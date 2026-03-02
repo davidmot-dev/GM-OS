@@ -243,6 +243,11 @@ export const useMusicStore = create<MusicState>()(
                 playPad: async (pad: MusicPad) => {
                     const state = get();
 
+                    if (!pad.url) {
+                        get().addLog(`Piste ignore : pas de fichier associé à "${pad.label}"`);
+                        return;
+                    }
+
                     // Forcer reprise du contexte si besoin
                     await musicEngine.resume();
 

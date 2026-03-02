@@ -92,10 +92,19 @@ class MusicDeck {
 
     async play() {
         if (this.context.state === 'suspended') await this.context.resume();
+
+        // Debug supplémentaire
+        if (!this.audioElement.src || this.audioElement.src.endsWith('/') || this.audioElement.src === window.location.href) {
+            console.warn(`[MusicDeck] Lecture annulée : src vide ou invalide pour Deck`);
+            return;
+        }
+
         try {
+            console.log(`[MusicDeck] Calling audioElement.play() for: ${this.audioElement.src}`);
             await this.audioElement.play();
         } catch (e) {
-            console.error("[MusicDeck] Play failed:", e);
+            // Un NotSupportedError ici confirme souvent un problème de chemin ou de format
+            console.error(`[MusicDeck] Play failed for ${this.audioElement.src}:`, e);
         }
     }
 
