@@ -1,0 +1,85 @@
+import React from 'react';
+import { useNPCStore } from '../useNPCStore';
+import { Trash2, Trash, User, MapPin, Package, Zap, Quote, ChevronRight } from 'lucide-react';
+
+const NPCHistory: React.FC = () => {
+    const { savedEntities, deleteFromMemo, setCurrentEntity, clearHistory } = useNPCStore();
+
+    if (savedEntities.length === 0) {
+        return (
+            <div className="h-full flex flex-col items-center justify-center p-8 text-slate-600 text-center animate-in fade-in duration-700">
+                <div className="w-12 h-12 rounded-full border border-slate-800 flex items-center justify-center mb-4">
+                    <Trash2 size={24} className="opacity-20" />
+                </div>
+                <p className="text-xs uppercase tracking-widest font-bold mb-1">Mémos vides</p>
+                <p className="text-[10px]">Sauvegardez vos générations favorites ici.</p>
+            </div>
+        );
+    }
+
+    const getMiniIcon = (category: string) => {
+        switch (category) {
+            case 'npcs': return <User size={14} className="text-gm-cyan" />;
+            case 'places': return <MapPin size={14} className="text-emerald-400" />;
+            case 'items': return <Package size={14} className="text-amber-400" />;
+            case 'events': return <Zap size={14} className="text-purple-400" />;
+            case 'rumors': return <Quote size={14} className="text-rose-400" />;
+            default: return <User size={14} />;
+        }
+    };
+
+    return (
+        <div className="h-full flex flex-col">
+            <div className="p-4 flex items-center justify-between border-b border-slate-800 bg-obsidian-dark/30">
+                <span className="text-[10px] uppercase font-bold text-slate-500 tracking-widest">Historique Mémos</span>
+                <button
+                    onClick={() => { if (confirm("Vider l'historique ?")) clearHistory(); }}
+                    className="p-1 hover:bg-rose-500/10 hover:text-rose-500 rounded transition-colors text-slate-600"
+                    title="Tout effacer"
+                >
+                    <Trash size={14} />
+                </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto custom-scrollbar p-2 flex flex-col gap-1">
+                {savedEntities.map((entity) => (
+                    <div
+                        key={entity.id}
+                        onClick={() => setCurrentEntity(entity)}
+                        className="group flex items-center gap-3 p-2 rounded-lg bg-slate-800/20 hover:bg-slate-800/50 border border-transparent hover:border-slate-700 cursor-pointer transition-all shrink-0"
+                    >
+                        <div className="w-8 h-8 rounded-md bg-slate-900 flex items-center justify-center shrink-0 border border-slate-700 overflow-hidden">
+                            {entity.avatar ? (
+                                <img
+                                    src={entity.avatar.startsWith('http') || entity.avatar.startsWith('blob:') || entity.avatar.startsWith('file://')
+                                        ? entity.avatar
+                                        : `file:///${entity.avatar.replace(/\\/g, '/')}`}
+                                    alt={entity.name}
+                                    className="w-full h-full object-cover"
+                                />
+                            ) : (
+                                getMiniIcon(entity.category)
+                            )}
+                        </div>
+
+                        <div className="flex-1 min-w-0">
+                            <p className="text-[11px] font-bold text-slate-200 truncate">{entity.name}</p>
+                            <p className="text-[8px] text-slate-500 uppercase">{entity.category}</p>
+                        </div>
+
+                        <button
+                            onClick={(e) => { e.stopPropagation(); deleteFromMemo(entity.id); }}
+                            className="p-1.5 opacity-0 group-hover:opacity-100 hover:bg-rose-500/20 hover:text-rose-500 rounded transition-all text-slate-500"
+                        >
+                            <Trash2 size={12} />
+                        </button>
+
+                        <ChevronRight size={14} className="text-slate-700 group-hover:text-gm-cyan transition-colors" />
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+export default NPCHistory;

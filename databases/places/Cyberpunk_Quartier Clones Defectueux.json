@@ -1,0 +1,53 @@
+{
+  "name": [
+    "Quartier des Copies Incomplètes",
+    "Quartier du Bloc Génomique",
+    "Quartier des Visages Identiques",
+    "Quartier du Couloir Répétitif",
+    "Quartier des Appartements Standardisés",
+    "Quartier des Séries Défaillantes",
+    "Quartier du Nœud de Gestation",
+    "Quartier des Reflets Discordants",
+    "Quartier des Modèles 3.2",
+    "Quartier des Identités Fragmentées"
+  ],
+
+  "description": [
+    "Un quartier où vivent des clones incomplets, aux traits légèrement asymétriques.",
+    "Un bloc génomique où chaque habitant partage 98% du même ADN.",
+    "Un quartier où tous les visages semblent identiques à quelques détails près.",
+    "Un couloir qui se répète à l’identique sur plusieurs centaines de mètres.",
+    "Un ensemble d’appartements strictement standardisés, sans aucune personnalisation.",
+    "Un quartier où les clones défaillants présentent des tics synchronisés.",
+    "Un nœud de gestation où les clones sont produits en série.",
+    "Un quartier où les miroirs renvoient des reflets légèrement différents.",
+    "Un secteur réservé aux modèles 3.2, tous issus de la même série.",
+    "Un quartier où les identités se fragmentent sous surcharge cognitive."
+  ],
+
+  "ambiance": [
+    "Une répétition troublante.",
+    "Une uniformité dérangeante.",
+    "Une identité fracturée.",
+    "Une boucle spatiale.",
+    "Une standardisation totale.",
+    "Une synchronisation involontaire.",
+    "Une gestation industrielle.",
+    "Une discordance visuelle.",
+    "Une série figée.",
+    "Une surcharge mentale."
+  ],
+
+  "secret": [
+    "Un clone incomplet murmure un nom qui n’existe pas.",
+    "Le bloc génomique contient un étage invisible aux habitants.",
+    "Un visage identique change légèrement d’expression sans raison.",
+    "Le couloir répétitif mène parfois à un niveau inconnu.",
+    "Un appartement standardisé contient un objet impossible.",
+    "Une série défaillante partage un souvenir commun… jamais vécu.",
+    "Le nœud de gestation produit un clone non répertorié.",
+    "Un reflet discordant bouge avant son modèle.",
+    "Un modèle 3.2 possède un ADN légèrement différent.",
+    "Une identité fragmentée se recompose en présence d’un visiteur."
+  ]
+}

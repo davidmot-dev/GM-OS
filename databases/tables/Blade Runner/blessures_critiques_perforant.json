@@ -1,0 +1,90 @@
+{
+    "name": "Blessures Critiques - Perforant",
+    "dice": "1d12",
+    "entries": [
+        {
+            "min": 1,
+            "max": 1,
+            "title": "Oreille arrachée",
+            "description": "Un projectile ou une lame emporte une partie de votre oreille.",
+            "effect": "Mortel : Non. Durée de guérison : Une semaine. Désavantage aux jets d'OBSERVATION."
+        },
+        {
+            "min": 2,
+            "max": 2,
+            "title": "Main transpercée",
+            "description": "La blessure traverse la paume, endommageant les tendons.",
+            "effect": "Mortel : Non. Durée de guérison : Une semaine. Désavantage aux jets d'ARME À FEU et de CORPS À CORPS."
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "Œil lacéré",
+            "description": "Une coupure profonde ou un éclat sectionne le globe oculaire.",
+            "effect": "Mortel : Non. Durée de guérison : Un mois. Désavantage aux jets d'ARME À FEU et d'OBSERVATION."
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "Épaule perforée",
+            "description": "Le coup traverse l'articulation, limitant l'amplitude de mouvement.",
+            "effect": "Mortel : Non. Durée de guérison : Une semaine. Désavantage aux jets de MOBILITÉ et d'ARMES À FEU."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "Plaie au ventre",
+            "description": "Une perforation abdominale qui menace les organes vitaux.",
+            "effect": "Mortel : Oui (Limite : Quart). Durée de guérison : Une semaine. Les jets de MOBILITÉ rouvrent la plaie."
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "Fracture du crâne",
+            "description": "L'os crânien est percé ou fendu, exposant la dure-mère.",
+            "effect": "Mortel : Oui (Limite : Quart). Durée de guérison : Une semaine. Désavantage aux jets d'OBSERVATION et de TECHNOLOGIE."
+        },
+        {
+            "min": 7,
+            "max": 7,
+            "title": "Poumon perforé",
+            "description": "Vous sifflez à chaque inspiration alors que l'air s'échappe de la plèvre.",
+            "effect": "Mortel : Oui (Limite : Quart). Durée de guérison : Un mois. Désavantage aux jets d'ENDURANCE et de MOBILITÉ."
+        },
+        {
+            "min": 8,
+            "max": 8,
+            "title": "Cervelle explosée",
+            "description": "Le projectile a traversé le centre de commande.",
+            "effect": "Mortel : Oui. Mort instantanée."
+        },
+        {
+            "min": 9,
+            "max": 9,
+            "title": "Lésions internes graves",
+            "description": "Hémorragie massive et dégâts tissulaires profonds.",
+            "effect": "Mortel : Oui (Limite : Round). Durée de guérison : Un mois. Vous ne pouvez pas vous tenir debout et devez ramper pour vous déplacer."
+        },
+        {
+            "min": 10,
+            "max": 10,
+            "title": "Cœur transpercé",
+            "description": "La pompe s'arrête net.",
+            "effect": "Mortel : Oui. Mort instantanée."
+        },
+        {
+            "min": 11,
+            "max": 11,
+            "title": "Jambe sectionnée",
+            "description": "Une artère majeure est coupée ou le membre est presque détaché.",
+            "effect": "Mortel : Oui (Limite : Quart). Durée de guérison : Permanent. Vous ne pouvez pas vous tenir debout et devez ramper pour vous déplacer."
+        },
+        {
+            "min": 12,
+            "max": 12,
+            "title": "Crâne brisé",
+            "description": "La structure osseuse ne protège plus rien.",
+            "effect": "Mortel : Oui. Mort instantanée."
+        }
+    ]
+}

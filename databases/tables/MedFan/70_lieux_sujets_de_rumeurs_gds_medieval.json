@@ -1,0 +1,496 @@
+{
+    "name": "70 Lieux sujets de rumeurs - Guide de Survie Médiéval",
+    "dice": "1d70",
+    "entries": [
+        {
+            "min": 1,
+            "max": 1,
+            "title": "La garde de paille",
+            "description": "Des dizaines d'épouvantails grimés en soldats de carnaval avec des lances de noisetier bordent les champs. Étrangement, ces terres sont épargnées par les invasions contrairement aux seigneuries voisines.",
+            "effect": "Dissuade les pillards ; origine de la protection mystérieuse."
+        },
+        {
+            "min": 2,
+            "max": 2,
+            "title": "Les champs aux rêveurs",
+            "description": "Prairies fleuries aux essences enivrantes. Le pollen de certaines fleurs incite à l'abandon total jusqu'à la mort.",
+            "effect": "Risque d'endormissement fatal ; jonché de squelettes."
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "Les îlots mouvants",
+            "description": "Archipel d'îlots pierreux dans un delta. Chaque tentative de construction militaire s'y enfonce inexorablement dans le fleuve.",
+            "effect": "Lieu instable ; ruines englouties."
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "La cascade aux esprits",
+            "description": "Chute d'eau nimbée d'une brume scintillante et féerique créée par d'anciens esprits sylvestres.",
+            "effect": "Atmosphère hors du temps."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "Le bois d'émeraude",
+            "description": "Forêt commune le jour, mais dont les mousses luisent d'un vert émeraude la nuit.",
+            "effect": "Le bois récolté produit des flammes vertes."
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "Le château enchevêtré",
+            "description": "Petit château totalement recouvert par une végétation dense. Personne n'y est entré depuis des siècles.",
+            "effect": "Issues obstruées ; anciens occupants supposés morts à l'intérieur."
+        },
+        {
+            "min": 7,
+            "max": 7,
+            "title": "Les guerriers figés",
+            "description": "Une dizaine de statues de guerriers en armes, extrêmement réalistes, faisant front contre un adversaire invisible.",
+            "effect": "Sculptures anciennes et moussues."
+        },
+        {
+            "min": 8,
+            "max": 8,
+            "title": "Le jardin des reflets",
+            "description": "Jardin seigneurial décoré de nombreux miroirs suspendus. Fermé depuis la disparition de la fille du duc.",
+            "effect": "Rumeur d'une créature velue capturant les gens à travers les miroirs."
+        },
+        {
+            "min": 9,
+            "max": 9,
+            "title": "Le champ de sang",
+            "description": "Lopin de terre extrêmement fertile donnant plusieurs récoltes par an, nommé ainsi en raison des massacres pour son contrôle.",
+            "effect": "Vitalité végétale exceptionnelle."
+        },
+        {
+            "min": 10,
+            "max": 10,
+            "title": "La porte des cendres",
+            "description": "Cercle taillé dans la roche diffusant une chaleur sèche permanente. Un ermite prétend que c'est une porte vers un autre monde.",
+            "effect": "Chaleur insupportable l'été ; bruits de coups provenant du sol."
+        },
+        {
+            "min": 11,
+            "max": 11,
+            "title": "Le verger d'Eden",
+            "description": "Verger clos abritant des pommes dorées dites 'fruits de la connaissance', protégées par des herbes hautes.",
+            "effect": "Infesté d'innombrables vipères."
+        },
+        {
+            "min": 12,
+            "max": 12,
+            "title": "La tour du fou",
+            "description": "Tour délabrée semblant faite d'or massif de loin, mais constituée en réalité de pyrite (or des fous).",
+            "effect": "Structure fragile et fissurée."
+        },
+        {
+            "min": 13,
+            "max": 13,
+            "title": "La marche des dieux",
+            "description": "Empreintes de pas titanesques figées dans la roche, bien plus grandes que n'importe quelle espèce connue.",
+            "effect": "Traces antédiluviennes."
+        },
+        {
+            "min": 14,
+            "max": 14,
+            "title": "Le bois aux cloches",
+            "description": "Forêt de pins dont les cônes tintent dans le vent comme des clochettes de bois.",
+            "effect": "Produit des harmonies perceptibles à plusieurs lieues."
+        },
+        {
+            "min": 15,
+            "max": 15,
+            "title": "Le labyrinthe foisonnant",
+            "description": "Structure végétale complexe qui s'étend inexorablement chaque année, dévorant les plaines alentours.",
+            "effect": "Progression implacable ; origine mystérieuse."
+        },
+        {
+            "min": 16,
+            "max": 16,
+            "title": "Le sanctuaire oublié du Roi cornu",
+            "description": "Ruines de pierre au fond d'un bois tordu. On y entend les appels à la Chasse sauvage les nuits sans lune.",
+            "effect": "Disparitions définitives pour ceux qui entendent l'appel."
+        },
+        {
+            "min": 17,
+            "max": 17,
+            "title": "Le pied de géant",
+            "description": "Énorme pied de pierre de quinze mètres de long trônant au milieu de la lande.",
+            "effect": "Fragment d'un ensemble défiant l'ordre divin."
+        },
+        {
+            "min": 18,
+            "max": 18,
+            "title": "La plage aux émaux",
+            "description": "Plage scintillant de mille feux car parsemée d'éclats de verre polis par la mer.",
+            "effect": "Origine des éclats colorés inconnue."
+        },
+        {
+            "min": 19,
+            "max": 19,
+            "title": "La borne des géants",
+            "description": "Pierre dressée de dix mètres marquant la limite d'un royaume oublié, ornée de runes peintes en rouge.",
+            "effect": "Avertissement pour les voyageurs."
+        },
+        {
+            "min": 20,
+            "max": 20,
+            "title": "L'anneau des anciens",
+            "description": "Monolithe circulaire avec un orifice central naturel, objet de dévotion hérétique pour les villageois.",
+            "effect": "Offrandes destinées à des êtres stellaires."
+        },
+        {
+            "min": 21,
+            "max": 21,
+            "title": "L'arbre d'abondance",
+            "description": "Arbre solitaire de vingt-cinq mètres portant des fruits juteux toute l'année. Sa sève est d'un blanc immaculé.",
+            "effect": "Légende d'une princesse ayant pris racine."
+        },
+        {
+            "min": 22,
+            "max": 22,
+            "title": "La brèche des vents",
+            "description": "Faille étroite au sommet d'une montagne semblant taillée à la hache par un géant.",
+            "effect": "Raccourci périlleux ; zone d'embuscades de brigands."
+        },
+        {
+            "min": 23,
+            "max": 23,
+            "title": "La clairière de la tranquillité",
+            "description": "Lieu provoquant un sommeil irrésistible et mortel chez tout être vivant qui s'y attarde.",
+            "effect": "Le sol dissimule les restes de nombreuses victimes."
+        },
+        {
+            "min": 24,
+            "max": 24,
+            "title": "La voie de l'empereur",
+            "description": "Route rectiligne traversant le relief sans croiser de vie. Suivre cette voie devient une obsession.",
+            "effect": "Obsession menant potentiellement aux enfers."
+        },
+        {
+            "min": 25,
+            "max": 25,
+            "title": "La roche qui boit",
+            "description": "Pierre lisse avec une vasque naturelle qui absorbe tout liquide versé et se remplit seule par le fond.",
+            "effect": "Lieu de fêtes païennes ; eau considérée comme bénie."
+        },
+        {
+            "min": 26,
+            "max": 26,
+            "title": "L'escalier d'Es",
+            "description": "Escalier taillé dans la roche sur une plage, s'enfonçant infiniment dans les profondeurs de la mer.",
+            "effect": "Plongée sans fin dans les eaux noires."
+        },
+        {
+            "min": 27,
+            "max": 27,
+            "title": "Le cimetière des oubliés",
+            "description": "Sept squelettes géants pétrifiés sortant du sol, trois fois plus grands qu'un homme.",
+            "effect": "Espèce inconnue et non identifiée."
+        },
+        {
+            "min": 28,
+            "max": 28,
+            "title": "Le Grand Cairn",
+            "description": "Énorme monument de pierre maudit marquant une bataille antique. Les spectres y rejoueraient le combat chaque soir.",
+            "effect": "Souffle des morts traumatisant pour l'âme."
+        },
+        {
+            "min": 29,
+            "max": 29,
+            "title": "La nourrice cornue",
+            "description": "Vallée marécageuse à l'atmosphère irrespirable où des bulles éclatent à la surface de mares visqueuses.",
+            "effect": "Lieu supposé engendrer des démons nés de la haine."
+        },
+        {
+            "min": 30,
+            "max": 30,
+            "title": "Le village sans lendemain",
+            "description": "Village d'apparence ordinaire dont personne dans les alentours n'a jamais entendu parler.",
+            "effect": "Inexistant sur les cartes et dans les mémoires."
+        },
+        {
+            "min": 31,
+            "max": 31,
+            "title": "Les brumes fuligineuses",
+            "description": "Brouillard épais chargé de suie et de poussière graisseuse provoquant la perte de la notion du temps.",
+            "effect": "Désorientation temporelle totale."
+        },
+        {
+            "min": 32,
+            "max": 32,
+            "title": "Le pont impossible",
+            "description": "Pont de pierre plat sans aucun pilier ni renfort, tenant miraculeusement au-dessus d'une gorge.",
+            "effect": "Défie les lois de la physique."
+        },
+        {
+            "min": 33,
+            "max": 33,
+            "title": "La vallée des demoiselles",
+            "description": "Sept colonnes de pierre blanche surmontées d'ovales noirs évoquant des têtes monstrueuses.",
+            "effect": "Gardiennes de la vallée et sources de maléfices."
+        },
+        {
+            "min": 34,
+            "max": 34,
+            "title": "La porte de la Terre creuse",
+            "description": "Trou circulaire débouchant sur un gouffre sans fond. On raconte que ceux qui y tombent peuvent en ressortir changés.",
+            "effect": "Aucun écho ; créatures supposées en sortir."
+        },
+        {
+            "min": 35,
+            "max": 35,
+            "title": "La mare aux vierges",
+            "description": "Bassin d'eau claire caché. L'eau apporterait santé et jouvence à celles qui s'y baignent.",
+            "effect": "Lieu secret délimité par des pierres rondes."
+        },
+        {
+            "min": 36,
+            "max": 36,
+            "title": "Le col des abîmes",
+            "description": "Accès strié de crevasses profondes en roche noire. On dit qu'elles ont été faites par les griffes d'un monstre.",
+            "effect": "Risque de chute dans des abîmes infernaux."
+        },
+        {
+            "min": 37,
+            "max": 37,
+            "title": "Le lac noir",
+            "description": "Lac à la surface opaque ne reflétant rien, bien que son eau soit pure une fois prélevée.",
+            "effect": "Refuge pour les ombres des morts ou des créatures noires."
+        },
+        {
+            "min": 38,
+            "max": 38,
+            "title": "La caverne étoilée",
+            "description": "Vaste grotte cyclopéenne où la voûte est parsemée de points lumineux formant des constellations inconnues.",
+            "effect": "Vision supposée de la création du monde."
+        },
+        {
+            "min": 39,
+            "max": 39,
+            "title": "Le moulin au sot",
+            "description": "Moulin fonctionnel et prospère bâti sur un îlot au milieu de rapides inaccessibles par voie terrestre ou navigable.",
+            "effect": "Lieu habité mais totalement isolé."
+        },
+        {
+            "min": 40,
+            "max": 40,
+            "title": "La salle de l'échiquier",
+            "description": "Vestiges d'un château avec une esplanade de dalles noires et blanches formant un échiquier géant.",
+            "effect": "Légende d'un baron fou tuant ses sujets jouant les pièces."
+        },
+        {
+            "min": 41,
+            "max": 41,
+            "title": "Le tertre d'Ul Imair",
+            "description": "Ancien tertre funéraire repoussant toute forme de vie. Rien n'y pousse et les animaux l'évitent.",
+            "effect": "Histoires de massacres ; offrandes récentes découvertes au sommet."
+        },
+        {
+            "min": 42,
+            "max": 42,
+            "title": "Les jumeaux des tempêtes",
+            "description": "Deux pics montagneux régulièrement frappés par les éclairs lors des tempêtes, provoquant des éboulements.",
+            "effect": "Phénomène électrique inexpliqué."
+        },
+        {
+            "min": 43,
+            "max": 43,
+            "title": "La chapelle aveugle",
+            "description": "Minuscule chapelle de pierre blanche entièrement murée à la hâte. On y entend des grattements à l'intérieur.",
+            "effect": "Présences enfermées dans les murs."
+        },
+        {
+            "min": 44,
+            "max": 44,
+            "title": "Le désert vivant",
+            "description": "Désert de sable mouvant où les dunes semblent animées d'une volonté propre lors des tempêtes.",
+            "effect": "Progression impossible sans guides autochtones coûteux."
+        },
+        {
+            "min": 45,
+            "max": 45,
+            "title": "Le bourdon solitaire",
+            "description": "Clocher isolé en pleine nature sauvage abritant un bourdon de bronze massif que l'on peut sonner.",
+            "effect": "Aucune construction alentour."
+        },
+        {
+            "min": 46,
+            "max": 46,
+            "title": "Les statues perdues",
+            "description": "Sept piliers de pierre alignés ressemblant à des socles dont les statues et les plaques ont disparu.",
+            "effect": "Vestiges d'un monument effacé."
+        },
+        {
+            "min": 47,
+            "max": 47,
+            "title": "Le gué charmant",
+            "description": "Passage de galets plats dans une rivière enchanteresse. Idéal pour camper, mais interdit de le souiller.",
+            "effect": "Fréquenté par la cour de la reine des fées."
+        },
+        {
+            "min": 48,
+            "max": 48,
+            "title": "Les mille marches",
+            "description": "Escalier sinueux taillé dans la montagne menant à un sanctuaire d'un dieu païen des tempêtes.",
+            "effect": "Accès escarpé et religieux."
+        },
+        {
+            "min": 49,
+            "max": 49,
+            "title": "Le chêne de vie",
+            "description": "Chêne millénaire creux abritant un temple de bougies. Son tronc diffuse une chaleur apaisante.",
+            "effect": "Porter un gland de cet arbre donnerait bonne fortune."
+        },
+        {
+            "min": 50,
+            "max": 50,
+            "title": "La sente des freux",
+            "description": "Chemin creux où des nuées de corbeaux s'assemblent et croassent agressivement au passage des voyageurs.",
+            "effect": "Lieu de mauvais augure ; témoins disparus."
+        },
+        {
+            "min": 51,
+            "max": 51,
+            "title": "Les cavernes des chasse-marées",
+            "description": "Complexe de grottes littorales menant à des criques secrètes et des repaires de naufrageurs.",
+            "effect": "Issues de secours ou caches de contrebande."
+        },
+        {
+            "min": 52,
+            "max": 52,
+            "title": "L'ossuaire des embruns",
+            "description": "Paroi de granit nichant des centaines de crânes humains faisant tous face à la mer.",
+            "effect": "Mémorial macabre sculpté dans la roche."
+        },
+        {
+            "min": 53,
+            "max": 53,
+            "title": "La citadelle du vertige",
+            "description": "Forteresse bâtie sur une aiguille rocheuse inaccessible sans connaître le chemin secret.",
+            "effect": "Prolongement naturel de la roche ; seigneur et cour cachés."
+        },
+        {
+            "min": 54,
+            "max": 54,
+            "title": "Le roncier",
+            "description": "Bosquet de ronces agressives d'où émanent des pleurs d'enfant. Les tiges s'agrippent aux intrus.",
+            "effect": "Présence d'une bête prédatrice sentie sur la nuque."
+        },
+        {
+            "min": 55,
+            "max": 55,
+            "title": "Le marionnettiste errant",
+            "description": "Charrette abandonnée contenant des marionnettes ressemblant étrangement aux nouveaux arrivants.",
+            "effect": "Indice inquiétant de surveillance ou de destin scellé."
+        },
+        {
+            "min": 56,
+            "max": 56,
+            "title": "Les termes du soufre",
+            "description": "Salle antique souterraine avec mosaïques païennes et fresques de créatures cornues vandalisées.",
+            "effect": "Vestiges de cultes anciens."
+        },
+        {
+            "min": 57,
+            "max": 57,
+            "title": "La serpentine",
+            "description": "Méandre de rivière formant une boucle fermée où l'eau circule sans jamais déborder malgré l'absence d'exutoire.",
+            "effect": "Lieu de disparitions fréquentes."
+        },
+        {
+            "min": 58,
+            "max": 58,
+            "title": "La rune",
+            "description": "Rochers massifs disposés au sol formant un immense glyphe lié à la destruction.",
+            "effect": "Visible uniquement en prenant de la hauteur."
+        },
+        {
+            "min": 59,
+            "max": 59,
+            "title": "Le mur de l'empereur",
+            "description": "Muraille de trois mètres protégeant les terres contre les aberrations rôdant de l'autre côté.",
+            "effect": "Structure sacrée et protectrice bien conservée."
+        },
+        {
+            "min": 60,
+            "max": 60,
+            "title": "Les ombres",
+            "description": "Silhouettes humanoïdes géantes noircies et fondues dans une falaise par une chaleur intense.",
+            "effect": "Traces calcinées d'un événement cataclysmique."
+        },
+        {
+            "min": 61,
+            "max": 61,
+            "title": "La flèche de l'ombre",
+            "description": "Grande flèche de pierre servant de cadran solaire, mais dont les ombres ne correspondent à aucune marque.",
+            "effect": "Mécanisme astronomique déréglé ou détourné."
+        },
+        {
+            "min": 62,
+            "max": 62,
+            "title": "Le vaisseau de pierre",
+            "description": "Fortification en forme de nef coincée dans une falaise. Les murs ont la texture de la pierre mais le grain du bois.",
+            "effect": "Structure vide avec une tour faisant office de mât."
+        },
+        {
+            "min": 63,
+            "max": 63,
+            "title": "Les gardiens du silence",
+            "description": "Vingt statues d'armures géantes bordant la route. La légende dit qu'elles s'animeront face à une menace sans nom.",
+            "effect": "Gardiens d'un royaume perdu."
+        },
+        {
+            "min": 64,
+            "max": 64,
+            "title": "L'espoir de saint Cancrède",
+            "description": "Auberge accueillante n'apparaissant que les soirs d'orage. Il faut refuser trois fois les offres des clients.",
+            "effect": "Illusion masquant des démons et succubes."
+        },
+        {
+            "min": 65,
+            "max": 65,
+            "title": "L'ange triste",
+            "description": "Statue d'ange de dix mètres sculptée avec les ailes brisées jonchant le sol. Son visage est inquiétant.",
+            "effect": "Expression de tristesse profonde."
+        },
+        {
+            "min": 66,
+            "max": 66,
+            "title": "Les rochers de l'âme",
+            "description": "Affleurement rocheux sculpté pour émettre des sons de lamentations lorsque le vent le traverse.",
+            "effect": "Effet sonore lugubre délibéré."
+        },
+        {
+            "min": 67,
+            "max": 67,
+            "title": "Les tisseuses",
+            "description": "Trois femmes (vieille, mûre, enfant) travaillant sur une tapisserie immense et sollicitant l'aide des passants.",
+            "effect": "Rencontre symbolique liée au destin."
+        },
+        {
+            "min": 68,
+            "max": 68,
+            "title": "Le four des déchus",
+            "description": "Ancien four à chaux encore tiède situé sur une colline. Il contient de la cendre d'os.",
+            "effect": "Lieu de crémation ou de rituel macabre."
+        },
+        {
+            "min": 69,
+            "max": 69,
+            "title": "Le domaine de Fenrir",
+            "description": "Gorges dominées par des meutes de loups géants obéissant à une louve alpha blanche comme neige.",
+            "effect": "Chasse impitoyable déclenchée contre ceux qui offensent la meute."
+        },
+        {
+            "min": 70,
+            "max": 70,
+            "title": "Les vingt frères",
+            "description": "Cercle de vingt chênes aux branches entrelacées formant un anneau de bois dense au-dessus du sol.",
+            "effect": "L'anneau serait un portail vers un autre monde."
+        }
+    ]
+}

@@ -1,0 +1,229 @@
+/**
+ * Engine Audio pour Music OS v5
+ * Gère le mixage, les platines, les boucles A/B et le routage via Streaming HTML5.
+ */
+
+export interface DeckState {
+    isPlaying: boolean;
+    isLooping: boolean;
+    volume: number;
+    currentTime: number;
+    duration: number;
+}
+
+class MusicDeck {
+    private context: AudioContext;
+    private audioElement: HTMLAudioElement;
+    private sourceNode: MediaElementAudioSourceNode;
+    private gainNode: GainNode;
+    private state: DeckState;
+    private onStateChange: (state: DeckState) => void;
+
+    public get isPlaying() { return this.state.isPlaying; }
+    public get duration() { return this.audioElement.duration || 0; }
+    public get currentTime() { return this.audioElement.currentTime || 0; }
+
+    constructor(context: AudioContext, destination: AudioNode, onStateChange: (state: DeckState) => void) {
+        this.context = context;
+        this.onStateChange = onStateChange;
+
+        // 1. Création de l'élément audio HTML5
+        this.audioElement = new Audio();
+        this.audioElement.crossOrigin = "anonymous";
+        this.audioElement.preload = "auto";
+
+        // IMPORTANT for Electron: Attach to DOM to keep priority
+        this.audioElement.style.display = "none";
+        document.body.appendChild(this.audioElement);
+
+        // 2. Branchement Web Audio
+        this.sourceNode = context.createMediaElementSource(this.audioElement);
+        this.gainNode = context.createGain();
+
+        this.sourceNode.connect(this.gainNode);
+        this.gainNode.connect(destination);
+
+        this.state = {
+            isPlaying: false,
+            isLooping: true,
+            volume: 1.0,
+            currentTime: 0,
+            duration: 0
+        };
+
+        // Events listeners for state sync
+        this.audioElement.onplay = () => { this.state.isPlaying = true; this.updateState(); };
+        this.audioElement.onpause = () => { this.state.isPlaying = false; this.updateState(); };
+        this.audioElement.onended = () => { if (!this.state.isLooping) { this.state.isPlaying = false; this.updateState(); } };
+        this.audioElement.onloadedmetadata = () => { this.state.duration = this.audioElement.duration; this.updateState(); };
+    }
+
+    async loadTrack(url: string) {
+        console.log(`[MusicDeck] Loading track: ${url}`);
+
+        // On libère l'ancien handle avant de charger
+        this.audioElement.pause();
+        this.audioElement.src = "";
+
+        let finalUrl = url;
+
+        // Transformation des chemins locaux Windows en URLs valides pour l'élément audio
+        // On check si c'est un chemin local (Pas de protocole détecté)
+        const isLocalPath = url && !url.includes('://') && !url.startsWith('blob:') && !url.startsWith('data:');
+
+        if (isLocalPath) {
+            // Utilisation du bridge si disponible, sinon fallback manuel robuste
+            const win = window as unknown as { appBridge?: { utils?: { formatFileUrl: (p: string) => string } } };
+            if (win.appBridge?.utils?.formatFileUrl) {
+                finalUrl = win.appBridge.utils.formatFileUrl(url);
+            } else {
+                const normalizedPath = url.replace(/\\/g, '/');
+                finalUrl = 'file:///' + encodeURI(normalizedPath).replace(/#/g, '%23').replace(/\?/g, '%3F');
+            }
+        }
+
+        console.log(`[MusicDeck] Final source: ${finalUrl}`);
+        this.audioElement.src = finalUrl;
+        this.audioElement.load();
+
+        this.state.currentTime = 0;
+        this.updateState();
+    }
+
+    async play() {
+        if (this.context.state === 'suspended') await this.context.resume();
+        try {
+            await this.audioElement.play();
+        } catch (e) {
+            console.error("[MusicDeck] Play failed:", e);
+        }
+    }
+
+    pause() {
+        this.audioElement.pause();
+    }
+
+    stop() {
+        this.audioElement.pause();
+        this.audioElement.currentTime = 0;
+        this.audioElement.src = ""; // Libère le descripteur de fichier
+        this.state.isPlaying = false;
+        this.updateState();
+    }
+
+    setVolume(value: number) {
+        this.state.volume = value;
+        const now = this.context.currentTime;
+        this.gainNode.gain.setTargetAtTime(value, now, 0.02);
+        this.updateState();
+    }
+
+    fadeOut(durationMs: number) {
+        const now = this.context.currentTime;
+        const durationSec = durationMs / 1000;
+
+        this.gainNode.gain.cancelScheduledValues(now);
+        this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, now);
+        this.gainNode.gain.linearRampToValueAtTime(0, now + durationSec);
+
+        setTimeout(() => {
+            this.stop();
+            // Reset gain for next usage
+            this.gainNode.gain.setValueAtTime(this.state.volume, this.context.currentTime);
+        }, durationMs + 100);
+    }
+
+    setLooping(value: boolean) {
+        this.state.isLooping = value;
+        this.audioElement.loop = value;
+        this.updateState();
+    }
+
+    private updateState() {
+        this.onStateChange({ ...this.state, currentTime: this.audioElement.currentTime, duration: this.audioElement.duration || 0 });
+    }
+
+    getCurrentTime(): number {
+        return this.audioElement.currentTime;
+    }
+}
+
+export class MusicEngine {
+    private context: AudioContext;
+    private masterGain: GainNode;
+    private crossfaderGainA: GainNode;
+    private crossfaderGainB: GainNode;
+    private destination: MediaStreamAudioDestinationNode;
+
+    public deckA: MusicDeck;
+    public deckB: MusicDeck;
+
+    private crossfaderValue: number = 0.5;
+
+    constructor() {
+        this.context = new AudioContext(); // Native default for stability
+
+        this.destination = this.context.createMediaStreamDestination();
+        this.masterGain = this.context.createGain();
+        this.masterGain.connect(this.destination);
+
+        this.crossfaderGainA = this.context.createGain();
+        this.crossfaderGainB = this.context.createGain();
+
+        this.crossfaderGainA.connect(this.masterGain);
+        this.crossfaderGainB.connect(this.masterGain);
+
+        this.deckA = new MusicDeck(this.context, this.crossfaderGainA, () => { });
+        this.deckB = new MusicDeck(this.context, this.crossfaderGainB, () => { });
+
+        this.updateCrossfaderGains();
+    }
+
+    setMasterVolume(value: number) {
+        this.masterGain.gain.setTargetAtTime(value, this.context.currentTime, 0.05);
+    }
+
+    setCrossfader(value: number) {
+        this.crossfaderValue = Math.max(0, Math.min(1, value));
+        const now = this.context.currentTime;
+        this.updateCrossfaderGains(now);
+    }
+
+    private updateCrossfaderGains(time?: number) {
+        const gainA = 1 - this.crossfaderValue;
+        const gainB = this.crossfaderValue;
+        const scheduledTime = time || this.context.currentTime;
+
+        // Curve optimization: use setTargetAtTime for smooth manual sliding
+        this.crossfaderGainA.gain.setTargetAtTime(gainA, scheduledTime, 0.02);
+        this.crossfaderGainB.gain.setTargetAtTime(gainB, scheduledTime, 0.02);
+    }
+
+    performAutoFade(target: 'A' | 'B', durationMs: number) {
+        const now = this.context.currentTime;
+        const durationSec = durationMs / 1000;
+        const targetA = target === 'A' ? 1 : 0;
+        const targetB = target === 'B' ? 1 : 0;
+
+        this.crossfaderGainA.gain.cancelScheduledValues(now);
+        this.crossfaderGainB.gain.cancelScheduledValues(now);
+
+        this.crossfaderGainA.gain.setValueAtTime(this.crossfaderGainA.gain.value, now);
+        this.crossfaderGainA.gain.linearRampToValueAtTime(targetA, now + durationSec);
+
+        this.crossfaderGainB.gain.setValueAtTime(this.crossfaderGainB.gain.value, now);
+        this.crossfaderGainB.gain.linearRampToValueAtTime(targetB, now + durationSec);
+
+        this.crossfaderValue = target === 'A' ? 0 : 1;
+    }
+
+    getStream(): MediaStream {
+        return this.destination.stream;
+    }
+
+    async resume() {
+        if (this.context.state === 'suspended') await this.context.resume();
+    }
+}
+
+export const musicEngine = new MusicEngine();

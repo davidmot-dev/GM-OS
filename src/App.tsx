@@ -1,30 +1,22 @@
-import { useState } from 'react';
+import { useSessionStore } from './store/useSessionStore';
 import Shell from './components/Shell';
-import type { ModuleID } from './components/Shell';
+import DiceBoard from './modules/dice/DiceBoard';
+import MusicDashboard from './modules/music/MusicDashboard';
+import CombatDashboard from './modules/combat/CombatDashboard';
+import NPCDashboard from './modules/npc/NPCDashboard';
+import MapDashboard from './modules/map/MapDashboard';
+import SessionDashboard from './modules/session/SessionDashboard';
+import ModalProvider from './components/ModalProvider';
+import AudioRouter from './modules/music/components/AudioRouter';
+import ClockDashboard from './modules/clock/ClockDashboard';
+import AmbientDashboard from './modules/ambient/AmbientDashboard';
+import TableDashboard from './modules/tables/TableDashboard';
+import WebDashboard from './modules/web/WebDashboard';
 
-// Component for the Dashboard module
-const Dashboard = () => (
-  <div className="space-y-6">
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div className="bg-slate-900/50 p-6 rounded-2xl border border-slate-800 backdrop-blur-sm">
-        <h3 className="text-slate-400 text-sm font-medium uppercase tracking-wider mb-2">Campaign</h3>
-        <p className="text-2xl font-bold">Obsidian & Slate</p>
-      </div>
-      <div className="bg-slate-900/50 p-6 rounded-2xl border border-slate-800 backdrop-blur-sm">
-        <h3 className="text-slate-400 text-sm font-medium uppercase tracking-wider mb-2">Current Scene</h3>
-        <p className="text-2xl font-bold text-blue-400">The Whispering Spire</p>
-      </div>
-      <div className="bg-slate-900/50 p-6 rounded-2xl border border-slate-800 backdrop-blur-sm">
-        <h3 className="text-slate-400 text-sm font-medium uppercase tracking-wider mb-2">Players Online</h3>
-        <p className="text-2xl font-bold text-emerald-400">4 / 5</p>
-      </div>
-    </div>
 
-    <div className="bg-slate-900/50 rounded-2xl border border-slate-800 backdrop-blur-sm h-96 flex items-center justify-center">
-      <p className="text-slate-500 italic">Quick access widgets will appear here...</p>
-    </div>
-  </div>
-);
+
+
+// App.tsx entry point
 
 const PlaceholderModule = ({ name }: { name: string }) => (
   <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
@@ -39,21 +31,46 @@ const PlaceholderModule = ({ name }: { name: string }) => (
 );
 
 function App() {
-  const [activeModule, setActiveModule] = useState<ModuleID>('dashboard');
+  const { activeModule } = useSessionStore();
 
   const renderModule = () => {
     switch (activeModule) {
       case 'dashboard':
-        return <Dashboard />;
+        return <SessionDashboard />;
+      case 'dice':
+        return <DiceBoard />;
+      case 'music':
+        return <MusicDashboard />;
+      case 'combat':
+        return <CombatDashboard />;
+      case 'map':
+        return <MapDashboard />;
+      case 'npc':
+        return <NPCDashboard />;
+      case 'clock':
+        return <ClockDashboard />;
+      case 'ambient':
+        return <AmbientDashboard />;
+      case 'table':
+        return <TableDashboard />;
+      case 'web':
+        return <WebDashboard />;
+
+
       default:
+
         return <PlaceholderModule name={activeModule} />;
     }
   };
 
   return (
-    <Shell activeModule={activeModule} setActiveModule={setActiveModule}>
-      {renderModule()}
-    </Shell>
+    <>
+      <ModalProvider />
+      <AudioRouter />
+      <Shell>
+        {renderModule()}
+      </Shell>
+    </>
   );
 }
 

@@ -1,0 +1,53 @@
+{
+  "name": [
+    "Village des Grottes Murmurantes",
+    "Village de la Falaise‑Respire",
+    "Village des Alvéoles Anciennes",
+    "Village du Roc‑Poreux",
+    "Village des Escaliers Vivants",
+    "Village des Cavités Chantantes",
+    "Village du Flanc‑Pulsant",
+    "Village des Galeries Tordues",
+    "Village des Parois‑Veilleuses",
+    "Village du Gouffre Habité"
+  ],
+
+  "description": [
+    "Un village creusé dans une falaise qui semble murmurer au vent.",
+    "Un ensemble de grottes où la paroi respire lentement comme un être vivant.",
+    "Un village troglodyte composé d’alvéoles anciennes, parfaitement circulaires.",
+    "Une falaise poreuse dont les cavités abritent des habitations rudimentaires.",
+    "Un village où les escaliers taillés dans la roche se déplacent légèrement.",
+    "Un réseau de cavités qui résonnent comme si elles chantaient.",
+    "Un flanc de montagne qui pulse faiblement sous la main.",
+    "Un village aux galeries tordues, comme sculptées par une force organique.",
+    "Une falaise dont les parois semblent observer les visiteurs.",
+    "Un gouffre habité où les maisons sont suspendues à des parois mouvantes."
+  ],
+
+  "ambiance": [
+    "Une respiration profonde.",
+    "Une organicité minérale.",
+    "Un murmure continu.",
+    "Une porosité inquiétante.",
+    "Un mouvement imperceptible.",
+    "Une résonance harmonique.",
+    "Une pulsation sourde.",
+    "Une torsion naturelle.",
+    "Une vigilance silencieuse.",
+    "Une profondeur vivante."
+  ],
+
+  "secret": [
+    "Une grotte murmurante répète les pensées des visiteurs.",
+    "La falaise‑respire accélère son rythme la nuit.",
+    "Une alvéole ancienne contient un symbole pré‑druidique.",
+    "Le roc‑poreux absorbe l’eau… puis la restitue ailleurs.",
+    "Un escalier vivant change de forme selon l’humeur du village.",
+    "Une cavité chantante harmonise les voix humaines.",
+    "Le flanc‑pulsant réagit à la magie.",
+    "Une galerie tordue mène à une chambre oubliée.",
+    "Les parois‑veilleuses s’illuminent en présence de mensonge.",
+    "Le gouffre habité descend plus profondément qu’il ne devrait."
+  ]
+}

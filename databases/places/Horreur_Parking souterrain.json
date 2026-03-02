@@ -1,0 +1,53 @@
+{
+  "name": [
+    "Parking Souterrain Niveau -3",
+    "Parking des Néons Tremblants",
+    "Parking du Couloir Sans Issue",
+    "Parking des Piliers Humides",
+    "Parking du Secteur Ouest",
+    "Parking des Ascenseurs Muets",
+    "Parking du Virage Serré",
+    "Parking des Caméras Fixes",
+    "Parking du Niveau Inconnu",
+    "Parking des Pas Égarés"
+  ],
+
+  "description": [
+    "Un parking profond où le niveau -3 semble plus vaste qu’il ne devrait l’être.",
+    "Un parking où les néons clignotent de manière irrégulière, même lorsqu’ils sont éteints.",
+    "Un parking dont un couloir latéral ne mène à aucune sortie identifiable.",
+    "Un parking où certains piliers suintent une humidité sombre et épaisse.",
+    "Un secteur entier du parking est fermé par des barrières rouillées.",
+    "Un parking où les ascenseurs restent immobiles, portes entrouvertes.",
+    "Un parking avec un virage serré qui semble absorber la lumière.",
+    "Un parking où les caméras de surveillance restent braquées sur le même point.",
+    "Un parking où un niveau supplémentaire apparaît parfois sur les panneaux.",
+    "Un parking où l’on entend des pas résonner sans jamais voir personne."
+  ],
+
+  "ambiance": [
+    "Une claustrophobie métallique.",
+    "Une lumière instable et agressive.",
+    "Une confusion spatiale.",
+    "Une lourdeur humide et malsaine.",
+    "Une zone morte et oubliée.",
+    "Une immobilité mécanique.",
+    "Une obscurité avalante.",
+    "Une surveillance oppressante.",
+    "Une distorsion inquiétante.",
+    "Une présence invisible."
+  ],
+
+  "secret": [
+    "Le niveau -3 semble changer de configuration la nuit.",
+    "Un néon s’allume toujours quelques secondes avant l’arrivée d’un visiteur.",
+    "Le couloir sans issue paraît parfois plus long qu’avant.",
+    "L’humidité des piliers forme des motifs étranges.",
+    "Le secteur ouest apparaît intact sur d’anciens plans.",
+    "Un ascenseur descend parfois d’un étage inexistant.",
+    "Le virage renvoie un écho qui ne correspond à aucun bruit.",
+    "Une caméra filme un mouvement absent du parking réel.",
+    "Le niveau supplémentaire disparaît dès qu’on tente d’y accéder.",
+    "Les pas semblent suivre les visiteurs à distance constante."
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "name": "Attaques de Facehugger",
+  "dice": "1d6",
+  "entries": [
+    {
+      "min": 1,
+      "max": 2,
+      "title": "COURSE ARACHNOÏDE",
+      "description": "Le Facehugger a choisi son hôte et sait qu'il vient pour lui ! Il cavale à toute vitesse, bien déterminé, comme une abominable araignée couleur chair.",
+      "effect": "Le NIVEAU DE STRESS de la victime augmente de 1, et elle doit immédiatement effectuer un test de Panique."
+    },
+    {
+      "min": 3,
+      "max": 3,
+      "title": "COUP DE QUEUE",
+      "description": "Le petit monstre se rue sur sa cible qu'il agresse vicieusement au moyen de sa queue.",
+      "effect": "Il attaque avec cinq dés de base, pour des Dégâts de 1. (Le Facehugger royal utilise six dés de base et ses Dégâts sont de 2.) En plus des dégâts subis, le NIVEAU DE STRESS de la victime augmente de 1."
+    },
+    {
+      "min": 4,
+      "max": 4,
+      "title": "SAISIE CAUDALE",
+      "description": "Le Facehugger bondit et saute sur sa victime par-derrière en la fouettant de sa queue.",
+      "effect": "Lancez 1d6 : \n1-2 : la queue s'enroule autour des jambes de la cible, qui s'écroule à terre ; elle doit effectuer un test de Panique.\n3-4 : les bras de la victime sont immobilisés par la queue du monstre ; elle ne peut plus utiliser d'objets tenus à la main et doit effectuer un test de Panique.\n5-6 : le Facehugger enroule sa queue autour du cou de la cible et l'étrangle. La victime subit les effets d'une noyade (cf. page 110) et doit effectuer un test de Panique."
+    },
+    {
+      "min": 5,
+      "max": 5,
+      "title": "SAISIE FACIALE",
+      "description": "Le Facehugger bondit sur sa victime.",
+      "effect": "Faites un test opposant six dés de base au COMBAT RAPPROCHÉ de la cible (ceci ne compte pas comme une action pour la victime) : \n- Si le Facehugger l'emporte, la cible subit le BAISER DE LA MORT lors de la prochaine initiative du Facehugger. \n- Si la victime l'emporte, elle jette la créature à terre, mais celle-ci n'en a pas terminé : elle attaque la même cible à sa prochaine initiative."
+    },
+    {
+      "min": 6,
+      "max": 6,
+      "title": "BAISER DE LA MORT",
+      "description": "Le Facehugger se jette sur sa victime, se débarrassant aisément de son casque ou de son respirateur à l'aide de son acide. La proie éprouve un mélange de sensations horribles et curieusement affectueuses : une caresse douce mais ferme sur la tête, une sensation d'étouffement aussitôt suivie d'une chaude bouffée d'air riche en oxygène, une impression de chute au ralenti... Pourquoi ne pas s'abandonner au sommeil ?",
+      "effect": "Faites un test d'attaque avec six dés de base. Si la créature obtient au moins un succès (symbole étoile), elle se colle au visage de la victime, qui est immédiatement Brisée."
+    }
+  ]
+}

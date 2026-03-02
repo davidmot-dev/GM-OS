@@ -1,0 +1,53 @@
+{
+  "name": [
+    "Forêt des Ombres Figées",
+    "Forêt des Arbres‑Veilleurs",
+    "Forêt du Silence Suspendu",
+    "Forêt des Formes Humaines",
+    "Forêt du Bois‑Statue",
+    "Forêt des Troncs‑Sentinelles",
+    "Forêt des Silhouettes Grises",
+    "Forêt du Souffle Retenu",
+    "Forêt des Branches‑Murmures",
+    "Forêt du Sentier Immobile"
+  ],
+
+  "description": [
+    "Une forêt où les ombres semblent figées, comme sculptées dans l’air.",
+    "Une forêt où les arbres ressemblent à des veilleurs immobiles.",
+    "Un bois où le silence semble suspendu, sans vent ni oiseaux.",
+    "Une forêt où certains troncs ont la forme troublante d’êtres humains.",
+    "Un bois où les arbres se dressent comme des statues de bois poli.",
+    "Une forêt où les troncs alignés évoquent une armée de sentinelles.",
+    "Un bois grisâtre où les silhouettes semblent se répéter à l’identique.",
+    "Une forêt où l’air semble retenir son souffle en permanence.",
+    "Un bois où les branches murmurent sans bouger.",
+    "Une forêt où le sentier reste parfaitement immobile, même sous la tempête."
+  ],
+
+  "ambiance": [
+    "Une immobilité oppressante.",
+    "Une vigilance silencieuse.",
+    "Un calme surnaturel.",
+    "Une forme humaine latente.",
+    "Une rigidité statuaire.",
+    "Une garde immobile.",
+    "Une monochromie inquiétante.",
+    "Un souffle retenu.",
+    "Un murmure immobile.",
+    "Une fixité absolue."
+  ],
+
+  "secret": [
+    "Une ombre figée change légèrement de position chaque nuit.",
+    "Un arbre‑veilleur tourne imperceptiblement sa tête de bois.",
+    "Le silence suspendu se brise par un seul battement de cœur.",
+    "Une forme humaine contient un cœur de sève encore chaud.",
+    "Un bois‑statue renferme un visage sculpté naturellement.",
+    "Une sentinelle de tronc s’incline devant certains visiteurs.",
+    "Une silhouette grise disparaît quand on la touche.",
+    "Le souffle retenu reprend brièvement lors d’un mensonge.",
+    "Les branches‑murmures prononcent un nom oublié.",
+    "Le sentier immobile mène parfois à un autre lieu."
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "name": [
+    "Toit‑Terrasse du Spire‑Nord",
+    "Toit des Antennes Ionisées",
+    "Toit du Relais Sigma‑8",
+    "Toit des Pylônes Oscillants",
+    "Toit du Champ Électromagnétique",
+    "Toit des Drones de Maintenance",
+    "Toit du Vent Saturé",
+    "Toit des Paraboles Rouillées",
+    "Toit du Réseau Ascendant",
+    "Toit des Signaux Parasites"
+  ],
+
+  "description": [
+    "Un toit balayé par des vents ionisés, hérissé d’antennes géantes.",
+    "Un toit où les antennes émettent des arcs électriques visibles la nuit.",
+    "Un relais Sigma‑8 dont les pylônes vibrent à intervalles réguliers.",
+    "Un toit où les pylônes oscillent légèrement, comme vivants.",
+    "Un champ électromagnétique si dense qu’il brouille les implants.",
+    "Un toit où des drones de maintenance tournent en boucle.",
+    "Un toit exposé à un vent saturé de particules métalliques.",
+    "Un toit où des paraboles rouillées captent encore des signaux anciens.",
+    "Un réseau ascendant reliant plusieurs arcologies par faisceaux lumineux.",
+    "Un toit où les signaux parasites forment des motifs répétitifs."
+  ],
+
+  "ambiance": [
+    "Une ionisation permanente.",
+    "Une tension électrique palpable.",
+    "Une vibration régulière.",
+    "Une oscillation inquiétante.",
+    "Une saturation magnétique.",
+    "Une mécanique autonome.",
+    "Un vent métallique.",
+    "Une corrosion lente.",
+    "Une verticalité vertigineuse.",
+    "Une interférence continue."
+  ],
+
+  "secret": [
+    "Une antenne capte un signal provenant d’un niveau interdit.",
+    "Les arcs électriques forment parfois un motif codé.",
+    "Le relais Sigma‑8 transmet un message non répertorié.",
+    "Un pylône s’incline légèrement vers les visiteurs.",
+    "Le champ électromagnétique réagit aux émotions.",
+    "Un drone de maintenance suit un trajet impossible.",
+    "Le vent saturé transporte des fragments de voix.",
+    "Une parabole rouillée capte une transmission d’il y a 20 ans.",
+    "Le réseau ascendant ouvre un canal vers une IA indépendante.",
+    "Les signaux parasites dessinent brièvement un visage."
+  ]
+}

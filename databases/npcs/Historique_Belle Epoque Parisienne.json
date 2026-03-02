@@ -1,0 +1,61 @@
+{
+    "firstNames": [
+        "Émile","Colette","Gustave","Camille","Henri","Suzanne","Armand","Lucienne","Maurice","Juliette",
+        "Léon","Marguerite","Paul","Gabrielle","Alfred","Hortense","Jules","Élise","Félix","Odette",
+        "Marcel","Blanche","Georges","Aimée","Théodore","Clémence","René","Amélie","Victor","Eugénie",
+        "Raymond","Cécile","Anatole","Flora","Étienne","Anaïs","Louis","Madeleine","Achille","Rose",
+        "André","Violette","Charles","Isabelle","Raoul","Adèle","Lucien","Berthe","Édouard","Lina"
+    ],
+    "lastNames": [
+        "Delaunay", "Moreau", "Lefèvre", "Dubois", "Garnier", "Lambert", "Rousseau", "Fontaine", "Durand", "Chevalier",
+        "Marchand", "Perrin", "Boucher", "Renaud", "Barbier", "Lemoine", "Bazin", "Charpentier", "Aubry", "Giraud",
+        "Bourgeois", "Lacombe", "Delacroix", "Carpentier", "Moulin", "Bertin", "Gaillard", "Rivière", "Poulain", "Leroux",
+        "Valette", "Beaumont", "Deschamps", "Lacour", "Fournier", "Navarre", "Bellanger", "Dutertre", "Masson", "Clément",
+        "Prévost", "Dumont", "Rolland", "Pasquier", "Vidal", "Bailly", "Colbert", "Duroc", "Leroy", "Arnaud"
+    ],
+    "jobs": [
+        "Peintre impressionniste", "Modiste", "Danseuse de cabaret", "Écrivain naturaliste", "Journaliste", "Photographe",
+        "Ingénieur du Métropolitain", "Conducteur de fiacre", "Patron de café", "Chanteuse de music‑hall", "Acteur de théâtre",
+        "Artisan bijoutier", "Ouvrier métallurgiste", "Typographe", "Éditeur", "Professeur de lycée", "Étudiant en médecine",
+        "Médecin de quartier", "Bourgeoise de salon", "Rentier", "Marchand de journaux", "Fleuriste", "Couturière",
+        "Maître d’hôtel", "Garçon de café", "Peintre de Montmartre", "Sculpteur", "Architecte", "Inventeur",
+        "Électricien", "Conducteur de tramway", "Chauffeur d’automobile", "Cocher", "Libraire", "Bouquiniste",
+        "Chimiste", "Pharmacien", "Facteur", "Garde républicain", "Modèle d’artiste", "Chanteur de rue", "Organiste",
+        "Maître verrier", "Horloger", "Restaurateur", "Patron de cabaret", "Dompteur", "Magicien de scène", "Calligraphe"
+    ],
+    "traits": [
+        "Élégant", "Raffiné", "Ambitieux", "Rêveur", "Éloquent", "Sceptique", "Superstitieux", "Généreux", "Avaricieux", "Curieux",
+        "Parle vite", "Parle lentement", "Parle avec emphase", "A un rire discret", "A un rire sonore", "A une voix douce",
+        "A une voix grave", "A un accent parisien", "A une démarche élégante", "A une démarche lourde", "A un regard perçant",
+        "A un regard doux", "A un regard inquiet", "A un regard fier", "A un humour subtil", "A un humour noir",
+        "A une mémoire parfaite", "A une mémoire défaillante", "A une obsession pour l’art", "A une obsession pour la modernité",
+        "A une obsession pour la politique", "A une obsession pour les cafés", "A un air fatigué", "A un air inspiré",
+        "A un air déterminé", "A un air absent", "A un air noble", "A un air mystérieux", "A un air radieux",
+        "A un air ombrageux", "A un air bienveillant", "A un air fier", "A un air prudent", "A un air mélancolique",
+        "A un air envoûtant", "A un air calme", "A un air tourmenté", "A un air bohème", "A un air exalté"
+    ],
+    "looks": [
+        "Robe en dentelle", "Chapeau à plumes", "Redingote noire", "Canne sculptée", "Gants en cuir", "Bottes vernies",
+        "Robe à corset", "Ombrelle brodée", "Montre à gousset", "Manteau long", "Écharpe en soie", "Chemise blanche impeccable",
+        "Cravate lavallière", "Veste en velours", "Pantalon sombre", "Chaussures fines", "Gants brodés", "Cape de soirée",
+        "Chapeau melon", "Manteau trempé", "Bottes usées", "Gants troués", "Robe simple", "Cape en laine",
+        "Chapeau rond", "Veste élimée", "Pantalon froissé", "Chaussures boueuses", "Cape épaisse", "Chapeau large",
+        "Robe de soirée", "Bijoux anciens", "Cape brodée", "Chapeau décoré", "Veste sombre", "Pantalon rayé",
+        "Chaussures vernies", "Gants de cérémonie", "Cape de velours", "Chapeau de cabaret", "Robe noire", "Collier de perles",
+        "Tunique de travail", "Tablier d’atelier", "Veste de serveur", "Pantalon clair", "Chaussures simples", "Gants simples"
+    ],
+    "secrets": [
+        "A posé for un peintre célèbre", "A un passé de communard", "A un frère disparu", "A un secret sur un cabaret",
+        "A un passé de voleur", "A un secret sur une œuvre d’art", "A un passé de modèle", "A un secret sur un mécène",
+        "A un passé de soldat", "A un secret sur une bataille", "A un passé de marin", "A un secret sur une cargaison",
+        "A un passé de journaliste", "A un secret sur un article censuré", "A un passé de médecin", "A un secret sur une maladie",
+        "A un passé de couturière", "A un secret sur une robe", "A un passé de danseuse", "A un secret sur un prince étranger",
+        "A un passé de magicien", "A un secret sur un tour", "A un passé de photographe", "A un secret sur une image",
+        "A un passé de libraire", "A un secret sur un livre interdit", "A un passé de noble déchu", "A un secret sur une trahison",
+        "A un passé de voyageur", "A un secret sur une île", "A un passé de garde", "A un secret sur un manoir",
+        "A un passé de conspirateur", "A un secret sur un complot", "A un passé de musicien", "A un secret sur une chanson",
+        "A un passé de peintre raté", "A un secret sur une fresque", "A un passé de sculpteur", "A un secret sur une statue",
+        "A un passé de serveur", "A un secret sur un client", "A un passé de survivant", "A un secret sur une cave",
+        "A un passé de marchand", "A un secret sur une cargaison", "A un passé de bohème", "A un secret sur une muse"
+    ]
+}

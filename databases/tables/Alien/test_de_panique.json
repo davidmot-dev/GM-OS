@@ -1,0 +1,76 @@
+{
+    "name": "Test de Panique",
+    "dice": "1d6",
+    "entries": [
+        {
+            "min": 1,
+            "max": 6,
+            "title": "JE TIENS LE COUP",
+            "description": "Vous parvenez à maîtriser vos nerfs. Tout juste.",
+            "effect": "Aucun effet mécanique"
+        },
+        {
+            "min": 7,
+            "max": 7,
+            "title": "TRESSAILLEMENT NERVEUX",
+            "description": "Votre corps réagit instinctivement à la terreur.",
+            "effect": "Votre NIVEAU DE STRESS et celui de tous les PJ amicaux situés à COURTE portée augmentent de 1."
+        },
+        {
+            "min": 8,
+            "max": 8,
+            "title": "TREMBLEMENT",
+            "description": "Vous êtes pris d'incoercibles tremblements.",
+            "effect": "Tous les tests de compétence utilisant l'AGILITÉ subissent un modificateur de -2 jusqu'à ce que votre panique s'arrête."
+        },
+        {
+            "min": 9,
+            "max": 9,
+            "title": "OBJET LÂCHÉ",
+            "description": "Le stress, l'affolement ou la soudaine prise de conscience vous fait lâcher ce que vous tenez.",
+            "effect": "Vous lâchez une arme ou un autre objet important (choisi par le MJ). Votre NIVEAU DE STRESS augmente de 1."
+        },
+        {
+            "min": 10,
+            "max": 10,
+            "title": "FIGÉ",
+            "description": "La peur ou le stress vous paralyse totalement.",
+            "effect": "Vous êtes paralysé pendant un Round et perdez votre action lente suivante. Votre NIVEAU DE STRESS et celui de tous les PJ amicaux à COURTE portée augmentent de 1."
+        },
+        {
+            "min": 11,
+            "max": 11,
+            "title": "TOUS AUX ABRIS !",
+            "description": "Vous devez vous éloigner du danger et trouver un endroit sûr.",
+            "effect": "Doit utiliser la prochaine action pour fuir. Test de MOBILITÉ autorisé pour battre en retraite si au CONTACT. STRESS baisse de 1, mais celui des PJ amicaux à COURTE portée augmente de 1. Agit normalement après un Round."
+        },
+        {
+            "min": 12,
+            "max": 12,
+            "title": "HURLEMENT",
+            "description": "Vous hurlez à pleins poumons pendant un Round.",
+            "effect": "Vous perdez votre action lente suivante. Votre NIVEAU DE STRESS baisse de 1, mais tout personnage amical qui vous entend doit immédiatement effectuer un test de Panique."
+        },
+        {
+            "min": 13,
+            "max": 13,
+            "title": "FUITE",
+            "description": "Vous n'en pouvez plus et fuyez vers un lieu sûr sans rien tenter de dangereux.",
+            "effect": "Pas de test de MOBILITÉ possible pour battre en retraite. STRESS baisse de 1. Tout personnage amical qui vous voit fuir doit immédiatement faire un test de Panique."
+        },
+        {
+            "min": 14,
+            "max": 14,
+            "title": "PSYCHOSE",
+            "description": "Crise meurtrière : vous attaquez la personne ou la créature la plus proche, amicale ou non.",
+            "effect": "Ne s'arrête que si vous ou la cible êtes Brisé. Tout personnage amical assistant à la crise doit immédiatement faire un test de Panique."
+        },
+        {
+            "min": 15,
+            "max": 20,
+            "title": "CATATONIE",
+            "description": "Vous vous écroulez et vous ne pouvez plus ni bouger ni parler, les yeux perdus dans le vide.",
+            "effect": "Incapable d'agir ou de se déplacer jusqu'à ce que l'état soit levé par une intervention extérieure."
+        }
+    ]
+}

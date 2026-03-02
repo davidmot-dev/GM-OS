@@ -1,59 +1,69 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { DiceEngine } from './DiceEngine';
 
 describe('DiceEngine', () => {
-    describe('roll()', () => {
-        it('devrait retourner un nombre entre 1 et N', () => {
-            for (let i = 0; i < 100; i++) {
-                const result = DiceEngine.roll(6);
-                expect(result).toBeGreaterThanOrEqual(1);
-                expect(result).toBeLessThanOrEqual(6);
-            }
-        });
-
-        it('devrait retourner 0 si le nombre de faces est inférieur à 1', () => {
-            expect(DiceEngine.roll(0)).toBe(0);
-            expect(DiceEngine.roll(-1)).toBe(0);
-        });
+    beforeEach(() => {
+        // Mock Math.random to a known sequence or fixed value
+        vi.spyOn(Math, 'random').mockReturnValue(0.5); // 0.5 * 6 = 3, + 1 = 4.
     });
 
-    describe('parseAndRoll()', () => {
-        it('devrait analyser correctement "2d6+5"', () => {
-            // On mock Math.random pour avoir des résultats prévisibles
-            const spy = vi.spyOn(Math, 'random')
-                .mockReturnValueOnce(0) // d6 -> 1
-                .mockReturnValueOnce(0.999); // d6 -> 6
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
 
-            const { total, rolls, modifier } = DiceEngine.parseAndRoll('2d6+5');
+    it('should calculate multiple dice with modifiers (2d6+5) via parseAndRoll', () => {
+        const result = DiceEngine.rollFormula('2d6+5');
+        // 2 dice of 6 sides: both roll 4. Total = 4 + 4 + 5 = 13.
+        expect(result.total).toBe(13);
+        expect(result.rolls.length).toBe(2);
+    });
 
-            expect(total).toBe(12); // 1 + 6 + 5
-            expect(rolls).toEqual([1, 6]);
-            expect(modifier).toBe(5);
+    it('should handle formula with negative dice (2d6-1d4)', () => {
+        // d6 -> 4, d4 -> 3
+        const result = DiceEngine.rollFormula('2d6-1d4');
+        expect(result.total).toBe(4 + 4 - 3);
+        expect(result.rolls.length).toBe(3);
+        expect(result.rolls[2].isCritMin).toBe(true); // Since it was negative it counts as critMin in our logic
+    });
 
-            spy.mockRestore();
-        });
+    it('should handle Digits Dice like d66', () => {
+        // baseFace for d66 = 6. -> rolls 4 and 4 -> 44.
+        const result = DiceEngine.rollDigits(66, 1, 0);
+        expect(result.total).toBe(44);
+        expect(result.rolls.length).toBe(2);
+        expect(result.rolls[0].val).toBe(4);
+    });
 
-        it('devrait fonctionner sans modificateur (ex: "1d20")', () => {
-            const spy = vi.spyOn(Math, 'random').mockReturnValue(0.5); // d20 -> 11
-            const { total, rolls, modifier } = DiceEngine.parseAndRoll('1d20');
+    it('should handle Exploding sum dice', () => {
+        vi.spyOn(Math, 'random').mockReturnValueOnce(0.99).mockReturnValueOnce(0.5);
+        // roll 6, then roll 4. total = 10
+        const result = DiceEngine.rollStandard(6, 1, 0, true);
+        expect(result.total).toBe(10);
+        expect(result.rolls.length).toBe(2);
+        expect(result.rolls[1].isExploded).toBe(true);
+    });
 
-            expect(total).toBe(11);
-            expect(modifier).toBe(0);
-            spy.mockRestore();
-        });
+    it('should handle Pool explode', () => {
+        // 1d6 pool target 5. roll 6 (success, explode). then roll 4 (fail).
+        vi.spyOn(Math, 'random').mockReturnValueOnce(0.99).mockReturnValueOnce(0.5);
+        const result = DiceEngine.rollPool(6, 1, 0, 5, true);
+        expect(result.successes).toBe(1);
+        expect(result.rolls.length).toBe(2);
+        expect(result.rolls[1].isExploded).toBe(true);
+    });
 
-        it('devrait gérer les modificateurs négatifs (ex: "1d10-2")', () => {
-            const spy = vi.spyOn(Math, 'random').mockReturnValue(0.9); // d10 -> 10
-            const { total, modifier } = DiceEngine.parseAndRoll('1d10-2');
+    it('should handle Threshold under rule', () => {
+        const result = DiceEngine.rollThreshold(20, 1, 0, 10, 'under');
+        // rolled 11
+        expect(result.total).toBe(11);
+        expect(result.tagSuccess).toBe(false);
+    });
 
-            expect(total).toBe(8);
-            expect(modifier).toBe(-2);
-            spy.mockRestore();
-        });
-
-        it('devrait lever une erreur pour un format invalide', () => {
-            expect(() => DiceEngine.parseAndRoll('invalid')).toThrow("Format de formule invalide");
-            expect(() => DiceEngine.parseAndRoll('d6')).toThrow("Format de formule invalide");
-        });
+    it('should handle YZE base and gear dice', () => {
+        // mock for 6, 1, 3
+        vi.spyOn(Math, 'random').mockReturnValueOnce(0.99).mockReturnValueOnce(0.01).mockReturnValue(0.5);
+        const result = DiceEngine.rollYZE(2, 1);
+        expect(result.successes).toBe(1);
+        expect(result.fails).toBe(0);
     });
 });

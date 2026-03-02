@@ -1,0 +1,470 @@
+import React, { useState } from 'react';
+import { DiceEngine } from './DiceEngine';
+import type { RollResult } from './DiceEngine';
+import { Dices, RotateCcw, Zap, Settings2, BookmarkPlus, X } from 'lucide-react';
+
+const generateId = () => Math.random().toString(36).substring(7);
+
+interface RollRecord extends RollResult {
+    id: string;
+    timestamp: Date;
+    title: string;
+    batchId?: string;
+}
+
+interface QuickRoll {
+    id: string;
+    label: string;
+    formula: string; // ex: 1d20+5
+}
+
+type DiceMode = 'standard' | 'formula' | 'pool' | 'pool_explode' | 'threshold' | 'advantage' | 'disadvantage' | 'exploding' | 'fate' | 'rolemaster' | 'yze';
+
+const DiceBoard: React.FC = () => {
+    // Config
+    const [mode, setMode] = useState<DiceMode>('standard');
+    const [diceCount, setDiceCount] = useState<number>(1);
+    const [modifier, setModifier] = useState<number | string>(0);
+    const [target, setTarget] = useState<number>(10);
+    const [gearCount, setGearCount] = useState<number>(1); // For YZE secondary pool
+    const [formulaInput, setFormulaInput] = useState<string>('2d6+5');
+
+    // v3 Features State
+    const [targetRule, setTargetRule] = useState<'over' | 'under'>('over');
+    const [batchCount, setBatchCount] = useState<number>(1);
+
+    // Data
+    const [history, setHistory] = useState<RollRecord[]>([]);
+    const [quickRolls, setQuickRolls] = useState<QuickRoll[]>([
+        { id: 'qr1', label: 'Attaque Épée Longue', formula: '1d20+7' },
+        { id: 'qr2', label: 'Dégâts', formula: '1d8+4' },
+        { id: 'qr3', label: 'Lancer D66', formula: '1d66' }
+    ]);
+    const [newQuickRollLabel, setNewQuickRollLabel] = useState('');
+    const [newQuickRollFormula, setNewQuickRollFormula] = useState('');
+    const [isAddingQuickRoll, setIsAddingQuickRoll] = useState(false);
+
+    const diceTypes = [4, 6, 8, 10, 12, 20, 100];
+
+    const resetConfig = () => {
+        setDiceCount(1);
+        setModifier(0);
+        setTarget(10);
+        setGearCount(1);
+        setBatchCount(1);
+        setTargetRule('over');
+        setFormulaInput('2d6+5');
+    };
+
+    const executeRoll = (sides: number = 20, isFormulaText: boolean = false, customFormula: string = "") => {
+        let result: RollResult;
+        let title = `${diceCount}d${sides}`;
+
+        const modVal = typeof modifier === 'string' ? (parseInt(modifier.replace('+', ''), 10) || 0) : modifier;
+
+        if (isFormulaText) {
+            const formObj = customFormula || formulaInput;
+            result = DiceEngine.rollFormula(formObj);
+            title = `Formule: ${formObj}`;
+        } else {
+            switch (mode) {
+                case 'standard':
+                    result = DiceEngine.rollStandard(sides, diceCount, modVal, false); // Always false for standard
+                    break;
+                case 'exploding':
+                    result = DiceEngine.rollStandard(sides, diceCount, modVal, true);
+                    title = `Explosif ${diceCount}d${sides}`;
+                    break;
+                case 'pool':
+                    result = DiceEngine.rollPool(sides, diceCount, modVal, target, false); // Always false for pool
+                    title = `Pool ${diceCount}d${sides} (Diff ${target})`;
+                    break;
+                case 'pool_explode':
+                    result = DiceEngine.rollPool(sides, diceCount, modVal, target, true);
+                    title = `Pool Exp. ${diceCount}d${sides} (Diff ${target})`;
+                    break;
+                case 'threshold':
+                    result = DiceEngine.rollThreshold(sides, diceCount, modVal, target, targetRule);
+                    title = `Test ${diceCount}d${sides} ${targetRule === 'over' ? '≥' : '≤'} ${target}`;
+                    break;
+                case 'advantage':
+                    result = DiceEngine.rollAdvantage(sides, modVal, true, target, targetRule);
+                    title = `Avantage 2d${sides}`;
+                    break;
+                case 'disadvantage':
+                    result = DiceEngine.rollAdvantage(sides, modVal, false, target, targetRule);
+                    title = `Désavantage 2d${sides}`;
+                    break;
+                case 'fate':
+                    result = DiceEngine.rollFate(diceCount, modVal);
+                    title = `FATE ${diceCount}dF`;
+                    break;
+                case 'rolemaster':
+                    result = DiceEngine.rollRolemaster(modVal);
+                    title = `Rolemaster d100`;
+                    break;
+                case 'yze':
+                    result = DiceEngine.rollYZE(diceCount, gearCount);
+                    title = `YZE (${diceCount} Base + ${gearCount} Gear)`;
+                    break;
+                default:
+                    result = DiceEngine.rollStandard(sides, diceCount, modVal);
+            }
+        }
+        return { result, title };
+    };
+
+    const handleRoll = (sides: number = 20, isFormulaText: boolean = false, customFormula: string = "") => {
+        try {
+            const batchId = batchCount > 1 ? generateId() : undefined;
+            const newRecords: RollRecord[] = [];
+
+            for (let i = 0; i < batchCount; i++) {
+                const { result, title } = executeRoll(sides, isFormulaText, customFormula);
+
+                let repTitle = title;
+                if (batchCount > 1) repTitle = `${title} (Jet ${i + 1}/${batchCount})`;
+
+                newRecords.push({
+                    ...result,
+                    id: generateId(),
+                    timestamp: new Date(),
+                    title: repTitle,
+                    batchId
+                });
+            }
+
+            setHistory((prev) => [...newRecords.reverse(), ...prev].slice(0, 50));
+        } catch (error) {
+            console.error("Erreur de lancer:", error);
+        }
+    };
+
+    const handleQuickRoll = (formula: string, label: string) => {
+        handleRoll(0, true, formula);
+        // Rename the last added history to match label
+        setHistory((prev) => {
+            const updated = [...prev];
+            // Since we batch-added them, the newest are at the start. Update the title.
+            // If batch = 1, just update 0. If batch > 1, update 0 to batchCount
+            for (let i = 0; i < batchCount && i < updated.length; i++) {
+                updated[i].title = `${label} ${batchCount > 1 ? `(Jet ${batchCount - i}/${batchCount})` : ''}`.trim();
+            }
+            return updated;
+        });
+    };
+
+    const addQuickRoll = () => {
+        if (newQuickRollLabel && newQuickRollFormula) {
+            setQuickRolls([...quickRolls, { id: generateId(), label: newQuickRollLabel, formula: newQuickRollFormula }]);
+            setIsAddingQuickRoll(false);
+            setNewQuickRollLabel('');
+            setNewQuickRollFormula('');
+        }
+    };
+
+    const removeQuickRoll = (id: string) => {
+        setQuickRolls(quickRolls.filter(qr => qr.id !== id));
+    };
+
+    return (
+        <div className="flex h-[calc(100vh-8rem)] gap-6 text-slate-200">
+
+            {/* LEFT & CENTER COLUMN: Config + Dices + Quick Rolls */}
+            <div className="flex-1 flex flex-col gap-6 overflow-y-auto custom-scrollbar pr-2">
+
+                {/* Top: Engine Config */}
+                <div className="bg-slate-900/40 p-5 rounded-2xl border border-slate-800/80 backdrop-blur-md shadow-xl">
+                    <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center text-indigo-400 border border-indigo-500/30">
+                                <Settings2 size={20} />
+                            </div>
+                            <h2 className="text-xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">Dice Engine</h2>
+                        </div>
+                        <button onClick={resetConfig} className="text-xs flex items-center gap-1.5 text-slate-500 hover:text-indigo-400 transition-colors bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800">
+                            <RotateCcw size={14} /> Réinitialiser
+                        </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div className="space-y-2">
+                            <label className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Mode</label>
+                            <select
+                                value={mode}
+                                onChange={(e) => setMode(e.target.value as DiceMode)}
+                                className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2 px-3 text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50 transition-all text-slate-300"
+                            >
+                                <option value="standard">Standard d20/d6</option>
+                                <option value="exploding">Somme Explosive</option>
+                                <option value="formula">Formule Libre</option>
+                                <option value="threshold">Jet de Seuil (Target)</option>
+                                <option value="pool">Pool de Dés (Succès)</option>
+                                <option value="pool_explode">Pool Explosif</option>
+                                <option value="advantage">Avantage (Garde Meilleur)</option>
+                                <option value="disadvantage">Désavantage (Garde Pire)</option>
+                                <option value="yze">Year Zero Engine</option>
+                                <option value="fate">FATE / Fudge</option>
+                                <option value="rolemaster">Rolemaster</option>
+                            </select>
+                        </div>
+
+                        {mode === 'formula' ? (
+                            <div className="space-y-2 col-span-2">
+                                <label className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Expression (ex: 2d6+1d4-2)</label>
+                                <div className="flex bg-slate-950 border border-slate-800 rounded-xl overflow-hidden focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500/50 h-[38px]">
+                                    <input
+                                        type="text" value={formulaInput} onChange={e => setFormulaInput(e.target.value)}
+                                        className="w-full bg-transparent px-4 py-2 font-mono text-sm text-slate-200 outline-none"
+                                        placeholder="Entrez une formule..."
+                                    />
+                                </div>
+                            </div>
+                        ) : (
+                            <>
+                                {/* Qty & Mod */}
+                                {mode === 'yze' ? (
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Dés Base/Equip</label>
+                                        <div className="flex space-x-2">
+                                            <div className="flex flex-1 bg-slate-950 border border-slate-800 rounded-xl overflow-hidden shadow-inner h-[38px]">
+                                                <span className="bg-yellow-500/20 text-yellow-500 text-xs px-2 flex items-center border-r border-slate-800">B</span>
+                                                <input type="number" value={diceCount} readOnly className="w-full bg-transparent text-center font-semibold text-slate-200 outline-none" />
+                                                <div className="flex flex-col border-l border-slate-800">
+                                                    <button onClick={() => setDiceCount(diceCount + 1)} className="flex-1 px-1 flex items-center justify-center hover:bg-slate-800 text-xs">+</button>
+                                                    <button onClick={() => setDiceCount(Math.max(1, diceCount - 1))} className="flex-1 px-1 flex items-center justify-center hover:bg-slate-800 text-xs border-t border-slate-800">-</button>
+                                                </div>
+                                            </div>
+                                            <div className="flex flex-1 bg-slate-950 border border-slate-800 rounded-xl overflow-hidden shadow-inner h-[38px]">
+                                                <span className="bg-slate-500/20 text-slate-400 text-xs px-2 flex items-center border-r border-slate-800">E</span>
+                                                <input type="number" value={gearCount} readOnly className="w-full bg-transparent text-center font-semibold text-slate-200 outline-none" />
+                                                <div className="flex flex-col border-l border-slate-800">
+                                                    <button onClick={() => setGearCount(gearCount + 1)} className="flex-1 px-1 flex items-center justify-center hover:bg-slate-800 text-xs">+</button>
+                                                    <button onClick={() => setGearCount(Math.max(0, gearCount - 1))} className="flex-1 px-1 flex items-center justify-center hover:bg-slate-800 text-xs border-t border-slate-800">-</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className={`space-y-2 ${['rolemaster', 'advantage', 'disadvantage'].includes(mode) ? 'opacity-30 pointer-events-none' : ''}`}>
+                                        <label className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Quantité</label>
+                                        <div className="flex bg-slate-950 border border-slate-800 rounded-xl overflow-hidden h-[38px]">
+                                            <button onClick={() => setDiceCount(Math.max(1, diceCount - 1))} className="px-3 hover:bg-slate-800 text-slate-400 transition-colors">-</button>
+                                            <input type="number" value={diceCount} onChange={(e) => setDiceCount(Math.max(1, parseInt(e.target.value) || 1))} className="w-full bg-transparent text-center font-semibold text-slate-200 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                                            <button onClick={() => setDiceCount(diceCount + 1)} className="px-3 hover:bg-slate-800 text-slate-400 transition-colors">+</button>
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className={`space-y-2 ${['yze'].includes(mode) ? 'hidden' : ''}`}>
+                                    <label className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Modificateur</label>
+                                    <div className="flex bg-slate-950 border border-slate-800 rounded-xl overflow-hidden h-[38px]">
+                                        <button onClick={() => setModifier((typeof modifier === 'number' ? modifier : parseInt(modifier.toString().replace('+', '')) || 0) - 1)} className="px-3 hover:bg-slate-800 text-slate-400 transition-colors">-</button>
+                                        <input type="text" value={modifier === 0 || modifier === "0" ? "0" : typeof modifier === 'number' && modifier > 0 ? `+${modifier}` : modifier} onChange={(e) => {
+                                            const raw = e.target.value.replace(/[^0-9+-]/g, '');
+                                            if (raw === '' || raw === '-' || raw === '+') setModifier(raw);
+                                            else setModifier(parseInt(raw.replace('+', ''), 10) || 0);
+                                        }} className="w-full bg-transparent text-center font-semibold text-slate-200 outline-none" />
+                                        <button onClick={() => setModifier((typeof modifier === 'number' ? modifier : parseInt(modifier.toString().replace('+', '')) || 0) + 1)} className="px-3 hover:bg-slate-800 text-slate-400 transition-colors">+</button>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Répétitions</label>
+                                    <div className="flex bg-slate-950 border border-slate-800 rounded-xl overflow-hidden h-[38px]">
+                                        <button onClick={() => setBatchCount(Math.max(1, batchCount - 1))} className="px-3 hover:bg-slate-800 text-slate-400 transition-colors">-</button>
+                                        <input type="number" value={batchCount} readOnly className="w-full bg-transparent text-center font-semibold text-slate-200 outline-none" />
+                                        <button onClick={() => setBatchCount(Math.min(20, batchCount + 1))} className="px-3 hover:bg-slate-800 text-slate-400 transition-colors">+</button>
+                                    </div>
+                                </div>
+                            </>
+                        )}
+
+                        {/* Dynamic Inputs depending on mode */}
+                        {['pool', 'pool_explode', 'threshold', 'advantage', 'disadvantage'].includes(mode) && (
+                            <div className="space-y-2">
+                                <label className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Seuil & Règle</label>
+                                <div className="flex bg-slate-950 border border-slate-800 rounded-xl overflow-hidden h-[38px]">
+                                    <select value={targetRule} onChange={e => setTargetRule(e.target.value as 'over' | 'under')} className="bg-slate-900 text-slate-300 text-xs px-2 outline-none border-r border-slate-800">
+                                        <option value="over">≥</option>
+                                        <option value="under">≤</option>
+                                    </select>
+                                    <button onClick={() => setTarget(target - 1)} className="px-2 hover:bg-slate-800 text-slate-400 transition-colors">-</button>
+                                    <input type="number" value={target} readOnly className="w-full bg-transparent text-center font-semibold text-slate-200 outline-none" />
+                                    <button onClick={() => setTarget(target + 1)} className="px-2 hover:bg-slate-800 text-slate-400 transition-colors">+</button>
+                                </div>
+                            </div>
+                        )}
+
+
+
+                    </div>
+                </div>
+
+                {/* Center: Dices Grid */}
+                <div className="bg-slate-900/40 p-5 rounded-2xl border border-slate-800/80 backdrop-blur-md shadow-xl flex flex-col items-center justify-center min-h-[160px]">
+                    {['formula', 'fate', 'rolemaster', 'yze'].includes(mode) ? (
+                        <button onClick={() => handleRoll(0, mode === 'formula')} className="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 shadow-lg shadow-indigo-500/20 rounded-xl text-xl font-bold uppercase tracking-widest transition-transform active:scale-95">
+                            LANCER
+                        </button>
+                    ) : (
+                        <div className="grid grid-cols-4 lg:grid-cols-7 gap-4 w-full">
+                            {diceTypes.map((sides) => (
+                                <button
+                                    key={sides}
+                                    onClick={() => handleRoll(sides)}
+                                    className="aspect-square flex flex-col items-center justify-center gap-2 rounded-2xl bg-slate-800/30 hover:bg-indigo-600/90 text-slate-300 hover:text-white border border-slate-700/50 hover:border-indigo-400 transition-all duration-300 group relative overflow-hidden shadow-lg"
+                                >
+                                    <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    <img src={`/icons/D${sides}b.png`} alt={`d${sides}`} className="w-10 h-10 object-contain relative z-10 group-hover:scale-110 transition-transform drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] group-hover:drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]" />
+                                    <span className="text-xs font-bold tracking-widest relative z-10 opacity-70 group-hover:opacity-100">d{sides}</span>
+                                    {sides === 20 && <div className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />}
+                                </button>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
+                {/* Bottom: Quick Rolls Panel */}
+                <div className="bg-slate-900/40 p-5 rounded-2xl border border-slate-800/80 backdrop-blur-md shadow-xl flex-1 flex flex-col">
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2">
+                            <Zap className="text-amber-400" size={18} />
+                            <h3 className="text-sm font-bold text-slate-300 uppercase tracking-widest">Quick Rolls</h3>
+                        </div>
+                        {!isAddingQuickRoll && (
+                            <button onClick={() => setIsAddingQuickRoll(true)} className="text-xs flex items-center gap-1 text-slate-400 hover:text-indigo-400 transition-colors bg-slate-800/50 px-3 py-1.5 rounded-lg border border-slate-700">
+                                <BookmarkPlus size={14} /> Ajouter
+                            </button>
+                        )}
+                    </div>
+
+                    {isAddingQuickRoll && (
+                        <div className="flex items-center gap-3 mb-4 bg-slate-950 p-3 rounded-xl border border-indigo-500/30">
+                            <input
+                                type="text" placeholder="Nom (ex: Soin)" value={newQuickRollLabel} onChange={(e) => setNewQuickRollLabel(e.target.value)}
+                                className="flex-1 bg-transparent border-b border-slate-700 focus:border-indigo-500 text-sm py-1 outline-none text-slate-200"
+                            />
+                            <input
+                                type="text" placeholder="Formule (ex: 2d8+3)" value={newQuickRollFormula} onChange={(e) => setNewQuickRollFormula(e.target.value)}
+                                className="flex-1 bg-transparent border-b border-slate-700 focus:border-indigo-500 text-sm py-1 outline-none text-slate-200"
+                            />
+                            <button onClick={addQuickRoll} className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold transition-colors">OK</button>
+                            <button onClick={() => setIsAddingQuickRoll(false)} className="px-2 py-1.5 text-slate-400 hover:text-rose-400 transition-colors"><X size={16} /></button>
+                        </div>
+                    )}
+
+                    <div className="flex flex-wrap gap-3">
+                        {quickRolls.map(qr => (
+                            <div key={qr.id} className="group flex items-center gap-px bg-slate-950/50 border border-slate-700 hover:border-indigo-500/50 rounded-xl overflow-hidden transition-all shadow-md">
+                                <button
+                                    onClick={() => handleQuickRoll(qr.formula, qr.label)}
+                                    className="px-4 py-2 hover:bg-slate-800 transition-colors flex flex-col items-start"
+                                >
+                                    <span className="text-sm font-semibold text-slate-200">{qr.label}</span>
+                                    <span className="text-[10px] text-indigo-400 font-mono tracking-wider">{qr.formula}</span>
+                                </button>
+                                <button onClick={() => removeQuickRoll(qr.id)} className="px-2 self-stretch hover:bg-rose-500/20 text-slate-600 hover:text-rose-400 transition-colors">
+                                    <X size={14} />
+                                </button>
+                            </div>
+                        ))}
+                        {quickRolls.length === 0 && <p className="text-xs text-slate-500 italic py-2">Aucun raccourci pour l'instant.</p>}
+                    </div>
+                </div>
+            </div>
+
+            {/* RIGHT COLUMN: Results & History */}
+            <div className="w-[400px] flex flex-col gap-6">
+
+                {/* Latest Result */}
+                <div className="min-h-[16rem] max-h-[50%] flex-shrink-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/40 via-slate-900/60 to-slate-950 border border-indigo-500/20 rounded-2xl flex flex-col items-center justify-center p-6 relative overflow-hidden shadow-2xl backdrop-blur-xl">
+                    {history.length > 0 ? (
+                        <>
+                            <p className="text-slate-400 font-medium mb-3 relative z-10 text-sm text-center line-clamp-2">{history[0].title}</p>
+                            <div className="text-7xl font-black text-white mb-4 z-10 drop-shadow-[0_0_15px_rgba(99,102,241,0.5)]">
+                                {history[0].totalDisplay}
+                            </div>
+                            {history[0].tagSuccess !== undefined && (
+                                <div className={`px-4 py-1 mb-2 rounded-full text-xs font-bold uppercase tracking-widest z-10 shadow-lg ${history[0].tagSuccess ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50' : 'bg-rose-500/20 text-rose-400 border border-rose-500/50'}`}>
+                                    {history[0].tagSuccess ? 'Succès' : 'Échec'}
+                                </div>
+                            )}
+                            <div className="flex flex-wrap gap-2 mt-2 justify-center z-10 max-h-[8rem] w-full overflow-y-auto custom-scrollbar px-2 py-1">
+                                {history[0].rolls.map((r, i) => (
+                                    <span key={i} className={`w-8 h-8 flex items-center justify-center rounded-lg text-xs font-bold shadow-inner ${r.cssClass ? r.cssClass + ' bg-slate-950 border' :
+                                        r.isExploded ? 'bg-indigo-500/30 text-indigo-100 border border-indigo-400/50' :
+                                            r.isCritMax ? 'bg-emerald-500/30 text-emerald-100 border border-emerald-400/50' :
+                                                r.isCritMin ? 'bg-rose-500/30 text-rose-100 border border-rose-400/50' :
+                                                    'bg-slate-800 border border-slate-700 text-slate-300'
+                                        }`}>
+                                        {r.displayStr ? r.displayStr : r.val}
+                                    </span>
+                                ))}
+                            </div>
+                        </>
+                    ) : (
+                        <div className="text-center opacity-50 relative z-10">
+                            <Dices size={48} className="mx-auto mb-4 text-slate-600" />
+                            <p className="text-slate-500 font-medium">En attente d'un lancer...</p>
+                        </div>
+                    )}
+                </div>
+
+                {/* History Log */}
+                <div className="flex-1 bg-slate-900/40 border border-slate-800/80 rounded-2xl p-5 flex flex-col overflow-hidden backdrop-blur-md shadow-xl">
+                    <div className="flex items-center justify-between mb-4 pb-2 border-b border-slate-800">
+                        <h3 className="text-sm font-bold text-slate-300 uppercase tracking-widest">Historique</h3>
+                        <button
+                            onClick={() => setHistory([])}
+                            disabled={history.length === 0}
+                            className="flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-slate-300 transition-colors disabled:opacity-30"
+                        >
+                            <RotateCcw size={12} /> Vider
+                        </button>
+                    </div>
+
+                    <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-3">
+                        {history.map(record => (
+                            <div key={record.id} className="flex flex-col gap-2 p-3 rounded-xl bg-slate-950/50 border border-slate-800/50 hover:bg-slate-950 transition-colors relative">
+                                {record.batchId && <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500/20 rounded-l-xl"></div>}
+                                <div className="flex items-center justify-between">
+                                    <span className="text-xs text-slate-500">{record.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
+                                    <span className="text-xs font-semibold text-indigo-400 max-w-[60%] truncate text-right">{record.title}</span>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                    <div className="flex flex-wrap gap-1 max-w-[60%] items-center">
+                                        {record.rolls.map((r, idx) => (
+                                            <span key={idx} className={`text-[10px] px-1.5 py-0.5 rounded flex items-center justify-center ${r.cssClass ? r.cssClass.replace('text-', 'bg-slate-950 border border-') :
+                                                r.isExploded ? 'bg-indigo-500/20 text-indigo-400' :
+                                                    r.isCritMax ? 'bg-emerald-500/20 text-emerald-400' :
+                                                        r.isCritMin ? 'bg-rose-500/20 text-rose-400' :
+                                                            'bg-slate-800 text-slate-400'
+                                                }`}>
+                                                {r.displayStr || r.val}
+                                            </span>
+                                        ))}
+                                        {record.modifier !== 0 && (
+                                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 font-bold ml-1">
+                                                {record.modifier > 0 ? '+' : ''}{record.modifier}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <span className="text-lg font-black text-slate-100">{record.totalDisplay}</span>
+                                </div>
+                                {record.tagSuccess !== undefined && (
+                                    <div className={`mt-1 text-[10px] uppercase font-bold text-right ${record.tagSuccess ? 'text-emerald-500' : 'text-rose-500'}`}>
+                                        {record.tagSuccess ? 'Succès' : 'Échec'}
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    );
+};
+
+export default DiceBoard;

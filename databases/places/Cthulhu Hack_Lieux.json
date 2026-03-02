@@ -1,0 +1,19 @@
+{
+    "name": [
+        "Le Manoir Blackwood", "La Bibliothèque Whitmore", "L'Entrepôt de Patrick Gurney", "Le Phare de Jack Malone", "La Boutique de jouets d'Alice Parker",
+        "La Scierie abandonnée", "L'Orphelinat du silence", "La Crypte de l'Église Hill Street", "Le Cabinet de curiosités de Jeremy Owans", "Le Loft de l'acier rouillé",
+        "La Maison aux dix cheminées", "Le Tunnel des galeries souterraines", "L'Atelier de Clarence Bell", "La Pension de Nancy Davis", "Le Théâtre des masques"
+    ],
+    "description": [
+        "Une bâtisse victorienne aux fenêtres barricadées par des planches", "Un bâtiment en briques noircies par un ancien incendie", "Une façade recouverte de lierre grimpant avec une porte massive en bois exotique", "Un immeuble Art déco dont la sonnette représente un lion", "Une maison de plain-pied possédant étrangement dix cheminées",
+        "Un ancien entrepôt industriel rénové avec une lourde porte de métal coulissante", "Une tour d'angle victorienne surplombant la rue", "Un jardin de rosiers protégé par un muret et des grilles pointues", "Une façade en marbre blanc immaculé avec des colonnes ioniques", "Un bâtiment moderne en verre et acier reflétant un ciel gris"
+    ],
+    "ambiance": [
+        "Une odeur d'humus et de marée stagnante", "Le tintinnabule incessant d'un carillon de bois", "Le grésillement d'un vieux phonographe diffusant des voix", "Une sensation de toute-puissance mêlée d'effroi", "Des lumières étranges qui brillent aux fenêtres la nuit",
+        "Le son d'une cloche en cuivre résonnant dans le brouillard", "Une atmosphère oppressante de secrets mal gardés", "Le silence de mort d'une bibliothèque millénaire", "L'odeur métallique et verdâtre d'un alliage inconnu", "Des ombres qui semblent bouger sur les murs sans source de lumière"
+    ],
+    "secret": [
+        "Des trous dans le sol mènent à des cités souterraines", "Un métal verdâtre aux propriétés magnétiques curieuses y est caché", "Des partitions de musique y attirent des entités surnaturelles", "Des plans de la demeure cachent des passages secrets", "Le sous-sol abrite une collection d'objets non répertoriés",
+        "Des rituels y sont pratiqués chaque mois par des personnes aisées", "Un livre écrit dans une langue inconnue attend d'être déchiffré", "La structure même du bâtiment est un glyphe occulte géant", "Un miroir y déforme les reflets de manière anormale", "L'habitant est un sorcier qui prédit des événements futurs"
+    ]
+}

@@ -1,0 +1,65 @@
+{
+    "firstNames": [
+        "Edwin","Beatrix","Horatio","Lydia","Cedric","Ophelia","Barnaby","Clara","Silas","Evangeline","Thaddeus","Mina",
+        "Archibald","Iris","Victor","Tabitha","Reginald","Ada","Cornelius","Nell","Augustus","Harriet","Bram","Lucinda",
+        "Felix","Dorothea","Gideon","Maude","Percival","Elowen","Tobias","Winifred","Alistair","Cora","Phineas","Agnes",
+        "Montague","Flora","Basil","Imogen","Rupert","Helena","Jasper","Mabel","Quentin","Rosalind","Cyrus","Beatrice"
+    ],
+    "lastNames": [
+        "Gearsworth","Copperfield","Brassington","Cogwright","Steamwell","Ironhart","Pennyworth","Hollowbridge","Wickerton","Brassbloom",
+        "Gearford","Ashenwick","Copperthorn","Steamridge","Ironwell","Clockhaven","Rivetson","Brasslock","Cogbloom","Hollowcrest",
+        "Gearstone","Copperhelm","Steamwhistle","Ironridge","Brasshaven","Cogsmith","Wickham","Ashcroft","Rivetwell","Steamthorn",
+        "Ironbloom","Coppercrest","Gearhaven","Clockthorn","Brassmoor","Cogwell","Steamcrest","Ironthorn","Rivetstone","Copperwell",
+        "Gearlock","Steamhelm","Brassridge","Cogthorn","Ironmoor","Copperbloom","Clockwell","Rivethelm","Steamlock","Gearthorn"
+    ],
+    "jobs": [
+        "Inventeur","Pilote de dirigeable","Horloger","Mécanicien","Explorateur","Scientifique excentrique","Chasseur de reliques",
+        "Ingénieur vapeur","Cartographe","Chirurgien mécanique","Marchand d’automates","Espion industriel","Dompteur de machines",
+        "Archiviste","Capitaine de dirigeable","Forgeron d’engrenages","Alchimiste","Technicien vapeur","Garde mécanique",
+        "Saboteur","Maître des chaudières","Messager aérien","Fabricant de prothèses","Chasseur de monstres mécaniques",
+        "Inventeur fou","Navigateur céleste","Réparateur d’automates","Maître horloger","Chasseur de tempêtes","Éclaireur aérien",
+        "Dresseur d’automates","Ingénieur naval","Maître des soupapes","Archiviste du vieux monde","Technicien d’éther",
+        "Capitaine pirate aérien","Garde du rail","Mineur de vapeur","Chasseur de trésors","Fabricant de lunettes optiques",
+        "Ingénieur ferroviaire","Dompteur de créatures mécaniques","Explorateur urbain","Maître des engrenages","Chasseur de bandits",
+        "Réparateur de moteurs","Technicien de ballon","Inventeur de gadgets","Garde de laboratoire"
+    ],
+    "traits": [
+        "Curieux","Distrait","Génial","Excentrique","Fier","Maniaque","Obsédé par les machines","Toujours pressé","Rêveur",
+        "Parle vite","Parle lentement","Regard brillant","Tics nerveux","Toujours couvert de suie","Odeur d’huile","Voix métallique",
+        "Rire étrange","Calme","Froid","Passionné","Hyperactif","Somnolent","Toujours en retard","Toujours en avance",
+        "Aime les gadgets","Collectionne les engrenages","A peur du vide","Aime les hauteurs","Aime les automates",
+        "Déteste les automates","A une mémoire parfaite","A une mémoire défaillante","A un rire tonitruant","A un rire discret",
+        "A une voix grave","A une voix douce","A une démarche mécanique","A une démarche légère","A un regard intense",
+        "A un regard absent","A une obsession pour l’ordre","A une obsession pour le chaos","A un humour noir",
+        "A un humour étrange","A un accent marqué","A une voix cassée","A une voix chantante","A une obsession pour les lunettes"
+    ],
+    "looks": [
+        "Lunettes d’aviateur","Manteau long","Gants en cuir","Chapeau haut-de-forme","Monocle mécanique","Bottes renforcées",
+        "Veste à engrenages","Gilet brodé","Montre à gousset","Masque respiratoire","Gants tachés d’huile","Pantalon en cuir",
+        "Bottes à boucles","Chapeau melon","Cape en toile","Gants articulés","Lunettes multiples","Veste en tweed",
+        "Bottes de pilote","Ceinture à outils","Gants de précision","Veste renforcée","Chapeau décoré","Pantalon rayé",
+        "Gants de cuivre","Bottes en laiton","Veste sombre","Chapeau à engrenages","Gants de vapeur","Lunettes fumées",
+        "Veste en cuir","Bottes usées","Gants troués","Chapeau poussiéreux","Veste à poches","Gants de mécanicien",
+        "Bottes brillantes","Chapeau large","Veste à boutons dorés","Gants élégants","Lunettes de précision",
+        "Veste en laine","Bottes lourdes","Chapeau décoré","Gants renforcés","Veste à sangles","Lunettes complexes",
+        "Bottes métalliques","Chapeau d’ingénieur"
+    ],
+    "secrets": [
+        "A volé un prototype","A saboté un dirigeable","A créé une machine dangereuse","A un automate interdit",
+        "A un passé criminel","A un carnet codé","A un ennemi puissant","A un secret sur une invention",
+        "A un passé militaire","A un frère disparu","A un laboratoire secret","A un plan pour une arme",
+        "A un automate vivant","A un passé de pirate aérien","A un secret sur une cité flottante",
+        "A un moteur révolutionnaire","A un passé d’espion","A un secret sur une explosion",
+        "A un passé de noble","A un secret sur un complot","A un prototype instable",
+        "A un passé de mercenaire","A un secret sur une machine antique","A un carnet volé",
+        "A un passé de voleur","A un secret sur une guilde","A un automate dangereux",
+        "A un passé de scientifique fou","A un secret sur une tempête d’éther",
+        "A un passé de pilote","A un secret sur un moteur d’éther","A un passé de contrebandier",
+        "A un secret sur un dirigeable perdu","A un passé de technicien","A un secret sur une cité souterraine",
+        "A un passé de chasseur de reliques","A un secret sur une arme ancienne",
+        "A un passé de garde","A un secret sur un complot industriel","A un passé de survivant",
+        "A un secret sur une machine vivante","A un passé de capitaine","A un secret sur un vol célèbre",
+        "A un passé de mécanicien","A un secret sur une invention volée","A un passé de chercheur",
+        "A un secret sur une créature mécanique","A un passé de vagabond","A un secret sur un moteur interdit"
+    ]
+}

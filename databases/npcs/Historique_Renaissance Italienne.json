@@ -1,0 +1,60 @@
+{
+    "firstNames": [
+        "Lorenzo","Isabella","Giovanni","Caterina","Francesco","Lucrezia","Matteo","Bianca","Alessandro","Giulia",
+        "Cesare","Beatrice","Marco","Elena","Raffaele","Vittoria","Pietro","Allegra","Niccolò","Rosa",
+        "Bartolomeo","Camilla","Giorgio","Lucia","Federico","Agnese","Tommaso","Fiorenza","Giuliano","Renata",
+        "Salvatore","Margherita","Antonio","Livia","Domenico","Serafina","Vincenzo","Adriana","Stefano","Costanza",
+        "Roberto","Chiara","Guglielmo","Sofia","Riccardo","Eleonora","Carlo","Francesca","Paolo","Maddalena"
+    ],
+    "lastNames": [
+        "Medici","Borgia","Sforza","Farnese","Gonzaga","Barberini","Colonna","Orsini","Este","Visconti",
+        "Strozzi","Rucellai","Pazzi","Salviati","Acciaioli","Albizzi","Ridolfi","Corsini","Capponi","Tornabuoni",
+        "Malatesta","Bentivoglio","Baglioni","Piccolomini","Chigi","Della Rovere","D’Este","Doria","Spinola","Grimaldi",
+        "Contarini","Morosini","Barbarigo","Loredan","Pisani","Giustiniani","Cornaro","Foscari","Mocenigo","Trevisan",
+        "Zeno","Bembo","Grimani","Venier","Dandolo","Querini","Dolfin","Falier","Tiepolo","Marcello"
+    ],
+    "jobs": [
+        "Peintre","Sculpteur","Architecte","Banquier","Marchand de soie","Condottiere","Moine copiste","Érudit humaniste",
+        "Cartographe","Astrologue","Apothicaire","Maître d’atelier","Tisserand","Orfèvre","Maître verrier","Musicien de cour",
+        "Poète","Ambassadeur","Notaire","Professeur de latin","Chirurgien","Navigateur","Explorateur","Maître d’armes",
+        "Bibliothécaire","Calligraphe","Maître imprimeur","Juge","Prêtre","Moine franciscain","Moine dominicain","Moine bénédictin",
+        "Éleveur de vers à soie","Fabricant de pigments","Maître tailleur","Maître charpentier","Maître maçon","Maître forgeron",
+        "Maître boulanger","Maître cordonnier","Maître sellier","Maître potier","Maître enlumineur","Maître horloger",
+        "Maître parfumeur","Maître distillateur","Maître armurier","Maître verrier","Maître brodeur","Maître de guilde"
+    ],
+    "traits": [
+        "Cultivé","Ambitieux","Raffiné","Superstitieux","Éloquent","Rêveur","Calculateur","Passionné","Discret","Observateur",
+        "Curieux","Sceptique","Généreux","Avaricieux","Jovial","Sombre","Taciturne","Bavard","Fier","Modeste",
+        "Parle lentement","Parle vite","Parle avec emphase","A un rire discret","A un rire sonore","A une voix douce",
+        "A une voix grave","A un accent marqué","A une démarche élégante","A une démarche lourde","A un regard perçant",
+        "A un regard doux","A un regard inquiet","A un regard fier","A un humour subtil","A un humour noir",
+        "A une mémoire parfaite","A une mémoire défaillante","A une obsession pour l’art","A une obsession pour la science",
+        "A une obsession pour la religion","A une obsession pour la politique","A un air fatigué","A un air inspiré",
+        "A un air déterminé","A un air absent","A un air noble","A un air inquiet","A un air mystérieux"
+    ],
+    "looks": [
+        "Tunique brodée","Robe de velours","Chapeau à plume","Cape en soie","Gants élégants","Chaussures à boucle",
+        "Pourpoint richement décoré","Robe à manches longues","Ceinture en cuir fin","Bourse en velours","Cape sombre",
+        "Tunique en laine","Robe simple","Chapeau rond","Gants en cuir","Chaussures fines","Cape brodée","Pourpoint sombre",
+        "Robe colorée","Tunique claire","Chapeau décoré","Cape épaisse","Gants brodés","Chaussures vernies",
+        "Pourpoint en soie","Robe en brocart","Cape en velours","Chapeau large","Gants de cérémonie","Chaussures de cour",
+        "Tunique sombre","Robe de cérémonie","Cape de voyage","Chapeau de voyage","Gants de voyage","Chaussures usées",
+        "Pourpoint usé","Robe usée","Cape simple","Chapeau simple","Gants simples","Chaussures simples",
+        "Tunique de travail","Robe de travail","Cape de travail","Chapeau de travail","Gants de travail","Chaussures de travail"
+    ],
+    "secrets": [
+        "A volé un manuscrit","A un passé de mercenaire","A un frère disparu","A un secret sur un mécène","A un passé de moine",
+        "A un secret sur une œuvre d’art","A un passé de voleur","A un secret sur une famille noble","A un passé de soldat",
+        "A un secret sur un meurtre","A un passé de courtisane","A un secret sur un cardinal","A un passé de conspirateur",
+        "A un secret sur un complot","A un passé de marchand ruiné","A un secret sur une dette","A un passé de pèlerin",
+        "A un secret sur une relique","A un passé de navigateur","A un secret sur une carte","A un passé de savant",
+        "A un secret sur une invention","A un passé de moine copiste","A un secret sur un livre interdit","A un passé de noble déchu",
+        "A un secret sur une trahison","A un passé de soldat blessé","A un secret sur une bataille","A un passé de diplomate",
+        "A un secret sur un traité","A un passé de maître d’armes","A un secret sur un duel","A un passé de banquier",
+        "A un secret sur une faillite","A un passé de peintre raté","A un secret sur une fresque","A un passé de sculpteur",
+        "A un secret sur une statue","A un passé de musicien","A un secret sur une chanson","A un passé de poète",
+        "A un secret sur un sonnet","A un passé de courtisan","A un secret sur une liaison","A un passé de conspirateur",
+        "A un secret sur un poison","A un passé de voyageur","A un secret sur une île","A un passé de marchand d’épices",
+        "A un secret sur une cargaison"
+    ]
+}

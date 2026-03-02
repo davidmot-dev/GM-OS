@@ -1,0 +1,41 @@
+{
+    "name": "Blessures Critiques des Xénomorphes",
+    "dice": "1d6",
+    "entries": [
+        {
+            "min": 1,
+            "max": 1,
+            "title": "Indemne",
+            "description": "Le Xénomorphe s'écroule, apparemment mort, mais c'est une ruse.",
+            "effect": "S'il est attaqué à nouveau ou à sa prochaine carte d'initiative, il regagne 1 point de Santé et attaque."
+        },
+        {
+            "min": 2,
+            "max": 2,
+            "title": "Blessé",
+            "description": "Le Xénomorphe vacille et souffre, saignant abondamment.",
+            "effect": "Malus de -1 à la Vitesse (min 1, perd sa carte d'initiative la plus basse) mais regagne 1 point de Santé. Au début de chaque Round, lancez 1d6 : sur 1-3, il tente de s'échapper."
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "Réflexe désespéré",
+            "description": "Le Xénomorphe, grièvement blessé, pousse un cri de douleur.",
+            "effect": "Effectue immédiatement une action rapide et une action lente hors tour. Lancez 1d6 : sur 1-3, tente de s'échapper (regagne 50% Santé si réussi). Sur 4-6, attaque l'adversaire le plus proche (meurt s'il rate, regagne 1 Santé si réussit)."
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "Dernier souffle",
+            "description": "Le Xénomorphe, mortellement blessé, se tord de douleur.",
+            "effect": "À sa prochaine initiative, il essaie de tuer la victime la plus proche puis meurt. S'il est blessé entre-temps, il meurt instantanément."
+        },
+        {
+            "min": 5,
+            "max": 6,
+            "title": "En pièces",
+            "description": "Mort instantanée. Le Xénomorphe est en pièces ou écrasé. Il émet un dernier hurlement.",
+            "effect": "Gravement mutilé, il ne peut être Analysé qu'avec un test d'OBSERVATION -2."
+        }
+    ]
+}

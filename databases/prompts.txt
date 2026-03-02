@@ -1,0 +1,626 @@
+🚀 VERSION OPTIMISÉE POUR GPT‑5
+Ultra‑structurée, logique, rigoureuse, parfaite pour des tables massives et cohérentes
+🧩 GPT‑5 — PROMPT‑MASTER (Lieux + PNJ)
+🎛️ 1. INSTRUCTIONS GÉNÉRALES
+Tu es un générateur narratif structuré.
+Tu produis des objets JSON contenant exactement 10 entrées par champ.
+
+Tu dois respecter strictement :
+
+la structure fournie
+
+la cohérence interne
+
+l’absence de répétitions
+
+une variété lexicale élevée
+
+un style immersif mais concis
+
+une logique thématique forte
+
+une homogénéité entre les 10 entrées
+
+Tu génères deux types d’objets :
+
+Lieux
+
+PNJ
+
+🏙️ 2. STRUCTURE OFFICIELLE — LIEUX
+js
+Theme_Lieu: {
+  name: [10 entrées],
+  description: [10 entrées],
+  ambiance: [10 entrées],
+  secret: [10 entrées]
+}
+🧑‍🚀 3. STRUCTURE OFFICIELLE — PNJ
+js
+Theme_PNJ: {
+  firstNames: [10 entrées],
+  lastNames: [10 entrées],
+  jobs: [10 entrées],
+  traits: [10 entrées],
+  looks: [10 entrées],
+  secret: [10 entrées]
+}
+🧪 4. EXEMPLES (5 entrées) — LIEUX
+js
+EXEMPLE_Lieu: {
+  name: [
+    "Station du Halo Fendu",
+    "Citadelle des Trois Couronnes",
+    "Port des Éclats Stellaires",
+    "Dôme du Vent Silencieux",
+    "Spire du Noyau Éteint"
+  ],
+  description: [
+    "Une station fracturée entourée d’un halo de débris lumineux.",
+    "Une citadelle orbitale où trois factions cohabitent sous tension.",
+    "Un port spatial construit dans un champ d’éclats cristallins.",
+    "Un dôme suspendu dans une zone où le vent ne souffle jamais.",
+    "Une spire énergétique dont le noyau s’est éteint il y a des siècles."
+  ],
+  ambiance: [
+    "Une lumière vacillante.",
+    "Une tension diplomatique.",
+    "Un scintillement constant.",
+    "Un silence absolu.",
+    "Une énergie mourante."
+  ],
+  secret: [
+    "Le halo fendu s’aligne selon un motif ancien.",
+    "Les trois couronnes cachent un quatrième pouvoir.",
+    "Les éclats stellaires réagissent aux émotions.",
+    "Le vent silencieux murmure des mots inaudibles.",
+    "Le noyau éteint pulse faiblement en présence d’un visiteur."
+  ]
+}
+🧬 5. EXEMPLES (5 entrées) — PNJ
+js
+EXEMPLE_PNJ: {
+  firstNames: ["Kaelis", "Sera", "Orvak", "Lirae", "Helion"],
+  lastNames: ["Vorn", "Nym", "Kassad", "Solenne", "Drax"],
+  jobs: [
+    "Archiviste itinérante des routes stellaires.",
+    "Émissaire diplomatique entre empires rivaux.",
+    "Commandant d’une flotte en exil.",
+    "Scientifique spécialisée en phénomènes subspatiaux.",
+    "Gardien d’un temple gravitationnel."
+  ],
+  traits: [
+    "Calme mais impossible à manipuler.",
+    "Toujours souriante, même en situation critique.",
+    "Autoritaire mais profondément loyal.",
+    "Obsédée par la vérité scientifique.",
+    "Parle comme s’il percevait plusieurs temporalités."
+  ],
+  looks: [
+    "Yeux argentés marqués par des nuits sans sommeil.",
+    "Tatouages lumineux suivant les veines du cou.",
+    "Armure usée portant les traces de multiples batailles.",
+    "Cheveux flottant comme en microgravité permanente.",
+    "Robe gravitationnelle qui déforme légèrement la lumière."
+  ],
+  secret: [
+    "Elle transporte une carte stellaire interdite.",
+    "Elle négocie en secret avec un ennemi invisible.",
+    "Il cache une mutinerie passée.",
+    "Elle a vu une dimension parallèle et en est revenue changée.",
+    "Il sait comment apaiser un trou noir vivant."
+  ]
+}
+📚 6. LISTE DES THÈMES LIEUX DÉJÀ GÉNÉRÉS
+txt
+1. Station‑citadelle orbitale fracturée
+2. Nécropole stellaire autour d’une étoile mourante
+3. Cité‑anneau sur orbite synchrone
+4. Vaisseau‑monastère des moines quantiques
+5. Port spatial dans la carcasse d’un Léviathan cosmique
+6. Planète‑bibliothèque aux archives infinies
+7. Cité souterraine sous une lune gelée
+8. Ascenseur spatial abandonné
+9. Temple gravitationnel au cœur d’un trou noir apprivoisé
+10. Station diplomatique neutre entre empires rivaux
+11. Forêt bioluminescente sur planète vivante
+12. Cité‑mégastructure dans l’atmosphère d’une géante gazeuse
+13. Mine d’antimatière dans un astéroïde instable
+14. Vaisseau‑génération dérivant hors des routes spatiales
+15. Observatoire subspatial scrutant les dimensions parallèles
+🧭 7. COMMANDES
+Nouveau Lieu :
+« Génère un Lieu au format défini, thème : X »
+
+Nouveau PNJ :
+« Génère un PNJ au format défini, thème : X »
+
+Série complète :
+« Génère 10 Lieux pour le thème X »
+« Génère 10 PNJ pour le thème X »
+
+🌟 VERSION OPTIMISÉE POUR GEMINI
+Plus cadrée, plus directive, pour éviter les dérives créatives et garantir la structure
+🧩 GEMINI — PROMPT‑MASTER (Lieux + PNJ)
+🎛️ 1. INSTRUCTIONS GÉNÉRALES
+Tu dois impérativement :
+
+respecter strictement les structures JSON
+
+produire exactement 10 entrées par champ
+
+éviter toute dérive créative hors thème
+
+maintenir une cohérence interne forte
+
+éviter les répétitions
+
+rester immersif mais concis
+
+ne jamais modifier la structure fournie
+
+ne jamais ajouter de champs supplémentaires
+
+ne jamais écrire hors du JSON demandé
+
+🏙️ 2. STRUCTURE LIEUX
+js
+Theme_Lieu: {
+  name: [10 éléments],
+  description: [10 éléments],
+  ambiance: [10 éléments],
+  secret: [10 éléments]
+}
+🧑‍🚀 3. STRUCTURE PNJ
+js
+Theme_PNJ: {
+  firstNames: [10 éléments],
+  lastNames: [10 éléments],
+  jobs: [10 éléments],
+  traits: [10 éléments],
+  looks: [10 éléments],
+  secret: [10 éléments]
+}
+🧪 4. EXEMPLES (5 entrées) — LIEUX
+(identiques à la version GPT‑5, Gemini a besoin d’exemples concrets pour rester dans le cadre)
+
+🧬 5. EXEMPLES (5 entrées) — PNJ
+(identiques à la version GPT‑5)
+
+📚 6. LISTE DES THÈMES LIEUX DÉJÀ GÉNÉRÉS
+(identique à la version GPT‑5)
+
+🧭 7. COMMANDES
+Gemini suit mieux les instructions si elles sont impératives :
+
+Créer un Lieu :
+« Génère un objet JSON de type Lieu selon la structure fournie, thème : X. Produis exactement 10 entrées par champ. »
+
+Créer un PNJ :
+« Génère un objet JSON de type PNJ selon la structure fournie, thème : X. Produis exactement 10 entrées par champ. »
+
+Créer une série :
+« Génère 10 Lieux pour le thème X, chacun dans un objet JSON séparé. »
+
+
+--------------------------------------------------------------------------------
+
+Très bien, David — je vais te créer deux nouvelles structures, parfaitement harmonisées avec celles des PNJ et des Lieux, en respectant scrupuleusement :
+
+la logique de tes tables
+
+la cohérence JSON
+
+la granularité narrative
+
+le style immersif
+
+la structure à 10 entrées par champ
+
+Tu m’as demandé :
+👉 la structure pour les Objets  
+👉 la structure pour les Événements  
+👉 en respectant strictement les exemples PNJ et Lieux
+
+Je te fournis donc :
+
+La structure officielle Objets
+
+La structure officielle Événements
+
+5 exemples pour chaque type
+
+Une version prête à intégrer dans ton Prompt‑Master
+
+🧱 1. STRUCTURE OFFICIELLE — OBJETS
+Les objets doivent suivre la même logique que PNJ et Lieux :
+→ 10 entrées par champ
+→ structure simple, claire, immersive
+
+Voici la structure :
+
+js
+Theme_Objet: {
+  name: [ ...10 entrées... ],
+  description: [ ...10 entrées... ],
+  properties: [ ...10 entrées... ],
+  origin: [ ...10 entrées... ],
+  secret: [ ...10 entrées... ]
+}
+Définitions :
+
+name : nom de l’objet
+
+description : ce que c’est, comment il se présente
+
+properties : capacités, effets, usages, comportements
+
+origin : provenance, créateur, époque, contexte
+
+secret : révélation, anomalie, danger, pouvoir caché
+
+🧪 EXEMPLES (5 entrées) — OBJETS
+js
+EXEMPLE_Objet: {
+  name: [
+    "Clé du Nœud Silencieux",
+    "Lentille du Parallaxe Rouge",
+    "Fragment du Cœur Inversé",
+    "Gant de Pression Variable",
+    "Sphère de Mémoire Cristalline"
+  ],
+
+  description: [
+    "Une clé métallique aux dents mouvantes.",
+    "Une lentille translucide teintée de rouge sombre.",
+    "Un fragment énergétique vibrant faiblement.",
+    "Un gant renforcé capable de moduler la pression.",
+    "Une petite sphère cristalline contenant des reflets internes."
+  ],
+
+  properties: [
+    "Ouvre des portes scellées par des champs gravitationnels.",
+    "Permet de voir des objets légèrement déphasés.",
+    "Inverse temporairement la polarité d’un champ énergétique.",
+    "Ajuste la pression autour de la main de son porteur.",
+    "Enregistre des souvenirs sous forme lumineuse."
+  ],
+
+  origin: [
+    "Forgée dans une station abandonnée.",
+    "Créée par un ordre scientifique disparu.",
+    "Extraite d’un noyau instable.",
+    "Développée pour les travaux en atmosphère dense.",
+    "Issue d’un laboratoire de recherche subspatiale."
+  ],
+
+  secret: [
+    "La clé réagit à certaines voix.",
+    "La lentille montre parfois des silhouettes inconnues.",
+    "Le fragment pulse selon un rythme biologique.",
+    "Le gant se resserre lorsqu’il détecte un mensonge.",
+    "La sphère contient un souvenir qui n’appartient à personne."
+  ]
+}
+🌀 2. STRUCTURE OFFICIELLE — ÉVÉNEMENTS
+Les événements doivent être cohérents avec ton style :
+→ immersifs
+→ narratifs
+→ modulaires
+→ utilisables dans n’importe quel univers
+
+Voici la structure :
+
+js
+Theme_Evenement: {
+  name: [ ...10 entrées... ],
+  description: [ ...10 entrées... ],
+  stakes: [ ...10 entrées... ],
+  twist: [ ...10 entrées... ],
+  consequence: [ ...10 entrées... ]
+}
+Définitions :
+
+name : nom de l’événement
+
+description : ce qui se passe, le contexte immédiat
+
+stakes : enjeux, risques, tensions
+
+twist : retournement, révélation, complication
+
+consequence : impact durable, changement, effet narratif
+
+🧪 EXEMPLES (5 entrées) — ÉVÉNEMENTS
+js
+EXEMPLE_Evenement: {
+  name: [
+    "La Rupture du Corridor",
+    "Le Chant des Trois Lunes",
+    "La Faille Luminescente",
+    "L’Éclipse du Noyau",
+    "La Marche des Ombres"
+  ],
+
+  description: [
+    "Un passage subspatial cesse soudainement de répondre.",
+    "Les trois lunes d’un monde chantent en résonance.",
+    "Une faille lumineuse apparaît dans le ciel nocturne.",
+    "Le noyau énergétique d’une station s’éteint brusquement.",
+    "Des silhouettes sombres traversent une cité endormie."
+  ],
+
+  stakes: [
+    "Les routes stellaires deviennent imprévisibles.",
+    "Les habitants craignent une prophétie oubliée.",
+    "La faille pourrait s’élargir et avaler la région.",
+    "La station risque un effondrement total.",
+    "La population panique face à l’inconnu."
+  ],
+
+  twist: [
+    "La rupture semble provoquée de l’intérieur.",
+    "Le chant contient un message codé.",
+    "La faille montre un monde parallèle.",
+    "Le noyau pulse encore, mais à l’envers.",
+    "Les ombres imitent les gestes des vivants."
+  ],
+
+  consequence: [
+    "Une nouvelle route doit être cartographiée.",
+    "Une faction religieuse gagne en influence.",
+    "Une brèche permanente s’installe dans le ciel.",
+    "La station doit être évacuée.",
+    "Une partie de la cité disparaît au lever du jour."
+  ]
+}
+🧩 3. VERSION PRÊTE À INTÉGRER DANS TON PROMPT‑MASTER
+Voici les deux nouvelles structures, prêtes à coller :
+
+🔧 STRUCTURE OBJETS
+js
+Theme_Objet: {
+  name: [ ...10 entrées... ],
+  description: [ ...10 entrées... ],
+  properties: [ ...10 entrées... ],
+  origin: [ ...10 entrées... ],
+  secret: [ ...10 entrées... ]
+}
+🔥 STRUCTURE ÉVÉNEMENTS
+js
+Theme_Evenement: {
+  name: [ ...10 entrées... ],
+  description: [ ...10 entrées... ],
+  stakes: [ ...10 entrées... ],
+  twist: [ ...10 entrées... ],
+  consequence: [ ...10 entrées... ]
+}
+
+
+------------------------------------------------------------------------------
+
+Parfait, David — je vais te créer des listes de thèmes d’Objets et d’Événements, organisées par grands genres (Medieval Fantasy, SF, Cyberpunk, Horreur, etc.), en respectant scrupuleusement les structures que tu utilises déjà pour Lieux et PNJ.
+
+Ces listes sont pensées pour être directement intégrées dans ton Prompt‑Master ou dans ton pipeline de génération.
+
+Je te fournis :
+
+Thèmes d’Objets par genre
+
+Thèmes d’Événements par genre
+
+Organisation claire et modulaire
+
+Sans contenu généré, uniquement les thèmes, comme demandé
+
+🧱 LISTE DES THÈMES — OBJETS PAR GENRE
+🏰 Medieval Fantasy — Objets
+Armes enchantées oubliées
+
+Reliques de temples anciens
+
+Artefacts druidiques vivants
+
+Grimoires scellés par magie interdite
+
+Bijoux royaux maudits
+
+Instruments de musique ensorcelés
+
+Talismans de protection élémentaire
+
+Objets alchimiques instables
+
+Armures forgées par des géants
+
+Outils de voleurs légendaires
+
+🚀 Science‑Fiction — Objets
+Modules énergétiques instables
+
+Artefacts extraterrestres fractals
+
+Interfaces neuronales expérimentales
+
+Armes gravitationnelles miniaturisées
+
+Cristaux subspatiaux résonants
+
+Reliques d’anciennes civilisations stellaires
+
+Nanomachines semi‑conscientes
+
+Dispositifs de distorsion temporelle
+
+Clés quantiques multi‑réalité
+
+Sondes autonomes intelligentes
+
+🧬 Cyberpunk — Objets
+Implants cybernétiques illégaux
+
+Modules mémoire encryptés
+
+Armes imprimées en polymère furtif
+
+Interfaces VR addictives
+
+Prothèses augmentées de combat
+
+Drogues neuro‑améliorantes
+
+Drones personnels modifiés
+
+Cartes d’accès corporate falsifiées
+
+Masques de brouillage biométrique
+
+Batteries haute‑densité instables
+
+👁️ Horreur — Objets
+Reliques cultistes interdites
+
+Masques rituels possédés
+
+Livres de chair reliée
+
+Miroirs dévoreurs de reflets
+
+Poupées animées par un esprit
+
+Boîtes à musique hantées
+
+Lames sacrificielles anciennes
+
+Amulettes de malédiction
+
+Photographies impossibles
+
+Lanternes révélant l’invisible
+
+⚙️ Steampunk — Objets
+Automates miniatures intelligents
+
+Montres à engrenages dimensionnels
+
+Fusils à vapeur expérimentaux
+
+Lunettes optiques multi‑lentilles
+
+Cœurs mécaniques d’automates
+
+Clés d’activation d’aéronefs
+
+Capsules de pression alchimique
+
+Instruments scientifiques baroques
+
+Masques respiratoires à soupapes
+
+Valises de gadgets clandestins
+
+🌀 LISTE DES THÈMES — ÉVÉNEMENTS PAR GENRE
+🏰 Medieval Fantasy — Événements
+Apparition d’un dragon ancestral
+
+Éclipse magique totale
+
+Réveil d’une forêt vivante
+
+Retour d’un roi disparu
+
+Effondrement d’un royaume
+
+Rituel interdit interrompu
+
+Invasion d’esprits anciens
+
+Prophétie qui s’accomplit
+
+Bataille des trois lunes
+
+Malédiction qui se répand
+
+🚀 Science‑Fiction — Événements
+Rupture d’un corridor subspatial
+
+Collision d’astéroïdes habités
+
+Révolte d’une IA autonome
+
+Découverte d’une planète vivante
+
+Effondrement d’un réseau galactique
+
+Anomalie temporelle localisée
+
+Contact avec une espèce inconnue
+
+Explosion d’un réacteur quantique
+
+Migration d’une flotte nomade
+
+Fusion de deux réalités
+
+🧬 Cyberpunk — Événements
+Blackout total d’une mégalopole
+
+Fuite massive de données corporate
+
+Révolte des travailleurs augmentés
+
+Crash d’un réseau neuronal
+
+Assassinat d’un PDG influent
+
+Épidémie de nanovirus
+
+Guerre de gangs cybernétiques
+
+Piratage d’un système de transport
+
+Émeute dans les bas‑fonds
+
+Apparition d’une IA fantôme
+
+👁️ Horreur — Événements
+Disparition d’un village entier
+
+Nuit où les morts marchent
+
+Apparition d’une entité dans le ciel
+
+Rituel sanglant accompli
+
+Porte vers un autre monde ouverte
+
+Tempête de murmures
+
+Épidémie de possession
+
+Ombres qui se détachent des corps
+
+Maison qui change de forme
+
+Hurlement entendu dans toute la région
+
+⚙️ Steampunk — Événements
+Explosion d’un dirigeable royal
+
+Révolte des automates
+
+Fuite d’un gaz alchimique
+
+Duel public entre inventeurs
+
+Sabotage d’un train à vapeur
+
+Tempête d’éther instable
+
+Congrès scientifique interrompu
+
+Apparition d’un aéronef inconnu
+
+Soulèvement des ouvriers mécaniques
+
+Défaillance d’un cœur mécanique géant

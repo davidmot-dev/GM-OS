@@ -1,0 +1,52 @@
+{
+    "firstNames": [
+        "Arthur", "Eleanor", "Walter", "Beatrice", "Howard", "Clara", "Thomas", "Edith", "Henry", "Martha", "George", "Agatha",
+        "Victor", "Lavinia", "Jonas", "Harriet", "Silas", "Mabel", "Edgar", "Constance", "Alfred", "Lucille", "Oscar", "Millicent",
+        "Reginald", "Ophelia", "Jonah", "Prudence", "Ambrose", "Tabitha", "Samuel", "Dorothy", "Nathaniel", "Iris", "Harlan", "Evelyn",
+        "Malcolm", "Gertrude", "Percival", "Helena", "Rupert", "Agnes", "Basil", "Marion", "Cyrus", "Winifred", "Ezekiel", "Florence"
+    ],
+    "lastNames": [
+        "Lovecraft", "Carter", "Whateley", "Marsh", "Pickman", "Derby", "Tillinghast", "West", "Armitage", "Blackwood",
+        "Hawthorne", "Kingsley", "Ravenscroft", "Holloway", "Crowhurst", "Ashford", "Merriweather", "Harrow", "Grimsby", "Wickham",
+        "Hargrove", "Pemberton", "Davenport", "Hollister", "Rookwood", "Grimwald", "Thornfield", "Wraithmore", "Eldridge", "Morrow",
+        "Hemsley", "Crowley", "Underwood", "Briarstone", "Harrowick", "Pendleton", "Grimshaw", "Winterhall", "Duskwood", "Ravenhall",
+        "Hollowbrook", "Mirefield", "Ashenford", "Darkwater", "Graveborne", "Nightwell", "Hollowgrave", "Wormwood", "Ebonford"
+    ],
+    "jobs": [
+        "Détective Privé", "Bibliothécaire", "Professeur", "Journaliste", "Médecin Légiste", "Antiquaire", "Gangster", "Artiste", "Majordome", "Aliéniste",
+        "Archiviste", "Chasseur de monstres", "Prêtre défroqué", "Explorateur", "Cryptozoologue", "Gardien de cimetière", "Chirurgien", "Pharmacien", "Horloger", "Écrivain",
+        "Marin", "Capitaine de navire", "Infirmier", "Psychologue", "Occultiste", "Voyant", "Chasseur de trésors", "Croque-mort", "Employé de morgue", "Conservateur de musée",
+        "Inspecteur de police", "Vagabond", "Mendiant", "Acteur", "Musicien", "Scientifique", "Inventeur", "Cartographe", "Explorateur urbain", "Gardien d’asile",
+        "Moine", "Ermite", "Chasseur de primes", "Apothicaire", "Notaire", "Juge", "Avocat", "Servante", "Domestique"
+    ],
+    "traits": [
+        "Anxieux", "Fumeur invétéré", "Sceptique", "Mélancolique", "Erudit", "Alcoolique", "Fanatique", "Discret", "Superstitieux",
+        "Taciturne", "Nerveux", "Somnambule", "Paranoïaque", "Hypersensible", "Froid", "Obsessif", "Introverti", "Agité", "Fiévreux",
+        "Tremblant", "Distrait", "Pâle", "Hanté", "Morose", "Renfermé", "Bégayant", "Rêveur", "Tourmenté", "Hypocondriaque",
+        "Maniaque", "Lunatique", "Apathique", "Étourdi", "Sombre", "Énigmatique", "Fuyant", "Trop poli", "Voix cassée", "Regard vide",
+        "Regard fuyant", "Tics nerveux", "Respiration sifflante", "Voix monotone", "Rire nerveux", "Main tremblante", "Regard intense",
+        "Parle tout bas", "Parle lentement"
+    ],
+    "looks": [
+        "Imperméable gris", "Lunettes rondes", "Teint pâle", "Mains tremblantes", "Costume trois pièces", "Regard hanté", "Chapeau melon", "Robe de soirée déchirée",
+        "Manteau long sombre", "Gants en cuir usés", "Cravate défraîchie", "Chapeau large", "Visage émacié", "Cernes profondes", "Cheveux gras", "Veste poussiéreuse",
+        "Bottes boueuses", "Chemise froissée", "Manteau élimé", "Odeur de tabac froid", "Odeur de renfermé", "Ongles sales", "Mains tachées d’encre",
+        "Lunettes fissurées", "Canne sculptée", "Écharpe sombre", "Chapeau feutre", "Manteau trempé", "Regard vitreux", "Peau cireuse",
+        "Veste en tweed", "Pantalon élimé", "Chaussures usées", "Mains gantées", "Cicatrice fine", "Cheveux en bataille", "Manteau trop grand",
+        "Chemise tachée", "Veste en laine", "Chapeau poussiéreux", "Regard fixe", "Mains froides", "Porte-cigarette", "Montre à gousset",
+        "Odeur d’alcool", "Veste sombre", "Cravate noire", "Manteau épais"
+    ],
+    "secrets": [
+        "A vu une chose indicible", "Possède un livre interdit", "Entend des voix", "Membre d'une secte malgré lui", "Recherche son frère disparu", "Fait des cauchemars lucides", "Est amnésique",
+        "A survécu à un rituel interdit", "A vu un monstre dans son enfance", "A perdu un être cher dans d’étranges circonstances", "A un passé criminel", "A brûlé une maison",
+        "A fui un asile", "A été témoin d’un sacrifice", "A un symbole gravé sur la peau", "A un double maléfique", "A un journal qu’il ne se souvient pas avoir écrit",
+        "A un objet qui murmure", "A un rêve récurrent prophétique", "A une dette envers une secte", "A un souvenir effacé", "A un ami imaginaire dangereux",
+        "A une vision de la fin du monde", "A un secret de famille horrible", "A vu un dieu ancien", "A un pacte oublié", "A un miroir qui ne reflète pas la réalité",
+        "A un proche disparu dans un culte", "A un passé militaire trouble", "A un coffre qu’il n’ose pas ouvrir", "A un nom qu’il ne doit pas prononcer",
+        "A un tatouage qui change", "A une voix intérieure", "A un masque qu’il ne peut enlever", "A un livre qu’il ne peut brûler",
+        "A un souvenir d’une autre vie", "A un ennemi immortel", "A un secret sur une ville maudite", "A une clé sans serrure",
+        "A un rêve qui le suit éveillé", "A une marque de naissance inquiétante", "A un héritage maudit", "A un ancien mentor disparu",
+        "A un passé d’occultiste", "A un secret sur un monstre local", "A un pendentif dangereux", "A un esprit qui le suit",
+        "A un message crypté qu’il ne comprend pas", "A une vision d’un monde parallèle"
+    ]
+}

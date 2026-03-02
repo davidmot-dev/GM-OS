@@ -1,7 +1,7 @@
-import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge, ipcRenderer, webUtils } from 'electron'
 
 // --------- Expose some API to the Renderer process ---------
-contextBridge.exposeInMainWorld('ipcRenderer', {
+contextBridge.exposeInMainWorld('appBridge', {
     on(...args: Parameters<typeof ipcRenderer.on>) {
         const [channel, listener] = args
         return ipcRenderer.on(channel, (event, ...args) => listener(event, ...args))
@@ -18,7 +18,32 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
         const [channel, ...omit] = args
         return ipcRenderer.invoke(channel, ...omit)
     },
-
-    // You can expose other apts you need here.
-    // ...
+    getPathForFile(file: File) {
+        return webUtils.getPathForFile(file)
+    },
+    npc: {
+        listDatabases: (category: string) => ipcRenderer.invoke('npc:list-databases', category),
+        loadDatabase: (category: string, name: string) => ipcRenderer.invoke('npc:load-database', category, name),
+        selectAvatar: () => ipcRenderer.invoke('npc:select-avatar')
+    },
+    tables: {
+        listUniverses: () => ipcRenderer.invoke('tables:list-universes'),
+        listTables: (universe: string) => ipcRenderer.invoke('tables:list-tables', universe),
+        loadTable: (universe: string, tableName: string) => ipcRenderer.invoke('tables:load-table', universe, tableName)
+    },
+    web: {
+        openExternal: (url: string) => ipcRenderer.send('web:open-external', url),
+        saveList: (data: unknown) => ipcRenderer.invoke('web:save-list', data),
+        loadList: () => ipcRenderer.invoke('web:load-list'),
+    },
+    utils: {
+        formatFileUrl: (path: string) => {
+            const normalized = path.replace(/\\/g, '/');
+            return `file:///${encodeURI(normalized).replace(/#/g, '%23').replace(/\?/g, '%3F')}`;
+        }
+    }
 })
+
+
+// Support legacy name if needed, but appBridge is preferred per instructions.md
+contextBridge.exposeInMainWorld('ipcRenderer', ipcRenderer)

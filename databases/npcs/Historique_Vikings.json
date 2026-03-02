@@ -1,0 +1,60 @@
+ {
+    "firstNames": [
+        "Bjorn", "Astrid", "Ragnar", "Freya", "Leif", "Sigrid", "Harald", "Ingrid", "Erik", "Yrsa", "Gunnar", "Solveig",
+        "Ulf", "Thyra", "Sten", "Liv", "Hakon", "Runa", "Torsten", "Kara", "Vidar", "Eira", "Sven", "Brynhild",
+        "Ivar", "Helga", "Olaf", "Sif", "Arne", "Gudrun", "Ketil", "Alva", "Sigurd", "Hilda", "Magnus", "Ragnhild",
+        "Torvald", "Svala", "Eirik", "Freyja", "Styr", "Ylva", "Haldor", "Signe", "Rolf", "Thora", "Jorund", "Maren"
+    ],
+    "lastNames": [
+        "Olafson", "Eriksen", "Haraldsson", "Leifsdottir", "Bjornsen", "Sigurdsson", "Torvaldsen", "Ivarsson", "Haldorsen", "Ragnarsdottir",
+        "Halvorsen", "Gundersen", "Nilsen", "Karlsen", "Johannesson", "Eiriksson", "Magnussen", "Svensen", "Torgersen", "Håkonsen",
+        "Ellingboe", "Frydenlund", "Eskildsen", "Erling", "Dahl", "Berg", "Nystrom", "Lundgren", "Haugland", "Solberg",
+        "Holt", "Ström", "Lindholm", "Sørensen", "Hansen", "Andersson", "Nygaard", "Haugen", "Bjørnsen", "Thorvaldsen",
+        "Knutsen", "Halldorsson", "Eldjarn", "Skarstad", "Vikstrom", "Hjort", "Sandvik", "Ulriksen", "Torstensen", "Arnesen"
+    ],
+    "jobs": [
+        "Guerrier", "Berserker", "Chasseur", "Pêcheur", "Forgeron", "Charpentier naval", "Skald", "Explorateur", "Marchand", "Éleveur de bétail",
+        "Tisseur de filets", "Maître de drakkar", "Chasseur de phoques", "Garde du village", "Dresseur de loups", "Chasseur de trolls",
+        "Pillard", "Éclaireur", "Guérisseur", "Herboriste", "Tanneur", "Fabricant de runes", "Chasseur de géants", "Porte-étendard",
+        "Capitaine de drakkar", "Maître des armes", "Garde du jarl", "Éleveur de chevaux", "Chasseur de baleines", "Pêcheur de fjord",
+        "Fabricant de boucliers", "Tailleur de peaux", "Messager", "Chasseur de monstres", "Garde-frontière", "Explorateur de terres lointaines",
+        "Chasseur de dragons", "Dresseur d’ours", "Fabricant de harpons", "Garde du temple", "Chasseur de bandits", "Pillard de monastères",
+        "Éleveur de rennes", "Chasseur de loups", "Fabricant de haches", "Garde de la salle du jarl", "Explorateur de montagnes",
+        "Chasseur de tempêtes", "Fabricant de bateaux", "Garde des runes"
+    ],
+    "traits": [
+        "Fier", "Brutal", "Courageux", "Superstitieux", "Rieur", "Taciturne", "Râleur", "Bagarreur", "Sanguin", "Stoïque",
+        "Méfiant", "Loyal", "Têtu", "Rancunier", "Généreux", "Sauvage", "Calme", "Observateur", "Impulsif", "Sage",
+        "Parle fort", "Parle peu", "Parle lentement", "A un rire tonitruant", "A un rire grave", "A une voix rauque",
+        "A une voix douce", "A un accent marqué", "A une démarche lourde", "A une démarche légère", "A un regard dur",
+        "A un regard fou", "A un regard perçant", "A un regard absent", "A un humour noir", "A un humour étrange",
+        "A une obsession pour la gloire", "A une obsession pour les batailles", "A une obsession pour les dieux",
+        "A une obsession pour les runes", "A une mémoire parfaite", "A une mémoire défaillante", "A un tic nerveux",
+        "A une cicatrice visible", "A une barbe imposante", "A une moustache épaisse", "A un air menaçant",
+        "A un air fatigué", "A un air déterminé"
+    ],
+    "looks": [
+        "Peau de bête", "Bouclier rond", "Hache lourde", "Casque conique", "Tresses épaisses", "Barbe tressée",
+        "Tatouages runiques", "Cape en fourrure", "Bottes en cuir", "Ceinture large", "Armure de cuir", "Lance longue",
+        "Casque en métal", "Bracelets de bronze", "Pantalon en laine", "Tunique épaisse", "Bouclier décoré", "Hache double",
+        "Épée courte", "Casque orné", "Cape sombre", "Bottes renforcées", "Gants en cuir", "Tunique brodée",
+        "Armure de mailles", "Bouclier usé", "Hache usé", "Cape en peau d’ours", "Bottes usées", "Tunique sombre",
+        "Bracelets en os", "Casque cabossé", "Bouclier peint", "Hache décorée", "Cape en peau de loup", "Bottes de voyage",
+        "Tunique claire", "Casque brillant", "Bouclier neuf", "Hache neuve", "Cape épaisse", "Bottes lourdes",
+        "Tunique en lin", "Casque simple", "Bouclier simple", "Hache simple", "Cape légère", "Tunique de voyage"
+    ],
+    "secrets": [
+        "A trahi son clan", "A fui une bataille", "A un frère disparu", "A un passé de berserker", "A un secret sur un jarl",
+        "A un tatouage interdit", "A un lien avec les dieux", "A un passé de marchand", "A un secret sur une île sacrée",
+        "A un passé de pillard", "A un secret sur un monstre marin", "A un passé de forgeron", "A un secret sur une arme légendaire",
+        "A un passé de skald", "A un secret sur une prophétie", "A un passé de chasseur", "A un secret sur une montagne sacrée",
+        "A un passé de pêcheur", "A un secret sur un fjord maudit", "A un passé de guerrier", "A un secret sur un duel perdu",
+        "A un passé de noble", "A un secret sur un trésor enfoui", "A un passé de vagabond", "A un secret sur un drakkar disparu",
+        "A un passé de capitaine", "A un secret sur une tempête", "A un passé de prisonnier", "A un secret sur un clan ennemi",
+        "A un passé de guérisseur", "A un secret sur une maladie", "A un passé de chasseur de géants", "A un secret sur un géant",
+        "A un passé de dresseur de loups", "A un secret sur une meute", "A un passé de forgeron sacré", "A un secret sur une rune",
+        "A un passé de voyageur", "A un secret sur une terre lointaine", "A un passé de maître d’armes", "A un secret sur une hache maudite",
+        "A un passé de gardien de temple", "A un secret sur un dieu oublié", "A un passé de skald itinérant", "A un secret sur une chanson sacrée",
+        "A un passé de chasseur de trolls", "A un secret sur un troll", "A un passé de survivant solitaire", "A un secret sur une bataille perdue"
+    ]
+}

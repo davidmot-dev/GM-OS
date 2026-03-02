@@ -1,0 +1,36 @@
+{
+    "firstNames": [
+        "Harold", "Martha", "Giovanni", "Clara", "Amarah", "Sophie", "Mary", "Thomas", "Yara", "Daniel", 
+        "Rebecca", "Fatima", "Anastasia", "Georgio", "Alicia", "Liam", "Ingrid", "Samuel", "Eleanor", "Hiroshi",
+        "Jonathan", "Victor", "Franklin", "Albert", "Liliane", "Evelyn", "Zhang", "Nora", "Mike", "Dmitri",
+        "Jeremy", "Maria", "Saúl", "Aisha", "Clarence", "Naomi", "John", "Helena", "Pablo", "Margaret"
+    ],
+    "lastNames": [
+        "Blackwood", "Whitmore", "Marconi", "Donovan", "Singh", "Morrow", "Lock", "O'Connor", "al-Mansouri", "Carter",
+        "Hargrove", "al-Rashid", "Petrovna", "Gonzalez", "Wittgenstein", "O'Reilly", "Bjørnsen", "Watson", "Rosen", "Murata",
+        "Harker", "Challoix", "Feldman", "Peterson", "Brivaud", "Grant", "Wei", "Blake", "Shepard", "Ivanov",
+        "Owans", "Kostopoulos", "Fernandez", "el-Tayeb", "Bell", "Cohen", "Jackson", "Rushin", "Byrd", "Fields"
+    ],
+    "jobs": [
+        "Antiquaire", "Bibliothécaire", "Maçon", "Journaliste", "Joaillier", "Actrice", "Professeure d'histoire", "Policier", "Calligraphe", "Chauffeur de taxi",
+        "Serveuse", "Traductrice", "Danseuse de ballet", "Banquier", "Couturière", "Couvreur", "Infirmière", "Manutentionnaire", "Herboriste", "Restaurateur d'art",
+        "Médecin légiste", "Ingénieur mécanique", "Avocat", "Barman", "Flûtiste", "Artiste peintre", "Marin", "Photographe", "Boucher", "Romancier",
+        "Marchand", "Enseignante", "Pompier", "Musicienne", "Forgeron", "Juge", "Guide touristique", "Infirmier", "Détective privée", "Analyste médicale"
+    ],
+    "traits": [
+        "Passionné d'occultisme et de glyphes", "Énergique et toujours munie d'un dictaphone", "Tiré à quatre épingles et mince", "Flegmatique et érudit", "Souriante mais cache un secret",
+        "Agile et charmant", "Garçon manqué à la voix rauque", "Muet à moins qu'on ne le paie", "Souvent guindé et maigre", "Sobre depuis dix ans et très certain",
+        "Consciencieux mais très désordonné", "Ouverte d'esprit et encyclopédique", "Gentil, simple et bienveillant", "Sobre et rigoureuse", "Dynamique et enjoué",
+        "Totalement pessimiste et désillusionné", "Peureux et sursaute au moindre bruit", "Excentrique et passionnée", "Indiscrète mais efficace", "Rancunier et colérique"
+    ],
+    "looks": [
+        "Cheveux grisonnants et lunettes rondes", "Petite taille, cheveux noir de jais en chignon", "Musclé, bronzé, cheveux noirs bouclés", "Auburn coupés au carré", "Visage poupin et gracieux",
+        "Costume impeccable et gomina", "Cheveux de feu bouclés", "Cernes profondes derrière d'épaisses lunettes", "Visage dur marqué par le soleil", "Pardessus gris et teint pâle",
+        "Moustache épaisse bien entretenue", "Massif et court sur pattes", "Physique athlétique, appareil en bandoulière", "Visage peu harmonieux mais grand sourire", "Mèche brune rebelle"
+    ],
+    "secrets": [
+        "Possède un écrit interdit mentionnant des rituels oubliés", "Craint pour sa sécurité après la disparition de collègues", "A acheté une gemme maudite", "Admirée par un fan adepte de forces occultes", "Partage des infos si on lui révèle tout",
+        "A offert un artefact dangereux à sa compagne", "Recherche ses ancêtres sorciers", "Fournit des ingrédients illégaux à des clients suspects", "Prédit l'avenir à travers des toiles terrifiantes", "Détient une carte vers un temple sous-marin",
+        "Cache une créature des profondeurs dans son entrepôt", "A vu des êtres se repaître de cadavres sur un champ de bataille", "Sait que des enfants font des cauchemars liés à la direction", "A grandi dans une secte secrète", "Accepte des pots-de-vin en prison"
+    ]
+}

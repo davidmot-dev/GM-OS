@@ -1,0 +1,53 @@
+{
+  "name": [
+    "Sanctuaire des Racines Figées",
+    "Sanctuaire du Cercle Minéralisé",
+    "Sanctuaire des Arbres‑Statues",
+    "Sanctuaire du Menhir Fendu",
+    "Sanctuaire des Pierres‑Chant",
+    "Sanctuaire du Chêne Fossile",
+    "Sanctuaire des Druides Silencieux",
+    "Sanctuaire du Bosquet Gris",
+    "Sanctuaire des Lianes de Quartz",
+    "Sanctuaire du Cœur Lithique"
+  ],
+
+  "description": [
+    "Un sanctuaire où les racines des arbres ont été pétrifiées en un réseau de pierre.",
+    "Un cercle druidique dont les pierres ont pris l’aspect de minéraux translucides.",
+    "Un bosquet où chaque arbre est devenu une statue de pierre parfaite.",
+    "Un menhir fendu en deux, laissant échapper une lueur intérieure.",
+    "Un sanctuaire où les pierres vibrent comme si elles chantaient encore.",
+    "Un chêne millénaire figé en fossile, ses feuilles devenues éclats de roche.",
+    "Un cercle de statues représentant d’anciens druides, figés en pleine incantation.",
+    "Un bosquet gris où la végétation entière semble avoir perdu sa couleur.",
+    "Un sanctuaire envahi de lianes de quartz qui scintillent à la lumière.",
+    "Un cœur de pierre pulsant au centre d’un ancien autel druidique."
+  ],
+
+  "ambiance": [
+    "Une immobilité sacrée.",
+    "Une minéralité mystique.",
+    "Un silence ancien.",
+    "Une fracture tellurique.",
+    "Une vibration subtile.",
+    "Une fossilisation totale.",
+    "Une magie figée.",
+    "Une pâleur surnaturelle.",
+    "Une cristallisation lente.",
+    "Une pulsation lithique."
+  ],
+
+  "secret": [
+    "Une racine figée renferme un symbole druidique intact.",
+    "Le cercle minéralisé s’illumine lors des nuits sans lune.",
+    "Un arbre‑statue contient un cœur encore chaud.",
+    "Le menhir fendu murmure un nom oublié.",
+    "Les pierres‑chant émettent une mélodie quand quelqu’un ment.",
+    "Le chêne fossile renferme une graine vivante.",
+    "Une statue de druide cligne parfois des yeux.",
+    "Le bosquet gris retrouve sa couleur sous une pluie rare.",
+    "Les lianes de quartz se déplacent imperceptiblement.",
+    "Le cœur lithique bat plus vite en présence de magie."
+  ]
+}

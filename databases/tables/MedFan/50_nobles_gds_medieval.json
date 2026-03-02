@@ -1,0 +1,356 @@
+{
+    "name": "50 Nobles - Guide de Survie Médiéval",
+    "dice": "1d50",
+    "entries": [
+        {
+            "min": 1,
+            "max": 1,
+            "title": "Beregor « le taureau » Fergarde",
+            "description": "Lord Beregor est un homme énorme à la crinière noire emmêlée et au sourire aux dents du bonheur. Buveur invétéré et combattant acharné, il a dû quitter les champs de bataille pour succéder à son père.",
+            "effect": "Ses décisions sont équitables mais il délibère très lentement (malus de temps sur les résolutions diplomatiques)."
+        },
+        {
+            "min": 2,
+            "max": 2,
+            "title": "Trilaina Saulec",
+            "description": "Svelte et gracieuse, Trilaina est douce et réfléchie. Elle a hérité d'un pacte familial ancien et vit sous l'œil attentif de sa grand-mère, Isantha.",
+            "effect": "Accès à une éducation d'élite permettant d'assumer un double héritage politique."
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "Bogwenn Brightshield",
+            "description": "L'aînée des Brightshield possède un tempérament enjoué mais une poigne de fer. Elle crée des cottes de mailles d'une finesse inégalée et préfère la compagnie de femmes de caractère.",
+            "effect": "Maniement expert de la masse et bonus en confection d'armures de mailles."
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "Daedric Hexenwerk",
+            "description": "Un homme fier à la moustache et barbe impeccables. Il exige un respect strict des titres et des protocoles, agissant avec une précision militaire.",
+            "effect": "Expertise reconnue en stratégie militaire (bonus aux tests de Tactique)."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "Ephemera Dapple",
+            "description": "Femme aux yeux émeraude et cheveux d'or. Bien que semblant parfois détachée, elle excelle dans les négociations difficiles.",
+            "effect": "Bonus important lors de négociations diplomatiques vers des issues profitables."
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "Clarion Skullhammer",
+            "description": "Robuste chevalier nordique au cri de guerre puissant. Il mène ses hommes sous l'étendard au lion d'argent avec une soif de conquête inextinguible.",
+            "effect": "Inspiration héroïque : bonus de moral pour tous les alliés qui le suivent au combat."
+        },
+        {
+            "min": 7,
+            "max": 7,
+            "title": "Gérard Cide",
+            "description": "Jeune héritier aux cheveux hirsutes qui idolâtre les corsaires et les capitaines-mercenaires aux comportements peu courtois.",
+            "effect": "Possède un réseau de contacts parmi les corsaires et mercenaires maritimes."
+        },
+        {
+            "min": 8,
+            "max": 8,
+            "title": "Cerise Poignefer",
+            "description": "Née sans main droite, elle utilise un manchon de cuir surmonté d'un poing d'acier. C'est une experte en fauconnerie, notamment pour les vautours fauves.",
+            "effect": "Bonus en Fauconnerie ; peut utiliser son poing d'acier comme une arme percutante."
+        },
+        {
+            "min": 9,
+            "max": 9,
+            "title": "Korajun Deewell",
+            "description": "Ancien croisé aux manières orientales, il recherche toujours le consensus par la diplomatie et les cadeaux, ce qui agace les barons locaux.",
+            "effect": "Bonus en Diplomatie et Érudition (écritures saintes)."
+        },
+        {
+            "min": 10,
+            "max": 10,
+            "title": "Cenovare Diorèse",
+            "description": "Mince et famélique, elle gère son domaine vêtue de noir. La rumeur l'accuse d'avoir provoqué la mort accidentelle de son mari par sorcellerie.",
+            "effect": "Réputation de sorcière (bonus en Intimidation, malus en Diplomatie auprès des pieux)."
+        },
+        {
+            "min": 11,
+            "max": 11,
+            "title": "Regina Goutetil",
+            "description": "Ancienne roturière anoblie vivant dans une demeure forestière gardée par des chiens noirs. On la soupçonne d'être liée à des brigands.",
+            "effect": "Connaissance approfondie de la forêt et des réseaux de voleurs de grand chemin."
+        },
+        {
+            "min": 12,
+            "max": 12,
+            "title": "Hevard Thunders",
+            "description": "Surnommé le bourreau de fort Legris. Son château cache un réseau de cavernes lui permettant d'apparaître n'importe où dans les vallées.",
+            "effect": "Utilisation de tunnels secrets (bonus en Embuscade et Mobilité régionale)."
+        },
+        {
+            "min": 13,
+            "max": 13,
+            "title": "Hendrie Bloodrose",
+            "description": "Belle femme à la stature impressionnante et aux yeux d'un noir profond. Derrière son parfum de fleurs se cache un soldat à la force redoutable.",
+            "effect": "Force physique exceptionnelle (+1 aux dégâts de corps à corps) et colères célèbres."
+        },
+        {
+            "min": 14,
+            "max": 14,
+            "title": "Renault Chorne",
+            "description": "Maître de l'ordre de Saint-Jean des Martyrs. Ce vieux lion à la chevelure argentée dégage une aura d'autorité naturelle.",
+            "effect": "Aura de commandement (avantage sur les tests de Charisme et d'Autorité)."
+        },
+        {
+            "min": 15,
+            "max": 15,
+            "title": "Lilina Riptide",
+            "description": "Jeune nageuse rousse de la côte, avide d'histoires romantiques. Elle cherche à profiter de sa liberté avant son mariage.",
+            "effect": "Excellente nageuse ; source de rumeurs sur les chevaliers de passage."
+        },
+        {
+            "min": 16,
+            "max": 16,
+            "title": "Brock Barrel",
+            "description": "Deuxième fils d'une famille de brasseurs. Bien que tourné vers le commerce, il est capable de terrasser quiconque insulte l'honneur familial.",
+            "effect": "Puissance de frappe (combat à mains nues) ; fournit du cidre célèbre pour sceller la paix."
+        },
+        {
+            "min": 17,
+            "max": 17,
+            "title": "Kalina Cockell",
+            "description": "Noble fortunée passionnée par l'étude des créatures inhabituelles. Elle entretient une ménagerie et une serre exotique dangereuses.",
+            "effect": "Connaissance des monstres et de la flore exotique (bonus en Connaissance de la Nature)."
+        },
+        {
+            "min": 18,
+            "max": 18,
+            "title": "Cédric de Caldérand",
+            "description": "Seigneur de Roche-Chaude, massif et amateur de fêtes populaires. Il récompense les artistes hardis avec des amulettes d'or en forme de dragon.",
+            "effect": "Mécène des arts ; ses amulettes servent de sauf-conduit dans ses terres."
+        },
+        {
+            "min": 19,
+            "max": 19,
+            "title": "Grâce de Bois d'Airain",
+            "description": "Dame sage aux yeux vert profond. Elle porte Corteline, une épée légendaire forgée par un géant dans un volcan.",
+            "effect": "Possession de l'épée Corteline ; bonus en Sagesse et Diplomatie."
+        },
+        {
+            "min": 20,
+            "max": 20,
+            "title": "Trille Carine",
+            "description": "Enfant espiègle de dix ans dotée de la faculté surnaturelle de communiquer avec les oiseaux, même les rapaces sauvages.",
+            "effect": "Communication animale (oiseaux) sans équipement de fauconnerie."
+        },
+        {
+            "min": 21,
+            "max": 21,
+            "title": "Aravaun Gelder",
+            "description": "Éleveur d'étalons de race au nez cassé lors d'une bagarre. Ses montures sont célèbres pour leur rapidité et leur endurance.",
+            "effect": "Fournit des chevaux d'exception (+10% vitesse/endurance de voyage)."
+        },
+        {
+            "min": 22,
+            "max": 22,
+            "title": "Gleena de Grays",
+            "description": "Énergique héritière qui préfère escalader des falaises en cuir taché plutôt que de porter de la soie à la cour.",
+            "effect": "Experte en Escalade et Athlétisme ; discrétion accrue en milieu rocheux."
+        },
+        {
+            "min": 23,
+            "max": 23,
+            "title": "Frédéric de Monrude",
+            "description": "Héritier robuste mais contemplatif. Contrairement à son père guerrier, il possède un véritable don pour la peinture et la sculpture.",
+            "effect": "Expertise artistique (peinture/sculpture) ; tempérament calme."
+        },
+        {
+            "min": 24,
+            "max": 24,
+            "title": "Sloane d'Auribeau",
+            "description": "Petite femme espiègle qui aime tricher aux jeux. Si on l'accepte, elle offre des cadeaux magnifiques ou fantasques.",
+            "effect": "Peut offrir des armes en acier de qualité ou des objets magiques imprévisibles."
+        },
+        {
+            "min": 25,
+            "max": 25,
+            "title": "Ernest Serdaile",
+            "description": "Vieux noble paralysé par une douleur à la jambe. Il abuse d'une tabatière apaisante qui engourdit son esprit.",
+            "effect": "Son entourage gère les affaires à sa place ; vulnérabilité aux manipulations."
+        },
+        {
+            "min": 26,
+            "max": 26,
+            "title": "Anaïs Vouivrague",
+            "description": "Selon la légende, sa lignée a mangé le cœur d'une vouivre. Elle possède une vitalité éclatante et dévore la vie à pleines dents.",
+            "effect": "Vitalité exceptionnelle (bonus aux tests d'Endurance et de Résistance)."
+        },
+        {
+            "min": 27,
+            "max": 27,
+            "title": "Aron Grace",
+            "description": "Malgré son visage d'ange, Aron est égoïste, ruzé et parfois cruel. Son intelligence lui permet d'éviter les punitions.",
+            "effect": "Manipulation experte ; bonus en Tromperie et évasion des conséquences."
+        },
+        {
+            "min": 28,
+            "max": 28,
+            "title": "Venteri Silvalus",
+            "description": "Chevalier retiré vivant dans des landes peu hospitalières. Il est le porte-parole respecté des hommes rugueux de sa région.",
+            "effect": "Soutien populaire local ; bonus en Diplomatie auprès des classes laborieuses."
+        },
+        {
+            "min": 29,
+            "max": 29,
+            "title": "Shen Auress",
+            "description": "Personnage affable qui accumule les secrets des autres familles comme s'il s'agissait d'un trésor.",
+            "effect": "Maître espion (connaissance de secrets compromettants sur la noblesse)."
+        },
+        {
+            "min": 30,
+            "max": 30,
+            "title": "Paracelsus Cournonge",
+            "description": "Érudit tuteur privé de plusieurs générations de seigneurs. Il est sévère et déteste les divertissements.",
+            "effect": "Enseignement académique (bonus permanent en Érudition pour ses élèves)."
+        },
+        {
+            "min": 31,
+            "max": 31,
+            "title": "Garris Blathor",
+            "description": "Géant violent doté d'une barbe noire. Il bat ses gens avec une canne noueuse dont l'esprit d'une sorcière lui chuchoterait des conseils.",
+            "effect": "Intimidation par la violence ; conseils occultes suspects via sa canne."
+        },
+        {
+            "min": 32,
+            "max": 32,
+            "title": "Célia Whiteblossom",
+            "description": "Jeune femme formée aux armes, surnommée la fleur aux épines. Elle est maîtresse de son cœur et de son esprit.",
+            "effect": "Maîtrise du combat à l'épée ; immunité contre les tentatives de séduction."
+        },
+        {
+            "min": 33,
+            "max": 33,
+            "title": "Liadora Wentlasse",
+            "description": "Douce et amusante en apparence, elle est en réalité l'un des « petits yeux » du maître-espion de la couronne.",
+            "effect": "Discrétion et écoute experte ; transmission de missives secrètes à la royauté."
+        },
+        {
+            "min": 34,
+            "max": 34,
+            "title": "Jean Blancour",
+            "description": "Dernier fils d'une famille au destin tragique. Ce guerrier insaisissable peut invoquer une rage le rendant vif comme un feu follet.",
+            "effect": "Rage de combat : bonus massif en Agilité et Vitesse de mouvement."
+        },
+        {
+            "min": 35,
+            "max": 35,
+            "title": "Voshara Rubise",
+            "description": "Féroce lionne des hauts plateaux. Ses ennemis ont tendance à mourir de peur avec une expression d'horreur gravée sur le visage.",
+            "effect": "Aura de terreur pure (peut paralyser de peur ses adversaires)."
+        },
+        {
+            "min": 36,
+            "max": 36,
+            "title": "Deanna Strond",
+            "description": "Géante prétendant avoir du sang de géant. Elle peut réduire un navet en bouillie à mains nues et aveugler un homme d'une gifle.",
+            "effect": "Force colossale ; bonus massif en combat à mains nues (Dégâts : Écrasement)."
+        },
+        {
+            "min": 37,
+            "max": 37,
+            "title": "Sylviane Dessai",
+            "description": "La dame bandée vit dans les ruines d'un château au fond d'un marais. Elle est couverte de bandages et ses yeux brûlent de fièvre.",
+            "effect": "Connaissances ésotériques anciennes ; audience très difficile à obtenir."
+        },
+        {
+            "min": 38,
+            "max": 38,
+            "title": "Sloven Decrisse",
+            "description": "Le prince à demi mort. Né mort-né, il s'est réveillé au goût du sang. Il parle du passé lointain comme s'il l'avait vécu.",
+            "effect": "Mémoire ancestrale (connaissance d'événements historiques oubliés)."
+        },
+        {
+            "min": 39,
+            "max": 39,
+            "title": "Monin Valcuse",
+            "description": "Grand Chancelier aux cheveux corbeau. Administrateur de justice compétent mais sujet à des colères passionnées.",
+            "effect": "Expertise en Droit et Justice ; tempérament volcanique imprévisible."
+        },
+        {
+            "min": 40,
+            "max": 40,
+            "title": "Branca Barehan",
+            "description": "Noble de petite taille couvert de cicatrices, compensant par une méchanceté et une habileté martiale brutale.",
+            "effect": "Coup fatal : peut briser des heaumes et des crânes d'un seul coup."
+        },
+        {
+            "min": 41,
+            "max": 41,
+            "title": "Craxen Anvilong",
+            "description": "Diplomate sauvage ayant engendré de nombreux bâtards talentueux. Il est considéré comme une souillure par sa famille respectable.",
+            "effect": "Réseau étendu de fils et filles bâtards dans diverses strates sociales."
+        },
+        {
+            "min": 42,
+            "max": 42,
+            "title": "Devor De'Lain",
+            "description": "Le bâtard à l'épée noire. Il porte Longue Nuit, une épée bâtarde qui ne peut être dégainée que par un sang vigoureux.",
+            "effect": "Possession de l'épée Longue Nuit (acier noirci) ; légitimité religieuse."
+        },
+        {
+            "min": 43,
+            "max": 43,
+            "title": "Aurand Leshu",
+            "description": "Noble solitaire vivant simplement dans son domaine forestier. Il protège ses bois giboyeux avec une efficacité mortelle.",
+            "effect": "Maîtrise absolue du domaine forestier (pièges et secrets des bois)."
+        },
+        {
+            "min": 44,
+            "max": 44,
+            "title": "Grassin Pierrehaute",
+            "description": "Géant colérique à la parole lente, mais beaucoup plus malin qu'il n'en a l'air. Il mène ses pairs à la guerre.",
+            "effect": "Chef de guerre expérimenté (bonus de commandement en bataille rangée)."
+        },
+        {
+            "min": 45,
+            "max": 45,
+            "title": "Luvère Forestier",
+            "description": "Fille adoptive d'une duchesse, née d'un paysan héroïque. Elle maîtrise les codes de la cour mais garde une nature audacieuse.",
+            "effect": "Mixité sociale : à l'aise tant avec les paysans qu'avec la haute noblesse."
+        },
+        {
+            "min": 46,
+            "max": 46,
+            "title": "Angus de Chandra",
+            "description": "Chevalier sauvage ayant fait pacte avec des pillards (les Cœurs de Corbeaux). Il est connu pour estropier ses adversaires en duel.",
+            "effect": "Soutien occulte de brigands ; ses duels laissent l'adversaire estropié à vie."
+        },
+        {
+            "min": 47,
+            "max": 47,
+            "title": "Fargan Strappe",
+            "description": "Noble sans terre possédant une flotte de guerre personnelle. Il maintient la paix sur les eaux et cache ses richesses à bord de ses navires.",
+            "effect": "Commandement naval ; richesse mobile importante (caches sur navires)."
+        },
+        {
+            "min": 48,
+            "max": 48,
+            "title": "Maëlis de Solara",
+            "description": "Noble innovante active dans le développement agricole et l'élevage. Elle a fait taire les sceptiques par son efficacité.",
+            "effect": "Gestion de ressources exceptionnelle (bonus de production sur le domaine)."
+        },
+        {
+            "min": 49,
+            "max": 49,
+            "title": "Bianca Brakall",
+            "description": "Hôtesse idéale et danseuse fougueuse. Elle est d'une adresse mortelle avec une arbalète, capable de repousser des assassins.",
+            "effect": "Tir d'élite (arbalète) ; bonus en Hospitalité et Diplomatie sociale."
+        },
+        {
+            "min": 50,
+            "max": 50,
+            "title": "Aggron Longmart",
+            "description": "Maître de la forteresse de Lucerne, raide et maladroit en politique. Il est beaucoup plus à l'aise dans un camp militaire.",
+            "effect": "Expertise en Logistique militaire ; pénalité aux tests de Politique courtisane."
+        }
+    ]
+}
