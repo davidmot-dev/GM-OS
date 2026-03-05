@@ -99,10 +99,16 @@ class MusicDeck {
             return;
         }
 
+        // Restore volume in case a fade was in progress
+        const now = this.context.currentTime;
+        this.gainNode.gain.cancelScheduledValues(now);
+        this.gainNode.gain.setValueAtTime(this.state.volume, now);
+
         try {
             console.log(`[MusicDeck] Calling audioElement.play() for: ${this.audioElement.src}`);
             await this.audioElement.play();
         } catch (e) {
+
             // Un NotSupportedError ici confirme souvent un problème de chemin ou de format
             console.error(`[MusicDeck] Play failed for ${this.audioElement.src}:`, e);
         }
@@ -115,10 +121,10 @@ class MusicDeck {
     stop() {
         this.audioElement.pause();
         this.audioElement.currentTime = 0;
-        this.audioElement.src = ""; // Libère le descripteur de fichier
         this.state.isPlaying = false;
         this.updateState();
     }
+
 
     setVolume(value: number) {
         this.state.volume = value;
@@ -233,6 +239,14 @@ export class MusicEngine {
     async resume() {
         if (this.context.state === 'suspended') await this.context.resume();
     }
+
+    isStreamingService(url: string): boolean {
+        if (!url) return false;
+        const u = url.toLowerCase();
+        return u.includes('youtube.com') || u.includes('youtu.be') ||
+            u.includes('spotify.com') || u.includes('deezer.com');
+    }
 }
+
 
 export const musicEngine = new MusicEngine();

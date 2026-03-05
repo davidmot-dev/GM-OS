@@ -1,0 +1,239 @@
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import type { ImageMedia, ProjectionTarget, ImageBridge, DisplayInfo, ImageFolder } from './types';
+
+// Extend window.appBridge to include image APIs
+declare global {
+    interface Window {
+        appBridge?: {
+            image?: ImageBridge;
+            session?: { launchHubWindow: () => void };
+        };
+    }
+}
+
+interface ImageState {
+    mediaList: ImageMedia[];
+    projectionTarget: ProjectionTarget;
+    activeProjectionId: string | null;
+    displays: DisplayInfo[];
+    folders: ImageFolder[];
+    activeFolderId: string | null; // null means 'All Media' or 'Root'
+    currentView: 'library' | 'favorites' | 'recent';
+
+    addMedia: (media: Omit<ImageMedia, 'id' | 'active' | 'isFavorite'>) => void;
+    removeMedia: (id: string) => void;
+    toggleMediaActive: (id: string) => void;
+    toggleMediaFavorite: (id: string) => void;
+    setProjectionTarget: (target: ProjectionTarget) => void;
+    setCurrentView: (view: 'library' | 'favorites' | 'recent') => void;
+    fetchDisplays: () => Promise<void>;
+
+    // Folder actions
+    addFolder: (name: string, parentId?: string | null) => void;
+    removeFolder: (id: string) => void;
+    renameFolder: (id: string, newName: string) => void;
+    setActiveFolderId: (id: string | null) => void;
+    moveMediaToFolder: (mediaId: string, folderId: string | null) => void;
+
+    projectSolo: (media: ImageMedia) => void;
+    projectSequence: () => void;
+    blackout: () => void;
+
+    navigateSequence: (direction: -1 | 1) => void;
+
+    clearAll: () => void;
+}
+
+export const useImageStore = create<ImageState>()(
+    persist(
+        (set, get) => ({
+            mediaList: [
+                // Some dummy data reflecting the design for testing
+                { id: '1', name: 'Cursed_Forest_Level3.png', path: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBhgj3d6Yg6g_DkXT1uDozfQUUl3hRf11nwnQJvP2_JJsOa7mPboxCz4SrUHYiZ7hw4gkKdWLHXwHl_OG8aUIMVHNua_AIQhrJdrpZNkeC0P2VuZjCYr1wHsSviQ4N8Dx6_aR9lMkzXXZxOAduqI2p4w0HHf3uVh1AP75rMCm8B4vkjb3IddTAnZm659VNUo_TFscYgUT9z6AwcUmLS_rhwx_n2Qdwc7NMoBoz3QoU2G1lwU97uCCl9Zhb6ho8_vHpB_Z06-sr_Fzo', active: true, sizeInfo: '1920x1080 • 2.4MB', isFavorite: true },
+                { id: '2', name: 'Dragon_Lair_Entry.jpg', path: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCgJngtipLoo7E9XnHlZz5SolJmWmfe3CYiKLzk-S9glx06jl67wkTU1_Ak2x6WlXPf7_VKWk5T-1tAVj7czB6wNJRBOS5iu8zWkh4zPDh4gwBmuEfC91WJQavR94cPfuoH9csDGnIHDjEvQW9WyEhPT0gDuHdY7A4EmnMzJ1xr1W30Acmjgauv9OKiKxKvgH_mJedF7icD_C5otY1_IH9_C9j256aRzig3Hha_JLufJ4TFOdgkuZModqw7QZSUocj_-MsdxNG7bpg', active: false, sizeInfo: '3840x2160 • 5.1MB', isFavorite: false },
+                { id: '3', name: 'Old_Oak_Tavern.webp', path: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBNaUC_Lv1RSfOXSXEZngmS6LYz68V-vJSp4bBjoTEUPpCMj-lxpLzL_qTY0_FGeLw0ZA63_91RdCSGukQIdLBsEjr4wzMmjUw-aW2dPA_Qcldt14UNHsqn9MYKAWR0a0QJ9wSFcWzX8b81zFG_As2eY-zpJO4eilw6AUuCjAQkhFNbCK4mGk08YCy8p4B8j4NntByGkfYMjahN60jm_VnFnDFKOsa3azr-n-93b_c04IjQHiwVX-TDcrmpgLHdl5VwY35VP9DHE_Q', active: true, sizeInfo: '1920x1080 • 0.8MB', isFavorite: false },
+            ],
+            projectionTarget: 'hub',
+            activeProjectionId: null,
+            displays: [],
+            folders: [
+                { id: 'f1', name: 'Backgrounds' },
+                { id: 'f2', name: 'NPC Portraits' },
+                { id: 'f3', name: 'Battlemaps' }
+            ],
+            activeFolderId: null,
+            currentView: 'library',
+
+            fetchDisplays: async () => {
+                if (window.appBridge?.image?.getDisplays) {
+                    const displays = await window.appBridge.image.getDisplays();
+                    set({ displays });
+
+                    // If target is invalid, fallback to hub
+                    const state = get();
+                    if (state.projectionTarget !== 'hub' && !displays.find(d => d.id === state.projectionTarget)) {
+                        set({ projectionTarget: 'hub' });
+                    }
+                }
+            },
+
+            addMedia: (mediaData) => {
+                const state = get();
+                const newMedia: ImageMedia = {
+                    ...mediaData,
+                    id: crypto.randomUUID(),
+                    active: true, // Default to true when added
+                    isFavorite: false,
+                    folderId: state.activeFolderId // Assign to current folder if any
+                };
+                set((state) => ({ mediaList: [...state.mediaList, newMedia] }));
+            },
+
+            removeMedia: (id) => {
+                set((state) => {
+                    const nextState = { mediaList: state.mediaList.filter(m => m.id !== id) };
+                    if (state.activeProjectionId === id) {
+                        // Current playing media deleted -> blackout
+                        get().blackout();
+                    }
+                    return nextState;
+                });
+            },
+
+            toggleMediaActive: (id) => {
+                set((state) => ({
+                    mediaList: state.mediaList.map(m => m.id === id ? { ...m, active: !m.active } : m)
+                }));
+            },
+
+            toggleMediaFavorite: (id) => {
+                set((state) => ({
+                    mediaList: state.mediaList.map(m => m.id === id ? { ...m, isFavorite: !m.isFavorite } : m)
+                }));
+            },
+
+            setProjectionTarget: (target) => set({ projectionTarget: target }),
+
+            setCurrentView: (view) => set({ currentView: view }),
+
+            // --- Folder Actions ---
+            addFolder: (name, parentId = null) => {
+                const newFolder: ImageFolder = {
+                    id: crypto.randomUUID(),
+                    name,
+                    parentId
+                };
+                set((state) => ({ folders: [...state.folders, newFolder] }));
+            },
+
+            removeFolder: (id) => {
+                // Remove folder and move its media to root
+                set((state) => ({
+                    folders: state.folders.filter(f => f.id !== id),
+                    mediaList: state.mediaList.map(m => m.folderId === id ? { ...m, folderId: null } : m),
+                    activeFolderId: state.activeFolderId === id ? null : state.activeFolderId
+                }));
+            },
+
+            renameFolder: (id, newName) => {
+                set((state) => ({
+                    folders: state.folders.map(f => f.id === id ? { ...f, name: newName } : f)
+                }));
+            },
+
+            setActiveFolderId: (id) => set({ activeFolderId: id }),
+
+            moveMediaToFolder: (mediaId, folderId) => {
+                set((state) => ({
+                    mediaList: state.mediaList.map(m => m.id === mediaId ? { ...m, folderId } : m)
+                }));
+            },
+
+            projectSolo: (media) => {
+                set({ activeProjectionId: media.id });
+
+                // Toujours synchroniser le hub avec l'image diffusée
+                window.appBridge?.image?.syncHubData('image', media.path);
+
+                // Si la cible est un écran physique, on lance le plein écran
+                if (get().projectionTarget !== 'hub') {
+                    window.appBridge?.image?.launchDisplay([media.path], get().projectionTarget);
+                }
+            },
+
+            projectSequence: () => {
+                const state = get();
+                const activeMedia = state.mediaList.filter(m => m.active);
+                if (activeMedia.length === 0) return;
+
+                // Start from the first active one, or if there's already one projected, find the next one
+                let targetMedia = activeMedia[0];
+                if (state.activeProjectionId) {
+                    const currentIndex = state.mediaList.findIndex(m => m.id === state.activeProjectionId);
+                    // Find first active one AFTER current index
+                    const nextActive = state.mediaList.find((m, i) => i > currentIndex && m.active);
+                    if (nextActive) {
+                        targetMedia = nextActive;
+                    }
+                    // else it loops back to first active
+                }
+
+                get().projectSolo(targetMedia);
+            },
+
+            navigateSequence: (direction) => {
+                const state = get();
+                const activeMedia = state.mediaList.filter(m => m.active);
+                if (activeMedia.length === 0) return;
+
+                if (!state.activeProjectionId) {
+                    get().projectSolo(activeMedia[0]);
+                    return;
+                }
+
+                // Sort out the active media list order respecting original array order
+                const mediaListIds = state.mediaList.map(m => m.id);
+                activeMedia.sort((a, b) => mediaListIds.indexOf(a.id) - mediaListIds.indexOf(b.id));
+
+                const activeIdx = activeMedia.findIndex(m => m.id === state.activeProjectionId);
+
+                if (activeIdx === -1) {
+                    // The currently playing item might have been unchecked during play. Just start over
+                    get().projectSolo(activeMedia[0]);
+                    return;
+                }
+
+                let nextIdx = activeIdx + direction;
+                if (nextIdx >= activeMedia.length) nextIdx = 0; // wrap to start
+                if (nextIdx < 0) nextIdx = activeMedia.length - 1; // wrap to end
+
+                get().projectSolo(activeMedia[nextIdx]);
+            },
+
+            blackout: () => {
+                set({ activeProjectionId: null });
+                window.appBridge?.image?.syncHubData('image', '');
+
+                if (get().projectionTarget !== 'hub') {
+                    window.appBridge?.image?.launchDisplay([], get().projectionTarget);
+                }
+            },
+
+            clearAll: () => {
+                if (confirm('Êtes-vous sûr de vouloir supprimer toutes les images ?')) {
+                    get().blackout();
+                    set({ mediaList: [] });
+                }
+            },
+        }),
+        {
+            name: 'gmos-image-storage',
+            partialize: (state) => ({
+                mediaList: state.mediaList,
+                projectionTarget: state.projectionTarget,
+                folders: state.folders
+            })
+        }
+    )
+);

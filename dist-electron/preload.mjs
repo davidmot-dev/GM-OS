@@ -19,6 +19,9 @@ contextBridge.exposeInMainWorld("appBridge", {
   getPathForFile(file) {
     return webUtils.getPathForFile(file);
   },
+  session: {
+    launchHubWindow: () => ipcRenderer.send("session:launch-hub-window")
+  },
   npc: {
     listDatabases: (category) => ipcRenderer.invoke("npc:list-databases", category),
     loadDatabase: (category, name) => ipcRenderer.invoke("npc:load-database", category, name),
@@ -33,6 +36,17 @@ contextBridge.exposeInMainWorld("appBridge", {
     openExternal: (url) => ipcRenderer.send("web:open-external", url),
     saveList: (data) => ipcRenderer.invoke("web:save-list", data),
     loadList: () => ipcRenderer.invoke("web:load-list")
+  },
+  image: {
+    getDisplays: () => ipcRenderer.invoke("image:get-displays"),
+    syncHubData: (type, path) => ipcRenderer.send("image:sync-hub-data", type, path),
+    launchDisplay: (paths, target) => ipcRenderer.send("image:launch-display", paths, target)
+  },
+  sound: {
+    loadAudios: () => ipcRenderer.invoke("sound:load-audios")
+  },
+  light: {
+    request: (url, method, body) => ipcRenderer.invoke("light:request", url, method, body)
   },
   utils: {
     formatFileUrl: (path) => {

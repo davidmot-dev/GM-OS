@@ -29,6 +29,7 @@ export interface AmbientScene {
 interface AmbientState {
     tracks: AmbientTrackState[];
     masterVolume: number;
+    outputDeviceId: string | 'default';
     presets: AmbientTheme[];
     scenes: AmbientScene[];
     customUniverses: string[];
@@ -42,6 +43,7 @@ interface AmbientState {
     setTrackVolume: (index: number, volume: number) => void;
     updateTrack: (index: number, updates: Partial<AmbientTrackState>) => void;
     setMasterVolume: (volume: number) => void;
+    setOutputDevice: (deviceId: string) => void;
     fadeOutAll: () => void;
     applyScene: (sceneId: string) => Promise<void>;
 }
@@ -120,6 +122,7 @@ export const useAmbientStore = create<AmbientState>()(
         (set, get) => ({
             tracks: INITIAL_TRACKS,
             masterVolume: 1.0,
+            outputDeviceId: 'default',
             presets: DEFAULT_PRESETS,
             scenes: DEFAULT_SCENES,
             customUniverses: [],
@@ -205,6 +208,10 @@ export const useAmbientStore = create<AmbientState>()(
                 set({ masterVolume: volume });
             },
 
+            setOutputDevice: (deviceId) => {
+                set({ outputDeviceId: deviceId });
+            },
+
             fadeOutAll: () => {
                 ambientEngine.fadeOutAll(2.0);
                 set(state => ({
@@ -249,6 +256,7 @@ export const useAmbientStore = create<AmbientState>()(
             partialize: (state) => ({
                 tracks: state.tracks,
                 masterVolume: state.masterVolume,
+                outputDeviceId: state.outputDeviceId,
                 presets: state.presets,
                 customUniverses: state.customUniverses
             })

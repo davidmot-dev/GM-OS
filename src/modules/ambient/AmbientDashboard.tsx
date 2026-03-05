@@ -38,7 +38,7 @@ const MasterVisualizer: React.FC = () => {
 };
 
 const AmbientDashboard: React.FC = () => {
-    const { tracks, presets, scenes, customUniverses, loadTheme, saveTheme, deleteTheme, addUniverse, fadeOutAll, applyScene } = useAmbientStore();
+    const { tracks, presets, scenes, customUniverses, loadTheme, saveTheme, deleteTheme, addUniverse, fadeOutAll, applyScene, outputDeviceId, setOutputDevice } = useAmbientStore();
 
     // Universe & Theme Selection State
     const universes = useMemo(() => {
@@ -62,6 +62,27 @@ const AmbientDashboard: React.FC = () => {
             setSelectedTheme(themesInUniverse[0]?.name || '');
         }
     }, [themesInUniverse, selectedTheme]);
+
+    // Audio Output Tracking
+    const [audioDevices, setAudioDevices] = useState<MediaDeviceInfo[]>([]);
+
+    useEffect(() => {
+        // Enforce the saved device early
+        ambientEngine.setOutputDevice(outputDeviceId);
+
+        const fetchDevices = async () => {
+            try {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const audioOutputs = devices.filter(d => d.kind === 'audiooutput');
+                setAudioDevices(audioOutputs);
+            } catch (err) {
+                console.error("Error enumerating audio devices:", err);
+            }
+        };
+        fetchDevices();
+        navigator.mediaDevices.addEventListener('devicechange', fetchDevices);
+        return () => navigator.mediaDevices.removeEventListener('devicechange', fetchDevices);
+    }, [outputDeviceId]);
 
     const handleThemeChange = (newTheme: string) => {
         setSelectedTheme(newTheme);
@@ -187,10 +208,26 @@ const AmbientDashboard: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Master VU & Volume */}
-                <div className="flex items-center gap-6 z-10">
-                    <div className="flex flex-col items-end gap-1">
-                        <span className="text-[8px] font-bold text-slate-600 uppercase">Master Output</span>
+                {/* Master Output & Volume */}
+                <div className="flex items-center gap-6 z-10 bg-slate-950/40 p-2 pl-4 rounded-3xl border border-slate-800">
+                    <div className="flex flex-col items-end gap-2">
+                        <select
+                            value={outputDeviceId}
+                            onChange={(e) => {
+                                const newId = e.target.value;
+                                setOutputDevice(newId);
+                                ambientEngine.setOutputDevice(newId);
+                            }}
+                            className="bg-slate-900 border-none text-slate-400 text-[10px] rounded-lg py-1 px-2 focus:ring-1 focus:ring-gm-cyan appearance-none cursor-pointer w-28 truncate"
+                            title="Audio Output Device"
+                        >
+                            <option value="default">System Default</option>
+                            {audioDevices.map(device => (
+                                <option key={device.deviceId} value={device.deviceId}>
+                                    {device.label || `Speaker ${device.deviceId.substring(0, 5)}...`}
+                                </option>
+                            ))}
+                        </select>
                         <MasterVisualizer />
                     </div>
 

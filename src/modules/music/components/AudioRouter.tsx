@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { musicEngine } from '../MusicEngine';
+import { useMusicStore } from '../useMusicStore';
 
 /**
  * AudioRouter is a global component mounted in App.tsx.
@@ -9,6 +10,7 @@ import { musicEngine } from '../MusicEngine';
  */
 const AudioRouter: React.FC = () => {
     const audioRef = useRef<HTMLAudioElement>(null);
+    const outputDeviceId = useMusicStore(state => state.outputDeviceId);
 
     useEffect(() => {
         const initAudio = async () => {
@@ -29,10 +31,25 @@ const AudioRouter: React.FC = () => {
             }
         };
 
-        initAudio();
-
-        // Optional: Handle sinkId changes here if needed for multi-output
+        if (!audioRef.current?.srcObject) {
+            initAudio();
+        }
     }, []);
+
+    // Handle output device changes
+    useEffect(() => {
+        const setDevice = async () => {
+            if (audioRef.current && 'setSinkId' in audioRef.current) {
+                try {
+                    await audioRef.current.setSinkId(outputDeviceId === 'default' ? '' : outputDeviceId);
+                    console.log(`[AudioRouter] Output device set to: ${outputDeviceId}`);
+                } catch (err) {
+                    console.error("[AudioRouter] Failed to set output device:", err);
+                }
+            }
+        };
+        setDevice();
+    }, [outputDeviceId]);
 
     return (
         <audio

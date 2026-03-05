@@ -29,6 +29,7 @@ export default {
                 mono: ['"JetBrains Mono"', 'monospace'],
                 sans: ['Inter', 'sans-serif'],
                 display: ['Orbitron', 'sans-serif'], // Optionnel pour les grands titres "OS"
+                cinematic: ['"Noto Serif"', 'serif'],
             },
             boxShadow: {
                 // Effets de lueur Glow pour l'immersion
@@ -36,6 +37,7 @@ export default {
                 'glow-cyan': '0 0 15px -3px rgba(6, 182, 212, 0.4)',
                 'glow-crimson': '0 0 15px -3px rgba(239, 68, 68, 0.4)',
                 'glow-violet': '0 0 15px -3px rgba(139, 92, 246, 0.4)',
+                'glow-white': '0 0 15px rgba(255, 255, 255, 0.1)',
             },
             backgroundImage: {
                 // Dégradés pour les cartes et panels

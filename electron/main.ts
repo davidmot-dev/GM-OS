@@ -1,9 +1,14 @@
-import { app, BrowserWindow, ipcMain, dialog, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, dialog, shell, screen } from 'electron'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import fs from 'fs-extra'
+import http from 'node:http'
+import https from 'node:https'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+// Ignore certificate errors for local HTTPS requests (like Philips Hue Bridge)
+app.commandLine.appendSwitch('ignore-certificate-errors')
 
 // The built directory structure
 //
@@ -162,6 +167,190 @@ ipcMain.handle('web:load-list', async () => {
         return await fs.readJson(filePaths[0]);
     }
     return null;
+});
+
+// --- Sound OS Handlers ---
+ipcMain.handle('sound:load-audios', async () => {
+    const { filePaths } = await dialog.showOpenDialog({
+        title: 'Sélectionner des effets sonores',
+        filters: [{ name: 'Audio', extensions: ['mp3', 'wav', 'ogg'] }],
+        properties: ['openFile', 'multiSelections']
+    });
+    return filePaths;
+});
+
+// --- Light OS Handlers ---
+ipcMain.handle('light:request', async (_event, url: string, method: string, body?: unknown) => {
+    return new Promise((resolve, reject) => {
+        try {
+            const parsedUrl = new URL(url);
+            const lib = parsedUrl.protocol === 'https:' ? https : http;
+
+            const options: https.RequestOptions = {
+                method,
+                rejectUnauthorized: false,
+                timeout: 5000 // 5 seconds timeout
+            };
+
+            const req = lib.request(parsedUrl, options, (res) => {
+                let data = '';
+                res.on('data', chunk => data += chunk);
+                res.on('end', () => {
+                    try {
+                        const parsed = data ? JSON.parse(data) : null;
+                        resolve(parsed);
+                    } catch {
+                        // Some endpoints might return empty string
+                        resolve(data);
+                    }
+                });
+            });
+
+            req.on('error', (err) => {
+                console.error(`[Light OS] Node request error for ${url}:`, err.message);
+                reject(err);
+            });
+
+            req.on('timeout', () => {
+                req.destroy();
+                reject(new Error('Request timed out'));
+            });
+
+            if (body) {
+                req.write(JSON.stringify(body));
+            }
+            req.end();
+
+        } catch (error: unknown) {
+            console.error(`[Light OS] Request setup failed for ${url}:`, error);
+            reject(error);
+        }
+    });
+});
+
+// --- Image OS Handlers ---
+const projectorWindows = new Map<string, BrowserWindow>();
+let hubWindow: BrowserWindow | null = null;
+
+ipcMain.handle('image:get-displays', () => {
+    const displays = screen.getAllDisplays();
+    return displays.map((d, index) => ({
+        id: d.id.toString(),
+        bounds: d.bounds,
+        label: `Moniteur ${index + 1}`
+    }));
+});
+
+ipcMain.on('image:sync-hub-data', (_event, type: string, imagePath: string) => {
+    console.log(`[Image OS] Sync Hub Data -> Type: ${type}, Path: ${imagePath}`);
+    // If we have a local hub window open, send it the update
+    if (hubWindow && !hubWindow.isDestroyed()) {
+        hubWindow.webContents.send('image:sync-hub-data', type, imagePath);
+    }
+});
+
+ipcMain.on('session:launch-hub-window', () => {
+    if (hubWindow && !hubWindow.isDestroyed()) {
+        hubWindow.focus();
+        return;
+    }
+
+    const displays = screen.getAllDisplays();
+    // Default to a secondary display if available, else primary
+    const targetDisplay = displays.length > 1 ? displays[1] : displays[0];
+
+    hubWindow = new BrowserWindow({
+        x: targetDisplay.bounds.x + 50,
+        y: targetDisplay.bounds.y + 50,
+        width: 1280,
+        height: 720,
+        frame: true, // Allow GM to move it around or fullscreen it manually
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.mjs'),
+            sandbox: false,
+            webSecurity: false,
+        },
+        backgroundColor: '#000000',
+    });
+
+    if (VITE_DEV_SERVER_URL) {
+        hubWindow.loadURL(`${VITE_DEV_SERVER_URL}?window=hub`);
+    } else {
+        hubWindow.loadFile(path.join(RENDERER_DIST, 'index.html'), { query: { window: 'hub' } });
+    }
+
+    hubWindow.on('closed', () => {
+        hubWindow = null;
+    });
+});
+
+ipcMain.on('image:launch-display', (_event, paths: string[], target: string) => {
+    console.log(`[Image OS] Launch Display -> Target: ${target}, Paths:`, paths);
+
+    if (target === 'hub') {
+        // Just trigger the sync logic for local hub window if any
+        if (hubWindow && !hubWindow.isDestroyed()) {
+            hubWindow.webContents.send('image:update-display', paths);
+        }
+        return;
+    }
+
+    const displays = screen.getAllDisplays();
+    const targetDisplay = displays.find(d => d.id.toString() === target);
+
+    if (!targetDisplay) {
+        console.error(`[Image OS] Target display ${target} not found.`);
+        return;
+    }
+
+    if (paths && paths.length === 0) {
+        // Blackout case: closing the projector window
+        const projWin = projectorWindows.get(target);
+        if (projWin && !projWin.isDestroyed()) {
+            projWin.close();
+        }
+        projectorWindows.delete(target);
+        return;
+    }
+
+    let projWin = projectorWindows.get(target);
+
+    if (!projWin || projWin.isDestroyed()) {
+        // Create new window on target display
+        projWin = new BrowserWindow({
+            x: targetDisplay.bounds.x,
+            y: targetDisplay.bounds.y,
+            fullscreen: true, // We want the projector to be fullscreen on that display
+            frame: false,
+            webPreferences: {
+                preload: path.join(__dirname, 'preload.mjs'),
+                sandbox: false,
+                webSecurity: false,
+            },
+            backgroundColor: '#000000',
+        });
+
+        projectorWindows.set(target, projWin);
+
+        projWin.on('closed', () => {
+            projectorWindows.delete(target);
+        });
+
+        // Load the projector route
+        if (VITE_DEV_SERVER_URL) {
+            projWin.loadURL(`${VITE_DEV_SERVER_URL}?window=projector`);
+        } else {
+            projWin.loadFile(path.join(RENDERER_DIST, 'index.html'), { query: { window: 'projector' } });
+        }
+
+        // Wait for finish load before sending image
+        projWin.webContents.on('did-finish-load', () => {
+            projWin?.webContents.send('image:update-display', paths);
+        });
+    } else {
+        // Window already exists, just update image
+        projWin.webContents.send('image:update-display', paths);
+    }
 });
 
 

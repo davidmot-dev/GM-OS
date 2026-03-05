@@ -42,6 +42,7 @@ interface MusicState {
     crossfader: number; // 0 to 1
     masterVolume: number;
     autoFadeDuration: number; // in ms
+    outputDeviceId: string | 'default';
 
     history: string[]; // Last 10 pad labels
     consoleLogs: string[]; // Engine logs
@@ -51,6 +52,7 @@ interface MusicState {
     setCrossfaderVisualOnly: (value: number) => void;
     setMasterVolume: (value: number) => void;
     setAutoFadeDuration: (value: number) => void;
+    setOutputDevice: (deviceId: string) => void;
 
     addPlaylist: (name: string) => void;
     removePlaylist: (id: string) => void;
@@ -59,16 +61,19 @@ interface MusicState {
     clearPlaylistPads: (playlistId: string) => void;
 
     loadToDeck: (deck: 'A' | 'B', pad: MusicPad) => Promise<void>;
-    playDeck: (deck: 'A' | 'B') => void;
+    playDeck: (deck: 'A' | 'B') => Promise<void>;
     stopDeck: (deck: 'A' | 'B') => void;
+    stopAll: () => void;
     toggleLoop: (deck: 'A' | 'B') => void;
 
     // V3 Auto-Logic
     autoFadeTarget: 'A' | 'B' | null;
     clearAutoFadeTarget: () => void;
-    triggerAutoFade: (target: 'A' | 'B') => void;
+    triggerAutoFade: (target: 'A' | 'B') => Promise<void>;
+
     playPad: (pad: MusicPad) => Promise<void>;
     addLog: (message: string) => void;
+    setActivePlaylistId: (id: string) => void;
 }
 
 export const useMusicStore = create<MusicState>()(
@@ -101,16 +106,22 @@ export const useMusicStore = create<MusicState>()(
                 crossfader: 0.5,
                 masterVolume: 1.0,
                 autoFadeDuration: 5000,
+                outputDeviceId: 'default',
                 history: [],
                 consoleLogs: [],
 
                 autoFadeTarget: null,
                 clearAutoFadeTarget: () => set({ autoFadeTarget: null }),
-                triggerAutoFade: (target) => {
+                triggerAutoFade: async (target) => {
+
+                    await musicEngine.resume();
+                    await get().playDeck(target);
                     musicEngine.performAutoFade(target, get().autoFadeDuration);
                     set({ autoFadeTarget: target });
                     get().addLog(`Transition auto vers Deck ${target}`);
                 },
+
+
 
                 setCrossfader: (value) => {
                     const val = Math.max(0, Math.min(1, value));
@@ -129,6 +140,8 @@ export const useMusicStore = create<MusicState>()(
                 },
 
                 setAutoFadeDuration: (value) => set({ autoFadeDuration: value }),
+
+                setOutputDevice: (deviceId) => set({ outputDeviceId: deviceId }),
 
                 addPlaylist: (name) => set((state) => ({
                     playlists: [...state.playlists, {
@@ -217,15 +230,34 @@ export const useMusicStore = create<MusicState>()(
                     }
                 },
 
-                playDeck: (deck) => {
-                    if (deck === 'A') musicEngine.deckA.play();
-                    else musicEngine.deckB.play();
+                playDeck: async (deck) => {
+                    await musicEngine.resume();
+                    const label = deck === 'A' ? get().deckA.activeTrackLabel : get().deckB.activeTrackLabel;
+                    if (deck === 'A') await musicEngine.deckA.play();
+                    else await musicEngine.deckB.play();
+                    get().addLog(`Lecture lancée sur Deck ${deck}${label ? `: ${label}` : ''}`);
                 },
 
+
                 stopDeck: (deck) => {
-                    if (deck === 'A') musicEngine.deckA.stop();
-                    else musicEngine.deckB.stop();
+                    const duration = get().autoFadeDuration;
+                    const label = deck === 'A' ? get().deckA.activeTrackLabel : get().deckB.activeTrackLabel;
+                    if (deck === 'A') {
+                        musicEngine.deckA.fadeOut(duration);
+                    } else {
+                        musicEngine.deckB.fadeOut(duration);
+                    }
+                    get().addLog(`Arrêt Deck ${deck}${label ? `: ${label}` : ''} (Fade Out)`);
                 },
+
+
+                stopAll: () => {
+                    const duration = get().autoFadeDuration;
+                    musicEngine.deckA.fadeOut(duration);
+                    musicEngine.deckB.fadeOut(duration);
+                    get().addLog("ARRÊT TOTAL (Progressif)");
+                },
+
 
                 toggleLoop: (deck) => set((state) => {
                     const isA = deck === 'A';
@@ -241,49 +273,48 @@ export const useMusicStore = create<MusicState>()(
                 }),
 
                 playPad: async (pad: MusicPad) => {
-                    const state = get();
-
                     if (!pad.url) {
-                        get().addLog(`Piste ignore : pas de fichier associé à "${pad.label}"`);
+                        get().addLog(`Piste ignorée : pas de fichier pour "${pad.label}"`);
                         return;
                     }
 
-                    // Forcer reprise du contexte si besoin
                     await musicEngine.resume();
 
-                    // 1. Est-ce que cette platine jour DÉJÀ cette musique ?
+                    // Detection link externe (YouTube, etc.)
+                    const isService = musicEngine.isStreamingService(pad.url);
+
+                    if (isService) {
+                        get().addLog(`Ouverture lien externe : ${pad.label}`);
+                        // @ts-expect-error global
+                        if (window.appBridge?.web?.openExternal) {
+                            // @ts-expect-error global
+                            window.appBridge.web.openExternal(pad.url);
+                        } else {
+                            window.open(pad.url, '_blank');
+                        }
+                        return;
+                    }
+
+                    // 1. Est-ce que cette platine joue DÉJÀ cette musique ?
+                    const state = get();
                     const isPlayingOnA = state.deckA.activePadId === pad.id && musicEngine.deckA.isPlaying;
                     const isPlayingOnB = state.deckB.activePadId === pad.id && musicEngine.deckB.isPlaying;
 
                     if (isPlayingOnA) {
-                        musicEngine.deckA.fadeOut(state.autoFadeDuration);
-                        set({ deckA: { ...state.deckA, activePadId: null, activeTrackLabel: null } });
+                        get().stopDeck('A');
                         return;
                     }
                     if (isPlayingOnB) {
-                        musicEngine.deckB.fadeOut(state.autoFadeDuration);
-                        set({ deckB: { ...state.deckB, activePadId: null, activeTrackLabel: null } });
+                        get().stopDeck('B');
                         return;
                     }
 
-                    // 2. Choisir la platine de destination (L'Intelligence)
-                    const isAActive = musicEngine.deckA.isPlaying;
-                    const isBActive = musicEngine.deckB.isPlaying;
+                    // 2. Choisir la platine de destination
+                    const targetDeck = state.autoFadeTarget || (state.crossfader < 0.5 ? 'B' : 'A');
 
-                    let targetDeck: 'A' | 'B' = 'A';
-
-                    if (isAActive && !isBActive) targetDeck = 'B';
-                    else if (isAActive && isBActive) {
-                        // Les deux jouent, on remplace celle qui a le moins de son
-                        targetDeck = state.crossfader > 0.5 ? 'A' : 'B';
-                    }
-
-                    // 3. Charger et jouer
+                    // 3. Charger et déclencher
                     await get().loadToDeck(targetDeck, pad);
-                    get().playDeck(targetDeck);
-
-                    // 4. Déclencher l'Auto-Fade vers cette platine
-                    get().triggerAutoFade(targetDeck);
+                    await get().triggerAutoFade(targetDeck);
                 },
 
                 addLog: (message: string) => {
@@ -292,18 +323,22 @@ export const useMusicStore = create<MusicState>()(
                     set((state) => ({
                         consoleLogs: [log, ...state.consoleLogs].slice(0, 40)
                     }));
-                }
+                },
+
+                setActivePlaylistId: (id: string) => set({ activePlaylistId: id })
             }
         },
+
         {
             name: 'gmos-music-storage',
-            // Ne pas persister l'état "playing" ou le volume temps réel si on veut
             partialize: (state) => ({
                 playlists: state.playlists,
                 crossfader: state.crossfader,
                 masterVolume: state.masterVolume,
-                autoFadeDuration: state.autoFadeDuration
+                autoFadeDuration: state.autoFadeDuration,
+                outputDeviceId: state.outputDeviceId
             }),
         }
     )
 );
+

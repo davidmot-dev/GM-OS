@@ -16,6 +16,13 @@ import WebDashboard from './modules/web/WebDashboard';
 
 
 
+import ImageDashboard from './modules/image/ImageDashboard';
+import ProjectorView from './modules/image/components/ProjectorView';
+import PlayerHub from './components/PlayerHub';
+import SoundDashboard from './modules/sound/SoundDashboard';
+import LightDashboard from './modules/light/LightDashboard';
+import { FavoriteDashboard } from './modules/favorite/components/FavoriteDashboard';
+
 // App.tsx entry point
 
 const PlaceholderModule = ({ name }: { name: string }) => (
@@ -55,13 +62,32 @@ function App() {
         return <TableDashboard />;
       case 'web':
         return <WebDashboard />;
-
+      case 'image':
+        return <ImageDashboard />;
+      case 'sound':
+        return <SoundDashboard />;
+      case 'light':
+        return <LightDashboard />;
+      case 'favorite':
+        return <FavoriteDashboard />;
 
       default:
 
         return <PlaceholderModule name={activeModule} />;
     }
   };
+
+  const searchParams = new URLSearchParams(window.location.search);
+  const isProjector = searchParams.get('window') === 'projector';
+  const isHub = searchParams.get('window') === 'hub';
+
+  if (isProjector) {
+    return <ProjectorView />;
+  }
+
+  if (isHub) {
+    return <PlayerHub />;
+  }
 
   return (
     <>

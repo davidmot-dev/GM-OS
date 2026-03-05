@@ -140,6 +140,16 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
 
                     <div className="my-3 mx-2 h-px bg-slate-800/50" />
 
+                    <div className="px-3 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Global</div>
+                    <NavItem
+                        icon={<Star size={20} className="text-amber-500" />}
+                        label="Favorite OS"
+                        active={activeModule === 'favorite'}
+                        onClick={() => setActiveModule('favorite')}
+                    />
+
+                    <div className="my-3 mx-2 h-px bg-slate-800/50" />
+
                     <div className="px-3 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Aventure</div>
                     <NavItem
                         icon={<Sword size={20} />}

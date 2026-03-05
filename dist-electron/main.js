@@ -1,4 +1,4 @@
-import { ipcMain, dialog, app, shell, BrowserWindow } from "electron";
+import { app, ipcMain, dialog, shell, screen, BrowserWindow } from "electron";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import require$$0$2 from "fs";
@@ -7,6 +7,8 @@ import require$$0$1 from "stream";
 import require$$4 from "util";
 import require$$5 from "assert";
 import require$$1 from "path";
+import http from "node:http";
+import https from "node:https";
 var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
 function getDefaultExportFromCjs(x) {
   return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x["default"] : x;
@@ -2176,6 +2178,7 @@ function requireLib() {
 var libExports = /* @__PURE__ */ requireLib();
 const fs = /* @__PURE__ */ getDefaultExportFromCjs(libExports);
 const __dirname$1 = path.dirname(fileURLToPath(import.meta.url));
+app.commandLine.appendSwitch("ignore-certificate-errors");
 process.env.APP_ROOT = path.join(__dirname$1, "..");
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
 const MAIN_DIST = path.join(process.env.APP_ROOT, "dist-electron");
@@ -2296,6 +2299,154 @@ ipcMain.handle("web:load-list", async () => {
     return await fs.readJson(filePaths[0]);
   }
   return null;
+});
+ipcMain.handle("sound:load-audios", async () => {
+  const { filePaths } = await dialog.showOpenDialog({
+    title: "Sélectionner des effets sonores",
+    filters: [{ name: "Audio", extensions: ["mp3", "wav", "ogg"] }],
+    properties: ["openFile", "multiSelections"]
+  });
+  return filePaths;
+});
+ipcMain.handle("light:request", async (_event, url, method, body) => {
+  return new Promise((resolve, reject) => {
+    try {
+      const parsedUrl = new URL(url);
+      const lib2 = parsedUrl.protocol === "https:" ? https : http;
+      const options = {
+        method,
+        rejectUnauthorized: false,
+        timeout: 5e3
+        // 5 seconds timeout
+      };
+      const req = lib2.request(parsedUrl, options, (res) => {
+        let data = "";
+        res.on("data", (chunk) => data += chunk);
+        res.on("end", () => {
+          try {
+            const parsed = data ? JSON.parse(data) : null;
+            resolve(parsed);
+          } catch {
+            resolve(data);
+          }
+        });
+      });
+      req.on("error", (err) => {
+        console.error(`[Light OS] Node request error for ${url}:`, err.message);
+        reject(err);
+      });
+      req.on("timeout", () => {
+        req.destroy();
+        reject(new Error("Request timed out"));
+      });
+      if (body) {
+        req.write(JSON.stringify(body));
+      }
+      req.end();
+    } catch (error) {
+      console.error(`[Light OS] Request setup failed for ${url}:`, error);
+      reject(error);
+    }
+  });
+});
+const projectorWindows = /* @__PURE__ */ new Map();
+let hubWindow = null;
+ipcMain.handle("image:get-displays", () => {
+  const displays = screen.getAllDisplays();
+  return displays.map((d, index) => ({
+    id: d.id.toString(),
+    bounds: d.bounds,
+    label: `Moniteur ${index + 1}`
+  }));
+});
+ipcMain.on("image:sync-hub-data", (_event, type, imagePath) => {
+  console.log(`[Image OS] Sync Hub Data -> Type: ${type}, Path: ${imagePath}`);
+  if (hubWindow && !hubWindow.isDestroyed()) {
+    hubWindow.webContents.send("image:sync-hub-data", type, imagePath);
+  }
+});
+ipcMain.on("session:launch-hub-window", () => {
+  if (hubWindow && !hubWindow.isDestroyed()) {
+    hubWindow.focus();
+    return;
+  }
+  const displays = screen.getAllDisplays();
+  const targetDisplay = displays.length > 1 ? displays[1] : displays[0];
+  hubWindow = new BrowserWindow({
+    x: targetDisplay.bounds.x + 50,
+    y: targetDisplay.bounds.y + 50,
+    width: 1280,
+    height: 720,
+    frame: true,
+    // Allow GM to move it around or fullscreen it manually
+    webPreferences: {
+      preload: path.join(__dirname$1, "preload.mjs"),
+      sandbox: false,
+      webSecurity: false
+    },
+    backgroundColor: "#000000"
+  });
+  if (VITE_DEV_SERVER_URL) {
+    hubWindow.loadURL(`${VITE_DEV_SERVER_URL}?window=hub`);
+  } else {
+    hubWindow.loadFile(path.join(RENDERER_DIST, "index.html"), { query: { window: "hub" } });
+  }
+  hubWindow.on("closed", () => {
+    hubWindow = null;
+  });
+});
+ipcMain.on("image:launch-display", (_event, paths, target) => {
+  console.log(`[Image OS] Launch Display -> Target: ${target}, Paths:`, paths);
+  if (target === "hub") {
+    if (hubWindow && !hubWindow.isDestroyed()) {
+      hubWindow.webContents.send("image:update-display", paths);
+    }
+    return;
+  }
+  const displays = screen.getAllDisplays();
+  const targetDisplay = displays.find((d) => d.id.toString() === target);
+  if (!targetDisplay) {
+    console.error(`[Image OS] Target display ${target} not found.`);
+    return;
+  }
+  if (paths && paths.length === 0) {
+    const projWin2 = projectorWindows.get(target);
+    if (projWin2 && !projWin2.isDestroyed()) {
+      projWin2.close();
+    }
+    projectorWindows.delete(target);
+    return;
+  }
+  let projWin = projectorWindows.get(target);
+  if (!projWin || projWin.isDestroyed()) {
+    projWin = new BrowserWindow({
+      x: targetDisplay.bounds.x,
+      y: targetDisplay.bounds.y,
+      fullscreen: true,
+      // We want the projector to be fullscreen on that display
+      frame: false,
+      webPreferences: {
+        preload: path.join(__dirname$1, "preload.mjs"),
+        sandbox: false,
+        webSecurity: false
+      },
+      backgroundColor: "#000000"
+    });
+    projectorWindows.set(target, projWin);
+    projWin.on("closed", () => {
+      projectorWindows.delete(target);
+    });
+    if (VITE_DEV_SERVER_URL) {
+      projWin.loadURL(`${VITE_DEV_SERVER_URL}?window=projector`);
+    } else {
+      projWin.loadFile(path.join(RENDERER_DIST, "index.html"), { query: { window: "projector" } });
+    }
+    projWin.webContents.on("did-finish-load", () => {
+      projWin?.webContents.send("image:update-display", paths);
+    });
+  } else {
+    projWin.webContents.send("image:update-display", paths);
+  }
 });
 ipcMain.handle("npc:select-avatar", async () => {
   const { filePaths } = await dialog.showOpenDialog({

@@ -155,6 +155,20 @@ export class AmbientEngine {
     getAnalyser() {
         return this.analyser;
     }
+
+    public async setOutputDevice(deviceId: string) {
+        if ('setSinkId' in this.context) {
+            try {
+                // @ts-expect-error AudioContext.setSinkId exists in modern browsers
+                await this.context.setSinkId(deviceId === 'default' ? '' : deviceId);
+                console.log(`[AmbientEngine] Output device changed to ${deviceId}`);
+            } catch (error) {
+                console.error('[AmbientEngine] Failed to set audio output device', error);
+            }
+        } else {
+            console.warn('[AmbientEngine] AudioContext.setSinkId is not supported by this browser.');
+        }
+    }
 }
 
 // Singleton for Ambient OS

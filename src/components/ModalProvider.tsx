@@ -3,23 +3,24 @@ import { useModalStore } from '../stores/useModalStore';
 import { AlertCircle, HelpCircle, Edit3 } from 'lucide-react';
 
 const ModalProvider: React.FC = () => {
-    const { type, message, onConfirm, onCancel, onPromptConfirm, defaultValue, closeModal } = useModalStore();
+    const { type, message, onConfirm, onCancel, onPromptConfirm, defaultValue, confirmLabel, cancelLabel, closeModal } = useModalStore();
+
     const [promptValue, setPromptValue] = useState(defaultValue || '');
 
     if (!type) return null;
 
     const handleConfirm = () => {
+        closeModal();
         if (type === 'prompt' && onPromptConfirm) {
             onPromptConfirm(promptValue);
         } else if (onConfirm) {
             onConfirm();
         }
-        closeModal();
     };
 
     const handleCancel = () => {
-        if (onCancel) onCancel();
         closeModal();
+        if (onCancel) onCancel();
     };
 
     const getIcon = () => {
@@ -79,7 +80,7 @@ const ModalProvider: React.FC = () => {
                             onClick={handleCancel}
                             className="px-4 py-2 rounded text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-gray-800 transition-colors"
                         >
-                            Annuler
+                            {cancelLabel || 'Annuler'}
                         </button>
                     )}
                     <button
@@ -87,9 +88,10 @@ const ModalProvider: React.FC = () => {
                         className={`px-4 py-2 rounded text-sm font-bold text-obsidian shadow-lg transition-colors ${getBtnColor()}`}
                         autoFocus={type !== 'prompt'}
                     >
-                        {type === 'prompt' ? 'Valider' : 'OK'}
+                        {confirmLabel || (type === 'prompt' ? 'Valider' : 'OK')}
                     </button>
                 </div>
+
             </div>
         </div>
     );

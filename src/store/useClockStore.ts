@@ -161,13 +161,16 @@ export const useClockStore = create<ClockState>()(
         {
             name: 'gm-os-clock-storage',
             partialize: (state) => ({
+                mode: state.mode,
                 theme: state.theme,
                 timestamp: state.timestamp,
                 tensions: state.tensions,
                 timerLabel: state.timerLabel,
+                timerRemaining: state.timerRemaining,
+                timerDuration: state.timerDuration,
+                timerIsRunning: state.timerIsRunning,
                 activeCalendarId: state.activeCalendarId,
                 calendars: state.calendars
-
             })
         }
     )
