@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useCombatStore } from '../useCombatStore';
+import { gmToast } from '../../../stores/useToastStore';
 import { gmConfirm } from '../../../stores/useModalStore';
 import { UserPlus, RefreshCw, Dices, Save, FolderOpen, Play, Skull, ArrowDown01, ArrowUp10 } from 'lucide-react';
 
@@ -10,7 +11,8 @@ const CombatControls: React.FC = () => {
         sortInitiative,
         nextTurn,
         addCombatant,
-        clearCombatants
+        clearCombatants,
+        syncCombatantHPToSession
     } = useCombatStore();
 
     const [diceMax, setDiceMax] = useState<number>(20);
@@ -117,7 +119,11 @@ const CombatControls: React.FC = () => {
             {/* Sync & Advanced */}
             <div className="mt-auto space-y-4 pt-6 border-t border-gray-800">
                 <button
-                    className="w-full bg-emerald-900/30 hover:bg-emerald-800/50 border border-emerald-500/30 text-emerald-400 px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors"
+                    onClick={() => {
+                        syncCombatantHPToSession();
+                        gmToast("Points de Vie synchronisés !");
+                    }}
+                    className="w-full bg-emerald-900/30 hover:bg-emerald-800/50 border border-emerald-500/30 text-emerald-400 px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-sm hover:shadow-glow-emerald"
                 >
                     <RefreshCw size={18} />
                     <span>Sync PV vers Session</span>

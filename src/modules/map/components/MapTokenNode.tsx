@@ -1,19 +1,21 @@
 import React, { useState, useRef } from 'react';
 import { useMapStore, type MapToken } from '../useMapStore';
 import { useCombatStore } from '../../combat/useCombatStore';
-import { Shield } from 'lucide-react';
+import { useMediaUrl } from '../../../hooks/useMediaUrl';
+import { Shield, Trash2 } from 'lucide-react';
 
 interface MapTokenNodeProps {
     token: MapToken;
 }
 
 const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token }) => {
-    const { currentTool, updateToken } = useMapStore();
+    const { currentTool, updateToken, removeToken } = useMapStore();
     const { combatants, currentTurnIdx } = useCombatStore();
 
     // On lie le token à son combattant s'il existe
     const combatant = combatants.find(c => c.id === token.linkedCombatantId);
-    const isCurrentTurn = combatants[currentTurnIdx]?.id === token.linkedCombatantId;
+    const isCurrentTurn = !!token.linkedCombatantId && combatants[currentTurnIdx]?.id === token.linkedCombatantId;
+    const resolvedAvatar = useMediaUrl(token.avatar || undefined);
 
     const [isDragging, setIsDragging] = useState(false);
     const dragRef = useRef<{ x: number; y: number } | null>(null);
@@ -87,10 +89,31 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token }) => {
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
             onPointerCancel={handlePointerUp}
+            onContextMenu={(e) => {
+                if (isInteractable) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    removeToken(token.id);
+                }
+            }}
         >
+            {/* Trash Button on Hover */}
+            {isInteractable && (
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        removeToken(token.id);
+                    }}
+                    className="absolute -top-2 -right-2 bg-red-600 text-white p-1 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-50 hover:bg-red-500 border border-white/20"
+                    title="Remove Token"
+                >
+                    <Trash2 size={14} />
+                </button>
+            )}
+
             {/* Avatar image */}
-            {token.avatar ? (
-                <img src={token.avatar} alt="avatar" className="w-full h-full object-cover rounded-full pointer-events-none" />
+            {token.avatar && resolvedAvatar ? (
+                <img src={resolvedAvatar} alt="avatar" className="w-full h-full object-cover rounded-full pointer-events-none" />
             ) : (
                 <Shield size={24 * token.size} className={combatant?.isPlayer ? 'text-gm-violet' : 'text-gm-crimson'} />
             )}
@@ -107,7 +130,7 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token }) => {
 
             {/* Hover Tooltip (Name + HP) */}
             <div className="absolute -bottom-8 whitespace-nowrap bg-obsidian/90 backdrop-blur-sm border border-gray-700 text-xs px-2 py-1 rounded opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none z-50 text-slate-200 shadow-xl font-bold">
-                {combatant ? `${combatant.name} (${combatant.hp}/${combatant.hpMax})` : 'Token'}
+                {combatant ? `${combatant.name} (${combatant.hp}/${combatant.hpMax})` : (token.name || 'Token')}
             </div>
         </div>
     );

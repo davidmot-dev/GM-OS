@@ -2,26 +2,36 @@ import React from 'react';
 import { X, Star } from 'lucide-react';
 import type { ImageMedia } from '../types';
 import { useImageStore } from '../useImageStore';
+import { useMediaUrl } from '../../../hooks/useMediaUrl';
 
 interface ImagePadProps {
     media: ImageMedia;
 }
 
 const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
-    const { activeProjectionId, projectSolo, toggleMediaActive, removeMedia, folders, moveMediaToFolder, toggleMediaFavorite } = useImageStore();
+    const {
+        projections, displays,
+        projectSolo, toggleMediaActive, removeMedia,
+        folders, moveMediaToFolder, toggleMediaFavorite
+    } = useImageStore();
 
-    // Check if it is currently projected
-    const isProjected = activeProjectionId === media.id;
+    // Find all targets currently projecting this media
+    const activeTargets = Object.entries(projections)
+        .filter(([, mediaId]) => mediaId === media.id)
+        .map(([targetId]) => {
+            if (targetId === 'hub') return 'Player Hub';
+            return displays.find(d => d.id === targetId)?.label || `Screen ${targetId}`;
+        });
+
+    const isProjected = activeTargets.length > 0;
 
     // Use the Stitch HTML styling, adapting active / playing states
     const borderClass = isProjected
         ? "ring-4 ring-sky-500 shadow-glow-cyan border-white/5"
         : "border-white/5 hover:border-sky-500/50 hover:shadow-glow-cyan";
 
-    const safePath = media.path.startsWith('http') || media.path.startsWith('file://') || media.path.startsWith('data:')
-        ? media.path
-        // @ts-expect-error global
-        : (window.appBridge?.utils?.formatFileUrl ? window.appBridge.utils.formatFileUrl(media.path) : media.path.replace(/\\/g, '/'));
+    const resolvedUrl = useMediaUrl(media.path);
+    const safePath = resolvedUrl || '';
 
     return (
         <div
@@ -35,8 +45,15 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent"></div>
 
             {isProjected && (
-                <div className="absolute top-3 left-3 flex gap-2">
-                    <span className="bg-sky-500 text-[10px] font-black text-white px-2 py-0.5 rounded uppercase tracking-tighter">Live</span>
+                <div className="absolute top-3 left-3 flex flex-col gap-1">
+                    {activeTargets.map(targetLabel => (
+                        <span
+                            key={targetLabel}
+                            className={`${targetLabel === 'Player Hub' ? 'bg-sky-500' : 'bg-amber-500'} text-[8px] font-black text-white px-1.5 py-0.5 rounded uppercase tracking-tighter shadow-lg whitespace-nowrap`}
+                        >
+                            {targetLabel}
+                        </span>
+                    ))}
                 </div>
             )}
 

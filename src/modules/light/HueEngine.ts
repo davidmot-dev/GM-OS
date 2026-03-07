@@ -175,6 +175,8 @@ export class HueEngine {
         for (const [id, state] of Object.entries(scene.lightStates)) {
             this.stopSoftwareEffect(id); // Clean any previous logic
             if (state.effect && state.effect !== 'none') {
+                // IMPORTANT: Even if there is an effect, we must turn the light ON first and set its base state
+                await this.setLightState(id, { ...state, effect: 'none' }, transTime);
                 this.startSoftwareEffect(id, state.effect, state);
             } else {
                 // Ensure we handle them sequentially to not rate-limit the bridge
@@ -405,15 +407,10 @@ export class HueEngine {
                 // Bypass setLightState to avoid polluting local store heavily and forcing React renders 10x a second
                 await this.request('PUT', `/lights/${id}/state`, payload);
 
-                // Keep UI effect string updated
-                if (tick % 10 === 0) {
-                    useLightStore.getState().updateLightState(id, { effect: effectName });
-                }
-
                 // If interval changed dynamically (glitch, neon, etc.), re-schedule
                 if (['glitch', 'tv', 'lightning', 'neon', 'heartbeat', 'flashlight'].includes(effectName)) {
                     if (this.softwareEffectIntervals[id]) {
-                        clearInterval(this.softwareEffectIntervals[id]);
+                        clearTimeout(this.softwareEffectIntervals[id]);
                         this.softwareEffectIntervals[id] = setTimeout(loop, interval);
                     }
                 }
@@ -424,7 +421,7 @@ export class HueEngine {
 
         // First run
         loop();
-        if (effectName !== 'glitch' && effectName !== 'lightning') {
+        if (!['glitch', 'tv', 'lightning', 'neon', 'heartbeat', 'flashlight'].includes(effectName)) {
             this.softwareEffectIntervals[id] = setInterval(loop, interval);
         } else {
             this.softwareEffectIntervals[id] = setTimeout(loop, interval); // managed in loop

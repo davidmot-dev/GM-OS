@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useCombatStore, type Combatant } from '../useCombatStore';
 import { X, Shield, Plus, Minus, PlusCircle } from 'lucide-react';
+import { useMediaUrl } from '../../../hooks/useMediaUrl';
 
 const PRESET_STATUSES = [
     { name: 'Poison', icon: '🤢', duration: 3 },
@@ -22,6 +23,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
     const { updateCombatant, removeCombatant, removeStatus, setInitiative, addStatus } = useCombatStore();
     const [showStatusMenu, setShowStatusMenu] = useState(false);
     const [customDuration, setCustomDuration] = useState<number>(3);
+    const resolvedAvatar = useMediaUrl(combatant.avatar);
 
     // Calcul de couleur HP
     let hpColorClass = 'text-green-400';
@@ -62,8 +64,8 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
 
                 {/* Avatar / Icon */}
                 <div className="w-12 h-12 rounded-full overflow-hidden bg-obsidian-dark flex items-center justify-center border-2 border-gm-crimson/50 shrink-0">
-                    {combatant.avatar ? (
-                        <img src={combatant.avatar} alt="avatar" className="w-full h-full object-cover" />
+                    {combatant.avatar && resolvedAvatar ? (
+                        <img src={resolvedAvatar} alt="avatar" className="w-full h-full object-cover" />
                     ) : (
                         <Shield className={combatant.isPlayer ? 'text-gm-violet' : 'text-gm-crimson'} size={24} />
                     )}

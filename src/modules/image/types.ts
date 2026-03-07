@@ -22,8 +22,21 @@ export interface DisplayInfo {
     label: string;
 }
 
+export interface ProjectedEntity {
+    id: string;
+    name: string;
+    subtitle?: string;
+    avatar?: string;
+    imageUrl?: string;
+    portraitUrl?: string;
+    description?: string;
+    lore?: string;
+    type?: string;
+    fields?: Record<string, string>;
+}
+
 export interface ImageBridge {
     getDisplays: () => Promise<DisplayInfo[]>;
-    syncHubData: (type: 'image', path: string) => void;
+    syncHubData: (type: 'image' | 'entity', data: string) => void;
     launchDisplay: (paths: string[], target: ProjectionTarget) => void;
 }

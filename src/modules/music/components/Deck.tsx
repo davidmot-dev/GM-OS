@@ -34,86 +34,95 @@ const Deck: React.FC<DeckProps> = ({ side }) => {
     const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
     const waveformHeights = useMemo(() => {
-        return Array.from({ length: 40 }).map(() => 20 + Math.random() * 60);
+        // Use a static "random-looking" sequence for the visualizer to avoid lint issues
+        return [60, 45, 80, 50, 65, 30, 85, 40, 70, 55, 90, 45, 60, 35, 75, 50, 65, 40, 80, 55, 70, 35, 90, 50, 65, 40, 85, 55, 70, 45, 80, 50, 65, 35, 75, 45, 60, 30, 85, 55];
     }, []);
 
     return (
-        <div className="bg-slate-900/60 rounded-3xl border border-white/5 p-6 flex flex-col gap-6 relative overflow-hidden group transition-all hover:bg-slate-900/80">
-            {/* Background Side Indicator */}
-            <div className="absolute -right-6 -bottom-8 text-[12rem] font-black text-white/[0.03] italic select-none pointer-events-none group-hover:text-primary/[0.05] transition-colors">
-                {side}
-            </div>
+        <div className="group relative bg-obsidian/40 backdrop-blur-[24px] rounded-[1.5rem] border border-white/5 p-4 shadow-xl overflow-hidden transition-all duration-500 hover:shadow-glow-violet/10 hover:border-gm-violet/30 hover:bg-obsidian/50 flex flex-col gap-3">
+            {/* Premium Ambient Background Glow */}
+            <div className={`absolute -top-32 -right-32 w-80 h-80 rounded-full transition-all duration-1000 ${isPlaying ? 'bg-gm-violet/20 blur-[120px] animate-pulse' : 'bg-transparent blur-0'}`} />
+            <div className="absolute top-0 right-0 w-40 h-40 bg-gm-violet/5 blur-3xl pointer-events-none opacity-40" />
 
-            <div className="flex justify-between items-start relative z-10">
-                <div>
-                    <div className="flex items-center gap-2 mb-1">
-                        <span className={`size-1.5 rounded-full ${isPlaying ? 'bg-primary animate-pulse shadow-[0_0_8px_#7c3bed]' : 'bg-slate-700'}`} />
-                        <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">Deck {side}</h3>
+            {/* Header: Track Info & Disc */}
+            <div className="flex items-center gap-4 relative z-10">
+                {/* Compact Disc Visualizer */}
+                <div className="relative shrink-0">
+                    <div className={`size-12 rounded-full border-2 border-obsidian-dark bg-obsidian shadow-lg flex items-center justify-center relative overflow-hidden transition-all duration-500 ${isPlaying ? 'animate-spin-slow scale-105' : 'group-hover:scale-105'}`}>
+                        {/* Center Label */}
+                        <div className={`size-6 rounded-full border border-obsidian-dark flex items-center justify-center relative z-10 transition-all duration-500 ${isPlaying ? 'bg-gm-violet shadow-glow-violet' : 'bg-obsidian-light'}`}>
+                            <Activity size={10} className={`transition-all duration-500 ${isPlaying ? 'text-white' : 'text-slate-600'}`} />
+                        </div>
                     </div>
-                    <p className="text-lg font-bold text-white truncate max-w-[240px] tracking-tight">
-                        {deckState.activeTrackLabel || "No Track Loaded"}
-                    </p>
                 </div>
-                <div className={`p-2.5 rounded-xl border transition-all ${isPlaying ? 'bg-primary/20 border-primary/30 text-primary shadow-[0_0_15px_rgba(124,59,237,0.2)]' : 'bg-slate-800/50 border-white/5 text-slate-500'}`}>
-                    <Activity size={18} />
+
+                <div className="flex-1 min-w-0 space-y-0.5">
+                    <div className="flex items-center gap-2">
+                        <span className={`px-1.5 py-0.5 rounded-lg text-[7px] font-black uppercase tracking-widest transition-all duration-500 border ${isPlaying ? 'bg-gm-violet/20 border-gm-violet text-white shadow-glow-violet/20' : 'bg-obsidian-light/60 border-white/10 text-slate-500'}`}>
+                            DRK {side}
+                        </span>
+                    </div>
+                    <div>
+                        <h3 className="text-sm font-black text-white truncate tracking-tight transition-colors group-hover:text-gm-violet/90">
+                            {deckState.activeTrackLabel || "Ready"}
+                        </h3>
+                    </div>
                 </div>
             </div>
 
-            {/* Waveform Visualization area */}
-            <div className="h-24 bg-slate-950/80 rounded-2xl border border-white/5 relative overflow-hidden flex items-center justify-center group-hover:border-primary/20 transition-colors">
-                {/* Simulated waveforms */}
-                <div className="absolute inset-x-0 bottom-0 top-0 flex items-center justify-center gap-[2px] opacity-20 pointer-events-none">
+            {/* Waveform & Progress */}
+            <div className="space-y-2 relative z-10">
+                <div className="h-4 bg-obsidian-dark/60 rounded-lg border border-white/5 relative overflow-hidden flex items-end px-1 pb-0.5 gap-0.5 group-hover:border-gm-violet/10 transition-colors shadow-inner">
                     {waveformHeights.map((h, i) => (
                         <div
                             key={i}
-                            className={`w-[3px] rounded-full bg-primary transition-all duration-300 ${isPlaying ? 'animate-pulse' : ''}`}
+                            className={`flex-1 rounded-t-[1px] transition-all duration-300 ${isPlaying ? 'bg-gm-violet/30 animate-jitter' : 'bg-slate-800'}`}
                             style={{
-                                height: isPlaying ? `${h}%` : '15%',
-                                transitionDelay: `${i * 20}ms`
+                                height: isPlaying ? `${h}%` : '20%',
+                                transitionDelay: `${i * 5}ms`
                             }}
                         />
                     ))}
+                    
+                    <div className="absolute inset-0 flex items-center px-0 pointer-events-none">
+                        <div className="h-full bg-gm-violet/5 border-r border-gm-violet/40 transition-all duration-100 ease-linear" style={{ width: `${progress}%` }} />
+                    </div>
                 </div>
 
-                {/* Progress Bar Overlay */}
-                <div className="absolute inset-0 flex items-center pointer-events-none">
-                    <div className="h-full bg-primary/10 border-r border-primary transition-all duration-100 ease-linear shadow-[0_0_15px_rgba(124,59,237,0.3)]" style={{ width: `${progress}%` }} />
-                </div>
-
-                <div className="relative z-10 flex flex-col items-center">
-                    <span className="text-[11px] font-mono text-white tracking-[0.3em] uppercase opacity-40">Streaming Active</span>
+                <div className="flex items-center justify-between text-[8px] font-black font-mono tracking-tighter text-slate-600 px-0.5 uppercase">
+                    <span className={isPlaying ? 'text-gm-violet' : ''}>{formatTime(currentTime)}</span>
+                    <span>{formatTime(duration)}</span>
                 </div>
             </div>
 
-            <div className="flex items-center justify-between text-xs font-mono text-slate-500 bg-slate-950/40 py-1.5 px-3 rounded-lg border border-white/5">
-                <span className={isPlaying ? 'text-primary' : ''}>{formatTime(currentTime)}</span>
-                <span>{formatTime(duration)}</span>
-            </div>
-
-            <div className="flex items-center gap-3 mt-auto relative z-10">
+            {/* Transport Controls */}
+            <div className="flex items-center gap-1.5 relative z-10">
                 <button
                     onClick={() => isPlaying ? engineDeck.pause() : playDeck(side)}
-                    className={`flex-1 h-14 rounded-2xl flex items-center justify-center transition-all ${isPlaying
-                        ? 'bg-primary/20 text-primary border border-primary/30 shadow-[inset_0_0_15px_rgba(124,59,237,0.1)]'
-                        : 'bg-primary text-white shadow-[0_8px_20px_rgba(124,59,237,0.4)] hover:scale-[1.02] active:scale-[0.98]'
+                    className={`flex-[2] h-8 rounded-lg flex items-center justify-center transition-all group/btn ${isPlaying
+                        ? 'bg-obsidian-light/80 text-gm-violet border border-gm-violet/20'
+                        : 'bg-gm-violet text-white shadow-lg active:scale-[0.98]'
                         }`}
                 >
-                    {isPlaying ? <Pause size={24} fill="currentColor" /> : <Play size={24} fill="currentColor" className="translate-x-0.5" />}
+                    {isPlaying ? <Pause size={14} fill="currentColor" /> : <Play size={14} fill="currentColor" className="translate-x-0.5" />}
                 </button>
+                
                 <button
                     onClick={() => stopDeck(side)}
-                    className="w-14 h-14 rounded-2xl bg-slate-800/80 border border-white/5 text-slate-400 flex items-center justify-center hover:bg-red-500/20 hover:text-red-500 hover:border-red-500/30 transition-all active:scale-[0.95]"
+                    className="flex-1 h-8 rounded-lg bg-obsidian-light/50 border border-white/5 text-slate-600 flex items-center justify-center hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/20 transition-all active:scale-[0.9]"
+                    title="Stop"
                 >
-                    <Square size={20} fill="currentColor" />
+                    <Square size={10} fill="currentColor" />
                 </button>
                 <button
                     onClick={() => toggleLoop(side)}
-                    className={`w-14 h-14 rounded-2xl border transition-all flex items-center justify-center ${deckState.isLooping
-                        ? 'bg-primary/10 border-primary/40 text-primary shadow-[0_0_15px_rgba(124,59,237,0.1)]'
-                        : 'bg-slate-800/80 border-white/5 text-slate-500 hover:text-slate-300'
+                    className={`flex-1 h-8 rounded-lg border transition-all flex items-center justify-center ${deckState.isLooping
+                        ? 'bg-gm-violet/10 border-gm-violet/30 text-gm-violet shadow-glow-violet'
+                        : 'bg-obsidian-light/50 border-white/5 text-slate-600 hover:text-slate-300'
                         }`}
+                    title="Toggle Loop"
                 >
-                    <Repeat size={20} />
+                    <Repeat size={10} />
                 </button>
             </div>
         </div>

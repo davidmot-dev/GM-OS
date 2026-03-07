@@ -4,6 +4,8 @@ import { useAmbientStore, type AmbientTheme, type AmbientTrackState } from './us
 import AmbientTrack from './components/AmbientTrack';
 import { ambientEngine } from './AmbientEngine';
 import { gmPrompt, gmConfirm } from '../../stores/useModalStore';
+import { MediaBrowser } from '../../components/MediaBrowser';
+import { useMediaStore } from '../../stores/useMediaStore';
 
 const MasterVisualizer: React.FC = () => {
     const [data, setData] = useState<Uint8Array>(new Uint8Array(32));
@@ -38,7 +40,22 @@ const MasterVisualizer: React.FC = () => {
 };
 
 const AmbientDashboard: React.FC = () => {
-    const { tracks, presets, scenes, customUniverses, loadTheme, saveTheme, deleteTheme, addUniverse, fadeOutAll, applyScene, outputDeviceId, setOutputDevice } = useAmbientStore();
+    const { tracks, presets, scenes, customUniverses, loadTheme, saveTheme, deleteTheme, addUniverse, fadeOutAll, applyScene, outputDeviceId, setOutputDevice, updateTrack } = useAmbientStore();
+
+    // Media Browser State
+    const [browserTarget, setBrowserTarget] = useState<number | null>(null);
+
+    const handleMediaSelect = (mediaId: string) => {
+        if (browserTarget !== null) {
+            const { mediaList } = useMediaStore.getState();
+            const media = mediaList.find((m: { id: string; name: string }) => m.id === mediaId);
+            if (media) {
+                const track = tracks[browserTarget];
+                updateTrack(browserTarget, { url: mediaId, label: track.label === `Piste ${browserTarget + 1}` ? media.name : track.label });
+            }
+            setBrowserTarget(null);
+        }
+    };
 
     // Universe & Theme Selection State
     const universes = useMemo(() => {
@@ -59,6 +76,7 @@ const AmbientDashboard: React.FC = () => {
     // Synchronize selectedTheme if themes change or current one is deleted
     useEffect(() => {
         if (!themesInUniverse.find(t => t.name === selectedTheme)) {
+            // eslint-disable-next-line
             setSelectedTheme(themesInUniverse[0]?.name || '');
         }
     }, [themesInUniverse, selectedTheme]);
@@ -120,6 +138,13 @@ const AmbientDashboard: React.FC = () => {
 
     return (
         <div className="h-full flex flex-col gap-4 p-2 lg:p-4 font-sans select-none">
+            <MediaBrowser
+                isOpen={browserTarget !== null}
+                onClose={() => setBrowserTarget(null)}
+                onSelect={handleMediaSelect}
+                allowedTypes={['audio']}
+                title="Sélectonner une Ambiance"
+            />
             {/* Header / Library Section */}
             <div className="flex flex-col md:flex-row items-center justify-between gap-6 bg-slate-900/60 border border-slate-800/50 p-6 rounded-3xl backdrop-blur-md shadow-2xl relative overflow-hidden">
                 {/* Background Glow */}
@@ -262,7 +287,12 @@ const AmbientDashboard: React.FC = () => {
             <div className="flex-1 min-h-0 bg-slate-950/20 rounded-3xl border border-slate-900/50 p-4">
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4 h-full">
                     {tracks.map((track: AmbientTrackState, i: number) => (
-                        <AmbientTrack key={track.id} track={track} index={i} />
+                        <AmbientTrack
+                            key={track.id}
+                            track={track}
+                            index={i}
+                            onRequestMediaBrowser={() => setBrowserTarget(i)}
+                        />
                     ))}
                 </div>
             </div>

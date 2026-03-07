@@ -20,11 +20,14 @@ import {
     Shield,
     ShieldOff,
     Palette,
-    Power
+    Power,
+    FolderOpen
 } from 'lucide-react';
 import { useSessionStore } from '../store/useSessionStore';
 import type { ThemeID } from '../store/useSessionStore';
+import { useModalStore } from '../stores/useModalStore';
 import { SessionService } from '../store/SessionService';
+import { flushApplication } from '../utils/appUtils';
 
 interface NavItemProps {
     icon: React.ReactNode;
@@ -63,6 +66,8 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
         isSessionMode,
         toggleSessionMode
     } = useSessionStore();
+
+    const { openMediaHub } = useModalStore();
 
     // Appliquer le thème au document
     useEffect(() => {
@@ -180,6 +185,12 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
 
                     <div className="px-3 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Outils</div>
                     <NavItem
+                        icon={<FolderOpen size={20} className="text-gm-cyan" />}
+                        label="Media Hub"
+                        active={false}
+                        onClick={() => openMediaHub()}
+                    />
+                    <NavItem
                         icon={<ImageIcon size={20} />}
                         label="Image OS"
                         active={activeModule === 'image'}
@@ -280,8 +291,12 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                                 Session Active
                             </span>
                         </div>
-                        <button className="ml-auto text-slate-500 hover:text-red-400 transition-colors" title="Quitter">
-                            <Power size={16} />
+                        <button
+                            onClick={flushApplication}
+                            className="ml-auto text-slate-500 hover:text-red-500 transition-colors p-1 hover:bg-red-500/10 rounded-lg"
+                            title="RÉINITIALISATION TOTALE (Flush App)"
+                        >
+                            <Power size={18} />
                         </button>
                     </div>
                 </div>

@@ -7,6 +7,7 @@ import NPCDashboard from './modules/npc/NPCDashboard';
 import MapDashboard from './modules/map/MapDashboard';
 import SessionDashboard from './modules/session/SessionDashboard';
 import ModalProvider from './components/ModalProvider';
+import ToastProvider from './components/ToastProvider';
 import AudioRouter from './modules/music/components/AudioRouter';
 import ClockDashboard from './modules/clock/ClockDashboard';
 import AmbientDashboard from './modules/ambient/AmbientDashboard';
@@ -22,6 +23,9 @@ import PlayerHub from './components/PlayerHub';
 import SoundDashboard from './modules/sound/SoundDashboard';
 import LightDashboard from './modules/light/LightDashboard';
 import { FavoriteDashboard } from './modules/favorite/components/FavoriteDashboard';
+import { GlobalKeybinds } from './components/GlobalKeybinds';
+import { useModalStore } from './stores/useModalStore';
+import { MediaBrowser } from './components/MediaBrowser';
 
 // App.tsx entry point
 
@@ -39,6 +43,7 @@ const PlaceholderModule = ({ name }: { name: string }) => (
 
 function App() {
   const { activeModule } = useSessionStore();
+  const { isMediaHubOpen, closeMediaHub } = useModalStore();
 
   const renderModule = () => {
     switch (activeModule) {
@@ -91,8 +96,16 @@ function App() {
 
   return (
     <>
+      <GlobalKeybinds />
       <ModalProvider />
+      <ToastProvider />
       <AudioRouter />
+      <MediaBrowser
+        isOpen={isMediaHubOpen}
+        onClose={closeMediaHub}
+        onSelect={() => { }} // Standalone mode, just for management
+        title="MEDIA HUB - GESTION GLOBALE"
+      />
       <Shell>
         {renderModule()}
       </Shell>

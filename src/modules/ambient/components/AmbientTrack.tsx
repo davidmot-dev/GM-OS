@@ -6,6 +6,7 @@ import { ambientEngine } from '../AmbientEngine';
 interface AmbientTrackProps {
     track: AmbientTrackState;
     index: number;
+    onRequestMediaBrowser: () => void;
 }
 
 const TrackVisualizer: React.FC<{ index: number; color: string; isPlaying: boolean }> = ({ index, color, isPlaying }) => {
@@ -48,22 +49,11 @@ const TrackVisualizer: React.FC<{ index: number; color: string; isPlaying: boole
     );
 };
 
-const AmbientTrack: React.FC<AmbientTrackProps> = ({ track, index }) => {
+const AmbientTrack: React.FC<AmbientTrackProps> = ({ track, index, onRequestMediaBrowser }) => {
     const { toggleTrack, setTrackVolume, updateTrack } = useAmbientStore();
 
     const handleFileSelect = () => {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'audio/*';
-        input.onchange = (e) => {
-            const file = (e.target as HTMLInputElement).files?.[0];
-            if (file) {
-                // @ts-expect-error appBridge
-                const path = window.appBridge ? window.appBridge.getPathForFile(file) : (file.path || file.name);
-                updateTrack(index, { url: path, label: track.label === `Piste ${index + 1}` ? file.name : track.label });
-            }
-        };
-        input.click();
+        onRequestMediaBrowser();
     };
 
     return (

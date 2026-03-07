@@ -44,7 +44,14 @@ const AudioRouter: React.FC = () => {
                     await audioRef.current.setSinkId(outputDeviceId === 'default' ? '' : outputDeviceId);
                     console.log(`[AudioRouter] Output device set to: ${outputDeviceId}`);
                 } catch (err) {
-                    console.error("[AudioRouter] Failed to set output device:", err);
+                    const error = err as Error;
+                    if (error.name === 'NotFoundError') {
+                        console.warn(`[AudioRouter] Device ${outputDeviceId} not found. Falling back to default.`);
+                        // Sync store back to default to prevent repeated errors
+                        useMusicStore.getState().setOutputDevice('default');
+                    } else {
+                        console.error("[AudioRouter] Failed to set output device:", err);
+                    }
                 }
             }
         };

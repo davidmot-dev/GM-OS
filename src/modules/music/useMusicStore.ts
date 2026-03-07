@@ -12,6 +12,7 @@ export interface MusicPad {
     loopA: number | null;
     loopB: number | null;
     lightLinkId?: string;
+    keybind?: string;
 }
 
 export interface Playlist {
@@ -74,6 +75,12 @@ interface MusicState {
     playPad: (pad: MusicPad) => Promise<void>;
     addLog: (message: string) => void;
     setActivePlaylistId: (id: string) => void;
+
+    // Key Learn UI State
+    isKeyLearnActive: boolean;
+    activePadLearnInfo: { playlistId: string, padIndex: number } | null;
+    toggleKeyLearn: () => void;
+    setActiveLearnPad: (playlistId: string | null, padIndex: number | null) => void;
 }
 
 export const useMusicStore = create<MusicState>()(
@@ -88,7 +95,7 @@ export const useMusicStore = create<MusicState>()(
             return {
                 playlists: [
                     {
-                        id: 'default', name: 'Exploration', pads: Array(16).fill(null).map((_, i) => ({
+                        id: 'default', name: 'Exploration', pads: Array(5).fill(null).map((_, i) => ({
                             id: `pad-${i}`,
                             label: `Pad ${i + 1}`,
                             url: '',
@@ -109,6 +116,12 @@ export const useMusicStore = create<MusicState>()(
                 outputDeviceId: 'default',
                 history: [],
                 consoleLogs: [],
+
+                // Key Learn UI State
+                isKeyLearnActive: false,
+                activePadLearnInfo: null,
+                toggleKeyLearn: () => set((state) => ({ isKeyLearnActive: !state.isKeyLearnActive, activePadLearnInfo: null })),
+                setActiveLearnPad: (playlistId, padIndex) => set({ activePadLearnInfo: playlistId && padIndex !== null ? { playlistId, padIndex } : null }),
 
                 autoFadeTarget: null,
                 clearAutoFadeTarget: () => set({ autoFadeTarget: null }),
@@ -147,7 +160,7 @@ export const useMusicStore = create<MusicState>()(
                     playlists: [...state.playlists, {
                         id: crypto.randomUUID(),
                         name,
-                        pads: Array(16).fill(null).map((_, i) => ({
+                        pads: Array(5).fill(null).map((_, i) => ({
                             id: crypto.randomUUID(),
                             label: `Pad ${i + 1}`,
                             url: '',
@@ -162,13 +175,31 @@ export const useMusicStore = create<MusicState>()(
                     playlists: state.playlists.filter(p => p.id !== id)
                 })),
 
-                updatePad: (playlistId, padIndex, padData) => set((state) => ({
-                    playlists: state.playlists.map(p =>
+                updatePad: (playlistId, padIndex, padData) => set((state) => {
+                    const newPlaylists = state.playlists.map(p =>
                         p.id === playlistId
                             ? { ...p, pads: p.pads.map((pd, i) => i === padIndex ? { ...pd, ...padData } : pd) }
                             : p
-                    )
-                })),
+                    );
+
+                    // Sync Deck labels if renamed
+                    const updatedPlaylist = newPlaylists.find(p => p.id === playlistId);
+                    const updatedPad = updatedPlaylist?.pads[padIndex];
+                    
+                    let deckA = state.deckA;
+                    let deckB = state.deckB;
+
+                    if (updatedPad) {
+                        if (state.deckA.activePadId === updatedPad.id) {
+                            deckA = { ...state.deckA, activeTrackLabel: updatedPad.label };
+                        }
+                        if (state.deckB.activePadId === updatedPad.id) {
+                            deckB = { ...state.deckB, activeTrackLabel: updatedPad.label };
+                        }
+                    }
+
+                    return { playlists: newPlaylists, deckA, deckB };
+                }),
 
                 reorderPads: (playlistId, oldIndex, newIndex) => set((state) => {
                     const playlist = state.playlists.find(p => p.id === playlistId);
@@ -285,6 +316,8 @@ export const useMusicStore = create<MusicState>()(
 
                     if (isService) {
                         get().addLog(`Ouverture lien externe : ${pad.label}`);
+                        get().stopAll(); // Trigger fade-out of current music
+
                         // @ts-expect-error global
                         if (window.appBridge?.web?.openExternal) {
                             // @ts-expect-error global
@@ -309,8 +342,13 @@ export const useMusicStore = create<MusicState>()(
                         return;
                     }
 
-                    // 2. Choisir la platine de destination
-                    const targetDeck = state.autoFadeTarget || (state.crossfader < 0.5 ? 'B' : 'A');
+                    // 2. Choisir la platine de destination - on alterne !
+                    let targetDeck: 'A' | 'B' = 'A';
+                    if (state.autoFadeTarget) {
+                        targetDeck = state.autoFadeTarget === 'A' ? 'B' : 'A';
+                    } else {
+                        targetDeck = state.crossfader < 0.5 ? 'B' : 'A';
+                    }
 
                     // 3. Charger et déclencher
                     await get().loadToDeck(targetDeck, pad);

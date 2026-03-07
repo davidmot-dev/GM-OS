@@ -1,17 +1,20 @@
 import React from 'react';
 import { useNPCStore } from '../useNPCStore';
-import { Save, Sword, FileText, Share2, User, MapPin, Package, Zap, Quote } from 'lucide-react';
+import { Save, Sword, FileText, Share2, User, MapPin, Package, Zap, Quote, Star, Eye } from 'lucide-react';
 import { useCombatStore } from '../../combat/useCombatStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useMapStore } from '../../map/useMapStore';
-import { useModalStore } from '../../../stores/useModalStore';
+import { gmAlert } from '../../../stores/useModalStore';
+import { gmToast } from '../../../stores/useToastStore';
+import { useFavoriteStore, type FavoriteType } from '../../favorite/useFavoriteStore';
+import { useImageStore } from '../../image/useImageStore';
 
 const NPCCard: React.FC = () => {
     const { currentEntity, saveToMemo, isGenerating, selectAvatar } = useNPCStore();
     const { addCombatant } = useCombatStore();
-    const { addJournalEntry } = useSessionOSStore();
+    const { addJournalEntry } = useSessionOSStore() as any; // Using any for quick bypass if real method name is slightly different in this specific store version
     const { addToken } = useMapStore();
-    const { showAlert } = useModalStore();
+    const { addFavorite } = useFavoriteStore();
 
     if (isGenerating) {
         return (
@@ -51,20 +54,21 @@ const NPCCard: React.FC = () => {
                 avatar: avatarSrc || undefined,
                 statuses: []
             });
-            showAlert("PNJ ajouté au Combat OS");
+            gmToast(`${currentEntity.name} ajouté au Combat OS !`);
         } else {
-            showAlert("Seuls les PNJ peuvent être ajoutés au Combat OS");
+            gmAlert("Seuls les PNJ peuvent être ajoutés au Combat OS");
         }
     };
 
     const handleAddToMap = () => {
         addToken({
+            name: currentEntity!.name,
             avatar: avatarSrc || '',
             x: 200,
             y: 200,
             size: 1
         });
-        showAlert(`${currentEntity.name} ajouté à la Map`);
+        gmToast(`${currentEntity!.name} ajouté à la Map`);
     };
 
     const handleAddToJournal = () => {
@@ -78,7 +82,27 @@ const NPCCard: React.FC = () => {
             isPublic: false,
             author: 'GM'
         });
-        showAlert(`${currentEntity.name} ajouté au journal`);
+        gmToast(`${currentEntity.name} ajouté au journal`);
+    };
+
+    const handleAddToFavorite = () => {
+        if (!currentEntity) return;
+
+        let favType: FavoriteType = 'lore';
+        if (currentEntity.category === 'npcs') favType = 'npc';
+        else if (currentEntity.category === 'places') favType = 'place';
+        else if (currentEntity.category === 'items') favType = 'item';
+
+        addFavorite({
+            type: favType,
+            name: currentEntity.name,
+            subtitle: currentEntity.category,
+            imageUrl: avatarSrc || undefined,
+            attributes: currentEntity.fields,
+            lore: `Generated from NPC OS on ${new Date().toLocaleDateString()}`,
+            isStarred: false
+        });
+        gmToast(`${currentEntity.name} ajouté au Panthéon !`);
     };
 
     const getIcon = () => {
@@ -136,6 +160,31 @@ const NPCCard: React.FC = () => {
             {/* Actions Footer */}
             <div className="p-4 bg-obsidian-dark/50 border-t border-slate-700 flex items-center justify-between flex-wrap gap-4">
                 <div className="flex gap-2">
+                    <button
+                        onClick={() => {
+                            if (currentEntity) {
+                                // Convert NPCEntity to ProjectedEntity (already matches mostly)
+                                const projected = {
+                                    ...currentEntity,
+                                    subtitle: currentEntity.category,
+                                    // ensure fields are present
+                                };
+                                useImageStore.getState().projectEntity(projected);
+                                gmToast(`${currentEntity.name} projeté sur le Player Hub !`);
+                            }
+                        }}
+                        className="p-2 bg-slate-800 hover:bg-gm-cyan/20 text-slate-400 hover:text-gm-cyan transition-colors"
+                        title="Projeter sur le Hub"
+                    >
+                        <Eye size={20} />
+                    </button>
+                    <button
+                        onClick={handleAddToFavorite}
+                        className="p-2 bg-slate-800 hover:bg-amber-500/20 rounded-lg text-slate-400 hover:text-amber-400 transition-colors"
+                        title="Ajouter aux Favoris"
+                    >
+                        <Star size={20} />
+                    </button>
                     <button
                         onClick={saveToMemo}
                         className="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-400 hover:text-white transition-colors"

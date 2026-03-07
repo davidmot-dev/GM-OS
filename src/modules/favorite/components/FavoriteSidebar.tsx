@@ -2,7 +2,24 @@ import React from 'react';
 import { useFavoriteStore } from '../useFavoriteStore';
 
 export const FavoriteSidebar: React.FC = () => {
-    const { activeCategory, setCategory } = useFavoriteStore();
+    const { activeCategory, setCategory, addFavorite, selectFavorite, setViewMode } = useFavoriteStore();
+
+    const handleNewEntry = () => {
+        const newId = addFavorite({
+            type: 'npc',
+            name: 'New Entity',
+            subtitle: 'Created from scratch',
+            isStarred: true,
+            attributes: {},
+            stats: {
+                'Power': 50,
+                'Defense': 50
+            },
+            lore: ''
+        });
+        selectFavorite(newId);
+        setViewMode('detail');
+    };
 
     return (
         <aside className="w-80 bg-slate-900/90 backdrop-blur-md border-r border-slate-800 p-6 flex flex-col gap-8 shrink-0">
@@ -48,7 +65,10 @@ export const FavoriteSidebar: React.FC = () => {
                     </div>
                 </div>
 
-                <button className="flex items-center justify-center gap-2 w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-4 rounded-xl border border-slate-700 transition-all uppercase text-xs tracking-widest shadow-lg shadow-black/20">
+                <button
+                    onClick={handleNewEntry}
+                    className="flex items-center justify-center gap-2 w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-4 rounded-xl border border-slate-700 transition-all uppercase text-xs tracking-widest shadow-lg shadow-black/20"
+                >
                     <span className="material-symbols-outlined text-[18px]">add_circle</span>
                     New Entry
                 </button>

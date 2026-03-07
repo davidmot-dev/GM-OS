@@ -51,6 +51,15 @@ export class FogEngine {
     }
 
     /**
+     * Reveals the entire map by clearing the fog canvas
+     */
+    public revealAll() {
+        if (!this.fogCtx) return;
+        this.fogCtx.globalCompositeOperation = 'destination-out';
+        this.fogCtx.fillRect(0, 0, this.width, this.height);
+    }
+
+    /**
      * Restores state from a base64 DataURL
      */
     public loadFromDataUrl(dataUrl: string, callback?: () => void) {

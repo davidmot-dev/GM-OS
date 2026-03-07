@@ -8,8 +8,16 @@ export type ClockTheme = 'cyberpunk' | 'oldstyle' | 'modern';
 export interface FantasyCalendar {
     id: string;
     name: string;
-    months: { name: string; days: number; displayName?: string }[];
+    description?: string;
+    months: {
+        name: string;
+        days: number;
+        displayName?: string;
+        isIntercalary?: boolean;
+        leapYearOnly?: boolean;
+    }[];
     daysPerWeek: number;
+    daysOfWeek?: string[];
     hoursPerDay: number;
     minutesPerHour: number;
 }
@@ -20,6 +28,16 @@ export interface TensionClock {
     totalSegments: number;
     filledSegments: number;
     color?: string;
+}
+
+export interface FantasyDate {
+    year: number;
+    monthIndex: number;
+    day: number;
+    hour: number;
+    minute: number;
+    second: number;
+    dayOfWeek?: string;
 }
 
 interface ClockState {
@@ -39,9 +57,13 @@ interface ClockState {
     // Fantasy Calendar State
     activeCalendarId: string | null;
     calendars: Record<string, FantasyCalendar>;
+    availableCalendars: string[];
 
     // Tension Clocks
     tensions: TensionClock[];
+
+    // Projection State
+    isClockProjected: boolean;
 
     // Actions
     setMode: (mode: ClockMode) => void;
@@ -67,12 +89,19 @@ interface ClockState {
 
     // Calendar Actions
     loadCalendar: (calendar: FantasyCalendar) => void;
-    setActiveCalendar: (id: string) => void;
+    setActiveCalendar: (id: string | null) => void;
+    fetchCalendars: () => Promise<void>;
+    selectCalendar: (id: string) => Promise<void>;
+    getFantasyDate: () => FantasyDate | null;
+    setFantasyDate: (date: Partial<FantasyDate>) => void;
+
+    // Projection Actions
+    setIsClockProjected: (projected: boolean) => void;
 }
 
 export const useClockStore = create<ClockState>()(
     persist(
-        (set) => ({
+        (set, get) => ({
             mode: 'realtime',
             theme: 'modern',
 
@@ -87,8 +116,10 @@ export const useClockStore = create<ClockState>()(
 
             activeCalendarId: null,
             calendars: {},
+            availableCalendars: [],
 
             tensions: [],
+            isClockProjected: true,
 
             setMode: (mode) => set({ mode }),
             setTheme: (theme) => set({ theme }),
@@ -156,7 +187,153 @@ export const useClockStore = create<ClockState>()(
                 calendars: { ...state.calendars, [calendar.id]: calendar }
             })),
 
-            setActiveCalendar: (id) => set({ activeCalendarId: id })
+            setActiveCalendar: (id) => set({ activeCalendarId: id }),
+
+            fetchCalendars: async () => {
+                // @ts-expect-error global
+                const bridge = window.appBridge?.clock;
+                if (!bridge) return;
+                try {
+                    const catalogs = await bridge.listCalendars();
+                    set({ availableCalendars: catalogs });
+                } catch (err) {
+                    console.error("Failed to fetch calendars:", err);
+                }
+            },
+
+            selectCalendar: async (id) => {
+                // @ts-expect-error global
+                const bridge = window.appBridge?.clock;
+                if (!bridge) return;
+                try {
+                    const calendar = await bridge.loadCalendar(id);
+                    if (calendar) {
+                        // Ensure ID is set (from filename if missing in JSON)
+                        if (!calendar.id) calendar.id = id;
+                        set((state) => ({
+                            calendars: { ...state.calendars, [calendar.id]: calendar },
+                            activeCalendarId: calendar.id
+                        }));
+                    }
+                } catch (err) {
+                    console.error("Failed to load calendar:", id, err);
+                }
+            },
+
+            setIsClockProjected: (isClockProjected) => set({ isClockProjected }),
+
+            getFantasyDate: () => {
+                const { timestamp, activeCalendarId, calendars } = get();
+                if (!activeCalendarId || !calendars[activeCalendarId]) return null;
+
+                const cal = calendars[activeCalendarId];
+                const secondsPerMin = cal.minutesPerHour || 60;
+                const secondsPerHour = secondsPerMin * 60;
+                const secondsPerDay = cal.hoursPerDay * secondsPerHour;
+
+                // For simplicity, we treat timestamp as "seconds since year 0" in fantasy context
+                // But typically timestamp is ms. Let's convert to seconds.
+                let totalSeconds = Math.floor(timestamp / 1000);
+
+                const getDaysInYear = (year: number) => {
+                    let total = 0;
+                    const isLeap = year % 4 === 0; // Simplified leap year
+                    cal.months.forEach((m: { days: number; leapYearOnly?: boolean }) => {
+                        if (m.leapYearOnly && !isLeap) return;
+                        total += m.days;
+                    });
+                    return total;
+                };
+
+                let year = 0;
+                let daysInYear = getDaysInYear(year);
+                while (totalSeconds >= daysInYear * secondsPerDay) {
+                    totalSeconds -= daysInYear * secondsPerDay;
+                    year++;
+                    daysInYear = getDaysInYear(year);
+                }
+
+                while (totalSeconds < 0) {
+                    year--;
+                    daysInYear = getDaysInYear(year);
+                    totalSeconds += daysInYear * secondsPerDay;
+                }
+
+                const isLeap = year % 4 === 0;
+                let monthIndex = 0;
+                let day = 1;
+
+                for (let i = 0; i < cal.months.length; i++) {
+                    const m = cal.months[i];
+                    if (m.leapYearOnly && !isLeap) continue;
+
+                    const monthSeconds = m.days * secondsPerDay;
+                    if (totalSeconds < monthSeconds) {
+                        monthIndex = i;
+                        day = Math.floor(totalSeconds / secondsPerDay) + 1;
+                        totalSeconds %= secondsPerDay;
+                        break;
+                    }
+                    totalSeconds -= monthSeconds;
+                }
+
+                const hour = Math.floor(totalSeconds / secondsPerHour);
+                totalSeconds %= secondsPerHour;
+                const minute = Math.floor(totalSeconds / secondsPerMin);
+                const second = totalSeconds % secondsPerMin;
+
+                // Day of week calculation
+                let dayOfWeek = undefined;
+                if (cal.daysOfWeek && cal.daysOfWeek.length > 0) {
+                    // Total days since beginning
+                    const totalDays = Math.floor(timestamp / (secondsPerDay * 1000));
+                    dayOfWeek = cal.daysOfWeek[totalDays % cal.daysOfWeek.length];
+                }
+
+                return { year, monthIndex, day, hour, minute, second, dayOfWeek };
+            },
+
+            setFantasyDate: (updates) => {
+                const current = get().getFantasyDate();
+                if (!current) return;
+
+                const next = { ...current, ...updates };
+                const cal = get().calendars[get().activeCalendarId!];
+
+                const secondsPerMin = cal.minutesPerHour || 60;
+                const secondsPerHour = secondsPerMin * 60;
+                const secondsPerDay = cal.hoursPerDay * secondsPerHour;
+
+                const getDaysInYear = (year: number) => {
+                    let total = 0;
+                    const isLeap = year % 4 === 0;
+                    cal.months.forEach((m: { days: number; leapYearOnly?: boolean }) => {
+                        if (m.leapYearOnly && !isLeap) return;
+                        total += m.days;
+                    });
+                    return total;
+                };
+
+                let totalSeconds = 0;
+                // Years
+                for (let y = 0; y < next.year; y++) {
+                    totalSeconds += getDaysInYear(y) * secondsPerDay;
+                }
+                // Months up to current
+                const isLeap = next.year % 4 === 0;
+                for (let i = 0; i < next.monthIndex; i++) {
+                    const m = cal.months[i];
+                    if (m.leapYearOnly && !isLeap) continue;
+                    totalSeconds += m.days * secondsPerDay;
+                }
+                // Days, Hours, Mins, Secs
+                totalSeconds += (next.day - 1) * secondsPerDay;
+                totalSeconds += next.hour * secondsPerHour;
+                totalSeconds += next.minute * secondsPerMin;
+                totalSeconds += next.second;
+
+                set({ timestamp: totalSeconds * 1000 });
+            }
         }),
         {
             name: 'gm-os-clock-storage',
@@ -170,7 +347,9 @@ export const useClockStore = create<ClockState>()(
                 timerDuration: state.timerDuration,
                 timerIsRunning: state.timerIsRunning,
                 activeCalendarId: state.activeCalendarId,
-                calendars: state.calendars
+                calendars: state.calendars,
+                availableCalendars: state.availableCalendars,
+                isClockProjected: state.isClockProjected
             })
         }
     )

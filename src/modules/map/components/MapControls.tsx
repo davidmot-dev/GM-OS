@@ -1,11 +1,16 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { useMapStore, type MapTool, type FogMode } from '../useMapStore';
 import { useCombatStore } from '../../combat/useCombatStore';
 import { gmAlert, gmConfirm } from '../../../stores/useModalStore';
 import {
     Upload, EyeOff, Eye, Paintbrush, Square, Circle,
-    Trash2, Save, Users, MousePointer2, PlusCircle
+    Save, Users, MousePointer2, PlusCircle, Trash2
 } from 'lucide-react';
+import { MediaBrowser } from '../../../components/MediaBrowser';
+import { useMediaStore } from '../../../stores/useMediaStore';
+import { useMediaUrl } from '../../../hooks/useMediaUrl';
+import { type MapToken } from '../useMapStore';
+import { type Combatant } from '../../combat/useCombatStore';
 
 const ToolButton = ({ tool, currentTool, setTool, icon: Icon, label }: { tool: MapTool, currentTool: MapTool, setTool: (t: MapTool) => void, icon: React.ElementType, label: string }) => {
     const isActive = currentTool === tool;
@@ -51,41 +56,47 @@ const MapControls: React.FC = () => {
         currentTool, setTool,
         fogMode, setFogMode,
         brushSize, setBrushSize,
-        addToken, tokens
+        addToken, tokens, clearTokens,
+        triggerFogCommand
     } = useMapStore();
 
     const combatants = useCombatStore(state => state.combatants);
+    const { mediaList } = useMediaStore();
 
-    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [isMediaBrowserOpen, setIsMediaBrowserOpen] = React.useState(false);
 
-    const handleFileImport = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
+    const handleMediaSelect = (mediaId: string) => {
+        const media = mediaList.find(m => m.id === mediaId);
+        if (!media) return;
 
-        // Try to get actual path if inside desktop app, fallback to ObjectURL
-        const win = window as unknown as {
-            appBridge?: {
-                getPathForFile: (file: File) => string;
-                utils?: { formatFileUrl: (path: string) => string };
-            }
-        };
-        let url = URL.createObjectURL(file);
-
-        if (win.appBridge && win.appBridge.getPathForFile && win.appBridge.utils?.formatFileUrl) {
-            const rawPath = win.appBridge.getPathForFile(file);
-            url = win.appBridge.utils.formatFileUrl(rawPath);
-        }
-
-        const isVideo = file.type.startsWith('video/');
-        setMap(url, isVideo);
+        const isVideo = media.type === 'video';
+        setMap(mediaId, isVideo, media.name.replace(/\.[^/.]+$/, "")); // Pass mediaId directly
         setFogDataUrl(null); // Reset fog on new map
-
-        // Reset input so the same file can be selected again
-        if (fileInputRef.current) fileInputRef.current.value = '';
     };
 
-    const handleResetFog = () => {
-        gmConfirm("Voulez-vous réinitialiser le brouillard de guerre ?", () => {
+    const handleRevealAll = () => {
+        gmConfirm("Voulez-vous RÉVÉLER toute la carte ?", () => {
+            triggerFogCommand('reveal_all');
+        });
+    };
+
+    const handleHideAll = () => {
+        gmConfirm("Voulez-vous MASQUER toute la carte ?", () => {
+            triggerFogCommand('hide_all');
+        });
+    };
+
+    const handleClearTokens = () => {
+        if (tokens.length === 0) return;
+        gmConfirm(`Voulez-vous SUPPRIMER les ${tokens.length} pions de la carte ?`, () => {
+            clearTokens();
+        });
+    };
+
+    const handleClearMap = () => {
+        if (!mapUrl) return;
+        gmConfirm("Voulez-vous RETIRER la carte actuelle ?", () => {
+            setMap(null);
             setFogDataUrl(null);
         });
     };
@@ -123,20 +134,22 @@ const MapControls: React.FC = () => {
                 <section>
                     <h3 className="text-xs text-slate-400 uppercase tracking-wider mb-2 font-bold px-1">Carte & Plan</h3>
                     <div className="flex gap-2">
-                        <input
-                            type="file"
-                            accept="image/*,video/mp4,video/webm"
-                            ref={fileInputRef}
-                            className="hidden"
-                            onChange={handleFileImport}
-                        />
                         <button
                             className="flex-1 bg-obsidian-light hover:bg-gray-700/60 p-3 rounded-lg flex items-center justify-center gap-2 border border-gray-700 transition-colors text-sm"
-                            onClick={() => fileInputRef.current?.click()}
+                            onClick={() => setIsMediaBrowserOpen(true)}
                         >
                             <Upload size={18} className="text-gm-cyan" />
                             <span>Importer Média</span>
                         </button>
+                        {mapUrl && (
+                            <button
+                                className="bg-rose-500/10 hover:bg-rose-500/20 p-3 rounded-lg flex items-center justify-center border border-rose-500/30 transition-colors text-rose-500"
+                                onClick={handleClearMap}
+                                title="Retirer la carte"
+                            >
+                                <Trash2 size={18} />
+                            </button>
+                        )}
                     </div>
                 </section>
 
@@ -146,13 +159,22 @@ const MapControls: React.FC = () => {
                 <section>
                     <div className="flex justify-between items-end mb-3 px-1">
                         <h3 className="text-xs text-slate-400 uppercase tracking-wider font-bold">Outils Fog of War</h3>
-                        <button
-                            className="text-gray-400 hover:text-red-500 transition-colors p-1"
-                            onClick={handleResetFog}
-                            title="Tout remplir de noir"
-                        >
-                            <Trash2 size={16} />
-                        </button>
+                        <div className="flex gap-1">
+                            <button
+                                className="text-gray-400 hover:text-green-500 transition-colors p-1 flex items-center gap-1"
+                                onClick={handleRevealAll}
+                                title="Tout révéler"
+                            >
+                                <Eye size={16} />
+                            </button>
+                            <button
+                                className="text-gray-400 hover:text-red-500 transition-colors p-1 flex items-center gap-1"
+                                onClick={handleHideAll}
+                                title="Tout masquer"
+                            >
+                                <EyeOff size={16} />
+                            </button>
+                        </div>
                     </div>
 
                     {/* Mode Toggle */}
@@ -194,6 +216,14 @@ const MapControls: React.FC = () => {
                 <section className="flex-1 flex flex-col min-h-[300px]">
                     <div className="flex justify-between items-center mb-3 px-1">
                         <h3 className="text-xs text-slate-400 uppercase tracking-wider font-bold text-gm-emerald">Pions du Combat</h3>
+                        <button
+                            onClick={handleClearTokens}
+                            className={`p-1 rounded transition-colors ${tokens.length > 0 ? 'text-gray-400 hover:text-rose-500' : 'text-gray-700 cursor-not-allowed'}`}
+                            title="Vider la carte"
+                            disabled={tokens.length === 0}
+                        >
+                            <Trash2 size={14} />
+                        </button>
                     </div>
 
                     <div className="flex-1 overflow-y-auto custom-scrollbar flex flex-col gap-2">
@@ -204,40 +234,15 @@ const MapControls: React.FC = () => {
                                 <p className="text-xs text-gray-600 mt-1">Ajoutez-les depuis le Combat OS.</p>
                             </div>
                         ) : (
-                            combatants.map(combatant => {
-                                const isOnMap = tokens.some(t => t.linkedCombatantId === combatant.id);
-                                return (
-                                    <div key={combatant.id} className="flex items-center justify-between p-2 bg-obsidian-light/30 border border-gray-800 rounded">
-                                        <div className="flex items-center gap-2 truncate">
-                                            {combatant.avatar ? (
-                                                <img src={combatant.avatar} alt="avatar" className="w-6 h-6 rounded-full object-cover" />
-                                            ) : (
-                                                <div className="w-6 h-6 rounded-full bg-obsidian-dark border border-gray-700 flex items-center justify-center">
-                                                    <span className="text-[10px] uppercase text-gm-crimson">{combatant.name.substring(0, 2)}</span>
-                                                </div>
-                                            )}
-                                            <span className="text-sm text-slate-200 truncate">{combatant.name}</span>
-                                        </div>
-                                        <button
-                                            disabled={isOnMap}
-                                            onClick={() => {
-                                                addToken({
-                                                    avatar: combatant.avatar || '',
-                                                    x: 200 + Math.random() * 100, // Dépose le pion au centre (approximatif)
-                                                    y: 200 + Math.random() * 100,
-                                                    size: 1,
-                                                    linkedCombatantId: combatant.id
-                                                });
-                                                setTool('move_token'); // Bascule automatiquement sur l'outil pion
-                                            }}
-                                            className={`p-1.5 rounded transition-colors ${isOnMap ? 'text-gray-600 cursor-not-allowed' : 'text-gm-emerald hover:bg-gm-emerald/20 hover:text-green-400'}`}
-                                            title={isOnMap ? "Déjà sur la carte" : "Ajouter sur la carte"}
-                                        >
-                                            <PlusCircle size={18} />
-                                        </button>
-                                    </div>
-                                );
-                            })
+                            combatants.map(combatant => (
+                                <MapCombatantItem
+                                    key={combatant.id}
+                                    combatant={combatant}
+                                    tokens={tokens}
+                                    addToken={addToken}
+                                    setTool={setTool}
+                                />
+                            ))
                         )}
                     </div>
                     <div className="mt-2 text-[10px] text-gray-500 px-1 border-t border-gray-800 pt-2 text-center">
@@ -257,8 +262,61 @@ const MapControls: React.FC = () => {
                 </section>
 
             </div>
+
+            <MediaBrowser 
+                isOpen={isMediaBrowserOpen}
+                onClose={() => setIsMediaBrowserOpen(false)}
+                onSelect={handleMediaSelect}
+                allowedTypes={['image', 'video']}
+                title="Sélectionner une Carte / Plan"
+            />
         </aside>
     );
 };
 
 export default MapControls;
+
+interface MapCombatantItemProps {
+    combatant: Combatant;
+    tokens: MapToken[];
+    addToken: (token: Omit<MapToken, 'id'>) => void;
+    setTool: (tool: MapTool) => void;
+}
+
+const MapCombatantItem: React.FC<MapCombatantItemProps> = ({ combatant, tokens, addToken, setTool }) => {
+    const resolvedAvatar = useMediaUrl(combatant.avatar);
+    const isOnMap = tokens.some(t => t.linkedCombatantId === combatant.id);
+
+    return (
+        <div className="flex items-center justify-between p-2 bg-obsidian-light/30 border border-gray-800 rounded">
+            <div className="flex items-center gap-2 truncate">
+                {combatant.avatar && resolvedAvatar ? (
+                    <img src={resolvedAvatar} alt="avatar" className="w-6 h-6 rounded-full object-cover" />
+                ) : (
+                    <div className="w-6 h-6 rounded-full bg-obsidian-dark border border-gray-700 flex items-center justify-center">
+                        <span className="text-[10px] uppercase text-gm-crimson">{combatant.name.substring(0, 2)}</span>
+                    </div>
+                )}
+                <span className="text-sm text-slate-200 truncate">{combatant.name}</span>
+            </div>
+            <button
+                disabled={isOnMap}
+                onClick={() => {
+                    addToken({
+                        name: combatant.name,
+                        avatar: combatant.avatar || '',
+                        x: 200 + Math.random() * 100,
+                        y: 200 + Math.random() * 100,
+                        size: 1,
+                        linkedCombatantId: combatant.id
+                    });
+                    setTool('move_token');
+                }}
+                className={`p-1.5 rounded transition-colors ${isOnMap ? 'text-gray-600 cursor-not-allowed' : 'text-gm-emerald hover:bg-gm-emerald/20 hover:text-green-400'}`}
+                title={isOnMap ? "Déjà sur la carte" : "Ajouter sur la carte"}
+            >
+                <PlusCircle size={18} />
+            </button>
+        </div>
+    );
+};

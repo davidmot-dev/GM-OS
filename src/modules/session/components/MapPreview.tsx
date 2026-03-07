@@ -1,11 +1,13 @@
 import React from 'react';
 import { useMapStore } from '../../map/useMapStore';
 import { useSessionStore } from '../../../store/useSessionStore';
+import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { Layers, ZoomIn, MapPin } from 'lucide-react';
 
 const MapPreview: React.FC = () => {
     const { mapUrl, isVideo } = useMapStore();
     const { setActiveModule } = useSessionStore();
+    const resolvedMapUrl = useMediaUrl(mapUrl || undefined);
 
     return (
         <div className="h-64 bg-slate-800/40 rounded-xl border border-slate-800 overflow-hidden relative group">
@@ -40,22 +42,42 @@ const MapPreview: React.FC = () => {
             </div>
 
             {/* Media Rendering */}
-            <div className="w-full h-full relative z-0 overflow-hidden">
-                {mapUrl ? (
-                    isVideo ? (
-                        <video
-                            src={mapUrl}
-                            autoPlay
-                            loop
-                            muted
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
-                    ) : (
-                        <div
-                            className="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                            style={{ backgroundImage: `url('${mapUrl}')` }}
-                        />
-                    )
+            <div className="w-full h-full relative z-0 overflow-hidden flex items-center justify-center">
+                {resolvedMapUrl ? (
+                    <>
+                        {isVideo ? (
+                            <video
+                                src={resolvedMapUrl}
+                                autoPlay
+                                loop
+                                muted
+                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
+                        ) : (
+                            <div
+                                className="absolute inset-0 w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                                style={{ backgroundImage: `url('${resolvedMapUrl}')` }}
+                            />
+                        )}
+                        
+                        {/* Minimized Token Layer */}
+                        <div className="absolute inset-0 w-full h-full z-10 pointer-events-none">
+                            {useMapStore.getState().tokens.map(token => (
+                                <div 
+                                    key={token.id}
+                                    className="absolute rounded-full border border-white/40 shadow-lg bg-slate-900 overflow-hidden"
+                                    style={{ 
+                                        left: `${(token.x / 1000) * 100}%`, // Absolute fallback or relative? 
+                                        top: `${(token.y / 1000) * 100}%`,
+                                        width: 12, height: 12,
+                                        transform: 'translate(-50%, -50%)'
+                                    }}
+                                >
+                                     <TokenImage src={token.avatar} />
+                                </div>
+                            ))}
+                        </div>
+                    </>
                 ) : (
                     <div className="absolute inset-0 bg-slate-900/50 flex flex-col items-center justify-center opacity-50">
                         <span className="text-slate-500 font-bold tracking-widest uppercase text-xs">Waiting for Projection</span>
@@ -64,6 +86,11 @@ const MapPreview: React.FC = () => {
             </div>
         </div>
     );
+};
+
+const TokenImage: React.FC<{ src: string }> = ({ src }) => {
+    const url = useMediaUrl(src);
+    return url ? <img src={url} className="w-full h-full object-cover" /> : null;
 };
 
 export default MapPreview;

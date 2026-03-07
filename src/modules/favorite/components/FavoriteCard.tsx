@@ -1,15 +1,19 @@
 import React from 'react';
 import { useFavoriteStore } from '../useFavoriteStore';
 import type { FavoriteEntity } from '../useFavoriteStore';
+import { useMediaUrl } from '../../../hooks/useMediaUrl';
+import { gmConfirm } from '../../../stores/useModalStore';
 
 interface FavoriteCardProps {
     entity: FavoriteEntity;
 }
 
 export const FavoriteCard: React.FC<FavoriteCardProps> = ({ entity }) => {
-    const { selectFavorite, toggleStar, removeFavorite, selectedFavoriteId } = useFavoriteStore();
+    const { selectFavorite, toggleStar, removeFavorite, selectedFavoriteId, setViewMode } = useFavoriteStore();
 
     const isSelected = selectedFavoriteId === entity.id;
+    const resolvedImageUrl = useMediaUrl(entity.imageUrl);
+    const resolvedTokenUrl = useMediaUrl(entity.tokenUrl);
 
     const getTypeIcon = (type: string) => {
         switch (type) {
@@ -57,11 +61,20 @@ export const FavoriteCard: React.FC<FavoriteCardProps> = ({ entity }) => {
             onClick={() => selectFavorite(entity.id)}
             className={`group relative bg-slate-900/40 border rounded-2xl p-5 transition-all duration-300 flex flex-col gap-4 cursor-pointer
                 ${isSelected ? `border-${typeColor.split('-')[1]}-500/80 bg-slate-800/60 shadow-lg` : `border-slate-800/50 ${typeBorderHover}`}
+                ${entity.isSyncedToPlayerHub ? 'ring-1 ring-gm-cyan/30 shadow-[0_0_15px_rgba(0,210,255,0.15)] bg-slate-900/60' : ''}
             `}
         >
             <div className="flex items-start justify-between">
-                <div className={`p-2 rounded-lg ${typeBg}`}>
-                    <span className={`material-symbols-outlined ${typeColor}`}>{getTypeIcon(entity.type)}</span>
+                <div className="flex items-start gap-3">
+                    <div className={`p-2 rounded-lg ${typeBg}`}>
+                        <span className={`material-symbols-outlined ${typeColor}`}>{getTypeIcon(entity.type)}</span>
+                    </div>
+                    {entity.isSyncedToPlayerHub && (
+                        <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-gm-cyan/20 border border-gm-cyan/30 animate-pulse">
+                            <span className="material-symbols-outlined text-gm-cyan text-[14px]">tv</span>
+                            <span className="text-gm-cyan text-[8px] font-black tracking-widest leading-none">HUB</span>
+                        </div>
+                    )}
                 </div>
                 <button
                     onClick={(e) => { e.stopPropagation(); toggleStar(entity.id); }}
@@ -71,17 +84,17 @@ export const FavoriteCard: React.FC<FavoriteCardProps> = ({ entity }) => {
                 </button>
             </div>
 
-            <div className="relative h-40 w-full overflow-hidden rounded-xl bg-slate-800/50">
-                {entity.imageUrl ? (
+            <div className={`aspect-[4/3] rounded-3xl overflow-hidden bg-slate-800 ring-2 ${typeColor.split(' ')[1]} shadow-lg transition-transform duration-500 group-hover:scale-[1.02] relative`}>
+                {/* Image or Icon */}
+                {(resolvedImageUrl || resolvedTokenUrl) ? (
                     <img
-                        src={entity.imageUrl}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        src={resolvedImageUrl || resolvedTokenUrl}
                         alt={entity.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
-                ) : (
-                    <div className="w-full h-full flex items-center justify-center text-slate-700">
-                        <span className="material-symbols-outlined text-4xl">{getTypeIcon(entity.type)}</span>
-                    </div>
+                ) : (<div className="w-full h-full flex items-center justify-center text-slate-700">
+                    <span className="material-symbols-outlined text-4xl">{getTypeIcon(entity.type)}</span>
+                </div>
                 )}
             </div>
 
@@ -99,7 +112,11 @@ export const FavoriteCard: React.FC<FavoriteCardProps> = ({ entity }) => {
 
                 <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
-                        onClick={(e) => { e.stopPropagation(); selectFavorite(entity.id); }}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            selectFavorite(entity.id);
+                            setViewMode('detail');
+                        }}
                         className="p-2 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 transition-colors"
                         title="View Details"
                     >
@@ -108,9 +125,9 @@ export const FavoriteCard: React.FC<FavoriteCardProps> = ({ entity }) => {
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
-                            if (window.confirm('Delete this from favorites?')) {
+                            gmConfirm(`Supprimer "${entity.name}" des favoris ?`, () => {
                                 removeFavorite(entity.id);
-                            }
+                            });
                         }}
                         className="p-2 rounded-lg bg-slate-800/80 hover:bg-red-500/20 hover:text-red-400 text-slate-300 transition-colors"
                         title="Remove from Favorites"

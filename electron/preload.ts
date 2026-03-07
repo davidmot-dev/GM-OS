@@ -50,6 +50,10 @@ contextBridge.exposeInMainWorld('appBridge', {
     light: {
         request: (url: string, method: string, body?: unknown) => ipcRenderer.invoke('light:request', url, method, body)
     },
+    clock: {
+        listCalendars: () => ipcRenderer.invoke('clock:list-calendars'),
+        loadCalendar: (id: string) => ipcRenderer.invoke('clock:load-calendar', id)
+    },
     utils: {
         formatFileUrl: (path: string) => {
             const normalized = path.replace(/\\/g, '/');

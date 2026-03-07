@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useSoundStore } from './useSoundStore';
 import SoundPad from './components/SoundPad';
 import { useMidiControls } from './useMidiControls';
-import { useKeyboardControls } from './useKeyboardControls';
 import { soundEngine } from './SoundEngine';
+import { MediaBrowser } from '../../components/MediaBrowser';
+import { useMediaStore } from '../../stores/useMediaStore';
 
 const SoundDashboard: React.FC = () => {
     const store = useSoundStore();
@@ -11,7 +12,6 @@ const SoundDashboard: React.FC = () => {
 
     // Initialize Global Input Listeners
     useMidiControls();
-    useKeyboardControls();
 
     const [audioDevices, setAudioDevices] = useState<MediaDeviceInfo[]>([]);
 
@@ -54,35 +54,39 @@ const SoundDashboard: React.FC = () => {
         // soundEngine.stopAll();
     };
 
-    const handleLoadAudios = async () => {
-        try {
-            // @ts-expect-error global
-            if (!window.appBridge?.sound?.loadAudios) {
-                console.warn('Electron IPC not available');
-                return;
-            }
+    const [isBrowserOpen, setIsBrowserOpen] = useState(false);
+    const { mediaList: storeMediaList } = useMediaStore();
 
-            // @ts-expect-error global
-            const selectedFiles: string[] = await window.appBridge.sound.loadAudios();
+    const handleLoadAudios = () => {
+        setIsBrowserOpen(true);
+    };
 
-            if (selectedFiles && selectedFiles.length > 0) {
-                // Find empty pads
-                const emptyPads = pads.filter(p => !p.filePath);
+    const handleMediaSelect = (mediaId: string) => {
+        const media = storeMediaList.find(m => m.id === mediaId);
+        if (!media) return;
 
-                selectedFiles.forEach((file, index) => {
-                    if (index < emptyPads.length) {
-                        const fileName = file.split(/[/\\]/).pop()?.replace(/\.[^/.]+$/, "") || "New Sound";
-                        store.setPadFile(emptyPads[index].id, file, fileName);
-                    }
-                });
-            }
-        } catch (error) {
-            console.error('Error loading audio files:', error);
+        // Find empty pads
+        const emptyPads = pads.filter(p => !p.filePath);
+        if (emptyPads.length > 0) {
+            // Take the first empty pad and assign this media
+            store.setPadFile(emptyPads[0].id, mediaId, media.name);
+        } else {
+            // Optional: alert user there are no empty pads left
+            console.warn('No empty pads left for new audio.');
         }
+
+        setIsBrowserOpen(false);
     };
 
     return (
         <div className="h-full flex overflow-hidden font-sans bg-[#0f172a] text-slate-50">
+            <MediaBrowser
+                isOpen={isBrowserOpen}
+                onClose={() => setIsBrowserOpen(false)}
+                onSelect={handleMediaSelect}
+                allowedTypes={['audio']}
+                title="Importer des Sons"
+            />
             {/* Sidebar Controls */}
             <aside className="w-72 bg-[#020617] border-r border-slate-800 flex flex-col p-6 space-y-8">
                 <div className="flex items-center space-x-3">

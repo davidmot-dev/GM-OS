@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Activity, FastForward } from 'lucide-react';
+import { Activity } from 'lucide-react';
 import { useMusicStore } from '../useMusicStore';
 
 const Mixer: React.FC = () => {
@@ -49,24 +49,35 @@ const Mixer: React.FC = () => {
     }, [autoFadeTarget]);
 
     return (
-        <div className="w-full max-w-4xl bg-slate-900/40 rounded-3xl border border-white/5 p-6 backdrop-blur-sm shadow-2xl">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+        <div className="w-full bg-obsidian/30 backdrop-blur-[32px] rounded-[1.5rem] border border-white/5 p-3 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.6)] relative overflow-hidden group/mixer transition-all duration-700 hover:border-gm-violet/20 hover:bg-obsidian/40">
+            {/* Inner Glass Glow */}
+            <div className="absolute inset-0 bg-gradient-to-b from-white/[0.04] to-transparent pointer-events-none" />
+            <div className="absolute -bottom-10 -left-10 size-40 bg-gm-violet/10 blur-[60px] pointer-events-none opacity-40" />
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center relative z-10">
                 {/* Master Volume */}
-                <div className="flex flex-col gap-3">
-                    <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Master Gain</span>
-                        <span className="text-[10px] font-mono text-primary font-bold">{Math.round(masterVolume * 100)}%</span>
+                <div className="space-y-1">
+                    <div className="flex items-center justify-between px-1">
+                        <div className="flex flex-col">
+                            <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Master</span>
+                            <span className="text-[7px] font-black text-gm-violet uppercase tracking-widest opacity-60">Engine</span>
+                        </div>
+                        <div className="flex items-baseline gap-0.5">
+                            <span className="text-xl font-black font-mono text-white/95 drop-shadow-md">{Math.round(masterVolume * 100)}</span>
+                            <span className="text-[10px] font-black text-slate-600">%</span>
+                        </div>
                     </div>
-                    <div className="relative h-3 bg-slate-950 rounded-full border border-white/5 group">
+                    <div className="relative h-1.5 bg-obsidian-dark/90 rounded-full border border-white/5 shadow-inner group/range">
                         <div
-                            className="absolute inset-y-0 left-0 bg-primary shadow-[0_0_15px_rgba(124,59,237,0.5)] transition-all duration-75 rounded-full"
+                            className="absolute inset-y-0 left-0 bg-gm-violet shadow-glow-violet transition-all duration-150 rounded-full"
                             style={{ width: `${masterVolume * 100}%` }}
                         />
-                        {/* Visible Handle */}
                         <div
-                            className="absolute top-1/2 -translate-y-1/2 size-4 bg-white rounded-full shadow-lg border-2 border-primary z-10 pointer-events-none transition-all duration-75"
+                            className="absolute top-1/2 -translate-y-1/2 size-4 bg-white rounded-lg shadow-lg border-2 border-gm-violet z-10 pointer-events-none transition-all duration-150"
                             style={{ left: `calc(${masterVolume * 100}% - 8px)` }}
-                        />
+                        >
+                            <div className="absolute inset-0 rounded-md animate-ping bg-gm-violet/30" />
+                        </div>
                         <input
                             type="range"
                             min="0"
@@ -80,38 +91,37 @@ const Mixer: React.FC = () => {
                 </div>
 
                 {/* Crossfader Center */}
-                <div className="flex flex-col gap-4">
-                    <div className="flex justify-between items-center px-4">
+                <div className="space-y-2 flex flex-col items-center">
+                    <div className="flex justify-between items-center w-full max-w-[200px] gap-3">
                         <button
                             onClick={async () => await triggerAutoFade('A')}
-                            className={`px-3 py-1 rounded-full text-[9px] font-bold border transition-all ${isFading === 'A' ? 'bg-primary border-primary text-white animate-pulse' : 'bg-slate-800 border-white/5 text-slate-500 hover:text-white'}`}
+                            className={`flex-1 py-1.5 rounded-xl text-[8px] font-black border transition-all uppercase tracking-tighter active:scale-[0.98] ${isFading === 'A' ? 'bg-gm-violet border-gm-violet text-white shadow-glow-violet' : 'bg-obsidian-light/40 border-white/10 text-slate-500 hover:text-white hover:border-gm-violet/30'}`}
                         >
-                            FADE TO A
+                            A
                         </button>
-                        <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary/60">
-                            <Activity size={16} />
+                        <div className="size-8 rounded-xl bg-obsidian-dark/80 border border-white/10 flex items-center justify-center relative overflow-hidden">
+                            <Activity size={14} className={`relative z-10 transition-all duration-500 ${isFading ? 'animate-pulse text-gm-violet' : 'text-slate-700'}`} />
                         </div>
                         <button
                             onClick={async () => await triggerAutoFade('B')}
-                            className={`px-3 py-1 rounded-full text-[9px] font-bold border transition-all ${isFading === 'B' ? 'bg-primary border-primary text-white animate-pulse' : 'bg-slate-800 border-white/5 text-slate-500 hover:text-white'}`}
+                            className={`flex-1 py-1.5 rounded-xl text-[8px] font-black border transition-all uppercase tracking-tighter active:scale-[0.98] ${isFading === 'B' ? 'bg-gm-violet border-gm-violet text-white shadow-glow-violet' : 'bg-obsidian-light/40 border-white/10 text-slate-500 hover:text-white hover:border-gm-violet/30'}`}
                         >
-                            FADE TO B
+                            B
                         </button>
                     </div>
 
-
-                    <div className="relative h-12 flex items-center group">
-                        {/* Track */}
-                        <div className="absolute inset-x-0 h-4 bg-slate-950 rounded-xl border border-white/5 p-1">
-                            <div className="w-full h-full border border-primary/10 rounded-lg bg-primary/5" />
+                    <div className="relative w-full h-10 flex items-center group/fader px-4">
+                        {/* Fader Track UI */}
+                        <div className="absolute inset-x-8 h-3 bg-black/60 rounded-full border border-white/5 p-0.5 shadow-inner overflow-hidden">
+                            <div className="w-full h-full border border-gm-violet/5 rounded-full bg-gradient-to-r from-gm-violet/10 via-transparent to-gm-violet/10" />
                         </div>
 
-                        {/* Interactive Handle */}
+                        {/* Premium Fader Handle */}
                         <div
-                            className="absolute size-8 bg-white rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.5)] border-y border-slate-200 z-10 pointer-events-none transition-all duration-75 flex items-center justify-center"
-                            style={{ left: `calc(${crossfader * 100}% - 1rem)` }}
+                            className="absolute h-6 w-10 bg-slate-100 rounded-lg shadow-xl border-y border-white z-10 pointer-events-none transition-all duration-150 flex items-center justify-center after:content-[''] after:w-[1px] after:h-3 after:bg-slate-300 after:rounded-full"
+                            style={{ left: `calc(${10 + (crossfader * 80)}% - 1.25rem)` }}
                         >
-                            <div className="w-0.5 h-4 bg-slate-300 rounded-full" />
+                            <div className="absolute inset-x-0 -top-0.5 h-[1px] bg-gm-violet/20 blur-[1px]" />
                         </div>
 
                         <input
@@ -123,29 +133,35 @@ const Mixer: React.FC = () => {
                             onChange={(e) => setCrossfader(parseFloat(e.target.value))}
                             className="absolute inset-x-0 w-full h-full opacity-0 cursor-pointer z-20"
                         />
+                        
+                        <div className="absolute left-0 top-1/2 -translate-y-1/2 text-[8px] font-black text-slate-700 opacity-40 uppercase">A</div>
+                        <div className="absolute right-0 top-1/2 -translate-y-1/2 text-[8px] font-black text-slate-700 opacity-40 uppercase">B</div>
                     </div>
                 </div>
 
-
-                {/* Automation Speed */}
-                <div className="flex flex-col gap-3">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                            <FastForward size={14} className="text-slate-500" />
-                            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Fade Duration</span>
+                {/* Automation Engine */}
+                <div className="space-y-1">
+                    <div className="flex items-center justify-between px-1">
+                        <div className="flex flex-col">
+                            <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Logic</span>
+                            <span className="text-[7px] font-black text-slate-600 uppercase tracking-widest opacity-60">Fade</span>
                         </div>
-                        <span className="text-[10px] font-mono text-primary font-bold">{(autoFadeDuration / 1000).toFixed(1)}s</span>
+                        <div className="flex items-baseline gap-0.5">
+                            <span className="text-xl font-black font-mono text-white/95 drop-shadow-md">{(autoFadeDuration / 1000).toFixed(1)}</span>
+                            <span className="text-[10px] font-black text-slate-600">s</span>
+                        </div>
                     </div>
-                    <div className="relative h-3 bg-slate-950 rounded-full border border-white/5 group">
+                    <div className="relative h-1.5 bg-obsidian-dark/90 rounded-full border border-white/5 shadow-inner group/range-speed">
                         <div
-                            className="absolute inset-y-0 left-0 bg-slate-700 transition-all rounded-full"
+                            className="absolute inset-y-0 left-0 bg-slate-700 transition-all rounded-full opacity-40"
                             style={{ width: `${((autoFadeDuration - 500) / 19500) * 100}%` }}
                         />
-                        {/* Visible Handle */}
                         <div
-                            className="absolute top-1/2 -translate-y-1/2 size-4 bg-white rounded-full shadow-lg border-2 border-slate-600 z-10 pointer-events-none transition-all duration-75"
+                            className="absolute top-1/2 -translate-y-1/2 size-4 bg-obsidian-light rounded-lg shadow-lg border-2 border-slate-600 z-10 pointer-events-none transition-all duration-150 flex items-center justify-center p-0.5"
                             style={{ left: `calc(${((autoFadeDuration - 500) / 19500) * 100}% - 8px)` }}
-                        />
+                        >
+                            <div className="w-[1px] h-2 bg-slate-500 rounded-full" />
+                        </div>
                         <input
                             type="range"
                             min="500"
@@ -157,7 +173,6 @@ const Mixer: React.FC = () => {
                         />
                     </div>
                 </div>
-
             </div>
         </div>
     );

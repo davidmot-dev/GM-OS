@@ -9,7 +9,7 @@ interface ClockVisualizerProps {
 }
 
 const ClockVisualizer: React.FC<ClockVisualizerProps> = ({ theme, timestamp, mode }) => {
-    const { timerRemaining, timerDuration, timerLabel } = useClockStore();
+    const { timerRemaining, timerDuration, timerLabel, calendars, activeCalendarId, getFantasyDate } = useClockStore();
     const [realtimeDate, setRealtimeDate] = useState(new Date());
 
     useEffect(() => {
@@ -20,12 +20,32 @@ const ClockVisualizer: React.FC<ClockVisualizerProps> = ({ theme, timestamp, mod
     }, [mode]);
 
     const date = mode === 'realtime' ? realtimeDate : new Date(timestamp);
+    const fantasyDate = mode === 'fantasy' ? getFantasyDate() : null;
 
     const formatTime = (d: Date) => {
+        if (mode === 'fantasy' && fantasyDate) {
+            return `${fantasyDate.hour.toString().padStart(2, '0')}:${fantasyDate.minute.toString().padStart(2, '0')}:${fantasyDate.second.toString().padStart(2, '0')}`;
+        }
         return d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     };
 
     const formatDate = (d: Date) => {
+        if (mode === 'fantasy' && activeCalendarId && calendars[activeCalendarId] && fantasyDate) {
+            const cal = calendars[activeCalendarId];
+            const monthObj = cal.months[fantasyDate.monthIndex];
+            const monthName = monthObj.displayName || monthObj.name;
+
+            let dateStr = "";
+            if (monthObj.isIntercalary) {
+                dateStr = `${monthName} ${fantasyDate.year}`;
+            } else {
+                dateStr = `${fantasyDate.day} ${monthName} ${fantasyDate.year}`;
+            }
+            if (fantasyDate.dayOfWeek) {
+                dateStr = `${fantasyDate.dayOfWeek} ${dateStr}`;
+            }
+            return dateStr;
+        }
         return d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
     };
 
@@ -50,9 +70,15 @@ const ClockVisualizer: React.FC<ClockVisualizerProps> = ({ theme, timestamp, mod
     );
 
     const renderOldStyle = () => {
-        const hours = date.getHours();
-        const minutes = date.getMinutes();
-        const seconds = date.getSeconds();
+        let hours = date.getHours();
+        let minutes = date.getMinutes();
+        let seconds = date.getSeconds();
+
+        if (mode === 'fantasy' && fantasyDate) {
+            hours = fantasyDate.hour;
+            minutes = fantasyDate.minute;
+            seconds = fantasyDate.second;
+        }
 
         // Rotation for hands
         const sRotate = seconds * 6;
@@ -135,29 +161,35 @@ const ClockVisualizer: React.FC<ClockVisualizerProps> = ({ theme, timestamp, mod
 
                 <div className="absolute bottom-[-80px] text-center w-full">
                     <p className="font-serif italic text-amber-200/80 text-xl tracking-[0.2em] font-bold drop-shadow-md">
-                        {date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                        {mode === 'fantasy' ? formatDate(date).toUpperCase() : date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }).toUpperCase()}
                     </p>
                 </div>
             </div>
         );
     };
 
-    const renderModern = () => (
-        <div className="flex flex-col items-center">
-            <div className="text-9xl font-thin text-white tracking-tighter tabular-nums flex items-baseline">
-                {date.getHours().toString().padStart(2, '0')}
-                <span className="text-slate-700 mx-2 animate-pulse">:</span>
-                {date.getMinutes().toString().padStart(2, '0')}
-                <span className="text-4xl text-slate-500 ml-4 font-normal">
-                    {date.getSeconds().toString().padStart(2, '0')}
-                </span>
+    const renderModern = () => {
+        const h = mode === 'fantasy' && fantasyDate ? fantasyDate.hour : date.getHours();
+        const m = mode === 'fantasy' && fantasyDate ? fantasyDate.minute : date.getMinutes();
+        const s = mode === 'fantasy' && fantasyDate ? fantasyDate.second : date.getSeconds();
+
+        return (
+            <div className="flex flex-col items-center">
+                <div className="text-9xl font-thin text-white tracking-tighter tabular-nums flex items-baseline">
+                    {h.toString().padStart(2, '0')}
+                    <span className="text-slate-700 mx-2 animate-pulse">:</span>
+                    {m.toString().padStart(2, '0')}
+                    <span className="text-4xl text-slate-500 ml-4 font-normal">
+                        {s.toString().padStart(2, '0')}
+                    </span>
+                </div>
+                <div className="h-[1px] w-64 bg-gradient-to-r from-transparent via-slate-700 to-transparent my-8" />
+                <div className="text-xl text-slate-400 font-light tracking-widest uppercase">
+                    {formatDate(date)}
+                </div>
             </div>
-            <div className="h-[1px] w-64 bg-gradient-to-r from-transparent via-slate-700 to-transparent my-8" />
-            <div className="text-xl text-slate-400 font-light tracking-widest uppercase">
-                {formatDate(date)}
-            </div>
-        </div>
-    );
+        );
+    };
 
     const renderTimer = () => {
         const total = timerDuration || 1;

@@ -2,6 +2,7 @@
  * Engine Audio pour Music OS v5
  * Gère le mixage, les platines, les boucles A/B et le routage via Streaming HTML5.
  */
+import { useMediaStore } from '../../stores/useMediaStore';
 
 export interface DeckState {
     isPlaying: boolean;
@@ -18,6 +19,7 @@ class MusicDeck {
     private gainNode: GainNode;
     private state: DeckState;
     private onStateChange: (state: DeckState) => void;
+    private objectUrl: string | null = null;
 
     public get isPlaying() { return this.state.isPlaying; }
     public get duration() { return this.audioElement.duration || 0; }
@@ -65,20 +67,36 @@ class MusicDeck {
         this.audioElement.pause();
         this.audioElement.src = "";
 
+        if (this.objectUrl) {
+            URL.revokeObjectURL(this.objectUrl);
+            this.objectUrl = null;
+        }
+
         let finalUrl = url;
 
-        // Transformation des chemins locaux Windows en URLs valides pour l'élément audio
-        // On check si c'est un chemin local (Pas de protocole détecté)
-        const isLocalPath = url && !url.includes('://') && !url.startsWith('blob:') && !url.startsWith('data:');
-
-        if (isLocalPath) {
-            // Utilisation du bridge si disponible, sinon fallback manuel robuste
-            const win = window as unknown as { appBridge?: { utils?: { formatFileUrl: (p: string) => string } } };
-            if (win.appBridge?.utils?.formatFileUrl) {
-                finalUrl = win.appBridge.utils.formatFileUrl(url);
+        if (url && url.startsWith('m-')) {
+            const { getMediaBlob } = useMediaStore.getState();
+            const blob = await getMediaBlob(url);
+            if (blob) {
+                this.objectUrl = URL.createObjectURL(blob);
+                finalUrl = this.objectUrl;
             } else {
-                const normalizedPath = url.replace(/\\/g, '/');
-                finalUrl = 'file:///' + encodeURI(normalizedPath).replace(/#/g, '%23').replace(/\?/g, '%3F');
+                console.warn(`[MusicDeck] MediaBlob not found for ID: ${url}`);
+            }
+        } else {
+            // Transformation des chemins locaux Windows en URLs valides pour l'élément audio
+            // On check si c'est un chemin local (Pas de protocole détecté)
+            const isLocalPath = url && !url.includes('://') && !url.startsWith('blob:') && !url.startsWith('data:');
+
+            if (isLocalPath) {
+                // Utilisation du bridge si disponible, sinon fallback manuel robuste
+                const win = window as unknown as { appBridge?: { utils?: { formatFileUrl: (p: string) => string } } };
+                if (win.appBridge?.utils?.formatFileUrl) {
+                    finalUrl = win.appBridge.utils.formatFileUrl(url);
+                } else {
+                    const normalizedPath = url.replace(/\\/g, '/');
+                    finalUrl = 'file:///' + encodeURI(normalizedPath).replace(/#/g, '%23').replace(/\?/g, '%3F');
+                }
             }
         }
 

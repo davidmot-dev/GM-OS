@@ -2274,6 +2274,23 @@ ipcMain.handle("tables:load-table", async (_event, universe, tableName) => {
   }
   return null;
 });
+ipcMain.handle("clock:list-calendars", async () => {
+  const appRoot = process.env.APP_ROOT || "";
+  const calendarPath = path.join(appRoot, "databases", "calendars");
+  if (await fs.pathExists(calendarPath)) {
+    const files = await fs.readdir(calendarPath);
+    return files.filter((f) => f.endsWith(".json")).map((f) => f.replace(".json", ""));
+  }
+  return [];
+});
+ipcMain.handle("clock:load-calendar", async (_event, id) => {
+  const appRoot = process.env.APP_ROOT || "";
+  const filePath = path.join(appRoot, "databases", "calendars", `${id}.json`);
+  if (await fs.pathExists(filePath)) {
+    return await fs.readJson(filePath);
+  }
+  return null;
+});
 ipcMain.on("web:open-external", (_event, url) => {
   shell.openExternal(url);
 });

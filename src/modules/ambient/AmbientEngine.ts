@@ -2,6 +2,7 @@
  * Engine Audio pour Ambient OS v5
  * Gère 8 pistes d'ambiance en boucle avec fondu et compression master.
  */
+import { useMediaStore } from '../../stores/useMediaStore';
 
 class AmbientTrack {
     private context: AudioContext;
@@ -44,15 +45,28 @@ class AmbientTrack {
     async load(url: string) {
         if (this.currentUrl === url && this.buffer) return;
 
-        let finalUrl = url;
-        if (url && !url.startsWith('http') && !url.startsWith('file://') && !url.startsWith('blob:')) {
-            finalUrl = 'file:///' + url.replace(/\\/g, '/');
-        }
-        const encodedUrl = encodeURI(finalUrl).replace(/%5C/g, '/');
-
         try {
-            const response = await fetch(encodedUrl);
-            const arrayBuffer = await response.arrayBuffer();
+            let arrayBuffer: ArrayBuffer;
+
+            if (url && url.startsWith('m-')) {
+                const { getMediaBlob } = useMediaStore.getState();
+                const blob = await getMediaBlob(url);
+                if (!blob) {
+                    console.warn(`[AmbientTrack] MediaBlob not found for ID: ${url}`);
+                    return;
+                }
+                arrayBuffer = await blob.arrayBuffer();
+            } else {
+                let finalUrl = url;
+                if (url && !url.startsWith('http') && !url.startsWith('file://') && !url.startsWith('blob:')) {
+                    finalUrl = 'file:///' + url.replace(/\\/g, '/');
+                }
+                const encodedUrl = encodeURI(finalUrl).replace(/%5C/g, '/');
+
+                const response = await fetch(encodedUrl);
+                arrayBuffer = await response.arrayBuffer();
+            }
+
             this.buffer = await this.context.decodeAudioData(arrayBuffer);
             this.currentUrl = url;
         } catch (e) {

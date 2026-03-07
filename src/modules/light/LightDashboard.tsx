@@ -7,16 +7,21 @@ import { useLightStore } from './useLightStore';
 import { hueEngine } from './HueEngine';
 
 const LightDashboard: React.FC = () => {
-    const { status, bridgeIp } = useLightStore();
+    const { status, bridgeIp, username } = useLightStore();
 
-    // Re-verify connection or stay offline on mount
+    // Auto-connect on mount if we have saved credentials
     useEffect(() => {
-        if (status === 'connected' && bridgeIp) {
+        if (status === 'disconnected' && bridgeIp && username) {
+            useLightStore.getState().setConnection('connected');
+            hueEngine.fetchLights().catch(() => {
+                useLightStore.getState().setConnection('disconnected');
+            });
+        } else if (status === 'connected' && bridgeIp) {
             hueEngine.fetchLights().catch(() => {
                 useLightStore.getState().setConnection('disconnected');
             });
         }
-    }, [status, bridgeIp]);
+    }, [status, bridgeIp, username]);
 
     // Setup polling for mock lights state if in mock mode to simulate things
     useEffect(() => {

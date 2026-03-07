@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 
 export interface MapToken {
     id: string; // Unique ID for the token on the map
+    name: string; // Nom affiché ou identifiant du token
     avatar: string;
     x: number;
     y: number;
@@ -16,9 +17,11 @@ export type MapTool = 'brush' | 'rect' | 'circle' | 'move_token';
 
 interface MapState {
     mapUrl: string | null;
+    mapName: string | null;
     isVideo: boolean;
     fogDataUrl: string | null; // C'est ici qu'on stockera l'image base64 du brouillard (pour reprendre une session plus tard)
     tokens: MapToken[];
+    fogCommand: 'reveal_all' | 'hide_all' | null;
 
     // UI State (Not persisted)
     currentTool: MapTool;
@@ -26,12 +29,13 @@ interface MapState {
     brushSize: number;
 
     // Actions
-    setMap: (url: string | null, isVideo?: boolean) => void;
+    setMap: (url: string | null, isVideo?: boolean, name?: string) => void;
     setFogDataUrl: (dataUrl: string | null) => void;
     addToken: (token: Omit<MapToken, 'id'>) => void;
     updateToken: (id: string, updates: Partial<MapToken>) => void;
     removeToken: (id: string) => void;
     clearTokens: () => void;
+    triggerFogCommand: (command: 'reveal_all' | 'hide_all' | null) => void;
 
     setTool: (tool: MapTool) => void;
     setFogMode: (mode: FogMode) => void;
@@ -42,6 +46,7 @@ export const useMapStore = create<MapState>()(
     persist(
         (set) => ({
             mapUrl: null,
+            mapName: null,
             isVideo: false,
             fogDataUrl: null,
             tokens: [],
@@ -50,8 +55,9 @@ export const useMapStore = create<MapState>()(
             currentTool: 'brush',
             fogMode: 'reveal',
             brushSize: 50,
+            fogCommand: null,
 
-            setMap: (mapUrl, isVideo = false) => set({ mapUrl, isVideo }),
+            setMap: (mapUrl, isVideo = false, mapName = 'Sans titre') => set({ mapUrl, isVideo, mapName }),
             setFogDataUrl: (fogDataUrl) => set({ fogDataUrl }),
 
             addToken: (token) => set(state => ({
@@ -68,6 +74,8 @@ export const useMapStore = create<MapState>()(
 
             clearTokens: () => set({ tokens: [] }),
 
+            triggerFogCommand: (fogCommand) => set({ fogCommand }),
+
             setTool: (currentTool) => set({ currentTool }),
             setFogMode: (fogMode) => set({ fogMode }),
             setBrushSize: (brushSize) => set({ brushSize })
@@ -76,6 +84,7 @@ export const useMapStore = create<MapState>()(
             name: 'gmos-map-storage',
             partialize: (state) => ({
                 mapUrl: state.mapUrl,
+                mapName: state.mapName,
                 isVideo: state.isVideo,
                 fogDataUrl: state.fogDataUrl,
                 tokens: state.tokens

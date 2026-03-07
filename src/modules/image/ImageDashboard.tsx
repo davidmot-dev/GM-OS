@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 // Let's use Lucide icons since it's the standard in this project.
 import {
     Grid as GridIcon, UploadCloud, Ban, Folder as FolderIcon, History as HistoryIcon,
@@ -8,11 +8,13 @@ import {
 
 import { useImageStore } from './useImageStore';
 import ImagePad from './components/ImagePad';
+import { MediaBrowser } from '../../components/MediaBrowser';
+import { useMediaStore } from '../../stores/useMediaStore';
 
 const ImageDashboard: React.FC = () => {
     const {
         mediaList, projectionTarget, setProjectionTarget,
-        projectSequence, blackout, addMedia, displays, fetchDisplays,
+        projectSequence, blackout, blackoutAll, addMedia, displays, fetchDisplays,
         folders, activeFolderId, setActiveFolderId, addFolder, removeFolder,
         currentView, setCurrentView
     } = useImageStore();
@@ -21,31 +23,22 @@ const ImageDashboard: React.FC = () => {
         fetchDisplays();
     }, [fetchDisplays]);
 
-    const fileInputRef = useRef<HTMLInputElement>(null);
+    const { mediaList: storeMediaList } = useMediaStore();
+    const [isBrowserOpen, setIsBrowserOpen] = React.useState(false);
 
     const handleUploadClick = () => {
-        fileInputRef.current?.click();
+        setIsBrowserOpen(true);
     };
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const files = e.target.files;
-        if (!files) return;
+    const handleMediaSelect = (mediaId: string) => {
+        const media = storeMediaList.find(m => m.id === mediaId);
+        if (!media) return;
 
-        Array.from(files).forEach(file => {
-            // @ts-expect-error global
-            const rawPath = window.appBridge ? window.appBridge.getPathForFile(file) : (file.path || file.name);
-            // @ts-expect-error global
-            const formattedPath = window.appBridge?.utils?.formatFileUrl ? window.appBridge.utils.formatFileUrl(rawPath) : rawPath.replace(/\\/g, '/');
-
-            addMedia({
-                name: file.name,
-                path: formattedPath,
-                sizeInfo: `${(file.size / (1024 * 1024)).toFixed(1)}MB`
-            });
+        addMedia({
+            name: media.name,
+            path: mediaId,
+            sizeInfo: `${(media.size / (1024 * 1024)).toFixed(1)}MB`
         });
-
-        // reset format
-        e.target.value = '';
     };
 
     const handleCreateFolder = () => {
@@ -78,14 +71,14 @@ const ImageDashboard: React.FC = () => {
 
     return (
         <div className="flex h-full bg-slate-950 font-display text-slate-100 overflow-hidden">
-            <input
-                type="file"
-                multiple
-                accept="image/*"
-                className="hidden"
-                ref={fileInputRef}
-                onChange={handleFileChange}
+            <MediaBrowser
+                isOpen={isBrowserOpen}
+                onClose={() => setIsBrowserOpen(false)}
+                onSelect={handleMediaSelect}
+                allowedTypes={['image']}
+                title="Importer des Images"
             />
+
 
             {/* Left Sidebar */}
             <aside className="w-80 bg-slate-900/90 backdrop-blur-md border-r border-slate-800 p-5 flex flex-col gap-6 flex-shrink-0">
@@ -109,10 +102,19 @@ const ImageDashboard: React.FC = () => {
                     </button>
                     <button
                         onClick={blackout}
-                        className="w-full bg-rose-950/40 border border-rose-500/50 text-rose-500 hover:bg-rose-600 hover:text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2"
+                        className="w-full bg-rose-950/20 border border-rose-500/30 text-rose-500/70 hover:bg-rose-900/40 hover:text-rose-400 font-bold py-2 rounded-xl transition-all flex items-center justify-center gap-2 text-xs"
+                        title="Éteindre l'écran cible uniquement"
+                    >
+                        <Ban size={16} />
+                        BLACKOUT TARGET
+                    </button>
+                    <button
+                        onClick={blackoutAll}
+                        className="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 rounded-xl shadow-lg shadow-rose-900/40 transition-all flex items-center justify-center gap-2"
+                        title="Éteindre TOUS les écrans"
                     >
                         <Ban size={20} />
-                        BLACKOUT
+                        BLACKOUT ALL
                     </button>
                 </div>
 

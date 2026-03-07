@@ -1,3 +1,5 @@
+import { useMediaStore } from '../../stores/useMediaStore';
+
 export class SoundEngine {
     private static instance: SoundEngine;
     private context: AudioContext;
@@ -50,9 +52,22 @@ export class SoundEngine {
 
     public async loadAudio(padId: string, filePath: string): Promise<void> {
         try {
-            const url = this.formatUrl(filePath);
-            const response = await fetch(url);
-            const arrayBuffer = await response.arrayBuffer();
+            let arrayBuffer: ArrayBuffer;
+
+            if (filePath && filePath.startsWith('m-')) {
+                const { getMediaBlob } = useMediaStore.getState();
+                const blob = await getMediaBlob(filePath);
+                if (!blob) {
+                    console.warn(`[SoundEngine] MediaBlob not found for ID: ${filePath}`);
+                    return;
+                }
+                arrayBuffer = await blob.arrayBuffer();
+            } else {
+                const url = this.formatUrl(filePath);
+                const response = await fetch(url);
+                arrayBuffer = await response.arrayBuffer();
+            }
+
             const audioBuffer = await this.context.decodeAudioData(arrayBuffer);
             this.audioBuffers.set(padId, audioBuffer);
             console.log(`[SoundEngine] Loaded ${filePath} for pad ${padId}`);
@@ -123,7 +138,9 @@ export class SoundEngine {
                 try {
                     source.stop();
                     source.disconnect();
-                } catch { }
+                } catch {
+                    // Ignore errors if source is already stopped/disconnected
+                }
             });
             this.padSources.clear();
 

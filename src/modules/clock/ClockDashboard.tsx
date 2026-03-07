@@ -39,8 +39,25 @@ const ClockDashboard: React.FC = () => {
         setTimer,
         setTimerLabel,
         timerDuration,
-        timerLabel
+        timerLabel,
+        isClockProjected,
+        setIsClockProjected,
+        availableCalendars,
+        activeCalendarId,
+        calendars,
+        fetchCalendars,
+        selectCalendar,
+        getFantasyDate,
+        setFantasyDate
     } = useClockStore();
+
+    const fantasyDate = getFantasyDate();
+
+
+    // Fetch calendars on mount
+    useEffect(() => {
+        fetchCalendars();
+    }, [fetchCalendars]);
 
 
 
@@ -118,6 +135,86 @@ const ClockDashboard: React.FC = () => {
                                 ))}
                             </div>
                         </div>
+
+                        {mode === 'fantasy' && (
+                            <div className="bg-slate-800/30 border border-slate-700/50 rounded-lg p-3 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                                <div>
+                                    <label className="text-xs text-slate-500 uppercase font-medium block mb-2">Calendrier</label>
+                                    <select
+                                        className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-xs text-white focus:outline-none focus:border-blue-500"
+                                        value={activeCalendarId || ''}
+                                        onChange={(e) => selectCalendar(e.target.value)}
+                                    >
+                                        <option value="" disabled>Choisir un calendrier...</option>
+                                        {availableCalendars.map(calId => (
+                                            <option key={calId} value={calId}>{calId}</option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                {activeCalendarId && calendars[activeCalendarId] && fantasyDate && (
+                                    <div className="space-y-3 pt-2 border-t border-slate-700/50">
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <div>
+                                                <label className="text-[10px] text-slate-500 uppercase block mb-1">Année</label>
+                                                <input
+                                                    type="number"
+                                                    className="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-xs text-white"
+                                                    value={fantasyDate.year}
+                                                    onChange={(e) => setFantasyDate({ year: parseInt(e.target.value) })}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="text-[10px] text-slate-500 uppercase block mb-1">Jour</label>
+                                                <input
+                                                    type="number"
+                                                    className="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-xs text-white"
+                                                    value={fantasyDate.day}
+                                                    onChange={(e) => setFantasyDate({ day: parseInt(e.target.value) })}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label className="text-[10px] text-slate-500 uppercase block mb-1">Mois</label>
+                                            <select
+                                                className="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-xs text-white"
+                                                value={fantasyDate.monthIndex}
+                                                onChange={(e) => setFantasyDate({ monthIndex: parseInt(e.target.value) })}
+                                            >
+                                                {calendars[activeCalendarId].months.map((m, idx) => {
+                                                    const isLeap = fantasyDate.year % 4 === 0;
+                                                    if (m.leapYearOnly && !isLeap) return null;
+                                                    return <option key={idx} value={idx}>{m.displayName || m.name}</option>;
+                                                })}
+                                            </select>
+                                        </div>
+                                        <div className="grid grid-cols-3 gap-1">
+                                            <input
+                                                type="number"
+                                                placeholder="HH"
+                                                className="bg-slate-900 border border-slate-700 rounded p-1.5 text-xs text-white text-center"
+                                                value={fantasyDate.hour}
+                                                onChange={(e) => setFantasyDate({ hour: parseInt(e.target.value) })}
+                                            />
+                                            <input
+                                                type="number"
+                                                placeholder="MM"
+                                                className="bg-slate-900 border border-slate-700 rounded p-1.5 text-xs text-white text-center"
+                                                value={fantasyDate.minute}
+                                                onChange={(e) => setFantasyDate({ minute: parseInt(e.target.value) })}
+                                            />
+                                            <input
+                                                type="number"
+                                                placeholder="SS"
+                                                className="bg-slate-900 border border-slate-700 rounded p-1.5 text-xs text-white text-center"
+                                                value={fantasyDate.second}
+                                                onChange={(e) => setFantasyDate({ second: parseInt(e.target.value) })}
+                                            />
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
 
                         {mode === 'static' && (
                             <div className="bg-slate-800/30 border border-slate-700/50 rounded-lg p-3 space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
@@ -256,7 +353,14 @@ const ClockDashboard: React.FC = () => {
                 {/* Main Clock Area */}
                 <div className="flex-1 min-h-[400px] bg-slate-900/40 border border-slate-800/50 rounded-2xl relative flex items-center justify-center overflow-hidden group">
                     <div className="absolute top-4 right-4 flex gap-2">
-                        <button className="p-2 rounded-full bg-slate-800/50 text-slate-400 hover:text-white hover:bg-slate-700 transition-all">
+                        <button
+                            onClick={() => setIsClockProjected(!isClockProjected)}
+                            className={`p-2 rounded-full transition-all border ${isClockProjected
+                                ? 'bg-sky-600/20 border-sky-500 text-sky-400 shadow-lg shadow-sky-900/40'
+                                : 'bg-slate-800/50 border-slate-700 text-slate-500 hover:text-white'
+                                }`}
+                            title={isClockProjected ? "Caché du Player Hub" : "Affiché sur le Player Hub"}
+                        >
                             <Monitor size={16} />
                         </button>
                     </div>

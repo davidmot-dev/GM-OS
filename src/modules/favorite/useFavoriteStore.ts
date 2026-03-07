@@ -8,12 +8,15 @@ export interface FavoriteEntity {
     type: FavoriteType;
     name: string;
     subtitle?: string;
-    imageUrl?: string;
+    imageUrl?: string; // Main portrait
+    tokenUrl?: string; // Icon/Token
     lastViewed?: number; // timestamp
     attributes?: Record<string, string | number>; // e.g. HP: '140', Alignment: 'Lawful Good'
     stats?: Record<string, number>; // e.g. Charisma: 18 (for the bar charts)
     lore?: string;
+    secretNotes?: string;
     isStarred?: boolean;
+    isSyncedToPlayerHub?: boolean;
 }
 
 interface FavoriteState {
@@ -21,15 +24,17 @@ interface FavoriteState {
     selectedFavoriteId: string | null;
     activeCategory: FavoriteType | 'all';
     searchQuery: string;
+    viewMode: 'grid' | 'detail';
 
     // Actions
-    addFavorite: (entity: Omit<FavoriteEntity, 'id' | 'lastViewed'>) => void;
+    addFavorite: (entity: Omit<FavoriteEntity, 'id' | 'lastViewed'>) => string;
     updateFavorite: (id: string, updates: Partial<FavoriteEntity>) => void;
     removeFavorite: (id: string) => void;
     selectFavorite: (id: string | null) => void;
     setCategory: (category: FavoriteType | 'all') => void;
     setSearchQuery: (query: string) => void;
     toggleStar: (id: string) => void;
+    setViewMode: (mode: 'grid' | 'detail') => void;
 }
 
 // Initial mock data simulating the user's HTML mockup
@@ -85,17 +90,22 @@ export const useFavoriteStore = create<FavoriteState>()(
             selectedFavoriteId: null,
             activeCategory: 'all',
             searchQuery: '',
+            viewMode: 'grid',
 
-            addFavorite: (entity) => set((state) => ({
-                favorites: [
-                    ...state.favorites,
-                    {
-                        ...entity,
-                        id: `fav-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
-                        lastViewed: Date.now()
-                    }
-                ]
-            })),
+            addFavorite: (entity) => {
+                const newId = `fav-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+                set((state) => ({
+                    favorites: [
+                        ...state.favorites,
+                        {
+                            ...entity,
+                            id: newId,
+                            lastViewed: Date.now()
+                        }
+                    ]
+                }));
+                return newId;
+            },
 
             updateFavorite: (id, updates) => set((state) => ({
                 favorites: state.favorites.map(fav =>
@@ -130,7 +140,9 @@ export const useFavoriteStore = create<FavoriteState>()(
                 favorites: state.favorites.map(fav =>
                     fav.id === id ? { ...fav, isStarred: !fav.isStarred } : fav
                 )
-            }))
+            })),
+
+            setViewMode: (mode) => set({ viewMode: mode })
         }),
         {
             name: 'gm-os-favorites-storage',

@@ -2,9 +2,11 @@ import React, { useRef, useEffect, useState, type MouseEvent } from 'react';
 import { useMapStore } from '../useMapStore';
 import { FogEngine } from '../FogEngine';
 import MapTokenNode from './MapTokenNode';
+import { useMediaUrl } from '../../../hooks/useMediaUrl';
 
 const MapCanvas: React.FC = () => {
-    const { mapUrl, isVideo, fogDataUrl, setFogDataUrl, currentTool, fogMode, brushSize, tokens } = useMapStore();
+    const { mapUrl, isVideo, fogDataUrl, setFogDataUrl, currentTool, fogMode, brushSize, tokens, fogCommand, triggerFogCommand } = useMapStore();
+    const resolvedMapUrl = useMediaUrl(mapUrl || undefined);
 
     const containerRef = useRef<HTMLDivElement>(null);
     const fogCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -57,6 +59,21 @@ const MapCanvas: React.FC = () => {
             }
         }
     }, [mapUrl, fogDataUrl]); // We only trigger this if URL changes or on initial mount. We don't want to reload continuously.
+
+    // Handle Global Fog Commands (Reveal All / Hide All)
+    useEffect(() => {
+        if (!engineRef.current || !fogCommand) return;
+
+        if (fogCommand === 'reveal_all') {
+            engineRef.current.revealAll();
+        } else if (fogCommand === 'hide_all') {
+            engineRef.current.fillBlack();
+        }
+
+        // Persist the new state and reset command
+        setFogDataUrl(engineRef.current.getFogDataUrl());
+        triggerFogCommand(null);
+    }, [fogCommand, setFogDataUrl, triggerFogCommand]);
 
     // --- Mouse Handlers for Fog Tools --- 
 
@@ -147,7 +164,7 @@ const MapCanvas: React.FC = () => {
     return (
         <div ref={containerRef} className="relative w-full h-full bg-obsidian-dark overflow-hidden flex items-center justify-center border border-gray-700 rounded-xl">
             {/* 0. Empty State */}
-            {!mapUrl && (
+            {!resolvedMapUrl && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-500 z-0">
                     <span className="text-4xl mb-2">🗺️</span>
                     <p className="text-xl font-bold font-display">Aucune carte chargée</p>
@@ -156,21 +173,21 @@ const MapCanvas: React.FC = () => {
             )}
 
             {/* 1. Base Layer (Image / Video) */}
-            {mapUrl && isVideo ? (
-                <video src={mapUrl} autoPlay loop muted className="absolute inset-0 w-full h-full object-contain pointer-events-none z-10" />
-            ) : mapUrl ? (
-                <img src={mapUrl} alt="Map Background" className="absolute inset-0 w-full h-full object-contain pointer-events-none z-10" />
+            {resolvedMapUrl && isVideo ? (
+                <video src={resolvedMapUrl} autoPlay loop muted className="absolute inset-0 w-full h-full object-contain pointer-events-none z-10" />
+            ) : resolvedMapUrl ? (
+                <img src={resolvedMapUrl} alt="Map Background" className="absolute inset-0 w-full h-full object-contain pointer-events-none z-10" />
             ) : null}
 
             {/* 2. Fog Layer (Persistent Canvas) */}
             <canvas
                 ref={fogCanvasRef}
                 className="absolute inset-0 w-full h-full z-20 pointer-events-none opacity-80"
-                style={{ display: mapUrl ? 'block' : 'none' }}
+                style={{ display: resolvedMapUrl ? 'block' : 'none' }}
             />
 
             {/* 3. Token Layer (React Components overlay) */}
-            <div className="absolute inset-0 w-full h-full z-30 pointer-events-none overflow-hidden" style={{ display: mapUrl ? 'block' : 'none' }}>
+            <div className="absolute inset-0 w-full h-full z-30 pointer-events-none overflow-hidden" style={{ display: resolvedMapUrl ? 'block' : 'none' }}>
                 {tokens.map(token => (
                     <MapTokenNode key={token.id} token={token} />
                 ))}

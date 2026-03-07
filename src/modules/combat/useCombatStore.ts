@@ -15,7 +15,8 @@ export interface Combatant {
     hp: number;
     hpMax: number;
     isPlayer: boolean;
-    sourcePlayerId?: string; // Link to Session OS
+    sourcePlayerId?: string; // Link to Session OS PlayerCharacter
+    sourceEntityId?: string; // Link to Session OS NPC/Monster
     avatar?: string;
     statuses: StatusEffect[];
 }
@@ -47,11 +48,14 @@ interface CombatState {
     // Statuses
     addStatus: (combatantId: string, status: Omit<StatusEffect, 'id'>) => void;
     removeStatus: (combatantId: string, statusId: string) => void;
+
+    // Sync
+    syncCombatantHPToSession: () => void;
 }
 
 export const useCombatStore = create<CombatState>()(
     persist(
-        (set) => ({
+        (set, get) => ({
             combatants: [],
             currentTurnIdx: 0,
             round: 1,
@@ -148,6 +152,13 @@ export const useCombatStore = create<CombatState>()(
                     return c;
                 });
 
+                const activeCombatant = newCombatants[nextIdx];
+                if (activeCombatant && typeof window !== 'undefined') {
+                    // Integration with Map-OS: highlight/center on token
+                    const bridge = (window as unknown as { appBridge?: { highlightMapToken?: (name: string) => void } }).appBridge;
+                    bridge?.highlightMapToken?.(activeCombatant.name);
+                }
+
                 return {
                     currentTurnIdx: nextIdx,
                     round: nextRound,
@@ -164,6 +175,12 @@ export const useCombatStore = create<CombatState>()(
                 if (prevIdx < 0) {
                     prevIdx = state.combatants.length - 1;
                     prevRound = Math.max(1, prevRound - 1);
+                }
+
+                const activeCombatant = state.combatants[prevIdx];
+                if (activeCombatant && typeof window !== 'undefined') {
+                    const bridge = (window as unknown as { appBridge?: { highlightMapToken?: (name: string) => void } }).appBridge;
+                    bridge?.highlightMapToken?.(activeCombatant.name);
                 }
 
                 return { currentTurnIdx: prevIdx, round: prevRound };
@@ -197,7 +214,46 @@ export const useCombatStore = create<CombatState>()(
                     }
                     return c;
                 })
-            }))
+            })),
+
+            syncCombatantHPToSession: () => {
+                const { combatants } = get();
+                // We use a dynamic import or window access to avoid circular dependency if possible,
+                // but for GM-OS we often use the global state access.
+                // For strict typing, we'll try to get the store from the window if it's been registered there,
+                // or just rely on the fact that this is a companion app where we control the environment.
+                
+                // Let's assume the session store is available via its own hook or a global reg.
+                // In GM-OS v5, we often use 'window.useSessionOSStore' if we register it, or just use it.
+                // However, the cleanest way is often to just use the reactive nature if possible, 
+                // but for a "push" sync, we need the action.
+
+                const sessionStore = (window as unknown as Record<string, { 
+                    getState: () => {
+                        players: { id: string, characters: { id: string }[] }[],
+                        updateCharacterHP: (pId: string, cId: string, hp: number) => void,
+                        updateEntityHP?: (eId: string, hp: number) => void
+                    }
+                }>).useSessionOSStore?.getState?.();
+                
+                if (!sessionStore) return;
+
+                combatants.forEach(c => {
+                    if (c.isPlayer && c.sourcePlayerId) {
+                        // Find the player who owns this character
+                        sessionStore.players.forEach((p: { id: string, characters: { id: string }[] }) => {
+                            const char = p.characters.find(char => char.id === c.sourcePlayerId);
+                            if (char) {
+                                sessionStore.updateCharacterHP(p.id, char.id, c.hp);
+                            }
+                        });
+                    } else if (!c.isPlayer && c.sourceEntityId) {
+                        if (typeof sessionStore.updateEntityHP === 'function') {
+                            sessionStore.updateEntityHP(c.sourceEntityId, c.hp);
+                        }
+                    }
+                });
+            }
         }),
         {
             name: 'gmos-combat-storage',
