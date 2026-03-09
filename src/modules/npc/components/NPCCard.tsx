@@ -8,13 +8,20 @@ import { gmAlert } from '../../../stores/useModalStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { useFavoriteStore, type FavoriteType } from '../../favorite/useFavoriteStore';
 import { useImageStore } from '../../image/useImageStore';
+import { useVoiceStore } from '../../voice/useVoiceStore';
 
 const NPCCard: React.FC = () => {
     const { currentEntity, saveToMemo, isGenerating, selectAvatar } = useNPCStore();
     const { addCombatant } = useCombatStore();
-    const { addJournalEntry } = useSessionOSStore() as any; // Using any for quick bypass if real method name is slightly different in this specific store version
+    const { addJournalEntry } = useSessionOSStore() as any;
     const { addToken } = useMapStore();
     const { addFavorite } = useFavoriteStore();
+    const { inputLevel, isSyncNPC, isActive } = useVoiceStore();
+    
+    // Voice Sync Animation values
+    const syncActive = isSyncNPC && isActive && inputLevel > 0.05;
+    const voiceScale = syncActive ? 1 + (inputLevel * 0.1) : 1;
+    const voiceGlow = syncActive ? `0 0 ${inputLevel * 30}px rgba(6, 182, 212, ${inputLevel})` : 'none';
 
     if (isGenerating) {
         return (
@@ -124,7 +131,11 @@ const NPCCard: React.FC = () => {
 
                 <button
                     onClick={() => selectAvatar()}
-                    className="w-32 h-32 rounded-2xl bg-obsidian-dark/50 border-2 border-gm-cyan/30 flex items-center justify-center text-gm-cyan shadow-glow-cyan z-10 transition-all hover:scale-105 hover:border-gm-cyan duration-500 overflow-hidden group/avatar"
+                    style={{ 
+                        transform: `scale(${voiceScale})`,
+                        boxShadow: voiceGlow,
+                    }}
+                    className={`w-32 h-32 rounded-2xl bg-obsidian-dark/50 border-2 border-gm-cyan/30 flex items-center justify-center text-gm-cyan shadow-glow-cyan z-10 transition-all duration-75 hover:border-gm-cyan overflow-hidden group/avatar`}
                 >
                     {avatarSrc ? (
                         <img src={avatarSrc} alt={currentEntity.name} className="w-full h-full object-cover" />

@@ -26,6 +26,7 @@ import WhiteboardDashboard from './modules/whiteboard/WhiteboardDashboard';
 import { FavoriteDashboard } from './modules/favorite/components/FavoriteDashboard';
 import DebugDashboard from './modules/debug/DebugDashboard';
 import { GlobalKeybinds } from './components/GlobalKeybinds';
+import VoiceDashboard from './modules/voice/VoiceDashboard';
 import { useModalStore } from './stores/useModalStore';
 import { MediaBrowser } from './components/MediaBrowser';
 
@@ -81,6 +82,8 @@ function App() {
         return <WhiteboardDashboard />;
       case 'debug':
         return <DebugDashboard />;
+      case 'voice':
+        return <VoiceDashboard />;
 
       default:
 
