@@ -22,7 +22,8 @@ export default {
                     cyan: '#06b6d4',    // Map OS
                     emerald: '#10b981', // NPC/Table OS
                     orange: '#f97316',  // Web/Dice OS
-                }
+                },
+                accent: 'var(--app-accent)',
             },
             fontFamily: {
                 // Typographie technique et lisible

@@ -10,53 +10,44 @@ Map OS transforme GM-OS en un mini-VTT (Virtual Tabletop). Il permet d'importer 
 
 * **Barre Latérale (Contrôles MJ) :**
   * **Importation :** Soutien natif des images (`.png`, `.jpg`) et des vidéos (`.mp4`).
-  * **Projection :** Sélecteur d'écran et bouton de lancement de la vue Joueur.
+  * **Grille Tactique :** Nouvelle option pour afficher une grille ajustable (taille, opacité, couleur).
+  * **Projection :** Sélecteur d'écran (Hub Joueur ou Moniteur externe).
   * **Outils de Brouillard :**
-    * `Pinceau` : Tracé libre à la souris.
-    * `Rectangle` / `Cercle` : Tracés géométriques précis avec prévisualisation et validation (Enter/Esc).
-  * **Modes de Brouillard :** 🔓 Révéler (Gomme) ou 🔒 Masquer (Pinceau noir).
-  * **Bibliothèque de Tokens :** Liste dynamique auto-générée récupérant les personnages depuis :
-        1. Combat OS (Combattants actuels).
-        2. Session OS (PJ présents et PNJ liés).
-        3. Favorite OS (PNJ favoris).
+    * `Pinceau` : Tracé libre.
+    * `Zone` (Rectangle) / `Rond` (Cercle) : Tracés géométriques avec confirmation modale.
+  * **Modes de Brouillard :** 🔓 Révéler ou 🔒 Masquer.
+  * **Outil Pions :** Mode spécifique pour déplacer les tokens sans risquer de modifier le brouillard.
 * **Affichage Principal (Le Plan de Travail) :**
-  * Un empilement de **5 canvas HTML5** pour une performance optimale :
-        1. `Base` / `Video` : La carte de fond.
-        2. `Fog` : La couche de brouillard (noir semi-opaque).
-        3. `Tokens` : La couche des pions.
-        4. `Preview` : Affichage temporaire des formes en cours de tracé.
-        5. `Empty State` : Affiché quand aucune carte n'est chargée.
+  * Un empilement de **canvas HTML5** optimisés :
+        1. `Base` : Image ou Vidéo.
+        2. `Grid` : Rendu de la grille tactique.
+        3. `Fog` : Couche de brouillard persistante.
+        4. `Tokens` : Couche interactive des pions.
+        5. `Preview` : Feedback visuel en cours de tracé.
+  * **Navigation :**
+    * `Molette` : Zoom centré sur la souris (x0.1 à x10).
+    * `Clic Milieu` : Panoramique (Drag & Pan).
 
 ## 3. Logique Métier & Comportements
 
 * **Moteur de Brouillard de Guerre (Fog of War) :**
-  * Le brouillard est stocké sous forme de `DataURL` (base64) pour assurer sa persistance.
-  * Utilise `globalCompositeOperation` : `destination-out` pour "creuser" des trous dans le brouillard et `source-over` pour en rajouter.
+  * Persistance via `DataURL` (base64) synchronisée.
+  * **Auto-Clear** : Le retrait de la carte via l'interface MJ vide automatiquement le brouillard et les tokens.
 * **Système de Tokens Synchronisés :**
-  * **Bidirectionnel :** Le MJ peut déplacer un pion, ce qui met à jour l'écran des joueurs. **NOUVEAUTÉ V3 :** Les joueurs peuvent aussi déplacer leurs propres pions sur la projection (tactile/souris), ce qui renvoie la position au MJ en temps réel.
-  * **Overlay Tactical :** Chaque token affiche dynamiquement :
-    * Une barre de vie (HP) auto-mise à jour depuis Combat OS.
-    * Des icônes de statuts (effets actifs).
-    * Le nom du personnage.
-  * **Focus Combat :** Le pion dont c'est le tour dans Combat OS est entouré d'un halo vert vif (`highlightCombatTurn`).
-* **Gestion des Vidéos :**
-  * Les cartes animées tournent en boucle. Le brouillard s'applique par-dessus la vidéo en temps réel.
+  * **Interactivité "Pass-through"** : Les pions autorisent le dessin du brouillard "à travers" eux (clic gauche) tout en restant supprimables (clic droit) à tout moment.
+  * **Lien Combat OS** : Synchronisation des PV, statuts et tour actif (halo lumineux).
+* **Projection & Synchronisation :**
+  * Synchronisation multi-fenêtres via `localStorage` et événements de stockage.
+  * Support du Player Hub avec gestion intelligente des couches (Z-index).
 
-## 4. Projection & Synchronisation
+## 4. Raccourcis & Gestes
 
-* **IPC (Inter-Process Communication) :**
-  * Envoie l'état complet de la carte (chemin du fichier, brouillard actuel, liste des tokens) à chaque modification.
-  * Le rendu de projection (`map-projection-renderer.js`) est optimisé pour ne pas recalculer ce qui n'a pas changé.
+* `Molette` : Zoom.
+* `Clic Milieu` : Déplacement de la vue.
+* `Clic Droit` (sur pion) : Suppression immédiate.
+* `Echap` / `Bouton Recadrer` : Réinitialise la vue sur la carte.
 
-## 5. Raccourcis Clavier
+## 5. Persistance
 
-* `Enter` : Valider une forme géométrique.
-* `Escape` : Annuler un tracé ou fermer la projection.
-* `Supr` / `Backspace` : Supprimer le token sélectionné.
-
-## 6. Persistance
-
-* Le module exporte et importe :
-  * Le chemin de la carte.
-  * L'état binaire du brouillard.
-  * La position, la taille et la visibilité de chaque token.
+* État complet sauvegardé via Zustand (persist middleware) :
+  * Média, Grille (taille/opacité), Brouillard (DataURL), Tokens (positions/liens), Vue (Zoom/Pan).

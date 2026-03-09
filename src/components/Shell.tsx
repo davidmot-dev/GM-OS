@@ -42,7 +42,7 @@ const NavItem: React.FC<NavItemProps> = ({ icon, label, active, onClick, classNa
         onClick={onClick}
         title={label}
         className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${active
-            ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30'
+            ? 'bg-accent/20 text-accent border border-accent/30'
             : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200 border border-transparent'
             } ${className}`}
     >
@@ -63,14 +63,16 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
         setActiveModule,
         theme,
         setTheme,
+        themeColor,
     } = useSessionStore();
 
     const { openMediaHub } = useModalStore();
 
-    // Appliquer le thème au document
+    // Appliquer le thème et la couleur d'accentuation au document
     useEffect(() => {
         document.documentElement.setAttribute('data-theme', theme);
-    }, [theme]);
+        document.documentElement.style.setProperty('--app-accent', themeColor);
+    }, [theme, themeColor]);
 
     const cycleTheme = () => {
         const themes: ThemeID[] = ['cyberpunk', 'medieval', 'modern'];
@@ -99,9 +101,14 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                             <line x1="12" y1="3" x2="12" y2="13"></line>
                         </svg>
                     </div>
-                    <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
-                        GM-OS v5
-                    </span>
+                    <div className="flex flex-col">
+                        <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent leading-none">
+                            GM-OS v5
+                        </span>
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-accent mt-1 opacity-80 backdrop-blur-sm">
+                            {theme}
+                        </span>
+                    </div>
                 </div>
 
                 <nav className="flex-1 flex flex-col gap-1 overflow-y-auto pr-2 custom-scrollbar">
@@ -231,8 +238,8 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         <div className="flex items-center gap-1">
                             <button
                                 onClick={cycleTheme}
-                                className="p-2 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-amber-400/10 transition-all group"
-                                title={`Thème : ${theme}`}
+                                className="p-2 rounded-lg text-slate-400 hover:text-accent hover:bg-accent/10 transition-all group"
+                                title={`Thème : ${theme} (${themeColor})`}
                             >
                                 <Palette size={18} className="group-hover:rotate-12 transition-transform" />
                             </button>
@@ -280,13 +287,13 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                     </div>
 
                     {/* 2. Premium DM Card */}
-                    <div className="group relative p-4 rounded-[1.25rem] bg-gradient-to-br from-slate-900/80 to-slate-950/90 border border-white/10 shadow-2xl backdrop-blur-2xl transition-all duration-300 hover:border-blue-500/30 overflow-hidden">
+                    <div className="group relative p-4 rounded-[1.25rem] bg-gradient-to-br from-slate-900/80 to-slate-950/90 border border-white/10 shadow-2xl backdrop-blur-2xl transition-all duration-300 hover:border-accent/30 overflow-hidden">
                         {/* Background subtle glow */}
-                        <div className="absolute -right-4 -top-4 w-24 h-24 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-all duration-500" />
+                        <div className="absolute -right-4 -top-4 w-24 h-24 bg-accent/10 rounded-full blur-3xl group-hover:bg-accent/20 transition-all duration-500" />
                         
                         <div className="flex items-center gap-3 relative z-10">
                             <div className="relative">
-                                <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-xs font-black text-white ring-2 ring-slate-800 shadow-inner group-hover:ring-blue-500/50 transition-all">
+                                <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-xs font-black text-white ring-2 ring-slate-800 shadow-inner group-hover:ring-accent/50 transition-all">
                                     DM
                                 </div>
                                 <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-slate-900" />
@@ -316,13 +323,13 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                 <header className="h-16 border-b border-slate-800/50 flex items-center justify-between px-8 bg-slate-900/20 backdrop-blur-md z-10">
                     <div className="flex items-center gap-4">
                         <h2 className="text-lg font-bold tracking-tight text-white uppercase italic">
-                            {activeModule} <span className="text-blue-500">OS</span>
+                            {activeModule} <span className="text-accent">OS</span>
                         </h2>
                     </div>
 
                     <div className="flex items-center gap-4">
                         <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-blue-500 animate-ping" />
+                            <div className="w-2 h-2 rounded-full bg-accent animate-ping" />
                             <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">System Link Active</span>
                         </div>
                         <div className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-slate-500 shadow-xl">

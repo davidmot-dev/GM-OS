@@ -6,6 +6,7 @@ export interface VoiceEffects {
     formant: number;    // -100 to 100 (timbre simulation via peaking EQ)
     reverb: number;     // 0 to 1 (mix)
     distortion: number; // 0 to 1 (amount)
+    bitcrush: number;  // 0 to 1
     lowCut: number;     // 80, 250 or 0 (off)
     gateThreshold: number; // -100 to 0 dB
     outputGain: number; // 0 to 2
@@ -58,6 +59,7 @@ const DEFAULT_EFFECTS: VoiceEffects = {
     formant: 0,
     reverb: 0,
     distortion: 0,
+    bitcrush: 0,
     lowCut: 80,
     gateThreshold: -50,
     outputGain: 1.0,

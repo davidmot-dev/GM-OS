@@ -268,6 +268,12 @@ const VoiceDashboard: React.FC = () => {
                             min={0} max={1} step={0.01}
                             onChange={(val) => updateEffect('distortion', val)} 
                         />
+                        <VocalShaperSlider 
+                            label="Bitcrush" 
+                            value={currentEffects.bitcrush} 
+                            min={0} max={1} step={0.01}
+                            onChange={(val) => updateEffect('bitcrush', val)} 
+                        />
                     </div>
 
                     <div className="mt-4 pt-4 border-t border-slate-800/30 flex flex-col gap-3">

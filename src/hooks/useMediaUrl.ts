@@ -20,7 +20,6 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
         const resolveSource = async () => {
             try {
                 if (!sourceIdOrUrl || typeof sourceIdOrUrl !== 'string' || sourceIdOrUrl.trim() === '') {
-                    if (isMounted) setResolvedUrl(undefined);
                     return;
                 }
 
@@ -56,7 +55,8 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
 
         return () => {
             isMounted = false;
-            // Cleanup the blob URL to prevent memory leaks in V8
+            // Cleanup the memory and state to avoid ERR_FILE_NOT_FOUND on next render
+            setResolvedUrl(undefined);
             if (objectUrl) {
                 URL.revokeObjectURL(objectUrl);
             }

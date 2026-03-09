@@ -11,7 +11,7 @@ export class VoiceEngine {
     private lowCut: BiquadFilterNode | null = null;
     private compressor: DynamicsCompressorNode | null = null;
     private formantFilter: BiquadFilterNode | null = null;
-    private distortion: WaveShaperNode | null = null;
+    private voiceWorklet: AudioWorkletNode | null = null;
     private reverb: ConvolverNode | null = null;
     private reverbGain: GainNode | null = null;
     private dryGain: GainNode | null = null;
@@ -83,11 +83,22 @@ export class VoiceEngine {
             this.formantFilter.frequency.value = 500;
             this.formantFilter.Q.value = 1.0;
 
-            // 6. Distortion
-            this.distortion = this.context.createWaveShaper();
-            // @ts-expect-error - distortion.curve expects Float32Array but types are strict
-            this.distortion.curve = this.makeDistortionCurve(0);
-            this.distortion.oversample = '4x';
+            // 6. AudioWorklet (Voice Processor)
+            try {
+                await this.context.audioWorklet.addModule('/audio/voice-processor.js');
+                this.voiceWorklet = new AudioWorkletNode(this.context, 'voice-processor');
+                
+                // Initialize parameters
+                const { currentEffects } = useVoiceStore.getState();
+                const pitchValue = Math.pow(2, (currentEffects.pitch || 0) / 12);
+                this.voiceWorklet.parameters.get('pitch')?.setValueAtTime(pitchValue, this.context.currentTime);
+                this.voiceWorklet.parameters.get('distortion')?.setValueAtTime(currentEffects.distortion || 0, this.context.currentTime);
+                this.voiceWorklet.parameters.get('bitcrush')?.setValueAtTime(currentEffects.bitcrush || 0, this.context.currentTime);
+
+                console.log('[VoiceEngine] AudioWorklet Loaded');
+            } catch (e) {
+                console.error('[VoiceEngine] Failed to load AudioWorklet:', e);
+            }
 
             // 7. Reverb
             this.reverb = this.context.createConvolver();
@@ -137,11 +148,17 @@ export class VoiceEngine {
             this.inputGain.connect(this.lowCut);
             this.lowCut.connect(this.compressor);
             this.compressor.connect(this.formantFilter);
-            this.formantFilter.connect(this.distortion);
             
-            // Reverb parallel paths
-            this.distortion.connect(this.dryGain);
-            this.distortion.connect(this.reverb);
+            if (this.voiceWorklet) {
+                this.formantFilter.connect(this.voiceWorklet);
+                this.voiceWorklet.connect(this.dryGain);
+                this.voiceWorklet.connect(this.reverb);
+            } else {
+                // Fallback direct connection
+                this.formantFilter.connect(this.dryGain);
+                this.formantFilter.connect(this.reverb);
+            }
+            
             this.reverb.connect(this.reverbGain);
             
             this.dryGain.connect(this.outputGain);
@@ -176,17 +193,6 @@ export class VoiceEngine {
         }
     }
 
-    private makeDistortionCurve(amount: number): Float32Array {
-        const k = typeof amount === 'number' ? amount : 50;
-        const n_samples = 44100;
-        const curve = new Float32Array(n_samples);
-        const deg = Math.PI / 180;
-        for (let i = 0 ; i < n_samples; ++i ) {
-            const x = i * 2 / n_samples - 1;
-            curve[i] = ( 3 + k ) * x * 20 * deg / ( Math.PI + k * Math.abs(x) );
-        }
-        return curve;
-    }
 
     private async generateImpulseResponse(duration: number, decay: number): Promise<AudioBuffer> {
         if (!this.context) throw new Error('Context not initialized');
@@ -337,10 +343,18 @@ export class VoiceEngine {
                 this.formantFilter!.gain.setTargetAtTime(gain, this.context.currentTime, 0.1);
             }
 
-            // 5. Distortion - HEAVY OPERATION, MUST BE CONDITIONAL
-            if (currentEffects.distortion !== prevEffects.distortion && this.distortion) {
-                // @ts-expect-error - distortion.curve expects Float32Array
-                this.distortion.curve = this.makeDistortionCurve(currentEffects.distortion * 100);
+            // 5. Worklet Parameters (Pitch, Distortion, Bitcrush)
+            if (this.voiceWorklet) {
+                const pitchParam = this.voiceWorklet.parameters.get('pitch');
+                const distortionParam = this.voiceWorklet.parameters.get('distortion');
+                const bitcrushParam = this.voiceWorklet.parameters.get('bitcrush');
+
+                // Semitones to multiplier
+                const pitchValue = Math.pow(2, (currentEffects.pitch || 0) / 12);
+                pitchParam?.setTargetAtTime(pitchValue, this.context.currentTime, 0.1);
+                
+                distortionParam?.setTargetAtTime(currentEffects.distortion || 0, this.context.currentTime, 0.1);
+                bitcrushParam?.setTargetAtTime(currentEffects.bitcrush || 0, this.context.currentTime, 0.1);
             }
 
             // 6. Reverb
