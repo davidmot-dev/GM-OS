@@ -32,6 +32,9 @@ interface VoiceState {
     
     inputLevel: number; // 0 to 1 (for VU-meter)
     
+    outputDeviceId: string | null;
+    availableOutputs: MediaDeviceInfo[];
+    
     // Actions
     toggleActive: (active?: boolean) => void;
     toggleLive: (live?: boolean) => void;
@@ -43,6 +46,9 @@ interface VoiceState {
     setInputLevel: (level: number) => void;
     toggleAntiLarsen: (active?: boolean) => void;
     toggleNoiseGate: (active?: boolean) => void;
+    
+    setOutputDeviceId: (deviceId: string | null) => void;
+    setAvailableOutputs: (devices: MediaDeviceInfo[]) => void;
     
     presets: VoicePreset[];
 }
@@ -109,6 +115,8 @@ export const useVoiceStore = create<VoiceState>()(
             activePresetId: 'clean',
             
             inputLevel: 0,
+            outputDeviceId: null,
+            availableOutputs: [],
             
             presets: INITIAL_PRESETS,
             
@@ -141,13 +149,17 @@ export const useVoiceStore = create<VoiceState>()(
             toggleNoiseGate: (active) => set((state) => ({ 
                 currentEffects: { ...state.currentEffects, noiseGate: active !== undefined ? active : !state.currentEffects.noiseGate } 
             })),
+            
+            setOutputDeviceId: (deviceId) => set({ outputDeviceId: deviceId }),
+            setAvailableOutputs: (devices) => set({ availableOutputs: devices }),
         }),
         {
             name: 'gmos-voice-storage',
             partialize: (state) => ({
                 currentEffects: state.currentEffects,
                 activePresetId: state.activePresetId,
-                isSyncNPC: state.isSyncNPC
+                isSyncNPC: state.isSyncNPC,
+                outputDeviceId: state.outputDeviceId
             })
         }
     )

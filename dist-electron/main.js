@@ -2377,9 +2377,13 @@ ipcMain.handle("image:get-displays", () => {
   }));
 });
 ipcMain.on("image:sync-hub-data", (_event, type, imagePath) => {
-  console.log(`[Image OS] Sync Hub Data -> Type: ${type}, Path: ${imagePath}`);
   if (hubWindow && !hubWindow.isDestroyed()) {
     hubWindow.webContents.send("image:sync-hub-data", type, imagePath);
+  }
+  for (const [, projWin] of projectorWindows) {
+    if (!projWin.isDestroyed()) {
+      projWin.webContents.send("image:sync-hub-data", type, imagePath);
+    }
   }
 });
 ipcMain.on("session:launch-hub-window", () => {

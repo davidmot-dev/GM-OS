@@ -43,6 +43,7 @@ interface SoundState {
     setPadMidiMapping: (padId: string, midiNote: number | null) => void;
     setPadKeyMapping: (padId: string, keyCode: string | null) => void;
     setPadLightLink: (padId: string, sceneId: string | null) => void;
+    renamePad: (padId: string, title: string) => void;
     clearPad: (padId: string) => void;
 
     setMasterVolume: (volume: number) => void;
@@ -167,6 +168,14 @@ export const useSoundStore = create<SoundState>()(
                 atmospheres: state.atmospheres.map(a =>
                     a.id === state.activeAtmosphereId
                         ? { ...a, pads: { ...a.pads, [padId]: { ...a.pads[padId], linkedLightSceneId: sceneId } } }
+                        : a
+                )
+            })),
+
+            renamePad: (padId, title) => set((state) => ({
+                atmospheres: state.atmospheres.map(a =>
+                    a.id === state.activeAtmosphereId
+                        ? { ...a, pads: { ...a.pads, [padId]: { ...a.pads[padId], title } } }
                         : a
                 )
             })),

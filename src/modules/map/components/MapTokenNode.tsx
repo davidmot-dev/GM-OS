@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { useMapStore, type MapToken } from '../useMapStore';
-import { useCombatStore } from '../../combat/useCombatStore';
+import { useCombatStore, type StatusEffect } from '../../combat/useCombatStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { Shield, Trash2 } from 'lucide-react';
 
 interface MapTokenNodeProps {
     token: MapToken;
     isProjectedView?: boolean;
+    localZoom?: number;
 }
 
-const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = false }) => {
-    const { currentTool, updateToken, updateProjectedToken, removeToken, zoom } = useMapStore();
+const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = false, localZoom }) => {
+    const { currentTool, updateToken, updateProjectedToken, removeToken, zoom: gmZoom } = useMapStore();
     const { combatants, currentTurnIdx } = useCombatStore();
 
     // On lie le token à son combattant s'il existe
@@ -38,9 +39,10 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
         e.stopPropagation();
 
         // On utilise movementX/Y qui est relatif et indépendant de l'origine
-        // Mais on doit diviser par le zoom car movement est en pixels écran
-        const dx = e.movementX / zoom;
-        const dy = e.movementY / zoom;
+        // On divise par le zoom approprié (local si projeté, sinon GM)
+        const effectiveZoom = isProjectedView ? (localZoom || 1) : gmZoom;
+        const dx = e.movementX / effectiveZoom;
+        const dy = e.movementY / effectiveZoom;
 
         const moveFn = isProjectedView ? updateProjectedToken : updateToken;
         moveFn(token.id, { 
@@ -82,7 +84,8 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
                 width: 48 * token.size,
                 height: 48 * token.size,
                 transform: 'translate(-50%, -50%)',
-                pointerEvents: isInteractable ? 'auto' : 'none'
+                pointerEvents: isInteractable ? 'auto' : 'none',
+                touchAction: 'none'
             }}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
@@ -121,7 +124,7 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
             {/* Status indicators */}
             {combatant && combatant.statuses.length > 0 && (
                 <div className="absolute top-0 right-0 translate-x-1/4 -translate-y-1/4 bg-obsidian border border-gray-700 rounded-full px-1.5 py-0.5 flex gap-0.5 pointer-events-none shadow-xl z-20">
-                    {combatant.statuses.slice(0, 3).map(s => (
+                    {combatant.statuses.slice(0, 3).map((s: StatusEffect) => (
                         <span key={s.id} className="text-[12px] leading-none drop-shadow-md">{s.icon}</span>
                     ))}
                     {combatant.statuses.length > 3 && <span className="text-[10px] text-gray-400 font-bold ml-0.5">+{combatant.statuses.length - 3}</span>}

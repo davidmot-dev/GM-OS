@@ -363,7 +363,10 @@ export const useMusicStore = create<MusicState>()(
                     // 4. Trigger Light if linked and sync enabled
                     const { isSyncEnabled } = useLightStore.getState();
                     if (isSyncEnabled && pad.lightLinkId) {
-                        hueEngine.applyScene(pad.lightLinkId);
+                        // Delay to let audio loading/decoding breathe
+                        setTimeout(() => {
+                            hueEngine.applyScene(pad.lightLinkId!);
+                        }, 300);
                     }
                 },
 

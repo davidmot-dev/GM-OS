@@ -68,11 +68,13 @@ export class VoiceEngine {
             this.lowCut = this.context.createBiquadFilter();
             this.lowCut.type = 'highpass';
 
-            // 4. Compressor
+            // 4. Compressor (Acts as an Auto-Leveler)
             this.compressor = this.context.createDynamicsCompressor();
-            this.compressor.threshold.value = -24;
-            this.compressor.knee.value = 30;
-            this.compressor.ratio.value = 12;
+            this.compressor.threshold.value = -30; // Capture lower voices
+            this.compressor.knee.value = 40;      // Very soft knee for natural feel
+            this.compressor.ratio.value = 4;       // Gentle compression
+            this.compressor.attack.value = 0.01;   // Fast enough for peaks
+            this.compressor.release.value = 0.25;  // Smooth release
             this.dryGain = this.context.createGain();
 
             // 5. Formant (Peaking EQ)
@@ -83,7 +85,8 @@ export class VoiceEngine {
 
             // 6. Distortion
             this.distortion = this.context.createWaveShaper();
-            this.distortion.curve = this.makeDistortionCurve(0) as any;
+            // @ts-expect-error - distortion.curve expects Float32Array but types are strict
+            this.distortion.curve = this.makeDistortionCurve(0);
             this.distortion.oversample = '4x';
 
             // 7. Reverb
@@ -101,13 +104,32 @@ export class VoiceEngine {
             this.gateGain = this.context.createGain();
             this.gateGain.gain.value = 0;
 
-            // 10. Master Limiter
+            // 10. Master Limiter (Brickwall)
             this.limiter = this.context.createDynamicsCompressor();
-            this.limiter.threshold.value = -0.5;
-            this.limiter.knee.value = 0;
-            this.limiter.ratio.value = 20;
-            this.limiter.attack.value = 0.003;
-            this.limiter.release.value = 0.1;
+            this.limiter.threshold.value = -1.0;   // Hard limit near peak
+            this.limiter.knee.value = 0;           // Hard knee for limiting
+            this.limiter.ratio.value = 20;         // High ratio to block peaks
+            this.limiter.attack.value = 0.001;     // Instant attack
+            this.limiter.release.value = 0.1;      // Fast release
+
+            // --- APPLY CURRENT STORE STATE ---
+            const { isActive, isMonitor, isLive } = useVoiceStore.getState();
+            this.inputGain.gain.value = isActive ? 1.0 : 0;
+            this.monitorGain.gain.value = isMonitor ? 1.0 : 0;
+            this.liveGain.gain.value = isLive ? 1.0 : 0;
+            this.gateGain.gain.value = 1.0; // Open initially
+
+            // Apply Effects
+            if (currentEffects.lowCut === 0) {
+                this.lowCut.frequency.value = 20;
+            } else {
+                this.lowCut.frequency.value = currentEffects.lowCut;
+            }
+            this.formantFilter.frequency.value = 500 + (currentEffects.formant * 5);
+            this.formantFilter.gain.value = Math.abs(currentEffects.formant) / 5;
+            this.reverbGain.gain.value = currentEffects.reverb;
+            this.dryGain.gain.value = 1.0 - (currentEffects.reverb * 0.5);
+            this.outputGain.gain.value = currentEffects.outputGain;
 
             // --- CONNECT CHAIN ---
             // source -> inputGain -> lowCut -> compressor -> formant -> distortion -> dry/wet reverb -> output -> monitor/live
@@ -125,9 +147,9 @@ export class VoiceEngine {
             this.dryGain.connect(this.outputGain);
             this.reverbGain.connect(this.outputGain);
 
+            this.outputGain.connect(this.analyser);
             this.outputGain.connect(this.gateGain);
-            this.gateGain.connect(this.analyser);
-            this.analyser.connect(this.limiter);
+            this.gateGain.connect(this.limiter);
             
             // Final Destinations
             this.limiter.connect(this.monitorGain);
@@ -136,9 +158,16 @@ export class VoiceEngine {
             this.limiter.connect(this.liveGain);
             this.liveGain.connect(this.context.destination);
 
+            // Apply stored output device if any
+            const { outputDeviceId } = useVoiceStore.getState();
+            if (outputDeviceId) {
+                this.updateOutputDevice(outputDeviceId).catch(err => console.error("Initial sinkId failed", err));
+            }
+
             this.isInitialized = true;
             this.startLevelTracking();
             this.syncWithStore();
+            this.refreshAvailableDevices();
             
             console.log('[VoiceEngine] Initialized');
         } catch (error) {
@@ -173,6 +202,33 @@ export class VoiceEngine {
         return buffer;
     }
 
+    public async refreshAvailableDevices() {
+        try {
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            const outputs = devices.filter(device => device.kind === 'audiooutput');
+            useVoiceStore.getState().setAvailableOutputs(outputs);
+        } catch (error) {
+            console.error('[VoiceEngine] Failed to enumerate devices:', error);
+        }
+    }
+
+    public async updateOutputDevice(deviceId: string) {
+        if (!this.context) return;
+        
+        try {
+            // @ts-expect-error - setSinkId is a recent experimental addition to AudioContext
+            if (typeof this.context.setSinkId === 'function') {
+                // @ts-expect-error - sinkId requires a string deviceId
+                await this.context.setSinkId(deviceId);
+                console.log(`[VoiceEngine] Output device changed to: ${deviceId}`);
+            } else {
+                console.warn('[VoiceEngine] setSinkId is not supported on this browser/environment');
+            }
+        } catch (error) {
+            console.error('[VoiceEngine] Failed to set output device:', error);
+        }
+    }
+
     private startLevelTracking() {
         if (!this.analyser) return;
 
@@ -199,7 +255,9 @@ export class VoiceEngine {
                     targetGain = 0;
                 }
                 
-                this.gateGain.gain.setTargetAtTime(targetGain, this.context.currentTime, 0.05);
+                // smoothing = 0.1s for attack, 0.2s for release (expander feel)
+                const timeConstant = targetGain > 0 ? 0.1 : 0.2;
+                this.gateGain.gain.setTargetAtTime(targetGain, this.context.currentTime, timeConstant);
             }
 
             if (useVoiceStore.getState().isActive) {
@@ -207,8 +265,13 @@ export class VoiceEngine {
                 useVoiceStore.getState().setInputLevel(currentLevel);
                 
                 // Sync with Player Hub if active
-                if (useVoiceStore.getState().isSyncNPC && window.appBridge?.image?.syncHubData) {
-                    window.appBridge.image.syncHubData('voice-level', currentLevel.toFixed(3));
+                if (window.appBridge?.image?.syncHubData) {
+                    if (useVoiceStore.getState().isSyncNPC) {
+                        window.appBridge.image.syncHubData('voice-level', currentLevel.toFixed(3));
+                    } else {
+                        // Ensure we send 0 to stop any ongoing animation
+                        window.appBridge.image.syncHubData('voice-level', '0');
+                    }
                 }
             } else {
                 useVoiceStore.getState().setInputLevel(0);
@@ -227,10 +290,16 @@ export class VoiceEngine {
         useVoiceStore.subscribe((state, prevState) => {
             if (!this.context) return;
             
-            const { currentEffects, isMonitor, isLive, isActive } = state;
+            const { currentEffects, isMonitor, isLive, isActive, outputDeviceId } = state;
+            const prevEffects = prevState.currentEffects;
+
+            // Handle Output Device changes
+            if (outputDeviceId !== prevState.outputDeviceId && outputDeviceId) {
+                this.updateOutputDevice(outputDeviceId);
+            }
 
             // Handle Microphone constraint changes (Anti-Larsen toggle)
-            if (currentEffects.antiLarsen !== prevState.currentEffects.antiLarsen && isActive) {
+            if (currentEffects.antiLarsen !== prevEffects.antiLarsen && isActive) {
                 console.log('[VoiceEngine] Re-initializing microphone for Anti-Larsen toggle');
                 this.stop();
                 this.initialize().catch(err => console.error("Re-initialization failed", err));
@@ -238,38 +307,52 @@ export class VoiceEngine {
             }
 
             // 1. Master Active/Mute
-            const masterVol = isActive ? 1.0 : 0;
-            this.inputGain!.gain.setTargetAtTime(masterVol, this.context.currentTime, 0.05);
+            if (isActive !== prevState.isActive) {
+                const masterVol = isActive ? 1.0 : 0;
+                this.inputGain!.gain.setTargetAtTime(masterVol, this.context.currentTime, 0.05);
+            }
 
             // 2. Monitoring & Live
-            this.monitorGain!.gain.setTargetAtTime(isMonitor ? 1.0 : 0, this.context.currentTime, 0.05);
-            this.liveGain!.gain.setTargetAtTime(isLive ? 1.0 : 0, this.context.currentTime, 0.05);
+            if (isMonitor !== prevState.isMonitor) {
+                this.monitorGain!.gain.setTargetAtTime(isMonitor ? 1.0 : 0, this.context.currentTime, 0.05);
+            }
+            if (isLive !== prevState.isLive) {
+                this.liveGain!.gain.setTargetAtTime(isLive ? 1.0 : 0, this.context.currentTime, 0.05);
+            }
 
             // 3. Low Cut
-            if (currentEffects.lowCut === 0) {
-                this.lowCut!.frequency.setTargetAtTime(20, this.context.currentTime, 0.05);
-            } else {
-                this.lowCut!.frequency.setTargetAtTime(currentEffects.lowCut, this.context.currentTime, 0.05);
+            if (currentEffects.lowCut !== prevEffects.lowCut) {
+                if (currentEffects.lowCut === 0) {
+                    this.lowCut!.frequency.setTargetAtTime(20, this.context.currentTime, 0.05);
+                } else {
+                    this.lowCut!.frequency.setTargetAtTime(currentEffects.lowCut, this.context.currentTime, 0.05);
+                }
             }
 
             // 4. Formant (Peaking EQ)
-            // Simulation: negative formant = low freq boost, positive = high freq boost
-            const frequency = 500 + (currentEffects.formant * 5);
-            const gain = Math.abs(currentEffects.formant) / 5;
-            this.formantFilter!.frequency.setTargetAtTime(frequency, this.context.currentTime, 0.1);
-            this.formantFilter!.gain.setTargetAtTime(gain, this.context.currentTime, 0.1);
+            if (currentEffects.formant !== prevEffects.formant) {
+                const frequency = 500 + (currentEffects.formant * 5);
+                const gain = Math.abs(currentEffects.formant) / 5;
+                this.formantFilter!.frequency.setTargetAtTime(frequency, this.context.currentTime, 0.1);
+                this.formantFilter!.gain.setTargetAtTime(gain, this.context.currentTime, 0.1);
+            }
 
-            // 5. Distortion
-            if (this.distortion) {
-                this.distortion.curve = this.makeDistortionCurve(currentEffects.distortion * 100) as any;
+            // 5. Distortion - HEAVY OPERATION, MUST BE CONDITIONAL
+            if (currentEffects.distortion !== prevEffects.distortion && this.distortion) {
+                // @ts-expect-error - distortion.curve expects Float32Array
+                this.distortion.curve = this.makeDistortionCurve(currentEffects.distortion * 100);
             }
 
             // 6. Reverb
-            this.reverbGain!.gain.setTargetAtTime(currentEffects.reverb, this.context.currentTime, 0.1);
-            this.dryGain!.gain.setTargetAtTime(1.0 - (currentEffects.reverb * 0.5), this.context.currentTime, 0.1);
+            if (currentEffects.reverb !== prevEffects.reverb) {
+                this.reverbGain!.gain.setTargetAtTime(currentEffects.reverb, this.context.currentTime, 0.1);
+                this.dryGain!.gain.setTargetAtTime(1.0 - (currentEffects.reverb * 0.5), this.context.currentTime, 0.1);
+            }
 
             // 7. Output Gain
-            this.outputGain!.gain.setTargetAtTime(currentEffects.outputGain, this.context.currentTime, 0.1);
+            if (currentEffects.outputGain !== prevEffects.outputGain) {
+                this.outputGain!.gain.setTargetAtTime(currentEffects.outputGain, this.context.currentTime, 0.1);
+            }
         });
     }
 
@@ -281,7 +364,18 @@ export class VoiceEngine {
         if (this.context) {
             this.context.close();
         }
+        
+        // Reset state
+        this.context = null;
+        this.stream = null;
+        this.source = null;
         this.isInitialized = false;
+        
+        // Reset UI levels
+        useVoiceStore.getState().setInputLevel(0);
+        if (window.appBridge?.image?.syncHubData) {
+            window.appBridge.image.syncHubData('voice-level', '0');
+        }
     }
 }
 

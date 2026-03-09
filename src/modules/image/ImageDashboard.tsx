@@ -3,7 +3,7 @@ import React from 'react';
 import {
     Grid as GridIcon, UploadCloud, Ban, Folder as FolderIcon, History as HistoryIcon,
     Star as StarIcon, Search as SearchIcon,
-    Filter, Plus, MonitorPlay
+    Filter, Plus
 } from 'lucide-react';
 
 import { useImageStore } from './useImageStore';
@@ -61,13 +61,6 @@ const ImageDashboard: React.FC = () => {
             ? folders.find(f => f.id === activeFolderId)?.name || 'Inconnu'
             : 'All Media');
 
-    const handleLaunchHub = () => {
-        if (window.appBridge?.session?.launchHubWindow) {
-            window.appBridge.session.launchHubWindow();
-        } else {
-            alert("Veuillez lancer le Player Hub dans un onglet `http://localhost:5173/?window=hub`");
-        }
-    };
 
     return (
         <div className="flex h-full bg-slate-950 font-display text-slate-100 overflow-hidden">
@@ -212,14 +205,6 @@ const ImageDashboard: React.FC = () => {
                                 ))}
                             </div>
                         </div>
-                        <button
-                            onClick={handleLaunchHub}
-                            className="text-slate-400 hover:text-white mt-1 ml-4 py-1.5 flex items-center gap-1 transition-colors"
-                            title="Launch Hub Window"
-                        >
-                            <MonitorPlay size={16} />
-                            <span className="text-xs font-bold uppercase tracking-wider">Launch Hub</span>
-                        </button>
                     </div>
 
                     <div className="flex items-center gap-4">

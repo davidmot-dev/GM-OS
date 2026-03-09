@@ -57,13 +57,24 @@ const VoiceDashboard: React.FC = () => {
         updateEffect,
         applyPreset,
         toggleAntiLarsen,
-        toggleNoiseGate
+        toggleNoiseGate,
+        outputDeviceId,
+        availableOutputs,
+        setOutputDeviceId
     } = useVoiceStore();
 
     useEffect(() => {
+        voiceEngine.refreshAvailableDevices();
         if (isActive) {
             voiceEngine.initialize().catch(err => console.error("Voice initialization failed", err));
+        } else {
+            voiceEngine.stop();
         }
+
+        // Cleanup on unmount
+        return () => {
+            if (!isActive) voiceEngine.stop();
+        };
     }, [isActive]);
 
     const getIcon = (iconName: string) => {
@@ -141,7 +152,31 @@ const VoiceDashboard: React.FC = () => {
                             )}
                         </button>
                     ))}
-                    
+                    <div className="mt-8 px-2 flex flex-col gap-4">
+                        <div className="flex items-center gap-2 text-slate-500">
+                            <Volume2 size={14} />
+                            <h3 className="text-[10px] font-black uppercase tracking-[0.2em]">Audio Output</h3>
+                        </div>
+                        <select
+                            value={outputDeviceId || ''}
+                            onChange={(e) => setOutputDeviceId(e.target.value || null)}
+                            className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs font-bold text-slate-300 focus:outline-none focus:border-blue-500/50 transition-all custom-scrollbar"
+                        >
+                            <option value="">Default System Output</option>
+                            {availableOutputs.map(device => (
+                                <option key={device.deviceId} value={device.deviceId}>
+                                    {device.label || `Périphérique ${device.deviceId.slice(0, 5)}...`}
+                                </option>
+                            ))}
+                        </select>
+                        <button 
+                            onClick={() => voiceEngine.refreshAvailableDevices()}
+                            className="text-[9px] text-slate-600 hover:text-blue-500 transition-colors uppercase font-bold text-left px-1"
+                        >
+                            ↻ Refresh Devices
+                        </button>
+                    </div>
+
                     <button className="mt-4 flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-slate-800 text-slate-600 text-[10px] font-black uppercase tracking-widest hover:border-slate-600 hover:text-slate-400 transition-all">
                         + Custom Profile
                     </button>

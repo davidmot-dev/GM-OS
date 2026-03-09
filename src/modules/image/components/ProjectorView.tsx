@@ -4,18 +4,20 @@ import { useMediaStore } from '../../../stores/useMediaStore';
 import { useMapStore } from '../../map/useMapStore';
 import { useWhiteboardStore } from '../../whiteboard/useWhiteboardStore';
 import PlayerMapCanvas from '../../map/components/PlayerMapCanvas';
+import MapTokenLayer from '../../map/components/MapTokenLayer';
 import { PlayerDrawingCanvas } from '../../whiteboard/components/PlayerDrawingCanvas';
 import { useVoiceStore } from '../../voice/useVoiceStore';
 
 const ProjectorView: React.FC = () => {
+    const { projectionTarget } = useMapStore();
     const [imagePath, setImagePath] = useState<string | null>(null);
     const [voiceLevel, setVoiceLevel] = useState(0);
 
-    const { isSyncNPC, isActive } = useVoiceStore();
-
     // Voice Sync Animation values
-    const syncActive = isSyncNPC && isActive && voiceLevel > 0.05;
-    const voiceScale = syncActive ? 1 + (voiceLevel * 0.1) : 1;
+    // We don't check 'isSyncNPC' here because the Projector receives 'voice-level' ONLY if 
+    // it's supposed to animate (filtered by VoiceEngine).
+    const syncActive = voiceLevel > 0.05;
+    const voiceScale = syncActive ? 1 + (voiceLevel * 0.15) : 1;
     const voiceGlow = syncActive ? `0 0 ${voiceLevel * 30}px rgba(6, 182, 212, ${voiceLevel})` : 'none';
     const resolvedUrl = useMediaUrl(imagePath || undefined);
     const { initDB } = useMediaStore();
@@ -86,7 +88,7 @@ const ProjectorView: React.FC = () => {
     useEffect(() => {
         // Detect media type
         if (!imagePath || imagePath === '__tactical_map__' || imagePath === '__whiteboard__') {
-            setMediaType('unknown');
+            setMediaType(prev => prev !== 'unknown' ? 'unknown' : prev);
             return;
         }
 
@@ -139,12 +141,17 @@ const ProjectorView: React.FC = () => {
     // SPECIAL MODE: Tactical Map
     if (imagePath === '__tactical_map__') {
         // We use the store's current state. If the target is 'monitor', we render the canvas.
-        const isTargetMonitor = useMapStore.getState().projectionTarget === 'monitor';
+        const isTargetMonitor = projectionTarget === 'monitor';
         
         return (
             <div className="w-screen h-screen bg-black overflow-hidden relative">
                 {isTargetMonitor ? (
-                    <PlayerMapCanvas />
+                    <div className="relative w-full h-full">
+                        <PlayerMapCanvas />
+                        <div className="absolute inset-0 z-20 pointer-events-none">
+                            <MapTokenLayer />
+                        </div>
+                    </div>
                 ) : (
                     <div className="flex items-center justify-center h-full text-slate-800 font-black uppercase tracking-widest text-2xl">
                         Standby

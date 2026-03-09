@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useSoundStore, type SoundPad as ISoundPad } from '../useSoundStore';
 import { soundEngine } from '../SoundEngine';
 import { soundController } from '../SoundController';
-import { gmCustom } from '../../../stores/useModalStore';
-import { Plus, Zap, Keyboard, Lightbulb, Volume2, MoreHorizontal } from 'lucide-react';
+import { gmCustom, gmPrompt, gmConfirm } from '../../../stores/useModalStore';
+import { Plus, Zap, Keyboard, Lightbulb, Volume2, MoreHorizontal, Edit2, Trash2, RefreshCcw } from 'lucide-react';
 
 interface SoundPadProps {
     pad: ISoundPad;
@@ -12,7 +12,7 @@ interface SoundPadProps {
 
 const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
     const { id, title, filePath, volume, color, midiMapping, keyMapping, isActive, linkedLightSceneId } = pad;
-    const { setPadVolume, isMidiLearnActive, isKeyLearnActive, activePadLearnId, setActiveLearnPad } = useSoundStore();
+    const { setPadVolume, isMidiLearnActive, isKeyLearnActive, activePadLearnId, setActiveLearnPad, renamePad, clearPad } = useSoundStore();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     // UI state
@@ -179,8 +179,33 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
             )}
 
             {isMenuOpen && (
-                <div className="absolute inset-0 bg-obsidian-dark/98 z-50 flex flex-col items-center justify-center p-4 gap-2 rounded-2xl animate-in fade-in zoom-in-95 duration-200">
-                    <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); }} className="text-[9px] font-black text-slate-500 mb-2 hover:text-white uppercase tracking-[0.2em]">Retour</button>
+                <div className="absolute inset-0 bg-obsidian-dark/98 z-50 flex flex-col items-center justify-center p-5 gap-2 rounded-2xl animate-in fade-in zoom-in-95 duration-200">
+                    <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); }} className="text-[10px] font-black text-slate-500 mb-2 hover:text-white uppercase tracking-[0.2em] transition-colors">Retour</button>
+                    
+                    <div className="w-full grid grid-cols-2 gap-2">
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                gmPrompt('Renommer le Pad', title, (newTitle) => renamePad(id, newTitle));
+                                setIsMenuOpen(false);
+                            }}
+                            className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-white/5 bg-white/5 text-[9px] font-black uppercase tracking-widest hover:bg-gm-violet hover:border-gm-violet transition-all"
+                        >
+                            <Edit2 size={12} /> Renommer
+                        </button>
+
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onAssignMedia(id);
+                                setIsMenuOpen(false);
+                            }}
+                            className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-white/5 bg-white/5 text-[9px] font-black uppercase tracking-widest hover:bg-blue-600 hover:border-blue-600 transition-all"
+                        >
+                            <RefreshCcw size={12} /> Remplacer
+                        </button>
+                    </div>
+
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
@@ -190,9 +215,20 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
                             });
                             setIsMenuOpen(false);
                         }}
-                        className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all ${linkedLightSceneId ? 'bg-gm-cyan/20 border-gm-cyan text-gm-cyan' : 'bg-obsidian border-white/5 hover:bg-gm-cyan hover:border-gm-cyan'}`}
+                        className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border text-[9px] font-black uppercase tracking-widest transition-all ${linkedLightSceneId ? 'bg-gm-cyan/20 border-gm-cyan text-gm-cyan' : 'bg-white/5 border-white/5 hover:bg-gm-cyan hover:border-gm-cyan'}`}
                     >
-                        <Lightbulb size={12} /> {linkedLightSceneId ? 'LIÉ' : 'LIER LUMIÈRE'}
+                        <Lightbulb size={12} /> {linkedLightSceneId ? 'Lumière Liée' : 'Lier Lumière'}
+                    </button>
+
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            gmConfirm('Effacer ce pad ?', () => clearPad(id));
+                            setIsMenuOpen(false);
+                        }}
+                        className="w-full mt-2 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-red-500/30 bg-red-500/10 text-red-500 text-[9px] font-black uppercase tracking-widest hover:bg-red-600 hover:border-red-600 hover:text-white transition-all"
+                    >
+                        <Trash2 size={12} /> Effacer Pad
                     </button>
                 </div>
             )}

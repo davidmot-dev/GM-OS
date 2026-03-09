@@ -262,10 +262,14 @@ ipcMain.handle('image:get-displays', () => {
 });
 
 ipcMain.on('image:sync-hub-data', (_event, type: string, imagePath: string) => {
-    console.log(`[Image OS] Sync Hub Data -> Type: ${type}, Path: ${imagePath}`);
-    // If we have a local hub window open, send it the update
+    // Broadcast to Hub and all projectors
     if (hubWindow && !hubWindow.isDestroyed()) {
         hubWindow.webContents.send('image:sync-hub-data', type, imagePath);
+    }
+    for (const [, projWin] of projectorWindows) {
+        if (!projWin.isDestroyed()) {
+            projWin.webContents.send('image:sync-hub-data', type, imagePath);
+        }
     }
 });
 

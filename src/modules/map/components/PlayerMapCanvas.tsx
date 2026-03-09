@@ -1,11 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { useMapStore } from '../useMapStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
-import MapTokenNode from './MapTokenNode';
 
 const PlayerMapCanvas: React.FC = () => {
     const { 
-        projectedMapUrl, projectedIsVideo, projectedFogDataUrl, projectedTokens,
+        projectedMapUrl, projectedIsVideo, projectedFogDataUrl,
         projectedMapWidth, projectedMapHeight,
         projectedIsGridEnabled, projectedGridSize, projectedGridColor, projectedGridOpacity,
         viewResetCounter
@@ -15,7 +14,6 @@ const PlayerMapCanvas: React.FC = () => {
     const mapUrl = projectedMapUrl;
     const isVideo = projectedIsVideo;
     const fogDataUrl = projectedFogDataUrl;
-    const tokens = projectedTokens;
     const mapWidth = projectedMapWidth;
     const mapHeight = projectedMapHeight;
     const isGridEnabled = projectedIsGridEnabled;
@@ -142,12 +140,6 @@ const PlayerMapCanvas: React.FC = () => {
                     className="absolute inset-0 w-full h-full z-20 opacity-90"
                 />
 
-                {/* 4. Tokens Layer */}
-                <div className="absolute inset-0 w-full h-full z-30">
-                    {tokens.map(token => (
-                        <MapTokenNode key={token.id} token={token} isProjectedView={true} />
-                    ))}
-                </div>
             </div>
             
             {/* Vignette effect */}

@@ -192,8 +192,8 @@ export class HueEngine {
             } else {
                 // Ensure we handle them sequentially to not rate-limit the bridge
                 await this.setLightState(id, state, transTime);
-                // Tiny delay to let the bridge breathe
-                await new Promise(r => setTimeout(r, 50));
+                // Tiny delay to let the bridge breathe (increased from 50ms)
+                await new Promise(r => setTimeout(r, 100));
             }
         }
     }
@@ -283,7 +283,7 @@ export class HueEngine {
             return;
         }
 
-        let interval = 200;
+        let interval = 250; // Minimum 250ms for performance stability
         let tick = 0;
 
         const loop = async () => {
@@ -309,7 +309,7 @@ export class HueEngine {
                         payload.bri = 20; // dark ambient grey
                         payload.xy = this.hexToXy('#808080'); // Actually Hue grey is tricky, usually desaturated blueish
                     }
-                    interval = 100;
+                    interval = 250;
                     break;
 
                 case 'police':
@@ -330,7 +330,7 @@ export class HueEngine {
                 case 'tv':
                     payload.transitiontime = 0;
                     payload.bri = Math.random() > 0.5 ? 254 : 10;
-                    interval = 50 + Math.random() * 150;
+                    interval = 200 + Math.random() * 200;
                     break;
 
                 case 'warp':
@@ -389,7 +389,7 @@ export class HueEngine {
                     payload.transitiontime = 0;
                     if (Math.random() > 0.9) {
                         payload.bri = 50;
-                        interval = 50;
+                        interval = 200;
                     } else {
                         payload.bri = 254;
                         interval = 800;

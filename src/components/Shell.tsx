@@ -20,7 +20,8 @@ import {
     Palette,
     Power,
     FolderOpen,
-    Edit3
+    Edit3,
+    MonitorPlay
 } from 'lucide-react';
 import { useSessionStore } from '../store/useSessionStore';
 import type { ThemeID } from '../store/useSessionStore';
@@ -75,6 +76,14 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
         const themes: ThemeID[] = ['cyberpunk', 'medieval', 'modern'];
         const idx = themes.indexOf(theme);
         setTheme(themes[(idx + 1) % themes.length]);
+    };
+
+    const handleLaunchHub = () => {
+        if (window.appBridge?.session?.launchHubWindow) {
+            window.appBridge.session.launchHubWindow();
+        } else {
+            alert("Veuillez lancer le Player Hub dans un onglet `http://localhost:5173/?window=hub` ou via le bridge Electron.");
+        }
     };
 
     return (
@@ -233,6 +242,13 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                                 title="Debug & Logs"
                             >
                                 <Terminal size={18} />
+                            </button>
+                            <button
+                                onClick={handleLaunchHub}
+                                className="p-2 rounded-lg text-slate-400 hover:text-sky-400 hover:bg-sky-400/10 transition-all"
+                                title="Launch Player Hub"
+                            >
+                                <MonitorPlay size={18} />
                             </button>
                             <button
                                 onClick={() => { }}
