@@ -17,13 +17,16 @@ const WhiteboardDashboard: React.FC = () => {
         undo, 
         redo,
         projectionTarget,
-        clearProjectedState
+        clearProjectedState,
+        backgroundMode
     } = useWhiteboardStore();
 
+    const isLight = backgroundMode === 'light';
+
     return (
-        <div className="h-full w-full bg-slate-900 relative overflow-hidden flex flex-col">
+        <div className={`h-full w-full transition-colors duration-500 relative overflow-hidden flex flex-col ${isLight ? 'bg-white' : 'bg-slate-900'}`}>
             {/* Header / Info bar */}
-            <div className="flex items-center justify-between p-4 bg-slate-900/50 backdrop-blur-md border-b border-white/5 z-10">
+            <div className={`flex items-center justify-between p-4 backdrop-blur-md border-b z-10 ${isLight ? 'bg-white/80 border-black/10' : 'bg-slate-900/50 border-white/5'}`}>
                 <div className="flex flex-col gap-0.5">
                     <h2 className="text-xl font-black text-white tracking-widest uppercase">Whiteboard OS</h2>
                     <p className="text-[10px] font-bold text-slate-500 tracking-[0.2em] uppercase">Visual Brainstorming Module</p>

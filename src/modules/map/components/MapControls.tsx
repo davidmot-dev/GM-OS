@@ -104,9 +104,10 @@ const MapControls: React.FC = () => {
 
     const handleClearMap = () => {
         if (!mapUrl) return;
-        gmConfirm("Voulez-vous RETIRER la carte actuelle ?", () => {
+        gmConfirm("Voulez-vous RETIRER la carte actuelle ? Cela supprimera également tous les pions.", () => {
             setMap(null);
             setFogDataUrl(null);
+            clearTokens();
         });
     };
 

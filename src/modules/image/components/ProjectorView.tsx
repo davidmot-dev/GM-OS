@@ -10,6 +10,7 @@ import { useVoiceStore } from '../../voice/useVoiceStore';
 
 const ProjectorView: React.FC = () => {
     const { projectionTarget } = useMapStore();
+    const { backgroundMode } = useWhiteboardStore();
     const [imagePath, setImagePath] = useState<string | null>(null);
     const [voiceLevel, setVoiceLevel] = useState(0);
 
@@ -132,7 +133,7 @@ const ProjectorView: React.FC = () => {
     // SPECIAL MODE: Whiteboard
     if (imagePath === '__whiteboard__') {
         return (
-            <div className="w-screen h-screen bg-black overflow-hidden relative">
+            <div className={`w-screen h-screen overflow-hidden relative transition-colors duration-500 ${backgroundMode === 'light' ? 'bg-white' : 'bg-black'}`}>
                 <PlayerDrawingCanvas />
             </div>
         );

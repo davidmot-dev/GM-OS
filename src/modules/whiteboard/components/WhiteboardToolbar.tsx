@@ -5,7 +5,9 @@ import {
     Square, 
     Circle, 
     Zap,
-    Palette
+    Palette,
+    Sun,
+    Moon
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useWhiteboardStore, type WhiteboardTool } from '../useWhiteboardStore';
@@ -19,8 +21,12 @@ const WhiteboardToolbar: React.FC<WhiteboardToolbarProps> = ({ className = "" })
         currentTool, 
         setTool, 
         currentColor, 
-        setColor 
+        setColor,
+        backgroundMode,
+        setBackgroundMode
     } = useWhiteboardStore();
+
+    const isLight = backgroundMode === 'light';
 
     const tools: { id: WhiteboardTool; icon: LucideIcon; label: string }[] = [
         { id: 'brush', icon: Pencil, label: 'Crayon' },
@@ -31,7 +37,7 @@ const WhiteboardToolbar: React.FC<WhiteboardToolbarProps> = ({ className = "" })
     ];
 
     const colors = [
-        '#ffffff', // White
+        isLight ? '#000000' : '#ffffff', // Black or White
         '#ef4444', // Red
         '#3b82f6', // Blue
         '#10b981', // Emerald
@@ -42,26 +48,40 @@ const WhiteboardToolbar: React.FC<WhiteboardToolbarProps> = ({ className = "" })
     ];
 
     return (
-        <div className={`flex flex-col gap-4 z-20 ${className}`}>
+        <div className={`flex flex-col gap-4 z-20 pointer-events-auto ${className}`}>
             {/* Tool Selection */}
-            <div className="flex flex-col gap-2 p-2 rounded-2xl bg-slate-900/80 backdrop-blur-xl border border-white/10 shadow-2xl">
+            <div className={`flex flex-col gap-2 p-2 rounded-2xl backdrop-blur-xl border shadow-2xl transition-colors duration-500 ${isLight ? 'bg-white/90 border-black/10' : 'bg-slate-900/80 border-white/10'}`}>
                 {tools.map((tool) => (
                     <button
                         key={tool.id}
                         onClick={() => setTool(tool.id)}
-                        className={`p-3 rounded-xl transition-all relative group ${currentTool === tool.id ? 'bg-gm-violet text-white shadow-lg shadow-gm-violet/20' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}
+                        className={`p-3 rounded-xl transition-all relative group ${currentTool === tool.id ? 'bg-gm-violet text-white shadow-lg shadow-gm-violet/20' : isLight ? 'text-slate-400 hover:text-slate-900 hover:bg-black/5' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}
                         title={tool.label}
                     >
                         <tool.icon size={20} />
-                        <div className="absolute left-full ml-4 px-2 py-1 rounded bg-gm-violet text-[10px] font-black uppercase tracking-widest whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                        <div className="absolute left-full ml-4 px-2 py-1 rounded bg-gm-violet text-[10px] font-black uppercase tracking-widest whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-30">
                             {tool.label}
                         </div>
                     </button>
                 ))}
             </div>
 
+            {/* Background Toggle */}
+            <div className={`flex flex-col gap-2 p-2 rounded-2xl backdrop-blur-xl border shadow-2xl transition-colors duration-500 ${isLight ? 'bg-white/90 border-black/10' : 'bg-slate-900/80 border-white/10'}`}>
+                <button
+                    onClick={() => setBackgroundMode(isLight ? 'dark' : 'light')}
+                    className={`p-3 rounded-xl transition-all relative group ${isLight ? 'text-amber-500 hover:bg-amber-500/10' : 'text-slate-500 hover:text-amber-400 hover:bg-white/5'}`}
+                    title={isLight ? 'Mode Sombre' : 'Mode Clair'}
+                >
+                    {isLight ? <Sun size={20} /> : <Moon size={20} />}
+                    <div className="absolute left-full ml-4 px-2 py-1 rounded bg-gm-violet text-[10px] font-black uppercase tracking-widest whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-30">
+                        {isLight ? 'Passer en Sombre' : 'Passer en Blanc'}
+                    </div>
+                </button>
+            </div>
+
             {/* Color Palette */}
-            <div className="flex flex-col gap-2 p-2 rounded-2xl bg-slate-900/80 backdrop-blur-xl border border-white/10 shadow-2xl">
+            <div className={`flex flex-col gap-2 p-2 rounded-2xl backdrop-blur-xl border shadow-2xl transition-colors duration-500 ${isLight ? 'bg-white/90 border-black/10' : 'bg-slate-900/80 border-white/10'}`}>
                 <div className="p-2 text-slate-600">
                     <Palette size={16} />
                 </div>

@@ -25,7 +25,7 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
 
     const handlePointerDown = (e: React.PointerEvent) => {
         if (!isInteractable || e.button !== 0) return;
-        // Empêche la propagation au canvas de Fog of War en-dessous
+        // Empêche la propagation au canvas de Fog of War en-dessous SEULEMENT si on veut bouger le pion
         e.stopPropagation();
         
         // Important pour capturer le pointeur même si on sort du pion
@@ -76,7 +76,7 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
 
     return (
         <div
-            className={`absolute rounded-full shadow-lg border-2 border-obsidian bg-obsidian-dark flex items-center justify-center transition-shadow group ${isInteractable ? 'cursor-grab hover:ring-4 hover:z-40 active:cursor-grabbing' : 'pointer-events-none'
+            className={`absolute rounded-full shadow-lg border-2 border-obsidian bg-obsidian-dark flex items-center justify-center transition-shadow group ${isInteractable ? 'cursor-grab hover:ring-4 hover:z-40 active:cursor-grabbing' : 'cursor-default'
                 } ring-2 ${ringColor} ${isDragging ? 'z-50 ring-4' : 'z-30'}`}
             style={{
                 left: token.x,
@@ -84,7 +84,7 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
                 width: 48 * token.size,
                 height: 48 * token.size,
                 transform: 'translate(-50%, -50%)',
-                pointerEvents: isInteractable ? 'auto' : 'none',
+                pointerEvents: 'auto',
                 touchAction: 'none'
             }}
             onPointerDown={handlePointerDown}
@@ -93,11 +93,10 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
             onPointerCancel={handlePointerUp}
             onMouseDown={(e) => e.stopPropagation()}
             onContextMenu={(e) => {
-                if (isInteractable) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    removeToken(token.id);
-                }
+                // La suppression par clic droit doit TOUJOURS fonctionner pour le MJ
+                e.preventDefault();
+                e.stopPropagation();
+                removeToken(token.id);
             }}
         >
             {/* Trash Button on Hover */}

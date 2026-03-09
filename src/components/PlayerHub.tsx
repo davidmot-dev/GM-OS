@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useImageStore } from '../modules/image/useImageStore';
-import { useCombatStore, type Combatant, type StatusEffect } from '../modules/combat/useCombatStore';
+import { useCombatStore, type Combatant } from '../modules/combat/useCombatStore';
 import { useClockStore } from '../store/useClockStore';
 import { useFavoriteStore } from '../modules/favorite/useFavoriteStore';
 import { useMapStore } from '../modules/map/useMapStore';
@@ -21,6 +21,8 @@ const PlayerHub: React.FC = () => {
     const { favorites } = useFavoriteStore();
     const { combatants, currentTurnIdx, round } = useCombatStore();
     const { mapUrl, projectionTarget } = useMapStore();
+    const { backgroundMode } = useWhiteboardStore();
+    const isWhiteboardLight = backgroundMode === 'light';
 
     const activeHubId = projections['hub'];
     
@@ -139,14 +141,14 @@ const PlayerHub: React.FC = () => {
                 </>
             )}
 
-            {/* Whiteboard Layer (Z-10) */}
-            <div className="fixed inset-0 z-10 pointer-events-none">
+            {/* Whiteboard Layer (Z-30) */}
+            <div className={`fixed inset-0 z-30 pointer-events-none transition-colors duration-500 ${isWhiteboardLight ? 'bg-white' : 'bg-transparent'}`}>
                 <PlayerDrawingCanvas />
             </div>
 
-            {/* Map Tokens Layer (Z-20) */}
+            {/* Map Tokens Layer (Z-35) - Above Whiteboard */}
             {isMapActive && (
-                <div className="fixed inset-0 z-20 pointer-events-none">
+                <div className="fixed inset-0 z-35 pointer-events-none">
                     <MapTokenLayer />
                 </div>
             )}
@@ -157,7 +159,7 @@ const PlayerHub: React.FC = () => {
             )}
 
             {/* Main Content Area */}
-            <div className="relative z-10 flex h-screen w-full flex-col overflow-hidden pointer-events-none">
+            <div className="relative z-40 flex h-screen w-full flex-col overflow-hidden pointer-events-none">
                 {/* 1. Dashboard Widgets */}
                 {isClockProjected && (
                     <div className="absolute top-0 left-0 p-8 pointer-events-auto animate-in fade-in slide-in-from-left duration-700">
@@ -268,7 +270,7 @@ const PlayerHub: React.FC = () => {
 
             {/* 4. Sidebar: Combat Tracker */}
             {hasCombatants && activeCombatant && (
-                <div className="fixed right-0 top-0 w-80 h-full z-20 bg-slate-900/40 backdrop-blur-xl border-l border-white/10 flex flex-col gap-4 p-6 shadow-2xl animate-in slide-in-from-right duration-500">
+                <div className="fixed right-0 top-0 w-80 h-full z-50 bg-slate-900/40 backdrop-blur-xl border-l border-white/10 flex flex-col gap-4 p-6 shadow-2xl animate-in slide-in-from-right duration-500 pointer-events-auto">
                     <div className="flex items-center justify-between mb-4 border-b border-white/10 pb-4">
                         <div className="flex flex-col">
                             <h1 className="text-white text-xl font-bold tracking-tight">Initiative</h1>

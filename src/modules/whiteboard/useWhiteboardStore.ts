@@ -31,6 +31,7 @@ interface WhiteboardState {
     // Real-time trace
     activePath: DrawingPath | null;
     activeDrawerId: string | null;
+    backgroundMode: 'dark' | 'light';
 
     // History
     undoStack: DrawingPath[][];
@@ -45,6 +46,7 @@ interface WhiteboardState {
     addPath: (path: DrawingPath) => void;
     removePath: (id: string) => void;
     clearBoard: () => void;
+    setBackgroundMode: (mode: 'dark' | 'light') => void;
     undo: () => void;
     redo: () => void;
     clearProjectedState: () => void;
@@ -62,6 +64,7 @@ export const useWhiteboardStore = create<WhiteboardState>()(
             version: 0,
             activePath: null,
             activeDrawerId: null,
+            backgroundMode: 'dark',
             undoStack: [],
             redoStack: [],
 
@@ -100,6 +103,11 @@ export const useWhiteboardStore = create<WhiteboardState>()(
                 version: state.version + 1,
                 activePath: null,
                 activeDrawerId: null
+            })),
+
+            setBackgroundMode: (mode) => set((state) => ({ 
+                backgroundMode: mode, 
+                version: state.version + 1 
             })),
 
             undo: () => set((state) => {
@@ -142,6 +150,7 @@ export const useWhiteboardStore = create<WhiteboardState>()(
                 laserPointer: state.laserPointer,
                 activePath: state.activePath,
                 activeDrawerId: state.activeDrawerId,
+                backgroundMode: state.backgroundMode,
                 version: state.version
             })
         }

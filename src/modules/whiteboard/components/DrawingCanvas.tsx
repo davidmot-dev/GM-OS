@@ -17,12 +17,13 @@ export const DrawingCanvas: React.FC = () => {
         laserPointer,
         setActivePath,
         activePath,
-        activeDrawerId
+        activeDrawerId,
+        backgroundMode
     } = useWhiteboardStore();
     
     const [currentPoints, setCurrentPoints] = useState<Point[]>([]);
 
-    const drawPath = (ctx: CanvasRenderingContext2D, path: DrawingPath) => {
+    const drawPath = React.useCallback((ctx: CanvasRenderingContext2D, path: DrawingPath) => {
         if (path.points.length < 2) return;
 
         ctx.beginPath();
@@ -32,7 +33,7 @@ export const DrawingCanvas: React.FC = () => {
         ctx.shadowColor = 'transparent';
         
         if (path.tool === 'eraser') {
-            ctx.strokeStyle = '#0f172a'; // obsidian-dark
+            ctx.strokeStyle = backgroundMode === 'light' ? '#ffffff' : '#0f172a'; // Match background
             ctx.lineWidth = path.width * 16;
         } else if (path.tool === 'laser') {
             ctx.strokeStyle = '#ff0000'; // Pure laser red or the selected color
@@ -64,7 +65,7 @@ export const DrawingCanvas: React.FC = () => {
             ctx.arc(start.x, start.y, radius, 0, 2 * Math.PI);
         }
         ctx.stroke();
-    };
+    }, [backgroundMode]);
 
     const redraw = React.useCallback(() => {
         const canvas = canvasRef.current;
@@ -105,7 +106,7 @@ export const DrawingCanvas: React.FC = () => {
             };
             drawPath(ctx, previewPath);
         }
-    }, [paths, isDrawing, currentPoints, currentTool, currentColor, currentWidth, activePath, activeDrawerId, instanceId, laserPointer]);
+    }, [paths, isDrawing, currentPoints, currentTool, currentColor, currentWidth, activePath, activeDrawerId, instanceId, laserPointer, drawPath]);
 
     useEffect(() => {
         const canvas = canvasRef.current;

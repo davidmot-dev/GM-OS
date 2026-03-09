@@ -18,7 +18,8 @@ export const PlayerDrawingCanvas: React.FC = () => {
         currentTool,
         setActivePath,
         activePath,
-        activeDrawerId
+        activeDrawerId,
+        backgroundMode
     } = useWhiteboardStore();
     
     const [isDrawing, setIsDrawing] = useState(false);
@@ -26,7 +27,7 @@ export const PlayerDrawingCanvas: React.FC = () => {
 
     const isActive = projectionTarget !== null;
 
-    const drawPath = (ctx: CanvasRenderingContext2D, path: DrawingPath) => {
+    const drawPath = React.useCallback((ctx: CanvasRenderingContext2D, path: DrawingPath) => {
         if (path.points.length < 2) return;
 
         ctx.beginPath();
@@ -35,7 +36,7 @@ export const PlayerDrawingCanvas: React.FC = () => {
         ctx.shadowColor = 'transparent';
         
         if (path.tool === 'eraser') {
-            ctx.strokeStyle = '#0f172a'; // Match background
+            ctx.strokeStyle = backgroundMode === 'light' ? '#ffffff' : '#0f172a'; // Match background
             ctx.lineWidth = path.width * 16;
         } else if (path.tool === 'laser') {
             ctx.strokeStyle = '#ff0000';
@@ -67,7 +68,7 @@ export const PlayerDrawingCanvas: React.FC = () => {
             ctx.arc(start.x, start.y, radius, 0, 2 * Math.PI);
         }
         ctx.stroke();
-    };
+    }, [backgroundMode]);
 
     const redraw = React.useCallback(() => {
         const canvas = canvasRef.current;
@@ -108,7 +109,7 @@ export const PlayerDrawingCanvas: React.FC = () => {
             ctx.fill();
             ctx.shadowBlur = 0;
         }
-    }, [paths, laserPointer, isActive, isDrawing, currentPoints, currentColor, currentWidth, currentTool, activePath, activeDrawerId, instanceId]);
+    }, [paths, laserPointer, isActive, isDrawing, currentPoints, currentColor, currentWidth, currentTool, activePath, activeDrawerId, instanceId, drawPath]);
 
     useEffect(() => {
         const canvas = canvasRef.current;
