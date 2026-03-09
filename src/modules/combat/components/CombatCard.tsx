@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useCombatStore, type Combatant } from '../useCombatStore';
-import { X, Shield, Plus, Minus, PlusCircle } from 'lucide-react';
-import { useMediaUrl } from '../../../hooks/useMediaUrl';
+import { X, Shield, Plus, Minus, PlusCircle, Edit2 } from 'lucide-react';
+import { ResolvedImage } from '../../../components/ResolvedImage';
+import { gmPrompt } from '../../../stores/useModalStore';
 
 const PRESET_STATUSES = [
     { name: 'Poison', icon: '🤢', duration: 3 },
@@ -23,7 +24,6 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
     const { updateCombatant, removeCombatant, removeStatus, setInitiative, addStatus } = useCombatStore();
     const [showStatusMenu, setShowStatusMenu] = useState(false);
     const [customDuration, setCustomDuration] = useState<number>(3);
-    const resolvedAvatar = useMediaUrl(combatant.avatar);
 
     // Calcul de couleur HP
     let hpColorClass = 'text-green-400';
@@ -64,18 +64,28 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
 
                 {/* Avatar / Icon */}
                 <div className="w-12 h-12 rounded-full overflow-hidden bg-obsidian-dark flex items-center justify-center border-2 border-gm-crimson/50 shrink-0">
-                    {combatant.avatar && resolvedAvatar ? (
-                        <img src={resolvedAvatar} alt="avatar" className="w-full h-full object-cover" />
-                    ) : (
-                        <Shield className={combatant.isPlayer ? 'text-gm-violet' : 'text-gm-crimson'} size={24} />
-                    )}
+                    <ResolvedImage 
+                        src={combatant.avatar} 
+                        alt={combatant.name} 
+                        className="w-full h-full object-cover" 
+                        fallback={<Shield className={combatant.isPlayer ? 'text-gm-violet' : 'text-gm-crimson'} size={24} />}
+                    />
                 </div>
 
                 {/* Info : Name & Statuses */}
                 <div className="flex-1 ml-4 flex flex-col justify-center min-w-0">
-                    <div className="flex items-center gap-2 relative">
-                        <div className="font-bold text-lg text-slate-100 truncate max-w-[200px]" title={combatant.name}>
+                    <div className="flex items-center gap-2 relative group/name">
+                        <div 
+                            className="font-bold text-lg text-slate-100 truncate max-w-[200px] cursor-pointer hover:text-gm-crimson transition-colors flex items-center gap-2" 
+                            title="Cliquer pour renommer"
+                            onClick={() => {
+                                gmPrompt(`Renommer ${combatant.name} :`, combatant.name, (newName) => {
+                                    if (newName.trim()) updateCombatant(combatant.id, { name: newName.trim() });
+                                });
+                            }}
+                        >
                             {combatant.name}
+                            <Edit2 size={12} className="opacity-0 group-hover/name:opacity-50 transition-opacity" />
                         </div>
                         <button
                             className={`text-gray-500 hover:text-white transition-colors p-1 rounded hover:bg-gray-700/50 ${showStatusMenu ? 'text-white bg-gray-700/50' : ''}`}

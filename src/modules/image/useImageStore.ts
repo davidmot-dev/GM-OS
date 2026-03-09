@@ -1,16 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { ImageMedia, ProjectionTarget, ImageBridge, DisplayInfo, ImageFolder, ProjectedEntity } from './types';
+import type { ImageMedia, ProjectionTarget, DisplayInfo, ImageFolder, ProjectedEntity } from './types';
 
-// Extend window.appBridge to include image APIs
-declare global {
-    interface Window {
-        appBridge?: {
-            image?: ImageBridge;
-            session?: { launchHubWindow: () => void };
-        };
-    }
-}
+// AppBridge is now defined globally in src/types/window.d.ts
 
 interface ImageState {
     mediaList: ImageMedia[];

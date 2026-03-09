@@ -6,6 +6,7 @@ import { useMapStore } from '../../map/useMapStore';
 import { useMediaStore } from '../../../stores/useMediaStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
+import { ResolvedAsset } from '../../../components/ResolvedAsset';
 
 const TYPE_META: Record<AtlasMap['type'], { label: string; icon: React.ReactNode; color: string }> = {
     'battlemap': { label: 'Battlemap', icon: <Swords size={10} />, color: 'text-red-400 bg-red-500/10 border-red-500/20' },
@@ -23,7 +24,6 @@ const MapCard: React.FC<{
     onDelete: () => void
 }> = ({ map, isSelected, isProjected, onClick, onDelete }) => {
     const typeMeta = TYPE_META[map.type];
-    const url = useMediaUrl(map.fileUrl);
 
     return (
         <div
@@ -37,20 +37,18 @@ const MapCard: React.FC<{
                 }`}
         >
             {/* Thumbnail */}
-            <div className="w-12 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-slate-800">
-                {url ? (
-                    map.isVideo ? (
-                        <div className="w-full h-full flex items-center justify-center bg-slate-700">
-                            <Film size={16} className="text-slate-500" />
+            <div className="w-12 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-slate-800 border border-white/5">
+                <ResolvedAsset 
+                    src={map.fileUrl} 
+                    isVideo={map.isVideo}
+                    className="w-full h-full object-cover"
+                    alt={map.name}
+                    fallback={
+                        <div className="w-full h-full flex items-center justify-center bg-slate-800 border border-slate-700/50 rounded-lg">
+                            <Map size={16} className="text-slate-600" />
                         </div>
-                    ) : (
-                        <img src={url} alt={map.name} className="w-full h-full object-cover" />
-                    )
-                ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-slate-800 border border-slate-700/50 rounded-lg">
-                        <Map size={16} className="text-slate-600" />
-                    </div>
-                )}
+                    }
+                />
             </div>
             {/* Info */}
             <div className="flex-1 min-w-0">
@@ -93,6 +91,7 @@ const AtlasLibrary: React.FC = () => {
     const [isBrowserOpen, setIsBrowserOpen] = useState(false);
 
     const filtered = atlasMaps.filter(m =>
+        m.campaignId === activeCampaignId &&
         m.name.toLowerCase().includes(search.toLowerCase())
     );
 

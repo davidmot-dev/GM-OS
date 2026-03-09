@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useCombatStore } from '../useCombatStore';
 import { gmToast } from '../../../stores/useToastStore';
-import { gmConfirm } from '../../../stores/useModalStore';
+import { gmConfirm, gmPrompt } from '../../../stores/useModalStore';
 import { UserPlus, RefreshCw, Dices, Save, FolderOpen, Play, Skull, ArrowDown01, ArrowUp10 } from 'lucide-react';
 
 const CombatControls: React.FC = () => {
@@ -18,13 +18,17 @@ const CombatControls: React.FC = () => {
     const [diceMax, setDiceMax] = useState<number>(20);
 
     const handleAddCombatant = () => {
-        addCombatant({
-            name: 'Nouveau Combattant',
-            init: 0,
-            hp: 10,
-            hpMax: 10,
-            isPlayer: false,
-            statuses: []
+        gmPrompt('Nom du nouveau combattant :', 'Nouveau Combattant', (name) => {
+            if (name.trim()) {
+                addCombatant({
+                    name: name.trim(),
+                    init: 0,
+                    hp: 10,
+                    hpMax: 10,
+                    isPlayer: false,
+                    statuses: []
+                });
+            }
         });
     };
 

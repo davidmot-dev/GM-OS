@@ -10,6 +10,7 @@ const MusicHeader: React.FC = () => {
         setActivePlaylistId, 
         addPlaylist, 
         removePlaylist, 
+        renamePlaylist,
         stopAll, 
         outputDeviceId, 
         setOutputDevice, 
@@ -68,23 +69,20 @@ const MusicHeader: React.FC = () => {
                             <button
                                 key={p.id}
                                 onClick={() => setActivePlaylistId(p.id)}
+                                onDoubleClick={() => gmPrompt(`Renommer "${p.name}" :`, p.name, (newName) => {
+                                    if (newName && newName.trim()) renamePlaylist(p.id, newName.trim());
+                                })}
+                                onContextMenu={(e) => {
+                                    e.preventDefault();
+                                    gmConfirm(`Supprimer "${p.name}" ?`, () => removePlaylist(p.id), () => {}, "Supprimer", "Annuler");
+                                }}
                                 className={`flex items-center gap-2.5 px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all relative ${currentId === p.id 
                                     ? 'bg-gm-violet text-white shadow-glow-violet' 
                                     : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'}`}
+                                title="Double-clic pour renommer, Clic-droit pour supprimer"
                             >
                                 {getIcon(p.name)}
                                 <span>{p.name}</span>
-                                {currentId === p.id && playlists.length > 1 && (
-                                    <div 
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            gmConfirm(`Supprimer "${p.name}" ?`, () => removePlaylist(p.id), () => {}, "Supprimer", "Annuler");
-                                        }}
-                                        className="ml-1 opacity-40 hover:opacity-100 hover:text-red-300 transition-opacity"
-                                    >
-                                        <StopCircle size={10} />
-                                    </div>
-                                )}
                             </button>
                         ))}
                     </div>

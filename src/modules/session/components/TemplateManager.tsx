@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
+import { useModalStore } from '../../../stores/useModalStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import type { SheetTemplate, SheetSection, SheetField, SheetFieldType } from '../../../data/defaultSheetTemplates';
-import { Plus, Trash2, ChevronDown, ChevronRight, Pencil } from 'lucide-react';
+import { Plus, Trash2, ChevronDown, ChevronRight, Pencil, Sparkles } from 'lucide-react';
 
 const FIELD_TYPE_LABELS: Record<SheetFieldType, string> = {
     gauge: 'Jauge (%)',
@@ -17,6 +18,7 @@ const SectionEditor: React.FC<{
     onUpdate: (updated: SheetSection) => void;
     onDelete: () => void;
 }> = ({ section, onUpdate, onDelete }) => {
+    const { showConfirm } = useModalStore();
     const [isOpen, setIsOpen] = useState(true);
 
     const updateField = (index: number, updates: Partial<SheetField>) => {
@@ -36,7 +38,10 @@ const SectionEditor: React.FC<{
     };
 
     const removeField = (index: number) => {
-        onUpdate({ ...section, fields: section.fields.filter((_, i) => i !== index) });
+        showConfirm(
+            `Supprimer le champ "${section.fields[index].label}" ?`,
+            () => onUpdate({ ...section, fields: section.fields.filter((_, i) => i !== index) })
+        );
     };
 
     return (
@@ -52,10 +57,14 @@ const SectionEditor: React.FC<{
                     onChange={e => onUpdate({ ...section, label: e.target.value })}
                     className="flex-1 bg-transparent font-bold text-sm text-white focus:outline-none"
                 />
-                <button onClick={onDelete} className="p-1.5 text-slate-600 hover:text-red-400 transition-colors rounded-lg hover:bg-red-500/10">
+                <button 
+                    onClick={() => showConfirm(`Supprimer la section "${section.label}" et tous ses champs ?`, onDelete)} 
+                    className="p-1.5 text-slate-600 hover:text-red-400 transition-colors rounded-lg hover:bg-red-500/10"
+                >
                     <Trash2 size={14} />
                 </button>
             </div>
+            {/* ... rest of SectionEditor ... */}
 
             {/* Section Fields */}
             {isOpen && (
@@ -139,6 +148,23 @@ const TemplateEditor: React.FC<{
                     className="flex-1 bg-transparent text-lg font-bold text-white focus:outline-none border-b border-white/10 focus:border-gm-gold/50 transition-colors pb-1"
                     placeholder="Nom du template"
                 />
+            </div>
+
+            {/* NotebookLM Link */}
+            <div className="flex items-center gap-3 p-3 bg-blue-500/5 border border-blue-500/20 rounded-xl">
+                <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400">
+                    <Sparkles size={16} />
+                </div>
+                <div className="flex-1">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-blue-500/70 mb-1">NotebookLM par défaut</p>
+                    <input 
+                        type="text"
+                        value={template.defaultNotebookUrl || ''}
+                        onChange={e => onUpdate({ ...template, defaultNotebookUrl: e.target.value })}
+                        placeholder="https://notebooklm.google.com/notebook/..."
+                        className="w-full bg-transparent text-xs text-slate-300 focus:outline-none border-b border-white/5 focus:border-blue-500/50 transition-colors pb-0.5"
+                    />
+                </div>
                 {onDelete && (
                     <button onClick={onDelete} className="px-3 py-1.5 text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-all font-bold uppercase tracking-widest border border-red-500/20">
                         Supprimer
@@ -170,6 +196,7 @@ const TemplateEditor: React.FC<{
 // --- Main TemplateManager ---
 const TemplateManager: React.FC = () => {
     const { customSheetTemplates, addSheetTemplate, updateSheetTemplate, deleteSheetTemplate } = useSessionOSStore();
+    const { showConfirm } = useModalStore();
     const [selectedId, setSelectedId] = useState<string | null>(customSheetTemplates[0]?.id ?? null);
 
     const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
@@ -249,8 +276,13 @@ const TemplateManager: React.FC = () => {
                             template={selectedTemplate}
                             onUpdate={handleUpdate}
                             onDelete={() => {
-                                deleteSheetTemplate(selectedTemplate.id);
-                                setSelectedId(null);
+                                showConfirm(
+                                    `Supprimer définitivement le modèle "${selectedTemplate.name}" ?`,
+                                    () => {
+                                        deleteSheetTemplate(selectedTemplate.id);
+                                        setSelectedId(null);
+                                    }
+                                );
                             }}
                         />
                     )

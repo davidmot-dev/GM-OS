@@ -1,16 +1,19 @@
 import React from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useSessionStore } from '../../../store/useSessionStore';
-import { BookOpen, LayoutDashboard, Swords, Users, Users2, Map as MapIcon, Archive, PlusCircle, Library, FileText } from 'lucide-react';
+import { useModalStore } from '../../../stores/useModalStore';
+import { BookOpen, LayoutDashboard, Swords, Users, Users2, Map as MapIcon, Archive, PlusCircle, Library, FileText, ExternalLink, File, StickyNote, Play } from 'lucide-react';
+import SessionChecklist from './SessionChecklist';
 
 const CampaignCockpit: React.FC = () => {
-    const { campaigns, activeCampaignId, sessions, setCurrentView, currentView } = useSessionOSStore();
+    const { campaigns, activeCampaignId, sessions, setCurrentView, currentView, updateSession } = useSessionOSStore();
     const { setActiveModule } = useSessionStore();
+    const { showCustom, showConfirm } = useModalStore();
 
     const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
 
     // Find active session for progress (mock logic for now)
-    const activeSession = activeCampaign ? sessions.find(s => s.id === activeCampaign.activeSessionId) : null;
+    const activeSession = activeCampaign ? sessions.find(s => s.id === activeCampaign.activeSessionId && s.status === 'active') : null;
     const sessionCount = sessions.filter(s => s.campaignId === activeCampaignId).length;
 
     return (
@@ -52,13 +55,6 @@ const CampaignCockpit: React.FC = () => {
                     <span className="text-sm font-medium">Cockpit</span>
                 </button>
                 <button
-                    onClick={() => setCurrentView('players')}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'players' ? 'bg-gm-gold/10 text-gm-gold' : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-100'}`}
-                >
-                    <Users2 size={20} />
-                    <span className="text-sm font-medium">Joueurs</span>
-                </button>
-                <button
                     onClick={() => setActiveModule('combat')}
                     className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800/50 hover:text-slate-100 transition-all w-full text-left"
                 >
@@ -87,12 +83,48 @@ const CampaignCockpit: React.FC = () => {
                     <span className="text-sm font-medium">Loot Tables</span>
                 </button>
                 <button
-                    onClick={() => setCurrentView('templates')}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'templates' ? 'bg-gm-gold/10 text-gm-gold' : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-100'}`}
+                    onClick={() => setCurrentView('session-prep')}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'session-prep' ? 'bg-gm-gold/10 text-gm-gold' : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-100'}`}
                 >
-                    <FileText size={20} />
-                    <span className="text-sm font-medium">Fiches de Jeu</span>
+                    <PlusCircle size={20} className={currentView === 'session-prep' ? 'text-gm-gold' : 'text-slate-500'} />
+                    <span className="text-sm font-medium">Session Preparation</span>
                 </button>
+
+                {activeSession ? (
+                    <div className="flex flex-col gap-1 mt-1">
+                        <button
+                            onClick={() => showConfirm(
+                                'La session est-elle terminée ?',
+                                () => updateSession(activeSession.id, { status: 'done' }),
+                                undefined,
+                                'OUI, TERMINER',
+                                'NON, CONTINUER'
+                            )}
+                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 hover:bg-emerald-500/20"
+                        >
+                            <Play size={20} fill="currentColor" className="animate-pulse" />
+                            <span className="text-sm font-bold uppercase tracking-tighter">Session Active</span>
+                        </button>
+                        
+                        <button
+                            onClick={() => showCustom('session-notes')}
+                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all text-slate-400 hover:bg-gm-gold/10 hover:text-gm-gold"
+                        >
+                            <StickyNote size={20} className="text-gm-gold/60 group-hover:text-gm-gold transition-colors" />
+                            <span className="text-sm font-bold uppercase tracking-tighter">Notes de Session</span>
+                        </button>
+                    </div>
+                ) : (
+                    sessions.some(s => s.campaignId === activeCampaignId && s.status === 'planned') && (
+                        <button
+                            onClick={() => showCustom('session-select')}
+                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all text-slate-400 hover:bg-gm-gold/10 hover:text-gm-gold mt-1"
+                        >
+                            <Play size={20} className="text-gm-gold/60 group-hover:text-gm-gold transition-colors" />
+                            <span className="text-sm font-bold uppercase tracking-tighter">Lancer Session</span>
+                        </button>
+                    )
+                )}
 
                 <div className="pt-4 mt-2 border-t border-slate-800/50">
                     <button
@@ -100,43 +132,66 @@ const CampaignCockpit: React.FC = () => {
                         className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'library' ? 'bg-gm-gold/10 text-gm-gold' : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-100'}`}
                     >
                         <Library size={20} className={currentView === 'library' ? 'text-gm-gold' : 'text-slate-500'} />
-                        <span className="text-sm font-medium font-bold uppercase tracking-tighter">Campaign Library</span>
+                        <span className="text-sm font-bold uppercase tracking-tighter">Campaign Library</span>
+                    </button>
+                    <button
+                        onClick={() => setCurrentView('players')}
+                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'players' ? 'bg-gm-gold/10 text-gm-gold' : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-100'}`}
+                    >
+                        <Users2 size={20} className={currentView === 'players' ? 'text-gm-gold' : 'text-slate-500'} />
+                        <span className="text-sm font-bold uppercase tracking-tighter text-left">Joueurs</span>
+                    </button>
+                    <button
+                        onClick={() => setCurrentView('templates')}
+                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'templates' ? 'bg-gm-gold/10 text-gm-gold' : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-100'}`}
+                    >
+                        <FileText size={20} className={currentView === 'templates' ? 'text-gm-gold' : 'text-slate-500'} />
+                        <span className="text-sm font-bold uppercase tracking-tighter text-left">Fiches de Jeu</span>
                     </button>
                 </div>
             </nav>
 
             {/* Checklist Section */}
             {activeSession && (
-                <div className="flex flex-col gap-3">
-                    <p className="text-slate-500 text-xs uppercase tracking-widest mb-1 px-3">Session Prep</p>
-                    <div className="flex flex-col gap-1 px-1">
-                        {activeSession.checklist.map(item => (
-                            <label key={item.id} className="flex items-center gap-3 p-2 hover:bg-slate-800/30 rounded-lg cursor-pointer group transition-colors">
-                                <input
-                                    type="checkbox"
-                                    checked={item.isCompleted}
-                                    onChange={() => useSessionOSStore.getState().toggleChecklistItem(activeSession.id, item.id)}
-                                    className="rounded border-slate-700 bg-slate-800 text-gm-gold focus:ring-gm-gold focus:ring-offset-slate-900 h-4 w-4"
-                                />
-                                <span className={`text-sm group-hover:text-slate-100 ${item.isCompleted ? 'text-slate-500 line-through' : 'text-slate-300'}`}>
-                                    {item.text}
-                                </span>
-                            </label>
-                        ))}
+                <SessionChecklist />
+            )}
+
+            {/* Session Resources Section */}
+            {activeSession && (activeSession.externalLink || activeSession.filePath) && (
+                <div className="flex flex-col gap-3 py-4 border-t border-slate-800/50">
+                    <p className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] px-3 mb-1">Ressources Session</p>
+                    <div className="flex flex-col gap-2 px-1">
+                        {activeSession.externalLink && (
+                            <a 
+                                href={activeSession.externalLink} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-3 px-3 py-2 rounded-lg bg-emerald-500/5 border border-emerald-500/10 text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500/30 transition-all group"
+                            >
+                                <ExternalLink size={16} className="group-hover:scale-110 transition-transform" />
+                                <span className="text-xs font-bold truncate">Ouvrir le Lien HTTP</span>
+                            </a>
+                        )}
+                        {activeSession.filePath && (
+                            <button 
+                                onClick={() => {
+                                    if (window.appBridge?.openFile) {
+                                        window.appBridge.openFile(activeSession.filePath!);
+                                    } else {
+                                        console.log('Opening file:', activeSession.filePath);
+                                        alert(`File: ${activeSession.filePath}`);
+                                    }
+                                }}
+                                className="flex items-center gap-3 px-3 py-2 rounded-lg bg-blue-500/5 border border-blue-500/10 text-blue-400 hover:bg-blue-500/10 hover:border-blue-500/30 transition-all group"
+                            >
+                                <File size={16} className="group-hover:scale-110 transition-transform" />
+                                <span className="text-xs font-bold truncate">Accéder au Fichier</span>
+                            </button>
+                        )}
                     </div>
                 </div>
             )}
 
-            {/* New Encounter Button */}
-            <div className="mt-auto">
-                <button
-                    onClick={() => setActiveModule('combat')}
-                    className="w-full flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-100 py-3 rounded-xl text-sm font-bold transition-all"
-                >
-                    <PlusCircle className="text-gm-gold" size={20} />
-                    New Encounter
-                </button>
-            </div>
         </aside>
     );
 };

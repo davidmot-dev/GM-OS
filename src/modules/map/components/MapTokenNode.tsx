@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useMapStore, type MapToken } from '../useMapStore';
 import { useCombatStore } from '../../combat/useCombatStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
@@ -6,10 +6,11 @@ import { Shield, Trash2 } from 'lucide-react';
 
 interface MapTokenNodeProps {
     token: MapToken;
+    isProjectedView?: boolean;
 }
 
-const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token }) => {
-    const { currentTool, updateToken, removeToken } = useMapStore();
+const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = false }) => {
+    const { currentTool, updateToken, updateProjectedToken, removeToken, zoom } = useMapStore();
     const { combatants, currentTurnIdx } = useCombatStore();
 
     // On lie le token à son combattant s'il existe
@@ -18,45 +19,43 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token }) => {
     const resolvedAvatar = useMediaUrl(token.avatar || undefined);
 
     const [isDragging, setIsDragging] = useState(false);
-    const dragRef = useRef<{ x: number; y: number } | null>(null);
 
-    const isInteractable = currentTool === 'move_token';
+    const isInteractable = isProjectedView || currentTool === 'move_token';
 
     const handlePointerDown = (e: React.PointerEvent) => {
-        if (!isInteractable) return;
+        if (!isInteractable || e.button !== 0) return;
         // Empêche la propagation au canvas de Fog of War en-dessous
         e.stopPropagation();
-        e.preventDefault();
-
+        
+        // Important pour capturer le pointeur même si on sort du pion
+        const target = e.currentTarget as HTMLElement;
+        target.setPointerCapture(e.pointerId);
         setIsDragging(true);
-        (e.target as HTMLElement).setPointerCapture(e.pointerId);
-
-        // On enregistre le décalage entre le clic de la souris et le centre du token
-        dragRef.current = {
-            x: e.clientX - token.x,
-            y: e.clientY - token.y
-        };
     };
 
     const handlePointerMove = (e: React.PointerEvent) => {
-        if (!isDragging || !dragRef.current) return;
+        if (!isDragging) return;
         e.stopPropagation();
-        e.preventDefault();
 
-        const newX = e.clientX - dragRef.current.x;
-        const newY = e.clientY - dragRef.current.y;
+        // On utilise movementX/Y qui est relatif et indépendant de l'origine
+        // Mais on doit diviser par le zoom car movement est en pixels écran
+        const dx = e.movementX / zoom;
+        const dy = e.movementY / zoom;
 
-        updateToken(token.id, { x: newX, y: newY });
+        const moveFn = isProjectedView ? updateProjectedToken : updateToken;
+        moveFn(token.id, { 
+            x: token.x + dx, 
+            y: token.y + dy 
+        });
     };
 
     const handlePointerUp = (e: React.PointerEvent) => {
         if (!isDragging) return;
         e.stopPropagation();
-        e.preventDefault();
 
         setIsDragging(false);
-        (e.target as HTMLElement).releasePointerCapture(e.pointerId);
-        dragRef.current = null;
+        const target = e.currentTarget as HTMLElement;
+        target.releasePointerCapture(e.pointerId);
     };
 
     // Calcul de l'aura de santé (similaire à CombatCard)
@@ -89,6 +88,7 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token }) => {
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
             onPointerCancel={handlePointerUp}
+            onMouseDown={(e) => e.stopPropagation()}
             onContextMenu={(e) => {
                 if (isInteractable) {
                     e.preventDefault();

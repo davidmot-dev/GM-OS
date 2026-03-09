@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useSessionOSStore, type Campaign } from '../useSessionOSStore';
-import { Save, X, BookOpen, ImageIcon, Info, MapPin } from 'lucide-react';
+import { Save, X, BookOpen, ImageIcon, Info, MapPin, Sparkles } from 'lucide-react';
+import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
+import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import { gmToast } from '../../../stores/useToastStore';
 
 interface CampaignFormProps {
@@ -11,17 +13,21 @@ interface CampaignFormProps {
 }
 
 const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, onClose }) => {
-    const { addCampaign, updateCampaign } = useSessionOSStore();
+    const { atlasMaps, addCampaign, updateCampaign, customSheetTemplates } = useSessionOSStore();
     
     const [name, setName] = useState(campaign?.name || '');
-    const [system, setSystem] = useState(campaign?.system || 'D&D 5E');
+    const [system, setSystem] = useState(campaign?.system || 'generic');
     const [description, setDescription] = useState(campaign?.description || '');
     const [synopsis, setSynopsis] = useState(campaign?.synopsis || '');
     const [wallpaperUrl, setWallpaperUrl] = useState(campaign?.wallpaperUrl || '');
+    const [notebookUrl, setNotebookUrl] = useState(campaign?.notebookUrl || '');
     const [activeLocationIds, setActiveLocationIds] = useState<string[]>(campaign?.activeLocationIds || []);
     
+    // Combine builtin and custom templates
+    const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
+    
     // Get maps for this campaign to allow pinning as "active"
-    const campaignMaps = useSessionOSStore.getState().atlasMaps.filter(m => m.campaignId === campaign?.id);
+    const campaignMaps = atlasMaps.filter(m => m.campaignId === campaign?.id);
     
     const [isMediaBrowserOpen, setIsMediaBrowserOpen] = useState(false);
     const resolvedWallpaper = useMediaUrl(wallpaperUrl);
@@ -37,6 +43,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, onClose }) => {
             description,
             synopsis,
             wallpaperUrl,
+            notebookUrl,
             activeLocationIds
         };
 
@@ -103,13 +110,25 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, onClose }) => {
                                     onChange={e => setSystem(e.target.value)}
                                     className="w-full bg-slate-900/60 border border-white/5 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-gm-gold/40 transition-all font-bold appearance-none cursor-pointer"
                                 >
-                                    <option value="D&D 5E">D&D 5E</option>
-                                    <option value="Pathfinder 2E">Pathfinder 2E</option>
-                                    <option value="Call of Cthulhu 7E">L'Appel de Cthulhu 7E</option>
-                                    <option value="Coriolis">Coriolis</option>
-                                    <option value="Générique / Autre">Générique / Autre</option>
+                                    {allTemplates.map(t => (
+                                        <option key={t.id} value={t.id}>{t.emoji} {t.name}</option>
+                                    ))}
                                 </select>
                             </div>
+                        </div>
+
+                        {/* NotebookLM Specific */}
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black uppercase tracking-widest text-blue-400 px-1 flex items-center gap-2">
+                                <Sparkles size={12} /> NotebookLM de Campagne (Surcharge)
+                            </label>
+                            <input 
+                                type="text"
+                                value={notebookUrl}
+                                onChange={e => setNotebookUrl(e.target.value)}
+                                placeholder="Laisse vide pour utiliser le NotebookLM du système..."
+                                className="w-full bg-slate-900/60 border border-white/5 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500/40 transition-all font-bold"
+                            />
                         </div>
 
                         {/* Description */}
@@ -191,7 +210,12 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, onClose }) => {
                                             }`}
                                         >
                                             <div className="w-10 h-10 rounded bg-slate-800 overflow-hidden flex-shrink-0 border border-white/5">
-                                                <img src={map.fileUrl} className={`w-full h-full object-cover ${activeLocationIds.includes(map.id) ? 'opacity-100' : 'opacity-40'}`} alt="" />
+                                                <ResolvedAsset 
+                                                    src={map.fileUrl} 
+                                                    isVideo={map.isVideo}
+                                                    className={`w-full h-full object-cover ${activeLocationIds.includes(map.id) ? 'opacity-100' : 'opacity-40'}`} 
+                                                    alt="" 
+                                                />
                                             </div>
                                             <span className="text-xs font-bold truncate">{map.name}</span>
                                             {activeLocationIds.includes(map.id) && <div className="w-2 h-2 rounded-full bg-gm-gold shadow-glow-gold ml-auto" />}

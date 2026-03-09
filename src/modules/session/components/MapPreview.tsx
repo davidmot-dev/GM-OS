@@ -2,6 +2,7 @@ import React from 'react';
 import { useMapStore } from '../../map/useMapStore';
 import { useSessionStore } from '../../../store/useSessionStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
+import { ResolvedImage } from '../../../components/ResolvedImage';
 import { Layers, ZoomIn, MapPin } from 'lucide-react';
 
 const MapPreview: React.FC = () => {
@@ -69,11 +70,11 @@ const MapPreview: React.FC = () => {
                                     style={{ 
                                         left: `${(token.x / 1000) * 100}%`, // Absolute fallback or relative? 
                                         top: `${(token.y / 1000) * 100}%`,
-                                        width: 12, height: 12,
+                                        width: '40px', height: '40px',
                                         transform: 'translate(-50%, -50%)'
                                     }}
                                 >
-                                     <TokenImage src={token.avatar} />
+                                     <ResolvedImage src={token.avatar} className="w-full h-full object-cover" />
                                 </div>
                             ))}
                         </div>
@@ -88,9 +89,5 @@ const MapPreview: React.FC = () => {
     );
 };
 
-const TokenImage: React.FC<{ src: string }> = ({ src }) => {
-    const url = useMediaUrl(src);
-    return url ? <img src={url} className="w-full h-full object-cover" /> : null;
-};
 
 export default MapPreview;

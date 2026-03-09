@@ -176,8 +176,15 @@ export class AmbientEngine {
                 // @ts-expect-error AudioContext.setSinkId exists in modern browsers
                 await this.context.setSinkId(deviceId === 'default' ? '' : deviceId);
                 console.log(`[AmbientEngine] Output device changed to ${deviceId}`);
-            } catch (error) {
-                console.error('[AmbientEngine] Failed to set audio output device', error);
+            } catch (error: unknown) {
+                const err = error as { name?: string; message?: string };
+                if (err.name === 'NotFoundError') {
+                    console.warn(`[AmbientEngine] Device ${deviceId} not found, falling back to default.`);
+                    // @ts-expect-error fallback
+                    await this.context.setSinkId('');
+                } else {
+                    console.error('[AmbientEngine] Failed to set audio output device', error);
+                }
             }
         } else {
             console.warn('[AmbientEngine] AudioContext.setSinkId is not supported by this browser.');

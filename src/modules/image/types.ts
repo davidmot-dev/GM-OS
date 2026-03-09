@@ -39,4 +39,5 @@ export interface ImageBridge {
     getDisplays: () => Promise<DisplayInfo[]>;
     syncHubData: (type: 'image' | 'entity', data: string) => void;
     launchDisplay: (paths: string[], target: ProjectionTarget) => void;
+    closeAllDisplays: () => void;
 }

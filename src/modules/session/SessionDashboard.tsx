@@ -1,7 +1,6 @@
-import React from 'react';
-import { useSessionStore } from '../../store/useSessionStore';
+import React, { useState } from 'react';
 import { gmAlert } from '../../stores/useModalStore';
-import { Users, Settings, Bell, Play } from 'lucide-react';
+import { Users, Settings, Bell, Sparkles } from 'lucide-react';
 import CampaignCockpit from './components/CampaignCockpit';
 import SessionWorkspace from './components/SessionWorkspace';
 import ModuleSnapshots from './components/ModuleSnapshots';
@@ -11,24 +10,22 @@ import PlayerManagement from './components/PlayerManagement';
 import WorldAtlas from './components/WorldAtlas';
 import NpcManagement from './components/NpcManagement';
 import TemplateManager from './components/TemplateManager';
+import SessionPrep from './components/SessionPrep';
+import SessionFocusEditor from './components/SessionFocusEditor';
+import OraclePanel from './components/OraclePanel';
 import { useSessionOSStore } from './useSessionOSStore';
+import { DEFAULT_SHEET_TEMPLATES } from '../../data/defaultSheetTemplates';
 
 const SessionDashboard: React.FC = () => {
-    const { toggleSessionMode, isSessionMode } = useSessionStore();
-    const { currentView, activeCampaignId, sessions, setCurrentView } = useSessionOSStore();
+    const { currentView, activeCampaignId, campaigns, setCurrentView, selectedEntityId, customSheetTemplates } = useSessionOSStore();
+    const [isOracleOpen, setIsOracleOpen] = useState(false);
 
-    const handleLaunchToggle = () => {
-        toggleSessionMode();
-        // Sync with SessionOS store
-        const activeSession = sessions.find(s => s.campaignId === activeCampaignId && s.status === (isSessionMode ? 'active' : 'planned'));
-        if (activeSession) {
-            useSessionOSStore.setState((state) => ({
-                sessions: state.sessions.map(s =>
-                    s.id === activeSession.id ? { ...s, status: isSessionMode ? 'planned' : 'active' } : s
-                )
-            }));
-        }
-    };
+    const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
+    
+    // Find system default NotebookLM
+    const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
+    const activeTemplate = allTemplates.find(t => t.id === activeCampaign?.system);
+    const templateNotebookUrl = activeTemplate?.defaultNotebookUrl;
 
     return (
         <div className="flex-1 h-[calc(100vh-64px)] overflow-hidden flex flex-col bg-slate-950 text-slate-100 font-display">
@@ -47,11 +44,12 @@ const SessionDashboard: React.FC = () => {
 
                 <div className="flex gap-3">
                     <button
-                        onClick={handleLaunchToggle}
-                        className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-sm font-bold transition-all shadow-[0_0_15px_-3px_rgba(234,179,8,0.3)] ${isSessionMode ? 'bg-amber-600 text-white' : 'bg-gm-gold text-slate-900 hover:brightness-110'}`}
+                        onClick={() => setIsOracleOpen(!isOracleOpen)}
+                        className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-sm font-bold transition-all border ${isOracleOpen ? 'bg-gm-gold text-slate-900 border-gm-gold shadow-[0_0_15px_rgba(234,179,8,0.4)]' : 'bg-slate-800 text-gm-gold border-slate-700 hover:bg-slate-700'}`}
+                        title="Consult the AI Oracle"
                     >
-                        <Play size={18} fill="currentColor" />
-                        {isSessionMode ? 'Session Active' : 'Launch Session'}
+                        <Sparkles size={18} className={isOracleOpen ? 'animate-pulse' : ''} />
+                        Oracle
                     </button>
                     <button
                         onClick={() => gmAlert('Le module de configuration globale sera bientôt disponible.')}
@@ -74,17 +72,15 @@ const SessionDashboard: React.FC = () => {
                     </div>
                 ) : currentView === 'world-atlas' ? (
                     <div className="col-span-12 overflow-hidden flex h-full">
-                        <CampaignCockpit />
                         <WorldAtlas />
                     </div>
                 ) : currentView === 'npc-gallery' ? (
                     <div className="col-span-12 overflow-hidden flex h-full">
-                        <CampaignCockpit />
+                        {!selectedEntityId && <CampaignCockpit />}
                         <NpcManagement />
                     </div>
                 ) : currentView === 'players' ? (
-                    <div className="col-span-12 overflow-hidden flex">
-                        <CampaignCockpit />
+                    <div className="col-span-12 overflow-hidden flex h-full">
                         <PlayerManagement />
                     </div>
                 ) : currentView === 'templates' ? (
@@ -93,6 +89,10 @@ const SessionDashboard: React.FC = () => {
                         <div className="flex-1 overflow-hidden">
                             <TemplateManager />
                         </div>
+                    </div>
+                ) : currentView === 'session-prep' || currentView === 'session-focus' ? (
+                    <div className="col-span-12 overflow-hidden flex h-full">
+                        {currentView === 'session-prep' ? <SessionPrep /> : <SessionFocusEditor />}
                     </div>
                 ) : (
                     <>
@@ -128,6 +128,13 @@ const SessionDashboard: React.FC = () => {
                     </>
                 )}
             </main>
+
+            <OraclePanel 
+                isOpen={isOracleOpen} 
+                onClose={() => setIsOracleOpen(false)} 
+                campaignNotebookUrl={activeCampaign?.notebookUrl}
+                templateNotebookUrl={templateNotebookUrl}
+            />
         </div>
     );
 };

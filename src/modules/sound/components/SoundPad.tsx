@@ -1,77 +1,82 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSoundStore, type SoundPad as ISoundPad } from '../useSoundStore';
 import { soundEngine } from '../SoundEngine';
+import { soundController } from '../SoundController';
+import { gmCustom } from '../../../stores/useModalStore';
+import { Plus, Zap, Keyboard, Lightbulb, Volume2, MoreHorizontal } from 'lucide-react';
 
 interface SoundPadProps {
     pad: ISoundPad;
+    onAssignMedia: (padId: string) => void;
 }
 
-const SoundPad: React.FC<SoundPadProps> = ({ pad }) => {
+const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
     const { id, title, filePath, volume, color, midiMapping, keyMapping, isActive, linkedLightSceneId } = pad;
-    const { setPadActive, setPadVolume, isMidiLearnActive, isKeyLearnActive, activePadLearnId, setActiveLearnPad } = useSoundStore();
+    const { setPadVolume, isMidiLearnActive, isKeyLearnActive, activePadLearnId, setActiveLearnPad } = useSoundStore();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     // UI state
     const [progress, setProgress] = useState(0);
 
     // Auto-load audio buffer when file path is set
-    React.useEffect(() => {
+    useEffect(() => {
         if (filePath) {
             soundEngine.loadAudio(id, filePath);
         }
     }, [id, filePath]);
+
+    // React to isActive changes (even from MIDI/Keyboard) to show progress
+    useEffect(() => {
+        let interval: ReturnType<typeof setInterval> | null = null;
+        if (isActive) {
+            let p = 0;
+            interval = setInterval(() => {
+                p += 2;
+                if (p > 100) p = 100;
+                setProgress(p);
+            }, 100);
+        }
+
+        return () => {
+            if (interval) clearInterval(interval);
+            // Reset progress on cleanup (when isActive becomes false)
+            setProgress(0);
+        };
+    }, [isActive]);
 
     const isLearningThis = activePadLearnId === id && (isMidiLearnActive || isKeyLearnActive);
 
     const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newVolume = parseFloat(e.target.value);
         setPadVolume(id, newVolume);
-
-        // Update engine live if it's currently active
-        // soundEngine.setVolume(pad.id, newVolume); - engine handles master, we need individual
-        // Wait, SoundEngine does has a setVolume(padId, volume).
         soundEngine.setVolume(id, newVolume);
     };
 
-    const togglePlayback = () => {
+    const togglePlayback = (e: React.MouseEvent) => {
+        e.stopPropagation();
         if (isMidiLearnActive || isKeyLearnActive) {
             setActiveLearnPad(id);
             return;
         }
 
-        if (!filePath) return;
-
-        if (isActive) {
-            // Stop
-            setPadActive(id, false);
-            soundEngine.stop(id);
-            setProgress(0);
-        } else {
-            // Play
-            setPadActive(id, true);
-
-            // Dummy progress bar for now until we hook up actual AudioBuffer durations
-            let p = 0;
-            const interval = setInterval(() => {
-                p += 2;
-                if (p > 100) p = 100;
-                setProgress(p);
-            }, 100);
-
-            soundEngine.play(id, volume, () => {
-                setPadActive(id, false);
-                setProgress(0);
-                clearInterval(interval);
-            });
+        if (!filePath) {
+            onAssignMedia(id);
+            return;
         }
+
+        soundController.togglePad(id, onAssignMedia);
     };
 
     if (!filePath && !isLearningThis) {
         return (
             <div
-                className={`relative h-44 bg-slate-900/40 border border-dashed border-slate-800 rounded-xl flex items-center justify-center p-4 hover:border-slate-600 transition-all cursor-pointer ${isLearningThis ? `border-[${color}] shadow-[0_0_15px_${color}]` : ''}`}
+                className="relative h-44 bg-obsidian-light/20 border-2 border-dashed border-white/5 rounded-2xl flex flex-col items-center justify-center p-4 hover:border-white/20 hover:bg-white/5 transition-all cursor-pointer group shadow-lg"
                 onClick={togglePlayback}
             >
-                <span className="material-symbols-outlined text-slate-700 text-3xl">add</span>
+                <div className="size-12 rounded-full bg-white/5 flex items-center justify-center text-slate-500 group-hover:text-white group-hover:scale-110 transition-all border border-white/5 group-hover:bg-gm-violet/40">
+                    <Plus size={24} />
+                </div>
+                <span className="mt-4 text-[9px] font-black text-slate-600 uppercase tracking-[0.2em] group-hover:text-slate-400">Empty Pad</span>
             </div>
         );
     }
@@ -82,57 +87,115 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad }) => {
     return (
         <div
             onClick={togglePlayback}
-            className={`relative h-44 bg-slate-800/40 border-2 rounded-xl flex flex-col justify-between p-4 group cursor-pointer transition-all ${isActive ? 'shadow-[0_0_20px_rgba(139,92,246,0.2)]' : 'hover:border-slate-500'}`}
-            style={{ borderColor: isActive || isLearningThis ? color : 'transparent' }}
+            className={`relative h-44 bg-obsidian-dark/40 backdrop-blur-md border-2 rounded-2xl flex flex-col justify-between p-5 group cursor-pointer transition-all duration-300 shadow-xl overflow-hidden ${isActive ? 'shadow-[0_0_30px_rgba(139,92,246,0.3)]' : 'hover:border-white/20 hover:bg-white/5'}`}
+            style={{ 
+                borderColor: isActive ? color : isLearningThis ? 'var(--gm-violet)' : 'rgba(255,255,255,0.05)',
+                backgroundColor: isActive ? `${color}15` : undefined
+            }}
         >
-            <div className="flex justify-between items-start pointer-events-none">
-                <span className="font-mono text-[10px] font-bold bg-slate-900 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700" style={{ color: keyMapping ? color : undefined, borderColor: keyMapping ? `${color}40` : undefined }}>
-                    {keyLabel || '-'}
-                </span>
+            {/* Header: Key & MIDI */}
+            <div className="flex justify-between items-start pointer-events-none z-10">
+                <div 
+                    className={`px-2 py-1 rounded-lg border text-[9px] font-black tracking-tighter shadow-sm transition-colors ${keyMapping ? 'bg-gm-violet text-white border-white/20' : 'bg-black/40 text-slate-500 border-white/5'}`}
+                >
+                    {keyLabel || <Keyboard size={10} />}
+                </div>
 
-                <div className="flex space-x-1">
+                <div className="flex items-center gap-1.5 bg-black/40 px-2 py-1 rounded-lg border border-white/5">
                     {linkedLightSceneId && (
-                        <span className="material-symbols-outlined text-sm" style={{ color: color }}>lightbulb</span>
+                        <div className="flex items-center gap-1 text-gm-cyan animate-pulse">
+                            <Lightbulb size={10} fill="currentColor" className="drop-shadow-glow-cyan" />
+                            <span className="text-[7px] font-black uppercase tracking-widest hidden group-hover:block">Light Linked</span>
+                        </div>
                     )}
-                    {midiMapping && (
-                        <span className="font-mono text-[8px] text-amber-500 ml-1">M:{midiMapping}</span>
+                    {midiMapping ? (
+                        <span className="text-[9px] font-black text-amber-500">#{midiMapping}</span>
+                    ) : (
+                        <Zap size={10} className="text-slate-600" />
                     )}
+                </div>
+
+                {/* More Menu Trigger */}
+                <div 
+                    onClick={(e) => { e.stopPropagation(); setIsMenuOpen(true); }}
+                    className="absolute top-2 right-2 size-8 flex items-center justify-center text-slate-500 hover:text-white hover:bg-white/10 rounded-full transition-all pointer-events-auto opacity-0 group-hover:opacity-100 z-30"
+                >
+                    <MoreHorizontal size={16} />
                 </div>
             </div>
 
-            <div className="text-center pb-2 pointer-events-none">
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider">{title || 'Unnamed Pad'}</h3>
-                <p className="text-[10px] text-slate-400 mt-1 truncate">{shortName}</p>
+            {/* Content: Title & File */}
+            <div className="text-center pointer-events-none z-10">
+                <h3 className={`text-[11px] font-black uppercase tracking-widest transition-colors ${isActive ? 'text-white' : 'text-slate-200'}`}>
+                    {title || 'Unnamed Sound'}
+                </h3>
+                <p className="text-[9px] font-bold text-slate-500 mt-1.5 truncate max-w-[120px] mx-auto opacity-40 italic">
+                    {shortName}
+                </p>
             </div>
 
-            {/* Volume Slider - prevent click from triggering pad toggle */}
+            {/* Volume Slider - Floating with glassmorphism */}
             <div
-                className="absolute right-2 top-1/2 -translate-y-1/2 flex flex-col items-center opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col items-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-4 group-hover:translate-x-0 z-20"
                 onClick={e => e.stopPropagation()}
             >
-                <input
-                    className="vertical-slider"
-                    max="1.5"
-                    min="0"
-                    step="0.05"
-                    type="range"
-                    value={volume}
-                    onChange={handleVolumeChange}
-                    style={{ writingMode: 'vertical-lr', direction: 'rtl', width: '4px', height: '60px', WebkitAppearance: 'slider-vertical' }}
-                />
+                <div className="bg-black/60 backdrop-blur-md p-2 rounded-full border border-white/10 shadow-2xl flex flex-col items-center gap-2">
+                    <Volume2 size={10} className="text-slate-500" />
+                    <input
+                        className="vertical-slider appearance-none bg-white/10 h-20 w-1 rounded-full outline-none cursor-pointer"
+                        max="1.5"
+                        min="0"
+                        step="0.05"
+                        type="range"
+                        value={volume}
+                        onChange={handleVolumeChange}
+                        style={{ writingMode: 'vertical-lr', direction: 'rtl' }}
+                    />
+                </div>
             </div>
 
-            {/* Progress Bar */}
-            <div className="w-full bg-slate-700 h-1.5 rounded-full overflow-hidden pointer-events-none">
-                <div
-                    className="h-full transition-all duration-100"
-                    style={{
-                        width: isActive ? `${progress}%` : '0%',
-                        backgroundColor: color,
-                        boxShadow: isActive ? `0 0 10px ${color}` : 'none'
-                    }}
-                ></div>
+            {/* Progress Bar & Footer */}
+            <div className="space-y-2 z-10 pointer-events-none">
+                <div className="w-full bg-black/40 h-1.5 rounded-full border border-white/5 overflow-hidden">
+                    <div
+                        className="h-full transition-all duration-100 relative"
+                        style={{
+                            width: isActive ? `${progress}%` : '0%',
+                            backgroundColor: color,
+                            boxShadow: isActive ? `0 0 15px ${color}` : 'none'
+                        }}
+                    >
+                        <div className="absolute inset-0 bg-white/20 animate-pulse" />
+                    </div>
+                </div>
             </div>
+
+            {/* Background Glow when active */}
+            {isActive && (
+                <div 
+                    className="absolute inset-x-0 bottom-0 h-1/2 opacity-20 bg-gradient-to-t from-current to-transparent pointer-events-none"
+                    style={{ color: color }}
+                />
+            )}
+
+            {isMenuOpen && (
+                <div className="absolute inset-0 bg-obsidian-dark/98 z-50 flex flex-col items-center justify-center p-4 gap-2 rounded-2xl animate-in fade-in zoom-in-95 duration-200">
+                    <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); }} className="text-[9px] font-black text-slate-500 mb-2 hover:text-white uppercase tracking-[0.2em]">Retour</button>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            gmCustom('light-scene-select', { 
+                                type: 'sound', 
+                                padId: id 
+                            });
+                            setIsMenuOpen(false);
+                        }}
+                        className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all ${linkedLightSceneId ? 'bg-gm-cyan/20 border-gm-cyan text-gm-cyan' : 'bg-obsidian border-white/5 hover:bg-gm-cyan hover:border-gm-cyan'}`}
+                    >
+                        <Lightbulb size={12} /> {linkedLightSceneId ? 'LIÉ' : 'LIER LUMIÈRE'}
+                    </button>
+                </div>
+            )}
         </div>
     );
 };

@@ -1,10 +1,10 @@
 import React from 'react';
 import { useMapStore, type MapTool, type FogMode } from '../useMapStore';
 import { useCombatStore } from '../../combat/useCombatStore';
-import { gmAlert, gmConfirm } from '../../../stores/useModalStore';
+import { gmConfirm, gmCustom } from '../../../stores/useModalStore';
 import {
     Upload, EyeOff, Eye, Paintbrush, Square, Circle,
-    Save, Users, MousePointer2, PlusCircle, Trash2
+    Cast, Maximize, Users, MousePointer2, PlusCircle, Trash2
 } from 'lucide-react';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaStore } from '../../../stores/useMediaStore';
@@ -52,12 +52,21 @@ const ModeButton = ({ mode, fogMode, setFogMode, icon: Icon, label }: { mode: Fo
 const MapControls: React.FC = () => {
     const {
         mapUrl, setMap,
-        fogDataUrl, setFogDataUrl,
+        setFogDataUrl,
         currentTool, setTool,
         fogMode, setFogMode,
         brushSize, setBrushSize,
         addToken, tokens, clearTokens,
-        triggerFogCommand
+        triggerFogCommand,
+        resetView,
+
+        // Grid Settings
+        isGridEnabled, setGridEnabled,
+        gridSize, setGridSize,
+        gridOpacity, setGridOpacity,
+
+        // Projection Actions
+        projectionTarget, clearProjectedState
     } = useMapStore();
 
     const combatants = useCombatStore(state => state.combatants);
@@ -101,21 +110,6 @@ const MapControls: React.FC = () => {
         });
     };
 
-    const handleProjectMap = () => {
-        const win = window as unknown as { appBridge?: { sendMapUpdate?: (data: unknown) => void } };
-        if (win.appBridge && win.appBridge.sendMapUpdate) {
-            win.appBridge.sendMapUpdate({
-                mapUrl,
-                isVideo: mapUrl?.endsWith('mp4') || mapUrl?.endsWith('webm'),
-                fogDataUrl,
-                tokens
-            });
-            console.log("Map projectée via IPC.");
-        } else {
-            console.warn("L'objet window.appBridge.sendMapUpdate n'est pas disponible (Hors mode Desktop).");
-            gmAlert("Projection impossible: L'application bureau (Electron/Tauri) n'est pas détectée.");
-        }
-    };
 
     return (
         <aside className="w-80 bg-obsidian-dark border-l border-gray-800 flex flex-col h-full overflow-y-auto custom-scrollbar">
@@ -212,6 +206,58 @@ const MapControls: React.FC = () => {
 
                 <hr className="border-gray-800" />
 
+                {/* Grid Settings */}
+                <section>
+                    <div className="flex items-center justify-between mb-3 px-1">
+                        <h3 className="text-xs text-slate-400 uppercase tracking-wider font-bold">Grille Tactique</h3>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                            <input 
+                                type="checkbox" 
+                                className="sr-only peer" 
+                                checked={isGridEnabled} 
+                                onChange={(e) => setGridEnabled(e.target.checked)} 
+                            />
+                            <div className="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-gm-cyan"></div>
+                        </label>
+                    </div>
+
+                    {isGridEnabled && (
+                        <div className="flex flex-col gap-3 bg-obsidian-light/20 p-3 rounded border border-gray-800">
+                            <div>
+                                <div className="flex justify-between text-[10px] text-slate-400 mb-1">
+                                    <span>Taille des cases</span>
+                                    <span>{gridSize}px</span>
+                                </div>
+                                <input
+                                    type="range"
+                                    min="20"
+                                    max="150"
+                                    value={gridSize}
+                                    onChange={(e) => setGridSize(parseInt(e.target.value))}
+                                    className="w-full h-1 accent-gm-cyan bg-gray-700 rounded-lg cursor-pointer"
+                                />
+                            </div>
+                            <div>
+                                <div className="flex justify-between text-[10px] text-slate-400 mb-1">
+                                    <span>Opacité</span>
+                                    <span>{Math.round(gridOpacity * 100)}%</span>
+                                </div>
+                                <input
+                                    type="range"
+                                    min="0"
+                                    max="1"
+                                    step="0.1"
+                                    value={gridOpacity}
+                                    onChange={(e) => setGridOpacity(parseFloat(e.target.value))}
+                                    className="w-full h-1 accent-gm-cyan bg-gray-700 rounded-lg cursor-pointer"
+                                />
+                            </div>
+                        </div>
+                    )}
+                </section>
+
+                <hr className="border-gray-800" />
+
                 {/* Tokens Section */}
                 <section className="flex-1 flex flex-col min-h-[300px]">
                     <div className="flex justify-between items-center mb-3 px-1">
@@ -251,14 +297,47 @@ const MapControls: React.FC = () => {
                 </section>
 
                 {/* Projection Action */}
-                <section className="mt-auto">
-                    <button
-                        className="w-full py-3 bg-gm-cyan hover:bg-cyan-400 text-obsidian rounded font-bold shadow-glow-cyan flex items-center justify-center gap-2 transition-colors"
-                        onClick={handleProjectMap}
-                    >
-                        <Save size={18} />
-                        Projeter la Carte
-                    </button>
+                <section className="mt-auto pt-4 border-t border-gray-800 flex flex-col gap-3">
+                    {projectionTarget && (
+                        <div className="px-1 flex flex-col gap-2">
+                            <div className="w-full flex items-center justify-center gap-2 p-3 bg-gm-cyan/10 border border-gm-cyan/20 rounded-xl text-gm-cyan shadow-inner">
+                                <Cast size={16} className="animate-pulse" />
+                                <span className="text-[10px] font-black uppercase tracking-widest">Projection Active</span>
+                            </div>
+                            <button
+                                onClick={() => {
+                                    if (projectionTarget === 'monitor' && window.appBridge?.image?.closeAllDisplays) {
+                                        window.appBridge.image.closeAllDisplays();
+                                    }
+                                    clearProjectedState();
+                                }}
+                                className="w-full py-1 text-[10px] text-slate-500 hover:text-rose-400 transition-colors uppercase font-bold tracking-widest"
+                            >
+                                Arrêter la projection
+                            </button>
+                        </div>
+                    )}
+
+                    <div className="grid grid-cols-2 gap-2 px-1">
+                        <button
+                            onClick={() => gmCustom('map-projection-select')}
+                            className={`flex flex-col items-center justify-center gap-2 p-4 transition-all group shadow-lg rounded-xl border ${projectionTarget 
+                                ? 'bg-obsidian-light/50 border-gray-700 text-slate-400' 
+                                : 'bg-indigo-600/20 hover:bg-indigo-600/30 border-indigo-500/30 text-white'}`}
+                            title="Choisir la cible de projection"
+                        >
+                            <Cast className={projectionTarget ? 'text-slate-500' : 'text-indigo-400 group-hover:scale-110 transition-transform'} />
+                            <span className="text-[10px] font-bold uppercase tracking-tight">Projeter</span>
+                        </button>
+                        <button
+                            onClick={resetView}
+                            className="flex flex-col items-center justify-center gap-2 p-4 bg-slate-800/40 hover:bg-slate-800/60 border border-gray-700/50 rounded-xl transition-all group shadow-lg"
+                            title="Réinitialiser le zoom et la position"
+                        >
+                            <Maximize className="text-slate-400 group-hover:scale-110 transition-transform" />
+                            <span className="text-[10px] font-bold uppercase tracking-tight text-white/80">Recadrer</span>
+                        </button>
+                    </div>
                 </section>
 
             </div>

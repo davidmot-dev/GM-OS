@@ -2,7 +2,7 @@ import { create } from 'zustand';
 
 type ModalType = 'alert' | 'confirm' | 'prompt' | 'custom' | null;
 
-export type CustomModalVariant = 'player-add' | 'character-add' | 'campaign-add' | 'campaign-edit' | 'npc-detail';
+export type CustomModalVariant = 'player-add' | 'character-add' | 'campaign-add' | 'campaign-edit' | 'npc-detail' | 'favorite-dossier' | 'session-select' | 'session-notes' | 'session-summary' | 'light-scene-select' | 'map-projection-select' | 'whiteboard-projection-select';
 
 interface ModalState {
     type: ModalType;
@@ -10,7 +10,7 @@ interface ModalState {
     onConfirm?: () => void;
     onCancel?: () => void;
     onPromptConfirm?: (value: string) => void;
-    defaultValue?: any;
+    defaultValue?: unknown;
     confirmLabel?: string;
     cancelLabel?: string;
     customVariant?: CustomModalVariant;
@@ -19,7 +19,7 @@ interface ModalState {
     showAlert: (message: string, onConfirm?: () => void, confirmLabel?: string) => void;
     showConfirm: (message: string, onConfirm: () => void, onCancel?: () => void, confirmLabel?: string, cancelLabel?: string) => void;
     showPrompt: (message: string, defaultValue: string, onConfirm: (value: string) => void, confirmLabel?: string, cancelLabel?: string) => void;
-    showCustom: (variant: CustomModalVariant, data?: any) => void;
+    showCustom: (variant: CustomModalVariant, data?: unknown) => void;
     openMediaHub: () => void;
     closeMediaHub: () => void;
     closeModal: () => void;
@@ -91,7 +91,7 @@ export const gmPrompt = (message: string, defaultValue: string, onConfirm: (valu
     useModalStore.getState().showPrompt(message, defaultValue, onConfirm, confirmLabel, cancelLabel);
 };
 
-export const gmCustom = (variant: CustomModalVariant, data?: any) => {
+export const gmCustom = (variant: CustomModalVariant, data?: unknown) => {
     useModalStore.getState().showCustom(variant, data);
 };
 

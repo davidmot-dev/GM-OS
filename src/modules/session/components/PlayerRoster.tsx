@@ -6,7 +6,7 @@ import type { Player } from '../useSessionOSStore';
 import { Search, UserPlus } from 'lucide-react';
 
 const PlayerRoster: React.FC = () => {
-    const { players, selectedPlayerId, setSelectedPlayer } = useSessionOSStore();
+    const { players, selectedPlayerId, setSelectedPlayer, togglePlayerOnline } = useSessionOSStore();
     const [searchQuery, setSearchQuery] = useState('');
 
     const filtered = players.filter(p =>
@@ -41,6 +41,10 @@ const PlayerRoster: React.FC = () => {
                         player={player}
                         isSelected={selectedPlayerId === player.id}
                         onClick={() => setSelectedPlayer(player.id)}
+                        onToggleOnline={(e) => {
+                            e.stopPropagation();
+                            togglePlayerOnline(player.id);
+                        }}
                     />
                 ))}
                 {filtered.length === 0 && (
@@ -62,12 +66,17 @@ const PlayerRoster: React.FC = () => {
     );
 };
 
-const PlayerCard: React.FC<{ player: Player; isSelected: boolean; onClick: () => void }> = ({ player, isSelected, onClick }) => {
+const PlayerCard: React.FC<{ 
+    player: Player; 
+    isSelected: boolean; 
+    onClick: () => void;
+    onToggleOnline: (e: React.MouseEvent) => void;
+}> = ({ player, isSelected, onClick, onToggleOnline }) => {
     const resolvedAvatar = useMediaUrl(player.avatarUrl);
     return (
-        <button
+        <div
             onClick={onClick}
-            className={`w-full flex items-center gap-3 p-3 rounded-xl text-left transition-all ${isSelected
+            className={`w-full flex items-center gap-3 p-3 rounded-xl text-left transition-all cursor-pointer ${isSelected
                 ? 'bg-gm-gold/10 border border-gm-gold/30'
                 : 'hover:bg-slate-800/60 border border-transparent'
                 }`}
@@ -88,10 +97,18 @@ const PlayerCard: React.FC<{ player: Player; isSelected: boolean; onClick: () =>
                     {player.characters.length} personnage{player.characters.length > 1 ? 's' : ''}
                 </p>
             </div>
-            <span className={`text-[10px] font-bold uppercase tracking-wider ${player.isOnline ? 'text-emerald-400' : 'text-slate-600'}`}>
+            <button
+                onClick={onToggleOnline}
+                className={`flex-shrink-0 text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-md transition-all border z-10 ${
+                    player.isOnline 
+                    ? 'text-emerald-400 border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/20' 
+                    : 'text-slate-600 border-slate-700 bg-slate-800/50 hover:bg-slate-800 hover:text-slate-400'
+                }`}
+                title={player.isOnline ? "Passer Hors Ligne" : "Passer En Ligne"}
+            >
                 {player.isOnline ? 'En ligne' : 'Hors ligne'}
-            </span>
-        </button>
+            </button>
+        </div>
     );
 };
 

@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import type { Entity } from '../useSessionOSStore';
 import { useCombatStore } from '../../combat/useCombatStore';
-import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { gmToast } from '../../../stores/useToastStore';
 import { useImageStore } from '../../image/useImageStore';
 import { Search, UserPlus, Swords, FileText, Eye, Pin } from 'lucide-react';
+import { ResolvedImage } from '../../../components/ResolvedImage';
 
 const ROLE_COLORS = {
     ally: 'bg-emerald-500/80 text-white',
@@ -131,7 +131,6 @@ const NpcGalleryItem: React.FC<{
     onSelect: () => void,
     onTogglePin: () => void
 }> = ({ npc, isSelected, isPinned, onSelect, onTogglePin }) => {
-    const resolvedAvatar = useMediaUrl(npc.avatar);
     
     return (
         <div
@@ -140,8 +139,8 @@ const NpcGalleryItem: React.FC<{
                 }`}
         >
             {/* Portrait */}
-            <img
-                src={resolvedAvatar || undefined}
+            <ResolvedImage
+                src={npc.avatar}
                 alt={npc.name}
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
             />

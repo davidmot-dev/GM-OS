@@ -60,12 +60,15 @@ export interface GameSession {
     campaignId: string;
     number: number;
     date: string;
-    status: 'planned' | 'active' | 'completed';
+    status: 'planned' | 'active' | 'done';
     publicSummary: string;
     gmSecrets: string;
     checklist: SessionChecklistItem[];
     activeTrackId?: string; // e.g., Audio track or Encounters
     sessionEntityIds: string[]; // IDs of NPCs/monsters active in this session
+    externalLink?: string;
+    filePath?: string;
+    sessionNotes?: string;
 }
 
 export type AtlasEntityCategory = 'npc' | 'lieu' | 'objet' | 'evenement';
@@ -74,6 +77,7 @@ export interface AtlasLinkedEntity {
     id: string;
     name: string;
     category: AtlasEntityCategory;
+    favoriteId?: string;
 }
 
 export interface AtlasMap {
@@ -97,6 +101,7 @@ export interface Campaign {
     activeSessionId?: string;
     wallpaperUrl?: string; // for Projector
     activeLocationIds: string[]; // IDs of AtlasMap entities pinned to this campaign
+    notebookUrl?: string; // URL for NotebookLM integration
 }
 
 interface SessionOSState {
@@ -109,17 +114,19 @@ interface SessionOSState {
 
     // UI State
     activeCampaignId: string | null;
+    selectedSessionId: string | null;
     selectedPlayerId: string | null;
     selectedCharacterId: string | null;
     selectedAtlasMapId: string | null;
     selectedEntityId: string | null;
-    currentView: 'cockpit' | 'campaign-details' | 'npc-gallery' | 'world-atlas' | 'library' | 'players' | 'templates';
+    currentView: 'cockpit' | 'campaign-details' | 'npc-gallery' | 'world-atlas' | 'library' | 'players' | 'templates' | 'session-prep' | 'session-focus';
     diceRolls: { die: number, result: number, timestamp: number }[];
     isAddingEntity: boolean;
 
     // Actions
     setActiveCampaign: (id: string | null) => void;
     setCurrentView: (view: SessionOSState['currentView']) => void;
+    setSelectedSession: (id: string | null) => void;
     setSelectedPlayer: (id: string | null) => void;
     setSelectedCharacter: (id: string | null) => void;
     setIsAddingEntity: (isAdding: boolean) => void;
@@ -132,14 +139,20 @@ interface SessionOSState {
     addCampaign: (campaign: Omit<Campaign, 'id'>) => void;
     updateCampaign: (id: string, updates: Partial<Campaign>) => void;
     deleteCampaign: (id: string) => void;
-    addSession: (session: Omit<GameSession, 'id'>) => void;
+    addSession: (session: Omit<GameSession, 'id'>) => string;
+    updateSession: (id: string, updates: Partial<GameSession>) => void;
     updateSessionPublicSummary: (sessionId: string, summary: string) => void;
     updateSessionGmSecrets: (sessionId: string, secrets: string) => void;
+    updateSessionNotes: (sessionId: string, notes: string) => void;
     toggleChecklistItem: (sessionId: string, itemId: string) => void;
+    addChecklistItem: (sessionId: string, text: string) => void;
+    removeChecklistItem: (sessionId: string, itemId: string) => void;
+    updateChecklistItem: (sessionId: string, itemId: string, text: string) => void;
     addPlayer: (player: Omit<Player, 'id'>) => void;
     addCharacterToPlayer: (playerId: string, character: Omit<PlayerCharacter, 'id'>) => void;
     linkCharacterToCampaign: (playerId: string, characterId: string, campaignId: string | null) => void;
     updateCharacterHP: (playerId: string, characterId: string, hp: number) => void;
+    updateCharacter: (playerId: string, characterId: string, updates: Partial<PlayerCharacter>) => void;
     addAtlasMap: (map: Omit<AtlasMap, 'id'>) => void;
     updateAtlasMap: (id: string, updates: Partial<Omit<AtlasMap, 'id'>>) => void;
     deleteAtlasMap: (id: string) => void;
@@ -155,25 +168,28 @@ interface SessionOSState {
     addEntityToSession: (sessionId: string, entityId: string) => void;
     removeEntityFromSession: (sessionId: string, entityId: string) => void;
     clearSessionEntities: (sessionId: string) => void;
+    launchSession: (sessionId: string) => void;
 
     rollDice: (sides: number) => void;
     clearDiceRolls: () => void;
+    togglePlayerOnline: (playerId: string) => void;
 }
 
 const mockCampaigns: Campaign[] = [
     {
         id: 'c-1',
         name: 'The Eternal Quest',
-        system: 'D&D 5E',
+        system: 'generic',
         description: 'A dark fantasy adventure in the Underdark.',
         synopsis: 'The party is currently investigating the iron citadel.',
         activeSessionId: 's-1',
-        activeLocationIds: ['am-1', 'am-2']
+        activeLocationIds: ['am-1', 'am-2'],
+        notebookUrl: 'https://notebooklm.google.com/notebook/campaign-c1-override'
     },
     {
         id: 'c-2',
         name: 'Les Ombres d\'Eldoria',
-        system: 'Pathfinder 2E',
+        system: 'coc7',
         description: 'Un voyage épique dans les terres d\'Eldoria.',
         synopsis: 'Le groupe enquête sur la disparition du roi d\'Eldoria.',
         activeLocationIds: ['am-3']
@@ -375,6 +391,7 @@ export const useSessionOSStore = create<SessionOSState>()(
             atlasMaps: mockAtlasMaps,
             customSheetTemplates: [],
             activeCampaignId: 'c-1',
+            selectedSessionId: null,
             selectedPlayerId: 'p-1',
             selectedCharacterId: null,
             selectedAtlasMapId: 'am-1',
@@ -383,8 +400,15 @@ export const useSessionOSStore = create<SessionOSState>()(
             diceRolls: [],
             isAddingEntity: false,
 
-            setActiveCampaign: (id) => set({ activeCampaignId: id, currentView: 'cockpit' }),
+            setActiveCampaign: (id) => set({ 
+                activeCampaignId: id, 
+                currentView: 'cockpit',
+                selectedSessionId: null,
+                selectedAtlasMapId: null
+            }),
+
             setCurrentView: (view) => set({ currentView: view }),
+            setSelectedSession: (id) => set({ selectedSessionId: id }),
             setSelectedPlayer: (id) => set({ selectedPlayerId: id, selectedCharacterId: null }),
             setSelectedCharacter: (id) => set({ selectedCharacterId: id }),
             setSelectedAtlasMap: (id) => set({ selectedAtlasMapId: id }),
@@ -445,12 +469,24 @@ export const useSessionOSStore = create<SessionOSState>()(
                 activeCampaignId: state.activeCampaignId === id ? null : state.activeCampaignId
             })),
 
-            addSession: (sessionData) => set((state) => ({
-                sessions: [...state.sessions, { ...sessionData, id: crypto.randomUUID() }]
+            addSession: (sessionData) => {
+                const newId = crypto.randomUUID();
+                set((state) => ({
+                    sessions: [...state.sessions, { ...sessionData, id: newId }]
+                }));
+                return newId;
+            },
+
+            updateSession: (id, updates) => set((state) => ({
+                sessions: state.sessions.map(s => s.id === id ? { ...s, ...updates } : s)
             })),
 
             updateSessionPublicSummary: (sessionId, summary) => set((state) => ({
                 sessions: state.sessions.map(s => s.id === sessionId ? { ...s, publicSummary: summary } : s)
+            })),
+
+            updateSessionNotes: (sessionId: string, notes: string) => set((state) => ({
+                sessions: state.sessions.map(s => s.id === sessionId ? { ...s, sessionNotes: notes } : s)
             })),
 
             updateSessionGmSecrets: (sessionId, secrets) => set((state) => ({
@@ -467,6 +503,30 @@ export const useSessionOSStore = create<SessionOSState>()(
                     }
                     return s;
                 })
+            })),
+
+            addChecklistItem: (sessionId, text) => set((state) => ({
+                sessions: state.sessions.map(s => 
+                    s.id === sessionId 
+                        ? { ...s, checklist: [...s.checklist, { id: crypto.randomUUID(), text, isCompleted: false }] } 
+                        : s
+                )
+            })),
+
+            removeChecklistItem: (sessionId, itemId) => set((state) => ({
+                sessions: state.sessions.map(s => 
+                    s.id === sessionId 
+                        ? { ...s, checklist: s.checklist.filter(item => item.id !== itemId) } 
+                        : s
+                )
+            })),
+
+            updateChecklistItem: (sessionId, itemId, text) => set((state) => ({
+                sessions: state.sessions.map(s => 
+                    s.id === sessionId 
+                        ? { ...s, checklist: s.checklist.map(item => item.id === itemId ? { ...item, text } : item) } 
+                        : s
+                )
             })),
 
             rollDice: (sides) => set((state) => {
@@ -500,6 +560,14 @@ export const useSessionOSStore = create<SessionOSState>()(
                 players: state.players.map(p =>
                     p.id === playerId
                         ? { ...p, characters: p.characters.map(c => c.id === characterId ? { ...c, hp: Math.max(0, Math.min(c.maxHp, hp)) } : c) }
+                        : p
+                )
+            })),
+
+            updateCharacter: (playerId: string, characterId: string, updates) => set((state) => ({
+                players: state.players.map(p =>
+                    p.id === playerId
+                        ? { ...p, characters: p.characters.map(c => c.id === characterId ? { ...c, ...updates } : c) }
                         : p
                 )
             })),
@@ -567,22 +635,55 @@ export const useSessionOSStore = create<SessionOSState>()(
                 )
             })),
 
-            clearDiceRolls: () => set({ diceRolls: [] })
+            clearDiceRolls: () => set({ diceRolls: [] }),
+
+            togglePlayerOnline: (playerId) => set((state) => ({
+                players: state.players.map(p =>
+                    p.id === playerId ? { ...p, isOnline: !p.isOnline } : p
+                )
+            })),
+
+            launchSession: (sessionId) => set((state) => {
+                const session = state.sessions.find(s => s.id === sessionId);
+                if (!session) return state;
+
+                return {
+                    sessions: state.sessions.map(s => {
+                        if (s.campaignId === session.campaignId) {
+                            return { ...s, status: s.id === sessionId ? 'active' : (s.status === 'active' ? 'done' : s.status) };
+                        }
+                        return s;
+                    }),
+                    campaigns: state.campaigns.map(c => 
+                        c.id === session.campaignId ? { ...c, activeSessionId: sessionId } : c
+                    ),
+                    selectedSessionId: sessionId,
+                    currentView: 'cockpit'
+                };
+            })
 
         }),
         {
             name: 'gmos-session-os-storage',
+            onRehydrateStorage: () => (state) => {
+                if (state) {
+                    // Sanitize stale blob URLs from persistent storage
+                    (state.atlasMaps || []).forEach(m => {
+                        if (m.fileUrl?.startsWith('blob:')) m.fileUrl = '';
+                    });
+                    (state.campaigns || []).forEach(c => {
+                        if (c.wallpaperUrl?.startsWith('blob:')) c.wallpaperUrl = '';
+                    });
+                }
+            },
             partialize: (state) => ({
-                // Persist everything except heavy binary data
-                campaigns: state.campaigns,
-                sessions: state.sessions,
-                entities: state.entities,
-                players: state.players,
-                atlasMaps: state.atlasMaps,
                 activeCampaignId: state.activeCampaignId,
-                selectedPlayerId: state.selectedPlayerId,
-                selectedCharacterId: state.selectedCharacterId,
-                selectedAtlasMapId: state.selectedAtlasMapId,
+                campaigns: state.campaigns,
+                atlasMaps: state.atlasMaps,
+                players: state.players,
+                entities: state.entities,
+                customSheetTemplates: state.customSheetTemplates,
+                sessions: state.sessions
             })
         }
     )

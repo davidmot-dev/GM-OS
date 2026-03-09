@@ -22,7 +22,9 @@ import ProjectorView from './modules/image/components/ProjectorView';
 import PlayerHub from './components/PlayerHub';
 import SoundDashboard from './modules/sound/SoundDashboard';
 import LightDashboard from './modules/light/LightDashboard';
+import WhiteboardDashboard from './modules/whiteboard/WhiteboardDashboard';
 import { FavoriteDashboard } from './modules/favorite/components/FavoriteDashboard';
+import DebugDashboard from './modules/debug/DebugDashboard';
 import { GlobalKeybinds } from './components/GlobalKeybinds';
 import { useModalStore } from './stores/useModalStore';
 import { MediaBrowser } from './components/MediaBrowser';
@@ -75,6 +77,10 @@ function App() {
         return <LightDashboard />;
       case 'favorite':
         return <FavoriteDashboard />;
+      case 'whiteboard':
+        return <WhiteboardDashboard />;
+      case 'debug':
+        return <DebugDashboard />;
 
       default:
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import type { SheetField } from '../../../data/defaultSheetTemplates';
-import { Save, CheckSquare, Square, FolderOpen, Layers, FileText, Trash2, Lock, BookOpen, Eye } from 'lucide-react';
+import { Save, CheckSquare, Square, FolderOpen, Layers, FileText, Trash2, Lock, BookOpen, Eye, Heart } from 'lucide-react';
 import { useImageStore } from '../../image/useImageStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
@@ -86,7 +86,8 @@ const FieldCheckbox: React.FC<{
 const CharacterSheetEditor: React.FC = () => {
     const {
         players, selectedPlayerId, selectedCharacterId,
-        customSheetTemplates, updateCharacterSheetData, updateCharacterVisuals, updateCharacterNarrative
+        customSheetTemplates, updateCharacterSheetData, updateCharacterVisuals, updateCharacterNarrative,
+        updateCharacterHP
     } = useSessionOSStore();
     const { mediaList, getMediaBlob } = useMediaStore();
 
@@ -298,15 +299,34 @@ const CharacterSheetEditor: React.FC = () => {
                         </div>
 
                         {/* HP quick control */}
-                        <div className="p-4 bg-slate-900/50 border border-white/5 rounded-xl space-y-2">
-                            <p className="text-[9px] font-black uppercase tracking-widest text-slate-500 text-center">Points de Vie</p>
-                            <div className="flex items-center justify-center gap-3">
-                                <span className="text-lg font-black font-mono text-white">{character.hp} <span className="text-slate-600">/ {character.maxHp}</span></span>
+                        <div className="p-4 bg-slate-900/60 border border-gm-gold/20 rounded-xl space-y-3 shadow-lg shadow-red-500/5">
+                            <div className="flex items-center justify-between">
+                                <span className="text-[9px] font-black uppercase tracking-[0.15em] text-gm-gold">Vigueur (PV)</span>
+                                <Heart size={12} className="text-red-500 animate-pulse" />
                             </div>
-                            <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                            
+                                <div className="flex items-center justify-center gap-1.5 bg-slate-950/40 py-1.5 rounded-lg border border-white/5">
+                                    <input 
+                                        type="number" 
+                                        value={character.hp}
+                                        onChange={(e) => updateCharacterHP(selectedPlayerId!, character.id, parseInt(e.target.value) || 0)}
+                                        className="w-14 bg-transparent text-center text-white font-black text-xs focus:outline-none"
+                                    />
+                                    <span className="text-slate-700 font-bold text-xs">/</span>
+                                    <input 
+                                        type="number" 
+                                        value={character.maxHp}
+                                        onChange={() => {
+                                            // Still no easy maxHp update exposed here without significant refactor
+                                        }}
+                                        className="w-14 bg-transparent text-center text-slate-400 font-black text-xs focus:outline-none"
+                                    />
+                                </div>
+                            
+                            <div className="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden border border-white/5 ring-1 ring-white/5 p-[1px]">
                                 <div
-                                    className={`h-full transition-all ${character.hp / character.maxHp > 0.6 ? 'bg-emerald-500' : character.hp / character.maxHp > 0.3 ? 'bg-amber-500' : 'bg-red-600'}`}
-                                    style={{ width: `${(character.hp / character.maxHp) * 100}%` }}
+                                    className={`h-full rounded-full transition-all duration-500 ${character.hp / character.maxHp > 0.6 ? 'bg-gradient-to-r from-emerald-600 to-emerald-400' : character.hp / character.maxHp > 0.3 ? 'bg-gradient-to-r from-amber-600 to-amber-400' : 'bg-gradient-to-r from-rose-700 to-rose-500'}`}
+                                    style={{ width: `${Math.max(0, Math.min(100, (character.hp / character.maxHp) * 100))}%` }}
                                 />
                             </div>
                         </div>

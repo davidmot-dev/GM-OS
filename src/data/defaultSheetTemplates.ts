@@ -22,6 +22,7 @@ export interface SheetTemplate {
     emoji: string;
     isBuiltin?: boolean; // Built-in templates cannot be deleted
     sections: SheetSection[];
+    defaultNotebookUrl?: string; // Default NotebookLM for this system
 }
 
 export const DEFAULT_SHEET_TEMPLATES: SheetTemplate[] = [
@@ -30,6 +31,7 @@ export const DEFAULT_SHEET_TEMPLATES: SheetTemplate[] = [
         name: 'Call of Cthulhu 7e',
         emoji: '🦑',
         isBuiltin: true,
+        defaultNotebookUrl: 'https://notebooklm.google.com/notebook/12345678-coc7-default',
         sections: [
             {
                 id: 'characteristics',
@@ -69,6 +71,7 @@ export const DEFAULT_SHEET_TEMPLATES: SheetTemplate[] = [
         name: 'Générique',
         emoji: '📋',
         isBuiltin: true,
+        defaultNotebookUrl: 'https://notebooklm.google.com/notebook/generic-default',
         sections: [
             {
                 id: 'stats',

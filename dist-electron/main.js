@@ -2465,6 +2465,15 @@ ipcMain.on("image:launch-display", (_event, paths, target) => {
     projWin.webContents.send("image:update-display", paths);
   }
 });
+ipcMain.on("image:close-all-displays", () => {
+  console.log("[Image OS] Close All Displays");
+  for (const [, projWin] of projectorWindows) {
+    if (!projWin.isDestroyed()) {
+      projWin.close();
+    }
+  }
+  projectorWindows.clear();
+});
 ipcMain.handle("npc:select-avatar", async () => {
   const { filePaths } = await dialog.showOpenDialog({
     title: "Sélectionner un Avatar",

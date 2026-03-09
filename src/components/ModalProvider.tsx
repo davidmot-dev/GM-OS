@@ -1,20 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { useModalStore } from '../stores/useModalStore';
-import { AlertCircle, HelpCircle, Edit3, UserPlus, ShieldPlus, BookOpen, Users } from 'lucide-react';
+import { AlertCircle, HelpCircle, Edit3, UserPlus, ShieldPlus, BookOpen, Users, Play, Cast } from 'lucide-react';
 import { AddPlayerForm } from '../modules/session/components/AddPlayerForm';
 import { AddCharacterForm } from '../modules/session/components/AddCharacterForm';
 import CampaignForm from '../modules/session/components/CampaignForm';
 import NpcDetail from '../modules/session/components/NpcDetail';
+import { FavoriteFullDossier } from '../modules/favorite/components/FavoriteFullDossier';
 import { useSessionOSStore } from '../modules/session/useSessionOSStore';
+import { SessionSelectModal } from '../modules/session/components/SessionSelectModal';
+import SessionNotesModal from '../modules/session/components/SessionNotesModal';
+import SessionSummaryModal from '../modules/session/components/SessionSummaryModal';
+import LightSceneSelector from '../modules/light/components/LightSceneSelector';
+import MapProjectionModal from '../modules/map/components/MapProjectionModal';
+import WhiteboardProjectionModal from '../modules/whiteboard/components/WhiteboardProjectionModal';
 
 const ModalProvider: React.FC = () => {
     const { type, message, onConfirm, onCancel, onPromptConfirm, defaultValue, confirmLabel, cancelLabel, customVariant, closeModal } = useModalStore();
-    const [promptValue, setPromptValue] = useState(defaultValue || '');
+    const [promptValue, setPromptValue] = useState((defaultValue as string) || '');
 
     // Synchronize promptValue when defaultValue changes (crucial for multiple prompts)
     useEffect(() => {
         if (type === 'prompt') {
-            setPromptValue(defaultValue || '');
+            setPromptValue((defaultValue as string) || '');
         }
     }, [defaultValue, type]);
 
@@ -43,6 +50,13 @@ const ModalProvider: React.FC = () => {
                 if (customVariant === 'character-add') return <ShieldPlus className="text-gm-gold" size={24} />;
                 if (customVariant === 'campaign-add' || customVariant === 'campaign-edit') return <BookOpen className="text-gm-gold" size={24} />;
                 if (customVariant === 'npc-detail') return <Users className="text-gm-gold" size={24} />;
+                if (customVariant === 'favorite-dossier') return <ShieldPlus className="text-gm-cyan" size={24} />;
+                if (customVariant === 'session-select') return <Play className="text-gm-gold" size={24} fill="currentColor" />;
+                if (customVariant === 'session-notes') return <BookOpen className="text-gm-gold" size={24} />;
+                if (customVariant === 'session-summary') return <Edit3 className="text-gm-gold" size={24} />;
+                if (customVariant === 'light-scene-select') return null;
+                if (customVariant === 'map-projection-select') return <Cast className="text-indigo-400" size={24} />;
+                if (customVariant === 'whiteboard-projection-select') return <Cast className="text-indigo-400" size={24} />;
                 return <HelpCircle className="text-gm-cyan" size={24} />;
             default: return <HelpCircle className="text-gm-cyan" size={24} />;
         }
@@ -58,6 +72,12 @@ const ModalProvider: React.FC = () => {
                 if (customVariant === 'campaign-add') return 'Nouvelle Campagne';
                 if (customVariant === 'campaign-edit') return 'Éditer la Campagne';
                 if (customVariant === 'npc-detail') return 'Détails du PNJ';
+                if (customVariant === 'favorite-dossier') return 'Dossier Entité';
+                if (customVariant === 'session-select') return 'Lancer une Session';
+                if (customVariant === 'session-notes') return 'Notes de Session';
+                if (customVariant === 'session-summary') return 'Résumé de Session';
+                if (customVariant === 'map-projection-select') return 'Projection de Carte';
+                if (customVariant === 'whiteboard-projection-select') return 'Projection du Whiteboard';
                 return 'Options';
             default: return 'Confirmation';
         }
@@ -74,22 +94,27 @@ const ModalProvider: React.FC = () => {
     return (
         <div className="fixed inset-0 z-[9999] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
             <div className={`bg-slate-950 border border-slate-800 rounded-2xl shadow-2xl ${
-                customVariant === 'npc-detail' || customVariant === 'campaign-edit' || customVariant === 'campaign-add' 
+                customVariant === 'favorite-dossier'
+                ? 'max-w-7xl'
+                : (customVariant === 'npc-detail' || customVariant === 'campaign-edit' || customVariant === 'campaign-add' || customVariant === 'session-notes' || customVariant === 'session-summary')
                 ? 'max-w-5xl' 
+                : customVariant === 'light-scene-select'
+                ? 'max-w-fit !bg-transparent !border-none !shadow-none'
                 : type === 'custom' 
                 ? 'max-w-md' 
                 : 'max-w-sm'
             } w-full outline-none focus:outline-none overflow-hidden animate-in fade-in zoom-in-95 duration-200`}>
-                {/* Header */}
-                <div className="flex items-center gap-3 px-4 py-3 bg-obsidian-light/50 border-b border-gray-800">
-                    {getIcon()}
-                    <h3 className="text-lg font-bold font-display text-slate-200 uppercase tracking-tighter">
-                        {getTitle()}
-                    </h3>
-                </div>
+                {customVariant !== 'light-scene-select' && (
+                    <div className="flex items-center gap-3 px-4 py-3 bg-obsidian-light/50 border-b border-gray-800">
+                        {getIcon()}
+                        <h3 className="text-lg font-bold font-display text-slate-200 uppercase tracking-tighter">
+                            {getTitle()}
+                        </h3>
+                    </div>
+                )}
 
                 {/* Body */}
-                <div className="p-6 text-slate-300">
+                <div className={customVariant === 'light-scene-select' ? '' : 'p-6 text-slate-300'}>
                     {message && <p className="text-sm mb-4 leading-relaxed">{message}</p>}
                     {type === 'prompt' && (
                         <input
@@ -115,6 +140,27 @@ const ModalProvider: React.FC = () => {
                             <NpcDetail embeddedId={(defaultValue as { entityId: string })?.entityId} />
                         </div>
                     )}
+                    {type === 'custom' && customVariant === 'favorite-dossier' && (
+                        <div className="max-h-[85vh] overflow-y-auto custom-scrollbar -m-6">
+                            <FavoriteFullDossier />
+                        </div>
+                    )}
+                    {type === 'custom' && customVariant === 'session-select' && <SessionSelectModal />}
+                    {type === 'custom' && customVariant === 'session-notes' && (
+                        <div className="max-h-[85vh] overflow-y-auto custom-scrollbar -m-6">
+                            <SessionNotesModal />
+                        </div>
+                    )}
+                    {type === 'custom' && customVariant === 'session-summary' && (
+                        <div className="max-h-[85vh] overflow-y-auto custom-scrollbar -m-6">
+                            <SessionSummaryModal />
+                        </div>
+                    )}
+                    {type === 'custom' && customVariant === 'light-scene-select' && (
+                        <LightSceneSelector data={defaultValue as { type: 'music' | 'sound'; playlistId?: string; padIndex?: number; padId?: string; }} />
+                    )}
+                    {type === 'custom' && customVariant === 'map-projection-select' && <MapProjectionModal />}
+                    {type === 'custom' && customVariant === 'whiteboard-projection-select' && <WhiteboardProjectionModal />}
                 </div>
 
                 {/* Footer (only for standard modals) */}

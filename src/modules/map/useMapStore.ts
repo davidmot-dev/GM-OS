@@ -23,6 +23,22 @@ interface MapState {
     tokens: MapToken[];
     fogCommand: 'reveal_all' | 'hide_all' | null;
 
+    // Map Dimensions
+    mapWidth: number;
+    mapHeight: number;
+
+    // Grid State
+    isGridEnabled: boolean;
+    gridSize: number;
+    gridColor: string;
+    gridOpacity: number;
+
+    // View State (Zoom/Pan)
+    zoom: number;
+    panX: number;
+    panY: number;
+    viewResetCounter: number;
+
     // UI State (Not persisted)
     currentTool: MapTool;
     fogMode: FogMode;
@@ -33,6 +49,7 @@ interface MapState {
     setFogDataUrl: (dataUrl: string | null) => void;
     addToken: (token: Omit<MapToken, 'id'>) => void;
     updateToken: (id: string, updates: Partial<MapToken>) => void;
+    updateProjectedToken: (id: string, updates: Partial<MapToken>) => void;
     removeToken: (id: string) => void;
     clearTokens: () => void;
     triggerFogCommand: (command: 'reveal_all' | 'hide_all' | null) => void;
@@ -40,11 +57,38 @@ interface MapState {
     setTool: (tool: MapTool) => void;
     setFogMode: (mode: FogMode) => void;
     setBrushSize: (size: number) => void;
+
+    // Grid Actions
+    setGridEnabled: (enabled: boolean) => void;
+    setGridSize: (size: number) => void;
+    setGridColor: (color: string) => void;
+    setGridOpacity: (opacity: number) => void;
+
+    // View Actions
+    setViewState: (zoom: number, panX: number, panY: number) => void;
+    setMapDimensions: (width: number, height: number) => void;
+    resetView: () => void;
+    
+    projectedMapUrl: string | null;
+    projectedIsVideo: boolean;
+    projectedFogDataUrl: string | null;
+    projectedTokens: MapToken[];
+    projectedMapWidth: number;
+    projectedMapHeight: number;
+    projectedIsGridEnabled: boolean;
+    projectedGridSize: number;
+    projectedGridColor: string;
+    projectedGridOpacity: number;
+
+    // Projection Action
+    projectionTarget: 'hub' | 'monitor' | null;
+    syncToPlayers: () => void;
+    clearProjectedState: () => void;
 }
 
 export const useMapStore = create<MapState>()(
     persist(
-        (set) => ({
+        (set, get) => ({
             mapUrl: null,
             mapName: null,
             isVideo: false,
@@ -57,28 +101,143 @@ export const useMapStore = create<MapState>()(
             brushSize: 50,
             fogCommand: null,
 
-            setMap: (mapUrl, isVideo = false, mapName = 'Sans titre') => set({ mapUrl, isVideo, mapName }),
-            setFogDataUrl: (fogDataUrl) => set({ fogDataUrl }),
+            // Map Dimensions Defaults
+            mapWidth: 2000,
+            mapHeight: 2000,
 
-            addToken: (token) => set(state => ({
-                tokens: [...state.tokens, { ...token, id: Math.random().toString(36).substring(2, 9) }]
-            })),
+            // Grid Defaults
+            isGridEnabled: false,
+            gridSize: 50,
+            gridColor: '#ffffff',
+            gridOpacity: 0.2,
 
-            updateToken: (id, updates) => set(state => ({
+            // View Defaults
+            zoom: 1,
+            panX: 0,
+            panY: 0,
+            viewResetCounter: 0,
+
+            // Projected Defaults
+            projectedMapUrl: null,
+            projectedIsVideo: false,
+            projectedFogDataUrl: null,
+            projectedTokens: [],
+            projectedMapWidth: 2000,
+            projectedMapHeight: 2000,
+            projectedIsGridEnabled: false,
+            projectedGridSize: 50,
+            projectedGridColor: '#ffffff',
+            projectedGridOpacity: 0.2,
+
+            setMap: (mapUrl, isVideo = false, mapName = 'Sans titre') => {
+                set({ mapUrl, isVideo, mapName });
+                if (get().projectionTarget) get().syncToPlayers();
+            },
+            setFogDataUrl: (fogDataUrl) => {
+                set({ fogDataUrl });
+                if (get().projectionTarget) get().syncToPlayers();
+            },
+
+            addToken: (token) => {
+                const id = Math.random().toString(36).substring(2, 9);
+                set(state => ({
+                    tokens: [...state.tokens, { ...token, id }]
+                }));
+                if (get().projectionTarget) get().syncToPlayers();
+            },
+
+            updateToken: (id, updates) => {
+                set(state => ({
+                    tokens: state.tokens.map(t => t.id === id ? { ...t, ...updates } : t)
+                }));
+                if (get().projectionTarget) get().syncToPlayers();
+            },
+
+            updateProjectedToken: (id, updates) => set(state => ({
+                // Update player Hub/Monitor state
+                projectedTokens: state.projectedTokens.map(t => t.id === id ? { ...t, ...updates } : t),
+                // Replicate to GM main state so it's not lost on next Sync
                 tokens: state.tokens.map(t => t.id === id ? { ...t, ...updates } : t)
             })),
 
-            removeToken: (id) => set(state => ({
-                tokens: state.tokens.filter(t => t.id !== id)
-            })),
+            removeToken: (id) => {
+                set(state => ({
+                    tokens: state.tokens.filter(t => t.id !== id)
+                }));
+                if (get().projectionTarget) get().syncToPlayers();
+            },
 
-            clearTokens: () => set({ tokens: [] }),
+            clearTokens: () => {
+                set({ tokens: [] });
+                if (get().projectionTarget) get().syncToPlayers();
+            },
 
-            triggerFogCommand: (fogCommand) => set({ fogCommand }),
+            triggerFogCommand: (fogCommand) => {
+                set({ fogCommand });
+                if (get().projectionTarget) get().syncToPlayers();
+            },
+
+            projectionTarget: null,
 
             setTool: (currentTool) => set({ currentTool }),
             setFogMode: (fogMode) => set({ fogMode }),
-            setBrushSize: (brushSize) => set({ brushSize })
+            setBrushSize: (brushSize) => set({ brushSize }),
+
+            setGridEnabled: (isGridEnabled) => {
+                set({ isGridEnabled });
+                if (get().projectionTarget) get().syncToPlayers();
+            },
+            setGridSize: (gridSize) => {
+                set({ gridSize });
+                if (get().projectionTarget) get().syncToPlayers();
+            },
+            setGridColor: (gridColor) => {
+                set({ gridColor });
+                if (get().projectionTarget) get().syncToPlayers();
+            },
+            setGridOpacity: (gridOpacity) => {
+                set({ gridOpacity });
+                if (get().projectionTarget) get().syncToPlayers();
+            },
+
+            setViewState: (zoom, panX, panY) => set({ zoom, panX, panY }),
+            setMapDimensions: (mapWidth, mapHeight) => set({ mapWidth, mapHeight }),
+            resetView: () => {
+                set(state => ({ viewResetCounter: state.viewResetCounter + 1 }));
+            },
+
+            syncToPlayers: () => {
+                // Clone current GM state to projected state
+                set(state => ({
+                    projectionTarget: state.projectionTarget || 'hub',
+                    projectedMapUrl: state.mapUrl,
+                    projectedIsVideo: state.isVideo,
+                    projectedFogDataUrl: state.fogDataUrl,
+                    projectedTokens: [...state.tokens],
+                    projectedMapWidth: state.mapWidth,
+                    projectedMapHeight: state.mapHeight,
+                    projectedIsGridEnabled: state.isGridEnabled,
+                    projectedGridSize: state.gridSize,
+                    projectedGridColor: state.gridColor,
+                    projectedGridOpacity: state.gridOpacity,
+                }));
+            },
+
+            clearProjectedState: () => {
+                set({
+                    projectionTarget: null,
+                    projectedMapUrl: null,
+                    projectedIsVideo: false,
+                    projectedFogDataUrl: null,
+                    projectedTokens: [],
+                    projectedMapWidth: 2000,
+                    projectedMapHeight: 2000,
+                    projectedIsGridEnabled: false,
+                    projectedGridSize: 50,
+                    projectedGridColor: '#ffffff',
+                    projectedGridOpacity: 0.2,
+                });
+            }
         }),
         {
             name: 'gmos-map-storage',
@@ -87,8 +246,28 @@ export const useMapStore = create<MapState>()(
                 mapName: state.mapName,
                 isVideo: state.isVideo,
                 fogDataUrl: state.fogDataUrl,
-                tokens: state.tokens
-            }) // On ne sauvegarde pas le currentTool et fogMode
+                tokens: state.tokens,
+                mapWidth: state.mapWidth,
+                mapHeight: state.mapHeight,
+                isGridEnabled: state.isGridEnabled,
+                gridSize: state.gridSize,
+                gridColor: state.gridColor,
+                gridOpacity: state.gridOpacity,
+                zoom: state.zoom,
+                panX: state.panX,
+                panY: state.panY,
+                projectionTarget: state.projectionTarget,
+                projectedMapUrl: state.projectedMapUrl,
+                projectedIsVideo: state.projectedIsVideo,
+                projectedFogDataUrl: state.projectedFogDataUrl,
+                projectedTokens: state.projectedTokens,
+                projectedMapWidth: state.projectedMapWidth,
+                projectedMapHeight: state.projectedMapHeight,
+                projectedIsGridEnabled: state.projectedIsGridEnabled,
+                projectedGridSize: state.projectedGridSize,
+                projectedGridColor: state.projectedGridColor,
+                projectedGridOpacity: state.projectedGridOpacity
+            })
         }
     )
 );

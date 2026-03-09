@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useFavoriteStore, type FavoriteEntity } from '../useFavoriteStore';
 import { useCombatStore } from '../../combat/useCombatStore';
 import { useMapStore } from '../../map/useMapStore';
+import { useModalStore } from '../../../stores/useModalStore';
 import {
     Save, Plus, Trash2, ArrowLeft,
     Image as ImageIcon, FolderOpen,
@@ -14,6 +15,7 @@ import { gmToast } from '../../../stores/useToastStore';
 
 export const FavoriteFullDossier: React.FC = () => {
     const { favorites, selectedFavoriteId, updateFavorite, setViewMode } = useFavoriteStore();
+    const { closeModal, type: modalType } = useModalStore();
     const { addCombatant } = useCombatStore();
     const { addToken } = useMapStore();
 
@@ -71,7 +73,13 @@ export const FavoriteFullDossier: React.FC = () => {
             <header className="flex items-center justify-between px-8 py-4 border-b border-white/5 bg-slate-900/40 backdrop-blur-md sticky top-0 z-50">
                 <div className="flex items-center gap-6">
                     <button
-                        onClick={() => setViewMode('grid')}
+                        onClick={() => {
+                            if (modalType) {
+                                closeModal();
+                            } else {
+                                setViewMode('grid');
+                            }
+                        }}
                         className="group flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 hover:border-gm-cyan/50 hover:bg-gm-cyan/10 transition-all"
                     >
                         <ArrowLeft size={16} className="text-slate-500 group-hover:text-gm-cyan" />

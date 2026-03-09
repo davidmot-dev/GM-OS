@@ -13,8 +13,15 @@ export interface SoundPad {
     linkedLightSceneId: string | null;
 }
 
-interface SoundState {
+export interface Atmosphere {
+    id: string;
+    name: string;
     pads: Record<string, SoundPad>;
+}
+
+interface SoundState {
+    atmospheres: Atmosphere[];
+    activeAtmosphereId: string;
     masterVolume: number; // 0.0 to 1.0
     outputDeviceId: string | 'default';
 
@@ -24,14 +31,19 @@ interface SoundState {
     activePadLearnId: string | null;
 
     // Actions
-    setPadFile: (id: string, filePath: string, title: string) => void;
-    setPadVolume: (id: string, volume: number) => void;
-    setPadColor: (id: string, color: string) => void;
-    setPadActive: (id: string, isActive: boolean) => void;
-    setPadMidiMapping: (id: string, midiNote: number | null) => void;
-    setPadKeyMapping: (id: string, keyCode: string | null) => void;
-    setPadLightLink: (id: string, sceneId: string | null) => void;
-    clearPad: (id: string) => void;
+    addAtmosphere: (name: string) => void;
+    removeAtmosphere: (id: string) => void;
+    setActiveAtmosphereId: (id: string) => void;
+    renameAtmosphere: (id: string, name: string) => void;
+
+    setPadFile: (padId: string, filePath: string, title: string) => void;
+    setPadVolume: (padId: string, volume: number) => void;
+    setPadColor: (padId: string, color: string) => void;
+    setPadActive: (padId: string, isActive: boolean) => void;
+    setPadMidiMapping: (padId: string, midiNote: number | null) => void;
+    setPadKeyMapping: (padId: string, keyCode: string | null) => void;
+    setPadLightLink: (padId: string, sceneId: string | null) => void;
+    clearPad: (padId: string) => void;
 
     setMasterVolume: (volume: number) => void;
     setOutputDevice: (deviceId: string) => void;
@@ -40,10 +52,13 @@ interface SoundState {
     toggleKeyLearn: () => void;
     setActiveLearnPad: (id: string | null) => void;
 
+    isMidiConnected: boolean;
+    setMidiConnected: (connected: boolean) => void;
+
     stopAllPads: () => void;
 }
 
-const initializePads = (): Record<string, SoundPad> => {
+const createEmptyPads = (): Record<string, SoundPad> => {
     const pads: Record<string, SoundPad> = {};
     for (let i = 1; i <= 16; i++) {
         const id = `PAD_${i.toString().padStart(2, '0')}`;
@@ -52,7 +67,7 @@ const initializePads = (): Record<string, SoundPad> => {
             title: '',
             filePath: null,
             volume: 1.0,
-            color: 'var(--electric-violet)', // Default color from Stitch
+            color: 'var(--electric-violet)',
             midiMapping: null,
             keyMapping: null,
             isActive: false,
@@ -65,7 +80,10 @@ const initializePads = (): Record<string, SoundPad> => {
 export const useSoundStore = create<SoundState>()(
     persist(
         (set) => ({
-            pads: initializePads(),
+            atmospheres: [
+                { id: 'default', name: 'Exploration', pads: createEmptyPads() }
+            ],
+            activeAtmosphereId: 'default',
             masterVolume: 1.0,
             outputDeviceId: 'default',
 
@@ -73,66 +91,101 @@ export const useSoundStore = create<SoundState>()(
             isKeyLearnActive: false,
             activePadLearnId: null,
 
-            setPadFile: (id, filePath, title) => set((state) => ({
-                pads: {
-                    ...state.pads,
-                    [id]: { ...state.pads[id], filePath, title }
-                }
+            addAtmosphere: (name) => set((state) => ({
+                atmospheres: [
+                    ...state.atmospheres,
+                    { id: crypto.randomUUID(), name, pads: createEmptyPads() }
+                ]
             })),
 
-            setPadVolume: (id, volume) => set((state) => ({
-                pads: {
-                    ...state.pads,
-                    [id]: { ...state.pads[id], volume }
+            removeAtmosphere: (id) => set((state) => {
+                const newAtmos = state.atmospheres.filter(a => a.id !== id);
+                if (newAtmos.length === 0) {
+                    newAtmos.push({ id: 'default', name: 'Exploration', pads: createEmptyPads() });
                 }
+                return {
+                    atmospheres: newAtmos,
+                    activeAtmosphereId: state.activeAtmosphereId === id ? newAtmos[0].id : state.activeAtmosphereId
+                };
+            }),
+
+            setActiveAtmosphereId: (id) => set({ activeAtmosphereId: id }),
+
+            renameAtmosphere: (id, name) => set((state) => ({
+                atmospheres: state.atmospheres.map(a => a.id === id ? { ...a, name } : a)
             })),
 
-            setPadColor: (id, color) => set((state) => ({
-                pads: {
-                    ...state.pads,
-                    [id]: { ...state.pads[id], color }
-                }
+            setPadFile: (padId, filePath, title) => set((state) => ({
+                atmospheres: state.atmospheres.map(a =>
+                    a.id === state.activeAtmosphereId
+                        ? { ...a, pads: { ...a.pads, [padId]: { ...a.pads[padId], filePath, title } } }
+                        : a
+                )
             })),
 
-            setPadActive: (id, isActive) => set((state) => ({
-                pads: {
-                    ...state.pads,
-                    [id]: { ...state.pads[id], isActive }
-                }
+            setPadVolume: (padId, volume) => set((state) => ({
+                atmospheres: state.atmospheres.map(a =>
+                    a.id === state.activeAtmosphereId
+                        ? { ...a, pads: { ...a.pads, [padId]: { ...a.pads[padId], volume } } }
+                        : a
+                )
             })),
 
-            setPadMidiMapping: (id, midiNote) => set((state) => ({
-                pads: {
-                    ...state.pads,
-                    [id]: { ...state.pads[id], midiMapping: midiNote }
-                }
+            setPadColor: (padId, color) => set((state) => ({
+                atmospheres: state.atmospheres.map(a =>
+                    a.id === state.activeAtmosphereId
+                        ? { ...a, pads: { ...a.pads, [padId]: { ...a.pads[padId], color } } }
+                        : a
+                )
             })),
 
-            setPadKeyMapping: (id, keyCode) => set((state) => ({
-                pads: {
-                    ...state.pads,
-                    [id]: { ...state.pads[id], keyMapping: keyCode }
-                }
+            setPadActive: (padId, isActive) => set((state) => ({
+                atmospheres: state.atmospheres.map(a =>
+                    a.id === state.activeAtmosphereId
+                        ? { ...a, pads: { ...a.pads, [padId]: { ...a.pads[padId], isActive } } }
+                        : a
+                )
             })),
 
-            setPadLightLink: (id, sceneId) => set((state) => ({
-                pads: {
-                    ...state.pads,
-                    [id]: { ...state.pads[id], linkedLightSceneId: sceneId }
-                }
+            setPadMidiMapping: (padId, midiNote) => set((state) => ({
+                atmospheres: state.atmospheres.map(a =>
+                    a.id === state.activeAtmosphereId
+                        ? { ...a, pads: { ...a.pads, [padId]: { ...a.pads[padId], midiMapping: midiNote } } }
+                        : a
+                )
             })),
 
-            clearPad: (id) => set((state) => ({
-                pads: {
-                    ...state.pads,
-                    [id]: {
-                        ...state.pads[id],
-                        title: '',
-                        filePath: null,
-                        isActive: false
-                        // Intentionally keeping mappings and color to allow hot-swapping files into existing colored/mapped pads based on v3 analysis
-                    }
-                }
+            setPadKeyMapping: (padId, keyCode) => set((state) => ({
+                atmospheres: state.atmospheres.map(a =>
+                    a.id === state.activeAtmosphereId
+                        ? { ...a, pads: { ...a.pads, [padId]: { ...a.pads[padId], keyMapping: keyCode } } }
+                        : a
+                )
+            })),
+
+            setPadLightLink: (padId, sceneId) => set((state) => ({
+                atmospheres: state.atmospheres.map(a =>
+                    a.id === state.activeAtmosphereId
+                        ? { ...a, pads: { ...a.pads, [padId]: { ...a.pads[padId], linkedLightSceneId: sceneId } } }
+                        : a
+                )
+            })),
+
+            clearPad: (padId) => set((state) => ({
+                atmospheres: state.atmospheres.map(a =>
+                    a.id === state.activeAtmosphereId
+                        ? {
+                            ...a, pads: {
+                                ...a.pads, [padId]: {
+                                    ...a.pads[padId],
+                                    title: '',
+                                    filePath: null,
+                                    isActive: false
+                                }
+                            }
+                        }
+                        : a
+                )
             })),
 
             setMasterVolume: (masterVolume) => set({ masterVolume }),
@@ -142,18 +195,41 @@ export const useSoundStore = create<SoundState>()(
             toggleKeyLearn: () => set((state) => ({ isKeyLearnActive: !state.isKeyLearnActive, isMidiLearnActive: false })),
             setActiveLearnPad: (id) => set({ activePadLearnId: id }),
 
-            stopAllPads: () => set((state) => {
-                const newPads = { ...state.pads };
-                Object.keys(newPads).forEach(key => {
-                    newPads[key].isActive = false;
-                });
-                return { pads: newPads };
-            })
+            isMidiConnected: false,
+            setMidiConnected: (isMidiConnected) => set({ isMidiConnected }),
+
+            stopAllPads: () => set((state) => ({
+                atmospheres: state.atmospheres.map(a => ({
+                    ...a,
+                    pads: Object.fromEntries(
+                        Object.entries(a.pads).map(([key, pad]) => [key, { ...pad, isActive: false }])
+                    )
+                }))
+            }))
         }),
         {
             name: 'gm-os-sound-storage',
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            migrate: (persistedState: any, version: number) => {
+                if (version === 0) {
+                    // Migrate from single 'pads' to 'atmospheres'
+                    if (persistedState.pads && !persistedState.atmospheres) {
+                        return {
+                            ...persistedState,
+                            atmospheres: [
+                                { id: 'default', name: 'Exploration', pads: persistedState.pads }
+                            ],
+                            activeAtmosphereId: 'default',
+                            pads: undefined // Remove old key
+                        };
+                    }
+                }
+                return persistedState;
+            },
+            version: 1,
             partialize: (state) => ({
-                pads: state.pads,
+                atmospheres: state.atmospheres,
+                activeAtmosphereId: state.activeAtmosphereId,
                 masterVolume: state.masterVolume,
                 outputDeviceId: state.outputDeviceId
             })

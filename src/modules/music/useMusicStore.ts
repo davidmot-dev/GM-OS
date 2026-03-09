@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { musicEngine } from './MusicEngine';
+import { hueEngine } from '../light/HueEngine';
+import { useLightStore } from '../light/useLightStore';
 
 export type PadType = 'local' | 'link';
 
@@ -60,6 +62,7 @@ interface MusicState {
     updatePad: (playlistId: string, padIndex: number, pad: Partial<MusicPad>) => void;
     reorderPads: (playlistId: string, oldIndex: number, newIndex: number) => void;
     clearPlaylistPads: (playlistId: string) => void;
+    renamePlaylist: (id: string, name: string) => void;
 
     loadToDeck: (deck: 'A' | 'B', pad: MusicPad) => Promise<void>;
     playDeck: (deck: 'A' | 'B') => Promise<void>;
@@ -154,7 +157,10 @@ export const useMusicStore = create<MusicState>()(
 
                 setAutoFadeDuration: (value) => set({ autoFadeDuration: value }),
 
-                setOutputDevice: (deviceId) => set({ outputDeviceId: deviceId }),
+                setOutputDevice: (deviceId) => {
+                    musicEngine.setOutputDevice(deviceId);
+                    set({ outputDeviceId: deviceId });
+                },
 
                 addPlaylist: (name) => set((state) => ({
                     playlists: [...state.playlists, {
@@ -353,6 +359,12 @@ export const useMusicStore = create<MusicState>()(
                     // 3. Charger et déclencher
                     await get().loadToDeck(targetDeck, pad);
                     await get().triggerAutoFade(targetDeck);
+
+                    // 4. Trigger Light if linked and sync enabled
+                    const { isSyncEnabled } = useLightStore.getState();
+                    if (isSyncEnabled && pad.lightLinkId) {
+                        hueEngine.applyScene(pad.lightLinkId);
+                    }
                 },
 
                 addLog: (message: string) => {
@@ -363,7 +375,11 @@ export const useMusicStore = create<MusicState>()(
                     }));
                 },
 
-                setActivePlaylistId: (id: string) => set({ activePlaylistId: id })
+                setActivePlaylistId: (id: string) => set({ activePlaylistId: id }),
+
+                renamePlaylist: (id: string, name: string) => set((state) => ({
+                    playlists: state.playlists.map(p => p.id === id ? { ...p, name } : p)
+                })),
             }
         },
 

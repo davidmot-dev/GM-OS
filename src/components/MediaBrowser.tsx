@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useMediaStore } from '../stores/useMediaStore';
 import type { MediaType, MediaItem } from '../stores/useMediaStore';
-import { Search, Image as ImageIcon, Music, Film, UploadCloud, Trash2, X, Check, FileText, Tag, Plus } from 'lucide-react';
+import { Search, Image as ImageIcon, Music, Film, UploadCloud, Trash2, X, Check, FileText, Tag, Plus, Edit2 } from 'lucide-react';
 import { useMediaUrl } from '../hooks/useMediaUrl';
+import { gmPrompt } from '../stores/useModalStore';
 
 interface MediaBrowserProps {
     isOpen: boolean;
@@ -65,7 +66,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
     allowedTypes,
     title = "Media Hub"
 }) => {
-    const { mediaList, isLoading, isInitialized, initDB, addMedia, deleteMedia, clearDB } = useMediaStore();
+    const { mediaList, isLoading, isInitialized, initDB, addMedia, deleteMedia, clearDB, renameMedia } = useMediaStore();
     const [search, setSearch] = useState('');
     const [typeFilter, setTypeFilter] = useState<MediaType | 'all'>('all');
     const [tagFilter, setTagFilter] = useState<string | null>(null);
@@ -115,7 +116,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
             <div className="bg-slate-900 border border-slate-700 w-full max-w-5xl h-[80vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-900/50">
@@ -223,6 +224,23 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                                     title="Sélectionner"
                                                 >
                                                     <Check size={20} />
+                                                </button>
+                                                <button
+                                                    onClick={() => {
+                                                        gmPrompt(
+                                                            `Renommer ${media.name}`,
+                                                            media.name,
+                                                            (newName) => {
+                                                                if (newName.trim() && newName.trim() !== media.name) {
+                                                                    renameMedia(media.id, newName.trim());
+                                                                }
+                                                            }
+                                                        );
+                                                    }}
+                                                    className="bg-gm-gold/80 text-slate-950 rounded-full p-2 hover:scale-110 transition-transform shadow-lg shadow-black hover:bg-gm-gold"
+                                                    title="Renommer"
+                                                >
+                                                    <Edit2 size={20} />
                                                 </button>
                                                 <button
                                                     onClick={() => {

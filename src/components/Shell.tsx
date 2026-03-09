@@ -17,11 +17,10 @@ import {
     Table,
     Globe,
     Star,
-    Shield,
-    ShieldOff,
     Palette,
     Power,
-    FolderOpen
+    FolderOpen,
+    Edit3
 } from 'lucide-react';
 import { useSessionStore } from '../store/useSessionStore';
 import type { ThemeID } from '../store/useSessionStore';
@@ -63,8 +62,6 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
         setActiveModule,
         theme,
         setTheme,
-        isSessionMode,
-        toggleSessionMode
     } = useSessionStore();
 
     const { openMediaHub } = useModalStore();
@@ -73,15 +70,6 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
     useEffect(() => {
         document.documentElement.setAttribute('data-theme', theme);
     }, [theme]);
-
-    // Appliquer le mode session via une classe globale
-    useEffect(() => {
-        if (isSessionMode) {
-            document.body.classList.add('session-focus');
-        } else {
-            document.body.classList.remove('session-focus');
-        }
-    }, [isSessionMode]);
 
     const cycleTheme = () => {
         const themes: ThemeID[] = ['cyberpunk', 'medieval', 'modern'];
@@ -221,83 +209,88 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         onClick={() => setActiveModule('web')}
                     />
                     <NavItem
-                        icon={<Star size={20} />}
-                        label="Favoris"
-                        active={activeModule === 'favorite'}
-                        onClick={() => setActiveModule('favorite')}
+                        icon={<Edit3 size={20} />}
+                        label="Whiteboard OS"
+                        active={activeModule === 'whiteboard'}
+                        onClick={() => setActiveModule('whiteboard')}
                     />
                 </nav>
 
-                <div className="mt-auto pt-4 flex flex-col gap-1 border-t border-slate-800/50">
-                    <div className="grid grid-cols-2 gap-2 mb-4">
-                        <button
-                            onClick={() => toggleSessionMode()}
-                            className={`flex flex-col items-center justify-center p-2 rounded-xl border transition-all ${isSessionMode
-                                ? 'bg-amber-500/10 border-amber-500/30 text-amber-500'
-                                : 'bg-slate-800/50 border-slate-700 text-slate-400 hover:text-slate-200'
-                                }`}
-                            title={isSessionMode ? "Mode Session : MJ Focus (Outils masqués)" : "Mode Edition : MJ Tools (Outils visibles)"}
-                        >
-                            {isSessionMode ? <Shield size={18} /> : <ShieldOff size={18} />}
-                            <span className="text-[9px] mt-1 font-bold uppercase tracking-tighter">Session</span>
-                        </button>
-                        <button
-                            onClick={cycleTheme}
-                            className="flex flex-col items-center justify-center p-2 rounded-xl border bg-slate-800/50 border-slate-700 text-slate-400 hover:text-slate-200 transition-all"
-                            title={`Thème actuel : ${theme}`}
-                        >
-                            <Palette size={18} />
-                            <span className="text-[9px] mt-1 font-bold uppercase tracking-tighter">Thème</span>
-                        </button>
+                <div className="mt-auto pt-6 flex flex-col gap-4 border-t border-slate-800/40">
+                    {/* 1. Unified System Bar */}
+                    <div className="flex items-center justify-between px-2 py-2 bg-slate-950/40 backdrop-blur-md rounded-xl border border-white/5 shadow-inner">
+                        <div className="flex items-center gap-1">
+                            <button
+                                onClick={cycleTheme}
+                                className="p-2 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-amber-400/10 transition-all group"
+                                title={`Thème : ${theme}`}
+                            >
+                                <Palette size={18} className="group-hover:rotate-12 transition-transform" />
+                            </button>
+                            <button
+                                onClick={() => setActiveModule('debug')}
+                                className={`p-2 rounded-lg transition-all ${activeModule === 'debug' ? 'text-blue-400 bg-blue-400/10' : 'text-slate-400 hover:text-blue-400 hover:bg-blue-400/10'}`}
+                                title="Debug & Logs"
+                            >
+                                <Terminal size={18} />
+                            </button>
+                            <button
+                                onClick={() => { }}
+                                className="p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-all"
+                                title="Réglages"
+                            >
+                                <Settings size={18} />
+                            </button>
+                        </div>
+
+                        <div className="w-px h-4 bg-white/10 mx-1" />
+
+                        <div className="flex items-center gap-1">
+                            <button
+                                onClick={() => SessionService.saveFullSession()}
+                                className="p-2 rounded-lg text-slate-400 hover:text-emerald-400 hover:bg-emerald-400/10 transition-all"
+                                title="Sauvegarder"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                            </button>
+                            <button
+                                onClick={() => SessionService.loadFullSession()}
+                                className="p-2 rounded-lg text-slate-400 hover:text-blue-400 hover:bg-blue-400/10 transition-all"
+                                title="Charger"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            </button>
+                        </div>
                     </div>
 
-                    <NavItem
-                        icon={<Terminal size={20} />}
-                        label="Debug / Logs"
-                        active={activeModule === 'debug'}
-                        onClick={() => setActiveModule('debug')}
-                    />
-                    <NavItem
-                        icon={<Settings size={20} />}
-                        label="Réglages"
-                        active={false}
-                        onClick={() => { }}
-                    />
-                    <div className="grid grid-cols-2 gap-2 mt-2 px-2">
-                        <button
-                            onClick={() => SessionService.saveFullSession()}
-                            className="flex items-center justify-center p-2 rounded-lg bg-slate-800/50 border border-slate-700 text-slate-400 hover:text-emerald-400 hover:border-emerald-500/30 transition-all"
-                            title="Sauvegarder Session"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-                        </button>
-                        <button
-                            onClick={() => SessionService.loadFullSession()}
-                            className="flex items-center justify-center p-2 rounded-lg bg-slate-800/50 border border-slate-700 text-slate-400 hover:text-blue-400 hover:border-blue-500/30 transition-all"
-                            title="Charger Session"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                        </button>
-                    </div>
+                    {/* 2. Premium DM Card */}
+                    <div className="group relative p-4 rounded-[1.25rem] bg-gradient-to-br from-slate-900/80 to-slate-950/90 border border-white/10 shadow-2xl backdrop-blur-2xl transition-all duration-300 hover:border-blue-500/30 overflow-hidden">
+                        {/* Background subtle glow */}
+                        <div className="absolute -right-4 -top-4 w-24 h-24 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-all duration-500" />
+                        
+                        <div className="flex items-center gap-3 relative z-10">
+                            <div className="relative">
+                                <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-xs font-black text-white ring-2 ring-slate-800 shadow-inner group-hover:ring-blue-500/50 transition-all">
+                                    DM
+                                </div>
+                                <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-slate-900" />
+                            </div>
+                            
+                            <div className="flex flex-col flex-1 min-w-0">
+                                <span className="text-xs font-black text-white uppercase tracking-tighter truncate leading-none">Dungeon Master</span>
+                                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1 opacity-70 group-hover:opacity-100 transition-opacity">
+                                    Session Link Active
+                                </span>
+                            </div>
 
-                    <div className="flex items-center gap-3 px-4 py-4 mt-2">
-                        <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-300 ring-2 ring-slate-800 shadow-inner">
-                            DM
+                            <button
+                                onClick={flushApplication}
+                                className="p-2 rounded-lg text-slate-600 hover:text-red-500 hover:bg-red-500/10 transition-all"
+                                title="RÉINITIALISATION TOTALE"
+                            >
+                                <Power size={18} />
+                            </button>
                         </div>
-                        <div className="flex flex-col">
-                            <span className="text-sm font-semibold text-slate-200">Dungeon Master</span>
-                            <span className="text-[10px] text-emerald-500 flex items-center gap-1">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                                Session Active
-                            </span>
-                        </div>
-                        <button
-                            onClick={flushApplication}
-                            className="ml-auto text-slate-500 hover:text-red-500 transition-colors p-1 hover:bg-red-500/10 rounded-lg"
-                            title="RÉINITIALISATION TOTALE (Flush App)"
-                        >
-                            <Power size={18} />
-                        </button>
                     </div>
                 </div>
             </aside>

@@ -1,8 +1,8 @@
 import React, { useState, useMemo } from 'react';
-import { Music, Link, Edit3, Trash2, GripVertical, MoreHorizontal } from 'lucide-react';
+import { Music, Link, Edit3, Trash2, GripVertical, MoreHorizontal, Lightbulb } from 'lucide-react';
 import { useMusicStore } from '../useMusicStore';
 import type { MusicPad as MusicPadType } from '../useMusicStore';
-import { gmPrompt, gmConfirm } from '../../../stores/useModalStore';
+import { gmPrompt, gmConfirm, gmCustom } from '../../../stores/useModalStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaStore } from '../../../stores/useMediaStore';
 
@@ -143,6 +143,13 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                 <GripVertical size={12} />
             </div>
 
+            {/* Light Link Indicator */}
+            {pad.lightLinkId && (
+                <div className="absolute bottom-2 left-2 p-1.5 text-gm-cyan drop-shadow-glow-cyan animate-pulse">
+                    <Lightbulb size={12} fill="currentColor" />
+                </div>
+            )}
+
             <div className={`transition-all duration-500 ${isPlaying || isLearningThis ? (isLearningThis ? 'text-cyan-400 scale-110 drop-shadow-glow-cyan' : 'text-gm-violet scale-110 drop-shadow-glow-violet') : 'text-slate-700 group-hover:text-gm-violet/70'}`}>
                 {pad.type === 'link' ? <Link size={36} strokeWidth={1} /> : <Music size={36} strokeWidth={1} />}
             </div>
@@ -186,6 +193,20 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                         className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-obsidian border border-white/5 hover:bg-red-600 hover:border-red-600 text-[10px] font-black uppercase tracking-widest transition-all"
                     >
                         <Trash2 size={12} /> VIDER
+                    </button>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            gmCustom('light-scene-select', { 
+                                type: 'music', 
+                                playlistId, 
+                                padIndex: index 
+                            });
+                            setIsMenuOpen(false);
+                        }}
+                        className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all ${pad.lightLinkId ? 'bg-gm-cyan/20 border-gm-cyan text-gm-cyan' : 'bg-obsidian border-white/5 hover:bg-gm-cyan hover:border-gm-cyan'}`}
+                    >
+                        <Lightbulb size={12} /> {pad.lightLinkId ? 'LIÉ' : 'LIER LUMIÈRE'}
                     </button>
                 </div>
             )}

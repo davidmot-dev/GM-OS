@@ -25,7 +25,7 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
                 }
 
                 // Return directly if it's already a usable URL
-                if (sourceIdOrUrl.startsWith('http') || sourceIdOrUrl.startsWith('data:') || sourceIdOrUrl.startsWith('blob:')) {
+                if (sourceIdOrUrl.startsWith('http') || sourceIdOrUrl.startsWith('data:')) {
                     if (isMounted) setResolvedUrl(sourceIdOrUrl);
                     return;
                 }
@@ -40,8 +40,11 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
                         if (isMounted) setResolvedUrl(undefined);
                     }
                 } else {
-                    // Unknown format, return as is (might be a local relative path during dev)
-                    if (isMounted) setResolvedUrl(sourceIdOrUrl);
+                    // Unknown format, try to format as local file URL if bridge is available
+                    const formatted = window.appBridge?.utils?.formatFileUrl 
+                        ? window.appBridge.utils.formatFileUrl(sourceIdOrUrl)
+                        : sourceIdOrUrl;
+                    if (isMounted) setResolvedUrl(formatted);
                 }
             } catch (err) {
                 console.error("[useMediaUrl] Failed to resolve source:", sourceIdOrUrl, err);

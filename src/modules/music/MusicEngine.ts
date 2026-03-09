@@ -264,6 +264,27 @@ export class MusicEngine {
         return u.includes('youtube.com') || u.includes('youtu.be') ||
             u.includes('spotify.com') || u.includes('deezer.com');
     }
+
+    public async setOutputDevice(deviceId: string) {
+        if ('setSinkId' in this.context) {
+            try {
+                // @ts-expect-error AudioContext.setSinkId exists in modern browsers
+                await this.context.setSinkId(deviceId === 'default' ? '' : deviceId);
+                console.log(`[MusicEngine] Output device changed to ${deviceId}`);
+            } catch (error: unknown) {
+                const err = error as { name?: string; message?: string };
+                if (err.name === 'NotFoundError') {
+                    console.warn(`[MusicEngine] Device ${deviceId} not found, falling back to default.`);
+                    // @ts-expect-error fallback
+                    await this.context.setSinkId('');
+                } else {
+                    console.error('[MusicEngine] Failed to set audio output device', error);
+                }
+            }
+        } else {
+            console.warn('[MusicEngine] AudioContext.setSinkId is not supported by this browser.');
+        }
+    }
 }
 
 

@@ -16,8 +16,8 @@ const CharacterGrid: React.FC = () => {
 
     if (!selectedPlayer) {
         return (
-            <div className="col-span-9 flex items-center justify-center text-slate-600">
-                <p>Sélectionne un joueur dans le roster</p>
+            <div className="flex-1 flex items-center justify-center text-slate-600 bg-slate-950/20">
+                <p className="italic text-sm">Sélectionnez un joueur dans le roster</p>
             </div>
         );
     }
@@ -69,7 +69,7 @@ const CharacterGrid: React.FC = () => {
                         <p className="text-sm">Ce joueur n'a pas encore de personnages</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-6">
                         {selectedPlayer.characters.map(character => (
                             <CharacterCard
                                 key={character.id}
@@ -117,15 +117,22 @@ const CharacterCard: React.FC<{
     return (
         <div className={`bg-slate-900/50 border rounded-xl overflow-hidden flex flex-col hover:border-slate-700 transition-all group ${isSelected ? 'border-gm-gold shadow-[0_0_15px_rgba(234,179,8,0.15)]' : 'border-slate-800'}`}>
             {/* Portrait */}
-            <div className="h-36 overflow-hidden relative bg-slate-800">
+            <div className="h-64 overflow-hidden relative bg-slate-950">
+                {/* Blurred background for full appearance */}
+                <img
+                    src={resolvedPortrait || undefined}
+                    alt=""
+                    className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-40 scale-110"
+                />
+                {/* Main image - centered and contained */}
                 <img
                     src={resolvedPortrait || undefined}
                     alt={character.name}
-                    className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                    className="relative w-full h-full object-contain transition-transform duration-500 group-hover:scale-105 z-10"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent z-20"></div>
                 {linkedCampaign && (
-                    <span className="absolute top-2 right-2 bg-gm-gold/90 text-slate-900 text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider">
+                    <span className="absolute top-2 right-2 bg-gm-gold/90 text-slate-900 text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider z-30">
                         {linkedCampaign.name.length > 12 ? linkedCampaign.name.slice(0, 12) + '…' : linkedCampaign.name}
                     </span>
                 )}

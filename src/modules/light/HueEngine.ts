@@ -18,6 +18,7 @@ interface HueApiLight {
 
 export class HueEngine {
     private softwareEffectIntervals: Record<string, ReturnType<typeof setInterval>> = {};
+    private flashTimeout: ReturnType<typeof setTimeout> | null = null;
 
     // ------------------------------------------------------------------------
     // Discovery & Pairing
@@ -163,12 +164,22 @@ export class HueEngine {
         useLightStore.getState().updateLightState(id, state);
     }
 
-    async applyScene(sceneId: string) {
+    async applyScene(sceneId: string | null, isAutomatic: boolean = false) {
+        if (!sceneId) {
+            console.log('[HUE ENGINE] No scene specified, extinguishing all.');
+            await this.extinguishAll();
+            return;
+        }
+
+        console.log(`[HUE ENGINE] Applying Scene: ${sceneId} (isAutomatic: ${isAutomatic})`);
         const scene = useLightStore.getState().scenes[sceneId];
-        if (!scene) return;
+        if (!scene) {
+            console.warn(`[HUE ENGINE] Scene not found: ${sceneId}`);
+            return;
+        }
 
         const transTime = useLightStore.getState().transitionTimeMs;
-        useLightStore.getState().setActiveScene(sceneId);
+        useLightStore.getState().setActiveScene(sceneId, isAutomatic);
 
         // Turn everything off first if not in snapshot?
         // Or just apply the snapshot.
@@ -185,6 +196,12 @@ export class HueEngine {
                 await new Promise(r => setTimeout(r, 50));
             }
         }
+    }
+
+    async revertToManualScene() {
+        const { lastManualSceneId } = useLightStore.getState();
+        console.log(`[HUE ENGINE] Reverting to manual scene: ${lastManualSceneId}`);
+        await this.applyScene(lastManualSceneId, true);
     }
 
     // ------------------------------------------------------------------------
@@ -432,48 +449,28 @@ export class HueEngine {
     // Flash / Overrides
     // ------------------------------------------------------------------------
 
-    private flashTimeout: ReturnType<typeof setTimeout> | null = null;
-    private preFlashStates: Record<string, HueLightState> = {};
-
     async triggerFlash(hexColor: string, durationMs: number = 1000) {
         if (this.flashTimeout) clearTimeout(this.flashTimeout);
 
         const store = useLightStore.getState();
         const xy = this.hexToXy(hexColor);
 
-        // Save state if not currently flashing
-        if (Object.keys(this.preFlashStates).length === 0) {
-            Object.entries(store.lights).forEach(([id, light]) => {
-                this.preFlashStates[id] = { ...light.state };
-                // Stop effects temporarily but save that it was running
-                if (this.softwareEffectIntervals[id]) {
-                    clearInterval(this.softwareEffectIntervals[id]); // Stop interval, KEEP `effect` string in state so we can restore
-                }
-            });
-        }
-
-        // Apply flash globally
-        const promises = Object.keys(store.lights).map(id =>
-            this.request('PUT', `/lights/${id}/state`, { on: true, bri: 254, xy, transitiontime: 0 })
-        );
+        // Apply flash globally without updating store's activeSceneId
+        const promises = Object.keys(store.lights).map(id => {
+            this.stopSoftwareEffect(id); // Stop any running effects
+            return this.request('PUT', `/lights/${id}/state`, { on: true, bri: 254, xy, transitiontime: 0 });
+        });
         await Promise.allSettled(promises);
 
-        // Schedule restore
+        // Schedule restore using the robust reversion system
         this.flashTimeout = setTimeout(() => {
             this.restoreFromFlash();
         }, durationMs);
     }
 
     private async restoreFromFlash() {
-        const promises = Object.entries(this.preFlashStates).map(async ([id, state]) => {
-            if (state.effect && state.effect !== 'none') {
-                this.startSoftwareEffect(id, state.effect, state);
-            } else {
-                await this.setLightState(id, state, 1000); // 1s restore
-            }
-        });
-        await Promise.allSettled(promises);
-        this.preFlashStates = {};
+        console.log('[HUE ENGINE] Restoring after flash via reversion.');
+        await this.revertToManualScene();
         this.flashTimeout = null;
     }
 
@@ -481,7 +478,6 @@ export class HueEngine {
         if (this.flashTimeout) {
             clearTimeout(this.flashTimeout);
             this.flashTimeout = null;
-            this.preFlashStates = {};
         }
 
         useLightStore.getState().setActiveScene(null);

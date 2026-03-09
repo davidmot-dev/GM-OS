@@ -23,6 +23,7 @@ interface MediaStoreState {
     addMedia: (file: File) => Promise<string>;
     deleteMedia: (id: string) => Promise<void>;
     updateMediaTags: (id: string, tags: string[]) => Promise<void>;
+    renameMedia: (id: string, newName: string) => Promise<void>;
     getMediaBlob: (id: string) => Promise<Blob | undefined>;
 }
 
@@ -205,6 +206,30 @@ export const useMediaStore = create<MediaStoreState>((set, get) => ({
         } catch (err) {
             console.error('Failed to update media tags:', err);
             throw new Error('Failed to update tags.');
+        }
+    },
+
+    renameMedia: async (id: string, newName: string) => {
+        try {
+            const db = await getDB();
+            const tx = db.transaction(STORE_NAME, 'readwrite');
+            const store = tx.objectStore(STORE_NAME);
+            
+            const item = await store.get(id);
+            if (!item) throw new Error('Media not found');
+            
+            item.name = newName;
+            await store.put(item);
+            await tx.done;
+            
+            set((state) => ({
+                mediaList: state.mediaList.map(m => 
+                    m.id === id ? { ...m, name: newName } : m
+                )
+            }));
+        } catch (err) {
+            console.error('Failed to rename media:', err);
+            throw new Error('Failed to rename media.');
         }
     },
 

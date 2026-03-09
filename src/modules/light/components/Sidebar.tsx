@@ -74,30 +74,29 @@ export const Sidebar: React.FC = () => {
                 <p className="text-slate-400 text-sm font-medium">GM Ambience Controller</p>
             </div>
 
-            {/* Connection Status */}
+            {/* Connection Status & Sync */}
             <div className="flex flex-col gap-3">
                 <div className={`flex items-center justify-between p-4 rounded-xl border ${status === 'connected' ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-slate-800/50 border-slate-700'}`}>
                     <div className="flex items-center gap-3">
-                        <span className={`material-symbols-outlined ${status === 'connected' ? 'text-emerald-400' : 'text-slate-500'}`}>hub</span>
+                        <span className="material-symbols-outlined text-gm-cyan">hub</span>
                         <div className="flex flex-col">
                             <span className="text-sm font-semibold">Hue Bridge</span>
                             {bridgeIp && <span className="text-xs text-slate-500">{bridgeIp}</span>}
                         </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                        {status === 'connected' ? (
-                            <>
-                                <span className="text-[10px] uppercase tracking-wider text-emerald-400 font-bold">Connected</span>
-                                <div className="size-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse"></div>
-                            </>
-                        ) : status === 'discovering' ? (
-                            <span className="text-[10px] uppercase tracking-wider text-amber-400 font-bold">Discovering...</span>
-                        ) : status === 'pairing' ? (
-                            <span className="text-[10px] uppercase tracking-wider text-blue-400 font-bold">Press Button</span>
-                        ) : (
-                            <span className="text-[10px] uppercase tracking-wider text-slate-500 font-bold">Offline</span>
-                        )}
+                </div>
+
+                <div className="flex items-center justify-between p-4 rounded-xl border bg-slate-800/20 border-slate-800">
+                    <div className="flex items-center gap-3">
+                        <span className={`material-symbols-outlined ${useLightStore.getState().isSyncEnabled ? 'text-gm-violet animate-pulse' : 'text-slate-600'}`}>sync</span>
+                        <span className="text-xs font-bold uppercase tracking-widest text-slate-300">Sync with Audio</span>
                     </div>
+                    <button 
+                        onClick={() => useLightStore.getState().setSyncEnabled(!useLightStore.getState().isSyncEnabled)}
+                        className={`w-10 h-5 rounded-full relative transition-colors ${useLightStore.getState().isSyncEnabled ? 'bg-gm-violet' : 'bg-slate-700'}`}
+                    >
+                        <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${useLightStore.getState().isSyncEnabled ? 'left-6' : 'left-1'}`} />
+                    </button>
                 </div>
 
                 {status !== 'connected' && (

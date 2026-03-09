@@ -47,6 +47,7 @@ interface LightState {
     // Scenes
     scenes: Record<string, LightScene>;
     activeSceneId: string | null;
+    lastManualSceneId: string | null;
 
     // Actions - Connection
     setConnection: (status: ConnectionStatus, ip?: string | null, username?: string | null) => void;
@@ -62,8 +63,10 @@ interface LightState {
     // Actions - Scenes
     saveSceneSnapshot: (sceneId: string, currentLights: Record<string, HueLight>) => void;
     updateSceneMetadata: (sceneId: string, name: string, icon: string, color: string) => void;
-    setActiveScene: (sceneId: string | null) => void;
+    setActiveScene: (sceneId: string | null, isAutomatic?: boolean) => void;
     clearScene: (sceneId: string) => void;
+    isSyncEnabled: boolean;
+    setSyncEnabled: (val: boolean) => void;
 }
 
 // ----------------------
@@ -99,6 +102,8 @@ export const useLightStore = create<LightState>()(
 
             scenes: createDefaultScenes(),
             activeSceneId: null,
+            lastManualSceneId: null,
+            isSyncEnabled: true, // Enabled by default
 
             setConnection: (status, ip, username) => set((state) => ({
                 status,
@@ -151,9 +156,12 @@ export const useLightStore = create<LightState>()(
                 }
             })),
 
-            setActiveScene: (sceneId) => set({ activeSceneId: sceneId }),
+            setActiveScene: (sceneId: string | null, isAutomatic = false) => set((state) => ({ 
+                activeSceneId: sceneId,
+                lastManualSceneId: isAutomatic ? state.lastManualSceneId : sceneId
+            })),
 
-            clearScene: (sceneId) => set((state) => ({
+            clearScene: (sceneId: string) => set((state) => ({
                 scenes: {
                     ...state.scenes,
                     [sceneId]: {
@@ -164,7 +172,9 @@ export const useLightStore = create<LightState>()(
                         lightStates: {}
                     }
                 }
-            }))
+            })),
+
+            setSyncEnabled: (val: boolean) => set({ isSyncEnabled: val })
         }),
         {
             name: 'gm-os-light-storage-v1',
@@ -173,7 +183,9 @@ export const useLightStore = create<LightState>()(
                 username: state.username,
                 scenes: state.scenes,
                 globalBrightness: state.globalBrightness,
-                transitionTimeMs: state.transitionTimeMs
+                transitionTimeMs: state.transitionTimeMs,
+                isSyncEnabled: state.isSyncEnabled,
+                lastManualSceneId: state.lastManualSceneId
             })
         }
     )

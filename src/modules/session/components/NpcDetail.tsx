@@ -4,10 +4,10 @@ import { Swords, MapPin, Monitor, Heart, Shield, Wind, Zap, Lock, BookOpen, Arro
 import { useMapStore } from '../../map/useMapStore';
 import { useCombatStore } from '../../combat/useCombatStore';
 import { useImageStore } from '../../image/useImageStore';
-import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { gmToast } from '../../../stores/useToastStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useModalStore } from '../../../stores/useModalStore';
+import { ResolvedImage } from '../../../components/ResolvedImage';
 
 interface NpcDetailProps {
     embeddedId?: string;
@@ -23,7 +23,6 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
     const [isMediaBrowserOpen, setIsMediaBrowserOpen] = useState(false);
 
     const selectedNpc = entities.find(e => e.id === currentId);
-    const resolvedAvatar = useMediaUrl(selectedNpc?.avatar);
 
     const handleClose = () => {
         if (embeddedId) {
@@ -80,7 +79,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
     const linkedMaps = atlasMaps.filter(m => selectedNpc.linkedMapIds.includes(m.id));
 
     return (
-        <div className="flex-1 h-full bg-slate-950/40 p-10 flex flex-col overflow-hidden animate-in fade-in slide-in-from-right-4 duration-300">
+        <div className="flex-1 h-full bg-slate-950/60 p-12 flex flex-col overflow-hidden animate-in fade-in slide-in-from-right-4 duration-500">
             {/* Header / Back Button */}
             <div className="flex items-center justify-between mb-8">
                 <button 
@@ -114,8 +113,8 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                         }`}
                         onClick={() => isEditing && setIsMediaBrowserOpen(true)}
                     >
-                        <img
-                            src={resolvedAvatar || undefined}
+                        <ResolvedImage
+                            src={selectedNpc.avatar}
                             alt={selectedNpc.name}
                             className="w-full h-full object-cover"
                         />
@@ -193,28 +192,88 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                         )}
                     </div>
 
-                    {/* Stats Grid */}
-                    <div className="grid grid-cols-4 gap-3">
+                    {/* Stats Grid - Adjusted Proportions: Vitality larger, others smaller */}
+                    <div className="grid grid-cols-[1.3fr_0.9fr_0.9fr_0.9fr] gap-3">
                         {isEditing ? (
                             <>
-                                <div className="bg-slate-900/40 border border-gm-gold/20 p-3 rounded-xl flex flex-col items-center justify-center gap-1 group">
-                                    <Heart size={14} className="text-red-400" />
-                                    <div className="flex items-center gap-1">
+                                {/* Type Selector */}
+                                <div className="col-span-4 space-y-2 mb-2">
+                                    <div className="flex items-center gap-2 px-1">
+                                        <Users size={14} className="text-slate-500" />
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Type d'entité</label>
+                                    </div>
+                                    <div className="grid grid-cols-3 gap-2">
+                                        {[
+                                            { id: 'pc', label: 'Joueur' },
+                                            { id: 'npc', label: 'PNJ' },
+                                            { id: 'monster', label: 'Monstre' }
+                                        ].map(t => (
+                                            <button
+                                                key={t.id}
+                                                onClick={() => updateEntity(selectedNpc.id, { type: t.id as 'pc' | 'npc' | 'monster' })}
+                                                className={`py-2 px-4 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all ${
+                                                    selectedNpc.type === t.id 
+                                                    ? 'bg-gm-gold text-slate-950 border-gm-gold shadow-glow-gold' 
+                                                    : 'bg-slate-900/40 border-slate-800 text-slate-500 hover:border-slate-700'
+                                                }`}
+                                            >
+                                                {t.label}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Role Selector */}
+                                <div className="col-span-4 space-y-2 mb-4">
+                                    <div className="flex items-center gap-2 px-1">
+                                        <Users size={14} className="text-slate-500 rotate-180" /> {/* Different icon or similar */}
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Alignement / Rôle</label>
+                                    </div>
+                                    <div className="grid grid-cols-4 gap-2">
+                                        {[
+                                            { id: 'ally', label: 'Allié' },
+                                            { id: 'neutral', label: 'Neutre' },
+                                            { id: 'hostile', label: 'Hostile' },
+                                            { id: 'boss', label: 'Boss' }
+                                        ].map(r => (
+                                            <button
+                                                key={r.id}
+                                                onClick={() => updateEntity(selectedNpc.id, { role: r.id as 'ally' | 'neutral' | 'hostile' | 'boss' })}
+                                                className={`py-2 px-2 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all ${
+                                                    selectedNpc.role === r.id 
+                                                    ? 'bg-white text-slate-950 border-white shadow-glow-white' 
+                                                    : 'bg-slate-900/40 border-slate-800 text-slate-500 hover:border-slate-700'
+                                                }`}
+                                            >
+                                                {r.label}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="col-span-1 bg-slate-900/60 border border-gm-gold/30 p-3 rounded-xl flex flex-col items-center justify-center gap-2 group transition-all hover:bg-slate-900 hover:border-gm-gold shadow-lg shadow-red-500/5 min-w-[140px]">
+                                    <div className="flex items-center gap-2">
+                                        <Heart size={14} className="text-red-500 animate-pulse" />
+                                        <span className="text-[9px] uppercase font-black text-gm-gold tracking-[0.15em]">Vitalité</span>
+                                    </div>
+                                    <div className="flex items-center gap-1.5 bg-slate-950/50 px-3 py-1.5 rounded-lg border border-white/5">
                                         <input 
                                             type="number" 
                                             value={selectedNpc.hp}
                                             onChange={(e) => updateEntity(selectedNpc.id, { hp: parseInt(e.target.value) || 0 })}
-                                            className="w-10 bg-transparent text-center text-white font-black text-xs border-b border-white/10 focus:outline-none"
+                                            className="w-16 bg-transparent text-center text-white font-black text-xs focus:outline-none placeholder:text-slate-700"
+                                            placeholder="HP"
                                         />
-                                        <span className="text-slate-600">/</span>
+                                        <span className="text-slate-700 font-bold text-xs">/</span>
                                         <input 
                                             type="number" 
                                             value={selectedNpc.maxHp}
                                             onChange={(e) => updateEntity(selectedNpc.id, { maxHp: parseInt(e.target.value) || 0 })}
-                                            className="w-10 bg-transparent text-center text-white font-black text-xs border-b border-white/10 focus:outline-none"
+                                            className="w-16 bg-transparent text-center text-slate-400 font-black text-xs focus:outline-none placeholder:text-slate-700"
+                                            placeholder="MAX"
                                         />
                                     </div>
-                                    <span className="text-[9px] uppercase font-bold text-slate-600 tracking-wider">Health Points</span>
+                                    <span className="text-[8px] uppercase font-bold text-slate-600 tracking-wider text-center">Actuel / Max</span>
                                 </div>
                                 <div className="bg-slate-900/40 border border-gm-gold/20 p-3 rounded-xl flex flex-col items-center justify-center gap-1 group">
                                     <Shield size={14} className="text-blue-400" />

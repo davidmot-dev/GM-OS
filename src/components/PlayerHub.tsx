@@ -3,7 +3,12 @@ import { useImageStore } from '../modules/image/useImageStore';
 import { useCombatStore } from '../modules/combat/useCombatStore';
 import { useClockStore } from '../store/useClockStore';
 import { useFavoriteStore } from '../modules/favorite/useFavoriteStore';
+import { useMapStore } from '../modules/map/useMapStore';
 import { useMediaUrl } from '../hooks/useMediaUrl';
+import PlayerMapCanvas from '../modules/map/components/PlayerMapCanvas';
+import { PlayerDrawingCanvas } from '../modules/whiteboard/components/PlayerDrawingCanvas';
+import { useWhiteboardStore } from '../modules/whiteboard/useWhiteboardStore';
+import { ResolvedImage } from './ResolvedImage';
 import type { ProjectedEntity } from '../modules/image/types';
 import NarrativeClock from '../modules/clock/components/NarrativeClock';
 import ClockVisualizer from '../modules/clock/components/ClockVisualizer';
@@ -13,6 +18,7 @@ const PlayerHub: React.FC = () => {
     const { isClockProjected, timestamp, mode, theme, tensions } = useClockStore();
     const { favorites } = useFavoriteStore();
     const { combatants, currentTurnIdx, round } = useCombatStore();
+    const { mapUrl } = useMapStore();
 
     const activeHubId = projections['hub'];
     
@@ -23,10 +29,15 @@ const PlayerHub: React.FC = () => {
     const backgroundPath = liveImagePath || activeMedia?.path;
 
     useEffect(() => {
+        // Load existing states immediately for all persisted stores
+        useClockStore.persist.rehydrate();
+        useCombatStore.persist.rehydrate();
+        useFavoriteStore.persist.rehydrate();
+        useMapStore.persist.rehydrate();
+        useWhiteboardStore.persist.rehydrate();
+        
         // Listen for IPC updates because this is a separate window
-        // @ts-expect-error global
         if (window.appBridge?.on) {
-            // @ts-expect-error global
             window.appBridge.on('image:sync-hub-data', (_event, type: string, data: string) => {
                 if (type === 'image') {
                     setLiveImagePath(data || null);
@@ -55,6 +66,12 @@ const PlayerHub: React.FC = () => {
             }
             if (e.key === 'gm-os-favorites-storage') {
                 useFavoriteStore.persist.rehydrate();
+            }
+            if (e.key === 'gmos-map-storage') {
+                useMapStore.persist.rehydrate();
+            }
+            if (e.key === 'gm-os-whiteboard-storage-v1') {
+                useWhiteboardStore.persist.rehydrate();
             }
         };
 
@@ -91,21 +108,37 @@ const PlayerHub: React.FC = () => {
 
     return (
         <div className="bg-[#221010] text-slate-100 font-cinematic selection:bg-red-600/30 w-full h-screen overflow-hidden flex flex-col relative select-none cursor-default">
-            {/* Full-screen Campaign Background */}
-            <div
-                className="fixed inset-0 z-0 bg-cover bg-center grayscale-[20%] transition-all duration-1000 ease-in-out"
-                style={{
-                    backgroundImage: resolvedBackground ? `url('${resolvedBackground}')` : "none",
-                    opacity: resolvedBackground ? 1 : 0,
-                    filter: `brightness(${(sharedFavorites.length > 0 || liveEntity) ? 0.15 : 0.4}) grayscale(20%)`
-                }}
-            ></div>
+            {/* Full-screen Campaign Background or Map OS Projection */}
+            {(mapUrl && useMapStore.getState().projectionTarget === 'hub') ? (
+                <div className="fixed inset-0 z-0">
+                    <PlayerMapCanvas />
+                </div>
+            ) : (
+                <>
+                    <div
+                        className="fixed inset-0 z-0 bg-cover bg-center grayscale-[20%] transition-all duration-1000 ease-in-out"
+                        style={{
+                            backgroundImage: resolvedBackground ? `url('${resolvedBackground}')` : "none",
+                            opacity: resolvedBackground ? 1 : 0,
+                            filter: `brightness(${(sharedFavorites.length > 0 || liveEntity) ? 0.15 : 0.4}) grayscale(20%)`
+                        }}
+                    ></div>
+                    {/* If no image, show blackout background */}
+                    {!resolvedBackground && <div className="fixed inset-0 z-0 bg-black"></div>}
+                </>
+            )}
 
-            {/* If no image, show blackout background */}
-            {!resolvedBackground && <div className="fixed inset-0 z-0 bg-black"></div>}
+            {/* Whiteboard / Annotation Layer */}
+            <div className="fixed inset-0 z-[5]">
+                <PlayerDrawingCanvas />
+            </div>
 
             {/* Dark Overlay when favorites or entity are displayed */}
-            {(sharedFavorites.length > 0 || liveEntity) && <div className="fixed inset-0 z-5 bg-black/40 backdrop-blur-[2px] pointer-events-none transition-all duration-700"></div>}
+            {(sharedFavorites.length > 0 || liveEntity) && (
+                <div 
+                    className={`fixed inset-0 z-5 bg-black/${mapUrl ? '60' : '40'} backdrop-blur-[2px] pointer-events-none transition-all duration-700`}
+                ></div>
+            )}
 
             {/* Main Projection Overlay */}
             <div className="relative z-10 flex h-screen w-full flex-col overflow-hidden pointer-events-none">
@@ -298,10 +331,5 @@ const PlayerHub: React.FC = () => {
     );
 };
 
-const ResolvedImage: React.FC<{ src?: string; alt?: string; className?: string; fallback?: React.ReactNode }> = ({ src, alt, className, fallback }) => {
-    const resolved = useMediaUrl(src);
-    if (!resolved && fallback) return <div className={className}>{fallback}</div>;
-    return <img src={resolved || undefined} alt={alt} className={className} />;
-};
 
 export default PlayerHub;

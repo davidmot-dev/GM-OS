@@ -40,7 +40,8 @@ contextBridge.exposeInMainWorld("appBridge", {
   image: {
     getDisplays: () => ipcRenderer.invoke("image:get-displays"),
     syncHubData: (type, path) => ipcRenderer.send("image:sync-hub-data", type, path),
-    launchDisplay: (paths, target) => ipcRenderer.send("image:launch-display", paths, target)
+    launchDisplay: (paths, target) => ipcRenderer.send("image:launch-display", paths, target),
+    closeAllDisplays: () => ipcRenderer.send("image:close-all-displays")
   },
   sound: {
     loadAudios: () => ipcRenderer.invoke("sound:load-audios")

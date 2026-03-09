@@ -3,8 +3,12 @@ import Deck from './components/Deck';
 import Mixer from './components/Mixer';
 import MusicHeader from './components/MusicHeader';
 import PlaylistManager from './components/PlaylistManager';
+import { useMusicKeyboardControls } from './useMusicKeyboardControls';
 
 const MusicDashboard: React.FC = () => {
+    // Initialize Global Input Listeners
+    useMusicKeyboardControls();
+
     return (
         <div className="flex h-full overflow-hidden bg-obsidian-dark -my-6 -mr-6 ml-6 rounded-l-3xl border-y border-l border-white/5 shadow-2xl relative">
             {/* Main Content Area */}

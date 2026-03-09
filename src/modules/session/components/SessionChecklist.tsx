@@ -1,31 +1,140 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
+import { Plus, Trash2, Edit3, Check } from 'lucide-react';
 
-const SessionChecklist: React.FC = () => {
-    const { checklist, toggleChecklist } = useSessionOSStore();
+interface SessionChecklistProps {
+    sessionId?: string;
+}
+
+const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
+    const { 
+        sessions, 
+        activeCampaignId, 
+        toggleChecklistItem, 
+        addChecklistItem, 
+        removeChecklistItem, 
+        updateChecklistItem 
+    } = useSessionOSStore();
+    
+    const [newItemText, setNewItemText] = useState('');
+    const [editingId, setEditingId] = useState<string | null>(null);
+    const [editText, setEditText] = useState('');
+
+    // If an ID is provided, use it. Otherwise, fallback to the active session for the campaign.
+    const session = sessionId 
+        ? sessions.find(s => s.id === sessionId)
+        : sessions.find(s => s.campaignId === activeCampaignId && s.status === 'active');
+
+    if (!session) return null;
+
+    const handleAddItem = (e?: React.FormEvent) => {
+        e?.preventDefault();
+        if (newItemText.trim()) {
+            addChecklistItem(session.id, newItemText.trim());
+            setNewItemText('');
+        }
+    };
+
+    const startEditing = (id: string, text: string) => {
+        setEditingId(id);
+        setEditText(text);
+    };
+
+    const saveEdit = (id: string) => {
+        if (editText.trim()) {
+            updateChecklistItem(session.id, id, editText.trim());
+        }
+        setEditingId(null);
+    };
 
     return (
-        <div className="flex flex-col gap-3">
-            <p className="text-slate-500 text-xs uppercase tracking-widest mb-1 px-3">Session Prep</p>
-
-            <div className="flex flex-col gap-1 px-1">
-                {checklist.map(item => (
-                    <label
-                        key={item.id}
-                        className="flex items-center gap-3 p-2 hover:bg-slate-800/30 rounded-lg cursor-pointer group transition-colors"
-                    >
-                        <input
-                            type="checkbox"
-                            checked={item.checked}
-                            onChange={() => toggleChecklist(item.id)}
-                            className="rounded border-slate-700 bg-slate-800 text-gm-gold focus:ring-gm-gold focus:ring-offset-slate-900 h-4 w-4 cursor-pointer"
-                        />
-                        <span className={`text-sm group-hover:text-slate-100 transition-colors ${item.checked ? 'text-slate-500 line-through' : 'text-slate-300'}`}>
-                            {item.label}
-                        </span>
-                    </label>
-                ))}
+        <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between px-3">
+                <p className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em]">Session Prep</p>
+                <div className="flex items-center gap-1.5">
+                    <span className="text-[10px] font-mono text-gm-gold/60">
+                        {session.checklist.filter(i => i.isCompleted).length}/{session.checklist.length}
+                    </span>
+                </div>
             </div>
+
+            <div className="flex flex-col gap-1 max-h-[300px] overflow-y-auto px-1 custom-scrollbar">
+                {session.checklist.length === 0 ? (
+                    <p className="text-[10px] text-slate-600 italic text-center py-4">No tasks planned...</p>
+                ) : (
+                    session.checklist.map(item => (
+                        <div
+                            key={item.id}
+                            className="flex items-center gap-2 p-1.5 hover:bg-slate-800/40 rounded-lg group transition-all"
+                        >
+                            <input
+                                type="checkbox"
+                                checked={item.isCompleted}
+                                onChange={() => toggleChecklistItem(session.id, item.id)}
+                                className="rounded border-slate-700 bg-slate-900 text-gm-gold focus:ring-gm-gold focus:ring-offset-slate-950 h-3.5 w-3.5 cursor-pointer flex-shrink-0 transition-all checked:bg-gm-gold"
+                            />
+                            
+                            {editingId === item.id ? (
+                                <div className="flex-1 flex items-center gap-2">
+                                    <input
+                                        autoFocus
+                                        className="flex-1 bg-slate-950 border-none text-xs text-white p-0 focus:ring-0"
+                                        value={editText}
+                                        onChange={(e) => setEditText(e.target.value)}
+                                        onKeyDown={(e) => e.key === 'Enter' && saveEdit(item.id)}
+                                        onBlur={() => saveEdit(item.id)}
+                                    />
+                                    <button onClick={() => saveEdit(item.id)} className="text-emerald-500 hover:text-emerald-400">
+                                        <Check size={14} />
+                                    </button>
+                                </div>
+                            ) : (
+                                <span 
+                                    className={`flex-1 text-xs transition-all truncate select-none ${item.isCompleted ? 'text-slate-600 line-through opacity-60' : 'text-slate-300'}`}
+                                    onDoubleClick={() => startEditing(item.id, item.text)}
+                                >
+                                    {item.text}
+                                </span>
+                            )}
+
+                            <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button 
+                                    onClick={() => startEditing(item.id, item.text)}
+                                    className="p-1 text-slate-500 hover:text-gm-gold transition-colors"
+                                    title="Edit task"
+                                >
+                                    <Edit3 size={12} />
+                                </button>
+                                <button 
+                                    onClick={() => removeChecklistItem(session.id, item.id)}
+                                    className="p-1 text-slate-500 hover:text-red-400 transition-colors"
+                                    title="Delete task"
+                                >
+                                    <Trash2 size={12} />
+                                </button>
+                            </div>
+                        </div>
+                    ))
+                )}
+            </div>
+
+            {/* Quick Add Form */}
+            <form onSubmit={handleAddItem} className="mt-2 px-2 relative group">
+                <input
+                    type="text"
+                    placeholder="Add preparation task..."
+                    value={newItemText}
+                    onChange={(e) => setNewItemText(e.target.value)}
+                    className="w-full bg-slate-900/60 border border-slate-800 rounded-lg py-2 pl-3 pr-10 text-[11px] text-slate-300 placeholder:text-slate-600 focus:outline-none focus:border-gm-gold/30 transition-all"
+                />
+                <button 
+                    type="submit"
+                    disabled={!newItemText.trim()}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-600 hover:text-gm-gold disabled:opacity-0 transition-all"
+                >
+                    <Plus size={16} />
+                </button>
+            </form>
         </div>
     );
 };
