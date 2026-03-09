@@ -202,7 +202,20 @@ export class VoiceEngine {
                 this.gateGain.gain.setTargetAtTime(targetGain, this.context.currentTime, 0.05);
             }
 
-            useVoiceStore.getState().setInputLevel(level);
+            if (useVoiceStore.getState().isActive) {
+                const currentLevel = level;
+                useVoiceStore.getState().setInputLevel(currentLevel);
+                
+                // Sync with Player Hub if active
+                if (useVoiceStore.getState().isSyncNPC && window.appBridge?.image?.syncHubData) {
+                    window.appBridge.image.syncHubData('voice-level', currentLevel.toFixed(3));
+                }
+            } else {
+                useVoiceStore.getState().setInputLevel(0);
+                if (window.appBridge?.image?.syncHubData) {
+                    window.appBridge.image.syncHubData('voice-level', '0');
+                }
+            }
             this.animationFrame = requestAnimationFrame(update);
         };
         update();

@@ -139,11 +139,18 @@ const NpcGalleryItem: React.FC<{
                 }`}
         >
             {/* Portrait */}
-            <ResolvedImage
-                src={npc.avatar}
-                alt={npc.name}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-            />
+            <div className="absolute inset-0">
+                <ResolvedImage
+                    src={npc.avatar}
+                    alt=""
+                    className="absolute inset-0 w-full h-full object-cover blur-lg scale-110 opacity-40 transition-transform duration-500 group-hover:scale-125"
+                />
+                <ResolvedImage
+                    src={npc.avatar}
+                    alt={npc.name}
+                    className="relative w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
+                />
+            </div>
 
             {/* Overlays */}
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-black/20" />

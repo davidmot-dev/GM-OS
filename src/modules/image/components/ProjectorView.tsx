@@ -5,9 +5,18 @@ import { useMapStore } from '../../map/useMapStore';
 import { useWhiteboardStore } from '../../whiteboard/useWhiteboardStore';
 import PlayerMapCanvas from '../../map/components/PlayerMapCanvas';
 import { PlayerDrawingCanvas } from '../../whiteboard/components/PlayerDrawingCanvas';
+import { useVoiceStore } from '../../voice/useVoiceStore';
 
 const ProjectorView: React.FC = () => {
     const [imagePath, setImagePath] = useState<string | null>(null);
+    const [voiceLevel, setVoiceLevel] = useState(0);
+
+    const { isSyncNPC, isActive } = useVoiceStore();
+
+    // Voice Sync Animation values
+    const syncActive = isSyncNPC && isActive && voiceLevel > 0.05;
+    const voiceScale = syncActive ? 1 + (voiceLevel * 0.1) : 1;
+    const voiceGlow = syncActive ? `0 0 ${voiceLevel * 30}px rgba(6, 182, 212, ${voiceLevel})` : 'none';
     const resolvedUrl = useMediaUrl(imagePath || undefined);
     const { initDB } = useMediaStore();
 
@@ -20,6 +29,7 @@ const ProjectorView: React.FC = () => {
         // Load existing states immediately
         useMapStore.persist.rehydrate();
         useWhiteboardStore.persist.rehydrate();
+        useVoiceStore.persist.rehydrate();
 
         // Hide scrollbars and set black background
         document.body.style.overflow = 'hidden';
@@ -41,6 +51,13 @@ const ProjectorView: React.FC = () => {
             window.appBridge.on('image:clear-display', () => {
                 setImagePath(null);
             });
+
+            window.appBridge.on('image:sync-hub-data', (_event: unknown, ...args: unknown[]) => {
+                const [type, data] = args as [string, string];
+                if (type === 'voice-level') {
+                    setVoiceLevel(parseFloat(data) || 0);
+                }
+            });
         }
 
         return () => {
@@ -57,6 +74,9 @@ const ProjectorView: React.FC = () => {
             }
             if (e.key === 'gm-os-whiteboard-storage-v1') {
                 useWhiteboardStore.persist.rehydrate();
+            }
+            if (e.key === 'gmos-voice-storage') {
+                useVoiceStore.persist.rehydrate();
             }
         };
         window.addEventListener('storage', handleStorage);
@@ -145,11 +165,24 @@ const ProjectorView: React.FC = () => {
                     className="max-w-full max-h-full object-contain"
                 />
             ) : resolvedUrl ? (
-                <img
-                    src={resolvedUrl}
-                    alt="Projection"
-                    className="max-w-full max-h-full object-contain transition-opacity duration-1000 animate-in fade-in"
-                />
+                <div className="relative w-full h-full flex items-center justify-center">
+                    {/* Blurred background */}
+                    <img
+                        src={resolvedUrl}
+                        alt=""
+                        className="absolute inset-0 w-full h-full object-cover blur-[80px] opacity-40 scale-125"
+                    />
+                    {/* Crisp centered image */}
+                    <img
+                        src={resolvedUrl}
+                        alt="Projection"
+                        style={{
+                            transform: `scale(${voiceScale})`,
+                            boxShadow: voiceGlow,
+                        }}
+                        className="relative z-10 max-w-full max-h-full object-contain transition-all duration-75 animate-in fade-in rounded-lg"
+                    />
+                </div>
             ) : null}
         </div>
     );

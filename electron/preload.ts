@@ -41,7 +41,7 @@ contextBridge.exposeInMainWorld('appBridge', {
     },
     image: {
         getDisplays: () => ipcRenderer.invoke('image:get-displays'),
-        syncHubData: (type: 'image', path: string) => ipcRenderer.send('image:sync-hub-data', type, path),
+        syncHubData: (type: 'image' | 'entity' | 'voice-level', data: string) => ipcRenderer.send('image:sync-hub-data', type, data),
         launchDisplay: (paths: string[], target: string) => ipcRenderer.send('image:launch-display', paths, target),
         closeAllDisplays: () => ipcRenderer.send('image:close-all-displays')
     },

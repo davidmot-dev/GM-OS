@@ -113,11 +113,18 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                         }`}
                         onClick={() => isEditing && setIsMediaBrowserOpen(true)}
                     >
-                        <ResolvedImage
-                            src={selectedNpc.avatar}
-                            alt={selectedNpc.name}
-                            className="w-full h-full object-cover"
-                        />
+                        <div className="absolute inset-0">
+                            <ResolvedImage
+                                src={selectedNpc.avatar}
+                                alt=""
+                                className="absolute inset-0 w-full h-full object-cover blur-xl opacity-30 scale-110"
+                            />
+                            <ResolvedImage
+                                src={selectedNpc.avatar}
+                                alt={selectedNpc.name}
+                                className="relative z-10 w-full h-full object-contain"
+                            />
+                        </div>
                         {isEditing ? (
                             <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                 <ImageIcon size={48} className="text-white" />

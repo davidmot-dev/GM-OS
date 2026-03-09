@@ -135,14 +135,27 @@ const NPCCard: React.FC = () => {
                         transform: `scale(${voiceScale})`,
                         boxShadow: voiceGlow,
                     }}
-                    className={`w-32 h-32 rounded-2xl bg-obsidian-dark/50 border-2 border-gm-cyan/30 flex items-center justify-center text-gm-cyan shadow-glow-cyan z-10 transition-all duration-75 hover:border-gm-cyan overflow-hidden group/avatar`}
+                    className={`w-40 h-40 rounded-2xl bg-obsidian-dark/50 border-2 border-gm-cyan/30 flex items-center justify-center text-gm-cyan shadow-glow-cyan z-10 transition-all duration-75 hover:border-gm-cyan overflow-hidden group/avatar relative`}
                 >
                     {avatarSrc ? (
-                        <img src={avatarSrc} alt={currentEntity.name} className="w-full h-full object-cover" />
+                        <>
+                            {/* Blurred background (fills the space) */}
+                            <img 
+                                src={avatarSrc} 
+                                alt="" 
+                                className="absolute inset-0 w-full h-full object-cover blur-xl opacity-30 scale-110" 
+                            />
+                            {/* Crisp centered image (shows full art) */}
+                            <img 
+                                src={avatarSrc} 
+                                alt={currentEntity.name} 
+                                className="relative z-10 w-full h-full object-contain" 
+                            />
+                        </>
                     ) : (
                         React.cloneElement(getIcon() as React.ReactElement<{ size?: number }>, { size: 64 })
                     )}
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/avatar:opacity-100 flex items-center justify-center transition-opacity">
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/avatar:opacity-100 flex items-center justify-center transition-opacity z-20">
                         <Share2 size={24} className="text-white animate-pulse" />
                     </div>
                 </button>

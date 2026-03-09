@@ -12,6 +12,7 @@ import { ResolvedImage } from './ResolvedImage';
 import type { ProjectedEntity } from '../modules/image/types';
 import NarrativeClock from '../modules/clock/components/NarrativeClock';
 import ClockVisualizer from '../modules/clock/components/ClockVisualizer';
+import { useVoiceStore } from '../modules/voice/useVoiceStore';
 
 const PlayerHub: React.FC = () => {
     const { mediaList, projections } = useImageStore();
@@ -24,6 +25,14 @@ const PlayerHub: React.FC = () => {
     
     const [liveImagePath, setLiveImagePath] = useState<string | null>(null);
     const [liveEntity, setLiveEntity] = useState<ProjectedEntity | null>(null);
+    const [voiceLevel, setVoiceLevel] = useState(0);
+
+    const { isSyncNPC, isActive } = useVoiceStore();
+    
+    // Voice Sync Animation values for the projected entity
+    const syncActive = isSyncNPC && isActive && voiceLevel > 0.05;
+    const voiceScale = syncActive ? 1 + (voiceLevel * 0.1) : 1;
+    const voiceGlow = syncActive ? `0 0 ${voiceLevel * 30}px rgba(6, 182, 212, ${voiceLevel})` : 'none';
 
     const activeMedia = mediaList?.find(m => m.id === activeHubId);
     const backgroundPath = liveImagePath || activeMedia?.path;
@@ -35,10 +44,12 @@ const PlayerHub: React.FC = () => {
         useFavoriteStore.persist.rehydrate();
         useMapStore.persist.rehydrate();
         useWhiteboardStore.persist.rehydrate();
+        useVoiceStore.persist.rehydrate();
         
         // Listen for IPC updates because this is a separate window
         if (window.appBridge?.on) {
-            window.appBridge.on('image:sync-hub-data', (_event, type: string, data: string) => {
+            window.appBridge.on('image:sync-hub-data', (_event: unknown, ...args: unknown[]) => {
+                const [type, data] = args as [string, string];
                 if (type === 'image') {
                     setLiveImagePath(data || null);
                 } else if (type === 'entity') {
@@ -52,6 +63,8 @@ const PlayerHub: React.FC = () => {
                             console.error("Failed to parse projected entity", e);
                         }
                     }
+                } else if (type === 'voice-level') {
+                    setVoiceLevel(parseFloat(data) || 0);
                 }
             });
         }
@@ -72,6 +85,9 @@ const PlayerHub: React.FC = () => {
             }
             if (e.key === 'gm-os-whiteboard-storage-v1') {
                 useWhiteboardStore.persist.rehydrate();
+            }
+            if (e.key === 'gmos-voice-storage') {
+                useVoiceStore.persist.rehydrate();
             }
         };
 
@@ -179,8 +195,24 @@ const PlayerHub: React.FC = () => {
                                     {liveEntity && (
                                         <div key={liveEntity.id} className="bg-slate-900/90 backdrop-blur-3xl border-2 border-gm-cyan/30 rounded-[2rem] p-6 md:p-8 shadow-[0_0_50px_rgba(34,211,238,0.2)] flex flex-col gap-6 animate-in fade-in zoom-in slide-in-from-bottom-12 duration-1000 w-full hover:border-gm-cyan/60 transition-all group ring-1 ring-gm-cyan/10">
                                             <div className="flex flex-col items-center text-center gap-4 md:gap-6">
-                                                <div className="size-28 md:size-40 rounded-2xl overflow-hidden border-2 border-gm-cyan/20 shadow-glow-cyan bg-slate-950 group-hover:border-gm-cyan/50 transition-all duration-700 scale-100 group-hover:scale-[1.05] flex-shrink-0">
-                                                    <ResolvedImage src={liveEntity.avatar || liveEntity.imageUrl || liveEntity.portraitUrl} alt={liveEntity.name} className="w-full h-full object-cover" />
+                                                <div 
+                                                    className="size-28 md:size-40 rounded-2xl overflow-hidden border-2 border-gm-cyan/20 shadow-glow-cyan bg-slate-950 group-hover:border-gm-cyan/50 transition-all duration-700 scale-100 group-hover:scale-[1.05] flex-shrink-0 relative"
+                                                    style={{
+                                                        transform: `scale(${voiceScale})`,
+                                                        boxShadow: voiceGlow,
+                                                    }}
+                                                >
+                                                    {/* Blurred background */}
+                                                    <ResolvedImage 
+                                                        src={liveEntity.avatar || liveEntity.imageUrl || liveEntity.portraitUrl} 
+                                                        className="absolute inset-0 w-full h-full object-cover blur-xl opacity-30 scale-110" 
+                                                    />
+                                                    {/* Crisp centered image */}
+                                                    <ResolvedImage 
+                                                        src={liveEntity.avatar || liveEntity.imageUrl || liveEntity.portraitUrl} 
+                                                        alt={liveEntity.name} 
+                                                        className="relative z-10 w-full h-full object-contain" 
+                                                    />
                                                 </div>
                                                 <div className="flex flex-col items-center">
                                                     <h3 className="text-2xl md:text-3xl font-black text-white tracking-tighter drop-shadow-lg uppercase bg-gradient-to-b from-white to-slate-400 bg-clip-text text-transparent">{liveEntity.name}</h3>
@@ -218,8 +250,18 @@ const PlayerHub: React.FC = () => {
                                     {sharedFavorites.map(fav => (
                                         <div key={fav.id} className="bg-slate-950/80 backdrop-blur-2xl border border-white/10 rounded-[1.5rem] p-5 md:p-6 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.8)] flex flex-col gap-4 md:gap-5 animate-in fade-in zoom-in duration-700 w-full hover:border-white/20 transition-all group">
                                             <div className="flex flex-col items-center text-center gap-3 md:gap-4">
-                                                <div className="size-20 md:size-28 rounded-xl overflow-hidden border border-white/10 shadow-xl bg-slate-900 group-hover:border-white/30 transition-all duration-500 scale-100 group-hover:scale-[1.05] flex-shrink-0">
-                                                    <ResolvedImage src={fav.imageUrl || fav.tokenUrl} alt={fav.name} className="w-full h-full object-cover" />
+                                                <div className="size-20 md:size-28 rounded-xl overflow-hidden border border-white/10 shadow-xl bg-slate-900 group-hover:border-white/30 transition-all duration-500 scale-100 group-hover:scale-[1.05] flex-shrink-0 relative">
+                                                    {/* Blurred background */}
+                                                    <ResolvedImage 
+                                                        src={fav.imageUrl || fav.tokenUrl} 
+                                                        className="absolute inset-0 w-full h-full object-cover blur-lg opacity-40 scale-110" 
+                                                    />
+                                                    {/* Crisp centered image */}
+                                                    <ResolvedImage 
+                                                        src={fav.imageUrl || fav.tokenUrl} 
+                                                        alt={fav.name} 
+                                                        className="relative z-10 w-full h-full object-contain" 
+                                                    />
                                                 </div>
                                                 <div className="flex flex-col items-center">
                                                     <h3 className="text-lg md:text-xl font-black text-white tracking-tighter drop-shadow-md uppercase opacity-90">{fav.name}</h3>
