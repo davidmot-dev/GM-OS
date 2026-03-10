@@ -84,6 +84,15 @@ interface MusicState {
     activePadLearnInfo: { playlistId: string, padIndex: number } | null;
     toggleKeyLearn: () => void;
     setActiveLearnPad: (playlistId: string | null, padIndex: number | null) => void;
+    applySnapshot: (snapshot: {
+        activePlaylistId?: string | null;
+        playlists?: Playlist[];
+        deckA?: { activePadId: string | null; volume: number; isPlaying: boolean };
+        deckB?: { activePadId: string | null; volume: number; isPlaying: boolean };
+        crossfader?: number;
+        masterVolume?: number;
+    }) => Promise<void>;
+    reset: () => void;
 }
 
 export const useMusicStore = create<MusicState>()(
@@ -383,6 +392,66 @@ export const useMusicStore = create<MusicState>()(
                 renamePlaylist: (id: string, name: string) => set((state) => ({
                     playlists: state.playlists.map(p => p.id === id ? { ...p, name } : p)
                 })),
+
+                applySnapshot: async (snapshot) => {
+                    if (!snapshot) return;
+                    
+                    try {
+                        // 1. Volumes and Crossfader
+                        if (snapshot.masterVolume !== undefined) get().setMasterVolume(snapshot.masterVolume);
+                        if (snapshot.crossfader !== undefined) get().setCrossfader(snapshot.crossfader);
+                        
+                        // 2. Playlists and Active Playlist
+                        if (snapshot.playlists) set({ playlists: snapshot.playlists });
+                        if (snapshot.activePlaylistId) set({ activePlaylistId: snapshot.activePlaylistId });
+
+                        // 3. Decks
+                        // Note: Loading might be async and depends on URL being valid
+                        if (snapshot.deckA?.activePadId) {
+                            const pad = get().playlists.flatMap(p => p.pads).find(p => p.id === snapshot.deckA?.activePadId);
+                            if (pad) {
+                                await get().loadToDeck('A', pad);
+                                if (snapshot.deckA.isPlaying) await get().playDeck('A');
+                            }
+                        }
+
+                        if (snapshot.deckB?.activePadId) {
+                            const pad = get().playlists.flatMap(p => p.pads).find(p => p.id === snapshot.deckB?.activePadId);
+                            if (pad) {
+                                await get().loadToDeck('B', pad);
+                                if (snapshot.deckB.isPlaying) await get().playDeck('B');
+                            }
+                        }
+                    } catch (err) {
+                        console.error("MusicStore: Failed to apply snapshot", err);
+                    }
+                },
+
+                reset: () => {
+                    get().stopAll();
+                    set({
+                        playlists: [
+                            {
+                                id: 'default', name: 'Exploration', pads: Array(5).fill(null).map((_, i) => ({
+                                    id: `pad-${i}`,
+                                    label: `Pad ${i + 1}`,
+                                    url: '',
+                                    type: 'local',
+                                    loopA: null,
+                                    loopB: null
+                                }))
+                            }
+                        ],
+                        activePlaylistId: 'default',
+                        deckA: { activePadId: null, activeTrackLabel: null, volume: 1.0, isLooping: true, isPlaying: false },
+                        deckB: { activePadId: null, activeTrackLabel: null, volume: 1.0, isLooping: true, isPlaying: false },
+                        crossfader: 0.5,
+                        history: [],
+                        consoleLogs: [],
+                        autoFadeTarget: null
+                    });
+                    get().addLog("Module réinitialisé");
+                }
             }
         },
 
@@ -399,3 +468,7 @@ export const useMusicStore = create<MusicState>()(
     )
 );
 
+// Export for cross-store access
+if (typeof window !== 'undefined') {
+    (window as unknown as { useMusicStore: typeof useMusicStore }).useMusicStore = useMusicStore;
+}

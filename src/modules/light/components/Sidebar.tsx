@@ -69,10 +69,7 @@ export const Sidebar: React.FC = () => {
 
     return (
         <aside className="col-span-3 bg-app-surface/95 backdrop-blur-md border-r border-app-border p-6 flex flex-col gap-8 text-app-text font-sans h-full">
-            <div className="flex flex-col gap-1">
-                <h1 className="text-2xl font-extrabold tracking-tight text-accent">Light OS</h1>
-                <p className="text-slate-400 text-sm font-medium">GM Ambience Controller</p>
-            </div>
+
 
             {/* Connection Status & Sync */}
             <div className="flex flex-col gap-3">

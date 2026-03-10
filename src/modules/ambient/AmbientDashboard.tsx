@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { Wind, Trash2, Layers, Music, Activity, Save, Plus } from 'lucide-react';
+import { Trash2, Layers, Music, Activity, Plus, Save, RotateCcw } from 'lucide-react';
 import { useAmbientStore, type AmbientTheme, type AmbientTrackState } from './useAmbientStore';
 import AmbientTrack from './components/AmbientTrack';
 import { ambientEngine } from './AmbientEngine';
@@ -40,7 +40,7 @@ const MasterVisualizer: React.FC = () => {
 };
 
 const AmbientDashboard: React.FC = () => {
-    const { tracks, presets, scenes, customUniverses, loadTheme, saveTheme, deleteTheme, addUniverse, fadeOutAll, applyScene, outputDeviceId, setOutputDevice, updateTrack } = useAmbientStore();
+    const { tracks, presets, scenes, customUniverses, loadTheme, saveTheme, deleteTheme, addUniverse, fadeOutAll, applyScene, outputDeviceId, setOutputDevice, updateTrack, reset } = useAmbientStore();
 
     // Media Browser State
     const [browserTarget, setBrowserTarget] = useState<number | null>(null);
@@ -145,20 +145,11 @@ const AmbientDashboard: React.FC = () => {
                 allowedTypes={['audio']}
                 title="Sélectonner une Ambiance"
             />
-            {/* Header / Library Section */}
             <div className="flex flex-col md:flex-row items-center justify-between gap-6 bg-slate-900/60 border border-slate-800/50 p-6 rounded-3xl backdrop-blur-md shadow-2xl relative overflow-hidden">
                 {/* Background Glow */}
                 <div className="absolute top-0 right-0 w-64 h-64 bg-gm-cyan/5 blur-[100px] -mr-32 -mt-32 pointer-events-none" />
 
-                <div className="flex items-center gap-4 z-10">
-                    <div className="w-12 h-12 rounded-2xl bg-gm-cyan/10 border border-gm-cyan/20 flex items-center justify-center text-gm-cyan shadow-glow-cyan">
-                        <Wind size={24} className="animate-pulse" />
-                    </div>
-                    <div>
-                        <h2 className="text-xl font-black text-white italic tracking-tight uppercase">Ambient <span className="text-gm-cyan">OS</span></h2>
-                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Signal Route: 7.1 Virtual Surround</p>
-                    </div>
-                </div>
+
 
                 {/* Hierarchical Selector */}
                 <div className="flex items-center gap-3 bg-slate-950/50 p-1.5 rounded-2xl border border-slate-800 z-10">
@@ -262,6 +253,14 @@ const AmbientDashboard: React.FC = () => {
                     >
                         <Trash2 size={16} className="group-hover:rotate-12 transition-transform" />
                         SILENCE
+                    </button>
+
+                    <button
+                        onClick={() => gmConfirm("Voulez-vous vraiment réinitialiser le module Ambient OS ? Toutes les pistes et configurations seront perdues.", () => reset())}
+                        title="Réinitialiser le module"
+                        className="size-12 bg-red-500/5 border border-red-500/10 text-red-500/50 rounded-2xl flex items-center justify-center hover:bg-red-500/20 hover:text-red-500 transition-all active:scale-95 shadow-lg"
+                    >
+                        <RotateCcw size={18} />
                     </button>
                 </div>
             </div>

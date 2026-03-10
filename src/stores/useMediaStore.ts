@@ -20,7 +20,7 @@ interface MediaStoreState {
 
     initDB: () => Promise<void>;
     clearDB: () => Promise<void>;
-    addMedia: (file: File) => Promise<string>;
+    addMedia: (file: File, tags?: string[]) => Promise<string>;
     deleteMedia: (id: string) => Promise<void>;
     updateMediaTags: (id: string, tags: string[]) => Promise<void>;
     renameMedia: (id: string, newName: string) => Promise<void>;
@@ -114,7 +114,7 @@ export const useMediaStore = create<MediaStoreState>((set, get) => ({
         }
     },
 
-    addMedia: async (file: File) => {
+    addMedia: async (file: File, tags: string[] = []) => {
         try {
             const db = await getDB();
             const id = `m-${crypto.randomUUID()}`;
@@ -139,7 +139,7 @@ export const useMediaStore = create<MediaStoreState>((set, get) => ({
                 size: file.size,
                 blob: file, // Store the File object directly as Blob
                 createdAt: Date.now(),
-                tags: []
+                tags
             };
 
             const tx = db.transaction(STORE_NAME, 'readwrite');

@@ -46,6 +46,12 @@ interface AmbientState {
     setOutputDevice: (deviceId: string) => void;
     fadeOutAll: () => void;
     applyScene: (sceneId: string) => Promise<void>;
+    applySnapshot: (snapshot: {
+        activeTracks?: { id: string; url: string; volume: number; isPlaying: boolean }[];
+        masterVolume?: number;
+        tracks?: AmbientTrackState[];
+    }) => Promise<void>;
+    reset: () => void;
 }
 
 
@@ -249,6 +255,46 @@ export const useAmbientStore = create<AmbientState>()(
                 }
 
                 set({ tracks: newTracks });
+            },
+
+            applySnapshot: async (snapshot) => {
+                if (!snapshot) return;
+
+                if (snapshot.masterVolume !== undefined) set({ masterVolume: snapshot.masterVolume });
+
+                // 1. Restore the structures (all 8 tracks metadata)
+                if (snapshot.tracks) {
+                    set({ tracks: snapshot.tracks });
+                }
+
+                // 2. Trigger Playback/Loading for tracks that should be playing
+                const currentTracks = get().tracks;
+                for (let i = 0; i < currentTracks.length; i++) {
+                    const track = currentTracks[i];
+                    
+                    if (track.isPlaying && track.url) {
+                        try {
+                            await ambientEngine.tracks[i].load(track.url);
+                            ambientEngine.tracks[i].play(track.volume, 1.0);
+                        } catch (e) {
+                            console.error(`[AmbientStore] Failed to restore track ${i}:`, e);
+                        }
+                    } else {
+                        // Ensure it's stopped in the engine if it was playing before
+                        ambientEngine.tracks[i].stop(1.0);
+                    }
+                }
+            },
+
+            reset: () => {
+                ambientEngine.fadeOutAll(1.0);
+                set({
+                    tracks: INITIAL_TRACKS,
+                    masterVolume: 1.0,
+                    presets: DEFAULT_PRESETS,
+                    scenes: DEFAULT_SCENES,
+                    customUniverses: []
+                });
             }
         }),
         {
@@ -263,4 +309,9 @@ export const useAmbientStore = create<AmbientState>()(
         }
     )
 );
+
+// Export for cross-store access
+if (typeof window !== 'undefined') {
+    (window as unknown as { useAmbientStore: typeof useAmbientStore }).useAmbientStore = useAmbientStore;
+}
 

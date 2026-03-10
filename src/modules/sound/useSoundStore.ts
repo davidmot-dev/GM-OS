@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { soundEngine } from './SoundEngine';
 
 export interface SoundPad {
     id: string; // PAD_01 to PAD_16
@@ -21,7 +22,7 @@ export interface Atmosphere {
 
 interface SoundState {
     atmospheres: Atmosphere[];
-    activeAtmosphereId: string;
+    activeAtmosphereId: string | null;
     masterVolume: number; // 0.0 to 1.0
     outputDeviceId: string | 'default';
 
@@ -36,7 +37,7 @@ interface SoundState {
     setActiveAtmosphereId: (id: string) => void;
     renameAtmosphere: (id: string, name: string) => void;
 
-    setPadFile: (padId: string, filePath: string, title: string) => void;
+    setPadFile: (padId: string, filePath: string, title: string, atmosphereId?: string) => void;
     setPadVolume: (padId: string, volume: number) => void;
     setPadColor: (padId: string, color: string) => void;
     setPadActive: (padId: string, isActive: boolean) => void;
@@ -57,6 +58,13 @@ interface SoundState {
     setMidiConnected: (connected: boolean) => void;
 
     stopAllPads: () => void;
+    applySnapshot: (snapshot: {
+        activeAtmosphereId?: string | null;
+        masterVolume?: number;
+        activePadIds?: string[];
+        atmospheres?: Atmosphere[];
+    }) => Promise<void>;
+    reset: () => void;
 }
 
 const createEmptyPads = (): Record<string, SoundPad> => {
@@ -80,7 +88,7 @@ const createEmptyPads = (): Record<string, SoundPad> => {
 
 export const useSoundStore = create<SoundState>()(
     persist(
-        (set) => ({
+        (set, get) => ({
             atmospheres: [
                 { id: 'default', name: 'Exploration', pads: createEmptyPads() }
             ],
@@ -116,13 +124,21 @@ export const useSoundStore = create<SoundState>()(
                 atmospheres: state.atmospheres.map(a => a.id === id ? { ...a, name } : a)
             })),
 
-            setPadFile: (padId, filePath, title) => set((state) => ({
-                atmospheres: state.atmospheres.map(a =>
-                    a.id === state.activeAtmosphereId
-                        ? { ...a, pads: { ...a.pads, [padId]: { ...a.pads[padId], filePath, title } } }
-                        : a
-                )
-            })),
+            setPadFile: (padId, filePath, title, atmosphereId) => set((state) => {
+                const targetAtmosId = atmosphereId || state.activeAtmosphereId;
+                const atmosExists = state.atmospheres.some(a => a.id === targetAtmosId);
+                
+                // Fallback to first atmosphere if target doesn't exist
+                const finalAtmosId = atmosExists ? (targetAtmosId as string) : state.atmospheres[0].id;
+
+                return {
+                    atmospheres: state.atmospheres.map(a =>
+                        a.id === finalAtmosId
+                            ? { ...a, pads: { ...a.pads, [padId]: { ...a.pads[padId], filePath, title } } }
+                            : a
+                    )
+                };
+            }),
 
             setPadVolume: (padId, volume) => set((state) => ({
                 atmospheres: state.atmospheres.map(a =>
@@ -206,7 +222,6 @@ export const useSoundStore = create<SoundState>()(
 
             isMidiConnected: false,
             setMidiConnected: (isMidiConnected) => set({ isMidiConnected }),
-
             stopAllPads: () => set((state) => ({
                 atmospheres: state.atmospheres.map(a => ({
                     ...a,
@@ -214,7 +229,64 @@ export const useSoundStore = create<SoundState>()(
                         Object.entries(a.pads).map(([key, pad]) => [key, { ...pad, isActive: false }])
                     )
                 }))
-            }))
+            })),
+
+            applySnapshot: async (snapshot) => {
+                if (!snapshot) return;
+
+                if (snapshot.masterVolume !== undefined) get().setMasterVolume(snapshot.masterVolume);
+                
+                // 1. Restore the structures (atmospheres and pads)
+                if (snapshot.atmospheres) {
+                    set({ atmospheres: snapshot.atmospheres });
+                }
+
+                if (snapshot.activeAtmosphereId !== undefined) {
+                    set({ activeAtmosphereId: snapshot.activeAtmosphereId });
+                }
+                const atmosId = get().activeAtmosphereId;
+
+                // 2. Trigger Playback for active pads in the snapshot
+                if (snapshot.activePadIds) {
+                    const activeAtmos = get().atmospheres.find(a => a.id === atmosId);
+                    if (activeAtmos) {
+                        for (const padId of snapshot.activePadIds) {
+                            const pad = activeAtmos.pads[padId];
+                            if (pad && pad.filePath) {
+                                try {
+                                    // Ensure the pad is marked active in store
+                                    set((state) => ({
+                                        atmospheres: state.atmospheres.map(a =>
+                                            a.id === atmosId
+                                                ? { ...a, pads: { ...a.pads, [padId]: { ...a.pads[padId], isActive: true } } }
+                                                : a
+                                        )
+                                    }));
+                                    // Load and play
+                                    await soundEngine.loadAudio(padId, pad.filePath);
+                                    soundEngine.play(padId, pad.volume);
+                                } catch (e) {
+                                    console.error(`[SoundStore] Failed to restore pad ${padId}:`, e);
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+
+            reset: () => {
+                get().stopAllPads();
+                set({
+                    atmospheres: [
+                        { id: 'default', name: 'Exploration', pads: createEmptyPads() }
+                    ],
+                    activeAtmosphereId: 'default',
+                    masterVolume: 1.0,
+                    isMidiLearnActive: false,
+                    isKeyLearnActive: false,
+                    activePadLearnId: null
+                });
+            }
         }),
         {
             name: 'gm-os-sound-storage',
@@ -245,3 +317,7 @@ export const useSoundStore = create<SoundState>()(
         }
     )
 );
+// Export for cross-store access
+if (typeof window !== 'undefined') {
+    (window as unknown as { useSoundStore: typeof useSoundStore }).useSoundStore = useSoundStore;
+}

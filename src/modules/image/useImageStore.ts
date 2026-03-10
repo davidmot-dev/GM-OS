@@ -39,6 +39,12 @@ interface ImageState {
     navigateSequence: (direction: -1 | 1) => void;
 
     clearAll: () => void;
+    applySnapshot: (snapshot: {
+        projections?: Record<string, string | null>;
+        mediaList?: ImageMedia[];
+        folders?: ImageFolder[];
+    }) => void;
+    reset: () => void;
 }
 
 export const useImageStore = create<ImageState>()(
@@ -298,10 +304,52 @@ export const useImageStore = create<ImageState>()(
 
             clearAll: () => {
                 if (confirm('Êtes-vous sûr de vouloir supprimer toutes les images ?')) {
-                    get().blackout();
                     set({ mediaList: [] });
                 }
             },
+
+            applySnapshot: (snapshot) => {
+                if (!snapshot) return;
+
+                // 1. Restore structures (media library and folders)
+                if (snapshot.mediaList) {
+                    set({ mediaList: snapshot.mediaList });
+                }
+                if (snapshot.folders) {
+                    set({ folders: snapshot.folders });
+                }
+
+                // 2. Restore projections
+                if (snapshot.projections) {
+                    set({ projections: snapshot.projections });
+                    
+                    // Trigger actual projection logic in the bridges
+                    Object.entries(snapshot.projections).forEach(([target, mediaId]) => {
+                        if (mediaId) {
+                            // Find in the RESTORED mediaList
+                            const media = get().mediaList.find(m => m.id === mediaId);
+                            if (media) {
+                                if (target === 'hub') {
+                                    window.appBridge?.image?.syncHubData('image', media.path);
+                                } else {
+                                    window.appBridge?.image?.launchDisplay([media.path], target);
+                                }
+                            }
+                        }
+                    });
+                }
+            },
+
+            reset: () => {
+                get().blackoutAll();
+                set({
+                    mediaList: [],
+                    projections: {},
+                    folders: [],
+                    activeFolderId: null,
+                    projectedEntity: null
+                });
+            }
         }),
         {
             name: 'gmos-image-storage',
@@ -314,3 +362,8 @@ export const useImageStore = create<ImageState>()(
         }
     )
 );
+
+// Export for cross-store access
+if (typeof window !== 'undefined') {
+    (window as unknown as { useImageStore: typeof useImageStore }).useImageStore = useImageStore;
+}

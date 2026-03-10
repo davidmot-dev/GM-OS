@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { DiceEngine } from './DiceEngine';
 import type { RollResult } from './DiceEngine';
-import { Dices, RotateCcw, Zap, Settings2, BookmarkPlus, X } from 'lucide-react';
+import { Dices, RotateCcw, Zap, BookmarkPlus, X } from 'lucide-react';
 
 const generateId = () => Math.random().toString(36).substring(7);
 
@@ -175,13 +175,7 @@ const DiceBoard: React.FC = () => {
 
                 {/* Top: Engine Config */}
                 <div className="bg-slate-900/40 p-5 rounded-2xl border border-slate-800/80 backdrop-blur-md shadow-xl">
-                    <div className="flex items-center justify-between mb-6">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center text-indigo-400 border border-indigo-500/30">
-                                <Settings2 size={20} />
-                            </div>
-                            <h2 className="text-xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">Dice Engine</h2>
-                        </div>
+                    <div className="flex items-center justify-end mb-6">
                         <button onClick={resetConfig} className="text-xs flex items-center gap-1.5 text-slate-500 hover:text-indigo-400 transition-colors bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800">
                             <RotateCcw size={14} /> Réinitialiser
                         </button>

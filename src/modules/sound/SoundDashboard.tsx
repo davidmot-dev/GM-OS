@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSoundStore } from './useSoundStore';
 import SoundPad from './components/SoundPad';
-import SoundHeader from './components/SoundHeader';
 import AtmosphereManager from './components/AtmosphereManager';
 import { useMidiControls } from './useMidiControls';
 import { useKeyboardControls } from './useKeyboardControls';
@@ -23,38 +22,44 @@ const SoundDashboard: React.FC = () => {
         soundEngine.setOutputDevice(store.outputDeviceId);
     }, [store.outputDeviceId]);
 
-    const [isBrowserOpen, setIsBrowserOpen] = useState(false);
-    const [selectedPadId, setSelectedPadId] = useState<string | null>(null);
-    const { mediaList: storeMediaList } = useMediaStore();
+    const [assignmentTarget, setAssignmentTarget] = useState<{ padId: string, atmosphereId: string } | null>(null);
+
 
     const handleAssignMedia = (padId: string) => {
-        setSelectedPadId(padId);
-        setIsBrowserOpen(true);
+        setAssignmentTarget({ padId, atmosphereId: store.activeAtmosphereId || activeAtmos.id });
     };
 
     const handleMediaSelect = (mediaId: string) => {
-        const media = storeMediaList.find(m => m.id === mediaId);
-        if (!media || !selectedPadId) return;
+        if (!assignmentTarget) return;
 
-        store.setPadFile(selectedPadId, mediaId, media.name);
-        setIsBrowserOpen(false);
-        setSelectedPadId(null);
+        const { mediaList } = useMediaStore.getState();
+        const media = mediaList.find(m => m.id === mediaId);
+        
+        if (media) {
+            store.setPadFile(
+                assignmentTarget.padId, 
+                mediaId, 
+                media.name, 
+                assignmentTarget.atmosphereId
+            );
+        }
+        
+        setAssignmentTarget(null);
     };
 
     return (
         <div className="h-full flex flex-col overflow-hidden font-sans bg-app-bg text-slate-50 p-6 space-y-6">
             <MediaBrowser
-                isOpen={isBrowserOpen}
+                isOpen={!!assignmentTarget}
                 onClose={() => {
-                    setIsBrowserOpen(false);
-                    setSelectedPadId(null);
+                    setAssignmentTarget(null);
                 }}
                 onSelect={handleMediaSelect}
                 allowedTypes={['audio']}
                 title="Choisir un Son"
             />
             
-            <SoundHeader />
+
 
             {/* Main Area - Grid and Mixer space */}
             <main className="flex-1 flex flex-col min-h-0 bg-app-surface/20 backdrop-blur-sm rounded-3xl border border-app-border/50 overflow-hidden shadow-2xl">

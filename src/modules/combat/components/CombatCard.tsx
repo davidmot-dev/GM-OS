@@ -51,14 +51,14 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
 
             <div className="flex items-center w-full">
                 {/* Initiative Input */}
-                <div className="flex flex-col items-center mr-4">
-                    <span className="text-xs text-slate-400 uppercase tracking-wider mb-1">Init</span>
+                <div className="flex flex-col items-center mr-5 shrink-0">
+                    <span className="text-[10px] text-slate-500 uppercase font-black tracking-[0.2em] mb-1.5 mr-0.5">INIT</span>
                     <input
                         type="number"
                         value={combatant.init === 0 ? '' : combatant.init}
                         placeholder="0"
                         onChange={handleInitChange}
-                        className="w-12 h-10 bg-obsidian-dark text-white rounded text-center text-lg font-bold border-none focus:ring-1 focus:ring-gm-crimson custom-scrollbar"
+                        className="w-16 h-14 bg-obsidian-dark text-white rounded-xl text-center text-3xl font-black border border-gray-800 shadow-inner -ml-1 focus:ring-2 focus:ring-gm-crimson/50 transition-all"
                     />
                 </div>
 

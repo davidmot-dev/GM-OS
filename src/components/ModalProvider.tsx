@@ -2,7 +2,7 @@ import React from 'react';
 import { useModalStore } from '../stores/useModalStore';
 import { 
     AlertCircle, HelpCircle, Edit3, UserPlus, ShieldPlus, BookOpen, Users, Play, Cast, 
-    History as LucideHistory, X
+    History as LucideHistory, X, Lightbulb
 } from 'lucide-react';
 import { AddPlayerForm } from '../modules/session/components/AddPlayerForm';
 import { AddCharacterForm } from '../modules/session/components/AddCharacterForm';
@@ -14,6 +14,12 @@ import { MediaBrowser } from './MediaBrowser';
 import { TimelineEventForm } from '../modules/session/components/TimelineEventForm';
 import { WikiEntryForm } from '../modules/session/components/WikiEntryForm';
 import GlobalSettingsModal from './GlobalSettingsModal';
+import LightSceneSelector from '../modules/light/components/LightSceneSelector';
+import MapProjectionModal from '../modules/map/components/MapProjectionModal';
+import WhiteboardProjectionModal from '../modules/whiteboard/components/WhiteboardProjectionModal';
+import SessionNotesModal from '../modules/session/components/SessionNotesModal';
+import SessionSummaryModal from '../modules/session/components/SessionSummaryModal';
+import SnapshotVisualizerModal from '../modules/session/components/SnapshotVisualizerModal';
 
 const ModalProvider: React.FC = () => {
     const { 
@@ -124,7 +130,7 @@ const ModalProvider: React.FC = () => {
             {type === 'custom' && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
                     <div className={`bg-slate-900 border border-slate-800/50 rounded-[2rem] overflow-hidden shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] animate-in zoom-in-95 duration-300 flex flex-col ${
-                        customVariant === 'global-settings' || customVariant === 'favorite-dossier' || customVariant === 'npc-detail'
+                        customVariant === 'global-settings' || customVariant === 'favorite-dossier' || customVariant === 'npc-detail' || customVariant === 'session-summary' || customVariant === 'session-notes'
                             ? 'max-w-6xl w-full h-[90vh]' 
                             : 'max-w-2xl w-full max-h-[90vh]'
                     }`}>
@@ -145,6 +151,10 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'timeline-event-edit' && <LucideHistory size={18} />}
                                         {customVariant === 'wiki-entry-add' && <BookOpen size={18} />}
                                         {customVariant === 'wiki-entry-edit' && <BookOpen size={18} />}
+                                        {customVariant === 'light-scene-select' && <Lightbulb size={18} />}
+                                        {customVariant === 'session-notes' && <Edit3 size={18} />}
+                                        {customVariant === 'session-summary' && <BookOpen size={18} />}
+                                        {customVariant === 'snapshot-viewer' && <Cast size={18} />}
                                     </div>
                                     <h3 className="font-bold text-white uppercase tracking-wider text-sm">
                                         {customVariant === 'player-add' && 'Ajouter un Joueur'}
@@ -159,6 +169,10 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'timeline-event-edit' && 'Modifier l\'Événement'}
                                         {customVariant === 'wiki-entry-add' && 'Nouvelle Entrée Wiki'}
                                         {customVariant === 'wiki-entry-edit' && 'Modifier l\'Entrée Wiki'}
+                                        {customVariant === 'light-scene-select' && 'Lier une Scène de Lumière'}
+                                        {customVariant === 'session-notes' && 'Notes de Session'}
+                                        {customVariant === 'session-summary' && 'Résumé de Session'}
+                                        {customVariant === 'snapshot-viewer' && 'Aperçu du Snapshot'}
                                     </h3>
                                 </div>
                                 <button onClick={closeModal} className="p-2 hover:bg-slate-800 rounded-full text-slate-400 hover:text-white transition-all">
@@ -179,6 +193,19 @@ const ModalProvider: React.FC = () => {
                             {customVariant === 'timeline-event-edit' && <TimelineEventForm event={defaultValue as any} onClose={closeModal} />}
                             {customVariant === 'wiki-entry-add' && <WikiEntryForm onClose={closeModal} />}
                             {customVariant === 'wiki-entry-edit' && <WikiEntryForm entry={defaultValue as any} onClose={closeModal} />}
+                            {customVariant === 'light-scene-select' && <LightSceneSelector data={defaultValue as any} />}
+                            {customVariant === 'map-projection-select' && <MapProjectionModal />}
+                            {customVariant === 'whiteboard-projection-select' && <WhiteboardProjectionModal />}
+                            {customVariant === 'session-notes' && <SessionNotesModal />}
+                            {customVariant === 'session-summary' && <SessionSummaryModal />}
+                            {customVariant === 'snapshot-viewer' && (
+                                <SnapshotVisualizerModal 
+                                    isOpen={true} 
+                                    onClose={closeModal} 
+                                    snapshot={(defaultValue as any)?.snapshot} 
+                                    sessionName={(defaultValue as any)?.sessionName || 'Session'} 
+                                />
+                            )}
                             {customVariant === 'global-settings' && <GlobalSettingsModal onClose={closeModal} />}
                         </div>
                     </div>

@@ -1,22 +1,23 @@
 import React from 'react';
 // Let's use Lucide icons since it's the standard in this project.
 import {
-    Grid as GridIcon, UploadCloud, Ban, Folder as FolderIcon, History as HistoryIcon,
+    Ban, Folder as FolderIcon, History as HistoryIcon,
     Star as StarIcon, Search as SearchIcon,
-    Filter, Plus
+    Filter, Plus, RotateCcw
 } from 'lucide-react';
 
 import { useImageStore } from './useImageStore';
 import ImagePad from './components/ImagePad';
 import { MediaBrowser } from '../../components/MediaBrowser';
 import { useMediaStore } from '../../stores/useMediaStore';
+import { gmConfirm } from '../../stores/useModalStore';
 
 const ImageDashboard: React.FC = () => {
     const {
         mediaList, projectionTarget, setProjectionTarget,
         projectSequence, blackout, blackoutAll, addMedia, displays, fetchDisplays,
         folders, activeFolderId, setActiveFolderId, addFolder, removeFolder,
-        currentView, setCurrentView
+        currentView, setCurrentView, reset
     } = useImageStore();
 
     React.useEffect(() => {
@@ -75,39 +76,39 @@ const ImageDashboard: React.FC = () => {
 
             {/* Left Sidebar */}
             <aside className="w-80 bg-app-surface/90 backdrop-blur-md border-r border-app-border p-5 flex flex-col gap-6 flex-shrink-0">
-                <div className="flex items-center gap-3 px-2">
-                    <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center text-slate-950">
-                        <GridIcon size={24} />
-                    </div>
-                    <div>
-                        <h1 className="text-lg font-bold tracking-tight text-white leading-none">Image OS</h1>
-                        <p className="text-xs text-slate-400 font-medium mt-1 uppercase tracking-widest">Media Manager</p>
-                    </div>
-                </div>
 
-                <div className="px-2">
+
+                <div className="flex flex-col gap-3 px-2">
+                    <div className="grid grid-cols-2 gap-3">
+                        <button
+                            onClick={blackout}
+                            className="bg-rose-500/10 border border-rose-500/20 text-rose-500 hover:bg-rose-500/20 hover:border-rose-500/40 font-black py-4 rounded-2xl transition-all flex flex-col items-center justify-center gap-2 text-[10px] tracking-[0.2em] group"
+                            title="Éteindre l'écran cible uniquement"
+                        >
+                            <div className="p-2 rounded-full bg-rose-500/10 group-hover:scale-110 transition-transform shadow-glow-rose">
+                                <Ban size={18} />
+                            </div>
+                            TARGET
+                        </button>
+                        <button
+                            onClick={blackoutAll}
+                            className="bg-rose-600 hover:bg-rose-500 text-white font-black py-4 rounded-2xl shadow-glow-rose transition-all flex flex-col items-center justify-center gap-2 text-[10px] tracking-[0.2em] group"
+                            title="Éteindre TOUS les écrans"
+                        >
+                            <div className="p-2 rounded-full bg-white/20 group-hover:scale-110 transition-transform shadow-lg">
+                                <Ban size={18} />
+                            </div>
+                            ALL
+                        </button>
+                    </div>
+
                     <button
-                        onClick={projectSequence}
-                        className="w-full bg-accent hover:bg-accent/90 text-slate-950 font-bold py-3 rounded-xl shadow-glow-accent transition-all flex items-center justify-center gap-2"
+                        onClick={() => gmConfirm("Voulez-vous vraiment réinitialiser le module Image OS ? Toutes les images, dossiers et projections seront perdus.", () => reset())}
+                        className="w-full bg-app-bg/60 border border-red-500/10 text-red-500/40 hover:bg-red-500/10 hover:text-red-500 font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-3 text-[10px] tracking-widest uppercase hover:border-red-500/30 group"
+                        title="Réinitialiser le module"
                     >
-                        <UploadCloud size={20} />
-                        UPLOAD
-                    </button>
-                    <button
-                        onClick={blackout}
-                        className="w-full bg-rose-950/20 border border-rose-500/30 text-rose-500/70 hover:bg-rose-900/40 hover:text-rose-400 font-bold py-2 rounded-xl transition-all flex items-center justify-center gap-2 text-xs"
-                        title="Éteindre l'écran cible uniquement"
-                    >
-                        <Ban size={16} />
-                        BLACKOUT TARGET
-                    </button>
-                    <button
-                        onClick={blackoutAll}
-                        className="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 rounded-xl shadow-lg shadow-rose-900/40 transition-all flex items-center justify-center gap-2"
-                        title="Éteindre TOUS les écrans"
-                    >
-                        <Ban size={20} />
-                        BLACKOUT ALL
+                        <RotateCcw size={14} className="group-hover:-rotate-180 transition-transform duration-500" />
+                        RESTORE DEFAULT
                     </button>
                 </div>
 

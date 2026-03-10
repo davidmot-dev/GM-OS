@@ -1,11 +1,9 @@
 import React from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
-import { useModalStore } from '../../../stores/useModalStore';
-import { StickyNote, Save, Maximize2 } from 'lucide-react';
+import { StickyNote, Maximize2 } from 'lucide-react';
 
 const SessionNotesModal: React.FC = () => {
     const { sessions, activeCampaignId, updateSessionNotes, campaigns } = useSessionOSStore();
-    const { closeModal } = useModalStore();
 
     const campaign = campaigns.find(c => c.id === activeCampaignId);
     const session = sessions.find(s => s.id === campaign?.activeSessionId && s.status === 'active');
@@ -13,9 +11,9 @@ const SessionNotesModal: React.FC = () => {
     if (!session) return null;
 
     return (
-        <div className="flex flex-col h-[70vh] gap-6 relative overflow-hidden">
-            {/* Context Info */}
-            <div className="flex items-center justify-between mb-2">
+        <div className="flex flex-col h-full gap-6 relative overflow-hidden p-8 bg-app-bg">
+            {/* Body Context Info */}
+            <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-accent/60">
                     <Maximize2 size={14} />
                     <span className="text-[10px] font-black uppercase tracking-[0.2em]">Espace de Saisie Rapide</span>
@@ -37,25 +35,15 @@ const SessionNotesModal: React.FC = () => {
                 className="flex-1 bg-app-surface/30 border border-app-border rounded-2xl px-8 py-6 text-lg leading-relaxed text-app-text resize-none font-medium placeholder:text-app-text/10 custom-scrollbar focus:border-accent/30 focus:ring-0 transition-all shadow-inner"
             />
 
-            {/* Footer with Info & Action */}
-            <div className="flex items-center justify-between pt-4 border-t border-app-border">
-                <div className="flex flex-col gap-1">
-                     <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-app-text/40">
-                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
-                        Sauvegarde Automatique
-                    </div>
-                    <span className="text-[9px] font-mono text-app-text/20 italic opacity-60">
-                        Ces notes seront transférées dans le résumé de session plus tard
-                    </span>
+            {/* Simple Help Info */}
+            <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-app-text/20">
+                <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/40 opacity-50"></div>
+                    Sauvegarde Automatique
                 </div>
-
-                <button
-                    onClick={closeModal}
-                    className="flex items-center gap-2 px-8 py-2.5 bg-accent text-white rounded-xl font-bold text-sm shadow-glow-accent transition-all active:scale-95 group"
-                >
-                    <Save size={18} className="group-hover:scale-110 transition-transform" />
-                    TERMINER LA SAISIE
-                </button>
+                <span className="italic opacity-60">
+                    Ferme cette fenêtre pour enregistrer
+                </span>
             </div>
         </div>
     );

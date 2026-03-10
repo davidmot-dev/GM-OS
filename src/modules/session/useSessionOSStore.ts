@@ -1,6 +1,15 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { gmToast } from '../../stores/useToastStore';
 import type { SheetTemplate } from '../../data/defaultSheetTemplates';
+import { hueEngine } from '../light/HueEngine';
+import type { Playlist } from '../music/useMusicStore';
+import type { Atmosphere } from '../sound/useSoundStore';
+import type { AmbientTrackState } from '../ambient/useAmbientStore';
+import type { LightScene } from '../light/useLightStore';
+import type { ImageMedia, ImageFolder } from '../image/types';
+import type { WebLink } from '../web/types';
+import type { Combatant } from '../combat/useCombatStore';
 
 // --- Interfaces ---
 
@@ -69,6 +78,49 @@ export interface GameSession {
     externalLink?: string;
     filePath?: string;
     sessionNotes?: string;
+    moduleSnapshot?: SessionModuleSnapshot;
+}
+
+export interface SessionModuleSnapshot {
+    timestamp: number;
+    music?: {
+        activePlaylistId: string | null;
+        playlists?: Playlist[];
+        deckA: { activePadId: string | null; volume: number; isLooping: boolean; isPlaying: boolean };
+        deckB: { activePadId: string | null; volume: number; isLooping: boolean; isPlaying: boolean };
+        crossfader: number;
+        masterVolume: number;
+    };
+    sound?: {
+        activeAtmosphereId: string | null;
+        masterVolume: number;
+        activePadIds: string[];
+        atmospheres?: Atmosphere[]; // Snapshot of all atmospheres/pads
+    };
+    ambient?: {
+        activeTracks: { id: string; url: string; volume: number; isPlaying: boolean }[];
+        masterVolume: number;
+        tracks?: AmbientTrackState[]; // Snapshot of all 8 tracks
+    };
+    light?: {
+        activeSceneId: string | null;
+        globalBrightness: number;
+        scenes?: Record<string, LightScene>; // Snapshot of all 18 scenes
+    };
+    image?: {
+        projections: Record<string, string | null>;
+        mediaList?: ImageMedia[];
+        folders?: ImageFolder[];
+    };
+    web?: {
+        links: string[];
+        fullLinks?: WebLink[];
+    };
+    combat?: {
+        combatants: Combatant[];
+        currentTurnIdx: number;
+        round: number;
+    };
 }
 
 export type AtlasEntityCategory = 'npc' | 'lieu' | 'objet' | 'evenement';
@@ -194,6 +246,8 @@ interface SessionOSState {
     removeEntityFromSession: (sessionId: string, entityId: string) => void;
     clearSessionEntities: (sessionId: string) => void;
     launchSession: (sessionId: string) => void;
+    saveSystemSnapshot: (sessionId: string) => void;
+    applySystemSnapshot: (snapshot: SessionModuleSnapshot) => Promise<void>;
 
     rollDice: (sides: number) => void;
     clearDiceRolls: () => void;
@@ -498,6 +552,168 @@ export const useSessionOSStore = create<SessionOSState>()(
             setSelectedAtlasMap: (id) => set({ selectedAtlasMapId: id }),
             setSelectedEntity: (id) => set({ selectedEntityId: id, isAddingEntity: false }),
             setIsAddingEntity: (isAdding) => set({ isAddingEntity: isAdding, selectedEntityId: null }),
+            
+            saveSystemSnapshot: (sessionId: string) => {
+                try {
+                    // Accessing other stores via their global accessors with unknown as bridge
+                    const gWindow = window as unknown as { 
+                        useMusicStore?: { getState: () => { playlists: Playlist[]; activePlaylistId: string | null; deckA: { activePadId: string | null; volume: number; isLooping: boolean; isPlaying: boolean }; deckB: { activePadId: string | null; volume: number; isLooping: boolean; isPlaying: boolean }; crossfader: number; masterVolume: number } };
+                        useSoundStore?: { getState: () => { activeAtmosphereId: string | null; masterVolume: number; atmospheres: Atmosphere[] } };
+                        useAmbientStore?: { getState: () => { tracks: AmbientTrackState[]; masterVolume: number } };
+                        useLightStore?: { getState: () => { activeSceneId: string | null; globalBrightness: number; scenes: Record<string, LightScene> } };
+                        useImageStore?: { getState: () => { projections: Record<string, string | null>; mediaList: ImageMedia[]; folders: ImageFolder[] } };
+                        useWebStore?: { getState: () => { links: WebLink[] } };
+                        useCombatStore?: { getState: () => { combatants: Combatant[]; currentTurnIdx: number; round: number } };
+                    };
+
+                    const musicState = gWindow.useMusicStore?.getState();
+                    const soundState = gWindow.useSoundStore?.getState();
+                    const ambientState = gWindow.useAmbientStore?.getState();
+                    const lightState = gWindow.useLightStore?.getState();
+                    const imageState = gWindow.useImageStore?.getState();
+                    const webState = gWindow.useWebStore?.getState();
+                    const combatState = gWindow.useCombatStore?.getState();
+
+                    const snapshot: SessionModuleSnapshot = {
+                        timestamp: Date.now(),
+                        music: musicState ? {
+                            activePlaylistId: musicState.activePlaylistId,
+                            playlists: musicState.playlists,
+                            deckA: { 
+                                activePadId: musicState.deckA.activePadId, 
+                                volume: musicState.deckA.volume, 
+                                isLooping: musicState.deckA.isLooping, 
+                                isPlaying: musicState.deckA.isPlaying 
+                            },
+                            deckB: { 
+                                activePadId: musicState.deckB.activePadId, 
+                                volume: musicState.deckB.volume, 
+                                isLooping: musicState.deckB.isLooping, 
+                                isPlaying: musicState.deckB.isPlaying 
+                            },
+                            crossfader: musicState.crossfader,
+                            masterVolume: musicState.masterVolume
+                        } : undefined,
+                        sound: soundState ? {
+                            activeAtmosphereId: soundState.activeAtmosphereId,
+                            masterVolume: soundState.masterVolume,
+                            activePadIds: soundState.atmospheres
+                                .find(a => a.id === soundState.activeAtmosphereId)?.pads
+                                ? Object.values(soundState.atmospheres.find(a => a.id === soundState.activeAtmosphereId)!.pads)
+                                    .filter(p => p.isActive)
+                                    .map(p => p.id)
+                                : [],
+                            atmospheres: soundState.atmospheres
+                        } : undefined,
+                        ambient: ambientState ? {
+                            activeTracks: ambientState.tracks.map(t => ({
+                                id: t.id,
+                                url: t.url,
+                                volume: t.volume,
+                                isPlaying: t.isPlaying
+                            })),
+                            masterVolume: ambientState.masterVolume,
+                            tracks: ambientState.tracks
+                        } : undefined,
+                        light: lightState ? {
+                            activeSceneId: lightState.activeSceneId as string,
+                            globalBrightness: lightState.globalBrightness as number,
+                            scenes: lightState.scenes
+                        } : undefined,
+                         image: imageState ? {
+                            projections: imageState.projections,
+                            mediaList: imageState.mediaList,
+                            folders: imageState.folders
+                        } : undefined,
+                        web: webState ? {
+                            links: webState.links.map(l => l.url),
+                            fullLinks: webState.links
+                        } : undefined,
+                        combat: combatState ? {
+                            combatants: combatState.combatants,
+                            currentTurnIdx: combatState.currentTurnIdx,
+                            round: combatState.round
+                        } : undefined
+                    };
+
+                    set(state => ({
+                        sessions: state.sessions.map(s => s.id === sessionId ? { ...s, moduleSnapshot: snapshot } : s)
+                    }));
+                } catch (err) {
+                    console.error("Failed to save system snapshot:", err);
+                }
+            },
+
+            applySystemSnapshot: async (snapshot: SessionModuleSnapshot) => {
+                try {
+                    // Type for stores with applySnapshot
+                    type SnapshotStore<T> = { getState: () => { applySnapshot?: (s: T) => void | Promise<void> } };
+
+                    // 1. Music
+                    if (snapshot.music) {
+                        const musicStore = (window as unknown as { useMusicStore?: SnapshotStore<NonNullable<SessionModuleSnapshot['music']>> }).useMusicStore;
+                        if (musicStore) {
+                            musicStore.getState().applySnapshot?.(snapshot.music);
+                        }
+                    }
+
+                    // 2. Sound
+                    if (snapshot.sound) {
+                        const soundStore = (window as unknown as { useSoundStore?: SnapshotStore<NonNullable<SessionModuleSnapshot['sound']>> }).useSoundStore;
+                        if (soundStore) {
+                            soundStore.getState().applySnapshot?.(snapshot.sound);
+                        }
+                    }
+
+                    // 3. Ambient
+                    if (snapshot.ambient) {
+                        const ambientStore = (window as unknown as { useAmbientStore?: SnapshotStore<NonNullable<SessionModuleSnapshot['ambient']>> }).useAmbientStore;
+                        if (ambientStore) {
+                            ambientStore.getState().applySnapshot?.(snapshot.ambient);
+                        }
+                    }
+
+                    // 4. Light
+                    if (snapshot.light) {
+                        const lightStore = (window as unknown as { useLightStore?: SnapshotStore<NonNullable<SessionModuleSnapshot['light']>> }).useLightStore;
+                        if (lightStore) {
+                            lightStore.getState().applySnapshot?.(snapshot.light);
+                            // Trigger Hue Engine for the scene
+                            if (snapshot.light.activeSceneId) {
+                                hueEngine.applyScene(snapshot.light.activeSceneId, true);
+                            }
+                        }
+                    }
+
+                    // 5. Image
+                    if (snapshot.image) {
+                        const imageStore = (window as unknown as { useImageStore?: SnapshotStore<NonNullable<SessionModuleSnapshot['image']>> }).useImageStore;
+                        if (imageStore) {
+                            imageStore.getState().applySnapshot?.(snapshot.image);
+                        }
+                    }
+
+                    // 6. Web
+                    if (snapshot.web) {
+                        const webStore = (window as unknown as { useWebStore?: SnapshotStore<NonNullable<SessionModuleSnapshot['web']>> }).useWebStore;
+                        if (webStore) {
+                            webStore.getState().applySnapshot?.(snapshot.web);
+                        }
+                    }
+
+                    // 7. Combat
+                    if (snapshot.combat) {
+                        const combatStore = (window as unknown as { useCombatStore?: SnapshotStore<NonNullable<SessionModuleSnapshot['combat']>> }).useCombatStore;
+                        if (combatStore) {
+                            combatStore.getState().applySnapshot?.(snapshot.combat);
+                        }
+                    }
+                    
+                    gmToast("État du système restauré avec succès !", "success");
+                } catch (err) {
+                    console.error("Failed to apply system snapshot:", err);
+                }
+            },
 
             addSheetTemplate: (template) => set((state) => ({
                 customSheetTemplates: [
@@ -730,6 +946,12 @@ export const useSessionOSStore = create<SessionOSState>()(
             launchSession: (sessionId) => set((state) => {
                 const session = state.sessions.find(s => s.id === sessionId);
                 if (!session) return state;
+
+                // Auto-apply snapshot if it exists
+                if (session.moduleSnapshot) {
+                    console.log("[useSessionOSStore] Auto-restoring snapshot for session:", session.id);
+                    state.applySystemSnapshot(session.moduleSnapshot);
+                }
 
                 return {
                     sessions: state.sessions.map(s => {

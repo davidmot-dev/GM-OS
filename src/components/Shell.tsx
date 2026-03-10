@@ -301,36 +301,26 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                     <div className="group relative p-4 rounded-[1.25rem] bg-gradient-to-br from-app-surface/40 to-app-bg/60 border border-app-border/30 shadow-2xl backdrop-blur-2xl transition-all duration-300 hover:border-accent/30 overflow-hidden">
                         <div className="absolute -right-4 -top-4 w-24 h-24 bg-accent/10 rounded-full blur-3xl group-hover:bg-accent/20 transition-all duration-500" />
                         
-                        <div className="flex items-center gap-3 relative z-10">
-                            <div className="relative">
-                                <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-xs font-black text-white ring-2 ring-slate-800 shadow-inner group-hover:ring-accent/50 transition-all">
-                                    DM
-                                </div>
-                                <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-slate-900" />
-                            </div>
-                            
-                            <div className="flex flex-col flex-1 min-w-0">
-                                <span className="text-xs font-black text-white uppercase tracking-tighter truncate leading-none">Dungeon Master</span>
-                                <span className="text-[10px] text-app-text/40 font-bold uppercase tracking-widest mt-1 opacity-70 group-hover:opacity-100 transition-opacity">
-                                    Session Link Active
-                                </span>
-                            </div>
+                        <div className="flex flex-1 items-center justify-center gap-4 relative z-10 px-2">
 
+
+                        <div className="flex items-center justify-center gap-4 relative z-10 px-2">
                             <button
                                 onClick={handleLaunchHub}
-                                className="p-1.5 rounded-lg text-app-text/40 hover:text-sky-400 hover:bg-sky-400/10 transition-all"
+                                className="p-3 rounded-xl bg-sky-500/5 text-sky-400/60 hover:text-sky-400 hover:bg-sky-500/10 hover:shadow-glow-sky transition-all border border-sky-500/10"
                                 title="Launch Player Hub"
                             >
-                                <MonitorPlay size={18} />
+                                <MonitorPlay size={20} />
                             </button>
 
                             <button
                                 onClick={handleQuitApp}
-                                className="p-2 rounded-lg text-app-text/20 hover:text-red-500 hover:bg-red-500/10 transition-all"
+                                className="p-3 rounded-xl bg-red-500/5 text-red-500/40 hover:text-red-500 hover:bg-red-500/10 hover:shadow-glow-red transition-all border border-red-500/10"
                                 title="QUITTER GM-OS"
                             >
-                                <Power size={18} />
+                                <Power size={20} />
                             </button>
+                        </div>
                         </div>
                     </div>
                 </div>
@@ -341,7 +331,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                 <header className="h-16 border-b border-app-border/20 flex items-center justify-between px-8 bg-app-surface/10 backdrop-blur-md z-10">
                     <div className="flex items-center gap-4">
                         <h2 className="text-lg font-bold tracking-tight text-white uppercase italic">
-                            {activeModule} <span className="text-accent">OS</span>
+                            {activeModule === 'dashboard' ? 'SESSION' : activeModule} <span className="text-accent">OS</span>
                         </h2>
                     </div>
 

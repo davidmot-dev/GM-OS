@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSessionOSStore, type WikiEntry } from '../useSessionOSStore';
 import { Save, X, Plus } from 'lucide-react';
+import { MediaImage } from '../../../components/MediaImage';
 
 interface WikiEntryFormProps {
     entry?: WikiEntry;
@@ -155,7 +156,7 @@ export const WikiEntryForm: React.FC<WikiEntryFormProps> = ({ entry, onClose }) 
                         <div className="flex flex-wrap gap-2 mt-2">
                             {imageUrls.map(url => (
                                 <div key={url} className="relative group w-12 h-12 rounded-lg overflow-hidden border border-app-border">
-                                    <img src={url} alt="Preview" className="w-full h-full object-cover" />
+                                    <MediaImage source={url} alt="Preview" className="w-full h-full object-cover" />
                                     <button 
                                         type="button" 
                                         onClick={() => setImageUrls(imageUrls.filter(u => u !== url))}

@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import {
-    Globe,
     Plus,
     Trash2,
     FileUp,
     FileDown,
-    Info
+    Info,
+    RotateCcw
 } from 'lucide-react';
 import { useWebStore } from './useWebStore';
 import type { WebLink } from './types';
 import WebLinkPad from './components/WebLinkPad';
 import AddEditWebLinkModal from './components/AddEditWebLinkModal';
+import { gmConfirm } from '../../stores/useModalStore';
 
 const WebDashboard: React.FC = () => {
     const {
@@ -19,7 +20,8 @@ const WebDashboard: React.FC = () => {
         updateLink,
         importLinks,
         exportLinks,
-        clearAll
+        clearAll,
+        reset
     } = useWebStore();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -47,18 +49,7 @@ const WebDashboard: React.FC = () => {
         <div className="h-full flex flex-col bg-app-bg scrollbar-hide overflow-hidden">
             {/* Header */}
             <header className="border-b border-app-border bg-app-surface/60 backdrop-blur-xl px-8 py-4 flex items-center justify-between sticky top-0 z-40">
-                <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-accent flex items-center justify-center shadow-glow-accent ring-1 ring-accent/30">
-                        <Globe className="text-slate-950 font-bold" size={28} />
-                    </div>
-                    <div>
-                        <h1 className="text-2xl font-black tracking-tighter text-accent uppercase italic leading-none">
-                            Web<span className="text-app-text/50">OS</span>
-                            <span className="text-[10px] font-mono font-normal text-slate-500 align-top ml-2 not-italic">v5.0</span>
-                        </h1>
-                        <p className="text-[10px] text-slate-500 font-mono tracking-[0.2em] uppercase mt-1">Global Bookmark Interface</p>
-                    </div>
-                </div>
+
 
                 <div className="flex items-center gap-3">
                     <div className="flex bg-app-bg/50 p-1 rounded-xl border border-app-border focus-within:border-accent/30 transition-all">
@@ -89,6 +80,14 @@ const WebDashboard: React.FC = () => {
                     >
                         <Trash2 size={14} className="group-hover:scale-110 transition-transform" />
                         Clear
+                    </button>
+
+                    <button
+                        onClick={() => gmConfirm("Voulez-vous vraiment réinitialiser le module Web OS ? Vos marque-pages seront réinitialisés aux valeurs par défaut.", () => reset())}
+                        className="flex items-center justify-center size-10 rounded-xl bg-red-500/5 hover:bg-red-500/20 border border-red-500/10 text-red-500/50 hover:text-red-500 transition-all active:scale-95 group"
+                        title="Réinitialiser le module"
+                    >
+                        <RotateCcw size={16} className="group-hover:rotate-180 transition-transform duration-500" />
                     </button>
 
                     <button

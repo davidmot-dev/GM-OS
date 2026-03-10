@@ -67,6 +67,12 @@ interface LightState {
     clearScene: (sceneId: string) => void;
     isSyncEnabled: boolean;
     setSyncEnabled: (val: boolean) => void;
+    applySnapshot: (snapshot: {
+        activeSceneId?: string | null;
+        globalBrightness?: number;
+        scenes?: Record<string, LightScene>;
+    }) => void;
+    reset: () => void;
 }
 
 // ----------------------
@@ -174,7 +180,37 @@ export const useLightStore = create<LightState>()(
                 }
             })),
 
-            setSyncEnabled: (val: boolean) => set({ isSyncEnabled: val })
+            setSyncEnabled: (val: boolean) => set({ isSyncEnabled: val }),
+
+            applySnapshot: (snapshot) => {
+                if (!snapshot) return;
+
+                // 1. Restore the structures (all 18 scenes metadata and light states)
+                if (snapshot.scenes) {
+                    set({ scenes: snapshot.scenes });
+                }
+
+                if (snapshot.globalBrightness !== undefined) {
+                    set({ globalBrightness: snapshot.globalBrightness });
+                }
+
+                if (snapshot.activeSceneId) {
+                    // We don't call HueEngine here directly to avoid circular deps or complex logic in store
+                    // But we set the active scene which UI will reflect
+                    set({ activeSceneId: snapshot.activeSceneId });
+                }
+            },
+
+            reset: () => {
+                set({
+                    scenes: createDefaultScenes(),
+                    activeSceneId: null,
+                    lastManualSceneId: null,
+                    globalBrightness: 100,
+                    transitionTimeMs: 5000,
+                    isSyncEnabled: true
+                });
+            }
         }),
         {
             name: 'gm-os-light-storage-v1',
@@ -190,3 +226,8 @@ export const useLightStore = create<LightState>()(
         }
     )
 );
+
+// Export for cross-store access
+if (typeof window !== 'undefined') {
+    (window as unknown as { useLightStore: typeof useLightStore }).useLightStore = useLightStore;
+}

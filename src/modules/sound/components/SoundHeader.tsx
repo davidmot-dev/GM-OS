@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { StopCircle, ChevronDown, Check, Zap, Keyboard, RefreshCcw } from 'lucide-react';
+import { StopCircle, ChevronDown, Check, Zap, Keyboard, RefreshCcw, RotateCcw } from 'lucide-react';
 import { useSoundStore } from '../useSoundStore';
+import { gmConfirm } from '../../../stores/useModalStore';
 import { soundEngine } from '../SoundEngine';
 import { soundController } from '../SoundController';
 import { useMidiControls } from '../useMidiControls';
@@ -18,7 +19,8 @@ const SoundHeader: React.FC<SoundHeaderProps> = () => {
         toggleMidiLearn, 
         isKeyLearnActive, 
         toggleKeyLearn,
-        isMidiConnected
+        isMidiConnected,
+        reset
     } = useSoundStore();
 
     const [audioDevices, setAudioDevices] = useState<MediaDeviceInfo[]>([]);
@@ -146,6 +148,14 @@ const SoundHeader: React.FC<SoundHeaderProps> = () => {
                         title="Arrêt Progressif (3s)"
                     >
                         <StopCircle size={18} />
+                    </button>
+
+                    <button
+                        onClick={() => gmConfirm("Voulez-vous vraiment réinitialiser le module Sound OS ? Toutes vos atmosphères et configurations seront perdues.", () => reset())}
+                        title="Réinitialiser le module"
+                        className="size-10 bg-red-500/5 border border-red-500/10 text-red-500/50 rounded-xl flex items-center justify-center hover:bg-red-500/20 hover:text-red-500 transition-all active:scale-95"
+                    >
+                        <RotateCcw size={16} />
                     </button>
                 </div>
             </div>

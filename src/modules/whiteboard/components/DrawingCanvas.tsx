@@ -1,7 +1,11 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useImperativeHandle, forwardRef } from 'react';
 import { useWhiteboardStore, type Point, type DrawingPath } from '../useWhiteboardStore';
 
-export const DrawingCanvas: React.FC = () => {
+export interface DrawingCanvasRef {
+    getBlob: () => Promise<Blob | null>;
+}
+
+export const DrawingCanvas = forwardRef<DrawingCanvasRef>((_, ref) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const contextRef = useRef<CanvasRenderingContext2D | null>(null);
     const [instanceId] = useState(() => Math.random().toString(36).substring(7));
@@ -108,6 +112,31 @@ export const DrawingCanvas: React.FC = () => {
         }
     }, [paths, isDrawing, currentPoints, currentTool, currentColor, currentWidth, activePath, activeDrawerId, instanceId, laserPointer, drawPath]);
 
+    useImperativeHandle(ref, () => ({
+        getBlob: async () => {
+            const canvas = canvasRef.current;
+            if (!canvas) return null;
+
+            // Create a temporary canvas to include the background
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = canvas.width;
+            tempCanvas.height = canvas.height;
+            const tempCtx = tempCanvas.getContext('2d');
+            if (!tempCtx) return null;
+
+            // 1. Fill background
+            tempCtx.fillStyle = backgroundMode === 'light' ? '#ffffff' : '#020617';
+            tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+            // 2. Draw original canvas content onto temp canvas
+            tempCtx.drawImage(canvas, 0, 0);
+
+            return new Promise<Blob | null>((resolve) => {
+                tempCanvas.toBlob((blob) => resolve(blob), 'image/png');
+            });
+        }
+    }));
+
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -163,7 +192,7 @@ export const DrawingCanvas: React.FC = () => {
         if (currentTool === 'laser') {
             setLaserPointer({ x, y });
         } else if (laserPointer) {
-             setLaserPointer(null);
+            setLaserPointer(null);
         }
 
         if (!isDrawing) return;
@@ -255,4 +284,6 @@ export const DrawingCanvas: React.FC = () => {
             className="w-full h-full cursor-crosshair touch-none"
         />
     );
-};
+});
+
+DrawingCanvas.displayName = 'DrawingCanvas';

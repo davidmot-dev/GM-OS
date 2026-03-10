@@ -23,10 +23,7 @@ export const FavoriteSidebar: React.FC = () => {
 
     return (
         <aside className="w-80 bg-app-surface/90 backdrop-blur-md border-r border-app-border p-6 flex flex-col gap-8 shrink-0">
-            <div className="flex flex-col gap-1">
-                <h1 className="text-accent text-xl font-bold tracking-tight">PANTHEON HUB</h1>
-                <p className="text-slate-500 text-xs font-semibold uppercase tracking-widest">Master Control OS</p>
-            </div>
+
 
             <nav className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
@@ -83,13 +80,7 @@ export const FavoriteSidebar: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="flex items-center gap-3 px-2">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-accent to-amber-200"></div>
-                    <div>
-                        <p className="text-sm font-bold leading-none text-slate-200">GameMaster_One</p>
-                        <p className="text-[10px] text-slate-500 mt-1 uppercase">Local Mode</p>
-                    </div>
-                </div>
+
             </div>
         </aside>
     );

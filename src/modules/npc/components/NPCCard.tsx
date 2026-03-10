@@ -13,10 +13,14 @@ import { useVoiceStore } from '../../voice/useVoiceStore';
 const NPCCard: React.FC = () => {
     const { currentEntity, saveToMemo, isGenerating, selectAvatar } = useNPCStore();
     const { addCombatant } = useCombatStore();
-    const { addJournalEntry } = useSessionOSStore() as any;
+    const { sessions, selectedSessionId, addWikiEntry } = useSessionOSStore();
     const { addToken } = useMapStore();
     const { addFavorite } = useFavoriteStore();
     const { inputLevel, isSyncNPC, isActive } = useVoiceStore();
+    
+    // Check if session is active
+    const activeSession = sessions.find(s => s.id === selectedSessionId);
+    const isSessionActive = activeSession?.status === 'active';
     
     // Voice Sync Animation values
     const syncActive = isSyncNPC && isActive && inputLevel > 0.05;
@@ -79,17 +83,26 @@ const NPCCard: React.FC = () => {
     };
 
     const handleAddToJournal = () => {
-        addJournalEntry({
-            id: Date.now().toString(),
+        if (!isSessionActive || !activeSession) {
+            gmAlert("Aucune session active. Lancez une session dans le Cockpit pour exporter vers le Wiki.");
+            return;
+        }
+
+        const wikiContent = Object.entries(currentEntity.fields)
+            .map(([k, v]) => `**${k}**: ${v}`)
+            .join('\n\n');
+
+        addWikiEntry({
+            campaignId: activeSession.campaignId,
             title: currentEntity.name,
-            content: Object.entries(currentEntity.fields)
-                .map(([k, v]) => `**${k}**: ${v}`)
-                .join('\n'),
-            timestamp: Date.now(),
-            isPublic: false,
-            author: 'GM'
+            content: `## Détails du PNJ\n\n${wikiContent}\n\n---\n*Généré via NPC OS*`,
+            category: currentEntity.category === 'npcs' ? 'npc' : 'other',
+            tags: [currentEntity.category, 'npc-os', 'journal'],
+            imageUrls: avatarSrc ? [avatarSrc] : [],
+            linkedEntityIds: []
         });
-        gmToast(`${currentEntity.name} ajouté au journal`);
+
+        gmToast(`${currentEntity.name} ajouté au Wiki de la session !`);
     };
 
     const handleAddToFavorite = () => {
@@ -218,8 +231,8 @@ const NPCCard: React.FC = () => {
                     </button>
                     <button
                         onClick={handleAddToJournal}
-                        className="p-2 bg-app-surface hover:bg-app-bg/50 rounded-lg text-slate-400 hover:text-white transition-colors"
-                        title="Ajouter au Journal"
+                        className={`p-2 rounded-lg transition-all ${isSessionActive ? 'bg-accent/10 text-accent border border-accent/20' : 'bg-app-surface text-slate-400 hover:text-white hover:bg-app-bg/50'}`}
+                        title={isSessionActive ? "Exporter vers le Wiki de la Session" : "Ajouter au Wiki (Session requise)"}
                     >
                         <FileText size={20} />
                     </button>

@@ -214,9 +214,6 @@ const VoiceDashboard: React.FC = () => {
 
                     {/* Go Live Button Area */}
                     <div className="mt-auto flex flex-col items-center gap-6">
-                        <h2 className="text-3xl font-black text-white italic tracking-tighter uppercase">
-                            Auralis <span className="text-accent">OS</span>
-                        </h2>
                         
                         <button 
                             onClick={() => toggleLive()}

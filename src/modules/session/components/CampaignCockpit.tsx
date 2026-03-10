@@ -2,11 +2,11 @@ import React from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useSessionStore } from '../../../store/useSessionStore';
 import { useModalStore } from '../../../stores/useModalStore';
-import { BookOpen, LayoutDashboard, Swords, Users, Users2, Map as MapIcon, Archive, PlusCircle, Library, FileText, ExternalLink, File, StickyNote, Play } from 'lucide-react';
+import { BookOpen, LayoutDashboard, Swords, Users, Users2, Map as MapIcon, Archive, PlusCircle, Library, FileText, ExternalLink, File, StickyNote, Play, RefreshCw, Eye } from 'lucide-react';
 import SessionChecklist from './SessionChecklist';
 
 const CampaignCockpit: React.FC = () => {
-    const { campaigns, activeCampaignId, sessions, setCurrentView, currentView, updateSession } = useSessionOSStore();
+    const { campaigns, activeCampaignId, sessions, setCurrentView, currentView, updateSession, applySystemSnapshot } = useSessionOSStore();
     const { setActiveModule } = useSessionStore();
     const { showCustom, showConfirm } = useModalStore();
 
@@ -113,6 +113,32 @@ const CampaignCockpit: React.FC = () => {
                             <StickyNote size={20} className="text-accent/60 group-hover:text-accent transition-colors" />
                             <span className="text-sm font-bold uppercase tracking-tighter">Notes de Session</span>
                         </button>
+
+                        {activeSession.moduleSnapshot && (
+                            <div className="flex flex-col gap-1 mt-1">
+                                <button
+                                    onClick={() => showConfirm(
+                                        'Voulez-vous restaurer l\'état complet de GM-OS à partir de ce snapshot ?',
+                                        () => applySystemSnapshot(activeSession.moduleSnapshot!),
+                                        undefined,
+                                        'OUI, RESTAURER',
+                                        'ANNULER'
+                                    )}
+                                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all text-emerald-400 hover:bg-emerald-500/10 border border-emerald-500/10"
+                                    title="Appliquer la configuration sauvegardée"
+                                >
+                                    <RefreshCw size={20} className="group-hover:rotate-180 transition-transform duration-500" />
+                                    <span className="text-sm font-bold uppercase tracking-tighter flex-1">Restaurer État</span>
+                                </button>
+                                <button
+                                    onClick={() => showCustom('snapshot-viewer', { snapshot: activeSession.moduleSnapshot, sessionName: `Session #${activeSession.number}` })}
+                                    className="flex items-center gap-3 px-3 py-1.5 rounded-lg group w-full text-left transition-all text-emerald-400/60 hover:text-emerald-400 hover:bg-emerald-500/5 text-[10px]"
+                                >
+                                    <Eye size={14} />
+                                    <span className="font-bold uppercase tracking-widest">Voir le contenu</span>
+                                </button>
+                            </div>
+                        )}
                     </div>
                 ) : (
                     sessions.some(s => s.campaignId === activeCampaignId && s.status === 'planned') && (

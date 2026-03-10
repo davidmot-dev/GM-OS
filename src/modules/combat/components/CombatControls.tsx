@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useCombatStore } from '../useCombatStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { gmConfirm, gmPrompt } from '../../../stores/useModalStore';
-import { UserPlus, RefreshCw, Dices, Save, FolderOpen, Play, Skull, ArrowDown01, ArrowUp10 } from 'lucide-react';
+import { UserPlus, RefreshCw, Dices, Save, Play, Skull, ArrowDown01, ArrowUp10 } from 'lucide-react';
+import { useSessionOSStore } from '../../session/useSessionOSStore';
 
 const CombatControls: React.FC = () => {
     const {
@@ -14,6 +15,12 @@ const CombatControls: React.FC = () => {
         clearCombatants,
         syncCombatantHPToSession
     } = useCombatStore();
+
+    const { 
+        activeCampaignId, 
+        selectedSessionId, 
+        addTimelineEvent 
+    } = useSessionOSStore();
 
     const [diceMax, setDiceMax] = useState<number>(20);
 
@@ -32,14 +39,59 @@ const CombatControls: React.FC = () => {
         });
     };
 
-    const handleLoadCombat = () => {
-        // Implementation for loading a combat JSON via AppBridge would go here
-        console.log("Loading combat...");
-    };
-
     const handleSaveCombat = () => {
-        // Implementation for saving combat via AppBridge would go here
-        console.log("Saving combat...");
+        if (!activeCampaignId) {
+            gmToast("Aucune campagne active pour l'export.", "error");
+            return;
+        }
+
+        const combatants = useCombatStore.getState().combatants;
+        if (combatants.length === 0) {
+            gmToast("Aucun combattant à exporter.", "warning");
+            return;
+        }
+
+        // 1. Generate Markdown Summary
+        const dateStr = new Date().toLocaleDateString('fr-FR', { 
+            day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' 
+        });
+
+        let content = `### ⚔️ Rapport de Combat - ${dateStr}\n\n`;
+        content += `**Fin du Round :** ${round}\n\n`;
+        
+        content += `#### Participants :\n`;
+        
+        const players = combatants.filter(c => c.isPlayer);
+        const enemies = combatants.filter(c => !c.isPlayer);
+
+        if (players.length > 0) {
+            content += `\n**Alliés & Joueurs :**\n`;
+            players.forEach(c => {
+                const statusStr = c.statuses.length > 0 ? ` [${c.statuses.map(s => s.name).join(', ')}]` : '';
+                content += `- **${c.name}** : ${c.hp}/${c.hpMax} PV${statusStr}\n`;
+            });
+        }
+
+        if (enemies.length > 0) {
+            content += `\n**Ennemis :**\n`;
+            enemies.forEach(c => {
+                const statusStr = c.statuses.length > 0 ? ` [${c.statuses.map(s => s.name).join(', ')}]` : '';
+                content += `- **${c.name}** : ${c.hp}/${c.hpMax} PV${statusStr}\n`;
+            });
+        }
+
+        // 2. Create Timeline Event
+        addTimelineEvent({
+            campaignId: activeCampaignId,
+            sessionId: selectedSessionId || undefined,
+            date: dateStr,
+            title: `Combat - Round ${round}`,
+            description: content,
+            type: 'combat',
+            involvedEntityIds: combatants.map(c => c.sourceEntityId || c.sourcePlayerId).filter(Boolean) as string[]
+        });
+
+        gmToast("Résumé de combat exporté dans la Chronologie !");
     };
 
     return (
@@ -133,14 +185,14 @@ const CombatControls: React.FC = () => {
                     <span>Sync PV vers Session</span>
                 </button>
 
-                <div className="grid grid-cols-2 gap-2">
-                    <button onClick={handleSaveCombat} className="bg-obsidian flex items-center justify-center gap-1 p-2 rounded text-slate-400 hover:text-white hover:bg-gray-800 transition-colors" title="Sauvegarder Combat">
-                        <Save size={16} /> Export
-                    </button>
-                    <button onClick={handleLoadCombat} className="bg-obsidian flex items-center justify-center gap-1 p-2 rounded text-slate-400 hover:text-white hover:bg-gray-800 transition-colors" title="Charger Combat">
-                        <FolderOpen size={16} /> Import
-                    </button>
-                </div>
+                <button 
+                    onClick={handleSaveCombat} 
+                    className="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center gap-2 py-3 rounded-lg text-slate-300 hover:text-white transition-all shadow-lg group" 
+                    title="Sauvegarder et terminer le combat"
+                >
+                    <Save size={18} className="group-hover:scale-110 transition-transform" /> 
+                    <span className="font-bold uppercase tracking-wider text-xs">Fin de combat</span>
+                </button>
 
                 <button
                     onClick={() => {

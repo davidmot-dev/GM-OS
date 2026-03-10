@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useMediaStore } from '../stores/useMediaStore';
 import type { MediaType, MediaItem } from '../stores/useMediaStore';
-import { Search, Image as ImageIcon, Music, Film, UploadCloud, Trash2, X, Check, FileText, Tag, Plus, Edit2 } from 'lucide-react';
+import { Search, Image as ImageIcon, Music, Film, UploadCloud, Trash2, X, Check, FileText, Tag, Plus, Edit2, Maximize2, Play as PlayIcon } from 'lucide-react';
 import { useMediaUrl } from '../hooks/useMediaUrl';
 import { gmPrompt } from '../stores/useModalStore';
 
@@ -42,7 +43,7 @@ const MediaPreview: React.FC<{ media: MediaItem }> = ({ media }) => {
         return (
             <div className="w-full h-full bg-app-surface flex flex-col items-center justify-center gap-2">
                 <Music size={24} className="text-amber-400" />
-                <audio src={url} controls className="w-full h-8 px-2 opacity-50 hover:opacity-100 transition-opacity" />
+                <div className="px-2 py-1 bg-app-bg/50 rounded-full text-[8px] font-bold text-amber-400 border border-amber-400/20">AUDIO CLIP</div>
             </div>
         );
     }
@@ -59,6 +60,56 @@ const MediaPreview: React.FC<{ media: MediaItem }> = ({ media }) => {
     return null;
 };
 
+const FullScreenPreview: React.FC<{ media: MediaItem; onClose: () => void }> = ({ media, onClose }) => {
+    const url = useMediaUrl(media.id);
+
+    useEffect(() => {
+        const handleEsc = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') onClose();
+        };
+        window.addEventListener('keydown', handleEsc);
+        return () => window.removeEventListener('keydown', handleEsc);
+    }, [onClose]);
+
+    if (!url) return null;
+
+    return (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/90 backdrop-blur-xl animate-in fade-in duration-300">
+            <button 
+                onClick={onClose}
+                className="absolute top-6 right-6 p-3 bg-white/5 hover:bg-white/10 text-white rounded-full transition-all border border-white/10 hover:scale-110 active:scale-95"
+            >
+                <X size={24} />
+            </button>
+
+            <div className="max-w-7xl max-h-[85vh] w-full flex flex-col items-center justify-center p-8 animate-in zoom-in-95 duration-300">
+                {media.type === 'image' && (
+                    <img src={url} alt={media.name} className="max-w-full max-h-full object-contain rounded-lg shadow-2xl border border-white/5" />
+                )}
+                {media.type === 'audio' && (
+                    <div className="bg-slate-900 border border-slate-800 p-12 rounded-[2rem] w-full max-w-lg flex flex-col items-center gap-8 shadow-3xl">
+                        <div className="w-24 h-24 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500 animate-pulse">
+                            <Music size={48} />
+                        </div>
+                        <div className="text-center">
+                            <h3 className="text-xl font-black text-white uppercase tracking-wider mb-2">{media.name}</h3>
+                            <p className="text-slate-500 text-xs font-bold uppercase tracking-[0.2em]">Fichier Audio • Media Hub</p>
+                        </div>
+                        <audio src={url} autoPlay controls className="w-full h-12 rounded-xl custom-audio-player" />
+                    </div>
+                )}
+                {media.type === 'video' && (
+                    <video src={url} autoPlay controls className="max-w-full max-h-full rounded-lg shadow-2xl border border-white/5" />
+                )}
+            </div>
+
+            <div className="absolute bottom-10 px-6 py-2 bg-black/40 border border-white/10 rounded-full text-white/40 text-[10px] uppercase font-black tracking-widest">
+                ESC pour fermer
+            </div>
+        </div>
+    );
+};
+
 export const MediaBrowser: React.FC<MediaBrowserProps> = ({
     isOpen,
     onClose,
@@ -73,6 +124,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
     const [isUploading, setIsUploading] = useState(false);
     const [tagInputId, setTagInputId] = useState<string | null>(null);
     const [newTag, setNewTag] = useState('');
+    const [previewItem, setPreviewItem] = useState<MediaItem | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -100,8 +152,6 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
         setIsUploading(true);
         try {
             await addMedia(file);
-            // Optionally auto-select after upload:
-            // onSelect('auto-sel');
         } catch (err) {
             alert("Erreur lors de l'import : " + err);
         } finally {
@@ -115,9 +165,17 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
         return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
     };
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-app-bg/80 backdrop-blur-sm p-4">
             <div className="bg-app-bg border border-app-border w-full max-w-5xl h-[80vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                {/* Full preview overlay */}
+                {previewItem && (
+                    <FullScreenPreview 
+                        media={previewItem} 
+                        onClose={() => setPreviewItem(null)} 
+                    />
+                )}
+
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 border-b border-app-border bg-app-surface/50">
                     <h2 className="text-lg font-bold text-app-text flex items-center gap-2">
@@ -144,7 +202,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                 </div>
 
                 {/* Toolbar */}
-                <div className="p-4 border-b border-app-border/50 flex flex-wrap items-center justify-between gap-4">
+                <div className="p-4 border-b border-app-border/50 flex flex-wrap items-center justify-between gap-4 text-app-text">
                     <div className="flex items-center gap-2">
                         <div className="relative w-64">
                             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
@@ -218,6 +276,15 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
 
                                             {/* Hover Overlay */}
                                             <div className="absolute inset-0 bg-app-bg/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 backdrop-blur-[2px]">
+                                                {/* Preview Button */}
+                                                <button
+                                                    onClick={() => setPreviewItem(media)}
+                                                    className="bg-app-surface/80 text-white rounded-full p-2 hover:scale-110 transition-transform shadow-lg shadow-black border border-white/10"
+                                                    title="Aperçu"
+                                                >
+                                                    {media.type === 'audio' ? <PlayIcon size={20} /> : <Maximize2 size={20} />}
+                                                </button>
+
                                                 <button
                                                     onClick={() => { onSelect(media.id); onClose(); }}
                                                     className="bg-accent text-slate-950 rounded-full p-2 hover:scale-110 transition-transform shadow-lg shadow-black"
@@ -225,6 +292,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                                 >
                                                     <Check size={20} />
                                                 </button>
+                                                
                                                 <button
                                                     onClick={() => {
                                                         gmPrompt(
@@ -237,7 +305,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                                             }
                                                         );
                                                     }}
-                                                    className="bg-accent/80 text-slate-950 rounded-full p-2 hover:scale-110 transition-transform shadow-lg shadow-black hover:bg-accent"
+                                                    className="bg-app-surface/80 text-white rounded-full p-2 hover:scale-110 transition-transform shadow-lg shadow-black hover:text-accent border border-white/10"
                                                     title="Renommer"
                                                 >
                                                     <Edit2 size={20} />
@@ -263,7 +331,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                             </p>
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-1">
-                                                    {TYPE_ICONS[media.type]}
+                                                    {TYPE_ICONS[media.type as keyof typeof TYPE_ICONS]}
                                                     <span className="text-[10px] text-slate-500 capitalize">{media.type}</span>
                                                 </div>
                                                 <span className="text-[10px] text-slate-600">{formatSize(media.size)}</span>
@@ -293,7 +361,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                                         onChange={e => setNewTag(e.target.value)}
                                                         onKeyDown={async e => {
                                                             if (e.key === 'Enter' && newTag.trim()) {
-                                                                const tag = newTag.trim().toLowerCase();
+                                                                  const tag = newTag.trim().toLowerCase();
                                                                 if (!media.tags.includes(tag)) {
                                                                     await useMediaStore.getState().updateMediaTags(media.id, [...media.tags, tag]);
                                                                 }
@@ -366,6 +434,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                     </div>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };

@@ -51,6 +51,10 @@ interface CombatState {
 
     // Sync
     syncCombatantHPToSession: () => void;
+    
+    // Snapshot System
+    applySnapshot: (snapshot: { combatants: Combatant[]; currentTurnIdx: number; round: number }) => void;
+    reset: () => void;
 }
 
 export const useCombatStore = create<CombatState>()(
@@ -59,6 +63,18 @@ export const useCombatStore = create<CombatState>()(
             combatants: [],
             currentTurnIdx: 0,
             round: 1,
+
+            applySnapshot: (snapshot) => set({
+                combatants: snapshot.combatants,
+                currentTurnIdx: snapshot.currentTurnIdx,
+                round: snapshot.round
+            }),
+
+            reset: () => set({
+                combatants: [],
+                currentTurnIdx: 0,
+                round: 1
+            }),
 
             addCombatant: (combatant) => set((state) => ({
                 combatants: [...state.combatants, { ...combatant, id: Math.random().toString(36).substring(2, 9) }]
@@ -261,3 +277,8 @@ export const useCombatStore = create<CombatState>()(
         }
     )
 );
+
+// Export for cross-store access
+if (typeof window !== 'undefined') {
+    (window as unknown as Record<string, unknown>).useCombatStore = useCombatStore;
+}

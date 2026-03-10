@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Music, CloudSnow, Sword, Skull, Beer, StopCircle, ChevronDown, Check } from 'lucide-react';
+import { Plus, Music, CloudSnow, Sword, Skull, Beer, StopCircle, ChevronDown, Check, RotateCcw } from 'lucide-react';
 import { useMusicStore } from '../useMusicStore';
 import { gmPrompt, gmConfirm } from '../../../stores/useModalStore';
 
@@ -15,7 +15,8 @@ const MusicHeader: React.FC = () => {
         outputDeviceId, 
         setOutputDevice, 
         isKeyLearnActive, 
-        toggleKeyLearn
+        toggleKeyLearn,
+        reset
     } = useMusicStore();
 
     const currentId = activePlaylistId || playlists[0]?.id;
@@ -144,8 +145,17 @@ const MusicHeader: React.FC = () => {
                     <button
                         onClick={() => stopAll()}
                         className="size-9 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl flex items-center justify-center hover:bg-red-500 hover:text-white transition-all shadow-lg active:scale-95"
+                        title="Arrêt brutal de toutes les pistes"
                     >
                         <StopCircle size={16} />
+                    </button>
+
+                    <button
+                        onClick={() => gmConfirm("Voulez-vous vraiment réinitialiser le module Music OS ? Toutes vos atmosphères et configurations seront perdues.", () => reset())}
+                        title="Réinitialiser le module"
+                        className="size-9 bg-red-500/5 border border-red-500/10 text-red-500/50 rounded-xl flex items-center justify-center hover:bg-red-500/20 hover:text-red-500 transition-all active:scale-95"
+                    >
+                        <RotateCcw size={14} />
                     </button>
                 </div>
             </div>

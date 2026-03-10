@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
+import { MediaImage } from '../../../components/MediaImage';
 import { 
     Search, 
     Plus, 
@@ -190,8 +191,8 @@ const WikiView: React.FC = () => {
                             <div className="col-span-4 space-y-6">
                                 {selectedEntry.imageUrls.length > 0 && (
                                     <div className="rounded-2xl overflow-hidden border border-app-border bg-app-surface shadow-2xl">
-                                        <img 
-                                            src={selectedEntry.imageUrls[0]} 
+                                        <MediaImage 
+                                            source={selectedEntry.imageUrls[0]} 
                                             alt={selectedEntry.title} 
                                             className="w-full h-auto object-cover opacity-80"
                                         />

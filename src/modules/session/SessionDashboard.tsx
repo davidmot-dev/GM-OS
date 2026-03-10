@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { gmAlert } from '../../stores/useModalStore';
-import { Users, Settings, Bell, Sparkles } from 'lucide-react';
+import { Users, Sparkles } from 'lucide-react';
 import CampaignCockpit from './components/CampaignCockpit';
 import SessionWorkspace from './components/SessionWorkspace';
 import ModuleSnapshots from './components/ModuleSnapshots';
+import SessionSnapshotModal from './components/SessionSnapshotModal';
 import CampaignDetails from './components/CampaignDetails';
 import CampaignLibrary from './components/CampaignLibrary';
 import PlayerManagement from './components/PlayerManagement';
@@ -20,6 +20,7 @@ import { DEFAULT_SHEET_TEMPLATES } from '../../data/defaultSheetTemplates';
 const SessionDashboard: React.FC = () => {
     const { currentView, activeCampaignId, campaigns, setCurrentView, selectedEntityId, customSheetTemplates } = useSessionOSStore();
     const [isOracleOpen, setIsOracleOpen] = useState(false);
+    const [isSnapshotModalOpen, setIsSnapshotModalOpen] = useState(false);
 
     const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
     
@@ -53,15 +54,14 @@ const SessionDashboard: React.FC = () => {
                         Oracle
                     </button>
                     <button
-                        onClick={() => gmAlert('Le module de configuration globale sera bientôt disponible.')}
-                        className="p-2 text-app-text/40 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                        onClick={() => setIsSnapshotModalOpen(true)}
+                        className="flex items-center gap-2 px-4 py-1.5 rounded-lg text-sm font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all"
+                        title="Capturer l'état actuel"
                     >
-                        <Settings size={18} />
+                        <Sparkles size={18} />
+                        Snapshot
                     </button>
-                    <button className="p-2 text-app-text/40 hover:text-white hover:bg-white/10 rounded-lg transition-all relative">
-                        <Bell size={18} />
-                        <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-app-bg"></span>
-                    </button>
+
                 </div>
             </header>
 
@@ -115,7 +115,7 @@ const SessionDashboard: React.FC = () => {
                             ) : (
                                 <div className="flex-1 flex flex-col items-center justify-center p-20 bg-app-bg/20">
                                     <div className="w-16 h-16 rounded-full bg-app-surface flex items-center justify-center mb-4 opacity-50">
-                                        <Settings className="animate-spin-slow text-app-text/40" />
+                                        <Sparkles className="animate-spin-slow text-app-text/40" />
                                     </div>
                                     <h2 className="text-xl font-bold text-app-text/40">View "{currentView}" under construction</h2>
                                     <p className="text-slate-600 text-sm mb-6">This section will be available in the next system update.</p>
@@ -138,6 +138,10 @@ const SessionDashboard: React.FC = () => {
                 campaignNotebookUrl={activeCampaign?.notebookUrl}
                 templateNotebookUrl={templateNotebookUrl}
             />
+
+            {isSnapshotModalOpen && (
+                <SessionSnapshotModal onClose={() => setIsSnapshotModalOpen(false)} />
+            )}
         </div>
     );
 };
