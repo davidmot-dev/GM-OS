@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useModalStore } from '../stores/useModalStore';
-import { AlertCircle, HelpCircle, Edit3, UserPlus, ShieldPlus, BookOpen, Users, Play, Cast } from 'lucide-react';
+import { AlertCircle, HelpCircle, Edit3, UserPlus, ShieldPlus, BookOpen, Users, Play, Cast, History as LucideHistory } from 'lucide-react';
 import { AddPlayerForm } from '../modules/session/components/AddPlayerForm';
 import { AddCharacterForm } from '../modules/session/components/AddCharacterForm';
 import CampaignForm from '../modules/session/components/CampaignForm';
@@ -13,6 +13,9 @@ import SessionSummaryModal from '../modules/session/components/SessionSummaryMod
 import LightSceneSelector from '../modules/light/components/LightSceneSelector';
 import MapProjectionModal from '../modules/map/components/MapProjectionModal';
 import WhiteboardProjectionModal from '../modules/whiteboard/components/WhiteboardProjectionModal';
+import { TimelineEventForm } from '../modules/session/components/TimelineEventForm';
+import { WikiEntryForm } from '../modules/session/components/WikiEntryForm';
+import { type TimelineEvent, type WikiEntry } from '../modules/session/useSessionOSStore';
 
 const ModalProvider: React.FC = () => {
     const { type, message, onConfirm, onCancel, onPromptConfirm, defaultValue, confirmLabel, cancelLabel, customVariant, closeModal } = useModalStore();
@@ -57,6 +60,8 @@ const ModalProvider: React.FC = () => {
                 if (customVariant === 'light-scene-select') return null;
                 if (customVariant === 'map-projection-select') return <Cast className="text-indigo-400" size={24} />;
                 if (customVariant === 'whiteboard-projection-select') return <Cast className="text-indigo-400" size={24} />;
+                if (customVariant === 'timeline-event-add' || customVariant === 'timeline-event-edit') return <LucideHistory className="text-gm-cyan" size={24} />;
+                if (customVariant === 'wiki-entry-add' || customVariant === 'wiki-entry-edit') return <BookOpen className="text-gm-cyan" size={24} />;
                 return <HelpCircle className="text-gm-cyan" size={24} />;
             default: return <HelpCircle className="text-gm-cyan" size={24} />;
         }
@@ -78,6 +83,10 @@ const ModalProvider: React.FC = () => {
                 if (customVariant === 'session-summary') return 'Résumé de Session';
                 if (customVariant === 'map-projection-select') return 'Projection de Carte';
                 if (customVariant === 'whiteboard-projection-select') return 'Projection du Whiteboard';
+                if (customVariant === 'timeline-event-add') return 'Nouvel Événement';
+                if (customVariant === 'timeline-event-edit') return 'Éditer l\'Événement';
+                if (customVariant === 'wiki-entry-add') return 'Nouvel Article';
+                if (customVariant === 'wiki-entry-edit') return 'Éditer l\'Article';
                 return 'Options';
             default: return 'Confirmation';
         }
@@ -161,6 +170,20 @@ const ModalProvider: React.FC = () => {
                     )}
                     {type === 'custom' && customVariant === 'map-projection-select' && <MapProjectionModal />}
                     {type === 'custom' && customVariant === 'whiteboard-projection-select' && <WhiteboardProjectionModal />}
+                    {type === 'custom' && customVariant === 'timeline-event-add' && <TimelineEventForm onClose={closeModal} />}
+                    {type === 'custom' && customVariant === 'timeline-event-edit' && (
+                        <TimelineEventForm 
+                            event={defaultValue as TimelineEvent} 
+                            onClose={closeModal} 
+                        />
+                    )}
+                    {type === 'custom' && customVariant === 'wiki-entry-add' && <WikiEntryForm onClose={closeModal} />}
+                    {type === 'custom' && customVariant === 'wiki-entry-edit' && (
+                        <WikiEntryForm 
+                            entry={defaultValue as WikiEntry} 
+                            onClose={closeModal} 
+                        />
+                    )}
                 </div>
 
                 {/* Footer (only for standard modals) */}

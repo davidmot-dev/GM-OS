@@ -13,6 +13,7 @@ import TemplateManager from './components/TemplateManager';
 import SessionPrep from './components/SessionPrep';
 import SessionFocusEditor from './components/SessionFocusEditor';
 import OraclePanel from './components/OraclePanel';
+import TimelineWikiDashboard from './components/TimelineWikiDashboard';
 import { useSessionOSStore } from './useSessionOSStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../data/defaultSheetTemplates';
 
@@ -36,7 +37,7 @@ const SessionDashboard: React.FC = () => {
                         <Users size={28} />
                         <h1 className="text-slate-100 text-lg font-bold tracking-tight">
                             Session OS <span className="text-gm-gold font-light">
-                                {currentView === 'cockpit' ? 'Master Cockpit' : currentView.replace('-', ' ')}
+                                {currentView === 'cockpit' ? 'Master Cockpit' : currentView === 'timeline-wiki' ? 'Chroniques' : currentView.replace('-', ' ')}
                             </span>
                         </h1>
                     </div>
@@ -109,6 +110,8 @@ const SessionDashboard: React.FC = () => {
                                 </div>
                             ) : currentView === 'campaign-details' ? (
                                 <CampaignDetails />
+                            ) : currentView === 'timeline-wiki' ? (
+                                <TimelineWikiDashboard />
                             ) : (
                                 <div className="flex-1 flex flex-col items-center justify-center p-20 bg-app-bg/20">
                                     <div className="w-16 h-16 rounded-full bg-app-surface flex items-center justify-center mb-4 opacity-50">

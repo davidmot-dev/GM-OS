@@ -104,6 +104,29 @@ export interface Campaign {
     notebookUrl?: string; // URL for NotebookLM integration
 }
 
+export interface TimelineEvent {
+    id: string;
+    campaignId: string;
+    date: string; // In-game date
+    title: string;
+    description: string;
+    type: 'quest' | 'combat' | 'lore' | 'major-event' | 'session';
+    involvedEntityIds: string[];
+    locationId?: string;
+    sessionId?: string;
+}
+
+export interface WikiEntry {
+    id: string;
+    campaignId: string;
+    title: string;
+    content: string; // Markdown
+    category: 'npc' | 'location' | 'organization' | 'lore' | 'item' | 'other';
+    tags: string[];
+    imageUrls: string[];
+    linkedEntityIds: string[];
+}
+
 interface SessionOSState {
     campaigns: Campaign[];
     sessions: GameSession[];
@@ -111,6 +134,8 @@ interface SessionOSState {
     players: Player[];
     atlasMaps: AtlasMap[];
     customSheetTemplates: SheetTemplate[];
+    timelineEvents: TimelineEvent[];
+    wikiEntries: WikiEntry[];
 
     // UI State
     activeCampaignId: string | null;
@@ -119,7 +144,7 @@ interface SessionOSState {
     selectedCharacterId: string | null;
     selectedAtlasMapId: string | null;
     selectedEntityId: string | null;
-    currentView: 'cockpit' | 'campaign-details' | 'npc-gallery' | 'world-atlas' | 'library' | 'players' | 'templates' | 'session-prep' | 'session-focus';
+    currentView: 'cockpit' | 'campaign-details' | 'npc-gallery' | 'world-atlas' | 'library' | 'players' | 'templates' | 'session-prep' | 'session-focus' | 'timeline-wiki';
     diceRolls: { die: number, result: number, timestamp: number }[];
     isAddingEntity: boolean;
 
@@ -173,7 +198,64 @@ interface SessionOSState {
     rollDice: (sides: number) => void;
     clearDiceRolls: () => void;
     togglePlayerOnline: (playerId: string) => void;
+
+    // Timeline Actions
+    addTimelineEvent: (event: Omit<TimelineEvent, 'id'>) => void;
+    updateTimelineEvent: (id: string, updates: Partial<TimelineEvent>) => void;
+    deleteTimelineEvent: (id: string) => void;
+
+    // Wiki Actions
+    addWikiEntry: (entry: Omit<WikiEntry, 'id'>) => void;
+    updateWikiEntry: (id: string, updates: Partial<WikiEntry>) => void;
+    deleteWikiEntry: (id: string) => void;
 }
+
+const mockTimelineEvents: TimelineEvent[] = [
+    {
+        id: 'te-1',
+        campaignId: 'c-1',
+        date: '14 Janvier, 1492 DR',
+        title: 'Arrivée à Ironhelm',
+        description: 'Le groupe arrive aux portes de la forteresse sous une brume épaisse.',
+        type: 'session',
+        involvedEntityIds: ['p-1', 'p-2', 'p-3'],
+        locationId: 'am-1',
+        sessionId: 's-1'
+    },
+    {
+        id: 'te-2',
+        campaignId: 'c-1',
+        date: '15 Janvier, 1492 DR',
+        title: 'L\'embuscade des Ghoules',
+        description: 'Combat sanglant dans les tunnels nord contre des ghoules spectrales.',
+        type: 'combat',
+        involvedEntityIds: ['pc-1', 'pc-4', 'e-4'],
+        locationId: 'am-1'
+    }
+];
+
+const mockWikiEntries: WikiEntry[] = [
+    {
+        id: 'we-1',
+        campaignId: 'c-1',
+        title: 'La Forteresse d\'Ironhelm',
+        content: '# Ironhelm\nUne pile de pierre noire bâtie par les nains du clan Ironfoot il y a trois siècles. Aujourd\'hui tenue par le Baron Varick.',
+        category: 'location',
+        tags: ['nain', 'forteresse', 'nord'],
+        imageUrls: ['https://images.unsplash.com/photo-1518709268805-4e9042af9f23'],
+        linkedEntityIds: ['am-1', 'e-1']
+    },
+    {
+        id: 'we-2',
+        campaignId: 'c-1',
+        title: 'Le Culte de la Lune Pâle',
+        content: 'Une mystérieuse organisation vénérant une entité lunaire oubliée. On dit qu\'ils peuvent changer de forme.',
+        category: 'organization',
+        tags: ['culte', 'secret', 'doppelganger'],
+        imageUrls: [],
+        linkedEntityIds: ['e-1']
+    }
+];
 
 const mockCampaigns: Campaign[] = [
     {
@@ -399,6 +481,8 @@ export const useSessionOSStore = create<SessionOSState>()(
             currentView: 'cockpit',
             diceRolls: [],
             isAddingEntity: false,
+            timelineEvents: mockTimelineEvents,
+            wikiEntries: mockWikiEntries,
 
             setActiveCampaign: (id) => set({ 
                 activeCampaignId: id, 
@@ -660,7 +744,31 @@ export const useSessionOSStore = create<SessionOSState>()(
                     selectedSessionId: sessionId,
                     currentView: 'cockpit'
                 };
-            })
+            }),
+
+            addTimelineEvent: (event) => set((state) => ({
+                timelineEvents: [...state.timelineEvents, { ...event, id: crypto.randomUUID() }]
+            })),
+
+            updateTimelineEvent: (id, updates) => set((state) => ({
+                timelineEvents: state.timelineEvents.map(e => e.id === id ? { ...e, ...updates } : e)
+            })),
+
+            deleteTimelineEvent: (id) => set((state) => ({
+                timelineEvents: state.timelineEvents.filter(e => e.id !== id)
+            })),
+
+            addWikiEntry: (entry) => set((state) => ({
+                wikiEntries: [...state.wikiEntries, { ...entry, id: crypto.randomUUID() }]
+            })),
+
+            updateWikiEntry: (id, updates) => set((state) => ({
+                wikiEntries: state.wikiEntries.map(e => e.id === id ? { ...e, ...updates } : e)
+            })),
+
+            deleteWikiEntry: (id) => set((state) => ({
+                wikiEntries: state.wikiEntries.filter(e => e.id !== id)
+            }))
 
         }),
         {
@@ -683,7 +791,9 @@ export const useSessionOSStore = create<SessionOSState>()(
                 players: state.players,
                 entities: state.entities,
                 customSheetTemplates: state.customSheetTemplates,
-                sessions: state.sessions
+                sessions: state.sessions,
+                timelineEvents: state.timelineEvents,
+                wikiEntries: state.wikiEntries
             })
         }
     )

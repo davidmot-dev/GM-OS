@@ -222,10 +222,13 @@ const CampaignDetails: React.FC = () => {
                                 )}
                             </div>
                         </div>
-                        <div className="bg-app-surface/60 rounded-xl border border-app-border p-5 flex flex-col justify-center items-center gap-3 opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all cursor-not-allowed">
-                            <h4 className="font-bold text-xs uppercase tracking-widest text-app-text/40">Timeline / Wiki</h4>
-                            <p className="text-[10px] text-app-text/20 font-medium">Coming Soon in v5.2</p>
-                        </div>
+                        <button 
+                            onClick={() => setCurrentView('timeline-wiki')}
+                            className="bg-app-surface/60 rounded-xl border border-app-border p-5 flex flex-col justify-center items-center gap-3 hover:bg-app-surface hover:border-accent/40 hover:shadow-glow-accent/10 transition-all group"
+                        >
+                            <h4 className="font-bold text-xs uppercase tracking-widest text-app-text/40 group-hover:text-accent transition-colors">Timeline / Wiki</h4>
+                            <p className="text-[10px] text-accent font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">Ouvrir les Archives</p>
+                        </button>
                     </div>
                 </div>
             </div>
