@@ -30,7 +30,7 @@ export const FavoriteGrid: React.FC = () => {
 
     if (filteredFavorites.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center p-16 border-2 border-dashed border-slate-800 rounded-3xl mt-8">
+            <div className="flex flex-col items-center justify-center p-16 border-2 border-dashed border-app-border rounded-3xl mt-8">
                 <span className="material-symbols-outlined text-6xl text-slate-700 mb-4">search_off</span>
                 <p className="text-xl font-bold text-slate-500">No favorites found</p>
                 <p className="text-sm text-slate-600 mt-2">Try adjusting your filters or search query.</p>

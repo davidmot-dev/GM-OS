@@ -58,20 +58,20 @@ const SoundHeader: React.FC<SoundHeaderProps> = () => {
 
     return (
         <header className="relative z-50 flex flex-col gap-2">
-            <div className="flex items-center justify-between bg-obsidian-dark/40 backdrop-blur-3xl border border-white/5 p-2 px-4 rounded-2xl shadow-2xl">
+            <div className="flex items-center justify-between bg-app-bg/40 backdrop-blur-3xl border border-app-border/50 p-2 px-4 rounded-2xl shadow-2xl">
                 {/* Left: Indicators */}
                 <div className="flex items-center gap-6">
 
                     <div className="flex items-center gap-4 bg-black/20 px-3 py-1.5 rounded-xl border border-white/5">
                         <div className="flex items-center gap-2">
-                            <div className={`size-1.5 rounded-full transition-all duration-500 ${isMidiConnected ? 'bg-emerald-500 shadow-glow-emerald animate-pulse' : 'bg-slate-600'}`} />
-                            <span className={`text-[8px] font-black uppercase tracking-widest leading-none transition-colors ${isMidiConnected ? 'text-emerald-400' : 'text-slate-500'}`}>
+                            <div className={`size-1.5 rounded-full transition-all duration-500 ${isMidiConnected ? 'bg-emerald-500 shadow-glow-emerald animate-pulse' : 'bg-app-text/20'}`} />
+                            <span className={`text-[8px] font-black uppercase tracking-widest leading-none transition-colors ${isMidiConnected ? 'text-emerald-400' : 'text-app-text/40'}`}>
                                 {isMidiConnected ? 'MIDI CONNECTED' : 'NO MIDI DEVICE'}
                             </span>
                         </div>
                         <button 
                             onClick={refreshMidi}
-                            className="p-1 hover:bg-white/10 rounded-md text-slate-500 hover:text-white transition-all group"
+                            className="p-1 hover:bg-white/10 rounded-md text-app-text/40 hover:text-white transition-all group"
                             title="Actualiser les périphériques MIDI"
                         >
                             <RefreshCcw size={10} className="group-active:rotate-180 transition-transform duration-500" />
@@ -81,12 +81,12 @@ const SoundHeader: React.FC<SoundHeaderProps> = () => {
 
                 {/* Right: Controls */}
                 <div className="flex items-center gap-3">
-                    <div className="flex bg-black/40 p-1 rounded-xl border border-white/5 shadow-inner mr-2">
+                    <div className="flex bg-app-bg/40 p-1 rounded-xl border border-app-border/40 shadow-inner mr-2">
                         <button
                             onClick={toggleMidiLearn}
                             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all ${isMidiLearnActive 
-                                ? 'bg-amber-500 text-slate-950 shadow-glow-amber' 
-                                : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'}`}
+                                ? 'bg-accent text-white shadow-glow-accent' 
+                                : 'text-app-text/40 hover:text-app-text/80 hover:bg-white/5'}`}
                         >
                             <Zap size={10} />
                             <span>MIDI LEARN</span>
@@ -94,8 +94,8 @@ const SoundHeader: React.FC<SoundHeaderProps> = () => {
                         <button
                             onClick={toggleKeyLearn}
                             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all ${isKeyLearnActive 
-                                ? 'bg-cyan-500 text-slate-950 shadow-glow-cyan' 
-                                : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'}`}
+                                ? 'bg-accent text-white shadow-glow-accent' 
+                                : 'text-app-text/40 hover:text-app-text/80 hover:bg-white/5'}`}
                         >
                             <Keyboard size={10} />
                             <span>KEY LEARN</span>
@@ -106,21 +106,21 @@ const SoundHeader: React.FC<SoundHeaderProps> = () => {
                     <div className="relative device-selector">
                         <button
                             onClick={() => setIsDeviceMenuOpen(!isDeviceMenuOpen)}
-                            className={`flex items-center gap-3 bg-black/40 border rounded-xl px-4 py-2 text-[8px] font-black uppercase tracking-widest transition-all ${isDeviceMenuOpen ? 'border-gm-violet text-white shadow-glow-violet/30' : 'border-white/5 text-slate-500 hover:border-white/10 hover:text-slate-300'}`}
+                            className={`flex items-center gap-3 bg-app-bg/40 border rounded-xl px-4 py-2 text-[8px] font-black uppercase tracking-widest transition-all ${isDeviceMenuOpen ? 'border-accent text-white shadow-glow-accent/30' : 'border-app-border text-app-text/40 hover:border-app-border/60 hover:text-app-text/80'}`}
                         >
                             <span className="truncate max-w-[120px]">{currentDeviceLabel}</span>
-                            <ChevronDown size={12} className={`transition-transform duration-300 ${isDeviceMenuOpen ? 'rotate-180 text-gm-violet' : ''}`} />
+                            <ChevronDown size={12} className={`transition-transform duration-300 ${isDeviceMenuOpen ? 'rotate-180 text-accent' : ''}`} />
                         </button>
 
                         {isDeviceMenuOpen && (
-                            <div className="absolute top-full right-0 mt-2 w-64 bg-obsidian-dark/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-3xl p-1.5 animate-in fade-in zoom-in-95 duration-200 z-[100]">
+                            <div className="absolute top-full right-0 mt-2 w-64 bg-app-surface/95 backdrop-blur-2xl border border-app-border rounded-2xl shadow-3xl p-1.5 animate-in fade-in zoom-in-95 duration-200 z-[100]">
                                 <div className="max-h-60 overflow-y-auto custom-scrollbar">
                                     <button
                                         onClick={() => { setOutputDevice('default'); soundEngine.setOutputDevice('default'); setIsDeviceMenuOpen(false); }}
-                                        className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${outputDeviceId === 'default' ? 'bg-gm-violet/20 text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white'}`}
+                                        className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${outputDeviceId === 'default' ? 'bg-accent/20 text-white' : 'text-app-text/40 hover:bg-app-surface/5 hover:text-white'}`}
                                     >
                                         <span>Default Speaker</span>
-                                        {outputDeviceId === 'default' && <Check size={12} className="text-gm-violet" />}
+                                        {outputDeviceId === 'default' && <Check size={12} className="text-accent" />}
                                     </button>
                                     
                                     <div className="h-px bg-white/5 my-1 mx-2" />
@@ -129,10 +129,10 @@ const SoundHeader: React.FC<SoundHeaderProps> = () => {
                                         <button
                                             key={device.deviceId}
                                             onClick={() => { setOutputDevice(device.deviceId); soundEngine.setOutputDevice(device.deviceId); setIsDeviceMenuOpen(false); }}
-                                            className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all text-left ${outputDeviceId === device.deviceId ? 'bg-gm-violet/20 text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white'}`}
+                                            className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all text-left ${outputDeviceId === device.deviceId ? 'bg-accent/20 text-white' : 'text-app-text/40 hover:bg-white/5 hover:text-white'}`}
                                         >
                                             <span className="truncate pr-4">{device.label || `Device ${device.deviceId.substring(0, 4)}`}</span>
-                                            {outputDeviceId === device.deviceId && <Check size={12} className="text-gm-violet" />}
+                                            {outputDeviceId === device.deviceId && <Check size={12} className="text-accent" />}
                                         </button>
                                     ))}
                                 </div>

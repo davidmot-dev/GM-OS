@@ -14,8 +14,8 @@ const NPCControls: React.FC = () => {
     ];
 
     return (
-        <div className="p-4 flex flex-col gap-4 border-b border-slate-800 bg-obsidian-light/50">
-            <h2 className="text-gm-cyan font-display font-bold text-lg flex items-center gap-2">
+        <div className="p-4 flex flex-col gap-4 border-b border-app-border bg-app-surface/50">
+            <h2 className="text-accent font-display font-bold text-lg flex items-center gap-2">
                 <Dices size={20} />
                 Générateur Universel
             </h2>
@@ -30,8 +30,8 @@ const NPCControls: React.FC = () => {
                             key={cat.id}
                             onClick={() => setConfig({ category: cat.id })}
                             className={`p-2 rounded-lg flex flex-col items-center justify-center transition-all ${isActive
-                                ? 'bg-gm-cyan text-obsidian shadow-glow-cyan scale-105'
-                                : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
+                                ? 'bg-accent text-slate-950 shadow-glow-accent scale-105'
+                                : 'bg-app-surface text-slate-400 hover:bg-app-bg/50'
                                 }`}
                             title={cat.label}
                         >
@@ -54,7 +54,7 @@ const NPCControls: React.FC = () => {
                             const firstTheme = availableUniverses.find(u => u.startsWith(selectedPrefix)) || "";
                             setConfig({ universe: firstTheme });
                         }}
-                        className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-gm-cyan custom-scrollbar"
+                        className="w-full bg-app-bg border border-app-border rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-accent custom-scrollbar"
                     >
                         {Array.from(new Set(availableUniverses.map(u => u.split('_')[0]))).sort().map(prefix => (
                             <option key={prefix} value={prefix}>{prefix}</option>
@@ -70,7 +70,7 @@ const NPCControls: React.FC = () => {
                         value={config.universe}
                         onChange={(e) => setConfig({ universe: e.target.value })}
                         disabled={availableUniverses.length === 0}
-                        className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-sm text-gm-cyan font-bold focus:outline-none focus:border-gm-cyan custom-scrollbar shadow-inner"
+                        className="w-full bg-app-bg border border-app-border rounded-lg p-2 text-sm text-accent font-bold focus:outline-none focus:border-accent custom-scrollbar shadow-inner"
                     >
                         {availableUniverses
                             .filter(u => u.startsWith(config.universe.split('_')[0]))
@@ -88,7 +88,7 @@ const NPCControls: React.FC = () => {
             <button
                 onClick={() => generate()}
                 disabled={isGenerating || availableUniverses.length === 0}
-                className="w-full py-3 bg-gm-cyan hover:bg-cyan-400 disabled:opacity-50 disabled:cursor-not-allowed text-obsidian font-bold rounded-xl shadow-glow-cyan flex items-center justify-center gap-3 transition-all hover:scale-[1.02] active:scale-95 group mt-2"
+                className="w-full py-3 bg-accent hover:bg-accent/80 disabled:opacity-50 disabled:cursor-not-allowed text-slate-950 font-bold rounded-xl shadow-glow-accent flex items-center justify-center gap-3 transition-all hover:scale-[1.02] active:scale-95 group mt-2"
             >
                 <Dices size={20} className={isGenerating ? 'animate-spin' : 'group-hover:rotate-12 transition-transform'} />
                 <span className="uppercase tracking-wider text-xs font-sans">

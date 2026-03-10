@@ -17,18 +17,39 @@ interface SessionState {
     toggleSessionMode: (force?: boolean) => void;
 }
 
+export const THEME_PALETTES = {
+    'cyberpunk': {
+        accent: '#06b6d4',
+        bg: '#020617',
+        surface: '#0f172a',
+        border: '#1e293b'
+    },
+    'medieval': {
+        accent: '#10b981',
+        bg: '#1a120b',
+        surface: '#2d241d',
+        border: '#3f352c'
+    },
+    'modern': {
+        accent: '#3b82f6',
+        bg: '#0f172a',
+        surface: '#1e293b',
+        border: '#334155'
+    }
+};
+
 export const useSessionStore = create<SessionState>()(
     persist(
         (set) => ({
             activeModule: 'dashboard',
             theme: 'cyberpunk',
-            themeColor: '#06b6d4', // Cyan by default for cyberpunk
+            themeColor: THEME_PALETTES['cyberpunk'].accent,
+            isSessionMode: false,
 
             setActiveModule: (activeModule) => set({ activeModule }),
             setTheme: (theme) => set({ 
                 theme,
-                // Apply default accent colors based on theme
-                themeColor: theme === 'cyberpunk' ? '#06b6d4' : (theme === 'medieval' ? '#10b981' : '#3b82f6')
+                themeColor: THEME_PALETTES[theme]?.accent || '#3b82f6'
             }),
             setThemeColor: (themeColor) => set({ themeColor }),
             toggleSessionMode: (force) => set((state) => ({

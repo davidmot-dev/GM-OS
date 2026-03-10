@@ -42,26 +42,26 @@ export const FavoriteCard: React.FC<FavoriteCardProps> = ({ entity }) => {
         entity.type === 'npc' ? 'text-amber-500' :
             entity.type === 'place' ? 'text-emerald-500' :
                 entity.type === 'item' ? 'text-purple-500' :
-                    'text-blue-500';
+                    'text-accent';
 
     const typeBg =
         entity.type === 'npc' ? 'bg-amber-500/20' :
             entity.type === 'place' ? 'bg-emerald-500/20' :
                 entity.type === 'item' ? 'bg-purple-500/20' :
-                    'bg-blue-500/20';
+                    'bg-accent/20';
 
     const typeBorderHover =
         entity.type === 'npc' ? 'hover:border-amber-500/50 hover:shadow-[0_0_15px_-3px_rgba(245,158,11,0.4)]' :
             entity.type === 'place' ? 'hover:border-emerald-500/50 hover:shadow-[0_0_15px_-3px_rgba(16,185,129,0.4)]' :
                 entity.type === 'item' ? 'hover:border-purple-500/50 hover:shadow-[0_0_15px_-3px_rgba(168,85,247,0.4)]' :
-                    'hover:border-blue-500/50 hover:shadow-[0_0_15px_-3px_rgba(59,130,246,0.4)]';
+                    'hover:border-accent/50 hover:shadow-glow-accent';
 
     return (
         <div
             onClick={() => selectFavorite(entity.id)}
-            className={`group relative bg-slate-900/40 border rounded-2xl p-5 transition-all duration-300 flex flex-col gap-4 cursor-pointer
-                ${isSelected ? `border-${typeColor.split('-')[1]}-500/80 bg-slate-800/60 shadow-lg` : `border-slate-800/50 ${typeBorderHover}`}
-                ${entity.isSyncedToPlayerHub ? 'ring-1 ring-gm-cyan/30 shadow-[0_0_15px_rgba(0,210,255,0.15)] bg-slate-900/60' : ''}
+            className={`group relative bg-app-surface/20 border rounded-2xl p-5 transition-all duration-300 flex flex-col gap-4 cursor-pointer
+                ${isSelected ? `border-accent/80 bg-app-surface/40 shadow-lg` : `border-app-border/50 ${typeBorderHover}`}
+                ${entity.isSyncedToPlayerHub ? 'ring-1 ring-accent/30 shadow-glow-accent/15 bg-app-surface/40' : ''}
             `}
         >
             <div className="flex items-start justify-between">
@@ -70,21 +70,21 @@ export const FavoriteCard: React.FC<FavoriteCardProps> = ({ entity }) => {
                         <span className={`material-symbols-outlined ${typeColor}`}>{getTypeIcon(entity.type)}</span>
                     </div>
                     {entity.isSyncedToPlayerHub && (
-                        <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-gm-cyan/20 border border-gm-cyan/30 animate-pulse">
-                            <span className="material-symbols-outlined text-gm-cyan text-[14px]">tv</span>
-                            <span className="text-gm-cyan text-[8px] font-black tracking-widest leading-none">HUB</span>
+                        <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-accent/20 border border-accent/30 animate-pulse">
+                            <span className="material-symbols-outlined text-accent text-[14px]">tv</span>
+                            <span className="text-accent text-[8px] font-black tracking-widest leading-none">HUB</span>
                         </div>
                     )}
                 </div>
                 <button
                     onClick={(e) => { e.stopPropagation(); toggleStar(entity.id); }}
-                    className={`${entity.isStarred ? 'text-gm-cyan fill-1 drop-shadow-[0_0_8px_rgba(0,210,255,0.8)]' : 'text-slate-600 hover:text-slate-400'} transition-all`}
+                    className={`${entity.isStarred ? 'text-accent fill-1 drop-shadow-glow-accent' : 'text-slate-600 hover:text-slate-400'} transition-all`}
                 >
                     <span className={`material-symbols-outlined ${entity.isStarred ? 'font-variation-fill-1' : ''}`}>star</span>
                 </button>
             </div>
 
-            <div className={`aspect-[4/3] rounded-3xl overflow-hidden bg-slate-800 ring-2 ${typeColor.split(' ')[1]} shadow-lg transition-transform duration-500 group-hover:scale-[1.02] relative`}>
+            <div className={`aspect-[4/3] rounded-3xl overflow-hidden bg-app-bg ring-2 ${isSelected ? 'ring-accent/50' : 'ring-app-border/50'} shadow-lg transition-transform duration-500 group-hover:scale-[1.02] relative`}>
                 {/* Image or Icon */}
                 {(resolvedImageUrl || resolvedTokenUrl) ? (
                     <img
@@ -107,7 +107,7 @@ export const FavoriteCard: React.FC<FavoriteCardProps> = ({ entity }) => {
                 </p>
             </div>
 
-            <div className="flex items-center justify-between mt-2 pt-4 border-t border-slate-800/80">
+            <div className="flex items-center justify-between mt-2 pt-4 border-t border-app-border/50">
                 <span className="text-xs text-slate-500 italic">Last viewed: {formatTimeAgo(entity.lastViewed)}</span>
 
                 <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -117,7 +117,7 @@ export const FavoriteCard: React.FC<FavoriteCardProps> = ({ entity }) => {
                             selectFavorite(entity.id);
                             setViewMode('detail');
                         }}
-                        className="p-2 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 transition-colors"
+                        className="p-2 rounded-lg bg-app-surface border border-app-border hover:bg-app-surface/80 text-slate-300 transition-colors"
                         title="View Details"
                     >
                         <span className="material-symbols-outlined text-[18px]">visibility</span>
@@ -129,7 +129,7 @@ export const FavoriteCard: React.FC<FavoriteCardProps> = ({ entity }) => {
                                 removeFavorite(entity.id);
                             });
                         }}
-                        className="p-2 rounded-lg bg-slate-800/80 hover:bg-red-500/20 hover:text-red-400 text-slate-300 transition-colors"
+                        className="p-2 rounded-lg bg-app-surface border border-app-border hover:bg-rose-500/20 hover:text-rose-400 text-slate-300 transition-colors"
                         title="Remove from Favorites"
                     >
                         <span className="material-symbols-outlined text-[18px]">delete</span>

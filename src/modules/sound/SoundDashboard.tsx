@@ -42,7 +42,7 @@ const SoundDashboard: React.FC = () => {
     };
 
     return (
-        <div className="h-full flex flex-col overflow-hidden font-sans bg-obsidian-dark text-slate-50 p-6 space-y-6">
+        <div className="h-full flex flex-col overflow-hidden font-sans bg-app-bg text-slate-50 p-6 space-y-6">
             <MediaBrowser
                 isOpen={isBrowserOpen}
                 onClose={() => {
@@ -57,7 +57,7 @@ const SoundDashboard: React.FC = () => {
             <SoundHeader />
 
             {/* Main Area - Grid and Mixer space */}
-            <main className="flex-1 flex flex-col min-h-0 bg-black/20 backdrop-blur-sm rounded-3xl border border-white/5 overflow-hidden shadow-2xl">
+            <main className="flex-1 flex flex-col min-h-0 bg-app-surface/20 backdrop-blur-sm rounded-3xl border border-app-border/50 overflow-hidden shadow-2xl">
                 <div className="px-8 pt-6">
                     <AtmosphereManager />
                 </div>
@@ -75,10 +75,10 @@ const SoundDashboard: React.FC = () => {
                 </div>
 
                 {/* Optional: Footer with small stats or indicator */}
-                <footer className="h-10 px-8 border-t border-white/5 flex items-center justify-between text-[10px] text-slate-500 font-black uppercase tracking-widest">
+                <footer className="h-10 px-8 border-t border-app-border/50 flex items-center justify-between text-[10px] text-app-text/50 font-black uppercase tracking-widest">
                     <div className="flex items-center gap-4">
                         <div className="flex items-center gap-2">
-                             <div className="size-1.5 rounded-full bg-gm-violet shadow-glow-violet animation-pulse" />
+                             <div className="size-1.5 rounded-full bg-accent shadow-glow-accent animation-pulse" />
                              <span>{pads.filter(p => p.isActive).length} ACTIVE CHANNELS</span>
                         </div>
                     </div>

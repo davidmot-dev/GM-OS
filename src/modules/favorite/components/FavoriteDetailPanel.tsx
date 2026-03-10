@@ -64,10 +64,10 @@ export const FavoriteDetailPanel: React.FC = () => {
         entity.type === 'npc' ? 'text-amber-500 ring-amber-500/20' :
             entity.type === 'place' ? 'text-emerald-500 ring-emerald-500/20' :
                 entity.type === 'item' ? 'text-purple-500 ring-purple-500/20' :
-                    'text-blue-500 ring-blue-500/20';
+                    'text-accent ring-accent/20';
 
     return (
-        <aside className="w-96 bg-slate-900/80 backdrop-blur-xl border-l border-slate-800 p-8 pb-24 overflow-y-auto hidden xl:flex flex-col gap-8 shrink-0 shadow-2xl custom-scrollbar">
+        <aside className="w-96 bg-app-surface/80 backdrop-blur-xl border-l border-app-border p-8 pb-24 overflow-y-auto hidden xl:flex flex-col gap-8 shrink-0 shadow-2xl custom-scrollbar">
             <MediaBrowser
                 isOpen={browserTarget !== null}
                 onClose={() => setBrowserTarget(null)}
@@ -81,7 +81,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                     {!isEditing ? (
                         <button
                             onClick={() => setIsEditing(true)}
-                            className="p-2 rounded-lg bg-slate-800 hover:bg-gm-cyan/20 text-slate-400 hover:text-gm-cyan transition-all"
+                            className="p-2 rounded-lg bg-app-surface border border-app-border hover:bg-accent/20 text-slate-400 hover:text-accent transition-all"
                             title="Edit Dossier"
                         >
                             <Edit3 size={18} />
@@ -90,7 +90,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                         <>
                             <button
                                 onClick={handleSave}
-                                className="p-2 rounded-lg bg-gm-cyan/20 text-gm-cyan hover:bg-gm-cyan/30 transition-all"
+                                className="p-2 rounded-lg bg-accent/20 text-accent hover:bg-accent/30 transition-all"
                                 title="Save Changes"
                             >
                                 <Save size={18} />
@@ -106,7 +106,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                     )}
                     <button
                         onClick={() => selectFavorite(null)}
-                        className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors ml-2"
+                        className="p-1 rounded-lg hover:bg-app-surface text-slate-400 hover:text-white transition-colors ml-2"
                     >
                         <span className="material-symbols-outlined">close</span>
                     </button>
@@ -115,7 +115,7 @@ export const FavoriteDetailPanel: React.FC = () => {
 
             <div className="space-y-6">
                 <div className="flex flex-col items-center gap-4 text-center">
-                    <div className={`w-32 h-32 rounded-full ring-4 ${typeColor.split(' ')[1]} overflow-hidden bg-slate-800 relative group`}>
+                    <div className={`w-32 h-32 rounded-full ring-4 ${typeColor.split(' ')[1]} overflow-hidden bg-app-bg relative group`}>
                         {resolvedImageUrl ? (
                             <img className="w-full h-full object-cover" src={resolvedImageUrl} alt={formData.name} />
                         ) : (
@@ -131,14 +131,14 @@ export const FavoriteDetailPanel: React.FC = () => {
                                 type="text"
                                 value={formData.name || ''}
                                 onChange={e => setFormData({ ...formData, name: e.target.value })}
-                                className="w-full bg-slate-800 border-b-2 border-gm-cyan/50 text-white text-xl font-bold text-center focus:outline-none focus:border-gm-cyan transition-colors"
+                                className="w-full bg-app-surface border-b-2 border-accent/50 text-white text-xl font-bold text-center focus:outline-none focus:border-accent transition-colors"
                                 placeholder="Name..."
                             />
                             <input
                                 type="text"
                                 value={formData.subtitle || ''}
                                 onChange={e => setFormData({ ...formData, subtitle: e.target.value })}
-                                className="w-full bg-slate-900 border border-slate-700/50 rounded-lg p-2 text-sm text-center text-slate-300 focus:outline-none focus:border-gm-cyan"
+                                className="w-full bg-app-bg border border-app-border rounded-lg p-2 text-sm text-center text-slate-300 focus:outline-none focus:border-accent"
                                 placeholder="Subtitle (e.g. Ruler of mountains)..."
                             />
                             <div className="space-y-4">
@@ -149,12 +149,12 @@ export const FavoriteDetailPanel: React.FC = () => {
                                             type="text"
                                             value={formData.imageUrl || ''}
                                             onChange={e => setFormData({ ...formData, imageUrl: e.target.value })}
-                                            className="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-gm-cyan font-mono"
+                                            className="flex-1 bg-app-bg border border-app-border rounded-lg px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-accent font-mono"
                                             placeholder="https://... ou m-..."
                                         />
                                         <button
                                             onClick={() => setBrowserTarget('imageUrl')}
-                                            className="p-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 hover:text-gm-cyan transition-colors"
+                                            className="p-2 rounded-lg bg-app-surface border border-app-border text-slate-400 hover:text-accent transition-colors"
                                             title="Parcourir le Media Hub"
                                         >
                                             <FolderOpen size={14} />
@@ -168,12 +168,12 @@ export const FavoriteDetailPanel: React.FC = () => {
                                             type="text"
                                             value={formData.tokenUrl || ''}
                                             onChange={e => setFormData({ ...formData, tokenUrl: e.target.value })}
-                                            className="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-gm-cyan font-mono"
+                                            className="flex-1 bg-app-bg border border-app-border rounded-lg px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-accent font-mono"
                                             placeholder="https://... ou m-..."
                                         />
                                         <button
                                             onClick={() => setBrowserTarget('tokenUrl')}
-                                            className="p-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 hover:text-gm-cyan transition-colors"
+                                            className="p-2 rounded-lg bg-app-surface border border-app-border text-slate-400 hover:text-accent transition-colors"
                                             title="Parcourir le Media Hub"
                                         >
                                             <FolderOpen size={14} />
@@ -202,7 +202,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                     attrs[`Trait ${Object.keys(attrs).length + 1}`] = 'Value';
                                     setFormData({ ...formData, attributes: attrs });
                                 }}
-                                className="text-gm-cyan hover:text-white transition-colors"
+                                className="text-accent hover:text-white transition-colors"
                             >
                                 <Plus size={14} />
                             </button>
@@ -211,7 +211,7 @@ export const FavoriteDetailPanel: React.FC = () => {
 
                     <div className="grid grid-cols-2 gap-3">
                         {Object.entries(formData.attributes || {}).map(([key, value]) => (
-                            <div key={key} className="p-4 rounded-2xl bg-slate-800/50 border border-slate-700/50 flex flex-col items-center justify-center text-center relative group/attr">
+                            <div key={key} className="p-4 rounded-2xl bg-app-surface/50 border border-app-border/50 flex flex-col items-center justify-center text-center relative group/attr">
                                 {isEditing ? (
                                     <>
                                         <input
@@ -224,7 +224,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                                 attrs[newKey] = value;
                                                 setFormData({ ...formData, attributes: attrs });
                                             }}
-                                            className="w-full bg-transparent text-[10px] text-gm-cyan uppercase font-bold text-center focus:outline-none mb-1"
+                                            className="w-full bg-transparent text-[10px] text-accent uppercase font-bold text-center focus:outline-none mb-1"
                                         />
                                         <input
                                             type="text"
@@ -268,7 +268,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                     stats[`Stat ${Object.keys(stats).length + 1}`] = 50;
                                     setFormData({ ...formData, stats: stats });
                                 }}
-                                className="text-gm-cyan hover:text-white transition-colors"
+                                className="text-accent hover:text-white transition-colors"
                             >
                                 <Plus size={14} />
                             </button>
@@ -323,14 +323,14 @@ export const FavoriteDetailPanel: React.FC = () => {
                                                     stats[stat] = parseInt(e.target.value);
                                                     setFormData({ ...formData, stats: stats });
                                                 }}
-                                                className="w-20 accent-gm-cyan"
+                                                className="w-20 accent-accent"
                                             />
                                         ) : (
                                             <div className="flex gap-1">
                                                 {Array.from({ length: blocks }).map((_, i) => (
                                                     <div
                                                         key={i}
-                                                        className={`w-6 h-1 rounded-full ${i < filledBlocks ? typeColor.replace('text-', 'bg-').split(' ')[0] : 'bg-slate-800'}`}
+                                                        className={`w-6 h-1 rounded-full ${i < filledBlocks ? typeColor.replace('text-', 'bg-').split(' ')[0] : 'bg-app-bg'}`}
                                                     ></div>
                                                 ))}
                                             </div>
@@ -348,7 +348,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                         <textarea
                             value={formData.lore || ''}
                             onChange={e => setFormData({ ...formData, lore: e.target.value })}
-                            className="w-full bg-slate-800/50 border border-slate-700/50 rounded-xl p-4 text-sm text-slate-300 focus:outline-none focus:border-gm-cyan/50 min-h-[120px] custom-scrollbar"
+                            className="w-full bg-app-surface/50 border border-app-border/50 rounded-xl p-4 text-sm text-slate-300 focus:outline-none focus:border-accent/50 min-h-[120px] custom-scrollbar"
                             placeholder="Describe history, motivations, secrets..."
                         />
                     ) : (
@@ -408,8 +408,8 @@ export const FavoriteDetailPanel: React.FC = () => {
                         }}
                         className={`w-full py-3 rounded-xl border font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-lg
                             ${entity.isSyncedToPlayerHub
-                                ? 'bg-gm-cyan/20 border-gm-cyan text-gm-cyan'
-                                : 'bg-slate-900 border-white/10 text-slate-500 hover:text-slate-300 hover:border-white/20'}`}
+                                ? 'bg-accent/20 border-accent text-accent shadow-glow-accent'
+                                : 'bg-app-bg border-white/10 text-slate-500 hover:text-slate-300 hover:border-white/20'}`}
                     >
                         <span className="material-symbols-outlined text-sm">{entity.isSyncedToPlayerHub ? 'visibility' : 'visibility_off'}</span>
                         PLAYER HUB SYNC
@@ -417,7 +417,7 @@ export const FavoriteDetailPanel: React.FC = () => {
 
                     <button
                         onClick={() => setViewMode('detail')}
-                        className="w-full py-3 bg-slate-200 hover:bg-white text-slate-900 rounded-xl font-bold text-sm transition-transform active:scale-95 shadow-lg"
+                        className="w-full py-3 bg-accent hover:bg-accent/80 text-slate-950 rounded-xl font-bold text-sm transition-transform active:scale-95 shadow-lg"
                     >
                         OPEN FULL DOSSIER
                     </button>

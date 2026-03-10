@@ -24,6 +24,9 @@ export default {
                     orange: '#f97316',  // Web/Dice OS
                 },
                 accent: 'var(--app-accent)',
+                'app-bg': 'var(--app-bg)',
+                'app-surface': 'var(--app-surface)',
+                'app-border': 'var(--app-border)',
             },
             fontFamily: {
                 // Typographie technique et lisible

@@ -10,7 +10,7 @@ export const FavoriteDashboard: React.FC = () => {
     const { selectedFavoriteId, viewMode } = useFavoriteStore();
 
     return (
-        <div className="flex h-screen w-full overflow-hidden bg-slate-950 font-sans text-slate-100 antialiased">
+        <div className="flex h-screen w-full overflow-hidden bg-app-bg font-sans text-slate-100 antialiased">
             {/* Sidebar (col-span-3 equivalent in fixed width) */}
             <FavoriteSidebar />
 
@@ -30,7 +30,7 @@ export const FavoriteDashboard: React.FC = () => {
                                     </div>
                                     <div className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase tracking-widest">
                                         <span>Sort by:</span>
-                                        <button className="flex items-center gap-1 text-gm-cyan hover:text-gm-cyan/80 transition-colors">
+                                        <button className="flex items-center gap-1 text-accent hover:text-accent/80 transition-colors">
                                             Recent <span className="material-symbols-outlined text-[14px]">expand_more</span>
                                         </button>
                                     </div>

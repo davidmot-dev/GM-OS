@@ -119,17 +119,17 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                 ${isLearningThis
                     ? 'border-cyan-500 bg-cyan-900/40 shadow-glow-cyan'
                     : isPlaying
-                        ? 'bg-gm-violet/40 border-gm-violet shadow-glow-violet animate-jitter scale-[1.05]'
-                        : 'bg-obsidian/40 border-white/5 hover:bg-obsidian-light/60 hover:border-gm-violet/40 hover:shadow-glow-violet/20 hover:scale-[1.02]'
-                } ${isOver && !isLearningThis ? 'border-gm-violet bg-gm-violet/10' : ''} cursor-pointer`}
+                        ? 'bg-accent/40 border-accent shadow-glow-accent animate-jitter scale-[1.05]'
+                        : 'bg-app-bg/40 border-app-border/50 hover:bg-app-surface/60 hover:border-accent/40 hover:shadow-glow-accent/20 hover:scale-[1.02]'
+                } ${isOver && !isLearningThis ? 'border-accent bg-accent/10' : ''} cursor-pointer`}
         >
             {/* Premium Glossy Overlay */}
             <div className="absolute inset-0 bg-gradient-to-tr from-white/[0.08] via-transparent to-transparent pointer-events-none opacity-50" />
-            <div className="absolute inset-0 bg-gradient-to-br from-gm-violet/10 via-transparent to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute inset-0 bg-gradient-to-br from-accent/10 via-transparent to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
 
             {/* Keybind Indicator */}
             {keyLabel && (
-                <div className={`absolute top-2 left-2 border text-[7px] font-black px-1.5 py-0.5 rounded-md shadow-sm transition-all uppercase tracking-widest ${isLearningThis ? 'bg-cyan-900 text-cyan-400 border-cyan-500' : 'bg-obsidian-dark/90 text-slate-500 border-white/10 opacity-60 group-hover:opacity-100 group-hover:text-gm-violet group-hover:border-gm-violet/40'}`}>
+                <div className={`absolute top-2 left-2 border text-[7px] font-black px-1.5 py-0.5 rounded-md shadow-sm transition-all uppercase tracking-widest ${isLearningThis ? 'bg-cyan-900 text-cyan-400 border-cyan-500' : 'bg-app-bg text-slate-500 border-app-border/50 opacity-60 group-hover:opacity-100 group-hover:text-accent group-hover:border-accent/40'}`}>
                     {keyLabel}
                 </div>
             )}
@@ -150,7 +150,7 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                 </div>
             )}
 
-            <div className={`transition-all duration-500 ${isPlaying || isLearningThis ? (isLearningThis ? 'text-cyan-400 scale-110 drop-shadow-glow-cyan' : 'text-gm-violet scale-110 drop-shadow-glow-violet') : 'text-slate-700 group-hover:text-gm-violet/70'}`}>
+            <div className={`transition-all duration-500 ${isPlaying || isLearningThis ? (isLearningThis ? 'text-cyan-400 scale-110 drop-shadow-glow-cyan' : 'text-accent scale-110 drop-shadow-glow-accent') : 'text-slate-700 group-hover:text-accent/70'}`}>
                 {pad.type === 'link' ? <Link size={36} strokeWidth={1} /> : <Music size={36} strokeWidth={1} />}
             </div>
 
@@ -160,9 +160,9 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                 </span>
                 {isPlaying && (
                     <div className="flex justify-center gap-0.5 mt-1.5">
-                        <div className="w-0.5 h-2 bg-gm-violet rounded-full animate-bounce shadow-glow-violet" style={{ animationDelay: '0ms' }} />
-                        <div className="w-0.5 h-2 bg-gm-violet rounded-full animate-bounce shadow-glow-violet" style={{ animationDelay: '100ms' }} />
-                        <div className="w-0.5 h-2 bg-gm-violet rounded-full animate-bounce shadow-glow-violet" style={{ animationDelay: '200ms' }} />
+                        <div className="w-0.5 h-2 bg-accent rounded-full animate-bounce shadow-glow-accent" style={{ animationDelay: '0ms' }} />
+                        <div className="w-0.5 h-2 bg-accent rounded-full animate-bounce shadow-glow-accent" style={{ animationDelay: '100ms' }} />
+                        <div className="w-0.5 h-2 bg-accent rounded-full animate-bounce shadow-glow-accent" style={{ animationDelay: '200ms' }} />
                     </div>
                 )}
             </div>
@@ -176,11 +176,11 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
             </div>
 
             {isMenuOpen && !isLearningThis && (
-                <div className="absolute inset-0 bg-obsidian-dark/98 z-50 flex flex-col items-center justify-center p-4 gap-2 rounded-2xl animate-in fade-in zoom-in-95 duration-200">
+                <div className="absolute inset-0 bg-app-bg/98 z-50 flex flex-col items-center justify-center p-4 gap-2 rounded-2xl animate-in fade-in zoom-in-95 duration-200">
                     <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); }} className="text-[9px] font-black text-slate-500 mb-2 hover:text-white uppercase tracking-[0.2em]">Retour</button>
                     <button
                         onClick={handleEdit}
-                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-obsidian border border-white/5 hover:bg-gm-violet hover:border-gm-violet text-[10px] font-black uppercase tracking-widest transition-all"
+                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-app-surface border border-app-border/50 hover:bg-accent hover:border-accent text-[10px] font-black uppercase tracking-widest transition-all"
                     >
                         <Edit3 size={12} /> ÉDITER
                     </button>
@@ -190,7 +190,7 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                             updatePad(playlistId, index, { url: '', label: `Pad ${index + 1}`, type: 'local', keybind: undefined });
                             setIsMenuOpen(false);
                         }}
-                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-obsidian border border-white/5 hover:bg-red-600 hover:border-red-600 text-[10px] font-black uppercase tracking-widest transition-all"
+                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-app-surface border border-app-border/50 hover:bg-red-600 hover:border-red-600 text-[10px] font-black uppercase tracking-widest transition-all"
                     >
                         <Trash2 size={12} /> VIDER
                     </button>
@@ -204,7 +204,7 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                             });
                             setIsMenuOpen(false);
                         }}
-                        className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all ${pad.lightLinkId ? 'bg-gm-cyan/20 border-gm-cyan text-gm-cyan' : 'bg-obsidian border-white/5 hover:bg-gm-cyan hover:border-gm-cyan'}`}
+                        className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all ${pad.lightLinkId ? 'bg-gm-cyan/20 border-gm-cyan text-gm-cyan' : 'bg-app-surface border-app-border/50 hover:bg-gm-cyan hover:border-gm-cyan'}`}
                     >
                         <Lightbulb size={12} /> {pad.lightLinkId ? 'LIÉ' : 'LIER LUMIÈRE'}
                     </button>

@@ -48,11 +48,11 @@ export const SceneGrid: React.FC = () => {
                             <div
                                 key={scene.id}
                                 onClick={(e) => handleCapture(e, scene.id)}
-                                className="aspect-square rounded-xl bg-slate-900/30 border border-slate-800/50 hover:border-slate-700 flex flex-col items-center justify-center gap-3 cursor-pointer group transition-all duration-300 relative"
+                                className="aspect-square rounded-xl bg-app-surface/30 border border-app-border/50 hover:border-accent/40 flex flex-col items-center justify-center gap-3 cursor-pointer group transition-all duration-300 relative"
                                 title="Click to Capture Current Lights"
                             >
-                                <span className="material-symbols-outlined text-slate-700 text-3xl group-hover:text-amber-500 transition-colors">add</span>
-                                <span className="text-[10px] font-bold text-slate-700 uppercase tracking-tight group-hover:text-amber-500">Capture</span>
+                                <span className="material-symbols-outlined text-app-text/40 text-3xl group-hover:text-accent transition-colors">add</span>
+                                <span className="text-[10px] font-bold text-app-text/40 uppercase tracking-tight group-hover:text-accent">Capture</span>
                             </div>
                         );
                     }
@@ -62,8 +62,8 @@ export const SceneGrid: React.FC = () => {
                             key={scene.id}
                             onClick={() => handleApply(scene.id)}
                             className={`aspect-square rounded-xl flex flex-col items-center justify-center gap-3 cursor-pointer group transition-all duration-300 relative overflow-hidden ${isActive
-                                ? `bg-slate-900/50 border-2 shadow-[0_0_20px_rgba(245,158,11,0.15)]`
-                                : `bg-slate-900/50 border border-slate-800 hover:border-slate-700`
+                                ? `bg-app-surface/50 border-accent border-2 shadow-glow-accent`
+                                : `bg-app-surface/50 border border-app-border hover:border-accent/30`
                                 }`}
                             style={{
                                 borderColor: isActive ? scene.color : undefined,

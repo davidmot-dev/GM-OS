@@ -24,7 +24,7 @@ const MediaPreview: React.FC<{ media: MediaItem }> = ({ media }) => {
     const url = useMediaUrl(media.id);
 
     if (!url) {
-        return <div className="w-full h-full bg-slate-800 flex items-center justify-center animate-pulse" />;
+        return <div className="w-full h-full bg-app-surface flex items-center justify-center animate-pulse" />;
     }
 
     if (media.type === 'image') {
@@ -40,7 +40,7 @@ const MediaPreview: React.FC<{ media: MediaItem }> = ({ media }) => {
     }
     if (media.type === 'audio') {
         return (
-            <div className="w-full h-full bg-slate-800 flex flex-col items-center justify-center gap-2">
+            <div className="w-full h-full bg-app-surface flex flex-col items-center justify-center gap-2">
                 <Music size={24} className="text-amber-400" />
                 <audio src={url} controls className="w-full h-8 px-2 opacity-50 hover:opacity-100 transition-opacity" />
             </div>
@@ -49,7 +49,7 @@ const MediaPreview: React.FC<{ media: MediaItem }> = ({ media }) => {
     if (media.type === 'document') {
         const ext = media.name.split('.').pop()?.toUpperCase() ?? 'DOC';
         return (
-            <div className="w-full h-full bg-slate-800/50 flex flex-col items-center justify-center gap-2 p-2">
+            <div className="w-full h-full bg-app-surface/50 flex flex-col items-center justify-center gap-2 p-2">
                 <FileText size={28} className="text-emerald-400" />
                 <span className="text-[9px] font-black uppercase tracking-widest text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded">{ext}</span>
                 <p className="text-[9px] text-slate-500 text-center truncate w-full px-1">{media.name}</p>
@@ -116,12 +116,12 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
     };
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
-            <div className="bg-slate-900 border border-slate-700 w-full max-w-5xl h-[80vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-app-bg/80 backdrop-blur-sm p-4">
+            <div className="bg-app-bg border border-app-border w-full max-w-5xl h-[80vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
                 {/* Header */}
-                <div className="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-900/50">
-                    <h2 className="text-lg font-bold text-slate-100 flex items-center gap-2">
-                        <UploadCloud className="text-gm-gold" />
+                <div className="flex items-center justify-between p-4 border-b border-app-border bg-app-surface/50">
+                    <h2 className="text-lg font-bold text-app-text flex items-center gap-2">
+                        <UploadCloud className="text-accent" />
                         {title}
                     </h2>
                     <div className="flex items-center gap-4">
@@ -137,14 +137,14 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                             <Trash2 size={14} />
                             Vider le Hub
                         </button>
-                        <button onClick={onClose} className="text-slate-500 hover:text-white transition-colors p-1 bg-slate-800 rounded-lg hover:bg-red-500/20">
+                        <button onClick={onClose} className="text-slate-500 hover:text-white transition-colors p-1 bg-app-surface rounded-lg hover:bg-red-500/20">
                             <X size={20} />
                         </button>
                     </div>
                 </div>
 
                 {/* Toolbar */}
-                <div className="p-4 border-b border-slate-800/50 flex flex-wrap items-center justify-between gap-4">
+                <div className="p-4 border-b border-app-border/50 flex flex-wrap items-center justify-between gap-4">
                     <div className="flex items-center gap-2">
                         <div className="relative w-64">
                             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
@@ -153,17 +153,17 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                 placeholder="Rechercher..."
                                 value={search}
                                 onChange={e => setSearch(e.target.value)}
-                                className="w-full bg-slate-950 border border-slate-700 rounded-lg py-2 pl-9 pr-3 text-sm text-slate-300 placeholder-slate-600 focus:outline-none focus:border-gm-gold/50"
+                                className="w-full bg-app-bg border border-app-border rounded-lg py-2 pl-9 pr-3 text-sm text-slate-300 placeholder-slate-600 focus:outline-none focus:border-accent/50"
                             />
                         </div>
 
                         {!allowedTypes && (
-                            <div className="flex bg-slate-950 rounded-lg p-1 border border-slate-800">
+                            <div className="flex bg-app-bg rounded-lg p-1 border border-app-border">
                                 {(['all', 'image', 'audio', 'video', 'document'] as const).map(type => (
                                     <button
                                         key={type}
                                         onClick={() => setTypeFilter(type)}
-                                        className={`px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-colors ${typeFilter === type ? 'bg-slate-800 text-white' : 'text-slate-500 hover:text-slate-300'}`}
+                                        className={`px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-colors ${typeFilter === type ? 'bg-app-surface text-white' : 'text-slate-500 hover:text-slate-300'}`}
                                     >
                                         {type === 'all' ? 'Tous' : type === 'document' ? 'Doc' : type}
                                     </button>
@@ -185,7 +185,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                         <button
                             onClick={() => fileInputRef.current?.click()}
                             disabled={isUploading}
-                            className={`flex items-center gap-2 px-4 py-2 ${isUploading ? 'bg-slate-800 text-slate-500 cursor-not-allowed' : 'bg-gm-gold hover:bg-yellow-400 text-slate-950 shadow-[0_0_15px_rgba(234,179,8,0.2)]'} rounded-xl font-bold text-sm transition-all`}
+                            className={`flex items-center gap-2 px-4 py-2 ${isUploading ? 'bg-app-surface text-slate-500 cursor-not-allowed' : 'bg-accent hover:bg-accent/80 text-slate-950 shadow-glow-accent'} rounded-xl font-bold text-sm transition-all`}
                         >
                             <UploadCloud size={16} />
                             {isUploading ? 'Import...' : 'Importer des fichiers'}
@@ -196,10 +196,10 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                 {/* Main Content Area (Grid + Sidebar) */}
                 <div className="flex-1 flex overflow-hidden">
                     {/* Library Grid */}
-                    <div className="flex-1 overflow-y-auto p-4 custom-scrollbar bg-slate-950/50">
+                    <div className="flex-1 overflow-y-auto p-4 custom-scrollbar bg-app-bg/50">
                         {isLoading ? (
                             <div className="w-full h-full flex flex-col items-center justify-center text-slate-500 gap-3">
-                                <div className="w-8 h-8 rounded-full border-2 border-gm-gold border-t-transparent animate-spin" />
+                                <div className="w-8 h-8 rounded-full border-2 border-accent border-t-transparent animate-spin" />
                                 <p>Chargement du Hub Media...</p>
                             </div>
                         ) : filteredMedia.length === 0 ? (
@@ -211,16 +211,16 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                         ) : (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                                 {filteredMedia.map(media => (
-                                    <div key={media.id} className="group relative bg-slate-900 border border-slate-800 rounded-xl overflow-hidden hover:border-gm-gold/50 transition-colors flex flex-col">
+                                    <div key={media.id} className="group relative bg-app-surface border border-app-border rounded-xl overflow-hidden hover:border-accent/50 transition-colors flex flex-col">
                                         {/* Preview Area */}
-                                        <div className="aspect-video w-full relative bg-slate-950 border-b border-slate-800">
+                                        <div className="aspect-video w-full relative bg-app-bg border-b border-app-border">
                                             <MediaPreview media={media} />
 
                                             {/* Hover Overlay */}
-                                            <div className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 backdrop-blur-[2px]">
+                                            <div className="absolute inset-0 bg-app-bg/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 backdrop-blur-[2px]">
                                                 <button
                                                     onClick={() => { onSelect(media.id); onClose(); }}
-                                                    className="bg-gm-gold text-slate-950 rounded-full p-2 hover:scale-110 transition-transform shadow-lg shadow-black"
+                                                    className="bg-accent text-slate-950 rounded-full p-2 hover:scale-110 transition-transform shadow-lg shadow-black"
                                                     title="Sélectionner"
                                                 >
                                                     <Check size={20} />
@@ -237,7 +237,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                                             }
                                                         );
                                                     }}
-                                                    className="bg-gm-gold/80 text-slate-950 rounded-full p-2 hover:scale-110 transition-transform shadow-lg shadow-black hover:bg-gm-gold"
+                                                    className="bg-accent/80 text-slate-950 rounded-full p-2 hover:scale-110 transition-transform shadow-lg shadow-black hover:bg-accent"
                                                     title="Renommer"
                                                 >
                                                     <Edit2 size={20} />
@@ -272,7 +272,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                             {/* Tags display */}
                                             <div className="flex flex-wrap gap-1 mt-2">
                                                 {media.tags.map(tag => (
-                                                    <span key={tag} className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 text-[9px] font-bold border border-white/5 group/tag">
+                                                    <span key={tag} className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-app-bg text-slate-400 text-[9px] font-bold border border-white/5 group/tag">
                                                         {tag}
                                                         <button
                                                             onClick={() => {
@@ -308,13 +308,13 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                                             setTagInputId(null);
                                                             setNewTag('');
                                                         }}
-                                                        className="bg-slate-950 border border-gm-gold/30 rounded px-1.5 py-0.5 text-[9px] text-gm-gold outline-none w-16"
+                                                        className="bg-app-bg border border-accent/30 rounded px-1.5 py-0.5 text-[9px] text-accent outline-none w-16"
                                                         placeholder="tag..."
                                                     />
                                                 ) : (
                                                     <button
                                                         onClick={() => setTagInputId(media.id)}
-                                                        className="flex items-center justify-center w-5 h-5 rounded hover:bg-slate-800 text-slate-600 hover:text-gm-gold transition-colors"
+                                                        className="flex items-center justify-center w-5 h-5 rounded hover:bg-app-bg text-slate-600 hover:text-accent transition-colors"
                                                     >
                                                         <Plus size={12} />
                                                     </button>
@@ -328,10 +328,10 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                     </div>
 
                     {/* Tags Sidebar */}
-                    <div className="w-64 border-l border-slate-800 bg-slate-900/40 flex flex-col overflow-hidden">
-                        <div className="p-4 border-b border-slate-800 bg-slate-900/40">
+                    <div className="w-64 border-l border-app-border bg-app-surface/40 flex flex-col overflow-hidden">
+                        <div className="p-4 border-b border-app-border bg-app-surface/40">
                             <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
-                                <Tag size={12} className="text-gm-gold" />
+                                <Tag size={12} className="text-accent" />
                                 Filtrage par Tags
                             </h3>
                         </div>
@@ -339,7 +339,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                         <div className="flex-1 overflow-y-auto p-4 custom-scrollbar space-y-1">
                             <button
                                 onClick={() => setTagFilter(null)}
-                                className={`w-full text-left px-3 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-between group ${!tagFilter ? 'bg-gm-gold text-slate-950 shadow-[0_0_15px_rgba(234,179,8,0.2)]' : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}
+                                className={`w-full text-left px-3 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-between group ${!tagFilter ? 'bg-accent text-slate-950 shadow-glow-accent' : 'text-slate-400 hover:bg-app-bg hover:text-slate-200'}`}
                             >
                                 <span>TOUS LES MÉDIAS</span>
                                 <Check size={14} className={!tagFilter ? 'opacity-100' : 'opacity-0'} />
@@ -354,11 +354,11 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                     <button
                                         key={tag}
                                         onClick={() => setTagFilter(tag === tagFilter ? null : tag)}
-                                        className={`w-full text-left px-3 py-2 rounded-lg text-xs font-medium transition-all flex items-center gap-3 group ${tag === tagFilter ? 'bg-slate-800 text-gm-gold border border-gm-gold/30' : 'text-slate-500 hover:bg-slate-800/50 hover:text-slate-300'}`}
+                                        className={`w-full text-left px-3 py-2 rounded-lg text-xs font-medium transition-all flex items-center gap-3 group ${tag === tagFilter ? 'bg-app-bg text-accent border border-accent/30' : 'text-slate-500 hover:bg-app-bg/50 hover:text-slate-300'}`}
                                     >
-                                        <div className={`w-1.5 h-1.5 rounded-full transition-all ${tag === tagFilter ? 'bg-gm-gold scale-125' : 'bg-slate-700 group-hover:bg-slate-500'}`} />
+                                        <div className={`w-1.5 h-1.5 rounded-full transition-all ${tag === tagFilter ? 'bg-accent scale-125' : 'bg-slate-700 group-hover:bg-slate-500'}`} />
                                         <span className="flex-1 truncate uppercase tracking-tight">{tag}</span>
-                                        <Tag size={12} className={tag === tagFilter ? 'text-gm-gold' : 'text-slate-700 opacity-0 group-hover:opacity-100'} />
+                                        <Tag size={12} className={tag === tagFilter ? 'text-accent' : 'text-slate-700 opacity-0 group-hover:opacity-100'} />
                                     </button>
                                 ))
                             )}

@@ -61,10 +61,10 @@ const MusicHeader: React.FC = () => {
 
     return (
         <header className="relative z-50 flex flex-col gap-2">
-            <div className="flex items-center justify-between bg-obsidian-dark/40 backdrop-blur-3xl border border-white/5 p-2 px-4 rounded-2xl shadow-2xl">
+            <div className="flex items-center justify-between bg-app-bg/40 backdrop-blur-3xl border border-app-border/50 p-2 px-4 rounded-2xl shadow-2xl">
                 {/* Left: Atmosphere Tabs */}
                 <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
-                    <div className="flex bg-black/40 p-1 rounded-xl border border-white/5 shadow-inner">
+                    <div className="flex bg-app-surface/40 p-1 rounded-xl border border-app-border/50 shadow-inner">
                         {playlists.map(p => (
                             <button
                                 key={p.id}
@@ -77,8 +77,8 @@ const MusicHeader: React.FC = () => {
                                     gmConfirm(`Supprimer "${p.name}" ?`, () => removePlaylist(p.id), () => {}, "Supprimer", "Annuler");
                                 }}
                                 className={`flex items-center gap-2.5 px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all relative ${currentId === p.id 
-                                    ? 'bg-gm-violet text-white shadow-glow-violet' 
-                                    : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'}`}
+                                    ? 'bg-accent text-white shadow-glow-accent' 
+                                    : 'text-slate-500 hover:text-slate-300 hover:bg-app-surface/5'}`}
                                 title="Double-clic pour renommer, Clic-droit pour supprimer"
                             >
                                 {getIcon(p.name)}
@@ -88,7 +88,7 @@ const MusicHeader: React.FC = () => {
                     </div>
                     <button
                         onClick={() => gmPrompt("Nom de l'atmosphère :", "", (n) => n && addPlaylist(n))}
-                        className="size-9 shrink-0 flex items-center justify-center rounded-xl bg-white/5 border border-white/5 text-slate-500 hover:text-white hover:bg-gm-violet/20 hover:border-gm-violet/30 transition-all"
+                        className="size-9 shrink-0 flex items-center justify-center rounded-xl bg-app-surface/5 border border-app-border/50 text-slate-500 hover:text-white hover:bg-accent/20 hover:border-accent/30 transition-all"
                     >
                         <Plus size={14} />
                     </button>
@@ -98,7 +98,7 @@ const MusicHeader: React.FC = () => {
                 <div className="flex items-center gap-3">
                     <button
                         onClick={toggleKeyLearn}
-                        className={`text-[8px] font-black uppercase tracking-[0.2em] px-3 py-2 rounded-xl border transition-all ${isKeyLearnActive ? 'bg-cyan-900/40 border-cyan-500 text-cyan-400 shadow-glow-cyan' : 'bg-obsidian-light/20 border-white/5 text-slate-600 hover:text-cyan-400'}`}
+                        className={`text-[8px] font-black uppercase tracking-[0.2em] px-3 py-2 rounded-xl border transition-all ${isKeyLearnActive ? 'bg-cyan-900/40 border-cyan-500 text-cyan-400 shadow-glow-cyan' : 'bg-app-surface/20 border-app-border/50 text-slate-600 hover:text-cyan-400'}`}
                     >
                         Learn
                     </button>
@@ -107,18 +107,18 @@ const MusicHeader: React.FC = () => {
                     <div className="relative device-selector">
                         <button
                             onClick={() => setIsDeviceMenuOpen(!isDeviceMenuOpen)}
-                            className={`flex items-center gap-3 bg-black/40 border rounded-xl px-4 py-2 text-[8px] font-black uppercase tracking-widest transition-all ${isDeviceMenuOpen ? 'border-gm-violet text-white shadow-glow-violet/30' : 'border-white/5 text-slate-500 hover:border-white/10 hover:text-slate-300'}`}
+                            className={`flex items-center gap-3 bg-app-surface/40 border rounded-xl px-4 py-2 text-[8px] font-black uppercase tracking-widest transition-all ${isDeviceMenuOpen ? 'border-accent text-white shadow-glow-accent/30' : 'border-app-border/50 text-slate-500 hover:border-app-border/10 hover:text-slate-300'}`}
                         >
                             <span className="truncate max-w-[120px]">{currentDeviceLabel}</span>
-                            <ChevronDown size={12} className={`transition-transform duration-300 ${isDeviceMenuOpen ? 'rotate-180 text-gm-violet' : ''}`} />
+                            <ChevronDown size={12} className={`transition-transform duration-300 ${isDeviceMenuOpen ? 'rotate-180 text-accent' : ''}`} />
                         </button>
 
                         {isDeviceMenuOpen && (
-                            <div className="absolute top-full right-0 mt-2 w-64 bg-obsidian-dark/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-3xl p-1.5 animate-in fade-in zoom-in-95 duration-200 z-[100]">
+                            <div className="absolute top-full right-0 mt-2 w-64 bg-app-bg/95 backdrop-blur-2xl border border-app-border/50 rounded-2xl shadow-3xl p-1.5 animate-in fade-in zoom-in-95 duration-200 z-[100]">
                                 <div className="max-h-60 overflow-y-auto custom-scrollbar">
                                     <button
                                         onClick={() => { setOutputDevice('default'); setIsDeviceMenuOpen(false); }}
-                                        className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${outputDeviceId === 'default' ? 'bg-gm-violet/20 text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white'}`}
+                                        className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${outputDeviceId === 'default' ? 'bg-accent/20 text-white' : 'text-slate-400 hover:bg-app-surface/5 hover:text-white'}`}
                                     >
                                         <span>Default Speaker</span>
                                         {outputDeviceId === 'default' && <Check size={12} className="text-gm-violet" />}

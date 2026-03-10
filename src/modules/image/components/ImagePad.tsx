@@ -27,8 +27,8 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
 
     // Use the Stitch HTML styling, adapting active / playing states
     const borderClass = isProjected
-        ? "ring-4 ring-sky-500 shadow-glow-cyan border-white/5"
-        : "border-white/5 hover:border-sky-500/50 hover:shadow-glow-cyan";
+        ? "ring-4 ring-accent shadow-glow-accent border-white/5"
+        : "border-white/5 hover:border-accent/50 hover:shadow-glow-accent";
 
     const resolvedUrl = useMediaUrl(media.path);
     const safePath = resolvedUrl || '';
@@ -36,20 +36,20 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
     return (
         <div
             onClick={() => projectSolo(media)}
-            className={`group aspect-video rounded-2xl bg-slate-900/40 border overflow-hidden relative cursor-pointer transition-all ${borderClass}`}
+            className={`group aspect-video rounded-2xl bg-app-surface/40 border overflow-hidden relative cursor-pointer transition-all ${borderClass}`}
         >
             <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
                 style={{ backgroundImage: `url('${safePath}')` }}
             ></div>
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-app-bg/90 via-transparent to-transparent"></div>
 
             {isProjected && (
                 <div className="absolute top-3 left-3 flex flex-col gap-1">
                     {activeTargets.map(targetLabel => (
                         <span
                             key={targetLabel}
-                            className={`${targetLabel === 'Player Hub' ? 'bg-sky-500' : 'bg-amber-500'} text-[8px] font-black text-white px-1.5 py-0.5 rounded uppercase tracking-tighter shadow-lg whitespace-nowrap`}
+                            className={`${targetLabel === 'Player Hub' ? 'bg-accent text-slate-950' : 'bg-amber-500 text-white'} text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-tighter shadow-lg whitespace-nowrap`}
                         >
                             {targetLabel}
                         </span>
@@ -62,7 +62,7 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
 
                 <button
                     onClick={(e) => { e.stopPropagation(); toggleMediaFavorite(media.id); }}
-                    className={`p-1 rounded-md transition-colors ${media.isFavorite ? 'bg-yellow-500/80 text-white' : 'bg-slate-800/50 text-slate-400 hover:text-yellow-400'}`}
+                    className={`p-1 rounded-md transition-colors ${media.isFavorite ? 'bg-yellow-500/80 text-white' : 'bg-app-surface/50 text-slate-400 hover:text-yellow-400'}`}
                     title={media.isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
                 >
                     <Star size={14} fill={media.isFavorite ? "currentColor" : "none"} />
@@ -72,7 +72,7 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
                     type="checkbox"
                     checked={media.active}
                     onChange={() => toggleMediaActive(media.id)}
-                    className="w-4 h-4 rounded border-slate-600 bg-slate-800/50 text-sky-500 cursor-pointer focus:ring-0 focus:ring-offset-0"
+                    className="w-4 h-4 rounded border-app-border bg-app-surface/50 text-accent cursor-pointer focus:ring-0 focus:ring-offset-0"
                     title="Inclure dans la séquence"
                 />
 
@@ -97,12 +97,12 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
             <div className="absolute bottom-0 w-full p-4">
                 <div className="flex justify-between items-start">
                     <div className="flex-1 min-w-0 pr-2">
-                        <h4 className="text-sm font-bold text-white truncate drop-shadow-md group-hover:text-sky-400 transition-colors">
+                        <h4 className="text-sm font-bold text-white truncate drop-shadow-md group-hover:text-accent transition-colors">
                             {media.name}
                         </h4>
                         <div className="flex items-center gap-2 mt-1">
                             {media.sizeInfo && (
-                                <span className="text-[10px] text-slate-300 font-mono bg-black/40 px-1.5 py-0.5 rounded">
+                                <span className="text-[10px] text-slate-300 font-mono bg-app-bg/40 px-1.5 py-0.5 rounded">
                                     {media.sizeInfo}
                                 </span>
                             )}
@@ -110,7 +110,7 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
                                 <select
                                     value={media.folderId || ''}
                                     onChange={(e) => moveMediaToFolder(media.id, e.target.value || null)}
-                                    className="text-[10px] text-slate-300 font-mono bg-black/60 border border-slate-700 rounded px-1 py-0.5 focus:outline-none focus:border-sky-500 hover:bg-black/80 cursor-pointer pointer-events-auto"
+                                    className="text-[10px] text-slate-300 font-mono bg-app-bg/60 border border-app-border rounded px-1 py-0.5 focus:outline-none focus:border-accent hover:bg-app-bg/80 cursor-pointer pointer-events-auto"
                                     onClick={(e) => e.stopPropagation()} // Prevent trigger solo
                                 >
                                     <option value="">Root</option>

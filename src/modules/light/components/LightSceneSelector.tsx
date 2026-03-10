@@ -32,12 +32,12 @@ const LightSceneSelector: React.FC<LightSceneSelectorProps> = ({ data }) => {
     };
 
     return (
-        <div className="w-[500px] bg-obsidian-dark border border-white/10 rounded-3xl shadow-3xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div className="w-[500px] bg-app-bg border border-app-border rounded-3xl shadow-3xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
             {/* Header */}
             <div className="px-8 py-6 border-b border-white/5 flex items-center justify-between bg-white/5">
                 <div className="flex items-center gap-3">
                     <div className="size-10 rounded-xl bg-gm-cyan/20 flex items-center justify-center">
-                        <Lightbulb className="text-gm-cyan" size={20} />
+                        <Lightbulb className="text-accent" size={20} />
                     </div>
                     <div>
                         <h2 className="text-sm font-black uppercase tracking-[0.2em] text-white">Lier une Scène</h2>
@@ -57,7 +57,7 @@ const LightSceneSelector: React.FC<LightSceneSelectorProps> = ({ data }) => {
                         onClick={() => handleSelect(null)}
                         className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-white/10 hover:bg-white/10 transition-all group"
                     >
-                        <div className="size-12 rounded-xl bg-slate-800 flex items-center justify-center text-slate-500 group-hover:text-slate-300">
+                        <div className="size-12 rounded-xl bg-app-surface flex items-center justify-center text-app-text/50 group-hover:text-app-text/80">
                             <X size={24} />
                         </div>
                         <div className="text-left">
@@ -98,10 +98,10 @@ const LightSceneSelector: React.FC<LightSceneSelectorProps> = ({ data }) => {
             </div>
 
             {/* Footer */}
-            <div className="px-8 py-4 bg-black/20 border-t border-white/5 flex justify-end">
+            <div className="px-8 py-4 bg-app-bg/20 border-t border-app-border/10 flex justify-end">
                 <button 
                     onClick={closeModal}
-                    className="px-6 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-[10px] font-black uppercase tracking-widest text-white transition-all shadow-lg active:scale-95"
+                    className="px-6 py-2.5 rounded-xl bg-app-surface hover:bg-app-surface/80 text-[10px] font-black uppercase tracking-widest text-app-text transition-all shadow-lg active:scale-95"
                 >
                     Annuler
                 </button>

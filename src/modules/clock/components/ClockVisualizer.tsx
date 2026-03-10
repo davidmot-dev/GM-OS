@@ -51,18 +51,18 @@ const ClockVisualizer: React.FC<ClockVisualizerProps> = ({ theme, timestamp, mod
 
     const renderCyberpunk = () => (
         <div className="relative flex flex-col items-center justify-center font-mono">
-            <div className="absolute inset-0 bg-cyan-500/10 blur-3xl rounded-full" />
-            <div className="text-7xl font-black text-cyan-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.8)] tracking-tighter tabular-nums mb-2 relative">
+            <div className="absolute inset-0 bg-accent/10 blur-3xl rounded-full" />
+            <div className="text-7xl font-black text-accent drop-shadow-glow-accent tracking-tighter tabular-nums mb-2 relative">
                 {formatTime(date)}
-                <div className="absolute -inset-1 bg-cyan-500/20 skew-x-12 opacity-30 animate-pulse pointer-events-none" />
+                <div className="absolute -inset-1 bg-accent/20 skew-x-12 opacity-30 animate-pulse pointer-events-none" />
             </div>
             <div className="text-xs uppercase tracking-[0.4em] text-pink-500 font-bold bg-pink-500/10 px-3 py-1 rounded border border-pink-500/30 animate-glitch mt-4">
                 {formatDate(date)}
             </div>
             <div className="mt-8 grid grid-cols-4 gap-4 w-full max-w-md">
                 {[...Array(4)].map((_, i) => (
-                    <div key={i} className="h-1 bg-cyan-900/50 relative overflow-hidden rounded-full">
-                        <div className="absolute inset-y-0 left-0 bg-cyan-400 animate-shimmer" style={{ width: '40%', animationDelay: `${i * 0.5}s` }} />
+                    <div key={i} className="h-1 bg-accent/20 relative overflow-hidden rounded-full">
+                        <div className="absolute inset-y-0 left-0 bg-accent animate-shimmer" style={{ width: '40%', animationDelay: `${i * 0.5}s` }} />
                     </div>
                 ))}
             </div>
@@ -175,16 +175,16 @@ const ClockVisualizer: React.FC<ClockVisualizerProps> = ({ theme, timestamp, mod
 
         return (
             <div className="flex flex-col items-center">
-                <div className="text-9xl font-thin text-white tracking-tighter tabular-nums flex items-baseline">
+                <div className="text-9xl font-thin text-app-text tracking-tighter tabular-nums flex items-baseline">
                     {h.toString().padStart(2, '0')}
-                    <span className="text-slate-700 mx-2 animate-pulse">:</span>
+                    <span className="text-app-text/20 mx-2 animate-pulse">:</span>
                     {m.toString().padStart(2, '0')}
-                    <span className="text-4xl text-slate-500 ml-4 font-normal">
+                    <span className="text-4xl text-app-text/40 ml-4 font-normal">
                         {s.toString().padStart(2, '0')}
                     </span>
                 </div>
-                <div className="h-[1px] w-64 bg-gradient-to-r from-transparent via-slate-700 to-transparent my-8" />
-                <div className="text-xl text-slate-400 font-light tracking-widest uppercase">
+                <div className="h-[1px] w-64 bg-gradient-to-r from-transparent via-app-border to-transparent my-8" />
+                <div className="text-xl text-app-text/60 font-light tracking-widest uppercase">
                     {formatDate(date)}
                 </div>
             </div>
@@ -199,10 +199,10 @@ const ClockVisualizer: React.FC<ClockVisualizerProps> = ({ theme, timestamp, mod
             switch (theme) {
                 case 'cyberpunk':
                     return {
-                        ring: '#22d3ee',
-                        bg: '#164e63',
-                        text: timerRemaining === 0 ? '#f43f5e' : '#f472b6',
-                        glow: 'drop-shadow(0 0 15px rgba(34, 211, 238, 0.8))',
+                        ring: 'var(--accent)',
+                        bg: 'rgba(var(--accent-rgb), 0.1)',
+                        text: timerRemaining === 0 ? '#f43f5e' : 'var(--accent)',
+                        glow: 'drop-shadow-glow-accent',
                         font: 'font-mono uppercase tracking-tighter'
                     };
                 case 'oldstyle':
@@ -216,10 +216,10 @@ const ClockVisualizer: React.FC<ClockVisualizerProps> = ({ theme, timestamp, mod
                 case 'modern':
                 default:
                     return {
-                        ring: '#3b82f6',
-                        bg: '#1e293b',
-                        text: timerRemaining === 0 ? '#ef4444' : '#ffffff',
-                        glow: 'drop-shadow(0 0 12px rgba(59, 130, 246, 0.5))',
+                        ring: 'var(--accent)',
+                        bg: 'var(--app-surface)',
+                        text: timerRemaining === 0 ? '#ef4444' : 'var(--app-text)',
+                        glow: 'drop-shadow-glow-accent',
                         font: 'font-mono tabular-nums tracking-tighter'
                     };
             }
@@ -264,7 +264,7 @@ const ClockVisualizer: React.FC<ClockVisualizerProps> = ({ theme, timestamp, mod
                             {Math.floor(timerRemaining / 60).toString().padStart(2, '0')}:
                             {(timerRemaining % 60).toString().padStart(2, '0')}
                         </span>
-                        <span className={`uppercase tracking-[0.5em] font-bold mt-4 text-center max-w-md px-4 ${theme === 'oldstyle' ? 'font-serif italic text-amber-600' : 'text-slate-500'}`}>
+                        <span className={`uppercase tracking-[0.5em] font-bold mt-4 text-center max-w-md px-4 ${theme === 'oldstyle' ? 'font-serif italic text-amber-600' : 'text-app-text/50'}`}>
                             {timerLabel || (theme === 'oldstyle' ? "Sablier de Destin" : "Minuteur Actif")}
                         </span>
                     </div>

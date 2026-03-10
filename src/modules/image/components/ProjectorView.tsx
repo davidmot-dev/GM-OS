@@ -123,17 +123,17 @@ const ProjectorView: React.FC = () => {
     const isResolving = imagePath?.startsWith('m-') && !resolvedUrl && imagePath !== '__tactical_map__' && imagePath !== '__whiteboard__';
 
     if (!imagePath) {
-        return <div className="w-screen h-screen bg-black" />;
+        return <div className="w-screen h-screen bg-app-bg" />;
     }
     
     if (isResolving) {
-        return <div className="w-screen h-screen bg-black flex items-center justify-center" />;
+        return <div className="w-screen h-screen bg-app-bg flex items-center justify-center" />;
     }
 
     // SPECIAL MODE: Whiteboard
     if (imagePath === '__whiteboard__') {
         return (
-            <div className={`w-screen h-screen overflow-hidden relative transition-colors duration-500 ${backgroundMode === 'light' ? 'bg-white' : 'bg-black'}`}>
+            <div className={`w-screen h-screen overflow-hidden relative transition-colors duration-500 ${backgroundMode === 'light' ? 'bg-white' : 'bg-app-bg'}`}>
                 <PlayerDrawingCanvas />
             </div>
         );
@@ -145,7 +145,7 @@ const ProjectorView: React.FC = () => {
         const isTargetMonitor = projectionTarget === 'monitor';
         
         return (
-            <div className="w-screen h-screen bg-black overflow-hidden relative">
+            <div className="w-screen h-screen bg-app-bg overflow-hidden relative">
                 {isTargetMonitor ? (
                     <div className="relative w-full h-full">
                         <PlayerMapCanvas />
@@ -154,7 +154,7 @@ const ProjectorView: React.FC = () => {
                         </div>
                     </div>
                 ) : (
-                    <div className="flex items-center justify-center h-full text-slate-800 font-black uppercase tracking-widest text-2xl">
+                    <div className="flex items-center justify-center h-full text-app-text font-black uppercase tracking-widest text-2xl">
                         Standby
                     </div>
                 )}
@@ -163,7 +163,7 @@ const ProjectorView: React.FC = () => {
     }
 
     return (
-        <div className="w-screen h-screen bg-black flex items-center justify-center overflow-hidden">
+        <div className="w-screen h-screen bg-app-bg flex items-center justify-center overflow-hidden">
             {resolvedUrl && mediaType === 'video' ? (
                 <video
                     src={resolvedUrl}

@@ -44,16 +44,16 @@ const WebDashboard: React.FC = () => {
     };
 
     return (
-        <div className="h-full flex flex-col bg-slate-950 scrollbar-hide overflow-hidden">
+        <div className="h-full flex flex-col bg-app-bg scrollbar-hide overflow-hidden">
             {/* Header */}
-            <header className="border-b border-slate-800 bg-slate-900/60 backdrop-blur-xl px-8 py-4 flex items-center justify-between sticky top-0 z-40">
+            <header className="border-b border-app-border bg-app-surface/60 backdrop-blur-xl px-8 py-4 flex items-center justify-between sticky top-0 z-40">
                 <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-orange-600 flex items-center justify-center shadow-lg shadow-orange-600/20 ring-1 ring-orange-400/30">
+                    <div className="w-12 h-12 rounded-xl bg-accent flex items-center justify-center shadow-glow-accent ring-1 ring-accent/30">
                         <Globe className="text-slate-950 font-bold" size={28} />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-black tracking-tighter text-orange-400 uppercase italic leading-none">
-                            Web <span className="text-white">OS</span>
+                        <h1 className="text-2xl font-black tracking-tighter text-accent uppercase italic leading-none">
+                            Web<span className="text-app-text/50">OS</span>
                             <span className="text-[10px] font-mono font-normal text-slate-500 align-top ml-2 not-italic">v5.0</span>
                         </h1>
                         <p className="text-[10px] text-slate-500 font-mono tracking-[0.2em] uppercase mt-1">Global Bookmark Interface</p>
@@ -61,10 +61,10 @@ const WebDashboard: React.FC = () => {
                 </div>
 
                 <div className="flex items-center gap-3">
-                    <div className="flex bg-slate-950/50 p-1 rounded-xl border border-slate-800 focus-within:border-slate-700 transition-all">
+                    <div className="flex bg-app-bg/50 p-1 rounded-xl border border-app-border focus-within:border-accent/30 transition-all">
                         <button
                             onClick={importLinks}
-                            className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-slate-800 transition-all text-[10px] font-bold text-slate-400 hover:text-blue-400 uppercase tracking-widest group"
+                            className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-app-surface transition-all text-[10px] font-bold text-slate-400 hover:text-accent uppercase tracking-widest group"
                             title="Importer une liste JSON"
                         >
                             <FileUp size={14} className="group-hover:scale-110 transition-transform" />
@@ -72,7 +72,7 @@ const WebDashboard: React.FC = () => {
                         </button>
                         <button
                             onClick={exportLinks}
-                            className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-slate-800 transition-all text-[10px] font-bold text-slate-400 hover:text-emerald-400 uppercase tracking-widest group"
+                            className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-app-surface transition-all text-[10px] font-bold text-slate-400 hover:text-accent uppercase tracking-widest group"
                             title="Exporter la liste en JSON"
                         >
                             <FileDown size={14} className="group-hover:scale-110 transition-transform" />
@@ -80,7 +80,7 @@ const WebDashboard: React.FC = () => {
                         </button>
                     </div>
 
-                    <div className="w-px h-8 bg-slate-800/50 mx-1"></div>
+                    <div className="w-px h-8 bg-app-border/50 mx-1"></div>
 
                     <button
                         onClick={clearAll}
@@ -93,7 +93,7 @@ const WebDashboard: React.FC = () => {
 
                     <button
                         onClick={handleAddClick}
-                        className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-br from-orange-600 to-orange-700 hover:from-orange-500 hover:to-orange-600 transition-all text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-orange-600/20 active:scale-95 group"
+                        className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-accent hover:bg-accent/80 transition-all text-slate-950 font-black text-xs uppercase tracking-wider shadow-glow-accent active:scale-95 group"
                     >
                         <Plus size={18} className="group-hover:rotate-90 transition-transform duration-300" />
                         New Link
@@ -107,7 +107,7 @@ const WebDashboard: React.FC = () => {
                     {/* Empty State or Grid */}
                     {links.length === 0 ? (
                         <div className="h-[50vh] flex flex-col items-center justify-center text-center space-y-4">
-                            <div className="w-20 h-20 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center mb-2">
+                            <div className="w-20 h-20 rounded-full bg-app-surface border border-app-border flex items-center justify-center mb-2">
                                 <Info size={32} className="text-slate-600" />
                             </div>
                             <h2 className="text-xl font-bold text-slate-300">Aucun raccourci web</h2>
@@ -116,7 +116,7 @@ const WebDashboard: React.FC = () => {
                             </p>
                             <button
                                 onClick={handleAddClick}
-                                className="px-6 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold text-xs uppercase transition-all shadow-xl"
+                                className="px-6 py-2 bg-app-surface hover:bg-app-surface/70 text-app-text rounded-xl font-bold text-xs uppercase transition-all shadow-xl"
                             >
                                 Commencer
                             </button>
@@ -134,9 +134,9 @@ const WebDashboard: React.FC = () => {
                             {/* Ghost Add Pad */}
                             <button
                                 onClick={handleAddClick}
-                                className="aspect-square bg-slate-900/30 border-2 border-dashed border-slate-800 rounded-xl flex flex-col items-center justify-center group hover:bg-slate-900/50 hover:border-slate-700 transition-all duration-300 overflow-hidden"
+                                className="aspect-square bg-app-surface/30 border-2 border-dashed border-app-border rounded-xl flex flex-col items-center justify-center group hover:bg-app-surface/50 hover:border-accent/30 transition-all duration-300 overflow-hidden"
                             >
-                                <div className="w-12 h-12 rounded-full flex items-center justify-center bg-slate-900 border border-slate-800 group-hover:bg-slate-800 group-hover:border-slate-700 transition-colors">
+                                <div className="w-12 h-12 rounded-full flex items-center justify-center bg-app-surface border border-app-border group-hover:bg-app-surface/80 group-hover:border-accent/30 transition-colors">
                                     <Plus size={24} className="text-slate-600 group-hover:text-slate-300" />
                                 </div>
                                 <span className="mt-4 text-[10px] font-bold text-slate-500 group-hover:text-slate-300 uppercase tracking-[0.2em] transition-colors">Add Link</span>
@@ -147,19 +147,19 @@ const WebDashboard: React.FC = () => {
             </main>
 
             {/* Footer status bar */}
-            <footer className="h-10 border-t border-slate-800 bg-slate-900/80 backdrop-blur-md px-6 flex items-center justify-between text-[10px] font-mono text-slate-500 uppercase tracking-widest">
+            <footer className="h-10 border-t border-app-border bg-app-surface/80 backdrop-blur-md px-6 flex items-center justify-between text-[10px] font-mono text-slate-500 uppercase tracking-widest">
                 <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2 pr-4 border-r border-slate-800">
-                        <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
-                        <span className="text-emerald-500/80 font-bold">Bridge Online</span>
+                    <div className="flex items-center gap-2 pr-4 border-r border-app-border">
+                        <div className="w-2 h-2 rounded-full bg-accent animate-pulse shadow-glow-accent"></div>
+                        <span className="text-accent/80 font-bold">Bridge Online</span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <span className="text-orange-500/50">[sys]</span>
-                        <span>{links.length} shortcuts active</span>
+                        <span className="text-accent/50">[sys]</span>
+                        <span>v5.2.0-STABLE</span>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
-                    <span className="bg-slate-800 px-2 py-1 rounded text-slate-400 ring-1 ring-slate-700">SRV: 127.0.0.1:4444</span>
+                    <span className="bg-app-surface px-2 py-1 rounded text-slate-400 ring-1 ring-app-border">SRV: 127.0.0.1:4444</span>
                 </div>
             </footer>
 

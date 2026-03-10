@@ -76,13 +76,13 @@ const MapProjectionModal: React.FC = () => {
                     </div>
                 </button>
 
-                <div className="h-px bg-slate-800 my-1" />
+                <div className="h-px bg-app-border my-1" />
 
                 {/* Option 2: Monitors */}
                 <h5 className="text-[10px] font-black uppercase tracking-widest text-slate-500 px-1">Moniteurs Détectés</h5>
                 
                 {displays.length === 0 ? (
-                    <div className="p-4 bg-slate-900/50 rounded-xl border border-dashed border-slate-800 text-center">
+                    <div className="p-4 bg-app-bg/50 rounded-xl border border-dashed border-app-border text-center">
                         <p className="text-xs text-slate-500 italic">Aucun moniteur externe détecté.</p>
                     </div>
                 ) : (
@@ -90,9 +90,9 @@ const MapProjectionModal: React.FC = () => {
                         <button
                             key={display.id}
                             onClick={() => handleProjectToMonitor(display.id)}
-                            className="flex items-center gap-4 p-4 bg-slate-800/40 hover:bg-slate-800/60 border border-gray-700/50 rounded-xl transition-all group text-left"
+                            className="flex items-center gap-4 p-4 bg-app-surface/40 hover:bg-app-surface/60 border border-app-border/50 rounded-xl transition-all group text-left"
                         >
-                            <div className="w-12 h-12 rounded-lg bg-slate-700/30 flex items-center justify-center text-slate-400 group-hover:text-gm-cyan transition-colors">
+                            <div className="w-12 h-12 rounded-lg bg-app-bg/30 flex items-center justify-center text-slate-400 group-hover:text-accent transition-colors">
                                 <Monitor size={24} />
                             </div>
                             <div className="flex-1">

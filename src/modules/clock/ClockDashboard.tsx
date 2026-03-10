@@ -90,25 +90,25 @@ const ClockDashboard: React.FC = () => {
     ];
 
     return (
-        <div className="h-full grid grid-cols-12 gap-6 p-6 bg-slate-950/50 overflow-hidden">
+        <div className="h-full grid grid-cols-12 gap-6 p-6 bg-app-bg/50 overflow-hidden">
             {/* Sidebar Controls */}
             <div className="col-span-3 space-y-6 overflow-y-auto pr-2 custom-scrollbar">
-                <section className="bg-slate-900/80 border border-slate-800 rounded-xl p-4 shadow-xl backdrop-blur-sm">
-                    <h3 className="text-sm font-semibold text-slate-400 mb-4 flex items-center gap-2 uppercase tracking-wider">
+                <section className="bg-app-surface/80 border border-app-border rounded-xl p-4 shadow-xl backdrop-blur-sm">
+                    <h3 className="text-sm font-semibold text-app-text/60 mb-4 flex items-center gap-2 uppercase tracking-wider">
                         <LayoutGrid size={16} /> Configuration
                     </h3>
 
                     <div className="space-y-4">
                         <div>
-                            <label className="text-xs text-slate-500 mb-2 block uppercase font-medium">Mode de Temps</label>
+                            <label className="text-xs text-app-text/50 mb-2 block uppercase font-medium">Mode de Temps</label>
                             <div className="grid grid-cols-2 gap-2">
                                 {modes.map((m) => (
                                     <button
                                         key={m.id}
                                         onClick={() => setMode(m.id)}
                                         className={`flex items-center gap-2 p-2 rounded-lg border text-xs font-medium transition-all ${mode === m.id
-                                            ? 'bg-blue-600/20 border-blue-500 text-blue-400 shadow-lg shadow-blue-900/20'
-                                            : 'bg-slate-800/50 border-slate-700 text-slate-400 hover:border-slate-500 hover:bg-slate-800'
+                                            ? 'bg-accent/20 border-accent text-accent shadow-glow-accent'
+                                            : 'bg-app-surface/50 border-app-border text-app-text/60 hover:border-accent/50 hover:bg-app-surface'
                                             }`}
                                     >
                                         <m.icon size={14} />
@@ -119,15 +119,15 @@ const ClockDashboard: React.FC = () => {
                         </div>
 
                         <div>
-                            <label className="text-xs text-slate-500 mb-2 block uppercase font-medium">Thème Visuel</label>
+                            <label className="text-xs text-app-text/50 mb-2 block uppercase font-medium">Thème Visuel</label>
                             <div className="grid grid-cols-3 gap-2">
                                 {themes.map((t) => (
                                     <button
                                         key={t.id}
                                         onClick={() => setTheme(t.id)}
                                         className={`p-2 rounded-lg border text-[10px] font-bold uppercase transition-all ${theme === t.id
-                                            ? 'bg-purple-600/20 border-purple-500 text-purple-400 shadow-lg shadow-purple-900/20'
-                                            : 'bg-slate-800/50 border-slate-700 text-slate-400 hover:border-slate-500 hover:bg-slate-800'
+                                            ? 'bg-accent/20 border-accent text-accent shadow-glow-accent'
+                                            : 'bg-app-surface/50 border-app-border text-app-text/60 hover:border-accent/50 hover:bg-app-surface'
                                             }`}
                                     >
                                         {t.label}
@@ -141,7 +141,7 @@ const ClockDashboard: React.FC = () => {
                                 <div>
                                     <label className="text-xs text-slate-500 uppercase font-medium block mb-2">Calendrier</label>
                                     <select
-                                        className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-xs text-white focus:outline-none focus:border-blue-500"
+                                        className="w-full bg-app-bg border border-app-border rounded p-2 text-xs text-app-text focus:outline-none focus:border-accent"
                                         value={activeCalendarId || ''}
                                         onChange={(e) => selectCalendar(e.target.value)}
                                     >
@@ -153,13 +153,13 @@ const ClockDashboard: React.FC = () => {
                                 </div>
 
                                 {activeCalendarId && calendars[activeCalendarId] && fantasyDate && (
-                                    <div className="space-y-3 pt-2 border-t border-slate-700/50">
+                                    <div className="space-y-3 pt-2 border-t border-app-border/50">
                                         <div className="grid grid-cols-2 gap-2">
                                             <div>
                                                 <label className="text-[10px] text-slate-500 uppercase block mb-1">Année</label>
                                                 <input
                                                     type="number"
-                                                    className="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-xs text-white"
+                                                    className="w-full bg-app-bg border border-app-border rounded p-1.5 text-xs text-app-text"
                                                     value={fantasyDate.year}
                                                     onChange={(e) => setFantasyDate({ year: parseInt(e.target.value) })}
                                                 />
@@ -168,7 +168,7 @@ const ClockDashboard: React.FC = () => {
                                                 <label className="text-[10px] text-slate-500 uppercase block mb-1">Jour</label>
                                                 <input
                                                     type="number"
-                                                    className="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-xs text-white"
+                                                    className="w-full bg-app-bg border border-app-border rounded p-1.5 text-xs text-app-text"
                                                     value={fantasyDate.day}
                                                     onChange={(e) => setFantasyDate({ day: parseInt(e.target.value) })}
                                                 />
@@ -177,7 +177,7 @@ const ClockDashboard: React.FC = () => {
                                         <div>
                                             <label className="text-[10px] text-slate-500 uppercase block mb-1">Mois</label>
                                             <select
-                                                className="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-xs text-white"
+                                                className="w-full bg-app-bg border border-app-border rounded p-1.5 text-xs text-app-text"
                                                 value={fantasyDate.monthIndex}
                                                 onChange={(e) => setFantasyDate({ monthIndex: parseInt(e.target.value) })}
                                             >
@@ -234,7 +234,7 @@ const ClockDashboard: React.FC = () => {
                                     <input
                                         type="time"
                                         step="1"
-                                        className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-xs text-white focus:outline-none focus:border-blue-500"
+                                        className="w-full bg-app-bg border border-app-border rounded p-2 text-xs text-white focus:outline-none focus:border-blue-500"
                                         value={new Date(timestamp).toTimeString().split(' ')[0]}
                                         onChange={(e) => {
                                             const [hours, minutes, seconds] = e.target.value.split(':').map(Number);
@@ -247,12 +247,11 @@ const ClockDashboard: React.FC = () => {
                             </div>
                         )}
                     </div>
-
                 </section>
 
                 {/* Timer Control Section */}
-                <section className="bg-slate-900/80 border border-slate-800 rounded-xl p-4 shadow-xl backdrop-blur-sm">
-                    <h3 className="text-sm font-semibold text-slate-400 mb-4 flex items-center gap-2 uppercase tracking-wider">
+                <section className="bg-app-surface/80 border border-app-border rounded-xl p-4 shadow-xl backdrop-blur-sm">
+                    <h3 className="text-sm font-semibold text-app-text/60 mb-4 flex items-center gap-2 uppercase tracking-wider">
                         <Timer size={16} /> Minuteur
                     </h3>
 
@@ -260,13 +259,13 @@ const ClockDashboard: React.FC = () => {
                         <input
                             type="text"
                             placeholder="Message du minuteur..."
-                            className="w-full bg-slate-800/80 border border-slate-700 rounded-lg p-2 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500"
+                            className="w-full bg-app-surface/80 border border-app-border rounded-lg p-2 text-xs text-app-text placeholder:text-app-text/30 focus:outline-none focus:border-accent"
                             value={timerLabel}
                             onChange={(e) => setTimerLabel(e.target.value)}
                         />
                     </div>
 
-                    <div className="flex items-center gap-3 mb-4 justify-center bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
+                    <div className="flex items-center gap-3 mb-4 justify-center bg-app-surface/50 p-4 rounded-xl border border-app-border/50">
 
                         <span className={`text-3xl font-mono font-bold tracking-tighter tabular-nums leading-none ${timerRemaining === 0 && timerDuration > 0 ? 'text-red-500 animate-pulse' : 'text-white'}`}>
                             {Math.floor(timerRemaining / 60).toString().padStart(2, '0')}:
@@ -280,7 +279,7 @@ const ClockDashboard: React.FC = () => {
                             <button
                                 key={m}
                                 onClick={() => setTimer(m * 60)}
-                                className="bg-slate-800/80 border border-slate-700 text-[10px] font-bold py-1 rounded hover:bg-slate-700 hover:text-blue-400 transition-all"
+                                className="bg-app-surface/80 border border-app-border text-[10px] font-bold py-1 rounded hover:bg-app-surface hover:text-accent transition-all"
                             >
                                 {m}m
                             </button>
@@ -306,7 +305,7 @@ const ClockDashboard: React.FC = () => {
                         )}
                         <button
                             onClick={resetTimer}
-                            className="bg-slate-800 border border-slate-700 text-slate-400 p-2 rounded-lg hover:bg-slate-700 transition-colors"
+                            className="bg-app-surface border border-app-border text-app-text/60 p-2 rounded-lg hover:bg-app-surface/80 hover:text-accent transition-colors"
                         >
                             <RotateCcw size={14} />
                         </button>
@@ -314,15 +313,15 @@ const ClockDashboard: React.FC = () => {
                 </section>
 
                 {/* Tension Clocks Grid Add */}
-                <section className="bg-slate-900/80 border border-slate-800 rounded-xl p-4 shadow-xl backdrop-blur-sm">
-                    <h3 className="text-sm font-semibold text-slate-400 mb-4 flex items-center gap-2 uppercase tracking-wider">
+                <section className="bg-app-surface/80 border border-app-border rounded-xl p-4 shadow-xl backdrop-blur-sm">
+                    <h3 className="text-sm font-semibold text-app-text/60 mb-4 flex items-center gap-2 uppercase tracking-wider">
                         <Plus size={16} /> Nouvelle Jauge
                     </h3>
                     <div className="flex flex-col gap-3">
                         <input
                             type="text"
                             placeholder="Nom de la jauge..."
-                            className="bg-slate-800/80 border border-slate-700 rounded-lg p-2 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500"
+                            className="bg-app-surface/80 border border-app-border rounded-lg p-2 text-xs text-app-text placeholder:text-app-text/30 focus:outline-none focus:border-accent"
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
                                     const val = e.currentTarget.value.trim();
@@ -338,7 +337,7 @@ const ClockDashboard: React.FC = () => {
                                 <button
                                     key={s}
                                     onClick={() => addTensionClock(`Jauge ${s} seg`, s)}
-                                    className="bg-slate-800/50 border border-slate-700 text-slate-400 px-2 py-1 rounded text-[10px] font-bold hover:bg-slate-700 hover:text-white transition-all"
+                                    className="bg-app-bg/50 border border-app-border text-app-text/50 px-2 py-1 rounded text-[10px] font-bold hover:bg-app-surface hover:text-accent transition-all"
                                 >
                                     +{s}
                                 </button>
@@ -351,13 +350,13 @@ const ClockDashboard: React.FC = () => {
             {/* Main Visualizer */}
             <div className="col-span-9 flex flex-col gap-6 overflow-hidden">
                 {/* Main Clock Area */}
-                <div className="flex-1 min-h-[400px] bg-slate-900/40 border border-slate-800/50 rounded-2xl relative flex items-center justify-center overflow-hidden group">
+                <div className="flex-1 min-h-[400px] bg-app-surface/40 border border-app-border/50 rounded-2xl relative flex items-center justify-center overflow-hidden group">
                     <div className="absolute top-4 right-4 flex gap-2">
                         <button
                             onClick={() => setIsClockProjected(!isClockProjected)}
                             className={`p-2 rounded-full transition-all border ${isClockProjected
-                                ? 'bg-sky-600/20 border-sky-500 text-sky-400 shadow-lg shadow-sky-900/40'
-                                : 'bg-slate-800/50 border-slate-700 text-slate-500 hover:text-white'
+                                ? 'bg-accent/20 border-accent text-accent shadow-glow-accent'
+                                : 'bg-app-surface/50 border-app-border text-app-text/50 hover:text-app-text'
                                 }`}
                             title={isClockProjected ? "Caché du Player Hub" : "Affiché sur le Player Hub"}
                         >
@@ -372,12 +371,12 @@ const ClockDashboard: React.FC = () => {
                 </div>
 
                 {/* Tension Clocks Grid */}
-                <div className="h-1/3 bg-slate-900/20 border border-slate-800/30 rounded-2xl p-6 overflow-y-auto overflow-x-hidden custom-scrollbar">
+                <div className="h-1/3 bg-app-surface/20 border border-app-border/30 rounded-2xl p-6 overflow-y-auto overflow-x-hidden custom-scrollbar">
                     <div className="grid grid-cols-4 gap-6">
                         {tensions.map((clock) => (
                             <div
                                 key={clock.id}
-                                className="bg-slate-900/60 border border-slate-800 rounded-xl p-4 relative group hover:border-slate-600 transition-all backdrop-blur-sm"
+                                className="bg-app-surface/60 border border-app-border rounded-xl p-4 relative group hover:border-accent/40 transition-all backdrop-blur-sm"
                             >
                                 <button
                                     onClick={() => removeTensionClock(clock.id)}

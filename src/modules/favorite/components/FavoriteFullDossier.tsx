@@ -40,7 +40,7 @@ export const FavoriteFullDossier: React.FC = () => {
         <div className="flex-1 flex flex-col items-center justify-center text-slate-500">
             <span className="material-symbols-outlined text-6xl mb-4">search_off</span>
             <p>No entity selected</p>
-            <button onClick={() => setViewMode('grid')} className="mt-4 text-gm-cyan hover:underline">Back to Library</button>
+            <button onClick={() => setViewMode('grid')} className="mt-4 text-accent hover:underline">Back to Library</button>
         </div>
     );
 
@@ -55,13 +55,13 @@ export const FavoriteFullDossier: React.FC = () => {
         npc: { icon: User, color: 'text-amber-500', bg: 'bg-amber-500/10', border: 'border-amber-500/30' },
         place: { icon: MapPin, color: 'text-emerald-500', bg: 'bg-emerald-500/10', border: 'border-emerald-500/30' },
         item: { icon: Sparkles, color: 'text-purple-500', bg: 'bg-purple-500/10', border: 'border-purple-500/30' },
-        lore: { icon: BookOpen, color: 'text-blue-500', bg: 'bg-blue-500/10', border: 'border-blue-500/30' }
+        lore: { icon: BookOpen, color: 'text-accent', bg: 'bg-accent/10', border: 'border-accent/30' }
     };
 
     const currentType = typeConfig[formData.type as keyof typeof typeConfig] || typeConfig.npc;
 
     return (
-        <div className="flex-1 flex flex-col min-h-0 bg-slate-950 font-display text-slate-200">
+        <div className="flex-1 flex flex-col min-h-0 bg-app-bg font-display text-slate-200">
             <MediaBrowser
                 isOpen={browserTarget !== null}
                 onClose={() => setBrowserTarget(null)}
@@ -70,7 +70,7 @@ export const FavoriteFullDossier: React.FC = () => {
                 title={`Sélectionner une ${browserTarget === 'tokenUrl' ? 'icône/token' : 'image de portrait'}`}
             />
             {/* 1. Global Header */}
-            <header className="flex items-center justify-between px-8 py-4 border-b border-white/5 bg-slate-900/40 backdrop-blur-md sticky top-0 z-50">
+            <header className="flex items-center justify-between px-8 py-4 border-b border-white/5 bg-app-surface/40 backdrop-blur-md sticky top-0 z-50">
                 <div className="flex items-center gap-6">
                     <button
                         onClick={() => {
@@ -80,10 +80,10 @@ export const FavoriteFullDossier: React.FC = () => {
                                 setViewMode('grid');
                             }
                         }}
-                        className="group flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 hover:border-gm-cyan/50 hover:bg-gm-cyan/10 transition-all"
+                        className="group flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 hover:border-accent/50 hover:bg-accent/10 transition-all"
                     >
-                        <ArrowLeft size={16} className="text-slate-500 group-hover:text-gm-cyan" />
-                        <span className="text-xs font-bold tracking-widest text-slate-400 group-hover:text-gm-cyan">BACK</span>
+                        <ArrowLeft size={16} className="text-slate-500 group-hover:text-accent" />
+                        <span className="text-xs font-bold tracking-widest text-slate-400 group-hover:text-accent">BACK</span>
                     </button>
                     <div className="h-6 w-px bg-white/10" />
                     <div className="flex items-center gap-3">
@@ -146,8 +146,8 @@ export const FavoriteFullDossier: React.FC = () => {
                         }}
                         className={`px-4 py-2 rounded-xl border font-bold text-[10px] tracking-widest transition-all flex items-center gap-2
                             ${formData.isSyncedToPlayerHub
-                                ? 'bg-gm-cyan/20 border-gm-cyan text-gm-cyan shadow-[0_0_15px_rgba(0,210,255,0.3)]'
-                                : 'bg-slate-900 border-white/10 text-slate-500 hover:text-slate-300 hover:border-white/20'}`}
+                                ? 'bg-accent/20 border-accent text-accent shadow-glow-accent'
+                                : 'bg-app-bg border-white/10 text-slate-500 hover:text-slate-300 hover:border-white/20'}`}
                     >
                         <span className="material-symbols-outlined text-sm">{formData.isSyncedToPlayerHub ? 'visibility' : 'visibility_off'}</span>
                         PLAYER HUB
@@ -157,7 +157,7 @@ export const FavoriteFullDossier: React.FC = () => {
 
                     <button
                         onClick={handleSave}
-                        className="px-6 py-2 rounded-xl bg-gm-cyan text-slate-950 font-black text-xs tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg shadow-gm-cyan/20 flex items-center gap-2"
+                        className="px-6 py-2 rounded-xl bg-accent text-slate-950 font-black text-xs tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg shadow-accent/20 flex items-center gap-2"
                     >
                         <Save size={16} />
                         SAVE CHANGES
@@ -168,7 +168,7 @@ export const FavoriteFullDossier: React.FC = () => {
             <main className="flex-1 overflow-y-auto custom-scrollbar">
                 {/* 2. Identity Banner (Hero Section) */}
                 <section className="relative px-12 py-16 overflow-hidden border-b border-white/5">
-                    <div className="absolute inset-0 bg-gradient-to-b from-gm-cyan/5 to-transparent pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent pointer-events-none" />
 
                     <div className="relative z-10 max-w-6xl mx-auto flex flex-col items-center text-center gap-6">
                         <div className="space-y-2 w-full max-w-3xl">
@@ -183,13 +183,13 @@ export const FavoriteFullDossier: React.FC = () => {
                                 type="text"
                                 value={formData.subtitle || ''}
                                 onChange={e => setFormData({ ...formData, subtitle: e.target.value })}
-                                className="w-full bg-transparent text-lg md:text-xl font-medium text-gm-cyan text-center focus:outline-none placeholder:text-slate-800 tracking-wide"
+                                className="w-full bg-transparent text-lg md:text-xl font-medium text-accent text-center focus:outline-none placeholder:text-slate-800 tracking-wide"
                                 placeholder="Subtitle or Title (e.g. Scourge of the Darkwood)"
                             />
                         </div>
 
                         {/* Type Selector Tabs */}
-                        <div className="flex bg-slate-900/80 p-1.5 rounded-2xl border border-white/10 shadow-2xl">
+                        <div className="flex bg-app-surface/80 p-1.5 rounded-2xl border border-white/10 shadow-2xl">
                             {(['npc', 'place', 'item', 'lore'] as const).map(t => {
                                 const cfg = typeConfig[t];
                                 const isActive = formData.type === t;
@@ -215,7 +215,7 @@ export const FavoriteFullDossier: React.FC = () => {
                 <div className="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-px bg-white/5 border-x border-white/5">
 
                     {/* LEFT COLUMN: VISUALS */}
-                    <div className="lg:col-span-3 p-8 space-y-8 bg-slate-950/50 backdrop-blur-sm">
+                    <div className="lg:col-span-3 p-8 space-y-8 bg-app-bg/50 backdrop-blur-sm">
                         <div className="flex items-center gap-2 text-slate-500 mb-2">
                             <ImageIcon size={14} />
                             <h3 className="text-[10px] font-black uppercase tracking-[0.2em]">Visual Assets</h3>
@@ -227,14 +227,14 @@ export const FavoriteFullDossier: React.FC = () => {
                                 {resolvedImageUrl ? (
                                     <img src={resolvedImageUrl} alt="Portrait" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                                 ) : (
-                                    <div className="w-full h-full flex flex-col items-center justify-center text-slate-800 gap-2">
+                                    <div className="w-full h-full flex flex-col items-center justify-center text-slate-500 gap-2">
                                         <ImageIcon size={48} />
                                         <span className="text-[10px] font-bold uppercase tracking-widest">No Portrait</span>
                                     </div>
                                 )}
                                 <button
                                     onClick={() => setBrowserTarget('imageUrl')}
-                                    className="absolute bottom-4 right-4 p-3 rounded-full bg-gm-cyan text-slate-950 shadow-xl opacity-0 group-hover:opacity-100 transition-all hover:scale-110"
+                                    className="absolute bottom-4 right-4 p-3 rounded-full bg-accent text-slate-950 shadow-xl opacity-0 group-hover:opacity-100 transition-all hover:scale-110"
                                     title="Parcourir le Media Hub"
                                 >
                                     <FolderOpen size={18} />
@@ -245,27 +245,27 @@ export const FavoriteFullDossier: React.FC = () => {
                                 placeholder="Portrait URL ou m-..."
                                 value={formData.imageUrl || ''}
                                 onChange={e => setFormData({ ...formData, imageUrl: e.target.value })}
-                                className="w-full bg-slate-900/50 border border-white/5 rounded-xl px-4 py-2 text-[10px] text-slate-500 focus:outline-none focus:border-gm-cyan/30 font-mono"
+                                className="w-full bg-app-bg/50 border border-white/5 rounded-xl px-4 py-2 text-[10px] text-slate-500 focus:outline-none focus:border-accent/30 font-mono"
                             />
                         </div>
 
                         {/* Token */}
                         <div className="space-y-4 pt-4 border-t border-white/5">
                             <div className="flex items-center gap-4">
-                                <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-gm-cyan/30 bg-slate-900 group shadow-lg">
+                                <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-accent/30 bg-app-bg group shadow-lg">
                                     {resolvedTokenUrl ? (
                                         <img src={resolvedTokenUrl} alt="Token" className="w-full h-full object-cover" />
                                     ) : (
-                                        <div className="w-full h-full flex items-center justify-center text-slate-800">
+                                        <div className="w-full h-full flex items-center justify-center text-slate-500">
                                             <Layers size={24} />
                                         </div>
                                     )}
                                     <button
                                         onClick={() => setBrowserTarget('tokenUrl')}
-                                        className="absolute inset-0 flex items-center justify-center bg-slate-950/60 opacity-0 group-hover:opacity-100 transition-all"
+                                        className="absolute inset-0 flex items-center justify-center bg-app-bg/60 opacity-0 group-hover:opacity-100 transition-all"
                                         title="Parcourir le Media Hub"
                                     >
-                                        <FolderOpen size={16} className="text-gm-cyan" />
+                                        <FolderOpen size={16} className="text-accent" />
                                     </button>
                                 </div>
                                 <div className="flex-1 space-y-1">
@@ -275,7 +275,7 @@ export const FavoriteFullDossier: React.FC = () => {
                                         placeholder="Token URL ou m-..."
                                         value={formData.tokenUrl || ''}
                                         onChange={e => setFormData({ ...formData, tokenUrl: e.target.value })}
-                                        className="w-full bg-slate-900/50 border border-white/5 rounded-lg px-3 py-1.5 text-[9px] text-slate-500 focus:outline-none focus:border-gm-cyan/30 font-mono"
+                                        className="w-full bg-app-bg/50 border border-white/5 rounded-lg px-3 py-1.5 text-[9px] text-slate-500 focus:outline-none focus:border-accent/30 font-mono"
                                     />
                                 </div>
                             </div>
@@ -283,7 +283,7 @@ export const FavoriteFullDossier: React.FC = () => {
                     </div>
 
                     {/* CENTER COLUMN: NARRATIVE */}
-                    <div className="lg:col-span-5 p-12 space-y-6 bg-slate-950">
+                    <div className="lg:col-span-5 p-12 space-y-6 bg-app-bg">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2 text-slate-500">
                                 <ScrollText size={16} />
@@ -295,27 +295,27 @@ export const FavoriteFullDossier: React.FC = () => {
                         <textarea
                             value={formData.lore || ''}
                             onChange={e => setFormData({ ...formData, lore: e.target.value })}
-                            className="w-full bg-transparent border-none text-lg md:text-xl text-slate-300 focus:outline-none min-h-[350px] leading-relaxed custom-scrollbar font-serif italic placeholder:text-slate-900"
+                            className="w-full bg-transparent border-none text-lg md:text-xl text-slate-300 focus:outline-none min-h-[350px] leading-relaxed custom-scrollbar font-serif italic placeholder:text-slate-700"
                             placeholder="Once upon a time in the dark corners of the world..."
                         />
 
                         {/* Secret GM Notes */}
                         <div className="pt-8 border-t border-white/5 space-y-4">
-                            <div className="flex items-center gap-2 text-gm-cyan/50">
+                            <div className="flex items-center gap-2 text-accent/50">
                                 <span className="material-symbols-outlined text-sm">lock</span>
                                 <h3 className="text-[10px] font-black uppercase tracking-[0.2em]">Secret GM Notes</h3>
                             </div>
                             <textarea
                                 value={formData.secretNotes || ''}
                                 onChange={e => setFormData({ ...formData, secretNotes: e.target.value })}
-                                className="w-full bg-slate-900/30 border border-white/5 rounded-2xl p-6 text-sm text-gm-cyan/80 focus:outline-none focus:border-gm-cyan/30 min-h-[200px] leading-relaxed custom-scrollbar font-mono placeholder:text-slate-900"
+                                className="w-full bg-app-bg/30 border border-white/5 rounded-2xl p-6 text-sm text-accent/80 focus:outline-none focus:border-accent/30 min-h-[200px] leading-relaxed custom-scrollbar font-mono placeholder:text-slate-900"
                                 placeholder="Plot hooks, secrets, mechanical weaknesses..."
                             />
                         </div>
                     </div>
 
                     {/* RIGHT COLUMN: MECHANICS */}
-                    <div className="lg:col-span-4 p-8 space-y-12 bg-slate-950/50 backdrop-blur-sm">
+                    <div className="lg:col-span-4 p-8 space-y-12 bg-app-bg/50 backdrop-blur-sm">
 
                         {/* Attributes Section */}
                         <div className="space-y-6">
@@ -330,7 +330,7 @@ export const FavoriteFullDossier: React.FC = () => {
                                         attrs[`New Trait`] = 'Value';
                                         setFormData({ ...formData, attributes: attrs });
                                     }}
-                                    className="p-1 px-3 rounded-lg bg-gm-cyan/10 text-gm-cyan text-[9px] font-black uppercase tracking-widest hover:bg-gm-cyan/20 transition-all flex items-center gap-1"
+                                    className="p-1 px-3 rounded-lg bg-accent/10 text-accent text-[9px] font-black uppercase tracking-widest hover:bg-accent/20 transition-all flex items-center gap-1"
                                 >
                                     <Plus size={12} /> ADD
                                 </button>
@@ -349,7 +349,7 @@ export const FavoriteFullDossier: React.FC = () => {
                                                     attrs[e.target.value] = value;
                                                     setFormData({ ...formData, attributes: attrs });
                                                 }}
-                                                className="w-full bg-transparent text-[9px] font-black text-slate-500 uppercase tracking-widest focus:text-gm-cyan focus:outline-none"
+                                                className="w-full bg-transparent text-[9px] font-black text-slate-500 uppercase tracking-widest focus:text-accent focus:outline-none"
                                             />
                                             <input
                                                 type="text"
@@ -390,7 +390,7 @@ export const FavoriteFullDossier: React.FC = () => {
                                         stats[`Gauge ${Object.keys(stats).length + 1}`] = 50;
                                         setFormData({ ...formData, stats });
                                     }}
-                                    className="p-1 px-3 rounded-lg bg-gm-cyan/10 text-gm-cyan text-[9px] font-black uppercase tracking-widest hover:bg-gm-cyan/20 transition-all flex items-center gap-1"
+                                    className="p-1 px-3 rounded-lg bg-accent/10 text-accent text-[9px] font-black uppercase tracking-widest hover:bg-accent/20 transition-all flex items-center gap-1"
                                 >
                                     <Plus size={12} /> ADD
                                 </button>
@@ -412,7 +412,7 @@ export const FavoriteFullDossier: React.FC = () => {
                                                 className="bg-transparent text-[10px] font-black text-slate-400 uppercase tracking-widest focus:text-white focus:outline-none"
                                             />
                                             <div className="flex items-center gap-3">
-                                                <span className="text-[10px] font-black text-gm-cyan">{val}%</span>
+                                                <span className="text-[10px] font-black text-accent">{val}%</span>
                                                 <button
                                                     onClick={() => {
                                                         const stats = { ...formData.stats };
@@ -425,9 +425,9 @@ export const FavoriteFullDossier: React.FC = () => {
                                                 </button>
                                             </div>
                                         </div>
-                                        <div className="relative h-2 bg-slate-900 rounded-full overflow-hidden border border-white/5">
+                                        <div className="relative h-2 bg-app-bg rounded-full overflow-hidden border border-white/5">
                                             <div
-                                                className="absolute inset-y-0 left-0 bg-gm-cyan transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(0,210,255,0.5)]"
+                                                className="absolute inset-y-0 left-0 bg-accent transition-all duration-1000 ease-out shadow-glow-accent"
                                                 style={{ width: `${val}%` }}
                                             />
                                             <input

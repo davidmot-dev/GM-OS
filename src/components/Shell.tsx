@@ -23,7 +23,7 @@ import {
     Edit3,
     MonitorPlay
 } from 'lucide-react';
-import { useSessionStore } from '../store/useSessionStore';
+import { useSessionStore, THEME_PALETTES } from '../store/useSessionStore';
 import type { ThemeID } from '../store/useSessionStore';
 import { useModalStore } from '../stores/useModalStore';
 import { SessionService } from '../store/SessionService';
@@ -70,8 +70,18 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
 
     // Appliquer le thème et la couleur d'accentuation au document
     useEffect(() => {
-        document.documentElement.setAttribute('data-theme', theme);
-        document.documentElement.style.setProperty('--app-accent', themeColor);
+        const root = document.documentElement;
+        const palette = THEME_PALETTES[theme] || THEME_PALETTES['cyberpunk'];
+        
+        root.setAttribute('data-theme', theme);
+        root.style.setProperty('--app-accent', themeColor);
+        root.style.setProperty('--app-bg', palette.bg);
+        root.style.setProperty('--app-surface', palette.surface);
+        root.style.setProperty('--app-border', palette.border);
+
+        // Mise à jour des classes de thème pour des ajustements CSS fins
+        root.classList.remove('theme-cyberpunk', 'theme-medieval', 'theme-modern');
+        root.classList.add(`theme-${theme}`);
     }, [theme, themeColor]);
 
     const cycleTheme = () => {
@@ -89,9 +99,9 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
     };
 
     return (
-        <div className="flex h-screen bg-slate-950 text-slate-50 overflow-hidden font-sans selection:bg-blue-500/30">
+        <div className="flex h-screen bg-app-bg text-slate-50 overflow-hidden font-sans selection:bg-accent/30">
             {/* Sidebar */}
-            <aside className="w-64 border-r border-slate-800/50 bg-slate-900/30 backdrop-blur-xl flex flex-col p-4 z-20">
+            <aside className="w-64 border-r border-app-border/50 bg-app-surface/30 backdrop-blur-xl flex flex-col p-4 z-20">
                 <div className="flex items-center gap-3 px-2 mb-8 mt-2">
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-emerald-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
@@ -119,9 +129,9 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         onClick={() => setActiveModule('dashboard')}
                     />
 
-                    <div className="my-3 mx-2 h-px bg-slate-800/50" />
+                    <div className="my-3 mx-2 h-px bg-app-border/20" />
 
-                    <div className="px-3 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Audio</div>
+                    <div className="px-3 mb-2 text-[10px] font-bold text-app-text/40 uppercase tracking-widest">Audio</div>
                     <NavItem
                         icon={<Music size={20} />}
                         label="Music OS"
@@ -147,9 +157,9 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         onClick={() => setActiveModule('voice')}
                     />
 
-                    <div className="my-3 mx-2 h-px bg-slate-800/50" />
+                    <div className="my-3 mx-2 h-px bg-app-border/20" />
 
-                    <div className="px-3 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Global</div>
+                    <div className="px-3 mb-2 text-[10px] font-bold text-app-text/40 uppercase tracking-widest">Global</div>
                     <NavItem
                         icon={<Star size={20} className="text-amber-500" />}
                         label="Favorite OS"
@@ -157,9 +167,9 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         onClick={() => setActiveModule('favorite')}
                     />
 
-                    <div className="my-3 mx-2 h-px bg-slate-800/50" />
+                    <div className="my-3 mx-2 h-px bg-app-border/20" />
 
-                    <div className="px-3 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Aventure</div>
+                    <div className="px-3 mb-2 text-[10px] font-bold text-app-text/40 uppercase tracking-widest">Aventure</div>
                     <NavItem
                         icon={<Sword size={20} />}
                         label="Combat OS"
@@ -185,9 +195,9 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         onClick={() => setActiveModule('map')}
                     />
 
-                    <div className="my-3 mx-2 h-px bg-slate-800/50" />
+                    <div className="my-3 mx-2 h-px bg-app-border/20" />
 
-                    <div className="px-3 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Outils</div>
+                    <div className="px-3 mb-2 text-[10px] font-bold text-app-text/40 uppercase tracking-widest">Outils</div>
                     <NavItem
                         icon={<FolderOpen size={20} className="text-gm-cyan" />}
                         label="Media Hub"
@@ -232,10 +242,10 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                     />
                 </nav>
 
-                <div className="mt-auto pt-6 flex flex-col gap-4 border-t border-slate-800/40">
+                <div className="mt-auto pt-4 flex flex-col gap-3 border-t border-app-border/20">
                     {/* 1. Unified System Bar */}
-                    <div className="flex items-center justify-between px-2 py-2 bg-slate-950/40 backdrop-blur-md rounded-xl border border-white/5 shadow-inner">
-                        <div className="flex items-center gap-1">
+                    <div className="flex items-center justify-between px-1 py-1 bg-app-bg/40 backdrop-blur-md rounded-xl border border-app-border/30 shadow-inner">
+                        <div className="flex items-center gap-0.5">
                             <button
                                 onClick={cycleTheme}
                                 className="p-2 rounded-lg text-slate-400 hover:text-accent hover:bg-accent/10 transition-all group"
@@ -252,26 +262,26 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                             </button>
                             <button
                                 onClick={handleLaunchHub}
-                                className="p-2 rounded-lg text-slate-400 hover:text-sky-400 hover:bg-sky-400/10 transition-all"
+                                className="p-1.5 rounded-lg text-app-text/40 hover:text-sky-400 hover:bg-sky-400/10 transition-all"
                                 title="Launch Player Hub"
                             >
                                 <MonitorPlay size={18} />
                             </button>
                             <button
                                 onClick={() => { }}
-                                className="p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-all"
+                                className="p-1.5 rounded-lg text-app-text/40 hover:text-app-text/80 hover:bg-white/5 transition-all"
                                 title="Réglages"
                             >
                                 <Settings size={18} />
                             </button>
                         </div>
 
-                        <div className="w-px h-4 bg-white/10 mx-1" />
+                        <div className="w-px h-4 bg-app-border/20 mx-0.5" />
 
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-0.5">
                             <button
                                 onClick={() => SessionService.saveFullSession()}
-                                className="p-2 rounded-lg text-slate-400 hover:text-emerald-400 hover:bg-emerald-400/10 transition-all"
+                                className="p-1.5 rounded-lg text-app-text/40 hover:text-emerald-400 hover:bg-emerald-400/10 transition-all"
                                 title="Sauvegarder"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
@@ -287,7 +297,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                     </div>
 
                     {/* 2. Premium DM Card */}
-                    <div className="group relative p-4 rounded-[1.25rem] bg-gradient-to-br from-slate-900/80 to-slate-950/90 border border-white/10 shadow-2xl backdrop-blur-2xl transition-all duration-300 hover:border-accent/30 overflow-hidden">
+                    <div className="group relative p-4 rounded-[1.25rem] bg-gradient-to-br from-app-surface/40 to-app-bg/60 border border-app-border/30 shadow-2xl backdrop-blur-2xl transition-all duration-300 hover:border-accent/30 overflow-hidden">
                         {/* Background subtle glow */}
                         <div className="absolute -right-4 -top-4 w-24 h-24 bg-accent/10 rounded-full blur-3xl group-hover:bg-accent/20 transition-all duration-500" />
                         
@@ -301,14 +311,14 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                             
                             <div className="flex flex-col flex-1 min-w-0">
                                 <span className="text-xs font-black text-white uppercase tracking-tighter truncate leading-none">Dungeon Master</span>
-                                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1 opacity-70 group-hover:opacity-100 transition-opacity">
+                                <span className="text-[10px] text-app-text/40 font-bold uppercase tracking-widest mt-1 opacity-70 group-hover:opacity-100 transition-opacity">
                                     Session Link Active
                                 </span>
                             </div>
 
                             <button
                                 onClick={flushApplication}
-                                className="p-2 rounded-lg text-slate-600 hover:text-red-500 hover:bg-red-500/10 transition-all"
+                                className="p-2 rounded-lg text-app-text/20 hover:text-red-500 hover:bg-red-500/10 transition-all"
                                 title="RÉINITIALISATION TOTALE"
                             >
                                 <Power size={18} />
@@ -320,7 +330,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
 
             {/* Main Content */}
             <main className="flex-1 flex flex-col relative overflow-hidden bg-[radial-gradient(circle_at_top_right,rgba(29,78,216,0.05),transparent_40%)]">
-                <header className="h-16 border-b border-slate-800/50 flex items-center justify-between px-8 bg-slate-900/20 backdrop-blur-md z-10">
+                <header className="h-16 border-b border-app-border/20 flex items-center justify-between px-8 bg-app-surface/10 backdrop-blur-md z-10">
                     <div className="flex items-center gap-4">
                         <h2 className="text-lg font-bold tracking-tight text-white uppercase italic">
                             {activeModule} <span className="text-accent">OS</span>
@@ -330,9 +340,9 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                     <div className="flex items-center gap-4">
                         <div className="flex items-center gap-2">
                             <div className="w-2 h-2 rounded-full bg-accent animate-ping" />
-                            <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">System Link Active</span>
+                             <span className="text-[10px] font-mono text-app-text/40 uppercase tracking-widest">System Link Active</span>
                         </div>
-                        <div className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-slate-500 shadow-xl">
+                        <div className="px-3 py-1.5 rounded-lg bg-app-bg border border-app-border text-xs font-mono text-app-text/40 shadow-xl">
                             GM-OS_v5.0.0-ALPHA
                         </div>
                     </div>

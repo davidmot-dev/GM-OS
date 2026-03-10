@@ -6,7 +6,10 @@
 :root {
   --background: 240 10% 3.9%;
   --foreground: 0 0% 98%;
-  --app-accent: #3b82f6; /* Default Blue */
+  --app-accent: #3b82f6; 
+  --app-bg: #020617;
+  --app-surface: #0f172a;
+  --app-border: #1e293b;
 }
 
 body {

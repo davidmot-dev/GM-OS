@@ -5,11 +5,11 @@ export const TopControls: React.FC = () => {
     const { transitionTimeMs, setTransitionTime } = useLightStore();
 
     return (
-        <header className="p-6 border-b border-slate-800 flex items-center justify-between bg-slate-950/50 backdrop-blur-sm z-10 font-sans">
+        <header className="p-6 border-b border-app-border flex items-center justify-between bg-app-surface/50 backdrop-blur-sm z-10 font-sans">
             <div className="flex items-center gap-8">
                 <div className="flex flex-col gap-2">
                     <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Transition Time</span>
-                    <div className="flex bg-slate-900 p-1 rounded-lg border border-slate-800">
+                    <div className="flex bg-app-bg p-1 rounded-lg border border-app-border">
                         <button
                             onClick={() => setTransitionTime(0)}
                             className={`px-3 py-1 text-xs font-bold rounded-md ${transitionTimeMs === 0 ? 'bg-gm-cyan text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}>
@@ -33,7 +33,7 @@ export const TopControls: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="h-10 w-px bg-slate-800"></div>
+                <div className="h-10 w-px bg-app-border"></div>
 
                 <div className="flex items-center gap-4">
                     <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Mock Sync</span>
@@ -45,7 +45,7 @@ export const TopControls: React.FC = () => {
                                 useLightStore.getState().setConnection('mock');
                             }
                         }}
-                        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${useLightStore.getState().status === 'mock' ? 'bg-gm-cyan' : 'bg-slate-700'}`}>
+                        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${useLightStore.getState().status === 'mock' ? 'bg-accent' : 'bg-app-surface'}`}>
                         <span className={`${useLightStore.getState().status === 'mock' ? 'translate-x-5' : 'translate-x-0'} pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out`}></span>
                     </button>
                 </div>

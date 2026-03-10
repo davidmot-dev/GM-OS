@@ -68,17 +68,17 @@ export const Sidebar: React.FC = () => {
     };
 
     return (
-        <aside className="col-span-3 bg-slate-900/95 backdrop-blur-md border-r border-slate-800 p-6 flex flex-col gap-8 text-slate-100 font-sans h-full">
+        <aside className="col-span-3 bg-app-surface/95 backdrop-blur-md border-r border-app-border p-6 flex flex-col gap-8 text-app-text font-sans h-full">
             <div className="flex flex-col gap-1">
-                <h1 className="text-2xl font-extrabold tracking-tight text-gm-cyan">Light OS</h1>
+                <h1 className="text-2xl font-extrabold tracking-tight text-accent">Light OS</h1>
                 <p className="text-slate-400 text-sm font-medium">GM Ambience Controller</p>
             </div>
 
             {/* Connection Status & Sync */}
             <div className="flex flex-col gap-3">
-                <div className={`flex items-center justify-between p-4 rounded-xl border ${status === 'connected' ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-slate-800/50 border-slate-700'}`}>
+                <div className={`flex items-center justify-between p-4 rounded-xl border ${status === 'connected' ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-app-bg/50 border-app-border'}`}>
                     <div className="flex items-center gap-3">
-                        <span className="material-symbols-outlined text-gm-cyan">hub</span>
+                        <span className="material-symbols-outlined text-accent">hub</span>
                         <div className="flex flex-col">
                             <span className="text-sm font-semibold">Hue Bridge</span>
                             {bridgeIp && <span className="text-xs text-slate-500">{bridgeIp}</span>}
@@ -86,14 +86,14 @@ export const Sidebar: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="flex items-center justify-between p-4 rounded-xl border bg-slate-800/20 border-slate-800">
+                <div className="flex items-center justify-between p-4 rounded-xl border bg-app-bg/20 border-app-border">
                     <div className="flex items-center gap-3">
                         <span className={`material-symbols-outlined ${useLightStore.getState().isSyncEnabled ? 'text-gm-violet animate-pulse' : 'text-slate-600'}`}>sync</span>
                         <span className="text-xs font-bold uppercase tracking-widest text-slate-300">Sync with Audio</span>
                     </div>
                     <button 
                         onClick={() => useLightStore.getState().setSyncEnabled(!useLightStore.getState().isSyncEnabled)}
-                        className={`w-10 h-5 rounded-full relative transition-colors ${useLightStore.getState().isSyncEnabled ? 'bg-gm-violet' : 'bg-slate-700'}`}
+                        className={`w-10 h-5 rounded-full relative transition-colors ${useLightStore.getState().isSyncEnabled ? 'bg-accent' : 'bg-app-surface'}`}
                     >
                         <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${useLightStore.getState().isSyncEnabled ? 'left-6' : 'left-1'}`} />
                     </button>
@@ -101,10 +101,10 @@ export const Sidebar: React.FC = () => {
 
                 {status !== 'connected' && (
                     <div className="flex gap-2">
-                        <button onClick={handleDiscover} className="flex-1 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs font-bold transition-colors">
+                        <button onClick={handleDiscover} className="flex-1 py-2 bg-app-bg hover:bg-app-surface rounded-lg text-xs font-bold transition-colors">
                             Discover
                         </button>
-                        <button onClick={handlePair} disabled={!bridgeIp} className="flex-1 py-2 bg-gm-cyan/20 hover:bg-gm-cyan/30 text-gm-cyan rounded-lg text-xs font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                        <button onClick={handlePair} disabled={!bridgeIp} className="flex-1 py-2 bg-accent/20 hover:bg-accent/30 text-accent rounded-lg text-xs font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                             Pair Key
                         </button>
                     </div>
@@ -120,7 +120,7 @@ export const Sidebar: React.FC = () => {
             <div className="flex flex-col gap-4">
                 <div className="flex justify-between items-center">
                     <label className="text-sm font-bold text-slate-300 uppercase tracking-widest">Global Intensity</label>
-                    <span className="text-gm-cyan font-mono font-bold">{globalBrightness}%</span>
+                    <span className="text-accent font-mono font-bold">{globalBrightness}%</span>
                 </div>
                 <div className="relative w-full h-8 flex items-center">
                     <input
@@ -128,7 +128,7 @@ export const Sidebar: React.FC = () => {
                         min="0" max="100"
                         value={globalBrightness}
                         onChange={(e) => setGlobalBrightness(parseInt(e.target.value))}
-                        className="w-full h-1.5 bg-slate-700 rounded-full appearance-none cursor-pointer accent-gm-cyan"
+                        className="w-full h-1.5 bg-app-bg rounded-full appearance-none cursor-pointer accent-accent"
                     />
                 </div>
             </div>
@@ -144,24 +144,24 @@ export const Sidebar: React.FC = () => {
                     <span className="material-symbols-outlined text-xs text-red-500/50">bolt</span>
                 </button>
 
-                <button onClick={() => handleFlash('#0088ff')} className="group flex items-center justify-between p-4 rounded-xl bg-blue-500/10 border border-blue-500/20 hover:bg-blue-500/20 transition-all">
+                <button onClick={() => handleFlash('#0088ff')} className="group flex items-center justify-between p-4 rounded-xl bg-accent/10 border border-accent/20 hover:bg-accent/20 transition-all">
                     <div className="flex items-center gap-3">
-                        <span className="material-symbols-outlined text-blue-400 group-hover:scale-110 transition-transform">auto_fix_high</span>
+                        <span className="material-symbols-outlined text-accent group-hover:scale-110 transition-transform">auto_fix_high</span>
                         <span className="font-bold text-blue-100">Arcane Blue</span>
                     </div>
-                    <span className="material-symbols-outlined text-xs text-blue-400/50">bolt</span>
+                    <span className="material-symbols-outlined text-xs text-accent/50">bolt</span>
                 </button>
 
                 <button onClick={() => handleFlash('#10b981')} className="group flex items-center justify-between p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all">
                     <div className="flex items-center gap-3">
                         <span className="material-symbols-outlined text-emerald-400 group-hover:scale-110 transition-transform">healing</span>
-                        <span className="font-bold text-emerald-100">Healing Green</span>
+                        <span className="font-bold text-app-text">Healing Green</span>
                     </div>
                     <span className="material-symbols-outlined text-xs text-emerald-400/50">bolt</span>
                 </button>
             </div>
 
-            <div className="mt-auto pt-6 border-t border-slate-800">
+            <div className="mt-auto pt-6 border-t border-app-border">
                 <button
                     onClick={() => hueEngine.extinguishAll()}
                     className="w-full py-4 bg-red-600 hover:bg-red-500 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all">

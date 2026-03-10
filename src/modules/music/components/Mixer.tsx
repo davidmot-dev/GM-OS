@@ -49,10 +49,10 @@ const Mixer: React.FC = () => {
     }, [autoFadeTarget]);
 
     return (
-        <div className="w-full bg-obsidian/30 backdrop-blur-[32px] rounded-[1.5rem] border border-white/5 p-3 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.6)] relative overflow-hidden group/mixer transition-all duration-700 hover:border-gm-violet/20 hover:bg-obsidian/40">
+        <div className="w-full bg-app-bg/30 backdrop-blur-[32px] rounded-[1.5rem] border border-app-border/50 p-3 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.6)] relative overflow-hidden group/mixer transition-all duration-700 hover:border-accent/20 hover:bg-app-bg/40">
             {/* Inner Glass Glow */}
             <div className="absolute inset-0 bg-gradient-to-b from-white/[0.04] to-transparent pointer-events-none" />
-            <div className="absolute -bottom-10 -left-10 size-40 bg-gm-violet/10 blur-[60px] pointer-events-none opacity-40" />
+            <div className="absolute -bottom-10 -left-10 size-40 bg-accent/10 blur-[60px] pointer-events-none opacity-40" />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center relative z-10">
                 {/* Master Volume */}
@@ -60,23 +60,23 @@ const Mixer: React.FC = () => {
                     <div className="flex items-center justify-between px-1">
                         <div className="flex flex-col">
                             <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Master</span>
-                            <span className="text-[7px] font-black text-gm-violet uppercase tracking-widest opacity-60">Engine</span>
+                            <span className="text-[7px] font-black text-accent uppercase tracking-widest opacity-60">Engine</span>
                         </div>
                         <div className="flex items-baseline gap-0.5">
                             <span className="text-xl font-black font-mono text-white/95 drop-shadow-md">{Math.round(masterVolume * 100)}</span>
                             <span className="text-[10px] font-black text-slate-600">%</span>
                         </div>
                     </div>
-                    <div className="relative h-1.5 bg-obsidian-dark/90 rounded-full border border-white/5 shadow-inner group/range">
+                    <div className="relative h-1.5 bg-app-bg rounded-full border border-app-border/50 shadow-inner group/range">
                         <div
-                            className="absolute inset-y-0 left-0 bg-gm-violet shadow-glow-violet transition-all duration-150 rounded-full"
+                            className="absolute inset-y-0 left-0 bg-accent shadow-glow-accent transition-all duration-150 rounded-full"
                             style={{ width: `${masterVolume * 100}%` }}
                         />
                         <div
-                            className="absolute top-1/2 -translate-y-1/2 size-4 bg-white rounded-lg shadow-lg border-2 border-gm-violet z-10 pointer-events-none transition-all duration-150"
+                            className="absolute top-1/2 -translate-y-1/2 size-4 bg-white rounded-lg shadow-lg border-2 border-accent z-10 pointer-events-none transition-all duration-150"
                             style={{ left: `calc(${masterVolume * 100}% - 8px)` }}
                         >
-                            <div className="absolute inset-0 rounded-md animate-ping bg-gm-violet/30" />
+                            <div className="absolute inset-0 rounded-md animate-ping bg-accent/30" />
                         </div>
                         <input
                             type="range"
@@ -95,16 +95,16 @@ const Mixer: React.FC = () => {
                     <div className="flex justify-between items-center w-full max-w-[200px] gap-3">
                         <button
                             onClick={async () => await triggerAutoFade('A')}
-                            className={`flex-1 py-1.5 rounded-xl text-[8px] font-black border transition-all uppercase tracking-tighter active:scale-[0.98] ${isFading === 'A' ? 'bg-gm-violet border-gm-violet text-white shadow-glow-violet' : 'bg-obsidian-light/40 border-white/10 text-slate-500 hover:text-white hover:border-gm-violet/30'}`}
+                            className={`flex-1 py-1.5 rounded-xl text-[8px] font-black border transition-all uppercase tracking-tighter active:scale-[0.98] ${isFading === 'A' ? 'bg-accent border-accent text-white shadow-glow-accent' : 'bg-app-surface/40 border-app-border/50 text-slate-500 hover:text-white hover:border-accent/30'}`}
                         >
                             A
                         </button>
-                        <div className="size-8 rounded-xl bg-obsidian-dark/80 border border-white/10 flex items-center justify-center relative overflow-hidden">
-                            <Activity size={14} className={`relative z-10 transition-all duration-500 ${isFading ? 'animate-pulse text-gm-violet' : 'text-slate-700'}`} />
+                        <div className="size-8 rounded-xl bg-app-bg border border-app-border/50 flex items-center justify-center relative overflow-hidden">
+                            <Activity size={14} className={`relative z-10 transition-all duration-500 ${isFading ? 'animate-pulse text-accent' : 'text-slate-700'}`} />
                         </div>
                         <button
                             onClick={async () => await triggerAutoFade('B')}
-                            className={`flex-1 py-1.5 rounded-xl text-[8px] font-black border transition-all uppercase tracking-tighter active:scale-[0.98] ${isFading === 'B' ? 'bg-gm-violet border-gm-violet text-white shadow-glow-violet' : 'bg-obsidian-light/40 border-white/10 text-slate-500 hover:text-white hover:border-gm-violet/30'}`}
+                            className={`flex-1 py-1.5 rounded-xl text-[8px] font-black border transition-all uppercase tracking-tighter active:scale-[0.98] ${isFading === 'B' ? 'bg-accent border-accent text-white shadow-glow-accent' : 'bg-app-surface/40 border-app-border/50 text-slate-500 hover:text-white hover:border-accent/30'}`}
                         >
                             B
                         </button>
@@ -112,8 +112,8 @@ const Mixer: React.FC = () => {
 
                     <div className="relative w-full h-10 flex items-center group/fader px-4">
                         {/* Fader Track UI */}
-                        <div className="absolute inset-x-8 h-3 bg-black/60 rounded-full border border-white/5 p-0.5 shadow-inner overflow-hidden">
-                            <div className="w-full h-full border border-gm-violet/5 rounded-full bg-gradient-to-r from-gm-violet/10 via-transparent to-gm-violet/10" />
+                        <div className="absolute inset-x-8 h-3 bg-black/60 rounded-full border border-app-border/50 p-0.5 shadow-inner overflow-hidden">
+                            <div className="w-full h-full border border-accent/5 rounded-full bg-gradient-to-r from-accent/10 via-transparent to-accent/10" />
                         </div>
 
                         {/* Premium Fader Handle */}
@@ -121,7 +121,7 @@ const Mixer: React.FC = () => {
                             className="absolute h-6 w-10 bg-slate-100 rounded-lg shadow-xl border-y border-white z-10 pointer-events-none transition-all duration-150 flex items-center justify-center after:content-[''] after:w-[1px] after:h-3 after:bg-slate-300 after:rounded-full"
                             style={{ left: `calc(${10 + (crossfader * 80)}% - 1.25rem)` }}
                         >
-                            <div className="absolute inset-x-0 -top-0.5 h-[1px] bg-gm-violet/20 blur-[1px]" />
+                            <div className="absolute inset-x-0 -top-0.5 h-[1px] bg-accent/20 blur-[1px]" />
                         </div>
 
                         <input
@@ -151,13 +151,13 @@ const Mixer: React.FC = () => {
                             <span className="text-[10px] font-black text-slate-600">s</span>
                         </div>
                     </div>
-                    <div className="relative h-1.5 bg-obsidian-dark/90 rounded-full border border-white/5 shadow-inner group/range-speed">
+                    <div className="relative h-1.5 bg-app-bg rounded-full border border-app-border/50 shadow-inner group/range-speed">
                         <div
                             className="absolute inset-y-0 left-0 bg-slate-700 transition-all rounded-full opacity-40"
                             style={{ width: `${((autoFadeDuration - 500) / 19500) * 100}%` }}
                         />
                         <div
-                            className="absolute top-1/2 -translate-y-1/2 size-4 bg-obsidian-light rounded-lg shadow-lg border-2 border-slate-600 z-10 pointer-events-none transition-all duration-150 flex items-center justify-center p-0.5"
+                            className="absolute top-1/2 -translate-y-1/2 size-4 bg-app-surface rounded-lg shadow-lg border-2 border-app-border z-10 pointer-events-none transition-all duration-150 flex items-center justify-center p-0.5"
                             style={{ left: `calc(${((autoFadeDuration - 500) / 19500) * 100}% - 8px)` }}
                         >
                             <div className="w-[1px] h-2 bg-slate-500 rounded-full" />

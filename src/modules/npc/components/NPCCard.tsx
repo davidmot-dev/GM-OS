@@ -25,17 +25,17 @@ const NPCCard: React.FC = () => {
 
     if (isGenerating) {
         return (
-            <div className="w-full max-w-2xl aspect-[3/4] rounded-3xl border-2 border-slate-800 bg-slate-900/50 flex flex-col items-center justify-center gap-6 animate-pulse">
-                <div className="w-24 h-24 rounded-full bg-slate-800" />
-                <div className="h-8 w-64 bg-slate-800 rounded-lg" />
-                <div className="h-32 w-full max-w-md bg-slate-800 rounded-lg mx-8" />
+            <div className="w-full max-w-2xl aspect-[3/4] rounded-3xl border-2 border-app-border bg-app-bg/50 flex flex-col items-center justify-center gap-6 animate-pulse">
+                <div className="w-24 h-24 rounded-full bg-app-surface" />
+                <div className="h-8 w-64 bg-app-surface rounded-lg" />
+                <div className="h-32 w-full max-w-md bg-app-surface rounded-lg mx-8" />
             </div>
         );
     }
 
     if (!currentEntity) {
         return (
-            <div className="text-center p-12 border-2 border-dashed border-slate-800 rounded-3xl text-slate-500 max-w-lg">
+            <div className="text-center p-12 border-2 border-dashed border-app-border rounded-3xl text-slate-500 max-w-lg">
                 <Share2 size={48} className="mx-auto mb-4 opacity-20" />
                 <p className="text-xl font-display uppercase tracking-widest italic">En attente de génération</p>
                 <p className="text-sm mt-2 opacity-60">Sélectionnez un univers et cliquez sur le bouton de tirage</p>
@@ -114,7 +114,7 @@ const NPCCard: React.FC = () => {
 
     const getIcon = () => {
         switch (currentEntity.category) {
-            case 'npcs': return <User className="text-gm-cyan" />;
+            case 'npcs': return <User className="text-accent" />;
             case 'places': return <MapPin className="text-emerald-400" />;
             case 'items': return <Package className="text-amber-400" />;
             case 'events': return <Zap className="text-purple-400" />;
@@ -124,9 +124,9 @@ const NPCCard: React.FC = () => {
     };
 
     return (
-        <div className="w-full max-w-2xl bg-obsidian-light/80 border border-slate-700/50 rounded-3xl shadow-2xl relative overflow-hidden flex flex-col backdrop-blur-md group animate-in fade-in zoom-in duration-500 font-sans">
+        <div className="w-full max-w-2xl bg-app-surface/80 border border-app-border/50 rounded-3xl shadow-2xl relative overflow-hidden flex flex-col backdrop-blur-md group animate-in fade-in zoom-in duration-500 font-sans">
             {/* Header / Avatar Area */}
-            <div className="h-48 bg-gradient-to-br from-gm-cyan/20 to-obsidian-dark flex items-center justify-center relative overflow-hidden">
+            <div className="h-48 bg-gradient-to-br from-accent/20 to-app-bg flex items-center justify-center relative overflow-hidden">
                 <div className="absolute inset-0 bg-corrugation opacity-10" />
 
                 <button
@@ -135,7 +135,7 @@ const NPCCard: React.FC = () => {
                         transform: `scale(${voiceScale})`,
                         boxShadow: voiceGlow,
                     }}
-                    className={`w-40 h-40 rounded-2xl bg-obsidian-dark/50 border-2 border-gm-cyan/30 flex items-center justify-center text-gm-cyan shadow-glow-cyan z-10 transition-all duration-75 hover:border-gm-cyan overflow-hidden group/avatar relative`}
+                    className={`w-40 h-40 rounded-2xl bg-app-bg/50 border-2 border-accent/30 flex items-center justify-center text-accent shadow-glow-accent z-10 transition-all duration-75 hover:border-accent overflow-hidden group/avatar relative`}
                 >
                     {avatarSrc ? (
                         <>
@@ -160,14 +160,14 @@ const NPCCard: React.FC = () => {
                     </div>
                 </button>
 
-                <div className="absolute top-4 right-4 text-[10px] uppercase font-bold tracking-widest text-gm-cyan/50 px-2 py-1 border border-gm-cyan/20 rounded bg-gm-cyan/5">
+                <div className="absolute top-4 right-4 text-[10px] uppercase font-bold tracking-widest text-accent/50 px-2 py-1 border border-accent/20 rounded bg-accent/5">
                     {currentEntity.category}
                 </div>
             </div>
 
             {/* Content Area */}
             <div className="p-8 flex-1">
-                <h1 className="text-4xl font-display font-black text-white mb-6 tracking-tight border-b border-slate-700 pb-4">
+                <h1 className="text-4xl font-display font-black text-white mb-6 tracking-tight border-b border-app-border pb-4">
                     {currentEntity.name}
                 </h1>
 
@@ -182,7 +182,7 @@ const NPCCard: React.FC = () => {
             </div>
 
             {/* Actions Footer */}
-            <div className="p-4 bg-obsidian-dark/50 border-t border-slate-700 flex items-center justify-between flex-wrap gap-4">
+            <div className="p-4 bg-app-bg/50 border-t border-app-border flex items-center justify-between flex-wrap gap-4">
                 <div className="flex gap-2">
                     <button
                         onClick={() => {
@@ -197,28 +197,28 @@ const NPCCard: React.FC = () => {
                                 gmToast(`${currentEntity.name} projeté sur le Player Hub !`);
                             }
                         }}
-                        className="p-2 bg-slate-800 hover:bg-gm-cyan/20 text-slate-400 hover:text-gm-cyan transition-colors"
+                        className="p-2 bg-app-surface hover:bg-accent/20 text-slate-400 hover:text-accent transition-colors"
                         title="Projeter sur le Hub"
                     >
                         <Eye size={20} />
                     </button>
                     <button
                         onClick={handleAddToFavorite}
-                        className="p-2 bg-slate-800 hover:bg-amber-500/20 rounded-lg text-slate-400 hover:text-amber-400 transition-colors"
+                        className="p-2 bg-app-surface hover:bg-amber-500/20 rounded-lg text-slate-400 hover:text-amber-400 transition-colors"
                         title="Ajouter aux Favoris"
                     >
                         <Star size={20} />
                     </button>
                     <button
                         onClick={saveToMemo}
-                        className="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-400 hover:text-white transition-colors"
+                        className="p-2 bg-app-surface hover:bg-app-bg/50 rounded-lg text-slate-400 hover:text-white transition-colors"
                         title="Sauvegarder en Mémo"
                     >
                         <Save size={20} />
                     </button>
                     <button
                         onClick={handleAddToJournal}
-                        className="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-400 hover:text-white transition-colors"
+                        className="p-2 bg-app-surface hover:bg-app-bg/50 rounded-lg text-slate-400 hover:text-white transition-colors"
                         title="Ajouter au Journal"
                     >
                         <FileText size={20} />

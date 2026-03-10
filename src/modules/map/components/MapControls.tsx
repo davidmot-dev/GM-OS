@@ -17,13 +17,13 @@ const ToolButton = ({ tool, currentTool, setTool, icon: Icon, label }: { tool: M
     return (
         <button
             className={`p-2 rounded flex flex-col items-center justify-center gap-1 transition-colors w-[70px] ${isActive
-                ? 'bg-gm-cyan shadow-glow-cyan text-obsidian'
-                : 'bg-obsidian hover:bg-obsidian-light text-slate-300 border border-gray-700/50'
+                ? 'bg-accent shadow-glow-accent text-slate-950'
+                : 'bg-app-bg hover:bg-app-surface text-slate-300 border border-app-border/50'
                 }`}
             onClick={() => setTool(tool)}
             title={label}
         >
-            <Icon size={20} className={isActive ? 'text-obsidian' : 'text-gm-cyan'} />
+            <Icon size={20} className={isActive ? 'text-slate-950' : 'text-accent'} />
             <span className="text-[10px] uppercase font-bold">{label}</span>
         </button>
     );
@@ -39,7 +39,7 @@ const ModeButton = ({ mode, fogMode, setFogMode, icon: Icon, label }: { mode: Fo
         <button
             className={`flex-1 py-2 flex items-center justify-center gap-2 rounded transition-all border ${isActive
                 ? `${activeColor} ${shadow} text-white border-transparent`
-                : `bg-obsidian border-gray-700 hover:bg-obsidian-light ${textColor}`
+                : `bg-app-bg border-app-border hover:bg-app-surface ${textColor}`
                 }`}
             onClick={() => setFogMode(mode)}
         >
@@ -113,10 +113,10 @@ const MapControls: React.FC = () => {
 
 
     return (
-        <aside className="w-80 bg-obsidian-dark border-l border-gray-800 flex flex-col h-full overflow-y-auto custom-scrollbar">
+        <aside className="w-80 bg-app-surface border-l border-app-border flex flex-col h-full overflow-y-auto custom-scrollbar">
             {/* Header */}
-            <div className="p-4 border-b border-gray-800 bg-obsidian-light/30">
-                <h2 className="text-gm-cyan font-display font-bold text-xl flex items-center gap-2">
+            <div className="p-4 border-b border-app-border bg-app-bg/30">
+                <h2 className="text-accent font-display font-bold text-xl flex items-center gap-2">
                     <span className="text-2xl">🗺️</span> Map OS
                 </h2>
                 <p className="text-gray-400 text-xs mt-1">Plateau tactique synchronisé.</p>
@@ -130,10 +130,10 @@ const MapControls: React.FC = () => {
                     <h3 className="text-xs text-slate-400 uppercase tracking-wider mb-2 font-bold px-1">Carte & Plan</h3>
                     <div className="flex gap-2">
                         <button
-                            className="flex-1 bg-obsidian-light hover:bg-gray-700/60 p-3 rounded-lg flex items-center justify-center gap-2 border border-gray-700 transition-colors text-sm"
+                            className="flex-1 bg-app-bg hover:bg-app-surface p-3 rounded-lg flex items-center justify-center gap-2 border border-app-border transition-colors text-sm"
                             onClick={() => setIsMediaBrowserOpen(true)}
                         >
-                            <Upload size={18} className="text-gm-cyan" />
+                            <Upload size={18} className="text-accent" />
                             <span>Importer Média</span>
                         </button>
                         {mapUrl && (
@@ -188,18 +188,19 @@ const MapControls: React.FC = () => {
 
                     {/* Brush Size Slider */}
                     {currentTool === 'brush' && (
-                        <div className="bg-obsidian-light/20 p-3 rounded border border-gray-800">
+                        <div className="bg-app-bg/20 p-3 rounded border border-app-border">
                             <div className="flex justify-between text-xs text-slate-400 mb-2">
-                                <span>Taille du pinceau</span>
-                                <span>{brushSize}px</span>
+                                <span>Taille Pinceau</span>
+                                <span className="text-accent font-mono">{brushSize}px</span>
                             </div>
                             <input
                                 type="range"
-                                min="10"
+                                min="20"
                                 max="200"
+                                step="10"
                                 value={brushSize}
                                 onChange={(e) => setBrushSize(parseInt(e.target.value))}
-                                className="w-full accent-gm-cyan"
+                                className="w-full accent-accent"
                             />
                         </div>
                     )}
@@ -218,30 +219,31 @@ const MapControls: React.FC = () => {
                                 checked={isGridEnabled} 
                                 onChange={(e) => setGridEnabled(e.target.checked)} 
                             />
-                            <div className="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-gm-cyan"></div>
+                            <div className="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-accent"></div>
                         </label>
                     </div>
 
                     {isGridEnabled && (
-                        <div className="flex flex-col gap-3 bg-obsidian-light/20 p-3 rounded border border-gray-800">
-                            <div>
+                        <div className="flex flex-col gap-3 bg-app-bg/20 p-3 rounded border border-app-border">
+                            <div className="flex flex-col gap-1">
                                 <div className="flex justify-between text-[10px] text-slate-400 mb-1">
-                                    <span>Taille des cases</span>
-                                    <span>{gridSize}px</span>
+                                    <span>Taille de Grille</span>
+                                    <span className="text-accent font-mono">{gridSize}px</span>
                                 </div>
                                 <input
                                     type="range"
                                     min="20"
-                                    max="150"
+                                    max="200"
+                                    step="10"
                                     value={gridSize}
                                     onChange={(e) => setGridSize(parseInt(e.target.value))}
-                                    className="w-full h-1 accent-gm-cyan bg-gray-700 rounded-lg cursor-pointer"
+                                    className="w-full h-1 accent-accent bg-gray-700 rounded-lg cursor-pointer"
                                 />
                             </div>
-                            <div>
+                            <div className="flex flex-col gap-1">
                                 <div className="flex justify-between text-[10px] text-slate-400 mb-1">
                                     <span>Opacité</span>
-                                    <span>{Math.round(gridOpacity * 100)}%</span>
+                                    <span className="text-accent font-mono">{Math.round(gridOpacity * 100)}%</span>
                                 </div>
                                 <input
                                     type="range"
@@ -250,7 +252,7 @@ const MapControls: React.FC = () => {
                                     step="0.1"
                                     value={gridOpacity}
                                     onChange={(e) => setGridOpacity(parseFloat(e.target.value))}
-                                    className="w-full h-1 accent-gm-cyan bg-gray-700 rounded-lg cursor-pointer"
+                                    className="w-full h-1 accent-accent bg-gray-700 rounded-lg cursor-pointer"
                                 />
                             </div>
                         </div>
@@ -275,7 +277,7 @@ const MapControls: React.FC = () => {
 
                     <div className="flex-1 overflow-y-auto custom-scrollbar flex flex-col gap-2">
                         {combatants.length === 0 ? (
-                            <div className="bg-obsidian-light/10 border border-gray-800 border-dashed rounded-lg flex flex-col items-center justify-center p-4 text-center">
+                        <div className="bg-app-bg/10 border border-app-border border-dashed rounded-lg flex flex-col items-center justify-center p-4 text-center">
                                 <Users size={32} className="text-gray-600 mb-2" />
                                 <p className="text-sm text-gray-500">Aucun combattant actif.</p>
                                 <p className="text-xs text-gray-600 mt-1">Ajoutez-les depuis le Combat OS.</p>
@@ -301,7 +303,7 @@ const MapControls: React.FC = () => {
                 <section className="mt-auto pt-4 border-t border-gray-800 flex flex-col gap-3">
                     {projectionTarget && (
                         <div className="px-1 flex flex-col gap-2">
-                            <div className="w-full flex items-center justify-center gap-2 p-3 bg-gm-cyan/10 border border-gm-cyan/20 rounded-xl text-gm-cyan shadow-inner">
+                            <div className="w-full flex items-center justify-center gap-2 p-3 bg-accent/10 border border-accent/20 rounded-xl text-accent shadow-inner">
                                 <Cast size={16} className="animate-pulse" />
                                 <span className="text-[10px] font-black uppercase tracking-widest">Projection Active</span>
                             </div>
@@ -322,18 +324,17 @@ const MapControls: React.FC = () => {
                     <div className="grid grid-cols-2 gap-2 px-1">
                         <button
                             onClick={() => gmCustom('map-projection-select')}
-                            className={`flex flex-col items-center justify-center gap-2 p-4 transition-all group shadow-lg rounded-xl border ${projectionTarget 
-                                ? 'bg-obsidian-light/50 border-gray-700 text-slate-400' 
-                                : 'bg-indigo-600/20 hover:bg-indigo-600/30 border-indigo-500/30 text-white'}`}
-                            title="Choisir la cible de projection"
+                            className={`group flex flex-col items-center justify-center gap-2 p-4 border rounded-xl transition-all shadow-lg ${projectionTarget
+                                ? 'bg-app-surface/50 border-app-border text-slate-400'
+                                : 'bg-indigo-500/10 border-indigo-500/30 text-indigo-100 hover:bg-indigo-500/20 active:scale-95'
+                                }`}
                         >
-                            <Cast className={projectionTarget ? 'text-slate-500' : 'text-indigo-400 group-hover:scale-110 transition-transform'} />
+                            <Cast className={projectionTarget ? 'text-slate-500' : 'text-accent group-hover:scale-110 transition-transform'} />
                             <span className="text-[10px] font-bold uppercase tracking-tight">Projeter</span>
                         </button>
                         <button
                             onClick={resetView}
-                            className="flex flex-col items-center justify-center gap-2 p-4 bg-slate-800/40 hover:bg-slate-800/60 border border-gray-700/50 rounded-xl transition-all group shadow-lg"
-                            title="Réinitialiser le zoom et la position"
+                            className="flex flex-col items-center justify-center gap-2 p-4 bg-app-surface/40 hover:bg-app-surface border border-app-border/50 rounded-xl transition-all group shadow-lg"
                         >
                             <Maximize className="text-slate-400 group-hover:scale-110 transition-transform" />
                             <span className="text-[10px] font-bold uppercase tracking-tight text-white/80">Recadrer</span>
@@ -368,12 +369,12 @@ const MapCombatantItem: React.FC<MapCombatantItemProps> = ({ combatant, tokens, 
     const isOnMap = tokens.some(t => t.linkedCombatantId === combatant.id);
 
     return (
-        <div className="flex items-center justify-between p-2 bg-obsidian-light/30 border border-gray-800 rounded">
-            <div className="flex items-center gap-2 truncate">
-                {combatant.avatar && resolvedAvatar ? (
-                    <img src={resolvedAvatar} alt="avatar" className="w-6 h-6 rounded-full object-cover" />
+        <div className="flex items-center justify-between p-2 bg-app-bg/30 border border-app-border rounded">
+            <div className="flex items-center gap-3 overflow-hidden">
+                {combatant.avatar ? (
+                    <img src={combatant.avatar} alt="" className="w-6 h-6 rounded-full object-cover border border-app-border" />
                 ) : (
-                    <div className="w-6 h-6 rounded-full bg-obsidian-dark border border-gray-700 flex items-center justify-center">
+                    <div className="w-6 h-6 rounded-full bg-app-surface border border-app-border flex items-center justify-center">
                         <span className="text-[10px] uppercase text-gm-crimson">{combatant.name.substring(0, 2)}</span>
                     </div>
                 )}

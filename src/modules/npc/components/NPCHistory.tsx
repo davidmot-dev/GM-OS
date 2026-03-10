@@ -8,7 +8,7 @@ const NPCHistory: React.FC = () => {
     if (savedEntities.length === 0) {
         return (
             <div className="h-full flex flex-col items-center justify-center p-8 text-slate-600 text-center animate-in fade-in duration-700">
-                <div className="w-12 h-12 rounded-full border border-slate-800 flex items-center justify-center mb-4">
+                <div className="w-12 h-12 rounded-full border border-app-border flex items-center justify-center mb-4">
                     <Trash2 size={24} className="opacity-20" />
                 </div>
                 <p className="text-xs uppercase tracking-widest font-bold mb-1">Mémos vides</p>
@@ -19,7 +19,7 @@ const NPCHistory: React.FC = () => {
 
     const getMiniIcon = (category: string) => {
         switch (category) {
-            case 'npcs': return <User size={14} className="text-gm-cyan" />;
+            case 'npcs': return <User size={14} className="text-accent" />;
             case 'places': return <MapPin size={14} className="text-emerald-400" />;
             case 'items': return <Package size={14} className="text-amber-400" />;
             case 'events': return <Zap size={14} className="text-purple-400" />;
@@ -30,7 +30,7 @@ const NPCHistory: React.FC = () => {
 
     return (
         <div className="h-full flex flex-col">
-            <div className="p-4 flex items-center justify-between border-b border-slate-800 bg-obsidian-dark/30">
+            <div className="p-4 flex items-center justify-between border-b border-app-border bg-app-bg/30">
                 <span className="text-[10px] uppercase font-bold text-slate-500 tracking-widest">Historique Mémos</span>
                 <button
                     onClick={() => { if (confirm("Vider l'historique ?")) clearHistory(); }}
@@ -46,9 +46,9 @@ const NPCHistory: React.FC = () => {
                     <div
                         key={entity.id}
                         onClick={() => setCurrentEntity(entity)}
-                        className="group flex items-center gap-3 p-2 rounded-lg bg-slate-800/20 hover:bg-slate-800/50 border border-transparent hover:border-slate-700 cursor-pointer transition-all shrink-0"
+                        className="group flex items-center gap-3 p-2 rounded-lg bg-app-surface/20 hover:bg-app-surface/50 border border-transparent hover:border-app-border cursor-pointer transition-all shrink-0"
                     >
-                        <div className="w-8 h-8 rounded-md bg-slate-900 flex items-center justify-center shrink-0 border border-slate-700 overflow-hidden">
+                        <div className="w-8 h-8 rounded-md bg-app-bg flex items-center justify-center shrink-0 border border-app-border overflow-hidden">
                             {entity.avatar ? (
                                 <img
                                     src={entity.avatar.startsWith('http') || entity.avatar.startsWith('blob:') || entity.avatar.startsWith('file://')
@@ -74,7 +74,7 @@ const NPCHistory: React.FC = () => {
                             <Trash2 size={12} />
                         </button>
 
-                        <ChevronRight size={14} className="text-slate-700 group-hover:text-gm-cyan transition-colors" />
+                        <ChevronRight size={14} className="text-slate-700 group-hover:text-accent transition-colors" />
                     </div>
                 ))}
             </div>

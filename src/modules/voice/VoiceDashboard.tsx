@@ -26,7 +26,7 @@ const VocalShaperSlider: React.FC<{
     <div className="flex flex-col gap-2">
         <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-slate-500">
             <span>{label}</span>
-            <span className="text-blue-400">{value}{unit}</span>
+            <span className="text-accent">{value}{unit}</span>
         </div>
         <input 
             type="range"
@@ -35,7 +35,7 @@ const VocalShaperSlider: React.FC<{
             step={step}
             value={value}
             onChange={(e) => onChange(parseFloat(e.target.value))}
-            className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500"
+            className="w-full h-1.5 bg-app-surface rounded-lg appearance-none cursor-pointer accent-accent"
         />
     </div>
 );
@@ -88,16 +88,16 @@ const VoiceDashboard: React.FC = () => {
     };
 
     return (
-        <div className="h-full flex flex-col bg-slate-950 font-sans text-slate-200 overflow-hidden">
+        <div className="h-full flex flex-col bg-app-bg font-sans text-slate-200 overflow-hidden">
             {/* Header Status Bar */}
-            <div className="flex items-center justify-between px-6 py-3 border-b border-white/5 bg-slate-900/50 backdrop-blur-md">
+            <div className="flex items-center justify-between px-6 py-3 border-b border-app-border/50 bg-app-surface/50 backdrop-blur-md">
                 <div className="flex items-center gap-6">
                     <div className="flex items-center gap-2">
                         <div className={`w-2 h-2 rounded-full ${isActive ? 'bg-emerald-500 animate-pulse' : 'bg-slate-700'}`} />
                         <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Mic Status: {isActive ? 'Active' : 'Standby'}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <Activity size={14} className="text-blue-500" />
+                        <Activity size={14} className="text-accent" />
                         <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Latency: 12ms</span>
                     </div>
                     <div className="flex items-center gap-2">
@@ -107,40 +107,40 @@ const VoiceDashboard: React.FC = () => {
                 </div>
                 
                 <div className="flex gap-2">
-                    <button 
-                        onClick={() => toggleMonitor()}
-                        className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${isMonitor ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30' : 'bg-slate-800 text-slate-500 border border-transparent hover:text-slate-300'}`}
-                    >
-                        🎧 Monitor
-                    </button>
-                    <button 
-                        onClick={() => toggleSyncNPC()}
-                        className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${isSyncNPC ? 'bg-purple-600/20 text-purple-400 border border-purple-500/30' : 'bg-slate-800 text-slate-500 border border-transparent hover:text-slate-300'}`}
-                    >
-                        🔄 Sync NPC
-                    </button>
-                    <button 
-                        onClick={() => toggleActive()}
-                        className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${isActive ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/20' : 'bg-slate-800 text-slate-300'}`}
-                    >
-                        {isActive ? 'MIC ON' : 'MIC OFF'}
-                    </button>
-                </div>
-            </div>
-
-            <div className="flex-1 flex overflow-hidden">
-                {/* Left Sidebar: Presets */}
-                <aside className="w-64 border-r border-white/5 flex flex-col p-4 gap-2 bg-slate-900/20 overflow-y-auto custom-scrollbar">
-                    <h3 className="px-2 mb-2 text-[10px] font-black text-slate-600 uppercase tracking-[0.2em]">Vocal Templates</h3>
-                    {presets.map((preset) => (
-                        <button
-                            key={preset.id}
-                            onClick={() => applyPreset(preset.id)}
-                            className={`flex items-center gap-3 p-3 rounded-xl transition-all group overflow-hidden relative ${activePresetId === preset.id 
-                                ? 'bg-blue-600/10 text-blue-400 border border-blue-500/30' 
-                                : 'text-slate-500 hover:bg-white/5 hover:text-slate-300 border border-transparent'}`}
+                        <button 
+                            onClick={() => toggleMonitor()}
+                            className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${isMonitor ? 'bg-accent/20 text-accent border border-accent/30' : 'bg-app-surface text-slate-500 border border-transparent hover:text-slate-300'}`}
                         >
-                            <div className={`${activePresetId === preset.id ? 'text-blue-400' : 'text-slate-600 group-hover:text-blue-500'} transition-colors`}>
+                            🎧 Monitor
+                        </button>
+                        <button 
+                            onClick={() => toggleSyncNPC()}
+                            className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${isSyncNPC ? 'bg-accent/20 text-accent border border-accent/30' : 'bg-app-surface text-slate-500 border border-transparent hover:text-slate-300'}`}
+                        >
+                            🔄 Sync NPC
+                        </button>
+                        <button 
+                            onClick={() => toggleActive()}
+                            className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${isActive ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/20' : 'bg-app-surface text-slate-300'}`}
+                        >
+                            {isActive ? 'MIC ON' : 'MIC OFF'}
+                        </button>
+                    </div>
+                </div>
+    
+                <div className="flex-1 flex overflow-hidden">
+                    {/* Left Sidebar: Presets */}
+                    <aside className="w-64 border-r border-app-border/50 flex flex-col p-4 gap-2 bg-app-surface/20 overflow-y-auto custom-scrollbar">
+                        <h3 className="px-2 mb-2 text-[10px] font-black text-slate-600 uppercase tracking-[0.2em]">Vocal Templates</h3>
+                        {presets.map((preset) => (
+                            <button
+                                key={preset.id}
+                                onClick={() => applyPreset(preset.id)}
+                                className={`flex items-center gap-3 p-3 rounded-xl transition-all group overflow-hidden relative ${activePresetId === preset.id 
+                                    ? 'bg-accent/10 text-accent border border-accent/30' 
+                                    : 'text-slate-500 hover:bg-app-surface/5 hover:text-slate-300 border border-transparent'}`}
+                            >
+                            <div className={`${activePresetId === preset.id ? 'text-accent' : 'text-slate-600 group-hover:text-accent'} transition-colors`}>
                                 {getIcon(preset.icon)}
                             </div>
                             <div className="flex flex-col items-start min-w-0">
@@ -148,7 +148,7 @@ const VoiceDashboard: React.FC = () => {
                                 <span className="text-[10px] opacity-60 truncate w-full">{preset.description}</span>
                             </div>
                             {activePresetId === preset.id && (
-                                <div className="absolute right-[-10px] top-[-10px] w-10 h-10 bg-blue-500/10 rounded-full blur-xl animate-pulse" />
+                                <div className="absolute right-[-10px] top-[-10px] w-10 h-10 bg-accent/10 rounded-full blur-xl animate-pulse" />
                             )}
                         </button>
                     ))}
@@ -160,7 +160,7 @@ const VoiceDashboard: React.FC = () => {
                         <select
                             value={outputDeviceId || ''}
                             onChange={(e) => setOutputDeviceId(e.target.value || null)}
-                            className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs font-bold text-slate-300 focus:outline-none focus:border-blue-500/50 transition-all custom-scrollbar"
+                            className="w-full bg-app-surface border border-app-border rounded-lg p-2 text-xs font-bold text-slate-300 focus:outline-none focus:border-accent/50 transition-all custom-scrollbar"
                         >
                             <option value="">Default System Output</option>
                             {availableOutputs.map(device => (
@@ -171,7 +171,7 @@ const VoiceDashboard: React.FC = () => {
                         </select>
                         <button 
                             onClick={() => voiceEngine.refreshAvailableDevices()}
-                            className="text-[9px] text-slate-600 hover:text-blue-500 transition-colors uppercase font-bold text-left px-1"
+                            className="text-[9px] text-slate-600 hover:text-accent transition-colors uppercase font-bold text-left px-1"
                         >
                             ↻ Refresh Devices
                         </button>
@@ -189,22 +189,22 @@ const VoiceDashboard: React.FC = () => {
                         <div className="relative w-80 h-80 flex items-center justify-center">
                             {/* Animated Rings */}
                             <div className="absolute inset-0 rounded-full border-2 border-white/5 scale-[1.1]" />
-                            <div className="absolute inset-0 rounded-full border border-blue-500/10 scale-[1.3] animate-pulse" />
+                            <div className="absolute inset-0 rounded-full border border-accent/10 scale-[1.3] animate-pulse" />
                             
                             {/* Waveform Circle Emulation */}
                             <div 
-                                className="absolute inset-0 rounded-full border-4 border-blue-500/20 transition-transform duration-75" 
+                                className="absolute inset-0 rounded-full border-4 border-accent/20 transition-transform duration-75" 
                                 style={{ transform: `scale(${1 + inputLevel * 0.4})` }} 
                             />
                             
                             {/* Main Mic Icon */}
-                            <div className={`relative w-48 h-48 rounded-full flex items-center justify-center transition-all duration-300 ${isActive ? 'bg-blue-600/10 border-2 border-blue-500/30' : 'bg-slate-900 border-2 border-slate-800'}`}>
-                                <Mic2 size={64} className={`transition-all duration-300 ${isActive ? 'text-blue-400 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]' : 'text-slate-700'}`} />
+                            <div className={`relative w-48 h-48 rounded-full flex items-center justify-center transition-all duration-300 ${isActive ? 'bg-accent/10 border-2 border-accent/20' : 'bg-slate-900 border-2 border-slate-800'}`}>
+                                <Mic2 size={64} className={`transition-all duration-300 ${isActive ? 'text-accent drop-shadow-glow-accent' : 'text-slate-700'}`} />
                                 
                                 {/* Pulse Effect when speaking */}
                                 {isActive && (
                                     <div 
-                                        className="absolute inset-0 rounded-full bg-blue-500/20 blur-2xl transition-opacity duration-150" 
+                                        className="absolute inset-0 rounded-full bg-accent/20 blur-2xl transition-opacity duration-150" 
                                         style={{ opacity: inputLevel }} 
                                     />
                                 )}
@@ -215,14 +215,14 @@ const VoiceDashboard: React.FC = () => {
                     {/* Go Live Button Area */}
                     <div className="mt-auto flex flex-col items-center gap-6">
                         <h2 className="text-3xl font-black text-white italic tracking-tighter uppercase">
-                            Auralis <span className="text-blue-500">OS</span>
+                            Auralis <span className="text-accent">OS</span>
                         </h2>
                         
                         <button 
                             onClick={() => toggleLive()}
                             className={`group relative overflow-hidden px-12 py-4 rounded-full font-black text-lg transition-all duration-500 border shadow-2xl ${isLive 
                                 ? 'bg-red-600 text-white border-red-500 animate-pulse ring-4 ring-red-600/20' 
-                                : 'bg-slate-900 text-slate-400 border-slate-800 hover:border-blue-500/50 hover:text-blue-400'}`}
+                                : 'bg-app-bg text-slate-400 border-app-border hover:border-accent/50 hover:text-accent'}`}
                         >
                             <span className="relative z-10 flex items-center gap-3">
                                 <Radio size={20} className={isLive ? 'animate-bounce' : ''} />
@@ -236,7 +236,7 @@ const VoiceDashboard: React.FC = () => {
                 </div>
 
                 {/* Right Sidebar: Vocal Shapers */}
-                <aside className="w-80 border-l border-white/5 p-6 flex flex-col gap-6 bg-slate-900/10 overflow-y-auto custom-scrollbar">
+                <aside className="w-80 border-l border-app-border/50 p-6 flex flex-col gap-6 bg-app-surface/10 overflow-y-auto custom-scrollbar">
                     <div className="flex items-center gap-2 mb-2">
                         <Settings2 size={16} className="text-slate-500" />
                         <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Vocal Shapers</h3>
@@ -279,7 +279,7 @@ const VoiceDashboard: React.FC = () => {
                     <div className="mt-4 pt-4 border-t border-slate-800/30 flex flex-col gap-3">
                         <button 
                             onClick={() => toggleAntiLarsen()}
-                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${currentEffects.antiLarsen ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-slate-800/50 border-transparent text-slate-500 hover:text-slate-400'}`}
+                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${currentEffects.antiLarsen ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-app-surface/50 border-transparent text-slate-500 hover:text-slate-400'}`}
                         >
                             <span className="text-[10px] font-black uppercase tracking-widest">🛡️ Anti-Larsen</span>
                             <div className={`w-8 h-4 rounded-full relative transition-colors ${currentEffects.antiLarsen ? 'bg-emerald-500' : 'bg-slate-700'}`}>
@@ -289,16 +289,16 @@ const VoiceDashboard: React.FC = () => {
                         
                         <button 
                             onClick={() => toggleNoiseGate()}
-                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${currentEffects.noiseGate ? 'bg-blue-500/10 border-blue-500/30 text-blue-400' : 'bg-slate-800/50 border-transparent text-slate-500 hover:text-slate-400'}`}
+                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${currentEffects.noiseGate ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-app-surface/50 border-transparent text-slate-500 hover:text-slate-400'}`}
                         >
                             <span className="text-[10px] font-black uppercase tracking-widest">🔇 Noise Gate</span>
-                            <div className={`w-8 h-4 rounded-full relative transition-colors ${currentEffects.noiseGate ? 'bg-blue-500' : 'bg-slate-700'}`}>
+                            <div className={`w-8 h-4 rounded-full relative transition-colors ${currentEffects.noiseGate ? 'bg-accent' : 'bg-slate-700'}`}>
                                 <div className={`absolute top-1 w-2 h-2 bg-white rounded-full transition-all ${currentEffects.noiseGate ? 'right-1' : 'left-1'}`} />
                             </div>
                         </button>
                     </div>
 
-                    <div className="mt-8 pt-8 border-t border-slate-800/50 flex flex-col gap-6">
+                    <div className="mt-8 pt-8 border-t border-app-border/50 flex flex-col gap-6">
                         <div className="flex items-center gap-2 text-slate-500 mb-2">
                             <Volume2 size={16} />
                             <h3 className="text-[10px] font-black uppercase tracking-[0.2em]">Master Output</h3>
@@ -322,7 +322,7 @@ const VoiceDashboard: React.FC = () => {
                                     step="1"
                                     value={currentEffects.gateThreshold}
                                     onChange={(e) => updateEffect('gateThreshold', parseInt(e.target.value))}
-                                    className="flex-1 h-1.5 bg-slate-800 rounded-full appearance-none cursor-pointer accent-blue-500 self-center"
+                                    className="flex-1 h-1.5 bg-app-surface rounded-full appearance-none cursor-pointer accent-accent self-center"
                                 />
                                 <span className="text-[10px] font-bold text-slate-500 w-12 text-right">{currentEffects.gateThreshold}dB</span>
                             </div>
@@ -332,9 +332,9 @@ const VoiceDashboard: React.FC = () => {
             </div>
 
             {/* Bottom VU Meter Bar */}
-            <div className="h-2 bg-slate-900 border-t border-white/5 flex">
+            <div className="h-2 bg-app-bg border-t border-app-border/50 flex">
                 <div 
-                    className="h-full bg-gradient-to-r from-blue-600 via-blue-400 to-emerald-400 transition-all duration-75 shadow-[0_0_10px_rgba(59,130,246,0.3)]"
+                    className="h-full bg-gradient-to-r from-accent via-accent/70 to-emerald-400 transition-all duration-75 shadow-[0_0_10px_rgba(59,130,246,0.3)]"
                     style={{ width: `${inputLevel * 100}%` }}
                 />
             </div>

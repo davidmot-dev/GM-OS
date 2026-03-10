@@ -40,12 +40,12 @@ const LightDashboard: React.FC = () => {
 
 
     return (
-        <div className="grid grid-cols-12 h-full bg-slate-950 text-slate-100 font-sans overflow-hidden">
+        <div className="grid grid-cols-12 h-full bg-app-bg text-app-text font-sans overflow-hidden">
             <Sidebar />
 
             <main className="col-span-9 flex flex-col overflow-hidden relative">
                 {/* Background glow base */}
-                <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-950 opacity-50 pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-br from-app-surface/50 via-app-bg to-app-bg opacity-50 pointer-events-none" />
 
                 <TopControls />
                 <SceneGrid />

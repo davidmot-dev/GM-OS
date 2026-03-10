@@ -37,11 +37,11 @@ const AtmosphereManager: React.FC = () => {
 
     return (
         <div className="flex items-center gap-3 py-2 overflow-x-auto no-scrollbar mask-fade-right min-h-[50px]">
-            <div className="flex items-center gap-2 p-1.5 bg-black/40 backdrop-blur-xl border border-white/5 rounded-2xl shadow-inner">
+            <div className="flex items-center gap-2 p-1.5 bg-app-bg/40 backdrop-blur-xl border border-app-border/50 rounded-2xl shadow-inner">
                 {atmospheres.map((atmos) => (
                     <div key={atmos.id} className="relative group flex items-center">
                         {editingId === atmos.id ? (
-                            <div className="flex items-center gap-2 px-3 py-1.5 bg-gm-violet/20 border border-gm-violet rounded-xl">
+                            <div className="flex items-center gap-2 px-3 py-1.5 bg-accent/20 border border-accent rounded-xl shadow-glow-accent/20">
                                 <input
                                     autoFocus
                                     className="bg-transparent text-[10px] font-black uppercase tracking-widest text-white outline-none w-24"
@@ -51,7 +51,7 @@ const AtmosphereManager: React.FC = () => {
                                     onKeyDown={(e) => e.key === 'Enter' && handleRename()}
                                 />
                                 <button onClick={handleRename}>
-                                    <Check size={12} className="text-gm-violet" />
+                                    <Check size={12} className="text-accent" />
                                 </button>
                             </div>
                         ) : (
@@ -65,8 +65,8 @@ const AtmosphereManager: React.FC = () => {
                                     }}
                                     className={`flex items-center gap-3 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
                                         activeAtmosphereId === atmos.id
-                                            ? 'bg-gm-violet text-white shadow-glow-violet'
-                                            : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'
+                                            ? 'bg-accent text-white shadow-glow-accent'
+                                            : 'text-app-text/40 hover:text-app-text/80 hover:bg-white/5'
                                     }`}
                                 >
                                     {atmos.name}
@@ -78,9 +78,9 @@ const AtmosphereManager: React.FC = () => {
                                         e.stopPropagation();
                                         setMenuOpenId(menuOpenId === atmos.id ? null : atmos.id);
                                     }}
-                                    className={`absolute -right-1 -top-1 size-5 bg-obsidian-dark border border-white/10 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:border-white/20 hover:bg-slate-800 ${menuOpenId === atmos.id ? 'opacity-100' : ''}`}
+                                    className={`absolute -right-1 -top-1 size-5 bg-app-bg border border-app-border/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:border-app-border hover:bg-app-surface ${menuOpenId === atmos.id ? 'opacity-100' : ''}`}
                                 >
-                                    <MoreHorizontal size={10} className="text-slate-400" />
+                                    <MoreHorizontal size={10} className="text-app-text/40" />
                                 </button>
 
                                 {/* Mini Menu */}
@@ -90,10 +90,10 @@ const AtmosphereManager: React.FC = () => {
                                             className="fixed inset-0 z-40" 
                                             onClick={() => setMenuOpenId(null)}
                                         />
-                                        <div className="absolute top-full left-0 mt-2 w-32 bg-obsidian-dark/95 backdrop-blur-2xl border border-white/10 rounded-xl shadow-3xl p-1 z-50 animate-in fade-in zoom-in-95 duration-150">
+                                        <div className="absolute top-full left-0 mt-2 w-32 bg-app-surface/95 backdrop-blur-2xl border border-app-border rounded-xl shadow-3xl p-1 z-50 animate-in fade-in zoom-in-95 duration-150">
                                             <button 
                                                 onClick={() => startRename(atmos)}
-                                                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[9px] font-black text-slate-400 uppercase tracking-widest hover:bg-white/5 hover:text-white transition-all"
+                                                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[9px] font-black text-app-text/40 uppercase tracking-widest hover:bg-white/5 hover:text-white transition-all"
                                             >
                                                 <Edit2 size={10} />
                                                 Rename
@@ -121,7 +121,7 @@ const AtmosphereManager: React.FC = () => {
 
             <button
                 onClick={handleAdd}
-                className="size-9 flex items-center justify-center bg-black/40 border border-white/5 text-slate-500 rounded-2xl hover:border-gm-violet/30 hover:text-gm-violet hover:bg-gm-violet/5 transition-all active:scale-95 shadow-lg flex-shrink-0"
+                className="size-9 flex items-center justify-center bg-app-bg/40 border border-app-border/50 text-slate-500 rounded-2xl hover:border-accent/30 hover:text-accent hover:bg-accent/5 transition-all active:scale-95 shadow-lg flex-shrink-0"
                 title="Nouvelle Atmosphère"
             >
                 <Plus size={18} />

@@ -13,13 +13,14 @@ const WebLinkPad: React.FC<WebLinkPadProps> = ({ link, onEdit }) => {
 
     // Mapping colors to Tailwind classes
     const colorClasses: Record<string, string> = {
-        orange: 'border-orange-500/30 hover:border-orange-500 text-orange-500 hover:shadow-[0_0_20px_rgba(249,115,22,0.15)] bg-orange-500/10 hover:bg-orange-500/20',
+        orange: 'border-orange-500/30 hover:border-orange-500 text-orange-400 hover:shadow-[0_0_20px_rgba(249,115,22,0.15)] bg-orange-500/10 hover:bg-orange-500/20',
         cyan: 'border-cyan-500/30 hover:border-cyan-500 text-cyan-500 hover:shadow-[0_0_20px_rgba(6,182,212,0.15)] bg-cyan-500/10 hover:bg-cyan-500/20',
         purple: 'border-purple-500/30 hover:border-purple-500 text-purple-500 hover:shadow-[0_0_20px_rgba(168,85,247,0.15)] bg-purple-500/10 hover:bg-purple-500/20',
-        emerald: 'border-emerald-500/30 hover:border-emerald-500 text-emerald-500 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] bg-emerald-500/10 hover:bg-emerald-500/20',
+        emerald: 'border-accent/30 hover:border-accent text-accent hover:shadow-glow-accent bg-accent/10 hover:bg-accent/20',
+        blue: 'border-blue-500/30 hover:border-blue-500 text-blue-400 hover:shadow-[0_0_20px_rgba(59,130,246,0.15)] bg-blue-500/10 hover:bg-blue-500/20',
         amber: 'border-amber-500/30 hover:border-amber-500 text-amber-500 hover:shadow-[0_0_20px_rgba(245,158,11,0.15)] bg-amber-500/10 hover:bg-amber-500/20',
         rose: 'border-rose-500/30 hover:border-rose-500 text-rose-500 hover:shadow-[0_0_20px_rgba(244,63,94,0.15)] bg-rose-500/10 hover:bg-rose-500/20',
-        default: 'border-slate-700/30 hover:border-slate-500 text-slate-400 hover:shadow-lg bg-slate-800/10 hover:bg-slate-800/20'
+        default: 'border-app-border/30 hover:border-accent/50 text-slate-400 hover:shadow-lg bg-app-surface/10 hover:bg-app-surface/20'
     };
 
     const currentClasses = colorClasses[link.color] || colorClasses.default;
@@ -38,17 +39,17 @@ const WebLinkPad: React.FC<WebLinkPadProps> = ({ link, onEdit }) => {
             </span>
 
             {/* Overlay Controls */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300 bg-slate-900/90 backdrop-blur-sm flex items-center justify-center gap-2 px-2">
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300 bg-app-surface/90 backdrop-blur-sm flex items-center justify-center gap-2 px-2">
                 <button
                     onClick={(e) => { e.stopPropagation(); onEdit(link); }}
-                    className="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-200 transition-colors"
-                    title="Edit"
+                    className="p-2 bg-app-bg hover:bg-app-surface rounded-lg text-app-text transition-colors"
+                    title="Modifier"
                 >
                     <Edit2 size={18} />
                 </button>
                 <button
                     onClick={(e) => { e.stopPropagation(); onEdit(link); }} // Palette opens edit for now
-                    className="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-200 transition-colors"
+                    className="p-2 bg-app-bg hover:bg-app-surface rounded-lg text-app-text transition-colors"
                     title="Palette"
                 >
                     <Palette size={18} />

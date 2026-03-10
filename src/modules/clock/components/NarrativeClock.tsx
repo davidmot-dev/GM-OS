@@ -30,10 +30,10 @@ const NarrativeClock: React.FC<NarrativeClockProps> = ({ clock, theme = 'modern'
                 glow: 'rgba(245, 158, 11, 0.4)'
             },
             modern: {
-                filled: '#3b82f6', // Blue 500
-                empty: '#1e293b',  // Slate 800
-                text: '#94a3b8',   // Slate 400
-                glow: 'rgba(59, 130, 246, 0.5)'
+                filled: 'var(--accent)',
+                empty: 'var(--app-surface)',
+                text: 'var(--app-text)',
+                glow: 'rgba(var(--accent-rgb), 0.5)'
             }
         };
         return themeMap[theme] || themeMap.modern;

@@ -112,10 +112,11 @@ const PlayerMapCanvas: React.FC = () => {
     const effectivePanY = localView.y;
 
     return (
-        <div ref={containerRef} className="relative w-full h-full bg-black overflow-hidden">
+        <div className="w-full h-full bg-app-bg relative overflow-hidden flex items-center justify-center">
             {/* Transform Layer Wrapper */}
             <div 
-                className="absolute top-0 left-0 origin-top-left"
+                ref={containerRef}
+                className="relative overflow-hidden" // Added relative and overflow-hidden to the containerRef div
                 style={{
                     width: mapWidth,
                     height: mapHeight,

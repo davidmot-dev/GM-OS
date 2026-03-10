@@ -50,23 +50,23 @@ export const BulbFooter: React.FC = () => {
 
     if (lightList.length === 0) {
         return (
-            <footer className="bg-slate-900/50 border-t border-slate-800 p-4 h-24 flex items-center justify-center">
+            <footer className="bg-app-surface/50 border-t border-app-border p-4 h-24 flex items-center justify-center">
                 <span className="text-slate-500 font-bold text-xs">No lights discovered.</span>
             </footer>
         );
     }
 
     return (
-        <footer className="bg-slate-900/50 border-t border-slate-800 p-4 shrink-0">
+        <footer className="bg-app-surface/50 border-t border-app-border p-4 shrink-0">
             <div className="flex gap-4 overflow-x-auto custom-scrollbar pb-2">
                 {lightList.map((light: HueLight) => {
                     const isOn = light.state.on;
                     const effect = light.state.effect || 'none';
                     return (
-                        <div key={light.id} className="flex-none w-64 bg-slate-950/80 rounded-lg p-3 border border-slate-800 flex items-center gap-4">
+                        <div key={light.id} className="flex-none w-64 bg-app-bg/80 rounded-lg p-3 border border-app-border flex items-center gap-4">
                             <button
                                 onClick={() => toggleLight(light.id, isOn)}
-                                className={`size-10 rounded-full flex items-center justify-center shrink-0 transition-all ${isOn ? 'bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.4)]' : 'bg-slate-800'
+                                className={`size-10 rounded-full flex items-center justify-center shrink-0 transition-all ${isOn ? 'bg-amber-500 shadow-glow-accent' : 'bg-app-surface'}
                                     }`}
                             >
                                 <span className={`material-symbols-outlined text-xl ${isOn ? 'text-white' : 'text-slate-500'}`}>lightbulb</span>
@@ -77,34 +77,34 @@ export const BulbFooter: React.FC = () => {
                                     <input
                                         type="color"
                                         onChange={(e) => handleColorChange(light.id, e.target.value)}
-                                        className="size-6 rounded border border-slate-700 cursor-pointer p-0 bg-transparent hover:border-slate-500 transition-colors"
+                                        className="size-6 rounded border border-app-border cursor-pointer p-0 bg-transparent hover:border-accent/50 transition-colors"
                                         title="Change Color"
                                     />
-                                    <div className="flex items-center bg-slate-900/80 border border-slate-800 rounded px-2 py-1 w-full hover:border-slate-700 transition-colors">
+                                    <div className="flex items-center bg-app-bg/80 border border-app-border rounded px-2 py-1 w-full hover:border-accent/30 transition-colors">
                                         <span className="material-symbols-outlined text-sm text-slate-500 mr-2">tune</span>
                                         <select
                                             value={effect}
                                             onChange={(e) => handleEffectChange(light.id, e.target.value)}
-                                            className="bg-transparent border-none p-0 text-xs font-bold text-gm-cyan focus:ring-0 cursor-pointer outline-none w-full"
+                                            className="bg-transparent border-none p-0 text-xs font-bold text-accent focus:ring-0 cursor-pointer outline-none w-full"
                                         >
-                                            <option value="none" className="bg-slate-900 text-slate-400">Steady</option>
-                                            <option value="colorloop" className="bg-slate-900 text-gm-cyan">Colorloop</option>
-                                            <option value="candle" className="bg-slate-900 text-amber-500">Candle</option>
-                                            <option value="fire" className="bg-slate-900 text-red-500">Fire</option>
-                                            <option value="police" className="bg-slate-900 text-blue-500">Police</option>
-                                            <option value="lightning" className="bg-slate-900 text-slate-300">Storm</option>
-                                            <option value="glitch" className="bg-slate-900 text-green-400">Glitch</option>
-                                            <option value="tv" className="bg-slate-900 text-cyan-200">CRT TV</option>
-                                            <option value="arcane" className="bg-slate-900 text-purple-400">Arcane</option>
-                                            <option value="warp" className="bg-slate-900 text-fuchsia-400">Warp Speed</option>
-                                            <option value="underwater" className="bg-slate-900 text-cyan-500">Underwater</option>
-                                            <option value="dragon" className="bg-slate-900 text-orange-500">Dragon Breath</option>
-                                            <option value="holy" className="bg-slate-900 text-yellow-300">Holy Aura</option>
-                                            <option value="neon" className="bg-slate-900 text-pink-500">Broken Neon</option>
-                                            <option value="heartbeat" className="bg-slate-900 text-red-600">Heartbeat</option>
-                                            <option value="flashlight" className="bg-slate-900 text-white">Flashlight</option>
-                                            <option value="radiation" className="bg-slate-900 text-emerald-400">Radiation</option>
-                                            <option value="breathing" className="bg-slate-900 text-slate-400">Breathing</option>
+                                            <option value="none" className="bg-app-bg text-app-text/50">Steady</option>
+                                            <option value="colorloop" className="bg-app-bg text-accent">Colorloop</option>
+                                            <option value="candle" className="bg-app-bg text-amber-500">Candle</option>
+                                            <option value="fire" className="bg-app-bg text-red-500">Fire</option>
+                                            <option value="police" className="bg-app-bg text-blue-500">Police</option>
+                                            <option value="lightning" className="bg-app-bg text-app-text/70">Storm</option>
+                                            <option value="glitch" className="bg-app-bg text-green-400">Glitch</option>
+                                            <option value="tv" className="bg-app-bg text-cyan-200">CRT TV</option>
+                                            <option value="arcane" className="bg-app-bg text-purple-400">Arcane</option>
+                                            <option value="warp" className="bg-app-bg text-fuchsia-400">Warp Speed</option>
+                                            <option value="underwater" className="bg-app-bg text-cyan-500">Underwater</option>
+                                            <option value="dragon" className="bg-app-bg text-orange-500">Dragon Breath</option>
+                                            <option value="holy" className="bg-app-bg text-yellow-300">Holy Aura</option>
+                                            <option value="neon" className="bg-app-bg text-pink-500">Broken Neon</option>
+                                            <option value="heartbeat" className="bg-app-bg text-red-600">Heartbeat</option>
+                                            <option value="flashlight" className="bg-app-bg text-white">Flashlight</option>
+                                            <option value="radiation" className="bg-app-bg text-emerald-400">Radiation</option>
+                                            <option value="breathing" className="bg-app-bg text-app-text/60">Breathing</option>
                                         </select>
                                     </div>
                                 </div>

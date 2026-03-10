@@ -42,7 +42,7 @@ const WhiteboardProjectionModal: React.FC = () => {
 
     return (
         <div className="flex flex-col gap-4">
-            <p className="text-sm text-slate-400 mb-2">
+            <p className="text-sm text-app-text/60 mb-2">
                 Choisissez la destination pour projeter le Whiteboard :
             </p>
 
@@ -50,41 +50,41 @@ const WhiteboardProjectionModal: React.FC = () => {
                 {/* Option 1: Player Hub */}
                 <button
                     onClick={handleProjectToHub}
-                    className="flex items-center gap-4 p-4 bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/30 rounded-xl transition-all group text-left"
+                    className="flex items-center gap-4 p-4 bg-accent/20 hover:bg-accent/30 border border-accent/20 rounded-xl transition-all group text-left"
                 >
-                    <div className="w-12 h-12 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:scale-110 transition-transform">
+                    <div className="w-12 h-12 rounded-lg bg-accent/20 flex items-center justify-center text-accent group-hover:scale-110 transition-transform">
                         <Cast size={24} />
                     </div>
                     <div className="flex-1">
-                        <h4 className="font-bold text-slate-100">Synchroniser Player Hub</h4>
-                        <p className="text-xs text-slate-500">Affiche le Whiteboard sur l'onglet Joueur interne (Dessin collaboratif).</p>
+                        <h4 className="font-bold text-app-text">Synchroniser Player Hub</h4>
+                        <p className="text-xs text-app-text/40">Affiche le Whiteboard sur l'onglet Joueur interne (Dessin collaboratif).</p>
                     </div>
                 </button>
 
-                <div className="h-px bg-slate-800 my-1" />
+                <div className="h-px bg-app-border/20 my-1" />
 
                 {/* Option 2: Monitors */}
-                <h5 className="text-[10px] font-black uppercase tracking-widest text-slate-500 px-1">Moniteurs Détectés</h5>
+                <h5 className="text-[10px] font-black uppercase tracking-widest text-app-text/40 px-1">Moniteurs Détectés</h5>
                 
                 {displays.length === 0 ? (
-                    <div className="p-4 bg-slate-900/50 rounded-xl border border-dashed border-slate-800 text-center">
-                        <p className="text-xs text-slate-500 italic">Aucun moniteur externe détecté.</p>
+                    <div className="p-4 bg-app-surface/50 rounded-xl border border-dashed border-app-border text-center">
+                        <p className="text-xs text-app-text/40 italic">Aucun moniteur externe détecté.</p>
                     </div>
                 ) : (
                     displays.map(display => (
                         <button
                             key={display.id}
                             onClick={() => handleProjectToMonitor(display.id)}
-                            className="flex items-center gap-4 p-4 bg-slate-800/40 hover:bg-slate-800/60 border border-gray-700/50 rounded-xl transition-all group text-left"
+                            className="flex items-center gap-4 p-4 bg-app-surface/40 hover:bg-app-surface/60 border border-app-border rounded-xl transition-all group text-left"
                         >
-                            <div className="w-12 h-12 rounded-lg bg-slate-700/30 flex items-center justify-center text-slate-400 group-hover:text-gm-cyan transition-colors">
+                            <div className="w-12 h-12 rounded-lg bg-app-surface/30 flex items-center justify-center text-app-text/60 group-hover:text-accent transition-colors">
                                 <Monitor size={24} />
                             </div>
                             <div className="flex-1">
-                                <h4 className="font-bold text-slate-100">{display.label}</h4>
-                                <p className="text-xs text-slate-500">Projeter le Whiteboard en plein écran sur ce moniteur.</p>
+                                <h4 className="font-bold text-app-text">{display.label}</h4>
+                                <p className="text-xs text-app-text/40">Projeter le Whiteboard en plein écran sur ce moniteur.</p>
                             </div>
-                            <ExternalLink size={16} className="text-slate-600 group-hover:text-slate-400 transition-colors" />
+                            <ExternalLink size={16} className="text-app-text/20 group-hover:text-app-text/40 transition-colors" />
                         </button>
                     ))
                 )}

@@ -71,12 +71,12 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
 
     // Modificateur pour le tour actif
     if (isCurrentTurn) {
-        ringColor = 'ring-gm-cyan shadow-glow-cyan animate-pulse';
+        ringColor = 'ring-accent shadow-glow-accent animate-pulse';
     }
 
     return (
         <div
-            className={`absolute rounded-full shadow-lg border-2 border-obsidian bg-obsidian-dark flex items-center justify-center transition-shadow group ${isInteractable ? 'cursor-grab hover:ring-4 hover:z-40 active:cursor-grabbing' : 'cursor-default'
+            className={`absolute rounded-full shadow-lg border-2 border-app-bg bg-app-surface flex items-center justify-center transition-shadow group ${isInteractable ? 'cursor-grab hover:ring-4 hover:z-40 active:cursor-grabbing' : 'cursor-default'
                 } ring-2 ${ringColor} ${isDragging ? 'z-50 ring-4' : 'z-30'}`}
             style={{
                 left: token.x,
@@ -131,7 +131,7 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
             )}
 
             {/* Hover Tooltip (Name + HP) */}
-            <div className="absolute -bottom-8 whitespace-nowrap bg-obsidian/90 backdrop-blur-sm border border-gray-700 text-xs px-2 py-1 rounded opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none z-50 text-slate-200 shadow-xl font-bold">
+            <div className="absolute -bottom-8 whitespace-nowrap bg-app-bg/90 backdrop-blur-sm border border-app-border text-xs px-2 py-1 rounded opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none z-50 text-slate-200 shadow-xl font-bold">
                 {combatant ? `${combatant.name} (${combatant.hp}/${combatant.hpMax})` : (token.name || 'Token')}
             </div>
         </div>

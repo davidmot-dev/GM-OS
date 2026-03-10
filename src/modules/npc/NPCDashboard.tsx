@@ -12,9 +12,9 @@ const NPCDashboard: React.FC = () => {
     }, [fetchUniverses]);
 
     return (
-        <div className="flex h-[calc(100vh-64px)] overflow-hidden bg-obsidian-dark text-slate-200">
+        <div className="flex h-[calc(100vh-64px)] overflow-hidden bg-app-bg text-slate-200">
             {/* Sidebar Left: Config & History */}
-            <aside className="w-80 border-r border-slate-800 flex flex-col bg-obsidian-light/30">
+            <aside className="w-80 border-r border-app-border flex flex-col bg-app-surface/30">
                 <NPCControls />
                 <div className="flex-1 overflow-hidden">
                     <NPCHistory />
@@ -22,7 +22,7 @@ const NPCDashboard: React.FC = () => {
             </aside>
 
             {/* Main Content: The Generator Card */}
-            <main className="flex-1 flex flex-col items-center justify-center p-8 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-from)_0%,_transparent_100%)] from-gm-cyan/5 overflow-y-auto custom-scrollbar">
+            <main className="flex-1 flex flex-col items-center justify-center p-8 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-from)_0%,_transparent_100%)] from-accent/5 overflow-y-auto custom-scrollbar">
                 <NPCCard />
             </main>
         </div>
