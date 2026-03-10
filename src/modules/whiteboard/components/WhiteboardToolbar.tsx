@@ -55,7 +55,7 @@ const WhiteboardToolbar: React.FC<WhiteboardToolbarProps> = ({ className = "" })
                     <button
                         key={tool.id}
                         onClick={() => setTool(tool.id)}
-                        className={`p-3 rounded-xl transition-all relative group ${currentTool === tool.id ? 'bg-accent text-white shadow-lg shadow-accent/20' : isLight ? 'text-app-text/40 hover:text-app-text hover:bg-black/5' : 'text-app-text/50 hover:text-white hover:bg-white/5'}`}
+                        className={`p-3 rounded-xl transition-all relative group ${currentTool === tool.id ? 'bg-accent text-white shadow-lg shadow-accent/20' : isLight ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-100' : 'text-app-text/50 hover:text-white hover:bg-white/5'}`}
                         title={tool.label}
                     >
                         <tool.icon size={20} />
@@ -70,7 +70,7 @@ const WhiteboardToolbar: React.FC<WhiteboardToolbarProps> = ({ className = "" })
             <div className={`flex flex-col gap-2 p-2 rounded-2xl backdrop-blur-xl border shadow-2xl transition-colors duration-500 ${isLight ? 'bg-white/90 border-black/10' : 'bg-slate-900/80 border-white/10'}`}>
                 <button
                     onClick={() => setBackgroundMode(isLight ? 'dark' : 'light')}
-                    className={`p-3 rounded-xl transition-all relative group ${isLight ? 'text-amber-500 hover:bg-amber-500/10' : 'text-app-text/50 hover:text-accent hover:bg-white/5'}`}
+                    className={`p-3 rounded-xl transition-all relative group ${isLight ? 'text-amber-600 hover:bg-amber-600/10' : 'text-app-text/50 hover:text-accent hover:bg-white/5'}`}
                     title={isLight ? 'Mode Sombre' : 'Mode Clair'}
                 >
                     {isLight ? <Sun size={20} /> : <Moon size={20} />}
@@ -82,7 +82,7 @@ const WhiteboardToolbar: React.FC<WhiteboardToolbarProps> = ({ className = "" })
 
             {/* Color Palette */}
             <div className={`flex flex-col gap-2 p-2 rounded-2xl backdrop-blur-xl border shadow-2xl transition-colors duration-500 ${isLight ? 'bg-white/90 border-black/10' : 'bg-slate-900/80 border-white/10'}`}>
-                <div className="p-2 text-app-text/40">
+                <div className={`p-2 ${isLight ? 'text-slate-600' : 'text-app-text/40'}`}>
                     <Palette size={16} />
                 </div>
                 <div className="grid grid-cols-2 gap-2 p-1">
@@ -90,7 +90,7 @@ const WhiteboardToolbar: React.FC<WhiteboardToolbarProps> = ({ className = "" })
                         <button
                             key={color}
                             onClick={() => setColor(color)}
-                            className={`size-6 rounded-full transition-transform hover:scale-125 border border-white/10 ${currentColor === color ? 'ring-2 ring-accent/60 ring-offset-2 ring-offset-app-bg scale-110' : ''}`}
+                            className={`size-6 rounded-full transition-transform hover:scale-125 border ${isLight ? 'border-black/10' : 'border-white/10'} ${currentColor === color ? 'ring-2 ring-accent/60 ring-offset-2 ring-offset-app-bg scale-110' : ''}`}
                             style={{ backgroundColor: color }}
                         />
                     ))}

@@ -21,13 +21,15 @@ import {
     Power,
     FolderOpen,
     Edit3,
-    MonitorPlay
+    MonitorPlay,
+    Save,
+    Download
 } from 'lucide-react';
 import { useSessionStore, THEME_PALETTES } from '../store/useSessionStore';
 import type { ThemeID } from '../store/useSessionStore';
 import { useModalStore } from '../stores/useModalStore';
 import { SessionService } from '../store/SessionService';
-import { flushApplication } from '../utils/appUtils';
+
 
 interface NavItemProps {
     icon: React.ReactNode;
@@ -66,7 +68,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
         themeColor,
     } = useSessionStore();
 
-    const { openMediaHub } = useModalStore();
+    const { openMediaHub, showCustom } = useModalStore();
 
     // Appliquer le thème et la couleur d'accentuation au document
     useEffect(() => {
@@ -95,6 +97,18 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
             window.appBridge.session.launchHubWindow();
         } else {
             alert("Veuillez lancer le Player Hub dans un onglet `http://localhost:5173/?window=hub` ou via le bridge Electron.");
+        }
+    };
+    
+    const handleQuitApp = () => {
+        if (confirm("Voulez-vous vraiment quitter GM-OS ?")) {
+            if (window.appBridge?.app?.quit) {
+                window.appBridge.app.quit();
+            } else {
+                console.warn("Bridge 'app.quit' non disponible.");
+                // En mode web, on peut essayer de fermer la fenêtre
+                window.close();
+            }
         }
     };
 
@@ -243,62 +257,48 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                 </nav>
 
                 <div className="mt-auto pt-4 flex flex-col gap-3 border-t border-app-border/20">
-                    {/* 1. Unified System Bar */}
-                    <div className="flex items-center justify-between px-1 py-1 bg-app-bg/40 backdrop-blur-md rounded-xl border border-app-border/30 shadow-inner">
-                        <div className="flex items-center gap-0.5">
-                            <button
-                                onClick={cycleTheme}
-                                className="p-2 rounded-lg text-slate-400 hover:text-accent hover:bg-accent/10 transition-all group"
-                                title={`Thème : ${theme} (${themeColor})`}
-                            >
-                                <Palette size={18} className="group-hover:rotate-12 transition-transform" />
-                            </button>
-                            <button
-                                onClick={() => setActiveModule('debug')}
-                                className={`p-2 rounded-lg transition-all ${activeModule === 'debug' ? 'text-blue-400 bg-blue-400/10' : 'text-slate-400 hover:text-blue-400 hover:bg-blue-400/10'}`}
-                                title="Debug & Logs"
-                            >
-                                <Terminal size={18} />
-                            </button>
-                            <button
-                                onClick={handleLaunchHub}
-                                className="p-1.5 rounded-lg text-app-text/40 hover:text-sky-400 hover:bg-sky-400/10 transition-all"
-                                title="Launch Player Hub"
-                            >
-                                <MonitorPlay size={18} />
-                            </button>
-                            <button
-                                onClick={() => { }}
-                                className="p-1.5 rounded-lg text-app-text/40 hover:text-app-text/80 hover:bg-white/5 transition-all"
-                                title="Réglages"
-                            >
-                                <Settings size={18} />
-                            </button>
-                        </div>
-
-                        <div className="w-px h-4 bg-app-border/20 mx-0.5" />
-
-                        <div className="flex items-center gap-0.5">
-                            <button
-                                onClick={() => SessionService.saveFullSession()}
-                                className="p-1.5 rounded-lg text-app-text/40 hover:text-emerald-400 hover:bg-emerald-400/10 transition-all"
-                                title="Sauvegarder"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-                            </button>
-                            <button
-                                onClick={() => SessionService.loadFullSession()}
-                                className="p-2 rounded-lg text-slate-400 hover:text-blue-400 hover:bg-blue-400/10 transition-all"
-                                title="Charger"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                            </button>
-                        </div>
+                    <div className="flex bg-slate-900/40 backdrop-blur-md border border-slate-700/50 rounded-2xl overflow-hidden shadow-2xl">
+                        <button 
+                            onClick={cycleTheme}
+                            className="flex-1 py-3 flex items-center justify-center text-slate-400 hover:text-accent hover:bg-accent/10 transition-all group"
+                            title={`Thème : ${theme}`}
+                        >
+                            <Palette size={18} className="group-hover:rotate-12 transition-transform" />
+                        </button>
+                        <button 
+                            onClick={() => setActiveModule('debug')}
+                            className={`flex-1 py-3 flex items-center justify-center transition-all border-x border-slate-800/50 ${activeModule === 'debug' ? 'text-blue-400 bg-blue-400/10' : 'text-slate-400 hover:text-blue-400 hover:bg-blue-400/10'}`}
+                            title="Debug & Logs"
+                        >
+                            <Terminal size={18} />
+                        </button>
+                        <button 
+                            onClick={() => showCustom('global-settings')}
+                            className="flex-1 py-3 flex items-center justify-center text-slate-400 hover:text-gm-gold hover:bg-gm-gold/10 transition-all duration-300 relative group"
+                            title="Paramètres de l'OS"
+                        >
+                            <Settings size={18} className="group-hover:rotate-90 transition-transform duration-500" />
+                            <div className="absolute inset-0 bg-gm-gold/0 group-hover:bg-gm-gold/5 transition-colors" />
+                        </button>
+                        <button 
+                            onClick={() => SessionService.saveFullSession()}
+                            className="flex-1 py-3 flex items-center justify-center text-slate-400 hover:text-gm-cyan hover:bg-gm-cyan/10 border-x border-slate-800/50 transition-all duration-300 relative group"
+                            title="Sauvegarder la session"
+                        >
+                            <Save size={18} className="group-hover:scale-110 transition-transform" />
+                            <div className="absolute inset-0 bg-gm-cyan/0 group-hover:bg-gm-cyan/5 transition-colors" />
+                        </button>
+                        <button 
+                            onClick={() => SessionService.loadFullSession()}
+                            className="flex-1 py-3 flex items-center justify-center text-slate-400 hover:text-gm-violet hover:bg-gm-violet/10 border-slate-800/50 transition-all duration-300 relative group"
+                            title="Charger une session"
+                        >
+                            <Download size={18} className="group-hover:-translate-y-0.5 transition-transform" />
+                            <div className="absolute inset-0 bg-gm-violet/0 group-hover:bg-gm-violet/5 transition-colors" />
+                        </button>
                     </div>
 
-                    {/* 2. Premium DM Card */}
                     <div className="group relative p-4 rounded-[1.25rem] bg-gradient-to-br from-app-surface/40 to-app-bg/60 border border-app-border/30 shadow-2xl backdrop-blur-2xl transition-all duration-300 hover:border-accent/30 overflow-hidden">
-                        {/* Background subtle glow */}
                         <div className="absolute -right-4 -top-4 w-24 h-24 bg-accent/10 rounded-full blur-3xl group-hover:bg-accent/20 transition-all duration-500" />
                         
                         <div className="flex items-center gap-3 relative z-10">
@@ -317,9 +317,17 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                             </div>
 
                             <button
-                                onClick={flushApplication}
+                                onClick={handleLaunchHub}
+                                className="p-1.5 rounded-lg text-app-text/40 hover:text-sky-400 hover:bg-sky-400/10 transition-all"
+                                title="Launch Player Hub"
+                            >
+                                <MonitorPlay size={18} />
+                            </button>
+
+                            <button
+                                onClick={handleQuitApp}
                                 className="p-2 rounded-lg text-app-text/20 hover:text-red-500 hover:bg-red-500/10 transition-all"
-                                title="RÉINITIALISATION TOTALE"
+                                title="QUITTER GM-OS"
                             >
                                 <Power size={18} />
                             </button>
