@@ -17,27 +17,27 @@ const CampaignCockpit: React.FC = () => {
     const sessionCount = sessions.filter(s => s.campaignId === activeCampaignId).length;
 
     return (
-        <aside className="col-span-3 bg-slate-900/90 backdrop-blur-md border-r border-slate-800 p-5 flex flex-col gap-6 overflow-y-auto custom-scrollbar">
+        <aside className="col-span-3 bg-app-surface/90 backdrop-blur-md border-r border-app-border p-5 flex flex-col gap-6 overflow-y-auto custom-scrollbar">
             {/* Campaign Card */}
             <div
                 onClick={() => setCurrentView('campaign-details')}
-                className="bg-slate-800/40 rounded-lg p-4 border-l-4 border-gm-gold shadow-[0_0_15px_-3px_rgba(234,179,8,0.3)] cursor-pointer hover:bg-slate-800/60 transition-all group"
+                className="bg-app-bg/40 rounded-lg p-4 border-l-4 border-accent shadow-glow-accent cursor-pointer hover:bg-app-bg/60 transition-all group"
             >
                 <div className="flex justify-between items-start mb-2">
                     <div>
-                        <h3 className="text-slate-100 font-bold text-lg group-hover:text-gm-gold transition-colors">{activeCampaign?.name || 'No Active Campaign'}</h3>
-                        <p className="text-slate-500 text-xs uppercase tracking-widest font-semibold font-display">Active Campaign</p>
+                        <h3 className="text-white font-bold text-lg group-hover:text-accent transition-colors">{activeCampaign?.name || 'No Active Campaign'}</h3>
+                        <p className="text-app-text/40 text-xs uppercase tracking-widest font-semibold font-display">Active Campaign</p>
                     </div>
-                    <BookOpen className="text-gm-gold group-hover:scale-110 transition-transform" size={24} />
+                    <BookOpen className="text-accent group-hover:scale-110 transition-transform" size={24} />
                 </div>
                 <div className="mt-4 flex flex-col gap-2">
-                    <div className="flex justify-between text-xs text-slate-400">
+                    <div className="flex justify-between text-xs text-app-text/40">
                         <span>Session Progress</span>
                         <span>Stage {activeSession?.number || 0}/{sessionCount || 0}</span>
                     </div>
-                    <div className="w-full bg-slate-700 h-1.5 rounded-full overflow-hidden">
+                    <div className="w-full bg-app-bg h-1.5 rounded-full overflow-hidden">
                         <div
-                            className="bg-gm-gold h-full shadow-[0_0_15px_-3px_rgba(234,179,8,0.3)]"
+                            className="bg-accent h-full shadow-glow-accent"
                             style={{ width: `${sessionCount ? ((activeSession?.number || 0) / sessionCount) * 100 : 0}%` }}
                         ></div>
                     </div>
@@ -46,47 +46,47 @@ const CampaignCockpit: React.FC = () => {
 
             {/* Navigation Menu */}
             <nav className="flex flex-col gap-1">
-                <p className="text-slate-500 text-xs uppercase tracking-widest mb-2 px-3">Management</p>
+                <p className="text-app-text/40 text-xs uppercase tracking-widest mb-2 px-3">Management</p>
                 <button
                     onClick={() => setCurrentView('cockpit')}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'cockpit' ? 'bg-gm-gold/10 text-gm-gold' : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-100'}`}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'cockpit' ? 'bg-accent/10 text-accent' : 'text-app-text/60 hover:bg-app-bg/50 hover:text-white'}`}
                 >
                     <LayoutDashboard className={currentView === 'cockpit' ? 'scale-110' : 'group-hover:scale-110 transition-transform'} size={20} />
                     <span className="text-sm font-medium">Cockpit</span>
                 </button>
                 <button
                     onClick={() => setActiveModule('combat')}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800/50 hover:text-slate-100 transition-all w-full text-left"
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-app-text/60 hover:bg-app-surface/50 hover:text-white transition-all w-full text-left"
                 >
                     <Swords size={20} />
                     <span className="text-sm font-medium">Encounters</span>
                 </button>
                 <button
                     onClick={() => setCurrentView('npc-gallery')}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'npc-gallery' ? 'bg-gm-gold/10 text-gm-gold' : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-100'}`}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'npc-gallery' ? 'bg-accent/10 text-accent' : 'text-app-text/60 hover:bg-app-bg/50 hover:text-white'}`}
                 >
                     <Users size={20} />
                     <span className="text-sm font-medium">Galerie PNJ</span>
                 </button>
                 <button
                     onClick={() => setCurrentView('world-atlas')}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'world-atlas' ? 'bg-gm-gold/10 text-gm-gold' : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-100'}`}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'world-atlas' ? 'bg-accent/10 text-accent' : 'text-app-text/60 hover:bg-app-bg/50 hover:text-white'}`}
                 >
                     <MapIcon size={20} />
                     <span className="text-sm font-medium">World Atlas</span>
                 </button>
                 <button
                     onClick={() => setActiveModule('table')}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800/50 hover:text-slate-100 transition-all w-full text-left"
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-app-text/60 hover:bg-app-surface/50 hover:text-white transition-all w-full text-left"
                 >
                     <Archive size={20} />
                     <span className="text-sm font-medium">Loot Tables</span>
                 </button>
                 <button
                     onClick={() => setCurrentView('session-prep')}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'session-prep' ? 'bg-gm-gold/10 text-gm-gold' : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-100'}`}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'session-prep' ? 'bg-accent/10 text-accent' : 'text-app-text/60 hover:bg-app-bg/50 hover:text-white'}`}
                 >
-                    <PlusCircle size={20} className={currentView === 'session-prep' ? 'text-gm-gold' : 'text-slate-500'} />
+                    <PlusCircle size={20} className={currentView === 'session-prep' ? 'text-accent' : 'text-app-text/40'} />
                     <span className="text-sm font-medium">Session Preparation</span>
                 </button>
 
@@ -108,9 +108,9 @@ const CampaignCockpit: React.FC = () => {
                         
                         <button
                             onClick={() => showCustom('session-notes')}
-                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all text-slate-400 hover:bg-gm-gold/10 hover:text-gm-gold"
+                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all text-app-text/60 hover:bg-accent/10 hover:text-accent"
                         >
-                            <StickyNote size={20} className="text-gm-gold/60 group-hover:text-gm-gold transition-colors" />
+                            <StickyNote size={20} className="text-accent/60 group-hover:text-accent transition-colors" />
                             <span className="text-sm font-bold uppercase tracking-tighter">Notes de Session</span>
                         </button>
                     </div>
@@ -118,34 +118,34 @@ const CampaignCockpit: React.FC = () => {
                     sessions.some(s => s.campaignId === activeCampaignId && s.status === 'planned') && (
                         <button
                             onClick={() => showCustom('session-select')}
-                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all text-slate-400 hover:bg-gm-gold/10 hover:text-gm-gold mt-1"
+                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all text-app-text/60 hover:bg-accent/10 hover:text-accent mt-1"
                         >
-                            <Play size={20} className="text-gm-gold/60 group-hover:text-gm-gold transition-colors" />
+                            <Play size={20} className="text-accent/60 group-hover:text-accent transition-colors" />
                             <span className="text-sm font-bold uppercase tracking-tighter">Lancer Session</span>
                         </button>
                     )
                 )}
 
-                <div className="pt-4 mt-2 border-t border-slate-800/50">
+                <div className="pt-4 mt-2 border-t border-app-border/40">
                     <button
                         onClick={() => setCurrentView('library')}
-                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'library' ? 'bg-gm-gold/10 text-gm-gold' : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-100'}`}
+                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'library' ? 'bg-accent/10 text-accent' : 'text-app-text/60 hover:bg-app-bg/50 hover:text-white'}`}
                     >
-                        <Library size={20} className={currentView === 'library' ? 'text-gm-gold' : 'text-slate-500'} />
+                        <Library size={20} className={currentView === 'library' ? 'text-accent' : 'text-app-text/40'} />
                         <span className="text-sm font-bold uppercase tracking-tighter">Campaign Library</span>
                     </button>
                     <button
                         onClick={() => setCurrentView('players')}
-                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'players' ? 'bg-gm-gold/10 text-gm-gold' : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-100'}`}
+                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'players' ? 'bg-accent/10 text-accent' : 'text-app-text/60 hover:bg-app-bg/50 hover:text-white'}`}
                     >
-                        <Users2 size={20} className={currentView === 'players' ? 'text-gm-gold' : 'text-slate-500'} />
+                        <Users2 size={20} className={currentView === 'players' ? 'text-accent' : 'text-app-text/40'} />
                         <span className="text-sm font-bold uppercase tracking-tighter text-left">Joueurs</span>
                     </button>
                     <button
                         onClick={() => setCurrentView('templates')}
-                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'templates' ? 'bg-gm-gold/10 text-gm-gold' : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-100'}`}
+                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'templates' ? 'bg-accent/10 text-accent' : 'text-app-text/60 hover:bg-app-bg/50 hover:text-white'}`}
                     >
-                        <FileText size={20} className={currentView === 'templates' ? 'text-gm-gold' : 'text-slate-500'} />
+                        <FileText size={20} className={currentView === 'templates' ? 'text-accent' : 'text-app-text/40'} />
                         <span className="text-sm font-bold uppercase tracking-tighter text-left">Fiches de Jeu</span>
                     </button>
                 </div>
@@ -158,8 +158,8 @@ const CampaignCockpit: React.FC = () => {
 
             {/* Session Resources Section */}
             {activeSession && (activeSession.externalLink || activeSession.filePath) && (
-                <div className="flex flex-col gap-3 py-4 border-t border-slate-800/50">
-                    <p className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] px-3 mb-1">Ressources Session</p>
+                <div className="flex flex-col gap-3 py-4 border-t border-app-border/40">
+                    <p className="text-app-text/40 text-[10px] font-bold uppercase tracking-[0.2em] px-3 mb-1">Ressources Session</p>
                     <div className="flex flex-col gap-2 px-1">
                         {activeSession.externalLink && (
                             <a 

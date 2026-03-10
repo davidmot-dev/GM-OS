@@ -23,7 +23,7 @@ const AtlasLinkedEntities: React.FC = () => {
 
     if (!selectedMap) {
         return (
-            <div className="w-64 flex-shrink-0 h-full bg-slate-900/90 border-l border-slate-800 flex items-center justify-center text-slate-600 text-xs">
+            <div className="w-64 flex-shrink-0 h-full bg-app-surface/90 border-l border-app-border flex items-center justify-center text-app-text/20 text-xs">
                 Sélectionne une carte
             </div>
         );
@@ -52,18 +52,18 @@ const AtlasLinkedEntities: React.FC = () => {
     };
 
     return (
-        <div className="w-64 flex-shrink-0 h-full bg-slate-900/90 border-l border-slate-800 flex flex-col overflow-y-auto custom-scrollbar relative">
-            <div className="p-4 border-b border-slate-800 sticky top-0 bg-slate-900/90 backdrop-blur-sm z-10">
-                <h3 className="text-slate-100 font-bold text-sm uppercase tracking-widest">Entités Liées</h3>
-                <p className="text-slate-600 text-xs mt-1 truncate">{selectedMap.name}</p>
+        <div className="w-64 flex-shrink-0 h-full bg-app-surface/90 border-l border-app-border flex flex-col overflow-y-auto custom-scrollbar relative">
+            <div className="p-4 border-b border-app-border sticky top-0 bg-app-surface/90 backdrop-blur-sm z-10">
+                <h3 className="text-app-text font-bold text-sm uppercase tracking-widest">Entités Liées</h3>
+                <p className="text-app-text/20 text-xs mt-1 truncate">{selectedMap.name}</p>
             </div>
 
             {/* Favorite Picker Overlay */}
             {pickingCategory && (
-                <div className="absolute inset-0 z-20 bg-slate-950/95 p-4 flex flex-col">
+                <div className="absolute inset-0 z-20 bg-app-bg/95 p-4 flex flex-col">
                     <div className="flex items-center justify-between mb-4">
-                        <h4 className="text-[10px] font-black text-gm-gold uppercase tracking-widest">Lier un Favori</h4>
-                        <button onClick={() => setPickingCategory(null)} className="text-slate-500 hover:text-white">
+                        <h4 className="text-[10px] font-black text-accent uppercase tracking-widest">Lier un Favori</h4>
+                        <button onClick={() => setPickingCategory(null)} className="text-app-text/20 hover:text-white">
                             <X size={14} />
                         </button>
                     </div>
@@ -74,14 +74,14 @@ const AtlasLinkedEntities: React.FC = () => {
                                 <button
                                     key={fav.id}
                                     onClick={() => handleLinkFavorite(fav.id)}
-                                    className="text-left px-3 py-2 rounded-lg bg-white/5 border border-white/5 hover:border-gm-gold/30 hover:bg-gm-gold/5 transition-all group"
+                                    className="text-left px-3 py-2 rounded-lg bg-white/5 border border-white/5 hover:border-accent/30 hover:bg-accent/5 transition-all group"
                                 >
-                                    <div className="text-xs font-bold text-slate-200 group-hover:text-gm-gold transition-colors">{fav.name}</div>
-                                    {fav.subtitle && <div className="text-[10px] text-slate-500 truncate">{fav.subtitle}</div>}
+                                    <div className="text-xs font-bold text-app-text/80 group-hover:text-accent transition-colors">{fav.name}</div>
+                                    {fav.subtitle && <div className="text-[10px] text-app-text/20 truncate">{fav.subtitle}</div>}
                                 </button>
                             ))}
                         {favorites.filter(f => f.type === CATEGORY_META[pickingCategory].favType).length === 0 && (
-                            <p className="text-slate-600 text-[10px] italic text-center mt-10">Aucun favori dans cette catégorie</p>
+                            <p className="text-app-text/20 text-[10px] italic text-center mt-10">Aucun favori dans cette catégorie</p>
                         )}
                     </div>
                 </div>
@@ -96,19 +96,19 @@ const AtlasLinkedEntities: React.FC = () => {
                             <div className="flex items-center justify-between mb-2">
                                 <div className="flex items-center gap-2">
                                     {meta.icon}
-                                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">{meta.label}</span>
+                                    <span className="text-xs font-bold text-app-text/40 uppercase tracking-wider">{meta.label}</span>
                                 </div>
                                 <div className="flex items-center gap-1">
                                     <button
                                         onClick={() => setPickingCategory(cat)}
-                                        className="w-5 h-5 rounded border border-slate-700 flex items-center justify-center text-slate-500 hover:border-gm-gold/50 hover:text-gm-gold transition-all"
+                                        className="w-5 h-5 rounded border border-app-border flex items-center justify-center text-app-text/20 hover:border-accent/50 hover:text-accent transition-all"
                                         title="Lier un favori"
                                     >
                                         <Bookmark size={10} />
                                     </button>
                                     <button
                                         onClick={() => handleAddManual(cat)}
-                                        className="w-5 h-5 rounded border border-slate-700 flex items-center justify-center text-slate-500 hover:border-gm-gold/50 hover:text-gm-gold transition-all"
+                                        className="w-5 h-5 rounded border border-app-border flex items-center justify-center text-app-text/20 hover:border-accent/50 hover:text-accent transition-all"
                                         title="Saisie manuelle"
                                     >
                                         <Plus size={11} />
@@ -116,7 +116,7 @@ const AtlasLinkedEntities: React.FC = () => {
                                 </div>
                             </div>
                             {entities.length === 0 ? (
-                                <p className="text-slate-700 text-[10px] italic pl-1">Aucun élément lié</p>
+                                <p className="text-app-text/10 italic pl-1">Aucun élément lié</p>
                             ) : (
                                 <div className="flex flex-col gap-1">
                                     {entities.map(entity => (
@@ -152,11 +152,11 @@ const EntityChip: React.FC<{
     };
 
     return (
-        <div className={`flex items-center justify-between gap-2 px-2 py-1.5 rounded-lg border text-xs transition-all ${meta.color} ${entity.favoriteId ? 'cursor-pointer hover:brightness-125 hover:border-gm-gold/50' : ''}`}
+        <div className={`flex items-center justify-between gap-2 px-2 py-1.5 rounded-lg border text-xs transition-all ${meta.color} ${entity.favoriteId ? 'cursor-pointer hover:brightness-125 hover:border-accent/50' : ''}`}
             onClick={entity.favoriteId ? handleView : undefined}
         >
             <div className="flex items-center gap-1.5 min-w-0">
-                {entity.favoriteId && <Star size={10} className="text-gm-gold fill-gm-gold/20 flex-shrink-0" />}
+                {entity.favoriteId && <Star size={10} className="text-accent fill-accent/20 flex-shrink-0" />}
                 <span className="truncate">{entity.name}</span>
             </div>
             <button 

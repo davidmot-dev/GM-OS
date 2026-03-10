@@ -18,12 +18,12 @@ const FieldGauge: React.FC<{
 }> = ({ field, value, onChange }) => (
     <div className="group space-y-2">
         <div className="flex justify-between items-center">
-            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">{field.label}</label>
-            <span className="text-[10px] font-black text-gm-gold font-mono">{value}%</span>
+            <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{field.label}</label>
+            <span className="text-[10px] font-black text-accent font-mono">{value}%</span>
         </div>
-        <div className="relative h-2 bg-slate-900 rounded-full overflow-hidden border border-white/5">
+        <div className="relative h-2 bg-app-bg rounded-full overflow-hidden border border-app-border/40">
             <div
-                className="absolute inset-y-0 left-0 bg-gm-gold transition-all duration-300"
+                className="absolute inset-y-0 left-0 bg-accent transition-all duration-300"
                 style={{ width: `${value}%` }}
             />
             <input
@@ -40,13 +40,13 @@ const FieldNumber: React.FC<{
     value: number;
     onChange: (val: number) => void;
 }> = ({ field, value, onChange }) => (
-    <div className="flex items-center justify-between p-3 bg-slate-900/40 rounded-xl border border-white/5">
-        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">{field.label}</label>
+    <div className="flex items-center justify-between p-3 bg-app-bg/40 rounded-xl border border-app-border/40">
+        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{field.label}</label>
         <input
             type="number"
             value={value}
             onChange={e => onChange(Number(e.target.value))}
-            className="w-16 bg-slate-800 text-white text-center font-mono text-sm font-bold rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-gm-gold/40"
+            className="w-16 bg-app-surface text-app-text text-center font-mono text-sm font-bold rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-accent/40"
         />
     </div>
 );
@@ -56,13 +56,13 @@ const FieldText: React.FC<{
     value: string;
     onChange: (val: string) => void;
 }> = ({ field, value, onChange }) => (
-    <div className="flex items-center gap-3 p-3 bg-slate-900/40 rounded-xl border border-white/5">
-        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 w-28 flex-shrink-0">{field.label}</label>
+    <div className="flex items-center gap-3 p-3 bg-app-bg/40 rounded-xl border border-app-border/40">
+        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40 w-28 flex-shrink-0">{field.label}</label>
         <input
             type="text"
             value={value}
             onChange={e => onChange(e.target.value)}
-            className="flex-1 bg-transparent text-white text-sm font-medium focus:outline-none border-b border-white/10 focus:border-gm-gold/50 transition-colors pb-0.5"
+            className="flex-1 bg-transparent text-app-text text-sm font-medium focus:outline-none border-b border-app-border focus:border-accent/50 transition-colors pb-0.5"
         />
     </div>
 );
@@ -74,10 +74,10 @@ const FieldCheckbox: React.FC<{
 }> = ({ field, value, onChange }) => (
     <button
         onClick={() => onChange(!value)}
-        className="flex items-center gap-3 p-3 bg-slate-900/40 rounded-xl border border-white/5 w-full hover:border-gm-gold/20 transition-all"
+        className="flex items-center gap-3 p-3 bg-app-bg/40 rounded-xl border border-app-border/40 w-full hover:border-accent/20 transition-all"
     >
-        {value ? <CheckSquare size={16} className="text-gm-gold flex-shrink-0" /> : <Square size={16} className="text-slate-600 flex-shrink-0" />}
-        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 cursor-pointer">{field.label}</label>
+        {value ? <CheckSquare size={16} className="text-accent flex-shrink-0" /> : <Square size={16} className="text-app-text/20 flex-shrink-0" />}
+        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40 cursor-pointer">{field.label}</label>
     </button>
 );
 
@@ -194,12 +194,12 @@ const CharacterSheetEditor: React.FC = () => {
             />
 
             {/* Save Bar */}
-            <div className="flex items-center justify-between px-8 py-3 border-b border-white/5 bg-slate-900/60 backdrop-blur-sm flex-shrink-0">
+            <div className="flex items-center justify-between px-8 py-3 border-b border-app-border bg-app-bg/60 backdrop-blur-sm flex-shrink-0">
                 <div className="flex items-center gap-3">
                     <span className="text-2xl">{template.emoji}</span>
                     <div>
-                        <p className="text-xs font-black uppercase tracking-widest text-slate-400">{template.name}</p>
-                        <p className="text-[10px] text-slate-600">Fiche de {character.name}</p>
+                        <p className="text-xs font-black uppercase tracking-widest text-app-text/40">{template.name}</p>
+                        <p className="text-[10px] text-app-text/20">Fiche de {character.name}</p>
                     </div>
                 </div>
                 <button
@@ -207,7 +207,7 @@ const CharacterSheetEditor: React.FC = () => {
                     className={`flex items-center gap-2 px-5 py-2 rounded-xl font-black text-xs tracking-widest transition-all ${
                         saved
                             ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20'
-                            : 'bg-gm-gold hover:bg-yellow-400 text-slate-950 shadow-lg shadow-gm-gold/20 hover:scale-105 active:scale-95'
+                            : 'bg-accent hover:opacity-90 text-app-bg shadow-lg shadow-accent/20 hover:scale-105 active:scale-95'
                     }`}
                 >
                     <Save size={14} />
@@ -224,26 +224,26 @@ const CharacterSheetEditor: React.FC = () => {
 
                         {/* Portrait */}
                         <div>
-                            <p className="text-[9px] font-black uppercase tracking-widest text-slate-600 mb-2">Portrait</p>
+                            <p className="text-[9px] font-black uppercase tracking-widest text-app-text/40 mb-2">Portrait</p>
                             <div
-                                className="aspect-[3/4] rounded-2xl overflow-hidden bg-slate-900 border border-white/5 shadow-2xl relative group cursor-pointer"
+                                className="aspect-[3/4] rounded-2xl overflow-hidden bg-app-bg border border-app-border shadow-2xl relative group cursor-pointer"
                                 onClick={() => setMediaBrowserTarget('portrait')}
                             >
                                 {portraitUrl ? (
                                     <img src={portraitUrl} alt={character.name} className="w-full h-full object-cover object-top" />
                                 ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-slate-700">
+                                    <div className="w-full h-full flex items-center justify-center text-app-text/20">
                                         <FolderOpen size={32} />
                                     </div>
                                 )}
                                 {/* Hover overlay */}
-                                <div className="absolute inset-0 bg-slate-950/70 opacity-0 group-hover:opacity-100 transition-all flex flex-col items-center justify-center gap-4">
+                                <div className="absolute inset-0 bg-app-bg/70 opacity-0 group-hover:opacity-100 transition-all flex flex-col items-center justify-center gap-4">
                                     <div 
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             setMediaBrowserTarget('portrait');
                                         }}
-                                        className="flex flex-col items-center gap-1 hover:text-gm-gold transition-colors text-slate-400"
+                                        className="flex flex-col items-center gap-1 hover:text-accent transition-colors text-app-text/40"
                                     >
                                         <FolderOpen size={24} />
                                         <span className="text-[10px] font-black uppercase tracking-widest">Changer</span>
@@ -256,7 +256,7 @@ const CharacterSheetEditor: React.FC = () => {
                                                 gmToast(`Image de ${character.name} projetée !`);
                                             }
                                         }}
-                                        className="flex flex-col items-center gap-1 hover:text-gm-cyan transition-colors text-slate-400"
+                                        className="flex flex-col items-center gap-1 hover:text-accent transition-colors text-app-text/40"
                                     >
                                         <Eye size={24} />
                                         <span className="text-[10px] font-black uppercase tracking-widest">Projeter</span>
@@ -267,63 +267,63 @@ const CharacterSheetEditor: React.FC = () => {
 
                         {/* Token */}
                         <div>
-                            <p className="text-[9px] font-black uppercase tracking-widest text-slate-600 mb-2 flex items-center gap-1.5">
+                            <p className="text-[9px] font-black uppercase tracking-widest text-app-text/40 mb-2 flex items-center gap-1.5">
                                 <Layers size={10} /> Token (Map / Combat)
                             </p>
                             <div
-                                className="w-full aspect-square rounded-2xl overflow-hidden bg-slate-900 border-2 border-dashed border-slate-700 hover:border-gm-gold/50 relative group cursor-pointer transition-all flex items-center justify-center"
+                                className="w-full aspect-square rounded-2xl overflow-hidden bg-app-bg border-2 border-dashed border-app-border hover:border-accent/50 relative group cursor-pointer transition-all flex items-center justify-center"
                                 onClick={() => setMediaBrowserTarget('token')}
                             >
                                 {tokenUrl ? (
                                     <img src={tokenUrl} alt="Token" className="w-full h-full object-cover" />
                                 ) : (
-                                    <div className="flex flex-col items-center gap-2 text-slate-700 group-hover:text-gm-gold/60 transition-colors">
+                                    <div className="flex flex-col items-center gap-2 text-app-text/20 group-hover:text-accent/60 transition-colors">
                                         <Layers size={28} />
                                         <span className="text-[9px] font-bold uppercase tracking-widest">Pas de token</span>
                                     </div>
                                 )}
                                 {tokenUrl && (
-                                    <div className="absolute inset-0 bg-slate-950/70 opacity-0 group-hover:opacity-100 transition-all flex flex-col items-center justify-center gap-2">
-                                        <FolderOpen size={20} className="text-gm-gold" />
-                                        <span className="text-[9px] font-black uppercase tracking-widest text-gm-gold">Changer</span>
+                                    <div className="absolute inset-0 bg-app-bg/70 opacity-0 group-hover:opacity-100 transition-all flex flex-col items-center justify-center gap-2">
+                                        <FolderOpen size={20} className="text-accent" />
+                                        <span className="text-[9px] font-black uppercase tracking-widest text-accent">Changer</span>
                                     </div>
                                 )}
                             </div>
-                            <p className="text-[9px] text-slate-700 mt-1.5 text-center">Utilisé dans Map-OS et Combat-OS</p>
+                            <p className="text-[9px] text-app-text/20 mt-1.5 text-center">Utilisé dans Map-OS et Combat-OS</p>
                         </div>
 
                         {/* Identity */}
                         <div className="space-y-1 text-center">
-                            <h2 className="text-lg font-black text-white">{character.name}</h2>
-                            <p className="text-xs text-slate-400 italic">{character.classRace}</p>
+                            <h2 className="text-lg font-black text-app-text">{character.name}</h2>
+                            <p className="text-xs text-app-text/40 italic">{character.classRace}</p>
                         </div>
 
                         {/* HP quick control */}
-                        <div className="p-4 bg-slate-900/60 border border-gm-gold/20 rounded-xl space-y-3 shadow-lg shadow-red-500/5">
+                        <div className="p-4 bg-app-bg/60 border border-accent/20 rounded-xl space-y-3 shadow-lg shadow-red-500/5">
                             <div className="flex items-center justify-between">
-                                <span className="text-[9px] font-black uppercase tracking-[0.15em] text-gm-gold">Vigueur (PV)</span>
+                                <span className="text-[9px] font-black uppercase tracking-[0.15em] text-accent">Vigueur (PV)</span>
                                 <Heart size={12} className="text-red-500 animate-pulse" />
                             </div>
                             
-                                <div className="flex items-center justify-center gap-1.5 bg-slate-950/40 py-1.5 rounded-lg border border-white/5">
+                                <div className="flex items-center justify-center gap-1.5 bg-app-bg/40 py-1.5 rounded-lg border border-app-border/40">
                                     <input 
                                         type="number" 
                                         value={character.hp}
                                         onChange={(e) => updateCharacterHP(selectedPlayerId!, character.id, parseInt(e.target.value) || 0)}
-                                        className="w-14 bg-transparent text-center text-white font-black text-xs focus:outline-none"
+                                        className="w-14 bg-transparent text-center text-app-text font-black text-xs focus:outline-none"
                                     />
-                                    <span className="text-slate-700 font-bold text-xs">/</span>
+                                    <span className="text-app-text/20 font-bold text-xs">/</span>
                                     <input 
                                         type="number" 
                                         value={character.maxHp}
                                         onChange={() => {
                                             // Still no easy maxHp update exposed here without significant refactor
                                         }}
-                                        className="w-14 bg-transparent text-center text-slate-400 font-black text-xs focus:outline-none"
+                                        className="w-14 bg-transparent text-center text-app-text/40 font-black text-xs focus:outline-none"
                                     />
                                 </div>
                             
-                            <div className="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden border border-white/5 ring-1 ring-white/5 p-[1px]">
+                            <div className="w-full bg-app-bg h-1.5 rounded-full overflow-hidden border border-app-border/40 ring-1 ring-white/5 p-[1px]">
                                 <div
                                     className={`h-full rounded-full transition-all duration-500 ${character.hp / character.maxHp > 0.6 ? 'bg-gradient-to-r from-emerald-600 to-emerald-400' : character.hp / character.maxHp > 0.3 ? 'bg-gradient-to-r from-amber-600 to-amber-400' : 'bg-gradient-to-r from-rose-700 to-rose-500'}`}
                                     style={{ width: `${Math.max(0, Math.min(100, (character.hp / character.maxHp) * 100))}%` }}
@@ -339,7 +339,7 @@ const CharacterSheetEditor: React.FC = () => {
                             const others = otherFields(section);
                             return (
                                 <div key={section.id} className="space-y-3">
-                                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-gm-gold border-b border-gm-gold/20 pb-2">{section.label}</h3>
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-accent border-b border-accent/20 pb-2">{section.label}</h3>
 
                                     {/* Gauges: 2-column grid */}
                                     {gauges.length > 0 && (
@@ -381,8 +381,8 @@ const CharacterSheetEditor: React.FC = () => {
                     {/* === UNIVERSAL SECTIONS (always visible) === */}
 
                     {/* Description */}
-                    <div className="col-span-9 border-t border-slate-800 pt-6 space-y-3">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-gm-gold border-b border-gm-gold/20 pb-2 flex items-center gap-2">
+                    <div className="col-span-9 border-t border-app-border pt-6 space-y-3">
+                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-accent border-b border-accent/20 pb-2 flex items-center gap-2">
                             <BookOpen size={12} /> Description
                         </h3>
                         <textarea
@@ -390,7 +390,7 @@ const CharacterSheetEditor: React.FC = () => {
                             onChange={e => setDescription(e.target.value)}
                             rows={4}
                             placeholder="Description du personnage — visible par les joueurs…"
-                            className="w-full bg-slate-900/40 border border-white/5 rounded-xl p-4 text-sm text-slate-200 placeholder-slate-600 resize-none focus:outline-none focus:ring-1 focus:ring-gm-gold/30 focus:border-gm-gold/20 transition-all leading-relaxed"
+                            className="w-full bg-app-bg/40 border border-app-border rounded-xl p-4 text-sm text-app-text placeholder-app-text/20 resize-none focus:outline-none focus:ring-1 focus:ring-accent/30 focus:border-accent/20 transition-all leading-relaxed"
                         />
                     </div>
 
@@ -405,19 +405,19 @@ const CharacterSheetEditor: React.FC = () => {
                             onChange={e => setGmNotes(e.target.value)}
                             rows={4}
                             placeholder="Notes secrètes du MJ — jamais visible par les joueurs…"
-                            className="w-full bg-amber-950/10 border border-amber-500/10 rounded-xl p-4 text-sm text-slate-200 placeholder-slate-600 resize-none focus:outline-none focus:ring-1 focus:ring-amber-500/30 focus:border-amber-500/20 transition-all leading-relaxed"
+                            className="w-full bg-amber-950/10 border border-amber-500/10 rounded-xl p-4 text-sm text-app-text placeholder-app-text/20 resize-none focus:outline-none focus:ring-1 focus:ring-amber-500/30 focus:border-amber-500/20 transition-all leading-relaxed"
                         />
                     </div>
 
                     {/* Linked Documents */}
                     <div className="col-span-9 space-y-3">
-                        <div className="flex items-center justify-between border-b border-gm-gold/20 pb-2">
-                            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-gm-gold flex items-center gap-2">
+                        <div className="flex items-center justify-between border-b border-accent/20 pb-2">
+                            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-accent flex items-center gap-2">
                                 <FileText size={12} /> Documents Liés
                             </h3>
                             <button
                                 onClick={() => setMediaBrowserTarget('document')}
-                                className="flex items-center gap-1.5 px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-gm-gold/10 text-gm-gold border border-gm-gold/30 rounded-lg hover:bg-gm-gold/20 transition-all"
+                                className="flex items-center gap-1.5 px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-accent/10 text-accent border border-accent/30 rounded-lg hover:bg-accent/20 transition-all"
                             >
                                 + Lier un document
                             </button>
@@ -425,10 +425,10 @@ const CharacterSheetEditor: React.FC = () => {
                         {(character.linkedDocumentIds ?? []).length === 0 ? (
                             <div
                                 onClick={() => setMediaBrowserTarget('document')}
-                                className="flex flex-col items-center justify-center gap-2 p-6 rounded-xl border-2 border-dashed border-slate-800 hover:border-gm-gold/30 cursor-pointer transition-all group"
+                                className="flex flex-col items-center justify-center gap-2 p-6 rounded-xl border-2 border-dashed border-app-border hover:border-accent/30 cursor-pointer transition-all group"
                             >
-                                <FileText size={24} className="text-slate-700 group-hover:text-gm-gold/50 transition-colors" />
-                                <p className="text-xs text-slate-600 group-hover:text-slate-400 transition-colors">Cliquez pour lier un PDF, Word, etc. depuis le Media Hub</p>
+                                <FileText size={24} className="text-app-text/20 group-hover:text-accent/50 transition-colors" />
+                                <p className="text-xs text-app-text/20 group-hover:text-app-text/40 transition-colors">Cliquez pour lier un PDF, Word, etc. depuis le Media Hub</p>
                             </div>
                         ) : (
                             <div className="space-y-1.5">
@@ -436,18 +436,18 @@ const CharacterSheetEditor: React.FC = () => {
                                     const media = mediaList.find(m => m.id === docId);
                                     const ext = media?.name.split('.').pop()?.toUpperCase() ?? '?';
                                     return (
-                                        <div key={docId} className="flex items-center gap-3 px-4 py-2.5 bg-slate-900/40 border border-white/5 rounded-xl hover:border-white/10 transition-all group">
+                                        <div key={docId} className="flex items-center gap-3 px-4 py-2.5 bg-app-bg/40 border border-app-border/40 rounded-xl hover:border-app-border/60 transition-all group">
                                             <FileText size={14} className="text-emerald-400 flex-shrink-0" />
                                             <span className="text-[9px] font-black tracking-widest text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded">{ext}</span>
                                             <button
                                                 onClick={() => openDocument(docId)}
-                                                className="flex-1 text-left text-sm text-slate-300 hover:text-white transition-colors truncate"
+                                                className="flex-1 text-left text-sm text-app-text/80 hover:text-app-text transition-colors truncate"
                                             >
                                                 {media?.name ?? docId}
                                             </button>
                                             <button
                                                 onClick={() => handleRemoveDocument(docId)}
-                                                className="opacity-0 group-hover:opacity-100 p-1 text-slate-600 hover:text-red-400 transition-all"
+                                                className="opacity-0 group-hover:opacity-100 p-1 text-app-text/20 hover:text-red-400 transition-all"
                                             >
                                                 <Trash2 size={12} />
                                             </button>

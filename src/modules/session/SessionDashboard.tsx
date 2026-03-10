@@ -28,9 +28,9 @@ const SessionDashboard: React.FC = () => {
     const templateNotebookUrl = activeTemplate?.defaultNotebookUrl;
 
     return (
-        <div className="flex-1 h-[calc(100vh-64px)] overflow-hidden flex flex-col bg-slate-950 text-slate-100 font-display">
+        <div className="flex-1 h-[calc(100vh-64px)] overflow-hidden flex flex-col bg-app-bg text-app-text font-display">
             {/* Top Navigation Bar - Contextual Header for Session OS */}
-            <header className="flex items-center justify-between h-16 border-b border-slate-800 bg-slate-900/90 backdrop-blur-md px-6 z-50">
+            <header className="flex items-center justify-between h-16 border-b border-app-border bg-app-surface/90 backdrop-blur-md px-6 z-50">
                 <div className="flex items-center gap-8">
                     <div className="flex items-center gap-3 text-gm-gold">
                         <Users size={28} />
@@ -45,7 +45,7 @@ const SessionDashboard: React.FC = () => {
                 <div className="flex gap-3">
                     <button
                         onClick={() => setIsOracleOpen(!isOracleOpen)}
-                        className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-sm font-bold transition-all border ${isOracleOpen ? 'bg-gm-gold text-slate-900 border-gm-gold shadow-[0_0_15px_rgba(234,179,8,0.4)]' : 'bg-slate-800 text-gm-gold border-slate-700 hover:bg-slate-700'}`}
+                        className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-sm font-bold transition-all border ${isOracleOpen ? 'bg-accent text-white border-accent shadow-glow-accent' : 'bg-app-surface text-accent border-app-border hover:bg-app-surface/80 hover:border-app-border/60'}`}
                         title="Consult the AI Oracle"
                     >
                         <Sparkles size={18} className={isOracleOpen ? 'animate-pulse' : ''} />
@@ -53,13 +53,13 @@ const SessionDashboard: React.FC = () => {
                     </button>
                     <button
                         onClick={() => gmAlert('Le module de configuration globale sera bientôt disponible.')}
-                        className="p-2 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded-lg transition-all"
+                        className="p-2 text-app-text/40 hover:text-white hover:bg-white/10 rounded-lg transition-all"
                     >
                         <Settings size={18} />
                     </button>
-                    <button className="p-2 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded-lg transition-all relative">
+                    <button className="p-2 text-app-text/40 hover:text-white hover:bg-white/10 rounded-lg transition-all relative">
                         <Bell size={18} />
-                        <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-slate-900"></span>
+                        <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-app-bg"></span>
                     </button>
                 </div>
             </header>
@@ -110,15 +110,15 @@ const SessionDashboard: React.FC = () => {
                             ) : currentView === 'campaign-details' ? (
                                 <CampaignDetails />
                             ) : (
-                                <div className="flex-1 flex flex-col items-center justify-center p-20 bg-slate-900/20">
-                                    <div className="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center mb-4 opacity-50">
-                                        <Settings className="animate-spin-slow text-slate-500" />
+                                <div className="flex-1 flex flex-col items-center justify-center p-20 bg-app-bg/20">
+                                    <div className="w-16 h-16 rounded-full bg-app-surface flex items-center justify-center mb-4 opacity-50">
+                                        <Settings className="animate-spin-slow text-app-text/40" />
                                     </div>
-                                    <h2 className="text-xl font-bold text-slate-400">View "{currentView}" under construction</h2>
+                                    <h2 className="text-xl font-bold text-app-text/40">View "{currentView}" under construction</h2>
                                     <p className="text-slate-600 text-sm mb-6">This section will be available in the next system update.</p>
                                     <button
                                         onClick={() => setCurrentView('cockpit')}
-                                        className="px-6 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-sm font-bold transition-all border border-slate-700"
+                                        className="px-6 py-2 bg-app-surface hover:bg-app-surface/80 text-app-text/80 rounded-lg text-sm font-bold transition-all border border-app-border"
                                     >
                                         RETURN TO COCKPIT
                                     </button>

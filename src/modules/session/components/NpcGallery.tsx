@@ -48,15 +48,15 @@ const NpcGallery: React.FC = () => {
     });
 
     return (
-        <div className="w-1/3 flex-shrink-0 h-full bg-slate-900/50 border-r border-slate-800 flex flex-col overflow-hidden">
+        <div className="w-1/3 flex-shrink-0 h-full bg-app-surface/50 border-r border-app-border flex flex-col overflow-hidden">
             {/* Search and Filters */}
-            <div className="p-4 flex flex-col gap-4 border-b border-slate-800">
+            <div className="p-4 flex flex-col gap-4 border-b border-app-border">
                 <div className="relative">
-                    <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                    <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-text/40" />
                     <input
                         type="text"
                         placeholder="Rechercher un PNJ ou monstre..."
-                        className="w-full bg-slate-800/50 border border-slate-700/50 rounded-lg pl-10 pr-4 py-2 text-sm text-slate-200 focus:outline-none focus:ring-1 focus:ring-gm-gold/50 placeholder:text-slate-600"
+                        className="w-full bg-app-bg/50 border border-app-border/20 rounded-lg pl-10 pr-4 py-2 text-sm text-app-text/80 focus:outline-none focus:ring-1 focus:ring-accent/50 placeholder:text-app-text/20"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
@@ -68,8 +68,8 @@ const NpcGallery: React.FC = () => {
                             key={f}
                             onClick={() => setFilter(f)}
                             className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all ${filter === f
-                                ? 'bg-gm-gold text-slate-950 shadow-[0_0_12px_rgba(234,179,8,0.3)]'
-                                : 'bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200'
+                                ? 'bg-accent text-white shadow-glow-accent'
+                                : 'bg-app-surface text-app-text/40 hover:bg-app-surface/80 hover:text-white'
                                 }`}
                         >
                             {f === 'all' ? 'Tous' : f === 'npc' ? 'PNJ' : f === 'monster' ? 'Monstre' : f === 'ally' ? 'Allié' : 'Hostile'}
@@ -103,7 +103,7 @@ const NpcGallery: React.FC = () => {
                 </div>
 
                 {filteredEntities.length === 0 && (
-                    <div className="flex flex-col items-center justify-center h-full py-20 text-slate-600">
+                    <div className="flex flex-col items-center justify-center h-full py-20 text-app-text/20">
                         <UserPlus size={48} className="mb-4 opacity-10" />
                         <p className="text-sm italic">Aucun PNJ trouvé</p>
                     </div>
@@ -111,10 +111,10 @@ const NpcGallery: React.FC = () => {
             </div>
 
             {/* Footer / Add NPC */}
-            <div className="p-4 border-t border-slate-800 bg-slate-900/30">
+            <div className="p-4 border-t border-app-border bg-app-surface/30">
                 <button 
                     onClick={() => useSessionOSStore.getState().setIsAddingEntity(true)}
-                    className="w-full flex items-center justify-center gap-2 bg-slate-800 border border-slate-700 hover:border-gm-gold/50 hover:bg-gm-gold/10 text-slate-300 hover:text-gm-gold py-2.5 rounded-xl text-xs font-bold transition-all group"
+                    className="w-full flex items-center justify-center gap-2 bg-app-surface border border-app-border hover:border-accent/50 hover:bg-accent/10 text-app-text/60 hover:text-accent py-2.5 rounded-xl text-xs font-bold transition-all group"
                 >
                     <UserPlus size={14} className="group-hover:scale-110 transition-transform" />
                     Ajouter un PNJ / Monstre
@@ -135,7 +135,7 @@ const NpcGalleryItem: React.FC<{
     return (
         <div
             onClick={onSelect}
-            className={`group relative aspect-[2/3] rounded-xl overflow-hidden cursor-pointer transition-all border-2 ${isSelected ? 'border-gm-gold shadow-[0_0_15px_rgba(234,179,8,0.2)]' : 'border-transparent hover:border-white/10'
+            className={`group relative aspect-[2/3] rounded-xl overflow-hidden cursor-pointer transition-all border-2 ${isSelected ? 'border-accent shadow-glow-accent' : 'border-transparent hover:border-white/10'
                 }`}
         >
             {/* Portrait */}
@@ -153,15 +153,15 @@ const NpcGalleryItem: React.FC<{
             </div>
 
             {/* Overlays */}
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-black/20" />
+            <div className="absolute inset-0 bg-gradient-to-t from-app-bg via-transparent to-black/20" />
 
             {/* Badge */}
-            <div className={`absolute top-2 right-2 px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-tighter ${ROLE_COLORS[npc.role as keyof typeof ROLE_COLORS] || 'bg-slate-500'}`}>
+            <div className={`absolute top-2 right-2 px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-tighter ${ROLE_COLORS[npc.role as keyof typeof ROLE_COLORS] || 'bg-app-text/20'}`}>
                 {ROLE_LABELS[npc.role as keyof typeof ROLE_LABELS] || npc.role}
             </div>
 
             {isPinned && (
-                <div className="absolute top-2 left-2 p-1.5 rounded-lg bg-gm-gold text-slate-950 shadow-glow-gold">
+                <div className="absolute top-2 left-2 p-1.5 rounded-lg bg-accent text-white shadow-glow-accent">
                     <Pin size={10} fill="currentColor" />
                 </div>
             )}
@@ -169,10 +169,10 @@ const NpcGalleryItem: React.FC<{
             {/* Info */}
             <div className="absolute bottom-3 left-3 right-3">
                 <p className="font-bold text-white text-sm truncate drop-shadow-md">{npc.name}</p>
-                <p className="text-[9px] text-slate-300 truncate opacity-80">{npc.description}</p>
+                <p className="text-[9px] text-app-text/60 truncate opacity-80">{npc.description}</p>
 
                 {/* HP Bar */}
-                <div className="mt-2 h-1 bg-slate-800 rounded-full overflow-hidden">
+                <div className="mt-2 h-1 bg-app-bg rounded-full overflow-hidden">
                     <div
                         className={`h-full transition-all duration-300 ${npc.hp / npc.maxHp < 0.3 ? 'bg-red-500' : 'bg-emerald-500'}`}
                         style={{ width: `${(npc.hp / npc.maxHp) * 100}%` }}
@@ -186,8 +186,8 @@ const NpcGalleryItem: React.FC<{
                     onClick={(e) => { e.stopPropagation(); onTogglePin(); }}
                     className={`flex items-center gap-2 px-4 py-1.5 rounded-lg font-bold text-xs transition-colors w-32 ${
                         isPinned 
-                        ? 'bg-gm-gold text-slate-950 hover:bg-gm-gold/80' 
-                        : 'bg-slate-800 text-white hover:bg-slate-700'
+                        ? 'bg-accent text-white hover:bg-accent/80' 
+                        : 'bg-app-surface text-white hover:bg-app-surface/80'
                     }`}
                 >
                     <Pin size={14} fill={isPinned ? 'currentColor' : 'none'} />
@@ -196,7 +196,7 @@ const NpcGalleryItem: React.FC<{
                 <div className="flex gap-2">
                     <button 
                         onClick={(e) => { e.stopPropagation(); onSelect(); }}
-                        className="flex items-center gap-2 bg-white text-slate-950 px-3 py-1.5 rounded-lg font-bold text-xs hover:bg-gm-gold transition-colors"
+                        className="flex items-center gap-2 bg-white text-app-bg px-3 py-1.5 rounded-lg font-bold text-xs hover:bg-accent hover:text-white transition-colors"
                     >
                         <FileText size={14} />
                         Fiche
@@ -227,7 +227,7 @@ const NpcGalleryItem: React.FC<{
                         useImageStore.getState().projectEntity(npc);
                         gmToast(`Personnage ${npc.name} projeté !`);
                     }}
-                    className="flex items-center gap-2 bg-gm-cyan text-obsidian px-4 py-1.5 rounded-lg font-bold text-xs hover:bg-cyan-400 transition-colors"
+                    className="flex items-center gap-2 bg-accent/80 text-white px-4 py-1.5 rounded-lg font-bold text-xs hover:bg-accent transition-colors"
                 >
                     <Eye size={14} />
                     Image

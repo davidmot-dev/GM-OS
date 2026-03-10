@@ -5,7 +5,6 @@ import { Search, FolderOpen, Film, Globe, Swords, Map, Building2, Hexagon, Trash
 import { useMapStore } from '../../map/useMapStore';
 import { useMediaStore } from '../../../stores/useMediaStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
-import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { ResolvedAsset } from '../../../components/ResolvedAsset';
 
 const TYPE_META: Record<AtlasMap['type'], { label: string; icon: React.ReactNode; color: string }> = {
@@ -32,27 +31,27 @@ const MapCard: React.FC<{
             onClick={onClick}
             onKeyDown={(e) => e.key === 'Enter' && onClick()}
             className={`group w-full flex items-center gap-3 p-2.5 rounded-xl text-left transition-all relative cursor-pointer ${isSelected
-                ? 'bg-gm-gold/10 border border-gm-gold/30'
-                : 'hover:bg-slate-800/60 border border-transparent'
+                ? 'bg-accent/10 border border-accent/30'
+                : 'hover:bg-app-surface/60 border border-transparent'
                 }`}
         >
             {/* Thumbnail */}
-            <div className="w-12 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-slate-800 border border-white/5">
+            <div className="w-12 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-app-bg border border-app-border/20">
                 <ResolvedAsset 
                     src={map.fileUrl} 
                     isVideo={map.isVideo}
                     className="w-full h-full object-cover"
                     alt={map.name}
                     fallback={
-                        <div className="w-full h-full flex items-center justify-center bg-slate-800 border border-slate-700/50 rounded-lg">
-                            <Map size={16} className="text-slate-600" />
+                        <div className="w-full h-full flex items-center justify-center bg-app-bg border border-app-border/20 rounded-lg">
+                            <Map size={16} className="text-app-text/20" />
                         </div>
                     }
                 />
             </div>
             {/* Info */}
             <div className="flex-1 min-w-0">
-                <p className={`font-bold text-xs truncate ${isSelected ? 'text-gm-gold' : 'text-slate-200'}`}>
+                <p className={`font-bold text-xs truncate ${isSelected ? 'text-accent' : 'text-app-text/80'}`}>
                     {map.name}
                 </p>
                 <div className="flex items-center gap-1.5 mt-1 flex-wrap">
@@ -74,7 +73,7 @@ const MapCard: React.FC<{
             {/* Delete Button */}
             <button
                 onClick={(e) => { e.stopPropagation(); onDelete(); }}
-                className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:text-red-400 text-slate-600"
+                className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:text-red-400 text-app-text/20"
             >
                 <Trash2 size={13} />
             </button>
@@ -112,21 +111,21 @@ const AtlasLibrary: React.FC = () => {
     };
 
     return (
-        <div className="w-72 flex-shrink-0 h-full bg-slate-900/90 border-r border-slate-800 flex flex-col">
+        <div className="w-72 flex-shrink-0 h-full bg-app-surface/90 border-r border-app-border flex flex-col">
             {/* Header */}
-            <div className="p-4 border-b border-slate-800">
+            <div className="p-4 border-b border-app-border">
                 <div className="flex items-center gap-2 mb-3">
-                    <Globe size={16} className="text-gm-gold" />
-                    <h3 className="text-slate-100 font-bold text-sm uppercase tracking-widest">World Atlas</h3>
+                    <Globe size={16} className="text-accent" />
+                    <h3 className="text-app-text font-bold text-sm uppercase tracking-widest">World Atlas</h3>
                 </div>
                 <div className="relative">
-                    <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                    <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-text/40" />
                     <input
                         type="text"
                         placeholder="Rechercher une carte..."
                         value={search}
                         onChange={e => setSearch(e.target.value)}
-                        className="w-full bg-slate-800 border border-slate-700 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-300 placeholder-slate-600 focus:ring-1 focus:ring-gm-gold/50 focus:outline-none"
+                        className="w-full bg-app-bg border border-app-border rounded-lg pl-8 pr-3 py-1.5 text-xs text-app-text/60 placeholder:text-app-text/20 focus:ring-1 focus:ring-accent/50 focus:outline-none"
                     />
                 </div>
             </div>
@@ -144,15 +143,15 @@ const AtlasLibrary: React.FC = () => {
                     />
                 ))}
                 {filtered.length === 0 && (
-                    <p className="text-slate-600 text-xs text-center p-4">Aucune carte trouvée</p>
+                    <p className="text-app-text/20 text-xs text-center p-4">Aucune carte trouvée</p>
                 )}
             </div>
 
             {/* Import Button */}
-            <div className="p-3 border-t border-slate-800">
+            <div className="p-3 border-t border-app-border">
                 <button
                     onClick={() => setIsBrowserOpen(true)}
-                    className="w-full flex items-center justify-center gap-2 border border-gm-gold/40 text-gm-gold hover:bg-gm-gold/10 py-2.5 rounded-lg text-xs font-bold transition-all"
+                    className="w-full flex items-center justify-center gap-2 border border-accent/40 text-accent hover:bg-accent/10 py-2.5 rounded-lg text-xs font-bold transition-all"
                 >
                     <FolderOpen size={14} />
                     Importer depuis Media Hub

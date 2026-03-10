@@ -45,9 +45,9 @@ const SectionEditor: React.FC<{
     };
 
     return (
-        <div className="border border-slate-800 rounded-xl overflow-hidden">
+        <div className="border border-app-border/40 rounded-xl overflow-hidden">
             {/* Section Header */}
-            <div className="flex items-center gap-3 p-3 bg-slate-900/60">
+            <div className="flex items-center gap-3 p-3 bg-app-surface/60">
                 <button onClick={() => setIsOpen(!isOpen)} className="text-slate-500 hover:text-white transition-colors">
                     {isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
                 </button>
@@ -68,9 +68,9 @@ const SectionEditor: React.FC<{
 
             {/* Section Fields */}
             {isOpen && (
-                <div className="p-3 space-y-2 bg-slate-950/40">
+                <div className="p-3 space-y-2 bg-app-bg/40">
                     {section.fields.map((field, i) => (
-                        <div key={field.id} className="flex items-center gap-2 p-2 bg-slate-900/30 rounded-lg border border-white/5">
+                        <div key={field.id} className="flex items-center gap-2 p-2 bg-app-surface/30 rounded-lg border border-white/5">
                             <Pencil size={12} className="text-slate-600 flex-shrink-0" />
                             <input
                                 type="text"
@@ -82,20 +82,20 @@ const SectionEditor: React.FC<{
                             <select
                                 value={field.type}
                                 onChange={e => updateField(i, { type: e.target.value as SheetFieldType, defaultValue: e.target.value === 'gauge' ? 50 : e.target.value === 'number' ? 0 : e.target.value === 'checkbox' ? false : '' })}
-                                className="bg-slate-800 text-slate-300 text-[11px] rounded-lg px-2 py-1 border border-white/10 focus:outline-none focus:ring-1 focus:ring-gm-gold/40"
+                                className="bg-app-bg text-app-text/80 text-[11px] rounded-lg px-2 py-1 border border-white/10 focus:outline-none focus:ring-1 focus:ring-accent/40"
                             >
                                 {(Object.entries(FIELD_TYPE_LABELS) as [SheetFieldType, string][]).map(([type, label]) => (
                                     <option key={type} value={type}>{label}</option>
                                 ))}
                             </select>
-                            <button onClick={() => removeField(i)} className="p-1 text-slate-700 hover:text-red-400 transition-colors">
+                            <button onClick={() => removeField(i)} className="p-1 text-app-text/20 hover:text-red-400 transition-colors">
                                 <Trash2 size={12} />
                             </button>
                         </div>
                     ))}
                     <button
                         onClick={addField}
-                        className="w-full py-1.5 text-xs text-slate-600 hover:text-gm-gold border border-dashed border-slate-800 hover:border-gm-gold/40 rounded-lg transition-all flex items-center justify-center gap-1"
+                        className="w-full py-1.5 text-xs text-app-text/20 hover:text-accent border border-dashed border-app-border/40 hover:border-accent/40 rounded-lg transition-all flex items-center justify-center gap-1"
                     >
                         <Plus size={12} /> Ajouter un champ
                     </button>
@@ -133,12 +133,12 @@ const TemplateEditor: React.FC<{
     return (
         <div className="space-y-4">
             {/* Template Meta */}
-            <div className="flex items-center gap-4 p-4 bg-slate-900/50 rounded-xl border border-slate-800">
+            <div className="flex items-center gap-4 p-4 bg-app-surface/50 rounded-xl border border-app-border/40">
                 <input
                     type="text"
                     value={template.emoji}
                     onChange={e => onUpdate({ ...template, emoji: e.target.value })}
-                    className="w-12 bg-slate-800 text-center text-xl rounded-lg p-1 focus:outline-none"
+                    className="w-12 bg-app-bg text-center text-xl rounded-lg p-1 focus:outline-none"
                     maxLength={2}
                 />
                 <input
@@ -162,7 +162,7 @@ const TemplateEditor: React.FC<{
                         value={template.defaultNotebookUrl || ''}
                         onChange={e => onUpdate({ ...template, defaultNotebookUrl: e.target.value })}
                         placeholder="https://notebooklm.google.com/notebook/..."
-                        className="w-full bg-transparent text-xs text-slate-300 focus:outline-none border-b border-white/5 focus:border-blue-500/50 transition-colors pb-0.5"
+                        className="w-full bg-transparent text-xs text-app-text/80 focus:outline-none border-b border-white/5 focus:border-accent/50 transition-colors pb-0.5"
                     />
                 </div>
                 {onDelete && (
@@ -184,7 +184,7 @@ const TemplateEditor: React.FC<{
                 ))}
                 <button
                     onClick={addSection}
-                    className="w-full py-2 text-xs text-slate-600 hover:text-gm-gold border border-dashed border-slate-800 hover:border-gm-gold/40 rounded-xl transition-all flex items-center justify-center gap-2 font-bold uppercase tracking-widest"
+                    className="w-full py-2 text-xs text-app-text/20 hover:text-accent border border-dashed border-app-border/40 hover:border-accent/40 rounded-xl transition-all flex items-center justify-center gap-2 font-bold uppercase tracking-widest"
                 >
                     <Plus size={14} /> Ajouter une section
                 </button>
@@ -226,16 +226,16 @@ const TemplateManager: React.FC = () => {
     return (
         <div className="flex h-full overflow-hidden">
             {/* Sidebar */}
-            <div className="w-64 flex-shrink-0 border-r border-slate-800 bg-slate-900/50 flex flex-col">
-                <div className="p-4 border-b border-slate-800">
-                    <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Modèles de Fiches</h3>
+            <div className="w-64 flex-shrink-0 border-r border-app-border bg-app-surface/50 flex flex-col">
+                <div className="p-4 border-b border-app-border">
+                    <h3 className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Modèles de Fiches</h3>
                 </div>
                 <div className="flex-1 overflow-y-auto p-3 space-y-1">
                     {allTemplates.map(t => (
                         <button
                             key={t.id}
                             onClick={() => setSelectedId(t.id)}
-                            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all ${selectedId === t.id ? 'bg-gm-gold/10 border border-gm-gold/30 text-gm-gold' : 'text-slate-400 hover:bg-slate-800/50 hover:text-white border border-transparent'}`}
+                            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all ${selectedId === t.id ? 'bg-accent/10 border border-accent/30 text-accent' : 'text-app-text/40 hover:bg-app-bg/50 hover:text-white border border-transparent'}`}
                         >
                             <span className="text-lg">{t.emoji}</span>
                             <div className="min-w-0">
@@ -245,7 +245,7 @@ const TemplateManager: React.FC = () => {
                         </button>
                     ))}
                 </div>
-                <div className="p-3 border-t border-slate-800">
+                <div className="p-3 border-t border-app-border">
                     <button
                         onClick={handleCreateNew}
                         className="w-full flex items-center justify-center gap-2 py-2.5 bg-gm-gold/10 border border-gm-gold/30 text-gm-gold hover:bg-gm-gold/20 rounded-xl text-xs font-bold uppercase tracking-widest transition-all"
@@ -260,7 +260,7 @@ const TemplateManager: React.FC = () => {
                 {selectedTemplate ? (
                     selectedTemplate.isBuiltin ? (
                         <div className="space-y-4">
-                            <div className="flex items-center gap-3 p-4 bg-amber-500/5 border border-amber-500/20 rounded-xl">
+                            <div className="flex items-center gap-3 p-4 bg-accent/5 border border-accent/20 rounded-xl">
                                 <span className="text-2xl">{selectedTemplate.emoji}</span>
                                 <div>
                                     <p className="font-bold text-white">{selectedTemplate.name}</p>

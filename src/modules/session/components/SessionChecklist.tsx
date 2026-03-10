@@ -50,9 +50,9 @@ const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
     return (
         <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between px-3">
-                <p className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em]">Session Prep</p>
+                <p className="text-app-text/40 text-[10px] font-bold uppercase tracking-[0.2em]">Session Prep</p>
                 <div className="flex items-center gap-1.5">
-                    <span className="text-[10px] font-mono text-gm-gold/60">
+                    <span className="text-[10px] font-mono text-accent/60">
                         {session.checklist.filter(i => i.isCompleted).length}/{session.checklist.length}
                     </span>
                 </div>
@@ -60,25 +60,25 @@ const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
 
             <div className="flex flex-col gap-1 max-h-[300px] overflow-y-auto px-1 custom-scrollbar">
                 {session.checklist.length === 0 ? (
-                    <p className="text-[10px] text-slate-600 italic text-center py-4">No tasks planned...</p>
+                    <p className="text-[10px] text-app-text/20 italic text-center py-4">No tasks planned...</p>
                 ) : (
                     session.checklist.map(item => (
                         <div
                             key={item.id}
-                            className="flex items-center gap-2 p-1.5 hover:bg-slate-800/40 rounded-lg group transition-all"
+                            className="flex items-center gap-2 p-1.5 hover:bg-app-surface/40 rounded-lg group transition-all"
                         >
                             <input
                                 type="checkbox"
                                 checked={item.isCompleted}
                                 onChange={() => toggleChecklistItem(session.id, item.id)}
-                                className="rounded border-slate-700 bg-slate-900 text-gm-gold focus:ring-gm-gold focus:ring-offset-slate-950 h-3.5 w-3.5 cursor-pointer flex-shrink-0 transition-all checked:bg-gm-gold"
+                                className="rounded border-app-border bg-app-bg text-accent focus:ring-accent focus:ring-offset-app-bg h-3.5 w-3.5 cursor-pointer flex-shrink-0 transition-all checked:bg-accent"
                             />
                             
                             {editingId === item.id ? (
                                 <div className="flex-1 flex items-center gap-2">
                                     <input
                                         autoFocus
-                                        className="flex-1 bg-slate-950 border-none text-xs text-white p-0 focus:ring-0"
+                                        className="flex-1 bg-app-bg border-none text-xs text-app-text p-0 focus:ring-0"
                                         value={editText}
                                         onChange={(e) => setEditText(e.target.value)}
                                         onKeyDown={(e) => e.key === 'Enter' && saveEdit(item.id)}
@@ -90,7 +90,7 @@ const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
                                 </div>
                             ) : (
                                 <span 
-                                    className={`flex-1 text-xs transition-all truncate select-none ${item.isCompleted ? 'text-slate-600 line-through opacity-60' : 'text-slate-300'}`}
+                                    className={`flex-1 text-xs transition-all truncate select-none ${item.isCompleted ? 'text-app-text/20 line-through opacity-60' : 'text-app-text/80'}`}
                                     onDoubleClick={() => startEditing(item.id, item.text)}
                                 >
                                     {item.text}
@@ -100,14 +100,14 @@ const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
                             <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
                                 <button 
                                     onClick={() => startEditing(item.id, item.text)}
-                                    className="p-1 text-slate-500 hover:text-gm-gold transition-colors"
+                                    className="p-1 text-app-text/20 hover:text-accent transition-colors"
                                     title="Edit task"
                                 >
                                     <Edit3 size={12} />
                                 </button>
                                 <button 
                                     onClick={() => removeChecklistItem(session.id, item.id)}
-                                    className="p-1 text-slate-500 hover:text-red-400 transition-colors"
+                                    className="p-1 text-app-text/20 hover:text-red-400 transition-colors"
                                     title="Delete task"
                                 >
                                     <Trash2 size={12} />
@@ -125,12 +125,12 @@ const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
                     placeholder="Add preparation task..."
                     value={newItemText}
                     onChange={(e) => setNewItemText(e.target.value)}
-                    className="w-full bg-slate-900/60 border border-slate-800 rounded-lg py-2 pl-3 pr-10 text-[11px] text-slate-300 placeholder:text-slate-600 focus:outline-none focus:border-gm-gold/30 transition-all"
+                    className="w-full bg-app-surface/60 border border-app-border rounded-lg py-2 pl-3 pr-10 text-[11px] text-app-text/60 placeholder:text-app-text/20 focus:outline-none focus:border-accent/30 transition-all"
                 />
                 <button 
                     type="submit"
                     disabled={!newItemText.trim()}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-600 hover:text-gm-gold disabled:opacity-0 transition-all"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-app-text/20 hover:text-accent disabled:opacity-0 transition-all"
                 >
                     <Plus size={16} />
                 </button>

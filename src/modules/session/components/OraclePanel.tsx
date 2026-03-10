@@ -71,33 +71,33 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
 
     return (
         <aside 
-            className={`fixed inset-y-0 right-0 w-[500px] bg-slate-900 border-l border-gm-gold/30 shadow-2xl z-[100] transform transition-transform duration-300 ease-in-out flex flex-col ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+            className={`fixed inset-y-0 right-0 w-[500px] bg-app-bg border-l border-accent/30 shadow-2xl z-[100] transform transition-transform duration-300 ease-in-out flex flex-col ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
         >
             {/* Header */}
-            <header className="h-16 border-b border-slate-800 bg-slate-900/90 backdrop-blur-md px-6 flex items-center justify-between">
-                <div className="flex items-center gap-3 text-gm-gold">
+            <header className="h-16 border-b border-app-border bg-app-bg/90 backdrop-blur-md px-6 flex items-center justify-between">
+                <div className="flex items-center gap-3 text-accent">
                     <Sparkles size={24} className="animate-pulse" />
-                    <h2 className="text-slate-100 font-bold tracking-tight">AI Oracle <span className="text-gm-gold/70 text-xs font-light ml-2">NotebookLM</span></h2>
+                    <h2 className="text-app-text font-bold tracking-tight">AI Oracle <span className="text-accent/70 text-xs font-light ml-2">NotebookLM</span></h2>
                 </div>
                 <div className="flex items-center gap-2">
                     <button 
                         onClick={handleReload}
-                        className="p-2 text-slate-400 hover:text-gm-gold hover:bg-slate-800 rounded-lg transition-all"
+                        className="p-2 text-app-text/40 hover:text-accent hover:bg-app-surface rounded-lg transition-all"
                         title="Reload"
                     >
                         <RefreshCw size={18} className={isLoading ? 'animate-spin' : ''} />
                     </button>
                     {hasBoth && (
-                        <div className="flex bg-slate-800 rounded-lg p-0.5 border border-white/5">
+                        <div className="flex bg-app-surface rounded-lg p-0.5 border border-white/5">
                             <button
                                 onClick={() => setSelectedUrlType('template')}
-                                className={`px-2 py-1 text-[9px] font-black uppercase tracking-tighter rounded-md transition-all ${selectedUrlType === 'template' ? 'bg-gm-gold text-slate-950 shadow-lg' : 'text-slate-500 hover:text-slate-300'}`}
+                                className={`px-2 py-1 text-[9px] font-black uppercase tracking-tighter rounded-md transition-all ${selectedUrlType === 'template' ? 'bg-accent text-app-bg shadow-lg' : 'text-app-text/40 hover:text-app-text/60'}`}
                             >
                                 Système
                             </button>
                             <button
                                 onClick={() => setSelectedUrlType('campaign')}
-                                className={`px-2 py-1 text-[9px] font-black uppercase tracking-tighter rounded-md transition-all ${selectedUrlType === 'campaign' ? 'bg-blue-500 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300'}`}
+                                className={`px-2 py-1 text-[9px] font-black uppercase tracking-tighter rounded-md transition-all ${selectedUrlType === 'campaign' ? 'bg-blue-500 text-white shadow-lg' : 'text-app-text/40 hover:text-app-text/60'}`}
                             >
                                 Campagne
                             </button>
@@ -105,15 +105,15 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                     )}
                     <button 
                         onClick={handleOpenExternal}
-                        className="p-2 text-gm-gold bg-gm-gold/10 hover:bg-gm-gold/20 border border-gm-gold/30 rounded-lg transition-all"
+                        className="p-2 text-accent bg-accent/10 hover:bg-accent/20 border border-accent/30 rounded-lg transition-all"
                         title="Open in Browser"
                     >
                         <ExternalLink size={18} />
                     </button>
-                    <div className="w-px h-6 bg-slate-800 mx-1"></div>
+                    <div className="w-px h-6 bg-app-border mx-1"></div>
                     <button 
                         onClick={onClose}
-                        className="p-2 text-slate-400 hover:text-red-400 hover:bg-slate-800 rounded-lg transition-all"
+                        className="p-2 text-app-text/40 hover:text-red-400 hover:bg-app-surface rounded-lg transition-all"
                     >
                         <X size={20} />
                     </button>
@@ -121,42 +121,42 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
             </header>
 
             {/* Content Area */}
-            <div className="flex-1 relative bg-slate-950 overflow-hidden">
+            <div className="flex-1 relative bg-app-bg overflow-hidden">
                 {!activeNotebookUrl ? (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-slate-900/40">
-                        <div className="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center mb-6">
-                            <Sparkles size={32} className="text-slate-600" />
+                    <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-app-bg/40">
+                        <div className="w-16 h-16 rounded-full bg-app-surface flex items-center justify-center mb-6">
+                            <Sparkles size={32} className="text-app-text/20" />
                         </div>
-                        <h3 className="text-xl font-bold text-slate-100 mb-2">No Notebook Linked</h3>
-                        <p className="text-slate-400 text-sm max-w-xs leading-relaxed">
+                        <h3 className="text-xl font-bold text-app-text mb-2">No Notebook Linked</h3>
+                        <p className="text-app-text/40 text-sm max-w-xs leading-relaxed">
                             To use the Oracle, please add a NotebookLM URL in your campaign settings or system template.
                         </p>
                     </div>
                 ) : (
                     <>
                         {isLoading && !loadError && (
-                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-900 z-10">
-                                <RefreshCw className="animate-spin text-gm-gold mb-4" size={32} />
-                                <p className="text-gm-gold/50 text-[10px] font-mono uppercase tracking-[0.2em] animate-pulse">Establishing Neural Link...</p>
+                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-app-bg z-10">
+                                <RefreshCw className="animate-spin text-accent mb-4" size={32} />
+                                <p className="text-accent/50 text-[10px] font-mono uppercase tracking-[0.2em] animate-pulse">Establishing Neural Link...</p>
                             </div>
                         )}
                         
                         {(loadError || isGoogleDomain) && (
-                            <div className="absolute inset-0 flex flex-col items-center justify-center p-12 text-center bg-slate-900/90 z-20 backdrop-blur-sm">
+                            <div className="absolute inset-0 flex flex-col items-center justify-center p-12 text-center bg-app-bg/90 z-20 backdrop-blur-sm">
                                 <div className="w-20 h-20 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-8 shadow-[0_0_30px_rgba(245,158,11,0.1)]">
                                     <ExternalLink size={36} className="text-amber-500" />
                                 </div>
-                                <h3 className="text-xl font-bold text-slate-100 mb-4">Security Restriction</h3>
-                                <p className="text-slate-300 text-sm leading-relaxed mb-8 max-w-sm">
+                                <h3 className="text-xl font-bold text-app-text mb-4">Security Restriction</h3>
+                                <p className="text-app-text/80 text-sm leading-relaxed mb-8 max-w-sm">
                                     Google prohibits embedding NotebookLM for security reasons. The Oracle must be consulted in a dedicated window.
                                 </p>
                                 <button 
                                     onClick={handleOpenExternal}
-                                    className="px-8 py-3 bg-gm-gold text-slate-900 rounded-xl font-bold text-sm hover:scale-105 active:scale-95 transition-all shadow-[0_10px_20px_-5px_rgba(234,179,8,0.4)] flex items-center gap-3"
+                                    className="px-8 py-3 bg-accent text-app-bg rounded-xl font-bold text-sm hover:scale-105 active:scale-95 transition-all shadow-glow-accent/20 flex items-center gap-3"
                                 >
                                     OPEN CONJURATION WINDOW <ExternalLink size={18} />
                                 </button>
-                                <p className="mt-8 text-[10px] text-slate-500 font-mono uppercase tracking-widest">
+                                <p className="mt-8 text-[10px] text-app-text/20 font-mono uppercase tracking-widest">
                                     Integration Node: ACTIVE (Bypassing IFrame)
                                 </p>
                             </div>
@@ -175,10 +175,10 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
             </div>
 
             {/* Status Footer */}
-            <footer className="h-10 border-t border-slate-800 bg-slate-900 px-4 flex items-center justify-between text-[10px] font-mono text-slate-500 uppercase tracking-widest">
+            <footer className="h-10 border-t border-app-border bg-app-bg px-4 flex items-center justify-between text-[10px] font-mono text-app-text/40 uppercase tracking-widest">
                 <span>Integrated AI Node</span>
                 <span className="flex items-center gap-2">
-                    <span className={`w-1.5 h-1.5 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.5)] ${activeNotebookUrl ? 'bg-emerald-500' : 'bg-slate-700'}`}></span>
+                    <span className={`w-1.5 h-1.5 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.5)] ${activeNotebookUrl ? 'bg-emerald-500' : 'bg-app-surface'}`}></span>
                     {activeNotebookUrl ? 'Session Linked' : 'Awaiting Connection'}
                 </span>
             </footer>

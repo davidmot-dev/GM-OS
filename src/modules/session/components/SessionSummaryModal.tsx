@@ -20,16 +20,16 @@ const SessionSummaryModal: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col h-[75vh] bg-slate-950">
+        <div className="flex flex-col h-[75vh] bg-app-bg">
             {/* Context Header */}
-            <div className="px-8 py-6 border-b border-white/5 bg-slate-900/40 flex items-center justify-between">
+            <div className="px-8 py-6 border-b border-app-border bg-app-surface flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-gm-gold/10 flex items-center justify-center text-gm-gold border border-gm-gold/20 shadow-[0_0_15px_rgba(234,179,8,0.1)]">
+                    <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center text-accent border border-accent/20 shadow-glow-accent/10">
                         <BookOpen size={24} />
                     </div>
                     <div>
-                        <h2 className="text-xl font-bold text-slate-100 uppercase tracking-tighter">Session #{session.number}</h2>
-                        <div className="flex items-center gap-2 text-slate-500 font-mono text-xs">
+                        <h2 className="text-xl font-bold text-app-text uppercase tracking-tighter">Session #{session.number}</h2>
+                        <div className="flex items-center gap-2 text-app-text/40 font-mono text-xs">
                             <Calendar size={12} />
                             {new Date(session.date).toLocaleDateString(undefined, { dateStyle: 'long' })}
                         </div>
@@ -47,8 +47,8 @@ const SessionSummaryModal: React.FC = () => {
             {/* Editor Area */}
             <div className="flex-1 p-8 overflow-hidden flex flex-col gap-4">
                 <div className="flex items-center justify-between">
-                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Résumé Public & Lore</label>
-                    <div className="flex items-center gap-2 text-[10px] text-gm-gold/60 font-medium">
+                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40">Résumé Public & Lore</label>
+                    <div className="flex items-center gap-2 text-[10px] text-accent/60 font-medium">
                         <Sparkles size={12} />
                         Ce contenu sera utilisé par l'Oracle
                     </div>
@@ -58,15 +58,15 @@ const SessionSummaryModal: React.FC = () => {
                     value={summary}
                     onChange={(e) => setSummary(e.target.value)}
                     placeholder="Rédigez le compte-rendu détaillé de cette session... Les PJ, les lieux, les combats, les révélations..."
-                    className="flex-1 bg-slate-900/20 border border-white/5 rounded-2xl px-8 py-8 text-lg leading-relaxed text-slate-200 resize-none font-medium placeholder:text-slate-800 custom-scrollbar focus:border-gm-gold/30 focus:ring-0 transition-all shadow-inner"
+                    className="flex-1 bg-app-surface border border-app-border rounded-2xl px-8 py-8 text-lg leading-relaxed text-app-text/80 resize-none font-medium placeholder:text-app-text/10 custom-scrollbar focus:border-accent/30 focus:ring-0 transition-all shadow-inner"
                 />
             </div>
 
             {/* Actions Footer */}
-            <div className="px-8 py-6 border-t border-white/5 bg-slate-900/40 flex items-center justify-between">
+            <div className="px-8 py-6 border-t border-app-border bg-app-surface flex items-center justify-between">
                 <button
                     onClick={closeModal}
-                    className="flex items-center gap-2 px-6 py-3 text-slate-400 hover:text-slate-200 font-bold text-sm transition-colors group"
+                    className="flex items-center gap-2 px-6 py-3 text-app-text/40 hover:text-app-text transition-colors font-bold text-sm group"
                 >
                     <X size={18} className="group-hover:rotate-90 transition-transform duration-300" />
                     ANNULER
@@ -74,7 +74,7 @@ const SessionSummaryModal: React.FC = () => {
 
                 <button
                     onClick={handleSave}
-                    className="flex items-center gap-3 px-10 py-3 bg-gm-gold text-slate-950 rounded-xl font-black text-sm shadow-[0_0_20px_rgba(234,179,8,0.2)] hover:shadow-[0_0_30px_rgba(234,179,8,0.4)] transition-all active:scale-95 group"
+                    className="flex items-center gap-3 px-10 py-3 bg-accent text-white rounded-xl font-black text-sm shadow-glow-accent transition-all active:scale-95 group"
                 >
                     <Save size={20} className="group-hover:scale-110 transition-transform" />
                     ENREGISTRER LE RÉSUMÉ

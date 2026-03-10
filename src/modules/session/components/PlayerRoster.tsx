@@ -14,21 +14,21 @@ const PlayerRoster: React.FC = () => {
     );
 
     return (
-        <div className="w-72 h-full bg-slate-900 border-r border-slate-800 flex flex-col flex-shrink-0">
+        <div className="w-72 h-full bg-app-bg border-r border-app-border flex flex-col flex-shrink-0">
             {/* Header */}
-            <div className="p-5 border-b border-slate-800">
-                <h3 className="text-slate-100 font-bold text-sm uppercase tracking-widest mb-3 flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-gm-gold"></span>
+            <div className="p-5 border-b border-app-border">
+                <h3 className="text-app-text font-bold text-sm uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-accent"></span>
                     Roster des Joueurs
                 </h3>
                 <div className="relative">
-                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-text/40" />
                     <input
                         type="text"
                         placeholder="Rechercher un joueur..."
                         value={searchQuery}
                         onChange={e => setSearchQuery(e.target.value)}
-                        className="w-full bg-slate-800 border border-slate-700 rounded-lg pl-9 pr-3 py-2 text-sm text-slate-300 placeholder-slate-600 focus:ring-1 focus:ring-gm-gold/50 focus:outline-none"
+                        className="w-full bg-app-surface border border-app-border rounded-lg pl-9 pr-3 py-2 text-sm text-app-text/80 placeholder-app-text/20 focus:ring-1 focus:ring-accent/50 focus:outline-none"
                     />
                 </div>
             </div>
@@ -48,15 +48,15 @@ const PlayerRoster: React.FC = () => {
                     />
                 ))}
                 {filtered.length === 0 && (
-                    <p className="text-slate-600 text-sm text-center p-4">Aucun joueur trouvé</p>
+                    <p className="text-app-text/20 text-sm text-center p-4">Aucun joueur trouvé</p>
                 )}
             </div>
 
             {/* Footer */}
-            <div className="p-4 border-t border-slate-800">
+            <div className="p-4 border-t border-app-border">
                 <button
                     onClick={() => gmCustom('player-add')}
-                    className="w-full flex items-center justify-center gap-2 border border-gm-gold/40 text-gm-gold hover:bg-gm-gold/10 py-2.5 rounded-lg text-sm font-bold transition-all"
+                    className="w-full flex items-center justify-center gap-2 border border-accent/40 text-accent hover:bg-accent/10 py-2.5 rounded-lg text-sm font-bold transition-all"
                 >
                     <UserPlus size={16} />
                     Ajouter un Joueur
@@ -77,23 +77,23 @@ const PlayerCard: React.FC<{
         <div
             onClick={onClick}
             className={`w-full flex items-center gap-3 p-3 rounded-xl text-left transition-all cursor-pointer ${isSelected
-                ? 'bg-gm-gold/10 border border-gm-gold/30'
-                : 'hover:bg-slate-800/60 border border-transparent'
+                ? 'bg-accent/10 border border-accent/30 shadow-glow-accent/5'
+                : 'hover:bg-app-surface/60 border border-transparent'
                 }`}
         >
             <div className="relative flex-shrink-0">
                 <img
                     src={resolvedAvatar || undefined}
                     alt={player.realName}
-                    className="w-10 h-10 rounded-full bg-slate-700 object-cover"
+                    className="w-10 h-10 rounded-full bg-app-surface object-cover border border-app-border"
                 />
-                <span className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-slate-900 ${player.isOnline ? 'bg-emerald-400' : 'bg-slate-500'}`}></span>
+                <span className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-app-bg ${player.isOnline ? 'bg-emerald-400' : 'bg-app-text/20'}`}></span>
             </div>
             <div className="min-w-0 flex-1">
-                <p className={`font-bold text-sm truncate ${isSelected ? 'text-gm-gold' : 'text-slate-200'}`}>
+                <p className={`font-bold text-sm truncate ${isSelected ? 'text-accent' : 'text-app-text/90'}`}>
                     {player.realName}
                 </p>
-                <p className="text-xs text-slate-500 truncate">
+                <p className="text-xs text-app-text/40 truncate">
                     {player.characters.length} personnage{player.characters.length > 1 ? 's' : ''}
                 </p>
             </div>
@@ -102,7 +102,7 @@ const PlayerCard: React.FC<{
                 className={`flex-shrink-0 text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-md transition-all border z-10 ${
                     player.isOnline 
                     ? 'text-emerald-400 border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/20' 
-                    : 'text-slate-600 border-slate-700 bg-slate-800/50 hover:bg-slate-800 hover:text-slate-400'
+                    : 'text-app-text/40 border-app-border bg-app-surface/50 hover:bg-app-surface hover:text-app-text/60'
                 }`}
                 title={player.isOnline ? "Passer Hors Ligne" : "Passer En Ligne"}
             >

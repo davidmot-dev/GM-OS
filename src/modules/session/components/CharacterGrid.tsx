@@ -16,38 +16,38 @@ const CharacterGrid: React.FC = () => {
 
     if (!selectedPlayer) {
         return (
-            <div className="flex-1 flex items-center justify-center text-slate-600 bg-slate-950/20">
+            <div className="flex-1 flex items-center justify-center text-app-text/20 bg-app-bg/20">
                 <p className="italic text-sm">Sélectionnez un joueur dans le roster</p>
             </div>
         );
     }
 
     return (
-        <div className="flex-1 h-full flex flex-col bg-slate-950/20 overflow-y-auto custom-scrollbar border-r border-slate-800/50">
+        <div className="flex-1 h-full flex flex-col bg-app-bg/20 overflow-y-auto custom-scrollbar border-r border-app-border/50">
             {/* Player Header */}
-            <div className="p-6 border-b border-slate-800 flex items-center gap-5 bg-slate-900/60 backdrop-blur-sm sticky top-0 z-10">
+            <div className="p-6 border-b border-app-border flex items-center gap-5 bg-app-surface/60 backdrop-blur-sm sticky top-0 z-10">
                 <div className="relative">
                     <img
                         src={resolvedPlayerAvatar || undefined}
                         alt={selectedPlayer.realName}
-                        className="w-16 h-16 rounded-full bg-slate-700 object-cover ring-2 ring-gm-gold/40"
+                        className="w-16 h-16 rounded-full bg-app-surface object-cover ring-2 ring-accent/40"
                     />
-                    <span className={`absolute bottom-0.5 right-0.5 w-4 h-4 rounded-full border-2 border-slate-900 ${selectedPlayer.isOnline ? 'bg-emerald-400' : 'bg-slate-500'}`}></span>
+                    <span className={`absolute bottom-0.5 right-0.5 w-4 h-4 rounded-full border-2 border-app-bg ${selectedPlayer.isOnline ? 'bg-emerald-400' : 'bg-app-text/20'}`}></span>
                 </div>
                 <div>
-                    <h2 className="text-xl font-bold text-slate-100">{selectedPlayer.realName}</h2>
+                    <h2 className="text-xl font-bold text-app-text">{selectedPlayer.realName}</h2>
                     {selectedPlayer.email && (
-                        <div className="flex items-center gap-1.5 text-slate-500 text-sm mt-0.5">
+                        <div className="flex items-center gap-1.5 text-app-text/40 text-sm mt-0.5">
                             <Mail size={13} />
                             <span>{selectedPlayer.email}</span>
                         </div>
                     )}
                     <div className="flex items-center gap-2 mt-2">
-                        <span className={`inline-flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-full ${selectedPlayer.isOnline ? 'bg-emerald-500/10 text-emerald-400' : 'bg-slate-800 text-slate-500'}`}>
-                            <span className={`w-1.5 h-1.5 rounded-full ${selectedPlayer.isOnline ? 'bg-emerald-400 animate-pulse' : 'bg-slate-500'}`}></span>
+                        <span className={`inline-flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-full ${selectedPlayer.isOnline ? 'bg-emerald-500/10 text-emerald-400' : 'bg-app-surface text-app-text/40'}`}>
+                            <span className={`w-1.5 h-1.5 rounded-full ${selectedPlayer.isOnline ? 'bg-emerald-400 animate-pulse' : 'bg-app-text/20'}`}></span>
                             {selectedPlayer.isOnline ? 'En ligne' : 'Hors ligne'}
                         </span>
-                        <span className="text-xs text-slate-600">
+                        <span className="text-xs text-app-text/20">
                             {selectedPlayer.characters.length} personnage{selectedPlayer.characters.length > 1 ? 's' : ''}
                         </span>
                     </div>
@@ -57,15 +57,15 @@ const CharacterGrid: React.FC = () => {
             {/* Characters Section */}
             <div className="p-6 flex-1">
                 <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-slate-300 font-bold text-sm uppercase tracking-widest flex items-center gap-2">
-                        <span className="text-gm-gold">⚔</span>
+                    <h3 className="text-app-text/60 font-bold text-sm uppercase tracking-widest flex items-center gap-2">
+                        <span className="text-accent">⚔</span>
                         Personnages Actifs
                     </h3>
-                    <span className="text-xs text-slate-600">{selectedPlayer.characters.length} au total</span>
+                    <span className="text-xs text-app-text/20">{selectedPlayer.characters.length} au total</span>
                 </div>
 
                 {selectedPlayer.characters.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-16 text-slate-600 gap-3">
+                    <div className="flex flex-col items-center justify-center py-16 text-app-text/20 gap-3">
                         <p className="text-sm">Ce joueur n'a pas encore de personnages</p>
                     </div>
                 ) : (
@@ -87,10 +87,10 @@ const CharacterGrid: React.FC = () => {
             </div>
 
             {/* Footer */}
-            <div className="p-6 border-t border-slate-800 flex justify-end">
+            <div className="p-6 border-t border-app-border flex justify-end">
                 <button
                     onClick={() => gmCustom('character-add')}
-                    className="flex items-center gap-2 bg-gm-gold hover:bg-yellow-400 text-slate-900 font-bold py-2.5 px-5 rounded-xl text-sm transition-all shadow-[0_0_20px_-4px_rgba(234,179,8,0.5)]"
+                    className="flex items-center gap-2 bg-accent hover:brightness-110 text-app-bg font-bold py-2.5 px-5 rounded-xl text-sm transition-all shadow-glow-accent/20 active:scale-95"
                 >
                     <UserPlus size={16} />
                     Ajouter un Personnage
@@ -115,9 +115,9 @@ const CharacterCard: React.FC<{
     const resolvedPortrait = useMediaUrl(character.portraitUrl);
 
     return (
-        <div className={`bg-slate-900/50 border rounded-xl overflow-hidden flex flex-col hover:border-slate-700 transition-all group ${isSelected ? 'border-gm-gold shadow-[0_0_15px_rgba(234,179,8,0.15)]' : 'border-slate-800'}`}>
+        <div className={`bg-app-surface/50 border rounded-xl overflow-hidden flex flex-col hover:border-app-border/80 transition-all group ${isSelected ? 'border-accent shadow-glow-accent/10' : 'border-app-border'}`}>
             {/* Portrait */}
-            <div className="h-64 overflow-hidden relative bg-slate-950">
+            <div className="h-64 overflow-hidden relative bg-app-bg">
                 {/* Blurred background for full appearance */}
                 <img
                     src={resolvedPortrait || undefined}
@@ -130,9 +130,9 @@ const CharacterCard: React.FC<{
                     alt={character.name}
                     className="relative w-full h-full object-contain transition-transform duration-500 group-hover:scale-105 z-10"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent z-20"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-app-bg/80 via-transparent to-transparent z-20"></div>
                 {linkedCampaign && (
-                    <span className="absolute top-2 right-2 bg-gm-gold/90 text-slate-900 text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider z-30">
+                    <span className="absolute top-2 right-2 bg-accent/90 text-app-bg text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider z-30">
                         {linkedCampaign.name.length > 12 ? linkedCampaign.name.slice(0, 12) + '…' : linkedCampaign.name}
                     </span>
                 )}
@@ -141,33 +141,33 @@ const CharacterCard: React.FC<{
             {/* Info */}
             <div className="p-4 flex flex-col gap-3 flex-1">
                 <div>
-                    <h4 className="font-bold text-slate-100 text-sm leading-tight">{character.name}</h4>
-                    <p className="text-slate-500 text-xs mt-0.5">{character.classRace}</p>
+                    <h4 className="font-bold text-app-text text-sm leading-tight">{character.name}</h4>
+                    <p className="text-app-text/40 text-xs mt-0.5">{character.classRace}</p>
                 </div>
 
                 {/* HP Bar */}
                 <div className="flex flex-col gap-1">
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-1 text-slate-500 text-xs">
+                        <div className="flex items-center gap-1 text-app-text/40 text-xs">
                             <Heart size={11} className="text-rose-500" />
                             <span>Points de Vie</span>
                         </div>
                         <div className="flex items-center gap-1">
-                            <button onClick={() => onHPChange(-1)} className="w-4 h-4 rounded bg-slate-800 text-slate-400 hover:text-red-400 hover:bg-slate-700 text-xs flex items-center justify-center transition-colors">−</button>
-                            <span className="font-mono text-xs text-slate-300">{character.hp}/{character.maxHp}</span>
-                            <button onClick={() => onHPChange(1)} className="w-4 h-4 rounded bg-slate-800 text-slate-400 hover:text-emerald-400 hover:bg-slate-700 text-xs flex items-center justify-center transition-colors">+</button>
+                            <button onClick={() => onHPChange(-1)} className="w-4 h-4 rounded bg-app-surface text-app-text/40 hover:text-red-400 hover:bg-app-border text-xs flex items-center justify-center transition-colors">−</button>
+                            <span className="font-mono text-xs text-app-text/60">{character.hp}/{character.maxHp}</span>
+                            <button onClick={() => onHPChange(1)} className="w-4 h-4 rounded bg-app-surface text-app-text/40 hover:text-emerald-400 hover:bg-app-border text-xs flex items-center justify-center transition-colors">+</button>
                         </div>
                     </div>
-                    <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                    <div className="w-full bg-app-surface h-1.5 rounded-full overflow-hidden">
                         <div className={`h-full transition-all duration-300 ${hpColor}`} style={{ width: `${hpPercent}%` }}></div>
                     </div>
                 </div>
 
                 {/* Actions */}
-                <div className="flex gap-2 mt-auto pt-2 border-t border-slate-800/50">
+                <div className="flex gap-2 mt-auto pt-2 border-t border-app-border/50">
                     <button 
                         onClick={onSelect}
-                        className={`flex-1 py-1.5 text-xs font-bold rounded-lg border transition-all ${isSelected ? 'bg-gm-gold text-slate-950 border-gm-gold' : 'border-gm-gold/30 text-gm-gold hover:bg-gm-gold/10'}`}>
+                        className={`flex-1 py-1.5 text-xs font-bold rounded-lg border transition-all ${isSelected ? 'bg-accent text-app-bg border-accent' : 'border-accent/30 text-accent hover:bg-accent/10'}`}>
                         Fiche
                     </button>
                     <button
@@ -185,7 +185,7 @@ const CharacterCard: React.FC<{
                             });
                             gmToast(`${character.name} ajouté au combat !`);
                         }}
-                        className="p-1.5 px-2.5 rounded-lg border border-gm-crimson/30 text-gm-crimson hover:bg-gm-crimson/10 transition-all flex items-center justify-center gap-1.5"
+                        className="p-1.5 px-2.5 rounded-lg border border-red-500/30 text-red-500 hover:bg-red-500/10 transition-all flex items-center justify-center gap-1.5"
                         title="Ajouter au Combat"
                     >
                         <Swords size={14} />
@@ -197,7 +197,7 @@ const CharacterCard: React.FC<{
                             useImageStore.getState().projectUrl(character.portraitUrl);
                             gmToast(`Image de ${character.name} projetée !`);
                         }}
-                        className="p-1.5 rounded-lg border border-gm-cyan/30 text-gm-cyan hover:bg-gm-cyan/10 transition-all flex items-center justify-center"
+                        className="p-1.5 rounded-lg border border-blue-500/30 text-blue-500 hover:bg-blue-500/10 transition-all flex items-center justify-center"
                         title="Projeter l'image (Image-OS)"
                     >
                         <Eye size={14} />
@@ -206,14 +206,14 @@ const CharacterCard: React.FC<{
                         <select
                             value={character.campaignId || ''}
                             onChange={e => onLink(e.target.value || null)}
-                            className="w-full py-1.5 text-xs rounded-lg bg-slate-800 border border-slate-700 text-slate-400 hover:border-slate-600 focus:ring-1 focus:ring-gm-gold/50 focus:outline-none appearance-none pl-2 pr-6 transition-all cursor-pointer"
+                            className="w-full py-1.5 text-xs rounded-lg bg-app-surface border border-app-border text-app-text/40 hover:border-app-border/80 focus:ring-1 focus:ring-accent/50 focus:outline-none appearance-none pl-2 pr-6 transition-all cursor-pointer"
                         >
-                            <option value="">Aucune campagne</option>
+                            <option value="" className="bg-app-bg">Aucune campagne</option>
                             {campaigns.map(c => (
-                                <option key={c.id} value={c.id}>{c.name}</option>
+                                <option key={c.id} value={c.id} className="bg-app-bg">{c.name}</option>
                             ))}
                         </select>
-                        <ChevronDown size={12} className="absolute right-1.5 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" />
+                        <ChevronDown size={12} className="absolute right-1.5 top-1/2 -translate-y-1/2 text-app-text/20 pointer-events-none" />
                     </div>
                 </div>
             </div>

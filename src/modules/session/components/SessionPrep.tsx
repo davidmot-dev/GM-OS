@@ -40,12 +40,12 @@ const SessionPrep: React.FC = () => {
     };
 
     if (!activeCampaignId) return (
-        <div className="flex-1 flex flex-col items-center justify-center p-10 bg-slate-950">
+        <div className="flex-1 flex flex-col items-center justify-center p-10 bg-app-bg">
             <AlertCircle size={48} className="text-slate-700 mb-4" />
             <p className="text-slate-400 font-bold uppercase tracking-widest">No Active Campaign</p>
             <button 
                 onClick={() => setCurrentView('library')}
-                className="mt-6 px-6 py-2 bg-gm-gold text-slate-900 rounded-lg font-bold"
+                className="mt-6 px-6 py-2 bg-accent text-white rounded-lg font-bold"
             >
                 SELECT CAMPAIGN
             </button>
@@ -53,30 +53,30 @@ const SessionPrep: React.FC = () => {
     );
 
     return (
-        <div className="flex-1 flex flex-col h-full overflow-hidden bg-slate-950">
+        <div className="flex-1 flex flex-col h-full overflow-hidden bg-app-bg">
             {/* Header */}
-            <header className="flex items-center justify-between px-8 py-6 border-b border-white/5 bg-slate-900/50 backdrop-blur-md">
+            <header className="flex items-center justify-between px-8 py-6 border-b border-app-border bg-app-surface/50 backdrop-blur-md">
                 <div className="flex items-center gap-6">
                     <button 
                         onClick={() => setCurrentView('cockpit')}
-                        className="p-3 bg-slate-800/50 hover:bg-slate-700 rounded-xl text-slate-400 hover:text-slate-100 transition-all border border-white/5 active:scale-95"
+                        className="p-3 bg-app-surface/50 hover:bg-app-surface/80 rounded-xl text-app-text/40 hover:text-app-text transition-all border border-app-border active:scale-95"
                     >
                         <ChevronLeft size={24} />
                     </button>
                     <div>
                         <div className="flex items-center gap-2">
-                            <span className="text-[10px] text-gm-gold font-bold uppercase tracking-widest bg-gm-gold/10 px-2 py-0.5 rounded border border-gm-gold/20">
+                            <span className="text-[10px] text-accent font-bold uppercase tracking-widest bg-accent/10 px-2 py-0.5 rounded border border-accent/20">
                                 {activeCampaign?.name || 'Campagne'}
                             </span>
-                            <h2 className="text-2xl font-black text-slate-100 tracking-tight">Liste des Sessions</h2>
+                            <h2 className="text-2xl font-black text-app-text tracking-tight">Liste des Sessions</h2>
                         </div>
-                        <p className="text-[10px] text-slate-500 uppercase tracking-[0.2em] font-bold mt-1">Gérer et préparer vos prochaines aventures</p>
+                        <p className="text-[10px] text-app-text/40 uppercase tracking-[0.2em] font-bold mt-1">Gérer et préparer vos prochaines aventures</p>
                     </div>
                 </div>
 
                 <button 
                     onClick={handleCreateSession}
-                    className="flex items-center gap-3 px-6 py-3 bg-gm-gold hover:brightness-110 text-slate-900 rounded-xl font-bold text-sm shadow-lg shadow-gm-gold/10 transition-all active:scale-95"
+                    className="flex items-center gap-3 px-6 py-3 bg-accent hover:brightness-110 text-white rounded-xl font-bold text-sm shadow-glow-accent transition-all active:scale-95"
                 >
                     <Plus size={20} />
                     CRÉER UNE SESSION
@@ -99,10 +99,10 @@ const SessionPrep: React.FC = () => {
                                         setSelectedSession(s.id);
                                         setCurrentView('session-focus');
                                     }}
-                                    className="flex flex-col text-left p-8 bg-slate-900/40 border border-white/5 rounded-[2rem] hover:border-gm-gold/40 hover:bg-slate-900/60 transition-all group relative overflow-hidden active:scale-[0.98] shadow-2xl"
+                                    className="flex flex-col text-left p-8 bg-app-surface/40 border border-app-border/20 rounded-[2rem] hover:border-accent/40 hover:bg-app-surface/60 transition-all group relative overflow-hidden active:scale-[0.98] shadow-2xl"
                                 >
                                     <div className="flex items-center justify-between mb-4">
-                                        <div className="px-3 py-1 bg-gm-gold/10 text-gm-gold text-[10px] font-black rounded-lg uppercase tracking-widest border border-gm-gold/20">
+                                        <div className="px-3 py-1 bg-accent/10 text-accent text-[10px] font-black rounded-lg uppercase tracking-widest border border-accent/20">
                                             Session #{s.number}
                                         </div>
                                         <div className={`w-3 h-3 rounded-full ${
@@ -112,16 +112,16 @@ const SessionPrep: React.FC = () => {
                                         }`}></div>
                                     </div>
                                     
-                                    <h4 className="text-2xl font-black text-slate-100 mb-2 truncate">{new Date(s.date).toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' })}</h4>
-                                    <p className="text-xs text-slate-500 uppercase tracking-widest font-bold mb-6">{s.status}</p>
+                                    <h4 className="text-2xl font-black text-app-text mb-2 truncate">{new Date(s.date).toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' })}</h4>
+                                    <p className="text-xs text-app-text/40 uppercase tracking-widest font-bold mb-6">{s.status}</p>
                                     
-                                    <div className="mt-auto flex items-center gap-3 text-[10px] font-black text-gm-gold/60 group-hover:text-gm-gold transition-colors uppercase tracking-[0.2em] border-t border-white/5 pt-6">
+                                    <div className="mt-auto flex items-center gap-3 text-[10px] font-black text-accent/60 group-hover:text-accent transition-colors uppercase tracking-[0.2em] border-t border-app-border pt-6">
                                         <BookOpen size={14} />
                                         PRÉPARER LA SESSION
                                     </div>
 
                                     {/* Decorative subtle background elements */}
-                                    <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-gm-gold/5 blur-[60px] rounded-full group-hover:bg-gm-gold/10 transition-all"></div>
+                                    <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-accent/5 blur-[60px] rounded-full group-hover:bg-accent/10 transition-all"></div>
                                 </button>
                             ))}
                         </div>

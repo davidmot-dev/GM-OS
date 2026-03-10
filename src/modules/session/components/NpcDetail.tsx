@@ -34,7 +34,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
 
     if (!selectedNpc) {
         return (
-            <div className="flex-1 flex items-center justify-center bg-slate-950/20 text-slate-600 italic text-sm p-20">
+            <div className="flex-1 flex items-center justify-center bg-app-bg/20 text-app-text/20 italic text-sm p-20">
                 Sélectionnez un PNJ pour afficher ses détails
             </div>
         );
@@ -79,12 +79,12 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
     const linkedMaps = atlasMaps.filter(m => selectedNpc.linkedMapIds.includes(m.id));
 
     return (
-        <div className="flex-1 h-full bg-slate-950/60 p-12 flex flex-col overflow-hidden animate-in fade-in slide-in-from-right-4 duration-500">
+        <div className="flex-1 h-full bg-app-bg/60 p-12 flex flex-col overflow-hidden animate-in fade-in slide-in-from-right-4 duration-500">
             {/* Header / Back Button */}
             <div className="flex items-center justify-between mb-8">
                 <button 
                     onClick={handleClose}
-                    className="flex items-center gap-2 px-4 py-2 bg-slate-900 border border-slate-800 text-slate-400 hover:text-gm-gold hover:border-gm-gold/50 rounded-xl transition-all font-bold text-sm uppercase tracking-widest group"
+                    className="flex items-center gap-2 px-4 py-2 bg-app-surface border border-app-border text-app-text/40 hover:text-accent hover:border-accent/50 rounded-xl transition-all font-bold text-sm uppercase tracking-widest group"
                 >
                     <ArrowLeft size={18} className="transition-transform group-hover:-translate-x-1" />
                     {embeddedId ? 'Fermer' : 'Retour à la Galerie'}
@@ -94,8 +94,8 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                     onClick={() => setIsEditing(!isEditing)}
                     className={`flex items-center gap-2 px-6 py-2 rounded-xl border transition-all font-bold text-sm uppercase tracking-widest ${
                         isEditing 
-                        ? 'bg-gm-gold text-slate-950 border-gm-gold shadow-glow-gold' 
-                        : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white hover:border-white/30'
+                        ? 'bg-accent text-white border-accent shadow-glow-accent' 
+                        : 'bg-app-surface border-app-border text-app-text/40 hover:text-white hover:border-white/30'
                     }`}
                 >
                     {isEditing ? <Check size={18} /> : <Edit2 size={18} />}
@@ -108,8 +108,8 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                 {/* Left Col: Cinematic Portrait */}
                 <div className="w-full md:w-[400px] flex-shrink-0 flex flex-col gap-6">
                     <div 
-                        className={`aspect-[4/5] rounded-3xl overflow-hidden border-2 shadow-2xl relative group bg-slate-900 transition-all ${
-                            isEditing ? 'border-gm-gold cursor-pointer hover:shadow-glow-gold' : 'border-gm-gold/10 shadow-amber-500/5'
+                        className={`aspect-[4/5] rounded-3xl overflow-hidden border-2 shadow-2xl relative group bg-app-surface transition-all ${
+                            isEditing ? 'border-accent cursor-pointer hover:shadow-glow-accent' : 'border-app-border/20 shadow-accent/5'
                         }`}
                         onClick={() => isEditing && setIsMediaBrowserOpen(true)}
                     >
@@ -130,14 +130,14 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                 <ImageIcon size={48} className="text-white" />
                             </div>
                         ) : (
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-app-bg/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                         )}
                     </div>
 
                     {/* Status Badge */}
                     {isEditing ? (
                         <div className="flex flex-col gap-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 pl-1">Vigueur & État</label>
+                            <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40 pl-1">Vigueur & État</label>
                             <div className="grid grid-cols-2 gap-2">
                                 {(['alive', 'injured', 'dead', 'unknown'] as const).map(s => (
                                     <button
@@ -145,8 +145,8 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                         onClick={() => updateEntity(selectedNpc.id, { status: s })}
                                         className={`py-2 px-3 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all ${
                                             selectedNpc.status === s 
-                                            ? 'bg-white text-slate-950 border-white' 
-                                            : 'bg-slate-900 border-slate-800 text-slate-500 hover:border-slate-700'
+                                            ? 'bg-white text-app-bg border-white' 
+                                            : 'bg-app-surface border-app-border text-app-text/40 hover:border-app-border/60'
                                         }`}
                                     >
                                         {s === 'alive' ? 'Vivant' : s === 'injured' ? 'Blessé' : s === 'dead' ? 'Mort' : 'Inconnu'}
@@ -155,13 +155,13 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                             </div>
                         </div>
                     ) : (
-                        <div className="flex items-center justify-center gap-2 py-2 px-4 rounded-xl bg-slate-900/50 border border-slate-800">
+                        <div className="flex items-center justify-center gap-2 py-2 px-4 rounded-xl bg-app-surface/50 border border-app-border">
                             <div className={`w-2 h-2 rounded-full ${
                                 selectedNpc.status === 'alive' ? 'bg-emerald-500' : 
                                 selectedNpc.status === 'injured' ? 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]' : 
-                                selectedNpc.status === 'dead' ? 'bg-red-500' : 'bg-slate-500'}`} 
+                                selectedNpc.status === 'dead' ? 'bg-red-500' : 'bg-app-text/40'}`} 
                             />
-                            <span className="text-[10px] uppercase font-black tracking-widest text-slate-300">
+                            <span className="text-[10px] uppercase font-black tracking-widest text-app-text/60">
                                 {selectedNpc.status === 'alive' ? 'Vivant' : 
                                  selectedNpc.status === 'injured' ? 'Blessé' :
                                  selectedNpc.status === 'dead' ? 'Mort' : 'Statut Inconnu'}
@@ -180,21 +180,21 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                     type="text"
                                     value={selectedNpc.name}
                                     onChange={(e) => updateEntity(selectedNpc.id, { name: e.target.value })}
-                                    className="bg-slate-900/50 border border-gm-gold/30 rounded-xl px-4 py-2 text-2xl font-black text-white focus:outline-none focus:border-gm-gold transition-all"
+                                    className="bg-app-surface/50 border border-accent/30 rounded-xl px-4 py-2 text-2xl font-black text-white focus:outline-none focus:border-accent transition-all"
                                 />
                                 <input 
                                     type="text"
                                     value={selectedNpc.description}
                                     onChange={(e) => updateEntity(selectedNpc.id, { description: e.target.value })}
-                                    className="bg-slate-900/30 border border-slate-800 rounded-lg px-4 py-1.5 text-sm text-slate-300 focus:outline-none focus:border-slate-600 transition-all font-medium italic"
+                                    className="bg-app-surface/30 border border-app-border rounded-lg px-4 py-1.5 text-sm text-app-text/60 focus:outline-none focus:border-app-border/60 transition-all font-medium italic"
                                 />
                             </>
                         ) : (
                             <>
-                                <h2 className="text-4xl font-display font-black text-gm-gold leading-tight tracking-tight mb-1">
+                                <h2 className="text-4xl font-display font-black text-accent leading-tight tracking-tight mb-1">
                                     {selectedNpc.name}
                                 </h2>
-                                <p className="text-slate-400 text-sm font-medium italic">{selectedNpc.description}</p>
+                                <p className="text-app-text/40 text-sm font-medium italic">{selectedNpc.description}</p>
                             </>
                         )}
                     </div>
@@ -206,8 +206,8 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                 {/* Type Selector */}
                                 <div className="col-span-4 space-y-2 mb-2">
                                     <div className="flex items-center gap-2 px-1">
-                                        <Users size={14} className="text-slate-500" />
-                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Type d'entité</label>
+                                        <Users size={14} className="text-app-text/20" />
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Type d'entité</label>
                                     </div>
                                     <div className="grid grid-cols-3 gap-2">
                                         {[
@@ -220,8 +220,8 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                                 onClick={() => updateEntity(selectedNpc.id, { type: t.id as 'pc' | 'npc' | 'monster' })}
                                                 className={`py-2 px-4 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all ${
                                                     selectedNpc.type === t.id 
-                                                    ? 'bg-gm-gold text-slate-950 border-gm-gold shadow-glow-gold' 
-                                                    : 'bg-slate-900/40 border-slate-800 text-slate-500 hover:border-slate-700'
+                                                    ? 'bg-accent text-white border-accent shadow-glow-accent' 
+                                                    : 'bg-app-surface/40 border-app-border text-app-text/40 hover:border-app-border/60'
                                                 }`}
                                             >
                                                 {t.label}
@@ -233,8 +233,8 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                 {/* Role Selector */}
                                 <div className="col-span-4 space-y-2 mb-4">
                                     <div className="flex items-center gap-2 px-1">
-                                        <Users size={14} className="text-slate-500 rotate-180" /> {/* Different icon or similar */}
-                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Alignement / Rôle</label>
+                                        <Users size={14} className="text-app-text/20 rotate-180" /> {/* Different icon or similar */}
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Alignement / Rôle</label>
                                     </div>
                                     <div className="grid grid-cols-4 gap-2">
                                         {[
@@ -248,8 +248,8 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                                 onClick={() => updateEntity(selectedNpc.id, { role: r.id as 'ally' | 'neutral' | 'hostile' | 'boss' })}
                                                 className={`py-2 px-2 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all ${
                                                     selectedNpc.role === r.id 
-                                                    ? 'bg-white text-slate-950 border-white shadow-glow-white' 
-                                                    : 'bg-slate-900/40 border-slate-800 text-slate-500 hover:border-slate-700'
+                                                    ? 'bg-white text-app-bg border-white shadow-glow-white' 
+                                                    : 'bg-app-surface/40 border-app-border text-app-text/40 hover:border-app-border/60'
                                                 }`}
                                             >
                                                 {r.label}
@@ -258,12 +258,12 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                     </div>
                                 </div>
 
-                                <div className="col-span-1 bg-slate-900/60 border border-gm-gold/30 p-3 rounded-xl flex flex-col items-center justify-center gap-2 group transition-all hover:bg-slate-900 hover:border-gm-gold shadow-lg shadow-red-500/5 min-w-[140px]">
+                                <div className="col-span-1 bg-app-surface/60 border border-accent/30 p-3 rounded-xl flex flex-col items-center justify-center gap-2 group transition-all hover:bg-app-surface hover:border-accent shadow-lg shadow-red-500/5 min-w-[140px]">
                                     <div className="flex items-center gap-2">
                                         <Heart size={14} className="text-red-500 animate-pulse" />
-                                        <span className="text-[9px] uppercase font-black text-gm-gold tracking-[0.15em]">Vitalité</span>
+                                        <span className="text-[9px] uppercase font-black text-accent tracking-[0.15em]">Vitalité</span>
                                     </div>
-                                    <div className="flex items-center gap-1.5 bg-slate-950/50 px-3 py-1.5 rounded-lg border border-white/5">
+                                    <div className="flex items-center gap-1.5 bg-app-bg/50 px-3 py-1.5 rounded-lg border border-white/5">
                                         <input 
                                             type="number" 
                                             value={selectedNpc.hp}
@@ -276,13 +276,13 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                             type="number" 
                                             value={selectedNpc.maxHp}
                                             onChange={(e) => updateEntity(selectedNpc.id, { maxHp: parseInt(e.target.value) || 0 })}
-                                            className="w-16 bg-transparent text-center text-slate-400 font-black text-xs focus:outline-none placeholder:text-slate-700"
+                                            className="w-16 bg-transparent text-center text-app-text/40 font-black text-xs focus:outline-none placeholder:text-app-text/10"
                                             placeholder="MAX"
                                         />
                                     </div>
-                                    <span className="text-[8px] uppercase font-bold text-slate-600 tracking-wider text-center">Actuel / Max</span>
+                                    <span className="text-[8px] uppercase font-bold text-app-text/20 tracking-wider text-center">Actuel / Max</span>
                                 </div>
-                                <div className="bg-slate-900/40 border border-gm-gold/20 p-3 rounded-xl flex flex-col items-center justify-center gap-1 group">
+                                <div className="bg-app-surface/40 border border-accent/20 p-3 rounded-xl flex flex-col items-center justify-center gap-1 group">
                                     <Shield size={14} className="text-blue-400" />
                                     <input 
                                         type="number" 
@@ -292,7 +292,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                     />
                                     <span className="text-[9px] uppercase font-bold text-slate-600 tracking-wider">Armor Class</span>
                                 </div>
-                                <div className="bg-slate-900/40 border border-gm-gold/20 p-3 rounded-xl flex flex-col items-center justify-center gap-1 group">
+                                <div className="bg-app-surface/40 border border-accent/20 p-3 rounded-xl flex flex-col items-center justify-center gap-1 group">
                                     <Wind size={14} className="text-emerald-400" />
                                     <input 
                                         type="number" 
@@ -302,7 +302,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                     />
                                     <span className="text-[9px] uppercase font-bold text-slate-600 tracking-wider">Movement</span>
                                 </div>
-                                <div className="bg-slate-900/40 border border-gm-gold/20 p-3 rounded-xl flex flex-col items-center justify-center gap-1 group">
+                                <div className="bg-app-surface/40 border border-accent/20 p-3 rounded-xl flex flex-col items-center justify-center gap-1 group">
                                     <Zap size={14} className="text-amber-400" />
                                     <input 
                                         type="number" 
@@ -320,10 +320,10 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                 { label: 'Speed', val: `${selectedNpc.speed} ft`, icon: <Wind size={14} className="text-emerald-400" /> },
                                 { label: 'Init', val: `+${selectedNpc.initiative}`, icon: <Zap size={14} className="text-amber-400" /> },
                             ].map((stat, i) => (
-                                <div key={i} className="bg-slate-900/40 border border-white/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1 group hover:border-gm-gold/20 transition-all">
+                                <div key={i} className="bg-app-surface/40 border border-white/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1 group hover:border-accent/20 transition-all">
                                     {stat.icon}
                                     <span className="text-white font-black text-xs">{stat.val}</span>
-                                    <span className="text-[9px] uppercase font-bold text-slate-600 tracking-wider transition-colors group-hover:text-slate-500">{stat.label}</span>
+                                    <span className="text-[9px] uppercase font-bold text-app-text/20 tracking-wider transition-colors group-hover:text-app-text/40">{stat.label}</span>
                                 </div>
                             ))
                         )}
@@ -332,13 +332,13 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                     {/* Text Areas */}
                     <div className="flex flex-col gap-4">
                         {/* Roleplaying Notes */}
-                        <div className="p-4 rounded-2xl bg-slate-900/30 border border-white/5 flex flex-col gap-2">
+                        <div className="p-4 rounded-2xl bg-app-surface/30 border border-white/5 flex flex-col gap-2">
                             <div className="flex items-center gap-2 mb-1">
-                                <BookOpen size={14} className="text-slate-400" />
-                                <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Notes d'Interprétation</h4>
+                                <BookOpen size={14} className="text-app-text/40" />
+                                <h4 className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Notes d'Interprétation</h4>
                             </div>
                             <textarea
-                                className="w-full bg-transparent border-none text-slate-300 text-xs leading-relaxed resize-none focus:ring-0 placeholder:text-slate-700 min-h-[80px]"
+                                className="w-full bg-transparent border-none text-app-text/80 text-xs leading-relaxed resize-none focus:ring-0 placeholder:text-app-text/10 min-h-[80px]"
                                 value={selectedNpc.roleplayingNotes}
                                 onChange={(e) => updateEntity(selectedNpc.id, { roleplayingNotes: e.target.value })}
                                 placeholder="Comment jouer ce personnage..."
@@ -346,16 +346,16 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                         </div>
 
                         {/* Secret GM Notes */}
-                        <div className="p-4 rounded-2xl bg-amber-950/5 border border-gm-gold/20 flex flex-col gap-2 relative overflow-hidden">
+                        <div className="p-4 rounded-2xl bg-accent/5 border border-accent/20 flex flex-col gap-2 relative overflow-hidden">
                             <div className="absolute top-0 right-0 p-3 opacity-5 pointer-events-none">
-                                <Lock size={48} className="text-gm-gold" />
+                                <Lock size={48} className="text-accent" />
                             </div>
                             <div className="flex items-center gap-2 mb-1 relative z-10">
-                                <Lock size={14} className="text-gm-gold" />
-                                <h4 className="text-[10px] font-black uppercase tracking-widest text-gm-gold">Informations Secrètes</h4>
+                                <Lock size={14} className="text-accent" />
+                                <h4 className="text-[10px] font-black uppercase tracking-widest text-accent">Informations Secrètes</h4>
                             </div>
                             <textarea
-                                className="w-full bg-transparent border-none text-slate-300 text-xs leading-relaxed resize-none focus:ring-0 placeholder:text-slate-700 min-h-[80px] relative z-10"
+                                className="w-full bg-transparent border-none text-app-text/80 text-xs leading-relaxed resize-none focus:ring-0 placeholder:text-app-text/10 min-h-[80px] relative z-10"
                                 value={selectedNpc.gmSecretInfo}
                                 onChange={(e) => updateEntity(selectedNpc.id, { gmSecretInfo: e.target.value })}
                                 placeholder="Secrets, complots, intentions cachées..."
@@ -366,20 +366,20 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                     {/* Linked Maps */}
                     <div>
                         <div className="flex items-center gap-2 mb-3">
-                            <MapPin size={14} className="text-slate-400" />
-                            <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Présent sur les cartes</h4>
+                            <MapPin size={14} className="text-app-text/40" />
+                            <h4 className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Présent sur les cartes</h4>
                         </div>
                         <div className="flex flex-wrap gap-2">
                             {linkedMaps.length > 0 ? linkedMaps.map(map => (
                                 <div
                                     key={map.id}
-                                    className="px-3 py-1.5 rounded-lg bg-slate-900/60 border border-slate-800 text-[10px] text-slate-300 font-bold hover:border-gm-gold/30 transition-all cursor-pointer flex items-center gap-2 group"
+                                    className="px-3 py-1.5 rounded-lg bg-app-surface/60 border border-app-border text-[10px] text-app-text/60 font-bold hover:border-accent/30 transition-all cursor-pointer flex items-center gap-2 group"
                                 >
-                                    <MapPin size={10} className="text-slate-600 group-hover:text-gm-gold" />
+                                    <MapPin size={10} className="text-app-text/20 group-hover:text-accent" />
                                     {map.name}
                                 </div>
                             )) : (
-                                <p className="text-[10px] text-slate-700 italic">Aucune carte liée</p>
+                                <p className="text-[10px] text-app-text/10 italic">Aucune carte liée</p>
                             )}
                         </div>
                     </div>
@@ -388,24 +388,24 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
 
             {/* Action Buttons */}
             {!isEditing && (
-                <div className="mt-8 flex gap-4 pt-4 border-t border-slate-800">
+                <div className="mt-8 flex gap-4 pt-4 border-t border-app-border">
                     <button
                         onClick={handleAddToCombat}
-                        className="flex-1 flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 rounded-xl text-xs transition-all border border-white/5 active:scale-[0.98]"
+                        className="flex-1 flex items-center justify-center gap-2 bg-app-surface hover:bg-app-surface/80 text-white font-bold py-3 rounded-xl text-xs transition-all border border-white/5 active:scale-[0.98]"
                     >
                         <Swords size={16} />
                         Envoyer au Combat
                     </button>
                     <button
                         onClick={handleSendToMap}
-                        className="flex-1 flex items-center justify-center gap-2 border border-gm-gold/50 text-gm-gold hover:bg-gm-gold/10 font-bold py-3 rounded-xl text-xs transition-all active:scale-[0.98]"
+                        className="flex-1 flex items-center justify-center gap-2 border border-accent/50 text-accent hover:bg-accent/10 font-bold py-3 rounded-xl text-xs transition-all active:scale-[0.98]"
                     >
                         <MapPin size={16} />
                         Placer sur la Carte
                     </button>
                     <button
                         onClick={() => useImageStore.getState().projectEntity(selectedNpc)}
-                        className="flex-1 flex items-center justify-center gap-2 bg-gm-gold hover:bg-yellow-400 text-slate-950 font-black py-3 rounded-xl text-xs transition-all shadow-[0_0_20px_rgba(234,179,8,0.2)] active:scale-[0.98]"
+                        className="flex-1 flex items-center justify-center gap-2 bg-accent hover:bg-accent/80 text-white font-black py-3 rounded-xl text-xs transition-all shadow-glow-accent active:scale-[0.98]"
                     >
                         <Monitor size={16} />
                         Projeter au Hub
