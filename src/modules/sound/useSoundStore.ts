@@ -214,7 +214,10 @@ export const useSoundStore = create<SoundState>()(
             })),
 
             setMasterVolume: (masterVolume) => set({ masterVolume }),
-            setOutputDevice: (outputDeviceId) => set({ outputDeviceId }),
+            setOutputDevice: (outputDeviceId) => {
+                soundEngine.setOutputDevice(outputDeviceId);
+                set({ outputDeviceId });
+            },
 
             toggleMidiLearn: () => set((state) => ({ isMidiLearnActive: !state.isMidiLearnActive, isKeyLearnActive: false })),
             toggleKeyLearn: () => set((state) => ({ isKeyLearnActive: !state.isKeyLearnActive, isMidiLearnActive: false })),

@@ -69,8 +69,8 @@ const InitiativeList: React.FC = () => {
 
     if (combatants.length === 0) {
         return (
-            <div className="flex-1 flex items-center justify-center bg-obsidian/50 rounded-xl border border-dashed border-gray-700 m-4">
-                <div className="text-center text-slate-500">
+            <div className="flex-1 flex items-center justify-center bg-app-surface/50 rounded-xl border border-dashed border-app-border m-4">
+                <div className="text-center text-app-text/50">
                     <p className="mb-2">La liste d'initiative est vide.</p>
                     <p className="text-sm">Utilisez les contrôles pour ajouter des combattants.</p>
                 </div>

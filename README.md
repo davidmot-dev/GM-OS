@@ -1,73 +1,45 @@
-# React + TypeScript + Vite
+# 🌌 GM-OS v5 : The Ultimate Game Master Toolkit
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+GM-OS v5 est une plateforme de gestion de sessions de Jeu de Rôle (JdR) de nouvelle génération, conçue pour offrir aux Maîtres de Jeu (MJ) une immersion totale et un contrôle sans précédent sur l'ambiance, le combat et la narration.
 
-Currently, two official plugins are available:
+## 🚀 Fonctionnalités Clés
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **SESSION OS** : Centre névralgique de vos campagnes. Gérez vos sessions, joueurs et snapshots d'état système.
+- **AUDIO ENGINE** :
+  - **Music OS** : Gestion de playlists multi-sources avec fondus enchaînés.
+  - **Ambient OS** : Mixage en temps réel de 8 pistes d'ambiance avec positionnement spatial.
+  - **Sound OS** : Pads de bruitages instantanés et atmosphères sonores.
+  - **Voice OS** : Modulateur de voix en temps réel pour l'incarnation de PNJ.
+- **VISUAL OS** :
+  - **Image OS** : Projection d'illustrations et cartes vers le **Player Hub**.
+  - **Map OS** : Gestion de cartes interactives avec brouillard de guerre et tokens.
+- **ADVENTURE TOOLS** :
+  - **Combat OS** : Suivi d'initiative avancé, gestion des PV et export automatique des résumés vers la chronologie.
+  - **Dice OS** : Moteur de lancer de dés 3D ultra-rapide.
+  - **NPC OS** : Galerie de PNJ synchronisée avec le visuel et l'audio.
 
-## React Compiler
+## 🛠️ Stack Technique
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend** : [React 18](https://reactjs.org/) + [TypeScript](https://www.typescriptlang.org/)
+- **Build Tool** : [Vite](https://vitejs.dev/)
+- **Styling** : [Tailwind CSS](https://tailwindcss.com/)
+- **State** : [Zustand](https://github.com/pmndrs/zustand) (Persistence via LocalStorage)
+- **Icons** : [Lucide React](https://lucide.dev/)
+- **Bridge** : API Unifiée pour **Electron** et **Tauri**.
 
-## Expanding the ESLint configuration
+## 📦 Installation & Démarrage
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+```bash
+# Installer les dépendances
+npm install
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Lancer en mode développement
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🏗️ Architecture "Bridge"
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Le projet sépare strictement l'interface utilisateur de la logique système via un objet global `window.appBridge`. Cela permet de faire tourner GM-OS aussi bien dans un navigateur que dans un conteneur natif (Electron/Tauri) sans modification du code UI.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+*Développé pour l'immersion. Conçu pour le contrôle.*

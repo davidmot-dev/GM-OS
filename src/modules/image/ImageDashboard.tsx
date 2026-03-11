@@ -11,6 +11,7 @@ import ImagePad from './components/ImagePad';
 import { MediaBrowser } from '../../components/MediaBrowser';
 import { useMediaStore } from '../../stores/useMediaStore';
 import { gmConfirm } from '../../stores/useModalStore';
+import { useHardwareStore } from '../../stores/useHardwareStore';
 
 const ImageDashboard: React.FC = () => {
     const {
@@ -19,6 +20,7 @@ const ImageDashboard: React.FC = () => {
         folders, activeFolderId, setActiveFolderId, addFolder, removeFolder,
         currentView, setCurrentView, reset
     } = useImageStore();
+    const { getDisplayLabel } = useHardwareStore();
 
     React.useEffect(() => {
         fetchDisplays();
@@ -182,23 +184,23 @@ const ImageDashboard: React.FC = () => {
                             <div className="flex bg-app-surface p-1 rounded-xl">
                                 <button
                                     onClick={() => setProjectionTarget('hub')}
-                                    className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${projectionTarget === 'hub'
-                                        ? 'bg-accent text-slate-950 shadow-md'
-                                        : 'text-slate-400 hover:text-white'
+                                    className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${projectionTarget === 'hub'
+                                        ? 'bg-accent text-slate-950 shadow-glow-accent'
+                                        : 'text-slate-500 hover:text-white'
                                         }`}
                                 >
-                                    Player Hub
+                                    {getDisplayLabel('hub')}
                                 </button>
                                 {displays.map(d => (
                                     <button
                                         key={d.id}
                                         onClick={() => setProjectionTarget(d.id)}
-                                        className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${projectionTarget === d.id
-                                            ? 'bg-accent text-slate-950 shadow-md'
-                                            : 'text-slate-400 hover:text-white'
+                                        className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${projectionTarget === d.id
+                                            ? 'bg-accent text-slate-950 shadow-glow-accent'
+                                            : 'text-slate-500 hover:text-white'
                                             }`}
                                     >
-                                        {d.label}
+                                        {getDisplayLabel(d.id)}
                                     </button>
                                 ))}
                             </div>

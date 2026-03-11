@@ -3,6 +3,7 @@ import { X, Star } from 'lucide-react';
 import type { ImageMedia } from '../types';
 import { useImageStore } from '../useImageStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
+import { useHardwareStore } from '../../../stores/useHardwareStore';
 
 interface ImagePadProps {
     media: ImageMedia;
@@ -10,18 +11,16 @@ interface ImagePadProps {
 
 const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
     const {
-        projections, displays,
+        projections,
         projectSolo, toggleMediaActive, removeMedia,
         folders, moveMediaToFolder, toggleMediaFavorite
     } = useImageStore();
+    const { getDisplayLabel } = useHardwareStore();
 
     // Find all targets currently projecting this media
     const activeTargets = Object.entries(projections)
         .filter(([, mediaId]) => mediaId === media.id)
-        .map(([targetId]) => {
-            if (targetId === 'hub') return 'Player Hub';
-            return displays.find(d => d.id === targetId)?.label || `Screen ${targetId}`;
-        });
+        .map(([targetId]) => getDisplayLabel(targetId));
 
     const isProjected = activeTargets.length > 0;
 

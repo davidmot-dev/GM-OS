@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useVoiceStore } from './useVoiceStore';
 import { voiceEngine } from './VoiceEngine';
+import { useHardwareStore } from '../../stores/useHardwareStore';
 
 const VocalShaperSlider: React.FC<{
     label: string;
@@ -62,6 +63,7 @@ const VoiceDashboard: React.FC = () => {
         availableOutputs,
         setOutputDeviceId
     } = useVoiceStore();
+    const { getAudioLabel } = useHardwareStore();
 
     useEffect(() => {
         voiceEngine.refreshAvailableDevices();
@@ -165,7 +167,7 @@ const VoiceDashboard: React.FC = () => {
                             <option value="">Default System Output</option>
                             {availableOutputs.map(device => (
                                 <option key={device.deviceId} value={device.deviceId}>
-                                    {device.label || `Périphérique ${device.deviceId.slice(0, 5)}...`}
+                                    {getAudioLabel(device.deviceId)}
                                 </option>
                             ))}
                         </select>

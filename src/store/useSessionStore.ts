@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export type ThemeID = 'cyberpunk' | 'medieval' | 'modern';
+export type ThemeID = 'cyberpunk' | 'medieval' | 'modern' | 'claire';
 export type ModuleID = 'dashboard' | 'music' | 'sound' | 'ambient' | 'combat' | 'npc' | 'clock' | 'light' | 'image' | 'map' | 'table' | 'web' | 'voice' | 'favorite' | 'debug' | 'dice' | 'whiteboard';
 
 interface SessionState {
@@ -22,19 +22,29 @@ export const THEME_PALETTES = {
         accent: '#06b6d4',
         bg: '#020617',
         surface: '#0f172a',
-        border: '#1e293b'
+        border: '#1e293b',
+        palettes: ['#06b6d4', '#8b5cf6', '#ec4899', '#f59e0b', '#ef4444']
     },
     'medieval': {
         accent: '#10b981',
         bg: '#1a120b',
         surface: '#2d241d',
-        border: '#3f352c'
+        border: '#3f352c',
+        palettes: ['#10b981', '#d4af37', '#7c2d12', '#4c1d95', '#1e40af']
     },
     'modern': {
         accent: '#3b82f6',
         bg: '#0f172a',
         surface: '#1e293b',
-        border: '#334155'
+        border: '#334155',
+        palettes: ['#3b82f6', '#6366f1', '#14b8a6', '#f43f5e', '#64748b']
+    },
+    'claire': {
+        accent: '#eca413',
+        bg: '#fdfbf7',
+        surface: '#ffffff',
+        border: '#e9e4d9',
+        palettes: ['#7fb3d5', '#a2d9ce', '#f1b6a7', '#eca413', '#6b615a']
     }
 };
 

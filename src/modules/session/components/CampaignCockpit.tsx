@@ -25,8 +25,8 @@ const CampaignCockpit: React.FC = () => {
             >
                 <div className="flex justify-between items-start mb-2">
                     <div>
-                        <h3 className="text-white font-bold text-lg group-hover:text-accent transition-colors">{activeCampaign?.name || 'No Active Campaign'}</h3>
-                        <p className="text-app-text/40 text-xs uppercase tracking-widest font-semibold font-display">Active Campaign</p>
+                        <h3 className="text-app-text font-bold text-lg group-hover:text-accent transition-colors">{activeCampaign?.name || 'No Active Campaign'}</h3>
+                        <p className="text-app-text/60 text-xs uppercase tracking-widest font-semibold font-display">Active Campaign</p>
                     </div>
                     <BookOpen className="text-accent group-hover:scale-110 transition-transform" size={24} />
                 </div>
@@ -49,44 +49,44 @@ const CampaignCockpit: React.FC = () => {
                 <p className="text-app-text/40 text-xs uppercase tracking-widest mb-2 px-3">Management</p>
                 <button
                     onClick={() => setCurrentView('cockpit')}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'cockpit' ? 'bg-accent/10 text-accent' : 'text-app-text/60 hover:bg-app-bg/50 hover:text-white'}`}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'cockpit' ? 'bg-accent/10 text-accent' : 'text-app-text/80 hover:bg-app-bg hover:text-app-text'}`}
                 >
                     <LayoutDashboard className={currentView === 'cockpit' ? 'scale-110' : 'group-hover:scale-110 transition-transform'} size={20} />
                     <span className="text-sm font-medium">Cockpit</span>
                 </button>
                 <button
                     onClick={() => setActiveModule('combat')}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-app-text/60 hover:bg-app-surface/50 hover:text-white transition-all w-full text-left"
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-app-text/80 hover:bg-app-surface hover:text-app-text transition-all w-full text-left"
                 >
                     <Swords size={20} />
                     <span className="text-sm font-medium">Encounters</span>
                 </button>
                 <button
                     onClick={() => setCurrentView('npc-gallery')}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'npc-gallery' ? 'bg-accent/10 text-accent' : 'text-app-text/60 hover:bg-app-bg/50 hover:text-white'}`}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'npc-gallery' ? 'bg-accent/10 text-accent' : 'text-app-text/80 hover:bg-app-bg hover:text-app-text'}`}
                 >
                     <Users size={20} />
                     <span className="text-sm font-medium">Galerie PNJ</span>
                 </button>
                 <button
                     onClick={() => setCurrentView('world-atlas')}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'world-atlas' ? 'bg-accent/10 text-accent' : 'text-app-text/60 hover:bg-app-bg/50 hover:text-white'}`}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'world-atlas' ? 'bg-accent/10 text-accent' : 'text-app-text/80 hover:bg-app-bg hover:text-app-text'}`}
                 >
                     <MapIcon size={20} />
                     <span className="text-sm font-medium">World Atlas</span>
                 </button>
                 <button
                     onClick={() => setActiveModule('table')}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-app-text/60 hover:bg-app-surface/50 hover:text-white transition-all w-full text-left"
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-app-text/80 hover:bg-app-surface hover:text-app-text transition-all w-full text-left"
                 >
                     <Archive size={20} />
                     <span className="text-sm font-medium">Loot Tables</span>
                 </button>
                 <button
                     onClick={() => setCurrentView('session-prep')}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'session-prep' ? 'bg-accent/10 text-accent' : 'text-app-text/60 hover:bg-app-bg/50 hover:text-white'}`}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'session-prep' ? 'bg-accent/10 text-accent' : 'text-app-text/80 hover:bg-app-bg hover:text-app-text'}`}
                 >
-                    <PlusCircle size={20} className={currentView === 'session-prep' ? 'text-accent' : 'text-app-text/40'} />
+                    <PlusCircle size={20} className={currentView === 'session-prep' ? 'text-accent' : 'text-app-text/60'} />
                     <span className="text-sm font-medium">Session Preparation</span>
                 </button>
 
@@ -155,23 +155,23 @@ const CampaignCockpit: React.FC = () => {
                 <div className="pt-4 mt-2 border-t border-app-border/40">
                     <button
                         onClick={() => setCurrentView('library')}
-                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'library' ? 'bg-accent/10 text-accent' : 'text-app-text/60 hover:bg-app-bg/50 hover:text-white'}`}
+                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'library' ? 'bg-accent/10 text-accent' : 'text-app-text/80 hover:bg-app-bg hover:text-app-text'}`}
                     >
-                        <Library size={20} className={currentView === 'library' ? 'text-accent' : 'text-app-text/40'} />
+                        <Library size={20} className={currentView === 'library' ? 'text-accent' : 'text-app-text/60'} />
                         <span className="text-sm font-bold uppercase tracking-tighter">Campaign Library</span>
                     </button>
                     <button
                         onClick={() => setCurrentView('players')}
-                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'players' ? 'bg-accent/10 text-accent' : 'text-app-text/60 hover:bg-app-bg/50 hover:text-white'}`}
+                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'players' ? 'bg-accent/10 text-accent' : 'text-app-text/80 hover:bg-app-bg hover:text-app-text'}`}
                     >
-                        <Users2 size={20} className={currentView === 'players' ? 'text-accent' : 'text-app-text/40'} />
+                        <Users2 size={20} className={currentView === 'players' ? 'text-accent' : 'text-app-text/60'} />
                         <span className="text-sm font-bold uppercase tracking-tighter text-left">Joueurs</span>
                     </button>
                     <button
                         onClick={() => setCurrentView('templates')}
-                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'templates' ? 'bg-accent/10 text-accent' : 'text-app-text/60 hover:bg-app-bg/50 hover:text-white'}`}
+                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'templates' ? 'bg-accent/10 text-accent' : 'text-app-text/80 hover:bg-app-bg hover:text-app-text'}`}
                     >
-                        <FileText size={20} className={currentView === 'templates' ? 'text-accent' : 'text-app-text/40'} />
+                        <FileText size={20} className={currentView === 'templates' ? 'text-accent' : 'text-app-text/60'} />
                         <span className="text-sm font-bold uppercase tracking-tighter text-left">Fiches de Jeu</span>
                     </button>
                 </div>

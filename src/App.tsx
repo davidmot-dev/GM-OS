@@ -29,6 +29,8 @@ import { GlobalKeybinds } from './components/GlobalKeybinds';
 import VoiceDashboard from './modules/voice/VoiceDashboard';
 import { useModalStore } from './stores/useModalStore';
 import { MediaBrowser } from './components/MediaBrowser';
+import { useState, useEffect } from 'react';
+import SplashScreenSelector from './components/splash/SplashScreenSelector';
 
 // App.tsx entry point
 
@@ -44,9 +46,16 @@ const PlaceholderModule = ({ name }: { name: string }) => (
   </div>
 );
 
+
 function App() {
-  const { activeModule } = useSessionStore();
+  const { activeModule, theme } = useSessionStore();
   const { isMediaHubOpen, closeMediaHub } = useModalStore();
+  const [showSplash, setShowSplash] = useState(true);
+
+  // Apply theme to the root HTML element for global CSS overrides
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
 
   const renderModule = () => {
     switch (activeModule) {
@@ -115,6 +124,7 @@ function App() {
         onSelect={() => { }} // Standalone mode, just for management
         title="MEDIA HUB - GESTION GLOBALE"
       />
+      {showSplash && <SplashScreenSelector onComplete={() => setShowSplash(false)} />}
       <Shell>
         {renderModule()}
       </Shell>

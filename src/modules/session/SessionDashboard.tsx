@@ -36,8 +36,8 @@ const SessionDashboard: React.FC = () => {
                 <div className="flex items-center gap-8">
                     <div className="flex items-center gap-3 text-gm-gold">
                         <Users size={28} />
-                        <h1 className="text-slate-100 text-lg font-bold tracking-tight">
-                            Session OS <span className="text-gm-gold font-light">
+                        <h1 className="text-app-text text-lg font-bold tracking-tight">
+                            Session OS <span className="text-gm-gold font-light opacity-80">
                                 {currentView === 'cockpit' ? 'Master Cockpit' : currentView === 'timeline-wiki' ? 'Chroniques' : currentView.replace('-', ' ')}
                             </span>
                         </h1>
@@ -117,8 +117,8 @@ const SessionDashboard: React.FC = () => {
                                     <div className="w-16 h-16 rounded-full bg-app-surface flex items-center justify-center mb-4 opacity-50">
                                         <Sparkles className="animate-spin-slow text-app-text/40" />
                                     </div>
-                                    <h2 className="text-xl font-bold text-app-text/40">View "{currentView}" under construction</h2>
-                                    <p className="text-slate-600 text-sm mb-6">This section will be available in the next system update.</p>
+                                    <h2 className="text-xl font-bold text-app-text/60">View "{currentView}" under construction</h2>
+                                    <p className="text-app-text/40 text-sm mb-6 font-medium">This section will be available in the next system update.</p>
                                     <button
                                         onClick={() => setCurrentView('cockpit')}
                                         className="px-6 py-2 bg-app-surface hover:bg-app-surface/80 text-app-text/80 rounded-lg text-sm font-bold transition-all border border-app-border"

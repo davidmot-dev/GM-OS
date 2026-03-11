@@ -45,7 +45,7 @@ const NavItem: React.FC<NavItemProps> = ({ icon, label, active, onClick, classNa
         title={label}
         className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${active
             ? 'bg-accent/20 text-accent border border-accent/30'
-            : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200 border border-transparent'
+            : 'text-app-text/60 hover:bg-app-surface hover:text-app-text border border-transparent'
             } ${className}`}
     >
         <span className={`transition-transform duration-200 ${active ? 'scale-110' : 'group-hover:scale-110'}`}>
@@ -87,7 +87,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
     }, [theme, themeColor]);
 
     const cycleTheme = () => {
-        const themes: ThemeID[] = ['cyberpunk', 'medieval', 'modern'];
+        const themes: ThemeID[] = ['cyberpunk', 'medieval', 'modern', 'claire'];
         const idx = themes.indexOf(theme);
         setTheme(themes[(idx + 1) % themes.length]);
     };
@@ -113,7 +113,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
     };
 
     return (
-        <div className="flex h-screen bg-app-bg text-slate-50 overflow-hidden font-sans selection:bg-accent/30">
+        <div data-theme={theme} className="flex h-screen bg-app-bg text-app-text overflow-hidden font-sans selection:bg-accent/30">
             {/* Sidebar */}
             <aside className="w-64 border-r border-app-border/50 bg-app-surface/30 backdrop-blur-xl flex flex-col p-4 z-20">
                 <div className="flex items-center gap-3 px-2 mb-8 mt-2">
@@ -126,7 +126,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         </svg>
                     </div>
                     <div className="flex flex-col">
-                        <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent leading-none">
+                        <span className={`text-xl font-bold tracking-tight leading-none ${theme === 'claire' ? 'text-app-text' : 'bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent'}`}>
                             GM-OS v5
                         </span>
                         <span className="text-[10px] font-black uppercase tracking-[0.2em] text-accent mt-1 opacity-80 backdrop-blur-sm">
@@ -145,7 +145,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
 
                     <div className="my-3 mx-2 h-px bg-app-border/20" />
 
-                    <div className="px-3 mb-2 text-[10px] font-bold text-app-text/40 uppercase tracking-widest">Audio</div>
+                    <div className="px-3 mb-2 text-[10px] font-bold text-app-text/60 uppercase tracking-widest">Audio</div>
                     <NavItem
                         icon={<Music size={20} />}
                         label="Music OS"
@@ -257,24 +257,24 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                 </nav>
 
                 <div className="mt-auto pt-4 flex flex-col gap-3 border-t border-app-border/20">
-                    <div className="flex bg-slate-900/40 backdrop-blur-md border border-slate-700/50 rounded-2xl overflow-hidden shadow-2xl">
+                    <div className="flex bg-app-surface/60 backdrop-blur-md border border-app-border/50 rounded-2xl overflow-hidden shadow-xl">
                         <button 
                             onClick={cycleTheme}
-                            className="flex-1 py-3 flex items-center justify-center text-slate-400 hover:text-accent hover:bg-accent/10 transition-all group"
+                            className="flex-1 py-3 flex items-center justify-center text-app-text/50 hover:text-accent hover:bg-accent/10 transition-all group"
                             title={`Thème : ${theme}`}
                         >
                             <Palette size={18} className="group-hover:rotate-12 transition-transform" />
                         </button>
                         <button 
                             onClick={() => setActiveModule('debug')}
-                            className={`flex-1 py-3 flex items-center justify-center transition-all border-x border-slate-800/50 ${activeModule === 'debug' ? 'text-blue-400 bg-blue-400/10' : 'text-slate-400 hover:text-blue-400 hover:bg-blue-400/10'}`}
+                            className={`flex-1 py-3 flex items-center justify-center transition-all border-x border-app-border/50 ${activeModule === 'debug' ? 'text-blue-400 bg-blue-400/10' : 'text-app-text/50 hover:text-blue-400 hover:bg-blue-400/10'}`}
                             title="Debug & Logs"
                         >
                             <Terminal size={18} />
                         </button>
                         <button 
                             onClick={() => showCustom('global-settings')}
-                            className="flex-1 py-3 flex items-center justify-center text-slate-400 hover:text-gm-gold hover:bg-gm-gold/10 transition-all duration-300 relative group"
+                            className="flex-1 py-3 flex items-center justify-center text-app-text/50 hover:text-gm-gold hover:bg-gm-gold/10 transition-all duration-300 relative group"
                             title="Paramètres de l'OS"
                         >
                             <Settings size={18} className="group-hover:rotate-90 transition-transform duration-500" />
@@ -282,7 +282,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         </button>
                         <button 
                             onClick={() => SessionService.saveFullSession()}
-                            className="flex-1 py-3 flex items-center justify-center text-slate-400 hover:text-gm-cyan hover:bg-gm-cyan/10 border-x border-slate-800/50 transition-all duration-300 relative group"
+                            className="flex-1 py-3 flex items-center justify-center text-app-text/50 hover:text-gm-cyan hover:bg-gm-cyan/10 border-x border-app-border/50 transition-all duration-300 relative group"
                             title="Sauvegarder la session"
                         >
                             <Save size={18} className="group-hover:scale-110 transition-transform" />
@@ -290,7 +290,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         </button>
                         <button 
                             onClick={() => SessionService.loadFullSession()}
-                            className="flex-1 py-3 flex items-center justify-center text-slate-400 hover:text-gm-violet hover:bg-gm-violet/10 border-slate-800/50 transition-all duration-300 relative group"
+                            className="flex-1 py-3 flex items-center justify-center text-app-text/50 hover:text-gm-violet hover:bg-gm-violet/10 border-app-border/50 transition-all duration-300 relative group"
                             title="Charger une session"
                         >
                             <Download size={18} className="group-hover:-translate-y-0.5 transition-transform" />
@@ -330,7 +330,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
             <main className="flex-1 flex flex-col relative overflow-hidden bg-[radial-gradient(circle_at_top_right,rgba(29,78,216,0.05),transparent_40%)]">
                 <header className="h-16 border-b border-app-border/20 flex items-center justify-between px-8 bg-app-surface/10 backdrop-blur-md z-10">
                     <div className="flex items-center gap-4">
-                        <h2 className="text-lg font-bold tracking-tight text-white uppercase italic">
+                        <h2 className="text-lg font-bold tracking-tight text-app-text uppercase italic">
                             {activeModule === 'dashboard' ? 'SESSION' : activeModule} <span className="text-accent">OS</span>
                         </h2>
                     </div>

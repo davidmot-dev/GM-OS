@@ -3,11 +3,13 @@ import { Monitor, Cast, ExternalLink } from 'lucide-react';
 import { useImageStore } from '../../image/useImageStore';
 import { useWhiteboardStore } from '../useWhiteboardStore';
 import { useModalStore } from '../../../stores/useModalStore';
+import { useHardwareStore } from '../../../stores/useHardwareStore';
 
 const WhiteboardProjectionModal: React.FC = () => {
     const { displays, fetchDisplays } = useImageStore();
     const { clearProjectedState } = useWhiteboardStore();
     const { closeModal } = useModalStore();
+    const { getDisplayLabel } = useHardwareStore();
 
     useEffect(() => {
         if (window.appBridge?.image?.getDisplays) {
@@ -81,7 +83,7 @@ const WhiteboardProjectionModal: React.FC = () => {
                                 <Monitor size={24} />
                             </div>
                             <div className="flex-1">
-                                <h4 className="font-bold text-app-text">{display.label}</h4>
+                                <h4 className="font-bold text-app-text">{getDisplayLabel(display.id)}</h4>
                                 <p className="text-xs text-app-text/40">Projeter le Whiteboard en plein écran sur ce moniteur.</p>
                             </div>
                             <ExternalLink size={16} className="text-app-text/20 group-hover:text-app-text/40 transition-colors" />

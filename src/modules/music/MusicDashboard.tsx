@@ -2,6 +2,7 @@ import React from 'react';
 import Deck from './components/Deck';
 import Mixer from './components/Mixer';
 import PlaylistManager from './components/PlaylistManager';
+import MusicHeader from './components/MusicHeader';
 import { useMusicKeyboardControls } from './useMusicKeyboardControls';
 
 const MusicDashboard: React.FC = () => {
@@ -13,6 +14,7 @@ const MusicDashboard: React.FC = () => {
             {/* Main Content Area */}
             <main className="flex-1 overflow-y-auto p-6 flex flex-col gap-6 custom-scrollbar relative">
                 {/* Header Integration */}
+                <MusicHeader />
 
                 {/* Background glow behind main area */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[600px] bg-accent/5 blur-[120px] pointer-events-none" />

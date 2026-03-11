@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Music, CloudSnow, Sword, Skull, Beer, StopCircle, ChevronDown, Check, RotateCcw } from 'lucide-react';
+import { Plus, Music, CloudSnow, Sword, Skull, Beer, StopCircle, ChevronDown, Check, RotateCcw, Keyboard } from 'lucide-react';
 import { useMusicStore } from '../useMusicStore';
 import { gmPrompt, gmConfirm } from '../../../stores/useModalStore';
+import { useHardwareStore } from '../../../stores/useHardwareStore';
 
 const MusicHeader: React.FC = () => {
     const { 
@@ -18,6 +19,7 @@ const MusicHeader: React.FC = () => {
         toggleKeyLearn,
         reset
     } = useMusicStore();
+    const { getAudioLabel, fetchAudioDevices: fetchAliases } = useHardwareStore();
 
     const currentId = activePlaylistId || playlists[0]?.id;
     const [audioDevices, setAudioDevices] = useState<MediaDeviceInfo[]>([]);
@@ -49,6 +51,11 @@ const MusicHeader: React.FC = () => {
         };
     }, [isDeviceMenuOpen]);
 
+    // Sync engine and aliases on mount
+    useEffect(() => {
+        fetchAliases();
+    }, [fetchAliases]);
+
     const getIcon = (name: string) => {
         const n = name.toLowerCase();
         if (n.includes('wood') || n.includes('forest') || n.includes('snow')) return <CloudSnow size={12} />;
@@ -58,7 +65,7 @@ const MusicHeader: React.FC = () => {
         return <Music size={12} />;
     };
 
-    const currentDeviceLabel = audioDevices.find((d: MediaDeviceInfo) => d.deviceId === outputDeviceId)?.label || 'Speaker';
+    const currentDeviceLabel = getAudioLabel(outputDeviceId);
 
     return (
         <header className="relative z-50 flex flex-col gap-2">
@@ -97,12 +104,17 @@ const MusicHeader: React.FC = () => {
 
                 {/* Right: Essential Controls */}
                 <div className="flex items-center gap-3">
-                    <button
-                        onClick={toggleKeyLearn}
-                        className={`text-[8px] font-black uppercase tracking-[0.2em] px-3 py-2 rounded-xl border transition-all ${isKeyLearnActive ? 'bg-cyan-900/40 border-cyan-500 text-cyan-400 shadow-glow-cyan' : 'bg-app-surface/20 border-app-border/50 text-slate-600 hover:text-cyan-400'}`}
-                    >
-                        Learn
-                    </button>
+                    <div className="flex bg-app-bg/40 p-1 rounded-xl border border-app-border/40 shadow-inner mr-2">
+                        <button
+                            onClick={toggleKeyLearn}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all ${isKeyLearnActive 
+                                ? 'bg-cyan-900/40 border-cyan-500 text-cyan-400 shadow-glow-cyan' 
+                                : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'}`}
+                        >
+                            <Keyboard size={10} />
+                            <span>KEY LEARN</span>
+                        </button>
+                    </div>
 
                     {/* Custom Device Selector */}
                     <div className="relative device-selector">
@@ -133,7 +145,7 @@ const MusicHeader: React.FC = () => {
                                             onClick={() => { setOutputDevice(device.deviceId); setIsDeviceMenuOpen(false); }}
                                             className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all text-left ${outputDeviceId === device.deviceId ? 'bg-gm-violet/20 text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white'}`}
                                         >
-                                            <span className="truncate pr-4">{device.label || `Device ${device.deviceId.substring(0, 4)}`}</span>
+                                            <span className="truncate pr-4">{getAudioLabel(device.deviceId)}</span>
                                             {outputDeviceId === device.deviceId && <Check size={12} className="text-gm-violet" />}
                                         </button>
                                     ))}

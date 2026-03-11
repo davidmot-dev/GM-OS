@@ -5,6 +5,7 @@ import { gmConfirm } from '../../../stores/useModalStore';
 import { soundEngine } from '../SoundEngine';
 import { soundController } from '../SoundController';
 import { useMidiControls } from '../useMidiControls';
+import { useHardwareStore } from '../../../stores/useHardwareStore';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface SoundHeaderProps {
@@ -22,6 +23,7 @@ const SoundHeader: React.FC<SoundHeaderProps> = () => {
         isMidiConnected,
         reset
     } = useSoundStore();
+    const { getAudioLabel } = useHardwareStore();
 
     const [audioDevices, setAudioDevices] = useState<MediaDeviceInfo[]>([]);
     const [isDeviceMenuOpen, setIsDeviceMenuOpen] = useState(false);
@@ -52,7 +54,12 @@ const SoundHeader: React.FC<SoundHeaderProps> = () => {
         };
     }, [isDeviceMenuOpen]);
 
-    const currentDeviceLabel = audioDevices.find((d: MediaDeviceInfo) => d.deviceId === outputDeviceId)?.label || 'Speaker';
+    // Sync engine on mount
+    useEffect(() => {
+        soundEngine.setOutputDevice(outputDeviceId);
+    }, [outputDeviceId]);
+
+    const currentDeviceLabel = getAudioLabel(outputDeviceId);
 
     const handleStopAll = () => {
         soundController.stopAll();
@@ -130,10 +137,10 @@ const SoundHeader: React.FC<SoundHeaderProps> = () => {
                                     {audioDevices.map((device: MediaDeviceInfo) => (
                                         <button
                                             key={device.deviceId}
-                                            onClick={() => { setOutputDevice(device.deviceId); soundEngine.setOutputDevice(device.deviceId); setIsDeviceMenuOpen(false); }}
+                                            onClick={() => { setOutputDevice(device.deviceId); setIsDeviceMenuOpen(false); }}
                                             className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all text-left ${outputDeviceId === device.deviceId ? 'bg-accent/20 text-white' : 'text-app-text/40 hover:bg-white/5 hover:text-white'}`}
                                         >
-                                            <span className="truncate pr-4">{device.label || `Device ${device.deviceId.substring(0, 4)}`}</span>
+                                            <span className="truncate pr-4">{getAudioLabel(device.deviceId)}</span>
                                             {outputDeviceId === device.deviceId && <Check size={12} className="text-accent" />}
                                         </button>
                                     ))}

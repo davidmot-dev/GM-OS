@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSoundStore } from './useSoundStore';
 import SoundPad from './components/SoundPad';
 import AtmosphereManager from './components/AtmosphereManager';
+import SoundHeader from './components/SoundHeader';
 import { useMidiControls } from './useMidiControls';
 import { useKeyboardControls } from './useKeyboardControls';
 import { soundEngine } from './SoundEngine';
@@ -59,6 +60,7 @@ const SoundDashboard: React.FC = () => {
                 title="Choisir un Son"
             />
             
+            <SoundHeader />
 
 
             {/* Main Area - Grid and Mixer space */}

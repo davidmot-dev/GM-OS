@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaStore } from '../../../stores/useMediaStore';
-import { useMediaUrl } from '../../../hooks/useMediaUrl';
+import { useHardwareStore } from '../../../stores/useHardwareStore';
 import { type MapToken } from '../useMapStore';
 import { type Combatant } from '../../combat/useCombatStore';
 
@@ -68,6 +68,7 @@ const MapControls: React.FC = () => {
         // Projection Actions
         projectionTarget, clearProjectedState
     } = useMapStore();
+    const { getDisplayLabel } = useHardwareStore();
 
     const combatants = useCombatStore(state => state.combatants);
     const { mediaList } = useMediaStore();
@@ -303,9 +304,12 @@ const MapControls: React.FC = () => {
                 <section className="mt-auto pt-4 border-t border-gray-800 flex flex-col gap-3">
                     {projectionTarget && (
                         <div className="px-1 flex flex-col gap-2">
-                            <div className="w-full flex items-center justify-center gap-2 p-3 bg-accent/10 border border-accent/20 rounded-xl text-accent shadow-inner">
-                                <Cast size={16} className="animate-pulse" />
-                                <span className="text-[10px] font-black uppercase tracking-widest">Projection Active</span>
+                            <div className="w-full flex flex-col items-center justify-center gap-1 p-3 bg-accent/10 border border-accent/20 rounded-xl text-accent shadow-inner">
+                                <div className="flex items-center gap-2">
+                                    <Cast size={16} className="animate-pulse" />
+                                    <span className="text-[10px] font-black uppercase tracking-widest italic">Projection Active</span>
+                                </div>
+                                <span className="text-[9px] font-bold opacity-60 uppercase tracking-tighter tabular-nums truncate max-w-full">Vers : {getDisplayLabel(projectionTarget)}</span>
                             </div>
                             <button
                                 onClick={() => {
@@ -365,7 +369,6 @@ interface MapCombatantItemProps {
 }
 
 const MapCombatantItem: React.FC<MapCombatantItemProps> = ({ combatant, tokens, addToken, setTool }) => {
-    const resolvedAvatar = useMediaUrl(combatant.avatar);
     const isOnMap = tokens.some(t => t.linkedCombatantId === combatant.id);
 
     return (

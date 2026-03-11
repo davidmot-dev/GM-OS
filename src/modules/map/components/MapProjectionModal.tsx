@@ -3,11 +3,13 @@ import { Monitor, Cast, ExternalLink } from 'lucide-react';
 import { useImageStore } from '../../image/useImageStore';
 import { useMapStore } from '../useMapStore';
 import { useModalStore } from '../../../stores/useModalStore';
+import { useHardwareStore } from '../../../stores/useHardwareStore';
 
 const MapProjectionModal: React.FC = () => {
     const { displays, fetchDisplays } = useImageStore();
     const { mapUrl, syncToPlayers, clearProjectedState, isVideo, fogDataUrl, tokens, mapWidth, mapHeight, isGridEnabled, gridSize, gridColor, gridOpacity } = useMapStore();
     const { closeModal } = useModalStore();
+    const { getDisplayLabel } = useHardwareStore();
 
     useEffect(() => {
         if (window.appBridge?.image?.getDisplays) {
@@ -96,7 +98,7 @@ const MapProjectionModal: React.FC = () => {
                                 <Monitor size={24} />
                             </div>
                             <div className="flex-1">
-                                <h4 className="font-bold text-slate-100">{display.label}</h4>
+                                <h4 className="font-bold text-slate-100">{getDisplayLabel(display.id)}</h4>
                                 <p className="text-xs text-slate-500">Ouvrir une fenêtre de projection plein écran sur ce moniteur.</p>
                             </div>
                             <ExternalLink size={16} className="text-slate-600 group-hover:text-slate-400 transition-colors" />

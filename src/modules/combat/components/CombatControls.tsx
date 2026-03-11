@@ -95,17 +95,17 @@ const CombatControls: React.FC = () => {
     };
 
     return (
-        <aside className="w-80 bg-obsidian-light/40 border-l border-gm-crimson/20 p-6 flex flex-col h-full overflow-y-auto custom-scrollbar">
+        <aside className="w-80 bg-app-surface/40 border-l border-app-border/50 p-6 flex flex-col h-full overflow-y-auto custom-scrollbar">
 
             {/* Header */}
-            <h2 className="text-xl font-display font-bold text-white mb-6 uppercase tracking-widest border-b border-gm-crimson/30 pb-2">
+            <h2 className="text-xl font-display font-bold text-app-text mb-6 uppercase tracking-widest border-b border-app-border/50 pb-2">
                 Contrôles
             </h2>
 
             {/* Main Action: Next Turn */}
             <div className="bg-gm-crimson/10 border border-gm-crimson/30 p-4 rounded-xl mb-6 shadow-glow-crimson flex flex-col items-center">
-                <div className="text-slate-300 text-sm uppercase tracking-wider mb-2">
-                    Round <span className="text-white font-bold text-xl ml-1">{round.toString().padStart(2, '0')}</span>
+                <div className="text-app-text/70 text-sm uppercase tracking-wider mb-2">
+                    Round <span className="text-app-text font-bold text-xl ml-1">{round.toString().padStart(2, '0')}</span>
                 </div>
                 <button
                     onClick={nextTurn}
@@ -118,10 +118,10 @@ const CombatControls: React.FC = () => {
 
             {/* Auto Initiative */}
             <div className="mb-6 space-y-3">
-                <h3 className="text-sm text-slate-400 uppercase tracking-wider font-semibold">Auto-Initiative (PNJ)</h3>
+                <h3 className="text-sm text-app-text/60 uppercase tracking-wider font-semibold">Auto-Initiative (PNJ)</h3>
                 <div className="flex gap-2">
                     <select
-                        className="bg-obsidian border border-gray-700 rounded-lg text-white px-3 py-2 outline-none focus:border-gm-crimson flex-1"
+                        className="bg-app-bg border border-app-border rounded-lg text-app-text px-3 py-2 outline-none focus:border-gm-crimson flex-1"
                         value={diceMax}
                         onChange={(e) => setDiceMax(Number(e.target.value))}
                     >
@@ -135,7 +135,7 @@ const CombatControls: React.FC = () => {
                     </select>
                     <button
                         onClick={() => rollAutoInitiative(diceMax)}
-                        className="bg-obsidian hover:bg-gm-crimson/20 border border-gm-crimson/50 text-gm-crimson hover:text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors flex-1"
+                        className="bg-app-bg hover:bg-gm-crimson/20 border border-gm-crimson/50 text-gm-crimson hover:text-gm-crimson px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors flex-1"
                         title="Jette l'initiative pour tous ceux à 0"
                     >
                         <Dices size={18} />
@@ -148,7 +148,7 @@ const CombatControls: React.FC = () => {
             <div className="space-y-2 mb-6">
                 <button
                     onClick={handleAddCombatant}
-                    className="w-full bg-obsidian-dark hover:bg-obsidian border border-gray-700 hover:border-gray-500 text-slate-300 px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors"
+                    className="w-full bg-app-bg hover:bg-app-surface border border-app-border hover:border-app-border/80 text-app-text/80 hover:text-app-text px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors"
                 >
                     <UserPlus size={18} />
                     <span>Ajouter Combattant</span>
@@ -157,14 +157,14 @@ const CombatControls: React.FC = () => {
                 <div className="grid grid-cols-2 gap-2 mt-2">
                     <button
                         onClick={() => sortInitiative(false)}
-                        className="bg-obsidian-dark hover:bg-obsidian border border-gray-700 text-slate-300 p-2 rounded-lg flex items-center justify-center gap-1 transition-colors text-sm"
+                        className="bg-app-bg hover:bg-app-surface border border-app-border text-app-text/80 hover:text-app-text p-2 rounded-lg flex items-center justify-center gap-1 transition-colors text-sm"
                         title="Trier (Décroissant)"
                     >
                         <ArrowDown01 size={16} /> Trie
                     </button>
                     <button
                         onClick={() => sortInitiative(true)}
-                        className="bg-obsidian-dark hover:bg-obsidian border border-gray-700 text-slate-300 p-2 rounded-lg flex items-center justify-center gap-1 transition-colors text-sm"
+                        className="bg-app-bg hover:bg-app-surface border border-app-border text-app-text/80 hover:text-app-text p-2 rounded-lg flex items-center justify-center gap-1 transition-colors text-sm"
                         title="Trier (Croissant)"
                     >
                         <ArrowUp10 size={16} /> Trie
@@ -173,7 +173,7 @@ const CombatControls: React.FC = () => {
             </div>
 
             {/* Sync & Advanced */}
-            <div className="mt-auto space-y-4 pt-6 border-t border-gray-800">
+            <div className="mt-auto space-y-4 pt-6 border-t border-app-border">
                 <button
                     onClick={() => {
                         syncCombatantHPToSession();
@@ -187,7 +187,7 @@ const CombatControls: React.FC = () => {
 
                 <button 
                     onClick={handleSaveCombat} 
-                    className="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center gap-2 py-3 rounded-lg text-slate-300 hover:text-white transition-all shadow-lg group" 
+                    className="w-full bg-app-bg hover:bg-app-surface/60 border border-app-border flex items-center justify-center gap-2 py-3 rounded-lg text-app-text/70 hover:text-app-text transition-all shadow-lg group" 
                     title="Sauvegarder et terminer le combat"
                 >
                     <Save size={18} className="group-hover:scale-110 transition-transform" /> 

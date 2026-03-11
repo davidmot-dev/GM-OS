@@ -18,6 +18,21 @@ Le projet utilise TypeScript en mode strict.
 - Aucun type `any`.
 - Interfaces obligatoires pour toutes les entités métier (Tracks, NPCs, Scenarios).
 
+## 📸 Nouveau Système : Session Snapshots
+
+La v5 introduit les **Snapshots de Session**, permettant de capturer l'état complet de l'OS à un instant T.
+
+- **Persistance :** Capturé dans `useSessionOSStore`.
+- **Portée :** Inclut Musique, Ambiance, Sons, Lumières, Images et **Combat OS**.
+- **Restauration :** Chaque store de module doit implémenter une action `applySnapshot(data)`.
+
+## ⚔️ Combat OS & Narration
+
+Le module de combat est désormais lié à la narration globale.
+
+- **Export Chronologie :** Les résumés de combat sont automatiquement insérés dans la session active.
+- **Synchronisation Hub :** L'état du combat (initiative) est projeté en temps réel vers le Player Hub.
+
 ## 🎨 Design & UI
 
 ### Écosystème
@@ -32,18 +47,9 @@ Les couleurs et espacements utilisent des variables CSS (`--bg-primary`, etc.) d
 
 ## 🧪 Tests Automatisés
 
-Le projet v5 impose une culture de la **robustesse**.
-
 - **Vitest** : Moteur de test principal.
 - **Classes de Test** : La logique métier doit être encapsulée dans des classes testables (Managers, Services).
 - **Mocks** : Les API système (`appBridge`) et matérielles (Web Audio) doivent être simulées dans les tests unitaires.
 
-## 🛣️ Chemin de Migration
-
-1. **Extraction :** Lire le code v3, extraire la logique pure sans DOM.
-2. **Implémentation :** Créer le service/classe TypeScript + Tests unitaires.
-3. **UI :** Créer le composant React avec Tailwind (via Stitch).
-4. **Binding :** Relier le composant au service via un Hook.
-
 ---
-*Dernière mise à jour : 01/03/2026*
+*Dernière mise à jour : 10/03/2026*

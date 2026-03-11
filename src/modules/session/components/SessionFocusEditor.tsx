@@ -77,11 +77,11 @@ const SessionFocusEditor: React.FC = () => {
                     <div>
                         <div className="flex items-center gap-3">
                             <span className="px-2 py-0.5 bg-accent/20 text-accent text-[10px] font-bold rounded uppercase tracking-widest">{activeCampaign?.name || 'Campagne'}</span>
-                            <span className="text-app-text/40 font-bold text-[10px]">/</span>
+                            <span className="text-app-text/60 font-bold text-[10px]">/</span>
                             <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 text-[10px] font-bold rounded uppercase tracking-widest">Session #{session.number}</span>
-                            <h2 className="text-2xl font-black tracking-tight">Détails de Préparation</h2>
+                            <h2 className="text-2xl font-black tracking-tight text-app-text">Détails de Préparation</h2>
                         </div>
-                        <p className="text-xs text-app-text/40 font-medium mt-1">Édition immersive de la session du {new Date(session.date).toLocaleDateString()}</p>
+                        <p className="text-xs text-app-text/60 font-medium mt-1">Édition immersive de la session du {new Date(session.date).toLocaleDateString()}</p>
                     </div>
                 </div>
 
@@ -130,7 +130,7 @@ const SessionFocusEditor: React.FC = () => {
                                 <div className="grid grid-cols-2 divide-x divide-app-border min-h-[600px]">
                                     {/* Public Side */}
                                     <div className="flex flex-col p-8 gap-6">
-                                        <div className="flex items-center justify-between opacity-40">
+                                        <div className="flex items-center justify-between opacity-80">
                                             <span className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
                                                 <Eye size={12} /> Synopsis Joueurs
                                             </span>
@@ -140,13 +140,13 @@ const SessionFocusEditor: React.FC = () => {
                                             value={session.publicSummary}
                                             onChange={(e) => updateSession(session.id, { publicSummary: e.target.value })}
                                             placeholder="Que savent les joueurs à ce stade ? Résumez ici ce qui sera visible dans leur journal de quête..."
-                                            className="flex-1 bg-transparent border-none focus:ring-0 text-lg leading-relaxed text-app-text/80 resize-none p-0 placeholder:text-app-text/10"
+                                            className="flex-1 bg-transparent border-none focus:ring-0 text-lg leading-relaxed text-app-text outline-none resize-none p-0 placeholder:text-app-text/40"
                                         />
                                     </div>
 
                                     {/* Private Side */}
-                                    <div className="flex flex-col p-8 gap-6 bg-accent/[0.02]">
-                                        <div className="flex items-center justify-between text-accent/60">
+                                    <div className="flex flex-col p-8 gap-6 bg-accent/[0.04]">
+                                        <div className="flex items-center justify-between text-accent">
                                             <span className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
                                                 <Lock size={12} /> Secrets du MJ
                                             </span>
@@ -156,16 +156,16 @@ const SessionFocusEditor: React.FC = () => {
                                             value={session.gmSecrets}
                                             onChange={(e) => updateSession(session.id, { gmSecrets: e.target.value })}
                                             placeholder="Notes de préparation, plot twists, stats de boss, récompenses cachées..."
-                                            className="flex-1 bg-transparent border-none focus:ring-0 text-lg leading-relaxed text-accent/80 italic resize-none p-0 placeholder:text-accent/20 scroll-pt-10 scrollbar-thin"
+                                            className="flex-1 bg-transparent border-none focus:ring-0 text-lg leading-relaxed text-accent outline-none italic resize-none p-0 placeholder:text-accent/50 scroll-pt-10 scrollbar-thin"
                                         />
                                     </div>
                                 </div>
-                                <div className="bg-app-surface px-8 py-4 border-t border-app-border flex items-center justify-between opacity-40 hover:opacity-100 transition-opacity">
-                                    <div className="flex gap-8 text-[11px] font-mono font-bold uppercase tracking-widest">
+                                <div className="bg-app-surface px-8 py-4 border-t border-app-border flex items-center justify-between opacity-80 hover:opacity-100 transition-opacity">
+                                    <div className="flex gap-8 text-[11px] font-mono font-bold uppercase tracking-widest text-app-text/60">
                                         <span>Words: {session.publicSummary.split(/\s+/).filter(Boolean).length + session.gmSecrets.split(/\s+/).filter(Boolean).length}</span>
                                         <span>Characters: {session.publicSummary.length + session.gmSecrets.length}</span>
                                     </div>
-                                    <div className="text-[10px] font-bold uppercase flex items-center gap-2">
+                                    <div className="text-[10px] font-bold uppercase flex items-center gap-2 text-app-text/60">
                                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
                                         Dernière synchro: {new Date().toLocaleTimeString()}
                                     </div>
@@ -179,14 +179,14 @@ const SessionFocusEditor: React.FC = () => {
                                 <h3 className="text-sm font-bold uppercase tracking-[0.3em]">Notes de Session (Cockpit)</h3>
                             </div>
                             <div className="bg-app-surface/40 rounded-3xl border border-app-border p-8 shadow-xl flex flex-col gap-4">
-                                <p className="text-[10px] text-app-text/40 font-bold uppercase tracking-widest leading-relaxed">
+                                <p className="text-[10px] text-app-text/60 font-bold uppercase tracking-widest leading-relaxed">
                                     Ces notes ont été prises en cours de partie via le cockpit. Elles servent de base pour votre résumé final.
                                 </p>
                                 <textarea 
                                     value={session.sessionNotes || ''}
                                     onChange={(e) => updateSession(session.id, { sessionNotes: e.target.value })}
                                     placeholder="Aucune note n'a encore été prise pour cette session..."
-                                    className="w-full bg-app-bg border border-app-border/20 rounded-2xl p-6 text-sm leading-relaxed text-app-text/80 resize-none min-h-[200px] focus:ring-accent/30 focus:border-accent/30 transition-all custom-scrollbar"
+                                    className="w-full bg-app-bg border border-app-border/20 rounded-2xl p-6 text-sm leading-relaxed text-app-text outline-none resize-none min-h-[200px] focus:ring-accent/30 focus:border-accent/30 transition-all custom-scrollbar placeholder:text-app-text/30"
                                 />
                             </div>
                         </div>
@@ -207,7 +207,7 @@ const SessionFocusEditor: React.FC = () => {
                     <div className="col-span-4 flex flex-col gap-10">
                         {/* Section Date Quick Pick */}
                         <div className="bg-app-surface/60 rounded-3xl border border-app-border p-6 shadow-2xl">
-                            <div className="flex items-center gap-3 mb-4 text-app-text/40">
+                            <div className="flex items-center gap-3 mb-4 text-app-text/60">
                                 <Calendar size={18} />
                                 <span className="text-[10px] font-bold uppercase tracking-widest">Date de la Partie</span>
                             </div>
@@ -221,40 +221,40 @@ const SessionFocusEditor: React.FC = () => {
 
                         {/* Additional Resources (Link & File) */}
                         <div className="bg-app-surface/60 rounded-3xl border border-app-border p-6 shadow-2xl flex flex-col gap-6">
-                            <div className="flex items-center gap-3 text-app-text/40">
+                            <div className="flex items-center gap-3 text-app-text/60">
                                 <Link size={18} />
                                 <span className="text-[10px] font-bold uppercase tracking-widest">Ressources Annexes</span>
                             </div>
                             
                             {/* HTTP Link */}
                             <div className="flex flex-col gap-2">
-                                <label className="text-[9px] text-app-text/20 uppercase font-black ml-1">Lien Externe (HTTP/S)</label>
+                                <label className="text-[9px] text-app-text/50 uppercase font-black ml-1">Lien Externe (HTTP/S)</label>
                                 <div className="relative group/input">
                                     <input 
                                         type="url"
                                         value={session.externalLink || ''}
                                         onChange={(e) => updateSession(session.id, { externalLink: e.target.value })}
                                         placeholder="https://example.com"
-                                        className="w-full bg-app-surface border border-app-border/40 rounded-xl pl-10 pr-4 py-2 text-xs focus:ring-accent focus:border-accent transition-all"
+                                        className="w-full bg-app-surface border border-app-border/40 rounded-xl pl-10 pr-4 py-2 text-xs focus:ring-accent focus:border-accent transition-all text-app-text placeholder:text-app-text/30"
                                     />
-                                    <Link size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-text/20 group-focus-within/input:text-accent transition-colors" />
+                                    <Link size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-text/40 group-focus-within/input:text-accent transition-colors" />
                                 </div>
                             </div>
 
                             {/* File Path */}
                             <div className="flex flex-col gap-2">
-                                <label className="text-[9px] text-app-text/20 uppercase font-black ml-1">Fichier Lié</label>
+                                <label className="text-[9px] text-app-text/50 uppercase font-black ml-1">Fichier Lié</label>
                                 <div className="relative group/input">
                                     <input 
                                         type="text"
                                         value={session.filePath || ''}
                                         onChange={(e) => updateSession(session.id, { filePath: e.target.value })}
                                         placeholder="C:/MonDossier/mon_scénario.pdf"
-                                        className="w-full bg-app-surface border border-app-border/40 rounded-xl pl-10 pr-4 py-2 text-xs focus:ring-accent focus:border-accent transition-all"
+                                        className="w-full bg-app-surface border border-app-border/40 rounded-xl pl-10 pr-4 py-2 text-xs focus:ring-accent focus:border-accent transition-all text-app-text placeholder:text-app-text/30"
                                     />
-                                    <File size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-text/20 group-focus-within/input:text-accent transition-colors" />
+                                    <File size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-text/40 group-focus-within/input:text-accent transition-colors" />
                                 </div>
-                                <p className="text-[8px] text-app-text/10 italic px-1">Collez le chemin complet du fichier.</p>
+                                <p className="text-[8px] text-app-text/40 italic px-1">Collez le chemin complet du fichier.</p>
                             </div>
                         </div>
 
@@ -265,7 +265,7 @@ const SessionFocusEditor: React.FC = () => {
                                     <Users size={20} />
                                     <h3 className="text-sm font-bold uppercase tracking-[0.3em]">PJ Presents</h3>
                                 </div>
-                                <span className="text-[10px] font-bold opacity-60">({linkedPlayers.length})</span>
+                                <span className="text-[10px] font-bold opacity-80">({linkedPlayers.length})</span>
                             </div>
                             <div className="bg-app-surface/40 rounded-3xl border border-app-border p-6 flex flex-col gap-4 shadow-xl">
                                 <div className="flex flex-wrap gap-2">
@@ -308,7 +308,7 @@ const SessionFocusEditor: React.FC = () => {
                                     <Skull size={20} />
                                     <h3 className="text-sm font-bold uppercase tracking-[0.3em]">PNJ & Monstres</h3>
                                 </div>
-                                <span className="text-[10px] font-bold opacity-60">({linkedNpcs.length})</span>
+                                <span className="text-[10px] font-bold opacity-80">({linkedNpcs.length})</span>
                             </div>
                             <div className="bg-app-surface/40 rounded-3xl border border-app-border p-6 shadow-xl">
                                 <SessionPrepEntityManager sessionId={session.id} />

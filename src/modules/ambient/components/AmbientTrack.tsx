@@ -58,8 +58,8 @@ const AmbientTrack: React.FC<AmbientTrackProps> = ({ track, index, onRequestMedi
 
     return (
         <div className={`relative group h-full flex flex-col items-center gap-4 p-4 rounded-2xl border transition-all duration-300 ${track.isPlaying
-            ? 'bg-slate-900 shadow-[0_0_30px_rgba(30,41,59,0.5)] border-slate-700'
-            : 'bg-slate-900/40 border-slate-800/50 hover:border-slate-700 hover:bg-slate-900/60'
+            ? 'bg-app-surface shadow-xl border-accent/30'
+            : 'bg-app-surface/40 border-app-border hover:border-accent/40 hover:bg-app-surface/60'
             }`}>
 
             {/* Track Info */}
@@ -68,7 +68,7 @@ const AmbientTrack: React.FC<AmbientTrackProps> = ({ track, index, onRequestMedi
                     type="text"
                     value={track.label}
                     onChange={(e) => updateTrack(index, { label: e.target.value })}
-                    className="w-full bg-transparent text-[10px] font-bold uppercase tracking-widest text-slate-500 text-center focus:text-white focus:outline-none"
+                    className="w-full bg-transparent text-[10px] font-bold uppercase tracking-widest text-app-text/50 text-center focus:text-app-text focus:outline-none"
                     placeholder="NOM DE PISTE"
                 />
 
@@ -83,7 +83,7 @@ const AmbientTrack: React.FC<AmbientTrackProps> = ({ track, index, onRequestMedi
                 onClick={() => toggleTrack(index)}
                 className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 relative group/btn ${track.isPlaying
                     ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                    : 'bg-slate-800/80 text-slate-500 border border-slate-700 hover:text-white hover:border-slate-500'
+                    : 'bg-app-surface/80 text-app-text/50 border border-app-border hover:text-app-text hover:border-app-border/80'
                     }`}
                 style={track.isPlaying ? { boxShadow: `0 0 20px -5px ${track.color}44`, borderColor: `${track.color}66`, color: track.color } : {}}
             >
@@ -97,13 +97,13 @@ const AmbientTrack: React.FC<AmbientTrackProps> = ({ track, index, onRequestMedi
 
             {/* Vertical Slider Control */}
             <div className="flex-1 flex flex-col items-center gap-2 group/slider w-full">
-                <div className="h-full relative w-6 bg-slate-950/80 rounded-full border border-slate-800 p-1 flex items-end">
+                <div className="h-full relative w-6 bg-app-bg/80 rounded-full border border-app-border p-1 flex items-end">
                     {/* Fill Level */}
                     <div
                         className="w-full rounded-full transition-all duration-150"
                         style={{
                             height: `${track.volume * 100}%`,
-                            backgroundColor: track.isPlaying ? track.color : '#475569',
+                            backgroundColor: track.isPlaying ? track.color : 'var(--app-border)',
                             boxShadow: track.isPlaying ? `0 0 15px ${track.color}66` : 'none'
                         }}
                     />
@@ -120,7 +120,7 @@ const AmbientTrack: React.FC<AmbientTrackProps> = ({ track, index, onRequestMedi
                     />
 
                 </div>
-                <div className="flex items-center gap-1 text-[8px] font-mono text-slate-600 font-bold uppercase">
+                <div className="flex items-center gap-1 text-[8px] font-mono text-app-text/60 font-bold uppercase">
                     <Volume2 size={10} />
                     {Math.round(track.volume * 100)}%
                 </div>
@@ -136,7 +136,7 @@ const AmbientTrack: React.FC<AmbientTrackProps> = ({ track, index, onRequestMedi
                 />
                 <button
                     onClick={handleFileSelect}
-                    className="text-[8px] font-bold text-slate-500 hover:text-white hover:underline transition-all"
+                    className="text-[8px] font-bold text-app-text/50 hover:text-app-text hover:underline transition-all"
                 >
                     {track.url ? "CHANGER" : "CHARGER"}
                 </button>

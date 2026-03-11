@@ -4,6 +4,7 @@ import { useAmbientStore, type AmbientTheme, type AmbientTrackState } from './us
 import AmbientTrack from './components/AmbientTrack';
 import { ambientEngine } from './AmbientEngine';
 import { gmPrompt, gmConfirm } from '../../stores/useModalStore';
+import { useHardwareStore } from '../../stores/useHardwareStore';
 import { MediaBrowser } from '../../components/MediaBrowser';
 import { useMediaStore } from '../../stores/useMediaStore';
 
@@ -27,7 +28,7 @@ const MasterVisualizer: React.FC = () => {
     }, []);
 
     return (
-        <div className="flex items-end gap-[2px] h-10 w-24 px-2 opacity-90 overflow-hidden bg-slate-950/80 rounded-xl p-1.5 border border-slate-800 shadow-inner">
+        <div className="flex items-end gap-[2px] h-10 w-24 px-2 opacity-90 overflow-hidden bg-app-bg/80 rounded-xl p-1.5 border border-app-border shadow-inner">
             {Array.from(data).filter((_, i) => i % 2 === 0).map((v, i) => (
                 <div
                     key={i}
@@ -41,6 +42,7 @@ const MasterVisualizer: React.FC = () => {
 
 const AmbientDashboard: React.FC = () => {
     const { tracks, presets, scenes, customUniverses, loadTheme, saveTheme, deleteTheme, addUniverse, fadeOutAll, applyScene, outputDeviceId, setOutputDevice, updateTrack, reset } = useAmbientStore();
+    const { getAudioLabel } = useHardwareStore();
 
     // Media Browser State
     const [browserTarget, setBrowserTarget] = useState<number | null>(null);
@@ -145,18 +147,18 @@ const AmbientDashboard: React.FC = () => {
                 allowedTypes={['audio']}
                 title="Sélectonner une Ambiance"
             />
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6 bg-slate-900/60 border border-slate-800/50 p-6 rounded-3xl backdrop-blur-md shadow-2xl relative overflow-hidden">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6 bg-app-surface/60 border border-app-border/50 p-6 rounded-3xl backdrop-blur-md shadow-2xl relative overflow-hidden">
                 {/* Background Glow */}
                 <div className="absolute top-0 right-0 w-64 h-64 bg-gm-cyan/5 blur-[100px] -mr-32 -mt-32 pointer-events-none" />
 
 
 
                 {/* Hierarchical Selector */}
-                <div className="flex items-center gap-3 bg-slate-950/50 p-1.5 rounded-2xl border border-slate-800 z-10">
+                <div className="flex items-center gap-3 bg-app-bg/50 p-1.5 rounded-2xl border border-app-border z-10">
                     {/* Universe Select */}
                     <div className="flex flex-col px-3 relative group/uni">
                         <div className="flex items-center justify-between mb-1">
-                            <label className="text-[8px] font-black text-slate-600 uppercase">Univers</label>
+                            <label className="text-[8px] font-black text-app-text/60 uppercase">Univers</label>
                             <button onClick={handleAddUniverse} className="opacity-0 group-hover/uni:opacity-100 transition-opacity p-0.5" title="Nouvel Univers">
                                 <Plus size={8} className="text-gm-cyan" />
                             </button>
@@ -169,17 +171,17 @@ const AmbientDashboard: React.FC = () => {
                                 const firstTheme = presets.find((p: AmbientTheme) => p.universe === newUni)?.name || '';
                                 setSelectedTheme(firstTheme);
                             }}
-                            className="bg-transparent text-xs font-bold text-slate-400 focus:outline-none focus:text-white cursor-pointer"
+                            className="bg-transparent text-xs font-bold text-app-text/70 focus:outline-none focus:text-app-text cursor-pointer"
                         >
-                            {universes.map((u: string) => <option key={u} value={u} className="bg-slate-900">{u}</option>)}
+                            {universes.map((u: string) => <option key={u} value={u} className="bg-app-surface text-app-text">{u}</option>)}
                         </select>
                     </div>
 
-                    <div className="h-8 w-px bg-slate-800 mx-1" />
+                    <div className="h-8 w-px bg-app-border mx-1" />
 
                     {/* Theme Select */}
                     <div className="flex flex-col px-3 min-w-[140px]">
-                        <label className="text-[8px] font-black text-slate-600 uppercase mb-1">Thème d'Ambiance</label>
+                        <label className="text-[8px] font-black text-app-text/60 uppercase mb-1">Thème d'Ambiance</label>
                         <div className="flex items-center gap-2">
                             <select
                                 value={selectedTheme}
@@ -188,16 +190,16 @@ const AmbientDashboard: React.FC = () => {
                             >
                                 {themesInUniverse.length > 0 ? (
                                     themesInUniverse.map((t: AmbientTheme) => (
-                                        <option key={t.id} value={t.name} className="bg-slate-900">{t.name}</option>
+                                        <option key={t.id} value={t.name} className="bg-app-surface text-app-text">{t.name}</option>
                                     ))
                                 ) : (
-                                    <option value="" className="bg-slate-900">(Vide)</option>
+                                    <option value="" className="bg-app-surface text-app-text">(Vide)</option>
                                 )}
                             </select>
                             {themesInUniverse.length > 0 && (
                                 <button
                                     onClick={handleDeleteTheme}
-                                    className="p-1 text-slate-600 hover:text-red-500 transition-colors"
+                                    className="p-1 text-app-text/60 hover:text-red-500 transition-colors"
                                     title="Supprimer ce thème"
                                 >
                                     <Trash2 size={12} />
@@ -225,7 +227,7 @@ const AmbientDashboard: React.FC = () => {
                 </div>
 
                 {/* Master Output & Volume */}
-                <div className="flex items-center gap-6 z-10 bg-slate-950/40 p-2 pl-4 rounded-3xl border border-slate-800">
+                <div className="flex items-center gap-6 z-10 bg-app-bg/40 p-2 pl-4 rounded-3xl border border-app-border">
                     <div className="flex flex-col items-end gap-2">
                         <select
                             value={outputDeviceId}
@@ -234,15 +236,15 @@ const AmbientDashboard: React.FC = () => {
                                 setOutputDevice(newId);
                                 ambientEngine.setOutputDevice(newId);
                             }}
-                            className="bg-slate-900 border-none text-slate-400 text-[10px] rounded-lg py-1 px-2 focus:ring-1 focus:ring-gm-cyan appearance-none cursor-pointer w-28 truncate"
+                            className="bg-app-surface border-none text-app-text/70 text-[10px] rounded-lg py-1 px-2 focus:ring-1 focus:ring-gm-cyan appearance-none cursor-pointer w-28 truncate"
                             title="Audio Output Device"
                         >
                             <option value="default">System Default</option>
-                            {audioDevices.map(device => (
+                            {audioDevices.map(device =>
                                 <option key={device.deviceId} value={device.deviceId}>
-                                    {device.label || `Speaker ${device.deviceId.substring(0, 5)}...`}
+                                    {getAudioLabel(device.deviceId)}
                                 </option>
-                            ))}
+                            )}
                         </select>
                         <MasterVisualizer />
                     </div>
@@ -275,15 +277,15 @@ const AmbientDashboard: React.FC = () => {
                     <button
                         key={scene.id}
                         onClick={() => applyScene(scene.id)}
-                        className="px-5 py-2.5 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-gm-cyan/50 hover:bg-slate-800 transition-all text-[11px] font-bold uppercase tracking-wide whitespace-nowrap group"
+                        className="px-5 py-2.5 rounded-xl bg-app-surface/60 border border-app-border hover:border-gm-cyan/50 hover:bg-app-surface transition-all text-[11px] font-bold uppercase tracking-wide whitespace-nowrap group"
                     >
-                        <span className="text-slate-400 group-hover:text-white transition-colors">{scene.name}</span>
+                        <span className="text-app-text/70 group-hover:text-app-text transition-colors">{scene.name}</span>
                     </button>
                 ))}
             </div>
 
             {/* Mixer Grid */}
-            <div className="flex-1 min-h-0 bg-slate-950/20 rounded-3xl border border-slate-900/50 p-4">
+            <div className="flex-1 min-h-0 bg-app-bg/20 rounded-3xl border border-app-border/50 p-4">
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4 h-full">
                     {tracks.map((track: AmbientTrackState, i: number) => (
                         <AmbientTrack
@@ -297,15 +299,15 @@ const AmbientDashboard: React.FC = () => {
             </div>
 
             {/* Status Footer */}
-            <div className="flex justify-between items-center px-6 py-3 bg-slate-900/40 rounded-2xl border border-slate-800/50 text-[9px] font-mono text-slate-500 uppercase tracking-widest">
+            <div className="flex justify-between items-center px-6 py-3 bg-app-surface/40 rounded-2xl border border-app-border/50 text-[9px] font-mono text-app-text/60 uppercase tracking-widest">
                 <div className="flex items-center gap-4">
                     <span className="flex items-center gap-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_5px_#10b981]" />
                         Engine Ready
                     </span>
-                    <span className="text-slate-700">|</span>
+                    <span className="text-app-border">|</span>
                     <span>Buffer: 48kHz PCM</span>
-                    <span className="text-slate-700">|</span>
+                    <span className="text-app-border">|</span>
                     <span>Latence: ~12ms</span>
                 </div>
                 <div className="flex items-center gap-2">
