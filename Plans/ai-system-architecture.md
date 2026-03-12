@@ -15,16 +15,16 @@ A centralized service to manage embeddings, vector storage, and persona orchestr
 - **Local Persistence**: Vector storage via `Voy` (WASM) ou une base SQLite locale pour les embeddings.
 
 
-## 2. Knowledge RAG Pipeline
+## 2. Knowledge RAG Pipeline (Optimized & Secure)
 
-### Ingestion (Background)
-- Watcher on `docs/` and `Plans/` directories.
-- Document chunking using a semantic strategy (Markdown headers awareness).
-- Embedding generation via `text-embedding-04`.
+### Architecture "Main Proxy"
+- **Secure Integration**: Toutes les requêtes vers les API LLM passent par `window.appBridge.ai.proxyRequest` (Main process). Zéro exposition des clés API dans le navigateur.
+- **RAG Engine (Main)** : Le moteur d'indexation (`RAGEngine.ts`) tourne nativement. Il indexe les dossiers `systems/` et `campaigns/` pour un accès instantané et sécurisé.
 
-### Retrieval (Query-time)
-- Metadata filtering based on `active_campaign` and `game_system`.
-- Top-K similarity search to fetch context.
+### Ingestion & Indexation
+- **Incremental Indexing**: Le moteur surveille les timestamps (`mtime`) et ne recharge que les fichiers modifiés pour économiser le CPU.
+- **Support Multiformat**: Lecture native des fichiers `.md`, `.txt` et extraction PDF asynchrone via `pdf-parse`.
+- **Manual Sync**: Bouton "Actualiser les documents" ajouté dans l'UI pour forcer une ré-indexation immédiate.
 
 ## 3. Modular "Game Drivers" System
 
