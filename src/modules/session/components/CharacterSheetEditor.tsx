@@ -80,7 +80,67 @@ const FieldCheckbox: React.FC<{
         <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40 cursor-pointer">{field.label}</label>
     </button>
 );
+const FieldSelect: React.FC<{
+    field: SheetField;
+    value: string;
+    onChange: (val: string) => void;
+}> = ({ field, value, onChange }) => (
+    <div className="flex items-center justify-between p-3 bg-app-bg/40 rounded-xl border border-app-border/40">
+        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{field.label}</label>
+        <select
+            value={value}
+            onChange={e => onChange(e.target.value)}
+            className="w-48 bg-app-surface text-app-text text-[11px] rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-accent/40 border border-white/5"
+        >
+            <option value="" disabled>-- Sélectionner --</option>
+            {(field.options || []).map(opt => (
+                <option key={opt} value={opt}>{opt}</option>
+            ))}
+        </select>
+    </div>
+);
 
+const FieldTextarea: React.FC<{
+    field: SheetField;
+    value: string;
+    onChange: (val: string) => void;
+}> = ({ field, value, onChange }) => (
+    <div className="flex flex-col gap-2 p-3 bg-app-bg/40 rounded-xl border border-app-border/40">
+        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{field.label}</label>
+        <textarea
+            value={value}
+            onChange={e => onChange(e.target.value)}
+            rows={2}
+            className="w-full bg-transparent text-app-text text-sm focus:outline-none border-b border-app-border/40 focus:border-accent/40 transition-colors resize-none custom-scrollbar"
+        />
+    </div>
+);
+
+const FieldRating: React.FC<{
+    field: SheetField;
+    value: number;
+    onChange: (val: number) => void;
+}> = ({ field, value, onChange }) => {
+    const max = field.max || 5;
+    return (
+        <div className="flex items-center justify-between p-3 bg-app-bg/40 rounded-xl border border-app-border/40 hover:border-accent/20 transition-all">
+            <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{field.label}</label>
+            <div className="flex items-center gap-1.5">
+                {Array.from({ length: max }).map((_, i) => (
+                    <button
+                        key={i}
+                        onClick={() => onChange(i + 1 === value ? 0 : i + 1)}
+                        className={`w-3.5 h-3.5 rounded-full transition-all border ${
+                            i < value 
+                                ? 'bg-accent border-accent scale-110 shadow-[0_0_8px_rgba(var(--color-accent),0.5)]' 
+                                : 'bg-black/20 border-white/10 hover:border-accent/50'
+                        }`}
+                    />
+                ))}
+            </div>
+        </div>
+    );
+};
 // --- Main Component ---
 
 const CharacterSheetEditor: React.FC = () => {
@@ -368,6 +428,15 @@ const CharacterSheetEditor: React.FC = () => {
                                                 );
                                                 if (field.type === 'checkbox') return (
                                                     <FieldCheckbox key={field.id} field={field} value={Boolean(val)} onChange={v => updateLocal(field.id, v)} />
+                                                );
+                                                if (field.type === 'select') return (
+                                                    <FieldSelect key={field.id} field={field} value={String(val)} onChange={v => updateLocal(field.id, v)} />
+                                                );
+                                                if (field.type === 'textarea') return (
+                                                    <FieldTextarea key={field.id} field={field} value={String(val)} onChange={v => updateLocal(field.id, v)} />
+                                                );
+                                                if (field.type === 'rating') return (
+                                                    <FieldRating key={field.id} field={field} value={Number(val)} onChange={v => updateLocal(field.id, v)} />
                                                 );
                                                 return null;
                                             })}

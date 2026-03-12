@@ -4,8 +4,13 @@ import { fileURLToPath } from 'node:url'
 import fs from 'fs-extra'
 import http from 'node:http'
 import https from 'node:https'
+import * as pdf from 'pdf-parse'
+import { registerRagHandlers } from './RAGEngine'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+// Register heavy AI/RAG engine
+registerRagHandlers();
 
 // Ignore certificate errors for local HTTPS requests (like Philips Hue Bridge)
 app.commandLine.appendSwitch('ignore-certificate-errors')
@@ -388,6 +393,134 @@ ipcMain.on('image:close-all-displays', () => {
     projectorWindows.clear();
 });
 
+const APP_ROOT = process.env.APP_ROOT || '';
+
+// --- AI RAG Handlers ---
+ipcMain.handle('ai:list-docs', async () => {
+    const docsPath = path.join(APP_ROOT, 'docs');
+    if (!fs.existsSync(docsPath)) return [];
+    
+    async function getFiles(dir: string): Promise<unknown[]> {
+      const items = await fs.readdir(dir, { withFileTypes: true });
+      const result = await Promise.all(items.map(async item => {
+        const fullPath = path.join(dir, item.name);
+        const relativePath = path.relative(docsPath, fullPath);
+        
+        if (item.isDirectory()) {
+          return {
+            name: item.name,
+            path: relativePath,
+            type: 'directory',
+            children: await getFiles(fullPath)
+          };
+        }
+        
+        return {
+          name: item.name,
+          path: relativePath,
+          type: 'file',
+          extension: path.extname(item.name).toLowerCase()
+        };
+      }));
+      return result;
+    }
+
+    return getFiles(docsPath);
+  });
+
+ipcMain.handle('ai:read-doc', async (_event, relativePath: string) => {
+    const fullPath = path.join(APP_ROOT, 'docs', relativePath);
+    if (!fs.existsSync(fullPath)) return null;
+    return fs.readFileSync(fullPath, 'utf-8');
+  });
+
+ipcMain.handle('ai:extract-pdf', async (_event, relativePath: string) => {
+    const fullPath = path.join(APP_ROOT, 'docs', relativePath);
+    console.log(`[AI Main] Extracting PDF: ${fullPath}`);
+    
+    if (!fs.existsSync(fullPath)) {
+      console.error(`[AI Main] PDF file not found: ${fullPath}`);
+      return "Fichier introuvable.";
+    }
+    
+    try {
+      const dataBuffer = fs.readFileSync(fullPath);
+      console.log(`[AI Main] Buffer read, size: ${dataBuffer.length} bytes. Parsing...`);
+      
+      // pdf-parse can be tricky with ESM, ensure we have the function
+      const parsePdf = (pdf as any).default || (pdf as any);
+      
+      if (typeof parsePdf !== 'function') {
+        console.error("[AI Main] pdf-parse is not a function:", typeof parsePdf);
+        return "Erreur interne: extracteur PDF non disponible.";
+      }
+
+      const data = await parsePdf(dataBuffer);
+      console.log(`[AI Main] PDF parsed successfully. Text length: ${data.text?.length || 0}`);
+      return data.text || "PDF vide ou illisible.";
+    } catch (error) {
+      console.error("[AI Main] PDF Extraction Error:", error);
+      return `Erreur lors de l'extraction du PDF : ${error instanceof Error ? error.message : String(error)}`;
+    }
+  });
+
+ipcMain.handle('ai:proxy-request', async (_event, url: string, method: string, headers: Record<string, string>, body: unknown) => {
+    return new Promise((resolve, reject) => {
+        try {
+            const parsedUrl = new URL(url);
+            const lib = parsedUrl.protocol === 'https:' ? https : http;
+
+            const options: https.RequestOptions = {
+                method,
+                headers,
+                rejectUnauthorized: false,
+                timeout: 30000 // 30 seconds for AI
+            };
+
+            const req = lib.request(parsedUrl, options, (res) => {
+                let data = '';
+                res.on('data', chunk => data += chunk);
+                res.on('end', () => {
+                    try {
+                        const parsed = data ? JSON.parse(data) : null;
+                        resolve({
+                            ok: res.statusCode ? res.statusCode >= 200 && res.statusCode < 300 : false,
+                            status: res.statusCode,
+                            statusText: res.statusMessage,
+                            data: parsed
+                        });
+                    } catch {
+                        resolve({
+                            ok: res.statusCode ? res.statusCode >= 200 && res.statusCode < 300 : false,
+                            status: res.statusCode,
+                            statusText: res.statusMessage,
+                            data: data
+                        });
+                    }
+                });
+            });
+
+            req.on('error', (err) => {
+                console.error(`[AI Main] Proxy request failed for ${url}:`, err.message);
+                reject(err);
+            });
+
+            req.on('timeout', () => {
+                req.destroy();
+                reject(new Error('AI Request timed out'));
+            });
+
+            if (body) {
+                req.write(typeof body === 'string' ? body : JSON.stringify(body));
+            }
+            req.end();
+
+        } catch (error: unknown) {
+            console.error(`[AI Main] Proxy setup failed for ${url}:`, error);
+            reject(error);
+        }
+    });
+});
 
 ipcMain.handle('npc:select-avatar', async () => {
     const { filePaths } = await dialog.showOpenDialog({

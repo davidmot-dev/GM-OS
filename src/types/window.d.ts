@@ -16,6 +16,22 @@ interface AppBridge {
     app?: {
         quit: () => void;
     };
+    ai?: {
+        listDocs: () => Promise<unknown[]>;
+        readDoc: (filePath: string) => Promise<string | null>;
+        extractPDF: (filePath: string) => Promise<string>;
+        proxyRequest: (url: string, method: string, headers: Record<string, string>, body: unknown) => Promise<{
+            ok: boolean;
+            status: number;
+            statusText: string;
+            data: unknown;
+        }>;
+        searchContext: (systemId: string, campaignName: string) => Promise<string>;
+        reindex: () => Promise<boolean>;
+    };
+    light?: {
+        request: (url: string, method: string, body?: unknown) => Promise<unknown>;
+    };
 }
 
 declare global {

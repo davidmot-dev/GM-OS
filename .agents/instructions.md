@@ -37,3 +37,9 @@ Ce guide définit les règles obligatoires pour la refonte de GM-OS vers une arc
 
 - **Règle :** Utiliser Zustand ou le Context API pour les données globales partagées (ex: Settings, Session).
 - **Synchronisation :** L'UI doit être une fonction pure de l'état global.
+
+## 7. Méthode BMAD (Agile AI Development)
+
+- **Règle :** Utiliser les workflows et agents définis dans `_bmad` pour les tâches complexes.
+- **Workflow :** Les processus d'analyse, de planification et d'implémentation doivent suivre les manifests BMAD.
+- **Support :** En cas d'incertitude sur la prochaine étape, consulter `_bmad/core/module-help.csv` ou utiliser les workflows de `_bmad/core/workflows`.

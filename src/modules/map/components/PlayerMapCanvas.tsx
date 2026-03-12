@@ -1,8 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import { useMapStore } from '../useMapStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
+import MapPingLayer from './MapPingLayer';
 
-const PlayerMapCanvas: React.FC = () => {
+interface PlayerMapCanvasProps {
+    onMapClick?: (x: number, y: number) => void;
+}
+
+const PlayerMapCanvas: React.FC<PlayerMapCanvasProps> = ({ onMapClick }) => {
     const { 
         projectedMapUrl, projectedIsVideo, projectedFogDataUrl,
         projectedMapWidth, projectedMapHeight,
@@ -62,10 +67,19 @@ const PlayerMapCanvas: React.FC = () => {
     // Sync Fog Canvas
     useEffect(() => {
         const canvas = fogCanvasRef.current;
-        if (!canvas || !fogDataUrl) return;
+        if (!canvas) return;
 
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
+
+        if (!fogDataUrl) {
+            // Fill completely black if no fog data is provided
+            canvas.width = mapWidth;
+            canvas.height = mapHeight;
+            ctx.fillStyle = 'black';
+            ctx.fillRect(0, 0, mapWidth, mapHeight);
+            return;
+        }
 
         const img = new Image();
         img.onload = () => {
@@ -112,35 +126,45 @@ const PlayerMapCanvas: React.FC = () => {
     const effectivePanY = localView.y;
 
     return (
-        <div className="w-full h-full bg-app-bg relative overflow-hidden flex items-center justify-center">
+        <div ref={containerRef} className="w-full h-full bg-app-bg relative overflow-hidden pointer-events-auto">
             {/* Transform Layer Wrapper */}
             <div 
-                ref={containerRef}
-                className="relative overflow-hidden" // Added relative and overflow-hidden to the containerRef div
+                className="absolute top-0 left-0 origin-top-left cursor-crosshair"
                 style={{
                     width: mapWidth,
                     height: mapHeight,
                     transform: `translate(${effectivePanX}px, ${effectivePanY}px) scale(${effectiveZoom})`,
                 }}
+                onPointerDown={(e) => {
+                    if (!onMapClick || !containerRef.current) return;
+                    const rect = containerRef.current.getBoundingClientRect();
+                    const rawX = e.clientX - rect.left;
+                    const rawY = e.clientY - rect.top;
+                    const x = (rawX - effectivePanX) / effectiveZoom;
+                    const y = (rawY - effectivePanY) / effectiveZoom;
+                    onMapClick(x, y);
+                }}
             >
                 {/* 1. Base Layer */}
                 {resolvedMapUrl && isVideo ? (
-                    <video src={resolvedMapUrl} autoPlay loop muted className="absolute inset-0 w-full h-full object-cover z-10" />
+                    <video src={resolvedMapUrl} autoPlay loop muted className="absolute inset-0 w-full h-full object-cover z-10 pointer-events-none" />
                 ) : resolvedMapUrl ? (
-                    <img src={resolvedMapUrl} alt="Map Background" className="absolute inset-0 w-full h-full object-cover z-10" />
+                    <img src={resolvedMapUrl} alt="Map Background" className="absolute inset-0 w-full h-full object-cover z-10 pointer-events-none" />
                 ) : null}
 
                 {/* 2. Grid Layer */}
                 {isGridEnabled && (
-                    <canvas ref={gridCanvasRef} className="absolute inset-0 w-full h-full z-15" />
+                    <canvas ref={gridCanvasRef} className="absolute inset-0 w-full h-full z-15 pointer-events-none" />
                 )}
 
                 {/* 3. Fog Layer */}
                 <canvas
                     ref={fogCanvasRef}
-                    className="absolute inset-0 w-full h-full z-20 opacity-90"
+                    className="absolute inset-0 w-full h-full z-20 opacity-100 pointer-events-none"
                 />
 
+                {/* 4. Pings Layer */}
+                <MapPingLayer isProjectedView={true} />
             </div>
             
             {/* Vignette effect */}

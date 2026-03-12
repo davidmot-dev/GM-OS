@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState, type MouseEvent } from 'react';
 import { useMapStore } from '../useMapStore';
 import { FogEngine } from '../FogEngine';
 import MapTokenNode from './MapTokenNode';
+import MapPingLayer from './MapPingLayer';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { gmConfirm } from '../../../stores/useModalStore';
 
@@ -10,6 +11,7 @@ const MapCanvas: React.FC = () => {
         mapUrl, isVideo, fogDataUrl, setFogDataUrl, 
         currentTool, fogMode, brushSize, tokens, 
         fogCommand, triggerFogCommand,
+        addPing,
         zoom, panX, panY, viewResetCounter, setViewState,
         mapWidth, mapHeight, setMapDimensions,
         isGridEnabled, gridSize, gridColor, gridOpacity
@@ -183,6 +185,12 @@ const MapCanvas: React.FC = () => {
             if (currentTool === 'move_token') return; // Ne pas dessiner en mode déplacement de pions
             
             const coords = getCoordinates(e);
+
+            if (currentTool === 'ping') {
+                addPing(coords.x, coords.y, '#eab308'); // GM-OS Gold
+                return;
+            }
+
             setIsDrawing(true);
             setStartPos(coords);
 
@@ -358,6 +366,9 @@ const MapCanvas: React.FC = () => {
                         <MapTokenNode key={token.id} token={token} />
                     ))}
                 </div>
+
+                {/* 4.5. Pings Layer */}
+                <MapPingLayer isProjectedView={false} />
 
                 {/* 5. Preview Layer */}
                 <canvas

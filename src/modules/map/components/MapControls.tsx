@@ -4,7 +4,7 @@ import { useCombatStore } from '../../combat/useCombatStore';
 import { gmConfirm, gmCustom } from '../../../stores/useModalStore';
 import {
     Upload, EyeOff, Eye, Paintbrush, Square, Circle,
-    Cast, Maximize, Users, MousePointer2, PlusCircle, Trash2
+    Cast, Maximize, Users, MousePointer2, PlusCircle, Trash2, MapPin
 } from 'lucide-react';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaStore } from '../../../stores/useMediaStore';
@@ -185,6 +185,7 @@ const MapControls: React.FC = () => {
                         <ToolButton tool="brush" currentTool={currentTool} setTool={setTool} icon={Paintbrush} label="Pinceau" />
                         <ToolButton tool="rect" currentTool={currentTool} setTool={setTool} icon={Square} label="Zone" />
                         <ToolButton tool="circle" currentTool={currentTool} setTool={setTool} icon={Circle} label="Rond" />
+                        <ToolButton tool="ping" currentTool={currentTool} setTool={setTool} icon={MapPin} label="Ping" />
                     </div>
 
                     {/* Brush Size Slider */}

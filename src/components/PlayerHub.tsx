@@ -21,8 +21,9 @@ const PlayerHub: React.FC = () => {
     const { favorites } = useFavoriteStore();
     const { combatants, currentTurnIdx, round } = useCombatStore();
     const { mapUrl, projectionTarget } = useMapStore();
-    const { backgroundMode } = useWhiteboardStore();
-    const isWhiteboardLight = backgroundMode === 'light';
+    const { backgroundMode, projectionTarget: whiteboardTarget } = useWhiteboardStore();
+
+    const isWhiteboardActive = whiteboardTarget === 'hub';
 
     const activeHubId = projections['hub'];
     
@@ -122,7 +123,11 @@ const PlayerHub: React.FC = () => {
             {/* Map Background Layer (Z-0) */}
             {isMapActive && (
                 <div className="fixed inset-0 z-0">
-                    <PlayerMapCanvas />
+                    <PlayerMapCanvas 
+                        onMapClick={(x, y) => {
+                            useMapStore.getState().addPing(x, y, '#06b6d4'); // GM-OS Cyan for player pings
+                        }}
+                    />
                 </div>
             )}
             
@@ -142,7 +147,10 @@ const PlayerHub: React.FC = () => {
             )}
 
             {/* Whiteboard Layer (Z-30) */}
-            <div className={`fixed inset-0 z-30 pointer-events-none transition-colors duration-500 ${isWhiteboardLight ? 'bg-white' : 'bg-transparent'}`}>
+            <div className={`fixed inset-0 z-30 pointer-events-none transition-colors duration-500 ${
+                isWhiteboardActive && backgroundMode === 'light' ? 'bg-white' : 
+                isWhiteboardActive && backgroundMode === 'dark' ? 'bg-app-bg' : 'bg-transparent'
+            }`}>
                 <PlayerDrawingCanvas />
             </div>
 

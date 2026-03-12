@@ -60,9 +60,18 @@ contextBridge.exposeInMainWorld('appBridge', {
             const normalized = path.replace(/\\/g, '/');
             return `file:///${encodeURI(normalized).replace(/#/g, '%23').replace(/\?/g, '%3F')}`;
         }
+    },
+    ai: {
+        listDocs: () => ipcRenderer.invoke('ai:list-docs'),
+        readDoc: (filePath: string) => ipcRenderer.invoke('ai:read-doc', filePath),
+        extractPDF: (filePath: string) => ipcRenderer.invoke('ai:extract-pdf', filePath),
+        proxyRequest: (url: string, method: string, headers: Record<string, string>, body: unknown) => 
+            ipcRenderer.invoke('ai:proxy-request', url, method, headers, body),
+        searchContext: (systemId: string, campaignName: string) => 
+            ipcRenderer.invoke('ai:search-context', systemId, campaignName),
+        reindex: () => ipcRenderer.invoke('ai:reindex')
     }
 })
 
 
-// Support legacy name if needed, but appBridge is preferred per instructions.md
-contextBridge.exposeInMainWorld('ipcRenderer', ipcRenderer)
+// Note: appBridge is the ONLY authorized gateway. ipcRenderer exposure is forbidden.

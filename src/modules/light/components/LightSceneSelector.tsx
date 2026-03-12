@@ -2,15 +2,17 @@ import React from 'react';
 import { useLightStore } from '../useLightStore';
 import { useMusicStore } from '../../music/useMusicStore';
 import { useSoundStore } from '../../sound/useSoundStore';
+import { useAmbientStore } from '../../ambient/useAmbientStore';
 import { useModalStore } from '../../../stores/useModalStore';
 import { X, Lightbulb } from 'lucide-react';
 
 interface LightSceneSelectorProps {
     data: {
-        type: 'music' | 'sound';
+        type: 'music' | 'sound' | 'ambient';
         playlistId?: string;
         padIndex?: number;
         padId?: string;
+        trackIndex?: number;
     };
 }
 
@@ -18,6 +20,7 @@ const LightSceneSelector: React.FC<LightSceneSelectorProps> = ({ data }) => {
     const { scenes } = useLightStore();
     const { updatePad } = useMusicStore();
     const { setPadLightLink } = useSoundStore();
+    const { setTrackLightLink } = useAmbientStore();
     const { closeModal } = useModalStore();
 
     const capturedScenes = Object.values(scenes).filter(s => Object.keys(s.lightStates).length > 0);
@@ -27,6 +30,8 @@ const LightSceneSelector: React.FC<LightSceneSelectorProps> = ({ data }) => {
             updatePad(data.playlistId, data.padIndex, { lightLinkId: sceneId || undefined });
         } else if (data.type === 'sound' && data.padId) {
             setPadLightLink(data.padId, sceneId);
+        } else if (data.type === 'ambient' && data.trackIndex !== undefined) {
+            setTrackLightLink(data.trackIndex, sceneId);
         }
         closeModal();
     };

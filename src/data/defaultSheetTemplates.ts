@@ -1,13 +1,15 @@
 // src/data/defaultSheetTemplates.ts
 // Defines the built-in character sheet templates.
 
-export type SheetFieldType = 'number' | 'text' | 'checkbox' | 'gauge';
+export type SheetFieldType = 'number' | 'text' | 'checkbox' | 'gauge' | 'select' | 'textarea' | 'rating';
 
 export interface SheetField {
     id: string;
     label: string;
     type: SheetFieldType;
     defaultValue: number | string | boolean;
+    options?: string[]; // Used for 'select' type
+    max?: number;       // Used for 'rating' or 'gauge' absolute maximum
 }
 
 export interface SheetSection {
@@ -23,6 +25,7 @@ export interface SheetTemplate {
     isBuiltin?: boolean; // Built-in templates cannot be deleted
     sections: SheetSection[];
     defaultNotebookUrl?: string; // Default NotebookLM for this system
+    aiPersonas?: Record<string, string>; // gemId -> instructions
 }
 
 export const DEFAULT_SHEET_TEMPLATES: SheetTemplate[] = [

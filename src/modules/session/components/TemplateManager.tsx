@@ -3,13 +3,55 @@ import { useSessionOSStore } from '../useSessionOSStore';
 import { useModalStore } from '../../../stores/useModalStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import type { SheetTemplate, SheetSection, SheetField, SheetFieldType } from '../../../data/defaultSheetTemplates';
-import { Plus, Trash2, ChevronDown, ChevronRight, Pencil, Sparkles } from 'lucide-react';
+import { Plus, Trash2, ChevronDown, ChevronRight, Pencil, Sparkles, Brain, BookOpen, PenTool, Music, Beaker, User, Wand2, type LucideIcon } from 'lucide-react';
+import { useGemStore } from '../../../stores/useGemStore';
+import { aiService } from '../../ai/AIService';
 
 const FIELD_TYPE_LABELS: Record<SheetFieldType, string> = {
     gauge: 'Jauge (%)',
     number: 'Nombre',
     text: 'Texte',
     checkbox: 'Case à cocher',
+    select: 'Liste déroulante',
+    textarea: 'Texte multiligne',
+    rating: 'Échelle (Ex: 1 à 5)',
+};
+
+// Sub-component to handle options input without immediate splitting/joining issues
+const FieldOptionsInput: React.FC<{
+    options: string[];
+    onUpdate: (newOptions: string[]) => void;
+}> = ({ options, onUpdate }) => {
+    const [text, setText] = useState(options.join(', '));
+
+    // Update internal text when external options change (e.g. from AI or undo)
+    React.useEffect(() => {
+        const currentText = options.join(', ');
+        // Only update if the external source is significantly different
+        // and doesn't match our current normalized split
+        const currentSplit = text.split(',').map(s => s.trim()).filter(s => s);
+        if (options.length !== currentSplit.length || options.some((opt, i) => opt !== currentSplit[i])) {
+            if (!text.endsWith(', ') && !text.endsWith(',')) {
+                setText(currentText);
+            }
+        }
+    }, [options, text]);
+
+    const handleChange = (newVal: string) => {
+        setText(newVal);
+        const split = newVal.split(',').map(s => s.trim()).filter(s => s);
+        onUpdate(split);
+    };
+
+    return (
+        <input 
+            type="text"
+            value={text}
+            onChange={e => handleChange(e.target.value)}
+            placeholder="Ex: Épée, Hache, Arc..."
+            className="flex-1 bg-black/20 text-xs text-app-text/80 px-2 py-1 rounded border border-white/5 focus:outline-none focus:border-accent/30"
+        />
+    );
 };
 
 // --- Section Editor ---
@@ -70,27 +112,58 @@ const SectionEditor: React.FC<{
             {isOpen && (
                 <div className="p-3 space-y-2 bg-app-bg/40">
                     {section.fields.map((field, i) => (
-                        <div key={field.id} className="flex items-center gap-2 p-2 bg-app-surface/30 rounded-lg border border-white/5">
-                            <Pencil size={12} className="text-slate-600 flex-shrink-0" />
-                            <input
-                                type="text"
-                                value={field.label}
-                                onChange={e => updateField(i, { label: e.target.value })}
-                                className="flex-1 bg-transparent text-sm text-slate-200 focus:outline-none min-w-0"
-                                placeholder="Nom du champ"
-                            />
-                            <select
-                                value={field.type}
-                                onChange={e => updateField(i, { type: e.target.value as SheetFieldType, defaultValue: e.target.value === 'gauge' ? 50 : e.target.value === 'number' ? 0 : e.target.value === 'checkbox' ? false : '' })}
-                                className="bg-app-bg text-app-text/80 text-[11px] rounded-lg px-2 py-1 border border-white/10 focus:outline-none focus:ring-1 focus:ring-accent/40"
-                            >
-                                {(Object.entries(FIELD_TYPE_LABELS) as [SheetFieldType, string][]).map(([type, label]) => (
-                                    <option key={type} value={type}>{label}</option>
-                                ))}
-                            </select>
-                            <button onClick={() => removeField(i)} className="p-1 text-app-text/20 hover:text-red-400 transition-colors">
-                                <Trash2 size={12} />
-                            </button>
+                        <div key={field.id} className="flex flex-col gap-2 p-2 bg-app-surface/30 rounded-lg border border-white/5">
+                            <div className="flex items-center gap-2">
+                                <Pencil size={12} className="text-slate-600 flex-shrink-0" />
+                                <input
+                                    type="text"
+                                    value={field.label}
+                                    onChange={e => updateField(i, { label: e.target.value })}
+                                    className="flex-1 bg-transparent text-sm text-slate-200 focus:outline-none min-w-0"
+                                    placeholder="Nom du champ"
+                                />
+                                <select
+                                    value={field.type}
+                                    onChange={e => updateField(i, { 
+                                        type: e.target.value as SheetFieldType, 
+                                        defaultValue: e.target.value === 'gauge' ? 50 : e.target.value === 'number' || e.target.value === 'rating' ? 0 : e.target.value === 'checkbox' ? false : '',
+                                        ...(e.target.value === 'rating' ? { max: 5 } : {}),
+                                        ...(e.target.value === 'select' ? { options: [] } : {})
+                                    })}
+                                    className="bg-app-bg text-app-text/80 text-[11px] rounded-lg px-2 py-1 border border-white/10 focus:outline-none focus:ring-1 focus:ring-accent/40"
+                                >
+                                    {(Object.entries(FIELD_TYPE_LABELS) as [SheetFieldType, string][]).map(([type, label]) => (
+                                        <option key={type} value={type}>{label}</option>
+                                    ))}
+                                </select>
+                                <button onClick={() => removeField(i)} className="p-1 text-app-text/20 hover:text-red-400 transition-colors">
+                                    <Trash2 size={12} />
+                                </button>
+                            </div>
+                            
+                            {/* Configuration supplementaire pour les champs complexes */}
+                            {field.type === 'select' && (
+                                <div className="flex items-center gap-2 pl-5">
+                                    <span className="text-[10px] text-app-text/40 uppercase font-bold">Options :</span>
+                                    <FieldOptionsInput 
+                                        options={field.options || []} 
+                                        onUpdate={newOptions => updateField(i, { options: newOptions })} 
+                                    />
+                                </div>
+                            )}
+                            {field.type === 'rating' && (
+                                <div className="flex items-center gap-2 pl-5">
+                                    <span className="text-[10px] text-app-text/40 uppercase font-bold">Valeur max :</span>
+                                    <input 
+                                        type="number"
+                                        min={1}
+                                        max={20}
+                                        value={field.max || 5}
+                                        onChange={e => updateField(i, { max: parseInt(e.target.value) || 5 })}
+                                        className="w-16 bg-black/20 text-xs text-app-text/80 px-2 py-1 rounded border border-white/5 focus:outline-none focus:border-accent/30 text-center"
+                                    />
+                                </div>
+                            )}
                         </div>
                     ))}
                     <button
@@ -172,8 +245,47 @@ const TemplateEditor: React.FC<{
                 )}
             </div>
 
+            {/* AI Personas Override */}
+            <div className="space-y-3 mt-6">
+                <h4 className="text-xs font-black uppercase tracking-tight text-app-text flex items-center gap-2">
+                    <Sparkles size={14} className="text-accent" /> Personnas IA Spécialisés (Optionnel)
+                </h4>
+                <p className="text-[10px] text-app-text/60">Définissez une personnalité spécifique pour ce système de jeu. Laissez vide pour utiliser vos paramètres IA globaux.</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {useGemStore.getState().gems.map(gem => {
+                        const iconMap: Record<string, LucideIcon> = { BookOpen, PenTool, Music, Beaker, User, Sparkles, Brain };
+                        const Icon = iconMap[gem.icon] || Brain;
+                        const currValue = template.aiPersonas?.[gem.id] || '';
+                        return (
+                            <div key={gem.id} className="p-3 bg-app-surface/40 border border-white/5 rounded-xl space-y-2 focus-within:border-accent/30 transition-colors">
+                                <div className="flex items-center gap-2">
+                                    <Icon size={14} className="text-accent" />
+                                    <span className="text-[10px] font-bold text-white uppercase tracking-widest">{gem.name}</span>
+                                </div>
+                                <textarea
+                                    value={currValue}
+                                    onChange={e => {
+                                        const newVal = e.target.value;
+                                        const newPersonas = { ...(template.aiPersonas || {}) };
+                                        if (newVal.trim() === '') {
+                                            delete newPersonas[gem.id];
+                                        } else {
+                                            newPersonas[gem.id] = newVal;
+                                        }
+                                        onUpdate({ ...template, aiPersonas: newPersonas });
+                                    }}
+                                    placeholder={`Surcharge des instructions pour ${gem.name}...`}
+                                    className="w-full h-20 bg-black/40 border border-app-border/40 rounded-xl p-3 text-xs text-app-text/80 focus:border-accent/50 outline-none transition-all font-mono"
+                                />
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+
             {/* Sections */}
-            <div className="space-y-2">
+            <div className="space-y-2 mt-6">
+                <h4 className="text-xs font-black uppercase tracking-tight text-app-text mb-3">Sections & Champs</h4>
                 {template.sections.map((section, i) => (
                     <SectionEditor
                         key={section.id}
@@ -196,8 +308,9 @@ const TemplateEditor: React.FC<{
 // --- Main TemplateManager ---
 const TemplateManager: React.FC = () => {
     const { customSheetTemplates, addSheetTemplate, updateSheetTemplate, deleteSheetTemplate } = useSessionOSStore();
-    const { showConfirm } = useModalStore();
+    const { showConfirm, showPrompt } = useModalStore();
     const [selectedId, setSelectedId] = useState<string | null>(customSheetTemplates[0]?.id ?? null);
+    const [isGenerating, setIsGenerating] = useState(false);
 
     const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
     const selectedTemplate = allTemplates.find(t => t.id === selectedId);
@@ -211,12 +324,43 @@ const TemplateManager: React.FC = () => {
             ],
         };
         addSheetTemplate(newTemplate);
-        // Select the new one after creation
         setTimeout(() => {
             const store = useSessionOSStore.getState();
             const newest = store.customSheetTemplates.at(-1);
             if (newest) setSelectedId(newest.id);
         }, 50);
+    };
+
+    const handleGenerateWithAI = () => {
+        showPrompt(
+            "Entrez le nom du jeu à générer :",
+            "",
+            async (systemQuery) => {
+                if (!systemQuery.trim()) return;
+                setIsGenerating(true);
+                try {
+                    const templateData = await aiService.generateStructuredTemplate(systemQuery);
+                    const newTemplate = {
+                        ...templateData,
+                        id: `system-${Date.now()}`,
+                        sections: templateData.sections || []
+                    };
+                    addSheetTemplate(newTemplate as SheetTemplate);
+                    setTimeout(() => {
+                        const store = useSessionOSStore.getState();
+                        const newest = store.customSheetTemplates.at(-1);
+                        if (newest) setSelectedId(newest.id);
+                    }, 50);
+                } catch (e: unknown) {
+                    const msg = e instanceof Error ? e.message : String(e);
+                    alert(`Erreur de génération : ${msg}`);
+                } finally {
+                    setIsGenerating(false);
+                }
+            },
+            "Générer",
+            "Annuler"
+        );
     };
 
     const handleUpdate = (updated: SheetTemplate) => {
@@ -245,17 +389,38 @@ const TemplateManager: React.FC = () => {
                         </button>
                     ))}
                 </div>
-                <div className="p-3 border-t border-app-border">
+                <div className="p-3 border-t border-app-border space-y-2">
                     <button
                         onClick={handleCreateNew}
                         className="w-full flex items-center justify-center gap-2 py-2.5 bg-gm-gold/10 border border-gm-gold/30 text-gm-gold hover:bg-gm-gold/20 rounded-xl text-xs font-bold uppercase tracking-widest transition-all"
                     >
                         <Plus size={14} /> Nouveau Modèle
                     </button>
+                    <button
+                        onClick={handleGenerateWithAI}
+                        disabled={isGenerating}
+                        className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${
+                            isGenerating
+                            ? 'bg-accent/20 text-accent/50 cursor-wait'
+                            : 'bg-accent/10 border border-accent/30 text-accent hover:bg-accent/20'
+                        }`}
+                    >
+                        {isGenerating ? (
+                            <>
+                                <div className="w-3.5 h-3.5 border-2 border-accent/30 border-t-accent rounded-full animate-spin" />
+                                Génération...
+                            </>
+                        ) : (
+                            <>
+                                <Wand2 size={14} /> Générer via l'IA
+                            </>
+                        )}
+                    </button>
                 </div>
             </div>
 
             {/* Editor Area */}
+
             <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
                 {selectedTemplate ? (
                     selectedTemplate.isBuiltin ? (

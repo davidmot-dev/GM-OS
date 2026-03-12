@@ -58,6 +58,13 @@ contextBridge.exposeInMainWorld("appBridge", {
       const normalized = path.replace(/\\/g, "/");
       return `file:///${encodeURI(normalized).replace(/#/g, "%23").replace(/\?/g, "%3F")}`;
     }
+  },
+  ai: {
+    listDocs: () => ipcRenderer.invoke("ai:list-docs"),
+    readDoc: (filePath) => ipcRenderer.invoke("ai:read-doc", filePath),
+    extractPDF: (filePath) => ipcRenderer.invoke("ai:extract-pdf", filePath),
+    proxyRequest: (url, method, headers, body) => ipcRenderer.invoke("ai:proxy-request", url, method, headers, body),
+    searchContext: (systemId, campaignName) => ipcRenderer.invoke("ai:search-context", systemId, campaignName),
+    reindex: () => ipcRenderer.invoke("ai:reindex")
   }
 });
-contextBridge.exposeInMainWorld("ipcRenderer", ipcRenderer);

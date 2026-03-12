@@ -148,7 +148,7 @@ const ProjectorView: React.FC = () => {
             <div className="w-screen h-screen bg-app-bg overflow-hidden relative">
                 {isTargetMonitor ? (
                     <div className="relative w-full h-full">
-                        <PlayerMapCanvas />
+                        <PlayerMapCanvas onMapClick={(x, y) => useMapStore.getState().addPing(x, y, '#06b6d4')} />
                         <div className="absolute inset-0 z-20 pointer-events-none">
                             <MapTokenLayer />
                         </div>

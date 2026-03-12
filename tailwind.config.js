@@ -82,6 +82,7 @@ export default {
                 'scanline': 'scanline 8s linear infinite',
                 'glitch-skew': 'glitch-skew 4s infinite linear alternate-reverse',
                 'spark': 'spark 0.2s infinite',
+                'ping-expand': 'ping-expand 1.5s ease-out forwards',
             },
             keyframes: {
                 glitch: {
@@ -122,6 +123,10 @@ export default {
                 spark: {
                     '0%, 100%': { opacity: 0 },
                     '50%': { opacity: 1, filter: 'brightness(2)' },
+                },
+                'ping-expand': {
+                    '0%': { transform: 'scale(0.2)', opacity: 0.8 },
+                    '100%': { transform: 'scale(2)', opacity: 0 },
                 }
             }
         },

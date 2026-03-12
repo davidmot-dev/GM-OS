@@ -3,15 +3,19 @@ import { useSessionOSStore } from '../useSessionOSStore';
 import { ChevronLeft, Info, Calendar, Users, MapPin, Edit3, Sparkles } from 'lucide-react';
 import { gmCustom, useModalStore } from '../../../stores/useModalStore';
 import { ResolvedAsset } from '../../../components/ResolvedAsset';
+import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 
 const CampaignDetails: React.FC = () => {
-    const { campaigns, activeCampaignId, sessions, setCurrentView, entities, atlasMaps } = useSessionOSStore();
+    const { campaigns, activeCampaignId, sessions, setCurrentView, entities, atlasMaps, customSheetTemplates } = useSessionOSStore();
     const campaign = campaigns.find(c => c.id === activeCampaignId);
     const campaignSessions = sessions.filter(s => s.campaignId === activeCampaignId);
     const campaignNPCs = entities.filter(e => e.type === 'npc' && e.campaignId === activeCampaignId);
     const activeLocations = atlasMaps.filter(m => campaign?.activeLocationIds?.includes(m.id));
 
     if (!campaign) return null;
+
+    const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
+    const systemName = allTemplates.find(t => t.id === campaign.system)?.name || campaign.system;
 
     return (
         <div className="flex-1 flex flex-col gap-6 p-6 h-full overflow-y-auto custom-scrollbar bg-app-bg/20">
@@ -49,7 +53,7 @@ const CampaignDetails: React.FC = () => {
                         <div className="space-y-4">
                             <div>
                                 <p className="text-[10px] text-app-text/40 uppercase font-bold tracking-widest mb-1">Adventure System</p>
-                                <p className="text-app-text/80 font-medium">{campaign.system}</p>
+                                <p className="text-app-text/80 font-medium">{systemName}</p>
                             </div>
                             <div>
                                 <p className="text-[10px] text-app-text/40 uppercase font-bold tracking-widest mb-1">Description</p>

@@ -23,12 +23,14 @@ import {
     Edit3,
     MonitorPlay,
     Save,
-    Download
+    Download,
+    Brain
 } from 'lucide-react';
 import { useSessionStore, THEME_PALETTES } from '../store/useSessionStore';
 import type { ThemeID } from '../store/useSessionStore';
 import { useModalStore } from '../stores/useModalStore';
 import { SessionService } from '../store/SessionService';
+import AIChatPanel from '../modules/ai/components/AIChatPanel';
 
 
 interface NavItemProps {
@@ -66,6 +68,8 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
         theme,
         setTheme,
         themeColor,
+        isAIPanelOpen,
+        toggleAIPanel,
     } = useSessionStore();
 
     const { openMediaHub, showCustom } = useModalStore();
@@ -179,6 +183,12 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         label="Favorite OS"
                         active={activeModule === 'favorite'}
                         onClick={() => setActiveModule('favorite')}
+                    />
+                    <NavItem
+                        icon={<Brain size={20} className="text-accent" />}
+                        label="AI GEMS"
+                        active={isAIPanelOpen}
+                        onClick={() => toggleAIPanel()}
                     />
 
                     <div className="my-3 mx-2 h-px bg-app-border/20" />
@@ -297,13 +307,9 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                             <div className="absolute inset-0 bg-gm-violet/0 group-hover:bg-gm-violet/5 transition-colors" />
                         </button>
                     </div>
-
                     <div className="group relative p-4 rounded-[1.25rem] bg-gradient-to-br from-app-surface/40 to-app-bg/60 border border-app-border/30 shadow-2xl backdrop-blur-2xl transition-all duration-300 hover:border-accent/30 overflow-hidden">
                         <div className="absolute -right-4 -top-4 w-24 h-24 bg-accent/10 rounded-full blur-3xl group-hover:bg-accent/20 transition-all duration-500" />
                         
-                        <div className="flex flex-1 items-center justify-center gap-4 relative z-10 px-2">
-
-
                         <div className="flex items-center justify-center gap-4 relative z-10 px-2">
                             <button
                                 onClick={handleLaunchHub}
@@ -320,7 +326,6 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                             >
                                 <Power size={20} />
                             </button>
-                        </div>
                         </div>
                     </div>
                 </div>
@@ -350,6 +355,9 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                     {children}
                 </div>
             </main>
+
+            {/* AI Side Panel */}
+            <AIChatPanel />
         </div>
     );
 };

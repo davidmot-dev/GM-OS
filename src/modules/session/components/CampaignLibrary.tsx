@@ -2,9 +2,15 @@ import React from 'react';
 import { Plus, Search, BookOpen, Trash2, ArrowRight, Settings } from 'lucide-react';
 import { gmConfirm, gmCustom } from '../../../stores/useModalStore';
 import { useSessionOSStore } from '../useSessionOSStore';
+import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 
 const CampaignLibrary: React.FC = () => {
-    const { campaigns, setActiveCampaign, setCurrentView, activeCampaignId } = useSessionOSStore();
+    const { campaigns, setActiveCampaign, setCurrentView, activeCampaignId, customSheetTemplates } = useSessionOSStore();
+
+    const getSystemName = (systemId: string) => {
+        const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
+        return allTemplates.find(t => t.id === systemId)?.name || systemId;
+    };
 
     const handleSelectCampaign = (id: string) => {
         setActiveCampaign(id);
@@ -83,7 +89,7 @@ const CampaignLibrary: React.FC = () => {
                                 </div>
                                 <h3 className="text-xl font-bold text-app-text/90 mb-1 group-hover:text-accent transition-colors">{campaign.name}</h3>
                                 <div className="flex items-center gap-2">
-                                    <span className="text-[10px] bg-app-bg text-app-text/40 px-2 py-0.5 rounded font-black uppercase tracking-widest">{campaign.system}</span>
+                                    <span className="text-[10px] bg-app-bg text-app-text/40 px-2 py-0.5 rounded font-black uppercase tracking-widest">{getSystemName(campaign.system)}</span>
                                     {campaign.id === activeCampaignId && (
                                         <span className="text-[10px] bg-accent text-app-bg px-2 py-0.5 rounded font-black uppercase tracking-widest animate-pulse">ACTIVE</span>
                                     )}

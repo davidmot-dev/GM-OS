@@ -1,8 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { musicEngine } from './MusicEngine';
-import { hueEngine } from '../light/HueEngine';
-import { useLightStore } from '../light/useLightStore';
+// Note: imports of hueEngine and useLightStore moved inside actions to avoid circular dependencies
 
 export type PadType = 'local' | 'link';
 
@@ -302,6 +301,19 @@ export const useMusicStore = create<MusicState>()(
                     musicEngine.deckA.fadeOut(duration);
                     musicEngine.deckB.fadeOut(duration);
                     get().addLog("ARRÊT TOTAL (Progressif)");
+
+                    // Light Reversion
+                    // @ts-expect-error global access to avoid circular dependency
+                    const lightStore = (window as any).useLightStore;
+                    // @ts-expect-error global access to avoid circular dependency
+                    const hue = (window as any).hueEngine;
+
+                    if (lightStore && hue) {
+                        const { isSyncEnabled } = lightStore.getState();
+                        if (isSyncEnabled) {
+                            hue.revertToManualScene();
+                        }
+                    }
                 },
 
 
@@ -370,12 +382,19 @@ export const useMusicStore = create<MusicState>()(
                     await get().triggerAutoFade(targetDeck);
 
                     // 4. Trigger Light if linked and sync enabled
-                    const { isSyncEnabled } = useLightStore.getState();
-                    if (isSyncEnabled && pad.lightLinkId) {
-                        // Delay to let audio loading/decoding breathe
-                        setTimeout(() => {
-                            hueEngine.applyScene(pad.lightLinkId!);
-                        }, 300);
+                    // @ts-expect-error global access to avoid circular dependency
+                    const lightStore = (window as any).useLightStore;
+                    // @ts-expect-error global access to avoid circular dependency
+                    const hue = (window as any).hueEngine;
+
+                    if (lightStore && hue) {
+                        const { isSyncEnabled } = lightStore.getState();
+                        if (isSyncEnabled && pad.lightLinkId) {
+                            // Delay to let audio loading/decoding breathe
+                            setTimeout(() => {
+                                hue.applyScene(pad.lightLinkId!);
+                            }, 300);
+                        }
                     }
                 },
 

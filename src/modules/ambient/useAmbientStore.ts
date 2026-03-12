@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { ambientEngine } from './AmbientEngine';
+// Note: imports of hueEngine and useLightStore moved inside actions to avoid circular dependencies
 
 export interface AmbientTrackState {
     id: string;
@@ -9,6 +10,7 @@ export interface AmbientTrackState {
     volume: number;
     isPlaying: boolean;
     color: string;
+    linkedLightSceneId?: string;
 }
 
 export interface AmbientTheme {
@@ -45,6 +47,8 @@ interface AmbientState {
     setMasterVolume: (volume: number) => void;
     setOutputDevice: (deviceId: string) => void;
     fadeOutAll: () => void;
+    setTrackLightLink: (index: number, sceneId: string | null) => void;
+    handleLightReversion: (stoppedIndex: number) => void;
     applyScene: (sceneId: string) => Promise<void>;
     applySnapshot: (snapshot: {
         activeTracks?: { id: string; url: string; volume: number; isPlaying: boolean }[];
@@ -186,6 +190,16 @@ export const useAmbientStore = create<AmbientState>()(
                     set(state => ({
                         tracks: state.tracks.map((t, i) => i === index ? { ...t, isPlaying: false } : t)
                     }));
+
+                    // Smart Reversion
+                    // @ts-expect-error global access to avoid circular dependency
+                    const lightStore = (window as any).useLightStore;
+                    if (lightStore) {
+                        const { isSyncEnabled } = lightStore.getState();
+                        if (isSyncEnabled && track.linkedLightSceneId) {
+                            get().handleLightReversion(index);
+                        }
+                    }
                 } else {
                     try {
                         await ambientEngine.tracks[index].load(track.url);
@@ -193,9 +207,49 @@ export const useAmbientStore = create<AmbientState>()(
                         set(state => ({
                             tracks: state.tracks.map((t, i) => i === index ? { ...t, isPlaying: true } : t)
                         }));
+
+                        // Handling light scene
+                        // @ts-expect-error global access to avoid circular dependency
+                        const lightStore = (window as any).useLightStore;
+                        // @ts-expect-error global access to avoid circular dependency
+                        const hue = (window as any).hueEngine;
+
+                        if (lightStore && hue) {
+                            const { isSyncEnabled } = lightStore.getState();
+                            if (isSyncEnabled && track.linkedLightSceneId) {
+                                // The track is now playing, so apply its linked scene
+                                hue.applyScene(track.linkedLightSceneId, true);
+                            }
+                        }
                     } catch (err) {
                         console.error("Failed to play track", err);
                     }
+                }
+            },
+
+            setTrackLightLink: (index, sceneId) => set(state => ({
+                tracks: state.tracks.map((t, i) => i === index ? { ...t, linkedLightSceneId: sceneId || undefined } : t)
+            })),
+
+            handleLightReversion: (stoppedIndex: number) => {
+                // @ts-expect-error global access to avoid circular dependency
+                const lightStore = (window as any).useLightStore;
+                // @ts-expect-error global access to avoid circular dependency
+                const hue = (window as any).hueEngine;
+
+                if (!lightStore || !hue) return;
+
+                const { isSyncEnabled } = lightStore.getState();
+                if (!isSyncEnabled) return;
+
+                const tracks = get().tracks;
+                const otherActiveWithLights = tracks.filter((t, i) => t.isPlaying && i !== stoppedIndex && t.linkedLightSceneId);
+
+                if (otherActiveWithLights.length > 0) {
+                    const nextTrack = otherActiveWithLights[otherActiveWithLights.length - 1];
+                    hue.applyScene(nextTrack.linkedLightSceneId!, true);
+                } else {
+                    hue.revertToManualScene();
                 }
             },
 
@@ -223,6 +277,19 @@ export const useAmbientStore = create<AmbientState>()(
                 set(state => ({
                     tracks: state.tracks.map(t => ({ ...t, isPlaying: false }))
                 }));
+
+                // Light Reversion
+                // @ts-expect-error global access to avoid circular dependency
+                const lightStore = (window as any).useLightStore;
+                // @ts-expect-error global access to avoid circular dependency
+                const hue = (window as any).hueEngine;
+
+                if (lightStore && hue) {
+                    const { isSyncEnabled } = lightStore.getState();
+                    if (isSyncEnabled) {
+                        hue.revertToManualScene();
+                    }
+                }
             },
 
             applyScene: async (sceneId) => {

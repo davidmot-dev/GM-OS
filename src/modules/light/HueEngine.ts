@@ -495,3 +495,8 @@ export class HueEngine {
 }
 
 export const hueEngine = new HueEngine();
+
+// Export for cross-module access to avoid circular dependencies
+if (typeof window !== 'undefined') {
+    (window as any).hueEngine = hueEngine;
+}

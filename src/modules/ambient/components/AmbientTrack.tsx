@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, Square, Volume2 } from 'lucide-react';
+import { Play, Square, Volume2, Lightbulb } from 'lucide-react';
+import { gmCustom } from '../../../stores/useModalStore';
 import { useAmbientStore, type AmbientTrackState } from '../useAmbientStore';
 import { ambientEngine } from '../AmbientEngine';
 
@@ -139,6 +140,19 @@ const AmbientTrack: React.FC<AmbientTrackProps> = ({ track, index, onRequestMedi
                     className="text-[8px] font-bold text-app-text/50 hover:text-app-text hover:underline transition-all"
                 >
                     {track.url ? "CHANGER" : "CHARGER"}
+                </button>
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        gmCustom('light-scene-select', { 
+                            type: 'ambient', 
+                            trackIndex: index 
+                        });
+                    }}
+                    className={`p-1 rounded-full transition-all ${track.linkedLightSceneId ? 'text-gm-cyan bg-gm-cyan/10 drop-shadow-glow-cyan' : 'text-app-text/40 hover:text-gm-cyan hover:bg-gm-cyan/5'}`}
+                    title={track.linkedLightSceneId ? "Lumière Liée" : "Lier une Lumière"}
+                >
+                    <Lightbulb size={12} fill={track.linkedLightSceneId ? "currentColor" : "none"} />
                 </button>
             </div>
         </div>

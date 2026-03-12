@@ -4,6 +4,7 @@ import { flushApplication } from '../utils/appUtils';
 import { useSessionStore, THEME_PALETTES } from '../store/useSessionStore';
 import type { ThemeID } from '../store/useSessionStore';
 import { useHardwareStore } from '../stores/useHardwareStore';
+import AISettings from '../modules/ai/components/AISettings';
 
 interface GlobalSettingsModalProps {
     onClose: () => void;
@@ -197,6 +198,14 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                 ))}
                             </div>
                         </div>
+                    </div>
+                </section>
+
+                {/* AI Configuration Section */}
+                <section className="space-y-6">
+                    <h3 className="text-xs font-black uppercase tracking-[0.2em] text-app-text/40 px-1 border-l-2 border-accent/30 pl-3 italic">Intelligence Artificielle (Cloud)</h3>
+                    <div className="bg-app-surface/20 border border-app-border/20 rounded-[2rem] p-8">
+                        <AISettings />
                     </div>
                 </section>
 

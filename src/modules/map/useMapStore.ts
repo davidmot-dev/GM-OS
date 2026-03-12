@@ -12,8 +12,16 @@ export interface MapToken {
     linkedSessionPlayerId?: string; // Lien direct avec un joueur Session OS
 }
 
+export interface MapPing {
+    id: string;
+    x: number;
+    y: number;
+    color: string;
+    createdAt: number;
+}
+
 export type FogMode = 'reveal' | 'hide';
-export type MapTool = 'brush' | 'rect' | 'circle' | 'move_token';
+export type MapTool = 'brush' | 'rect' | 'circle' | 'move_token' | 'ping';
 
 interface MapState {
     mapUrl: string | null;
@@ -21,6 +29,7 @@ interface MapState {
     isVideo: boolean;
     fogDataUrl: string | null; // C'est ici qu'on stockera l'image base64 du brouillard (pour reprendre une session plus tard)
     tokens: MapToken[];
+    pings: MapPing[];
     fogCommand: 'reveal_all' | 'hide_all' | null;
 
     // Map Dimensions
@@ -52,6 +61,11 @@ interface MapState {
     updateProjectedToken: (id: string, updates: Partial<MapToken>) => void;
     removeToken: (id: string) => void;
     clearTokens: () => void;
+    
+    // Pings
+    addPing: (x: number, y: number, color: string) => void;
+    removePing: (id: string) => void;
+
     triggerFogCommand: (command: 'reveal_all' | 'hide_all' | null) => void;
 
     setTool: (tool: MapTool) => void;
@@ -73,6 +87,7 @@ interface MapState {
     projectedIsVideo: boolean;
     projectedFogDataUrl: string | null;
     projectedTokens: MapToken[];
+    projectedPings: MapPing[];
     projectedMapWidth: number;
     projectedMapHeight: number;
     projectedIsGridEnabled: boolean;
@@ -94,6 +109,7 @@ export const useMapStore = create<MapState>()(
             isVideo: false,
             fogDataUrl: null,
             tokens: [],
+            pings: [],
 
             // UI Defaults
             currentTool: 'brush',
@@ -122,6 +138,7 @@ export const useMapStore = create<MapState>()(
             projectedIsVideo: false,
             projectedFogDataUrl: null,
             projectedTokens: [],
+            projectedPings: [],
             projectedMapWidth: 2000,
             projectedMapHeight: 2000,
             projectedIsGridEnabled: false,
@@ -172,6 +189,31 @@ export const useMapStore = create<MapState>()(
                 if (get().projectionTarget) get().syncToPlayers();
             },
 
+            addPing: (x, y, color) => {
+                const id = Math.random().toString(36).substring(2, 9);
+                const ping: MapPing = { id, x, y, color, createdAt: Date.now() };
+                
+                set(state => ({
+                    pings: [...state.pings, ping]
+                }));
+                // Real-time bypass to replicate immediately
+                set(state => ({
+                    projectedPings: [...state.pings]
+                }));
+
+                // Auto-cleanup after 3 seconds
+                setTimeout(() => {
+                    get().removePing(id);
+                }, 3000);
+            },
+
+            removePing: (id) => {
+                set(state => ({
+                    pings: state.pings.filter(p => p.id !== id),
+                    projectedPings: state.projectedPings.filter(p => p.id !== id)
+                }));
+            },
+
             triggerFogCommand: (fogCommand) => {
                 set({ fogCommand });
                 if (get().projectionTarget) get().syncToPlayers();
@@ -214,6 +256,7 @@ export const useMapStore = create<MapState>()(
                     projectedIsVideo: state.isVideo,
                     projectedFogDataUrl: state.fogDataUrl,
                     projectedTokens: [...state.tokens],
+                    projectedPings: [...state.pings],
                     projectedMapWidth: state.mapWidth,
                     projectedMapHeight: state.mapHeight,
                     projectedIsGridEnabled: state.isGridEnabled,
@@ -230,6 +273,7 @@ export const useMapStore = create<MapState>()(
                     projectedIsVideo: false,
                     projectedFogDataUrl: null,
                     projectedTokens: [],
+                    projectedPings: [],
                     projectedMapWidth: 2000,
                     projectedMapHeight: 2000,
                     projectedIsGridEnabled: false,
