@@ -4,7 +4,9 @@ import { fileURLToPath } from 'node:url'
 import fs from 'fs-extra'
 import http from 'node:http'
 import https from 'node:https'
-import * as pdf from 'pdf-parse'
+import { createRequire } from 'node:module';
+const require = createRequire(import.meta.url);
+const pdf = require('pdf-parse');
 import { registerRagHandlers } from './RAGEngine'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -447,15 +449,7 @@ ipcMain.handle('ai:extract-pdf', async (_event, relativePath: string) => {
       const dataBuffer = fs.readFileSync(fullPath);
       console.log(`[AI Main] Buffer read, size: ${dataBuffer.length} bytes. Parsing...`);
       
-      // pdf-parse can be tricky with ESM, ensure we have the function
-      const parsePdf = (pdf as any).default || (pdf as any);
-      
-      if (typeof parsePdf !== 'function') {
-        console.error("[AI Main] pdf-parse is not a function:", typeof parsePdf);
-        return "Erreur interne: extracteur PDF non disponible.";
-      }
-
-      const data = await parsePdf(dataBuffer);
+      const data = await pdf(dataBuffer);
       console.log(`[AI Main] PDF parsed successfully. Text length: ${data.text?.length || 0}`);
       return data.text || "PDF vide ou illisible.";
     } catch (error) {
@@ -474,7 +468,7 @@ ipcMain.handle('ai:proxy-request', async (_event, url: string, method: string, h
                 method,
                 headers,
                 rejectUnauthorized: false,
-                timeout: 30000 // 30 seconds for AI
+                timeout: 120000 // 120 seconds (2 minutes) for heavy AI analysis (PDFs, etc.)
             };
 
             const req = lib.request(parsedUrl, options, (res) => {

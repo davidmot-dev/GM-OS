@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { gmToast } from '../../stores/useToastStore';
-import type { SheetTemplate } from '../../data/defaultSheetTemplates';
+import { DEFAULT_SHEET_TEMPLATES, type SheetTemplate } from '../../data/defaultSheetTemplates';
 import { hueEngine } from '../light/HueEngine';
 import type { Playlist } from '../music/useMusicStore';
 import type { Atmosphere } from '../sound/useSoundStore';
@@ -10,6 +10,7 @@ import type { LightScene } from '../light/useLightStore';
 import type { ImageMedia, ImageFolder } from '../image/types';
 import type { WebLink } from '../web/types';
 import type { Combatant } from '../combat/useCombatStore';
+import type { GameDriver } from '../../types/drivers';
 
 // --- Interfaces ---
 
@@ -186,6 +187,7 @@ interface SessionOSState {
     players: Player[];
     atlasMaps: AtlasMap[];
     customSheetTemplates: SheetTemplate[];
+    customGameDrivers: GameDriver[];
     timelineEvents: TimelineEvent[];
     wikiEntries: WikiEntry[];
 
@@ -196,7 +198,9 @@ interface SessionOSState {
     selectedCharacterId: string | null;
     selectedAtlasMapId: string | null;
     selectedEntityId: string | null;
-    currentView: 'cockpit' | 'campaign-details' | 'npc-gallery' | 'world-atlas' | 'library' | 'players' | 'templates' | 'session-prep' | 'session-focus' | 'timeline-wiki';
+    editingTemplateId: string | null;
+    editingDriverId: string | null;
+    currentView: 'cockpit' | 'campaign-details' | 'npc-gallery' | 'world-atlas' | 'library' | 'players' | 'templates' | 'session-prep' | 'session-focus' | 'timeline-wiki' | 'forge' | 'template-editor' | 'driver-editor';
     diceRolls: { die: number, result: number, timestamp: number }[];
     isAddingEntity: boolean;
 
@@ -206,10 +210,30 @@ interface SessionOSState {
     setSelectedSession: (id: string | null) => void;
     setSelectedPlayer: (id: string | null) => void;
     setSelectedCharacter: (id: string | null) => void;
+    setEditingTemplateId: (id: string | null) => void;
     setIsAddingEntity: (isAdding: boolean) => void;
     addSheetTemplate: (template: Omit<SheetTemplate, 'id' | 'isBuiltin'>) => void;
     updateSheetTemplate: (id: string, updates: Partial<SheetTemplate>) => void;
     deleteSheetTemplate: (id: string) => void;
+    
+    // Game Driver Actions (Rule Engine / "Brain")
+    /** 
+     * Saves or overwrites a rule engine driver. 
+     * Drivers manage dice logic and AI resonance.
+     */
+    saveGameDriver: (driver: GameDriver) => void;
+    /** Updates a specific driver's metadata or AI instructions. */
+    updateGameDriver: (id: string, updates: Partial<GameDriver>) => void;
+    /** Permanent deletion of a custom driver. */
+    deleteGameDriver: (id: string) => void;
+    /** Context management for the Driver Editor. */
+    setEditingDriverId: (id: string | null) => void;
+    /** 
+     * Shadow Driver logic: Ensures every template has a linked editable driver.
+     * If isBuiltin, creates a custom override driver for AI resonance.
+     */
+    getOrCreateDriverForTemplate: (templateId: string) => GameDriver;
+
     updateCharacterSheetData: (playerId: string, characterId: string, fieldId: string, value: string | number | boolean) => void;
     updateCharacterVisuals: (playerId: string, characterId: string, updates: { portraitUrl?: string; tokenUrl?: string }) => void;
     updateCharacterNarrative: (playerId: string, characterId: string, updates: { description?: string; gmNotes?: string; linkedDocumentIds?: string[] }) => void;
@@ -262,6 +286,9 @@ interface SessionOSState {
     addWikiEntry: (entry: Omit<WikiEntry, 'id'>) => void;
     updateWikiEntry: (id: string, updates: Partial<WikiEntry>) => void;
     deleteWikiEntry: (id: string) => void;
+
+    // Selectors
+    getActiveDriver: () => GameDriver | null;
 }
 
 const mockTimelineEvents: TimelineEvent[] = [
@@ -519,19 +546,22 @@ const mockEntities: Entity[] = [
 
 export const useSessionOSStore = create<SessionOSState>()(
     persist(
-        (set) => ({
+        (set, get) => ({
             campaigns: mockCampaigns,
             sessions: mockSessions,
             entities: mockEntities,
             players: mockPlayers,
             atlasMaps: mockAtlasMaps,
             customSheetTemplates: [],
+            customGameDrivers: [],
             activeCampaignId: 'c-1',
             selectedSessionId: null,
             selectedPlayerId: 'p-1',
             selectedCharacterId: null,
             selectedAtlasMapId: 'am-1',
             selectedEntityId: 'e-1',
+            editingTemplateId: null,
+            editingDriverId: null,
             currentView: 'cockpit',
             diceRolls: [],
             isAddingEntity: false,
@@ -549,6 +579,8 @@ export const useSessionOSStore = create<SessionOSState>()(
             setSelectedSession: (id) => set({ selectedSessionId: id }),
             setSelectedPlayer: (id) => set({ selectedPlayerId: id, selectedCharacterId: null }),
             setSelectedCharacter: (id) => set({ selectedCharacterId: id }),
+            setEditingTemplateId: (id) => set({ editingTemplateId: id }),
+            setEditingDriverId: (id) => set({ editingDriverId: id }),
             setSelectedAtlasMap: (id) => set({ selectedAtlasMapId: id }),
             setSelectedEntity: (id) => set({ selectedEntityId: id, isAddingEntity: false }),
             setIsAddingEntity: (isAdding) => set({ isAddingEntity: isAdding, selectedEntityId: null }),
@@ -731,6 +763,48 @@ export const useSessionOSStore = create<SessionOSState>()(
             deleteSheetTemplate: (id) => set((state) => ({
                 customSheetTemplates: state.customSheetTemplates.filter(t => t.id !== id)
             })),
+
+            saveGameDriver: (driver) => set((state) => ({
+                customGameDrivers: [
+                    ...state.customGameDrivers.filter(d => d.id !== driver.id),
+                    driver
+                ]
+            })),
+
+            updateGameDriver: (id, updates) => set((state) => ({
+                customGameDrivers: state.customGameDrivers.map(d =>
+                    d.id === id ? { ...d, ...updates } : d
+                )
+            })),
+
+            deleteGameDriver: (id) => set((state) => ({
+                customGameDrivers: state.customGameDrivers.filter(d => d.id !== id)
+            })),
+
+            getOrCreateDriverForTemplate: (templateId) => {
+                const state = get();
+                const existing = state.customGameDrivers.find(d => d.templateId === templateId);
+                if (existing) return existing;
+
+                // Create a default driver for this template
+                const template = [...DEFAULT_SHEET_TEMPLATES, ...state.customSheetTemplates].find(t => t.id === templateId);
+                const newDriver: GameDriver = {
+                    id: `driver-${templateId}-${Date.now()}`,
+                    name: template?.name || 'Système Inconnu',
+                    author: 'User',
+                    version: '1.0.0',
+                    description: `Moteur de règles pour ${template?.name}`,
+                    emoji: template?.emoji || '🎲',
+                    templateId: templateId,
+                    dice: { defaultDice: '1d20', logic: 'sum' },
+                    combat: { statsToTrack: [], initiativeFormula: 'dex' },
+                    aiInstructions: '',
+                    aiPersonas: {}
+                };
+                
+                set(s => ({ customGameDrivers: [...s.customGameDrivers, newDriver] }));
+                return newDriver;
+            },
 
             updateCharacterSheetData: (playerId, characterId, fieldId, value) => set((state) => ({
                 players: state.players.map(p => p.id === playerId ? {
@@ -990,7 +1064,14 @@ export const useSessionOSStore = create<SessionOSState>()(
 
             deleteWikiEntry: (id) => set((state) => ({
                 wikiEntries: state.wikiEntries.filter(e => e.id !== id)
-            }))
+            })),
+
+            getActiveDriver: () => {
+                const state = get();
+                const campaign = state.campaigns.find((c: Campaign) => c.id === state.activeCampaignId);
+                if (!campaign) return null;
+                return state.customGameDrivers.find((d: GameDriver) => d.id === campaign.system) || null;
+            }
 
         }),
         {
@@ -1013,6 +1094,7 @@ export const useSessionOSStore = create<SessionOSState>()(
                 players: state.players,
                 entities: state.entities,
                 customSheetTemplates: state.customSheetTemplates,
+                customGameDrivers: state.customGameDrivers,
                 sessions: state.sessions,
                 timelineEvents: state.timelineEvents,
                 wikiEntries: state.wikiEntries

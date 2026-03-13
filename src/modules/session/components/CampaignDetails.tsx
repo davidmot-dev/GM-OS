@@ -6,7 +6,7 @@ import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 
 const CampaignDetails: React.FC = () => {
-    const { campaigns, activeCampaignId, sessions, setCurrentView, entities, atlasMaps, customSheetTemplates } = useSessionOSStore();
+    const { campaigns, activeCampaignId, sessions, setCurrentView, entities, atlasMaps, customSheetTemplates, customGameDrivers } = useSessionOSStore();
     const campaign = campaigns.find(c => c.id === activeCampaignId);
     const campaignSessions = sessions.filter(s => s.campaignId === activeCampaignId);
     const campaignNPCs = entities.filter(e => e.type === 'npc' && e.campaignId === activeCampaignId);
@@ -15,7 +15,10 @@ const CampaignDetails: React.FC = () => {
     if (!campaign) return null;
 
     const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
-    const systemName = allTemplates.find(t => t.id === campaign.system)?.name || campaign.system;
+    const systemName = 
+        allTemplates.find(t => t.id === campaign.system)?.name || 
+        customGameDrivers.find(d => d.id === campaign.system)?.name ||
+        campaign.system;
 
     return (
         <div className="flex-1 flex flex-col gap-6 p-6 h-full overflow-y-auto custom-scrollbar bg-app-bg/20">
@@ -53,7 +56,14 @@ const CampaignDetails: React.FC = () => {
                         <div className="space-y-4">
                             <div>
                                 <p className="text-[10px] text-app-text/40 uppercase font-bold tracking-widest mb-1">Adventure System</p>
-                                <p className="text-app-text/80 font-medium">{systemName}</p>
+                                <div className="flex items-center gap-2">
+                                    <p className="text-app-text/80 font-medium">{systemName}</p>
+                                    {customGameDrivers.find(d => d.id === campaign.system) && (
+                                        <span className="text-xs bg-indigo-500/20 text-indigo-400 px-2 py-0.5 rounded border border-indigo-500/30 flex items-center gap-1 font-bold">
+                                            {customGameDrivers.find(d => d.id === campaign.system)?.emoji} DRIVER ACTIVE
+                                        </span>
+                                    )}
+                                </div>
                             </div>
                             <div>
                                 <p className="text-[10px] text-app-text/40 uppercase font-bold tracking-widest mb-1">Description</p>

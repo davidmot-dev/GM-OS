@@ -337,4 +337,41 @@ export class DiceEngine {
             totalDisplay: total.toString()
         };
     }
+
+    // --- 10. SYSTEM BRIDGE ---
+    static rollFromConfig(config: { defaultDice: string; logic: string; successThreshold?: number }): RollResult {
+        const dicePart = config.defaultDice.match(/(\d+)d(\d+)/i);
+        if (!dicePart) return this.rollFormula(config.defaultDice);
+        
+        const count = parseInt(dicePart[1]);
+        const faces = parseInt(dicePart[2]);
+        const threshold = config.successThreshold || 10;
+
+        switch (config.logic) {
+            case 'count-success':
+                return this.rollPool(faces, count, 0, threshold, false);
+            case 'highest': {
+                const res = this.rollStandard(faces, count, 0, false);
+                const max = Math.max(...res.rolls.map(r => typeof r.val === 'number' ? r.val : 0));
+                return {
+                    ...res,
+                    total: max,
+                    totalDisplay: max.toString()
+                };
+            }
+            case 'lowest': {
+                const res = this.rollStandard(faces, count, 0, false);
+                const min = Math.min(...res.rolls.map(r => typeof r.val === 'number' ? r.val : 1000));
+                return {
+                    ...res,
+                    total: min,
+                    totalDisplay: min.toString()
+                };
+            }
+            case 'd100-low':
+                return this.rollThreshold(100, 1, 0, threshold, 'under');
+            default:
+                return this.rollFormula(config.defaultDice);
+        }
+    }
 }

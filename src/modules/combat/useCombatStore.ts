@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { DiceEngine } from '../dice/DiceEngine';
 
 export interface StatusEffect {
     id: string; // Unique ID for the status instance
@@ -19,7 +20,18 @@ export interface Combatant {
     sourceEntityId?: string; // Link to Session OS NPC/Monster
     avatar?: string;
     statuses: StatusEffect[];
+    extraStats?: Record<string, { value: number; max: number }>; // Dynamic stats (MP, Sanity...)
 }
+
+// Conflicting status effects: adding a key status will automatically remove the value statuses
+export const STATUS_CONFLICT_MAP: Record<string, string[]> = {
+    'En feu': ['Mouillé', 'Sous l\'eau'],
+    'Mouillé': ['En feu'],
+    'Sous l\'eau': ['En feu'],
+    'Inconscient': ['Debout', 'En garde'],
+    'Debout': ['À terre'],
+    'À terre': ['Debout']
+};
 
 interface CombatState {
     combatants: Combatant[];
@@ -37,7 +49,7 @@ interface CombatState {
     // Initiative
     setInitiative: (id: string, init: number) => void;
     sortInitiative: (ascending?: boolean) => void;
-    rollAutoInitiative: (diceMax: number) => void;
+    rollAutoInitiative: (params: { diceMax?: number; formula?: string; resolver?: (name: string) => number }) => void;
     reorderCombatants: (startIndex: number, endIndex: number) => void;
 
     // Turns
@@ -108,18 +120,36 @@ export const useCombatStore = create<CombatState>()(
                 return { combatants: sorted, currentTurnIdx: 0 }; // Usually reset turn on manual sort
             }),
 
-            rollAutoInitiative: (diceMax) => set((state) => {
+            rollAutoInitiative: ({ diceMax = 20, formula, resolver }) => set((state) => {
                 const newCombatants = [...state.combatants];
                 const assignedInits = new Set(newCombatants.map(c => c.init).filter(i => i !== 0));
 
                 newCombatants.forEach(c => {
-                    if (c.init === 0 || isNaN(c.init)) { // Also handle NaN just in case
+                    if (c.init === 0 || isNaN(c.init)) {
                         let rolled = 0;
-                        let attempts = 0;
-                        do {
+                        
+                        if (formula) {
+                            // Simple formula resolution (e.g. 1d20 + dex)
+                            // We replace variables if resolver is provided
+                            let evaluatedFormula = formula;
+                            if (resolver) {
+                                // Extract potential variables like [dex], [init]...
+                                const vars = formula.match(/\[\w+\]|\b(dex|str|int|init|wis|cha|level)\b/gi);
+                                vars?.forEach(v => {
+                                    const cleanVar = v.replace(/[[\]]/g, '');
+                                    const val = resolver(cleanVar);
+                                    evaluatedFormula = evaluatedFormula.replace(v, val.toString());
+                                });
+                            }
+                            try {
+                                const res = DiceEngine.rollFormula(evaluatedFormula);
+                                rolled = res.total;
+                            } catch {
+                                rolled = Math.floor(Math.random() * diceMax) + 1;
+                            }
+                        } else {
                             rolled = Math.floor(Math.random() * diceMax) + 1;
-                            attempts++;
-                        } while (assignedInits.has(rolled) && attempts < 50); // Avoid infinite loop
+                        }
 
                         c.init = rolled;
                         assignedInits.add(rolled);
@@ -208,17 +238,22 @@ export const useCombatStore = create<CombatState>()(
                 combatants: state.combatants.map(c => ({ ...c, init: 0 }))
             })),
 
-            addStatus: (combatantId, status) => set((state) => ({
-                combatants: state.combatants.map(c => {
-                    if (c.id === combatantId) {
-                        return {
-                            ...c,
-                            statuses: [...c.statuses, { ...status, id: Math.random().toString(36).substring(2, 9) }]
-                        };
-                    }
-                    return c;
-                })
-            })),
+            addStatus: (combatantId, status) => set((state) => {
+                const conflicts = STATUS_CONFLICT_MAP[status.name] || [];
+                return {
+                    combatants: state.combatants.map(c => {
+                        if (c.id === combatantId) {
+                            // Filter out conflicting statuses
+                            const filteredStatuses = c.statuses.filter(s => !conflicts.includes(s.name));
+                            return {
+                                ...c,
+                                statuses: [...filteredStatuses, { ...status, id: Math.random().toString(36).substring(2, 9) }]
+                            };
+                        }
+                        return c;
+                    })
+                };
+            }),
 
             removeStatus: (combatantId, statusId) => set((state) => ({
                 combatants: state.combatants.map(c => {

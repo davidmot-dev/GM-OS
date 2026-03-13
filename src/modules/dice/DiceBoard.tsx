@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { DiceEngine } from './DiceEngine';
 import type { RollResult } from './DiceEngine';
 import { Dices, RotateCcw, Zap, BookmarkPlus, X } from 'lucide-react';
+import { useSessionOSStore } from '../session/useSessionOSStore';
+import { useMapStore } from '../map/useMapStore';
+import { tacticalService } from '../map/TacticalService';
+import { Target, Info } from 'lucide-react';
 
 const generateId = () => Math.random().toString(36).substring(7);
 
@@ -21,6 +25,10 @@ interface QuickRoll {
 type DiceMode = 'standard' | 'formula' | 'pool' | 'pool_explode' | 'threshold' | 'advantage' | 'disadvantage' | 'exploding' | 'fate' | 'rolemaster' | 'yze';
 
 const DiceBoard: React.FC = () => {
+    // Tactical Bridge State
+    const { tokens, gridSize } = useMapStore();
+    const [lastSelectedTokenId, setLastSelectedTokenId] = useState<string | null>(null);
+    const [targetTokenId, setTargetTokenId] = useState<string | null>(null);
     // Config
     const [mode, setMode] = useState<DiceMode>('standard');
     const [diceCount, setDiceCount] = useState<number>(1);
@@ -56,10 +64,19 @@ const DiceBoard: React.FC = () => {
         setFormulaInput('2d6+5');
     };
 
+    const { getActiveDriver } = useSessionOSStore();
+    const activeDriver = getActiveDriver();
+    const [useSystemDriver, setUseSystemDriver] = useState(false);
+
     const executeRoll = (sides: number = 20, isFormulaText: boolean = false, customFormula: string = "") => {
         let result: RollResult;
-        let title = `${diceCount}d${sides}`;
+        
+        if (useSystemDriver && activeDriver) {
+            result = DiceEngine.rollFromConfig(activeDriver.dice);
+            return { result, title: `Système: ${activeDriver.name}` };
+        }
 
+        let title = `${diceCount}d${sides}`;
         const modVal = typeof modifier === 'string' ? (parseInt(modifier.replace('+', ''), 10) || 0) : modifier;
 
         if (isFormulaText) {
@@ -175,7 +192,18 @@ const DiceBoard: React.FC = () => {
 
                 {/* Top: Engine Config */}
                 <div className="bg-app-surface/60 p-5 rounded-2xl border border-app-border backdrop-blur-md shadow-xl">
-                    <div className="flex items-center justify-end mb-6">
+                    <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-4">
+                            {activeDriver && (
+                                <button 
+                                    onClick={() => setUseSystemDriver(!useSystemDriver)}
+                                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${useSystemDriver ? 'bg-indigo-500 text-white border-indigo-400 shadow-glow-primary/20' : 'bg-app-bg text-app-text/40 border-app-border hover:border-app-border/80'}`}
+                                >
+                                    <Zap size={14} className={useSystemDriver ? 'animate-pulse' : ''} />
+                                    MODE SYSTÈME: {activeDriver.name.toUpperCase()}
+                                </button>
+                            )}
+                        </div>
                         <button onClick={resetConfig} className="text-xs flex items-center gap-1.5 text-app-text/60 hover:text-indigo-500 transition-colors bg-app-bg px-3 py-1.5 rounded-lg border border-app-border/80">
                             <RotateCcw size={14} /> Réinitialiser
                         </button>
@@ -370,6 +398,76 @@ const DiceBoard: React.FC = () => {
 
             {/* RIGHT COLUMN: Results & History */}
             <div className="w-[400px] flex flex-col gap-6">
+
+                {/* Tactical Advice Panel */}
+                {tokens.length >= 2 && (
+                    <div className="bg-indigo-900/20 border border-indigo-500/30 rounded-2xl p-4 backdrop-blur-md">
+                        <div className="flex items-center gap-2 mb-3">
+                            <Target className="text-indigo-400" size={16} />
+                            <h3 className="text-xs font-bold text-indigo-300 uppercase tracking-widest">Conseil Tactique</h3>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3 mb-3">
+                            <div className="space-y-1">
+                                <label className="text-[10px] text-app-text/40 uppercase">Attaquant</label>
+                                <select 
+                                    value={lastSelectedTokenId || ''} 
+                                    onChange={e => setLastSelectedTokenId(e.target.value)}
+                                    className="w-full bg-app-bg/50 border border-app-border rounded-lg text-xs py-1 px-2 outline-none"
+                                >
+                                    <option value="">Sélectionner...</option>
+                                    {tokens.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+                                </select>
+                            </div>
+                            <div className="space-y-1">
+                                <label className="text-[10px] text-app-text/40 uppercase">Cible</label>
+                                <select 
+                                    value={targetTokenId || ''} 
+                                    onChange={e => setTargetTokenId(e.target.value)}
+                                    className="w-full bg-app-bg/50 border border-app-border rounded-lg text-xs py-1 px-2 outline-none"
+                                >
+                                    <option value="">Sélectionner...</option>
+                                    {tokens.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+                                </select>
+                            </div>
+                        </div>
+
+                        {lastSelectedTokenId && targetTokenId && lastSelectedTokenId !== targetTokenId && (() => {
+                            const tA = tokens.find(t => t.id === lastSelectedTokenId);
+                            const tB = tokens.find(t => t.id === targetTokenId);
+                            if (tA && tB) {
+                                const range = tacticalService.getRangeInfo(tA, tB, gridSize);
+                                return (
+                                    <div className="bg-app-bg/40 rounded-xl p-3 border border-indigo-500/20 flex items-center justify-between animate-in fade-in slide-in-from-top-2 duration-300">
+                                        <div className="flex flex-col">
+                                            <span className="text-[10px] text-indigo-400 font-bold uppercase">{range.category}</span>
+                                            <span className="text-xs text-app-text/80">{range.distanceUnits} cases ({Math.round(range.distancePx)}px)</span>
+                                        </div>
+                                        <div className="flex flex-col items-end">
+                                            <span className="text-[10px] text-app-text/40 uppercase">Modificateur</span>
+                                            <button 
+                                                onClick={() => setModifier(range.modifier)}
+                                                className="text-sm font-black text-indigo-400 hover:text-indigo-300 transition-colors bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/30 flex items-center gap-1"
+                                            >
+                                                {range.modifier > 0 ? '+' : ''}{range.modifier}
+                                                <Zap size={10} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                );
+                            }
+                            return null;
+                        })()}
+                        {!lastSelectedTokenId || !targetTokenId ? (
+                            <div className="text-[10px] text-app-text/30 italic flex items-center gap-1.5 justify-center py-2 h-[42px]">
+                                <Info size={12} /> Sélectionnez deux jetons pour voir le calcul de portée
+                            </div>
+                        ) : lastSelectedTokenId === targetTokenId ? (
+                            <div className="text-[10px] text-rose-400/50 italic flex items-center gap-1.5 justify-center py-2 h-[42px]">
+                                L'attaquant et la cible doivent être différents
+                            </div>
+                        ) : null}
+                    </div>
+                )}
 
                 {/* Latest Result */}
                 <div className="min-h-[16rem] max-h-[50%] flex-shrink-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-500/10 via-app-surface/60 to-app-bg border border-indigo-500/20 rounded-2xl flex flex-col items-center justify-center p-6 relative overflow-hidden shadow-2xl backdrop-blur-xl">

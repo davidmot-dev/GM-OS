@@ -3,6 +3,8 @@ import { useCombatStore, type Combatant } from '../useCombatStore';
 import { X, Shield, Plus, Minus, PlusCircle, Edit2 } from 'lucide-react';
 import { ResolvedImage } from '../../../components/ResolvedImage';
 import { gmPrompt } from '../../../stores/useModalStore';
+import { useSessionOSStore } from '../../session/useSessionOSStore';
+import { Link2 } from 'lucide-react';
 
 const PRESET_STATUSES = [
     { name: 'Poison', icon: '🤢', duration: 3 },
@@ -21,7 +23,16 @@ interface CombatCardProps {
 }
 
 const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
-    const { updateCombatant, removeCombatant, removeStatus, setInitiative, addStatus } = useCombatStore();
+    const { 
+        updateCombatant, 
+        removeCombatant, 
+        removeStatus, 
+        setInitiative, 
+        addStatus 
+    } = useCombatStore();
+    const { getActiveDriver } = useSessionOSStore();
+    const activeDriver = getActiveDriver();
+    
     const [showStatusMenu, setShowStatusMenu] = useState(false);
     const [customDuration, setCustomDuration] = useState<number>(3);
 
@@ -116,7 +127,12 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                 </div>
 
                 {/* Health Control */}
-                <div className="flex flex-col items-center mx-4 bg-app-bg/50 rounded-lg p-2 border border-gm-crimson/20">
+                <div className="flex flex-col items-center mx-4 bg-app-bg/50 rounded-lg p-2 border border-gm-crimson/20 relative group">
+                    {combatant.sourcePlayerId && (
+                        <div className="absolute -top-1 -right-1 text-accent animate-pulse" title="Synchronisé avec la fiche">
+                            <Link2 size={10} />
+                        </div>
+                    )}
                     <div className="flex items-center gap-2">
                         <button
                             className="text-app-text/40 hover:text-app-text hover:bg-app-surface/50 rounded p-1"
@@ -149,6 +165,40 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                     <X size={18} />
                 </button>
             </div>
+
+            {/* Extra Stats Bars (Dynamic from System) */}
+            {activeDriver && activeDriver.combat.statsToTrack.length > 0 && (
+                <div className="mt-3 flex gap-3 px-2">
+                    {activeDriver.combat.statsToTrack
+                        .filter(s => s.isResource)
+                        .map((statMapping, idx) => {
+                        const statName = statMapping.label;
+                        const extra = combatant.extraStats?.[statMapping.fieldId] || { value: 10, max: 10 };
+                        const percent = Math.min(100, Math.max(0, (extra.value / extra.max) * 100));
+                        
+                        // Color coding based on stat name
+                        let barColor = 'bg-indigo-500';
+                        if (statName.toLowerCase().includes('san')) barColor = 'bg-purple-500';
+                        if (statName.toLowerCase().includes('mp') || statName.toLowerCase().includes('mana')) barColor = 'bg-blue-500';
+                        if (statName.toLowerCase().includes('xp') || statName.toLowerCase().includes('exp')) barColor = 'bg-amber-500';
+
+                        return (
+                            <div key={idx} className="flex-1 flex flex-col gap-1">
+                                <div className="flex justify-between items-center px-0.5">
+                                    <span className="text-[8px] font-black uppercase tracking-tighter text-app-text/40">{statName}</span>
+                                    <span className="text-[8px] font-bold text-app-text/60">{extra.value}</span>
+                                </div>
+                                <div className="h-1 bg-app-bg rounded-full overflow-hidden border border-white/5">
+                                    <div 
+                                        className={`h-full ${barColor} transition-all duration-500 shadow-sm`}
+                                        style={{ width: `${percent}%` }}
+                                    />
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
 
             {/* Expansible Status Panel */}
             {showStatusMenu && (

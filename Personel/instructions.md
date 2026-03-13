@@ -43,3 +43,10 @@ Ce guide définit les règles obligatoires pour la refonte de GM-OS vers une arc
 
 - **Règle :** Utiliser Zustand ou le Context API pour les données globales partagées (ex: Settings, Session).
 - **Synchronisation :** L'UI doit être une fonction pure de l'état global.
+
+## 7. Documentation Continue
+
+- **Règle :** Maintenir systématiquement la documentation à jour après chaque modification structurelle ou logique.
+- **Emplacement :** La documentation technique doit être regroupée dans le dossier `docs/` (architecture, guides, histoire).
+- **Contenu :** Chaque nouvelle fonctionnalité majeure doit être documentée dans `docs/architecture` ou `docs/guides`.
+- **Walkthroughs :** Sauvegarder systématiquement chaque `walkthrough.md` finalisé dans `docs/history/` avec un nom descriptif daté ou lié à la version/feature (ex: `2026-03-system-forge-v2-walkthrough.md`).

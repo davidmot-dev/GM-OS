@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import { useCombatStore } from '../useCombatStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { gmConfirm, gmPrompt } from '../../../stores/useModalStore';
-import { UserPlus, RefreshCw, Dices, Save, Play, Skull, ArrowDown01, ArrowUp10 } from 'lucide-react';
+import { 
+    UserPlus, RefreshCw, Dices, Save, Play, Skull, 
+    ArrowDown01, ArrowUp10, Sparkles 
+} from 'lucide-react';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 
 const CombatControls: React.FC = () => {
@@ -19,8 +22,11 @@ const CombatControls: React.FC = () => {
     const { 
         activeCampaignId, 
         selectedSessionId, 
-        addTimelineEvent 
+        addTimelineEvent,
+        getActiveDriver
     } = useSessionOSStore();
+
+    const activeDriver = getActiveDriver();
 
     const [diceMax, setDiceMax] = useState<number>(20);
 
@@ -98,9 +104,20 @@ const CombatControls: React.FC = () => {
         <aside className="w-80 bg-app-surface/40 border-l border-app-border/50 p-6 flex flex-col h-full overflow-y-auto custom-scrollbar">
 
             {/* Header */}
-            <h2 className="text-xl font-display font-bold text-app-text mb-6 uppercase tracking-widest border-b border-app-border/50 pb-2">
+            <h2 className="text-xl font-display font-bold text-app-text mb-2 uppercase tracking-widest border-b border-app-border/50 pb-2">
                 Contrôles
             </h2>
+
+            {/* Active Driver Indicator */}
+            <div className="mb-6 flex flex-col gap-1">
+                <span className="text-[10px] text-app-text/30 font-black uppercase tracking-widest">Système Actif</span>
+                <div className={`px-3 py-2 rounded-lg border flex items-center gap-2 group transition-all ${activeDriver ? 'bg-amber-500/10 border-amber-500/30 text-amber-400' : 'bg-app-bg/50 border-app-border/20 text-app-text/40'}`}>
+                    <Sparkles size={14} className={activeDriver ? 'animate-pulse' : 'opacity-20'} />
+                    <span className="text-xs font-black uppercase tracking-wider truncate">
+                        {activeDriver?.name || 'Standard Dice-OS'}
+                    </span>
+                </div>
+            </div>
 
             {/* Main Action: Next Turn */}
             <div className="bg-gm-crimson/10 border border-gm-crimson/30 p-4 rounded-xl mb-6 shadow-glow-crimson flex flex-col items-center">
@@ -118,29 +135,44 @@ const CombatControls: React.FC = () => {
 
             {/* Auto Initiative */}
             <div className="mb-6 space-y-3">
-                <h3 className="text-sm text-app-text/60 uppercase tracking-wider font-semibold">Auto-Initiative (PNJ)</h3>
-                <div className="flex gap-2">
-                    <select
-                        className="bg-app-bg border border-app-border rounded-lg text-app-text px-3 py-2 outline-none focus:border-gm-crimson flex-1"
-                        value={diceMax}
-                        onChange={(e) => setDiceMax(Number(e.target.value))}
-                    >
-                        <option value={4}>d4</option>
-                        <option value={6}>d6</option>
-                        <option value={8}>d8</option>
-                        <option value={10}>d10</option>
-                        <option value={12}>d12</option>
-                        <option value={20}>d20</option>
-                        <option value={100}>d100</option>
-                    </select>
-                    <button
-                        onClick={() => rollAutoInitiative(diceMax)}
-                        className="bg-app-bg hover:bg-gm-crimson/20 border border-gm-crimson/50 text-gm-crimson hover:text-gm-crimson px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors flex-1"
-                        title="Jette l'initiative pour tous ceux à 0"
-                    >
-                        <Dices size={18} />
-                        <span>Rouler</span>
-                    </button>
+                <div className="flex flex-col gap-2">
+                    <div className="flex gap-2">
+                        <select
+                            className="bg-app-bg border border-app-border rounded-lg text-app-text px-3 py-2 outline-none focus:border-gm-crimson flex-1"
+                            value={diceMax}
+                            onChange={(e) => setDiceMax(Number(e.target.value))}
+                        >
+                            <option value={4}>d4</option>
+                            <option value={6}>d6</option>
+                            <option value={8}>d8</option>
+                            <option value={10}>d10</option>
+                            <option value={12}>d12</option>
+                            <option value={20}>d20</option>
+                            <option value={100}>d100</option>
+                        </select>
+                        <button
+                            onClick={() => rollAutoInitiative({ diceMax })}
+                            className="bg-app-bg hover:bg-gm-crimson/20 border border-gm-crimson/50 text-gm-crimson px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors flex-1"
+                            title="Jette l'initiative standard pour tous ceux à 0"
+                        >
+                            <Dices size={18} />
+                            <span>Standard</span>
+                        </button>
+                    </div>
+
+                    {activeDriver?.combat.initiativeFormula && (
+                        <button
+                            onClick={() => rollAutoInitiative({ formula: activeDriver.combat.initiativeFormula })}
+                            className="w-full bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/50 text-amber-500 font-black py-2 rounded-lg flex flex-col items-center justify-center gap-1 transition-all shadow-glow-amber/5 group"
+                            title={`Jette l'initiative via le système ${activeDriver.name}`}
+                        >
+                            <div className="flex items-center gap-2">
+                                <Sparkles size={14} className="group-hover:rotate-12 transition-transform" />
+                                <span className="text-[11px] uppercase tracking-widest">Jet Système</span>
+                            </div>
+                            <span className="text-[9px] opacity-60 font-mono tracking-tighter">[{activeDriver.combat.initiativeFormula}]</span>
+                        </button>
+                    )}
                 </div>
             </div>
 

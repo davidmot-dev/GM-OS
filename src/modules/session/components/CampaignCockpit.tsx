@@ -2,7 +2,7 @@ import React from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useSessionStore } from '../../../store/useSessionStore';
 import { useModalStore } from '../../../stores/useModalStore';
-import { BookOpen, LayoutDashboard, Swords, Users, Users2, Map as MapIcon, Archive, PlusCircle, Library, FileText, ExternalLink, File, StickyNote, Play, RefreshCw, Eye } from 'lucide-react';
+import { BookOpen, LayoutDashboard, Swords, Users, Users2, Map as MapIcon, Archive, PlusCircle, Library, FileText, ExternalLink, File, StickyNote, Play, RefreshCw, Eye, Hammer } from 'lucide-react';
 import SessionChecklist from './SessionChecklist';
 
 const CampaignCockpit: React.FC = () => {
@@ -88,6 +88,13 @@ const CampaignCockpit: React.FC = () => {
                 >
                     <PlusCircle size={20} className={currentView === 'session-prep' ? 'text-accent' : 'text-app-text/60'} />
                     <span className="text-sm font-medium">Session Preparation</span>
+                </button>
+                <button
+                    onClick={() => setCurrentView('forge')}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'forge' ? 'bg-accent/10 text-accent' : 'text-app-text/80 hover:bg-app-bg hover:text-app-text'}`}
+                >
+                    <Hammer size={20} className={currentView === 'forge' ? 'text-accent' : 'text-app-text/60'} />
+                    <span className="text-sm font-medium">System Forge</span>
                 </button>
 
                 {activeSession ? (

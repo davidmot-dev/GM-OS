@@ -9,11 +9,14 @@ import CampaignLibrary from './components/CampaignLibrary';
 import PlayerManagement from './components/PlayerManagement';
 import WorldAtlas from './components/WorldAtlas';
 import NpcManagement from './components/NpcManagement';
-import TemplateManager from './components/TemplateManager';
 import SessionPrep from './components/SessionPrep';
 import SessionFocusEditor from './components/SessionFocusEditor';
 import OraclePanel from './components/OraclePanel';
 import TimelineWikiDashboard from './components/TimelineWikiDashboard';
+import ForgeDashboard from '../forge/components/ForgeDashboard';
+import TemplateDashboard from './components/TemplateDashboard';
+import SheetTemplateEditor from './components/SheetTemplateEditor';
+import RuleEngineEditor from './components/RuleEngineEditor';
 import { useSessionOSStore } from './useSessionOSStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../data/defaultSheetTemplates';
 
@@ -38,13 +41,22 @@ const SessionDashboard: React.FC = () => {
                         <Users size={28} />
                         <h1 className="text-app-text text-lg font-bold tracking-tight">
                             Session OS <span className="text-gm-gold font-light opacity-80">
-                                {currentView === 'cockpit' ? 'Master Cockpit' : currentView === 'timeline-wiki' ? 'Chroniques' : currentView.replace('-', ' ')}
+                                {currentView === 'cockpit' ? 'Master Cockpit' : currentView === 'timeline-wiki' ? 'Chroniques' : currentView === 'forge' ? 'System Forge' : currentView === 'templates' ? 'Bibliothèque des Fiches' : currentView.replace('-', ' ')}
                             </span>
                         </h1>
                     </div>
                 </div>
 
                 <div className="flex gap-3">
+                    {currentView !== 'cockpit' && (
+                        <button
+                            onClick={() => setCurrentView('cockpit')}
+                            className="flex items-center gap-2 px-4 py-1.5 rounded-lg text-sm font-bold bg-white/5 text-slate-300 border border-white/10 hover:bg-white/10 hover:text-white transition-all shadow-lg"
+                        >
+                            <Sparkles size={18} className="rotate-[-45deg]" />
+                            Retour Cockpit
+                        </button>
+                    )}
                     <button
                         onClick={() => setIsOracleOpen(!isOracleOpen)}
                         className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-sm font-bold transition-all border ${isOracleOpen ? 'bg-accent text-white border-accent shadow-glow-accent' : 'bg-app-surface text-accent border-app-border hover:bg-app-surface/80 hover:border-app-border/60'}`}
@@ -84,16 +96,25 @@ const SessionDashboard: React.FC = () => {
                     <div className="col-span-12 overflow-hidden flex h-full">
                         <PlayerManagement />
                     </div>
-                ) : currentView === 'templates' ? (
-                    <div className="col-span-12 overflow-hidden flex h-full">
-                        <CampaignCockpit />
-                        <div className="flex-1 overflow-hidden">
-                            <TemplateManager />
-                        </div>
-                    </div>
                 ) : currentView === 'session-prep' || currentView === 'session-focus' ? (
                     <div className="col-span-12 overflow-hidden flex h-full">
                         {currentView === 'session-prep' ? <SessionPrep /> : <SessionFocusEditor />}
+                    </div>
+                ) : currentView === 'forge' ? (
+                    <div className="col-span-12 overflow-hidden flex h-full p-8 scrollbar-hide">
+                        <ForgeDashboard />
+                    </div>
+                ) : currentView === 'templates' ? (
+                    <div className="col-span-12 overflow-hidden flex h-full">
+                        <TemplateDashboard />
+                    </div>
+                ) : currentView === 'template-editor' ? (
+                    <div className="col-span-12 overflow-hidden flex h-full">
+                        <SheetTemplateEditor />
+                    </div>
+                ) : currentView === 'driver-editor' ? (
+                    <div className="col-span-12 overflow-hidden flex h-full">
+                        <RuleEngineEditor />
                     </div>
                 ) : (
                     <>

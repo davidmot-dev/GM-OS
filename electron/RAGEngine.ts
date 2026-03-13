@@ -1,7 +1,9 @@
 import { ipcMain } from 'electron';
 import path from 'node:path';
 import fs from 'fs-extra';
-import * as pdf from 'pdf-parse'
+import { createRequire } from 'node:module';
+const require = createRequire(import.meta.url);
+const pdf = require('pdf-parse');
 
 interface IndexedFile {
     mtime: number;
@@ -135,9 +137,8 @@ export class RAGEngine {
                 return text.length > MAX_SIZE ? text.substring(0, MAX_SIZE) + '... [Tronqué]' : text;
             } else if (ext === '.pdf') {
                 const dataBuffer = await fs.readFile(filePath);
-                const parsePdf = (pdf as any).default || (pdf as any);
-                if (typeof parsePdf === 'function') {
-                    const data = await parsePdf(dataBuffer);
+                if (typeof pdf === 'function') {
+                    const data = await pdf(dataBuffer);
                     return data.text || '';
                 }
             }

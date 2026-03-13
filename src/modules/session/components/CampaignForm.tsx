@@ -13,7 +13,7 @@ interface CampaignFormProps {
 }
 
 const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, onClose }) => {
-    const { atlasMaps, addCampaign, updateCampaign, customSheetTemplates } = useSessionOSStore();
+    const { atlasMaps, addCampaign, updateCampaign, customSheetTemplates, customGameDrivers } = useSessionOSStore();
     
     const [name, setName] = useState(campaign?.name || '');
     const [system, setSystem] = useState(campaign?.system || 'generic');
@@ -107,17 +107,32 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, onClose }) => {
                                 <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40 px-1">Système de Jeu</label>
                                 <select 
                                     value={system}
-                                    onChange={e => setSystem(e.target.value)}
+                                    onChange={e => {
+                                        const newSystemId = e.target.value;
+                                        setSystem(newSystemId);
+                                        
+                                        // Auto-cohesion: If this is a driver, we might want to store more than just the ID 
+                                        // but for now the ID lookup is enough. The important thing is that 
+                                        // when a driver is active, the sheet template is derived from it.
+                                    }}
                                     className="w-full bg-app-surface/60 border border-app-border/20 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-accent/40 transition-all font-bold appearance-none cursor-pointer"
                                 >
-                                    {allTemplates.map(t => (
-                                        <option key={t.id} value={t.id} className="bg-app-surface text-app-text">{t.emoji} {t.name}</option>
-                                    ))}
+                                    <optgroup label="Modèles de Fiches (UI)">
+                                        {allTemplates.map(t => (
+                                            <option key={t.id} value={t.id} className="bg-app-surface text-app-text">{t.emoji} {t.name}</option>
+                                        ))}
+                                    </optgroup>
+                                    {customGameDrivers.length > 0 && (
+                                        <optgroup label="Règles & IA (Drivers)">
+                                            {customGameDrivers.map(d => (
+                                                <option key={d.id} value={d.id} className="bg-app-surface text-app-text">{d.emoji} {d.name} (Rulebook)</option>
+                                            ))}
+                                        </optgroup>
+                                    )}
                                 </select>
                             </div>
                         </div>
 
-                        {/* NotebookLM Specific */}
                         <div className="space-y-2">
                             <label className="text-[10px] font-black uppercase tracking-widest text-blue-400 px-1 flex items-center gap-2">
                                 <Sparkles size={12} /> NotebookLM de Campagne (Surcharge)
@@ -130,6 +145,25 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, onClose }) => {
                                 className="w-full bg-app-surface/60 border border-app-border/20 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500/40 transition-all font-bold"
                             />
                         </div>
+
+                        {/* Cohesion Info */}
+                        {system && (
+                            <div className="p-4 rounded-2xl bg-accent/5 border border-accent/10 animate-fade-in">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 rounded-xl bg-accent text-app-bg">
+                                        <Sparkles size={12} />
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] font-black uppercase text-accent tracking-widest">Cohésion Active</p>
+                                        <p className="text-[9px] text-app-text/60 font-bold uppercase">
+                                            {customGameDrivers.find(d => d.id === system) 
+                                                ? `Moteur lié à : ${allTemplates.find(t => t.id === customGameDrivers.find(d => d.id === system)?.templateId)?.name || 'aucune fiche'}`
+                                                : "Mode Fiche Standard (IA Générique Dice-OS)"}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
                         {/* Description */}
                         <div className="space-y-2">

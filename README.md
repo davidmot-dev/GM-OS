@@ -41,5 +41,14 @@ npm run dev
 
 Le projet sépare strictement l'interface utilisateur de la logique système via un objet global `window.appBridge`. Cela permet de faire tourner GM-OS aussi bien dans un navigateur que dans un conteneur natif (Electron/Tauri) sans modification du code UI.
 
+## 📚 Documentation
+
+Plus d'informations techniques et guides d'utilisation sont disponibles dans le dossier `docs/` :
+
+- **[Architecture (Brain vs Body)](file:///c:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/docs/architecture/rule-engine-ai.md)** : Fonctionnement du Moteur de Règles et de l'IA.
+- **[Guide de Migration](file:///c:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/docs/guides/migration-guide.md)** : Instructions pour la transition vers la v5.
+- **[Historique du Projet](file:///c:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/docs/history/)** : Comptes-rendus des phases de développement (Forge, etc.).
+- **[Dev & Debug](file:///c:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/docs/dev/)** : Notes techniques pour le débogage.
+
 ---
 *Développé pour l'immersion. Conçu pour le contrôle.*
