@@ -31,7 +31,13 @@ import type { ThemeID } from '../store/useSessionStore';
 import { useModalStore } from '../stores/useModalStore';
 import { SessionService } from '../store/SessionService';
 import AIChatPanel from '../modules/ai/components/AIChatPanel';
+import { TacticalAIControlPanel } from '../modules/tactical-ai/components/TacticalAIControlPanel';
 
+import { useTacticalAIStore } from '../modules/tactical-ai/useTacticalAIStore';
+import { useTacticalOrchestrator } from '../modules/tactical-ai/hooks/useTacticalOrchestrator';
+import { useHardwareBridge } from '../modules/tactical-ai/hooks/useHardwareBridge';
+import { useAudioTactical } from '../modules/tactical-ai/hooks/useAudioTactical';
+import { useHueAutoConnect } from '../modules/light/hooks/useHueAutoConnect';
 
 interface NavItemProps {
     icon: React.ReactNode;
@@ -62,6 +68,14 @@ interface ShellProps {
 }
 
 const Shell: React.FC<ShellProps> = ({ children }) => {
+    // Activate Tactical AI listeners
+    useHardwareBridge();
+    useAudioTactical();
+    useTacticalOrchestrator();
+
+    // Global persistence/sync hooks
+    useHueAutoConnect();
+
     const {
         activeModule,
         setActiveModule,
@@ -73,6 +87,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
     } = useSessionStore();
 
     const { openMediaHub, showCustom } = useModalStore();
+    const tacticalStatus = useTacticalAIStore((state) => state.status);
 
     // Appliquer le thème et la couleur d'accentuation au document
     useEffect(() => {
@@ -115,6 +130,8 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
             }
         }
     };
+
+    const { isPanelOpen, setIsPanelOpen, status: tacticalAIStatus, settings: tacticalSettings } = useTacticalAIStore();
 
     return (
         <div data-theme={theme} className="flex h-screen bg-app-bg text-app-text overflow-hidden font-sans selection:bg-accent/30">
@@ -269,8 +286,15 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                 <div className="mt-auto pt-4 flex flex-col gap-3 border-t border-app-border/20">
                     <div className="flex bg-app-surface/60 backdrop-blur-md border border-app-border/50 rounded-2xl overflow-hidden shadow-xl">
                         <button 
+                            onClick={() => setIsPanelOpen(!isPanelOpen)}
+                            className={`flex-1 py-3 flex items-center justify-center transition-all group ${isPanelOpen ? 'text-accent bg-accent/10' : 'text-app-text/50 hover:text-accent hover:bg-accent/10'}`}
+                            title="Cortex Tactique"
+                        >
+                            <Brain size={18} className={`${tacticalAIStatus === 'analyzing' ? 'animate-pulse' : ''} group-hover:scale-110 transition-transform`} />
+                        </button>
+                        <button 
                             onClick={cycleTheme}
-                            className="flex-1 py-3 flex items-center justify-center text-app-text/50 hover:text-accent hover:bg-accent/10 transition-all group"
+                            className="flex-1 py-3 flex items-center justify-center text-app-text/50 hover:text-accent hover:bg-accent/10 transition-all group border-l border-app-border/50"
                             title={`Thème : ${theme}`}
                         >
                             <Palette size={18} className="group-hover:rotate-12 transition-transform" />
@@ -341,6 +365,12 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                     </div>
 
                     <div className="flex items-center gap-4">
+                        <div className={`flex items-center gap-4 px-4 py-1.5 rounded-full ${tacticalSettings.isEnabled ? 'bg-accent/10 border border-accent/20' : 'bg-app-surface border border-app-border opacity-50'}`}>
+                            <div className={`w-2 h-2 rounded-full ${tacticalSettings.isEnabled ? (tacticalStatus === 'analyzing' ? 'bg-emerald-400 animate-pulse' : 'bg-accent') : 'bg-app-text/20'} shadow-glow-accent`} />
+                             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/80">
+                                {tacticalSettings.isEnabled ? 'CORTEX ACTIVE' : 'CORTEX DISABLED'}
+                             </span>
+                        </div>
                         <div className="flex items-center gap-2">
                             <div className="w-2 h-2 rounded-full bg-accent animate-ping" />
                              <span className="text-[10px] font-mono text-app-text/40 uppercase tracking-widest">System Link Active</span>
@@ -358,6 +388,10 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
 
             {/* AI Side Panel */}
             <AIChatPanel />
+
+            {/* Tactical AI HUD */}
+            {tacticalSettings.isEnabled && <TacticalAIControlPanel />}
+
         </div>
     );
 };

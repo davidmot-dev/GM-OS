@@ -14,7 +14,8 @@ const MapCanvas: React.FC = () => {
         addPing,
         zoom, panX, panY, viewResetCounter, setViewState,
         mapWidth, mapHeight, setMapDimensions,
-        isGridEnabled, gridSize, gridColor, gridOpacity
+        isGridEnabled, gridSize, gridColor, gridOpacity,
+        setSelectedTokenId
     } = useMapStore();
     const resolvedMapUrl = useMediaUrl(mapUrl || undefined);
 
@@ -180,8 +181,11 @@ const MapCanvas: React.FC = () => {
             setLastPanPos({ x: e.clientX, y: e.clientY });
             return;
         }
-
+        
+        // Clic gauche sur le fond -> Désélectionner
         if (e.button === 0) {
+            setSelectedTokenId(null);
+            
             if (currentTool === 'move_token') return; // Ne pas dessiner en mode déplacement de pions
             
             const coords = getCoordinates(e);

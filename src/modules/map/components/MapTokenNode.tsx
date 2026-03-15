@@ -11,13 +11,17 @@ interface MapTokenNodeProps {
 }
 
 const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = false, localZoom }) => {
-    const { currentTool, updateToken, updateProjectedToken, removeToken, zoom: gmZoom } = useMapStore();
+    const { 
+        currentTool, updateToken, updateProjectedToken, removeToken, zoom: gmZoom, 
+        setIsDraggingToken, selectedTokenId, setSelectedTokenId 
+    } = useMapStore();
     const { combatants, currentTurnIdx } = useCombatStore();
 
     // On lie le token à son combattant s'il existe
     const combatant = combatants.find(c => c.id === token.linkedCombatantId);
     const isCurrentTurn = !!token.linkedCombatantId && combatants[currentTurnIdx]?.id === token.linkedCombatantId;
     const resolvedAvatar = useMediaUrl(token.avatar || undefined);
+    const isSelected = selectedTokenId === token.id;
 
     const [isDragging, setIsDragging] = useState(false);
 
@@ -32,6 +36,12 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
         const target = e.currentTarget as HTMLElement;
         target.setPointerCapture(e.pointerId);
         setIsDragging(true);
+        setIsDraggingToken(true);
+        
+        // Gérer la sélection pour le Cerveau Tactique (seulement MJ)
+        if (!isProjectedView) {
+            setSelectedTokenId(token.id);
+        }
     };
 
     const handlePointerMove = (e: React.PointerEvent) => {
@@ -56,6 +66,7 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
         e.stopPropagation();
 
         setIsDragging(false);
+        setIsDraggingToken(false);
         const target = e.currentTarget as HTMLElement;
         target.releasePointerCapture(e.pointerId);
     };
@@ -77,7 +88,7 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
     return (
         <div
             className={`absolute rounded-full shadow-lg border-2 border-app-bg bg-app-surface flex items-center justify-center transition-shadow group ${isInteractable ? 'cursor-grab hover:ring-4 hover:z-40 active:cursor-grabbing' : 'cursor-default'
-                } ring-2 ${ringColor} ${isDragging ? 'z-50 ring-4' : 'z-30'}`}
+                } ring-2 ${ringColor} ${isDragging ? 'z-50 ring-4' : 'z-30'} ${isSelected ? 'ring-sky-500 shadow-[0_0_20px_rgba(14,165,233,0.5)] z-40' : ''}`}
             style={{
                 left: token.x,
                 top: token.y,

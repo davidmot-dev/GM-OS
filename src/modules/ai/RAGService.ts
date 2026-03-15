@@ -29,6 +29,14 @@ export class RAGService {
     const osStore = useSessionOSStore.getState();
     const activeCampaign = osStore.campaigns.find(c => c.id === osStore.activeCampaignId);
     
+    if (!activeCampaign) return "";
+
+    // If explicit paths are provided, we use them directly
+    if (activeCampaign.systemPath || activeCampaign.campaignPath) {
+      console.log(`[RAG Service] Explicit Paths found -> System: ${activeCampaign.systemPath}, Campaign: ${activeCampaign.campaignPath}`);
+      return this.getContextFromExplicitPaths(activeCampaign.systemPath, activeCampaign.campaignPath);
+    }
+
     const rawSystemId = activeCampaign?.system || 'unknown';
     const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...osStore.customSheetTemplates];
     const systemId = allTemplates.find(t => t.id === rawSystemId)?.name || rawSystemId;
@@ -53,6 +61,75 @@ export class RAGService {
         console.error("[RAG Service] Search error:", error);
         return "";
     }
+  }
+
+  private async getContextFromExplicitPaths(systemPath?: string, campaignPath?: string): Promise<string> {
+    if (!window.appBridge?.ai?.listDocs) return "";
+    const docs = await window.appBridge.ai.listDocs() as DocEntry[];
+    let totalContext = "";
+
+    const findAndRead = async (targetPath: string) => {
+      // Normalize path (split by / or \ and trim)
+      const parts = targetPath.trim().split(/[/\\]/).filter(p => p.length > 0).map(p => p.toLowerCase());
+      if (parts.length === 0) return "";
+
+      console.log(`[RAG Service] Searching for path segments:`, parts);
+
+      // Recursive finder that follows the path
+      const findNestedEntry = (entries: DocEntry[], segments: string[]): DocEntry | null => {
+        if (segments.length === 0) return null;
+        
+        const [current, ...remaining] = segments;
+        const match = entries.find(e => e.name.toLowerCase() === current);
+        
+        if (match) {
+          if (remaining.length === 0) return match;
+          if (match.children) return findNestedEntry(match.children, remaining);
+        }
+        return null;
+      };
+
+      let foundEntry = findNestedEntry(docs, parts);
+
+      // Fallback: If not found by full path, try searching for the leaf name anywhere in the tree
+      // (This helps if the user forgot a parent folder like 'systems/' or 'campaigns/')
+      if (!foundEntry && parts.length > 0) {
+        const leaf = parts[parts.length - 1];
+        console.warn(`[RAG Service] Path not found directly: ${targetPath}. Trying to find leaf: ${leaf}`);
+        
+        const findByLeaf = (entries: DocEntry[]): DocEntry | null => {
+          for (const entry of entries) {
+            if (entry.name.toLowerCase() === leaf) return entry;
+            if (entry.children) {
+              const b = findByLeaf(entry.children);
+              if (b) return b;
+            }
+          }
+          return null;
+        };
+        foundEntry = findByLeaf(docs);
+      }
+
+      if (foundEntry) {
+        console.log(`[RAG Service] Found entry for RAG: ${foundEntry.name} (${foundEntry.type})`);
+        return await this.readFolderRecursive(foundEntry);
+      } else {
+        console.error(`[RAG Service] Target RAG path not found: ${targetPath}`);
+      }
+      return "";
+    };
+
+    if (systemPath) {
+      const systemContext = await findAndRead(systemPath);
+      if (systemContext) totalContext += `### SYSTÈME: ${systemPath}\n${systemContext}\n\n`;
+    }
+
+    if (campaignPath) {
+      const campaignContext = await findAndRead(campaignPath);
+      if (campaignContext) totalContext += `### CAMPAGNE: ${campaignPath}\n${campaignContext}\n\n`;
+    }
+
+    return totalContext;
   }
 
   private async readFolderRecursive(entry: DocEntry): Promise<string> {

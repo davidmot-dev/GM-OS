@@ -3,7 +3,7 @@ import { useSessionOSStore } from '../useSessionOSStore';
 import { gmCustom } from '../../../stores/useModalStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import type { Player } from '../useSessionOSStore';
-import { Search, UserPlus } from 'lucide-react';
+import { Search, UserPlus, Trash2 } from 'lucide-react';
 
 const PlayerRoster: React.FC = () => {
     const { players, selectedPlayerId, setSelectedPlayer, togglePlayerOnline } = useSessionOSStore();
@@ -45,6 +45,12 @@ const PlayerRoster: React.FC = () => {
                             e.stopPropagation();
                             togglePlayerOnline(player.id);
                         }}
+                        onDelete={(e) => {
+                            e.stopPropagation();
+                            if (window.confirm(`Êtes-vous sûr de vouloir supprimer le joueur ${player.realName} et TOUS ses personnages ? Cette action est irréversible.`)) {
+                                useSessionOSStore.getState().deletePlayer(player.id);
+                            }
+                        }}
                     />
                 ))}
                 {filtered.length === 0 && (
@@ -71,7 +77,8 @@ const PlayerCard: React.FC<{
     isSelected: boolean; 
     onClick: () => void;
     onToggleOnline: (e: React.MouseEvent) => void;
-}> = ({ player, isSelected, onClick, onToggleOnline }) => {
+    onDelete: (e: React.MouseEvent) => void;
+}> = ({ player, isSelected, onClick, onToggleOnline, onDelete }) => {
     const resolvedAvatar = useMediaUrl(player.avatarUrl);
     return (
         <div
@@ -97,17 +104,26 @@ const PlayerCard: React.FC<{
                     {player.characters.length} personnage{player.characters.length > 1 ? 's' : ''}
                 </p>
             </div>
-            <button
-                onClick={onToggleOnline}
-                className={`flex-shrink-0 text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-md transition-all border z-10 ${
-                    player.isOnline 
-                    ? 'text-emerald-400 border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/20' 
-                    : 'text-app-text/40 border-app-border bg-app-surface/50 hover:bg-app-surface hover:text-app-text/60'
-                }`}
-                title={player.isOnline ? "Passer Hors Ligne" : "Passer En Ligne"}
-            >
-                {player.isOnline ? 'En ligne' : 'Hors ligne'}
-            </button>
+            <div className="flex flex-col gap-1 items-end">
+                <button
+                    onClick={onToggleOnline}
+                    className={`flex-shrink-0 text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-md transition-all border z-10 ${
+                        player.isOnline 
+                        ? 'text-emerald-400 border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/20' 
+                        : 'text-app-text/40 border-app-border bg-app-surface/50 hover:bg-app-surface hover:text-app-text/60'
+                    }`}
+                    title={player.isOnline ? "Passer Hors Ligne" : "Passer En Ligne"}
+                >
+                    {player.isOnline ? 'En ligne' : 'Hors ligne'}
+                </button>
+                <button
+                    onClick={onDelete}
+                    className="p-1 px-2 rounded-md border border-red-500/20 text-red-500/40 hover:text-red-500 hover:bg-red-500/10 transition-all"
+                    title="Supprimer le joueur"
+                >
+                    <Trash2 size={12} />
+                </button>
+            </div>
         </div>
     );
 };

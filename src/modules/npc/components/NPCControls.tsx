@@ -47,7 +47,7 @@ const NPCControls: React.FC = () => {
                 <div className="flex flex-col gap-1">
                     <label className="text-[10px] uppercase font-bold text-slate-500 ml-1 font-sans tracking-tight">Univers (Préfixe)</label>
                     <select
-                        value={config.universe.split('_')[0]}
+                        value={config?.universe?.split('_')[0] || ''}
                         onChange={(e) => {
                             const selectedPrefix = e.target.value;
                             // Reset to the first theme of this universe
@@ -67,7 +67,7 @@ const NPCControls: React.FC = () => {
                 <div className="flex flex-col gap-1 animate-in slide-in-from-top-1 duration-200">
                     <label className="text-[10px] uppercase font-bold text-slate-500 ml-1 font-sans tracking-tight">Thème / Fichier</label>
                     <select
-                        value={config.universe}
+                        value={config?.universe || ''}
                         onChange={(e) => setConfig({ universe: e.target.value })}
                         disabled={availableUniverses.length === 0}
                         className="w-full bg-app-bg border border-app-border rounded-lg p-2 text-sm text-accent font-bold focus:outline-none focus:border-accent custom-scrollbar shadow-inner"

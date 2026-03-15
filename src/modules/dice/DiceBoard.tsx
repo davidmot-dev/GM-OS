@@ -68,11 +68,67 @@ const DiceBoard: React.FC = () => {
     const activeDriver = getActiveDriver();
     const [useSystemDriver, setUseSystemDriver] = useState(false);
 
+    // Auto-sync with active system driver
+    React.useEffect(() => {
+        if (activeDriver) {
+            setUseSystemDriver(true);
+            
+            // Map engine to local mode
+            const engine = activeDriver.dice.engine as any;
+            
+            if (engine === 'yze' || engine === 'year-zero') {
+                setMode('yze');
+                const dCount = parseInt(activeDriver.dice.defaultDice) || 6;
+                setDiceCount(dCount);
+            } else {
+                // Try to extract count from "XdY"
+                const dicePart = activeDriver.dice.defaultDice.match(/(\d+)d(\d+)/i);
+                if (dicePart) {
+                    setDiceCount(parseInt(dicePart[1]));
+                }
+                
+                if (engine === 'rolemaster' || engine === 'd100') {
+                    setMode('rolemaster');
+                } else if (engine === '2d20') {
+                    setMode('standard'); // Handled by engine logic
+                } else if (engine === 'pool' || engine === 'pool_explode') {
+                    setMode(engine);
+                    setTarget(activeDriver.dice.successThreshold || 8);
+                } else if (engine === 'threshold') {
+                    setMode('threshold');
+                    setTarget(activeDriver.dice.successThreshold || 10);
+                } else if (engine === 'advantage' || engine === 'disadvantage') {
+                    setMode(engine);
+                } else if (engine === 'fate') {
+                    setMode('fate');
+                } else if (engine === 'exploding') {
+                    setMode('exploding');
+                } else if (engine === 'formula') {
+                    setMode('formula');
+                } else if (activeDriver.dice.logic === 'count-success') {
+                    setMode('pool');
+                    setTarget(activeDriver.dice.successThreshold || 8);
+                } else {
+                    setMode('standard');
+                }
+            }
+        } else {
+            setUseSystemDriver(false);
+            setMode('standard');
+        }
+    }, [activeDriver, activeDriver?.id]); // Only re-run when actual system changes
+
     const executeRoll = (sides: number = 20, isFormulaText: boolean = false, customFormula: string = "") => {
         let result: RollResult;
         
         if (useSystemDriver && activeDriver) {
-            result = DiceEngine.rollFromConfig(activeDriver.dice);
+            const modVal = typeof modifier === 'string' ? (parseInt(modifier.replace('+', ''), 10) || 0) : modifier;
+            result = DiceEngine.rollFromConfig(activeDriver.dice, {
+                modifier: modVal,
+                baseCount: diceCount,
+                gearCount: gearCount,
+                targetOverwrite: target
+            });
             return { result, title: `Système: ${activeDriver.name}` };
         }
 
@@ -435,7 +491,7 @@ const DiceBoard: React.FC = () => {
                             const tA = tokens.find(t => t.id === lastSelectedTokenId);
                             const tB = tokens.find(t => t.id === targetTokenId);
                             if (tA && tB) {
-                                const range = tacticalService.getRangeInfo(tA, tB, gridSize);
+                                const range = tacticalService.getRangeInfo(tA, tB, gridSize, activeDriver?.tactical);
                                 return (
                                     <div className="bg-app-bg/40 rounded-xl p-3 border border-indigo-500/20 flex items-center justify-between animate-in fade-in slide-in-from-top-2 duration-300">
                                         <div className="flex flex-col">

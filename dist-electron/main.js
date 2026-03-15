@@ -2330,7 +2330,7 @@ function createWindow() {
   win.webContents.on("did-finish-load", () => {
     win?.webContents.send("main-process-message", (/* @__PURE__ */ new Date()).toLocaleString());
   });
-  win.webContents.openDevTools();
+  win.webContents.openDevTools({ mode: "detach" });
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL);
   } else {
@@ -2453,6 +2453,23 @@ ipcMain.handle("sound:load-audios", async () => {
     properties: ["openFile", "multiSelections"]
   });
   return filePaths;
+});
+ipcMain.handle("tactical:list-sounds", async () => {
+  try {
+    const tacticalPath = path.join(process.env.VITE_PUBLIC || "", "assets/sounds/tactical");
+    if (await fs.pathExists(tacticalPath)) {
+      const files = await fs.readdir(tacticalPath);
+      return files.filter((f) => f.match(/\.(mp3|wav|ogg|m4a)$/i));
+    }
+  } catch (error) {
+    console.error("[Main] Error listing tactical sounds:", error);
+  }
+  return [];
+});
+ipcMain.on("debug:open-console", () => {
+  if (win && !win.isDestroyed()) {
+    win.webContents.openDevTools({ mode: "detach" });
+  }
 });
 ipcMain.handle("light:request", async (_event, url, method, body) => {
   return new Promise((resolve, reject) => {

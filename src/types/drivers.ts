@@ -1,13 +1,30 @@
 // src/types/drivers.ts
-import { SheetTemplate } from '../data/defaultSheetTemplates';
 
 export type DiceRollLogic = 'sum' | 'highest' | 'lowest' | 'count-success' | 'd100-low' | 'd100-high';
 
 export interface DiceConfig {
     defaultDice: string; // e.g. "1d20", "3d6"
     logic: DiceRollLogic;
+    engine?: 'standard' | 'formula' | 'pool' | 'pool_explode' | 'threshold' | 'advantage' | 'disadvantage' | 'exploding' | 'fate' | 'rolemaster' | 'yze' | '2d20'; // Specific specialized logic
     successThreshold?: number; // e.g. 8 for WoD, or dynamic
     critRange?: number; // e.g. 20 for 5e, 1 for d100
+}
+
+export interface TacticalRangeThreshold {
+    label: string;
+    maxUnits: number; // renamed from maxDistance for clarity (grid units)
+    modifier: number;
+}
+
+export interface TacticalConfig {
+    ranges: {
+        contact: TacticalRangeThreshold;
+        courte: TacticalRangeThreshold;
+        moyenne: TacticalRangeThreshold;
+        longue: TacticalRangeThreshold;
+        extreme: TacticalRangeThreshold;
+    };
+    useTacticalAI: boolean;
 }
 
 export interface CombatStatMapping {
@@ -28,10 +45,15 @@ export interface GameDriver {
     // Mechanics
     dice: DiceConfig;
     
+    // Tactical configuration
+    tactical?: TacticalConfig;
+
     // Combat configuration
     combat: {
         statsToTrack: CombatStatMapping[];
         initiativeFormula: string; // e.g. "dex", "dex + int", "1d10"
+        initiativeSort?: 'asc' | 'desc'; // Default: 'desc'
+        initiativeCards?: number; // If set, use a unique card pool 1-N
     };
 
     // Linked assets

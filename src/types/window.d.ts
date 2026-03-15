@@ -29,6 +29,12 @@ interface AppBridge {
         searchContext: (systemId: string, campaignName: string) => Promise<string>;
         reindex: () => Promise<boolean>;
     };
+    sound?: {
+        loadAudios: () => Promise<string[]>;
+    };
+    tactical?: {
+        listSounds: () => Promise<string[]>;
+    };
     light?: {
         request: (url: string, method: string, body?: unknown) => Promise<unknown>;
     };

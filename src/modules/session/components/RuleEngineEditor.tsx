@@ -1,10 +1,10 @@
 import { useSessionOSStore } from '../useSessionOSStore';
 import { 
     Sparkles, Brain, Save, ArrowLeft, PenTool, Music, Beaker, User,
-    Hammer, BookOpen, Dice5, type LucideIcon 
+    Hammer, BookOpen, Dice5, Zap, type LucideIcon 
 } from 'lucide-react';
 import { useGemStore } from '../../../stores/useGemStore';
-import type { GameDriver } from '../../../types/drivers';
+import type { GameDriver, TacticalConfig } from '../../../types/drivers';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { gmToast } from '../../../stores/useToastStore';
 
@@ -107,15 +107,39 @@ const RuleEngineEditor: React.FC = () => {
                                     <Dice5 size={16} /> Dice-OS Core
                                 </h4>
                                 <div className="space-y-4">
-                                    <div>
-                                        <label className="text-[10px] font-black uppercase text-app-text/40 mb-2 block">Dés par défaut</label>
-                                        <input 
-                                            type="text"
-                                            value={driver.dice.defaultDice}
-                                            onChange={e => handleUpdate({ dice: { ...driver.dice, defaultDice: e.target.value } })}
-                                            className="w-full bg-app-bg px-4 py-3 rounded-xl border border-app-border/40 font-mono text-sm focus:border-accent/40 outline-none"
-                                            placeholder="Ex: 1d20, 3d6..."
-                                        />
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="text-[10px] font-black uppercase text-app-text/40 mb-2 block">Dés par défaut</label>
+                                            <input 
+                                                type="text"
+                                                value={driver.dice.defaultDice}
+                                                onChange={e => handleUpdate({ dice: { ...driver.dice, defaultDice: e.target.value } })}
+                                                className="w-full bg-app-bg px-4 py-3 rounded-xl border border-app-border/40 font-mono text-sm focus:border-accent/40 outline-none"
+                                                placeholder="Ex: 1d20, 3d6..."
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="text-[10px] font-black uppercase text-app-text/40 mb-2 block">Moteur (Engine)</label>
+                                            <select 
+                                                value={driver.dice.engine || 'standard'}
+                                                onChange={e => handleUpdate({ dice: { ...driver.dice, engine: e.target.value as GameDriver['dice']['engine'] } })}
+                                                className="w-full bg-app-bg px-4 py-3 rounded-xl border border-app-border/40 text-xs focus:border-accent/40 outline-none"
+                                            >
+                                                <option value="standard">Standard (Somme)</option>
+                                                <option value="exploding">Somme Explosive</option>
+                                                <option value="formula">Formule Libre</option>
+                                                <option value="threshold">Jet de Seuil (Target)</option>
+                                                <option value="pool">Pool de Dés (Succès)</option>
+                                                <option value="pool_explode">Pool Explosif</option>
+                                                <option value="advantage">Avantage (Garde Meilleur)</option>
+                                                <option value="disadvantage">Désavantage (Garde Pire)</option>
+                                                <option value="year-zero">Year Zero Engine (Alien/Blade Runner)</option>
+                                                <option value="yze">YZE (Succès sur 6)</option>
+                                                <option value="fate">FATE / Fudge</option>
+                                                <option value="rolemaster">Rolemaster / D100</option>
+                                                <option value="2d20">2d20 (Star Trek/Dune)</option>
+                                            </select>
+                                        </div>
                                     </div>
                                     <div>
                                         <label className="text-[10px] font-black uppercase text-app-text/40 mb-2 block">Liaison Fiche (Body)</label>
@@ -130,6 +154,112 @@ const RuleEngineEditor: React.FC = () => {
                                             ))}
                                         </select>
                                     </div>
+                                </div>
+                            </div>
+
+                            <div className="p-6 bg-indigo-500/10 rounded-3xl border border-indigo-500/20 shadow-2xl relative overflow-hidden group">
+                                <h4 className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-indigo-400 mb-4">
+                                    <Zap size={16} /> Combat & Initiative
+                                </h4>
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="text-[10px] font-black uppercase text-app-text/40 mb-2 block">Formule Initiative</label>
+                                        <input 
+                                            type="text"
+                                            value={driver.combat.initiativeFormula}
+                                            onChange={e => handleUpdate({ combat: { ...driver.combat, initiativeFormula: e.target.value } })}
+                                            className="w-full bg-app-bg px-4 py-3 rounded-xl border border-app-border/40 font-mono text-sm focus:border-accent/40 outline-none"
+                                            placeholder="Ex: dex, 1d6 + init..."
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="text-[10px] font-black uppercase text-app-text/40 mb-2 block">Ordre de tri</label>
+                                        <div className="flex bg-app-bg rounded-xl border border-app-border/40 overflow-hidden">
+                                            <button 
+                                                onClick={() => handleUpdate({ combat: { ...driver.combat, initiativeSort: 'desc' } })}
+                                                className={`flex-1 py-3 text-[10px] font-black uppercase tracking-widest transition-all ${driver.combat.initiativeSort !== 'asc' ? 'bg-indigo-500 text-white shadow-lg' : 'text-app-text/40 hover:text-white'}`}
+                                            >
+                                                Décroissant
+                                            </button>
+                                            <button 
+                                                onClick={() => handleUpdate({ combat: { ...driver.combat, initiativeSort: 'asc' } })}
+                                                className={`flex-1 py-3 text-[10px] font-black uppercase tracking-widest transition-all ${driver.combat.initiativeSort === 'asc' ? 'bg-indigo-500 text-white shadow-lg' : 'text-app-text/40 hover:text-white'}`}
+                                            >
+                                                Croissant
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="text-[10px] font-black uppercase text-app-text/40 mb-2 block">Pool de Cartes (Facultatif)</label>
+                                        <input 
+                                            type="number"
+                                            value={driver.combat.initiativeCards || ''}
+                                            onChange={e => handleUpdate({ combat: { ...driver.combat, initiativeCards: e.target.value ? parseInt(e.target.value) : undefined } })}
+                                            className="w-full bg-app-bg px-4 py-3 rounded-xl border border-app-border/40 font-mono text-sm focus:border-accent/40 outline-none"
+                                            placeholder="Nombre de cartes (ex: 10)"
+                                        />
+                                        <p className="text-[9px] text-app-text/30 mt-2 italic">Active le tirage de valeurs uniques de 1 à N.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="p-6 bg-app-surface/40 rounded-3xl border border-app-border/40 shadow-2xl relative overflow-hidden group">
+                                <h4 className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-emerald-400 mb-4">
+                                    <Hammer size={16} /> Tactique & Portées
+                                </h4>
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between p-3 bg-app-bg rounded-xl border border-app-border/40">
+                                        <label className="text-[10px] font-black uppercase text-app-text/40 tracking-widest">Activer le Cortex Tactique</label>
+                                        <button 
+                                            onClick={() => handleUpdate({ tactical: { ...(driver.tactical || { useTacticalAI: true, ranges: {} as any }), useTacticalAI: !driver.tactical?.useTacticalAI } as GameDriver['tactical'] })}
+                                            className={`w-10 h-5 rounded-full transition-all relative ${driver.tactical?.useTacticalAI ? 'bg-emerald-500 shadow-glow-emerald' : 'bg-app-surface border border-white/5'}`}
+                                        >
+                                            <div className={`absolute top-1 w-3 h-3 rounded-full bg-white transition-all ${driver.tactical?.useTacticalAI ? 'left-6' : 'left-1'}`} />
+                                        </button>
+                                    </div>
+
+                                    <div className="grid grid-cols-12 gap-2 mb-2 px-1">
+                                        <div className="col-span-4 text-[8px] font-black uppercase tracking-widest text-app-text/30">Zone</div>
+                                        <div className="col-span-4 text-[8px] font-black uppercase tracking-widest text-app-text/30 text-center">Seuil Max (Cases)</div>
+                                        <div className="col-span-4 text-[8px] font-black uppercase tracking-widest text-app-text/30 text-center">Modificateur</div>
+                                    </div>
+
+                                    {(['contact', 'courte', 'moyenne', 'longue', 'extreme'] as const).map(rangeKey => {
+                                        const range = driver.tactical?.ranges[rangeKey] || { label: rangeKey.toUpperCase(), maxUnits: 0, modifier: 0 };
+                                        return (
+                                            <div key={rangeKey} className="grid grid-cols-12 gap-2 items-center">
+                                                <div className="col-span-4 text-[9px] font-black uppercase tracking-tighter text-app-text/60">{range.label}</div>
+                                                <div className="col-span-4">
+                                                    <input 
+                                                        type="number"
+                                                        step="0.1"
+                                                        value={range.maxUnits}
+                                                        onChange={e => {
+                                                            const val = parseFloat(e.target.value);
+                                                            const newRanges = { ...(driver.tactical?.ranges || {}) } as TacticalConfig['ranges'];
+                                                            (newRanges as any)[rangeKey] = { ...range, maxUnits: isNaN(val) ? 0 : val };
+                                                            handleUpdate({ tactical: { ...(driver.tactical || { useTacticalAI: true, ranges: {} as TacticalConfig['ranges'] }), ranges: newRanges } });
+                                                        }}
+                                                        className="w-full bg-app-bg text-center py-1 rounded-lg border border-app-border/20 text-[10px] font-mono"
+                                                        placeholder="Cases"
+                                                    />
+                                                </div>
+                                                <div className="col-span-4">
+                                                    <input 
+                                                        type="number"
+                                                        value={range.modifier}
+                                                        onChange={e => {
+                                                            const val = parseInt(e.target.value);
+                                                            const newRanges = { ...(driver.tactical?.ranges || {}) } as TacticalConfig['ranges'];
+                                                            (newRanges as any)[rangeKey] = { ...range, modifier: val };
+                                                            handleUpdate({ tactical: { ...(driver.tactical || { useTacticalAI: true, ranges: {} as TacticalConfig['ranges'] }), ranges: newRanges } });
+                                                        }}
+                                                        className="w-full bg-app-bg text-center py-1 rounded-lg border border-app-border/20 text-[10px] font-mono text-accent"
+                                                        placeholder="Mod."
+                                                    />
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             </div>
                         </div>

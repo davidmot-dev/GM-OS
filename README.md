@@ -14,6 +14,7 @@ GM-OS v5 est une plateforme de gestion de sessions de Jeu de Rôle (JdR) de nouv
   - **Image OS** : Projection d'illustrations et cartes vers le **Player Hub**.
   - **Map OS** : Gestion de cartes interactives avec brouillard de guerre et tokens.
 - **ADVENTURE TOOLS** :
+  - **CORTEX TACTIQUE (AI)** : Analyse intelligente des portées, suggestions de modificateurs de dés, et synchronisation automatique des lumières (Hue) et sons en fonction du danger.
   - **Combat OS** : Suivi d'initiative avancé, gestion des PV et export automatique des résumés vers la chronologie.
   - **Dice OS** : Moteur de lancer de dés 3D ultra-rapide.
   - **NPC OS** : Galerie de PNJ synchronisée avec le visuel et l'audio.

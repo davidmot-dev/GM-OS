@@ -339,19 +339,38 @@ export class DiceEngine {
     }
 
     // --- 10. SYSTEM BRIDGE ---
-    static rollFromConfig(config: { defaultDice: string; logic: string; successThreshold?: number }): RollResult {
+    static rollFromConfig(config: { defaultDice: string; logic: string; successThreshold?: number; engine?: string }, options?: { modifier?: number; baseCount?: number; gearCount?: number; targetOverwrite?: number }): RollResult {
+        // If an engine is specified, prioritize it
+        if (config.engine === 'year-zero' || config.engine === 'yze') {
+            const count = options?.baseCount ?? (parseInt(config.defaultDice) || 6);
+            const gear = options?.gearCount ?? 0;
+            const mod = options?.modifier ?? 0;
+            // In YZE, modifiers add/remove base dice
+            return this.rollYZE(Math.max(1, count + mod), gear);
+        }
+
+        if (config.engine === 'd100' || config.engine === 'rolemaster') {
+            return this.rollRolemaster(options?.modifier ?? 0);
+        }
+
+        if (config.engine === '2d20') {
+            // Basic 2d20 logic: 2d20 vs threshold
+            return this.rollPool(20, 2, options?.modifier ?? 0, (options?.targetOverwrite ?? config.successThreshold) || 12, false);
+        }
+
         const dicePart = config.defaultDice.match(/(\d+)d(\d+)/i);
         if (!dicePart) return this.rollFormula(config.defaultDice);
         
-        const count = parseInt(dicePart[1]);
+        const count = options?.baseCount ?? parseInt(dicePart[1]);
         const faces = parseInt(dicePart[2]);
-        const threshold = config.successThreshold || 10;
+        const threshold = (options?.targetOverwrite ?? config.successThreshold) || 10;
+        const modifier = options?.modifier ?? 0;
 
         switch (config.logic) {
             case 'count-success':
-                return this.rollPool(faces, count, 0, threshold, false);
+                return this.rollPool(faces, count, modifier, threshold, false);
             case 'highest': {
-                const res = this.rollStandard(faces, count, 0, false);
+                const res = this.rollStandard(faces, count, modifier, false);
                 const max = Math.max(...res.rolls.map(r => typeof r.val === 'number' ? r.val : 0));
                 return {
                     ...res,
@@ -360,7 +379,7 @@ export class DiceEngine {
                 };
             }
             case 'lowest': {
-                const res = this.rollStandard(faces, count, 0, false);
+                const res = this.rollStandard(faces, count, modifier, false);
                 const min = Math.min(...res.rolls.map(r => typeof r.val === 'number' ? r.val : 1000));
                 return {
                     ...res,
@@ -369,7 +388,7 @@ export class DiceEngine {
                 };
             }
             case 'd100-low':
-                return this.rollThreshold(100, 1, 0, threshold, 'under');
+                return this.rollThreshold(100, 1, modifier, threshold, 'under');
             default:
                 return this.rollFormula(config.defaultDice);
         }

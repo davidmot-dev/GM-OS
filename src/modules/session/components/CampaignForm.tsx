@@ -8,31 +8,37 @@ import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import { gmToast } from '../../../stores/useToastStore';
 
 interface CampaignFormProps {
-    campaign?: Campaign; // If provided, we are in Edit mode
+    campaign?: Campaign | { campaignId: string }; // Can be full object or just a reference ID
     onClose: () => void;
 }
 
 const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, onClose }) => {
-    const { atlasMaps, addCampaign, updateCampaign, customSheetTemplates, customGameDrivers } = useSessionOSStore();
+    const { campaigns, atlasMaps, addCampaign, updateCampaign, customSheetTemplates, customGameDrivers } = useSessionOSStore();
     
-    const [name, setName] = useState(campaign?.name || '');
-    const [system, setSystem] = useState(campaign?.system || 'generic');
-    const [description, setDescription] = useState(campaign?.description || '');
-    const [synopsis, setSynopsis] = useState(campaign?.synopsis || '');
-    const [wallpaperUrl, setWallpaperUrl] = useState(campaign?.wallpaperUrl || '');
-    const [notebookUrl, setNotebookUrl] = useState(campaign?.notebookUrl || '');
-    const [activeLocationIds, setActiveLocationIds] = useState<string[]>(campaign?.activeLocationIds || []);
+    // If we only received an ID (common in the modal system), find the full campaign
+    const fullCampaign = campaign && 'id' in campaign ? campaign as Campaign : 
+                        (campaign && 'campaignId' in campaign ? campaigns.find(c => c.id === (campaign as { campaignId: string }).campaignId) : undefined);
+
+    const [name, setName] = useState(fullCampaign?.name || '');
+    const [system, setSystem] = useState(fullCampaign?.system || 'generic');
+    const [description, setDescription] = useState(fullCampaign?.description || '');
+    const [synopsis, setSynopsis] = useState(fullCampaign?.synopsis || '');
+    const [wallpaperUrl, setWallpaperUrl] = useState(fullCampaign?.wallpaperUrl || '');
+    const [notebookUrl, setNotebookUrl] = useState(fullCampaign?.notebookUrl || '');
+    const [systemPath, setSystemPath] = useState(fullCampaign?.systemPath || '');
+    const [campaignPath, setCampaignPath] = useState(fullCampaign?.campaignPath || '');
+    const [activeLocationIds, setActiveLocationIds] = useState<string[]>(fullCampaign?.activeLocationIds || []);
     
     // Combine builtin and custom templates
     const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
     
     // Get maps for this campaign to allow pinning as "active"
-    const campaignMaps = atlasMaps.filter(m => m.campaignId === campaign?.id);
+    const campaignMaps = atlasMaps.filter(m => m.campaignId === fullCampaign?.id);
     
     const [isMediaBrowserOpen, setIsMediaBrowserOpen] = useState(false);
     const resolvedWallpaper = useMediaUrl(wallpaperUrl);
 
-    const isEdit = !!campaign;
+    const isEdit = !!fullCampaign;
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -44,11 +50,13 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, onClose }) => {
             synopsis,
             wallpaperUrl,
             notebookUrl,
+            systemPath,
+            campaignPath,
             activeLocationIds
         };
 
-        if (isEdit && campaign) {
-            updateCampaign(campaign.id, campaignData);
+        if (isEdit && fullCampaign) {
+            updateCampaign(fullCampaign.id, campaignData);
             gmToast('Campagne mise à jour avec succès !');
         } else {
             addCampaign(campaignData);
@@ -144,6 +152,42 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, onClose }) => {
                                 placeholder="Laisse vide pour utiliser le NotebookLM du système..."
                                 className="w-full bg-app-surface/60 border border-app-border/20 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500/40 transition-all font-bold"
                             />
+                        </div>
+
+                        {/* RAG Paths (Strict Documentation) */}
+                        <div className="p-6 rounded-2xl bg-blue-500/5 border border-blue-500/10 space-y-6">
+                            <div className="flex items-center gap-2">
+                                <div className="w-6 h-6 rounded-lg bg-blue-500 flex items-center justify-center text-app-bg">
+                                    <BookOpen size={14} />
+                                </div>
+                                <p className="text-[10px] font-black uppercase tracking-widest text-blue-400">Cerfeau AI : Chemins RAG (Optionnel)</p>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <label className="text-[9px] font-black uppercase tracking-widest text-app-text/40 px-1">Répertoire Système</label>
+                                    <input 
+                                        type="text"
+                                        value={systemPath}
+                                        onChange={e => setSystemPath(e.target.value)}
+                                        placeholder="ex: systems/dune"
+                                        className="w-full bg-app-bg/60 border border-app-border/20 rounded-xl py-2 px-3 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500/40 transition-all font-mono"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-[9px] font-black uppercase tracking-widest text-app-text/40 px-1">Répertoire Campagne</label>
+                                    <input 
+                                        type="text"
+                                        value={campaignPath}
+                                        onChange={e => setCampaignPath(e.target.value)}
+                                        placeholder="ex: campaigns/dune-session-1"
+                                        className="w-full bg-app-bg/60 border border-app-border/20 rounded-xl py-2 px-3 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500/40 transition-all font-mono"
+                                    />
+                                </div>
+                            </div>
+                            <p className="text-[9px] text-app-text/30 italic">
+                                Indique les dossiers dans <code className="bg-app-surface px-1 rounded">docs/</code> pour forcer le contexte de l'IA.
+                            </p>
                         </div>
 
                         {/* Cohesion Info */}

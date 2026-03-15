@@ -1,5 +1,7 @@
 
 import type { MapToken } from './useMapStore';
+import { GridEngine } from '../tactical-ai/logic/GridEngine';
+import type { TacticalConfig } from '../../types/drivers';
 
 export interface TacticalRange {
     category: 'Contact' | 'Courte' | 'Moyenne' | 'Longue' | 'Extrême';
@@ -11,9 +13,6 @@ export interface TacticalRange {
 export class TacticalService {
     private static instance: TacticalService;
     
-    // Default Pixels Per Unit (e.g., 50px = 2 meters)
-    private pixelsPerUnit = 50; 
-
     public static getInstance(): TacticalService {
         if (!TacticalService.instance) {
             TacticalService.instance = new TacticalService();
@@ -22,44 +21,28 @@ export class TacticalService {
     }
 
     public calculateDistance(tokenA: MapToken, tokenB: MapToken): number {
-        const dx = tokenA.x - tokenB.x;
-        const dy = tokenA.y - tokenB.y;
-        return Math.sqrt(dx * dx + dy * dy);
+        return GridEngine.calculateDistance(
+            { x: tokenA.x, y: tokenA.y },
+            { x: tokenB.x, y: tokenB.y }
+        );
     }
 
-    public getRangeInfo(tokenA: MapToken, tokenB: MapToken, gridSize: number = 50): TacticalRange {
+    static pxToUnits(px: number, gridSize: number = 50): number {
+        return GridEngine.pxToUnits(px, gridSize);
+    }
+
+    public getRangeInfo(tokenA: MapToken, tokenB: MapToken, gridSize: number = 50, config?: TacticalConfig): TacticalRange {
         const distPx = this.calculateDistance(tokenA, tokenB);
+        
+        // Use GridEngine for unit conversion and system-driven thresholds
         const units = distPx / gridSize;
-
-        // Thresholds based on Alien RPG (simplified for 2m/grid squares)
-        // Contact: < 0.5 units
-        // Courte: < 1.5 units (same zone)
-        // Moyenne: < 5 units (adj zones (~10-15m))
-        // Longue: < 15 units (~30-50m)
-        // Extrême: > 15 units
-
-        let category: TacticalRange['category'] = 'Extrême';
-        let modifier = -3;
-
-        if (units < 0.45) {
-            category = 'Contact';
-            modifier = -3; // Harder to shoot at contact unless defenseless (+3 in Alien)
-        } else if (units < 2) {
-            category = 'Courte';
-            modifier = 0;
-        } else if (units < 6) {
-            category = 'Moyenne';
-            modifier = -1;
-        } else if (units < 15) {
-            category = 'Longue';
-            modifier = -2;
-        }
+        const gridInfo = GridEngine.getRangeInfo(units, config);
 
         return {
-            category,
-            modifier,
+            category: gridInfo.category,
+            modifier: gridInfo.modifier,
             distancePx: distPx,
-            distanceUnits: Math.round(units * 10) / 10
+            distanceUnits: gridInfo.distanceUnits
         };
     }
 }

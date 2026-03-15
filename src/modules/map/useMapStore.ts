@@ -52,6 +52,8 @@ interface MapState {
     currentTool: MapTool;
     fogMode: FogMode;
     brushSize: number;
+    isDraggingToken: boolean;
+    selectedTokenId: string | null;
 
     // Actions
     setMap: (url: string | null, isVideo?: boolean, name?: string) => void;
@@ -99,6 +101,8 @@ interface MapState {
     projectionTarget: 'hub' | 'monitor' | null;
     syncToPlayers: () => void;
     clearProjectedState: () => void;
+    setIsDraggingToken: (val: boolean) => void;
+    setSelectedTokenId: (id: string | null) => void;
 }
 
 export const useMapStore = create<MapState>()(
@@ -116,6 +120,8 @@ export const useMapStore = create<MapState>()(
             fogMode: 'reveal',
             brushSize: 50,
             fogCommand: null,
+            isDraggingToken: false,
+            selectedTokenId: null,
 
             // Map Dimensions Defaults
             mapWidth: 2000,
@@ -266,22 +272,23 @@ export const useMapStore = create<MapState>()(
                 }));
             },
 
-            clearProjectedState: () => {
-                set({
-                    projectionTarget: null,
-                    projectedMapUrl: null,
-                    projectedIsVideo: false,
-                    projectedFogDataUrl: null,
-                    projectedTokens: [],
-                    projectedPings: [],
-                    projectedMapWidth: 2000,
-                    projectedMapHeight: 2000,
-                    projectedIsGridEnabled: false,
-                    projectedGridSize: 50,
-                    projectedGridColor: '#ffffff',
-                    projectedGridOpacity: 0.2,
-                });
-            }
+            clearProjectedState: () => set({
+                projectionTarget: null,
+                projectedMapUrl: null,
+                projectedIsVideo: false,
+                projectedFogDataUrl: null,
+                projectedTokens: [],
+                projectedPings: [],
+                projectedMapWidth: 2000,
+                projectedMapHeight: 2000,
+                projectedIsGridEnabled: false,
+                projectedGridSize: 50,
+                projectedGridColor: '#ffffff',
+                projectedGridOpacity: 0.2,
+            }),
+
+            setIsDraggingToken: (isDraggingToken) => set({ isDraggingToken }),
+            setSelectedTokenId: (selectedTokenId) => set({ selectedTokenId })
         }),
         {
             name: 'gmos-map-storage',

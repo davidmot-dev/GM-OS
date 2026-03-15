@@ -67,7 +67,7 @@ const CampaignLibrary: React.FC = () => {
                                             className="p-2 text-app-text/20 hover:text-accent transition-colors opacity-0 group-hover:opacity-100"
                                             onClick={(e) => { 
                                                 e.stopPropagation(); 
-                                                gmCustom('campaign-edit', { campaignId: campaign.id }); 
+                                                gmCustom('campaign-edit', campaign); 
                                             }}
                                             title="Éditer"
                                         >

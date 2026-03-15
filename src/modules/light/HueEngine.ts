@@ -205,11 +205,46 @@ export class HueEngine {
     }
 
     // ------------------------------------------------------------------------
-    // Color Math (CIE)
+    // Color Math (CIE & Gamut)
     // ------------------------------------------------------------------------
+    
+    // Gamut Definitions (A, B, C)
+    private readonly GAMUT_C = {
+        red: [0.692, 0.308] as [number, number],
+        green: [0.170, 0.700] as [number, number],
+        blue: [0.153, 0.048] as [number, number]
+    };
+
+    private isPointInTriangle(p: [number, number], a: [number, number], b: [number, number], c: [number, number]): boolean {
+        const v0 = [c[0] - a[0], c[1] - a[1]] as [number, number];
+        const v1 = [b[0] - a[0], b[1] - a[1]] as [number, number];
+        const v2 = [p[0] - a[0], p[1] - a[1]] as [number, number];
+
+        const dot00 = v0[0] * v0[0] + v0[1] * v0[1];
+        const dot01 = v0[0] * v1[0] + v0[1] * v1[1];
+        const dot02 = v0[0] * v2[0] + v0[1] * v2[1];
+        const dot11 = v1[0] * v1[0] + v1[1] * v1[1];
+        const dot12 = v1[0] * v2[0] + v1[1] * v2[1];
+
+        const invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
+        const u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+        const v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+
+        return (u >= 0) && (v >= 0) && (u + v < 1);
+    }
+
+    private getClosestPointOnLine(p: [number, number], a: [number, number], b: [number, number]): [number, number] {
+        const ap = [p[0] - a[0], p[1] - a[1]];
+        const ab = [b[0] - a[0], b[1] - a[1]];
+        const ab2 = ab[0] * ab[0] + ab[1] * ab[1];
+        const ap_ab = ap[0] * ab[0] + ap[1] * ab[1];
+        let t = ap_ab / ab2;
+        if (t < 0.0) t = 0.0;
+        else if (t > 1.0) t = 1.0;
+        return [a[0] + ab[0] * t, a[1] + ab[1] * t];
+    }
 
     hexToXy(hex: string): [number, number] {
-        // Remove #
         hex = hex.replace('#', '');
         if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
 
@@ -218,11 +253,11 @@ export class HueEngine {
         const b = parseInt(hex.substring(4, 6), 16) / 255;
 
         // Gamma correction
-        const red = r > 0.04045 ? Math.pow((r + 0.055) / (1.0 + 0.055), 2.4) : (r / 12.92);
-        const green = g > 0.04045 ? Math.pow((g + 0.055) / (1.0 + 0.055), 2.4) : (g / 12.92);
-        const blue = b > 0.04045 ? Math.pow((b + 0.055) / (1.0 + 0.055), 2.4) : (b / 12.92);
+        const red = r > 0.04045 ? Math.pow((r + 0.055) / 1.055, 2.4) : (r / 12.92);
+        const green = g > 0.04045 ? Math.pow((g + 0.055) / 1.055, 2.4) : (g / 12.92);
+        const blue = b > 0.04045 ? Math.pow((b + 0.055) / 1.055, 2.4) : (b / 12.92);
 
-        // Wide gamut conversion
+        // XYZ
         const X = red * 0.664511 + green * 0.154324 + blue * 0.162028;
         const Y = red * 0.283881 + green * 0.668433 + blue * 0.047685;
         const Z = red * 0.000088 + green * 0.072310 + blue * 0.986039;
@@ -233,7 +268,48 @@ export class HueEngine {
         if (isNaN(cx)) cx = 0.0;
         if (isNaN(cy)) cy = 0.0;
 
+        // Gamut Clamping (Defaults to Gamut C as it is the most common for new bulbs,
+        // if point is outside, we pull it to the edge).
+        const inGamut = this.isPointInTriangle([cx, cy], this.GAMUT_C.red as [number, number], this.GAMUT_C.green as [number, number], this.GAMUT_C.blue as [number, number]);
+
+        if (!inGamut) {
+            console.log(`[HUE ENGINE] Clamping color ${hex} to Gamut C edge`);
+            const p = [cx, cy] as [number, number];
+            const p_rg = this.getClosestPointOnLine(p, this.GAMUT_C.red as [number, number], this.GAMUT_C.green as [number, number]);
+            const p_gb = this.getClosestPointOnLine(p, this.GAMUT_C.green as [number, number], this.GAMUT_C.blue as [number, number]);
+            const p_br = this.getClosestPointOnLine(p, this.GAMUT_C.blue as [number, number], this.GAMUT_C.red as [number, number]);
+
+            const dist_rg = Math.sqrt(Math.pow(p[0] - p_rg[0], 2) + Math.pow(p[1] - p_rg[1], 2));
+            const dist_gb = Math.sqrt(Math.pow(p[0] - p_gb[0], 2) + Math.pow(p[1] - p_gb[1], 2));
+            const dist_br = Math.sqrt(Math.pow(p[0] - p_br[0], 2) + Math.pow(p[1] - p_br[1], 2));
+
+            let min = dist_rg;
+            let finalP = p_rg;
+            if (dist_gb < min) { min = dist_gb; finalP = p_gb; }
+            if (dist_br < min) { finalP = p_br; }
+            
+            cx = finalP[0];
+            cy = finalP[1];
+        }
+
         return [cx, cy];
+    }
+
+    /**
+     * Extracts Hue-compatible brightness (0-254) from a HEX string using luminance
+     */
+    hexToBri(hex: string): number {
+        hex = hex.replace('#', '');
+        if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+        const r = parseInt(hex.substring(0, 2), 16);
+        const g = parseInt(hex.substring(2, 4), 16);
+        const b = parseInt(hex.substring(4, 6), 16);
+        
+        // Relative luminance formula
+        const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+        // Map to Hue scale (maximize for tactical, but respect darkness)
+        // We use a floor of 40 to ensure it's never completely off
+        return Math.round(40 + (lum * 214));
     }
 
     // ------------------------------------------------------------------------
@@ -449,27 +525,62 @@ export class HueEngine {
     // Flash / Overrides
     // ------------------------------------------------------------------------
 
-    async triggerFlash(hexColor: string, durationMs: number = 1000) {
+    async triggerFlash(hexColor: string, durationMs: number = 1000, intensity: number = 1.0) {
         if (this.flashTimeout) clearTimeout(this.flashTimeout);
 
         const store = useLightStore.getState();
         const xy = this.hexToXy(hexColor);
+        const baseBri = this.hexToBri(hexColor);
+        const bri = Math.max(1, Math.round(baseBri * intensity));
+
+        console.log(`[HUE ENGINE] ⚡ FLASH triggered: ${hexColor} (Scaled Brightness: ${bri}, Intensity: ${intensity})`);
 
         // Apply flash globally without updating store's activeSceneId
         const promises = Object.keys(store.lights).map(id => {
             this.stopSoftwareEffect(id); // Stop any running effects
-            return this.request('PUT', `/lights/${id}/state`, { on: true, bri: 254, xy, transitiontime: 0 });
+            return this.request('PUT', `/lights/${id}/state`, { on: true, bri, xy, transitiontime: 0 });
         });
         await Promise.allSettled(promises);
 
         // Schedule restore using the robust reversion system
         this.flashTimeout = setTimeout(() => {
-            this.restoreFromFlash();
+            this.restoreAfterTactical();
         }, durationMs);
     }
 
-    private async restoreFromFlash() {
-        console.log('[HUE ENGINE] Restoring after flash via reversion.');
+    /**
+     * Applies a persistent tactical state (e.g. status effect) that stays until cleared.
+     */
+    async applyTacticalState(hexColor: string, name: string, intensity: number = 1.0) {
+        if (this.flashTimeout) {
+            console.log(`[HUE ENGINE] Flash active, tactical state ${name} will be visible after restore.`);
+            // We don't return, we want the "underlying" state to be correct when flash ends
+        }
+
+        const store = useLightStore.getState();
+        const xy = this.hexToXy(hexColor);
+        const baseBri = this.hexToBri(hexColor);
+        const bri = Math.max(1, Math.round(baseBri * intensity));
+        
+        console.log(`[HUE ENGINE] 🛡️ Applying Persistent Tactical State: ${name} (${hexColor}) (Scaled Brightness: ${bri}, Intensity: ${intensity})`);
+
+        const promises = Object.keys(store.lights).map(id => {
+            this.stopSoftwareEffect(id);
+            return this.request('PUT', `/lights/${id}/state`, { on: true, bri, xy, transitiontime: 10 });
+        });
+        await Promise.allSettled(promises);
+    }
+
+    /**
+     * Clears any tactical overrides and returns to the normal scene
+     */
+    async clearTacticalState() {
+        console.log('[HUE ENGINE] 🧹 Clearing Tactical State, reverting to manual scene.');
+        await this.restoreAfterTactical();
+    }
+
+    private async restoreAfterTactical() {
+        console.log('[HUE ENGINE] Restoring after tactical override via reversion.');
         await this.revertToManualScene();
         this.flashTimeout = null;
     }
@@ -498,5 +609,5 @@ export const hueEngine = new HueEngine();
 
 // Export for cross-module access to avoid circular dependencies
 if (typeof window !== 'undefined') {
-    (window as any).hueEngine = hueEngine;
+    (window as Window & { hueEngine?: HueEngine }).hueEngine = hueEngine;
 }

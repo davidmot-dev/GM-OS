@@ -15,6 +15,9 @@ const PRESET_STATUSES = [
     { name: 'Invisibilité', icon: '👻', duration: 10 },
     { name: 'Béni', icon: '✨', duration: 10 },
     { name: 'Maudit', icon: '💀', duration: 10 },
+    { name: 'Soin', icon: '✨', duration: 1 },
+    { name: 'Froid', icon: '❄️', duration: 3 },
+    { name: 'Foudre', icon: '⚡', duration: 1 },
 ];
 
 interface CombatCardProps {
@@ -69,7 +72,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                         value={combatant.init === 0 ? '' : combatant.init}
                         placeholder="0"
                         onChange={handleInitChange}
-                        className="w-16 h-14 bg-app-bg text-app-text rounded-xl text-center text-3xl font-black border border-app-border shadow-inner -ml-1 focus:ring-2 focus:ring-gm-crimson/50 transition-all"
+                        className="w-20 h-14 bg-app-bg text-app-text rounded-xl text-center text-2xl font-black border border-app-border shadow-inner focus:ring-2 focus:ring-gm-crimson/50 transition-all"
                     />
                 </div>
 

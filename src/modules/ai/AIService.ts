@@ -93,7 +93,7 @@ ${fullContext}`;
 
         return window.appBridge.ai.proxyRequest(url, 'POST', { 'Content-Type': 'application/json' }, {
           contents: [{ parts: [{ text: `${systemPrompt}\n\nUtilisateur: ${prompt}` }] }],
-          generationConfig: { temperature: 0.7, maxOutputTokens: 1024 }
+          generationConfig: { temperature: 0.7, maxOutputTokens: 4096 }
         });
       };
 
@@ -121,7 +121,7 @@ ${fullContext}`;
 
                const fallbackRes = await window.appBridge.ai.proxyRequest(fallbackUrl, 'POST', { 'Content-Type': 'application/json' }, {
                  contents: [{ parts: [{ text: `${systemPrompt}\n\nUtilisateur: ${prompt}` }] }],
-                 generationConfig: { temperature: 0.7, maxOutputTokens: 1024 }
+                 generationConfig: { temperature: 0.7, maxOutputTokens: 4096 }
                });
                if (fallbackRes.ok) {
                  const data = fallbackRes.data;

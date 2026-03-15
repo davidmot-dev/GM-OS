@@ -15,14 +15,14 @@ describe('TacticalService', () => {
     });
 
     it('should calculate short range correctly', () => {
-        const tokenB: MapToken = { id: 'b', name: 'Target', avatar: '', x: 70, y: 0, size: 1 }; // Dist 70px (1.4 units)
+        const tokenB: MapToken = { id: 'b', name: 'Target', avatar: '', x: 100, y: 0, size: 1 }; // Dist 100px (2.0 units)
         const info = service.getRangeInfo(tokenA, tokenB, 50);
         expect(info.category).toBe('Courte');
         expect(info.modifier).toBe(0);
     });
 
     it('should calculate extreme range correctly', () => {
-        const tokenB: MapToken = { id: 'b', name: 'Target', avatar: '', x: 1000, y: 0, size: 1 }; // Dist 1000px (20 units)
+        const tokenB: MapToken = { id: 'b', name: 'Target', avatar: '', x: 3000, y: 0, size: 1 }; // Dist 3000px (60 units)
         const info = service.getRangeInfo(tokenA, tokenB, 50);
         expect(info.category).toBe('Extrême');
         expect(info.modifier).toBe(-3);

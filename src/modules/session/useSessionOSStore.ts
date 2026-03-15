@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { gmToast } from '../../stores/useToastStore';
 import { DEFAULT_SHEET_TEMPLATES, type SheetTemplate } from '../../data/defaultSheetTemplates';
+import { DEFAULT_GAME_DRIVERS } from '../../data/defaultGameDrivers';
 import { hueEngine } from '../light/HueEngine';
 import type { Playlist } from '../music/useMusicStore';
 import type { Atmosphere } from '../sound/useSoundStore';
@@ -13,6 +14,15 @@ import type { Combatant } from '../combat/useCombatStore';
 import type { GameDriver } from '../../types/drivers';
 
 // --- Interfaces ---
+
+export interface Campaign {
+    id: string;
+    name: string;
+    system: string;
+    wallpaperUrl?: string;
+    activeLocationIds: string[];
+    ragPath?: string;
+}
 
 export interface Entity {
     id: string;
@@ -155,6 +165,8 @@ export interface Campaign {
     wallpaperUrl?: string; // for Projector
     activeLocationIds: string[]; // IDs of AtlasMap entities pinned to this campaign
     notebookUrl?: string; // URL for NotebookLM integration
+    systemPath?: string; // Explicit path to system rules (e.g. "systems/dune")
+    campaignPath?: string; // Explicit path to campaign notes (e.g. "campaigns/dune")
 }
 
 export interface TimelineEvent {
@@ -233,6 +245,8 @@ interface SessionOSState {
      * If isBuiltin, creates a custom override driver for AI resonance.
      */
     getOrCreateDriverForTemplate: (templateId: string) => GameDriver;
+    /** Retrieves a game driver by ID, prioritizing custom, then built-in, then generic. */
+    getGameDriver: (id: string) => GameDriver | null;
 
     updateCharacterSheetData: (playerId: string, characterId: string, fieldId: string, value: string | number | boolean) => void;
     updateCharacterVisuals: (playerId: string, characterId: string, updates: { portraitUrl?: string; tokenUrl?: string }) => void;
@@ -250,7 +264,9 @@ interface SessionOSState {
     removeChecklistItem: (sessionId: string, itemId: string) => void;
     updateChecklistItem: (sessionId: string, itemId: string, text: string) => void;
     addPlayer: (player: Omit<Player, 'id'>) => void;
+    deletePlayer: (playerId: string) => void;
     addCharacterToPlayer: (playerId: string, character: Omit<PlayerCharacter, 'id'>) => void;
+    deleteCharacter: (playerId: string, characterId: string) => void;
     linkCharacterToCampaign: (playerId: string, characterId: string, campaignId: string | null) => void;
     updateCharacterHP: (playerId: string, characterId: string, hp: number) => void;
     updateCharacter: (playerId: string, characterId: string, updates: Partial<PlayerCharacter>) => void;
@@ -471,7 +487,7 @@ const mockPlayers: Player[] = [
                 id: 'pc-4',
                 name: 'Balder le Barbare',
                 classRace: 'Nain / Voie du Berserker',
-                portraitUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD2UuEcnNO7cWviHYN4QuSbMycNRmu3PqaYZQBaCeRZRkW0263XO4Ch0qkrWqacSaAhIBEjZBuKDa-EabuAVKZTBagu8psUp0WcruTx_eWIsw5oYw8-DxntYplI4NfEa9bn41JPnM-Lrmmn3vi5NHykl_Re4hQwqmS1MKy371RYCcW1NPHJUxxsETklobi_7yaGByibduzihqh3QnTDryJor79YR3bSE_TV04UeJ3pmLkdP4Vm9gGQCz2hGUlfo_0-ohRiAbDbV-Hg',
+                portraitUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD2UuEcnNO7cWviHYN4QuSbMycNRmu3PqaYZQBaCeZZRkW0263XO4Ch0qkrWqacSaAhIBEjZBuKDa-EabuAVKZTBagu8psUp0WcruTx_eWIsw5oYw8-DxntYplI4NfEa9bn41JPnM-Lrmmn3vi5NHykl_Re4hQwqmS1MKy371RYCcW1NPHJUxxsETklobi_7yaGByibduzihqh3QnTDryJor79YR3bSE_TV04UeJ3pmLkdP4Vm9gGQCz2hGUlfo_0-ohRiAbDbV-Hg',
                 hp: 72,
                 maxHp: 90,
                 campaignId: 'c-1',
@@ -534,7 +550,7 @@ const mockEntities: Entity[] = [
     },
     {
         id: 'e-4', name: 'Capitaine Ren', type: 'npc', role: 'ally', status: 'alive',
-        avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD2UuEcnNO7cWviHYN4QuSbMycNRmu3PqaYZQBaCeRZRkW0263XO4Ch0qkrWqacSaAhIBEjZBuKDa-EabuAVKZTBagu8psUp0WcruTx_eWIsw5oYw8-DxntYplI4NfEa9bn41JPnM-Lrmmn3vi5NHykl_Re4hQwqmS1MKy371RYCcW1NPHJUxxsETklobi_7yaGByibduzihqh3QnTDryJor79YR3bSE_TV04UeJ3pmLkdP4Vm9gGQCz2hGUlfo_0-ohRiAbDbV-Hg',
+        avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD2UuEcnNO7cWviHYN4QuSbMycNRmu3PqaYZQBaCeZZRkW0263XO4Ch0qkrWqacSaAhIBEjZBuKDa-EabuAVKZTBagu8psUp0WcruTx_eWIsw5oYw8-DxntYplI4NfEa9bn41JPnM-Lrmmn3vi5NHykl_Re4hQwqmS1MKy371RYCcW1NPHJUxxsETlobi_7yaGByibduzihqh3QnTDryJor79YR3bSE_TV04UeJ3pmLkdP4Vm9gGQCz2hGUlfo_0-ohRiAbDbV-Hg',
         hp: 68, maxHp: 75, ac: 18, speed: 30, initiative: 2,
         description: 'Humain / Garde d\'Élite',
         roleplayingNotes: 'Loyale, directe, professionnelle. Respecte la force et la compétence. Peut devenir une alliée précieuse si les PJ démontrent leur valeur au combat.',
@@ -797,9 +813,24 @@ export const useSessionOSStore = create<SessionOSState>()(
                     emoji: template?.emoji || '🎲',
                     templateId: templateId,
                     dice: { defaultDice: '1d20', logic: 'sum' },
-                    combat: { statsToTrack: [], initiativeFormula: 'dex' },
+                    combat: { 
+                        statsToTrack: [], 
+                        initiativeFormula: 'dex',
+                        initiativeSort: 'desc',
+                        initiativeCards: undefined
+                    },
                     aiInstructions: '',
-                    aiPersonas: {}
+                    aiPersonas: {},
+                    tactical: {
+                        useTacticalAI: true,
+                        ranges: {
+                            contact: { label: 'Engagé (Contact)', maxUnits: 1.5, modifier: -3 },
+                            courte: { label: 'Short (Courte)', maxUnits: 3.5, modifier: 0 },
+                            moyenne: { label: 'Medium (Moyenne)', maxUnits: 12.5, modifier: -1 },
+                            longue: { label: 'Long (Longue)', maxUnits: 50, modifier: -2 },
+                            extreme: { label: 'Extreme (Extrême)', maxUnits: 200, modifier: -3 }
+                        }
+                    }
                 };
                 
                 set(s => ({ customGameDrivers: [...s.customGameDrivers, newDriver] }));
@@ -834,9 +865,24 @@ export const useSessionOSStore = create<SessionOSState>()(
                 campaigns: [...state.campaigns, { ...campaignData, id: crypto.randomUUID(), activeLocationIds: [] }]
             })),
 
-            updateCampaign: (id, updates) => set((state) => ({
-                campaigns: state.campaigns.map(c => c.id === id ? { ...c, ...updates } : c)
-            })),
+            updateCampaign: (id, updates) => set((state) => {
+                const updatedCampaigns = state.campaigns.map(c => {
+                    if (c.id === id) {
+                        // Auto-create/link driver if system changed
+                        if (updates.system && updates.system !== c.system) {
+                            const builtInDriver = DEFAULT_GAME_DRIVERS.find(d => d.id === updates.system);
+                            const customDriverExists = state.customGameDrivers.some(d => d.id === updates.system);
+                            
+                            if (!builtInDriver && !customDriverExists) {
+                                get().getOrCreateDriverForTemplate(updates.system);
+                            }
+                        }
+                        return { ...c, ...updates };
+                    }
+                    return c;
+                });
+                return { campaigns: updatedCampaigns };
+            }),
 
             deleteCampaign: (id) => set((state) => ({
                 campaigns: state.campaigns.filter(c => c.id !== id),
@@ -920,6 +966,23 @@ export const useSessionOSStore = create<SessionOSState>()(
                         ? { ...p, characters: [...p.characters, { ...characterData, id: crypto.randomUUID() }] }
                         : p
                 )
+            })),
+
+            deleteCharacter: (playerId, characterId) => set((state) => ({
+                players: state.players.map(p =>
+                    p.id === playerId
+                        ? { ...p, characters: p.characters.filter(c => c.id !== characterId) }
+                        : p
+                ),
+                selectedCharacterId: state.selectedCharacterId === characterId ? null : state.selectedCharacterId
+            })),
+
+            deletePlayer: (playerId) => set((state) => ({
+                players: state.players.filter(p => p.id !== playerId),
+                selectedPlayerId: state.selectedPlayerId === playerId ? null : state.selectedPlayerId,
+                selectedCharacterId: state.players.find(p => p.id === playerId)?.characters.some(c => c.id === state.selectedCharacterId) 
+                    ? null 
+                    : state.selectedCharacterId
             })),
 
             linkCharacterToCampaign: (playerId, characterId, campaignId) => set((state) => ({
@@ -1066,11 +1129,18 @@ export const useSessionOSStore = create<SessionOSState>()(
                 wikiEntries: state.wikiEntries.filter(e => e.id !== id)
             })),
 
+            getGameDriver: (id) => {
+                const state = get();
+                return DEFAULT_GAME_DRIVERS.find(d => d.id === id) || 
+                       state.customGameDrivers.find(d => d.id === id) || 
+                       DEFAULT_GAME_DRIVERS.find(d => d.id === 'generic') || null;
+            },
+
             getActiveDriver: () => {
                 const state = get();
                 const campaign = state.campaigns.find((c: Campaign) => c.id === state.activeCampaignId);
                 if (!campaign) return null;
-                return state.customGameDrivers.find((d: GameDriver) => d.id === campaign.system) || null;
+                return state.getGameDriver(campaign.system);
             }
 
         }),

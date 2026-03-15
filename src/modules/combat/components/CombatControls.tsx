@@ -4,7 +4,7 @@ import { gmToast } from '../../../stores/useToastStore';
 import { gmConfirm, gmPrompt } from '../../../stores/useModalStore';
 import { 
     UserPlus, RefreshCw, Dices, Save, Play, Skull, 
-    ArrowDown01, ArrowUp10, Sparkles 
+    ArrowDown01, ArrowUp10, Sparkles, Zap, Activity
 } from 'lucide-react';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 
@@ -27,7 +27,6 @@ const CombatControls: React.FC = () => {
     } = useSessionOSStore();
 
     const activeDriver = getActiveDriver();
-
     const [diceMax, setDiceMax] = useState<number>(20);
 
     const handleAddCombatant = () => {
@@ -45,6 +44,29 @@ const CombatControls: React.FC = () => {
         });
     };
 
+    const handleAutoInitiative = () => {
+        console.log("[CombatControls] Clicking Jet Système", { 
+            formula: activeDriver?.combat.initiativeFormula,
+            sort: activeDriver?.combat.initiativeSort,
+            cards: activeDriver?.combat.initiativeCards 
+        });
+        
+        if (activeDriver?.combat.initiativeFormula) {
+            rollAutoInitiative({ 
+                formula: activeDriver.combat.initiativeFormula,
+                sortOrder: activeDriver.combat.initiativeSort || 'desc',
+                cards: activeDriver.combat.initiativeCards,
+                resolver: (stat) => {
+                    console.log("[CombatControls] Resolving stat:", stat);
+                    return 0;
+                }
+            });
+        } else {
+            console.log("[CombatControls] Fallback to standard dice roll", diceMax);
+            rollAutoInitiative({ diceMax });
+        }
+    };
+
     const handleSaveCombat = () => {
         if (!activeCampaignId) {
             gmToast("Aucune campagne active pour l'export.", "error");
@@ -57,14 +79,12 @@ const CombatControls: React.FC = () => {
             return;
         }
 
-        // 1. Generate Markdown Summary
         const dateStr = new Date().toLocaleDateString('fr-FR', { 
             day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' 
         });
 
         let content = `### ⚔️ Rapport de Combat - ${dateStr}\n\n`;
         content += `**Fin du Round :** ${round}\n\n`;
-        
         content += `#### Participants :\n`;
         
         const players = combatants.filter(c => c.isPlayer);
@@ -86,7 +106,6 @@ const CombatControls: React.FC = () => {
             });
         }
 
-        // 2. Create Timeline Event
         addTimelineEvent({
             campaignId: activeCampaignId,
             sessionId: selectedSessionId || undefined,
@@ -133,46 +152,56 @@ const CombatControls: React.FC = () => {
                 </button>
             </div>
 
-            {/* Auto Initiative */}
-            <div className="mb-6 space-y-3">
-                <div className="flex flex-col gap-2">
-                    <div className="flex gap-2">
-                        <select
-                            className="bg-app-bg border border-app-border rounded-lg text-app-text px-3 py-2 outline-none focus:border-gm-crimson flex-1"
-                            value={diceMax}
-                            onChange={(e) => setDiceMax(Number(e.target.value))}
-                        >
-                            <option value={4}>d4</option>
-                            <option value={6}>d6</option>
-                            <option value={8}>d8</option>
-                            <option value={10}>d10</option>
-                            <option value={12}>d12</option>
-                            <option value={20}>d20</option>
-                            <option value={100}>d100</option>
-                        </select>
-                        <button
-                            onClick={() => rollAutoInitiative({ diceMax })}
-                            className="bg-app-bg hover:bg-gm-crimson/20 border border-gm-crimson/50 text-gm-crimson px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors flex-1"
-                            title="Jette l'initiative standard pour tous ceux à 0"
-                        >
-                            <Dices size={18} />
-                            <span>Standard</span>
-                        </button>
+            {/* Intelligent Initiative Section */}
+            <div className="flex flex-col gap-4 p-4 bg-slate-900/50 rounded-xl border border-slate-700/50 backdrop-blur-md mb-6 shadow-lg shadow-black/20">
+                <div className="flex items-center justify-between mb-1">
+                    <div className="flex items-center gap-2">
+                        <Activity className="w-4 h-4 text-indigo-400" />
+                        <h3 className="font-bold text-slate-300 uppercase tracking-wider text-[10px]">Auto Initiative</h3>
                     </div>
+                </div>
 
-                    {activeDriver?.combat.initiativeFormula && (
-                        <button
-                            onClick={() => rollAutoInitiative({ formula: activeDriver.combat.initiativeFormula })}
-                            className="w-full bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/50 text-amber-500 font-black py-2 rounded-lg flex flex-col items-center justify-center gap-1 transition-all shadow-glow-amber/5 group"
-                            title={`Jette l'initiative via le système ${activeDriver.name}`}
-                        >
-                            <div className="flex items-center gap-2">
-                                <Sparkles size={14} className="group-hover:rotate-12 transition-transform" />
-                                <span className="text-[11px] uppercase tracking-widest">Jet Système</span>
-                            </div>
-                            <span className="text-[9px] opacity-60 font-mono tracking-tighter">[{activeDriver.combat.initiativeFormula}]</span>
-                        </button>
-                    )}
+                {activeDriver?.combat.initiativeFormula && (
+                    <button
+                        onClick={handleAutoInitiative}
+                        className="group relative overflow-hidden flex flex-col items-center justify-center py-4 px-6 bg-gradient-to-br from-indigo-600 to-violet-700 hover:from-indigo-500 hover:to-violet-600 text-white rounded-xl border border-indigo-400/30 shadow-lg shadow-indigo-900/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                    >
+                        <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                        <div className="flex items-center gap-2 mb-1">
+                            <Zap className="w-5 h-5 text-yellow-300 animate-pulse" />
+                            <span className="font-black tracking-tighter text-lg uppercase">Jet Système</span>
+                        </div>
+                        <div className="flex flex-col items-center gap-1 text-[9px] text-indigo-100 font-medium opacity-90">
+                            <span className="px-2 py-0.5 bg-black/20 rounded-md backdrop-blur-sm border border-white/10 tracking-widest uppercase">
+                                {activeDriver.combat.initiativeCards 
+                                    ? `CARTES UNIQUE (1-${activeDriver.combat.initiativeCards})` 
+                                    : activeDriver.combat.initiativeFormula}
+                            </span>
+                            <span className="opacity-60 italic uppercase tracking-tighter">
+                                {activeDriver.combat.initiativeSort === 'asc' ? 'Ordre Croissant' : 'Ordre Décroissant'}
+                            </span>
+                        </div>
+                    </button>
+                )}
+
+                <div className="flex gap-2">
+                    <select
+                        className="bg-app-bg border border-app-border rounded-lg text-app-text px-2 py-2 outline-none focus:border-gm-crimson text-xs flex-1"
+                        value={diceMax}
+                        onChange={(e) => setDiceMax(Number(e.target.value))}
+                    >
+                        {[4, 6, 8, 10, 12, 20, 100].map(d => (
+                            <option key={d} value={d}>d{d}</option>
+                        ))}
+                    </select>
+                    <button
+                        onClick={() => rollAutoInitiative({ diceMax })}
+                        className="bg-app-bg hover:bg-gm-crimson/20 border border-gm-crimson/50 text-gm-crimson px-3 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors flex-[2] text-xs font-bold uppercase tracking-tighter"
+                        title="Jette l'initiative standard pour tous ceux à 0"
+                    >
+                        <Dices size={14} />
+                        <span>Standard</span>
+                    </button>
                 </div>
             </div>
 

@@ -2,8 +2,8 @@ import { useMediaStore } from '../../stores/useMediaStore';
 
 export class SoundEngine {
     private static instance: SoundEngine;
-    private context: AudioContext;
-    private masterGain: GainNode;
+    public context: AudioContext;
+    public masterGain: GainNode;
     private padSources: Map<string, AudioBufferSourceNode> = new Map();
     private padGains: Map<string, GainNode> = new Map();
     private audioBuffers: Map<string, AudioBuffer> = new Map();
@@ -38,13 +38,11 @@ export class SoundEngine {
         return SoundEngine.instance;
     }
 
-    private formatUrl(filePath: string): string {
+    public formatUrl(filePath: string): string {
         if (filePath.startsWith('http') || filePath.startsWith('data:') || filePath.startsWith('file://')) {
             return filePath;
         }
-        // @ts-expect-error global
         if (window.appBridge?.utils?.formatFileUrl) {
-            // @ts-expect-error global
             return window.appBridge.utils.formatFileUrl(filePath);
         }
         return filePath;

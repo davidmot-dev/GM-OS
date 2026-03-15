@@ -19,6 +19,12 @@ contextBridge.exposeInMainWorld("appBridge", {
   getPathForFile(file) {
     return webUtils.getPathForFile(file);
   },
+  app: {
+    quit: () => ipcRenderer.send("app:quit")
+  },
+  debug: {
+    openConsole: () => ipcRenderer.send("debug:open-console")
+  },
   session: {
     launchHubWindow: () => ipcRenderer.send("session:launch-hub-window")
   },
@@ -45,6 +51,9 @@ contextBridge.exposeInMainWorld("appBridge", {
   },
   sound: {
     loadAudios: () => ipcRenderer.invoke("sound:load-audios")
+  },
+  tactical: {
+    listSounds: () => ipcRenderer.invoke("tactical:list-sounds")
   },
   light: {
     request: (url, method, body) => ipcRenderer.invoke("light:request", url, method, body)

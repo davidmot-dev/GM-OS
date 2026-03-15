@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { DiceEngine } from '../dice/DiceEngine';
+import { gmToast } from '../../stores/useToastStore';
 
 export interface StatusEffect {
     id: string; // Unique ID for the status instance
@@ -25,9 +26,10 @@ export interface Combatant {
 
 // Conflicting status effects: adding a key status will automatically remove the value statuses
 export const STATUS_CONFLICT_MAP: Record<string, string[]> = {
-    'En feu': ['Mouillé', 'Sous l\'eau'],
+    'En feu': ['Mouillé', 'Sous l\'eau', 'Froid'],
     'Mouillé': ['En feu'],
     'Sous l\'eau': ['En feu'],
+    'Froid': ['En feu'],
     'Inconscient': ['Debout', 'En garde'],
     'Debout': ['À terre'],
     'À terre': ['Debout']
@@ -49,7 +51,7 @@ interface CombatState {
     // Initiative
     setInitiative: (id: string, init: number) => void;
     sortInitiative: (ascending?: boolean) => void;
-    rollAutoInitiative: (params: { diceMax?: number; formula?: string; resolver?: (name: string) => number }) => void;
+    rollAutoInitiative: (params: { diceMax?: number; formula?: string; resolver?: (name: string) => number; sortOrder?: 'asc' | 'desc'; cards?: number }) => void;
     reorderCombatants: (startIndex: number, endIndex: number) => void;
 
     // Turns
@@ -120,44 +122,67 @@ export const useCombatStore = create<CombatState>()(
                 return { combatants: sorted, currentTurnIdx: 0 }; // Usually reset turn on manual sort
             }),
 
-            rollAutoInitiative: ({ diceMax = 20, formula, resolver }) => set((state) => {
-                const newCombatants = [...state.combatants];
-                const assignedInits = new Set(newCombatants.map(c => c.init).filter(i => i !== 0));
+            rollAutoInitiative: ({ diceMax = 20, formula, resolver, sortOrder = 'desc', cards }) => set((state) => {
+                const combatants = state.combatants;
+                if (combatants.length === 0) {
+                    gmToast("Aucun combattant dans la liste !", "warning");
+                    return state;
+                }
 
+                const newCombatants = combatants.map(c => ({ ...c }));
+                
+                // If cards mode is active, prepare a shuffled pool
+                let cardPool: number[] = [];
+                if (cards && cards > 0) {
+                    cardPool = Array.from({ length: cards }, (_, i) => i + 1);
+                    // Shuffle the pool (Fisher-Yates)
+                    for (let i = cardPool.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [cardPool[i], cardPool[j]] = [cardPool[j], cardPool[i]];
+                    }
+                }
+
+                let cardIdx = 0;
                 newCombatants.forEach(c => {
-                    if (c.init === 0 || isNaN(c.init)) {
-                        let rolled = 0;
-                        
-                        if (formula) {
-                            // Simple formula resolution (e.g. 1d20 + dex)
-                            // We replace variables if resolver is provided
-                            let evaluatedFormula = formula;
-                            if (resolver) {
-                                // Extract potential variables like [dex], [init]...
-                                const vars = formula.match(/\[\w+\]|\b(dex|str|int|init|wis|cha|level)\b/gi);
-                                vars?.forEach(v => {
-                                    const cleanVar = v.replace(/[[\]]/g, '');
-                                    const val = resolver(cleanVar);
-                                    evaluatedFormula = evaluatedFormula.replace(v, val.toString());
-                                });
-                            }
-                            try {
-                                const res = DiceEngine.rollFormula(evaluatedFormula);
-                                rolled = res.total;
-                            } catch {
-                                rolled = Math.floor(Math.random() * diceMax) + 1;
-                            }
+                    // Logic: we reroll EVERYTHING if this is called, or only those at 0?
+                    // User probably wants to reroll everyone when clicking "Jet Système"
+                    let rolled = 0;
+                    
+                    if (cardPool.length > 0) {
+                        if (cardIdx < cardPool.length) {
+                            rolled = cardPool[cardIdx++];
                         } else {
+                            rolled = Math.floor(Math.random() * (cards || 10)) + 1;
+                        }
+                    } else if (formula) {
+                        let evaluatedFormula = formula;
+                        if (resolver) {
+                            const vars = formula.match(/\[\w+\]|\b(dex|str|int|init|wis|cha|level)\b/gi);
+                            vars?.forEach(v => {
+                                const cleanVar = v.replace(/[[\]]/g, '');
+                                const val = resolver(cleanVar);
+                                evaluatedFormula = evaluatedFormula.replace(v, val.toString());
+                            });
+                        }
+                        try {
+                            const res = DiceEngine.rollFormula(evaluatedFormula);
+                            rolled = res.total;
+                        } catch {
                             rolled = Math.floor(Math.random() * diceMax) + 1;
                         }
-
-                        c.init = rolled;
-                        assignedInits.add(rolled);
+                    } else {
+                        rolled = Math.floor(Math.random() * diceMax) + 1;
                     }
+
+                    c.init = rolled;
                 });
 
-                // Auto sort descending
-                newCombatants.sort((a, b) => b.init - a.init);
+                // Auto sort based on direction
+                newCombatants.sort((a, b) => {
+                    return sortOrder === 'desc' ? b.init - a.init : a.init - b.init;
+                });
+                
+                gmToast(`Initiative système lancée (${sortOrder === 'desc' ? 'Décroissant' : 'Croissant'})`, "success");
                 return { combatants: newCombatants, currentTurnIdx: 0 };
             }),
 

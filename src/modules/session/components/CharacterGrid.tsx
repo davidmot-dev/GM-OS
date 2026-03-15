@@ -5,7 +5,7 @@ import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import type { PlayerCharacter, Campaign } from '../useSessionOSStore';
 import { useCombatStore } from '../../combat/useCombatStore';
 import { gmToast } from '../../../stores/useToastStore';
-import { Heart, UserPlus, ChevronDown, Mail, Swords, Eye } from 'lucide-react';
+import { Heart, UserPlus, ChevronDown, Mail, Swords, Eye, Trash2 } from 'lucide-react';
 import { useImageStore } from '../../image/useImageStore';
 
 const CharacterGrid: React.FC = () => {
@@ -80,6 +80,11 @@ const CharacterGrid: React.FC = () => {
                                 onSelect={() => setSelectedCharacter(character.id)}
                                 onLink={(campaignId) => linkCharacterToCampaign(selectedPlayer.id, character.id, campaignId)}
                                 onHPChange={(delta) => updateCharacterHP(selectedPlayer.id, character.id, character.hp + delta)}
+                                onDelete={() => {
+                                    if (window.confirm(`Êtes-vous sûr de vouloir supprimer le personnage ${character.name} ? Cette action est irréversible.`)) {
+                                        useSessionOSStore.getState().deleteCharacter(selectedPlayer.id, character.id);
+                                    }
+                                }}
                             />
                         ))}
                     </div>
@@ -108,7 +113,8 @@ const CharacterCard: React.FC<{
     onSelect: () => void;
     onLink: (campaignId: string | null) => void;
     onHPChange: (delta: number) => void;
-}> = ({ character, campaigns, isSelected, onSelect, onLink, onHPChange }) => {
+    onDelete: () => void;
+}> = ({ character, campaigns, isSelected, onSelect, onLink, onHPChange, onDelete }) => {
     const linkedCampaign = campaigns.find(c => c.id === character.campaignId);
     const hpPercent = (character.hp / character.maxHp) * 100;
     const hpColor = hpPercent > 60 ? 'bg-emerald-500' : hpPercent > 30 ? 'bg-amber-500' : 'bg-red-600';
@@ -136,6 +142,17 @@ const CharacterCard: React.FC<{
                         {linkedCampaign.name.length > 12 ? linkedCampaign.name.slice(0, 12) + '…' : linkedCampaign.name}
                     </span>
                 )}
+                {/* Delete Button */}
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete();
+                    }}
+                    className="absolute top-2 left-2 p-1.5 bg-black/40 hover:bg-red-600/80 text-white/40 hover:text-white rounded-lg backdrop-blur-md transition-all z-30 opacity-0 group-hover:opacity-100 shadow-xl"
+                    title="Supprimer le personnage"
+                >
+                    <Trash2 size={14} />
+                </button>
             </div>
 
             {/* Info */}

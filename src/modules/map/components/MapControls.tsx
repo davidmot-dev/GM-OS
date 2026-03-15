@@ -4,7 +4,8 @@ import { useCombatStore } from '../../combat/useCombatStore';
 import { gmConfirm, gmCustom } from '../../../stores/useModalStore';
 import {
     Upload, EyeOff, Eye, Paintbrush, Square, Circle,
-    Cast, Maximize, Users, MousePointer2, PlusCircle, Trash2, MapPin
+    Cast, Maximize, Users, MousePointer2, PlusCircle, Trash2, MapPin,
+    SkipBack, SkipForward, Swords
 } from 'lucide-react';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaStore } from '../../../stores/useMediaStore';
@@ -70,7 +71,13 @@ const MapControls: React.FC = () => {
     } = useMapStore();
     const { getDisplayLabel } = useHardwareStore();
 
-    const combatants = useCombatStore(state => state.combatants);
+    const { 
+        combatants, 
+        nextTurn, 
+        prevTurn, 
+        currentTurnIdx, 
+        round 
+    } = useCombatStore();
     const { mediaList } = useMediaStore();
 
     const [isMediaBrowserOpen, setIsMediaBrowserOpen] = React.useState(false);
@@ -259,6 +266,42 @@ const MapControls: React.FC = () => {
                             </div>
                         </div>
                     )}
+                </section>
+
+                <hr className="border-gray-800" />
+
+                {/* Combat Turn Section */}
+                <section>
+                    <div className="flex items-center justify-between mb-3 px-1">
+                        <h3 className="text-xs text-slate-400 uppercase tracking-wider font-bold text-gm-crimson flex items-center gap-2">
+                           <Swords size={12} /> Tour de Combat
+                        </h3>
+                        {combatants.length > 0 && (
+                            <div className="flex items-center gap-2">
+                                <span className="text-[10px] font-black bg-gm-crimson/20 text-gm-crimson px-2 py-0.5 rounded uppercase tracking-tighter">Round {round}</span>
+                                <span className="text-[10px] font-black bg-app-surface text-app-text/60 px-2 py-0.5 rounded border border-app-border uppercase tracking-tighter">{currentTurnIdx + 1} / {combatants.length}</span>
+                            </div>
+                        )}
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-2">
+                        <button
+                            disabled={combatants.length === 0}
+                            onClick={prevTurn}
+                            className="flex items-center justify-center gap-2 py-2 bg-app-bg hover:bg-app-surface border border-app-border rounded-lg text-xs font-bold text-slate-300 disabled:opacity-20 disabled:cursor-not-allowed transition-all active:scale-95"
+                        >
+                            <SkipBack size={14} />
+                            <span>Précédent</span>
+                        </button>
+                        <button
+                            disabled={combatants.length === 0}
+                            onClick={nextTurn}
+                            className="flex items-center justify-center gap-2 py-2 bg-gm-crimson/10 hover:bg-gm-crimson/20 border border-gm-crimson/30 rounded-lg text-xs font-bold text-gm-crimson shadow-glow-crimson/5 disabled:opacity-20 disabled:cursor-not-allowed transition-all active:scale-95 shadow-lg"
+                        >
+                            <span>Suivant</span>
+                            <SkipForward size={14} />
+                        </button>
+                    </div>
                 </section>
 
                 <hr className="border-gray-800" />

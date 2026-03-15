@@ -35,7 +35,7 @@ const CampaignDetails: React.FC = () => {
                     <p className="text-app-text/40 text-sm tracking-widest uppercase font-semibold">Campaign Management</p>
                 </div>
                 <button 
-                    onClick={() => gmCustom('campaign-edit', { campaignId: campaign.id })}
+                    onClick={() => gmCustom('campaign-edit', campaign)}
                     className="ml-auto flex items-center gap-2 px-4 py-2 bg-app-surface hover:bg-app-surface/80 border border-app-border rounded-lg text-sm text-app-text/80 transition-all font-bold"
                 >
                     <Edit3 size={16} />
