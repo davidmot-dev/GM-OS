@@ -8,11 +8,14 @@ import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 const pdf = require('pdf-parse');
 import { registerRagHandlers } from './RAGEngine'
+import { registerMcpHandlers } from './mcp_bridge'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // Register heavy AI/RAG engine
 registerRagHandlers();
+// Register MCP Bridge for AI Oracle
+registerMcpHandlers();
 
 // Ignore certificate errors for local HTTPS requests (like Philips Hue Bridge)
 app.commandLine.appendSwitch('ignore-certificate-errors')

@@ -79,6 +79,12 @@ contextBridge.exposeInMainWorld('appBridge', {
         searchContext: (systemId: string, campaignName: string) => 
             ipcRenderer.invoke('ai:search-context', systemId, campaignName),
         reindex: () => ipcRenderer.invoke('ai:reindex')
+    },
+    mcp: {
+        listTools: (serverName: string) => ipcRenderer.invoke('mcp:list-tools', serverName),
+        callTool: (serverName: string, toolName: string, args: Record<string, unknown>) => 
+            ipcRenderer.invoke('mcp:call-tool', serverName, toolName, args),
+        reauthenticate: () => ipcRenderer.invoke('mcp:reauthenticate')
     }
 })
 

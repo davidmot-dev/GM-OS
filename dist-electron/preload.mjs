@@ -75,5 +75,10 @@ contextBridge.exposeInMainWorld("appBridge", {
     proxyRequest: (url, method, headers, body) => ipcRenderer.invoke("ai:proxy-request", url, method, headers, body),
     searchContext: (systemId, campaignName) => ipcRenderer.invoke("ai:search-context", systemId, campaignName),
     reindex: () => ipcRenderer.invoke("ai:reindex")
+  },
+  mcp: {
+    listTools: (serverName) => ipcRenderer.invoke("mcp:list-tools", serverName),
+    callTool: (serverName, toolName, args) => ipcRenderer.invoke("mcp:call-tool", serverName, toolName, args),
+    reauthenticate: () => ipcRenderer.invoke("mcp:reauthenticate")
   }
 });

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Brain, Key, Cpu, ShieldCheck, AlertTriangle, Eye, EyeOff, Sparkles, RefreshCw, BookOpen, PenTool, Music, Beaker, User, Settings2, ChevronRight, Save, type LucideIcon } from 'lucide-react';
+import { Brain, Key, Cpu, ShieldCheck, AlertTriangle, Eye, EyeOff, Sparkles, RefreshCw, BookOpen, PenTool, Music, Beaker, User, Settings2, ChevronRight, Save, ExternalLink, type LucideIcon } from 'lucide-react';
 import { useAIStore } from '../../../stores/useAIStore';
 import { useGemStore } from '../../../stores/useGemStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
@@ -220,6 +220,46 @@ const AISettings: React.FC = () => {
             )}
           </div>
         ))}
+      </div>
+
+      {/* AI Oracle (NotebookLM) Section */}
+      <div className="p-4 rounded-2xl bg-accent/5 border border-accent/20 space-y-4">
+        <div className="flex gap-4">
+          <div className="p-3 rounded-xl bg-accent/10 text-accent">
+            <Sparkles size={24} />
+          </div>
+          <div>
+            <h4 className="text-sm font-black uppercase tracking-tight text-app-text">AI Oracle (NotebookLM)</h4>
+            <p className="text-xs text-app-text/60 mt-1">
+              Connectez votre compte Google pour permettre à l'Oracle d'accéder à vos carnets de notes personnels.
+            </p>
+          </div>
+        </div>
+
+        <div className="bg-black/20 rounded-xl p-4 border border-white/5 flex items-center justify-between gap-4">
+          <div className="space-y-1">
+            <p className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Statut de la connexion</p>
+            <p className="text-xs text-app-text/80">Si l'Oracle ne répond plus, une reconnexion peut être nécessaire.</p>
+          </div>
+          
+          <button
+            onClick={async () => {
+              try {
+                const result = await window.appBridge?.mcp?.reauthenticate();
+                if (result?.success) {
+                  alert("La fenêtre de connexion a été lancée dans votre navigateur.");
+                }
+              } catch (error) {
+                console.error("Re-authentication failed:", error);
+                alert("Erreur lors du lancement de l'authentification.");
+              }
+            }}
+            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-accent text-white border border-accent shadow-glow-accent/20 hover:scale-105 active:scale-95 transition-all font-black uppercase tracking-widest text-[10px]"
+          >
+            <ExternalLink size={16} />
+            Reconnecter l'Oracle
+          </button>
+        </div>
       </div>
 
       <div className="p-4 rounded-2xl bg-gm-emerald/5 border border-gm-emerald/20 flex items-center justify-between gap-4 mt-8">

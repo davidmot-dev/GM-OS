@@ -1,7 +1,8 @@
 import { ipcMain, app, dialog, shell, screen, BrowserWindow } from "electron";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import require$$0$2 from "fs";
+import * as fs$2 from "fs";
+import fs__default from "fs";
 import require$$0 from "constants";
 import require$$0$1 from "stream";
 import require$$4 from "util";
@@ -10,6 +11,7 @@ import require$$1 from "path";
 import http from "node:http";
 import https from "node:https";
 import { createRequire } from "node:module";
+import { spawn } from "child_process";
 var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
 function getDefaultExportFromCjs(x) {
   return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x["default"] : x;
@@ -456,7 +458,7 @@ var hasRequiredGracefulFs;
 function requireGracefulFs() {
   if (hasRequiredGracefulFs) return gracefulFs;
   hasRequiredGracefulFs = 1;
-  var fs2 = require$$0$2;
+  var fs2 = fs__default;
   var polyfills2 = requirePolyfills();
   var legacy = requireLegacyStreams();
   var clone = requireClone();
@@ -1883,7 +1885,7 @@ function requireJsonfile$1() {
   try {
     _fs = requireGracefulFs();
   } catch (_) {
-    _fs = require$$0$2;
+    _fs = fs__default;
   }
   const universalify2 = requireUniversalify();
   const { stringify, stripBom } = requireUtils();
@@ -2303,10 +2305,219 @@ function registerRagHandlers() {
   setInterval(() => engine.updateIndex(), 1e3 * 60 * 5);
   setTimeout(() => engine.updateIndex(), 5e3);
 }
+const DEBUG_LOG_PATH = "C:\\Users\\david\\mcp_bridge_debug.log";
+function logToDebugFile(msg) {
+  try {
+    const timestamp = (/* @__PURE__ */ new Date()).toISOString();
+    fs$2.appendFileSync(DEBUG_LOG_PATH, `[${timestamp}] ${msg}
+`);
+  } catch (err) {
+    console.error("Failed to write to debug log:", err);
+  }
+}
+try {
+  if (process.type === "browser") {
+    fs$2.writeFileSync(DEBUG_LOG_PATH, "--- MCP Bridge Started ---\n");
+  }
+} catch (err) {
+  console.error("Failed to initialize debug log:", err);
+}
+let mcpProcess = null;
+let requestId = 1;
+const pendingRequests = /* @__PURE__ */ new Map();
+let stdoutBuffer = "";
+let serverSpawnPromise = null;
+let initializationPromise = null;
+let isInitialized = false;
+async function ensureHandshake() {
+  if (isInitialized) return;
+  if (initializationPromise) {
+    logToDebugFile("Waiting for existing initialization to complete...");
+    return initializationPromise;
+  }
+  initializationPromise = (async () => {
+    try {
+      logToDebugFile("Performing initialize handshake...");
+      await callMcp("initialize", {
+        protocolVersion: "2024-11-05",
+        capabilities: {
+          sampling: {},
+          roots: { listChanged: false }
+        },
+        clientInfo: { name: "gm-os", version: "1.0.0" }
+      });
+      logToDebugFile("Sending notifications/initialized...");
+      const serverProcess = await ensureMcpServer();
+      const notify = JSON.stringify({
+        jsonrpc: "2.0",
+        method: "notifications/initialized"
+      }) + "\n";
+      serverProcess.stdin?.write(notify);
+      logToDebugFile("Handshake: Waiting 200ms for server state to stabilize...");
+      await new Promise((resolve) => setTimeout(resolve, 200));
+      isInitialized = true;
+      logToDebugFile("Handshake SUCCESS");
+    } catch (error) {
+      logToDebugFile(`Handshake FAILED: ${error}`);
+      console.error("[MCP Bridge] Handshake failed:", error);
+      initializationPromise = null;
+      throw error;
+    }
+  })();
+  return initializationPromise;
+}
+async function ensureMcpServer() {
+  if (mcpProcess && mcpProcess.connected) return mcpProcess;
+  if (serverSpawnPromise) return serverSpawnPromise;
+  serverSpawnPromise = (async () => {
+    isInitialized = false;
+    initializationPromise = null;
+    logToDebugFile("Spawning NotebookLM MCP Server with --debug flag...");
+    const proc = spawn("python", ["-m", "notebooklm_mcp.server", "--debug"], {
+      stdio: ["pipe", "pipe", "pipe"],
+      env: { ...process.env, PYTHONUNBUFFERED: "1" }
+    });
+    proc.stdout?.on("data", (data) => {
+      stdoutBuffer += data.toString();
+      let boundary = stdoutBuffer.indexOf("\n");
+      while (boundary !== -1) {
+        const line = stdoutBuffer.substring(0, boundary).trim();
+        stdoutBuffer = stdoutBuffer.substring(boundary + 1);
+        if (line) {
+          logToDebugFile(`<<< RECV: ${line}`);
+          try {
+            const response = JSON.parse(line);
+            if (response.id !== void 0) {
+              const pending = pendingRequests.get(response.id);
+              if (pending) {
+                clearTimeout(pending.timeout);
+                if (response.error) {
+                  const errorDetails = JSON.stringify(response.error);
+                  logToDebugFile(`!!! ERROR for ID ${response.id}: ${errorDetails}`);
+                  pending.reject(new Error(`${response.error.message || "Unknown error"} (Data: ${errorDetails})`));
+                } else {
+                  pending.resolve(response.result);
+                }
+                pendingRequests.delete(response.id);
+              }
+            } else if (response.method === "notifications/message") {
+              logToDebugFile(`[Server Notification] ${response.params?.message}`);
+            }
+          } catch {
+            logToDebugFile(`[Raw Output] ${line}`);
+          }
+        }
+        boundary = stdoutBuffer.indexOf("\n");
+      }
+    });
+    proc.stderr?.on("data", (data) => {
+      const msg = data.toString().trim();
+      if (msg) {
+        logToDebugFile(`stderr: ${msg}`);
+        if (msg.toLowerCase().includes("error")) {
+          console.error(`[MCP Server] ${msg}`);
+        }
+      }
+    });
+    proc.on("exit", (code, signal) => {
+      logToDebugFile(`Server exited (code: ${code}, signal: ${signal})`);
+      isInitialized = false;
+      mcpProcess = null;
+      serverSpawnPromise = null;
+      pendingRequests.forEach((p) => p.reject(new Error(`MCP Server exited with code ${code}`)));
+      pendingRequests.clear();
+    });
+    mcpProcess = proc;
+    return proc;
+  })();
+  return serverSpawnPromise;
+}
+async function callMcp(method, params) {
+  const process2 = await ensureMcpServer();
+  if (method !== "initialize" && !isInitialized) {
+    await ensureHandshake();
+  }
+  const id = requestId++;
+  return new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      const timeoutMsg = `MCP Request ${id} (${method}) timed out after 60s`;
+      console.error(`[MCP Bridge] ${timeoutMsg}`);
+      pendingRequests.delete(id);
+      reject(new Error(timeoutMsg));
+    }, 6e4);
+    pendingRequests.set(id, { resolve, reject, method, timeout });
+    const request = JSON.stringify({
+      jsonrpc: "2.0",
+      id,
+      method,
+      params
+    }) + "\n";
+    logToDebugFile(`>>> SEND: ${request.trim()}`);
+    process2.stdin?.write(request);
+  });
+}
+function registerMcpHandlers() {
+  console.log("[MCP Bridge] Registering IPC Handlers");
+  ipcMain.handle("mcp:list-tools", async () => {
+    try {
+      console.log("[MCP Bridge] Requesting tool list...");
+      const result = await callMcp("tools/list", {});
+      return result.tools || [];
+    } catch (error) {
+      console.error("[MCP Bridge] tools/list failed:", error);
+      throw error;
+    }
+  });
+  ipcMain.handle("mcp:call-tool", async (_event, _serverName, toolName, args) => {
+    try {
+      console.log(`[MCP Bridge] Calling tool: ${toolName}`);
+      const cleanArgs = JSON.parse(JSON.stringify(args));
+      const result = await callMcp("tools/call", {
+        name: toolName,
+        arguments: cleanArgs
+      });
+      if (result && result.content && Array.isArray(result.content)) {
+        const textContent = result.content.filter((c) => c.type === "text").map((c) => c.text).join("\n");
+        if (textContent.trim().startsWith("{")) {
+          try {
+            const parsed = JSON.parse(textContent);
+            if (parsed.status === "success" && typeof parsed.answer === "string") {
+              return { content: parsed.answer || "L'Oracle n'a pas trouvé de réponse précise pour ce notebook." };
+            }
+          } catch {
+          }
+        }
+        return { content: textContent };
+      }
+      return result;
+    } catch (error) {
+      console.error(`[MCP Bridge] tools/call ${toolName} failed:`, error);
+      throw error;
+    }
+  });
+  ipcMain.handle("mcp:reauthenticate", async () => {
+    logToDebugFile(`[Auth] Triggering re-authentication CLI...`);
+    try {
+      const pythonPath = process.env.PYTHON_PATH || "python";
+      const authProcess = spawn(pythonPath, ["-m", "notebooklm_mcp.auth_cli"], {
+        shell: true,
+        detached: true,
+        stdio: "ignore"
+      });
+      authProcess.unref();
+      logToDebugFile(`[Auth] Auth CLI process spawned.`);
+      return { success: true, message: "Authentification lancée." };
+    } catch (error) {
+      logToDebugFile(`[Auth] Error: ${error}`);
+      throw error;
+    }
+  });
+}
 const require$1 = createRequire(import.meta.url);
 const pdf = require$1("pdf-parse");
 const __dirname$1 = path.dirname(fileURLToPath(import.meta.url));
 registerRagHandlers();
+registerMcpHandlers();
 app.commandLine.appendSwitch("ignore-certificate-errors");
 process.env.APP_ROOT = path.join(__dirname$1, "..");
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];

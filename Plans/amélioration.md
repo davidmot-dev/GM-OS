@@ -17,7 +17,7 @@ Exploiter l'IA générative pour assister le MJ en temps réel.
 ## 3. 🗺️ Évolution du Map-OS & Player Hub
 Améliorer l'interactivité et le rendu visuel du plateau virtuel.
 *   **Effets Météo Dynamiques** : Couches de particules animées (pluie, fumée, neige, braises) sur les cartes projetées.
-*   **Interactivité Joueur** : Permettre aux joueurs de poser des "pings" ou de déplacer leurs pions via l'interface Hub.
+*   [x] **Interactivité Joueur** : Permettre aux joueurs de poser des "pings" ou de déplacer leurs pions via l'interface Hub. (FAIT)
 *   **Éclairage Dynamique** : Fog of war qui réagit à la position des sources lumineuses des pions.
 
 ## 4. ⚔️ Automatisation du Combat OS

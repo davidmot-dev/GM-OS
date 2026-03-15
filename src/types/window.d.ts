@@ -38,6 +38,11 @@ interface AppBridge {
     light?: {
         request: (url: string, method: string, body?: unknown) => Promise<unknown>;
     };
+    mcp?: {
+        listTools: (serverName: string) => Promise<unknown[]>;
+        callTool: (serverName: string, toolName: string, args: Record<string, unknown>) => Promise<{ content: string; [key: string]: unknown }>;
+        reauthenticate: () => Promise<{ success: boolean; message: string }>;
+    };
 }
 
 declare global {
