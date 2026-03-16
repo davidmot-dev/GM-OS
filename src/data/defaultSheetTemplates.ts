@@ -132,40 +132,4 @@ export const DEFAULT_SHEET_TEMPLATES: SheetTemplate[] = [
             },
         ],
     },
-    {
-        id: 'alien',
-        name: 'Alien RPG',
-        emoji: '👽',
-        isBuiltin: true,
-        defaultNotebookUrl: 'https://notebooklm.google.com/notebook/alien-default',
-        sections: [
-            {
-                id: 'attributes',
-                label: 'Attributs',
-                fields: [
-                    { id: 'strength', label: 'Force', type: 'gauge', defaultValue: 2, max: 5 },
-                    { id: 'agility', label: 'Agilité', type: 'gauge', defaultValue: 2, max: 5 },
-                    { id: 'wits', label: 'Esprit', type: 'gauge', defaultValue: 2, max: 5 },
-                    { id: 'empathy', label: 'Empathie', type: 'gauge', defaultValue: 2, max: 5 },
-                ],
-            },
-            {
-                id: 'vitals',
-                label: 'État Vital',
-                fields: [
-                    { id: 'hp', label: 'Santé', type: 'gauge', defaultValue: 3, max: 6 },
-                    { id: 'stress', label: 'Stress', type: 'number', defaultValue: 0 },
-                    { id: 'radiation', label: 'Radiations', type: 'number', defaultValue: 0 },
-                ],
-            },
-            {
-                id: 'career',
-                label: 'Carrière & Atouts',
-                fields: [
-                    { id: 'career', label: 'Métier', type: 'text', defaultValue: 'Officier' },
-                    { id: 'talent', label: 'Talent', type: 'text', defaultValue: '' },
-                ],
-            },
-        ],
-    },
 ];

@@ -1,4 +1,6 @@
 import { ImageBridge } from '../modules/image/types';
+import type { NoteEntry } from '../useObsidianStore';
+
 
 interface AppBridge {
     image?: ImageBridge;
@@ -11,6 +13,11 @@ interface AppBridge {
     openExternal?: (url: string) => void;
     utils?: {
         formatFileUrl: (path: string) => string;
+    };
+    web?: {
+        openExternal: (url: string) => void;
+        saveList: (data: unknown) => Promise<boolean>;
+        loadList: () => Promise<unknown>;
     };
     on?: (channel: string, callback: (event: unknown, ...args: unknown[]) => void) => void;
     app?: {
@@ -43,11 +50,32 @@ interface AppBridge {
         callTool: (serverName: string, toolName: string, args: Record<string, unknown>) => Promise<{ content: string; [key: string]: unknown }>;
         reauthenticate: () => Promise<{ success: boolean; message: string }>;
     };
+    obsidian?: {
+        listNotes: (vaultPath?: string) => Promise<NoteEntry[]>;
+        readNote: (relativePath: string, vaultPath?: string) => Promise<string | null>;
+        writeNote: (relativePath: string, content: string, vaultPath?: string) => Promise<boolean>;
+        ensureDirectory: (relativePath: string, vaultPath?: string) => Promise<boolean>;
+    };
+}
+
+interface NoteEntry {
+    name: string;
+    path: string;
+    type: 'file' | 'directory';
+    children?: NoteEntry[];
 }
 
 declare global {
     interface Window {
         appBridge?: AppBridge;
+        useMusicStore?: any;
+        useLightStore?: any;
+        useMapStore?: any;
+        useImageStore?: any;
+        useSoundStore?: any;
+        useStoryboardStore?: any;
+        hueEngine?: any;
+        soundEngine?: any;
     }
 }
 

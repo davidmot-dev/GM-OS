@@ -2513,11 +2513,105 @@ function registerMcpHandlers() {
     }
   });
 }
+const DEFAULT_VAULT_PATH = "C:\\Users\\david\\OneDrive\\Obsidian Vault";
+function registerObsidianHandlers() {
+  console.log("[Obsidian Bridge] Registering IPC Handlers");
+  ipcMain.handle("obsidian:list-notes", async (_event, vaultPath) => {
+    const rootPath = vaultPath || DEFAULT_VAULT_PATH;
+    if (!await fs.pathExists(rootPath)) {
+      console.error(`[Obsidian Bridge] Vault path not found: ${rootPath}`);
+      return [];
+    }
+    async function getNotes(dir) {
+      const items = await fs.readdir(dir, { withFileTypes: true });
+      const result = await Promise.all(items.map(async (item) => {
+        const fullPath = path.join(dir, item.name);
+        const relativePath = path.relative(rootPath, fullPath);
+        if (item.name.startsWith(".")) return null;
+        if (item.isDirectory()) {
+          const children = await getNotes(fullPath);
+          if (children.length === 0) return null;
+          return {
+            name: item.name,
+            path: relativePath,
+            type: "directory",
+            children
+          };
+        }
+        if (item.name.toLowerCase().endsWith(".md")) {
+          return {
+            name: item.name,
+            path: relativePath,
+            type: "file"
+          };
+        }
+        return null;
+      }));
+      return result.filter((r) => r !== null);
+    }
+    try {
+      return await getNotes(rootPath);
+    } catch (error) {
+      console.error("[Obsidian Bridge] Error listing notes:", error);
+      return [];
+    }
+  });
+  ipcMain.handle("obsidian:read-note", async (_event, relativePath, vaultPath) => {
+    const rootPath = vaultPath || DEFAULT_VAULT_PATH;
+    const fullPath = path.join(rootPath, relativePath);
+    if (!fullPath.startsWith(rootPath)) {
+      console.error(`[Obsidian Bridge] Security Violation: Attempted to read outside vault: ${fullPath}`);
+      return null;
+    }
+    if (!await fs.pathExists(fullPath)) {
+      console.error(`[Obsidian Bridge] Note not found: ${fullPath}`);
+      return null;
+    }
+    try {
+      return await fs.readFile(fullPath, "utf-8");
+    } catch (error) {
+      console.error("[Obsidian Bridge] Error reading note:", error);
+      return null;
+    }
+  });
+  ipcMain.handle("obsidian:write-note", async (_event, relativePath, content, vaultPath) => {
+    const rootPath = vaultPath || DEFAULT_VAULT_PATH;
+    const fullPath = path.join(rootPath, relativePath);
+    if (!fullPath.startsWith(rootPath)) {
+      console.error(`[Obsidian Bridge] Security Violation: Attempted to write outside vault: ${fullPath}`);
+      return false;
+    }
+    try {
+      await fs.ensureDir(path.dirname(fullPath));
+      await fs.writeFile(fullPath, content, "utf-8");
+      return true;
+    } catch (error) {
+      console.error("[Obsidian Bridge] Error writing note:", error);
+      return false;
+    }
+  });
+  ipcMain.handle("obsidian:ensure-directory", async (_event, relativePath, vaultPath) => {
+    const rootPath = vaultPath || DEFAULT_VAULT_PATH;
+    const fullPath = path.join(rootPath, relativePath);
+    if (!fullPath.startsWith(rootPath)) {
+      console.error(`[Obsidian Bridge] Security Violation: Attempted to create directory outside vault: ${fullPath}`);
+      return false;
+    }
+    try {
+      await fs.ensureDir(fullPath);
+      return true;
+    } catch (error) {
+      console.error("[Obsidian Bridge] Error creating directory:", error);
+      return false;
+    }
+  });
+}
 const require$1 = createRequire(import.meta.url);
 const pdf = require$1("pdf-parse");
 const __dirname$1 = path.dirname(fileURLToPath(import.meta.url));
 registerRagHandlers();
 registerMcpHandlers();
+registerObsidianHandlers();
 app.commandLine.appendSwitch("ignore-certificate-errors");
 process.env.APP_ROOT = path.join(__dirname$1, "..");
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
@@ -2744,10 +2838,15 @@ ipcMain.on("image:sync-hub-data", (_event, type, imagePath) => {
   }
 });
 ipcMain.on("session:launch-hub-window", () => {
+  console.log("[Main] session:launch-hub-window received");
   if (hubWindow && !hubWindow.isDestroyed()) {
+    console.log("[Main] Hub window already exists, restoring and focusing...");
+    if (hubWindow.isMinimized()) hubWindow.restore();
+    hubWindow.show();
     hubWindow.focus();
     return;
   }
+  console.log("[Main] Creating new Hub window...");
   const displays = screen.getAllDisplays();
   const targetDisplay = displays.length > 1 ? displays[1] : displays[0];
   hubWindow = new BrowserWindow({
@@ -2770,6 +2869,7 @@ ipcMain.on("session:launch-hub-window", () => {
     hubWindow.loadFile(path.join(RENDERER_DIST, "index.html"), { query: { window: "hub" } });
   }
   hubWindow.on("closed", () => {
+    console.log("[Main] Hub window closed");
     hubWindow = null;
   });
 });

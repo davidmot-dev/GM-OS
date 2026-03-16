@@ -70,7 +70,7 @@ const SoundDashboard: React.FC = () => {
                 </div>
 
                 <div className="flex-1 p-8 overflow-y-auto custom-scrollbar">
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-6 w-full h-full content-start">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 w-full h-full content-start">
                         {pads.map(pad => (
                             <SoundPad 
                                 key={pad.id} 

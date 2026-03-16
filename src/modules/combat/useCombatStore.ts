@@ -22,6 +22,9 @@ export interface Combatant {
     avatar?: string;
     statuses: StatusEffect[];
     extraStats?: Record<string, { value: number; max: number }>; // Dynamic stats (MP, Sanity...)
+    resistances?: string[];
+    vulnerabilities?: string[];
+    immunities?: string[];
 }
 
 // Conflicting status effects: adding a key status will automatically remove the value statuses
@@ -65,6 +68,9 @@ interface CombatState {
 
     // Sync
     syncCombatantHPToSession: () => void;
+    
+    // Damage/Heal
+    applyDamage: (amount: number, type: string, targetIds: string[]) => void;
     
     // Snapshot System
     applySnapshot: (snapshot: { combatants: Combatant[]; currentTurnIdx: number; round: number }) => void;
@@ -329,7 +335,43 @@ export const useCombatStore = create<CombatState>()(
                         }
                     }
                 });
-            }
+            },
+
+            applyDamage: (amount, type, targetIds) => set((state) => {
+                const isHeal = amount < 0;
+                const newCombatants = state.combatants.map(c => {
+                    if (!targetIds.includes(c.id)) return c;
+
+                    let finalAmount = amount;
+
+                    if (!isHeal) {
+                        // Check immunities
+                        if (c.immunities?.includes(type)) {
+                            finalAmount = 0;
+                        } 
+                        // Check resistances (typically half damage)
+                        else if (c.resistances?.includes(type)) {
+                            finalAmount = Math.floor(amount / 2);
+                        }
+                        // Check vulnerabilities (typically double damage)
+                        else if (c.vulnerabilities?.includes(type)) {
+                            finalAmount = amount * 2;
+                        }
+                    }
+
+                    const newHp = Math.min(c.hpMax, Math.max(0, c.hp - finalAmount));
+                    
+                    if (finalAmount > 0) {
+                        gmToast(`${c.name} subit ${finalAmount} dégâts (${type})`, "info");
+                    } else if (finalAmount < 0) {
+                        gmToast(`${c.name} récupère ${Math.abs(finalAmount)} PV`, "success");
+                    }
+
+                    return { ...c, hp: newHp };
+                });
+
+                return { combatants: newCombatants };
+            })
         }),
         {
             name: 'gmos-combat-storage',

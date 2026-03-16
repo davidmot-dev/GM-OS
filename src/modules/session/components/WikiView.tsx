@@ -122,7 +122,7 @@ const WikiView: React.FC = () => {
                                         <div className="flex items-center gap-4 mt-1">
                                             <span className="text-[10px] font-black uppercase tracking-widest text-accent">#{selectedEntry.category}</span>
                                             <div className="flex gap-1">
-                                                {selectedEntry.tags.map(tag => (
+                                                {(selectedEntry.tags || []).map(tag => (
                                                     <span key={tag} className="text-[9px] font-bold text-app-text/20 bg-app-bg border border-app-border px-1.5 py-0.5 rounded">
                                                         {tag}
                                                     </span>
@@ -170,8 +170,8 @@ const WikiView: React.FC = () => {
                                                 Entités Liées
                                             </h4>
                                             <div className="flex flex-col gap-2">
-                                                {selectedEntry.linkedEntityIds.length > 0 ? (
-                                                    selectedEntry.linkedEntityIds.map(id => (
+                                                {(selectedEntry.linkedEntityIds || []).length > 0 ? (
+                                                    (selectedEntry.linkedEntityIds || []).map(id => (
                                                         <div key={id} className="flex items-center gap-2 p-2 rounded-lg bg-app-surface/40 border border-app-border">
                                                             <Users size={12} className="text-accent" />
                                                             <span className="text-[10px] font-bold text-app-text/60">{entities.find(e => e.id === id)?.name || "Entité inconnue"}</span>
@@ -189,10 +189,10 @@ const WikiView: React.FC = () => {
 
                             {/* Sidebar visual */}
                             <div className="col-span-4 space-y-6">
-                                {selectedEntry.imageUrls.length > 0 && (
+                                {((selectedEntry as any).imageUrls || []).length > 0 && (
                                     <div className="rounded-2xl overflow-hidden border border-app-border bg-app-surface shadow-2xl">
                                         <MediaImage 
-                                            source={selectedEntry.imageUrls[0]} 
+                                            source={((selectedEntry as any).imageUrls || [])[0]} 
                                             alt={selectedEntry.title} 
                                             className="w-full h-auto object-cover opacity-80"
                                         />

@@ -99,6 +99,7 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
                         <h4 className="text-sm font-bold text-white truncate drop-shadow-md group-hover:text-accent transition-colors">
                             {media.name}
                         </h4>
+                        <div className="text-[7px] font-black text-white/20 uppercase tracking-tighter">[{media.id}]</div>
                         <div className="flex items-center gap-2 mt-1">
                             {media.sizeInfo && (
                                 <span className="text-[10px] text-slate-300 font-mono bg-app-bg/40 px-1.5 py-0.5 rounded">

@@ -90,7 +90,7 @@ const AtlasLinkedEntities: React.FC = () => {
             <div className="p-4 flex flex-col gap-5">
                 {CATEGORIES.map(cat => {
                     const meta = CATEGORY_META[cat];
-                    const entities = selectedMap.linkedEntities.filter(e => e.category === cat);
+                    const entities = (selectedMap.linkedEntities || []).filter(e => e.category === cat);
                     return (
                         <div key={cat}>
                             <div className="flex items-center justify-between mb-2">

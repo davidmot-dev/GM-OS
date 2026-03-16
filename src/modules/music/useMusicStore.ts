@@ -249,6 +249,9 @@ export const useMusicStore = create<MusicState>()(
 
                 loadToDeck: async (deck, pad) => {
                     try {
+                        console.log(`[MusicStore] Loading pad ${pad.id} to deck ${deck}: ${pad.url}`);
+                        get().addLog(`Chargement ${deck}: ${pad.label}`);
+                        
                         // Force l'activation de l'audio sur interaction utilisateur
                         await musicEngine.resume();
 
@@ -303,10 +306,9 @@ export const useMusicStore = create<MusicState>()(
                     get().addLog("ARRÊT TOTAL (Progressif)");
 
                     // Light Reversion
-                    // @ts-expect-error global access to avoid circular dependency
-                    const lightStore = (window as any).useLightStore;
-                    // @ts-expect-error global access to avoid circular dependency
-                    const hue = (window as any).hueEngine;
+                    const gWin = window as any;
+                    const lightStore = gWin.useLightStore;
+                    const hue = gWin.hueEngine;
 
                     if (lightStore && hue) {
                         const { isSyncEnabled } = lightStore.getState();
@@ -382,10 +384,9 @@ export const useMusicStore = create<MusicState>()(
                     await get().triggerAutoFade(targetDeck);
 
                     // 4. Trigger Light if linked and sync enabled
-                    // @ts-expect-error global access to avoid circular dependency
-                    const lightStore = (window as any).useLightStore;
-                    // @ts-expect-error global access to avoid circular dependency
-                    const hue = (window as any).hueEngine;
+                    const gWin = window as any;
+                    const lightStore = gWin.useLightStore;
+                    const hue = gWin.hueEngine;
 
                     if (lightStore && hue) {
                         const { isSyncEnabled } = lightStore.getState();

@@ -76,32 +76,44 @@ class MusicDeck {
 
         if (url && url.startsWith('m-')) {
             const { getMediaBlob } = useMediaStore.getState();
+            console.log(`[MusicDeck] Fetching MediaBlob for: ${url}`);
             const blob = await getMediaBlob(url);
             if (blob) {
                 this.objectUrl = URL.createObjectURL(blob);
                 finalUrl = this.objectUrl;
+                console.log(`[MusicDeck] Blob URL created: ${finalUrl}`);
             } else {
                 console.warn(`[MusicDeck] MediaBlob not found for ID: ${url}`);
             }
-        } else {
+        } else if (url) {
             // Transformation des chemins locaux Windows en URLs valides pour l'élément audio
-            // On check si c'est un chemin local (Pas de protocole détecté)
-            const isLocalPath = url && !url.includes('://') && !url.startsWith('blob:') && !url.startsWith('data:');
+            const isLocalPath = !url.includes('://') && !url.startsWith('blob:') && !url.startsWith('data:');
 
             if (isLocalPath) {
-                // Utilisation du bridge si disponible, sinon fallback manuel robuste
+                console.log(`[MusicDeck] Local path detected: ${url}`);
                 const win = window as unknown as { appBridge?: { utils?: { formatFileUrl: (p: string) => string } } };
                 if (win.appBridge?.utils?.formatFileUrl) {
                     finalUrl = win.appBridge.utils.formatFileUrl(url);
                 } else {
                     const normalizedPath = url.replace(/\\/g, '/');
-                    finalUrl = 'file:///' + encodeURI(normalizedPath).replace(/#/g, '%23').replace(/\?/g, '%3F');
+                    // Ensure triple slash for Windows paths
+                    finalUrl = 'file:///' + normalizedPath.replace(/ /g, '%20');
                 }
             }
         }
 
-        console.log(`[MusicDeck] Final source: ${finalUrl}`);
+        console.log(`[MusicDeck] Final source assigned: ${finalUrl}`);
         this.audioElement.src = finalUrl;
+        
+        // Listen for errors on the audio element immediately
+        this.audioElement.onerror = () => {
+            const err = this.audioElement.error;
+            const msg = `Erreur Audio: ${err?.message || 'Inconnue'} (Code ${err?.code})`;
+            console.error(`[MusicDeck] AudioElement Error [${finalUrl}]:`, err);
+            const gWin = window as unknown as { useToastStore?: { getState: () => { gmToast: (t: string, m: string) => void } } };
+            if (gWin.useToastStore) gWin.useToastStore.getState().gmToast('error', msg);
+        };
+
         this.audioElement.load();
 
         this.state.currentTime = 0;
@@ -109,7 +121,11 @@ class MusicDeck {
     }
 
     async play() {
-        if (this.context.state === 'suspended') await this.context.resume();
+        console.log(`[MusicDeck] play() triggered. Current context state: ${this.context.state}`);
+        if (this.context.state === 'suspended') {
+            await this.context.resume();
+            console.log(`[MusicDeck] Context resumed. New state: ${this.context.state}`);
+        }
 
         // Debug supplémentaire
         if (!this.audioElement.src || this.audioElement.src.endsWith('/') || this.audioElement.src === window.location.href) {
@@ -125,10 +141,12 @@ class MusicDeck {
         try {
             console.log(`[MusicDeck] Calling audioElement.play() for: ${this.audioElement.src}`);
             await this.audioElement.play();
+            console.log(`[MusicDeck] Play successful.`);
         } catch (e) {
-
-            // Un NotSupportedError ici confirme souvent un problème de chemin ou de format
-            console.error(`[MusicDeck] Play failed for ${this.audioElement.src}:`, e);
+            const error = e as Error;
+            console.error(`[MusicDeck] Play failed for ${this.audioElement.src}:`, error);
+            const gWin = window as unknown as { useToastStore?: { getState: () => { gmToast: (t: string, m: string) => void } } };
+            if (gWin.useToastStore) gWin.useToastStore.getState().gmToast('error', `Échec Lecture: ${error.message}`);
         }
     }
 

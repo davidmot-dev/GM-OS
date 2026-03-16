@@ -1,44 +1,66 @@
 # 🚀 GM-OS v5 : Idées d'améliorations et évolutions
 
-Ce document répertorie les axes de développement futurs pour transformer GM-OS v5 en une plateforme d'immersion totale.
+Ce document répertorie les axes de développement futurs. Les priorités sont définies pour guider la suite du projet.
 
-## 1. 📂 Système de Scénarios & Chronologie (Timeline OS)
-Centraliser la gestion des moments clés de la partie.
-*   **Master Storyboard** : Créer des événements déclenchant simultanément plusieurs modules (Musique, Ambiances, Lumières, Images).
-*   **Timeline Interactive** : Suivre le déroulement temporel et narratif de la session.
-*   **Notes Contextuelles** : Lier dynamiquement des entrées de Wiki ou des fiches PNJ à la progression du scénario.
+## ✅ Jalons Complétés
 
-## 2. 🤖 Intégration de l'IA (Gemini/Vocal Shaping)
-Exploiter l'IA générative pour assister le MJ en temps réel.
-*   **NPC Live Generator** : Génération instantanée de portraits (via DALL-E/Gemini) et de backgrounds basés sur les tables aléatoires du module Session.
-*   **Transcription Automatique** : Écoute passive pour archiver les dialogues et les faits marquants dans le journal de session.
-*   **Voice Automation** : Adapter automatiquement le pitch ou les effets de la voix en fonction du PNJ sélectionné.
+* [x] **Intégration Obsidian** (Bridge, Explorateur, Sync Oracle, **Export Structuré**)
+* [x] **Gestion de Galerie & Atlas** (Auto-sélection, Correction bouton Retour)
+* [x] **AI Oracle (NotebookLM)** (RAG MCP Native, Reconnexion UI)
+* [x] **Gems & Personas Dynamiques** (Contextualisation par Driver, Switch UI)
+* [x] **Interactivité Joueur Hub** (Pings, Déplacements Pions)
+* [x] **Dice-OS System Sync** (Alignement automatique avec les Drivers)
+* [x] **System Forge IA** (Générateur automatique via PDF de règles)
+* [x] **Master Storyboard** : Déclenchement simultané (Musique, Lumières, Images)
 
-## 3. 🗺️ Évolution du Map-OS & Player Hub
-Améliorer l'interactivité et le rendu visuel du plateau virtuel.
-*   **Effets Météo Dynamiques** : Couches de particules animées (pluie, fumée, neige, braises) sur les cartes projetées.
-*   [x] **Interactivité Joueur** : Permettre aux joueurs de poser des "pings" ou de déplacer leurs pions via l'interface Hub. (FAIT)
-*   **Éclairage Dynamique** : Fog of war qui réagit à la position des sources lumineuses des pions.
+---
 
-## 4. ⚔️ Automatisation du Combat OS
-Rendre les affrontements plus fluides et cinématiques.
-*   **Calculateur de Dégâts Intelligent** : Gestion automatisée des résistances, vulnérabilités et états (étourdi, empoisonné, etc.).
-*   **Visual Combat Log** : Affichage stylisé des coups critiques et des échecs sur l'écran des joueurs pour augmenter la tension.
-*   **Gestion d'Initiative Avancée** : Rappels automatiques des effets à durée limitée à chaque début de tour.
+## 🔴 Priorité 1 : Immersion & Mécaniques Coeur
 
-## 5. 📱 Contrôle Déporté (Mobile/Tablette)
-Offrir plus de liberté de mouvement au MJ.
-*   **GM Remote Control** : Application optimisée pour tablette/smartphone permettant de piloter l'audio, les lumières et les projections sans écran.
-*   **Second Screen Support** : Utiliser un appareil séparé pour afficher uniquement les notes secrètes ou les statistiques des monstres.
+### 1. ⚔️ Automatisation du Combat OS
 
-## 7. 🧠 Intelligence Artificielle & RAG (NotebookLM Mode)
-Transformer GM-OS en un co-pilote savant et contextuel.
-*   **Knowledge RAG (Retrieval-Augmented Generation)** : Indexation locale des fichiers PDF/Markdown de règles et de scénarios avec filtrage par campagne (Namespacing).
-*   **Gems & Personas Contextuels** : Agents spécialisés (Sage, Scribe, Oracle) adaptant leur ton et leurs connaissances via un système d'instructions en couches (Identité + Système de Jeu + Source).
-*   **Vocal Shaping integration** : Préparation des métadonnées IA pour piloter la synthèse vocale et les effets audio en fonction du Persona.
+* **Calculateur de Dégâts Intelligent** : Gestion automatisée des résistances, vulnérabilités et états.
+* **Actions Suggérées (Cortex)** : Suggérer des actions PNJ basées sur leur état et positionnement.
+* **Gestion d'Initiative Avancée** : Rappels automatiques des effets à durée limitée.
 
-## 8. 🎮 Architecture Modulaire "System Drivers"
-Rendre l'interface de GM-OS totalement agnostique au système de jeu.
-*   **Game Drivers Engine** : Séparation de la logique métier (Dice-OS, Combat-OS) du noyau de l'application. Chaque jeu possède son "pilote" définissant ses mécaniques propres.
-*   **Dynamic UI Components** : Composants d'interface (Jauges, Listes d'initiative) qui s'adaptent visuellement en fonction du driver actif.
-*   **System Forge IA** : Workflow assisté par l'IA pour générer un driver et une fiche de personnage fonctionnelle à partir d'une simple capture ou d'un PDF de règle.
+### 2. 🎮 Architecture "System Drivers" (Evolution)
+
+* **Dynamic UI Components** : Jauges et listes d'initiative qui s'adaptent visuellement au jeu.
+
+---
+
+## 🟡 Priorité 2 : Environnement & Storytelling
+
+### 3. 📂 Système de Scénarios & Chronologie (Timeline OS)
+
+
+### 4. 🗺️ Évolution du Map-OS
+
+* **Effets Météo Dynamiques** : Particules (pluie, neige, fumée) sur les cartes projetées.
+* **Éclairage Dynamique** : Fog of war réagissant à la lumière des pions.
+
+---
+
+## 🔵 Priorité 3 : Confort & Expansion
+
+### 5. 🤖 IA Générative Live
+
+* **NPC Live Generator** : Génération instantanée de portraits et backgrounds via IA.
+* **Voice Automation** : Adapter automatiquement le pitch vocal selon le PNJ.
+
+### 6. 📱 Contrôle Déporté
+
+* **GM Remote Control** : Application tablette/smartphone pour piloter l'OS sans écran.
+
+---
+
+## ⚪ Backup & Futuriste
+
+* **Transcription Automatique** : Écoute passive pour archiver les faits marquants.
+
+---
+
+## 💾 Archives (Idées Abandonnées)
+
+* ~~**Ligne de Vue (Line of Sight)** : Détection d'obstacles pour la visibilité des pions sur la map.~~ (Trop gourmand en ressources/complexité algos)
+* ~~**Retour Haptique** : Vibrations sur les contrôleurs lors des impacts.~~ (Complexité matérielle/priorité basse)

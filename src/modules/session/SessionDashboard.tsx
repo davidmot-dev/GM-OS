@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Users, Sparkles } from 'lucide-react';
+import { Users, Sparkles, Hammer } from 'lucide-react';
 import CampaignCockpit from './components/CampaignCockpit';
 import SessionWorkspace from './components/SessionWorkspace';
 import ModuleSnapshots from './components/ModuleSnapshots';
@@ -17,6 +17,7 @@ import ForgeDashboard from '../forge/components/ForgeDashboard';
 import TemplateDashboard from './components/TemplateDashboard';
 import SheetTemplateEditor from './components/SheetTemplateEditor';
 import RuleEngineEditor from './components/RuleEngineEditor';
+import StoryboardDashboard from '../storyboard/StoryboardDashboard';
 import { useSessionOSStore } from './useSessionOSStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../data/defaultSheetTemplates';
 
@@ -24,6 +25,7 @@ const SessionDashboard: React.FC = () => {
     const { currentView, activeCampaignId, campaigns, setCurrentView, selectedEntityId, customSheetTemplates } = useSessionOSStore();
     const [isOracleOpen, setIsOracleOpen] = useState(false);
     const [isSnapshotModalOpen, setIsSnapshotModalOpen] = useState(false);
+    const [forgeMode, setForgeMode] = useState<'system' | 'chronicle'>('system');
 
     const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
     
@@ -46,6 +48,28 @@ const SessionDashboard: React.FC = () => {
                         </h1>
                     </div>
                 </div>
+
+                {/* Forge Tab Switcher (at Header Height) */}
+                {currentView === 'forge' && (
+                    <div className="flex p-1 bg-white/5 border border-white/10 rounded-xl shadow-lg">
+                        <button
+                            onClick={() => setForgeMode('system')}
+                            className={`px-6 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 ${
+                                forgeMode === 'system' ? 'bg-primary text-white shadow-glow-primary/40' : 'text-slate-300'
+                            }`}
+                        >
+                            <Hammer size={12} /> System Forge
+                        </button>
+                        <button
+                            onClick={() => setForgeMode('chronicle')}
+                            className={`px-6 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 ${
+                                forgeMode === 'chronicle' ? 'bg-fuchsia-600 text-white shadow-glow-fuchsia/40' : 'text-slate-300'
+                            }`}
+                        >
+                            <Sparkles size={12} /> Chronicle Forge
+                        </button>
+                    </div>
+                )}
 
                 <div className="flex gap-3">
                     {currentView !== 'cockpit' && (
@@ -102,7 +126,7 @@ const SessionDashboard: React.FC = () => {
                     </div>
                 ) : currentView === 'forge' ? (
                     <div className="col-span-12 overflow-hidden flex h-full p-8 scrollbar-hide">
-                        <ForgeDashboard />
+                        <ForgeDashboard mode={forgeMode} />
                     </div>
                 ) : currentView === 'templates' ? (
                     <div className="col-span-12 overflow-hidden flex h-full">
@@ -115,6 +139,10 @@ const SessionDashboard: React.FC = () => {
                 ) : currentView === 'driver-editor' ? (
                     <div className="col-span-12 overflow-hidden flex h-full">
                         <RuleEngineEditor />
+                    </div>
+                ) : currentView === 'storyboard' ? (
+                    <div className="col-span-12 overflow-hidden flex h-full">
+                        <StoryboardDashboard />
                     </div>
                 ) : (
                     <>

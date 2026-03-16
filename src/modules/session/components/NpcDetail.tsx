@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
-import { Swords, MapPin, Monitor, Heart, Shield, Wind, Zap, Lock, BookOpen, ArrowLeft, Edit2, Check, Image as ImageIcon, Users } from 'lucide-react';
+import { Swords, MapPin, Monitor, Heart, Shield, Wind, Zap, Lock, BookOpen, ArrowLeft, Edit2, CheckCircle, Image as ImageIcon, MessageSquare, Compass, Send, Trash2, XCircle, MoreVertical, Map, Info, Sparkles, Layers } from 'lucide-react';
+import { DEFAULT_SHEET_TEMPLATES, type SheetField } from '../../../data/defaultSheetTemplates';
 import { useMapStore } from '../../map/useMapStore';
 import { useCombatStore } from '../../combat/useCombatStore';
 import { useImageStore } from '../../image/useImageStore';
@@ -8,6 +9,79 @@ import { gmToast } from '../../../stores/useToastStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useModalStore } from '../../../stores/useModalStore';
 import { ResolvedImage } from '../../../components/ResolvedImage';
+
+// --- Sub-components (Reused or adapted from CharacterSheetEditor) ---
+const FieldGauge: React.FC<{
+    field: SheetField;
+    value: number;
+    onChange: (val: number) => void;
+}> = ({ field, value, onChange }) => (
+    <div className="group space-y-2">
+        <div className="flex justify-between items-center">
+            <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{field.label}</label>
+            <span className="text-[10px] font-black text-accent font-mono">{value}%</span>
+        </div>
+        <div className="relative h-2 bg-app-bg rounded-full overflow-hidden border border-app-border/40">
+            <div
+                className="absolute inset-y-0 left-0 bg-accent transition-all duration-300"
+                style={{ width: `${value}%` }}
+            />
+            <input
+                type="range" min={0} max={100} step={1} value={value}
+                onChange={e => onChange(parseInt(e.target.value))}
+                className="absolute inset-0 w-full opacity-0 cursor-pointer z-10 h-full"
+            />
+        </div>
+    </div>
+);
+
+const FieldNumber: React.FC<{
+    field: SheetField;
+    value: number;
+    onChange: (val: number) => void;
+}> = ({ field, value, onChange }) => (
+    <div className="flex items-center justify-between p-3 bg-app-bg/40 rounded-xl border border-app-border/40">
+        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{field.label}</label>
+        <input
+            type="number"
+            value={value}
+            onChange={e => onChange(Number(e.target.value))}
+            className="w-16 bg-app-surface text-app-text text-center font-mono text-sm font-bold rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-accent/40"
+        />
+    </div>
+);
+
+const FieldText: React.FC<{
+    field: SheetField;
+    value: string;
+    onChange: (val: string) => void;
+}> = ({ field, value, onChange }) => (
+    <div className="flex items-center gap-3 p-3 bg-app-bg/40 rounded-xl border border-app-border/40">
+        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40 w-28 flex-shrink-0">{field.label}</label>
+        <input
+            type="text"
+            value={value}
+            onChange={e => onChange(e.target.value)}
+            className="flex-1 bg-transparent text-app-text text-sm font-medium focus:outline-none border-b border-app-border focus:border-accent/50 transition-colors pb-0.5"
+        />
+    </div>
+);
+
+const FieldCheckbox: React.FC<{
+    field: SheetField;
+    value: boolean;
+    onChange: (val: boolean) => void;
+}> = ({ field, value, onChange }) => (
+    <button
+        onClick={() => onChange(!value)}
+        className="flex items-center gap-3 p-3 bg-app-bg/40 rounded-xl border border-app-border/40 w-full hover:border-accent/20 transition-all flex-shrink-0"
+    >
+        <div className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${value ? 'bg-accent border-accent' : 'border-app-text/20'}`}>
+            {value && <CheckCircle size={10} className="text-white" />}
+        </div>
+        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40 cursor-pointer">{field.label}</label>
+    </button>
+);
 
 interface NpcDetailProps {
     embeddedId?: string;
@@ -53,9 +127,10 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
         });
 
         // 2. Link NPC to the active Atlas map if we have one
-        if (selectedAtlasMapId && !selectedNpc.linkedMapIds.includes(selectedAtlasMapId)) {
+        const linkedMapIds = selectedNpc.linkedMapIds || [];
+        if (selectedAtlasMapId && !linkedMapIds.includes(selectedAtlasMapId)) {
             updateEntity(selectedNpc.id, {
-                linkedMapIds: [...selectedNpc.linkedMapIds, selectedAtlasMapId]
+                linkedMapIds: [...linkedMapIds, selectedAtlasMapId]
             });
         }
 
@@ -76,7 +151,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
         gmToast(`${selectedNpc.name} ajouté au combat !`);
     };
 
-    const linkedMaps = atlasMaps.filter(m => selectedNpc.linkedMapIds.includes(m.id));
+    const linkedMaps = atlasMaps.filter(m => (selectedNpc.linkedMapIds || []).includes(m.id));
 
     return (
         <div className="flex-1 h-full bg-app-bg/60 p-12 flex flex-col overflow-hidden animate-in fade-in slide-in-from-right-4 duration-500">
@@ -98,7 +173,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                         : 'bg-app-surface border-app-border text-app-text/40 hover:text-white hover:border-white/30'
                     }`}
                 >
-                    {isEditing ? <Check size={18} /> : <Edit2 size={18} />}
+                    {isEditing ? <CheckCircle size={18} /> : <Edit2 size={18} />}
                     {isEditing ? 'Terminer l\'édition' : 'Editer la fiche'}
                 </button>
             </div>
@@ -197,137 +272,210 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                 <p className="text-app-text/40 text-sm font-medium italic">{selectedNpc.description}</p>
                             </>
                         )}
+                                       {/* Stats Grid - Dynamic based on Game Driver */}
+                    <div className={`grid gap-3 ${isEditing ? 'grid-cols-1' : 'grid-cols-4'}`}>
+                        {(() => {
+                            const { getActiveDriver } = useSessionOSStore.getState();
+                            const driver = getActiveDriver();
+                            const statsToTrack = driver?.combat.statsToTrack || [];
+                            
+                            if (isEditing) {
+                                return (
+                                    <>
+                                        {/* Type & Role Selectors (keeping them in editing mode for layout) */}
+                                        <div className="grid grid-cols-2 gap-4 mb-2">
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40 pl-1">Type d'entité</label>
+                                                <div className="flex gap-2">
+                                                    {(['pc', 'npc', 'monster'] as const).map(t => (
+                                                        <button
+                                                            key={t}
+                                                            onClick={() => updateEntity(selectedNpc.id, { type: t })}
+                                                            className={`flex-1 py-1.5 rounded-lg border text-[9px] font-black uppercase tracking-widest transition-all ${
+                                                                selectedNpc.type === t ? 'bg-accent text-white border-accent' : 'bg-app-surface/40 border-app-border text-app-text/40'
+                                                            }`}
+                                                        >
+                                                            {t === 'pc' ? 'Joueur' : t === 'npc' ? 'PNJ' : 'Monstre'}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40 pl-1">Rôle / Boss</label>
+                                                <div className="flex gap-2">
+                                                    {(['ally', 'neutral', 'hostile', 'boss'] as const).map(r => (
+                                                        <button
+                                                            key={r}
+                                                            onClick={() => updateEntity(selectedNpc.id, { role: r })}
+                                                            className={`flex-1 py-1.5 rounded-lg border text-[9px] font-black uppercase tracking-widest transition-all ${
+                                                                selectedNpc.role === r ? 'bg-white text-app-bg border-white' : 'bg-app-surface/40 border-app-border text-app-text/40'
+                                                            }`}
+                                                        >
+                                                            {r === 'ally' ? 'Allié' : r === 'neutral' ? 'Neutre' : r === 'hostile' ? 'Host' : 'Boss'}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Core Stats Editor */}
+                                        <div className="grid grid-cols-4 gap-3">
+                                            <div className="col-span-1 bg-app-surface/60 border border-accent/30 p-3 rounded-xl flex flex-col items-center justify-center gap-2">
+                                                <div className="flex items-center gap-2">
+                                                    <Heart size={14} className="text-red-500" />
+                                                    <span className="text-[9px] font-black text-accent uppercase tracking-widest">Vitalité</span>
+                                                </div>
+                                                <div className="flex items-center gap-1 bg-app-bg/50 px-2 py-1 rounded-lg border border-white/5">
+                                                    <input 
+                                                        type="number" value={selectedNpc.hp}
+                                                        onChange={(e) => updateEntity(selectedNpc.id, { hp: parseInt(e.target.value) || 0 })}
+                                                        className="w-10 bg-transparent text-center text-white font-black text-xs focus:outline-none"
+                                                    />
+                                                    <span className="text-app-text/20">/</span>
+                                                    <input 
+                                                        type="number" value={selectedNpc.maxHp}
+                                                        onChange={(e) => updateEntity(selectedNpc.id, { maxHp: parseInt(e.target.value) || 0 })}
+                                                        className="w-10 bg-transparent text-center text-app-text/40 font-black text-xs focus:outline-none"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="bg-app-surface/40 border border-white/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1">
+                                                <Shield size={14} className="text-blue-400" />
+                                                <input 
+                                                    type="number" value={selectedNpc.ac}
+                                                    onChange={(e) => updateEntity(selectedNpc.id, { ac: parseInt(e.target.value) || 0 })}
+                                                    className="w-full bg-transparent text-center text-white font-black text-xs focus:outline-none"
+                                                />
+                                                <span className="text-[8px] font-bold text-app-text/20 uppercase tracking-widest">Armure</span>
+                                            </div>
+                                            <div className="bg-app-surface/40 border border-white/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1">
+                                                <Wind size={14} className="text-emerald-400" />
+                                                <input 
+                                                    type="number" value={selectedNpc.speed}
+                                                    onChange={(e) => updateEntity(selectedNpc.id, { speed: parseInt(e.target.value) || 0 })}
+                                                    className="w-full bg-transparent text-center text-white font-black text-xs focus:outline-none"
+                                                />
+                                                <span className="text-[8px] font-bold text-app-text/20 uppercase tracking-widest">Vitesse</span>
+                                            </div>
+                                            <div className="bg-app-surface/40 border border-white/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1">
+                                                <Zap size={14} className="text-amber-400" />
+                                                <input 
+                                                    type="number" value={selectedNpc.initiative}
+                                                    onChange={(e) => updateEntity(selectedNpc.id, { initiative: parseInt(e.target.value) || 0 })}
+                                                    className="w-full bg-transparent text-center text-white font-black text-xs focus:outline-none"
+                                                />
+                                                <span className="text-[8px] font-bold text-app-text/20 uppercase tracking-widest">Init</span>
+                                            </div>
+                                        </div>
+                                    </>
+                                );
+                            }
+
+                            // Read-only mode: Dynamic Stats from Driver
+                            if (statsToTrack.length > 0) {
+                                return statsToTrack.map((stat, i) => {
+                                    // Map standard fields or sheetData
+                                    let val: string | number = "??";
+                                    if (stat.isMainHP) val = `${selectedNpc.hp}/${selectedNpc.maxHp}`;
+                                    else if (stat.fieldId === 'ac') val = selectedNpc.ac;
+                                    else if (stat.fieldId === 'speed') val = `${selectedNpc.speed} ft`;
+                                    else if (stat.fieldId === 'initiative') val = `+${selectedNpc.initiative}`;
+                                    else val = (selectedNpc.sheetData?.[stat.fieldId] as any) ?? 0;
+
+                                    return (
+                                        <div key={i} className="bg-app-surface/40 border border-white/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1 group hover:border-accent/20 transition-all">
+                                            {stat.isMainHP ? <Heart size={14} className="text-red-500" /> : <div className="w-1.5 h-1.5 rounded-full bg-accent/40" />}
+                                            <span className="text-white font-black text-xs">{val}</span>
+                                            <span className="text-[9px] uppercase font-bold text-app-text/20 tracking-wider group-hover:text-app-text/40">{stat.label}</span>
+                                        </div>
+                                    );
+                                });
+                            }
+
+                            // Fallback to standard 4 stats if no driver or stats defined
+                            return (
+                                [
+                                    { label: 'HP', val: `${selectedNpc.hp}/${selectedNpc.maxHp}`, icon: <Heart size={14} className="text-red-400" /> },
+                                    { label: 'AC', val: selectedNpc.ac, icon: <Shield size={14} className="text-blue-400" /> },
+                                    { label: 'Speed', val: `${selectedNpc.speed} ft`, icon: <Wind size={14} className="text-emerald-400" /> },
+                                    { label: 'Init', val: `+${selectedNpc.initiative}`, icon: <Zap size={14} className="text-amber-400" /> },
+                                ].map((stat, i) => (
+                                    <div key={i} className="bg-app-surface/40 border border-white/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1 group hover:border-accent/20 transition-all">
+                                        {stat.icon}
+                                        <span className="text-white font-black text-xs">{stat.val}</span>
+                                        <span className="text-[9px] uppercase font-bold text-app-text/20 tracking-wider group-hover:text-app-text/40">{stat.label}</span>
+                                    </div>
+                                ))
+                            );
+                        })()}
+                    </div>
                     </div>
 
-                    {/* Stats Grid - Adjusted Proportions: Vitality larger, others smaller */}
-                    <div className="grid grid-cols-[1.3fr_0.9fr_0.9fr_0.9fr] gap-3">
-                        {isEditing ? (
-                            <>
-                                {/* Type Selector */}
-                                <div className="col-span-4 space-y-2 mb-2">
+                    {/* Dynamic System Sheets Support */}
+                    {(() => {
+                        const { customSheetTemplates, updateEntitySheetData } = useSessionOSStore.getState();
+                        const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...(customSheetTemplates || [])];
+                        
+                        if (isEditing) {
+                            return (
+                                <div className="space-y-4 p-4 bg-app-surface/20 border border-white/5 rounded-2xl">
                                     <div className="flex items-center gap-2 px-1">
-                                        <Users size={14} className="text-app-text/20" />
-                                        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Type d'entité</label>
+                                        <Layers size={14} className="text-accent" />
+                                        <label className="text-[11px] font-black uppercase tracking-[0.2em] text-app-text/60">Modèle de Fiche Système</label>
                                     </div>
-                                    <div className="grid grid-cols-3 gap-2">
-                                        {[
-                                            { id: 'pc', label: 'Joueur' },
-                                            { id: 'npc', label: 'PNJ' },
-                                            { id: 'monster', label: 'Monstre' }
-                                        ].map(t => (
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {allTemplates.map(t => (
                                             <button
                                                 key={t.id}
-                                                onClick={() => updateEntity(selectedNpc.id, { type: t.id as 'pc' | 'npc' | 'monster' })}
-                                                className={`py-2 px-4 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all ${
-                                                    selectedNpc.type === t.id 
-                                                    ? 'bg-accent text-white border-accent shadow-glow-accent' 
-                                                    : 'bg-app-surface/40 border-app-border text-app-text/40 hover:border-app-border/60'
+                                                onClick={() => updateEntity(selectedNpc.id, { templateId: t.id })}
+                                                className={`py-2 px-3 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all text-left flex items-center gap-2 ${
+                                                    selectedNpc.templateId === t.id 
+                                                    ? 'bg-accent/10 border-accent text-accent' 
+                                                    : 'bg-app-bg border-app-border text-app-text/40 hover:border-app-border/60 hover:text-app-text/60'
                                                 }`}
                                             >
-                                                {t.label}
+                                                <div className={`w-2 h-2 rounded-full ${selectedNpc.templateId === t.id ? 'bg-accent shadow-[0_0_8px_rgba(var(--color-accent),0.5)]' : 'bg-app-text/20'}`} />
+                                                {t.name}
                                             </button>
                                         ))}
                                     </div>
                                 </div>
+                            );
+                        }
 
-                                {/* Role Selector */}
-                                <div className="col-span-4 space-y-2 mb-4">
-                                    <div className="flex items-center gap-2 px-1">
-                                        <Users size={14} className="text-app-text/20 rotate-180" /> {/* Different icon or similar */}
-                                        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Alignement / Rôle</label>
-                                    </div>
-                                    <div className="grid grid-cols-4 gap-2">
-                                        {[
-                                            { id: 'ally', label: 'Allié' },
-                                            { id: 'neutral', label: 'Neutre' },
-                                            { id: 'hostile', label: 'Hostile' },
-                                            { id: 'boss', label: 'Boss' }
-                                        ].map(r => (
-                                            <button
-                                                key={r.id}
-                                                onClick={() => updateEntity(selectedNpc.id, { role: r.id as 'ally' | 'neutral' | 'hostile' | 'boss' })}
-                                                className={`py-2 px-2 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all ${
-                                                    selectedNpc.role === r.id 
-                                                    ? 'bg-white text-app-bg border-white shadow-glow-white' 
-                                                    : 'bg-app-surface/40 border-app-border text-app-text/40 hover:border-app-border/60'
-                                                }`}
-                                            >
-                                                {r.label}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
+                        const template = allTemplates.find(t => t.id === selectedNpc.templateId);
+                        if (!template || template.id === 'generic') return null;
 
-                                <div className="col-span-1 bg-app-surface/60 border border-accent/30 p-3 rounded-xl flex flex-col items-center justify-center gap-2 group transition-all hover:bg-app-surface hover:border-accent shadow-lg shadow-red-500/5 min-w-[140px]">
-                                    <div className="flex items-center gap-2">
-                                        <Heart size={14} className="text-red-500 animate-pulse" />
-                                        <span className="text-[9px] uppercase font-black text-accent tracking-[0.15em]">Vitalité</span>
+                        return (
+                            <div className="space-y-6 pt-4 border-t border-white/5 mt-4">
+                                <div className="flex items-center gap-2">
+                                    <BookOpen size={16} className="text-accent" />
+                                    <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-accent">Fiche Système : {template.name}</h3>
+                                </div>
+                                {template.sections.map((section, idx) => (
+                                    <div key={idx} className="space-y-4">
+                                        <div className="flex items-center gap-3">
+                                            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+                                            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-app-text/20">{section.title}</span>
+                                            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-3">
+                                            {section.fields.map(field => {
+                                                const value = selectedNpc.sheetData?.[field.id] ?? field.defaultValue;
+                                                const handleChange = (val: any) => updateEntitySheetData(selectedNpc.id, field.id, val);
+
+                                                if (field.type === 'gauge') return <FieldGauge key={field.id} field={field} value={value as number} onChange={handleChange} />;
+                                                if (field.type === 'number') return <FieldNumber key={field.id} field={field} value={value as number} onChange={handleChange} />;
+                                                if (field.type === 'text') return <FieldText key={field.id} field={field} value={value as string} onChange={handleChange} />;
+                                                if (field.type === 'checkbox') return <FieldCheckbox key={field.id} field={field} value={value as boolean} onChange={handleChange} />;
+                                                return null;
+                                            })}
+                                        </div>
                                     </div>
-                                    <div className="flex items-center gap-1.5 bg-app-bg/50 px-3 py-1.5 rounded-lg border border-white/5">
-                                        <input 
-                                            type="number" 
-                                            value={selectedNpc.hp}
-                                            onChange={(e) => updateEntity(selectedNpc.id, { hp: parseInt(e.target.value) || 0 })}
-                                            className="w-16 bg-transparent text-center text-white font-black text-xs focus:outline-none placeholder:text-slate-700"
-                                            placeholder="HP"
-                                        />
-                                        <span className="text-slate-700 font-bold text-xs">/</span>
-                                        <input 
-                                            type="number" 
-                                            value={selectedNpc.maxHp}
-                                            onChange={(e) => updateEntity(selectedNpc.id, { maxHp: parseInt(e.target.value) || 0 })}
-                                            className="w-16 bg-transparent text-center text-app-text/40 font-black text-xs focus:outline-none placeholder:text-app-text/10"
-                                            placeholder="MAX"
-                                        />
-                                    </div>
-                                    <span className="text-[8px] uppercase font-bold text-app-text/20 tracking-wider text-center">Actuel / Max</span>
-                                </div>
-                                <div className="bg-app-surface/40 border border-accent/20 p-3 rounded-xl flex flex-col items-center justify-center gap-1 group">
-                                    <Shield size={14} className="text-blue-400" />
-                                    <input 
-                                        type="number" 
-                                        value={selectedNpc.ac}
-                                        onChange={(e) => updateEntity(selectedNpc.id, { ac: parseInt(e.target.value) || 0 })}
-                                        className="w-full bg-transparent text-center text-white font-black text-xs border-b border-white/10 focus:outline-none"
-                                    />
-                                    <span className="text-[9px] uppercase font-bold text-slate-600 tracking-wider">Armor Class</span>
-                                </div>
-                                <div className="bg-app-surface/40 border border-accent/20 p-3 rounded-xl flex flex-col items-center justify-center gap-1 group">
-                                    <Wind size={14} className="text-emerald-400" />
-                                    <input 
-                                        type="number" 
-                                        value={selectedNpc.speed}
-                                        onChange={(e) => updateEntity(selectedNpc.id, { speed: parseInt(e.target.value) || 0 })}
-                                        className="w-full bg-transparent text-center text-white font-black text-xs border-b border-white/10 focus:outline-none"
-                                    />
-                                    <span className="text-[9px] uppercase font-bold text-slate-600 tracking-wider">Movement</span>
-                                </div>
-                                <div className="bg-app-surface/40 border border-accent/20 p-3 rounded-xl flex flex-col items-center justify-center gap-1 group">
-                                    <Zap size={14} className="text-amber-400" />
-                                    <input 
-                                        type="number" 
-                                        value={selectedNpc.initiative}
-                                        onChange={(e) => updateEntity(selectedNpc.id, { initiative: parseInt(e.target.value) || 0 })}
-                                        className="w-full bg-transparent text-center text-white font-black text-xs border-b border-white/10 focus:outline-none"
-                                    />
-                                    <span className="text-[9px] uppercase font-bold text-slate-600 tracking-wider">Initiative</span>
-                                </div>
-                            </>
-                        ) : (
-                            [
-                                { label: 'HP', val: `${selectedNpc.hp}/${selectedNpc.maxHp}`, icon: <Heart size={14} className="text-red-400" /> },
-                                { label: 'AC', val: selectedNpc.ac, icon: <Shield size={14} className="text-blue-400" /> },
-                                { label: 'Speed', val: `${selectedNpc.speed} ft`, icon: <Wind size={14} className="text-emerald-400" /> },
-                                { label: 'Init', val: `+${selectedNpc.initiative}`, icon: <Zap size={14} className="text-amber-400" /> },
-                            ].map((stat, i) => (
-                                <div key={i} className="bg-app-surface/40 border border-white/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1 group hover:border-accent/20 transition-all">
-                                    {stat.icon}
-                                    <span className="text-white font-black text-xs">{stat.val}</span>
-                                    <span className="text-[9px] uppercase font-bold text-app-text/20 tracking-wider transition-colors group-hover:text-app-text/40">{stat.label}</span>
-                                </div>
-                            ))
-                        )}
-                    </div>
+                                ))}
+                            </div>
+                        );
+                    })()}
 
                     {/* Text Areas */}
                     <div className="flex flex-col gap-4">

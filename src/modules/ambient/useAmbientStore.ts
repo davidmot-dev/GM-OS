@@ -40,6 +40,8 @@ interface AmbientState {
     loadTheme: (universe: string, themeName: string) => Promise<void>;
     saveTheme: (universe: string, themeName: string) => void;
     deleteTheme: (themeId: string) => void;
+    saveScene: (name: string) => void;
+    deleteScene: (id: string) => void;
     addUniverse: (name: string) => void;
     toggleTrack: (index: number) => Promise<void>;
     setTrackVolume: (index: number, volume: number) => void;
@@ -171,6 +173,22 @@ export const useAmbientStore = create<AmbientState>()(
 
             deleteTheme: (themeId) => {
                 set(state => ({ presets: state.presets.filter(p => p.id !== themeId) }));
+            },
+
+            saveScene: (name) => {
+                const currentTracks = get().tracks;
+                const newScene: AmbientScene = {
+                    id: `scene-${Date.now()}`,
+                    name,
+                    description: 'Scène personnalisée',
+                    trackVolumes: currentTracks.map(t => t.volume),
+                    activeTracks: currentTracks.map(t => t.isPlaying)
+                };
+                set(state => ({ scenes: [...state.scenes, newScene] }));
+            },
+
+            deleteScene: (id) => {
+                set(state => ({ scenes: state.scenes.filter(s => s.id !== id) }));
             },
 
             addUniverse: (name) => {
@@ -371,6 +389,7 @@ export const useAmbientStore = create<AmbientState>()(
                 masterVolume: state.masterVolume,
                 outputDeviceId: state.outputDeviceId,
                 presets: state.presets,
+                scenes: state.scenes, // Persist custom scenes
                 customUniverses: state.customUniverses
             })
         }

@@ -70,7 +70,7 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
     if (!filePath && !isLearningThis) {
         return (
             <div
-                className="relative h-44 bg-app-surface/20 border-2 border-dashed border-app-border/50 rounded-2xl flex flex-col items-center justify-center p-4 hover:border-app-border/20 hover:bg-app-surface/5 transition-all cursor-pointer group shadow-lg"
+                className="relative h-64 bg-app-surface/20 border-2 border-dashed border-app-border/50 rounded-2xl flex flex-col items-center justify-center p-4 hover:border-app-border/20 hover:bg-app-surface/5 transition-all cursor-pointer group shadow-lg"
                 onClick={togglePlayback}
             >
                 <div className="size-12 rounded-full bg-app-surface/20 flex items-center justify-center text-app-text/40 group-hover:text-white group-hover:scale-110 transition-all border border-app-border/20 group-hover:bg-accent/40">
@@ -87,7 +87,7 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
     return (
         <div
             onClick={togglePlayback}
-            className={`relative h-44 bg-app-bg/40 backdrop-blur-md border border-app-border/40 rounded-2xl flex flex-col justify-between p-5 group cursor-pointer transition-all duration-300 shadow-xl overflow-hidden ${isActive ? 'shadow-glow-accent ring-1 ring-accent/30' : 'hover:border-app-border/20 hover:bg-app-surface/5'}`}
+            className={`relative h-64 bg-app-bg/40 backdrop-blur-md border border-app-border/40 rounded-2xl flex flex-col justify-between p-5 group cursor-pointer transition-all duration-300 shadow-xl overflow-hidden ${isActive ? 'shadow-glow-accent ring-1 ring-accent/30' : 'hover:border-app-border/20 hover:bg-app-surface/5'}`}
             style={{ 
                 borderColor: isActive ? color : isLearningThis ? 'var(--gm-violet)' : 'var(--app-border)',
                 backgroundColor: isActive ? `${color}15` : undefined
@@ -102,6 +102,7 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
                 </div>
 
                 <div className="flex items-center gap-1.5 bg-app-bg/60 px-2 py-1 rounded-lg border border-app-border/30">
+                    <span className="text-[8px] font-black text-white/30 mr-1">{id}</span>
                     {linkedLightSceneId && (
                         <div className="flex items-center gap-1 text-accent animate-pulse">
                             <Lightbulb size={10} fill="currentColor" className="drop-shadow-glow-accent" />

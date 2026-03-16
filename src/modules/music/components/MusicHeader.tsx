@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Music, CloudSnow, Sword, Skull, Beer, StopCircle, ChevronDown, Check, RotateCcw, Keyboard } from 'lucide-react';
+import { Plus, Music, CloudSnow, Sword, Skull, Beer, StopCircle, ChevronDown, Check, RotateCcw, Keyboard, Activity } from 'lucide-react';
 import { useMusicStore } from '../useMusicStore';
+import { musicEngine } from '../MusicEngine';
 import { gmPrompt, gmConfirm } from '../../../stores/useModalStore';
 import { useHardwareStore } from '../../../stores/useHardwareStore';
 
@@ -104,7 +105,18 @@ const MusicHeader: React.FC = () => {
 
                 {/* Right: Essential Controls */}
                 <div className="flex items-center gap-3">
-                    <div className="flex bg-app-bg/40 p-1 rounded-xl border border-app-border/40 shadow-inner mr-2">
+                    <div className="flex bg-app-bg/40 p-1 rounded-xl border border-app-border/40 shadow-inner mr-2 gap-1">
+                        <button
+                            onClick={async () => {
+                                await musicEngine.resume();
+                                const gWin = window as unknown as { useToastStore?: { getState: () => { gmToast: (t: string, m: string) => void } } };
+                                if (gWin.useToastStore) gWin.useToastStore.getState().gmToast('info', 'Moteur Audio relancé !');
+                            }}
+                            title="Forcer la reprise du moteur audio (en cas de blocage)"
+                            className="size-9 bg-accent/10 border border-accent/20 text-accent rounded-xl flex items-center justify-center hover:bg-accent hover:text-white transition-all active:scale-95"
+                        >
+                            <Activity size={14} />
+                        </button>
                         <button
                             onClick={toggleKeyLearn}
                             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all ${isKeyLearnActive 

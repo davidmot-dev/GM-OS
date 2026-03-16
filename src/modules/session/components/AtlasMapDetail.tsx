@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useMapStore } from '../../map/useMapStore';
-import { Lock, Eye, Send, Film } from 'lucide-react';
+import { Lock, Eye, Send, Film, Image as ImageIcon } from 'lucide-react';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
+import { MediaBrowser } from '../../../components/MediaBrowser';
+import { useMediaStore } from '../../../stores/useMediaStore';
 
 const AtlasMapDetail: React.FC = () => {
     const { atlasMaps, selectedAtlasMapId, updateAtlasMap, setCurrentView } = useSessionOSStore();
     const { setMap } = useMapStore();
 
     const selectedMap = atlasMaps.find(m => m.id === selectedAtlasMapId);
+    const [isChoosingMedia, setIsChoosingMedia] = useState(false);
 
     // Always call hooks at the top level
     const url = useMediaUrl(selectedMap?.fileUrl);
@@ -29,8 +32,19 @@ const AtlasMapDetail: React.FC = () => {
         setCurrentView('cockpit');
     };
 
+    const handleMediaSelect = (mediaId: string) => {
+        const media = useMediaStore.getState().mediaList.find(m => m.id === mediaId);
+        if (selectedMap && media) {
+            updateAtlasMap(selectedMap.id, { 
+                fileUrl: media.id, 
+                isVideo: media.type === 'video' 
+            });
+        }
+        setIsChoosingMedia(false);
+    };
+
     return (
-        <div className="flex-1 flex flex-col bg-app-bg overflow-hidden">
+        <div className="flex-1 flex flex-col bg-app-bg overflow-hidden relative">
             {/* Map Preview */}
             <div className="relative flex-shrink-0 h-64 bg-app-surface overflow-hidden">
                 {url ? (
@@ -56,8 +70,19 @@ const AtlasMapDetail: React.FC = () => {
                         <p className="text-app-text/40 font-bold text-sm">Chargement du fichier...</p>
                     </div>
                 )}
+                
+                {/* Image Change Button */}
+                <button 
+                    onClick={() => setIsChoosingMedia(true)}
+                    className="absolute top-4 right-4 z-20 flex items-center gap-2 bg-app-surface/60 hover:bg-accent text-white font-bold py-1.5 px-3 rounded-lg text-[10px] transition-all border border-white/10 backdrop-blur-md"
+                >
+                    <ImageIcon size={12} />
+                    Changer Médias
+                </button>
+
                 {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-app-bg via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-app-bg via-transparent to-transparent pointer-events-none" />
+                
                 {/* Name overlay */}
                 <div className="absolute bottom-4 left-6 right-6">
                     <div className="flex items-end justify-between">
@@ -117,6 +142,30 @@ const AtlasMapDetail: React.FC = () => {
                     />
                 </div>
             </div>
+
+            {/* Media Browser Modal */}
+            {isChoosingMedia && (
+                <div className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-20 backdrop-blur-sm">
+                    <div className="bg-app-bg border border-app-border rounded-2xl w-full max-w-5xl h-full flex flex-col overflow-hidden shadow-2xl">
+                        <div className="p-4 border-b border-app-border flex items-center justify-between">
+                            <h3 className="font-bold text-lg">Changer le média de la carte</h3>
+                            <button 
+                                onClick={() => setIsChoosingMedia(false)}
+                                className="text-app-text/40 hover:text-white transition-colors"
+                            >
+                                Fermer
+                            </button>
+                        </div>
+                        <div className="flex-1 overflow-hidden">
+                            <MediaBrowser 
+                                isOpen={isChoosingMedia} 
+                                onClose={() => setIsChoosingMedia(false)} 
+                                onSelect={handleMediaSelect} 
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

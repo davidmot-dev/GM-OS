@@ -1,6 +1,20 @@
 import type { GameDriver } from '../../types/drivers';
 import type { SheetTemplate } from '../../data/defaultSheetTemplates';
 
+export interface ForgeContextItem {
+  id?: string;
+  name: string;
+  type: 'text' | 'pdf' | 'image';
+  content: string; // text or base64
+  mimeType?: string;
+  timestamp?: number;
+}
+
+export interface ForgeSystemResult {
+  driver: Partial<GameDriver>;
+  template: Partial<SheetTemplate>;
+}
+
 export class ForgeService {
   private static instance: ForgeService;
 
@@ -9,6 +23,83 @@ export class ForgeService {
       ForgeService.instance = new ForgeService();
     }
     return ForgeService.instance;
+  }
+
+  /**
+   * Generates a complete, cohesive system (Driver + Template) from multiple sources.
+   */
+  public async forgeSystem(items: ForgeContextItem[], userInstructions?: string): Promise<ForgeSystemResult> {
+    const prompt = this.getSystemForgePrompt(userInstructions);
+    
+    // Aggregate items into Gemini parts
+    const parts: Array<{ text?: string, inline_data?: { mime_type: string, data: string } }> = [{ text: prompt }];
+    
+    items.forEach(item => {
+      if (item.type === 'text') {
+        parts.push({ text: `CONTENU DU DOCUMENT [${item.name}] :\n\n${item.content}` });
+      } else {
+        parts.push({
+          inline_data: {
+            mime_type: item.mimeType || 'application/pdf',
+            data: item.content
+          }
+        });
+      }
+    });
+
+    const body = {
+      contents: [{ parts }],
+      generationConfig: {
+        response_mime_type: "application/json"
+      }
+    };
+
+    const response = await this.callForgeAIRaw(body);
+    return response as ForgeSystemResult;
+  }
+
+  private getSystemForgePrompt(userInstructions?: string): string {
+    return `
+      Tu es l'ingénieur en chef de la Forge GM-OS, agissant en mode **🧠 SYSTEM ENGINEER (End-to-End Generation)**.
+      Ton objectif est de créer un système de jeu complet et cohérent (Driver + Fiche) à partir des documents fournis.
+
+      ${userInstructions ? `CONSIGNES UTILISATEUR PRIORITAIRES : "${userInstructions}"` : ''}
+
+      Tu dois produire un JSON unique contenant deux objets : "driver" et "template".
+      RÈGLES DE COHÉRENCE CRITIQUES :
+      1. Les IDs des stats dans "driver.combat.statsToTrack" DOIVENT correspondre exactement aux IDs des champs dans "template.sections[].fields[]".
+      2. La formule d'initiative dans "driver.combat.initiativeFormula" doit utiliser des IDs de champs définis dans le template.
+      3. Le "dice.logic" doit être choisi parmi : 'sum', 'highest', 'lowest', 'count-success', 'd100-low', 'd100-high'.
+
+      FORMAT DE SORTIE ATTENDU :
+      {
+        "driver": {
+          "name": "Nom du Système",
+          "description": "...",
+          "emoji": "🎲",
+          "dice": { "defaultDice": "1d20", "logic": "sum", "engine": "standard" },
+          "combat": {
+            "statsToTrack": [ { "fieldId": "hp", "label": "PV", "isMainHP": true, "isResource": false } ],
+            "initiativeFormula": "dex"
+          },
+          "aiInstructions": "Directives pour le MJ IA..."
+        },
+        "template": {
+          "name": "Fiche de Personnage",
+          "emoji": "📜",
+          "sections": [
+            {
+              "id": "stats",
+              "label": "Statistiques",
+              "fields": [
+                { "id": "hp", "label": "Points de Vie", "type": "number", "defaultValue": 10 },
+                { "id": "dex", "label": "Dextérité", "type": "number", "defaultValue": 10 }
+              ]
+            }
+          ]
+        }
+      }
+    `;
   }
 
   /**
@@ -108,12 +199,7 @@ export class ForgeService {
   }
 
   private async callForgeAI(prompt: string, fileBase64?: string, mimeType?: string, rawText?: string): Promise<unknown> {
-    if (!window.appBridge?.ai?.proxyRequest) {
-      throw new Error("AI Bridge not available");
-    }
-
-    // Prepare the parts for Gemini
-    const parts: { text?: string; inline_data?: { mime_type: string; data: string } }[] = [{ text: prompt }];
+    const parts: Array<{ text?: string, inline_data?: { mime_type: string, data: string } }> = [{ text: prompt }];
 
     if (rawText) {
       parts.push({ text: `CONTENU DU DOCUMENT À ANALYSER :\n\n${rawText}` });
@@ -135,13 +221,14 @@ export class ForgeService {
       }
     };
 
-    // Note: We'll need the API Key from the store, but usually the proxy should handle it 
-    // or we pass it if required. Since main.ts expects the full URL, we construct it here
-    // based on our knowledge of the proxy handler.
-    
-    // For now, assuming the proxy handles the API key and base URL selection 
-    // or we're using a specific endpoint. 
-    // Use the model and API Key from the AI store
+    return this.callForgeAIRaw(body);
+  }
+
+  private async callForgeAIRaw(body: { contents: Array<{ parts: Array<{ text?: string, inline_data?: { mime_type: string, data: string } }> }>, generationConfig?: { response_mime_type: string } }): Promise<unknown> {
+    if (!window.appBridge?.ai?.proxyRequest) {
+      throw new Error("AI Bridge not available");
+    }
+
     const { configs } = (await import('../../stores/useAIStore')).useAIStore.getState();
     const config = configs.gemini;
     const modelId = config.modelId || 'gemini-1.5-flash';

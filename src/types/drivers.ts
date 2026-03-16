@@ -54,6 +54,7 @@ export interface GameDriver {
         initiativeFormula: string; // e.g. "dex", "dex + int", "1d10"
         initiativeSort?: 'asc' | 'desc'; // Default: 'desc'
         initiativeCards?: number; // If set, use a unique card pool 1-N
+        damageTypes?: string[]; // e.g. ["Feu", "Froid", "Physique", "Psychique"]
     };
 
     // Linked assets

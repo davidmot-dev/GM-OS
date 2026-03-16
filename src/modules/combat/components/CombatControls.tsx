@@ -6,6 +6,7 @@ import {
     UserPlus, RefreshCw, Dices, Save, Play, Skull, 
     ArrowDown01, ArrowUp10, Sparkles, Zap, Activity
 } from 'lucide-react';
+import { gmCustom } from '../../../stores/useModalStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 
 const CombatControls: React.FC = () => {
@@ -213,6 +214,14 @@ const CombatControls: React.FC = () => {
                 >
                     <UserPlus size={18} />
                     <span>Ajouter Combattant</span>
+                </button>
+
+                <button
+                    onClick={() => gmCustom('damage-calc')}
+                    className="w-full bg-gm-crimson/10 hover:bg-gm-crimson/20 border border-gm-crimson/30 text-gm-crimson px-4 py-3 rounded-xl flex items-center justify-center gap-2 transition-all shadow-glow-crimson/10 group"
+                >
+                    <Zap size={18} className="group-hover:animate-pulse" />
+                    <span className="font-bold uppercase tracking-widest text-xs">Calculateur de Dégâts</span>
                 </button>
 
                 <div className="grid grid-cols-2 gap-2 mt-2">

@@ -9,6 +9,7 @@ const require = createRequire(import.meta.url);
 const pdf = require('pdf-parse');
 import { registerRagHandlers } from './RAGEngine'
 import { registerMcpHandlers } from './mcp_bridge'
+import { registerObsidianHandlers } from './obsidian_bridge'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -16,6 +17,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 registerRagHandlers();
 // Register MCP Bridge for AI Oracle
 registerMcpHandlers();
+// Register Obsidian Bridge
+registerObsidianHandlers();
 
 // Ignore certificate errors for local HTTPS requests (like Philips Hue Bridge)
 app.commandLine.appendSwitch('ignore-certificate-errors')
@@ -304,11 +307,16 @@ ipcMain.on('image:sync-hub-data', (_event, type: string, imagePath: string) => {
 });
 
 ipcMain.on('session:launch-hub-window', () => {
+    console.log('[Main] session:launch-hub-window received');
     if (hubWindow && !hubWindow.isDestroyed()) {
+        console.log('[Main] Hub window already exists, restoring and focusing...');
+        if (hubWindow.isMinimized()) hubWindow.restore();
+        hubWindow.show();
         hubWindow.focus();
         return;
     }
 
+    console.log('[Main] Creating new Hub window...');
     const displays = screen.getAllDisplays();
     // Default to a secondary display if available, else primary
     const targetDisplay = displays.length > 1 ? displays[1] : displays[0];
@@ -334,6 +342,7 @@ ipcMain.on('session:launch-hub-window', () => {
     }
 
     hubWindow.on('closed', () => {
+        console.log('[Main] Hub window closed');
         hubWindow = null;
     });
 });

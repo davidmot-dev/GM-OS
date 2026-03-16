@@ -22,7 +22,7 @@ const MapCard: React.FC<{
     onClick: () => void,
     onDelete: () => void
 }> = ({ map, isSelected, isProjected, onClick, onDelete }) => {
-    const typeMeta = TYPE_META[map.type];
+    const typeMeta = TYPE_META[map.type] || { label: 'Inconnu', icon: <Map size={10} />, color: 'text-slate-400 bg-slate-500/10 border-slate-500/20' };
 
     return (
         <div

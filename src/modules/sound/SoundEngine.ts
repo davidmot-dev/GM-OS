@@ -188,3 +188,8 @@ export class SoundEngine {
 }
 
 export const soundEngine = SoundEngine.getInstance();
+
+// Export for cross-store access
+if (typeof window !== 'undefined') {
+    (window as any).soundEngine = soundEngine;
+}

@@ -85,6 +85,12 @@ contextBridge.exposeInMainWorld('appBridge', {
         callTool: (serverName: string, toolName: string, args: Record<string, unknown>) => 
             ipcRenderer.invoke('mcp:call-tool', serverName, toolName, args),
         reauthenticate: () => ipcRenderer.invoke('mcp:reauthenticate')
+    },
+    obsidian: {
+        listNotes: (vaultPath?: string) => ipcRenderer.invoke('obsidian:list-notes', vaultPath),
+        readNote: (relativePath: string, vaultPath?: string) => ipcRenderer.invoke('obsidian:read-note', relativePath, vaultPath),
+        writeNote: (relativePath: string, content: string, vaultPath?: string) => ipcRenderer.invoke('obsidian:write-note', relativePath, content, vaultPath),
+        ensureDirectory: (relativePath: string, vaultPath?: string) => ipcRenderer.invoke('obsidian:ensure-directory', relativePath, vaultPath)
     }
 })
 

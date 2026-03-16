@@ -119,10 +119,10 @@ const TimelineView: React.FC = () => {
                                                 {atlasMaps.find(m => m.id === event.locationId)?.name}
                                             </div>
                                         )}
-                                        {event.involvedEntityIds.length > 0 && (
+                                        {((event as any).involvedEntityIds || []).length > 0 && (
                                             <div className="flex items-center gap-2 text-[10px] font-bold text-app-text/40">
                                                 <Users size={12} className="text-accent" />
-                                                {event.involvedEntityIds.length} Participants
+                                                {((event as any).involvedEntityIds || []).length} Participants
                                             </div>
                                         )}
                                     </div>

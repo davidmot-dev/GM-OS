@@ -72,6 +72,7 @@ const AmbientTrack: React.FC<AmbientTrackProps> = ({ track, index, onRequestMedi
                     className="w-full bg-transparent text-[10px] font-bold uppercase tracking-widest text-app-text/50 text-center focus:text-app-text focus:outline-none"
                     placeholder="NOM DE PISTE"
                 />
+                <div className="text-[7px] font-black text-white/20 mt-0.5 uppercase tracking-tighter">[{track.id}]</div>
 
                 {/* Visualizer */}
                 <div className="mt-2">

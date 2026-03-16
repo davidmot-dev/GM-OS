@@ -322,3 +322,8 @@ export const useMapStore = create<MapState>()(
         }
     )
 );
+
+// Export for cross-store access
+if (typeof window !== 'undefined') {
+    (window as any).useMapStore = useMapStore;
+}

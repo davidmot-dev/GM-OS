@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
-import { ChevronLeft, Info, Calendar, Users, MapPin, Edit3, Sparkles } from 'lucide-react';
+import { ChevronLeft, Info, Calendar, Users, MapPin, Edit3, Sparkles, Share2 } from 'lucide-react';
 import { gmCustom, useModalStore } from '../../../stores/useModalStore';
 import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
@@ -34,13 +34,22 @@ const CampaignDetails: React.FC = () => {
                     <h2 className="text-2xl font-bold text-app-text/90">{campaign.name}</h2>
                     <p className="text-app-text/40 text-sm tracking-widest uppercase font-semibold">Campaign Management</p>
                 </div>
-                <button 
-                    onClick={() => gmCustom('campaign-edit', campaign)}
-                    className="ml-auto flex items-center gap-2 px-4 py-2 bg-app-surface hover:bg-app-surface/80 border border-app-border rounded-lg text-sm text-app-text/80 transition-all font-bold"
-                >
-                    <Edit3 size={16} />
-                    Edit Campaign
-                </button>
+                <div className="ml-auto flex gap-2">
+                    <button 
+                        onClick={() => useSessionOSStore.getState().exportActiveCampaignToObsidian()}
+                        className="flex items-center gap-2 px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/30 rounded-lg text-sm text-purple-400 transition-all font-bold"
+                    >
+                        <Share2 size={16} />
+                        Exporter vers Obsidian
+                    </button>
+                    <button 
+                        onClick={() => gmCustom('campaign-edit', campaign)}
+                        className="flex items-center gap-2 px-4 py-2 bg-app-surface hover:bg-app-surface/80 border border-app-border rounded-lg text-sm text-app-text/80 transition-all font-bold"
+                    >
+                        <Edit3 size={16} />
+                        Edit Campaign
+                    </button>
+                </div>
             </div>
 
             <div className="grid grid-cols-12 gap-6">

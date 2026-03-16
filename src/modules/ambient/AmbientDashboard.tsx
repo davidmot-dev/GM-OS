@@ -41,7 +41,7 @@ const MasterVisualizer: React.FC = () => {
 };
 
 const AmbientDashboard: React.FC = () => {
-    const { tracks, presets, scenes, customUniverses, loadTheme, saveTheme, deleteTheme, addUniverse, fadeOutAll, applyScene, outputDeviceId, setOutputDevice, updateTrack, reset } = useAmbientStore();
+    const { tracks, presets, scenes, customUniverses, loadTheme, saveTheme, deleteTheme, saveScene, deleteScene, addUniverse, fadeOutAll, applyScene, outputDeviceId, setOutputDevice, updateTrack, reset } = useAmbientStore();
     const { getAudioLabel } = useHardwareStore();
 
     // Media Browser State
@@ -133,6 +133,15 @@ const AmbientDashboard: React.FC = () => {
             if (trimmed) {
                 addUniverse(trimmed);
                 setSelectedUniverse(trimmed);
+            }
+        });
+    };
+
+    const handleSaveScene = () => {
+        gmPrompt("Nom de la nouvelle scène ?", "", (name) => {
+            const trimmed = name.trim();
+            if (trimmed) {
+                saveScene(trimmed);
             }
         });
     };
@@ -269,18 +278,40 @@ const AmbientDashboard: React.FC = () => {
 
             {/* Quick Scenes Row */}
             <div className="flex items-center gap-3 px-2 overflow-x-auto scrollbar-hide py-1">
-                <div className="flex items-center gap-2 text-gm-emerald bg-gm-emerald/10 border border-gm-emerald/20 px-3 py-2 rounded-xl">
+                <div className="flex items-center gap-2 text-gm-emerald bg-gm-emerald/10 border border-gm-emerald/20 px-3 py-2 rounded-xl group relative">
                     <Activity size={14} />
                     <span className="text-[10px] font-black uppercase tracking-tight">Quick Scenes</span>
+                    <button 
+                        onClick={handleSaveScene}
+                        className="ml-2 p-1 bg-gm-emerald/20 hover:bg-gm-emerald/40 rounded-lg transition-colors"
+                        title="Sauvegarder l'état actuel"
+                    >
+                        <Save size={10} />
+                    </button>
                 </div>
                 {scenes.map(scene => (
-                    <button
-                        key={scene.id}
-                        onClick={() => applyScene(scene.id)}
-                        className="px-5 py-2.5 rounded-xl bg-app-surface/60 border border-app-border hover:border-gm-cyan/50 hover:bg-app-surface transition-all text-[11px] font-bold uppercase tracking-wide whitespace-nowrap group"
-                    >
-                        <span className="text-app-text/70 group-hover:text-app-text transition-colors">{scene.name}</span>
-                    </button>
+                    <div key={scene.id} className="group relative flex items-center">
+                        <button
+                            onClick={() => applyScene(scene.id)}
+                            className="px-5 py-2.5 rounded-xl bg-app-surface/60 border border-app-border hover:border-gm-cyan/50 hover:bg-app-surface transition-all text-[11px] font-bold uppercase tracking-wide whitespace-nowrap"
+                        >
+                            <span className="text-app-text/70 group-hover:text-app-text transition-colors">{scene.name} <span className="opacity-30">[{scene.id.substring(0, 8)}]</span></span>
+                        </button>
+                        
+                        {/* Delete button for custom scenes (ones that aren't the hardcoded defaults) */}
+                        {!['scene-quiet', 'scene-tension', 'scene-action'].includes(scene.id) && (
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    gmConfirm(`Supprimer la scène "${scene.name}" ?`, () => deleteScene(scene.id));
+                                }}
+                                className="absolute -top-1 -right-1 p-1 bg-red-500 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity shadow-lg z-10 hover:scale-110"
+                                title="Supprimer la scène"
+                            >
+                                <Plus size={10} className="rotate-45" />
+                            </button>
+                        )}
+                    </div>
                 ))}
             </div>
 

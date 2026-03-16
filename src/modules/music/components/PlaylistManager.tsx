@@ -158,6 +158,7 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                 <span className={`text-[10px] font-black uppercase tracking-widest line-clamp-1 transition-colors ${isPlaying || isLearningThis ? 'text-white drop-shadow-sm' : 'text-slate-500 group-hover:text-slate-300'}`}>
                     {pad.label}
                 </span>
+                <div className="text-[7px] font-black text-white/20 mt-0.5 uppercase tracking-tighter">[{pad.id}]</div>
                 {isPlaying && (
                     <div className="flex justify-center gap-0.5 mt-1.5">
                         <div className="w-0.5 h-2 bg-accent rounded-full animate-bounce shadow-glow-accent" style={{ animationDelay: '0ms' }} />

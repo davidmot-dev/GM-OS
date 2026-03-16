@@ -24,7 +24,8 @@ import {
     MonitorPlay,
     Save,
     Download,
-    Brain
+    Brain,
+    Sparkles
 } from 'lucide-react';
 import { useSessionStore, THEME_PALETTES } from '../store/useSessionStore';
 import type { ThemeID } from '../store/useSessionStore';
@@ -38,6 +39,7 @@ import { useTacticalOrchestrator } from '../modules/tactical-ai/hooks/useTactica
 import { useHardwareBridge } from '../modules/tactical-ai/hooks/useHardwareBridge';
 import { useAudioTactical } from '../modules/tactical-ai/hooks/useAudioTactical';
 import { useHueAutoConnect } from '../modules/light/hooks/useHueAutoConnect';
+import { gmToast } from '../stores/useToastStore';
 
 interface NavItemProps {
     icon: React.ReactNode;
@@ -112,9 +114,13 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
     };
 
     const handleLaunchHub = () => {
+        console.log('[Shell] Launching Player Hub...');
         if (window.appBridge?.session?.launchHubWindow) {
+            console.log('[Shell] Calling bridge launchHubWindow');
+            gmToast('Lancement du Player Hub...', 'info');
             window.appBridge.session.launchHubWindow();
         } else {
+            console.warn('[Shell] Bridge launchHubWindow not found');
             alert("Veuillez lancer le Player Hub dans un onglet `http://localhost:5173/?window=hub` ou via le bridge Electron.");
         }
     };
@@ -200,6 +206,12 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         label="Favorite OS"
                         active={activeModule === 'favorite'}
                         onClick={() => setActiveModule('favorite')}
+                    />
+                    <NavItem
+                        icon={<Sparkles size={20} className="text-purple-400" />}
+                        label="Obsidian"
+                        active={activeModule === 'obsidian'}
+                        onClick={() => setActiveModule('obsidian')}
                     />
                     <NavItem
                         icon={<Brain size={20} className="text-accent" />}

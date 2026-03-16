@@ -199,8 +199,15 @@ const SheetTemplateEditor: React.FC = () => {
     const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
     const template = allTemplates.find(t => t.id === editingTemplateId);
     
-    // Always get/create a driver for the current template to allow AI resonance customization
-    const driver = template ? getOrCreateDriverForTemplate(template.id) : null;
+    // Use a selector to find the driver instead of getOrCreate during render
+    const driver = customGameDrivers.find(d => d.templateId === editingTemplateId);
+
+    React.useEffect(() => {
+        if (template && !driver) {
+            // It is safe to trigger state updates (creation) inside useEffect
+            getOrCreateDriverForTemplate(template.id);
+        }
+    }, [template?.id, driver, getOrCreateDriverForTemplate]);
 
     if (!template) {
         return (

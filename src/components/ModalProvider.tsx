@@ -2,7 +2,7 @@ import React from 'react';
 import { useModalStore } from '../stores/useModalStore';
 import { 
     AlertCircle, HelpCircle, Edit3, UserPlus, ShieldPlus, BookOpen, Users, Play, Cast, 
-    History as LucideHistory, X, Lightbulb
+    History as LucideHistory, X, Lightbulb, Zap
 } from 'lucide-react';
 import { AddPlayerForm } from '../modules/session/components/AddPlayerForm';
 import { AddCharacterForm } from '../modules/session/components/AddCharacterForm';
@@ -20,6 +20,7 @@ import WhiteboardProjectionModal from '../modules/whiteboard/components/Whiteboa
 import SessionNotesModal from '../modules/session/components/SessionNotesModal';
 import SessionSummaryModal from '../modules/session/components/SessionSummaryModal';
 import SnapshotVisualizerModal from '../modules/session/components/SnapshotVisualizerModal';
+import DamageCalculator from '../modules/combat/components/DamageCalculator';
 
 const ModalProvider: React.FC = () => {
     const { 
@@ -155,6 +156,7 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'session-notes' && <Edit3 size={18} />}
                                         {customVariant === 'session-summary' && <BookOpen size={18} />}
                                         {customVariant === 'snapshot-viewer' && <Cast size={18} />}
+                                        {customVariant === 'damage-calc' && <Zap size={18} />}
                                     </div>
                                     <h3 className="font-bold text-white uppercase tracking-wider text-sm">
                                         {customVariant === 'player-add' && 'Ajouter un Joueur'}
@@ -173,6 +175,7 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'session-notes' && 'Notes de Session'}
                                         {customVariant === 'session-summary' && 'Résumé de Session'}
                                         {customVariant === 'snapshot-viewer' && 'Aperçu du Snapshot'}
+                                        {customVariant === 'damage-calc' && 'Calculateur de Dégâts'}
                                     </h3>
                                 </div>
                                 <button onClick={closeModal} className="p-2 hover:bg-slate-800 rounded-full text-slate-400 hover:text-white transition-all">
@@ -206,6 +209,7 @@ const ModalProvider: React.FC = () => {
                                     sessionName={(defaultValue as any)?.sessionName || 'Session'} 
                                 />
                             )}
+                            {customVariant === 'damage-calc' && <DamageCalculator />}
                             {customVariant === 'global-settings' && <GlobalSettingsModal onClose={closeModal} />}
                         </div>
                     </div>

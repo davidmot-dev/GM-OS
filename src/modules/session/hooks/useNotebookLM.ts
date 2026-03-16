@@ -1,81 +1,100 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
+import { useGemStore } from '../../../stores/useGemStore';
+import { useSessionOSStore } from '../useSessionOSStore';
 
-export interface NotebookLMMessage {
+interface Message {
     role: 'user' | 'assistant';
     content: string;
-    timestamp: number;
 }
 
 export const useNotebookLM = () => {
-    const [messages, setMessages] = useState<NotebookLMMessage[]>([]);
+    const [messages, setMessages] = useState<Message[]>([]);
     const [isQuerying, setIsQuerying] = useState(false);
+    
+    // Get active GEM and campaign info
+    const { activeGemId, gems } = useGemStore();
+    const { activeCampaignId, campaigns, getActiveDriver } = useSessionOSStore();
 
-    /**
-     * Extracts UUID from a NotebookLM URL
-     * Format: https://notebooklm.google.com/notebook/uuid-here
-     */
-    const extractNotebookId = (url: string): string | null => {
+    const activeGem = useMemo(() => gems.find(g => g.id === activeGemId), [gems, activeGemId]);
+    const activeCampaign = useMemo(() => campaigns.find(c => c.id === activeCampaignId), [campaigns, activeCampaignId]);
+    const activeDriver = getActiveDriver();
+
+    const extractNotebookId = useCallback((url: string): string | null => {
         if (!url) return null;
-        const match = url.match(/\/notebook\/([a-f0-9-]+)/i);
-        return match ? match[1] : null;
-    };
+        // Search for UUID pattern: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        const match = url.match(/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/i);
+        return match ? match[0] : null;
+    }, []);
 
     const queryNotebook = useCallback(async (notebookId: string, query: string) => {
+        if (!notebookId || !query.trim() || isQuerying) return;
+
         setIsQuerying(true);
-        const userMsg: NotebookLMMessage = { role: 'user', content: query, timestamp: Date.now() };
-        setMessages(prev => [...prev, userMsg]);
+        setMessages(prev => [...prev, { role: 'user', content: query }]);
 
         try {
-            if (!window.appBridge?.mcp?.callTool) {
-                throw new Error("MCP Bridge not available");
+            // Build the persona-aware prompt
+            let personaPrompt = "";
+            if (activeGem) {
+                const systemId = activeCampaign?.system;
+                
+                // Priority 1: User-defined override in the current Driver (Rule Engine)
+                const driverOverride = activeDriver?.aiPersonas?.[activeGem.id];
+                
+                // Priority 2: Built-in system override for this Gem
+                const systemOverride = systemId ? activeGem.systemOverrides?.[systemId] : null;
+                
+                // Priority 3: Base Gem instructions
+                personaPrompt = driverOverride || systemOverride || activeGem.baseInstructions;
             }
 
-            const finalQuery = `${query}\n\n(Réponds toujours en français)`;
-            
+            const fullPrompt = `
+[CONSIGNES DU PERSONA]
+${personaPrompt}
+
+---
+[QUESTION UTILISATEUR]
+${query}
+
+---
+(Réponds toujours en français)
+`.trim();
+
+            if (!window.appBridge?.mcp?.callTool) {
+                throw new Error("Bridge MCP non disponible");
+            }
+
             const response = await window.appBridge.mcp.callTool('notebooklm-mcp-server', 'notebook_query', {
                 notebook_id: notebookId,
-                query: finalQuery
+                query: fullPrompt
             });
 
-            const assistantMsg: NotebookLMMessage = { 
-                role: 'assistant', 
-                content: response?.content || "L'Oracle est resté silencieux (réponse vide).",
-                timestamp: Date.now() 
-            };
-            setMessages(prev => [...prev, assistantMsg]);
-            return assistantMsg;
-        } catch (error) {
-            console.error("[NotebookLM] Query failed:", error);
-            
-            let message = "Le serveur a rencontré un problème.";
-            if (error instanceof Error) {
-                message = error.message;
-            } else if (typeof error === 'string') {
-                message = error;
-            } else if (error && typeof error === 'object') {
-                message = (error as { message?: string }).message || JSON.stringify(error);
+            if (response && response.content) {
+                setMessages(prev => [...prev, { role: 'assistant', content: response.content as string }]);
+            } else {
+                setMessages(prev => [...prev, { role: 'assistant', content: "Désolé, je n'ai pas pu obtenir de réponse de l'Oracle." }]);
             }
-
-            const errorMsg: NotebookLMMessage = { 
-                role: 'assistant', 
-                content: `🚨 **Erreur Oracle** : ${message}\n\nVeuillez vérifier que le serveur MCP est bien authentifié (run \`notebooklm-mcp-auth\`).`, 
-                timestamp: Date.now() 
-            };
-            setMessages(prev => [...prev, errorMsg]);
-            throw error;
+        } catch (error) {
+            console.error("useNotebookLM: Query failed", error);
+            setMessages(prev => [...prev, { role: 'assistant', content: "Erreur de connexion avec l'Oracle." }]);
         } finally {
             setIsQuerying(false);
         }
-    }, []);
+    }, [isQuerying, activeGem, activeCampaign, activeDriver?.aiPersonas]);
 
-    const clearChat = () => setMessages([]);
+    const clearChat = useCallback(() => {
+        setMessages([]);
+    }, []);
     
-    const reauthenticate = async () => {
-        if (window.appBridge?.mcp?.reauthenticate) {
-            return await window.appBridge.mcp.reauthenticate();
+    const reauthenticate = useCallback(async () => {
+        try {
+            if (window.appBridge?.mcp?.reauthenticate) {
+                await window.appBridge.mcp.reauthenticate();
+            }
+        } catch (error) {
+            console.error("Re-authentication failed", error);
         }
-        throw new Error("MCP Re-authentication not available");
-    };
+    }, []);
 
     return {
         messages,

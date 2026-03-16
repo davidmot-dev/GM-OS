@@ -42,7 +42,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                     </div>
                     <div>
                         <h2 className="text-xl font-black uppercase tracking-tighter text-app-text">Paramètres OS</h2>
-                        <p className="text-[10px] text-app-text/60 font-bold uppercase tracking-widest">GM-OS v5.0.0-alpha</p>
+                        <p className="text-[10px] text-app-text/60 font-bold uppercase tracking-widest">GM-OS v5.1.0-alpha (System Forge Edition)</p>
                     </div>
                 </div>
                 <button 

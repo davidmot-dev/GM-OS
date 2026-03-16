@@ -29,6 +29,7 @@ import { GlobalKeybinds } from './components/GlobalKeybinds';
 import VoiceDashboard from './modules/voice/VoiceDashboard';
 import { useModalStore } from './stores/useModalStore';
 import { MediaBrowser } from './components/MediaBrowser';
+import ObsidianPanel from './modules/session/components/ObsidianPanel';
 import { useState, useEffect } from 'react';
 import SplashScreenSelector from './components/splash/SplashScreenSelector';
 
@@ -93,6 +94,8 @@ function App() {
         return <DebugDashboard />;
       case 'voice':
         return <VoiceDashboard />;
+      case 'obsidian':
+        return <ObsidianPanel />;
 
       default:
 

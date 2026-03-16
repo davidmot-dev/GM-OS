@@ -2,7 +2,7 @@ import React from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useSessionStore } from '../../../store/useSessionStore';
 import { useModalStore } from '../../../stores/useModalStore';
-import { BookOpen, LayoutDashboard, Swords, Users, Users2, Map as MapIcon, Archive, PlusCircle, Library, FileText, ExternalLink, File, StickyNote, Play, RefreshCw, Eye, Hammer } from 'lucide-react';
+import { BookOpen, LayoutDashboard, Swords, Users, Users2, Map as MapIcon, Archive, PlusCircle, Library, FileText, ExternalLink, File, StickyNote, Play, RefreshCw, Eye, Hammer, Zap } from 'lucide-react';
 import SessionChecklist from './SessionChecklist';
 
 const CampaignCockpit: React.FC = () => {
@@ -60,6 +60,13 @@ const CampaignCockpit: React.FC = () => {
                 >
                     <Swords size={20} />
                     <span className="text-sm font-medium">Encounters</span>
+                </button>
+                <button
+                    onClick={() => setCurrentView('storyboard')}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'storyboard' ? 'bg-accent/10 text-accent' : 'text-app-text/80 hover:bg-app-bg hover:text-app-text'}`}
+                >
+                    <Zap className={currentView === 'storyboard' ? 'text-accent scale-110 shadow-glow-accent' : 'group-hover:scale-110 transition-transform'} size={20} />
+                    <span className="text-sm font-medium">Master Storyboard</span>
                 </button>
                 <button
                     onClick={() => setCurrentView('npc-gallery')}

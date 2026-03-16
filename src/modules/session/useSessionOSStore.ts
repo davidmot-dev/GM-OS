@@ -12,6 +12,8 @@ import type { ImageMedia, ImageFolder } from '../image/types';
 import type { WebLink } from '../web/types';
 import type { Combatant } from '../combat/useCombatStore';
 import type { GameDriver } from '../../types/drivers';
+import { obsidianExportService } from './ObsidianExportService';
+import { useObsidianStore } from './useObsidianStore';
 
 // --- Interfaces ---
 
@@ -42,6 +44,8 @@ export interface Entity {
     linkedMapIds: string[];   // AtlasMap IDs
     campaignId: string;
     sourceRef?: string;
+    templateId?: string;           // ID of the sheet template used
+    sheetData?: Record<string, string | number | boolean>; // fieldId -> value
 }
 
 export interface PlayerCharacter {
@@ -161,6 +165,8 @@ export interface Campaign {
     system: string;
     description: string;
     synopsis: string;
+    notes?: string; // Global campaign/scenario notes
+    gmNotes?: string; // Secret GM notes
     activeSessionId?: string;
     wallpaperUrl?: string; // for Projector
     activeLocationIds: string[]; // IDs of AtlasMap entities pinned to this campaign
@@ -186,7 +192,7 @@ export interface WikiEntry {
     campaignId: string;
     title: string;
     content: string; // Markdown
-    category: 'npc' | 'location' | 'organization' | 'lore' | 'item' | 'other';
+    category: 'npc' | 'location' | 'organization' | 'lore' | 'item' | 'clue' | 'rumor' | 'other';
     tags: string[];
     imageUrls: string[];
     linkedEntityIds: string[];
@@ -212,7 +218,7 @@ interface SessionOSState {
     selectedEntityId: string | null;
     editingTemplateId: string | null;
     editingDriverId: string | null;
-    currentView: 'cockpit' | 'campaign-details' | 'npc-gallery' | 'world-atlas' | 'library' | 'players' | 'templates' | 'session-prep' | 'session-focus' | 'timeline-wiki' | 'forge' | 'template-editor' | 'driver-editor';
+    currentView: 'cockpit' | 'campaign-details' | 'npc-gallery' | 'world-atlas' | 'library' | 'players' | 'templates' | 'session-prep' | 'session-focus' | 'timeline-wiki' | 'forge' | 'template-editor' | 'driver-editor' | 'storyboard';
     diceRolls: { die: number, result: number, timestamp: number }[];
     isAddingEntity: boolean;
 
@@ -274,10 +280,13 @@ interface SessionOSState {
     updateAtlasMap: (id: string, updates: Partial<Omit<AtlasMap, 'id'>>) => void;
     deleteAtlasMap: (id: string) => void;
     setSelectedAtlasMap: (id: string | null) => void;
+    autoSelectFirstMap: () => void;
     updateEntityHP: (entityId: string, hp: number) => void;
     addEntity: (entity: Omit<Entity, 'id'>) => void;
     setSelectedEntity: (id: string | null) => void;
+    autoSelectFirstEntity: () => void;
     updateEntity: (id: string, updates: Partial<Entity>) => void;
+    updateEntitySheetData: (id: string, fieldId: string, value: string | number | boolean) => void;
     addLinkedEntity: (mapId: string, entity: Omit<AtlasLinkedEntity, 'id'>) => void;
     removeLinkedEntity: (mapId: string, entityId: string) => void;
     
@@ -292,7 +301,9 @@ interface SessionOSState {
     rollDice: (sides: number) => void;
     clearDiceRolls: () => void;
     togglePlayerOnline: (playerId: string) => void;
-
+    
+    // Obsidian Export
+    exportActiveCampaignToObsidian: () => Promise<void>;
     // Timeline Actions
     addTimelineEvent: (event: Omit<TimelineEvent, 'id'>) => void;
     updateTimelineEvent: (id: string, updates: Partial<TimelineEvent>) => void;
@@ -302,6 +313,14 @@ interface SessionOSState {
     addWikiEntry: (entry: Omit<WikiEntry, 'id'>) => void;
     updateWikiEntry: (id: string, updates: Partial<WikiEntry>) => void;
     deleteWikiEntry: (id: string) => void;
+
+    /** Batch adds generated narrative content from Chronicle Forge */
+    addChronicle: (data: {
+      campaign: Omit<Campaign, 'id'>;
+      entities: Omit<Entity, 'id' | 'campaignId'>[];
+      atlasMaps: Omit<AtlasMap, 'id' | 'campaignId'>[];
+      wikiEntries: Omit<WikiEntry, 'id' | 'campaignId'>[];
+    }) => void;
 
     // Selectors
     getActiveDriver: () => GameDriver | null;
@@ -468,7 +487,7 @@ const mockPlayers: Player[] = [
                 id: 'pc-3',
                 name: 'Elowen la Druide',
                 classRace: 'Elfe / Cercle de la Lune',
-                portraitUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCBTyI7J_D8D-GO4ooijVdZViAJpDNTgm07YBeKcBQgciteqTrXl9vKtVo2INKWZcf84gisyID6cW7uwbwKdiwmu1K08T_Tyhrs-VeMudTuhDWwhEvGWOBPXIM6IRkKXiXjZ3eS7_vDAJ4ZES3zv0M0PrfmrZMWnXyZ1TmknmnruVfU9V-7JFVvykUur_1xE-bG5_WChJfdy2PINkiXggTTb0-wG5PqeyyQ4YQ-9z8p8LiFKtdmtYoKtjps6ePefI55z-7oK2OXG10',
+                portraitUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCBTyI7J_D8D-GO4ooijVdZViAJpDNTgm07YBeKcBQgciteqTrXl9vKtVo0INKWZcf84gisyID6cW7uwbwKdiwmu1K08T_Tyhrs-VeMudTuhDWwhEvGWOBPXIM6IRkKXiXjZ3eS7_vDAJ4ZES3zv0M0PrfmrZMWnXyZ1TmknmnruVfU9V-7JFVvykUur_1xE-bG5_WChJfdy2PINkiXggTTb0-wG5PqeyyQ4YQ-9z8p8LiFKtdmtYoKtjps6ePefI55z-7oK2OXG10',
                 hp: 60,
                 maxHp: 60,
                 campaignId: 'c-2',
@@ -487,7 +506,7 @@ const mockPlayers: Player[] = [
                 id: 'pc-4',
                 name: 'Balder le Barbare',
                 classRace: 'Nain / Voie du Berserker',
-                portraitUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD2UuEcnNO7cWviHYN4QuSbMycNRmu3PqaYZQBaCeZZRkW0263XO4Ch0qkrWqacSaAhIBEjZBuKDa-EabuAVKZTBagu8psUp0WcruTx_eWIsw5oYw8-DxntYplI4NfEa9bn41JPnM-Lrmmn3vi5NHykl_Re4hQwqmS1MKy371RYCcW1NPHJUxxsETklobi_7yaGByibduzihqh3QnTDryJor79YR3bSE_TV04UeJ3pmLkdP4Vm9gGQCz2hGUlfo_0-ohRiAbDbV-Hg',
+                portraitUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD2UuEcnNO7cWviHYN4QuSbMycNRmu3PqaYZQBaCeZZRkW0263XO4Ch0qkrWqacSaAhIBEjZBuKDa-EabuAVKZTBagu8psUp0WcruTx_eWIsw5oYw8-DxntYplI4NfEa9bn41JPnM-Lrmmn3vi5NHykl_Re4hQwqmS1MKy371RYCcW1NPHJUxxsETlobi_7yaGByibduzihqh3QnTDryJor79YR3bSE_TV04UeJ3pmLkdP4Vm9gGQCz2hGUlfo_0-ohRiAbDbV-Hg',
                 hp: 72,
                 maxHp: 90,
                 campaignId: 'c-1',
@@ -526,17 +545,21 @@ const mockEntities: Entity[] = [
         roleplayingNotes: 'Parle avec une autorité froide et calculée. Imite parfaitement les manières d\'un noble. Évite les confrontations directes, préfère manipuler. Voix grave, regard perçant.',
         gmSecretInfo: 'C\'est un Doppelganger — il connaît les noms et secrets de chaque PJ grâce à ses espions. Il cherche à séparer le Clerc du groupe lors du banquet. Son vrai nom est Ix\'thal.',
         linkedMapIds: ['am-1'],
-        campaignId: 'c-1'
+        campaignId: 'c-1',
+        templateId: 'generic',
+        sheetData: { 'strength': 14, 'dexterity': 16 }
     },
     {
         id: 'e-2', name: 'Sylvara la Driade', type: 'npc', role: 'neutral', status: 'alive',
-        avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCBTyI7J_D8D-GO4ooijVdZViAJpDNTgm07YBeKcBQgciteqTrXl9vKtVo2INKWZcf84gisyID6cW7uwbwKdiwmu1K08T_Tyhrs-VeMudTuhDWwhEvGWOBPXIM6IRkKXiXjZ3eS7_vDAJ4ZES3zv0M0PrfmrZMWnXyZ1TmknmnruVfU9V-7JFVvykUur_1xE-bG5_WChJfdy2PINkiXggTTb0-wG5PqeyyQ4YQ-9z8p8LiFKtdmtYoKtjps6ePefI55z-7oK2OXG10',
+        avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCBTyI7J_D8D-GO4ooijVdZViAJpDNTgm07YBeKcBQgciteqTrXl9vKtVo0INKWZcf84gisyID6cW7uwbwKdiwmu1K08T_Tyhrs-VeMudTuhDWwhEvGWOBPXIM6IRkKXiXjZ3eS7_vDAJ4ZES3zv0M0PrfmrZMWnXyZ1TmknmnruVfU9V-7JFVvykUur_1xE-bG5_WChJfdy2PINkiXggTTb0-wG5PqeyyQ4YQ-9z8p8LiFKtdmtYoKtjps6ePefI55z-7oK2OXG10',
         hp: 52, maxHp: 52, ac: 14, speed: 35, initiative: 4,
         description: 'Driade / Gardienne de la Forêt',
         roleplayingNotes: 'Méfiante envers les étrangers mais pas hostile. Parle lentement, comme si chaque mot avait du poids. Très liée à son arbre-ancêtre. Peut devenir alliée si les PJ promettent de protéger la forêt.',
         gmSecretInfo: 'Elle sait où se trouve le portail vers le plan Féerique mais refuse de le révéler sans une preuve de bonne foi (DC 18 Persuasion ou une offrande naturelle rare).',
         linkedMapIds: ['am-2'],
-        campaignId: 'c-1'
+        campaignId: 'c-1',
+        templateId: 'generic',
+        sheetData: { 'wisdom': 18, 'charisma': 16 }
     },
     {
         id: 'e-3', name: 'Ignathor', type: 'monster', role: 'boss', status: 'alive',
@@ -546,7 +569,9 @@ const mockEntities: Entity[] = [
         roleplayingNotes: 'Arrogant, condescendant. Parle des humains comme de simples insectes. Aime les monologues. Ne se lève que si vraiment menacé — il enverra ses serviteurs en premier.',
         gmSecretInfo: 'Faiblesse secrète : l\'Orbe de Feu Primordial peut paralyser ses ailes (DC 20 Arcane pour le découvrir). Il négocie si sa horde est menacée.',
         linkedMapIds: ['am-3'],
-        campaignId: 'c-2'
+        campaignId: 'c-2',
+        templateId: 'generic',
+        sheetData: { 'strength': 28, 'constitution': 24 }
     },
     {
         id: 'e-4', name: 'Capitaine Ren', type: 'npc', role: 'ally', status: 'alive',
@@ -556,7 +581,9 @@ const mockEntities: Entity[] = [
         roleplayingNotes: 'Loyale, directe, professionnelle. Respecte la force et la compétence. Peut devenir une alliée précieuse si les PJ démontrent leur valeur au combat.',
         gmSecretInfo: 'Elle suspecte que Varick n\'est pas qui il prétend être — elle a remarqué des incohérences dans son comportement. Peut être recrutée si les PJ lui révèlent la vérité au bon moment.',
         linkedMapIds: ['am-1'],
-        campaignId: 'c-1'
+        campaignId: 'c-1',
+        templateId: 'generic',
+        sheetData: { 'strength': 16, 'constitution': 14 }
     }
 ];
 
@@ -591,14 +618,53 @@ export const useSessionOSStore = create<SessionOSState>()(
                 selectedAtlasMapId: null
             }),
 
-            setCurrentView: (view) => set({ currentView: view }),
+            setCurrentView: (view) => {
+                set({ currentView: view });
+                if (view === 'npc-gallery') {
+                    get().autoSelectFirstEntity();
+                } else if (view === 'world-atlas') {
+                    get().autoSelectFirstMap();
+                }
+            },
             setSelectedSession: (id) => set({ selectedSessionId: id }),
             setSelectedPlayer: (id) => set({ selectedPlayerId: id, selectedCharacterId: null }),
             setSelectedCharacter: (id) => set({ selectedCharacterId: id }),
             setEditingTemplateId: (id) => set({ editingTemplateId: id }),
             setEditingDriverId: (id) => set({ editingDriverId: id }),
             setSelectedAtlasMap: (id) => set({ selectedAtlasMapId: id }),
+
+            autoSelectFirstMap: () => {
+                const { atlasMaps, activeCampaignId, selectedAtlasMapId } = get();
+                const campaignMaps = atlasMaps.filter(m => m.campaignId === activeCampaignId);
+                
+                // If current selection is not in this campaign or is null, select the first one
+                const currentMap = atlasMaps.find(m => m.id === selectedAtlasMapId);
+                if (!currentMap || currentMap.campaignId !== activeCampaignId) {
+                    if (campaignMaps.length > 0) {
+                        set({ selectedAtlasMapId: campaignMaps[0].id });
+                    } else {
+                        set({ selectedAtlasMapId: null });
+                    }
+                }
+            },
+
             setSelectedEntity: (id) => set({ selectedEntityId: id, isAddingEntity: false }),
+            
+            autoSelectFirstEntity: () => {
+                const { entities, activeCampaignId, selectedEntityId } = get();
+                const campaignEntities = entities.filter(e => e.campaignId === activeCampaignId);
+                
+                // If current selection is not in this campaign or is null, select the first one
+                const currentEntity = entities.find(e => e.id === selectedEntityId);
+                if (!currentEntity || currentEntity.campaignId !== activeCampaignId) {
+                    if (campaignEntities.length > 0) {
+                        set({ selectedEntityId: campaignEntities[0].id });
+                    } else {
+                        set({ selectedEntityId: null });
+                    }
+                }
+            },
+
             setIsAddingEntity: (isAdding) => set({ isAddingEntity: isAdding, selectedEntityId: null }),
             
             saveSystemSnapshot: (sessionId: string) => {
@@ -1009,6 +1075,10 @@ export const useSessionOSStore = create<SessionOSState>()(
                 )
             })),
 
+
+
+
+
             addAtlasMap: (mapData) => set((state) => ({
                 atlasMaps: [...state.atlasMaps, { ...mapData, id: crypto.randomUUID() }]
             })),
@@ -1017,8 +1087,24 @@ export const useSessionOSStore = create<SessionOSState>()(
                 atlasMaps: state.atlasMaps.map(m => m.id === id ? { ...m, ...updates } : m)
             })),
 
+            deleteAtlasMap: (id) => set((state) => ({
+                atlasMaps: state.atlasMaps.filter(m => m.id !== id),
+                selectedAtlasMapId: state.selectedAtlasMapId === id ? null : state.selectedAtlasMapId
+            })),
+
             updateEntity: (id, updates) => set((state) => ({
                 entities: state.entities.map(e => e.id === id ? { ...e, ...updates } : e)
+            })),
+
+            updateEntitySheetData: (id: string, fieldId: string, value: string | number | boolean) => set(state => ({
+                entities: state.entities.map(e => 
+                    e.id === id 
+                        ? { 
+                            ...e, 
+                            sheetData: { ...(e.sheetData || {}), [fieldId]: value } 
+                          } 
+                        : e
+                )
             })),
 
             updateEntityHP: (entityId, hp) => set((state) => ({
@@ -1029,10 +1115,6 @@ export const useSessionOSStore = create<SessionOSState>()(
                 entities: [...state.entities, { ...entityData, id: crypto.randomUUID() }]
             })),
 
-            deleteAtlasMap: (id) => set((state) => ({
-                atlasMaps: state.atlasMaps.filter(m => m.id !== id),
-                selectedAtlasMapId: state.selectedAtlasMapId === id ? null : state.selectedAtlasMapId
-            })),
 
             addLinkedEntity: (mapId, entityData) => set((state) => ({
                 atlasMaps: state.atlasMaps.map(m =>
@@ -1129,6 +1211,41 @@ export const useSessionOSStore = create<SessionOSState>()(
                 wikiEntries: state.wikiEntries.filter(e => e.id !== id)
             })),
 
+            addChronicle: ({ campaign, entities, atlasMaps, wikiEntries }) => set((state) => {
+                const campaignId = crypto.randomUUID();
+                const newCampaign: Campaign = { ...campaign, id: campaignId };
+                
+                const newEntities: Entity[] = entities.map(e => ({
+                  ...e,
+                  id: crypto.randomUUID(),
+                  campaignId
+                }));
+                
+                const newMaps: AtlasMap[] = atlasMaps.map(m => ({
+                  ...m,
+                  id: crypto.randomUUID(),
+                  campaignId
+                }));
+                
+                const newWikiEntries: WikiEntry[] = wikiEntries.map(w => ({
+                  ...w,
+                  id: crypto.randomUUID(),
+                  campaignId
+                }));
+
+                const activeLocationIds = newMaps.map(m => m.id);
+                newCampaign.activeLocationIds = activeLocationIds;
+
+                return {
+                  campaigns: [...state.campaigns, newCampaign],
+                  entities: [...state.entities, ...newEntities],
+                  atlasMaps: [...state.atlasMaps, ...newMaps],
+                  wikiEntries: [...state.wikiEntries, ...newWikiEntries],
+                  activeCampaignId: campaignId,
+                  currentView: 'cockpit'
+                };
+            }),
+
             getGameDriver: (id) => {
                 const state = get();
                 return DEFAULT_GAME_DRIVERS.find(d => d.id === id) || 
@@ -1141,6 +1258,39 @@ export const useSessionOSStore = create<SessionOSState>()(
                 const campaign = state.campaigns.find((c: Campaign) => c.id === state.activeCampaignId);
                 if (!campaign) return null;
                 return state.getGameDriver(campaign.system);
+            },
+
+            exportActiveCampaignToObsidian: async () => {
+                const state = get();
+                const activeCampaign = state.campaigns.find(c => c.id === state.activeCampaignId);
+                
+                if (!activeCampaign) {
+                    gmToast("Aucune campagne active à exporter.", "error");
+                    return;
+                }
+
+                const entities = state.entities.filter(e => e.campaignId === activeCampaign.id);
+                const locations = state.atlasMaps.filter(m => m.campaignId === activeCampaign.id);
+                const lore = state.wikiEntries.filter(w => w.campaignId === activeCampaign.id);
+                
+                // Get vault path from Obsidian store if possible
+                const vaultPath = useObsidianStore.getState().vaultPath;
+
+                gmToast("Exportation vers Obsidian en cours...", "info");
+                
+                const result = await obsidianExportService.exportCampaign(
+                    activeCampaign,
+                    entities,
+                    locations,
+                    lore,
+                    vaultPath
+                );
+
+                if (result.success) {
+                    gmToast(result.message, "success");
+                } else {
+                    gmToast(result.message, "error");
+                }
             }
 
         }),
