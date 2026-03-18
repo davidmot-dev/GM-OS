@@ -240,6 +240,27 @@ const DiceBoard: React.FC = () => {
         setQuickRolls(quickRolls.filter(qr => qr.id !== id));
     };
 
+    // --- Remote Control Listeners ---
+    React.useEffect(() => {
+        const handleRemoteRoll = (e: any) => {
+            if (e.detail?.die) {
+                console.log("[DiceBoard] Remote Roll Triggered:", e.detail.die);
+                handleRoll(e.detail.die);
+            }
+        };
+        const handleRemoteClear = () => {
+            console.log("[DiceBoard] Remote Clear Triggered");
+            setHistory([]);
+        };
+
+        window.addEventListener('remote:roll-die', handleRemoteRoll);
+        window.addEventListener('remote:clear-dice', handleRemoteClear);
+        return () => {
+            window.removeEventListener('remote:roll-die', handleRemoteRoll);
+            window.removeEventListener('remote:clear-dice', handleRemoteClear);
+        };
+    }, [handleRoll]);
+
     return (
         <div className="flex h-[calc(100vh-8rem)] gap-6 text-app-text">
 

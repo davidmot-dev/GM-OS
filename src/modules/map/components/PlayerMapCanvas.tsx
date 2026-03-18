@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { useMapStore } from '../useMapStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import MapPingLayer from './MapPingLayer';
+import WeatherLayer from './WeatherLayer';
 
 interface PlayerMapCanvasProps {
     onMapClick?: (x: number, y: number) => void;
@@ -165,6 +166,9 @@ const PlayerMapCanvas: React.FC<PlayerMapCanvasProps> = ({ onMapClick }) => {
 
                 {/* 4. Pings Layer */}
                 <MapPingLayer isProjectedView={true} />
+
+                {/* 5. Weather Layer */}
+                <WeatherLayer isProjectedView={true} />
             </div>
             
             {/* Vignette effect */}

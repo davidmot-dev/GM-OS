@@ -28,6 +28,8 @@ interface StoryboardState {
     addMoment: (moment: Omit<StoryboardMoment, 'id'>) => void;
     updateMoment: (id: string, updates: Partial<StoryboardMoment>) => void;
     deleteMoment: (id: string) => void;
+    duplicateMoment: (id: string) => void;
+    setMoments: (moments: StoryboardMoment[]) => void;
     triggerMoment: (id: string) => Promise<void>;
     reset: () => void;
 }
@@ -50,6 +52,18 @@ export const useStoryboardStore = create<StoryboardState>()(
                 moments: state.moments.filter(m => m.id !== id),
                 activeMomentId: state.activeMomentId === id ? null : state.activeMomentId
             })),
+
+            duplicateMoment: (id) => {
+                const moment = get().moments.find(m => m.id === id);
+                if (moment) {
+                    const newMoment = { ...moment, id: crypto.randomUUID(), name: `${moment.name} (Copie)` };
+                    set((state) => ({
+                        moments: [...state.moments, newMoment]
+                    }));
+                }
+            },
+
+            setMoments: (moments) => set({ moments }),
 
             triggerMoment: async (id) => {
                 const moment = get().moments.find(m => m.id === id);

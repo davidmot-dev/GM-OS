@@ -27,11 +27,24 @@ export interface TacticalConfig {
     useTacticalAI: boolean;
 }
 
+export interface GaugeConfig {
+    fieldId: string;
+    label: string;
+    color: string; // Tailwind color class or hex, e.g. "bg-emerald-500" or "#10b981"
+    style: 'bar' | 'segmented' | 'neon';
+}
+
 export interface CombatStatMapping {
     fieldId: string; // ID from the sheet template
     label: string;
     isMainHP: boolean;
     isResource: boolean; // Magic points, Sanity, etc.
+}
+
+export interface UIConfig {
+    gauges: GaugeConfig[];
+    initiativeStyle?: 'list' | 'grid';
+    themeColor?: string; // Global accent for this system
 }
 
 export interface GameDriver {
@@ -56,6 +69,9 @@ export interface GameDriver {
         initiativeCards?: number; // If set, use a unique card pool 1-N
         damageTypes?: string[]; // e.g. ["Feu", "Froid", "Physique", "Psychique"]
     };
+
+    // UI Customization
+    ui_config?: UIConfig;
 
     // Linked assets
     templateId: string; // The ID of the primary SheetTemplate used by this system

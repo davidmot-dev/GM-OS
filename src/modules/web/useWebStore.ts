@@ -16,7 +16,7 @@ interface WebState {
     reset: () => void;
 }
 
-const appBridge = (window as unknown as { appBridge: { web: WebBridge } }).appBridge;
+const getBridge = () => (window as unknown as { appBridge?: { web: WebBridge } }).appBridge?.web;
 
 export const useWebStore = create<WebState>()(
     persist(
@@ -47,22 +47,25 @@ export const useWebStore = create<WebState>()(
             setLinks: (links) => set({ links }),
 
             openLink: (url) => {
-                if (appBridge?.web?.openExternal) {
-                    appBridge.web.openExternal(url);
+                const bridge = getBridge();
+                if (bridge?.openExternal) {
+                    bridge.openExternal(url);
                 } else {
                     window.open(url, '_blank');
                 }
             },
 
             exportLinks: async () => {
-                if (appBridge?.web?.saveList) {
-                    await appBridge.web.saveList(get().links);
+                const bridge = getBridge();
+                if (bridge?.saveList) {
+                    await bridge.saveList(get().links);
                 }
             },
 
             importLinks: async () => {
-                if (appBridge?.web?.loadList) {
-                    const data = await appBridge.web.loadList();
+                const bridge = getBridge();
+                if (bridge?.loadList) {
+                    const data = await bridge.loadList();
                     if (data) {
                         set({ links: data });
                     }

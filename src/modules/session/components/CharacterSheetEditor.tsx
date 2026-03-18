@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import type { SheetField } from '../../../data/defaultSheetTemplates';
-import { Save, CheckSquare, Square, FolderOpen, Layers, FileText, Trash2, Lock, BookOpen, Eye, Heart } from 'lucide-react';
+import { Save, CheckSquare, Square, FolderOpen, Layers, FileText, Trash2, Lock, BookOpen, Eye, Heart, Sparkles } from 'lucide-react';
 import { useImageStore } from '../../image/useImageStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaStore } from '../../../stores/useMediaStore';
+import AIPromptOverlay from '../../ai/components/AIPromptOverlay';
 
 // --- Sub-components ---
 
@@ -147,6 +148,7 @@ const CharacterSheetEditor: React.FC = () => {
     const {
         players, selectedPlayerId, selectedCharacterId,
         customSheetTemplates, updateCharacterSheetData, updateCharacterVisuals, updateCharacterNarrative,
+        generatePlayerPortrait, isGeneratingAIImage,
         updateCharacterHP
     } = useSessionOSStore();
     const { mediaList, getMediaBlob } = useMediaStore();
@@ -174,6 +176,7 @@ const CharacterSheetEditor: React.FC = () => {
     const [mediaBrowserTarget, setMediaBrowserTarget] = useState<'portrait' | 'token' | 'document' | null>(null);
     const [description, setDescription] = useState(character?.description ?? '');
     const [gmNotes, setGmNotes] = useState(character?.gmNotes ?? '');
+    const [showAIPrompt, setShowAIPrompt] = useState(false);
 
     const portraitUrl = useMediaUrl(character?.portraitUrl);
     const tokenUrl = useMediaUrl(character?.tokenUrl);
@@ -287,41 +290,51 @@ const CharacterSheetEditor: React.FC = () => {
                             <p className="text-[9px] font-black uppercase tracking-widest text-app-text/40 mb-2">Portrait</p>
                             <div
                                 className="aspect-[3/4] rounded-2xl overflow-hidden bg-app-bg border border-app-border shadow-2xl relative group cursor-pointer"
-                                onClick={() => setMediaBrowserTarget('portrait')}
                             >
                                 {portraitUrl ? (
                                     <img src={portraitUrl} alt={character.name} className="w-full h-full object-cover object-top" />
                                 ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-app-text/20">
+                                    <div className="w-full h-full flex items-center justify-center text-app-text/20" onClick={() => setMediaBrowserTarget('portrait')}>
                                         <FolderOpen size={32} />
                                     </div>
                                 )}
                                 {/* Hover overlay */}
                                 <div className="absolute inset-0 bg-app-bg/70 opacity-0 group-hover:opacity-100 transition-all flex flex-col items-center justify-center gap-4">
-                                    <div 
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setMediaBrowserTarget('portrait');
-                                        }}
-                                        className="flex flex-col items-center gap-1 hover:text-accent transition-colors text-app-text/40"
+                                    <button
+                                        onClick={(e) => { e.stopPropagation(); setMediaBrowserTarget('portrait'); }}
+                                        className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all border border-white/10"
+                                        title="Changer via Galerie"
                                     >
-                                        <FolderOpen size={24} />
-                                        <span className="text-[10px] font-black uppercase tracking-widest">Changer</span>
-                                    </div>
-                                    <div 
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            if (character.portraitUrl) {
-                                                useImageStore.getState().projectUrl(character.portraitUrl);
+                                        <FolderOpen size={18} className="text-white" />
+                                    </button>
+                                    <button
+                                        onClick={(e) => { e.stopPropagation(); setShowAIPrompt(true); }}
+                                        className="w-12 h-12 rounded-full bg-accent text-app-bg flex items-center justify-center transition-all shadow-glow-accent hover:scale-110"
+                                        title="Générer par IA"
+                                    >
+                                        <Sparkles size={20} />
+                                    </button>
+                                    {character.portraitUrl && (
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                useImageStore.getState().projectUrl(character.portraitUrl!);
                                                 gmToast(`Image de ${character.name} projetée !`);
-                                            }
-                                        }}
-                                        className="flex flex-col items-center gap-1 hover:text-accent transition-colors text-app-text/40"
-                                    >
-                                        <Eye size={24} />
-                                        <span className="text-[10px] font-black uppercase tracking-widest">Projeter</span>
-                                    </div>
+                                            }}
+                                            className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all border border-white/10"
+                                            title="Projeter"
+                                        >
+                                            <Eye size={18} className="text-white" />
+                                        </button>
+                                    )}
                                 </div>
+
+                                {isGeneratingAIImage && (
+                                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center z-30">
+                                        <Sparkles size={32} className="text-accent animate-spin mb-2" />
+                                        <span className="text-[9px] font-black uppercase tracking-widest text-accent animate-pulse">Vision en cours...</span>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
@@ -365,23 +378,21 @@ const CharacterSheetEditor: React.FC = () => {
                                 <Heart size={12} className="text-red-500 animate-pulse" />
                             </div>
                             
-                                <div className="flex items-center justify-center gap-1.5 bg-app-bg/40 py-1.5 rounded-lg border border-app-border/40">
-                                    <input 
-                                        type="number" 
-                                        value={character.hp}
-                                        onChange={(e) => updateCharacterHP(selectedPlayerId!, character.id, parseInt(e.target.value) || 0)}
-                                        className="w-14 bg-transparent text-center text-app-text font-black text-xs focus:outline-none"
-                                    />
-                                    <span className="text-app-text/20 font-bold text-xs">/</span>
-                                    <input 
-                                        type="number" 
-                                        value={character.maxHp}
-                                        onChange={() => {
-                                            // Still no easy maxHp update exposed here without significant refactor
-                                        }}
-                                        className="w-14 bg-transparent text-center text-app-text/40 font-black text-xs focus:outline-none"
-                                    />
-                                </div>
+                            <div className="flex items-center justify-center gap-1.5 bg-app-bg/40 py-1.5 rounded-lg border border-app-border/40">
+                                <input 
+                                    type="number" 
+                                    value={character.hp}
+                                    onChange={(e) => updateCharacterHP(selectedPlayerId!, character.id, parseInt(e.target.value) || 0)}
+                                    className="w-14 bg-transparent text-center text-app-text font-black text-xs focus:outline-none"
+                                />
+                                <span className="text-app-text/20 font-bold text-xs">/</span>
+                                <input 
+                                    type="number" 
+                                    value={character.maxHp}
+                                    readOnly
+                                    className="w-14 bg-transparent text-center text-app-text/40 font-black text-xs focus:outline-none"
+                                />
+                            </div>
                             
                             <div className="w-full bg-app-bg h-1.5 rounded-full overflow-hidden border border-app-border/40 ring-1 ring-white/5 p-[1px]">
                                 <div
@@ -529,6 +540,19 @@ const CharacterSheetEditor: React.FC = () => {
 
                 </div>
             </div>
+
+            <AIPromptOverlay
+                isOpen={showAIPrompt}
+                onClose={() => setShowAIPrompt(false)}
+                isGenerating={isGeneratingAIImage}
+                title={`Portrait IA : ${character.name}`}
+                placeholder="Ex: cape rouge déchirée, tatouages mystiques, regard d'acier..."
+                onGenerate={(instructions) => {
+                    if (selectedPlayer && character) {
+                        generatePlayerPortrait(selectedPlayer.id, character.id, instructions).then(() => setShowAIPrompt(false));
+                    }
+                }}
+            />
         </div>
     );
 };

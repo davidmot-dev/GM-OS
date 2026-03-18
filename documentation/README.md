@@ -12,6 +12,8 @@ Ce répertoire contient l'archive de tous les guides de mise en œuvre, walkthro
 - [Session OS (Campagnes & Chronologie)](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/documentation/User%20Guides/Session_OS_User_Guide.md)
 - [Master Storyboard (Orchestration Immersion)](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/documentation/User%20Guides/Storyboard_User_Guide.md)
 - [Table OS (Butins & Aléatoire)](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/documentation/User%20Guides/Table_OS_User_Guide.md)
+- [Combat OS - Composants Dynamiques](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/documentation/User%20Guides/Combat_Dynamic_UI_User_Guide.md)
+- **[Combat - Dynamic UI Architecture](./walkthroughs/Combat_Dynamic_UI_Walkthrough.md)** : Architecture des jauges et trackers adaptatifs.
 - **[Obsidian - Bridge Integration](./walkthroughs/Obsidian_Bridge_Integration.md)** : Utilisation du module Obsidian et sync Oracle.
 - **[Oracle - Gem Selector](./walkthroughs/Oracle_Gem_Selector.md)** : Documentation sur le sélecteur d'assistants.
 - **[Oracle_Base_Personas.md](./walkthroughs/Oracle_Base_Personas.md)** : Configuration des personas par défaut du système.
@@ -20,6 +22,8 @@ Ce répertoire contient l'archive de tous les guides de mise en œuvre, walkthro
 - **[Taxonomy_Editor.md](./walkthroughs/Taxonomy_Editor.md)** : Documentation sur l'éditeur de taxonomie.
 - **[Hardware_Sync_Fix.md](./walkthroughs/Hardware_Sync_Fix.md)** : Correctifs liés à la synchronisation matérielle.
 - [Storyboard_Architecture.md](./walkthroughs/Storyboard_Architecture.md) : Architecture de l'orchestrateur multi-module.
+- **[NPC_Live_Generator_Walkthrough.md](./walkthroughs/NPC_Live_Generator_Walkthrough.md)** : Intégration de la génération d'images IA.
+- **[NPC_Live_Generator_Technical_Doc.md](./Technical%20Docs/NPC_Live_Generator_Technical_Doc.md)** : Architecture du moteur de génération d'images.
 
 ## Planification
 

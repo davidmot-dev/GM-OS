@@ -4,6 +4,8 @@ GM-OS v5 est une plateforme de gestion de sessions de Jeu de Rôle (JdR) de nouv
 
 ## 🚀 Fonctionnalités Clés
 
+- **MASTER STORYBOARD** : Table de montage cinématographique horizontale. Synchronisez Musique, Lumières, Cartes et Visuels en une seule séquence déclenchable d'un clic.
+- **GM REMOTE CONTROL** : Pilotage déporté sur tablette/smartphone via QR Code. Gérez les dés, les sons, le combat et vos notes de session sans quitter vos joueurs des yeux.
 - **SESSION OS** : Centre névralgique de vos campagnes. Gérez vos sessions, joueurs et snapshots d'état système.
 - **AUDIO ENGINE** :
   - **Music OS** : Gestion de playlists multi-sources avec fondus enchaînés.
@@ -49,7 +51,18 @@ Plus d'informations techniques et guides d'utilisation sont disponibles dans le 
 - **[Architecture (Brain vs Body)](file:///c:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/docs/architecture/rule-engine-ai.md)** : Fonctionnement du Moteur de Règles et de l'IA.
 - **[Guide de Migration](file:///c:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/docs/guides/migration-guide.md)** : Instructions pour la transition vers la v5.
 - **[Historique du Projet](file:///c:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/docs/history/)** : Comptes-rendus des phases de développement (Forge, etc.).
-- **[Dev & Debug](file:///c:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/docs/dev/)** : Notes techniques pour le débogage.
+- **[Dev & Debug](file:///C:/Projet_David/GM-OS-v5/docs/dev/)** : Notes techniques pour le débogage.
+
+### 🤖 Gemini CLI Integration
+Le projet intègre désormais **Gemini CLI** pour des opérations assistées par IA directement en terminal.
+
+**Installation & Login :**
+1. Installez les dépendances : `npm install`
+2. Connectez-vous : `npx @google/gemini-cli login`
+
+**Usage :**
+- `npm run gemini -- "ta question"` : Pose une question générale.
+- `npm run gemini:doc -- "Explique le système Oracle"` : Pose une question avec le contexte complet de la documentation locale.
 
 ---
 *Développé pour l'immersion. Conçu pour le contrôle.*

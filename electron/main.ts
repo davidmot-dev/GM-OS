@@ -7,6 +7,8 @@ import https from 'node:https'
 import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 const pdf = require('pdf-parse');
+const { WebSocketServer } = require('ws');
+import os from 'node:os';
 import { registerRagHandlers } from './RAGEngine'
 import { registerMcpHandlers } from './mcp_bridge'
 import { registerObsidianHandlers } from './obsidian_bridge'
@@ -427,6 +429,85 @@ ipcMain.on('image:close-all-displays', () => {
     projectorWindows.clear();
 });
 
+// --- Remote Control Server (Winston's Architecture) ---
+let wss: any = null;
+const REMOTE_PORT = 3001;
+
+function startRemoteServer() {
+    try {
+        wss = new WebSocketServer({ port: REMOTE_PORT });
+        console.log(`[Remote] Server started on port ${REMOTE_PORT}`);
+
+        wss.on('connection', (ws: any) => {
+            console.log('[Remote] New device connected');
+            
+            // Send initial sync data
+            if (win && !win.isDestroyed()) {
+                win.webContents.send('remote:request-sync');
+            }
+            
+            ws.on('message', (message: string) => {
+                try {
+                    const data = JSON.parse(message);
+                    console.log('[Remote] Action received:', data);
+                    
+                    if (data.type === 'remote:hello') {
+                        // Handshake
+                        console.log('[Remote] Handshake received from device');
+                    } else {
+                        // Forward action to renderer process
+                        if (win && !win.isDestroyed()) {
+                            win.webContents.send('remote:action', data);
+                        }
+                    }
+                } catch (err) {
+                    console.error('[Remote] Failed to parse message:', err);
+                }
+            });
+
+            ws.on('close', () => console.log('[Remote] Device disconnected'));
+        });
+    } catch (err) {
+        console.error('[Remote] Failed to start server:', err);
+    }
+}
+
+// Broadcast data to all connected remote devices
+ipcMain.on('remote:broadcast-sync', (_event, data) => {
+    if (wss) {
+        const message = JSON.stringify({ type: 'sync', payload: data });
+        wss.clients.forEach((client: any) => {
+            if (client.readyState === 1) { // 1 = OPEN
+                client.send(message);
+            }
+        });
+    }
+});
+
+// --- Local IP Helper ---
+function getLocalIP() {
+    const interfaces = os.networkInterfaces();
+    for (const name of Object.keys(interfaces)) {
+        const networkInterface = interfaces[name];
+        if (!networkInterface) continue;
+        
+        for (const iface of networkInterface) {
+            // family can be 'IPv4' or 4 depending on node version
+            if ((iface.family === 'IPv4' || (iface.family as any) === 4) && !iface.internal) {
+                return iface.address;
+            }
+        }
+    }
+    return 'localhost';
+}
+
+ipcMain.handle('remote:get-connection-info', () => {
+    return {
+        ip: getLocalIP(),
+        port: REMOTE_PORT
+    };
+});
+
 const APP_ROOT = process.env.APP_ROOT || '';
 
 // --- AI RAG Handlers ---
@@ -581,4 +662,7 @@ app.on('activate', () => {
     }
 })
 
-app.whenReady().then(createWindow)
+app.whenReady().then(() => {
+    createWindow();
+    startRemoteServer();
+})

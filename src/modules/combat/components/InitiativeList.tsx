@@ -14,16 +14,19 @@ import {
     SortableContext,
     sortableKeyboardCoordinates,
     verticalListSortingStrategy,
+    rectSortingStrategy,
     useSortable
 } from '@dnd-kit/sortable';
+import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { CSS } from '@dnd-kit/utilities';
 
 interface SortableCombatCardProps {
     combatant: Combatant;
     isActive: boolean;
+    isGrid?: boolean;
 }
 
-const SortableCombatCard: React.FC<SortableCombatCardProps> = ({ combatant, isActive }) => {
+const SortableCombatCard: React.FC<SortableCombatCardProps> = ({ combatant, isActive, isGrid }) => {
     const {
         attributes,
         listeners,
@@ -41,7 +44,7 @@ const SortableCombatCard: React.FC<SortableCombatCardProps> = ({ combatant, isAc
     };
 
     return (
-        <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing">
+        <div ref={setNodeRef} style={style} {...attributes} {...listeners} className={`cursor-grab active:cursor-grabbing ${isGrid ? 'h-full' : ''}`}>
             <CombatCard combatant={combatant} isActive={isActive} />
         </div>
     );
@@ -49,6 +52,11 @@ const SortableCombatCard: React.FC<SortableCombatCardProps> = ({ combatant, isAc
 
 const InitiativeList: React.FC = () => {
     const { combatants, currentTurnIdx, reorderCombatants } = useCombatStore();
+    const { getActiveDriver } = useSessionOSStore();
+    const activeDriver = getActiveDriver();
+    
+    const initiativeStyle = activeDriver?.ui_config?.initiativeStyle || 'list';
+    const isGrid = initiativeStyle === 'grid';
 
     const sensors = useSensors(
         useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -87,14 +95,15 @@ const InitiativeList: React.FC = () => {
             >
                 <SortableContext
                     items={combatants.map(c => c.id)}
-                    strategy={verticalListSortingStrategy}
+                    strategy={isGrid ? rectSortingStrategy : verticalListSortingStrategy}
                 >
-                    <div className="space-y-1">
+                    <div className={isGrid ? "grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4" : "space-y-1"}>
                         {combatants.map((combatant, index) => (
                             <SortableCombatCard
                                 key={combatant.id}
                                 combatant={combatant}
                                 isActive={index === currentTurnIdx}
+                                isGrid={isGrid}
                             />
                         ))}
                     </div>

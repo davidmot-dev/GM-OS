@@ -24,7 +24,7 @@ interface TableState {
     sendToSession: () => void;
 }
 
-const bridge = (window as Window & typeof globalThis & { appBridge?: { tables: TableBridge } }).appBridge?.tables;
+const getBridge = () => (window as Window & typeof globalThis & { appBridge?: { tables: TableBridge } }).appBridge?.tables;
 
 export const useTableStore = create<TableState>()(
     persist(
@@ -40,6 +40,7 @@ export const useTableStore = create<TableState>()(
             modifier: 0,
 
             fetchUniverses: async () => {
+                const bridge = getBridge();
                 if (!bridge) return;
                 try {
                     const universes = await bridge.listUniverses();
@@ -51,6 +52,7 @@ export const useTableStore = create<TableState>()(
 
             selectUniverse: async (universe) => {
                 set({ selectedUniverse: universe, tables: [], selectedTable: '', currentTableData: null });
+                const bridge = getBridge();
                 if (!bridge) return;
                 try {
                     const tables = await bridge.listTables(universe);
@@ -62,6 +64,7 @@ export const useTableStore = create<TableState>()(
 
             selectTable: async (tableName) => {
                 set({ selectedTable: tableName, isLoading: true });
+                const bridge = getBridge();
                 if (!bridge) return;
                 try {
                     const data = await bridge.loadTable(get().selectedUniverse, tableName);

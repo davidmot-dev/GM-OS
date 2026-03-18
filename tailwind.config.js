@@ -45,10 +45,13 @@ export default {
                 'app-text': 'var(--app-text)',
             },
             fontFamily: {
+                // Typographie premium
+                jakarta: ['"Plus Jakarta Sans"', 'sans-serif'],
+                outfit: ['Outfit', 'sans-serif'],
                 // Typographie technique et lisible
                 mono: ['"JetBrains Mono"', 'monospace'],
-                sans: ['Inter', 'sans-serif'],
-                display: ['Orbitron', 'sans-serif'],
+                sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+                display: ['Outfit', 'Orbitron', 'sans-serif'],
                 cinematic: ['"Noto Serif"', 'serif'],
                 // Splash Screen Fonts
                 elite: ['"Special Elite"', 'cursive'],

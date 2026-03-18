@@ -28,6 +28,16 @@ Le brouillard de guerre masque les zones non explorées. Vous disposez de plusie
     - **Tout révéler (Eye)** : Retire instantanément tout le brouillard de la carte.
     - **Tout masquer (EyeOff)** : Recouvre la carte entière de noir.
 
+## 🌦️ Effets Atmosphériques (Météo)
+
+Apportez une couche d'immersion supplémentaire avec le moteur de particules intégré :
+- **Types d'effets** :
+    - **Pluie (Rain)** : Idéal pour les scènes d'extérieur sombres ou orageuses.
+    - **Neige (Snow)** : Pour les ambiances polaires ou hivernales.
+    - **Brouillard (Smoke/Fog)** : Pour les cimetières, les marais ou les incendies.
+- **Contrôle d'Intensité** : Ajustez le curseur pour passer d'une bruine légère à une tempête battante.
+- **Synchronisation** : Comme pour le reste, l'effet s'affiche sur votre écran de contrôle et simultanément sur celui des joueurs.
+
 ## 📏 Grille Tactique
 
 Activez la grille pour faciliter les déplacements et les combats :

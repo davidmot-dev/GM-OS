@@ -3,6 +3,7 @@ import { useMapStore } from '../useMapStore';
 import { FogEngine } from '../FogEngine';
 import MapTokenNode from './MapTokenNode';
 import MapPingLayer from './MapPingLayer';
+import WeatherLayer from './WeatherLayer';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { gmConfirm } from '../../../stores/useModalStore';
 
@@ -373,6 +374,9 @@ const MapCanvas: React.FC = () => {
 
                 {/* 4.5. Pings Layer */}
                 <MapPingLayer isProjectedView={false} />
+
+                {/* 4.6. Weather Layer */}
+                <WeatherLayer isProjectedView={false} />
 
                 {/* 5. Preview Layer */}
                 <canvas

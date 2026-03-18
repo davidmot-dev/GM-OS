@@ -58,6 +58,14 @@ Lorsque le **System Forge** analyse un document :
 3. Il lie les deux via `templateId`.
 4. L'utilisateur peut ensuite enrichir ce Driver via les interfaces d'édition pour affiner la voix de l'IA ou les liens NotebookLM.
 
+## 6. Gemini CLI & Assistant Terminal
+
+Le module **Gemini CLI** (`@google/gemini-cli`) est intégré en tant qu'outil de développement de bas niveau :
+
+- **Contexte Projet** : Le CLI a accès aux dossiers `documentation/` et `src/modules/` via le script `scripts/gemini-bridge.js`.
+- **Automatisation** : Utilisé pour générer des fichiers de structure (ex: `WeatherLayer.tsx`) ou analyser la cohérence entre les Drivers et l'UI.
+- **Accessibilité** : Commandes disponibles via `npm run gemini` et `npm run gemini:doc`.
+
 ## Contact Technique
 
 Dernière mise à jour : Mars 2026

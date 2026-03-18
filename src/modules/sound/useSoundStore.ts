@@ -46,6 +46,7 @@ interface SoundState {
     setPadLightLink: (padId: string, sceneId: string | null) => void;
     renamePad: (padId: string, title: string) => void;
     clearPad: (padId: string) => void;
+    triggerPad: (padId: string) => Promise<void>;
 
     setMasterVolume: (volume: number) => void;
     setOutputDevice: (deviceId: string) => void;
@@ -212,6 +213,24 @@ export const useSoundStore = create<SoundState>()(
                         : a
                 )
             })),
+
+            triggerPad: async (padId) => {
+                const atmosId = get().activeAtmosphereId;
+                const activeAtmos = get().atmospheres.find(a => a.id === atmosId);
+                const pad = activeAtmos?.pads[padId];
+
+                if (pad && pad.filePath) {
+                    try {
+                        // Mark as active in store
+                        get().setPadActive(padId, true);
+                        // Load and Play
+                        await soundEngine.loadAudio(padId, pad.filePath);
+                        soundEngine.play(padId, pad.volume);
+                    } catch (err) {
+                        console.error(`[SoundStore] Trigger failed for pad ${padId}:`, err);
+                    }
+                }
+            },
 
             setMasterVolume: (masterVolume) => set({ masterVolume }),
             setOutputDevice: (outputDeviceId) => {

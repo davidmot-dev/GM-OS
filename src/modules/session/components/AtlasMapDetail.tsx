@@ -5,13 +5,19 @@ import { Lock, Eye, Send, Film, Image as ImageIcon } from 'lucide-react';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaStore } from '../../../stores/useMediaStore';
+import { Sparkles } from 'lucide-react';
+import AIPromptOverlay from '../../ai/components/AIPromptOverlay';
 
 const AtlasMapDetail: React.FC = () => {
-    const { atlasMaps, selectedAtlasMapId, updateAtlasMap, setCurrentView } = useSessionOSStore();
+    const { 
+        atlasMaps, selectedAtlasMapId, updateAtlasMap, setCurrentView,
+        generateAtlasMapImage, isGeneratingAIImage 
+    } = useSessionOSStore();
     const { setMap } = useMapStore();
 
     const selectedMap = atlasMaps.find(m => m.id === selectedAtlasMapId);
     const [isChoosingMedia, setIsChoosingMedia] = useState(false);
+    const [showAIPrompt, setShowAIPrompt] = useState(false);
 
     // Always call hooks at the top level
     const url = useMediaUrl(selectedMap?.fileUrl);
@@ -71,14 +77,30 @@ const AtlasMapDetail: React.FC = () => {
                     </div>
                 )}
                 
-                {/* Image Change Button */}
-                <button 
-                    onClick={() => setIsChoosingMedia(true)}
-                    className="absolute top-4 right-4 z-20 flex items-center gap-2 bg-app-surface/60 hover:bg-accent text-white font-bold py-1.5 px-3 rounded-lg text-[10px] transition-all border border-white/10 backdrop-blur-md"
-                >
-                    <ImageIcon size={12} />
-                    Changer Médias
-                </button>
+                <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
+                    <button 
+                        onClick={() => setIsChoosingMedia(true)}
+                        className="flex items-center gap-2 bg-app-surface/60 hover:bg-white/10 text-white font-bold py-1.5 px-3 rounded-lg text-[10px] transition-all border border-white/10 backdrop-blur-md"
+                    >
+                        <ImageIcon size={12} />
+                        Médiathèque
+                    </button>
+                    <button 
+                        onClick={() => setShowAIPrompt(true)}
+                        disabled={isGeneratingAIImage}
+                        className="flex items-center gap-2 bg-accent text-slate-950 font-bold py-1.5 px-3 rounded-lg text-[10px] transition-all border border-accent/20 shadow-glow-accent"
+                    >
+                        <Sparkles size={12} />
+                        Générer par IA
+                    </button>
+                </div>
+
+                {isGeneratingAIImage && (
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-md flex flex-col items-center justify-center z-30">
+                        <Sparkles size={48} className="text-accent animate-spin mb-4" />
+                        <span className="text-xs font-black uppercase tracking-[0.3em] text-accent animate-pulse">Expansion du monde...</span>
+                    </div>
+                )}
 
                 {/* Gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-app-bg via-transparent to-transparent pointer-events-none" />
@@ -166,6 +188,17 @@ const AtlasMapDetail: React.FC = () => {
                     </div>
                 </div>
             )}
+
+            <AIPromptOverlay
+                isOpen={showAIPrompt}
+                onClose={() => setShowAIPrompt(false)}
+                isGenerating={isGeneratingAIImage}
+                title={`Décor IA : ${selectedMap.name}`}
+                placeholder="Ex: citadelle flottante au-dessus des nuages, architecture luminescente, ambiance onirique..."
+                onGenerate={(instructions) => {
+                    generateAtlasMapImage(selectedMap.id, instructions).then(() => setShowAIPrompt(false));
+                }}
+            />
         </div>
     );
 };

@@ -221,6 +221,7 @@ interface SessionOSState {
     currentView: 'cockpit' | 'campaign-details' | 'npc-gallery' | 'world-atlas' | 'library' | 'players' | 'templates' | 'session-prep' | 'session-focus' | 'timeline-wiki' | 'forge' | 'template-editor' | 'driver-editor' | 'storyboard';
     diceRolls: { die: number, result: number, timestamp: number }[];
     isAddingEntity: boolean;
+    isGeneratingAIImage: boolean; // For loading feedback
 
     // Actions
     setActiveCampaign: (id: string | null) => void;
@@ -301,6 +302,11 @@ interface SessionOSState {
     rollDice: (sides: number) => void;
     clearDiceRolls: () => void;
     togglePlayerOnline: (playerId: string) => void;
+
+    // AI Image Generation Actions
+    generateEntityPortrait: (entityId: string, instructions?: string) => Promise<void>;
+    generateAtlasMapImage: (mapId: string, instructions?: string) => Promise<void>;
+    generatePlayerPortrait: (playerId: string, characterId: string, instructions?: string) => Promise<void>;
     
     // Obsidian Export
     exportActiveCampaignToObsidian: () => Promise<void>;
@@ -456,7 +462,7 @@ const mockPlayers: Player[] = [
                 id: 'pc-1',
                 name: 'Aldric le Paladin',
                 classRace: 'Humain / Serment des Anciens',
-                portraitUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC7Ly-KWdINIXSLb_hnmp8A-gZLcn5zLhr5yt8wcjUg8SQohiI1ylzS6Cd9cFmeaq0DGVGJ3qV2Dp4vBPZY7hpPaBwbfZqRY8ZSfDRCI9A0YUfzBFQ2VCiVGc23hciaWsOSJQnVVEnwpWd73CmqXCB5wLaBSIk20LPHnKjgO8m4xJ41FXa4Stpvh3KNobTSrWXB30YOCCyaDmvwqEr-k2yBXMK2-JFJk2R9CdbWdRKdYPoBLCOhSM3JkFsvIhCTDJhky2aWgJTcFRc',
+                portraitUrl: 'https://api.dicebear.com/9.x/adventurer/svg?seed=Aldric&backgroundColor=b6e3f4',
                 hp: 42,
                 maxHp: 58,
                 campaignId: 'c-1',
@@ -467,7 +473,7 @@ const mockPlayers: Player[] = [
                 id: 'pc-2',
                 name: 'Zorak l\'Assassin',
                 classRace: 'Demi-Elfe / Voleur Arcanique',
-                portraitUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuANXovZVG56CIZEr9tdrW6SYp6Bw6vH-bkwRMJ4HEGbS_vJsTnrJFJzqtQ3TV7cEwLwpfpGUj4BCugeug1uW6ZfIS4v_pgR-_wf3AtdFbu_m7e-WJO85LBeP938Sdy49o2PWIGIMjRpJldohOiY1E_GT4SJEOKERuQr_yZMIlukB8h0WpssLmic1_5338kVU5KpfMjKpPTiaQPb6a-NYxd4YsSjtg_9Y5N4m_EK7ENDbDlRva2Ltl2t8aHaHqv0fQK_1aMOLo2lxIY',
+                portraitUrl: 'https://api.dicebear.com/9.x/adventurer/svg?seed=Zorak&backgroundColor=c0aede',
                 hp: 35,
                 maxHp: 35,
                 campaignId: null,
@@ -487,7 +493,7 @@ const mockPlayers: Player[] = [
                 id: 'pc-3',
                 name: 'Elowen la Druide',
                 classRace: 'Elfe / Cercle de la Lune',
-                portraitUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCBTyI7J_D8D-GO4ooijVdZViAJpDNTgm07YBeKcBQgciteqTrXl9vKtVo0INKWZcf84gisyID6cW7uwbwKdiwmu1K08T_Tyhrs-VeMudTuhDWwhEvGWOBPXIM6IRkKXiXjZ3eS7_vDAJ4ZES3zv0M0PrfmrZMWnXyZ1TmknmnruVfU9V-7JFVvykUur_1xE-bG5_WChJfdy2PINkiXggTTb0-wG5PqeyyQ4YQ-9z8p8LiFKtdmtYoKtjps6ePefI55z-7oK2OXG10',
+                portraitUrl: 'https://api.dicebear.com/9.x/adventurer/svg?seed=Elowen&backgroundColor=ffdfbf',
                 hp: 60,
                 maxHp: 60,
                 campaignId: 'c-2',
@@ -506,7 +512,7 @@ const mockPlayers: Player[] = [
                 id: 'pc-4',
                 name: 'Balder le Barbare',
                 classRace: 'Nain / Voie du Berserker',
-                portraitUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD2UuEcnNO7cWviHYN4QuSbMycNRmu3PqaYZQBaCeZZRkW0263XO4Ch0qkrWqacSaAhIBEjZBuKDa-EabuAVKZTBagu8psUp0WcruTx_eWIsw5oYw8-DxntYplI4NfEa9bn41JPnM-Lrmmn3vi5NHykl_Re4hQwqmS1MKy371RYCcW1NPHJUxxsETlobi_7yaGByibduzihqh3QnTDryJor79YR3bSE_TV04UeJ3pmLkdP4Vm9gGQCz2hGUlfo_0-ohRiAbDbV-Hg',
+                portraitUrl: 'https://api.dicebear.com/9.x/adventurer/svg?seed=Balder&backgroundColor=ffd5dc',
                 hp: 72,
                 maxHp: 90,
                 campaignId: 'c-1',
@@ -539,7 +545,7 @@ const mockSessions: GameSession[] = [
 const mockEntities: Entity[] = [
     {
         id: 'e-1', name: 'Baron Varick', type: 'npc', role: 'hostile', status: 'alive',
-        avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC7Ly-KWdINIXSLb_hnmp8A-gZLcn5zLhr5yt8wcjUg8SQohiI1ylzS6Cd9cFmeaq0DGVGJ3qV2Dp4vBPZY7hpPaBwbfZqRY8ZSfDRCI9A0YUfzBFQ2VCiVGc23hciaWsOSJQnVVEnwpWd73CmqXCB5wLaBSIk20LPHnKjgO8m4xJ41FXa4Stpvh3KNobTSrWXB30YOCCyaDmvwqEr-k2yBXMK2-JFJk2R9CdbWdRKdYPoBLCOhSM3JkFsvIhCTDJhky2aWgJTcFRc',
+        avatar: 'https://api.dicebear.com/9.x/adventurer/svg?seed=Varick&backgroundColor=b6e3f4',
         hp: 85, maxHp: 85, ac: 16, speed: 30, initiative: 3,
         description: 'Doppelganger / Seigneur de Guerre',
         roleplayingNotes: 'Parle avec une autorité froide et calculée. Imite parfaitement les manières d\'un noble. Évite les confrontations directes, préfère manipuler. Voix grave, regard perçant.',
@@ -551,7 +557,7 @@ const mockEntities: Entity[] = [
     },
     {
         id: 'e-2', name: 'Sylvara la Driade', type: 'npc', role: 'neutral', status: 'alive',
-        avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCBTyI7J_D8D-GO4ooijVdZViAJpDNTgm07YBeKcBQgciteqTrXl9vKtVo0INKWZcf84gisyID6cW7uwbwKdiwmu1K08T_Tyhrs-VeMudTuhDWwhEvGWOBPXIM6IRkKXiXjZ3eS7_vDAJ4ZES3zv0M0PrfmrZMWnXyZ1TmknmnruVfU9V-7JFVvykUur_1xE-bG5_WChJfdy2PINkiXggTTb0-wG5PqeyyQ4YQ-9z8p8LiFKtdmtYoKtjps6ePefI55z-7oK2OXG10',
+        avatar: 'https://api.dicebear.com/9.x/adventurer/svg?seed=Sylvara&backgroundColor=ffdfbf',
         hp: 52, maxHp: 52, ac: 14, speed: 35, initiative: 4,
         description: 'Driade / Gardienne de la Forêt',
         roleplayingNotes: 'Méfiante envers les étrangers mais pas hostile. Parle lentement, comme si chaque mot avait du poids. Très liée à son arbre-ancêtre. Peut devenir alliée si les PJ promettent de protéger la forêt.',
@@ -563,7 +569,7 @@ const mockEntities: Entity[] = [
     },
     {
         id: 'e-3', name: 'Ignathor', type: 'monster', role: 'boss', status: 'alive',
-        avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuANXovZVG56CIZEr9tdrW6SYp6Bw6vH-bkwRMJ4HEGbS_vJsTnrJFJzqtQ3TV7cEwLwpfpGUj4BCugeug1uW6ZfIS4v_pgR-_wf3AtdFbu_m7e-WJO85LBeP938Sdy49o2PWIGIMjRpJldohOiY1E_GT4SJEOKERuQr_yZMIlukB8h0WpssLmic1_5338kVU5KpfMjKpPTiaQPb6a-NYxd4YsSjtg_9Y5N4m_EK7ENDbDlRva2Ltl2t8aHaHqv0fQK_1aMOLo2lxIY',
+        avatar: 'https://api.dicebear.com/9.x/bottts/svg?seed=Ignathor&backgroundColor=ffd5dc',
         hp: 256, maxHp: 256, ac: 22, speed: 40, initiative: 0,
         description: 'Dragon Rouge Ancien / Boss Final',
         roleplayingNotes: 'Arrogant, condescendant. Parle des humains comme de simples insectes. Aime les monologues. Ne se lève que si vraiment menacé — il enverra ses serviteurs en premier.',
@@ -575,7 +581,7 @@ const mockEntities: Entity[] = [
     },
     {
         id: 'e-4', name: 'Capitaine Ren', type: 'npc', role: 'ally', status: 'alive',
-        avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD2UuEcnNO7cWviHYN4QuSbMycNRmu3PqaYZQBaCeZZRkW0263XO4Ch0qkrWqacSaAhIBEjZBuKDa-EabuAVKZTBagu8psUp0WcruTx_eWIsw5oYw8-DxntYplI4NfEa9bn41JPnM-Lrmmn3vi5NHykl_Re4hQwqmS1MKy371RYCcW1NPHJUxxsETlobi_7yaGByibduzihqh3QnTDryJor79YR3bSE_TV04UeJ3pmLkdP4Vm9gGQCz2hGUlfo_0-ohRiAbDbV-Hg',
+        avatar: 'https://api.dicebear.com/9.x/adventurer/svg?seed=Ren&backgroundColor=c0aede',
         hp: 68, maxHp: 75, ac: 18, speed: 30, initiative: 2,
         description: 'Humain / Garde d\'Élite',
         roleplayingNotes: 'Loyale, directe, professionnelle. Respecte la force et la compétence. Peut devenir une alliée précieuse si les PJ démontrent leur valeur au combat.',
@@ -608,6 +614,7 @@ export const useSessionOSStore = create<SessionOSState>()(
             currentView: 'cockpit',
             diceRolls: [],
             isAddingEntity: false,
+            isGeneratingAIImage: false,
             timelineEvents: mockTimelineEvents,
             wikiEntries: mockWikiEntries,
 
@@ -1021,6 +1028,55 @@ export const useSessionOSStore = create<SessionOSState>()(
                     diceRolls: [{ die: sides, result, timestamp: Date.now() }, ...state.diceRolls].slice(0, 10)
                 };
             }),
+
+            generateEntityPortrait: async (entityId, instructions) => {
+              const entity = get().entities.find(e => e.id === entityId);
+              if (!entity) return;
+              set({ isGeneratingAIImage: true });
+              try {
+                const { aiService } = await import('../ai/AIService');
+                const prompt = `A professional fantasy RPG character portrait of ${entity.name}. ${entity.description}. High quality digital art, cinematic lighting, 8k. ${instructions ? `Additional: ${instructions}` : ''}`;
+                const mediaId = await aiService.generateImage(prompt, '1:1');
+                get().updateEntity(entityId, { avatar: mediaId });
+              } catch (err) {
+                console.error("AI Portrait Error:", err);
+              } finally {
+                set({ isGeneratingAIImage: false });
+              }
+            },
+
+            generateAtlasMapImage: async (mapId, instructions) => {
+              const map = get().atlasMaps.find(m => m.id === mapId);
+              if (!map) return;
+              set({ isGeneratingAIImage: true });
+              try {
+                const { aiService } = await import('../ai/AIService');
+                const prompt = `Fantasy RPG environment art: ${map.name}. ${map.narrativeDescription}. Cinematic, epic scale, high quality. ${instructions ? `Additional: ${instructions}` : ''}`;
+                const mediaId = await aiService.generateImage(prompt, '16:9');
+                get().updateAtlasMap(mapId, { fileUrl: mediaId, isVideo: false });
+              } catch (err) {
+                console.error("AI Map Error:", err);
+              } finally {
+                set({ isGeneratingAIImage: false });
+              }
+            },
+
+            generatePlayerPortrait: async (playerId, characterId, instructions) => {
+              const player = get().players.find(p => p.id === playerId);
+              const char = player?.characters.find(c => c.id === characterId);
+              if (!char) return;
+              set({ isGeneratingAIImage: true });
+              try {
+                const { aiService } = await import('../ai/AIService');
+                const prompt = `A heroic character portrait of ${char.name}. ${char.classRace}. Professional digital art, cinematic lighting, 8k. ${instructions ? `Additional: ${instructions}` : ''}`;
+                const mediaId = await aiService.generateImage(prompt, '1:1');
+                get().updateCharacterVisuals(playerId, characterId, { portraitUrl: mediaId });
+              } catch (err) {
+                console.error("AI Player Portrait Error:", err);
+              } finally {
+                set({ isGeneratingAIImage: false });
+              }
+            },
 
             addPlayer: (playerData) => set((state) => ({
                 players: [...state.players, { ...playerData, id: crypto.randomUUID() }]

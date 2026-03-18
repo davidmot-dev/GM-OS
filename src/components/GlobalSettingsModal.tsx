@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Power, Globe, Shield, Info, Terminal, MonitorPlay, Zap, Settings } from 'lucide-react';
+import { X, Power, Globe, Shield, Info, Terminal, MonitorPlay, Zap, Settings, Tablet, RefreshCw } from 'lucide-react';
 import { flushApplication } from '../utils/appUtils';
 import { useSessionStore, THEME_PALETTES } from '../store/useSessionStore';
 import type { ThemeID } from '../store/useSessionStore';
@@ -12,10 +12,11 @@ interface GlobalSettingsModalProps {
     onClose: () => void;
 }
 
-type TabID = 'system' | 'tactical';
+type TabID = 'system' | 'tactical' | 'remote';
 
 const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) => {
     const [activeTab, setActiveTab] = useState<TabID>('system');
+    const [connectionInfo, setConnectionInfo] = useState<{ip: string, port: number} | null>(null);
     const { theme, setTheme, themeColor, setThemeColor } = useSessionStore();
     const { 
         audioDevices, fetchAudioDevices, audioAliases, setAudioAlias,
@@ -30,7 +31,24 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
     React.useEffect(() => {
         fetchAudioDevices();
         fetchDisplays();
+
+        const updateInfo = async () => {
+            console.log("[Remote] Requesting connection info...");
+            if (window.appBridge?.remote?.getConnectionInfo) {
+                const info = await window.appBridge.remote.getConnectionInfo();
+                console.log("[Remote] Received info:", info);
+                setConnectionInfo(info);
+            } else {
+                console.error("[Remote] Bridge function not found!");
+            }
+        };
+
+        updateInfo();
     }, [fetchAudioDevices, fetchDisplays]);
+
+    const remoteUrl = connectionInfo?.ip ? `http://${connectionInfo.ip}:5173/?window=remote` : '';
+    // Use a direct qrcode API that is very reliable
+    const qrCodeUrl = remoteUrl ? `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(remoteUrl)}` : '';
 
     return (
         <div className="flex flex-col h-full bg-app-bg text-app-text/80">
@@ -70,6 +88,13 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                     >
                         <Zap size={18} />
                         Tactique
+                    </button>
+                    <button 
+                        onClick={() => setActiveTab('remote')}
+                        className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-sm ${activeTab === 'remote' ? 'bg-accent/10 text-accent border border-accent/20' : 'text-app-text/60 hover:bg-app-surface/40 hover:text-app-text border border-transparent'}`}
+                    >
+                        <Tablet size={18} />
+                        Télécommande
                     </button>
                 </div>
 
@@ -298,6 +323,98 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                             <div className="flex-1 overflow-y-auto">
                                 <TacticalTaxonomyEditor />
                             </div>
+                        </div>
+                    )}
+
+                    {activeTab === 'remote' && (
+                        <div className="flex-1 overflow-y-auto p-8 custom-scrollbar space-y-10 animate-in fade-in slide-in-from-right-2 duration-300">
+                            <section className="flex flex-col items-center text-center space-y-6">
+                                <div className="w-20 h-20 rounded-3xl bg-accent/10 flex items-center justify-center text-accent shadow-glow-accent/10">
+                                    <Tablet size={40} />
+                                </div>
+                                <div>
+                                    <h3 className="text-2xl font-black uppercase tracking-tighter text-app-text">GM Remote Control</h3>
+                                    <p className="text-sm text-app-text/60 max-w-md mx-auto mt-2">Transformez votre tablette ou smartphone en surface de contrôle tactile pour piloter vos sessions.</p>
+                                </div>
+                            </section>
+
+                            <section className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-app-surface/20 border border-app-border/20 rounded-[2.5rem] p-10">
+                                <div className="space-y-6">
+                                    <div className="space-y-2">
+                                        <h4 className="text-xs font-black uppercase tracking-widest text-accent">Connexion Rapide</h4>
+                                        <p className="text-xs text-app-text/40 leading-relaxed">Scannez ce QR Code avec l'appareil photo de votre tablette ou téléphone pour ouvrir instantanément la télécommande GM-OS.</p>
+                                    </div>
+
+                                    <div className="p-4 rounded-2xl bg-white/5 border border-white/5 space-y-3">
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-[10px] font-bold text-app-text/30 uppercase tracking-widest">Adresse IP Locale</span>
+                                            <button 
+                                                onClick={() => window.appBridge?.remote?.getConnectionInfo().then(setConnectionInfo)}
+                                                className="p-1 hover:bg-white/10 rounded-lg text-accent transition-colors"
+                                            >
+                                                <RefreshCw size={12} />
+                                            </button>
+                                        </div>
+                                        <p className="font-mono text-sm font-bold text-app-text/80">{connectionInfo?.ip || 'Recherche...'}</p>
+                                    </div>
+
+                                    <div className="flex items-center gap-3 p-4 rounded-2xl bg-emerald-500/5 border border-emerald-500/10">
+                                        <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-glow-emerald" />
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500">Serveur WebSocket Actif (Port 3001)</span>
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col items-center gap-4">
+                                    <div className="relative p-4 bg-white rounded-[2rem] shadow-2xl group transition-transform hover:scale-105 min-w-[200px] min-h-[200px] flex items-center justify-center">
+                                        {qrCodeUrl ? (
+                                            <img 
+                                                src={qrCodeUrl} 
+                                                alt="Remote QR Code" 
+                                                className="w-48 h-48 mix-blend-multiply" 
+                                                onLoad={() => console.log("[Remote] QR Code loaded successfully")}
+                                                onError={() => console.error("[Remote] QR Code image failed to load")}
+                                            />
+                                        ) : (
+                                            <div className="flex flex-col items-center gap-2">
+                                                <div className="w-12 h-12 border-4 border-accent border-t-transparent animate-spin rounded-full" />
+                                                <p className="text-[10px] text-slate-500 font-bold uppercase">Génération...</p>
+                                            </div>
+                                        )}
+                                        <div className="absolute inset-0 border-4 border-accent/20 rounded-[2rem] pointer-events-none" />
+                                    </div>
+                                    <p className="text-[10px] font-bold text-app-text/30 uppercase tracking-widest italic select-all cursor-help">{remoteUrl || 'URL en attente...'}</p>
+                                    
+                                    {!connectionInfo && (
+                                        <button 
+                                            onClick={async () => {
+                                                console.log("[Remote] Manual detection triggered");
+                                                const info = await window.appBridge?.remote?.getConnectionInfo();
+                                                console.log("[Remote] Manual info result:", info);
+                                                setConnectionInfo(info);
+                                            }}
+                                            className="px-4 py-2 bg-accent/10 hover:bg-accent/20 text-accent text-[10px] font-black uppercase rounded-lg border border-accent/20 transition-all"
+                                        >
+                                            Forcer la détection
+                                        </button>
+                                    )}
+                                </div>
+                            </section>
+
+                            <section className="space-y-4">
+                                <h4 className="text-xs font-black uppercase tracking-widest text-app-text/40 px-1 border-l-2 border-accent/30 pl-3">Fonctions Disponibles</h4>
+                                <div className="grid grid-cols-3 gap-4">
+                                    {[
+                                        { label: 'Soundboard FX', desc: 'Déclenchez les sons' },
+                                        { label: 'Dice Roller', desc: 'Lancez les dés' },
+                                        { label: 'Scene Master', desc: 'Changez les ambiances' }
+                                    ].map(f => (
+                                        <div key={f.label} className="p-4 rounded-2xl bg-app-surface/20 border border-app-border/20 text-center space-y-1">
+                                            <p className="text-[10px] font-black text-app-text/80 uppercase">{f.label}</p>
+                                            <p className="text-[9px] text-app-text/40">{f.desc}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
                         </div>
                     )}
                 </div>

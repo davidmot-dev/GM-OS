@@ -70,6 +70,11 @@ export class ForgeService {
       1. Les IDs des stats dans "driver.combat.statsToTrack" DOIVENT correspondre exactement aux IDs des champs dans "template.sections[].fields[]".
       2. La formule d'initiative dans "driver.combat.initiativeFormula" doit utiliser des IDs de champs définis dans le template.
       3. Le "dice.logic" doit être choisi parmi : 'sum', 'highest', 'lowest', 'count-success', 'd100-low', 'd100-high'.
+      4. Génère un "ui_config" cohérent avec l'ambiance :
+         - Style 'bar' pour du médieval-fantastique classique.
+         - Style 'neon' pour du Cyberpunk / SF.
+         - Style 'segmented' pour du rétro, horreur ou systèmes à "boxes".
+         - Choisis des couleurs (hex ou classes Tailwind "bg-...") adaptées (ex: vert néon pour Cyberpunk, or pour Fantasy, rouge sang pour Horreur).
 
       FORMAT DE SORTIE ATTENDU :
       {
@@ -81,6 +86,13 @@ export class ForgeService {
           "combat": {
             "statsToTrack": [ { "fieldId": "hp", "label": "PV", "isMainHP": true, "isResource": false } ],
             "initiativeFormula": "dex"
+          },
+          "ui_config": {
+            "gauges": [
+              { "fieldId": "hp", "label": "PV", "color": "bg-emerald-500", "style": "bar" }
+            ],
+            "initiativeStyle": "list",
+            "themeColor": "#10b981"
           },
           "aiInstructions": "Directives pour le MJ IA..."
         },
@@ -126,6 +138,9 @@ export class ForgeService {
       2. Analyse les mécaniques de dés (ex: 1d20 + bonus vs DC, ou d100 sous compétence).
       3. Détermine quels champs de fiche de personnage sont essentiels pour le combat (HP, MP, Initiative).
       4. Rédige des "aiInstructions" courtes mais précises pour qu'un autre assistant puisse simuler ce MJ.
+      5. Ajoute un "ui_config" esthétique :
+         - 'neon' (Cyberpunk/SF), 'bar' (Fantasy), 'segmented' (Retro/Grips).
+         - Couleurs vibrantes adaptées à l'ambiance.
 
       Format de sortie JSON obligatoire :
       {
@@ -142,6 +157,12 @@ export class ForgeService {
             { "fieldId": "hp", "label": "Points de Vie", "isMainHP": true, "isResource": false }
           ],
           "initiativeFormula": "dex"
+        },
+        "ui_config": {
+          "gauges": [
+            { "fieldId": "hp", "label": "PV", "color": "bg-red-500", "style": "bar" }
+          ],
+          "initiativeStyle": "list"
         },
         "aiInstructions": "Tu es un MJ expert de [Système]..."
       }

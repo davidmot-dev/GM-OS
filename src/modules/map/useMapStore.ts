@@ -22,6 +22,7 @@ export interface MapPing {
 
 export type FogMode = 'reveal' | 'hide';
 export type MapTool = 'brush' | 'rect' | 'circle' | 'move_token' | 'ping';
+export type WeatherType = 'none' | 'rain' | 'snow' | 'smoke';
 
 interface MapState {
     mapUrl: string | null;
@@ -31,6 +32,10 @@ interface MapState {
     tokens: MapToken[];
     pings: MapPing[];
     fogCommand: 'reveal_all' | 'hide_all' | null;
+
+    // Weather State
+    weatherType: WeatherType;
+    weatherIntensity: number; // 0 to 1
 
     // Map Dimensions
     mapWidth: number;
@@ -74,6 +79,9 @@ interface MapState {
     setFogMode: (mode: FogMode) => void;
     setBrushSize: (size: number) => void;
 
+    // Weather Actions
+    setWeather: (type: WeatherType, intensity?: number) => void;
+
     // Grid Actions
     setGridEnabled: (enabled: boolean) => void;
     setGridSize: (size: number) => void;
@@ -90,6 +98,8 @@ interface MapState {
     projectedFogDataUrl: string | null;
     projectedTokens: MapToken[];
     projectedPings: MapPing[];
+    projectedWeatherType: WeatherType;
+    projectedWeatherIntensity: number;
     projectedMapWidth: number;
     projectedMapHeight: number;
     projectedIsGridEnabled: boolean;
@@ -123,6 +133,10 @@ export const useMapStore = create<MapState>()(
             isDraggingToken: false,
             selectedTokenId: null,
 
+            // Weather Defaults
+            weatherType: 'none',
+            weatherIntensity: 0.5,
+
             // Map Dimensions Defaults
             mapWidth: 2000,
             mapHeight: 2000,
@@ -145,6 +159,8 @@ export const useMapStore = create<MapState>()(
             projectedFogDataUrl: null,
             projectedTokens: [],
             projectedPings: [],
+            projectedWeatherType: 'none',
+            projectedWeatherIntensity: 0.5,
             projectedMapWidth: 2000,
             projectedMapHeight: 2000,
             projectedIsGridEnabled: false,
@@ -231,6 +247,14 @@ export const useMapStore = create<MapState>()(
             setFogMode: (fogMode) => set({ fogMode }),
             setBrushSize: (brushSize) => set({ brushSize }),
 
+            setWeather: (weatherType, weatherIntensity) => {
+                set(state => ({ 
+                    weatherType, 
+                    weatherIntensity: weatherIntensity ?? state.weatherIntensity 
+                }));
+                if (get().projectionTarget) get().syncToPlayers();
+            },
+
             setGridEnabled: (isGridEnabled) => {
                 set({ isGridEnabled });
                 if (get().projectionTarget) get().syncToPlayers();
@@ -263,6 +287,8 @@ export const useMapStore = create<MapState>()(
                     projectedFogDataUrl: state.fogDataUrl,
                     projectedTokens: [...state.tokens],
                     projectedPings: [...state.pings],
+                    projectedWeatherType: state.weatherType,
+                    projectedWeatherIntensity: state.weatherIntensity,
                     projectedMapWidth: state.mapWidth,
                     projectedMapHeight: state.mapHeight,
                     projectedIsGridEnabled: state.isGridEnabled,
@@ -279,6 +305,8 @@ export const useMapStore = create<MapState>()(
                 projectedFogDataUrl: null,
                 projectedTokens: [],
                 projectedPings: [],
+                projectedWeatherType: 'none',
+                projectedWeatherIntensity: 0.5,
                 projectedMapWidth: 2000,
                 projectedMapHeight: 2000,
                 projectedIsGridEnabled: false,
@@ -298,6 +326,8 @@ export const useMapStore = create<MapState>()(
                 isVideo: state.isVideo,
                 fogDataUrl: state.fogDataUrl,
                 tokens: state.tokens,
+                weatherType: state.weatherType,
+                weatherIntensity: state.weatherIntensity,
                 mapWidth: state.mapWidth,
                 mapHeight: state.mapHeight,
                 isGridEnabled: state.isGridEnabled,
@@ -312,6 +342,8 @@ export const useMapStore = create<MapState>()(
                 projectedIsVideo: state.projectedIsVideo,
                 projectedFogDataUrl: state.projectedFogDataUrl,
                 projectedTokens: state.projectedTokens,
+                projectedWeatherType: state.projectedWeatherType,
+                projectedWeatherIntensity: state.projectedWeatherIntensity,
                 projectedMapWidth: state.projectedMapWidth,
                 projectedMapHeight: state.projectedMapHeight,
                 projectedIsGridEnabled: state.projectedIsGridEnabled,

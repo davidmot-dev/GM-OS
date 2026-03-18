@@ -41,7 +41,7 @@ interface NPCState {
     setCurrentEntity: (entity: NPCEntity | null) => void;
 }
 
-const bridge = (window as Window & typeof globalThis & { appBridge?: { npc: NPCBridge } }).appBridge?.npc as NPCBridge;
+const getBridge = () => (window as Window & typeof globalThis & { appBridge?: { npc: NPCBridge } }).appBridge?.npc;
 
 export const useNPCStore = create<NPCState>()(
     persist(
@@ -66,6 +66,7 @@ export const useNPCStore = create<NPCState>()(
 
             fetchUniverses: async (category) => {
                 const cat = category || get().config.category;
+                const bridge = getBridge();
                 if (!bridge) return;
                 try {
                     const universes = await bridge.listDatabases(cat);
@@ -81,6 +82,7 @@ export const useNPCStore = create<NPCState>()(
 
             generate: async () => {
                 const { category, universe } = get().config;
+                const bridge = getBridge();
                 if (!universe || !bridge) return;
 
                 set({ isGenerating: true });
@@ -131,6 +133,7 @@ export const useNPCStore = create<NPCState>()(
             },
 
             selectAvatar: async () => {
+                const bridge = getBridge();
                 if (!bridge) return;
                 try {
                     const avatarPath = await bridge.selectAvatar();

@@ -11,7 +11,12 @@ Ce document répertorie les axes de développement futurs. Les priorités sont d
 * [x] **Interactivité Joueur Hub** (Pings, Déplacements Pions)
 * [x] **Dice-OS System Sync** (Alignement automatique avec les Drivers)
 * [x] **System Forge IA** (Générateur automatique via PDF de règles)
-* [x] **Master Storyboard** : Déclenchement simultané (Musique, Lumières, Images)
+* [x] **Master Storyboard** : Table de montage cinématographique (Horizontal, Drag & Drop, Duplication)
+* [x] **GM Remote Control** : Pilotage déporté sur tablette/smartphone (Dés, Sons, Combat, Notes)
+* [x] **Dynamic UI Components** : Jauges et listes d'initiative adaptatives (Combat-OS)
+* [x] **Effets Météo Dynamiques** : Particules (pluie, neige, fumée) synchronisées (Map-OS)
+* [x] **Timeline OS** : Gestion de la chronologie, des événements et du journal de bord (Chroniques)
+* [x] **Intégration Gemini CLI** : Assistant terminal avec contexte projet et guides automatisés
 
 ---
 
@@ -25,19 +30,16 @@ Ce document répertorie les axes de développement futurs. Les priorités sont d
 
 ### 2. 🎮 Architecture "System Drivers" (Evolution)
 
-* **Dynamic UI Components** : Jauges et listes d'initiative qui s'adaptent visuellement au jeu.
+* (Déplacé vers les jalons complétés)
 
 ---
 
 ## 🟡 Priorité 2 : Environnement & Storytelling
 
-### 3. 📂 Système de Scénarios & Chronologie (Timeline OS)
+### 3. 🗺️ Évolution du Map-OS
 
-
-### 4. 🗺️ Évolution du Map-OS
-
-* **Effets Météo Dynamiques** : Particules (pluie, neige, fumée) sur les cartes projetées.
-* **Éclairage Dynamique** : Fog of war réagissant à la lumière des pions.
+* [x] **Effets Météo Dynamiques** : (Déplacé vers jalons complétés)
+* [ ] **Éclairage Dynamique** : Fog of war réagissant à la lumière des pions.
 
 ---
 
@@ -47,10 +49,6 @@ Ce document répertorie les axes de développement futurs. Les priorités sont d
 
 * **NPC Live Generator** : Génération instantanée de portraits et backgrounds via IA.
 * **Voice Automation** : Adapter automatiquement le pitch vocal selon le PNJ.
-
-### 6. 📱 Contrôle Déporté
-
-* **GM Remote Control** : Application tablette/smartphone pour piloter l'OS sans écran.
 
 ---
 

@@ -9,6 +9,7 @@ import { gmToast } from '../../../stores/useToastStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useModalStore } from '../../../stores/useModalStore';
 import { ResolvedImage } from '../../../components/ResolvedImage';
+import AIPromptOverlay from '../../ai/components/AIPromptOverlay';
 
 // --- Sub-components (Reused or adapted from CharacterSheetEditor) ---
 const FieldGauge: React.FC<{
@@ -88,13 +89,17 @@ interface NpcDetailProps {
 }
 
 const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
-    const { entities, selectedEntityId, setSelectedEntity, updateEntity, atlasMaps } = useSessionOSStore();
+    const { 
+        entities, selectedEntityId, setSelectedEntity, updateEntity, atlasMaps,
+        generateEntityPortrait, isGeneratingAIImage 
+    } = useSessionOSStore();
     const { closeModal } = useModalStore();
     const { addToken } = useMapStore();
 
     const currentId = embeddedId || selectedEntityId;
     const [isEditing, setIsEditing] = useState(false);
     const [isMediaBrowserOpen, setIsMediaBrowserOpen] = useState(false);
+    const [showAIPrompt, setShowAIPrompt] = useState(false);
 
     const selectedNpc = entities.find(e => e.id === currentId);
 
@@ -201,11 +206,33 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                             />
                         </div>
                         {isEditing ? (
-                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                <ImageIcon size={48} className="text-white" />
+                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20 gap-4">
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); setIsMediaBrowserOpen(true); }}
+                                    className="p-3 bg-white/10 hover:bg-white/20 rounded-full transition-all"
+                                    title="Galerie Média"
+                                >
+                                    <ImageIcon size={32} />
+                                </button>
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); setShowAIPrompt(true); }}
+                                    className="p-3 bg-accent text-slate-950 rounded-full hover:scale-110 transition-all shadow-glow-accent"
+                                    title="Générer par IA"
+                                >
+                                    <Sparkles size={32} />
+                                </button>
                             </div>
                         ) : (
                             <div className="absolute inset-0 bg-gradient-to-t from-app-bg/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                        )}
+                        
+                        {isGeneratingAIImage && (
+                            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-30">
+                                <div className="flex flex-col items-center gap-4 animate-pulse">
+                                    <Sparkles size={48} className="text-accent animate-spin" />
+                                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-accent">Création en cours...</span>
+                                </div>
+                            </div>
                         )}
                     </div>
 
@@ -570,6 +597,17 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                 }}
                 allowedTypes={['image']}
                 title="Changer le Portrait"
+            />
+
+            <AIPromptOverlay
+                isOpen={showAIPrompt}
+                onClose={() => setShowAIPrompt(false)}
+                isGenerating={isGeneratingAIImage}
+                title={`Portrait IA : ${selectedNpc.name}`}
+                placeholder="Ex: cicatrices de combat, armure noire reluisante, fond volcanique..."
+                onGenerate={(instructions) => {
+                    generateEntityPortrait(selectedNpc.id, instructions).then(() => setShowAIPrompt(false));
+                }}
             />
         </div>
     );

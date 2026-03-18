@@ -170,37 +170,118 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
             </div>
 
             {/* Extra Stats Bars (Dynamic from System) */}
-            {activeDriver && activeDriver.combat.statsToTrack.length > 0 && (
+            {activeDriver?.ui_config?.gauges && activeDriver.ui_config.gauges.length > 0 ? (
                 <div className="mt-3 flex gap-3 px-2">
-                    {activeDriver.combat.statsToTrack
-                        .filter(s => s.isResource)
-                        .map((statMapping, idx) => {
-                        const statName = statMapping.label;
-                        const extra = combatant.extraStats?.[statMapping.fieldId] || { value: 10, max: 10 };
+                    {activeDriver.ui_config.gauges.map((gaugeConfig, idx) => {
+                        const extra = combatant.extraStats?.[gaugeConfig.fieldId] || { value: 10, max: 10 };
                         const percent = Math.min(100, Math.max(0, (extra.value / extra.max) * 100));
                         
-                        // Color coding based on stat name
-                        let barColor = 'bg-indigo-500';
-                        if (statName.toLowerCase().includes('san')) barColor = 'bg-purple-500';
-                        if (statName.toLowerCase().includes('mp') || statName.toLowerCase().includes('mana')) barColor = 'bg-blue-500';
-                        if (statName.toLowerCase().includes('xp') || statName.toLowerCase().includes('exp')) barColor = 'bg-amber-500';
+                        // Style: Segmented (e.g. for Stress or boxes)
+                        if (gaugeConfig.style === 'segmented') {
+                            const segments = Math.max(2, Math.min(10, extra.max)); // cap segments for display
+                            const activeSegments = Math.round((percent / 100) * segments);
+                            
+                            return (
+                                <div key={idx} className="flex-1 flex flex-col gap-1">
+                                    <div className="flex justify-between items-center px-0.5">
+                                        <span className="text-[8px] font-black uppercase tracking-tighter text-app-text/40">{gaugeConfig.label}</span>
+                                        <span className="text-[8px] font-bold text-app-text/60">{extra.value}</span>
+                                    </div>
+                                    <div className="flex gap-0.5 h-2">
+                                        {Array.from({ length: segments }).map((_, sIdx) => (
+                                            <div 
+                                                key={sIdx}
+                                                className={`flex-1 rounded-sm border border-white/5 transition-all duration-300 ${
+                                                    sIdx < activeSegments 
+                                                        ? (gaugeConfig.color.startsWith('bg-') ? gaugeConfig.color : '') 
+                                                        : 'bg-app-bg/50'
+                                                }`}
+                                                style={{ 
+                                                    backgroundColor: sIdx < activeSegments && !gaugeConfig.color.startsWith('bg-') ? gaugeConfig.color : undefined 
+                                                }}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                            );
+                        }
 
+                        // Style: Neon (Cyberpunk glow)
+                        if (gaugeConfig.style === 'neon') {
+                            const color = gaugeConfig.color.startsWith('bg-') ? '' : gaugeConfig.color;
+                            return (
+                                <div key={idx} className="flex-1 flex flex-col gap-1">
+                                    <div className="flex justify-between items-center px-0.5">
+                                        <span className="text-[8px] font-black uppercase tracking-tighter text-app-text/40 drop-shadow-[0_0_2px_rgba(255,255,255,0.3)]">{gaugeConfig.label}</span>
+                                        <span className="text-[8px] font-bold text-app-text/60">{extra.value}</span>
+                                    </div>
+                                    <div className="h-1.5 bg-black/40 rounded-full overflow-hidden border border-white/5 p-[1px]">
+                                        <div 
+                                            className={`h-full rounded-full transition-all duration-700 ease-out shadow-[0_0_8px_rgba(255,255,255,0.5)] ${gaugeConfig.color.startsWith('bg-') ? gaugeConfig.color : ''}`}
+                                            style={{ 
+                                                width: `${percent}%`,
+                                                backgroundColor: color || undefined,
+                                                boxShadow: color ? `0 0 10px ${color}` : undefined
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            );
+                        }
+
+                        // Default Style: Bar
                         return (
                             <div key={idx} className="flex-1 flex flex-col gap-1">
                                 <div className="flex justify-between items-center px-0.5">
-                                    <span className="text-[8px] font-black uppercase tracking-tighter text-app-text/40">{statName}</span>
+                                    <span className="text-[8px] font-black uppercase tracking-tighter text-app-text/40">{gaugeConfig.label}</span>
                                     <span className="text-[8px] font-bold text-app-text/60">{extra.value}</span>
                                 </div>
                                 <div className="h-1 bg-app-bg rounded-full overflow-hidden border border-white/5">
                                     <div 
-                                        className={`h-full ${barColor} transition-all duration-500 shadow-sm`}
-                                        style={{ width: `${percent}%` }}
+                                        className={`h-full transition-all duration-500 shadow-sm ${gaugeConfig.color.startsWith('bg-') ? gaugeConfig.color : ''}`}
+                                        style={{ 
+                                            width: `${percent}%`,
+                                            backgroundColor: gaugeConfig.color.startsWith('bg-') ? undefined : gaugeConfig.color 
+                                        }}
                                     />
                                 </div>
                             </div>
                         );
                     })}
                 </div>
+            ) : (
+                /* Fallback to legacy stats mapping if no ui_config is present */
+                activeDriver && activeDriver.combat.statsToTrack.length > 0 && (
+                    <div className="mt-3 flex gap-3 px-2">
+                        {activeDriver.combat.statsToTrack
+                            .filter(s => s.isResource)
+                            .map((statMapping, idx) => {
+                            const statName = statMapping.label;
+                            const extra = combatant.extraStats?.[statMapping.fieldId] || { value: 10, max: 10 };
+                            const percent = Math.min(100, Math.max(0, (extra.value / extra.max) * 100));
+                            
+                            let barColor = 'bg-indigo-500';
+                            if (statName.toLowerCase().includes('san')) barColor = 'bg-purple-500';
+                            if (statName.toLowerCase().includes('mp') || statName.toLowerCase().includes('mana')) barColor = 'bg-blue-500';
+                            if (statName.toLowerCase().includes('xp') || statName.toLowerCase().includes('exp')) barColor = 'bg-amber-500';
+
+                            return (
+                                <div key={idx} className="flex-1 flex flex-col gap-1">
+                                    <div className="flex justify-between items-center px-0.5">
+                                        <span className="text-[8px] font-black uppercase tracking-tighter text-app-text/40">{statName}</span>
+                                        <span className="text-[8px] font-bold text-app-text/60">{extra.value}</span>
+                                    </div>
+                                    <div className="h-1 bg-app-bg rounded-full overflow-hidden border border-white/5">
+                                        <div 
+                                            className={`h-full ${barColor} transition-all duration-500 shadow-sm`}
+                                            style={{ width: `${percent}%` }}
+                                        />
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )
             )}
 
             {/* Expansible Status Panel */}

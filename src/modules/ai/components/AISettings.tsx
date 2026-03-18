@@ -31,7 +31,10 @@ const AISettings: React.FC = () => {
           const data = await aiService.listModels() as { models: Array<{ name: string, supportedGenerationMethods: string[] }> };
           if (data && data.models) {
             const names = data.models
-              .filter(m => m.supportedGenerationMethods.includes('generateContent'))
+              .filter(m => 
+                m.supportedGenerationMethods.includes('generateContent') || 
+                m.supportedGenerationMethods.includes('predict')
+              )
               .map(m => m.name.replace('models/', ''));
             setDiscoveredModels(names);
           }
@@ -164,6 +167,7 @@ const AISettings: React.FC = () => {
                 </div>
                 
                 <select
+                  title="Sélectionner le modèle d'IA"
                   value={configs[p.id].modelId}
                   onChange={(e) => updateConfig(p.id, { modelId: e.target.value })}
                   className="w-full bg-black/40 border border-app-border/40 rounded-xl px-4 py-3 text-xs text-app-text focus:border-accent/50 outline-none transition-all appearance-none cursor-pointer"
@@ -179,6 +183,8 @@ const AISettings: React.FC = () => {
                           <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
                           <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
                           <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+                          <option value="imagen-3.0-generate-001">Imagen 3 (Portrait)</option>
+                          <option value="imagen-3.0-fast-generate-001">Imagen 3 Fast (Portrait)</option>
                         </>
                       )}
                       <option value="custom">-- Saisie Manuelle --</option>

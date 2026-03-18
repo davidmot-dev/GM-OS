@@ -1,11 +1,11 @@
 import React from 'react';
-import { useMapStore, type MapTool, type FogMode } from '../useMapStore';
+import { useMapStore, type MapTool, type FogMode, type WeatherType } from '../useMapStore';
 import { useCombatStore } from '../../combat/useCombatStore';
 import { gmConfirm, gmCustom } from '../../../stores/useModalStore';
 import {
     Upload, EyeOff, Eye, Paintbrush, Square, Circle,
     Cast, Maximize, Users, MousePointer2, PlusCircle, Trash2, MapPin,
-    SkipBack, SkipForward, Swords
+    SkipBack, SkipForward, Swords, CloudRain, CloudSnow, Cloud
 } from 'lucide-react';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaStore } from '../../../stores/useMediaStore';
@@ -65,6 +65,10 @@ const MapControls: React.FC = () => {
         isGridEnabled, setGridEnabled,
         gridSize, setGridSize,
         gridOpacity, setGridOpacity,
+
+        // Weather Settings
+        weatherType, setWeather,
+        weatherIntensity,
 
         // Projection Actions
         projectionTarget, clearProjectedState
@@ -217,6 +221,59 @@ const MapControls: React.FC = () => {
 
                 <hr className="border-gray-800" />
 
+                {/* Weather Section */}
+                <section>
+                    <h3 className="text-xs text-slate-400 uppercase tracking-wider mb-3 font-bold px-1">Effets Atmosphériques</h3>
+                    <div className="flex gap-2 mb-4">
+                        {[
+                            { id: 'none', icon: EyeOff, label: 'Aucun' },
+                            { id: 'rain', icon: CloudRain, label: 'Pluie' },
+                            { id: 'snow', icon: CloudSnow, label: 'Neige' },
+                            { id: 'smoke', icon: Cloud, label: 'Brouillard' },
+                        ].map((w) => {
+                            const isActive = weatherType === w.id;
+                            const Icon = w.icon;
+                            return (
+                                <button
+                                    key={w.id}
+                                    onClick={() => setWeather(w.id as WeatherType)}
+                                    className={`flex-1 flex flex-col items-center justify-center p-2 rounded border transition-all ${
+                                        isActive 
+                                        ? 'bg-accent/20 border-accent text-accent shadow-glow-accent/20' 
+                                        : 'bg-app-bg border-app-border text-slate-500 hover:bg-app-surface'
+                                    }`}
+                                    title={w.label}
+                                >
+                                    <Icon size={18} />
+                                    <span className="text-[9px] mt-1 font-bold uppercase">{w.label}</span>
+                                </button>
+                            );
+                        })}
+                    </div>
+
+                    {weatherType !== 'none' && (
+                        <div className="bg-app-bg/20 p-3 rounded border border-app-border">
+                            <div className="flex justify-between text-xs text-slate-400 mb-2">
+                                <span>Intensité</span>
+                                <span className="text-accent font-mono">{Math.round(weatherIntensity * 100)}%</span>
+                            </div>
+                            <input
+                                type="range"
+                                min="0.1"
+                                max="1.0"
+                                step="0.1"
+                                value={weatherIntensity}
+                                title="Intensité des effets météo"
+                                aria-label="Intensité"
+                                onChange={(e) => setWeather(weatherType, parseFloat(e.target.value))}
+                                className="w-full h-1 accent-accent bg-gray-700 rounded-lg cursor-pointer"
+                            />
+                        </div>
+                    )}
+                </section>
+
+                <hr className="border-gray-800" />
+
                 {/* Grid Settings */}
                 <section>
                     <div className="flex items-center justify-between mb-3 px-1">
@@ -245,6 +302,7 @@ const MapControls: React.FC = () => {
                                     max="200"
                                     step="10"
                                     value={gridSize}
+                                    title="Taille de la grille"
                                     onChange={(e) => setGridSize(parseInt(e.target.value))}
                                     className="w-full h-1 accent-accent bg-gray-700 rounded-lg cursor-pointer"
                                 />
@@ -260,6 +318,7 @@ const MapControls: React.FC = () => {
                                     max="1"
                                     step="0.1"
                                     value={gridOpacity}
+                                    title="Opacité de la grille"
                                     onChange={(e) => setGridOpacity(parseFloat(e.target.value))}
                                     className="w-full h-1 accent-accent bg-gray-700 rounded-lg cursor-pointer"
                                 />

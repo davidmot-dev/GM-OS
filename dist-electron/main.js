@@ -11,6 +11,7 @@ import require$$1 from "path";
 import http from "node:http";
 import https from "node:https";
 import { createRequire } from "node:module";
+import os from "node:os";
 import { spawn } from "child_process";
 var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
 function getDefaultExportFromCjs(x) {
@@ -1791,10 +1792,19 @@ function requireSymlink() {
     } catch {
     }
     if (stats && stats.isSymbolicLink()) {
-      const [srcStat, dstStat] = await Promise.all([
-        fs2.stat(srcpath),
-        fs2.stat(dstpath)
-      ]);
+      let srcStat;
+      if (path2.isAbsolute(srcpath)) {
+        srcStat = await fs2.stat(srcpath);
+      } else {
+        const dstdir = path2.dirname(dstpath);
+        const relativeToDst = path2.join(dstdir, srcpath);
+        try {
+          srcStat = await fs2.stat(relativeToDst);
+        } catch {
+          srcStat = await fs2.stat(srcpath);
+        }
+      }
+      const dstStat = await fs2.stat(dstpath);
       if (areIdentical(srcStat, dstStat)) return;
     }
     const relative = await symlinkPaths(srcpath, dstpath);
@@ -1813,7 +1823,18 @@ function requireSymlink() {
     } catch {
     }
     if (stats && stats.isSymbolicLink()) {
-      const srcStat = fs2.statSync(srcpath);
+      let srcStat;
+      if (path2.isAbsolute(srcpath)) {
+        srcStat = fs2.statSync(srcpath);
+      } else {
+        const dstdir = path2.dirname(dstpath);
+        const relativeToDst = path2.join(dstdir, srcpath);
+        try {
+          srcStat = fs2.statSync(relativeToDst);
+        } catch {
+          srcStat = fs2.statSync(srcpath);
+        }
+      }
       const dstStat = fs2.statSync(dstpath);
       if (areIdentical(srcStat, dstStat)) return;
     }
@@ -2608,6 +2629,7 @@ function registerObsidianHandlers() {
 }
 const require$1 = createRequire(import.meta.url);
 const pdf = require$1("pdf-parse");
+const { WebSocketServer } = require$1("ws");
 const __dirname$1 = path.dirname(fileURLToPath(import.meta.url));
 registerRagHandlers();
 registerMcpHandlers();
@@ -2935,6 +2957,67 @@ ipcMain.on("image:close-all-displays", () => {
   }
   projectorWindows.clear();
 });
+let wss = null;
+const REMOTE_PORT = 3001;
+function startRemoteServer() {
+  try {
+    wss = new WebSocketServer({ port: REMOTE_PORT });
+    console.log(`[Remote] Server started on port ${REMOTE_PORT}`);
+    wss.on("connection", (ws) => {
+      console.log("[Remote] New device connected");
+      if (win && !win.isDestroyed()) {
+        win.webContents.send("remote:request-sync");
+      }
+      ws.on("message", (message) => {
+        try {
+          const data = JSON.parse(message);
+          console.log("[Remote] Action received:", data);
+          if (data.type === "remote:hello") {
+            console.log("[Remote] Handshake received from device");
+          } else {
+            if (win && !win.isDestroyed()) {
+              win.webContents.send("remote:action", data);
+            }
+          }
+        } catch (err) {
+          console.error("[Remote] Failed to parse message:", err);
+        }
+      });
+      ws.on("close", () => console.log("[Remote] Device disconnected"));
+    });
+  } catch (err) {
+    console.error("[Remote] Failed to start server:", err);
+  }
+}
+ipcMain.on("remote:broadcast-sync", (_event, data) => {
+  if (wss) {
+    const message = JSON.stringify({ type: "sync", payload: data });
+    wss.clients.forEach((client) => {
+      if (client.readyState === 1) {
+        client.send(message);
+      }
+    });
+  }
+});
+function getLocalIP() {
+  const interfaces = os.networkInterfaces();
+  for (const name of Object.keys(interfaces)) {
+    const networkInterface = interfaces[name];
+    if (!networkInterface) continue;
+    for (const iface of networkInterface) {
+      if ((iface.family === "IPv4" || iface.family === 4) && !iface.internal) {
+        return iface.address;
+      }
+    }
+  }
+  return "localhost";
+}
+ipcMain.handle("remote:get-connection-info", () => {
+  return {
+    ip: getLocalIP(),
+    port: REMOTE_PORT
+  };
+});
 const APP_ROOT = process.env.APP_ROOT || "";
 ipcMain.handle("ai:list-docs", async () => {
   const docsPath = path.join(APP_ROOT, "docs");
@@ -3062,7 +3145,10 @@ app.on("activate", () => {
     createWindow();
   }
 });
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  createWindow();
+  startRemoteServer();
+});
 export {
   MAIN_DIST,
   RENDERER_DIST,
