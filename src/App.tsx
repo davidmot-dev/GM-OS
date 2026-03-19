@@ -104,7 +104,8 @@ function App() {
               hp: c.hp,
               hpMax: c.hpMax,
               init: c.init,
-              isPlayer: c.isPlayer
+              isPlayer: c.isPlayer,
+              healthSystem: c.healthSystem
             })),
             currentTurnIdx: combatStore.currentTurnIdx,
             round: combatStore.round

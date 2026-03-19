@@ -15,29 +15,33 @@ L'interface est divisée en trois zones principales :
 ## 🚀 Projection et Gestion des Écrans
 
 ### Choisir sa Cible (Target Screen)
+
 En haut de l'interface, vous pouvez sélectionner l'écran de destination :
+
 - **Player Hub** : Envoie l'image vers l'application "Hub" des joueurs (fenêtré).
 - **Displays (1, 2, etc.)** : Envoie l'image en plein écran sur vos moniteurs physiques connectés à l'ordinateur.
 
 ### Modes de Projection
+
 - **Solo** : Un simple clic sur une image l'envoie instantanément sur l'écran cible.
-- **Sequence** : Le bouton "Project Sequence" fait défiler automatiquement les images marquées comme "actives" dans votre bibliothèque.
-- **Entity (NPC/PC)** : GM-OS peut projeter une fiche complète de personnage (nom, portrait, statistiques publiques) vers le Player Hub pour que les joueurs visualisent immédiatement leur interlocuteur.
+- **Diaporama (Sequence)** : Cochez les cases "Sequence" sur vos images, puis lancez le diaporama via le bouton **DIAPORAMA** en haut à droite.
+  - **Navigation** : Utilisez les flèches **Précédent** et **Suivant** à côté du bouton pour faire défiler manuellement votre séquence.
+- **Entity (NPC/PC)** : GM-OS projette une fiche complète (nom, portrait, stats publiques) vers le Player Hub en mode "Diorama" tout en affichant l'image brute sur vos écrans secondaires.
 
 ## 📁 Organisation de la Bibliothèque
 
 Pour ne pas perdre de temps à chercher une image en plein combat :
 
-- **Dossiers** : Créez une structure claire (ex: *Lieux*, *PNJ*, *Cartes*, *Objets*).
+- **Dossiers** : Créez une structure claire. Les dossiers sont rechargés automatiquement d'une session à l'autre.
 - **Favoris (⭐)** : Marquez vos images les plus utilisées pour un accès rapide.
-- **Filtres** : Utilisez la barre de recherche pour retrouver un asset par son nom de fichier.
+- **Séquence** : Marquez les images pour votre scène actuelle afin de les projeter en un clic via le diaporama.
 
 ## 🛑 Contrôle de Sécurité (Blackout)
 
-La gestion visuelle peut être sensible (spoilers). Image OS propose deux niveaux de sécurité :
+La gestion visuelle est sensible (spoilers). Image OS propose une synchronisation parfaite du blackout :
 
-- **Target Blackout** : Éteint uniquement l'image sur l'écran cible actuellement sélectionné.
-- **Global Blackout (🔴 ALL)** : Coupe instantanément la projection sur TOUS les écrans connectés. Indispensable pour masquer une carte secrète ou finir une scène sur un écran noir dramatique.
+- **Target Blackout** : Éteint l'image sur l'écran cible sélectionné. Si vous projetez sur un moniteur, le Player Hub (en mode miroir) s'effacera également pour éviter les fuites d'infos.
+- **Global Blackout (🔴 ALL)** : Coupe instantanément TOUTES les projections sur TOUS les écrans. Indispensable pour masquer une carte secrète ou finir une scène sur un écran noir dramatique.
 
 ---
 

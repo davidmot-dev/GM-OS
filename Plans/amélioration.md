@@ -17,8 +17,11 @@ Ce document répertorie les axes de développement futurs. Les priorités sont d
 * [x] **Effets Météo Dynamiques** : Particules (pluie, neige, fumée) synchronisées (Map-OS)
 * [x] **Timeline OS** : Gestion de la chronologie, des événements et du journal de bord (Chroniques)
 * [x] **Intégration Gemini CLI** : Assistant terminal avec contexte projet et guides automatisés
-* [x] **Cerveau Tactique (Tactical Brain)** : Auto-dispel intelligent, orchestration de combat et **Actions Suggérées (Cortex)** basées sur le positionnement.
+* [x] **Cerveau Tactique (Tactical Brain)** : Auto-dispel intelligent, orchestration de combat et **Actions Suggérées (Cortex)** basées sur le positionnement (Synchronisé Hub & Moniteur).
 * [x] **Évolution Combat-OS** : Distinction PJ / PNJ, système de ciblage et registre de statuts (20 états).
+* [x] **Map-OS : Magic Layers** : Visualisation de sorts (Feu, Glace, etc.), formes tactiques (Cercle, Cône, Ligne) et synchronisation multi-écrans robuste.
+* [x] **Combat Tracker 2.0** : Jauges interactives (Clic +/-), miniaturisation haute précision (24px) pour le stress, et isolation anatomique (correction du bug de superposition du torse).
+
 
 * [x] **NPC Live Generator** : Génération instantanée (Z-Image/Gemini) et stockage Media Hub.
 * [x] **Localisation & Accessibilité** : Refonte intégrale fr-FR et conformité A11y (NpcDetail/Gallery/Oracle).
@@ -32,7 +35,7 @@ Ce document répertorie les axes de développement futurs. Les priorités sont d
 
 ### 1. ⚔️ Automatisation du Combat OS
 
-* [x] **Calculateur de Dégâts Intelligent** : Auto-Status Mapping (Feu, Froid, etc.) et Prévu Cortex.
+* [x] **Calculateur de Dégâts Intelligent** : Auto-Status Mapping (Feu, Froid, etc.), Prévu Cortex et **Bouton Haute Visibilité (Gold Ghost)**.
 
 * [x] **Actions Suggérées (Cortex)** : Suggérer des actions PNJ basées sur leur état et positionnement (Propulsé par Gemini 1.5).
 
@@ -40,9 +43,10 @@ Ce document répertorie les axes de développement futurs. Les priorités sont d
 
 ### 2. 🪄 Map-OS : Calques Magiques (Nouveau)
 
-* [ ] **Visualisation de Sorts** : Zones animées (Feu, Glace, Acide) sur la carte.
-* [ ] **Sync Player Hub** : Projection en temps réel des effets magiques.
-* [ ] **Outils de Mesure** : Cercles, lignes et cônes tactiques.
+* [x] **Visualisation de Sorts** : Zones animées (Feu, Glace, Acide) sur la carte.
+* [x] **Sync Player Hub** : Projection en temps réel des effets magiques et synchronisation du "drop" token pour l'IA.
+* [x] **Outils de Mesure** : Cercles, lignes et cônes tactiques.
+
 
 
 
@@ -75,7 +79,8 @@ Ce document répertorie les axes de développement futurs. Les priorités sont d
 
 * [ ] **Dialogue Tree Engine** (NPC-OS) : Génération de répliques contextuelles via IA.
 * [ ] **Butin Sync** (Table-OS ➡️ Session-OS) : Transfert automatique d'objets vers les fiches PJ.
-* [ ] **Thèmes Dynamiques** (UI/UX) : Thèmes thématiques (Cyberpunk, Médiéval-Dark) changeant toute l'interface.
+* [x] **Thèmes Dynamiques** (UI/UX) : 4 univers immersifs (Cyberpunk, Médiéval-Dark, Modern, Claire) avec polices, textures et couleurs synchronisées.
+
 * [ ] **Soundscape Spatial** (Ambient-OS) : Volume sonore dépendant de la position des pions sur la map.
 
 

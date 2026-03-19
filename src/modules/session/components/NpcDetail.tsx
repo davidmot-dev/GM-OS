@@ -11,6 +11,7 @@ import { useModalStore } from '../../../stores/useModalStore';
 import { ResolvedImage } from '../../../components/ResolvedImage';
 import AIPromptOverlay from '../../ai/components/AIPromptOverlay';
 import { useVoiceAutomation } from '../../voice/hooks/useVoiceAutomation';
+import { HealthManager } from './health/HealthManager';
 
 
 // --- Sub-components (Reused or adapted from CharacterSheetEditor) ---
@@ -21,8 +22,8 @@ const FieldGauge: React.FC<{
 }> = ({ field, value, onChange }) => (
     <div className="group space-y-2">
         <div className="flex justify-between items-center">
-            <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{field.label}</label>
-            <span className="text-[10px] font-black text-accent font-mono">{value}%</span>
+            <label className="text-[11px] font-black uppercase tracking-wider text-app-text/60">{field.label}</label>
+            <span className="text-[11px] font-black text-accent font-mono">{value}%</span>
         </div>
         <div className="relative h-2 bg-app-bg rounded-full overflow-hidden border border-app-border/40">
             <div
@@ -45,7 +46,7 @@ const FieldNumber: React.FC<{
     onChange: (val: number) => void;
 }> = ({ field, value, onChange }) => (
     <div className="flex items-center justify-between p-3 bg-app-bg/40 rounded-xl border border-app-border/40">
-        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{field.label}</label>
+        <label className="text-[11px] font-black uppercase tracking-wider text-app-text/60">{field.label}</label>
         <input
             type="number"
             value={value ?? 0}
@@ -62,7 +63,7 @@ const FieldText: React.FC<{
     onChange: (val: string) => void;
 }> = ({ field, value, onChange }) => (
     <div className="flex items-center gap-3 p-3 bg-app-bg/40 rounded-xl border border-app-border/40">
-        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40 w-28 flex-shrink-0">{field.label}</label>
+        <label className="text-[11px] font-black uppercase tracking-wider text-app-text/60 w-28 flex-shrink-0">{field.label}</label>
         <input
             type="text"
             value={value ?? ''}
@@ -85,7 +86,7 @@ const FieldCheckbox: React.FC<{
         <div className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${value ? 'bg-accent border-accent' : 'border-app-text/20'}`}>
             {value && <CheckCircle size={10} className="text-white" />}
         </div>
-        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40 cursor-pointer">{field.label}</label>
+        <label className="text-[11px] font-black uppercase tracking-wider text-app-text/60 cursor-pointer">{field.label}</label>
     </button>
 );
 
@@ -153,8 +154,8 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
         useCombatStore.getState().addCombatant({
             name: selectedNpc.name,
             init: selectedNpc.initiative,
-            hp: selectedNpc.hp,
-            hpMax: selectedNpc.maxHp,
+            hp: selectedNpc.healthSystem?.type === 'hp' ? Number(selectedNpc.healthSystem.data.current) : selectedNpc.hp,
+            hpMax: selectedNpc.healthSystem?.type === 'hp' ? Number(selectedNpc.healthSystem.data.max) : selectedNpc.maxHp,
             avatar: selectedNpc.avatar,
             isPlayer: false,
             faction: 'enemy',
@@ -244,40 +245,10 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                         )}
                     </div>
 
-                    {/* Status Badge */}
-                    {isEditing ? (
-                        <div className="flex flex-col gap-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40 pl-1">Vigueur & État</label>
-                            <div className="grid grid-cols-2 gap-2">
-                                {(['alive', 'injured', 'dead', 'unknown'] as const).map(s => (
-                                    <button
-                                        key={s}
-                                        onClick={() => updateEntity(selectedNpc.id, { status: s })}
-                                        className={`py-2 px-3 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all ${
-                                            selectedNpc.status === s 
-                                            ? 'bg-white text-app-bg border-white' 
-                                            : 'bg-app-surface border-app-border text-app-text/40 hover:border-app-border/60'
-                                        }`}
-                                    >
-                                        {s === 'alive' ? 'Vivant' : s === 'injured' ? 'Blessé' : s === 'dead' ? 'Mort' : 'Inconnu'}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    ) : (
-                        <div className="flex items-center justify-center gap-2 py-2 px-4 rounded-xl bg-app-surface/50 border border-app-border">
-                            <div className={`w-2 h-2 rounded-full ${
-                                selectedNpc.status === 'alive' ? 'bg-emerald-500' : 
-                                selectedNpc.status === 'injured' ? 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]' : 
-                                selectedNpc.status === 'dead' ? 'bg-red-500' : 'bg-app-text/40'}`} 
-                            />
-                            <span className="text-[10px] uppercase font-black tracking-widest text-app-text/60">
-                                {selectedNpc.status === 'alive' ? 'Vivant' : 
-                                 selectedNpc.status === 'injured' ? 'Blessé' :
-                                 selectedNpc.status === 'dead' ? 'Mort' : 'Statut Inconnu'}
-                            </span>
-                        </div>
-                    )}
+                    {/* Modular Health Manager */}
+                    <div className="w-full">
+                        <HealthManager id={selectedNpc.id} type="npc" />
+                    </div>
                 </div>
 
                 {/* Right Col: Stats & Lore */}
@@ -428,7 +399,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                             <div key={i} className="bg-app-surface/40 border border-white/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1 group hover:border-accent/20 transition-all">
                                                 {stat.isMainHP ? <Heart size={14} className="text-red-500" /> : <div className="w-1.5 h-1.5 rounded-full bg-accent/40" />}
                                                 <span className="text-white font-black text-xs">{val}</span>
-                                                <span className="text-[9px] uppercase font-bold text-app-text/20 tracking-wider group-hover:text-app-text/40">{stat.label}</span>
+                                                <span className="text-[10px] uppercase font-bold text-app-text/40 tracking-wide group-hover:text-app-text/60">{stat.label}</span>
                                             </div>
                                         );
                                     });
@@ -497,9 +468,9 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                 {template.sections.map((section, idx) => (
                                     <div key={idx} className="space-y-4">
                                         <div className="flex items-center gap-3">
-                                            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
-                                            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-app-text/20">{section.label}</span>
-                                            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+                                            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                                            <span className="text-[11px] font-black uppercase tracking-[0.2em] text-app-text/40">{section.label}</span>
+                                            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                                         </div>
                                         <div className="grid grid-cols-2 gap-3">
                                             {section.fields.map(field => {
@@ -542,7 +513,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                             </div>
                             <div className="flex items-center gap-2 mb-1 relative z-10">
                                 <Lock size={14} className="text-accent" />
-                                <h4 className="text-[10px] font-black uppercase tracking-widest text-accent">Informations Secrètes</h4>
+                                <h4 className="text-[11px] font-black uppercase tracking-wider text-accent">Informations Secrètes</h4>
                             </div>
                             <textarea
                                 className="w-full bg-transparent border-none text-app-text/80 text-xs leading-relaxed resize-none focus:ring-0 placeholder:text-app-text/10 min-h-[80px] relative z-10"

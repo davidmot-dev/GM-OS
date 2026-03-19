@@ -71,6 +71,7 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
                     type="checkbox"
                     checked={media.active}
                     onChange={() => toggleMediaActive(media.id)}
+                    onClick={(e) => e.stopPropagation()}
                     className="w-4 h-4 rounded border-app-border bg-app-surface/50 text-accent cursor-pointer focus:ring-0 focus:ring-offset-0"
                     title="Inclure dans la séquence"
                 />

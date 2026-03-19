@@ -20,8 +20,25 @@ export interface MapPing {
     createdAt: number;
 }
 
+export type MagicShape = 'circle' | 'rect' | 'line' | 'cone';
+export type MagicStyle = 'fire' | 'ice' | 'acid' | 'electric' | 'poison' | 'arcane' | 'darkness';
+
+export interface MagicEffect {
+    id: string;
+    type: MagicShape;
+    style: MagicStyle;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    rotation: number;
+    opacity: number;
+}
+
+
 export type FogMode = 'reveal' | 'hide';
-export type MapTool = 'brush' | 'rect' | 'circle' | 'move_token' | 'ping';
+export type MapTool = 'brush' | 'rect' | 'circle' | 'move_token' | 'ping' | 'magic';
+
 export type WeatherType = 'none' | 'rain' | 'snow' | 'smoke';
 
 interface MapState {
@@ -31,7 +48,9 @@ interface MapState {
     fogDataUrl: string | null; // C'est ici qu'on stockera l'image base64 du brouillard (pour reprendre une session plus tard)
     tokens: MapToken[];
     pings: MapPing[];
+    magicEffects: MagicEffect[];
     fogCommand: 'reveal_all' | 'hide_all' | null;
+
 
     // Weather State
     weatherType: WeatherType;
@@ -55,7 +74,10 @@ interface MapState {
 
     // UI State (Not persisted)
     currentTool: MapTool;
+    magicStyle: MagicStyle;
+    magicShape: MagicShape;
     fogMode: FogMode;
+
     brushSize: number;
     isDraggingToken: boolean;
     selectedTokenId: string | null;
@@ -73,10 +95,18 @@ interface MapState {
     addPing: (x: number, y: number, color: string) => void;
     removePing: (id: string) => void;
 
+    // Magic Effects
+    addMagicEffect: (effect: Omit<MagicEffect, 'id'>) => void;
+    removeMagicEffect: (id: string) => void;
+    clearMagicEffects: () => void;
+
+
     triggerFogCommand: (command: 'reveal_all' | 'hide_all' | null) => void;
 
     setTool: (tool: MapTool) => void;
+    setMagicSettings: (style: MagicStyle, shape: MagicShape) => void;
     setFogMode: (mode: FogMode) => void;
+
     setBrushSize: (size: number) => void;
 
     // Weather Actions
@@ -98,6 +128,8 @@ interface MapState {
     projectedFogDataUrl: string | null;
     projectedTokens: MapToken[];
     projectedPings: MapPing[];
+    projectedMagicEffects: MagicEffect[];
+
     projectedWeatherType: WeatherType;
     projectedWeatherIntensity: number;
     projectedMapWidth: number;
@@ -124,10 +156,15 @@ export const useMapStore = create<MapState>()(
             fogDataUrl: null,
             tokens: [],
             pings: [],
+            magicEffects: [],
+
 
             // UI Defaults
             currentTool: 'brush',
+            magicStyle: 'fire',
+            magicShape: 'circle',
             fogMode: 'reveal',
+
             brushSize: 50,
             fogCommand: null,
             isDraggingToken: false,
@@ -159,6 +196,8 @@ export const useMapStore = create<MapState>()(
             projectedFogDataUrl: null,
             projectedTokens: [],
             projectedPings: [],
+            projectedMagicEffects: [],
+
             projectedWeatherType: 'none',
             projectedWeatherIntensity: 0.5,
             projectedMapWidth: 2000,
@@ -236,6 +275,27 @@ export const useMapStore = create<MapState>()(
                 }));
             },
 
+            addMagicEffect: (effect) => {
+                const id = Math.random().toString(36).substring(2, 9);
+                set(state => ({
+                    magicEffects: [...state.magicEffects, { ...effect, id }]
+                }));
+                if (get().projectionTarget) get().syncToPlayers();
+            },
+
+            removeMagicEffect: (id) => {
+                set(state => ({
+                    magicEffects: state.magicEffects.filter(e => e.id !== id)
+                }));
+                if (get().projectionTarget) get().syncToPlayers();
+            },
+
+            clearMagicEffects: () => {
+                set({ magicEffects: [] });
+                if (get().projectionTarget) get().syncToPlayers();
+            },
+
+
             triggerFogCommand: (fogCommand) => {
                 set({ fogCommand });
                 if (get().projectionTarget) get().syncToPlayers();
@@ -244,8 +304,10 @@ export const useMapStore = create<MapState>()(
             projectionTarget: null,
 
             setTool: (currentTool) => set({ currentTool }),
+            setMagicSettings: (magicStyle, magicShape) => set({ magicStyle, magicShape }),
             setFogMode: (fogMode) => set({ fogMode }),
             setBrushSize: (brushSize) => set({ brushSize }),
+
 
             setWeather: (weatherType, weatherIntensity) => {
                 set(state => ({ 
@@ -273,7 +335,11 @@ export const useMapStore = create<MapState>()(
             },
 
             setViewState: (zoom, panX, panY) => set({ zoom, panX, panY }),
-            setMapDimensions: (mapWidth, mapHeight) => set({ mapWidth, mapHeight }),
+            setMapDimensions: (mapWidth, mapHeight) => {
+                set({ mapWidth, mapHeight });
+                if (get().projectionTarget) get().syncToPlayers();
+            },
+
             resetView: () => {
                 set(state => ({ viewResetCounter: state.viewResetCounter + 1 }));
             },
@@ -287,7 +353,9 @@ export const useMapStore = create<MapState>()(
                     projectedFogDataUrl: state.fogDataUrl,
                     projectedTokens: [...state.tokens],
                     projectedPings: [...state.pings],
+                    projectedMagicEffects: [...state.magicEffects],
                     projectedWeatherType: state.weatherType,
+
                     projectedWeatherIntensity: state.weatherIntensity,
                     projectedMapWidth: state.mapWidth,
                     projectedMapHeight: state.mapHeight,
@@ -337,7 +405,10 @@ export const useMapStore = create<MapState>()(
                 zoom: state.zoom,
                 panX: state.panX,
                 panY: state.panY,
+                isDraggingToken: state.isDraggingToken,
+                selectedTokenId: state.selectedTokenId,
                 projectionTarget: state.projectionTarget,
+
                 projectedMapUrl: state.projectedMapUrl,
                 projectedIsVideo: state.projectedIsVideo,
                 projectedFogDataUrl: state.projectedFogDataUrl,
@@ -349,13 +420,16 @@ export const useMapStore = create<MapState>()(
                 projectedIsGridEnabled: state.projectedIsGridEnabled,
                 projectedGridSize: state.projectedGridSize,
                 projectedGridColor: state.projectedGridColor,
-                projectedGridOpacity: state.projectedGridOpacity
+                projectedGridOpacity: state.projectedGridOpacity,
+                projectedMagicEffects: state.projectedMagicEffects
             })
+
         }
     )
 );
 
 // Export for cross-store access
 if (typeof window !== 'undefined') {
-    (window as any).useMapStore = useMapStore;
+    (window as unknown as Record<string, unknown>).useMapStore = useMapStore;
 }
+

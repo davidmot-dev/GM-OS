@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useCombatStore, type Combatant } from '../useCombatStore';
-import { X, Shield, Plus, Minus, PlusCircle, Edit2, Link2, Brain, Crosshair, Sparkles, Loader2 } from 'lucide-react';
+import { X, Shield, PlusCircle, Edit2, Brain, Crosshair, Sparkles, Loader2, Zap } from 'lucide-react';
 import { ResolvedImage } from '../../../components/ResolvedImage';
-import { gmPrompt } from '../../../stores/useModalStore';
+import { gmPrompt, gmCustom } from '../../../stores/useModalStore';
 import { useSessionOSStore, type Entity } from '../../session/useSessionOSStore';
+import { HealthManager } from '../../session/components/health/HealthManager';
 import { useTacticalAIStore } from '../../tactical-ai/useTacticalAIStore';
 import { aiService } from '../../ai/AIService';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
@@ -41,14 +42,16 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
         updateCombatant, 
         removeCombatant, 
         combatants,
-        applyDamage,
         setTarget,
         setInitiative, // Kept setInitiative as it's used for the initiative input
         addStatus, // Kept addStatus as it's used for adding statuses
         removeStatus // Kept removeStatus as it's used for removing statuses
     } = useCombatStore();
 
-    const { entities, players, customSheetTemplates } = useSessionOSStore();
+    const { 
+        entities, players, customSheetTemplates,
+        updateCharacterSheetData, updateEntitySheetData 
+    } = useSessionOSStore();
     
     // Source data for dynamic stats
     const sourceCharacter = combatant.isPlayer 
@@ -73,18 +76,6 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
     const myAdvices = activeAdvices.filter(a => a.sourceId === combatant.id);
     const hasHighPriority = myAdvices.some(a => a.priority >= 1);
 
-    // Calcul de couleur HP
-    let hpColorClass = 'text-green-400';
-    if (combatant.hp <= 0) hpColorClass = 'text-gray-500';
-    else if (combatant.hp <= combatant.hpMax * 0.25) hpColorClass = 'text-red-500';
-    else if (combatant.hp <= combatant.hpMax * 0.5) hpColorClass = 'text-yellow-400';
-
-    const handleHpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        let val = parseInt(e.target.value);
-        if (isNaN(val)) val = 0;
-        updateCombatant(combatant.id, { hp: val });
-    };
-
     const handleInitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let val = parseInt(e.target.value);
         if (isNaN(val)) val = 0;
@@ -93,17 +84,29 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
 
     const isDead = combatant.hp <= 0;
 
-    // Faction styling
-    const factionColors = {
-        player: 'border-gm-cyan/50 ring-gm-cyan/20 bg-gm-cyan/5',
-        enemy: 'border-gm-crimson/50 ring-gm-crimson/20 bg-gm-crimson/5',
-        neutral: 'border-amber-500/50 ring-amber-500/20 bg-amber-500/5',
-        ally: 'border-emerald-500/50 ring-emerald-500/20 bg-emerald-500/5'
-    };
-    const factionClass = factionColors[combatant.faction] || factionColors.enemy;
+    // Note: factionColors logic is available for future data-driven styling if needed 
 
     // Target Info
     const currentTarget = combatants.find(c => c.id === combatant.targetId);
+
+    const handleGaugeClick = (e: React.MouseEvent, fieldId: string, delta: number) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const sheetData = sourceCharacter?.sheetData as Record<string, string | number> | undefined;
+        const currentVal = Number(sheetData?.[fieldId] || 0);
+        const newVal = Math.max(0, currentVal + delta);
+        
+        if (combatant.isPlayer && combatant.sourcePlayerId) {
+            // Correctly find the player ID to which this character belongs
+            const player = players.find(p => p.characters.some(c => c.id === combatant.sourcePlayerId));
+            if (player) {
+                updateCharacterSheetData(player.id, combatant.sourcePlayerId, fieldId, newVal);
+            }
+        } else if (combatant.sourceEntityId) {
+            updateEntitySheetData(combatant.sourceEntityId, fieldId, newVal);
+        }
+    };
 
     const handleSuggestAction = async () => {
         setIsSuggesting(true);
@@ -127,37 +130,38 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
     };
 
     return (
-        <div className={`relative flex flex-col p-3 mb-2 rounded-xl transition-all duration-300 border ${factionClass} ${isActive ? 'ring-2 ring-white/50 shadow-glow-white scale-[1.02] z-10' : ''
-            } ${isDead && !isActive ? 'opacity-50 grayscale' : ''}`}>
+        <div className={`relative flex flex-col p-4 mb-3 transition-all duration-500 stitch-card rounded-xl ${
+            isActive ? 'ring-2 ring-primary/40 shadow-glow-gold scale-[1.01] z-10' : ''
+            } ${isDead && !isActive ? 'opacity-40 grayscale blur-[0.5px]' : ''}`}>
 
             <div className="flex items-center w-full">
-                {/* Initiative Input */}
-                <div className="flex flex-col items-center mr-5 shrink-0">
-                    <span className="text-[10px] text-app-text/50 uppercase font-black tracking-[0.2em] mb-1.5 mr-0.5">INIT</span>
+                {/* Initiative Block */}
+                <div className="flex flex-col items-center mr-6 shrink-0 bg-slate-800/40 rounded-lg p-3 border-l-4 border-gm-gold shadow-glow-gold">
+                    <span className="stitch-label mb-1">INIT</span>
                     <input
                         type="number"
                         value={(!combatant.init || Number.isNaN(combatant.init)) ? '' : combatant.init}
                         placeholder="0"
                         onChange={handleInitChange}
-                        className="w-20 h-14 bg-app-bg text-app-text rounded-xl text-center text-2xl font-black border border-app-border shadow-inner focus:ring-2 focus:ring-gm-crimson/50 transition-all"
+                        className="w-16 h-12 bg-transparent text-primary text-center text-2xl font-black outline-none transition-all placeholder:text-primary/20"
                     />
                 </div>
 
                 {/* Avatar / Icon */}
-                <div className="w-12 h-12 rounded-full overflow-hidden bg-app-bg flex items-center justify-center border-2 border-gm-crimson/50 shrink-0">
+                <div className="w-14 h-14 rounded-full overflow-hidden bg-slate-800/50 flex items-center justify-center border-2 border-primary/30 ring-4 ring-primary/5 shrink-0 shadow-lg">
                     <ResolvedImage 
                         src={combatant.avatar} 
                         alt={combatant.name} 
-                        className="w-full h-full object-cover" 
-                        fallback={<Shield className={combatant.isPlayer ? 'text-gm-violet' : 'text-gm-crimson'} size={24} />}
+                        className="w-full h-full object-cover brightness-110" 
+                        fallback={<Shield className={combatant.isPlayer ? 'text-primary' : 'text-gm-crimson'} size={28} />}
                     />
                 </div>
 
                 {/* Info : Name & Statuses */}
-                <div className="flex-1 ml-4 flex flex-col justify-center min-w-0">
-                    <div className="flex items-center gap-2 relative group/name">
+                <div className="flex-initial ml-6 flex flex-col justify-center min-w-[180px] max-w-[320px]">
+                    <div className="flex items-center gap-3 relative group/name">
                         <div 
-                            className="font-bold text-lg text-app-text truncate max-w-[200px] cursor-pointer hover:text-gm-crimson transition-colors flex items-center gap-2" 
+                            className="font-black text-xl text-white tracking-tight truncate max-w-[220px] cursor-pointer hover:text-primary transition-colors flex items-center gap-2" 
                             title="Cliquer pour renommer"
                             onClick={() => {
                                 gmPrompt(`Renommer ${combatant.name} :`, combatant.name, (newName: string) => {
@@ -166,17 +170,17 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                             }}
                         >
                             {combatant.name}
-                            <Edit2 size={12} className="opacity-0 group-hover/name:opacity-50 transition-opacity" />
+                            <Edit2 size={14} className="opacity-0 group-hover/name:opacity-50 transition-opacity" />
                         </div>
-                        {combatant.isPlayer && <span className="text-[10px] bg-gm-cyan/20 text-gm-cyan px-1.5 rounded uppercase font-bold">PJ</span>}
-                        {!combatant.isPlayer && <span className="text-[10px] bg-gm-crimson/20 text-gm-crimson px-1.5 rounded uppercase font-bold">PNJ</span>}
+                        {combatant.isPlayer && <span className="text-[9px] bg-primary text-slate-900 px-1.5 py-0.5 rounded font-black uppercase tracking-tighter">PJ</span>}
+                        {!combatant.isPlayer && <span className="text-[9px] bg-slate-700 text-slate-300 px-1.5 py-0.5 rounded font-black uppercase tracking-tighter">PNJ</span>}
                         
                         <button
-                            className={`text-app-text/50 hover:text-app-text transition-colors p-1 rounded hover:bg-app-surface/50 ${showStatusMenu ? 'text-app-text bg-app-surface/50' : ''}`}
+                            className={`text-slate-400 hover:text-primary transition-colors p-1 rounded hover:bg-white/5 ${showStatusMenu ? 'text-primary bg-white/5' : ''}`}
                             onClick={() => setShowStatusMenu(!showStatusMenu)}
-                            title="Ajouter une altération d'état"
+                            title="Lancer une altération d'état"
                         >
-                            <PlusCircle size={16} />
+                            <PlusCircle size={18} />
                         </button>
 
                         {!combatant.isPlayer && (
@@ -209,9 +213,9 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                             {combatant.statuses.map(status => (
                                 <span
                                     key={status.id}
-                                    className="inline-flex items-center gap-1 bg-app-bg px-2 py-0.5 rounded text-xs border border-app-border/50 group cursor-pointer hover:bg-red-500/20"
+                                    className="inline-flex items-center gap-1 bg-slate-800/60 px-2 py-0.5 rounded text-xs border border-white/5 group cursor-pointer hover:bg-red-500/20 transition-colors"
                                     onClick={() => removeStatus(combatant.id, status.id)}
-                                    title="Cliquer pour dissiper"
+                                    title={`Dissiper l'effet ${status.name}`}
                                 >
                                     <span>{status.icon}</span>
                                     <span className={status.duration > 0 ? "text-app-text/70" : "text-gm-cyan"}>
@@ -247,44 +251,19 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                     )}
                 </div>
 
-                {/* Health Control */}
-                <div className="flex flex-col items-center mx-4 bg-app-bg/50 rounded-lg p-2 border border-gm-crimson/20 relative group">
-                    {combatant.sourcePlayerId && (
-                        <div className="absolute -top-1 -right-1 text-accent animate-pulse" title="Synchronisé avec la fiche">
-                            <Link2 size={10} />
-                        </div>
-                    )}
-                    <div className="flex items-center gap-2">
-                        <button
-                            className="text-app-text/40 hover:text-app-text hover:bg-app-surface/50 rounded p-1"
-                            onClick={() => updateCombatant(combatant.id, { hp: combatant.hp - 1 })}
-                            title="Réduire les PV"
-                        >
-                            <Minus size={14} />
-                        </button>
-                        <input
-                            type="number"
-                            value={combatant.hp ?? 0}
-                            onChange={handleHpChange}
-                            title="Points de vie actuels"
-                            className={`w-14 bg-transparent text-center text-xl font-bold p-0 border-none focus:ring-0 ${hpColorClass}`}
-                        />
-                        <button
-                            className="text-app-text/40 hover:text-app-text hover:bg-app-surface/50 rounded p-1"
-                            onClick={() => updateCombatant(combatant.id, { hp: combatant.hp + 1 })}
-                            title="Augmenter les PV"
-                        >
-                            <Plus size={14} />
-                        </button>
-                    </div>
-                    <span className="text-xs text-app-text/50 mt-1">/ {combatant.hpMax} PV</span>
+                {/* Modular Health Manager - Expanded to fill void */}
+                <div className="mx-6 flex-1 min-w-[200px] transition-all duration-500">
+                  <HealthManager 
+                    id={combatant.isPlayer ? combatant.sourcePlayerId! : combatant.sourceEntityId!} 
+                    type={combatant.isPlayer ? 'pc' : 'npc'} 
+                  />
                 </div>
 
-                {/* Targeting Indicator */}
-                <div className="flex flex-col gap-1 min-w-[120px] items-end pr-2 group/target">
-                    <div className="flex items-center gap-1.5 text-[8px] font-black text-app-text/30 uppercase tracking-widest">
-                        <Crosshair size={10} className={currentTarget ? 'text-gm-cyan animate-pulse' : ''} />
-                        <span>Cible</span>
+                {/* Targeting Indicator - Compact to leave space for Health */}
+                <div className="flex flex-col gap-1.5 min-w-[120px] shrink-0 items-end pr-2 group/target relative">
+                    <div className="flex items-center gap-2 stitch-label opacity-60">
+                        <Crosshair size={12} className={currentTarget ? 'text-primary animate-pulse' : ''} />
+                        <span>CIBLE</span>
                     </div>
                     <select 
                         value={combatant.targetId || ''}
@@ -302,6 +281,20 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                             ))
                         }
                     </select>
+
+                    {/* Quick Calculator Button */}
+                    <button
+                        onClick={() => {
+                            const ids = [combatant.id];
+                            if (combatant.targetId) ids.push(combatant.targetId);
+                            gmCustom('damage-calc', { targetIds: ids });
+                        }}
+                        className="mt-2 flex items-center justify-center gap-2 w-full py-2 bg-slate-900/60 border border-primary/50 hover:bg-primary text-primary hover:text-slate-950 rounded-lg text-[10px] font-black transition-all uppercase tracking-[0.2em] shadow-glow-gold/20 active:scale-95"
+                        title="Ouvrir le calculateur de dégâts pour ce groupe"
+                    >
+                        <Zap size={14} className="fill-current" />
+                        <span>CALCULER</span>
+                    </button>
                     {currentTarget && (
                         <div className="flex items-center gap-1 mt-0.5 max-w-[120px]">
                              <div className="w-1.5 h-1.5 rounded-full bg-accent animate-ping shrink-0" />
@@ -322,10 +315,9 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                 </button>
             </div>
 
-            {/* Extra Stats Bars (Dynamic from System) */}
             {activeDriver?.ui_config?.gauges && activeDriver.ui_config.gauges.length > 0 ? (
-                <div className="mt-3 flex gap-3 px-2">
-                    {activeDriver.ui_config.gauges.map((gaugeConfig: any, idx: number) => {
+                <div className="mt-4 flex gap-6 px-3">
+                    {activeDriver.ui_config.gauges.map((gaugeConfig: { fieldId: string; label: string; style: string; color: string }, idx: number) => {
                         // Extract value from sheetData
                         const sheetData = sourceCharacter?.sheetData as Record<string, string | number> | undefined;
                         const sheetValRaw = sheetData?.[gaugeConfig.fieldId];
@@ -333,7 +325,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                         
                         // Attempt to find max from template, default to 10
                         let max = 10;
-                        const fieldDef = sourceTemplate?.sections.flatMap(s => s.fields).find((f: any) => f.id === gaugeConfig.fieldId);
+                        const fieldDef = sourceTemplate?.sections.flatMap(s => s.fields).find((f: { id: string; type: string; defaultValue?: string | number | boolean }) => f.id === gaugeConfig.fieldId);
                         if (fieldDef && fieldDef.type === 'number' && fieldDef.defaultValue) {
                             max = Number(fieldDef.defaultValue);
                         }
@@ -349,23 +341,26 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                             const activeSegments = Math.round((percent / 100) * segments);
                             
                             return (
-                                <div key={idx} className="flex-1 flex flex-col gap-1">
-                                    <div className="flex justify-between items-center px-0.5">
-                                        <span className="text-[8px] font-black uppercase tracking-tighter text-app-text/40">{gaugeConfig.label}</span>
-                                        <span className="text-[8px] font-bold text-app-text/60">{val}</span>
+                                <div 
+                                    key={idx} 
+                                    className="flex-1 flex flex-col gap-1.5 cursor-pointer select-none group/gauge"
+                                    onClick={(e) => handleGaugeClick(e, gaugeConfig.fieldId, -1)}
+                                    onContextMenu={(e) => handleGaugeClick(e, gaugeConfig.fieldId, 1)}
+                                    title={`${gaugeConfig.label}: ${val}/${max} (L-Click: -1 | R-Click: +1)`}
+                                >
+                                    <div className="flex items-center justify-between px-1">
+                                        <span className="stitch-label text-slate-200">{gaugeConfig.label}</span>
+                                        <span className="text-[12px] font-black text-primary drop-shadow-[0_0_3px_rgba(231,176,8,0.3)]">{val}</span>
                                     </div>
-                                    <div className="flex gap-0.5 h-2">
+                                    <div className="flex gap-1 h-2.5 bg-slate-900/40 p-0.5 rounded-sm border border-white/5">
                                         {Array.from({ length: segments }).map((_, sIdx) => (
                                             <div 
                                                 key={sIdx}
-                                                className={`flex-1 rounded-sm border border-white/5 transition-all duration-300 ${
+                                                className={`flex-1 rounded-sm transition-all duration-300 ${
                                                     sIdx < activeSegments 
-                                                        ? (gaugeConfig.color.startsWith('bg-') ? gaugeConfig.color : '') 
-                                                        : 'bg-app-bg/50'
+                                                        ? 'bg-primary shadow-glow-gold' 
+                                                        : 'bg-slate-800/60 border border-white/5'
                                                 }`}
-                                                style={{ 
-                                                    backgroundColor: sIdx < activeSegments && !gaugeConfig.color.startsWith('bg-') ? gaugeConfig.color : undefined 
-                                                }}
                                             />
                                         ))}
                                     </div>
@@ -375,21 +370,22 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
 
                         // Style: Neon (Cyberpunk glow)
                         if (gaugeConfig.style === 'neon') {
-                            const color = gaugeConfig.color.startsWith('bg-') ? '' : gaugeConfig.color;
                             return (
-                                <div key={idx} className="flex-1 flex flex-col gap-1">
-                                    <div className="flex justify-between items-center px-0.5">
-                                        <span className="text-[8px] font-black uppercase tracking-tighter text-app-text/40 drop-shadow-[0_0_2px_rgba(255,255,255,0.3)]">{gaugeConfig.label}</span>
-                                        <span className="text-[8px] font-bold text-app-text/60">{val}</span>
+                                <div 
+                                    key={idx} 
+                                    className="flex-1 flex flex-col gap-1.5 cursor-pointer select-none"
+                                    onClick={(e) => handleGaugeClick(e, gaugeConfig.fieldId, -1)}
+                                    onContextMenu={(e) => handleGaugeClick(e, gaugeConfig.fieldId, 1)}
+                                    title={`${gaugeConfig.label}: ${val}/${max} (L-Click: -1 | R-Click: +1)`}
+                                >
+                                    <div className="flex justify-between items-center px-1">
+                                        <span className="stitch-label text-slate-200">{gaugeConfig.label}</span>
+                                        <span className="text-[12px] font-black text-primary">{val}</span>
                                     </div>
-                                    <div className="h-1.5 bg-black/40 rounded-full overflow-hidden border border-white/5 p-[1px]">
+                                    <div className="h-3 bg-slate-900/90 rounded-full overflow-hidden border border-white/20 p-[1.5px]">
                                         <div 
-                                            className={`h-full rounded-full transition-all duration-700 ease-out shadow-[0_0_8px_rgba(255,255,255,0.5)] ${gaugeConfig.color.startsWith('bg-') ? gaugeConfig.color : ''}`}
-                                            style={{ 
-                                                width: `${percent}%`,
-                                                backgroundColor: color || undefined,
-                                                boxShadow: color ? `0 0 10px ${color}` : undefined
-                                            }}
+                                            className="h-full rounded-full transition-all duration-1000 ease-out bg-primary shadow-glow-gold"
+                                            style={{ width: `${percent}%` }}
                                         />
                                     </div>
                                 </div>
@@ -398,12 +394,18 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
 
                         // Default Style: Bar
                         return (
-                            <div key={idx} className="flex-1 flex flex-col gap-1">
+                            <div 
+                                key={idx} 
+                                className="flex-1 flex flex-col gap-1 cursor-pointer select-none"
+                                onClick={(e) => handleGaugeClick(e, gaugeConfig.fieldId, -1)}
+                                onContextMenu={(e) => handleGaugeClick(e, gaugeConfig.fieldId, 1)}
+                                title={`${gaugeConfig.label}: ${val}/${max} (L-Click: -1 | R-Click: +1)`}
+                            >
                                 <div className="flex justify-between items-center px-0.5">
-                                    <span className="text-[8px] font-black uppercase tracking-tighter text-app-text/40">{gaugeConfig.label}</span>
-                                    <span className="text-[8px] font-bold text-app-text/60">{val}</span>
+                                    <span className="text-[10px] font-black uppercase tracking-wider text-app-text/80">{gaugeConfig.label}</span>
+                                    <span className="text-[10px] font-bold text-app-text/90">{val}</span>
                                 </div>
-                                <div className="h-1 bg-app-bg rounded-full overflow-hidden border border-white/5">
+                                <div className="h-2 bg-app-bg border border-white/10 rounded-full overflow-hidden">
                                     <div 
                                         className={`h-full transition-all duration-500 shadow-sm ${gaugeConfig.color.startsWith('bg-') ? gaugeConfig.color : ''}`}
                                         style={{ 
@@ -418,47 +420,51 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                 </div>
             ) : (
                 /* Fallback to legacy stats mapping if no ui_config is present */
-                activeDriver && activeDriver.combat.statsToTrack.length > 0 && (
-                    <div className="mt-3 flex gap-3 px-2">
-                        {activeDriver.combat.statsToTrack
-                            .filter(stat => !stat.isMainHP) // show all non-HP tracked stats as fallback gauges
+                    <div className="mt-4 flex gap-6 px-3">
+                        {activeDriver?.combat?.statsToTrack
+                            .filter(stat => !stat.isMainHP)
                             .map((stat, idx) => {
                                 const sheetData = sourceCharacter?.sheetData as Record<string, string | number> | undefined;
-                                const sheetValRaw = sheetData?.[stat.fieldId];
-                                const val = typeof sheetValRaw === 'number' ? sheetValRaw : parseInt(String(sheetValRaw || 0), 10);
-                                
-                                // Attempt to find max from template, default to 10
+                                const val = Number(sheetData?.[stat.fieldId] || 0);
                                 let max = 10;
-                                const fieldDef = sourceTemplate?.sections.flatMap(s => s.fields).find((f: any) => f.id === stat.fieldId);
-                                if (fieldDef && fieldDef.type === 'number' && fieldDef.defaultValue) {
-                                    max = Number(fieldDef.defaultValue);
-                                }
-                                max = Math.max(max, val > 0 ? val : 10); // Ensure max is at least 10 or current value if higher
+                                const fieldDef = sourceTemplate?.sections.flatMap(s => s.fields).find((f: { id: string; type: string; defaultValue?: string | number | boolean }) => f.id === stat.fieldId);
+                                if (fieldDef && fieldDef.type === 'number' && fieldDef.defaultValue) max = Number(fieldDef.defaultValue);
+                                max = Math.max(max, val > 0 ? val : 10);
 
-                                const percent = Math.min(100, Math.max(0, (val / max) * 100));
-                            
-                            let barColor = 'bg-indigo-500';
-                            if (stat.label.toLowerCase().includes('san')) barColor = 'bg-purple-500';
-                            if (stat.label.toLowerCase().includes('mp') || stat.label.toLowerCase().includes('mana')) barColor = 'bg-blue-500';
-                            if (stat.label.toLowerCase().includes('xp') || stat.label.toLowerCase().includes('exp')) barColor = 'bg-amber-500';
+                                const segments = 10;
+                                const activeSegments = Math.round((val / max) * segments);
 
-                            return (
-                                <div key={idx} className="flex-1 flex flex-col gap-1">
-                                    <div className="flex justify-between items-center px-0.5">
-                                        <span className="text-[8px] font-black uppercase tracking-tighter text-app-text/40">{stat.label}</span>
-                                        <span className="text-[8px] font-bold text-app-text/60">{val} / {max}</span>
+                                return (
+                                    <div 
+                                        key={idx} 
+                                        className="flex-1 flex flex-col gap-1.5 cursor-pointer select-none group/gauge"
+                                        onClick={(e) => handleGaugeClick(e, stat.fieldId, -1)}
+                                        onContextMenu={(e) => handleGaugeClick(e, stat.fieldId, 1)}
+                                        title={`${stat.label}: ${val}/${max} (L-Click: -1 | R-Click: +1)`}
+                                    >
+                                        <div className="flex items-center justify-between px-1">
+                                            <span className="stitch-label text-slate-200">{stat.label}</span>
+                                            <span className="text-[11px] font-black text-primary">{val}</span>
+                                        </div>
+                                        <div className="flex gap-1 h-1.5 bg-slate-900/40 p-[1px] rounded-full border border-white/5">
+                                            {Array.from({ length: segments }).map((_, sIdx) => {
+                                                const isFilled = sIdx < activeSegments;
+                                                return (
+                                                    <div 
+                                                        key={sIdx}
+                                                        className={`flex-1 rounded-full transition-all duration-300 ${
+                                                            isFilled 
+                                                                ? 'bg-primary shadow-glow-gold' 
+                                                                : 'bg-slate-800/60 border border-white/10' // Increased contrast for empty segments
+                                                        }`}
+                                                    />
+                                                );
+                                            })}
+                                        </div>
                                     </div>
-                                    <div className="h-1 bg-app-bg rounded-full overflow-hidden border border-white/5">
-                                        <div 
-                                            className={`h-full ${barColor} transition-all duration-500 shadow-sm`}
-                                            style={{ width: `${percent}%` }}
-                                        />
-                                    </div>
-                                </div>
-                            );
-                        })}
+                                );
+                            })}
                     </div>
-                )
             )}
 
             {/* Expansible Status Panel */}

@@ -7,7 +7,13 @@ import { useHardwareStore } from '../../../stores/useHardwareStore';
 
 const MapProjectionModal: React.FC = () => {
     const { displays, fetchDisplays } = useImageStore();
-    const { mapUrl, syncToPlayers, clearProjectedState, isVideo, fogDataUrl, tokens, mapWidth, mapHeight, isGridEnabled, gridSize, gridColor, gridOpacity } = useMapStore();
+    const { 
+        mapUrl, syncToPlayers, clearProjectedState, isVideo, fogDataUrl, tokens, pings, magicEffects,
+        weatherType, weatherIntensity,
+        mapWidth, mapHeight, isGridEnabled, gridSize, gridColor, gridOpacity 
+    } = useMapStore();
+
+
     const { closeModal } = useModalStore();
     const { getDisplayLabel } = useHardwareStore();
 
@@ -43,13 +49,19 @@ const MapProjectionModal: React.FC = () => {
                 projectedIsVideo: isVideo,
                 projectedFogDataUrl: fogDataUrl,
                 projectedTokens: tokens,
+                projectedPings: pings,
+                projectedMagicEffects: magicEffects,
+                projectedWeatherType: weatherType,
+                projectedWeatherIntensity: weatherIntensity,
                 projectedMapWidth: mapWidth,
+
                 projectedMapHeight: mapHeight,
                 projectedIsGridEnabled: isGridEnabled,
                 projectedGridSize: gridSize,
                 projectedGridColor: gridColor,
                 projectedGridOpacity: gridOpacity
             });
+
 
             // Signal tactical map mode to the projector window
             bridge.image.launchDisplay(['__tactical_map__'], displayId);

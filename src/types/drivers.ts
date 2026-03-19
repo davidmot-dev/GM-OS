@@ -68,6 +68,7 @@ export interface GameDriver {
         initiativeSort?: 'asc' | 'desc'; // Default: 'desc'
         initiativeCards?: number; // If set, use a unique card pool 1-N
         damageTypes?: string[]; // e.g. ["Feu", "Froid", "Physique", "Psychique"]
+        defaultHealthType?: 'hp' | 'clocks' | 'anatomy';
     };
 
     // UI Customization

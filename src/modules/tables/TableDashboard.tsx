@@ -7,10 +7,12 @@ import {
     Send,
     AlertTriangle,
     Hash,
-    Trash2
+    Trash2,
+    Package
 } from 'lucide-react';
 import { useTableStore } from './useTableStore';
 import { useSessionOSStore } from '../session/useSessionOSStore';
+import { RecipientSelector } from '../session/components/RecipientSelector';
 
 const TableDashboard: React.FC = () => {
     const {
@@ -34,8 +36,11 @@ const TableDashboard: React.FC = () => {
     const { 
         activeCampaignId, 
         sessions, 
-        updateSessionGmSecrets 
+        updateSessionGmSecrets,
+        addLootToCharacter 
     } = useSessionOSStore();
+
+    const [showRecipientSelector, setShowRecipientSelector] = useState(false);
 
     // Find active session to update
     const activeSession = sessions.find(s => 
@@ -59,6 +64,19 @@ const TableDashboard: React.FC = () => {
             `----------------------------\n`;
 
         updateSessionGmSecrets(activeSession.id, (activeSession.gmSecrets || "") + formatted);
+    };
+
+    const handleGiveToPC = (playerId: string, characterId: string) => {
+        if (!currentResult) return;
+        
+        let lootString = `**${currentResult.entry.title}** (${currentResult.tableName})\n`;
+        lootString += `_${currentResult.entry.description}_`;
+        if (currentResult.entry.effect) {
+            lootString += `\n**Effet:** ${currentResult.entry.effect}`;
+        }
+        
+        addLootToCharacter(playerId, characterId, lootString);
+        setShowRecipientSelector(false);
     };
 
     return (
@@ -237,11 +255,21 @@ const TableDashboard: React.FC = () => {
                                 <div className="flex gap-4 pt-4 border-t border-app-border">
                                     <button
                                         onClick={handleSendToSession}
-                                        className="flex-1 flex items-center justify-center gap-3 bg-app-surface hover:bg-app-surface/80 py-4 rounded-xl border border-app-border transition-all group"
+                                        className="flex-[2] flex items-center justify-center gap-3 bg-app-surface hover:bg-app-surface/80 py-4 rounded-xl border border-app-border transition-all group"
                                     >
                                         <Send className="w-5 h-5 text-accent group-hover:translate-x-1 transition-transform" />
-                                        <span>Envoyer au Log Session</span>
+                                        <span>Log Session</span>
                                     </button>
+                                    
+                                    <button
+                                        onClick={() => setShowRecipientSelector(true)}
+                                        className="flex-1 flex items-center justify-center gap-3 bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 py-4 rounded-xl border border-amber-500/30 transition-all group"
+                                        title="Donner à un PJ"
+                                    >
+                                        <Package className="w-5 h-5" />
+                                        <span>Donner</span>
+                                    </button>
+
                                     <button
                                         onClick={clearCurrentResult}
                                         className="bg-app-surface hover:bg-red-900/30 p-4 border border-app-border rounded-xl transition-all group"
@@ -252,6 +280,16 @@ const TableDashboard: React.FC = () => {
                                 </div>
                             </div>
                         </div>
+
+                        {/* Recipient Selector Overlay */}
+                        {showRecipientSelector && (
+                            <div className="mt-4 flex justify-center animate-in fade-in slide-in-from-top-2 duration-200">
+                                <RecipientSelector 
+                                    onSelect={handleGiveToPC}
+                                    onCancel={() => setShowRecipientSelector(false)}
+                                />
+                            </div>
+                        )}
                     </div>
                 )}
             </main>

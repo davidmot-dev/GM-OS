@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import type { SheetField } from '../../../data/defaultSheetTemplates';
-import { Save, CheckSquare, Square, FolderOpen, Layers, FileText, Trash2, Lock, BookOpen, Eye, Heart, Sparkles } from 'lucide-react';
+import { Save, CheckSquare, Square, FolderOpen, Layers, FileText, Trash2, Lock, BookOpen, Eye, Heart, Sparkles, Package } from 'lucide-react';
 import { useImageStore } from '../../image/useImageStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
@@ -176,6 +176,7 @@ const CharacterSheetEditor: React.FC = () => {
     const [mediaBrowserTarget, setMediaBrowserTarget] = useState<'portrait' | 'token' | 'document' | null>(null);
     const [description, setDescription] = useState(character?.description ?? '');
     const [gmNotes, setGmNotes] = useState(character?.gmNotes ?? '');
+    const [inventory, setInventory] = useState(character?.inventory ?? '');
     const [showAIPrompt, setShowAIPrompt] = useState(false);
 
     const portraitUrl = useMediaUrl(character?.portraitUrl);
@@ -199,7 +200,7 @@ const CharacterSheetEditor: React.FC = () => {
             updateCharacterSheetData(selectedPlayer.id, character.id, fieldId, value);
         }
         // Save narrative fields
-        updateCharacterNarrative(selectedPlayer.id, character.id, { description, gmNotes });
+        updateCharacterNarrative(selectedPlayer.id, character.id, { description, gmNotes, inventory });
         setSaved(true);
         setTimeout(() => setSaved(false), 2000);
     };
@@ -471,6 +472,20 @@ const CharacterSheetEditor: React.FC = () => {
                             rows={4}
                             placeholder="Description du personnage — visible par les joueurs…"
                             className="w-full bg-app-bg/40 border border-app-border rounded-xl p-4 text-sm text-app-text placeholder-app-text/20 resize-none focus:outline-none focus:ring-1 focus:ring-accent/30 focus:border-accent/20 transition-all leading-relaxed"
+                        />
+                    </div>
+
+                    {/* Inventory */}
+                    <div className="col-span-9 space-y-3">
+                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-accent border-b border-accent/20 pb-2 flex items-center gap-2">
+                            <Package size={12} /> Inventaire & Équipement
+                        </h3>
+                        <textarea
+                            value={inventory}
+                            onChange={e => setInventory(e.target.value)}
+                            rows={6}
+                            placeholder="Objets, armes, trésors possédés par le personnage…"
+                            className="w-full bg-app-bg/40 border border-app-border rounded-xl p-4 text-sm text-app-text placeholder-app-text/20 resize-none focus:outline-none focus:ring-1 focus:ring-accent/30 focus:border-accent/20 transition-all leading-relaxed custom-scrollbar font-mono"
                         />
                     </div>
 

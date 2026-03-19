@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Hammer, FileUp, Globe, X, Rocket, Zap } from 'lucide-react';
+import { Hammer, FileUp, Globe, X, Rocket, Zap, Sparkles } from 'lucide-react';
 import { forgeService, type ForgeContextItem, type ForgeSystemResult } from '../ForgeService';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import type { GameDriver } from '../../../types/drivers';
@@ -363,13 +363,26 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                     <input type="file" id="ritual-upload" className="hidden" onChange={handleFileUpload} multiple />
                  </div>
               </div>
-              <div className="bg-black/60 rounded-2xl p-4 border border-primary/10 h-40 font-mono text-[10px] overflow-y-auto custom-scrollbar">
+              {/* Terminal Logs */}
+              <div className="bg-black/60 rounded-2xl p-4 border border-primary/10 h-32 font-mono text-[10px] overflow-y-auto custom-scrollbar">
                  {logs.map((log, i) => (
                    <div key={i} className={log.startsWith('> ERROR') ? 'text-red-400' : 'text-primary/70'}>{log}</div>
                  ))}
                  <div ref={logEndRef} />
               </div>
-              <textarea value={userInstructions} onChange={(e) => setUserInstructions(e.target.value)} placeholder="Instructions..." className="w-full bg-black/40 border border-accent/20 rounded-2xl p-4 text-xs h-28 resize-none focus:outline-none" />
+
+              {/* MJ Instructions Area */}
+              <div className="bg-black/40 rounded-2xl border border-accent/20 p-5 flex flex-col gap-3 min-h-[160px] hover:border-accent/40 transition-all">
+                <h2 className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-accent">
+                   <Sparkles size={14} className="animate-pulse" /> Intentions du MJ
+                </h2>
+                <textarea 
+                  value={userInstructions} 
+                  onChange={(e) => setUserInstructions(e.target.value)} 
+                  placeholder="Ex: Concentre-toi sur un système de blessures localisées complexe et une magie corruptrice..." 
+                  className="w-full flex-1 bg-transparent text-xs text-slate-300 resize-none focus:outline-none placeholder:text-slate-600 leading-relaxed font-inter" 
+                />
+              </div>
             </div>
 
             <div className="col-span-8 flex flex-col gap-6">
@@ -461,11 +474,17 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
               </div>
               <div className="flex-1 flex overflow-hidden">
                  <div className="w-1/3 border-r border-white/5 overflow-y-auto p-4 space-y-2">
-                    {notebooks.map(nb => (
-                       <button key={nb.id} onClick={() => handleNotebookSelect(nb.id)} className={`w-full text-left p-3 rounded-xl transition-all ${selectedNotebook?.id === nb.id ? 'bg-primary/20 border-primary/40' : 'hover:bg-white/5'}`}>
-                          <div className="text-xs font-bold uppercase">{nb.title}</div>
-                       </button>
-                    ))}
+                    {isLoadingNotebooks && notebooks.length === 0 ? (
+                      <div className="flex items-center justify-center p-4">
+                        <Zap size={24} className="animate-spin text-primary" />
+                      </div>
+                    ) : (
+                      notebooks.map(nb => (
+                         <button key={nb.id} onClick={() => handleNotebookSelect(nb.id)} className={`w-full text-left p-3 rounded-xl transition-all ${selectedNotebook?.id === nb.id ? 'bg-primary/20 border-primary/40' : 'hover:bg-white/5'}`}>
+                            <div className="text-xs font-bold uppercase">{nb.title}</div>
+                         </button>
+                      ))
+                    )}
                  </div>
                  <div className="flex-1 p-6 overflow-y-auto custom-scrollbar">
                     {selectedNotebook ? (

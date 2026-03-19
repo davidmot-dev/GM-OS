@@ -191,6 +191,7 @@ const DiceBoard: React.FC = () => {
         try {
             const batchId = batchCount > 1 ? generateId() : undefined;
             const newRecords: RollRecord[] = [];
+            const { setLastRoll } = (window as any).useDiceStore.getState();
 
             for (let i = 0; i < batchCount; i++) {
                 const { result, title } = executeRoll(sides, isFormulaText, customFormula);
@@ -198,13 +199,19 @@ const DiceBoard: React.FC = () => {
                 let repTitle = title;
                 if (batchCount > 1) repTitle = `${title} (Jet ${i + 1}/${batchCount})`;
 
-                newRecords.push({
+                const record = {
                     ...result,
                     id: generateId(),
                     timestamp: new Date(),
                     title: repTitle,
                     batchId
-                });
+                };
+                newRecords.push(record);
+                
+                // Only set as last global roll the very last one of the batch
+                if (i === batchCount - 1) {
+                    setLastRoll(record);
+                }
             }
 
             setHistory((prev) => [...newRecords.reverse(), ...prev].slice(0, 50));

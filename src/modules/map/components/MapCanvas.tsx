@@ -4,6 +4,8 @@ import { FogEngine } from '../FogEngine';
 import MapTokenNode from './MapTokenNode';
 import MapPingLayer from './MapPingLayer';
 import WeatherLayer from './WeatherLayer';
+import MagicLayer from './MagicLayer';
+
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { gmConfirm } from '../../../stores/useModalStore';
 
@@ -16,8 +18,12 @@ const MapCanvas: React.FC = () => {
         zoom, panX, panY, viewResetCounter, setViewState,
         mapWidth, mapHeight, setMapDimensions,
         isGridEnabled, gridSize, gridColor, gridOpacity,
-        setSelectedTokenId
+        setSelectedTokenId,
+        magicStyle, magicShape, magicEffects, addMagicEffect, removeMagicEffect
     } = useMapStore();
+
+
+
     const resolvedMapUrl = useMediaUrl(mapUrl || undefined);
 
     const containerRef = useRef<HTMLDivElement>(null);
@@ -30,6 +36,8 @@ const MapCanvas: React.FC = () => {
     const [isPanning, setIsPanning] = useState(false);
     const [startPos, setStartPos] = useState<{ x: number, y: number } | null>(null);
     const [lastPanPos, setLastPanPos] = useState<{ x: number, y: number } | null>(null);
+    const [magicPreview, setMagicPreview] = useState<{ x: number, y: number, w: number, h: number, r: number } | null>(null);
+
 
     const fitToScreen = React.useCallback((targetW = mapWidth, targetH = mapHeight) => {
         if (!containerRef.current) return;
@@ -238,7 +246,20 @@ const MapCanvas: React.FC = () => {
         } else if (currentTool === 'circle') {
             const radius = Math.sqrt(Math.pow(coords.x - startPos.x, 2) + Math.pow(coords.y - startPos.y, 2));
             engineRef.current?.previewCircle(startPos.x, startPos.y, radius, fogMode);
+        } else if (currentTool === 'magic') {
+            const dx = coords.x - startPos.x;
+            const dy = coords.y - startPos.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const rotation = (Math.atan2(dy, dx) * 180) / Math.PI;
+            setMagicPreview({
+                x: startPos.x,
+                y: startPos.y,
+                w: dist,
+                h: dist,
+                r: rotation
+            });
         }
+
     };
 
     const handleMouseUp = (e: MouseEvent) => {
@@ -280,9 +301,50 @@ const MapCanvas: React.FC = () => {
             return;
         }
 
+        if (startPos && currentTool === 'magic') {
+            const dx = coords.x - startPos.x;
+            const dy = coords.y - startPos.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const rotation = (Math.atan2(dy, dx) * 180) / Math.PI;
+
+            // Placement logic adjustment:
+            // Circle/Cone/Line: vertex/center is startPos
+            // Rect: startPos is top-left
+            
+            let finalX = startPos.x;
+            let finalY = startPos.y;
+            let finalW = dist || 100;
+            let finalH = dist || 100;
+
+            if (magicShape === 'rect') {
+                // If it's a rectangle, we allow dragging from corner to corner
+                finalW = Math.abs(dx);
+                finalH = Math.abs(dy);
+                // The store/layer expects X/Y to be the center
+                finalX = startPos.x + dx / 2;
+                finalY = startPos.y + dy / 2;
+            }
+
+            addMagicEffect({
+                type: magicShape,
+                style: magicStyle,
+                x: finalX,
+                y: finalY,
+                width: finalW,
+                height: finalH,
+                rotation: (magicShape === 'line' || magicShape === 'cone') ? rotation : 0,
+                opacity: 0.8
+            });
+            setMagicPreview(null);
+        }
+
+
+
         setIsDrawing(false);
         setStartPos(null);
+        setMagicPreview(null);
         if (engineRef.current) setFogDataUrl(engineRef.current.getFogDataUrl());
+
     };
 
     const handleWheel = (e: React.WheelEvent) => {
@@ -316,7 +378,20 @@ const MapCanvas: React.FC = () => {
                 setIsDrawing(false);
                 engineRef.current?.clearPreview();
             }}
-            onContextMenu={(e) => e.preventDefault()}
+            onContextMenu={(e: React.MouseEvent) => {
+                e.preventDefault();
+                if (currentTool === 'magic') {
+                    const coords = getCoordinates(e as unknown as MouseEvent);
+
+                    // Find and remove the nearest magic effect
+                    const nearest = magicEffects.find(eff => {
+                        const dist = Math.sqrt(Math.pow(eff.x - coords.x, 2) + Math.pow(eff.y - coords.y, 2));
+                        return dist < (eff.width || 50); // Simple collision
+                    });
+                    if (nearest) removeMagicEffect(nearest.id);
+                }
+            }}
+
         >
             {/* 0. Empty State */}
             {!resolvedMapUrl && (
@@ -372,6 +447,10 @@ const MapCanvas: React.FC = () => {
                     ))}
                 </div>
 
+                {/* 4.1. Magic Effects Layer */}
+                <MagicLayer isProjectedView={false} />
+
+
                 {/* 4.5. Pings Layer */}
                 <MapPingLayer isProjectedView={false} />
 
@@ -383,6 +462,50 @@ const MapCanvas: React.FC = () => {
                     ref={previewCanvasRef}
                     className="absolute inset-0 w-full h-full z-40 pointer-events-none"
                 />
+
+                {/* Magic Preview Overlay (Simple visual aid) */}
+                {magicPreview && (
+                    <div 
+                        className={`absolute border-2 border-white/50 border-dashed pointer-events-none z-50 ${magicShape === 'circle' ? 'rounded-full' : ''}`}
+                        style={{
+                            left: magicPreview.x,
+                            top: magicPreview.y,
+                            width: (magicShape === 'rect' || magicShape === 'cone' || magicShape === 'line') ? 0 : magicPreview.w * 2,
+                            height: (magicShape === 'rect' || magicShape === 'cone' || magicShape === 'line') ? 0 : magicPreview.h * 2,
+                            transform: `translate(-50%, -50%) rotate(${magicShape === 'line' || magicShape === 'cone' ? magicPreview.r : 0}deg)`,
+                        }}
+                    >
+                        {magicShape === 'rect' && (
+                            <div className="absolute top-0 left-0 border-2 border-white/50 border-dashed"
+                                 style={{
+                                     width: Math.abs(magicPreview.w),
+                                     height: Math.abs(magicPreview.h),
+                                     transform: `translate(${magicPreview.w < 0 ? magicPreview.w : 0}px, ${magicPreview.h < 0 ? magicPreview.h : 0}px)`
+                                 }}
+                            />
+                        )}
+                        {(magicShape === 'line' || magicShape === 'cone') && (
+                            <svg 
+                                className="absolute top-0 left-0 overflow-visible"
+                                style={{ width: 1, height: 1 }}
+                            >
+                                {magicShape === 'line' ? (
+                                    <line 
+                                        x1="0" y1="0" x2={magicPreview.w} y2="0" 
+                                        stroke="rgba(255,255,255,0.5)" strokeWidth="40" strokeDasharray="5,5"
+                                    />
+                                ) : (
+                                    <path 
+                                        d={`M 0 0 L ${magicPreview.w * Math.cos(-Math.PI/6)} ${magicPreview.w * Math.sin(-Math.PI/6)} A ${magicPreview.w} ${magicPreview.w} 0 0 1 ${magicPreview.w * Math.cos(Math.PI/6)} ${magicPreview.w * Math.sin(Math.PI/6)} Z`}
+                                        fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2" strokeDasharray="5,5"
+                                    />
+                                )}
+                            </svg>
+                        )}
+                    </div>
+                )}
+
+
             </div>
         </div>
     );

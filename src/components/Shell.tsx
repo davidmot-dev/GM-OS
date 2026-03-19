@@ -101,6 +101,9 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
         root.style.setProperty('--app-bg', palette.bg);
         root.style.setProperty('--app-surface', palette.surface);
         root.style.setProperty('--app-border', palette.border);
+        root.style.setProperty('--font-display', palette.fonts);
+
+
 
         // Mise à jour des classes de thème pour des ajustements CSS fins
         root.classList.remove('theme-cyberpunk', 'theme-medieval', 'theme-modern');
@@ -140,7 +143,8 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
     const { isPanelOpen, setIsPanelOpen, status: tacticalAIStatus, settings: tacticalSettings } = useTacticalAIStore();
 
     return (
-        <div data-theme={theme} className="flex h-screen bg-app-bg text-app-text overflow-hidden font-sans selection:bg-accent/30">
+        <div data-theme={theme} className="flex h-screen bg-app-bg text-app-text overflow-hidden font-sans selection:bg-accent/30 bg-texture-overlay theme-root">
+
             {/* Sidebar */}
             <aside className="w-64 border-r border-app-border/50 bg-app-surface/30 backdrop-blur-xl flex flex-col p-4 z-20">
                 <div className="flex items-center gap-3 px-2 mb-8 mt-2">
@@ -157,8 +161,9 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                             GM-OS v5
                         </span>
                         <span className="text-[10px] font-black uppercase tracking-[0.2em] text-accent mt-1 opacity-80 backdrop-blur-sm">
-                            {theme}
+                            {theme === 'medieval' ? 'Médiéval-Dark' : theme}
                         </span>
+
                     </div>
                 </div>
 

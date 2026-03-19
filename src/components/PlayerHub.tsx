@@ -14,6 +14,8 @@ import type { ProjectedEntity } from '../modules/image/types';
 import NarrativeClock from '../modules/clock/components/NarrativeClock';
 import ClockVisualizer from '../modules/clock/components/ClockVisualizer';
 import { useVoiceStore } from '../modules/voice/useVoiceStore';
+import { useTacticalAIStore } from '../modules/tactical-ai/useTacticalAIStore';
+
 
 const PlayerHub: React.FC = () => {
     const { mediaList, projections } = useImageStore();
@@ -27,7 +29,7 @@ const PlayerHub: React.FC = () => {
 
     const activeHubId = projections['hub'];
     
-    const [liveImagePath, setLiveImagePath] = useState<string | null>(null);
+    const [liveImagePath, setLiveImagePath] = useState<string | null | undefined>(undefined);
     const [liveEntity, setLiveEntity] = useState<ProjectedEntity | null>(null);
     const [voiceLevel, setVoiceLevel] = useState(0);
 
@@ -47,7 +49,8 @@ const PlayerHub: React.FC = () => {
                 useFavoriteStore.persist.rehydrate(),
                 useMapStore.persist.rehydrate(),
                 useWhiteboardStore.persist.rehydrate(),
-                useVoiceStore.persist.rehydrate()
+                useVoiceStore.persist.rehydrate(),
+                useImageStore.persist.rehydrate()
             ]);
         };
         rehydrateAll();
@@ -83,8 +86,11 @@ const PlayerHub: React.FC = () => {
                 'gm-os-favorites-storage': () => useFavoriteStore.persist.rehydrate(),
                 'gmos-map-storage': () => useMapStore.persist.rehydrate(),
                 'gm-os-whiteboard-storage-v1': () => useWhiteboardStore.persist.rehydrate(),
-                'gmos-voice-storage': () => useVoiceStore.persist.rehydrate()
+                'gmos-voice-storage': () => useVoiceStore.persist.rehydrate(),
+                'gm-os-tactical-ai': () => useTacticalAIStore.persist.rehydrate(),
+                'gmos-image-storage': () => useImageStore.persist.rehydrate()
             };
+
             if (e.key && keys[e.key]) keys[e.key]();
         };
 
@@ -114,7 +120,7 @@ const PlayerHub: React.FC = () => {
         );
     };
 
-    const backgroundPath = liveImagePath || activeMedia?.path;
+    const backgroundPath = liveImagePath !== undefined ? liveImagePath : activeMedia?.path;
     const resolvedBackground = useMediaUrl(backgroundPath || undefined);
     const isMapActive = !!(mapUrl && projectionTarget === 'hub');
 
@@ -288,23 +294,89 @@ const PlayerHub: React.FC = () => {
 
                     <div className="flex flex-col gap-3">
                         {/* Active Turn */}
-                        <div className="flex items-center gap-4 px-4 py-4 rounded-xl bg-red-500/20 ring-1 ring-red-500/50 shadow-glow-crimson relative overflow-hidden">
-                            <ResolvedImage className="size-10 rounded-full border-2 border-red-500" src={activeCombatant.avatar} alt={activeCombatant.name} fallback={activeCombatant.name.charAt(0)} />
-                            <div className="flex flex-col">
-                                <p className="text-white text-sm font-bold leading-none">{activeCombatant.name}</p>
-                                <p className="text-red-400 text-[10px] font-bold uppercase mt-1">Active Turn</p>
+                        <div className="flex flex-col gap-4 px-4 py-4 rounded-xl bg-red-500/20 ring-1 ring-red-500/50 shadow-glow-crimson relative overflow-hidden transition-all duration-700">
+                            <div className="flex items-center gap-4">
+                                <ResolvedImage className="size-10 rounded-full border-2 border-red-500" src={activeCombatant.avatar} alt={activeCombatant.name} fallback={activeCombatant.name.charAt(0)} />
+                                <div className="flex flex-col">
+                                    <p className="text-white text-sm font-bold leading-none">{activeCombatant.name}</p>
+                                    <p className="text-red-400 text-[10px] font-bold uppercase mt-1">Active Turn</p>
+                                </div>
+                                <div className="ml-auto text-red-500 material-symbols-outlined">double_arrow</div>
                             </div>
-                            <div className="ml-auto text-red-500 material-symbols-outlined">double_arrow</div>
+
+                            {/* Health Indicators */}
+                            <div className="flex flex-wrap gap-2 pt-2 border-t border-red-500/20">
+                                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-black/60 border border-red-500/40">
+                                    <div className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)] animate-pulse" />
+                                    <span className="text-xs font-black text-red-100 tracking-normal">{activeCombatant.hp} / {activeCombatant.hpMax} HP</span>
+                                </div>
+                                
+                                {activeCombatant.healthSystem && (
+                                    <>
+                                        {activeCombatant.healthSystem.type === 'wounds' && (
+                                            <div className="px-2 py-0.5 rounded-full bg-orange-500/20 border border-orange-500/40">
+                                                <span className="text-[10px] font-black text-orange-400 uppercase tracking-tighter">
+                                                    {activeCombatant.healthSystem.data.currentLevel as any}
+                                                </span>
+                                            </div>
+                                        )}
+                                        {activeCombatant.healthSystem.type === 'clock' && (
+                                            <div className="px-2 py-0.5 rounded-full bg-blue-500/20 border border-blue-500/40">
+                                                <span className="text-[10px] font-black text-blue-400 uppercase tracking-tighter">
+                                                    Clock {activeCombatant.healthSystem.data.segments as any}/{activeCombatant.healthSystem.data.maxSegments as any}
+                                                </span>
+                                            </div>
+                                        )}
+                                        {activeCombatant.healthSystem.type === 'boxes' && (
+                                            <div className="flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-orange-500/20 border border-orange-500/40">
+                                                <span className="text-[10px] font-black text-orange-400 uppercase tracking-tighter mr-1">Stress</span>
+                                                {(activeCombatant.healthSystem.data.boxes as any[]).map((b: any, bi: number) => (
+                                                    <div key={bi} className={`w-1.5 h-1.5 rounded-xs border ${b.filled ? 'bg-orange-500 border-orange-400' : 'border-orange-500/30'}`} />
+                                                ))}
+                                            </div>
+                                        )}
+                                    </>
+                                )}
+                            </div>
                         </div>
 
                         {/* Queue */}
                         {upcomingCombatants.slice(0, 5).map((combatant, idx) => (
-                            <div key={combatant.id} className="flex items-center gap-4 px-4 py-3 rounded-xl bg-white/5 border border-white/5 opacity-80">
-                                <ResolvedImage className="size-10 rounded-full border border-white/10" src={combatant.avatar} alt={combatant.name} fallback={combatant.name.charAt(0)} />
-                                <div className="flex flex-col">
-                                    <p className="text-slate-200 text-sm font-medium leading-tight">{combatant.name}</p>
-                                    <p className="text-slate-500 text-[10px] uppercase">{idx === 0 ? 'Next' : 'Upcoming'}</p>
+                            <div key={combatant.id} className="flex flex-col gap-2 p-3 rounded-xl bg-white/5 border border-white/5 opacity-80 hover:opacity-100 hover:bg-white/10 transition-all cursor-pointer group">
+                                <div className="flex items-center gap-4">
+                                    <ResolvedImage className="size-10 rounded-full border border-white/10 group-hover:border-white/30 transition-colors" src={combatant.avatar} alt={combatant.name} fallback={combatant.name.charAt(0)} />
+                                    <div className="flex flex-col">
+                                        <p className="text-slate-200 text-sm font-medium leading-tight">{combatant.name}</p>
+                                        <p className="text-slate-500 text-[10px] uppercase tracking-tighter">{idx === 0 ? 'Next' : 'Upcoming'}</p>
+                                    </div>
+
+                                    {/* Mini HP Bar for upcoming */}
+                                    <div className="ml-auto flex flex-col items-end gap-1">
+                                         <span className="text-[9px] font-bold text-slate-400 tracking-tighter">{combatant.hp} HP</span>
+                                         <div className="w-12 h-1 bg-white/10 rounded-full overflow-hidden">
+                                             <div 
+                                                className={`h-full transition-all ${combatant.hp / combatant.hpMax < 0.3 ? 'bg-red-500' : 'bg-emerald-500'}`} 
+                                                style={{ width: `${Math.min(100, (combatant.hp / combatant.hpMax) * 100)}%` }} 
+                                             />
+                                         </div>
+                                    </div>
                                 </div>
+                                
+                                {/* Mini health system tags if present */}
+                                {combatant.healthSystem && (
+                                    <div className="flex flex-wrap gap-1 mt-1">
+                                        {combatant.healthSystem.type === 'wounds' && (
+                                            <span className="text-[8px] font-black text-amber-500/80 uppercase px-1.5 rounded bg-amber-500/10 border border-amber-500/20">
+                                                {combatant.healthSystem.data.currentLevel}
+                                            </span>
+                                        )}
+                                        {combatant.healthSystem.type === 'clock' && (
+                                            <span className="text-[8px] font-black text-blue-400 uppercase px-1.5 rounded bg-blue-500/10 border border-blue-500/20">
+                                                {combatant.healthSystem.data.segments}/{combatant.healthSystem.data.maxSegments}
+                                            </span>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>

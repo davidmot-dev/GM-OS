@@ -3,6 +3,8 @@ import { useMapStore } from '../useMapStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import MapPingLayer from './MapPingLayer';
 import WeatherLayer from './WeatherLayer';
+import MagicLayer from './MagicLayer';
+
 
 interface PlayerMapCanvasProps {
     onMapClick?: (x: number, y: number) => void;
@@ -64,6 +66,18 @@ const PlayerMapCanvas: React.FC<PlayerMapCanvasProps> = ({ onMapClick }) => {
     useEffect(() => {
         if (viewResetCounter > 0) fitToScreen();
     }, [viewResetCounter, fitToScreen]);
+
+    // Add storage listener for cross-window sync
+    useEffect(() => {
+        const handleStorageChange = (e: StorageEvent) => {
+            if (e.key === 'gmos-map-storage') {
+                useMapStore.persist.rehydrate();
+            }
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+        return () => window.removeEventListener('storage', handleStorageChange);
+    }, []);
 
     // Sync Fog Canvas
     useEffect(() => {
@@ -164,8 +178,12 @@ const PlayerMapCanvas: React.FC<PlayerMapCanvasProps> = ({ onMapClick }) => {
                     className="absolute inset-0 w-full h-full z-20 opacity-100 pointer-events-none"
                 />
 
-                {/* 4. Pings Layer */}
+                {/* 4. Magic Effects Layer */}
+                <MagicLayer isProjectedView={true} />
+
+                {/* 5. Pings Layer */}
                 <MapPingLayer isProjectedView={true} />
+
 
                 {/* 5. Weather Layer */}
                 <WeatherLayer isProjectedView={true} />

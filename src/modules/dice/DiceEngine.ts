@@ -309,9 +309,17 @@ export class DiceEngine {
                     }
                 }
 
-                const faces = parseInt(facesStr);
+                const isFate = facesStr.toLowerCase() === 'f';
+                const faces = isFate ? 0 : parseInt(facesStr);
 
-                if ([44, 66, 88, 444, 666, 888].includes(faces)) {
+                if (isFate) {
+                    const fateRes = this.rollFate(count, 0);
+                    fateRes.rolls.forEach(r => {
+                        if (isNeg && typeof r.val === 'number') r.val = -r.val;
+                        rolls.push(r);
+                    });
+                    total += isNeg ? -fateRes.total : fateRes.total;
+                } else if ([44, 66, 88, 444, 666, 888].includes(faces)) {
                     const digitRes = this.rollDigits(faces, count, 0);
                     digitRes.rolls.forEach(r => rolls.push(r));
                     let dt = digitRes.total;
@@ -358,13 +366,20 @@ export class DiceEngine {
             return this.rollPool(20, 2, options?.modifier ?? 0, (options?.targetOverwrite ?? config.successThreshold) || 12, false);
         }
 
-        const dicePart = config.defaultDice.match(/(\d+)d(\d+)/i);
+        const dicePart = config.defaultDice.match(/(\d+)d(\d+|f|F)/i);
         if (!dicePart) return this.rollFormula(config.defaultDice);
         
         const count = options?.baseCount ?? parseInt(dicePart[1]);
-        const faces = parseInt(dicePart[2]);
-        const threshold = (options?.targetOverwrite ?? config.successThreshold) || 10;
+        const facesStr = dicePart[2];
+        const isFate = facesStr.toLowerCase() === 'f';
         const modifier = options?.modifier ?? 0;
+
+        if (isFate) {
+            return this.rollFate(count, modifier);
+        }
+
+        const faces = parseInt(facesStr);
+        const threshold = (options?.targetOverwrite ?? config.successThreshold) || 10;
 
         switch (config.logic) {
             case 'count-success':

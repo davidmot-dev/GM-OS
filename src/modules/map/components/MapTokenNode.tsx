@@ -38,11 +38,10 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
         setIsDragging(true);
         setIsDraggingToken(true);
         
-        // Gérer la sélection pour le Cerveau Tactique (seulement MJ)
-        if (!isProjectedView) {
-            setSelectedTokenId(token.id);
-        }
+        // Gérer la sélection pour le Cerveau Tactique
+        setSelectedTokenId(token.id);
     };
+
 
     const handlePointerMove = (e: React.PointerEvent) => {
         if (!isDragging) return;

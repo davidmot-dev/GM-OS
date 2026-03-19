@@ -14,8 +14,29 @@ import type { Combatant } from '../combat/useCombatStore';
 import type { GameDriver } from '../../types/drivers';
 import { obsidianExportService } from './ObsidianExportService';
 import { useObsidianStore } from './useObsidianStore';
+import { HealthInterpreter } from './logic/HealthInterpreter';
 
-// --- Interfaces ---
+export interface DamageImpact {
+    value: number;
+    type?: string;
+    location?: string;
+    isRecovery?: boolean;
+}
+
+export interface PersistenceBadge {
+    id: string;
+    label: string;
+    description: string;
+    severity: 'minor' | 'major' | 'critical';
+    location?: string;
+}
+
+export interface HealthSystem {
+    type: string; // 'hp', 'wounds', 'clocks', 'anatomy', etc.
+    data: Record<string, string | number | boolean | object | null>;
+    state: 'healthy' | 'scratched' | 'wounded' | 'critical' | 'dead';
+    badges: PersistenceBadge[];
+}
 
 export interface Campaign {
     id: string;
@@ -46,6 +67,7 @@ export interface Entity {
     sourceRef?: string;
     templateId?: string;           // ID of the sheet template used
     sheetData?: Record<string, string | number | boolean>; // fieldId -> value
+    healthSystem?: HealthSystem;   // New modular health system
 }
 
 export interface PlayerCharacter {
@@ -62,6 +84,8 @@ export interface PlayerCharacter {
     description?: string;          // Player-visible character description
     gmNotes?: string;              // GM-only secret notes
     linkedDocumentIds?: string[];  // Media Hub document IDs
+    inventory?: string;            // Player's items/loot
+    healthSystem?: HealthSystem;   // New modular health system
 }
 
 export interface Player {
@@ -257,7 +281,7 @@ interface SessionOSState {
 
     updateCharacterSheetData: (playerId: string, characterId: string, fieldId: string, value: string | number | boolean) => void;
     updateCharacterVisuals: (playerId: string, characterId: string, updates: { portraitUrl?: string; tokenUrl?: string }) => void;
-    updateCharacterNarrative: (playerId: string, characterId: string, updates: { description?: string; gmNotes?: string; linkedDocumentIds?: string[] }) => void;
+    updateCharacterNarrative: (playerId: string, characterId: string, updates: { description?: string; gmNotes?: string; linkedDocumentIds?: string[]; inventory?: string }) => void;
     addCampaign: (campaign: Omit<Campaign, 'id'>) => void;
     updateCampaign: (id: string, updates: Partial<Campaign>) => void;
     deleteCampaign: (id: string) => void;
@@ -276,6 +300,7 @@ interface SessionOSState {
     deleteCharacter: (playerId: string, characterId: string) => void;
     linkCharacterToCampaign: (playerId: string, characterId: string, campaignId: string | null) => void;
     updateCharacterHP: (playerId: string, characterId: string, hp: number) => void;
+    updateCharacterHealth: (playerId: string, characterId: string, health: HealthSystem) => void;
     updateCharacter: (playerId: string, characterId: string, updates: Partial<PlayerCharacter>) => void;
     addAtlasMap: (map: Omit<AtlasMap, 'id'>) => void;
     updateAtlasMap: (id: string, updates: Partial<Omit<AtlasMap, 'id'>>) => void;
@@ -283,13 +308,19 @@ interface SessionOSState {
     setSelectedAtlasMap: (id: string | null) => void;
     autoSelectFirstMap: () => void;
     updateEntityHP: (entityId: string, hp: number) => void;
+    updateEntityHealth: (entityId: string, health: HealthSystem) => void;
     addEntity: (entity: Omit<Entity, 'id'>) => void;
+    addPersistenceBadge: (targetId: string, targetType: 'pc' | 'npc', badge: Omit<PersistenceBadge, 'id'>) => void;
+    removePersistenceBadge: (targetId: string, targetType: 'pc' | 'npc', badgeId: string) => void;
     setSelectedEntity: (id: string | null) => void;
     autoSelectFirstEntity: () => void;
     updateEntity: (id: string, updates: Partial<Entity>) => void;
     updateEntitySheetData: (id: string, fieldId: string, value: string | number | boolean) => void;
     addLinkedEntity: (mapId: string, entity: Omit<AtlasLinkedEntity, 'id'>) => void;
     removeLinkedEntity: (mapId: string, entityId: string) => void;
+    
+    // Impact & Health System Actions
+    handleApplyImpact: (targetId: string, targetType: 'pc' | 'npc', impact: DamageImpact) => void;
     
     // Session NPC Actions
     addEntityToSession: (sessionId: string, entityId: string) => void;
@@ -302,6 +333,7 @@ interface SessionOSState {
     rollDice: (sides: number) => void;
     clearDiceRolls: () => void;
     togglePlayerOnline: (playerId: string) => void;
+    addLootToCharacter: (playerId: string, characterId: string, item: string) => void;
 
     // AI Image Generation Actions
     generateEntityPortrait: (entityId: string, instructions?: string) => Promise<void>;
@@ -468,6 +500,7 @@ const mockPlayers: Player[] = [
                 campaignId: 'c-1',
                 templateId: 'generic',
                 sheetData: {},
+                inventory: '',
             },
             {
                 id: 'pc-2',
@@ -479,6 +512,7 @@ const mockPlayers: Player[] = [
                 campaignId: null,
                 templateId: 'generic',
                 sheetData: {},
+                inventory: '',
             }
         ]
     },
@@ -499,6 +533,7 @@ const mockPlayers: Player[] = [
                 campaignId: 'c-2',
                 templateId: 'generic',
                 sheetData: {},
+                inventory: '',
             }
         ]
     },
@@ -518,6 +553,7 @@ const mockPlayers: Player[] = [
                 campaignId: 'c-1',
                 templateId: 'generic',
                 sheetData: {},
+                inventory: '',
             }
         ]
     }
@@ -1022,12 +1058,35 @@ export const useSessionOSStore = create<SessionOSState>()(
                 )
             })),
 
-            rollDice: (sides) => set((state) => {
+            rollDice: (sides) => {
                 const result = Math.floor(Math.random() * sides) + 1;
-                return {
+                set(state => ({
                     diceRolls: [{ die: sides, result, timestamp: Date.now() }, ...state.diceRolls].slice(0, 10)
-                };
-            }),
+                }));
+            },
+
+            addLootToCharacter: (playerId, characterId, item) => {
+                set(state => ({
+                    players: state.players.map(p => 
+                        p.id === playerId 
+                            ? {
+                                ...p,
+                                characters: p.characters.map(c => 
+                                    c.id === characterId 
+                                        ? { 
+                                            ...c, 
+                                            inventory: (c.inventory ? c.inventory + '\n' : '') + item 
+                                        } 
+                                        : c
+                                )
+                            }
+                            : p
+                    )
+                }));
+                gmToast(`Butin ajouté à la fiche de ${item.split(':')[0]}`, "success");
+            },
+
+
 
             generateEntityPortrait: async (entityId, instructions) => {
               const entity = get().entities.find(e => e.id === entityId);
@@ -1132,6 +1191,81 @@ export const useSessionOSStore = create<SessionOSState>()(
                 )
             })),
 
+            updateCharacterHealth: (playerId, characterId, health) => set((state) => ({
+                players: state.players.map(p =>
+                    p.id === playerId
+                        ? { ...p, characters: p.characters.map(c => c.id === characterId ? { ...c, healthSystem: health } : c) }
+                        : p
+                )
+            })),
+
+            updateEntityHealth: (entityId, health) => set((state) => ({
+                entities: state.entities.map(e => e.id === entityId ? { ...e, healthSystem: health } : e)
+            })),
+
+            addPersistenceBadge: (targetId, targetType, badgeData) => set((state) => {
+                const badge: PersistenceBadge = { ...badgeData, id: crypto.randomUUID() };
+                if (targetType === 'pc') {
+                    return {
+                        players: state.players.map(p => ({
+                            ...p,
+                            characters: p.characters.map(c => {
+                                if (c.id === targetId) {
+                                  const hs: HealthSystem = c.healthSystem || { 
+                                    type: 'hp', 
+                                    data: { current: c.hp, max: c.maxHp }, 
+                                    state: 'healthy', 
+                                    badges: [] 
+                                  };
+                                  return { ...c, healthSystem: { ...hs, badges: [...hs.badges, badge] } };
+                                }
+                                return c;
+                            })
+                        }))
+                    };
+                } else {
+                    return {
+                        entities: state.entities.map(e => {
+                            if (e.id === targetId) {
+                                const hs: HealthSystem = e.healthSystem || { 
+                                  type: 'hp', 
+                                  data: { current: e.hp, max: e.maxHp }, 
+                                  state: 'healthy', 
+                                  badges: [] 
+                                };
+                                return { ...e, healthSystem: { ...hs, badges: [...hs.badges, badge] } };
+                            }
+                            return e;
+                        })
+                    };
+                }
+            }),
+
+            removePersistenceBadge: (targetId, targetType, badgeId) => set((state) => {
+                if (targetType === 'pc') {
+                    return {
+                        players: state.players.map(p => ({
+                            ...p,
+                            characters: p.characters.map(c => {
+                                if (c.id === targetId && c.healthSystem) {
+                                    return { ...c, healthSystem: { ...c.healthSystem, badges: c.healthSystem.badges.filter(b => b.id !== badgeId) } };
+                                }
+                                return c;
+                            })
+                        }))
+                    };
+                } else {
+                    return {
+                        entities: state.entities.map(e => {
+                            if (e.id === targetId && e.healthSystem) {
+                                return { ...e, healthSystem: { ...e.healthSystem, badges: e.healthSystem.badges.filter(b => b.id !== badgeId) } };
+                            }
+                            return e;
+                        })
+                    };
+                }
+            }),
+
             updateCharacter: (playerId: string, characterId: string, updates) => set((state) => ({
                 players: state.players.map(p =>
                     p.id === playerId
@@ -1219,6 +1353,54 @@ export const useSessionOSStore = create<SessionOSState>()(
                         : m
                 )
             })),
+
+            handleApplyImpact: (targetId, targetType, impact) => set((state) => {
+                if (targetType === 'pc') {
+                    return {
+                        players: state.players.map(p => ({
+                            ...p,
+                            characters: p.characters.map(c => {
+                                if (c.id === targetId) {
+                                    const currentHS = c.healthSystem || HealthInterpreter.createDefault('hp');
+                                    // Special case for HP: sync c.hp if system is hp
+                                    if (currentHS.type === 'hp') {
+                                        currentHS.data.current = c.hp;
+                                        currentHS.data.max = c.maxHp;
+                                    }
+                                    const nextHS = HealthInterpreter.calculateNextState(currentHS, impact);
+                                    
+                                    const updates: Partial<PlayerCharacter> = { healthSystem: nextHS };
+                                    if (nextHS.type === 'hp') {
+                                        updates.hp = nextHS.data.current as number;
+                                    }
+                                    return { ...c, ...updates };
+                                }
+                                return c;
+                            })
+                        }))
+                    };
+                } else {
+                    return {
+                        entities: state.entities.map(e => {
+                            if (e.id === targetId) {
+                                const currentHS = e.healthSystem || HealthInterpreter.createDefault('hp');
+                                if (currentHS.type === 'hp') {
+                                    currentHS.data.current = e.hp;
+                                    currentHS.data.max = e.maxHp;
+                                }
+                                const nextHS = HealthInterpreter.calculateNextState(currentHS, impact);
+                                
+                                const updates: Partial<Entity> = { healthSystem: nextHS };
+                                if (nextHS.type === 'hp') {
+                                    updates.hp = nextHS.data.current as number;
+                                }
+                                return { ...e, ...updates };
+                            }
+                            return e;
+                        })
+                    };
+                }
+            }),
 
             addEntityToSession: (sessionId, entityId) => set((state) => ({
                 sessions: state.sessions.map(s => 

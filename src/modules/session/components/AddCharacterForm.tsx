@@ -71,7 +71,7 @@ export const AddCharacterForm: React.FC = () => {
                 <div className="col-span-2 space-y-1.5">
                     <label className="text-xs font-bold text-app-text/40 uppercase tracking-wider pl-1">Nom du Personnage</label>
                     <div className="relative">
-                        <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-text/40" />
+                        <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-text/40 pointer-events-none" />
                         <input
                             type="text"
                             value={name}
@@ -87,7 +87,7 @@ export const AddCharacterForm: React.FC = () => {
                 <div className="space-y-1.5">
                     <label className="text-xs font-bold text-app-text/40 uppercase tracking-wider pl-1">Classe / Race</label>
                     <div className="relative">
-                        <Shield size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-text/40" />
+                        <Shield size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-text/40 pointer-events-none" />
                         <input
                             type="text"
                             value={classRace}
@@ -102,7 +102,7 @@ export const AddCharacterForm: React.FC = () => {
                 <div className="space-y-1.5">
                     <label className="text-xs font-bold text-app-text/40 uppercase tracking-wider pl-1">PV Max</label>
                     <div className="relative">
-                        <Heart size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-rose-500" />
+                        <Heart size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-rose-500 pointer-events-none" />
                         <input
                             type="number"
                             value={maxHp}

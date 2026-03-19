@@ -20,6 +20,7 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
         const resolveSource = async () => {
             try {
                 if (!sourceIdOrUrl || typeof sourceIdOrUrl !== 'string' || sourceIdOrUrl.trim() === '') {
+                    if (isMounted) setResolvedUrl(undefined);
                     return;
                 }
 

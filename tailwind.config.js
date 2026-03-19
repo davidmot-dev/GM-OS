@@ -50,8 +50,9 @@ export default {
                 outfit: ['Outfit', 'sans-serif'],
                 // Typographie technique et lisible
                 mono: ['"JetBrains Mono"', 'monospace'],
-                sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
-                display: ['Outfit', 'Orbitron', 'sans-serif'],
+                sans: ['var(--font-display)', 'Inter', 'sans-serif'],
+                display: ['var(--font-display)', 'Outfit', 'Orbitron', 'sans-serif'],
+
                 cinematic: ['"Noto Serif"', 'serif'],
                 // Splash Screen Fonts
                 elite: ['"Special Elite"', 'cursive'],

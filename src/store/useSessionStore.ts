@@ -4,6 +4,15 @@ import { persist } from 'zustand/middleware';
 export type ThemeID = 'cyberpunk' | 'medieval' | 'modern' | 'claire';
 export type ModuleID = 'dashboard' | 'music' | 'sound' | 'ambient' | 'combat' | 'npc' | 'clock' | 'light' | 'image' | 'map' | 'table' | 'web' | 'voice' | 'favorite' | 'debug' | 'dice' | 'whiteboard' | 'obsidian';
 
+interface ThemePalette {
+    accent: string;
+    bg: string;
+    surface: string;
+    border: string;
+    fonts: string;
+    palettes: string[];
+}
+
 interface SessionState {
     activeModule: ModuleID;
     theme: ThemeID;
@@ -19,36 +28,43 @@ interface SessionState {
     toggleAIPanel: (force?: boolean) => void;
 }
 
-export const THEME_PALETTES = {
+export const THEME_PALETTES: Record<ThemeID, ThemePalette> = {
+
     'cyberpunk': {
         accent: '#06b6d4',
         bg: '#020617',
         surface: '#0f172a',
         border: '#1e293b',
+        fonts: '"Orbitron", "JetBrains Mono", sans-serif',
         palettes: ['#06b6d4', '#8b5cf6', '#ec4899', '#f59e0b', '#ef4444']
     },
     'medieval': {
-        accent: '#10b981',
-        bg: '#1a120b',
-        surface: '#2d241d',
-        border: '#3f352c',
-        palettes: ['#10b981', '#d4af37', '#7c2d12', '#4c1d95', '#1e40af']
+        accent: '#d4af37',
+        bg: '#181411', // Slightly lighter brown
+        surface: '#24201c',
+        border: '#332c26',
+        fonts: '"Cinzel", "MedievalSharp", serif',
+        palettes: ['#d4af37', '#b91c1c', '#7c2d12', '#4c1d95', '#1e40af']
     },
+
     'modern': {
         accent: '#3b82f6',
         bg: '#0f172a',
         surface: '#1e293b',
         border: '#334155',
+        fonts: '"Outfit", "Inter", sans-serif',
         palettes: ['#3b82f6', '#6366f1', '#14b8a6', '#f43f5e', '#64748b']
     },
     'claire': {
-        accent: '#eca413',
-        bg: '#fdfbf7',
+        accent: '#c2410c',
+        bg: '#fbfbf9',
         surface: '#ffffff',
-        border: '#e9e4d9',
-        palettes: ['#7fb3d5', '#a2d9ce', '#f1b6a7', '#eca413', '#6b615a']
+        border: '#e7e5e4',
+        fonts: '"Inter", sans-serif',
+        palettes: ['#c2410c', '#0369a1', '#15803d', '#a21caf', '#374151']
     }
 };
+
 
 export const useSessionStore = create<SessionState>()(
     persist(

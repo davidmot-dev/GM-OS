@@ -162,15 +162,31 @@ const RuleEngineEditor: React.FC = () => {
                                     <Zap size={16} /> Combat & Initiative
                                 </h4>
                                 <div className="space-y-4">
-                                    <div>
-                                        <label className="text-[10px] font-black uppercase text-app-text/40 mb-2 block">Formule Initiative</label>
-                                        <input 
-                                            type="text"
-                                            value={driver.combat.initiativeFormula || ''}
-                                            onChange={e => handleUpdate({ combat: { ...driver.combat, initiativeFormula: e.target.value } })}
-                                            className="w-full bg-app-bg px-4 py-3 rounded-xl border border-app-border/40 font-mono text-sm focus:border-accent/40 outline-none"
-                                            placeholder="Ex: dex, 1d6 + init..."
-                                        />
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="text-[10px] font-black uppercase text-app-text/40 mb-2 block">Formule Initiative</label>
+                                            <input 
+                                                type="text"
+                                                value={driver.combat.initiativeFormula || ''}
+                                                onChange={e => handleUpdate({ combat: { ...driver.combat, initiativeFormula: e.target.value } })}
+                                                className="w-full bg-app-bg px-4 py-3 rounded-xl border border-app-border/40 font-mono text-sm focus:border-accent/40 outline-none"
+                                                placeholder="Ex: dex, 1d6 + init..."
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="text-[10px] font-black uppercase text-app-text/40 mb-2 block">Moteur de Santé</label>
+                                            <select 
+                                                value={driver.combat.defaultHealthType || 'hp'}
+                                                onChange={e => handleUpdate({ combat: { ...driver.combat, defaultHealthType: e.target.value as any } })}
+                                                className="w-full bg-app-bg px-4 py-3 rounded-xl border border-app-border/40 text-xs focus:border-accent/40 outline-none"
+                                            >
+                                                <option value="hp">Points de Vie (HP)</option>
+                                                <option value="wounds">Niveaux de Blessure (Type 2)</option>
+                                                <option value="boxes">Cases de Blessure (Type 3)</option>
+                                                <option value="clocks">Horloges / Clocks (Type 7)</option>
+                                                <option value="anatomy">Anatomie (Type 5)</option>
+                                            </select>
+                                        </div>
                                     </div>
                                     <div>
                                         <label className="text-[10px] font-black uppercase text-app-text/40 mb-2 block">Ordre de tri</label>

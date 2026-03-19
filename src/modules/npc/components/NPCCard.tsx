@@ -10,12 +10,14 @@ import { useFavoriteStore, type FavoriteType } from '../../favorite/useFavoriteS
 import { useImageStore } from '../../image/useImageStore';
 import { useVoiceStore } from '../../voice/useVoiceStore';
 import AIPromptOverlay from '../../ai/components/AIPromptOverlay';
+import { RecipientSelector } from '../../session/components/RecipientSelector';
 
 const NPCCard: React.FC = () => {
     const { currentEntity, saveToMemo, isGenerating, selectAvatar, generateAvatar, isGeneratingAIAvatar } = useNPCStore();
     const [showAIPrompt, setShowAIPrompt] = useState(false);
     const { addCombatant } = useCombatStore();
-    const { sessions, selectedSessionId, addWikiEntry } = useSessionOSStore();
+    const { sessions, selectedSessionId, addWikiEntry, addLootToCharacter } = useSessionOSStore();
+    const [showRecipientSelector, setShowRecipientSelector] = useState(false);
     const { addToken } = useMapStore();
     const { addFavorite } = useFavoriteStore();
     const { inputLevel, isSyncNPC, isActive } = useVoiceStore();
@@ -65,7 +67,8 @@ const NPCCard: React.FC = () => {
                 init: Math.floor(Math.random() * 20) + 1,
                 isPlayer: false,
                 avatar: avatarSrc || undefined,
-                statuses: []
+                statuses: [],
+                faction: 'enemy' // Default to enemy for Combat OS addition
             });
             gmToast(`${currentEntity.name} ajouté au Combat OS !`);
         } else {
@@ -125,6 +128,37 @@ const NPCCard: React.FC = () => {
             isStarred: false
         });
         gmToast(`${currentEntity.name} ajouté au Panthéon !`);
+    };
+    
+    const handleGiveToPC = (playerId: string, characterId: string) => {
+        if (!currentEntity) return;
+        
+        let lootString = "";
+        
+        // If it's an item, format it with markdown for better readability
+        if (currentEntity.category === 'items') {
+            lootString = `**${currentEntity.name}**\n`;
+            
+            // Try to find a description or effect in fields or gmNotes
+            const desc = currentEntity.fields['Description'] || currentEntity.fields['Effet'] || currentEntity.fields['Effect'] || currentEntity.gmNotes;
+            if (desc) lootString += `_${desc}_\n`;
+            
+            // Add other technical fields
+            const details = Object.entries(currentEntity.fields)
+                .filter(([k]) => !['Description', 'Effet', 'Effect'].includes(k))
+                .map(([k, v]) => `**${k}**: ${v}`)
+                .join(' | ');
+            if (details) lootString += details;
+        } else {
+            // Default formatting for other categories
+            const itemDetails = Object.entries(currentEntity.fields)
+                .map(([k, v]) => `${k}: ${v}`)
+                .join(' | ');
+            lootString = `${currentEntity.name} (${itemDetails})`;
+        }
+        
+        addLootToCharacter(playerId, characterId, lootString);
+        setShowRecipientSelector(false);
     };
 
     const getIcon = () => {
@@ -272,11 +306,34 @@ const NPCCard: React.FC = () => {
                             className="flex items-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl shadow-lg shadow-rose-900/20 transition-all hover:scale-105 active:scale-95"
                         >
                             <Sword size={18} />
-                            <span className="text-xs uppercase tracking-wider">Combat</span>
-                        </button>
+                        <span className="text-xs uppercase tracking-wider">Combat</span>
+                    </button>
                     )}
+
+                    <button
+                        onClick={() => setShowRecipientSelector(true)}
+                        className={`flex items-center gap-2 px-4 py-2 border font-bold rounded-xl transition-all hover:scale-105 active:scale-95 ${
+                            currentEntity.category === 'items'
+                            ? 'bg-amber-500 text-app-bg border-amber-400 shadow-glow-amber/20'
+                            : 'bg-app-surface text-app-text/60 border-app-border/40 hover:text-accent hover:border-accent/40'
+                        }`}
+                        title="Donner cet objet à un personnage joueur"
+                    >
+                        <Package size={18} />
+                        <span className="text-xs uppercase tracking-wider">Donner à...</span>
+                    </button>
                 </div>
             </div>
+
+            {/* Recipient Selector Overlay */}
+            {showRecipientSelector && (
+                <div className="absolute inset-0 z-50 flex items-center justify-center p-8 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
+                    <RecipientSelector 
+                        onSelect={handleGiveToPC}
+                        onCancel={() => setShowRecipientSelector(false)}
+                    />
+                </div>
+            )}
 
             <AIPromptOverlay
                 isOpen={showAIPrompt}

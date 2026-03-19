@@ -3,7 +3,7 @@ import React from 'react';
 import {
     Ban, Folder as FolderIcon, History as HistoryIcon,
     Star as StarIcon, Search as SearchIcon,
-    Filter, Plus, RotateCcw
+    Filter, Plus, RotateCcw, ChevronLeft, ChevronRight
 } from 'lucide-react';
 
 import { useImageStore } from './useImageStore';
@@ -16,7 +16,7 @@ import { useHardwareStore } from '../../stores/useHardwareStore';
 const ImageDashboard: React.FC = () => {
     const {
         mediaList, projectionTarget, setProjectionTarget,
-        projectSequence, blackout, blackoutAll, addMedia, displays, fetchDisplays,
+        projectSequence, navigateSequence, blackout, blackoutAll, addMedia, displays, fetchDisplays,
         folders, activeFolderId, setActiveFolderId, addFolder, removeFolder,
         currentView, setCurrentView, reset
     } = useImageStore();
@@ -217,12 +217,28 @@ const ImageDashboard: React.FC = () => {
                             />
                         </div>
 
-                        <button
-                            onClick={projectSequence}
-                            className="bg-accent text-slate-950 px-6 py-2 rounded-xl font-bold text-sm tracking-wide shadow-glow-accent hover:scale-[1.02] active:scale-[0.98] transition-all"
-                        >
-                            PROJECT SEQUENCE
-                        </button>
+                        <div className="flex bg-app-surface/50 rounded-xl border border-app-border overflow-hidden">
+                            <button 
+                                onClick={() => navigateSequence(-1)}
+                                className="p-2 hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+                                title="Précédent"
+                            >
+                                <ChevronLeft size={20} />
+                            </button>
+                            <button
+                                onClick={projectSequence}
+                                className="bg-accent text-slate-950 px-6 py-2 font-bold text-sm tracking-wide shadow-glow-accent hover:brightness-110 active:scale-[0.98] transition-all"
+                            >
+                                DIAPORAMA
+                            </button>
+                            <button 
+                                onClick={() => navigateSequence(1)}
+                                className="p-2 hover:bg-white/10 text-slate-400 hover:text-white transition-colors border-l border-app-border"
+                                title="Suivant"
+                            >
+                                <ChevronRight size={20} />
+                            </button>
+                        </div>
 
                         <div className="w-10 h-10 rounded-full bg-app-surface border border-app-border flex items-center justify-center overflow-hidden">
                             {/* Dummy Profile */}
@@ -237,7 +253,10 @@ const ImageDashboard: React.FC = () => {
                         <button className="text-app-text font-bold border-b-2 border-accent pb-2 text-sm">{currentFolderName}</button>
                     </div>
                     <div className="flex gap-2">
-                        <button className="p-2 rounded-lg bg-app-bg border border-app-border text-slate-400 hover:text-white transition-colors">
+                        <button 
+                            className="p-2 rounded-lg bg-app-bg border border-app-border text-slate-400 hover:text-white transition-colors"
+                            title="Filtrer"
+                        >
                             <Filter size={20} />
                         </button>
                     </div>

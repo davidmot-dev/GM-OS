@@ -55,7 +55,7 @@ export const AddPlayerForm: React.FC = () => {
                 <div className="space-y-1.5">
                     <label className="text-xs font-bold text-app-text/40 uppercase tracking-wider pl-1">Nom du Joueur</label>
                     <div className="relative">
-                        <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-text/20" />
+                        <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-text/20 pointer-events-none" />
                         <input
                             type="text"
                             value={realName}
@@ -71,7 +71,7 @@ export const AddPlayerForm: React.FC = () => {
                 <div className="space-y-1.5">
                     <label className="text-xs font-bold text-app-text/40 uppercase tracking-wider pl-1">Email (Optionnel)</label>
                     <div className="relative">
-                        <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-text/20" />
+                        <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-text/20 pointer-events-none" />
                         <input
                             type="email"
                             value={email}

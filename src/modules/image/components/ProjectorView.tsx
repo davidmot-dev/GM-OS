@@ -7,6 +7,9 @@ import PlayerMapCanvas from '../../map/components/PlayerMapCanvas';
 import MapTokenLayer from '../../map/components/MapTokenLayer';
 import { PlayerDrawingCanvas } from '../../whiteboard/components/PlayerDrawingCanvas';
 import { useVoiceStore } from '../../voice/useVoiceStore';
+import { useTacticalAIStore } from '../../tactical-ai/useTacticalAIStore';
+import { useImageStore } from '../useImageStore';
+
 
 const ProjectorView: React.FC = () => {
     const { projectionTarget } = useMapStore();
@@ -29,11 +32,36 @@ const ProjectorView: React.FC = () => {
     useEffect(() => {
         initDB();
         
-        // Load existing states immediately
-        useMapStore.persist.rehydrate();
-        useWhiteboardStore.persist.rehydrate();
-        useVoiceStore.persist.rehydrate();
+        // Rehydrate on mount to catch existing state
+        const syncAtStart = async () => {
+            await Promise.all([
+                useMapStore.persist.rehydrate(),
+                useWhiteboardStore.persist.rehydrate(),
+                useVoiceStore.persist.rehydrate(),
+                useImageStore.persist.rehydrate()
+            ]);
+        };
+        syncAtStart();
 
+        // Fallback: If store says we are projecting to monitor, auto-set tactical map mode
+        // This helps if the IPC event was missed or happened before window was ready
+        const currentTarget = useMapStore.getState().projectionTarget;
+        if (currentTarget === 'monitor' && !imagePath) {
+            setImagePath('__tactical_map__');
+        }
+
+        // Initialize from Image Store projections if available
+        const imageState = useImageStore.getState();
+        const targetId = projectionTarget as string;
+        if (targetId) {
+            const myProjectionId = imageState.projections[targetId];
+            if (myProjectionId) {
+                const media = imageState.mediaList.find(m => m.id === myProjectionId);
+                if (media) setImagePath(media.path);
+                else setImagePath(myProjectionId);
+            }
+        }
+        
         // Hide scrollbars and set black background
         document.body.style.overflow = 'hidden';
         document.body.style.backgroundColor = '#000';
@@ -81,7 +109,14 @@ const ProjectorView: React.FC = () => {
             if (e.key === 'gmos-voice-storage') {
                 useVoiceStore.persist.rehydrate();
             }
+            if (e.key === 'gm-os-tactical-ai') {
+                useTacticalAIStore.persist.rehydrate();
+            }
+            if (e.key === 'gmos-image-storage') {
+                useImageStore.persist.rehydrate();
+            }
         };
+
         window.addEventListener('storage', handleStorage);
         return () => window.removeEventListener('storage', handleStorage);
     }, []);
@@ -140,9 +175,11 @@ const ProjectorView: React.FC = () => {
     }
 
     // SPECIAL MODE: Tactical Map
-    if (imagePath === '__tactical_map__') {
+    // We show the map if explicitly requested OR as a fallback if the monitor is active but no other image is set
+    if (imagePath === '__tactical_map__' || (projectionTarget === 'monitor' && !imagePath)) {
         // We use the store's current state. If the target is 'monitor', we render the canvas.
         const isTargetMonitor = projectionTarget === 'monitor';
+
         
         return (
             <div className="w-screen h-screen bg-app-bg overflow-hidden relative">

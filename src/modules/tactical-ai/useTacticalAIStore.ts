@@ -68,7 +68,10 @@ export const useTacticalAIStore = create<TacticalAIState>()(
         settings: state.settings,
         secrets: state.secrets,
         logs: state.logs,
+        activeAdvices: state.activeAdvices,
+        status: state.status
       }),
+
     }
   )
 );

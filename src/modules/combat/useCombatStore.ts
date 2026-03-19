@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { DiceEngine } from '../dice/DiceEngine';
 import { gmToast } from '../../stores/useToastStore';
+import type { HealthSystem } from '../session/useSessionOSStore';
 
 export interface StatusEffect {
     id: string; // Unique ID for the status instance
@@ -27,6 +28,7 @@ export interface Combatant {
     resistances?: string[];
     vulnerabilities?: string[];
     immunities?: string[];
+    healthSystem?: HealthSystem;
 }
 
 // Conflicting status effects: adding a key status will automatically remove the value statuses
@@ -389,24 +391,45 @@ export const useCombatStore = create<CombatState>()(
 
             applyDamage: (amount, type, targetIds) => set((state) => {
                 const isHeal = amount < 0;
+                const sessionStore = (window as any).useSessionOSStore?.getState?.();
+
                 const newCombatants = state.combatants.map(c => {
                     if (!targetIds.includes(c.id)) return c;
 
-                    let finalAmount = amount;
+                    // 1. Sync with Session OS Health Systems if linked
+                    if (sessionStore) {
+                        const targetId = c.isPlayer ? c.sourcePlayerId : c.sourceEntityId;
+                        const targetType = c.isPlayer ? 'pc' : 'npc';
+                        
+                        if (targetId) {
+                            // Map damage type to a DamageImpact object for the HealthInterpreter
+                            const impact = {
+                                value: Math.abs(amount),
+                                type: type,
+                                isRecovery: isHeal
+                            };
+                            
+                            // Call the session store's impact handler
+                            // This will trigger the specialized logic (wounds, boxes, etc.)
+                            sessionStore.handleApplyImpact(targetId, targetType, impact);
+                            
+                            // Also update the local combatant's healthSystem snapshot for the Hub/Remote
+                            const updatedSource = targetType === 'pc' 
+                                ? sessionStore.players.flatMap((p: any) => p.characters).find((char: any) => char.id === targetId)
+                                : sessionStore.entities.find((e: any) => e.id === targetId);
+                            
+                            if (updatedSource && updatedSource.healthSystem) {
+                                c.healthSystem = updatedSource.healthSystem;
+                            }
+                        }
+                    }
 
+                    // 2. Standard HP Logic (Legacy/Combat Snapshot)
+                    let finalAmount = amount;
                     if (!isHeal) {
-                        // Check immunities
-                        if (c.immunities?.includes(type)) {
-                            finalAmount = 0;
-                        } 
-                        // Check resistances (typically half damage)
-                        else if (c.resistances?.includes(type)) {
-                            finalAmount = Math.floor(amount / 2);
-                        }
-                        // Check vulnerabilities (typically double damage)
-                        else if (c.vulnerabilities?.includes(type)) {
-                            finalAmount = amount * 2;
-                        }
+                        if (c.immunities?.includes(type)) finalAmount = 0;
+                        else if (c.resistances?.includes(type)) finalAmount = Math.floor(amount / 2);
+                        else if (c.vulnerabilities?.includes(type)) finalAmount = amount * 2;
                     }
 
                     const newHp = Math.min(c.hpMax, Math.max(0, c.hp - finalAmount));

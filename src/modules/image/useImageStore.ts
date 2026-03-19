@@ -165,9 +165,10 @@ export const useImageStore = create<ImageState>()(
                     projections: { ...state.projections, [target]: media.id }
                 }));
 
-                if (target === 'hub') {
-                    window.appBridge?.image?.syncHubData('image', media.path);
-                } else {
+                // Always sync background to Hub for consistency, even if projecting to monitor
+                window.appBridge?.image?.syncHubData('image', media.path);
+                
+                if (target !== 'hub') {
                     window.appBridge?.image?.launchDisplay([media.path], target);
                 }
             },
@@ -187,9 +188,10 @@ export const useImageStore = create<ImageState>()(
                     projections: { ...state.projections, [target]: url }
                 }));
 
-                if (target === 'hub') {
-                    window.appBridge?.image?.syncHubData('image', url);
-                } else {
+                // Always sync background to Hub for consistency
+                window.appBridge?.image?.syncHubData('image', url);
+
+                if (target !== 'hub') {
                     window.appBridge?.image?.launchDisplay([url], target);
                 }
             },
@@ -206,10 +208,10 @@ export const useImageStore = create<ImageState>()(
 
                 set({ projectedEntity: entity });
 
-                if (target === 'hub') {
-                    // Send to Player Hub
-                    window.appBridge?.image?.syncHubData('entity', JSON.stringify(entity));
-                } else {
+                // ALWAYS send to Player Hub for "Diorama" view (card + description)
+                window.appBridge?.image?.syncHubData('entity', JSON.stringify(entity));
+
+                if (target !== 'hub') {
                     // Physical displays still just get the image
                     const avatar = entity.avatar || entity.imageUrl || entity.portraitUrl || '';
                     window.appBridge?.image?.launchDisplay([avatar], target);
@@ -226,7 +228,7 @@ export const useImageStore = create<ImageState>()(
                 // Start from the first active one, or if there's already one projected, find the next one
                 let targetMedia = activeMedia[0];
                 if (currentTargetId) {
-                    const currentIndex = state.mediaList.findIndex(m => m.id === currentTargetId);
+                    const currentIndex = state.mediaList.findIndex(m => m.id === currentTargetId || m.path === currentTargetId);
                     // Find first active one AFTER current index
                     const nextActive = state.mediaList.find((m, i) => i > currentIndex && m.active);
                     if (nextActive) {
@@ -277,10 +279,11 @@ export const useImageStore = create<ImageState>()(
                     projectedEntity: target === 'hub' ? null : state.projectedEntity
                 }));
 
-                if (target === 'hub') {
-                    window.appBridge?.image?.syncHubData('image', '');
-                    window.appBridge?.image?.syncHubData('entity', '');
-                } else {
+                // Always clear Hub sync for consistency with projectSolo's global sync
+                window.appBridge?.image?.syncHubData('image', '');
+                window.appBridge?.image?.syncHubData('entity', '');
+
+                if (target !== 'hub') {
                     window.appBridge?.image?.launchDisplay([], target);
                 }
             },
@@ -289,10 +292,11 @@ export const useImageStore = create<ImageState>()(
                 const state = get();
                 const allTargets = Object.keys(state.projections);
 
-                set({ projections: {} });
+                set({ projections: {}, projectedEntity: null });
 
                 // Sync Hub
                 window.appBridge?.image?.syncHubData('image', '');
+                window.appBridge?.image?.syncHubData('entity', '');
 
                 // Sync all other physical displays
                 allTargets.forEach(target => {

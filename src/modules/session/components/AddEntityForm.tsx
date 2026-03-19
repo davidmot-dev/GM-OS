@@ -182,7 +182,7 @@ const AddEntityForm: React.FC = () => {
                         {/* Roleplaying Notes */}
                         <div className="p-4 rounded-2xl bg-app-surface/30 border border-white/5 flex flex-col gap-2">
                             <div className="flex items-center gap-2 mb-1">
-                                <BookOpen size={14} className="text-app-text/40" />
+                                <BookOpen size={14} className="text-app-text/40 pointer-events-none" />
                                 <h4 className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Notes d'Interprétation</h4>
                             </div>
                             <textarea
@@ -199,7 +199,7 @@ const AddEntityForm: React.FC = () => {
                                 <Lock size={48} className="text-accent" />
                             </div>
                             <div className="flex items-center gap-2 mb-1 relative z-10">
-                                <Lock size={14} className="text-accent" />
+                                <Lock size={14} className="text-accent pointer-events-none" />
                                 <h4 className="text-[10px] font-black uppercase tracking-widest text-accent">Informations Secrètes</h4>
                             </div>
                             <textarea

@@ -29,7 +29,15 @@ const RemoteControl: React.FC = () => {
         moments: { id: string, name: string }[],
         masterVolume: number,
         combat: {
-            combatants: { id: string, name: string, hp: number, hpMax: number, init: number, isPlayer: boolean }[],
+            combatants: { 
+                id: string, 
+                name: string, 
+                hp: number, 
+                hpMax: number, 
+                init: number, 
+                isPlayer: boolean,
+                healthSystem?: any
+            }[],
             currentTurnIdx: number,
             round: number
         },
@@ -230,10 +238,52 @@ const RemoteControl: React.FC = () => {
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <button onClick={() => sendAction('combat:update-hp', { id: c.id, delta: -1 })} className="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-500 flex items-center justify-center">-</button>
-                                    <span className="text-xs font-black min-w-[20px] text-center">{c.hp}</span>
+                                    <div className="flex flex-col items-center min-w-[30px]">
+                                        <span className="text-xs font-black">{c.hp}</span>
+                                        <span className="text-[8px] text-slate-500">PV</span>
+                                    </div>
                                     <button onClick={() => sendAction('combat:update-hp', { id: c.id, delta: 1 })} className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-500 flex items-center justify-center">+</button>
                                 </div>
                             </div>
+
+                            {/* Modular Health Display */}
+                            {c.healthSystem && (
+                                <div className="mt-3 pt-3 border-t border-white/5 flex flex-wrap gap-2 items-center">
+                                    {c.healthSystem.type === 'wounds' && (
+                                        <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full border ${
+                                            c.healthSystem.data.currentLevel === 'SAIN' ? 'border-emerald-500/30 text-emerald-400' :
+                                            c.healthSystem.data.currentLevel === 'FATAL' ? 'border-rose-600 bg-rose-600 text-white animate-pulse' :
+                                            'border-amber-500 text-amber-400'
+                                        }`}>
+                                            {c.healthSystem.data.currentLevel}
+                                        </span>
+                                    )}
+                                    {c.healthSystem.type === 'clock' && (
+                                        <div className="flex items-center gap-1.5 bg-white/5 px-2 py-0.5 rounded-full border border-white/10">
+                                            <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_5px_rgba(59,130,246,0.5)]" />
+                                            <span className="text-[10px] font-bold text-blue-400">
+                                                {c.healthSystem.data.segments} / {c.healthSystem.data.maxSegments}
+                                            </span>
+                                        </div>
+                                    )}
+                                    {c.healthSystem.type === 'boxes' && (
+                                        <div className="flex gap-1">
+                                            {c.healthSystem.data.boxes.map((b: any, bi: number) => (
+                                                <div 
+                                                    key={bi} 
+                                                    className={`w-2 h-2 rounded-sm border ${b.filled ? 'bg-orange-500 border-orange-400' : 'border-white/20'}`} 
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
+                                    {c.healthSystem.type === 'anatomy' && (
+                                        <div className="flex items-center gap-1 text-[10px] text-rose-400 font-bold uppercase">
+                                            <Shield size={10} /> 
+                                            {Object.values(c.healthSystem.data.parts).filter((p: any) => p.status !== 'healthy').length} Blessures Localisées
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     );
                 })}

@@ -85,7 +85,8 @@ export class ForgeService {
           "dice": { "defaultDice": "1d20", "logic": "sum", "engine": "standard" },
           "combat": {
             "statsToTrack": [ { "fieldId": "hp", "label": "PV", "isMainHP": true, "isResource": false } ],
-            "initiativeFormula": "dex"
+            "initiativeFormula": "dex",
+            "defaultHealthType": "hp"
           },
           "ui_config": {
             "gauges": [
@@ -152,12 +153,13 @@ export class ForgeService {
           "logic": "sum | highest | d100-low",
           "critRange": 20
         },
-        "combat": {
-          "statsToTrack": [
-            { "fieldId": "hp", "label": "Points de Vie", "isMainHP": true, "isResource": false }
-          ],
-          "initiativeFormula": "dex"
-        },
+          "combat": {
+            "statsToTrack": [
+              { "fieldId": "hp", "label": "Points de Vie", "isMainHP": true, "isResource": false }
+            ],
+            "initiativeFormula": "dex",
+            "defaultHealthType": "hp | clocks | anatomy"
+          },
         "ui_config": {
           "gauges": [
             { "fieldId": "hp", "label": "PV", "color": "bg-red-500", "style": "bar" }

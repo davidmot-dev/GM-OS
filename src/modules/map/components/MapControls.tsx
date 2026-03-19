@@ -5,13 +5,19 @@ import { gmConfirm, gmCustom } from '../../../stores/useModalStore';
 import {
     Upload, EyeOff, Eye, Paintbrush, Square, Circle,
     Cast, Maximize, Users, MousePointer2, PlusCircle, Trash2, MapPin,
-    SkipBack, SkipForward, Swords, CloudRain, CloudSnow, Cloud
+    SkipBack, SkipForward, Swords, CloudRain, CloudSnow, Cloud, Sparkles, Triangle
 } from 'lucide-react';
+
+
+
+
+
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaStore } from '../../../stores/useMediaStore';
 import { useHardwareStore } from '../../../stores/useHardwareStore';
-import { type MapToken } from '../useMapStore';
+import { type MapToken, type MagicStyle, type MagicShape } from '../useMapStore';
 import { type Combatant } from '../../combat/useCombatStore';
+
 
 const ToolButton = ({ tool, currentTool, setTool, icon: Icon, label }: { tool: MapTool, currentTool: MapTool, setTool: (t: MapTool) => void, icon: React.ElementType, label: string }) => {
     const isActive = currentTool === tool;
@@ -56,10 +62,12 @@ const MapControls: React.FC = () => {
         setFogDataUrl,
         currentTool, setTool,
         fogMode, setFogMode,
-        brushSize, setBrushSize,
+
         addToken, tokens, clearTokens,
         triggerFogCommand,
         resetView,
+
+
 
         // Grid Settings
         isGridEnabled, setGridEnabled,
@@ -71,8 +79,15 @@ const MapControls: React.FC = () => {
         weatherIntensity,
 
         // Projection Actions
-        projectionTarget, clearProjectedState
+        projectionTarget, clearProjectedState,
+        
+        // Magic Effects
+        magicEffects, clearMagicEffects, removeMagicEffect,
+        magicStyle, magicShape, setMagicSettings
     } = useMapStore();
+
+
+
     const { getDisplayLabel } = useHardwareStore();
 
     const { 
@@ -85,6 +100,8 @@ const MapControls: React.FC = () => {
     const { mediaList } = useMediaStore();
 
     const [isMediaBrowserOpen, setIsMediaBrowserOpen] = React.useState(false);
+
+
 
     const handleMediaSelect = (mediaId: string) => {
         const media = mediaList.find(m => m.id === mediaId);
@@ -113,6 +130,14 @@ const MapControls: React.FC = () => {
             clearTokens();
         });
     };
+
+    const handleClearMagic = () => {
+        if (magicEffects.length === 0) return;
+        gmConfirm(`Voulez-vous SUPPRIMER les ${magicEffects.length} effets magiques de la carte ?`, () => {
+            clearMagicEffects();
+        });
+    };
+
 
     const handleClearMap = () => {
         if (!mapUrl) return;
@@ -197,27 +222,118 @@ const MapControls: React.FC = () => {
                         <ToolButton tool="rect" currentTool={currentTool} setTool={setTool} icon={Square} label="Zone" />
                         <ToolButton tool="circle" currentTool={currentTool} setTool={setTool} icon={Circle} label="Rond" />
                         <ToolButton tool="ping" currentTool={currentTool} setTool={setTool} icon={MapPin} label="Ping" />
+                        <ToolButton tool="magic" currentTool={currentTool} setTool={setTool} icon={Sparkles} label="Magie" />
                     </div>
 
-                    {/* Brush Size Slider */}
-                    {currentTool === 'brush' && (
-                        <div className="bg-app-bg/20 p-3 rounded border border-app-border">
-                            <div className="flex justify-between text-xs text-slate-400 mb-2">
-                                <span>Taille Pinceau</span>
-                                <span className="text-accent font-mono">{brushSize}px</span>
+                    {/* Magic Options */}
+                    {currentTool === 'magic' && (
+                        <div className="bg-app-bg/20 p-3 rounded border border-app-border flex flex-col gap-3">
+                            <div>
+                                <div className="flex justify-between text-[10px] text-slate-400 mb-2 uppercase font-bold tracking-wider">
+                                    <span>Type d'Effet</span>
+                                    <button onClick={handleClearMagic} className="text-rose-500 hover:text-rose-400">Tout effacer</button>
+                                </div>
+                                <div className="grid grid-cols-4 gap-1">
+                                    {[
+                                        { id: 'fire', icon: '🔥', label: 'Feu' },
+                                        { id: 'ice', icon: '❄️', label: 'Glace' },
+                                        { id: 'acid', icon: '🧪', label: 'Acide' },
+                                        { id: 'electric', icon: '⚡', label: 'Élec' },
+                                        { id: 'arcane', icon: '🔮', label: 'Arcane' },
+                                        { id: 'darkness', icon: '🌑', label: 'Noir' },
+                                        { id: 'poison', icon: '🤢', label: 'Poison' },
+                                    ].map(s => (
+                                        <button
+                                            key={s.id}
+                                            onClick={() => setMagicSettings(s.id as MagicStyle, magicShape)}
+                                            className={`p-1.5 rounded border text-[10px] flex flex-col items-center transition-all ${
+
+                                                magicStyle === s.id 
+                                                ? 'bg-accent/20 border-accent text-accent' 
+                                                : 'bg-app-bg border-app-border text-slate-500 hover:bg-app-surface'
+                                            }`}
+                                        >
+                                            <span>{s.icon}</span>
+                                            <span className="font-bold truncate w-full text-center">{s.label}</span>
+                                        </button>
+                                    ))}
+                                </div>
+
                             </div>
-                            <input
-                                type="range"
-                                min="20"
-                                max="200"
-                                step="10"
-                                value={brushSize}
-                                onChange={(e) => setBrushSize(parseInt(e.target.value))}
-                                className="w-full accent-accent"
-                            />
+                            
+                            <div>
+                                <span className="text-[10px] text-slate-400 mb-2 block uppercase font-bold tracking-wider">Forme</span>
+                                <div className="grid grid-cols-2 gap-2">
+                                    {[
+                                        { id: 'circle', icon: Circle, label: 'Sphère' },
+                                        { id: 'rect', icon: Square, label: 'Zone' },
+                                        { id: 'line', icon: SkipForward, label: 'Ligne' },
+                                        { id: 'cone', icon: Triangle, label: 'Cône' }
+                                    ].map(sh => {
+                                        const Icon = sh.icon; 
+                                        return (
+                                            <button
+                                                key={sh.id}
+                                                onClick={() => setMagicSettings(magicStyle, sh.id as MagicShape)}
+                                                className={`p-2 rounded border flex items-center justify-center gap-2 transition-all ${
+                                                    magicShape === sh.id 
+                                                    ? 'bg-accent/20 border-accent text-accent' 
+                                                    : 'bg-app-bg border-app-border text-slate-500 hover:bg-app-surface'
+                                                }`}
+                                            >
+                                                <Icon size={14} />
+                                                <span className="text-[10px] font-bold">{sh.label}</span>
+                                            </button>
+                                        );
+                                    })}
+
+                                </div>
+                            </div>
+
+                            {/* List of active effects */}
+                            {magicEffects.length > 0 && (
+                                <div className="mt-2 border-t border-app-border pt-3">
+                                    <div className="flex justify-between items-center mb-2">
+                                        <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Effets actifs ({magicEffects.length})</span>
+                                    </div>
+                                    <div className="flex flex-col gap-1 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
+                                        {magicEffects.map((eff) => (
+                                            <div key={eff.id} className="flex items-center justify-between p-2 bg-app-bg/40 rounded border border-app-border/50 group hover:border-accent/30 transition-all">
+                                                <div className="flex items-center gap-2 overflow-hidden">
+                                                    <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: 
+                                                        eff.style === 'fire' ? '#f97316' : 
+                                                        eff.style === 'ice' ? '#3b82f6' : 
+                                                        eff.style === 'electric' ? '#0ea5e9' : 
+                                                        eff.style === 'acid' ? '#84cc16' : 
+                                                        eff.style === 'arcane' ? '#a855f7' : 
+                                                        eff.style === 'darkness' ? '#374151' : '#10b981'
+                                                    }} />
+                                                    <span className="text-[10px] text-slate-300 capitalize truncate font-medium">
+                                                        {eff.style} - {
+                                                            eff.type === 'circle' ? 'Sphère' :
+                                                            eff.type === 'rect' ? 'Zone' :
+                                                            eff.type === 'line' ? 'Ligne' : 'Cône'
+                                                        }
+                                                    </span>
+                                                </div>
+                                                <button 
+                                                    onClick={() => removeMagicEffect(eff.id)}
+                                                    className="p-1 text-slate-600 hover:text-rose-500 transition-colors"
+                                                    title="Supprimer cet effet"
+                                                >
+                                                    <Trash2 size={12} />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     )}
+
                 </section>
+
+
 
                 <hr className="border-gray-800" />
 
