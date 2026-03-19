@@ -22,7 +22,9 @@ Bienvenue dans le centre de documentation de **GM-OS v5**. Ce guide est conçu p
 - [**NPC OS (Générateur de PNJ)**](./NPC_OS_User_Guide.md)
 - [**Map OS (Atlas & Tactique)**](./Map_OS_User_Guide.md)
 - [**Combat OS (Gestionnaire de Batailles)**](./Combat_OS_User_Guide.md)
+- [**Calculateur de Dégâts Intelligent**](./Smart_Damage_Calculator_Guide.md)
 - [**Table OS (Butins & Aléatoire)**](./Table_OS_User_Guide.md)
+
 - [**Clock OS (Gestion du Temps)**](./Clock_OS_User_Guide.md)
 
 ---
