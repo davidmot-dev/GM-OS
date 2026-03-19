@@ -50,7 +50,7 @@ Ce document répertorie les axes de développement futurs. Les priorités sont d
 ### 3. 🗺️ Évolution du Map-OS
 
 * [x] **Effets Météo Dynamiques** : (Déplacé vers jalons complétés)
-* [ ] **Éclairage Dynamique** : Fog of war réagissant à la lumière des pions.
+
 
 ---
 
@@ -68,7 +68,7 @@ Ce document répertorie les axes de développement futurs. Les priorités sont d
 
 ## ⚪ Backup & Futuriste
 
-* **Transcription Automatique** : Écoute passive pour archiver les faits marquants.
+
 
 ---
 
@@ -76,3 +76,6 @@ Ce document répertorie les axes de développement futurs. Les priorités sont d
 
 * ~~**Ligne de Vue (Line of Sight)** : Détection d'obstacles pour la visibilité des pions sur la map.~~ (Trop gourmand en ressources/complexité algos)
 * ~~**Retour Haptique** : Vibrations sur les contrôleurs lors des impacts.~~ (Complexité matérielle/priorité basse)
+* ~~**Éclairage Dynamique** : Fog of war réagissant à la lumière des pions.~~ (Trop complexe / Priorité basse)
+* ~~**Transcription Automatique** : Écoute passive pour archiver les faits marquants.~~ (Trop complexe / Vie privée)
+
