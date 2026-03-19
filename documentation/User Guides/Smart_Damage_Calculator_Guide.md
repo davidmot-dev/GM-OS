@@ -27,7 +27,25 @@ C'est ici que l'outil devient "intelligent". Avant même d'appliquer les dégât
 -   **Indicateurs de Faction** : Les cibles sont bordées de couleurs thématiques (Bleu pour PJ, Rouge pour PNJ) pour éviter les erreurs de tir ami.
 -   **Application Groupée** : Une fois la sélection terminée, cliquez sur **"Appliquer"**. Tous les combattants sont mis à jour simultanément.
 
+## ✨ Auto-Status Mapping
+
+Le calculateur ne se contente plus de modifier les PV. Selon le **type de dégâts** choisi, il peut injecter automatiquement des effets de statut sur les cibles :
+
+-   🔥 **Feu** ➡️ Applique **En feu** (3T)
+-   ❄️ **Froid / Glace** ➡️ Applique **Gelé** (2T)
+-   🧪 **Acide** ➡️ Applique **Corrodé** (2T)
+-   ⚡ **Éclair / Foudre** ➡️ Applique **Choqué** (1T)
+-   🤢 **Poison** ➡️ Applique **Empoisonné** (3T)
+-   💀 **Nécrotique** ➡️ Applique **Affaibli** (2T)
+-   😵 **Psychique** ➡️ Applique **Confus** (1T)
+-   ✨ **Radiant** ➡️ Applique **Ébloui** (1T)
+-   💖 **Soin** ➡️ Applique **Soin** (1T)
+
+> [!NOTE]
+> **Gestion intelligente des conflits** : L'ajout automatique d'un statut respecte les règles de conflit. Par exemple, appliquer des dégâts de Feu sur une cible ayant le statut "Mouillé" retirera automatiquement ce dernier.
+
 ## 🔄 Synchronisation avec la Session
+
 
 Une fois les dégâts appliqués via le calculateur :
 1.  Les barres de vie (Gauges) sur les cartes de combat se mettent à jour.

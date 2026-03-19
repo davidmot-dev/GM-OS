@@ -32,7 +32,8 @@ Ce document répertorie les axes de développement futurs. Les priorités sont d
 
 ### 1. ⚔️ Automatisation du Combat OS
 
-* [x] **Calculateur de Dégâts Intelligent** : (Géré via le Cerveau Tactique & Factions).
+* [x] **Calculateur de Dégâts Intelligent** : Auto-Status Mapping (Feu, Froid, etc.) et Prévu Cortex.
+
 * [x] **Actions Suggérées (Cortex)** : Suggérer des actions PNJ basées sur leur état et positionnement (Propulsé par Gemini 1.5).
 
 * [x] **Gestion d'Initiative Avancée** : Parser Cortex pour formules descriptives et auto-nettoyage des parenthèses.
@@ -58,8 +59,10 @@ Ce document répertorie les axes de développement futurs. Les priorités sont d
 ### 5. 🤖 IA Générative Live
 
 * [x] **NPC Live Generator** : (Déplacé vers jalons complétés)
-* [x] **Voice Automation** : Adapter automatiquement le pitch vocal selon le PNJ.
+* [x] **Voice Automation** : Adapter automatiquement le pitch vocal selon le PNJ (Sync NPC).
 
+
+* [x] **Light-OS : Forget Bridge** : Bouton de réinitialisation de connexion Philips Hue.
 
 ---
 

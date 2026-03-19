@@ -22,6 +22,10 @@ Avant de commencer, vous devez lier GM-OS à votre installation Philips Hue :
 3. Lorsque l'OS vous le demande, appuyez sur le bouton physique central de votre **Philips Hue Bridge**.
 4. Une fois jumelé, le statut passe au vert ("Connected") et vos lampes apparaissent dans l'interface.
 
+> [!TIP]
+> **Réinitialisation (Forget Bridge)** : Si vous changez de pont ou si vous souhaitez réinitialiser la détection automatique, utilisez le bouton **"Forget Bridge"** (icône 🗑️) dans la barre latérale. Cela effacera l'IP du pont et votre clé utilisateur pour repartir sur une installation propre.
+
+
 ## 🎭 Création et Gestion des Scènes
 
 Le système de "Snapshots" vous permet de capturer une ambiance parfaite en quelques secondes :

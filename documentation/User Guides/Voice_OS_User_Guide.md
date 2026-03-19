@@ -33,11 +33,15 @@ Pour les MJs souhaitant un contrôle total, ajustez les réglages suivants :
 
 ---
 
-## 🔄 Sync NPC : L'Immersion Ultime
-L'une des fonctions les plus puissantes de GM-OS v5 :
-- **Principe** : Lorsque **Sync NPC** est activé, votre niveau vocal est envoyé en temps réel au **Player Hub**.
-- **Effet** : Le portrait du PNJ actif sur l'écran des joueurs s'anime (zoom, vibration ou aura) au rythme de vos paroles.
-- **Utilité** : Donne vie aux illustrations de PNJ sans nécessiter d'animations complexes.
+## 🔄 Sync NPC : Automatisation & Immersion
+L'une des fonctions les plus puissantes de GM-OS v5 pour donner vie à vos PNJ :
+
+1.  **Animation du Portrait** : Votre volume vocal est envoyé au **Player Hub**. Le portrait du PNJ actif s'anime (vibrations, aura) au rythme de vos paroles.
+2.  **Automatisation Vocale** : Si activée, Voice-OS analyse la description et les notes du PNJ pour ajuster votre voix :
+    -   **Mots-clés de Pitch** : "Géant", "Ogre", "Grave" baissent le ton. "Enfant", "Petit", "Fée" l'augmentent.
+    -   **Presets Automatiques** : Si le PNJ est décrit comme un "Spectre", "Robot", "Androïde" ou "Dragon", le preset correspondant est appliqué instantanément.
+3.  **Déclenchement** : La synchronisation se fait dès que vous ouvrez une fiche PNJ ou quand le tour d'un PNJ commence en combat.
+
 
 ---
 
