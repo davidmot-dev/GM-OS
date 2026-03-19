@@ -31,7 +31,8 @@ contextBridge.exposeInMainWorld("appBridge", {
   npc: {
     listDatabases: (category) => ipcRenderer.invoke("npc:list-databases", category),
     loadDatabase: (category, name) => ipcRenderer.invoke("npc:load-database", category, name),
-    selectAvatar: () => ipcRenderer.invoke("npc:select-avatar")
+    selectAvatar: () => ipcRenderer.invoke("npc:select-avatar"),
+    saveAvatar: (buffer, fileName) => ipcRenderer.invoke("npc:save-avatar", buffer, fileName)
   },
   tables: {
     listUniverses: () => ipcRenderer.invoke("tables:list-universes"),

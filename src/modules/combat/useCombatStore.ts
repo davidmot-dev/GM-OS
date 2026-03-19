@@ -17,6 +17,8 @@ export interface Combatant {
     hp: number;
     hpMax: number;
     isPlayer: boolean;
+    faction: 'player' | 'enemy' | 'neutral' | 'ally';
+    targetId?: string;
     sourcePlayerId?: string; // Link to Session OS PlayerCharacter
     sourceEntityId?: string; // Link to Session OS NPC/Monster
     avatar?: string;
@@ -35,7 +37,14 @@ export const STATUS_CONFLICT_MAP: Record<string, string[]> = {
     'Froid': ['En feu'],
     'Inconscient': ['Debout', 'En garde'],
     'Debout': ['À terre'],
-    'À terre': ['Debout']
+    'À terre': ['Debout'],
+    'Invisible': ['En feu', 'En garde'],
+    'Béni': ['Maudit'],
+    'Maudit': ['Béni'],
+    'Effrayé': ['Concentration', 'Béni'],
+    'Confus': ['Concentration'],
+    'Épuisé': ['En garde', 'Concentration'],
+    'Agrippé': ['Debout']
 };
 
 interface CombatState {
@@ -54,7 +63,7 @@ interface CombatState {
     // Initiative
     setInitiative: (id: string, init: number) => void;
     sortInitiative: (ascending?: boolean) => void;
-    rollAutoInitiative: (params: { diceMax?: number; formula?: string; resolver?: (name: string) => number; sortOrder?: 'asc' | 'desc'; cards?: number }) => void;
+    rollAutoInitiative: (params: { diceMax?: number; formula?: string; resolver?: (name: string, combatant: Combatant) => number; sortOrder?: 'asc' | 'desc'; cards?: number }) => void;
     reorderCombatants: (startIndex: number, endIndex: number) => void;
 
     // Turns
@@ -71,6 +80,7 @@ interface CombatState {
     
     // Damage/Heal
     applyDamage: (amount: number, type: string, targetIds: string[]) => void;
+    setTarget: (combatantId: string, targetId: string | null) => void;
     
     // Snapshot System
     applySnapshot: (snapshot: { combatants: Combatant[]; currentTurnIdx: number; round: number }) => void;
@@ -97,7 +107,11 @@ export const useCombatStore = create<CombatState>()(
             }),
 
             addCombatant: (combatant) => set((state) => ({
-                combatants: [...state.combatants, { ...combatant, id: Math.random().toString(36).substring(2, 9) }]
+                combatants: [...state.combatants, { 
+                    ...combatant, 
+                    id: Math.random().toString(36).substring(2, 9),
+                    faction: combatant.faction || (combatant.isPlayer ? 'player' : 'enemy')
+                }]
             })),
 
             removeCombatant: (id) => set((state) => {
@@ -163,24 +177,57 @@ export const useCombatStore = create<CombatState>()(
                     } else if (formula) {
                         let evaluatedFormula = formula;
                         if (resolver) {
-                            const vars = formula.match(/\[\w+\]|\b(dex|str|int|init|wis|cha|level)\b/gi);
-                            vars?.forEach(v => {
-                                const cleanVar = v.replace(/[[\]]/g, '');
-                                const val = resolver(cleanVar);
-                                evaluatedFormula = evaluatedFormula.replace(v, val.toString());
+                            // 1. Identify all potential variables (words like DEX, INT, or [MyStat])
+                            // We match: [anything] or single words [a-zA-Z_]+
+                            const varRegex = /\[([^\]]+)\]|\b([a-zA-ZÀ-ÿ_]+)\b/gi;
+                            const matches = Array.from(formula.matchAll(varRegex));
+                            
+                            // Reorder matches by length descending to avoid partial replacements (e.g., 'int' in 'intelligence')
+                            matches.sort((a, b) => b[0].length - a[0].length);
+
+                            matches.forEach(match => {
+                                const fullMatch = match[0];
+                                const innerVar = match[1] || match[2];
+                                
+                                // Skip "d" as it's part of dice notation (e.g., 2d6)
+                                if (innerVar.toLowerCase() === 'd' && /^\d*d\d+$/i.test(fullMatch)) return;
+
+                                const val = resolver(innerVar, c);
+                                // If the resolver found a numeric value, replace the match
+                                // Otherwise, if it's just a label word, we'll strip it later
+                                if (val !== undefined && !Number.isNaN(val)) {
+                                    evaluatedFormula = evaluatedFormula.replace(fullMatch, val.toString());
+                                }
                             });
                         }
+
+                        // 2. Final Cleanup: Resolve remaining text to keep only math
+                        // We keep: numbers, operators (+ - * /), and "d" for dice.
+                        // We remove EVERYTHING else (including parentheses, labels, special chars).
+                        evaluatedFormula = evaluatedFormula.replace(/[a-zA-ZÀ-ÿ_]+/g, (match) => {
+                            // If it's a standalone "d", it's probably part of dice notation
+                            if (match.toLowerCase() === 'd') return match;
+                            // Otherwise, it's a label that couldn't be resolved -> replace with 0
+                            return '0';
+                        });
+
+                        // 3. Remove all characters that are not math-related (parentheses, etc.)
+                        // BUT preserve the "d" or "D" if it's part of a dice roll.
+                        evaluatedFormula = evaluatedFormula.replace(/[^0-9dD+\-*/\s]/g, '');
+
                         try {
+                            console.log(`[useCombatStore] Final cleaned formula for ${c.name}: "${evaluatedFormula}"`);
                             const res = DiceEngine.rollFormula(evaluatedFormula);
-                            rolled = res.total;
-                        } catch {
+                            rolled = Number.isNaN(res.total) ? 0 : res.total;
+                        } catch (err) {
+                            console.error(`[useCombatStore] Formula error: ${evaluatedFormula}`, err);
                             rolled = Math.floor(Math.random() * diceMax) + 1;
                         }
                     } else {
                         rolled = Math.floor(Math.random() * diceMax) + 1;
                     }
 
-                    c.init = rolled;
+                    c.init = Number.isNaN(rolled) ? 0 : rolled;
                 });
 
                 // Auto sort based on direction
@@ -371,7 +418,13 @@ export const useCombatStore = create<CombatState>()(
                 });
 
                 return { combatants: newCombatants };
-            })
+            }),
+
+            setTarget: (combatantId, targetId) => set((state) => ({
+                combatants: state.combatants.map(c => 
+                    c.id === combatantId ? { ...c, targetId: targetId || undefined } : c
+                )
+            }))
         }),
         {
             name: 'gmos-combat-storage',

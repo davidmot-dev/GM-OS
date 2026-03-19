@@ -172,7 +172,7 @@ const NpcGalleryItem: React.FC<{
                 <p className="text-[9px] text-app-text/60 truncate opacity-80">{npc.description}</p>
 
                 {/* HP Bar */}
-                <div className="mt-2 h-1 bg-app-bg rounded-full overflow-hidden">
+                <div className="mt-2 h-1 bg-app-bg rounded-full overflow-hidden" title={`Points de Vie: ${npc.hp}/${npc.maxHp}`}>
                     <div
                         className={`h-full transition-all duration-300 ${npc.hp / npc.maxHp < 0.3 ? 'bg-red-500' : 'bg-emerald-500'}`}
                         style={{ width: `${(npc.hp / npc.maxHp) * 100}%` }}
@@ -189,6 +189,7 @@ const NpcGalleryItem: React.FC<{
                         ? 'bg-accent text-white hover:bg-accent/80' 
                         : 'bg-app-surface text-white hover:bg-app-surface/80'
                     }`}
+                    title={isPinned ? 'Retirer de la session' : 'Épingler à la session'}
                 >
                     <Pin size={14} fill={isPinned ? 'currentColor' : 'none'} />
                     {isPinned ? 'Détacher' : 'Épingler'}
@@ -197,6 +198,7 @@ const NpcGalleryItem: React.FC<{
                     <button 
                         onClick={(e) => { e.stopPropagation(); onSelect(); }}
                         className="flex items-center gap-2 bg-white text-app-bg px-3 py-1.5 rounded-lg font-bold text-xs hover:bg-accent hover:text-white transition-colors"
+                        title="Ouvrir la fiche détaillée"
                     >
                         <FileText size={14} />
                         Fiche
@@ -211,12 +213,14 @@ const NpcGalleryItem: React.FC<{
                                 hpMax: npc.maxHp,
                                 avatar: npc.avatar,
                                 isPlayer: false,
+                                faction: 'enemy',
                                 sourceEntityId: npc.id,
                                 statuses: []
                             });
                             gmToast(`${npc.name} ajouté au combat !`);
                         }}
                         className="flex items-center justify-center bg-red-600 text-white p-1.5 rounded-lg font-bold text-xs hover:bg-red-500 transition-colors"
+                        title="Ajouter au combat actif"
                     >
                         <Swords size={14} />
                     </button>
@@ -228,6 +232,7 @@ const NpcGalleryItem: React.FC<{
                         gmToast(`Personnage ${npc.name} projeté !`);
                     }}
                     className="flex items-center gap-2 bg-accent/80 text-white px-4 py-1.5 rounded-lg font-bold text-xs hover:bg-accent transition-colors"
+                    title="Projeter sur le Hub Média"
                 >
                     <Eye size={14} />
                     Image

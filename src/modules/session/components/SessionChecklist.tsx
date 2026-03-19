@@ -50,7 +50,7 @@ const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
     return (
         <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between px-3">
-                <p className="text-GM-OS-v5/src/modules/session/components/SessionChecklist.tsx text-[10px] font-bold uppercase tracking-[0.2em]">Session Prep</p>
+                <p className="text-app-text/40 text-[10px] font-bold uppercase tracking-[0.2em]">Prép. Session</p>
                 <div className="flex items-center gap-1.5">
                     <span className="text-[10px] font-mono text-accent">
                         {session.checklist.filter(i => i.isCompleted).length}/{session.checklist.length}
@@ -60,7 +60,7 @@ const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
 
             <div className="flex flex-col gap-1 max-h-[300px] overflow-y-auto px-1 custom-scrollbar">
                 {session.checklist.length === 0 ? (
-                    <p className="text-[10px] text-app-text/50 italic text-center py-4">No tasks planned...</p>
+                    <p className="text-[10px] text-app-text/50 italic text-center py-4">Aucune tâche prévue...</p>
                 ) : (
                     session.checklist.map(item => (
                         <div
@@ -101,14 +101,14 @@ const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
                                 <button 
                                     onClick={() => startEditing(item.id, item.text)}
                                     className="p-1 text-app-text/40 hover:text-accent transition-colors"
-                                    title="Edit task"
+                                    title="Modifier la tâche"
                                 >
                                     <Edit3 size={12} />
                                 </button>
                                 <button 
                                     onClick={() => removeChecklistItem(session.id, item.id)}
                                     className="p-1 text-app-text/40 hover:text-red-400 transition-colors"
-                                    title="Delete task"
+                                    title="Supprimer la tâche"
                                 >
                                     <Trash2 size={12} />
                                 </button>
@@ -122,10 +122,11 @@ const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
             <form onSubmit={handleAddItem} className="mt-2 px-2 relative group">
                 <input
                     type="text"
-                    placeholder="Add preparation task..."
+                    placeholder="Ajouter une tâche de préparation..."
                     value={newItemText}
                     onChange={(e) => setNewItemText(e.target.value)}
                     className="w-full bg-app-surface/60 border border-app-border rounded-lg py-2 pl-3 pr-10 text-[11px] text-app-text placeholder:text-app-text/40 focus:outline-none focus:border-accent/30 transition-all"
+                    title="Texte de la nouvelle tâche"
                 />
                 <button 
                     type="submit"

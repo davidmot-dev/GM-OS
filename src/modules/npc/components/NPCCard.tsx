@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNPCStore } from '../useNPCStore';
-import { Save, Sword, FileText, Share2, User, MapPin, Package, Zap, Quote, Star, Eye } from 'lucide-react';
+import { Save, Sword, FileText, Share2, User, MapPin, Package, Zap, Quote, Star, Eye, Sparkles } from 'lucide-react';
 import { useCombatStore } from '../../combat/useCombatStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useMapStore } from '../../map/useMapStore';
@@ -9,9 +9,11 @@ import { gmToast } from '../../../stores/useToastStore';
 import { useFavoriteStore, type FavoriteType } from '../../favorite/useFavoriteStore';
 import { useImageStore } from '../../image/useImageStore';
 import { useVoiceStore } from '../../voice/useVoiceStore';
+import AIPromptOverlay from '../../ai/components/AIPromptOverlay';
 
 const NPCCard: React.FC = () => {
-    const { currentEntity, saveToMemo, isGenerating, selectAvatar } = useNPCStore();
+    const { currentEntity, saveToMemo, isGenerating, selectAvatar, generateAvatar, isGeneratingAIAvatar } = useNPCStore();
+    const [showAIPrompt, setShowAIPrompt] = useState(false);
     const { addCombatant } = useCombatStore();
     const { sessions, selectedSessionId, addWikiEntry } = useSessionOSStore();
     const { addToken } = useMapStore();
@@ -49,7 +51,7 @@ const NPCCard: React.FC = () => {
 
     // Ensure we handle local file paths for <img> src
     const avatarSrc = currentEntity.avatar
-        ? (currentEntity.avatar.startsWith('http') || currentEntity.avatar.startsWith('blob:') || currentEntity.avatar.startsWith('file://')
+        ? (currentEntity.avatar.startsWith('http') || currentEntity.avatar.startsWith('blob:') || currentEntity.avatar.startsWith('file://') || currentEntity.avatar.startsWith('data:')
             ? currentEntity.avatar
             : `file:///${currentEntity.avatar.replace(/\\/g, '/')}`)
         : null;
@@ -143,7 +145,6 @@ const NPCCard: React.FC = () => {
                 <div className="absolute inset-0 bg-corrugation opacity-10" />
 
                 <button
-                    onClick={() => selectAvatar()}
                     style={{ 
                         transform: `scale(${voiceScale})`,
                         boxShadow: voiceGlow,
@@ -152,13 +153,11 @@ const NPCCard: React.FC = () => {
                 >
                     {avatarSrc ? (
                         <>
-                            {/* Blurred background (fills the space) */}
                             <img 
                                 src={avatarSrc} 
                                 alt="" 
                                 className="absolute inset-0 w-full h-full object-cover blur-xl opacity-30 scale-110" 
                             />
-                            {/* Crisp centered image (shows full art) */}
                             <img 
                                 src={avatarSrc} 
                                 alt={currentEntity.name} 
@@ -168,9 +167,27 @@ const NPCCard: React.FC = () => {
                     ) : (
                         React.cloneElement(getIcon() as React.ReactElement<{ size?: number }>, { size: 64 })
                     )}
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/avatar:opacity-100 flex items-center justify-center transition-opacity z-20">
-                        <Share2 size={24} className="text-white animate-pulse" />
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity z-20 gap-4">
+                        <div
+                            onClick={(e) => { e.stopPropagation(); selectAvatar(); }}
+                            className="p-2 bg-white/10 hover:bg-white/20 rounded-full transition-all cursor-pointer"
+                            title="Importer un fichier"
+                        >
+                            <Share2 size={24} className="text-white" />
+                        </div>
+                        <div
+                            onClick={(e) => { e.stopPropagation(); setShowAIPrompt(true); }}
+                            className="p-2 bg-accent text-slate-950 rounded-full hover:scale-110 transition-all shadow-glow-accent cursor-pointer"
+                            title="Générer par IA"
+                        >
+                            <Sparkles size={24} />
+                        </div>
                     </div>
+                    {isGeneratingAIAvatar && (
+                        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-30">
+                            <Sparkles size={32} className="text-accent animate-spin" />
+                        </div>
+                    )}
                 </button>
 
                 <div className="absolute top-4 right-4 text-[10px] uppercase font-bold tracking-widest text-accent/50 px-2 py-1 border border-accent/20 rounded bg-accent/5">
@@ -260,6 +277,17 @@ const NPCCard: React.FC = () => {
                     )}
                 </div>
             </div>
+
+            <AIPromptOverlay
+                isOpen={showAIPrompt}
+                onClose={() => setShowAIPrompt(false)}
+                isGenerating={isGeneratingAIAvatar}
+                title={`Illustration IA : ${currentEntity.name}`}
+                placeholder="Ex: portrait cyberpunk, éclairage néon, cicatrices..."
+                onGenerate={(instructions) => {
+                    generateAvatar(instructions).then(() => setShowAIPrompt(false));
+                }}
+            />
         </div>
     );
 };

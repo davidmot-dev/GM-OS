@@ -35,12 +35,12 @@ const ModuleSnapshots: React.FC = () => {
         <aside className="col-span-3 bg-app-surface/80 border-l border-app-border p-4 flex flex-col gap-6 overflow-y-auto custom-scrollbar">
             {/* Module Snapshot Section */}
             <div className="flex flex-col gap-4">
-                <h4 className="text-xs uppercase tracking-widest text-app-text/40 mb-2 font-bold px-1">Module Snapshot</h4>
+                <h4 className="text-xs uppercase tracking-widest text-app-text/40 mb-2 font-bold px-1">État des Modules</h4>
 
                 {/* Track 1: Active Encounter */}
                 <div className="flex flex-col gap-2">
                     <div className="flex items-center justify-between text-[10px] text-app-text/40 font-bold uppercase tracking-wider px-1">
-                        <span>Combat Order</span>
+                        <span>Ordre de Combat</span>
                         <span className="text-accent">Round {round}</span>
                     </div>
                     
@@ -90,7 +90,7 @@ const ModuleSnapshots: React.FC = () => {
                 {/* Track 2: Audio Environment */}
                 <div className="flex flex-col gap-2">
                     <div className="flex items-center justify-between text-[10px] text-app-text/40 font-bold uppercase tracking-wider px-1">
-                        <span>Audio Environment</span>
+                        <span>Environnement Audio</span>
                     </div>
                     <div className="bg-app-bg/40 rounded-xl border border-app-border/40 p-3">
                         <div className="flex items-center gap-3">
@@ -137,7 +137,7 @@ const ModuleSnapshots: React.FC = () => {
                 {/* Track 3: Conditions */}
                 <div className="flex flex-col gap-2">
                     <div className="flex items-center justify-between text-[10px] text-app-text/40 font-bold uppercase tracking-wider px-1">
-                        <span>Active Conditions</span>
+                        <span>Conditions Actives</span>
                     </div>
                     {allActiveStatuses.length > 0 ? (
                         <div className="grid grid-cols-2 gap-2">
@@ -166,12 +166,12 @@ const ModuleSnapshots: React.FC = () => {
             {/* Quick Roll Tray */}
             <div className="mt-auto bg-app-bg p-4 rounded-xl border border-app-border/40 shadow-lg">
                 <div className="flex justify-between items-center mb-3">
-                    <span className="text-[10px] text-app-text/40 font-bold uppercase tracking-widest">Quick Roll</span>
+                    <span className="text-[10px] text-app-text/40 font-bold uppercase tracking-widest">Jet Rapide</span>
                     <button
                         onClick={() => clearDiceRolls()}
                         className="text-accent text-[10px] font-bold hover:underline"
                     >
-                        HISTORY
+                        HISTORIQUE
                     </button>
                 </div>
                 <div className="flex justify-between gap-1">

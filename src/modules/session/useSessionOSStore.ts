@@ -1035,9 +1035,16 @@ export const useSessionOSStore = create<SessionOSState>()(
               set({ isGeneratingAIImage: true });
               try {
                 const { aiService } = await import('../ai/AIService');
-                const prompt = `A professional fantasy RPG character portrait of ${entity.name}. ${entity.description}. High quality digital art, cinematic lighting, 8k. ${instructions ? `Additional: ${instructions}` : ''}`;
-                const mediaId = await aiService.generateImage(prompt, '1:1');
+                const cleanDesc = (entity.description || '').replace(/\n/g, ' ').substring(0, 300);
+                const basePrompt = `A professional fantasy RPG character portrait of ${entity.name}. ${cleanDesc}. High quality digital art, cinematic lighting, 8k.`;
+                const prompt = instructions ? instructions : basePrompt;
+                
+                console.log(`[useSessionOSStore] Requesting image for ${entity.name}...`);
+                const mediaId = await aiService.generateImage(prompt);
+                
+                console.log(`[useSessionOSStore] Image received: ${mediaId.substring(0, 50)}...`);
                 get().updateEntity(entityId, { avatar: mediaId });
+                console.log(`[useSessionOSStore] Entity ${entityId} updated with new avatar.`);
               } catch (err) {
                 console.error("AI Portrait Error:", err);
               } finally {
@@ -1051,8 +1058,10 @@ export const useSessionOSStore = create<SessionOSState>()(
               set({ isGeneratingAIImage: true });
               try {
                 const { aiService } = await import('../ai/AIService');
-                const prompt = `Fantasy RPG environment art: ${map.name}. ${map.narrativeDescription}. Cinematic, epic scale, high quality. ${instructions ? `Additional: ${instructions}` : ''}`;
-                const mediaId = await aiService.generateImage(prompt, '16:9');
+                const cleanDesc = (map.narrativeDescription || '').replace(/\n/g, ' ').substring(0, 300);
+                const basePrompt = `Fantasy RPG environment art: ${map.name}. ${cleanDesc}. Cinematic, epic scale, high quality.`;
+                const prompt = instructions ? instructions : basePrompt;
+                const mediaId = await aiService.generateImage(prompt);
                 get().updateAtlasMap(mapId, { fileUrl: mediaId, isVideo: false });
               } catch (err) {
                 console.error("AI Map Error:", err);
@@ -1069,7 +1078,7 @@ export const useSessionOSStore = create<SessionOSState>()(
               try {
                 const { aiService } = await import('../ai/AIService');
                 const prompt = `A heroic character portrait of ${char.name}. ${char.classRace}. Professional digital art, cinematic lighting, 8k. ${instructions ? `Additional: ${instructions}` : ''}`;
-                const mediaId = await aiService.generateImage(prompt, '1:1');
+                const mediaId = await aiService.generateImage(prompt);
                 get().updateCharacterVisuals(playerId, characterId, { portraitUrl: mediaId });
               } catch (err) {
                 console.error("AI Player Portrait Error:", err);
@@ -1148,28 +1157,51 @@ export const useSessionOSStore = create<SessionOSState>()(
                 selectedAtlasMapId: state.selectedAtlasMapId === id ? null : state.selectedAtlasMapId
             })),
 
-            updateEntity: (id, updates) => set((state) => ({
-                entities: state.entities.map(e => e.id === id ? { ...e, ...updates } : e)
-            })),
+            updateEntity: (id, updates) => set((state) => {
+                const sanitized = { ...updates };
+                // Ensure no nulls in string fields
+                if (sanitized.name === null) sanitized.name = '';
+                if (sanitized.description === null) sanitized.description = '';
+                if (sanitized.roleplayingNotes === null) sanitized.roleplayingNotes = '';
+                if (sanitized.gmSecretInfo === null) sanitized.gmSecretInfo = '';
+                
+                return {
+                    entities: state.entities.map(e => e.id === id ? { ...e, ...sanitized } : e)
+                };
+            }),
 
             updateEntitySheetData: (id: string, fieldId: string, value: string | number | boolean) => set(state => ({
                 entities: state.entities.map(e => 
                     e.id === id 
                         ? { 
                             ...e, 
-                            sheetData: { ...(e.sheetData || {}), [fieldId]: value } 
+                            sheetData: { ...(e.sheetData || {}), [fieldId]: value ?? '' } 
                           } 
                         : e
                 )
             })),
 
             updateEntityHP: (entityId, hp) => set((state) => ({
-                entities: state.entities.map(e => e.id === entityId ? { ...e, hp: Math.max(0, Math.min(e.maxHp, hp)) } : e)
+                entities: state.entities.map(e => e.id === entityId ? { ...e, hp: Math.max(0, Math.min(e.maxHp ?? 10, hp ?? 0)) } : e)
             })),
 
-            addEntity: (entityData) => set((state) => ({
-                entities: [...state.entities, { ...entityData, id: crypto.randomUUID() }]
-            })),
+            addEntity: (entityData) => set((state) => {
+                const entity = { ...entityData };
+                // Sanitize
+                entity.name = entity.name || '';
+                entity.description = entity.description || '';
+                entity.roleplayingNotes = entity.roleplayingNotes || '';
+                entity.gmSecretInfo = entity.gmSecretInfo || '';
+                entity.hp = entity.hp ?? 10;
+                entity.maxHp = entity.maxHp ?? 10;
+                entity.ac = entity.ac ?? 10;
+                entity.speed = entity.speed ?? 30;
+                entity.initiative = entity.initiative ?? 0;
+
+                return {
+                    entities: [...state.entities, { ...entity, id: crypto.randomUUID() }]
+                };
+            }),
 
 
             addLinkedEntity: (mapId, entityData) => set((state) => ({
@@ -1304,9 +1336,17 @@ export const useSessionOSStore = create<SessionOSState>()(
 
             getGameDriver: (id) => {
                 const state = get();
-                return DEFAULT_GAME_DRIVERS.find(d => d.id === id) || 
-                       state.customGameDrivers.find(d => d.id === id) || 
-                       DEFAULT_GAME_DRIVERS.find(d => d.id === 'generic') || null;
+                // 1. Try exact ID match (built-in or custom)
+                let driver = DEFAULT_GAME_DRIVERS.find(d => d.id === id) || 
+                             state.customGameDrivers.find(d => d.id === id);
+                
+                // 2. If not found by ID, maybe 'id' provided was actually a templateId
+                if (!driver) {
+                    driver = state.customGameDrivers.find(d => d.templateId === id);
+                }
+
+                // 3. Last resort: generic fallback
+                return driver || DEFAULT_GAME_DRIVERS.find(d => d.id === 'generic') || null;
             },
 
             getActiveDriver: () => {

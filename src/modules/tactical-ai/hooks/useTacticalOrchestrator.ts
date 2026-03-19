@@ -1,5 +1,5 @@
 import { useEffect, useCallback, useRef } from 'react';
-import { useCombatStore } from '../../combat/useCombatStore';
+import { useCombatStore, type Combatant } from '../../combat/useCombatStore';
 import { useMapStore } from '../../map/useMapStore';
 import { useTacticalAIStore } from '../useTacticalAIStore';
 import { GridEngine } from '../logic/GridEngine';
@@ -91,43 +91,64 @@ export const useTacticalOrchestrator = () => {
 
     // Mock an active combatant if we only have a token (for range messages)
     if (!activeCombatant && activeToken) {
-       activeCombatant = {
-         id: 'selected-token',
-         name: activeToken.name || 'Jeton sélectionné',
-         hp: 1, hpMax: 1, init: 0, isPlayer: true, statuses: []
-       } as any;
+      activeCombatant = {
+        id: 'selected-token',
+        name: activeToken.name || 'Jeton sélectionné',
+        hp: 1,
+        hpMax: 1,
+        init: 0,
+        isPlayer: true,
+        statuses: [],
+        extraStats: {},
+        resistances: [],
+        vulnerabilities: [],
+        immunities: []
+      } as unknown as Combatant;
     }
 
-    const currentActor = activeCombatant;
-    if (!currentActor) {
+    const activeActor = activeCombatant; // For type safety
+    if (!activeActor) {
       endScan();
       isScanning.current = false;
       return;
     }
 
+    const currentActor = activeActor;
     const newAdvices: TacticalAdvice[] = [];
     const nonce = force ? `-${Date.now()}` : '';
 
     try {
       // 1. Smart Dispel Check
-      const conflicts = GridEngine.getConflictingStatuses(activeCombatant);
+      const conflicts = GridEngine.getConflictingStatuses(activeActor);
       if (conflicts.length > 0) {
         newAdvices.push({
-          id: `dispel-${activeCombatant.id}${nonce}`,
-          sourceId: activeCombatant.id,
+          id: `dispel-${activeActor.id}${nonce}`,
+          sourceId: activeActor.id,
           type: 'dispel',
-          message: `Nettoyage suggéré : ${activeCombatant.name} a des statuts en conflit (${conflicts.join(', ')}).`,
+          message: `Nettoyage suggéré : ${activeActor.name} a des statuts en conflit (${conflicts.join(', ')}).`,
           priority: 1,
           resolution: {
               hardware: { color: '#ff00ff', priority: 1, scene: 'Stun', intensity: 0.8 }, 
               intensity: 0.8
           }
         });
+
+        // AUTO-APPLY DISPEL logic
+        if (settings.autoApplyDispel) {
+          const { removeStatus } = useCombatStore.getState();
+          conflicts.forEach(statusName => {
+            const statusToClear = activeActor.statuses.find(s => s.name === statusName);
+            if (statusToClear) {
+              console.log(`[TacticalAI] Auto-Dispel: Removing ${statusName} from ${activeActor.name}`);
+              removeStatus(activeActor.id, statusToClear.id);
+            }
+          });
+        }
       }
 
     // 1.5. Status Elemental Impacts
-    if (currentActor && currentActor.id !== 'selected-token') {
-      currentActor.statuses.forEach(status => {
+    if (activeActor && activeActor.id !== 'selected-token') {
+      activeActor.statuses.forEach(status => {
         const resolution = resolvePrompt(status.name);
         newAdvices.push({
           id: `status-${currentActor.id}-${status.id}${nonce}`,

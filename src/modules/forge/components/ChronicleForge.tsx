@@ -23,6 +23,8 @@ import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { type ForgeContextItem } from '../ForgeService';
 import { chronicleForgeService, type ChronicleForgeResult } from '../ChronicleService';
 import { gmToast } from '../../../stores/useToastStore';
+import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
+
 
 interface NotebookSource {
   id: string;
@@ -250,7 +252,18 @@ const ChronicleForge: React.FC = () => {
     setIsForging(true);
     setResult(null);
     try {
+      // Find the driver (custom or default)
+      const driver = customGameDrivers.find(d => d.id === selectedDriverId) || 
+                     DEFAULT_GAME_DRIVERS.find(d => d.id === selectedDriverId);
+                     
+      if (!driver) {
+        gmToast("Système introuvable.", "error");
+        setIsForging(false);
+        return;
+      }
+
       const forgeResult = await chronicleForgeService.forgeChronicle(contextItems, driver, userInstructions);
+
       setResult(forgeResult);
       gmToast("Chronique forgée avec succès.", "success");
     } catch (err) {
@@ -264,15 +277,22 @@ const ChronicleForge: React.FC = () => {
   const handleCommit = () => {
     if (!result) return;
     
+    // Get the templateId from the selected driver
+    const driver = customGameDrivers.find(d => d.id === selectedDriverId) || 
+                   DEFAULT_GAME_DRIVERS.find(d => d.id === selectedDriverId);
+    const templateId = driver?.templateId || 'generic';
+
     addChronicle({
       campaign: {
         name: result.campaign.name || 'Sans titre',
         description: result.campaign.description || '',
         synopsis: result.campaign.synopsis || '',
+        system: selectedDriverId,
       } as any,
       entities: (result.entities || []).map(e => ({
         ...e,
         name: e.name || 'NPC Inconnu',
+        templateId: templateId,
         linkedMapIds: (e as any).linkedMapIds || [], // Ensure initialized
       })) as any,
       atlasMaps: (result.locations || []).map(l => ({
@@ -289,6 +309,7 @@ const ChronicleForge: React.FC = () => {
         linkedEntityIds: (l as any).linkedEntityIds || [],
       })) as any,
     });
+
 
     gmToast("Chronique déployée dans le Codex.", "success");
     setResult(null);
@@ -414,10 +435,14 @@ const ChronicleForge: React.FC = () => {
               className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-xs text-fuchsia-100 outline-none focus:border-fuchsia-500/50 transition-all appearance-none cursor-pointer"
             >
               <option value="">Sélectionner un système...</option>
+              {DEFAULT_GAME_DRIVERS.map(driver => (
+                <option key={driver.id} value={driver.id}>{driver.emoji} {driver.name}</option>
+              ))}
               {customGameDrivers.map(driver => (
-                <option key={driver.id} value={driver.id}>{driver.name}</option>
+                <option key={driver.id} value={driver.id}>{driver.emoji} {driver.name} (Custom)</option>
               ))}
             </select>
+
           </div>
         </div>
 

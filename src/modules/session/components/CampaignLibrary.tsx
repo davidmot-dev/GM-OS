@@ -5,10 +5,13 @@ import { useSessionOSStore } from '../useSessionOSStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 
 const CampaignLibrary: React.FC = () => {
-    const { campaigns, setActiveCampaign, setCurrentView, activeCampaignId, customSheetTemplates } = useSessionOSStore();
+    const { campaigns, setActiveCampaign, setCurrentView, activeCampaignId, customSheetTemplates, customGameDrivers } = useSessionOSStore();
 
     const getSystemName = (systemId: string) => {
-        const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
+        const customDriver = customGameDrivers?.find(d => d.id === systemId);
+        if (customDriver) return customDriver.name;
+        
+        const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...(customSheetTemplates || [])];
         return allTemplates.find(t => t.id === systemId)?.name || systemId;
     };
 

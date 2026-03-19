@@ -17,6 +17,13 @@ Ce document répertorie les axes de développement futurs. Les priorités sont d
 * [x] **Effets Météo Dynamiques** : Particules (pluie, neige, fumée) synchronisées (Map-OS)
 * [x] **Timeline OS** : Gestion de la chronologie, des événements et du journal de bord (Chroniques)
 * [x] **Intégration Gemini CLI** : Assistant terminal avec contexte projet et guides automatisés
+* [x] **Cerveau Tactique (Tactical Brain)** : Auto-dispel intelligent et orchestration de combat.
+* [x] **Évolution Combat-OS** : Distinction PJ / PNJ, système de ciblage et registre de statuts (20 états).
+* [x] **NPC Live Generator** : Génération instantanée (Z-Image/Gemini) et stockage Media Hub.
+* [x] **Localisation & Accessibilité** : Refonte intégrale fr-FR et conformité A11y (NpcDetail/Gallery/Oracle).
+* [x] **Initiative & Auto-Fiche** : Calcul robuste avec parser de labels (ex: `INT`) et liaison automatique du système aux PNJ.
+* [x] **Forge-OS Sync** : Correction de l'importation de scénarios (Lien auto des fiches et support multi-systèmes).
+
 
 ---
 
@@ -24,9 +31,10 @@ Ce document répertorie les axes de développement futurs. Les priorités sont d
 
 ### 1. ⚔️ Automatisation du Combat OS
 
-* **Calculateur de Dégâts Intelligent** : Gestion automatisée des résistances, vulnérabilités et états.
-* **Actions Suggérées (Cortex)** : Suggérer des actions PNJ basées sur leur état et positionnement.
-* **Gestion d'Initiative Avancée** : Rappels automatiques des effets à durée limitée.
+* [x] **Calculateur de Dégâts Intelligent** : (Géré via le Cerveau Tactique & Factions).
+* [ ] **Actions Suggérées (Cortex)** : Suggérer des actions PNJ basées sur leur état et positionnement.
+* [x] **Gestion d'Initiative Avancée** : Parser Cortex pour formules descriptives et auto-nettoyage des parenthèses.
+
 
 ### 2. 🎮 Architecture "System Drivers" (Evolution)
 
@@ -47,8 +55,8 @@ Ce document répertorie les axes de développement futurs. Les priorités sont d
 
 ### 5. 🤖 IA Générative Live
 
-* **NPC Live Generator** : Génération instantanée de portraits et backgrounds via IA.
-* **Voice Automation** : Adapter automatiquement le pitch vocal selon le PNJ.
+* [x] **NPC Live Generator** : (Déplacé vers jalons complétés)
+* [ ] **Voice Automation** : Adapter automatiquement le pitch vocal selon le PNJ.
 
 ---
 

@@ -56,6 +56,12 @@ interface AppBridge {
         writeNote: (relativePath: string, content: string, vaultPath?: string) => Promise<boolean>;
         ensureDirectory: (relativePath: string, vaultPath?: string) => Promise<boolean>;
     };
+    npc?: {
+        listDatabases: (category: string) => Promise<string[]>;
+        loadDatabase: (category: string, name: string) => Promise<Record<string, string[]>>;
+        selectAvatar: () => Promise<string | null>;
+        saveAvatar: (buffer: ArrayBuffer, fileName: string) => Promise<string | null>;
+    };
 }
 
 interface NoteEntry {

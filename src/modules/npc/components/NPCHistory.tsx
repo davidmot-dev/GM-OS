@@ -51,7 +51,7 @@ const NPCHistory: React.FC = () => {
                         <div className="w-8 h-8 rounded-md bg-app-bg flex items-center justify-center shrink-0 border border-app-border overflow-hidden">
                             {entity.avatar ? (
                                 <img
-                                    src={entity.avatar.startsWith('http') || entity.avatar.startsWith('blob:') || entity.avatar.startsWith('file://')
+                                    src={entity.avatar.startsWith('http') || entity.avatar.startsWith('blob:') || entity.avatar.startsWith('file://') || entity.avatar.startsWith('data:')
                                         ? entity.avatar
                                         : `file:///${entity.avatar.replace(/\\/g, '/')}`}
                                     alt={entity.name}
@@ -70,6 +70,7 @@ const NPCHistory: React.FC = () => {
                         <button
                             onClick={(e) => { e.stopPropagation(); deleteFromMemo(entity.id); }}
                             className="p-1.5 opacity-0 group-hover:opacity-100 hover:bg-rose-500/20 hover:text-rose-500 rounded transition-all text-slate-500"
+                            title="Supprimer du mémo"
                         >
                             <Trash2 size={12} />
                         </button>

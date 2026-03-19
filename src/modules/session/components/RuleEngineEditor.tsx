@@ -64,7 +64,7 @@ const RuleEngineEditor: React.FC = () => {
                     <div className="flex items-center gap-4">
                         <input
                             type="text"
-                            value={driver.emoji}
+                            value={driver.emoji || ''}
                             onChange={e => handleUpdate({ emoji: e.target.value })}
                             className="w-12 h-12 bg-app-bg text-center text-2xl rounded-2xl p-1 border border-app-border/40 focus:outline-none focus:border-accent/50 shadow-inner"
                             maxLength={2}
@@ -72,7 +72,7 @@ const RuleEngineEditor: React.FC = () => {
                         <div>
                             <input
                                 type="text"
-                                value={driver.name}
+                                value={driver.name || ''}
                                 onChange={e => handleUpdate({ name: e.target.value })}
                                 className="bg-transparent text-xl font-black text-white focus:outline-none border-b border-transparent focus:border-accent/40 transition-all min-w-[200px]"
                                 placeholder="Nom du moteur de règles"
@@ -112,7 +112,7 @@ const RuleEngineEditor: React.FC = () => {
                                             <label className="text-[10px] font-black uppercase text-app-text/40 mb-2 block">Dés par défaut</label>
                                             <input 
                                                 type="text"
-                                                value={driver.dice.defaultDice}
+                                                value={driver.dice.defaultDice || ''}
                                                 onChange={e => handleUpdate({ dice: { ...driver.dice, defaultDice: e.target.value } })}
                                                 className="w-full bg-app-bg px-4 py-3 rounded-xl border border-app-border/40 font-mono text-sm focus:border-accent/40 outline-none"
                                                 placeholder="Ex: 1d20, 3d6..."
@@ -166,7 +166,7 @@ const RuleEngineEditor: React.FC = () => {
                                         <label className="text-[10px] font-black uppercase text-app-text/40 mb-2 block">Formule Initiative</label>
                                         <input 
                                             type="text"
-                                            value={driver.combat.initiativeFormula}
+                                            value={driver.combat.initiativeFormula || ''}
                                             onChange={e => handleUpdate({ combat: { ...driver.combat, initiativeFormula: e.target.value } })}
                                             className="w-full bg-app-bg px-4 py-3 rounded-xl border border-app-border/40 font-mono text-sm focus:border-accent/40 outline-none"
                                             placeholder="Ex: dex, 1d6 + init..."
@@ -270,7 +270,7 @@ const RuleEngineEditor: React.FC = () => {
                                     <Hammer size={16} /> Extraction Logique (Prompt Global)
                                 </h4>
                                 <textarea 
-                                    value={driver.aiInstructions}
+                                    value={driver.aiInstructions || ''}
                                     onChange={e => handleUpdate({ aiInstructions: e.target.value })}
                                     placeholder="Décrivez les règles fondamentales (système de dés, critiques, avantages...) pour que l'IA puisse les appliquer."
                                     className="w-full h-48 bg-black/20 text-[11px] text-app-text/80 p-4 rounded-2xl border border-white/5 focus:border-indigo-500/40 outline-none transition-all font-mono leading-relaxed"

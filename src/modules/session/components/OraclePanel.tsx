@@ -84,10 +84,10 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
 
     // Reset load error when key or URL changes
     useEffect(() => {
-        if (isOpen && activeNotebookUrl && viewMode === 'iframe') {
+        if (isOpen && activeNotebookUrl && viewMode === 'iframe' && loadError) {
             setLoadError(false);
         }
-    }, [isOpen, activeNotebookUrl, viewMode, key]);
+    }, [isOpen, activeNotebookUrl, viewMode, key, loadError]);
 
     const hasBoth = !!campaignNotebookUrl && !!templateNotebookUrl && campaignNotebookUrl !== templateNotebookUrl;
 
@@ -341,9 +341,9 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                             <div className="w-16 h-16 rounded-full bg-app-surface flex items-center justify-center mb-6">
                                 <Sparkles size={32} className="text-app-text/20" />
                             </div>
-                            <h3 className="text-xl font-bold text-app-text mb-2">No Notebook Linked</h3>
+                            <h3 className="text-xl font-bold text-app-text mb-2">Aucun Notebook Lié</h3>
                             <p className="text-app-text/40 text-sm max-w-xs leading-relaxed">
-                                To use the Oracle, please add a NotebookLM URL in your campaign settings or system template.
+                                Pour utiliser l'Oracle, veuillez ajouter une URL de NotebookLM dans les paramètres de votre campagne ou le template du système.
                             </p>
                         </div>
                     ) : viewMode === 'chat' ? (
@@ -415,12 +415,13 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                                         type="submit"
                                         disabled={!input.trim() || isQuerying}
                                         className={`absolute right-3 bottom-3 p-2.5 rounded-xl transition-all ${!input.trim() || isQuerying ? 'text-app-text/20 bg-app-surface' : 'bg-accent text-app-bg shadow-glow-accent/20 hover:scale-110 active:scale-95'}`}
+                                        title="Envoyer la question"
                                     >
                                         <Send size={18} />
                                     </button>
                                 </form>
                                 <p className="mt-3 text-[9px] text-app-text/30 font-mono text-center uppercase tracking-widest">
-                                    {isQuerying ? 'Neural Stream: ACTIVE' : `Connected to Notebook: ${notebookId?.slice(0, 8) || 'NONE'}...`}
+                                    {isQuerying ? 'Flux Neural : ACTIF' : `Connecté au Notebook : ${notebookId?.slice(0, 8) || 'AUCUN'}...`}
                                 </p>
                             </div>
                         </>
@@ -430,7 +431,7 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                             {isLoading && !loadError && (
                                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-app-bg z-10">
                                     <RefreshCw className="animate-spin text-accent mb-4" size={32} />
-                                    <p className="text-accent/50 text-[10px] font-mono uppercase tracking-[0.2em] animate-pulse">Establishing Neural Link...</p>
+                                    <p className="text-accent/50 text-[10px] font-mono uppercase tracking-[0.2em] animate-pulse">Établissement de la Liaison Neurale...</p>
                                 </div>
                             )}
                             
@@ -439,15 +440,15 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                                     <div className="w-20 h-20 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-8 shadow-[0_0_30px_rgba(245,158,11,0.1)]">
                                         <ExternalLink size={36} className="text-amber-500" />
                                     </div>
-                                    <h3 className="text-xl font-bold text-app-text mb-4">Security Restriction</h3>
+                                    <h3 className="text-xl font-bold text-app-text mb-4">Restriction de Sécurité</h3>
                                     <p className="text-app-text/80 text-sm leading-relaxed mb-8 max-w-sm">
-                                        Google prohibits embedding NotebookLM for security reasons. The Oracle source must be viewed in a dedicated window.
+                                        Google interdit l'intégration de NotebookLM pour des raisons de sécurité. La source de l'Oracle doit être consultée dans une fenêtre dédiée.
                                     </p>
                                     <button 
                                         onClick={handleOpenExternal}
                                         className="px-8 py-3 bg-accent text-app-bg rounded-xl font-bold text-sm hover:scale-105 active:scale-95 transition-all shadow-glow-accent/20 flex items-center gap-3"
                                     >
-                                        OPEN SOURCE WINDOW <ExternalLink size={18} />
+                                        OUVRIR LA FENÊTRE SOURCE <ExternalLink size={18} />
                                     </button>
                                     <div className="mt-8 flex flex-col items-center gap-2">
                                         <p className="text-[10px] text-app-text/40 font-bold uppercase tracking-widest">Projet Recommandé :</p>
@@ -475,10 +476,10 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
 
                 {/* Status Footer */}
                 <footer className="h-10 border-t border-app-border bg-app-bg px-4 flex items-center justify-between text-[10px] font-mono text-app-text/40 uppercase tracking-widest shrink-0">
-                    <span>Integrated AI Node</span>
+                    <span>Nœud d'IA Intégré</span>
                     <span className="flex items-center gap-2">
                         <span className={`w-1.5 h-1.5 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.5)] ${activeNotebookUrl ? 'bg-emerald-500' : 'bg-app-surface'}`}></span>
-                        {activeNotebookUrl ? 'MCP Bridge: ONLINE' : 'Awaiting Connection'}
+                        {activeNotebookUrl ? 'Pont MCP : EN LIGNE' : 'En attente de connexion'}
                     </span>
                 </footer>
             </aside>

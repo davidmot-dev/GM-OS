@@ -38,8 +38,8 @@ const SessionWorkspace: React.FC = () => {
     if (!session) {
         return (
             <section className="col-span-6 flex flex-col items-center justify-center p-6 bg-app-surface/40 rounded-xl border border-app-border/20 shadow-inner">
-                <p className="text-app-text/40 font-bold tracking-widest uppercase">No Active Session</p>
-                <p className="text-app-text/20 text-sm mt-2">Start a session to view the workspace.</p>
+                <p className="text-app-text/40 font-bold tracking-widest uppercase">Aucune Session Active</p>
+                <p className="text-app-text/20 text-sm mt-2">Lancez une session pour accéder à l'espace de travail.</p>
             </section>
         );
     }
@@ -51,7 +51,7 @@ const SessionWorkspace: React.FC = () => {
                 <div className="flex items-center gap-10">
                     {/* PC List */}
                     <div className="flex flex-col justify-center">
-                        <span className="text-[9px] font-bold tracking-[0.3em] text-accent uppercase opacity-60 mb-1 block ml-1">Party</span>
+                        <span className="text-[9px] font-bold tracking-[0.3em] text-accent uppercase opacity-60 mb-1 block ml-1">Groupe</span>
                         <div className="flex -space-x-3">
                             {(session.sessionEntityIds || []).map(id => {
                                 // Find character among all players
@@ -85,7 +85,7 @@ const SessionWorkspace: React.FC = () => {
                             <button 
                                 onClick={() => useSessionOSStore.getState().setCurrentView('players')}
                                 className="w-12 h-12 rounded-full border-2 border-dashed border-app-border/40 flex items-center justify-center text-app-text/20 hover:text-accent hover:border-accent/50 transition-all group bg-app-surface/20"
-                                title="Manage Party"
+                                title="Gérer le groupe"
                             >
                                 <Plus size={18} className="group-hover:rotate-90 transition-transform" />
                             </button>
@@ -94,7 +94,7 @@ const SessionWorkspace: React.FC = () => {
 
                     {/* Session NPC List */}
                     <div className="flex flex-col justify-center">
-                        <span className="text-[9px] font-bold tracking-[0.3em] text-accent uppercase opacity-60 mb-1 block ml-1">Active NPCs</span>
+                        <span className="text-[9px] font-bold tracking-[0.3em] text-accent uppercase opacity-60 mb-1 block ml-1">PNJ Actifs</span>
                         <div className="flex gap-3">
                             {(session.sessionEntityIds || []).map(id => {
                                 const npc = entities.find(e => e.id === id);
@@ -113,7 +113,7 @@ const SessionWorkspace: React.FC = () => {
                                         <button 
                                             onClick={(e) => { e.stopPropagation(); useSessionOSStore.getState().removeEntityFromSession(session.id, npc.id); }}
                                             className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-red-600 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg hover:bg-red-500 border border-white/20"
-                                            title="Remove from session"
+                                            title="Retirer de la session"
                                         >
                                             <span className="text-[10px] font-bold">×</span>
                                         </button>
@@ -127,7 +127,7 @@ const SessionWorkspace: React.FC = () => {
                             <button 
                                 onClick={() => useSessionOSStore.getState().setCurrentView('npc-gallery')}
                                 className="w-12 h-12 rounded-xl border-2 border-dashed border-app-border/40 flex items-center justify-center text-app-text/20 hover:text-accent hover:border-accent/50 transition-all group"
-                                title="Add NPC to session"
+                                title="Ajouter un PNJ"
                             >
                                 <Pin size={22} className="group-hover:rotate-12 transition-transform" />
                             </button>
@@ -144,15 +144,15 @@ const SessionWorkspace: React.FC = () => {
                     <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
                             <Eye size={18} className="text-app-text/40" />
-                            <h4 className="text-app-text/80 font-bold text-sm tracking-wide">Public Summary</h4>
+                            <h4 className="text-app-text/80 font-bold text-sm tracking-wide">Résumé Public</h4>
                         </div>
-                        <button className="text-app-text/20 hover:text-accent transition-colors"><Edit3 size={18} /></button>
+                        <button className="text-app-text/20 hover:text-accent transition-colors" title="Modifier le résumé"><Edit3 size={18} /></button>
                     </div>
                     <textarea
                         className="flex-1 bg-transparent border-none text-app-text/60 text-sm leading-relaxed resize-none focus:ring-0 p-0 custom-scrollbar"
                         value={session.publicSummary}
                         onChange={(e) => updateSessionPublicSummary(session.id, e.target.value)}
-                        placeholder="Write public session notes here..."
+                        placeholder="Rédigez les notes publiques ici..."
                     />
                 </div>
 
@@ -164,15 +164,15 @@ const SessionWorkspace: React.FC = () => {
                     <div className="flex items-center justify-between mb-4 relative z-10">
                         <div className="flex items-center gap-2">
                             <Lock size={18} className="text-accent" />
-                            <h4 className="text-accent font-bold text-sm tracking-wide">GM Secrets</h4>
+                            <h4 className="text-accent font-bold text-sm tracking-wide">Secrets du MJ</h4>
                         </div>
-                        <button className="text-app-text/20 hover:text-accent transition-colors"><History size={18} /></button>
+                        <button className="text-app-text/20 hover:text-accent transition-colors" title="Historique des secrets"><History size={18} /></button>
                     </div>
                     <textarea
                         className="flex-1 bg-transparent border-none text-app-text/60 text-sm leading-relaxed resize-none focus:ring-0 p-0 relative z-10 border-l-2 border-accent/40 pl-3 custom-scrollbar"
                         value={session.gmSecrets}
                         onChange={(e) => updateSessionGmSecrets(session.id, e.target.value)}
-                        placeholder="Write private GM secrets here..."
+                        placeholder="Rédigez vos notes secrètes ici..."
                     />
                 </div>
             </div>
@@ -217,15 +217,15 @@ const SessionWorkspace: React.FC = () => {
             <div className="h-64 bg-app-surface/40 rounded-xl border border-app-border overflow-hidden relative group">
                 <div className="absolute inset-0 bg-gradient-to-t from-app-bg via-transparent to-transparent z-10"></div>
                 <div className="absolute bottom-4 left-4 z-20">
-                    <h5 className="text-app-text/90 font-bold">{mapName || 'No Active Map'}</h5>
+                    <h5 className="text-app-text/90 font-bold">{mapName || 'Aucune Carte Active'}</h5>
                     <div className="flex items-center gap-2 text-xs text-app-text/40 mt-1">
                         <MapPin size={14} className="text-accent" />
                         <span>{mapName ? 'Map-OS Synchronized' : 'Sector 7G • Underdark Region'}</span>
                     </div>
                 </div>
                 <div className="absolute top-4 right-4 z-20 flex gap-2">
-                    <button className="bg-app-bg/80 backdrop-blur-md p-2 rounded-lg text-app-text/40 hover:text-accent transition-colors"><Search size={18} /></button>
-                    <button className="bg-app-bg/80 backdrop-blur-md p-2 rounded-lg text-app-text/40 hover:text-accent transition-colors"><Layers size={18} /></button>
+                    <button className="bg-app-bg/80 backdrop-blur-md p-2 rounded-lg text-app-text/40 hover:text-accent transition-colors" title="Rechercher sur la carte"><Search size={18} /></button>
+                    <button className="bg-app-bg/80 backdrop-blur-md p-2 rounded-lg text-app-text/40 hover:text-accent transition-colors" title="Gérer les calques"><Layers size={18} /></button>
                 </div>
                 {isVideo && resolvedMapUrl ? (
                     <video

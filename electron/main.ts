@@ -644,6 +644,22 @@ ipcMain.handle('npc:select-avatar', async () => {
     return null;
 });
 
+ipcMain.handle('npc:save-avatar', async (_event, buffer: Buffer, fileName: string) => {
+    try {
+        const avatarsDir = path.join(process.env.APP_ROOT || '', 'public', 'assets', 'avatars', 'npc');
+        await fs.ensureDir(avatarsDir);
+        
+        const filePath = path.join(avatarsDir, fileName);
+        await fs.writeFile(filePath, buffer);
+        
+        const normalized = filePath.replace(/\\/g, '/');
+        return `file:///${encodeURI(normalized).replace(/#/g, '%23').replace(/\?/g, '%3F')}`;
+    } catch (error) {
+        console.error('[Main] Error saving avatar:', error);
+        return null;
+    }
+});
+
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.

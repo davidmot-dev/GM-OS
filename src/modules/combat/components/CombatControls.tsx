@@ -20,9 +20,9 @@ const CombatControls: React.FC = () => {
         syncCombatantHPToSession
     } = useCombatStore();
 
-    const { 
-        activeCampaignId, 
-        selectedSessionId, 
+    const {
+        activeCampaignId,
+        selectedSessionId,
         addTimelineEvent,
         getActiveDriver
     } = useSessionOSStore();
@@ -39,6 +39,7 @@ const CombatControls: React.FC = () => {
                     hp: 10,
                     hpMax: 10,
                     isPlayer: false,
+                    faction: 'enemy',
                     statuses: []
                 });
             }
@@ -57,9 +58,54 @@ const CombatControls: React.FC = () => {
                 formula: activeDriver.combat.initiativeFormula,
                 sortOrder: activeDriver.combat.initiativeSort || 'desc',
                 cards: activeDriver.combat.initiativeCards,
-                resolver: (stat) => {
-                    console.log("[CombatControls] Resolving stat:", stat);
-                    return 0;
+                resolver: (stat, combatant) => {
+                    const sessionStore = useSessionOSStore.getState();
+                    const getStatValue = (data: Record<string, any>, statName: string) => {
+                        const lowStat = statName.toLowerCase();
+                        // 1. Check sheetData case-insensitively
+                        const entry = Object.entries(data || {}).find(([k]) => k.toLowerCase() === lowStat);
+                        if (entry !== undefined) return Number(entry[1]) || 0;
+                        return undefined;
+                    };
+                    let val = 0;
+
+                    if (combatant.isPlayer && combatant.sourcePlayerId) {
+                        const char = sessionStore.players
+                            .flatMap(p => p.characters)
+                            .find(c => c.id === combatant.sourcePlayerId);
+                        
+                        if (char) {
+                            const sheetVal = getStatValue(char.sheetData, stat);
+                            if (sheetVal !== undefined) {
+                                val = sheetVal;
+                            } else {
+                                // Fallback to standard fields
+                                const lowStat = stat.toLowerCase();
+                                if ((char as unknown as Record<string, unknown>)[lowStat] !== undefined) {
+                                    val = Number((char as unknown as Record<string, unknown>)[lowStat]) || 0;
+                                }
+                            }
+                        }
+                    } else if (combatant.sourceEntityId) {
+                        const entity = sessionStore.entities.find(e => e.id === combatant.sourceEntityId);
+                        if (entity) {
+                            const sheetVal = getStatValue(entity.sheetData || {}, stat);
+                            if (sheetVal !== undefined) {
+                                val = sheetVal;
+                            } else {
+                                // Fallback to standard fields
+                                const lowStat = stat.toLowerCase();
+                                if ((entity as unknown as Record<string, unknown>)[lowStat] !== undefined) {
+                                    val = Number((entity as unknown as Record<string, unknown>)[lowStat]) || 0;
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (Number.isNaN(val)) val = 0;
+                    
+                    console.log(`[CombatControls] Resolving "${stat}" for ${combatant.name} -> ${val} (Source: ${combatant.isPlayer ? 'PC' : 'NPC'})`);
+                    return val;
                 }
             });
         } else {

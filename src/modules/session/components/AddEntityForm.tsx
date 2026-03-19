@@ -7,7 +7,7 @@ import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { gmToast } from '../../../stores/useToastStore';
 
 const AddEntityForm: React.FC = () => {
-    const { addEntity, setIsAddingEntity, activeCampaignId } = useSessionOSStore();
+    const { addEntity, setIsAddingEntity, activeCampaignId, getActiveDriver } = useSessionOSStore();
 
     const [name, setName] = useState('');
     const [type, setType] = useState<Entity['type']>('npc');
@@ -44,6 +44,7 @@ const AddEntityForm: React.FC = () => {
             gmSecretInfo,
             linkedMapIds: [],
             campaignId: activeCampaignId,
+            templateId: getActiveDriver()?.templateId || 'generic',
         });
 
         gmToast(`${name} créé avec succès !`);
@@ -139,6 +140,7 @@ const AddEntityForm: React.FC = () => {
                             placeholder="Ex: Baron Varick l'Imposteur"
                             className="w-full bg-app-surface/50 border border-app-border rounded-2xl px-6 py-4 text-xl font-bold text-white focus:ring-1 focus:ring-accent/50 focus:border-accent/50 focus:outline-none transition-all placeholder:text-app-text/10"
                             required
+                            title="Nom du personnage"
                         />
                     </div>
 
@@ -150,16 +152,17 @@ const AddEntityForm: React.FC = () => {
                             onChange={(e) => setDescription(e.target.value)}
                             placeholder="Ex: Humain Paladin de l'Ordre d'Or"
                             className="w-full bg-app-surface/30 border border-app-border rounded-xl px-4 py-2 text-sm text-app-text/60 focus:ring-1 focus:ring-accent/50 focus:outline-none placeholder:text-app-text/10"
+                            title="Description courte"
                         />
                     </div>
 
                     {/* Stats Grid */}
                     <div className="grid grid-cols-4 gap-3">
                         {[
-                            { label: 'HP Max', val: maxHp, set: setMaxHp, icon: <Heart size={14} className="text-red-400" /> },
-                            { label: 'AC', val: ac, set: setAc, icon: <Shield size={14} className="text-blue-400" /> },
-                            { label: 'Speed', val: speed, set: setSpeed, icon: <Wind size={14} className="text-emerald-400" /> },
-                            { label: 'Init', val: initiative, set: setInitiative, icon: <Zap size={14} className="text-amber-400" /> },
+                            { label: 'PV Max', val: maxHp, set: setMaxHp, icon: <Heart size={14} className="text-red-400" /> },
+                            { label: 'CA', val: ac, set: setAc, icon: <Shield size={14} className="text-blue-400" /> },
+                            { label: 'Vitesse', val: speed, set: setSpeed, icon: <Wind size={14} className="text-emerald-400" /> },
+                            { label: 'Init.', val: initiative, set: setInitiative, icon: <Zap size={14} className="text-amber-400" /> },
                         ].map((stat, i) => (
                             <div key={i} className="bg-app-surface/40 border border-white/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1 group hover:border-accent/20 transition-all">
                                 {stat.icon}
@@ -168,6 +171,7 @@ const AddEntityForm: React.FC = () => {
                                     value={stat.val}
                                     onChange={(e) => stat.set(parseInt(e.target.value) || 0)}
                                     className="w-full bg-transparent border-none text-center text-white font-black text-sm focus:ring-0"
+                                    title={stat.label}
                                 />
                                 <span className="text-[9px] uppercase font-bold text-app-text/20 tracking-wider">{stat.label}</span>
                             </div>

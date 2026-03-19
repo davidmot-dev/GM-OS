@@ -28,12 +28,14 @@ interface NPCState {
     currentEntity: NPCEntity | null;
     savedEntities: NPCEntity[];
     isGenerating: boolean;
+    isGeneratingAIAvatar: boolean;
 
     // Actions
     setConfig: (updates: Partial<NPCState['config']>) => void;
     fetchUniverses: (category?: NPCCategory) => Promise<void>;
     generate: () => Promise<void>;
     selectAvatar: () => Promise<void>;
+    generateAvatar: (instructions?: string) => Promise<void>;
     saveToMemo: () => void;
     deleteFromMemo: (id: string) => void;
     updateEntityNotes: (id: string, notes: string) => void;
@@ -54,6 +56,7 @@ export const useNPCStore = create<NPCState>()(
             currentEntity: null,
             savedEntities: [],
             isGenerating: false,
+            isGeneratingAIAvatar: false,
 
             setConfig: (updates) => {
                 const newConfig = { ...get().config, ...updates };
@@ -153,6 +156,46 @@ export const useNPCStore = create<NPCState>()(
                     }
                 } catch (err) {
                     console.error("Avatar selection failed:", err);
+                }
+            },
+
+            generateAvatar: async (instructions?: string) => {
+                const { currentEntity, savedEntities } = get();
+                if (!currentEntity) return;
+
+                set({ isGeneratingAIAvatar: true });
+                try {
+                    const { aiService } = await import('../ai/AIService');
+                    // Check if it's a place or NPC to adjust prompt
+                    // Clean and truncate fields to prevent HTTP 500 from too long/complex prompts
+                    const fieldsText = Object.values(currentEntity.fields).join(', ').replace(/\n/g, ' ').substring(0, 300);
+                    
+                    const basePrompt = currentEntity.category === 'places' 
+                        ? `Fantasy RPG environment art: ${currentEntity.name}. ${fieldsText}. Cinematic, epic scale, high quality.`
+                        : `A professional fantasy RPG character portrait of ${currentEntity.name}. ${fieldsText}. High quality digital art, cinematic lighting, 8k.`;
+                        
+                    const prompt = instructions ? instructions : basePrompt;
+                    const aspect = currentEntity.category === 'places' ? '16:9' : '1:1';
+                    
+                    const mediaId = await aiService.generateImage(prompt, aspect);
+                    console.log(`[useNPCStore] Image generated successfully: ${mediaId.substring(0, 50)}...`);
+                    
+                    const updatedEntity = { ...currentEntity, avatar: mediaId };
+                    set({ currentEntity: updatedEntity });
+                    console.log(`[useNPCStore] currentEntity updated with new avatar.`);
+
+                    // Update in memos if present
+                    if (savedEntities.find(e => e.id === currentEntity.id)) {
+                        set({
+                            savedEntities: savedEntities.map(e => e.id === currentEntity.id ? updatedEntity : e)
+                        });
+                    }
+                } catch (err) {
+                    console.error("AI Avatar Generation Error:", err);
+                    const { gmToast } = await import('../../stores/useToastStore');
+                    gmToast("Erreur lors de la génération IA", "error");
+                } finally {
+                    set({ isGeneratingAIAvatar: false });
                 }
             },
 
