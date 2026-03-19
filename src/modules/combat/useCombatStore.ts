@@ -31,10 +31,10 @@ export interface Combatant {
 
 // Conflicting status effects: adding a key status will automatically remove the value statuses
 export const STATUS_CONFLICT_MAP: Record<string, string[]> = {
-    'En feu': ['Mouillé', 'Sous l\'eau', 'Froid'],
+    'En feu': ['Mouillé', 'Sous l\'eau', 'Gelé'],
     'Mouillé': ['En feu'],
     'Sous l\'eau': ['En feu'],
-    'Froid': ['En feu'],
+    'Gelé': ['En feu'],
     'Inconscient': ['Debout', 'En garde'],
     'Debout': ['À terre'],
     'À terre': ['Debout'],
@@ -44,8 +44,11 @@ export const STATUS_CONFLICT_MAP: Record<string, string[]> = {
     'Effrayé': ['Concentration', 'Béni'],
     'Confus': ['Concentration'],
     'Épuisé': ['En garde', 'Concentration'],
-    'Agrippé': ['Debout']
+    'Agrippé': ['Debout'],
+    'Soin': ['Empoisonné', 'Saignement'],
+    'Choqué': ['Concentration']
 };
+
 
 interface CombatState {
     combatants: Combatant[];
