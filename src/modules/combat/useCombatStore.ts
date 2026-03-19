@@ -408,14 +408,50 @@ export const useCombatStore = create<CombatState>()(
 
                     const newHp = Math.min(c.hpMax, Math.max(0, c.hp - finalAmount));
                     
+                    // Auto-Status Mapping
+                    let newStatuses = [...c.statuses];
+                    const typeLower = type.toLowerCase();
+                    let statusToAdd: Omit<StatusEffect, 'id'> | null = null;
+
+                    if (typeLower.includes('feu') || typeLower.includes('fire')) {
+                        statusToAdd = { name: 'En feu', duration: 3, icon: '🔥' };
+                    } else if (typeLower.includes('froid') || typeLower.includes('glace') || typeLower.includes('ice') || typeLower.includes('cold')) {
+                        statusToAdd = { name: 'Gelé', duration: 2, icon: '❄️' };
+                    } else if (typeLower.includes('acide') || typeLower.includes('acid')) {
+                        statusToAdd = { name: 'Corrodé', duration: 2, icon: '🧪' };
+                    } else if (typeLower.includes('éclair') || typeLower.includes('foudre') || typeLower.includes('lightn') || typeLower.includes('shock')) {
+                        statusToAdd = { name: 'Choqué', duration: 1, icon: '⚡' };
+                    } else if (typeLower.includes('poison')) {
+                        statusToAdd = { name: 'Empoisonné', duration: 3, icon: '🤢' };
+                    } else if (typeLower.includes('nécro') || typeLower.includes('necro')) {
+                        statusToAdd = { name: 'Affaibli', duration: 2, icon: '💀' };
+                    } else if (typeLower.includes('psych')) {
+                        statusToAdd = { name: 'Confus', duration: 1, icon: '😵' };
+                    } else if (typeLower.includes('radia') || typeLower.includes('solar') || typeLower.includes('lumi')) {
+                        statusToAdd = { name: 'Ébloui', duration: 1, icon: '✨' };
+                    } else if (isHeal || typeLower.includes('soin') || typeLower.includes('heal')) {
+                        statusToAdd = { name: 'Soin', duration: 1, icon: '💖' };
+                    }
+
+                    if (statusToAdd) {
+                        const conflicts = STATUS_CONFLICT_MAP[statusToAdd.name] || [];
+                        newStatuses = newStatuses.filter(s => !conflicts.includes(s.name));
+                        newStatuses.push({ 
+                            ...statusToAdd, 
+                            id: Math.random().toString(36).substring(2, 9) 
+                        });
+                        gmToast(`${c.name} : Statut auto [${statusToAdd.name}] appliqué`, "info");
+                    }
+
                     if (finalAmount > 0) {
                         gmToast(`${c.name} subit ${finalAmount} dégâts (${type})`, "info");
                     } else if (finalAmount < 0) {
                         gmToast(`${c.name} récupère ${Math.abs(finalAmount)} PV`, "success");
                     }
 
-                    return { ...c, hp: newHp };
+                    return { ...c, hp: newHp, statuses: newStatuses };
                 });
+
 
                 return { combatants: newCombatants };
             }),
