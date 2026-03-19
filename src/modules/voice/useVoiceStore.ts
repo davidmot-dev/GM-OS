@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { gmToast } from '../../stores/useToastStore';
+
 
 export interface VoiceEffects {
     pitch: number;      // -12 to 12 semitones
@@ -36,7 +38,10 @@ interface VoiceState {
     outputDeviceId: string | null;
     availableOutputs: MediaDeviceInfo[];
     
+    lastSyncedEntityId: string | null;
+    
     // Actions
+
     toggleActive: (active?: boolean) => void;
     toggleLive: (live?: boolean) => void;
     toggleMonitor: (monitor?: boolean) => void;
@@ -51,7 +56,10 @@ interface VoiceState {
     setOutputDeviceId: (deviceId: string | null) => void;
     setAvailableOutputs: (devices: MediaDeviceInfo[]) => void;
     
+    syncWithNpc: (npc: { name: string; description: string; roleplayingNotes: string; id: string }) => void;
+    
     presets: VoicePreset[];
+
 }
 
 const DEFAULT_EFFECTS: VoiceEffects = {
@@ -154,7 +162,47 @@ export const useVoiceStore = create<VoiceState>()(
             
             setOutputDeviceId: (deviceId) => set({ outputDeviceId: deviceId }),
             setAvailableOutputs: (devices) => set({ availableOutputs: devices }),
+            
+            lastSyncedEntityId: null,
+
+            syncWithNpc: (npc) => {
+                const { isSyncNPC, lastSyncedEntityId, updateEffect, applyPreset } = get();
+                if (!isSyncNPC || lastSyncedEntityId === npc.id) return;
+
+                const text = `${npc.name} ${npc.description} ${npc.roleplayingNotes}`.toLowerCase();
+                
+                // 1. Check for PRESETS
+                if (text.includes('spectre') || text.includes('fantôme') || text.includes('ghost')) {
+                    applyPreset('ghost');
+                } else if (text.includes('ogre') || text.includes('géant') || text.includes('troll') || text.includes('colossal')) {
+                    applyPreset('ogre');
+                } else if (text.includes('robot') || text.includes('androïde') || text.includes('cyborg')) {
+                    applyPreset('robot');
+                } else if (text.includes('dragon') || text.includes('démon')) {
+                    applyPreset('dragon');
+                } else {
+                    // 2. Dynamic individual mapping (if no preset)
+                    applyPreset('clean'); // Start fresh
+
+                    // Pitch mapping
+                    if (text.includes('grave') || text.includes('profond') || text.includes('basse')) {
+                        updateEffect('pitch', -4);
+                        updateEffect('formant', -30);
+                    } else if (text.includes('enfant') || text.includes('petit') || text.includes('suraigu') || text.includes('fée') || text.includes('grêle')) {
+                        updateEffect('pitch', 5);
+                        updateEffect('formant', 40);
+                    } else if (text.includes('vieux') || text.includes('vieille') || text.includes('ancien')) {
+                        updateEffect('pitch', -1);
+                        updateEffect('formant', -10);
+                        updateEffect('distortion', 0.1); // Slightly raspy
+                    }
+                }
+
+                set({ lastSyncedEntityId: npc.id });
+                gmToast(`Voice-OS : Profil synchronisé (${npc.name})`, "info");
+            }
         }),
+
         {
             name: 'gmos-voice-storage',
             partialize: (state) => ({

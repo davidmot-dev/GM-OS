@@ -10,6 +10,8 @@ import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useModalStore } from '../../../stores/useModalStore';
 import { ResolvedImage } from '../../../components/ResolvedImage';
 import AIPromptOverlay from '../../ai/components/AIPromptOverlay';
+import { useVoiceAutomation } from '../../voice/hooks/useVoiceAutomation';
+
 
 // --- Sub-components (Reused or adapted from CharacterSheetEditor) ---
 const FieldGauge: React.FC<{
@@ -98,8 +100,10 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
     } = useSessionOSStore();
     const { closeModal } = useModalStore();
     const { addToken } = useMapStore();
+    useVoiceAutomation();
 
     const currentId = embeddedId || selectedEntityId;
+
     const [isEditing, setIsEditing] = useState(false);
     const [isMediaBrowserOpen, setIsMediaBrowserOpen] = useState(false);
     const [showAIPrompt, setShowAIPrompt] = useState(false);

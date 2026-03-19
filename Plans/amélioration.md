@@ -58,7 +58,8 @@ Ce document répertorie les axes de développement futurs. Les priorités sont d
 ### 5. 🤖 IA Générative Live
 
 * [x] **NPC Live Generator** : (Déplacé vers jalons complétés)
-* [ ] **Voice Automation** : Adapter automatiquement le pitch vocal selon le PNJ.
+* [x] **Voice Automation** : Adapter automatiquement le pitch vocal selon le PNJ.
+
 
 ---
 
