@@ -111,6 +111,20 @@ export const Sidebar: React.FC = () => {
                         Disconnect
                     </button>
                 )}
+                {bridgeIp && (
+                    <button 
+                        onClick={() => {
+                            if (window.confirm("Oublier ce Philips Hue Bridge ? Vous devrez relancer une découverte.")) {
+                                useLightStore.getState().forgetBridge();
+                            }
+                        }}
+                        className="py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-2"
+                    >
+                        <span className="material-symbols-outlined text-[14px]">delete_forever</span>
+                        Forget Bridge
+                    </button>
+                )}
+
             </div>
 
             {/* Global Brightness */}

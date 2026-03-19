@@ -72,8 +72,10 @@ interface LightState {
         globalBrightness?: number;
         scenes?: Record<string, LightScene>;
     }) => void;
+    forgetBridge: () => void;
     reset: () => void;
 }
+
 
 // ----------------------
 // Initial State
@@ -182,7 +184,15 @@ export const useLightStore = create<LightState>()(
 
             setSyncEnabled: (val: boolean) => set({ isSyncEnabled: val }),
 
+            forgetBridge: () => set({
+                bridgeIp: null,
+                username: null,
+                status: 'disconnected',
+                lights: {}
+            }),
+
             applySnapshot: (snapshot) => {
+
                 if (!snapshot) return;
 
                 // 1. Restore the structures (all 18 scenes metadata and light states)
