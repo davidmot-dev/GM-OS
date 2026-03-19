@@ -109,7 +109,12 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
         setIsSuggesting(true);
         setSuggestedAction(null);
         try {
-            const prompt = `En tant que Cerveau Tactique de GM-OS, propose de manière extrêmement concise (max 2 phrases) la meilleure action pour le PNJ/Monstre "${combatant.name}". Variables actuelles : PV: ${combatant.hp}/${combatant.hpMax}, Classe d'Armure: ${combatant.extraStats?.ac?.value || 'inconnue'}, Statuts actifs: ${combatant.statuses.map(s => s.name).join(', ') || 'Aucun'}. Environnement: (Cible déclarée: ${currentTarget?.name || 'Aucune'}). Ne mets pas de texte introductif, donne juste directement l'action conseillée en français.`;
+            const tacticalContext = myAdvices.filter(a => a.type === 'range' || a.type === 'dispel').map(a => a.message).join('. ');
+            const prompt = `En tant que Cerveau Tactique de GM-OS, propose de manière extrêmement concise (max 2 phrases) la meilleure action pour le PNJ/Monstre "${combatant.name}". 
+            Variables actuelles : PV: ${combatant.hp}/${combatant.hpMax}, Classe d'Armure: ${combatant.extraStats?.ac?.value || 'inconnue'}, Statuts actifs: ${combatant.statuses.map(s => s.name).join(', ') || 'Aucun'}. 
+            Contexte de positionnement : ${tacticalContext || 'Cible hors de vue ou aucune donnée de distance'}.
+            Environnement: (Cible déclarée: ${currentTarget?.name || 'Aucune'}). 
+            Ne mets pas de texte introductif, donne juste directement l'action conseillée en français.`;
             
             const response = await aiService.generateText(prompt);
             setSuggestedAction(response.text.trim());

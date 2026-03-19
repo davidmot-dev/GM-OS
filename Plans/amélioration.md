@@ -17,8 +17,9 @@ Ce document répertorie les axes de développement futurs. Les priorités sont d
 * [x] **Effets Météo Dynamiques** : Particules (pluie, neige, fumée) synchronisées (Map-OS)
 * [x] **Timeline OS** : Gestion de la chronologie, des événements et du journal de bord (Chroniques)
 * [x] **Intégration Gemini CLI** : Assistant terminal avec contexte projet et guides automatisés
-* [x] **Cerveau Tactique (Tactical Brain)** : Auto-dispel intelligent et orchestration de combat.
+* [x] **Cerveau Tactique (Tactical Brain)** : Auto-dispel intelligent, orchestration de combat et **Actions Suggérées (Cortex)** basées sur le positionnement.
 * [x] **Évolution Combat-OS** : Distinction PJ / PNJ, système de ciblage et registre de statuts (20 états).
+
 * [x] **NPC Live Generator** : Génération instantanée (Z-Image/Gemini) et stockage Media Hub.
 * [x] **Localisation & Accessibilité** : Refonte intégrale fr-FR et conformité A11y (NpcDetail/Gallery/Oracle).
 * [x] **Initiative & Auto-Fiche** : Calcul robuste avec parser de labels (ex: `INT`) et liaison automatique du système aux PNJ.
@@ -32,7 +33,8 @@ Ce document répertorie les axes de développement futurs. Les priorités sont d
 ### 1. ⚔️ Automatisation du Combat OS
 
 * [x] **Calculateur de Dégâts Intelligent** : (Géré via le Cerveau Tactique & Factions).
-* [ ] **Actions Suggérées (Cortex)** : Suggérer des actions PNJ basées sur leur état et positionnement.
+* [x] **Actions Suggérées (Cortex)** : Suggérer des actions PNJ basées sur leur état et positionnement (Propulsé par Gemini 1.5).
+
 * [x] **Gestion d'Initiative Avancée** : Parser Cortex pour formules descriptives et auto-nettoyage des parenthèses.
 
 
