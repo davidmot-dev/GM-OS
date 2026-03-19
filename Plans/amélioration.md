@@ -38,6 +38,13 @@ Ce document répertorie les axes de développement futurs. Les priorités sont d
 
 * [x] **Gestion d'Initiative Avancée** : Parser Cortex pour formules descriptives et auto-nettoyage des parenthèses.
 
+### 2. 🪄 Map-OS : Calques Magiques (Nouveau)
+
+* [ ] **Visualisation de Sorts** : Zones animées (Feu, Glace, Acide) sur la carte.
+* [ ] **Sync Player Hub** : Projection en temps réel des effets magiques.
+* [ ] **Outils de Mesure** : Cercles, lignes et cônes tactiques.
+
+
 
 ### 2. 🎮 Architecture "System Drivers" (Evolution)
 
@@ -63,6 +70,14 @@ Ce document répertorie les axes de développement futurs. Les priorités sont d
 
 
 * [x] **Light-OS : Forget Bridge** : Bouton de réinitialisation de connexion Philips Hue.
+
+### 6. 🎭 Narration & Diversité UI
+
+* [ ] **Dialogue Tree Engine** (NPC-OS) : Génération de répliques contextuelles via IA.
+* [ ] **Butin Sync** (Table-OS ➡️ Session-OS) : Transfert automatique d'objets vers les fiches PJ.
+* [ ] **Thèmes Dynamiques** (UI/UX) : Thèmes thématiques (Cyberpunk, Médiéval-Dark) changeant toute l'interface.
+* [ ] **Soundscape Spatial** (Ambient-OS) : Volume sonore dépendant de la position des pions sur la map.
+
 
 ---
 
