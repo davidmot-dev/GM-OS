@@ -319,11 +319,21 @@ const CharacterSheetEditor: React.FC = () => {
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                useImageStore.getState().projectUrl(character.portraitUrl!);
-                                                gmToast(`Image de ${character.name} projetée !`);
+                                                const projectedPJ = {
+                                                    id: character.id,
+                                                    name: character.name,
+                                                    subtitle: character.classRace,
+                                                    portraitUrl: character.portraitUrl,
+                                                    avatar: character.tokenUrl || character.portraitUrl,
+                                                    stats: {
+                                                        'Santé': (character.hp / character.maxHp) * 100
+                                                    }
+                                                };
+                                                useImageStore.getState().projectEntity(projectedPJ);
+                                                gmToast(`${character.name} projeté sur le Hub !`);
                                             }}
                                             className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all border border-white/10"
-                                            title="Projeter"
+                                            title="Projeter sur le Hub"
                                         >
                                             <Eye size={18} className="text-white" />
                                         </button>

@@ -197,6 +197,7 @@ const CharacterCard: React.FC<{
                                 hpMax: character.maxHp,
                                 avatar: character.tokenUrl || character.portraitUrl,
                                 isPlayer: true,
+                                faction: 'ally',
                                 sourcePlayerId: character.id,
                                 statuses: []
                             });
@@ -211,16 +212,27 @@ const CharacterCard: React.FC<{
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
-                            useImageStore.getState().projectUrl(character.portraitUrl);
-                            gmToast(`Image de ${character.name} projetée !`);
+                            const projectedPJ = {
+                                id: character.id,
+                                name: character.name,
+                                subtitle: character.classRace,
+                                portraitUrl: character.portraitUrl,
+                                avatar: character.tokenUrl || character.portraitUrl,
+                                stats: {
+                                    'Santé': (character.hp / character.maxHp) * 100
+                                }
+                            };
+                            useImageStore.getState().projectEntity(projectedPJ);
+                            gmToast(`${character.name} projeté sur le Hub !`);
                         }}
                         className="p-1.5 rounded-lg border border-blue-500/30 text-blue-500 hover:bg-blue-500/10 transition-all flex items-center justify-center"
-                        title="Projeter l'image (Image-OS)"
+                        title="Projeter sur le Hub"
                     >
                         <Eye size={14} />
                     </button>
                     <div className="relative flex-1">
                         <select
+                            title="Lier à une campagne"
                             value={character.campaignId || ''}
                             onChange={e => onLink(e.target.value || null)}
                             className="w-full py-1.5 text-xs rounded-lg bg-app-surface border border-app-border text-app-text/40 hover:border-app-border/80 focus:ring-1 focus:ring-accent/50 focus:outline-none appearance-none pl-2 pr-6 transition-all cursor-pointer"

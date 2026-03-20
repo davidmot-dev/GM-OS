@@ -75,8 +75,17 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
                     if (window.appBridge?.utils?.formatFileUrl) {
                         return window.appBridge.utils.formatFileUrl(sourceIdOrUrl);
                     }
-                    if (sourceIdOrUrl.startsWith('C:') || sourceIdOrUrl.startsWith('D:') || sourceIdOrUrl.startsWith('/') || sourceIdOrUrl.startsWith('\\')) {
-                        return `file:///${sourceIdOrUrl.replace(/\\/g, '/')}`;
+                    
+                    const cleanPath = sourceIdOrUrl.replace(/^file:\/\/\//, '');
+                    
+                    // If we are on a remote device (tablet), use the media proxy on port 3001
+                    if (!window.appBridge && (cleanPath.startsWith('C:') || cleanPath.startsWith('D:') || cleanPath.startsWith('/') || cleanPath.startsWith('\\'))) {
+                        const host = window.location.hostname; // Main PC IP
+                        return `http://${host}:3001/media/${encodeURIComponent(cleanPath)}`;
+                    }
+
+                    if (cleanPath.startsWith('C:') || cleanPath.startsWith('D:') || cleanPath.startsWith('/') || cleanPath.startsWith('\\')) {
+                        return `file:///${cleanPath.replace(/\\/g, '/')}`;
                     }
                     return sourceIdOrUrl;
                 })();
@@ -93,8 +102,13 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
 
         return () => {
             isMounted = false;
+            // Add a small delay for revocation to give the browser time to finish any pending internal requests
+            // (fixes some ERR_FILE_NOT_FOUND issues on fast-switching media)
             if (objectUrl) {
-                URL.revokeObjectURL(objectUrl);
+                const urlToRevoke = objectUrl;
+                setTimeout(() => {
+                    URL.revokeObjectURL(urlToRevoke);
+                }, 1000);
             }
         };
     }, [sourceIdOrUrl, getMediaBlob]);

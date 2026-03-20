@@ -1,101 +1,82 @@
-# 🚀 GM-OS v5 : Idées d'améliorations et évolutions
+# 🚀 GM-OS v5 : Architecture & Améliorations
 
-Ce document répertorie les axes de développement futurs. Les priorités sont définies pour guider la suite du projet.
-
-## ✅ Jalons Complétés
-
-* [x] **Intégration Obsidian** (Bridge, Explorateur, Sync Oracle, **Export Structuré**)
-* [x] **Gestion de Galerie & Atlas** (Auto-sélection, Correction bouton Retour)
-* [x] **AI Oracle (NotebookLM)** (RAG MCP Native, Reconnexion UI)
-* [x] **Gems & Personas Dynamiques** (Contextualisation par Driver, Switch UI)
-* [x] **Interactivité Joueur Hub** (Pings, Déplacements Pions)
-* [x] **Dice-OS System Sync** (Alignement automatique avec les Drivers)
-* [x] **System Forge IA** (Générateur automatique via PDF de règles)
-* [x] **Master Storyboard** : Table de montage cinématographique (Horizontal, Drag & Drop, Duplication)
-* [x] **GM Remote Control** : Pilotage déporté sur tablette/smartphone (Dés, Sons, Combat, Notes)
-* [x] **Dynamic UI Components** : Jauges et listes d'initiative adaptatives (Combat-OS)
-* [x] **Effets Météo Dynamiques** : Particules (pluie, neige, fumée) synchronisées (Map-OS)
-* [x] **Timeline OS** : Gestion de la chronologie, des événements et du journal de bord (Chroniques)
-* [x] **Intégration Gemini CLI** : Assistant terminal avec contexte projet et guides automatisés
-* [x] **Cerveau Tactique (Tactical Brain)** : Auto-dispel intelligent, orchestration de combat et **Actions Suggérées (Cortex)** basées sur le positionnement (Synchronisé Hub & Moniteur).
-* [x] **Évolution Combat-OS** : Distinction PJ / PNJ, système de ciblage et registre de statuts (20 états).
-* [x] **Map-OS : Magic Layers** : Visualisation de sorts (Feu, Glace, etc.), formes tactiques (Cercle, Cône, Ligne) et synchronisation multi-écrans robuste.
-* [x] **Combat Tracker 2.0** : Jauges interactives (Clic +/-), miniaturisation haute précision (24px) pour le stress, et isolation anatomique (correction du bug de superposition du torse).
-
-
-* [x] **NPC Live Generator** : Génération instantanée (Z-Image/Gemini) et stockage Media Hub.
-* [x] **Localisation & Accessibilité** : Refonte intégrale fr-FR et conformité A11y (NpcDetail/Gallery/Oracle).
-* [x] **Initiative & Auto-Fiche** : Calcul robuste avec parser de labels (ex: `INT`) et liaison automatique du système aux PNJ.
-* [x] **Forge-OS Sync** : Correction de l'importation de scénarios (Lien auto des fiches et support multi-systèmes).
-
+Ce document est la boussole technique du projet, listant les innovations, les succès et les défis futurs.
 
 ---
 
-## 🔴 Priorité 1 : Immersion & Mécaniques Coeur
+## ✅ Jalons Complétés (Récents)
 
-### 1. ⚔️ Automatisation du Combat OS
+### 📲 Connectivité & Remote
+* [x] **GM Remote Control** : Pilotage déporté multi-appareils (Dés, Sons, Combat).
+* [x] **Tablet Hub 1.0** : Interface second-écran pour tablettes via **WebSocket (Port 3001)**.
+* [x] **Dynamic QR-Code Settings** : Double section dans les paramètres (Remote vs Tablet) avec détection d'IP automatique.
+* [x] **Voice-Level Sync** : Visualiseur sonore dynamique répercuté sur le Tablet Hub pour l'immersion.
+* [x] **Clock-OS Hub Sync** : Synchronisation temps-réel de l'horloge, des thèmes et de la projection MJ/Hub.
 
-* [x] **Calculateur de Dégâts Intelligent** : Auto-Status Mapping (Feu, Froid, etc.), Prévu Cortex et **Bouton Haute Visibilité (Gold Ghost)**.
+### 🎭 IA & Narration
+* [x] **NPC Live Generator** : Génération d'images/avatars directement intégrée via Z-Image/Gemini.
+* [x] **AI Oracle (NotebookLM)** : Intégration RAG native, support MCP et reconnexion automatique.
 
-* [x] **Actions Suggérées (Cortex)** : Suggérer des actions PNJ basées sur leur état et positionnement (Propulsé par Gemini 1.5).
-
-* [x] **Gestion d'Initiative Avancée** : Parser Cortex pour formules descriptives et auto-nettoyage des parenthèses.
-
-### 2. 🪄 Map-OS : Calques Magiques (Nouveau)
-
-* [x] **Visualisation de Sorts** : Zones animées (Feu, Glace, Acide) sur la carte.
-* [x] **Sync Player Hub** : Projection en temps réel des effets magiques et synchronisation du "drop" token pour l'IA.
-* [x] **Outils de Mesure** : Cercles, lignes et cônes tactiques.
-
-
-
-
-### 2. 🎮 Architecture "System Drivers" (Evolution)
-
-* (Déplacé vers les jalons complétés)
+### ⚔️ Combat & Tactique
+* [x] **Cortex Tactique (Actions)** : Suggestions intelligentes basées sur la position et l'état.
+* [x] **Calculateur Gold Ghost** : Bouton de dégâts à haute visibilité et mapping automatique de statuts.
 
 ---
 
-## 🟡 Priorité 2 : Environnement & Storytelling
+## 🔥 Priorité 1 : Infrastructure & Performance
 
-### 3. 🗺️ Évolution du Map-OS
+### 🏗️ Architecture "Next-Gen" & IA
+* [ ] **Architecture AI Hybride (Ollama)** : Connecter un serveur local Ollama pour les tâches à haute fréquence (Morphing vocal PNJ, calculs de dés narratifs, suggestions d'ambiance) afin de réduire la dépendance aux APIs Cloud et garantir un mode **Offline** total.
+* [ ] **Tauri v2 Readiness** : Audit et typage strict de `window.appBridge` pour une migration "Zéro-Impact" (Backend Rust optionnel).
+* [ ] **Local Asset Middleware** : Remplacer le Base64 systématique par un mini-serveur d'images local pour soulager la bande passante WebSocket vers les tablettes.
+* [ ] **Multi-Hub Viewports** : Permettre des vues différentes par tablette (ex: Tablette Joueur vs Tablette Ambiance MJ).
 
-* [x] **Effets Météo Dynamiques** : (Déplacé vers jalons complétés)
-
-
----
-
-## 🔵 Priorité 3 : Confort & Expansion
-
-### 5. 🤖 IA Générative Live
-
-* [x] **NPC Live Generator** : (Déplacé vers jalons complétés)
-* [x] **Voice Automation** : Adapter automatiquement le pitch vocal selon le PNJ (Sync NPC).
-
-
-* [x] **Light-OS : Forget Bridge** : Bouton de réinitialisation de connexion Philips Hue.
-
-### 6. 🎭 Narration & Diversité UI
-
-* [ ] **Dialogue Tree Engine** (NPC-OS) : Génération de répliques contextuelles via IA.
-* [ ] **Butin Sync** (Table-OS ➡️ Session-OS) : Transfert automatique d'objets vers les fiches PJ.
-* [x] **Thèmes Dynamiques** (UI/UX) : 4 univers immersifs (Cyberpunk, Médiéval-Dark, Modern, Claire) avec polices, textures et couleurs synchronisées.
-
-* [ ] **Soundscape Spatial** (Ambient-OS) : Volume sonore dépendant de la position des pions sur la map.
-
+### ⚙️ Optimisation Système
+* [ ] **IndexedDB Scoping** : Nettoyage automatique des médias orphelins (PNJ supprimés) pour limiter l'empreinte disque.
+* [ ] **Sync Différentielle** : N'envoyer via WebSocket que les propriétés modifiées plutôt que le store complet (Optimization Payload).
 
 ---
 
-## ⚪ Backup & Futuriste
+## 🟡 Priorité 2 : Gameplay & Environnement
 
+### 🗺️ Map-OS : Vision & Tactique
+* [ ] **Zones de Danger Actives** : Déclencheur Hue/Audio automatique si un pion entre dans une zone d'effet (Feu, Poison).
 
+### 🗣️ NPC & Voice-OS (Advanced)
+* [ ] **AI-Driven Voice Profiling** : Utiliser Gemini pour analyser la psychologie/race du PNJ et générer des réglages de voix uniques (Pitch, Formant, Reverb) au-delà des mots-clés simples.
+* [ ] **Portrait Lip-Sync (Lite)** : Faire bouger la bouche ou pulser l'aura du portrait du PNJ sur le **Player Hub** et **Tablet Hub** en temps réel selon l'intensité vocale du MJ.
+* [x] **Ducking Narratif (Auto-Ducking)** : Réduction automatique du volume de Music-OS/Ambient-OS lors des prises de parole du MJ pour une clarté optimale.
+* [ ] **VFX Voice-Trigger** : Déclenchement d'effets visuels (Map-OS / Hubs) basés sur l'intensité vocale ou les pics de fréquence (ex: "Cri de Guerre" = Flashes sur le Hub).
+* [ ] **Dialogue Tree Engine** : Arbres de dialogue générés dynamiquement par IA selon le contexte de la session.
+* [ ] **Ambient Proximity** : Volume de l'ambiance sonore variant selon la position du curseur MJ ou des pions PJ.
 
 ---
 
-## 💾 Archives (Idées Abandonnées)
+## ⚪ Futuriste & R&D
 
-* ~~**Ligne de Vue (Line of Sight)** : Détection d'obstacles pour la visibilité des pions sur la map.~~ (Trop gourmand en ressources/complexité algos)
-* ~~**Retour Haptique** : Vibrations sur les contrôleurs lors des impacts.~~ (Complexité matérielle/priorité basse)
-* ~~**Éclairage Dynamique** : Fog of war réagissant à la lumière des pions.~~ (Trop complexe / Priorité basse)
-* ~~**Transcription Automatique** : Écoute passive pour archiver les faits marquants.~~ (Trop complexe / Vie privée)
+* [ ] **Dynamic Theme Engine** : Alternance automatique (Jour/Nuit) ou thèmes basés sur la tension de l'Horloge narrative.
 
+---
+
+## 📦 Packaging & Distribution (Nouveau)
+* [ ] **Support Windows Installer** : Configurer `electron-builder` pour générer des fichiers `.exe` ou `.msi`.
+* [ ] **Nettoyage TypeScript** : Résoudre toutes les erreurs de type dans `main.ts` (notamment les `any` et modules manquants) pour garantir une compilation stable via `npm run build`.
+* [ ] **Code Signing** : Préparer les certificats pour éviter les alertes "SmartScreen" lors du lancement de l'application compilée.
+
+---
+
+## 💾 Archives (Idées Abandonnées / Reportées)
+
+* ~~**Butin Automatique** : Transfert direct d'objets du Table-OS vers les fiches PJ.~~
+* ~~**Gestion de l'Élévation** : Calcul auto des bonus de tir plongeant.~~
+* ~~**Ligne de Vue (LoS)** : Détection dynamique d'obstacles sur la map.~~
+* ~~**Retour Haptique** : Vibrations sur les contrôleurs/smartphones.~~
+* ~~**Transcription Automatique** : Écoute passive pour archiver les faits marquants.~~ (Raison : Confidentialité et limitations API temps réel).
+* ~~**Éclairage Dynamique Réactif** : Brouillard de guerre pilotant les Hue individuellement.~~ (Raison : Complexité réseau excessive).
+
+---
+
+---
+
+> [!NOTE]  
+> Ce document doit rester cohérent avec [Plans/amélioration.md](file:///c:/Projet_David/GM-OS-v5/Plans/amélioration.md) et la roadmap utilisateur.

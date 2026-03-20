@@ -34,7 +34,7 @@ const AtlasMapDetail: React.FC = () => {
     }
 
     const handleSendToMapOS = () => {
-        setMap(selectedMap.fileUrl, selectedMap.isVideo, selectedMap.name);
+        setMap(selectedMap.fileUrl, selectedMap.isVideo, selectedMap.name, selectedMap.narrativeDescription);
         setCurrentView('cockpit');
     };
 

@@ -28,7 +28,9 @@ contextBridge.exposeInMainWorld('appBridge', {
         openConsole: () => ipcRenderer.send('debug:open-console')
     },
     session: {
-        launchHubWindow: () => ipcRenderer.send('session:launch-hub-window'),
+        launchHubWindow: (mode?: string) => ipcRenderer.send('session:launch-hub-window', mode),
+        saveSession: (data: unknown) => ipcRenderer.invoke('save-session', data),
+        loadSession: () => ipcRenderer.invoke('load-session'),
     },
     npc: {
         listDatabases: (category: string) => ipcRenderer.invoke('npc:list-databases', category),
@@ -95,7 +97,13 @@ contextBridge.exposeInMainWorld('appBridge', {
     },
     remote: {
         getConnectionInfo: () => ipcRenderer.invoke('remote:get-connection-info'),
-        onAction: (callback: (data: any) => void) => ipcRenderer.on('remote:action', (_event, data) => callback(data))
+        onAction: (callback: (data: unknown) => void) => {
+            const listener = (_event: Electron.IpcRendererEvent, data: unknown) => callback(data);
+            ipcRenderer.on('remote:action', listener);
+            return () => ipcRenderer.off('remote:action', listener);
+        },
+        removeActions: () => ipcRenderer.removeAllListeners('remote:action'),
+        sendSync: (data: unknown) => ipcRenderer.send('remote:broadcast-sync', data),
     }
 })
 

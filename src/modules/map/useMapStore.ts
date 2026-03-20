@@ -84,7 +84,7 @@ interface MapState {
     selectedTokenId: string | null;
 
     // Actions
-    setMap: (url: string | null, isVideo?: boolean, name?: string) => void;
+    setMap: (url: string | null, isVideo?: boolean, name?: string, narrativeDescription?: string) => void;
     setFogDataUrl: (dataUrl: string | null) => void;
     addToken: (token: Omit<MapToken, 'id'>) => void;
     updateToken: (id: string, updates: Partial<MapToken>) => void;
@@ -208,8 +208,17 @@ export const useMapStore = create<MapState>()(
             projectedGridColor: '#ffffff',
             projectedGridOpacity: 0.2,
 
-            setMap: (mapUrl, isVideo = false, mapName = 'Sans titre') => {
+            setMap: (mapUrl, isVideo = false, mapName = 'Sans titre', narrativeDescription?: string) => {
                 set({ mapUrl, isVideo, mapName });
+                
+                if (mapUrl) {
+                    useJournalStore.getState().addEvent({
+                        type: 'LOCATION',
+                        title: `🗺️ Carte chargée: ${mapName}`,
+                        content: narrativeDescription || `Le MJ a chargé la carte "${mapName}" dans le Map-OS.`
+                    });
+                }
+
                 if (get().projectionTarget) get().syncToPlayers();
             },
             setFogDataUrl: (fogDataUrl) => {

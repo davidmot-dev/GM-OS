@@ -9,6 +9,18 @@ const require = createRequire(import.meta.url);
 const pdf = require('pdf-parse');
 const { WebSocketServer } = require('ws');
 import os from 'node:os';
+import type { WebSocket } from 'ws';
+
+interface ExtendedWebSocket extends WebSocket {
+    isAlive?: boolean;
+}
+
+interface AIProxyResponse {
+    ok: boolean;
+    status?: number;
+    statusText?: string;
+    data: unknown;
+}
 import { registerRagHandlers } from './RAGEngine'
 import { registerMcpHandlers } from './mcp_bridge'
 import { registerObsidianHandlers } from './obsidian_bridge'
@@ -44,6 +56,8 @@ export const RENDERER_DIST = path.join(process.env.APP_ROOT, 'dist')
 process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 'public') : RENDERER_DIST
 
 let win: BrowserWindow | null
+let wss: import('ws').WebSocketServer | null = null;
+const REMOTE_PORT = 3001;
 
 function createWindow() {
     win = new BrowserWindow({
@@ -75,27 +89,32 @@ function createWindow() {
 }
 
 // --- Session Management Handlers ---
+const SESSIONS_DIR = path.join(process.env.APP_ROOT || '', 'sessions');
+
 ipcMain.handle('save-session', async (_event, data) => {
+    await fs.ensureDir(SESSIONS_DIR);
     const { filePath } = await dialog.showSaveDialog({
         title: 'Sauvegarder la Session GM-OS',
-        defaultPath: path.join(app.getPath('documents') || '', 'gmos-session.json'),
+        defaultPath: path.join(SESSIONS_DIR, 'gmos-session.json'),
         filters: [{ name: 'GM-OS Session', extensions: ['json'] }]
     });
-
+ 
     if (filePath) {
         await fs.writeJson(filePath, data, { spaces: 2 });
         return true;
     }
     return false;
 });
-
+ 
 ipcMain.handle('load-session', async () => {
+    await fs.ensureDir(SESSIONS_DIR);
     const { filePaths } = await dialog.showOpenDialog({
         title: 'Charger une Session GM-OS',
+        defaultPath: SESSIONS_DIR,
         filters: [{ name: 'GM-OS Session', extensions: ['json'] }],
         properties: ['openFile']
     });
-
+ 
     if (filePaths && filePaths.length > 0) {
         return await fs.readJson(filePaths[0]);
     }
@@ -306,10 +325,23 @@ ipcMain.on('image:sync-hub-data', (_event, type: string, imagePath: string) => {
             projWin.webContents.send('image:sync-hub-data', type, imagePath);
         }
     }
+
+    // NEW: Broadcast to WebSockets for Tablet/Remote devices
+    if (wss) {
+        const message = JSON.stringify({ 
+            type: 'hub-projection', 
+            payload: { type, data: imagePath } 
+        });
+        wss.clients.forEach((client: ExtendedWebSocket) => {
+            if (client.readyState === 1) { // 1 = OPEN
+                client.send(message);
+            }
+        });
+    }
 });
 
-ipcMain.on('session:launch-hub-window', () => {
-    console.log('[Main] session:launch-hub-window received');
+ipcMain.on('session:launch-hub-window', (_event, mode = 'hub') => {
+    console.log(`[Main] session:launch-hub-window received (mode: ${mode})`);
     if (hubWindow && !hubWindow.isDestroyed()) {
         console.log('[Main] Hub window already exists, restoring and focusing...');
         if (hubWindow.isMinimized()) hubWindow.restore();
@@ -318,7 +350,7 @@ ipcMain.on('session:launch-hub-window', () => {
         return;
     }
 
-    console.log('[Main] Creating new Hub window...');
+    console.log(`[Main] Creating new ${mode} window...`);
     const displays = screen.getAllDisplays();
     // Default to a secondary display if available, else primary
     const targetDisplay = displays.length > 1 ? displays[1] : displays[0];
@@ -326,8 +358,8 @@ ipcMain.on('session:launch-hub-window', () => {
     hubWindow = new BrowserWindow({
         x: targetDisplay.bounds.x + 50,
         y: targetDisplay.bounds.y + 50,
-        width: 1280,
-        height: 720,
+        width: mode === 'tablet' ? 1024 : 1280,
+        height: mode === 'tablet' ? 768 : 720,
         frame: true, // Allow GM to move it around or fullscreen it manually
         webPreferences: {
             preload: path.join(__dirname, 'preload.mjs'),
@@ -338,13 +370,13 @@ ipcMain.on('session:launch-hub-window', () => {
     });
 
     if (VITE_DEV_SERVER_URL) {
-        hubWindow.loadURL(`${VITE_DEV_SERVER_URL}?window=hub`);
+        hubWindow.loadURL(`${VITE_DEV_SERVER_URL}?window=${mode}`);
     } else {
-        hubWindow.loadFile(path.join(RENDERER_DIST, 'index.html'), { query: { window: 'hub' } });
+        hubWindow.loadFile(path.join(RENDERER_DIST, 'index.html'), { query: { window: mode } });
     }
 
     hubWindow.on('closed', () => {
-        console.log('[Main] Hub window closed');
+        console.log(`[Main] ${mode} window closed`);
         hubWindow = null;
     });
 });
@@ -429,16 +461,52 @@ ipcMain.on('image:close-all-displays', () => {
     projectorWindows.clear();
 });
 
-// --- Remote Control Server (Winston's Architecture) ---
-let wss: any = null;
-const REMOTE_PORT = 3001;
-
+// --- Remote Control Server ---
 function startRemoteServer() {
     try {
-        wss = new WebSocketServer({ port: REMOTE_PORT });
-        console.log(`[Remote] Server started on port ${REMOTE_PORT}`);
+        // Create an HTTP server to serve media files and handle the websocket
+        const server = http.createServer((req, res) => {
+            console.log(`[Remote Proxy] Request: ${req.url}`);
+            
+            // Support serving local files via /media/path-to-file
+            if (req.url && req.url.startsWith('/media/')) {
+                const encodedPath = req.url.substring(7); // Remove /media/
+                const filePath = decodeURIComponent(encodedPath);
+                console.log(`[Remote Proxy] Attempting to serve: ${filePath}`);
+                
+                // Security check or simple existence check
+                if (fs.existsSync(filePath) && fs.lstatSync(filePath).isFile()) {
+                    const ext = path.extname(filePath).toLowerCase();
+                    const mimeTypes: Record<string, string> = {
+                        '.png': 'image/png',
+                        '.jpg': 'image/jpeg',
+                        '.jpeg': 'image/jpeg',
+                        '.gif': 'image/gif',
+                        '.webp': 'image/webp',
+                        '.svg': 'image/svg+xml',
+                        '.mp3': 'audio/mpeg',
+                        '.wav': 'audio/wav'
+                    };
+                    res.writeHead(200, { 
+                        'Content-Type': mimeTypes[ext] || 'application/octet-stream',
+                        'Access-Control-Allow-Origin': '*' // Allow cross-origin for tablets
+                    });
+                    fs.createReadStream(filePath).pipe(res);
+                } else {
+                    console.warn(`[Remote Proxy] File NOT FOUND or not a file: ${filePath}`);
+                    res.writeHead(404);
+                    res.end('Media not found');
+                }
+                return;
+            }
+            res.writeHead(404);
+            res.end();
+        });
 
-        wss.on('connection', (ws: any) => {
+        wss = new WebSocketServer({ server });
+        console.log(`[Remote] Server + Media started on port ${REMOTE_PORT}`);
+
+        wss.on('connection', (ws: import('ws').WebSocket) => {
             console.log('[Remote] New device connected');
             
             // Send initial sync data
@@ -467,6 +535,12 @@ function startRemoteServer() {
 
             ws.on('close', () => console.log('[Remote] Device disconnected'));
         });
+
+        // Use 0.0.0.0 to ensure it's accessible from other devices on the LAN
+        server.listen(REMOTE_PORT, '0.0.0.0', () => {
+            console.log(`[Remote] Server + Media proxy listening on 0.0.0.0:${REMOTE_PORT}`);
+        });
+
     } catch (err) {
         console.error('[Remote] Failed to start server:', err);
     }
@@ -476,7 +550,7 @@ function startRemoteServer() {
 ipcMain.on('remote:broadcast-sync', (_event, data) => {
     if (wss) {
         const message = JSON.stringify({ type: 'sync', payload: data });
-        wss.clients.forEach((client: any) => {
+        wss.clients.forEach((client: ExtendedWebSocket) => {
             if (client.readyState === 1) { // 1 = OPEN
                 client.send(message);
             }
@@ -493,7 +567,7 @@ function getLocalIP() {
         
         for (const iface of networkInterface) {
             // family can be 'IPv4' or 4 depending on node version
-            if ((iface.family === 'IPv4' || (iface.family as any) === 4) && !iface.internal) {
+            if ((iface.family === 'IPv4' || (iface.family as unknown as number) === 4) && !iface.internal) {
                 return iface.address;
             }
         }
@@ -571,7 +645,7 @@ ipcMain.handle('ai:extract-pdf', async (_event, relativePath: string) => {
     }
   });
 
-ipcMain.handle('ai:proxy-request', async (_event, url: string, method: string, headers: Record<string, string>, body: unknown) => {
+ipcMain.handle('ai:proxy-request', async (_event, url: string, method: string, headers: Record<string, string>, body: unknown): Promise<AIProxyResponse> => {
     return new Promise((resolve, reject) => {
         try {
             const parsedUrl = new URL(url);

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Power, Globe, Shield, Info, Terminal, MonitorPlay, Zap, Settings, Tablet, RefreshCw } from 'lucide-react';
+import { X, Power, Globe, Shield, Info, Terminal, MonitorPlay, Zap, Settings, Tablet } from 'lucide-react';
 import { flushApplication } from '../utils/appUtils';
 import { useSessionStore, THEME_PALETTES } from '../store/useSessionStore';
 import type { ThemeID } from '../store/useSessionStore';
@@ -47,8 +47,11 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
     }, [fetchAudioDevices, fetchDisplays]);
 
     const remoteUrl = connectionInfo?.ip ? `http://${connectionInfo.ip}:5173/?window=remote` : '';
+    const tabletUrl = connectionInfo?.ip ? `http://${connectionInfo.ip}:5173/?window=tablet` : '';
+    
     // Use a direct qrcode API that is very reliable
     const qrCodeUrl = remoteUrl ? `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(remoteUrl)}` : '';
+    const tabletQrCodeUrl = tabletUrl ? `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(tabletUrl)}` : '';
 
     return (
         <div className="flex flex-col h-full bg-app-bg text-app-text/80">
@@ -328,77 +331,85 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
 
                     {activeTab === 'remote' && (
                         <div className="flex-1 overflow-y-auto p-8 custom-scrollbar space-y-10 animate-in fade-in slide-in-from-right-2 duration-300">
-                            <section className="flex flex-col items-center text-center space-y-6">
-                                <div className="w-20 h-20 rounded-3xl bg-accent/10 flex items-center justify-center text-accent shadow-glow-accent/10">
-                                    <Tablet size={40} />
-                                </div>
-                                <div>
-                                    <h3 className="text-2xl font-black uppercase tracking-tighter text-app-text">GM Remote Control</h3>
-                                    <p className="text-sm text-app-text/60 max-w-md mx-auto mt-2">Transformez votre tablette ou smartphone en surface de contrôle tactile pour piloter vos sessions.</p>
-                                </div>
-                            </section>
-
-                            <section className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-app-surface/20 border border-app-border/20 rounded-[2.5rem] p-10">
-                                <div className="space-y-6">
-                                    <div className="space-y-2">
-                                        <h4 className="text-xs font-black uppercase tracking-widest text-accent">Connexion Rapide</h4>
-                                        <p className="text-xs text-app-text/40 leading-relaxed">Scannez ce QR Code avec l'appareil photo de votre tablette ou téléphone pour ouvrir instantanément la télécommande GM-OS.</p>
-                                    </div>
-
-                                    <div className="p-4 rounded-2xl bg-white/5 border border-white/5 space-y-3">
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-[10px] font-bold text-app-text/30 uppercase tracking-widest">Adresse IP Locale</span>
-                                            <button 
-                                                onClick={() => window.appBridge?.remote?.getConnectionInfo().then(setConnectionInfo)}
-                                                className="p-1 hover:bg-white/10 rounded-lg text-accent transition-colors"
-                                            >
-                                                <RefreshCw size={12} />
-                                            </button>
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                {/* Section 1: GM Remote Control */}
+                                <section className="flex flex-col gap-6 bg-app-surface/20 border border-app-border/20 rounded-[2.5rem] p-8">
+                                    <div className="flex flex-col items-center text-center gap-4">
+                                        <div className="w-16 h-16 rounded-2xl bg-accent/10 flex items-center justify-center text-accent shadow-glow-accent/10">
+                                            <Tablet size={32} />
                                         </div>
-                                        <p className="font-mono text-sm font-bold text-app-text/80">{connectionInfo?.ip || 'Recherche...'}</p>
+                                        <div>
+                                            <h3 className="text-xl font-black uppercase tracking-tighter text-app-text">GM Remote Control</h3>
+                                            <p className="text-[10px] text-app-text/60 max-w-[240px] mt-1 uppercase tracking-widest font-black">Pilotez votre session via smartphone</p>
+                                        </div>
                                     </div>
 
-                                    <div className="flex items-center gap-3 p-4 rounded-2xl bg-emerald-500/5 border border-emerald-500/10">
-                                        <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-glow-emerald" />
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500">Serveur WebSocket Actif (Port 3001)</span>
+                                    <div className="flex flex-col items-center gap-4 border-t border-white/5 pt-6">
+                                        <div className="relative p-2 bg-white rounded-[1.5rem] shadow-2xl group transition-transform hover:scale-105">
+                                            {qrCodeUrl ? (
+                                                <img 
+                                                    src={qrCodeUrl} 
+                                                    alt="Remote QR Code" 
+                                                    className="w-40 h-40 mix-blend-multiply" 
+                                                />
+                                            ) : (
+                                                <div className="w-40 h-40 flex flex-col items-center justify-center gap-2">
+                                                    <div className="w-8 h-8 border-3 border-accent border-t-transparent animate-spin rounded-full" />
+                                                </div>
+                                            )}
+                                            <div className="absolute inset-0 border-2 border-accent/20 rounded-[1.5rem] pointer-events-none" />
+                                        </div>
+                                        <p className="text-[9px] font-bold text-app-text/30 uppercase tracking-widest italic select-all cursor-help">{remoteUrl || 'URL en attente...'}</p>
                                     </div>
-                                </div>
-
-                                <div className="flex flex-col items-center gap-4">
-                                    <div className="relative p-4 bg-white rounded-[2rem] shadow-2xl group transition-transform hover:scale-105 min-w-[200px] min-h-[200px] flex items-center justify-center">
-                                        {qrCodeUrl ? (
-                                            <img 
-                                                src={qrCodeUrl} 
-                                                alt="Remote QR Code" 
-                                                className="w-48 h-48 mix-blend-multiply" 
-                                                onLoad={() => console.log("[Remote] QR Code loaded successfully")}
-                                                onError={() => console.error("[Remote] QR Code image failed to load")}
-                                            />
-                                        ) : (
-                                            <div className="flex flex-col items-center gap-2">
-                                                <div className="w-12 h-12 border-4 border-accent border-t-transparent animate-spin rounded-full" />
-                                                <p className="text-[10px] text-slate-500 font-bold uppercase">Génération...</p>
-                                            </div>
-                                        )}
-                                        <div className="absolute inset-0 border-4 border-accent/20 rounded-[2rem] pointer-events-none" />
-                                    </div>
-                                    <p className="text-[10px] font-bold text-app-text/30 uppercase tracking-widest italic select-all cursor-help">{remoteUrl || 'URL en attente...'}</p>
                                     
-                                    {!connectionInfo && (
-                                        <button 
-                                            onClick={async () => {
-                                                console.log("[Remote] Manual detection triggered");
-                                                const info = await window.appBridge?.remote?.getConnectionInfo();
-                                                console.log("[Remote] Manual info result:", info);
-                                                setConnectionInfo(info);
-                                            }}
-                                            className="px-4 py-2 bg-accent/10 hover:bg-accent/20 text-accent text-[10px] font-black uppercase rounded-lg border border-accent/20 transition-all"
-                                        >
-                                            Forcer la détection
-                                        </button>
-                                    )}
-                                </div>
-                            </section>
+                                    <div className="p-4 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between">
+                                        <span className="text-[9px] font-bold text-app-text/30 uppercase tracking-widest">Connexion Directe</span>
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-glow-emerald" />
+                                            <span className="text-[9px] font-bold text-emerald-500 uppercase tracking-widest">Actif (3001)</span>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                {/* Section 2: Tablet Hub (Second Screen) */}
+                                <section className="flex flex-col gap-6 bg-accent/5 border border-accent/10 rounded-[2.5rem] p-8">
+                                    <div className="flex flex-col items-center text-center gap-4">
+                                        <div className="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-400 shadow-glow-blue/10">
+                                            <MonitorPlay size={32} />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-xl font-black uppercase tracking-tighter text-app-text">Tablet Hub</h3>
+                                            <p className="text-[10px] text-app-text/60 max-w-[240px] mt-1 uppercase tracking-widest font-black">Diffusion déportée (Stats & Tensions)</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex flex-col items-center gap-4 border-t border-white/5 pt-6">
+                                        <div className="relative p-2 bg-white rounded-[1.5rem] shadow-2xl group transition-transform hover:scale-105">
+                                            {tabletQrCodeUrl ? (
+                                                <img 
+                                                    src={tabletQrCodeUrl} 
+                                                    alt="Tablet Hub QR Code" 
+                                                    className="w-40 h-40 mix-blend-multiply" 
+                                                />
+                                            ) : (
+                                                <div className="w-40 h-40 flex flex-col items-center justify-center gap-2">
+                                                    <div className="w-8 h-8 border-3 border-blue-400 border-t-transparent animate-spin rounded-full" />
+                                                </div>
+                                            )}
+                                            <div className="absolute inset-0 border-2 border-blue-400/20 rounded-[1.5rem] pointer-events-none" />
+                                        </div>
+                                        <p className="text-[9px] font-bold text-app-text/30 uppercase tracking-widest italic select-all cursor-help">{tabletUrl || 'URL en attente...'}</p>
+                                    </div>
+
+                                    <div className="p-4 rounded-xl bg-blue-500/5 border border-blue-500/10 flex items-center justify-between">
+                                        <span className="text-[9px] font-bold text-app-text/30 uppercase tracking-widest">Streaming WebSocket</span>
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-2 h-2 rounded-full bg-blue-400 shadow-glow-blue" />
+                                            <span className="text-[9px] font-bold text-blue-400 uppercase tracking-widest">Actif</span>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
 
                             <section className="space-y-4">
                                 <h4 className="text-xs font-black uppercase tracking-widest text-app-text/40 px-1 border-l-2 border-accent/30 pl-3">Fonctions Disponibles</h4>

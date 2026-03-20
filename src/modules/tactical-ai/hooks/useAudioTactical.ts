@@ -7,7 +7,9 @@ import { useCombatStore } from '../../combat/useCombatStore';
 
 export const useAudioTactical = () => {
   const activeAdvices = useTacticalAIStore((state) => state?.activeAdvices || []);
-  const isMuted = useTacticalAIStore((state) => state?.settings?.isMuted || false);
+  const tacticalSettings = useTacticalAIStore((state) => state?.settings);
+  const isMuted = tacticalSettings?.isMuted || false;
+  const isEnabled = tacticalSettings?.isEnabled || false;
   const currentTurnIdx = useCombatStore((state) => state.currentTurnIdx);
   const { resolvePrompt } = useNarrativeRegistry();
   const applyAmbientScene = useAmbientStore((state) => state.applyScene);
@@ -15,9 +17,10 @@ export const useAudioTactical = () => {
   // Track already played sounds to avoid loops
   const playedRegistry = useRef<Set<string>>(new Set());
   const lastTurnRef = useRef<number>(-1);
+  const hasTriggeredTactical = useRef<boolean>(false);
 
   useEffect(() => {
-    if (typeof useTacticalAIStore !== 'function' || isMuted) return;
+    if (typeof useTacticalAIStore !== 'function' || !isEnabled || isMuted) return;
 
     // 1. Reset registry IF turn changed
     if (lastTurnRef.current !== currentTurnIdx) {
@@ -26,7 +29,6 @@ export const useAudioTactical = () => {
     }
 
     // 1.5 Clean registry of no-longer active advices
-    // This allows a sound to re-trigger if the user moves out and back into a range
     const currentActiveIds = new Set(activeAdvices.map(a => a.id));
     playedRegistry.current.forEach(id => {
        if (!currentActiveIds.has(id)) {
@@ -35,9 +37,12 @@ export const useAudioTactical = () => {
     });
 
     if (activeAdvices.length === 0) {
-      // Revert ambiance if no tactical state
-      // This stops the "loop" when turn passes or status is cleared
-      applyAmbientScene('scene-quiet');
+      // Revert ambiance only if we were in a tactical state before
+      if (hasTriggeredTactical.current) {
+        console.log("[AudioTactical] Reverting to quiet scene.");
+        applyAmbientScene('scene-quiet');
+        hasTriggeredTactical.current = false;
+      }
       return;
     }
 
@@ -45,7 +50,6 @@ export const useAudioTactical = () => {
     let hasTacticalAmbiance = false;
 
     activeAdvices.forEach((advice) => {
-      // Use pre-calculated resolution if available, otherwise fallback to registry
       const resolution = advice.resolution || resolvePrompt(advice.message);
       const intensity = advice.resolution?.intensity ?? resolution?.intensity ?? 1.0;
       
@@ -63,14 +67,16 @@ export const useAudioTactical = () => {
         if (resolution.ambientSceneId) {
           applyAmbientScene(resolution.ambientSceneId);
           hasTacticalAmbiance = true;
+          hasTriggeredTactical.current = true;
         }
       }
     });
 
-    if (!hasTacticalAmbiance) {
+    if (!hasTacticalAmbiance && hasTriggeredTactical.current) {
         applyAmbientScene('scene-quiet');
+        hasTriggeredTactical.current = false;
     }
-  }, [activeAdvices, isMuted, currentTurnIdx, resolvePrompt, applyAmbientScene]);
+  }, [activeAdvices, isEnabled, isMuted, currentTurnIdx, resolvePrompt, applyAmbientScene]);
 
   return {};
 };

@@ -689,7 +689,20 @@ export const useSessionOSStore = create<SessionOSState>()(
             setSelectedCharacter: (id) => set({ selectedCharacterId: id }),
             setEditingTemplateId: (id) => set({ editingTemplateId: id }),
             setEditingDriverId: (id) => set({ editingDriverId: id }),
-            setSelectedAtlasMap: (id) => set({ selectedAtlasMapId: id }),
+            setSelectedAtlasMap: (id) => {
+                const { atlasMaps } = get();
+                const map = atlasMaps.find(m => m.id === id);
+                
+                set({ selectedAtlasMapId: id });
+
+                if (map) {
+                    useJournalStore.getState().addEvent({
+                        type: 'LOCATION',
+                        title: `📍 Navigation: ${map.name}`,
+                        content: map.narrativeDescription || `Le groupe se déplace vers ${map.name}.`
+                    });
+                }
+            },
 
             autoSelectFirstMap: () => {
                 const { atlasMaps, activeCampaignId, selectedAtlasMapId } = get();

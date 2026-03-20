@@ -47,11 +47,16 @@ export class VoiceEngine {
 
             const { currentEffects } = useVoiceStore.getState();
 
+            // Apple Google Meet-style constraints for voice clarity
             this.stream = await navigator.mediaDevices.getUserMedia({ 
                 audio: {
-                    echoCancellation: currentEffects.antiLarsen,
-                    noiseSuppression: currentEffects.antiLarsen,
-                    autoGainControl: currentEffects.antiLarsen
+                    // Always-on DSP processing (OS-level, most effective)
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    autoGainControl: currentEffects.antiLarsen, // User-controlled
+                    // Voice-optimized acquisition
+                    sampleRate: { ideal: 16000 },   // Optimal for speech (like Google Meet)
+                    channelCount: { ideal: 1 },     // Mono: eliminates stereo noise bleed
                 } 
             });
 
@@ -64,17 +69,19 @@ export class VoiceEngine {
             // 2. Input Gain
             this.inputGain = this.context.createGain();
 
-            // 3. Low Cut (High Pass)
+            // 3. Low Cut (High Pass) — 120Hz default cuts table rumble & fan noise
             this.lowCut = this.context.createBiquadFilter();
             this.lowCut.type = 'highpass';
+            this.lowCut.frequency.value = 120; // Aggressive default (Google Meet uses ~100-120Hz)
+            this.lowCut.Q.value = 0.707; // Butterworth — maximally flat passband
 
-            // 4. Compressor (Acts as an Auto-Leveler)
+            // 4. Compressor — "Broadcast" style (tight, controlled, consistent)
             this.compressor = this.context.createDynamicsCompressor();
-            this.compressor.threshold.value = -30; // Capture lower voices
-            this.compressor.knee.value = 40;      // Very soft knee for natural feel
-            this.compressor.ratio.value = 4;       // Gentle compression
-            this.compressor.attack.value = 0.01;   // Fast enough for peaks
-            this.compressor.release.value = 0.25;  // Smooth release
+            this.compressor.threshold.value = -24; // Catches most speech levels
+            this.compressor.knee.value = 6;        // Tighter knee for more aggressive onset
+            this.compressor.ratio.value = 8;       // Broadcast ratio — strong leveling
+            this.compressor.attack.value = 0.003;  // Ultra-fast: catches every consonant
+            this.compressor.release.value = 0.15;  // Fast release: voice "breathes" naturally
             this.dryGain = this.context.createGain();
 
             // 5. Formant (Peaking EQ)
@@ -132,7 +139,7 @@ export class VoiceEngine {
 
             // Apply Effects
             if (currentEffects.lowCut === 0) {
-                this.lowCut.frequency.value = 20;
+                this.lowCut.frequency.value = 120; // Default to voice-optimized 120Hz
             } else {
                 this.lowCut.frequency.value = currentEffects.lowCut;
             }
@@ -261,8 +268,8 @@ export class VoiceEngine {
                     targetGain = 0;
                 }
                 
-                // smoothing = 0.1s for attack, 0.2s for release (expander feel)
-                const timeConstant = targetGain > 0 ? 0.1 : 0.2;
+                // More reactive gate: fast open (0.005s) for crisp voice onset, slower close (0.4s) to avoid pumping
+                const timeConstant = targetGain > 0 ? 0.005 : 0.4;
                 this.gateGain.gain.setTargetAtTime(targetGain, this.context.currentTime, timeConstant);
             }
 

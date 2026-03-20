@@ -126,6 +126,7 @@ export const TimelineEventForm: React.FC<TimelineEventFormProps> = ({ event, onC
                 <div className="space-y-2">
                     <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Lieu (Atlas)</label>
                     <select
+                        title="Sélectionner un lieu"
                         value={locationId}
                         onChange={e => setLocationId(e.target.value)}
                         className="w-full bg-app-bg/40 border border-app-border rounded-xl px-4 py-2 text-sm text-app-text focus:outline-none focus:border-accent/50 transition-all"

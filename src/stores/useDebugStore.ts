@@ -18,11 +18,38 @@ interface DebugState {
 }
 
 const MAX_LOGS = 500;
+const PERSIST_LIMIT = 200; // Only persist the latest 200 logs to storage
+const STORAGE_KEY = 'gm_os_debug_logs';
+
+/**
+ * Loads logs from local storage on init
+ */
+const loadStoredLogs = (): LogEntry[] => {
+    try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        return stored ? JSON.parse(stored) : [];
+    } catch {
+        return [];
+    }
+};
+
+/**
+ * Saves logs to local storage
+ */
+const saveLogsToStorage = (logs: LogEntry[]) => {
+    try {
+        const toPersist = logs.slice(0, PERSIST_LIMIT);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(toPersist));
+    } catch (e) {
+        console.warn('[DEBUG] Failed to persist logs:', e);
+    }
+};
 
 /**
  * Extracts module name from a message like "[SOUND] Playing file..."
  */
 const extractModule = (message: string): { module?: string, cleanMessage: string } => {
+    // Support nested tags like [VOICE:ENGINE] or [AUDIO]
     const match = message.match(/^\[([^\]]+)\]\s*(.*)/);
     if (match) {
         return { 
@@ -34,7 +61,7 @@ const extractModule = (message: string): { module?: string, cleanMessage: string
 };
 
 export const useDebugStore = create<DebugState>((set) => ({
-    logs: [],
+    logs: loadStoredLogs(),
     addLog: (level, message, data) => set((state) => {
         const { module, cleanMessage } = extractModule(message);
         
@@ -43,13 +70,17 @@ export const useDebugStore = create<DebugState>((set) => ({
             timestamp: Date.now(),
             level,
             message: cleanMessage,
-            module,
+            module: module || 'SYSTEM',
             data,
         };
         const newLogs = [entry, ...state.logs].slice(0, MAX_LOGS);
+        saveLogsToStorage(newLogs);
         return { logs: newLogs };
     }),
-    clearLogs: () => set({ logs: [] }),
+    clearLogs: () => set(() => {
+        localStorage.removeItem(STORAGE_KEY);
+        return { logs: [] };
+    }),
 }));
 
 // --- Console Interceptor ---
@@ -83,4 +114,21 @@ export const initConsoleInterceptor = () => {
         originalDebug.apply(console, args);
         useDebugStore.getState().addLog('debug', args[0]?.toString() || '(empty)', args.length > 1 ? args.slice(1) : undefined);
     };
+
+    // --- Global Error Listeners ---
+    window.addEventListener('error', (event) => {
+        useDebugStore.getState().addLog('error', `[RUNTIME] ${event.message}`, {
+            filename: event.filename,
+            lineno: event.lineno,
+            colno: event.colno,
+            stack: event.error?.stack
+        });
+    });
+
+    window.addEventListener('unhandledrejection', (event) => {
+        useDebugStore.getState().addLog('error', `[PROMISE] ${event.reason?.message || 'Unhandled Rejection'}`, {
+            reason: event.reason,
+            stack: event.reason?.stack
+        });
+    });
 };

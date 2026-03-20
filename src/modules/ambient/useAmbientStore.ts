@@ -210,8 +210,7 @@ export const useAmbientStore = create<AmbientState>()(
                     }));
 
                     // Smart Reversion
-                    // @ts-expect-error global access to avoid circular dependency
-                    const lightStore = (window as any).useLightStore;
+                    const lightStore = (window as unknown as Record<string, any>).useLightStore;
                     if (lightStore) {
                         const { isSyncEnabled } = lightStore.getState();
                         if (isSyncEnabled && track.linkedLightSceneId) {
@@ -227,10 +226,8 @@ export const useAmbientStore = create<AmbientState>()(
                         }));
 
                         // Handling light scene
-                        // @ts-expect-error global access to avoid circular dependency
-                        const lightStore = (window as any).useLightStore;
-                        // @ts-expect-error global access to avoid circular dependency
-                        const hue = (window as any).hueEngine;
+                        const lightStore = (window as unknown as Record<string, any>).useLightStore;
+                        const hue = (window as unknown as Record<string, any>).hueEngine;
 
                         if (lightStore && hue) {
                             const { isSyncEnabled } = lightStore.getState();
@@ -250,10 +247,8 @@ export const useAmbientStore = create<AmbientState>()(
             })),
 
             handleLightReversion: (stoppedIndex: number) => {
-                // @ts-expect-error global access to avoid circular dependency
-                const lightStore = (window as any).useLightStore;
-                // @ts-expect-error global access to avoid circular dependency
-                const hue = (window as any).hueEngine;
+                const lightStore = (window as unknown as Record<string, any>).useLightStore;
+                const hue = (window as unknown as Record<string, any>).hueEngine;
 
                 if (!lightStore || !hue) return;
 
@@ -297,10 +292,8 @@ export const useAmbientStore = create<AmbientState>()(
                 }));
 
                 // Light Reversion
-                // @ts-expect-error global access to avoid circular dependency
-                const lightStore = (window as any).useLightStore;
-                // @ts-expect-error global access to avoid circular dependency
-                const hue = (window as any).hueEngine;
+                const lightStore = (window as unknown as Record<string, any>).useLightStore;
+                const hue = (window as unknown as Record<string, any>).hueEngine;
 
                 if (lightStore && hue) {
                     const { isSyncEnabled } = lightStore.getState();
@@ -385,7 +378,8 @@ export const useAmbientStore = create<AmbientState>()(
         {
             name: 'gmos-ambient-storage-v2', // Increment version to avoid conflicts
             partialize: (state) => ({
-                tracks: state.tracks,
+                // Reset isPlaying to false when persisting to prevent auto-play on reload
+                tracks: state.tracks.map(t => ({ ...t, isPlaying: false })),
                 masterVolume: state.masterVolume,
                 outputDeviceId: state.outputDeviceId,
                 presets: state.presets,

@@ -1,8 +1,10 @@
 import { useAIStore } from '../../stores/useAIStore';
 import { useSessionOSStore } from '../session/useSessionOSStore';
+import { useJournalStore } from '../journal/useJournalStore';
 import { useMediaStore } from '../../stores/useMediaStore';
 import { ragService } from './RAGService';
 import type { AIResponse } from './types';
+import type { JournalEvent } from '../journal/types';
 
 interface GeminiResponse {
   candidates?: {
@@ -134,6 +136,63 @@ ${fullContext}`;
       text: `[Simulation ${activeProvider}] Réponse basée sur le contexte RAG récupéré (${ragContext.length} chars).`,
       metadata: { provider: activeProvider, model: config.modelId }
     };
+  }
+
+  public async summarizeSession(events: JournalEvent[]): Promise<string> {
+    const { activeProvider, configs } = useAIStore.getState();
+    const config = configs[activeProvider];
+
+    if (!config.apiKey) {
+      throw new Error(`API Key manquante pour le fournisseur ${activeProvider}`);
+    }
+
+    // Sort events by timestamp
+    const sortedEvents = [...events].sort((a, b) => a.timestamp - b.timestamp);
+
+    // Filter and format events for the prompt
+    const eventLog = sortedEvents
+      .map(e => {
+        const time = new Date(e.timestamp).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+        return `[${time}] ${e.title}: ${e.content}`;
+      })
+      .join('\n');
+
+    const journalStore = useJournalStore.getState();
+    const activeJournal = journalStore.journals.find(j => j.id === journalStore.activeJournalId);
+
+    const summaryPrompt = `En tant que Chroniqueur Expert, transforme ces logs de session de jeu de rôle en un résumé narratif captivant.
+    Les événements sont chronologiques. Crée un récit fluide, avec des titres de sections, des moments forts et des développements d'intrigue.
+    
+    ${activeJournal?.finalNote ? `IMPORTANT - NOTE FINALE DU MJ :\n"${activeJournal.finalNote}"\nPrends bien en compte ces notes pour conclure le résumé.` : ''}
+
+    LOGS DE LA SESSION :
+    ${eventLog}
+    
+    RÉSUMÉ FINAL :`;
+
+    try {
+      if (activeProvider === 'gemini') {
+        const apiKey = config.apiKey?.trim().replace(/[\r\n]/g, '');
+        const model = config.modelId || 'gemini-1.5-flash';
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+
+        const bridgeResponse = await window.appBridge?.ai?.proxyRequest?.(url, 'POST', { 'Content-Type': 'application/json' }, {
+          contents: [{ parts: [{ text: summaryPrompt }] }],
+          generationConfig: { temperature: 0.8, maxOutputTokens: 2048 }
+        });
+
+        if (bridgeResponse?.ok) {
+          const data = bridgeResponse.data as GeminiResponse;
+          return data.candidates?.[0]?.content?.parts?.[0]?.text || "Impossible de générer le résumé.";
+        }
+        throw new Error("L'appel au bridge pour le résumé a échoué.");
+      }
+      
+      return "Résumé non disponible pour ce fournisseur d'IA.";
+    } catch (err) {
+      console.error("[AIService] Summarization error:", err);
+      throw err;
+    }
   }
 
   public async generateImage(prompt: string): Promise<string> {

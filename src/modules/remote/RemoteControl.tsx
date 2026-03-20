@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
     Dice5, 
-    Music, 
     Clapperboard, 
-    Zap, 
     Wifi, 
     WifiOff, 
     Volume2, 
@@ -14,16 +12,24 @@ import {
     Swords,
     Shield,
     ChevronRight,
-    Plus,
-    Minus,
     FileText,
-    EyeOff
+    EyeOff,
+    Eraser
 } from 'lucide-react';
+import { type Point, type DrawingPath } from '../whiteboard/useWhiteboardStore';
+import RemoteWhiteboardView from './components/RemoteWhiteboardView';
+
+type HealthSystemData = 
+    { type: 'wounds', data: { currentLevel: 'SAIN' | 'BLESSÉ' | 'MORTEL' | 'FATAL' } } |
+    { type: 'clock', data: { segments: number, maxSegments: number } } |
+    { type: 'boxes', data: { boxes: { filled: boolean }[] } } |
+    { type: 'anatomy', data: { parts: Record<string, { status: string }> } };
 
 const RemoteControl: React.FC = () => {
     const [status, setStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
-    const [activeTab, setActiveTab] = useState<'dice' | 'sounds' | 'storyboard' | 'combat' | 'notes'>('dice');
+    const [activeTab, setActiveTab] = useState<'dice' | 'sounds' | 'storyboard' | 'combat' | 'whiteboard' | 'notes'>('dice');
     const [notesView, setNotesView] = useState<'public' | 'private'>('private');
+    const [isAventureMode, setIsAventureMode] = useState(false);
     const [syncData, setSyncData] = useState<{
         sounds: { id: string, title: string, active: boolean }[],
         moments: { id: string, name: string }[],
@@ -36,18 +42,36 @@ const RemoteControl: React.FC = () => {
                 hpMax: number, 
                 init: number, 
                 isPlayer: boolean,
-                healthSystem?: any
+                healthSystem?: HealthSystemData
             }[],
             currentTurnIdx: number,
             round: number
         },
-        notes: { public: string, private: string }
+        notes: { public: string, private: string },
+        whiteboard: {
+            paths: DrawingPath[],
+            activePath: DrawingPath | null,
+            laserPointer: Point | null,
+            backgroundMode: 'dark' | 'light',
+            currentTool: string,
+            currentColor: string,
+            currentWidth: number
+        }
     }>({ 
         sounds: [], 
         moments: [], 
         masterVolume: 1.0,
         combat: { combatants: [], currentTurnIdx: 0, round: 1 },
-        notes: { public: '', private: '' }
+        notes: { public: '', private: '' },
+        whiteboard: {
+            paths: [],
+            activePath: null,
+            laserPointer: null,
+            backgroundMode: 'dark',
+            currentTool: 'brush',
+            currentColor: '#ffffff',
+            currentWidth: 3
+        }
     });
 
     const socketRef = useRef<WebSocket | null>(null);
@@ -56,14 +80,13 @@ const RemoteControl: React.FC = () => {
     const host = window.location.hostname;
     const port = 3001;
 
-    useEffect(() => {
-        connect();
-        return () => socketRef.current?.close();
-    }, []);
+    const connectRef = useRef<(() => void) | null>(null);
 
-    const connect = () => {
+    const connect = React.useCallback(() => {
         setStatus('connecting');
-        const socket = new WebSocket(`ws://${host}:${port}`);
+        const socketUrl = `ws://${host}:${port}`;
+        console.log(`[Remote] Attempting to connect to: ${socketUrl}`);
+        const socket = new WebSocket(socketUrl);
 
         socket.onopen = () => {
             console.log('Connected to GM-OS');
@@ -74,7 +97,10 @@ const RemoteControl: React.FC = () => {
         socket.onclose = () => {
             console.log('Disconnected');
             setStatus('error');
-            setTimeout(connect, 3000);
+            // Safely call via ref to allow recursion without closure trap
+            setTimeout(() => {
+                if (connectRef.current) connectRef.current();
+            }, 3000);
         };
 
         socket.onmessage = (event) => {
@@ -82,7 +108,17 @@ const RemoteControl: React.FC = () => {
                 const data = JSON.parse(event.data);
                 if (data.type === 'sync') {
                     console.log('[Remote] Sync data received:', data.payload);
-                    setSyncData(data.payload);
+                    setSyncData(prev => {
+                        // Crucial: Merge partial updates instead of overwriting
+                        const newData = { ...prev, ...data.payload };
+                        
+                        // Ensure required sub-objects remain stable
+                        if (data.payload.combat) newData.combat = { ...prev.combat, ...data.payload.combat };
+                        if (data.payload.notes) newData.notes = { ...prev.notes, ...data.payload.notes };
+                        if (data.payload.whiteboard) newData.whiteboard = { ...prev.whiteboard, ...data.payload.whiteboard };
+                        
+                        return newData;
+                    });
                 }
             } catch (err) {
                 console.error('[Remote] Failed to parse server message:', err);
@@ -91,9 +127,18 @@ const RemoteControl: React.FC = () => {
 
         socket.onerror = () => setStatus('error');
         socketRef.current = socket;
-    };
+    }, [host, port]);
 
-    const sendAction = (type: string, payload: any) => {
+    useEffect(() => {
+        connectRef.current = connect;
+    }, [connect]);
+
+    useEffect(() => {
+        connect();
+        return () => socketRef.current?.close();
+    }, [connect]);
+
+    const sendAction = (type: string, payload: unknown) => {
         if (socketRef.current?.readyState === WebSocket.OPEN) {
             socketRef.current.send(JSON.stringify({ type, payload }));
             if ('vibrate' in navigator) window.navigator.vibrate(50);
@@ -128,14 +173,14 @@ const RemoteControl: React.FC = () => {
             <div className="flex flex-col gap-4 p-6 bg-white/5 border border-white/10 rounded-[2.5rem]">
                 <div className="flex items-center justify-between">
                     <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Volume Maître</span>
-                    <span className="text-xs font-black text-accent">{Math.round((syncData.masterVolume || 0) * 100)}%</span>
+                    <span className="text-xs font-black text-accent">{Math.round((syncData?.masterVolume ?? 0) * 100)}%</span>
                 </div>
                 <input 
                     type="range"
                     min="0"
                     max="1"
                     step="0.01"
-                    value={syncData.masterVolume || 0}
+                    value={syncData?.masterVolume ?? 0}
                     onChange={(e) => {
                         const vol = parseFloat(e.target.value);
                         setSyncData(prev => ({ ...prev, masterVolume: vol }));
@@ -155,7 +200,7 @@ const RemoteControl: React.FC = () => {
             <div className="space-y-4">
                 <p className="text-[10px] font-black uppercase text-white/30 tracking-widest text-center">Déclencheurs SFX</p>
                 <div className="grid grid-cols-2 gap-3">
-                    {syncData.sounds.length > 0 ? (
+                    {syncData.sounds && syncData.sounds.length > 0 ? (
                         syncData.sounds.map(s => (
                             <button 
                                 key={s.id}
@@ -213,7 +258,7 @@ const RemoteControl: React.FC = () => {
             <div className="flex items-center justify-between p-6 bg-white/5 border border-white/10 rounded-[2.5rem]">
                 <div className="flex flex-col">
                     <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Round Actuel</span>
-                    <span className="text-3xl font-black text-white">{syncData.combat.round}</span>
+                    <span className="text-3xl font-black text-white">{syncData.combat?.round ?? 1}</span>
                 </div>
                 <button 
                     onClick={() => sendAction('combat:next-turn', {})}
@@ -224,25 +269,32 @@ const RemoteControl: React.FC = () => {
             </div>
 
             <div className="space-y-3">
-                {syncData.combat.combatants.map((c, i) => {
+                {syncData.combat?.combatants?.map((c, i) => {
                     const isActive = i === syncData.combat.currentTurnIdx;
                     return (
                         <div key={c.id} className={`p-4 rounded-3xl border transition-all ${isActive ? 'bg-accent/10 border-accent scale-[1.02]' : 'bg-white/5 border-white/5'}`}>
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-black text-xs ${isActive ? 'bg-accent text-app-bg' : 'bg-white/10'}`}>{c.init}</div>
+                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-black text-xs transition-colors duration-500 ${isActive ? 'bg-accent text-app-bg shadow-glow-accent/50' : 'bg-white/10'}`}>{c.init}</div>
                                     <div className="flex flex-col">
-                                        <span className="font-bold text-sm">{c.name}</span>
+                                        <span className={`font-bold text-sm transition-colors ${isActive ? 'text-accent' : 'text-slate-200'}`}>{c.name}</span>
                                         <span className="text-[8px] uppercase text-slate-500">{c.isPlayer ? 'Joueur' : 'Ennemi'}</span>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <button onClick={() => sendAction('combat:update-hp', { id: c.id, delta: -1 })} className="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-500 flex items-center justify-center">-</button>
-                                    <div className="flex flex-col items-center min-w-[30px]">
-                                        <span className="text-xs font-black">{c.hp}</span>
-                                        <span className="text-[8px] text-slate-500">PV</span>
-                                    </div>
-                                    <button onClick={() => sendAction('combat:update-hp', { id: c.id, delta: 1 })} className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-500 flex items-center justify-center">+</button>
+                                    {(!isAventureMode || c.isPlayer) && (
+                                        <>
+                                            <button onClick={() => sendAction('combat:update-hp', { id: c.id, delta: -1 })} className="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-500 flex items-center justify-center active:scale-90">-</button>
+                                            <div className="flex flex-col items-center min-w-[30px]">
+                                                <span className="text-xs font-black">{c.hp}</span>
+                                                <span className="text-[8px] text-slate-500">PV</span>
+                                            </div>
+                                            <button onClick={() => sendAction('combat:update-hp', { id: c.id, delta: 1 })} className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-500 flex items-center justify-center active:scale-90">+</button>
+                                        </>
+                                    )}
+                                    {isAventureMode && !c.isPlayer && (
+                                        <div className="text-[10px] font-black uppercase text-slate-600 tracking-widest italic pr-2">Caché</div>
+                                    )}
                                 </div>
                             </div>
 
@@ -268,7 +320,7 @@ const RemoteControl: React.FC = () => {
                                     )}
                                     {c.healthSystem.type === 'boxes' && (
                                         <div className="flex gap-1">
-                                            {c.healthSystem.data.boxes.map((b: any, bi: number) => (
+                                            {c.healthSystem.data.boxes.map((b: { filled: boolean }, bi: number) => (
                                                 <div 
                                                     key={bi} 
                                                     className={`w-2 h-2 rounded-sm border ${b.filled ? 'bg-orange-500 border-orange-400' : 'border-white/20'}`} 
@@ -310,15 +362,15 @@ const RemoteControl: React.FC = () => {
             </div>
 
             {/* Content Area */}
-            <div className="p-6 rounded-[2.5rem] bg-white/5 border border-white/5 min-h-[300px]">
+            <div className={`p-6 rounded-[2.5rem] bg-white/5 border border-white/5 min-h-[300px] transition-all ${isAventureMode && notesView === 'private' ? 'blur-md grayscale pointer-events-none' : ''}`}>
                 <div className="prose prose-invert prose-sm max-w-none">
                     {notesView === 'private' ? (
                         <div className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-slate-300">
-                            {syncData.notes.private || "Aucun secret enregistré pour cette campagne."}
+                            {isAventureMode ? "Contenu protégé par le Mode Aventure." : (syncData.notes?.private || "Aucun secret enregistré pour cette campagne.")}
                         </div>
                     ) : (
                         <div className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-slate-300">
-                            {syncData.notes.public || "Aucun synopsis public disponible."}
+                            {syncData.notes?.public || "Aucun synopsis public disponible."}
                         </div>
                     )}
                 </div>
@@ -351,8 +403,21 @@ const RemoteControl: React.FC = () => {
                         </div>
                     </div>
                 </div>
-                <div className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold">
-                    V5.1
+                
+                <div className="flex items-center gap-2">
+                    <button 
+                        onClick={() => setIsAventureMode(!isAventureMode)}
+                        className={`px-3 py-1 rounded-full border text-[9px] font-black uppercase tracking-widest transition-all ${
+                            isAventureMode 
+                            ? 'bg-rose-500 border-rose-400 text-white shadow-glow-rose/30' 
+                            : 'bg-white/5 border-white/10 text-slate-400'
+                        }`}
+                    >
+                        {isAventureMode ? 'AVENTURE ON' : 'MODE MJ'}
+                    </button>
+                    <div className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold">
+                        V5.1
+                    </div>
                 </div>
             </div>
 
@@ -362,6 +427,16 @@ const RemoteControl: React.FC = () => {
                 {activeTab === 'sounds' && renderSoundboard()}
                 {activeTab === 'storyboard' && renderStoryboard()}
                 {activeTab === 'combat' && renderCombatTracker()}
+                {activeTab === 'whiteboard' && (
+                    <div className="h-[60vh]">
+                        <RemoteWhiteboardView 
+                            whiteboard={syncData.whiteboard}
+                            onAction={(type, payload) => {
+                                socketRef.current?.send(JSON.stringify({ type, payload }));
+                            }}
+                        />
+                    </div>
+                )}
                 {activeTab === 'notes' && renderNotes()}
             </div>
 
@@ -394,6 +469,13 @@ const RemoteControl: React.FC = () => {
                 >
                     <Swords size={20} />
                     <span className="text-[7px] font-black uppercase tracking-widest">Combat</span>
+                </button>
+                <button 
+                    onClick={() => setActiveTab('whiteboard')}
+                    className={`flex flex-col items-center gap-1 transition-all ${activeTab === 'whiteboard' ? 'text-accent scale-110' : 'text-slate-500'}`}
+                >
+                    <Eraser size={20} />
+                    <span className="text-[7px] font-black uppercase tracking-widest">Dessin</span>
                 </button>
                 <button 
                     onClick={() => setActiveTab('notes')}

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import { useDebugStore } from '../../../stores/useDebugStore';
 import { Hammer, FileUp, Globe, X, Rocket, Zap, Sparkles } from 'lucide-react';
 import { forgeService, type ForgeContextItem, type ForgeSystemResult } from '../ForgeService';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
@@ -33,6 +34,15 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
   const [analysisResult, setAnalysisResult] = useState<ForgeSystemResult | null>(null);
   const [logs, setLogs] = useState<string[]>([]);
   const logEndRef = useRef<HTMLDivElement>(null);
+  const startTimeRef = useRef<number>(Date.now());
+
+  useLayoutEffect(() => {
+    const renderTime = Date.now() - startTimeRef.current;
+    if (renderTime > 16) { // Only log if it's potentially skipping a frame
+       useDebugStore.getState().addLog('debug', `[PERF:FORGE] ForgeDashboard render took ${renderTime}ms`, { renderTime });
+    }
+    // Reset for next potential render cycle if needed, though usually we want mounting time
+  });
 
   // NotebookLM Integration State
   const [isNotebookModalOpen, setIsNotebookModalOpen] = useState(false);

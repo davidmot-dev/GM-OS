@@ -30,17 +30,18 @@ export const DrawingCanvas = forwardRef<DrawingCanvasRef>((_, ref) => {
     const drawPath = React.useCallback((ctx: CanvasRenderingContext2D, path: DrawingPath) => {
         if (path.points.length < 2) return;
 
+        const w = ctx.canvas.width;
+        const h = ctx.canvas.height;
+
         ctx.beginPath();
-        
-        // Reset effects
         ctx.shadowBlur = 0;
         ctx.shadowColor = 'transparent';
         
         if (path.tool === 'eraser') {
-            ctx.strokeStyle = backgroundMode === 'light' ? '#ffffff' : '#0f172a'; // Match background
+            ctx.strokeStyle = backgroundMode === 'light' ? '#ffffff' : '#0f172a';
             ctx.lineWidth = path.width * 16;
         } else if (path.tool === 'laser') {
-            ctx.strokeStyle = '#ff0000'; // Pure laser red or the selected color
+            ctx.strokeStyle = '#ff0000';
             ctx.lineWidth = 4;
             ctx.shadowBlur = 15;
             ctx.shadowColor = '#ff0000';
@@ -53,20 +54,30 @@ export const DrawingCanvas = forwardRef<DrawingCanvasRef>((_, ref) => {
         ctx.lineJoin = 'round';
 
         if (path.tool === 'brush' || path.tool === 'eraser' || path.tool === 'laser') {
-            ctx.moveTo(path.points[0].x, path.points[0].y);
+            const first = path.points[0];
+            ctx.moveTo(first.x * w, first.y * h);
             for (let i = 1; i < path.points.length; i++) {
-                ctx.lineTo(path.points[i].x, path.points[i].y);
+                const p = path.points[i];
+                ctx.lineTo(p.x * w, p.y * h);
             }
         } else if (path.tool === 'rect') {
             const start = path.points[0];
             const end = path.points[path.points.length - 1];
-            ctx.strokeRect(start.x, start.y, end.x - start.x, end.y - start.y);
-            return; // strokeRect does it all
+            ctx.strokeRect(
+                start.x * w, 
+                start.y * h, 
+                (end.x - start.x) * w, 
+                (end.y - start.y) * h
+            );
+            return;
         } else if (path.tool === 'circle') {
             const start = path.points[0];
             const end = path.points[path.points.length - 1];
-            const radius = Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2));
-            ctx.arc(start.x, start.y, radius, 0, 2 * Math.PI);
+            // Calculate radius in pixel space for a proper circle
+            const dx = (end.x - start.x) * w;
+            const dy = (end.y - start.y) * h;
+            const radius = Math.sqrt(dx * dx + dy * dy);
+            ctx.arc(start.x * w, start.y * h, radius, 0, 2 * Math.PI);
         }
         ctx.stroke();
     }, [backgroundMode]);
@@ -90,8 +101,10 @@ export const DrawingCanvas = forwardRef<DrawingCanvasRef>((_, ref) => {
 
         // 3. Draw laser pointer dot (from store)
         if (laserPointer) {
+            const w = canvas.width;
+            const h = canvas.height;
             ctx.beginPath();
-            ctx.arc(laserPointer.x, laserPointer.y, 4, 0, Math.PI * 2);
+            ctx.arc(laserPointer.x * w, laserPointer.y * h, 4, 0, Math.PI * 2);
             ctx.fillStyle = '#ff0000';
             ctx.shadowBlur = 15;
             ctx.shadowColor = '#ff0000';
@@ -179,30 +192,43 @@ export const DrawingCanvas = forwardRef<DrawingCanvasRef>((_, ref) => {
         return () => window.removeEventListener('storage', handleStorage);
     }, []);
 
+    const roundCoord = (val: number) => Math.round(val * 10000) / 10000;
+
     const startDrawing = (e: React.MouseEvent | React.TouchEvent) => {
         const { x, y } = getCoordinates(e);
+        const rx = roundCoord(x);
+        const ry = roundCoord(y);
         setIsDrawing(true);
-        setCurrentPoints([{ x, y }]);
+        setCurrentPoints([{ x: rx, y: ry }]);
     };
 
     const draw = (e: React.MouseEvent | React.TouchEvent) => {
         const { x, y } = getCoordinates(e);
+        const rx = roundCoord(x);
+        const ry = roundCoord(y);
         
         // Track laser pointer
         if (currentTool === 'laser') {
-            setLaserPointer({ x, y });
+            setLaserPointer({ x: rx, y: ry });
         } else if (laserPointer) {
             setLaserPointer(null);
         }
 
         if (!isDrawing) return;
         
+        // Point Decimation: only add point if it moved at least 0.002
+        const lastPoint = currentPoints[currentPoints.length - 1];
+        if (lastPoint && currentTool !== 'rect' && currentTool !== 'circle') {
+            const dist = Math.sqrt(Math.pow(rx - lastPoint.x, 2) + Math.pow(ry - lastPoint.y, 2));
+            if (dist < 0.002) return;
+        }
+
         let newPoints: Point[];
         if (currentTool === 'brush' || currentTool === 'eraser' || currentTool === 'laser') {
-            newPoints = [...currentPoints, { x, y }];
+            newPoints = [...currentPoints, { x: rx, y: ry }];
         } else {
             // Shapes: only keep start and current end
-            newPoints = [currentPoints[0], { x, y }];
+            newPoints = [currentPoints[0], { x: rx, y: ry }];
         }
 
         setCurrentPoints(newPoints);
@@ -265,9 +291,10 @@ export const DrawingCanvas = forwardRef<DrawingCanvasRef>((_, ref) => {
             clientY = e.clientY;
         }
 
+        // Return normalized coordinates (0 to 1)
         return {
-            x: clientX - rect.left,
-            y: clientY - rect.top
+            x: (clientX - rect.left) / canvas.width,
+            y: (clientY - rect.top) / canvas.height
         };
     };
 

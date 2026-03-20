@@ -215,6 +215,94 @@ export const useJournalStore = create<JournalState>()(
         isRecording: status !== undefined ? status : !state.isRecording
       })),
 
+      generateAISummary: async (journalId) => {
+        const journal = get().journals.find(j => j.id === journalId);
+        if (!journal || journal.events.length === 0) return;
+
+        try {
+          const { aiService } = await import('../ai/AIService');
+          const summary = await aiService.summarizeSession(journal.events);
+
+          get().addEvent({
+            type: 'SYSTEM',
+            title: '✨ Résumé Narratif (IA)',
+            content: summary
+          });
+        } catch (err) {
+          console.error("[JournalStore] AI Summary failed:", err);
+          get().addEvent({
+            type: 'SYSTEM',
+            title: '⚠️ Échec du résumé IA',
+            content: "Une erreur est survenue lors de la génération du résumé narratif."
+          });
+        }
+      },
+
+      syncToNotebook: async (journalId) => {
+        const journal = get().journals.find(j => j.id === journalId);
+        if (!journal) return;
+
+        // Find the AI summary event
+        const summaryEvent = journal.events.find(e => e.title === '✨ Résumé Narratif (IA)');
+        if (!summaryEvent) {
+          throw new Error("Aucun résumé IA trouvé pour ce journal.");
+        }
+
+        // Get notebook URL from SessionOS
+        try {
+          const { useSessionOSStore } = await import('../session/useSessionOSStore');
+          const { campaigns, activeCampaignId } = useSessionOSStore.getState();
+          const campaign = campaigns.find(c => c.id === activeCampaignId);
+
+          if (!campaign?.notebookUrl) {
+            throw new Error("Aucun Notebook configuré pour cette campagne.");
+          }
+
+          // Extract ID from URL: https://notebooklm.google.com/notebook/ID
+          const notebookIdMatch = campaign.notebookUrl.match(/notebook\/([a-zA-Z0-9-]+)/);
+          const notebookId = notebookIdMatch ? notebookIdMatch[1] : null;
+
+          if (!notebookId) {
+            throw new Error("URL Notebook invalide.");
+          }
+
+          // Call MCP tool (this would typically be handled by a service or directly if in a supported environment)
+          // Since we are in the frontend, we'd need a bridge or a direct call if the MCP is exposed.
+          // For now, we simulate the call via bridge or notify the user if we can't do it directly.
+          console.log(`[JournalStore] Syncing to Notebook: ${notebookId}`);
+          
+          // Instruction: Use the notebooklm-mcp-server_notebook_add_text tool if possible.
+          // In a real implementation, this would be an IPC call to the main process which has access to MCP.
+          if (window.appBridge?.notebooklm?.addText) {
+            await window.appBridge.notebooklm.addText(notebookId, summaryEvent.content, `Résumé Session: ${journal.title}`);
+          } else {
+            throw new Error("Interface NotebookLM non disponible.");
+          }
+
+        } catch (err: any) {
+          console.error("[JournalStore] Sync failed:", err);
+          throw err;
+        }
+      },
+
+      updateJournalNote: (journalId, note) => set((state) => ({
+        journals: state.journals.map((j) => j.id === journalId ? { ...j, finalNote: note } : j)
+      })),
+
+      addJournal: (name) => {
+        const id = uuidv4();
+        const newJournal: Journal = {
+          id,
+          title: name,
+          startTimestamp: Date.now(),
+          events: [],
+        };
+        set((state) => ({
+          journals: [newJournal, ...state.journals],
+          activeJournalId: id,
+        }));
+      },
+
       clearJournal: () => set({ journals: [], activeJournalId: null, isRecording: false }),
     }),
     {

@@ -19,6 +19,8 @@ import { type MapToken, type MagicStyle, type MagicShape } from '../useMapStore'
 import { type Combatant } from '../../combat/useCombatStore';
 
 
+import { useJournalStore } from '../../journal/useJournalStore';
+
 const ToolButton = ({ tool, currentTool, setTool, icon: Icon, label }: { tool: MapTool, currentTool: MapTool, setTool: (t: MapTool) => void, icon: React.ElementType, label: string }) => {
     const isActive = currentTool === tool;
     return (
@@ -58,7 +60,7 @@ const ModeButton = ({ mode, fogMode, setFogMode, icon: Icon, label }: { mode: Fo
 
 const MapControls: React.FC = () => {
     const {
-        mapUrl, setMap,
+        mapUrl, mapName, setMap,
         setFogDataUrl,
         currentTool, setTool,
         fogMode, setFogMode,
@@ -142,9 +144,16 @@ const MapControls: React.FC = () => {
     const handleClearMap = () => {
         if (!mapUrl) return;
         gmConfirm("Voulez-vous RETIRER la carte actuelle ? Cela supprimera également tous les pions.", () => {
+            const oldName = mapName;
             setMap(null);
             setFogDataUrl(null);
             clearTokens();
+            
+            useJournalStore.getState().addEvent({
+                type: 'LOCATION',
+                title: `🗺️ Carte retirée: ${oldName}`,
+                content: "La carte a été retirée du plateau tactique."
+            });
         });
     };
 

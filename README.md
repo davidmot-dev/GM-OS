@@ -6,6 +6,7 @@ GM-OS v5 est une plateforme de gestion de sessions de Jeu de Rôle (JdR) de nouv
 
 - **MASTER STORYBOARD** : Table de montage cinématographique horizontale. Synchronisez Musique, Lumières, Cartes et Visuels en une seule séquence déclenchable d'un clic.
 - **GM REMOTE CONTROL** : Pilotage déporté sur tablette/smartphone via QR Code. Gérez les dés, les sons, le combat et vos notes de session sans quitter vos joueurs des yeux.
+- **TABLET HUB** : Tableau de bord secondaire pour tablettes. Déportez l'Horloge, les Chronos et les Jauges de Tension en temps réel via WebSocket.
 - **SESSION OS** : Centre névralgique de vos campagnes. Gérez vos sessions, joueurs et snapshots d'état système.
 - **AUDIO ENGINE** :
   - **Music OS** : Gestion de playlists multi-sources avec fondus enchaînés.

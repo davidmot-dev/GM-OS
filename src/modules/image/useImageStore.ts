@@ -33,7 +33,7 @@ interface ImageState {
 
     projectSolo: (media: ImageMedia) => void;
     projectUrl: (url: string) => void;
-    projectEntity: (entity: ProjectedEntity) => void;
+    projectEntity: (entity: ProjectedEntity) => Promise<void>;
     projectSequence: () => void;
     blackout: () => void;
     blackoutAll: () => void;
@@ -210,7 +210,7 @@ export const useImageStore = create<ImageState>()(
                 }
             },
 
-            projectEntity: (entity) => {
+            projectEntity: async (entity) => {
                 const state = get();
                 const target = state.projectionTarget;
                 
@@ -244,13 +244,26 @@ export const useImageStore = create<ImageState>()(
                     content: `Fiche de "${entity.name}" (${entity.subtitle || 'Entité'}) envoyée au Player Hub.`
                 });
 
-                // Entities (Dioramas) ALWAYS go to Player Hub as it's the only screen with stats view
-                window.appBridge?.image?.syncHubData('entity', JSON.stringify(entity));
+                const { resolveToSendableUrl } = await import('../../utils/mediaResolver');
 
-                if (target !== 'hub') {
-                    // Physical displays still just get the image
-                    const avatar = entity.avatar || entity.imageUrl || entity.portraitUrl || '';
-                    window.appBridge?.image?.launchDisplay([avatar], target);
+                // Entities (PNJ, PJ, Favoris) ALWAYS go to Player Hub as it's the only screen with stats view
+                // Resolve the entity avatar before sending so cross-window display works
+                const avatarSrc = entity.avatar || entity.imageUrl || entity.portraitUrl || '';
+                const resolvedAvatar = await resolveToSendableUrl(avatarSrc);
+
+                const entityToSend = resolvedAvatar !== avatarSrc 
+                    ? { ...entity, avatar: resolvedAvatar, imageUrl: resolvedAvatar, portraitUrl: resolvedAvatar }
+                    : entity;
+
+                window.appBridge?.image?.syncHubData('entity', JSON.stringify(entityToSend));
+                
+                // If the entity has an image, also show it in the Hub's image area
+                if (resolvedAvatar) {
+                    window.appBridge?.image?.syncHubData('image', resolvedAvatar);
+                    set((state) => ({ projections: { ...state.projections, hub: resolvedAvatar } }));
+                } else if (avatarSrc && !avatarSrc.startsWith('m-')) {
+                    window.appBridge?.image?.syncHubData('image', avatarSrc);
+                    set((state) => ({ projections: { ...state.projections, hub: avatarSrc } }));
                 }
             },
 

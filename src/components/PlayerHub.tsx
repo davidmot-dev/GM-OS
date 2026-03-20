@@ -183,11 +183,11 @@ const PlayerHub: React.FC = () => {
                             {tensions.length > 0 && (
                                 <div className="grid grid-cols-2 gap-4 w-full">
                                     {tensions.map(clock => (
-                                        <div key={clock.id} className="flex items-center gap-4 bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl p-4 shadow-xl w-full">
-                                            <NarrativeClock clock={clock} theme={theme} size={62} />
+                                        <div key={clock.id} className="flex items-center gap-5 bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl p-5 shadow-xl w-full">
+                                            <NarrativeClock clock={clock} theme={theme} size={75} />
                                             <div className="flex flex-col flex-1 overflow-hidden">
-                                                <p className={`text-lg font-black truncate w-full ${theme === 'cyberpunk' ? 'text-pink-400 font-mono tracking-wider' : theme === 'oldstyle' ? 'text-amber-500 font-serif' : 'text-slate-200 uppercase tracking-tight'}`}>{clock.name}</p>
-                                                <p className={`text-xs mt-0.5 font-bold ${theme === 'cyberpunk' ? 'text-cyan-400' : theme === 'oldstyle' ? 'text-amber-700/80 italic' : 'text-slate-400'}`}>
+                                                <p className={`text-xl font-black truncate w-full ${theme === 'cyberpunk' ? 'text-pink-400 font-mono tracking-wider' : theme === 'oldstyle' ? 'text-amber-500 font-serif' : 'text-slate-200 uppercase tracking-tight'}`}>{clock.name}</p>
+                                                <p className={`text-sm mt-0.5 font-bold ${theme === 'cyberpunk' ? 'text-cyan-400' : theme === 'oldstyle' ? 'text-amber-700/80 italic' : 'text-slate-400'}`}>
                                                     {clock.filledSegments} / {clock.totalSegments} Segments
                                                 </p>
                                             </div>

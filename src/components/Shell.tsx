@@ -22,6 +22,7 @@ import {
     FolderOpen,
     Edit3,
     MonitorPlay,
+    Tablet,
     Save,
     Download,
     Brain,
@@ -126,6 +127,21 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
         } else {
             console.warn('[Shell] Bridge launchHubWindow not found');
             alert("Veuillez lancer le Player Hub dans un onglet `http://localhost:5173/?window=hub` ou via le bridge Electron.");
+        }
+    };
+
+    const handleLaunchTabletHub = () => {
+        console.log('[Shell] Launching Tablet Hub...');
+        // We use the same bridge if available, or just instruct
+        if (window.appBridge?.session?.launchHubWindow) {
+            gmToast('Lancement du Hub Tablette...', 'info');
+            // Check if the bridge supports a custom tag, if not, we might need a separate call or manual open
+            // For now, we'll try to use the bridge if it handles new windows generally,
+            // but the most reliable way for "deportable" is the URL.
+            window.appBridge.session.launchHubWindow('tablet'); 
+        } else {
+            const url = `${window.location.origin}/?window=tablet`;
+            prompt("Copiez cette URL sur votre tablette :", url);
         }
     };
     
@@ -365,6 +381,14 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                                 title="Launch Player Hub"
                             >
                                 <MonitorPlay size={20} />
+                            </button>
+
+                            <button
+                                onClick={handleLaunchTabletHub}
+                                className="p-3 rounded-xl bg-indigo-500/5 text-indigo-400/60 hover:text-indigo-400 hover:bg-indigo-500/10 hover:shadow-glow-indigo transition-all border border-indigo-500/10"
+                                title="Launch Tablet Hub (Semi-Hub)"
+                            >
+                                <Tablet size={20} />
                             </button>
 
                             <button

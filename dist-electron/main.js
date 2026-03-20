@@ -2641,6 +2641,8 @@ const MAIN_DIST = path.join(process.env.APP_ROOT, "dist-electron");
 const RENDERER_DIST = path.join(process.env.APP_ROOT, "dist");
 process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, "public") : RENDERER_DIST;
 let win;
+let wss = null;
+const REMOTE_PORT = 3001;
 function createWindow() {
   win = new BrowserWindow({
     icon: path.join(process.env.VITE_PUBLIC || "", "electron-vite.svg"),
@@ -2664,10 +2666,12 @@ function createWindow() {
     win.loadFile(path.join(RENDERER_DIST, "index.html"));
   }
 }
+const SESSIONS_DIR = path.join(process.env.APP_ROOT || "", "sessions");
 ipcMain.handle("save-session", async (_event, data) => {
+  await fs.ensureDir(SESSIONS_DIR);
   const { filePath } = await dialog.showSaveDialog({
     title: "Sauvegarder la Session GM-OS",
-    defaultPath: path.join(app.getPath("documents") || "", "gmos-session.json"),
+    defaultPath: path.join(SESSIONS_DIR, "gmos-session.json"),
     filters: [{ name: "GM-OS Session", extensions: ["json"] }]
   });
   if (filePath) {
@@ -2677,8 +2681,10 @@ ipcMain.handle("save-session", async (_event, data) => {
   return false;
 });
 ipcMain.handle("load-session", async () => {
+  await fs.ensureDir(SESSIONS_DIR);
   const { filePaths } = await dialog.showOpenDialog({
     title: "Charger une Session GM-OS",
+    defaultPath: SESSIONS_DIR,
     filters: [{ name: "GM-OS Session", extensions: ["json"] }],
     properties: ["openFile"]
   });
@@ -2858,9 +2864,20 @@ ipcMain.on("image:sync-hub-data", (_event, type, imagePath) => {
       projWin.webContents.send("image:sync-hub-data", type, imagePath);
     }
   }
+  if (wss) {
+    const message = JSON.stringify({
+      type: "hub-projection",
+      payload: { type, data: imagePath }
+    });
+    wss.clients.forEach((client) => {
+      if (client.readyState === 1) {
+        client.send(message);
+      }
+    });
+  }
 });
-ipcMain.on("session:launch-hub-window", () => {
-  console.log("[Main] session:launch-hub-window received");
+ipcMain.on("session:launch-hub-window", (_event, mode = "hub") => {
+  console.log(`[Main] session:launch-hub-window received (mode: ${mode})`);
   if (hubWindow && !hubWindow.isDestroyed()) {
     console.log("[Main] Hub window already exists, restoring and focusing...");
     if (hubWindow.isMinimized()) hubWindow.restore();
@@ -2868,14 +2885,14 @@ ipcMain.on("session:launch-hub-window", () => {
     hubWindow.focus();
     return;
   }
-  console.log("[Main] Creating new Hub window...");
+  console.log(`[Main] Creating new ${mode} window...`);
   const displays = screen.getAllDisplays();
   const targetDisplay = displays.length > 1 ? displays[1] : displays[0];
   hubWindow = new BrowserWindow({
     x: targetDisplay.bounds.x + 50,
     y: targetDisplay.bounds.y + 50,
-    width: 1280,
-    height: 720,
+    width: mode === "tablet" ? 1024 : 1280,
+    height: mode === "tablet" ? 768 : 720,
     frame: true,
     // Allow GM to move it around or fullscreen it manually
     webPreferences: {
@@ -2886,12 +2903,12 @@ ipcMain.on("session:launch-hub-window", () => {
     backgroundColor: "#000000"
   });
   if (VITE_DEV_SERVER_URL) {
-    hubWindow.loadURL(`${VITE_DEV_SERVER_URL}?window=hub`);
+    hubWindow.loadURL(`${VITE_DEV_SERVER_URL}?window=${mode}`);
   } else {
-    hubWindow.loadFile(path.join(RENDERER_DIST, "index.html"), { query: { window: "hub" } });
+    hubWindow.loadFile(path.join(RENDERER_DIST, "index.html"), { query: { window: mode } });
   }
   hubWindow.on("closed", () => {
-    console.log("[Main] Hub window closed");
+    console.log(`[Main] ${mode} window closed`);
     hubWindow = null;
   });
 });
@@ -2957,12 +2974,44 @@ ipcMain.on("image:close-all-displays", () => {
   }
   projectorWindows.clear();
 });
-let wss = null;
-const REMOTE_PORT = 3001;
 function startRemoteServer() {
   try {
-    wss = new WebSocketServer({ port: REMOTE_PORT });
-    console.log(`[Remote] Server started on port ${REMOTE_PORT}`);
+    const server = http.createServer((req, res) => {
+      console.log(`[Remote Proxy] Request: ${req.url}`);
+      if (req.url && req.url.startsWith("/media/")) {
+        const encodedPath = req.url.substring(7);
+        const filePath = decodeURIComponent(encodedPath);
+        console.log(`[Remote Proxy] Attempting to serve: ${filePath}`);
+        if (fs.existsSync(filePath) && fs.lstatSync(filePath).isFile()) {
+          const ext = path.extname(filePath).toLowerCase();
+          const mimeTypes = {
+            ".png": "image/png",
+            ".jpg": "image/jpeg",
+            ".jpeg": "image/jpeg",
+            ".gif": "image/gif",
+            ".webp": "image/webp",
+            ".svg": "image/svg+xml",
+            ".mp3": "audio/mpeg",
+            ".wav": "audio/wav"
+          };
+          res.writeHead(200, {
+            "Content-Type": mimeTypes[ext] || "application/octet-stream",
+            "Access-Control-Allow-Origin": "*"
+            // Allow cross-origin for tablets
+          });
+          fs.createReadStream(filePath).pipe(res);
+        } else {
+          console.warn(`[Remote Proxy] File NOT FOUND or not a file: ${filePath}`);
+          res.writeHead(404);
+          res.end("Media not found");
+        }
+        return;
+      }
+      res.writeHead(404);
+      res.end();
+    });
+    wss = new WebSocketServer({ server });
+    console.log(`[Remote] Server + Media started on port ${REMOTE_PORT}`);
     wss.on("connection", (ws) => {
       console.log("[Remote] New device connected");
       if (win && !win.isDestroyed()) {
@@ -2984,6 +3033,9 @@ function startRemoteServer() {
         }
       });
       ws.on("close", () => console.log("[Remote] Device disconnected"));
+    });
+    server.listen(REMOTE_PORT, "0.0.0.0", () => {
+      console.log(`[Remote] Server + Media proxy listening on 0.0.0.0:${REMOTE_PORT}`);
     });
   } catch (err) {
     console.error("[Remote] Failed to start server:", err);

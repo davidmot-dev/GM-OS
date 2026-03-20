@@ -116,6 +116,21 @@ export const useFavoriteStore = create<FavoriteState>()(
                         fav.id === id ? { ...fav, ...updates } : fav
                     );
 
+                    // Actual projection to Hub via the Bridge/ImageStore
+                    if (favBefore) {
+                        const imageStore = (window as any).useImageStore;
+                        if (imageStore) {
+                            const isCurrentlyProjected = imageStore.getState().projectedEntity?.id === id;
+                            
+                            // Synchronize if state changed
+                            if (updates.isSyncedToPlayerHub === true && !isCurrentlyProjected) {
+                                imageStore.getState().projectEntity({ ...favBefore, ...updates });
+                            } else if (updates.isSyncedToPlayerHub === false && isCurrentlyProjected) {
+                                imageStore.getState().projectEntity(favBefore); // Toggle off
+                            }
+                        }
+                    }
+
                     // Log to journal if just synced to hub
                     if (favBefore && !favBefore.isSyncedToPlayerHub && updates.isSyncedToPlayerHub) {
                         useJournalStore.getState().addEvent({

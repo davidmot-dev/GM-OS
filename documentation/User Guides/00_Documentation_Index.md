@@ -17,6 +17,7 @@ Bienvenue dans le centre de documentation de **GM-OS v5**. Ce guide est conçu p
 ## 📦 Modules de Session & Narration
 
 - [**Master Storyboard (Table de Montage)**](./Storyboard_User_Guide.md) (Mis à jour)
+- [Tablet Hub](Tablet_Hub_User_Guide.md)
 - [**GM Remote Control (Télécommande)**](./Remote_Control_User_Guide.md) (Nouveau)
 - [**Session OS (Cockpit & Campagnes)**](./Session_OS_User_Guide.md)
 - [**NPC OS (Générateur de PNJ)**](./NPC_OS_User_Guide.md)

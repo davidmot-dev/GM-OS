@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { DiceEngine } from './DiceEngine';
 import type { RollResult } from './DiceEngine';
 import { Dices, RotateCcw, Zap, BookmarkPlus, X } from 'lucide-react';
@@ -118,7 +118,7 @@ const DiceBoard: React.FC = () => {
         }
     }, [activeDriver, activeDriver?.id]); // Only re-run when actual system changes
 
-    const executeRoll = (sides: number = 20, isFormulaText: boolean = false, customFormula: string = "") => {
+    const executeRoll = useCallback((sides: number = 20, isFormulaText: boolean = false, customFormula: string = "") => {
         let result: RollResult;
         
         if (useSystemDriver && activeDriver) {
@@ -185,9 +185,9 @@ const DiceBoard: React.FC = () => {
             }
         }
         return { result, title };
-    };
+    }, [useSystemDriver, activeDriver, modifier, diceCount, gearCount, target, formulaInput, mode, targetRule]);
 
-    const handleRoll = (sides: number = 20, isFormulaText: boolean = false, customFormula: string = "") => {
+    const handleRoll = useCallback((sides: number = 20, isFormulaText: boolean = false, customFormula: string = "") => {
         try {
             const batchId = batchCount > 1 ? generateId() : undefined;
             const newRecords: RollRecord[] = [];
@@ -218,7 +218,7 @@ const DiceBoard: React.FC = () => {
         } catch (error) {
             console.error("Erreur de lancer:", error);
         }
-    };
+    }, [batchCount, executeRoll]);
 
     const handleQuickRoll = (formula: string, label: string) => {
         handleRoll(0, true, formula);
@@ -299,6 +299,8 @@ const DiceBoard: React.FC = () => {
                             <select
                                 value={mode}
                                 onChange={(e) => setMode(e.target.value as DiceMode)}
+                                title="Mode de jet de dés"
+                                aria-label="Choisir le mode de jet de dés"
                                 className="w-full bg-app-bg border border-app-border rounded-xl py-2 px-3 text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50 transition-all text-app-text"
                             >
                                 <option value="standard">Standard d20/d6</option>
@@ -335,7 +337,14 @@ const DiceBoard: React.FC = () => {
                                         <div className="flex space-x-2">
                                             <div className="flex flex-1 bg-app-bg border border-app-border rounded-xl overflow-hidden shadow-inner h-[38px]">
                                                 <span className="bg-yellow-500/20 text-yellow-600 dark:text-yellow-500 text-xs px-2 flex items-center border-r border-app-border">B</span>
-                                                <input type="number" value={diceCount} readOnly className="w-full bg-transparent text-center font-semibold text-app-text outline-none" />
+                                                <input 
+                                                    type="number" 
+                                                    value={diceCount} 
+                                                    onChange={(e) => setDiceCount(Math.max(1, parseInt(e.target.value) || 1))}
+                                                    title="Dés de base"
+                                                    aria-label="Nombre de dés de base"
+                                                    className="w-full bg-transparent text-center font-semibold text-app-text outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
+                                                />
                                                 <div className="flex flex-col border-l border-app-border">
                                                     <button onClick={() => setDiceCount(diceCount + 1)} className="flex-1 px-1 flex items-center justify-center hover:bg-app-surface text-xs">+</button>
                                                     <button onClick={() => setDiceCount(Math.max(1, diceCount - 1))} className="flex-1 px-1 flex items-center justify-center hover:bg-app-surface text-xs border-t border-app-border">-</button>
@@ -343,7 +352,14 @@ const DiceBoard: React.FC = () => {
                                             </div>
                                             <div className="flex flex-1 bg-app-bg border border-app-border rounded-xl overflow-hidden shadow-inner h-[38px]">
                                                 <span className="bg-app-surface text-app-text/60 text-xs px-2 flex items-center border-r border-app-border">E</span>
-                                                <input type="number" value={gearCount} readOnly className="w-full bg-transparent text-center font-semibold text-app-text outline-none" />
+                                                <input 
+                                                    type="number" 
+                                                    value={gearCount} 
+                                                    onChange={(e) => setGearCount(Math.max(0, parseInt(e.target.value) || 0))}
+                                                    title="Dés d'équipement"
+                                                    aria-label="Nombre de dés d'équipement"
+                                                    className="w-full bg-transparent text-center font-semibold text-app-text outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
+                                                />
                                                 <div className="flex flex-col border-l border-app-border">
                                                     <button onClick={() => setGearCount(gearCount + 1)} className="flex-1 px-1 flex items-center justify-center hover:bg-app-surface text-xs">+</button>
                                                     <button onClick={() => setGearCount(Math.max(0, gearCount - 1))} className="flex-1 px-1 flex items-center justify-center hover:bg-app-surface text-xs border-t border-app-border">-</button>
@@ -352,11 +368,18 @@ const DiceBoard: React.FC = () => {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className={`space-y-2 ${['rolemaster', 'advantage', 'disadvantage'].includes(mode) ? 'opacity-30 pointer-events-none' : ''}`}>
+                                    <div className="space-y-2">
                                         <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">Quantité</label>
                                         <div className="flex bg-app-bg border border-app-border rounded-xl overflow-hidden h-[38px]">
                                             <button onClick={() => setDiceCount(Math.max(1, diceCount - 1))} className="px-3 hover:bg-app-surface text-app-text/60 transition-colors">-</button>
-                                            <input type="number" value={diceCount} onChange={(e) => setDiceCount(Math.max(1, parseInt(e.target.value) || 1))} className="w-full bg-transparent text-center font-semibold text-app-text outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                                            <input 
+                                                type="number" 
+                                                value={diceCount} 
+                                                onChange={(e) => setDiceCount(Math.max(1, parseInt(e.target.value) || 1))} 
+                                                title="Quantité de dés"
+                                                aria-label="Nombre de dés à lancer"
+                                                className="w-full bg-transparent text-center font-semibold text-app-text outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
+                                            />
                                             <button onClick={() => setDiceCount(diceCount + 1)} className="px-3 hover:bg-app-surface text-app-text/60 transition-colors">+</button>
                                         </div>
                                     </div>
@@ -366,23 +389,37 @@ const DiceBoard: React.FC = () => {
                                     <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">Modificateur</label>
                                     <div className="flex bg-app-bg border border-app-border rounded-xl overflow-hidden h-[38px]">
                                         <button onClick={() => setModifier((typeof modifier === 'number' ? modifier : parseInt(modifier.toString().replace('+', '')) || 0) - 1)} className="px-3 hover:bg-app-surface text-app-text/60 transition-colors">-</button>
-                                        <input type="text" value={modifier === 0 || modifier === "0" ? "0" : typeof modifier === 'number' && modifier > 0 ? `+${modifier}` : modifier} onChange={(e) => {
-                                            const raw = e.target.value.replace(/[^0-9+-]/g, '');
-                                            if (raw === '' || raw === '-' || raw === '+') setModifier(raw);
-                                            else setModifier(parseInt(raw.replace('+', ''), 10) || 0);
-                                        }} className="w-full bg-transparent text-center font-semibold text-app-text outline-none" />
+                                        <input 
+                                            type="text" 
+                                            value={modifier === 0 || modifier === "0" ? "0" : typeof modifier === 'number' && modifier > 0 ? `+${modifier}` : modifier} 
+                                            onChange={(e) => {
+                                                const raw = e.target.value.replace(/[^0-9+-]/g, '');
+                                                if (raw === '' || raw === '-' || raw === '+') setModifier(raw);
+                                                else setModifier(parseInt(raw.replace('+', ''), 10) || 0);
+                                            }} 
+                                            title="Modificateur de jet"
+                                            aria-label="Ajouter un bonus ou malus au jet"
+                                            className="w-full bg-transparent text-center font-semibold text-app-text outline-none" 
+                                        />
                                         <button onClick={() => setModifier((typeof modifier === 'number' ? modifier : parseInt(modifier.toString().replace('+', '')) || 0) + 1)} className="px-3 hover:bg-app-surface text-app-text/60 transition-colors">+</button>
                                     </div>
                                 </div>
 
-                                <div className="space-y-2">
-                                    <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">Répétitions</label>
-                                    <div className="flex bg-app-bg border border-app-border rounded-xl overflow-hidden h-[38px]">
-                                        <button onClick={() => setBatchCount(Math.max(1, batchCount - 1))} className="px-3 hover:bg-app-surface text-app-text/60 transition-colors">-</button>
-                                        <input type="number" value={batchCount} readOnly className="w-full bg-transparent text-center font-semibold text-app-text outline-none" />
-                                        <button onClick={() => setBatchCount(Math.min(20, batchCount + 1))} className="px-3 hover:bg-app-surface text-app-text/60 transition-colors">+</button>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">Répétitions</label>
+                                        <div className="flex bg-app-bg border border-app-border rounded-xl overflow-hidden h-[38px]">
+                                            <button onClick={() => setBatchCount(Math.max(1, batchCount - 1))} className="px-3 hover:bg-app-surface text-app-text/60 transition-colors">-</button>
+                                            <input 
+                                                type="number" 
+                                                value={batchCount} 
+                                                onChange={(e) => setBatchCount(Math.min(20, Math.max(1, parseInt(e.target.value) || 1)))}
+                                                title="Nombre de répétitions"
+                                                aria-label="Répéter le jet plusieurs fois"
+                                                className="w-full bg-transparent text-center font-semibold text-app-text outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
+                                            />
+                                            <button onClick={() => setBatchCount(Math.min(20, batchCount + 1))} className="px-3 hover:bg-app-surface text-app-text/60 transition-colors">+</button>
+                                        </div>
                                     </div>
-                                </div>
                             </>
                         )}
 
@@ -391,12 +428,25 @@ const DiceBoard: React.FC = () => {
                             <div className="space-y-2">
                                 <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">Seuil & Règle</label>
                                 <div className="flex bg-app-bg border border-app-border rounded-xl overflow-hidden h-[38px]">
-                                    <select value={targetRule} onChange={e => setTargetRule(e.target.value as 'over' | 'under')} className="bg-app-surface text-app-text text-xs px-2 outline-none border-r border-app-border">
+                                    <select 
+                                        value={targetRule} 
+                                        onChange={e => setTargetRule(e.target.value as 'over' | 'under')} 
+                                        title="Règle du seuil"
+                                        aria-label="Coup au dessus ou en dessous"
+                                        className="bg-app-surface text-app-text text-xs px-2 outline-none border-r border-app-border"
+                                    >
                                         <option value="over">≥</option>
                                         <option value="under">≤</option>
                                     </select>
                                     <button onClick={() => setTarget(target - 1)} className="px-2 hover:bg-app-surface text-app-text/60 transition-colors">-</button>
-                                    <input type="number" value={target} readOnly className="w-full bg-transparent text-center font-semibold text-app-text outline-none" />
+                                    <input 
+                                        type="number" 
+                                        value={target} 
+                                        onChange={(e) => setTarget(parseInt(e.target.value) || 0)}
+                                        title="Valeur du seuil"
+                                        aria-label="Entrer manuellement le seuil"
+                                        className="w-full bg-transparent text-center font-semibold text-app-text outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
+                                    />
                                     <button onClick={() => setTarget(target + 1)} className="px-2 hover:bg-app-surface text-app-text/60 transition-colors">+</button>
                                 </div>
                             </div>

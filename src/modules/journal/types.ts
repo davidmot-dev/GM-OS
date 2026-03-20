@@ -24,6 +24,7 @@ export interface Journal {
   endTimestamp?: number;
   duration?: string;
   events: JournalEvent[];
+  finalNote?: string; // New field for user final thoughts
 }
 
 export interface SessionSnapshot {
@@ -45,13 +46,18 @@ export interface JournalState {
   activeJournalId: string | null;
   isRecording: boolean;
   
+  // Actions
   startJournal: (campaignName: string, sessionName?: string, startSnapshot?: SessionStartSnapshot) => void;
   stopJournal: (snapshot?: SessionSnapshot) => void;
+  addJournal: (name: string) => void;
+  setActiveJournal: (id: string | null) => void;
+  deleteJournal: (id: string) => void;
   addEvent: (event: Omit<JournalEvent, 'id' | 'timestamp'>) => void;
   removeEvent: (journalId: string, eventId: string) => void;
   updateEvent: (journalId: string, eventId: string, updates: Partial<JournalEvent>) => void;
-  deleteJournal: (id: string) => void;
-  setActiveJournal: (id: string | null) => void;
   toggleRecording: (status?: boolean) => void;
+  generateAISummary: (journalId: string) => Promise<void>;
+  syncToNotebook: (journalId: string) => Promise<void>;
+  updateJournalNote: (journalId: string, note: string) => void;
   clearJournal: () => void;
 }

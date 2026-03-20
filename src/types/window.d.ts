@@ -5,7 +5,7 @@ import type { NoteEntry } from '../useObsidianStore';
 interface AppBridge {
     image?: ImageBridge;
     session?: {
-        launchHubWindow: () => void;
+        launchHubWindow: (tag?: string) => void;
         saveSession: (data: Record<string, unknown>) => Promise<boolean>;
         loadSession: () => Promise<Record<string, unknown> | null>;
     };
@@ -19,7 +19,13 @@ interface AppBridge {
         saveList: (data: unknown) => Promise<boolean>;
         loadList: () => Promise<unknown>;
     };
-    on?: (channel: string, callback: (event: unknown, ...args: unknown[]) => void) => void;
+    on: (channel: string, callback: (event: unknown, ...args: unknown[]) => void) => void;
+    off: (channel: string, callback: (event: unknown, ...args: unknown[]) => void) => void;
+    send: (channel: string, ...args: unknown[]) => void;
+    remote: {
+        onAction: (callback: (action: unknown) => void) => () => void;
+        removeActions: () => void;
+    };
     app?: {
         quit: () => void;
     };
@@ -74,14 +80,14 @@ interface NoteEntry {
 declare global {
     interface Window {
         appBridge?: AppBridge;
-        useMusicStore?: any;
-        useLightStore?: any;
-        useMapStore?: any;
-        useImageStore?: any;
-        useSoundStore?: any;
-        useStoryboardStore?: any;
-        hueEngine?: any;
-        soundEngine?: any;
+        useMusicStore?: unknown;
+        useLightStore?: unknown;
+        useMapStore?: unknown;
+        useImageStore?: unknown;
+        useSoundStore?: unknown;
+        useStoryboardStore?: unknown;
+        hueEngine?: unknown;
+        soundEngine?: unknown;
     }
 }
 

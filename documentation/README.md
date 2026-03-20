@@ -23,7 +23,9 @@ Ce répertoire contient l'archive de tous les guides de mise en œuvre, walkthro
 - **[Hardware_Sync_Fix.md](./walkthroughs/Hardware_Sync_Fix.md)** : Correctifs liés à la synchronisation matérielle.
 - [Storyboard_Architecture.md](./walkthroughs/Storyboard_Architecture.md) : Architecture de l'orchestrateur multi-module.
 - **[NPC_Live_Generator_Walkthrough.md](./walkthroughs/NPC_Live_Generator_Walkthrough.md)** : Intégration de la génération d'images IA.
+- **[Tablet_Hub_Walkthrough.md](./walkthroughs/Tablet_Hub_Walkthrough.md)** : Mise en œuvre du dashboard second-écran.
 - **[NPC_Live_Generator_Technical_Doc.md](./Technical%20Docs/NPC_Live_Generator_Technical_Doc.md)** : Architecture du moteur de génération d'images.
+- **[Tablet_Hub_Technical_Doc.md](./Technical%20Docs/Tablet_Hub_Technical_Doc.md)** : Architecture de synchronisation temps-réel.
 
 ## Planification
 

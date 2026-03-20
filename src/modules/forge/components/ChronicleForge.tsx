@@ -641,13 +641,27 @@ const ChronicleForge: React.FC = () => {
                             <button 
                               onClick={() => handleSourceImport(s.id, s.title)} 
                               disabled={importingSources.has(s.id)}
-                              className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                              className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 ${
                                 importingSources.has(s.id)
                                   ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
-                                  : 'bg-fuchsia-500/20 text-fuchsia-300 hover:bg-fuchsia-500 hover:text-white'
+                                  : contextItems.some(item => item.name === `[NB] ${s.title}`)
+                                    ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                                    : 'bg-fuchsia-500/20 text-fuchsia-300 hover:bg-fuchsia-500 hover:text-white'
                               }`}
                             >
-                              {importingSources.has(s.id) ? 'Extraction...' : 'Import'}
+                              {importingSources.has(s.id) ? (
+                                <>
+                                  <Zap className="size-3 animate-spin" />
+                                  Extraction...
+                                </>
+                              ) : contextItems.some(item => item.name === `[NB] ${s.title}`) ? (
+                                <>
+                                  <CheckCircle2 className="size-3" />
+                                  Importé
+                                </>
+                              ) : (
+                                'Import'
+                              )}
                             </button>
                           </div>
                         ))}
