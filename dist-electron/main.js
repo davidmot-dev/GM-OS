@@ -1,4 +1,4 @@
-import { ipcMain, app, dialog, shell, screen, BrowserWindow } from "electron";
+import { ipcMain, protocol, app, dialog, shell, screen, BrowserWindow, net } from "electron";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import * as fs$2 from "fs";
@@ -2634,6 +2634,9 @@ const __dirname$1 = path.dirname(fileURLToPath(import.meta.url));
 registerRagHandlers();
 registerMcpHandlers();
 registerObsidianHandlers();
+protocol.registerSchemesAsPrivileged([
+  { scheme: "gmos", privileges: { standard: true, secure: true, supportFetchAPI: true, bypassCSP: true, stream: true } }
+]);
 app.commandLine.appendSwitch("ignore-certificate-errors");
 process.env.APP_ROOT = path.join(__dirname$1, "..");
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
@@ -2645,16 +2648,17 @@ let wss = null;
 const REMOTE_PORT = 3001;
 function createWindow() {
   win = new BrowserWindow({
+    width: 1200,
+    height: 800,
+    backgroundColor: "#000000",
     icon: path.join(process.env.VITE_PUBLIC || "", "electron-vite.svg"),
     webPreferences: {
       preload: path.join(__dirname$1, "preload.mjs"),
       sandbox: false,
-      webSecurity: false
-      // Nécessaire pour charger les fichiers audio locaux via fetch/file://
-    },
-    width: 1200,
-    height: 800,
-    backgroundColor: "#000000"
+      // SECURITY NOTE: webSecurity is currently false to allow legacy file:// access.
+      // Switch to TRUE once you've verified that all media loads via gmos:// protocol.
+      webSecurity: true
+    }
   });
   win.webContents.on("did-finish-load", () => {
     win?.webContents.send("main-process-message", (/* @__PURE__ */ new Date()).toLocaleString());
@@ -2898,7 +2902,7 @@ ipcMain.on("session:launch-hub-window", (_event, mode = "hub") => {
     webPreferences: {
       preload: path.join(__dirname$1, "preload.mjs"),
       sandbox: false,
-      webSecurity: false
+      webSecurity: true
     },
     backgroundColor: "#000000"
   });
@@ -2945,7 +2949,7 @@ ipcMain.on("image:launch-display", (_event, paths, target) => {
       webPreferences: {
         preload: path.join(__dirname$1, "preload.mjs"),
         sandbox: false,
-        webSecurity: false
+        webSecurity: true
       },
       backgroundColor: "#000000"
     });
@@ -3012,28 +3016,30 @@ function startRemoteServer() {
     });
     wss = new WebSocketServer({ server });
     console.log(`[Remote] Server + Media started on port ${REMOTE_PORT}`);
-    wss.on("connection", (ws) => {
-      console.log("[Remote] New device connected");
-      if (win && !win.isDestroyed()) {
-        win.webContents.send("remote:request-sync");
-      }
-      ws.on("message", (message) => {
-        try {
-          const data = JSON.parse(message);
-          console.log("[Remote] Action received:", data);
-          if (data.type === "remote:hello") {
-            console.log("[Remote] Handshake received from device");
-          } else {
-            if (win && !win.isDestroyed()) {
-              win.webContents.send("remote:action", data);
-            }
-          }
-        } catch (err) {
-          console.error("[Remote] Failed to parse message:", err);
+    if (wss) {
+      wss.on("connection", (ws) => {
+        console.log("[Remote] New device connected");
+        if (win && !win.isDestroyed()) {
+          win.webContents.send("remote:request-sync");
         }
+        ws.on("message", (message) => {
+          try {
+            const data = JSON.parse(message);
+            console.log("[Remote] Action received:", data);
+            if (data.type === "remote:hello") {
+              console.log("[Remote] Handshake received from device");
+            } else {
+              if (win && !win.isDestroyed()) {
+                win.webContents.send("remote:action", data);
+              }
+            }
+          } catch (err) {
+            console.error("[Remote] Failed to parse message:", err);
+          }
+        });
+        ws.on("close", () => console.log("[Remote] Device disconnected"));
       });
-      ws.on("close", () => console.log("[Remote] Device disconnected"));
-    });
+    }
     server.listen(REMOTE_PORT, "0.0.0.0", () => {
       console.log(`[Remote] Server + Media proxy listening on 0.0.0.0:${REMOTE_PORT}`);
     });
@@ -3211,6 +3217,12 @@ app.on("activate", () => {
   }
 });
 app.whenReady().then(() => {
+  protocol.handle("gmos", (request) => {
+    const url = request.url.replace(/^gmos:\/\/media\//, "");
+    const decodedPath = decodeURIComponent(url);
+    const absolutePath = path.isAbsolute(decodedPath) ? decodedPath : path.join(process.env.APP_ROOT || "", decodedPath);
+    return net.fetch(`file:///${absolutePath}`);
+  });
   createWindow();
   startRemoteServer();
 });

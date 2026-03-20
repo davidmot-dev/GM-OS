@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, dialog, shell, screen } from 'electron'
+import { app, BrowserWindow, ipcMain, dialog, shell, screen, protocol, net } from 'electron'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import fs from 'fs-extra'
@@ -21,6 +21,7 @@ interface AIProxyResponse {
     statusText?: string;
     data: unknown;
 }
+
 import { registerRagHandlers } from './RAGEngine'
 import { registerMcpHandlers } from './mcp_bridge'
 import { registerObsidianHandlers } from './obsidian_bridge'
@@ -34,18 +35,14 @@ registerMcpHandlers();
 // Register Obsidian Bridge
 registerObsidianHandlers();
 
+// Register gmos protocol as privileged
+protocol.registerSchemesAsPrivileged([
+    { scheme: 'gmos', privileges: { standard: true, secure: true, supportFetchAPI: true, bypassCSP: true, stream: true } }
+]);
+
 // Ignore certificate errors for local HTTPS requests (like Philips Hue Bridge)
 app.commandLine.appendSwitch('ignore-certificate-errors')
 
-// The built directory structure
-//
-// ├─┬─┬ dist
-// │ │ └── index.html
-// │ │
-// │ ├─┬ dist-electron
-// │ │ ├── main.js
-// │ │ └── preload.js
-// │
 process.env.APP_ROOT = path.join(__dirname, '..')
 
 // 🚧 Use ['ENV_NAME'] avoid vite:define dev replacement
@@ -61,15 +58,17 @@ const REMOTE_PORT = 3001;
 
 function createWindow() {
     win = new BrowserWindow({
+        width: 1200,
+        height: 800,
+        backgroundColor: '#000000',
         icon: path.join(process.env.VITE_PUBLIC || '', 'electron-vite.svg'),
         webPreferences: {
             preload: path.join(__dirname, 'preload.mjs'),
             sandbox: false,
-            webSecurity: false, // Nécessaire pour charger les fichiers audio locaux via fetch/file://
+            // SECURITY NOTE: webSecurity is currently false to allow legacy file:// access.
+            // Switch to TRUE once you've verified that all media loads via gmos:// protocol.
+            webSecurity: true, 
         },
-        width: 1200,
-        height: 800,
-        backgroundColor: '#000000',
     })
 
     // Test active push message to Renderer-process.
@@ -83,7 +82,6 @@ function createWindow() {
     if (VITE_DEV_SERVER_URL) {
         win.loadURL(VITE_DEV_SERVER_URL)
     } else {
-        // win.loadFile('dist/index.html')
         win.loadFile(path.join(RENDERER_DIST, 'index.html'))
     }
 }
@@ -364,7 +362,7 @@ ipcMain.on('session:launch-hub-window', (_event, mode = 'hub') => {
         webPreferences: {
             preload: path.join(__dirname, 'preload.mjs'),
             sandbox: false,
-            webSecurity: false,
+            webSecurity: true,
         },
         backgroundColor: '#000000',
     });
@@ -422,7 +420,7 @@ ipcMain.on('image:launch-display', (_event, paths: string[], target: string) => 
             webPreferences: {
                 preload: path.join(__dirname, 'preload.mjs'),
                 sandbox: false,
-                webSecurity: false,
+                webSecurity: true,
             },
             backgroundColor: '#000000',
         });
@@ -506,35 +504,37 @@ function startRemoteServer() {
         wss = new WebSocketServer({ server });
         console.log(`[Remote] Server + Media started on port ${REMOTE_PORT}`);
 
-        wss.on('connection', (ws: import('ws').WebSocket) => {
-            console.log('[Remote] New device connected');
-            
-            // Send initial sync data
-            if (win && !win.isDestroyed()) {
-                win.webContents.send('remote:request-sync');
-            }
-            
-            ws.on('message', (message: string) => {
-                try {
-                    const data = JSON.parse(message);
-                    console.log('[Remote] Action received:', data);
-                    
-                    if (data.type === 'remote:hello') {
-                        // Handshake
-                        console.log('[Remote] Handshake received from device');
-                    } else {
-                        // Forward action to renderer process
-                        if (win && !win.isDestroyed()) {
-                            win.webContents.send('remote:action', data);
-                        }
-                    }
-                } catch (err) {
-                    console.error('[Remote] Failed to parse message:', err);
+        if (wss) {
+            wss.on('connection', (ws: import('ws').WebSocket) => {
+                console.log('[Remote] New device connected');
+                
+                // Send initial sync data
+                if (win && !win.isDestroyed()) {
+                    win.webContents.send('remote:request-sync');
                 }
-            });
+                
+                ws.on('message', (message: string) => {
+                    try {
+                        const data = JSON.parse(message);
+                        console.log('[Remote] Action received:', data);
+                        
+                        if (data.type === 'remote:hello') {
+                            // Handshake
+                            console.log('[Remote] Handshake received from device');
+                        } else {
+                            // Forward action to renderer process
+                            if (win && !win.isDestroyed()) {
+                                win.webContents.send('remote:action', data);
+                            }
+                        }
+                    } catch (err) {
+                        console.error('[Remote] Failed to parse message:', err);
+                    }
+                });
 
-            ws.on('close', () => console.log('[Remote] Device disconnected'));
-        });
+                ws.on('close', () => console.log('[Remote] Device disconnected'));
+            });
+        }
 
         // Use 0.0.0.0 to ensure it's accessible from other devices on the LAN
         server.listen(REMOTE_PORT, '0.0.0.0', () => {
@@ -753,6 +753,15 @@ app.on('activate', () => {
 })
 
 app.whenReady().then(() => {
+    // Register custom protocol handler for local media
+    protocol.handle('gmos', (request) => {
+        const url = request.url.replace(/^gmos:\/\/media\//, '');
+        const decodedPath = decodeURIComponent(url);
+        // On Windows, the path might start with C:/, net.fetch handles it well if it's a file:// URL or absolute path
+        const absolutePath = path.isAbsolute(decodedPath) ? decodedPath : path.join(process.env.APP_ROOT || '', decodedPath);
+        return net.fetch(`file:///${absolutePath}`);
+    });
+
     createWindow();
     startRemoteServer();
 })

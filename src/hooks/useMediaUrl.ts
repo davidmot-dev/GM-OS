@@ -78,6 +78,11 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
                     
                     const cleanPath = sourceIdOrUrl.replace(/^file:\/\/\//, '');
                     
+                    // If we are in Electron (main MJ app), use the custom secure protocol
+                    if (window.appBridge && (cleanPath.startsWith('C:') || cleanPath.startsWith('D:') || cleanPath.startsWith('/') || cleanPath.startsWith('\\'))) {
+                        return `gmos://media/${cleanPath.replace(/\\/g, '/')}`;
+                    }
+                    
                     // If we are on a remote device (tablet), use the media proxy on port 3001
                     if (!window.appBridge && (cleanPath.startsWith('C:') || cleanPath.startsWith('D:') || cleanPath.startsWith('/') || cleanPath.startsWith('\\'))) {
                         const host = window.location.hostname; // Main PC IP
