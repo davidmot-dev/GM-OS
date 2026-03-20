@@ -11,6 +11,7 @@ export interface NPCEntity {
     gmNotes: string;
     fields: Record<string, string>;
     timestamp: number;
+    isDead?: boolean;
 }
 
 interface NPCBridge {
@@ -39,6 +40,7 @@ interface NPCState {
     saveToMemo: () => void;
     deleteFromMemo: (id: string) => void;
     updateEntityNotes: (id: string, notes: string) => void;
+    toggleDeadStatus: (id: string) => void;
     clearHistory: () => void;
     setCurrentEntity: (entity: NPCEntity | null) => void;
 }
@@ -221,6 +223,20 @@ export const useNPCStore = create<NPCState>()(
                 set(state => ({
                     savedEntities: state.savedEntities.map(e => e.id === id ? { ...e, gmNotes: notes } : e)
                 }));
+            },
+
+            toggleDeadStatus: (id) => {
+                const { currentEntity, savedEntities } = get();
+                
+                // Update current if matches
+                if (currentEntity?.id === id) {
+                    set({ currentEntity: { ...currentEntity, isDead: !currentEntity.isDead } });
+                }
+                
+                // Update saved list
+                set({
+                    savedEntities: savedEntities.map(e => e.id === id ? { ...e, isDead: !e.isDead } : e)
+                });
             },
 
             clearHistory: () => {

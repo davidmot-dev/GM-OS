@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
-import { Swords, MapPin, Monitor, Heart, Shield, Wind, Zap, Lock, BookOpen, ArrowLeft, Edit2, CheckCircle, Image as ImageIcon, Sparkles, Layers } from 'lucide-react';
+import { Swords, MapPin, Monitor, Heart, Shield, Wind, Zap, Lock, BookOpen, ArrowLeft, Edit2, CheckCircle, Image as ImageIcon, Sparkles, Layers, Skull } from 'lucide-react';
 import { DEFAULT_SHEET_TEMPLATES, type SheetField } from '../../../data/defaultSheetTemplates';
 import { useMapStore } from '../../map/useMapStore';
 import { useCombatStore } from '../../combat/useCombatStore';
@@ -211,9 +211,17 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                             <ResolvedImage
                                 src={selectedNpc.avatar}
                                 alt={selectedNpc.name}
-                                className="relative z-10 w-full h-full object-contain"
+                                className={`relative z-10 w-full h-full object-contain ${selectedNpc.status === 'dead' ? 'grayscale contrast-125 brightness-75' : ''}`}
                             />
                         </div>
+
+                        {selectedNpc.status === 'dead' && (
+                            <div className="absolute inset-0 z-20 flex items-center justify-center bg-rose-950/20 backdrop-grayscale-[0.5]">
+                                <div className="bg-rose-600 text-white text-[10px] font-black px-3 py-1 rounded shadow-lg shadow-rose-900/50 uppercase tracking-widest rotate-[-10deg] border border-rose-400/50">
+                                    MORT / K.O
+                                </div>
+                            </div>
+                        )}
                         {isEditing ? (
                             <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20 gap-4">
                                 <button
@@ -274,9 +282,22 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                             </>
                         ) : (
                             <>
-                                <h2 className="text-4xl font-display font-black text-accent leading-tight tracking-tight mb-1">
-                                    {selectedNpc.name}
-                                </h2>
+                                <div className="flex items-center gap-4">
+                                    <h2 className={`text-4xl font-display font-black leading-tight tracking-tight mb-1 transition-colors ${selectedNpc.status === 'dead' ? 'text-slate-500 line-through decoration-rose-600/50' : 'text-accent'}`}>
+                                        {selectedNpc.name}
+                                    </h2>
+                                    <button
+                                        onClick={() => updateEntity(selectedNpc.id, { status: selectedNpc.status === 'dead' ? 'alive' : 'dead' })}
+                                        className={`p-2 rounded-xl border-2 transition-all flex items-center justify-center shadow-lg ${
+                                            selectedNpc.status === 'dead' 
+                                            ? 'bg-rose-600 border-rose-400 text-white shadow-glow-rose scale-110' 
+                                            : 'bg-app-surface border-app-border text-app-text/20 hover:text-rose-500 hover:border-rose-500/50'
+                                        }`}
+                                        title={selectedNpc.status === 'dead' ? "Ressusciter" : "Marquer comme Mort / K.O"}
+                                    >
+                                        <Skull size={20} />
+                                    </button>
+                                </div>
                                 <p className="text-app-text/40 text-sm font-medium italic">{selectedNpc.description}</p>
                             </>
                         )}

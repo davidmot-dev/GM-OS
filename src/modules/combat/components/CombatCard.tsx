@@ -30,6 +30,7 @@ const PRESET_STATUSES = [
     { name: 'Concentration', icon: '🧠', duration: 0 },
     { name: 'Soin', icon: '🩹', duration: 1 },
     { name: 'Foudre', icon: '⚡', duration: 1 },
+    { name: 'Mort', icon: '💀', duration: 0 },
 ];
 
 interface CombatCardProps {

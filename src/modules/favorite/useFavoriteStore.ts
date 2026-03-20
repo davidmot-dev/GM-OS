@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { useJournalStore } from '../journal/useJournalStore';
 
 export type FavoriteType = 'npc' | 'place' | 'item' | 'lore';
 
@@ -107,12 +108,26 @@ export const useFavoriteStore = create<FavoriteState>()(
                 return newId;
             },
 
-            updateFavorite: (id, updates) => set((state) => ({
-                favorites: state.favorites.map(fav =>
-                    fav.id === id ? { ...fav, ...updates } : fav
-                ),
-                // if updating the selected one, it automatically reflects but we might want to update lastViewed
-            })),
+            updateFavorite: (id, updates) => {
+                set((state) => {
+                    const favBefore = state.favorites.find(f => f.id === id);
+                    
+                    const nextFavorites = state.favorites.map(fav =>
+                        fav.id === id ? { ...fav, ...updates } : fav
+                    );
+
+                    // Log to journal if just synced to hub
+                    if (favBefore && !favBefore.isSyncedToPlayerHub && updates.isSyncedToPlayerHub) {
+                        useJournalStore.getState().addEvent({
+                            type: 'SYSTEM',
+                            title: 'Élément favori partagé',
+                            content: `L'élément "${favBefore.name}" (${favBefore.type}) a été montré sur le Player Hub.`
+                        });
+                    }
+
+                    return { favorites: nextFavorites };
+                });
+            },
 
             removeFavorite: (id) => set((state) => ({
                 favorites: state.favorites.filter(fav => fav.id !== id),

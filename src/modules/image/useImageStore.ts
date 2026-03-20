@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { ImageMedia, ProjectionTarget, DisplayInfo, ImageFolder, ProjectedEntity } from './types';
+import { useJournalStore } from '../journal/useJournalStore';
+import { gmToast } from '../../stores/useToastStore';
 
 // AppBridge is now defined globally in src/types/window.d.ts
 
@@ -165,10 +167,16 @@ export const useImageStore = create<ImageState>()(
                     projections: { ...state.projections, [target]: media.id }
                 }));
 
-                // Always sync background to Hub for consistency, even if projecting to monitor
-                window.appBridge?.image?.syncHubData('image', media.path);
-                
-                if (target !== 'hub') {
+                // Log to journal
+                useJournalStore.getState().addEvent({
+                    type: 'SYSTEM',
+                    title: 'Image projetée',
+                    content: `Média "${media.name}" projeté sur : ${target === 'hub' ? 'Player Hub' : 'Écran externe'}`
+                });
+
+                if (target === 'hub') {
+                    window.appBridge?.image?.syncHubData('image', media.path);
+                } else {
                     window.appBridge?.image?.launchDisplay([media.path], target);
                 }
             },
@@ -188,10 +196,16 @@ export const useImageStore = create<ImageState>()(
                     projections: { ...state.projections, [target]: url }
                 }));
 
-                // Always sync background to Hub for consistency
-                window.appBridge?.image?.syncHubData('image', url);
+                // Log to journal
+                useJournalStore.getState().addEvent({
+                    type: 'SYSTEM',
+                    title: 'URL projetée',
+                    content: `Source "${url}" projetée sur : ${target === 'hub' ? 'Player Hub' : 'Écran externe'}`
+                });
 
-                if (target !== 'hub') {
+                if (target === 'hub') {
+                    window.appBridge?.image?.syncHubData('image', url);
+                } else {
                     window.appBridge?.image?.launchDisplay([url], target);
                 }
             },
@@ -200,15 +214,37 @@ export const useImageStore = create<ImageState>()(
                 const state = get();
                 const target = state.projectionTarget;
                 
-                // Toggle logic: if already projecting THIS entity, blackout
+                // Toggle logic: if already projecting THIS entity, blackout it specifically
                 if (state.projectedEntity?.id === entity.id) {
-                    get().blackout();
+                    set({ projectedEntity: null });
+                    
+                    // Clear Hub data
+                    window.appBridge?.image?.syncHubData('entity', '');
+                    
+                    // If the current target is Hub AND it's showing this entity's id/image, clear it
+                    if (target === 'hub') {
+                        set((state) => ({ projections: { ...state.projections, hub: null } }));
+                        window.appBridge?.image?.syncHubData('image', '');
+                    } else if (state.projections[target] === (entity.avatar || entity.imageUrl || entity.portraitUrl)) {
+                        // Also clear from external monitor if it matches
+                        set((state) => ({ projections: { ...state.projections, [target]: null } }));
+                        window.appBridge?.image?.launchDisplay([], target);
+                    }
+                    
+                    gmToast(`Retrait de ${entity.name} du Player Hub.`);
                     return;
                 }
 
                 set({ projectedEntity: entity });
 
-                // ALWAYS send to Player Hub for "Diorama" view (card + description)
+                // Log to journal
+                useJournalStore.getState().addEvent({
+                    type: 'NPC',
+                    title: 'Entité projetée',
+                    content: `Fiche de "${entity.name}" (${entity.subtitle || 'Entité'}) envoyée au Player Hub.`
+                });
+
+                // Entities (Dioramas) ALWAYS go to Player Hub as it's the only screen with stats view
                 window.appBridge?.image?.syncHubData('entity', JSON.stringify(entity));
 
                 if (target !== 'hub') {
@@ -279,11 +315,10 @@ export const useImageStore = create<ImageState>()(
                     projectedEntity: target === 'hub' ? null : state.projectedEntity
                 }));
 
-                // Always clear Hub sync for consistency with projectSolo's global sync
-                window.appBridge?.image?.syncHubData('image', '');
-                window.appBridge?.image?.syncHubData('entity', '');
-
-                if (target !== 'hub') {
+                if (target === 'hub') {
+                    window.appBridge?.image?.syncHubData('image', '');
+                    window.appBridge?.image?.syncHubData('entity', '');
+                } else {
                     window.appBridge?.image?.launchDisplay([], target);
                 }
             },

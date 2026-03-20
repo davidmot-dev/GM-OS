@@ -19,6 +19,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@gradio/client": "^2.1.0",
     "@types/fs-extra": "^11.0.4",
+    "date-fns": "^4.1.0",
     "fs-extra": "^11.3.3",
     "idb": "^8.0.3",
     "lucide-react": "^0.575.0",

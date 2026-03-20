@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNPCStore } from '../useNPCStore';
-import { Trash2, Trash, User, MapPin, Package, Zap, Quote, ChevronRight } from 'lucide-react';
+import { Trash2, Trash, User, MapPin, Package, Zap, Quote, ChevronRight, Skull } from 'lucide-react';
 
 const NPCHistory: React.FC = () => {
     const { savedEntities, deleteFromMemo, setCurrentEntity, clearHistory } = useNPCStore();
@@ -55,7 +55,7 @@ const NPCHistory: React.FC = () => {
                                         ? entity.avatar
                                         : `file:///${entity.avatar.replace(/\\/g, '/')}`}
                                     alt={entity.name}
-                                    className="w-full h-full object-cover"
+                                    className={`w-full h-full object-cover ${entity.isDead ? 'grayscale opacity-50' : ''}`}
                                 />
                             ) : (
                                 getMiniIcon(entity.category)
@@ -63,7 +63,12 @@ const NPCHistory: React.FC = () => {
                         </div>
 
                         <div className="flex-1 min-w-0">
-                            <p className="text-[11px] font-bold text-slate-200 truncate">{entity.name}</p>
+                            <div className="flex items-center gap-1.5">
+                                <p className={`text-[11px] font-bold truncate ${entity.isDead ? 'text-slate-500 line-through' : 'text-slate-200'}`}>
+                                    {entity.name}
+                                </p>
+                                {entity.isDead && <Skull size={10} className="text-rose-500 shrink-0" />}
+                            </div>
                             <p className="text-[8px] text-slate-500 uppercase">{entity.category}</p>
                         </div>
 

@@ -25,7 +25,8 @@ import {
     Save,
     Download,
     Brain,
-    Sparkles
+    Sparkles,
+    BookOpen
 } from 'lucide-react';
 import { useSessionStore, THEME_PALETTES } from '../store/useSessionStore';
 import type { ThemeID } from '../store/useSessionStore';
@@ -173,6 +174,12 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         label="Session OS"
                         active={activeModule === 'dashboard'}
                         onClick={() => setActiveModule('dashboard')}
+                    />
+                    <NavItem
+                        icon={<BookOpen size={20} />}
+                        label="Journal OS"
+                        active={activeModule === 'journal'}
+                        onClick={() => setActiveModule('journal')}
                     />
 
                     <div className="my-3 mx-2 h-px bg-app-border/20" />

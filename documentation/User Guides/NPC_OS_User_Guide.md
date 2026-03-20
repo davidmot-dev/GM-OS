@@ -52,9 +52,10 @@ Les fichiers doivent être déposés dans le dossier `databases/` à la racine d
 | :--- | :--- |
 | **⚔️ Combat** | Envoie le PNJ directement dans le **Combat OS** avec des PV et une initiative aléatoire. |
 | **📍 Map** | Crée un pion (Token) avec l'avatar et le nom sur la carte tactique actuelle de **Map OS**. |
-| **📝 Wiki** | Ajoute une entrée complète dans le journal de la session actuelle pour garder une trace narrative. |
+| **📝 Wiki & Journal** | Ajoute une entrée complète dans le Wiki ET une trace dans le Journal de session. |
 | **⭐ Favoris** | Enregistre l'entité dans votre **Panthéon** pour une réutilisation dans d'autres campagnes. |
-| **💾 Mémo** | Garde l'entité dans l'historique local (colonne de gauche) pour ne pas la perdre si vous relancez une génération. |
+| **🎁 Donner** | Transfère l'objet à un PJ en enregistrant précisément le **destinataire** dans le Journal. |
+| **💾 Mémo** | Garde l'entité dans l'historique local pour ne pas la perdre. |
 
 ## 🖼️ Galerie des PNJs (Session)
 

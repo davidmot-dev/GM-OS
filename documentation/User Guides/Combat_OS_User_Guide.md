@@ -40,11 +40,11 @@ Ajoutez des icônes et des noms d'effets (ex: *Étourdi*, *En Feu*).
 Modifiez les points de vie des participants durant le combat. Une fois l'affrontement terminé ou pendant une pause, cliquez sur **"Sync PV vers Session"** pour mettre à jour durablement les fiches de personnages (PJ) et d'entités (PNJ) dans la base de données de la campagne.
 
 ## 📑 Archive et Fin de Combat
-
-Le bouton **"Fin de Combat"** ne se contente pas de vider la liste :
-1. Il génère un rapport markdown listant les participants et leur état final.
-2. Il ajoute cet événement à la **Timeline** de votre session.
-3. Il libère tous les combattants pour la prochaine rencontre.
+Le bouton **"Tout Effacer"** (Fin de Combat) déclenche plusieurs actions de session :
+1. **Résumé de Combat** : Génère une entrée dans le Journal listant les rounds écoulés, le nombre de participants, les survivants et les pertes.
+2. **Constat de Décès** : Chaque PNJ ayant le statut "Mort" (💀) lors de la fin du combat crée une entrée dédiée dans le Journal et met à jour son statut dans le Session OS.
+3. **Log de Session** : Ajoute l'événement à la chronologie de votre session active.
+4. **Libération** : Vide la liste pour la prochaine rencontre.
 
 ---
 

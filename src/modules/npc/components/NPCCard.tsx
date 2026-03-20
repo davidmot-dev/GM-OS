@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNPCStore } from '../useNPCStore';
-import { Save, Sword, FileText, Share2, User, MapPin, Package, Zap, Quote, Star, Eye, Sparkles } from 'lucide-react';
+import { Save, Sword, FileText, Share2, User, MapPin, Package, Zap, Quote, Star, Eye, Sparkles, Skull } from 'lucide-react';
 import { useCombatStore } from '../../combat/useCombatStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useMapStore } from '../../map/useMapStore';
@@ -10,13 +10,14 @@ import { useFavoriteStore, type FavoriteType } from '../../favorite/useFavoriteS
 import { useImageStore } from '../../image/useImageStore';
 import { useVoiceStore } from '../../voice/useVoiceStore';
 import AIPromptOverlay from '../../ai/components/AIPromptOverlay';
+import { useJournalStore } from '../../journal/useJournalStore';
 import { RecipientSelector } from '../../session/components/RecipientSelector';
 
 const NPCCard: React.FC = () => {
-    const { currentEntity, saveToMemo, isGenerating, selectAvatar, generateAvatar, isGeneratingAIAvatar } = useNPCStore();
+    const { currentEntity, saveToMemo, isGenerating, selectAvatar, generateAvatar, isGeneratingAIAvatar, toggleDeadStatus } = useNPCStore();
     const [showAIPrompt, setShowAIPrompt] = useState(false);
     const { addCombatant } = useCombatStore();
-    const { sessions, selectedSessionId, addWikiEntry, addLootToCharacter } = useSessionOSStore();
+    const { sessions, selectedSessionId, addWikiEntry, addLootToCharacter, players, entities } = useSessionOSStore();
     const [showRecipientSelector, setShowRecipientSelector] = useState(false);
     const { addToken } = useMapStore();
     const { addFavorite } = useFavoriteStore();
@@ -133,6 +134,11 @@ const NPCCard: React.FC = () => {
     const handleGiveToPC = (playerId: string, characterId: string) => {
         if (!currentEntity) return;
         
+        // Find recipient name for Journal
+        const player = players.find(p => p.id === playerId);
+        const character = entities.find(e => e.id === characterId);
+        const recipientName = character?.name || player?.realName || "un PJ";
+
         let lootString = "";
         
         // If it's an item, format it with markdown for better readability
@@ -156,6 +162,13 @@ const NPCCard: React.FC = () => {
                 .join(' | ');
             lootString = `${currentEntity.name} (${itemDetails})`;
         }
+
+        // Add to Journal
+        useJournalStore.getState().addEvent({
+            type: 'SYSTEM',
+            title: `Don de NPC-OS : ${currentEntity.name}`,
+            content: `Élément : **${currentEntity.name}** (${currentEntity.category})\nDonné à : **${recipientName}**\n\n*Détails : ${lootString}*`
+        });
         
         addLootToCharacter(playerId, characterId, lootString);
         setShowRecipientSelector(false);
@@ -183,23 +196,31 @@ const NPCCard: React.FC = () => {
                         transform: `scale(${voiceScale})`,
                         boxShadow: voiceGlow,
                     }}
-                    className={`w-40 h-40 rounded-2xl bg-app-bg/50 border-2 border-accent/30 flex items-center justify-center text-accent shadow-glow-accent z-10 transition-all duration-75 hover:border-accent overflow-hidden group/avatar relative`}
+                    className={`w-40 h-40 rounded-2xl bg-app-bg/50 border-2 ${currentEntity?.isDead ? 'border-rose-900/50' : 'border-accent/30'} flex items-center justify-center text-accent shadow-glow-accent z-10 transition-all duration-75 hover:border-accent overflow-hidden group/avatar relative`}
                 >
                     {avatarSrc ? (
                         <>
                             <img 
                                 src={avatarSrc} 
                                 alt="" 
-                                className="absolute inset-0 w-full h-full object-cover blur-xl opacity-30 scale-110" 
+                                className={`absolute inset-0 w-full h-full object-cover blur-xl opacity-30 scale-110 ${currentEntity?.isDead ? 'grayscale brightness-50' : ''}`} 
                             />
                             <img 
                                 src={avatarSrc} 
                                 alt={currentEntity.name} 
-                                className="relative z-10 w-full h-full object-contain" 
+                                className={`relative z-10 w-full h-full object-contain ${currentEntity?.isDead ? 'grayscale contrast-125 brightness-75' : ''}`} 
                             />
                         </>
                     ) : (
-                        React.cloneElement(getIcon() as React.ReactElement<{ size?: number }>, { size: 64 })
+                        React.cloneElement(getIcon() as React.ReactElement<{ size?: number; className?: string }>, { size: 64, className: currentEntity?.isDead ? 'grayscale opacity-50' : '' })
+                    )}
+
+                    {currentEntity?.isDead && (
+                        <div className="absolute inset-0 z-20 flex items-center justify-center bg-rose-950/20 backdrop-grayscale-[0.5]">
+                            <div className="bg-rose-600 text-white text-[10px] font-black px-2 py-0.5 rounded shadow-lg shadow-rose-900/50 uppercase tracking-tighter rotate-[-10deg] border border-rose-400/50">
+                                Mort
+                            </div>
+                        </div>
                     )}
                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity z-20 gap-4">
                         <div
@@ -224,14 +245,27 @@ const NPCCard: React.FC = () => {
                     )}
                 </button>
 
-                <div className="absolute top-4 right-4 text-[10px] uppercase font-bold tracking-widest text-accent/50 px-2 py-1 border border-accent/20 rounded bg-accent/5">
-                    {currentEntity.category}
+                <div className="absolute top-4 right-4 flex gap-2 z-30">
+                    <button
+                        onClick={(e) => { e.stopPropagation(); toggleDeadStatus(currentEntity.id); }}
+                        className={`p-2 rounded-lg border-2 transition-all flex items-center justify-center shadow-lg ${
+                            currentEntity.isDead 
+                            ? 'bg-rose-600 border-rose-400 text-white shadow-glow-rose scale-110' 
+                            : 'bg-app-surface/90 border-app-border text-slate-400 hover:text-rose-500 hover:border-rose-500/50 hover:bg-app-surface'
+                        }`}
+                        title={currentEntity.isDead ? "Ressusciter" : "Marquer comme Mort"}
+                    >
+                        <Skull size={18} />
+                    </button>
+                    <div className="text-[10px] uppercase font-bold tracking-widest text-accent/50 px-2 py-1 border border-accent/20 rounded bg-accent/5 flex items-center backdrop-blur-sm">
+                        {currentEntity.category}
+                    </div>
                 </div>
             </div>
 
             {/* Content Area */}
             <div className="p-8 flex-1">
-                <h1 className="text-4xl font-display font-black text-white mb-6 tracking-tight border-b border-app-border pb-4">
+                <h1 className={`text-4xl font-display font-black mb-6 tracking-tight border-b border-app-border pb-4 transition-colors ${currentEntity.isDead ? 'text-slate-500 line-through decoration-rose-600/50' : 'text-white'}`}>
                     {currentEntity.name}
                 </h1>
 

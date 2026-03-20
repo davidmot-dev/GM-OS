@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { TableBridge, TableData, TableResult } from './types';
 import { TableEngine } from './TableEngine';
+import { useJournalStore } from '../journal/useJournalStore';
 
 interface TableState {
     universes: string[];
@@ -106,25 +107,19 @@ export const useTableStore = create<TableState>()(
 
             clearCurrentResult: () => set({ currentResult: null }),
 
-            sendToSession: () => {
+            sendToSession: (recipientName?: string) => {
                 const { currentResult } = get();
                 if (!currentResult) return;
 
-                // In v5, we want to integrate with useSessionOSStore
-                // We'll expose this via a simple string format
-                const formatted = `\n--- TABLE ROLL: ${currentResult.tableName} ---\n` +
-                    `Roll: ${currentResult.rawRoll} ${currentResult.modifier >= 0 ? '+' : ''}${currentResult.modifier} = ${currentResult.finalValue}\n` +
-                    `Result: ${currentResult.entry.title}\n` +
-                    `${currentResult.entry.description}\n` +
-                    (currentResult.entry.effect ? `Effect: ${currentResult.entry.effect}\n` : '') +
-                    `----------------------------\n`;
+                // Log the actual roll result to Journal only when shared
+                useJournalStore.getState().addEvent({
+                    type: 'ORACLE',
+                    title: `Partage Table : ${currentResult.tableName}`,
+                    content: `Jet: ${currentResult.rawRoll} (Mod: ${currentResult.modifier}) -> ${currentResult.finalValue}\nRésultat : **${currentResult.entry.title}**\n${currentResult.entry.description || ''}${recipientName ? `\n\n*Donné à : ${recipientName}*` : ''}`
+                });
 
-                // For now, we'll try to find the session store in window or just log it
-                // Ideally, TableDashboard will handle the cross-store call.
-                console.log("SENDING TO SESSION:", formatted);
-
-                // We'll update useSessionOSStore via Dashboard to stay clean (no store-to-store deps if possible)
-                // But we'll add a flag or trigger here if needed.
+                // UI feedback
+                console.log("SENDING TO SESSION:", currentResult.entry.title);
             }
         }),
         {

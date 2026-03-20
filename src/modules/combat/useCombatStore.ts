@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { DiceEngine } from '../dice/DiceEngine';
 import { gmToast } from '../../stores/useToastStore';
+import { useJournalStore } from '../journal/useJournalStore';
 import type { HealthSystem } from '../session/useSessionOSStore';
 
 export interface StatusEffect {
@@ -82,6 +83,7 @@ interface CombatState {
 
     // Sync
     syncCombatantHPToSession: () => void;
+    propagateStatusToSession: () => void;
     
     // Damage/Heal
     applyDamage: (amount: number, type: string, targetIds: string[]) => void;
@@ -136,7 +138,30 @@ export const useCombatStore = create<CombatState>()(
                 combatants: state.combatants.map(c => c.id === id ? { ...c, ...updates } : c)
             })),
 
-            clearCombatants: () => set({ combatants: [], currentTurnIdx: 0, round: 1 }),
+            clearCombatants: () => {
+                const { combatants, round } = get();
+                
+                if (combatants.length > 0) {
+                    const survivors = combatants.filter(c => !c.statuses.some(s => s.name.toLowerCase() === 'mort' || s.icon === '💀'));
+                    const casualities = combatants.filter(c => c.statuses.some(s => s.name.toLowerCase() === 'mort' || s.icon === '💀'));
+                    
+                    const summary = [
+                        `Combat terminé après **${round} rounds**.`,
+                        `**Participants :** ${combatants.length}`,
+                        casualities.length > 0 ? `**Pertes :** ${casualities.map(c => c.name).join(', ')}` : '**Pertes :** Aucune',
+                        `**Survivants :** ${survivors.map(c => c.name).join(', ')}`
+                    ].join('\n');
+
+                    useJournalStore.getState().addEvent({
+                        type: 'COMBAT',
+                        title: 'Combat : Résumé de fin',
+                        content: summary,
+                        metadata: { round, totalCombatants: combatants.length, casualitiesCount: casualities.length }
+                    });
+                }
+                
+                set({ combatants: [], currentTurnIdx: 0, round: 1 });
+            },
 
             setInitiative: (id, init) => set((state) => ({
                 combatants: state.combatants.map(c => c.id === id ? { ...c, init } : c)
@@ -241,6 +266,14 @@ export const useCombatStore = create<CombatState>()(
                 });
                 
                 gmToast(`Initiative système lancée (${sortOrder === 'desc' ? 'Décroissant' : 'Croissant'})`, "success");
+                
+                useJournalStore.getState().addEvent({
+                    type: 'COMBAT',
+                    title: 'Combat : Initiative',
+                    content: `Round ${state.round} - L'initiative a été tirée pour ${newCombatants.length} combattants.`,
+                    metadata: { round: state.round, count: newCombatants.length }
+                });
+
                 return { combatants: newCombatants, currentTurnIdx: 0 };
             }),
 
@@ -349,34 +382,16 @@ export const useCombatStore = create<CombatState>()(
                     return c;
                 })
             })),
-
             syncCombatantHPToSession: () => {
                 const { combatants } = get();
-                // We use a dynamic import or window access to avoid circular dependency if possible,
-                // but for GM-OS we often use the global state access.
-                // For strict typing, we'll try to get the store from the window if it's been registered there,
-                // or just rely on the fact that this is a companion app where we control the environment.
-                
-                // Let's assume the session store is available via its own hook or a global reg.
-                // In GM-OS v5, we often use 'window.useSessionOSStore' if we register it, or just use it.
-                // However, the cleanest way is often to just use the reactive nature if possible, 
-                // but for a "push" sync, we need the action.
-
-                const sessionStore = (window as unknown as Record<string, { 
-                    getState: () => {
-                        players: { id: string, characters: { id: string }[] }[],
-                        updateCharacterHP: (pId: string, cId: string, hp: number) => void,
-                        updateEntityHP?: (eId: string, hp: number) => void
-                    }
-                }>).useSessionOSStore?.getState?.();
+                const sessionStore = (window as any).useSessionOSStore?.getState?.();
                 
                 if (!sessionStore) return;
 
                 combatants.forEach(c => {
                     if (c.isPlayer && c.sourcePlayerId) {
-                        // Find the player who owns this character
-                        sessionStore.players.forEach((p: { id: string, characters: { id: string }[] }) => {
-                            const char = p.characters.find(char => char.id === c.sourcePlayerId);
+                        sessionStore.players.forEach((p: any) => {
+                            const char = p.characters.find((char: any) => char.id === c.sourcePlayerId);
                             if (char) {
                                 sessionStore.updateCharacterHP(p.id, char.id, c.hp);
                             }
@@ -384,6 +399,32 @@ export const useCombatStore = create<CombatState>()(
                     } else if (!c.isPlayer && c.sourceEntityId) {
                         if (typeof sessionStore.updateEntityHP === 'function') {
                             sessionStore.updateEntityHP(c.sourceEntityId, c.hp);
+                        }
+                    }
+                });
+            },
+
+            propagateStatusToSession: () => {
+                const { combatants } = get();
+                const sessionStore = (window as any).useSessionOSStore?.getState?.();
+                
+                if (!sessionStore) return;
+
+                combatants.forEach(c => {
+                    const isMort = c.statuses.some(s => s.name.toLowerCase() === 'mort' || s.icon === '💀');
+                    
+                    if (isMort && !c.isPlayer && c.sourceEntityId) {
+                        if (typeof sessionStore.updateEntity === 'function') {
+                            sessionStore.updateEntity(c.sourceEntityId, { status: 'dead' });
+                            gmToast(`${c.name} marqué comme MORT dans la Galerie.`, "info");
+
+                            // Log to Journal
+                            useJournalStore.getState().addEvent({
+                                type: 'NPC',
+                                title: `Décès : ${c.name}`,
+                                content: `Le PNJ **${c.name}** a été marqué comme **MORT** suite au combat (Combat-OS).`,
+                                metadata: { entityId: c.sourceEntityId }
+                            });
                         }
                     }
                 });

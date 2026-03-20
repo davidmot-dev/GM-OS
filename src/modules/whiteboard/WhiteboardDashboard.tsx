@@ -12,6 +12,8 @@ import {
     Cast
 } from 'lucide-react';
 import { gmCustom } from '../../stores/useModalStore';
+import { useJournalStore } from '../journal/useJournalStore';
+import { gmToast } from '../../stores/useToastStore';
 
 const WhiteboardDashboard: React.FC = () => {
     const canvasRef = useRef<DrawingCanvasRef>(null);
@@ -32,7 +34,10 @@ const WhiteboardDashboard: React.FC = () => {
     const isLight = backgroundMode === 'light';
 
     const handleExport = async () => {
-        if (!canvasRef.current || !isSessionActive || !activeSession) return;
+        if (!canvasRef.current || !isSessionActive || !activeSession) {
+            gmToast("Export impossible : Session inactive.", "error");
+            return;
+        }
 
         try {
             const blob = await canvasRef.current.getBlob();
@@ -54,10 +59,18 @@ const WhiteboardDashboard: React.FC = () => {
                 linkedEntityIds: []
             });
 
-            alert("Whiteboard exporté avec succès dans le Wiki !");
+            // 3. Add to Journal
+            useJournalStore.getState().addEvent({
+                type: 'SYSTEM',
+                title: 'Capture Whiteboard',
+                content: `Une copie du Whiteboard a été sauvegardée dans le Media Hub et liée au Wiki de la session.`,
+                metadata: { mediaId, filename }
+            });
+
+            gmToast("Whiteboard exporté avec succès ! (Media + Wiki + Journal)", "success");
         } catch (err) {
             console.error('[Whiteboard] Export failed:', err);
-            alert("Erreur lors de l'exportation du Whiteboard.");
+            gmToast("Erreur lors de l'exportation du Whiteboard.", "error");
         }
     };
 
@@ -89,25 +102,27 @@ const WhiteboardDashboard: React.FC = () => {
                     <button 
                         onClick={() => gmCustom('whiteboard-projection-select')}
                         className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all border font-black uppercase text-xs tracking-widest ${projectionTarget ? 'bg-app-surface text-app-text/40 border-app-border' : 'bg-accent/20 hover:bg-accent/30 text-accent border-accent/20'}`}
+                        title="Projeter le Whiteboard"
                     >
                         <Cast size={14} />
                         Projeter
                     </button>
                     <div className="w-px h-6 bg-white/10 mx-1" />
-                    <button onClick={undo} className="p-2 rounded-lg bg-app-surface/40 hover:bg-app-surface/60 text-app-text/60 transition-all border border-app-border">
+                    <button onClick={undo} className="p-2 rounded-lg bg-app-surface/40 hover:bg-app-surface/60 text-app-text/60 transition-all border border-app-border" title="Annuler">
                         <RotateCcw size={18} />
                     </button>
-                    <button onClick={redo} className="p-2 rounded-lg bg-app-surface/40 hover:bg-app-surface/60 text-app-text/60 transition-all border border-app-border">
+                    <button onClick={redo} className="p-2 rounded-lg bg-app-surface/40 hover:bg-app-surface/60 text-app-text/60 transition-all border border-app-border" title="Rétablir">
                         <RotateCw size={18} />
                     </button>
                     <div className="w-px h-6 bg-white/10 mx-1" />
-                    <button onClick={clearBoard} className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-all border border-red-500/10">
+                    <button onClick={clearBoard} className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-all border border-red-500/10" title="Effacer tout">
                         <Trash2 size={18} />
                     </button>
                     {isSessionActive && (
                         <button 
                             onClick={handleExport}
                             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent/20 hover:bg-accent/30 text-accent text-xs font-black uppercase tracking-widest transition-all border border-accent/20"
+                            title="Exporter vers le Wiki"
                         >
                             <Download size={14} />
                             Export

@@ -63,10 +63,11 @@ Localisation du prompt : `databases/tables/MedFan/Prompt Aide Création de Table
 
 ---
 
-## 🔗 Intégration avec Session-OS
+## 🔗 Intégration avec Session-OS (Journal & Log)
 Chaque tirage peut être envoyé directement dans le log de votre session actuelle :
-- Cliquez sur **"Envoyer au Log Session"** sous un résultat.
-- Le texte (Titre, Roll, Description, Effet) sera ajouté aux "GM Secrets" de la session active pour référence future.
+- **Log Session** : Envoie le texte (Titre, Roll, Description, Effet) dans le Journal de la session.
+- **Donner à un PJ** : Envoie l'objet à un joueur et crée une entrée dans le Journal mentionnant explicitement le **destinataire** (Personnage ou Joueur).
+- Les détails sont automatiquement formatés en Markdown pour une lecture propre dans le Journal.
 
 ---
 

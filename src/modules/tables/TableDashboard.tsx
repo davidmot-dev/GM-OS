@@ -30,12 +30,15 @@ const TableDashboard: React.FC = () => {
         selectTable,
         setModifier,
         roll,
-        clearCurrentResult
+        clearCurrentResult,
+        sendToSession
     } = useTableStore();
 
     const { 
         activeCampaignId, 
         sessions, 
+        players,
+        entities,
         updateSessionGmSecrets,
         addLootToCharacter 
     } = useSessionOSStore();
@@ -56,6 +59,9 @@ const TableDashboard: React.FC = () => {
     const handleSendToSession = () => {
         if (!currentResult || !activeSession) return;
 
+        // Use the store's unified logging (Journal)
+        sendToSession();
+
         const formatted = `\n--- TABLE ROLL: ${currentResult.tableName} ---\n` +
             `Roll: ${currentResult.rawRoll} ${currentResult.modifier >= 0 ? '+' : ''}${currentResult.modifier} = ${currentResult.finalValue}\n` +
             `Result: ${currentResult.entry.title}\n` +
@@ -69,6 +75,15 @@ const TableDashboard: React.FC = () => {
     const handleGiveToPC = (playerId: string, characterId: string) => {
         if (!currentResult) return;
         
+        // Find recipient name for Journal
+        const player = players.find(p => p.id === playerId);
+        const character = entities.find(e => e.id === characterId);
+
+        const recipientName = character?.name || player?.realName || "un PJ";
+        
+        // Log to Journal via store with recipient
+        sendToSession(recipientName);
+
         let lootString = `**${currentResult.entry.title}** (${currentResult.tableName})\n`;
         lootString += `_${currentResult.entry.description}_`;
         if (currentResult.entry.effect) {

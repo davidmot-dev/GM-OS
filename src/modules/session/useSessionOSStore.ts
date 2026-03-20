@@ -8,6 +8,7 @@ import type { Playlist } from '../music/useMusicStore';
 import type { Atmosphere } from '../sound/useSoundStore';
 import type { AmbientTrackState } from '../ambient/useAmbientStore';
 import type { LightScene } from '../light/useLightStore';
+import { useJournalStore } from '../journal/useJournalStore';
 import type { ImageMedia, ImageFolder } from '../image/types';
 import type { WebLink } from '../web/types';
 import type { Combatant } from '../combat/useCombatStore';
@@ -15,6 +16,9 @@ import type { GameDriver } from '../../types/drivers';
 import { obsidianExportService } from './ObsidianExportService';
 import { useObsidianStore } from './useObsidianStore';
 import { HealthInterpreter } from './logic/HealthInterpreter';
+import { useClockStore } from '../../store/useClockStore';
+import { useWhiteboardStore } from '../whiteboard/useWhiteboardStore';
+import type { SessionSnapshot } from '../journal/types';
 
 export interface DamageImpact {
     value: number;
@@ -654,12 +658,23 @@ export const useSessionOSStore = create<SessionOSState>()(
             timelineEvents: mockTimelineEvents,
             wikiEntries: mockWikiEntries,
 
-            setActiveCampaign: (id) => set({ 
-                activeCampaignId: id, 
-                currentView: 'cockpit',
-                selectedSessionId: null,
-                selectedAtlasMapId: null
-            }),
+            setActiveCampaign: (id) => {
+                set({ 
+                    activeCampaignId: id, 
+                    currentView: 'cockpit',
+                    selectedSessionId: null,
+                    selectedAtlasMapId: null
+                });
+                if (id) {
+                    const campaign = get().campaigns.find(c => c.id === id);
+                    useJournalStore.getState().stopJournal(); // Close previous journal if any
+                    useJournalStore.getState().addEvent({
+                        type: 'SYSTEM',
+                        title: 'Campagne activée',
+                        content: `La campagne "${campaign?.name || id}" est maintenant active.`
+                    });
+                }
+            },
 
             setCurrentView: (view) => {
                 set({ currentView: view });
@@ -1006,9 +1021,56 @@ export const useSessionOSStore = create<SessionOSState>()(
                 return newId;
             },
 
-            updateSession: (id, updates) => set((state) => ({
-                sessions: state.sessions.map(s => s.id === id ? { ...s, ...updates } : s)
-            })),
+            updateSession: (id, updates) => set((state) => {
+                const session = state.sessions.find(s => s.id === id);
+                if (session && updates.status === 'done' && session.status === 'active') {
+                    // Create Snapshot before stopping
+                    const presentPCs = state.players
+                        .filter(p => p.isOnline)
+                        .flatMap(p => p.characters.filter(c => c.campaignId === session.campaignId))
+                        .map(c => ({
+                            name: c.name,
+                            hp: c.hp,
+                            maxHp: c.maxHp,
+                            state: c.healthSystem?.state || 'healthy'
+                        }));
+
+                    const sessionEntities = state.entities
+                        .filter(e => session.sessionEntityIds?.includes(e.id))
+                        .map(e => ({
+                            name: e.name,
+                            hp: e.hp,
+                            maxHp: e.maxHp,
+                            status: e.status
+                        }));
+
+                    const pendingChecklist = session.checklist
+                        .filter(item => !item.isCompleted)
+                        .map(item => item.text);
+
+                    const clocks = useClockStore.getState().tensions.map((t: any) => ({
+                        name: t.name,
+                        filled: t.filledSegments,
+                        total: t.totalSegments
+                    }));
+
+                    const whiteboardSnapshot = (useWhiteboardStore.getState() as any).paths;
+
+                    const snapshot: SessionSnapshot = {
+                        notes: session.sessionNotes,
+                        presentPCs,
+                        sessionEntities,
+                        pendingChecklist,
+                        clocks,
+                        whiteboardSnapshot
+                    };
+
+                    useJournalStore.getState().stopJournal(snapshot);
+                }
+                return {
+                    sessions: state.sessions.map(s => s.id === id ? { ...s, ...updates } : s)
+                };
+            }),
 
             updateSessionPublicSummary: (sessionId, summary) => set((state) => ({
                 sessions: state.sessions.map(s => s.id === sessionId ? { ...s, publicSummary: summary } : s)
@@ -1022,17 +1084,32 @@ export const useSessionOSStore = create<SessionOSState>()(
                 sessions: state.sessions.map(s => s.id === sessionId ? { ...s, gmSecrets: secrets } : s)
             })),
 
-            toggleChecklistItem: (sessionId, itemId) => set((state) => ({
-                sessions: state.sessions.map(s => {
-                    if (s.id === sessionId) {
-                        return {
-                            ...s,
-                            checklist: s.checklist.map(item => item.id === itemId ? { ...item, isCompleted: !item.isCompleted } : item)
-                        };
-                    }
-                    return s;
-                })
-            })),
+            toggleChecklistItem: (sessionId, itemId) => {
+                const session = get().sessions.find(s => s.id === sessionId);
+                const item = session?.checklist.find(i => i.id === itemId);
+                const wasCompleted = item?.isCompleted;
+
+                set((state) => ({
+                    sessions: state.sessions.map(s => {
+                        if (s.id === sessionId) {
+                            return {
+                                ...s,
+                                checklist: s.checklist.map(i => i.id === itemId ? { ...i, isCompleted: !i.isCompleted } : i)
+                            };
+                        }
+                        return s;
+                    })
+                }));
+
+                // Log to journal if it was just marked as completed
+                if (!wasCompleted && item) {
+                    useJournalStore.getState().addEvent({
+                        type: 'SYSTEM',
+                        title: 'Checklist mise à jour',
+                        content: `Élément complété : "${item.text}"`
+                    });
+                }
+            },
 
             addChecklistItem: (sessionId, text) => set((state) => ({
                 sessions: state.sessions.map(s => 
@@ -1442,9 +1519,26 @@ export const useSessionOSStore = create<SessionOSState>()(
                     state.applySystemSnapshot(session.moduleSnapshot);
                 }
 
+                // Activate Journal Recording & Start new Journal entry
+                const campaignLabel = state.campaigns.find(c => c.id === session.campaignId)?.name || 'Campagne';
+                const presentPlayers = state.players.filter(p => p.isOnline).map(p => p.realName);
+                
+                useJournalStore.getState().startJournal(
+                    campaignLabel, 
+                    `Session #${session.number}`,
+                    {
+                        presentPlayers,
+                        publicSummary: session.publicSummary
+                    }
+                );
+
                 return {
                     sessions: state.sessions.map(s => {
                         if (s.campaignId === session.campaignId) {
+                            const isStopping = s.status === 'active' && s.id !== sessionId;
+                            if (isStopping) {
+                                useJournalStore.getState().stopJournal();
+                            }
                             return { ...s, status: s.id === sessionId ? 'active' : (s.status === 'active' ? 'done' : s.status) };
                         }
                         return s;

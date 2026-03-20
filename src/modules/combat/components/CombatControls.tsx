@@ -17,7 +17,8 @@ const CombatControls: React.FC = () => {
         nextTurn,
         addCombatant,
         clearCombatants,
-        syncCombatantHPToSession
+        syncCombatantHPToSession,
+        propagateStatusToSession
     } = useCombatStore();
 
     const {
@@ -163,7 +164,12 @@ const CombatControls: React.FC = () => {
             involvedEntityIds: combatants.map(c => c.sourceEntityId || c.sourcePlayerId).filter(Boolean) as string[]
         });
 
-        gmToast("Résumé de combat exporté dans la Chronologie !");
+        // 🆕 Propagation of statuses (e.g. Mort) to Session OS entities
+        propagateStatusToSession();
+        // and final HP sync just in case
+        syncCombatantHPToSession();
+
+        gmToast("Résumé de combat exporté et statuts propagés !");
     };
 
     return (

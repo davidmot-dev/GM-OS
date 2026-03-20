@@ -31,6 +31,7 @@ const VoiceDashboard = lazy(() => import('./modules/voice/VoiceDashboard'));
 const ProjectorView = lazy(() => import('./modules/image/components/ProjectorView'));
 const PlayerHub = lazy(() => import('./components/PlayerHub'));
 const ObsidianPanel = lazy(() => import('./modules/session/components/ObsidianPanel'));
+const JournalDashboard = lazy(() => import('./modules/journal/JournalDashboard'));
 const FavoriteDashboard = lazy(() => import('./modules/favorite/components/FavoriteDashboard').then(m => ({ default: m.FavoriteDashboard })));
 
 // --- SHARED COMPONENTS ---
@@ -166,6 +167,7 @@ function App() {
       case 'debug': return <DebugDashboard />;
       case 'voice': return <VoiceDashboard />;
       case 'obsidian': return <ObsidianPanel />;
+      case 'journal': return <JournalDashboard />;
       default: return <PlaceholderModule name={activeModule} />;
     }
   };

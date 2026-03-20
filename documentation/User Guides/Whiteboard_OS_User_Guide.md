@@ -33,12 +33,13 @@ Transformez vos croquis en éléments de jeu partagés :
 
 ---
 
-## 📸 Snapshot Wiki (La fonction magique)
+### 📸 Snapshot Wiki & Journal (La fonction magique)
 Une des fonctions les plus puissantes de Whiteboard-OS est son intégration avec le **Session Wiki** :
 1. Cliquez sur **"EXPORT"**.
 2. GM-OS capture instantanément votre dessin.
 3. Le fichier est automatiquement ajouté à votre **Media Hub**.
-4. Une nouvelle fiche est créée dans le **Wiki de la session active**, incluant l'image et la date de création.
+4. Une nouvelle fiche est créée dans le **Wiki de la session active**, incluant l'image.
+5. Une entrée est créée dans le **Journal** avec la référence de la capture pour une navigation rapide.
 
 > [!TIP]
 > Utilisez cette fonction pour immortaliser les schémas complexes ou les plans de donjons improvisés que les joueurs devront consulter plus tard dans leur journal d'aventure !

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { useJournalStore } from '../journal/useJournalStore';
 
 export interface MapToken {
     id: string; // Unique ID for the token on the map
@@ -345,6 +346,13 @@ export const useMapStore = create<MapState>()(
             },
 
             syncToPlayers: () => {
+                // Log to journal
+                useJournalStore.getState().addEvent({
+                    type: 'LOCATION',
+                    title: 'Carte synchronisée',
+                    content: `La carte "${get().mapName || 'Sans titre'}" a été envoyée aux joueurs (${get().projectionTarget === 'hub' ? 'Player Hub' : 'Écran externe'}).`
+                });
+
                 // Clone current GM state to projected state
                 set(state => ({
                     projectionTarget: state.projectionTarget || 'hub',

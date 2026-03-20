@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useSessionOSStore, type TimelineEvent } from '../useSessionOSStore';
+import { useClockStore } from '../../../store/useClockStore';
 import { Save, X } from 'lucide-react';
 
 interface TimelineEventFormProps {
@@ -9,6 +10,7 @@ interface TimelineEventFormProps {
 
 export const TimelineEventForm: React.FC<TimelineEventFormProps> = ({ event, onClose }) => {
     const { activeCampaignId, addTimelineEvent, updateTimelineEvent, atlasMaps, entities } = useSessionOSStore();
+    const clock = useClockStore();
     
     const [title, setTitle] = useState(event?.title || '');
     const [date, setDate] = useState(event?.date || '');
@@ -21,10 +23,22 @@ export const TimelineEventForm: React.FC<TimelineEventFormProps> = ({ event, onC
         e.preventDefault();
         if (!activeCampaignId) return;
 
+        let finalDate = date.trim();
+        if (!finalDate) {
+            const fantasyDate = clock.getFantasyDate();
+            if (clock.activeCalendarId && clock.calendars[clock.activeCalendarId] && fantasyDate) {
+                const cal = clock.calendars[clock.activeCalendarId];
+                const monthName = cal.months[fantasyDate.monthIndex]?.displayName || cal.months[fantasyDate.monthIndex]?.name;
+                finalDate = `${fantasyDate.day} ${monthName}, ${fantasyDate.year} ${cal.name.includes('FR') || cal.id.includes('FR') ? 'DR' : ''}`.trim().replace(/,$/, '');
+            } else {
+                finalDate = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+            }
+        }
+
         const eventData = {
             campaignId: activeCampaignId,
             title,
-            date,
+            date: finalDate,
             description,
             type,
             locationId: locationId || undefined,
@@ -67,7 +81,6 @@ export const TimelineEventForm: React.FC<TimelineEventFormProps> = ({ event, onC
                 <div className="space-y-2">
                     <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Date (Calendrier de jeu)</label>
                     <input
-                        required
                         type="text"
                         value={date}
                         onChange={e => setDate(e.target.value)}

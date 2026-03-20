@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { musicEngine } from './MusicEngine';
+import { useJournalStore } from '../journal/useJournalStore';
 // Note: imports of hueEngine and useLightStore moved inside actions to avoid circular dependencies
 
 export type PadType = 'local' | 'link';
@@ -382,6 +383,13 @@ export const useMusicStore = create<MusicState>()(
                     // 3. Charger et déclencher
                     await get().loadToDeck(targetDeck, pad);
                     await get().triggerAutoFade(targetDeck);
+
+                    useJournalStore.getState().addEvent({
+                        type: 'AUDIO',
+                        title: `Musique : ${pad.label}`,
+                        content: `Lecture de la piste "${pad.label}" sur le Deck ${targetDeck}.`,
+                        metadata: { padId: pad.id, deck: targetDeck }
+                    });
 
                     // 4. Trigger Light if linked and sync enabled
                     const gWin = window as any;
