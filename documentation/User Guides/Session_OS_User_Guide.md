@@ -40,11 +40,13 @@ Chaque campagne est pilotée par un **Driver**. Ce "pilote" définit :
 ## 🎭 Personas & IA Oracle
 
 L'IA Oracle ne se contente pas de citer des règles. Selon le système choisi, elle peut changer de **Persona**.
-- **Le Sage** : Concentré sur les règles et les statistiques.
-- **Le Conteur** : Concentré sur l'ambiance et les descriptions narratives.
-- **Le Tacticien** : Concentré sur les conseils d'optimisation en combat.
 
-Chaque Persona est configuré par le **Driver** pour offrir une assistance adaptée au ton du jeu.
+### Auto-Génération Smart
+Inutile de rédiger manuellement les instructions de vos assistants. Un bouton **"Générer avec l'IA"** est disponible :
+- **Dans les Campagnes** : Pour adapter les 7 personas (GEMS) au ton et au synopsis de votre aventure.
+- **Dans le Rule Engine (Drivers)** : Pour définir les comportements par défaut de tout un système de jeu.
+
+**Fiabilité & Précision** : Le système utilise une génération séquentielle optimisée pour **Ollama**, garantissant des instructions riches et sans coupures. De plus, l'IA sépare intelligemment le contexte du système et celui de la campagne (Isolation RAG) pour plus de clarté.
 
 ---
 

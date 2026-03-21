@@ -227,25 +227,42 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                         </div>
                     )}
 
-                    {/* Cortex Suggested Action */}
+                    {/* Cortex Suggested Action (Absolute Overlay) */}
                     {(suggestedAction || isSuggesting) && (
-                        <div className="mt-2 text-xs bg-accent/10 border border-accent/20 rounded p-2 text-app-text/80 shadow-inner flex items-start gap-2 relative">
+                        <div className="absolute bottom-2 left-6 right-6 z-50 text-[11px] bg-slate-950/90 backdrop-blur-xl border border-accent/40 rounded-lg p-3 text-app-text/90 shadow-2xl flex items-start gap-2 animate-in zoom-in-95 slide-in-from-bottom-2 duration-300 motion-safe:scale-100 hover:scale-[1.02] transition-transform cursor-default">
                             {suggestedAction && !isSuggesting && (
                                 <button 
-                                    onClick={() => setSuggestedAction(null)}
-                                    className="absolute -top-1 -right-1 bg-black/60 rounded-full p-0.5 text-app-text/40 hover:text-red-400 transition-colors"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setSuggestedAction(null);
+                                    }}
+                                    className="absolute -top-1 -right-1 bg-black/80 rounded-full p-1 text-app-text/60 hover:text-red-400 transition-colors shadow-lg border border-white/10"
                                 >
-                                    <X size={10} />
+                                    <X size={12} />
                                 </button>
                             )}
-                            <Brain size={12} className="text-accent mt-0.5 shrink-0" />
-                            <div className="flex-1">
+                            <div className="bg-accent/20 p-1.5 rounded-full shrink-0 animate-pulse border border-accent/30 shadow-glow-accent/20">
+                                <Brain size={14} className="text-accent" />
+                            </div>
+                            <div className="flex-1 pr-4">
                                 {isSuggesting ? (
-                                    <span className="text-accent animate-pulse font-medium italic">Le Cortex analyse la situation tactique...</span>
+                                    <div className="flex flex-col gap-1">
+                                        <span className="text-accent font-black uppercase tracking-widest animate-pulse flex items-center gap-2">
+                                            Cortex Analyze...
+                                            <Loader2 size={10} className="animate-spin" />
+                                        </span>
+                                        <span className="text-[10px] text-app-text/40 italic">Scénario tactique en cours de calcul...</span>
+                                    </div>
                                 ) : (
-                                    <span className="italic leading-snug">
-                                        {suggestedAction}
-                                    </span>
+                                    <div className="flex flex-col gap-1">
+                                        <span className="text-accent font-black uppercase tracking-widest text-[9px] mb-0.5 opacity-80 flex items-center gap-1.5">
+                                            <Sparkles size={10} />
+                                            Conseil Tactique
+                                        </span>
+                                        <span className="italic leading-normal text-white drop-shadow-sm">
+                                            {suggestedAction}
+                                        </span>
+                                    </div>
                                 )}
                             </div>
                         </div>

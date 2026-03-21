@@ -5,7 +5,7 @@ import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import type { SheetTemplate, SheetSection, SheetField, SheetFieldType } from '../../../data/defaultSheetTemplates';
 import { 
     Plus, Trash2, ChevronDown, ChevronRight, Pencil, Sparkles, Brain, 
-    BookOpen, Save, ArrowLeft, PenTool, Music, Beaker, User,
+    BookOpen, Save, ArrowLeft, PenTool, Music, Beaker, User, Map,
     type LucideIcon 
 } from 'lucide-react';
 import { useGemStore } from '../../../stores/useGemStore';
@@ -201,13 +201,15 @@ const SheetTemplateEditor: React.FC = () => {
     
     // Use a selector to find the driver instead of getOrCreate during render
     const driver = customGameDrivers.find(d => d.templateId === editingTemplateId);
+    const { gems, syncGemsWithDefaults } = useGemStore();
 
     React.useEffect(() => {
         if (template && !driver) {
             // It is safe to trigger state updates (creation) inside useEffect
             getOrCreateDriverForTemplate(template.id);
         }
-    }, [template?.id, driver, getOrCreateDriverForTemplate]);
+        syncGemsWithDefaults();
+    }, [template?.id, driver, getOrCreateDriverForTemplate, syncGemsWithDefaults, template]);
 
     if (!template) {
         return (
@@ -385,8 +387,8 @@ const SheetTemplateEditor: React.FC = () => {
                                 <Sparkles size={14} /> Neural Overrides & Gems
                             </h3>
                             <div className="grid grid-cols-2 gap-4">
-                                {useGemStore.getState().gems.map(gem => {
-                                    const iconMap: Record<string, LucideIcon> = { BookOpen, PenTool, Music, Beaker, User, Sparkles, Brain };
+                                {gems.map(gem => {
+                                    const iconMap: Record<string, LucideIcon> = { BookOpen, PenTool, Music, Beaker, Map, User, Sparkles, Brain };
                                     const Icon = iconMap[gem.icon] || Brain;
                                     const currValue = driver?.aiPersonas?.[gem.id] || '';
                                     return (

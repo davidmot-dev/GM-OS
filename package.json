@@ -1,7 +1,7 @@
 {
   "name": "gm-os-v5",
   "private": true,
-  "version": "5.1.0",
+  "version": "5.1.0-ALPHA",
   "type": "module",
   "scripts": {
     "dev": "vite",

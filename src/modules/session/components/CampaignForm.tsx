@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { useSessionOSStore, type Campaign } from '../useSessionOSStore';
-import { Save, X, BookOpen, ImageIcon, Info, MapPin, Sparkles } from 'lucide-react';
+import { Save, X, BookOpen, ImageIcon, Info, MapPin, Sparkles, Music, Beaker, User, Brain, Map, PenTool, type LucideIcon } from 'lucide-react';
+import { useGemStore } from '../../../stores/useGemStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import { gmToast } from '../../../stores/useToastStore';
+import { personaGeneratorService } from '../../ai/PersonaGeneratorService';
+import { Loader2 } from 'lucide-react';
 
 interface CampaignFormProps {
     campaign?: Campaign | { campaignId: string }; // Can be full object or just a reference ID
@@ -28,10 +31,18 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, onClose }) => {
     const [systemPath, setSystemPath] = useState(fullCampaign?.systemPath || '');
     const [campaignPath, setCampaignPath] = useState(fullCampaign?.campaignPath || '');
     const [activeLocationIds, setActiveLocationIds] = useState<string[]>(fullCampaign?.activeLocationIds || []);
+    const [aiPersonas, setAiPersonas] = useState<Record<string, string>>(fullCampaign?.aiPersonas || {});
     
     // Combine builtin and custom templates
     const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
+    const { gems, syncGemsWithDefaults } = useGemStore();
+    const [isGenerating, setIsGenerating] = useState(false);
     
+    // Auto-sync missing default gems (e.g. Map/Cartographer)
+    React.useEffect(() => {
+        syncGemsWithDefaults();
+    }, [syncGemsWithDefaults]);
+
     // Get maps for this campaign to allow pinning as "active"
     const campaignMaps = atlasMaps.filter(m => m.campaignId === fullCampaign?.id);
     
@@ -52,7 +63,8 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, onClose }) => {
             notebookUrl,
             systemPath,
             campaignPath,
-            activeLocationIds
+            activeLocationIds,
+            aiPersonas
         };
 
         if (isEdit && fullCampaign) {
@@ -64,6 +76,42 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, onClose }) => {
         }
         
         onClose();
+    };
+
+    const updateAiPersona = (gemId: string, instructions: string) => {
+        setAiPersonas(prev => {
+            const next = { ...prev };
+            if (instructions.trim() === '') {
+                delete next[gemId];
+            } else {
+                next[gemId] = instructions;
+            }
+            return next;
+        });
+    };
+
+    const handleAutoGenerate = async () => {
+        if (!name) {
+            gmToast('Donne au moins un nom à ta campagne !', 'error');
+            return;
+        }
+        
+        setIsGenerating(true);
+        try {
+            const personas = await personaGeneratorService.generateAllPersonas({
+                name,
+                universe: system,
+                style: description || system,
+                objective: synopsis
+            }, false);
+            setAiPersonas(personas);
+            gmToast('Résonances Éthériques générées !');
+        } catch (error) {
+            console.error(error);
+            gmToast('Erreur lors de la génération.', 'error');
+        } finally {
+            setIsGenerating(false);
+        }
     };
 
     return (
@@ -208,6 +256,55 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, onClose }) => {
                                 </div>
                             </div>
                         )}
+
+                        {/* AI Personas Overrides Section */}
+                        <div className="space-y-4">
+                            <div className="flex items-center justify-between px-1">
+                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-accent flex items-center gap-2">
+                                    <Sparkles size={12} /> Résonances Éthériques (Surcharges IA)
+                                </label>
+                                <button
+                                    type="button"
+                                    onClick={handleAutoGenerate}
+                                    disabled={isGenerating}
+                                    className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-accent/10 text-accent border border-accent/20 text-[9px] font-black uppercase tracking-widest hover:bg-accent/20 transition-all disabled:opacity-50"
+                                >
+                                    {isGenerating ? <Loader2 size={10} className="animate-spin" /> : <Sparkles size={10} />}
+                                    {isGenerating ? 'Génération...' : 'Générer avec l\'IA'}
+                                </button>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {gems.map(gem => {
+                                    const iconMap: Record<string, LucideIcon> = { BookOpen, MapPin, Music, Beaker, User, Sparkles, Brain, PenTool };
+                                    // Use Map icon from lucide-react if gem.icon is 'Map'
+                                    const Icon = gem.icon === 'Map' ? Map : (iconMap[gem.icon] || Brain);
+                                    const hasOverride = !!aiPersonas[gem.id];
+                                    
+                                    return (
+                                        <div key={gem.id} className={`p-4 rounded-2xl border transition-all ${hasOverride ? 'bg-accent/5 border-accent/30' : 'bg-app-surface/20 border-app-border/20'}`}>
+                                            <div className="flex items-center gap-3 mb-3">
+                                                <div className={`p-2 rounded-xl ${hasOverride ? 'bg-accent text-app-bg' : 'bg-app-bg text-app-text/20'}`}>
+                                                    <Icon size={14} />
+                                                </div>
+                                                <span className={`text-[10px] font-black uppercase tracking-widest ${hasOverride ? 'text-accent' : 'text-app-text/40'}`}>
+                                                    {gem.name}
+                                                </span>
+                                            </div>
+                                            <textarea 
+                                                value={aiPersonas[gem.id] || ''}
+                                                onChange={e => updateAiPersona(gem.id, e.target.value)}
+                                                placeholder={`Instructions pour ${gem.name}...`}
+                                                rows={3}
+                                                className="w-full bg-black/20 border border-white/5 rounded-xl p-3 text-[11px] text-app-text/60 focus:outline-none focus:border-accent/40 resize-none transition-all placeholder:text-white/5"
+                                            />
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                            <p className="text-[9px] text-app-text/20 italic px-1">
+                                Ces instructions seront prioritaires sur celles du système pour cette aventure.
+                            </p>
+                        </div>
 
                         {/* Description */}
                         <div className="space-y-2">

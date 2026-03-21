@@ -47,6 +47,7 @@ const VoiceDashboard: React.FC = () => {
         isLive, 
         isMonitor, 
         isSyncNPC,
+        isDucking,
         currentEffects,
         activePresetId,
         inputLevel,
@@ -55,13 +56,15 @@ const VoiceDashboard: React.FC = () => {
         toggleLive,
         toggleMonitor,
         toggleSyncNPC,
+        toggleDucking,
         updateEffect,
         applyPreset,
         toggleAntiLarsen,
         toggleNoiseGate,
         outputDeviceId,
         availableOutputs,
-        setOutputDeviceId
+        setOutputDeviceId,
+        lastSyncedEntityName
     } = useVoiceStore();
     const { getAudioLabel } = useHardwareStore();
 
@@ -106,6 +109,24 @@ const VoiceDashboard: React.FC = () => {
                         <Zap size={14} className="text-amber-500" />
                         <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">DSP Load: 4%</span>
                     </div>
+                    {isDucking && (
+                        <div className="flex items-center gap-2 px-2 py-0.5 bg-amber-500/20 border border-amber-500/30 rounded text-amber-500 animate-pulse">
+                            <Volume2 size={12} />
+                            <span className="text-[9px] font-black uppercase tracking-widest">Ducking Active</span>
+                        </div>
+                    )}
+                    {lastSyncedEntityName && (
+                        <div className="flex items-center gap-3 px-3 py-1 bg-accent/10 rounded-full border border-accent/20 ml-4 animate-in fade-in slide-in-from-left-4 duration-500">
+                            <Mic2 size={12} className="text-accent" />
+                            <span className="text-[9px] font-bold text-accent uppercase tracking-wider">
+                                Linked: {lastSyncedEntityName}
+                            </span>
+                            <span className="text-[8px] bg-accent/20 px-1.5 py-0.5 rounded text-accent/80 font-black flex items-center gap-1 shadow-[0_0_10px_rgba(59,130,246,0.2)]">
+                                <span className="w-1 h-1 bg-accent rounded-full animate-pulse" />
+                                AI OPTIMIZED
+                            </span>
+                        </div>
+                    )}
                 </div>
                 
                 <div className="flex gap-2">
@@ -295,6 +316,50 @@ const VoiceDashboard: React.FC = () => {
                                 <div className={`absolute top-1 w-2 h-2 bg-white rounded-full transition-all ${currentEffects.noiseGate ? 'right-1' : 'left-1'}`} />
                             </div>
                         </button>
+
+                        <button 
+                            onClick={() => toggleDucking()}
+                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${currentEffects.duckingEnabled ? 'bg-amber-500/10 border-amber-500/30 text-amber-500' : 'bg-app-surface/50 border-transparent text-slate-500 hover:text-slate-400'}`}
+                        >
+                            <span className="text-[10px] font-black uppercase tracking-widest">🔊 Auto-Ducking</span>
+                            <div className={`w-8 h-4 rounded-full relative transition-colors ${currentEffects.duckingEnabled ? 'bg-amber-500' : 'bg-slate-700'}`}>
+                                <div className={`absolute top-1 w-2 h-2 bg-white rounded-full transition-all ${currentEffects.duckingEnabled ? 'right-1' : 'left-1'}`} />
+                            </div>
+                        </button>
+                    </div>
+
+                    <div className="mt-4 pt-4 border-t border-slate-800/30 flex flex-col gap-4">
+                        <div className="flex flex-col gap-2">
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-600 italic">Ducking Params</span>
+                            <VocalShaperSlider 
+                                label="Trigger Threshold" 
+                                value={currentEffects.duckingThreshold} 
+                                min={-80} max={-10} step={1}
+                                onChange={(val) => updateEffect('duckingThreshold', val)} 
+                                unit="dB"
+                            />
+                            <VocalShaperSlider 
+                                label="Music Reduct." 
+                                value={Math.round((1 - currentEffects.duckingRange) * 100)} 
+                                min={0} max={100} step={5}
+                                onChange={(val) => updateEffect('duckingRange', 1 - (val / 100))} 
+                                unit="%"
+                            />
+                            <VocalShaperSlider 
+                                label="Release Delay" 
+                                value={currentEffects.duckingRelease} 
+                                min={0} max={3000} step={100}
+                                onChange={(val) => updateEffect('duckingRelease', val)} 
+                                unit="ms"
+                            />
+                            <VocalShaperSlider 
+                                label="Fade Speed" 
+                                value={currentEffects.duckingAttack} 
+                                min={50} max={1000} step={50}
+                                onChange={(val) => updateEffect('duckingAttack', val)} 
+                                unit="ms"
+                            />
+                        </div>
                     </div>
 
                     <div className="mt-8 pt-8 border-t border-app-border/50 flex flex-col gap-6">

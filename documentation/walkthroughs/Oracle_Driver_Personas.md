@@ -15,6 +15,9 @@ L'interface de l'Oracle a été repensée pour être plus intuitive :
 - **Bouton SWITCH** : Un bouton explicite "SWITCH" est désormais visible en haut à gauche de l'Oracle. Cliquez sur ce bouton (ou sur la carte du persona) pour ouvrir le menu.
 - **Retour Visuel** : L'icône du persona s'anime lors du survol pour indiquer qu'elle est interactive.
 
+### 4. Auto-Génération Smart (NOUVEAU)
+Le bouton **"Générer avec l'IA"** dans l'éditeur de Driver permet de remplir instantanément les 7 personas. Cette génération est séquentielle pour garantir la qualité et supporte l'isolation RAG (seules les règles du système sont consultées en mode Driver).
+
 ---
 
 ## Vérification Technique

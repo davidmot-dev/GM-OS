@@ -242,12 +242,15 @@ export class VoiceEngine {
         }
     }
 
+    private duckingTimeout: number | null = null;
+
     private startLevelTracking() {
         if (!this.analyser) return;
 
         const dataArray = new Uint8Array(this.analyser.frequencyBinCount);
         const update = () => {
-            this.analyser!.getByteTimeDomainData(dataArray);
+            if (!this.analyser) return;
+            this.analyser.getByteTimeDomainData(dataArray);
             
             // Calculate RMS
             let sum = 0;
@@ -257,11 +260,11 @@ export class VoiceEngine {
             }
             const rms = Math.sqrt(sum / dataArray.length);
             const level = Math.min(1.0, rms * 5); // Scale for UI visibility
+            const db = 20 * Math.log10(rms || 0.000001);
             
             // Dynamic Noise Gate Logic
             if (this.gateGain && this.context) {
                 const { currentEffects, isActive } = useVoiceStore.getState();
-                const db = 20 * Math.log10(rms || 0.000001);
                 
                 let targetGain = 1.0;
                 if (!isActive || (currentEffects.noiseGate && db < currentEffects.gateThreshold)) {
@@ -271,6 +274,24 @@ export class VoiceEngine {
                 // More reactive gate: fast open (0.005s) for crisp voice onset, slower close (0.4s) to avoid pumping
                 const timeConstant = targetGain > 0 ? 0.005 : 0.4;
                 this.gateGain.gain.setTargetAtTime(targetGain, this.context.currentTime, timeConstant);
+
+                // --- DUCKING DETECTION ---
+                if (isActive && currentEffects.duckingEnabled) {
+                    if (db > currentEffects.duckingThreshold) {
+                        if (this.duckingTimeout) {
+                            clearTimeout(this.duckingTimeout);
+                            this.duckingTimeout = null;
+                        }
+                        useVoiceStore.getState().setDucking(true);
+                    } else if (useVoiceStore.getState().isDucking && !this.duckingTimeout) {
+                        this.duckingTimeout = window.setTimeout(() => {
+                            useVoiceStore.getState().setDucking(false);
+                            this.duckingTimeout = null;
+                        }, currentEffects.duckingRelease); // Smooth narrative release
+                    }
+                } else if (useVoiceStore.getState().isDucking) {
+                    useVoiceStore.getState().setDucking(false);
+                }
             }
 
             if (useVoiceStore.getState().isActive) {

@@ -26,10 +26,12 @@ interface GameDriver {
     // Logique de jeu
     dice: { defaultDice: string; logic: DiceRollLogic };
     
-    // Intelligence Artificielle
+    // Intelligence Artificielle (Hybrid Stack)
     aiInstructions: string;    // Prompt global MJ/Oracle
     aiPersonas: Record<string, string>; // Surcharges par rôle (Sage, Scribe...)
     defaultNotebookUrl?: string; // Lien vers le savoir externe (NotebookLM)
+    aiProvider: 'ollama' | 'gemini' | 'openai'; // Choix du moteur
+    aiVoiceProfile?: string;   // Profilage vocal spécifique
 }
 ```
 

@@ -58,8 +58,9 @@ class AmbientTrack {
                 arrayBuffer = await blob.arrayBuffer();
             } else {
                 let finalUrl = url;
-                if (url && !url.startsWith('http') && !url.startsWith('file://') && !url.startsWith('blob:')) {
-                    finalUrl = 'file:///' + url.replace(/\\/g, '/');
+                if (url && !url.startsWith('http') && !url.startsWith('blob:') && !url.startsWith('gmos://')) {
+                    const cleanPath = url.replace(/^file:\/\/\//, '').replace(/\\/g, '/');
+                    finalUrl = `gmos://media/${cleanPath}`;
                 }
                 const encodedUrl = encodeURI(finalUrl).replace(/%5C/g, '/');
 
@@ -122,6 +123,7 @@ class AmbientTrack {
 export class AmbientEngine {
     private context: AudioContext;
     private masterGain: GainNode;
+    private duckingGain: GainNode;
     private compressor: DynamicsCompressorNode;
     private analyser: AnalyserNode;
     public tracks: AmbientTrack[] = [];
@@ -143,17 +145,45 @@ export class AmbientEngine {
         this.masterGain = this.context.createGain();
         this.masterGain.gain.value = 1.3; // Compensation gain
 
+        this.duckingGain = this.context.createGain();
+        this.duckingGain.gain.value = 1.0;
+
         this.analyser = this.context.createAnalyser();
         this.analyser.fftSize = 256;
 
         this.compressor.connect(this.masterGain);
-        this.masterGain.connect(this.analyser);
+        this.masterGain.connect(this.duckingGain);
+        this.duckingGain.connect(this.analyser);
         this.analyser.connect(this.context.destination);
 
         // Init 8 tracks
         for (let i = 0; i < 8; i++) {
             this.tracks.push(new AmbientTrack(this.context, this.compressor));
         }
+
+        this.setupDucking();
+    }
+
+    private async setupDucking() {
+        const { useVoiceStore } = await import('../voice/useVoiceStore');
+        
+        useVoiceStore.subscribe((state) => {
+            const { isDucking, currentEffects } = state;
+            
+            // Safety: ensure finite values to prevent Web Audio API crashes 
+            // especially if state is corrupted or missing fields in localStorage
+            const duckingRange = Number.isFinite(currentEffects?.duckingRange) ? currentEffects.duckingRange : 0.3;
+            const duckingAttack = Number.isFinite(currentEffects?.duckingAttack) ? currentEffects.duckingAttack : 150;
+            
+            const targetGain = isDucking ? duckingRange : 1.0;
+            const timeConstant = Math.max(0.001, duckingAttack / 1000); // Must be > 0
+            
+            this.duckingGain.gain.setTargetAtTime(
+                targetGain, 
+                this.context.currentTime, 
+                timeConstant
+            );
+        });
     }
 
     async resume() {

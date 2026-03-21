@@ -13,42 +13,34 @@ Ce document centralise les visions, les chantiers en cours et les victoires tech
 - **Sync Différentielle WebSocket** : Optimisation du poids des messages (Envoi des deltas uniquement).
 - **Local Asset Middleware** : Service d'images via HTTP pour les tablettes (Fin du Base64 massif).
 - **AppBridge v2 (Zéro-Any)** : Audit et typage strict des interfaces pour la migration Tauri v2.
+- **Multi-Instance Sync (v5.1 Party Mode)** : Identification robuste par `deviceId`, gestion du lobby et résilience réseau.
+- **Protocole gmos://** : Sécurisation des accès aux ressources locales sur Windows.
 
 ### 🧠 IA & Narration
 
-- **AI Oracle MCP** : Intégration NotebookLM avec RAG local/distant et interface de reconnexion.
+- **NPC AI Enrichment (Ollama)** : Enrichissement textuel contextuel et suggestion de prompts d'images basés sur l'univers et la campagne.
+- **AI-Driven Voice Profiling** : Analyse psychologique des PNJ par l'IA pour générer des réglages Voice-OS.
 - **NPC Live Generator** : Génération d'images/avatars IA intégrée aux fiches PNJ.
 
-### ⚔️ Combat & Tactique
+### 🔊 Immersion Sonore & Robustesse
 
-- **Cerveau Tactique 1.0** : Analyse de portée (Year Zero), feedback Hue et audio dynamique.
+- **Ducking Narratif v2** : Réduction automatique intelligente du volume Musique/Ambiance avec contrôle complet des timings (Attack, Release) et du seuil.
+- **Correctif Robustesse Audio** : Protection contre les valeurs `non-finite` et synchronisation sécurisée du store (Bugfix 1.0.1).
+- **Sécurisation React/AI** : Couche d'assainissement des données IA pour prévenir les crashs d'affichage sur les titres et noms.
+- **Dice OS manual input** : Possibilité de saisir manuellement les seuils de réussite.
 
 ---
 
-## 🛠️ Chantiers Prioritaires (Backlog)
+## 🛠️ Chantiers Prioritaires (V5.4)
 
-### 1. 🌐 Infrastructure & Performance
-
-- **Architecture AI Hybride (Ollama)** : Connecter un serveur local Ollama pour les tâches à haute fréquence (Voice profiling, aide aux règles) afin de réduire les coûts API et permettre un mode **Offline**.
-- **Multi-Instance Sync** : Permettre à plusieurs tablettes de se connecter simultanément avec des vues filtrées.
+### 1. 🎭 Immersion Visuelle
+- **Génération Narrative** : Intégration de l'IA pour générer des descriptions d'ambiance basées sur les tokens présents sur la carte.
 
 ### 2. 🗺️ Cartographie & Perception
-
 - **Zones de Danger Actives** : Déclencheur Hue/Audio automatique si un pion entre dans une zone d'effet (Feu, Poison).
 
-### 3. 🤖 Intelligence Artificielle (NPC AI)
-
-- **AI-Driven Voice Profiling** : Utiliser Gemini pour analyser la psychologie/race du PNJ et générer des réglages de voix uniques (Pitch, Formant, Reverb) au-delà des mots-clés simples.
-- **Portrait Lip-Sync (Lite)** : Faire bouger la bouche ou pulser l'aura du portrait du PNJ sur le **Player Hub** et **Tablet Hub** en temps réel selon l'intensité vocale du MJ.
-- **Analyse de Combat en Temps Réel** : Suggestions tactiques basées sur l'état du groupe ("Repli", "Flanquement").
-- **Génération Narratif** : Intégration de l'IA pour générer des descriptions d'ambiance basées sur les tokens présents sur la carte.
-
-### 4. 🎭 Immersion Sensorielle
-
-- **Ducking Narratif (Auto-Ducking)** : Réduction automatique du volume de Music-OS/Ambient-OS lors des prises de parole du MJ pour une clarté optimale.
-- **VFX Voice-Trigger** : Déclenchement d'effets visuels (Map-OS / Hubs) basés sur l'intensité vocale ou les pics de fréquence (ex: "Cri de Guerre" = Flashes sur le Hub).
-- **Ambient Proximity** : Volume de l'ambiance sonore variant selon la position du curseur MJ ou des pions PJ.
-- **Visualizer Audio 2.0** : Intégration plus poussée du rythme sonore dans les effets de bordure du Tablet Hub.
+### 4. 🎨 IA Visuelle (Expérimental)
+- **Génération d'Image Local (Ollama Flux)** : Fonctionnalité déjà présente dans le code. À tester avec des modèles plus légers pour les machines de jeu standard.
 
 ---
 
@@ -56,10 +48,8 @@ Ce document centralise les visions, les chantiers en cours et les victoires tech
 
 - **Ligne de Vue (LoS)** : Détection dynamique d'obstacles pour la visibilité des pions.
 - **Gestion de l'Élévation** : Calcul des bonus de hauteur (Axe Z).
-- **Butin Automatique** : Transfert direct d'objets du Table-OS vers les fiches PJ.
-- **Retour Haptique** : Vibrations sur les contrôleurs lors des impacts.
 
 ---
 
 > [!TIP]
-> Priorité actuelle : **Fiabilisation de la synchronisation Hub** et **Préparation à la migration légère (Tauri)**.
+> Priorité actuelle : **Immersion vocale (Lip-Sync/Ducking)** et **Interactivité de la carte (Zones)**.

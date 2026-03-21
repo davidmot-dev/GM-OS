@@ -22,7 +22,7 @@ export const SessionService = {
         const whiteboardState = useWhiteboardStore.getState();
 
         const fullData = {
-            version: '5.0.0',
+            version: '5.1.0',
             timestamp: new Date().toISOString(),
             global: {
                 theme: sessionState.theme,

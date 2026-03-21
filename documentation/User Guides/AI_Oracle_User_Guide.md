@@ -17,7 +17,13 @@ La force de l'Oracle réside dans sa capacité à changer de personnalité selon
 - **✨ L'Oracle** : Votre partenaire d'improvisation et de descriptions narratives.
 - **🎵 Le Barde** : Expert en lore profond, poésies et légendes.
 - **🧪 L'Alchimiste** : Générateur d'objets magiques, de potions et de caractéristiques.
+- **🗺️ Le Cartographe** : Expert en lieux, architecture, pièges et géographie.
 - **👤 L'Acteur** : Vous aide à interpréter vos PNJ (dialogues, motivations).
+
+### ⚡ Auto-Forge (Génération Intelligente)
+Inutile de configurer manuellement chaque expert. Le bouton **"Générer avec l'IA"** (disponible dans les Campagnes et Drivers) utilise un moteur séquentiel pour paramétrer instantanément vos 7 GEMS. 
+- **Isolation RAG** : Le système sait distinguer les règles du jeu (Drivers) du lore de l'aventure (Campagnes) pour une spécialisation parfaite.
+- **Fiabilité Ollama** : Optimisé pour fonctionner localement sans coupures de texte.
 
 > [!NOTE]
 > **Badge SYNC** : Si vous voyez un badge "SYNC" sur un persona, cela signifie qu'il a été automatiquement configuré avec les règles spécifiques de votre système de jeu actuel (ex: *Alien RPG* ou *Appel de Cthulhu*).

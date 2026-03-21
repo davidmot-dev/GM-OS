@@ -1,12 +1,15 @@
+import React, { useEffect } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { 
     Sparkles, Brain, Save, ArrowLeft, PenTool, Music, Beaker, User,
-    Hammer, BookOpen, Dice5, Zap, type LucideIcon 
+    Hammer, BookOpen, Dice5, Zap, Map, type LucideIcon 
 } from 'lucide-react';
 import { useGemStore } from '../../../stores/useGemStore';
 import type { GameDriver, TacticalConfig } from '../../../types/drivers';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { gmToast } from '../../../stores/useToastStore';
+import { personaGeneratorService } from '../../ai/PersonaGeneratorService';
+import { Loader2 } from 'lucide-react';
 
 /**
  * RuleEngineEditor: Full-window interface for modifying the "Brain" of a system.
@@ -23,6 +26,31 @@ const RuleEngineEditor: React.FC = () => {
     } = useSessionOSStore();
 
     const driver = customGameDrivers.find(d => d.id === editingDriverId);
+    const { gems, syncGemsWithDefaults } = useGemStore();
+    const [isGenerating, setIsGenerating] = React.useState(false);
+
+    const handleAutoGenerate = async () => {
+        setIsGenerating(true);
+        try {
+            const personas = await personaGeneratorService.generateAllPersonas({
+                name: driver.name,
+                universe: driver.name,
+                style: driver.aiInstructions || 'Standard RPG',
+                objective: 'Immersion totale et aide à la narration.'
+            }, true);
+            handleUpdate({ aiPersonas: personas });
+            gmToast('Personas du système générés !');
+        } catch (error) {
+            gmToast('Échec de la génération.', 'error');
+        } finally {
+            setIsGenerating(false);
+        }
+    };
+
+    // Auto-sync missing default gems (e.g. Map/Cartographer)
+    useEffect(() => {
+        syncGemsWithDefaults();
+    }, [syncGemsWithDefaults]);
 
     if (!driver) {
         return (
@@ -299,18 +327,28 @@ const RuleEngineEditor: React.FC = () => {
 
                     {/* AI Resonances (Personas & Gems) */}
                     <div className="space-y-8">
-                        <div className="flex flex-col gap-2">
-                             <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-accent flex items-center gap-3">
-                                <Sparkles size={14} /> Aetheric Resonance & Personas
-                            </h3>
-                            <p className="text-[10px] text-app-text/40 font-bold uppercase tracking-widest max-w-2xl">
-                                Définissez comment l'IA doit interpréter le système pour chaque rôle. Ces instructions surchargent les protocoles par défaut.
-                            </p>
+                        <div className="flex items-center justify-between">
+                            <div className="flex flex-col gap-2">
+                                <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-accent flex items-center gap-3">
+                                    <Sparkles size={14} /> Aetheric Resonance & Personas
+                                </h3>
+                                <p className="text-[10px] text-app-text/40 font-bold uppercase tracking-widest max-w-2xl">
+                                    Définissez comment l'IA doit interpréter le système pour chaque rôle. Ces instructions surchargent les protocoles par défaut.
+                                </p>
+                            </div>
+                            <button
+                                onClick={handleAutoGenerate}
+                                disabled={isGenerating}
+                                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-accent/10 text-accent border border-accent/20 text-[10px] font-black uppercase tracking-widest hover:bg-accent/20 transition-all disabled:opacity-50"
+                            >
+                                {isGenerating ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
+                                {isGenerating ? 'Génération...' : 'Générer avec l\'IA'}
+                            </button>
                         </div>
                         
                         <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
-                            {useGemStore.getState().gems.map(gem => {
-                                const iconMap: Record<string, LucideIcon> = { BookOpen, PenTool, Music, Beaker, User, Sparkles, Brain };
+                            {gems.map(gem => {
+                                const iconMap: Record<string, LucideIcon> = { BookOpen, PenTool, Music, Beaker, Map, User, Sparkles, Brain };
                                 const Icon = iconMap[gem.icon] || Brain;
                                 const currValue = driver.aiPersonas?.[gem.id] || '';
                                 return (

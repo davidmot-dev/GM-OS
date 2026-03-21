@@ -12,6 +12,7 @@ export interface NPCEntity {
     fields: Record<string, string>;
     timestamp: number;
     isDead?: boolean;
+    suggestedPrompt?: string;
 }
 
 interface NPCBridge {
@@ -24,6 +25,7 @@ interface NPCState {
     config: {
         category: NPCCategory;
         universe: string;
+        aiEnabled: boolean;
     };
     availableUniverses: string[];
     currentEntity: NPCEntity | null;
@@ -53,6 +55,7 @@ export const useNPCStore = create<NPCState>()(
             config: {
                 category: 'npcs',
                 universe: '',
+                aiEnabled: true,
             },
             availableUniverses: [],
             currentEntity: null,
@@ -104,29 +107,58 @@ export const useNPCStore = create<NPCState>()(
                         }
                     });
 
-                    // Intelligent Name Extraction
-                    const getName = (obj: Record<string, string>) => {
+                    // Intelligent Name Extraction with Safety
+                    const getName = (obj: Record<string, any>) => {
                         const nameKey = Object.keys(obj).find(k =>
-                            ['titre', 'name', 'nom', 'character', 'personnage'].includes(k.toLowerCase())
+                            ['nom', 'name', 'titre', 'character', 'personnage'].includes(k.toLowerCase())
                         );
-
-                        if (nameKey) return obj[nameKey];
-
-                        // Try first name + last name
-                        const prenomKey = Object.keys(obj).find(k => ['prenom', 'prénom', 'firstname'].includes(k.toLowerCase()));
-                        const nomKey = Object.keys(obj).find(k => ['nom', 'lastname', 'surname'].includes(k.toLowerCase()));
-                        if (prenomKey && nomKey) return `${obj[prenomKey]} ${obj[nomKey]}`;
-
-                        // Fallback to first field
-                        return Object.values(obj)[0] || "Unnamed Entity";
+                        
+                        const val = nameKey ? obj[nameKey] : (Object.values(obj)[0] || "Unnamed Entity");
+                        
+                        if (typeof val === 'object' && val !== null) {
+                            // Support potential nested structure from AI like { originalValue: '...', enrichedValue: '...' }
+                            return val.enrichedValue || val.value || JSON.stringify(val);
+                        }
+                        return String(val || "Unnamed Entity");
                     };
+
+                    let entityFields = fields;
+                    let suggestedPrompt = "";
+
+                    // AI Enrichment if enabled
+                    if (get().config.aiEnabled) {
+                        try {
+                            const { aiService } = await import('../ai/AIService');
+                            const enriched = await aiService.enrichNPCEntity(fields, category, universe) as Record<string, any>;
+                            
+                            if (enriched && Object.keys(enriched).length > 0) {
+                                // Sanitize: ensure all values are strings
+                                const sanitized: Record<string, string> = {};
+                                for (const [key, value] of Object.entries(enriched)) {
+                                    if (typeof value === 'object' && value !== null) {
+                                        // Support suspected nested structure
+                                        sanitized[key] = String(value.enrichedValue || value.value || JSON.stringify(value));
+                                    } else {
+                                        sanitized[key] = String(value);
+                                    }
+                                }
+                                entityFields = sanitized;
+                            }
+                            
+                            // Also suggest an image prompt
+                            suggestedPrompt = await aiService.suggestNPCImagePrompt(getName(entityFields), entityFields, category, universe);
+                        } catch (aiErr) {
+                            console.warn("[useNPCStore] AI enrichment failed, using raw details:", aiErr);
+                        }
+                    }
 
                     const newEntity: NPCEntity = {
                         id: `ID-${Math.floor(Math.random() * 99999)}`,
                         category,
-                        name: getName(fields),
+                        name: getName(entityFields),
                         gmNotes: "",
-                        fields,
+                        fields: entityFields,
+                        suggestedPrompt,
                         timestamp: Date.now()
                     };
 
@@ -168,7 +200,6 @@ export const useNPCStore = create<NPCState>()(
                 set({ isGeneratingAIAvatar: true });
                 try {
                     const { aiService } = await import('../ai/AIService');
-                    // Check if it's a place or NPC to adjust prompt
                     // Clean and truncate fields to prevent HTTP 500 from too long/complex prompts
                     const fieldsText = Object.values(currentEntity.fields).join(', ').replace(/\n/g, ' ').substring(0, 300);
                     
@@ -180,11 +211,9 @@ export const useNPCStore = create<NPCState>()(
                     const aspect = currentEntity.category === 'places' ? '16:9' : '1:1';
                     
                     const mediaId = await aiService.generateImage(prompt, aspect);
-                    console.log(`[useNPCStore] Image generated successfully: ${mediaId.substring(0, 50)}...`);
                     
                     const updatedEntity = { ...currentEntity, avatar: mediaId };
                     set({ currentEntity: updatedEntity });
-                    console.log(`[useNPCStore] currentEntity updated with new avatar.`);
 
                     // Update in memos if present
                     if (savedEntities.find(e => e.id === currentEntity.id)) {

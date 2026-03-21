@@ -23,7 +23,7 @@ export interface TacticalAILogs {
 export interface TacticalAdvice {
   id: string;
   sourceId: string; // ID of the token/combatant generating advice
-  type: 'range' | 'dispel' | 'position' | 'magic' | 'status';
+  type: 'range' | 'dispel' | 'position' | 'magic' | 'status' | 'macro-flank' | 'macro-rout';
   message: string;
   priority: number;
   color?: string; // Optional hex color for lights (legacy)

@@ -224,14 +224,24 @@ export function registerMcpHandlers() {
                     .map((c: { type: string; text: string }) => c.text)
                     .join('\n');
 
-                // If the content looks like JSON, try to extract 'answer'
+                // If the content looks like JSON, try to extract 'answer' or handle errors
                 if (textContent.trim().startsWith('{')) {
+                    let parsed: Record<string, unknown> | null = null;
                     try {
-                        const parsed = JSON.parse(textContent);
+                        parsed = JSON.parse(textContent) as Record<string, unknown>;
                         if (parsed.status === 'success' && typeof parsed.answer === 'string') {
                             return { content: parsed.answer || "L'Oracle n'a pas trouvé de réponse précise pour ce notebook." };
                         }
-                    } catch {
+                        if (parsed.status === 'error') {
+                            throw new Error((parsed.error as string) || "Erreur inconnue provenant de l'Oracle.");
+                        }
+                    } catch (e: unknown) {
+                        const err = e as Error;
+                        // Si c'est notre erreur générée, on la fait remonter
+                        if ((err.message && err.message.includes("provenant de l'Oracle")) || parsed?.status === 'error') {
+                            console.error("[MCP Bridge] Oracle Error intercepted:", err);
+                            throw err;
+                        }
                         // Not valid JSON or different format, keep original text
                     }
                 }
@@ -262,5 +272,17 @@ export function registerMcpHandlers() {
             logToDebugFile(`[Auth] Error: ${error}`);
             throw error;
         }
+    });
+
+    ipcMain.handle('mcp:restart', async () => {
+        logToDebugFile(`[System] Restarting MCP Server...`);
+        if (mcpProcess) {
+            mcpProcess.kill();
+            mcpProcess = null;
+        }
+        serverSpawnPromise = null;
+        isInitialized = false;
+        initializationPromise = null;
+        return { success: true, message: "Serveur MCP redémarré avec succès." };
     });
 }

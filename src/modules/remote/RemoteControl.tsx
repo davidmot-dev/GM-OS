@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { type Point, type DrawingPath } from '../whiteboard/useWhiteboardStore';
 import RemoteWhiteboardView from './components/RemoteWhiteboardView';
+import { useClientStore } from '../../stores/useClientStore';
 
 type HealthSystemData = 
     { type: 'wounds', data: { currentLevel: 'SAIN' | 'BLESSÉ' | 'MORTEL' | 'FATAL' } } |
@@ -74,6 +75,8 @@ const RemoteControl: React.FC = () => {
         }
     });
 
+    const { deviceId, pseudo, role, setStatus: setClientStatus } = useClientStore();
+
     const socketRef = useRef<WebSocket | null>(null);
 
     // Get the host IP from current URL
@@ -91,12 +94,17 @@ const RemoteControl: React.FC = () => {
         socket.onopen = () => {
             console.log('Connected to GM-OS');
             setStatus('connected');
-            socket.send(JSON.stringify({ type: 'remote:hello' }));
+            setClientStatus('active');
+            socket.send(JSON.stringify({ 
+                type: 'remote:register', 
+                payload: { deviceId, pseudo, role: 'remote' } 
+            }));
         };
 
         socket.onclose = () => {
             console.log('Disconnected');
             setStatus('error');
+            setClientStatus('disconnected');
             // Safely call via ref to allow recursion without closure trap
             setTimeout(() => {
                 if (connectRef.current) connectRef.current();
@@ -127,15 +135,20 @@ const RemoteControl: React.FC = () => {
 
         socket.onerror = () => setStatus('error');
         socketRef.current = socket;
-    }, [host, port]);
+    }, [host, port, deviceId, pseudo, setClientStatus]);
 
     useEffect(() => {
         connectRef.current = connect;
     }, [connect]);
 
     useEffect(() => {
-        connect();
-        return () => socketRef.current?.close();
+        const timer = setTimeout(() => {
+            connect();
+        }, 0);
+        return () => {
+            clearTimeout(timer);
+            socketRef.current?.close();
+        };
     }, [connect]);
 
     const sendAction = (type: string, payload: unknown) => {
@@ -416,7 +429,7 @@ const RemoteControl: React.FC = () => {
                         {isAventureMode ? 'AVENTURE ON' : 'MODE MJ'}
                     </button>
                     <div className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold">
-                        V5.1
+                        V5.1.0-ALPHA
                     </div>
                 </div>
             </div>

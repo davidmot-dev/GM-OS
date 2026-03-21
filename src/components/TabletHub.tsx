@@ -15,6 +15,8 @@ import ClockVisualizer from '../modules/clock/components/ClockVisualizer';
 import { useVoiceStore } from '../modules/voice/useVoiceStore';
 import { useTacticalAIStore } from '../modules/tactical-ai/useTacticalAIStore';
 import { openDB } from 'idb';
+import { useClientStore } from '../stores/useClientStore';
+import LobbyOnboarding from './hub/LobbyOnboarding';
 
 /**
  * Attempts to resolve an m-xxx media ID to a data: URI using the local IndexedDB.
@@ -50,6 +52,7 @@ const TabletHub: React.FC = () => {
     const activeHubId = projections['hub'];
     const [liveImagePath, setLiveImagePath] = useState<string | null | undefined>(undefined);
     const [liveEntity, setLiveEntity] = useState<ProjectedEntity | null>(null);
+    const { deviceId, pseudo, role, isOnboarded, setStatus: setClientStatus } = useClientStore();
     const [voiceLevel, setVoiceLevel] = useState(0);
     const [status, setStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
     const socketRef = useRef<WebSocket | null>(null);
@@ -72,12 +75,18 @@ const TabletHub: React.FC = () => {
         socket.onopen = () => {
             console.log('[TabletHub] Connected via WebSocket');
             setStatus('connected');
-            socket.send(JSON.stringify({ type: 'remote:hello' }));
+            setClientStatus('active');
+            // Register with the server
+            socket.send(JSON.stringify({ 
+                type: 'remote:register', 
+                payload: { deviceId, pseudo, role } 
+            }));
         };
 
         socket.onclose = () => {
             console.log('[TabletHub] WebSocket Disconnected');
             setStatus('error');
+            setClientStatus('disconnected');
             // Attempt reconnect if still on tablet view
             setTimeout(() => {
                 if (window.location.search.includes('window=tablet') && connectRef.current) {
@@ -120,7 +129,7 @@ const TabletHub: React.FC = () => {
         };
 
         socket.onerror = () => setStatus('error');
-    }, [host, port]);
+    }, [host, port, deviceId, pseudo, role, setClientStatus]);
 
     useEffect(() => {
         connectRef.current = connect;
@@ -136,6 +145,7 @@ const TabletHub: React.FC = () => {
     const activeMedia = mediaList?.find(m => m.id === activeHubId);
 
     useEffect(() => {
+        if (!isOnboarded) return;
         connect();
         const rehydrateAll = async () => {
             await Promise.all([
@@ -193,7 +203,7 @@ const TabletHub: React.FC = () => {
                 window.appBridge.off('image:sync-hub-data', handleIpcUpdate);
             }
         };
-    }, [connect]);
+    }, [connect, isOnboarded]);
 
     const hasCombatants = combatants.length > 0;
     const activeCombatant = hasCombatants ? combatants[currentTurnIdx] : null;
@@ -401,6 +411,8 @@ const TabletHub: React.FC = () => {
 
             {/* Polish Overlays */}
             <div className="fixed inset-0 pointer-events-none z-50 shadow-[inset_0_0_100px_rgba(0,0,0,0.6)] opacity-50"></div>
+
+            {!isOnboarded && <LobbyOnboarding />}
         </div>
     );
 };

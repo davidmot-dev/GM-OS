@@ -81,7 +81,13 @@ contextBridge.exposeInMainWorld('appBridge', {
             ipcRenderer.invoke('ai:proxy-request', url, method, headers, body),
         searchContext: (systemId: string, campaignName: string) => 
             ipcRenderer.invoke('ai:search-context', systemId, campaignName),
-        reindex: () => ipcRenderer.invoke('ai:reindex')
+        reindex: () => ipcRenderer.invoke('ai:reindex'),
+        // Ollama Local AI
+        ollamaChat: (model: string, messages: { role: string; content: string }[]) => ipcRenderer.invoke('ai:ollama-chat', model, messages),
+        ollamaStatus: () => ipcRenderer.invoke('ai:ollama-status'),
+        ollamaListModels: () => ipcRenderer.invoke('ai:ollama-list-models'),
+        ollamaPull: (model: string) => ipcRenderer.invoke('ai:ollama-pull', model),
+        ollamaGenerateImage: (model: string, prompt: string) => ipcRenderer.invoke('ai:ollama-generate-image', model, prompt)
     },
     mcp: {
         listTools: (serverName: string) => ipcRenderer.invoke('mcp:list-tools', serverName),

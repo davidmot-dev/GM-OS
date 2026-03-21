@@ -424,7 +424,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                              <span className="text-[10px] font-mono text-app-text/40 uppercase tracking-widest">System Link Active</span>
                         </div>
                         <div className="px-3 py-1.5 rounded-lg bg-app-bg border border-app-border text-xs font-mono text-app-text/40 shadow-xl">
-                            GM-OS_v5.0.0-ALPHA
+                            GM-OS_v5.1.0-ALPHA
                         </div>
                     </div>
                 </header>

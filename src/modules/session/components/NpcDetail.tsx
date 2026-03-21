@@ -96,7 +96,7 @@ interface NpcDetailProps {
 
 const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
     const { 
-        entities, selectedEntityId, setSelectedEntity, updateEntity, atlasMaps,
+        entities, selectedEntityId, setSelectedEntity, updateEntity, updateEntityHP, atlasMaps,
         generateEntityPortrait, isGeneratingAIImage 
     } = useSessionOSStore();
     const { closeModal } = useModalStore();
@@ -222,26 +222,22 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                 </div>
                             </div>
                         )}
-                        {isEditing ? (
-                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20 gap-4">
-                                <button
-                                    onClick={(e) => { e.stopPropagation(); setIsMediaBrowserOpen(true); }}
-                                    className="p-3 bg-white/10 hover:bg-white/20 rounded-full transition-all"
-                                    title="Galerie Média"
-                                >
-                                    <ImageIcon size={32} />
-                                </button>
-                                <button
-                                    onClick={(e) => { e.stopPropagation(); setShowAIPrompt(true); }}
-                                    className="p-3 bg-accent text-slate-950 rounded-full hover:scale-110 transition-all shadow-glow-accent"
-                                    title="Générer par IA"
-                                >
-                                    <Sparkles size={32} />
-                                </button>
-                            </div>
-                        ) : (
-                            <div className="absolute inset-0 bg-gradient-to-t from-app-bg/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                        )}
+                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20 gap-4">
+                            <button
+                                onClick={(e) => { e.stopPropagation(); setIsMediaBrowserOpen(true); }}
+                                className="p-3 bg-white/10 hover:bg-white/20 rounded-full transition-all"
+                                title="Galerie Média"
+                            >
+                                <ImageIcon size={32} />
+                            </button>
+                            <button
+                                onClick={(e) => { e.stopPropagation(); setShowAIPrompt(true); }}
+                                className="p-3 bg-accent text-slate-950 rounded-full hover:scale-110 transition-all shadow-glow-accent"
+                                title="Générer par IA"
+                            >
+                                <Sparkles size={32} />
+                            </button>
+                        </div>
                         
                         {isGeneratingAIImage && (
                             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-30">
@@ -408,18 +404,42 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                 // Read-only mode: Dynamic Stats from Driver
                                 if (statsToTrack.length > 0) {
                                     return statsToTrack.map((stat, i) => {
-                                        // Map standard fields or sheetData
-                                        let val: string | number = "??";
-                                        if (stat.isMainHP) val = `${selectedNpc.hp}/${selectedNpc.maxHp}`;
-                                        else if (stat.fieldId === 'ac') val = selectedNpc.ac;
-                                        else if (stat.fieldId === 'speed') val = `${selectedNpc.speed} ft`;
-                                        else if (stat.fieldId === 'initiative') val = `+${selectedNpc.initiative}`;
-                                        else val = (selectedNpc.sheetData?.[stat.fieldId] as string | number) ?? 0;
+                                        const val = (selectedNpc.sheetData?.[stat.fieldId] as string | number) ?? 0;
+                                        
+                                        if (stat.isMainHP) {
+                                            return (
+                                                <div key={i} className="bg-app-surface/60 border border-accent/30 p-3 rounded-xl flex flex-col items-center justify-center gap-2 group hover:shadow-[0_0_15px_rgba(var(--accent-rgb),0.1)] transition-all">
+                                                    <div className="flex items-center gap-2">
+                                                        <Heart size={14} className="text-red-500" />
+                                                        <span className="text-[9px] font-black text-accent uppercase tracking-widest">{stat.label}</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-2 mt-1">
+                                                        <div className="bg-black/40 border border-white/5 w-10 h-8 rounded-lg flex items-center justify-center shadow-inner group-hover:border-accent/20 transition-all">
+                                                            <input 
+                                                                type="number" value={selectedNpc.hp ?? 0}
+                                                                onChange={(e) => updateEntityHP(selectedNpc.id, parseInt(e.target.value) || 0)}
+                                                                className="w-full bg-transparent text-center text-white font-black text-[10px] focus:outline-none"
+                                                                title="Points de Vie actuels"
+                                                            />
+                                                        </div>
+                                                        <span className="text-app-text/20 font-bold text-[10px]">/</span>
+                                                        <div className="bg-black/20 border border-white/5 w-10 h-8 rounded-lg flex items-center justify-center shadow-inner group-hover:border-accent/10 transition-all">
+                                                            <input 
+                                                                type="number" value={selectedNpc.maxHp ?? 10}
+                                                                onChange={(e) => updateEntity(selectedNpc.id, { maxHp: parseInt(e.target.value) || 0 })}
+                                                                className="w-full bg-transparent text-center text-app-text/40 font-black text-[10px] focus:outline-none"
+                                                                title="Points de Vie Max"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        }
 
                                         return (
                                             <div key={i} className="bg-app-surface/40 border border-white/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1 group hover:border-accent/20 transition-all">
-                                                {stat.isMainHP ? <Heart size={14} className="text-red-500" /> : <div className="w-1.5 h-1.5 rounded-full bg-accent/40" />}
-                                                <span className="text-white font-black text-xs">{val}</span>
+                                                <div className="w-1.5 h-1.5 rounded-full bg-accent/40 mb-1" />
+                                                <span className="text-app-text font-black text-xs">{val}</span>
                                                 <span className="text-[10px] uppercase font-bold text-app-text/40 tracking-wide group-hover:text-app-text/60">{stat.label}</span>
                                             </div>
                                         );
@@ -429,17 +449,45 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                 // Fallback to standard 4 stats if no driver or stats defined
                                 return (
                                     [
-                                        { label: 'PV', val: `${selectedNpc.hp}/${selectedNpc.maxHp}`, icon: <Heart size={14} className="text-red-400" /> },
+                                        { label: 'PV', isHP: true, icon: <Heart size={14} className="text-red-400" /> },
                                         { label: 'CA', val: selectedNpc.ac, icon: <Shield size={14} className="text-blue-400" /> },
                                         { label: 'Vitesse', val: `${selectedNpc.speed} ft`, icon: <Wind size={14} className="text-emerald-400" /> },
                                         { label: 'Init.', val: `+${selectedNpc.initiative}`, icon: <Zap size={14} className="text-amber-400" /> },
-                                    ].map((stat, i) => (
-                                        <div key={i} className="bg-app-surface/40 border border-white/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1 group hover:border-accent/20 transition-all">
-                                            {stat.icon}
-                                            <span className="text-white font-black text-xs">{stat.val}</span>
-                                            <span className="text-[9px] uppercase font-bold text-app-text/20 tracking-wider group-hover:text-app-text/40">{stat.label}</span>
-                                        </div>
-                                    ))
+                                    ].map((stat, i) => {
+                                        if (stat.isHP) {
+                                            return (
+                                                <div key={i} className="bg-app-surface/60 border border-accent/20 p-3 rounded-xl flex flex-col items-center justify-center gap-2 group hover:shadow-[0_0_15px_rgba(var(--accent-rgb),0.1)] transition-all">
+                                                    <div className="flex items-center gap-2">
+                                                        <Heart size={14} className="text-red-500" />
+                                                        <span className="text-[9px] font-black text-accent uppercase tracking-widest">{stat.label}</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-1 bg-app-bg/50 px-2 py-1 rounded-lg border border-app-border/40">
+                                                        <input 
+                                                            type="number" value={selectedNpc.hp ?? 0}
+                                                            onChange={(e) => updateEntityHP(selectedNpc.id, parseInt(e.target.value) || 0)}
+                                                            className="w-10 bg-transparent text-center text-app-text font-black text-xs focus:outline-none"
+                                                            title="Points de Vie actuels"
+                                                        />
+                                                        <span className="text-app-text/20 font-bold">/</span>
+                                                        <input 
+                                                            type="number" value={selectedNpc.maxHp ?? 10}
+                                                            onChange={(e) => updateEntity(selectedNpc.id, { maxHp: parseInt(e.target.value) || 0 })}
+                                                            className="w-10 bg-transparent text-center text-app-text/40 font-black text-xs focus:outline-none"
+                                                            title="Points de Vie Max"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            );
+                                        }
+
+                                        return (
+                                            <div key={i} className="bg-app-surface/40 border border-white/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1 group hover:border-accent/20 transition-all">
+                                                {stat.icon}
+                                                <span className="text-app-text font-black text-xs">{stat.val}</span>
+                                                <span className="text-[9px] uppercase font-bold text-app-text/20 tracking-wider group-hover:text-app-text/40">{stat.label}</span>
+                                            </div>
+                                        );
+                                    })
                                 );
                             })()}
                         </div>

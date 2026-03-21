@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Brain, Key, Cpu, ShieldCheck, AlertTriangle, Eye, EyeOff, Sparkles, RefreshCw, BookOpen, PenTool, Music, Beaker, User, Settings2, ChevronRight, Save, ExternalLink, type LucideIcon } from 'lucide-react';
+import { Brain, Key, Cpu, ShieldCheck, AlertTriangle, Eye, EyeOff, Sparkles, RefreshCw, BookOpen, PenTool, Music, Beaker, User, Settings2, ChevronRight, Save, ExternalLink, Map, type LucideIcon } from 'lucide-react';
 import { useAIStore } from '../../../stores/useAIStore';
 import { useGemStore } from '../../../stores/useGemStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
@@ -8,7 +8,7 @@ import { aiService } from '../AIService';
 
 const AISettings: React.FC = () => {
   const { configs, updateConfig, activeProvider, setProvider } = useAIStore();
-  const { gems, updateGem } = useGemStore();
+  const { gems, updateGem, syncGemsWithDefaults } = useGemStore();
   const activeCampaign = useSessionOSStore(state => state.campaigns.find(c => c.id === state.activeCampaignId));
   const systemId = activeCampaign?.system?.toLowerCase() || 'generic';
   
@@ -20,34 +20,42 @@ const AISettings: React.FC = () => {
   const [isReindexing, setIsReindexing] = useState(false);
 
   const iconMap: Record<string, LucideIcon> = {
-    BookOpen, PenTool, Music, Beaker, User, Sparkles, Brain
+    BookOpen, PenTool, Music, Beaker, Map, User, Sparkles, Brain
   };
 
   useEffect(() => {
+    syncGemsWithDefaults();
+  }, [syncGemsWithDefaults]);
+
+  useEffect(() => {
     const fetchModels = async () => {
-      if (configs.gemini.apiKey) {
+      if (activeProvider === 'gemini' && configs.gemini.apiKey) {
         setIsLoadingModels(true);
         try {
-          const data = await aiService.listModels() as { models: Array<{ name: string, supportedGenerationMethods: string[] }> };
-          if (data && data.models) {
-            const names = data.models
-              .filter(m => 
-                m.supportedGenerationMethods.includes('generateContent') || 
-                m.supportedGenerationMethods.includes('predict')
-              )
-              .map(m => m.name.replace('models/', ''));
-            setDiscoveredModels(names);
-          }
+          const data = await aiService.listModels(configs.gemini.apiKey);
+          setDiscoveredModels(data);
         } catch (err) {
-          console.error("Failed to discover models:", err);
+          console.error("Failed to discover Gemini models:", err);
         } finally {
           setIsLoadingModels(false);
         }
+      } else if (activeProvider === 'ollama' && window.appBridge?.ai?.ollamaListModels) {
+        setIsLoadingModels(true);
+        try {
+          const models = await window.appBridge.ai.ollamaListModels();
+          setDiscoveredModels(models);
+        } catch (err) {
+          console.error("Failed to discover Ollama models:", err);
+        } finally {
+          setIsLoadingModels(false);
+        }
+      } else {
+        setDiscoveredModels([]);
       }
     };
 
     fetchModels();
-  }, [configs.gemini.apiKey]);
+  }, [activeProvider, configs.gemini.apiKey]);
 
   const toggleKeyVisibility = (provider: string) => {
     setShowKeys(prev => ({ ...prev, [provider]: !prev[provider] }));
@@ -74,6 +82,13 @@ const AISettings: React.FC = () => {
       icon: <Brain size={24} />,
       color: 'text-gm-violet',
       desc: 'Claude 3.5 Sonnet. Excellent pour l\'écriture créative et le RP.'
+    },
+    { 
+      id: 'ollama', 
+      name: 'Ollama (Local)', 
+      icon: <Cpu size={24} />,
+      color: 'text-orange-400',
+      desc: 'Modèles locaux (Phi-3, Gemma 2). 100% privé, sans abonnement.'
     },
   ];
 
@@ -125,27 +140,57 @@ const AISettings: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40 flex items-center gap-2">
-                  <Key size={12} className="text-accent" />
-                  Clé API
-                </label>
-                <div className="relative">
-                  <input
-                    type={showKeys[p.id] ? 'text' : 'password'}
-                    value={configs[p.id].apiKey || ''}
-                    onChange={(e) => updateConfig(p.id, { apiKey: e.target.value })}
-                    placeholder={`Saisissez votre clé ${p.name}...`}
-                    className="w-full bg-black/40 border border-app-border/40 rounded-xl px-4 py-3 text-xs text-app-text focus:border-accent/50 outline-none transition-all font-mono"
-                  />
-                  <button 
-                    onClick={() => toggleKeyVisibility(p.id)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-app-text/20 hover:text-app-text transition-colors"
-                  >
-                    {showKeys[p.id] ? <EyeOff size={16} /> : <Eye size={16} />}
-                  </button>
+              {p.id !== 'ollama' && (
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40 flex items-center gap-2">
+                    <Key size={12} className="text-accent" />
+                    Clé API
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showKeys[p.id] ? 'text' : 'password'}
+                      value={configs[p.id]?.apiKey || ''}
+                      onChange={(e) => updateConfig(p.id, { apiKey: e.target.value })}
+                      placeholder={`Saisissez votre clé ${p.name}...`}
+                      className="w-full bg-black/40 border border-app-border/40 rounded-xl px-4 py-3 text-xs text-app-text focus:border-accent/50 outline-none transition-all font-mono"
+                    />
+                    <button 
+                      onClick={() => toggleKeyVisibility(p.id)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-app-text/20 hover:text-app-text transition-colors"
+                    >
+                      {showKeys[p.id] ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {p.id === 'ollama' && (
+                <div className="space-y-2">
+                   <label className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40 flex items-center gap-2">
+                    <ShieldCheck size={12} className="text-emerald-500" />
+                    Statut Local
+                  </label>
+                  <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-emerald-500/5 border border-emerald-500/10">
+                    <div className="flex items-center gap-2 text-emerald-500 text-[10px] font-bold uppercase tracking-widest">
+                      <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                      Serveur Ollama Prêt
+                    </div>
+                    <button
+                      onClick={async () => {
+                        const ok = await window.appBridge?.ai?.ollamaPull?.('phi3');
+                        if (ok) {
+                          // Refresh models list
+                          updateConfig('ollama', { apiKey: '' });
+                        }
+                      }}
+                      className="text-[10px] font-black uppercase tracking-widest text-accent bg-accent/10 px-2 py-1 rounded border border-accent/20 hover:bg-accent/20 transition-all"
+                      title="Télécharger le modèle recommandé (phi3)"
+                    >
+                      Pull phi3
+                    </button>
+                  </div>
+                </div>
+              )}
 
               <div className="space-y-2">
                 <div className="flex items-center gap-2 mb-2">
@@ -165,20 +210,22 @@ const AISettings: React.FC = () => {
                     </button>
                   )}
                 </div>
-                
                 <select
                   title="Sélectionner le modèle d'IA"
-                  value={configs[p.id].modelId}
+                  value={configs[p.id]?.modelId || ''}
                   onChange={(e) => updateConfig(p.id, { modelId: e.target.value })}
                   className="w-full bg-black/40 border border-app-border/40 rounded-xl px-4 py-3 text-xs text-app-text focus:border-accent/50 outline-none transition-all appearance-none cursor-pointer"
                 >
-                  {p.id === 'gemini' && (
+                  {(p.id === 'gemini' || p.id === 'ollama') && discoveredModels.length > 0 ? (
                     <>
-                      {discoveredModels.length > 0 ? (
-                        discoveredModels.map(name => (
-                          <option key={name} value={name}>{name}</option>
-                        ))
-                      ) : (
+                      {discoveredModels.map(name => (
+                        <option key={name} value={name}>{name}</option>
+                      ))}
+                      <option value="custom">-- Saisie Manuelle --</option>
+                    </>
+                  ) : (
+                    <>
+                      {p.id === 'gemini' && (
                         <>
                           <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
                           <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
@@ -187,38 +234,43 @@ const AISettings: React.FC = () => {
                           <option value="imagen-3.0-fast-generate-001">Imagen 3 Fast (Portrait)</option>
                         </>
                       )}
-                      <option value="custom">-- Saisie Manuelle --</option>
-                    </>
-                  )}
-
-                  {p.id === 'openai' && (
-                    <>
-                      <option value="gpt-4o">GPT-4o (Expert)</option>
-                      <option value="gpt-4o-mini">GPT-4o Mini (Rapide)</option>
-                      <option value="o1-preview">OpenAI o1 (Raisonnement)</option>
-                      <option value="custom">-- Saisie Manuelle --</option>
-                    </>
-                  )}
-
-                  {p.id === 'anthropic' && (
-                    <>
-                      <option value="claude-3-5-sonnet-latest">Claude 3.5 Sonnet (Recommandé)</option>
-                      <option value="claude-3-opus-20240229">Claude 3 Opus (Créatif)</option>
-                      <option value="claude-3-5-haiku-latest">Claude 3.5 Haiku (Vitesse)</option>
+                      {p.id === 'openai' && (
+                        <>
+                          <option value="gpt-4o">GPT-4o (Expert)</option>
+                          <option value="gpt-4o-mini">GPT-4o Mini (Rapide)</option>
+                          <option value="o1-preview">OpenAI o1 (Raisonnement)</option>
+                        </>
+                      )}
+                      {p.id === 'anthropic' && (
+                        <>
+                          <option value="claude-3-5-sonnet-latest">Claude 3.5 Sonnet (Recommandé)</option>
+                          <option value="claude-3-opus-20240229">Claude 3 Opus (Créatif)</option>
+                          <option value="claude-3-5-haiku-latest">Claude 3.5 Haiku (Vitesse)</option>
+                        </>
+                      )}
+                      {p.id === 'ollama' && (
+                        <>
+                          <option value="phi3">Phi-3 (Léger & Rapide)</option>
+                          <option value="gemma2:2b">Gemma 2 2B (Efficace)</option>
+                          <option value="mistral">Mistral (Polyvalent)</option>
+                          <option value="x/flux2-klein:latest">Flux.2 Klein (Image)</option>
+                          <option value="flux">Flux (Image)</option>
+                        </>
+                      )}
                       <option value="custom">-- Saisie Manuelle --</option>
                     </>
                   )}
                 </select>
                 
-                {(configs[p.id].modelId === 'custom' || (p.id === 'gemini' && discoveredModels.length === 0)) && (
+                {(configs[p.id]?.modelId === 'custom' || (p.id === 'gemini' && discoveredModels.length === 0)) && (
                   <div className="mt-2 text-app-text/60 italic text-[9px] uppercase tracking-widest pl-1">
-                    Modèle sélectionné: <span className="text-accent font-bold">{configs[p.id].modelId}</span>
+                    Modèle sélectionné: <span className="text-accent font-bold">{configs[p.id]?.modelId}</span>
                   </div>
                 )}
               </div>
             </div>
 
-            {configs[p.id].apiKey && (
+            {configs[p.id]?.apiKey && (
               <div className="mt-4 flex items-center gap-2 text-[9px] font-bold uppercase tracking-widest text-emerald-500/60 bg-emerald-500/5 px-3 py-2 rounded-lg border border-emerald-500/10">
                 <ShieldCheck size={12} />
                 Clé configurée localement

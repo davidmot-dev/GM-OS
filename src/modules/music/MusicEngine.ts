@@ -95,9 +95,8 @@ class MusicDeck {
                 if (win.appBridge?.utils?.formatFileUrl) {
                     finalUrl = win.appBridge.utils.formatFileUrl(url);
                 } else {
-                    const normalizedPath = url.replace(/\\/g, '/');
-                    // Ensure triple slash for Windows paths
-                    finalUrl = 'file:///' + normalizedPath.replace(/ /g, '%20');
+                    const normalizedPath = url.replace(/^file:\/\/\//, '').replace(/\\/g, '/');
+                    finalUrl = `gmos://media/${normalizedPath}`;
                 }
             }
         }
@@ -202,6 +201,7 @@ class MusicDeck {
 export class MusicEngine {
     private context: AudioContext;
     private masterGain: GainNode;
+    private duckingGain: GainNode;
     private crossfaderGainA: GainNode;
     private crossfaderGainB: GainNode;
     private destination: MediaStreamAudioDestinationNode;
@@ -216,7 +216,10 @@ export class MusicEngine {
 
         this.destination = this.context.createMediaStreamDestination();
         this.masterGain = this.context.createGain();
-        this.masterGain.connect(this.destination);
+        this.duckingGain = this.context.createGain();
+        
+        this.masterGain.connect(this.duckingGain);
+        this.duckingGain.connect(this.destination);
 
         this.crossfaderGainA = this.context.createGain();
         this.crossfaderGainB = this.context.createGain();
@@ -228,6 +231,20 @@ export class MusicEngine {
         this.deckB = new MusicDeck(this.context, this.crossfaderGainB, () => { });
 
         this.updateCrossfaderGains();
+        this.setupDucking();
+    }
+
+    private async setupDucking() {
+        // We import it dynamically to avoid circular dependencies if any
+        const { useVoiceStore } = await import('../voice/useVoiceStore');
+        
+        useVoiceStore.subscribe((state) => {
+            const { isDucking, currentEffects } = state;
+            const targetGain = isDucking ? currentEffects.duckingRange : 1.0;
+            
+            // Smooth transition for ducking using dynamic attack
+            this.duckingGain.gain.setTargetAtTime(targetGain, this.context.currentTime, currentEffects.duckingAttack / 1000);
+        });
     }
 
     setMasterVolume(value: number) {

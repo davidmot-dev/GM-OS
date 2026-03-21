@@ -1,6 +1,6 @@
 import { SessionOSState } from '../modules/session/useSessionOSStore';
 import { MusicState } from '../modules/music/useMusicStore';
-import { CombatState, Combatant } from '../modules/combat/useCombatStore';
+import { CombatState } from '../modules/combat/useCombatStore';
 import { LightState } from '../modules/light/useLightStore';
 import { MapState } from '../modules/map/useMapStore';
 import { ImageState } from '../modules/image/useImageStore';
@@ -70,6 +70,14 @@ declare global {
         children?: NoteEntry[];
     }
 
+    export interface ClientContext {
+        deviceId: string;
+        pseudo: string;
+        role: 'combat' | 'narrative' | 'player' | 'remote';
+        status: 'active' | 'ghost' | 'disconnected';
+        lastSeen: number;
+    }
+
     export interface SyncPayload {
         clock?: Partial<ClockState>;
         combat?: Partial<CombatState>;
@@ -82,6 +90,7 @@ declare global {
         storyboard?: Partial<StoryboardState>;
         session?: Partial<SessionOSState>;
         voiceLevel?: number;
+        clients?: ClientContext[]; // The list of active clients for the MJ to see
     }
 
     interface AppBridge {
@@ -125,6 +134,11 @@ declare global {
             proxyRequest: (url: string, method: string, headers: Record<string, string>, body: unknown) => Promise<AIProxyResponse>;
             searchContext: (systemId: string, campaignName: string) => Promise<string>;
             reindex: () => Promise<boolean>;
+            ollamaChat: (model: string, messages: { role: string; content: string }[]) => Promise<string>;
+            ollamaStatus: () => Promise<boolean>;
+            ollamaListModels: () => Promise<string[]>;
+            ollamaPull: (model: string) => Promise<boolean>;
+            ollamaGenerateImage: (model: string, prompt: string) => Promise<string>;
         };
         sound?: {
             loadAudios: () => Promise<string[]>;

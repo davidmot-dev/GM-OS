@@ -40,10 +40,18 @@ Les fichiers doivent être déposés dans le dossier `databases/` à la racine d
 - **Générer** : Cliquez sur le bouton principal (Dés). NPC OS pioche une valeur unique dans chaque liste de votre fichier JSON pour créer une fiche cohérente.
 - **Extraction Intelligente** : Le système détecte automatiquement quel champ doit servir de "Titre" (Titre, Nom, Personnage, etc.).
 
+## 🤖 Enrichissement par IA (Ollama)
+
+Désormais, **NPC OS** tire parti de l'intelligence artificielle locale pour sublimer vos tirages.
+
+- **Détails Sublimés** : Lorsque l'option **AI Enrichment** est activée, l'IA (via Ollama) analyse les traits aléatoires piochés et les reformule de manière littéraire pour une lecture plus immersive.
+- **Suggestion de Prompt Image** : Basée sur la description enrichie, l'IA génère automatiquement un prompt optimisé pour la création d'un avatar visuel.
+- **Toggle de Contrôle** : Vous pouvez activer ou désactiver l'enrichissement à tout moment via le bouton **IA** dans les contrôles du module (en haut à droite).
+
 ## 🖼️ Immersion et Hub Joueur
 
 - **Avatar** : Cliquez sur le cadre de l'avatar pour lier une image locale ou web à votre entité.
-- **Voice Sync (Cible)** : Si vous utilisez **Voice OS**, l'avatar s'animera légèrement au rythme de votre voix lorsque vous parlez, renforçant l'immersion des joueurs.
+- **Voice Sync (Cible)** : Si vous utilisez **Voice OS**, l'avatar émet un léger pulse visuel au rythme de votre voix lorsque vous parlez, renforçant l'immersion des joueurs.
 - **Projection Hub** : Cliquez sur l'icône **Œil** pour projeter instantanément la fiche (image + texte sélectionné) sur le Player Hub des joueurs.
 
 ## 🔗 Intégrations Cross-Modules

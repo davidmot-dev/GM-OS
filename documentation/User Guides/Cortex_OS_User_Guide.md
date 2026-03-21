@@ -11,11 +11,11 @@ Cortex OS agit comme un assistant expert à vos côtés :
 1. **Analyse de Proximité** : Calcule les distances entre les pions et applique les modificateurs de portée.
 2. **Smart Dispel** : Détecte les conflits d'états (ex: un personnage en feu qui devient mouillé).
 3. **Orchestration Immersive** : Pilote vos lampes Philips Hue et vos sons d'ambiance selon l'action.
-4. **Insights Tactiques** : Propose des rappels de règles basés sur le contexte actuel du combat.
+4. **Insights Tactiques** : Propose des rappels de règles et des **Analyses de Groupe** (Détection de flanquement, suggestions de repli coordonné).
 
-## 🛰️ Capteurs et Paramètres
+## 🛰️ Capteurs et Interface (Widget Horizontal)
 
-Le panneau de contrôle (Brain Icon) vous permet de configurer l'intelligence :
+Le panneau de contrôle Cortex se présente désormais sous la forme d'un widget horizontal discret en bas de l'écran (ou via l'icône Brain) :
 
 - **Live Sensors (ON/OFF)** : Active ou désactive l'analyse en temps réel. En mode "Muted", l'IA ne fera aucune suggestion et ne touchera pas au matériel.
 - **Auto-Dispel** : Si activé, l'IA nettoiera automatiquement les statuts incompatibles. Sinon, elle se contentera de vous suggérer l'action via un "Insight".
@@ -42,6 +42,7 @@ Au bas du panneau Cortex, vous trouverez les **Recent Analytics**. Ce log techni
 - *"Scan terminé : 4 pions détectés."*
 - *"Alerte : Le Guerrier est à portée de corps à corps du Gobelin."*
 - *"Nettoyage : Statut 'Froid' retiré (conflit avec 'En Feu')."*
+- *"Tactique : Alerte de Flanquement détectée sur le Flanc Droit !"*
 
 ---
 

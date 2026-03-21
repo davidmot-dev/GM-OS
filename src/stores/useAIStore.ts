@@ -20,6 +20,7 @@ export const useAIStore = create<AIState>()(
         gemini: { provider: 'gemini', modelId: 'gemini-1.5-flash' },
         openai: { provider: 'openai', modelId: 'gpt-4o' },
         anthropic: { provider: 'anthropic', modelId: 'claude-3-5-sonnet-latest' },
+        ollama: { provider: 'ollama', modelId: 'phi3' },
       },
       
       setProvider: (provider) => set({ activeProvider: provider }),
@@ -35,6 +36,14 @@ export const useAIStore = create<AIState>()(
     }),
     {
       name: 'gm-os-ai-settings',
+      merge: (persistedState, currentState) => ({
+        ...currentState,
+        ...(persistedState as AIState),
+        configs: {
+          ...currentState.configs,
+          ...((persistedState as AIState)?.configs || {})
+        }
+      }),
     }
   )
 );

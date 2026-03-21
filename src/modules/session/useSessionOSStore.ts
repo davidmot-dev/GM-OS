@@ -49,6 +49,7 @@ export interface Campaign {
     wallpaperUrl?: string;
     activeLocationIds: string[];
     ragPath?: string;
+    aiPersonas?: Record<string, string>; // gemId -> instructions override pour cette campagne
 }
 
 export interface Entity {
@@ -679,9 +680,9 @@ export const useSessionOSStore = create<SessionOSState>()(
             setCurrentView: (view) => {
                 set({ currentView: view });
                 if (view === 'npc-gallery') {
-                    get().autoSelectFirstEntity();
+                    set({ selectedEntityId: null, isAddingEntity: false });
                 } else if (view === 'world-atlas') {
-                    get().autoSelectFirstMap();
+                    set({ selectedAtlasMapId: null });
                 }
             },
             setSelectedSession: (id) => set({ selectedSessionId: id }),

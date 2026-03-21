@@ -10,6 +10,7 @@ import { useTacticalAIStore } from '../modules/tactical-ai/useTacticalAIStore';
 import { mediaCleanupService } from '../services/MediaCleanupService';
 import { gmToast } from '../stores/useToastStore';
 import { Trash2, RefreshCw } from 'lucide-react';
+import LobbyMonitor from './settings/LobbyMonitor';
 
 interface GlobalSettingsModalProps {
     onClose: () => void;
@@ -462,6 +463,8 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                     </div>
                                 </section>
                             </div>
+
+                            <LobbyMonitor />
 
                             <section className="space-y-4">
                                 <h4 className="text-xs font-black uppercase tracking-widest text-app-text/40 px-1 border-l-2 border-accent/30 pl-3">Fonctions Disponibles</h4>

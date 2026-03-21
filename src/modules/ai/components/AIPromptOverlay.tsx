@@ -9,6 +9,7 @@ interface AIPromptOverlayProps {
     placeholder?: string;
     suggestions?: string[];
     isGenerating?: boolean;
+    initialPrompt?: string;
 }
 
 const AIPromptOverlay: React.FC<AIPromptOverlayProps> = ({
@@ -24,16 +25,27 @@ const AIPromptOverlay: React.FC<AIPromptOverlayProps> = ({
         "Ambiance sombre et brumeuse",
         "Traits héroïques"
     ],
-    isGenerating = false
+    isGenerating = false,
+    initialPrompt = ""
 }) => {
     const [inputValue, setInputValue] = useState('');
     const inputRef = useRef<HTMLTextAreaElement>(null);
 
     useEffect(() => {
-        if (isOpen && inputRef.current) {
-            inputRef.current.focus();
+        if (isOpen) {
+            // Functional update to avoid dependencies issues and loops
+            if (initialPrompt) {
+                setInputValue(prev => prev || initialPrompt);
+            }
+            
+            if (inputRef.current) {
+                inputRef.current.focus();
+            }
+        } else {
+            // Reset state when overlay is closed
+            setInputValue('');
         }
-    }, [isOpen]);
+    }, [isOpen, initialPrompt]);
 
     if (!isOpen) return null;
 

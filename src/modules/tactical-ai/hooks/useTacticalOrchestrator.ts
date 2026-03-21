@@ -168,26 +168,69 @@ export const useTacticalOrchestrator = () => {
       });
     }
 
-      // 2. Range & Position Advice
+      // 2. Macro Analysis (Flanking & Routing)
       if (activeToken && activeCombatant) {
+        // Ennemis opposés au jeton actif
         const enemies = tokens.filter(t => {
           if (t.id === activeToken!.id) return false; // Not self
-          
           const combatant = combatants.find(c => 
             (t.linkedCombatantId && c.id === t.linkedCombatantId) || 
             t.name === c.name
           );
-          // If we have combatants, only compare against opposition
           if (activeCombatant!.id !== 'selected-token' && combatant) {
             return combatant.isPlayer !== activeCombatant!.isPlayer;
           }
-          // If purely measuring from a selected token (not in combat), show distance to everyone
           return true;
         });
 
+        const myFaction = activeCombatant.isPlayer ? combatants.filter(c => c.isPlayer) : combatants.filter(c => !c.isPlayer);
+        
+        // 2a. Détection de Repli (Sur sa propre faction)
+        if (activeCombatant.id !== 'selected-token') {
+             const routCheck = GridEngine.checkFactionRout(myFaction, 30);
+             if (routCheck.isRouting) {
+                 newAdvices.push({
+                     id: `macro-rout-${activeCombatant.isPlayer ? 'player' : 'enemy'}${nonce}`,
+                     sourceId: activeCombatant.id,
+                     type: 'macro-rout',
+                     message: `🚨 L'escouade de ${activeCombatant.name} s'effondre (Santé : ${Math.round(routCheck.currentPercent)}%). Stratégie de repli conseillée.`,
+                     priority: 0 // Top priority
+                 });
+             }
+        }
+
+        // Préparation des données pour le flanquement
+        const enemiesData = enemies.map(enemyToken => {
+            const distPx = GridEngine.calculateDistance(activeToken!, enemyToken);
+            const units = GridEngine.pxToUnits(distPx, gridSize);
+            return {
+                point: enemyToken,
+                unitsToTarget: units,
+                name: enemyToken.name || 'Inconnu'
+            };
+        });
+
+        // 2b. Détection de Flanquement
+        const flankCheck = GridEngine.checkFlanking({ point: activeToken, name: activeToken.name || 'Jeton' }, enemiesData, tacticalConfig);
+        if (flankCheck.isFlanked) {
+             const flankerNames = flankCheck.flankers.join(' et ');
+             newAdvices.push({
+                 id: `macro-flank-${activeCombatant.id}${nonce}`,
+                 sourceId: activeCombatant.id,
+                 type: 'macro-flank',
+                 message: `⚠️ ATTENTION : ${activeActor.name} est flanqué par ${flankerNames}.`,
+                 priority: 1, // High priority
+                 resolution: {
+                     hardware: { color: '#ffaa00', priority: 1, scene: 'Warning', intensity: 0.9 },
+                     intensity: 0.9
+                 }
+             });
+        }
+
+        // 3. Range & Position Advice (Individual)
         enemies.forEach(enemy => {
           // Standard center-to-center (more predictable for 1.5 unit threshold)
-          const distPx = GridEngine.calculateDistance(activeToken, enemy);
+          const distPx = GridEngine.calculateDistance(activeToken!, enemy);
           const units = GridEngine.pxToUnits(distPx, gridSize);
           
           // Debug tactique complet

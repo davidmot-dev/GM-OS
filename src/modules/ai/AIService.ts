@@ -32,15 +32,20 @@ export class AIService {
     return AIService.instance;
   }
 
-  public async generateText(prompt: string, customContext?: string, gemId: string = 'sage'): Promise<AIResponse> {
+  public async generateText(
+    prompt: string, 
+    customContext?: string, 
+    gemId: string = 'sage',
+    ragOptions: { systemOnly?: boolean; systemName?: string } = {}
+  ): Promise<AIResponse> {
     const { activeProvider, configs } = useAIStore.getState();
     const config = configs[activeProvider];
 
-    if (!config.apiKey) {
+    if (activeProvider !== 'ollama' && !config.apiKey) {
       throw new Error(`API Key manquante pour le fournisseur ${activeProvider}`);
     }
 
-    const ragContext = await ragService.getRelevantContext();
+    const ragContext = await ragService.getRelevantContext(ragOptions);
     const fullContext = customContext ? `${customContext}\n\n${ragContext}` : ragContext;
 
     const gemStore = (await import('../../stores/useGemStore')).useGemStore.getState();
@@ -81,6 +86,23 @@ RÈGLES IMPORTANTES :
 
 CONTEXTE LOCAL RÉCUPÉRÉ :
 ${fullContext}`;
+
+    if (activeProvider === 'ollama') {
+      const model = config.modelId || 'phi3';
+      try {
+        if (!window.appBridge?.ai?.ollamaChat) throw new Error("Bridge Ollama non disponible.");
+        
+        const text = await window.appBridge.ai.ollamaChat(model, [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: prompt }
+        ]);
+        
+        return { text, metadata: { provider: 'ollama', model } };
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
+        throw new Error(`Erreur Ollama: ${message}`);
+      }
+    }
 
     if (activeProvider === 'gemini') {
       const apiKey = config.apiKey?.trim().replace(/[\r\n]/g, '');
@@ -195,8 +217,67 @@ ${fullContext}`;
     }
   }
 
-  public async generateImage(prompt: string): Promise<string> {
+  public async generateImage(prompt: string, _legacyAspect?: string): Promise<string> {
+    const { activeProvider, configs } = useAIStore.getState();
+    const config = configs[activeProvider];
+
     try {
+      // 0. TENTATIVE OLLAMA LOCAL FLUX (Si actif)
+      if (activeProvider === 'ollama') {
+        try {
+          let model = config.modelId || 'flux';
+          // Force flux if a text model is used for image generation
+          const isTextModel = model.includes('phi') || model.includes('gemma') || model.includes('mistral') || model.includes('llama');
+          if (isTextModel) {
+             console.log(`[AI Service] Modèle texte détecté (${model}), redirection vers Flux pour l'image...`);
+             model = 'x/flux2-klein:latest'; // Default standard flux identified in user tags
+          }
+
+          console.log(`[AI Service] Envoi de la requête Ollama Image (Modèle: ${model})...`);
+          if (!window.appBridge?.ai?.ollamaGenerateImage) throw new Error("Bridge Ollama Generate Image non disponible.");
+          
+          const base64Response = await window.appBridge.ai.ollamaGenerateImage(model, prompt);
+          
+          if (base64Response) {
+             let base64Data = base64Response;
+             // Si Ollama encapsule le base64 dans du markdown (ex: ![image](data:image/png;base64,iVBOR...))
+             const markdownMatch = base64Response.match(/data:image\/[^;]+;base64,([a-zA-Z0-9+/=]+)/);
+             if (markdownMatch) {
+                 base64Data = markdownMatch[1];
+             }
+             
+             // Decodage base64 robuste
+             const binaryString = atob(base64Data);
+             const uint8Array = new Uint8Array(binaryString.length);
+             for (let i = 0; i < binaryString.length; i++) {
+                 uint8Array[i] = binaryString.charCodeAt(i);
+             }
+
+             if (uint8Array.byteLength > 1000) {
+                 const fileName = `ollama_flux_${Date.now()}.png`;
+                 if (window.appBridge?.npc?.saveAvatar) {
+                     const bufferCopy = (uint8Array.buffer as ArrayBuffer).slice(0);
+                     const localUrl = await window.appBridge.npc.saveAvatar(bufferCopy, fileName);
+                     
+                     try {
+                         const { useMediaStore } = await import('../../stores/useMediaStore');
+                         const addMedia = useMediaStore.getState().addMedia;
+                         const blob = new Blob([uint8Array], { type: 'image/png' });
+                         const file = new File([blob], fileName, { type: 'image/png' });
+                         await addMedia(file, ['AI Generated', 'Local Flux']);
+                     } catch (err) {
+                         console.warn("[AI Service] Media hub registration failed for Ollama:", err);
+                     }
+                     if (localUrl) return localUrl;
+                 }
+                 return `data:image/png;base64,${base64Data}`;
+             }
+          }
+        } catch (ollamaErr) {
+             console.error("[AI Service] Ollama image generation failed, checking fallbacks...", ollamaErr);
+        }
+      }
+
       // 1. TENTATIVE Z-IMAGE (HuggingFace Space via Gradio)
       try {
         console.log(`[AI Service] Tentative de génération via Z-Image (HuggingFace Space)...`);
@@ -262,8 +343,8 @@ ${fullContext}`;
       }
 
       // 2. FALLBACK GEMINI 2.5 FLASH IMAGE
-      const { configs } = useAIStore.getState();
-      const apiKey = configs['gemini']?.apiKey;
+      const geminiConfig = configs['gemini'] as { apiKey?: string };
+      const apiKey = geminiConfig?.apiKey;
       
       if (!apiKey) {
         throw new Error("Clé API Gemini manquante pour fallback.");
@@ -367,12 +448,60 @@ ${fullContext}`;
 
   public async listModels(apiKey: string): Promise<string[]> {
     const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`;
-    const response = await window.appBridge?.ai?.proxyRequest?.(url, 'GET', {}, {});
+    const response = await window.appBridge?.ai?.proxyRequest?.(url, 'GET', {}, {}) as { ok: boolean; data: any };
     if (response?.ok) {
       const data = response.data as { models?: { name: string }[] };
       return (data.models || []).map((m) => m.name.replace('models/', ''));
     }
     return [];
+  }
+
+  public async enrichNPCEntity(fields: Record<string, string>, category: string, universe: string): Promise<Record<string, string>> {
+     const fieldsPrompt = Object.entries(fields).map(([k, v]) => `${k}: ${v}`).join('\n');
+     const prompt = `Voici les attributs d'un(e) [${category}] dans l'univers [${universe}]. 
+     TACHE : Améliore ces descriptions pour les rendre immersives, narratives et riches en détails.
+     RÈGLES :
+     1. Garde EXACTEMENT les mêmes noms de clés (labels).
+     2. Réponds UNIQUEMENT avec un objet JSON valide contenant les clés originales et les nouvelles valeurs enrichies en français.
+     3. Ne déforme pas l'essence de l'attribut original mais rend-le "vivant".
+     
+     ATTRIBUTS BRUTS :
+     ${fieldsPrompt}`;
+
+     try {
+       const response = await this.generateText(prompt, "Tu es un assistant de création narrative expert. Réponds exclusivement en JSON pur.");
+       // Extraction du JSON au cas où l'IA ajoute du texte avant/après
+       const jsonMatch = response.text.match(/\{[\s\S]*\}/);
+       if (jsonMatch) {
+         return JSON.parse(jsonMatch[0]);
+       }
+       return fields;
+     } catch (err) {
+       console.error("[AIService] Enrichment failed:", err);
+       return fields;
+     }
+  }
+
+  public async suggestNPCImagePrompt(name: string, fields: Record<string, string>, category: string, universe: string): Promise<string> {
+    const fieldsText = Object.values(fields).join(', ');
+    const prompt = `Basé sur ce personnage/lieu nommé "${name}" (${category}) dans l'univers "${universe}" :
+    Description : ${fieldsText}
+    
+    TACHE : Génère un prompt visuel détaillé en ANGLAIS pour un moteur de génération d'images IA (type Flux/Stable Diffusion).
+    RÈGLES :
+    1. Sois très précis sur le style (digital art, cinematic lighting, etc.).
+    2. Décris l'apparence, les vêtements, l'ambiance et l'arrière-plan.
+    3. Réponds UNIQUEMENT avec le prompt final en anglais.
+    
+    PROMPT VISUEL :`;
+
+    try {
+      const response = await this.generateText(prompt, "Tu es un expert en prompting d'images pour IA. Réponds uniquement avec le prompt en anglais.");
+      return response.text.trim();
+    } catch (err) {
+      console.error("[AIService] Prompt suggestion failed:", err);
+      return "";
+    }
   }
 }
 

@@ -1,5 +1,16 @@
-# Walkthrough: Unified Tactical Controls & Stability
+# GM-OS v5 : Walkthrough Général & État de la Refonte
 
+## 🌟 Nouveautés V5.2 (Mars 2026)
+
+La version 5.2 marque une étape majeure dans l'intégration de l'Intelligence Artificielle et de l'ergonomie MJ.
+
+- **IA Hybride & Locale** : GM-OS peut désormais fonctionner sans connexion internet grâce au support d'**Ollama**. L'IA locale gère parfaitement le profilage vocal des PNJ.
+- **Voice-OS Advanced** : Transition vers un système de profilage psychologique. Le MJ discute avec l'IA pour définir la voix de ses personnages, au-delà des simples curseurs.
+- **Refonte UI Cortex** : Le cerveau tactique a été transformé en un widget horizontal discret mais puissant, libérant l'espace visuel pour la cartographie.
+- **Sécurité Windows (gmos://)** : Migration réussie vers un protocole sécurisé pour le chargement massif de médias locaux.
+- **AI Persona Forge (V5.4)** : Génération séquentielle de 7 assistants IA (GEMS) avec support optimisé pour **Ollama** et isolation intelligente du contexte (Système vs Campagne).
+
+## 🧱 Architecture Fondamentale
 This walkthrough demonstrates the latest improvements to the GM-OS tactical ecosystem, focusing on seamless combat management from Map-OS and overall system robustness.
 
 ## 🗺️ Map-OS: Integrated Combat Shortcut

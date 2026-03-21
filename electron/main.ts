@@ -32,6 +32,10 @@ interface AIProxyResponse {
 import { registerRagHandlers } from './RAGEngine'
 import { registerMcpHandlers } from './mcp_bridge'
 import { registerObsidianHandlers } from './obsidian_bridge'
+import { sessionManager } from './SessionManager'
+import { OllamaService } from './OllamaService'
+
+const ollamaService = new OllamaService();
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -536,6 +540,7 @@ function startRemoteServer() {
 
         if (wss) {
             wss.on('connection', (ws: import('ws').WebSocket) => {
+                let currentDeviceId: string | null = null;
                 console.log('[Remote] New device connected');
                 
                 // Send initial sync data
@@ -546,11 +551,20 @@ function startRemoteServer() {
                 ws.on('message', (message: string) => {
                     try {
                         const data = JSON.parse(message);
-                        console.log('[Remote] Action received:', data);
+                        // console.log('[Remote] message received:', data);
                         
-                        if (data.type === 'remote:hello') {
-                            // Handshake
-                            console.log('[Remote] Handshake received from device');
+                        if (data.type === 'remote:register') {
+                            const { deviceId, pseudo, role } = data.payload;
+                            currentDeviceId = deviceId;
+                            console.log(`[Remote] Registering client: ${pseudo} (${role})`);
+                            sessionManager.registerClient(deviceId, pseudo, role);
+                            
+                            // Immediately broadcast updated client list to MJ
+                            if (win && !win.isDestroyed()) {
+                                win.webContents.send('remote:sync-clients', sessionManager.getAllClients());
+                            }
+                        } else if (data.type === 'remote:hello') {
+                            console.log('[Remote] Handshake received');
                         } else {
                             // Forward action to renderer process
                             if (win && !win.isDestroyed()) {
@@ -562,7 +576,18 @@ function startRemoteServer() {
                     }
                 });
 
-                ws.on('close', () => console.log('[Remote] Device disconnected'));
+                ws.on('close', () => {
+                    if (currentDeviceId) {
+                        console.log(`[Remote] Client went ghost: ${currentDeviceId}`);
+                        sessionManager.ghostClient(currentDeviceId);
+                        // Broadcast ghost status to MJ
+                        if (win && !win.isDestroyed()) {
+                            win.webContents.send('remote:sync-clients', sessionManager.getAllClients());
+                        }
+                    } else {
+                        console.log('[Remote] Anonymous device disconnected');
+                    }
+                });
             });
         }
 
@@ -624,6 +649,10 @@ ipcMain.handle('remote:get-connection-info', () => {
     };
 });
 
+ipcMain.on('remote:request-client-sync', (event) => {
+    event.reply('remote:sync-clients', sessionManager.getAllClients());
+});
+
 const APP_ROOT = process.env.APP_ROOT || '';
 
 // --- AI RAG Handlers ---
@@ -664,6 +693,27 @@ ipcMain.handle('ai:read-doc', async (_event, relativePath: string) => {
     if (!fs.existsSync(fullPath)) return null;
     return fs.readFileSync(fullPath, 'utf-8');
   });
+
+// --- Ollama Local AI Handlers ---
+ipcMain.handle('ai:ollama-status', async () => {
+    return await ollamaService.checkStatus();
+});
+
+ipcMain.handle('ai:ollama-chat', async (_event, model: string, messages: { role: string; content: string }[]) => {
+    return await ollamaService.chat(model, messages);
+});
+
+ipcMain.handle('ai:ollama-generate-image', async (_event, model: string, prompt: string) => {
+    return await ollamaService.generateImage(model, prompt);
+});
+
+ipcMain.handle('ai:ollama-list-models', async () => {
+    return await ollamaService.listModels();
+});
+
+ipcMain.handle('ai:ollama-pull', async (_event, model: string) => {
+    return await ollamaService.pullModel(model);
+});
 
 ipcMain.handle('ai:extract-pdf', async (_event, relativePath: string) => {
     const fullPath = path.join(APP_ROOT, 'docs', relativePath);
@@ -755,7 +805,7 @@ ipcMain.handle('npc:select-avatar', async () => {
     if (filePaths && filePaths.length > 0) {
         const rawPath = filePaths[0];
         const normalized = rawPath.replace(/\\/g, '/');
-        return `file:///${encodeURI(normalized).replace(/#/g, '%23').replace(/\?/g, '%3F')}`;
+        return `gmos://media/${normalized}`;
     }
     return null;
 });
@@ -769,7 +819,7 @@ ipcMain.handle('npc:save-avatar', async (_event, buffer: Buffer, fileName: strin
         await fs.writeFile(filePath, buffer);
         
         const normalized = filePath.replace(/\\/g, '/');
-        return `file:///${encodeURI(normalized).replace(/#/g, '%23').replace(/\?/g, '%3F')}`;
+        return `gmos://media/${normalized}`;
     } catch (error) {
         console.error('[Main] Error saving avatar:', error);
         return null;
