@@ -128,8 +128,10 @@ const TabletHub: React.FC = () => {
 
     // Voice Sync Animation values
     const syncActive = voiceLevel > 0.05;
-    const voiceScale = syncActive ? 1 + (voiceLevel * 0.15) : 1;
-    const voiceGlow = syncActive ? `0 0 ${voiceLevel * 30}px rgba(6, 182, 212, ${voiceLevel})` : 'none';
+    const voiceStyles = { 
+        '--voice-scale': syncActive ? 1 + (voiceLevel * 0.15) : 1, 
+        '--voice-glow': syncActive ? `0 0 ${voiceLevel * 30}px rgba(6, 182, 212, ${voiceLevel})` : '0 0 0 transparent' 
+    } as React.CSSProperties;
 
     const activeMedia = mediaList?.find(m => m.id === activeHubId);
 
@@ -250,14 +252,13 @@ const TabletHub: React.FC = () => {
                 {status === 'connected' ? <Wifi size={14} /> : <WifiOff size={14} />}
             </div>
 
-            {/* Background Layer */}
             <div
-                className="fixed inset-0 z-0 bg-cover bg-center transition-all duration-1000 ease-in-out"
+                className="fixed inset-0 z-0 bg-cover bg-center transition-all duration-1000 ease-in-out tablet-hub-bg"
                 style={{
-                    backgroundImage: resolvedBackground ? `url('${resolvedBackground}')` : "none",
-                    opacity: resolvedBackground ? 1 : 0,
-                    filter: `brightness(${(resolvedFavorites.length > 0 || liveEntity) ? 0.15 : 0.4}) grayscale(30%) blur(4px)`
-                }}
+                    '--hub-bg-url': resolvedBackground ? `url('${resolvedBackground}')` : "none",
+                    '--hub-bg-filter': `brightness(${(resolvedFavorites.length > 0 || liveEntity) ? 0.15 : 0.4}) grayscale(30%) blur(4px)`,
+                    '--hub-bg-opacity': resolvedBackground ? 1 : 0
+                } as React.CSSProperties}
             ></div>
             {!resolvedBackground && <div className="fixed inset-0 z-0 bg-black"></div>}
 
@@ -305,8 +306,8 @@ const TabletHub: React.FC = () => {
                                         <div key={liveEntity.id} className="bg-slate-900/90 backdrop-blur-3xl border-2 border-gm-cyan/30 rounded-3xl p-5 md:p-6 shadow-[0_0_40px_rgba(34,211,238,0.15)] flex flex-col gap-4 animate-in fade-in zoom-in duration-1000 w-full">
                                             <div className="flex flex-col items-center text-center gap-4">
                                                 <div 
-                                                    className="size-24 md:size-32 rounded-2xl overflow-hidden border-2 border-gm-cyan/20 shadow-glow-cyan bg-slate-950 relative"
-                                                    style={{ transform: `scale(${voiceScale})`, boxShadow: voiceGlow }}
+                                                    className="w-48 h-48 rounded-full border-4 border-accent relative flex items-center justify-center tablet-hub-voice-avatar"
+                                                    style={voiceStyles}
                                                 >
                                                     <ResolvedImage src={liveEntity.avatar || liveEntity.imageUrl || liveEntity.portraitUrl} className="absolute inset-0 w-full h-full object-cover blur-xl opacity-30 scale-110" />
                                                     <ResolvedImage src={liveEntity.avatar || liveEntity.imageUrl || liveEntity.portraitUrl} alt={liveEntity.name} className="relative z-10 w-full h-full object-contain" />
@@ -375,7 +376,10 @@ const TabletHub: React.FC = () => {
                                 <div className="flex items-center gap-2 pt-2 border-t border-red-500/20">
                                     <span className="text-[10px] font-black text-red-100">{activeCombatant.hp} / {activeCombatant.hpMax} HP</span>
                                     <div className="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
-                                         <div className="h-full bg-red-500" style={{ width: `${(activeCombatant.hp / activeCombatant.hpMax) * 100}%` }} />
+                                         <div 
+                                            className="h-full bg-red-500 hp-progress-fill" 
+                                            style={{ '--progress-percent': `${(activeCombatant.hp / activeCombatant.hpMax) * 100}%` } as React.CSSProperties}
+                                         />
                                     </div>
                                 </div>
                             )}

@@ -312,22 +312,22 @@ export const useSoundStore = create<SoundState>()(
         }),
         {
             name: 'gm-os-sound-storage',
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            migrate: (persistedState: any, version: number) => {
+            migrate: (persistedState: unknown, version: number) => {
+                const state = persistedState as Record<string, any>;
                 if (version === 0) {
                     // Migrate from single 'pads' to 'atmospheres'
-                    if (persistedState.pads && !persistedState.atmospheres) {
+                    if (state.pads && !state.atmospheres) {
                         return {
-                            ...persistedState,
+                            ...state,
                             atmospheres: [
-                                { id: 'default', name: 'Exploration', pads: persistedState.pads }
+                                { id: 'default', name: 'Exploration', pads: state.pads }
                             ],
                             activeAtmosphereId: 'default',
                             pads: undefined // Remove old key
                         };
                     }
                 }
-                return persistedState;
+                return state;
             },
             version: 1,
             partialize: (state) => ({

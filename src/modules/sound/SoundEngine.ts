@@ -38,6 +38,12 @@ export class SoundEngine {
         return SoundEngine.instance;
     }
 
+    /** @internal - For testing only */
+    public static resetInstance() {
+        // @ts-expect-error - access private static
+        SoundEngine.instance = undefined;
+    }
+
     public formatUrl(filePath: string): string {
         if (filePath.startsWith('http') || filePath.startsWith('data:') || filePath.startsWith('file://')) {
             return filePath;

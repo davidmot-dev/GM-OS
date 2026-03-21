@@ -6,10 +6,11 @@ Le **Tablet Hub** est un module "second-screen" pour GM-OS v5. Il fonctionne com
 
 Contrairement au reste de l'application (Renderer), le Hub peut s'exécuter dans un navigateur distant (tablette, smartphone). Il ne peut donc pas accéder à l'objet `window.appBridge` natif d'Electron.
 
-### Stratégies de Substitution :
-1.  **WebSocket (Direct Sync)** : Toute l'activité de l'état global (Stores Zustand) est capturée par `App.tsx` (le "Maître") et diffusée via un serveur WebSocket local (Port 3001).
-2.  **Résolution Media via Base64** : Comme un navigateur distant ne peut pas accéder au système de fichiers local (`appBridge.fs`), toutes les images (PNJ, Favoris, Combatants) sont converties en `data:image/...` (Base64) par le Maître avant l'envoi du paquet de synchronisation.
-3.  **Cache Performance** : Pour éviter des conversions Base64 redondantes à chaque seconde (tick 1Hz), un `mediaResolver` avec cache (`Map`) est utilisé côté Maître.
+### Stratégies de Substitution
+
+1.  **WebSocket (Differential Sync)** : Toute l'activité de l'état global (Stores Zustand) est capturée par `App.tsx` (le "Maître") et diffusée via un serveur WebSocket local (Port 3001). Le système n'envoie que les *deltas* (segments de store modifiés) via `getDifferentialPayload`.
+2.  **Local Asset Middleware (HTTP Proxy)** : Les images ne sont plus envoyées en Base64. Le MJ PC cache les blobs dans un dossier temporaire et le Hub les récupère via des URLs HTTP directes (`http://[IP]:3001/temp/m-xxx`).
+3.  **AppBridge v2 (Standardisation)** : Utilisation d'interfaces TypeScript strictes pour sécuriser les échanges entre le Main Process et le Renderer, facilitant une future migration vers Tauri v2.
 
 ## 🔄 Protocole de Synchronisation
 

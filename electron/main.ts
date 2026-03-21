@@ -10,6 +10,13 @@ const pdf = require('pdf-parse');
 const { WebSocketServer } = require('ws');
 import os from 'node:os';
 import type { WebSocket } from 'ws';
+import log from 'electron-log';
+
+// Configure electron-log
+log.transports.file.level = 'info';
+log.transports.console.level = 'debug';
+log.initialize();
+console.log('[Main] Logger initialized at:', log.transports.file.getFile().path);
 
 interface ExtendedWebSocket extends WebSocket {
     isAlive?: boolean;
@@ -55,6 +62,7 @@ process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 
 let win: BrowserWindow | null
 let wss: import('ws').WebSocketServer | null = null;
 const REMOTE_PORT = 3001;
+const TEMP_MEDIA_DIR = path.join(app.getPath('userData'), 'temp-media');
 
 function createWindow() {
     win = new BrowserWindow({
@@ -244,10 +252,14 @@ ipcMain.handle('tactical:list-sounds', async () => {
     return [];
 });
 
-// --- Debug Handlers ---
-ipcMain.on('debug:open-console', () => {
-    if (win && !win.isDestroyed()) {
-        win.webContents.openDevTools({ mode: 'detach' });
+// --- Logging Handlers ---
+ipcMain.on('log:message', (_event, level: string, message: string, ...args: unknown[]) => {
+    switch (level) {
+        case 'info': log.info('[Renderer]', message, ...args); break;
+        case 'warn': log.warn('[Renderer]', message, ...args); break;
+        case 'error': log.error('[Renderer]', message, ...args); break;
+        case 'debug': log.debug('[Renderer]', message, ...args); break;
+        default: log.info('[Renderer]', message, ...args);
     }
 });
 
@@ -487,13 +499,31 @@ function startRemoteServer() {
                     };
                     res.writeHead(200, { 
                         'Content-Type': mimeTypes[ext] || 'application/octet-stream',
-                        'Access-Control-Allow-Origin': '*' // Allow cross-origin for tablets
+                        'Access-Control-Allow-Origin': '*' 
                     });
                     fs.createReadStream(filePath).pipe(res);
                 } else {
-                    console.warn(`[Remote Proxy] File NOT FOUND or not a file: ${filePath}`);
+                    console.warn(`[Remote Proxy] File NOT FOUND: ${filePath}`);
                     res.writeHead(404);
                     res.end('Media not found');
+                }
+                return;
+            }
+
+            // NEW: Support serving temp media files from IndexedDB cache
+            if (req.url && req.url.startsWith('/temp/')) {
+                const fileName = req.url.substring(6); // Remove /temp/
+                const filePath = path.join(TEMP_MEDIA_DIR, fileName);
+                
+                if (fs.existsSync(filePath)) {
+                    res.writeHead(200, { 
+                        'Content-Type': 'image/webp', // Default to webp or guess by extension if needed
+                        'Access-Control-Allow-Origin': '*' 
+                    });
+                    fs.createReadStream(filePath).pipe(res);
+                } else {
+                    res.writeHead(404);
+                    res.end('Temp Media not found');
                 }
                 return;
             }
@@ -545,6 +575,18 @@ function startRemoteServer() {
         console.error('[Remote] Failed to start server:', err);
     }
 }
+
+ipcMain.handle('remote:cache-media', async (_event, buffer: Buffer, id: string) => {
+    try {
+        await fs.ensureDir(TEMP_MEDIA_DIR);
+        const filePath = path.join(TEMP_MEDIA_DIR, id);
+        await fs.writeFile(filePath, buffer);
+        return true;
+    } catch (error) {
+        console.error('[Main] Error caching media:', error);
+        return false;
+    }
+});
 
 // Broadcast data to all connected remote devices
 ipcMain.on('remote:broadcast-sync', (_event, data) => {
@@ -752,7 +794,17 @@ app.on('activate', () => {
     }
 })
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+    // Clean temp media on startup
+    try {
+        if (await fs.pathExists(TEMP_MEDIA_DIR)) {
+            await fs.emptyDir(TEMP_MEDIA_DIR);
+            console.log('[Main] Temp media directory cleared');
+        }
+    } catch (e) {
+        console.warn('[Main] Could not clear temp media directory:', e);
+    }
+
     // Register custom protocol handler for local media
     protocol.handle('gmos', (request) => {
         const url = request.url.replace(/^gmos:\/\/media\//, '');

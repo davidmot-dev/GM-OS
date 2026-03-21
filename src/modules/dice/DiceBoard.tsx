@@ -74,7 +74,7 @@ const DiceBoard: React.FC = () => {
             setUseSystemDriver(true);
             
             // Map engine to local mode
-            const engine = activeDriver.dice.engine as any;
+            const engine = activeDriver.dice.engine as string | undefined;
             
             if (engine === 'yze' || engine === 'year-zero') {
                 setMode('yze');
@@ -191,7 +191,7 @@ const DiceBoard: React.FC = () => {
         try {
             const batchId = batchCount > 1 ? generateId() : undefined;
             const newRecords: RollRecord[] = [];
-            const { setLastRoll } = (window as any).useDiceStore.getState();
+            const { setLastRoll } = (window as unknown as Record<string, { getState: () => { setLastRoll: (r: RollRecord) => void } }>).useDiceStore.getState();
 
             for (let i = 0; i < batchCount; i++) {
                 const { result, title } = executeRoll(sides, isFormulaText, customFormula);
@@ -249,10 +249,11 @@ const DiceBoard: React.FC = () => {
 
     // --- Remote Control Listeners ---
     React.useEffect(() => {
-        const handleRemoteRoll = (e: any) => {
-            if (e.detail?.die) {
-                console.log("[DiceBoard] Remote Roll Triggered:", e.detail.die);
-                handleRoll(e.detail.die);
+        const handleRemoteRoll = (e: Event) => {
+            const detail = (e as CustomEvent<{ die?: number }>).detail;
+            if (detail?.die) {
+                console.log("[DiceBoard] Remote Roll Triggered:", detail.die);
+                handleRoll(detail.die);
             }
         };
         const handleRemoteClear = () => {

@@ -7,6 +7,9 @@ import { useHardwareStore } from '../stores/useHardwareStore';
 import AISettings from '../modules/ai/components/AISettings';
 import { TacticalTaxonomyEditor } from '../modules/tactical-ai/components/TacticalTaxonomyEditor';
 import { useTacticalAIStore } from '../modules/tactical-ai/useTacticalAIStore';
+import { mediaCleanupService } from '../services/MediaCleanupService';
+import { gmToast } from '../stores/useToastStore';
+import { Trash2, RefreshCw } from 'lucide-react';
 
 interface GlobalSettingsModalProps {
     onClose: () => void;
@@ -25,6 +28,8 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
     
     // Tactical AI Store Integration (Reactive)
     const { settings: tacticalSettings, updateSettings: updateTacticalSettings } = useTacticalAIStore();
+    const [isCleaning, setIsCleaning] = useState(false);
+    const [cleanupResult, setCleanupResult] = useState<{deletedCount: number, savedBytes: number} | null>(null);
     
     const isBridgeActive = !!window.appBridge;
 
@@ -63,12 +68,14 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                     </div>
                     <div>
                         <h2 className="text-xl font-black uppercase tracking-tighter text-app-text">Paramètres OS</h2>
-                        <p className="text-[10px] text-app-text/60 font-bold uppercase tracking-widest">GM-OS v5.1.0-alpha (System Forge Edition)</p>
+                        <p className="text-[10px] text-app-text/60 font-bold uppercase tracking-widest">GM-OS v5.1.0 (System Forge Edition)</p>
                     </div>
                 </div>
                 <button 
                     onClick={onClose}
                     className="p-2 hover:bg-app-surface rounded-full transition-colors text-app-text/40 hover:text-app-text"
+                    title="Fermer les paramètres"
+                    aria-label="Fermer les paramètres"
                 >
                     <X size={20} />
                 </button>
@@ -146,11 +153,15 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                                     key={t}
                                                     onClick={() => setTheme(t)}
                                                     className={`flex items-center justify-between p-4 rounded-xl border transition-all ${theme === t ? 'bg-accent/10 border-accent shadow-glow-accent/20' : 'bg-app-surface/20 border-app-border/20 hover:border-app-border/40'}`}
+                                                    title={`Sélectionner le thème ${t}`}
+                                                    aria-label={`Sélectionner le thème ${t}`}
                                                 >
                                                     <div className="flex items-center gap-3">
-                                                        <div className="w-8 h-8 rounded-lg bg-app-bg border border-app-border/50 flex items-center justify-center text-accent" style={{ color: theme === t ? themeColor : 'inherit' }}>
-                                                            <Zap size={18} fill={theme === t ? "currentColor" : "none"} />
-                                                        </div>
+                                                        <div 
+                                                        className="w-8 h-8 rounded-lg bg-app-bg border border-app-border/50 flex items-center justify-center text-accent" 
+                                                    >
+                                                        <Zap size={18} fill={theme === t ? "currentColor" : "none"} />
+                                                    </div>
                                                         <span className="text-sm font-black uppercase tracking-tight text-app-text">{t}</span>
                                                     </div>
                                                     {theme === t && <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />}
@@ -180,7 +191,11 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                                 ))}
                                             </div>
                                             <div className="text-center">
-                                                <p className="text-sm font-mono font-bold" style={{ color: (theme === 'claire' || themeColor === '#ffffff') ? 'var(--app-text)' : themeColor }}>{themeColor}</p>
+                                                <p 
+                                                    className="text-sm font-mono font-bold text-accent" 
+                                                >
+                                                    {themeColor}
+                                                </p>
                                                 <p className="text-[9px] uppercase tracking-[0.2em] text-app-text/40 mt-1">Échantillon ACTIF</p>
                                             </div>
                                         </div>
@@ -267,6 +282,41 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                 </div>
                             </section>
 
+                            {/* Maintenance Section */}
+                            <section className="space-y-4">
+                                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-app-text/40 px-1 border-l-2 border-accent/30 pl-3">Maintenance & Optimisation</h3>
+                                <div className="p-6 rounded-2xl bg-app-surface/20 border border-app-border/10 flex items-center justify-between">
+                                    <div className="flex-1">
+                                        <h4 className="text-app-text font-bold text-sm mb-1">Nettoyage de l'Index Médias</h4>
+                                        <p className="text-xs text-app-text/40 max-w-md">Recherche et supprime les fichiers médias orphelins (PNJ supprimés, images non référencées) pour libérer de l'espace.</p>
+                                        {cleanupResult && (
+                                            <p className="text-[10px] text-accent font-black uppercase mt-2 animate-pulse">
+                                                Dernier nettoyage : {cleanupResult.deletedCount} éléments supprimés ({(cleanupResult.savedBytes / 1024 / 1024).toFixed(2)} Mo libérés)
+                                            </p>
+                                        )}
+                                    </div>
+                                    <button 
+                                        onClick={async () => {
+                                            setIsCleaning(true);
+                                            try {
+                                                const res = await mediaCleanupService.performCleanup();
+                                                setCleanupResult(res);
+                                                gmToast(`${res.deletedCount} médias orphelins supprimés.`, "success");
+                                            } catch {
+                                                gmToast("Erreur lors du nettoyage", "error");
+                                            } finally {
+                                                setIsCleaning(false);
+                                            }
+                                        }}
+                                        disabled={isCleaning}
+                                        className="flex items-center gap-2 bg-accent/10 hover:bg-accent text-accent hover:text-app-bg border border-accent/30 px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all disabled:opacity-50"
+                                    >
+                                        {isCleaning ? <RefreshCw size={18} className="animate-spin" /> : <Trash2 size={18} />}
+                                        {isCleaning ? 'NETTOYAGE...' : 'NETTOYER'}
+                                    </button>
+                                </div>
+                            </section>
+
                             {/* Dangerous Actions Section */}
                             <section className="space-y-4 pt-4">
                                 <h3 className="text-xs font-black uppercase tracking-[0.2em] text-red-500 px-1 border-l-2 border-red-500/30 pl-3">Zone de Danger</h3>
@@ -317,6 +367,8 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                     <button
                                         onClick={() => updateTacticalSettings({ isEnabled: !tacticalSettings.isEnabled })}
                                         className={`relative w-14 h-7 rounded-full transition-all duration-300 ${tacticalSettings.isEnabled ? 'bg-accent shadow-glow-accent/20' : 'bg-app-surface border border-app-border/50'}`}
+                                        title={tacticalSettings.isEnabled ? "Désactiver l'IA Tactique" : "Activer l'IA Tactique"}
+                                        aria-label={tacticalSettings.isEnabled ? "Désactiver l'IA Tactique" : "Activer l'IA Tactique"}
                                     >
                                         <div className={`absolute top-1 w-5 h-5 rounded-full bg-white transition-all duration-300 shadow-md ${tacticalSettings.isEnabled ? 'left-8' : 'left-1'}`} />
                                     </button>

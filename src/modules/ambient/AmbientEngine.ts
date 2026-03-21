@@ -193,4 +193,9 @@ export class AmbientEngine {
 }
 
 // Singleton for Ambient OS
-export const ambientEngine = new AmbientEngine();
+export let ambientEngine = new AmbientEngine();
+
+/** @internal - For testing only */
+export const resetAmbientEngine = () => {
+    ambientEngine = new AmbientEngine();
+};

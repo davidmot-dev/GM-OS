@@ -316,21 +316,21 @@ const PlayerHub: React.FC = () => {
                                         {activeCombatant.healthSystem.type === 'wounds' && (
                                             <div className="px-2 py-0.5 rounded-full bg-orange-500/20 border border-orange-500/40">
                                                 <span className="text-[10px] font-black text-orange-400 uppercase tracking-tighter">
-                                                    {activeCombatant.healthSystem.data.currentLevel as any}
+                                                    {String(activeCombatant.healthSystem.data.currentLevel || '')}
                                                 </span>
                                             </div>
                                         )}
                                         {activeCombatant.healthSystem.type === 'clock' && (
                                             <div className="px-2 py-0.5 rounded-full bg-blue-500/20 border border-blue-500/40">
                                                 <span className="text-[10px] font-black text-blue-400 uppercase tracking-tighter">
-                                                    Clock {activeCombatant.healthSystem.data.segments as any}/{activeCombatant.healthSystem.data.maxSegments as any}
+                                                    Clock {Number(activeCombatant.healthSystem.data.segments || 0)}/{Number(activeCombatant.healthSystem.data.maxSegments || 0)}
                                                 </span>
                                             </div>
                                         )}
                                         {activeCombatant.healthSystem.type === 'boxes' && (
                                             <div className="flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-orange-500/20 border border-orange-500/40">
                                                 <span className="text-[10px] font-black text-orange-400 uppercase tracking-tighter mr-1">Stress</span>
-                                                {(activeCombatant.healthSystem.data.boxes as any[]).map((b: any, bi: number) => (
+                                                {(activeCombatant.healthSystem.data.boxes as Array<{ filled: boolean }> || []).map((b, bi) => (
                                                     <div key={bi} className={`w-1.5 h-1.5 rounded-xs border ${b.filled ? 'bg-orange-500 border-orange-400' : 'border-orange-500/30'}`} />
                                                 ))}
                                             </div>
@@ -367,12 +367,12 @@ const PlayerHub: React.FC = () => {
                                     <div className="flex flex-wrap gap-1 mt-1">
                                         {combatant.healthSystem.type === 'wounds' && (
                                             <span className="text-[8px] font-black text-amber-500/80 uppercase px-1.5 rounded bg-amber-500/10 border border-amber-500/20">
-                                                {combatant.healthSystem.data.currentLevel}
+                                                {String(combatant.healthSystem.data.currentLevel || '')}
                                             </span>
                                         )}
                                         {combatant.healthSystem.type === 'clock' && (
                                             <span className="text-[8px] font-black text-blue-400 uppercase px-1.5 rounded bg-blue-500/10 border border-blue-500/20">
-                                                {combatant.healthSystem.data.segments}/{combatant.healthSystem.data.maxSegments}
+                                                {Number(combatant.healthSystem.data.segments || 0)}/{Number(combatant.healthSystem.data.maxSegments || 0)}
                                             </span>
                                         )}
                                     </div>

@@ -1,4 +1,6 @@
 import { openDB } from 'idb';
+import { withTimeout } from './promiseUtils';
+import { Logger } from './logger'; // Added this line
 const mediaCache = new Map<string, string>();
 
 /**
@@ -19,21 +21,40 @@ export async function resolveToSendableUrl(src: string | undefined): Promise<str
         if (mediaCache.has(src)) return mediaCache.get(src)!;
 
         try {
-            const db = await openDB('gmos-media-db', 1);
-            const item = await db.get('media', src);
+            const db = await withTimeout(openDB('gmos-media-db', 1), 3000, 'DB_TIMEOUT');
+            const item = await withTimeout(db.get('media', src), 3000, 'DB_GET_TIMEOUT');
             if (item?.blob) {
                 const blob = item.blob as Blob;
-                const result = await new Promise<string>((resolve) => {
+
+                // NEW: Use local HTTP proxy instead of Base64 to save bandwidth
+                const bridge = window.appBridge;
+                if (bridge?.remote?.cacheMedia && bridge?.remote?.getConnectionInfo) {
+                    try {
+                        const info = await bridge.remote.getConnectionInfo();
+                        const buffer = await blob.arrayBuffer();
+                        const success = await bridge.remote.cacheMedia(buffer, src);
+                        if (success) {
+                            const result = `http://${info.ip}:${info.port}/temp/${src}`;
+                            mediaCache.set(src, result);
+                            return result;
+                        }
+                    } catch (err) {
+                        Logger.warn('[MediaResolver] Local cache export failed, falling back to Base64', err);
+                    }
+                }
+
+                // Fallback to Base64 for legacy support or if bridge is unavailable
+                const result = await withTimeout(new Promise<string>((resolve) => {
                     const reader = new FileReader();
                     reader.onload = () => resolve(reader.result as string);
                     reader.onerror = () => resolve('');
                     reader.readAsDataURL(blob);
-                });
+                }), 5000, 'FILEREADER_TIMEOUT');
                 if (result) mediaCache.set(src, result);
                 return result;
             }
         } catch (e) {
-            console.error('[MediaResolver] Could not resolve m- ID:', src, e);
+            Logger.error('[MediaResolver] Could not resolve m- ID', src, e);
         }
         return '';
     }

@@ -55,11 +55,10 @@ interface SortableMomentProps {
     isOverlay?: boolean;
 }
 
-const MomentFrame: React.FC<SortableMomentProps & { dragProps?: any, dragListeners?: any }> = ({ 
+const MomentFrame: React.FC<SortableMomentProps & { dragProps?: Record<string, unknown>, dragListeners?: Record<string, unknown> }> = ({ 
     moment, 
     index, 
     activeMomentId, 
-    isLast, 
     onTrigger, 
     onEdit, 
     onDelete,
@@ -182,8 +181,8 @@ const SortableMoment: React.FC<SortableMomentProps> = (props) => {
         >
             <MomentFrame 
                 {...props} 
-                dragProps={attributes} 
-                dragListeners={listeners} 
+                dragProps={attributes as unknown as Record<string, unknown>} 
+                dragListeners={listeners as unknown as Record<string, unknown>} 
                 isOverlay={false}
             />
             {/* Connection Arrow */}
@@ -274,42 +273,41 @@ const StoryboardDashboard: React.FC = () => {
     };
 
     const handleCapture = (type: 'music' | 'light' | 'map' | 'image' | 'sound' | 'ambient') => {
-        const gWin = window as any;
-        const { gmToast } = gWin.useToastStore?.getState() || {};
+        const gmToast = (window as any).useToastStore?.getState()?.gmToast;
 
         switch (type) {
             case 'music': {
-                const musicStore = gWin.useMusicStore?.getState();
+                const musicStore = (window as any).useMusicStore?.getState();
                 if (musicStore) {
                     const padId = musicStore.deckA.isPlaying ? musicStore.deckA.activePadId : 
                                  (musicStore.deckB.isPlaying ? musicStore.deckB.activePadId : musicStore.deckA.activePadId);
                     if (padId) {
-                        setMusicPadId(padId);
+                        setMusicPadId(padId as string);
                         if (gmToast) gmToast('info', 'ID Musique capturé !');
                     }
                 }
                 break;
             }
             case 'light': {
-                const lightStore = gWin.useLightStore?.getState();
+                const lightStore = (window as any).useLightStore?.getState();
                 if (lightStore?.activeSceneId) {
-                    setLightSceneId(lightStore.activeSceneId);
+                    setLightSceneId(lightStore.activeSceneId as string);
                     if (gmToast) gmToast('info', 'Scène Lumière capturée !');
                 }
                 break;
             }
             case 'map': {
-                const mapStore = gWin.useMapStore?.getState();
+                const mapStore = (window as any).useMapStore?.getState();
                 if (mapStore?.currentMapUrl) {
-                    setMapUrl(mapStore.currentMapUrl);
+                    setMapUrl(mapStore.currentMapUrl as string);
                     if (gmToast) gmToast('info', 'Carte Atlas capturée !');
                 }
                 break;
             }
             case 'image': {
-                const imageStore = gWin.useImageStore?.getState();
+                const imageStore = (window as any).useImageStore?.getState();
                 if (imageStore?.activeMediaId) {
-                    setImageMediaId(imageStore.activeMediaId);
+                    setImageMediaId(imageStore.activeMediaId as string);
                     if (gmToast) gmToast('info', 'ID Image capturé !');
                 }
                 break;
@@ -351,9 +349,6 @@ const StoryboardDashboard: React.FC = () => {
         setEditingMoment(null);
     };
 
-    const getAmbientLabel = (id: string) => {
-        return ambientScenes.find(s => s.id === id)?.name || 'Aucun';
-    };
 
     return (
         <div className="flex flex-col h-full bg-app-bg text-slate-200">
@@ -453,7 +448,7 @@ const StoryboardDashboard: React.FC = () => {
                                 <h3 className="text-xl font-black uppercase tracking-tighter text-white">Réglage Scène</h3>
                                 <p className="text-[10px] font-bold text-accent uppercase tracking-widest">Configuration des Liaisons</p>
                             </div>
-                            <button onClick={() => setIsEditing(false)} className="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors">
+                            <button onClick={() => setIsEditing(false)} className="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors" title="Fermer le réglage">
                                 <X size={20} />
                             </button>
                         </div>
@@ -482,9 +477,10 @@ const StoryboardDashboard: React.FC = () => {
                                         value={musicPadId}
                                         onChange={e => setMusicPadId(e.target.value)}
                                         className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-blue-400 outline-none"
+                                        title="Sélectionner une musique"
                                     >
                                         <option value="">Aucune</option>
-                                        {((window as any).useMusicStore?.getState() as any)?.playlists?.map((pl: any) => (
+                                        {((window as any).useMusicStore?.getState() as { playlists: Array<{ id: string, name: string, pads: Array<{ id: string, label: string }> }> })?.playlists?.map((pl: any) => (
                                             <optgroup key={pl.id} label={pl.name}>
                                                 {pl.pads.map((pad: any) => (
                                                     <option key={pad.id} value={pad.id}>{pad.label}</option>
@@ -502,6 +498,7 @@ const StoryboardDashboard: React.FC = () => {
                                         value={ambientSceneId}
                                         onChange={e => setAmbientSceneId(e.target.value)}
                                         className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-cyan-400 outline-none"
+                                        title="Sélectionner une ambiance"
                                     >
                                         <option value="">Aucune</option>
                                         {ambientScenes.map((s) => (
@@ -518,13 +515,14 @@ const StoryboardDashboard: React.FC = () => {
                                         value={soundPadId}
                                         onChange={e => setSoundPadId(e.target.value)}
                                         className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-rose-400 outline-none"
+                                        title="Sélectionner un effet sonore"
                                     >
                                         <option value="">Aucun</option>
                                         {(() => {
-                                            const soundStore = (window as any).useSoundStore?.getState();
-                                            const atmosId = soundStore?.activeAtmosphereId;
-                                            const atmosphere = soundStore?.atmospheres.find((a: any) => a.id === atmosId);
-                                            return atmosphere ? Object.values(atmosphere.pads as Record<string, any>).filter(p => p.filePath).map(p => (
+                                            const state = (window as any).useSoundStore?.getState() as { activeAtmosphereId: string, atmospheres: Array<{ id: string, pads: Record<string, { id: string, title?: string, filePath?: string }> }> } | undefined;
+                                            const atmosId = state?.activeAtmosphereId;
+                                            const atmosphere = state?.atmospheres.find(a => a.id === atmosId);
+                                            return atmosphere ? Object.values(atmosphere.pads).filter(p => p.filePath).map(p => (
                                                 <option key={p.id} value={p.id}>{p.title || p.id}</option>
                                             )) : null;
                                         })()}
@@ -543,9 +541,10 @@ const StoryboardDashboard: React.FC = () => {
                                         value={lightSceneId}
                                         onChange={e => setLightSceneId(e.target.value)}
                                         className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-orange-400 outline-none"
+                                        title="Sélectionner une scène de lumière"
                                     >
                                         <option value="">Aucune</option>
-                                        {Object.values((window as any).useLightStore?.getState()?.scenes || {}).map((s: any) => (
+                                        {Object.values(((window as any).useLightStore?.getState() as { scenes: Record<string, { id: string, name: string }> })?.scenes || {}).map((s: any) => (
                                             <option key={s.id} value={s.id}>{s.name}</option>
                                         ))}
                                     </select>
@@ -560,6 +559,7 @@ const StoryboardDashboard: React.FC = () => {
                                         value={mapUrl}
                                         onChange={e => setMapUrl(e.target.value)}
                                         className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-emerald-400 outline-none"
+                                        title="Sélectionner une carte"
                                     >
                                         <option value="">Aucune</option>
                                         {atlasMaps.filter(m => m.campaignId === activeCampaignId).map(m => (
@@ -577,9 +577,10 @@ const StoryboardDashboard: React.FC = () => {
                                         value={imageMediaId}
                                         onChange={e => setImageMediaId(e.target.value)}
                                         className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-purple-400 outline-none"
+                                        title="Sélectionner une image"
                                     >
                                         <option value="">Aucune</option>
-                                        {((window as any).useImageStore?.getState() as any)?.mediaList?.map((m: { id: string, name: string }) => (
+                                        {((window as unknown as Record<string, unknown>).useImageStore as { getState: () => { mediaList: Array<{ id: string, name: string }> } })?.getState()?.mediaList?.map((m) => (
                                             <option key={m.id} value={m.id}>{m.name}</option>
                                         ))}
                                     </select>

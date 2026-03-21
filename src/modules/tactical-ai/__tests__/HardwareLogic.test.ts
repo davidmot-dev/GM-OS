@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { HuePriorityQueue, HuePriority } from '../services/HuePriorityQueue';
 import { HardwareAnonymizer } from '../logic/HardwareAnonymizer';
 
@@ -8,9 +8,7 @@ describe('Sprint 3: Hardware & Anonymization', () => {
       const queue = HuePriorityQueue.getInstance();
       const executionOrder: number[] = [];
       
-      // Mock engine to add delay
-      const mockEngine: any = {};
-      
+      // Hue Priority Queue test
       const p2 = { 
         priority: HuePriority.P2_TACTICAL, 
         execute: async () => { 

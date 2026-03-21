@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 import { DiceEngine } from '../dice/DiceEngine';
 import { gmToast } from '../../stores/useToastStore';
 import { useJournalStore } from '../journal/useJournalStore';
-import type { HealthSystem } from '../session/useSessionOSStore';
+import type { HealthSystem, Player, Entity, PlayerCharacter } from '../session/useSessionOSStore';
 
 export interface StatusEffect {
     id: string; // Unique ID for the status instance
@@ -122,7 +122,7 @@ export const useCombatStore = create<CombatState>()(
 
             broadcastSync: async () => {
                 if (typeof window === 'undefined') return;
-                const bridge = (window as any).appBridge;
+                const bridge = window.appBridge;
                 if (!bridge?.remote?.sendSync) return;
                 
                 const { combatants, currentTurnIdx, round } = get();
@@ -262,7 +262,7 @@ export const useCombatStore = create<CombatState>()(
                             try {
                                 const res = DiceEngine.rollFormula(evaluatedFormula);
                                 rolled = Number.isNaN(res.total) ? 0 : res.total;
-                            } catch (err) {
+                            } catch {
                                 rolled = Math.floor(Math.random() * diceMax) + 1;
                             }
                         } else {
@@ -320,15 +320,13 @@ export const useCombatStore = create<CombatState>()(
                     });
                     const activeCombatant = newCombatants[nextIdx];
                     if (activeCombatant && typeof window !== 'undefined') {
-                        const bridge = (window as any).appBridge;
-                        bridge?.highlightMapToken?.(activeCombatant.name);
+                        const bridge = window.appBridge;
+                        if (bridge && bridge.highlightMapToken) {
+                            bridge.highlightMapToken(activeCombatant.name);
+                        }
                     }
                     
                     const newState = { currentTurnIdx: nextIdx, round: nextRound, combatants: newCombatants };
-                    
-                    // We need to ensure broadcastSync is called AFTER the state is set 
-                    // but Zustand's set callback returns the state. 
-                    // So we'll use a timeout or just call it manually after the set.
                     return newState;
                 });
                 get().broadcastSync();
@@ -345,8 +343,10 @@ export const useCombatStore = create<CombatState>()(
                     }
                     const activeCombatant = state.combatants[prevIdx];
                     if (activeCombatant && typeof window !== 'undefined') {
-                        const bridge = (window as any).appBridge;
-                        bridge?.highlightMapToken?.(activeCombatant.name);
+                        const bridge = window.appBridge;
+                        if (bridge && bridge.highlightMapToken) {
+                            bridge.highlightMapToken(activeCombatant.name);
+                        }
                     }
                     return { currentTurnIdx: prevIdx, round: prevRound };
                 });
@@ -395,12 +395,12 @@ export const useCombatStore = create<CombatState>()(
 
             syncCombatantHPToSession: () => {
                 const { combatants } = get();
-                const sessionStore = (window as any).useSessionOSStore?.getState?.();
+                const sessionStore = window.useSessionOSStore?.getState();
                 if (!sessionStore) return;
                 combatants.forEach(c => {
                     if (c.isPlayer && c.sourcePlayerId) {
-                        sessionStore.players.forEach((p: any) => {
-                            const char = p.characters.find((char: any) => char.id === c.sourcePlayerId);
+                        sessionStore.players.forEach((p: Player) => {
+                            const char = p.characters.find((char: PlayerCharacter) => char.id === c.sourcePlayerId);
                             if (char) sessionStore.updateCharacterHP(p.id, char.id, c.hp);
                         });
                     } else if (!c.isPlayer && c.sourceEntityId) {
@@ -411,7 +411,7 @@ export const useCombatStore = create<CombatState>()(
 
             propagateStatusToSession: () => {
                 const { combatants } = get();
-                const sessionStore = (window as any).useSessionOSStore?.getState?.();
+                const sessionStore = window.useSessionOSStore?.getState();
                 if (!sessionStore) return;
                 combatants.forEach(c => {
                     const isMort = c.statuses.some(s => s.name.toLowerCase() === 'mort' || s.icon === '💀');
@@ -433,7 +433,7 @@ export const useCombatStore = create<CombatState>()(
             applyDamage: (amount, type, targetIds) => {
                 set((state) => {
                     const isHeal = amount < 0;
-                    const sessionStore = (window as any).useSessionOSStore?.getState?.();
+                    const sessionStore = window.useSessionOSStore?.getState();
                     const newCombatants = state.combatants.map(c => {
                         if (!targetIds.includes(c.id)) return c;
                         if (sessionStore) {
@@ -442,8 +442,8 @@ export const useCombatStore = create<CombatState>()(
                             if (targetId) {
                                 sessionStore.handleApplyImpact(targetId, targetType, { value: Math.abs(amount), type, isRecovery: isHeal });
                                 const updatedSource = targetType === 'pc' 
-                                    ? sessionStore.players.flatMap((p: any) => p.characters).find((char: any) => char.id === targetId)
-                                    : sessionStore.entities.find((e: any) => e.id === targetId);
+                                    ? (sessionStore.players as Player[]).flatMap((p: Player) => p.characters).find((char: PlayerCharacter) => char.id === targetId)
+                                    : (sessionStore.entities as Entity[]).find((e: Entity) => e.id === targetId);
                                 if (updatedSource && updatedSource.healthSystem) c.healthSystem = updatedSource.healthSystem;
                             }
                         }
@@ -499,5 +499,5 @@ if (typeof window !== 'undefined') {
 
 // Export for cross-store access
 if (typeof window !== 'undefined') {
-    (window as unknown as Record<string, unknown>).useCombatStore = useCombatStore;
+    (window as any).useCombatStore = useCombatStore;
 }

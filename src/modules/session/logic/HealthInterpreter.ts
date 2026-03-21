@@ -152,7 +152,7 @@ export const HealthInterpreter = {
         const location = impact.location || 'torso';
         
         // Deep clone the parts map
-        const parts = { ...(health.data.parts as Record<string, any> || {}) };
+        const parts = { ...(health.data.parts as Record<string, { status: string }> || {}) };
         const part = { ...(parts[location] || { status: 'healthy' }) };
         
         const currentStatus = part.status || 'healthy';
@@ -181,10 +181,10 @@ export const HealthInterpreter = {
         const isFatal = (location === 'head' || location === 'torso') && parts[location].status === 'crippled';
 
         let state: HealthSystem['state'] = 'healthy';
-        const allParts = Object.values(parts);
+        const allParts = Object.values(parts) as { status: string }[];
         if (isFatal) state = 'dead';
-        else if (allParts.some((p: any) => p.status === 'crippled')) state = 'critical';
-        else if (allParts.some((p: any) => p.status === 'injured')) state = 'wounded';
+        else if (allParts.some(p => p.status === 'crippled')) state = 'critical';
+        else if (allParts.some(p => p.status === 'injured')) state = 'wounded';
         else state = 'healthy';
 
         return {

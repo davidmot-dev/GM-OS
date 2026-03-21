@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { GridEngine } from '../logic/GridEngine';
+import type { Combatant } from '../../combat/useCombatStore';
 
 describe('Sprint 2: Grid & Logic', () => {
   describe('GridEngine', () => {
@@ -25,13 +26,13 @@ describe('Sprint 2: Grid & Logic', () => {
     });
 
     it('should identify conflicting statuses', () => {
-      const mockCombatant: any = {
+      const mockCombatant = {
         name: 'Test',
         statuses: [
           { name: 'En feu' },
           { name: 'Mouillé' }
         ]
-      };
+      } as unknown as Combatant;
       const conflicts = GridEngine.getConflictingStatuses(mockCombatant);
       expect(conflicts).toContain('Mouillé');
       expect(conflicts).toContain('En feu');

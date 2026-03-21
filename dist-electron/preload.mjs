@@ -98,6 +98,13 @@ contextBridge.exposeInMainWorld("appBridge", {
       return () => ipcRenderer.off("remote:action", listener);
     },
     removeActions: () => ipcRenderer.removeAllListeners("remote:action"),
-    sendSync: (data) => ipcRenderer.send("remote:broadcast-sync", data)
+    sendSync: (data) => ipcRenderer.send("remote:broadcast-sync", data),
+    cacheMedia: (buffer, id) => ipcRenderer.invoke("remote:cache-media", buffer, id)
+  },
+  logger: {
+    info: (message, ...args) => ipcRenderer.send("log:message", "info", message, ...args),
+    warn: (message, ...args) => ipcRenderer.send("log:message", "warn", message, ...args),
+    error: (message, ...args) => ipcRenderer.send("log:message", "error", message, ...args),
+    debug: (message, ...args) => ipcRenderer.send("log:message", "debug", message, ...args)
   }
 });

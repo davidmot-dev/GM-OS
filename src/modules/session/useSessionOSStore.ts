@@ -16,8 +16,8 @@ import type { GameDriver } from '../../types/drivers';
 import { obsidianExportService } from './ObsidianExportService';
 import { useObsidianStore } from './useObsidianStore';
 import { HealthInterpreter } from './logic/HealthInterpreter';
-import { useClockStore } from '../../store/useClockStore';
-import { useWhiteboardStore } from '../whiteboard/useWhiteboardStore';
+import { useClockStore, type TensionClock } from '../../store/useClockStore';
+import { useWhiteboardStore, type DrawingPath } from '../whiteboard/useWhiteboardStore';
 import type { SessionSnapshot } from '../journal/types';
 
 export interface DamageImpact {
@@ -226,7 +226,7 @@ export interface WikiEntry {
     linkedEntityIds: string[];
 }
 
-interface SessionOSState {
+export interface SessionOSState {
     campaigns: Campaign[];
     sessions: GameSession[];
     entities: Entity[];
@@ -1061,13 +1061,13 @@ export const useSessionOSStore = create<SessionOSState>()(
                         .filter(item => !item.isCompleted)
                         .map(item => item.text);
 
-                    const clocks = useClockStore.getState().tensions.map((t: any) => ({
+                    const clocks = useClockStore.getState().tensions.map((t: TensionClock) => ({
                         name: t.name,
                         filled: t.filledSegments,
                         total: t.totalSegments
                     }));
 
-                    const whiteboardSnapshot = (useWhiteboardStore.getState() as any).paths;
+                    const whiteboardSnapshot = (useWhiteboardStore.getState() as { paths: DrawingPath[] }).paths;
 
                     const snapshot: SessionSnapshot = {
                         notes: session.sessionNotes,

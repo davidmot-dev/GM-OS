@@ -30,6 +30,8 @@ Ce répertoire contient l'archive de tous les guides de mise en œuvre, walkthro
 ## Planification
 
 - **[Development_Roadmap.md](./walkthroughs/Development_Roadmap.md)** : La liste des améliorations et fonctionnalités prévues.
+- **[Lessons_Learned.md](./Lessons_Learned.md)** : Retours d'expérience sur la synchronisation et le typage strict.
+- **[AppBridge_v2_Standardization.md](../c:/Users/david/.gemini/antigravity/brain/d493bc42-29db-4269-b5ae-9023789a04d7/walkthrough.md)** : Détails techniques sur le typage strict et les deltas (Walkthrough lié).
 
 > [!NOTE]
 > Ces fichiers sont synchronisés automatiquement à chaque étape majeure de développement pour vous assurer une consultation aisée hors de l'interface de chat.

@@ -1,93 +1,191 @@
+import { SessionOSState } from '../modules/session/useSessionOSStore';
+import { MusicState } from '../modules/music/useMusicStore';
+import { CombatState, Combatant } from '../modules/combat/useCombatStore';
+import { LightState } from '../modules/light/useLightStore';
+import { MapState } from '../modules/map/useMapStore';
+import { ImageState } from '../modules/image/useImageStore';
+import { SoundState } from '../modules/sound/useSoundStore';
+import { AmbientState } from '../modules/ambient/useAmbientStore';
+import { StoryboardState } from '../modules/storyboard/useStoryboardStore';
+import { ToastState } from '../stores/useToastStore';
+import { FavoriteState } from '../modules/favorite/useFavoriteStore';
+import { JournalState } from '../modules/journal/useJournalStore';
+import { ObsidianState } from '../modules/session/useObsidianStore';
+import { TacticalAIState } from '../modules/tactical-ai/useTacticalAIStore';
+import { TaxonomyState } from '../modules/tactical-ai/useTaxonomyStore';
+import { VoiceState } from '../modules/voice/useVoiceStore';
+import { ClockState } from '../store/useClockStore';
 import { ImageBridge } from '../modules/image/types';
-import type { NoteEntry } from '../useObsidianStore';
-
-
-interface AppBridge {
-    image?: ImageBridge;
-    session?: {
-        launchHubWindow: (tag?: string) => void;
-        saveSession: (data: Record<string, unknown>) => Promise<boolean>;
-        loadSession: () => Promise<Record<string, unknown> | null>;
-    };
-    openFile?: (path: string) => void;
-    openExternal?: (url: string) => void;
-    utils?: {
-        formatFileUrl: (path: string) => string;
-    };
-    web?: {
-        openExternal: (url: string) => void;
-        saveList: (data: unknown) => Promise<boolean>;
-        loadList: () => Promise<unknown>;
-    };
-    on: (channel: string, callback: (event: unknown, ...args: unknown[]) => void) => void;
-    off: (channel: string, callback: (event: unknown, ...args: unknown[]) => void) => void;
-    send: (channel: string, ...args: unknown[]) => void;
-    remote: {
-        onAction: (callback: (action: unknown) => void) => () => void;
-        removeActions: () => void;
-    };
-    app?: {
-        quit: () => void;
-    };
-    ai?: {
-        listDocs: () => Promise<unknown[]>;
-        readDoc: (filePath: string) => Promise<string | null>;
-        extractPDF: (filePath: string) => Promise<string>;
-        proxyRequest: (url: string, method: string, headers: Record<string, string>, body: unknown) => Promise<{
-            ok: boolean;
-            status: number;
-            statusText: string;
-            data: unknown;
-        }>;
-        searchContext: (systemId: string, campaignName: string) => Promise<string>;
-        reindex: () => Promise<boolean>;
-    };
-    sound?: {
-        loadAudios: () => Promise<string[]>;
-    };
-    tactical?: {
-        listSounds: () => Promise<string[]>;
-    };
-    light?: {
-        request: (url: string, method: string, body?: unknown) => Promise<unknown>;
-    };
-    mcp?: {
-        listTools: (serverName: string) => Promise<unknown[]>;
-        callTool: (serverName: string, toolName: string, args: Record<string, unknown>) => Promise<{ content: string; [key: string]: unknown }>;
-        reauthenticate: () => Promise<{ success: boolean; message: string }>;
-    };
-    obsidian?: {
-        listNotes: (vaultPath?: string) => Promise<NoteEntry[]>;
-        readNote: (relativePath: string, vaultPath?: string) => Promise<string | null>;
-        writeNote: (relativePath: string, content: string, vaultPath?: string) => Promise<boolean>;
-        ensureDirectory: (relativePath: string, vaultPath?: string) => Promise<boolean>;
-    };
-    npc?: {
-        listDatabases: (category: string) => Promise<string[]>;
-        loadDatabase: (category: string, name: string) => Promise<Record<string, string[]>>;
-        selectAvatar: () => Promise<string | null>;
-        saveAvatar: (buffer: ArrayBuffer, fileName: string) => Promise<string | null>;
-    };
-}
-
-interface NoteEntry {
-    name: string;
-    path: string;
-    type: 'file' | 'directory';
-    children?: NoteEntry[];
-}
 
 declare global {
+    export interface DisplayInfo {
+        id: string;
+        bounds: {
+            x: number;
+            y: number;
+            width: number;
+            height: number;
+        };
+        label: string;
+    }
+
+    export interface AIDocument {
+        name: string;
+        path: string;
+        type: 'file' | 'directory';
+        children?: AIDocument[];
+        extension?: string;
+    }
+
+    export interface AIProxyResponse {
+        ok: boolean;
+        status?: number;
+        statusText?: string;
+        data: unknown;
+    }
+
+    export interface MCPTool {
+        name: string;
+        description: string;
+        inputSchema: {
+            type: "object";
+            properties: Record<string, unknown>;
+            required?: string[];
+        };
+    }
+
+    export interface MCPCallResult {
+        content: string;
+    }
+
+    export interface RemoteAction {
+        type: string;
+        payload?: unknown; // payload can be anything depending on the type
+    }
+
+    export interface NoteEntry {
+        name: string;
+        path: string;
+        type: 'file' | 'directory';
+        children?: NoteEntry[];
+    }
+
+    export interface SyncPayload {
+        clock?: Partial<ClockState>;
+        combat?: Partial<CombatState>;
+        music?: Partial<MusicState>;
+        sound?: Partial<SoundState>;
+        ambient?: Partial<AmbientState>;
+        whiteboard?: unknown;
+        image?: Partial<ImageState>;
+        light?: Partial<LightState>;
+        storyboard?: Partial<StoryboardState>;
+        session?: Partial<SessionOSState>;
+        voiceLevel?: number;
+    }
+
+    interface AppBridge {
+        image?: ImageBridge;
+        session?: {
+            launchHubWindow: (tag?: string) => void;
+            saveSession: (data: Record<string, unknown>) => Promise<boolean>;
+            loadSession: () => Promise<Record<string, unknown> | null>;
+        };
+        openFile?: (path: string) => void;
+        openExternal?: (url: string) => void;
+        utils?: {
+            formatFileUrl: (path: string) => string;
+        };
+        web?: {
+            openExternal: (url: string) => void;
+            saveList: (data: unknown) => Promise<boolean>;
+            loadList: () => Promise<unknown>;
+        };
+        on: (channel: string, callback: (event: unknown, ...args: unknown[]) => void) => void;
+        off: (channel: string, callback: (event: unknown, ...args: unknown[]) => void) => void;
+        send: (channel: string, ...args: unknown[]) => void;
+        remote: {
+            getConnectionInfo?: () => Promise<{ ip: string; port: number }>;
+            sendSync?: (payload: SyncPayload) => void;
+            broadcastToTablets: (type: string, payload: unknown) => void;
+            getDisplays: () => Promise<DisplayInfo[]>;
+            openProjectionWindow: (displayId: string, url: string) => void;
+            onAction: (callback: (data: RemoteAction) => void) => () => void;
+            cacheMedia: (id: string, buffer: ArrayBuffer) => Promise<boolean>;
+            removeActions: () => void;
+        };
+        highlightMapToken?: (name: string) => void;
+        app?: {
+            quit: () => void;
+        };
+        ai?: {
+            listDocs: () => Promise<AIDocument[]>;
+            readDoc: (filePath: string) => Promise<string | null>;
+            extractPdf: (filePath: string) => Promise<string>;
+            proxyRequest: (url: string, method: string, headers: Record<string, string>, body: unknown) => Promise<AIProxyResponse>;
+            searchContext: (systemId: string, campaignName: string) => Promise<string>;
+            reindex: () => Promise<boolean>;
+        };
+        sound?: {
+            loadAudios: () => Promise<string[]>;
+        };
+        tactical?: {
+            listSounds: () => Promise<string[]>;
+        };
+        light?: {
+            request: (url: string, method: string, body?: unknown) => Promise<unknown>;
+        };
+        mcp?: {
+            listTools: (serverName: string) => Promise<MCPTool[]>;
+            callTool: (serverName: string, toolName: string, args: Record<string, unknown>) => Promise<MCPCallResult>;
+            reauthenticate: () => Promise<{ success: boolean; message: string }>;
+        };
+        obsidian?: {
+            listNotes: (vaultPath?: string) => Promise<NoteEntry[]>;
+            readNote: (relativePath: string, vaultPath?: string) => Promise<string | null>;
+            writeNote: (relativePath: string, content: string, vaultPath?: string) => Promise<boolean>;
+            ensureDirectory: (relativePath: string, vaultPath?: string) => Promise<boolean>;
+        };
+        npc?: {
+            listDatabases: (category: string) => Promise<string[]>;
+            loadDatabase: (category: string, name: string) => Promise<Record<string, string[]>>;
+            selectAvatar: () => Promise<string | null>;
+            saveAvatar: (buffer: ArrayBuffer, fileName: string) => Promise<string | null>;
+        };
+        logger?: {
+            info: (message: string, ...args: unknown[]) => void;
+            warn: (message: string, ...args: unknown[]) => void;
+            error: (message: string, ...args: unknown[]) => void;
+            debug: (message: string, ...args: unknown[]) => void;
+        };
+    }
+
     interface Window {
         appBridge?: AppBridge;
-        useMusicStore?: unknown;
-        useLightStore?: unknown;
-        useMapStore?: unknown;
-        useImageStore?: unknown;
-        useSoundStore?: unknown;
-        useStoryboardStore?: unknown;
-        hueEngine?: unknown;
-        soundEngine?: unknown;
+        useMusicStore: { getState: () => MusicState; setState: (s: Partial<MusicState>) => void; subscribe: (cb: (s: MusicState) => void) => () => void };
+        useLightStore: { getState: () => LightState; setState: (s: Partial<LightState>) => void; subscribe: (cb: (s: LightState) => void) => () => void };
+        useMapStore: { getState: () => MapState; setState: (s: Partial<MapState>) => void; subscribe: (cb: (s: MapState) => void) => () => void };
+        useImageStore: { getState: () => ImageState; setState: (s: Partial<ImageState>) => void; subscribe: (cb: (s: ImageState) => void) => () => void };
+        useSoundStore: { getState: () => SoundState; setState: (s: Partial<SoundState>) => void; subscribe: (cb: (s: SoundState) => void) => () => void };
+        useAmbientStore: { getState: () => AmbientState; setState: (s: Partial<AmbientState>) => void; subscribe: (cb: (s: AmbientState) => void) => () => void };
+        useStoryboardStore: { getState: () => StoryboardState; setState: (s: Partial<StoryboardState>) => void; subscribe: (cb: (s: StoryboardState) => void) => () => void };
+        useToastStore: { getState: () => ToastState; setState: (s: Partial<ToastState>) => void; subscribe: (cb: (s: ToastState) => void) => () => void };
+        useSessionOSStore: { getState: () => SessionOSState; setState: (s: Partial<SessionOSState>) => void; subscribe: (cb: (s: SessionOSState) => void) => () => void };
+        useCombatStore: { getState: () => CombatState; setState: (s: Partial<CombatState>) => void; subscribe: (cb: (s: CombatState) => void) => () => void };
+        useClockStore: { getState: () => ClockState; setState: (s: Partial<ClockState>) => void; subscribe: (cb: (s: ClockState) => void) => () => void };
+        useFavoriteStore: { getState: () => FavoriteState; setState: (s: Partial<FavoriteState>) => void; subscribe: (cb: (s: FavoriteState) => void) => () => void };
+        useJournalStore: { getState: () => JournalState; setState: (s: Partial<JournalState>) => void; subscribe: (cb: (s: JournalState) => void) => () => void };
+        useObsidianStore: { getState: () => ObsidianState; setState: (s: Partial<ObsidianState>) => void; subscribe: (cb: (s: ObsidianState) => void) => () => void };
+        useTacticalAIStore: { getState: () => TacticalAIState; setState: (s: Partial<TacticalAIState>) => void; subscribe: (cb: (s: TacticalAIState) => void) => () => void };
+        useTaxonomyStore: { getState: () => TaxonomyState; setState: (s: Partial<TaxonomyState>) => void; subscribe: (cb: (s: TaxonomyState) => void) => () => void };
+        useVoiceStore: { getState: () => VoiceState; setState: (s: Partial<VoiceState>) => void; subscribe: (cb: (s: VoiceState) => void) => () => void };
+        
+        hueEngine?: { applyScene: (id: string, sync?: boolean) => void; revertToManualScene: () => void };
+        soundEngine?: { 
+            loadAudio: (id: string, path: string) => Promise<void>;
+            play: (id: string, volume: number) => void;
+        };
+        highlightMapToken?: (name: string) => void;
     }
 }
 

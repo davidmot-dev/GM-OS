@@ -1,6 +1,6 @@
-# ⚒️ Walkthrough: System Forge IA (v5.1 Evolution)
+# ⚒️ Walkthrough: System Forge IA (v5.1 Stable)
 
-Cette mise à jour majeure (v5.1.0-alpha) transforme la Forge en un véritable ingénieur système capable de générer un jeu complet à partir de votre base de connaissances.
+Cette mise à jour majeure (v5.1.0) transforme la Forge en un véritable ingénieur système capable de générer un jeu complet à partir de votre base de connaissances.
 
 ## 🍱 Context Bin (Knowledge Base)
 Fini le fichier unique. Vous pouvez maintenant "stager" plusieurs documents pour former le contexte de votre système :
@@ -26,7 +26,7 @@ D'un seul clic sur **"Quench & Sync System"** :
 ## 🛠️ Améliorations Techniques
 - **Multimodalité** : Envoi groupé des PDFs et textes à Gemini 1.5 pour une analyse holistique.
 - **Cinématique de Forge** : Nouveaux logs et effets visuels pour suivre la progression de la construction.
-- **Versioning** : Passage officiel à la branche **5.1.0-alpha (System Forge Edition)**.
+- **Versioning** : Passage officiel à la branche **5.1.0 (System Forge Edition)**.
 
 ---
 *Note technique : Le `ForgeService.ts` a été refondu pour utiliser une architecture de prompt unifiée garantissant la synchronisation entre le Brain et le Body.*

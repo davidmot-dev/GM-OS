@@ -1,42 +1,44 @@
 import { useSoundStore } from './useSoundStore';
-import { soundController } from './SoundController';
-import type { SoundPad } from './useSoundStore';
 
-// Local interfaces to avoid 'any' and resolve missing WebMidi types
-interface MIDIInput {
-    id: string;
-    name?: string;
-    onmidimessage: ((event: MIDIMessageEvent) => void) | null;
+// Local interfaces to replace 'any' and avoid environment type conflicts
+interface GMMIDIAccess {
+    inputs: GMMIDIInputMap;
+    outputs: GMMIDIOutputMap;
+    onstatechange: ((event: GMMIDIConnectionEvent) => void) | null;
 }
 
-interface MIDIMessageEvent {
+interface GMMIDIInputMap extends Map<string, GMMIDIInput> {
+    __brand?: 'GMMIDIInputMap';
+}
+interface GMMIDIOutputMap extends Map<string, GMMIDIOutput> {
+    __brand?: 'GMMIDIOutputMap';
+}
+
+interface GMMIDIInput {
+    id: string;
+    name?: string;
+    onmidimessage: ((event: GMMIDIMessageEvent) => void) | null;
+}
+
+interface GMMIDIOutput {
+    id: string;
+    name?: string;
+}
+
+interface GMMIDIMessageEvent {
     data: Uint8Array;
 }
 
-interface MIDIConnectionEvent {
+interface GMMIDIConnectionEvent {
     port: {
-        name?: string;
+        name: string;
         state: string;
         type: string;
     };
 }
 
-interface MIDIAccess {
-    inputs: {
-        values: () => IterableIterator<MIDIInput>;
-        forEach: (callback: (input: MIDIInput) => void) => void;
-    };
-    onstatechange: ((event: MIDIConnectionEvent) => void) | null;
-}
-
-// Interface for navigator extension
-interface NavigatorWithMIDI extends Navigator {
-    requestMIDIAccess?: () => Promise<MIDIAccess>;
-}
-
 export class MidiEngine {
     private static instance: MidiEngine;
-    private midiAccess: MIDIAccess | null = null;
     private initializationPromise: Promise<void> | null = null;
     private initialized: boolean = false;
 
@@ -54,7 +56,10 @@ export class MidiEngine {
         if (this.initializationPromise) return this.initializationPromise;
 
         this.initializationPromise = (async () => {
-            const nav = navigator as NavigatorWithMIDI;
+            interface MIDINavigator {
+                requestMIDIAccess?: (options?: unknown) => Promise<GMMIDIAccess>;
+            }
+            const nav = navigator as unknown as MIDINavigator;
             if (nav.requestMIDIAccess) {
                 try {
                     const access = await nav.requestMIDIAccess();
@@ -62,96 +67,66 @@ export class MidiEngine {
                     this.initialized = true;
                 } catch (error) {
                     console.error('[MIDI] Failed to get MIDI access:', error);
-                    this.initializationPromise = null; // Reset promise to allow retry
                 }
             } else {
-                console.warn('[MIDI] WebMIDI API not supported by this browser.');
+                console.warn('[MIDI] Web MIDI API not supported in this browser.');
             }
         })();
 
         return this.initializationPromise;
     }
 
-    private onMIDISuccess(access: MIDIAccess) {
-        this.midiAccess = access;
-        console.log('[MIDI] MIDI Access granted.');
+    private onMIDISuccess(midiAccess: GMMIDIAccess): void {
+        console.log('[MIDI] Access Granted');
 
-        const handleInputs = () => {
-            const currentInputs: MIDIInput[] = [];
-            access.inputs.forEach((input) => currentInputs.push(input));
+        const scanInputs = () => {
+            const inputs: GMMIDIInput[] = [];
+            midiAccess.inputs.forEach((input) => inputs.push(input));
             
-            const names = currentInputs.map(i => i.name || 'Unknown Device');
-            const count = currentInputs.length;
-            
-            console.log(`[MIDI] Detected ${count} device(s):`, names);
-            useSoundStore.getState().setMidiConnected(count > 0);
+            console.log(`[MIDI] ${inputs.length} devices detected:`, inputs.map(i => i.name || i.id));
+            useSoundStore.getState().setMidiConnected(inputs.length > 0);
 
-            currentInputs.forEach(input => {
-                input.onmidimessage = (event: MIDIMessageEvent) => this.onMIDIMessage(event);
+            inputs.forEach((input) => {
+                input.onmidimessage = (event) => this.onMIDIMessage(event);
             });
         };
 
-        handleInputs();
-        // Second check after a short delay for some browsers
-        setTimeout(handleInputs, 500);
+        scanInputs();
 
-        access.onstatechange = (event: MIDIConnectionEvent) => {
-            const port = event.port;
-            console.log(`[MIDI] State Change: ${port.name} is now ${port.state} (${port.type})`);
-            handleInputs();
+        midiAccess.onstatechange = (event) => {
+            console.log(`[MIDI] State change: ${event.port.name} is now ${event.port.state}`);
+            scanInputs();
         };
     }
 
-    private onMIDIMessage(event: MIDIMessageEvent) {
-        const [status, data1, data2] = event.data;
-        const command = status >> 4;
+    private onMIDIMessage(event: GMMIDIMessageEvent): void {
+        const [status, note, velocity] = event.data;
+        const isNoteOn = (status & 0xF0) === 0x90 && velocity > 0;
         
-        // Command 9 is Note On
-        const isNoteOn = command === 9 && data2 > 0;
-
         if (isNoteOn) {
-            this.handleMidiSignal(data1);
+            console.log(`[MIDI] Note On: ${note} (Vel: ${velocity})`);
+            this.handleMIDINote(note);
         }
     }
 
-    private handleMidiSignal(midiNote: number) {
-        const currentState = useSoundStore.getState();
-        const activeAtmos = currentState.atmospheres.find(a => a.id === currentState.activeAtmosphereId) || currentState.atmospheres[0];
+    private handleMIDINote(midiNote: number): void {
+        const { atmospheres, activeAtmosphereId, isMidiLearnActive } = useSoundStore.getState();
+        const activeAtmosphere = atmospheres.find(a => a.id === activeAtmosphereId);
+        if (!activeAtmosphere) return;
 
-        // Learn Mode
-        if (currentState.isMidiLearnActive && currentState.activePadLearnId) {
-            console.log(`[MIDI] Learning mode: Mapping ${midiNote} to pad ${currentState.activePadLearnId}`);
-            currentState.setPadMidiMapping(currentState.activePadLearnId, midiNote);
-            currentState.toggleMidiLearn(); 
-            currentState.setActiveLearnPad(null);
+        // Mode Learning : On associe la note au dernier pad sélectionné (géré par le store)
+        if (isMidiLearnActive) {
+            console.log(`[MIDI] Learn mode active. Note received: ${midiNote}`);
             return;
         }
 
-        // Playback Mode
-        const padToTrigger = Object.values(activeAtmos.pads).find((p: SoundPad) => p.midiMapping === midiNote);
-
+        // Mode Normal : On cherche si un pad est mappé à cette note
+        const pads = Object.values(activeAtmosphere.pads);
+        const padToTrigger = pads.find(p => p.midiMapping === midiNote);
         if (padToTrigger) {
-            console.log(`[MIDI] Triggering pad: ${padToTrigger.name || padToTrigger.title} (Note ${midiNote})`);
-            soundController.togglePad(padToTrigger.id);
+            console.log(`[MIDI] Triggering pad: ${padToTrigger.title || padToTrigger.id} via Note ${midiNote}`);
+            useSoundStore.getState().triggerPad(padToTrigger.id);
         }
-    }
-
-    public refreshMidi() {
-        if (this.midiAccess) {
-            this.onMIDISuccess(this.midiAccess);
-        } else {
-            this.initialize();
-        }
-    }
-
-    public cleanup() {
-        if (this.midiAccess) {
-            this.midiAccess.inputs.forEach(input => {
-                input.onmidimessage = null;
-            });
-        }
-        this.initialized = false;
-        this.initializationPromise = null;
     }
 }
 

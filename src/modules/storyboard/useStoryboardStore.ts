@@ -73,13 +73,14 @@ export const useStoryboardStore = create<StoryboardState>()(
                 set({ activeMomentId: id });
 
                 // Cross-store orchestration
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const gWindow = window as any;
                 const { gmToast } = gWindow.useToastStore?.getState() || {};
 
                 // 1. Music-OS
                 if (moment.musicPadId && gWindow.useMusicStore) {
                     const musicStore = gWindow.useMusicStore.getState();
-                    const pad = musicStore.playlists.flatMap((p: any) => p.pads).find((p: any) => p.id === moment.musicPadId);
+                    const pad = musicStore.playlists.flatMap((p: { pads: { id: string, label: string }[] }) => p.pads).find((p: { id: string }) => p.id === moment.musicPadId);
                     
                     if (pad) {
                         console.log(`[Storyboard] Music: Found pad ${pad.label} (${pad.id}). Playing...`);
@@ -108,7 +109,7 @@ export const useStoryboardStore = create<StoryboardState>()(
                 // 4. Image-OS
                 if (moment.imageMediaId && gWindow.useImageStore) {
                     const imageStore = gWindow.useImageStore.getState();
-                    const media = imageStore.mediaList.find((m: any) => m.id === moment.imageMediaId);
+                    const media = imageStore.mediaList.find((m: { id: string, name: string }) => m.id === moment.imageMediaId);
                     if (media) {
                         console.log(`[Storyboard] Image: Projecting solo ${media.name}`);
                         imageStore.projectSolo(media);
@@ -121,7 +122,8 @@ export const useStoryboardStore = create<StoryboardState>()(
                 if (moment.soundPadId && gWindow.useSoundStore && gWindow.soundEngine) {
                     const soundStore = gWindow.useSoundStore.getState();
                     const atmosId = soundStore.activeAtmosphereId;
-                    const atmosphere = soundStore.atmospheres.find((a: any) => a.id === atmosId);
+                    const atmosphere = soundStore.atmospheres.find((a: { id: string }) => a.id === atmosId);
+                    // @ts-expect-error - dynamic pad lookup
                     const pad = atmosphere?.pads[moment.soundPadId];
                     if (pad && pad.filePath) {
                         console.log(`[Storyboard] Sound: Playing SFX ${pad.title} (${pad.id})`);

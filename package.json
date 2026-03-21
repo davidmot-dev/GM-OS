@@ -1,7 +1,7 @@
 {
   "name": "gm-os-v5",
   "private": true,
-  "version": "5.1.0-alpha",
+  "version": "5.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -21,6 +21,7 @@
     "@types/file-saver": "^2.0.7",
     "@types/fs-extra": "^11.0.4",
     "date-fns": "^4.1.0",
+    "electron-log": "^5.4.3",
     "file-saver": "^2.0.5",
     "fs-extra": "^11.3.3",
     "idb": "^8.0.3",
@@ -28,6 +29,7 @@
     "pdf-parse": "^2.4.5",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "zod": "^4.3.6",
     "zustand": "^5.0.11"
   },
   "devDependencies": {

@@ -21,6 +21,8 @@ GM-OS v5 est une plateforme de gestion de sessions de Jeu de Rôle (JdR) de nouv
   - **Combat OS** : Suivi d'initiative avancé, gestion des PV et export automatique des résumés vers la chronologie.
   - **Dice OS** : Moteur de lancer de dés 3D ultra-rapide.
   - **NPC OS** : Galerie de PNJ synchronisée avec le visuel et l'audio.
+- **SYSTEM OS** :
+  - **Media Cleanup** : Nettoyage automatique des médias orphelins (PNJ supprimés) pour limiter l'empreinte disque.
 
 ## 🛠️ Stack Technique
 
@@ -51,19 +53,24 @@ Plus d'informations techniques et guides d'utilisation sont disponibles dans le 
 
 - **[Architecture (Brain vs Body)](file:///c:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/docs/architecture/rule-engine-ai.md)** : Fonctionnement du Moteur de Règles et de l'IA.
 - **[Guide de Migration](file:///c:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/docs/guides/migration-guide.md)** : Instructions pour la transition vers la v5.
-- **[Historique du Projet](file:///c:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/docs/history/)** : Comptes-rendus des phases de développement (Forge, etc.).
+- **[Documentation Technique (Nettoyage)](file:///c:/Projet_David/GM-OS-v5/docs/technical/media-cleanup.md)** : Fonctionnement du service de maintenance des médias.
+- **[Historique du Projet](file:///c:/Projet_David/GM-OS-v5/docs/history/)** : Comptes-rendus des phases de développement (Forge, etc.).
 - **[Dev & Debug](file:///C:/Projet_David/GM-OS-v5/docs/dev/)** : Notes techniques pour le débogage.
 
 ### 🤖 Gemini CLI Integration
+
 Le projet intègre désormais **Gemini CLI** pour des opérations assistées par IA directement en terminal.
 
 **Installation & Login :**
+
 1. Installez les dépendances : `npm install`
 2. Connectez-vous : `npx @google/gemini-cli login`
 
 **Usage :**
+
 - `npm run gemini -- "ta question"` : Pose une question générale.
 - `npm run gemini:doc -- "Explique le système Oracle"` : Pose une question avec le contexte complet de la documentation locale.
 
 ---
+
 *Développé pour l'immersion. Conçu pour le contrôle.*

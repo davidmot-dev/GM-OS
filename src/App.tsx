@@ -3,14 +3,18 @@ import { useSessionStore } from './store/useSessionStore';
 import Shell from './components/Shell';
 import { useModalStore } from './stores/useModalStore';
 import SplashScreenSelector from './components/splash/SplashScreenSelector';
+import ErrorBoundary from './components/common/ErrorBoundary';
+import LoadingOverlay from './components/common/LoadingOverlay';
 
 // --- STORES (Safe for Web) ---
 import { useSoundStore } from './modules/sound/useSoundStore';
 import { useStoryboardStore } from './modules/storyboard/useStoryboardStore';
 import { useCombatStore } from './modules/combat/useCombatStore';
 import { useSessionOSStore } from './modules/session/useSessionOSStore';
-import { useWhiteboardStore } from './modules/whiteboard/useWhiteboardStore';
+import { useWhiteboardStore, type WhiteboardTool, type Point, type DrawingPath } from './modules/whiteboard/useWhiteboardStore';
 import { useClockStore } from './store/useClockStore';
+import { mediaCleanupService } from './services/MediaCleanupService';
+import { getDifferentialPayload } from './utils/syncUtils';
 
 // --- LAZY COMPONENTS (Critical for Remote Stability) ---
 const RemoteControl = lazy(() => import('./modules/remote/RemoteControl'));
@@ -55,6 +59,7 @@ const PlaceholderModule = ({ name }: { name: string }) => (
 
 function App() {
   const lastSyncRef = React.useRef(0);
+  const lastBroadcastRef = React.useRef<Record<string, unknown>>({});
   const { activeModule, theme } = useSessionStore();
   const sessionOSStore = useSessionOSStore();
   const { activeCampaignId, selectedSessionId, sessions } = sessionOSStore;
@@ -64,6 +69,19 @@ function App() {
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
+
+  // Automatic Media Cleanup on startup
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      console.log("[App] Running automatic media cleanup...");
+      mediaCleanupService.performCleanup().then(res => {
+        if (res.deletedCount > 0) {
+          console.log(`[App] Media cleanup finished: ${res.deletedCount} items removed, ${(res.savedBytes / 1024 / 1024).toFixed(2)} MB saved.`);
+        }
+      }).catch(err => console.error("[App] Media cleanup failed:", err));
+    }, 5000); // 5s delay to let everything settle
+    return () => clearTimeout(timer);
+  }, []);
 
   // Handle Remote Sync and Actions (Only on Main PC Window)
   useEffect(() => {
@@ -151,21 +169,28 @@ function App() {
           currentWidth: whiteboardStore.currentWidth
         };
 
-        bridge.send('remote:broadcast-sync', { sounds, moments, masterVolume: soundStore.masterVolume, combat, notes, whiteboard, clock });
+        const currentState = { sounds, moments, masterVolume: soundStore.masterVolume, combat, notes, whiteboard, clock };
+        const diffPayload = getDifferentialPayload(currentState, lastBroadcastRef.current);
+        
+        if (Object.keys(diffPayload).length > 0) {
+           bridge.send('remote:broadcast-sync', diffPayload);
+           lastBroadcastRef.current = currentState;
+        }
       } catch (e) { console.error("Sync failed", e); }
     };
 
     const handleAction = (action: unknown) => {
-      const { type, payload } = action as { type: string; payload: any };
+      const { type, payload } = action as RemoteAction;
+      
       console.log('[App] Remote action received:', type);
       if (type === 'dice:roll') window.dispatchEvent(new CustomEvent('remote:roll-die', { detail: payload }));
       if (type === 'dice:clear') window.dispatchEvent(new CustomEvent('remote:clear-dice'));
-      if (type === 'sound:trigger') useSoundStore.getState().triggerPad(payload.padId);
-      if (type === 'sound:volume') useSoundStore.getState().setMasterVolume(payload.volume);
+      if (type === 'sound:trigger') useSoundStore.getState().triggerPad((payload as { padId: string }).padId);
+      if (type === 'sound:volume') useSoundStore.getState().setMasterVolume((payload as { volume: number }).volume);
       if (type === 'sound:stop-all') useSoundStore.getState().stopAllPads();
       
       if (type === 'combat:update-hp') {
-        const { id, delta } = payload;
+        const { id, delta } = payload as { id: string; delta: number };
         const c = useCombatStore.getState().combatants.find(c => c.id === id);
         if (c) useCombatStore.getState().updateCombatant(id, { hp: Math.min(c.hpMax, Math.max(0, c.hp + delta)) });
       }
@@ -175,19 +200,19 @@ function App() {
       }
 
       if (type === 'storyboard:trigger') {
-        const m = useStoryboardStore.getState().moments.filter(m => m.campaignId === activeCampaignId)[payload.index];
+        const m = useStoryboardStore.getState().moments.filter(m => m.campaignId === activeCampaignId)[(payload as { index: number }).index];
         if (m) useStoryboardStore.getState().triggerMoment(m.id);
       }
 
       // --- WHITEBOARD ACTIONS ---
       if (type === 'whiteboard:set-laser-pointer') {
-        useWhiteboardStore.getState().setLaserPointer(payload);
+        useWhiteboardStore.getState().setLaserPointer(payload as unknown as Point);
       }
       if (type === 'whiteboard:set-active-path') {
-        useWhiteboardStore.getState().setActivePath(payload.path, payload.drawerId);
+        useWhiteboardStore.getState().setActivePath((payload as { path: DrawingPath }).path, (payload as { drawerId: string }).drawerId);
       }
-      if (type === 'whiteboard:add-path') {
-        useWhiteboardStore.getState().addPath(payload);
+      if (type === 'whiteboard:draw') {
+        useWhiteboardStore.getState().addPath(payload as unknown as DrawingPath);
       }
       if (type === 'whiteboard:clear') {
         useWhiteboardStore.getState().clearBoard();
@@ -199,13 +224,13 @@ function App() {
         useWhiteboardStore.getState().redo();
       }
       if (type === 'whiteboard:set-tool') {
-        useWhiteboardStore.getState().setTool(payload);
+        useWhiteboardStore.getState().setTool(payload as unknown as WhiteboardTool);
       }
       if (type === 'whiteboard:set-color') {
-        useWhiteboardStore.getState().setColor(payload);
+        useWhiteboardStore.getState().setColor(payload as unknown as string);
       }
       if (type === 'whiteboard:set-width') {
-        useWhiteboardStore.getState().setWidth(payload);
+        useWhiteboardStore.getState().setWidth(payload as unknown as number);
       }
 
       // Trigger an immediate sync after any remote action
@@ -235,25 +260,25 @@ function App() {
 
   const renderModule = () => {
     switch (activeModule) {
-      case 'dashboard': return <SessionDashboard />;
-      case 'dice': return <DiceBoard />;
-      case 'music': return <MusicDashboard />;
-      case 'combat': return <CombatDashboard />;
-      case 'map': return <MapDashboard />;
-      case 'npc': return <NPCDashboard />;
-      case 'clock': return <ClockDashboard />;
-      case 'ambient': return <AmbientDashboard />;
-      case 'table': return <TableDashboard />;
-      case 'web': return <WebDashboard />;
-      case 'image': return <ImageDashboard />;
-      case 'sound': return <SoundDashboard />;
-      case 'light': return <LightDashboard />;
-      case 'favorite': return <FavoriteDashboard />;
-      case 'whiteboard': return <WhiteboardDashboard />;
-      case 'debug': return <DebugDashboard />;
-      case 'voice': return <VoiceDashboard />;
-      case 'obsidian': return <ObsidianPanel />;
-      case 'journal': return <JournalDashboard />;
+      case 'dashboard': return <ErrorBoundary moduleName="Dashboard"><SessionDashboard /></ErrorBoundary>;
+      case 'dice': return <ErrorBoundary moduleName="Dice OS"><DiceBoard /></ErrorBoundary>;
+      case 'music': return <ErrorBoundary moduleName="Music OS"><MusicDashboard /></ErrorBoundary>;
+      case 'combat': return <ErrorBoundary moduleName="Combat OS"><CombatDashboard /></ErrorBoundary>;
+      case 'map': return <ErrorBoundary moduleName="Map OS"><MapDashboard /></ErrorBoundary>;
+      case 'npc': return <ErrorBoundary moduleName="NPC OS"><NPCDashboard /></ErrorBoundary>;
+      case 'clock': return <ErrorBoundary moduleName="Clock OS"><ClockDashboard /></ErrorBoundary>;
+      case 'ambient': return <ErrorBoundary moduleName="Ambient OS"><AmbientDashboard /></ErrorBoundary>;
+      case 'table': return <ErrorBoundary moduleName="Table OS"><TableDashboard /></ErrorBoundary>;
+      case 'web': return <ErrorBoundary moduleName="Web OS"><WebDashboard /></ErrorBoundary>;
+      case 'image': return <ErrorBoundary moduleName="Image OS"><ImageDashboard /></ErrorBoundary>;
+      case 'sound': return <ErrorBoundary moduleName="Sound OS"><SoundDashboard /></ErrorBoundary>;
+      case 'light': return <ErrorBoundary moduleName="Light OS"><LightDashboard /></ErrorBoundary>;
+      case 'favorite': return <ErrorBoundary moduleName="Favorite OS"><FavoriteDashboard /></ErrorBoundary>;
+      case 'whiteboard': return <ErrorBoundary moduleName="Whiteboard OS"><WhiteboardDashboard /></ErrorBoundary>;
+      case 'debug': return <ErrorBoundary moduleName="Debug OS"><DebugDashboard /></ErrorBoundary>;
+      case 'voice': return <ErrorBoundary moduleName="Voice OS"><VoiceDashboard /></ErrorBoundary>;
+      case 'obsidian': return <ErrorBoundary moduleName="Obsidian Panel"><ObsidianPanel /></ErrorBoundary>;
+      case 'journal': return <ErrorBoundary moduleName="Journal OS"><JournalDashboard /></ErrorBoundary>;
       default: return <PlaceholderModule name={activeModule} />;
     }
   };
@@ -267,13 +292,13 @@ function App() {
   return (
     <Suspense fallback={<div className="h-screen w-screen bg-black" />}>
       {isRemote ? (
-        <RemoteControl />
+        <ErrorBoundary moduleName="Remote Control"><RemoteControl /></ErrorBoundary>
       ) : isProjector ? (
-        <ProjectorView />
+        <ErrorBoundary moduleName="Projector View"><ProjectorView /></ErrorBoundary>
       ) : isHub ? (
-        <PlayerHub />
+        <ErrorBoundary moduleName="Player Hub"><PlayerHub /></ErrorBoundary>
       ) : isTablet ? (
-        <TabletHub />
+        <ErrorBoundary moduleName="Tablet Hub"><TabletHub /></ErrorBoundary>
       ) : (
         <>
           <GlobalKeybinds />
@@ -281,6 +306,7 @@ function App() {
           <ToastProvider />
           <AudioRouter />
           <MediaBrowser isOpen={isMediaHubOpen} onClose={closeMediaHub} onSelect={() => {}} title="MEDIA HUB" />
+          <LoadingOverlay />
           {showSplash && <SplashScreenSelector onComplete={() => setShowSplash(false)} />}
           <Shell>{renderModule()}</Shell>
         </>
