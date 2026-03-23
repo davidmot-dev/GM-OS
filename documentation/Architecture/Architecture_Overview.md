@@ -9,9 +9,9 @@ Ce document présente l'architecture modulaire de GM-OS v5, expliquant comment l
 GM-OS repose sur quatre piliers fondamentaux :
 
 1. **UI (React/Tailwind)** : Interface purement fonctionnelle pilotée par l'état global.
-2. **State Management (Zustand)** : Stores persistants gérant l'état et déclenchant les Engines via abonnements.
+2. **State Management (Zustand)** : Stores persistants gérant l'état et déclenchant les Engines via abonnements. Inclut désormais un **Layout Manager** pour la persistance du workspace.
 3. **Engines & Services (Singleton)** : Logique lourde (Audio, Dés, IA) découplée de React pour la performance.
-4. **Bridge (`appBridge`)** : Couche d'abstraction facilitant le passage entre Electron, Tauri ou le Web.
+4. **Bridge (`appBridge`)** : Couche d'abstraction facilitant le passage entre Electron, Tauri ou le Web. Intègre désormais une **détection d'événements matériels (Workspace Sync v2)** pour l'adaptation dynamique.
 
 ```mermaid
 graph TD
@@ -26,6 +26,7 @@ graph TD
     subgraph Business_Layer
         Engines[Engines Audio/Dés]
         AI[AIService & RAG]
+        Search[Spotlight Service]
     end
     
     subgraph Hardware_Layer
@@ -36,8 +37,10 @@ graph TD
     UI --> State
     State --> Engines
     State --> AI
+    State --> Search
     Engines --> Bridge
     AI --> Bridge
+    Search --> State
     Bridge --> Hardware
 ```
 
@@ -46,10 +49,11 @@ graph TD
 GM-OS est un système modulaire où le **Session OS** agit comme chef d'orchestre principal.
 
 ### 1. Fondations & Logique de Jeu
-- **Session-OS** : Pilier central gérant les campagnes, les entités (PJ/PNJ) et la chronologie.
+- **Session-OS** : Pilier central gérant les campagnes, les entités (PJ/PNJ) et la chronologie. Intègre le **Layout Manager** qui synchronise l'interface (module actif, thèmes, panels) à la volée lors d'un changement de campagne.
 - **Social Nexus** : Module de visualisation de graphe social (Force-Graph) intégré à `Session-OS`. Il permet de cartographier les relations et de naviguer par "deep-link" vers les fiches.
 - **Dice-OS** : Géré par le **DiceEngine**, il supporte des dizaines de systèmes (Pools, Explosives, Year Zero).
 - **Combat-OS** : Orchestre l'initiative et les tours, synchronisé avec le `Journal-OS`.
+- **Spotlight (Universal Search)** : Service de recherche transverse inter-stores (`CMD+K`) permettant de naviguer instantanément entre les entités, cartes, musiques et règles.
 
 ### 2. Le Stack Audio Engine
 Le système audio est divisé en quatre moteurs spécialisés, tous synchronisés pour l'immersion :
@@ -61,7 +65,7 @@ Le système audio est divisé en quatre moteurs spécialisés, tous synchronisé
 ### 3. Visual & Immersion
 
 - **Image-OS** : Projection de médias et gestion des noirs (Blackout).
-- **Map-OS** : Gestion tactique des calques et du brouillard de guerre physique (Z-index).
+- **Map-OS** : Gestion tactique multicouche, brouillard de guerre dynamique et Zones de Danger v2 (Auras mobiles, terrains difficiles avec coût de mouvement, et synchronisation domotique/audio).
 - **Storyboard** : Automatisation d'ambiances combinant Son + Image + Lumières (Hue/MIDI).
 
 ## 🔄 Interactions & Flux de Données
@@ -78,6 +82,7 @@ graph LR
     Map[Map-OS] -->|Signal Ping| Sound[Sound-OS]
     Session[Session-OS] -->|Data| Graph[Social Nexus]
     Graph -->|Deep Link| NPC[NPC-OS]
+    Spotlight[Spotlight] -.->|Search & Jump| ALL[Tous les Modules]
     NPC <-->|Bookmark/Recall| Favorite[Favorite-OS]
 ```
 
@@ -135,6 +140,7 @@ erDiagram
 
 - **Single Source of Truth** : Tous les stores critiques sont synchronisés avec le **Tablet Hub** via des deltas JSON minimaux.
 - **Media Hub (m-xxxx)** : Les avatars et médias sont indexés dans une base de données locale (IndexedDB) pour un accès ultra-rapide sans dépendance directe au système de fichiers.
+  - **Architecture Modulaire** : Composants découplés (`MediaItemThumbnail`, `TacticalDetailPanel`, `FullScreenPreview`) pour une maintenance facilitée.
   - **Filtrage Tactique** : Le Hub supporte une isolation par campagne (`activeCampaignId`), permettant un mode "Operational Focus" pour les sessions en cours.
   - **HUD Tactique** : Le panneau de détails est un composant latéral indépendant permettant l'attribution interactive des campagnes sans quitter le contexte de navigation.
 - **Protocole `gmos://`** : Middleware HTTP permettant d'afficher des médias locaux tout en respectant la sécurité des navigateurs.

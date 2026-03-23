@@ -46,4 +46,20 @@ describe('Danger Zone Presets Logic', () => {
         expect(finalPresets.length).toBe(initialCount - 1);
         expect(finalPresets.find(p => p.id === target.id)).toBeUndefined();
     });
+
+    it('should update Aura and Difficult Terrain properties', () => {
+        const presets = useMapStore.getState().dangerZonePresets;
+        const target = presets[0];
+
+        // Enable Aura
+        useMapStore.getState().updateDangerZonePreset(target.id, { isAura: true });
+        let updated = useMapStore.getState().dangerZonePresets.find(p => p.id === target.id);
+        expect(updated?.isAura).toBe(true);
+
+        // Enable Difficult Terrain with cost
+        useMapStore.getState().updateDangerZonePreset(target.id, { isDifficultTerrain: true, movementCost: 3.5 });
+        updated = useMapStore.getState().dangerZonePresets.find(p => p.id === target.id);
+        expect(updated?.isDifficultTerrain).toBe(true);
+        expect(updated?.movementCost).toBe(3.5);
+    });
 });

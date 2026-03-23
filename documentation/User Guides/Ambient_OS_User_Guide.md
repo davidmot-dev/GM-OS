@@ -51,6 +51,13 @@ Tout comme les autres modules audio de GM-OS, les pistes d'Ambient OS peuvent pi
 2. **Priorité Intelligente** : Si plusieurs pistes liées jouent en même temps, l'OS donne la priorité à la dernière piste activée.
 3. **Retour au Calme** : Lorsque vous arrêtez une piste, l'OS rétablit automatiquement l'ambiance lumineuse de la piste précédente encore active, ou revient à votre éclairage manuel.
 
+## 📱 Contrôle Distant (Remote Mode)
+
+Lorsqu'utilisé via la télécommande ou le **Universal Pad**, Ambient OS change légèrement de comportement pour plus de réactivité :
+
+- **Toggle Intelligent** : Appuyer sur un pad de thème (ex: "Forêt") lancera immédiatement le chargement ET la lecture des pistes. Appuyer à nouveau sur le *même* pad coupera tout proprement (Fade Out).
+- **Auto-Play** : Contrairement à l'interface PC où charger un thème ne lance pas le son, la télécommande active automatiquement toutes les pistes ayant un volume configuré.
+
 ---
 
 ## ⚙️ Configuration Technique

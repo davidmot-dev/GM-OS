@@ -124,29 +124,47 @@ export class SpatialTriggerService {
      * Cette méthode doit être appelée à chaque mise à jour de position de token.
      */
     public evaluateTokenPosition(tokenId: string, x: number, y: number): void {
-        const { dangerZones, updateDangerZone } = useMapStore.getState();
+        const { dangerZones } = useMapStore.getState();
         
+        // 1. Évaluer ce jeton par rapport à TOUTES les zones
         dangerZones.forEach(zone => {
-            const isInside = this.isPointInZone(x, y, zone);
-            const currentlyInside = zone.activeTokenIds.includes(tokenId);
-
-            if (isInside && !currentlyInside) {
-                console.log(`[SpatialTrigger] DETECTION: Token ${tokenId} est DANS la zone ${zone.name}`);
-                // Entrée dans la zone
-                this.handleZoneEntry(tokenId, zone);
-                updateDangerZone(zone.id, {
-                    activeTokenIds: [...zone.activeTokenIds, tokenId]
-                });
-            } else if (!isInside && currentlyInside) {
-                console.log(`[SpatialTrigger] DETECTION: Token ${tokenId} est SORTI de la zone ${zone.name}`);
-                // Sortie de la zone
-                const newActiveIds = zone.activeTokenIds.filter(id => id !== tokenId);
-                this.handleZoneExit(tokenId, zone, newActiveIds.length === 0);
-                updateDangerZone(zone.id, {
-                    activeTokenIds: newActiveIds
-                });
-            }
+            this.evaluateDetection(tokenId, x, y, zone);
         });
+
+        // 2. Si ce jeton possède une AURA, évaluer TOUS les autres jetons par rapport à cette aura
+        const tokenAura = dangerZones.find(z => z.parentTokenId === tokenId);
+        if (tokenAura) {
+            const { tokens } = useMapStore.getState();
+            tokens.forEach(otherToken => {
+                if (otherToken.id !== tokenId) {
+                    this.evaluateDetection(otherToken.id, otherToken.x, otherToken.y, tokenAura);
+                }
+            });
+        }
+    }
+
+    /**
+     * Logique interne de détection pour une paire token/zone spécifique.
+     */
+    private evaluateDetection(tokenId: string, tx: number, ty: number, zone: DangerZone): void {
+        const { updateDangerZone } = useMapStore.getState();
+        const isInside = this.isPointInZone(tx, ty, zone);
+        const currentlyInside = zone.activeTokenIds.includes(tokenId);
+
+        if (isInside && !currentlyInside) {
+            console.log(`[SpatialTrigger] DETECTION: Token ${tokenId} est DANS la zone ${zone.name}`);
+            this.handleZoneEntry(tokenId, zone);
+            updateDangerZone(zone.id, {
+                activeTokenIds: [...zone.activeTokenIds, tokenId]
+            });
+        } else if (!isInside && currentlyInside) {
+            console.log(`[SpatialTrigger] DETECTION: Token ${tokenId} est SORTI de la zone ${zone.name}`);
+            const newActiveIds = zone.activeTokenIds.filter(id => id !== tokenId);
+            this.handleZoneExit(tokenId, zone, newActiveIds.length === 0);
+            updateDangerZone(zone.id, {
+                activeTokenIds: newActiveIds
+            });
+        }
     }
 
     private handleZoneEntry(tokenId: string, zone: DangerZone): void {

@@ -57,10 +57,14 @@ class AmbientTrack {
             let arrayBuffer: ArrayBuffer;
 
             if (url && url.startsWith('m-')) {
-                const { getMediaBlob } = useMediaStore.getState();
-                const blob = await getMediaBlob(url);
+                const mediaStore = useMediaStore.getState();
+                if (!mediaStore.isInitialized) {
+                    await mediaStore.initDB();
+                }
+                const blob = await mediaStore.getMediaBlob(url);
                 if (!blob) {
-                    console.warn(`[AmbientTrack] MediaBlob not found for ID: ${url}`);
+                    console.error(`[AmbientTrack] MediaBlob not found for ID: ${url}`);
+                    if (window.useToastStore) window.useToastStore.getState().gmToast('error', `Fichier d'ambiance introuvable dans la base de données.`);
                     return;
                 }
                 arrayBuffer = await blob.arrayBuffer();
@@ -91,6 +95,11 @@ class AmbientTrack {
      */
     play(volume: number = 0.5, fadeTime: number = 1.5) {
         if (!this.buffer || this.isPlaying) return;
+
+        // Ensure context is resumed for remote triggers
+        if (this.context.state === 'suspended') {
+            this.context.resume().catch(e => console.error('[AmbientTrack] Failed to resume context:', e));
+        }
 
         this.source = this.context.createBufferSource();
         this.source.buffer = this.buffer;
@@ -239,10 +248,6 @@ export class AmbientEngine {
         return this.analyser;
     }
 
-    /**
-     * Change le périphérique de sortie audio pour toutes les ambiances.
-     * @param deviceId Identifiant du périphérique (sinkID).
-     */
     public async setOutputDevice(deviceId: string) {
         if ('setSinkId' in this.context) {
             try {

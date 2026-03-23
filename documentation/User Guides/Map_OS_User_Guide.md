@@ -61,6 +61,27 @@ L'outil **Ping** permet de désigner un point précis sur la carte. Un cercle co
 - La vue projetée est **"Clean"** : elle ne contient ni les menus, ni les zones masquées par le brouillard de guerre du MJ, ni les outils de dessin.
 - Utilisez **Recadrer** pour recentrer votre vue et celle des joueurs sur le centre de la carte.
 
+## ☢️ Zones de Danger (Éditeur Obsidian Nexus)
+
+L'éditeur de zones a été entièrement refondu pour offrir une expérience **Obsidian Nexus** premium, modulaire et hautement performante :
+
+1. **Architecture en Colonnes** : Gérez la sélection, les paramètres visuels et la logique tactique dans des colonnes distinctes sans défilement inutile.
+2. **Auras Dynamiques** : Liez une zone à un pion (PJ ou PNJ). Elle suivra ses mouvements en temps réel (sorts, lumière, effets de peur).
+3. **Terrains Complexes** : Configurez des zones de ralentissement avec multiplicateur de coût de mouvement auto-calculé.
+4. **Automation Audio/Lumineuse** : Déclenchez des scènes Philips Hue ou des ambiances sonores spécifiques dès qu'une zone est activée.
+
+---
+
+## 💾 Map Presets (Configuration de Scène)
+
+Ne perdez plus de temps à configurer vos rencontres en cours de jeu. Les **Map Presets** vous permettent de capturer l'état complet d'une carte :
+
+- **Sauvegarde de Scène** : Capture le brouillard, la position de tous les pions et toutes les zones de danger actives.
+- **Rappel Instantané** : Préparez plusieurs variantes d'une même carte (ex: "Journée", "Embuscade de Nuit") et basculez entre elles en un clic.
+- **Modularité** : Les presets sont sauvegardés par campagne pour une organisation parfaite.
+
+---
+
 ## ✨ Vision de l'Oracle (Narration IA)
 
 La **Vision de l'Oracle** est un assistant narratif puissant qui utilise l'Intelligence Artificielle pour donner vie à votre plateau tactique :

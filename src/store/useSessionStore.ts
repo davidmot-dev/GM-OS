@@ -19,6 +19,7 @@ interface SessionState {
     themeColor: string; // Hex color for global accents
     isSessionMode: boolean; // Mode MJ Focus (masque les outils d'édition)
     isAIPanelOpen: boolean;
+    displayCount: number;
 
     // Actions
     setActiveModule: (id: ModuleID) => void;
@@ -26,6 +27,7 @@ interface SessionState {
     setThemeColor: (color: string) => void;
     toggleSessionMode: (force?: boolean) => void;
     toggleAIPanel: (force?: boolean) => void;
+    setDisplayCount: (count: number) => void;
 }
 
 export const THEME_PALETTES: Record<ThemeID, ThemePalette> = {
@@ -74,6 +76,7 @@ export const useSessionStore = create<SessionState>()(
             themeColor: THEME_PALETTES['cyberpunk'].accent,
             isSessionMode: false,
             isAIPanelOpen: false,
+            displayCount: 1,
 
             setActiveModule: (activeModule) => set({ activeModule }),
             setTheme: (theme) => set({ 
@@ -87,6 +90,7 @@ export const useSessionStore = create<SessionState>()(
             toggleAIPanel: (force) => set((state) => ({
                 isAIPanelOpen: force !== undefined ? force : !state.isAIPanelOpen
             })),
+            setDisplayCount: (displayCount) => set({ displayCount }),
         }),
         {
             name: 'gmos-session-storage',

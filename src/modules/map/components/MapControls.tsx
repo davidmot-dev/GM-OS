@@ -5,9 +5,10 @@ import { useCombatStore } from '../../combat/useCombatStore';
 import { gmConfirm, gmCustom } from '../../../stores/useModalStore';
 import {
     Upload, EyeOff, Eye, Paintbrush, Square, Circle,
-    Cast, Maximize, Users, MousePointer2, PlusCircle, Trash2, MapPin,
+    Cast, Maximize, Users, MousePointer2, PlusCircle, Trash2, MapPin, FolderOpen,
     SkipBack, SkipForward, Swords, CloudRain, CloudSnow, Cloud, Sparkles, Triangle,
-    ShieldAlert, Zap, GripHorizontal, Settings2, Volume2, VolumeX, ChevronDown, Check
+    ShieldAlert, Zap, GripHorizontal, Settings2, Volume2, VolumeX, ChevronDown, Check,
+    Link, Mountain
 } from 'lucide-react';
 
 
@@ -23,6 +24,7 @@ import { type Combatant } from '../../combat/useCombatStore';
 
 import { useJournalStore } from '../../journal/useJournalStore';
 import { useNarrativeGenerator } from '../hooks/useNarrativeGenerator';
+import MapPresetGallery from './MapPresetGallery';
 
 const ToolButton = ({ tool, currentTool, setTool, icon: Icon, label }: { tool: MapTool, currentTool: MapTool, setTool: (t: MapTool) => void, icon: React.ElementType, label: string }) => {
     const isActive = currentTool === tool;
@@ -94,6 +96,9 @@ const MapControls: React.FC = () => {
         dangerZones, removeDangerZone, clearDangerZones,
         dangerZonePresets, selectedDangerPresetId, setSelectedDangerPresetId,
         dangerShape, setDangerShape,
+        auraOverride, setAuraOverride,
+        difficultTerrainOverride, setDifficultTerrainOverride,
+        movementCostOverride, setMovementCostOverride,
         isMapMuted, setMapMuted, mapVolume, setMapVolume, mapOutputDeviceId, setMapOutputDevice,
         isVideo
     } = useMapStore();
@@ -189,6 +194,17 @@ const MapControls: React.FC = () => {
 
             {/* Content Array */}
             <div className="p-4 flex flex-col gap-6">
+
+                {/* Presets Section */}
+                <section>
+                    <h3 className="text-xs text-slate-400 uppercase tracking-wider mb-3 font-bold px-1 flex items-center gap-2">
+                        <FolderOpen size={14} className="text-accent" />
+                        Configurations Sauvées
+                    </h3>
+                    <MapPresetGallery />
+                </section>
+
+                <hr className="border-gray-800" />
 
                 {/* Import Section */}
                 <section>
@@ -446,6 +462,41 @@ const MapControls: React.FC = () => {
                                         </div>
                                     </div>
 
+                                    {/* Quick Toggles for Aura/DT Overrides */}
+                                    <div className="flex gap-2">
+                                        <button 
+                                            onClick={() => setAuraOverride(!auraOverride)}
+                                            className={`flex-1 flex items-center justify-center gap-2 p-2 rounded border text-[10px] font-bold transition-all ${auraOverride ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-slate-500 hover:text-slate-300'}`}
+                                            title="Transformer la zone en Aura (suit le porteur)"
+                                        >
+                                            <Link size={14} />
+                                            <span>AURA</span>
+                                        </button>
+                                        <button 
+                                            onClick={() => setDifficultTerrainOverride(!difficultTerrainOverride)}
+                                            className={`flex-1 flex items-center justify-center gap-2 p-2 rounded border text-[10px] font-bold transition-all ${difficultTerrainOverride ? 'bg-emerald-500/20 border-emerald-500 text-emerald-500' : 'bg-app-bg/50 border-app-border/50 text-slate-500 hover:text-slate-300'}`}
+                                            title="Marquer comme Terrain Difficile"
+                                        >
+                                            <Mountain size={14} />
+                                            <span>TERRAIN</span>
+                                        </button>
+                                    </div>
+
+                                    {difficultTerrainOverride && (
+                                        <div className="flex items-center justify-between px-1">
+                                            <span className="text-[10px] text-slate-500 uppercase font-bold">Coût DT</span>
+                                            <div className="flex items-center gap-2">
+                                                <input 
+                                                    type="range" min="1" max="4" step="0.5" 
+                                                    value={movementCostOverride}
+                                                    onChange={(e) => setMovementCostOverride(parseFloat(e.target.value))}
+                                                    className="w-20 h-1 accent-emerald-500 bg-gray-700 rounded-lg cursor-pointer"
+                                                />
+                                                <span className="text-[10px] font-mono text-emerald-500">x{movementCostOverride}</span>
+                                            </div>
+                                        </div>
+                                    )}
+
                                     <div>
                                         <label className="text-[10px] text-slate-500 uppercase font-bold block mb-1">Modèles (Presets)</label>
                                         <div className="grid grid-cols-1 gap-1">
@@ -462,7 +513,13 @@ const MapControls: React.FC = () => {
                                                         }`}
                                                     >
                                                         <div className="w-3 h-3 rounded-full" style={{ backgroundColor: preset.color }} />
-                                                        <span className={`flex-1 text-[11px] ${isActive ? 'text-accent font-bold' : 'text-slate-300'}`}>{preset.name}</span>
+                                                        <span className={`flex-1 text-[11px] ${isActive ? 'text-accent font-bold' : 'text-slate-300'}`}>
+                                                            {preset.name}
+                                                            <span className="ml-2 inline-flex gap-1 opacity-50">
+                                                                {preset.isAura && <Link size={10} />}
+                                                                {preset.isDifficultTerrain && <Mountain size={10} />}
+                                                            </span>
+                                                        </span>
                                                         {isActive ? (
                                                             <Zap size={14} className="text-accent animate-pulse" />
                                                         ) : (
@@ -478,15 +535,27 @@ const MapControls: React.FC = () => {
                         ) : (
                             <div className="flex flex-col gap-1">
                                 {dangerZones.map(zone => (
-                                    <div key={zone.id} className="bg-app-bg/30 border border-app-border rounded p-2 flex items-center gap-2 group">
-                                        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: zone.color }} />
-                                        <span className="text-[11px] text-slate-300 flex-1 truncate">{zone.name}</span>
-                                        <button 
-                                            onClick={() => removeDangerZone(zone.id)}
-                                            className="text-slate-600 hover:text-rose-500 p-1 opacity-0 group-hover:opacity-100 transition-all"
-                                        >
-                                            <Trash2 size={14} />
-                                        </button>
+                                    <div key={zone.id} className="bg-app-bg/30 border border-app-border rounded p-2 flex flex-col gap-1 group">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: zone.color }} />
+                                            <span className="text-[11px] text-slate-300 flex-1 truncate">{zone.name}</span>
+                                            <div className="flex gap-1">
+                                                {zone.isAura && <Link size={12} className="text-accent" />}
+                                                {zone.isDifficultTerrain && <Mountain size={12} className="text-emerald-500" />}
+                                            </div>
+                                            <button 
+                                                onClick={() => removeDangerZone(zone.id)}
+                                                className="text-slate-600 hover:text-rose-500 p-1 opacity-0 group-hover:opacity-100 transition-all"
+                                            >
+                                                <Trash2 size={14} />
+                                            </button>
+                                        </div>
+                                        {zone.isAura && (
+                                            <div className="text-[9px] text-slate-500 flex items-center gap-1 px-1 italic">
+                                                <Users size={10} />
+                                                <span>Porteur: {zone.parentTokenId ? (tokens.find(t => t.id === zone.parentTokenId)?.name || 'Inconnu') : 'Aucun (Sélectionnez un pion)'}</span>
+                                            </div>
+                                        )}
                                     </div>
                                 ))}
                                 {dangerZones.length === 0 && (

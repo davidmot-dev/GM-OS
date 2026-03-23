@@ -41,6 +41,7 @@ import { useTacticalOrchestrator } from '../modules/tactical-ai/hooks/useTactica
 import { useHardwareBridge } from '../modules/tactical-ai/hooks/useHardwareBridge';
 import { useAudioTactical } from '../modules/tactical-ai/hooks/useAudioTactical';
 import { useHueAutoConnect } from '../modules/light/hooks/useHueAutoConnect';
+import { useLayoutManager } from '../modules/session/hooks/useLayoutManager';
 import { gmToast } from '../stores/useToastStore';
 
 interface NavItemProps {
@@ -79,6 +80,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
 
     // Global persistence/sync hooks
     useHueAutoConnect();
+    useLayoutManager();
 
     const {
         activeModule,

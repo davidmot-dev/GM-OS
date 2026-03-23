@@ -22,7 +22,12 @@ contextBridge.exposeInMainWorld('appBridge', {
         return webUtils.getPathForFile(file)
     },
     app: {
-        quit: () => ipcRenderer.send('app:quit')
+        quit: () => ipcRenderer.send('app:quit'),
+        onDisplayChanged: (callback: (count: number) => void) => {
+            const listener = (_event: Electron.IpcRendererEvent, count: number) => callback(count);
+            ipcRenderer.on('app:display-changed', listener);
+            return () => ipcRenderer.off('app:display-changed', listener);
+        }
     },
     debug: {
         openConsole: () => ipcRenderer.send('debug:open-console')

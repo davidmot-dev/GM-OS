@@ -14,9 +14,15 @@ import { useCombatStore } from './modules/combat/useCombatStore';
 import { useSessionOSStore } from './modules/session/useSessionOSStore';
 import { useWhiteboardStore, type WhiteboardTool, type Point, type DrawingPath } from './modules/whiteboard/useWhiteboardStore';
 import { useClockStore } from './store/useClockStore';
+import { useMusicStore } from './modules/music/useMusicStore';
+import { useImageStore } from './modules/image/useImageStore';
+import { useAmbientStore } from './modules/ambient/useAmbientStore';
+import { useMediaStore } from './stores/useMediaStore';
 import { mediaCleanupService } from './services/MediaCleanupService';
 import { getDifferentialPayload } from './utils/syncUtils';
 import { spatialTriggerService } from './modules/map/SpatialTriggerService';
+import { useDisplayDetection } from './hooks/useDisplayDetection';
+import { resolveToSendableUrl } from './utils/mediaResolver';
 
 // --- LAZY COMPONENTS (Critical for Remote Stability) ---
 const RemoteControl = lazy(() => import('./modules/remote/RemoteControl'));
@@ -49,6 +55,7 @@ const ToastProvider = lazy(() => import('./components/ToastProvider'));
 const AudioRouter = lazy(() => import('./modules/music/components/AudioRouter'));
 const MediaBrowser = lazy(() => import('./components/MediaBrowser').then(m => ({ default: m.MediaBrowser })));
 const GlobalKeybinds = lazy(() => import('./components/GlobalKeybinds').then(m => ({ default: m.GlobalKeybinds })));
+const SpotlightSearch = lazy(() => import('./components/SpotlightSearch').then(m => ({ default: m.SpotlightSearch })));
 
 const PlaceholderModule = ({ name }: { name: string }) => (
   <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
@@ -68,12 +75,24 @@ function App() {
   const { isMediaHubOpen, closeMediaHub } = useModalStore();
   const [showSplash, setShowSplash] = useState(true);
 
+  const searchParams = new URLSearchParams(window.location.search);
+  const isProjector = searchParams.get('window') === 'projector';
+  const isHub = searchParams.get('window') === 'hub';
+  const isTablet = searchParams.get('window') === 'tablet';
+  const isRemote = searchParams.get('window') === 'remote';
+
+  // Workspace Sync v2: Intelligent display detection (Main GM window only)
+  const isMainPC = !isProjector && !isHub && !isTablet && !isRemote;
+  useDisplayDetection(isMainPC);
+
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
-  // Automatic Media Cleanup on startup
+  // Automatic Media Cleanup on startup (Main PC only)
   useEffect(() => {
+    if (!isMainPC) return;
+    
     const timer = setTimeout(() => {
       console.log("[App] Running automatic media cleanup...");
       mediaCleanupService.performCleanup().then(res => {
@@ -83,7 +102,7 @@ function App() {
       }).catch(err => console.error("[App] Media cleanup failed:", err));
     }, 5000); // 5s delay to let everything settle
     return () => clearTimeout(timer);
-  }, []);
+  }, [isMainPC]);
 
   // Handle Remote Sync and Actions (Only on Main PC Window)
   useEffect(() => {
@@ -100,8 +119,12 @@ function App() {
       console.log(`[App] ${windowTag} window: Skipping remote action listeners.`);
       return;
     }
+
     // Démarrage de la surveillance des triggers spatiaux (GM uniquement)
     spatialTriggerService.startWatching();
+    
+    // Initialisation du MediaStore pour les résolutions d'URL (m-ID)
+    useMediaStore.getState().initDB();
 
     // Synchroniser automatiquement la carte si le Combat-OS change (pour l'invisibilité des jetons liés)
     const unsubscribeCombat = useCombatStore.subscribe((state, prevState) => {
@@ -128,6 +151,50 @@ function App() {
           id: p.id, title: p.title || p.id, active: !!p.filePath
         })) : [];
 
+        let universalPads: any[] = [];
+        try {
+          const musicStore = useMusicStore.getState();
+          const imageStore = useImageStore.getState();
+          const ambientStore = useAmbientStore.getState();
+
+          // MUSIC
+          let musicPlaylist = musicStore.playlists.find(p => p.id === musicStore.activePlaylistId);
+          if (!musicPlaylist && musicStore.playlists.length > 0) musicPlaylist = musicStore.playlists[0];
+          const musicPads = (musicPlaylist?.pads.filter(p => !!p.url) || []).slice(0, 4).map(p => ({
+            id: p.id, type: 'music', label: p.label || 'Sans Nom', color: 'var(--accent)'
+          }));
+
+          // SOUND (SFX)
+          let soundAtmosphere = soundStore.atmospheres.find(a => a.id === atmosId);
+          if (!soundAtmosphere && soundStore.atmospheres.length > 0) soundAtmosphere = soundStore.atmospheres[0];
+          const sfxPads = (soundAtmosphere ? Object.values(soundAtmosphere.pads) : [])
+            .filter(p => !!p.filePath).slice(0, 4).map(p => ({
+            id: p.id, type: 'sound', label: p.title || p.id, color: 'var(--rose-500)'
+          }));
+
+          // IMAGE
+          let favoriteImages = imageStore.mediaList.filter(m => m.isFavorite);
+          if (favoriteImages.length === 0 && imageStore.mediaList.length > 0) {
+            favoriteImages = imageStore.mediaList.slice(0, 4);
+          }
+          const imagePads = favoriteImages.slice(0, 4).map(m => ({
+            id: m.id, type: 'image', label: m.name, imageUrl: m.path, color: 'var(--emerald-500)'
+          }));
+          const resolvedImagePads = await Promise.all(imagePads.map(async (p: any) => ({
+            ...p,
+            imageUrl: await resolveToSendableUrl(p.imageUrl)
+          })));
+
+          // AMBIENT
+          const ambientPads = ambientStore.presets.slice(0, 4).map(p => ({
+            id: p.id, type: 'ambient', label: p.name, sublabel: p.universe, color: 'var(--blue-500)'
+          }));
+
+          universalPads = [...musicPads, ...sfxPads, ...resolvedImagePads, ...ambientPads];
+        } catch (e) {
+          console.error('[App] Failed to aggregate universal pads', e);
+        }
+
         const moments = storyboardStore.moments
           .filter(m => m.campaignId === activeCampaignId)
           .map(m => ({ id: m.id, name: m.name }));
@@ -141,7 +208,6 @@ function App() {
           private: activeSession?.gmSecrets || activeSession?.sessionNotes || 'Aucune note secrète.'
         };
 
-        const { resolveToSendableUrl } = await import('./utils/mediaResolver');
         const resolvedCombatants = (await Promise.all(
           combatStore.combatants.map(async (c) => ({
             id: c.id, name: c.name, hp: c.hp, hpMax: c.hpMax,
@@ -184,7 +250,7 @@ function App() {
           currentWidth: whiteboardStore.currentWidth
         };
 
-        const currentState = { sounds, moments, masterVolume: soundStore.masterVolume, combat, notes, whiteboard, clock };
+        const currentState = { sounds, moments, masterVolume: soundStore.masterVolume, combat, notes, whiteboard, clock, universalPads };
         const diffPayload = getDifferentialPayload(currentState, lastBroadcastRef.current);
         
         if (Object.keys(diffPayload).length > 0) {
@@ -197,9 +263,15 @@ function App() {
     const handleAction = (action: unknown) => {
       const { type, payload } = action as RemoteAction;
       
-      console.log('[App] Remote action received:', type);
-      if (type === 'dice:roll') window.dispatchEvent(new CustomEvent('remote:roll-die', { detail: payload }));
-      if (type === 'dice:clear') window.dispatchEvent(new CustomEvent('remote:clear-dice'));
+      console.log(`[App] [RemoteAction] type: ${type}`, payload);
+      if (type === 'dice:roll') {
+        console.log('[App] Roll Die action');
+        window.dispatchEvent(new CustomEvent('remote:roll-die', { detail: payload }));
+      }
+      if (type === 'dice:clear') {
+        console.log('[App] Clear Dice action');
+        window.dispatchEvent(new CustomEvent('remote:clear-dice'));
+      }
       if (type === 'sound:trigger') useSoundStore.getState().triggerPad((payload as { padId: string }).padId);
       if (type === 'sound:volume') useSoundStore.getState().setMasterVolume((payload as { volume: number }).volume);
       if (type === 'sound:stop-all') useSoundStore.getState().stopAllPads();
@@ -248,6 +320,56 @@ function App() {
         useWhiteboardStore.getState().setWidth(payload as unknown as number);
       }
 
+      // --- UNIVERSAL ACTIONS ---
+      if (type === 'universal:trigger') {
+        const { id, type: itemType } = payload as { id: string, type: string };
+        console.log(`[App] [Universal:Trigger] ${itemType} id: ${id}`);
+        
+        if (itemType === 'music') {
+          const pads = useMusicStore.getState().playlists.flatMap(p => p.pads);
+          const pad = pads.find(p => p.id === id);
+          if (pad) {
+            console.log(`[App] Triggering Music Pad: ${pad.label}`);
+            useMusicStore.getState().playPad(pad);
+          } else {
+            console.warn(`[App] Music Pad not found: ${id} among ${pads.length} pads`);
+          }
+        } else if (itemType === 'sound') {
+          console.log(`[App] Triggering Sound Pad: ${id}`);
+          import('./modules/sound/SoundController').then((m) => {
+            m.soundController.togglePad(id);
+          });
+        }
+ else if (itemType === 'image') {
+          const media = useImageStore.getState().mediaList.find(m => m.id === id);
+          if (media) useImageStore.getState().projectSolo(media);
+        } else if (itemType === 'ambient') {
+          const ambientStore = useAmbientStore.getState();
+          const preset = ambientStore.presets.find(p => p.id === id);
+          if (preset) {
+            console.log(`[App] Triggering Ambient Preset: ${preset.name}`);
+            
+            const isActive = ambientStore.tracks.some((t, i) => {
+               const pTrack = preset.tracks[i];
+               return pTrack && t.url === pTrack.url && t.isPlaying;
+            });
+
+            if (isActive) {
+                ambientStore.fadeOutAll();
+            } else {
+                ambientStore.loadTheme(preset.universe, preset.name).then(() => {
+                    const latestStore = useAmbientStore.getState();
+                    preset.tracks.forEach((pTrack, index) => {
+                        if (pTrack && pTrack.url && (pTrack.volume ?? 0) > 0) {
+                            latestStore.toggleTrack(index).catch(e => console.error('[App] Failed to auto-play ambient track', e));
+                        }
+                    });
+                });
+            }
+          }
+        }
+      }
+
       // Trigger an immediate sync after any remote action
       handleSync();
     };
@@ -262,6 +384,12 @@ function App() {
     const unsubWhiteboard = useWhiteboardStore.subscribe(() => handleSync(false));
     const unsubClock = useClockStore.subscribe(() => handleSync(false));
     
+    // Subscribe to stores for Universal Pad
+    const unsubMusic = useMusicStore.subscribe(() => handleSync(false));
+    const unsubSoundSync = useSoundStore.subscribe(() => handleSync(false));
+    const unsubImage = useImageStore.subscribe(() => handleSync(false));
+    const unsubAmbient = useAmbientStore.subscribe(() => handleSync(false));
+    
     handleSync();
 
     return () => {
@@ -269,6 +397,10 @@ function App() {
       cleanupAction();
       unsubWhiteboard();
       unsubClock();
+      unsubMusic();
+      unsubSoundSync();
+      unsubImage();
+      unsubAmbient();
       unsubscribeCombat();
       console.log('[App] Remote effect cleanup - IPC listeners removed.');
     };
@@ -299,25 +431,25 @@ function App() {
     }
   };
 
-  const searchParams = new URLSearchParams(window.location.search);
-  const isProjector = searchParams.get('window') === 'projector';
-  const isHub = searchParams.get('window') === 'hub';
-  const isTablet = searchParams.get('window') === 'tablet';
-  const isRemote = searchParams.get('window') === 'remote';
+  const isProjectorView = searchParams.get('window') === 'projector';
+  const isHubView = searchParams.get('window') === 'hub';
+  const isTabletView = searchParams.get('window') === 'tablet';
+  const isRemoteView = searchParams.get('window') === 'remote';
 
   return (
     <Suspense fallback={<div className="h-screen w-screen bg-black" />}>
-      {isRemote ? (
+      {isRemoteView ? (
         <ErrorBoundary moduleName="Remote Control"><RemoteControl /></ErrorBoundary>
-      ) : isProjector ? (
+      ) : isProjectorView ? (
         <ErrorBoundary moduleName="Projector View"><ProjectorView /></ErrorBoundary>
-      ) : isHub ? (
+      ) : isHubView ? (
         <ErrorBoundary moduleName="Player Hub"><PlayerHub /></ErrorBoundary>
-      ) : isTablet ? (
+      ) : isTabletView ? (
         <ErrorBoundary moduleName="Tablet Hub"><TabletHub /></ErrorBoundary>
       ) : (
         <>
           <GlobalKeybinds />
+          <SpotlightSearch />
           <ModalProvider />
           <ToastProvider />
           <AudioRouter />

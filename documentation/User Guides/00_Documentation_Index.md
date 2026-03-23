@@ -11,6 +11,8 @@ Bienvenue dans le centre de documentation de **GM-OS v5**. Ce guide est conçu p
 - [**Intégration Export Obsidian**](./walkthroughs/Obsidian_Export_Integration.md)
 - [**System Forge IA (v5.1 Evolution)**](./walkthroughs/System_Forge_IA_5.1.md)
 - [**Assistant Gemini CLI & Effets Météo**](./walkthroughs/Gemini_Weather_Integration.md)
+- [**Universal Search (Spotlight)**](./walkthroughs/2026-03-23-universal-search-spotlight.md) (Nouveau)
+- [**Social Nexus v2**](./walkthroughs/walkthrough_social_nexus_v2.md) (Mis à jour)
 
 ---
 
@@ -25,6 +27,7 @@ Bienvenue dans le centre de documentation de **GM-OS v5**. Ce guide est conçu p
 - [**Combat OS (Gestionnaire de Batailles)**](./Combat_OS_User_Guide.md)
 - [**Calculateur de Dégâts Intelligent**](./Smart_Damage_Calculator_Guide.md)
 - [**Table OS (Butins & Aléatoire)**](./Table_OS_User_Guide.md)
+- [**Universal Search (Spotlight)**](./Universal_Search_User_Guide.md) (Nouveau)
 
 - [**Clock OS (Gestion du Temps)**](./Clock_OS_User_Guide.md)
 

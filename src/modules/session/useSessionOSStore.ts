@@ -19,6 +19,15 @@ import { HealthInterpreter } from './logic/HealthInterpreter';
 import { useClockStore, type TensionClock } from '../../store/useClockStore';
 import { useWhiteboardStore, type DrawingPath } from '../whiteboard/useWhiteboardStore';
 import type { SessionSnapshot } from '../journal/types';
+import type { ModuleID, ThemeID } from '../../store/useSessionStore';
+
+export interface LayoutConfig {
+    activeModule: ModuleID;
+    isAIPanelOpen: boolean;
+    isTacticalPanelOpen: boolean;
+    theme: ThemeID;
+    themeColor: string;
+}
 
 export interface DamageImpact {
     value: number;
@@ -67,6 +76,8 @@ export interface Campaign {
     ragPath?: string;
     /** Overrides d'instructions IA par personnage (gemId -> instructions) */
     aiPersonas?: Record<string, string>; 
+    /** Configuration du layout par défaut pour cette campagne */
+    layoutConfig?: LayoutConfig;
 }
 
 /**
@@ -429,6 +440,8 @@ export interface SessionOSState {
     addTimelineEvent: (event: Omit<TimelineEvent, 'id'>) => void;
     updateTimelineEvent: (id: string, updates: Partial<TimelineEvent>) => void;
     deleteTimelineEvent: (id: string) => void;
+    /** Met à jour le layout de la campagne spécifiée */
+    updateCampaignLayout: (campaignId: string, layout: Partial<LayoutConfig>) => void;
 
     // Wiki Actions
     addWikiEntry: (entry: Omit<WikiEntry, 'id'>) => void;
@@ -1109,6 +1122,14 @@ export const useSessionOSStore = create<SessionOSState>()(
                 return { campaigns: updatedCampaigns };
             }),
 
+            updateCampaignLayout: (id, layout) => set((state) => ({
+                campaigns: state.campaigns.map(c => 
+                    c.id === id 
+                        ? { ...c, layoutConfig: { ...c.layoutConfig, ...layout } as LayoutConfig } 
+                        : c
+                )
+            })),
+
             deleteCampaign: (id) => set((state) => ({
                 campaigns: state.campaigns.filter(c => c.id !== id),
                 activeCampaignId: state.activeCampaignId === id ? null : state.activeCampaignId
@@ -1705,7 +1726,16 @@ export const useSessionOSStore = create<SessionOSState>()(
             })),
 
             addWikiEntry: (entry) => set((state) => ({
-                wikiEntries: [...state.wikiEntries, { ...entry, id: crypto.randomUUID() }]
+                wikiEntries: [
+                    ...state.wikiEntries, 
+                    { 
+                        ...entry, 
+                        id: crypto.randomUUID(),
+                        imageUrls: entry.imageUrls || [],
+                        linkedEntityIds: entry.linkedEntityIds || [],
+                        tags: entry.tags || []
+                    }
+                ]
             })),
 
             updateWikiEntry: (id, updates) => set((state) => ({
@@ -1755,7 +1785,10 @@ export const useSessionOSStore = create<SessionOSState>()(
                 const newWikiEntries: WikiEntry[] = wikiEntries.map(w => ({
                   ...w,
                   id: crypto.randomUUID(),
-                  campaignId
+                  campaignId,
+                  imageUrls: w.imageUrls || [],
+                  linkedEntityIds: w.linkedEntityIds || [],
+                  tags: w.tags || []
                 }));
 
                 const activeLocationIds = newMaps.map(m => m.id);

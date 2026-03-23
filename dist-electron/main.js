@@ -6005,6 +6005,18 @@ app.whenReady().then(async () => {
   });
   createWindow();
   startRemoteServer();
+  screen.on("display-added", () => {
+    console.log("[Main] Display added");
+    win?.webContents.send("app:display-changed", screen.getAllDisplays().length);
+  });
+  screen.on("display-removed", () => {
+    console.log("[Main] Display removed");
+    win?.webContents.send("app:display-changed", screen.getAllDisplays().length);
+  });
+  screen.on("display-metrics-changed", () => {
+    console.log("[Main] Display metrics changed");
+    win?.webContents.send("app:display-changed", screen.getAllDisplays().length);
+  });
 });
 export {
   MAIN_DIST,

@@ -14,7 +14,11 @@ import {
     ChevronRight,
     FileText,
     EyeOff,
-    Eraser
+    Eraser,
+    LayoutGrid,
+    Music,
+    Image as ImageIcon,
+    Wind
 } from 'lucide-react';
 import { type Point, type DrawingPath } from '../whiteboard/useWhiteboardStore';
 import RemoteWhiteboardView from './components/RemoteWhiteboardView';
@@ -28,7 +32,7 @@ type HealthSystemData =
 
 const RemoteControl: React.FC = () => {
     const [status, setStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
-    const [activeTab, setActiveTab] = useState<'dice' | 'sounds' | 'storyboard' | 'combat' | 'whiteboard' | 'notes'>('dice');
+    const [activeTab, setActiveTab] = useState<'dice' | 'sounds' | 'storyboard' | 'combat' | 'whiteboard' | 'notes' | 'pads'>('pads');
     const [notesView, setNotesView] = useState<'public' | 'private'>('private');
     const [isAventureMode, setIsAventureMode] = useState(false);
     const [syncData, setSyncData] = useState<{
@@ -57,7 +61,16 @@ const RemoteControl: React.FC = () => {
             currentTool: string,
             currentColor: string,
             currentWidth: number
-        }
+        },
+        universalPads: {
+            id: string,
+            type: 'music' | 'sound' | 'image' | 'ambient',
+            label: string,
+            sublabel?: string,
+            color?: string,
+            imageUrl?: string,
+            isActive?: boolean
+        }[]
     }>({ 
         sounds: [], 
         moments: [], 
@@ -72,10 +85,11 @@ const RemoteControl: React.FC = () => {
             currentTool: 'brush',
             currentColor: '#ffffff',
             currentWidth: 3
-        }
+        },
+        universalPads: []
     });
 
-    const { deviceId, pseudo, role, setStatus: setClientStatus } = useClientStore();
+    const { deviceId, pseudo, setStatus: setClientStatus } = useClientStore();
 
     const socketRef = useRef<WebSocket | null>(null);
 
@@ -157,6 +171,88 @@ const RemoteControl: React.FC = () => {
             if ('vibrate' in navigator) window.navigator.vibrate(50);
         }
     };
+
+    const renderUniversalPads = () => (
+        <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="flex items-center justify-between px-2">
+                <p className="text-[10px] font-black uppercase text-white/30 tracking-widest">Multi-Deck Universal Pad</p>
+                <div className="flex gap-2">
+                     <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                     <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" style={{ animationDelay: '200ms' }} />
+                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" style={{ animationDelay: '400ms' }} />
+                </div>
+            </div>
+
+            <div className="grid grid-cols-4 grid-rows-4 gap-2 aspect-square">
+                {Array.from({ length: 16 }).map((_, idx) => {
+                    const pad = syncData.universalPads[idx];
+                    if (!pad) {
+                        return (
+                            <div 
+                                key={`empty-${idx}`}
+                                className="bg-white/[0.02] border border-white/[0.05] rounded-xl flex items-center justify-center"
+                            >
+                                <div className="w-1 h-1 rounded-full bg-white/5" />
+                            </div>
+                        );
+                    }
+
+                    const Icon = {
+                        music: Music,
+                        sound: Volume2,
+                        image: ImageIcon,
+                        ambient: Wind
+                    }[pad.type];
+
+                    const glowClass = {
+                        music: 'shadow-glow-cyan border-accent/20 text-accent',
+                        sound: 'shadow-glow-crimson border-rose-500/20 text-rose-400',
+                        image: 'shadow-xl border-emerald-500/20 text-emerald-400',
+                        ambient: 'shadow-glow-sky border-blue-500/20 text-blue-400'
+                    }[pad.type];
+
+                    return (
+                        <button
+                            key={pad.id}
+                            onClick={() => sendAction('universal:trigger', { id: pad.id, type: pad.type })}
+                            className={`relative group overflow-hidden bg-white/5 border rounded-xl flex flex-col items-center justify-center gap-1 active:scale-90 transition-all duration-200 ${glowClass}`}
+                            title={pad.label}
+                        >
+                            {/* Visual Feedback for Image */}
+                            {pad.type === 'image' && pad.imageUrl && (
+                                <img 
+                                    src={pad.imageUrl.startsWith('/') ? `http://${host}:${port}${pad.imageUrl}` : pad.imageUrl} 
+                                    alt="" 
+                                    className="absolute inset-0 w-full h-full object-cover opacity-20 blur-[1px] group-active:opacity-40 transition-opacity"
+                                />
+                            )}
+                            
+                            <Icon size={18} className="relative z-10 opacity-80 group-active:scale-110 transition-transform" />
+                            <span className="relative z-10 text-[8px] font-black uppercase tracking-tighter text-center leading-tight px-1 max-w-full truncate">
+                                {pad.label}
+                            </span>
+
+                            {/* Active Indicator */}
+                            {pad.isActive && (
+                                <div className="absolute top-1 right-1 w-1 h-1 rounded-full bg-current animate-ping" />
+                            )}
+                        </button>
+                    );
+                })}
+            </div>
+
+            {/* Sub-label info for selected/active pad or status */}
+            <div className="bg-white/5 border border-white/10 p-3 rounded-2xl flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center text-accent">
+                    <LayoutGrid size={20} />
+                </div>
+                <div className="flex flex-col">
+                    <span className="text-[10px] font-black uppercase text-slate-500">Flux de Synchronisation</span>
+                    <span className="text-xs font-bold text-white">Agglomération Multi-OS Ready</span>
+                </div>
+            </div>
+        </div>
+    );
 
     const renderDicePad = () => (
         <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -436,6 +532,7 @@ const RemoteControl: React.FC = () => {
 
             {/* Scrollable Content */}
             <div className="flex-1 overflow-y-auto p-6 custom-scrollbar pb-32">
+                {activeTab === 'pads' && renderUniversalPads()}
                 {activeTab === 'dice' && renderDicePad()}
                 {activeTab === 'sounds' && renderSoundboard()}
                 {activeTab === 'storyboard' && renderStoryboard()}
@@ -455,6 +552,13 @@ const RemoteControl: React.FC = () => {
 
             {/* Bottom Navigation */}
             <div className="fixed bottom-6 left-6 right-6 h-20 bg-app-surface/80 border border-white/10 rounded-[2.5rem] backdrop-blur-2xl shadow-2xl flex items-center justify-around px-2 z-50">
+                <button 
+                    onClick={() => setActiveTab('pads')}
+                    className={`flex flex-col items-center gap-1 transition-all ${activeTab === 'pads' ? 'text-accent scale-110' : 'text-slate-500'}`}
+                >
+                    <LayoutGrid size={20} />
+                    <span className="text-[7px] font-black uppercase tracking-widest">Pads</span>
+                </button>
                 <button 
                     onClick={() => setActiveTab('dice')}
                     className={`flex flex-col items-center gap-1 transition-all ${activeTab === 'dice' ? 'text-accent scale-110' : 'text-slate-500'}`}

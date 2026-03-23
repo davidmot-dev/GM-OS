@@ -4,7 +4,7 @@ import { useJournalStore } from '../journal/useJournalStore';
 
 import type { 
     MapToken, MapPing, MagicShape, MagicStyle, MagicEffect, 
-    DangerZonePreset, DangerZone, FogMode, MapTool, WeatherType 
+    DangerZonePreset, DangerZone, FogMode, MapTool, WeatherType, MapPreset 
 } from './types';
 
 interface MapState {
@@ -90,9 +90,10 @@ interface MapState {
     updateDangerZone: (id: string, updates: Partial<DangerZone>) => void;
     removeDangerZone: (id: string) => void;
     clearDangerZones: () => void;
+    attachZoneToToken: (zoneId: string, tokenId: string | null) => void;
     
     // Danger Zone Presets
-    addDangerZonePreset: (preset: Omit<DangerZonePreset, 'id'>) => void;
+    addDangerZonePreset: (preset: Omit<DangerZonePreset, 'id'>) => DangerZonePreset;
     removeDangerZonePreset: (id: string) => void;
     updateDangerZonePreset: (id: string, updates: Partial<DangerZonePreset>) => void;
     setSelectedDangerPresetId: (id: string | null) => void;
@@ -154,9 +155,24 @@ interface MapState {
     clearProjectedState: () => void;
     dangerShape: 'circle' | 'rect' | 'line' | 'cone';
     setDangerShape: (shape: 'circle' | 'rect' | 'line' | 'cone') => void;
+
+    // Overrides for drawing
+    auraOverride: boolean;
+    setAuraOverride: (val: boolean) => void;
+    difficultTerrainOverride: boolean;
+    setDifficultTerrainOverride: (val: boolean) => void;
+    movementCostOverride: number;
+    setMovementCostOverride: (val: number) => void;
+
     dangerRotation: number;
     setIsDraggingToken: (val: boolean) => void;
     setSelectedTokenId: (id: string | null) => void;
+
+    // Map Presets
+    mapPresets: MapPreset[];
+    saveCurrentAsPreset: (name: string) => void;
+    loadPreset: (id: string) => void;
+    deletePreset: (id: string) => void;
 }
 
 export const useMapStore = create<MapState>()(
@@ -202,14 +218,78 @@ export const useMapStore = create<MapState>()(
             selectedDangerPresetId: 'preset-fire',
             dangerShape: 'rect',
             setDangerShape: (dangerShape) => set({ dangerShape }),
+            setAuraOverride: (auraOverride) => set({ auraOverride }),
+            setDifficultTerrainOverride: (difficultTerrainOverride) => set({ difficultTerrainOverride }),
+            setMovementCostOverride: (movementCostOverride) => set({ movementCostOverride }),
             dangerRotation: 0,
-            setDangerRotation: (dangerRotation) => set({ dangerRotation }),
+            setDangerRotation: (dangerRotation: number) => set({ dangerRotation }),
+
+            mapPresets: [],
+            saveCurrentAsPreset: (name) => {
+                const state = get();
+                const newPreset: MapPreset = {
+                    id: Math.random().toString(36).substring(2, 9),
+                    name,
+                    mapUrl: state.mapUrl,
+                    mapName: state.mapName,
+                    isVideo: state.isVideo,
+                    tokens: state.tokens,
+                    dangerZones: state.dangerZones,
+                    magicEffects: state.magicEffects,
+                    weatherType: state.weatherType,
+                    weatherIntensity: state.weatherIntensity,
+                    isGridEnabled: state.isGridEnabled,
+                    gridSize: state.gridSize,
+                    gridColor: state.gridColor,
+                    gridOpacity: state.gridOpacity,
+                    fogDataUrl: state.fogDataUrl,
+                    mapWidth: state.mapWidth,
+                    mapHeight: state.mapHeight,
+                    zoom: state.zoom,
+                    panX: state.panX,
+                    panY: state.panY,
+                };
+                set(state => ({ mapPresets: [...state.mapPresets, newPreset] }));
+            },
+            loadPreset: (id) => {
+                const preset = get().mapPresets.find(p => p.id === id);
+                if (!preset) return;
+                set({
+                    mapUrl: preset.mapUrl,
+                    mapName: preset.mapName,
+                    isVideo: preset.isVideo,
+                    tokens: preset.tokens,
+                    dangerZones: preset.dangerZones,
+                    magicEffects: preset.magicEffects,
+                    weatherType: preset.weatherType,
+                    weatherIntensity: preset.weatherIntensity,
+                    isGridEnabled: preset.isGridEnabled,
+                    gridSize: preset.gridSize,
+                    gridColor: preset.gridColor,
+                    gridOpacity: preset.gridOpacity,
+                    fogDataUrl: preset.fogDataUrl,
+                    mapWidth: preset.mapWidth,
+                    mapHeight: preset.mapHeight,
+                    zoom: preset.zoom,
+                    panX: preset.panX,
+                    panY: preset.panY,
+                });
+                
+                // Trigger sync if projecting
+                if (get().projectionTarget) get().syncToPlayers();
+            },
+            deletePreset: (id) => {
+                set(state => ({ mapPresets: state.mapPresets.filter(p => p.id !== id) }));
+            },
 
 
             // UI Defaults
             currentTool: 'brush',
             magicStyle: 'fire',
             magicShape: 'circle',
+            auraOverride: false,
+            difficultTerrainOverride: false,
+            movementCostOverride: 2,
             fogMode: 'reveal',
 
             brushSize: 50,
@@ -281,9 +361,28 @@ export const useMapStore = create<MapState>()(
             },
 
             updateToken: (id, updates) => {
+                const state = get();
+                const oldToken = state.tokens.find(t => t.id === id);
+                
                 set(state => ({
                     tokens: state.tokens.map(t => t.id === id ? { ...t, ...updates } : t)
                 }));
+
+                // Workspace Sync v2: Update linked Auras (move them with the token)
+                if (oldToken && (updates.x !== undefined || updates.y !== undefined)) {
+                    const dx = (updates.x ?? oldToken.x) - oldToken.x;
+                    const dy = (updates.y ?? oldToken.y) - oldToken.y;
+
+                    if (dx !== 0 || dy !== 0) {
+                        set(state => ({
+                            dangerZones: state.dangerZones.map(z => 
+                                z.parentTokenId === id 
+                                ? { ...z, x: z.x + dx, y: z.y + dy } 
+                                : z
+                            )
+                        }));
+                    }
+                }
                 
                 if (get().projectionTarget) get().syncToPlayers();
             },
@@ -432,10 +531,7 @@ export const useMapStore = create<MapState>()(
                     projectedMapUrl: state.mapUrl,
                     projectedIsVideo: state.isVideo,
                     projectedFogDataUrl: state.fogDataUrl,
-                    projectedTokens: state.tokens.filter(t => {
-                        // Simplified: Project all visible tokens. Fog of War now handled via Z-Index on Player Hub.
-                        return true;
-                    }),
+                    projectedTokens: state.tokens,
                     projectedPings: [...state.pings],
                     projectedMagicEffects: [...state.magicEffects],
                     projectedWeatherType: state.weatherType,
@@ -505,12 +601,23 @@ export const useMapStore = create<MapState>()(
                 if (get().projectionTarget) get().syncToPlayers();
             },
 
+            attachZoneToToken: (zoneId, tokenId) => {
+                set(state => ({
+                    dangerZones: state.dangerZones.map(z => 
+                        z.id === zoneId ? { ...z, parentTokenId: tokenId || undefined, isAura: !!tokenId } : z
+                    )
+                }));
+                if (get().projectionTarget) get().syncToPlayers();
+            },
+
             // Presets Actions
             addDangerZonePreset: (preset) => {
                 const id = Math.random().toString(36).substring(2, 9);
+                const newPreset = { ...preset, id };
                 set(state => ({
-                    dangerZonePresets: [...state.dangerZonePresets, { ...preset, id }]
+                    dangerZonePresets: [...state.dangerZonePresets, newPreset]
                 }));
+                return newPreset;
             },
 
             removeDangerZonePreset: (id) => {
@@ -530,11 +637,11 @@ export const useMapStore = create<MapState>()(
         {
             name: 'gmos-map-storage',
             version: 1,
-            migrate: (persistedState: any, version: number) => {
-                const state = persistedState as any;
+            migrate: (persistedState: unknown, version: number) => {
+                const state = persistedState as MapState;
                 if (version === 0) {
                     console.log("[MapStore] Migration vers v1: mise à jour des presets par défaut");
-                    const updatedPresets = state.dangerZonePresets?.map((p: any) => {
+                    const updatedPresets = state.dangerZonePresets?.map((p: DangerZonePreset) => {
                         if (p.id === 'preset-fire' && !p.hueSceneId) {
                             return { ...p, hueSceneId: 'fire-scene-id', audioAtmosphereId: 'fire-ambience-id' };
                         }
@@ -548,7 +655,7 @@ export const useMapStore = create<MapState>()(
                     });
                     return { ...state, dangerZonePresets: updatedPresets || state.dangerZonePresets };
                 }
-                return state;
+                return state as unknown as MapState;
             },
             partialize: (state) => ({
                 mapUrl: state.mapUrl,
@@ -574,6 +681,7 @@ export const useMapStore = create<MapState>()(
                 isDraggingToken: state.isDraggingToken,
                 selectedTokenId: state.selectedTokenId,
                 projectionTarget: state.projectionTarget,
+                mapPresets: state.mapPresets,
 
                 projectedMapUrl: state.projectedMapUrl,
                 projectedIsVideo: state.projectedIsVideo,

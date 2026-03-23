@@ -412,7 +412,11 @@ const MapCanvas: React.FC = () => {
                 color: preset?.color || '#ff0000',
                 hueSceneId: preset?.hueSceneId,
                 audioAtmosphereId: preset?.audioAtmosphereId,
-                audioPadId: preset?.audioPadId
+                audioPadId: preset?.audioPadId,
+                isAura: state.auraOverride || preset?.isAura,
+                isDifficultTerrain: state.difficultTerrainOverride || preset?.isDifficultTerrain,
+                movementCost: state.difficultTerrainOverride ? state.movementCostOverride : (preset?.isDifficultTerrain ? preset?.movementCost : undefined),
+                parentTokenId: ((state.auraOverride || preset?.isAura) && state.selectedTokenId) ? state.selectedTokenId : undefined
             });
             setDangerPreview(null);
         }

@@ -70,7 +70,7 @@ class MusicDeck {
      * @param url Chemin ou ID de la piste à charger.
      */
     async loadTrack(url: string) {
-        console.log(`[MusicDeck] Loading track: ${url}`);
+        console.log(`[MusicDeck] loadTrack(url: "${url}", type: ${typeof url}, length: ${url?.length})`);
 
         // On libère l'ancien handle avant de charger
         this.audioElement.pause();
@@ -84,15 +84,21 @@ class MusicDeck {
         let finalUrl = url;
 
         if (url && url.startsWith('m-')) {
-            const { getMediaBlob } = useMediaStore.getState();
+            const mediaStore = useMediaStore.getState();
+            if (!mediaStore.isInitialized) {
+                console.log('[MusicDeck] MediaStore not initialized, waiting...');
+                await mediaStore.initDB();
+            }
             console.log(`[MusicDeck] Fetching MediaBlob for: ${url}`);
-            const blob = await getMediaBlob(url);
+            const blob = await mediaStore.getMediaBlob(url);
             if (blob) {
                 this.objectUrl = URL.createObjectURL(blob);
                 finalUrl = this.objectUrl;
                 console.log(`[MusicDeck] Blob URL created: ${finalUrl}`);
             } else {
-                console.warn(`[MusicDeck] MediaBlob not found for ID: ${url}`);
+                console.error(`[MusicDeck] MediaBlob not found for ID: ${url}`);
+                if (window.useToastStore) window.useToastStore.getState().gmToast('error', `Fichier audio introuvable dans la base de données.`);
+                return; // Abort loading
             }
         } else if (url) {
             // Transformation des chemins locaux Windows en URLs valides pour l'élément audio

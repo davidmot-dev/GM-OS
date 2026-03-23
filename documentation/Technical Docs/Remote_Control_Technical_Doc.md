@@ -39,9 +39,16 @@ Les messages sont échangés au format **JSON**.
 ```
 Types supportés :
 - `dice:roll`, `dice:clear`
-- `sound:trigger`, `sound:volume`, `sound:stop-all`
+- `sound:trigger` (via `SoundController`), `sound:volume`, `sound:stop-all`
+- `ambient:trigger` (Theme auto-play/toggle logic), `ambient:scene`
 - `combat:update-hp`, `combat:next-turn`
 - `storyboard:trigger`
+
+### 4. Specialized Trigger Logic (Main PC)
+Pour garantir une expérience fluide, certaines actions ne sont pas de simples appels aux stores :
+- **Sound-OS** : Les triggers distants utilisent `SoundController.togglePad()`. Cela garantit que si le tampon audio (buffer) n'était pas pré-chargé (onglet fermé), il est chargé dynamiquement avant la lecture. Cela gère aussi le déblocage forcé du contexte audio et la synchro Hue.
+- **Ambient-OS** : Le trigger d'un thème (`loadTheme`) est suivi d'un auto-play de toutes les pistes actives (volume > 0). Appuyer à nouveau sur le même pad déclenche un `fadeOutAll()`, simulant un bouton On/Off physique.
+- **Music-OS** : Les actions `playPad` forcent la résolution de l'ID MediaStore (`m-xxxx`) avant l'assignation à la platine.
 
 ### PC ➔ Mobile (Sync)
 ```json

@@ -15,8 +15,8 @@ Le rendu est organisé par un empilement de calques utilisant les Z-index CSS. C
 | **Fond** | `10` | `img` / `video` | Carte de base chargée par le MJ. |
 | **Grille** | `15` | `canvas` | Grille tactique superposée. |
 | **Pions (Tokens)** | `16` | `MapTokenNode` | PNJ et PJ. Placés sous le brouillard. |
-| **Magie** | `17` | `MagicLayer` | Effets de sorts et auras. Placés sous le brouillard. |
-| **Zones de Danger** | `18` | `DangerZoneLayer` | Zones d'alerte. |
+| **Auras & Magie** | `17` | `MapAuraLayer` / `MagicLayer` | Effets de sorts et auras mobiles liées aux pions. |
+| **Zones de Danger** | `18` | `DangerZoneLayer` | Zones tactiques statiques ou terrains difficiles. |
 | **Brouillard** | `20` | `canvas` | **Masque Principal**. Recouvre tout ce qui précède. |
 | **Interface / Pings** | `30+` | `MapPingLayer` | Notifications et pings (doivent rester visibles). |
 

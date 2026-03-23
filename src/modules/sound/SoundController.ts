@@ -44,6 +44,12 @@ export class SoundController {
             // PLAY
             store.setPadActive(padId, true);
 
+            // Fetch and decode if not pre-loaded (e.g., triggered from Remote while Sound-OS tab is closed)
+            if (!soundEngine.hasBuffer(padId)) {
+                console.log(`[SoundController] Audio for ${padId} not loaded. Loading now...`);
+                await soundEngine.loadAudio(padId, pad.filePath);
+            }
+
             soundEngine.play(padId, pad.volume, () => {
                 store.setPadActive(padId, false);
                 if (pad.linkedLightSceneId) {

@@ -188,6 +188,134 @@ L'esthétique ne doit jamais primer sur la "découvrabilité" des fonctions réc
 
 **Solution :** Introduction du **HUD Tactique (Side Panel)**. Au lieu de surcharger la grille de médias avec des contrôles complexes, l'utilisation d'un panneau latéral dédié permet de regrouper les actions d'indexation (Tags, Campagnes) dans un espace spacieux et ergonomique. La restauration a également permis d'implémenter la **Liaison Automatique**, réduisant la charge cognitive du MJ en session.
 
+## 17. Workspace Persistence & Campagne Sync (Layout Manager)
+
+### 17.1 Défi
+
+Synchroniser l'état de l'interface (module, thèmes, panneaux) lors du changement de campagne sans provoquer de boucles infinies où le chargement d'un layout déclenche immédiatement sa propre sauvegarde (écrasant potentiellement les données avec des états transitoires).
+
+### 17.2 Leçon
+
+La synchronisation d'état bidirectionnelle nécessite un "gardien" de flux.
+
+**Solution :** Utilisation d'un `isRestoring` ref dans le hook `useLayoutManager`. Ce drapeau bloque temporairement l'auto-save pendant que les actions du store (`setTheme`, `setActiveModule`) s'exécutent. Un court délai (`setTimeout`) assure que le cycle de rendu React est terminé avant de réactiver la surveillance des changements.
+
+## 18. Refactoring de Modules Complexes (Media Hub)
+
+### 18.1 Défi
+
+Un composant monolithique (`MediaHub.tsx`) devient illisible et difficile à maintenir dès qu'il intègre des fonctionnalités transverses (Recherche, Grille, Détails Tactiques, Previews).
+
+### 18.2 Leçon
+
+L'extraction préventive de sous-composants spécialisés (`TacticalDetailPanel`, `MediaItemThumbnail`) améliore non seulement la lisibilité mais aussi la performance (moindre surface de re-render).
+
+**Solution :** Découpage du Media Hub en une "Orchestration" (`MediaHub.tsx`) et des "Éléments de Structure" atomiques. Cela a permis d'implémenter le panneau latéral HUD Obsidian de manière isolée, sans risquer de casser la grille de navigation principale ou le moteur de recherche.
+
+---
+
+## 19. Robustesse des Stores (Optional Chaining)
+
+### 19.1 Défi
+
+L'introduction de services automatisés (ex: `MediaCleanupService`) interagissant avec plusieurs stores Zustand peut provoquer des plantages "Cannot read property of undefined" si un store est accédé avant son initialisation complète ou si une propriété attendue est absente.
+
+### 19.2 Leçon
+
+L'utilisation systématique du **Optional Chaining (`?.`)** et des valeurs par défaut est impérative pour les services de maintenance transverse.
+
+**Solution :** Refactoring des accesseurs de store dans les boucles de nettoyage. Au lieu de `store.subStore.items`, l'utilisation de `store?.subStore?.items ?? []` garantit que le service ne casse jamais le thread principal de l'application, même en cas d'incohérence passagère des données.
+
+## 20. Contexte Matériel & UX Adaptative (Workspace Sync v2)
+
+### 20.1 Défi
+
+Offrir une expérience utilisateur fluide sur des setups variés (un portable seul vs un bureau avec 3 écrans) sans forcer le MJ à redimensionner ses fenêtres manuellement à chaque changement de matériel.
+
+### 20.2 Leçon
+
+L'interface doit être une fonction de l'environnement matériel, pas seulement de l'état logique.
+
+**Solution :** Branchement sur les événements `screen` d'Electron via le bridge. La connaissance du `displayCount` dans le store global permet de définir des **règles de priorité de rendu** (ex: auto-clôture des panneaux secondaires sur petit écran). Cela transforme GM-OS d'une application statique en un environnement "pro-actif" qui libère de la charge cognitive au MJ.
+
+---
+
 ---
 > [!TIP]
 > **Règle d'or GM-OS :** Toute nouvelle fonctionnalité de synchronisation doit être testée avec un payload différentiel et un asset local pour garantir la fluidité sur les terminaux MJ et Joueurs. Toute donnée issue d'une IA doit passer par un validateur de type avant d'atteindre le DOM.
+
+## 21. Refonte d'Éditeurs Modulaires (Obisidian Nexus)
+
+### 21.1 Défi
+
+L'ajout de nombreuses fonctionnalités (Auras, Mobilité, Sync Audio/Lumière) à un éditeur monolithique le rend illisible et difficile à utiliser, surtout sur des écrans chargés.
+
+### 21.2 Leçon
+
+Le découpage en **sous-composants métier** (`TacticalSwitch`, `ObsidianSelect`) et une architecture par colonnes améliore radicalement l'expérience utilisateur.
+
+**Solution :** Refonte de l'Éditeur de Danger en style **Obsidian Nexus**. L'interface a été scindée en trois zones claires : Sélection (liste latérale), Configuration Visuelle (nom/couleur), et Configuration Tactique/Audio (toggles et dropdowns). L'adoption du **Glassmorphism** et du mode **Large Modal (6xl)** permet de présenter toutes les options complexes sans aucun défilement nécessaire sur la plupart des résolutions.
+
+## 22. Recherche Transverse & Clavier Global (Spotlight)
+
+### 22.1 Défi
+
+Permettre une recherche rapide à travers plusieurs stores Zustand indépendants (Session, Music, Ambient, Sound) sans créer de dépendances circulaires ou de surcharges de rendu massives lors de la saisie de texte.
+
+### 22.2 Leçon
+
+Le calcul des résultats doit être centralisé dans un hook dédié et les actions d'exécution doivent être injectées dynamiquement pour rester découplé des modules.
+
+**Solution :** Implémentation du hook `useSpotlight`. Il agrège les données de 4 stores différents via un `useMemo` optimisé qui ne recalcule que si la `query` ou les listes sources changent. Le raccourci clavier est géré par un `useEffect` sur `window` au niveau racine, garantissant une disponibilité permanente (`z-index: 9999`).
+
+## 23. Résolution d'Avatars & Performance (Social Nexus v2)
+
+### 23.1 Défi
+
+Le rendu d'un graphe social contenant des dizaines d'entités provoquait des saccades car chaque nœud tentait de résoudre son avatar (URL locale vs web vs blob) simultanément, surchargeant le thread principal.
+
+### 23.2 Leçon
+
+La résolution de média doit être asynchrone et bénéficier d'une couche de cache dédiée (Memoization).
+
+**Solution :** Création du service **`useAvatarResolver`**. Ce hook encapsule la logique complexe de priorité des images (Portrait > Token > Fallback) et utilise un cache interne pour éviter de recalculer les URLs à chaque frame du canvas. Le résultat est une fluidité de 60fps constante sur le Social Nexus, même avec des campagnes massives.
+
+## 24. Persistance des Workspaces (Layout Manager)
+
+### 24.1 Défi
+
+Restaurer la configuration précise des fenêtres lors du changement de campagne sans écraser les données par mégarde.
+
+### 24.2 Leçon
+
+Il est crucial de distinguer les changements d'état initiés par l'utilisateur de ceux initiés par le système de restauration.
+
+**Solution :** Utilisation d'un flag `isRestoring` dans le `LayoutManager`. Cela empêche l'auto-save d'enregistrer des états intermédiaires pendant la phase de chargement, garantissant l'intégrité de la configuration visuelle de chaque campagne.
+
+---
+
+## 25. Dépendances de Nettoyage Cross-Stores (Media Cleanup)
+
+### 25.1 Défi
+
+L'introduction de nouveaux modules (Music OS, Ambient OS) a créé une faille dans le service de nettoyage automatique. Le script de nettoyage ne scannait que les stores "historiques", ignorant les nouvelles playlists et thèmes. Cela a conduit à la suppression massive de fichiers audio actifs, perçus à tort comme orphelins.
+
+### 25.2 Leçon
+
+Toute nouvelle structure de données utilisant des IDs du MediaStore (`m-xxxx`) **doit** obligatoirement être enregistrée dans la whitelist du `MediaCleanupService`.
+
+**Solution :** Refactoring du service pour inclure l'interrogation systématique de `useMusicStore` (playlists/pads) et `useAmbientStore` (presets/tracks). La robustesse du nettoyage est désormais liée à l'exhaustivité de la collecte des références.
+
+## 26. Activation Audio Distante & Autoplay Policy
+
+### 26.1 Défi
+
+Les navigateurs bloquent le son tant qu'une interaction utilisateur n'a pas eu lieu sur la page. Lors d'un contrôle via **Remote Pad**, l'interaction a lieu sur le mobile, pas sur le PC. Le son restait donc "suspendu" sur le PC hôte, même si l'ordre de lecture était bien reçu.
+
+### 26.2 Leçon
+
+La réception d'un signal WebSocket distant doit être considérée comme une interaction utilisateur valide pour forcer la reprise du contexte audio.
+
+**Solution :** Ajout systématique de `context.resume()` dans les méthodes `play()` de tous les moteurs audio (`Music`, `Sound`, `Ambient`). De plus, pour les thèmes Ambient, le trigger distant force désormais l'état de lecture (`isPlaying: true`) pour contourner le comportement par défaut de simple chargement passif.
+
+---

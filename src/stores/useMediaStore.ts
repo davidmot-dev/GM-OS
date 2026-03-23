@@ -295,13 +295,23 @@ export const useMediaStore = create<MediaStoreState>((set, get) => ({
 
     getMediaBlob: async (id: string) => {
         try {
+            console.log(`[MediaStore] getMediaBlob called for ID: ${id}`);
             const db = await getDB();
             const tx = db.transaction(STORE_NAME, 'readonly');
             const store = tx.objectStore(STORE_NAME);
             const item = await store.get(id);
-            return item?.blob as Blob | undefined;
+            if (!item) {
+                console.warn(`[MediaStore] Item not found in DB: ${id}`);
+                return undefined;
+            }
+            if (!item.blob) {
+                console.warn(`[MediaStore] Item found but has no Blob: ${id}`);
+                return undefined;
+            }
+            console.log(`[MediaStore] Blob successfully retrieved for ID: ${id} (${item.blob.size} bytes)`);
+            return item.blob as Blob | undefined;
         } catch (err) {
-            console.error('Failed to get media blob:', err);
+            console.error(`[MediaStore] Error getting media blob for ID: ${id}:`, err);
             return undefined;
         }
     },

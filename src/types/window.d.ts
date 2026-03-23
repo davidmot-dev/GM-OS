@@ -126,6 +126,7 @@ declare global {
         highlightMapToken?: (name: string) => void;
         app?: {
             quit: () => void;
+            onDisplayChanged: (callback: (count: number) => void) => () => void;
         };
         ai?: {
             listDocs: () => Promise<AIDocument[]>;

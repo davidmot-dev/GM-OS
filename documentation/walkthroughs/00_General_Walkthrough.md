@@ -9,6 +9,10 @@ La version 5.2 marque une étape majeure dans l'intégration de l'Intelligence A
 - **Refonte UI Cortex** : Le cerveau tactique a été transformé en un widget horizontal discret mais puissant, libérant l'espace visuel pour la cartographie.
 - **Sécurité Windows (gmos://)** : Migration réussie vers un protocole sécurisé pour le chargement massif de médias locaux.
 - **AI Persona Forge (V5.4)** : Génération séquentielle de 7 assistants IA (GEMS) avec support optimisé pour **Ollama** et isolation intelligente du contexte (Système vs Campagne).
+- **Social Nexus v2 (V5.5)** : Refonte du graphe de relations avec résolution d'avatars haute performance (`useAvatarResolver`), filtrage par faction et navigation directe.
+- **Universal Search - Spotlight (V5.6)** : Recherche globale ultra-rapide (`CMD+K`) à travers tous les modules (Entités, Maps, Audio, Règles).
+- **Danger Zone Editor (V5.6)** : Refonte premium en mode **Obsidian Nexus** avec support des auras mobiles et terrains complexes.
+- **Audio & Media Hub Stability (V5.7)** : Correction critique des moteurs audio ( Music, Sound, Ambient) pour le contrôle à distance et protection du Media Hub contre le nettoyage automatique abusif. [Détails techniques](file:///C:/Users/david/.gemini/antigravity/brain/d493bc42-29db-4269-b5ae-9023789a04d7/walkthrough_audio_engines_fixes.md)
 
 ## 🧱 Architecture Fondamentale
 This walkthrough demonstrates the latest improvements to the GM-OS tactical ecosystem, focusing on seamless combat management from Map-OS and overall system robustness.
@@ -36,6 +40,8 @@ The tactical audio engine is now hardened against corrupted or missing assets.
 - **Decoding Protection**: `AudioCurationService` now uses try-catch blocks to catch `EncodingError`.
 - **Automatic Fallback**: If a specific sound (like `proximity_alarm.mp3`) fails to decode, the system seamlessly falls back to a stable sound (`target_lock.mp3`).
 - **Clean Registry**: Turn-based audio triggers now properly reset when conditions are cleared, allowing for reliable re-triggering of proximity alarms.
+- **Remote Activation**: AudioContext is now forcefully resumed upon remote pad trigger, ensuring sound plays even if the PC has had no direct keyboard/mouse interaction.
+- **Media Hub Safety**: The automatic cleanup service has been hardened to respect Music and Ambient playlists, preventing the accidental deletion of active audio files. [Consulter le rapport de stabilité](file:///C:/Users/david/.gemini/antigravity/brain/d493bc42-29db-4269-b5ae-9023789a04d7/walkthrough_audio_engines_fixes.md)
 
 ## 🎨 Lighting & Color Fixes
 
@@ -143,3 +149,19 @@ L'orchestrateur de moments a été profondément amélioré pour devenir le cent
 - **Interface Contextuelle** : Les champs de saisie manuelle d'IDs ont été remplacés par des menus déroulants intelligents (Music Pads, Light Scenes, Media List).
 - **Intégration Ambient-OS** : Support natif du rappel des scènes de mixage complexes pré-enregistrées.
 - **Stabilité Renforcée** : Correction des erreurs de rendu et optimisation de la réactivité Zustand sur les sélecteurs.
+
+## 🔍 Spotlight : Votre Assistant de Navigation
+
+Le **Universal Search** est devenu le centre de commande rapide de GM-OS :
+
+- **Raccourci Omniprésent** : `CMD+K` ouvre la recherche quel que soit le module actif.
+- **Inter-Stores** : Résultats fédérés depuis Session, Music, Ambient et Sound stores.
+- **Zéro Souris** : Navigation 100% clavier pour une fluidité maximale en session.
+
+## ☢️ Map-OS : Zones de Danger v2
+
+L'édition tactique passe au niveau supérieur avec le design **Obsidian Nexus** :
+
+- **Modularité Colonne** : Une interface claire et sans défilement pour configurer les effets complexes.
+- **Auras Dynamiques** : Les zones (sorts, lumière) suivent désormais les pions dans leurs déplacements.
+- **Calcul Tactique** : Affichage dynamique du coût de mouvement pour les terrains difficiles.

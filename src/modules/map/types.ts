@@ -41,6 +41,9 @@ export interface DangerZonePreset {
     hueSceneId?: string;
     audioAtmosphereId?: string;
     audioPadId?: string;
+    isAura?: boolean;
+    isDifficultTerrain?: boolean;
+    movementCost?: number; // 0.5, 2, etc.
 }
 
 export interface DangerZone {
@@ -59,8 +62,41 @@ export interface DangerZone {
     audioAtmosphereId?: string;
     audioPadId?: string;
     activeTokenIds: string[]; // Tokens actuellement à l'intérieur
+    parentTokenId?: string; // Si défini, la zone suit ce jeton (Aura)
+    isAura?: boolean;
+    isDifficultTerrain?: boolean;
+    movementCost?: number;
 }
 
 export type FogMode = 'reveal' | 'hide';
 export type MapTool = 'brush' | 'rect' | 'circle' | 'move_token' | 'ping' | 'magic' | 'danger';
 export type WeatherType = 'none' | 'rain' | 'snow' | 'smoke';
+
+export interface MapPreset {
+    id: string;
+    name: string;
+    mapUrl: string | null;
+    mapName: string | null;
+    isVideo: boolean;
+    // Data
+    tokens: MapToken[];
+    dangerZones: DangerZone[];
+    magicEffects: MagicEffect[];
+    // Environment
+    weatherType: WeatherType;
+    weatherIntensity: number;
+    // Grid
+    isGridEnabled: boolean;
+    gridSize: number;
+    gridColor: string;
+    gridOpacity: number;
+    // Fog
+    fogDataUrl: string | null;
+    // Scale & View
+    mapWidth: number;
+    mapHeight: number;
+    zoom: number;
+    panX: number;
+    panY: number;
+}
+

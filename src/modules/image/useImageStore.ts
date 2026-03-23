@@ -71,6 +71,7 @@ interface ImageState {
     /** Navigue manuellement dans la séquence : -1 (précédent), 1 (suivant) */
     navigateSequence: (direction: -1 | 1) => void;
 
+
     /** Supprime tous les médias de la bibliothèque */
     clearAll: () => void;
     /** Applique un instantané de l'état pour la persistance */
@@ -402,6 +403,7 @@ export const useImageStore = create<ImageState>()(
                     });
                 }
             },
+
 
             reset: () => {
                 get().blackoutAll();

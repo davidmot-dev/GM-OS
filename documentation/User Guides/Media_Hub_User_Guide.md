@@ -9,21 +9,23 @@ Le **Media Hub** est la bibliothèque centrale de GM-OS v5. C'est ici que sont s
 Le Media Hub n'est pas qu'un simple explorateur de fichiers ; c'est une base de données optimisée pour le jeu de rôle :
 
 1. **Stockage Persistant (IndexedDB)** : Vos fichiers sont stockés localement dans le navigateur/application. Ils restent disponibles même si vous déplacez les fichiers originaux sur votre ordinateur.
-2. **Multi-Formats** : Support natif des images, de l'audio, de la vidéo et des documents (PDF, texte, markdown).
-3. **Système de Tags** : Une méthode d'organisation transversale pour retrouver vos assets par thème plutôt que par dossier.
-4. **Recherche Instantanée** : Filtrez des centaines de fichiers en quelques millisecondes.
+2. **Multi-Formats** : Support natif des images, de l'audio (MP3, WAV), de la vidéo et des documents (PDF, MD).
+3. **Système de Tags & Campagnes** : Une méthode d'organisation transversale pour retrouver vos assets par thème ou par aventure.
+4. **Recherche Instantanée** : Filtrez des centaines de fichiers par nom, type ou tag en quelques millisecondes.
 
 ## 🚀 Importer et Gérer vos Médias
 
 ### Ajout de Fichiers
+
 - Cliquez sur **"Importer des fichiers"** pour ouvrir le sélecteur de votre système.
 - GM-OS trie automatiquement les fichiers par type :
-    - **Images** : JPG, PNG, WEBP, GIF.
-    - **Audio** : MP3, WAV, OGG, M4A.
-    - **Vidéo** : MP4, WebM.
-    - **Documents** : PDF, TXT, DOCX, MD, RTF.
+  - **Images** : JPG, PNG, WEBP, GIF.
+  - **Audio** : MP3, WAV, OGG, M4A.
+  - **Vidéo** : MP4, WebM.
+  - **Documents** : PDF, TXT, DOCX, MD, RTF.
 
 ### Actions sur les Fichiers
+
 En survolant un média, plusieurs icônes apparaissent :
 - **Aperçu (🔍/▶️)** : Affiche l'image en grand, lance la lecture audio avec contrôles, ou ouvre la vidéo.
 - **Sélectionner (✔️)** : Utilise ce média dans le module qui a ouvert le Hub (ex: choisir une image pour Image OS).
@@ -38,19 +40,22 @@ Les tags sont le cœur de l'organisation du Media Hub. Un même fichier peut avo
 - **Filtrer par Tag** : Utilisez la barre latérale droite pour sélectionner un tag. Seuls les fichiers correspondants s'afficheront.
 
 ### Filtrage par Type
+
 Dans la barre d'outils supérieure, vous pouvez isoler un type de média spécifique :
+
 ## 🛡️ Panneau de Détails Tactique (Side Panel)
 
-En cliquant sur n'importe quel média, un panneau latéral **HUD Obsidian** s'ouvre pour offrir un contrôle approfondi :
-- **Visualisation HD** : Aperçu sans quitter la grille.
-- **Gestion des Campagnes** : Des badges interactifs permettent de lier/délier le média à une ou plusieurs campagnes en un clic.
-    - **Pleine couleur** : Lié à la campagne.
-    - **Contour uniquement** : Disponible pour liaison.
-- **Métadonnées et Tags** : Accès rapide pour renommer ou modifier l'indexation.
+En cliquant sur un média, un panneau latéral s'ouvre pour offrir un contrôle approfondi :
+
+- **Visualisation HD** : Aperçu rapide sans quitter le flux de travail.
+- **Gestion des Campagnes** : Liez/déliez le média à vos campagnes actives via des badges interactifs.
+- **Indexation Dynamique** : Modifiez les tags et le nom d'usage en temps réel.
+- **Status Tactique** : Affiche si le média est actuellement utilisé dans la session en cours.
 
 ## 🎯 Mode "Operational Focus"
 
 Le Media Hub introduit un **Mode Tactique** (icône de cible dans la barre latérale) :
+
 - **Filtrage Intelligent** : Seuls les assets de la campagne active sont affichés.
 - **Workflow Accéléré** : Idéal pendant une session pour ne pas être pollué par les assets d'autres aventures.
 - **Isolation de Session** : Les nouveaux imports sont automatiquement taggués avec la campagne active si ce mode est activé ou si vous êtes en session.
@@ -60,7 +65,8 @@ Le Media Hub introduit un **Mode Tactique** (icône de cible dans la barre laté
 ## ⚙️ Configuration Technique
 
 - **Stockage Local** : Le Media Hub utilise la technologie IndexedDB. La limite de stockage dépend de votre navigateur/système, mais elle permet généralement de stocker plusieurs gigaoctets de données.
-- **Vider le Hub** : Le bouton **"Vider le Hub"** supprime TOUTES les données stockées. À utiliser avec précaution !
+- **Nettoyage Automatique** : Pour optimiser les performances, GM-OS scanne régulièrement la base de données pour supprimer les fichiers "orphelins" (ceux qui ne sont liés à aucun PNJ, aucune playlist, aucun thème d'ambiance ou aucune campagne). 
+- **Vider le Hub** : Le bouton **"Vider le Hub"** supprime TOUTES les données storeéd. À utiliser avec précaution !
 
 ---
 

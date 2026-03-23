@@ -28,6 +28,8 @@ The service scans the following stores to find media IDs (starting with `m-`) :
 - **SessionOS Store** : Campaigns (wallpapers), entities, players (portraits, tokens), atlas maps, wiki entries.
 - **Combat Store** : Active combatants (avatars).
 - **Sound Store** : Atmosphere pads (file paths).
+- **Music Store** : Playlists and individual pads (URLs).
+- **Ambient Store** : Presets and active tracks (URLs).
 
 ## Trigger Mechanism
 
@@ -43,4 +45,4 @@ Successfully deleted items are logged with :
 
 ---
 
-*Last Updated: 2026-03-21*
+*Last Updated: 2026-03-24*

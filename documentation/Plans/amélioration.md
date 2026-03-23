@@ -13,6 +13,9 @@ Ce document centralise les visions, les victoires techniques et les chantiers fu
 * [x] **AI Persona Forge** : Génération séquentielle de 7 gèmes (assistants) avec isolation RAG (Système vs Campagne).
 * [x] **Vision de l'Oracle** : Narration dynamique basée sur l'état spatial et tactique.
 * [x] **Rule Engine Editor Redesign (v5.6)** : Refonte complète de l'interface avec navigation sidebar, design premium glassmorphisme, gestion d'état Zustand optimisée et intégration IA (Personas).
+* [x] **Danger Zone Editor Redesign (v5.6)** : Refonte premium (Obsidian Nexus) avec modularité, auras et terrains difficiles.
+* [x] **Universal Search (Spotlight)** : Recherche globale ultra-rapide (`CMD+K`) à travers tous les modules (Entités, Maps, Audio, Règles).
+* [x] **Social Nexus v2** : Refonte du graphe de relations avec résolution d'avatars haute performance (`useAvatarResolver`), filtrage par faction et navigation directe.
 * [x] **Smart Faction Mapping** : Synchronisation des allégeances entre NPC Gallery et Combat-OS.
 
 ### 🔊 Audio Engine & Immersion
@@ -20,6 +23,8 @@ Ce document centralise les visions, les victoires techniques et les chantiers fu
 * [x] **Voice-OS Advanced** : Profilage psychologique IA pour les réglages vocaux.
 * [x] **Audio-Map Support** : Lecture synchrone des pistes audio des tokens et cartes animées.
 * [x] **Correctif Robustesse** : Protection contre les valeurs `non-finite` et synchronisation sécurisée du store.
+* [x] **Universal Pad Fixes** : Résolution des problèmes d'autoplay distant et de suspension de contexte.
+* [x] **Media Persistance Fix** : Correction du script de nettoyage pour protéger les musiques et ambiances.
 
 ### 📱 Connectivité & Performance
 * [x] **Tablet Hub 1.0 & Remote Control** : Dashboard second-écran et pilotage déporté via WebSocket.
@@ -34,14 +39,17 @@ Ce document centralise les visions, les victoires techniques et les chantiers fu
 * [x] **Masquage Furtivité** : Filtrage auto des tokens invisibles sur le Player Hub.
 * [x] **Media Hub Tactical Redesign** : Refonte visuelle style Obsidian, nouveau Panneau Tactique HUD et attribution interactive des campagnes.
 * [x] **Auto-Campaign Linking** : Liaison automatique des assets générés (IA) et exportés (Whiteboard) à la campagne active.
+* [x] **Layout Manager v1** : Sauvegarde et restauration automatique des configurations de fenêtres (module actif, thèmes, panels) par campagne.
+* [x] **Workspace Sync v2** : Détection intelligente du nombre d'écrans pour adapter le layout (auto-clôture des panneaux en mode mono-écran).
+* [x] **Map Presets (Map-OS)** : Sauvegarde et rappel rapide des configurations de scène (zones de danger, unités).
 
 ---
 
 ## 🔥 Chantiers en Cours (Roadmap v5.6 & +)
 
 ### 🗺️ Interaction Carte & Météo
-* [ ] **Map Layering & Weather** : Système de calques pour effets météo (Pluie, Neige) et Spell FX.
-* [ ] **Active Danger Zones v2** : Plus de types de zones (Aura, Terrain difficile) avec calcul auto.
+* [x] **Map Layering & Weather** : Système de calques pour effets météo (Pluie, Neige) et Spell FX.
+* [x] **Active Danger Zones v2** : Support des Auras mobiles et terrains difficiles avec calcul auto du coût de mouvement.
 
 ### 📦 Economie & Butin
 * [ ] **Encounter & Loot Generator** : Génération de butin dynamique basée sur le Rule-Engine et tables `.json`.
@@ -49,8 +57,7 @@ Ce document centralise les visions, les victoires techniques et les chantiers fu
 
 ### ⚙️ UX & Workflow
 * [ ] **Master Soundscape Controller** : Curseur master global et bouton "Focus Chat" global (tamisage total).
-* [ ] **Layout Manager** : Sauvegarde des configurations de fenêtres par campagne.
-* [ ] **Universal Search (Spotlight)** : Recherche rapide d'entités, musiques ou règles (CMD+K).
+* [x] **Universal Search (Spotlight)** : Recherche rapide d'entités, musiques ou règles (CMD+K).
 
 ---
 

@@ -65,6 +65,13 @@ export class SoundEngine {
     }
 
     /**
+     * Vérifie si un pad a déjà son buffer audio chargé.
+     */
+    public hasBuffer(padId: string): boolean {
+        return this.audioBuffers.has(padId);
+    }
+
+    /**
      * Charge de manière asynchrone un fichier audio et le décode en AudioBuffer.
      * Gère les IDs du MediaStore (m-xxx) et les URLs classiques.
      * @param padId Identifiant unique du pad associé au son.
@@ -75,10 +82,14 @@ export class SoundEngine {
             let arrayBuffer: ArrayBuffer;
 
             if (filePath && filePath.startsWith('m-')) {
-                const { getMediaBlob } = useMediaStore.getState();
-                const blob = await getMediaBlob(filePath);
+                const mediaStore = useMediaStore.getState();
+                if (!mediaStore.isInitialized) {
+                    await mediaStore.initDB();
+                }
+                const blob = await mediaStore.getMediaBlob(filePath);
                 if (!blob) {
-                    console.warn(`[SoundEngine] MediaBlob not found for ID: ${filePath}`);
+                    console.error(`[SoundEngine] MediaBlob not found for ID: ${filePath}`);
+                    if (window.useToastStore) window.useToastStore.getState().gmToast('error', `Fichier sonore introuvable dans la base de données.`);
                     return;
                 }
                 arrayBuffer = await blob.arrayBuffer();
@@ -107,6 +118,11 @@ export class SoundEngine {
         if (!buffer) {
             console.warn(`[SoundEngine] Cannot play ${padId}, buffer not loaded.`);
             return;
+        }
+
+        // Unsuspend context if needed (for remote triggers)
+        if (this.context.state === 'suspended') {
+            this.context.resume().catch(e => console.error('[SoundEngine] Failed to resume context:', e));
         }
 
         // Stop existing playback for this pad if any

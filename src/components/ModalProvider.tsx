@@ -145,7 +145,7 @@ const ModalProvider: React.FC = () => {
             {type === 'custom' && (
                 <div role="dialog" aria-modal="true" className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
                     <div className={`bg-slate-900 border border-slate-800/50 rounded-[2rem] overflow-hidden shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] animate-in zoom-in-95 duration-300 flex flex-col ${
-                        customVariant === 'global-settings' || customVariant === 'favorite-dossier' || customVariant === 'npc-detail' || customVariant === 'session-summary' || customVariant === 'session-notes'
+                        customVariant === 'global-settings' || customVariant === 'favorite-dossier' || customVariant === 'npc-detail' || customVariant === 'session-summary' || customVariant === 'session-notes' || customVariant === 'danger-preset-editor'
                             ? 'max-w-6xl w-full h-[90vh]' 
                             : 'max-w-2xl w-full max-h-[90vh]'
                     }`}>
