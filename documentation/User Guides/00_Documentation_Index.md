@@ -53,6 +53,7 @@ Bienvenue dans le centre de documentation de **GM-OS v5**. Ce guide est conçu p
 
 - [**Remote Control Architecture**](../Technical%20Docs/Remote_Control_Technical_Doc.md) (Nouveau)
 - [**NPC Live Generator (Architecture IA)**](../Technical%20Docs/NPC_Live_Generator_Technical_Doc.md)
+- [**Combat Projection (Système de Visibilité)**](../Technical%20Docs/Combat_Projection_Technical_Doc.md) (Nouveau)
 - [**Roadmap de Développement**](../walkthroughs/Development_Roadmap.md)
 
 ---

@@ -20,11 +20,18 @@ interface GeminiResponse {
   }[];
 }
 
+/**
+ * Service central pour les interactions avec l'IA.
+ * Gère plusieurs fournisseurs (Gemini, Anthropic, Ollama) et types de contenu (Texte, Image).
+ */
 export class AIService {
   private static instance: AIService;
 
   private constructor() {}
 
+  /**
+   * Récupère l'instance unique du AIService (Singleton).
+   */
   public static getInstance(): AIService {
     if (!AIService.instance) {
       AIService.instance = new AIService();
@@ -32,6 +39,15 @@ export class AIService {
     return AIService.instance;
   }
 
+  /**
+   * Génère une réponse textuelle en utilisant le fournisseur actif.
+   * Intègre automatiquement le contexte RAG et les instructions du Persona (Gem).
+   * @param prompt Question ou consigne de l'utilisateur.
+   * @param customContext Contexte additionnel optionnel.
+   * @param gemId Identifiant du Gem (Persona AI) à utiliser.
+   * @param ragOptions Options de filtrage pour le moteur RAG.
+   * @returns Objet AIResponse contenant le texte et les métadonnées de génération.
+   */
   public async generateText(
     prompt: string, 
     customContext?: string, 
@@ -154,17 +170,58 @@ ${fullContext}`;
       }
     }
 
+    if (activeProvider === 'anthropic') {
+      const apiKey = config.apiKey?.trim();
+      if (!apiKey) throw new Error("Clé API Anthropic non configurée.");
+      const model = config.modelId || 'claude-3-5-sonnet-latest';
+      const url = `https://api.anthropic.com/v1/messages`;
+      
+      if (!window.appBridge?.ai?.proxyRequest) throw new Error("Bridge AI non disponible.");
+
+      try {
+        const bridgeResponse = await window.appBridge.ai.proxyRequest(url, 'POST', {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01'
+        }, {
+          model,
+          max_tokens: 4096,
+          messages: [
+            { role: 'user', content: `${systemPrompt}\n\nUtilisateur: ${prompt}` }
+          ]
+        });
+
+        if (!bridgeResponse.ok) {
+          const errorData = (bridgeResponse.data as { error?: { message?: string } }) || {};
+          throw new Error(`Erreur API Anthropic (${bridgeResponse.status}): ${errorData.error?.message || bridgeResponse.statusText}`);
+        }
+
+        const data = bridgeResponse.data as { content: { type: string; text: string }[] };
+        const textElement = data.content?.find(c => c.type === 'text');
+        const text = textElement?.text || "Pas de réponse.";
+        return { text, metadata: { provider: 'anthropic', model } };
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
+        throw new Error(message || "Erreur Anthropic inconnue.");
+      }
+    }
+
     return {
       text: `[Simulation ${activeProvider}] Réponse basée sur le contexte RAG récupéré (${ragContext.length} chars).`,
       metadata: { provider: activeProvider, model: config.modelId }
     };
   }
 
+  /**
+   * Génère un résumé narratif d'une session à partir des événements du journal.
+   * @param events Liste des événements chronologiques de la session.
+   * @returns Le résumé narratif généré (Markdown).
+   */
   public async summarizeSession(events: JournalEvent[]): Promise<string> {
     const { activeProvider, configs } = useAIStore.getState();
     const config = configs[activeProvider];
 
-    if (!config.apiKey) {
+    if (!config.apiKey && activeProvider !== 'ollama') {
       throw new Error(`API Key manquante pour le fournisseur ${activeProvider}`);
     }
 
@@ -186,6 +243,7 @@ ${fullContext}`;
     Les événements sont chronologiques. Crée un récit fluide, avec des titres de sections, des moments forts et des développements d'intrigue.
     
     ${activeJournal?.finalNote ? `IMPORTANT - NOTE FINALE DU MJ :\n"${activeJournal.finalNote}"\nPrends bien en compte ces notes pour conclure le résumé.` : ''}
+ 
 
     LOGS DE LA SESSION :
     ${eventLog}
@@ -217,7 +275,14 @@ ${fullContext}`;
     }
   }
 
-  public async generateImage(prompt: string, _legacyAspect?: string): Promise<string> {
+  /**
+   * Génère une image à partir d'un prompt textuel.
+   * Tente d'abord Ollama Local (Flux), puis Z-Image (HuggingFace), et enfin Gemini en fallback.
+   * @param prompt Description visuelle détaillée.
+   * @param aspectRatio Ratio d'aspect (ex: "1:1", "16:9"). Supporté par Z-Image.
+   * @returns URL de l'image (Locale via bridge, Data URI ou Placeholder Dicebear).
+   */
+  public async generateImage(prompt: string, aspectRatio?: string): Promise<string> {
     const { activeProvider, configs } = useAIStore.getState();
     const config = configs[activeProvider];
 
@@ -284,22 +349,24 @@ ${fullContext}`;
         const { Client } = await import('@gradio/client');
         
         // Utilisation du token fourni par l'environnement
-        const hfToken = import.meta.env.VITE_HF_TOKEN || ''; 
+        const env = (import.meta as unknown as { env: Record<string, string> }).env;
+        const hfToken = env?.VITE_HF_TOKEN || ''; 
         
         const client = await Client.connect('https://mrfakename-z-image-turbo.hf.space', { hf_token: hfToken } as any);
         
         // Paramètres Z-Image : prompt, height, width, num_inference_steps, seed, randomize_seed
+        const isLandscape = aspectRatio === '16:9';
         const result = await client.predict('/generate_image', { 
             prompt: prompt,
-            height: 1024,
-            width: 1024,
+            height: isLandscape ? 768 : 1024,
+            width: isLandscape ? 1344 : 1024,
             num_inference_steps: 4, // Rapide
             seed: 42,
             randomize_seed: true
         });
 
-        const data = result.data as any[];
-        const imageUrl = data[0]?.url;
+        const resultData = result.data as { url: string }[];
+        const imageUrl = resultData[0]?.url;
 
         if (imageUrl) {
           console.log(`[AI Service] Z-Image générée : ${imageUrl}. Téléchargement...`);
@@ -320,9 +387,10 @@ ${fullContext}`;
               // Register in Media Hub as well
               try {
                 const { addMedia } = useMediaStore.getState();
+                const activeCampaignId = useSessionOSStore.getState().activeCampaignId;
                 const blob = new Blob([uint8Array], { type: mimeType });
                 const file = new File([blob], fileName, { type: mimeType });
-                await addMedia(file, ['AI Generated', 'NPC Portrait']);
+                await addMedia(file, ['AI Generated', 'NPC Portrait'], activeCampaignId ? [activeCampaignId] : []);
                 console.log(`[AI Service] Z-Image registered in Media Hub.`);
               } catch (hubErr) {
                 console.warn(`[AI Service] Base64 for Media Hub failed (Z-Image):`, hubErr);
@@ -336,7 +404,7 @@ ${fullContext}`;
             }
           }
         }
-        console.warn(`[AI Service] Z-Image n'a pas retourné d'URL fluide. Passage à Gemini...`);
+        console.log(`[AI Service] Z-Image n'a pas retourné d'URL fluide. Passage à Gemini...`);
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : String(err);
         console.warn(`[AI Service] Z-Image (HF Space) indisponible ou en échec (${message}). Passage à Gemini...`);
@@ -356,7 +424,7 @@ ${fullContext}`;
       
       const payload = {
         contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { responseModalities: ["IMAGE"] }
+        generationConfig: { responseModalalities: ["IMAGE"] }
       };
 
 
@@ -399,9 +467,10 @@ ${fullContext}`;
         // Register in Media Hub as well
         try {
           const { addMedia } = useMediaStore.getState();
+          const activeCampaignId = useSessionOSStore.getState().activeCampaignId;
           const blob = new Blob([uint8Array], { type: mimeType || 'image/png' });
           const file = new File([blob], fileName, { type: mimeType || 'image/png' });
-          await addMedia(file, ['AI Generated', 'NPC Portrait']);
+          await addMedia(file, ['AI Generated', 'NPC Portrait'], activeCampaignId ? [activeCampaignId] : []);
           console.log(`[AI Service] Gemini Image registered in Media Hub.`);
         } catch (hubErr) {
           console.warn(`[AI Service] Base64 for Media Hub failed (Gemini):`, hubErr);
@@ -423,6 +492,11 @@ ${fullContext}`;
     }
   }
 
+  /**
+   * Génère un template structuré de fiche de personnage (JSON) à partir d'un système.
+   * @param systemQuery Nom ou description du système de jeu.
+   * @returns Le template de fiche partiel.
+   */
   public async generateStructuredTemplate(systemQuery: string): Promise<Partial<import('../../data/defaultSheetTemplates').SheetTemplate>> {
     const { activeProvider, configs } = useAIStore.getState();
     const config = configs[activeProvider];
@@ -446,16 +520,28 @@ ${fullContext}`;
     return {};
   }
 
+  /**
+   * Liste les modèles disponibles pour une clé API Gemini.
+   * @param apiKey Clé API Google Gemini.
+   * @returns Liste des IDs de modèles.
+   */
   public async listModels(apiKey: string): Promise<string[]> {
     const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`;
-    const response = await window.appBridge?.ai?.proxyRequest?.(url, 'GET', {}, {}) as { ok: boolean; data: any };
+    const response = await window.appBridge?.ai?.proxyRequest?.(url, 'GET', {}, {}) as { ok: boolean; data: { models?: { name: string }[] } };
     if (response?.ok) {
-      const data = response.data as { models?: { name: string }[] };
+      const data = response.data;
       return (data.models || []).map((m) => m.name.replace('models/', ''));
     }
     return [];
   }
 
+  /**
+   * Enrichit les attributs d'un PNJ ou lieu de manière narrative.
+   * @param fields Champs originaux (clé: valeur).
+   * @param category Catégorie (Personnage, Lieu, etc.).
+   * @param universe Univers ou Lore parent.
+   * @returns Champs enrichis narratifs.
+   */
   public async enrichNPCEntity(fields: Record<string, string>, category: string, universe: string): Promise<Record<string, string>> {
      const fieldsPrompt = Object.entries(fields).map(([k, v]) => `${k}: ${v}`).join('\n');
      const prompt = `Voici les attributs d'un(e) [${category}] dans l'univers [${universe}]. 
@@ -482,6 +568,14 @@ ${fullContext}`;
      }
   }
 
+  /**
+   * Suggère un prompt visuel détaillé destiné aux générateurs d'images.
+   * @param name Nom de l'entité.
+   * @param fields Attributs descriptifs.
+   * @param category Catégorie (Personnage, Lieu).
+   * @param universe Univers de référence.
+   * @returns Prompt en anglais pour IA génératrice d'image.
+   */
   public async suggestNPCImagePrompt(name: string, fields: Record<string, string>, category: string, universe: string): Promise<string> {
     const fieldsText = Object.values(fields).join(', ');
     const prompt = `Basé sur ce personnage/lieu nommé "${name}" (${category}) dans l'univers "${universe}" :

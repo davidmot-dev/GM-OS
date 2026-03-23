@@ -9,7 +9,7 @@ Le module **Map OS** est votre table de jeu virtuelle. Il permet de gérer les c
 Map OS combine la puissance d'un logiciel de cartographie et d'un gestionnaire de combat :
 
 1. **Régie Cartographique** : Importez des plans de donjons, des cartes de villes ou des paysages.
-2. **Brouillard de Guerre (Fog of War)** : Révélez la carte progressivement selon l'exploration des joueurs.
+2. **Brouillard de Guerre (Fog of War)** : Révélez la carte progressivement selon l'exploration des joueurs. Le masquage est désormais **physique** : tout ce qui est situé sous le calque de brouillard (pions, magie, carte) est occulté automatiquement.
 3. **Pions Tactiques (Tokens)** : Placez et déplacez les combattants directement sur la grille.
 4. **Grille Tactique** : Affichez une grille personnalisable pour les mesures de distance.
 5. **Projection Synchronisée** : Diffusez la vue "Joueur" sans vos outils de maître de jeu.
@@ -60,6 +60,15 @@ L'outil **Ping** permet de désigner un point précis sur la carte. Un cercle co
 - Cliquez sur **Projeter** pour choisir la destination (Player Hub ou Écran secondaire).
 - La vue projetée est **"Clean"** : elle ne contient ni les menus, ni les zones masquées par le brouillard de guerre du MJ, ni les outils de dessin.
 - Utilisez **Recadrer** pour recentrer votre vue et celle des joueurs sur le centre de la carte.
+
+## ✨ Vision de l'Oracle (Narration IA)
+
+La **Vision de l'Oracle** est un assistant narratif puissant qui utilise l'Intelligence Artificielle pour donner vie à votre plateau tactique :
+
+- **Analyse en Temps Réel** : L'Oracle examine l'emplacement des pions, le type d'ennemis, leur état de santé (PV), leurs allégeances (Factions) et les conditions environnementales (Météo, Zones de danger).
+- **Génération d'Ambiance** : Produit instantanément un texte descriptif immersif que vous pouvez lire à vos joueurs pour introduire un combat ou une scène d'exploration.
+- **Conseils Tactiques** : L'Oracle suggère des comportements intelligents pour vos PNJ basés sur leur situation actuelle (repli si blessé, harcèlement si en supériorité).
+- **Intégration au Journal** : D'un clic, vous pouvez archiver la narration générée dans votre **Journal de Session** pour garder une trace indélébile de l'histoire.
 
 ---
 

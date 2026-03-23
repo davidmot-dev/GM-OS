@@ -62,6 +62,7 @@ Les fiches sont entièrement adaptables :
     - **Token** : L'icône de jeton utilisée sur les cartes (**Map OS**) et dans la gestion de combat (**Combat OS**).
 - **Notes du MJ (Privé)** : Une zone de saisie réservée au MJ pour noter les secrets d'un personnage (trahisons, objectifs cachés).
 - **Documents Liés** : Liez des fichiers PDF ou images (depuis le Media Hub) directement à un personnage (ex: sa backstory, un artefact possédé).
+- **Liaison Automatique (Smart Link)** : Tout asset créé pendant que la session est active (portraits générés par IA, snapshots du Whiteboard) est désormais **automatiquement lié** à la campagne en cours. Plus besoin d'attribution manuelle fastidieuse.
 
 ---
 
@@ -100,3 +101,19 @@ L'Atlas gère la géographie et les lieux d'intérêt :
 C'est l'outil ultime pour nourrir votre OS :
 1.  **Lien direct** : Connectez Session OS à votre coffre **Obsidian**.
 2.  **Injection IA** : Le bouton **"Sync to Oracle"** envoie le contenu de votre note Obsidian (lore, scénario) directement à l'Oracle pour qu'il le prenne en compte dans ses réponses.
+
+---
+
+## 🕸️ Social Nexus (Graphe Social)
+
+Le **Social Nexus** est un outil de visualisation dynamique des relations entre tous les acteurs de votre campagne (PNJ et PJ).
+
+### Fonctionnalités Clés
+- **Visualisation Interactive** : Un graphe de force affiche les connexions entre les personnages. Les bulles incluent les portraits pour une identification immédiate.
+- **Cartographie des Relations** :
+    - **Directionnalité** : Les flèches indiquent le sens de la relation (ex: A considère B comme un allié, mais B considère A comme un ennemi).
+    - **Codes Couleurs** : Vert (Allié), Rouge (Ennemi), Bleu (Neutre).
+- **Gestion des Factions** : Filtrez le graphe par faction pour isoler les jeux d'influence entre différents groupes (ex: La Garde Royale, Le Syndicat de l'Ombre).
+- **Accès Rapide (Deep Link)** : Cliquez sur l'icône **ExternalLink** dans le profil d'un personnage pour être téléporté instantanément sur sa fiche complète dans la **Galerie PNJ** ou le **Roster Joueurs**.
+
+**Usage Tactique** : Utilisez le Social Nexus pour suivre l'évolution des allégeances au fil de vos sessions et identifier les points de pression politiques de votre scénario.

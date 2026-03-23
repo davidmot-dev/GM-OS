@@ -9,12 +9,14 @@ import LoadingOverlay from './components/common/LoadingOverlay';
 // --- STORES (Safe for Web) ---
 import { useSoundStore } from './modules/sound/useSoundStore';
 import { useStoryboardStore } from './modules/storyboard/useStoryboardStore';
+import { useMapStore } from './modules/map/useMapStore';
 import { useCombatStore } from './modules/combat/useCombatStore';
 import { useSessionOSStore } from './modules/session/useSessionOSStore';
 import { useWhiteboardStore, type WhiteboardTool, type Point, type DrawingPath } from './modules/whiteboard/useWhiteboardStore';
 import { useClockStore } from './store/useClockStore';
 import { mediaCleanupService } from './services/MediaCleanupService';
 import { getDifferentialPayload } from './utils/syncUtils';
+import { spatialTriggerService } from './modules/map/SpatialTriggerService';
 
 // --- LAZY COMPONENTS (Critical for Remote Stability) ---
 const RemoteControl = lazy(() => import('./modules/remote/RemoteControl'));
@@ -98,6 +100,15 @@ function App() {
       console.log(`[App] ${windowTag} window: Skipping remote action listeners.`);
       return;
     }
+    // Démarrage de la surveillance des triggers spatiaux (GM uniquement)
+    spatialTriggerService.startWatching();
+
+    // Synchroniser automatiquement la carte si le Combat-OS change (pour l'invisibilité des jetons liés)
+    const unsubscribeCombat = useCombatStore.subscribe((state, prevState) => {
+      if (state.combatants !== prevState.combatants) {
+        useMapStore.getState().syncToPlayers();
+      }
+    });
 
     const handleSync = async (immediate = true) => {
       // Throttle for whiteboard/non-immediate updates (100ms = 10Hz)
@@ -131,13 +142,17 @@ function App() {
         };
 
         const { resolveToSendableUrl } = await import('./utils/mediaResolver');
-        const resolvedCombatants = await Promise.all(
+        const resolvedCombatants = (await Promise.all(
           combatStore.combatants.map(async (c) => ({
             id: c.id, name: c.name, hp: c.hp, hpMax: c.hpMax,
             init: c.init, isPlayer: c.isPlayer, healthSystem: c.healthSystem,
-            avatar: await resolveToSendableUrl(c.avatar)
+            avatar: await resolveToSendableUrl(c.avatar),
+            statuses: c.statuses
           }))
-        );
+        )).filter(c => c.isPlayer || !c.statuses?.some(s => {
+          const n = s.name.toLowerCase();
+          return n === 'invisible' || n === 'invisibilité' || n === 'caché' || n === 'hidden';
+        }));
 
         const combat = {
           combatants: resolvedCombatants,
@@ -254,6 +269,7 @@ function App() {
       cleanupAction();
       unsubWhiteboard();
       unsubClock();
+      unsubscribeCombat();
       console.log('[App] Remote effect cleanup - IPC listeners removed.');
     };
   }, [activeCampaignId, selectedSessionId, sessions, sessionOSStore]);

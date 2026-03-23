@@ -12,6 +12,10 @@ export interface DeckState {
     duration: number;
 }
 
+/**
+ * Représente une platine (Deck) individuelle pour la lecture musicale.
+ * Utilise un élément HTMLAudioElement routé vers un contexte Web Audio.
+ */
 class MusicDeck {
     private context: AudioContext;
     private audioElement: HTMLAudioElement;
@@ -60,6 +64,11 @@ class MusicDeck {
         this.audioElement.onloadedmetadata = () => { this.state.duration = this.audioElement.duration; this.updateState(); };
     }
 
+    /**
+     * Charge une piste audio de manière asynchrone.
+     * Supporte les IDs du MediaStore (m-xxx) et les chemins locaux formés via l'appBridge.
+     * @param url Chemin ou ID de la piste à charger.
+     */
     async loadTrack(url: string) {
         console.log(`[MusicDeck] Loading track: ${url}`);
 
@@ -91,9 +100,8 @@ class MusicDeck {
 
             if (isLocalPath) {
                 console.log(`[MusicDeck] Local path detected: ${url}`);
-                const win = window as unknown as { appBridge?: { utils?: { formatFileUrl: (p: string) => string } } };
-                if (win.appBridge?.utils?.formatFileUrl) {
-                    finalUrl = win.appBridge.utils.formatFileUrl(url);
+                if (window.appBridge?.utils?.formatFileUrl) {
+                    finalUrl = window.appBridge.utils.formatFileUrl(url);
                 } else {
                     const normalizedPath = url.replace(/^file:\/\/\//, '').replace(/\\/g, '/');
                     finalUrl = `gmos://media/${normalizedPath}`;
@@ -109,8 +117,7 @@ class MusicDeck {
             const err = this.audioElement.error;
             const msg = `Erreur Audio: ${err?.message || 'Inconnue'} (Code ${err?.code})`;
             console.error(`[MusicDeck] AudioElement Error [${finalUrl}]:`, err);
-            const gWin = window as unknown as { useToastStore?: { getState: () => { gmToast: (t: string, m: string) => void } } };
-            if (gWin.useToastStore) gWin.useToastStore.getState().gmToast('error', msg);
+            if (window.useToastStore) window.useToastStore.getState().gmToast('error', msg);
         };
 
         this.audioElement.load();
@@ -119,6 +126,10 @@ class MusicDeck {
         this.updateState();
     }
 
+    /**
+     * Démarre la lecture de la platine.
+     * Gère la reprise du contexte Web Audio si suspendu.
+     */
     async play() {
         console.log(`[MusicDeck] play() triggered. Current context state: ${this.context.state}`);
         if (this.context.state === 'suspended') {
@@ -144,15 +155,20 @@ class MusicDeck {
         } catch (e) {
             const error = e as Error;
             console.error(`[MusicDeck] Play failed for ${this.audioElement.src}:`, error);
-            const gWin = window as unknown as { useToastStore?: { getState: () => { gmToast: (t: string, m: string) => void } } };
-            if (gWin.useToastStore) gWin.useToastStore.getState().gmToast('error', `Échec Lecture: ${error.message}`);
+            if (window.useToastStore) window.useToastStore.getState().gmToast('error', `Échec Lecture: ${error.message}`);
         }
     }
 
+    /**
+     * Met la lecture en pause.
+     */
     pause() {
         this.audioElement.pause();
     }
 
+    /**
+     * Arrête la lecture et revient au début de la piste.
+     */
     stop() {
         this.audioElement.pause();
         this.audioElement.currentTime = 0;
@@ -160,7 +176,10 @@ class MusicDeck {
         this.updateState();
     }
 
-
+    /**
+     * Modifie le volume de la platine de manière fluide.
+     * @param value Nouveau volume (0.0 à 1.0).
+     */
     setVolume(value: number) {
         this.state.volume = value;
         const now = this.context.currentTime;
@@ -168,6 +187,10 @@ class MusicDeck {
         this.updateState();
     }
 
+    /**
+     * Effectue un fondu de sortie (fade-out) avant d'arrêter la platine.
+     * @param durationMs Durée du fondu en millisecondes.
+     */
     fadeOut(durationMs: number) {
         const now = this.context.currentTime;
         const durationSec = durationMs / 1000;
@@ -183,6 +206,10 @@ class MusicDeck {
         }, durationMs + 100);
     }
 
+    /**
+     * Active ou désactive la lecture en boucle (loop).
+     * @param value True pour boucler, False pour arrêter à la fin.
+     */
     setLooping(value: boolean) {
         this.state.isLooping = value;
         this.audioElement.loop = value;
@@ -193,11 +220,16 @@ class MusicDeck {
         this.onStateChange({ ...this.state, currentTime: this.audioElement.currentTime, duration: this.audioElement.duration || 0 });
     }
 
+    /** @returns Position actuelle de lecture en secondes. */
     getCurrentTime(): number {
         return this.audioElement.currentTime;
     }
 }
 
+/**
+ * Moteur principal de gestion de la musique (Music OS).
+ * Gère deux platines (A/B), un crossfader, le ducking voix et le routage vers le stream.
+ */
 export class MusicEngine {
     private context: AudioContext;
     private masterGain: GainNode;
@@ -234,6 +266,10 @@ export class MusicEngine {
         this.setupDucking();
     }
 
+    /**
+     * Configure l'écouteur de ducking (atténuation automatique).
+     * S'abonne au VoiceStore pour ajuster le gain master quand quelqu'un parle.
+     */
     private async setupDucking() {
         // We import it dynamically to avoid circular dependencies if any
         const { useVoiceStore } = await import('../voice/useVoiceStore');
@@ -247,16 +283,28 @@ export class MusicEngine {
         });
     }
 
+    /**
+     * Modifie le volume global de la musique.
+     * @param value Nouveau volume (0.0 à 1.0).
+     */
     setMasterVolume(value: number) {
         this.masterGain.gain.setTargetAtTime(value, this.context.currentTime, 0.05);
     }
 
+    /**
+     * Positionne le crossfader entre les platines A et B.
+     * @param value Valeur entre 0.0 (Deck A uniquement) et 1.0 (Deck B uniquement).
+     */
     setCrossfader(value: number) {
         this.crossfaderValue = Math.max(0, Math.min(1, value));
         const now = this.context.currentTime;
         this.updateCrossfaderGains(now);
     }
 
+    /**
+     * Met à jour les gains individuels des platines en fonction de la position du crossfader.
+     * @param time Timestamp Web Audio optionnel pour le changement.
+     */
     private updateCrossfaderGains(time?: number) {
         const gainA = 1 - this.crossfaderValue;
         const gainB = this.crossfaderValue;
@@ -267,6 +315,11 @@ export class MusicEngine {
         this.crossfaderGainB.gain.setTargetAtTime(gainB, scheduledTime, 0.02);
     }
 
+    /**
+     * Effectue une transition automatique (auto-fade) vers une platine cible.
+     * @param target Platine cible ('A' ou 'B').
+     * @param durationMs Durée de la transition en millisecondes.
+     */
     performAutoFade(target: 'A' | 'B', durationMs: number) {
         const now = this.context.currentTime;
         const durationSec = durationMs / 1000;
@@ -285,14 +338,26 @@ export class MusicEngine {
         this.crossfaderValue = target === 'A' ? 0 : 1;
     }
 
+    /**
+     * Récupère le flux audio (MediaStream) pour le routage externe (ex: Stream OS).
+     * @returns Le flux audio mixé.
+     */
     getStream(): MediaStream {
         return this.destination.stream;
     }
 
+    /**
+     * Reprend le contexte audio si suspendu par le navigateur.
+     */
     async resume() {
         if (this.context.state === 'suspended') await this.context.resume();
     }
 
+    /**
+     * Vérifie si une URL correspond à un service de streaming connu.
+     * @param url URL à vérifier.
+     * @returns True si c'est du streaming (YouTube, Spotify, etc.).
+     */
     isStreamingService(url: string): boolean {
         if (!url) return false;
         const u = url.toLowerCase();
@@ -300,6 +365,11 @@ export class MusicEngine {
             u.includes('spotify.com') || u.includes('deezer.com');
     }
 
+    /**
+     * Désigne le périphérique de sortie.
+     * Note: Actuellement géré par l'AudioRouter global pour le switch physique.
+     * @param deviceId ID du périphérique.
+     */
     public async setOutputDevice(deviceId: string) {
         console.log(`[MusicEngine] Output device updated in store: ${deviceId}. AudioRouter will handle the physical switch.`);
     }

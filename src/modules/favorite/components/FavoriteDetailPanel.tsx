@@ -369,6 +369,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                     init: Math.floor(Math.random() * 20) + 1,
                                     isPlayer: false,
                                     avatar: entity.tokenUrl || entity.imageUrl,
+                                    faction: 'neutral',
                                     statuses: []
                                 });
                                 gmToast(`${entity.name} envoyé au Combat OS!`);

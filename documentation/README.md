@@ -5,6 +5,7 @@ Ce répertoire contient l'archive de tous les guides de mise en œuvre, walkthro
 ## Walkthroughs & Guides Techniques
 
 - **[00_General_Walkthrough.md](./walkthroughs/00_General_Walkthrough.md)** : État d'avancement général de la refonte.
+- **[Architecture_Overview.md](./Architecture/Architecture_Overview.md)** : Vue d'ensemble de l'architecture (Bridge, Sync, Modules).
 - **[AI_Obsidian_Synergy_Guide.md](./AI_Obsidian_Synergy_Guide.md)** : Guide sur le workflow combiné Obsidian + Oracle AI.
 - **[Oracle - Driver Personas](./walkthroughs/Oracle_Driver_Personas.md)** : Guide sur l'intégration des gèmes contextuels via les Drivers.
 - **[Oracle - MCP Integration](./walkthroughs/Oracle_MCP_Integration.md)** : Détails sur le pont MCP pour l'Oracle.
@@ -26,11 +27,13 @@ Ce répertoire contient l'archive de tous les guides de mise en œuvre, walkthro
 - **[Tablet_Hub_Walkthrough.md](./walkthroughs/Tablet_Hub_Walkthrough.md)** : Mise en œuvre du dashboard second-écran.
 - **[NPC_Live_Generator_Technical_Doc.md](./Technical%20Docs/NPC_Live_Generator_Technical_Doc.md)** : Architecture du moteur de génération d'images.
 - **[Tablet_Hub_Technical_Doc.md](./Technical%20Docs/Tablet_Hub_Technical_Doc.md)** : Architecture de synchronisation temps-réel.
+- **[Map_OS_Technical_Doc.md](./Technical%20Docs/Map_OS_Technical_Doc.md)** : Architecture des calques et brouillard de guerre.
+- **[Social_Nexus_Technical_Doc.md](./Technical%20Docs/Social_Nexus_Technical_Doc.md)** : Architecture du graphe de relations sociales.
 
 ## Planification
 
-- **[Development_Roadmap.md](./walkthroughs/Development_Roadmap.md)** : La liste des améliorations et fonctionnalités prévues.
-- **[Lessons_Learned.md](./Lessons_Learned.md)** : Retours d'expérience sur la synchronisation et le typage strict.
+- **[Roadmap & Améliorations](./Plans/am%C3%A9lioration.md)** : La liste consolidée des fonctionnalités et victoires techniques.
+- **[Lessons_Learned.md](./Lessons_Learned.md)** : Retours d'expérience consolidés sur la synchronisation et le typage strict.
 - **[AppBridge_v2_Standardization.md](../c:/Users/david/.gemini/antigravity/brain/d493bc42-29db-4269-b5ae-9023789a04d7/walkthrough.md)** : Détails techniques sur le typage strict et les deltas (Walkthrough lié).
 
 > [!NOTE]

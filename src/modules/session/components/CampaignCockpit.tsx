@@ -76,6 +76,13 @@ const CampaignCockpit: React.FC = () => {
                     <span className="text-sm font-medium">Galerie PNJ</span>
                 </button>
                 <button
+                    onClick={() => setCurrentView('social-graph')}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'social-graph' ? 'bg-accent/10 text-accent' : 'text-app-text/80 hover:bg-app-bg hover:text-app-text'}`}
+                >
+                    <Users size={20} className={currentView === 'social-graph' ? 'text-accent' : 'text-app-text/60'} />
+                    <span className="text-sm font-medium">Graphe Social</span>
+                </button>
+                <button
                     onClick={() => setCurrentView('world-atlas')}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'world-atlas' ? 'bg-accent/10 text-accent' : 'text-app-text/80 hover:bg-app-bg hover:text-app-text'}`}
                 >

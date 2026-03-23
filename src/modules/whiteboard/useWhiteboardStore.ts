@@ -1,54 +1,88 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+/** Outils de dessin disponibles sur le Whiteboard */
 export type WhiteboardTool = 'brush' | 'eraser' | 'rect' | 'circle' | 'laser';
 
+/** Point de coordonnées vectorielles */
 export interface Point {
     x: number;
     y: number;
 }
 
+/**
+ * Représente un tracé vectoriel sur le tableau blanc.
+ */
 export interface DrawingPath {
     id: string;
+    /** Liste ordonnée des points formant le tracé */
     points: Point[];
+    /** Couleur du tracé (Hex) */
     color: string;
+    /** Épaisseur du trait */
     width: number;
+    /** Outil utilisé pour ce tracé */
     tool: WhiteboardTool;
-    isTemporary?: boolean; // For laser pointer
+    /** Si vrai, le tracé disparaît après un court instant (Laser) */
+    isTemporary?: boolean; 
 }
 
+/**
+ * Interface d'état globale pour le Whiteboard-OS (Tableau Blanc).
+ * Gère le dessin vectoriel temps réel et la projection collaborative.
+ */
 interface WhiteboardState {
+    /** Liste des tracés validés présents sur le tableau */
     paths: DrawingPath[];
+    /** Outil actuellement sélectionné par l'utilisateur */
     currentTool: WhiteboardTool;
+    /** Couleur active pour les nouveaux tracés */
     currentColor: string;
+    /** Épaisseur active pour les nouveaux tracés */
     currentWidth: number;
+    /** Position actuelle du pointeur laser (si actif) */
     laserPointer: Point | null;
     
     // Projection
+    /** Cible de projection du tableau (Hub=Joueurs, Monitor=MJ) */
     projectionTarget: 'hub' | 'monitor' | null;
-    version: number; // For sync triggering
+    /** Compteur de version pour forcer la synchronisation réseau */
+    version: number; 
     
     // Real-time trace
+    /** Tracé en cours de création (non encore validé) */
     activePath: DrawingPath | null;
+    /** ID de l'utilisateur qui dessine actuellement (système multi-source) */
     activeDrawerId: string | null;
+    /** Mode de rendu du fond (Sombre/Clair) */
     backgroundMode: 'dark' | 'light';
 
     // History
+    /** Pile d'annulation pour les opérations Undo */
     undoStack: DrawingPath[][];
+    /** Pile de rétablissement pour les opérations Redo */
     redoStack: DrawingPath[][];
 
     // Actions
     setTool: (tool: WhiteboardTool) => void;
     setColor: (color: string) => void;
     setWidth: (width: number) => void;
+    /** Met à jour la position du laser pour tous les écrans */
     setLaserPointer: (point: Point | null) => void;
+    /** Définit le tracé temporaire en cours de dessin */
     setActivePath: (path: DrawingPath | null, drawerId: string | null) => void;
+    /** Ajoute définitivement un tracé au tableau et à l'historique */
     addPath: (path: DrawingPath) => void;
+    /** Supprime un tracé spécifique */
     removePath: (id: string) => void;
+    /** Efface tout le contenu du tableau */
     clearBoard: () => void;
     setBackgroundMode: (mode: 'dark' | 'light') => void;
+    /** Annule la dernière action */
     undo: () => void;
+    /** Rétablit la dernière action annulée */
     redo: () => void;
+    /** Désactive la projection active */
     clearProjectedState: () => void;
 }
 

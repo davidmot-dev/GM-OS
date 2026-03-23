@@ -47,7 +47,7 @@ const TabletHub: React.FC = () => {
     const { mediaList, projections } = useImageStore();
     const { isClockProjected, timestamp, mode, theme, tensions } = useClockStore();
     const { favorites } = useFavoriteStore();
-    const { combatants, currentTurnIdx, round } = useCombatStore();
+    const { combatants, currentTurnIdx, round, isCombatProjected } = useCombatStore();
 
     const activeHubId = projections['hub'];
     const [liveImagePath, setLiveImagePath] = useState<string | null | undefined>(undefined);
@@ -205,8 +205,20 @@ const TabletHub: React.FC = () => {
         };
     }, [connect, isOnboarded]);
 
-    const hasCombatants = combatants.length > 0;
-    const activeCombatant = hasCombatants ? combatants[currentTurnIdx] : null;
+    const visibleCombatants = combatants.filter(c => 
+        c.isPlayer || !c.statuses.some(s => {
+            const n = s.name.toLowerCase();
+            return n === 'invisible' || n === 'invisibilité' || n === 'caché' || n === 'hidden';
+        })
+    );
+    const hasCombatants = isCombatProjected && visibleCombatants.length > 0;
+    
+    // Find active combatant among visible ones, or use the real one if it's a player
+    const realActiveCombatant = combatants[currentTurnIdx];
+    const activeCombatant = (realActiveCombatant && (realActiveCombatant.isPlayer || !realActiveCombatant.statuses.some(s => {
+        const n = s.name.toLowerCase();
+        return n === 'invisible' || n === 'invisibilité' || n === 'caché' || n === 'hidden';
+    }))) ? realActiveCombatant : null;
     const sharedFavorites = favorites.filter(f => f.isSyncedToPlayerHub);
 
     // Resolve m-xxx IDs in favorites to data: URIs so they display in this window
@@ -227,13 +239,20 @@ const TabletHub: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [favorites]);
 
-    // Sort the upcoming combatants
+    // Sort the upcoming combatants among visible ones
     const upcomingCombatants: Combatant[] = [];
-    if (hasCombatants && combatants.length > 1) {
-        let i = (currentTurnIdx + 1) % combatants.length;
-        while (i !== currentTurnIdx) {
-            upcomingCombatants.push(combatants[i]);
-            i = (i + 1) % combatants.length;
+    if (hasCombatants && visibleCombatants.length > 1) {
+        // Find index of active in visible list
+        const visibleIdx = activeCombatant ? visibleCombatants.findIndex(c => c.id === activeCombatant.id) : -1;
+        if (visibleIdx !== -1) {
+            let i = (visibleIdx + 1) % visibleCombatants.length;
+            while (i !== visibleIdx) {
+                upcomingCombatants.push(visibleCombatants[i]);
+                i = (i + 1) % visibleCombatants.length;
+            }
+        } else {
+            // If active is hidden, just show all visible
+            upcomingCombatants.push(...visibleCombatants);
         }
     }
 

@@ -46,7 +46,8 @@ const WhiteboardDashboard: React.FC = () => {
             // 1. Create file and add to Media Hub
             const filename = `whiteboard-${new Date().toISOString().split('T')[0]}-${Date.now()}.png`;
             const file = new File([blob], filename, { type: 'image/png' });
-            const mediaId = await addMedia(file, ['whiteboard']);
+            const { activeCampaignId } = useSessionOSStore.getState();
+            const mediaId = await addMedia(file, ['whiteboard'], activeCampaignId ? [activeCampaignId] : []);
 
             // 2. Add to Wiki
             addWikiEntry({

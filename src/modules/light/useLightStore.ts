@@ -5,55 +5,94 @@ import { persist } from 'zustand/middleware';
 // Types & Interfaces
 // ----------------------
 
+/** Statut de connexion au pont Philips Hue */
 export type ConnectionStatus = 'disconnected' | 'discovering' | 'pairing' | 'connected' | 'mock';
 
+/**
+ * État détaillé d'une ampoule individuelle.
+ */
 export interface HueLightState {
+    /** Indique si la lampe est allumée */
     on: boolean;
-    bri: number; // 0-254
-    xy?: [number, number]; // CIE color space
-    ct?: number; // Color temperature
-    effect?: string; // Software effect (e.g., 'none', 'candle', 'warp', 'police')
+    /** Luminosité (0-254) */
+    bri: number; 
+    /** Coordonnées de couleur dans l'espace CIE */
+    xy?: [number, number]; 
+    /** Température de couleur (Mireds) */
+    ct?: number; 
+    /** Effet logiciel appliqué (ex: 'candle', 'warp', 'police') */
+    effect?: string; 
 }
 
+/**
+ * Représente une ampoule Hue physique.
+ */
 export interface HueLight {
     id: string;
+    /** Nom défini dans l'application Hue */
     name: string;
+    /** Type de matériel (ex: 'Extended color light') */
     type: string;
+    /** État actuel de la lampe */
     state: HueLightState;
 }
 
+/**
+ * Scène d'ambiance GM-OS enregistrant l'état de plusieurs lampes.
+ */
 export interface LightScene {
-    id: string; // SCENE_01 to SCENE_18
+    /** Identifiant de scène (SCENE_01 à SCENE_18) */
+    id: string; 
+    /** Nom personnalisé par le MJ */
     name: string;
+    /** Icône représentative */
     icon: string;
-    color: string; // Tailwind hex or class for UI glow
-    lightStates: Record<string, HueLightState>; // Snapshot of light states
-    keyCode?: string; // For Key Learn
+    /** Couleur hexadécimale pour le retour visuel dans l'interface */
+    color: string; 
+    /** États des lampes enregistrés pour cette scène */
+    lightStates: Record<string, HueLightState>; 
+    /** Code touche MIDI/Clavier associé (Key Learn) */
+    keyCode?: string; 
 }
 
+/**
+ * Interface d'état globale pour le Light-OS (Atmosphère).
+ */
 interface LightState {
     // Connection
+    /** Adresse IP locale du pont Hue identifié */
     bridgeIp: string | null;
+    /** Nom d'utilisateur (API Key) généré lors de l'appairage */
     username: string | null;
+    /** Statut actuel du cycle de connexion */
     status: ConnectionStatus;
 
     // Devices
+    /** Liste des lampes découvertes sur le pont */
     lights: Record<string, HueLight>;
 
     // Global Control
-    globalBrightness: number; // 0 to 100%
-    transitionTimeMs: number; // Transition time for scenes
+    /** Multiplicateur de luminosité globale (0 à 100%) */
+    globalBrightness: number; 
+    /** Durée par défaut des transitions entre scènes (ms) */
+    transitionTimeMs: number; 
 
     // Scenes
+    /** Catalogue des 18 scènes disponibles */
     scenes: Record<string, LightScene>;
+    /** ID de la scène actuellement active sur le système */
     activeSceneId: string | null;
+    /** Dernière scène activée manuellement par l'utilisateur */
     lastManualSceneId: string | null;
 
     // Actions - Connection
+    /** Met à jour les paramètres de connexion au pont */
     setConnection: (status: ConnectionStatus, ip?: string | null, username?: string | null) => void;
 
     // Actions - Devices
+    /** Définit la liste des lampes disponibles */
     setLights: (lights: Record<string, HueLight>) => void;
+    /** Modifie l'état d'une lampe spécifique */
     updateLightState: (id: string, state: Partial<HueLightState>) => void;
 
     // Actions - Global
@@ -61,18 +100,26 @@ interface LightState {
     setTransitionTime: (ms: number) => void;
 
     // Actions - Scenes
+    /** Capture l'état actuel de toutes les lampes dans une scène */
     saveSceneSnapshot: (sceneId: string, currentLights: Record<string, HueLight>) => void;
+    /** Met à jour le nom, l'icône ou la couleur d'une scène */
     updateSceneMetadata: (sceneId: string, name: string, icon: string, color: string) => void;
+    /** Active une scène sur le pont physique */
     setActiveScene: (sceneId: string | null, isAutomatic?: boolean) => void;
+    /** Réinitialise une scène aux valeurs par défaut */
     clearScene: (sceneId: string) => void;
+    /** Indique si la synchronisation avec d'autres modules (ex: Combat) est active */
     isSyncEnabled: boolean;
     setSyncEnabled: (val: boolean) => void;
+    /** Restaure l'état d'éclairage à partir d'un snapshot de session */
     applySnapshot: (snapshot: {
         activeSceneId?: string | null;
         globalBrightness?: number;
         scenes?: Record<string, LightScene>;
     }) => void;
+    /** Oublie les identifiants de connexion du pont */
     forgetBridge: () => void;
+    /** Réinitialise complètement le store */
     reset: () => void;
 }
 

@@ -39,19 +39,21 @@ Les tags sont le cœur de l'organisation du Media Hub. Un même fichier peut avo
 
 ### Filtrage par Type
 Dans la barre d'outils supérieure, vous pouvez isoler un type de média spécifique :
-- **Tous** : Affiche l'intégralité de votre bibliothèque.
-- **Images** : Uniquement les visuels.
-- **Audio** : Uniquement les sons/musiques.
-- **Vidéo** : Uniquement les clips animés.
-- **Doc** : Vos documents de règles et notes.
+## 🛡️ Panneau de Détails Tactique (Side Panel)
 
-## 🎞️ Aperçu Plein Écran
+En cliquant sur n'importe quel média, un panneau latéral **HUD Obsidian** s'ouvre pour offrir un contrôle approfondi :
+- **Visualisation HD** : Aperçu sans quitter la grille.
+- **Gestion des Campagnes** : Des badges interactifs permettent de lier/délier le média à une ou plusieurs campagnes en un clic.
+    - **Pleine couleur** : Lié à la campagne.
+    - **Contour uniquement** : Disponible pour liaison.
+- **Métadonnées et Tags** : Accès rapide pour renommer ou modifier l'indexation.
 
-Pour une meilleure visibilité, le Media Hub propose un mode "Focus" :
-- **Images** : Zoom haute définition.
-- **Audio** : Lecteur dédié avec barre de progression et réglage de volume, idéal pour tester un son avant de le diffuser.
-- **Vidéo** : Lecture plein écran intégrée.
-*Appuyez sur **ESC** pour quitter l'aperçu.*
+## 🎯 Mode "Operational Focus"
+
+Le Media Hub introduit un **Mode Tactique** (icône de cible dans la barre latérale) :
+- **Filtrage Intelligent** : Seuls les assets de la campagne active sont affichés.
+- **Workflow Accéléré** : Idéal pendant une session pour ne pas être pollué par les assets d'autres aventures.
+- **Isolation de Session** : Les nouveaux imports sont automatiquement taggués avec la campagne active si ce mode est activé ou si vous êtes en session.
 
 ---
 

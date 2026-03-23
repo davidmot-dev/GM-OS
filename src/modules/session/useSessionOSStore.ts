@@ -27,6 +27,13 @@ export interface DamageImpact {
     isRecovery?: boolean;
 }
 
+export interface EntityRelation {
+    targetId: string;
+    targetType: 'pc' | 'npc';
+    type: 'ally' | 'neutral' | 'hostile' | 'family' | 'romantic' | 'mentor' | 'rival' | 'other';
+    description: string;
+}
+
 export interface PersistenceBadge {
     id: string;
     label: string;
@@ -42,16 +49,30 @@ export interface HealthSystem {
     badges: PersistenceBadge[];
 }
 
+/**
+ * Représente une campagne de jeu.
+ * Gère l'identité, les réglages IA et les lieux associés.
+ */
 export interface Campaign {
     id: string;
+    /** Nom de la campagne (ex: "The Eternal Quest") */
     name: string;
+    /** Système de jeu utilisé (ex: "generic", "dnd5e") */
     system: string;
+    /** URL de fond pour le Player Hub */
     wallpaperUrl?: string;
+    /** IDs des AtlasMaps épinglées à cette campagne */
     activeLocationIds: string[];
+    /** Chemin local pour l'indexation RAG via Gemini CLI */
     ragPath?: string;
-    aiPersonas?: Record<string, string>; // gemId -> instructions override pour cette campagne
+    /** Overrides d'instructions IA par personnage (gemId -> instructions) */
+    aiPersonas?: Record<string, string>; 
 }
 
+/**
+ * Représente une entité de jeu (PNJ ou Monstre).
+ * Inclut les statistiques de combat, notes de RP et relations sociales.
+ */
 export interface Entity {
     id: string;
     name: string;
@@ -64,15 +85,27 @@ export interface Entity {
     ac: number;
     speed: number;
     initiative: number;
-    description: string;      // race/class subtitle
-    roleplayingNotes: string; // how to play this NPC
-    gmSecretInfo: string;     // private GM info
-    linkedMapIds: string[];   // AtlasMap IDs
+    /** Description courte (ex: "Race/Classe") */
+    description: string;      
+    /** Notes pour le jeu de rôle du MJ */
+    roleplayingNotes: string; 
+    /** Informations secrètes réservées au MJ */
+    gmSecretInfo: string;     
+    /** IDs des AtlasMaps liées à cette entité */
+    linkedMapIds: string[];   
     campaignId: string;
+    /** Référence vers le Bestiaire/Source */
     sourceRef?: string;
-    templateId?: string;           // ID of the sheet template used
-    sheetData?: Record<string, string | number | boolean>; // fieldId -> value
-    healthSystem?: HealthSystem;   // New modular health system
+    /** ID du template de fiche utilisé */
+    templateId?: string;           
+    /** Données de fiche personnalisées (fieldId -> val) */
+    sheetData?: Record<string, string | number | boolean>; 
+    /** Système de santé modulaire (badges, états) */
+    healthSystem?: HealthSystem;   
+    /** Réseau de relations sociales */
+    relations?: EntityRelation[];  
+    /** Faction ou groupe d'appartenance */
+    faction?: string;
 }
 
 export interface PlayerCharacter {
@@ -87,10 +120,15 @@ export interface PlayerCharacter {
     templateId: string;           // ID of the sheet template used
     sheetData: Record<string, string | number | boolean>; // fieldId -> value
     description?: string;          // Player-visible character description
-    gmNotes?: string;              // GM-only secret notes
-    linkedDocumentIds?: string[];  // Media Hub document IDs
-    inventory?: string;            // Player's items/loot
-    healthSystem?: HealthSystem;   // New modular health system
+    /** Notes pour le MJ */
+    gmNotes?: string;              
+    /** IDs des documents liés */
+    linkedDocumentIds?: string[];  
+    inventory?: string;            
+    healthSystem?: HealthSystem;   
+    relations?: EntityRelation[];  
+    /** Faction ou groupe d'appartenance */
+    faction?: string;
 }
 
 export interface Player {
@@ -108,20 +146,32 @@ export interface SessionChecklistItem {
     isCompleted: boolean;
 }
 
+/**
+ * Représente une session de jeu.
+ * Contient le résumé, les secrets du MJ et un instantané optionnel des modules.
+ */
 export interface GameSession {
     id: string;
     campaignId: string;
+    /** Numéro de la session */
     number: number;
+    /** Date au format ISO */
     date: string;
     status: 'planned' | 'active' | 'done';
+    /** Résumé public visible par les joueurs */
     publicSummary: string;
+    /** Secrets réservés au MJ */
     gmSecrets: string;
+    /** Liste de tâches pour la préparation */
     checklist: SessionChecklistItem[];
-    activeTrackId?: string; // e.g., Audio track or Encounters
-    sessionEntityIds: string[]; // IDs of NPCs/monsters active in this session
+    activeTrackId?: string; 
+    /** IDs des entités actives pendant cette session */
+    sessionEntityIds: string[]; 
     externalLink?: string;
     filePath?: string;
+    /** Notes de session libres */
     sessionNotes?: string;
+    /** État sauvegardé de tous les modules (Musique, Lumières, etc.) */
     moduleSnapshot?: SessionModuleSnapshot;
 }
 
@@ -174,6 +224,9 @@ export interface AtlasLinkedEntity {
     name: string;
     category: AtlasEntityCategory;
     favoriteId?: string;
+    entityId?: string;
+    mapId?: string;
+    wikiEntryId?: string;
 }
 
 export interface AtlasMap {
@@ -247,14 +300,23 @@ export interface SessionOSState {
     selectedEntityId: string | null;
     editingTemplateId: string | null;
     editingDriverId: string | null;
-    currentView: 'cockpit' | 'campaign-details' | 'npc-gallery' | 'world-atlas' | 'library' | 'players' | 'templates' | 'session-prep' | 'session-focus' | 'timeline-wiki' | 'forge' | 'template-editor' | 'driver-editor' | 'storyboard';
+    currentView: 'cockpit' | 'campaign-details' | 'npc-gallery' | 'social-graph' | 'world-atlas' | 'library' | 'players' | 'templates' | 'session-prep' | 'session-focus' | 'timeline-wiki' | 'forge' | 'template-editor' | 'driver-editor' | 'storyboard';
+    /** État de la navigation Wiki/Timeline */
+    wikiTab: 'timeline' | 'wiki';
+    selectedWikiEntryId: string | null;
+
+    /** Historique des derniers jets de dés via Table-OS */
     diceRolls: { die: number, result: number, timestamp: number }[];
+    /** État de l'UI: mode ajout d'entité */
     isAddingEntity: boolean;
-    isGeneratingAIImage: boolean; // For loading feedback
+    /** Feedback visuel pour la génération d'image par l'IA */
+    isGeneratingAIImage: boolean; 
 
     // Actions
     setActiveCampaign: (id: string | null) => void;
     setCurrentView: (view: SessionOSState['currentView']) => void;
+    setWikiTab: (tab: SessionOSState['wikiTab']) => void;
+    setSelectedWikiEntryId: (id: string | null) => void;
     setSelectedSession: (id: string | null) => void;
     setSelectedPlayer: (id: string | null) => void;
     setSelectedCharacter: (id: string | null) => void;
@@ -287,8 +349,11 @@ export interface SessionOSState {
     updateCharacterSheetData: (playerId: string, characterId: string, fieldId: string, value: string | number | boolean) => void;
     updateCharacterVisuals: (playerId: string, characterId: string, updates: { portraitUrl?: string; tokenUrl?: string }) => void;
     updateCharacterNarrative: (playerId: string, characterId: string, updates: { description?: string; gmNotes?: string; linkedDocumentIds?: string[]; inventory?: string }) => void;
+    /** Crée une nouvelle campagne et l'ajoute à la liste */
     addCampaign: (campaign: Omit<Campaign, 'id'>) => void;
+    /** Met à jour les propriétés d'une campagne existante */
     updateCampaign: (id: string, updates: Partial<Campaign>) => void;
+    /** Supprime définitivement une campagne */
     deleteCampaign: (id: string) => void;
     addSession: (session: Omit<GameSession, 'id'>) => string;
     updateSession: (id: string, updates: Partial<GameSession>) => void;
@@ -331,9 +396,22 @@ export interface SessionOSState {
     addEntityToSession: (sessionId: string, entityId: string) => void;
     removeEntityFromSession: (sessionId: string, entityId: string) => void;
     clearSessionEntities: (sessionId: string) => void;
+    /** Téléporte les joueurs vers une session spécifique */
     launchSession: (sessionId: string) => void;
+    /** 
+     * Capture l'état actuel de tous les modules de l'OS.
+     * Sauvegarde les playlists actives, ambiances, scènes de lumière et projections.
+     */
     saveSystemSnapshot: (sessionId: string) => void;
+    /** 
+     * Restaure l'état complet de l'OS à partir d'un instantané.
+     * Cette opération est asynchrone car elle peut déclencher des chargements médias.
+     */
     applySystemSnapshot: (snapshot: SessionModuleSnapshot) => Promise<void>;
+
+    // Social Graph Actions
+    addRelation: (sourceId: string, sourceType: 'pc' | 'npc', relation: EntityRelation) => void;
+    removeRelation: (sourceId: string, sourceType: 'pc' | 'npc', targetId: string) => void;
 
     rollDice: (sides: number) => void;
     clearDiceRolls: () => void;
@@ -345,7 +423,7 @@ export interface SessionOSState {
     generateAtlasMapImage: (mapId: string, instructions?: string) => Promise<void>;
     generatePlayerPortrait: (playerId: string, characterId: string, instructions?: string) => Promise<void>;
     
-    // Obsidian Export
+    /** Exporte toute la campagne (Wiki, Timeline, PNJ) vers Obsidian en Markdown */
     exportActiveCampaignToObsidian: () => Promise<void>;
     // Timeline Actions
     addTimelineEvent: (event: Omit<TimelineEvent, 'id'>) => void;
@@ -357,10 +435,15 @@ export interface SessionOSState {
     updateWikiEntry: (id: string, updates: Partial<WikiEntry>) => void;
     deleteWikiEntry: (id: string) => void;
 
-    /** Batch adds generated narrative content from Chronicle Forge */
+    /** 
+     * Import massif de contenu narratif généré (Chronicle Forge).
+     * Crée la campagne, les entités, les cartes et le wiki en une seule opération.
+     */
     addChronicle: (data: {
       campaign: Omit<Campaign, 'id'>;
-      entities: Omit<Entity, 'id' | 'campaignId'>[];
+      entities: (Omit<Entity, 'id' | 'campaignId' | 'relations'> & { 
+        relations?: { targetName: string; type: EntityRelation['type']; description: string }[] 
+      })[];
       atlasMaps: Omit<AtlasMap, 'id' | 'campaignId'>[];
       wikiEntries: Omit<WikiEntry, 'id' | 'campaignId'>[];
     }) => void;
@@ -653,6 +736,8 @@ export const useSessionOSStore = create<SessionOSState>()(
             editingTemplateId: null,
             editingDriverId: null,
             currentView: 'cockpit',
+            wikiTab: 'timeline',
+            selectedWikiEntryId: null,
             diceRolls: [],
             isAddingEntity: false,
             isGeneratingAIImage: false,
@@ -680,11 +765,13 @@ export const useSessionOSStore = create<SessionOSState>()(
             setCurrentView: (view) => {
                 set({ currentView: view });
                 if (view === 'npc-gallery') {
-                    set({ selectedEntityId: null, isAddingEntity: false });
+                    set({ isAddingEntity: false });
                 } else if (view === 'world-atlas') {
                     set({ selectedAtlasMapId: null });
                 }
             },
+            setWikiTab: (tab) => set({ wikiTab: tab }),
+            setSelectedWikiEntryId: (id) => set({ selectedWikiEntryId: id }),
             setSelectedSession: (id) => set({ selectedSessionId: id }),
             setSelectedPlayer: (id) => set({ selectedPlayerId: id, selectedCharacterId: null }),
             setSelectedCharacter: (id) => set({ selectedCharacterId: id }),
@@ -1177,6 +1264,46 @@ export const useSessionOSStore = create<SessionOSState>()(
                 gmToast(`Butin ajouté à la fiche de ${item.split(':')[0]}`, "success");
             },
 
+            addRelation: (sourceId, sourceType, relation) => set((state) => {
+                const updateRelations = (rels: EntityRelation[] = []) => [...rels, relation];
+                if (sourceType === 'pc') {
+                    return {
+                        players: state.players.map(p => ({
+                            ...p,
+                            characters: p.characters.map(c => 
+                                c.id === sourceId ? { ...c, relations: updateRelations(c.relations) } : c
+                            )
+                        }))
+                    };
+                } else {
+                    return {
+                        entities: state.entities.map(e => 
+                            e.id === sourceId ? { ...e, relations: updateRelations(e.relations) } : e
+                        )
+                    };
+                }
+            }),
+
+            removeRelation: (sourceId, sourceType, targetId) => set((state) => {
+                const filterRelations = (rels: EntityRelation[] = []) => rels.filter(r => r.targetId !== targetId);
+                if (sourceType === 'pc') {
+                    return {
+                        players: state.players.map(p => ({
+                            ...p,
+                            characters: p.characters.map(c => 
+                                c.id === sourceId ? { ...c, relations: filterRelations(c.relations) } : c
+                            )
+                        }))
+                    };
+                } else {
+                    return {
+                        entities: state.entities.map(e => 
+                            e.id === sourceId ? { ...e, relations: filterRelations(e.relations) } : e
+                        )
+                    };
+                }
+            }),
+
 
 
             generateEntityPortrait: async (entityId, instructions) => {
@@ -1593,11 +1720,31 @@ export const useSessionOSStore = create<SessionOSState>()(
                 const campaignId = crypto.randomUUID();
                 const newCampaign: Campaign = { ...campaign, id: campaignId };
                 
-                const newEntities: Entity[] = entities.map(e => ({
-                  ...e,
-                  id: crypto.randomUUID(),
-                  campaignId
-                }));
+                const nameToIdMap: Record<string, string> = {};
+
+                const newEntities: Entity[] = entities.map(e => {
+                  const id = crypto.randomUUID();
+                  if (e.name) nameToIdMap[e.name] = id;
+                  return {
+                    ...e,
+                    id,
+                    campaignId,
+                    relations: [] // Will be filled after mapping
+                  } as Entity;
+                });
+
+                // Resolve relations using name mapping
+                newEntities.forEach((entity, index) => {
+                  const original = entities[index];
+                  if (original.relations) {
+                    entity.relations = original.relations.map(rel => ({
+                      targetId: nameToIdMap[rel.targetName] || '',
+                      targetType: 'npc' as const,
+                      type: rel.type,
+                      description: rel.description
+                    })).filter(rel => rel.targetId !== '');
+                  }
+                });
                 
                 const newMaps: AtlasMap[] = atlasMaps.map(m => ({
                   ...m,

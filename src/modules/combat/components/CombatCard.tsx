@@ -174,7 +174,28 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                             <Edit2 size={14} className="opacity-0 group-hover/name:opacity-50 transition-opacity" />
                         </div>
                         {combatant.isPlayer && <span className="text-[9px] bg-primary text-slate-900 px-1.5 py-0.5 rounded font-black uppercase tracking-tighter">PJ</span>}
-                        {!combatant.isPlayer && <span className="text-[9px] bg-slate-700 text-slate-300 px-1.5 py-0.5 rounded font-black uppercase tracking-tighter">PNJ</span>}
+                        
+                        <div className="relative flex items-center gap-1 group/faction">
+                            <select 
+                                value={combatant.faction}
+                                onChange={(e) => updateCombatant(combatant.id, { faction: e.target.value as 'player' | 'enemy' | 'neutral' | 'ally' })}
+                                className={`text-[9px] px-1.5 py-0.5 rounded font-black uppercase tracking-tighter outline-none cursor-pointer border transition-all appearance-none pr-4 ${
+                                    combatant.faction === 'enemy' ? 'bg-red-500/20 text-red-400 border-red-500/30' :
+                                    combatant.faction === 'ally' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' :
+                                    combatant.faction === 'player' ? 'bg-blue-600/20 text-blue-400 border-blue-500/30' :
+                                    'bg-slate-700 text-slate-300 border-slate-600'
+                                }`}
+                                title="Changer l'allégeance"
+                            >
+                                <option value="player">PJ</option>
+                                <option value="enemy">Hostile</option>
+                                <option value="ally">Allié</option>
+                                <option value="neutral">Neutre</option>
+                            </select>
+                            <div className="absolute right-1 pointer-events-none opacity-40 group-hover/faction:opacity-100">
+                                <PlusCircle size={8} />
+                            </div>
+                        </div>
                         
                         <button
                             className={`text-slate-400 hover:text-primary transition-colors p-1 rounded hover:bg-white/5 ${showStatusMenu ? 'text-primary bg-white/5' : ''}`}

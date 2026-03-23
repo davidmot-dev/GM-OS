@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
-import { useMapStore, type MagicEffect } from '../useMapStore';
+import { useMapStore } from '../useMapStore';
+import type { MagicEffect } from '../types';
 
 interface MagicLayerProps {
     isProjectedView?: boolean;
@@ -232,7 +233,7 @@ const MagicLayer: React.FC<MagicLayerProps> = ({ isProjectedView = false }) => {
     return (
         <canvas
             ref={canvasRef}
-            className="absolute inset-0 w-full h-full pointer-events-none z-20"
+            className="absolute inset-0 w-full h-full pointer-events-none z-17"
             style={{ mixBlendMode: 'normal' }}
         />
     );

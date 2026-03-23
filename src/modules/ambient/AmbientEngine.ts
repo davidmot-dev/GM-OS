@@ -1,9 +1,10 @@
-/**
- * Engine Audio pour Ambient OS v5
- * Gère 8 pistes d'ambiance en boucle avec fondu et compression master.
- */
 import { useMediaStore } from '../../stores/useMediaStore';
 
+/**
+ * Représente une piste d'ambiance individuelle.
+ * Gère le chargement, la lecture en boucle et les fondus (fade-in/fade-out).
+ * Inclut un routage spécifique pour corriger les problèmes de phase (Mono Summed).
+ */
 class AmbientTrack {
     private context: AudioContext;
     private source: AudioBufferSourceNode | null = null;
@@ -38,10 +39,17 @@ class AmbientTrack {
     }
 
 
+    /**
+     * Récupère l'analyseur de fréquence de la piste.
+     */
     getAnalyser() {
         return this.analyser;
     }
 
+    /**
+     * Charge un fichier audio depuis une URL ou un ID MediaStore.
+     * @param url Chemin du fichier ou identifiant 'm-XXX'.
+     */
     async load(url: string) {
         if (this.currentUrl === url && this.buffer) return;
 
@@ -76,6 +84,11 @@ class AmbientTrack {
         }
     }
 
+    /**
+     * Démarre la lecture de la piste avec un fondu d'entrée.
+     * @param volume Volume cible (0.0 à 1.0).
+     * @param fadeTime Durée du fondu en secondes.
+     */
     play(volume: number = 0.5, fadeTime: number = 1.5) {
         if (!this.buffer || this.isPlaying) return;
 
@@ -94,6 +107,10 @@ class AmbientTrack {
         this.isPlaying = true;
     }
 
+    /**
+     * Arrête la lecture de la piste avec un fondu de sortie.
+     * @param fadeTime Durée du fondu en secondes.
+     */
     stop(fadeTime: number = 1.0) {
         if (!this.source || !this.isPlaying) return;
 
@@ -114,12 +131,20 @@ class AmbientTrack {
         this.source = null;
     }
 
+    /**
+     * Ajuste le volume de la piste en temps réel.
+     * @param volume Nouveau volume (0.0 à 1.0).
+     */
     setVolume(volume: number) {
         const now = this.context.currentTime;
         this.gainNode.gain.setTargetAtTime(volume, now, 0.1);
     }
 }
 
+/**
+ * Moteur principal pour Ambient OS.
+ * Gère 8 pistes indépendantes avec mixage master, compression et ducking réactif à la voix.
+ */
 export class AmbientEngine {
     private context: AudioContext;
     private masterGain: GainNode;
@@ -164,6 +189,10 @@ export class AmbientEngine {
         this.setupDucking();
     }
 
+    /**
+     * Configure le système de ducking automatique.
+     * S'abonne au Voice Store pour réduire le volume des ambiances quand quelqu'un parle.
+     */
     private async setupDucking() {
         const { useVoiceStore } = await import('../voice/useVoiceStore');
         
@@ -186,20 +215,34 @@ export class AmbientEngine {
         });
     }
 
+    /**
+     * Relance le contexte audio s'il est suspendu par le navigateur.
+     */
     async resume() {
         if (this.context.state === 'suspended') {
             await this.context.resume();
         }
     }
 
+    /**
+     * Arrête toutes les pistes d'ambiance avec un fondu.
+     * @param fadeTime Durée du fondu de sortie.
+     */
     fadeOutAll(fadeTime: number = 2.0) {
         this.tracks.forEach(track => track.stop(fadeTime));
     }
 
+    /**
+     * Récupère l'analyseur master pour la visualisation globale.
+     */
     getAnalyser() {
         return this.analyser;
     }
 
+    /**
+     * Change le périphérique de sortie audio pour toutes les ambiances.
+     * @param deviceId Identifiant du périphérique (sinkID).
+     */
     public async setOutputDevice(deviceId: string) {
         if ('setSinkId' in this.context) {
             try {
@@ -221,6 +264,7 @@ export class AmbientEngine {
         }
     }
 }
+
 
 // Singleton for Ambient OS
 export let ambientEngine = new AmbientEngine();

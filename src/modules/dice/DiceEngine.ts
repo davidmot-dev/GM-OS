@@ -14,12 +14,25 @@ export interface RollResult {
 }
 
 export class DiceEngine {
+    /**
+     * Effectue un lancer de dé simple de 1 à 'sides'.
+     * @param sides Nombre de faces du dé.
+     * @returns Résultat du lancer (entier entre 1 et sides).
+     */
     static roll(sides: number): number {
         if (sides < 1) return 0;
         return Math.floor(Math.random() * sides) + 1;
     }
 
     // --- 1. DÉS MULTI-CHIFFRES (D66, D888...) ---
+    /**
+     * Lance des dés multi-chiffres (ex: D66, D888).
+     * Chaque dé est lancé individuellement et combiné (D66 = dizaine + unité).
+     * @param faces Type de dé multi-chiffre (ex: 66, 888).
+     * @param count Nombre de fois que l'on lance cette combinaison.
+     * @param modifier Modificateur à ajouter à chaque résultat final.
+     * @returns Objet RollResult contenant les détails des lancers.
+     */
     static rollDigits(faces: number, count: number, modifier: number): RollResult {
         const rolls: RollResult['rolls'] = [];
         const totals: number[] = [];
@@ -59,6 +72,15 @@ export class DiceEngine {
     }
 
     // --- 2. JETS STANDARDS ET SOMMES EXPLOSIVES ---
+    /**
+     * Lance des dés standards avec support optionnel de l'explosion.
+     * Redirige vers rollDigits si les faces correspondent à un dé multi-chiffre.
+     * @param faces Nombre de faces (ex: 6, 20).
+     * @param count Nombre de dés à lancer.
+     * @param modifier Modificateur global.
+     * @param exploding Si true, relance le dé s'il atteint sa valeur maximale.
+     * @returns Objet RollResult.
+     */
     static rollStandard(faces: number, count: number, modifier: number = 0, exploding: boolean = false): RollResult {
         if ([44, 66, 88, 444, 666, 888].includes(faces)) {
             return this.rollDigits(faces, count, modifier);
@@ -85,6 +107,15 @@ export class DiceEngine {
     }
 
     // --- 3. JETS DE SEUIL (THRESHOLD) ---
+    /**
+     * Lance des dés standards et compare le total à un seuil.
+     * @param faces Nombre de faces.
+     * @param count Nombre de dés.
+     * @param modifier Modificateur global.
+     * @param target Seuil à atteindre.
+     * @param rule Règle de comparaison ('over' ou 'under').
+     * @returns Objet RollResult avec tagSuccess.
+     */
     static rollThreshold(faces: number, count: number, modifier: number, target: number, rule: 'over' | 'under' = 'over'): RollResult {
         const res = this.rollStandard(faces, count, modifier);
         const success = rule === 'over' ? res.total >= target : res.total <= target;
@@ -94,6 +125,16 @@ export class DiceEngine {
     }
 
     // --- 4. POOLS (CLASSIQUES ET EXPLOSIFS) ---
+    /**
+     * Lance une réserve (pool) de dés et compte les succès individuels.
+     * Supporte l'explosion des faces maximales et la soustraction des "1" (fléaux).
+     * @param faces Nombre de faces.
+     * @param count Nombre de dés dans la réserve.
+     * @param modifier Modificateur ajouté au nombre de succès.
+     * @param target Seuil de succès pour chaque dé.
+     * @param exploding Si true, chaque succès critique (face max) ajoute un dé supplémentaire.
+     * @returns Objet RollResult avec décompte des succès et échecs.
+     */
     static rollPool(faces: number, count: number, modifier: number, target: number, exploding: boolean = false): RollResult {
         const rolls: RollResult['rolls'] = [];
         let successes = 0;
@@ -136,6 +177,15 @@ export class DiceEngine {
     }
 
     // --- 5. AVANTAGE / DÉSAVANTAGE ---
+    /**
+     * Lance deux dés et garde le meilleur (Avantage) ou le moins bon (Désavantage).
+     * @param faces Nombre de faces.
+     * @param modifier Modificateur global.
+     * @param isAdvantage True pour l'avantage, False pour le désavantage.
+     * @param target Seuil à atteindre.
+     * @param rule Règle de comparaison ('over' ou 'under').
+     * @returns Objet RollResult.
+     */
     static rollAdvantage(faces: number, modifier: number, isAdvantage: boolean, target: number, rule: 'over' | 'under' = 'over'): RollResult {
         const r1 = this.roll(faces);
         const r2 = this.roll(faces);
@@ -165,6 +215,12 @@ export class DiceEngine {
     }
 
     // --- 6. FATE / FUDGE ---
+    /**
+     * Effectue un lancer de type Fate/Fudge (-1, 0, +1).
+     * @param count Nombre de dés (généralement 4).
+     * @param modifier Modificateur à ajouter à la somme.
+     * @returns Objet RollResult avec une description textuelle de l'échelle Fate.
+     */
     static rollFate(count: number = 4, modifier: number = 0): RollResult {
         const rolls: RollResult['rolls'] = [];
         let sum = 0;
@@ -188,6 +244,13 @@ export class DiceEngine {
     }
 
     // --- 7. ROLEMASTER (D100) ---
+    /**
+     * Effectue un lancer Rolemaster (D100 ouvert).
+     * Si le résultat est >= 96, le dé explose vers le haut.
+     * Si le résultat est <= 5, le dé explose vers le bas.
+     * @param modifier Modificateur global.
+     * @returns Objet RollResult.
+     */
     static rollRolemaster(modifier: number = 0): RollResult {
         const rolls: RollResult['rolls'] = [];
         let total = 0;
@@ -216,6 +279,13 @@ export class DiceEngine {
     }
 
     // --- 8. YEAR ZERO ENGINE (YZE) ---
+    /**
+     * Effectue un lancer Year Zero Engine (YZE).
+     * Différencie les dés de base et les dés d'équipement (Banes sur les 1 de Gear).
+     * @param baseDice Nombre de dés de base.
+     * @param gearDice Nombre de dés d'équipement.
+     * @returns Objet RollResult avec décompte des succès et fléaux.
+     */
     static rollYZE(baseDice: number, gearDice: number): RollResult {
         const rolls: RollResult['rolls'] = [];
         let successes = 0;
@@ -274,6 +344,11 @@ export class DiceEngine {
     }
 
     // --- 9. PARSEUR DE FORMULE LIBRE (ex: 2d6-1d4+5) ---
+    /**
+     * Tokenise une formule de dés (ex: "2d6-1d4+5").
+     * @param formula Chaîne de caractères représentant la formule.
+     * @returns Tableau de tokens ou null si invalide.
+     */
     static parseSettings(formula: string): string[] | null {
         // Tokenisation de la formule: ex "2d6-1d4+5" => ["2d6", "-1d4", "+5"]
         // C'est basique mais ça reproduit "window.utils.parseDiceFormula" de la v3.
@@ -283,6 +358,12 @@ export class DiceEngine {
         return matches;
     }
 
+    /**
+     * Analyse et lance une formule complexe de dés.
+     * Supporte les dés multi-chiffres, Fate et les bonus/malus.
+     * @param formula Formule (ex: "2d6+5", "1d66").
+     * @returns Objet RollResult.
+     */
     static rollFormula(formula: string): RollResult {
         const matches = this.parseSettings(formula);
         if (!matches) throw new Error("Format Invalide");
@@ -347,6 +428,13 @@ export class DiceEngine {
     }
 
     // --- 10. SYSTEM BRIDGE ---
+    /**
+     * Point d'entrée principal pour lancer des dés à partir d'une configuration système.
+     * Gère les différents moteurs (Year Zero, Rolemaster, 2d20) et logiques (count-success, highest, etc.).
+     * @param config Configuration du système (dés, logique, seuil, moteur).
+     * @param options Options dynamiques (modificateur, nombre de dés, seuil forcé).
+     * @returns Objet RollResult final.
+     */
     static rollFromConfig(config: { defaultDice: string; logic: string; successThreshold?: number; engine?: string }, options?: { modifier?: number; baseCount?: number; gearCount?: number; targetOverwrite?: number }): RollResult {
         // If an engine is specified, prioritize it
         if (config.engine === 'year-zero' || config.engine === 'yze') {
@@ -409,3 +497,4 @@ export class DiceEngine {
         }
     }
 }
+

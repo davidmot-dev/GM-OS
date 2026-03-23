@@ -6,7 +6,6 @@ import { useFavoriteStore } from '../modules/favorite/useFavoriteStore';
 import { useMapStore } from '../modules/map/useMapStore';
 import { useMediaUrl } from '../hooks/useMediaUrl';
 import PlayerMapCanvas from '../modules/map/components/PlayerMapCanvas';
-import MapTokenLayer from '../modules/map/components/MapTokenLayer';
 import { PlayerDrawingCanvas } from '../modules/whiteboard/components/PlayerDrawingCanvas';
 import { useWhiteboardStore } from '../modules/whiteboard/useWhiteboardStore';
 import { ResolvedImage } from './ResolvedImage';
@@ -21,7 +20,7 @@ const PlayerHub: React.FC = () => {
     const { mediaList, projections } = useImageStore();
     const { isClockProjected, timestamp, mode, theme, tensions } = useClockStore();
     const { favorites } = useFavoriteStore();
-    const { combatants, currentTurnIdx, round } = useCombatStore();
+    const { combatants, currentTurnIdx, round, isCombatProjected } = useCombatStore();
     const { mapUrl, projectionTarget } = useMapStore();
     const { backgroundMode, projectionTarget: whiteboardTarget } = useWhiteboardStore();
 
@@ -98,17 +97,36 @@ const PlayerHub: React.FC = () => {
         return () => window.removeEventListener('storage', handleStorageChange);
     }, []);
 
-    const hasCombatants = combatants.length > 0;
-    const activeCombatant = hasCombatants ? combatants[currentTurnIdx] : null;
+    const visibleCombatants = combatants.filter(c => 
+        c.isPlayer || !c.statuses.some(s => {
+            const n = s.name.toLowerCase();
+            return n === 'invisible' || n === 'invisibilité' || n === 'caché' || n === 'hidden';
+        })
+    );
+    const hasCombatants = isCombatProjected && visibleCombatants.length > 0;
+    
+    // Find active combatant among visible ones, or use the real one if it's a player
+    const realActiveCombatant = combatants[currentTurnIdx];
+    const activeCombatant = (realActiveCombatant && (realActiveCombatant.isPlayer || !realActiveCombatant.statuses.some(s => {
+        const n = s.name.toLowerCase();
+        return n === 'invisible' || n === 'invisibilité' || n === 'caché' || n === 'hidden';
+    }))) ? realActiveCombatant : null;
     const sharedFavorites = favorites.filter(f => f.isSyncedToPlayerHub);
 
-    // Sort the upcoming combatants
+    // Sort the upcoming combatants among visible ones
     const upcomingCombatants: Combatant[] = [];
-    if (hasCombatants && combatants.length > 1) {
-        let i = (currentTurnIdx + 1) % combatants.length;
-        while (i !== currentTurnIdx) {
-            upcomingCombatants.push(combatants[i]);
-            i = (i + 1) % combatants.length;
+    if (hasCombatants && visibleCombatants.length > 1) {
+        // Find index of active in visible list
+        const visibleIdx = activeCombatant ? visibleCombatants.findIndex(c => c.id === activeCombatant.id) : -1;
+        if (visibleIdx !== -1) {
+            let i = (visibleIdx + 1) % visibleCombatants.length;
+            while (i !== visibleIdx) {
+                upcomingCombatants.push(visibleCombatants[i]);
+                i = (i + 1) % visibleCombatants.length;
+            }
+        } else {
+            // If active is hidden, just show all visible
+            upcomingCombatants.push(...visibleCombatants);
         }
     }
 
@@ -160,14 +178,7 @@ const PlayerHub: React.FC = () => {
                 <PlayerDrawingCanvas />
             </div>
 
-            {/* Map Tokens Layer (Z-35) - Above Whiteboard */}
-            {isMapActive && (
-                <div className="fixed inset-0 z-35 pointer-events-none">
-                    <MapTokenLayer />
-                </div>
-            )}
-
-            {/* Overlay for focus */}
+            {/* Overlays for focus */}
             {(sharedFavorites.length > 0 || liveEntity) && (
                 <div className={`fixed inset-0 z-5 bg-black/${isMapActive ? '60' : '40'} backdrop-blur-[2px] pointer-events-none transition-all duration-700`}></div>
             )}

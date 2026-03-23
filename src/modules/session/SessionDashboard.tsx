@@ -18,6 +18,7 @@ import TemplateDashboard from './components/TemplateDashboard';
 import SheetTemplateEditor from './components/SheetTemplateEditor';
 import RuleEngineEditor from './components/RuleEngineEditor';
 import StoryboardDashboard from '../storyboard/StoryboardDashboard';
+import SocialGraph from './components/SocialGraph';
 import { useSessionOSStore } from './useSessionOSStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../data/defaultSheetTemplates';
 
@@ -43,7 +44,7 @@ const SessionDashboard: React.FC = () => {
                         <Users size={28} />
                         <h1 className="text-app-text text-lg font-bold tracking-tight">
                             Session OS <span className="text-gm-gold font-light opacity-80">
-                                {currentView === 'cockpit' ? 'Master Cockpit' : currentView === 'timeline-wiki' ? 'Chroniques' : currentView === 'forge' ? 'System Forge' : currentView === 'templates' ? 'Bibliothèque des Fiches' : currentView.replace('-', ' ')}
+                                {currentView === 'cockpit' ? 'Master Cockpit' : currentView === 'timeline-wiki' ? 'Chroniques' : currentView === 'forge' ? 'System Forge' : currentView === 'templates' ? 'Bibliothèque des Fiches' : currentView === 'social-graph' ? 'Social Nexus (Graphe Social)' : currentView.replace('-', ' ')}
                             </span>
                         </h1>
                     </div>
@@ -127,6 +128,10 @@ const SessionDashboard: React.FC = () => {
                 ) : currentView === 'forge' ? (
                     <div className="col-span-12 overflow-hidden flex h-full p-8 scrollbar-hide">
                         <ForgeDashboard mode={forgeMode} />
+                    </div>
+                ) : currentView === 'social-graph' ? (
+                    <div className="col-span-12 overflow-hidden flex h-full">
+                        <SocialGraph />
                     </div>
                 ) : currentView === 'templates' ? (
                     <div className="col-span-12 overflow-hidden flex h-full">

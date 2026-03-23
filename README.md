@@ -15,7 +15,7 @@ GM-OS v5 est une plateforme de gestion de sessions de Jeu de Rôle (JdR) de nouv
   - **Voice OS** : Modulateur de voix en temps réel avec **Auto-Ducking** (réduction de musique automatique) et profilage vocal intelligent.
 - **VISUAL OS** :
   - **Image OS** : Projection d'illustrations et cartes vers le **Player Hub** via protocole local sécurisé `gmos://`.
-  - **Map OS** : Gestion de cartes interactives avec brouillard de guerre et tokens.
+  - **Map OS** : Gestion de cartes interactives avec brouillard de guerre, tokens et **Vision de l'Oracle** (Narration et tactique assistées par IA).
 - **ADVENTURE TOOLS** :
   - **CORTEX TACTIQUE (AI) v2.0** : Widget horizontal d'analyse comportementale de groupe (Flanquement, Repli) et suggestions tactiques.
   - **Combat OS** : Suivi d'initiative avancé, gestion des PV et mapping automatique de statuts.
@@ -51,13 +51,12 @@ Le projet sépare strictement l'interface utilisateur de la logique système via
 
 ## 📚 Documentation
 
-Plus d'informations techniques et guides d'utilisation sont disponibles dans le dossier `docs/` :
+Plus d'informations techniques et guides d'utilisation sont disponibles dans le dossier `documentation/` :
 
-- **[Architecture (Brain vs Body)](file:///c:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/docs/architecture/rule-engine-ai.md)** : Fonctionnement du Moteur de Règles et de l'IA.
-- **[Guide de Migration](file:///c:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/docs/guides/migration-guide.md)** : Instructions pour la transition vers la v5.
-- **[Documentation Technique (Nettoyage)](file:///c:/Projet_David/GM-OS-v5/docs/technical/media-cleanup.md)** : Fonctionnement du service de maintenance des médias.
-- **[Historique du Projet](file:///c:/Projet_David/GM-OS-v5/docs/history/)** : Comptes-rendus des phases de développement (Forge, etc.).
-- **[Dev & Debug](file:///C:/Projet_David/GM-OS-v5/docs/dev/)** : Notes techniques pour le débogage.
+- **[Architecture (Brain vs Body)](file:///c:/Projet_David/GM-OS-v5/documentation/Architecture/rule-engine-ai.md)** : Fonctionnement du Moteur de Règles et de l'IA.
+- **[Documentation Technique (Social Nexus)](file:///c:/Projet_David/GM-OS-v5/documentation/Technical%20Docs/Social_Nexus_Technical_Doc.md)** : Architecture du graphe de relations.
+- **[Documentation Technique (Nettoyage)](file:///c:/Projet_David/GM-OS-v5/documentation/Technical%20Docs/media-cleanup.md)** : Fonctionnement du service de maintenance des médias.
+- **[Lessons Learned](file:///c:/Projet_David/GM-OS-v5/documentation/Lessons_Learned.md)** : Défis et solutions de l'architecture v5.
 
 ### 🤖 Gemini CLI Integration
 

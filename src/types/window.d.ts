@@ -110,9 +110,9 @@ declare global {
             saveList: (data: unknown) => Promise<boolean>;
             loadList: () => Promise<unknown>;
         };
-        on: (channel: string, callback: (event: unknown, ...args: unknown[]) => void) => void;
-        off: (channel: string, callback: (event: unknown, ...args: unknown[]) => void) => void;
-        send: (channel: string, ...args: unknown[]) => void;
+        on: (channel: string, callback: (event: any, ...args: any[]) => void) => void;
+        off: (channel: string, callback: (event: any, ...args: any[]) => void) => void;
+        send: (channel: string, ...args: any[]) => void;
         remote: {
             getConnectionInfo?: () => Promise<{ ip: string; port: number }>;
             sendSync?: (payload: SyncPayload) => void;
@@ -147,7 +147,7 @@ declare global {
             listSounds: () => Promise<string[]>;
         };
         light?: {
-            request: (url: string, method: string, body?: unknown) => Promise<unknown>;
+            request: (url: string, method: string, body?: unknown) => Promise<any>;
         };
         mcp?: {
             listTools: (serverName: string) => Promise<MCPTool[]>;
@@ -167,10 +167,10 @@ declare global {
             saveAvatar: (buffer: ArrayBuffer, fileName: string) => Promise<string | null>;
         };
         logger?: {
-            info: (message: string, ...args: unknown[]) => void;
-            warn: (message: string, ...args: unknown[]) => void;
-            error: (message: string, ...args: unknown[]) => void;
-            debug: (message: string, ...args: unknown[]) => void;
+            info: (message: string, ...args: any[]) => void;
+            warn: (message: string, ...args: any[]) => void;
+            error: (message: string, ...args: any[]) => void;
+            debug: (message: string, ...args: any[]) => void;
         };
     }
 
@@ -194,10 +194,40 @@ declare global {
         useTaxonomyStore: { getState: () => TaxonomyState; setState: (s: Partial<TaxonomyState>) => void; subscribe: (cb: (s: TaxonomyState) => void) => () => void };
         useVoiceStore: { getState: () => VoiceState; setState: (s: Partial<VoiceState>) => void; subscribe: (cb: (s: VoiceState) => void) => () => void };
         
-        hueEngine?: { applyScene: (id: string, sync?: boolean) => void; revertToManualScene: () => void };
+        hueEngine?: { 
+            applyScene: (id: string | null, isAutomatic?: boolean) => Promise<void>; 
+            revertToManualScene: () => Promise<void>;
+            extinguishAll: () => Promise<void>;
+            triggerFlash: (hex: string, duration?: number, intensity?: number) => Promise<void>;
+            applyTacticalState: (hex: string, name: string, intensity?: number) => Promise<void>;
+            clearTacticalState: () => Promise<void>;
+        };
         soundEngine?: { 
             loadAudio: (id: string, path: string) => Promise<void>;
-            play: (id: string, volume: number) => void;
+            play: (id: string, volume?: number, onEnded?: () => void) => void;
+            stop: (id: string) => void;
+            stopAll: () => void;
+            setVolume: (id: string, volume: number) => void;
+            setMasterVolume: (volume: number) => void;
+        };
+        musicEngine?: {
+            setMasterVolume: (v: number) => void;
+            setCrossfader: (v: number) => void;
+            performAutoFade: (target: 'A' | 'B', durationMs: number) => void;
+            resume: () => Promise<void>;
+            deckA: any;
+            deckB: any;
+        };
+        voiceEngine?: {
+            initialize: () => Promise<void>;
+            stop: () => void;
+            refreshAvailableDevices: () => Promise<void>;
+            updateOutputDevice: (id: string) => Promise<void>;
+        };
+        diceEngine?: {
+            roll: (sides: number) => number;
+            rollFormula: (formula: string) => any;
+            rollFromConfig: (config: any, options?: any) => any;
         };
         highlightMapToken?: (name: string) => void;
     }

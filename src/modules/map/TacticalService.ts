@@ -1,5 +1,4 @@
-
-import type { MapToken } from './useMapStore';
+import type { MapToken } from './types';
 import { GridEngine } from '../tactical-ai/logic/GridEngine';
 import type { TacticalConfig } from '../../types/drivers';
 

@@ -1,4 +1,4 @@
-import { type FogMode, type MapTool } from './useMapStore';
+import type { FogMode, MapTool } from './types';
 
 /**
  * FogEngine
@@ -175,5 +175,25 @@ export class FogEngine {
         this.previewCtx.arc(x, y, radius, 0, Math.PI * 2);
         this.previewCtx.fill();
         this.previewCtx.stroke();
+    }
+
+    /**
+     * Checks if a specific point (x, y) is revealed (transparent) on the fog canvas.
+     */
+    public isPointRevealed(x: number, y: number): boolean {
+        if (!this.fogCtx) return true;
+        
+        try {
+            const ix = Math.floor(x);
+            const iy = Math.floor(y);
+            
+            // Bounds check
+            if (ix < 0 || ix >= this.width || iy < 0 || iy >= this.height) return false;
+
+            const pixel = this.fogCtx.getImageData(ix, iy, 1, 1).data;
+            return pixel[3] < 128;
+        } catch {
+            return true;
+        }
     }
 }

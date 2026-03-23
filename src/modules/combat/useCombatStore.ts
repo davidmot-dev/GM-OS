@@ -5,30 +5,51 @@ import { gmToast } from '../../stores/useToastStore';
 import { useJournalStore } from '../journal/useJournalStore';
 import type { HealthSystem, Player, Entity, PlayerCharacter } from '../session/useSessionOSStore';
 
+/**
+ * Représente un effet d'état appliqué à un combattant (ex: Brûlé, Étourdi).
+ */
 export interface StatusEffect {
-    id: string; // Unique ID for the status instance
+    /** Identifiant unique de l'instance d'effet */
+    id: string; 
+    /** Nom de l'effet (utilisé pour les conflits et la logique) */
     name: string;
-    duration: number; // 0 means infinite
-    icon: string; // e.g. '🔥', '🤢', or a lucide icon name
+    /** Durée en rounds (0 = infini) */
+    duration: number; 
+    /** Icône représentative (Emoji ou nom Lucide) */
+    icon: string; 
 }
 
+/**
+ * Entité participant à un combat.
+ * Peut être liée à un personnage joueur (PC) ou un PNJ (NPC).
+ */
 export interface Combatant {
     id: string;
     name: string;
+    /** Valeur d'initiative pour l'ordre de passage */
     init: number;
     hp: number;
     hpMax: number;
+    /** Indique si le combattant est un PJ */
     isPlayer: boolean;
+    /** Faction pour l'affichage et l'IA (Ami, Ennemi, Neutre) */
     faction: 'player' | 'enemy' | 'neutral' | 'ally';
+    /** ID du combattant actuellement ciblé */
     targetId?: string;
-    sourcePlayerId?: string; // Link to Session OS PlayerCharacter
-    sourceEntityId?: string; // Link to Session OS NPC/Monster
+    /** Lien vers l'ID du PlayerCharacter dans Session-OS (si isPlayer: true) */
+    sourcePlayerId?: string; 
+    /** Lien vers l'ID de l'entité NPC/Monstre dans Session-OS (si isPlayer: false) */
+    sourceEntityId?: string; 
+    /** URL de l'avatar ou du jeton */
     avatar?: string;
+    /** Liste des effets d'état actifs */
     statuses: StatusEffect[];
-    extraStats?: Record<string, { value: number; max: number }>; // Dynamic stats (MP, Sanity...)
+    /** Statistiques additionnelles (Mana, Santé Mentale, etc.) */
+    extraStats?: Record<string, { value: number; max: number }>; 
     resistances?: string[];
     vulnerabilities?: string[];
     immunities?: string[];
+    /** Système de santé spécifique (ex: D&D 5e, Savage Worlds) */
     healthSystem?: HealthSystem;
 }
 
@@ -52,46 +73,78 @@ export const STATUS_CONFLICT_MAP: Record<string, string[]> = {
     'Choqué': ['Concentration']
 };
 
+/**
+ * Interface d'état globale pour le Combat-OS.
+ * Gère le cycle de vie d'un combat, de l'initiative au résumé final.
+ */
 interface CombatState {
+    /** Liste des combattants actifs sur le plateau */
     combatants: Combatant[];
+    /** Index du combattant dont c'est le tour */
     currentTurnIdx: number;
+    /** Numéro du round actuel */
     round: number;
+    /** Indique si le tracker de combat est projeté sur le Player Hub */
+    isCombatProjected: boolean;
+    /** État de synchronisation avec les terminaux distants */
     isRemoteSyncing?: boolean;
 
     // --- Actions --- //
 
     // CRUD
+    /** Ajoute un nouveau participant au combat */
     addCombatant: (combatant: Omit<Combatant, 'id'>) => void;
+    /** Retire un participant du combat */
     removeCombatant: (id: string) => void;
+    /** Met à jour les données d'un combattant */
     updateCombatant: (id: string, updates: Partial<Combatant>) => void;
+    /** Vide la liste complète des combattants et génère un rapport dans le Journal */
     clearCombatants: () => void;
 
     // Initiative
+    /** Définit manuellement l'initiative d'un combattant */
     setInitiative: (id: string, init: number) => void;
+    /** Trie la liste par initiative */
     sortInitiative: (ascending?: boolean) => void;
+    /** Lance l'initiative automatique pour tous les combattants via DiceEngine ou formules */
     rollAutoInitiative: (params: { diceMax?: number; formula?: string; resolver?: (name: string, combatant: Combatant) => number; sortOrder?: 'asc' | 'desc'; cards?: number }) => void;
+    /** Réordonne manuellement les combattants (ex: via Drag & Drop) */
     reorderCombatants: (startIndex: number, endIndex: number) => void;
 
     // Turns
+    /** Passe au tour suivant et réduit la durée des effets d'état */
     nextTurn: () => void;
+    /** Revient au tour précédent */
     prevTurn: () => void;
+    /** Réinitialise les rounds et les initiatives sans vider la liste */
     resetCombat: () => void;
 
     // Statuses
+    /** Ajoute un effet d'état à un combattant (gère les conflits automatiques) */
     addStatus: (combatantId: string, status: Omit<StatusEffect, 'id'>) => void;
+    /** Retire un effet d'état spécifique */
     removeStatus: (combatantId: string, statusId: string) => void;
+    /** Active/Désactive la projection sur le Player Hub */
+    setIsCombatProjected: (projected: boolean) => void;
 
     // Sync
+    /** Synchronise les PV actuels des combattants vers Session-OS (Persistance) */
     syncCombatantHPToSession: () => void;
+    /** Propage les états critiques (mort, etc.) vers Session-OS */
     propagateStatusToSession: () => void;
+    /** Envoie l'état actuel du combat vers les écrans distants via le Bridge */
     broadcastSync: () => void;
     
     // Damage/Heal
+    /** Applique des dégâts ou des soins à un groupe de cibles (gère résistances/vulnérabilités) */
     applyDamage: (amount: number, type: string, targetIds: string[]) => void;
+    /** Définit la cible prioritaire d'un participant */
     setTarget: (combatantId: string, targetId: string | null) => void;
     
     // Snapshot System
+    /** Restaure l'état du combat à partir d'un snapshot de session */
     applySnapshot: (snapshot: { combatants: Combatant[]; currentTurnIdx: number; round: number }) => void;
+    /** Réinitialise complètement le store */
     reset: () => void;
 }
 
@@ -101,6 +154,7 @@ export const useCombatStore = create<CombatState>()(
             combatants: [],
             currentTurnIdx: 0,
             round: 1,
+            isCombatProjected: true,
 
             applySnapshot: (snapshot) => {
                 set({
@@ -122,21 +176,24 @@ export const useCombatStore = create<CombatState>()(
 
             broadcastSync: async () => {
                 if (typeof window === 'undefined') return;
-                const bridge = window.appBridge;
+                const bridge = (window as any).appBridge;
                 if (!bridge?.remote?.sendSync) return;
                 
-                const { combatants, currentTurnIdx, round } = get();
+                const { combatants, currentTurnIdx, round, isCombatProjected } = get();
                 const { resolveToSendableUrl } = await import('../../utils/mediaResolver');
 
-                const resolvedCombatants = await Promise.all(
+                const resolvedCombatants = (await Promise.all(
                     combatants.map(async (c) => ({
                         ...c,
                         avatar: await resolveToSendableUrl(c.avatar)
                     }))
-                );
+                )).filter(c => c.isPlayer || !c.statuses.some(s => {
+                    const n = s.name.toLowerCase();
+                    return n === 'invisible' || n === 'invisibilité' || n === 'caché' || n === 'hidden';
+                }));
                 
                 bridge.remote.sendSync({
-                    combat: { combatants: resolvedCombatants, currentTurnIdx, round }
+                    combat: { combatants: resolvedCombatants, currentTurnIdx, round, isCombatProjected }
                 });
             },
 
@@ -241,13 +298,13 @@ export const useCombatStore = create<CombatState>()(
                         } else if (formula) {
                             let evaluatedFormula = formula;
                             if (resolver) {
-                                const varRegex = /\[([^\]]+)\]|\b([a-zA-ZÀ-ÿ_]+)\b/gi;
+                                const varRegex = /\[([^\]]+)\]|\\b([a-zA-ZÀ-ÿ_]+)\\b/gi;
                                 const matches = Array.from(formula.matchAll(varRegex));
                                 matches.sort((a, b) => b[0].length - a[0].length);
                                 matches.forEach(match => {
                                     const fullMatch = match[0];
                                     const innerVar = match[1] || match[2];
-                                    if (innerVar.toLowerCase() === 'd' && /^\d*d\d+$/i.test(fullMatch)) return;
+                                    if (innerVar.toLowerCase() === 'd' && /^\\d*d\\d+$/i.test(fullMatch)) return;
                                     const val = resolver(innerVar, c);
                                     if (val !== undefined && !Number.isNaN(val)) {
                                         evaluatedFormula = evaluatedFormula.replace(fullMatch, val.toString());
@@ -258,7 +315,7 @@ export const useCombatStore = create<CombatState>()(
                                 if (match.toLowerCase() === 'd') return match;
                                 return '0';
                             });
-                            evaluatedFormula = evaluatedFormula.replace(/[^0-9dD+\-*/\s]/g, '');
+                            evaluatedFormula = evaluatedFormula.replace(/[^0-9dD+\\-\\*/\\s]/g, '');
                             try {
                                 const res = DiceEngine.rollFormula(evaluatedFormula);
                                 rolled = Number.isNaN(res.total) ? 0 : res.total;
@@ -320,7 +377,7 @@ export const useCombatStore = create<CombatState>()(
                     });
                     const activeCombatant = newCombatants[nextIdx];
                     if (activeCombatant && typeof window !== 'undefined') {
-                        const bridge = window.appBridge;
+                        const bridge = (window as any).appBridge;
                         if (bridge && bridge.highlightMapToken) {
                             bridge.highlightMapToken(activeCombatant.name);
                         }
@@ -343,7 +400,7 @@ export const useCombatStore = create<CombatState>()(
                     }
                     const activeCombatant = state.combatants[prevIdx];
                     if (activeCombatant && typeof window !== 'undefined') {
-                        const bridge = window.appBridge;
+                        const bridge = (window as any).appBridge;
                         if (bridge && bridge.highlightMapToken) {
                             bridge.highlightMapToken(activeCombatant.name);
                         }
@@ -393,9 +450,14 @@ export const useCombatStore = create<CombatState>()(
                 get().broadcastSync();
             },
 
+            setIsCombatProjected: (projected: boolean) => {
+                set({ isCombatProjected: projected });
+                get().broadcastSync();
+            },
+
             syncCombatantHPToSession: () => {
                 const { combatants } = get();
-                const sessionStore = window.useSessionOSStore?.getState();
+                const sessionStore = (window as unknown as { useSessionOSStore?: { getState: () => any } }).useSessionOSStore?.getState();
                 if (!sessionStore) return;
                 combatants.forEach(c => {
                     if (c.isPlayer && c.sourcePlayerId) {
@@ -411,7 +473,7 @@ export const useCombatStore = create<CombatState>()(
 
             propagateStatusToSession: () => {
                 const { combatants } = get();
-                const sessionStore = window.useSessionOSStore?.getState();
+                const sessionStore = (window as unknown as { useSessionOSStore?: { getState: () => any } }).useSessionOSStore?.getState();
                 if (!sessionStore) return;
                 combatants.forEach(c => {
                     const isMort = c.statuses.some(s => s.name.toLowerCase() === 'mort' || s.icon === '💀');
@@ -433,7 +495,7 @@ export const useCombatStore = create<CombatState>()(
             applyDamage: (amount, type, targetIds) => {
                 set((state) => {
                     const isHeal = amount < 0;
-                    const sessionStore = window.useSessionOSStore?.getState();
+                    const sessionStore = (window as unknown as { useSessionOSStore?: { getState: () => any } }).useSessionOSStore?.getState();
                     const newCombatants = state.combatants.map(c => {
                         if (!targetIds.includes(c.id)) return c;
                         if (sessionStore) {
@@ -486,18 +548,17 @@ export const useCombatStore = create<CombatState>()(
         }),
         {
             name: 'gmos-combat-storage',
-            partialize: (state) => ({ combatants: state.combatants, round: state.round, currentTurnIdx: state.currentTurnIdx })
+            partialize: (state) => ({ 
+                combatants: state.combatants, 
+                round: state.round, 
+                currentTurnIdx: state.currentTurnIdx,
+                isCombatProjected: state.isCombatProjected 
+            })
         }
     )
 );
 
-// Export for cross-store access
+// Export for cross-store access (safe window cast)
 if (typeof window !== 'undefined') {
-    (window as unknown as Record<string, unknown>).useCombatStore = useCombatStore;
-}
-
-
-// Export for cross-store access
-if (typeof window !== 'undefined') {
-    (window as any).useCombatStore = useCombatStore;
+    (window as unknown as { useCombatStore: typeof useCombatStore }).useCombatStore = useCombatStore;
 }

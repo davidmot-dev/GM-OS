@@ -4,11 +4,11 @@ import { useMediaStore } from '../../../stores/useMediaStore';
 import { useMapStore } from '../../map/useMapStore';
 import { useWhiteboardStore } from '../../whiteboard/useWhiteboardStore';
 import PlayerMapCanvas from '../../map/components/PlayerMapCanvas';
-import MapTokenLayer from '../../map/components/MapTokenLayer';
 import { PlayerDrawingCanvas } from '../../whiteboard/components/PlayerDrawingCanvas';
 import { useVoiceStore } from '../../voice/useVoiceStore';
 import { useTacticalAIStore } from '../../tactical-ai/useTacticalAIStore';
 import { useImageStore } from '../useImageStore';
+import { useCombatStore } from '../../combat/useCombatStore';
 
 
 const ProjectorView: React.FC = () => {
@@ -38,7 +38,8 @@ const ProjectorView: React.FC = () => {
                 useMapStore.persist.rehydrate(),
                 useWhiteboardStore.persist.rehydrate(),
                 useVoiceStore.persist.rehydrate(),
-                useImageStore.persist.rehydrate()
+                useImageStore.persist.rehydrate(),
+                useCombatStore.persist.rehydrate()
             ]);
         };
         syncAtStart();
@@ -115,6 +116,9 @@ const ProjectorView: React.FC = () => {
             if (e.key === 'gmos-image-storage') {
                 useImageStore.persist.rehydrate();
             }
+            if (e.key === 'gmos-combat-storage') {
+                useCombatStore.persist.rehydrate();
+            }
         };
 
         window.addEventListener('storage', handleStorage);
@@ -186,9 +190,6 @@ const ProjectorView: React.FC = () => {
                 {isTargetMonitor ? (
                     <div className="relative w-full h-full">
                         <PlayerMapCanvas onMapClick={(x, y) => useMapStore.getState().addPing(x, y, '#06b6d4')} />
-                        <div className="absolute inset-0 z-20 pointer-events-none">
-                            <MapTokenLayer />
-                        </div>
                     </div>
                 ) : (
                     <div className="flex items-center justify-center h-full text-app-text font-black uppercase tracking-widest text-2xl">

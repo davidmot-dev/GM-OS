@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { useMapStore } from '../useMapStore';
-import type { WeatherType } from '../useMapStore';
+import type { WeatherType } from '../types';
 
 interface WeatherLayerProps {
     isProjectedView?: boolean;

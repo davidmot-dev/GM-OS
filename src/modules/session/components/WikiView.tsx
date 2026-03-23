@@ -19,12 +19,13 @@ const WikiView: React.FC = () => {
         wikiEntries,
         activeCampaignId,
         deleteWikiEntry,
-        entities
+        entities,
+        selectedWikiEntryId,
+        setSelectedWikiEntryId
     } = useSessionOSStore();
 
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState<string>('all');
-    const [selectedEntryId, setSelectedEntryId] = useState<string | null>(null);
 
     const categories = ['all', 'npc', 'location', 'organization', 'lore', 'item'];
 
@@ -34,7 +35,7 @@ const WikiView: React.FC = () => {
         .filter(e => e.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                      e.content.toLowerCase().includes(searchQuery.toLowerCase()));
 
-    const selectedEntry = wikiEntries.find(e => e.id === selectedEntryId);
+    const selectedEntry = wikiEntries.find(e => e.id === selectedWikiEntryId);
 
     return (
         <div className="flex h-full bg-app-bg/20">
@@ -61,7 +62,7 @@ const WikiView: React.FC = () => {
                                     selectedCategory === cat 
                                         ? 'bg-accent/10 border-accent/40 text-accent' 
                                         : 'bg-app-bg/20 border-app-border text-app-text/40 hover:text-app-text'
-                                }`}
+                                  }`}
                             >
                                 {cat === 'all' ? 'Tout' : cat}
                             </button>
@@ -74,9 +75,9 @@ const WikiView: React.FC = () => {
                         {filteredEntries.map(entry => (
                             <button
                                 key={entry.id}
-                                onClick={() => setSelectedEntryId(entry.id)}
+                                onClick={() => setSelectedWikiEntryId(entry.id)}
                                 className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all group ${
-                                    selectedEntryId === entry.id
+                                    selectedWikiEntryId === entry.id
                                         ? 'bg-accent/10 border-accent/40 text-accent'
                                         : 'border-transparent text-app-text/60 hover:bg-app-surface/40 hover:text-app-text'
                                 }`}
@@ -89,7 +90,7 @@ const WikiView: React.FC = () => {
                                         </span>
                                     </div>
                                 </div>
-                                <ChevronRight size={14} className={`opacity-0 group-hover:opacity-40 ${selectedEntryId === entry.id ? 'opacity-40' : ''}`} />
+                                <ChevronRight size={14} className={`opacity-0 group-hover:opacity-40 ${selectedWikiEntryId === entry.id ? 'opacity-40' : ''}`} />
                             </button>
                         ))}
                     </div>
@@ -135,15 +136,17 @@ const WikiView: React.FC = () => {
                                     <button 
                                         onClick={() => gmCustom('wiki-entry-edit', selectedEntry)}
                                         className="p-2 bg-app-surface border border-app-border rounded-xl text-app-text/40 hover:text-accent transition-all"
+                                        title="Modifier l'article"
                                     >
                                         <Edit2 size={18} />
                                     </button>
                                     <button 
                                         onClick={() => {
                                             deleteWikiEntry(selectedEntry.id);
-                                            setSelectedEntryId(null);
+                                            setSelectedWikiEntryId(null);
                                         }}
                                         className="p-2 bg-app-surface border border-app-border rounded-xl text-app-text/40 hover:text-rose-400 transition-all"
+                                        title="Supprimer l'article"
                                     >
                                         <Trash2 size={18} />
                                     </button>
@@ -189,10 +192,10 @@ const WikiView: React.FC = () => {
 
                             {/* Sidebar visual */}
                             <div className="col-span-4 space-y-6">
-                                {((selectedEntry as any).imageUrls || []).length > 0 && (
+                                {(selectedEntry.imageUrls || []).length > 0 && (
                                     <div className="rounded-2xl overflow-hidden border border-app-border bg-app-surface shadow-2xl">
                                         <MediaImage 
-                                            source={((selectedEntry as any).imageUrls || [])[0]} 
+                                            source={(selectedEntry.imageUrls || [])[0]} 
                                             alt={selectedEntry.title} 
                                             className="w-full h-auto object-cover opacity-80"
                                         />

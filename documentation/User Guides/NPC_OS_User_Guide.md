@@ -67,10 +67,10 @@ Désormais, **NPC OS** tire parti de l'intelligence artificielle locale pour sub
 
 ## 🖼️ Galerie des PNJs (Session)
 
-Dans le Cockpit de session, l'accès à la **NPC Gallery** a été optimisé :
+Dans le Cockpit de session, l'accès à la **NPC Gallery** a été optimisé pour la fluidité narrative :
 
-- **Auto-Sélection** : Lors de l'ouverture de la galerie, le premier PNJ est automatiquement sélectionné pour vous faire gagner du temps.
-- **Navigation Fluide** : Le bouton "Retour à la Galerie" vous permet de revenir instantanément à la liste complète tout en gardant vos filtres.
+- **Préservation du Contexte** : Si vous accédez à la galerie via un lien direct (ex: depuis le Social Nexus), l'OS vous affiche immédiatement la fiche détaillée demandée.
+- **Navigation Fluide** : Le bouton "Retour à la Galerie" vous permet de revenir instantanément à la liste complète tout en gardant vos filtres de recherche.
 
 ---
 

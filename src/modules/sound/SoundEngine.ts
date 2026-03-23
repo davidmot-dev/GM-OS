@@ -31,6 +31,10 @@ export class SoundEngine {
         }
     }
 
+    /**
+     * Récupère l'instance unique du SoundEngine (Singleton).
+     * @returns L'instance stable du moteur audio.
+     */
     public static getInstance(): SoundEngine {
         if (!SoundEngine.instance) {
             SoundEngine.instance = new SoundEngine();
@@ -44,6 +48,12 @@ export class SoundEngine {
         SoundEngine.instance = undefined;
     }
 
+    /**
+     * Formate un chemin de fichier en URL utilisable par le moteur audio.
+     * Supporte les protocoles http, data, file et l'appBridge natif.
+     * @param filePath Chemin brut du fichier.
+     * @returns URL formatée.
+     */
     public formatUrl(filePath: string): string {
         if (filePath.startsWith('http') || filePath.startsWith('data:') || filePath.startsWith('file://')) {
             return filePath;
@@ -54,6 +64,12 @@ export class SoundEngine {
         return filePath;
     }
 
+    /**
+     * Charge de manière asynchrone un fichier audio et le décode en AudioBuffer.
+     * Gère les IDs du MediaStore (m-xxx) et les URLs classiques.
+     * @param padId Identifiant unique du pad associé au son.
+     * @param filePath Chemin ou ID du fichier audio.
+     */
     public async loadAudio(padId: string, filePath: string): Promise<void> {
         try {
             let arrayBuffer: ArrayBuffer;
@@ -80,6 +96,12 @@ export class SoundEngine {
         }
     }
 
+    /**
+     * Joue un son pré-chargé pour un pad spécifique.
+     * @param padId Identifiant unique du pad.
+     * @param volume Volume initial (0.0 à 1.0).
+     * @param onEndedCallback Callback optionnel appelé à la fin de la lecture.
+     */
     public play(padId: string, volume: number = 1.0, onEndedCallback?: () => void) {
         const buffer = this.audioBuffers.get(padId);
         if (!buffer) {
@@ -112,6 +134,10 @@ export class SoundEngine {
         this.padSources.set(padId, source);
     }
 
+    /**
+     * Arrête immédiatement la lecture d'un pad et libère les ressources associées.
+     * @param padId Identifiant unique du pad.
+     */
     public stop(padId: string) {
         const source = this.padSources.get(padId);
         if (source) {
@@ -127,6 +153,10 @@ export class SoundEngine {
         }
     }
 
+    /**
+     * Arrête tous les sons en cours avec un fondu de sortie (fade-out) de 3 secondes.
+     * Réinitialise ensuite le gain master à 1.0.
+     */
     public stopAll() {
         console.log('[SoundEngine] Executing 3s Master Fade-Out');
 
@@ -159,6 +189,11 @@ export class SoundEngine {
         }, 3100);
     }
 
+    /**
+     * Modifie le volume d'un pad en cours de lecture de manière fluide.
+     * @param padId Identifiant unique du pad.
+     * @param volume Nouveau volume (0.0 à 1.0).
+     */
     public setVolume(padId: string, volume: number) {
         const gain = this.padGains.get(padId);
         if (gain) {
@@ -167,10 +202,18 @@ export class SoundEngine {
         }
     }
 
+    /**
+     * Modifie le volume global (Master) de manière fluide.
+     * @param volume Nouveau volume (0.0 à 1.0).
+     */
     public setMasterVolume(volume: number) {
         this.masterGain.gain.setTargetAtTime(volume, this.context.currentTime, 0.05);
     }
 
+    /**
+     * Change le périphérique de sortie audio (si supporté par le navigateur).
+     * @param deviceId ID du périphérique (ex: 'default', 'communications' ou UUID).
+     */
     public async setOutputDevice(deviceId: string) {
         if ('setSinkId' in this.context) {
             try {
@@ -197,5 +240,5 @@ export const soundEngine = SoundEngine.getInstance();
 
 // Export for cross-store access
 if (typeof window !== 'undefined') {
-    (window as any).soundEngine = soundEngine;
+    window.soundEngine = soundEngine;
 }

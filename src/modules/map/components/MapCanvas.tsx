@@ -5,6 +5,7 @@ import MapTokenNode from './MapTokenNode';
 import MapPingLayer from './MapPingLayer';
 import WeatherLayer from './WeatherLayer';
 import MagicLayer from './MagicLayer';
+import DangerZoneLayer from './DangerZoneLayer';
 
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { gmConfirm } from '../../../stores/useModalStore';
@@ -19,7 +20,9 @@ const MapCanvas: React.FC = () => {
         mapWidth, mapHeight, setMapDimensions,
         isGridEnabled, gridSize, gridColor, gridOpacity,
         setSelectedTokenId,
-        magicStyle, magicShape, magicEffects, addMagicEffect, removeMagicEffect
+        magicStyle, magicShape, magicEffects, addMagicEffect, removeMagicEffect,
+        addDangerZone, dangerShape,
+        isMapMuted, mapVolume, mapOutputDeviceId
     } = useMapStore();
 
 
@@ -27,6 +30,7 @@ const MapCanvas: React.FC = () => {
     const resolvedMapUrl = useMediaUrl(mapUrl || undefined);
 
     const containerRef = useRef<HTMLDivElement>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
     const fogCanvasRef = useRef<HTMLCanvasElement>(null);
     const previewCanvasRef = useRef<HTMLCanvasElement>(null);
     const gridCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -37,6 +41,7 @@ const MapCanvas: React.FC = () => {
     const [startPos, setStartPos] = useState<{ x: number, y: number } | null>(null);
     const [lastPanPos, setLastPanPos] = useState<{ x: number, y: number } | null>(null);
     const [magicPreview, setMagicPreview] = useState<{ x: number, y: number, w: number, h: number, r: number } | null>(null);
+    const [dangerPreview, setDangerPreview] = useState<{ x: number, y: number, w: number, h: number, radius: number, rotation: number } | null>(null);
 
 
     const fitToScreen = React.useCallback((targetW = mapWidth, targetH = mapHeight) => {
@@ -91,7 +96,7 @@ const MapCanvas: React.FC = () => {
                 setMapDimensions(w, h);
                 engineRef.current?.resize(w, h);
                 fitToScreen(w, h);
-            }, 50);
+            }, 10);
         };
 
         if (isVideo) {
@@ -108,6 +113,28 @@ const MapCanvas: React.FC = () => {
             if (img.width > 0) handleDimensions(img.width, img.height);
         }
     }, [resolvedMapUrl, isVideo, setMapDimensions, fitToScreen]);
+
+    // Handle Audio Volume & Device for GM View
+    useEffect(() => {
+        if (videoRef.current) {
+            videoRef.current.volume = mapVolume;
+        }
+    }, [mapVolume]);
+
+    useEffect(() => {
+        const setDevice = async () => {
+            if (videoRef.current && 'setSinkId' in videoRef.current) {
+                try {
+                    const deviceId = mapOutputDeviceId === 'default' ? '' : mapOutputDeviceId;
+                    await (videoRef.current as any).setSinkId(deviceId);
+                    console.log(`[MapCanvas] Output device set to: ${deviceId || 'default'}`);
+                } catch (err) {
+                    console.error("[MapCanvas] Failed to set output device:", err);
+                }
+            }
+        };
+        setDevice();
+    }, [mapOutputDeviceId]);
 
     // 3. Répondre au bouton "Recadrer"
     useEffect(() => {
@@ -209,6 +236,9 @@ const MapCanvas: React.FC = () => {
 
             if (currentTool === 'brush') {
                 engineRef.current?.drawBrush(coords.x, coords.y, coords.x, coords.y, fogMode, brushSize);
+            } else if (currentTool === 'danger') {
+                setIsDrawing(true);
+                setStartPos(coords);
             }
         }
     };
@@ -257,6 +287,19 @@ const MapCanvas: React.FC = () => {
                 w: dist,
                 h: dist,
                 r: rotation
+            });
+        } else if (currentTool === 'danger' && isDrawing && startPos) {
+            const dx = coords.x - startPos.x;
+            const dy = coords.y - startPos.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const rotation = (Math.atan2(dy, dx) * 180) / Math.PI;
+            setDangerPreview({
+                x: startPos.x,
+                y: startPos.y,
+                w: dx,
+                h: dy,
+                radius: dist,
+                rotation: rotation
             });
         }
 
@@ -338,6 +381,42 @@ const MapCanvas: React.FC = () => {
             setMagicPreview(null);
         }
 
+        if (startPos && currentTool === 'danger') {
+            const state = useMapStore.getState();
+            const presets = state.dangerZonePresets;
+            const presetId = state.selectedDangerPresetId;
+            const preset = presets.find(p => p.id === presetId);
+            
+            const dx = coords.x - startPos.x;
+            const dy = coords.y - startPos.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const rotation = (Math.atan2(dy, dx) * 180) / Math.PI;
+
+            console.log("[MapCanvas] Zone construite avec:", {
+                name: preset?.name,
+                hue: preset?.hueSceneId,
+                atmos: preset?.audioAtmosphereId,
+                pad: preset?.audioPadId
+            });
+
+            addDangerZone({
+                name: preset?.name || "Zone de Danger",
+                presetId: presetId || undefined,
+                type: dangerShape,
+                x: (dangerShape === 'cone' || dangerShape === 'line') ? startPos.x : (dangerShape === 'rect' ? Math.min(startPos.x, coords.x) : startPos.x),
+                y: (dangerShape === 'cone' || dangerShape === 'line') ? startPos.y : (dangerShape === 'rect' ? Math.min(startPos.y, coords.y) : startPos.y),
+                width: dangerShape === 'rect' ? Math.abs(dx) : dist,
+                height: dangerShape === 'rect' ? Math.abs(dy) : (dangerShape === 'line' ? 40 : dist),
+                radius: (dangerShape === 'circle' || dangerShape === 'cone') ? dist : 0,
+                rotation: (dangerShape === 'cone' || dangerShape === 'line') ? rotation : 0,
+                color: preset?.color || '#ff0000',
+                hueSceneId: preset?.hueSceneId,
+                audioAtmosphereId: preset?.audioAtmosphereId,
+                audioPadId: preset?.audioPadId
+            });
+            setDangerPreview(null);
+        }
+
 
 
         setIsDrawing(false);
@@ -414,10 +493,11 @@ const MapCanvas: React.FC = () => {
                 {/* 1. Base Layer (Image / Video) */}
                 {resolvedMapUrl && isVideo ? (
                     <video 
+                        ref={videoRef}
                         src={resolvedMapUrl} 
                         autoPlay 
                         loop 
-                        muted 
+                        muted={isMapMuted} 
                         className="absolute inset-0 w-full h-full object-cover z-10" 
                     />
                 ) : resolvedMapUrl ? (
@@ -433,28 +513,30 @@ const MapCanvas: React.FC = () => {
                     <canvas ref={gridCanvasRef} className="absolute inset-0 w-full h-full z-15" />
                 )}
 
-                {/* 3. Fog Layer */}
+                {/* 3. Tokens Layer (Under Fog for shading) */}
+                <div className="absolute inset-0 w-full h-full z-16 pointer-events-none">
+                    {tokens.map(token => (
+                        <MapTokenNode key={token.id} token={token} />
+                    ))}
+                </div>
+
+                {/* 4. Magic Effects Layer (Under Fog) */}
+                <MagicLayer isProjectedView={false} />
+
+                {/* 5. Danger Zones Layer */}
+                <DangerZoneLayer isProjectedView={false} />
+
+                {/* 6. Fog Layer (Top-level mask) */}
                 <canvas
                     ref={fogCanvasRef}
                     className="absolute inset-0 w-full h-full z-20 opacity-80"
                     style={{ display: resolvedMapUrl ? 'block' : 'none' }}
                 />
 
-                {/* 4. Tokens Layer */}
-                <div className="absolute inset-0 w-full h-full z-30 pointer-events-none">
-                    {tokens.map(token => (
-                        <MapTokenNode key={token.id} token={token} />
-                    ))}
-                </div>
-
-                {/* 4.1. Magic Effects Layer */}
-                <MagicLayer isProjectedView={false} />
-
-
-                {/* 4.5. Pings Layer */}
+                {/* 7. Pings Layer (Above Fog) */}
                 <MapPingLayer isProjectedView={false} />
 
-                {/* 4.6. Weather Layer */}
+                {/* 8. Weather Layer */}
                 <WeatherLayer isProjectedView={false} />
 
                 {/* 5. Preview Layer */}
@@ -501,6 +583,31 @@ const MapCanvas: React.FC = () => {
                                     />
                                 )}
                             </svg>
+                        )}
+                    </div>
+                )}
+
+                {/* Danger Zone Drawing Preview */}
+                {dangerPreview && (
+                    <div 
+                        className={`absolute border border-rose-500/50 bg-rose-500/10 pointer-events-none z-50 border-dashed ${dangerShape === 'circle' ? 'rounded-full text-center flex items-center justify-center' : ''}`}
+                        style={{
+                            left: dangerShape === 'circle' 
+                                ? (dangerPreview.x - dangerPreview.radius)
+                                : Math.min(dangerPreview.x, dangerPreview.x + dangerPreview.w),
+                            top: dangerShape === 'circle' 
+                                ? (dangerPreview.y - dangerPreview.radius)
+                                : Math.min(dangerPreview.y, dangerPreview.y + dangerPreview.h),
+                            width: dangerShape === 'circle' 
+                                ? (dangerPreview.radius * 2)
+                                : Math.abs(dangerPreview.w),
+                            height: dangerShape === 'circle' 
+                                ? (dangerPreview.radius * 2) 
+                                : Math.abs(dangerPreview.h)
+                        }}
+                    >
+                        {dangerShape === 'circle' && (
+                            <div className="w-1 h-1 bg-rose-500 rounded-full" />
                         )}
                     </div>
                 )}

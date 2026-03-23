@@ -1,35 +1,57 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+/** Mode de fonctionnement de l'horloge */
 export type ClockMode = 'realtime' | 'static' | 'timer' | 'fantasy';
+/** Thèmes visuels disponibles pour l'affichage */
 export type ClockTheme = 'cyberpunk' | 'oldstyle' | 'modern';
 
-
+/**
+ * Définit un calendrier fantastique personnalisé.
+ */
 export interface FantasyCalendar {
     id: string;
+    /** Nom du calendrier (ex: "Calendrier d'Harptos") */
     name: string;
     description?: string;
+    /** Liste des mois et leur durée */
     months: {
         name: string;
         days: number;
         displayName?: string;
+        /** Indique si c'est un mois hors calendrier (ex: fête) */
         isIntercalary?: boolean;
+        /** Présent uniquement lors des années bissextiles */
         leapYearOnly?: boolean;
     }[];
+    /** Nombre de jours par semaine */
     daysPerWeek: number;
+    /** Noms des jours de la semaine */
     daysOfWeek?: string[];
+    /** Heures dans un cycle journalier */
     hoursPerDay: number;
+    /** Minutes par heure */
     minutesPerHour: number;
 }
 
+/**
+ * Jauge de tension narrative (Clock).
+ */
 export interface TensionClock {
     id: string;
+    /** Label de la jauge (ex: "Alerte Gardes") */
     name: string;
+    /** Nombre total de segments */
     totalSegments: number;
+    /** Segments actuellement remplis */
     filledSegments: number;
+    /** Couleur personnalisée pour le rendu */
     color?: string;
 }
 
+/**
+ * Représente une date précise dans un calendrier fantastique.
+ */
 export interface FantasyDate {
     year: number;
     monthIndex: number;
@@ -37,65 +59,98 @@ export interface FantasyDate {
     hour: number;
     minute: number;
     second: number;
+    /** Nom du jour calculé selon le calendrier actif */
     dayOfWeek?: string;
 }
 
+/**
+ * Interface d'état globale pour le Clock-OS.
+ * Gère le temps réel, les minuteurs et les calendriers narratifs.
+ */
 interface ClockState {
     // Time State
+    /** Mode actuel de l'horloge */
     mode: ClockMode;
+    /** Thème visuel actif */
     theme: ClockTheme;
-    timestamp: number; // Current point in time (ms)
-    timeMultiplier: number; // For fantasy time acceleration
+    /** Point actuel dans le temps (Millisecondes UNIX ou relatives) */
+    timestamp: number; 
+    /** Multiplicateur pour l'accélération du temps fantastique */
+    timeMultiplier: number; 
 
     // Timer State
-    timerDuration: number; // Total duration in seconds
-    timerRemaining: number; // Remaining time in seconds
+    /** Durée totale configurée pour le minuteur (secondes) */
+    timerDuration: number; 
+    /** Temps restant avant la fin (secondes) */
+    timerRemaining: number; 
+    /** Indique si le minuteur est actif */
     timerIsRunning: boolean;
-    timerLabel: string; // Label for the current timer
+    /** Label affiché sur le minuteur */
+    timerLabel: string; 
 
 
     // Fantasy Calendar State
+    /** ID du calendrier narratif sélectionné */
     activeCalendarId: string | null;
+    /** Dictionnaire des calendriers chargés */
     calendars: Record<string, FantasyCalendar>;
+    /** Liste des IDs de calendriers disponibles sur le système */
     availableCalendars: string[];
 
     // Tension Clocks
+    /** Liste des jauges de tension actives */
     tensions: TensionClock[];
 
     // Projection State
+    /** Indique si l'horloge/minuteur est projeté sur le Player Hub */
     isClockProjected: boolean;
 
     // Actions
     setMode: (mode: ClockMode) => void;
     setTheme: (theme: ClockTheme) => void;
+    /** Définit manuellement le timestamp actuel */
     setTimestamp: (timestamp: number) => void;
+    /** Avance ou recule le temps de X secondes */
     addTime: (seconds: number) => void;
+    /** Configure la vitesse de défilement du temps */
     setTimeMultiplier: (multiplier: number) => void;
 
     // Timer Actions
+    /** Configure une durée de minuteur */
     setTimer: (seconds: number) => void;
     startTimer: () => void;
     pauseTimer: () => void;
     resetTimer: () => void;
     setTimerLabel: (label: string) => void;
+    /** Décrémente le minuteur (appelé chaque seconde) */
     tickTimer: () => void;
 
 
     // Tension Actions
-    addTensionClock: (name: string, segments: number) => void;
+    /** Ajoute une nouvelle jauge de tension */
+    addTensionClock: (name: string, totalSegments: number) => void;
+    /** Supprime une jauge */
     removeTensionClock: (id: string) => void;
+    /** Ajoute ou retire des segments à une jauge */
     updateTensionSegments: (id: string, delta: number) => void;
+    /** Remet une jauge à zéro */
     resetTensionClock: (id: string) => void;
 
     // Calendar Actions
+    /** Charge les données d'un calendrier en mémoire */
     loadCalendar: (calendar: FantasyCalendar) => void;
     setActiveCalendar: (id: string | null) => void;
+    /** Récupère la liste des fichiers de calendrier via le Bridge */
     fetchCalendars: () => Promise<void>;
+    /** Charge et active un calendrier spécifique */
     selectCalendar: (id: string) => Promise<void>;
+    /** Calcule la date fantastique actuelle selon le timestamp et le calendrier actif */
     getFantasyDate: () => FantasyDate | null;
+    /** Définit la date fantastique (répercute sur le timestamp) */
     setFantasyDate: (date: Partial<FantasyDate>) => void;
 
     // Projection Actions
+    /** Active/Désactive la projection sur le moniteur externe */
     setIsClockProjected: (projected: boolean) => void;
 }
 
@@ -190,8 +245,7 @@ export const useClockStore = create<ClockState>()(
             setActiveCalendar: (id) => set({ activeCalendarId: id }),
 
             fetchCalendars: async () => {
-                // @ts-expect-error global
-                const bridge = window.appBridge?.clock;
+                const bridge = (window as unknown as { appBridge?: { clock?: { listCalendars: () => Promise<string[]> } } }).appBridge?.clock;
                 if (!bridge) return;
                 try {
                     const catalogs = await bridge.listCalendars();
@@ -202,13 +256,11 @@ export const useClockStore = create<ClockState>()(
             },
 
             selectCalendar: async (id) => {
-                // @ts-expect-error global
-                const bridge = window.appBridge?.clock;
+                const bridge = (window as unknown as { appBridge?: { clock?: { loadCalendar: (id: string) => Promise<FantasyCalendar> } } }).appBridge?.clock;
                 if (!bridge) return;
                 try {
                     const calendar = await bridge.loadCalendar(id);
                     if (calendar) {
-                        // Ensure ID is set (from filename if missing in JSON)
                         if (!calendar.id) calendar.id = id;
                         set((state) => ({
                             calendars: { ...state.calendars, [calendar.id]: calendar },
@@ -231,13 +283,11 @@ export const useClockStore = create<ClockState>()(
                 const secondsPerHour = secondsPerMin * 60;
                 const secondsPerDay = cal.hoursPerDay * secondsPerHour;
 
-                // For simplicity, we treat timestamp as "seconds since year 0" in fantasy context
-                // But typically timestamp is ms. Let's convert to seconds.
                 let totalSeconds = Math.floor(timestamp / 1000);
 
                 const getDaysInYear = (year: number) => {
                     let total = 0;
-                    const isLeap = year % 4 === 0; // Simplified leap year
+                    const isLeap = year % 4 === 0;
                     cal.months.forEach((m: { days: number; leapYearOnly?: boolean }) => {
                         if (m.leapYearOnly && !isLeap) return;
                         total += m.days;
@@ -282,10 +332,8 @@ export const useClockStore = create<ClockState>()(
                 const minute = Math.floor(totalSeconds / secondsPerMin);
                 const second = totalSeconds % secondsPerMin;
 
-                // Day of week calculation
                 let dayOfWeek = undefined;
                 if (cal.daysOfWeek && cal.daysOfWeek.length > 0) {
-                    // Total days since beginning
                     const totalDays = Math.floor(timestamp / (secondsPerDay * 1000));
                     dayOfWeek = cal.daysOfWeek[totalDays % cal.daysOfWeek.length];
                 }
@@ -315,18 +363,15 @@ export const useClockStore = create<ClockState>()(
                 };
 
                 let totalSeconds = 0;
-                // Years
                 for (let y = 0; y < next.year; y++) {
                     totalSeconds += getDaysInYear(y) * secondsPerDay;
                 }
-                // Months up to current
                 const isLeap = next.year % 4 === 0;
                 for (let i = 0; i < next.monthIndex; i++) {
                     const m = cal.months[i];
                     if (m.leapYearOnly && !isLeap) continue;
                     totalSeconds += m.days * secondsPerDay;
                 }
-                // Days, Hours, Mins, Secs
                 totalSeconds += (next.day - 1) * secondsPerDay;
                 totalSeconds += next.hour * secondsPerHour;
                 totalSeconds += next.minute * secondsPerMin;

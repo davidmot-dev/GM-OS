@@ -3,15 +3,23 @@ import { persist } from 'zustand/middleware';
 
 export type NPCCategory = 'npcs' | 'places' | 'items' | 'events' | 'rumors';
 
+/**
+ * Représente une entité générée par le NPC-OS.
+ * Peut être un PNJ, un lieu, un objet, un événement ou une rumeur.
+ */
 export interface NPCEntity {
     id: string;
     category: NPCCategory;
     name: string;
+    /** Chemin local vers l'image d'avatar */
     avatar?: string;
+    /** Notes privées du MJ */
     gmNotes: string;
+    /** Champs dynamiques (ex: 'Race', 'Classe', 'Traits') */
     fields: Record<string, string>;
     timestamp: number;
     isDead?: boolean;
+    /** Suggestion de prompt pour la génération d'image par l'IA */
     suggestedPrompt?: string;
 }
 
@@ -35,10 +43,21 @@ interface NPCState {
 
     // Actions
     setConfig: (updates: Partial<NPCState['config']>) => void;
+    /** 
+     * Récupère la liste des univers disponibles (fichiers JSON dans /databases).
+     * @param category Optionnel, filtre par catégorie (npcs, places, etc.)
+     */
     fetchUniverses: (category?: NPCCategory) => Promise<void>;
+    /** 
+     * Génère une nouvelle entité aléatoire à partir de l'univers sélectionné.
+     * Si `aiEnabled` est vrai, l'entité est enrichie narrativement par l'IA.
+     */
     generate: () => Promise<void>;
+    /** Ouvre une boîte de dialogue pour sélectionner manuellement un avatar. */
     selectAvatar: () => Promise<void>;
+    /** Génère un avatar artistique via l'IA en se basant sur les champs de l'entité. */
     generateAvatar: (instructions?: string) => Promise<void>;
+    /** Sauvegarde l'entité actuelle dans le mémo (historique). */
     saveToMemo: () => void;
     deleteFromMemo: (id: string) => void;
     updateEntityNotes: (id: string, notes: string) => void;

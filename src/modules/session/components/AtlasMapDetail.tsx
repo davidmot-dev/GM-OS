@@ -1,12 +1,21 @@
 import React, { useState } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useMapStore } from '../../map/useMapStore';
-import { Lock, Eye, Send, Film, Image as ImageIcon } from 'lucide-react';
+import { Lock, Eye, Send, Film, Image as ImageIcon, Globe, Swords, Map, Building2, MapPin, type LucideIcon } from 'lucide-react';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaStore } from '../../../stores/useMediaStore';
 import { Sparkles } from 'lucide-react';
 import AIPromptOverlay from '../../ai/components/AIPromptOverlay';
+import type { AtlasMap } from '../useSessionOSStore';
+
+const TYPE_META: Record<AtlasMap['type'], { label: string; icon: LucideIcon; color: string }> = {
+    'battlemap': { label: 'Battlemap', icon: Swords, color: 'text-red-400 border-red-500/30 bg-red-500/10' },
+    'world-map': { label: 'Monde', icon: Globe, color: 'text-blue-400 border-blue-500/30 bg-blue-500/10' },
+    'region': { label: 'Région', icon: Map, color: 'text-green-400 border-green-500/30 bg-green-500/10' },
+    'city': { label: 'Ville', icon: Building2, color: 'text-amber-400 border-amber-500/30 bg-amber-500/10' },
+    'dungeon': { label: 'Lieu', icon: MapPin, color: 'text-purple-400 border-purple-500/30 bg-purple-500/10' },
+};
 
 const AtlasMapDetail: React.FC = () => {
     const { 
@@ -110,9 +119,28 @@ const AtlasMapDetail: React.FC = () => {
                     <div className="flex items-end justify-between">
                         <div>
                             <h2 className="text-2xl font-black text-white tracking-tight drop-shadow-lg">{selectedMap.name}</h2>
-                            <div className="flex items-center gap-2 mt-1">
+                            <div className="flex items-center gap-2 mt-2">
+                                {(Object.entries(TYPE_META) as [AtlasMap['type'], typeof TYPE_META['battlemap']][]).map(([type, meta]) => {
+                                    const Icon = meta.icon;
+                                    const isActive = selectedMap.type === type;
+                                    return (
+                                        <button
+                                            key={type}
+                                            onClick={() => updateAtlasMap(selectedMap.id, { type })}
+                                            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all border backdrop-blur-md ${
+                                                isActive 
+                                                ? `${meta.color} border-white/20 shadow-lg scale-105` 
+                                                : 'text-white/40 border-white/5 hover:text-white/60 hover:bg-white/5'
+                                            }`}
+                                            title={meta.label}
+                                        >
+                                            <Icon size={10} />
+                                            {meta.label}
+                                        </button>
+                                    );
+                                })}
                                 {selectedMap.isVideo && (
-                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/80 text-white">
+                                    <span className="inline-flex items-center gap-1 text-[9px] font-bold px-2 py-1 rounded-lg bg-purple-500/80 text-white ml-2">
                                         <Film size={9} /> Animé
                                     </span>
                                 )}

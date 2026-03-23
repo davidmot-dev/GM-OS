@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { midiEngine, MidiEngine } from './MidiEngine';
+import { MidiEngine } from './MidiEngine';
 import { useSoundStore } from './useSoundStore';
 import { soundController } from './SoundController';
 
@@ -18,8 +18,11 @@ vi.mock('./SoundController', () => ({
 
 describe('MidiEngine', () => {
     let mockInput: any;
+    const mockSetPadMidiMapping = vi.fn();
+    const mockToggleMidiLearn = vi.fn();
+    const mockSetMidiConnected = vi.fn();
 
-    beforeEach(() => {
+    beforeEach(async () => {
         vi.clearAllMocks();
         MidiEngine.resetInstance();
         
@@ -29,37 +32,34 @@ describe('MidiEngine', () => {
             onmidimessage: null 
         };
 
-        // Pre-configure the MIDI access mock from setup.ts to use our local mockInput
-        const nav = navigator as any;
-        nav.requestMIDIAccess().then((access: any) => {
-            access.inputs.forEach = vi.fn((cb) => cb(mockInput));
-        });
-
         // Setup default store state
         vi.mocked(useSoundStore.getState).mockReturnValue({
             atmospheres: [{ id: 'default', pads: { PAD_01: { id: 'PAD_01', title: 'Test', midiMapping: 60 } } }],
             activeAtmosphereId: 'default',
             isMidiLearnActive: false,
             activePadLearnId: null,
-            setMidiConnected: vi.fn(),
-            setPadMidiMapping: vi.fn(),
-            toggleMidiLearn: vi.fn(),
+            setMidiConnected: mockSetMidiConnected,
+            setPadMidiMapping: mockSetPadMidiMapping,
+            toggleMidiLearn: mockToggleMidiLearn,
             setActiveLearnPad: vi.fn(),
         } as any);
+
+        // Pre-configure the MIDI access mock
+        const nav = navigator as any;
+        const access = await nav.requestMIDIAccess();
+        access.inputs.forEach = vi.fn((cb) => cb(mockInput));
+
+        // Initialize once for all tests in this describe
+        await MidiEngine.getInstance().initialize();
     });
 
     it('should initialize and request MIDI access', async () => {
         const nav = navigator as any;
-        await midiEngine.initialize();
         expect(nav.requestMIDIAccess).toHaveBeenCalled();
+        expect(mockSetMidiConnected).toHaveBeenCalledWith(true);
     });
 
     it('should handle MIDI Note On messages', async () => {
-        await midiEngine.initialize();
-        
-        // Ensure inputs are refreshed to attach onmidimessage
-        midiEngine.refreshMidi();
-        
         expect(mockInput.onmidimessage).toBeDefined();
         
         // Simulate Note On (Status 144 = Note On Ch 1, Note 60, Velocity 100)
@@ -70,25 +70,22 @@ describe('MidiEngine', () => {
     });
 
     it('should enter learn mode and map a note to a pad', async () => {
-        // Setup store for learn mode
+        // Setup store for learn mode - OVERRIDE for this specific test
         vi.mocked(useSoundStore.getState).mockReturnValue({
             isMidiLearnActive: true,
             activePadLearnId: 'PAD_02',
-            setPadMidiMapping: vi.fn(),
-            toggleMidiLearn: vi.fn(),
+            setPadMidiMapping: mockSetPadMidiMapping,
+            toggleMidiLearn: mockToggleMidiLearn,
             setActiveLearnPad: vi.fn(),
-            atmospheres: [{ id: 'default', pads: {} }], // Pad 2 not mapped yet
+            atmospheres: [{ id: 'default', pads: {} }],
+            activeAtmosphereId: 'default'
         } as any);
-
-        await midiEngine.initialize();
-        midiEngine.refreshMidi();
 
         // Simulate Note On for Note 72
         const event = { data: new Uint8Array([144, 72, 100]) } as any;
         mockInput.onmidimessage!(event);
 
-        const state = useSoundStore.getState();
-        expect(state.setPadMidiMapping).toHaveBeenCalledWith('PAD_02', 72);
-        expect(state.toggleMidiLearn).toHaveBeenCalled();
+        expect(mockSetPadMidiMapping).toHaveBeenCalledWith('PAD_02', 72);
+        expect(mockToggleMidiLearn).toHaveBeenCalled();
     });
 });

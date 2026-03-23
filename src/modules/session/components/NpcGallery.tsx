@@ -386,7 +386,8 @@ const NpcGalleryItem: React.FC<{
                                     hpMax: npc.maxHp,
                                     avatar: npc.avatar,
                                     isPlayer: false,
-                                    faction: 'enemy',
+                                    faction: npc.role === 'ally' ? 'ally' : 
+                                             (npc.role === 'hostile' || npc.role === 'boss') ? 'enemy' : 'neutral',
                                     sourceEntityId: npc.id,
                                     statuses: []
                                 });

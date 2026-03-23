@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useModalStore } from '../stores/useModalStore';
 import { 
     AlertCircle, HelpCircle, Edit3, UserPlus, ShieldPlus, BookOpen, Users, Play, Cast, 
-    History as LucideHistory, X, Lightbulb, Zap
+    History as LucideHistory, X, Lightbulb, Zap, Settings2
 } from 'lucide-react';
+import type { Campaign, WikiEntry, TimelineEvent, SessionModuleSnapshot } from '../modules/session/useSessionOSStore';
 import { AddPlayerForm } from '../modules/session/components/AddPlayerForm';
 import { AddCharacterForm } from '../modules/session/components/AddCharacterForm';
 import CampaignForm from '../modules/session/components/CampaignForm';
@@ -21,6 +22,9 @@ import SessionNotesModal from '../modules/session/components/SessionNotesModal';
 import SessionSummaryModal from '../modules/session/components/SessionSummaryModal';
 import SnapshotVisualizerModal from '../modules/session/components/SnapshotVisualizerModal';
 import DamageCalculator from '../modules/combat/components/DamageCalculator';
+import DangerZonePresetEditor from '../modules/map/components/DangerZonePresetEditor';
+import NarrativeModal from '../modules/map/components/NarrativeModal';
+import { Sparkles } from 'lucide-react';
 
 const ModalProvider: React.FC = () => {
     const { 
@@ -29,12 +33,20 @@ const ModalProvider: React.FC = () => {
         isMediaHubOpen, closeModal, closeMediaHub 
     } = useModalStore();
 
+    const [inputValue, setInputValue] = useState('');
+
+    useEffect(() => {
+        if (type === 'prompt' && defaultValue !== undefined) {
+            setInputValue(defaultValue as string);
+        }
+    }, [type, defaultValue]);
+
     if (!type && !isMediaHubOpen) return null;
 
     return (
         <>
             {type === 'alert' && (
-                <div role="dialog" aria-modal="true" className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+                <div role="dialog" aria-modal="true" className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
                     <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-sm w-full shadow-2xl animate-in zoom-in-95 duration-200">
                         <div className="flex items-center gap-4 mb-4">
                             <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-500">
@@ -54,7 +66,7 @@ const ModalProvider: React.FC = () => {
             )}
 
             {type === 'confirm' && (
-                <div role="dialog" aria-modal="true" className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+                <div role="dialog" aria-modal="true" className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
                     <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-sm w-full shadow-2xl animate-in zoom-in-95 duration-200">
                         <div className="flex items-center gap-4 mb-4">
                             <div className="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500">
@@ -85,7 +97,7 @@ const ModalProvider: React.FC = () => {
             )}
 
             {type === 'prompt' && (
-                <div role="dialog" aria-modal="true" className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+                <div role="dialog" aria-modal="true" className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
                     <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-sm w-full shadow-2xl animate-in zoom-in-95 duration-200">
                         <div className="flex items-center gap-4 mb-4">
                             <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-500">
@@ -97,11 +109,14 @@ const ModalProvider: React.FC = () => {
                         <input
                             type="text"
                             autoFocus
-                            defaultValue={defaultValue as string}
+                            value={inputValue}
+                            onChange={(e) => setInputValue(e.target.value)}
                             className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white mb-6 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all font-medium"
+                            title="Saisie utilisateur"
+                            placeholder="Saisissez ici..."
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
-                                    onPromptConfirm?.(e.currentTarget.value);
+                                    onPromptConfirm?.(inputValue);
                                     closeModal();
                                 }
                             }}
@@ -114,9 +129,8 @@ const ModalProvider: React.FC = () => {
                                 {cancelLabel || 'Annuler'}
                             </button>
                             <button
-                                onClick={(e) => {
-                                    const input = e.currentTarget.parentElement?.previousElementSibling as HTMLInputElement;
-                                    onPromptConfirm?.(input.value);
+                                onClick={() => {
+                                    onPromptConfirm?.(inputValue);
                                     closeModal();
                                 }}
                                 className="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-colors shadow-lg shadow-emerald-600/20"
@@ -129,7 +143,7 @@ const ModalProvider: React.FC = () => {
             )}
 
             {type === 'custom' && (
-                <div role="dialog" aria-modal="true" className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
+                <div role="dialog" aria-modal="true" className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
                     <div className={`bg-slate-900 border border-slate-800/50 rounded-[2rem] overflow-hidden shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] animate-in zoom-in-95 duration-300 flex flex-col ${
                         customVariant === 'global-settings' || customVariant === 'favorite-dossier' || customVariant === 'npc-detail' || customVariant === 'session-summary' || customVariant === 'session-notes'
                             ? 'max-w-6xl w-full h-[90vh]' 
@@ -157,6 +171,8 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'session-summary' && <BookOpen size={18} />}
                                         {customVariant === 'snapshot-viewer' && <Cast size={18} />}
                                         {customVariant === 'damage-calc' && <Zap size={18} />}
+                                        {customVariant === 'danger-preset-editor' && <Settings2 size={18} />}
+                                        {customVariant === 'narrative-display' && <Sparkles size={18} />}
                                     </div>
                                     <h3 className="font-bold text-white uppercase tracking-wider text-sm">
                                         {customVariant === 'player-add' && 'Ajouter un Joueur'}
@@ -176,9 +192,15 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'session-summary' && 'Résumé de Session'}
                                         {customVariant === 'snapshot-viewer' && 'Aperçu du Snapshot'}
                                         {customVariant === 'damage-calc' && 'Calculateur de Dégâts'}
+                                        {customVariant === 'danger-preset-editor' && 'Gestion des Presets de Danger'}
+                                        {customVariant === 'narrative-display' && 'Vision de l\'Oracle'}
                                     </h3>
                                 </div>
-                                <button onClick={closeModal} className="p-2 hover:bg-slate-800 rounded-full text-slate-400 hover:text-white transition-all">
+                                <button 
+                                    onClick={closeModal} 
+                                    className="p-2 hover:bg-slate-800 rounded-full text-slate-400 hover:text-white transition-all"
+                                    title="Fermer la fenêtre"
+                                >
                                     <X size={20} />
                                 </button>
                             </div>
@@ -188,15 +210,15 @@ const ModalProvider: React.FC = () => {
                             {customVariant === 'player-add' && <AddPlayerForm />}
                             {customVariant === 'character-add' && <AddCharacterForm />}
                             {customVariant === 'campaign-add' && <CampaignForm onClose={closeModal} />}
-                            {customVariant === 'campaign-edit' && <CampaignForm campaign={defaultValue as any} onClose={closeModal} />}
+                            {customVariant === 'campaign-edit' && <CampaignForm campaign={defaultValue as Campaign} onClose={closeModal} />}
                             {customVariant === 'session-select' && <SessionSelectModal />}
                             {customVariant === 'npc-detail' && <NpcDetail embeddedId={defaultValue as string} />}
                             {customVariant === 'favorite-dossier' && <FavoriteFullDossier />}
                             {customVariant === 'timeline-event-add' && <TimelineEventForm onClose={closeModal} />}
-                            {customVariant === 'timeline-event-edit' && <TimelineEventForm event={defaultValue as any} onClose={closeModal} />}
+                            {customVariant === 'timeline-event-edit' && <TimelineEventForm event={defaultValue as TimelineEvent} onClose={closeModal} />}
                             {customVariant === 'wiki-entry-add' && <WikiEntryForm onClose={closeModal} />}
-                            {customVariant === 'wiki-entry-edit' && <WikiEntryForm entry={defaultValue as any} onClose={closeModal} />}
-                            {customVariant === 'light-scene-select' && <LightSceneSelector data={defaultValue as any} />}
+                            {customVariant === 'wiki-entry-edit' && <WikiEntryForm entry={defaultValue as WikiEntry} onClose={closeModal} />}
+                            {customVariant === 'light-scene-select' && <LightSceneSelector data={defaultValue as { type: 'music' | 'sound' | 'ambient'; playlistId?: string; padIndex?: number; padId?: string; trackIndex?: number }} />}
                             {customVariant === 'map-projection-select' && <MapProjectionModal />}
                             {customVariant === 'whiteboard-projection-select' && <WhiteboardProjectionModal />}
                             {customVariant === 'session-notes' && <SessionNotesModal />}
@@ -205,11 +227,13 @@ const ModalProvider: React.FC = () => {
                                 <SnapshotVisualizerModal 
                                     isOpen={true} 
                                     onClose={closeModal} 
-                                    snapshot={(defaultValue as any)?.snapshot} 
-                                    sessionName={(defaultValue as any)?.sessionName || 'Session'} 
+                                    snapshot={(defaultValue as { snapshot: SessionModuleSnapshot; sessionName: string })?.snapshot} 
+                                    sessionName={(defaultValue as { snapshot: SessionModuleSnapshot; sessionName: string })?.sessionName || 'Session'} 
                                 />
                             )}
                             {customVariant === 'damage-calc' && <DamageCalculator />}
+                            {customVariant === 'danger-preset-editor' && <DangerZonePresetEditor />}
+                            {customVariant === 'narrative-display' && <NarrativeModal />}
                             {customVariant === 'global-settings' && <GlobalSettingsModal onClose={closeModal} />}
                         </div>
                     </div>

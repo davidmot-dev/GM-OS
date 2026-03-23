@@ -15,12 +15,16 @@ describe('TacticalAIControlPanel', () => {
       status: 'idle',
       settings: { isMuted: false, autoApplyDispel: false },
       logs: [],
+      isPanelOpen: true,
       updateSettings: vi.fn(),
       clearLogs: vi.fn(),
+      setIsPanelOpen: vi.fn(),
+      activeAdvices: [],
+      hardwareStatus: { hue: 'connected', audio: 'ready' },
     });
 
     render(<TacticalAIControlPanel />);
-    expect(screen.getByRole('button')).toBeDefined();
+    expect(screen.getByText(/Fermer Cortex/i)).toBeDefined();
   });
 
   it('should open the panel when clicked', () => {
@@ -28,12 +32,16 @@ describe('TacticalAIControlPanel', () => {
       status: 'idle',
       settings: { isMuted: false, autoApplyDispel: false },
       logs: [],
+      isPanelOpen: true,
       updateSettings: vi.fn(),
       clearLogs: vi.fn(),
+      setIsPanelOpen: vi.fn(),
+      activeAdvices: [],
+      hardwareStatus: { hue: 'connected', autoApplyDispel: false },
     });
 
     render(<TacticalAIControlPanel />);
-    const btn = screen.getByRole('button');
+    const btn = screen.getByText(/Fermer Cortex/i);
     fireEvent.click(btn);
     
     expect(screen.getByText(/Cerveau/i)).toBeDefined();

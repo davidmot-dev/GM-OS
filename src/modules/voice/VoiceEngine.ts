@@ -1,5 +1,11 @@
 import { useVoiceStore } from './useVoiceStore';
 
+/**
+ * Moteur de traitement de la voix en temps réel.
+ * Gère l'acquisition du microphone, les effets (Pitch, Distortion, Bitcrush), 
+ * la réverbération, le noise gate dynamique et le ducking (atténuation automatique de l'ambiance).
+ * Utilise un AudioWorklet pour le traitement basse latence.
+ */
 export class VoiceEngine {
     private static instance: VoiceEngine;
     private context: AudioContext | null = null;
@@ -29,6 +35,9 @@ export class VoiceEngine {
 
     private constructor() {}
 
+    /**
+     * Récupère l'instance unique du VoiceEngine (Singleton).
+     */
     public static getInstance(): VoiceEngine {
         if (!VoiceEngine.instance) {
             VoiceEngine.instance = new VoiceEngine();
@@ -36,12 +45,15 @@ export class VoiceEngine {
         return VoiceEngine.instance;
     }
 
+    /**
+     * Initialise le contexte audio, capture le microphone et configure la chaîne d'effets.
+     * Configure également les contraintes optimales pour la clarté vocale (écho, suppression de bruit).
+     */
     public async initialize() {
         if (this.isInitialized) return;
 
         try {
-            const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-            this.context = new AudioContextClass({
+            this.context = new AudioContext({
                 latencyHint: 'interactive'
             });
 
@@ -96,11 +108,11 @@ export class VoiceEngine {
                 this.voiceWorklet = new AudioWorkletNode(this.context, 'voice-processor');
                 
                 // Initialize parameters
-                const { currentEffects } = useVoiceStore.getState();
-                const pitchValue = Math.pow(2, (currentEffects.pitch || 0) / 12);
+                const { currentEffects: initialEffects } = useVoiceStore.getState();
+                const pitchValue = Math.pow(2, (initialEffects.pitch || 0) / 12);
                 this.voiceWorklet.parameters.get('pitch')?.setValueAtTime(pitchValue, this.context.currentTime);
-                this.voiceWorklet.parameters.get('distortion')?.setValueAtTime(currentEffects.distortion || 0, this.context.currentTime);
-                this.voiceWorklet.parameters.get('bitcrush')?.setValueAtTime(currentEffects.bitcrush || 0, this.context.currentTime);
+                this.voiceWorklet.parameters.get('distortion')?.setValueAtTime(initialEffects.distortion || 0, this.context.currentTime);
+                this.voiceWorklet.parameters.get('bitcrush')?.setValueAtTime(initialEffects.bitcrush || 0, this.context.currentTime);
 
                 console.log('[VoiceEngine] AudioWorklet Loaded');
             } catch (e) {
@@ -131,23 +143,23 @@ export class VoiceEngine {
             this.limiter.release.value = 0.1;      // Fast release
 
             // --- APPLY CURRENT STORE STATE ---
-            const { isActive, isMonitor, isLive } = useVoiceStore.getState();
+            const { isActive, isMonitor, isLive, currentEffects: effects } = useVoiceStore.getState();
             this.inputGain.gain.value = isActive ? 1.0 : 0;
             this.monitorGain.gain.value = isMonitor ? 1.0 : 0;
             this.liveGain.gain.value = isLive ? 1.0 : 0;
             this.gateGain.gain.value = 1.0; // Open initially
 
             // Apply Effects
-            if (currentEffects.lowCut === 0) {
+            if (effects.lowCut === 0) {
                 this.lowCut.frequency.value = 120; // Default to voice-optimized 120Hz
             } else {
-                this.lowCut.frequency.value = currentEffects.lowCut;
+                this.lowCut.frequency.value = effects.lowCut;
             }
-            this.formantFilter.frequency.value = 500 + (currentEffects.formant * 5);
-            this.formantFilter.gain.value = Math.abs(currentEffects.formant) / 5;
-            this.reverbGain.gain.value = currentEffects.reverb;
-            this.dryGain.gain.value = 1.0 - (currentEffects.reverb * 0.5);
-            this.outputGain.gain.value = currentEffects.outputGain;
+            this.formantFilter.frequency.value = 500 + (effects.formant * 5);
+            this.formantFilter.gain.value = Math.abs(effects.formant) / 5;
+            this.reverbGain.gain.value = effects.reverb;
+            this.dryGain.gain.value = 1.0 - (effects.reverb * 0.5);
+            this.outputGain.gain.value = effects.outputGain;
 
             // --- CONNECT CHAIN ---
             // source -> inputGain -> lowCut -> compressor -> formant -> distortion -> dry/wet reverb -> output -> monitor/live
@@ -201,6 +213,12 @@ export class VoiceEngine {
     }
 
 
+    /**
+     * Génère une impulsion aléatoire pour la réverbération algorithmique.
+     * @param duration Durée de la queue de réverbération en secondes.
+     * @param decay Facteur de décroissance exponentielle.
+     * @returns Un AudioBuffer contenant l'impulsion générée.
+     */
     private async generateImpulseResponse(duration: number, decay: number): Promise<AudioBuffer> {
         if (!this.context) throw new Error('Context not initialized');
         const sampleRate = this.context.sampleRate;
@@ -215,6 +233,10 @@ export class VoiceEngine {
         return buffer;
     }
 
+    /**
+     * Liste les périphériques de sortie audio disponibles.
+     * Met à jour la liste dans le store global.
+     */
     public async refreshAvailableDevices() {
         try {
             const devices = await navigator.mediaDevices.enumerateDevices();
@@ -225,6 +247,10 @@ export class VoiceEngine {
         }
     }
 
+    /**
+     * Change le périphérique de sortie audio utilisé par le contexte.
+     * @param deviceId Identifiant unique du périphérique (sinkId).
+     */
     public async updateOutputDevice(deviceId: string) {
         if (!this.context) return;
         
@@ -244,6 +270,11 @@ export class VoiceEngine {
 
     private duckingTimeout: number | null = null;
 
+    /**
+     * Démarre l'analyse en temps réel du niveau d'entrée.
+     * Gère également la logique du Noise Gate et la détection du Ducking.
+     * Synchronise le niveau de voix avec le Player Hub via le bridge.
+     */
     private startLevelTracking() {
         if (!this.analyser) return;
 
@@ -318,6 +349,10 @@ export class VoiceEngine {
         update();
     }
 
+    /**
+     * Abonne l'engine aux mutations du store global Voice.
+     * Permet d'appliquer les changements de paramètres (Pitch, Gain, etc.) en temps réel sur la chaîne audio.
+     */
     public syncWithStore() {
         if (!this.isInitialized) return;
 
@@ -398,6 +433,9 @@ export class VoiceEngine {
         });
     }
 
+    /**
+     * Arrête complètement l'engine, ferme le flux du microphone et le contexte audio.
+     */
     public stop() {
         if (this.animationFrame) cancelAnimationFrame(this.animationFrame);
         if (this.stream) {
@@ -420,5 +458,6 @@ export class VoiceEngine {
         }
     }
 }
+
 
 export const voiceEngine = VoiceEngine.getInstance();

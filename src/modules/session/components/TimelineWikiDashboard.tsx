@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { 
     History, 
@@ -10,8 +10,7 @@ import TimelineView from './TimelineView';
 import WikiView from './WikiView';
 
 const TimelineWikiDashboard: React.FC = () => {
-    const { setCurrentView, activeCampaignId, campaigns } = useSessionOSStore();
-    const [activeTab, setActiveTab] = useState<'timeline' | 'wiki'>('timeline');
+    const { setCurrentView, activeCampaignId, campaigns, wikiTab, setWikiTab } = useSessionOSStore();
     
     const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
 
@@ -41,9 +40,9 @@ const TimelineWikiDashboard: React.FC = () => {
 
                 <div className="flex items-center gap-1 p-1 bg-app-bg/60 rounded-xl border border-app-border">
                     <button
-                        onClick={() => setActiveTab('timeline')}
+                        onClick={() => setWikiTab('timeline')}
                         className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${
-                            activeTab === 'timeline' 
+                            wikiTab === 'timeline' 
                                 ? 'bg-accent text-app-bg shadow-glow-accent/20' 
                                 : 'text-app-text/40 hover:text-app-text hover:bg-app-surface'
                         }`}
@@ -52,9 +51,9 @@ const TimelineWikiDashboard: React.FC = () => {
                         Chronologie
                     </button>
                     <button
-                        onClick={() => setActiveTab('wiki')}
+                        onClick={() => setWikiTab('wiki')}
                         className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${
-                            activeTab === 'wiki' 
+                            wikiTab === 'wiki' 
                                 ? 'bg-accent text-app-bg shadow-glow-accent/20' 
                                 : 'text-app-text/40 hover:text-app-text hover:bg-app-surface'
                         }`}
@@ -67,7 +66,7 @@ const TimelineWikiDashboard: React.FC = () => {
 
             {/* Content Area */}
             <div className="flex-1 overflow-hidden relative">
-                {activeTab === 'timeline' ? (
+                {wikiTab === 'timeline' ? (
                     <TimelineView />
                 ) : (
                     <WikiView />
