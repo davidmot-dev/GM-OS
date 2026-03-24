@@ -1,4 +1,5 @@
 {
   "masterVolume": 0.52,
-  "isFocusMode": false
+  "isFocusMode": false,
+  "focusDuckingRatio": 0.1
 }
