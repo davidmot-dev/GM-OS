@@ -1,0 +1,138 @@
+[
+  {
+    "id": "c-1",
+    "name": "The Eternal Quest",
+    "system": "D&D 5E",
+    "description": "A dark fantasy adventure in the Underdark.",
+    "synopsis": "The party is currently investigating the iron citadel.",
+    "wallpaperUrl": "m-f8d906c3-e50e-42c4-a74e-a952cc4726d4",
+    "activeLocationIds": [
+      "152b09f6-e0af-44eb-b473-39a0dc15d7d3",
+      "am-2"
+    ],
+    "activeSessionId": "0ad3a2fb-c66a-4676-ae7c-1e6152840b76",
+    "notebookUrl": "https://notebooklm.google.com/notebook/d043f3ee-bd2f-43f6-afc2-e89d08493395"
+  },
+  {
+    "name": "Aux Portes de L'Horreur",
+    "system": "coc7",
+    "description": "",
+    "synopsis": "",
+    "wallpaperUrl": "",
+    "notebookUrl": "",
+    "activeLocationIds": [],
+    "id": "c42911de-0b0c-4480-824a-ef41467ca727"
+  },
+  {
+    "name": "Trinité Fatale",
+    "description": "Le NCPD est plongé dans un imbroglio occulte, débutant par la profanation d'une tombe et dégénérant en une série de meurtres impliquant un gourou satanique et un groupe d'adolescents riches et perturbés.",
+    "synopsis": "L'enquête commence par la profanation de la tombe de Karl Stanton, avant-dernier condamné à mort de New York, un acte initié par Andy Barnes, un adolescent manipulateur sous l'influence de Doug 'Baphomet' Ritter, gourou de la secte des 'Rejetons de Baal'. Andy, jaloux de la relation de sa petite amie Rose 'Endorphine' Stanton avec Baphomet, est piégé par ce dernier. Rose, la petite-fille de Karl Stanton, est finalement étranglée par Baphomet, son corps jeté dans une poubelle à Harlem. \n\nLes PJ enquêtent sur la profanation, identifiant Andy et ses amis gothiques. Parallèlement, le corps de Rose est découvert, reliant l'affaire à la secte de Baphomet. L'enquête mène les PJ à des clubs interlopes et au repaire délabré des 'Rejetons de Baal', tout en les confrontant à la violence des gangs de Harlem et aux manigances des avocats des familles aisées. \n\nL'intrigue culmine avec un triple homicide chez les Barnes, où Andy a empoisonné ses amis lors d'un rituel tordu pour s'approprier leur force, avant de se lancer dans une vengeance contre Baphomet. La confrontation finale a lieu au temple satanique, où les PJ doivent empêcher Andy et Baphomet de s'entretuer ou de les attaquer. L'aventure se conclut par la chute de la secte, mais Andy, psychopathe insaisissable, échappe à la justice après avoir massacré ses parents, promettant de devenir un antagoniste récurrent.",
+    "system": "custom-1773953440187",
+    "id": "cfbda402-33a8-46f7-9b86-df9301430715",
+    "activeLocationIds": [
+      "2b45d6b6-e230-41d9-9ace-4f94ba56ec84",
+      "afd5ce85-89fe-4b9f-b04a-d1a5ab202123",
+      "bf1e7f2d-c7b7-4f7d-bdd2-47d18d17dcc4",
+      "50e2603e-4a26-4a6d-8e98-f397a0365908",
+      "723068fb-599c-4405-bd5b-d8eb70888f84",
+      "1eb19668-5ed8-46c7-9ce7-89c926f4c572",
+      "fb7934ff-a13d-4eff-bf47-9a9986f72807",
+      "b9e23f42-29b6-4f35-9aec-d170a34f5293",
+      "13b02e41-1126-4c27-9214-16b78d0400aa",
+      "53fcae32-8a34-4df2-82c3-36402551ad88"
+    ],
+    "wallpaperUrl": "",
+    "notebookUrl": "",
+    "systemPath": "",
+    "campaignPath": "",
+    "activeSessionId": "d4f14a81-c156-474d-ac3e-b05ad387d343"
+  },
+  {
+    "name": "Hégémonie",
+    "description": "Une équipe hétéroclite, contrainte par la mystérieuse SIC, est déployée sur la planète à haute gravité Yand et son orbitale Mandala, un foyer de tensions politiques où l'influence de l'Hégémonie de Zarus menace l'équilibre. Leur mission : naviguer entre les factions locales et découvrir les véritables enjeux d'une planète au bord du basculement.",
+    "synopsis": "La technicienne Denyna, fugitive après avoir libéré l'astroplaneur intelligent Venuda (ex-Répartition équitable) de Kallisphère, se retrouve capturée avec lui par l'agent xénomorphe Sallastin Lis-Thaa de l'Alliance Évoluée. Contre toute attente, ils sont tous trois enrôlés de force par la Section d'Intervention et de Contact (SIC) de la Communalité, et chargés d'une mission sur la planète Yand, proche de la Frontière. Ils y rejoignent Rax Ganfari Aggarad, un ex-agent de la Division d'Investigation de l'Alliance (DIA) mandalane, lui aussi récemment doté d'un implant neuronal par la SIC. Leur objectif officiel est inconnu, mais Yand est une planète à haute gravité, dotée d'une culture unique et d'une population divisée entre les hominidés de Yand (Mongutes) et de son orbitale (Yands de Mandala). Une faction pro-Hégémonie de Zarus gagne du terrain, suggérant une mission d'infiltration ou de stabilisation dans un secteur stratégique. L'équipe devra composer avec ses propres passés complexes et la méfiance mutuelle pour réussir une mission dont les véritables enjeux pourraient être bien plus vastes que ce qui leur a été présenté.",
+    "system": "custom-1773946880863",
+    "id": "ba523a7a-087e-4d8e-9ede-52cd603abbbc",
+    "activeLocationIds": [
+      "26625ceb-b95e-4ffd-ba6e-557404ebfffb",
+      "459c7d3b-6138-4113-975f-e40994f8ad30",
+      "c9025ef0-db13-4214-83c9-2fbca20d1714",
+      "17d2da0c-0333-4731-949f-ff44ea195ded"
+    ],
+    "wallpaperUrl": "",
+    "notebookUrl": "https://notebooklm.google.com/notebook/ea4e77bf-87ad-40c6-a9dd-828eef96d7bc",
+    "systemPath": "",
+    "campaignPath": ""
+  },
+  {
+    "name": "La Nouvelle Ys",
+    "description": "Une campagne d'introduction aux concepts fondateurs de Nephilim Légende, mêlant mystère ésotérique, confrontation avec les Templiers, et la quête de la cité engloutie d'Ys, avec des ramifications vers Arcadia.",
+    "synopsis": "La campagne 'La Nouvelle Ys' est une aventure en trois scénarios conçue pour initier les Nephilim aux réalités occultes de leur monde. Tout commence avec la découverte d'une mystérieuse page de financement participatif pour un livre intitulé 'La Nouvelle Atlantis'. Ce livre, qui dévoile des secrets ésotériques effrayants sur la cité mythique d'Ys, attire l'attention des Immortels vers Nantes. Ils y enquêtent sur la maison d'édition et son directeur cupide, Benoît Gaillard, qui a volé le manuscrit à un initié autodidacte et tourmenté, Rémi Faucon. Rapidement, les Nephilim se retrouvent confrontés aux Chevaliers d'Ys, une obédience templière dont l'objectif est d'empêcher le retour de la cité engloutie. \n\nLe deuxième scénario intensifie la confrontation avec les Chevaliers d'Ys. Selon l'issue du premier acte (récupération du manuscrit, enlèvement d'un PJ), les Nephilim devront soit se défendre contre une offensive templière, soit infiltrer le Manoir des Charmes, le quartier général de l'ordre en Sologne, pour récupérer le manuscrit ou sauver un compagnon. Des trahisons internes au Bâton pourraient offrir des opportunités aux Immortels.\n\nEnfin, le troisième scénario mène les Nephilim au village de Ploëdec, en Finistère, le site présumé d'Ys. Là, ils découvrent le projet 'Aqua-Ys', un parc d'attraction pharaonique orchestré par une commanderie templière (l'Ordre Uni du Temple Occidental) pour remonter Ys des profondeurs et en faire une 't��te de pont' templière dans les Plans Subtils. Les Nephilim pourront s'allier aux Diwezhañ, les derniers descendants des habitants d'Ys, pour contrecarrer les plans templiers et potentiellement provoquer la résurgence de la Cité Immortelle. La campagne est liée à la quête occulte d'Arcadia, et la remontée d'Ys pourrait ouvrir des passages vers cette cité mythique, notamment via la dangereuse Perle Sombre.",
+    "system": "custom-1774003903709",
+    "id": "a8ea4c22-12ff-4da9-a606-0125abab2a60",
+    "activeLocationIds": [
+      "03a6d7ba-5c95-45c0-b83d-01d95f8e69a6",
+      "0259312f-3659-4d6d-91ed-0553ab4438f7",
+      "99b0e31c-1bad-4108-a9ec-182c2885c9ec",
+      "15b5fc7c-f497-4b55-bd5d-2721c72482d7",
+      "5e26bc7c-e4c3-4fbb-b37a-07286247cfdc",
+      "1629cefc-550a-47ff-a4a0-1355939d0adf",
+      "e066d03f-1780-4a20-ac71-367a1f6a0dc1",
+      "4afefb1f-4370-4213-9cc3-5ea53425d596",
+      "fefbef25-49d0-4c15-958d-f969ace47409",
+      "0632c3a3-df2c-4781-ae5b-e0594e951aee",
+      "9dcfed44-2c11-444d-bdc4-c447b443b0f8",
+      "3b47253e-dadb-4d7a-bfab-2e72e4620997",
+      "e0d89a98-1396-48c8-859c-e6e8ad47c4fe",
+      "2452b174-41e7-4894-b436-178bb895112e",
+      "a12a8a57-59ac-475f-849c-61fa8d087732",
+      "f607e9c4-ea52-489c-8a17-5a060185d286",
+      "3b4fed78-9570-4004-9ffe-484b42a9706f",
+      "c09d26df-23d3-4fa9-849a-309f5cd1ca83",
+      "83c759a6-22e8-4134-a4c5-2501188a9510",
+      "2938471f-ec59-45fb-9e60-0bda301dd0fd",
+      "b8e8b0b8-e1bd-4329-9625-03ef174d77ba",
+      "743ca461-b8bf-4ec5-b444-ae2a3f33800c"
+    ],
+    "wallpaperUrl": "",
+    "notebookUrl": "https://notebooklm.google.com/notebook/9389872e-c46b-4cf1-bd6c-18bfccae13b8",
+    "systemPath": "",
+    "campaignPath": ""
+  },
+  {
+    "name": "Fiery Angels",
+    "description": "The second official Case File for the BLADE RUNNER RPG, continuing the 'Immortal Game' campaign arc. This stand-alone adventure delves into the boundaries of Replicant technology and its consequences, challenging Blade Runners with physical, mental, and moral dilemmas.",
+    "synopsis": "Lilith Tyrell, presumed dead, is alive and operating a black market Replicant production facility. She has created five 'prophets'—bootleg Replicants physically identical to key individuals—to infiltrate the Wallace Corporation and steal crucial industrial data (a memory sphere) from Niander Wallace's executive suite. Her ultimate goal is to improve her unstable Replicant breed and usher in a new era of free Replicants. The Player Characters are assigned to investigate Ellis Vale, a service technician who attempted to break into Wallace Corp's Memory Vault. Unbeknownst to them, Ellis Vale was a Replicant copy (Jeremiah) and a test run for Lilith's larger plan. Another prophet, Ezekiel, has replaced legendary Blade Runner Ray McCoy and is actively sabotaging the investigation while hunting a renegade prophet, Noah (a copy of one of the Player Characters). The Blade Runners must uncover this intricate conspiracy before Lilith executes her final, decisive attack on the Wallace Corporation HQ.",
+    "system": "custom-1774091088325",
+    "id": "5164b587-4016-47cb-9cd1-df6d704233d1",
+    "activeLocationIds": [
+      "c9972fd8-a833-4a06-9b5f-dc935e5fee73",
+      "e588a1df-4e55-43f8-9fdb-a98c5123d3dd",
+      "cddc5abd-3921-4eb6-9950-fd448d2fb98d",
+      "643dbee2-7530-473d-b647-65c67dbbdb36",
+      "eed208b9-ec13-48d0-84f9-d29939829f86",
+      "96334278-d365-4949-a458-2e63c89819ba",
+      "975b366d-d2bd-4473-b152-444b0f35b24c",
+      "e06914ae-7401-4167-8887-1e93455ab734",
+      "11ac13f7-104e-4d16-9354-5f82878f7004",
+      "eeaa1490-4e1d-4b77-90ee-dda11ac5dd5e",
+      "3be3f48b-773f-42bf-8922-388069000d90",
+      "14de9273-d42f-4f93-bd74-dcda83f6fb0a",
+      "7b999002-56f9-4481-9455-924e63470068",
+      "245959ab-5715-4d1d-b81c-aa7878825bc3",
+      "b98130b1-4a16-4679-b11a-b09b30399a6c",
+      "3a0dca8c-5732-4b1c-8f0a-cb9377304efb",
+      "85e8b05f-ae7d-40a6-af42-5cc97b406f2c",
+      "67feb45c-a351-4bd2-a3d1-2fb489f2f762",
+      "dea517ff-7538-4d3b-877d-b5fdbd096435",
+      "03675393-5433-4af6-8956-51ff47765b86"
+    ],
+    "layoutConfig": {
+      "activeModule": "dashboard",
+      "isAIPanelOpen": false,
+      "isTacticalPanelOpen": false,
+      "theme": "cyberpunk",
+      "themeColor": "#06b6d4"
+    }
+  }
+]
