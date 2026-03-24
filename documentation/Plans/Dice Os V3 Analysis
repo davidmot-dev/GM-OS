@@ -1,0 +1,67 @@
+# Analyse Exhaustive de Dice OS v3
+
+Suite à l'analyse en profondeur du fichier source `dice-os.js` (528 lignes) de GM-OS v3, voici la liste exhaustive de **toutes les fonctionnalités** qui étaient présentes et qui doivent être reportées dans la nouvelle architecture v5 MOTEUR (DiceEngine) + INTERFACE (DiceBoard).
+
+---
+
+## 🎲 1. Les 12 Modes de Jeu / Types de Lancers
+
+Le moteur permettait la résolution de nombreux systèmes de règles via une liste déroulante :
+
+1. **Standard (`std`)** : Somme classique de (X)d(Y) + Modificateur.
+2. **Formule Libre (`formula`)** : Interprétation d'un texte type `2d6-1d4+5`.
+3. **Jet avec Seuil de difficulté (`threshold`)** : (X)d(Y) + Mod, vérifié contre un seuil (Target DC). Support de la règle "Au-dessus de" (`over`) ou "En-dessous de" (`under`) pour les succès.
+4. **Pool de Dés classique (`pool`)** : Lance X dés, compte combien ont un résultat `>=` à un seuil. Compte aussi les "1" (Botches/Fails). Si le (Succès Brut - 1) <= 0, c'est un échec.
+5. **Pool de Dés Explosif (`pool_explode`)** : Idem que Pool, mais chaque dé faisant le maximum est relancé à l'infini pour générer potentiellement un succès supplémentaire sur le nouveau dé (attention les "1" subséquents s'ajoutent aux échecs).
+6. **Somme Explosive (`exploding`)** : Somme classique (X)d(Y), mais chaque dé faisant le maximum est relancé et additionné au total (à l'infini).
+7. **Avantage (`advantage`)** : Lance 2 dés, garde le meilleur (si `over`) ou le plus bas (si `under`). Supporte un seuil de difficulté pour évaluer automatiquement le Succès/Échec du résultat final.
+8. **Désavantage (`disadvantage`)** : L'inverse (Garde le pire).
+9. **FATE / Fudge (`fate`)** : Lance des dés à 3 faces : [-1, 0, +1]. Affiche "+1" ou "-", et qualifie le total (ex: >=8: Légendaire, >=4: Superbe, >=2: Bon, <=-2: Mauvais).
+10. **Rolemaster** : Un jet de `d100` unique, +Mod. Explosion montante si `<= 96`. Explosion descendante (soustraction) si `<= 5`.
+11. **Year Zero Engine (`yze`)** : Lance `Base Dice` (X dés) et `Gear Dice` (Y dés). Les 6 sont des succès. Les 1 sur les dés d'équipement sont des "Fléaux" (Banes).
+12. **Dés Multi-Chiffres "Digit" (`d44`, `d66`, `d88`, `d444`, etc.)** : Lancers cachés qui tirent chaque chiffre séparément. Par exemple un `d66` simule un dé des dizaines (1-6) et un dé des unités (1-6) pour obtenir 11-66.
+
+---
+
+## 🎛️ 2. L'Interface Utilisateur (UI) / Paramètres de Jet
+
+Le composant adaptait masquait/affichait les inputs selon le `Mode` :
+
+* **Sélectionneur de Mode** (Menu déroulant).
+* **Nombre de dés (Count)** et second Compteur pour YZE.
+* **Modificateur** statique (+ / -).
+* **Target** (valeur pour qu'un dé soit un succès en mode "Pool").
+* **Threshold** (seuil du total final à battre).
+* **Règle** (Battre ou Etre inférieur au seuil).
+* **Input Formule Libre**.
+* **Bouton Lancer Custom** permettant d'être prompté pour un nombre de faces exotique (ex: `d50`).
+* **Répétition / Jet en Rafale (Batch)** : Permettait d'entrer un nombre (ex: "Série de 5 jets") et d'exécuter l'action en bloc avec un header visuel `Série de X jets`.
+
+---
+
+## ⚡ 3. Quick Rolls (Raccourcis)
+
+* **Ajout via Prompt** : Nom du raccourci et formule libre.
+* **Affichage** : Boutons persistants en haut à gauche.
+* **Suppression** : Petite croix pour effacer un shortcut.
+* **Persistance** : Le système exportait et importait l'état de ces quick rolls (lié au `Session OS` global de la v3).
+
+---
+
+## 📊 4. Historique et Résultats (Output)
+
+La construction des résultats comprenait :
+
+* **Détail des dés séparés**, avec des couleurs/classes conditionnelles (`die-crit-max`, `die-crit-min`, `die-yze-bane`, ou les 3 couleurs de "Digits" pour les d66: rouge, bleu, vert).
+* **Texte formatté pour le total** avec affichage dynamique (`Mod: +X`, `Total Brut / Net`, etc).
+* **Tag Visuel de Succès/Échec** pastilles verte ou rouge évaluant l'action (en fonction du Threshold ou de la soustraction des Fails dans un pool).
+* Historique limité à **50 entrées**.
+* Transmission asynchrone / pont avec le **Global Log (Session OS)** : *Window.logApp.log('dice', ...)* enregistrait publiquement chaque action pour la session du MJ.
+
+---
+
+## Objectifs pour l'intégration V5
+
+1. **Refonte de DiceEngine.ts** : Supporter `pool_explode`, `under/over rules`, les `d44/d66` et le processeur de Formules Libre.
+2. **Refonte du UI (DiceBoard.tsx)** : Réintégrer la gestion des séries (`Batch`), le dé custom, et le toggle exact des inputs (Threshold vs Target, etc) au format Stitch.
+3. **Persistance** : Connecter le cache/état (les Quick Rolls) à un store global (Context ou Zustand) comme vu dans tes règles d'Architecture v5.

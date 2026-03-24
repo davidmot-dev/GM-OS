@@ -1,0 +1,69 @@
+{
+    "name": "Test de Panique lors d'un Combat Spatial",
+    "dice": "1d6",
+    "entries": [
+        {
+            "min": 1,
+            "max": 6,
+            "title": "JE TIENS LE COUP",
+            "description": "Vous parvenez à maîtriser vos nerfs. Tout juste.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 7,
+            "max": 7,
+            "title": "TRESSAILLEMENT NERVEUX",
+            "description": "Vos nerfs lâchent un instant face à la violence de l'affrontement.",
+            "effect": "Votre NIVEAU DE STRESS et celui de tous les PJ amicaux situés à COURTE portée de vous augmentent de 1."
+        },
+        {
+            "min": 8,
+            "max": 8,
+            "title": "TREMBLEMENT",
+            "description": "Vous êtes pris d'incoercibles tremblements.",
+            "effect": "Tous vos tests de compétence subissent un modificateur de -2 jusqu'à ce que votre panique s'arrête."
+        },
+        {
+            "min": 9,
+            "max": 9,
+            "title": "ORDRES IGNORÉS",
+            "description": "Vous ne parvenez plus à vous concentrer et vous oubliez ce qui vous entoure.",
+            "effect": "Pour le Tour suivant, vous n'exécutez aucun ordre, vous n'acceptez aucune aide et vous ne discutez avec personne. Votre NIVEAU DE STRESS augmente de 1."
+        },
+        {
+            "min": 10,
+            "max": 10,
+            "title": "LOGORRHÉE HYSTÉRIQUE À LA COMM",
+            "description": "Vous perdez les pédales et vous vous mettez à crier ou à jacasser dans l'intercom, rendant toute communication impossible.",
+            "effect": "Votre NIVEAU DE STRESS diminue de 1, mais celui de tout PJ amical qui entend vos élucubrations augmente de 1."
+        },
+        {
+            "min": 11,
+            "max": 12,
+            "title": "PARALYSIE",
+            "description": "Vous êtes paralysé par la peur ou l'angoisse pendant 1 Tour.",
+            "effect": "Vous perdez votre prochaine action. Votre NIVEAU DE STRESS et celui de tous les PJ amicaux situés dans le même compartiment que vous augmentent de 1."
+        },
+        {
+            "min": 13,
+            "max": 13,
+            "title": "SAUVE QUI PEUT !",
+            "description": "Vous n'en pouvez plus. Vous devez quitter votre poste et vous enfuir vers une zone plus sûre du vaisseau (cabine, cambuse...).",
+            "effect": "Votre NIVEAU DE STRESS diminue de 1, mais tous les PJ amicaux témoins de votre comportement incohérent doivent immédiatement faire un test de Panique."
+        },
+        {
+            "min": 14,
+            "max": 14,
+            "title": "ABANDON DU VAISSEAU",
+            "description": "Submergé par la terreur, vous vous précipitez vers la capsule de sauvetage la plus proche (VEU) ou une combinaison pressurisée pour quitter le vaisseau.",
+            "effect": "Tout PJ amical qui vous voit vous enfuir doit immédiatement faire un test de Panique."
+        },
+        {
+            "min": 15,
+            "max": 99,
+            "title": "TROP C'EST TROP !",
+            "description": "L'horreur vous fait péter les plombs. Vous perdez les pédales et vous surchargez votre poste, lui infligeant des dégâts critiques.",
+            "effect": "Vous perdez votre prochaine action. Consultez la table des avaries majeures selon votre poste : Opérateur-senseurs (panne de senseurs), Pilote (panne de moteur), Artilleur (armement endommagé), Ingénieur (brèche du réacteur)."
+        }
+    ]
+}

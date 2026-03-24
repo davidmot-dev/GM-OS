@@ -1,0 +1,53 @@
+{
+  "name": [
+    "Planète‑Archive d’Obsidienne",
+    "Monde‑Bibliothèque d’Astris",
+    "Planète des Scribes Stellaires",
+    "Monde‑Mémoire du Nexus Alpha",
+    "Planète des Dômes Archivaux",
+    "Monde‑Codex des Mille Ères",
+    "Planète des Archives Vivantes",
+    "Monde‑Scriptorium des Anciens",
+    "Planète‑Index du Grand Référentiel",
+    "Monde‑Bibliothèque du Voile Blanc"
+  ],
+
+  "description": [
+    "Une planète‑archive entièrement recouverte de structures d’obsidienne renfermant des données millénaires.",
+    "Un monde‑bibliothèque où des IA scribes classent les connaissances de milliers de civilisations.",
+    "Une planète où les scribes stellaires conservent des archives gravées dans la roche.",
+    "Un monde‑mémoire connecté au Nexus Alpha, cœur de la connaissance galactique.",
+    "Une planète couverte de dômes archivaux contenant des millions de salles.",
+    "Un monde‑codex où chaque ère de l’histoire galactique possède son propre continent.",
+    "Une planète où les archives sont vivantes et se réécrivent en temps réel.",
+    "Un monde‑scriptorium où les Anciens ont laissé des textes impossibles à décrypter.",
+    "Une planète‑index servant de référentiel ultime pour les explorateurs.",
+    "Un monde‑bibliothèque enveloppé d’un voile blanc protégeant ses secrets."
+  ],
+
+  "ambiance": [
+    "Une mémoire infinie.",
+    "Un silence studieux.",
+    "Une lumière archivale.",
+    "Une densité historique.",
+    "Une architecture cyclopéenne.",
+    "Une stratification temporelle.",
+    "Une connaissance vivante.",
+    "Un mystère ancien.",
+    "Une classification sacrée.",
+    "Une protection énigmatique."
+  ],
+
+  "secret": [
+    "Une archive d’obsidienne contient un futur possible.",
+    "Une IA scribe connaît le nom de chaque visiteur avant son arrivée.",
+    "Une roche gravée révèle un message en changeant de texture.",
+    "Le Nexus Alpha enregistre des souvenirs qui ne sont pas humains.",
+    "Un dôme archival renferme une salle impossible à cartographier.",
+    "Un continent du monde‑codex disparaît des cartes à intervalles réguliers.",
+    "Une archive vivante réagit aux émotions.",
+    "Un texte ancien s’écrit seul lorsqu’on le regarde.",
+    "Le grand référentiel contient une entrée sur un visiteur encore non né.",
+    "Le voile blanc s’ouvre uniquement pour ceux qui ont oublié quelque chose."
+  ]
+}

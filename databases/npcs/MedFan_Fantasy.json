@@ -1,0 +1,52 @@
+{
+    "firstNames": [
+        "Eldrin", "Thora", "Grom", "Lyra", "Aeris", "Kaelen", "Morgran", "Elara", "Finn", "Sylas", "Duna", "Baelor", "Rowan",
+        "Isolde", "Theren", "Mirael", "Borin", "Seraphine", "Darian", "Liora", "Garruk", "Nymira", "Tavion", "Eryndor", "Faelyn",
+        "Korgrim", "Selene", "Arannis", "Brom", "Ysolda", "Toren", "Maelis", "Rurik", "Vaelis", "Odrin", "Shayla", "Fenric",
+        "Aldora", "Kelvar", "Nerion", "Thalia", "Galdor", "Ravenna", "Torvak", "Elion", "Mirel", "Soren", "Kaelis", "Bryndor"
+    ],
+    "lastNames": [
+        "Ironfoot", "Oakenshield", "Blackwood", "Leclair", "Montfaucon", "Boisvert", "Rochefort", "Loupgris", "Desmarais", "Bellefeuille",
+        "Durocher", "Laroche", "Montbrun", "Rivargent", "Sombreval", "Clairval", "Deschamps", "LaRivière", "Montdragon", "Fauconnier",
+        "Tremblay", "Beauregard", "Chantemerle", "Boisclair", "Rochebrune", "Stormwind", "Moonwhisper", "Fireforge", "Swiftarrow",
+        "Shadowstep", "Stonehelm", "Silverbranch", "Duskbane", "Brightshield", "Stormbreaker", "Nightwhisper", "Frostmane",
+        "Goldriver", "Deepwood", "Thunderpeak", "Ravencrest", "Lightbloom", "Ironbark", "Duskrider", "Flameheart", "Starwatcher",
+        "Wolfborn", "Highpeak", "Shadowthorn", "Brightforge"
+    ],
+    "jobs": [
+        "Guerrier", "Forgeron", "Aubergiste", "Mage", "Voleur", "Prêtre", "Ranger", "Alchimiste", "Barde", "Paysan", "Garde", "Marchand", "Druide",
+        "Chasseur", "Scribe", "Cartographe", "Nécromancien", "Paladin", "Éclaireur", "Herboriste", "Mineur", "Chevalier", "Éleveur de griffons",
+        "Tanneur", "Pêcheur", "Moine", "Ensorceleur", "Sorcier", "Apothicaire", "Archer", "Marin", "Capitaine de garde", "Érudit",
+        "Ambassadeur", "Dresseur de loups", "Gardien de forêt", "Voyant", "Chaman", "Tisseur de runes", "Éleveur de dragons",
+        "Maître d’armes", "Ébéniste", "Tailleur de pierre", "Messager royal", "Garde-chasse", "Vagabond", "Troubadour", "Archiviste"
+    ],
+    "traits": [
+        "Superstitieux", "Honorable", "Avare", "Jovial", "Mystérieux", "Zélé", "Peureux", "Sage", "Bourru", "Noble", "Gourmand",
+        "Rancunier", "Curieux", "Distrait", "Fier", "Loyal", "Taciturne", "Rieur", "Mélancolique", "Têtu", "Généreux", "Méfiant",
+        "Ambitieux", "Rêveur", "Colérique", "Calme", "Sérieux", "Bavard", "Silencieux", "Impatient", "Courageux", "Maladroit",
+        "Observateur", "Sensible", "Arrogant", "Prudent", "Idéaliste", "Sombre", "Charismatique", "Énigmatique", "Franc",
+        "Sanguin", "Pessimiste", "Optimiste", "Entêté", "Malin", "Bienveillant", "Sauvage", "Stoïque"
+    ],
+    "looks": [
+        "Armure rouillée", "Robe de soie", "Cape à capuchon", "Cicatrice de guerre", "Bijoux elfiques", "Barbe tressée", "Vêtements en lambeaux", "Regard perçant", "Amulette étrange",
+        "Armure en écailles", "Tunique brodée", "Bottes de cuir usées", "Épée ornée", "Bouclier cabossé", "Tatouages tribaux", "Cheveux argentés", "Couronne de fleurs",
+        "Cape en fourrure", "Gants renforcés", "Masque en bois", "Coiffure tressée", "Hache massive", "Arc finement sculpté", "Bourse pleine d’herbes",
+        "Bracelets runiques", "Casque ailé", "Plastron brillant", "Cape déchirée", "Anneaux multiples", "Bottes boueuses", "Tunique simple",
+        "Épaulières en os", "Collier de dents", "Armure dorée", "Cape de plumes", "Tunique de voyage", "Gants de soie", "Épée courte usée",
+        "Sacoche en cuir", "Bandeau de tissu", "Armure légère", "Cape sombre", "Tunique colorée", "Bottes renforcées", "Bracelet magique",
+        "Épaulettes de métal", "Talisman ancien"
+    ],
+    "secrets": [
+        "Possède un artefact maudit", "Est un prince exilé", "A fait un pacte avec un démon", "Recherché pour hérésie", "Cache sa nature lycanthrope", "Ancien assassin", "Voit les fantômes",
+        "A volé un grimoire interdit", "Est l’héritier d’un royaume perdu", "A trahi son ordre", "A survécu à un rituel interdit", "A un frère disparu",
+        "A caché un meurtre", "A été béni par une divinité", "A été maudit par une sorcière", "A un passé de pirate", "A fui une prophétie",
+        "Est recherché par une guilde secrète", "A un pouvoir incontrôlable", "A caché un dragon blessé", "A volé un trésor royal",
+        "A un lien avec les esprits", "A été témoin d’un massacre", "A un enfant caché", "A un double maléfique", "A été manipulé par un mage noir",
+        "A un tatouage magique dangereux", "A brisé un serment sacré", "A un passé de noble déchu", "A un ennemi immortel",
+        "A survécu à une malédiction ancienne", "A un livre qui parle", "A un familier interdit", "A été ressuscité",
+        "A un secret sur la royauté", "A un pacte avec une fée", "A un pouvoir scellé", "A un passé de voleur célèbre",
+        "A une dette envers un dragon", "A un artefact volé", "A un passé de gladiateur", "A une prophétie le concernant",
+        "A un ennemi dans l’ombre", "A un passé de mercenaire", "A une identité cachée", "A un lien avec une ancienne civilisation",
+        "A un secret sur les dieux", "A une vision de la fin du monde"
+    ]
+}

@@ -1,0 +1,1 @@
+Peux-tu analyser finement le module original pour reproduire toutes les fonctionnalités dans la nouvelle version. Pour cela je veux que tu me donnes une description précise et exhaustive de toutes les fonctionnalités que tu dois reporter.

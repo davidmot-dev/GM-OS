@@ -1,0 +1,33 @@
+{
+  "name": [
+    "Hôtel de la Comtesse d’Aubigny", "Hôtel Particulier de la Rue des Lys", "Hôtel des Orchidées Blanches", "Hôtel du Marquis de Villeroy", "Hôtel des Arts et des Lettres", "Hôtel de la Famille Montferrand", "Hôtel du Boulevard Haussmann", "Hôtel des Collectionneurs", "Hôtel du Parc Monceau", "Hôtel de la Baronne de Mirecourt", "Hôtel des Trois Lanternes", "Hôtel du Conservatoire", "Hôtel de la Famille Delorme", "Hôtel des Lumières Dorées", "Hôtel du Jardin Secret", "Hôtel de la Rue des Gravures", "Hôtel de la Famille Saint‑Roch", "Hôtel du Quai d’Orsay", "Hôtel des Soirées Électriques", "Hôtel des Muses"
+  ],
+  "description": [
+    "Un édifice imposant avec un grand escalier en marbre et des lustres en cristal. Les soirées y sont réputées pour leur faste.",
+    "Un vaste hôtel particulier du Faubourg Saint‑Germain, décoré de portraits familiaux et de meubles Louis XVI.",
+    "Un hôtel particulier raffiné où des orchidées fraîches décorent chaque pièce. Les parfums floraux se mêlent à l’odeur du bois ciré.",
+    "Un bâtiment majestueux aux salons richement décorés, où les invités se pressent lors de réceptions somptueuses.",
+    "Un hôtel particulier fréquenté par des artistes, rempli de toiles, de manuscrits et de sculptures.",
+    "Un bâtiment discret mais élégant, doté d’un jardin intérieur et d’une verrière lumineuse.",
+    "Un hôtel particulier moderne équipé des dernières innovations électriques, symbole de la nouvelle ère technologique.",
+    "Un hôtel particulier rempli d’antiquités, de curiosités exotiques et d’objets rares.",
+    "Un hôtel particulier lumineux donnant sur le parc, avec de grandes fenêtres et des salons baignés de soleil.",
+    "Un hôtel particulier aux tapisseries anciennes et aux meubles précieux, où se tiennent des salons littéraires réputés.",
+    "Un hôtel particulier décoré de lanternes asiatiques et d’objets importés d’Extrême‑Orient.",
+    "Un hôtel particulier fréquenté par des musiciens, où un piano à queue trône dans le grand salon.",
+    "Un hôtel particulier aux boiseries sombres et aux tapis épais, entretenu avec une rigueur impeccable.",
+    "Un hôtel particulier illuminé par des lampes à incandescence créant un halo doré sur les murs.",
+    "Un hôtel particulier entouré d’un jardin caché derrière de hauts murs, rempli de fleurs rares.",
+    "Un hôtel particulier décoré de gravures anciennes représentant Paris à différentes époques.",
+    "Un hôtel particulier aux salons tamisés et aux meubles en acajou, empreint d’une élégance sombre.",
+    "Un hôtel particulier donnant sur la Seine, décoré de fresques marines et de grandes fenêtres.",
+    "Un hôtel particulier où l’on organise des soirées expérimentales autour de l’électricité.",
+    "Un hôtel particulier dédié aux arts, rempli de sculptures, de peintures et de partitions."
+  ],
+  "ambiance": [
+    "Une élégance feutrée, presque aristocratique.", "Une atmosphère noble et légèrement distante.", "Une douceur parfumée, presque envoûtante.", "Un luxe éclatant, presque ostentatoire.", "Une effervescence artistique et inspirée.", "Une sérénité bourgeoise, presque intime.", "Une modernité élégante et maîtrisée.", "Une fascination silencieuse, presque muséale.", "Une élégance lumineuse et apaisante.", "Une atmosphère intellectuelle et raffinée.", "Une touche d’exotisme élégante et intrigante.", "Une musicalité douce et inspirante.", "Une rigueur bourgeoise, presque trop parfaite.", "Une chaleur lumineuse et festive.", "Une tranquillité presque enchantée.", "Une atmosphère studieuse et mystérieuse.", "Une élégance sombre et feutrée.", "Une élégance lumineuse et légèrement mélancolique.", "Une excitation scientifique teintée de mystère.", "Une inspiration permanente, presque sacrée."
+  ],
+  "secret": [
+    "Un passage dissimulé derrière une bibliothèque mène à une pièce oubliée.", "Un portrait de famille a été retouché pour masquer un héritier disparu.", "Une orchidée rare offerte par un explorateur aurait des propriétés mystérieuses.", "Une salle du dernier étage est toujours fermée, même lors des réceptions.", "Un manuscrit non signé serait l’œuvre d’un auteur célèbre sous pseudonyme.", "Une lettre scellée trouvée dans un secrétaire n’a jamais été ouverte.", "Un dispositif électrique expérimental est caché dans le sous‑sol.", "Un objet exposé n’a jamais été authentifié et pourrait être un faux… ou pire.", "Une fenêtre donne sur un angle du parc qui n’existe sur aucun plan.", "Un poète célèbre y aurait laissé un message crypté dans un livre.", "Une lanterne ancienne projette parfois une silhouette inconnue.", "Une mélodie jouée seule la nuit proviendrait du piano fermé.", "Une pièce du rez‑de‑chaussée a été murée sans explication.", "Une lampe ancienne change de couleur selon la personne qui l’allume.", "Un banc du jardin porte une inscription effacée, jamais déchiffrée.", "Une gravure montre un bâtiment qui n’a jamais existé.", "Un coffre ancien trouvé dans le grenier n’a jamais pu être ouvert.", "Une fresque montre un navire qui n’a jamais été identifié.", "Un appareil exposé aurait provoqué un phénomène inexpliqué.", "Une sculpture aurait été réalisée d’après un modèle jamais retrouvé."
+  ]
+}

@@ -1,0 +1,36 @@
+{
+    "name": "Fouille d'un Ganger des Rues",
+    "dice": "1d20",
+    "entries": [
+        {
+            "min": 1, "max": 5,
+            "title": "Poches vides",
+            "description": "Le corps a déjà été fouillé ou le ganger était fauché. Vous ne trouvez que des emballages de synthé-bouffe et un briquet cassé.",
+            "effect": "Aucun butin."
+        },
+        {
+            "min": 6, "max": 12,
+            "title": "Quelques Eddies",
+            "description": "Vous trouvez une puce de crédit non sécurisée au fond de sa poche et quelques balles en vrac.",
+            "effect": "Gagnez +1d100 Eurodollars (Eddies) et 1d4 munitions pour pistolet."
+        },
+        {
+            "min": 13, "max": 17,
+            "title": "Matériel de rue",
+            "description": "En fouillant sa veste, vous récupérez un inhalateur médical à moitié plein et une arme blanche de bonne facture.",
+            "effect": "Gagnez 1 couteau tactique (Dégâts 1d6) et 1 dose de Stimulant de rue (Soigne 2d6 PV mais rend 'Étourdi' le tour suivant)."
+        },
+        {
+            "min": 18, "max": 19,
+            "title": "Données cryptées",
+            "description": "Un éclat de données (shard) noir mat est caché dans un compartiment secret de sa botte.",
+            "effect": "Nécessite un test de Piratage (Difficulté 15). Si réussi : révèle les mots de passe de la planque du gang."
+        },
+        {
+            "min": 20, "max": 99,
+            "title": "Jackpot : Cyberware intact",
+            "description": "Le bras mécanique de la victime est un modèle corpo haut de gamme, curieusement épargné par les dégâts.",
+            "effect": "Loot de valeur : Bras cybernétique non-enregistré. Se revend environ 1000 Eddies chez un Charcudoc ou peut être installé."
+        }
+    ]
+}

@@ -1,0 +1,33 @@
+{
+  "name": [
+    "Théâtre des Ombres Rouges", "Théâtre du Pavillon Doré", "Théâtre de la Lune Blanche", "Théâtre des Masques d’Ivoire", "Théâtre du Boulevard des Arts", "Théâtre des Trois Rideaux", "Théâtre du Lys Bleu", "Théâtre des Échos", "Théâtre du Marbre Noir", "Théâtre des Lanternes", "Théâtre du Vent Parisien", "Théâtre des Illusions", "Théâtre du Passage Clair", "Théâtre des Harmonies", "Théâtre du Cygne d’Argent", "Théâtre des Rêves Modernes", "Théâtre du Pont Royal", "Théâtre des Voix Perdues", "Théâtre du Salon Rouge", "Théâtre des Lumières"
+  ],
+  "description": [
+    "Un théâtre aux rideaux rouges épais où les acteurs répètent jusque tard dans la nuit.",
+    "Un théâtre élégant décoré de dorures et de fresques mythologiques.",
+    "Un petit théâtre intimiste éclairé par des lampes à incandescence.",
+    "Un théâtre spécialisé dans les pièces masquées et les pantomimes.",
+    "Un théâtre moderne attirant les artistes avant‑gardistes.",
+    "Un théâtre aux trois rideaux successifs créant une scène profonde.",
+    "Un théâtre fleuri où les loges sont décorées de lys bleus.",
+    "Un théâtre réputé pour son acoustique exceptionnelle.",
+    "Un théâtre sombre aux colonnes de marbre noir.",
+    "Un théâtre illuminé par des lanternes colorées importées d’Asie.",
+    "Un théâtre où souffle un courant d’air mystérieux depuis les coulisses.",
+    "Un théâtre spécialisé dans les illusions scéniques.",
+    "Un théâtre discret niché dans un passage couvert.",
+    "Un théâtre réputé pour ses opéras et ses concerts.",
+    "Un théâtre décoré d’un grand cygne argenté au-dessus de la scène.",
+    "Un théâtre dédié aux pièces modernes et expérimentales.",
+    "Un théâtre donnant sur le Pont Royal, très prisé des artistes.",
+    "Un théâtre où certaines voix semblent résonner sans source visible.",
+    "Un théâtre aux fauteuils rouges et aux loges richement décorées.",
+    "Un théâtre illuminé par des centaines de petites ampoules."
+  ],
+  "ambiance": [
+    "Une théâtralité vibrante et mystérieuse.", "Une élégance classique et majestueuse.", "Une intimité chaleureuse et feutrée.", "Une atmosphère énigmatique et raffinée.", "Une modernité audacieuse et inspirée.", "Une profondeur scénique presque hypnotique.", "Une douceur florale et artistique.", "Une acoustique pure et enveloppante.", "Une solennité sombre et impressionnante.", "Une ambiance exotique et lumineuse.", "Une agitation légère et intrigante.", "Une magie scénique omniprésente.", "Une discrétion élégante et feutrée.", "Une harmonie musicale et noble.", "Une grâce poétique et scintillante.", "Une énergie moderne et expérimentale.", "Une élégance parisienne intemporelle.", "Une résonance étrange et troublante.", "Une chaleur artistique et prestigieuse.", "Une lumière scintillante et festive."
+  ],
+  "secret": [
+    "Un masque ancien serait lié à une pièce maudite.", "Une fresque cacherait un message codé.", "Une loge serait toujours occupée, même vide.", "Un acteur disparu aurait laissé un carnet dans les coulisses.", "Une pièce moderne aurait été interdite par un mécène influent.", "Un rideau supplémentaire dissimulerait une scène oubliée.", "Un bouquet de lys serait remplacé chaque nuit sans explication.", "Une note musicale résonne parfois seule.", "Une colonne de marbre sonne creux à un endroit précis.", "Une lanterne projette parfois une silhouette inconnue.", "Un souffle d’air provient d’un couloir muré.", "Un miroir déforme légèrement les visages.", "Une porte mène à un passage disparu du passage couvert.", "Une partition ancienne serait incomplète.", "Le cygne argenté bougerait imperceptiblement.", "Une pièce expérimentale aurait provoqué un scandale oublié.", "Un spectateur mystérieux occupe toujours la même place.", "Une voix féminine résonne parfois dans la salle vide.", "Une loge porte un numéro qui n’existe pas sur le plan.", "Une ampoule change de couleur selon la personne qui la regarde."
+  ]
+}

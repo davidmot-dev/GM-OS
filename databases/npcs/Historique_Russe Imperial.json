@@ -1,0 +1,62 @@
+{
+    "firstNames": [
+        "Ivan","Anastasia","Dmitri","Tatiana","Alexei","Ekaterina","Nikolai","Olga","Sergei","Natalia",
+        "Fyodor","Irina","Vladimir","Sofia","Mikhail","Daria","Yakov","Galina","Pavel","Marina",
+        "Boris","Vera","Konstantin","Polina","Andrei","Yelena","Lev","Ksenia","Grigori","Ludmila",
+        "Yuri","Zoya","Stepan","Varvara","Oleg","Nadezhda","Roman","Alina","Arkady","Larisa",
+        "Viktor","Mila","Timofei","Raisa","Gennadi","Svetlana","Ilya","Yulia","Leonid","Alyona"
+    ],
+    "lastNames": [
+        "Romanov","Volkov","Petrov","Sokolov","Ivanov","Morozov","Vasiliev","Smirnov","Baranov","Orlov",
+        "Mikhailov","Pavlov","Fedorov","Stepanov","Nikolaev","Belikov","Gusev","Kuznetsov","Lebedev","Antonov",
+        "Suvorov","Dragunov","Yakovlev","Grigoriev","Artemiev","Bogdanov","Sorokin","Karpov","Zaitsev","Voronov",
+        "Turgenev","Dostoevsky","Tolstoy","Chekhov","Bunin","Gogol","Pushkin","Lermontov","Tchaikovsky","Rimsky",
+        "Semyonov","Khrushchev","Ulyanov","Karamazov","Raskolnikov","Korsakov","Baryshnikov","Kozlov","Markov","Gavrilov"
+    ],
+    "jobs": [
+        "Noble de cour", "Officier tsariste", "Cosaque", "Paysanne", "Moujik", "Prêtre orthodoxe", "Moine du monastère",
+        "Marchand de fourrures", "Cocher", "Conducteur de troïka", "Écrivain", "Poète", "Professeur de littérature",
+        "Étudiant en théologie", "Fonctionnaire impérial", "Garde du palais", "Soldat d’infanterie", "Chasseur de loups",
+        "Pêcheur de rivière", "Charpentier", "Forgeron", "Tisserande", "Apothicaire", "Médecin de campagne",
+        "Gouvernante française", "Maître de musique", "Violoniste", "Pianiste", "Peintre réaliste", "Icônographe",
+        "Marchand ambulant", "Propriétaire terrien", "Intendant de domaine", "Servante", "Cuisinière", "Dompteur d’ours",
+        "Coiffeur de salon", "Modiste", "Conducteur de traîneau", "Garde-frontière", "Chasseur de zibelines",
+        "Archiviste impérial", "Bibliothécaire", "Professeur de russe", "Maître d’armes", "Capitaine de cavalerie",
+        "Chasseur de brigands", "Garde de village", "Messager impérial", "Maître de samovar"
+    ],
+    "traits": [
+        "Fier", "Stoïque", "Mélancolique", "Rêveur", "Superstitieux", "Religieux", "Taciturne", "Bavard", "Généreux", "Dur",
+        "Parle lentement", "Parle avec gravité", "A un rire grave", "A un rire discret", "A une voix profonde",
+        "A une voix douce", "A un accent rural", "A une démarche lourde", "A une démarche noble", "A un regard perçant",
+        "A un regard triste", "A un regard dur", "A un regard inquiet", "A un humour noir", "A un humour sec",
+        "A une mémoire parfaite", "A une mémoire défaillante", "A une obsession pour la neige", "A une obsession pour la vodka",
+        "A une obsession pour la foi", "A une obsession pour la littérature", "A un air fatigué", "A un air inspiré",
+        "A un air déterminé", "A un air absent", "A un air noble", "A un air mystérieux", "A un air radieux",
+        "A un air ombrageux", "A un air bienveillant", "A un air fier", "A un air prudent", "A un air mélancolique",
+        "A un air envoûtant", "A un air calme", "A un air tourmenté", "A un air stoïque", "A un air glacial"
+    ],
+    "looks": [
+        "Chapan en laine", "Manteau de fourrure", "Chapka", "Bottes en cuir", "Ceinture brodée", "Icône autour du cou",
+        "Robe traditionnelle", "Foulard coloré", "Gants en laine", "Bottes fourrées", "Manteau épais", "Écharpe en laine",
+        "Chemise brodée", "Pantalon sombre", "Bottes usées", "Veste élimée", "Chapeau de feutre", "Cape en laine",
+        "Uniforme tsariste", "Épaulettes dorées", "Sabre courbe", "Bottes vernies", "Gants blancs", "Casquette militaire",
+        "Robe de bal", "Bijoux anciens", "Cape brodée", "Chapeau décoré", "Veste sombre", "Pantalon rayé",
+        "Chaussures vernies", "Gants de cérémonie", "Cape de velours", "Chapeau de voyage", "Robe simple", "Tablier de paysanne",
+        "Veste de fourrure", "Pantalon de toile", "Bottes de neige", "Châle épais", "Manteau trempé", "Chapeau cabossé",
+        "Veste sombre", "Pantalon clair", "Chaussures fines", "Gants simples", "Cape de voyage", "Chapeau simple"
+    ],
+    "secrets": [
+        "A fui un domaine familial", "A un passé de révolutionnaire", "A un frère disparu", "A un secret sur un noble",
+        "A un passé de soldat", "A un secret sur une bataille", "A un passé de cosaque", "A un secret sur une frontière",
+        "A un passé de moine", "A un secret sur un monastère", "A un passé de marchand", "A un secret sur une cargaison",
+        "A un passé de voleur", "A un secret sur un meurtre", "A un passé de servante", "A un secret sur une famille noble",
+        "A un passé de médecin", "A un secret sur une maladie", "A un passé de poète", "A un secret sur un manuscrit",
+        "A un passé de peintre", "A un secret sur une icône", "A un passé de voyageur", "A un secret sur la Sibérie",
+        "A un passé de garde", "A un secret sur un complot", "A un passé de conspirateur", "A un secret sur un tsar",
+        "A un passé de prisonnier", "A un secret sur une évasion", "A un passé de chasseur", "A un secret sur une bête",
+        "A un passé de capitaine", "A un secret sur une mutinerie", "A un passé de noble déchu", "A un secret sur une trahison",
+        "A un passé de musicien", "A un secret sur une chanson", "A un passé de pèlerin", "A un secret sur une relique",
+        "A un passé de survivant", "A un secret sur une tempête", "A un passé de vagabond", "A un secret sur une ville perdue",
+        "A un passé de garde-frontière", "A un secret sur une frontière", "A un passé de moine-guerrier", "A un secret sur une crypte"
+    ]
+}

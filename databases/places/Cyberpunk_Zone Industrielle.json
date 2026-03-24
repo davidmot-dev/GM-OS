@@ -1,0 +1,53 @@
+{
+  "name": [
+    "Zone Industrielle A‑17",
+    "Complexe Automatisé Ferro‑Bloc",
+    "Usine des Convoyeurs Infinis",
+    "Secteur des Robots‑Manutention",
+    "Zone des Presses Hydrauliques",
+    "Complexe du Four Plasma",
+    "Usine des Drones‑Soudeurs",
+    "Secteur des Tuyaux Pressurisés",
+    "Zone du Réacteur Ionique",
+    "Complexe des Alarmes Silencieuses"
+  ],
+
+  "description": [
+    "Une zone industrielle entièrement automatisée où aucun humain ne travaille plus.",
+    "Un complexe ferro‑métallique où les machines déplacent des blocs massifs sans pause.",
+    "Une usine où des convoyeurs interminables transportent des pièces anonymes.",
+    "Un secteur rempli de robots de manutention aux mouvements précis et froids.",
+    "Une zone où des presses hydrauliques s’abattent avec une régularité parfaite.",
+    "Un complexe dominé par un four plasma projetant une lumière blanche aveuglante.",
+    "Une usine où des drones‑soudeurs crépitent en continu, sans supervision.",
+    "Un secteur parcouru de tuyaux pressurisés vibrant sous la chaleur.",
+    "Une zone alimentée par un réacteur ionique instable.",
+    "Un complexe où les alarmes lumineuses clignotent sans produire de son."
+  ],
+
+  "ambiance": [
+    "Une mécanique implacable.",
+    "Une lourdeur métallique.",
+    "Un mouvement perpétuel.",
+    "Une précision inhumaine.",
+    "Une cadence écrasante.",
+    "Une chaleur aveuglante.",
+    "Une étincelle continue.",
+    "Une pression interne.",
+    "Une énergie instable.",
+    "Une alerte muette."
+  ],
+
+  "secret": [
+    "Une machine s’active parfois sans ordre du système central.",
+    "Un robot‑manutention semble éviter certains visiteurs.",
+    "Un convoyeur transporte une pièce inconnue du catalogue.",
+    "Une presse hydraulique s’arrête une seconde avant un accident potentiel.",
+    "Le four plasma émet un flash contenant un motif codé.",
+    "Un drone‑soudeur suit un trajet non programmé.",
+    "Un tuyau pressurisé pulse comme un organisme vivant.",
+    "Le réacteur ionique produit un signal radio clandestin.",
+    "Une alarme silencieuse s’active uniquement en présence humaine.",
+    "Un sous‑niveau du complexe n’apparaît sur aucun plan."
+  ]
+}

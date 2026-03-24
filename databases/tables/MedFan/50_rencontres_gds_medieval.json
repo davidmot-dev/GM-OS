@@ -1,0 +1,356 @@
+{
+    "name": "50 Rencontres - Guide de Survie Médiéval",
+    "dice": "1d50",
+    "entries": [
+        {
+            "min": 1,
+            "max": 1,
+            "title": "Jada (Artiste de rue)",
+            "description": "Jada voyage de festival en célébration. Malgré ses jérémiades sur ses douleurs aux pieds, elle est d'une humeur radieuse.",
+            "effect": "Peut lire dans les lignes de la main, jongler ou raconter des histoires pour distraire un groupe."
+        },
+        {
+            "min": 2,
+            "max": 2,
+            "title": "Kriss (Chasseresse)",
+            "description": "Fille d'un seigneur local, elle ne vit que pour la chasse et ses faucons, méprisant les futilités sociales.",
+            "effect": "Experte en fauconnerie et pistage en milieu sauvage."
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "Faï (Lutteuse)",
+            "description": "Jeune fille athlétique couverte de cicatrices, fille du célèbre lutteur Brad « Mains Noires ».",
+            "effect": "Peut engager un combat au corps à corps avec un bonus de force brute."
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "Poo (Tailleur de pierre retraité)",
+            "description": "Un vieil homme au dos brisé qui adore parler des accès cachés et des portes dérobées qu'il a construits.",
+            "effect": "Fournit des informations sur les passages secrets des grandes demeures et prisons de la région."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "Lance de Rocastel (Tacticien)",
+            "description": "Jeune homme sérieux, spécialiste de l'histoire et de la tactique militaire.",
+            "effect": "Donne un avantage tactique lors de la planification d'un siège ou d'une bataille."
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "Seth (Vigneron)",
+            "description": "Un homme froid et émacié dont les vignes produisent un vin gorgé de soleil grâce à son travail acharné.",
+            "effect": "Fournit du vin de haute qualité (récupération de fatigue)."
+        },
+        {
+            "min": 7,
+            "max": 7,
+            "title": "Rekker (Meunier peu scrupuleux)",
+            "description": "Grand et bruyant, il moud du grain mais aussi des os pour en faire de l'engrais, sans se soucier de leur provenance.",
+            "effect": "Peut racheter des restes organiques ou fournir des informations sur des trafics louches."
+        },
+        {
+            "min": 8,
+            "max": 8,
+            "title": "Marane (Apicultrice)",
+            "description": "Femme timide sentant le miel, passionnée par les tournois de joute.",
+            "effect": "Connaît les forces et faiblesses des chevaliers locaux (ex: Sire Corlon)."
+        },
+        {
+            "min": 9,
+            "max": 9,
+            "title": "Rina (Pèlerine)",
+            "description": "Une jeune femme de bonne famille voyageant discrètement sous l'apparence d'une simple pèlerine.",
+            "effect": "Peut offrir un abri ou des conseils de voyage pour éviter les loups/bandits."
+        },
+        {
+            "min": 10,
+            "max": 10,
+            "title": "Arian de Saint-Amand (Écuyer)",
+            "description": "Bagarreur invétéré au nez tordu, il possède une épée usée et un code d'honneur strict.",
+            "effect": "Combattant courageux prêt à servir un maître digne."
+        },
+        {
+            "min": 11,
+            "max": 11,
+            "title": "Trihn (Scribe)",
+            "description": "Homme distingué rédigeant des contrats officiels, mais aussi des documents plus 'discrets' pour le bon prix.",
+            "effect": "Peut falsifier des documents ou rédiger des édits officiels."
+        },
+        {
+            "min": 12,
+            "max": 12,
+            "title": "Oslas (Sculpteur)",
+            "description": "Battu et costaud, il crée des œuvres oniriques où la pierre semble devenir de la chair.",
+            "effect": "Peut sculpter des gargouilles ou des pierres tombales avec un réalisme troublant."
+        },
+        {
+            "min": 13,
+            "max": 13,
+            "title": "Gia (Vitrailliste)",
+            "description": "Compagnon voyageuse possédant un journal rempli de croquis sur les messages cachés des vitraux des lieux saints.",
+            "effect": "Capacité à décoder des messages ésotériques dans l'architecture religieuse."
+        },
+        {
+            "min": 14,
+            "max": 14,
+            "title": "Grindal (Batelier simplet)",
+            "description": "Simple d'esprit mais doté d'une force brute incroyable, il fait traverser la rivière sur sa barge.",
+            "effect": "Transport fluvial infatigable, peu importe la charge."
+        },
+        {
+            "min": 15,
+            "max": 15,
+            "title": "Doris (Herboriste)",
+            "description": "Vieille femme au regard aiguisé, experte en infusions et herbes aromatiques.",
+            "effect": "Soigne les rhumes, l'engourdissement ou la fatigue avec ses infusions."
+        },
+        {
+            "min": 16,
+            "max": 16,
+            "title": "Tivère (Nettoyeur d'égouts)",
+            "description": "Accompagné de son chien Artus, il connaît les sous-sols et les secrets des demeures de notables par leurs conduits.",
+            "effect": "Guide pour les infiltrations via les égouts ; connaît les issues secrètes."
+        },
+        {
+            "min": 17,
+            "max": 17,
+            "title": "Bors (Dresseur d'oiseaux)",
+            "description": "Il tente de dresser des oiseaux pour détecter les gaz dangereux dans les mines.",
+            "effect": "Peut fournir un oiseau capable d'alerter sur des dangers environnementaux invisibles."
+        },
+        {
+            "min": 18,
+            "max": 18,
+            "title": "Greena (Guérisseuse itinérante)",
+            "description": "Un 'hospice sur pieds' avec des dizaines de sachets de poudres et teintures.",
+            "effect": "Soigne les maux de tête, les ecchymoses et la gueule de bois."
+        },
+        {
+            "min": 19,
+            "max": 19,
+            "title": "Harrian (Chasseur de trésors)",
+            "description": "Capitaine mystérieux soupçonné d'avoir conclu un pacte avec des créatures marines pour piller des épaves.",
+            "effect": "Expert en récupération de cargaisons sous-marines."
+        },
+        {
+            "min": 20,
+            "max": 20,
+            "title": "Corinthia (Érudite)",
+            "description": "Passionnée de légendes antiques, elle collectionne les volumes étranges.",
+            "effect": "Aide à localiser des lieux de légendes oubliées."
+        },
+        {
+            "min": 21,
+            "max": 21,
+            "title": "Chicore (Gardienne de dépôt)",
+            "description": "Protège les trésors de ses clients. La rumeur dit qu'elle possède des reliques volées à l'Inquisition.",
+            "effect": "Service de stockage sécurisé ; source potentielle de reliques sacrées."
+        },
+        {
+            "min": 22,
+            "max": 22,
+            "title": "Shadrak (Tanneur)",
+            "description": "Maître dans le travail des peaux de bêtes dangereuses, qu'il s'agisse de cuir ou de trophées empaillés.",
+            "effect": "Confection d'armures de cuir à partir de monstres."
+        },
+        {
+            "min": 23,
+            "max": 23,
+            "title": "Laslo (Bottier)",
+            "description": "Fabrique des bottes durables avec une garantie de dix ans (hors dommages de combat).",
+            "effect": "Fournit des bottes augmentant l'endurance lors des longs voyages."
+        },
+        {
+            "min": 24,
+            "max": 24,
+            "title": "Minandra (Alchimiste autodidacte)",
+            "description": "Vend des 'lotions de confort' pour garder bonne mine ou rafraîchir l'eau.",
+            "effect": "Fournit des cosmétiques utilitaires ou des poudres désodorisantes."
+        },
+        {
+            "min": 25,
+            "max": 25,
+            "title": "Raleen (Bergère)",
+            "description": "Athlétique et courtisée, elle vend du lait et des fromages exceptionnels au marché.",
+            "effect": "Fournit des vivres de qualité supérieure (bonus de moral)."
+        },
+        {
+            "min": 26,
+            "max": 26,
+            "title": "Spaé (Fossoyeur sans peur)",
+            "description": "Travaille au cimetière même la nuit, affirmant que les morts ne le dérangent pas.",
+            "effect": "Informations sur les défunts récents ou aide pour des exhumations."
+        },
+        {
+            "min": 27,
+            "max": 27,
+            "title": "Rasp (Peintre manchot)",
+            "description": "Ancien guerrier devenu portraitiste de talent, capable de capturer l'essence des gens sur toile.",
+            "effect": "Peut réaliser des portraits fidèles utiles pour des recherches ou dossiers."
+        },
+        {
+            "min": 28,
+            "max": 28,
+            "title": "Marin (Percepteur redoutable)",
+            "description": "Récupère toujours les taxes, que ce soit par l'or ou par le sang.",
+            "effect": "Expert en évaluation de richesses et détection de fraude fiscale."
+        },
+        {
+            "min": 29,
+            "max": 29,
+            "title": "Cortée (Orfèvre)",
+            "description": "Travaille les métaux précieux avec une précision extrême malgré ses mains massives.",
+            "effect": "Création ou réparation de bijoux et mécanismes fins."
+        },
+        {
+            "min": 30,
+            "max": 30,
+            "title": "Godric (Colporteur d'inventions)",
+            "description": "Propose du matériel coûteux et spécifique comme des gaines affuteuses ou des briquets de pluie.",
+            "effect": "Vente d'objets utilitaires uniques (parfois dispensables)."
+        },
+        {
+            "min": 31,
+            "max": 31,
+            "title": "Rinaldo (Pêcheur d'épaves)",
+            "description": "Jeune homme malin trouvant des trésors sur la grève à marée basse.",
+            "effect": "Fournit des objets perdus ou des pièces de monnaie anciennes."
+        },
+        {
+            "min": 32,
+            "max": 32,
+            "title": "Duncan (Dresseur de bêtes)",
+            "description": "Vit dans des installations troglodytes et dresse des mastiffs et bêtes sauvages.",
+            "effect": "Vente et dressage d'animaux de garde ou de chasse."
+        },
+        {
+            "min": 33,
+            "max": 33,
+            "title": "Nildy (Bûcheronne technique)",
+            "description": "Abat des arbres imposants avec peu de coups de hache grâce à une technique précise d'angle de frappe.",
+            "effect": "Aide pour dégager des chemins ou construire des structures en bois rapidement."
+        },
+        {
+            "min": 34,
+            "max": 34,
+            "title": "Gaten (Bijoutier/Changeur)",
+            "description": "Change les devises et collectionne les monnaies rares provenant d'anciens trésors.",
+            "effect": "Service de change de monnaie (cuivre/argent/or/platine)."
+        },
+        {
+            "min": 35,
+            "max": 35,
+            "title": "Mierian (Fermière à l'arc)",
+            "description": "Défend sa ferme à la lisière du 'bois aux fées' avec son arc, ignorant les rumeurs.",
+            "effect": "Archerie défensive ; protection de périmètre."
+        },
+        {
+            "min": 36,
+            "max": 36,
+            "title": "Trevil (Pêcheur conteur)",
+            "description": "Réputé pour ses pêches miraculeuses et ses histoires fantastiques au pub.",
+            "effect": "Fournit du poisson en abondance et des rumeurs locales."
+        },
+        {
+            "min": 37,
+            "max": 37,
+            "title": "Eviane (Sage-femme/Voyante)",
+            "description": "Affirme descendre d'une lignée de sorcières et prêtresses sylvestres.",
+            "effect": "Soins obstétricaux et prédictions sur l'avenir."
+        },
+        {
+            "min": 38,
+            "max": 38,
+            "title": "Cassandre (Briseuse de chevaux)",
+            "description": "Dresse les chevaux les plus récalcitrants par la force et la volonté.",
+            "effect": "Rend n'importe quelle monture sauvage docile pour un cavalier."
+        },
+        {
+            "min": 39,
+            "max": 39,
+            "title": "Clarisse (Acolyte aveugle)",
+            "description": "Guidée par un vieux chien de berger, elle voyage avec foi et sérénité.",
+            "effect": "Soutien spirituel ; peut se diriger sans vue."
+        },
+        {
+            "min": 40,
+            "max": 40,
+            "title": "Hartigan (Ancien sapeur)",
+            "description": "Mineur à la barbe carrée, reconnaissable à sa bague de soldat-sapeur.",
+            "effect": "Expert en démolition, minage et structures souterraines."
+        },
+        {
+            "min": 41,
+            "max": 41,
+            "title": "Liandra (Marchande armée)",
+            "description": "Sillonne les routes avec une arbalète lourde pour chasser les bandits de grand chemin.",
+            "effect": "Escorte marchande protégée par des projectiles barbelés."
+        },
+        {
+            "min": 42,
+            "max": 42,
+            "title": "Shelid (Chasseresse sauvage)",
+            "description": "Voûtée et portant des cuirs tachés, elle connaît le terrain comme personne.",
+            "effect": "Meilleure guide régionale pour les zones sauvages."
+        },
+        {
+            "min": 43,
+            "max": 43,
+            "title": "Mara (Artisane chapardeuse)",
+            "description": "Fabrique des bibelots avec ses doigts agiles, mais des objets ont tendance à disparaître autour d'elle.",
+            "effect": "Création de petits objets ; source potentielle de pickpocket."
+        },
+        {
+            "min": 44,
+            "max": 44,
+            "title": "Bor et Mora (Jumeaux oracles)",
+            "description": "Lisent dans les mains et les étoiles, finissant souvent les phrases l'un de l'autre.",
+            "effect": "Divination et lecture de pensées (empathie gémellaire)."
+        },
+        {
+            "min": 45,
+            "max": 45,
+            "title": "Joriah (Maître forgeron)",
+            "description": "Malgré une jambe paralysée, il forge le fer avec un talent artistique exceptionnel.",
+            "effect": "Réparation d'armes et armures légères (nécessite persuasion)."
+        },
+        {
+            "min": 46,
+            "max": 46,
+            "title": "Bartelemy (Ancien voleur)",
+            "description": "Homme élégant portant la marque d'une guilde de voleurs disparue au poignet.",
+            "effect": "Connaissance du milieu criminel et des techniques de cambriolage."
+        },
+        {
+            "min": 47,
+            "max": 47,
+            "title": "Kaspr (Informateur excentrique)",
+            "description": "Mine d'informations sur ce qui sort de l'ordinaire et les trésors étranges.",
+            "effect": "Fournit des indices sur des légendes régionales obscures."
+        },
+        {
+            "min": 48,
+            "max": 48,
+            "title": "Andrick (Individu magnétique)",
+            "description": "Bûcheron à l'aura de majesté, armé d'une hallebarde à anneaux mélodiques.",
+            "effect": "Présence imposante ; sa hallebarde émet une musique frénétique en combat."
+        },
+        {
+            "min": 49,
+            "max": 49,
+            "title": "Érok (Soldat vétéran)",
+            "description": "Ressemble à un paysan mais cache un tatouage d'aigle noir, marque de son passé militaire.",
+            "effect": "Vigilance accrue ; expertise en survie et tactique de combat."
+        },
+        {
+            "min": 50,
+            "max": 50,
+            "title": "Marinanda (Voyageuse)",
+            "description": "Parcourt les continents et échange des ragots et nouvelles contre des récits de voyage.",
+            "effect": "Source mondiale d'informations, rumeurs et ragots."
+        }
+    ]
+}

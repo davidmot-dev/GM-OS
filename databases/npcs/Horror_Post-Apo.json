@@ -1,0 +1,56 @@
+{
+    "firstNames": [
+        "Ash", "Mara", "Duke", "Riley", "Jonas", "Kara", "Silas", "Nora", "Briggs", "Tess", "Hank", "Lena",
+        "Viktor", "June", "Cass", "Rafe", "Ivy", "Cole", "Sable", "Milo", "Tara", "Gage", "Nash", "Willa",
+        "Orion", "Piper", "Jett", "Ronan", "Skye", "Dahlia", "Knox", "Harper", "Zed", "Marlow", "Tobin", "Sierra",
+        "Axel", "Nova", "Reed", "Vera", "Sawyer", "Lark", "Dorian", "Faye", "Ryder", "Mina", "Talon", "Eli"
+    ],
+    "lastNames": [
+        "Redstone", "Holloway", "Graves", "Dustwalker", "Ironjaw", "Blackridge", "Ashford", "Crowe", "Ridgewell", "Marrow",
+        "Rustfield", "Hawker", "Deadfall", "Scrapthorn", "Hollowstep", "Grimwater", "Steelmark", "Wastemore", "Drybone", "Roughwind",
+        "Cinderfall", "Gravelock", "Stormpit", "Hardscrap", "Bleakridge", "Ruinborn", "Sandbreaker", "Ironfall", "Craterfield", "Rustborn",
+        "Wasteland", "Grimshore", "Dustforge", "Scrapwell", "Ashwalker", "Bonecrest", "Rubblethorn", "Steelgrave", "Drymarch", "Canyonfall",
+        "Roughstone", "Irontrail", "Dustmoor", "Grimtrail", "Rustpeak", "Wastelock", "Cinderstone", "Grimridge", "Ashmoor", "Deadmarch"
+    ],
+    "jobs": [
+        "Éclaireur", "Chasseur", "Charognard", "Médecin de fortune", "Mécanicien", "Contrebandier", "Chef de clan", "Éleveur de bêtes mutantes", "Marchand itinérant", "Garde de caravane",
+        "Ingénieur bricoleur", "Saboteur", "Explorateur de ruines", "Mineur de ferraille", "Chasseur de primes", "Pilote de buggy", "Trafiquant d’eau", "Cultivateur hydroponique",
+        "Guérisseur", "Fabricant d’armes", "Dompteur de chiens", "Archiviste du vieux monde", "Technicien radio", "Fossoyeur", "Éclaireur nocturne", "Garde-frontière",
+        "Chasseur de mutants", "Réparateur de drones", "Éleveur d’insectes", "Pilleur de bunkers", "Chimiste amateur", "Contrebandier de médicaments", "Chef de caravane",
+        "Messager", "Mineur de tunnels", "Garde de camp", "Tisseur de filets", "Pêcheur de marécage", "Collecteur de pluie", "Dresseur de rats", "Fabricant de pièges",
+        "Éleveur de chèvres", "Récupérateur de batteries", "Technicien solaire", "Garde des remparts", "Chasseur de tempêtes", "Éleveur de vers géants", "Réparateur de moteurs", "Coureur des dunes"
+    ],
+    "traits": [
+        "Méfiant", "Dur à cuire", "Silencieux", "Nerveux", "Endurci", "Cynique", "Superstitieux", "Tremblant", "Râleur",
+        "Optimiste malgré tout", "Paranoïaque", "Trop bavard", "Regard vide", "Rire nerveux", "Tics compulsifs", "Somnambule", "Hyperactif", "Lent à réagir",
+        "Voix rauque", "Boite légèrement", "Regard perçant", "Toujours affamé", "Toujours fatigué", "Trop curieux", "Trop prudent",
+        "Aime raconter des histoires", "Déteste le bruit", "Aime le silence", "Aime les vieilles chansons", "A peur de l’obscurité",
+        "Aime les armes anciennes", "Collectionne les babioles", "Parle tout seul", "Regarde souvent le ciel", "A une mémoire défaillante",
+        "A une mémoire parfaite", "A un humour noir", "A un rire grave", "A une voix douce", "A une démarche lourde",
+        "A une démarche légère", "A un regard triste", "A un regard fou", "A un regard dur", "A une obsession pour l’eau",
+        "A une obsession pour les cartes", "A une obsession pour les machines", "A une obsession pour les animaux", "A une obsession pour les ruines", "A une obsession pour les armes"
+    ],
+    "looks": [
+        "Manteau en cuir usé", "Masque à gaz fissuré", "Bottes poussiéreuses", "Bandana sale", "Gants renforcés", "Sac à dos rafistolé", "Cicatrice profonde", "Œil bandé",
+        "Armure de bric et de broc", "Casque de moto cabossé", "Épaulières en métal récupéré", "Pantalon déchiré", "T-shirt du vieux monde", "Tatouage effacé",
+        "Lunettes de soleil cassées", "Bottes renforcées", "Cape en toile", "Gilet pare-balles usé", "Masque en tissu", "Cheveux rasés",
+        "Barbe hirsute", "Cheveux emmêlés", "Visage couvert de poussière", "Mains calleuses", "Cicatrices multiples", "Œil cybernétique défectueux",
+        "Bandeau sur la tête", "Bottes militaires", "Veste en jean renforcée", "Gants troués", "Écharpe poussiéreuse", "Pantalon militaire",
+        "Bottes de motard", "Casque de chantier", "Lunettes de protection", "Gilet tactique", "Pantalon cargo", "Chaussures rafistolées",
+        "Armure en pneus découpés", "Épaulières en os", "Masque de hockey", "Cape en peau de bête", "Tatouages tribaux", "Visage peint",
+        "Bottes en caoutchouc", "Gants de moto", "Veste en cuir cloutée", "Sacoche en toile", "Casque bricolé"
+    ],
+    "secrets": [
+        "A volé une ration d’eau", "A trahi son clan", "A tué un proche par accident", "Cache une maladie", "A trouvé un bunker intact", "A vu une créature étrange", "A un passé militaire",
+        "A un enfant caché", "A un implant défectueux", "A une carte secrète", "A un lien avec une ancienne faction", "A survécu à une tempête radioactive",
+        "A un journal du vieux monde", "A une dette envers un chef de guerre", "A un passé de scientifique", "A détruit un village", "A un frère disparu",
+        "A un secret sur une oasis", "A un objet précieux", "A un passé de bandit", "A un tatouage de faction", "A un ennemi juré",
+        "A un message codé", "A un passé de médecin", "A un secret sur une arme ancienne", "A un refuge caché", "A un passé de pilote",
+        "A un secret sur une tempête", "A un passé de prisonnier", "A un contact dans une faction ennemie", "A un passé de chef",
+        "A un secret sur une mutation", "A un passé de technicien", "A un objet du vieux monde", "A un secret sur une ville perdue",
+        "A un passé de mercenaire", "A un passé de contrebandier", "A un secret sur une machine ancienne", "A un passé de chasseur",
+        "A un secret sur une tribu mutante", "A un passé de garde", "A un secret sur une source d’eau", "A un passé de pilote de drone",
+        "A un secret sur un laboratoire", "A un passé de soldat", "A un secret sur une explosion", "A un passé de mécanicien",
+        "A un secret sur un chef de clan", "A un passé de survivant solitaire"
+    ]
+}

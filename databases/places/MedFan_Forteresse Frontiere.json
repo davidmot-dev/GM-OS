@@ -1,0 +1,53 @@
+{
+  "name": [
+    "Forteresse des Remparts Fissurés",
+    "Forteresse du Bastion du Nord",
+    "Forteresse des Veilleurs Fatigués",
+    "Forteresse du Mur des Hurlements",
+    "Forteresse des Tours Ébréchées",
+    "Forteresse du Guet Silencieux",
+    "Forteresse des Portes de Fer",
+    "Forteresse du Rempart Gris",
+    "Forteresse des Archères Vides",
+    "Forteresse du Bastion Souterrain"
+  ],
+
+  "description": [
+    "Une forteresse dont les remparts fissurés témoignent d’assauts anciens et imminents.",
+    "Un bastion du nord battu par les vents glacés, gardé par une garnison épuisée.",
+    "Une forteresse où les veilleurs semblent lutter contre le sommeil et la peur.",
+    "Un mur où l’on dit entendre des hurlements lorsque la nuit tombe.",
+    "Une forteresse aux tours ébréchées, prêtes à s’effondrer au prochain choc.",
+    "Un guet silencieux où aucune cloche n’a sonné depuis des mois.",
+    "Une forteresse protégée par d’immenses portes de fer marquées de coups.",
+    "Un rempart gris rongé par le temps et les intempéries.",
+    "Une forteresse où les archères restent vides, faute d’archers.",
+    "Un bastion souterrain reliant la forteresse à d’anciens tunnels oubliés."
+  ],
+
+  "ambiance": [
+    "Une tension permanente.",
+    "Un froid militaire.",
+    "Une fatigue accumulée.",
+    "Une menace invisible.",
+    "Une fragilité structurelle.",
+    "Un silence oppressant.",
+    "Une défense acharnée.",
+    "Une usure lente.",
+    "Un abandon partiel.",
+    "Une profondeur inquiétante."
+  ],
+
+  "secret": [
+    "Une fissure du rempart laisse filtrer une lumière étrange.",
+    "Le bastion du nord abrite un prisonnier que personne n’a vu.",
+    "Un veilleur affirme voir des silhouettes au-delà des murs.",
+    "Le mur des hurlements résonne même sans vent.",
+    "Une tour ébréchée cache un escalier scellé.",
+    "Le guet silencieux possède une cloche qui sonne seule.",
+    "Les portes de fer vibrent parfois comme sous un choc invisible.",
+    "Le rempart gris renferme un symbole ancien.",
+    "Une archère vide laisse passer un souffle glacé.",
+    "Le bastion souterrain mène à une salle oubliée."
+  ]
+}

@@ -1,0 +1,48 @@
+{
+    "name": "Attaques de Prétorien, de Broyeur et de Reine",
+    "dice": "1d6",
+    "entries": [
+        {
+            "min": 1,
+            "max": 1,
+            "title": "APPEL DE LA GARDE",
+            "description": "L'énorme Xénomorphe émet un cri perçant, appelant D6 Sentinelles (pour la Reine) ou Soldats (pour le Prétorien ou le Broyeur) qui accourent à sa défense.",
+            "effect": "Ils atteignent la zone au Round suivant, puis ils tirent leur initiative et peuvent agir."
+        },
+        {
+            "min": 2,
+            "max": 2,
+            "title": "CHARGE",
+            "description": "Réservée au Broyeur (relancez pour le Prétorien et la Reine). La cible risque d'être écrasée par la masse de la créature.",
+            "effect": "Test de MOBILITÉ pour éviter d'être Brisée et de subir une blessure critique tirée au hasard. En cas de réussite, la cible tombe quand même à terre et son NIVEAU DE STRESS augmente de 1."
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "MORSURE BESTIALE",
+            "description": "Le Xénomorphe mord sauvagement sa proie, lui arrachant un énorme morceau de chair.",
+            "effect": "Attaque avec 10 dés, Dégâts 1. Si au moins 1 point de dégâts est infligé : provoque la blessure critique n° 61 (même si non Brisée) et un test de Panique."
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "COUP ÉCRASANT",
+            "description": "Le Xénomorphe se jette de tout son poids sur son infortunée victime.",
+            "effect": "Test de MOBILITÉ à -2 (hors action). Échec : la victime subit immédiatement trois blessures critiques (tirez 3 fois, cumulables, même si non Brisée). La victime est jetée à terre et fait un test de Panique."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "EMPALEMENT CAUDAL",
+            "description": "Le Xénomorphe empale sa victime avec une force effroyable.",
+            "effect": "Attaque 10 dés (14 pour une Reine), Dégâts 1, Perce-armure. Si dégâts : déclenche automatiquement la blessure critique n° 66, tuant aussitôt la proie."
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "MORSURE À LA TÊTE",
+            "description": "Le Xénomorphe ouvre grand ses mâchoires externes, et ses mâchoires internes apparaissent, claquant d'impatience, avant de jaillir.",
+            "effect": "Attaque avec 10 dés de base, Dégâts 2. Si dégâts : inflige automatiquement la blessure critique n° 64 (mort immédiate)."
+        }
+    ]
+}

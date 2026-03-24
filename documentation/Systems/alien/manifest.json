@@ -1,0 +1,21 @@
+{
+  "source_pdf": "ALIEN_le_jeu_de_rôle.pdf",
+  "files": [
+    "README.md",
+    "aliens/neomorphs.md",
+    "aliens/other_species.md",
+    "aliens/overview.md",
+    "aliens/xenomorph_xx121.md",
+    "equipment/weapons_armor_gear_vehicles.md",
+    "raw/full_book_by_pdf_page.md",
+    "rules/combat_and_panic.md",
+    "rules/core_mechanics.md",
+    "rules/skills.md",
+    "rules/talents.md",
+    "scenario_hope/events_and_triggers.md",
+    "scenario_hope/gm_os_index.md",
+    "scenario_hope/locations.md",
+    "scenario_hope/overview.md",
+    "scenario_hope/pregens_and_npcs.md"
+  ]
+}

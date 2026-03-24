@@ -1,0 +1,706 @@
+{
+    "name": "100 Façades de bâtiments - GdS-Cth-Investigateur",
+    "dice": "1d100",
+    "entries": [
+        {
+            "min": 1,
+            "max": 1,
+            "title": "Briques rouges classique",
+            "description": "Une façade de briques rouges avec des fenêtres à guillotine.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 2,
+            "max": 2,
+            "title": "Style Art déco",
+            "description": "Un immeuble de style Art déco présentant des motifs géométriques en relief et une porte ouvragée dont la sonnette en laiton représente un lion.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "Victorienne florale",
+            "description": "Une maison victorienne aux tons pastels, dont les volets en bois, légèrement usés, sont ornés de détails floraux sculptés.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "Moderne verre et acier",
+            "description": "Époque contemporaine. Un bâtiment moderne en verre et en acier, reflétant le ciel gris.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "Maison corinthienne",
+            "description": "Une maison imposante dont l'entrée est une sorte de préau soutenu par des colonnes corinthiennes.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "Béton brut",
+            "description": "Époque contemporaine. Un immeuble en béton brut rappelant l'architecture brutaliste des années 1960.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 7,
+            "max": 7,
+            "title": "Gratte-ciel illuminé",
+            "description": "Époque contemporaine. Un gratte-ciel en acier et en verre s'élevant vers le ciel, le logo de l'entreprise qui l'occupe est illuminé par rétro-éclairage au sommet.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 8,
+            "max": 8,
+            "title": "Style Rural engoncé",
+            "description": "Une maison en pierre avec des volets en bois, comme si une habitation rurale s'était retrouvée engoncée dans cette rue.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 9,
+            "max": 9,
+            "title": "Méditerranéenne",
+            "description": "Une façade en stuc blanc avec des volets en fer forgé, dans un style méditerranéen.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 10,
+            "max": 10,
+            "title": "Bâtiment en bois fleuri",
+            "description": "Un bâtiment tout en bois, de trois étages, avec des balcons fleuris.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 11,
+            "max": 11,
+            "title": "Brique noircie",
+            "description": "Une façade en brique noircie par le temps, la pollution ou un ancien incendie, au choix du meneur de jeu.",
+            "effect": "Ambiance sinistre."
+        },
+        {
+            "min": 12,
+            "max": 12,
+            "title": "Three-decker typique",
+            "description": "Un three-decker, typique de la Nouvelle-Angleterre, chaque étage constituant un appartement indépendant.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 13,
+            "max": 13,
+            "title": "Façade barricadée",
+            "description": "Une façade de pierres de taille, dont la porte et les fenêtres sont barricadées par des planches.",
+            "effect": "Bâtiment condamné ou abandonné."
+        },
+        {
+            "min": 14,
+            "max": 14,
+            "title": "Moderne gothique",
+            "description": "Un immeuble résolument moderne, possédant sur sa façade plusieurs gargouilles noires de style gothique qui semblent ne pas être à leur place.",
+            "effect": "Test de SAN (0/1) possible pour les investigateurs sensibles aux anachronismes dérangeants."
+        },
+        {
+            "min": 15,
+            "max": 15,
+            "title": "Briques et carillon",
+            "description": "Une maison de briques rouges possédant un petit porche où tintinnabule un carillon de bois.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 16,
+            "max": 16,
+            "title": "Villa aux statues",
+            "description": "Une villa cossue dont le porche abrite deux statues d'animaux exotiques en marbre (lion, panthère ou éléphant).",
+            "effect": "Indice de richesse élevée."
+        },
+        {
+            "min": 17,
+            "max": 17,
+            "title": "Brasserie et habitations",
+            "description": "Un immeuble de cinq étages en briques rouges, le rez-de-chaussée abrite une brasserie et les étages au-dessus sont des habitations.",
+            "effect": "Lieu de passage et de rumeurs."
+        },
+        {
+            "min": 18,
+            "max": 18,
+            "title": "Cabinet et bureaux",
+            "description": "Un immeuble de briques beiges, le rez-de-chaussée est un cabinet de dentiste et les étages au-dessus sont des bureaux.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 19,
+            "max": 19,
+            "title": "Jardin grillagé",
+            "description": "Un immeuble d'habitations accessible via un petit jardin fort bien entretenu, auquel on accède par une grille en fer forgé ouverte en journée.",
+            "effect": "Accès restreint la nuit."
+        },
+        {
+            "min": 20,
+            "max": 20,
+            "title": "Palais de marbre",
+            "description": "Un grand bâtiment dont la façade est en marbre blanc, surplombé de statues, avec un hall d'entrée gigantesque visible depuis l'extérieur.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 21,
+            "max": 21,
+            "title": "Porche ésotérique",
+            "description": "Un bâtiment dont le premier étage est construit en pierres et ceux du dessus en briques beiges, le porche est orné d'un symbole ésotérique.",
+            "effect": "Test d'Occultisme pour identifier le symbole."
+        },
+        {
+            "min": 22,
+            "max": 22,
+            "title": "Béton blanc moderne",
+            "description": "Époque contemporaine. Un immeuble en béton blanc avec de nombreuses baies vitrées, dans une architecture résolument moderne.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 23,
+            "max": 23,
+            "title": "Maison bois colorée",
+            "description": "Une maison en bois peinte avec des couleurs vives, certaines légèrement abîmées par le temps et les intempéries.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 24,
+            "max": 24,
+            "title": "Stuc et Anges",
+            "description": "Une façade en stuc blanc richement ornée de sculptures florales, et dont l'entrée est encadrée par deux statues d'anges.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 25,
+            "max": 25,
+            "title": "Acier rouillé",
+            "description": "Époque contemporaine. Une façade en acier rouillé, dans des teintes orangées et brunes, dotée de grandes fenêtres rectangulaires.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 26,
+            "max": 26,
+            "title": "Maison au lierre",
+            "description": "Une façade en pierre, abîmée, recouverte de lierre grimpant. On y entre par une porte massive en bois exotique rouge.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 27,
+            "max": 27,
+            "title": "Briques et balcons",
+            "description": "Un immeuble de briques rouges où la séparation des étages est marquée par une ligne de briques blanches. Chaque appartement dispose de son balcon en fer forgé.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 28,
+            "max": 28,
+            "title": "Blanche et bleue",
+            "description": "Une façade en bois peinte en blanc, avec des volets bleus et de petites fenêtres à carreau où sont suspendues des jardinières de geraniums.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 29,
+            "max": 29,
+            "title": "Motifs géométriques rétro",
+            "description": "Époque contemporaine. Une façade revêtue de carreaux de ciment aux motifs rétro, formant des dessins géométriques colorés et des formes abstraites.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 30,
+            "max": 30,
+            "title": "Colombages ciselés",
+            "description": "Une maison à colombages, en bois noir et plâtre blanc. Les fenêtres du rez-de-chaussée sont ciselées de motifs géométriques les rendant opaques.",
+            "effect": "Impossible de voir à l'intérieur depuis la rue."
+        },
+        {
+            "min": 31,
+            "max": 31,
+            "title": "Tour solaire",
+            "description": "Époque contemporaine. Une tour de verre et d'acier dont les murs extérieurs sont en partie recouverts de panneaux solaires.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 32,
+            "max": 32,
+            "title": "Fresque de montagne",
+            "description": "Un immeuble en brique jaune dont une partie a été décorée par un artiste peintre. Il a peint une fresque évoquant un paysage de montagne.",
+            "effect": "Point de repère visuel aisé."
+        },
+        {
+            "min": 33,
+            "max": 33,
+            "title": "Fenêtres ovales",
+            "description": "Une maison en briques brunes avec des fenêtres ovales et des rideaux jaunes à l'intérieur.",
+            "effect": "Style architectural inhabituel."
+        },
+        {
+            "min": 34,
+            "max": 34,
+            "title": "Huit étages mixtes",
+            "description": "Un immeuble de huit étages dont les deux premiers sont parés de briques de marbre; les étages du dessus sont en briques rouges avec des frontons décorés.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 35,
+            "max": 35,
+            "title": "Ciment et commerces",
+            "description": "Un bâtiment en ciment abîmé, accueillant un fleuriste et un primeur au rez-de-chaussée, et dont les étages sont des appartements.",
+            "effect": "Lieu de vie quotidien."
+        },
+        {
+            "min": 36,
+            "max": 36,
+            "title": "Villa dissimulée",
+            "description": "Une villa que l'on distingue à peine par-delà les arbres de son jardin : des hêtres, des chênes et des platanes dissimulent la vue.",
+            "effect": "Bonus de discrétion pour ceux qui s'y cachent."
+        },
+        {
+            "min": 37,
+            "max": 37,
+            "title": "Portail imposant",
+            "description": "Un mur massif surplombé de statues, encadrant un portail imposant en fer forgé menant à une habitation.",
+            "effect": "Accès difficile sans autorisation."
+        },
+        {
+            "min": 38,
+            "max": 38,
+            "title": "Pierre calcaire blanche",
+            "description": "Une façade en pierre calcaire blanche immaculée, des fenêtres à guillotine et des balcons en fer forgé ayant les initiales du propriétaire.",
+            "effect": "Identité du propriétaire affichée."
+        },
+        {
+            "min": 39,
+            "max": 39,
+            "title": "Loft industriel",
+            "description": "Époque contemporaine. Un ancien entrepôt industriel rénové en loft, l'entrée se fait par une lourde porte de métal coulissante.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 40,
+            "max": 40,
+            "title": "Ancienne chapelle",
+            "description": "Une ancienne chapelle reconvertie en habitation. Elle dispose encore de deux vitraux colorés d'époque, représentant des scènes bibliques.",
+            "effect": "Aura de sacré ou de mystère."
+        },
+        {
+            "min": 41,
+            "max": 41,
+            "title": "Carrelages bicolores",
+            "description": "Une façade faite de carrelages rouges et jaunes, dont l'entrée est une porte grise sans sonnette.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 42,
+            "max": 42,
+            "title": "Brique et taille",
+            "description": "Un bâtiment de quatre étages, dont les murs alternent entre la brique et la pierre de taille. La porte et les fenêtres sont peintes en vert.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 43,
+            "max": 43,
+            "title": "Maison de maître florale",
+            "description": "Une maison de maître, symétrique, dont les linteaux des fenêtres sont sculptés de fresques florales.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 44,
+            "max": 44,
+            "title": "Façade mauve",
+            "description": "Un bâtiment dont la façade est un parement enduit peint en mauve.",
+            "effect": "Couleur très reconnaissable."
+        },
+        {
+            "min": 45,
+            "max": 45,
+            "title": "Frontons triangulaires",
+            "description": "Un immeuble en briques rouges doté de fenêtres à six carreaux surmontées de frontons triangulaires.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 46,
+            "max": 46,
+            "title": "Style Mauresque",
+            "description": "Une façade en stuc ocre avec des volets en bois peint en blanc, et des motifs mauresques au-dessus de la porte et des fenêtres.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 47,
+            "max": 47,
+            "title": "Grès rouge et arcades",
+            "description": "Une façade en grès rouge avec des fenêtres surmontées d'arcades de pierres.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 48,
+            "max": 48,
+            "title": "Ferronneries complexes",
+            "description": "Une façade en pierre de taille avec des motifs Art déco en relief, et des garde-corps à l'étage formés de ferronneries complexes.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 49,
+            "max": 49,
+            "title": "Néo-colonial",
+            "description": "Une façade de style néo-colonial avec des colonnes doriques, des balcons en bois et des volets en jalousie.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 50,
+            "max": 50,
+            "title": "Mélange architectural",
+            "description": "Un bâtiment mélangeant des éléments Art nouveau, Art déco et gothique.",
+            "effect": "Test de SAN (0/1) possible pour l'aspect chaotique de la construction."
+        },
+        {
+            "min": 51,
+            "max": 51,
+            "title": "Grecque et beige",
+            "description": "Un jardin fleuri abritant deux statues d'inspiration grecque et derrière lequel s'élève une maison beige à parement lisse.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 52,
+            "max": 52,
+            "title": "Petites fenêtres",
+            "description": "Un immeuble en pierre de taille doté de nombreuses petites fenêtres.",
+            "effect": "Intérieur probablement sombre."
+        },
+        {
+            "min": 53,
+            "max": 53,
+            "title": "Colonnes ioniques",
+            "description": "Une immeuble dont la façade est jaune pâle, lisse, décorée de colonnes ioniques. Accès par un chemin encadré de haies.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 54,
+            "max": 54,
+            "title": "Rocking-chairs",
+            "description": "Une maison en bois dont le porche accueille deux rocking-chairs.",
+            "effect": "Ambiance rurale ou calme."
+        },
+        {
+            "min": 55,
+            "max": 55,
+            "title": "Piliers gravés",
+            "description": "Une maison en briques brunes avec un porche en bois soutenu par des piliers de pierre gravés de symboles.",
+            "effect": "Test d'Anthropologie ou d'Occultisme pour déchiffrer les gravures."
+        },
+        {
+            "min": 56,
+            "max": 56,
+            "title": "Tour d'angle victorienne",
+            "description": "Une façade de style victorien, avec une sorte de tour d'angle en brique.",
+            "effect": "Point d'observation stratégique."
+        },
+        {
+            "min": 57,
+            "max": 57,
+            "title": "Manoir imposant",
+            "description": "Un manoir doté d'un grand porche en pierre, d'une promenade extérieure couverte et de deux étages ainsi que de combles aménagés.",
+            "effect": "Possibilité de nombreuses pièces à explorer."
+        },
+        {
+            "min": 58,
+            "max": 58,
+            "title": "Dix cheminées",
+            "description": "Une maison de plain pied possédant étrangement dix cheminées.",
+            "effect": "Bizarrerie architecturale notable."
+        },
+        {
+            "min": 59,
+            "max": 59,
+            "title": "Porte blindée moderne",
+            "description": "Époque contemporaine. Façade en béton brut, baie vitrée avec rideaux blancs. Porte en métal particulièrement épaisse.",
+            "effect": "Très difficile à forcer (malus aux tests de Crochetage/Force)."
+        },
+        {
+            "min": 60,
+            "max": 60,
+            "title": "Grands carreaux colorés",
+            "description": "Une façade en briques brunes avec des fenêtres en métal et de grands carreaux colorés.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 61,
+            "max": 61,
+            "title": "Bâtiment aux graffitis",
+            "description": "Époque contemporaine. Un bâtiment qui semblerait abandonné tant sa façade est recouverte de nombreux graffitis colorés.",
+            "effect": "Peut servir de planque."
+        },
+        {
+            "min": 62,
+            "max": 62,
+            "title": "Architecte fantasque",
+            "description": "Une maison où chaque fenêtre a une forme différente (rondes, carrées, ovales) et aucune n'a la même taille.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 63,
+            "max": 63,
+            "title": "Porte circulaire",
+            "description": "Une maison en briques beiges, dont l'entrée est une grande porte circulaire en bois, décorée de gravures de feuilles.",
+            "effect": "Style unique."
+        },
+        {
+            "min": 64,
+            "max": 64,
+            "title": "Cottage en chaume",
+            "description": "Une maison de style cottage, avec des pierres blanches irrégulières, un petit sas d'entrée et un toit en chaume.",
+            "effect": "Risque d'incendie accru."
+        },
+        {
+            "min": 65,
+            "max": 65,
+            "title": "Parement mixte",
+            "description": "Maison dont le rez-de-chaussée est en pierre et les étages en brique. Accès par un petit escalier.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 66,
+            "max": 66,
+            "title": "Rideaux rouges occultants",
+            "description": "Grande maison avec fenêtres massives et lourds rideaux rouges. Accès par un escalier majestueux.",
+            "effect": "Confidentialité totale depuis l'extérieur."
+        },
+        {
+            "min": 67,
+            "max": 67,
+            "title": "Maison grise surélevée",
+            "description": "Une maison grise légèrement surélevée par rapport à la rue, on y accède en montant une marche.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 68,
+            "max": 68,
+            "title": "Lanterne et symétrie",
+            "description": "Maison symétrique blanche. Des lanternes ornent chaque côté des fenêtres et de la porte.",
+            "effect": "Bon éclairage nocturne immédiat."
+        },
+        {
+            "min": 69,
+            "max": 69,
+            "title": "Manoir à la française",
+            "description": "Manoir majestueux en pierre de taille, toit en ardoise, jardin à la française et sentier de graviers blancs.",
+            "effect": "Discrétion impossible sur les graviers (malus aux tests de Discrétion)."
+        },
+        {
+            "min": 70,
+            "max": 70,
+            "title": "Œil de bœuf anachronique",
+            "description": "Époque contemporaine. Maison béton et acier, mais fenêtre en œil de bœuf anachronique au toit.",
+            "effect": "Détail perturbateur."
+        },
+        {
+            "min": 71,
+            "max": 71,
+            "title": "Villa aux fontaines",
+            "description": "Villa en pierres blanches avec frontons vitrés. Allée pavée encadrée de deux fontaines.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 72,
+            "max": 72,
+            "title": "Feuille d'or",
+            "description": "Ancien hôtel particulier cossu, fenêtres surplombées de frontons arqués recouverts de feuille d'or.",
+            "effect": "Valeur marchande des ornements élevée."
+        },
+        {
+            "min": 73,
+            "max": 73,
+            "title": "Colombages bleus",
+            "description": "Maison en briques beiges et colombages bleus. Jardin buissonneux.",
+            "effect": "Jardin offrant des cachettes."
+        },
+        {
+            "min": 74,
+            "max": 74,
+            "title": "Pergola pastel",
+            "description": "Époque contemporaine. Maison lisse pastel (bleu, vert ou rose) avec pergola à l'entrée.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 75,
+            "max": 75,
+            "title": "Maison de deux mètres",
+            "description": "Une maison en briques, large d'environ deux mètres seulement, mais haute de plusieurs étages.",
+            "effect": "Agencement intérieur très exigu."
+        },
+        {
+            "min": 76,
+            "max": 76,
+            "title": "Manoir abandonné",
+            "description": "Un manoir victorien symétrique arborant deux tours et entouré d'un jardin à l'abandon envahi par les ronces.",
+            "effect": "Terrain difficile (ronces) ; risque de rencontres spectrales."
+        },
+        {
+            "min": 77,
+            "max": 77,
+            "title": "Crépi jaune terne",
+            "description": "Une façade en crépi jaune passé, aux fenêtres encadrées de pierres grises, et aux volets blanc terne.",
+            "effect": "Apparence modeste."
+        },
+        {
+            "min": 78,
+            "max": 78,
+            "title": "Escalier irrégulier",
+            "description": "Une petite maison en bois et en pierre, avec un escalier aux marches irrégulières le long de la façade.",
+            "effect": "Risque de chute lors d'une poursuite (test de Dextérité requis)."
+        },
+        {
+            "min": 79,
+            "max": 79,
+            "title": "Magasins de luxe",
+            "description": "Époque contemporaine. Façade en marbre blanc avec vitrines et enseignes en laiton poli rétro-éclairé.",
+            "effect": "Objets de luxe disponibles."
+        },
+        {
+            "min": 80,
+            "max": 80,
+            "title": "Fenêtres grillagées",
+            "description": "Une façade colorée légèrement noircie dont les fenêtres sont grillagées.",
+            "effect": "Infiltration par les fenêtres impossible sans matériel lourd."
+        },
+        {
+            "min": 81,
+            "max": 81,
+            "title": "Manoir gothique vertical",
+            "description": "Manoir en grès anthracite, très haut. Contreforts sculptés d'entrelacs comme de la dentelle.",
+            "effect": "Ambiance oppressante."
+        },
+        {
+            "min": 82,
+            "max": 82,
+            "title": "Jardin de rosiers",
+            "description": "Petite maison au milieu d'un jardin de rosiers, protégée par un muret et une grille en fer forgé.",
+            "effect": "Protection contre les intrus (épines)."
+        },
+        {
+            "min": 83,
+            "max": 83,
+            "title": "Three-decker aux oiseaux",
+            "description": "Three-decker tricolore. Sonnettes surplombées de gravures : corbeau, colombe, aigle.",
+            "effect": "Test d'Idée pour un lien symbolique avec les résidents."
+        },
+        {
+            "min": 84,
+            "max": 84,
+            "title": "Béton et verre dépoli",
+            "description": "Époque contemporaine. Façade en béton ciré, porte en verre dépoli, fenêtres teintées avec stores motorisés.",
+            "effect": "Systèmes électriques centralisés."
+        },
+        {
+            "min": 85,
+            "max": 85,
+            "title": "Portes multiples",
+            "description": "Maison en briques rouges avec plusieurs portes, dont une sous marquise en métal et verre dépoli.",
+            "effect": "Plusieurs points d'entrée/sortie."
+        },
+        {
+            "min": 86,
+            "max": 86,
+            "title": "Cloche en cuivre",
+            "description": "Pierres irrégulières tricolores. Porte chêne massif avec cloche en cuivre en guise de sonnette.",
+            "effect": "Signal sonore audible de loin."
+        },
+        {
+            "min": 87,
+            "max": 87,
+            "title": "Vigne et chêne",
+            "description": "Briques rouges avec treillages pour vigne. Porte en chêne avec fenêtre ovale au-dessus.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 88,
+            "max": 88,
+            "title": "Motifs géométriques",
+            "description": "Immeuble vert pastel. Portes sculptées de motifs différents : triangles, cercles, hexagones.",
+            "effect": "Code visuel potentiel."
+        },
+        {
+            "min": 89,
+            "max": 89,
+            "title": "Arcades commerçantes",
+            "description": "Rez-de-chaussée avec boulangerie, fleuriste et boucher sous arcades protectrices. Appartements aux étages.",
+            "effect": "Abri contre la pluie ; sources de ravitaillement."
+        },
+        {
+            "min": 90,
+            "max": 90,
+            "title": "Petite porte exotique",
+            "description": "Briques grises, cinq fenêtres aux volets blancs fermés. Petite porte en bois exotique.",
+            "effect": "Accès étroit."
+        },
+        {
+            "min": 91,
+            "max": 91,
+            "title": "Métal riveté moderne",
+            "description": "Époque contemporaine. Béton brut, fenêtres acier, sonnette bouton-poussoir, porte en métal riveté.",
+            "effect": "Solidité renforcée."
+        },
+        {
+            "min": 92,
+            "max": 92,
+            "title": "Bibliothèque sculptée",
+            "description": "Pierre de taille, bois clair. Livre sculpté au-dessus de l'entrée, bibliothèque visible.",
+            "effect": "Lieu propice aux recherches documentaires."
+        },
+        {
+            "min": 93,
+            "max": 93,
+            "title": "Style Rococo",
+            "description": "Parement lisse beige agrémenté de nombreuses moulures en plâtre style rococo.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 94,
+            "max": 94,
+            "title": "Crépi hérissé",
+            "description": "Époque contemporaine. Crépi blanc tranchant, baie vitrée, jardin d'arbres majestueux.",
+            "effect": "Surface abrasive (1 point de dégât si frottement violent)."
+        },
+        {
+            "min": 95,
+            "max": 95,
+            "title": "Sonnette silencieuse",
+            "description": "Blanche lisse, volets noirs. Sonnette bouton-poussoir inaudible pour celui qui appuie.",
+            "effect": "Incertitude sur le fonctionnement de l'appel."
+        },
+        {
+            "min": 96,
+            "max": 96,
+            "title": "Patchwork original",
+            "description": "Parement carrelage dépareillé, volets multicolores, porte avec vitrail bigarré.",
+            "effect": "Difficile à manquer."
+        },
+        {
+            "min": 97,
+            "max": 97,
+            "title": "Porte monumentale",
+            "description": "Maison en pierres dépareillées grises. Porte monumentale encadrée par une arche.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 98,
+            "max": 98,
+            "title": "Ferme urbaine",
+            "description": "Ancienne ferme cernée par la ville. Long bâtiment bas en pierres irrégulières abîmées.",
+            "effect": "Multiples entrées latérales."
+        },
+        {
+            "min": 99,
+            "max": 99,
+            "title": "Bureaux corinthiens",
+            "description": "Grand immeuble de bureaux, colonnes corinthiennes, fenêtres ovales sans volets.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 100,
+            "max": 100,
+            "title": "Chaux et Ardoise",
+            "description": "Façade blanchie à la chaux, tuiles ardoise, porte bois sombre et fer forgé.",
+            "effect": "Aucun effet mécanique."
+        }
+    ]
+}

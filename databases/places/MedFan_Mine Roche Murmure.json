@@ -1,0 +1,53 @@
+{
+  "name": [
+    "Mine des Échos Profonds",
+    "Mine du Filon Murmurant",
+    "Mine des Galeries Oubliées",
+    "Mine du Roc‑Chuchoteur",
+    "Mine des Lanternes Éteintes",
+    "Mine du Gouffre Souterrain",
+    "Mine des Veines Vibrantes",
+    "Mine du Sable Noir",
+    "Mine des Parois Vivantes",
+    "Mine du Chant Minéral"
+  ],
+
+  "description": [
+    "Une mine où les échos semblent répondre aux voix humaines.",
+    "Un filon abandonné dont la roche murmure sous la main.",
+    "Une mine aux galeries oubliées, effondrées et labyrinthiques.",
+    "Un réseau souterrain où le roc chuchote des mots indistincts.",
+    "Une mine où les lanternes ne restent jamais allumées longtemps.",
+    "Un gouffre profond reliant plusieurs niveaux instables.",
+    "Une mine où les veines minérales vibrent faiblement.",
+    "Un souterrain où le sable noir absorbe toute lumière.",
+    "Une mine où les parois semblent se déplacer imperceptiblement.",
+    "Un réseau minier où la roche émet un chant grave et continu."
+  ],
+
+  "ambiance": [
+    "Une résonance inquiétante.",
+    "Un murmure minéral.",
+    "Une obscurité mouvante.",
+    "Un chuchotement profond.",
+    "Une lumière fragile.",
+    "Un vertige souterrain.",
+    "Une vibration tellurique.",
+    "Une noirceur absorbante.",
+    "Une paroi vivante.",
+    "Un chant abyssal."
+  ],
+
+  "secret": [
+    "Un écho profond répète des phrases jamais prononcées.",
+    "Le filon murmurant révèle un nom oublié.",
+    "Une galerie oubliée mène à une salle intacte.",
+    "Le roc‑chuchoteur réagit aux émotions.",
+    "Une lanterne éteinte s’allume seule à minuit.",
+    "Le gouffre souterrain cache un pont naturel invisible.",
+    "Une veine vibrante pulse comme un cœur.",
+    "Le sable noir se déplace contre la gravité.",
+    "Une paroi vivante s’écarte pour laisser passer un élu.",
+    "Le chant minéral s’interrompt lorsqu’un mensonge est prononcé."
+  ]
+}

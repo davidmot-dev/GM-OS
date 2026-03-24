@@ -1,0 +1,60 @@
+{
+    "firstNames": [
+        "Edmund","Victoria","Alistair","Eleanor","Bram","Beatrice","Nathaniel","Clara","Reginald","Agatha",
+        "Lucien","Harriet","Gideon","Ophelia","Percival","Lenora","Ambrose","Isadora","Theodore","Marion",
+        "Silas","Josephine","Arthur","Lavinia","Basil","Cecilia","Harlan","Winifred","Oscar","Tabitha",
+        "Malcolm","Rosalind","Frederick","Helena","Cyril","Dorothea","Julian","Mabel","Vincent","Ada",
+        "Edgar","Constance","Rupert","Iris","Phineas","Esther","Charles","Genevieve","Hugo","Morgana"
+    ],
+    "lastNames": [
+        "Harrow","Blackwood","Ravenscroft","Wickham","Ashdown","Holloway","Grimsley","Pemberton","Crowhurst","Davenport",
+        "Hawthorne","Merriweather","Thornfield","Winterhall","Briarwood","Hemsley","Underwood","Rookwood","Marrowstone","Pendleton",
+        "Hollowbrook","Eldridge","Wraithmore","Coldwell","Ashenford","Nightwell","Grimshaw","Ravensbrook","Mirefield","Darkwater",
+        "Ironbrook","Frostmoor","Blackridge","Hollowcrest","Nightbloom","Ashenmoor","Deepwater","Grimvale","Hollowthorn","Darkmoor",
+        "Ravencrest","Wraithfield","Ebonshore","Marrowfield","Hollowthorn","Duskwood","Ravenhall","Ebonford","Stormhollow","Nightthorn"
+    ],
+    "jobs": [
+        "Aristocrate déchu","Médecin de campagne","Chirurgien clandestin","Detective privé","Journaliste","Écrivain de feuilletons",
+        "Chasseur de vampires","Occultiste","Prêtre anglican","Employé de morgue","Fossoyeur","Domestique","Majordome",
+        "Gouvernante","Chimiste","Inventeur excentrique","Horloger","Bibliothécaire","Archiviste","Professeur de sciences naturelles",
+        "Explorateur","Capitaine de navire","Marchand de curiosités","Antiquaire","Hypnotiseur","Magnétiseur","Photographe",
+        "Chasseur de fantômes","Inspecteur de police","Avocat","Juge","Banquier","Commerçant","Propriétaire de manoir",
+        "Acteur de théâtre","Chanteuse de cabaret","Musicien","Dompteur d’animaux","Gardien de musée","Conservateur",
+        "Apothicaire","Herboriste","Chasseur de monstres","Gardien de cimetière","Maître de loge","Membre de société secrète",
+        "Érudit en folklore","Cartomancienne","Voyante","Chasseur de reliques"
+    ],
+    "traits": [
+        "Pâle","Nerveux","Taciturne","Éloquent","Superstitieux","Sceptique","Rêveur","Tourmenté","Froid","Obsessif",
+        "Regard perçant","Regard vide","Voix grave","Voix douce","Rire nerveux","Rire discret","Tics nerveux","Somnambule",
+        "A une mémoire parfaite","A une mémoire défaillante","A un humour noir","A un humour sec","A une démarche élégante",
+        "A une démarche lourde","A un accent aristocratique","A un accent populaire","A un air malade","A un air noble",
+        "A un air inquiet","A un air mélancolique","A un air sévère","A un air absent","A un air inspiré","A un air froid",
+        "A une obsession pour la mort","A une obsession pour les sciences","A une obsession pour les esprits",
+        "A une obsession pour les machines","A un regard fou","A un regard triste","A un regard dur","A un rire grave",
+        "A un rire étouffé","A une voix cassée","A un air menaçant","A un air innocent","A un air déterminé"
+    ],
+    "looks": [
+        "Redingote noire","Cape en laine","Chapeau haut-de-forme","Canne sculptée","Gants en cuir","Bottes vernies",
+        "Robe victorienne","Corset serré","Ombrelle sombre","Gants en dentelle","Broche ancienne","Collier de perles",
+        "Lunettes rondes","Montre à gousset","Manteau long","Écharpe sombre","Chemise blanche impeccable","Cravate noire",
+        "Veste en velours","Pantalon sombre","Chaussures fines","Gants brodés","Cape de voyage","Chapeau melon",
+        "Manteau trempé","Bottes usées","Gants troués","Robe usée","Cape en lambeaux","Chapeau cabossé",
+        "Veste élimée","Pantalon froissé","Chaussures boueuses","Cape épaisse","Chapeau large","Gants élégants",
+        "Robe de soirée","Bijoux anciens","Cape brodée","Chapeau décoré","Veste sombre","Pantalon rayé",
+        "Chaussures vernies","Gants de cérémonie","Cape de velours","Chapeau de deuil","Robe noire","Collier gothique"
+    ],
+    "secrets": [
+        "A vu un fantôme","A pactisé avec une entité","A un passé criminel","A un frère disparu","A un secret sur un manoir",
+        "A un passé de médium","A un secret sur une société secrète","A un passé de scientifique","A un secret sur une expérience",
+        "A un passé de chasseur de vampires","A un secret sur un vampire","A un passé de domestique","A un secret sur une famille noble",
+        "A un passé de soldat","A un secret sur une bataille","A un passé de marin","A un secret sur un navire fantôme",
+        "A un passé de voleur","A un secret sur un meurtre","A un passé de journaliste","A un secret sur un article censuré",
+        "A un passé de médecin","A un secret sur une maladie","A un passé de prêtre","A un secret sur un rituel",
+        "A un passé de chimiste","A un secret sur un poison","A un passé de photographe","A un secret sur une image",
+        "A un passé de bibliothécaire","A un secret sur un livre interdit","A un passé de noble déchu","A un secret sur une trahison",
+        "A un passé de voyageur","A un secret sur une île","A un passé de marin","A un secret sur une tempête",
+        "A un passé de garde","A un secret sur un cimetière","A un passé de médium","A un secret sur un esprit",
+        "A un passé de collectionneur","A un secret sur un artefact","A un passé de survivant","A un secret sur une crypte",
+        "A un passé de conspirateur","A un secret sur un complot","A un passé de poète","A un secret sur un sonnet"
+    ]
+}

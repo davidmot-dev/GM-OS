@@ -1,0 +1,33 @@
+{
+  "name": [
+    "Musée des Inventions Électriques", "Galerie des Affiches Modernes", "Musée des Curiosités Mécaniques", "Musée des Modes Élégantes", "Musée des Arts du Métropolitain", "Musée des Portraits Oubliés", "Musée des Sciences de l’Avenir", "Musée des Ombres du Théâtre", "Musée des Arts du Verre", "Musée des Instruments du Monde", "Musée des Collections Privées", "Musée des Arts du Mouvement", "Musée des Expositions Universelles", "Musée des Lumières Nocturnes", "Musée des Arts du Métal", "Musée des Photographies Vivantes", "Musée des Machines à Écrire", "Musée des Parfums Oubliés", "Musée des Cartes et Plans", "Musée des Sculptures de Salon"
+  ],
+  "description": [
+    "Expose les premières machines électriques et prototypes d’ampoules dans un bourdonnement discret.",
+    "Présente des affiches colorées de cabarets, théâtres et expositions universelles.",
+    "Expose automates, boîtes à musique et jouets mécaniques semblant parfois bouger seuls.",
+    "Des mannequins présentent robes, gants et chapeaux de la haute couture parisienne.",
+    "Expose maquettes, plans et affiches des premières lignes souterraines du métro.",
+    "Rempli de portraits d’artistes dont les regards semblent suivre les visiteurs.",
+    "Expose prototypes d’avions, moteurs et machines volantes dans une odeur d’huile.",
+    "Expose costumes, masques et décors miniatures sous des rideaux rouges frémissants.",
+    "Les vitrines regorgent de vases et lampes en verre coloré reflétant la lumière.",
+    "Des instruments du monde entier émettent parfois un léger son au passage des visiteurs.",
+    "Ce musée discret expose bijoux et objets provenant de riches familles parisiennes.",
+    "Des sculptures cinétiques et mobiles tournent lentement en créant une mélodie mécanique.",
+    "Retrace les expositions de 1889 et 1900 avec maquettes et objets exotiques.",
+    "Expose lanternes, lampadaires et dispositifs lumineux utilisés dans Paris.",
+    "Des balustrades et ferronneries ornent les salles, brillantes sous les lampes.",
+    "Des clichés montrent des scènes de vie parisienne semblant parfois changer.",
+    "Des rangées de machines à écrire produisent parfois un cliquetis fantôme.",
+    "Des flacons anciens et essences rares sont exposés dans des vitrines éclairées.",
+    "Des plans anciens de Paris tapissent les murs, certains montrant des rues disparues.",
+    "Des bustes et statues décorent les salles en projetant des ombres mouvantes."
+  ],
+  "ambiance": [
+    "Une excitation scientifique mêlée à une inquiétude diffuse.", "Une nostalgie artistique et vivante.", "Une atmosphère délicate, presque féerique.", "Une élégance raffinée et intimidante.", "Une modernité fascinante et mystérieuse.", "Un silence lourd, presque respectueux.", "Une audace technologique vibrante.", "Une théâtralité vibrante et étrange.", "Une beauté fragile et hypnotique.", "Une atmosphère voyageuse et mystérieuse.", "Un luxe silencieux et oppressant.", "Une harmonie mécanique envoûtante.", "Une fierté nationale teintée de nostalgie.", "Une douceur lumineuse légèrement inquiétante.", "Une élégance industrielle raffinée.", "Une atmosphère figée mais mouvante.", "Une ambiance studieuse, presque hantée.", "Une sensualité enveloppante et troublante.", "Une atmosphère studieuse et mélancolique.", "Une élégance silencieuse et solennelle."
+  ],
+  "secret": [
+    "Un générateur oublié dans les sous‑sols s’allumerait encore certaines nuits.", "Une affiche représenterait un cabaret n’ayant jamais officiellement existé.", "Un automate de danseuse aurait été inspiré d’une personne disparue.", "Une robe exposée contiendrait un message crypté dans sa doublure.", "Un plan mural montre une station de métro jamais inaugurée.", "Un portrait serait signé d’un peintre mort avant sa réalisation.", "Un prototype d’aéronef aurait réellement volé sans être déclaré.", "Un masque serait lié à une pièce maudite de 1892.", "Une lampe diffuserait une lumière différente selon le visiteur.", "Un tambour ancien résonnerait seul à la tombée de la nuit.", "Une lettre scellée n’a jamais été ouverte depuis 1878.", "Un mobile tournerait parfois dans le sens inverse sans intervention.", "Une vitrine contient un objet dont l’origine reste inconnue.", "Une lanterne projette parfois une silhouette inconnue.", "Une grille forgée serait l’œuvre d’un artisan disparu mystérieusement.", "Une photo montrerait un passant jamais identifié.", "Une machine taperait seule un mot différent chaque semaine.", "Un parfum provoquerait des visions chez certains visiteurs.", "Un plan de 1891 mentionne un passage disparu.", "Une statue aurait été sculptée d’après un modèle jamais retrouvé."
+  ]
+}

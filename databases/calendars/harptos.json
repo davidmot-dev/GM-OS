@@ -1,0 +1,123 @@
+{
+    "name": "Calendrier d'Harptos",
+    "description": "Le calendrier standard des Royaumes Oubliés (Faerûn).",
+    "hoursPerDay": 24,
+    "minutesPerHour": 60,
+    "daysOfWeek": [
+        "Premier jour",
+        "Deuxième jour",
+        "Troisième jour",
+        "Quatrième jour",
+        "Cinquième jour",
+        "Sixième jour",
+        "Septième jour",
+        "Huitième jour",
+        "Neuvième jour",
+        "Dixième jour"
+    ],
+    "months": [
+        {
+            "name": "Hammer",
+            "displayName": "Hammer (Kezef)",
+            "days": 30
+        },
+        {
+            "name": "Midwinter",
+            "displayName": "Milieu d'Hiver",
+            "days": 1,
+            "isIntercalary": true
+        },
+        {
+            "name": "Alturiak",
+            "displayName": "Alturiak (Le Griffon)",
+            "days": 30
+        },
+        {
+            "name": "Ches",
+            "displayName": "Ches (La Griffe)",
+            "days": 30
+        },
+        {
+            "name": "Tarsakh",
+            "displayName": "Tarsakh (Le Jardinier)",
+            "days": 30
+        },
+        {
+            "name": "Greengrass",
+            "displayName": "Herbeverte",
+            "days": 1,
+            "isIntercalary": true
+        },
+        {
+            "name": "Mirtul",
+            "displayName": "Mirtul (La Fondaison)",
+            "days": 30
+        },
+        {
+            "name": "Kythorn",
+            "displayName": "Kythorn (Le Temps des Fleurs)",
+            "days": 30
+        },
+        {
+            "name": "Flamerule",
+            "displayName": "Flamerule (L'Été de Feu)",
+            "days": 30
+        },
+        {
+            "name": "Midsummer",
+            "displayName": "Milieu d'Été",
+            "days": 1,
+            "isIntercalary": true
+        },
+        {
+            "name": "Shieldmeet",
+            "displayName": "Rencontre des Boucliers",
+            "days": 1,
+            "isIntercalary": true,
+            "leapYearOnly": true
+        },
+        {
+            "name": "Eleasias",
+            "displayName": "Eleasias (La Haute Moisson)",
+            "days": 30
+        },
+        {
+            "name": "Eleint",
+            "displayName": "Eleint (La Décorpion)",
+            "days": 30
+        },
+        {
+            "name": "Highharvestide",
+            "displayName": "Fête de la Moisson",
+            "days": 1,
+            "isIntercalary": true
+        },
+        {
+            "name": "Marpenoth",
+            "displayName": "Marpenoth (La Morsure du Froid)",
+            "days": 30
+        },
+        {
+            "name": "Uktar",
+            "displayName": "Uktar (La Putréfaction)",
+            "days": 30
+        },
+        {
+            "name": "Feast of the Moon",
+            "displayName": "Fête de la Lune",
+            "days": 1,
+            "isIntercalary": true
+        },
+        {
+            "name": "Nightal",
+            "displayName": "Nightal (Le Dessinateur)",
+            "days": 30
+        }
+    ],
+    "currentYear": 1492,
+    "currentMonthIndex": 0,
+    "currentDay": 1,
+    "currentHour": 12,
+    "currentMinute": 0,
+    "currentSecond": 3
+}

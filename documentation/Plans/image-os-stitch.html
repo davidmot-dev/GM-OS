@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Image OS Media Manager</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0da2e7",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101c22",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+                    boxShadow: {
+                        'glow-cyan': '0 0 20px -5px rgba(13, 162, 231, 0.5)',
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+    <div class="grid grid-cols-12 min-h-screen">
+        <!-- Left Sidebar (col-span-3) -->
+        <aside
+            class="col-span-3 bg-slate-900/90 backdrop-blur-md border-r border-slate-800 p-5 flex flex-col gap-6 sticky top-0 h-screen">
+            <div class="flex items-center gap-3 px-2">
+                <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white">
+                    <span class="material-symbols-outlined text-2xl">grid_view</span>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold tracking-tight text-white leading-none">Image OS</h1>
+                    <p class="text-xs text-slate-400 font-medium mt-1 uppercase tracking-widest">Media Manager</p>
+                </div>
+            </div>
+            <div class="flex flex-col gap-2">
+                <button
+                    class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl shadow-lg shadow-primary/40 transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined">cloud_upload</span>
+                    UPLOAD
+                </button>
+                <button
+                    class="w-full bg-rose-950/40 border border-rose-500/50 text-rose-500 hover:bg-rose-600 hover:text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined">block</span>
+                    BLACKOUT
+                </button>
+            </div>
+            <div class="flex flex-col gap-4">
+                <h3 class="text-xs font-semibold text-slate-500 uppercase px-2 tracking-wider">Navigation</h3>
+                <nav class="flex flex-col gap-1">
+                    <div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/20 text-primary">
+                        <span class="material-symbols-outlined">folder_open</span>
+                        <span class="text-sm font-medium">Media Library</span>
+                    </div>
+                    <div
+                        class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-800/50 transition-colors cursor-pointer">
+                        <span class="material-symbols-outlined">history</span>
+                        <span class="text-sm font-medium">Recent Uploads</span>
+                    </div>
+                    <div
+                        class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-800/50 transition-colors cursor-pointer">
+                        <span class="material-symbols-outlined">star</span>
+                        <span class="text-sm font-medium">Favorites</span>
+                    </div>
+                </nav>
+            </div>
+            <div class="bg-slate-800/30 p-3 rounded-lg flex-grow overflow-y-auto">
+                <h3 class="text-xs font-semibold text-slate-500 uppercase mb-3 px-1 tracking-wider">Folder Tree</h3>
+                <div class="space-y-2">
+                    <div class="flex items-center gap-2 text-slate-300 text-sm px-2 cursor-pointer hover:text-white">
+                        <span class="material-symbols-outlined text-sm">keyboard_arrow_down</span>
+                        <span class="material-symbols-outlined text-sky-400">folder</span>
+                        Campaign_01
+                    </div>
+                    <div class="ml-6 space-y-2">
+                        <div
+                            class="flex items-center gap-2 text-slate-400 text-sm px-2 cursor-pointer hover:text-white">
+                            <span class="material-symbols-outlined text-sm">folder</span>
+                            Backgrounds
+                        </div>
+                        <div
+                            class="flex items-center gap-2 text-slate-400 text-sm px-2 cursor-pointer hover:text-white">
+                            <span class="material-symbols-outlined text-sm">folder</span>
+                            NPC_Portraits
+                        </div>
+                        <div
+                            class="flex items-center gap-2 text-slate-400 text-sm px-2 cursor-pointer hover:text-white">
+                            <span class="material-symbols-outlined text-sm">folder</span>
+                            Battlemaps
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-auto pt-4 border-t border-slate-800 flex flex-col gap-3">
+                <div
+                    class="flex justify-between items-center text-[10px] text-slate-500 uppercase tracking-widest font-bold">
+                    <span>Cloud Storage</span>
+                    <span>84%</span>
+                </div>
+                <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                    <div class="bg-primary h-full w-[84%]"></div>
+                </div>
+                <div class="flex items-center gap-2 text-emerald-500 text-xs">
+                    <span class="material-symbols-outlined text-xs">sync</span>
+                    Sync Active
+                </div>
+            </div>
+        </aside>
+        <!-- Central Grid (col-span-9) -->
+        <main class="col-span-9 bg-slate-950 p-6 flex flex-col gap-6 overflow-y-auto">
+            <!-- Top Nav -->
+            <header class="flex items-center justify-between bg-slate-900/50 p-4 rounded-2xl border border-slate-800">
+                <div class="flex items-center gap-6">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs font-bold text-slate-500 uppercase">Target Screen:</span>
+                        <div class="flex bg-slate-800 p-1 rounded-xl">
+                            <button
+                                class="px-4 py-1.5 rounded-lg bg-primary text-white text-sm font-medium shadow-md">Player
+                                Hub</button>
+                            <button
+                                class="px-4 py-1.5 rounded-lg text-slate-400 text-sm font-medium hover:text-white">Monitor
+                                1</button>
+                            <button
+                                class="px-4 py-1.5 rounded-lg text-slate-400 text-sm font-medium hover:text-white">Monitor
+                                2</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <span
+                            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">search</span>
+                        <input
+                            class="bg-slate-800 border-none rounded-xl pl-10 pr-4 py-2 text-sm w-64 focus:ring-1 focus:ring-primary"
+                            placeholder="Search assets..." type="text" />
+                    </div>
+                    <button
+                        class="bg-primary text-white px-6 py-2 rounded-xl font-bold text-sm tracking-wide shadow-glow-cyan hover:scale-[1.02] active:scale-[0.98] transition-all">
+                        PROJECT NOW
+                    </button>
+                    <div
+                        class="w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center overflow-hidden">
+                        <img alt="User Profile Image" data-alt="Avatar of the current user profile"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuARqlBB-f78DSETh8wLNRwtPl4KBH-vRF7YnXl6Ur6utCjuRxffCkEsgiapNMQt5C3_XAThkpSork8918sDNjvK-x9-pgR_dThOeGETZF8voHOzPUsPWyJxdG4M3YKTM8OXZfYTl2ZSOF0Xgg8zqyEpVhaD-7BbesKYWF2PKkMwiRGHLnd4MLU6ZhhXdjAr-amYOeLX0DK_rLZimmDztQG30KpKPwPHfb_d9djlgZuJs1t564jTyvhJ2k4usdJKT_4PF308WFf1N5s" />
+                    </div>
+                </div>
+            </header>
+            <!-- Filters & Tabs -->
+            <div class="flex items-center justify-between">
+                <div class="flex gap-4">
+                    <button class="text-white font-bold border-b-2 border-primary pb-2 text-sm">All Media</button>
+                    <button class="text-slate-500 font-medium hover:text-slate-300 pb-2 text-sm">Favorites</button>
+                    <button class="text-slate-500 font-medium hover:text-slate-300 pb-2 text-sm">Recent</button>
+                </div>
+                <div class="flex gap-2">
+                    <button class="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white">
+                        <span class="material-symbols-outlined">filter_list</span>
+                    </button>
+                    <button class="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white">
+                        <span class="material-symbols-outlined">view_module</span>
+                    </button>
+                </div>
+            </div>
+            <!-- Image Grid -->
+            <div class="grid grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Highlighted/Active Card -->
+                <div
+                    class="group aspect-video rounded-2xl bg-slate-900/40 border border-white/5 overflow-hidden ring-4 ring-primary shadow-glow-cyan relative transition-all">
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                        data-alt="Dark misty forest with purple highlights"
+                        style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBhgj3d6Yg6g_DkXT1uDozfQUUl3hRf11nwnQJvP2_JJsOa7mPboxCz4SrUHYiZ7hw4gkKdWLHXwHl_OG8aUIMVHNua_AIQhrJdrpZNkeC0P2VuZjCYr1wHsSviQ4N8Dx6_aR9lMkzXXZxOAduqI2p4w0HHf3uVh1AP75rMCm8B4vkjb3IddTAnZm659VNUo_TFscYgUT9z6AwcUmLS_rhwx_n2Qdwc7NMoBoz3QoU2G1lwU97uCCl9Zhb6ho8_vHpB_Z06-sr_Fzo');">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent">
+                    </div>
+                    <div class="absolute top-3 right-3 flex gap-2">
+                        <span
+                            class="bg-primary text-[10px] font-black text-white px-2 py-0.5 rounded uppercase tracking-tighter">Live</span>
+                    </div>
+                    <div
+                        class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                            class="bg-white/10 backdrop-blur-md border border-white/20 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-white/20">SOLO</button>
+                    </div>
+                    <div class="absolute bottom-0 w-full p-4">
+                        <p class="text-white text-sm font-bold truncate">Cursed_Forest_Level3.png</p>
+                        <p class="text-slate-400 text-[10px] font-medium uppercase tracking-wider">1920x1080 • 2.4MB</p>
+                    </div>
+                </div>
+                <!-- Regular Card 1 -->
+                <div
+                    class="group aspect-video rounded-2xl bg-slate-900/40 border border-white/5 overflow-hidden hover:border-primary/50 hover:shadow-glow-cyan relative transition-all">
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                        data-alt="Lava filled dungeon chamber with dragon bones"
+                        style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCgJngtipLoo7E9XnHlZz5SolJmWmfe3CYiKLzk-S9glx06jl67wkTU1_Ak2x6WlXPf7_VKWk5T-1tAVj7czB6wNJRBOS5iu8zWkh4zPDh4gwBmuEfC91WJQavR94cPfuoH9csDGnIHDjEvQW9WyEhPT0gDuHdY7A4EmnMzJ1xr1W30Acmjgauv9OKiKxKvgH_mJedF7icD_C5otY1_IH9_C9j256aRzig3Hha_JLufJ4TFOdgkuZModqw7QZSUocj_-MsdxNG7bpg');">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent">
+                    </div>
+                    <div
+                        class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                            class="bg-white/10 backdrop-blur-md border border-white/20 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-white/20">SOLO</button>
+                    </div>
+                    <div class="absolute bottom-0 w-full p-4">
+                        <p class="text-white text-sm font-bold truncate">Dragon_Lair_Entry.jpg</p>
+                        <p class="text-slate-400 text-[10px] font-medium uppercase tracking-wider">3840x2160 • 5.1MB</p>
+                    </div>
+                </div>
+                <!-- Regular Card 2 -->
+                <div
+                    class="group aspect-video rounded-2xl bg-slate-900/40 border border-white/5 overflow-hidden hover:border-primary/50 hover:shadow-glow-cyan relative transition-all">
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                        data-alt="Cozy tavern interior with warm lighting"
+                        style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBNaUC_Lv1RSfOXSXEZngmS6LYz68V-vJSp4bBjoTEUPpCMj-lxpLzL_qTY0_FGeLw0ZA63_91RdCSGukQIdLBsEjr4wzMmjUw-aW2dPA_Qcldt14UNHsqn9MYKAWR0a0QJ9wSFcWzX8b81zFG_As2eY-zpJO4eilw6AUuCjAQkhFNbCK4mGk08YCy8p4B8j4NntByGkfYMjahN60jm_VnFnDFKOsa3azr-n-93b_c04IjQHiwVX-TDcrmpgLHdl5VwY35VP9DHE_Q');">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent">
+                    </div>
+                    <div
+                        class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                            class="bg-white/10 backdrop-blur-md border border-white/20 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-white/20">SOLO</button>
+                    </div>
+                    <div class="absolute bottom-0 w-full p-4">
+                        <p class="text-white text-sm font-bold truncate">Old_Oak_Tavern.webp</p>
+                        <p class="text-slate-400 text-[10px] font-medium uppercase tracking-wider">1920x1080 • 0.8MB</p>
+                    </div>
+                </div>
+                <!-- Regular Card 3 -->
+                <div
+                    class="group aspect-video rounded-2xl bg-slate-900/40 border border-white/5 overflow-hidden hover:border-primary/50 hover:shadow-glow-cyan relative transition-all">
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                        data-alt="Snowy mountain peaks under a clear blue sky"
+                        style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBo57wSFQQo7F7oabZeBStK8XvYyUPj0AD1CK6LT75xk-uWFxMWSjMQDsm5fAQlABBKlNxX7P3ZOSHpFwqFnH2FUz09VvhLOhwScmbusY28hArjB8ZtMo6I1-AaZtcTK23WdSCVrectoKdE1selxWhmQybOjC6aUZC8bx3f6X_0Hun10OieujnSDvrfswDpsbA9tl6ucfdcnMOeaW-T4X9iu3L-hp1_W2JoDpbOiLlqeaIEM_UkyL1DqtzdEHc7uBCY3fXLG_eYp9w');">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent">
+                    </div>
+                    <div
+                        class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                            class="bg-white/10 backdrop-blur-md border border-white/20 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-white/20">SOLO</button>
+                    </div>
+                    <div class="absolute bottom-0 w-full p-4">
+                        <p class="text-white text-sm font-bold truncate">Frost_Peak_Pass.png</p>
+                        <p class="text-slate-400 text-[10px] font-medium uppercase tracking-wider">2560x1440 • 3.7MB</p>
+                    </div>
+                </div>
+                <!-- Regular Card 4 -->
+                <div
+                    class="group aspect-video rounded-2xl bg-slate-900/40 border border-white/5 overflow-hidden hover:border-primary/50 hover:shadow-glow-cyan relative transition-all">
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                        data-alt="Blue glowing dungeon hallway with ancient runes"
+                        style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuATaAaZ_4UvYw1Np0-CzvLoQtjipq6hNMWRTOoKbh3I8r23ob39GFvzIuVdmyAOhwkimJYtAjE3H8vUq1EMBgxDvCUxncHA5xpkUerbMbohtCY695p3-Mw4N5OQYYOSjMdK-8UqfQ7RtHw7SeiK3SREXdnXKh6hXSZYQ16ksMI8TQgH3AQRP9l5hRUziJtthKJJa4Qcp-IatNC5dJ85G7N3WcL9ulucOFvcqUK0-gt0woUp_Hnt2VjmNkXKhBzZtq4ix9d8JaPZiJU');">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent">
+                    </div>
+                    <div
+                        class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                            class="bg-white/10 backdrop-blur-md border border-white/20 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-white/20">SOLO</button>
+                    </div>
+                    <div class="absolute bottom-0 w-full p-4">
+                        <p class="text-white text-sm font-bold truncate">Ancient_Crypt_Hall.jpg</p>
+                        <p class="text-slate-400 text-[10px] font-medium uppercase tracking-wider">1920x1080 • 1.2MB</p>
+                    </div>
+                </div>
+                <!-- Regular Card 5 -->
+                <div
+                    class="group aspect-video rounded-2xl bg-slate-900/40 border border-white/5 overflow-hidden hover:border-primary/50 hover:shadow-glow-cyan relative transition-all">
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                        data-alt="Medieval town square bustling with market stalls"
+                        style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAE4IezON1Y9GyfhAkLdGspOV-bIl1EcXjGhfARmV7WZEw5IS47Ro5M8TDqQHlhjrij0JaKgYje48TY8wemuZ8y_xGmzUsmwyVyd1fFnJd8zIwF0vPx1QDG18IwaK2kFaOarmuzzbNvUjb8g5mg5xtd1I6Lr-YeJXFYvKjpKjzgAnwXdYZF3-ndq4wxznWXognBAm_-QgmCPtO8KV4N5m50tSr5Tvgg1t4P3nePEOqiGP2cAhNHvVA90OcO_GVOPadpjswWVHu5tfA');">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent">
+                    </div>
+                    <div
+                        class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                            class="bg-white/10 backdrop-blur-md border border-white/20 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-white/20">SOLO</button>
+                    </div>
+                    <div class="absolute bottom-0 w-full p-4">
+                        <p class="text-white text-sm font-bold truncate">Kings_Landing_Market.png</p>
+                        <p class="text-slate-400 text-[10px] font-medium uppercase tracking-wider">3840x2160 • 4.8MB</p>
+                    </div>
+                </div>
+                <!-- Empty State / Add New -->
+                <div
+                    class="group aspect-video rounded-2xl bg-slate-900/20 border-2 border-dashed border-slate-800 flex flex-col items-center justify-center gap-3 hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer">
+                    <div
+                        class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-slate-500 group-hover:bg-primary/20 group-hover:text-primary transition-colors">
+                        <span class="material-symbols-outlined">add</span>
+                    </div>
+                    <p class="text-slate-500 font-bold text-sm group-hover:text-primary">Add New Media</p>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
