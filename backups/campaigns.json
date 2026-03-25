@@ -134,7 +134,12 @@
         "isTacticalPanelOpen": false,
         "theme": "cyberpunk",
         "themeColor": "#06b6d4"
-      }
+      },
+      "wallpaperUrl": "",
+      "notebookUrl": "https://notebooklm.google.com/notebook/132e7c53-8082-4451-9de3-0e68b518bb1c",
+      "systemPath": "",
+      "campaignPath": "",
+      "aiPersonas": {}
     }
   ],
   "sessions": [
@@ -4742,6 +4747,17 @@
             "state": "healthy",
             "badges": []
           }
+        },
+        {
+          "name": "TEST",
+          "classRace": "Humain",
+          "maxHp": 10,
+          "hp": 10,
+          "portraitUrl": "https://api.dicebear.com/9.x/adventurer/svg?seed=TEST",
+          "campaignId": "5164b587-4016-47cb-9cd1-df6d704233d1",
+          "templateId": "custom-1774091088329",
+          "sheetData": {},
+          "id": "4fbae6f4-d0db-4048-aa9e-47e213e9325d"
         }
       ],
       "id": "2497e575-3982-4508-858a-2ef6b782e3ad"
