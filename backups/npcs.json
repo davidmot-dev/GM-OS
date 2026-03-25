@@ -18,8 +18,8 @@
     }
   ],
   "config": {
-    "category": "npcs",
-    "universe": "Contemporain_Africain",
+    "category": "events",
+    "universe": "MedFan_Incident",
     "aiEnabled": true
   }
 }
