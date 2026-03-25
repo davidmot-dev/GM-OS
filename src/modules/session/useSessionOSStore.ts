@@ -20,6 +20,9 @@ import { useClockStore, type TensionClock } from '../../store/useClockStore';
 import { useWhiteboardStore, type DrawingPath } from '../whiteboard/useWhiteboardStore';
 import type { SessionSnapshot } from '../journal/types';
 import type { ModuleID, ThemeID } from '../../store/useSessionStore';
+import { LootGenerator } from './logic/LootGenerator';
+import { EncounterGenerator } from './logic/EncounterGenerator';
+import { useLootStore } from '../../stores/useLootStore';
 
 export interface LayoutConfig {
     activeModule: ModuleID;
@@ -105,6 +108,8 @@ export interface Entity {
     /** IDs des AtlasMaps liées à cette entité */
     linkedMapIds: string[];   
     campaignId: string;
+    /** Indique si cette entité est une instance temporaire de rencontre */
+    isEncounterInstance?: boolean;
     /** Référence vers le Bestiaire/Source */
     sourceRef?: string;
     /** ID du template de fiche utilisé */
@@ -117,6 +122,7 @@ export interface Entity {
     relations?: EntityRelation[];  
     /** Faction ou groupe d'appartenance */
     faction?: string;
+    inventory?: string;
 }
 
 export interface PlayerCharacter {
@@ -140,6 +146,20 @@ export interface PlayerCharacter {
     relations?: EntityRelation[];  
     /** Faction ou groupe d'appartenance */
     faction?: string;
+}
+
+/**
+ * Représente un objet d'inventaire généré ou géré par l'OS.
+ */
+export interface InventoryItem {
+    id: string;
+    name: string;
+    type: 'weapon' | 'armor' | 'gear' | 'consumable' | 'currency' | 'lore' | 'other';
+    rarity: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'artifact';
+    weight: number;
+    quantity: number;
+    description: string;
+    properties: Record<string, unknown>;
 }
 
 export interface Player {
@@ -301,6 +321,8 @@ export interface SessionOSState {
     customGameDrivers: GameDriver[];
     timelineEvents: TimelineEvent[];
     wikiEntries: WikiEntry[];
+    /** All characters across all players, flattened for easy access */
+    party: PlayerCharacter[];
 
     // UI State
     activeCampaignId: string | null;
@@ -390,12 +412,13 @@ export interface SessionOSState {
     autoSelectFirstMap: () => void;
     updateEntityHP: (entityId: string, hp: number) => void;
     updateEntityHealth: (entityId: string, health: HealthSystem) => void;
-    addEntity: (entity: Omit<Entity, 'id'>) => void;
+    addEntity: (entity: Omit<Entity, 'id'> & { id?: string }) => void;
     addPersistenceBadge: (targetId: string, targetType: 'pc' | 'npc', badge: Omit<PersistenceBadge, 'id'>) => void;
     removePersistenceBadge: (targetId: string, targetType: 'pc' | 'npc', badgeId: string) => void;
     setSelectedEntity: (id: string | null) => void;
     autoSelectFirstEntity: () => void;
     updateEntity: (id: string, updates: Partial<Entity>) => void;
+    deleteEntity: (id: string) => void;
     updateEntitySheetData: (id: string, fieldId: string, value: string | number | boolean) => void;
     addLinkedEntity: (mapId: string, entity: Omit<AtlasLinkedEntity, 'id'>) => void;
     removeLinkedEntity: (mapId: string, entityId: string) => void;
@@ -427,7 +450,18 @@ export interface SessionOSState {
     rollDice: (sides: number) => void;
     clearDiceRolls: () => void;
     togglePlayerOnline: (playerId: string) => void;
-    addLootToCharacter: (playerId: string, characterId: string, item: string) => void;
+    /** Heals all characters in the party to their maxHp */
+    healParty: () => void;
+    addLootToCharacter: (playerId: string, characterId: string, item: string | string[]) => void;
+    /** 
+     * Génère du butin à partir d'une table et l'ajoute à un personnage.
+     * Déclenche une notification visuelle.
+     */
+    generateLoot: (playerId: string, characterId: string, tableId: string) => void;
+    /**
+     * Génère une rencontre à partir d'un template et ajoute les entités à la session.
+     */
+    generateEncounter: (templateId: string) => Entity[];
 
     // AI Image Generation Actions
     generateEntityPortrait: (entityId: string, instructions?: string) => Promise<void>;
@@ -750,6 +784,9 @@ export const useSessionOSStore = create<SessionOSState>()(
             atlasMaps: mockAtlasMaps,
             customSheetTemplates: [],
             customGameDrivers: [],
+            timelineEvents: mockTimelineEvents,
+            wikiEntries: mockWikiEntries,
+            party: [],
             activeCampaignId: 'c-1',
             selectedSessionId: null,
             selectedPlayerId: 'p-1',
@@ -764,8 +801,6 @@ export const useSessionOSStore = create<SessionOSState>()(
             diceRolls: [],
             isAddingEntity: false,
             isGeneratingAIImage: false,
-            timelineEvents: mockTimelineEvents,
-            wikiEntries: mockWikiEntries,
 
             setActiveCampaign: (id) => {
                 set({ 
@@ -1274,25 +1309,111 @@ export const useSessionOSStore = create<SessionOSState>()(
                 }));
             },
 
-            addLootToCharacter: (playerId, characterId, item) => {
-                set(state => ({
-                    players: state.players.map(p => 
-                        p.id === playerId 
-                            ? {
-                                ...p,
-                                characters: p.characters.map(c => 
-                                    c.id === characterId 
-                                        ? { 
-                                            ...c, 
-                                            inventory: (c.inventory ? c.inventory + '\n' : '') + item 
-                                        } 
-                                        : c
-                                )
-                            }
-                            : p
-                    )
+            healParty: () => set(state => {
+                const newPlayers = state.players.map(p => ({
+                    ...p,
+                    characters: p.characters.map(c => ({ ...c, hp: c.maxHp }))
                 }));
-                gmToast(`Butin ajouté à la fiche de ${item.split(':')[0]}`, "success");
+                const newParty = newPlayers.flatMap(p => p.characters);
+                return { players: newPlayers, party: newParty };
+            }),
+
+
+            generateLoot: (playerId, characterId, tableId) => {
+                const driver = get().getActiveDriver();
+                if (!driver || !driver.lootTables) return;
+                
+                const table = driver.lootTables.find(t => t.id === tableId);
+                if (!table) return;
+
+                console.group(`🎲 Génération de loot pour ${characterId} sur table ${table.name}`);
+                const items = LootGenerator.generateFromTable(table, driver.lootTables);
+                
+                if (items.length > 0) {
+                    // Mapper les items en chaînes de caractères
+                    const lootStrings = items.map(item => `${item.name} (${item.rarity}) x${item.quantity}`);
+                    
+                    // Ajouter tout d'un coup pour éviter les appels multiples à set()
+                    get().addLootToCharacter(playerId, characterId, lootStrings);
+                    
+                    // Trigger Player Hub notification
+                    useLootStore.getState().setLastLoot(items, table.name);
+                    gmToast(`${items.length} objets générés depuis la table ${table.name}`, "info");
+                } else {
+                    console.warn("⚠️ Aucun objet généré.");
+                }
+                console.groupEnd();
+            },
+
+            addLootToCharacter: (playerId, characterId, items) => set((state) => {
+                const itemsArray = Array.isArray(items) ? items : [items];
+                
+                const appendLoot = (current: any = '') => {
+                    // Sanitize 'current' if it's not a string (legacy/corrupted data)
+                    let base = '';
+                    if (typeof current === 'string') {
+                        // Nettoyer les résidus de "[object Object]" si présents
+                        base = current.replace(/\[object Object\]/g, '').replace(/,,+/g, ',').trim();
+                    } else if (Array.isArray(current)) {
+                        base = current.map(i => typeof i === 'string' ? i : JSON.stringify(i)).join('\n');
+                    } else if (current && typeof current === 'object') {
+                        base = JSON.stringify(current);
+                    }
+
+                    const newItemsText = itemsArray.map(it => `- ${it}`).join('\n');
+                    return base ? `${base}\n${newItemsText}` : newItemsText;
+                };
+                
+                if (playerId) {
+                    return {
+                        players: state.players.map(p => 
+                            p.id === playerId 
+                                ? { 
+                                    ...p, 
+                                    characters: p.characters.map(c => 
+                                        c.id === characterId ? { ...c, inventory: appendLoot(c.inventory) } : c
+                                    ) 
+                                  } 
+                                : p
+                        )
+                    };
+                } else {
+                    return {
+                        entities: state.entities.map(e => 
+                            e.id === characterId ? { ...e, inventory: appendLoot(e.inventory) } : e
+                        )
+                    };
+                }
+            }),
+
+            generateEncounter: (templateId) => {
+                const driver = get().getActiveDriver();
+                if (!driver || !driver.encounterTemplates) return [];
+
+                const template = driver.encounterTemplates.find(t => t.id === templateId);
+                if (!template) return [];
+
+                const campaignId = get().activeCampaignId;
+                if (!campaignId) return [];
+
+                const sessionId = get().selectedSessionId;
+                
+                // Get all entities as potential prototypes
+                const prototypes = get().entities;
+                const newEntities = EncounterGenerator.generateFromTemplate(template, prototypes);
+
+                newEntities.forEach(entity => {
+                    const entityWithCampaign = { ...entity, campaignId };
+                    get().addEntity(entityWithCampaign);
+                    
+                    // If a session is active, add it to the session too
+                    if (sessionId) {
+                        get().addEntityToSession(sessionId, entity.id);
+                    }
+                });
+
+                gmToast(`Rencontre "${template.name}" générée avec ${newEntities.length} entités.`, "info");
+                return newEntities;
             },
 
             addRelation: (sourceId, sourceType, relation) => set((state) => {
@@ -1547,11 +1668,17 @@ export const useSessionOSStore = create<SessionOSState>()(
                 if (sanitized.description === null) sanitized.description = '';
                 if (sanitized.roleplayingNotes === null) sanitized.roleplayingNotes = '';
                 if (sanitized.gmSecretInfo === null) sanitized.gmSecretInfo = '';
+                if (sanitized.inventory === null) sanitized.inventory = '';
                 
                 return {
                     entities: state.entities.map(e => e.id === id ? { ...e, ...sanitized } : e)
                 };
             }),
+
+            deleteEntity: (id) => set((state) => ({
+                entities: state.entities.filter(e => e.id !== id),
+                selectedEntityId: state.selectedEntityId === id ? null : state.selectedEntityId
+            })),
 
             updateEntitySheetData: (id: string, fieldId: string, value: string | number | boolean) => set(state => ({
                 entities: state.entities.map(e => 
@@ -1581,8 +1708,11 @@ export const useSessionOSStore = create<SessionOSState>()(
                 entity.speed = entity.speed ?? 30;
                 entity.initiative = entity.initiative ?? 0;
 
+                // Priority to existing ID (e.g. from EncounterGenerator)
+                const id = entity.id || crypto.randomUUID();
+
                 return {
-                    entities: [...state.entities, { ...entity, id: crypto.randomUUID() }]
+                    entities: [...state.entities, { ...entity, id }]
                 };
             }),
 

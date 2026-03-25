@@ -4447,7 +4447,7 @@
     {
       "name": "Wallace Security Guard",
       "type": "npc",
-      "role": "neutral",
+      "role": "boss",
       "hp": 7,
       "description": "Security contractors dressed in dark blue uniforms with helmets and goggles, paid to follow orders without question.",
       "faction": "Wallace Corporation Security",
@@ -4475,7 +4475,7 @@
     {
       "name": "Wallace Bodyguard",
       "type": "npc",
-      "role": "ally",
+      "role": "hostile",
       "hp": 8,
       "description": "A team of crack N-9 commandos forming Niander Wallace's personal security detail. Equipped with Ender Assault Rifles.",
       "faction": "Niander Wallace's Personal Security",
@@ -4509,6 +4509,66 @@
       "id": "f01d663e-04fb-4b59-9378-8b85557d1766",
       "campaignId": "5164b587-4016-47cb-9cd1-df6d704233d1",
       "avatar": "m-44fccf1e-7e79-4317-9af0-8bdb2ebbd178"
+    },
+    {
+      "name": "Wallace Security Guard",
+      "type": "npc",
+      "role": "hostile",
+      "hp": 7,
+      "description": "Security contractors dressed in dark blue uniforms with helmets and goggles, paid to follow orders without question.",
+      "faction": "Wallace Corporation Security",
+      "roleplayingNotes": "Follows orders explicitly. Can be confused by two identical Quells, leading to hesitation.",
+      "gmSecretInfo": "Can be compromised by Miriam (fake Quell) or confused during the 'two Quells' scenario. Will attack PCs if they are seen as a threat or refuse to comply.\n[Instance de rencontre: Patrouille Wallace]",
+      "relations": [
+        {
+          "targetId": "178cbfbd-5b77-4e6b-bf27-9de830aaa49c",
+          "targetType": "npc",
+          "type": "ally",
+          "description": "Protects Quell and follows her orders."
+        },
+        {
+          "targetId": "03b59728-61a2-4dac-8393-6646a32564c4",
+          "targetType": "npc",
+          "type": "neutral",
+          "description": "Can be tricked into following Miriam's orders due to identical appearance."
+        }
+      ],
+      "templateId": "custom-1774091088329",
+      "linkedMapIds": [],
+      "id": "09f797cf-076d-423f-bdc3-b6d36d74afa2",
+      "campaignId": "5164b587-4016-47cb-9cd1-df6d704233d1",
+      "isEncounterInstance": true,
+      "maxHp": 10,
+      "ac": 10,
+      "speed": 30,
+      "initiative": 0
+    },
+    {
+      "name": "Wallace Bodyguard",
+      "type": "npc",
+      "role": "hostile",
+      "hp": 12,
+      "description": "A team of crack N-9 commandos forming Niander Wallace's personal security detail. Equipped with Ender Assault Rifles.",
+      "faction": "Niander Wallace's Personal Security",
+      "roleplayingNotes": "Offers no interaction beyond icy stares and immediate, deadly force. Cannot be reasoned with.",
+      "gmSecretInfo": "Arrive with the real Niander Wallace. Their primary directive is to eliminate any threat to Niander, including Amos and Miriam, without hesitation.\n[Instance de rencontre: Patrouille Wallace]",
+      "relations": [
+        {
+          "targetId": "312c53c4-8c8c-4c62-b91b-65e3faa90f5a",
+          "targetType": "npc",
+          "type": "ally",
+          "description": "Absolutely loyal to Niander Wallace, following his orders with extreme prejudice."
+        }
+      ],
+      "templateId": "custom-1774091088329",
+      "linkedMapIds": [],
+      "id": "c197443d-82be-4169-9dc3-a953d0ca5bc6",
+      "campaignId": "5164b587-4016-47cb-9cd1-df6d704233d1",
+      "isEncounterInstance": true,
+      "maxHp": null,
+      "ac": 12,
+      "speed": 30,
+      "initiative": 0
     }
   ],
   "players": [
@@ -4756,70 +4816,54 @@
           "portraitUrl": "https://api.dicebear.com/9.x/adventurer/svg?seed=TEST",
           "campaignId": "5164b587-4016-47cb-9cd1-df6d704233d1",
           "templateId": "custom-1774091088329",
-          "sheetData": {},
+          "sheetData": {
+            "nom": "",
+            "archetype": "",
+            "anneesService": 0,
+            "nature": "Humain",
+            "description": "",
+            "domicile": "",
+            "objetFetiche": "",
+            "promotion": 0,
+            "humanite": 0,
+            "chinyen": 0,
+            "vigueur": 8,
+            "agilite": 8,
+            "intelligence": 8,
+            "empathie": 8,
+            "hp": 10,
+            "maxHp": 0,
+            "sangFroid": 10,
+            "maxSangFroid": 0,
+            "corpsACorps": 6,
+            "endurance": 6,
+            "force": 6,
+            "armesAFeu": 6,
+            "discretion": 6,
+            "mobilite": 6,
+            "assistanceMedicale": 6,
+            "observation": 6,
+            "technologie": 6,
+            "contacts": 6,
+            "manipulation": 6,
+            "psychologie": 6,
+            "conduite": 6,
+            "specialite1": "",
+            "specialite2": "",
+            "specialite3": "",
+            "autresSpecialites": "",
+            "souvenirCle": "",
+            "relationCle": "",
+            "dotationReglementaire": "Insigne, Blaster PK-D ou .357 subcompact, Assistant d'Intégration des Connaissances (AIC), Spinner Detective Special",
+            "armes": "",
+            "protection": "",
+            "vehicules": "",
+            "autresEquipements": ""
+          },
           "id": "4fbae6f4-d0db-4048-aa9e-47e213e9325d",
-          "inventory": [
-            {
-              "id": "8f129f1e-525b-4186-af6c-a35d32b31e4f",
-              "name": "Ration de voyage",
-              "type": "other",
-              "rarity": "Commun",
-              "weight": 0,
-              "quantity": 1,
-              "description": "Objet issu de la table Butin Standard",
-              "properties": {
-                "rarity": "Commun"
-              }
-            },
-            {
-              "id": "c2dbc965-95f8-4397-b44c-bd011b5401d0",
-              "name": "Pièces d'Or",
-              "type": "other",
-              "rarity": "common",
-              "weight": 0,
-              "quantity": 99,
-              "description": "Objet issu de la table Butin Standard",
-              "properties": {
-                "quantityFormula": "1d100"
-              }
-            },
-            {
-              "id": "47ee3fbe-36f8-4c0d-b191-4c81625d2a0a",
-              "name": "Ration de voyage",
-              "type": "other",
-              "rarity": "Commun",
-              "weight": 0,
-              "quantity": 1,
-              "description": "Objet issu de la table Butin Standard",
-              "properties": {
-                "rarity": "Commun"
-              }
-            },
-            {
-              "id": "5291ea19-faf2-4652-9514-b2e37adf83f1",
-              "name": "Ration de voyage",
-              "type": "other",
-              "rarity": "Commun",
-              "weight": 0,
-              "quantity": 1,
-              "description": "Objet issu de la table Butin Standard",
-              "properties": {
-                "rarity": "Commun"
-              }
-            },
-            {
-              "id": "3fe5613f-c755-4c1b-be81-c5f7eaa1f16f",
-              "name": "Pièces d'Or",
-              "type": "other",
-              "rarity": "common",
-              "weight": 0,
-              "quantity": 55,
-              "description": "Objet issu de la table Butin Standard",
-              "properties": {
-                "quantityFormula": "1d100"
-              }
-            }
-          ]
+          "inventory": "- Cadenas (common) x2",
+          "description": "",
+          "gmNotes": ""
         }
       ],
       "id": "2497e575-3982-4508-858a-2ef6b782e3ad"

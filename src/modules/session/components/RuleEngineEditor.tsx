@@ -1,11 +1,14 @@
 import React, { useEffect } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { 
-    Sparkles, Brain, Save, ArrowLeft, PenTool, Music, Beaker, User,
-    BookOpen, Dice5, Zap, Map, type LucideIcon 
+    Sparkles, Brain, Save, ArrowLeft, PenTool, Music, Beaker, User, Search,
+    BookOpen, Dice5, Zap, Map, Gift, Swords, Plus, Trash2, ChevronRight, type LucideIcon 
 } from 'lucide-react';
 import { useGemStore } from '../../../stores/useGemStore';
-import type { GameDriver, TacticalConfig } from '../../../types/drivers';
+import type { GameDriver, TacticalConfig, LootEntryType } from '../../../types/drivers';
+import { LootGenerator } from '../logic/LootGenerator';
+import { EncounterGenerator } from '../logic/EncounterGenerator';
+import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { gmToast } from '../../../stores/useToastStore';
 import { personaGeneratorService } from '../../ai/PersonaGeneratorService';
@@ -19,6 +22,175 @@ const DEFAULT_RANGES: TacticalConfig['ranges'] = {
     extreme: { label: 'Portée extrême', maxUnits: 24, modifier: -10 }
 };
 
+const SearchableNPCSelect: React.FC<{
+    value: string;
+    onChange: (value: string) => void;
+    entities: Array<{ id: string, name: string, campaignId: string, templateId?: string, type?: string }>;
+    activeCampaignId: string | null;
+    targetTemplateId: string;
+}> = ({ value, onChange, entities, activeCampaignId, targetTemplateId }) => {
+    const [isOpen, setIsOpen] = React.useState(false);
+    const [search, setSearch] = React.useState('');
+    const containerRef = React.useRef<HTMLDivElement>(null);
+
+    const selectedEntity = entities.find(e => e.id === value);
+
+    const filteredEntities = React.useMemo(() => {
+        const systemEntities = entities.filter(e => e.templateId === targetTemplateId);
+        const campaignEntities = systemEntities.filter(e => 
+            (e.name.toLowerCase().includes(search.toLowerCase()) || e.id.toLowerCase().includes(search.toLowerCase())) &&
+            e.campaignId === activeCampaignId
+        );
+        const otherEntities = systemEntities.filter(e => 
+            (e.name.toLowerCase().includes(search.toLowerCase()) || e.id.toLowerCase().includes(search.toLowerCase())) &&
+            e.campaignId !== activeCampaignId
+        );
+        return [...campaignEntities, ...otherEntities];
+    }, [entities, search, activeCampaignId, targetTemplateId]);
+
+    React.useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    return (
+        <div className="relative" ref={containerRef}>
+            <button
+                type="button"
+                onClick={() => setIsOpen(!isOpen)}
+                className="w-full h-10 px-4 bg-black/40 rounded-xl border border-white/10 text-left flex items-center justify-between group hover:border-emerald-500/30 transition-all shadow-lg backdrop-blur-sm"
+                title="Sélectionner un NPC"
+            >
+                <div className="flex items-center gap-3 overflow-hidden">
+                    <User size={14} className={selectedEntity ? "text-emerald-400" : "text-slate-500"} />
+                    <span className={`text-xs truncate font-bold ${selectedEntity ? "text-emerald-400" : "text-slate-500 uppercase tracking-widest"}`}>
+                        {selectedEntity ? selectedEntity.name : "Sélectionner NPC"}
+                    </span>
+                </div>
+                <ChevronRight size={14} className={`text-slate-600 group-hover:text-emerald-500/50 transition-transform ${isOpen ? "rotate-90" : ""}`} />
+            </button>
+
+            {isOpen && (
+                <div className="absolute z-[100] top-full left-0 right-0 mt-2 p-2 bg-slate-900/95 border border-white/10 rounded-2xl shadow-2xl backdrop-blur-xl animate-in fade-in zoom-in duration-200 origin-top min-w-[240px]">
+                    <div className="relative mb-2">
+                        <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                        <input
+                            type="text"
+                            autoFocus
+                            placeholder="Rechercher..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Escape') setIsOpen(false);
+                            }}
+                            className="w-full bg-black/40 border border-white/5 rounded-xl pl-8 pr-3 py-2 text-[11px] text-white placeholder:text-slate-600 outline-none focus:border-emerald-500/30"
+                            title="Rechercher un PNJ"
+                        />
+                    </div>
+                    <div className="max-h-[300px] overflow-y-auto custom-scrollbar space-y-1 divide-y divide-white/5">
+                        {filteredEntities.length === 0 ? (
+                            <div className="p-4 text-center text-[10px] text-slate-600 uppercase tracking-widest italic">Aucun PNJ trouvé</div>
+                        ) : (
+                            filteredEntities.map(en => (
+                                <button
+                                    key={en.id}
+                                    type="button"
+                                    onClick={() => {
+                                        onChange(en.id);
+                                        setIsOpen(false);
+                                    }}
+                                    className={`w-full p-3 text-left hover:bg-white/5 rounded-xl transition-all group flex flex-col gap-1 ${en.id === value ? "bg-emerald-500/10 border border-emerald-500/20" : "border border-transparent"}`}
+                                >
+                                    <div className="flex items-center justify-between gap-2">
+                                        <span className={`text-[11px] font-black uppercase tracking-wider ${en.id === value ? "text-emerald-400" : "text-slate-300 group-hover:text-white"}`}>
+                                            {en.name}
+                                        </span>
+                                        {en.campaignId === activeCampaignId && (
+                                            <span className="text-[8px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-black uppercase">Campagne</span>
+                                        )}
+                                    </div>
+                                    <div className="text-[9px] text-slate-500 font-mono flex items-center justify-between">
+                                        <span>ID: {en.id.slice(0, 8)}...</span>
+                                        {en.campaignId !== activeCampaignId && (
+                                            <span className="opacity-40 italic">Hors campagne</span>
+                                        )}
+                                    </div>
+                                </button>
+                            ))
+                        )}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+const GlassSelect: React.FC<{
+    value: string;
+    onChange: (value: string) => void;
+    options: { value: string, label: string }[];
+    title: string;
+    className?: string;
+}> = ({ value, onChange, options, title, className = "" }) => {
+    const [isOpen, setIsOpen] = React.useState(false);
+    const containerRef = React.useRef<HTMLDivElement>(null);
+    const selectedOption = options.find(o => o.value === value);
+
+    React.useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    return (
+        <div className="relative" ref={containerRef}>
+            <button
+                type="button"
+                onClick={() => setIsOpen(!isOpen)}
+                className={`w-full flex items-center justify-between gap-2 px-2 py-1.5 rounded-lg border border-white/5 bg-black/20 hover:bg-black/40 hover:border-white/10 transition-all group ${className}`}
+                title={title}
+            >
+                <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-slate-200 truncate">
+                    {selectedOption?.label || value}
+                </span>
+                <ChevronRight size={10} className={`text-slate-600 group-hover:text-slate-400 transition-transform flex-shrink-0 ${isOpen ? "rotate-90" : ""}`} />
+            </button>
+
+            {isOpen && (
+                <div className="absolute z-[110] top-full left-0 right-0 mt-1 p-1 bg-slate-900 border border-white/10 rounded-xl shadow-2xl backdrop-blur-2xl animate-in fade-in zoom-in duration-150 origin-top min-w-max">
+                    <div className="space-y-0.5">
+                        {options.map(opt => (
+                            <button
+                                key={opt.value}
+                                type="button"
+                                onClick={() => {
+                                    onChange(opt.value);
+                                    setIsOpen(false);
+                                }}
+                                className={`w-full px-3 py-2 text-left rounded-lg transition-all flex items-center justify-between gap-4 group ${opt.value === value ? "bg-white/10" : "hover:bg-white/5"}`}
+                            >
+                                <span className={`text-[10px] font-black uppercase tracking-widest whitespace-nowrap ${opt.value === value ? "text-emerald-400" : "text-slate-400 group-hover:text-slate-200"}`}>
+                                    {opt.label}
+                                </span>
+                                {opt.value === value && <div className="w-1 h-1 rounded-full bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]" />}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
 export const RuleEngineEditor: React.FC = () => {
     const { 
         editingDriverId, 
@@ -26,16 +198,30 @@ export const RuleEngineEditor: React.FC = () => {
         updateGameDriver, 
         getGameDriver,
         setCurrentView,
-        customSheetTemplates 
+        customSheetTemplates,
+        customGameDrivers,
+        saveGameDriver,
+        entities,
+        activeCampaignId
     } = useSessionOSStore();
+
+    // Group entities for encounter selection: current campaign first, then others
+    const sessionEntities = React.useMemo(() => {
+        const campaignEntities = entities.filter(e => e.campaignId === activeCampaignId && e.type === 'npc');
+        const otherEntities = entities.filter(e => e.campaignId !== activeCampaignId && e.type === 'npc');
+        return [...campaignEntities, ...otherEntities];
+    }, [entities, activeCampaignId]);
 
     const driver = React.useMemo(() => 
         editingDriverId ? getGameDriver(editingDriverId) : null
-    , [editingDriverId, getGameDriver]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    , [editingDriverId, getGameDriver, customGameDrivers]);
 
     const { gems, syncGemsWithDefaults } = useGemStore();
     const [isGenerating, setIsGenerating] = React.useState(false);
-    const [activeSection, setActiveSection] = React.useState<'core' | 'combat' | 'tactical' | 'ai' | 'notebook'>('core');
+    const [activeSection, setActiveSection] = React.useState<'core' | 'combat' | 'tactical' | 'ai' | 'notebook' | 'loot' | 'encounters'>('core');
+    const [selectedLootTableId, setSelectedLootTableId] = React.useState<string | null>(null);
+    const [selectedEncounterTemplateId, setSelectedEncounterTemplateId] = React.useState<string | null>(null);
 
     useEffect(() => {
         syncGemsWithDefaults();
@@ -48,7 +234,22 @@ export const RuleEngineEditor: React.FC = () => {
     );
 
     const handleUpdate = (updates: Partial<GameDriver>) => {
-        updateGameDriver(driver.id, updates);
+        if (!driver) return;
+        
+        // If editing a built-in driver, we need to fork it into a custom one
+        if (DEFAULT_GAME_DRIVERS.some(d => d.id === driver.id)) {
+            const newId = `custom-${driver.id}-${Date.now()}`;
+            const newDriver: GameDriver = { 
+                ...driver, 
+                ...updates, 
+                id: newId
+            };
+            saveGameDriver(newDriver);
+            setEditingDriverId(newId);
+            gmToast(`Nouveau système personnalisé créé à partir de "${driver.name}"`, "success");
+        } else {
+            updateGameDriver(driver.id, updates);
+        }
     };
 
     const handleBack = () => {
@@ -79,6 +280,8 @@ export const RuleEngineEditor: React.FC = () => {
         { id: 'core', label: 'Système', icon: Dice5, color: 'text-cyan-400', bg: 'bg-cyan-500/10' },
         { id: 'combat', label: 'Combat', icon: Zap, color: 'text-indigo-400', bg: 'bg-indigo-500/10' },
         { id: 'tactical', label: 'Tactique', icon: Map, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
+        { id: 'loot', label: 'Butin', icon: Gift, color: 'text-amber-400', bg: 'bg-amber-500/10' },
+        { id: 'encounters', label: 'Rencontres', icon: Swords, color: 'text-rose-400', bg: 'bg-rose-500/10' },
         { id: 'ai', label: 'Intelligence', icon: Sparkles, color: 'text-violet-400', bg: 'bg-violet-500/10' },
         { id: 'notebook', label: 'Knowledge', icon: BookOpen, color: 'text-blue-400', bg: 'bg-blue-500/10' },
     ];
@@ -163,6 +366,438 @@ export const RuleEngineEditor: React.FC = () => {
                 <div className="flex-1 overflow-y-auto custom-scrollbar bg-[radial-gradient(circle_at_top_right,rgba(6,182,212,0.05),transparent_40%)]">
                     <div className="max-w-5xl mx-auto p-12 animate-fade-in">
                         
+                        {activeSection === 'loot' && (
+                            <div className="space-y-8">
+                                <header className="space-y-2 mb-10">
+                                    <h2 className="text-3xl font-black text-white tracking-tight uppercase italic flex items-center gap-4">
+                                        <Gift className="text-amber-400" size={32} />
+                                        Tables de <span className="text-amber-500/20 underline decoration-amber-500/40">Butin</span>
+                                    </h2>
+                                    <p className="text-slate-500 text-sm max-w-2xl leading-relaxed uppercase tracking-widest font-bold">
+                                        Créez des tables de butin aléatoires. Définissez des objets, des quantités et des probabilités (poids).
+                                    </p>
+                                </header>
+
+                                <div className="grid grid-cols-12 gap-8">
+                                    {/* Tables List */}
+                                    <div className="col-span-4 space-y-4">
+                                        <button 
+                                            onClick={() => {
+                                                const newTable = { id: `lt-${Date.now()}`, name: 'Nouvelle Table', entries: [] };
+                                                handleUpdate({ lootTables: [...(driver.lootTables || []), newTable] });
+                                                setSelectedLootTableId(newTable.id);
+                                            }}
+                                            className="w-full p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-amber-500/20 transition-all"
+                                        >
+                                            <Plus size={16} /> Ajouter une Table
+                                        </button>
+                                        <div className="space-y-2">
+                                            {(driver.lootTables || []).map(table => (
+                                                <button
+                                                    key={table.id}
+                                                    onClick={() => setSelectedLootTableId(table.id)}
+                                                    className={`w-full p-4 rounded-xl flex items-center justify-between group transition-all ${selectedLootTableId === table.id ? 'bg-amber-500 text-black shadow-glow-amber' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}
+                                                >
+                                                    <span className="text-xs font-bold truncate">{table.name}</span>
+                                                    <ChevronRight size={14} className={selectedLootTableId === table.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} />
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Table Editor */}
+                                    <div className="col-span-8">
+                                        {selectedLootTableId ? (
+                                            (() => {
+                                                const table = driver.lootTables?.find(t => t.id === selectedLootTableId);
+                                                if (!table) return null;
+                                                return (
+                                                    <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+                                                        {/* First Row: Name and Action Buttons */}
+                                                        <div className="flex items-center justify-between gap-6">
+                                                            <input 
+                                                                type="text"
+                                                                value={table.name}
+                                                                title="Nom de la table de butin"
+                                                                placeholder="Nom de la table (ex: Trésor de Boss)"
+                                                                onChange={e => {
+                                                                    const newTables = driver.lootTables?.map(t => t.id === table.id ? { ...t, name: e.target.value } : t);
+                                                                    handleUpdate({ lootTables: newTables });
+                                                                }}
+                                                                className="bg-transparent text-2xl font-black text-white focus:outline-none border-b border-white/10 focus:border-amber-500/40 pb-2 flex-1"
+                                                            />
+                                                            <div className="flex items-center gap-3">
+                                                                <button 
+                                                                    onClick={() => {
+                                                                        try {
+                                                                            const items = LootGenerator.generateFromTable(table, driver.lootTables || []);
+                                                                            console.log('Test Loot Result:', items);
+                                                                            alert(`Test réussi ! ${items.length} objets générés. Voir console pour détails.`);
+                                                                        } catch (e) {
+                                                                            alert('Erreur lors du test : ' + (e as Error).message);
+                                                                        }
+                                                                    }}
+                                                                    className="px-4 py-2 bg-amber-500/20 text-amber-400 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-amber-500/30 transition-all border border-amber-500/20 shadow-lg shadow-amber-500/10 h-10"
+                                                                >
+                                                                    Tester
+                                                                </button>
+
+                                                                <button 
+                                                                    onClick={() => {
+                                                                        if (window.confirm('Supprimer cette table ?')) {
+                                                                            const newTables = driver.lootTables?.filter(t => t.id !== table.id);
+                                                                            handleUpdate({ lootTables: newTables });
+                                                                            setSelectedLootTableId(null);
+                                                                        }
+                                                                    }}
+                                                                    className="p-2.5 bg-red-500/10 text-red-400 rounded-xl hover:bg-red-500/20 transition-all border border-red-500/20 h-10 w-10 flex items-center justify-center"
+                                                                >
+                                                                    <Trash2 size={16} />
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Second Row: Configuration Options */}
+                                                        <div className="flex items-center gap-6 bg-white/[0.03] px-6 py-3 rounded-2xl border border-white/10 shadow-xl w-fit">
+                                                            <div className="flex flex-col gap-1.5">
+                                                                <span className="text-[9px] font-black text-amber-500/60 uppercase tracking-widest leading-none">Tirages (Dés)</span>
+                                                                <input 
+                                                                    type="text"
+                                                                    value={String(table.rolls || '1')}
+                                                                    title="Nombre de tirages automatique pour cette table (ex: 1, 2d4, 5)"
+                                                                    onChange={e => {
+                                                                        const newTables = driver.lootTables?.map(t => t.id === table.id ? { ...t, rolls: e.target.value } : t);
+                                                                        handleUpdate({ lootTables: newTables });
+                                                                    }}
+                                                                    className="w-16 bg-white/5 border border-white/10 rounded-lg py-1 px-2 text-center text-xs font-mono text-amber-400 focus:outline-none focus:border-amber-500/50 transition-all focus:bg-amber-500/10"
+                                                                    placeholder="1"
+                                                                />
+                                                            </div>
+
+                                                            <div className="w-px h-8 bg-white/10" />
+
+                                                            <div className="flex flex-col gap-1.5">
+                                                                <span className="text-[9px] font-black text-amber-500/60 uppercase tracking-widest leading-none">Mode Tirage</span>
+                                                                <div className="flex p-0.5 bg-black/20 rounded-lg border border-white/5">
+                                                                    <button
+                                                                        onClick={() => {
+                                                                            const newTables = driver.lootTables?.map(t => t.id === table.id ? { ...t, rollMode: 'weighted' as const } : t);
+                                                                            handleUpdate({ lootTables: newTables });
+                                                                        }}
+                                                                        className={`px-3 py-1 rounded-md text-[9px] font-black uppercase tracking-widest transition-all ${table.rollMode === 'weighted' || !table.rollMode ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/40' : 'text-slate-500 hover:text-slate-300'}`}
+                                                                    >
+                                                                        Pondéré
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => {
+                                                                            const newTables = driver.lootTables?.map(t => t.id === table.id ? { ...t, rollMode: 'independent' as const } : t);
+                                                                            handleUpdate({ lootTables: newTables });
+                                                                        }}
+                                                                        className={`px-3 py-1 rounded-md text-[9px] font-black uppercase tracking-widest transition-all ${table.rollMode === 'independent' ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/40' : 'text-slate-500 hover:text-slate-300'}`}
+                                                                    >
+                                                                        Indépendant
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="space-y-4">
+                                                            <div className="flex items-center justify-between px-2">
+                                                                <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-400/60">Entrées de butin ({table.entries.length})</h4>
+                                                                <button 
+                                                                    onClick={() => {
+                                                                        const newEntry = { id: `entry-${Date.now()}`, type: 'item' as const, name: 'Nouvel Objet', weight: 1, minAmount: '1' };
+                                                                        const newTables = driver.lootTables?.map(t => t.id === table.id ? { ...t, entries: [...t.entries, newEntry] } : t);
+                                                                        handleUpdate({ lootTables: newTables });
+                                                                    }}
+                                                                    className="text-[10px] font-black uppercase tracking-widest text-amber-400 hover:underline"
+                                                                >
+                                                                    + Ajouter une entrée
+                                                                </button>
+                                                            </div>
+
+                                                            <div className="grid grid-cols-12 gap-3 mb-2 px-4 opacity-40">
+                                                                <div className="col-span-4 text-[9px] font-black uppercase tracking-[0.3em] text-slate-500">Nom de l'objet / Table</div>
+                                                                <div className="col-span-2 text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 text-center">Poids</div>
+                                                                <div className="col-span-2 text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 text-center">Quantité / Dés</div>
+                                                                <div className="col-span-3 text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 text-center">Type</div>
+                                                                <div className="col-span-1"></div>
+                                                            </div>
+
+                                                            <div className="space-y-2">
+                                                                {table.entries.map(entry => (
+                                                                    <div key={entry.id} className="grid grid-cols-12 gap-3 p-3 bg-black/40 rounded-2xl border border-white/5 items-center group/entry hover:border-amber-500/20 transition-all">
+                                                                        <div className="col-span-4">
+                                                                            <input 
+                                                                                type="text"
+                                                                                value={entry.name}
+                                                                                title="Nom de l'objet"
+                                                                                onChange={e => {
+                                                                                    const newEntries = table.entries.map(en => en.id === entry.id ? { ...en, name: e.target.value } : en);
+                                                                                    const newTables = driver.lootTables?.map(t => t.id === table.id ? { ...t, entries: newEntries } : t);
+                                                                                    handleUpdate({ lootTables: newTables });
+                                                                                }}
+                                                                                className="w-full bg-transparent text-xs font-bold text-white focus:outline-none placeholder:text-slate-700"
+                                                                                placeholder="Nom ou ID..."
+                                                                            />
+                                                                        </div>
+                                                                        <div className="col-span-2">
+                                                                            <input 
+                                                                                type="number"
+                                                                                value={entry.weight}
+                                                                                title="Poids du tirage (Probabilité relative)"
+                                                                                onChange={e => {
+                                                                                    const newEntries = table.entries.map(en => en.id === entry.id ? { ...en, weight: parseInt(e.target.value) || 0 } : en);
+                                                                                    const newTables = driver.lootTables?.map(t => t.id === table.id ? { ...t, entries: newEntries } : t);
+                                                                                    handleUpdate({ lootTables: newTables });
+                                                                                }}
+                                                                                className="w-full bg-black/20 text-center py-2 rounded-xl text-[10px] font-mono text-amber-400 border border-white/5 focus:border-amber-500/40 outline-none"
+                                                                                placeholder="W"
+                                                                            />
+                                                                        </div>
+                                                                        <div className="col-span-2">
+                                                                            <input 
+                                                                                type="text"
+                                                                                value={String(entry.minAmount || '1')}
+                                                                                title="Quantité ou Formule (ex: 1, 2d6, 100)"
+                                                                                onChange={e => {
+                                                                                    const newEntries = table.entries.map(en => en.id === entry.id ? { ...en, minAmount: e.target.value } : en);
+                                                                                    const newTables = driver.lootTables?.map(t => t.id === table.id ? { ...t, entries: newEntries } : t);
+                                                                                    handleUpdate({ lootTables: newTables });
+                                                                                }}
+                                                                                className="w-full bg-black/20 text-center py-2 rounded-xl text-[10px] font-mono text-cyan-400 border border-white/5 focus:border-cyan-500/40 outline-none"
+                                                                                placeholder="Qty/Rolls"
+                                                                            />
+                                                                        </div>
+                                                                        <div className="col-span-3">
+                                                                            <GlassSelect 
+                                                                                value={entry.type}
+                                                                                title="Type de butin"
+                                                                                options={[
+                                                                                    { value: 'item', label: '🗃️ Objet' },
+                                                                                    { value: 'currency', label: '💰 Devise' },
+                                                                                    { value: 'table', label: '📋 Sous-Table' }
+                                                                                ]}
+                                                                                onChange={val => {
+                                                                                    const newEntries = table.entries.map(en => en.id === entry.id ? { ...en, type: val as LootEntryType } : en);
+                                                                                    const newTables = driver.lootTables?.map(t => t.id === table.id ? { ...t, entries: newEntries } : t);
+                                                                                    handleUpdate({ lootTables: newTables });
+                                                                                }}
+                                                                            />
+                                                                        </div>
+                                                                        <div className="col-span-1 flex justify-end">
+                                                                            <button 
+                                                                                onClick={() => {
+                                                                                    const newEntries = table.entries.filter(en => en.id !== entry.id);
+                                                                                    const newTables = driver.lootTables?.map(t => t.id === table.id ? { ...t, entries: newEntries } : t);
+                                                                                    handleUpdate({ lootTables: newTables });
+                                                                                }}
+                                                                                className="opacity-0 group-hover/entry:opacity-100 p-2 text-rose-500/40 hover:text-rose-500 hover:bg-rose-500/10 rounded-lg transition-all"
+                                                                                title="Supprimer l'entrée"
+                                                                            >
+                                                                                <Trash2 size={14} />
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })()
+                                        ) : (
+                                            <div className="h-full flex flex-col items-center justify-center p-12 bg-white/[0.02] border border-dashed border-white/10 rounded-[2.5rem] text-slate-500 italic text-sm">
+                                                Sélectionnez une table pour modifier ses entrées.
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {activeSection === 'encounters' && (
+                            <div className="space-y-8">
+                                <header className="space-y-2 mb-10">
+                                    <h2 className="text-3xl font-black text-white tracking-tight uppercase italic flex items-center gap-4">
+                                        <Swords className="text-rose-400" size={32} />
+                                        Templates de <span className="text-rose-500/20 underline decoration-rose-500/40">Rencontre</span>
+                                    </h2>
+                                    <p className="text-slate-500 text-sm max-w-2xl leading-relaxed uppercase tracking-widest font-bold">
+                                        Automatisez la génération de groupes d'ennemis. Liez des entités prototypes et gérez leur nombre aléatoire.
+                                    </p>
+                                </header>
+
+                                <div className="grid grid-cols-12 gap-8">
+                                    {/* Templates List */}
+                                    <div className="col-span-4 space-y-4">
+                                        <button 
+                                            onClick={() => {
+                                                const newTemplate = { id: `et-${Date.now()}`, name: 'Nouvelle Rencontre', entities: [] };
+                                                handleUpdate({ encounterTemplates: [...(driver.encounterTemplates || []), newTemplate] });
+                                                setSelectedEncounterTemplateId(newTemplate.id);
+                                            }}
+                                            className="w-full p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-rose-500/20 transition-all"
+                                        >
+                                            <Plus size={16} /> Ajouter un Template
+                                        </button>
+                                        <div className="space-y-2">
+                                            {(driver.encounterTemplates || []).map(template => (
+                                                <button
+                                                    key={template.id}
+                                                    onClick={() => setSelectedEncounterTemplateId(template.id)}
+                                                    className={`w-full p-4 rounded-xl flex items-center justify-between group transition-all ${selectedEncounterTemplateId === template.id ? 'bg-rose-500 text-black shadow-glow-rose' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}
+                                                >
+                                                    <span className="text-xs font-bold truncate">{template.name}</span>
+                                                    <ChevronRight size={14} className={selectedEncounterTemplateId === template.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} />
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Template Editor */}
+                                    <div className="col-span-8">
+                                        {selectedEncounterTemplateId ? (
+                                            (() => {
+                                                const template = driver.encounterTemplates?.find(t => t.id === selectedEncounterTemplateId);
+                                                if (!template) return null;
+                                                return (
+                                                    <div className="p-8 bg-white/[0.03] border border-white/10 rounded-[2.5rem] space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
+                                                        <div className="flex items-center justify-between">
+                                                            <input 
+                                                                type="text"
+                                                                value={template.name}
+                                                                onChange={e => {
+                                                                    const newTemplates = driver.encounterTemplates?.map(t => t.id === template.id ? { ...t, name: e.target.value } : t);
+                                                                    handleUpdate({ encounterTemplates: newTemplates });
+                                                                }}
+                                                                className="bg-transparent text-2xl font-black text-white focus:outline-none border-b border-white/10 focus:border-rose-500/40 pb-2 flex-1 mr-4"
+                                                            />
+                                                            <div className="flex items-center gap-2">
+                                                                <button 
+                                                                    onClick={() => {
+                                                                        try {
+                                                                            const prototypes = useSessionOSStore.getState().entities;
+                                                                            const newEntities = EncounterGenerator.generateFromTemplate(template, prototypes);
+                                                                            console.log('Test Encounter Result:', newEntities);
+                                                                            alert(`Test réussi ! ${newEntities.length} entités générées. Voir console pour détails.`);
+                                                                        } catch (e) {
+                                                                            alert('Erreur lors du test : ' + (e as Error).message);
+                                                                        }
+                                                                    }}
+                                                                    className="px-3 py-1 bg-rose-500/20 text-rose-400 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-rose-500/30 transition-all border border-rose-500/20"
+                                                                >
+                                                                    Tester
+                                                                </button>
+                                                                <button 
+                                                                    onClick={() => {
+                                                                        const newTemplates = driver.encounterTemplates?.filter(t => t.id !== template.id);
+                                                                        handleUpdate({ encounterTemplates: newTemplates });
+                                                                        setSelectedEncounterTemplateId(null);
+                                                                    }}
+                                                                    className="p-2 text-rose-500/40 hover:text-rose-500 hover:bg-rose-500/10 rounded-lg transition-all"
+                                                                    title="Supprimer le template"
+                                                                >
+                                                                    <Trash2 size={18} />
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="space-y-4">
+                                                            <div className="flex items-center justify-between px-2">
+                                                                <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-rose-400/60">Unités prototypes ({template.entities.length})</h4>
+                                                                <button 
+                                                                    onClick={() => {
+                                                                        const newEntity = { templateId: '', count: '1', role: 'mook' as const };
+                                                                        const newTemplates = driver.encounterTemplates?.map(t => t.id === template.id ? { ...t, entities: [...t.entities, newEntity] } : t);
+                                                                        handleUpdate({ encounterTemplates: newTemplates });
+                                                                    }}
+                                                                    className="text-[10px] font-black uppercase tracking-widest text-rose-400 hover:underline"
+                                                                >
+                                                                    + Ajouter une unité
+                                                                </button>
+                                                            </div>
+                                                            <div className="space-y-2">
+                                                                {template.entities.map((en, idx) => (
+                                                                    <div key={idx} className="grid grid-cols-12 gap-3 p-3 bg-black/40 rounded-2xl border border-white/5 items-center group/entity">
+                                                                        <div className="col-span-5 relative">
+                                                                            <SearchableNPCSelect 
+                                                                                value={en.templateId}
+                                                                                entities={sessionEntities}
+                                                                                activeCampaignId={activeCampaignId}
+                                                                                targetTemplateId={driver.templateId}
+                                                                                onChange={val => {
+                                                                                    const newEntities = [...template.entities];
+                                                                                    newEntities[idx] = { ...en, templateId: val };
+                                                                                    const newTemplates = driver.encounterTemplates?.map(t => t.id === template.id ? { ...t, entities: newEntities } : t);
+                                                                                    handleUpdate({ encounterTemplates: newTemplates });
+                                                                                }}
+                                                                            />
+                                                                        </div>
+                                                                        <div className="col-span-3">
+                                                                            <div className="flex items-center gap-2">
+                                                                                <span className="text-[9px] font-black text-slate-600 uppercase">Nombre</span>
+                                                                                <input 
+                                                                                    type="text"
+                                                                                    value={en.count}
+                                                                                    title="Nombre d'unités"
+                                                                                    onChange={e => {
+                                                                                        const newEntities = [...template.entities];
+                                                                                        newEntities[idx] = { ...en, count: e.target.value };
+                                                                                        const newTemplates = driver.encounterTemplates?.map(t => t.id === template.id ? { ...t, entities: newEntities } : t);
+                                                                                        handleUpdate({ encounterTemplates: newTemplates });
+                                                                                    }}
+                                                                                    placeholder="1, 1d4..."
+                                                                                    className="w-full bg-black/20 text-center py-1 rounded text-[10px] font-mono text-rose-400 border border-white/5"
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="col-span-3">
+                                                                             <GlassSelect 
+                                                                                 value={en.role || 'mook'}
+                                                                                title="Rôle de l'entité"
+                                                                                options={[
+                                                                                    { value: 'mook', label: 'Mook (Sbire)' },
+                                                                                    { value: 'elite', label: 'Élite' },
+                                                                                    { value: 'boss', label: 'Boss' }
+                                                                                ]}
+                                                                                onChange={val => {
+                                                                                    const newEntities = [...template.entities];
+                                                                                    newEntities[idx] = { ...en, role: val as 'mook' | 'elite' | 'boss' };
+                                                                                    const newTemplates = driver.encounterTemplates?.map(t => t.id === template.id ? { ...t, entities: newEntities } : t);
+                                                                                    handleUpdate({ encounterTemplates: newTemplates });
+                                                                                }}
+                                                                            />
+                                                                        </div>
+                                                                        <div className="col-span-1 flex justify-end">
+                                                                            <button 
+                                                                                onClick={() => {
+                                                                                    const newEntities = template.entities.filter((_, i) => i !== idx);
+                                                                                    const newTemplates = driver.encounterTemplates?.map(t => t.id === template.id ? { ...t, entities: newEntities } : t);
+                                                                                    handleUpdate({ encounterTemplates: newTemplates });
+                                                                                }}
+                                                                                className="opacity-0 group-hover/entity:opacity-100 p-1 text-rose-500/40 hover:text-rose-500 transition-all"
+                                                                                title="Supprimer l'unité"
+                                                                            >
+                                                                                <Trash2 size={12} />
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })()
+                                        ) : (
+                                            <div className="h-full flex flex-col items-center justify-center p-12 bg-white/[0.02] border border-dashed border-white/10 rounded-[2.5rem] text-slate-500 italic text-sm">
+                                                Sélectionnez un template pour modifier ses unités.
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
                         {activeSection === 'core' && (
                             <div className="space-y-8">
                                 <header className="space-y-2 mb-10">
@@ -179,26 +814,23 @@ export const RuleEngineEditor: React.FC = () => {
                                     <div className="p-8 bg-white/[0.03] border border-white/10 rounded-[2.5rem] backdrop-blur-sm space-y-6">
                                         <div>
                                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-400/60 mb-3 block px-1">Moteur de Résolution</label>
-                                            <select 
+                                            <GlassSelect 
                                                 value={dice.engine || 'standard'}
-                                                onChange={e => handleUpdate({ dice: { ...dice, engine: e.target.value as GameDriver['dice']['engine'] } })}
-                                                className="w-full bg-black/40 px-5 py-4 rounded-2xl border border-white/10 text-sm text-white focus:border-cyan-500/50 outline-none transition-all appearance-none cursor-pointer"
                                                 title="Moteur de résolution"
-                                            >
-                                                <option value="standard">Standard (Somme de dés)</option>
-                                                <option value="exploding">Somme Explosive</option>
-                                                <option value="formula">Formule Libre</option>
-                                                <option value="threshold">Jet de Seuil (Target)</option>
-                                                <option value="pool">Pool de Dés (Succès)</option>
-                                                <option value="pool_explode">Pool Explosif</option>
-                                                <option value="advantage">Avantage (Garde Meilleur)</option>
-                                                <option value="disadvantage">Désavantage (Garde Pire)</option>
-                                                <option value="year-zero">Year Zero Engine (Alien/Blade Runner)</option>
-                                                <option value="yze">YZE (Succès sur 6)</option>
-                                                <option value="fate">FATE / Fudge</option>
-                                                <option value="rolemaster">Rolemaster / D100</option>
-                                                <option value="2d20">2d20 (Star Trek/Dune)</option>
-                                            </select>
+                                                options={[
+                                                    { value: 'standard', label: 'Standard (Somme)' },
+                                                    { value: 'threshold', label: 'Seuil de Succès' },
+                                                    { value: 'pool', label: 'Réserve de Dés' },
+                                                    { value: 'formula', label: 'Formule Libre' },
+                                                    { value: 'year-zero', label: 'Year Zero Engine' },
+                                                    { value: 'yze', label: 'YZE (Succès sur 6)' },
+                                                    { value: 'fate', label: 'FATE / Fudge' },
+                                                    { value: 'rolemaster', label: 'Rolemaster / D100' },
+                                                    { value: '2d20', label: '2d20' }
+                                                ]}
+                                                onChange={val => handleUpdate({ dice: { ...dice, engine: val as any } })}
+                                                className="bg-black/20 px-4 py-3 rounded-xl border border-white/10 text-sm text-cyan-400"
+                                            />
                                         </div>
                                         <div>
                                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-400/60 mb-3 block px-1">Formule de Dés par défaut</label>
@@ -208,6 +840,7 @@ export const RuleEngineEditor: React.FC = () => {
                                                 onChange={e => handleUpdate({ dice: { ...dice, defaultDice: e.target.value } })}
                                                 className="w-full bg-black/40 px-5 py-4 rounded-2xl border border-white/10 font-mono text-base text-cyan-400 focus:border-cyan-500/50 outline-none transition-all shadow-inner"
                                                 placeholder="Ex: 1d20, 2d6+4..."
+                                                title="Formule de dés par défaut"
                                             />
                                         </div>
                                     </div>
@@ -215,17 +848,19 @@ export const RuleEngineEditor: React.FC = () => {
                                     <div className="p-8 bg-white/[0.03] border border-white/10 rounded-[2.5rem] backdrop-blur-sm flex flex-col justify-center">
                                         <div className="mb-6">
                                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-400/60 mb-3 block px-1">Liaison Fiche de Personnage</label>
-                                            <select 
+                                            <GlassSelect 
                                                 value={driver.templateId}
-                                                onChange={e => handleUpdate({ templateId: e.target.value })}
-                                                className="w-full bg-black/40 px-5 py-4 rounded-2xl border border-white/10 text-sm text-white focus:border-cyan-500/50 outline-none transition-all appearance-none cursor-pointer"
                                                 title="Liaison Fiche de Personnage"
-                                            >
-                                                <option value="">Aucune fiche liée</option>
-                                                {[...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates].map(t => (
-                                                    <option key={t.id} value={t.id}>{t.emoji} {t.name}</option>
-                                                ))}
-                                            </select>
+                                                options={[
+                                                    { value: '', label: 'Aucune fiche liée' },
+                                                    ...[...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates].map(t => ({
+                                                        value: t.id,
+                                                        label: `${t.emoji} ${t.name}`
+                                                    }))
+                                                ]}
+                                                onChange={val => handleUpdate({ templateId: val })}
+                                                className="bg-black/20 px-4 py-3 rounded-xl border border-white/10 text-sm text-white"
+                                            />
                                         </div>
                                         <p className="text-[11px] text-slate-500 leading-relaxed italic px-2">
                                             La liaison permet à l'IA d'automatiser le remplissage des caractéristiques et d'utiliser les bons modificateurs lors des jets.
@@ -255,25 +890,27 @@ export const RuleEngineEditor: React.FC = () => {
                                                 <input 
                                                     type="text"
                                                     value={combat.initiativeFormula || ''}
-                                                    onChange={e => handleUpdate({ combat: { ...combat, initiativeFormula: e.target.value } })}
+                                                    onChange={(e) => updateGameDriver(driver.id, { combat: { ...combat, initiativeFormula: e.target.value } })}
                                                     className="w-full bg-black/40 px-5 py-4 rounded-2xl border border-white/5 font-mono text-base text-indigo-400 focus:border-indigo-500/40 outline-none shadow-inner"
                                                     placeholder="Ex: dex, 1d6 + int..."
+                                                    title="Formule d'initiative"
                                                 />
                                             </div>
                                             <div>
                                                 <label className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400/60 mb-3 block px-1">Gestion de la Santé</label>
-                                                <select 
+                                                <GlassSelect 
                                                     value={combat.defaultHealthType || 'hp'}
-                                                    onChange={e => handleUpdate({ combat: { ...combat, defaultHealthType: e.target.value as GameDriver['combat']['defaultHealthType'] } })}
-                                                    className="w-full bg-black/40 px-5 py-4 rounded-2xl border border-white/5 text-sm text-white focus:border-indigo-500/40 outline-none appearance-none cursor-pointer"
-                                                    title="Type de santé"
-                                                >
-                                                    <option value="hp">Points de Vie (HP)</option>
-                                                    <option value="wounds">Niveaux de Blessure</option>
-                                                    <option value="boxes">Cases de Blessure</option>
-                                                    <option value="clocks">Horloges (Type Blades)</option>
-                                                    <option value="anatomy">Anatomie (Ciblée)</option>
-                                                </select>
+                                                    title="Type de gestion de la santé"
+                                                    className="bg-black/40 px-5 py-4 rounded-2xl border border-white/5 text-sm text-white"
+                                                    options={[
+                                                        { value: 'hp', label: 'Points de Vie (HP)' },
+                                                        { value: 'wounds', label: 'Niveaux de Blessure' },
+                                                        { value: 'boxes', label: 'Cases de Blessure' },
+                                                        { value: 'clocks', label: 'Horloges (Type Blades)' },
+                                                        { value: 'anatomy', label: 'Anatomie (Ciblée)' }
+                                                    ]}
+                                                    onChange={val => updateGameDriver(driver.id, { combat: { ...combat, defaultHealthType: val as GameDriver['combat']['defaultHealthType'] } })}
+                                                />
                                             </div>
                                         </div>
 
@@ -281,7 +918,7 @@ export const RuleEngineEditor: React.FC = () => {
                                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400/60 mb-4 block px-1">Ordre de tri temporel</label>
                                             <div className="flex p-1 bg-black/40 rounded-2xl border border-white/10 overflow-hidden">
                                                 <button 
-                                                    onClick={() => handleUpdate({ combat: { ...combat, initiativeSort: 'desc' } })}
+                                                    onClick={() => updateGameDriver(driver.id, { combat: { ...combat, initiativeSort: 'desc' } })}
                                                     className={`flex-1 py-4 text-[11px] font-black uppercase tracking-[0.2em] rounded-xl transition-all ${combat.initiativeSort !== 'asc' ? 'bg-indigo-500 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300'}`}
                                                     title="Trier par ordre décroissant (High Start)"
                                                 >
@@ -374,11 +1011,12 @@ export const RuleEngineEditor: React.FC = () => {
                                                                     onChange={e => {
                                                                         const val = parseFloat(e.target.value);
                                                                         const newRanges = { ...(tactical.ranges || {}) } as TacticalConfig['ranges'];
-                                                                        (newRanges as any)[rangeKey] = { ...range, maxUnits: isNaN(val) ? 0 : val };
+                                                                        (newRanges as Record<string, any>)[rangeKey] = { ...range, maxUnits: isNaN(val) ? 0 : val };
                                                                         handleUpdate({ tactical: { ...tactical, ranges: newRanges } });
                                                                     }}
                                                                     className="w-24 bg-black/40 text-center py-2.5 rounded-xl border border-white/10 text-xs font-mono text-emerald-400 focus:border-emerald-500/50 outline-none"
                                                                     placeholder="Cases"
+                                                                    title={`Distance maximale pour ${range.label}`}
                                                                 />
                                                             </div>
                                                             <div className="col-span-4 flex justify-center">
@@ -388,11 +1026,12 @@ export const RuleEngineEditor: React.FC = () => {
                                                                     onChange={e => {
                                                                         const val = parseInt(e.target.value);
                                                                         const newRanges = { ...(tactical.ranges || {}) } as TacticalConfig['ranges'];
-                                                                        (newRanges as any)[rangeKey] = { ...range, modifier: val };
+                                                                        (newRanges as Record<string, any>)[rangeKey] = { ...range, modifier: val };
                                                                         handleUpdate({ tactical: { ...tactical, ranges: newRanges } });
                                                                     }}
                                                                     className={`w-24 bg-black/40 text-center py-2.5 rounded-xl border border-white/10 text-xs font-mono focus:border-emerald-500/50 outline-none ${range.modifier > 0 ? 'text-emerald-400' : range.modifier < 0 ? 'text-rose-400' : 'text-slate-500'}`}
                                                                     placeholder="Mod."
+                                                                    title={`Modificateur pour ${range.label}`}
                                                                 />
                                                             </div>
                                                         </div>
@@ -440,7 +1079,8 @@ export const RuleEngineEditor: React.FC = () => {
                                         <textarea 
                                             value={driver.aiInstructions || ''}
                                             onChange={e => handleUpdate({ aiInstructions: e.target.value })}
-                                            placeholder="Ex: Système D&D 5e. Initiative = 1d20+DEX. Les critiques font 2x dés de dégâts. L'IA doit toujours suggérer une option tactique lors de son tour..."
+                                            placeholder="Ex: Système D&D 5e..."
+                                            title="Protocoles Système IA"
                                             className="w-full h-64 bg-black/40 text-sm text-slate-300 p-6 rounded-3xl border border-white/5 focus:border-violet-500/40 outline-none transition-all font-mono leading-relaxed custom-scrollbar shadow-inner"
                                         />
                                     </div>

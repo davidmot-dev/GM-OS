@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useModalStore } from '../stores/useModalStore';
 import { 
     AlertCircle, HelpCircle, Edit3, UserPlus, ShieldPlus, BookOpen, Users, Play, Cast, 
-    History as LucideHistory, X, Lightbulb, Zap, Settings2
+    History as LucideHistory, X, Lightbulb, Zap, Settings2, Gift, Swords
 } from 'lucide-react';
 import type { Campaign, WikiEntry, TimelineEvent, SessionModuleSnapshot } from '../modules/session/useSessionOSStore';
 import { AddPlayerForm } from '../modules/session/components/AddPlayerForm';
@@ -25,6 +25,8 @@ import DamageCalculator from '../modules/combat/components/DamageCalculator';
 import DangerZonePresetEditor from '../modules/map/components/DangerZonePresetEditor';
 import NarrativeModal from '../modules/map/components/NarrativeModal';
 import { Sparkles } from 'lucide-react';
+import { LootRollPanel } from '../modules/session/components/LootRollPanel';
+import { EncounterRollPanel } from '../modules/session/components/EncounterRollPanel';
 
 const ModalProvider: React.FC = () => {
     const { 
@@ -37,7 +39,11 @@ const ModalProvider: React.FC = () => {
 
     useEffect(() => {
         if (type === 'prompt' && defaultValue !== undefined) {
-            setInputValue(defaultValue as string);
+            // Use timeout to avoid cascading renders warning
+            const timer = setTimeout(() => {
+                setInputValue(defaultValue as string);
+            }, 0);
+            return () => clearTimeout(timer);
         }
     }, [type, defaultValue]);
 
@@ -173,6 +179,8 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'damage-calc' && <Zap size={18} />}
                                         {customVariant === 'danger-preset-editor' && <Settings2 size={18} />}
                                         {customVariant === 'narrative-display' && <Sparkles size={18} />}
+                                        {customVariant === 'loot-roll' && <Gift size={18} />}
+                                        {customVariant === 'encounter-roll' && <Swords size={18} />}
                                     </div>
                                     <h3 className="font-bold text-white uppercase tracking-wider text-sm">
                                         {customVariant === 'player-add' && 'Ajouter un Joueur'}
@@ -194,6 +202,8 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'damage-calc' && 'Calculateur de Dégâts'}
                                         {customVariant === 'danger-preset-editor' && 'Gestion des Presets de Danger'}
                                         {customVariant === 'narrative-display' && 'Vision de l\'Oracle'}
+                                        {customVariant === 'loot-roll' && 'Attribution de Butin'}
+                                        {customVariant === 'encounter-roll' && 'Déclencheur de Rencontre'}
                                     </h3>
                                 </div>
                                 <button 
@@ -234,6 +244,16 @@ const ModalProvider: React.FC = () => {
                             {customVariant === 'damage-calc' && <DamageCalculator />}
                             {customVariant === 'danger-preset-editor' && <DangerZonePresetEditor />}
                             {customVariant === 'narrative-display' && <NarrativeModal />}
+                            {customVariant === 'loot-roll' && (
+                                <LootRollPanel 
+                                    playerId={(defaultValue as { playerId: string }).playerId} 
+                                    characterId={(defaultValue as { characterId: string }).characterId} 
+                                    onClose={closeModal} 
+                                />
+                            )}
+                            {customVariant === 'encounter-roll' && (
+                                <EncounterRollPanel onClose={closeModal} />
+                            )}
                             {customVariant === 'global-settings' && <GlobalSettingsModal onClose={closeModal} />}
                         </div>
                     </div>

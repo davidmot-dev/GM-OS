@@ -55,7 +55,7 @@ const CampaignCockpit: React.FC = () => {
                     <span className="text-sm font-medium">Cockpit</span>
                 </button>
                 <button
-                    onClick={() => setActiveModule('combat')}
+                    onClick={() => showCustom('encounter-roll')}
                     className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-app-text/80 hover:bg-app-surface hover:text-app-text transition-all w-full text-left"
                 >
                     <Swords size={20} />

@@ -46,7 +46,7 @@ Ce document centralise la vision, les victoires techniques et les chantiers futu
 ## 🔥 Chantiers en Cours (Priorités)
 
 ### 📦 Economie & Butin (v5.7 Focus)
-* [ ] **Encounter & Loot Generator** : Génération de butin dynamique basée sur le Rule-Engine et tables `.json`.
+* [x] **Encounter & Loot Generator** : Génération de butin dynamique pilotée par le Rule-Engine. Support du mode "Indépendant" (Set complet) et des multi-tirages.
 * [ ] **Auto-Loot Transfer** : (Réévalué) Transfert direct d'objets vers les inventaires PJ via le Hub.
 
 ### 🛠️ UX & Qualité de Vie
@@ -67,7 +67,7 @@ Ce document centralise la vision, les victoires techniques et les chantiers futu
 ---
 
 > [!TIP]
-> **Priorité actuelle** : **Générateur de Butin** et **Amélioration du Brouillard de Guerre**.
+> **Priorité actuelle** : **Amélioration du Brouillard de Guerre** et **Social Nexus v3**.
 
 > [!IMPORTANT]
 > Version Actuelle : **5.1.1-STABLE** (Mars 2026)

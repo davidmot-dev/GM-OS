@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import type { SheetField } from '../../../data/defaultSheetTemplates';
-import { Save, CheckSquare, Square, FolderOpen, Layers, FileText, Trash2, Lock, BookOpen, Eye, Heart, Sparkles, Package } from 'lucide-react';
+import { Save, CheckSquare, Square, FolderOpen, Layers, FileText, Trash2, Lock, BookOpen, Eye, Heart, Sparkles, Package, Gift } from 'lucide-react';
 import { useImageStore } from '../../image/useImageStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaStore } from '../../../stores/useMediaStore';
 import AIPromptOverlay from '../../ai/components/AIPromptOverlay';
+import { gmCustom } from '../../../stores/useModalStore';
 
 // --- Sub-components ---
 
@@ -94,9 +95,13 @@ const FieldSelect: React.FC<{
             className="w-48 bg-app-surface text-app-text text-[11px] rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-accent/40 border border-white/5"
         >
             <option value="" disabled>-- Sélectionner --</option>
-            {(field.options || []).map(opt => (
-                <option key={opt} value={opt}>{opt}</option>
-            ))}
+            {(field.options || []).map(opt => {
+                const label = typeof opt === 'object' ? opt.label : opt;
+                const val = typeof opt === 'object' ? opt.value : opt;
+                return (
+                    <option key={val} value={val}>{label}</option>
+                );
+            })}
         </select>
     </div>
 );
@@ -178,6 +183,19 @@ const CharacterSheetEditor: React.FC = () => {
     const [gmNotes, setGmNotes] = useState(character?.gmNotes ?? '');
     const [inventory, setInventory] = useState(character?.inventory ?? '');
     const [showAIPrompt, setShowAIPrompt] = useState(false);
+
+    // Sync local states if character changes externally (e.g. Loot generated)
+    React.useEffect(() => {
+        if (character?.inventory) {
+            setInventory(character.inventory);
+        }
+    }, [character?.inventory]);
+
+    React.useEffect(() => {
+        if (character?.description) {
+            setDescription(character.description);
+        }
+    }, [character?.description]);
 
     const portraitUrl = useMediaUrl(character?.portraitUrl);
     const tokenUrl = useMediaUrl(character?.tokenUrl);
@@ -266,17 +284,27 @@ const CharacterSheetEditor: React.FC = () => {
                         <p className="text-[10px] text-app-text/20">Fiche de {character.name}</p>
                     </div>
                 </div>
-                <button
-                    onClick={handleSave}
-                    className={`flex items-center gap-2 px-5 py-2 rounded-xl font-black text-xs tracking-widest transition-all ${
-                        saved
-                            ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20'
-                            : 'bg-accent hover:opacity-90 text-app-bg shadow-lg shadow-accent/20 hover:scale-105 active:scale-95'
-                    }`}
-                >
-                    <Save size={14} />
-                    {saved ? 'Sauvegardé ✓' : 'Sauvegarder'}
-                </button>
+                <div className="flex items-center gap-3">
+                    <button
+                        onClick={() => gmCustom('loot-roll', { playerId: selectedPlayerId, characterId: selectedCharacterId })}
+                        className="flex items-center gap-2 px-4 py-2 rounded-xl font-black text-xs tracking-widest bg-amber-500/10 text-amber-500 border border-amber-500/20 hover:bg-amber-500/20 transition-all shadow-lg shadow-amber-500/5 group"
+                        title="Générer un butin pour ce personnage"
+                    >
+                        <Gift size={14} className="group-hover:rotate-12 transition-transform" />
+                        Butin
+                    </button>
+                    <button
+                        onClick={handleSave}
+                        className={`flex items-center gap-2 px-5 py-2 rounded-xl font-black text-xs tracking-widest transition-all ${
+                            saved
+                                ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20'
+                                : 'bg-accent hover:opacity-90 text-app-bg shadow-lg shadow-accent/20 hover:scale-105 active:scale-95'
+                        }`}
+                    >
+                        <Save size={14} />
+                        {saved ? 'Sauvegardé ✓' : 'Sauvegarder'}
+                    </button>
+                </div>
             </div>
 
             {/* Main Content */}

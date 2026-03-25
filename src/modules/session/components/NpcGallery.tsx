@@ -16,7 +16,8 @@ import {
     Plus,
     Users,
     Skull,
-    Heart
+    Heart,
+    Trash2
 } from 'lucide-react';
 import { ResolvedImage } from '../../../components/ResolvedImage';
 import AIPromptOverlay from '../../ai/components/AIPromptOverlay';
@@ -47,6 +48,7 @@ const NpcGallery: React.FC = () => {
         removeEntityFromSession,
         generateEntityPortrait,
         updateEntity,
+        deleteEntity,
         isGeneratingAIImage,
         setIsAddingEntity
     } = useSessionOSStore();
@@ -65,6 +67,7 @@ const NpcGallery: React.FC = () => {
 
     const filteredEntities = entities.filter(e => {
         if (e.campaignId !== activeCampaignId) return false;
+        if (e.isEncounterInstance) return false;
 
         const matchesSearch = e.name.toLowerCase().includes(search.toLowerCase()) ||
             e.description.toLowerCase().includes(search.toLowerCase());
@@ -201,6 +204,12 @@ const NpcGallery: React.FC = () => {
                                 setEditingNpcId(npc.id);
                                 setShowMediaBrowser(true);
                             }}
+                            onDelete={() => {
+                                if (confirm(`Supprimer ${npc.name} ? Cette action est irréversible.`)) {
+                                    deleteEntity(npc.id);
+                                    gmToast(`${npc.name} supprimé de la galerie.`);
+                                }
+                            }}
                         />
                     ))}
 
@@ -285,8 +294,9 @@ const NpcGalleryItem: React.FC<{
     onSelect: () => void,
     onTogglePin: () => void,
     onGenerateImage: () => void,
-    onPickImage: () => void
-}> = ({ npc, isSelected, isPinned, onSelect, onTogglePin, onGenerateImage, onPickImage }) => {
+    onPickImage: () => void,
+    onDelete: () => void
+}> = ({ npc, isSelected, isPinned, onSelect, onTogglePin, onGenerateImage, onPickImage, onDelete }) => {
     
     return (
         <div
@@ -330,6 +340,13 @@ const NpcGalleryItem: React.FC<{
                             title="Générer par IA"
                         >
                             <Sparkles size={18} />
+                        </button>
+                        <button
+                            onClick={(e) => { e.stopPropagation(); onDelete(); }}
+                            className="p-2.5 bg-red-600 text-white rounded-xl hover:scale-110 transition-all shadow-[0_0_15px_rgba(239,68,68,0.4)]"
+                            title="Supprimer PNJ"
+                        >
+                            <Trash2 size={18} />
                         </button>
                     </div>
                 </div>

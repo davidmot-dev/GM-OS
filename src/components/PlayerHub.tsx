@@ -16,6 +16,8 @@ import { useVoiceStore } from '../modules/voice/useVoiceStore';
 import { useTacticalAIStore } from '../modules/tactical-ai/useTacticalAIStore';
 import { useDiceStore } from '../stores/useDiceStore';
 import type { DieResult } from '../modules/dice/DiceEngine';
+import { useLootStore } from '../stores/useLootStore';
+import { LootNotification } from './LootNotification';
 
 
 const PlayerHub: React.FC = () => {
@@ -26,9 +28,15 @@ const PlayerHub: React.FC = () => {
     const { mapUrl, projectionTarget } = useMapStore();
     const { backgroundMode, projectionTarget: whiteboardTarget } = useWhiteboardStore();
     const { isDiceProjected, lastRoll, projectionTrigger } = useDiceStore();
+    const { isLootProjected, lastLoot, tableName, projectionTrigger: lootTrigger } = useLootStore();
+    
     const [showDice, setShowDice] = useState(false);
+    const [showLoot, setShowLoot] = useState(false);
+    
     const diceTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+    const lootTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
     const lastTriggerRef = React.useRef(0);
+    const lastLootTriggerRef = React.useRef(0);
 
     useEffect(() => {
         // On affiche seulement si le mode est ON et qu'un nouveau trigger (lancer) survient
@@ -47,6 +55,23 @@ const PlayerHub: React.FC = () => {
             return () => clearTimeout(timerHide);
         }
     }, [isDiceProjected, projectionTrigger]);
+
+    useEffect(() => {
+        if (isLootProjected && lootTrigger > lastLootTriggerRef.current) {
+            lastLootTriggerRef.current = lootTrigger;
+            const timerShow = setTimeout(() => setShowLoot(true), 0);
+            
+            if (lootTimerRef.current) clearTimeout(lootTimerRef.current);
+            lootTimerRef.current = setTimeout(() => {
+                setShowLoot(false);
+            }, 8000); 
+
+            return () => clearTimeout(timerShow);
+        } else if (!isLootProjected) {
+            const timerHide = setTimeout(() => setShowLoot(false), 0);
+            return () => clearTimeout(timerHide);
+        }
+    }, [isLootProjected, lootTrigger]);
 
     const isWhiteboardActive = whiteboardTarget === 'hub';
 
@@ -113,7 +138,8 @@ const PlayerHub: React.FC = () => {
                 'gmos-voice-storage': () => useVoiceStore.persist.rehydrate(),
                 'gm-os-tactical-ai': () => useTacticalAIStore.persist.rehydrate(),
                 'gmos-image-storage': () => useImageStore.persist.rehydrate(),
-                'gmos-dice-storage': () => useDiceStore.persist.rehydrate()
+                'gmos-dice-storage': () => useDiceStore.persist.rehydrate(),
+                'gmos-loot-storage': () => useLootStore.persist.rehydrate()
             };
 
             if (e.key && keys[e.key]) keys[e.key]();
@@ -352,6 +378,13 @@ const PlayerHub: React.FC = () => {
                             </div>
                         )}
                     </div>
+
+                    {/* Loot Projection Overlay */}
+                    <LootNotification 
+                        items={lastLoot} 
+                        tableName={tableName} 
+                        isVisible={showLoot} 
+                    />
                 </div>
 
                 {/* 3. Sync Status */}

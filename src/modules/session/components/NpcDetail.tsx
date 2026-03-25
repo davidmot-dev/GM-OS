@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
-import { Swords, MapPin, Monitor, Heart, Shield, Wind, Zap, Lock, BookOpen, ArrowLeft, Edit2, CheckCircle, Image as ImageIcon, Sparkles, Layers, Skull } from 'lucide-react';
+import { Swords, MapPin, Monitor, Heart, Shield, Wind, Zap, Lock, BookOpen, ArrowLeft, Edit2, CheckCircle, Image as ImageIcon, Sparkles, Layers, Skull, Gift, Package } from 'lucide-react';
 import { DEFAULT_SHEET_TEMPLATES, type SheetField } from '../../../data/defaultSheetTemplates';
 import { useMapStore } from '../../map/useMapStore';
 import { useCombatStore } from '../../combat/useCombatStore';
@@ -575,6 +575,20 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                             />
                         </div>
 
+                        {/* Inventory */}
+                        <div className="p-4 rounded-2xl bg-app-surface/30 border border-white/5 flex flex-col gap-2">
+                            <div className="flex items-center gap-2 mb-1">
+                                <Package size={14} className="text-accent" />
+                                <h4 className="text-[10px] font-black uppercase tracking-widest text-accent">Inventaire & Équipement</h4>
+                            </div>
+                            <textarea
+                                className="w-full bg-transparent border-none text-app-text/80 text-xs leading-relaxed resize-none focus:ring-0 placeholder:text-app-text/10 min-h-[80px]"
+                                value={selectedNpc.inventory || ''}
+                                onChange={(e) => updateEntity(selectedNpc.id, { inventory: e.target.value })}
+                                placeholder="Liste des objets possédés..."
+                            />
+                        </div>
+
                         {/* Secret GM Notes */}
                         <div className="p-4 rounded-2xl bg-accent/5 border border-accent/20 flex flex-col gap-2 relative overflow-hidden">
                             <div className="absolute top-0 right-0 p-3 opacity-5 pointer-events-none">
@@ -639,6 +653,13 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                     >
                         <Monitor size={16} />
                         Projeter au Hub
+                    </button>
+                    <button
+                        onClick={() => useModalStore.getState().gmCustom('loot-roll', { characterId: selectedNpc.id })}
+                        className="flex-1 flex items-center justify-center gap-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 font-bold py-3 rounded-xl text-xs transition-all border border-amber-500/20 active:scale-[0.98]"
+                    >
+                        <Gift size={16} />
+                        Butin
                     </button>
                 </div>
             )}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useMapStore } from '../../map/useMapStore';
-import { Eye, Edit3, Lock, History, Search, Layers, MapPin, Pin, Plus } from 'lucide-react';
+import { Eye, Edit3, Lock, History, Search, Layers, MapPin, Pin, Plus, Swords } from 'lucide-react';
 import { useModalStore } from '../../../stores/useModalStore';
 import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
@@ -130,6 +130,13 @@ const SessionWorkspace: React.FC = () => {
                                 title="Ajouter un PNJ"
                             >
                                 <Pin size={22} className="group-hover:rotate-12 transition-transform" />
+                            </button>
+                            <button 
+                                onClick={() => useModalStore.getState().showCustom('encounter-roll')}
+                                className="w-12 h-12 rounded-xl border-2 border-dashed border-rose-500/40 flex items-center justify-center text-rose-500/40 hover:text-rose-400 hover:border-rose-500/50 transition-all group bg-rose-500/5"
+                                title="Lancer une rencontre (Template)"
+                            >
+                                <Swords size={22} className="group-hover:rotate-12 transition-transform" />
                             </button>
                         </div>
                     </div>

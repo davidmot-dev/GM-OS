@@ -63,3 +63,10 @@ Ce guide définit les règles obligatoires pour la refonte de GM-OS vers une arc
 
 - **Règle Impérative :** Avant de commencer tout nouveau développement ou refonte, l'agent doit impérativement lire l'intégralité de la documentation technique existante liée au module concerné (ex: `documentation/Technical Docs/`).
 - **Prise en Compte :** Toutes les remarques, contraintes architecturales et leçons apprises (`Lessons_Learned.md`) documentées doivent être prises en compte et respectées scrupuleusement dans la nouvelle implémentation.
+
+## 9. Rendu UI & Electron (Prévention des Fenêtres Déportées)
+
+- **Problème :** Les éléments UI natifs (ex: `<select>`, `contextmenu` par défaut) peuvent s'ouvrir dans des fenêtres OS séparées et mal positionnées ("déportées") si le moteur Electron est configuré avec certaines options de transparence ou de DPI.
+- **Règle :** Éviter l'utilisation des éléments `<select>` natifs pour les listes complexes ou critiques.
+- **Solution :** Implémenter systématiquement des composants "Custom Dropdown" (basés sur des `div`, `button` et positionnement `absolute`) qui s'affichent à l'intérieur du DOM de l'application (ex: `SearchableNPCSelect`).
+- **Vérification :** Lors de la création d'un nouvel écran, vérifier que tous les menus déroulants et sélecteurs restent confinés dans les limites visuelles de la fenêtre de l'application.

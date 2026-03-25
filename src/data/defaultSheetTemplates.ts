@@ -8,7 +8,7 @@ export interface SheetField {
     label: string;
     type: SheetFieldType;
     defaultValue: number | string | boolean;
-    options?: string[]; // Used for 'select' type
+    options?: (string | { label: string; value: string })[]; // Used for 'select' type
     max?: number;       // Used for 'rating' or 'gauge' absolute maximum
 }
 

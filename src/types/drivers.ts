@@ -1,5 +1,39 @@
 // src/types/drivers.ts
 
+export type LootEntryType = 'item' | 'currency' | 'table';
+
+export interface LootEntry {
+    id: string;
+    type: LootEntryType;
+    name: string;
+    weight: number;
+    minAmount?: number | string; // 1, "1d6", etc.
+    maxAmount?: number | string;
+    metadata?: Record<string, unknown>;
+}
+
+export interface LootTable {
+    id: string;
+    name: string;
+    description?: string;
+    entries: LootEntry[];
+    rolls?: number | string; 
+    rollMode?: 'weighted' | 'independent'; // Unique choice vs Every line independently
+}
+
+export interface EncounterEntity {
+    templateId: string; // The ID of the Entity prototype
+    count: number | string; // e.g., 1, "2d4"
+    role?: 'mook' | 'elite' | 'boss';
+}
+
+export interface EncounterTemplate {
+    id: string;
+    name: string;
+    description?: string;
+    entities: EncounterEntity[];
+}
+
 export type DiceRollLogic = 'sum' | 'highest' | 'lowest' | 'count-success' | 'd100-low' | 'd100-high';
 
 export interface DiceConfig {
@@ -78,6 +112,10 @@ export interface GameDriver {
     templateId: string; // The ID of the primary SheetTemplate used by this system
     defaultNotebookUrl?: string; // Default NotebookLM for this system
     
+    // Loot & Encounters
+    lootTables?: LootTable[];
+    encounterTemplates?: EncounterTemplate[];
+
     // Metadata for AI
     aiInstructions: string; // Specialized instructions for the Oracle/Sage to understand rules
     aiPersonas?: Record<string, string>; // gemId -> instructions override
