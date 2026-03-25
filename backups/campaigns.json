@@ -102,8 +102,8 @@
     },
     {
       "name": "Fiery Angels",
-      "description": "The second official Case File for the BLADE RUNNER RPG, continuing the 'Immortal Game' campaign arc. This stand-alone adventure delves into the boundaries of Replicant technology and its consequences, challenging Blade Runners with physical, mental, and moral dilemmas.",
-      "synopsis": "Lilith Tyrell, presumed dead, is alive and operating a black market Replicant production facility. She has created five 'prophets'—bootleg Replicants physically identical to key individuals—to infiltrate the Wallace Corporation and steal crucial industrial data (a memory sphere) from Niander Wallace's executive suite. Her ultimate goal is to improve her unstable Replicant breed and usher in a new era of free Replicants. The Player Characters are assigned to investigate Ellis Vale, a service technician who attempted to break into Wallace Corp's Memory Vault. Unbeknownst to them, Ellis Vale was a Replicant copy (Jeremiah) and a test run for Lilith's larger plan. Another prophet, Ezekiel, has replaced legendary Blade Runner Ray McCoy and is actively sabotaging the investigation while hunting a renegade prophet, Noah (a copy of one of the Player Characters). The Blade Runners must uncover this intricate conspiracy before Lilith executes her final, decisive attack on the Wallace Corporation HQ.",
+      "description": "Deuxième dossier officiel du jeu de rôle BLADE RUNNER, qui poursuit l'arc narratif « Immortal Game ». Cette aventure autonome explore les limites de la technologie des réplicants et ses conséquences, confrontant les Blade Runners à des dilemmes physiques, mentaux et moraux.",
+      "synopsis": "Lilith Tyrell, que l'on croyait morte, est bien vivante et dirige une usine clandestine de production de réplicants. Elle a créé cinq « prophètes » — des réplicants de contrefaçon physiquement identiques à des personnalités clés — afin d'infiltrer la Wallace Corporation et de dérober des données industrielles cruciales (une sphère de mémoire) dans le bureau de direction de Niander Wallace. Son objectif ultime est d'améliorer sa lignée instable de réplicants et d'ouvrir la voie à une nouvelle ère de réplicants libres. Les personnages joueurs sont chargés d’enquêter sur Ellis Vale, un technicien de maintenance qui a tenté de s’introduire dans la chambre forte de la Wallace Corp. À leur insu, Ellis Vale était une copie réplicante (Jeremiah) et servait de test pour le plan plus vaste de Lilith. Un autre prophète, Ezekiel, a remplacé le légendaire Blade Runner Ray McCoy et sabote activement l'enquête tout en traquant un prophète renégat, Noah (une copie de l'un des personnages joueurs). Les Blade Runners doivent déjouer cette conspiration complexe avant que Lilith ne lance son attaque finale et décisive contre le QG de la Wallace Corporation.\n*** Traduit avec www.DeepL.com/Translator (version gratuite) ***\n\n",
       "system": "custom-1774091088325",
       "id": "5164b587-4016-47cb-9cd1-df6d704233d1",
       "activeLocationIds": [
@@ -121,12 +121,12 @@
         "14de9273-d42f-4f93-bd74-dcda83f6fb0a",
         "7b999002-56f9-4481-9455-924e63470068",
         "245959ab-5715-4d1d-b81c-aa7878825bc3",
-        "b98130b1-4a16-4679-b11a-b09b30399a6c",
-        "3a0dca8c-5732-4b1c-8f0a-cb9377304efb",
         "85e8b05f-ae7d-40a6-af42-5cc97b406f2c",
         "67feb45c-a351-4bd2-a3d1-2fb489f2f762",
         "dea517ff-7538-4d3b-877d-b5fdbd096435",
-        "03675393-5433-4af6-8956-51ff47765b86"
+        "03675393-5433-4af6-8956-51ff47765b86",
+        "b98130b1-4a16-4679-b11a-b09b30399a6c",
+        "3a0dca8c-5732-4b1c-8f0a-cb9377304efb"
       ],
       "layoutConfig": {
         "activeModule": "dashboard",
@@ -7905,7 +7905,7 @@
     },
     {
       "title": "The Immortal Game",
-      "content": "The overarching campaign arc for the BLADE RUNNER RPG, of which 'Fiery Angels' is the second installment. Each installment is designed to be stand-alone but contributes to a larger narrative exploring the fate of Replicants and the nature of humanity.",
+      "content": "L'arc narratif global du jeu de rôle BLADE RUNNER, dont « Fiery Angels » constitue le deuxième volet. Chaque volet est conçu pour être autonome, mais s'inscrit dans une histoire plus vaste qui explore le destin des réplicants et la nature de l'humanité.",
       "category": "lore",
       "tags": [
         "campaign arc",
@@ -7919,7 +7919,7 @@
     },
     {
       "title": "Bootleg Replicants",
-      "content": "Black market Replicants created using stolen Tyrell technology. They are unregistered, tailor-made, and unlike the obedient Wallace Nexus-9s, often described as 'attack dogs without a leash.' Lilith Tyrell's 'prophets' are a specific breed of bootlegs, less stable than previous models and prone to genetic disorders, resulting in short lifespans.",
+      "content": "Des réplicants issus du marché noir, créés à partir de technologies Tyrell volées. Non enregistrés et fabriqués sur mesure, ils sont, contrairement aux dociles Nexus-9 de Wallace, souvent décrits comme des « chiens d'attaque sans laisse ». Les « prophètes » de Lilith Tyrell constituent une catégorie particulière de réplicants pirates, moins stables que les modèles précédents et sujets à des troubles génétiques, ce qui se traduit par une espérance de vie réduite.\n\n\n",
       "category": "lore",
       "tags": [
         "replicants",
