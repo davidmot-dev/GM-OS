@@ -4782,6 +4782,42 @@
               "properties": {
                 "quantityFormula": "1d100"
               }
+            },
+            {
+              "id": "47ee3fbe-36f8-4c0d-b191-4c81625d2a0a",
+              "name": "Ration de voyage",
+              "type": "other",
+              "rarity": "Commun",
+              "weight": 0,
+              "quantity": 1,
+              "description": "Objet issu de la table Butin Standard",
+              "properties": {
+                "rarity": "Commun"
+              }
+            },
+            {
+              "id": "5291ea19-faf2-4652-9514-b2e37adf83f1",
+              "name": "Ration de voyage",
+              "type": "other",
+              "rarity": "Commun",
+              "weight": 0,
+              "quantity": 1,
+              "description": "Objet issu de la table Butin Standard",
+              "properties": {
+                "rarity": "Commun"
+              }
+            },
+            {
+              "id": "3fe5613f-c755-4c1b-be81-c5f7eaa1f16f",
+              "name": "Pièces d'Or",
+              "type": "other",
+              "rarity": "common",
+              "weight": 0,
+              "quantity": 55,
+              "description": "Objet issu de la table Butin Standard",
+              "properties": {
+                "quantityFormula": "1d100"
+              }
             }
           ]
         }
