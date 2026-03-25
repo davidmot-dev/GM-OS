@@ -20,6 +20,17 @@ import { useClockStore, type TensionClock } from '../../store/useClockStore';
 import { useWhiteboardStore, type DrawingPath } from '../whiteboard/useWhiteboardStore';
 import type { SessionSnapshot } from '../journal/types';
 
+export interface InventoryItem {
+    id: string;
+    name: string;
+    type: 'item' | 'currency' | 'other';
+    rarity: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+    weight: number;
+    quantity: number;
+    description: string;
+    properties?: Record<string, unknown>;
+}
+
 export interface DamageImpact {
     value: number;
     type?: string;

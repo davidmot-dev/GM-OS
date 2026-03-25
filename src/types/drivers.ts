@@ -82,3 +82,20 @@ export interface GameDriver {
     aiInstructions: string; // Specialized instructions for the Oracle/Sage to understand rules
     aiPersonas?: Record<string, string>; // gemId -> instructions override
 }
+ 
+export interface LootEntry {
+    name: string;
+    weight: number;
+    type: 'item' | 'currency' | 'table';
+    minAmount?: string | number;
+    maxAmount?: string | number;
+    metadata?: Record<string, unknown>;
+}
+
+export interface LootTable {
+    id?: string;
+    name: string;
+    rolls?: number | string; // Numeric or dice formula
+    rollMode?: 'weighted' | 'independent'; // 'weighted' (pick one) vs 'independent' (each line has its % chance)
+    entries: LootEntry[];
+}
