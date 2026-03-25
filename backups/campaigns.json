@@ -4742,17 +4742,6 @@
             "state": "healthy",
             "badges": []
           }
-        },
-        {
-          "name": "test",
-          "classRace": "test",
-          "maxHp": 10,
-          "hp": 10,
-          "portraitUrl": "https://api.dicebear.com/9.x/adventurer/svg?seed=test",
-          "campaignId": null,
-          "templateId": "custom-1774091088329",
-          "sheetData": {},
-          "id": "8063c9c1-d375-4a8c-a3d0-652866eca260"
         }
       ],
       "id": "2497e575-3982-4508-858a-2ef6b782e3ad"
