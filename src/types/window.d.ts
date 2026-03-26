@@ -1,6 +1,6 @@
 import { SessionOSState } from '../modules/session/useSessionOSStore';
 import { MusicState } from '../modules/music/useMusicStore';
-import { CombatState, Combatant } from '../modules/combat/useCombatStore';
+import { CombatState } from '../modules/combat/useCombatStore';
 import { LightState } from '../modules/light/useLightStore';
 import { MapState } from '../modules/map/useMapStore';
 import { ImageState } from '../modules/image/useImageStore';
@@ -70,6 +70,14 @@ declare global {
         children?: NoteEntry[];
     }
 
+    export interface ClientContext {
+        deviceId: string;
+        pseudo: string;
+        role: 'combat' | 'narrative' | 'player' | 'remote';
+        status: 'active' | 'ghost' | 'disconnected';
+        lastSeen: number;
+    }
+
     export interface SyncPayload {
         clock?: Partial<ClockState>;
         combat?: Partial<CombatState>;
@@ -82,6 +90,7 @@ declare global {
         storyboard?: Partial<StoryboardState>;
         session?: Partial<SessionOSState>;
         voiceLevel?: number;
+        clients?: ClientContext[]; // The list of active clients for the MJ to see
     }
 
     interface AppBridge {
@@ -90,6 +99,12 @@ declare global {
             launchHubWindow: (tag?: string) => void;
             saveSession: (data: Record<string, unknown>) => Promise<boolean>;
             loadSession: () => Promise<Record<string, unknown> | null>;
+        };
+        git?: {
+          getStatus: () => Promise<{ available: boolean; isRepo: boolean; branch: string; exists: boolean }>;
+          setupBranch: (branch: string) => Promise<{ success: boolean; branch: string }>;
+          syncData: (directory: string, branch: string, message: string) => Promise<{ success: boolean; timestamp: string; error?: string }>;
+          saveData: (data: any) => Promise<{ success: boolean; error?: string }>;
         };
         openFile?: (path: string) => void;
         openExternal?: (url: string) => void;
@@ -101,9 +116,9 @@ declare global {
             saveList: (data: unknown) => Promise<boolean>;
             loadList: () => Promise<unknown>;
         };
-        on: (channel: string, callback: (event: unknown, ...args: unknown[]) => void) => void;
-        off: (channel: string, callback: (event: unknown, ...args: unknown[]) => void) => void;
-        send: (channel: string, ...args: unknown[]) => void;
+        on: (channel: string, callback: (event: any, ...args: any[]) => void) => void;
+        off: (channel: string, callback: (event: any, ...args: any[]) => void) => void;
+        send: (channel: string, ...args: any[]) => void;
         remote: {
             getConnectionInfo?: () => Promise<{ ip: string; port: number }>;
             sendSync?: (payload: SyncPayload) => void;
@@ -117,6 +132,7 @@ declare global {
         highlightMapToken?: (name: string) => void;
         app?: {
             quit: () => void;
+            onDisplayChanged: (callback: (count: number) => void) => () => void;
         };
         ai?: {
             listDocs: () => Promise<AIDocument[]>;
@@ -125,6 +141,11 @@ declare global {
             proxyRequest: (url: string, method: string, headers: Record<string, string>, body: unknown) => Promise<AIProxyResponse>;
             searchContext: (systemId: string, campaignName: string) => Promise<string>;
             reindex: () => Promise<boolean>;
+            ollamaChat: (model: string, messages: { role: string; content: string }[]) => Promise<string>;
+            ollamaStatus: () => Promise<boolean>;
+            ollamaListModels: () => Promise<string[]>;
+            ollamaPull: (model: string) => Promise<boolean>;
+            ollamaGenerateImage: (model: string, prompt: string) => Promise<string>;
         };
         sound?: {
             loadAudios: () => Promise<string[]>;
@@ -133,12 +154,13 @@ declare global {
             listSounds: () => Promise<string[]>;
         };
         light?: {
-            request: (url: string, method: string, body?: unknown) => Promise<unknown>;
+            request: (url: string, method: string, body?: unknown) => Promise<any>;
         };
         mcp?: {
             listTools: (serverName: string) => Promise<MCPTool[]>;
             callTool: (serverName: string, toolName: string, args: Record<string, unknown>) => Promise<MCPCallResult>;
             reauthenticate: () => Promise<{ success: boolean; message: string }>;
+            restart: () => Promise<{ success: boolean; message: string }>;
         };
         obsidian?: {
             listNotes: (vaultPath?: string) => Promise<NoteEntry[]>;
@@ -153,10 +175,10 @@ declare global {
             saveAvatar: (buffer: ArrayBuffer, fileName: string) => Promise<string | null>;
         };
         logger?: {
-            info: (message: string, ...args: unknown[]) => void;
-            warn: (message: string, ...args: unknown[]) => void;
-            error: (message: string, ...args: unknown[]) => void;
-            debug: (message: string, ...args: unknown[]) => void;
+            info: (message: string, ...args: any[]) => void;
+            warn: (message: string, ...args: any[]) => void;
+            error: (message: string, ...args: any[]) => void;
+            debug: (message: string, ...args: any[]) => void;
         };
     }
 
@@ -180,10 +202,40 @@ declare global {
         useTaxonomyStore: { getState: () => TaxonomyState; setState: (s: Partial<TaxonomyState>) => void; subscribe: (cb: (s: TaxonomyState) => void) => () => void };
         useVoiceStore: { getState: () => VoiceState; setState: (s: Partial<VoiceState>) => void; subscribe: (cb: (s: VoiceState) => void) => () => void };
         
-        hueEngine?: { applyScene: (id: string, sync?: boolean) => void; revertToManualScene: () => void };
+        hueEngine?: { 
+            applyScene: (id: string | null, isAutomatic?: boolean) => Promise<void>; 
+            revertToManualScene: () => Promise<void>;
+            extinguishAll: () => Promise<void>;
+            triggerFlash: (hex: string, duration?: number, intensity?: number) => Promise<void>;
+            applyTacticalState: (hex: string, name: string, intensity?: number) => Promise<void>;
+            clearTacticalState: () => Promise<void>;
+        };
         soundEngine?: { 
             loadAudio: (id: string, path: string) => Promise<void>;
-            play: (id: string, volume: number) => void;
+            play: (id: string, volume?: number, onEnded?: () => void) => void;
+            stop: (id: string) => void;
+            stopAll: () => void;
+            setVolume: (id: string, volume: number) => void;
+            setMasterVolume: (volume: number) => void;
+        };
+        musicEngine?: {
+            setMasterVolume: (v: number) => void;
+            setCrossfader: (v: number) => void;
+            performAutoFade: (target: 'A' | 'B', durationMs: number) => void;
+            resume: () => Promise<void>;
+            deckA: any;
+            deckB: any;
+        };
+        voiceEngine?: {
+            initialize: () => Promise<void>;
+            stop: () => void;
+            refreshAvailableDevices: () => Promise<void>;
+            updateOutputDevice: (id: string) => Promise<void>;
+        };
+        diceEngine?: {
+            roll: (sides: number) => number;
+            rollFormula: (formula: string) => any;
+            rollFromConfig: (config: any, options?: any) => any;
         };
         highlightMapToken?: (name: string) => void;
     }

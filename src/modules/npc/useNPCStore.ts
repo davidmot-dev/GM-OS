@@ -3,15 +3,24 @@ import { persist } from 'zustand/middleware';
 
 export type NPCCategory = 'npcs' | 'places' | 'items' | 'events' | 'rumors';
 
+/**
+ * Représente une entité générée par le NPC-OS.
+ * Peut être un PNJ, un lieu, un objet, un événement ou une rumeur.
+ */
 export interface NPCEntity {
     id: string;
     category: NPCCategory;
     name: string;
+    /** Chemin local vers l'image d'avatar */
     avatar?: string;
+    /** Notes privées du MJ */
     gmNotes: string;
+    /** Champs dynamiques (ex: 'Race', 'Classe', 'Traits') */
     fields: Record<string, string>;
     timestamp: number;
     isDead?: boolean;
+    /** Suggestion de prompt pour la génération d'image par l'IA */
+    suggestedPrompt?: string;
 }
 
 interface NPCBridge {
@@ -24,6 +33,7 @@ interface NPCState {
     config: {
         category: NPCCategory;
         universe: string;
+        aiEnabled: boolean;
     };
     availableUniverses: string[];
     currentEntity: NPCEntity | null;
@@ -33,16 +43,31 @@ interface NPCState {
 
     // Actions
     setConfig: (updates: Partial<NPCState['config']>) => void;
+    /** 
+     * Récupère la liste des univers disponibles (fichiers JSON dans /databases).
+     * @param category Optionnel, filtre par catégorie (npcs, places, etc.)
+     */
     fetchUniverses: (category?: NPCCategory) => Promise<void>;
+    /** 
+     * Génère une nouvelle entité aléatoire à partir de l'univers sélectionné.
+     * Si `aiEnabled` est vrai, l'entité est enrichie narrativement par l'IA.
+     */
     generate: () => Promise<void>;
+    /** Ouvre une boîte de dialogue pour sélectionner manuellement un avatar. */
     selectAvatar: () => Promise<void>;
+    /** Génère un avatar artistique via l'IA en se basant sur les champs de l'entité. */
     generateAvatar: (instructions?: string) => Promise<void>;
+    /** Sauvegarde l'entité actuelle dans le mémo (historique). */
     saveToMemo: () => void;
     deleteFromMemo: (id: string) => void;
     updateEntityNotes: (id: string, notes: string) => void;
     toggleDeadStatus: (id: string) => void;
     clearHistory: () => void;
     setCurrentEntity: (entity: NPCEntity | null) => void;
+    getBackupData: () => {
+        savedEntities: NPCEntity[];
+        config: NPCState['config'];
+    };
 }
 
 const getBridge = () => (window as Window & typeof globalThis & { appBridge?: { npc: NPCBridge } }).appBridge?.npc;
@@ -53,6 +78,7 @@ export const useNPCStore = create<NPCState>()(
             config: {
                 category: 'npcs',
                 universe: '',
+                aiEnabled: true,
             },
             availableUniverses: [],
             currentEntity: null,
@@ -104,29 +130,53 @@ export const useNPCStore = create<NPCState>()(
                         }
                     });
 
-                    // Intelligent Name Extraction
+                    // Intelligent Name Extraction with Safety
                     const getName = (obj: Record<string, string>) => {
                         const nameKey = Object.keys(obj).find(k =>
-                            ['titre', 'name', 'nom', 'character', 'personnage'].includes(k.toLowerCase())
+                            ['nom', 'name', 'titre', 'character', 'personnage'].includes(k.toLowerCase())
                         );
-
-                        if (nameKey) return obj[nameKey];
-
-                        // Try first name + last name
-                        const prenomKey = Object.keys(obj).find(k => ['prenom', 'prénom', 'firstname'].includes(k.toLowerCase()));
-                        const nomKey = Object.keys(obj).find(k => ['nom', 'lastname', 'surname'].includes(k.toLowerCase()));
-                        if (prenomKey && nomKey) return `${obj[prenomKey]} ${obj[nomKey]}`;
-
-                        // Fallback to first field
-                        return Object.values(obj)[0] || "Unnamed Entity";
+                        
+                        const val = nameKey ? obj[nameKey] : (Object.values(obj)[0] || "Unnamed Entity");
+                        return String(val || "Unnamed Entity");
                     };
+
+                    let entityFields = fields;
+                    let suggestedPrompt = "";
+
+                    // AI Enrichment if enabled
+                    if (get().config.aiEnabled) {
+                        try {
+                            const { aiService } = await import('../ai/AIService');
+                            const enriched = await aiService.enrichNPCEntity(fields, category, universe) as Record<string, string | { enrichedValue?: string, value?: string }>;
+                            
+                            if (enriched && Object.keys(enriched).length > 0) {
+                                // Sanitize: ensure all values are strings
+                                const sanitized: Record<string, string> = {};
+                                for (const [key, value] of Object.entries(enriched)) {
+                                    if (typeof value === 'object' && value !== null) {
+                                        // Support suspected nested structure
+                                        sanitized[key] = String(value.enrichedValue || value.value || JSON.stringify(value));
+                                    } else {
+                                        sanitized[key] = String(value);
+                                    }
+                                }
+                                entityFields = sanitized;
+                            }
+                            
+                            // Also suggest an image prompt
+                            suggestedPrompt = await aiService.suggestNPCImagePrompt(getName(entityFields), entityFields, category, universe);
+                        } catch (aiErr) {
+                            console.warn("[useNPCStore] AI enrichment failed, using raw details:", aiErr);
+                        }
+                    }
 
                     const newEntity: NPCEntity = {
                         id: `ID-${Math.floor(Math.random() * 99999)}`,
                         category,
-                        name: getName(fields),
+                        name: getName(entityFields),
                         gmNotes: "",
-                        fields,
+                        fields: entityFields,
+                        suggestedPrompt,
                         timestamp: Date.now()
                     };
 
@@ -168,7 +218,6 @@ export const useNPCStore = create<NPCState>()(
                 set({ isGeneratingAIAvatar: true });
                 try {
                     const { aiService } = await import('../ai/AIService');
-                    // Check if it's a place or NPC to adjust prompt
                     // Clean and truncate fields to prevent HTTP 500 from too long/complex prompts
                     const fieldsText = Object.values(currentEntity.fields).join(', ').replace(/\n/g, ' ').substring(0, 300);
                     
@@ -180,11 +229,9 @@ export const useNPCStore = create<NPCState>()(
                     const aspect = currentEntity.category === 'places' ? '16:9' : '1:1';
                     
                     const mediaId = await aiService.generateImage(prompt, aspect);
-                    console.log(`[useNPCStore] Image generated successfully: ${mediaId.substring(0, 50)}...`);
                     
                     const updatedEntity = { ...currentEntity, avatar: mediaId };
                     set({ currentEntity: updatedEntity });
-                    console.log(`[useNPCStore] currentEntity updated with new avatar.`);
 
                     // Update in memos if present
                     if (savedEntities.find(e => e.id === currentEntity.id)) {
@@ -245,7 +292,11 @@ export const useNPCStore = create<NPCState>()(
 
             setCurrentEntity: (entity) => {
                 set({ currentEntity: entity });
-            }
+            },
+            getBackupData: () => ({
+                savedEntities: get().savedEntities,
+                config: get().config
+            })
         }),
         {
             name: 'gmos-npc-storage',

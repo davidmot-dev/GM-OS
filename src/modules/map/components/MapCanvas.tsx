@@ -1,138 +1,123 @@
-import React, { useRef, useEffect, useState, type MouseEvent } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useMapStore } from '../useMapStore';
+import { useMapUIStore } from '../useMapUIStore';
 import { FogEngine } from '../FogEngine';
 import MapTokenNode from './MapTokenNode';
 import MapPingLayer from './MapPingLayer';
 import WeatherLayer from './WeatherLayer';
 import MagicLayer from './MagicLayer';
+import DangerZoneLayer from './DangerZoneLayer';
 
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
-import { gmConfirm } from '../../../stores/useModalStore';
+import { useMapNavigation } from '../hooks/useMapNavigation';
+import { useMapInteraction } from '../hooks/useMapInteraction';
 
 const MapCanvas: React.FC = () => {
-    const { 
-        mapUrl, isVideo, fogDataUrl, setFogDataUrl, 
-        currentTool, fogMode, brushSize, tokens, 
-        fogCommand, triggerFogCommand,
-        addPing,
-        zoom, panX, panY, viewResetCounter, setViewState,
-        mapWidth, mapHeight, setMapDimensions,
-        isGridEnabled, gridSize, gridColor, gridOpacity,
-        setSelectedTokenId,
-        magicStyle, magicShape, magicEffects, addMagicEffect, removeMagicEffect
-    } = useMapStore();
+    // Stores
+    const mapStore = useMapStore();
+    const uiStore = useMapUIStore();
 
+    const resolvedMapUrl = useMediaUrl(mapStore.mapUrl || undefined);
 
-
-    const resolvedMapUrl = useMediaUrl(mapUrl || undefined);
-
+    // Refs
     const containerRef = useRef<HTMLDivElement>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
     const fogCanvasRef = useRef<HTMLCanvasElement>(null);
     const previewCanvasRef = useRef<HTMLCanvasElement>(null);
     const gridCanvasRef = useRef<HTMLCanvasElement>(null);
     const engineRef = useRef<FogEngine | null>(null);
 
-    const [isDrawing, setIsDrawing] = useState(false);
-    const [isPanning, setIsPanning] = useState(false);
-    const [startPos, setStartPos] = useState<{ x: number, y: number } | null>(null);
-    const [lastPanPos, setLastPanPos] = useState<{ x: number, y: number } | null>(null);
-    const [magicPreview, setMagicPreview] = useState<{ x: number, y: number, w: number, h: number, r: number } | null>(null);
+    // Hooks
+    const { 
+        zoom, panX, panY, isPanning,
+        fitToScreen, getCoordinates, handleWheel,
+        startPanning, updatePanning, stopPanning
+    } = useMapNavigation(containerRef, mapStore.mapWidth, mapStore.mapHeight);
 
+    const {
+        magicPreview, dangerPreview,
+        handleInteractionStart, handleInteractionMove, handleInteractionEnd,
+        clearPreviews
+    } = useMapInteraction(engineRef, previewCanvasRef);
 
-    const fitToScreen = React.useCallback((targetW = mapWidth, targetH = mapHeight) => {
-        if (!containerRef.current) return;
-        const cw = containerRef.current.clientWidth;
-        const ch = containerRef.current.clientHeight;
-        if (cw === 0 || ch === 0) return;
-        
-        const scale = Math.min(cw / targetW, ch / targetH);
-        const px = (cw - targetW * scale) / 2;
-        const py = (ch - targetH * scale) / 2;
-        
-        setViewState(scale, px, py);
-    }, [mapWidth, mapHeight, setViewState]);
-
-    // Track container size & re-fit
-    useEffect(() => {
-        if (!containerRef.current) return;
-        const observer = new ResizeObserver(() => {
-            fitToScreen();
-        });
-        observer.observe(containerRef.current);
-        return () => observer.disconnect();
-    }, [fitToScreen]);
-
-    // Re-fit when container size changes and zoom is currently "fitted" (optional, but let's just do it on reset/load)
-
-    // 1. Initialiser le Fog Engine
+    // Fog Engine Initialization
     useEffect(() => {
         if (!fogCanvasRef.current || !previewCanvasRef.current) return;
+        if (!engineRef.current) engineRef.current = new FogEngine();
         
-        const engine = new FogEngine();
-        engine.initialize(
+        engineRef.current.initialize(
             fogCanvasRef.current,
             previewCanvasRef.current,
-            mapWidth,
-            mapHeight
+            mapStore.mapWidth,
+            mapStore.mapHeight
         );
-        engineRef.current = engine;
 
-        if (fogDataUrl) engine.loadFromDataUrl(fogDataUrl);
-        else engine.fillBlack();
-    }, [mapWidth, mapHeight, fogDataUrl]);
+        if (mapStore.fogDataUrl) engineRef.current.loadFromDataUrl(mapStore.fogDataUrl);
+        else engineRef.current.fillBlack();
+    }, [mapStore.mapWidth, mapStore.mapHeight, mapStore.fogDataUrl]);
 
-    // 2. Détecter le chargement du média et ajuster les dimensions + Auto-Fit
+    // Media Load & Auto-Fit
     useEffect(() => {
         if (!resolvedMapUrl) return;
 
         const handleDimensions = (w: number, h: number) => {
-            // Un petit délai pour s'assurer que le container a fini son layout si possible
             setTimeout(() => {
-                setMapDimensions(w, h);
-                engineRef.current?.resize(w, h);
+                mapStore.setMapDimensions(w, h);
                 fitToScreen(w, h);
-            }, 50);
+            }, 10);
         };
 
-        if (isVideo) {
+        if (mapStore.isVideo) {
             const video = document.createElement('video');
             video.src = resolvedMapUrl;
             video.onloadedmetadata = () => handleDimensions(video.videoWidth, video.videoHeight);
-            // Fallback if already loaded
-            if (video.videoWidth > 0) handleDimensions(video.videoWidth, video.videoHeight);
         } else {
             const img = new Image();
             img.src = resolvedMapUrl;
             img.onload = () => handleDimensions(img.width, img.height);
-            // Fallback if already loaded
-            if (img.width > 0) handleDimensions(img.width, img.height);
         }
-    }, [resolvedMapUrl, isVideo, setMapDimensions, fitToScreen]);
+    }, [resolvedMapUrl, mapStore.isVideo, mapStore.setMapDimensions, fitToScreen, mapStore]);
 
-    // 3. Répondre au bouton "Recadrer"
+    // Audio & Device Sync
     useEffect(() => {
-        if (viewResetCounter > 0) {
-            fitToScreen();
-        }
-    }, [viewResetCounter, fitToScreen]);
-
+        if (videoRef.current) videoRef.current.volume = mapStore.mapVolume;
+    }, [mapStore.mapVolume]);
 
     useEffect(() => {
-        if (!engineRef.current || !fogCommand) return;
-        if (fogCommand === 'reveal_all') engineRef.current.revealAll();
-        else if (fogCommand === 'hide_all') engineRef.current.fillBlack();
-        setFogDataUrl(engineRef.current.getFogDataUrl());
-        triggerFogCommand(null);
-    }, [fogCommand, setFogDataUrl, triggerFogCommand]);
+        const setDevice = async () => {
+            if (videoRef.current && 'setSinkId' in videoRef.current) {
+                try {
+                    const deviceId = mapStore.mapOutputDeviceId === 'default' ? '' : mapStore.mapOutputDeviceId;
+                    await (videoRef.current as HTMLVideoElement & { setSinkId: (id: string) => Promise<void> }).setSinkId(deviceId);
+                } catch (err) {
+                    console.error("[MapCanvas] Failed to set output device:", err);
+                }
+            }
+        };
+        setDevice();
+    }, [mapStore.mapOutputDeviceId]);
 
-    // Add storage listener for cross-window sync
+    // Reset View Trigger
+    useEffect(() => {
+        if (mapStore.viewResetCounter > 0) fitToScreen();
+    }, [mapStore.viewResetCounter, fitToScreen]);
+
+    // Fog Commands (Reveal/Hide All)
+    useEffect(() => {
+        if (!engineRef.current || !mapStore.fogCommand) return;
+        if (mapStore.fogCommand === 'reveal_all') engineRef.current.revealAll();
+        else if (mapStore.fogCommand === 'hide_all') engineRef.current.fillBlack();
+        mapStore.setFogDataUrl(engineRef.current.getFogDataUrl());
+        mapStore.triggerFogCommand(null);
+    }, [mapStore.fogCommand, mapStore]);
+
+    // Cross-window Sync
     useEffect(() => {
         const handleStorageChange = (e: StorageEvent) => {
             if (e.key === 'gmos-map-storage') {
                 useMapStore.persist.rehydrate();
             }
         };
-
         window.addEventListener('storage', handleStorageChange);
         return () => window.removeEventListener('storage', handleStorageChange);
     }, []);
@@ -140,260 +125,92 @@ const MapCanvas: React.FC = () => {
     // Grid Rendering
     useEffect(() => {
         const canvas = gridCanvasRef.current;
-        if (!canvas || !isGridEnabled) return;
-
+        if (!canvas || !mapStore.isGridEnabled) return;
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
-        canvas.width = mapWidth;
-        canvas.height = mapHeight;
+        canvas.width = mapStore.mapWidth;
+        canvas.height = mapStore.mapHeight;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
         ctx.beginPath();
-        ctx.strokeStyle = gridColor;
-        ctx.globalAlpha = gridOpacity;
+        ctx.strokeStyle = mapStore.gridColor;
+        ctx.globalAlpha = mapStore.gridOpacity;
         ctx.lineWidth = 1;
 
-        for (let x = 0; x <= mapWidth; x += gridSize) {
-            ctx.moveTo(x, 0);
-            ctx.lineTo(x, mapHeight);
+        for (let x = 0; x <= mapStore.mapWidth; x += mapStore.gridSize) {
+            ctx.moveTo(x, 0); ctx.lineTo(x, mapStore.mapHeight);
         }
-        for (let y = 0; y <= mapHeight; y += gridSize) {
-            ctx.moveTo(0, y);
-            ctx.lineTo(mapWidth, y);
+        for (let y = 0; y <= mapStore.mapHeight; y += mapStore.gridSize) {
+            ctx.moveTo(0, y); ctx.lineTo(mapStore.mapWidth, y);
         }
         ctx.stroke();
-    }, [isGridEnabled, gridSize, gridColor, gridOpacity, mapWidth, mapHeight]);
+    }, [mapStore.isGridEnabled, mapStore.gridSize, mapStore.gridColor, mapStore.gridOpacity, mapStore.mapWidth, mapStore.mapHeight]);
 
-    // Coordinate Conversion Factor
-    const getCoordinates = (e: MouseEvent) => {
-        const container = containerRef.current;
-        if (!container) return { x: 0, y: 0 };
-        const rect = container.getBoundingClientRect();
-        
-        // Raw position in container
-        const rawX = e.clientX - rect.left;
-        const rawY = e.clientY - rect.top;
-
-        // Account for pan and zoom to get "virtual" coordinates
-        // Virtual = (Raw - Pan) / Zoom
-        return {
-            x: (rawX - panX) / zoom,
-            y: (rawY - panY) / zoom
-        };
-    };
-
-    const handleMouseDown = (e: MouseEvent) => {
-        // Middle click (button 1): start pan
+    // Event Handlers
+    const handleMouseDown = (e: React.MouseEvent) => {
         if (e.button === 1) {
-            setIsPanning(true);
-            setLastPanPos({ x: e.clientX, y: e.clientY });
+            startPanning(e.clientX, e.clientY);
             return;
         }
-        
-        // Clic gauche sur le fond -> Désélectionner
         if (e.button === 0) {
-            setSelectedTokenId(null);
+            uiStore.setSelectedTokenId(null);
+            if (uiStore.currentTool === 'move_token') return;
             
-            if (currentTool === 'move_token') return; // Ne pas dessiner en mode déplacement de pions
-            
-            const coords = getCoordinates(e);
-
-            if (currentTool === 'ping') {
-                addPing(coords.x, coords.y, '#eab308'); // GM-OS Gold
+            const coords = getCoordinates(e.clientX, e.clientY);
+            if (uiStore.currentTool === 'ping') {
+                mapStore.addPing(coords.x, coords.y, '#eab308');
                 return;
             }
-
-            setIsDrawing(true);
-            setStartPos(coords);
-
-            if (currentTool === 'brush') {
-                engineRef.current?.drawBrush(coords.x, coords.y, coords.x, coords.y, fogMode, brushSize);
-            }
+            handleInteractionStart(coords);
         }
     };
 
-    const handleMouseMove = (e: MouseEvent) => {
-        if (isPanning && lastPanPos) {
-            const dx = e.clientX - lastPanPos.x;
-            const dy = e.clientY - lastPanPos.y;
-            setViewState(zoom, panX + dx, panY + dy);
-            setLastPanPos({ x: e.clientX, y: e.clientY });
-            return;
-        }
-
-        const coords = getCoordinates(e);
-
-        if (currentTool === 'brush' && !isPanning) {
-            engineRef.current?.clearPreview();
-            const ctx = previewCanvasRef.current?.getContext('2d');
-            if (ctx) {
-                ctx.beginPath();
-                ctx.arc(coords.x, coords.y, brushSize / 2, 0, Math.PI * 2);
-                ctx.strokeStyle = fogMode === 'reveal' ? 'white' : 'black';
-                ctx.lineWidth = 2 / zoom; // Adjust line width for zoom
-                ctx.stroke();
-            }
-        }
-
-        if (!isDrawing || !startPos || isPanning) return;
-
-        if (currentTool === 'brush') {
-            engineRef.current?.drawBrush(startPos.x, startPos.y, coords.x, coords.y, fogMode, brushSize);
-            setStartPos(coords);
-        } else if (currentTool === 'rect') {
-            engineRef.current?.previewRect(startPos.x, startPos.y, coords.x - startPos.x, coords.y - startPos.y, fogMode);
-        } else if (currentTool === 'circle') {
-            const radius = Math.sqrt(Math.pow(coords.x - startPos.x, 2) + Math.pow(coords.y - startPos.y, 2));
-            engineRef.current?.previewCircle(startPos.x, startPos.y, radius, fogMode);
-        } else if (currentTool === 'magic') {
-            const dx = coords.x - startPos.x;
-            const dy = coords.y - startPos.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            const rotation = (Math.atan2(dy, dx) * 180) / Math.PI;
-            setMagicPreview({
-                x: startPos.x,
-                y: startPos.y,
-                w: dist,
-                h: dist,
-                r: rotation
-            });
-        }
-
-    };
-
-    const handleMouseUp = (e: MouseEvent) => {
+    const handleMouseMove = (e: React.MouseEvent) => {
         if (isPanning) {
-            setIsPanning(false);
-            setLastPanPos(null);
+            updatePanning(e.clientX, e.clientY);
             return;
         }
-
-        if (!isDrawing) return;
-        const coords = getCoordinates(e);
-
-        if (startPos && (currentTool === 'rect' || currentTool === 'circle')) {
-            const actionLabel = fogMode === 'reveal' ? 'révéler' : 'cacher';
-            const shapeLabel = currentTool === 'rect' ? 'rectangle' : 'cercle';
-            
-            gmConfirm(
-                `Êtes-vous sûr de vouloir ${actionLabel} cette zone (${shapeLabel}) ?`,
-                () => {
-                    if (currentTool === 'rect') {
-                        engineRef.current?.commitRect(startPos.x, startPos.y, coords.x - startPos.x, coords.y - startPos.y, fogMode);
-                    } else if (currentTool === 'circle') {
-                        const radius = Math.sqrt(Math.pow(coords.x - startPos.x, 2) + Math.pow(coords.y - startPos.y, 2));
-                        engineRef.current?.commitCircle(startPos.x, startPos.y, radius, fogMode);
-                    }
-                    if (engineRef.current) setFogDataUrl(engineRef.current.getFogDataUrl());
-                    setIsDrawing(false);
-                    setStartPos(null);
-                },
-                () => {
-                    engineRef.current?.clearPreview();
-                    setIsDrawing(false);
-                    setStartPos(null);
-                },
-                "Appliquer",
-                "Annuler"
-            );
-            // We return early and wait for the modal
-            return;
-        }
-
-        if (startPos && currentTool === 'magic') {
-            const dx = coords.x - startPos.x;
-            const dy = coords.y - startPos.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            const rotation = (Math.atan2(dy, dx) * 180) / Math.PI;
-
-            // Placement logic adjustment:
-            // Circle/Cone/Line: vertex/center is startPos
-            // Rect: startPos is top-left
-            
-            let finalX = startPos.x;
-            let finalY = startPos.y;
-            let finalW = dist || 100;
-            let finalH = dist || 100;
-
-            if (magicShape === 'rect') {
-                // If it's a rectangle, we allow dragging from corner to corner
-                finalW = Math.abs(dx);
-                finalH = Math.abs(dy);
-                // The store/layer expects X/Y to be the center
-                finalX = startPos.x + dx / 2;
-                finalY = startPos.y + dy / 2;
-            }
-
-            addMagicEffect({
-                type: magicShape,
-                style: magicStyle,
-                x: finalX,
-                y: finalY,
-                width: finalW,
-                height: finalH,
-                rotation: (magicShape === 'line' || magicShape === 'cone') ? rotation : 0,
-                opacity: 0.8
-            });
-            setMagicPreview(null);
-        }
-
-
-
-        setIsDrawing(false);
-        setStartPos(null);
-        setMagicPreview(null);
-        if (engineRef.current) setFogDataUrl(engineRef.current.getFogDataUrl());
-
+        const coords = getCoordinates(e.clientX, e.clientY);
+        handleInteractionMove(coords, zoom);
     };
 
-    const handleWheel = (e: React.WheelEvent) => {
-        const delta = -e.deltaY;
-        const scaleFactor = delta > 0 ? 1.1 : 0.9;
-        const newZoom = Math.min(Math.max(zoom * scaleFactor, 0.1), 10);
-
-        // Zoom centered on mouse
-        const rect = containerRef.current!.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
-
-        const newPanX = mouseX - (mouseX - panX) * (newZoom / zoom);
-        const newPanY = mouseY - (mouseY - panY) * (newZoom / zoom);
-
-        setViewState(newZoom, newPanX, newPanY);
+    const handleMouseUp = (e: React.MouseEvent) => {
+        if (isPanning) {
+            stopPanning();
+            return;
+        }
+        const coords = getCoordinates(e.clientX, e.clientY);
+        handleInteractionEnd(coords);
     };
 
     return (
         <div 
             ref={containerRef} 
             className={`relative w-full h-full bg-obsidian-dark overflow-hidden border border-gray-700 rounded-xl ${
-                isPanning ? 'cursor-grabbing' : currentTool === 'move_token' ? 'cursor-default' : 'cursor-crosshair'
+                isPanning ? 'cursor-grabbing' : uiStore.currentTool === 'move_token' ? 'cursor-default' : 'cursor-crosshair'
             }`}
             onWheel={handleWheel}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={() => {
-                setIsPanning(false);
-                setIsDrawing(false);
-                engineRef.current?.clearPreview();
+                stopPanning();
+                uiStore.setIsDrawing(false);
+                clearPreviews();
             }}
             onContextMenu={(e: React.MouseEvent) => {
                 e.preventDefault();
-                if (currentTool === 'magic') {
-                    const coords = getCoordinates(e as unknown as MouseEvent);
-
-                    // Find and remove the nearest magic effect
-                    const nearest = magicEffects.find(eff => {
+                if (uiStore.currentTool === 'magic') {
+                    const coords = getCoordinates(e.clientX, e.clientY);
+                    const nearest = mapStore.magicEffects.find(eff => {
                         const dist = Math.sqrt(Math.pow(eff.x - coords.x, 2) + Math.pow(eff.y - coords.y, 2));
-                        return dist < (eff.width || 50); // Simple collision
+                        return dist < (eff.width || 50);
                     });
-                    if (nearest) removeMagicEffect(nearest.id);
+                    if (nearest) mapStore.removeMagicEffect(nearest.id);
                 }
             }}
-
         >
-            {/* 0. Empty State */}
             {!resolvedMapUrl && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-500 z-0">
                     <span className="text-4xl mb-2">🗺️</span>
@@ -402,22 +219,19 @@ const MapCanvas: React.FC = () => {
                 </div>
             )}
 
-            {/* Transform Layer Wrapper */}
             <div 
                 className="absolute top-0 left-0 origin-top-left pointer-events-none"
                 style={{
-                    width: mapWidth,
-                    height: mapHeight,
+                    width: mapStore.mapWidth,
+                    height: mapStore.mapHeight,
                     transform: `translate(${panX}px, ${panY}px) scale(${zoom})`,
                 }}
             >
-                {/* 1. Base Layer (Image / Video) */}
-                {resolvedMapUrl && isVideo ? (
+                {resolvedMapUrl && mapStore.isVideo ? (
                     <video 
+                        ref={videoRef}
                         src={resolvedMapUrl} 
-                        autoPlay 
-                        loop 
-                        muted 
+                        autoPlay loop muted={mapStore.isMapMuted} 
                         className="absolute inset-0 w-full h-full object-cover z-10" 
                     />
                 ) : resolvedMapUrl ? (
@@ -428,54 +242,44 @@ const MapCanvas: React.FC = () => {
                     />
                 ) : null}
 
-                {/* 2. Grid Layer */}
-                {isGridEnabled && (
+                {mapStore.isGridEnabled && mapStore.layerVisibility.grid && (
                     <canvas ref={gridCanvasRef} className="absolute inset-0 w-full h-full z-15" />
                 )}
 
-                {/* 3. Fog Layer */}
-                <canvas
-                    ref={fogCanvasRef}
-                    className="absolute inset-0 w-full h-full z-20 opacity-80"
-                    style={{ display: resolvedMapUrl ? 'block' : 'none' }}
-                />
-
-                {/* 4. Tokens Layer */}
-                <div className="absolute inset-0 w-full h-full z-30 pointer-events-none">
-                    {tokens.map(token => (
+                <div className="absolute inset-0 w-full h-full z-16 pointer-events-none">
+                    {mapStore.layerVisibility.tokens && mapStore.tokens.map(token => (
                         <MapTokenNode key={token.id} token={token} />
                     ))}
                 </div>
 
-                {/* 4.1. Magic Effects Layer */}
-                <MagicLayer isProjectedView={false} />
+                {mapStore.layerVisibility.magic && <MagicLayer isProjectedView={false} />}
+                {mapStore.layerVisibility.danger && <DangerZoneLayer isProjectedView={false} />}
 
+                {mapStore.layerVisibility.fog && (
+                    <canvas
+                        ref={fogCanvasRef}
+                        className="absolute inset-0 w-full h-full z-20 opacity-80"
+                        style={{ display: resolvedMapUrl ? 'block' : 'none' }}
+                    />
+                )}
 
-                {/* 4.5. Pings Layer */}
                 <MapPingLayer isProjectedView={false} />
+                {mapStore.layerVisibility.weather && <WeatherLayer isProjectedView={false} />}
 
-                {/* 4.6. Weather Layer */}
-                <WeatherLayer isProjectedView={false} />
+                <canvas ref={previewCanvasRef} className="absolute inset-0 w-full h-full z-40 pointer-events-none" />
 
-                {/* 5. Preview Layer */}
-                <canvas
-                    ref={previewCanvasRef}
-                    className="absolute inset-0 w-full h-full z-40 pointer-events-none"
-                />
-
-                {/* Magic Preview Overlay (Simple visual aid) */}
                 {magicPreview && (
                     <div 
-                        className={`absolute border-2 border-white/50 border-dashed pointer-events-none z-50 ${magicShape === 'circle' ? 'rounded-full' : ''}`}
+                        className={`absolute border-2 border-white/50 border-dashed pointer-events-none z-50 ${uiStore.magicShape === 'circle' ? 'rounded-full' : ''}`}
                         style={{
                             left: magicPreview.x,
                             top: magicPreview.y,
-                            width: (magicShape === 'rect' || magicShape === 'cone' || magicShape === 'line') ? 0 : magicPreview.w * 2,
-                            height: (magicShape === 'rect' || magicShape === 'cone' || magicShape === 'line') ? 0 : magicPreview.h * 2,
-                            transform: `translate(-50%, -50%) rotate(${magicShape === 'line' || magicShape === 'cone' ? magicPreview.r : 0}deg)`,
+                            width: (uiStore.magicShape === 'rect' || uiStore.magicShape === 'cone' || uiStore.magicShape === 'line') ? 0 : magicPreview.w * 2,
+                            height: (uiStore.magicShape === 'rect' || uiStore.magicShape === 'cone' || uiStore.magicShape === 'line') ? 0 : magicPreview.h * 2,
+                            transform: `translate(-50%, -50%) rotate(${uiStore.magicShape === 'line' || uiStore.magicShape === 'cone' ? magicPreview.r : 0}deg)`,
                         }}
                     >
-                        {magicShape === 'rect' && (
+                        {uiStore.magicShape === 'rect' && (
                             <div className="absolute top-0 left-0 border-2 border-white/50 border-dashed"
                                  style={{
                                      width: Math.abs(magicPreview.w),
@@ -484,16 +288,10 @@ const MapCanvas: React.FC = () => {
                                  }}
                             />
                         )}
-                        {(magicShape === 'line' || magicShape === 'cone') && (
-                            <svg 
-                                className="absolute top-0 left-0 overflow-visible"
-                                style={{ width: 1, height: 1 }}
-                            >
-                                {magicShape === 'line' ? (
-                                    <line 
-                                        x1="0" y1="0" x2={magicPreview.w} y2="0" 
-                                        stroke="rgba(255,255,255,0.5)" strokeWidth="40" strokeDasharray="5,5"
-                                    />
+                        {(uiStore.magicShape === 'line' || uiStore.magicShape === 'cone') && (
+                            <svg className="absolute top-0 left-0 overflow-visible" style={{ width: 1, height: 1 }}>
+                                {uiStore.magicShape === 'line' ? (
+                                    <line x1="0" y1="0" x2={magicPreview.w} y2="0" stroke="rgba(255,255,255,0.5)" strokeWidth="40" strokeDasharray="5,5" />
                                 ) : (
                                     <path 
                                         d={`M 0 0 L ${magicPreview.w * Math.cos(-Math.PI/6)} ${magicPreview.w * Math.sin(-Math.PI/6)} A ${magicPreview.w} ${magicPreview.w} 0 0 1 ${magicPreview.w * Math.cos(Math.PI/6)} ${magicPreview.w * Math.sin(Math.PI/6)} Z`}
@@ -505,7 +303,19 @@ const MapCanvas: React.FC = () => {
                     </div>
                 )}
 
-
+                {dangerPreview && (
+                    <div 
+                        className={`absolute border border-rose-500/50 bg-rose-500/10 pointer-events-none z-50 border-dashed ${mapStore.dangerShape === 'circle' ? 'rounded-full text-center flex items-center justify-center' : ''}`}
+                        style={{
+                            left: mapStore.dangerShape === 'circle' ? (dangerPreview.x - dangerPreview.radius) : Math.min(dangerPreview.x, dangerPreview.x + dangerPreview.w),
+                            top: mapStore.dangerShape === 'circle' ? (dangerPreview.y - dangerPreview.radius) : Math.min(dangerPreview.y, dangerPreview.y + dangerPreview.h),
+                            width: mapStore.dangerShape === 'circle' ? (dangerPreview.radius * 2) : Math.abs(dangerPreview.w),
+                            height: mapStore.dangerShape === 'circle' ? (dangerPreview.radius * 2) : Math.abs(dangerPreview.h)
+                        }}
+                    >
+                        {mapStore.dangerShape === 'circle' && <div className="w-1 h-1 bg-rose-500 rounded-full" />}
+                    </div>
+                )}
             </div>
         </div>
     );

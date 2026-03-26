@@ -5,7 +5,7 @@ import { useSessionOSStore } from '../modules/session/useSessionOSStore';
 import { useAudioMasterStore } from '../stores/useAudioMasterStore';
 import { gmToast } from '../stores/useToastStore';
 
-const BACKUP_INTERVAL = 1000 * 60 * 15; // Every 15 minutes
+// const BACKUP_INTERVAL = 1000 * 60 * 15; // Every 15 minutes (DISABLED)
 const BACKUP_BRANCH = 'data-sync';
 const BACKUP_DIR = 'backups';
 
@@ -68,14 +68,12 @@ export const useBackupSync = () => {
   }, []); // Empty dependency array! Callback is stable.
 
   useEffect(() => {
-    let interval: any; // Using any here to avoid browser/node conflict in types
-
     const initGit = async () => {
       try {
         const status = await window.appBridge?.git?.getStatus();
         if (status?.available && status?.isRepo) {
           await window.appBridge?.git?.setupBranch(BACKUP_BRANCH);
-          performSync(); // Initial sync on mount
+          // performSync(); // Initial sync on mount (DISABLED)
         }
       } catch (err) {
         console.warn('[BackupSync] Git initialization skipped:', err);
@@ -84,12 +82,14 @@ export const useBackupSync = () => {
 
     initGit();
 
+    /* 
     interval = setInterval(() => {
       performSync();
     }, BACKUP_INTERVAL);
+    */
 
     return () => {
-      if (interval) clearInterval(interval);
+      // if (interval) clearInterval(interval);
     };
   }, [performSync]);
 

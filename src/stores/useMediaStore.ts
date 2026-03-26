@@ -10,26 +10,44 @@ export interface MediaItem {
     size: number;
     createdAt: number;
     tags: string[];
+    campaignIds: string[];
+    isPersistent?: boolean;
+}
+
+export interface MediaCollection {
+    id: string;
+    name: string;
+    mediaIds: string[];
 }
 
 interface MediaStoreState {
     mediaList: MediaItem[];
+    collections: MediaCollection[];
     isLoading: boolean;
     isInitialized: boolean;
     error: string | null;
 
     initDB: () => Promise<void>;
     clearDB: () => Promise<void>;
-    addMedia: (file: File, tags?: string[]) => Promise<string>;
+    addMedia: (file: File, tags?: string[], campaignIds?: string[]) => Promise<string>;
     deleteMedia: (id: string) => Promise<void>;
     updateMediaTags: (id: string, tags: string[]) => Promise<void>;
     renameMedia: (id: string, newName: string) => Promise<void>;
+    updateMediaCampaigns: (id: string, campaignIds: string[]) => Promise<void>;
     getMediaBlob: (id: string) => Promise<Blob | undefined>;
+    
+    // Collections
+    addCollection: (name: string) => Promise<void>;
+    deleteCollection: (id: string) => Promise<void>;
+    renameCollection: (id: string, name: string) => Promise<void>;
+    toggleMediaInCollection: (collectionId: string, mediaId: string) => Promise<void>;
+    toggleMediaPersistence: (id: string) => Promise<void>;
 }
 
 const DB_NAME = 'gmos-media-db';
 const STORE_NAME = 'media';
-const DB_VERSION = 1;
+const COLLECTIONS_STORE = 'collections';
+const DB_VERSION = 4; // Incremented to match existing database on disk (VersionError fix)
 
 let dbPromise: Promise<IDBPDatabase> | null = null;
 
@@ -42,6 +60,10 @@ const getDB = () => {
                 if (!db.objectStoreNames.contains(STORE_NAME)) {
                     db.createObjectStore(STORE_NAME, { keyPath: 'id' });
                     console.log('[MediaHub] Created object store', STORE_NAME);
+                }
+                if (!db.objectStoreNames.contains(COLLECTIONS_STORE)) {
+                    db.createObjectStore(COLLECTIONS_STORE, { keyPath: 'id' });
+                    console.log('[MediaHub] Created object store', COLLECTIONS_STORE);
                 }
             },
             blocked(currentVersion, blockedVersion) {
@@ -67,6 +89,7 @@ const getDB = () => {
 
 export const useMediaStore = create<MediaStoreState>((set, get) => ({
     mediaList: [],
+    collections: [],
     isLoading: false,
     isInitialized: false,
     error: null,
@@ -78,9 +101,14 @@ export const useMediaStore = create<MediaStoreState>((set, get) => ({
             set({ isLoading: true, error: null });
             const db = await getDB();
             console.log('[MediaHub] initDB: DB acquired, starting transaction');
-            const tx = db.transaction(STORE_NAME, 'readonly');
+            const tx = db.transaction([STORE_NAME, COLLECTIONS_STORE], 'readonly');
             const store = tx.objectStore(STORE_NAME);
-            const allItems = await store.getAll();
+            const collStore = tx.objectStore(COLLECTIONS_STORE);
+            
+            const [allItems, allCollections] = await Promise.all([
+                store.getAll(),
+                collStore.getAll()
+            ]);
             console.log('[MediaHub] initDB: Retrieved all items, count:', allItems.length);
 
             // Extract metadata for the list (exclude blobs to save memory)
@@ -90,10 +118,18 @@ export const useMediaStore = create<MediaStoreState>((set, get) => ({
                 type: item.type,
                 size: item.size,
                 createdAt: item.createdAt,
-                tags: item.tags || []
+                tags: item.tags || [],
+                campaignIds: item.campaignIds || [],
+                isPersistent: !!item.isPersistent
             })).sort((a, b) => b.createdAt - a.createdAt); // Newest first
 
-            set({ mediaList, isLoading: false, isInitialized: true });
+            const collections: MediaCollection[] = allCollections.map(c => ({
+                id: c.id,
+                name: c.name,
+                mediaIds: c.mediaIds || []
+            }));
+            
+            set({ mediaList, collections, isLoading: false, isInitialized: true });
         } catch (err) {
             console.error('Failed to init Media DB:', err);
             set({ error: 'Failed to initialize Media Database.', isLoading: false, isInitialized: true });
@@ -104,17 +140,18 @@ export const useMediaStore = create<MediaStoreState>((set, get) => ({
         try {
             set({ isLoading: true });
             const db = await getDB();
-            const tx = db.transaction(STORE_NAME, 'readwrite');
+            const tx = db.transaction([STORE_NAME, COLLECTIONS_STORE], 'readwrite');
             await tx.objectStore(STORE_NAME).clear();
+            await tx.objectStore(COLLECTIONS_STORE).clear();
             await tx.done;
-            set({ mediaList: [], isLoading: false });
+            set({ mediaList: [], collections: [], isLoading: false });
         } catch (err) {
             console.error('Failed to clear Media DB:', err);
             set({ error: 'Failed to clear Media Database.', isLoading: false });
         }
     },
 
-    addMedia: async (file: File, tags: string[] = []) => {
+    addMedia: async (file: File, tags: string[] = [], campaignIds: string[] = []) => {
         try {
             const db = await getDB();
             const id = `m-${crypto.randomUUID()}`;
@@ -139,7 +176,9 @@ export const useMediaStore = create<MediaStoreState>((set, get) => ({
                 size: file.size,
                 blob: file, // Store the File object directly as Blob
                 createdAt: Date.now(),
-                tags
+                tags,
+                campaignIds,
+                isPersistent: false
             };
 
             const tx = db.transaction(STORE_NAME, 'readwrite');
@@ -154,7 +193,9 @@ export const useMediaStore = create<MediaStoreState>((set, get) => ({
                 type: item.type,
                 size: item.size,
                 createdAt: item.createdAt,
-                tags: item.tags
+                tags: item.tags,
+                campaignIds: item.campaignIds,
+                isPersistent: item.isPersistent
             };
 
             set((state) => ({
@@ -233,16 +274,148 @@ export const useMediaStore = create<MediaStoreState>((set, get) => ({
         }
     },
 
+    updateMediaCampaigns: async (id: string, campaignIds: string[]) => {
+        try {
+            const db = await getDB();
+            const tx = db.transaction(STORE_NAME, 'readwrite');
+            const store = tx.objectStore(STORE_NAME);
+            
+            const item = await store.get(id);
+            if (!item) throw new Error('Media not found');
+            
+            item.campaignIds = campaignIds;
+            await store.put(item);
+            await tx.done;
+            
+            set((state) => ({
+                mediaList: state.mediaList.map(m => 
+                    m.id === id ? { ...m, campaignIds } : m
+                )
+            }));
+        } catch (err) {
+            console.error('Failed to update media campaigns:', err);
+            throw new Error('Failed to update campaigns.');
+        }
+    },
+
     getMediaBlob: async (id: string) => {
         try {
+            console.log(`[MediaStore] getMediaBlob called for ID: ${id}`);
             const db = await getDB();
             const tx = db.transaction(STORE_NAME, 'readonly');
             const store = tx.objectStore(STORE_NAME);
             const item = await store.get(id);
-            return item?.blob as Blob | undefined;
+            if (!item) {
+                return undefined;
+            }
+            if (!item.blob) {
+                return undefined;
+            }
+            console.log(`[MediaStore] Blob successfully retrieved for ID: ${id} (${item.blob.size} bytes)`);
+            return item.blob as Blob | undefined;
         } catch (err) {
-            console.error('Failed to get media blob:', err);
+            console.error(`[MediaStore] Error getting media blob for ID: ${id}:`, err);
             return undefined;
+        }
+    },
+
+    addCollection: async (name: string) => {
+        try {
+            const id = `coll-${crypto.randomUUID()}`;
+            const newColl: MediaCollection = { id, name, mediaIds: [] };
+            
+            const db = await getDB();
+            const tx = db.transaction(COLLECTIONS_STORE, 'readwrite');
+            await tx.objectStore(COLLECTIONS_STORE).put(newColl);
+            await tx.done;
+            
+            set(state => ({ collections: [...state.collections, newColl] }));
+        } catch (err) {
+            console.error('Failed to add collection:', err);
+        }
+    },
+
+    deleteCollection: async (id: string) => {
+        try {
+            const db = await getDB();
+            const tx = db.transaction(COLLECTIONS_STORE, 'readwrite');
+            await tx.objectStore(COLLECTIONS_STORE).delete(id);
+            await tx.done;
+            
+            set(state => ({ collections: state.collections.filter(c => c.id !== id) }));
+        } catch (err) {
+            console.error('Failed to delete collection:', err);
+        }
+    },
+
+    renameCollection: async (id: string, name: string) => {
+        try {
+            const db = await getDB();
+            const tx = db.transaction(COLLECTIONS_STORE, 'readwrite');
+            const store = tx.objectStore(COLLECTIONS_STORE);
+            const coll = await store.get(id);
+            if (!coll) return;
+            
+            coll.name = name;
+            await store.put(coll);
+            await tx.done;
+            
+            set(state => ({
+                collections: state.collections.map(c => c.id === id ? { ...c, name } : c)
+            }));
+        } catch (err) {
+            console.error('Failed to rename collection:', err);
+        }
+    },
+
+    toggleMediaInCollection: async (collectionId: string, mediaId: string) => {
+        try {
+            const db = await getDB();
+            const tx = db.transaction(COLLECTIONS_STORE, 'readwrite');
+            const store = tx.objectStore(COLLECTIONS_STORE);
+            const coll = await store.get(collectionId);
+            if (!coll) return;
+            
+            const mediaIds = coll.mediaIds || [];
+            const nextMediaIds = mediaIds.includes(mediaId)
+                ? mediaIds.filter((id: string) => id !== mediaId)
+                : [...mediaIds, mediaId];
+            
+            coll.mediaIds = nextMediaIds;
+            await store.put(coll);
+            await tx.done;
+            
+            set(state => ({
+                collections: state.collections.map(c => 
+                    c.id === collectionId ? { ...c, mediaIds: nextMediaIds } : c
+                )
+            }));
+        } catch (err) {
+            console.error('Failed to toggle media in collection:', err);
+        }
+    },
+    
+    toggleMediaPersistence: async (id: string) => {
+        try {
+            const db = await getDB();
+            const tx = db.transaction(STORE_NAME, 'readwrite');
+            const store = tx.objectStore(STORE_NAME);
+            
+            const item = await store.get(id);
+            if (!item) throw new Error('Media not found');
+            
+            item.isPersistent = !item.isPersistent;
+            await store.put(item);
+            await tx.done;
+            
+            set((state) => ({
+                mediaList: state.mediaList.map(m => 
+                    m.id === id ? { ...m, isPersistent: item.isPersistent } : m
+                )
+            }));
+        } catch (err) {
+            console.error('Failed to toggle media persistence:', err);
+            throw new Error('Failed to update persistence.');
         }
     }
 }));

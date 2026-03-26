@@ -15,6 +15,8 @@ import ClockVisualizer from '../modules/clock/components/ClockVisualizer';
 import { useVoiceStore } from '../modules/voice/useVoiceStore';
 import { useTacticalAIStore } from '../modules/tactical-ai/useTacticalAIStore';
 import { openDB } from 'idb';
+import { useClientStore } from '../stores/useClientStore';
+import LobbyOnboarding from './hub/LobbyOnboarding';
 
 /**
  * Attempts to resolve an m-xxx media ID to a data: URI using the local IndexedDB.
@@ -45,11 +47,12 @@ const TabletHub: React.FC = () => {
     const { mediaList, projections } = useImageStore();
     const { isClockProjected, timestamp, mode, theme, tensions } = useClockStore();
     const { favorites } = useFavoriteStore();
-    const { combatants, currentTurnIdx, round } = useCombatStore();
+    const { combatants, currentTurnIdx, round, isCombatProjected } = useCombatStore();
 
     const activeHubId = projections['hub'];
     const [liveImagePath, setLiveImagePath] = useState<string | null | undefined>(undefined);
     const [liveEntity, setLiveEntity] = useState<ProjectedEntity | null>(null);
+    const { deviceId, pseudo, role, isOnboarded, setStatus: setClientStatus } = useClientStore();
     const [voiceLevel, setVoiceLevel] = useState(0);
     const [status, setStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
     const socketRef = useRef<WebSocket | null>(null);
@@ -72,12 +75,18 @@ const TabletHub: React.FC = () => {
         socket.onopen = () => {
             console.log('[TabletHub] Connected via WebSocket');
             setStatus('connected');
-            socket.send(JSON.stringify({ type: 'remote:hello' }));
+            setClientStatus('active');
+            // Register with the server
+            socket.send(JSON.stringify({ 
+                type: 'remote:register', 
+                payload: { deviceId, pseudo, role } 
+            }));
         };
 
         socket.onclose = () => {
             console.log('[TabletHub] WebSocket Disconnected');
             setStatus('error');
+            setClientStatus('disconnected');
             // Attempt reconnect if still on tablet view
             setTimeout(() => {
                 if (window.location.search.includes('window=tablet') && connectRef.current) {
@@ -120,7 +129,7 @@ const TabletHub: React.FC = () => {
         };
 
         socket.onerror = () => setStatus('error');
-    }, [host, port]);
+    }, [host, port, deviceId, pseudo, role, setClientStatus]);
 
     useEffect(() => {
         connectRef.current = connect;
@@ -136,6 +145,7 @@ const TabletHub: React.FC = () => {
     const activeMedia = mediaList?.find(m => m.id === activeHubId);
 
     useEffect(() => {
+        if (!isOnboarded) return;
         connect();
         const rehydrateAll = async () => {
             await Promise.all([
@@ -193,10 +203,22 @@ const TabletHub: React.FC = () => {
                 window.appBridge.off('image:sync-hub-data', handleIpcUpdate);
             }
         };
-    }, [connect]);
+    }, [connect, isOnboarded]);
 
-    const hasCombatants = combatants.length > 0;
-    const activeCombatant = hasCombatants ? combatants[currentTurnIdx] : null;
+    const visibleCombatants = combatants.filter(c => 
+        c.isPlayer || !c.statuses.some(s => {
+            const n = s.name.toLowerCase();
+            return n === 'invisible' || n === 'invisibilité' || n === 'caché' || n === 'hidden';
+        })
+    );
+    const hasCombatants = isCombatProjected && visibleCombatants.length > 0;
+    
+    // Find active combatant among visible ones, or use the real one if it's a player
+    const realActiveCombatant = combatants[currentTurnIdx];
+    const activeCombatant = (realActiveCombatant && (realActiveCombatant.isPlayer || !realActiveCombatant.statuses.some(s => {
+        const n = s.name.toLowerCase();
+        return n === 'invisible' || n === 'invisibilité' || n === 'caché' || n === 'hidden';
+    }))) ? realActiveCombatant : null;
     const sharedFavorites = favorites.filter(f => f.isSyncedToPlayerHub);
 
     // Resolve m-xxx IDs in favorites to data: URIs so they display in this window
@@ -217,13 +239,20 @@ const TabletHub: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [favorites]);
 
-    // Sort the upcoming combatants
+    // Sort the upcoming combatants among visible ones
     const upcomingCombatants: Combatant[] = [];
-    if (hasCombatants && combatants.length > 1) {
-        let i = (currentTurnIdx + 1) % combatants.length;
-        while (i !== currentTurnIdx) {
-            upcomingCombatants.push(combatants[i]);
-            i = (i + 1) % combatants.length;
+    if (hasCombatants && visibleCombatants.length > 1) {
+        // Find index of active in visible list
+        const visibleIdx = activeCombatant ? visibleCombatants.findIndex(c => c.id === activeCombatant.id) : -1;
+        if (visibleIdx !== -1) {
+            let i = (visibleIdx + 1) % visibleCombatants.length;
+            while (i !== visibleIdx) {
+                upcomingCombatants.push(visibleCombatants[i]);
+                i = (i + 1) % visibleCombatants.length;
+            }
+        } else {
+            // If active is hidden, just show all visible
+            upcomingCombatants.push(...visibleCombatants);
         }
     }
 
@@ -401,6 +430,8 @@ const TabletHub: React.FC = () => {
 
             {/* Polish Overlays */}
             <div className="fixed inset-0 pointer-events-none z-50 shadow-[inset_0_0_100px_rgba(0,0,0,0.6)] opacity-50"></div>
+
+            {!isOnboarded && <LobbyOnboarding />}
         </div>
     );
 };

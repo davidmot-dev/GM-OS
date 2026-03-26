@@ -43,7 +43,7 @@ const CampaignDetails: React.FC = () => {
                         Exporter vers Obsidian
                     </button>
                     <button 
-                        onClick={() => gmCustom('campaign-edit', campaign)}
+                        onClick={() => setCurrentView('campaign-editor')}
                         className="flex items-center gap-2 px-4 py-2 bg-app-surface hover:bg-app-surface/80 border border-app-border rounded-lg text-sm text-app-text/80 transition-all font-bold"
                     >
                         <Edit3 size={16} />
@@ -118,30 +118,13 @@ const CampaignDetails: React.FC = () => {
                         </div>
                     </div>
 
-                    <div className="bg-app-surface/60 rounded-xl border border-app-border p-6 flex flex-col gap-4">
-                        <div className="flex items-center gap-3 text-emerald-500">
-                            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                                <Users size={18} />
-                            </div>
-                            <h3 className="font-bold text-sm uppercase tracking-wide">NPC Gallery ({campaignNPCs.length})</h3>
-                        </div>
-                        <div className="grid grid-cols-4 gap-2">
-                            {campaignNPCs.map(npc => (
-                                <div key={npc.id} className="relative group aspect-square rounded-lg overflow-hidden border border-app-border hover:border-accent transition-colors">
-                                    <ResolvedAsset src={npc.avatar} className="w-full h-full object-cover" alt={npc.name} />
-                                    <div className="absolute inset-0 bg-app-bg/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                        <p className="text-[8px] text-white font-bold uppercase p-1 bg-black/60 rounded">{npc.name}</p>
-                                    </div>
-                                </div>
-                            ))}
-                            <button 
-                                onClick={() => setCurrentView('npc-gallery')}
-                                className="aspect-square rounded-lg border-2 border-dashed border-app-border hover:border-app-border/80 flex items-center justify-center text-app-text/20 hover:text-app-text/40 transition-all font-bold text-lg"
-                            >
-                                +
-                            </button>
-                        </div>
-                    </div>
+                    <button 
+                        onClick={() => setCurrentView('timeline-wiki')}
+                        className="bg-app-surface/60 rounded-xl border border-app-border p-6 flex flex-col justify-center items-center gap-3 hover:bg-app-surface hover:border-accent/40 hover:shadow-glow-accent/10 transition-all group"
+                    >
+                        <h4 className="font-bold text-sm uppercase tracking-widest text-app-text/40 group-hover:text-accent transition-colors">Timeline / Wiki</h4>
+                        <p className="text-[10px] text-accent font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">Ouvrir les Archives</p>
+                    </button>
                 </div>
 
                 {/* Right: Session History & Lore Notes */}
@@ -245,13 +228,30 @@ const CampaignDetails: React.FC = () => {
                                 )}
                             </div>
                         </div>
-                        <button 
-                            onClick={() => setCurrentView('timeline-wiki')}
-                            className="bg-app-surface/60 rounded-xl border border-app-border p-5 flex flex-col justify-center items-center gap-3 hover:bg-app-surface hover:border-accent/40 hover:shadow-glow-accent/10 transition-all group"
-                        >
-                            <h4 className="font-bold text-xs uppercase tracking-widest text-app-text/40 group-hover:text-accent transition-colors">Timeline / Wiki</h4>
-                            <p className="text-[10px] text-accent font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">Ouvrir les Archives</p>
-                        </button>
+                        <div className="bg-app-surface/60 rounded-xl border border-app-border p-6 flex flex-col gap-4">
+                            <div className="flex items-center gap-3 text-emerald-500">
+                                <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                                    <Users size={18} />
+                                </div>
+                                <h3 className="font-bold text-sm uppercase tracking-wide">NPC Gallery ({campaignNPCs.length})</h3>
+                            </div>
+                            <div className="grid grid-cols-4 gap-2">
+                                {campaignNPCs.map(npc => (
+                                    <div key={npc.id} className="relative group aspect-square rounded-lg overflow-hidden border border-app-border hover:border-accent transition-colors cursor-pointer" onClick={() => setCurrentView('npc-gallery')}>
+                                        <ResolvedAsset src={npc.avatar} className="w-full h-full object-cover" alt={npc.name} />
+                                        <div className="absolute inset-0 bg-app-bg/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                            <p className="text-[8px] text-white font-bold uppercase p-1 bg-black/60 rounded">{npc.name}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                                <button 
+                                    onClick={() => setCurrentView('npc-gallery')}
+                                    className="aspect-square rounded-lg border-2 border-dashed border-app-border hover:border-app-border/80 flex items-center justify-center text-app-text/20 hover:text-app-text/40 transition-all font-bold text-lg"
+                                >
+                                    +
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

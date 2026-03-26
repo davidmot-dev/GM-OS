@@ -51,9 +51,9 @@ const NPCHistory: React.FC = () => {
                         <div className="w-8 h-8 rounded-md bg-app-bg flex items-center justify-center shrink-0 border border-app-border overflow-hidden">
                             {entity.avatar ? (
                                 <img
-                                    src={entity.avatar.startsWith('http') || entity.avatar.startsWith('blob:') || entity.avatar.startsWith('file://') || entity.avatar.startsWith('data:')
+                                    src={entity.avatar.startsWith('http') || entity.avatar.startsWith('blob:') || entity.avatar.startsWith('gmos://') || entity.avatar.startsWith('data:')
                                         ? entity.avatar
-                                        : `file:///${entity.avatar.replace(/\\/g, '/')}`}
+                                        : `gmos://media/${entity.avatar.replace(/^file:\/\/\//, '').replace(/\\/g, '/')}`}
                                     alt={entity.name}
                                     className={`w-full h-full object-cover ${entity.isDead ? 'grayscale opacity-50' : ''}`}
                                 />

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { useMapStore, type MapToken } from '../useMapStore';
+import { useMapStore } from '../useMapStore';
+import { useMapUIStore } from '../useMapUIStore';
+import type { MapToken } from '../types';
 import { useCombatStore, type StatusEffect } from '../../combat/useCombatStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
-import { Shield, Trash2 } from 'lucide-react';
+import { Shield, Trash2, Eye, EyeOff } from 'lucide-react';
 
 interface MapTokenNodeProps {
     token: MapToken;
@@ -12,14 +14,23 @@ interface MapTokenNodeProps {
 
 const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = false, localZoom }) => {
     const { 
-        currentTool, updateToken, updateProjectedToken, removeToken, zoom: gmZoom, 
-        setIsDraggingToken, selectedTokenId, setSelectedTokenId 
+        updateToken, updateProjectedToken, removeToken, zoom: gmZoom 
     } = useMapStore();
+    const {
+        currentTool, setIsDraggingToken, selectedTokenId, setSelectedTokenId
+    } = useMapUIStore();
     const { combatants, currentTurnIdx } = useCombatStore();
 
     // On lie le token à son combattant s'il existe
     const combatant = combatants.find(c => c.id === token.linkedCombatantId);
     const isCurrentTurn = !!token.linkedCombatantId && combatants[currentTurnIdx]?.id === token.linkedCombatantId;
+    const isVisible = token.isVisible !== false;
+    const isActuallyInvisibleInCombat = combatant?.statuses.some(s => {
+        const n = s.name.toLowerCase();
+        return n === 'invisible' || n === 'invisibilité' || n === 'caché' || n === 'hidden';
+    });
+    const displayInvisible = !isVisible || isActuallyInvisibleInCombat;
+    
     const resolvedAvatar = useMediaUrl(token.avatar || undefined);
     const isSelected = selectedTokenId === token.id;
 
@@ -86,8 +97,8 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
 
     return (
         <div
-            className={`absolute rounded-full shadow-lg border-2 border-app-bg bg-app-surface flex items-center justify-center transition-shadow group ${isInteractable ? 'cursor-grab hover:ring-4 hover:z-40 active:cursor-grabbing' : 'cursor-default'
-                } ring-2 ${ringColor} ${isDragging ? 'z-50 ring-4' : 'z-30'} ${isSelected ? 'ring-sky-500 shadow-[0_0_20px_rgba(14,165,233,0.5)] z-40' : ''}`}
+            className={`absolute rounded-full shadow-lg border-2 border-app-bg bg-app-surface flex items-center justify-center transition-all group ${isInteractable ? 'cursor-grab hover:ring-4 hover:z-40 active:cursor-grabbing' : 'cursor-default'
+                } ring-2 ${ringColor} ${isDragging ? 'z-50 ring-4' : 'z-30'} ${isSelected ? 'ring-sky-500 shadow-[0_0_20px_rgba(14,165,233,0.5)] z-40' : ''} ${displayInvisible ? (isProjectedView ? 'hidden' : 'opacity-40 grayscale-[0.5]') : ''}`}
             style={{
                 left: token.x,
                 top: token.y,
@@ -111,16 +122,28 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
         >
             {/* Trash Button on Hover */}
             {isInteractable && (
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        removeToken(token.id);
-                    }}
-                    className="absolute -top-2 -right-2 bg-red-600 text-white p-1 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-50 hover:bg-red-500 border border-white/20"
-                    title="Remove Token"
-                >
-                    <Trash2 size={14} />
-                </button>
+                <div className="absolute -top-2 -right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-50">
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            updateToken(token.id, { isVisible: !isVisible });
+                        }}
+                        className={`p-1 rounded-full shadow-lg border border-white/20 transition-colors ${isVisible ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-gray-600 hover:bg-gray-500'}`}
+                        title={isVisible ? "Hide from Players" : "Show to Players"}
+                    >
+                        {isVisible ? <Eye size={14} /> : <EyeOff size={14} />}
+                    </button>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            removeToken(token.id);
+                        }}
+                        className="bg-red-600 text-white p-1 rounded-full shadow-lg hover:bg-red-500 border border-white/20"
+                        title="Remove Token"
+                    >
+                        <Trash2 size={14} />
+                    </button>
+                </div>
             )}
 
             {/* Avatar image */}

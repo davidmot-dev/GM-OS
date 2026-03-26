@@ -240,6 +240,7 @@ const ImageDashboard: React.FC = () => {
                             </button>
                         </div>
 
+
                         <div className="w-10 h-10 rounded-full bg-app-surface border border-app-border flex items-center justify-center overflow-hidden">
                             {/* Dummy Profile */}
                             <div className="w-full h-full bg-app-surface flex items-center justify-center text-white font-bold">GM</div>
@@ -280,6 +281,7 @@ const ImageDashboard: React.FC = () => {
                     </div>
                 </div>
             </main>
+
         </div>
     );
 };

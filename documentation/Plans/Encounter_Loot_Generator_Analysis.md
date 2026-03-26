@@ -50,3 +50,5 @@ Utilisation de dossiers structurés dans `public/data/loot/` :
 *   **Immersion** : Chaque objet devient une micro-histoire racontée par l'IA.
 *   **Customisation facile** : L'utilisateur peut simplement glisser ses propres fichiers JSON dans le dossier data pour importer des milliers d'objets.
 
+---
+*Analyse sauvegardée le 2026-03-23*

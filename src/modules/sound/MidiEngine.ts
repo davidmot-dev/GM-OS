@@ -1,6 +1,9 @@
 import { useSoundStore } from './useSoundStore';
+import { soundController } from './SoundController';
 
-// Local interfaces to replace 'any' and avoid environment type conflicts
+/**
+ * Interfaces locales pour la gestion MIDI (évite les conflits d'environnement).
+ */
 interface GMMIDIAccess {
     inputs: GMMIDIInputMap;
     outputs: GMMIDIOutputMap;
@@ -37,6 +40,10 @@ interface GMMIDIConnectionEvent {
     };
 }
 
+/**
+ * Moteur de gestion des périphériques MIDI (Contrôleurs, Launchpads).
+ * Permet de mapper des notes MIDI à des pads audio via un mode d'apprentissage (Learning).
+ */
 export class MidiEngine {
     private static instance: MidiEngine;
     private initializationPromise: Promise<void> | null = null;
@@ -44,6 +51,9 @@ export class MidiEngine {
 
     private constructor() {}
 
+    /**
+     * Récupère l'instance unique du MidiEngine (Singleton).
+     */
     public static getInstance(): MidiEngine {
         if (!MidiEngine.instance) {
             MidiEngine.instance = new MidiEngine();
@@ -51,6 +61,16 @@ export class MidiEngine {
         return MidiEngine.instance;
     }
 
+    /**
+     * Réinitialise l'instance (Utile pour les tests unitaires).
+     */
+    public static resetInstance(): void {
+        MidiEngine.instance = new MidiEngine();
+    }
+
+    /**
+     * Initialise l'accès à l'API Web MIDI du navigateur.
+     */
     public async initialize(): Promise<void> {
         if (this.initialized) return;
         if (this.initializationPromise) return this.initializationPromise;
@@ -76,6 +96,9 @@ export class MidiEngine {
         return this.initializationPromise;
     }
 
+    /**
+     * Callback de succès de l'accès MIDI. Scanne les entrées et configure les listeners.
+     */
     private onMIDISuccess(midiAccess: GMMIDIAccess): void {
         console.log('[MIDI] Access Granted');
 
@@ -99,6 +122,9 @@ export class MidiEngine {
         };
     }
 
+    /**
+     * Analyse un message MIDI entrant. Filtre les événements Note On.
+     */
     private onMIDIMessage(event: GMMIDIMessageEvent): void {
         const [status, note, velocity] = event.data;
         const isNoteOn = (status & 0xF0) === 0x90 && velocity > 0;
@@ -109,6 +135,10 @@ export class MidiEngine {
         }
     }
 
+    /**
+     * Traite une note MIDI reçue en fonction du mode (Normal ou Learning).
+     * @param midiNote Numéro de la note MIDI (0-127).
+     */
     private handleMIDINote(midiNote: number): void {
         const { atmospheres, activeAtmosphereId, isMidiLearnActive } = useSoundStore.getState();
         const activeAtmosphere = atmospheres.find(a => a.id === activeAtmosphereId);
@@ -116,7 +146,12 @@ export class MidiEngine {
 
         // Mode Learning : On associe la note au dernier pad sélectionné (géré par le store)
         if (isMidiLearnActive) {
-            console.log(`[MIDI] Learn mode active. Note received: ${midiNote}`);
+            const { activePadLearnId, setPadMidiMapping, toggleMidiLearn } = useSoundStore.getState();
+            if (activePadLearnId) {
+                console.log(`[MIDI] Mapping Note ${midiNote} to ${activePadLearnId}`);
+                setPadMidiMapping(activePadLearnId, midiNote);
+                toggleMidiLearn(); // Automatiquement quitter le mode learn après capture
+            }
             return;
         }
 
@@ -125,9 +160,10 @@ export class MidiEngine {
         const padToTrigger = pads.find(p => p.midiMapping === midiNote);
         if (padToTrigger) {
             console.log(`[MIDI] Triggering pad: ${padToTrigger.title || padToTrigger.id} via Note ${midiNote}`);
-            useSoundStore.getState().triggerPad(padToTrigger.id);
+            soundController.togglePad(padToTrigger.id);
         }
     }
 }
+
 
 export const midiEngine = MidiEngine.getInstance();

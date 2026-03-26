@@ -5,7 +5,8 @@ import { Dices, RotateCcw, Zap, BookmarkPlus, X } from 'lucide-react';
 import { useSessionOSStore } from '../session/useSessionOSStore';
 import { useMapStore } from '../map/useMapStore';
 import { tacticalService } from '../map/TacticalService';
-import { Target, Info } from 'lucide-react';
+import { Target, Info, Cast, XCircle } from 'lucide-react';
+import { useDiceStore } from '../../stores/useDiceStore';
 
 const generateId = () => Math.random().toString(36).substring(7);
 
@@ -29,6 +30,15 @@ const DiceBoard: React.FC = () => {
     const { tokens, gridSize } = useMapStore();
     const [lastSelectedTokenId, setLastSelectedTokenId] = useState<string | null>(null);
     const [targetTokenId, setTargetTokenId] = useState<string | null>(null);
+    const { isDiceProjected, setIsDiceProjected, triggerDiceProjection } = useDiceStore();
+    // Le timer est désormais géré au niveau du Player Hub via projectionTrigger
+
+    const handleToggleProjection = () => {
+        setIsDiceProjected(!isDiceProjected);
+        if (!isDiceProjected) {
+            triggerDiceProjection(); // Déclencher immédiatement si on l'allume
+        }
+    };
     // Config
     const [mode, setMode] = useState<DiceMode>('standard');
     const [diceCount, setDiceCount] = useState<number>(1);
@@ -211,6 +221,10 @@ const DiceBoard: React.FC = () => {
                 // Only set as last global roll the very last one of the batch
                 if (i === batchCount - 1) {
                     setLastRoll(record);
+                    // Automatiquement projeter sur le Player Hub si le mode est activé
+                    if (isDiceProjected) {
+                        triggerDiceProjection();
+                    }
                 }
             }
 
@@ -218,7 +232,7 @@ const DiceBoard: React.FC = () => {
         } catch (error) {
             console.error("Erreur de lancer:", error);
         }
-    }, [batchCount, executeRoll]);
+    }, [batchCount, executeRoll, isDiceProjected, triggerDiceProjection]);
 
     const handleQuickRoll = (formula: string, label: string) => {
         handleRoll(0, true, formula);
@@ -605,7 +619,32 @@ const DiceBoard: React.FC = () => {
                 )}
 
                 {/* Latest Result */}
-                <div className="min-h-[16rem] max-h-[50%] flex-shrink-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-500/10 via-app-surface/60 to-app-bg border border-indigo-500/20 rounded-2xl flex flex-col items-center justify-center p-6 relative overflow-hidden shadow-2xl backdrop-blur-xl">
+                <div className="min-h-[16rem] max-h-[50%] flex-shrink-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-500/10 via-app-surface/60 to-app-bg border border-indigo-500/20 rounded-2xl flex flex-col items-center justify-center p-6 relative overflow-hidden shadow-2xl backdrop-blur-xl group/result">
+                    
+                    {/* Projection Controls Overlay */}
+                    {history.length > 0 && (
+                        <div className="absolute top-4 right-4 z-40 flex items-center gap-2 opacity-0 group-hover/result:opacity-100 transition-opacity">
+                            <button
+                                onClick={handleToggleProjection}
+                                title={isDiceProjected ? "Arrêter la projection" : "Projeter sur le Player Hub (5s)"}
+                                className={`p-2 rounded-lg border transition-all ${
+                                    isDiceProjected 
+                                        ? 'bg-red-500/20 border-red-500/50 text-red-500 hover:bg-red-500/30' 
+                                        : 'bg-indigo-500/20 border-indigo-500/50 text-indigo-400 hover:bg-indigo-500/30'
+                                }`}
+                            >
+                                {isDiceProjected ? <XCircle size={18} /> : <Cast size={18} />}
+                            </button>
+                        </div>
+                    )}
+
+                    {isDiceProjected && (
+                        <div className="absolute top-4 left-4 z-40">
+                             <span className="flex items-center gap-1.5 px-2 py-1 rounded bg-indigo-500/10 border border-indigo-500/30 text-[9px] font-black text-indigo-400 uppercase tracking-widest animate-pulse">
+                                <Cast size={10} /> Projection Active
+                             </span>
+                        </div>
+                    )}
                     {history.length > 0 ? (
                         <>
                             <p className="text-app-text/70 font-medium mb-3 relative z-10 text-sm text-center line-clamp-2">{history[0].title}</p>

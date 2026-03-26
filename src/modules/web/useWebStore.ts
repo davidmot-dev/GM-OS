@@ -2,17 +2,31 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { WebLink, WebBridge } from './types';
 
+/**
+ * Interface d'état globale pour le Web-OS (Marque-pages).
+ */
 interface WebState {
+    /** Liste des liens configurés */
     links: WebLink[];
+    /** Ajoute un nouveau lien avec un ID généré */
     addLink: (link: Omit<WebLink, 'id'>) => void;
+    /** Supprime un lien par son ID */
     removeLink: (id: string) => void;
+    /** Met à jour les propriétés d'un lien existant */
     updateLink: (id: string, updates: Partial<WebLink>) => void;
+    /** Remplace la liste complète des liens */
     setLinks: (links: WebLink[]) => void;
+    /** Ouvre le lien via le moteur approprié (Bridge ou Browser) */
     openLink: (url: string) => void;
+    /** Exclut les liens vers un fichier via le Bridge */
     exportLinks: () => Promise<void>;
+    /** Importe des liens depuis un fichier externe */
     importLinks: () => Promise<void>;
+    /** Vide tous les marque-pages après confirmation */
     clearAll: () => void;
+    /** Applique un snapshot de session (format URLs simples ou objets complets) */
     applySnapshot: (snapshot: { links?: string[]; fullLinks?: WebLink[] }) => void;
+    /** Réinitialise aux liens de base */
     reset: () => void;
 }
 

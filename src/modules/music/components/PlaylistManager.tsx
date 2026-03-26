@@ -188,7 +188,15 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
-                            updatePad(playlistId, index, { url: '', label: `Pad ${index + 1}`, type: 'local', keybind: undefined });
+                            updatePad(playlistId, index, { 
+                                url: '', 
+                                label: `Pad ${index + 1}`, 
+                                type: 'local', 
+                                keybind: undefined,
+                                lightLinkId: undefined,
+                                loopA: null,
+                                loopB: null
+                            });
                             setIsMenuOpen(false);
                         }}
                         className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-app-surface border border-app-border/50 hover:bg-red-600 hover:border-red-600 text-[10px] font-black uppercase tracking-widest transition-all"

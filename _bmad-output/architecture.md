@@ -29,6 +29,7 @@ Chaque module dans `src/modules` suit généralement cette structure :
 - `services/` : Logique métier pure, indépendante de React (testable via Vitest).
 - `api/` : (Optionnel) Wrappers autour du `appBridge`.
 - `ModuleDashboard.tsx` : Vue MJ principale.
+- `RuleEngineEditor.tsx` : (Nouveau v5.6) Interface de configuration avancée des systèmes de jeu, utilisant un layout à sidebar et des composants premium.
 - `ProjectorView.tsx` : (Optionnel) Vue dédiée à la projection vers les joueurs.
 
 ## 4. Intégration IA (Tactical AI)

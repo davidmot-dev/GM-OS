@@ -4,6 +4,7 @@ export class SoundEngine {
     private static instance: SoundEngine;
     public context: AudioContext;
     public masterGain: GainNode;
+    public globalSyncGain: GainNode;
     private padSources: Map<string, AudioBufferSourceNode> = new Map();
     private padGains: Map<string, GainNode> = new Map();
     private audioBuffers: Map<string, AudioBuffer> = new Map();
@@ -17,9 +18,13 @@ export class SoundEngine {
         this.masterGain = this.context.createGain();
         this.masterGain.gain.value = 1.0;
 
-        // Note: setSinkId is a newer API, need to check support
-        // We will connect masterGain to destination by default
-        this.masterGain.connect(this.context.destination);
+        this.globalSyncGain = this.context.createGain();
+        this.globalSyncGain.gain.value = 1.0;
+
+        this.masterGain.connect(this.globalSyncGain);
+        this.globalSyncGain.connect(this.context.destination);
+
+        this.setupGlobalSync();
 
         // Resume context if suspended (browser autoplay policy)
         if (this.context.state === 'suspended') {
@@ -31,6 +36,27 @@ export class SoundEngine {
         }
     }
 
+    /**
+     * S'abonne au store master pour appliquer le volume global et le mode Focus Chat.
+     */
+    private async setupGlobalSync() {
+        const { useAudioMasterStore } = await import('../../stores/useAudioMasterStore');
+        
+        useAudioMasterStore.subscribe((state) => {
+            const { masterVolume, isFocusMode, focusDuckingRatio } = state;
+            
+            // Pour les SFX, on atténue moins fort que pour la musique (ex: 50% au lieu de 10%)
+            const sfxDuckingRatio = Math.max(0.5, focusDuckingRatio * 5); 
+            const targetGain = masterVolume * (isFocusMode ? sfxDuckingRatio : 1.0);
+            
+            this.globalSyncGain.gain.setTargetAtTime(targetGain, this.context.currentTime, 0.1);
+        });
+    }
+
+    /**
+     * Récupère l'instance unique du SoundEngine (Singleton).
+     * @returns L'instance stable du moteur audio.
+     */
     public static getInstance(): SoundEngine {
         if (!SoundEngine.instance) {
             SoundEngine.instance = new SoundEngine();
@@ -44,6 +70,12 @@ export class SoundEngine {
         SoundEngine.instance = undefined;
     }
 
+    /**
+     * Formate un chemin de fichier en URL utilisable par le moteur audio.
+     * Supporte les protocoles http, data, file et l'appBridge natif.
+     * @param filePath Chemin brut du fichier.
+     * @returns URL formatée.
+     */
     public formatUrl(filePath: string): string {
         if (filePath.startsWith('http') || filePath.startsWith('data:') || filePath.startsWith('file://')) {
             return filePath;
@@ -54,15 +86,32 @@ export class SoundEngine {
         return filePath;
     }
 
+    /**
+     * Vérifie si un pad a déjà son buffer audio chargé.
+     */
+    public hasBuffer(padId: string): boolean {
+        return this.audioBuffers.has(padId);
+    }
+
+    /**
+     * Charge de manière asynchrone un fichier audio et le décode en AudioBuffer.
+     * Gère les IDs du MediaStore (m-xxx) et les URLs classiques.
+     * @param padId Identifiant unique du pad associé au son.
+     * @param filePath Chemin ou ID du fichier audio.
+     */
     public async loadAudio(padId: string, filePath: string): Promise<void> {
         try {
             let arrayBuffer: ArrayBuffer;
 
             if (filePath && filePath.startsWith('m-')) {
-                const { getMediaBlob } = useMediaStore.getState();
-                const blob = await getMediaBlob(filePath);
+                const mediaStore = useMediaStore.getState();
+                if (!mediaStore.isInitialized) {
+                    await mediaStore.initDB();
+                }
+                const blob = await mediaStore.getMediaBlob(filePath);
                 if (!blob) {
-                    console.warn(`[SoundEngine] MediaBlob not found for ID: ${filePath}`);
+                    console.error(`[SoundEngine] MediaBlob not found for ID: ${filePath}`);
+                    if (window.useToastStore) window.useToastStore.getState().gmToast('error', `Fichier sonore introuvable dans la base de données.`);
                     return;
                 }
                 arrayBuffer = await blob.arrayBuffer();
@@ -80,11 +129,22 @@ export class SoundEngine {
         }
     }
 
+    /**
+     * Joue un son pré-chargé pour un pad spécifique.
+     * @param padId Identifiant unique du pad.
+     * @param volume Volume initial (0.0 à 1.0).
+     * @param onEndedCallback Callback optionnel appelé à la fin de la lecture.
+     */
     public play(padId: string, volume: number = 1.0, onEndedCallback?: () => void) {
         const buffer = this.audioBuffers.get(padId);
         if (!buffer) {
             console.warn(`[SoundEngine] Cannot play ${padId}, buffer not loaded.`);
             return;
+        }
+
+        // Unsuspend context if needed (for remote triggers)
+        if (this.context.state === 'suspended') {
+            this.context.resume().catch(e => console.error('[SoundEngine] Failed to resume context:', e));
         }
 
         // Stop existing playback for this pad if any
@@ -112,6 +172,10 @@ export class SoundEngine {
         this.padSources.set(padId, source);
     }
 
+    /**
+     * Arrête immédiatement la lecture d'un pad et libère les ressources associées.
+     * @param padId Identifiant unique du pad.
+     */
     public stop(padId: string) {
         const source = this.padSources.get(padId);
         if (source) {
@@ -127,6 +191,10 @@ export class SoundEngine {
         }
     }
 
+    /**
+     * Arrête tous les sons en cours avec un fondu de sortie (fade-out) de 3 secondes.
+     * Réinitialise ensuite le gain master à 1.0.
+     */
     public stopAll() {
         console.log('[SoundEngine] Executing 3s Master Fade-Out');
 
@@ -159,6 +227,11 @@ export class SoundEngine {
         }, 3100);
     }
 
+    /**
+     * Modifie le volume d'un pad en cours de lecture de manière fluide.
+     * @param padId Identifiant unique du pad.
+     * @param volume Nouveau volume (0.0 à 1.0).
+     */
     public setVolume(padId: string, volume: number) {
         const gain = this.padGains.get(padId);
         if (gain) {
@@ -167,10 +240,18 @@ export class SoundEngine {
         }
     }
 
+    /**
+     * Modifie le volume global (Master) de manière fluide.
+     * @param volume Nouveau volume (0.0 à 1.0).
+     */
     public setMasterVolume(volume: number) {
         this.masterGain.gain.setTargetAtTime(volume, this.context.currentTime, 0.05);
     }
 
+    /**
+     * Change le périphérique de sortie audio (si supporté par le navigateur).
+     * @param deviceId ID du périphérique (ex: 'default', 'communications' ou UUID).
+     */
     public async setOutputDevice(deviceId: string) {
         if ('setSinkId' in this.context) {
             try {
@@ -197,5 +278,5 @@ export const soundEngine = SoundEngine.getInstance();
 
 // Export for cross-store access
 if (typeof window !== 'undefined') {
-    (window as any).soundEngine = soundEngine;
+    window.soundEngine = soundEngine;
 }

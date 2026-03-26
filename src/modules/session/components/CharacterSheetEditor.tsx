@@ -149,7 +149,7 @@ const CharacterSheetEditor: React.FC = () => {
         players, selectedPlayerId, selectedCharacterId,
         customSheetTemplates, updateCharacterSheetData, updateCharacterVisuals, updateCharacterNarrative,
         generatePlayerPortrait, isGeneratingAIImage,
-        updateCharacterHP
+        updateCharacterHP, updateCharacter
     } = useSessionOSStore();
     const { mediaList, getMediaBlob } = useMediaStore();
 
@@ -388,21 +388,26 @@ const CharacterSheetEditor: React.FC = () => {
                                 <span className="text-[9px] font-black uppercase tracking-[0.15em] text-accent">Vigueur (PV)</span>
                                 <Heart size={12} className="text-red-500 animate-pulse" />
                             </div>
-                            
-                            <div className="flex items-center justify-center gap-1.5 bg-app-bg/40 py-1.5 rounded-lg border border-app-border/40">
-                                <input 
-                                    type="number" 
-                                    value={character.hp}
-                                    onChange={(e) => updateCharacterHP(selectedPlayerId!, character.id, parseInt(e.target.value) || 0)}
-                                    className="w-14 bg-transparent text-center text-app-text font-black text-xs focus:outline-none"
-                                />
+                                                <div className="flex items-center justify-center gap-2 mt-1">
+                                <div className="bg-black/40 border border-white/5 w-14 h-10 rounded-lg flex items-center justify-center shadow-inner group-hover:border-accent/20 transition-all">
+                                    <input 
+                                        type="number" 
+                                        value={character.hp}
+                                        onChange={(e) => updateCharacterHP(selectedPlayerId!, character.id, parseInt(e.target.value) || 0)}
+                                        className="w-full bg-transparent text-center text-white font-black text-sm focus:outline-none"
+                                        title="Points de Vie actuels"
+                                    />
+                                </div>
                                 <span className="text-app-text/20 font-bold text-xs">/</span>
-                                <input 
-                                    type="number" 
-                                    value={character.maxHp}
-                                    readOnly
-                                    className="w-14 bg-transparent text-center text-app-text/40 font-black text-xs focus:outline-none"
-                                />
+                                <div className="bg-black/20 border border-white/5 w-14 h-10 rounded-lg flex items-center justify-center shadow-inner group-hover:border-accent/10 transition-all">
+                                    <input 
+                                        type="number" 
+                                        value={character.maxHp}
+                                        onChange={(e) => updateCharacter(selectedPlayerId!, character.id, { maxHp: parseInt(e.target.value) || 0 })}
+                                        className="w-full bg-transparent text-center text-app-text/40 font-black text-sm focus:outline-none"
+                                        title="Points de Vie Max"
+                                    />
+                                </div>
                             </div>
                             
                             <div className="w-full bg-app-bg h-1.5 rounded-full overflow-hidden border border-app-border/40 ring-1 ring-white/5 p-[1px]">

@@ -48,5 +48,14 @@ Configurez le "cerveau" de votre OS :
 
 ---
 
+## 💾 Sauvegarde & Synchronisation (Git Cloud)
+GM-OS v5 assure la sécurité de vos données de campagne sans action manuelle :
+- **Sauvegarde Automatique** : À chaque modification majeure (création de PNJ, fin de session), l'OS synchronise vos données sur votre branche GitHub privée `data-sync`.
+- **Isolation Totale** : Vos données sont stockées séparément du code source pour une clarté maximale.
+- **Restauration** : En cas de changement de machine, l'OS récupère automatiquement votre dernier état synchronisé.
+- **Indicateur de Statut** : Surveillez l'icône de Cloud dans la barre de titre pour vérifier l'état de la synchronisation.
+
+---
+
 > [!IMPORTANT]
 > **Sécurité Réseau** : Pour que la télécommande fonctionne, votre tablette et votre PC doivent être connectés au **même réseau WiFi**.

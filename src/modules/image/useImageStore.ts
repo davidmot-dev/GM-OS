@@ -6,46 +6,81 @@ import { gmToast } from '../../stores/useToastStore';
 
 // AppBridge is now defined globally in src/types/window.d.ts
 
+/**
+ * Représente l'état global du Image-OS.
+ * Gère les médias, les dossiers, les projections et les diaporamas.
+ */
 interface ImageState {
+    /** Liste plate de tous les médias chargés */
     mediaList: ImageMedia[];
-    projectionTarget: ProjectionTarget;
-    projections: Record<string, string | null>; // Key: targetId (hub or displayId), Value: mediaId
-    displays: DisplayInfo[];
+    /** Arborescence des dossiers de médias */
     folders: ImageFolder[];
-    activeFolderId: string | null; // null means 'All Media' or 'Root'
+    /** Média projeté sur le Player Hub */
+    projectedEntity: ProjectedEntity | null;
+    /** Cible actuelle de projection (hub, moniteur externe) */
+    projectionTarget: ProjectionTarget;
+    /** État des projections par cible (id cible -> id média ou URL) */
+    projections: Record<string, string | null>; 
+    /** Liste des moniteurs physiques détectés */
+    displays: DisplayInfo[];
+    /** ID du dossier actif dans la bibliothèque */
+    activeFolderId: string | null; 
+    /** Mode de vue de la bibliothèque */
     currentView: 'library' | 'favorites' | 'recent';
-    projectedEntity: ProjectedEntity | null; // Complex entity (NPC/PC) for Hub windowed display
 
+    /** Ajoute un média à la bibliothèque */
     addMedia: (media: Omit<ImageMedia, 'id' | 'active' | 'isFavorite'>) => void;
+    /** Supprime un média */
     removeMedia: (id: string) => void;
+    /** Active/Désactive un média pour le diaporama */
     toggleMediaActive: (id: string) => void;
+    /** Ajoute/Retire des favoris */
     toggleMediaFavorite: (id: string) => void;
+    /** Définit la cible de projection par défaut */
     setProjectionTarget: (target: ProjectionTarget) => void;
+    /** Change la vue active de la bibliothèque */
     setCurrentView: (view: 'library' | 'favorites' | 'recent') => void;
+    /** Rafraîchit la liste des moniteurs externes */
     fetchDisplays: () => Promise<void>;
 
     // Folder actions
+    /** Crée un nouveau dossier */
     addFolder: (name: string, parentId?: string | null) => void;
+    /** Supprime un dossier et remet ses médias à la racine */
     removeFolder: (id: string) => void;
+    /** Renomme un dossier */
     renameFolder: (id: string, newName: string) => void;
+    /** Change le dossier actif pour l'affichage */
     setActiveFolderId: (id: string | null) => void;
+    /** Déplace un média dans un dossier */
     moveMediaToFolder: (mediaId: string, folderId: string | null) => void;
 
+    /** Projette un média spécifique de la bibliothèque */
     projectSolo: (media: ImageMedia) => void;
+    /** Projette une URL (ex: base64 ou lien externe) */
     projectUrl: (url: string) => void;
-    projectEntity: (entity: ProjectedEntity) => Promise<void>;
+    /** Projette une entité narrative (PNJ, Lieu) avec ses statistiques et son portrait */
+    projectEntity: (entity: ProjectedEntity | null) => Promise<void>;
+    /** Déclenche la suite du diaporama (Médias actifs uniquement) */
     projectSequence: () => void;
+    /** Coupe la projection sur la cible actuelle */
     blackout: () => void;
+    /** Coupe toutes les projections actives */
     blackoutAll: () => void;
 
+    /** Navigue manuellement dans la séquence : -1 (précédent), 1 (suivant) */
     navigateSequence: (direction: -1 | 1) => void;
 
+
+    /** Supprime tous les médias de la bibliothèque */
     clearAll: () => void;
+    /** Applique un instantané de l'état pour la persistance */
     applySnapshot: (snapshot: {
         projections?: Record<string, string | null>;
         mediaList?: ImageMedia[];
         folders?: ImageFolder[];
     }) => void;
+    /** Réinitialise tout l'état du Image-OS */
     reset: () => void;
 }
 
@@ -53,7 +88,6 @@ export const useImageStore = create<ImageState>()(
     persist(
         (set, get) => ({
             mediaList: [
-                // Some dummy data reflecting the design for testing
                 { id: '1', name: 'Cursed_Forest_Level3.png', path: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBhgj3d6Yg6g_DkXT1uDozfQUUl3hRf11nwnQJvP2_JJsOa7mPboxCz4SrUHYiZ7hw4gkKdWLHXwHl_OG8aUIMVHNua_AIQhrJdrpZNkeC0P2VuZjCYr1wHsSviQ4N8Dx6_aR9lMkzXXZxOAduqI2p4w0HHf3uVh1AP75rMCm8B4vkjb3IddTAnZm659VNUo_TFscYgUT9z6AwcUmLS_rhwx_n2Qdwc7NMoBoz3QoU2G1lwU97uCCl9Zhb6ho8_vHpB_Z06-sr_Fzo', active: true, sizeInfo: '1920x1080 • 2.4MB', isFavorite: true },
                 { id: '2', name: 'Dragon_Lair_Entry.jpg', path: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCgJngtipLoo7E9XnHlZz5SolJmWmfe3CYiKLzk-S9glx06jl67wkTU1_Ak2x6WlXPf7_VKWk5T-1tAVj7czB6wNJRBOS5iu8zWkh4zPDh4gwBmuEfC91WJQavR94cPfuoH9csDGnIHDjEvQW9WyEhPT0gDuHdY7A4EmnMzJ1xr1W30Acmjgauv9OKiKxKvgH_mJedF7icD_C5otY1_IH9_C9j256aRzig3Hha_JLufJ4TFOdgkuZModqw7QZSUocj_-MsdxNG7bpg', active: false, sizeInfo: '3840x2160 • 5.1MB', isFavorite: false },
                 { id: '3', name: 'Old_Oak_Tavern.webp', path: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBNaUC_Lv1RSfOXSXEZngmS6LYz68V-vJSp4bBjoTEUPpCMj-lxpLzL_qTY0_FGeLw0ZA63_91RdCSGukQIdLBsEjr4wzMmjUw-aW2dPA_Qcldt14UNHsqn9MYKAWR0a0QJ9wSFcWzX8b81zFG_As2eY-zpJO4eilw6AUuCjAQkhFNbCK4mGk08YCy8p4B8j4NntByGkfYMjahN60jm_VnFnDFKOsa3azr-n-93b_c04IjQHiwVX-TDcrmpgLHdl5VwY35VP9DHE_Q', active: true, sizeInfo: '1920x1080 • 0.8MB', isFavorite: false },
@@ -75,9 +109,8 @@ export const useImageStore = create<ImageState>()(
                     const displays = await window.appBridge.image.getDisplays();
                     set({ displays });
 
-                    // If target is invalid, fallback to hub
                     const state = get();
-                    if (state.projectionTarget !== 'hub' && !displays.find(d => d.id === state.projectionTarget)) {
+                    if (state.projectionTarget !== 'hub' && !displays.find(d => d.id === (state.projectionTarget as string))) {
                         set({ projectionTarget: 'hub' });
                     }
                 }
@@ -88,9 +121,9 @@ export const useImageStore = create<ImageState>()(
                 const newMedia: ImageMedia = {
                     ...mediaData,
                     id: crypto.randomUUID(),
-                    active: true, // Default to true when added
+                    active: true,
                     isFavorite: false,
-                    folderId: state.activeFolderId // Assign to current folder if any
+                    folderId: state.activeFolderId
                 };
                 set((state) => ({ mediaList: [...state.mediaList, newMedia] }));
             },
@@ -100,7 +133,6 @@ export const useImageStore = create<ImageState>()(
                     const newMediaList = state.mediaList.filter(m => m.id !== id);
                     const newProjections = { ...state.projections };
 
-                    // Clear any target that was showing this media
                     Object.keys(newProjections).forEach(target => {
                         if (newProjections[target] === id) {
                             newProjections[target] = null;
@@ -127,7 +159,6 @@ export const useImageStore = create<ImageState>()(
 
             setCurrentView: (view) => set({ currentView: view }),
 
-            // --- Folder Actions ---
             addFolder: (name, parentId = null) => {
                 const newFolder: ImageFolder = {
                     id: crypto.randomUUID(),
@@ -138,7 +169,6 @@ export const useImageStore = create<ImageState>()(
             },
 
             removeFolder: (id) => {
-                // Remove folder and move its media to root
                 set((state) => ({
                     folders: state.folders.filter(f => f.id !== id),
                     mediaList: state.mediaList.map(m => m.folderId === id ? { ...m, folderId: null } : m),
@@ -161,13 +191,12 @@ export const useImageStore = create<ImageState>()(
             },
 
             projectSolo: (media) => {
-                const target = get().projectionTarget;
+                const target = get().projectionTarget as string;
 
                 set((state) => ({
                     projections: { ...state.projections, [target]: media.id }
                 }));
 
-                // Log to journal
                 useJournalStore.getState().addEvent({
                     type: 'SYSTEM',
                     title: 'Image projetée',
@@ -183,10 +212,9 @@ export const useImageStore = create<ImageState>()(
 
             projectUrl: (url) => {
                 const state = get();
-                const target = state.projectionTarget;
+                const target = state.projectionTarget as string;
                 const currentProjection = state.projections[target];
 
-                // Toggle logic: if already projecting this URL, blackout instead
                 if (currentProjection === url) {
                     get().blackout();
                     return;
@@ -196,7 +224,6 @@ export const useImageStore = create<ImageState>()(
                     projections: { ...state.projections, [target]: url }
                 }));
 
-                // Log to journal
                 useJournalStore.getState().addEvent({
                     type: 'SYSTEM',
                     title: 'URL projetée',
@@ -212,21 +239,16 @@ export const useImageStore = create<ImageState>()(
 
             projectEntity: async (entity) => {
                 const state = get();
-                const target = state.projectionTarget;
+                const target = state.projectionTarget as string;
                 
-                // Toggle logic: if already projecting THIS entity, blackout it specifically
-                if (state.projectedEntity?.id === entity.id) {
+                if (state.projectedEntity?.id === entity?.id && entity !== null) {
                     set({ projectedEntity: null });
-                    
-                    // Clear Hub data
                     window.appBridge?.image?.syncHubData('entity', '');
                     
-                    // If the current target is Hub AND it's showing this entity's id/image, clear it
                     if (target === 'hub') {
                         set((state) => ({ projections: { ...state.projections, hub: null } }));
                         window.appBridge?.image?.syncHubData('image', '');
                     } else if (state.projections[target] === (entity.avatar || entity.imageUrl || entity.portraitUrl)) {
-                        // Also clear from external monitor if it matches
                         set((state) => ({ projections: { ...state.projections, [target]: null } }));
                         window.appBridge?.image?.launchDisplay([], target);
                     }
@@ -235,9 +257,13 @@ export const useImageStore = create<ImageState>()(
                     return;
                 }
 
+                if (!entity) {
+                    set({ projectedEntity: null });
+                    return;
+                }
+
                 set({ projectedEntity: entity });
 
-                // Log to journal
                 useJournalStore.getState().addEvent({
                     type: 'NPC',
                     title: 'Entité projetée',
@@ -246,8 +272,6 @@ export const useImageStore = create<ImageState>()(
 
                 const { resolveToSendableUrl } = await import('../../utils/mediaResolver');
 
-                // Entities (PNJ, PJ, Favoris) ALWAYS go to Player Hub as it's the only screen with stats view
-                // Resolve the entity avatar before sending so cross-window display works
                 const avatarSrc = entity.avatar || entity.imageUrl || entity.portraitUrl || '';
                 const resolvedAvatar = await resolveToSendableUrl(avatarSrc);
 
@@ -257,7 +281,6 @@ export const useImageStore = create<ImageState>()(
 
                 window.appBridge?.image?.syncHubData('entity', JSON.stringify(entityToSend));
                 
-                // If the entity has an image, also show it in the Hub's image area
                 if (resolvedAvatar) {
                     window.appBridge?.image?.syncHubData('image', resolvedAvatar);
                     set((state) => ({ projections: { ...state.projections, hub: resolvedAvatar } }));
@@ -272,18 +295,15 @@ export const useImageStore = create<ImageState>()(
                 const activeMedia = state.mediaList.filter(m => m.active);
                 if (activeMedia.length === 0) return;
 
-                const currentTargetId = state.projections[state.projectionTarget];
+                const currentTargetId = state.projections[state.projectionTarget as string];
 
-                // Start from the first active one, or if there's already one projected, find the next one
                 let targetMedia = activeMedia[0];
                 if (currentTargetId) {
                     const currentIndex = state.mediaList.findIndex(m => m.id === currentTargetId || m.path === currentTargetId);
-                    // Find first active one AFTER current index
                     const nextActive = state.mediaList.find((m, i) => i > currentIndex && m.active);
                     if (nextActive) {
                         targetMedia = nextActive;
                     }
-                    // else it loops back to first active
                 }
 
                 get().projectSolo(targetMedia);
@@ -294,34 +314,32 @@ export const useImageStore = create<ImageState>()(
                 const activeMedia = state.mediaList.filter(m => m.active);
                 if (activeMedia.length === 0) return;
 
-                const currentTargetId = state.projections[state.projectionTarget];
+                const currentTargetId = state.projections[state.projectionTarget as string];
 
                 if (!currentTargetId) {
                     get().projectSolo(activeMedia[0]);
                     return;
                 }
 
-                // Sort out the active media list order respecting original array order
                 const mediaListIds = state.mediaList.map(m => m.id);
                 activeMedia.sort((a, b) => mediaListIds.indexOf(a.id) - mediaListIds.indexOf(b.id));
 
                 const activeIdx = activeMedia.findIndex(m => m.id === currentTargetId);
 
                 if (activeIdx === -1) {
-                    // The currently playing item might have been unchecked during play. Just start over
                     get().projectSolo(activeMedia[0]);
                     return;
                 }
 
                 let nextIdx = activeIdx + direction;
-                if (nextIdx >= activeMedia.length) nextIdx = 0; // wrap to start
-                if (nextIdx < 0) nextIdx = activeMedia.length - 1; // wrap to end
+                if (nextIdx >= activeMedia.length) nextIdx = 0; 
+                if (nextIdx < 0) nextIdx = activeMedia.length - 1; 
 
                 get().projectSolo(activeMedia[nextIdx]);
             },
 
             blackout: () => {
-                const target = get().projectionTarget;
+                const target = get().projectionTarget as string;
 
                 set((state) => ({
                     projections: { ...state.projections, [target]: null },
@@ -342,11 +360,9 @@ export const useImageStore = create<ImageState>()(
 
                 set({ projections: {}, projectedEntity: null });
 
-                // Sync Hub
                 window.appBridge?.image?.syncHubData('image', '');
                 window.appBridge?.image?.syncHubData('entity', '');
 
-                // Sync all other physical displays
                 allTargets.forEach(target => {
                     if (target !== 'hub') {
                         window.appBridge?.image?.launchDisplay([], target);
@@ -363,7 +379,6 @@ export const useImageStore = create<ImageState>()(
             applySnapshot: (snapshot) => {
                 if (!snapshot) return;
 
-                // 1. Restore structures (media library and folders)
                 if (snapshot.mediaList) {
                     set({ mediaList: snapshot.mediaList });
                 }
@@ -371,14 +386,11 @@ export const useImageStore = create<ImageState>()(
                     set({ folders: snapshot.folders });
                 }
 
-                // 2. Restore projections
                 if (snapshot.projections) {
                     set({ projections: snapshot.projections });
                     
-                    // Trigger actual projection logic in the bridges
                     Object.entries(snapshot.projections).forEach(([target, mediaId]) => {
                         if (mediaId) {
-                            // Find in the RESTORED mediaList
                             const media = get().mediaList.find(m => m.id === mediaId);
                             if (media) {
                                 if (target === 'hub') {
@@ -391,6 +403,7 @@ export const useImageStore = create<ImageState>()(
                     });
                 }
             },
+
 
             reset: () => {
                 get().blackoutAll();
@@ -415,7 +428,6 @@ export const useImageStore = create<ImageState>()(
     )
 );
 
-// Export for cross-store access
 if (typeof window !== 'undefined') {
     (window as unknown as { useImageStore: typeof useImageStore }).useImageStore = useImageStore;
 }

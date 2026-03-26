@@ -24,5 +24,6 @@ Le projet repose sur une architecture **Bridge** qui sépare strictement l'UI de
 ## 📊 Project Scope
 
 - **19 Modules Fonctionnels** : De la gestion audio 3D au suivi d'initiative en combat.
-- **Système de Drivers** : Support multi-systèmes (Cthulhu, D&D, etc.) via des modèles de feuilles et des moteurs de règles.
+- **Rule Engine Forge (v5.6)** : Un éditeur premium pour les moteurs de règles, gérant les dés, le combat et l'IA tactique.
+- **Système de Drivers** : Support multi-systèmes (Cthulhu, D&D, etc.) via des modèles de feuilles et des moteurs de règles persistants.
 - **Player Hub** : Interface interactive permettant aux joueurs de voir les cartes, les visuels et de participer aux pings tactiques.

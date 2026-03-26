@@ -53,7 +53,11 @@ const AmbientDashboard: React.FC = () => {
             const media = mediaList.find((m: { id: string; name: string }) => m.id === mediaId);
             if (media) {
                 const track = tracks[browserTarget];
-                updateTrack(browserTarget, { url: mediaId, label: track.label === `Piste ${browserTarget + 1}` ? media.name : track.label });
+                const isDefaultLabel = track.label.toLowerCase().startsWith('piste') || track.label === '';
+                updateTrack(browserTarget, { 
+                    url: mediaId, 
+                    label: isDefaultLabel ? media.name : track.label 
+                });
             }
             setBrowserTarget(null);
         }
@@ -181,6 +185,7 @@ const AmbientDashboard: React.FC = () => {
                                 setSelectedTheme(firstTheme);
                             }}
                             className="bg-transparent text-xs font-bold text-app-text/70 focus:outline-none focus:text-app-text cursor-pointer"
+                            title="Sélectionner l'Univers"
                         >
                             {universes.map((u: string) => <option key={u} value={u} className="bg-app-surface text-app-text">{u}</option>)}
                         </select>
@@ -196,6 +201,7 @@ const AmbientDashboard: React.FC = () => {
                                 value={selectedTheme}
                                 onChange={(e) => handleThemeChange(e.target.value)}
                                 className="bg-transparent text-sm font-black text-gm-cyan focus:outline-none cursor-pointer flex-1"
+                                title="Sélectionner le Thème"
                             >
                                 {themesInUniverse.length > 0 ? (
                                     themesInUniverse.map((t: AmbientTheme) => (

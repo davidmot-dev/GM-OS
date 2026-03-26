@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, Square, Volume2, Lightbulb } from 'lucide-react';
+import { Play, Square, Volume2, Lightbulb, Trash2 } from 'lucide-react';
 import { gmCustom } from '../../../stores/useModalStore';
 import { useAmbientStore, type AmbientTrackState } from '../useAmbientStore';
 import { ambientEngine } from '../AmbientEngine';
@@ -154,6 +154,22 @@ const AmbientTrack: React.FC<AmbientTrackProps> = ({ track, index, onRequestMedi
                     title={track.linkedLightSceneId ? "Lumière Liée" : "Lier une Lumière"}
                 >
                     <Lightbulb size={12} fill={track.linkedLightSceneId ? "currentColor" : "none"} />
+                </button>
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        if (track.isPlaying) toggleTrack(index);
+                        updateTrack(index, {
+                            label: `Piste ${index + 1}`,
+                            url: '',
+                            volume: 0.5,
+                            linkedLightSceneId: undefined
+                        });
+                    }}
+                    className="p-1 rounded-full text-app-text/40 hover:text-red-500 hover:bg-red-500/10 transition-all"
+                    title="Effacer la piste"
+                >
+                    <Trash2 size={12} />
                 </button>
             </div>
         </div>

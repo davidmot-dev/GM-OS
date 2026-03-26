@@ -7,6 +7,8 @@ Le module **Ambient OS** est l'outil ultime pour créer des paysages sonores imm
 ## 📋 Présentation du Module
 
 L'interface est conçue comme un pupitre de mixage vertical :
+> [!TIP]
+> **Contrôle Global** : Le volume d'Ambient OS est piloté par le [Master Soundscape Controller](./Audio_Master_Guide.md). Le mode **Focus Chat** permet de tamiser toutes vos pistes d'ambiance d'un simple clic.
 
 1. **Les 8 Pistes (Tracks)** : Chaque piste est une couche sonore distincte avec sa propre gestion de volume et de lecture.
 2. **Univers & Thèmes** : Un système de bibliothèque pour charger des ensembles de sons pré-configurés.
@@ -50,6 +52,13 @@ Tout comme les autres modules audio de GM-OS, les pistes d'Ambient OS peuvent pi
 1. **Lien par Piste** : Associez une scène lumineuse à une piste (ex: la piste "Orage" liée à une scène de flashs bleutés).
 2. **Priorité Intelligente** : Si plusieurs pistes liées jouent en même temps, l'OS donne la priorité à la dernière piste activée.
 3. **Retour au Calme** : Lorsque vous arrêtez une piste, l'OS rétablit automatiquement l'ambiance lumineuse de la piste précédente encore active, ou revient à votre éclairage manuel.
+
+## 📱 Contrôle Distant (Remote Mode)
+
+Lorsqu'utilisé via la télécommande ou le **Universal Pad**, Ambient OS change légèrement de comportement pour plus de réactivité :
+
+- **Toggle Intelligent** : Appuyer sur un pad de thème (ex: "Forêt") lancera immédiatement le chargement ET la lecture des pistes. Appuyer à nouveau sur le *même* pad coupera tout proprement (Fade Out).
+- **Auto-Play** : Contrairement à l'interface PC où charger un thème ne lance pas le son, la télécommande active automatiquement toutes les pistes ayant un volume configuré.
 
 ---
 

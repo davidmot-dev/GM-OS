@@ -20,7 +20,12 @@ contextBridge.exposeInMainWorld("appBridge", {
     return webUtils.getPathForFile(file);
   },
   app: {
-    quit: () => ipcRenderer.send("app:quit")
+    quit: () => ipcRenderer.send("app:quit"),
+    onDisplayChanged: (callback) => {
+      const listener = (_event, count) => callback(count);
+      ipcRenderer.on("app:display-changed", listener);
+      return () => ipcRenderer.off("app:display-changed", listener);
+    }
   },
   debug: {
     openConsole: () => ipcRenderer.send("debug:open-console")
@@ -67,6 +72,7 @@ contextBridge.exposeInMainWorld("appBridge", {
   },
   utils: {
     formatFileUrl: (path) => {
+      if (!path) return "";
       const normalized = path.replace(/\\/g, "/");
       return `file:///${encodeURI(normalized).replace(/#/g, "%23").replace(/\?/g, "%3F")}`;
     }
@@ -77,12 +83,19 @@ contextBridge.exposeInMainWorld("appBridge", {
     extractPDF: (filePath) => ipcRenderer.invoke("ai:extract-pdf", filePath),
     proxyRequest: (url, method, headers, body) => ipcRenderer.invoke("ai:proxy-request", url, method, headers, body),
     searchContext: (systemId, campaignName) => ipcRenderer.invoke("ai:search-context", systemId, campaignName),
-    reindex: () => ipcRenderer.invoke("ai:reindex")
+    reindex: () => ipcRenderer.invoke("ai:reindex"),
+    // Ollama Local AI
+    ollamaChat: (model, messages) => ipcRenderer.invoke("ai:ollama-chat", model, messages),
+    ollamaStatus: () => ipcRenderer.invoke("ai:ollama-status"),
+    ollamaListModels: () => ipcRenderer.invoke("ai:ollama-list-models"),
+    ollamaPull: (model) => ipcRenderer.invoke("ai:ollama-pull", model),
+    ollamaGenerateImage: (model, prompt) => ipcRenderer.invoke("ai:ollama-generate-image", model, prompt)
   },
   mcp: {
     listTools: (serverName) => ipcRenderer.invoke("mcp:list-tools", serverName),
     callTool: (serverName, toolName, args) => ipcRenderer.invoke("mcp:call-tool", serverName, toolName, args),
-    reauthenticate: () => ipcRenderer.invoke("mcp:reauthenticate")
+    reauthenticate: () => ipcRenderer.invoke("mcp:reauthenticate"),
+    restart: () => ipcRenderer.invoke("mcp:restart")
   },
   obsidian: {
     listNotes: (vaultPath) => ipcRenderer.invoke("obsidian:list-notes", vaultPath),
@@ -106,5 +119,11 @@ contextBridge.exposeInMainWorld("appBridge", {
     warn: (message, ...args) => ipcRenderer.send("log:message", "warn", message, ...args),
     error: (message, ...args) => ipcRenderer.send("log:message", "error", message, ...args),
     debug: (message, ...args) => ipcRenderer.send("log:message", "debug", message, ...args)
+  },
+  git: {
+    getStatus: () => ipcRenderer.invoke("git:status"),
+    setupBranch: (branchName) => ipcRenderer.invoke("git:setup-branch", branchName),
+    syncData: (targetDir, branchName, message) => ipcRenderer.invoke("git:sync", targetDir, branchName, message),
+    saveData: (data) => ipcRenderer.invoke("backup:save-data", data)
   }
 });

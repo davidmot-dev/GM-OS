@@ -25,7 +25,11 @@ export class RAGService {
   /**
    * Scans the docs directory and returns relevant content based on active session.
    */
-  public async getRelevantContext(): Promise<string> {
+  public async getRelevantContext(options: { systemOnly?: boolean; systemName?: string } = {}): Promise<string> {
+    if (options.systemOnly && options.systemName) {
+      return this.getContextForSpecificSystem(options.systemName);
+    }
+
     const osStore = useSessionOSStore.getState();
     const activeCampaign = osStore.campaigns.find(c => c.id === osStore.activeCampaignId);
     
@@ -148,7 +152,7 @@ export class RAGService {
       } 
       else if (ext === '.pdf') {
         // Use the new extract-pdf bridge
-        const text = await window.appBridge?.ai?.extractPDF?.(entry.path);
+        const text = await window.appBridge?.ai?.extractPdf?.(entry.path);
         if (text) {
           const truncated = text.length > MAX_DOC_SIZE ? text.substring(0, MAX_DOC_SIZE) + "..." : text;
           return `[Fichier PDF: ${entry.name}]\n${truncated}\n`;

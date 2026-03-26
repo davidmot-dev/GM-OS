@@ -19,6 +19,7 @@ interface SessionState {
     themeColor: string; // Hex color for global accents
     isSessionMode: boolean; // Mode MJ Focus (masque les outils d'édition)
     isAIPanelOpen: boolean;
+    displayCount: number;
 
     // Actions
     setActiveModule: (id: ModuleID) => void;
@@ -26,6 +27,14 @@ interface SessionState {
     setThemeColor: (color: string) => void;
     toggleSessionMode: (force?: boolean) => void;
     toggleAIPanel: (force?: boolean) => void;
+    setDisplayCount: (count: number) => void;
+    getBackupData: () => {
+        activeModule: string;
+        theme: string;
+        themeColor: string;
+        isSessionMode: boolean;
+        displayCount: number;
+    };
 }
 
 export const THEME_PALETTES: Record<ThemeID, ThemePalette> = {
@@ -68,12 +77,13 @@ export const THEME_PALETTES: Record<ThemeID, ThemePalette> = {
 
 export const useSessionStore = create<SessionState>()(
     persist(
-        (set) => ({
+        (set, get) => ({
             activeModule: 'dashboard',
             theme: 'cyberpunk',
             themeColor: THEME_PALETTES['cyberpunk'].accent,
             isSessionMode: false,
             isAIPanelOpen: false,
+            displayCount: 1,
 
             setActiveModule: (activeModule) => set({ activeModule }),
             setTheme: (theme) => set({ 
@@ -81,12 +91,20 @@ export const useSessionStore = create<SessionState>()(
                 themeColor: THEME_PALETTES[theme]?.accent || '#3b82f6'
             }),
             setThemeColor: (themeColor) => set({ themeColor }),
-            toggleSessionMode: (force) => set((state) => ({
+            toggleSessionMode: (force?: boolean) => set((state) => ({
                 isSessionMode: force !== undefined ? force : !state.isSessionMode
             })),
-            toggleAIPanel: (force) => set((state) => ({
+            toggleAIPanel: (force?: boolean) => set((state) => ({
                 isAIPanelOpen: force !== undefined ? force : !state.isAIPanelOpen
             })),
+            setDisplayCount: (displayCount) => set({ displayCount }),
+            getBackupData: () => ({
+                activeModule: get().activeModule,
+                theme: get().theme,
+                themeColor: get().themeColor,
+                isSessionMode: get().isSessionMode,
+                displayCount: get().displayCount,
+            }),
         }),
         {
             name: 'gmos-session-storage',

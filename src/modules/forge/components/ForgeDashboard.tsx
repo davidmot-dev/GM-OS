@@ -3,6 +3,8 @@ import { useDebugStore } from '../../../stores/useDebugStore';
 import { Hammer, FileUp, Globe, X, Rocket, Zap, Sparkles } from 'lucide-react';
 import { forgeService, type ForgeContextItem, type ForgeSystemResult } from '../ForgeService';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
+import { gmToast } from '../../../stores/useToastStore';
+import { gmConfirm } from '../../../stores/useModalStore';
 import type { GameDriver } from '../../../types/drivers';
 import type { SheetTemplate } from '../../../data/defaultSheetTemplates';
 import ChronicleForge from './ChronicleForge';
@@ -225,45 +227,52 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
   const handleSourceImport = async (sourceId: string, title: string) => {
     if (importingSources.has(sourceId)) return;
     
-    addLog(`IMPORTING SCROLL: ${title}...`);
-    setImportingSources(prev => new Set(prev).add(sourceId));
-    
-    try {
-      const result = await callMcpToolWithRetry<{ content: any }>('notebooklm-mcp-server', 'source_get_content', { source_id: sourceId });
-      
-      let content = result.content;
-      if (typeof content === 'string' && (content.startsWith('{') || content.startsWith('['))) {
+    gmConfirm(
+      `Voulez-vous importer "${title}" de NotebookLM dans la forge ?`,
+      async () => {
+        addLog(`IMPORTING SCROLL: ${title}...`);
+        setImportingSources(prev => new Set(prev).add(sourceId));
+        
         try {
-          const parsed = JSON.parse(content);
-          content = parsed.content || parsed;
-        } catch { /* use as is */ }
+          const result = await callMcpToolWithRetry<{ content: unknown }>('notebooklm-mcp-server', 'source_get_content', { source_id: sourceId });
+          
+          let content = result.content;
+          if (typeof content === 'string' && (content.startsWith('{') || content.startsWith('['))) {
+            try {
+              const parsed = JSON.parse(content);
+              content = parsed.content || parsed;
+            } catch { /* use as is */ }
+          }
+
+          setContextItems(prev => [...prev, {
+            name: `[NB] ${title}`,
+            type: 'text',
+            content: typeof content === 'string' ? content : JSON.stringify(content),
+            mimeType: 'text/plain'
+          }]);
+          addLog(`SUCCESS: ${title} ADDED TO BUCKET.`);
+          gmToast(`${title} importé avec succès.`, "success");
+          
+          setTimeout(() => {
+            setImportingSources(prev => {
+              const next = new Set(prev);
+              next.delete(sourceId);
+              return next;
+            });
+          }, 3000);
+
+        } catch (err) {
+          addLog("ERROR: IMPORT FAILED.");
+          console.error(err);
+          gmToast("Échec de l'importation.", "error");
+          setImportingSources(prev => {
+            const next = new Set(prev);
+            next.delete(sourceId);
+            return next;
+          });
+        }
       }
-
-      setContextItems(prev => [...prev, {
-        name: `[NB] ${title}`,
-        type: 'text',
-        content: typeof content === 'string' ? content : JSON.stringify(content),
-        mimeType: 'text/plain'
-      }]);
-      addLog(`SUCCESS: ${title} ADDED TO BUCKET.`);
-      
-      setTimeout(() => {
-        setImportingSources(prev => {
-          const next = new Set(prev);
-          next.delete(sourceId);
-          return next;
-        });
-      }, 3000);
-
-    } catch (err) {
-      addLog("ERROR: IMPORT FAILED.");
-      console.error(err);
-      setImportingSources(prev => {
-        const next = new Set(prev);
-        next.delete(sourceId);
-        return next;
-      });
-    }
+    );
   };
 
   const removeContextItem = (index: number) => {

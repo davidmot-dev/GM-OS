@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { 
     Sparkles, X, ExternalLink, RefreshCw, Send, MessageSquare, 
-    Book, Bot, User, Trash2, BookOpen, PenTool, Music, Beaker,
+    Book, Bot, User, Trash2, BookOpen, PenTool, Music, Beaker, Map,
     ChevronDown, type LucideIcon 
 } from 'lucide-react';
 import { useNotebookLM } from '../hooks/useNotebookLM';
@@ -17,7 +17,7 @@ interface OraclePanelProps {
 
 const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNotebookUrl, templateNotebookUrl }) => {
     const { messages, isQuerying, queryNotebook, extractNotebookId, clearChat } = useNotebookLM();
-    const { activeGemId, gems, setActiveGemId } = useGemStore();
+    const { activeGemId, gems, setActiveGemId, syncGemsWithDefaults } = useGemStore();
     const activeDriver = useSessionOSStore(state => state.getActiveDriver());
     
     // Resolve active GEM
@@ -30,6 +30,7 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
         Sparkles,
         Music,
         Beaker,
+        Map,
         User,
         Bot
     };
@@ -62,6 +63,13 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
             document.removeEventListener('keydown', handleKeyDown);
         };
     }, [isOpen, onClose]);
+
+    // Sync gems with defaults when panel opens
+    useEffect(() => {
+        if (isOpen) {
+            syncGemsWithDefaults?.();
+        }
+    }, [isOpen, syncGemsWithDefaults]);
 
     // Initial state based on props - but we'll use a local state that follows props
     const [userSelectedType, setUserSelectedType] = useState<'campaign' | 'template' | null>(null);

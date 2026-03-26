@@ -9,21 +9,23 @@ Le **Media Hub** est la bibliothèque centrale de GM-OS v5. C'est ici que sont s
 Le Media Hub n'est pas qu'un simple explorateur de fichiers ; c'est une base de données optimisée pour le jeu de rôle :
 
 1. **Stockage Persistant (IndexedDB)** : Vos fichiers sont stockés localement dans le navigateur/application. Ils restent disponibles même si vous déplacez les fichiers originaux sur votre ordinateur.
-2. **Multi-Formats** : Support natif des images, de l'audio, de la vidéo et des documents (PDF, texte, markdown).
-3. **Système de Tags** : Une méthode d'organisation transversale pour retrouver vos assets par thème plutôt que par dossier.
-4. **Recherche Instantanée** : Filtrez des centaines de fichiers en quelques millisecondes.
+2. **Multi-Formats** : Support natif des images, de l'audio (MP3, WAV), de la vidéo et des documents (PDF, MD).
+3. **Système de Tags & Campagnes** : Une méthode d'organisation transversale pour retrouver vos assets par thème ou par aventure.
+4. **Recherche Instantanée** : Filtrez des centaines de fichiers par nom, type ou tag en quelques millisecondes.
 
 ## 🚀 Importer et Gérer vos Médias
 
 ### Ajout de Fichiers
+
 - Cliquez sur **"Importer des fichiers"** pour ouvrir le sélecteur de votre système.
 - GM-OS trie automatiquement les fichiers par type :
-    - **Images** : JPG, PNG, WEBP, GIF.
-    - **Audio** : MP3, WAV, OGG, M4A.
-    - **Vidéo** : MP4, WebM.
-    - **Documents** : PDF, TXT, DOCX, MD, RTF.
+  - **Images** : JPG, PNG, WEBP, GIF.
+  - **Audio** : MP3, WAV, OGG, M4A.
+  - **Vidéo** : MP4, WebM.
+  - **Documents** : PDF, TXT, DOCX, MD, RTF.
 
 ### Actions sur les Fichiers
+
 En survolant un média, plusieurs icônes apparaissent :
 - **Aperçu (🔍/▶️)** : Affiche l'image en grand, lance la lecture audio avec contrôles, ou ouvre la vidéo.
 - **Sélectionner (✔️)** : Utilise ce média dans le module qui a ouvert le Hub (ex: choisir une image pour Image OS).
@@ -38,27 +40,38 @@ Les tags sont le cœur de l'organisation du Media Hub. Un même fichier peut avo
 - **Filtrer par Tag** : Utilisez la barre latérale droite pour sélectionner un tag. Seuls les fichiers correspondants s'afficheront.
 
 ### Filtrage par Type
+
 Dans la barre d'outils supérieure, vous pouvez isoler un type de média spécifique :
-- **Tous** : Affiche l'intégralité de votre bibliothèque.
-- **Images** : Uniquement les visuels.
-- **Audio** : Uniquement les sons/musiques.
-- **Vidéo** : Uniquement les clips animés.
-- **Doc** : Vos documents de règles et notes.
 
-## 🎞️ Aperçu Plein Écran
+## 🛡️ Panneau de Détails Tactique (Side Panel)
 
-Pour une meilleure visibilité, le Media Hub propose un mode "Focus" :
-- **Images** : Zoom haute définition.
-- **Audio** : Lecteur dédié avec barre de progression et réglage de volume, idéal pour tester un son avant de le diffuser.
-- **Vidéo** : Lecture plein écran intégrée.
-*Appuyez sur **ESC** pour quitter l'aperçu.*
+En cliquant sur un média, un panneau latéral s'ouvre pour offrir un contrôle approfondi :
+
+- **Visualisation HD** : Aperçu rapide sans quitter le flux de travail.
+- **Gestion des Campagnes** : Liez/déliez le média à vos campagnes actives via des badges interactifs.
+- **Indexation Dynamique** : Modifiez les tags et le nom d'usage en temps réel.
+- **Status Tactique** : Affiche si le média est actuellement utilisé dans la session en cours.
+
+- **Isolation de Session** : Les nouveaux imports sont automatiquement taggués avec la campagne active si ce mode est activé ou si vous êtes en session.
+
+## 🔒 Persistance des Médias (Asset Lock)
+
+Parfois, vous importez des assets pour une utilisation future ou des éléments de lore qui ne sont pas encore liés à des PNJ ou des cartes. Pour éviter qu'ils ne soient supprimés par le système de nettoyage automatique, vous pouvez les verrouiller :
+
+1.  **Verrouiller** : Dans le **Panneau de Détails Tactique**, cliquez sur l'icône de **Cadenas Ouvert**. Elle se transformera en **Cadenas Fermé** cyan.
+2.  **Notification** : Un badge "Persistant" apparaîtra sous l'image pour confirmer la protection.
+3.  **Visualisation Grille** : Dans le navigateur de médias, une petite icône de cadenas apparaît sur la vignette de l'asset.
+
+> [!TIP]
+> **Planification à l'avance** : Verrouillez vos "Boss" ou vos "Cartes Secrètes" dès l'import pour être sûr qu'ils ne disparaissent pas avant le grand jour !
 
 ---
 
 ## ⚙️ Configuration Technique
 
 - **Stockage Local** : Le Media Hub utilise la technologie IndexedDB. La limite de stockage dépend de votre navigateur/système, mais elle permet généralement de stocker plusieurs gigaoctets de données.
-- **Vider le Hub** : Le bouton **"Vider le Hub"** supprime TOUTES les données stockées. À utiliser avec précaution !
+- **Nettoyage Automatique** : Pour optimiser les performances, GM-OS scanne régulièrement la base de données pour supprimer les fichiers "orphelins" (ceux qui ne sont liés à aucun PNJ, aucune playlist, aucun thème d'ambiance ou aucune campagne). Les fichiers marqués comme **Persistants** sont systématiquement épargnés.
+- **Vider le Hub** : Le bouton **"Vider le Hub"** supprime TOUTES les données stockées (y compris les fichiers persistants). À utiliser avec précaution !
 
 ---
 

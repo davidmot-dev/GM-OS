@@ -35,12 +35,14 @@ import { useModalStore } from '../stores/useModalStore';
 import { SessionService } from '../store/SessionService';
 import AIChatPanel from '../modules/ai/components/AIChatPanel';
 import { TacticalAIControlPanel } from '../modules/tactical-ai/components/TacticalAIControlPanel';
+import MasterAudioController from './audio/MasterAudioController';
 
 import { useTacticalAIStore } from '../modules/tactical-ai/useTacticalAIStore';
 import { useTacticalOrchestrator } from '../modules/tactical-ai/hooks/useTacticalOrchestrator';
 import { useHardwareBridge } from '../modules/tactical-ai/hooks/useHardwareBridge';
 import { useAudioTactical } from '../modules/tactical-ai/hooks/useAudioTactical';
 import { useHueAutoConnect } from '../modules/light/hooks/useHueAutoConnect';
+import { useLayoutManager } from '../modules/session/hooks/useLayoutManager';
 import { gmToast } from '../stores/useToastStore';
 
 interface NavItemProps {
@@ -79,6 +81,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
 
     // Global persistence/sync hooks
     useHueAutoConnect();
+    useLayoutManager();
 
     const {
         activeModule,
@@ -412,6 +415,10 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         </h2>
                     </div>
 
+                    <div className="flex-1 flex justify-center px-12">
+                        <MasterAudioController />
+                    </div>
+
                     <div className="flex items-center gap-4">
                         <div className={`flex items-center gap-4 px-4 py-1.5 rounded-full ${tacticalSettings.isEnabled ? 'bg-accent/10 border border-accent/20' : 'bg-app-surface border border-app-border opacity-50'}`}>
                             <div className={`w-2 h-2 rounded-full ${tacticalSettings.isEnabled ? (tacticalStatus === 'analyzing' ? 'bg-emerald-400 animate-pulse' : 'bg-accent') : 'bg-app-text/20'} shadow-glow-accent`} />
@@ -424,7 +431,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                              <span className="text-[10px] font-mono text-app-text/40 uppercase tracking-widest">System Link Active</span>
                         </div>
                         <div className="px-3 py-1.5 rounded-lg bg-app-bg border border-app-border text-xs font-mono text-app-text/40 shadow-xl">
-                            GM-OS_v5.0.0-ALPHA
+                            GM-OS_v5.1.1-ALPHA
                         </div>
                     </div>
                 </header>

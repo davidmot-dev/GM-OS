@@ -76,7 +76,7 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
                         return window.appBridge.utils.formatFileUrl(sourceIdOrUrl);
                     }
                     
-                    const cleanPath = sourceIdOrUrl.replace(/^file:\/\/\//, '');
+                    const cleanPath = (typeof sourceIdOrUrl === 'string') ? sourceIdOrUrl.replace(/^file:\/\/\//, '') : '';
                     
                     // If we are in Electron (main MJ app), use the custom secure protocol
                     if (window.appBridge && (cleanPath.startsWith('C:') || cleanPath.startsWith('D:') || cleanPath.startsWith('/') || cleanPath.startsWith('\\'))) {

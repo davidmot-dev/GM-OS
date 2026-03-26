@@ -7,6 +7,8 @@ Le module **Sound OS** est votre console d'effets sonores instantanés (One-Shot
 ## 📋 Présentation du Module
 
 Le module propose une interface de type "Launchpad" haute performance :
+> [!TIP]
+> **Contrôle Global** : Vos bruitages sont asservis au [Master Soundscape Controller](./Audio_Master_Guide.md). Notez que le mode **Focus Chat** atténue les sons moins fortement que la musique pour garder l'impact des actions tactiques.
 
 1. **La Grille de Pads** : 16 boutons personnalisables pour déclencher vos sons.
 2. **Les Atmosphères** : Des onglets de navigation pour changer instantanément votre set de 16 pads selon le contexte (ex: "Forêt", "Donjon", "Combat Spatial").

@@ -21,7 +21,7 @@ export async function resolveToSendableUrl(src: string | undefined): Promise<str
         if (mediaCache.has(src)) return mediaCache.get(src)!;
 
         try {
-            const db = await withTimeout(openDB('gmos-media-db', 1), 3000, 'DB_TIMEOUT');
+            const db = await withTimeout(openDB('gmos-media-db', 2), 3000, 'DB_TIMEOUT');
             const item = await withTimeout(db.get('media', src), 3000, 'DB_GET_TIMEOUT');
             if (item?.blob) {
                 const blob = item.blob as Blob;
@@ -32,7 +32,7 @@ export async function resolveToSendableUrl(src: string | undefined): Promise<str
                     try {
                         const info = await bridge.remote.getConnectionInfo();
                         const buffer = await blob.arrayBuffer();
-                        const success = await bridge.remote.cacheMedia(buffer, src);
+                        const success = await (bridge.remote as any).cacheMedia(buffer, src);
                         if (success) {
                             const result = `http://${info.ip}:${info.port}/temp/${src}`;
                             mediaCache.set(src, result);

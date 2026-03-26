@@ -11,6 +11,7 @@ Contrairement au reste de l'application (Renderer), le Hub peut s'exécuter dans
 1.  **WebSocket (Differential Sync)** : Toute l'activité de l'état global (Stores Zustand) est capturée par `App.tsx` (le "Maître") et diffusée via un serveur WebSocket local (Port 3001). Le système n'envoie que les *deltas* (segments de store modifiés) via `getDifferentialPayload`.
 2.  **Local Asset Middleware (HTTP Proxy)** : Les images ne sont plus envoyées en Base64. Le MJ PC cache les blobs dans un dossier temporaire et le Hub les récupère via des URLs HTTP directes (`http://[IP]:3001/temp/m-xxx`).
 3.  **AppBridge v2 (Standardisation)** : Utilisation d'interfaces TypeScript strictes pour sécuriser les échanges entre le Main Process et le Renderer, facilitant une future migration vers Tauri v2.
+4.  **Client Identity & Persistence** : Chaque terminal génère un `deviceId` persistant (UUID). Les joueurs s'authentifient via un **Lobby Onboarding** pour choisir leur pseudonyme et leur rôle.
 
 ## 🔄 Protocole de Synchronisation
 
@@ -26,15 +27,24 @@ Le Hub utilise un modèle de synchronisation "One-Way" (Maître vers Esclave) :
 4.  Le payload est envoyé via IPC au Main Process Electron, puis diffusé vers tous les clients WebSocket connectés.
 5.  Le `TabletHub.tsx` reçoit le message `sync` et met à jour ses stores locaux via `useStore.setState()`.
 
+## 🛡️ Session Manager & Robustesse
+
+La v5.1 introduit le `SessionManager.ts` (Main Process) pour gérer la persistance des connexions :
+
+- **Ghost State (Fantôme)** : Si une tablette perd le Wi-Fi, elle n'est pas immédiatement déconnectée. Elle passe en état "fantôme" pendant 2 minutes, permettant une reconnexion transparente.
+- **Session Takeover** : Un joueur peut reprendre sa session sur un autre appareil (nécessite l'approbation du MJ via le Lobby).
+- **Lobby Monitor** : Interface intégrée au MJ pour visualiser les terminaux connectés et leur état de santé.
+
 ## 📦 Structure du Composant `TabletHub.tsx`
 
 ```mermaid
 graph TD
     A[App.tsx - Master] -- IPC: broadcast-sync --> B[Main Process Electron]
     B -- WebSocket: 3001 --> C[Tablet Hub Client]
-    C --> D[Socket Listener]
-    D --> E[Store Update: isClockProjected, etc.]
-    E --> F[UI Render: Clock, Tensions]
+    C --> D[Socket Listener: remote:register]
+    D --> E[SessionManager: Track deviceId]
+    E --> F[Store Update: isClockProjected, etc.]
+    F --> G[UI Render: Clock, Tensions]
 ```
 
 ### Écrans de Rendu :

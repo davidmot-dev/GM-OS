@@ -1,4 +1,4 @@
-import { type FogMode, type MapTool } from './useMapStore';
+import type { FogMode, MapTool } from './types';
 
 /**
  * FogEngine
@@ -63,12 +63,21 @@ export class FogEngine {
      * Restores state from a base64 DataURL
      */
     public loadFromDataUrl(dataUrl: string, callback?: () => void) {
-        if (!this.fogCtx) return;
+        if (!this.fogCtx || !dataUrl) {
+            this.fillBlack();
+            return;
+        }
         const img = new Image();
         img.onload = () => {
-            this.fogCtx!.globalCompositeOperation = 'source-over';
-            this.fogCtx!.clearRect(0, 0, this.width, this.height);
-            this.fogCtx!.drawImage(img, 0, 0, this.width, this.height);
+            if (!this.fogCtx) return;
+            this.fogCtx.globalCompositeOperation = 'source-over';
+            this.fogCtx.clearRect(0, 0, this.width, this.height);
+            this.fogCtx.drawImage(img, 0, 0, this.width, this.height);
+            if (callback) callback();
+        };
+        img.onerror = () => {
+            console.error("[FogEngine] Failed to load fog data URL, falling back to black.");
+            this.fillBlack();
             if (callback) callback();
         };
         img.src = dataUrl;
@@ -175,5 +184,25 @@ export class FogEngine {
         this.previewCtx.arc(x, y, radius, 0, Math.PI * 2);
         this.previewCtx.fill();
         this.previewCtx.stroke();
+    }
+
+    /**
+     * Checks if a specific point (x, y) is revealed (transparent) on the fog canvas.
+     */
+    public isPointRevealed(x: number, y: number): boolean {
+        if (!this.fogCtx) return true;
+        
+        try {
+            const ix = Math.floor(x);
+            const iy = Math.floor(y);
+            
+            // Bounds check
+            if (ix < 0 || ix >= this.width || iy < 0 || iy >= this.height) return false;
+
+            const pixel = this.fogCtx.getImageData(ix, iy, 1, 1).data;
+            return pixel[3] < 128;
+        } catch {
+            return true;
+        }
     }
 }

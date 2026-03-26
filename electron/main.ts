@@ -32,8 +32,31 @@ interface AIProxyResponse {
 import { registerRagHandlers } from './RAGEngine'
 import { registerMcpHandlers } from './mcp_bridge'
 import { registerObsidianHandlers } from './obsidian_bridge'
+import { sessionManager } from './SessionManager'
+import { OllamaService } from './OllamaService'
+import { GitBackupService } from './GitBackupService'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const APP_ROOT = path.join(__dirname, '..')
+process.env.APP_ROOT = APP_ROOT
+
+// Global Error Logger for Main Process
+const crashLogPath = path.join(APP_ROOT, 'crash.log');
+const logError = (error: unknown, type: string) => {
+    const timestamp = new Date().toISOString();
+    const stack = error instanceof Error ? error.stack : JSON.stringify(error, null, 2);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const logEntry = `[${timestamp}] [${type}] ${errorMessage}\nStack: ${stack}\n${'='.repeat(50)}\n`;
+    try {
+        fs.appendFileSync(crashLogPath, logEntry);
+        console.error(`[Main] ${type} logged to crash.log`);
+    } catch (e) {
+        console.error('[Main] Failed to write to crash.log:', e);
+    }
+};
+
+process.on('uncaughtException', (err) => logError(err, 'Uncaught Exception'));
+process.on('unhandledRejection', (reason) => logError(reason, 'Unhandled Rejection'));
 
 // Register heavy AI/RAG engine
 registerRagHandlers();
@@ -50,11 +73,12 @@ protocol.registerSchemesAsPrivileged([
 // Ignore certificate errors for local HTTPS requests (like Philips Hue Bridge)
 app.commandLine.appendSwitch('ignore-certificate-errors')
 
-process.env.APP_ROOT = path.join(__dirname, '..')
+const ollamaService = new OllamaService();
+const gitBackupService = new GitBackupService(process.env.APP_ROOT);
 
 // 🚧 Use ['ENV_NAME'] avoid vite:define dev replacement
 export const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
-export const MAIN_DIST = path.join(process.env.APP_ROOT, 'dist-electron')
+export const MAIN_DIST = __dirname
 export const RENDERER_DIST = path.join(process.env.APP_ROOT, 'dist')
 
 process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 'public') : RENDERER_DIST
@@ -536,6 +560,7 @@ function startRemoteServer() {
 
         if (wss) {
             wss.on('connection', (ws: import('ws').WebSocket) => {
+                let currentDeviceId: string | null = null;
                 console.log('[Remote] New device connected');
                 
                 // Send initial sync data
@@ -546,11 +571,20 @@ function startRemoteServer() {
                 ws.on('message', (message: string) => {
                     try {
                         const data = JSON.parse(message);
-                        console.log('[Remote] Action received:', data);
+                        // console.log('[Remote] message received:', data);
                         
-                        if (data.type === 'remote:hello') {
-                            // Handshake
-                            console.log('[Remote] Handshake received from device');
+                        if (data.type === 'remote:register') {
+                            const { deviceId, pseudo, role } = data.payload;
+                            currentDeviceId = deviceId;
+                            console.log(`[Remote] Registering client: ${pseudo} (${role})`);
+                            sessionManager.registerClient(deviceId, pseudo, role);
+                            
+                            // Immediately broadcast updated client list to MJ
+                            if (win && !win.isDestroyed()) {
+                                win.webContents.send('remote:sync-clients', sessionManager.getAllClients());
+                            }
+                        } else if (data.type === 'remote:hello') {
+                            console.log('[Remote] Handshake received');
                         } else {
                             // Forward action to renderer process
                             if (win && !win.isDestroyed()) {
@@ -562,7 +596,18 @@ function startRemoteServer() {
                     }
                 });
 
-                ws.on('close', () => console.log('[Remote] Device disconnected'));
+                ws.on('close', () => {
+                    if (currentDeviceId) {
+                        console.log(`[Remote] Client went ghost: ${currentDeviceId}`);
+                        sessionManager.ghostClient(currentDeviceId);
+                        // Broadcast ghost status to MJ
+                        if (win && !win.isDestroyed()) {
+                            win.webContents.send('remote:sync-clients', sessionManager.getAllClients());
+                        }
+                    } else {
+                        console.log('[Remote] Anonymous device disconnected');
+                    }
+                });
             });
         }
 
@@ -624,7 +669,9 @@ ipcMain.handle('remote:get-connection-info', () => {
     };
 });
 
-const APP_ROOT = process.env.APP_ROOT || '';
+ipcMain.on('remote:request-client-sync', (event) => {
+    event.reply('remote:sync-clients', sessionManager.getAllClients());
+});
 
 // --- AI RAG Handlers ---
 ipcMain.handle('ai:list-docs', async () => {
@@ -664,6 +711,27 @@ ipcMain.handle('ai:read-doc', async (_event, relativePath: string) => {
     if (!fs.existsSync(fullPath)) return null;
     return fs.readFileSync(fullPath, 'utf-8');
   });
+
+// --- Ollama Local AI Handlers ---
+ipcMain.handle('ai:ollama-status', async () => {
+    return await ollamaService.checkStatus();
+});
+
+ipcMain.handle('ai:ollama-chat', async (_event, model: string, messages: { role: string; content: string }[]) => {
+    return await ollamaService.chat(model, messages);
+});
+
+ipcMain.handle('ai:ollama-generate-image', async (_event, model: string, prompt: string) => {
+    return await ollamaService.generateImage(model, prompt);
+});
+
+ipcMain.handle('ai:ollama-list-models', async () => {
+    return await ollamaService.listModels();
+});
+
+ipcMain.handle('ai:ollama-pull', async (_event, model: string) => {
+    return await ollamaService.pullModel(model);
+});
 
 ipcMain.handle('ai:extract-pdf', async (_event, relativePath: string) => {
     const fullPath = path.join(APP_ROOT, 'docs', relativePath);
@@ -745,6 +813,94 @@ ipcMain.handle('ai:proxy-request', async (_event, url: string, method: string, h
     });
 });
 
+// --- Git Backup Handlers ---
+ipcMain.handle('git:status', async () => {
+    return await gitBackupService.checkStatus();
+});
+
+ipcMain.handle('git:setup-branch', async (_event, branchName: string) => {
+    return await gitBackupService.setupBackupBranch(branchName);
+});
+
+ipcMain.handle('git:sync', async (_event, targetDir: string, branchName: string, message: string) => {
+    return await gitBackupService.syncData(targetDir, branchName, message);
+});
+
+ipcMain.handle('backup:save-data', async (_event, data: unknown) => {
+    console.log('[Backup] Received save-data request');
+    try {
+        if (!data || typeof data !== 'object') {
+            console.error('[Backup] Invalid data type:', typeof data);
+            throw new Error('Données de sauvegarde invalides ou manquantes.');
+        }
+
+        const appRoot = process.env.APP_ROOT || '';
+        console.log('[Backup] APP_ROOT:', appRoot);
+        const backupDir = path.join(appRoot, 'backups');
+        console.log(`[Backup] Ensuring backup directory: ${backupDir}`);
+        await fs.ensureDir(backupDir);
+
+        const entries = Object.entries(data as Record<string, unknown>);
+        console.log(`[Backup] Found ${entries.length} modules to back up`);
+
+        for (const [key, value] of entries) {
+            if (!key) {
+                console.warn('[Backup] Skipping empty key');
+                continue;
+            }
+
+            if (value === undefined || value === null) {
+                console.warn(`[Backup] Module "${key}" is ${value}, skipping to avoid crash`);
+                logError(new Error(`Module "${key}" is ${value}`), 'Backup Skip Warning');
+                continue;
+            }
+
+            const fileName = `${key}.json`;
+            const filePath = path.join(backupDir, fileName);
+            console.log(`[Backup] Writing module: ${key} -> ${filePath}`);
+            try {
+                // Use explicit stringify to avoid library crashes on edge cases
+                const jsonStr = JSON.stringify(value, null, 2);
+                await fs.writeFile(filePath, jsonStr, 'utf-8');
+            } catch (writeErr) {
+                console.error(`[Backup] Failed to write ${key}:`, writeErr);
+                logError(writeErr, `Backup Write Error [Module: ${key}]`);
+                throw writeErr;
+            }
+        }
+
+        console.log('[Backup] All modules saved successfully');
+        
+        // Trigger Git Sync after successful save
+        console.log('[Backup] Triggering Git Sync...');
+        try {
+            const syncResult = await gitBackupService.syncData('backups');
+            if (!syncResult.success) {
+                console.warn('[Backup] Git Sync succeeded but with issues:', syncResult.error);
+                return { 
+                    success: true, 
+                    path: backupDir, 
+                    warning: `Fichiers sauvés mais échec de la synchro Git : ${syncResult.error}` 
+                };
+            }
+            console.log('[Backup] Git Sync completed successfully');
+            return { success: true, path: backupDir, synced: true };
+        } catch (syncErr) {
+            console.error('[Backup] Critical failure during Git Sync:', syncErr);
+            return { 
+                success: true, 
+                path: backupDir, 
+                error: `Fichiers sauvés mais crash lors de la synchro Git : ${(syncErr as Error).message}` 
+            };
+        }
+    } catch (error: unknown) {
+        const err = error as Error;
+        console.error('[Main] Backup save failed:', err);
+        logError(err, 'BackupHandler Error');
+        return { success: false, error: err.message };
+    }
+});
+
 ipcMain.handle('npc:select-avatar', async () => {
     const { filePaths } = await dialog.showOpenDialog({
         title: 'Sélectionner un Avatar',
@@ -752,10 +908,11 @@ ipcMain.handle('npc:select-avatar', async () => {
         properties: ['openFile']
     });
 
-    if (filePaths && filePaths.length > 0) {
+    if (filePaths && filePaths.length > 0 && typeof filePaths[0] === 'string') {
         const rawPath = filePaths[0];
         const normalized = rawPath.replace(/\\/g, '/');
-        return `file:///${encodeURI(normalized).replace(/#/g, '%23').replace(/\?/g, '%3F')}`;
+        // If it's in public/assets/avatars/npc, use gmos path, else return raw for save-avatar to handle
+        return normalized;
     }
     return null;
 });
@@ -766,10 +923,12 @@ ipcMain.handle('npc:save-avatar', async (_event, buffer: Buffer, fileName: strin
         await fs.ensureDir(avatarsDir);
         
         const filePath = path.join(avatarsDir, fileName);
+        if (!filePath || typeof filePath !== 'string') throw new Error('Chemin d\'avatar invalide.');
+
         await fs.writeFile(filePath, buffer);
         
         const normalized = filePath.replace(/\\/g, '/');
-        return `file:///${encodeURI(normalized).replace(/#/g, '%23').replace(/\?/g, '%3F')}`;
+        return `gmos://media/${normalized}`;
     } catch (error) {
         console.error('[Main] Error saving avatar:', error);
         return null;
@@ -807,13 +966,46 @@ app.whenReady().then(async () => {
 
     // Register custom protocol handler for local media
     protocol.handle('gmos', (request) => {
-        const url = request.url.replace(/^gmos:\/\/media\//, '');
-        const decodedPath = decodeURIComponent(url);
-        // On Windows, the path might start with C:/, net.fetch handles it well if it's a file:// URL or absolute path
-        const absolutePath = path.isAbsolute(decodedPath) ? decodedPath : path.join(process.env.APP_ROOT || '', decodedPath);
-        return net.fetch(`file:///${absolutePath}`);
+        console.log(`[Protocol:GMOS] Request received: ${request.url}`);
+        if (!request || !request.url) {
+            console.error('[Protocol:GMOS] Missing request URL');
+            return new Response('URL manquante', { status: 400 });
+        }
+        
+        try {
+            const rawUrl = String(request.url);
+            console.log(`[Protocol:GMOS] Raw URL string: "${rawUrl}"`);
+            const url = rawUrl.replace(/^gmos:\/\/media\//, '');
+            console.log(`[Protocol:GMOS] Decoded path part: "${url}"`);
+            const decodedPath = decodeURIComponent(url);
+            // On Windows, the path might start with C:/, net.fetch handles it well if it's a file:// URL or absolute path
+            const appRoot = process.env.APP_ROOT || '';
+            const absolutePath = path.isAbsolute(decodedPath) ? decodedPath : path.join(appRoot, decodedPath);
+            console.log(`[Protocol:GMOS] Final absolute path: "${absolutePath}"`);
+            return net.fetch(`file:///${absolutePath}`);
+        } catch (error) {
+            console.error('[Main] protocol:gmos error:', error);
+            const errMsg = error instanceof Error ? error.message : String(error);
+            return new Response(`Erreur interne du protocole gmos: ${errMsg}`, { status: 500 });
+        }
     });
 
     createWindow();
     startRemoteServer();
+
+    // --- Display Management ---
+    screen.on('display-added', () => {
+        console.log('[Main] Display added');
+        win?.webContents.send('app:display-changed', screen.getAllDisplays().length);
+    });
+
+    screen.on('display-removed', () => {
+        console.log('[Main] Display removed');
+        win?.webContents.send('app:display-changed', screen.getAllDisplays().length);
+    });
+
+    screen.on('display-metrics-changed', () => {
+        console.log('[Main] Display metrics changed');
+        win?.webContents.send('app:display-changed', screen.getAllDisplays().length);
+    });
 })

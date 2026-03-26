@@ -206,7 +206,11 @@ export const useSoundStore = create<SoundState>()(
                                     ...a.pads[padId],
                                     title: '',
                                     filePath: null,
-                                    isActive: false
+                                    isActive: false,
+                                    linkedLightSceneId: null,
+                                    keyMapping: null,
+                                    midiMapping: null,
+                                    volume: 1.0
                                 }
                             }
                         }
@@ -313,7 +317,7 @@ export const useSoundStore = create<SoundState>()(
         {
             name: 'gm-os-sound-storage',
             migrate: (persistedState: unknown, version: number) => {
-                const state = persistedState as Record<string, any>;
+                const state = persistedState as Record<string, unknown>;
                 if (version === 0) {
                     // Migrate from single 'pads' to 'atmospheres'
                     if (state.pads && !state.atmospheres) {

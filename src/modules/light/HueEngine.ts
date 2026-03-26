@@ -26,8 +26,7 @@ export class HueEngine {
 
     async discoverBridge(): Promise<string | null> {
         try {
-            type LightBridge = { request: (u: string, m: string, b?: unknown) => Promise<unknown> };
-            const bridge = (window as unknown as { appBridge?: { light?: LightBridge } }).appBridge?.light;
+            const bridge = window.appBridge?.light;
             let data: unknown;
             if (bridge) {
                 data = await bridge.request('https://discovery.meethue.com/', 'GET');
@@ -52,8 +51,7 @@ export class HueEngine {
         try {
             const url = `https://${ip}/api`;
             const payload = { devicetype: "gm_os_v5#windows" };
-            type LightBridge = { request: (u: string, m: string, b?: unknown) => Promise<unknown> };
-            const bridge = (window as unknown as { appBridge?: { light?: LightBridge } }).appBridge?.light;
+            const bridge = window.appBridge?.light;
             let data: unknown;
 
             if (bridge) {
@@ -98,8 +96,7 @@ export class HueEngine {
 
         const url = `https://${bridgeIp}/api/${username}${endpoint}`;
         try {
-            type LightBridge = { request: (u: string, m: string, b?: unknown) => Promise<unknown> };
-            const bridge = (window as unknown as { appBridge?: { light?: LightBridge } }).appBridge?.light;
+            const bridge = window.appBridge?.light;
             if (bridge) {
                 return await bridge.request(url, method, body);
             } else {

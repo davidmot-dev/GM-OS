@@ -6,7 +6,6 @@ import { useFavoriteStore } from '../modules/favorite/useFavoriteStore';
 import { useMapStore } from '../modules/map/useMapStore';
 import { useMediaUrl } from '../hooks/useMediaUrl';
 import PlayerMapCanvas from '../modules/map/components/PlayerMapCanvas';
-import MapTokenLayer from '../modules/map/components/MapTokenLayer';
 import { PlayerDrawingCanvas } from '../modules/whiteboard/components/PlayerDrawingCanvas';
 import { useWhiteboardStore } from '../modules/whiteboard/useWhiteboardStore';
 import { ResolvedImage } from './ResolvedImage';
@@ -15,15 +14,39 @@ import NarrativeClock from '../modules/clock/components/NarrativeClock';
 import ClockVisualizer from '../modules/clock/components/ClockVisualizer';
 import { useVoiceStore } from '../modules/voice/useVoiceStore';
 import { useTacticalAIStore } from '../modules/tactical-ai/useTacticalAIStore';
+import { useDiceStore } from '../stores/useDiceStore';
+import type { DieResult } from '../modules/dice/DiceEngine';
 
 
 const PlayerHub: React.FC = () => {
     const { mediaList, projections } = useImageStore();
     const { isClockProjected, timestamp, mode, theme, tensions } = useClockStore();
     const { favorites } = useFavoriteStore();
-    const { combatants, currentTurnIdx, round } = useCombatStore();
+    const { combatants, currentTurnIdx, round, isCombatProjected } = useCombatStore();
     const { mapUrl, projectionTarget } = useMapStore();
     const { backgroundMode, projectionTarget: whiteboardTarget } = useWhiteboardStore();
+    const { isDiceProjected, lastRoll, projectionTrigger } = useDiceStore();
+    const [showDice, setShowDice] = useState(false);
+    const diceTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+    const lastTriggerRef = React.useRef(0);
+
+    useEffect(() => {
+        // On affiche seulement si le mode est ON et qu'un nouveau trigger (lancer) survient
+        if (isDiceProjected && projectionTrigger > lastTriggerRef.current) {
+            lastTriggerRef.current = projectionTrigger;
+            const timerShow = setTimeout(() => setShowDice(true), 0);
+            
+            if (diceTimerRef.current) clearTimeout(diceTimerRef.current);
+            diceTimerRef.current = setTimeout(() => {
+                setShowDice(false);
+            }, 5000);
+
+            return () => clearTimeout(timerShow);
+        } else if (!isDiceProjected) {
+            const timerHide = setTimeout(() => setShowDice(false), 0);
+            return () => clearTimeout(timerHide);
+        }
+    }, [isDiceProjected, projectionTrigger]);
 
     const isWhiteboardActive = whiteboardTarget === 'hub';
 
@@ -50,7 +73,8 @@ const PlayerHub: React.FC = () => {
                 useMapStore.persist.rehydrate(),
                 useWhiteboardStore.persist.rehydrate(),
                 useVoiceStore.persist.rehydrate(),
-                useImageStore.persist.rehydrate()
+                useImageStore.persist.rehydrate(),
+                useDiceStore.persist.rehydrate()
             ]);
         };
         rehydrateAll();
@@ -88,7 +112,8 @@ const PlayerHub: React.FC = () => {
                 'gm-os-whiteboard-storage-v1': () => useWhiteboardStore.persist.rehydrate(),
                 'gmos-voice-storage': () => useVoiceStore.persist.rehydrate(),
                 'gm-os-tactical-ai': () => useTacticalAIStore.persist.rehydrate(),
-                'gmos-image-storage': () => useImageStore.persist.rehydrate()
+                'gmos-image-storage': () => useImageStore.persist.rehydrate(),
+                'gmos-dice-storage': () => useDiceStore.persist.rehydrate()
             };
 
             if (e.key && keys[e.key]) keys[e.key]();
@@ -98,17 +123,36 @@ const PlayerHub: React.FC = () => {
         return () => window.removeEventListener('storage', handleStorageChange);
     }, []);
 
-    const hasCombatants = combatants.length > 0;
-    const activeCombatant = hasCombatants ? combatants[currentTurnIdx] : null;
+    const visibleCombatants = combatants.filter(c => 
+        c.isPlayer || !c.statuses.some(s => {
+            const n = s.name.toLowerCase();
+            return n === 'invisible' || n === 'invisibilité' || n === 'caché' || n === 'hidden';
+        })
+    );
+    const hasCombatants = isCombatProjected && visibleCombatants.length > 0;
+    
+    // Find active combatant among visible ones, or use the real one if it's a player
+    const realActiveCombatant = combatants[currentTurnIdx];
+    const activeCombatant = (realActiveCombatant && (realActiveCombatant.isPlayer || !realActiveCombatant.statuses.some(s => {
+        const n = s.name.toLowerCase();
+        return n === 'invisible' || n === 'invisibilité' || n === 'caché' || n === 'hidden';
+    }))) ? realActiveCombatant : null;
     const sharedFavorites = favorites.filter(f => f.isSyncedToPlayerHub);
 
-    // Sort the upcoming combatants
+    // Sort the upcoming combatants among visible ones
     const upcomingCombatants: Combatant[] = [];
-    if (hasCombatants && combatants.length > 1) {
-        let i = (currentTurnIdx + 1) % combatants.length;
-        while (i !== currentTurnIdx) {
-            upcomingCombatants.push(combatants[i]);
-            i = (i + 1) % combatants.length;
+    if (hasCombatants && visibleCombatants.length > 1) {
+        // Find index of active in visible list
+        const visibleIdx = activeCombatant ? visibleCombatants.findIndex(c => c.id === activeCombatant.id) : -1;
+        if (visibleIdx !== -1) {
+            let i = (visibleIdx + 1) % visibleCombatants.length;
+            while (i !== visibleIdx) {
+                upcomingCombatants.push(visibleCombatants[i]);
+                i = (i + 1) % visibleCombatants.length;
+            }
+        } else {
+            // If active is hidden, just show all visible
+            upcomingCombatants.push(...visibleCombatants);
         }
     }
 
@@ -160,14 +204,7 @@ const PlayerHub: React.FC = () => {
                 <PlayerDrawingCanvas />
             </div>
 
-            {/* Map Tokens Layer (Z-35) - Above Whiteboard */}
-            {isMapActive && (
-                <div className="fixed inset-0 z-35 pointer-events-none">
-                    <MapTokenLayer />
-                </div>
-            )}
-
-            {/* Overlay for focus */}
+            {/* Overlays for focus */}
             {(sharedFavorites.length > 0 || liveEntity) && (
                 <div className={`fixed inset-0 z-5 bg-black/${isMapActive ? '60' : '40'} backdrop-blur-[2px] pointer-events-none transition-all duration-700`}></div>
             )}
@@ -272,6 +309,49 @@ const PlayerHub: React.FC = () => {
                             </div>
                         </div>
                     )}
+
+                    {/* Dice Projection Overlay */}
+                    <div className={`fixed inset-0 z-[70] flex items-center justify-center p-12 pointer-events-none transition-all duration-1000 ${
+                        showDice ? 'opacity-100' : 'opacity-0'
+                    }`}>
+                        {lastRoll && (
+                            <div className={`bg-slate-950/80 backdrop-blur-3xl border-2 border-gm-cyan/30 rounded-[3rem] p-12 shadow-[0_0_100px_rgba(34,211,238,0.3)] flex flex-col items-center gap-8 max-w-2xl w-full transform transition-all duration-1000 ${
+                                showDice ? 'scale-100 translate-y-0 animate-in zoom-in' : 'scale-95 translate-y-8 duration-700'
+                            }`}>
+                                <div className="flex flex-col items-center gap-2 text-center">
+                                    <span className="text-gm-cyan text-xs font-black uppercase tracking-[0.5em] animate-pulse">Dice Result</span>
+                                    <h2 className="text-white/80 text-xl font-black tracking-tight uppercase drop-shadow-lg">{lastRoll.title}</h2>
+                                </div>
+
+                                <div className="text-6xl md:text-8xl leading-tight font-black text-white drop-shadow-[0_0_40px_rgba(255,255,255,0.4)] transition-all text-center break-words max-w-full">
+                                    {lastRoll.totalDisplay}
+                                </div>
+
+                                {lastRoll.tagSuccess !== undefined && (
+                                    <div className={`px-12 py-3 rounded-full text-2xl font-black uppercase tracking-[0.3em] shadow-2xl ${
+                                        lastRoll.tagSuccess 
+                                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 shadow-emerald-500/20' 
+                                            : 'bg-rose-500/20 text-rose-400 border border-rose-500/50 shadow-rose-500/20'
+                                    }`}>
+                                        {lastRoll.tagSuccess ? 'Success' : 'Failure'}
+                                    </div>
+                                )}
+
+                                <div className="flex flex-wrap gap-4 justify-center mt-4">
+                                    {(lastRoll.rolls as DieResult[]).map((r, i) => (
+                                        <div key={i} className={`size-16 flex items-center justify-center rounded-2xl text-2xl font-black border-2 transition-all ${
+                                            r.isExploded ? 'bg-indigo-500/20 border-indigo-400 text-indigo-300 shadow-glow-indigo/30 scale-110' :
+                                            r.isCritMax ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300 shadow-glow-emerald/30 scale-110' :
+                                            r.isCritMin ? 'bg-rose-500/20 border-rose-400 text-rose-300 shadow-glow-crimson/30 scale-90' :
+                                            'bg-white/5 border-white/10 text-white/50'
+                                        }`}>
+                                            {r.displayStr || r.val}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 {/* 3. Sync Status */}

@@ -23,6 +23,7 @@ import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { type ForgeContextItem } from '../ForgeService';
 import { chronicleForgeService, type ChronicleForgeResult } from '../ChronicleService';
 import { gmToast } from '../../../stores/useToastStore';
+import { gmConfirm } from '../../../stores/useModalStore';
 import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 
 
@@ -169,40 +170,45 @@ const ChronicleForge: React.FC = () => {
 
   const handleSourceImport = async (sourceId: string, title: string) => {
     if (importingSources.has(sourceId)) return;
-    
-    setImportingSources(prev => new Set(prev).add(sourceId));
-    
-    try {
-      const result = await callMcpToolWithRetry<{ content: any }>('notebooklm-mcp-server', 'source_get_content', { source_id: sourceId });
-      
-      let content = result.content;
-      if (typeof content === 'string' && (content.startsWith('{') || content.startsWith('['))) {
-        try {
-          const parsed = JSON.parse(content);
-          content = parsed.content || parsed;
-        } catch { /* use as is */ }
-      }
 
-      const newItem: ForgeContextItem = {
-        id: crypto.randomUUID(),
-        name: `[NB] ${title}`,
-        type: 'text',
-        content: typeof content === 'string' ? content : JSON.stringify(content),
-        timestamp: Date.now()
-      };
-      setContextItems(prev => [...prev, newItem]);
-      gmToast(`${title} importé avec succès.`, "success");
-      
-    } catch (err) {
-      console.error(err);
-      gmToast("Échec de l'importation.", "error");
-    } finally {
-      setImportingSources(prev => {
-        const next = new Set(prev);
-        next.delete(sourceId);
-        return next;
-      });
-    }
+    gmConfirm(
+      `Voulez-vous importer "${title}" de NotebookLM dans la forge ?`,
+      async () => {
+        setImportingSources(prev => new Set(prev).add(sourceId));
+
+        try {
+          const result = await callMcpToolWithRetry<{ content: unknown }>('notebooklm-mcp-server', 'source_get_content', { source_id: sourceId });
+
+          let content = result.content;
+          if (typeof content === 'string' && (content.startsWith('{') || content.startsWith('['))) {
+            try {
+              const parsed = JSON.parse(content);
+              content = parsed.content || parsed;
+            } catch { /* use as is */ }
+          }
+
+          const newItem: ForgeContextItem = {
+            id: crypto.randomUUID(),
+            name: `[NB] ${title}`,
+            type: 'text',
+            content: typeof content === 'string' ? content : JSON.stringify(content),
+            timestamp: Date.now()
+          };
+          setContextItems(prev => [...prev, newItem]);
+          gmToast(`${title} importé avec succès.`, "success");
+
+        } catch (err) {
+          console.error(err);
+          gmToast("Échec de l'importation.", "error");
+        } finally {
+          setImportingSources(prev => {
+            const next = new Set(prev);
+            next.delete(sourceId);
+            return next;
+          });
+        }
+      }
+    );
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,5 +1,6 @@
 import React from 'react';
-import { useMapStore, type MapPing } from '../useMapStore';
+import { useMapStore } from '../useMapStore';
+import type { MapPing } from '../types';
 
 interface MapPingLayerProps {
     isProjectedView: boolean;

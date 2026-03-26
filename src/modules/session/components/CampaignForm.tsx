@@ -1,21 +1,34 @@
 import React, { useState } from 'react';
 import { useSessionOSStore, type Campaign } from '../useSessionOSStore';
-import { Save, X, BookOpen, ImageIcon, Info, MapPin, Sparkles } from 'lucide-react';
+import { 
+    Save, X, BookOpen, ImageIcon, MapPin, Sparkles, 
+    Brain, Map, PenTool, Check, Loader2, Users, Layout, 
+    ArrowLeft, ExternalLink, Trash2, Edit3, Fingerprint,
+    Info
+} from 'lucide-react';
+import { useGemStore } from '../../../stores/useGemStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import { gmToast } from '../../../stores/useToastStore';
+import { personaGeneratorService } from '../../ai/PersonaGeneratorService';
 
 interface CampaignFormProps {
-    campaign?: Campaign | { campaignId: string }; // Can be full object or just a reference ID
+    campaign?: Campaign | { campaignId: string };
     onClose: () => void;
 }
 
+type SectionId = 'identity' | 'narrative' | 'ambience' | 'world' | 'intelligence';
+
 const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, onClose }) => {
-    const { campaigns, atlasMaps, addCampaign, updateCampaign, customSheetTemplates, customGameDrivers } = useSessionOSStore();
+    const { 
+        campaigns, atlasMaps, addCampaign, updateCampaign, 
+        customSheetTemplates, customGameDrivers, entities, 
+        setCurrentView 
+    } = useSessionOSStore();
     
-    // If we only received an ID (common in the modal system), find the full campaign
+    // Identity logic
     const fullCampaign = campaign && 'id' in campaign ? campaign as Campaign : 
                         (campaign && 'campaignId' in campaign ? campaigns.find(c => c.id === (campaign as { campaignId: string }).campaignId) : undefined);
 
@@ -28,21 +41,25 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, onClose }) => {
     const [systemPath, setSystemPath] = useState(fullCampaign?.systemPath || '');
     const [campaignPath, setCampaignPath] = useState(fullCampaign?.campaignPath || '');
     const [activeLocationIds, setActiveLocationIds] = useState<string[]>(fullCampaign?.activeLocationIds || []);
+    const [aiPersonas, setAiPersonas] = useState<Record<string, string>>(fullCampaign?.aiPersonas || {});
     
-    // Combine builtin and custom templates
-    const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
-    
-    // Get maps for this campaign to allow pinning as "active"
-    const campaignMaps = atlasMaps.filter(m => m.campaignId === fullCampaign?.id);
-    
+    // UI State
+    const [activeSection, setActiveSection] = useState<SectionId>('identity');
     const [isMediaBrowserOpen, setIsMediaBrowserOpen] = useState(false);
-    const resolvedWallpaper = useMediaUrl(wallpaperUrl);
+    const [isGenerating, setIsGenerating] = useState(false);
+    
+    const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
+    const { gems, syncGemsWithDefaults } = useGemStore();
+    
+    React.useEffect(() => {
+        syncGemsWithDefaults();
+    }, [syncGemsWithDefaults]);
 
+    const campaignMaps = atlasMaps.filter(m => m.campaignId === fullCampaign?.id);
+    const resolvedWallpaper = useMediaUrl(wallpaperUrl);
     const isEdit = !!fullCampaign;
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        
+    const handleSubmit = () => {
         const campaignData = {
             name,
             system,
@@ -52,278 +69,405 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, onClose }) => {
             notebookUrl,
             systemPath,
             campaignPath,
-            activeLocationIds
-        };
+            activeLocationIds,
+            aiPersonas
+        } as Partial<Campaign>;
 
         if (isEdit && fullCampaign) {
             updateCampaign(fullCampaign.id, campaignData);
-            gmToast('Campagne mise à jour avec succès !');
+            gmToast('Paramètres de campagne mis à jour.');
         } else {
-            addCampaign(campaignData);
-            gmToast('Nouvelle aventure créée !');
+            addCampaign(campaignData as Omit<Campaign, 'id'>);
+            gmToast('Nouvelle campagne initialisée.');
         }
-        
         onClose();
     };
 
+    const handleAutoGenerate = async () => {
+        if (!name) {
+            gmToast('Nom de campagne requis pour la génération.', 'error');
+            return;
+        }
+        setIsGenerating(true);
+        try {
+            const personas = await personaGeneratorService.generateAllPersonas({
+                name,
+                universe: system,
+                style: description || system,
+                objective: synopsis
+            }, false);
+            setAiPersonas(personas);
+            gmToast('Résonances Éthériques synchronisées.');
+        } catch (error) {
+            gmToast('Échec de la synchronisation neurale.', 'error');
+        } finally {
+            setIsGenerating(false);
+        }
+    };
+
+    const sidebarItems: { id: SectionId; icon: any; label: string }[] = [
+        { id: 'identity', icon: Layout, label: 'Identité' },
+        { id: 'narrative', icon: BookOpen, label: 'Narration' },
+        { id: 'ambience', icon: ImageIcon, label: 'Ambiance' },
+        { id: 'world', icon: Map, label: 'Monde' },
+        { id: 'intelligence', icon: Sparkles, label: 'Intelligence' },
+    ];
+
     return (
-        <div className="flex flex-col h-full bg-app-bg text-app-text/80">
-            {/* Header */}
-            <div className="p-6 border-b border-app-border/10 flex items-center justify-between bg-app-surface/40">
-                <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center text-accent">
-                        <BookOpen size={20} />
-                    </div>
-                    <div>
-                        <h2 className="text-xl font-black uppercase tracking-tighter">
-                            {isEdit ? 'Éditer la Campagne' : 'Nouvelle Aventure'}
-                        </h2>
-                        <p className="text-[10px] text-app-text/40 font-bold uppercase tracking-widest">Configure ton univers de jeu</p>
+        <div className="flex flex-col h-full w-full bg-[#0a0a0c] text-[#dee5ff] font-['Space_Grotesk'] overflow-hidden">
+            {/* Top Command Bar */}
+            <header className="h-16 flex items-center justify-between px-8 border-b border-white/5 bg-black/40 backdrop-blur-2xl z-50">
+                <div className="flex items-center gap-6">
+                    <button 
+                        type="button"
+                        onClick={onClose}
+                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-white/40 hover:text-white transition-all text-xs font-bold border border-white/5"
+                    >
+                        <ArrowLeft size={14} />
+                        Retour Cockpit
+                    </button>
+                    <div className="h-6 w-px bg-white/10" />
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-gm-gold/10 flex items-center justify-center border border-gm-gold/20">
+                            <Fingerprint className="text-gm-gold" size={18} />
+                        </div>
+                        <h1 className="text-sm font-black uppercase tracking-[0.2em] text-white/80">
+                            Editor <span className="text-white/20 px-2">//</span> 
+                            <span className="text-gm-gold">{isEdit ? 'Modification de Campagne' : 'Nouvelle Aventure'}</span>
+                        </h1>
                     </div>
                 </div>
-                <button 
-                    onClick={onClose}
-                    className="p-2 hover:bg-app-surface rounded-full transition-colors text-app-text/20 hover:text-white"
-                >
-                    <X size={20} />
-                </button>
-            </div>
 
-            {/* Form */}
-            <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-8 custom-scrollbar">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div className="flex items-center gap-4">
+                    <button 
+                        type="button"
+                        onClick={handleSubmit}
+                        className="flex items-center gap-2 bg-gm-gold hover:bg-yellow-500 text-black font-black px-6 py-2 rounded-xl text-[10px] tracking-widest uppercase transition-all shadow-glow-gold/20"
+                    >
+                        <Save size={14} />
+                        Synchroniser Nexus
+                    </button>
+                    <button 
+                        type="button"
+                        onClick={onClose}
+                        className="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl text-white/20 hover:text-white hover:bg-red-500/20 transition-all border border-white/5"
+                    >
+                        <X size={18} />
+                    </button>
+                </div>
+            </header>
+
+            <div className="flex flex-1 overflow-hidden">
+                {/* Left Navigation Sidebar */}
+                <aside className="w-20 flex flex-col items-center py-8 gap-6 border-r border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl">
+                    {sidebarItems.map(item => (
+                        <button
+                            key={item.id}
+                            type="button"
+                            onClick={() => setActiveSection(item.id)}
+                            title={item.label}
+                            className={`group relative w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 ${
+                                activeSection === item.id 
+                                ? 'bg-gm-gold text-black shadow-glow-gold' 
+                                : 'bg-white/5 text-white/20 hover:bg-white/10 hover:text-white/60'
+                            }`}
+                        >
+                            <item.icon size={20} />
+                            <span className="absolute left-full ml-4 px-3 py-1.5 bg-black border border-white/10 rounded-lg text-[10px] font-black uppercase tracking-widest text-gm-gold opacity-0 group-hover:opacity-100 pointer-events-none transition-all translate-x-[-10px] group-hover:translate-x-0 z-50 whitespace-nowrap">
+                                {item.label}
+                            </span>
+                        </button>
+                    ))}
                     
-                    {/* Left Column: Story & Identity */}
-                    <div className="space-y-8">
-                        {/* Identity */}
-                        <div className="grid grid-cols-2 gap-6">
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40 px-1">Nom de la Campagne</label>
-                                <div className="relative">
-                                    <BookOpen className="absolute left-3 top-1/2 -translate-y-1/2 text-app-text/20" size={16} />
-                                    <input 
-                                        required
-                                        type="text"
-                                        value={name}
-                                        onChange={e => setName(e.target.value)}
-                                        placeholder="ex: Le Trésor de l'Île Morte"
-                                        className="w-full bg-app-surface/60 border border-app-border/20 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-1 focus:ring-accent/40 transition-all font-bold"
-                                    />
-                                </div>
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40 px-1">Système de Jeu</label>
-                                <select 
-                                    value={system}
-                                    onChange={e => {
-                                        const newSystemId = e.target.value;
-                                        setSystem(newSystemId);
-                                        
-                                        // Auto-cohesion: If this is a driver, we might want to store more than just the ID 
-                                        // but for now the ID lookup is enough. The important thing is that 
-                                        // when a driver is active, the sheet template is derived from it.
-                                    }}
-                                    className="w-full bg-app-surface/60 border border-app-border/20 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-accent/40 transition-all font-bold appearance-none cursor-pointer"
-                                >
-                                    <optgroup label="Modèles de Fiches (UI)">
-                                        {allTemplates.map(t => (
-                                            <option key={t.id} value={t.id} className="bg-app-surface text-app-text">{t.emoji} {t.name}</option>
-                                        ))}
-                                    </optgroup>
-                                    {customGameDrivers.length > 0 && (
-                                        <optgroup label="Règles & IA (Drivers)">
-                                            {customGameDrivers.map(d => (
-                                                <option key={d.id} value={d.id} className="bg-app-surface text-app-text">{d.emoji} {d.name} (Rulebook)</option>
-                                            ))}
-                                        </optgroup>
-                                    )}
-                                </select>
-                            </div>
+                    <div className="mt-auto flex flex-col gap-4">
+                        <div className="w-8 h-px bg-white/5" />
+                        <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-white/10">
+                            <Info size={18} />
                         </div>
+                    </div>
+                </aside>
 
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-blue-400 px-1 flex items-center gap-2">
-                                <Sparkles size={12} /> NotebookLM de Campagne (Surcharge)
-                            </label>
-                            <input 
-                                type="text"
-                                value={notebookUrl}
-                                onChange={e => setNotebookUrl(e.target.value)}
-                                placeholder="Laisse vide pour utiliser le NotebookLM du système..."
-                                className="w-full bg-app-surface/60 border border-app-border/20 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500/40 transition-all font-bold"
-                            />
-                        </div>
-
-                        {/* RAG Paths (Strict Documentation) */}
-                        <div className="p-6 rounded-2xl bg-blue-500/5 border border-blue-500/10 space-y-6">
-                            <div className="flex items-center gap-2">
-                                <div className="w-6 h-6 rounded-lg bg-blue-500 flex items-center justify-center text-app-bg">
-                                    <BookOpen size={14} />
-                                </div>
-                                <p className="text-[10px] font-black uppercase tracking-widest text-blue-400">Cerfeau AI : Chemins RAG (Optionnel)</p>
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Main Content Area */}
+                <main className="flex-1 overflow-y-auto custom-scrollbar p-16 bg-[#0a0a0c]">
+                    <div className="max-w-4xl mx-auto space-y-16 animate-in fade-in slide-in-from-bottom-8 duration-700">
+                        
+                        {/* 1. IDENTITY SECTION */}
+                        {activeSection === 'identity' && (
+                            <div className="space-y-12">
                                 <div className="space-y-2">
-                                    <label className="text-[9px] font-black uppercase tracking-widest text-app-text/40 px-1">Répertoire Système</label>
-                                    <input 
-                                        type="text"
-                                        value={systemPath}
-                                        onChange={e => setSystemPath(e.target.value)}
-                                        placeholder="ex: systems/dune"
-                                        className="w-full bg-app-bg/60 border border-app-border/20 rounded-xl py-2 px-3 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500/40 transition-all font-mono"
-                                    />
+                                    <h2 className="text-2xl font-black tracking-tight text-white flex items-center gap-4">
+                                        <Layout className="text-gm-gold" size={28} />
+                                        Identité Fondamentale
+                                    </h2>
+                                    <p className="text-sm text-white/40 tracking-wide uppercase font-bold">Définissez les paramètres de base de votre univers.</p>
                                 </div>
-                                <div className="space-y-2">
-                                    <label className="text-[9px] font-black uppercase tracking-widest text-app-text/40 px-1">Répertoire Campagne</label>
-                                    <input 
-                                        type="text"
-                                        value={campaignPath}
-                                        onChange={e => setCampaignPath(e.target.value)}
-                                        placeholder="ex: campaigns/dune-session-1"
-                                        className="w-full bg-app-bg/60 border border-app-border/20 rounded-xl py-2 px-3 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500/40 transition-all font-mono"
-                                    />
-                                </div>
-                            </div>
-                            <p className="text-[9px] text-app-text/30 italic">
-                                Indique les dossiers dans <code className="bg-app-surface px-1 rounded">docs/</code> pour forcer le contexte de l'IA.
-                            </p>
-                        </div>
 
-                        {/* Cohesion Info */}
-                        {system && (
-                            <div className="p-4 rounded-2xl bg-accent/5 border border-accent/10 animate-fade-in">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-2 rounded-xl bg-accent text-app-bg">
-                                        <Sparkles size={12} />
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                                    <div className="space-y-4">
+                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gm-gold/60 px-2 flex items-center gap-2">
+                                            <Edit3 size={12} /> Nom de l'Opération
+                                        </label>
+                                        <input 
+                                            value={name}
+                                            onChange={e => setName(e.target.value)}
+                                            placeholder="ex: Chroniques du Vide"
+                                            className="w-full bg-[#121215] border border-white/5 rounded-2xl py-5 px-6 text-base font-bold tracking-wide focus:outline-none focus:border-gm-gold/40 focus:ring-1 focus:ring-gm-gold/20 transition-all text-[#dee5ff]"
+                                        />
                                     </div>
-                                    <div>
-                                        <p className="text-[10px] font-black uppercase text-accent tracking-widest">Cohésion Active</p>
-                                        <p className="text-[9px] text-app-text/60 font-bold uppercase">
-                                            {customGameDrivers.find(d => d.id === system) 
-                                                ? `Moteur lié à : ${allTemplates.find(t => t.id === customGameDrivers.find(d => d.id === system)?.templateId)?.name || 'aucune fiche'}`
-                                                : "Mode Fiche Standard (IA Générique Dice-OS)"}
-                                        </p>
+                                    <div className="space-y-4">
+                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gm-gold/60 px-2 flex items-center gap-2">
+                                            <Sparkles size={12} /> Référentiel Système
+                                        </label>
+                                        <select 
+                                            value={system}
+                                            onChange={e => setSystem(e.target.value)}
+                                            className="w-full bg-[#121215] border border-white/5 rounded-2xl py-5 px-6 text-base font-bold tracking-wide focus:outline-none focus:border-gm-gold/40 transition-all text-[#dee5ff] appearance-none"
+                                        >
+                                            <optgroup label="UI Templates">
+                                                {allTemplates.map(t => (
+                                                    <option key={t.id} value={t.id}>{t.emoji} {t.name}</option>
+                                                ))}
+                                            </optgroup>
+                                        </select>
                                     </div>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gm-gold/60 px-2 flex items-center gap-2">
+                                        <Info size={12} /> Description Courte (Tagline)
+                                    </label>
+                                    <input 
+                                        value={description}
+                                        onChange={e => setDescription(e.target.value)}
+                                        placeholder="Une brève accroche pour votre aventure..."
+                                        className="w-full bg-[#121215] border border-white/5 rounded-2xl py-5 px-6 text-base font-bold focus:outline-none focus:border-gm-gold/40 transition-all text-white/70"
+                                    />
                                 </div>
                             </div>
                         )}
 
-                        {/* Description */}
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40 px-1 flex items-center gap-2">
-                                <Info size={12} /> Accroche (Courte)
-                            </label>
-                            <textarea 
-                                value={description}
-                                onChange={e => setDescription(e.target.value)}
-                                placeholder="Une brève description pour la bibliothèque..."
-                                rows={2}
-                                className="w-full bg-app-surface/60 border border-app-border/20 rounded-xl p-4 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-accent/40 transition-all font-bold"
-                            />
-                        </div>
+                        {/* 2. NARRATIVE SECTION */}
+                        {activeSection === 'narrative' && (
+                            <div className="space-y-12">
+                                <div className="space-y-2">
+                                    <h2 className="text-2xl font-black tracking-tight text-white flex items-center gap-4">
+                                        <BookOpen className="text-gm-gold" size={28} />
+                                        Trame Narrative
+                                    </h2>
+                                    <p className="text-sm text-white/40 tracking-wide uppercase font-bold">Documentez les enjeux et le synopsis de l'intrigue.</p>
+                                </div>
 
-                        {/* Synopsis */}
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40 px-1 flex items-center gap-2">
-                                <BookOpen size={12} /> Synopsis de l'Aventure
-                            </label>
-                            <textarea 
-                                value={synopsis}
-                                onChange={e => setSynopsis(e.target.value)}
-                                placeholder="Le texte détaillé de l'intrigue..."
-                                rows={10}
-                                className="w-full bg-app-surface/60 border border-app-border/20 rounded-xl p-4 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-accent/40 transition-all font-serif italic text-app-text/60"
-                            />
-                        </div>
-                    </div>
+                                <div className="space-y-4">
+                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gm-gold/60 px-2 flex items-center gap-2">
+                                        <PenTool size={12} /> Synopsis de l'Aventure
+                                    </label>
+                                    <textarea 
+                                        value={synopsis}
+                                        onChange={e => setSynopsis(e.target.value)}
+                                        placeholder="Détaillez ici les points clés de l'histoire..."
+                                        rows={12}
+                                        className="w-full bg-[#121215] border border-white/5 rounded-[2.5rem] p-10 text-lg leading-relaxed focus:outline-none focus:border-gm-gold/40 transition-all font-serif italic text-white/60 resize-none custom-scrollbar"
+                                    />
+                                </div>
+                            </div>
+                        )}
 
-                    {/* Right Column: Visuals & Places */}
-                    <div className="space-y-8">
-                        {/* Visual Header / Wallpaper */}
-                        <div className="space-y-3">
-                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-accent flex items-center gap-2 px-1">
-                                <ImageIcon size={12} /> Ambiance Visuelle
-                            </label>
-                            <div 
-                                className="relative h-64 rounded-2xl bg-app-bg border-2 border-dashed border-app-border hover:border-accent/30 transition-all group cursor-pointer overflow-hidden flex items-center justify-center p-2"
-                                onClick={() => setIsMediaBrowserOpen(true)}
-                            >
-                                {wallpaperUrl && resolvedWallpaper ? (
-                                    <img src={resolvedWallpaper} className="w-full h-full object-cover rounded-xl shadow-2xl" alt="Wallpaper" />
+                        {/* 3. AMBIENCE SECTION */}
+                        {activeSection === 'ambience' && (
+                            <div className="space-y-12">
+                                <div className="space-y-2">
+                                    <h2 className="text-2xl font-black tracking-tight text-white flex items-center gap-4">
+                                        <ImageIcon className="text-gm-gold" size={28} />
+                                        Ambiance Visuelle
+                                    </h2>
+                                    <p className="text-sm text-white/40 tracking-wide uppercase font-bold">Configurez l'esthétique du centre de commandement.</p>
+                                </div>
+
+                                <div 
+                                    className="relative aspect-video rounded-[3rem] bg-[#121215] border-2 border-dashed border-white/5 hover:border-gm-gold/30 transition-all duration-700 group cursor-pointer overflow-hidden flex items-center justify-center p-4 shadow-2xl"
+                                    onClick={() => setIsMediaBrowserOpen(true)}
+                                >
+                                    {wallpaperUrl && resolvedWallpaper ? (
+                                        <>
+                                            <ResolvedAsset src={wallpaperUrl} className="w-full h-full object-cover rounded-[2.5rem] opacity-60 group-hover:opacity-100 transition-all duration-1000 group-hover:scale-105" />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60" />
+                                            <div className="absolute inset-x-8 bottom-8 p-10 opacity-0 group-hover:opacity-100 transition-all translate-y-4 group-hover:translate-y-0 duration-500">
+                                                <div className="px-10 py-4 bg-gm-gold text-black text-[10px] font-black uppercase tracking-[0.3em] rounded-2xl shadow-glow-gold">Changer le Wallpaper</div>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <div className="flex flex-col items-center gap-6 text-white/10 group-hover:text-gm-gold/40 transition-all duration-500">
+                                            <ImageIcon size={64} strokeWidth={1} />
+                                            <span className="text-xs font-black uppercase tracking-[0.4em]">Définir Wallpaper de Campagne</span>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* 4. WORLD SECTION */}
+                        {activeSection === 'world' && (
+                            <div className="space-y-12">
+                                <div className="space-y-2">
+                                    <h2 className="text-2xl font-black tracking-tight text-white flex items-center gap-4">
+                                        <Map className="text-gm-gold" size={28} />
+                                        Atlas & Lieux Actifs
+                                    </h2>
+                                    <p className="text-sm text-white/40 tracking-wide uppercase font-bold">Épinglez les dossiers tactiques pour y accéder en session.</p>
+                                </div>
+
+                                {campaignMaps.length > 0 ? (
+                                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
+                                        {campaignMaps.map(map => {
+                                            const isActive = activeLocationIds.includes(map.id);
+                                            return (
+                                                <button
+                                                    key={map.id}
+                                                    type="button"
+                                                    onClick={() => {
+                                                        if (isActive) {
+                                                            setActiveLocationIds(activeLocationIds.filter(id => id !== map.id));
+                                                        } else {
+                                                            setActiveLocationIds([...activeLocationIds, map.id]);
+                                                        }
+                                                    }}
+                                                    className={`flex flex-col rounded-[2.5rem] border transition-all duration-500 overflow-hidden group ${
+                                                        isActive
+                                                        ? 'bg-gm-gold/10 border-gm-gold/40 shadow-glow-gold/10'
+                                                        : 'bg-[#121215] border-white/5 hover:border-white/20'
+                                                    }`}
+                                                >
+                                                    <div className="aspect-[4/3] relative overflow-hidden bg-black/40">
+                                                        <ResolvedAsset 
+                                                            src={map.fileUrl} 
+                                                            className={`w-full h-full object-cover transition-all duration-700 ${isActive ? 'scale-110 opacity-100' : 'opacity-40 grayscale group-hover:grayscale-0 group-hover:opacity-80'}`} 
+                                                            alt={map.name}
+                                                        />
+                                                        {isActive && (
+                                                            <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gm-gold text-black flex items-center justify-center shadow-glow-gold">
+                                                                <Check size={16} strokeWidth={3} />
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    <div className="p-6 text-center">
+                                                        <span className={`text-[10px] font-black uppercase tracking-widest ${isActive ? 'text-gm-gold' : 'text-white/30 group-hover:text-white/60'}`}>{map.name}</span>
+                                                    </div>
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
                                 ) : (
-                                    <div className="flex flex-col items-center gap-2 text-app-text/20 group-hover:text-accent/50">
-                                        <ImageIcon size={32} />
-                                        <span className="text-xs font-bold">Choisir une image de fond</span>
+                                    <div className="py-20 border-2 border-dashed border-white/5 rounded-[3rem] text-center flex flex-col items-center gap-6">
+                                        <MapPin size={48} className="text-white/10" />
+                                        <div className="space-y-2">
+                                            <p className="text-xs font-black uppercase tracking-widest text-white/20">Aucune carte associée</p>
+                                            <p className="text-[10px] text-white/10 font-bold uppercase tracking-widest max-w-xs px-6">Liez des cartes via le World Atlas pour les épingler ici.</p>
+                                        </div>
                                     </div>
                                 )}
-                                <div className="absolute inset-0 bg-app-bg/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-accent font-bold text-xs uppercase tracking-widest">
-                                    Changer l'image
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Active Locations Management */}
-                        {isEdit && campaignMaps.length > 0 && (
-                            <div className="space-y-4">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40 px-1 flex items-center gap-2">
-                                    <MapPin size={12} /> Lieux Actifs (Favoris)
-                                </label>
-                                <div className="grid grid-cols-2 gap-3 max-h-80 overflow-y-auto custom-scrollbar pr-2">
-                                    {campaignMaps.map(map => (
-                                        <button
-                                            key={map.id}
-                                            type="button"
-                                            onClick={() => {
-                                                if (activeLocationIds.includes(map.id)) {
-                                                    setActiveLocationIds(activeLocationIds.filter(id => id !== map.id));
-                                                } else {
-                                                    setActiveLocationIds([...activeLocationIds, map.id]);
-                                                }
-                                            }}
-                                            className={`flex items-center gap-3 p-3 rounded-xl border transition-all text-left ${
-                                                activeLocationIds.includes(map.id)
-                                                ? 'bg-accent/10 border-accent/40 text-accent shadow-glow-accent/10'
-                                                : 'bg-app-surface/40 border-app-border/40 text-app-text/40 hover:border-app-border/80'
-                                            }`}
-                                        >
-                                            <div className="w-10 h-10 rounded bg-app-bg overflow-hidden flex-shrink-0 border border-app-border/20">
-                                                <ResolvedAsset 
-                                                    src={map.fileUrl} 
-                                                    isVideo={map.isVideo}
-                                                    className={`w-full h-full object-cover ${activeLocationIds.includes(map.id) ? 'opacity-100' : 'opacity-40'}`} 
-                                                    alt="" 
-                                                />
-                                            </div>
-                                            <span className="text-xs font-bold truncate">{map.name}</span>
-                                            {activeLocationIds.includes(map.id) && <div className="w-2 h-2 rounded-full bg-accent shadow-glow-accent ml-auto" />}
-                                        </button>
-                                    ))}
-                                </div>
-                                <p className="text-[10px] text-app-text/20 italic px-1">
-                                    Les lieux épinglés apparaissent dans le cockpit de session pour un accès rapide.
-                                </p>
                             </div>
                         )}
-                    </div>
-                </div>
-            </form>
 
-            {/* Footer Actions */}
-            <div className="p-6 border-t border-app-border/10 bg-app-surface/40 flex justify-end gap-3">
-                <button 
-                    onClick={onClose}
-                    className="px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest text-app-text/40 hover:text-white transition-colors"
-                >
-                    Annuler
-                </button>
-                <button 
-                    onClick={handleSubmit}
-                    className="flex items-center gap-2 bg-accent hover:brightness-110 text-app-bg font-black px-8 py-2.5 rounded-xl text-xs tracking-widest transition-all shadow-glow-accent/20 hover:scale-105 active:scale-95"
-                >
-                    <Save size={16} />
-                    {isEdit ? 'Mettre à jour' : 'Créer la Campagne'}
-                </button>
+                        {/* 5. INTELLIGENCE SECTION */}
+                        {activeSection === 'intelligence' && (
+                            <div className="space-y-12">
+                                <div className="space-y-2">
+                                    <h2 className="text-2xl font-black tracking-tight text-white flex items-center gap-4">
+                                        <Sparkles className="text-gm-gold" size={28} />
+                                        Intelligence OS (AI)
+                                    </h2>
+                                    <p className="text-sm text-white/40 tracking-wide uppercase font-bold">Configurez les vecteurs de résonance AI et RAG.</p>
+                                </div>
+
+                                <div className="p-10 rounded-[3rem] bg-gradient-to-br from-gm-purple/10 to-transparent border border-gm-purple/20 space-y-10">
+                                    <div className="flex items-center gap-6">
+                                        <div className="w-16 h-16 rounded-[1.5rem] bg-gm-purple/20 flex items-center justify-center text-gm-purple border border-gm-purple/30 shadow-glow-purple/10">
+                                            <Brain size={32} />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-lg font-black uppercase tracking-[0.2em] text-gm-purple">NotebookLM Integration</h3>
+                                            <p className="text-[10px] text-white/30 font-bold uppercase tracking-widest mt-1">Surcharge locale de la base de connaissances</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-4">
+                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gm-purple/60 px-2 flex items-center gap-2">
+                                            <ExternalLink size={12} /> Knowledge UUID / URL
+                                        </label>
+                                        <input 
+                                            value={notebookUrl}
+                                            onChange={e => setNotebookUrl(e.target.value)}
+                                            placeholder="Surchargez ici l'ID ou l'URL du NotebookLM..."
+                                            className="w-full bg-black/40 border border-white/10 rounded-2xl py-5 px-6 text-sm font-mono tracking-wider focus:outline-none focus:border-gm-purple/50 transition-all text-gm-purple shadow-inner"
+                                        />
+                                    </div>
+
+                                    <div className="flex flex-col md:flex-row gap-6">
+                                        <div className="flex-1 space-y-3">
+                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/20 px-2 flex items-center gap-2">
+                                                <PenTool size={12} /> System Rules Path
+                                            </label>
+                                            <input value={systemPath} onChange={e => setSystemPath(e.target.value)} placeholder="ex: systems/pathfinder" className="w-full bg-black/20 border border-white/5 rounded-xl py-4 px-5 text-xs text-white/40 focus:outline-none focus:border-gm-purple/30 tracking-tight" />
+                                        </div>
+                                        <div className="flex-1 space-y-3">
+                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/20 px-2 flex items-center gap-2">
+                                                <PenTool size={12} /> Campaign Notes Path
+                                            </label>
+                                            <input value={campaignPath} onChange={e => setCampaignPath(e.target.value)} placeholder="ex: campaigns/ironhelm" className="w-full bg-black/20 border border-white/5 rounded-xl py-4 px-5 text-xs text-white/40 focus:outline-none focus:border-gm-purple/30 tracking-tight" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-8">
+                                    <div className="flex items-center justify-between">
+                                        <div className="space-y-1">
+                                            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gm-purple">Neural Overrides</h3>
+                                            <p className="text-[9px] text-white/20 font-bold uppercase tracking-widest italic">Instructions spécifiques pour les Gems IA</p>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={handleAutoGenerate}
+                                            disabled={isGenerating}
+                                            className="flex items-center gap-3 px-6 py-2.5 bg-gm-purple/10 hover:bg-gm-purple/20 text-gm-purple border border-gm-purple/30 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all disabled:opacity-50 shadow-glow-purple/5"
+                                        >
+                                            {isGenerating ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
+                                            Auto-Générer
+                                        </button>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                        {gems.slice(0, 6).map(gem => {
+                                            const hasOverride = !!aiPersonas[gem.id];
+                                            return (
+                                                <div key={gem.id} className={`p-6 rounded-[2rem] border transition-all duration-500 flex flex-col gap-4 ${hasOverride ? 'bg-gm-purple/10 border-gm-purple/30 shadow-glow-purple/5' : 'bg-[#121215] border-white/5'}`}>
+                                                    <div className="flex items-center gap-3">
+                                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${hasOverride ? 'bg-gm-purple text-black shadow-glow-purple/20' : 'bg-white/5 text-white/20'}`}>
+                                                            <Sparkles size={16} />
+                                                        </div>
+                                                        <span className="text-[10px] font-black uppercase tracking-widest text-white/60">{gem.name}</span>
+                                                    </div>
+                                                    <textarea 
+                                                        value={aiPersonas[gem.id] || ''}
+                                                        onChange={e => {
+                                                            const next = { ...aiPersonas };
+                                                            if (e.target.value) next[gem.id] = e.target.value;
+                                                            else delete next[gem.id];
+                                                            setAiPersonas(next);
+                                                        }}
+                                                        rows={3}
+                                                        className="w-full bg-black/40 border border-white/5 rounded-2xl p-4 text-[11px] text-white/40 focus:border-gm-purple/40 resize-none outline-none custom-scrollbar transition-all"
+                                                        placeholder={`Prompt override for ${gem.name}...`}
+                                                    />
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                    </div>
+                </main>
             </div>
 
             <MediaBrowser 
@@ -334,7 +478,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, onClose }) => {
                     setIsMediaBrowserOpen(false);
                 }}
                 allowedTypes={['image']}
-                title="Choisir un Fond de Campagne"
+                title="Saisie Visuelle: Nexus Wallpaper"
             />
         </div>
     );

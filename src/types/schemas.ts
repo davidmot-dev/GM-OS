@@ -64,7 +64,7 @@ export const GlobalSettingsSchema = z.object({
 });
 
 export const FullSessionSchema = z.object({
-    version: z.string().optional().default('5.0.0'),
+    version: z.string().optional().default('5.1.0'),
     timestamp: z.string().optional(),
     global: GlobalSettingsSchema,
     modules: z.object({

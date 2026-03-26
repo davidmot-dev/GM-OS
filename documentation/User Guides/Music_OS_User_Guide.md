@@ -7,6 +7,8 @@ Le module **Music OS** est le coeur de l'ambiance sonore de vos sessions. Contra
 ## 📋 Présentation du Module
 
 Le module s'articule autour de trois zones de contrôle :
+> [!TIP]
+> **Contrôle Global** : Le volume de Music OS est désormais asservi au [Master Soundscape Controller](./Audio_Master_Guide.md). Utilisez le mode **Focus Chat** pour atténuer la musique instantanément pendant vos narrations.
 
 1. **Les Platines (Decks A & B)** : Deux lecteurs audio indépendants capables de charger et de jouer des pistes simultanément.
 2. **La Console de Mixage (Mixer)** : Permet d'équilibrer le volume entre les deux platines et de réaliser des transitions professionnelles.

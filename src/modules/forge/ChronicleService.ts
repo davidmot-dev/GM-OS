@@ -1,10 +1,10 @@
-import type { Campaign, Entity, AtlasMap, WikiEntry } from '../session/useSessionOSStore';
+import type { Campaign, Entity, AtlasMap, WikiEntry, EntityRelation } from '../session/useSessionOSStore';
 import type { GameDriver } from '../../types/drivers';
 import type { ForgeContextItem } from './ForgeService';
 
 export interface ChronicleForgeResult {
   campaign: Partial<Campaign>;
-  entities: Partial<Entity>[];
+  entities: (Partial<Entity> & { relations?: { targetName: string; type: EntityRelation['type']; description: string }[] })[];
   locations: Partial<AtlasMap>[];
   lore: Partial<WikiEntry>[];
 }
@@ -72,6 +72,8 @@ export class ChronicleForgeService {
       2. "entities" : NPCs et Monstres clés. Utilise l'échelle de puissance du système ${driver.name}.
          - Remplis "hp", "ac", "speed", "initiative" en fonction du Driver.
          - Ajoute des "roleplayingNotes" (comment les jouer) et "gmSecretInfo".
+         - **FACTION** : Si l'entité appartient à une organisation, une guilde ou une alliance, spécifie-le ("faction").
+         - **RELATIONS** : Identifie les liens entre les personnages. Ajoute un champ "relations" : tableau de { "targetName": "Nom", "type": "ally | neutral | hostile | family | romantic | mentor | rival | other", "description": "Lien précis" }.
       3. "locations" : Lieux majeurs pour l'Atlas.
          - "name", "narrativeDescription" (pour les joueurs), "gmNotes" (secrets du lieu).
       4. "lore" : Entrées wiki pour enrichir l'univers.
@@ -93,8 +95,12 @@ export class ChronicleForgeService {
             "hp": 10,
             "ac": 10,
             "description": "Race / Classe",
+            "faction": "Garde Royale | Clan du Loup | etc.",
             "roleplayingNotes": "...",
-            "gmSecretInfo": "..."
+            "gmSecretInfo": "...",
+            "relations": [
+              { "targetName": "Nom de l'autre personnage", "type": "family", "description": "Frère de..." }
+            ]
           }
         ],
         "locations": [

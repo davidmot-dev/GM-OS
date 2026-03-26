@@ -4,9 +4,13 @@ import { useImageStore } from '../modules/image/useImageStore';
 import { useSessionOSStore } from '../modules/session/useSessionOSStore';
 import { useCombatStore } from '../modules/combat/useCombatStore';
 import { useSoundStore } from '../modules/sound/useSoundStore';
+import { useMusicStore } from '../modules/music/useMusicStore';
+import { useAmbientStore } from '../modules/ambient/useAmbientStore';
 
 export class MediaCleanupService {
     private static instance: MediaCleanupService;
+
+    private isCleaning = false;
 
     private constructor() {}
 
@@ -22,7 +26,14 @@ export class MediaCleanupService {
      * @returns The number of deleted items.
      */
     public async performCleanup(): Promise<{ deletedCount: number; savedBytes: number }> {
-        const mediaStore = useMediaStore.getState();
+        if (this.isCleaning) {
+            console.log("[MediaCleanupService] Cleanup already in progress, skipping.");
+            return { deletedCount: 0, savedBytes: 0 };
+        }
+        
+        this.isCleaning = true;
+        try {
+            const mediaStore = useMediaStore.getState();
         await mediaStore.initDB();
         
         const allMedia = mediaStore.mediaList;
@@ -55,17 +66,17 @@ export class MediaCleanupService {
         sessionStore.entities.forEach((e) => {
             if (e.avatar) this.collectId(e.avatar, referencedIds);
         });
-        sessionStore.players.forEach((p) => {
-            p.characters.forEach((c) => {
+        sessionStore.players?.forEach((p) => {
+            p.characters?.forEach((c) => {
                 if (c.portraitUrl) this.collectId(c.portraitUrl, referencedIds);
                 if (c.tokenUrl) this.collectId(c.tokenUrl, referencedIds);
             });
         });
-        sessionStore.atlasMaps.forEach((m) => {
+        sessionStore.atlasMaps?.forEach((m) => {
             if (m.fileUrl) this.collectId(m.fileUrl, referencedIds);
         });
-        sessionStore.wikiEntries.forEach((w) => {
-            w.imageUrls.forEach((url: string) => this.collectId(url, referencedIds));
+        sessionStore.wikiEntries?.forEach((w) => {
+            w.imageUrls?.forEach((url: string) => this.collectId(url, referencedIds));
         });
 
         // 4. collect references from Combat Store
@@ -83,20 +94,44 @@ export class MediaCleanupService {
             });
         });
 
-        // 6. Identify and delete orphans
+        // 6. collect references from Music Store
+        const musicStore = useMusicStore.getState();
+        musicStore.playlists.forEach((playlist) => {
+            playlist.pads.forEach((pad) => {
+                if (pad.url) this.collectId(pad.url, referencedIds);
+            });
+        });
+
+        // 7. collect references from Ambient Store
+        const ambientStore = useAmbientStore.getState();
+        ambientStore.presets.forEach((preset) => {
+            preset.tracks.forEach((track) => {
+                if (track.url) this.collectId(track.url, referencedIds);
+            });
+        });
+        ambientStore.tracks.forEach((track) => {
+            if (track.url) this.collectId(track.url, referencedIds);
+        });
+
+        // 8. Identify and delete orphans
         let deletedCount = 0;
         let savedBytes = 0;
 
         for (const media of allMedia) {
-            if (!referencedIds.has(media.id)) {
+            if (!referencedIds.has(media.id) && !media.isPersistent) {
                 console.log(`[MediaCleanup] Deleting orphan media: ${media.name} (${media.id})`);
                 savedBytes += media.size;
                 await mediaStore.deleteMedia(media.id);
                 deletedCount++;
+            } else if (media.isPersistent && !referencedIds.has(media.id)) {
+                console.log(`[MediaCleanup] Sparing persistent orphan: ${media.name} (${media.id})`);
             }
         }
 
-        return { deletedCount, savedBytes };
+            return { deletedCount, savedBytes };
+        } finally {
+            this.isCleaning = false;
+        }
     }
 
     private collectId(value: string | undefined, set: Set<string>) {

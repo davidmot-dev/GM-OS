@@ -9,7 +9,7 @@ Le module **Map OS** est votre table de jeu virtuelle. Il permet de gérer les c
 Map OS combine la puissance d'un logiciel de cartographie et d'un gestionnaire de combat :
 
 1. **Régie Cartographique** : Importez des plans de donjons, des cartes de villes ou des paysages.
-2. **Brouillard de Guerre (Fog of War)** : Révélez la carte progressivement selon l'exploration des joueurs.
+2. **Brouillard de Guerre (Fog of War)** : Révélez la carte progressivement selon l'exploration des joueurs. Le masquage est désormais **physique** : tout ce qui est situé sous le calque de brouillard (pions, magie, carte) est occulté automatiquement.
 3. **Pions Tactiques (Tokens)** : Placez et déplacez les combattants directement sur la grille.
 4. **Grille Tactique** : Affichez une grille personnalisable pour les mesures de distance.
 5. **Projection Synchronisée** : Diffusez la vue "Joueur" sans vos outils de maître de jeu.
@@ -27,6 +27,18 @@ Le brouillard de guerre masque les zones non explorées. Vous disposez de plusie
 - **Commandes Globales** :
     - **Tout révéler (Eye)** : Retire instantanément tout le brouillard de la carte.
     - **Tout masquer (EyeOff)** : Recouvre la carte entière de noir.
+
+> [!IMPORTANT]
+> **Persistance Intelligente** : Le brouillard est sauvegardé **par carte**. Si vous changez de lieu, le brouillard de votre précédente map est conservé. Toute nouvelle carte est chargée avec un **brouillard noir complet** par sécurité.
+
+## 🎞️ Gestion des Couches (Layers)
+
+Un nouveau panneau de contrôle vous permet de masquer/afficher dynamiquement les éléments de jeu sans les supprimer :
+- **Brouillard** : Pratique pour voir toute la map sans révéler aux joueurs.
+- **Grille** : Activez ou désactivez le quadrillage.
+- **Pions** : Cachez tous les combattants instantanément.
+- **Magie & Danger** : Masquez les effets visuels d'AoE et de pièges.
+- **Météo** : Désactivez les particules (pluie, neige) si besoin.
 
 ## 🌦️ Effets Atmosphériques (Météo)
 
@@ -61,6 +73,36 @@ L'outil **Ping** permet de désigner un point précis sur la carte. Un cercle co
 - La vue projetée est **"Clean"** : elle ne contient ni les menus, ni les zones masquées par le brouillard de guerre du MJ, ni les outils de dessin.
 - Utilisez **Recadrer** pour recentrer votre vue et celle des joueurs sur le centre de la carte.
 
+## ☢️ Zones de Danger (Éditeur Obsidian Nexus)
+
+L'éditeur de zones a été entièrement refondu pour offrir une expérience **Obsidian Nexus** premium, modulaire et hautement performante :
+
+1. **Architecture en Colonnes** : Gérez la sélection, les paramètres visuels et la logique tactique dans des colonnes distinctes sans défilement inutile.
+2. **Auras Dynamiques** : Liez une zone à un pion (PJ ou PNJ). Elle suivra ses mouvements en temps réel (sorts, lumière, effets de peur).
+3. **Terrains Complexes** : Configurez des zones de ralentissement avec multiplicateur de coût de mouvement auto-calculé.
+4. **Automation Audio/Lumineuse** : Déclenchez des scènes Philips Hue ou des ambiances sonores spécifiques dès qu'une zone est activée.
+
+---
+
+## 💾 Map Presets (Configuration de Scène)
+
+Ne perdez plus de temps à configurer vos rencontres en cours de jeu. Les **Map Presets** vous permettent de capturer l'état complet d'une carte :
+
+- **Sauvegarde de Scène** : Capture le brouillard, la position de tous les pions et toutes les zones de danger actives.
+- **Rappel Instantané** : Préparez plusieurs variantes d'une même carte (ex: "Journée", "Embuscade de Nuit") et basculez entre elles en un clic.
+- **Modularité** : Les presets sont sauvegardés par campagne pour une organisation parfaite.
+
+---
+
+## ✨ Vision de l'Oracle (Narration IA)
+
+La **Vision de l'Oracle** est un assistant narratif puissant qui utilise l'Intelligence Artificielle pour donner vie à votre plateau tactique :
+
+- **Analyse en Temps Réel** : L'Oracle examine l'emplacement des pions, le type d'ennemis, leur état de santé (PV), leurs allégeances (Factions) et les conditions environnementales (Météo, Zones de danger).
+- **Génération d'Ambiance** : Produit instantanément un texte descriptif immersif que vous pouvez lire à vos joueurs pour introduire un combat ou une scène d'exploration.
+- **Conseils Tactiques** : L'Oracle suggère des comportements intelligents pour vos PNJ basés sur leur situation actuelle (repli si blessé, harcèlement si en supériorité).
+- **Intégration au Journal** : D'un clic, vous pouvez archiver la narration générée dans votre **Journal de Session** pour garder une trace indélébile de l'histoire.
+
 ---
 
 ## 💡 Astuces pour l'Immersion
@@ -69,7 +111,7 @@ L'outil **Ping** permet de désigner un point précis sur la carte. Un cercle co
 > **Cartes Animées** : Map OS supporte les fichiers vidéo (MP4/WebM). Vous pouvez importer une forêt avec des feuilles qui bougent ou une mer déchaînée depuis le Media Hub pour un rendu spectaculaire.
 
 > [!IMPORTANT]
-> **Persistance et Reprise** : Le brouillard de guerre que vous avez dessiné est sauvegardé dans votre session. Si vous changez de module ou fermez l'application, l'exploration des joueurs est conservée.
+> **Persistance et Reprise** : Votre exploration est sauvegardée dans le registre de session. Même après un redémarrage, chaque carte retrouve son état exact de brouillard.
 
 ---
 

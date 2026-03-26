@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNPCStore, type NPCCategory } from '../useNPCStore';
-import { Users, MapPin, Box, Zap, MessageSquare, Dices, type LucideIcon } from 'lucide-react';
+import { Users, MapPin, Box, Zap, MessageSquare, Dices, Sparkles, type LucideIcon } from 'lucide-react';
 
 const NPCControls: React.FC = () => {
     const { config, setConfig, availableUniverses, generate, isGenerating } = useNPCStore();
@@ -84,17 +84,31 @@ const NPCControls: React.FC = () => {
                 </div>
             </div>
 
-            {/* Generate Button */}
-            <button
-                onClick={() => generate()}
-                disabled={isGenerating || availableUniverses.length === 0}
-                className="w-full py-3 bg-accent hover:bg-accent/80 disabled:opacity-50 disabled:cursor-not-allowed text-slate-950 font-bold rounded-xl shadow-glow-accent flex items-center justify-center gap-3 transition-all hover:scale-[1.02] active:scale-95 group mt-2"
-            >
-                <Dices size={20} className={isGenerating ? 'animate-spin' : 'group-hover:rotate-12 transition-transform'} />
-                <span className="uppercase tracking-wider text-xs font-sans">
-                    {isGenerating ? 'Génération...' : `Générer ${categories.find(c => c.id === config.category)?.label}`}
-                </span>
-            </button>
+            {/* AI Toggle & Generate Button */}
+            <div className="flex flex-col gap-2 mt-2">
+                <button
+                    onClick={() => setConfig({ aiEnabled: !config.aiEnabled })}
+                    className={`flex items-center justify-center gap-2 py-1.5 rounded-lg border transition-all text-[10px] font-black uppercase tracking-widest ${
+                        config.aiEnabled 
+                        ? 'bg-accent/10 border-accent/30 text-accent shadow-glow-accent/20' 
+                        : 'bg-app-surface border-app-border text-slate-500 hover:text-slate-400'
+                    }`}
+                >
+                    <Sparkles size={12} className={config.aiEnabled ? 'animate-pulse' : ''} />
+                    {config.aiEnabled ? 'IA : Enrichissement Actif' : 'IA : Désactivée'}
+                </button>
+
+                <button
+                    onClick={() => generate()}
+                    disabled={isGenerating || availableUniverses.length === 0}
+                    className="w-full py-3 bg-accent hover:bg-accent/80 disabled:opacity-50 disabled:cursor-not-allowed text-slate-950 font-bold rounded-xl shadow-glow-accent flex items-center justify-center gap-3 transition-all hover:scale-[1.02] active:scale-95 group"
+                >
+                    <Dices size={20} className={isGenerating ? 'animate-spin' : 'group-hover:rotate-12 transition-transform'} />
+                    <span className="uppercase tracking-wider text-xs font-sans">
+                        {isGenerating ? 'Génération...' : `Générer ${categories.find(c => c.id === config.category)?.label}`}
+                    </span>
+                </button>
+            </div>
         </div>
     );
 };

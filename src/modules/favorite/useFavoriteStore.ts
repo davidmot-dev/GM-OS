@@ -4,19 +4,33 @@ import { useJournalStore } from '../journal/useJournalStore';
 
 export type FavoriteType = 'npc' | 'place' | 'item' | 'lore';
 
+/**
+ * Entité mise en favori (PNJ, Lieu, Objet, Lore).
+ * Ces entités peuvent être projetées sur le Player Hub via le Image-OS.
+ */
 export interface FavoriteEntity {
     id: string;
     type: FavoriteType;
     name: string;
+    /** Sous-titre descriptif (ex: "Ruler of the Seven Peaks") */
     subtitle?: string;
-    imageUrl?: string; // Main portrait
-    tokenUrl?: string; // Icon/Token
-    lastViewed?: number; // timestamp
-    attributes?: Record<string, string | number>; // e.g. HP: '140', Alignment: 'Lawful Good'
-    stats?: Record<string, number>; // e.g. Charisma: 18 (for the bar charts)
+    /** URL du portrait principal */
+    imageUrl?: string; 
+    /** URL de l'icône ou du jeton */
+    tokenUrl?: string; 
+    /** Timestamp de la dernière consultation */
+    lastViewed?: number; 
+    /** Attributs textuels (ex: HP: '140', Alignement: 'Loyal Bon') */
+    attributes?: Record<string, string | number>; 
+    /** Statistiques numériques pour les graphiques à barres */
+    stats?: Record<string, number>; 
+    /** Texte de lore public */
     lore?: string;
+    /** Notes secrètes réservées au MJ */
     secretNotes?: string;
+    /** Indique si l'élément est épinglé */
     isStarred?: boolean;
+    /** État de synchronisation avec le Player Hub */
     isSyncedToPlayerHub?: boolean;
 }
 
@@ -28,17 +42,28 @@ interface FavoriteState {
     viewMode: 'grid' | 'detail';
 
     // Actions
+    /** Ajoute une entité aux favoris */
     addFavorite: (entity: Omit<FavoriteEntity, 'id' | 'lastViewed'>) => string;
+    /** 
+     * Met à jour un favori et synchronise automatiquement la projection.
+     * Si `isSyncedToPlayerHub` devient vrai, l'entité est projetée sur le Player Hub.
+     */
     updateFavorite: (id: string, updates: Partial<FavoriteEntity>) => void;
+    /** Supprime un favori */
     removeFavorite: (id: string) => void;
+    /** Sélectionne un favori pour l'affichage détaillé */
     selectFavorite: (id: string | null) => void;
+    /** Filtre les favoris par catégorie */
     setCategory: (category: FavoriteType | 'all') => void;
+    /** Recherche textuelle dans les favoris */
     setSearchQuery: (query: string) => void;
+    /** Épingle/Désépingle un favori */
     toggleStar: (id: string) => void;
+    /** Change le mode d'affichage (grille ou détail) */
     setViewMode: (mode: 'grid' | 'detail') => void;
 }
 
-// Initial mock data simulating the user's HTML mockup
+// Initial mock data
 const initialMockFavorites: FavoriteEntity[] = [
     {
         id: 'mock-1',
@@ -46,14 +71,14 @@ const initialMockFavorites: FavoriteEntity[] = [
         name: 'High King Alaric',
         subtitle: 'Ruler of the Seven Peaks',
         imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCwj9taQCjzjjQ-86EMDqIVlENcrP3YOH170PQxu0YMVgdu8R5WgIygW9ppBRhgrogXVCV32WugsrbBN2gUhnyS8rdnf56ciMqG9e6zETogSTlgBDxpF1alehixi98nPyWwp6djGT9Z2OhiA1T_VfBbKiadtHMwp4QgjCxR-tEQEW5Q8H2Fjh2KHjWDMQCLeDg0HZjJmukdtnWsHZtVbiYVejZKIxmzufAZwjQzM9mizOeO5rbkzYeztLq-vTgtO3jKuiWdCydxU_0',
-        lastViewed: Date.now() - 2 * 60 * 60 * 1000, // 2 hours ago
+        lastViewed: Date.now() - 2 * 60 * 60 * 1000,
         isStarred: true,
         attributes: {
             'Health': '140 HP',
             'Alignment': 'Lawful Good'
         },
         stats: {
-            'Charisma': 80, // percentage for the bar
+            'Charisma': 80,
             'Intelligence': 60
         },
         lore: '"Born during the Great Eclipse, Alaric was prophesied to reunite the shattered kingdoms. His reign has seen forty years of prosperity, though rumors of a dark cult rising in the Ironbound Keep keep him awake at night."'
@@ -86,7 +111,7 @@ const initialMockFavorites: FavoriteEntity[] = [
 
 export const useFavoriteStore = create<FavoriteState>()(
     persist(
-        (set) => ({
+        (set, get) => ({
             favorites: initialMockFavorites,
             selectedFavoriteId: null,
             activeCategory: 'all',
@@ -109,39 +134,36 @@ export const useFavoriteStore = create<FavoriteState>()(
             },
 
             updateFavorite: (id, updates) => {
-                set((state) => {
-                    const favBefore = state.favorites.find(f => f.id === id);
-                    
-                    const nextFavorites = state.favorites.map(fav =>
+                const favBefore = get().favorites.find(f => f.id === id);
+                
+                set((state) => ({
+                    favorites: state.favorites.map(fav =>
                         fav.id === id ? { ...fav, ...updates } : fav
-                    );
+                    )
+                }));
 
-                    // Actual projection to Hub via the Bridge/ImageStore
-                    if (favBefore) {
-                        const imageStore = (window as any).useImageStore;
-                        if (imageStore) {
-                            const isCurrentlyProjected = imageStore.getState().projectedEntity?.id === id;
-                            
-                            // Synchronize if state changed
-                            if (updates.isSyncedToPlayerHub === true && !isCurrentlyProjected) {
-                                imageStore.getState().projectEntity({ ...favBefore, ...updates });
-                            } else if (updates.isSyncedToPlayerHub === false && isCurrentlyProjected) {
-                                imageStore.getState().projectEntity(favBefore); // Toggle off
-                            }
+                // Handle projection sync
+                if (favBefore) {
+                    const imageStore = (window as unknown as { useImageStore?: { getState: () => { projectedEntity?: { id: string }, projectEntity: (e: any) => Promise<void> } } }).useImageStore;
+                    if (imageStore) {
+                        const isCurrentlyProjected = imageStore.getState().projectedEntity?.id === id;
+                        
+                        if (updates.isSyncedToPlayerHub === true && !isCurrentlyProjected) {
+                            imageStore.getState().projectEntity({ ...favBefore, ...updates });
+                        } else if (updates.isSyncedToPlayerHub === false && isCurrentlyProjected) {
+                            imageStore.getState().projectEntity(null); 
                         }
                     }
 
                     // Log to journal if just synced to hub
-                    if (favBefore && !favBefore.isSyncedToPlayerHub && updates.isSyncedToPlayerHub) {
+                    if (!favBefore.isSyncedToPlayerHub && updates.isSyncedToPlayerHub) {
                         useJournalStore.getState().addEvent({
                             type: 'SYSTEM',
                             title: 'Élément favori partagé',
                             content: `L'élément "${favBefore.name}" (${favBefore.type}) a été montré sur le Player Hub.`
                         });
                     }
-
-                    return { favorites: nextFavorites };
-                });
+                }
             },
 
             removeFavorite: (id) => set((state) => ({
@@ -152,7 +174,6 @@ export const useFavoriteStore = create<FavoriteState>()(
             selectFavorite: (id) => set((state) => {
                 if (!id) return { selectedFavoriteId: null };
 
-                // Update last viewed
                 const updatedFavorites = state.favorites.map(fav =>
                     fav.id === id ? { ...fav, lastViewed: Date.now() } : fav
                 );
@@ -176,7 +197,7 @@ export const useFavoriteStore = create<FavoriteState>()(
         }),
         {
             name: 'gm-os-favorites-storage',
-            partialize: (state) => ({ favorites: state.favorites }), // Only persist the entities, not the active UI state
+            partialize: (state) => ({ favorites: state.favorites }),
         }
     )
 );

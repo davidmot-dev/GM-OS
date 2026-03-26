@@ -38,35 +38,39 @@ export const useNotebookLM = () => {
             if (activeGem) {
                 const systemId = activeCampaign?.system;
                 
+                // Priority 0: User-defined override in the current Campaign
+                const campaignOverride = activeCampaign?.aiPersonas?.[activeGem.id];
+                
                 // Priority 1: User-defined override in the current Driver (Rule Engine)
                 const driverOverride = activeDriver?.aiPersonas?.[activeGem.id];
                 
                 // Priority 2: Built-in system override for this Gem
                 const systemOverride = systemId ? activeGem.systemOverrides?.[systemId] : null;
                 
-                // Priority 3: Base Gem instructions
-                personaPrompt = driverOverride || systemOverride || activeGem.baseInstructions;
+                // Final selection: Campaign > Driver > System > Base
+                personaPrompt = campaignOverride || driverOverride || systemOverride || activeGem.baseInstructions;
             }
-
-            const fullPrompt = `
-[CONSIGNES DU PERSONA]
-${personaPrompt}
-
----
-[QUESTION UTILISATEUR]
-${query}
-
----
-(Réponds toujours en français)
-`.trim();
 
             if (!window.appBridge?.mcp?.callTool) {
                 throw new Error("Bridge MCP non disponible");
             }
 
+            if (personaPrompt) {
+                try {
+                    await window.appBridge.mcp.callTool('notebooklm-mcp-server', 'chat_configure', {
+                        notebook_id: notebookId,
+                        goal: 'custom',
+                        custom_prompt: `[CONSIGNES DU PERSONA]\n${personaPrompt}`,
+                        response_length: 'default'
+                    });
+                } catch (err) {
+                    console.warn("useNotebookLM: Failed to configure persona, continuing with query", err);
+                }
+            }
+
             const response = await window.appBridge.mcp.callTool('notebooklm-mcp-server', 'notebook_query', {
                 notebook_id: notebookId,
-                query: fullPrompt
+                query: `${query}\n\n(Réponds toujours en français)`
             });
 
             if (response && response.content) {

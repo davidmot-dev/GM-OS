@@ -4,7 +4,8 @@ import { gmToast } from '../../../stores/useToastStore';
 import { gmConfirm, gmPrompt } from '../../../stores/useModalStore';
 import { 
     UserPlus, RefreshCw, Dices, Save, Play, Skull, 
-    ArrowDown01, ArrowUp10, Sparkles, Zap, Activity
+    ArrowDown01, ArrowUp10, Sparkles, Zap, Activity,
+    MonitorPlay, MonitorOff
 } from 'lucide-react';
 import { gmCustom } from '../../../stores/useModalStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
@@ -18,7 +19,9 @@ const CombatControls: React.FC = () => {
         addCombatant,
         clearCombatants,
         syncCombatantHPToSession,
-        propagateStatusToSession
+        propagateStatusToSession,
+        isCombatProjected,
+        setIsCombatProjected
     } = useCombatStore();
 
     const {
@@ -176,9 +179,25 @@ const CombatControls: React.FC = () => {
         <aside className="w-80 bg-app-surface/40 border-l border-app-border/50 p-6 flex flex-col h-full overflow-y-auto custom-scrollbar">
 
             {/* Header */}
-            <h2 className="text-xl font-display font-bold text-app-text mb-2 uppercase tracking-widest border-b border-app-border/50 pb-2">
-                Contrôles
-            </h2>
+            <div className="flex items-center justify-between mb-2 border-b border-app-border/50 pb-2">
+                <h2 className="text-xl font-display font-bold text-app-text uppercase tracking-widest">
+                    Contrôles
+                </h2>
+                <button
+                    onClick={() => setIsCombatProjected(!isCombatProjected)}
+                    className={`p-2 rounded-lg transition-all duration-300 flex items-center gap-2 group ${
+                        isCombatProjected 
+                        ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow-glow-emerald/20' 
+                        : 'bg-red-500/10 text-red-400/50 border border-red-500/10 opacity-60 grayscale'
+                    }`}
+                    title={isCombatProjected ? "Désactiver la projection sur le Hub" : "Activer la projection sur le Hub"}
+                >
+                    {isCombatProjected ? <MonitorPlay size={18} /> : <MonitorOff size={18} />}
+                    <span className="text-[10px] font-black uppercase tracking-tighter">
+                        {isCombatProjected ? 'ON' : 'OFF'}
+                    </span>
+                </button>
+            </div>
 
             {/* Active Driver Indicator */}
             <div className="mb-6 flex flex-col gap-1">

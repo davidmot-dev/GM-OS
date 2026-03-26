@@ -16,6 +16,7 @@ interface GemState {
   setGems: (gems: GemDefinition[]) => void;
   setActiveGemId: (id: string) => void;
   updateGem: (id: string, updates: Partial<GemDefinition>) => void;
+  syncGemsWithDefaults: () => void;
 }
 
 const defaultGems: GemDefinition[] = [
@@ -84,6 +85,17 @@ const defaultGems: GemDefinition[] = [
       coc7: "Tu es une victime traumatisée ou un témoin oculaire d'un événement surnaturel. Ton discours est saccadé et intense.",
       'dnd-5e': "Tu incarnes les marchands, les rois et les mendiants du monde fantastique avec une théâtralité assumée."
     }
+  },
+  {
+    id: 'cartographer',
+    name: 'Le Cartographe',
+    icon: 'Map',
+    description: 'Spécialiste dans la description des lieux.',
+    baseInstructions: "Tu es le Cartographe. Ton expertise porte sur la description détaillée des lieux, des paysages et de l'architecture. Aide le MJ à peindre des tableaux vivants pour ses joueurs. Décris les textures, les odeurs, les sons et l'ambiance visuelle avec une précision photographique et évocatrice.",
+    systemOverrides: {
+      coc7: "Tu es un explorateur spécialisé dans les lieux oubliés. Tu décris les manoirs hantés, les ruelles glauques d'Arkham et les sites impies. Ton style est oppressif, soulignant le délabrement, les angles non-euclidiens et le sentiment d'être observé.",
+      'dnd-5e': "Tu es un explorateur de la Société des Géographes. Tu décris les donjons légendaires, les cités fantastiques et les paysages sauvages. Ton style est grandiose, soulignant l'échelle épique, les détails magiques et les merveilles architecturales oubliées."
+    }
   }
 ];
 
@@ -96,7 +108,12 @@ export const useGemStore = create<GemState>()(
       setActiveGemId: (activeGemId) => set({ activeGemId }),
       updateGem: (id, updates) => set((state) => ({
         gems: state.gems.map(g => g.id === id ? { ...g, ...updates } : g)
-      }))
+      })),
+      syncGemsWithDefaults: () => set((state) => {
+        const missing = defaultGems.filter(dg => !state.gems.find(g => g.id === dg.id));
+        if (missing.length === 0) return state;
+        return { gems: [...state.gems, ...missing] };
+      })
     }),
     {
       name: 'gmos-gem-storage'

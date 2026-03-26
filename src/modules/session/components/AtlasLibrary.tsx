@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import type { AtlasMap } from '../useSessionOSStore';
-import { Search, FolderOpen, Film, Globe, Swords, Map, Building2, Hexagon, Trash2 } from 'lucide-react';
+import { Search, FolderOpen, Film, Globe, Swords, Map, Building2, MapPin, Trash2 } from 'lucide-react';
 import { useMapStore } from '../../map/useMapStore';
 import { useMediaStore } from '../../../stores/useMediaStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
@@ -12,7 +12,7 @@ const TYPE_META: Record<AtlasMap['type'], { label: string; icon: React.ReactNode
     'world-map': { label: 'Monde', icon: <Globe size={10} />, color: 'text-blue-400 bg-blue-500/10 border-blue-500/20' },
     'region': { label: 'Region', icon: <Map size={10} />, color: 'text-green-400 bg-green-500/10 border-green-500/20' },
     'city': { label: 'Ville', icon: <Building2 size={10} />, color: 'text-amber-400 bg-amber-500/10 border-amber-500/20' },
-    'dungeon': { label: 'Donjon', icon: <Hexagon size={10} />, color: 'text-purple-400 bg-purple-500/10 border-purple-500/20' },
+    'dungeon': { label: 'Lieu', icon: <MapPin size={10} />, color: 'text-purple-400 bg-purple-500/10 border-purple-500/20' },
 };
 
 const MapCard: React.FC<{
@@ -26,54 +26,57 @@ const MapCard: React.FC<{
 
     return (
         <div
-            role="button"
-            tabIndex={0}
-            onClick={onClick}
-            onKeyDown={(e) => e.key === 'Enter' && onClick()}
-            className={`group w-full flex items-center gap-3 p-2.5 rounded-xl text-left transition-all relative cursor-pointer ${isSelected
-                ? 'bg-accent/10 border border-accent/30'
-                : 'hover:bg-app-surface/60 border border-transparent'
+            className={`group w-full flex items-center gap-3 p-2.5 rounded-xl text-left transition-all relative border ${isSelected
+                ? 'bg-accent/10 border-accent/30'
+                : 'hover:bg-app-surface/60 border-transparent'
                 }`}
         >
-            {/* Thumbnail */}
-            <div className="w-12 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-app-bg border border-app-border/20">
-                <ResolvedAsset 
-                    src={map.fileUrl} 
-                    isVideo={map.isVideo}
-                    className="w-full h-full object-cover"
-                    alt={map.name}
-                    fallback={
-                        <div className="w-full h-full flex items-center justify-center bg-app-bg border border-app-border/20 rounded-lg">
-                            <Map size={16} className="text-app-text/20" />
-                        </div>
-                    }
-                />
-            </div>
-            {/* Info */}
-            <div className="flex-1 min-w-0">
-                <p className={`font-bold text-xs truncate ${isSelected ? 'text-accent' : 'text-app-text/80'}`}>
-                    {map.name}
-                </p>
-                <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-                    <span className={`inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded border ${typeMeta.color}`}>
-                        {typeMeta.icon} {typeMeta.label}
-                    </span>
-                    {map.isVideo && (
-                        <span className="inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded border text-purple-400 bg-purple-500/10 border-purple-500/20">
-                            <Film size={8} /> Animé
-                        </span>
-                    )}
-                    {isProjected && (
-                        <span className="inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded border text-emerald-400 bg-emerald-500/10 border-emerald-500/20">
-                            ● Actif
-                        </span>
-                    )}
+            <button
+                onClick={onClick}
+                className="flex-1 flex items-center gap-3 text-left focus:outline-none min-w-0"
+                title={`Sélectionner ${map.name}`}
+            >
+                {/* Thumbnail */}
+                <div className="w-12 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-app-bg border border-app-border/20">
+                    <ResolvedAsset 
+                        src={map.fileUrl} 
+                        isVideo={map.isVideo}
+                        className="w-full h-full object-cover"
+                        alt={map.name}
+                        fallback={
+                            <div className="w-full h-full flex items-center justify-center bg-app-bg border border-app-border/20 rounded-lg">
+                                <Map size={16} className="text-app-text/20" />
+                            </div>
+                        }
+                    />
                 </div>
-            </div>
+                {/* Info */}
+                <div className="flex-1 min-w-0">
+                    <p className={`font-bold text-xs truncate ${isSelected ? 'text-accent' : 'text-app-text/80'}`}>
+                        {map.name}
+                    </p>
+                    <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                        <span className={`inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded border ${typeMeta.color}`}>
+                            {typeMeta.icon} {typeMeta.label}
+                        </span>
+                        {map.isVideo && (
+                            <span className="inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded border text-purple-400 bg-purple-500/10 border-purple-500/20">
+                                <Film size={8} /> Animé
+                            </span>
+                        )}
+                        {isProjected && (
+                            <span className="inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded border text-emerald-400 bg-emerald-500/10 border-emerald-500/20">
+                                ● Actif
+                            </span>
+                        )}
+                    </div>
+                </div>
+            </button>
             {/* Delete Button */}
             <button
                 onClick={(e) => { e.stopPropagation(); onDelete(); }}
                 className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:text-red-400 text-app-text/20"
+                title="Supprimer la carte"
             >
                 <Trash2 size={13} />
             </button>

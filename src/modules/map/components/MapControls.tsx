@@ -1,11 +1,15 @@
 import React from 'react';
-import { useMapStore, type MapTool, type FogMode, type WeatherType } from '../useMapStore';
+import { useMapStore } from '../useMapStore';
+import { useMapUIStore } from '../useMapUIStore';
+import type { MapTool, FogMode, WeatherType } from '../types';
 import { useCombatStore } from '../../combat/useCombatStore';
 import { gmConfirm, gmCustom } from '../../../stores/useModalStore';
 import {
     Upload, EyeOff, Eye, Paintbrush, Square, Circle,
-    Cast, Maximize, Users, MousePointer2, PlusCircle, Trash2, MapPin,
-    SkipBack, SkipForward, Swords, CloudRain, CloudSnow, Cloud, Sparkles, Triangle
+    Cast, Maximize, Users, MousePointer2, PlusCircle, Trash2, MapPin, FolderOpen,
+    SkipBack, SkipForward, Swords, CloudRain, CloudSnow, Cloud, Sparkles, Triangle,
+    ShieldAlert, Zap, GripHorizontal, Settings2, Volume2, VolumeX, ChevronDown, Check,
+    Link, Mountain
 } from 'lucide-react';
 
 
@@ -15,11 +19,14 @@ import {
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaStore } from '../../../stores/useMediaStore';
 import { useHardwareStore } from '../../../stores/useHardwareStore';
-import { type MapToken, type MagicStyle, type MagicShape } from '../useMapStore';
+import type { MapToken, MagicStyle, MagicShape } from '../types';
 import { type Combatant } from '../../combat/useCombatStore';
 
 
 import { useJournalStore } from '../../journal/useJournalStore';
+import { useNarrativeGenerator } from '../hooks/useNarrativeGenerator';
+import MapPresetGallery from './MapPresetGallery';
+import MapLayersPanel from './MapLayersPanel';
 
 const ToolButton = ({ tool, currentTool, setTool, icon: Icon, label }: { tool: MapTool, currentTool: MapTool, setTool: (t: MapTool) => void, icon: React.ElementType, label: string }) => {
     const isActive = currentTool === tool;
@@ -59,34 +66,38 @@ const ModeButton = ({ mode, fogMode, setFogMode, icon: Icon, label }: { mode: Fo
 };
 
 const MapControls: React.FC = () => {
+    const mapStore = useMapStore();
+    const uiStore = useMapUIStore();
+    
     const {
         mapUrl, mapName, setMap,
         setFogDataUrl,
-        currentTool, setTool,
-        fogMode, setFogMode,
-
         addToken, tokens, clearTokens,
         triggerFogCommand,
         resetView,
-
-
-
-        // Grid Settings
         isGridEnabled, setGridEnabled,
         gridSize, setGridSize,
         gridOpacity, setGridOpacity,
-
-        // Weather Settings
         weatherType, setWeather,
         weatherIntensity,
-
-        // Projection Actions
         projectionTarget, clearProjectedState,
-        
-        // Magic Effects
         magicEffects, clearMagicEffects, removeMagicEffect,
-        magicStyle, magicShape, setMagicSettings
-    } = useMapStore();
+        dangerZones, removeDangerZone, clearDangerZones,
+        dangerZonePresets,
+        isMapMuted, setMapMuted, mapVolume, setMapVolume, mapOutputDeviceId, setMapOutputDevice,
+        isVideo
+    } = mapStore;
+
+    const {
+        currentTool, setTool,
+        fogMode, setFogMode,
+        magicStyle, magicShape, setMagicSettings,
+        selectedDangerPresetId, setSelectedDangerPresetId,
+        dangerShape, setDangerShape,
+        auraOverride, setAuraOverride,
+        difficultTerrainOverride, setDifficultTerrainOverride,
+        movementCostOverride, setMovementCostOverride,
+    } = uiStore;
 
 
 
@@ -103,6 +114,15 @@ const MapControls: React.FC = () => {
 
     const [isMediaBrowserOpen, setIsMediaBrowserOpen] = React.useState(false);
 
+    const { generateNarrative, isGenerating } = useNarrativeGenerator();
+
+    const handleGenerateNarrative = async () => {
+        const text = await generateNarrative();
+        if (text) {
+            gmCustom('narrative-display', text);
+        }
+    };
+
 
 
     const handleMediaSelect = (mediaId: string) => {
@@ -111,7 +131,7 @@ const MapControls: React.FC = () => {
 
         const isVideo = media.type === 'video';
         setMap(mediaId, isVideo, media.name.replace(/\.[^/.]+$/, "")); // Pass mediaId directly
-        setFogDataUrl(null); // Reset fog on new map
+        // Note: setMap now automatically loads fog from registry, no need to manual reset
     };
 
     const handleRevealAll = () => {
@@ -171,10 +191,21 @@ const MapControls: React.FC = () => {
             {/* Content Array */}
             <div className="p-4 flex flex-col gap-6">
 
+                {/* Presets Section */}
+                <section>
+                    <h3 className="text-xs text-slate-400 uppercase tracking-wider mb-3 font-bold px-1 flex items-center gap-2">
+                        <FolderOpen size={14} className="text-accent" />
+                        Configurations Sauvées
+                    </h3>
+                    <MapPresetGallery />
+                </section>
+
+                <hr className="border-gray-800" />
+
                 {/* Import Section */}
                 <section>
                     <h3 className="text-xs text-slate-400 uppercase tracking-wider mb-2 font-bold px-1">Carte & Plan</h3>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 mb-3">
                         <button
                             className="flex-1 bg-app-bg hover:bg-app-surface p-3 rounded-lg flex items-center justify-center gap-2 border border-app-border transition-colors text-sm"
                             onClick={() => setIsMediaBrowserOpen(true)}
@@ -192,6 +223,27 @@ const MapControls: React.FC = () => {
                             </button>
                         )}
                     </div>
+
+                    {/* Narrative Generation Button */}
+                    <button
+                        disabled={isGenerating || !mapUrl}
+                        onClick={handleGenerateNarrative}
+                        className="w-full bg-gradient-to-r from-indigo-600/20 to-purple-600/20 hover:from-indigo-600/30 hover:to-purple-600/30 p-2.5 rounded-lg border border-indigo-500/30 flex items-center justify-center gap-2 transition-all group disabled:opacity-30 disabled:grayscale"
+                    >
+                        {isGenerating ? (
+                            <div className="w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                            <Sparkles size={16} className="text-accent group-hover:scale-110 transition-transform animate-pulse" />
+                        )}
+                        <span className="text-[11px] font-black uppercase tracking-widest text-indigo-100 group-hover:text-accent transition-colors">Vision de l'Oracle</span>
+                    </button>
+                </section>
+
+                <hr className="border-gray-800" />
+
+                {/* Layers Section */}
+                <section>
+                    <MapLayersPanel />
                 </section>
 
                 <hr className="border-gray-800" />
@@ -232,6 +284,7 @@ const MapControls: React.FC = () => {
                         <ToolButton tool="circle" currentTool={currentTool} setTool={setTool} icon={Circle} label="Rond" />
                         <ToolButton tool="ping" currentTool={currentTool} setTool={setTool} icon={MapPin} label="Ping" />
                         <ToolButton tool="magic" currentTool={currentTool} setTool={setTool} icon={Sparkles} label="Magie" />
+                        <ToolButton tool="danger" currentTool={currentTool} setTool={setTool} icon={ShieldAlert} label="Danger" />
                     </div>
 
                     {/* Magic Options */}
@@ -343,6 +396,180 @@ const MapControls: React.FC = () => {
                 </section>
 
 
+
+                <hr className="border-gray-800" />
+
+                {/* Danger Zones Section */}
+                <section>
+                    <div className="flex items-center justify-between mb-2">
+                        <h3 className="text-xs text-slate-400 uppercase tracking-wider font-bold px-1 flex items-center gap-2">
+                            <ShieldAlert size={14} className="text-rose-500" />
+                            Zones de Danger
+                            <button 
+                                onClick={() => gmCustom('danger-preset-editor')}
+                                title="Gérer les Modèles"
+                                className="p-1 hover:bg-slate-800 rounded-md text-slate-500 hover:text-accent transition-all"
+                            >
+                                <Settings2 size={14} />
+                            </button>
+                        </h3>
+                        {dangerZones.length > 0 && (
+                            <button 
+                                onClick={clearDangerZones}
+                                className="text-[10px] text-rose-500 hover:text-rose-400 uppercase font-bold px-2 py-1 rounded hover:bg-rose-500/10 transition-colors"
+                            >
+                                Tout Effacer
+                            </button>
+                        )}
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                        {currentTool === 'danger' ? (
+                            <div className="bg-rose-500/5 border border-rose-500/20 rounded-lg p-3">
+                                <p className="text-[11px] text-rose-200/70 mb-3 italic">
+                                    Cliquez et glissez sur la carte pour dessiner une zone. Les effets se déclencheront automatiquement.
+                                </p>
+                                
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="text-[10px] text-slate-500 uppercase font-bold block mb-1">Forme de la zone</label>
+                                        <div className="flex gap-1">
+                                            <button 
+                                                onClick={() => setDangerShape('rect')}
+                                                title="Zone Rectangulaire"
+                                                className={`flex-1 flex justify-center p-2 rounded border transition-all ${dangerShape === 'rect' ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-slate-400 hover:text-slate-200'}`}
+                                            >
+                                                <Square size={16} />
+                                            </button>
+                                            <button 
+                                                onClick={() => setDangerShape('circle')}
+                                                title="Zone Circulaire"
+                                                className={`flex-1 flex justify-center p-2 rounded border transition-all ${dangerShape === 'circle' ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-slate-400 hover:text-slate-200'}`}
+                                            >
+                                                <Circle size={16} />
+                                            </button>
+                                            <button 
+                                                onClick={() => setDangerShape('cone')}
+                                                title="Cône"
+                                                className={`flex-1 flex justify-center p-2 rounded border transition-all ${dangerShape === 'cone' ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-slate-400 hover:text-slate-200'}`}
+                                            >
+                                                <Triangle size={16} className="rotate-180" />
+                                            </button>
+                                            <button 
+                                                onClick={() => setDangerShape('line')}
+                                                title="Ligne / Couloir"
+                                                className={`flex-1 flex justify-center p-2 rounded border transition-all ${dangerShape === 'line' ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-slate-400 hover:text-slate-200'}`}
+                                            >
+                                                <GripHorizontal size={16} />
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {/* Quick Toggles for Aura/DT Overrides */}
+                                    <div className="flex gap-2">
+                                        <button 
+                                            onClick={() => setAuraOverride(!auraOverride)}
+                                            className={`flex-1 flex items-center justify-center gap-2 p-2 rounded border text-[10px] font-bold transition-all ${auraOverride ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-slate-500 hover:text-slate-300'}`}
+                                            title="Transformer la zone en Aura (suit le porteur)"
+                                        >
+                                            <Link size={14} />
+                                            <span>AURA</span>
+                                        </button>
+                                        <button 
+                                            onClick={() => setDifficultTerrainOverride(!difficultTerrainOverride)}
+                                            className={`flex-1 flex items-center justify-center gap-2 p-2 rounded border text-[10px] font-bold transition-all ${difficultTerrainOverride ? 'bg-emerald-500/20 border-emerald-500 text-emerald-500' : 'bg-app-bg/50 border-app-border/50 text-slate-500 hover:text-slate-300'}`}
+                                            title="Marquer comme Terrain Difficile"
+                                        >
+                                            <Mountain size={14} />
+                                            <span>TERRAIN</span>
+                                        </button>
+                                    </div>
+
+                                    {difficultTerrainOverride && (
+                                        <div className="flex items-center justify-between px-1">
+                                            <span className="text-[10px] text-slate-500 uppercase font-bold">Coût DT</span>
+                                            <div className="flex items-center gap-2">
+                                                <input 
+                                                    type="range" min="1" max="4" step="0.5" 
+                                                    value={movementCostOverride}
+                                                    onChange={(e) => setMovementCostOverride(parseFloat(e.target.value))}
+                                                    className="w-20 h-1 accent-emerald-500 bg-gray-700 rounded-lg cursor-pointer"
+                                                />
+                                                <span className="text-[10px] font-mono text-emerald-500">x{movementCostOverride}</span>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    <div>
+                                        <label className="text-[10px] text-slate-500 uppercase font-bold block mb-1">Modèles (Presets)</label>
+                                        <div className="grid grid-cols-1 gap-1">
+                                            {dangerZonePresets.map(preset => {
+                                                const isActive = selectedDangerPresetId === preset.id;
+                                                return (
+                                                    <button
+                                                        key={preset.id}
+                                                        onClick={() => setSelectedDangerPresetId(preset.id)}
+                                                        className={`flex items-center gap-2 p-2 rounded border transition-all text-left group ${
+                                                            isActive
+                                                            ? 'bg-accent/20 border-accent shadow-glow-accent/10'
+                                                            : 'bg-app-bg/50 hover:bg-app-surface border-app-border/50'
+                                                        }`}
+                                                    >
+                                                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: preset.color }} />
+                                                        <span className={`flex-1 text-[11px] ${isActive ? 'text-accent font-bold' : 'text-slate-300'}`}>
+                                                            {preset.name}
+                                                            <span className="ml-2 inline-flex gap-1 opacity-50">
+                                                                {preset.isAura && <Link size={10} />}
+                                                                {preset.isDifficultTerrain && <Mountain size={10} />}
+                                                            </span>
+                                                        </span>
+                                                        {isActive ? (
+                                                            <Zap size={14} className="text-accent animate-pulse" />
+                                                        ) : (
+                                                            <PlusCircle size={14} className="text-slate-600 group-hover:text-accent" />
+                                                        )}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="flex flex-col gap-1">
+                                {dangerZones.map(zone => (
+                                    <div key={zone.id} className="bg-app-bg/30 border border-app-border rounded p-2 flex flex-col gap-1 group">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: zone.color }} />
+                                            <span className="text-[11px] text-slate-300 flex-1 truncate">{zone.name}</span>
+                                            <div className="flex gap-1">
+                                                {zone.isAura && <Link size={12} className="text-accent" />}
+                                                {zone.isDifficultTerrain && <Mountain size={12} className="text-emerald-500" />}
+                                            </div>
+                                            <button 
+                                                onClick={() => removeDangerZone(zone.id)}
+                                                className="text-slate-600 hover:text-rose-500 p-1 opacity-0 group-hover:opacity-100 transition-all"
+                                            >
+                                                <Trash2 size={14} />
+                                            </button>
+                                        </div>
+                                        {zone.isAura && (
+                                            <div className="text-[9px] text-slate-500 flex items-center gap-1 px-1 italic">
+                                                <Users size={10} />
+                                                <span>Porteur: {zone.parentTokenId ? (tokens.find(t => t.id === zone.parentTokenId)?.name || 'Inconnu') : 'Aucun (Sélectionnez un pion)'}</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                                {dangerZones.length === 0 && (
+                                    <p className="text-center py-4 text-[11px] text-slate-600 italic border border-dashed border-app-border rounded">
+                                        Aucune zone active
+                                    </p>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </section>
 
                 <hr className="border-gray-800" />
 
@@ -528,6 +755,49 @@ const MapControls: React.FC = () => {
                     </div>
                 </section>
 
+                {/* Audio Controls (Conditional for Videos) */}
+                {isVideo && (
+                    <section className="mt-4 pt-4 border-t border-gray-800 flex flex-col gap-3 px-1">
+                        <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Ambiance Carte</span>
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => setMapMuted(!isMapMuted)}
+                                    className={`p-1.5 rounded-lg transition-all ${isMapMuted ? 'text-rose-500 bg-rose-500/10' : 'text-accent bg-accent/10 hover:bg-accent/20'}`}
+                                    title={isMapMuted ? "Activer le son" : "Couper le son"}
+                                >
+                                    {isMapMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center gap-3 bg-app-bg/40 p-2 py-3 rounded-xl border border-app-border/40">
+                            <div className="flex-1 px-1">
+                                <input
+                                    type="range"
+                                    min="0"
+                                    max="1"
+                                    step="0.01"
+                                    value={mapVolume}
+                                    onChange={(e) => setMapVolume(parseFloat(e.target.value))}
+                                    className="w-full accent-accent h-1.5 bg-gray-800 rounded-lg appearance-none cursor-pointer"
+                                />
+                            </div>
+                            <span className="text-[10px] font-bold text-slate-400 tabular-nums w-8 text-right">
+                                {Math.round(mapVolume * 100)}%
+                            </span>
+                        </div>
+
+                        {/* Output Device Selector (Consistent with Music/Sound OS) */}
+                        <div className="relative device-selector-map">
+                            <DeviceSelector 
+                                currentId={mapOutputDeviceId} 
+                                onSelect={setMapOutputDevice} 
+                            />
+                        </div>
+                    </section>
+                )}
+
                 {/* Projection Action */}
                 <section className="mt-auto pt-4 border-t border-gray-800 flex flex-col gap-3">
                     {projectionTarget && (
@@ -584,6 +854,71 @@ const MapControls: React.FC = () => {
                 title="Sélectionner une Carte / Plan"
             />
         </aside>
+    );
+};
+
+/* --- Sub-components (Audio Device Selector) --- */
+
+const DeviceSelector = ({ currentId, onSelect }: { currentId: string, onSelect: (id: string) => void }) => {
+    const [isOpen, setIsOpen] = React.useState(false);
+    const [devices, setDevices] = React.useState<MediaDeviceInfo[]>([]);
+    const { getAudioLabel } = useHardwareStore();
+
+    React.useEffect(() => {
+        const fetchDevices = async () => {
+            const allDevices = await navigator.mediaDevices.enumerateDevices();
+            setDevices(allDevices.filter(d => d.kind === 'audiooutput'));
+        };
+        fetchDevices();
+        navigator.mediaDevices.addEventListener('devicechange', fetchDevices);
+        return () => navigator.mediaDevices.removeEventListener('devicechange', fetchDevices);
+    }, []);
+
+    const currentLabel = getAudioLabel(currentId);
+
+    return (
+        <div className="relative">
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className={`w-full flex items-center justify-between gap-3 bg-app-surface/30 border rounded-xl px-4 py-2.5 text-[8px] font-black uppercase tracking-widest transition-all ${isOpen ? 'border-accent text-white shadow-glow-accent/20' : 'border-app-border/50 text-slate-500 hover:border-app-border/10 hover:text-slate-300'}`}
+            >
+                <span className="truncate max-w-[140px]">{currentLabel}</span>
+                <ChevronDown size={12} className={`transition-transform duration-300 ${isOpen ? 'rotate-180 text-accent' : ''}`} />
+            </button>
+
+            {isOpen && (
+                <>
+                    <div 
+                        className="fixed inset-0 z-[60]" 
+                        onClick={() => setIsOpen(false)} 
+                    />
+                    <div className="absolute bottom-full right-0 mb-2 w-full bg-app-bg/95 backdrop-blur-2xl border border-app-border/50 rounded-2xl shadow-3xl p-1.5 animate-in fade-in slide-in-from-bottom-2 duration-200 z-[70]">
+                        <div className="max-h-48 overflow-y-auto custom-scrollbar flex flex-col gap-0.5">
+                            <button
+                                onClick={() => { onSelect('default'); setIsOpen(false); }}
+                                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all ${currentId === 'default' ? 'bg-accent/20 text-white' : 'text-slate-400 hover:bg-app-surface/5 hover:text-white'}`}
+                            >
+                                <span>Default Speaker</span>
+                                {currentId === 'default' && <Check size={10} className="text-gm-violet" />}
+                            </button>
+                            
+                            <div className="h-px bg-white/5 my-0.5 mx-1" />
+                            
+                            {devices.map((device) => (
+                                <button
+                                    key={device.deviceId}
+                                    onClick={() => { onSelect(device.deviceId); setIsOpen(false); }}
+                                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all text-left ${currentId === device.deviceId ? 'bg-gm-violet/20 text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white'}`}
+                                >
+                                    <span className="truncate pr-4">{getAudioLabel(device.deviceId)}</span>
+                                    {currentId === device.deviceId && <Check size={10} className="text-gm-violet" />}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </>
+            )}
+        </div>
     );
 };
 

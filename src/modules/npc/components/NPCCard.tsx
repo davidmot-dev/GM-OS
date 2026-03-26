@@ -21,7 +21,7 @@ const NPCCard: React.FC = () => {
     const [showRecipientSelector, setShowRecipientSelector] = useState(false);
     const { addToken } = useMapStore();
     const { addFavorite } = useFavoriteStore();
-    const { inputLevel, isSyncNPC, isActive } = useVoiceStore();
+    const { inputLevel, isSyncNPC, isActive, generateVoiceProfile } = useVoiceStore();
     
     // Check if session is active
     const activeSession = sessions.find(s => s.id === selectedSessionId);
@@ -52,11 +52,11 @@ const NPCCard: React.FC = () => {
         );
     }
 
-    // Ensure we handle local file paths for <img> src
+    // Ensure we handle local file paths via gmos:// protocol for Electron security
     const avatarSrc = currentEntity.avatar
-        ? (currentEntity.avatar.startsWith('http') || currentEntity.avatar.startsWith('blob:') || currentEntity.avatar.startsWith('file://') || currentEntity.avatar.startsWith('data:')
+        ? (currentEntity.avatar.startsWith('http') || currentEntity.avatar.startsWith('blob:') || currentEntity.avatar.startsWith('gmos://') || currentEntity.avatar.startsWith('data:')
             ? currentEntity.avatar
-            : `file:///${currentEntity.avatar.replace(/\\/g, '/')}`)
+            : `gmos://media/${currentEntity.avatar.replace(/^file:\/\/\//, '').replace(/\\/g, '/')}`)
         : null;
 
     const handleAddToCombat = () => {
@@ -257,6 +257,14 @@ const NPCCard: React.FC = () => {
                     >
                         <Skull size={18} />
                     </button>
+                    <button
+                        onClick={(e) => { e.stopPropagation(); generateVoiceProfile(currentEntity); }}
+                        className="text-[10px] uppercase font-bold tracking-widest text-emerald-400/80 px-2 py-1 border border-emerald-500/20 rounded bg-emerald-500/10 flex items-center gap-1 backdrop-blur-sm hover:bg-emerald-500/20 transition-colors"
+                        title="Générer un profil vocal IA"
+                    >
+                        <Sparkles size={10} />
+                        Vocal
+                    </button>
                     <div className="text-[10px] uppercase font-bold tracking-widest text-accent/50 px-2 py-1 border border-accent/20 rounded bg-accent/5 flex items-center backdrop-blur-sm">
                         {currentEntity.category}
                     </div>
@@ -375,7 +383,8 @@ const NPCCard: React.FC = () => {
                 isGenerating={isGeneratingAIAvatar}
                 title={`Illustration IA : ${currentEntity.name}`}
                 placeholder="Ex: portrait cyberpunk, éclairage néon, cicatrices..."
-                onGenerate={(instructions) => {
+                initialPrompt={currentEntity.suggestedPrompt}
+                onGenerate={(instructions: string) => {
                     generateAvatar(instructions).then(() => setShowAIPrompt(false));
                 }}
             />

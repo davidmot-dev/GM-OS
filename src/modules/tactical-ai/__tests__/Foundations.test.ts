@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { useTacticalAIStore } from '../useTacticalAIStore';
 import { renderHook } from '@testing-library/react';
 import { useNarrativeRegistry } from '../hooks/useNarrativeRegistry';
@@ -11,6 +11,7 @@ describe('TacticalAI Foundations', () => {
       settings: {
         intensity: 0.5,
         isMuted: false,
+        isEnabled: true,
         autoApplyDispel: true,
         enableTacticalToasts: true,
       }
@@ -36,13 +37,13 @@ describe('TacticalAI Foundations', () => {
   });
 
   describe('useNarrativeRegistry', () => {
-    it('should resolve "lightning" to correct tags', () => {
+    it('should resolve "foudre" to correct tags', () => {
       const { result } = renderHook(() => useNarrativeRegistry());
-      const tags = result.current.resolvePrompt('A flash of lightning strike');
+      const tags = result.current.resolvePrompt('Un éclair de foudre');
       
       expect(tags).not.toBeNull();
-      expect(tags?.light).toBe('thunderstorm');
-      expect(tags?.audio).toBe('thunder_heavy');
+      expect(tags?.hardware?.scene).toBe('Storm');
+      expect(tags?.audio?.effect).toBe('thunder_crack.mp3');
     });
 
     it('should return null for unknown prompts', () => {
