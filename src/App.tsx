@@ -22,7 +22,7 @@ import { useMediaStore } from './stores/useMediaStore';
 import { getDifferentialPayload } from './utils/syncUtils';
 import { spatialTriggerService } from './modules/map/SpatialTriggerService';
 import { useDisplayDetection } from './hooks/useDisplayDetection';
-import { useBackupSync } from './hooks/useBackupSync';
+// import { useBackupSync } from './hooks/useBackupSync';
 import { resolveToSendableUrl } from './utils/mediaResolver';
 
 // --- LAZY COMPONENTS (Critical for Remote Stability) ---
@@ -86,8 +86,8 @@ function App() {
   const isMainPC = !isProjector && !isHub && !isTablet && !isRemote;
   useDisplayDetection(isMainPC);
   
-  // Automated GitHub Backup (Main GM window only)
-  useBackupSync();
+  // Automated GitHub Backup (DISABLED)
+  // useBackupSync();
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);

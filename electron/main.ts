@@ -34,7 +34,7 @@ import { registerMcpHandlers } from './mcp_bridge'
 import { registerObsidianHandlers } from './obsidian_bridge'
 import { sessionManager } from './SessionManager'
 import { OllamaService } from './OllamaService'
-import { GitBackupService } from './GitBackupService'
+// import { GitBackupService } from './GitBackupService'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const APP_ROOT = path.join(__dirname, '..')
@@ -74,7 +74,7 @@ protocol.registerSchemesAsPrivileged([
 app.commandLine.appendSwitch('ignore-certificate-errors')
 
 const ollamaService = new OllamaService();
-const gitBackupService = new GitBackupService(process.env.APP_ROOT);
+// const gitBackupService = new GitBackupService(process.env.APP_ROOT);
 
 // 🚧 Use ['ENV_NAME'] avoid vite:define dev replacement
 export const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
@@ -813,7 +813,8 @@ ipcMain.handle('ai:proxy-request', async (_event, url: string, method: string, h
     });
 });
 
-// --- Git Backup Handlers ---
+// --- Git Backup Handlers (REMOVED) ---
+/*
 ipcMain.handle('git:status', async () => {
     return await gitBackupService.checkStatus();
 });
@@ -825,81 +826,14 @@ ipcMain.handle('git:setup-branch', async (_event, branchName: string) => {
 ipcMain.handle('git:sync', async (_event, targetDir: string, branchName: string, message: string) => {
     return await gitBackupService.syncData(targetDir, branchName, message);
 });
+*/
 
+// --- Backup Save Handler (REMOVED) ---
+/*
 ipcMain.handle('backup:save-data', async (_event, data: unknown) => {
-    console.log('[Backup] Received save-data request');
-    try {
-        if (!data || typeof data !== 'object') {
-            console.error('[Backup] Invalid data type:', typeof data);
-            throw new Error('Données de sauvegarde invalides ou manquantes.');
-        }
-
-        const appRoot = process.env.APP_ROOT || '';
-        console.log('[Backup] APP_ROOT:', appRoot);
-        const backupDir = path.join(appRoot, 'backups');
-        console.log(`[Backup] Ensuring backup directory: ${backupDir}`);
-        await fs.ensureDir(backupDir);
-
-        const entries = Object.entries(data as Record<string, unknown>);
-        console.log(`[Backup] Found ${entries.length} modules to back up`);
-
-        for (const [key, value] of entries) {
-            if (!key) {
-                console.warn('[Backup] Skipping empty key');
-                continue;
-            }
-
-            if (value === undefined || value === null) {
-                console.warn(`[Backup] Module "${key}" is ${value}, skipping to avoid crash`);
-                logError(new Error(`Module "${key}" is ${value}`), 'Backup Skip Warning');
-                continue;
-            }
-
-            const fileName = `${key}.json`;
-            const filePath = path.join(backupDir, fileName);
-            console.log(`[Backup] Writing module: ${key} -> ${filePath}`);
-            try {
-                // Use explicit stringify to avoid library crashes on edge cases
-                const jsonStr = JSON.stringify(value, null, 2);
-                await fs.writeFile(filePath, jsonStr, 'utf-8');
-            } catch (writeErr) {
-                console.error(`[Backup] Failed to write ${key}:`, writeErr);
-                logError(writeErr, `Backup Write Error [Module: ${key}]`);
-                throw writeErr;
-            }
-        }
-
-        console.log('[Backup] All modules saved successfully');
-        
-        // Trigger Git Sync after successful save
-        console.log('[Backup] Triggering Git Sync...');
-        try {
-            const syncResult = await gitBackupService.syncData('backups');
-            if (!syncResult.success) {
-                console.warn('[Backup] Git Sync succeeded but with issues:', syncResult.error);
-                return { 
-                    success: true, 
-                    path: backupDir, 
-                    warning: `Fichiers sauvés mais échec de la synchro Git : ${syncResult.error}` 
-                };
-            }
-            console.log('[Backup] Git Sync completed successfully');
-            return { success: true, path: backupDir, synced: true };
-        } catch (syncErr) {
-            console.error('[Backup] Critical failure during Git Sync:', syncErr);
-            return { 
-                success: true, 
-                path: backupDir, 
-                error: `Fichiers sauvés mais crash lors de la synchro Git : ${(syncErr as Error).message}` 
-            };
-        }
-    } catch (error: unknown) {
-        const err = error as Error;
-        console.error('[Main] Backup save failed:', err);
-        logError(err, 'BackupHandler Error');
-        return { success: false, error: err.message };
-    }
+...
 });
+*/
 
 ipcMain.handle('npc:select-avatar', async () => {
     const { filePaths } = await dialog.showOpenDialog({

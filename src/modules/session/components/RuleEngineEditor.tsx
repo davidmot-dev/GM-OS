@@ -90,7 +90,7 @@ export const RuleEngineEditor: React.FC = () => {
     const tactical = driver.tactical || { useTacticalAI: true, ranges: DEFAULT_RANGES };
 
     return (
-        <div className="flex-1 flex flex-col overflow-hidden bg-[#0a0a0c] font-inter text-app-text/90">
+        <div className="flex-1 flex flex-col h-full overflow-hidden bg-[#0a0a0c] font-inter text-app-text/90">
             {/* Top Premium Bar */}
             <div className="h-20 border-b border-white/5 bg-black/40 backdrop-blur-2xl px-8 flex items-center justify-between z-50">
                 <div className="flex items-center gap-6">

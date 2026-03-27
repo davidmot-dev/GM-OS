@@ -9,38 +9,11 @@ import { TacticalTaxonomyEditor } from '../modules/tactical-ai/components/Tactic
 import { useTacticalAIStore } from '../modules/tactical-ai/useTacticalAIStore';
 import { mediaCleanupService } from '../services/MediaCleanupService';
 import { gmToast } from '../stores/useToastStore';
-import { Trash2, RefreshCw, GitBranch, CloudUpload } from 'lucide-react';
-import { useBackupSync } from '../hooks/useBackupSync';
+import { Trash2, RefreshCw } from 'lucide-react';
+// import { useBackupSync } from '../hooks/useBackupSync';
 import LobbyMonitor from './settings/LobbyMonitor';
 
-const GitHubSyncSection: React.FC = () => {
-    const { syncNow, isSyncing, lastSync } = useBackupSync();
-    
-    return (
-        <div className="p-6 rounded-2xl bg-app-surface/20 border border-app-border/10 flex items-center justify-between">
-            <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                    <h4 className="text-app-text font-bold text-sm">Sauvegarde & Synchro GitHub</h4>
-                    <span className="px-2 py-0.5 rounded-full bg-accent/10 text-accent text-[9px] font-black uppercase tracking-widest border border-accent/20">Alpha</span>
-                </div>
-                <p className="text-xs text-app-text/40 max-w-md">Synchronise vos campagnes, PNJ et sessions sur la branche <code className="text-accent/60">data-sync</code> de votre dépôt GitHub.</p>
-                {lastSync > 0 && (
-                    <p className="text-[10px] text-accent font-black uppercase mt-2">
-                        Dernière synchronisation : {new Date(lastSync).toLocaleString()}
-                    </p>
-                )}
-            </div>
-            <button 
-                onClick={() => syncNow()}
-                disabled={isSyncing}
-                className="flex items-center gap-2 bg-accent/10 hover:bg-accent text-accent hover:text-app-bg border border-accent/30 px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all disabled:opacity-50 shadow-glow-accent/0 hover:shadow-glow-accent/20"
-            >
-                {isSyncing ? <GitBranch size={18} className="animate-pulse" /> : <CloudUpload size={18} />}
-                {isSyncing ? 'SYNCHRO...' : 'SYNCHRONISER'}
-            </button>
-        </div>
-    );
-};
+/* GitHub Sync Section Removed at user request */
 
 interface GlobalSettingsModalProps {
     onClose: () => void;
@@ -350,8 +323,8 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                         </button>
                                     </div>
 
-                                    {/* GitHub Sync */}
-                                    <GitHubSyncSection />
+                                    {/* GitHub Sync (DISABLED) */}
+                                    {/* <GitHubSyncSection /> */}
                                 </div>
                             </section>
 

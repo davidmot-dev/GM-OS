@@ -351,24 +351,26 @@ L'application refuse de démarrer avec une erreur `spawn UNKNOWN` (errno -4094) 
 
 Sur certains systèmes Windows (particulièrement en environnement pro ou sécurisé), les **politiques de contrôle d'application (AppLocker ou WDAC)** bloquent l'exécution de tout binaire non autorisé situé dans le dossier `node_modules`.
 
-**Solution :** 
+**Solution :**
 1. Identifier la source du blocage via l'Observateur d'Événements Windows (Journaux Microsoft-Windows-AppLocker).
 2. Ajouter une **exclusion** dans la Sécurité Windows (Windows Defender) pour le dossier complet du projet ou autoriser spécifiquement le binaire : `node_modules\electron\dist\electron.exe`.
 3. Le "déblocage" de fichier simple (`Unblock-File`) est souvent insuffisant face à une politique WDAC stricte.
 
 ---
 
-361. Isolation des Données & Danger des commandes destructives (Git Backup)
+## 27. Sécurité Critique & Suppression de l'Auto-Backup (Git Sync)
 
-### 361.1 Défi
+### 27.1 Défi
+L'implémentation d'un système de backup Git automatisé en arrière-plan a causé des régressions critiques (suppression de fichiers du projet) dues à des conflits de processus et des verrous de fichiers. Malgré des tentatives de sécurisation via `git rm --cached`, la complexité de maintenir un état Git propre en parallèle de l'utilisation active de l'application représentait un risque inacceptable pour l'intégrité des données utilisateur.
 
-L'implémentation initiale du `GitBackupService` utilisait `git rm -rf .` pour vider le répertoire de travail lors de la création d'une branche orpheline (`--orphan`). Bien que techniquement correct pour Git, cela s'est avéré extrêmement dangereux en environnement de production : si le processus Electron était interrompu, s'il y avait un verrou sur un fichier, ou si le script échouait à revenir sur la branche `master`, l'utilisateur se retrouvait face à un projet physiquement vide.
+### 27.2 Leçon
+**La simplicité est la forme suprême de la sécurité.** Pour un outil de création comme GM-OS, l'intégrité du répertoire de travail prime sur toute automatisation de sauvegarde complexe.
 
-### 361.2 Leçon
-
-**Ne jamais utiliser de commandes de suppression physique (`rm -rf`) dans un service d'arrière-plan automatisé.** Git propose des alternatives "index-only" beaucoup plus sûres.
-
-**Solution :** Passage à `git rm -r --cached .`. Cette commande vide l'index Git (ce qui permet de repartir de zéro pour la branche de backup) mais ne touche **jamais** aux fichiers physiques sur le disque. Le basculement entre les branches (`checkout`) s'occupe de la gestion des fichiers, et en cas de crash, les fichiers restent présents dans le répertoire de travail, évitant toute perte de données catastrophique.
+**Solution Finale (Mars 2026) :**
+La fonctionnalité d'auto-backup Git a été **intégralement supprimée** du noyau de l'application.
+- Suppression du service backend `GitBackupService`.
+- Suppression des déclencheurs UI et des hooks de synchronisation.
+- Recentrage sur les sauvegardes locales robustes (Zustand Persist) et les exports manuels de session, laissant la gestion Git (versioning) à la discrétion de l'utilisateur via des outils externes spécialisés.
 
 ## 30. Rendu Canvas & Cycle de Vie React
 

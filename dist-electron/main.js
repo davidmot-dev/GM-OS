@@ -5,14 +5,14 @@ import * as require$$0 from "fs";
 import require$$0__default from "fs";
 import require$$0$1 from "constants";
 import require$$0$2 from "stream";
-import require$$4, { promisify } from "util";
+import require$$4 from "util";
 import require$$5 from "assert";
 import require$$1 from "path";
 import http from "node:http";
 import https from "node:https";
 import { createRequire } from "node:module";
 import os from "node:os";
-import require$$0$3, { spawn, exec } from "child_process";
+import require$$0$3, { spawn } from "child_process";
 import require$$1$1 from "os";
 import require$$0$4 from "events";
 import require$$0$5 from "http";
@@ -5318,134 +5318,6 @@ class OllamaService {
     }
   }
 }
-const execAsync = promisify(exec);
-class GitBackupService {
-  constructor(projectPath) {
-    this.isBusy = false;
-    this.projectPath = projectPath;
-  }
-  /**
-   * Check if git is available and if the project is a repository.
-   */
-  async checkStatus() {
-    try {
-      await execAsync("git --version", { cwd: this.projectPath });
-      const { stdout: status } = await execAsync("git status --short", { cwd: this.projectPath });
-      const { stdout: branch } = await execAsync("git rev-parse --abbrev-ref HEAD", { cwd: this.projectPath });
-      return {
-        available: true,
-        isRepo: true,
-        currentBranch: branch.trim(),
-        hasChanges: status.length > 0
-      };
-    } catch (error) {
-      return {
-        available: false,
-        isRepo: false,
-        error: error instanceof Error ? error.message : String(error)
-      };
-    }
-  }
-  /**
-   * Ensure the backup branch exists and is checked out.
-   */
-  async setupBackupBranch(branchName = "data-sync") {
-    if (this.isBusy) return { success: false, error: "Une opération Git est déjà en cours." };
-    this.isBusy = true;
-    try {
-      const { stdout: branches } = await execAsync("git branch", { cwd: this.projectPath });
-      if (!branches.includes(branchName)) {
-        await execAsync(`git checkout --orphan ${branchName}`, { cwd: this.projectPath });
-        await execAsync("git rm -r --cached . --quiet", { cwd: this.projectPath });
-      } else {
-        await execAsync(`git checkout ${branchName}`, { cwd: this.projectPath });
-      }
-      return { success: true, branch: branchName };
-    } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : String(error) };
-    } finally {
-      this.isBusy = false;
-    }
-  }
-  /**
-   * Commit and push data from a specific directory.
-   * This is now fully ASYNCHRONOUS and non-blocking.
-   */
-  async syncData(targetDir, branchName = "data-sync", message = "Automated GM-OS Backup") {
-    if (this.isBusy) {
-      console.warn("[GitSync] Sync already in progress, skipping.");
-      return { success: false, error: "Synchronisation déjà en cours." };
-    }
-    this.isBusy = true;
-    let originalBranch = "";
-    try {
-      const fullPath = require$$1.resolve(this.projectPath, targetDir);
-      if (!require$$0__default.existsSync(fullPath)) {
-        return { success: false, error: `Le dossier ${targetDir} est introuvable.` };
-      }
-      const { stdout: branchOut } = await execAsync("git rev-parse --abbrev-ref HEAD", { cwd: this.projectPath });
-      originalBranch = branchOut.trim();
-      if (originalBranch !== branchName) {
-        console.log(`[GitSync] Stashing changes on ${originalBranch} and switching to ${branchName}`);
-        await execAsync("git stash", { cwd: this.projectPath });
-        const { stdout: branches } = await execAsync("git branch", { cwd: this.projectPath });
-        if (!branches.includes(branchName)) {
-          console.log(`[GitSync] Initializing new orphan branch: ${branchName}`);
-          await execAsync(`git checkout --orphan ${branchName}`, { cwd: this.projectPath });
-          await execAsync("git rm -r --cached . --quiet", { cwd: this.projectPath });
-        } else {
-          await execAsync(`git checkout ${branchName}`, { cwd: this.projectPath });
-          try {
-            await execAsync("git rm -r --cached . --quiet", { cwd: this.projectPath });
-          } catch {
-          }
-        }
-      }
-      await execAsync(`git add "${targetDir}"`, { cwd: this.projectPath });
-      const { stdout: status } = await execAsync("git status --porcelain", { cwd: this.projectPath });
-      if (status.length > 0) {
-        await execAsync(`git commit -m "${message}"`, { cwd: this.projectPath });
-        console.log(`[GitSync] Pushing to origin ${branchName}...`);
-        try {
-          await execAsync(`git push origin ${branchName}`, { cwd: this.projectPath });
-        } catch (pushError) {
-          const stderr = pushError?.stderr || String(pushError);
-          console.error(`[GitSync] Push failed: ${stderr}`);
-          return {
-            success: true,
-            warning: `Sauvegarde locale OK, mais échec de l'envoi distant : ${stderr}`,
-            timestamp: (/* @__PURE__ */ new Date()).toISOString()
-          };
-        }
-      }
-      return { success: true, timestamp: (/* @__PURE__ */ new Date()).toISOString() };
-    } catch (error) {
-      console.error("[GitSync] Fatal error during sync:", error);
-      return { success: false, error: error instanceof Error ? error.message : String(error) };
-    } finally {
-      if (originalBranch && originalBranch !== branchName) {
-        try {
-          await execAsync(`git checkout ${originalBranch}`, { cwd: this.projectPath });
-          try {
-            const { stdout: stashList } = await execAsync("git stash list", { cwd: this.projectPath });
-            if (stashList.includes(`WIP on ${originalBranch}`)) {
-              await execAsync("git stash pop", { cwd: this.projectPath });
-            }
-          } catch {
-          }
-          console.log(`[GitSync] Successfully returned to ${originalBranch}`);
-        } catch (cleanupErr) {
-          console.error("[GitSync] CRITICAL: Stuck on backup branch!", cleanupErr);
-          try {
-            await execAsync(`git checkout -f ${originalBranch}`, { cwd: this.projectPath });
-          } catch {
-          }
-        }
-      }
-      this.isBusy = false;
-    }
-  }
-}
 const require$1 = createRequire(import.meta.url);
 const pdf = require$1("pdf-parse");
 const { WebSocketServer } = require$1("ws");
@@ -5482,7 +5354,6 @@ protocol.registerSchemesAsPrivileged([
 ]);
 app.commandLine.appendSwitch("ignore-certificate-errors");
 const ollamaService = new OllamaService();
-const gitBackupService = new GitBackupService(process.env.APP_ROOT);
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
 const MAIN_DIST = __dirname$1;
 const RENDERER_DIST = path.join(process.env.APP_ROOT, "dist");
@@ -6097,80 +5968,6 @@ ipcMain.handle("ai:proxy-request", async (_event, url, method, headers, body) =>
       reject(error);
     }
   });
-});
-ipcMain.handle("git:status", async () => {
-  return await gitBackupService.checkStatus();
-});
-ipcMain.handle("git:setup-branch", async (_event, branchName) => {
-  return await gitBackupService.setupBackupBranch(branchName);
-});
-ipcMain.handle("git:sync", async (_event, targetDir, branchName, message) => {
-  return await gitBackupService.syncData(targetDir, branchName, message);
-});
-ipcMain.handle("backup:save-data", async (_event, data) => {
-  console.log("[Backup] Received save-data request");
-  try {
-    if (!data || typeof data !== "object") {
-      console.error("[Backup] Invalid data type:", typeof data);
-      throw new Error("Données de sauvegarde invalides ou manquantes.");
-    }
-    const appRoot = process.env.APP_ROOT || "";
-    console.log("[Backup] APP_ROOT:", appRoot);
-    const backupDir = path.join(appRoot, "backups");
-    console.log(`[Backup] Ensuring backup directory: ${backupDir}`);
-    await fs.ensureDir(backupDir);
-    const entries = Object.entries(data);
-    console.log(`[Backup] Found ${entries.length} modules to back up`);
-    for (const [key, value] of entries) {
-      if (!key) {
-        console.warn("[Backup] Skipping empty key");
-        continue;
-      }
-      if (value === void 0 || value === null) {
-        console.warn(`[Backup] Module "${key}" is ${value}, skipping to avoid crash`);
-        logError(new Error(`Module "${key}" is ${value}`), "Backup Skip Warning");
-        continue;
-      }
-      const fileName = `${key}.json`;
-      const filePath = path.join(backupDir, fileName);
-      console.log(`[Backup] Writing module: ${key} -> ${filePath}`);
-      try {
-        const jsonStr = JSON.stringify(value, null, 2);
-        await fs.writeFile(filePath, jsonStr, "utf-8");
-      } catch (writeErr) {
-        console.error(`[Backup] Failed to write ${key}:`, writeErr);
-        logError(writeErr, `Backup Write Error [Module: ${key}]`);
-        throw writeErr;
-      }
-    }
-    console.log("[Backup] All modules saved successfully");
-    console.log("[Backup] Triggering Git Sync...");
-    try {
-      const syncResult = await gitBackupService.syncData("backups");
-      if (!syncResult.success) {
-        console.warn("[Backup] Git Sync succeeded but with issues:", syncResult.error);
-        return {
-          success: true,
-          path: backupDir,
-          warning: `Fichiers sauvés mais échec de la synchro Git : ${syncResult.error}`
-        };
-      }
-      console.log("[Backup] Git Sync completed successfully");
-      return { success: true, path: backupDir, synced: true };
-    } catch (syncErr) {
-      console.error("[Backup] Critical failure during Git Sync:", syncErr);
-      return {
-        success: true,
-        path: backupDir,
-        error: `Fichiers sauvés mais crash lors de la synchro Git : ${syncErr.message}`
-      };
-    }
-  } catch (error) {
-    const err = error;
-    console.error("[Main] Backup save failed:", err);
-    logError(err, "BackupHandler Error");
-    return { success: false, error: err.message };
-  }
 });
 ipcMain.handle("npc:select-avatar", async () => {
   const { filePaths } = await dialog.showOpenDialog({

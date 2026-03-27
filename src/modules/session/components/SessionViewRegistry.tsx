@@ -111,7 +111,7 @@ const SessionViewRegistry: React.FC<SessionViewRegistryProps> = ({ forgeMode }) 
                     </aside>
                 )}
                 
-                <section className="flex-1 h-full overflow-hidden relative">
+                <section className="flex-1 h-full overflow-hidden relative flex flex-col">
                     {renderViewContent()}
                 </section>
             </div>
