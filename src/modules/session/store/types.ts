@@ -48,7 +48,9 @@ export type CurrentView =
     | 'driver-editor'
     | 'storyboard'
     | 'deck-library'
-    | 'deck-player';
+    | 'deck-player'
+    | 'campaign-details'
+    | 'campaign-form';
 
 // ─────────────────────────────────────────────
 // Entity / Health

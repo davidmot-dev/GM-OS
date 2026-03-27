@@ -85,6 +85,9 @@ const SessionViewRegistry: React.FC<SessionViewRegistryProps> = ({ forgeMode }) 
                 // Spécifique : NpcManagement gère son propre layout interne si sélectionné
                 return <NpcManagement />;
 
+            case 'campaign-form':
+                return <CampaignForm onClose={() => setCurrentView('campaign-details')} />;
+
             default:
                 return (
                     <div className="flex-1 flex flex-col items-center justify-center p-20 bg-app-bg/20">

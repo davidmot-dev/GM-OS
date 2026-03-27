@@ -51,7 +51,7 @@ const DeckPlayer: React.FC = () => {
                 <Layers size={48} strokeWidth={1} />
                 <p className="text-sm font-black uppercase tracking-widest">Aucun paquet configuré</p>
                 <button 
-                    onClick={() => setCurrentView('campaign-form')} 
+                    onClick={() => setCurrentView('deck-library')} 
                     className="px-6 py-2 bg-gm-gold/10 text-gm-gold border border-gm-gold/20 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-gm-gold/20 transition-all"
                 >
                     Aller à la Bibliothèque
@@ -83,7 +83,7 @@ const DeckPlayer: React.FC = () => {
             <header className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                     <button 
-                        onClick={() => setCurrentView('campaign-dashboard')}
+                        onClick={() => setCurrentView('cockpit')}
                         className="p-2 rounded-lg bg-white/5 text-white/40 hover:text-white transition-all"
                     >
                         <ChevronLeft size={20} />
