@@ -1,5 +1,5 @@
 import React from 'react';
-import { Music, Pause, Play, Volume2, EyeOff, HeartCrack, CheckCircle, Skull, Zap } from 'lucide-react';
+import { Music, Pause, Play, Volume2, EyeOff, HeartCrack, CheckCircle, Skull, Zap, Layers, ChevronRight } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useCombatStore } from '../../combat/useCombatStore';
 import { useMusicStore } from '../../music/useMusicStore';
@@ -160,6 +160,35 @@ const ModuleSnapshots: React.FC = () => {
                             <p className="text-[10px] text-slate-600 italic">Aucune altération d'état</p>
                         </div>
                     )}
+                </div>
+                {/* Track 4: Deck-OS */}
+                <div className="flex flex-col gap-2">
+                    <div className="flex items-center justify-between text-[10px] text-app-text/40 font-bold uppercase tracking-wider px-1 border-t border-white/5 pt-4 mt-2">
+                        <span>Cartes & Destinée</span>
+                        <div className="flex gap-2">
+                            <button 
+                                onClick={() => useSessionOSStore.getState().setCurrentView('deck-library')}
+                                className="text-accent hover:underline lowercase tracking-tight"
+                            >
+                                gérer
+                            </button>
+                        </div>
+                    </div>
+                    <button 
+                        onClick={() => useSessionOSStore.getState().setCurrentView('deck-player')}
+                        className="group flex items-center justify-between bg-white/5 hover:bg-gm-gold/10 rounded-xl border border-app-border/40 hover:border-gm-gold/30 p-3 transition-all"
+                    >
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-lg bg-black/40 flex items-center justify-center border border-app-border/20 group-hover:border-gm-gold/40 text-app-text/20 group-hover:text-gm-gold transition-colors">
+                                <Layers size={18} />
+                            </div>
+                            <div className="flex flex-col items-start">
+                                <span className="text-xs text-app-text font-bold uppercase tracking-wider group-hover:text-gm-gold transition-colors">Deck-OS</span>
+                                <span className="text-[9px] text-app-text/40 uppercase tracking-widest font-black">Lancer le moteur</span>
+                            </div>
+                        </div>
+                        <ChevronRight size={14} className="text-app-text/20 group-hover:text-gm-gold transition-colors" />
+                    </button>
                 </div>
             </div>
 

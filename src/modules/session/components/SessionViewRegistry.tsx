@@ -17,6 +17,8 @@ import RuleEngineEditor from './RuleEngineEditor';
 import StoryboardDashboard from '../../storyboard/StoryboardDashboard';
 import SocialGraph from './SocialGraph';
 import CampaignForm from './CampaignForm';
+import DeckLibrary from './DeckLibrary';
+import DeckPlayer from './DeckPlayer';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { Sparkles } from 'lucide-react';
 
@@ -55,6 +57,10 @@ const SessionViewRegistry: React.FC<SessionViewRegistryProps> = ({ forgeMode }) 
                 return <RuleEngineEditor />;
             case 'storyboard':
                 return <StoryboardDashboard />;
+            case 'deck-library':
+                return <DeckLibrary />;
+            case 'deck-player':
+                return <DeckPlayer />;
             
             // --- VUES AVEC COCKPIT (Split Layout) ---
             case 'cockpit':

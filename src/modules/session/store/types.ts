@@ -46,7 +46,9 @@ export type CurrentView =
     | 'forge'
     | 'template-editor'
     | 'driver-editor'
-    | 'storyboard';
+    | 'storyboard'
+    | 'deck-library'
+    | 'deck-player';
 
 // ─────────────────────────────────────────────
 // Entity / Health
