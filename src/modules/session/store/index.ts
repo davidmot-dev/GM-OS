@@ -28,6 +28,7 @@ import { createChronicleSlice, type ChronicleSlice } from './chronicleSlice';
 import { createForgeSlice, type ForgeSlice } from './forgeSlice';
 import { createUiSlice, type UiSlice } from './uiSlice';
 import { createCluesSlice, type CluesSlice } from './cluesSlice';
+import { createDeckSlice, type DeckSlice } from './deckSlice';
 
 import type {
     Campaign,
@@ -108,6 +109,7 @@ export type SessionOSStore = CampaignSlice &
     ForgeSlice &
     UiSlice &
     CluesSlice &
+    DeckSlice &
     CrossDomainActions;
 
 // ─────────────────────────────────────────────
@@ -250,6 +252,7 @@ export const useSessionOSStore = create<SessionOSStore>()(
             ...createForgeSlice(set as Parameters<typeof createForgeSlice>[0], get as Parameters<typeof createForgeSlice>[1], api as Parameters<typeof createForgeSlice>[2]),
             ...createUiSlice(set as Parameters<typeof createUiSlice>[0], get as Parameters<typeof createUiSlice>[1], api as Parameters<typeof createUiSlice>[2]),
             ...createCluesSlice(set as Parameters<typeof createCluesSlice>[0], get as Parameters<typeof createCluesSlice>[1], api as Parameters<typeof createCluesSlice>[2]),
+            ...createDeckSlice(set as Parameters<typeof createDeckSlice>[0], get as Parameters<typeof createDeckSlice>[1], api as Parameters<typeof createDeckSlice>[2]),
 
             // ── Hydratation des données initiales ─────────
             campaigns: INITIAL_DATA.campaigns,
