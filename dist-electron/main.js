@@ -5390,8 +5390,9 @@ class GitBackupService {
         await execAsync("git stash", { cwd: this.projectPath });
         const { stdout: branches } = await execAsync("git branch", { cwd: this.projectPath });
         if (!branches.includes(branchName)) {
+          console.log(`[GitSync] Initializing new orphan branch: ${branchName}`);
           await execAsync(`git checkout --orphan ${branchName}`, { cwd: this.projectPath });
-          await execAsync("git rm -rf .", { cwd: this.projectPath });
+          await execAsync("git rm -r --cached . --quiet", { cwd: this.projectPath });
         } else {
           await execAsync(`git checkout ${branchName}`, { cwd: this.projectPath });
           try {
@@ -5427,7 +5428,7 @@ class GitBackupService {
           await execAsync(`git checkout ${originalBranch}`, { cwd: this.projectPath });
           try {
             const { stdout: stashList } = await execAsync("git stash list", { cwd: this.projectPath });
-            if (stashList.includes("WIP on")) {
+            if (stashList.includes(`WIP on ${originalBranch}`)) {
               await execAsync("git stash pop", { cwd: this.projectPath });
             }
           } catch {
@@ -5435,6 +5436,10 @@ class GitBackupService {
           console.log(`[GitSync] Successfully returned to ${originalBranch}`);
         } catch (cleanupErr) {
           console.error("[GitSync] CRITICAL: Stuck on backup branch!", cleanupErr);
+          try {
+            await execAsync(`git checkout -f ${originalBranch}`, { cwd: this.projectPath });
+          } catch {
+          }
         }
       }
       this.isBusy = false;

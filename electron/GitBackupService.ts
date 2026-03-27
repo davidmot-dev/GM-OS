@@ -91,8 +91,10 @@ export class GitBackupService {
         
         const { stdout: branches } = await execAsync('git branch', { cwd: this.projectPath });
         if (!branches.includes(branchName)) {
+          console.log(`[GitSync] Initializing new orphan branch: ${branchName}`);
           await execAsync(`git checkout --orphan ${branchName}`, { cwd: this.projectPath });
-          await execAsync('git rm -rf .', { cwd: this.projectPath });
+          // DANGER FIX: Use index-only removal! Never delete physical files during sync.
+          await execAsync('git rm -r --cached . --quiet', { cwd: this.projectPath });
         } else {
           await execAsync(`git checkout ${branchName}`, { cwd: this.projectPath });
           // Ensure index is clean so we only pick up targetDir
@@ -126,21 +128,26 @@ export class GitBackupService {
       console.error('[GitSync] Fatal error during sync:', error);
       return { success: false, error: error instanceof Error ? error.message : String(error) };
     } finally {
-      // 4. Cleanup: Always try to return to original branch
+      // 4. Cleanup: Toujours tenter de revenir à la branche d'origine de manière sûre
       if (originalBranch && originalBranch !== branchName) {
         try {
+          // On s'assure d'être sur la branche d'origine (on utilise -f en cas de conflit index/worktree inattendu)
           await execAsync(`git checkout ${originalBranch}`, { cwd: this.projectPath });
+          
+          // Tentative de restauration du stash
           try { 
             const { stdout: stashList } = await execAsync('git stash list', { cwd: this.projectPath });
-            if (stashList.includes('WIP on')) {
+            // On vérifie si un stash WIP correspondant à la branche orignale existe
+            if (stashList.includes(`WIP on ${originalBranch}`)) {
               await execAsync('git stash pop', { cwd: this.projectPath }); 
             }
-          } catch { /* ignore if no stash found */ }
+          } catch { /* ignore if no stash found or pop failed */ }
           
           console.log(`[GitSync] Successfully returned to ${originalBranch}`);
         } catch (cleanupErr) {
           console.error('[GitSync] CRITICAL: Stuck on backup branch!', cleanupErr);
-          // In a real app, we might want to notify the UI via an IPC event here
+          // Tentative désespérée de revenir si bloqué
+          try { await execAsync(`git checkout -f ${originalBranch}`, { cwd: this.projectPath }); } catch { /* ignore */ }
         }
       }
       this.isBusy = false;
