@@ -2,7 +2,7 @@ import React from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useSessionStore } from '../../../store/useSessionStore';
 import { useModalStore } from '../../../stores/useModalStore';
-import { BookOpen, LayoutDashboard, Swords, Users, Users2, Map as MapIcon, Archive, PlusCircle, Library, FileText, ExternalLink, File, StickyNote, Play, RefreshCw, Eye, Hammer, Zap } from 'lucide-react';
+import { BookOpen, LayoutDashboard, Swords, Users, Users2, Map as MapIcon, Archive, PlusCircle, Library, FileText, ExternalLink, File, StickyNote, Play, RefreshCw, Eye, Hammer, Zap, Layers } from 'lucide-react';
 import SessionChecklist from './SessionChecklist';
 
 const CampaignCockpit: React.FC = () => {
@@ -111,6 +111,13 @@ const CampaignCockpit: React.FC = () => {
                 >
                     <Hammer size={20} className={currentView === 'forge' ? 'text-accent' : 'text-app-text/60'} />
                     <span className="text-sm font-medium">System Forge</span>
+                </button>
+                <button
+                    onClick={() => setCurrentView('deck-player')}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all nav-item-glow ${currentView === 'deck-player' ? 'bg-gm-gold/10 text-gm-gold border border-gm-gold/20' : 'text-app-text/60 hover:bg-white/5 hover:text-app-text'}`}
+                >
+                    <Layers className={currentView === 'deck-player' ? 'text-gm-gold scale-110 shadow-glow-gold' : 'group-hover:scale-110 transition-transform'} size={20} />
+                    <span className="text-sm font-bold tracking-tight text-left">Deck-OS</span>
                 </button>
 
                 {activeSession ? (
