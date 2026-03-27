@@ -57,6 +57,7 @@ Plus d'informations techniques et guides d'utilisation sont disponibles dans le 
 - **[Architecture (Brain vs Body)](file:///c:/Projet_David/GM-OS-v5/documentation/Architecture/rule-engine-ai.md)** : Fonctionnement du Moteur de Règles et de l'IA.
 - **[Documentation Technique (Social Nexus)](file:///c:/Projet_David/GM-OS-v5/documentation/Technical%20Docs/Social_Nexus_Technical_Doc.md)** : Architecture du graphe de relations.
 - **[Documentation Technique (Nettoyage)](file:///c:/Projet_David/GM-OS-v5/documentation/Technical%20Docs/media-cleanup.md)** : Fonctionnement du service de maintenance des médias.
+- **[Documentation Technique (Clues-OS)](file:///c:/Projet_David/GM-OS-v5/documentation/Technical%20Docs/Clues-OS_Technical_Doc.md)** : Système de gestion et révélation d'indices.
 - **[Lessons Learned](file:///c:/Projet_David/GM-OS-v5/documentation/Lessons_Learned.md)** : Défis et solutions de l'architecture v5.
 
 ### 🤖 Gemini CLI Integration

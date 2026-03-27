@@ -165,6 +165,32 @@ Le **Social Nexus** est un outil de visualisation dynamique des relations (PJ/PN
 
 ---
 
+## 🕵️ Clues-OS (Gestion des Indices)
+
+**Clues-OS** est le module dédié à la gestion des preuves, des rumeurs et des objets narratifs de votre campagne.
+
+### 🔍 Pourquoi utiliser les indices ?
+
+- **Traçabilité** : Ne perdez plus le fil de ce que vos joueurs savent vraiment.
+- **Automatisation** : La révélation d'un indice génère automatiquement une note dans le **Journal-OS**.
+- **Immersion** : Projetez visuellement l'indice sur le **Player Hub** au moment de sa découverte.
+
+### 🎭 Fonctionnement du Cockpit (Clue Deck)
+
+Dans le Master Cockpit, le widget **Clue Deck** vous permet :
+- **Visualisation Filtrée** : Affiche en priorité les indices liés au lieu actuel (Atlas-OS).
+- **Révélation Express** : Un bouton "Œil" pour passer l'indice en mode "Révélé".
+- **Projection** : Un bouton dédié pour envoyer l'illustration et le texte de l'indice aux joueurs.
+
+### 📝 Le Clues Manager
+
+Accessible depuis le menu latéral, cet éditeur complet permet de :
+- Rédiger le titre et le contenu (lore) de l'indice.
+- Lier l'indice à une **Localisation** (Atlas) ou un **PNJ** (Propriétaire).
+- Définir un **Moment de Campagne** (ex: "Automne 1492") pour la chronologie narrative.
+
+---
+
 ## 🔍 Spotlight (Universal Search) - Navigation Express
 
 Utilisez `CMD+K` (ou `CTRL+K`) pour ouvrir la barre de recherche globale. 

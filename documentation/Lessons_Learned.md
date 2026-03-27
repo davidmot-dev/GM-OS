@@ -358,17 +358,17 @@ Sur certains systèmes Windows (particulièrement en environnement pro ou sécur
 
 ---
 
-29. Isolation des Données (Git Branch Isolation)
+361. Isolation des Données & Danger des commandes destructives (Git Backup)
 
-### 29.1 Défi
-La branche de sauvegarde `data-sync` était "polluée" par l'intégralité du code source du projet, ce qui alourdissait les synchronisations et augmentait les risques de conflits lors des opérations de `stash`.
+### 361.1 Défi
 
-### 29.2 Leçon
-Une branche de données doit être structurellement isolée du code pour garantir des performances optimales et une clarté totale sur l'historique des sauvegardes.
+L'implémentation initiale du `GitBackupService` utilisait `git rm -rf .` pour vider le répertoire de travail lors de la création d'une branche orpheline (`--orphan`). Bien que techniquement correct pour Git, cela s'est avéré extrêmement dangereux en environnement de production : si le processus Electron était interrompu, s'il y avait un verrou sur un fichier, ou si le script échouait à revenir sur la branche `master`, l'utilisateur se retrouvait face à un projet physiquement vide.
 
-**Solution :** 
-1. **Orphan Branches** : Utilisation de `git checkout --orphan` pour créer une branche sans parenté avec le code source.
-2. **Nettoyage de l'Index (`--cached`)** : Utilisation de `git rm -r --cached .` lors du switch de branche. Cela permet de "vider" virtuellement la branche de tout fichier de code tout en les conservant physiquement sur le disque pour le switch retour vers `master`. Le résultat final sur GitHub est une branche contenant **uniquement** le dossier `backups/`.
+### 361.2 Leçon
+
+**Ne jamais utiliser de commandes de suppression physique (`rm -rf`) dans un service d'arrière-plan automatisé.** Git propose des alternatives "index-only" beaucoup plus sûres.
+
+**Solution :** Passage à `git rm -r --cached .`. Cette commande vide l'index Git (ce qui permet de repartir de zéro pour la branche de backup) mais ne touche **jamais** aux fichiers physiques sur le disque. Le basculement entre les branches (`checkout`) s'occupe de la gestion des fichiers, et en cas de crash, les fichiers restent présents dans le répertoire de travail, évitant toute perte de données catastrophique.
 
 ## 30. Rendu Canvas & Cycle de Vie React
 
