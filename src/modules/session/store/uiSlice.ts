@@ -81,7 +81,7 @@ export const createUiSlice: StateCreator<UiSlice, [], [], UiSlice> = (set) => ({
     diceRolls: [],
     isAddingEntity: false,
     isGeneratingAIImage: false,
-    activeCampaignFormSection: 'details',
+    activeCampaignFormSection: 'identity',
     isHeaderHidden: false,
     editingClueId: null,
 

@@ -16,6 +16,8 @@ import { gmToast } from '../../../stores/useToastStore';
 export interface DeckSliceState {
     decks: DeckManifest[];
     deckStates: Record<string, DeckSessionState>;
+    selectedDeckId: string | null;
+    isProjecting: boolean;
 }
 
 export interface DeckSliceActions {
@@ -28,6 +30,8 @@ export interface DeckSliceActions {
     discardCard: (deckId: string) => void;
     shuffleDeck: (deckId: string) => void;
     resetDeck: (deckId: string) => void;
+    selectDeck: (id: string | null) => void;
+    toggleProjection: () => void;
 }
 
 export type DeckSlice = DeckSliceState & DeckSliceActions;
@@ -36,6 +40,8 @@ export const createDeckSlice: StateCreator<DeckSlice, [], [], DeckSlice> = (set,
     // Initial State
     decks: [],
     deckStates: {},
+    selectedDeckId: null,
+    isProjecting: false,
 
     // Actions
     addDeck: (deck) => {
@@ -48,7 +54,7 @@ export const createDeckSlice: StateCreator<DeckSlice, [], [], DeckSlice> = (set,
                 ...state.deckStates,
                 [id]: {
                     deckId: id,
-                    remainingIndices: DeckInterpreter.initializeIndices(deck.cardCount),
+                    remainingIndices: DeckInterpreter.initializeIndices(newDeck),
                     discardedIndices: [],
                     currentCardIndex: null
                 }
@@ -69,7 +75,8 @@ export const createDeckSlice: StateCreator<DeckSlice, [], [], DeckSlice> = (set,
 
     deleteDeck: (id) => {
         set((state) => {
-            const { [id]: _, ...newStates } = state.deckStates;
+            const newStates = { ...state.deckStates };
+            delete newStates[id];
             return {
                 decks: state.decks.filter(d => d.id !== id),
                 deckStates: newStates
@@ -79,11 +86,28 @@ export const createDeckSlice: StateCreator<DeckSlice, [], [], DeckSlice> = (set,
 
     drawCard: (deckId) => {
         const state = get().deckStates[deckId];
-        if (!state) return;
+        const deck = get().decks.find(d => d.id === deckId);
+        if (!state || !deck) return;
 
-        const { card, newRemaining } = DeckInterpreter.draw(state.remainingIndices);
+        let workingRemaining = [...state.remainingIndices];
+        const workingDiscard = [...state.discardedIndices];
+
+        // 1. Gérer la carte actuellement affichée (la carte "précédente")
+        if (state.currentCardIndex !== null) {
+            if (deck.useDiscard) {
+                // Elle va dans la défausse
+                workingDiscard.push(state.currentCardIndex);
+            } else {
+                // Elle retourne dans le paquet au hasard
+                workingRemaining.push(state.currentCardIndex);
+                workingRemaining = DeckInterpreter.shuffle(workingRemaining);
+            }
+        }
+
+        // 2. Piocher la nouvelle carte
+        const { card, newRemaining } = DeckInterpreter.draw(workingRemaining);
         
-        if (!card) {
+        if (card === null) {
             gmToast("Plus de cartes dans la pioche !", "info");
             return;
         }
@@ -94,19 +118,58 @@ export const createDeckSlice: StateCreator<DeckSlice, [], [], DeckSlice> = (set,
                 [deckId]: {
                     ...state,
                     remainingIndices: newRemaining,
+                    discardedIndices: workingDiscard,
                     currentCardIndex: card
                 }
             }
         }));
 
-        const deck = get().decks.find(d => d.id === deckId);
-        gmToast(`Carte tirée (${deck?.name || 'Deck'})`, 'success');
+
+        gmToast(`Carte tirée (${deck.name})`, 'success');
+
+        // [PREMIUM] Projection & Journalisation
+        if (get().isProjecting) {
+            import('../../image/useImageStore').then(async mod => {
+                const cardImageUrl = DeckInterpreter.getCardImage(deck, card);
+                const metadata = DeckInterpreter.getCardMetadata(deck, card);
+                const cardName = metadata?.name || `Carte #${card + (deck.startAtZero ? 0 : 1)}`;
+                
+                if (cardImageUrl) {
+                    // Projection as Entity for better UI focus (Full card view)
+                    await mod.useImageStore.getState().projectEntity({
+                        id: `card-${deckId}-${card}-${Date.now()}`,
+                        name: cardName,
+                        subtitle: `Oracle : ${deck.name}`,
+                        avatar: cardImageUrl,
+                        type: 'Oracle',
+                        lore: metadata?.description || ""
+                    });
+                }
+            });
+        }
+
+        import('../../journal/useJournalStore').then(mod => {
+            const journal = mod.useJournalStore.getState();
+            if (journal.isRecording) {
+                const cardName = DeckInterpreter.getCardMetadata(deck, card)?.name || `Carte #${card + (deck.startAtZero ? 0 : 1)}`;
+                journal.addEvent({
+                    type: 'ORACLE',
+                    title: `Tirage : ${cardName}`,
+                    content: `Paquet : **${deck.name}**\nRésultat : ${cardName}`,
+                    metadata: { 
+                        deckId, 
+                        cardIndex: card,
+                        imageUrl: DeckInterpreter.getCardImage(deck, card)
+                    }
+                });
+            }
+        });
     },
 
     discardCard: (deckId) => {
         const state = get().deckStates[deckId];
         const deck = get().decks.find(d => d.id === deckId);
-        if (!state || !state.currentCardIndex) return;
+        if (!state || state.currentCardIndex === null) return;
 
         set((store) => ({
             deckStates: {
@@ -123,25 +186,21 @@ export const createDeckSlice: StateCreator<DeckSlice, [], [], DeckSlice> = (set,
     },
 
     shuffleDeck: (deckId) => {
-        const state = get().deckStates[deckId];
-        if (!state) return;
-
-        // On remet tout dans la pioche et on mélange
-        const allIndices = [...state.remainingIndices, ...state.discardedIndices];
-        if (state.currentCardIndex) allIndices.push(state.currentCardIndex);
+        const deck = get().decks.find(d => d.id === deckId);
+        if (!deck) return;
 
         set((store) => ({
             deckStates: {
                 ...store.deckStates,
                 [deckId]: {
-                    ...state,
-                    remainingIndices: DeckInterpreter.shuffle(allIndices),
+                    deckId,
+                    remainingIndices: DeckInterpreter.initializeIndices(deck),
                     discardedIndices: [],
                     currentCardIndex: null
                 }
             }
         }));
-        gmToast("Paquet mélangé.", "info");
+        gmToast("Paquet régénéré et mélangé.", "info");
     },
 
     resetDeck: (deckId) => {
@@ -153,11 +212,58 @@ export const createDeckSlice: StateCreator<DeckSlice, [], [], DeckSlice> = (set,
                 ...store.deckStates,
                 [deckId]: {
                     deckId,
-                    remainingIndices: DeckInterpreter.initializeIndices(deck.cardCount),
+                    remainingIndices: DeckInterpreter.initializeIndices(deck),
                     discardedIndices: [],
                     currentCardIndex: null
                 }
             }
         }));
+    },
+
+    selectDeck: (id) => {
+        set({ selectedDeckId: id });
+    },
+
+    toggleProjection: () => {
+        const wasProjecting = get().isProjecting;
+        set({ isProjecting: !wasProjecting });
+
+        import('../../image/useImageStore').then(async mod => {
+            if (wasProjecting) {
+                // ❌ Désactivation → vider les Hubs
+                mod.useImageStore.getState().projectEntity(null);
+                gmToast("Projection Hub DÉSACTIVÉE", "info");
+            } else {
+                // ✅ Activation → projeter la carte courante si elle existe
+                gmToast("Projection Hub ACTIVÉE", "info");
+
+                // Chercher la carte active parmi tous les decks (prioriser activeDeckId si possible)
+                const state = get();
+                const decks = state.decks;
+                const deckStates = state.deckStates;
+
+                for (const deck of decks) {
+                    const deckState = deckStates[deck.id];
+                    if (deckState && deckState.currentCardIndex !== null) {
+                        const card = deckState.currentCardIndex;
+                        const cardImageUrl = DeckInterpreter.getCardImage(deck, card);
+                        const metadata = DeckInterpreter.getCardMetadata(deck, card);
+                        const cardName = metadata?.name || `Carte #${card + (deck.startAtZero ? 0 : 1)}`;
+
+                        if (cardImageUrl) {
+                            await mod.useImageStore.getState().projectEntity({
+                                id: `card-${deck.id}-${card}-${Date.now()}`,
+                                name: cardName,
+                                subtitle: `Oracle : ${deck.name}`,
+                                avatar: cardImageUrl,
+                                type: 'Oracle',
+                                lore: metadata?.description || ''
+                            });
+                        }
+                        break; // Projeter seulement le premier deck avec une carte active
+                    }
+                }
+            }
+        });
     }
 });

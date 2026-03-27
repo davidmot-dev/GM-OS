@@ -259,6 +259,9 @@ export const useImageStore = create<ImageState>()(
 
                 if (!entity) {
                     set({ projectedEntity: null });
+                    // 🔌 Envoyer le signal de clear aux Hubs connectés (IPC + WebSocket)
+                    window.appBridge?.image?.syncHubData('entity', '');
+                    window.appBridge?.image?.syncHubData('image', '');
                     return;
                 }
 

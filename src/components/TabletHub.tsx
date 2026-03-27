@@ -340,28 +340,32 @@ const TabletHub: React.FC = () => {
                         <div className="w-full h-full flex items-center justify-center overflow-hidden pointer-events-auto">
                             <div className="w-full max-h-full overflow-y-auto custom-scrollbar p-2 flex flex-col items-center justify-center">
                                 <div className={`grid grid-cols-1 ${(resolvedFavorites.length + (liveEntity ? 1 : 0)) > 1 ? 'md:grid-cols-2 lg:grid-cols-3' : 'max-w-md'} gap-4 md:gap-8 w-full place-items-center`}>
-                                    
                                     {liveEntity && (
-                                        <div key={liveEntity.id} className="bg-slate-900/90 backdrop-blur-3xl border-2 border-gm-cyan/30 rounded-3xl p-5 md:p-6 shadow-[0_0_40px_rgba(34,211,238,0.15)] flex flex-col gap-4 animate-in fade-in zoom-in duration-1000 w-full">
+                                        <div key={liveEntity.id} className={`bg-slate-900/90 backdrop-blur-3xl border-2 border-gm-cyan/30 rounded-3xl p-5 md:p-6 shadow-[0_0_40px_rgba(34,211,238,0.15)] flex flex-col gap-4 animate-in fade-in zoom-in duration-1000 w-full ${liveEntity.type === 'Oracle' ? 'max-w-xl' : ''}`}>
                                             <div className="flex flex-col items-center text-center gap-4">
                                                 <div 
-                                                    className="w-48 h-48 rounded-full border-4 border-accent relative flex items-center justify-center tablet-hub-voice-avatar"
+                                                    className={`${liveEntity.type === 'Oracle' ? 'w-full aspect-[2/3] max-h-[75vh]' : 'size-28 md:size-40'} rounded-2xl overflow-hidden border-2 border-gm-cyan/20 shadow-glow-cyan bg-slate-950 transition-all scale-100 relative`}
                                                     style={voiceStyles}
                                                 >
                                                     <ResolvedImage src={liveEntity.avatar || liveEntity.imageUrl || liveEntity.portraitUrl} className="absolute inset-0 w-full h-full object-cover blur-xl opacity-30 scale-110" />
-                                                    <ResolvedImage src={liveEntity.avatar || liveEntity.imageUrl || liveEntity.portraitUrl} alt={liveEntity.name} className="relative z-10 w-full h-full object-contain" />
+                                                    <ResolvedImage src={liveEntity.avatar || liveEntity.imageUrl || liveEntity.portraitUrl} alt={liveEntity.name} className={`relative z-10 w-full h-full ${liveEntity.type === 'Oracle' ? 'object-contain' : 'object-cover'}`} />
                                                 </div>
-                                                <div className="flex flex-col items-center">
-                                                    <h3 className="text-xl md:text-2xl font-black text-white tracking-tighter uppercase whitespace-nowrap">{liveEntity.name}</h3>
-                                                    <p className="text-gm-cyan text-[9px] font-black uppercase tracking-[0.3em] mt-1">{liveEntity.subtitle || liveEntity.type || 'Personnage'}</p>
-                                                </div>
+
+                                                {liveEntity.type !== 'Oracle' && (
+                                                    <div className="flex flex-col items-center">
+                                                        <h3 className="text-xl md:text-2xl font-black text-white tracking-tighter uppercase whitespace-nowrap">{liveEntity.name}</h3>
+                                                        <p className="text-gm-cyan text-[9px] font-black uppercase tracking-[0.3em] mt-1">{liveEntity.subtitle || liveEntity.type || 'Personnage'}</p>
+                                                    </div>
+                                                )}
                                             </div>
                                             
-                                            <div className="relative pt-4 border-t border-white/10">
-                                                <p className="font-serif text-slate-200 leading-relaxed italic text-xs md:text-sm text-center line-clamp-6">
-                                                    {liveEntity.lore || liveEntity.description || "Détails confidentiels."}
-                                                </p>
-                                            </div>
+                                            {liveEntity.type !== 'Oracle' && (
+                                                <div className="relative pt-4 border-t border-white/10">
+                                                    <p className="font-serif text-slate-200 leading-relaxed italic text-xs md:text-sm text-center line-clamp-6">
+                                                        {liveEntity.lore || liveEntity.description || "Détails confidentiels."}
+                                                    </p>
+                                                </div>
+                                            )}
                                         </div>
                                     )}
 

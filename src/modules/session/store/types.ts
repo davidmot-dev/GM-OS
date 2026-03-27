@@ -335,6 +335,11 @@ export interface DeckManifest {
     format: CardFormat;
     orientation: CardOrientation;
     useDiscard: boolean;    // Si vrai, les cartes tirées vont en défausse
+    extension?: string;     // Optionnel : extension de fichier (ex: ".jpg", default: ".png")
+    filenamePattern?: string; // Optionnel : pattern (ex: "card_{n}" ou "{n}")
+    startAtZero?: boolean;  // Si vrai, l'index commence à 0 (default: false = 1)
+    padding?: number;       // Optionnel : nombre de chiffres (ex: 2 pour "01")
+    cardMetadata?: Record<number, { name?: string; description?: string }>; // Optionnel : métadonnées par index
 }
 
 export interface DeckSessionState {

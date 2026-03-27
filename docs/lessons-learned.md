@@ -21,6 +21,18 @@
 **Solution :** Nouvel ajout aux `instructions.md` imposant la mise à jour systématique du README, des guides techniques et de l'historique avant de clore une tâche.
 **Apprentissage :** L'archivage systématique des walkthroughs dans `docs/history/` permet de garder une trace claire de l'évolution du projet sans polluer l'espace de travail actif.
 
+## 🧩 Store & Reactivity : Synchronisation Deck-OS
+
+### React Hooks & Early Returns
+**Problème :** Dans `DeckPlayer.tsx`, l'utilisation de `useCallback` après un `if (!deck) return null` provoquait une erreur de violation des règles des Hooks (Hooks must be called in the exact same order).
+**Solution :** Déplacer toute la logique de Hooks (déclarations de callbacks, memos, effets) au tout début du composant, avant tout rendu conditionnel ou sortie anticipée.
+**Apprentissage :** Même si un composant ne "devrait pas" s'afficher sans données, ses Hooks doivent rester stables et enregistrés par React pour chaque rendu.
+
+### Stratégie de "Cache-Busting" Logique (ID Unique)
+**Problème :** Le retournement d'une carte (Flip) gardant parfois la même image (ou une structure d'objet identique) n'était pas détecté par les Hubs distants, empêchant le rafraîchissement visuel.
+**Solution :** Injection d'un `projectionId` basé sur un timestamp (`Date.now()`) à chaque action utilisateur. Cela force une différence d'état au niveau du store, déclenchant l'envoi du signal IPC vers les Hubs.
+**Apprentissage :** Pour la synchronisation multi-fenêtres (Electron/Tauri), ne jamais se fier uniquement à l'identité des données métier. Un ID de transaction/projection temporaire est indispensable pour garantir la réactivité.
+
 ## 🧠 Store & Reactivity : Édition de Drivers Système
 
 ### Fork-on-Edit pour Drivers Immuables
@@ -34,4 +46,5 @@
 **Apprentissage :** Dans Zustand, si une action de lecture (`getXXX`) utilise `get()` en interne, elle n'est pas réactive par nature. Le sélecteur du composant doit explicitement toucher aux propriétés de données (Data Props) pour déclencher une mise à jour de l'UI.
 
 ---
-*Dernière entrée : 2026-03-26*
+*Dernière mise à jour : 27 Mars 2026*
+*Statut : Système Deck-OS validé & documenté*

@@ -244,41 +244,48 @@ const PlayerHub: React.FC = () => {
                                 <div className={`grid grid-cols-1 ${(sharedFavorites.length + (liveEntity ? 1 : 0)) > 1 ? 'md:grid-cols-2 lg:grid-cols-3' : 'md:max-w-xl'} gap-8 md:gap-12 w-full place-items-center`}>
                                     
                                     {liveEntity && (
-                                        <div key={liveEntity.id} className="bg-slate-900/90 backdrop-blur-3xl border-2 border-gm-cyan/30 rounded-[2rem] p-6 md:p-8 shadow-[0_0_50px_rgba(34,211,238,0.2)] flex flex-col gap-6 animate-in fade-in zoom-in slide-in-from-bottom-12 duration-1000 w-full hover:border-gm-cyan/60 transition-all group">
+                                        <div key={liveEntity.id} className={`bg-slate-900/90 backdrop-blur-3xl border-2 border-gm-cyan/30 rounded-[2rem] p-6 md:p-8 shadow-[0_0_50px_rgba(34,211,238,0.2)] flex flex-col gap-6 animate-in fade-in zoom-in slide-in-from-bottom-12 duration-1000 w-full hover:border-gm-cyan/60 transition-all group ${liveEntity.type === 'Oracle' ? 'md:max-w-2xl' : ''}`}>
                                             <div className="flex flex-col items-center text-center gap-4 md:gap-6">
                                                 <div 
-                                                    className="size-28 md:size-40 rounded-2xl overflow-hidden border-2 border-gm-cyan/20 shadow-glow-cyan bg-slate-950 group-hover:border-gm-cyan/50 transition-all scale-100 group-hover:scale-105 relative"
+                                                    className={`${liveEntity.type === 'Oracle' ? 'w-full aspect-[2/3] max-h-[75vh]' : 'size-28 md:size-40'} rounded-2xl overflow-hidden border-2 border-gm-cyan/20 shadow-glow-cyan bg-slate-950 group-hover:border-gm-cyan/50 transition-all scale-100 group-hover:scale-105 relative`}
                                                     style={{ transform: `scale(${voiceScale})`, boxShadow: voiceGlow }}
                                                 >
                                                     <ResolvedImage src={liveEntity.avatar || liveEntity.imageUrl || liveEntity.portraitUrl} className="absolute inset-0 w-full h-full object-cover blur-xl opacity-30 scale-110" />
-                                                    <ResolvedImage src={liveEntity.avatar || liveEntity.imageUrl || liveEntity.portraitUrl} alt={liveEntity.name} className="relative z-10 w-full h-full object-contain" />
+                                                    <ResolvedImage src={liveEntity.avatar || liveEntity.imageUrl || liveEntity.portraitUrl} alt={liveEntity.name} className={`relative z-10 w-full h-full ${liveEntity.type === 'Oracle' ? 'object-contain' : 'object-cover'}`} />
                                                 </div>
-                                                <div className="flex flex-col items-center">
-                                                    <h3 className="text-2xl md:text-3xl font-black text-white tracking-tighter drop-shadow-lg uppercase bg-gradient-to-b from-white to-slate-400 bg-clip-text text-transparent">{liveEntity.name}</h3>
-                                                    <div className="flex items-center gap-3 mt-1">
-                                                        <span className="h-px w-6 bg-gm-cyan/40"></span>
-                                                        <p className="text-gm-cyan text-[10px] md:text-[12px] font-black uppercase tracking-[0.5em]">{liveEntity.subtitle || liveEntity.type || 'Personnage'}</p>
-                                                        <span className="h-px w-6 bg-gm-cyan/40"></span>
+
+                                                {liveEntity.type !== 'Oracle' && (
+                                                    <div className="flex flex-col items-center">
+                                                        <h3 className="text-2xl md:text-3xl font-black text-white tracking-tighter drop-shadow-lg uppercase bg-gradient-to-b from-white to-slate-400 bg-clip-text text-transparent">{liveEntity.name}</h3>
+                                                        <div className="flex items-center gap-3 mt-1">
+                                                            <span className="h-px w-6 bg-gm-cyan/40"></span>
+                                                            <p className="text-gm-cyan text-[10px] md:text-[12px] font-black uppercase tracking-[0.5em]">{liveEntity.subtitle || liveEntity.type || 'Personnage'}</p>
+                                                            <span className="h-px w-6 bg-gm-cyan/40"></span>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                )}
                                             </div>
                                             
-                                            {liveEntity.fields && Object.keys(liveEntity.fields).length > 0 && (
-                                                <div className="grid grid-cols-2 gap-3 py-4 border-t border-b border-white/5">
-                                                    {Object.entries(liveEntity.fields).slice(0, 4).map(([k, v]) => (
-                                                        <div key={k} className="flex flex-col items-center text-center">
-                                                            <span className="text-[8px] uppercase font-bold text-slate-500 tracking-widest">{k}</span>
-                                                            <span className="text-xs font-bold text-slate-200">{String(v)}</span>
+                                            {liveEntity.type !== 'Oracle' && (
+                                                <>
+                                                    {liveEntity.fields && Object.keys(liveEntity.fields).length > 0 && (
+                                                        <div className="grid grid-cols-2 gap-3 py-4 border-t border-b border-white/5">
+                                                            {Object.entries(liveEntity.fields).slice(0, 4).map(([k, v]) => (
+                                                                <div key={k} className="flex flex-col items-center text-center">
+                                                                    <span className="text-[8px] uppercase font-bold text-slate-500 tracking-widest">{k}</span>
+                                                                    <span className="text-xs font-bold text-slate-200">{String(v)}</span>
+                                                                </div>
+                                                            ))}
                                                         </div>
-                                                    ))}
-                                                </div>
-                                            )}
+                                                    )}
 
-                                            <div className="relative pt-6 border-t border-white/10">
-                                                <p className="font-serif text-slate-200 leading-relaxed italic text-sm md:text-base text-center whitespace-pre-wrap drop-shadow-md line-clamp-[10]">
-                                                    {liveEntity.lore || liveEntity.description || "Aucun détail narratif supplémentaire."}
-                                                </p>
-                                            </div>
+                                                    <div className="relative pt-6 border-t border-white/10">
+                                                        <p className="font-serif text-slate-200 leading-relaxed italic text-sm md:text-base text-center whitespace-pre-wrap drop-shadow-md line-clamp-[10]">
+                                                            {liveEntity.lore || liveEntity.description || "Aucun détail narratif supplémentaire."}
+                                                        </p>
+                                                    </div>
+                                                </>
+                                            )}
                                         </div>
                                     )}
 

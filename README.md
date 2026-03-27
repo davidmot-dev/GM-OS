@@ -15,7 +15,8 @@ GM-OS v5 est une plateforme de gestion de sessions de Jeu de Rôle (JdR) de nouv
   - **Voice OS** : Modulateur de voix en temps réel avec **Auto-Ducking** (réduction de musique automatique) et profilage vocal intelligent.
 - **VISUAL OS** :
   - **Image OS** : Projection d'illustrations et cartes vers le **Player Hub** via protocole local sécurisé `gmos://`.
-  - **Map OS** : Gestion de cartes interactives avec brouillard de guerre, tokens et **Vision de l'Oracle** (Narration et tactique assistées par IA).
+  - **Map OS** : Gestion de cartes interactives avec brouillard de guerre, tokens et **Vision de l'Oracle**.
+  - **Deck-OS** : Système immersif de gestion de paquets de cartes (Drama, Crit, Loot). Comprend le tirage aléatoire, la défausse et la projection **Seer's Eye** avec mode **Oracle (Clean View)**.
 - **ADVENTURE TOOLS** :
   - **CORTEX TACTIQUE (AI) v2.0** : Widget horizontal d'analyse comportementale de groupe (Flanquement, Repli) et suggestions tactiques.
   - **Combat OS** : Suivi d'initiative avancé, gestion des PV et mapping automatique de statuts.
@@ -53,6 +54,9 @@ Le projet sépare strictement l'interface utilisateur de la logique système via
 
 Plus d'informations techniques et guides d'utilisation sont disponibles dans le dossier `documentation/` :
 
+- **[Architecture (Logic Flow)](file:///c:/Projet_David/GM-OS-v5/documentation/Architecture/Deck-OS_Architecture.md)** : Flux de données MJ -> Store -> Hubs.
+- **[Documentation Technique (Deck-OS)](file:///c:/Projet_David/GM-OS-v5/documentation/Technical%20Docs/Deck-OS_Technical_Doc.md)** : API et Store Zustand du module de cartes.
+- **[Manuel Utilisateur (Deck-OS)](file:///c:/Projet_David/GM-OS-v5/documentation/User%20Guides/Deck-OS_User_Manual.md)** : Guide pas à pas pour le Maître de Jeu.
 - **[Architecture (Brain vs Body)](file:///c:/Projet_David/GM-OS-v5/documentation/Architecture/rule-engine-ai.md)** : Fonctionnement du Moteur de Règles et de l'IA.
 - **[Documentation Technique (Social Nexus)](file:///c:/Projet_David/GM-OS-v5/documentation/Technical%20Docs/Social_Nexus_Technical_Doc.md)** : Architecture du graphe de relations.
 - **[Documentation Technique (Nettoyage)](file:///c:/Projet_David/GM-OS-v5/documentation/Technical%20Docs/media-cleanup.md)** : Fonctionnement du service de maintenance des médias.

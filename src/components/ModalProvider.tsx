@@ -213,7 +213,7 @@ const ModalProvider: React.FC = () => {
                         <div className="flex-1 overflow-y-auto custom-scrollbar">
                             {customVariant === 'player-add' && <AddPlayerForm />}
                             {customVariant === 'character-add' && <AddCharacterForm />}
-                            {customVariant === 'campaign-add' && <CampaignForm onClose={closeModal} />}
+                            {customVariant === 'campaign-add' && <CampaignForm isNew onClose={closeModal} />}
                             {customVariant === 'campaign-edit' && <CampaignForm campaign={defaultValue as Campaign} onClose={closeModal} />}
                             {customVariant === 'session-select' && <SessionSelectModal />}
                             {customVariant === 'npc-detail' && <NpcDetail embeddedId={defaultValue as string} />}

@@ -590,6 +590,10 @@ export const useSessionOSStore = create<SessionOSStore>()(
                 customSheetTemplates: state.customSheetTemplates,
                 customGameDrivers: state.customGameDrivers,
                 activeCampaignId: state.activeCampaignId,
+                decks: state.decks,
+                deckStates: state.deckStates,
+                selectedDeckId: state.selectedDeckId,
+                isProjecting: state.isProjecting,
             }),
         }
     )

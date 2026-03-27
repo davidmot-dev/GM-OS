@@ -30,7 +30,7 @@ const SessionViewRegistry: React.FC<SessionViewRegistryProps> = ({ forgeMode }) 
     const { currentView, setCurrentView } = useSessionOSStore();
 
     // Determine if the current view should take full width or be split with the cockpit
-    const isFullLayout = !['cockpit', 'campaign-details', 'campaign-editor', 'timeline-wiki', 'npc-gallery'].includes(currentView);
+    const isFullLayout = !['cockpit', 'campaign-details', 'campaign-editor', 'campaign-form', 'timeline-wiki', 'npc-gallery'].includes(currentView);
 
     // Rendu du contenu de la vue
     const renderViewContent = () => {

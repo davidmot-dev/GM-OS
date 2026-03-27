@@ -5,7 +5,7 @@
  * @module session/logic/DeckInterpreter
  */
 
-import type { CardFormat, CardOrientation } from '../store/types';
+import type { CardFormat, CardOrientation, DeckManifest } from '../store/types';
 
 export const DeckInterpreter = {
     /**
@@ -24,8 +24,9 @@ export const DeckInterpreter = {
     /**
      * Initialise un paquet mélangé de N cartes.
      */
-    initializeIndices: (cardCount: number): number[] => {
-        const indices = Array.from({ length: cardCount }, (_, i) => i + 1);
+    initializeIndices: (manifest: DeckManifest): number[] => {
+        const start = manifest.startAtZero ? 0 : 1;
+        const indices = Array.from({ length: manifest.cardCount }, (_, i) => i + start);
         return DeckInterpreter.shuffle(indices);
     },
 
@@ -54,14 +55,39 @@ export const DeckInterpreter = {
     /**
      * Génère l'URL d'une image de carte basée sur la convention de dossier.
      */
-    getCardImageUrl: (folderPath: string, index: number): string => {
-        return `/${folderPath}/card_${index}.png`;
+    getCardImageUrl: (folderPath: string, index: number, manifest: DeckManifest): string => {
+        const ext = manifest.extension || '.jpg';
+        const pattern = manifest.filenamePattern || '{n}';
+        const padding = manifest.padding || 0;
+        const indexStr = padding > 0 ? String(index).padStart(padding, '0') : String(index);
+        const filename = pattern.replace('{n}', indexStr);
+        
+        // Ensure folderPath ends without /
+        const finalPath = folderPath.endsWith('/') ? folderPath.slice(0, -1) : folderPath;
+        
+        return `${finalPath}/${filename}${ext}`;
+    },
+
+    /**
+     * Retourne l'URL complète de l'image pour un index donné.
+     */
+    getCardImage: (deck: DeckManifest, index: number): string => {
+        return DeckInterpreter.getCardImageUrl(deck.folderPath, index, deck);
+    },
+
+    /**
+     * Retourne les métadonnées d'une carte (si définies).
+     */
+    getCardMetadata: (deck: DeckManifest, index: number) => {
+        return deck.cardMetadata?.[index];
     },
 
     /**
      * Génère l'URL du dos de la carte.
      */
-    getBackImageUrl: (folderPath: string): string => {
-        return `/${folderPath}/back.png`;
+    getBackImageUrl: (folderPath: string, manifest: DeckManifest): string => {
+        const ext = manifest.extension || '.png';
+        const finalPath = folderPath.endsWith('/') ? folderPath.slice(0, -1) : folderPath;
+        return `${finalPath}/back${ext}`;
     }
 };

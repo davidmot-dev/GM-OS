@@ -29,9 +29,13 @@ interface DeckManifest {
     id: string;             // Identifiant unique (ex: "drama-torg")
     name: string;           // Nom affiché (ex: "Drama Deck")
     systemId: string;       // Liaison au GameDriver (ex: "torg")
-    folderPath: string;     // Chemin : "torg/drama-deck"
+    folderPath: string;     // Chemin relatif (ex: `assets/decks/torg/drama`)
     cardCount: number;      // Nombre total de cartes (N)
-    format: CardFormat;     // Ratio d'aspect (Poker=2.5/3.5, Tarot=2.75/4.75)
+    format: 'poker' | 'tarot';
+    orientation: 'portrait' | 'landscape';
+    extension: string;      // (ex: `.jpg`, default: `.png`)
+    filenamePattern: string; // (ex: `{n}`, default: `card_{n}`)
+    startAtZero: boolean;   // (default: `false`)
     useDiscard: boolean;    // Si vrai, les cartes tirées vont en défausse
 }
 
@@ -60,15 +64,18 @@ interface DeckSessionState {
 - **Formatage** : Utilisation de CSS `aspect-ratio` et `object-fit: cover` pour garantir une interface stable et sans déformation.
 
 ### 3. Interconnexions
-- **Projection Hub** : Bouton pour envoyer l'URL de l'image de la carte actuelle vers le **Player Hub** (via `ImageOS`).
-- **Journalisation Auto** : Chaque action de tirage génère automatiquement un événement de type `ORACLE` dans **Journal-OS** pour archive.
+- **Projection Hub (Seer's Eye)** : Intégration d'un bouton de projection en temps réel. L'activation projette immédiatement la carte courante. La désactivation vide les Hubs.
+- **Mode Oracle (Clean View)** : Les entités de type `Oracle` (cartes de deck) sont affichées sur les Hubs sans métadonnées textuelles, privilégiant l'immersion visuelle.
+- **Synchronisation Robuste** : Utilisation d'identifiants uniques temporels pour garantir la mise à jour des images lors d'un retournement de carte (flip).
+- **Journalisation Auto** : Chaque action de tirage génère un événement de type `ORACLE` dans **Journal-OS**.
 
 ---
 
 ## 📂 Emplacements des fichiers de référence
-- **Spécification locale** : `c:\Projet_David\GM-OS-v5\docs\blueprints\deck_os_specification.md`
-- **Plan d'implémentation** : [implementation_plan.md](file:///C:/Users/david/.gemini/antigravity/brain/8d040931-77d8-4d94-b446-53f3b6430e9c/implementation_plan.md)
+- **Composant Principal** : `src/modules/session/components/DeckPlayer.tsx`
+- **Store Zustand** : `src/modules/session/store/deckSlice.ts`
+- **Hubs de Restitution** : `src/components/PlayerHub.tsx`, `src/components/TabletHub.tsx`
 
 ---
-*Date de sauvegarde : 26 Mars 2026*
-*Statut : Spécification validée, Prêt pour développement*
+*Date de mise à jour : 27 Mars 2026*
+*Statut : Terminé & Déploiement validé*

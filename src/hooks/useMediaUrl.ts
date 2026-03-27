@@ -30,6 +30,15 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
                     return;
                 }
 
+                // Root-relative paths (e.g. /assets/decks/...) or plain relative paths
+                // that don't match any other prefix - return as-is for Electron/browser to resolve
+                if (sourceIdOrUrl.startsWith('/') || 
+                    sourceIdOrUrl.startsWith('assets/') || 
+                    sourceIdOrUrl.startsWith('./')) {
+                    if (isMounted) setResolvedUrl(sourceIdOrUrl);
+                    return;
+                }
+
                 // Pour les data URI très longs (Gemini), on les convertit en Blob ObjectURL
                 // pour éviter les problèmes de lenteur ou de limites de taille d'URL dans Chromium
                 if (sourceIdOrUrl.startsWith('data:')) {

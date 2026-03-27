@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { useGemStore } from '../../../stores/useGemStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
+import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { ResolvedAsset } from '../../../components/ResolvedAsset';
@@ -18,21 +19,26 @@ import { personaGeneratorService } from '../../ai/PersonaGeneratorService';
 
 interface CampaignFormProps {
     campaign?: Campaign | { campaignId: string };
+    isNew?: boolean;
     onClose: () => void;
 }
 
 type SectionId = 'identity' | 'narrative' | 'clues' | 'ambience' | 'world' | 'intelligence';
 
-const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, onClose }) => {
+const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose }) => {
     const { 
-        campaigns, atlasMaps, addCampaign, updateCampaign,
-        customSheetTemplates, 
+        campaigns, activeCampaignId, atlasMaps, addCampaign, updateCampaign,
+        customSheetTemplates, customGameDrivers,
         activeCampaignFormSection, setActiveCampaignFormSection
     } = useSessionOSStore();
     
     // Identity logic
-    const fullCampaign = campaign && 'id' in campaign ? campaign as Campaign : 
+    const propCampaign = campaign && 'id' in campaign ? campaign as Campaign : 
                         (campaign && 'campaignId' in campaign ? campaigns.find(c => c.id === (campaign as { campaignId: string }).campaignId) : undefined);
+    
+    // Fallback to active campaign if no prop is provided (e.g. standalone view from cockpit)
+    // Only happens if not explicitly in 'isNew' mode
+    const fullCampaign = isNew ? undefined : (propCampaign || campaigns.find(c => c.id === activeCampaignId));
 
     const [name, setName] = useState(fullCampaign?.name || '');
     const [system, setSystem] = useState(fullCampaign?.system || 'generic');
@@ -52,6 +58,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, onClose }) => {
     const [isGenerating, setIsGenerating] = useState(false);
     
     const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
+    const allDrivers = [...DEFAULT_GAME_DRIVERS, ...customGameDrivers];
     const { gems, syncGemsWithDefaults } = useGemStore();
     
     React.useEffect(() => {
@@ -146,6 +153,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, onClose }) => {
                     <button 
                         type="button"
                         onClick={handleSubmit}
+                        title="Synchroniser avec le Nexus"
                         className="flex items-center gap-2 bg-gm-gold hover:bg-yellow-500 text-black font-black px-6 py-2 rounded-xl text-[10px] tracking-widest uppercase transition-all shadow-glow-gold/20"
                     >
                         <Save size={14} />
@@ -225,9 +233,15 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, onClose }) => {
                                         <select 
                                             value={system}
                                             onChange={e => setSystem(e.target.value)}
+                                            title="Référentiel Système"
                                             className="w-full bg-[#121215] border border-white/5 rounded-2xl py-5 px-6 text-base font-bold tracking-wide focus:outline-none focus:border-gm-gold/40 transition-all text-[#dee5ff] appearance-none"
                                         >
-                                            <optgroup label="UI Templates">
+                                            <optgroup label="Systèmes de jeu (Drivers)">
+                                                {allDrivers.map(d => (
+                                                    <option key={d.id} value={d.id}>{d.emoji} {d.name}</option>
+                                                ))}
+                                            </optgroup>
+                                            <optgroup label="Templates UI">
                                                 {allTemplates.map(t => (
                                                     <option key={t.id} value={t.id}>{t.emoji} {t.name}</option>
                                                 ))}
@@ -440,7 +454,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, onClose }) => {
                                     </div>
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                        {gems.slice(0, 6).map(gem => {
+                                        {gems.map(gem => {
                                             const hasOverride = !!aiPersonas[gem.id];
                                             return (
                                                 <div key={gem.id} className={`p-6 rounded-[2rem] border transition-all duration-500 flex flex-col gap-4 ${hasOverride ? 'bg-gm-purple/10 border-gm-purple/30 shadow-glow-purple/5' : 'bg-[#121215] border-white/5'}`}>
