@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import CluesManager from './CluesManager';
 import { useSessionOSStore, type Campaign } from '../useSessionOSStore';
 import { 
-    Save, X, BookOpen, ImageIcon, MapPin, Sparkles, 
-    Brain, Map, PenTool, Check, Loader2, Users, Layout, 
-    ArrowLeft, ExternalLink, Trash2, Edit3, Fingerprint,
-    Info
+    Search,
+    Image as ImageIcon, Sparkles, Layout, 
+    Info, 
+    ExternalLink, 
+    Save, X, BookOpen, Map, ArrowLeft, Fingerprint, Edit3, Loader2, MapPin, Brain, PenTool, Check
 } from 'lucide-react';
 import { useGemStore } from '../../../stores/useGemStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
@@ -19,13 +21,13 @@ interface CampaignFormProps {
     onClose: () => void;
 }
 
-type SectionId = 'identity' | 'narrative' | 'ambience' | 'world' | 'intelligence';
+type SectionId = 'identity' | 'narrative' | 'clues' | 'ambience' | 'world' | 'intelligence';
 
 const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, onClose }) => {
     const { 
-        campaigns, atlasMaps, addCampaign, updateCampaign, 
-        customSheetTemplates, customGameDrivers, entities, 
-        setCurrentView 
+        campaigns, atlasMaps, addCampaign, updateCampaign,
+        customSheetTemplates, 
+        activeCampaignFormSection, setActiveCampaignFormSection
     } = useSessionOSStore();
     
     // Identity logic
@@ -44,7 +46,8 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, onClose }) => {
     const [aiPersonas, setAiPersonas] = useState<Record<string, string>>(fullCampaign?.aiPersonas || {});
     
     // UI State
-    const [activeSection, setActiveSection] = useState<SectionId>('identity');
+    const activeSection = activeCampaignFormSection || 'identity';
+    const setActiveSection = setActiveCampaignFormSection;
     const [isMediaBrowserOpen, setIsMediaBrowserOpen] = useState(false);
     const [isGenerating, setIsGenerating] = useState(false);
     
@@ -108,6 +111,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, onClose }) => {
     const sidebarItems: { id: SectionId; icon: any; label: string }[] = [
         { id: 'identity', icon: Layout, label: 'Identité' },
         { id: 'narrative', icon: BookOpen, label: 'Narration' },
+        { id: 'clues', icon: Search, label: 'Indices' },
         { id: 'ambience', icon: ImageIcon, label: 'Ambiance' },
         { id: 'world', icon: Map, label: 'Monde' },
         { id: 'intelligence', icon: Sparkles, label: 'Intelligence' },
@@ -466,6 +470,10 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, onClose }) => {
                             </div>
                         )}
 
+                        {/* 6. CLUES SECTION */}
+                        {activeSection === 'clues' && (
+                            <CluesManager />
+                        )}
                     </div>
                 </main>
             </div>

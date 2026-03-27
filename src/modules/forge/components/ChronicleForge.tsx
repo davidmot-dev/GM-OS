@@ -274,7 +274,8 @@ const ChronicleForge: React.FC = () => {
       gmToast("Chronique forgée avec succès.", "success");
     } catch (err) {
       console.error(err);
-      gmToast("Échec de la forge.", "error");
+      const errorMessage = err instanceof Error ? err.message : "Échec de la forge.";
+      gmToast(`Échec de la Forge : ${errorMessage}`, "error");
     } finally {
       setIsForging(false);
     }

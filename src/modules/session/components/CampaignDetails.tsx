@@ -6,7 +6,7 @@ import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 
 const CampaignDetails: React.FC = () => {
-    const { campaigns, activeCampaignId, sessions, setCurrentView, entities, atlasMaps, customSheetTemplates, customGameDrivers } = useSessionOSStore();
+    const { campaigns, activeCampaignId, sessions, setCurrentView, entities, atlasMaps, customSheetTemplates, customGameDrivers, setSelectedAtlasMap } = useSessionOSStore();
     const campaign = campaigns.find(c => c.id === activeCampaignId);
     const campaignSessions = sessions.filter(s => s.campaignId === activeCampaignId);
     const campaignNPCs = entities.filter(e => e.type === 'npc' && e.campaignId === activeCampaignId);
@@ -211,7 +211,14 @@ const CampaignDetails: React.FC = () => {
                             <div className="flex flex-col gap-2">
                                 {activeLocations.length > 0 ? (
                                     activeLocations.map(loc => (
-                                        <div key={loc.id} className="group flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-all cursor-pointer">
+                                        <div 
+                                            key={loc.id} 
+                                            className="group flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-all cursor-pointer"
+                                            onClick={() => {
+                                                setSelectedAtlasMap(loc.id);
+                                                setCurrentView('world-atlas');
+                                            }}
+                                        >
                                             <div className="w-8 h-8 rounded bg-app-bg overflow-hidden border border-app-border">
                                                 <ResolvedAsset 
                                                     src={loc.fileUrl} 
@@ -224,7 +231,10 @@ const CampaignDetails: React.FC = () => {
                                         </div>
                                     ))
                                 ) : (
-                                    <p className="text-[10px] text-app-text/20 italic">Aucun lieu épinglé. Éditez la campagne pour en ajouter.</p>
+                                    <p className="text-[10px] text-app-text/20 italic text-center py-4">
+                                        Aucun lieu épinglé.<br/>
+                                        Utilisez l'épingle dans l'Atlas Mondial pour en ajouter.
+                                    </p>
                                 )}
                             </div>
                         </div>

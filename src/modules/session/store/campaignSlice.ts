@@ -32,6 +32,7 @@ export interface CampaignSliceActions {
     updateCampaign: (id: string, updates: Partial<Campaign>) => void;
     deleteCampaign: (id: string) => void;
     updateCampaignLayout: (campaignId: string, layout: Partial<LayoutConfig>) => void;
+    toggleActiveLocation: (mapId: string) => void;
 }
 
 export type CampaignSlice = CampaignSliceState & CampaignSliceActions;
@@ -80,4 +81,30 @@ export const createCampaignSlice: StateCreator<CampaignSlice, [], [], CampaignSl
                     : c
             ),
         })),
+
+    toggleActiveLocation: (mapId) => {
+        const { activeCampaignId, campaigns } = get();
+        if (!activeCampaignId) return;
+
+        const campaign = campaigns.find((c) => c.id === activeCampaignId);
+        if (!campaign) return;
+
+        const activeLocationIds = campaign.activeLocationIds || [];
+        const isPinned = activeLocationIds.includes(mapId);
+
+        const newIds = isPinned
+            ? activeLocationIds.filter((id) => id !== mapId)
+            : [...activeLocationIds, mapId];
+
+        set((state) => ({
+            campaigns: state.campaigns.map((c) =>
+                c.id === activeCampaignId ? { ...c, activeLocationIds: newIds } : c
+            ),
+        }));
+
+        gmToast(
+            isPinned ? 'Lieu retiré des favoris.' : 'Lieu épinglé au cockpit.',
+            isPinned ? 'info' : 'success'
+        );
+    },
 });

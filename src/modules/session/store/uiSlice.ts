@@ -31,6 +31,9 @@ export interface UiSliceState {
     diceRolls: { die: number; result: number; timestamp: number }[];
     isAddingEntity: boolean;
     isGeneratingAIImage: boolean;
+    activeCampaignFormSection: string | null;
+    isHeaderHidden: boolean;
+    editingClueId: string | null;
 }
 
 // ─────────────────────────────────────────────
@@ -50,6 +53,9 @@ export interface UiSliceActions {
     setEditingDriverId: (id: string | null) => void;
     setIsAddingEntity: (isAdding: boolean) => void;
     setIsGeneratingAIImage: (isGenerating: boolean) => void;
+    setActiveCampaignFormSection: (section: string | null) => void;
+    setHeaderHidden: (isHidden: boolean) => void;
+    setEditingClueId: (id: string | null) => void;
     rollDice: (die: number) => void;
     clearDiceHistory: () => void;
 }
@@ -75,6 +81,9 @@ export const createUiSlice: StateCreator<UiSlice, [], [], UiSlice> = (set) => ({
     diceRolls: [],
     isAddingEntity: false,
     isGeneratingAIImage: false,
+    activeCampaignFormSection: 'details',
+    isHeaderHidden: false,
+    editingClueId: null,
 
     // Actions
     setCurrentView: (view) => set({ currentView: view }),
@@ -89,6 +98,9 @@ export const createUiSlice: StateCreator<UiSlice, [], [], UiSlice> = (set) => ({
     setEditingDriverId: (id) => set({ editingDriverId: id }),
     setIsAddingEntity: (isAdding) => set({ isAddingEntity: isAdding }),
     setIsGeneratingAIImage: (isGenerating) => set({ isGeneratingAIImage: isGenerating }),
+    setActiveCampaignFormSection: (section) => set({ activeCampaignFormSection: section }),
+    setHeaderHidden: (isHidden) => set({ isHeaderHidden: isHidden }),
+    setEditingClueId: (id) => set({ editingClueId: id }),
 
     rollDice: (die) =>
         set((state) => ({

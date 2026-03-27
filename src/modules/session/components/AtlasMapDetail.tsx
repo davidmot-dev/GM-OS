@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useMapStore } from '../../map/useMapStore';
-import { Lock, Eye, Send, Film, Image as ImageIcon, Globe, Swords, Map, Building2, MapPin, type LucideIcon } from 'lucide-react';
+import { Lock, Eye, Send, Film, Image as ImageIcon, Globe, Swords, Map, Building2, MapPin, type LucideIcon, Pin } from 'lucide-react';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaStore } from '../../../stores/useMediaStore';
 import { Sparkles } from 'lucide-react';
 import AIPromptOverlay from '../../ai/components/AIPromptOverlay';
+import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import type { AtlasMap } from '../useSessionOSStore';
+import { Search } from 'lucide-react';
 
 const TYPE_META: Record<AtlasMap['type'], { label: string; icon: LucideIcon; color: string }> = {
     'battlemap': { label: 'Battlemap', icon: Swords, color: 'text-red-400 border-red-500/30 bg-red-500/10' },
@@ -20,11 +22,16 @@ const TYPE_META: Record<AtlasMap['type'], { label: string; icon: LucideIcon; col
 const AtlasMapDetail: React.FC = () => {
     const { 
         atlasMaps, selectedAtlasMapId, updateAtlasMap, setCurrentView,
-        generateAtlasMapImage, isGeneratingAIImage 
+        clues, setActiveCampaignFormSection, setEditingClueId,
+        generateAtlasMapImage, isGeneratingAIImage,
+        campaigns, toggleActiveLocation, activeCampaignId
     } = useSessionOSStore();
     const { setMap } = useMapStore();
 
     const selectedMap = atlasMaps.find(m => m.id === selectedAtlasMapId);
+    const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
+    const isPinned = activeCampaign?.activeLocationIds?.includes(selectedAtlasMapId || '');
+    
     const [isChoosingMedia, setIsChoosingMedia] = useState(false);
     const [showAIPrompt, setShowAIPrompt] = useState(false);
 
@@ -146,14 +153,68 @@ const AtlasMapDetail: React.FC = () => {
                                 )}
                             </div>
                         </div>
-                        <button
-                            onClick={handleSendToMapOS}
-                            className="flex items-center gap-2 bg-accent hover:bg-accent/80 text-white font-black py-2.5 px-5 rounded-xl text-sm transition-all shadow-glow-accent"
-                        >
-                            <Send size={16} />
-                            Send to Map-OS
-                        </button>
+                        <div className="flex items-center gap-3">
+                            <button
+                                onClick={() => toggleActiveLocation(selectedMap.id)}
+                                className={`flex items-center gap-2 font-black py-2.5 px-4 rounded-xl text-sm transition-all border ${
+                                    isPinned 
+                                    ? 'bg-accent/20 border-accent text-accent shadow-glow-accent' 
+                                    : 'bg-app-surface/40 border-white/10 text-white/60 hover:text-white hover:bg-white/10'
+                                }`}
+                                title={isPinned ? "Retirer du Cockpit" : "Épingler au Cockpit"}
+                            >
+                                <Pin size={16} fill={isPinned ? "currentColor" : "none"} />
+                                {isPinned ? 'Épinglé' : 'Épingler'}
+                            </button>
+                            <button
+                                onClick={handleSendToMapOS}
+                                className="flex items-center gap-2 bg-accent hover:bg-accent/80 text-white font-black py-2.5 px-5 rounded-xl text-sm transition-all shadow-glow-accent"
+                            >
+                                <Send size={16} />
+                                Send to Map-OS
+                            </button>
+                        </div>
                     </div>
+                </div>
+            </div>
+
+            {/* Linked Clues Section */}
+            <div className="px-6 py-4 bg-black/20 border-b border-app-border flex flex-col gap-3">
+                <div className="flex items-center gap-2">
+                    <Search size={14} className="text-gm-gold" />
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-gm-gold/60">Indices du Lieu</h4>
+                </div>
+                <div className="flex flex-wrap gap-3">
+                    {clues.filter(c => c.locationId === selectedMap.id).length > 0 ? (
+                        clues.filter(c => c.locationId === selectedMap.id).map(clue => (
+                            <button
+                                key={clue.id}
+                                onClick={() => {
+                                    setActiveCampaignFormSection('clues');
+                                    setEditingClueId(clue.id);
+                                    setCurrentView('campaign-editor');
+                                }}
+                                className="group relative flex items-center gap-3 p-2 bg-[#121215] border border-white/5 rounded-2xl hover:border-gm-gold/40 transition-all text-left max-w-xs overflow-hidden"
+                                title={`Ouvrir "${clue.title}" dans le Nexus`}
+                            >
+                                <div className="w-10 h-10 rounded-xl bg-app-surface overflow-hidden flex-shrink-0 border border-white/5">
+                                    {clue.mediaUrl ? (
+                                        <ResolvedAsset src={clue.mediaUrl} className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center text-white/10">
+                                            <Search size={14} />
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="flex-1 min-w-0 pr-4">
+                                    <p className="text-[10px] font-black text-white/80 group-hover:text-gm-gold transition-colors truncate">{clue.title}</p>
+                                    <p className="text-[8px] font-bold text-white/20 uppercase tracking-widest leading-none mt-0.5">Cliquez pour voir</p>
+                                </div>
+                            </button>
+                        ))
+                    ) : (
+                        <p className="text-[10px] text-app-text/10 italic">Aucun indice découvert dans ce lieu.</p>
+                    )}
                 </div>
             </div>
 

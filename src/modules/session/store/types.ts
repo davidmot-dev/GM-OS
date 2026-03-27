@@ -282,6 +282,39 @@ export interface WikiEntry {
     linkedEntityIds: string[];
 }
 
+export interface InventoryItem {
+    id: string;
+    name: string;
+    type: 'weapon' | 'armor' | 'consumable' | 'currency' | 'other' | string;
+    rarity: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | string;
+    weight: number;
+    quantity: number;
+    description: string;
+    properties: Record<string, string | number | boolean | object | null>;
+}
+
+// ─────────────────────────────────────────────
+// Clues (Indices)
+// ─────────────────────────────────────────────
+
+export interface Clue {
+    id: string;
+    campaignId: string;
+    title: string;
+    content: string;
+    mediaUrl?: string;
+    
+    // Triple-Liaison (FK)
+    locationId?: string;     // Lien vers AtlasMap
+    ownerId?: string;        // Lien vers Entity (PNJ)
+    eventId?: string;        // Lien vers TimelineEvent
+    
+    // Traçabilité
+    isRevealed: boolean;
+    revealedAt?: number;
+    campaignMoment?: string; // Acte, Chapitre, etc.
+}
+
 // ─────────────────────────────────────────────
 // Re-exports (pour compatibilité descendante)
 // ─────────────────────────────────────────────

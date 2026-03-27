@@ -31,6 +31,7 @@ Bienvenue dans le centre de documentation de **GM-OS v5**. Ce guide est conçu p
 - [**Calculateur de Dégâts Intelligent**](./Smart_Damage_Calculator_Guide.md)
 - [**Table OS (Butins & Aléatoire)**](./Table_OS_User_Guide.md)
 - [**Dice-OS (Projection Automatique)**](./Dice_Projection_Guide.md) (Nouveau)
+- [**Système d'Indices (Clues & Preuves)**](./Clues_User_Guide.md) (Nouveau)
 - [**Universal Search (Spotlight)**](./Universal_Search_User_Guide.md) (Nouveau)
 
 - [**Clock OS (Gestion du Temps)**](./Clock_OS_User_Guide.md)

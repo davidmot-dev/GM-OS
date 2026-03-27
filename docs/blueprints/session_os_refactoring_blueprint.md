@@ -111,7 +111,7 @@ L'objectif est de diviser le fichier actuel de 90 Ko en **7 Slices thématiques*
 2. **`sessionSlice.ts`** : Gestion des sessions, checklists et snapshots système.
 3. **`entitySlice.ts`** : PJ, PNJ, Monstres et système de santé modulaire.
 4. **`atlasSlice.ts`** : Cartographie, points d'intérêt et liens géographiques.
-5. **`chronicleSlice.ts`** : Wiki, Timeline et futur système d'indices (Clues).
+5. **`chronicleSlice.ts`** : Wiki, Timeline et système d'indices (✅ Livré le 27/03).
 6. **`forgeSlice.ts`** : Moteur de règles, templates de fiches et drivers IA.
 7. **`uiSlice.ts`** : Navigation (vues), historique des dés et états UI temporaires.
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import type { AtlasMap } from '../useSessionOSStore';
-import { Search, FolderOpen, Film, Globe, Swords, Map, Building2, MapPin, Trash2 } from 'lucide-react';
+import { Search, FolderOpen, Film, Globe, Swords, Map, Building2, MapPin, Trash2, Pin } from 'lucide-react';
 import { useMapStore } from '../../map/useMapStore';
 import { useMediaStore } from '../../../stores/useMediaStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
@@ -19,9 +19,11 @@ const MapCard: React.FC<{
     map: AtlasMap,
     isSelected: boolean,
     isProjected: boolean,
+    isPinned: boolean,
     onClick: () => void,
-    onDelete: () => void
-}> = ({ map, isSelected, isProjected, onClick, onDelete }) => {
+    onDelete: () => void,
+    onTogglePin: () => void
+}> = ({ map, isSelected, isProjected, isPinned, onClick, onDelete, onTogglePin }) => {
     const typeMeta = TYPE_META[map.type] || { label: 'Inconnu', icon: <Map size={10} />, color: 'text-slate-400 bg-slate-500/10 border-slate-500/20' };
 
     return (
@@ -72,25 +74,44 @@ const MapCard: React.FC<{
                     </div>
                 </div>
             </button>
-            {/* Delete Button */}
-            <button
-                onClick={(e) => { e.stopPropagation(); onDelete(); }}
-                className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:text-red-400 text-app-text/20"
-                title="Supprimer la carte"
-            >
-                <Trash2 size={13} />
-            </button>
+            
+            {/* Action Buttons */}
+            <div className="flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                {/* Pin Button */}
+                <button
+                    onClick={(e) => { e.stopPropagation(); onTogglePin(); }}
+                    className={`p-1.5 rounded-lg transition-all ${isPinned ? 'text-accent bg-accent/10' : 'text-app-text/20 hover:text-accent/60'}`}
+                    title={isPinned ? "Retirer du Cockpit" : "Épingler au Cockpit"}
+                >
+                    <Pin size={13} fill={isPinned ? "currentColor" : "none"} />
+                </button>
+                {/* Delete Button */}
+                <button
+                    onClick={(e) => { e.stopPropagation(); onDelete(); }}
+                    className="p-1.5 hover:text-red-400 text-app-text/20 transition-colors"
+                    title="Supprimer la carte"
+                >
+                    <Trash2 size={13} />
+                </button>
+            </div>
         </div>
     );
 };
 
 const AtlasLibrary: React.FC = () => {
-    const { atlasMaps, selectedAtlasMapId, setSelectedAtlasMap, addAtlasMap, deleteAtlasMap, activeCampaignId } = useSessionOSStore();
+    const { 
+        atlasMaps, selectedAtlasMapId, setSelectedAtlasMap, 
+        addAtlasMap, deleteAtlasMap, activeCampaignId,
+        campaigns, toggleActiveLocation 
+    } = useSessionOSStore();
     const { mapUrl } = useMapStore();
     const { mediaList } = useMediaStore();
 
     const [search, setSearch] = useState('');
     const [isBrowserOpen, setIsBrowserOpen] = useState(false);
+
+    const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
+    const activeLocationIds = activeCampaign?.activeLocationIds || [];
 
     const filtered = atlasMaps.filter(m =>
         m.campaignId === activeCampaignId &&
@@ -140,9 +161,11 @@ const AtlasLibrary: React.FC = () => {
                         key={map.id}
                         map={map}
                         isSelected={selectedAtlasMapId === map.id}
-                        isProjected={mapUrl === map.fileUrl} // Note: This will need coordination with Map-OS which might now receive mediaId
+                        isProjected={mapUrl === map.fileUrl} 
+                        isPinned={activeLocationIds.includes(map.id)}
                         onClick={() => setSelectedAtlasMap(map.id)}
                         onDelete={() => deleteAtlasMap(map.id)}
+                        onTogglePin={() => toggleActiveLocation(map.id)}
                     />
                 ))}
                 {filtered.length === 0 && (

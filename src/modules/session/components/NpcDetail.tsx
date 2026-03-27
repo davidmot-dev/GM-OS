@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
-import { Swords, MapPin, Monitor, Heart, Shield, Wind, Zap, Lock, BookOpen, ArrowLeft, Edit2, CheckCircle, Image as ImageIcon, Sparkles, Layers, Skull } from 'lucide-react';
+import { Swords, MapPin, Monitor, Heart, Shield, Wind, Zap, Lock, BookOpen, ArrowLeft, Edit2, CheckCircle, Image as ImageIcon, Sparkles, Layers, Skull, Search } from 'lucide-react';
+import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import { DEFAULT_SHEET_TEMPLATES, type SheetField } from '../../../data/defaultSheetTemplates';
 import { useMapStore } from '../../map/useMapStore';
 import { useCombatStore } from '../../combat/useCombatStore';
@@ -97,6 +98,7 @@ interface NpcDetailProps {
 const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
     const { 
         entities, selectedEntityId, setSelectedEntity, updateEntity, updateEntityHP, atlasMaps,
+        clues, setCurrentView, setActiveCampaignFormSection, setEditingClueId,
         generateEntityPortrait, isGeneratingAIImage 
     } = useSessionOSStore();
     const { closeModal } = useModalStore();
@@ -166,6 +168,14 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
     };
 
     const linkedMaps = atlasMaps.filter(m => (selectedNpc.linkedMapIds || []).includes(m.id));
+    const linkedClues = clues.filter(c => c.ownerId === selectedNpc.id);
+
+    const handleClueClick = (clueId?: string) => {
+        setActiveCampaignFormSection('clues');
+        if (clueId) setEditingClueId(clueId);
+        setCurrentView('campaign-editor');
+        if (embeddedId) closeModal();
+    };
 
     return (
         <div className="flex-1 h-full bg-app-bg/60 p-12 flex flex-col overflow-hidden animate-in fade-in slide-in-from-right-4 duration-500">
@@ -594,24 +604,59 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                     </div>
 
                     {/* Linked Maps */}
-                    <div>
-                        <div className="flex items-center gap-2 mb-3">
-                            <MapPin size={14} className="text-app-text/40" />
-                            <h4 className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Présent sur les cartes</h4>
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                            {linkedMaps.length > 0 ? linkedMaps.map(map => (
-                                <div
-                                    key={map.id}
-                                    className="px-3 py-1.5 rounded-lg bg-app-surface/60 border border-app-border text-[10px] text-app-text/60 font-bold hover:border-accent/30 transition-all cursor-pointer flex items-center gap-2 group"
-                                >
-                                    <MapPin size={10} className="text-app-text/20 group-hover:text-accent" />
-                                    {map.name}
-                                </div>
-                            )) : (
-                                <p className="text-[10px] text-app-text/10 italic">Aucune carte liée</p>
-                            )}
-                        </div>
+                    <div className="space-y-6">
+                        <section className="space-y-3">
+                            <div className="flex items-center gap-2 px-1">
+                                <Search size={14} className="text-gm-gold" />
+                                <h4 className="text-[10px] font-black uppercase tracking-widest text-gm-gold/60">Indices Liés</h4>
+                            </div>
+                            <div className="flex flex-wrap gap-3">
+                                {linkedClues.length > 0 ? linkedClues.map(clue => (
+                                    <button
+                                        key={clue.id}
+                                        onClick={() => handleClueClick(clue.id)}
+                                        className="group relative flex items-center gap-3 p-2 bg-[#121215] border border-white/5 rounded-2xl hover:border-gm-gold/40 transition-all text-left max-w-xs overflow-hidden"
+                                        title={`Ouvrir "${clue.title}" dans le Nexus`}
+                                    >
+                                        <div className="w-10 h-10 rounded-xl bg-app-surface overflow-hidden flex-shrink-0 border border-white/5">
+                                            {clue.mediaUrl ? (
+                                                <ResolvedAsset src={clue.mediaUrl} className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center text-white/10">
+                                                    <Search size={14} />
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="flex-1 min-w-0 pr-4">
+                                            <p className="text-[10px] font-black text-white/80 group-hover:text-gm-gold transition-colors truncate">{clue.title}</p>
+                                            <p className="text-[8px] font-bold text-white/20 uppercase tracking-widest leading-none mt-0.5">Cliquez pour voir</p>
+                                        </div>
+                                    </button>
+                                )) : (
+                                    <p className="text-[10px] text-app-text/10 italic px-1">Aucun indice découvert lié à ce personnage.</p>
+                                )}
+                            </div>
+                        </section>
+
+                        <section className="space-y-3">
+                            <div className="flex items-center gap-2 px-1">
+                                <MapPin size={14} className="text-app-text/40" />
+                                <h4 className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Présent sur les cartes</h4>
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                                {linkedMaps.length > 0 ? linkedMaps.map(map => (
+                                    <div
+                                        key={map.id}
+                                        className="px-3 py-1.5 rounded-lg bg-app-surface/60 border border-app-border text-[10px] text-app-text/60 font-bold hover:border-accent/30 transition-all cursor-pointer flex items-center gap-2 group"
+                                    >
+                                        <MapPin size={10} className="text-app-text/20 group-hover:text-accent" />
+                                        {map.name}
+                                    </div>
+                                )) : (
+                                    <p className="text-[10px] text-app-text/10 italic px-1">Aucune carte liée</p>
+                                )}
+                            </div>
+                        </section>
                     </div>
                 </div>
             </div>

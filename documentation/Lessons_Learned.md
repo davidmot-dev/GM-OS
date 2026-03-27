@@ -389,3 +389,16 @@ Le brouillard de guerre était auparavant global. Changer de carte écrasait le 
 L'état d'un module ne doit pas être une variable simple unique mais un **Registre indexé par l'Asset ID/URL**.
 
 **Solution :** Utilisation d'un `FogRegistry` (`Record<string, string>`). En liant l'exploration à l'URL de l'image, la persistance devient "invisible" pour l'utilisateur. Le changement de carte devient alors une simple opération de lecture dans le registre, garantissant une expérience fluide et sans perte de données.
+
+## 33. Traçabilité des Indices & Intégration Narratives (v5.2)
+
+### 33.1 Défi
+Maintenir une chronologie cohérente des découvertes des joueurs sans surcharger manuellement le journal de session, tout en permettant au MJ de noter le contexte narratif exact (Moment de campagne) au moment de la révélation.
+
+### 33.2 Leçon
+Le passage d'un état de visibilité (`isRevealed`) est le déclencheur idéal pour automatiser la documentation narrative, mais il doit être protégé contre les doubles déclenchements.
+
+**Solution :** 
+1. **Détection de Changement d'État** : Utilisation d'une comparaison entre l'état local de l'éditeur et l'état actuel du store (`currentClue.isRevealed`) dans `handleSave`. Cela garantit que le timestamp (`revealedAt`) et l'événement journal ne sont générés que lors du passage de Masqué à Révélé.
+2. **Couplage Faible via `getState()`** : Pour injecter l'événement dans le `JournalStore` depuis le `CluesManager` sans créer de dépendances de rendu inutiles, l'accès direct via `useJournalStore.getState().addEvent` est privilégié. Cela permet une mise à jour silencieuse du journal pendant que l'UI de gestion d'indices reste fluide.
+3. **Double Temporalité** : Séparation stricte entre le temps réel (`Date.now()`) pour le tri technique et le "Moment de Campagne" (chaîne libre) pour la cohérence narrative. Cette flexibilité permet au MJ de corriger un oubli de révélation a posteriori sans casser la chronologie de l'histoire.

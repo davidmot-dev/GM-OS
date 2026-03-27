@@ -25,7 +25,9 @@ const SocialGraph: React.FC = () => {
         addRelation, 
         removeRelation, 
         updateEntity, 
-        updateCharacter 
+        updateCharacter,
+        isHeaderHidden,
+        setHeaderHidden
     } = useSessionOSStore();
 
     // UI Local State
@@ -36,13 +38,39 @@ const SocialGraph: React.FC = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [isEditingFaction, setIsEditingFaction] = useState(false);
     const [tempFaction, setTempFaction] = useState('');
+
+    const graphRef = useRef<any>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+    // --- Dimensionnement Réactif ---
+    useEffect(() => {
+        if (!containerRef.current) return;
+
+        const resizeObserver = new ResizeObserver(entries => {
+            for (const entry of entries) {
+                const { width, height } = entry.contentRect;
+                setDimensions({ width, height });
+            }
+        });
+
+        resizeObserver.observe(containerRef.current);
+        return () => resizeObserver.disconnect();
+    }, []);
+
+    // Initialisation forcée
+    useEffect(() => {
+        if (containerRef.current) {
+            const rect = containerRef.current.getBoundingClientRect();
+            setDimensions({ width: rect.width, height: rect.height });
+        }
+    }, [isHeaderHidden]); // Recalculer quand le header change d'état
     
     // Relation form state
     const [newRelTarget, setNewRelTarget] = useState<string>('');
     const [newRelType, setNewRelType] = useState<string>('ally');
     const [newRelDesc, setNewRelDesc] = useState<string>('');
 
-    const graphRef = useRef<any>(null);
     const imgCache = useRef<Record<string, HTMLImageElement>>({});
 
     // Avatar Resolution with Cache Hook
@@ -194,7 +222,7 @@ const SocialGraph: React.FC = () => {
     const selectedNode = data.nodes.find(n => n.id === selectedNodeId);
 
     return (
-        <div className="relative w-full h-full bg-[#05050a] overflow-hidden flex flex-col font-display">
+        <div className="relative w-full h-full overflow-hidden flex flex-col font-display transition-all duration-700">
             <SocialGraphFilters 
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
@@ -206,33 +234,41 @@ const SocialGraph: React.FC = () => {
                 onZoomIn={() => graphRef.current?.zoom(graphRef.current.zoom() * 1.2, 400)}
                 onZoomOut={() => graphRef.current?.zoom(graphRef.current.zoom() / 1.2, 400)}
                 onZoomReset={() => graphRef.current?.zoomToFit(400, 100)}
+                isHeaderHidden={isHeaderHidden}
+                onToggleHeader={() => setHeaderHidden(!isHeaderHidden)}
             />
 
-            <div className="flex-1 relative">
-                <ForceGraph2D
-                    ref={graphRef}
-                    graphData={data}
-                    backgroundColor="#05050a"
-                    nodeCanvasObject={paintNode}
-                    nodePointerAreaPaint={(node: GraphNode, color, ctx) => {
-                        const size = node.type === 'pc' ? 24 : 20;
-                        ctx.fillStyle = color;
-                        ctx.beginPath();
-                        ctx.arc(node.x || 0, node.y || 0, size, 0, 2 * Math.PI, false);
-                        ctx.fill();
-                    }}
-                    linkDirectionalParticles={2}
-                    linkDirectionalParticleSpeed={() => 0.005}
-                    linkDirectionalParticleWidth={2}
-                    linkDirectionalParticleColor={(link: GraphLink) => getRelationColor(link.type)}
-                    linkDirectionalArrowLength={3.5}
-                    linkDirectionalArrowRelPos={1}
-                    linkCurvature={0.2}
-                    linkColor={(link: GraphLink) => `${getRelationColor(link.type)}66`}
-                    linkWidth={2}
-                    onNodeClick={handleNodeClick}
-                    cooldownTicks={200}
-                />
+            <div ref={containerRef} className="flex-1 relative">
+                {dimensions.width > 0 && (
+                    <ForceGraph2D
+                        ref={graphRef}
+                        width={dimensions.width}
+                        height={dimensions.height}
+                        graphData={data}
+                        backgroundColor="transparent"
+                        nodeCanvasObject={paintNode}
+                        nodePointerAreaPaint={(node: any, color, canvasContext) => {
+                            canvasContext.fillStyle = color;
+                            const size = (node.val || 10) * 1.5;
+                            canvasContext.beginPath();
+                            canvasContext.arc(node.x, node.y, size, 0, 2 * Math.PI, false);
+                            canvasContext.fill();
+                        }}
+                        linkDirectionalParticles={2}
+                        linkDirectionalParticleSpeed={() => 0.005}
+                        linkDirectionalParticleWidth={2}
+                        linkDirectionalParticleColor={(link: GraphLink) => getRelationColor(link.type)}
+                        linkDirectionalArrowLength={3.5}
+                        linkDirectionalArrowRelPos={1}
+                        linkCurvature={0.25}
+                        linkColor={(link: GraphLink) => `${getRelationColor(link.type)}66`}
+                        linkWidth={2}
+                        onNodeClick={handleNodeClick}
+                        onBackgroundClick={() => setSelectedNodeId(null)}
+                        cooldownTicks={100}
+                        d3VelocityDecay={0.3}
+                    />
+                )}
             </div>
 
             {selectedNode && (

@@ -265,6 +265,9 @@ export class ForgeService {
     const headers = { 'Content-Type': 'application/json' };
 
     try {
+      const payloadSize = JSON.stringify(body).length;
+      console.log(`[Forge Service] Sending AI request (${(payloadSize / 1024 / 1024).toFixed(2)} MB)...`);
+      
       const response = await window.appBridge.ai.proxyRequest(url, 'POST', headers, body);
       
       if (!response.ok) {

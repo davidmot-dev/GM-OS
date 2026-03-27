@@ -66,6 +66,8 @@ interface SocialGraphFiltersProps {
     onZoomIn: () => void;
     onZoomOut: () => void;
     onZoomReset: () => void;
+    isHeaderHidden: boolean;
+    onToggleHeader: () => void;
 }
 
 const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
@@ -78,7 +80,9 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
     uniqueFactions,
     onZoomIn,
     onZoomOut,
-    onZoomReset
+    onZoomReset,
+    isHeaderHidden,
+    onToggleHeader
 }) => {
     return (
         <div className="absolute top-6 left-6 z-10 flex flex-col gap-4 max-w-2xl">
@@ -90,9 +94,16 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
                     <button onClick={onZoomOut} className="p-3 hover:bg-white/10 rounded-xl transition-all text-slate-400 hover:text-white" title="Zoom Out">
                         <ZoomOut size={20} />
                     </button>
+                    <button 
+                        onClick={onToggleHeader} 
+                        className={`p-3 rounded-xl transition-all ${isHeaderHidden ? 'text-accent bg-accent/20 shadow-glow-accent border border-accent/30' : 'text-slate-400 hover:text-white hover:bg-white/10'}`} 
+                        title={isHeaderHidden ? "Sortir du mode immersif" : "Mode Immersif (Plein écran)"}
+                    >
+                        <Maximize2 size={20} />
+                    </button>
                     <div className="w-px h-8 bg-white/10 self-center mx-1" />
                     <button onClick={onZoomReset} className="p-3 hover:bg-white/10 rounded-xl transition-all text-slate-400 hover:text-white" title="Reset View">
-                        <Maximize2 size={20} />
+                        <Search size={20} className="rotate-45" />
                     </button>
                 </div>
 

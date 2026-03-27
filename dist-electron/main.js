@@ -6050,8 +6050,8 @@ ipcMain.handle("ai:proxy-request", async (_event, url, method, headers, body) =>
         method,
         headers,
         rejectUnauthorized: false,
-        timeout: 12e4
-        // 120 seconds (2 minutes) for heavy AI analysis (PDFs, etc.)
+        timeout: 3e5
+        // 300 seconds (5 minutes) for heavy AI analysis (PDFs, etc.)
       };
       const req = lib2.request(parsedUrl, options, (res) => {
         let data = "";

@@ -6,6 +6,8 @@ import { useModalStore } from '../../../stores/useModalStore';
 import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 
+import SessionClueDeck from './SessionClueDeck';
+
 const SessionWorkspace: React.FC = () => {
     const { sessions, activeCampaignId, entities, updateSessionPublicSummary, updateSessionGmSecrets, campaigns, atlasMaps, players, updateCharacterHP } = useSessionOSStore();
     const { mapUrl, mapName, isVideo, setMap } = useMapStore();
@@ -136,6 +138,9 @@ const SessionWorkspace: React.FC = () => {
 
                 </div>
             </div>
+
+            {/* Session Clues Deck (v5.2) */}
+            <SessionClueDeck />
 
             {/* Double Journal Split Pane */}
             <div className="flex-1 grid grid-cols-2 gap-4 min-h-[400px]">

@@ -32,5 +32,17 @@ Le rendu des vues est délégué à un registre centralisé.
 - **Logique Métier** : Doit être extraite dans des services ou interpréteurs (`logic/HealthInterpreter.ts`) pour être testable indépendamment de React.
 - **Notifications** : Utiliser exclusivement `gmToast(message, type)` pour les feedbacks utilisateur.
 
+## 4. AI Forge & Performance
+
+### Proxy IA (Electron Main)
+Les requêtes vers l'API Gemini transitent par un tunnel IPC sécurisé dans le processus principal d'Electron (`main.ts`).
+- **Timeout** : Fixé à **300 secondes (5 minutes)** pour permettre l'analyse de documents PDF volumineux.
+- **Payload Logging** : Les services (`ChronicleService`, `ForgeService`) loggent systématiquement la taille du payload envoyé en MB pour le monitoring de charge.
+
+### Système d'Indices (Clues)
+Le système d'indices est transverse et utilise :
+- **Persistence** : Stocké dans le `Campaign` via le `chronicleSlice`.
+- **Navigation** : Utilise le `uiSlice` pour la navigation contextuelle ("Cross-Linking") entre les entités et l'éditeur de campagne.
+
 ---
-*Document créé le 27 Mars 2026 - GM-OS v5 Technical Audit.*
+*Dernière mise à jour : 27 Mars 2026 - GM-OS v5 Technical Audit.*

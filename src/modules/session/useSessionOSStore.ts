@@ -57,6 +57,8 @@ export type {
     // Chronicle
     WikiEntry,
     TimelineEvent,
+    InventoryItem,
+    Clue,
 
     // Forge
     SheetTemplate,

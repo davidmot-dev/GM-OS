@@ -17,6 +17,12 @@ import { useTacticalAIStore } from '../modules/tactical-ai/useTacticalAIStore';
 import { openDB } from 'idb';
 import { useClientStore } from '../stores/useClientStore';
 import LobbyOnboarding from './hub/LobbyOnboarding';
+import { useSessionOSStore } from '../modules/session/useSessionOSStore';
+import { 
+    Archive, 
+    Monitor,
+    Search
+} from 'lucide-react';
 
 /**
  * Attempts to resolve an m-xxx media ID to a data: URI using the local IndexedDB.
@@ -48,10 +54,12 @@ const TabletHub: React.FC = () => {
     const { isClockProjected, timestamp, mode, theme, tensions } = useClockStore();
     const { favorites } = useFavoriteStore();
     const { combatants, currentTurnIdx, round, isCombatProjected } = useCombatStore();
+    const { clues } = useSessionOSStore();
 
     const activeHubId = projections['hub'];
     const [liveImagePath, setLiveImagePath] = useState<string | null | undefined>(undefined);
     const [liveEntity, setLiveEntity] = useState<ProjectedEntity | null>(null);
+    const [currentTab, setCurrentTab] = useState<'live' | 'archives'>('live');
     const { deviceId, pseudo, role, isOnboarded, setStatus: setClientStatus } = useClientStore();
     const [voiceLevel, setVoiceLevel] = useState(0);
     const [status, setStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
@@ -153,7 +161,8 @@ const TabletHub: React.FC = () => {
                 useCombatStore.persist.rehydrate(),
                 useFavoriteStore.persist.rehydrate(),
                 useVoiceStore.persist.rehydrate(),
-                useImageStore.persist.rehydrate()
+                useImageStore.persist.rehydrate(),
+                useSessionOSStore.persist.rehydrate()
             ]);
         };
         rehydrateAll();
@@ -189,7 +198,8 @@ const TabletHub: React.FC = () => {
                 'gm-os-favorites-storage': () => useFavoriteStore.persist.rehydrate(),
                 'gmos-voice-storage': () => useVoiceStore.persist.rehydrate(),
                 'gm-os-tactical-ai': () => useTacticalAIStore.persist.rehydrate(),
-                'gmos-image-storage': () => useImageStore.persist.rehydrate()
+                'gmos-image-storage': () => useImageStore.persist.rehydrate(),
+                'gmos-v5-session-os-storage': () => useSessionOSStore.persist.rehydrate()
             };
 
             if (e.key && keys[e.key]) keys[e.key]();
@@ -326,7 +336,7 @@ const TabletHub: React.FC = () => {
 
                 {/* Central Theater Area */}
                 <div className={`flex-1 flex items-center justify-center transition-all duration-1000 ${hasCombatants ? 'pr-0 md:pr-72' : ''} pointer-events-none overflow-hidden`}>
-                    {(resolvedFavorites.length > 0 || liveEntity) && (
+                    {currentTab === 'live' && (resolvedFavorites.length > 0 || liveEntity) && (
                         <div className="w-full h-full flex items-center justify-center overflow-hidden pointer-events-auto">
                             <div className="w-full max-h-full overflow-y-auto custom-scrollbar p-2 flex flex-col items-center justify-center">
                                 <div className={`grid grid-cols-1 ${(resolvedFavorites.length + (liveEntity ? 1 : 0)) > 1 ? 'md:grid-cols-2 lg:grid-cols-3' : 'max-w-md'} gap-4 md:gap-8 w-full place-items-center`}>
@@ -378,6 +388,92 @@ const TabletHub: React.FC = () => {
                             </div>
                         </div>
                     )}
+
+                    {currentTab === 'archives' && (
+                        <div className="w-full h-full p-4 overflow-hidden flex flex-col pointer-events-auto">
+                            <div className="flex items-center justify-between mb-8 px-4">
+                                <div className="space-y-1">
+                                    <h2 className="text-2xl font-black tracking-tight text-white flex items-center gap-3">
+                                        <Archive className="text-gm-gold" size={24} />
+                                        Archives du Groupe
+                                    </h2>
+                                    <p className="text-[10px] text-white/30 font-bold uppercase tracking-widest">Preuves et indices collectés lors de la campagne.</p>
+                                </div>
+                                <div className="text-[10px] font-black bg-white/5 border border-white/10 px-4 py-2 rounded-full text-white/40 uppercase tracking-widest">
+                                    {clues.filter(c => c.isRevealed).length} Fragments Découverts
+                                </div>
+                            </div>
+
+                            <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 pb-24">
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {clues.filter(c => c.isRevealed).map((clue, idx) => (
+                                        <div 
+                                            key={clue.id} 
+                                            className="group bg-slate-900/60 backdrop-blur-xl border border-white/5 rounded-3xl p-6 transition-all hover:border-gm-gold/30 hover:bg-slate-900/80 animate-in fade-in slide-in-from-bottom-4 duration-500"
+                                            style={{ animationDelay: `${idx * 50}ms` }}
+                                        >
+                                            <div className="flex gap-4 items-start">
+                                                <div className="size-16 rounded-2xl bg-black/40 border border-white/5 overflow-hidden flex-none">
+                                                    {clue.mediaUrl ? (
+                                                        <ResolvedImage src={clue.mediaUrl} className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity" />
+                                                    ) : (
+                                                        <div className="w-full h-full flex items-center justify-center text-white/10">
+                                                            <Search size={24} />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="space-y-4 flex-1">
+                                                    <div className="space-y-1">
+                                                        <h3 className="text-sm font-black text-white group-hover:text-gm-gold transition-colors">{clue.title}</h3>
+                                                        <div className="flex flex-wrap gap-2">
+                                                            {clue.revealedAt && (
+                                                                <span className="text-[7px] font-black text-white/30 uppercase tracking-[0.2em] bg-white/5 px-2 py-0.5 rounded border border-white/5">
+                                                                    DÉCOUVERT LE {new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'short' }).format(clue.revealedAt)}
+                                                                </span>
+                                                            )}
+                                                            {clue.campaignMoment && (
+                                                                <span className="text-[7px] font-black text-gm-gold/40 uppercase tracking-[0.2em] bg-gm-gold/5 px-2 py-0.5 rounded border border-gm-gold/10">
+                                                                    {clue.campaignMoment}
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                    <p className="text-[11px] text-white/40 leading-relaxed italic font-serif line-clamp-4">{clue.content}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                    
+                                    {clues.filter(c => c.isRevealed).length === 0 && (
+                                        <div className="col-span-full py-32 flex flex-col items-center justify-center text-center gap-4 border-2 border-dashed border-white/5 rounded-[3rem]">
+                                            <Archive size={48} className="text-white/5" />
+                                            <p className="text-xs font-black uppercase tracking-widest text-white/20">Aucune archive disponible</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* Bottom Navigation Tabs */}
+            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] pointer-events-auto">
+                <div className="bg-slate-950/80 backdrop-blur-2xl border border-white/10 p-1.5 rounded-full shadow-2xl flex items-center gap-1">
+                    <button 
+                        onClick={() => setCurrentTab('live')}
+                        className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${currentTab === 'live' ? 'bg-gm-gold text-black' : 'text-white/40 hover:text-white'}`}
+                    >
+                        <Monitor size={14} />
+                        Direct
+                    </button>
+                    <button 
+                        onClick={() => setCurrentTab('archives')}
+                        className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${currentTab === 'archives' ? 'bg-gm-gold text-black' : 'text-white/40 hover:text-white'}`}
+                    >
+                        <Archive size={14} />
+                        Archives
+                    </button>
                 </div>
             </div>
 
@@ -407,7 +503,7 @@ const TabletHub: React.FC = () => {
                                     <div className="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
                                          <div 
                                             className="h-full bg-red-500 hp-progress-fill" 
-                                            style={{ '--progress-percent': `${(activeCombatant.hp / activeCombatant.hpMax) * 100}%` } as React.CSSProperties}
+                                            style={{ '--progress-percent': `${(activeCombatant.hp / (activeCombatant.hpMax || 1)) * 100}%` } as React.CSSProperties}
                                          />
                                     </div>
                                 </div>

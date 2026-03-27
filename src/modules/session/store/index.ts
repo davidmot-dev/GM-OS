@@ -27,12 +27,14 @@ import { createAtlasSlice, type AtlasSlice } from './atlasSlice';
 import { createChronicleSlice, type ChronicleSlice } from './chronicleSlice';
 import { createForgeSlice, type ForgeSlice } from './forgeSlice';
 import { createUiSlice, type UiSlice } from './uiSlice';
+import { createCluesSlice, type CluesSlice } from './cluesSlice';
 
 import type {
     Campaign,
     Entity,
     AtlasMap,
     WikiEntry,
+    Clue,
     EntityRelation,
     SessionModuleSnapshot,
 } from './types';
@@ -65,6 +67,7 @@ interface CrossDomainActions {
         atlasMaps: AtlasMap[];
         timelineEvents: import('./types').TimelineEvent[];
         wikiEntries: WikiEntry[];
+        clues: Clue[];
         activeCampaignId: string | null;
     };
 
@@ -104,6 +107,7 @@ export type SessionOSStore = CampaignSlice &
     ChronicleSlice &
     ForgeSlice &
     UiSlice &
+    CluesSlice &
     CrossDomainActions;
 
 // ─────────────────────────────────────────────
@@ -224,6 +228,10 @@ const INITIAL_DATA = {
     wikiEntries: [
         { id: 'we-1', campaignId: 'c-1', title: "La Forteresse d'Ironhelm", content: "# Ironhelm\nUne pile de pierre noire.", category: 'location' as const, tags: ['nain', 'forteresse'], imageUrls: [], linkedEntityIds: ['am-1'] },
     ],
+    clues: [
+        { id: 'clue-1', campaignId: 'c-1', title: "Le Médaillon Sanglant", content: "Un médaillon trouvé sur un garde mort, marqué du sceau de Varick.", locationId: 'am-1', ownerId: 'e-1', isRevealed: false },
+        { id: 'clue-2', campaignId: 'c-1', title: "Rumeur de la Forêt", content: "Les dryades parlent d'un imposteur au château.", locationId: 'am-2', ownerId: 'e-2', isRevealed: true, revealedAt: Date.now() },
+    ] as Clue[],
 };
 
 // ─────────────────────────────────────────────
@@ -241,6 +249,7 @@ export const useSessionOSStore = create<SessionOSStore>()(
             ...createChronicleSlice(set as Parameters<typeof createChronicleSlice>[0], get as Parameters<typeof createChronicleSlice>[1], api as Parameters<typeof createChronicleSlice>[2]),
             ...createForgeSlice(set as Parameters<typeof createForgeSlice>[0], get as Parameters<typeof createForgeSlice>[1], api as Parameters<typeof createForgeSlice>[2]),
             ...createUiSlice(set as Parameters<typeof createUiSlice>[0], get as Parameters<typeof createUiSlice>[1], api as Parameters<typeof createUiSlice>[2]),
+            ...createCluesSlice(set as Parameters<typeof createCluesSlice>[0], get as Parameters<typeof createCluesSlice>[1], api as Parameters<typeof createCluesSlice>[2]),
 
             // ── Hydratation des données initiales ─────────
             campaigns: INITIAL_DATA.campaigns,
@@ -250,6 +259,7 @@ export const useSessionOSStore = create<SessionOSStore>()(
             atlasMaps: INITIAL_DATA.atlasMaps,
             timelineEvents: INITIAL_DATA.timelineEvents,
             wikiEntries: INITIAL_DATA.wikiEntries,
+            clues: INITIAL_DATA.clues,
             activeCampaignId: 'c-1',
             selectedPlayerId: 'p-1',
             selectedAtlasMapId: 'am-1',
@@ -335,8 +345,8 @@ export const useSessionOSStore = create<SessionOSStore>()(
             },
 
             getBackupData: () => {
-                const { campaigns, sessions, entities, players, atlasMaps, timelineEvents, wikiEntries, activeCampaignId } = get();
-                return { campaigns, sessions, entities, players, atlasMaps, timelineEvents, wikiEntries, activeCampaignId };
+                const { campaigns, sessions, entities, players, atlasMaps, timelineEvents, wikiEntries, clues, activeCampaignId } = get();
+                return { campaigns, sessions, entities, players, atlasMaps, timelineEvents, wikiEntries, clues, activeCampaignId };
             },
 
             // ── Snapshot System ────────────────────────────
@@ -514,16 +524,40 @@ export const useSessionOSStore = create<SessionOSStore>()(
             // ── Session Launch ─────────────────────────────
 
             launchSession: (sessionId) => {
-                const { sessions } = get();
+                const { sessions, campaigns } = get();
                 const session = sessions.find((s) => s.id === sessionId);
                 if (!session) return;
 
+                // 1. Mettre à jour les statuts des sessions (une seule active par campagne)
+                const updatedSessions = sessions.map(s => {
+                    if (s.campaignId === session.campaignId) {
+                        if (s.id === sessionId) return { ...s, status: 'active' as const };
+                        if (s.id !== sessionId && s.status === 'active') return { ...s, status: 'done' as const };
+                    }
+                    return s;
+                });
+
+                // 2. Mettre à jour l'activeSessionId de la campagne
+                const updatedCampaigns = campaigns.map(c => {
+                    if (c.id === session.campaignId) {
+                        return { ...c, activeSessionId: sessionId };
+                    }
+                    return c;
+                });
+
+                // 3. Initialiser le Journal OS
                 useJournalStore.getState().startJournal(
                     session.campaignId,
                     `Session #${session.number}`,
                     { publicSummary: session.publicSummary }
                 );
-                set({ currentView: 'session-focus' });
+
+                // 4. Mettre à jour le store et basculer sur le cockpit
+                set({ 
+                    sessions: updatedSessions, 
+                    campaigns: updatedCampaigns,
+                    currentView: 'cockpit' 
+                });
             },
         }),
         {
@@ -549,6 +583,7 @@ export const useSessionOSStore = create<SessionOSStore>()(
                 atlasMaps: state.atlasMaps,
                 timelineEvents: state.timelineEvents,
                 wikiEntries: state.wikiEntries,
+                clues: state.clues,
                 customSheetTemplates: state.customSheetTemplates,
                 customGameDrivers: state.customGameDrivers,
                 activeCampaignId: state.activeCampaignId,

@@ -25,6 +25,7 @@ GM-OS v5 est une plateforme de gestion de sessions de Jeu de Rôle (JdR) de nouv
   - **Hybrid AI Bridge** : Support natif d'**Ollama** pour une IA 100% locale et privée.
   - **Sync Différentielle** : Optimisation des messages WebSocket pour un Tablet Hub ultra-réactif.
   - **AI Persona Forge** : Auto-génération séquentielle de 7 assistants IA spécialisés (GEMS) avec support optimisé pour **Ollama** et isolation du contexte RAG (Système vs Campagne).
+- **CLUES OS** : Système transverse de gestion d'indices et preuves avec traçabilité temporelle, moments narratifs et archivage automatique dans le **Journal-OS**.
 
 ## 🛠️ Stack Technique
 

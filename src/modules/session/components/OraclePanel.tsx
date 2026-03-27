@@ -124,7 +124,13 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
         e?.preventDefault();
         if (!input.trim() || !notebookId || isQuerying) return;
 
-        const query = input;
+        // Neural Liaison: Inject active clues context to help the AI "read" the session state
+        const revealedClues = useSessionOSStore.getState().clues.filter(c => c.isRevealed);
+        const cluesContext = revealedClues.length > 0 
+            ? `[LIAISON NEURALE : INDICES RÉVÉLÉS]\n${revealedClues.map(c => `- ${c.title} : ${c.content}`).join('\n')}\n\nMESSAGE DU MJ :\n`
+            : '';
+
+        const query = cluesContext + input;
         setInput('');
         try {
             await queryNotebook(notebookId, query);

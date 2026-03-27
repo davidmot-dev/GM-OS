@@ -14,7 +14,8 @@ const SessionDashboard: React.FC = () => {
     const { 
         activeCampaignId, 
         campaigns, 
-        customSheetTemplates 
+        customSheetTemplates,
+        isHeaderHidden
     } = useSessionOSStore();
 
     const [isOracleOpen, setIsOracleOpen] = useState(false);
@@ -30,15 +31,17 @@ const SessionDashboard: React.FC = () => {
     const templateNotebookUrl = activeTemplate?.defaultNotebookUrl;
 
     return (
-        <div className="flex-1 h-[calc(100vh-64px)] overflow-hidden flex flex-col bg-app-bg text-app-text font-display">
+        <div className={`flex-1 ${isHeaderHidden ? 'h-screen' : 'h-[calc(100vh-64px)]'} overflow-hidden flex flex-col bg-app-bg text-app-text font-display transition-all duration-500`}>
             {/* Header modulaire (Navigation & Utilitaires) */}
-            <SessionHeader 
-                isOracleOpen={isOracleOpen}
-                setIsOracleOpen={setIsOracleOpen}
-                setIsSnapshotModalOpen={setIsSnapshotModalOpen}
-                forgeMode={forgeMode}
-                setForgeMode={setForgeMode}
-            />
+            {!isHeaderHidden && (
+                <SessionHeader 
+                    isOracleOpen={isOracleOpen}
+                    setIsOracleOpen={setIsOracleOpen}
+                    setIsSnapshotModalOpen={setIsSnapshotModalOpen}
+                    forgeMode={forgeMode}
+                    setForgeMode={setForgeMode}
+                />
+            )}
 
             {/* Registre de Vues (Contenu principal dynamique) */}
             <SessionViewRegistry forgeMode={forgeMode} />
