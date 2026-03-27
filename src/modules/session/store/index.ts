@@ -528,6 +528,19 @@ export const useSessionOSStore = create<SessionOSStore>()(
         }),
         {
             name: 'gmos-v5-session-os-storage', // ← Clé inchangée pour préserver les données existantes
+            version: 10,
+            migrate: (persistedState: unknown, version: number) => {
+                console.log(`[Store Migration] Migrating from version ${version} to 10`);
+                return persistedState;
+            },
+            onRehydrateStorage: () => (state) => {
+                if (state) {
+                    // Sanitize stale blob URLs from persistent storage
+                    (state.atlasMaps || []).forEach(m => {
+                        if (m.fileUrl?.startsWith('blob:')) m.fileUrl = '';
+                    });
+                }
+            },
             partialize: (state) => ({
                 campaigns: state.campaigns,
                 sessions: state.sessions,

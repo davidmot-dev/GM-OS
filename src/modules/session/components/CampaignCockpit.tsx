@@ -17,12 +17,14 @@ const CampaignCockpit: React.FC = () => {
     const sessionCount = sessions.filter(s => s.campaignId === activeCampaignId).length;
 
     return (
-        <aside className="col-span-3 bg-app-surface/90 backdrop-blur-md border-r border-app-border p-5 flex flex-col gap-6 overflow-y-auto custom-scrollbar">
+        <aside className="col-span-3 premium-glass border-r-0 p-5 flex flex-col gap-6 overflow-y-auto custom-scrollbar">
+            <div className="absolute inset-y-0 right-0 w-[1px] bg-gradient-to-b from-transparent via-white/5 to-transparent pointer-events-none" />
             {/* Campaign Card */}
             <div
                 onClick={() => setCurrentView('campaign-details')}
-                className="bg-app-bg/40 rounded-lg p-4 border-l-4 border-accent shadow-glow-accent cursor-pointer hover:bg-app-bg/60 transition-all group"
+                className="bg-white/5 rounded-xl p-4 border-l-4 border-gm-gold shadow-[0_0_20px_rgba(212,175,55,0.1)] cursor-pointer hover:bg-white/10 hover:shadow-[0_0_25px_rgba(212,175,55,0.2)] transition-all group relative overflow-hidden"
             >
+                <div className="absolute inset-0 bg-gradient-to-br from-gm-gold/5 to-transparent pointer-events-none" />
                 <div className="flex justify-between items-start mb-2">
                     <div>
                         <h3 className="text-app-text font-bold text-lg group-hover:text-accent transition-colors">{activeCampaign?.name || 'Aucune Campagne Active'}</h3>
@@ -49,10 +51,10 @@ const CampaignCockpit: React.FC = () => {
                 <p className="text-app-text/40 text-xs uppercase tracking-widest mb-2 px-3">Gestion</p>
                 <button
                     onClick={() => setCurrentView('cockpit')}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'cockpit' ? 'bg-accent/10 text-accent' : 'text-app-text/80 hover:bg-app-bg hover:text-app-text'}`}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all nav-item-glow ${currentView === 'cockpit' ? 'bg-accent/10 text-accent border border-accent/20' : 'text-app-text/60 hover:bg-white/5 hover:text-app-text'}`}
                 >
-                    <LayoutDashboard className={currentView === 'cockpit' ? 'scale-110' : 'group-hover:scale-110 transition-transform'} size={20} />
-                    <span className="text-sm font-medium">Cockpit</span>
+                    <LayoutDashboard className={currentView === 'cockpit' ? 'scale-110 shadow-glow-accent' : 'group-hover:scale-110 transition-transform'} size={20} />
+                    <span className="text-sm font-bold tracking-tight">Cockpit</span>
                 </button>
                 <button
                     onClick={() => setActiveModule('combat')}
@@ -63,10 +65,10 @@ const CampaignCockpit: React.FC = () => {
                 </button>
                 <button
                     onClick={() => setCurrentView('storyboard')}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'storyboard' ? 'bg-accent/10 text-accent' : 'text-app-text/80 hover:bg-app-bg hover:text-app-text'}`}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all nav-item-glow ${currentView === 'storyboard' ? 'bg-accent/10 text-accent border border-accent/20' : 'text-app-text/60 hover:bg-white/5 hover:text-app-text'}`}
                 >
                     <Zap className={currentView === 'storyboard' ? 'text-accent scale-110 shadow-glow-accent' : 'group-hover:scale-110 transition-transform'} size={20} />
-                    <span className="text-sm font-medium">Master Storyboard</span>
+                    <span className="text-sm font-bold tracking-tight">Master Storyboard</span>
                 </button>
                 <button
                     onClick={() => setCurrentView('npc-gallery')}
@@ -229,7 +231,7 @@ const CampaignCockpit: React.FC = () => {
                                         alert(`File: ${activeSession.filePath}`);
                                     }
                                 }}
-                                className="flex items-center gap-3 px-3 py-2 rounded-lg bg-blue-500/5 border border-blue-500/10 text-blue-400 hover:bg-blue-500/10 hover:border-blue-500/30 transition-all group"
+                                className="flex items-center gap-3 px-3 py-2 rounded-lg bg-cyan-500/5 border border-cyan-500/10 text-cyan-400 hover:bg-cyan-500/10 hover:border-cyan-500/30 transition-all group"
                             >
                                 <File size={16} className="group-hover:scale-110 transition-transform" />
                                 <span className="text-xs font-bold truncate">Accéder au Fichier</span>

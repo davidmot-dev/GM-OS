@@ -67,6 +67,52 @@
   .hub-progress-bar-fill {
     width: var(--progress-percent, 0%);
   }
+
+  .hp-progress-fill {
+    width: var(--progress-percent);
+  }
+
+  .premium-glass {
+    background: rgba(15, 23, 42, 0.45);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .premium-glass::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  }
+
+  /* View Transitions */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .view-transition-fade-up {
+    animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .nav-item-glow {
+    transition: all 0.3s ease;
+  }
+
+  .nav-item-glow:hover {
+    text-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+    transform: translateY(-1px);
+  }
 }
 
 :root {

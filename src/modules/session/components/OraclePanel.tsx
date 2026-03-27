@@ -90,12 +90,11 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
     const [loadError, setLoadError] = useState(false);
     const [key, setKey] = useState(0);
 
-    // Reset load error when key or URL changes
-    useEffect(() => {
-        if (isOpen && activeNotebookUrl && viewMode === 'iframe' && loadError) {
-            setLoadError(false);
-        }
-    }, [isOpen, activeNotebookUrl, viewMode, key, loadError]);
+    // Reset load error when key or URL changes - Handled via manual triggers to avoid cascading renders
+    const handleSetViewMode = (mode: 'chat' | 'iframe') => {
+        if (mode === 'iframe') setLoadError(false);
+        setViewMode(mode);
+    };
 
     const hasBoth = !!campaignNotebookUrl && !!templateNotebookUrl && campaignNotebookUrl !== templateNotebookUrl;
 
@@ -161,11 +160,12 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
             )}
 
             <aside 
-                className={`fixed inset-y-0 right-0 w-[550px] max-w-full bg-app-bg border-l border-accent/30 shadow-2xl z-[100] transform transition-transform duration-300 ease-in-out flex flex-col ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+                className={`fixed inset-y-0 right-0 w-[650px] max-w-full premium-glass border-l border-cyan-500/20 shadow-2xl z-[100] transform transition-transform duration-500 ease-out flex flex-col ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
             >
+                <div className="absolute inset-0 bg-cyan-500/5 pointer-events-none" />
                 {/* Header */}
-                <header className="h-20 border-b border-app-border bg-app-bg/95 backdrop-blur-xl px-5 flex items-center justify-between shrink-0 relative shadow-lg z-10 transition-all">
-                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                <header className="h-20 border-b border-app-border/40 bg-app-bg/95 backdrop-blur-xl px-4 flex items-center justify-between shrink-0 relative shadow-lg z-10 transition-all gap-4">
+                    <div className="flex items-center gap-3 min-w-0 flex-shrink">
                         {/* Compact Close Button */}
                         <button 
                             onClick={onClose}
@@ -181,10 +181,10 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                         <div className="relative group max-w-[240px] flex-1">
                             <button 
                                 onClick={() => setIsGemMenuOpen(!isGemMenuOpen)}
-                                className={`w-full flex items-center gap-3 p-1.5 pr-4 rounded-2xl transition-all border ${
+                                className={`w-full flex items-center gap-3 p-1.5 pr-4 rounded-2xl transition-all border nav-item-glow ${
                                     isGemMenuOpen 
-                                        ? 'bg-accent/15 border-accent/40 shadow-glow-accent/10' 
-                                        : 'bg-app-surface/40 border-white/5 hover:border-accent/30 hover:bg-app-surface/60'
+                                        ? 'bg-cyan-500/10 border-cyan-400/40 shadow-[0_0_15px_rgba(6,182,212,0.1)]' 
+                                        : 'bg-white/5 border-white/5 hover:border-cyan-500/30 hover:bg-white/10'
                                 }`}
                             >
                                 <div className={`p-2 rounded-xl transition-colors shadow-inner ${
@@ -272,14 +272,14 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                         <div className="flex items-center bg-app-surface/60 rounded-xl p-1 border border-white/5">
                             <div className="flex p-0.5 gap-1">
                                 <button
-                                    onClick={() => setViewMode('chat')}
+                                    onClick={() => handleSetViewMode('chat')}
                                     className={`p-2 rounded-lg transition-all ${viewMode === 'chat' ? 'bg-accent text-app-bg shadow-lg' : 'text-app-text/40 hover:text-app-text/60 hover:bg-white/5'}`}
                                     title="Mode Discussion"
                                 >
                                     <MessageSquare size={16} />
                                 </button>
                                 <button
-                                    onClick={() => setViewMode('iframe')}
+                                    onClick={() => handleSetViewMode('iframe')}
                                     className={`p-2 rounded-lg transition-all ${viewMode === 'iframe' ? 'bg-accent text-app-bg shadow-lg' : 'text-app-text/40 hover:text-app-text/60 hover:bg-white/5'}`}
                                     title="Voir la Source (NotebookLM)"
                                 >
