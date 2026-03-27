@@ -9,7 +9,7 @@
 
 import type { StateCreator } from 'zustand';
 import { gmToast } from '../../../stores/useToastStore';
-import { useJournalStore } from '../useJournalStore';
+import { useJournalStore } from '../../journal/useJournalStore';
 import { HealthInterpreter } from '../logic/HealthInterpreter';
 import type {
     Entity,
@@ -85,7 +85,7 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
     addEntity: (entity) => {
         const newEntity: Entity = { ...entity, id: `e-${Date.now()}` };
         set((state) => ({ entities: [...state.entities, newEntity] }));
-        gmToast.success(`Entité "${newEntity.name}" créée.`);
+        gmToast(`Entité "${newEntity.name}" créée.`, 'success');
     },
 
     updateEntity: (id, updates) =>
@@ -96,7 +96,7 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
     deleteEntity: (id) => {
         const entity = get().entities.find((e) => e.id === id);
         set((state) => ({ entities: state.entities.filter((e) => e.id !== id) }));
-        if (entity) gmToast.info(`"${entity.name}" supprimé.`);
+        if (entity) gmToast(`"${entity.name}" supprimé.`, 'info');
     },
 
     updateEntityHP: (entityId, hp) =>
@@ -285,35 +285,34 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
 
         if (targetType === 'npc') {
             const entity = entities.find((e) => e.id === targetId);
-            if (!entity) return;
+            if (!entity || !entity.healthSystem) return;
 
-            const result = HealthInterpreter.applyImpact(entity.healthSystem, impact, entity);
-            get().updateEntityHealth(targetId, result.updatedHealth);
-            get().updateEntityHP(targetId, result.newHp);
+            const updatedHealth = HealthInterpreter.calculateNextState(entity.healthSystem, impact);
+            const newHp = (updatedHealth.data.current as number) ?? entity.hp;
+            get().updateEntityHealth(targetId, updatedHealth);
+            get().updateEntityHP(targetId, newHp);
 
             useJournalStore.getState().addEvent({
                 type: 'COMBAT',
                 title: `💥 Impact sur ${entity.name}`,
-                content: result.narrative,
+                content: `HP : ${newHp} / ${entity.maxHp} — État : ${updatedHealth.state}`,
             });
         } else {
             const player = players.find((p) =>
                 p.characters.some((c) => c.id === targetId)
             );
             const character = player?.characters.find((c) => c.id === targetId);
-            if (!player || !character) return;
+            if (!player || !character || !character.healthSystem) return;
 
-            const result = HealthInterpreter.applyImpact(character.healthSystem, impact, {
-                hp: character.hp,
-                maxHp: character.maxHp,
-            });
-            get().updateCharacterHealth(player.id, targetId, result.updatedHealth);
-            get().updateCharacterHP(player.id, targetId, result.newHp);
+            const updatedHealth = HealthInterpreter.calculateNextState(character.healthSystem, impact);
+            const newHp = (updatedHealth.data.current as number) ?? character.hp;
+            get().updateCharacterHealth(player.id, targetId, updatedHealth);
+            get().updateCharacterHP(player.id, targetId, newHp);
 
             useJournalStore.getState().addEvent({
                 type: 'COMBAT',
                 title: `💥 Impact sur ${character.name}`,
-                content: result.narrative,
+                content: `HP : ${newHp} / ${character.maxHp} — État : ${updatedHealth.state}`,
             });
         }
     },

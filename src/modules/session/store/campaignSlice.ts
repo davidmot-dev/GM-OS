@@ -55,7 +55,7 @@ export const createCampaignSlice: StateCreator<CampaignSlice, [], [], CampaignSl
             activeLocationIds: campaign.activeLocationIds ?? [],
         };
         set((state) => ({ campaigns: [...state.campaigns, newCampaign] }));
-        gmToast.success(`Campagne "${newCampaign.name}" créée.`);
+        gmToast(`Campagne "${newCampaign.name}" créée.`, 'success');
     },
 
     updateCampaign: (id, updates) =>
@@ -69,7 +69,7 @@ export const createCampaignSlice: StateCreator<CampaignSlice, [], [], CampaignSl
             campaigns: state.campaigns.filter((c) => c.id !== id),
             activeCampaignId: state.activeCampaignId === id ? null : state.activeCampaignId,
         }));
-        if (campaign) gmToast.info(`Campagne "${campaign.name}" supprimée.`);
+        if (campaign) gmToast(`Campagne "${campaign.name}" supprimée.`, 'info');
     },
 
     updateCampaignLayout: (campaignId, layout) =>

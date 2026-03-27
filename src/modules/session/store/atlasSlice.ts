@@ -10,7 +10,7 @@
  */
 
 import type { StateCreator } from 'zustand';
-import { useJournalStore } from '../useJournalStore';
+import { useJournalStore } from '../../journal/useJournalStore';
 import type { AtlasMap, AtlasLinkedEntity } from './types';
 
 // ─────────────────────────────────────────────

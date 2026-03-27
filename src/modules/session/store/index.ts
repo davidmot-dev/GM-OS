@@ -18,10 +18,7 @@ import { persist } from 'zustand/middleware';
 import { gmToast } from '../../../stores/useToastStore';
 import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 import { hueEngine } from '../../light/HueEngine';
-import { useJournalStore } from '../useJournalStore';
-import { useClockStore, type TensionClock } from '../../../store/useClockStore';
-import { useWhiteboardStore, type DrawingPath } from '../../whiteboard/useWhiteboardStore';
-import { HealthInterpreter } from '../logic/HealthInterpreter';
+import { useJournalStore } from '../../journal/useJournalStore';
 
 import { createCampaignSlice, type CampaignSlice } from './campaignSlice';
 import { createSessionSlice, type SessionSlice } from './sessionSlice';
@@ -46,7 +43,6 @@ import type { LightScene } from '../../light/useLightStore';
 import type { ImageMedia, ImageFolder } from '../../image/types';
 import type { WebLink } from '../../web/types';
 import type { Combatant } from '../../combat/useCombatStore';
-import type { SessionSnapshot } from '../../journal/types';
 
 // ─────────────────────────────────────────────
 // Cross-domain actions type
@@ -399,7 +395,7 @@ export const useSessionOSStore = create<SessionOSStore>()(
                     if (snapshot.image) (window as unknown as { useImageStore?: SnapshotStore<typeof snapshot.image> }).useImageStore?.getState().applySnapshot?.(snapshot.image);
                     if (snapshot.web) (window as unknown as { useWebStore?: SnapshotStore<typeof snapshot.web> }).useWebStore?.getState().applySnapshot?.(snapshot.web);
                     if (snapshot.combat) (window as unknown as { useCombatStore?: SnapshotStore<typeof snapshot.combat> }).useCombatStore?.getState().applySnapshot?.(snapshot.combat);
-                    gmToast.success('État du système restauré avec succès !');
+                    gmToast('État du système restauré avec succès !', 'success');
                 } catch (err) {
                     console.error('Failed to apply system snapshot:', err);
                 }
@@ -504,43 +500,29 @@ export const useSessionOSStore = create<SessionOSStore>()(
                     currentView: 'cockpit',
                 }));
 
-                gmToast.success(`Chronique "${newCampaign.name}" importée avec ${newEntities.length} entités.`);
+                gmToast(`Chronique "${newCampaign.name}" importée avec ${newEntities.length} entités.`, 'success');
             },
 
             exportActiveCampaignToObsidian: async () => {
                 const { obsidianExportService } = await import('../ObsidianExportService');
-                const { useObsidianStore } = await import('../useObsidianStore');
                 const state = get();
                 const campaign = state.campaigns.find((c) => c.id === state.activeCampaignId);
                 if (!campaign) return;
-
-                const obsidianState = useObsidianStore.getState();
-                await obsidianExportService.exportCampaign(campaign, state.entities, state.wikiEntries, state.timelineEvents, obsidianState);
+                await obsidianExportService.exportCampaign(campaign, state.entities, state.atlasMaps, state.wikiEntries);
             },
 
             // ── Session Launch ─────────────────────────────
 
             launchSession: (sessionId) => {
-                const { sessions, players, entities } = get();
+                const { sessions } = get();
                 const session = sessions.find((s) => s.id === sessionId);
                 if (!session) return;
 
-                const presentPCs = players
-                    .filter((p) => p.isOnline)
-                    .flatMap((p) => p.characters.filter((c) => c.campaignId === session.campaignId))
-                    .map((c) => ({ name: c.name, hp: c.hp, maxHp: c.maxHp, state: c.healthSystem?.state || 'healthy' }));
-
-                const sessionEntities = entities
-                    .filter((e) => session.sessionEntityIds?.includes(e.id))
-                    .map((e) => ({ name: e.name, hp: e.hp, maxHp: e.maxHp, status: e.status }));
-
-                const pendingChecklist = session.checklist.filter((i) => !i.isCompleted).map((i) => i.text);
-                const clocks = useClockStore.getState().tensions.map((t: TensionClock) => ({ name: t.name, filled: t.filledSegments, total: t.totalSegments }));
-                const whiteboardSnapshot = (useWhiteboardStore.getState() as { paths: DrawingPath[] }).paths;
-
-                const snapshot: SessionSnapshot = { notes: session.sessionNotes, presentPCs, sessionEntities, pendingChecklist, clocks, whiteboardSnapshot };
-
-                useJournalStore.getState().startJournal(session.campaignId, sessionId, snapshot);
+                useJournalStore.getState().startJournal(
+                    session.campaignId,
+                    `Session #${session.number}`,
+                    { publicSummary: session.publicSummary }
+                );
                 set({ currentView: 'session-focus' });
             },
         }),
