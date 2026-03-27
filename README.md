@@ -1,4 +1,4 @@
-# 🌌 GM-OS v5 : The Ultimate Game Master Toolkit
+# 🌌 GM-OS v5.9 : The Ultimate Game Master Toolkit
 
 GM-OS v5 est une plateforme de gestion de sessions de Jeu de Rôle (JdR) de nouvelle génération, conçue pour offrir aux Maîtres de Jeu (MJ) une immersion totale et un contrôle sans précédent sur l'ambiance, le combat et la narration.
 
