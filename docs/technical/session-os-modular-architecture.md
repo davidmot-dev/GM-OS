@@ -39,10 +39,18 @@ Les requêtes vers l'API Gemini transitent par un tunnel IPC sécurisé dans le 
 - **Timeout** : Fixé à **300 secondes (5 minutes)** pour permettre l'analyse de documents PDF volumineux.
 - **Payload Logging** : Les services (`ChronicleService`, `ForgeService`) loggent systématiquement la taille du payload envoyé en MB pour le monitoring de charge.
 
-### Système d'Indices (Clues)
-Le système d'indices est transverse et utilise :
-- **Persistence** : Stocké dans le `Campaign` via le `chronicleSlice`.
-- **Navigation** : Utilise le `uiSlice` pour la navigation contextuelle ("Cross-Linking") entre les entités et l'éditeur de campagne.
+## 5. Hub Synchronization Engine (Nexus Bridge)
+
+### Deep Sync Protocol
+La synchronisation entre le Cockpit MJ et le Tablet Hub utilise un pont WebSocket bidirectionnel.
+- **Broadcast Sélectif** : Le MJ n'envoie que les données nécessaires à la session active.
+- **Forge Sync** : Depuis la v5.11, le payload inclut les `customSheetTemplates` et `customGameDrivers`. Cela garantit que la tablette peut effectuer des calculs de règles et un rendu d'UI identique au MJ sans accès direct à la base de données locale.
+
+### Template Resolution Logic
+La résolution de la fiche de personnage (`logic/templateResolver.ts`) suit une hiérarchie stricte pour garantir la cohérence visuelle :
+1. **Template Spécifique** : Si `character.templateId` est défini et valide.
+2. **Template Système** : Recherche un template correspondant au `gameSystem` de la campagne.
+3. **Template Générique** : Fallback sur le template par défaut de Session-OS.
 
 ---
-*Dernière mise à jour : 27 Mars 2026 - GM-OS v5 Technical Audit.*
+*Dernière mise à jour : 28 Mars 2026 - GM-OS v5 Technical Audit (Deep Sync Engine & Hub Interactive).*

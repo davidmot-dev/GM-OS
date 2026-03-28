@@ -36,6 +36,11 @@ Le Tablet Hub affiche les éléments clés de votre session en temps réel :
 ### 5. État de la Connexion
 - Un indicateur (Wifi/WifiOff) en haut à droite vous informe si la tablette est bien synchronisée via le serveur WebSocket.
 
+### 6. Fiche de Personnage Interactive
+- **Affichage Fidèle** : Le Hub utilise désormais le système de templates de GM-OS. Votre fiche s'affiche avec le design spécifique à votre jeu (ex: Cthulhu Hack, Cyberpunk, etc.).
+- **Édition de l'Inventaire** : Vous pouvez modifier votre inventaire en temps réel. Cliquez dans la zone "Inventaire", modifiez vos objets, et le changement est automatiquement transmis au MJ dès que vous quittez le champ.
+- **Notes & Description** : Modifiez votre description publique ou vos notes personnelles directement depuis la tablette pour une immersion totale.
+
 ## 💡 Conseils d'Utilisation
 
 - **Positionnement** : Placez la tablette au centre de la table pour que tous les joueurs voient l'horloge et les tensions, ou gardez-la près de vous comme extension tactile.

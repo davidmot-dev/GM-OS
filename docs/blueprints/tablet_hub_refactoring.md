@@ -49,7 +49,7 @@ Balayage laser Cyan traverse le portrait pour simuler une authentification sécu
 - **Stats Vitales** : PV/PM/PA en barres horizontales (affichage seul).
 - **Journal Public** : Affichage du résumé public de la session en cours.
 
-### Phase 2 : Identité & Interaction Bi-directionnelle [EN COURS]
+### Phase 2 : Identité & Interaction Bi-directionnelle [TERMINÉ]
 
 - **Liaison d'Identité** : Le HUB se lie à un `characterId` spécifique.
 - **Hub Character Sheet** : Nouvelle vue interactive pour le joueur ("Moi").
@@ -65,9 +65,10 @@ Balayage laser Cyan traverse le portrait pour simuler une authentification sécu
 ## 5. Roadmap
 
 - `[x]` Onboarding v1 (Radar + Grille).
-- `[/]` Phase 2 : Synchronisation bi-directionnelle & Notifications MJ (En cours).
+- `[x]` Phase 2 : Synchronisation bi-directionnelle & Notifications MJ (Terminé).
+- `[/]` Phase 3 : Interaction directe (Inventaire ok, Dés à venir).
 
-### Phase 3 : L'Expérience "Action"
+### Phase 3 : L'Expérience "Action" [EN COURS]
 
 - Intégration des lancers de dés contextuels (clic sur une carac).
-- Gestion de l'inventaire en temps réel.
+- Gestion de l'inventaire en temps réel [TERMINÉ]
