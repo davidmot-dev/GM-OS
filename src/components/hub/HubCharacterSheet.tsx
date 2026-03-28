@@ -3,6 +3,7 @@ import { Heart, ChevronLeft, Package, BookOpen, PenTool, Shield, Layout } from '
 import { useSessionOSStore } from '../../modules/session/useSessionOSStore';
 import { useClientStore } from '../../stores/useClientStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../data/defaultSheetTemplates';
+import { ResolvedImage } from '../ResolvedImage';
 import type { SheetSection, SheetField } from '../../data/defaultSheetTemplates';
 import type { PlayerCharacter, Campaign, SheetTemplate } from '../../modules/session/store/types';
 import { resolveSheetTemplate } from '../../modules/session/logic/templateResolver';
@@ -109,7 +110,7 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                     <div className="lg:col-span-4 space-y-6">
                         <div className="relative aspect-[3/4] rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl bg-slate-900">
                             {character.portraitUrl ? (
-                                <img src={character.portraitUrl} alt={character.name} className="w-full h-full object-cover" />
+                                <ResolvedImage src={character.portraitUrl} alt={character.name} className="w-full h-full object-cover" />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center text-slate-800">
                                     <Shield size={80} />

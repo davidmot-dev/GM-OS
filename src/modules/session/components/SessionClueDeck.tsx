@@ -5,12 +5,12 @@ import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import { Share2, ChevronLeft, ChevronRight, Search, FileText } from 'lucide-react';
 
 const SessionClueDeck: React.FC = () => {
-    const { clues } = useSessionOSStore();
+    const { clues, activeCampaignId } = useSessionOSStore();
     const { projectEntity } = useImageStore();
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-    // Only show revealed clues in the deck for the GM
-    const revealedClues = clues.filter(c => c.isRevealed);
+    // Only show revealed clues in the deck for the GM AND the active campaign
+    const revealedClues = clues.filter(c => c.isRevealed && c.campaignId === activeCampaignId);
 
     const handleProject = (clue: { id: string; title: string; mediaUrl?: string; content: string }) => {
         projectEntity({

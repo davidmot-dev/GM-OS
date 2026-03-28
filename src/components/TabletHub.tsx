@@ -1,7 +1,14 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { 
+    Monitor, 
+    Archive, 
+    MessageSquare, 
+    Search, 
+    BookOpen,
     Wifi,
-    WifiOff
+    WifiOff,
+    User,
+    LogOut
 } from 'lucide-react';
 import { useImageStore } from '../modules/image/useImageStore';
 import { useCombatStore, type Combatant } from '../modules/combat/useCombatStore';
@@ -18,14 +25,11 @@ import { openDB } from 'idb';
 import { useClientStore } from '../stores/useClientStore';
 import LobbyOnboarding from './hub/LobbyOnboarding';
 import { useSessionOSStore } from '../modules/session/useSessionOSStore';
-import { 
-    Archive, 
-    Monitor,
-    Search,
-    LogOut,
-    UserCircle
-} from 'lucide-react';
 import HubCharacterSheet from './hub/HubCharacterSheet';
+import { HubMessenger } from './hub/HubMessenger';
+import HubNotificationCenter from './hub/HubNotificationCenter';
+import { HubClueViewer } from './hub/HubClueViewer';
+import { type Clue } from '../modules/session/store/types';
 
 /**
  * Attempts to resolve an m-xxx media ID to a data: URI using the local IndexedDB.
@@ -57,15 +61,23 @@ const TabletHub: React.FC = () => {
     const { isClockProjected, timestamp, mode, theme, tensions } = useClockStore();
     const { favorites } = useFavoriteStore();
     const { combatants, currentTurnIdx, round, isCombatProjected } = useCombatStore();
-    const { clues } = useSessionOSStore();
+    const { clues, activeCampaignId } = useSessionOSStore();
 
     const activeHubId = projections['hub'];
     const [liveImagePath, setLiveImagePath] = useState<string | null | undefined>(undefined);
     const [liveEntity, setLiveEntity] = useState<ProjectedEntity | null>(null);
     const [currentTab, setCurrentTab] = useState<'live' | 'archives'>('live');
-    const [isCharacterSheetOpen, setIsCharacterSheetOpen] = useState(false);
+    const [isInventoryOpen, setIsInventoryOpen] = useState(false);
+    const [isMessengerOpen, setIsMessengerOpen] = useState(false);
+    const [lastReadMessageTime, setLastReadMessageTime] = useState(Date.now());
     const { deviceId, pseudo, playerName, characterId, isOnboarded, setStatus: setClientStatus, resetIdentity } = useClientStore();
-    const { sessions, activeCampaignWallpaper, activeCampaignName } = useSessionOSStore();
+    const { sessions, activeCampaignWallpaper, activeCampaignName, players } = useSessionOSStore();
+    
+    // Find character name
+    const characterName = players
+        .flatMap(p => p.characters)
+        .find(c => c.id === characterId)?.name || playerName || 'Joueur';
+
     const activeSession = sessions.find(s => s.status === 'active');
     const [voiceLevel, setVoiceLevel] = useState(0);
     const [status, setStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
@@ -74,10 +86,26 @@ const TabletHub: React.FC = () => {
     // Resolved versions of favorites (m-xxx IDs converted to data: URIs)
     const [resolvedFavorites, setResolvedFavorites] = useState<FavoriteEntity[]>([]);
 
+    const messages = useSessionOSStore((state) => state.messages);
+    const unreadCount = messages.filter(m => 
+        m.timestamp > lastReadMessageTime && 
+        (
+            (m.fromId === 'GM' && (m.toId === characterId || m.toId === 'all' || !m.toId)) || 
+            (m.fromId === characterId && m.toId === 'GM')
+        )
+    ).length;
+
+    const toggleMessenger = () => {
+        setIsMessengerOpen(!isMessengerOpen);
+        if (!isMessengerOpen) setLastReadMessageTime(Date.now());
+    };
+
     // WebSocket Sync Logic
     const host = window.location.hostname;
     const port = 3001;
-
+    const [sessionSummary, setSessionSummary] = useState<string>('');
+    const [selectedClue, setSelectedClue] = useState<Clue | null>(null);
+    
     const connect = useCallback(() => {
         if (socketRef.current?.readyState === WebSocket.OPEN) return;
         
@@ -147,20 +175,46 @@ const TabletHub: React.FC = () => {
                           activeCampaignWallpaper: data.payload.session.activeCampaignWallpaper ? (data.payload.session.activeCampaignWallpaper.substring(0, 50) + '...') : 'NULL'
                         });
 
+                        const incomingSession = data.payload.session;
                         useSessionOSStore.setState({ 
-                            sessions: data.payload.session.sessions || [],
-                            campaigns: data.payload.session.campaigns || [],
-                            players: data.payload.session.players || [],
-                            clues: data.payload.session.clues || [],
-                            activeCampaignId: data.payload.session.activeCampaignId || null,
-                            activeCampaignName: data.payload.session.activeCampaignName || null,
-                            activeCampaignWallpaper: data.payload.session.activeCampaignWallpaper || null,
-                            customSheetTemplates: data.payload.session.customSheetTemplates || [],
-                            customGameDrivers: data.payload.session.customGameDrivers || []
+                            sessions: incomingSession.sessions || [],
+                            campaigns: incomingSession.campaigns || [],
+                            players: incomingSession.players || [],
+                            clues: incomingSession.clues || [],
+                            activeCampaignId: incomingSession.activeCampaignId || null,
+                            activeCampaignName: incomingSession.activeCampaignName || null,
+                            activeCampaignWallpaper: incomingSession.activeCampaignWallpaper || null,
+                            customSheetTemplates: incomingSession.customSheetTemplates || [],
+                            customGameDrivers: incomingSession.customGameDrivers || []
                         });
                     }
 
+                    if (data.payload.notes?.public !== undefined) {
+                        setSessionSummary(data.payload.notes.public);
+                    }
+
                     if (incomingVoice !== undefined) setVoiceLevel(incomingVoice);
+                }
+
+                // Handle direct messages
+                if (data.type === 'session:receive-message' && data.payload) {
+                    const msg = data.payload;
+                    useSessionOSStore.getState().addSessionMessage(msg);
+                    
+                    // Si le message n'est pas de nous et qu'on est le destinataire (direct ou broadcast)
+                    if (msg.fromId !== characterId && (msg.toId === characterId || msg.toId === 'all' || !msg.toId)) {
+                        const isBroadcast = msg.toId === 'all' || !msg.toId;
+                        const isFromGM = msg.fromId === 'GM';
+                        
+                        useSessionOSStore.getState().addHubNotification({
+                            type: 'message',
+                            title: isBroadcast 
+                                ? (isFromGM ? 'Annonce MJ' : 'Message Général')
+                                : (isFromGM ? 'Message Privé (MJ)' : `Message de ${msg.fromName}`),
+                            content: msg.content,
+                            fromName: msg.fromName
+                        });
+                    }
                 }
             } catch (err) {
                 console.error('[TabletHub] Sync error:', err);
@@ -168,7 +222,25 @@ const TabletHub: React.FC = () => {
         };
 
         socket.onerror = () => setStatus('error');
-    }, [host, port, deviceId, pseudo, playerName, setClientStatus, characterId]); // Removed role, added characterId
+
+        // Handler pour envoyer des messages depuis le store (Hub)
+        const handleSendMessage = (e: Event) => {
+            const customEvent = e as CustomEvent;
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({
+                    type: 'session:send-message',
+                    payload: customEvent.detail
+                }));
+            }
+        };
+
+        window.addEventListener('session:send-message', handleSendMessage);
+
+        return () => {
+            window.removeEventListener('session:send-message', handleSendMessage);
+            socket.close();
+        };
+    }, [host, port, deviceId, pseudo, playerName, setClientStatus, characterId]);
 
     useEffect(() => {
         connectRef.current = connect;
@@ -376,7 +448,7 @@ const TabletHub: React.FC = () => {
                     )}
 
                     {tensions.length > 0 && (
-                        <div className="grid grid-cols-2 gap-4 w-full h-fit overflow-y-auto max-h-[300px] pr-2 custom-scrollbar">
+                        <div className="grid grid-cols-2 gap-4 w-full h-fit overflow-y-auto max-h-[220px] pr-2 custom-scrollbar">
                             {tensions.map(clock => (
                                 <div key={clock.id} className="flex items-center gap-3 bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl p-3 shadow-xl">
                                     <NarrativeClock clock={clock} theme={theme} size={48} />
@@ -461,16 +533,17 @@ const TabletHub: React.FC = () => {
                                     <p className="text-[10px] text-white/30 font-bold uppercase tracking-widest">Preuves et indices collectés lors de la campagne.</p>
                                 </div>
                                 <div className="text-[10px] font-black bg-white/5 border border-white/10 px-4 py-2 rounded-full text-white/40 uppercase tracking-widest">
-                                    {clues.filter(c => c.isRevealed).length} Fragments Découverts
+                                    {clues.filter(c => c.isRevealed && c.campaignId === activeCampaignId).length} Fragments Découverts
                                 </div>
                             </div>
 
                             <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 pb-24">
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    {clues.filter(c => c.isRevealed).map((clue, idx) => (
+                                    {clues.filter(c => c.isRevealed && c.campaignId === activeCampaignId).map((clue, idx) => (
                                         <div 
                                             key={clue.id} 
-                                            className={`group bg-slate-900/60 backdrop-blur-xl border border-white/5 rounded-3xl p-6 transition-all hover:border-gm-gold/30 hover:bg-slate-900/80 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-${idx * 50}`}
+                                            onClick={() => setSelectedClue(clue)}
+                                            className={`group bg-slate-900/60 backdrop-blur-xl border border-white/5 rounded-3xl p-6 transition-all hover:border-gm-gold/30 hover:bg-slate-900/80 cursor-pointer animate-in fade-in slide-in-from-bottom-4 duration-500 delay-${idx * 50}`}
                                         >
                                             <div className="flex gap-4 items-start">
                                                 <div className="size-16 rounded-2xl bg-black/40 border border-white/5 overflow-hidden flex-none">
@@ -517,6 +590,26 @@ const TabletHub: React.FC = () => {
                 </div>
             </div>
 
+            {/* Refined Session Summary (Sober & Floating) */}
+            {sessionSummary && currentTab === 'live' && (
+                <div className="fixed bottom-28 left-8 z-[60] w-full max-w-2xl bg-slate-950/20 backdrop-blur-md border border-white/5 rounded-[2.5rem] p-8 shadow-[0_8px_32px_rgba(0,0,0,0.3)] animate-in fade-in slide-in-from-bottom-8 duration-1000 pointer-events-auto">
+                    <div className="flex items-center gap-5 mb-6 opacity-40">
+                        <div className="p-2.5 bg-white/5 rounded-2xl border border-white/10">
+                            <BookOpen size={20} className="text-slate-400" />
+                        </div>
+                        <div className="space-y-0.5">
+                            <h3 className="text-[10px] font-black text-slate-300 uppercase tracking-[0.4em]">Chroniques de Séance</h3>
+                            <p className="text-[7px] font-bold text-slate-500 uppercase tracking-widest">Journal Narratif en temps réel</p>
+                        </div>
+                    </div>
+                    <div className="max-h-[220px] overflow-y-auto custom-scrollbar-minimal pr-6 group">
+                        <p className="text-xl text-slate-300 leading-relaxed font-serif italic text-justify opacity-70 group-hover:opacity-100 transition-opacity duration-700">
+                            {sessionSummary}
+                        </p>
+                    </div>
+                </div>
+            )}
+
             {/* Bottom Navigation Tabs */}
             <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] pointer-events-auto">
                 <div className="bg-slate-950/80 backdrop-blur-2xl border border-white/10 p-1.5 rounded-full shadow-2xl flex items-center gap-1">
@@ -534,15 +627,28 @@ const TabletHub: React.FC = () => {
                         <Archive size={14} />
                         Archives
                     </button>
-                    {characterId && (
-                        <button 
-                            onClick={() => setIsCharacterSheetOpen(true)}
-                            className="flex items-center gap-2 px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest text-cyan-400 hover:bg-cyan-500/10 transition-all"
-                        >
-                            <UserCircle size={14} />
-                            Personnage
-                        </button>
-                    )}
+                    <button 
+                        onClick={() => setIsInventoryOpen(!isInventoryOpen)}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${isInventoryOpen ? 'bg-indigo-600 text-white' : 'text-white/40 hover:text-white'}`}
+                    >
+                        <User size={14} />
+                        Fiche
+                    </button>
+                    <button 
+                        onClick={toggleMessenger}
+                        className={`relative flex items-center gap-2 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${isMessengerOpen ? 'bg-indigo-600 text-white' : 'text-white/40 hover:text-white'}`}
+                    >
+                        <MessageSquare size={14} />
+                        Messages
+                        {unreadCount > 0 && !isMessengerOpen && (
+                            <span className="absolute -top-1 -right-1 flex h-4 w-4">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-4 w-4 bg-red-500 text-[9px] items-center justify-center font-bold text-white">
+                                    {unreadCount}
+                                </span>
+                            </span>
+                        )}
+                    </button>
                     <div className="w-[1px] h-4 bg-white/10 mx-1" />
                     <button 
                         onClick={() => {
@@ -612,9 +718,31 @@ const TabletHub: React.FC = () => {
             {(!isOnboarded || !activeSession) && <LobbyOnboarding />}
 
             {/* Interactive Character Sheet Overlay */}
-            {isCharacterSheetOpen && (
-                <HubCharacterSheet onClose={() => setIsCharacterSheetOpen(false)} />
+            {characterId && (
+                <>
+                    {isInventoryOpen && (
+                        <HubCharacterSheet 
+                            onClose={() => setIsInventoryOpen(false)} 
+                        />
+                    )}
+
+                    <HubMessenger 
+                        isOpen={isMessengerOpen}
+                        onClose={() => setIsMessengerOpen(false)}
+                        characterId={characterId}
+                        characterName={characterName}
+                    />
+                </>
             )}
+
+            {/* Notification Center for Hub Alerts */}
+            <HubNotificationCenter />
+
+            {/* Clue Viewer Modal */}
+            <HubClueViewer 
+                clue={selectedClue} 
+                onClose={() => setSelectedClue(null)} 
+            />
         </div>
     );
 };

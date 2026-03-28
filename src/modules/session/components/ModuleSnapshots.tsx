@@ -1,8 +1,9 @@
 import React from 'react';
-import { Music, Pause, Play, Volume2, EyeOff, HeartCrack, CheckCircle, Skull, Zap, Layers, ChevronRight } from 'lucide-react';
+import { Music, Pause, Play, Volume2, EyeOff, HeartCrack, CheckCircle, Skull, Zap, Layers } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useCombatStore } from '../../combat/useCombatStore';
 import { useMusicStore } from '../../music/useMusicStore';
+import { CockpitMessenger } from './CockpitMessenger';
 
 const ModuleSnapshots: React.FC = () => {
     const { rollDice, diceRolls, clearDiceRolls } = useSessionOSStore();
@@ -187,8 +188,8 @@ const ModuleSnapshots: React.FC = () => {
                                 <span className="text-[9px] text-app-text/40 uppercase tracking-widest font-black">Lancer le moteur</span>
                             </div>
                         </div>
-                        <ChevronRight size={14} className="text-app-text/20 group-hover:text-gm-gold transition-colors" />
                     </button>
+                    <CockpitMessenger />
                 </div>
             </div>
 

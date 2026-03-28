@@ -98,7 +98,7 @@ interface NpcDetailProps {
 const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
     const { 
         entities, selectedEntityId, setSelectedEntity, updateEntity, updateEntityHP, updateEntityMaxHP, atlasMaps,
-        clues, setCurrentView, setActiveCampaignFormSection, setEditingClueId,
+        clues, activeCampaignId, setCurrentView, setActiveCampaignFormSection, setEditingClueId,
         generateEntityPortrait, isGeneratingAIImage 
     } = useSessionOSStore();
     const { closeModal } = useModalStore();
@@ -168,7 +168,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
     };
 
     const linkedMaps = atlasMaps.filter(m => (selectedNpc.linkedMapIds || []).includes(m.id));
-    const linkedClues = clues.filter(c => c.ownerId === selectedNpc.id);
+    const linkedClues = clues.filter(c => c.ownerId === selectedNpc.id && c.campaignId === activeCampaignId);
 
     const handleClueClick = (clueId?: string) => {
         setActiveCampaignFormSection('clues');

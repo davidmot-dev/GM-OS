@@ -185,8 +185,8 @@ const AtlasMapDetail: React.FC = () => {
                     <h4 className="text-[10px] font-black uppercase tracking-widest text-gm-gold/60">Indices du Lieu</h4>
                 </div>
                 <div className="flex flex-wrap gap-3">
-                    {clues.filter(c => c.locationId === selectedMap.id).length > 0 ? (
-                        clues.filter(c => c.locationId === selectedMap.id).map(clue => (
+                    {clues.filter(c => c.locationId === selectedMap.id && c.campaignId === activeCampaignId).length > 0 ? (
+                        clues.filter(c => c.locationId === selectedMap.id && c.campaignId === activeCampaignId).map(clue => (
                             <button
                                 key={clue.id}
                                 onClick={() => {

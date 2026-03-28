@@ -23,6 +23,7 @@
     "date-fns": "^4.1.0",
     "electron-log": "^5.4.3",
     "file-saver": "^2.0.5",
+    "framer-motion": "^12.38.0",
     "fs-extra": "^11.3.3",
     "idb": "^8.0.3",
     "lucide-react": "^0.575.0",

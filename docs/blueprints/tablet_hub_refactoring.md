@@ -1,4 +1,4 @@
-# Blueprint : Tablet HUB Refactoring
+# Blueprint : Tablet HUB Refactoring [TERMINÉ]
 
 ## 1. Vision & Objectifs
 
@@ -37,7 +37,7 @@ Balayage laser Cyan traverse le portrait pour simuler une authentification sécu
 ### 3. Performance & Optimisation (Carson)
 
 - **Resource Pre-loading** : Dès que l'onboarding commence, les portraits des PJ présents sont chargés en cache locale `DataURL`.
-- **Selective Sync** : The HUB ne s'abonne qu'aux updates concernant son propre `characterId` et les événements mondiaux (Journal), réduisant la charge CPU.
+- **Selective Sync** : Le HUB ne s'abonne qu'aux updates concernant son propre `characterId` et les événements mondiaux (Journal), réduisant la charge CPU.
 
 ---
 
@@ -57,18 +57,26 @@ Balayage laser Cyan traverse le portrait pour simuler une authentification sécu
 - **Supervision MJ** : Notification automatique sur l'écran du MJ pour chaque modification distante (prévention d'erreurs/triche).
 - **HUB Configuration** : Checkbox dans l'éditeur de personnage pour définir quelles ressources afficher sur le HUB.
 
+### Phase 3 : L'Expérience "Action" [TERMINÉ]
+
+- Intégration des lancers de dés contextuels (clic sur une carac).
+- Gestion de l'inventaire en temps réel [TERMINÉ].
+- **Deep Sync Media Patch** : Résolution proactive des images `m-xxx` pour les clients distants [TERMINÉ].
+
 ## 4. Architecture Technique (Nexus Bridge)
 
 - **Store** : `useClientStore` (local) + `useSessionOSStore` (sync).
+- **Protocole de Synchronisation (Deep Sync)** :
+    - Le MJ pré-résout les médias IndexedDB en URLs via un proxy local (`3001/temp/`).
+    - Les tablettes utilisent un hook `useMediaUrl` avec `failsafe` vers l'IP réseau du MJ.
 - **Protocole** : Diffusion sélective du MJ vers la tablette.
 
-## 5. Roadmap
+## 5. Roadmap Finalisée
 
 - `[x]` Onboarding v1 (Radar + Grille).
-- `[x]` Phase 2 : Synchronisation bi-directionnelle & Notifications MJ (Terminé).
-- `[/]` Phase 3 : Interaction directe (Inventaire ok, Dés à venir).
+- `[x]` Phase 2 : Synchronisation bi-directionnelle & Notifications MJ.
+- `[x]` Phase 3 : Interaction directe (Inventaire, Dés, Médias).
 
-### Phase 3 : L'Expérience "Action" [EN COURS]
-
-- Intégration des lancers de dés contextuels (clic sur une carac).
-- Gestion de l'inventaire en temps réel [TERMINÉ]
+---
+*Dernière mise à jour : 28 Mars 2026*
+*Statut : PROJET TERMINÉ & INTÉGRÉ*

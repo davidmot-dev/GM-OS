@@ -134,7 +134,7 @@ const INITIAL_DATA = {
         {
             id: 'c-2',
             name: "Les Ombres d'Eldoria",
-            system: 'coc7',
+            system: 'generic',
             description: "Un voyage épique dans les terres d'Eldoria.",
             synopsis: "Le groupe enquête sur la disparition du roi d'Eldoria.",
             activeLocationIds: ['am-3'],
@@ -235,7 +235,6 @@ const INITIAL_DATA = {
     ],
     clues: [
         { id: 'clue-1', campaignId: 'c-1', title: "Le Médaillon Sanglant", content: "Un médaillon trouvé sur un garde mort, marqué du sceau de Varick.", locationId: 'am-1', ownerId: 'e-1', isRevealed: false },
-        { id: 'clue-2', campaignId: 'c-1', title: "Rumeur de la Forêt", content: "Les dryades parlent d'un imposteur au château.", locationId: 'am-2', ownerId: 'e-2', isRevealed: true, revealedAt: Date.now() },
     ] as Clue[],
 };
 

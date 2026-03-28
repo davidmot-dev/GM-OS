@@ -57,6 +57,7 @@ const AudioRouter = lazy(() => import('./modules/music/components/AudioRouter'))
 const MediaBrowser = lazy(() => import('./components/MediaBrowser').then(m => ({ default: m.MediaBrowser })));
 const GlobalKeybinds = lazy(() => import('./components/GlobalKeybinds').then(m => ({ default: m.GlobalKeybinds })));
 const SpotlightSearch = lazy(() => import('./components/SpotlightSearch').then(m => ({ default: m.SpotlightSearch })));
+const MessageAlertOverlay = lazy(() => import('./modules/session/components/MessageAlertOverlay').then(m => ({ default: m.MessageAlertOverlay })));
 
 const PlaceholderModule = ({ name }: { name: string }) => (
   <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
@@ -194,11 +195,14 @@ function App() {
           const imagePads = favoriteImages.slice(0, 4).map(m => ({
             id: m.id, type: 'image' as const, label: m.name, imageUrl: m.path, color: 'var(--emerald-500)'
           }));
-          const resolvedImagePads = await Promise.all(imagePads.map(async (p) => ({
-            ...p,
-            type: 'image' as const,
-            imageUrl: await resolveToSendableUrl(p.imageUrl)
-          })));
+          const resolvedImagePads = await Promise.all(imagePads.map(async (p) => {
+            const resolvedUrl = await resolveToSendableUrl(p.imageUrl);
+            return {
+              ...p,
+              type: 'image' as const,
+              imageUrl: resolvedUrl
+            };
+          }));
 
           // AMBIENT
           const ambientPads = ambientStore.presets.slice(0, 4).map(p => ({
@@ -224,12 +228,15 @@ function App() {
         };
 
         const resolvedCombatants = (await Promise.all(
-          combatStore.combatants.map(async (c) => ({
-            id: c.id, name: c.name, hp: c.hp, hpMax: c.hpMax,
-            init: c.init, isPlayer: c.isPlayer, healthSystem: c.healthSystem,
-            avatar: await resolveToSendableUrl(c.avatar),
-            statuses: c.statuses
-          }))
+          combatStore.combatants.map(async (c) => {
+            const resolvedAvatar = await resolveToSendableUrl(c.avatar);
+            return {
+              id: c.id, name: c.name, hp: c.hp, hpMax: c.hpMax,
+              init: c.init, isPlayer: c.isPlayer, healthSystem: c.healthSystem,
+              avatar: resolvedAvatar,
+              statuses: c.statuses
+            };
+          })
         )).filter(c => c.isPlayer || !c.statuses?.some(s => {
           const n = s.name.toLowerCase();
           return n === 'invisible' || n === 'invisibilité' || n === 'caché' || n === 'hidden';
@@ -281,9 +288,34 @@ function App() {
         const session = {
             sessions,
             campaigns,
-            players,
+            players: await Promise.all(
+                players.map(async (p: import('./modules/session/store/types').Player) => ({
+                    ...p,
+                    characters: await Promise.all(
+                        p.characters.map(async (c) => {
+                            const resolvedPortrait = await resolveToSendableUrl(c.portraitUrl);
+                            const resolvedToken = c.tokenUrl ? await resolveToSendableUrl(c.tokenUrl) : undefined;
+                            return {
+                                ...c,
+                                portraitUrl: resolvedPortrait,
+                                tokenUrl: resolvedToken
+                            };
+                        })
+                    )
+                }))
+            ),
             activeCampaignId,
-            clues,
+            clues: await Promise.all(
+                clues
+                    .filter(c => String(c.campaignId) === String(activeCampaignId)) // String comparison safety
+                    .map(async c => {
+                        const resolvedMedia = await resolveToSendableUrl(c.mediaUrl);
+                        return {
+                            ...c,
+                            mediaUrl: resolvedMedia
+                        };
+                    })
+            ),
             activeCampaignName: activeCampaign?.name || null,
             activeCampaignWallpaper: activeCampaign?.wallpaperUrl ? await resolveToSendableUrl(activeCampaign.wallpaperUrl) : null,
             customSheetTemplates,
@@ -345,6 +377,10 @@ function App() {
         const { playerId, characterId, updates } = payload as { playerId: string; characterId: string; updates: any };
         console.log(`[App] Remote update for ${characterId}:`, updates);
         useSessionOSStore.getState().updateCharacterNarrative(playerId, characterId, updates);
+      }
+
+      if (type === 'session:send-message') {
+        useSessionOSStore.getState().addSessionMessage(payload as import('./modules/session/store/types').SessionMessage);
       }
 
       if (type === 'combat:next-turn') {
@@ -527,6 +563,11 @@ function App() {
           <MediaBrowser isOpen={isMediaHubOpen} onClose={closeMediaHub} onSelect={() => {}} title="MEDIA HUB" />
           <LoadingOverlay />
           {showSplash && <SplashScreenSelector onComplete={() => setShowSplash(false)} />}
+          
+          <Suspense fallback={null}>
+            <MessageAlertOverlay />
+          </Suspense>
+          
           <Shell>{renderModule()}</Shell>
         </>
       )}

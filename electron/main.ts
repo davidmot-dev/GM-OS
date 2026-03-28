@@ -587,10 +587,29 @@ function startRemoteServer() {
                         } else if (data.type === 'remote:hello') {
                             console.log('[Remote] Handshake received');
                         } else {
-                            // Forward action to renderer process
-                            if (win && !win.isDestroyed()) {
+                            // Forward action to renderer process (GM)
+                            const isP2P = data.type === 'session:send-message' && data.payload && 
+                                          data.payload.toId !== 'GM' && data.payload.toId !== 'all';
+                            
+                            if (win && !win.isDestroyed() && !isP2P) {
                                 console.log('[Remote] Action received from tablet:', data.type);
                                 win.webContents.send('remote:action', data);
+                            }
+
+                            // Broadcasting: If it's a message for others or a broadcast, forward it via WS
+                            if (data.type === 'session:send-message') {
+                                const payload = data.payload;
+                                if (payload && payload.toId !== 'GM' && wss) {
+                                    console.log(`[Remote] WebSocket Broadcast: Forwarding message from ${payload.fromName} to ${payload.toId}`);
+                                    // Change event type so the receiving tablets handle it as an incoming message
+                                    const broadcastData = { ...data, type: 'session:receive-message' };
+                                    const p2pMsg = JSON.stringify(broadcastData);
+                                    wss.clients.forEach((client: ExtendedWebSocket) => {
+                                        if (client !== ws && client.readyState === 1) { // Forward to OTHERS
+                                            client.send(p2pMsg);
+                                        }
+                                    });
+                                }
                             }
                         }
                     } catch (err) {
@@ -649,6 +668,19 @@ ipcMain.on('remote:broadcast-sync', (_event, data) => {
         const segments = Object.keys(data || {});
         console.log(`[Remote] Broadcasting sync (${segments.join(', ')}) to ${wss.clients.size} clients`);
         const message = JSON.stringify({ type: 'sync', payload: data });
+        wss.clients.forEach((client: ExtendedWebSocket) => {
+            if (client.readyState === 1) { // 1 = OPEN
+                client.send(message);
+            }
+        });
+    }
+});
+
+// NEW: Broadcast a specific UI action to all connected remote devices (e.g., messages)
+ipcMain.on('remote:broadcast-ui-action', (_event, action) => {
+    if (wss) {
+        console.log(`[Remote] Broadcasting UI action: ${action.type} to ${wss.clients.size} clients`);
+        const message = JSON.stringify(action);
         wss.clients.forEach((client: ExtendedWebSocket) => {
             if (client.readyState === 1) { // 1 = OPEN
                 client.send(message);

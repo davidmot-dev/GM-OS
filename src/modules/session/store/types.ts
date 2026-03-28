@@ -254,6 +254,26 @@ export interface RemoteNotification {
     isRead: boolean;
 }
 
+export interface HubNotification {
+    id: string;
+    type: 'message' | 'alert' | 'system';
+    title: string;
+    content: string;
+    fromName: string;
+    timestamp: number;
+}
+
+export interface SessionMessage {
+    id: string;
+    fromId: string;       // ID du perso ou 'GM'
+    fromName: string;
+    toId: string;         // ID du perso ou 'GM'
+    toName: string;
+    content: string;
+    timestamp: number;
+    isRead: boolean;
+}
+
 // ─────────────────────────────────────────────
 // Atlas
 // ─────────────────────────────────────────────

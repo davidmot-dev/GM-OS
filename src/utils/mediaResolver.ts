@@ -44,24 +44,28 @@ export async function resolveToSendableUrl(src: string | undefined): Promise<str
             // NEW: Use local HTTP proxy instead of Base64 to save bandwidth
             const bridge = window.appBridge;
             if (bridge?.remote?.cacheMedia && bridge?.remote?.getConnectionInfo) {
-                console.log(`[MediaResolver] Local cache export path executing...`);
+                console.log(`[MediaResolver] Local cache export path executing for ${src}...`);
                 try {
                     const info = await bridge.remote.getConnectionInfo();
                     const buffer = await blob.arrayBuffer();
+                    
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     const success = await (bridge.remote as any).cacheMedia(buffer, src);
-                    console.log(`[MediaResolver] cacheMedia success: ${success}`);
-                    if (success) {
-                        const result = `http://${info.ip}:${info.port}/temp/${src}`;
+                    console.log(`[MediaResolver] cacheMedia response for ${src}: ${success}`);
+                    
+                    if (success && info && info.ip) {
+                        // The server on port 3001 serves files from the temp directory.
+                        const id = src.replace('m-', '');
+                        const result = `http://${info.ip}:${info.port}/temp/${id}`;
+                        console.log(`[MediaResolver] Resolved ${src} to ${result}`);
                         mediaCache.set(src, result);
-                        console.log(`[MediaResolver] Resolution successful via temp server: ${result}`);
                         return result;
                     }
                 } catch (err) {
-                    console.warn('[MediaResolver] Local cache export failed, falling back to Base64', err);
+                    console.warn('[MediaResolver] Local cache export failed:', err);
                 }
             } else {
-                 console.log(`[MediaResolver] Bridge cacheMedia unavailable, falling to Base64.`);
+                 console.log(`[MediaResolver] Bridge cacheMedia unavailable, falling back to Base64.`);
             }
 
             console.log(`[MediaResolver] Falling back to Base64 read...`);

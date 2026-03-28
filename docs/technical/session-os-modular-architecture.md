@@ -5,6 +5,7 @@ Ce document décrit l'architecture standard du module `Session-OS` après la ref
 ## 1. Gestion d'État (Store Zustand)
 
 ### Slicing Pattern
+
 Le store est divisé en "tranches" (Slices) isolées par domaine métier. Chaque slice gère son propre état et ses actions.
 
 - **Localisation** : `src/modules/session/store/`
@@ -12,6 +13,7 @@ Le store est divisé en "tranches" (Slices) isolées par domaine métier. Chaque
 - **Assemblage** : `store/index.ts` utilise la fonction `create()` de Zustand pour combiner les slices.
 
 ### Configuration du Store
+
 - **Persistance** : Utilise le middleware `persist` avec la clé `gmos-v5-session-os-storage`.
 - **Migration** : Gérée via la propriété `version` (actuelle : 10). Toute modification structurelle de l'état persistant DOIT incrémenter cette version.
 - **Actions Cross-Domain** : Les fonctions nécessitant de modifier plusieurs slices (ex: `launchSession`) sont définies dans `store/index.ts`.
@@ -19,6 +21,7 @@ Le store est divisé en "tranches" (Slices) isolées par domaine métier. Chaque
 ## 2. Architecture de l'Interface (UI)
 
 ### Registry Pattern
+
 Le rendu des vues est délégué à un registre centralisé.
 
 - **SessionHeader.tsx** : Composant de navigation fixe.
@@ -35,22 +38,46 @@ Le rendu des vues est délégué à un registre centralisé.
 ## 4. AI Forge & Performance
 
 ### Proxy IA (Electron Main)
+
 Les requêtes vers l'API Gemini transitent par un tunnel IPC sécurisé dans le processus principal d'Electron (`main.ts`).
+
 - **Timeout** : Fixé à **300 secondes (5 minutes)** pour permettre l'analyse de documents PDF volumineux.
 - **Payload Logging** : Les services (`ChronicleService`, `ForgeService`) loggent systématiquement la taille du payload envoyé en MB pour le monitoring de charge.
 
 ## 5. Hub Synchronization Engine (Nexus Bridge)
 
 ### Deep Sync Protocol
+
 La synchronisation entre le Cockpit MJ et le Tablet Hub utilise un pont WebSocket bidirectionnel.
+
 - **Broadcast Sélectif** : Le MJ n'envoie que les données nécessaires à la session active.
 - **Forge Sync** : Depuis la v5.11, le payload inclut les `customSheetTemplates` et `customGameDrivers`. Cela garantit que la tablette peut effectuer des calculs de règles et un rendu d'UI identique au MJ sans accès direct à la base de données locale.
 
 ### Template Resolution Logic
+
 La résolution de la fiche de personnage (`logic/templateResolver.ts`) suit une hiérarchie stricte pour garantir la cohérence visuelle :
+
 1. **Template Spécifique** : Si `character.templateId` est défini et valide.
 2. **Template Système** : Recherche un template correspondant au `gameSystem` de la campagne.
 3. **Template Générique** : Fallback sur le template par défaut de Session-OS.
 
+## 6. Gouvernance des Données & Isolation (Scope-by-Active)
+
+### Principe d'Herméticité
+
+Pour éviter toute fuite de données entre projets ("Data Leakage"), Session-OS impose un filtrage strict à la source de l'UI.
+
+- **activeCampaignId** : Chaque requête d'affichage (indices, PNJs, cartes) doit inclure une clause `campaignId === activeCampaignId`.
+- **Composants Critiques** : `SessionClueDeck.tsx` (Deck MJ) et `OraclePanel.tsx` (Contexte IA) sont les gardiens de cette isolation.
+
+## 7. Résolution Médias & Proxy Distant
+
+### Protocole de Résolution Temps-Réel
+
+La gestion des IDs `m-xxx` (Blob IDs stockés en local) nécessite une couche d'abstraction pour les clients distants.
+
+- **Broadcast Resolution** : Avant l'envoi du signal `sync`, le MJ résout tous les médias en URLs absolues pointant vers son serveur local (`http://[IP]:3001/temp/[ID]`).
+- **Hub Failsafe** : Le hook `useMediaUrl` sur les tablettes redirige automatiquement vers l'IP du MJ si un identifiant non résolu est détecté dans le store synchronisé.
+
 ---
-*Dernière mise à jour : 28 Mars 2026 - GM-OS v5 Technical Audit (Deep Sync Engine & Hub Interactive).*
+*Dernière mise à jour : 28 Mars 2026 - GM-OS v5 Stability Patch (Data Governance & Remote Media Protocol).*

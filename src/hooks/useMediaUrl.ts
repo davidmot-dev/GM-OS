@@ -68,13 +68,27 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
 
                 // Try to resolve as a media ID from the DB
                 if (sourceIdOrUrl.startsWith('m-')) {
+                    // Try local IndexedDB first
                     const blob = await getMediaBlob(sourceIdOrUrl);
-                    if (blob && isMounted) {
-                        objectUrl = URL.createObjectURL(blob);
-                        setResolvedUrl(objectUrl);
-                    } else {
-                        if (isMounted) setResolvedUrl(undefined);
+                    if (blob) {
+                        const url = URL.createObjectURL(blob);
+                        objectUrl = url;
+                        if (isMounted) setResolvedUrl(url);
+                        return;
                     }
+
+                    // FAILSAFE: If no local blob and we are on a remote device (tablet), 
+                    // use the media proxy on port 3001 of the GM's machine
+                    if (!window.appBridge) {
+                        const host = window.location.hostname; // Main PC IP
+                        const id = sourceIdOrUrl.replace('m-', '');
+                        const remoteUrl = `http://${host}:3001/temp/${id}`;
+                        console.log(`[useMediaUrl] Remote failsafe: resolving ${sourceIdOrUrl} to ${remoteUrl}`);
+                        if (isMounted) setResolvedUrl(remoteUrl);
+                        return;
+                    }
+                    
+                    if (isMounted) setResolvedUrl(undefined);
                 } else {
                 // Unknown format (local path or ID), try to format as local file URL
                 const formatted = (() => {

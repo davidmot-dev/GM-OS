@@ -23,7 +23,7 @@
     {
       "id": "c-2",
       "name": "Les Ombres d'Eldoria",
-      "system": "coc7",
+      "system": "generic",
       "description": "Un voyage épique dans les terres d'Eldoria.",
       "synopsis": "Le groupe enquête sur la disparition du roi d'Eldoria.",
       "activeLocationIds": [

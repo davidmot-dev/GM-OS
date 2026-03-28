@@ -19,6 +19,7 @@ interface SessionState {
     themeColor: string; // Hex color for global accents
     isSessionMode: boolean; // Mode MJ Focus (masque les outils d'édition)
     isAIPanelOpen: boolean;
+    isMessengerOpen: boolean;
     displayCount: number;
 
     // Actions
@@ -27,6 +28,7 @@ interface SessionState {
     setThemeColor: (color: string) => void;
     toggleSessionMode: (force?: boolean) => void;
     toggleAIPanel: (force?: boolean) => void;
+    toggleMessenger: (force?: boolean) => void;
     setDisplayCount: (count: number) => void;
     getBackupData: () => {
         activeModule: string;
@@ -83,6 +85,7 @@ export const useSessionStore = create<SessionState>()(
             themeColor: THEME_PALETTES['cyberpunk'].accent,
             isSessionMode: false,
             isAIPanelOpen: false,
+            isMessengerOpen: false,
             displayCount: 1,
 
             setActiveModule: (activeModule) => set({ activeModule }),
@@ -96,6 +99,9 @@ export const useSessionStore = create<SessionState>()(
             })),
             toggleAIPanel: (force?: boolean) => set((state) => ({
                 isAIPanelOpen: force !== undefined ? force : !state.isAIPanelOpen
+            })),
+            toggleMessenger: (force?: boolean) => set((state) => ({
+                isMessengerOpen: force !== undefined ? force : !state.isMessengerOpen
             })),
             setDisplayCount: (displayCount) => set({ displayCount }),
             getBackupData: () => ({

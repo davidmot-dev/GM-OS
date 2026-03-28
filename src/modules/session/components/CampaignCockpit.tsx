@@ -122,6 +122,7 @@ const CampaignCockpit: React.FC = () => {
                     <span className="text-sm font-bold tracking-tight text-left">Deck-OS</span>
                 </button>
 
+
                 {activeSession ? (
                     <div className="flex flex-col gap-1 mt-1">
                         <button
