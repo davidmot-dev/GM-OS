@@ -38,6 +38,7 @@ export interface SessionSliceActions {
     addEntityToSession: (sessionId: string, entityId: string) => void;
     removeEntityFromSession: (sessionId: string, entityId: string) => void;
     clearSessionEntities: (sessionId: string) => void;
+    deleteSession: (id: string) => void;
 }
 
 export type SessionSlice = SessionSliceState & SessionSliceActions;
@@ -55,7 +56,7 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
         const id = `s-${Date.now()}`;
         const newSession: GameSession = { ...session, id };
         set((state) => ({ sessions: [...state.sessions, newSession] }));
-        gmToast.success(`Session #${newSession.number} créée.`);
+        gmToast(`Session #${newSession.number} créée.`, 'success');
         return id;
     },
 
@@ -163,4 +164,12 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
                 s.id === sessionId ? { ...s, sessionEntityIds: [] } : s
             ),
         })),
+
+    deleteSession: (id) =>
+        set((state) => {
+            const session = state.sessions.find((s) => s.id === id);
+            const newSessions = state.sessions.filter((s) => s.id !== id);
+            gmToast(`Session #${session?.number} supprimée.`, 'success');
+            return { sessions: newSessions };
+        }),
 });

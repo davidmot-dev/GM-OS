@@ -4,8 +4,10 @@ import {
     ChevronLeft, 
     Plus, 
     BookOpen,
-    AlertCircle
+    AlertCircle,
+    Trash2
 } from 'lucide-react';
+import { gmConfirm } from '../../../stores/useModalStore';
 
 const SessionPrep: React.FC = () => {
     const { 
@@ -13,6 +15,7 @@ const SessionPrep: React.FC = () => {
         activeCampaignId, 
         setSelectedSession, 
         addSession, 
+        deleteSession,
         setCurrentView,
         campaigns
     } = useSessionOSStore();
@@ -60,6 +63,7 @@ const SessionPrep: React.FC = () => {
                     <button 
                         onClick={() => setCurrentView('cockpit')}
                         className="p-3 bg-app-surface/50 hover:bg-app-surface/80 rounded-xl text-app-text/40 hover:text-app-text transition-all border border-app-border active:scale-95"
+                        title="Retour au Cockpit"
                     >
                         <ChevronLeft size={24} />
                     </button>
@@ -110,6 +114,23 @@ const SessionPrep: React.FC = () => {
                                             s.status === 'planned' ? 'bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.3)]' : 
                                             'bg-slate-600'
                                         }`}></div>
+
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                gmConfirm(
+                                                    `Voulez-vous vraiment supprimer la Session #${s.number} ? Cette action est irréversible.`,
+                                                    () => deleteSession(s.id),
+                                                    () => {},
+                                                    "Supprimer",
+                                                    "Annuler"
+                                                );
+                                            }}
+                                            className="ml-2 p-2 text-app-text/20 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
+                                            title="Supprimer la session"
+                                        >
+                                            <Trash2 size={16} />
+                                        </button>
                                     </div>
                                     
                                     <h4 className="text-2xl font-black text-app-text mb-2 truncate">{new Date(s.date).toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' })}</h4>
