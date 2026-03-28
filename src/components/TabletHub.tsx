@@ -22,8 +22,10 @@ import {
     Archive, 
     Monitor,
     Search,
-    LogOut
+    LogOut,
+    UserCircle
 } from 'lucide-react';
+import HubCharacterSheet from './hub/HubCharacterSheet';
 
 /**
  * Attempts to resolve an m-xxx media ID to a data: URI using the local IndexedDB.
@@ -61,6 +63,7 @@ const TabletHub: React.FC = () => {
     const [liveImagePath, setLiveImagePath] = useState<string | null | undefined>(undefined);
     const [liveEntity, setLiveEntity] = useState<ProjectedEntity | null>(null);
     const [currentTab, setCurrentTab] = useState<'live' | 'archives'>('live');
+    const [isCharacterSheetOpen, setIsCharacterSheetOpen] = useState(false);
     const { deviceId, pseudo, playerName, characterId, isOnboarded, setStatus: setClientStatus, resetIdentity } = useClientStore();
     const { sessions, activeCampaignWallpaper, activeCampaignName } = useSessionOSStore();
     const activeSession = sessions.find(s => s.status === 'active');
@@ -148,9 +151,12 @@ const TabletHub: React.FC = () => {
                             sessions: data.payload.session.sessions || [],
                             campaigns: data.payload.session.campaigns || [],
                             players: data.payload.session.players || [],
+                            clues: data.payload.session.clues || [],
                             activeCampaignId: data.payload.session.activeCampaignId || null,
                             activeCampaignName: data.payload.session.activeCampaignName || null,
-                            activeCampaignWallpaper: data.payload.session.activeCampaignWallpaper || null
+                            activeCampaignWallpaper: data.payload.session.activeCampaignWallpaper || null,
+                            customSheetTemplates: data.payload.session.customSheetTemplates || [],
+                            customGameDrivers: data.payload.session.customGameDrivers || []
                         });
                     }
 
@@ -528,6 +534,15 @@ const TabletHub: React.FC = () => {
                         <Archive size={14} />
                         Archives
                     </button>
+                    {characterId && (
+                        <button 
+                            onClick={() => setIsCharacterSheetOpen(true)}
+                            className="flex items-center gap-2 px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest text-cyan-400 hover:bg-cyan-500/10 transition-all"
+                        >
+                            <UserCircle size={14} />
+                            Personnage
+                        </button>
+                    )}
                     <div className="w-[1px] h-4 bg-white/10 mx-1" />
                     <button 
                         onClick={() => {
@@ -595,6 +610,11 @@ const TabletHub: React.FC = () => {
 
             {/* Session Guard & Onboarding Overlay */}
             {(!isOnboarded || !activeSession) && <LobbyOnboarding />}
+
+            {/* Interactive Character Sheet Overlay */}
+            {isCharacterSheetOpen && (
+                <HubCharacterSheet onClose={() => setIsCharacterSheetOpen(false)} />
+            )}
         </div>
     );
 };

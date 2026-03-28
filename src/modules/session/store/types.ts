@@ -123,11 +123,19 @@ export interface PlayerCharacter {
     sheetData: Record<string, string | number | boolean>;
     description?: string;
     gmNotes?: string;
+    playerNotes?: string;
     linkedDocumentIds?: string[];
     inventory?: string;
     healthSystem?: HealthSystem;
     relations?: EntityRelation[];
     faction?: string;
+    hubOptions?: {
+        showHP: boolean;
+        showMP: boolean;
+        showAP: boolean;
+        showInventory: boolean;
+        showRelations: boolean;
+    };
 }
 
 export interface Player {
@@ -233,6 +241,17 @@ export interface GameSession {
     filePath?: string;
     sessionNotes?: string;
     moduleSnapshot?: SessionModuleSnapshot;
+}
+
+export interface RemoteNotification {
+    id: string;
+    type: 'vitals_update' | 'action' | 'alert';
+    characterId: string;
+    characterName: string;
+    playerName: string;
+    message: string;
+    timestamp: number;
+    isRead: boolean;
 }
 
 // ─────────────────────────────────────────────

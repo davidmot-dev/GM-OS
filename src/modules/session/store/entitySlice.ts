@@ -51,15 +51,18 @@ export interface EntitySliceActions {
     togglePlayerOnline: (playerId: string) => void;
     addCharacterToPlayer: (playerId: string, character: Omit<PlayerCharacter, 'id'>) => void;
     deleteCharacter: (playerId: string, characterId: string) => void;
-    linkCharacterToCampaign: (playerId: string, characterId: string, campaignId: string | null) => void;
+    linkCharacterToCampaign: (playerId: string, characterId: string, campaignId: string | null, templateId?: string) => void;
     updateCharacterHP: (playerId: string, characterId: string, hp: number) => void;
     updateCharacterMaxHP: (playerId: string, characterId: string, maxHp: number) => void;
     updateCharacterHealth: (playerId: string, characterId: string, health: HealthSystem) => void;
     updateCharacter: (playerId: string, characterId: string, updates: Partial<PlayerCharacter>) => void;
     updateCharacterSheetData: (playerId: string, characterId: string, fieldId: string, value: string | number | boolean) => void;
     updateCharacterVisuals: (playerId: string, characterId: string, updates: { portraitUrl?: string; tokenUrl?: string }) => void;
-    updateCharacterNarrative: (playerId: string, characterId: string, updates: { description?: string; gmNotes?: string; linkedDocumentIds?: string[]; inventory?: string }) => void;
+    updateCharacterNarrative: (playerId: string, characterId: string, updates: { description?: string; gmNotes?: string; playerNotes?: string; linkedDocumentIds?: string[]; inventory?: string }) => void;
+    remoteUpdateCharacterNarrative: (playerId: string, characterId: string, updates: { description?: string; playerNotes?: string; inventory?: string }) => void;
     addLootToCharacter: (playerId: string, characterId: string, item: string) => void;
+    updateCharacterHubOptions: (playerId: string, characterId: string, options: Partial<PlayerCharacter['hubOptions']>) => void;
+    remoteUpdateCharacterVitals: (playerId: string, characterId: string, updates: { hp?: number; mp?: number; ap?: number }) => void;
 
     // Health / Impact System
     handleApplyImpact: (targetId: string, targetType: 'pc' | 'npc', impact: DamageImpact) => void;
@@ -221,15 +224,22 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
             ),
         })),
 
-    linkCharacterToCampaign: (playerId, characterId, campaignId) =>
+    linkCharacterToCampaign: (playerId, characterId, campaignId, templateId) =>
         set((state) => ({
             players: state.players.map((p) =>
                 p.id === playerId
                     ? {
                           ...p,
-                          characters: p.characters.map((c) =>
-                              c.id === characterId ? { ...c, campaignId } : c
-                          ),
+                          characters: p.characters.map((c) => {
+                              if (c.id !== characterId) return c;
+                              
+                              // Deep Correction: If template is generic or none, and a system is provided, use it.
+                              const newTemplateId = (c.templateId === 'generic' || !c.templateId) && templateId 
+                                ? templateId 
+                                : c.templateId;
+                                
+                              return { ...c, campaignId, templateId: newTemplateId };
+                          }),
                       }
                     : p
             ),
@@ -379,6 +389,19 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
             ),
         })),
 
+    remoteUpdateCharacterNarrative: (playerId, characterId, updates) => {
+        // Mettre à jour le store local (tablette) pour un retour visuel immédiat
+        get().updateCharacterNarrative(playerId, characterId, updates);
+
+        // Envoyer l'action au MJ via le pont distant (Electron/WebSocket)
+        if (typeof window !== 'undefined' && (window as any).appBridge?.remote?.sendAction) {
+            (window as any).appBridge.remote.sendAction({
+                type: 'session:update-character-narrative',
+                payload: { playerId, characterId, updates }
+            });
+        }
+    },
+
     addLootToCharacter: (playerId, characterId, item) => {
         set((state) => ({
             players: state.players.map((p) =>
@@ -394,6 +417,46 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                     : p
             ),
         }));
+    },
+
+    updateCharacterHubOptions: (playerId, characterId, options) =>
+        set((state) => ({
+            players: state.players.map((p) =>
+                p.id === playerId
+                    ? {
+                          ...p,
+                          characters: p.characters.map((c) =>
+                              c.id === characterId
+                                  ? { ...c, hubOptions: { ...(c.hubOptions ?? { showHP: true, showMP: true, showAP: true, showInventory: true, showRelations: true }), ...options } }
+                                  : c
+                          ),
+                      }
+                    : p
+            ),
+        })),
+
+    remoteUpdateCharacterVitals: (playerId, characterId, updates) => {
+        const player = get().players.find((p) => p.id === playerId);
+        const character = player?.characters.find((c) => c.id === characterId);
+
+        if (!player || !character) return;
+
+        // Apply updates locally
+        if (updates.hp !== undefined) get().updateCharacterHP(playerId, characterId, updates.hp);
+
+        // Notify MJ
+        const messageParts = [];
+        if (updates.hp !== undefined) messageParts.push(`PV: ${updates.hp}/${character.maxHp}`);
+
+        if (messageParts.length > 0) {
+            (get() as any).addRemoteNotification({
+                type: 'vitals_update',
+                characterId,
+                characterName: character.name,
+                playerName: player.realName,
+                message: `Modification à distance : ${messageParts.join(', ')}`,
+            });
+        }
     },
 
     // ─── Health / Impact System ───────────────────

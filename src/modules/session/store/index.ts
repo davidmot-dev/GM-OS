@@ -19,6 +19,8 @@ import { gmToast } from '../../../stores/useToastStore';
 import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 import { hueEngine } from '../../light/HueEngine';
 import { useJournalStore } from '../../journal/useJournalStore';
+import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
+import { resolveSheetTemplate } from '../logic/templateResolver';
 
 import { createCampaignSlice, type CampaignSlice } from './campaignSlice';
 import { createSessionSlice, type SessionSlice } from './sessionSlice';
@@ -95,6 +97,7 @@ interface CrossDomainActions {
     }) => void;
 
     exportActiveCampaignToObsidian: () => Promise<void>;
+    reconcileTemplates: () => void;
 }
 
 // ─────────────────────────────────────────────
@@ -562,6 +565,35 @@ export const useSessionOSStore = create<SessionOSStore>()(
                     currentView: 'cockpit' 
                 });
             },
+
+            /** 
+             * Réconcilie les templates des personnages en fonction de leur campagne.
+             * Force le template correct si le personnage est sur 'generic'.
+             */
+            reconcileTemplates: () => {
+                const { players, campaigns, customSheetTemplates } = get();
+                const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
+                
+                let hasChanges = false;
+                const newPlayers = players.map(p => ({
+                    ...p,
+                    characters: p.characters.map(c => {
+                        if (!c.campaignId) return c;
+                        
+                        const resolvedTemplate = resolveSheetTemplate(c, campaigns, allTemplates);
+                        if (c.templateId !== resolvedTemplate.id) {
+                            hasChanges = true;
+                            console.log(`[Reconcile] Template de ${c.name} changé : ${c.templateId} -> ${resolvedTemplate.id}`);
+                            return { ...c, templateId: resolvedTemplate.id };
+                        }
+                        return c;
+                    })
+                }));
+
+                if (hasChanges) {
+                    set({ players: newPlayers });
+                }
+            },
         }),
         {
             name: 'gmos-v5-session-os-storage', // ← Clé inchangée pour préserver les données existantes
@@ -576,6 +608,11 @@ export const useSessionOSStore = create<SessionOSStore>()(
                     (state.atlasMaps || []).forEach(m => {
                         if (m.fileUrl?.startsWith('blob:')) m.fileUrl = '';
                     });
+                    
+                    // Lancement de la réconciliation des templates
+                    if (typeof state.reconcileTemplates === 'function') {
+                        state.reconcileTemplates();
+                    }
                 }
             },
             partialize: (state) => ({
@@ -598,3 +635,21 @@ export const useSessionOSStore = create<SessionOSStore>()(
         }
     )
 );
+
+// ─────────────────────────────────────────────
+// Cross-Window Synchronization
+// ─────────────────────────────────────────────
+
+/**
+ * Synchronisation automatique entre les fenêtres (Cockpit MJ, Hub TabletTE, etc.)
+ * Écoute les changements du localStorage émis par d'autres fenêtres et synchronise 
+ * l'état local du store sans recharger la page.
+ */
+if (typeof window !== 'undefined') {
+    window.addEventListener('storage', (event) => {
+        if (event.key === 'gmos-v5-session-os-storage') {
+            // Force la ré-hydratation du store avec les nouvelles données du disque
+            useSessionOSStore.persist.rehydrate();
+        }
+    });
+}

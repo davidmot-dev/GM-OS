@@ -157,7 +157,7 @@ function App() {
         const storyboardStore = useStoryboardStore.getState();
         const combatStore = useCombatStore.getState();
         const freshSessionOS = useSessionOSStore.getState();
-        const { sessions, campaigns, players, activeCampaignId, clues } = freshSessionOS;
+        const { sessions, campaigns, players, activeCampaignId, clues, customSheetTemplates, customGameDrivers } = freshSessionOS;
         
         const atmosId = soundStore.activeAtmosphereId;
         const atmosphere = soundStore.atmospheres.find(a => a.id === atmosId);
@@ -283,8 +283,11 @@ function App() {
             campaigns,
             players,
             activeCampaignId,
+            clues,
             activeCampaignName: activeCampaign?.name || null,
-            activeCampaignWallpaper: activeCampaign?.wallpaperUrl ? await resolveToSendableUrl(activeCampaign.wallpaperUrl) : null
+            activeCampaignWallpaper: activeCampaign?.wallpaperUrl ? await resolveToSendableUrl(activeCampaign.wallpaperUrl) : null,
+            customSheetTemplates,
+            customGameDrivers
         };
 
         if (session.activeCampaignWallpaper) {
@@ -337,6 +340,13 @@ function App() {
         const c = useCombatStore.getState().combatants.find(c => c.id === id);
         if (c) useCombatStore.getState().updateCombatant(id, { hp: Math.min(c.hpMax, Math.max(0, c.hp + delta)) });
       }
+
+      if (type === 'session:update-character-narrative') {
+        const { playerId, characterId, updates } = payload as { playerId: string; characterId: string; updates: any };
+        console.log(`[App] Remote update for ${characterId}:`, updates);
+        useSessionOSStore.getState().updateCharacterNarrative(playerId, characterId, updates);
+      }
+
       if (type === 'combat:next-turn') {
         console.log('[App] → Calling nextTurn()');
         useCombatStore.getState().nextTurn();

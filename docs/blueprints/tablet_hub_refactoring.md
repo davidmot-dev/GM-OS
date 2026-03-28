@@ -43,11 +43,19 @@ Balayage laser Cyan traverse le portrait pour simuler une authentification sécu
 
 ## 🛠️ Phases d'Implémentation
 
-### Phase 1 : Onboarding & Session Guard [EN COURS]
+### Phase 1 : Onboarding & Session Guard [TERMINÉ]
 
 - **Portrait PJ** : Large, immersif, en background ou carte.
-- **Stats Vitales** : PV/PM/PA en barres horizontales premium.
+- **Stats Vitales** : PV/PM/PA en barres horizontales (affichage seul).
 - **Journal Public** : Affichage du résumé public de la session en cours.
+
+### Phase 2 : Identité & Interaction Bi-directionnelle [EN COURS]
+
+- **Liaison d'Identité** : Le HUB se lie à un `characterId` spécifique.
+- **Hub Character Sheet** : Nouvelle vue interactive pour le joueur ("Moi").
+- **Remote Vitals Update** : Le joueur peut modifier ses propres HP/MP/AP depuis la tablette.
+- **Supervision MJ** : Notification automatique sur l'écran du MJ pour chaque modification distante (prévention d'erreurs/triche).
+- **HUB Configuration** : Checkbox dans l'éditeur de personnage pour définir quelles ressources afficher sur le HUB.
 
 ## 4. Architecture Technique (Nexus Bridge)
 
@@ -57,7 +65,7 @@ Balayage laser Cyan traverse le portrait pour simuler une authentification sécu
 ## 5. Roadmap
 
 - `[x]` Onboarding v1 (Radar + Grille).
-- `[/]` Synchronisation bi-directionnelle (Prochaine étape).
+- `[/]` Phase 2 : Synchronisation bi-directionnelle & Notifications MJ (En cours).
 
 ### Phase 3 : L'Expérience "Action"
 

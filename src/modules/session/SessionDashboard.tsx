@@ -3,6 +3,7 @@ import SessionHeader from './components/SessionHeader';
 import SessionViewRegistry from './components/SessionViewRegistry';
 import OraclePanel from './components/OraclePanel';
 import SessionSnapshotModal from './components/SessionSnapshotModal';
+import RemoteNotificationCenter from './components/RemoteNotificationCenter';
 import { useSessionOSStore } from './useSessionOSStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../data/defaultSheetTemplates';
 
@@ -57,6 +58,9 @@ const SessionDashboard: React.FC = () => {
             {isSnapshotModalOpen && (
                 <SessionSnapshotModal onClose={() => setIsSnapshotModalOpen(false)} />
             )}
+
+            {/* Notifications Distantes (Tablet HUB Sync) */}
+            <RemoteNotificationCenter />
         </div>
     );
 };

@@ -36,6 +36,7 @@ export interface UiSliceState {
     activeCampaignName: string | null;
     activeCampaignWallpaper: string | null;
     editingClueId: string | null;
+    remoteNotifications: import('./types').RemoteNotification[];
 }
 
 // ─────────────────────────────────────────────
@@ -60,6 +61,8 @@ export interface UiSliceActions {
     setEditingClueId: (id: string | null) => void;
     rollDice: (die: number) => void;
     clearDiceHistory: () => void;
+    addRemoteNotification: (notif: Omit<import('./types').RemoteNotification, 'id' | 'timestamp' | 'isRead'>) => void;
+    clearRemoteNotification: (id: string) => void;
 }
 
 export type UiSlice = UiSliceState & UiSliceActions;
@@ -88,6 +91,7 @@ export const createUiSlice: StateCreator<UiSlice, [], [], UiSlice> = (set) => ({
     activeCampaignName: null,
     activeCampaignWallpaper: null,
     editingClueId: null,
+    remoteNotifications: [],
 
     // Actions
     setCurrentView: (view) => set({ currentView: view }),
@@ -115,4 +119,22 @@ export const createUiSlice: StateCreator<UiSlice, [], [], UiSlice> = (set) => ({
         })),
 
     clearDiceHistory: () => set({ diceRolls: [] }),
+
+    addRemoteNotification: (notif) =>
+        set((state) => ({
+            remoteNotifications: [
+                {
+                    ...notif,
+                    id: `rn-${Date.now()}`,
+                    timestamp: Date.now(),
+                    isRead: false,
+                },
+                ...state.remoteNotifications.slice(0, 19), // Garder les 20 dernières
+            ],
+        })),
+
+    clearRemoteNotification: (id) =>
+        set((state) => ({
+            remoteNotifications: state.remoteNotifications.filter((n) => n.id !== id),
+        })),
 });

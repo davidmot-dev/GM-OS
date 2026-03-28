@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import type { SheetField } from '../../../data/defaultSheetTemplates';
-import { Save, CheckSquare, Square, FolderOpen, Layers, FileText, Trash2, Lock, BookOpen, Eye, Heart, Sparkles, Package } from 'lucide-react';
+import { Save, CheckSquare, Square, FolderOpen, Layers, FileText, Trash2, Lock, BookOpen, Eye, Heart, Sparkles, Package, Tablet, PenTool } from 'lucide-react';
 import { useImageStore } from '../../image/useImageStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaStore } from '../../../stores/useMediaStore';
 import AIPromptOverlay from '../../ai/components/AIPromptOverlay';
+import { resolveSheetTemplate } from '../logic/templateResolver';
 
 // --- Sub-components ---
 
@@ -149,7 +150,9 @@ const CharacterSheetEditor: React.FC = () => {
         players, selectedPlayerId, selectedCharacterId,
         customSheetTemplates, updateCharacterSheetData, updateCharacterVisuals, updateCharacterNarrative,
         generatePlayerPortrait, isGeneratingAIImage,
-        updateCharacterHP, updateCharacterMaxHP, updateCharacter
+        updateCharacterHP, updateCharacterMaxHP,
+        updateCharacterHubOptions,
+        campaigns
     } = useSessionOSStore();
     const { mediaList, getMediaBlob } = useMediaStore();
 
@@ -157,7 +160,7 @@ const CharacterSheetEditor: React.FC = () => {
     const character = selectedPlayer?.characters.find(c => c.id === selectedCharacterId);
 
     const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
-    const template = allTemplates.find(t => t.id === character?.templateId) ?? allTemplates.find(t => t.id === 'generic')!;
+    const template = resolveSheetTemplate(character, campaigns, allTemplates);
 
     // Compute default data from template, merged with saved sheetData
     const getInitialData = (): Record<string, string | number | boolean> => {
@@ -176,6 +179,7 @@ const CharacterSheetEditor: React.FC = () => {
     const [mediaBrowserTarget, setMediaBrowserTarget] = useState<'portrait' | 'token' | 'document' | null>(null);
     const [description, setDescription] = useState(character?.description ?? '');
     const [gmNotes, setGmNotes] = useState(character?.gmNotes ?? '');
+    const [playerNotes, setPlayerNotes] = useState(character?.playerNotes ?? '');
     const [inventory, setInventory] = useState(character?.inventory ?? '');
     const [showAIPrompt, setShowAIPrompt] = useState(false);
 
@@ -200,7 +204,7 @@ const CharacterSheetEditor: React.FC = () => {
             updateCharacterSheetData(selectedPlayer.id, character.id, fieldId, value);
         }
         // Save narrative fields
-        updateCharacterNarrative(selectedPlayer.id, character.id, { description, gmNotes, inventory });
+        updateCharacterNarrative(selectedPlayer.id, character.id, { description, gmNotes, playerNotes, inventory });
         setSaved(true);
         setTimeout(() => setSaved(false), 2000);
     };
@@ -504,6 +508,21 @@ const CharacterSheetEditor: React.FC = () => {
                         />
                     </div>
 
+                    {/* Player Notes */}
+                    <div className="col-span-9 space-y-3">
+                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-500 border-b border-cyan-500/20 pb-2 flex items-center gap-2">
+                            <PenTool size={12} /> Notes du Joueur
+                            <span className="ml-auto text-[9px] bg-cyan-500/10 text-cyan-600 border border-cyan-500/20 px-2 py-0.5 rounded-full normal-case tracking-normal font-bold">Public Joueur</span>
+                        </h3>
+                        <textarea
+                            value={playerNotes}
+                            onChange={e => setPlayerNotes(e.target.value)}
+                            rows={4}
+                            placeholder="Notes partagées avec le joueur — visible sur son HUB…"
+                            className="w-full bg-cyan-950/10 border border-cyan-500/10 rounded-xl p-4 text-sm text-app-text placeholder-app-text/20 resize-none focus:outline-none focus:ring-1 focus:ring-cyan-500/30 focus:border-cyan-500/20 transition-all leading-relaxed"
+                        />
+                    </div>
+
                     {/* GM Notes */}
                     <div className="col-span-9 space-y-3">
                         <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-500 border-b border-amber-500/20 pb-2 flex items-center gap-2">
@@ -517,6 +536,41 @@ const CharacterSheetEditor: React.FC = () => {
                             placeholder="Notes secrètes du MJ — jamais visible par les joueurs…"
                             className="w-full bg-amber-950/10 border border-amber-500/10 rounded-xl p-4 text-sm text-app-text placeholder-app-text/20 resize-none focus:outline-none focus:ring-1 focus:ring-amber-500/30 focus:border-amber-500/20 transition-all leading-relaxed"
                         />
+                    </div>
+
+                    {/* Tablet HUB Configuration */}
+                    <div className="col-span-9 space-y-3">
+                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-500 border-b border-cyan-500/20 pb-2 flex items-center gap-2">
+                            <Tablet size={12} /> Configuration Tablet HUB
+                        </h3>
+                        <div className="grid grid-cols-3 gap-3">
+                            <FieldCheckbox 
+                                field={{ id: 'showHP', label: 'Afficher PV', type: 'checkbox', defaultValue: true }} 
+                                value={character.hubOptions?.showHP ?? true} 
+                                onChange={(val) => selectedPlayer && updateCharacterHubOptions(selectedPlayer.id, character.id, { showHP: val })} 
+                            />
+                            <FieldCheckbox 
+                                field={{ id: 'showMP', label: 'Afficher PM', type: 'checkbox', defaultValue: true }} 
+                                value={character.hubOptions?.showMP ?? true} 
+                                onChange={(val) => selectedPlayer && updateCharacterHubOptions(selectedPlayer.id, character.id, { showMP: val })} 
+                            />
+                            <FieldCheckbox 
+                                field={{ id: 'showAP', label: 'Afficher PA', type: 'checkbox', defaultValue: true }} 
+                                value={character.hubOptions?.showAP ?? true} 
+                                onChange={(val) => selectedPlayer && updateCharacterHubOptions(selectedPlayer.id, character.id, { showAP: val })} 
+                            />
+                            <FieldCheckbox 
+                                field={{ id: 'showInventory', label: 'Afficher Inventaire', type: 'checkbox', defaultValue: true }} 
+                                value={character.hubOptions?.showInventory ?? true} 
+                                onChange={(val) => selectedPlayer && updateCharacterHubOptions(selectedPlayer.id, character.id, { showInventory: val })} 
+                            />
+                            <FieldCheckbox 
+                                field={{ id: 'showRelations', label: 'Afficher Relations', type: 'checkbox', defaultValue: true }} 
+                                value={character.hubOptions?.showRelations ?? true} 
+                                onChange={(val) => selectedPlayer && updateCharacterHubOptions(selectedPlayer.id, character.id, { showRelations: val })} 
+                            />
+                        </div>
+                        <p className="text-[9px] text-app-text/20 italic">Déterminez quels éléments sont visibles par le joueur sur sa tablette.</p>
                     </div>
 
                     {/* Linked Documents */}
