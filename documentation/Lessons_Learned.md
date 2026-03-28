@@ -358,16 +358,19 @@ Sur certains systèmes Windows (particulièrement en environnement pro ou sécur
 
 ---
 
-## 27. Sécurité Critique & Suppression de l'Auto-Backup (Git Sync)
+## 28. Sécurité Critique & Suppression de l'Auto-Backup (Git Sync)
 
-### 27.1 Défi
+### 28.1 Défi
+
 L'implémentation d'un système de backup Git automatisé en arrière-plan a causé des régressions critiques (suppression de fichiers du projet) dues à des conflits de processus et des verrous de fichiers. Malgré des tentatives de sécurisation via `git rm --cached`, la complexité de maintenir un état Git propre en parallèle de l'utilisation active de l'application représentait un risque inacceptable pour l'intégrité des données utilisateur.
 
-### 27.2 Leçon
+### 28.2 Leçon
+
 **La simplicité est la forme suprême de la sécurité.** Pour un outil de création comme GM-OS, l'intégrité du répertoire de travail prime sur toute automatisation de sauvegarde complexe.
 
 **Solution Finale (Mars 2026) :**
 La fonctionnalité d'auto-backup Git a été **intégralement supprimée** du noyau de l'application.
+
 - Suppression du service backend `GitBackupService`.
 - Suppression des déclencheurs UI et des hooks de synchronisation.
 - Recentrage sur les sauvegardes locales robustes (Zustand Persist) et les exports manuels de session, laissant la gestion Git (versioning) à la discrétion de l'utilisateur via des outils externes spécialisés.

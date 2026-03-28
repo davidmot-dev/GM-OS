@@ -27,8 +27,18 @@ const SocialGraph: React.FC = () => {
         updateEntity, 
         updateCharacter,
         isHeaderHidden,
-        setHeaderHidden
+        setHeaderHidden,
+        campaigns,
+        freezeGraphLayout,
+        unfreezeGraphLayout,
+        resetGraphLayout
     } = useSessionOSStore();
+
+    const activeCampaign = useMemo(() => 
+        campaigns.find(c => c.id === activeCampaignId),
+    [campaigns, activeCampaignId]);
+
+    const isGraphLocked = activeCampaign?.isGraphLocked ?? false;
 
     // UI Local State
     const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
@@ -38,6 +48,12 @@ const SocialGraph: React.FC = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [isEditingFaction, setIsEditingFaction] = useState(false);
     const [tempFaction, setTempFaction] = useState('');
+    
+    // Ajout des réglages de physique (Charge, Distance, Collision)
+    const [graphCharge, setGraphCharge] = useState<number>(-100);
+    const [graphDistance, setGraphDistance] = useState<number>(150);
+    const [graphCollision, setGraphCollision] = useState<number>(40);
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
     const graphRef = useRef<any>(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -82,8 +98,8 @@ const SocialGraph: React.FC = () => {
             type: typeFilter, 
             faction: factionFilter, 
             search: searchQuery 
-        }), 
-    [entities, players, activeCampaignId, typeFilter, factionFilter, searchQuery]);
+        }, activeCampaign?.nodePositions, isGraphLocked), 
+    [entities, players, activeCampaignId, typeFilter, factionFilter, searchQuery, activeCampaign?.nodePositions, isGraphLocked]);
 
     const uniqueFactions = useMemo(() => 
         getUniqueFactions(entities, players, activeCampaignId),
@@ -94,18 +110,81 @@ const SocialGraph: React.FC = () => {
         resolveBatch(data.nodes);
     }, [data.nodes, resolveBatch]);
 
-    // Graph Engine Initialization
+    // Graph Engine Initialization & Reactive Force Updates
     useEffect(() => {
-        if (graphRef.current) {
+        if (graphRef.current && data.nodes.length > 0) {
             const fg = graphRef.current;
-            fg.d3Force('charge').strength(-200);
-            fg.d3Force('link').distance(150);
-            if ((window as any).d3) {
-                fg.d3Force('collide', (window as any).d3.forceCollide(40));
+            
+            // Charge Dynamique
+            fg.d3Force('charge').strength(graphCharge).distanceMax(1000);
+            
+            // Liens Dynamiques
+            fg.d3Force('link').distance(graphDistance).strength(1);
+            
+            // Collision Dynamique
+            const d3 = (window as any).d3;
+            if (d3) {
+                fg.d3Force('collide', d3.forceCollide(graphCollision));
             }
+            
             fg.d3Force('center').strength(0.05);
+
+            // Relancer la simulation avec protection contre les fonctions manquantes
+            try {
+                if (typeof fg.d3ReheatActive === 'function') {
+                    fg.d3ReheatActive();
+                } else {
+                    const sim = typeof fg.d3Simulation === 'function' ? fg.d3Simulation() : null;
+                    if (sim && typeof sim.alpha === 'function') {
+                        sim.alpha(0.3).restart();
+                    }
+                }
+            } catch {
+                console.warn('[SocialGraph] Erreur de relance simulation D3 non critique:');
+            }
         }
-    }, []);
+    }, [data.nodes, data.links, graphCharge, graphDistance, graphCollision]);
+
+    const handleToggleLock = useCallback(() => {
+        if (!activeCampaignId) return;
+        
+        if (isGraphLocked) {
+            unfreezeGraphLayout(activeCampaignId);
+        } else {
+            // Capture current positions
+            const currentPositions: Record<string, { x: number; y: number }> = {};
+            data.nodes.forEach(node => {
+                if (node.x !== undefined && node.y !== undefined) {
+                    currentPositions[node.id] = { x: node.x, y: node.y };
+                }
+            });
+            freezeGraphLayout(activeCampaignId, currentPositions);
+        }
+    }, [activeCampaignId, isGraphLocked, data.nodes, freezeGraphLayout, unfreezeGraphLayout]);
+
+    const handleResetLayout = useCallback(() => {
+        if (!activeCampaignId) return;
+        resetGraphLayout(activeCampaignId);
+        
+        // Petit délai pour laisser le store se mettre à jour avant de tenter le rafraîchissement
+        setTimeout(() => {
+            const fg = graphRef.current;
+            if (!fg) return;
+            
+            try {
+                if (typeof fg.d3ReheatActive === 'function') {
+                    fg.d3ReheatActive();
+                } else {
+                    const sim = typeof fg.d3Simulation === 'function' ? fg.d3Simulation() : null;
+                    if (sim && typeof sim.alpha === 'function') {
+                        sim.alpha(0.5).restart();
+                    }
+                }
+            } catch {
+                console.warn('[SocialGraph] Échec du rafraîchissement visuel mais positions réinitialisées.');
+            }
+        }, 150);
+    }, [activeCampaignId, resetGraphLayout]);
 
     const getRelationColor = useCallback((type: string) => {
         switch (type) {
@@ -236,6 +315,23 @@ const SocialGraph: React.FC = () => {
                 onZoomReset={() => graphRef.current?.zoomToFit(400, 100)}
                 isHeaderHidden={isHeaderHidden}
                 onToggleHeader={() => setHeaderHidden(!isHeaderHidden)}
+                isLocked={isGraphLocked}
+                onToggleLock={handleToggleLock}
+                onResetLayout={handleResetLayout}
+                
+                // Nouveaux réglages de physique
+                physicsSettings={{
+                    charge: graphCharge,
+                    distance: graphDistance,
+                    collision: graphCollision
+                }}
+                setPhysicsSettings={{
+                    setCharge: setGraphCharge,
+                    setDistance: setGraphDistance,
+                    setCollision: setGraphCollision
+                }}
+                isSettingsOpen={isSettingsOpen}
+                setIsSettingsOpen={setIsSettingsOpen}
             />
 
             <div ref={containerRef} className="flex-1 relative">
@@ -247,11 +343,11 @@ const SocialGraph: React.FC = () => {
                         graphData={data}
                         backgroundColor="transparent"
                         nodeCanvasObject={paintNode}
-                        nodePointerAreaPaint={(node: any, color, canvasContext) => {
+                        nodePointerAreaPaint={(node: GraphNode, color, canvasContext) => {
                             canvasContext.fillStyle = color;
-                            const size = (node.val || 10) * 1.5;
+                            const size = 20 * 1.5;
                             canvasContext.beginPath();
-                            canvasContext.arc(node.x, node.y, size, 0, 2 * Math.PI, false);
+                            canvasContext.arc(node.x || 0, node.y || 0, size, 0, 2 * Math.PI, false);
                             canvasContext.fill();
                         }}
                         linkDirectionalParticles={2}
@@ -265,8 +361,9 @@ const SocialGraph: React.FC = () => {
                         linkWidth={2}
                         onNodeClick={handleNodeClick}
                         onBackgroundClick={() => setSelectedNodeId(null)}
-                        cooldownTicks={100}
-                        d3VelocityDecay={0.3}
+                        cooldownTicks={isGraphLocked ? 0 : 200}
+                        d3VelocityDecay={isGraphLocked ? 1 : 0.4}
+                        enableNodeDrag={!isGraphLocked}
                     />
                 )}
             </div>

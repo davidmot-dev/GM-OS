@@ -565,6 +565,7 @@ function startRemoteServer() {
                 
                 // Send initial sync data
                 if (win && !win.isDestroyed()) {
+                    console.log('[Remote] New client connected. Requesting full sync from MJ...');
                     win.webContents.send('remote:request-sync');
                 }
                 
@@ -574,10 +575,10 @@ function startRemoteServer() {
                         // console.log('[Remote] message received:', data);
                         
                         if (data.type === 'remote:register') {
-                            const { deviceId, pseudo, role } = data.payload;
-                            currentDeviceId = deviceId;
-                            console.log(`[Remote] Registering client: ${pseudo} (${role})`);
-                            sessionManager.registerClient(deviceId, pseudo, role);
+                            const { deviceId, pseudo, role, playerName } = data.payload || {};
+                            const actualDeviceId = deviceId || `remote-${Math.random().toString(36).substring(2, 9)}`;
+                            currentDeviceId = actualDeviceId;
+                            sessionManager.registerClient(actualDeviceId, pseudo || 'Unknown', (role as any) || 'remote', playerName);
                             
                             // Immediately broadcast updated client list to MJ
                             if (win && !win.isDestroyed()) {
@@ -588,6 +589,7 @@ function startRemoteServer() {
                         } else {
                             // Forward action to renderer process
                             if (win && !win.isDestroyed()) {
+                                console.log('[Remote] Action received from tablet:', data.type);
                                 win.webContents.send('remote:action', data);
                             }
                         }
@@ -610,6 +612,14 @@ function startRemoteServer() {
                 });
             });
         }
+
+        // --- IPC Handlers for Remote Control Management ---
+        ipcMain.on('remote:request-client-sync', () => {
+            console.log('[Remote] MJ requested client sync');
+            if (win && !win.isDestroyed()) {
+                win.webContents.send('remote:sync-clients', sessionManager.getAllClients());
+            }
+        });
 
         // Use 0.0.0.0 to ensure it's accessible from other devices on the LAN
         server.listen(REMOTE_PORT, '0.0.0.0', () => {
@@ -636,6 +646,8 @@ ipcMain.handle('remote:cache-media', async (_event, buffer: Buffer, id: string) 
 // Broadcast data to all connected remote devices
 ipcMain.on('remote:broadcast-sync', (_event, data) => {
     if (wss) {
+        const segments = Object.keys(data || {});
+        console.log(`[Remote] Broadcasting sync (${segments.join(', ')}) to ${wss.clients.size} clients`);
         const message = JSON.stringify({ type: 'sync', payload: data });
         wss.clients.forEach((client: ExtendedWebSocket) => {
             if (client.readyState === 1) { // 1 = OPEN

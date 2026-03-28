@@ -21,7 +21,8 @@ import { useSessionOSStore } from '../modules/session/useSessionOSStore';
 import { 
     Archive, 
     Monitor,
-    Search
+    Search,
+    LogOut
 } from 'lucide-react';
 
 /**
@@ -60,7 +61,9 @@ const TabletHub: React.FC = () => {
     const [liveImagePath, setLiveImagePath] = useState<string | null | undefined>(undefined);
     const [liveEntity, setLiveEntity] = useState<ProjectedEntity | null>(null);
     const [currentTab, setCurrentTab] = useState<'live' | 'archives'>('live');
-    const { deviceId, pseudo, role, isOnboarded, setStatus: setClientStatus } = useClientStore();
+    const { deviceId, pseudo, playerName, characterId, isOnboarded, setStatus: setClientStatus, resetIdentity } = useClientStore();
+    const { sessions, activeCampaignWallpaper, activeCampaignName } = useSessionOSStore();
+    const activeSession = sessions.find(s => s.status === 'active');
     const [voiceLevel, setVoiceLevel] = useState(0);
     const [status, setStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
     const socketRef = useRef<WebSocket | null>(null);
@@ -81,14 +84,16 @@ const TabletHub: React.FC = () => {
         socketRef.current = socket;
 
         socket.onopen = () => {
-            console.log('[TabletHub] Connected via WebSocket');
+            console.log('[TabletHub] Connected to Nexus Bridge');
             setStatus('connected');
             setClientStatus('active');
-            // Register with the server
+            // On s'enregistre comme tablette avec les infos d'identité
             socket.send(JSON.stringify({ 
-                type: 'remote:register', 
-                payload: { deviceId, pseudo, role } 
+                type: 'remote:register',
+                payload: { deviceId, pseudo, playerName, characterId, role: 'hub' }
             }));
+            // On demande immédiatement une synchronisation complète pour éviter d'attendre le prochain diff
+            socket.send(JSON.stringify({ type: 'remote:request-sync' }));
         };
 
         socket.onclose = () => {
@@ -120,6 +125,7 @@ const TabletHub: React.FC = () => {
                 // Handle full sync (from App.tsx broadcast)
                 if (data.type === 'sync' && data.payload) {
                     const { clock, combat, voiceLevel: incomingVoice } = data.payload;
+                    console.log('[TabletHub] Received sync segments:', Object.keys(data.payload));
                     
                     if (clock) {
                         useClockStore.setState(prev => ({ ...prev, ...clock }));
@@ -127,6 +133,25 @@ const TabletHub: React.FC = () => {
 
                     if (combat) {
                         useCombatStore.setState(prev => ({ ...prev, ...combat }));
+                    }
+
+                    if (data.payload.session) {
+                        console.log('[TabletHub] SYNC RECEIVED - Session Data:', {
+                          hasSessions: !!data.payload.session.sessions,
+                          hasCampaigns: !!data.payload.session.campaigns,
+                          activeCampaignId: data.payload.session.activeCampaignId,
+                          activeCampaignName: data.payload.session.activeCampaignName,
+                          activeCampaignWallpaper: data.payload.session.activeCampaignWallpaper ? (data.payload.session.activeCampaignWallpaper.substring(0, 50) + '...') : 'NULL'
+                        });
+
+                        useSessionOSStore.setState({ 
+                            sessions: data.payload.session.sessions || [],
+                            campaigns: data.payload.session.campaigns || [],
+                            players: data.payload.session.players || [],
+                            activeCampaignId: data.payload.session.activeCampaignId || null,
+                            activeCampaignName: data.payload.session.activeCampaignName || null,
+                            activeCampaignWallpaper: data.payload.session.activeCampaignWallpaper || null
+                        });
                     }
 
                     if (incomingVoice !== undefined) setVoiceLevel(incomingVoice);
@@ -137,7 +162,7 @@ const TabletHub: React.FC = () => {
         };
 
         socket.onerror = () => setStatus('error');
-    }, [host, port, deviceId, pseudo, role, setClientStatus]);
+    }, [host, port, deviceId, pseudo, playerName, setClientStatus, characterId]); // Removed role, added characterId
 
     useEffect(() => {
         connectRef.current = connect;
@@ -153,8 +178,11 @@ const TabletHub: React.FC = () => {
     const activeMedia = mediaList?.find(m => m.id === activeHubId);
 
     useEffect(() => {
-        if (!isOnboarded) return;
+        // ALWAYS connect to WebSocket to receive session updates, 
+        // even if not onboarded yet (onboarding depends on this data).
+        console.log('[TabletHub] Initializing sync effect. Onboarded:', isOnboarded);
         connect();
+        
         const rehydrateAll = async () => {
             await Promise.all([
                 useClockStore.persist.rehydrate(),
@@ -216,7 +244,7 @@ const TabletHub: React.FC = () => {
     }, [connect, isOnboarded]);
 
     const visibleCombatants = combatants.filter(c => 
-        c.isPlayer || !c.statuses.some(s => {
+        c.isPlayer || !c.statuses?.some(s => {
             const n = s.name.toLowerCase();
             return n === 'invisible' || n === 'invisibilité' || n === 'caché' || n === 'hidden';
         })
@@ -225,7 +253,7 @@ const TabletHub: React.FC = () => {
     
     // Find active combatant among visible ones, or use the real one if it's a player
     const realActiveCombatant = combatants[currentTurnIdx];
-    const activeCombatant = (realActiveCombatant && (realActiveCombatant.isPlayer || !realActiveCombatant.statuses.some(s => {
+    const activeCombatant = (realActiveCombatant && (realActiveCombatant.isPlayer || !realActiveCombatant.statuses?.some(s => {
         const n = s.name.toLowerCase();
         return n === 'invisible' || n === 'invisibilité' || n === 'caché' || n === 'hidden';
     }))) ? realActiveCombatant : null;
@@ -279,8 +307,15 @@ const TabletHub: React.FC = () => {
     const backgroundPath = liveImagePath !== undefined ? liveImagePath : activeMedia?.path;
     const resolvedBackground = useMediaUrl(backgroundPath || undefined);
 
+    const rootStyles = {
+        '--hub-bg-url': resolvedBackground ? `url('${resolvedBackground}')` : "none",
+        '--hub-bg-opacity': resolvedBackground ? 1 : 0,
+        '--hub-blur-bg-url': activeCampaignWallpaper ? `url("${activeCampaignWallpaper}")` : "none",
+        ...voiceStyles
+    } as React.CSSProperties;
+
     return (
-        <div className="bg-[#110505] text-slate-100 font-cinematic selection:bg-red-600/30 w-full h-screen overflow-hidden flex flex-col relative select-none cursor-default">
+        <div className="bg-black text-slate-100 font-cinematic selection:bg-red-600/30 w-full h-screen overflow-hidden flex flex-col relative select-none cursor-default" style={rootStyles}>
             
             {/* Sync connection status */}
             <div className={`fixed top-4 right-4 z-50 p-1.5 rounded-full backdrop-blur-md border ${
@@ -291,15 +326,32 @@ const TabletHub: React.FC = () => {
                 {status === 'connected' ? <Wifi size={14} /> : <WifiOff size={14} />}
             </div>
 
+            {/* Campaign Title Header */}
+            {activeCampaignName && (
+                <div className="fixed top-6 left-8 z-50 animate-in fade-in slide-in-from-left duration-1000">
+                    <div className="flex flex-col">
+                        <span className="text-[10px] font-black text-gm-gold/60 uppercase tracking-[0.4em] mb-1">Opération en cours</span>
+                        <h1 className="text-3xl font-black text-white uppercase tracking-tightest drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
+                            {activeCampaignName}
+                        </h1>
+                    </div>
+                </div>
+            )}
+
             <div
-                className="fixed inset-0 z-0 bg-cover bg-center transition-all duration-1000 ease-in-out tablet-hub-bg"
-                style={{
-                    '--hub-bg-url': resolvedBackground ? `url('${resolvedBackground}')` : "none",
-                    '--hub-bg-filter': `brightness(${(resolvedFavorites.length > 0 || liveEntity) ? 0.15 : 0.4}) grayscale(30%) blur(4px)`,
-                    '--hub-bg-opacity': resolvedBackground ? 1 : 0
-                } as React.CSSProperties}
-            ></div>
-            {!resolvedBackground && <div className="fixed inset-0 z-0 bg-black"></div>}
+                className={`fixed inset-0 z-1 bg-cover bg-center transition-all duration-1000 ease-in-out tablet-hub-bg [background-image:var(--hub-bg-url)] [opacity:var(--hub-bg-opacity)] ${
+                    (resolvedFavorites.length > 0 || liveEntity) ? 'brightness-[0.15] grayscale-[30%] blur-[2px]' : 'brightness-[0.4] grayscale-[30%] blur-[2px]'
+                }`}
+            />
+
+                {/* Visual Ambiance Layer (Always present as base layer) */}
+                {activeCampaignWallpaper && isOnboarded && activeSession && (
+                    <div 
+                        className="fixed inset-0 z-0 bg-cover bg-center pointer-events-none opacity-50 blur-[4px] brightness-[0.4] [background-image:var(--hub-blur-bg-url)]"
+                    />
+                )}
+            
+            {!resolvedBackground && !activeCampaignWallpaper && <div className="fixed inset-0 z-0 bg-[#110505]"></div>}
 
             {/* Overlay for focus */}
             {(resolvedFavorites.length > 0 || liveEntity) && (
@@ -344,8 +396,7 @@ const TabletHub: React.FC = () => {
                                         <div key={liveEntity.id} className={`bg-slate-900/90 backdrop-blur-3xl border-2 border-gm-cyan/30 rounded-3xl p-5 md:p-6 shadow-[0_0_40px_rgba(34,211,238,0.15)] flex flex-col gap-4 animate-in fade-in zoom-in duration-1000 w-full ${liveEntity.type === 'Oracle' ? 'max-w-xl' : ''}`}>
                                             <div className="flex flex-col items-center text-center gap-4">
                                                 <div 
-                                                    className={`${liveEntity.type === 'Oracle' ? 'w-full aspect-[2/3] max-h-[75vh]' : 'size-28 md:size-40'} rounded-2xl overflow-hidden border-2 border-gm-cyan/20 shadow-glow-cyan bg-slate-950 transition-all scale-100 relative`}
-                                                    style={voiceStyles}
+                                                    className={`${liveEntity.type === 'Oracle' ? 'w-full aspect-[2/3] max-h-[75vh]' : 'size-28 md:size-40'} rounded-2xl overflow-hidden border-2 border-gm-cyan/20 shadow-glow-cyan bg-slate-950 transition-all scale-100 relative [transform:scale(var(--voice-scale))] [box-shadow:var(--voice-glow)]`}
                                                 >
                                                     <ResolvedImage src={liveEntity.avatar || liveEntity.imageUrl || liveEntity.portraitUrl} className="absolute inset-0 w-full h-full object-cover blur-xl opacity-30 scale-110" />
                                                     <ResolvedImage src={liveEntity.avatar || liveEntity.imageUrl || liveEntity.portraitUrl} alt={liveEntity.name} className={`relative z-10 w-full h-full ${liveEntity.type === 'Oracle' ? 'object-contain' : 'object-cover'}`} />
@@ -413,8 +464,7 @@ const TabletHub: React.FC = () => {
                                     {clues.filter(c => c.isRevealed).map((clue, idx) => (
                                         <div 
                                             key={clue.id} 
-                                            className="group bg-slate-900/60 backdrop-blur-xl border border-white/5 rounded-3xl p-6 transition-all hover:border-gm-gold/30 hover:bg-slate-900/80 animate-in fade-in slide-in-from-bottom-4 duration-500"
-                                            style={{ animationDelay: `${idx * 50}ms` }}
+                                            className={`group bg-slate-900/60 backdrop-blur-xl border border-white/5 rounded-3xl p-6 transition-all hover:border-gm-gold/30 hover:bg-slate-900/80 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-${idx * 50}`}
                                         >
                                             <div className="flex gap-4 items-start">
                                                 <div className="size-16 rounded-2xl bg-black/40 border border-white/5 overflow-hidden flex-none">
@@ -478,6 +528,18 @@ const TabletHub: React.FC = () => {
                         <Archive size={14} />
                         Archives
                     </button>
+                    <div className="w-[1px] h-4 bg-white/10 mx-1" />
+                    <button 
+                        onClick={() => {
+                            if (window.confirm('Voulez-vous vraiment vous déconnecter ?')) {
+                                resetIdentity();
+                            }
+                        }}
+                        className="flex items-center gap-2 px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all"
+                    >
+                        <LogOut size={14} />
+                        Quitter
+                    </button>
                 </div>
             </div>
 
@@ -506,8 +568,8 @@ const TabletHub: React.FC = () => {
                                     <span className="text-[10px] font-black text-red-100">{activeCombatant.hp} / {activeCombatant.hpMax} HP</span>
                                     <div className="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
                                          <div 
-                                            className="h-full bg-red-500 hp-progress-fill" 
-                                            style={{ '--progress-percent': `${(activeCombatant.hp / (activeCombatant.hpMax || 1)) * 100}%` } as React.CSSProperties}
+                                            className="h-full bg-red-500 transition-all duration-500" 
+                                            style={{ width: `${(activeCombatant.hp / (activeCombatant.hpMax || 1)) * 100}%` }}
                                          />
                                     </div>
                                 </div>
@@ -531,7 +593,8 @@ const TabletHub: React.FC = () => {
             {/* Polish Overlays */}
             <div className="fixed inset-0 pointer-events-none z-50 shadow-[inset_0_0_100px_rgba(0,0,0,0.6)] opacity-50"></div>
 
-            {!isOnboarded && <LobbyOnboarding />}
+            {/* Session Guard & Onboarding Overlay */}
+            {(!isOnboarded || !activeSession) && <LobbyOnboarding />}
         </div>
     );
 };

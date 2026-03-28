@@ -97,7 +97,7 @@ interface NpcDetailProps {
 
 const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
     const { 
-        entities, selectedEntityId, setSelectedEntity, updateEntity, updateEntityHP, atlasMaps,
+        entities, selectedEntityId, setSelectedEntity, updateEntity, updateEntityHP, updateEntityMaxHP, atlasMaps,
         clues, setCurrentView, setActiveCampaignFormSection, setEditingClueId,
         generateEntityPortrait, isGeneratingAIImage 
     } = useSessionOSStore();
@@ -363,14 +363,14 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                                     <div className="flex items-center gap-1 bg-app-bg/50 px-2 py-1 rounded-lg border border-white/5">
                                                         <input 
                                                             type="number" value={selectedNpc.hp ?? 0}
-                                                            onChange={(e) => updateEntity(selectedNpc.id, { hp: parseInt(e.target.value) || 0 })}
+                                                            onChange={(e) => updateEntityHP(selectedNpc.id, parseInt(e.target.value) || 0)}
                                                             className="w-10 bg-transparent text-center text-white font-black text-xs focus:outline-none"
                                                             title="Points de Vie actuels"
                                                         />
                                                         <span className="text-app-text/20">/</span>
                                                         <input 
                                                             type="number" value={selectedNpc.maxHp ?? 10}
-                                                            onChange={(e) => updateEntity(selectedNpc.id, { maxHp: parseInt(e.target.value) || 0 })}
+                                                            onChange={(e) => updateEntityMaxHP(selectedNpc.id, parseInt(e.target.value) || 0)}
                                                             className="w-10 bg-transparent text-center text-app-text/40 font-black text-xs focus:outline-none"
                                                             title="Points de Vie Max"
                                                         />
@@ -436,7 +436,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                                         <div className="bg-black/20 border border-white/5 w-10 h-8 rounded-lg flex items-center justify-center shadow-inner group-hover:border-accent/10 transition-all">
                                                             <input 
                                                                 type="number" value={selectedNpc.maxHp ?? 10}
-                                                                onChange={(e) => updateEntity(selectedNpc.id, { maxHp: parseInt(e.target.value) || 0 })}
+                                                                onChange={(e) => updateEntityMaxHP(selectedNpc.id, parseInt(e.target.value) || 0)}
                                                                 className="w-full bg-transparent text-center text-app-text/40 font-black text-[10px] focus:outline-none"
                                                                 title="Points de Vie Max"
                                                             />
@@ -481,7 +481,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                                         <span className="text-app-text/20 font-bold">/</span>
                                                         <input 
                                                             type="number" value={selectedNpc.maxHp ?? 10}
-                                                            onChange={(e) => updateEntity(selectedNpc.id, { maxHp: parseInt(e.target.value) || 0 })}
+                                                            onChange={(e) => updateEntityMaxHP(selectedNpc.id, parseInt(e.target.value) || 0)}
                                                             className="w-10 bg-transparent text-center text-app-text/40 font-black text-xs focus:outline-none"
                                                             title="Points de Vie Max"
                                                         />

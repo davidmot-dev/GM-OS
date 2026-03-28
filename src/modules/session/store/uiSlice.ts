@@ -33,6 +33,8 @@ export interface UiSliceState {
     isGeneratingAIImage: boolean;
     activeCampaignFormSection: string | null;
     isHeaderHidden: boolean;
+    activeCampaignName: string | null;
+    activeCampaignWallpaper: string | null;
     editingClueId: string | null;
 }
 
@@ -83,6 +85,8 @@ export const createUiSlice: StateCreator<UiSlice, [], [], UiSlice> = (set) => ({
     isGeneratingAIImage: false,
     activeCampaignFormSection: 'identity',
     isHeaderHidden: false,
+    activeCampaignName: null,
+    activeCampaignWallpaper: null,
     editingClueId: null,
 
     // Actions

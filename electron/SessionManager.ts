@@ -5,7 +5,7 @@ export class SessionManager {
     private ghostTimeouts = new Map<string, NodeJS.Timeout>();
     private GHOST_DURATION = 2 * 60 * 1000; // 2 minutes
 
-    public registerClient(deviceId: string, pseudo: string, role: ClientContext['role']): ClientContext {
+    public registerClient(deviceId: string, pseudo: string, role: ClientContext['role'], playerName?: string): ClientContext {
         // Clear any existing ghost timeout
         if (this.ghostTimeouts.has(deviceId)) {
             clearTimeout(this.ghostTimeouts.get(deviceId)!);
@@ -17,6 +17,7 @@ export class SessionManager {
         const context: ClientContext = {
             deviceId,
             pseudo: pseudo || (existingSession?.pseudo) || 'Anonyme',
+            playerName: playerName || existingSession?.playerName,
             role,
             status: 'active',
             lastSeen: Date.now()

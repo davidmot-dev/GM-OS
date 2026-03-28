@@ -67,6 +67,15 @@ const PlaceholderModule = ({ name }: { name: string }) => (
   </div>
 );
 
+interface UniversalPad {
+  id: string;
+  type: 'music' | 'sound' | 'image' | 'ambient';
+  label: string;
+  color: string;
+  imageUrl?: string;
+  sublabel?: string;
+}
+
 function App() {
   const lastSyncRef = React.useRef(0);
   const lastBroadcastRef = React.useRef<Record<string, unknown>>({});
@@ -139,17 +148,16 @@ function App() {
       }
     });
 
-    const handleSync = async (immediate = true) => {
-      // Throttle for whiteboard/non-immediate updates (100ms = 10Hz)
-      if (!immediate) {
-        const now = Date.now();
-        if (now - lastSyncRef.current < 100) return;
-        lastSyncRef.current = now;
-      }
+    const handleSync = async (force: boolean = false) => {
+      const now = Date.now();
+      if (!force && now - lastSyncRef.current < 100) return;
+      lastSyncRef.current = now;
       try {
         const soundStore = useSoundStore.getState();
         const storyboardStore = useStoryboardStore.getState();
         const combatStore = useCombatStore.getState();
+        const freshSessionOS = useSessionOSStore.getState();
+        const { sessions, campaigns, players, activeCampaignId, clues } = freshSessionOS;
         
         const atmosId = soundStore.activeAtmosphereId;
         const atmosphere = soundStore.atmospheres.find(a => a.id === atmosId);
@@ -157,7 +165,7 @@ function App() {
           id: p.id, title: p.title || p.id, active: !!p.filePath
         })) : [];
 
-        let universalPads: any[] = [];
+        let universalPads: UniversalPad[] = [];
         try {
           const musicStore = useMusicStore.getState();
           const imageStore = useImageStore.getState();
@@ -167,7 +175,7 @@ function App() {
           let musicPlaylist = musicStore.playlists.find(p => p.id === musicStore.activePlaylistId);
           if (!musicPlaylist && musicStore.playlists.length > 0) musicPlaylist = musicStore.playlists[0];
           const musicPads = (musicPlaylist?.pads.filter(p => !!p.url) || []).slice(0, 4).map(p => ({
-            id: p.id, type: 'music', label: p.label || 'Sans Nom', color: 'var(--accent)'
+            id: p.id, type: 'music' as const, label: p.label || 'Sans Nom', color: 'var(--accent)'
           }));
 
           // SOUND (SFX)
@@ -175,7 +183,7 @@ function App() {
           if (!soundAtmosphere && soundStore.atmospheres.length > 0) soundAtmosphere = soundStore.atmospheres[0];
           const sfxPads = (soundAtmosphere ? Object.values(soundAtmosphere.pads) : [])
             .filter(p => !!p.filePath).slice(0, 4).map(p => ({
-            id: p.id, type: 'sound', label: p.title || p.id, color: 'var(--rose-500)'
+            id: p.id, type: 'sound' as const, label: p.title || p.id, color: 'var(--rose-500)'
           }));
 
           // IMAGE
@@ -184,16 +192,17 @@ function App() {
             favoriteImages = imageStore.mediaList.slice(0, 4);
           }
           const imagePads = favoriteImages.slice(0, 4).map(m => ({
-            id: m.id, type: 'image', label: m.name, imageUrl: m.path, color: 'var(--emerald-500)'
+            id: m.id, type: 'image' as const, label: m.name, imageUrl: m.path, color: 'var(--emerald-500)'
           }));
-          const resolvedImagePads = await Promise.all(imagePads.map(async (p: any) => ({
+          const resolvedImagePads = await Promise.all(imagePads.map(async (p) => ({
             ...p,
+            type: 'image' as const,
             imageUrl: await resolveToSendableUrl(p.imageUrl)
           })));
 
           // AMBIENT
           const ambientPads = ambientStore.presets.slice(0, 4).map(p => ({
-            id: p.id, type: 'ambient', label: p.name, sublabel: p.universe, color: 'var(--blue-500)'
+            id: p.id, type: 'ambient' as const, label: p.name, sublabel: p.universe, color: 'var(--blue-500)'
           }));
 
           universalPads = [...musicPads, ...sfxPads, ...resolvedImagePads, ...ambientPads];
@@ -205,9 +214,9 @@ function App() {
           .filter(m => m.campaignId === activeCampaignId)
           .map(m => ({ id: m.id, name: m.name }));
 
-        let activeSession = sessions.find(s => s.id === selectedSessionId);
-        if (!activeSession) activeSession = sessions.find(s => s.status === 'active' && s.campaignId === activeCampaignId);
-        if (!activeSession && sessions.length > 0) activeSession = [...sessions].reverse().find(s => s.campaignId === activeCampaignId);
+
+        const activeSession = sessions.find((s: import('./modules/session/store/types').GameSession) => s.status === 'active' && s.campaignId === activeCampaignId) || 
+                              (sessions.length > 0 ? [...sessions].reverse().find((s: import('./modules/session/store/types').GameSession) => s.campaignId === activeCampaignId) : undefined);
 
         const notes = {
           public: activeSession?.publicSummary || activeSession?.sessionNotes || 'Aucun résumé public.',
@@ -256,14 +265,50 @@ function App() {
           currentWidth: whiteboardStore.currentWidth
         };
 
-        const currentState = { sounds, moments, masterVolume: soundStore.masterVolume, combat, notes, whiteboard, clock, universalPads };
-        const diffPayload = getDifferentialPayload(currentState, lastBroadcastRef.current);
+        const activeCampaign = campaigns.find(c => String(c.id) === String(activeCampaignId));
+        
+        if (activeCampaignId) {
+            console.log(`[Sync] Active Campaign Found: ${activeCampaign?.name} (ID: ${activeCampaignId})`);
+            if (activeCampaign?.wallpaperUrl) {
+                console.log(`[Sync] Campaign has wallpaper defined: ${activeCampaign.wallpaperUrl.substring(0, 50)}...`);
+            } else {
+                console.warn(`[Sync] Campaign ${activeCampaignId} has NO wallpaperUrl defined in store!`);
+            }
+        } else {
+            console.error(`[Sync] CRITICAL: activeCampaignId is NULL in SessionOSStore!`);
+        }
+
+        const session = {
+            sessions,
+            campaigns,
+            players,
+            activeCampaignId,
+            activeCampaignName: activeCampaign?.name || null,
+            activeCampaignWallpaper: activeCampaign?.wallpaperUrl ? await resolveToSendableUrl(activeCampaign.wallpaperUrl) : null
+        };
+
+        if (session.activeCampaignWallpaper) {
+            console.log(`[Sync] Wallpaper resolved to: ${session.activeCampaignWallpaper.startsWith('data:') ? 'Data URI (Base64)' : session.activeCampaignWallpaper.substring(0, 100)}...`);
+        }
+
+        const currentState = { sounds, moments, masterVolume: soundStore.masterVolume, combat, notes, whiteboard, clock, universalPads, session };
+        const diffPayload = force ? currentState : getDifferentialPayload(currentState, lastBroadcastRef.current);
         
         if (Object.keys(diffPayload).length > 0) {
+           console.log(`[Sync] Broadcasting update (${force ? 'FULL' : 'DIFF'}):`, Object.keys(diffPayload));
+           
+           const sPayload = diffPayload as { session?: { activeCampaignWallpaper?: string } };
+           if (sPayload.session?.activeCampaignWallpaper) {
+               console.log(`[Sync] Including activeCampaignWallpaper in this broadcast.`);
+           }
            bridge.send('remote:broadcast-sync', diffPayload);
            lastBroadcastRef.current = currentState;
         }
-      } catch (e) { console.error("Sync failed", e); }
+        lastSyncRef.current = Date.now();
+      } catch (e: unknown) { 
+          const err = e instanceof Error ? e.message : String(e);
+          console.error("[Sync] Error in handleSync:", err); 
+      }
     };
 
     const handleAction = (action: unknown) => {
@@ -277,6 +322,11 @@ function App() {
       if (type === 'dice:clear') {
         console.log('[App] Clear Dice action');
         window.dispatchEvent(new CustomEvent('remote:clear-dice'));
+      }
+
+      if (type === 'remote:request-sync') {
+        console.log('[App] Forced sync request from tablet');
+        handleSync(true); // Force full sync broadcast
       }
       if (type === 'sound:trigger') useSoundStore.getState().triggerPad((payload as { padId: string }).padId);
       if (type === 'sound:volume') useSoundStore.getState().setMasterVolume((payload as { volume: number }).volume);
@@ -377,10 +427,13 @@ function App() {
       }
 
       // Trigger an immediate sync after any remote action
-      handleSync();
+      handleSync(true);
     };
 
-    bridge.on('remote:request-sync', () => handleSync(true));
+    bridge.on('remote:request-sync', () => {
+        console.log('[Sync] Remote requested full state sync');
+        handleSync(true);
+    });
     // Cleanup any existing listeners to be safe before adding new one
     bridge.remote.removeActions();
     const cleanupAction = bridge.remote.onAction(handleAction);
@@ -395,6 +448,7 @@ function App() {
     const unsubSoundSync = useSoundStore.subscribe(() => handleSync(false));
     const unsubImage = useImageStore.subscribe(() => handleSync(false));
     const unsubAmbient = useAmbientStore.subscribe(() => handleSync(false));
+    const unsubSessionOS = useSessionOSStore.subscribe(() => handleSync(false));
     
     handleSync();
 
@@ -407,6 +461,7 @@ function App() {
       unsubSoundSync();
       unsubImage();
       unsubAmbient();
+      unsubSessionOS();
       unsubscribeCombat();
       console.log('[App] Remote effect cleanup - IPC listeners removed.');
     };

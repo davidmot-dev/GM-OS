@@ -108,19 +108,19 @@ const SessionViewRegistry: React.FC<SessionViewRegistryProps> = ({ forgeMode }) 
     };
 
     return (
-        <main className="flex-1 flex overflow-hidden bg-app-bg/40">
+        <main className="flex-1 min-h-0 flex overflow-hidden bg-app-bg/40">
             {/* L'utilisation de 'key' ici force React à re-monter le conteneur et déclencher l'animation CSS */}
             <div 
                 key={currentView} 
-                className={`flex-1 flex overflow-hidden view-transition-fade-up ${isFullLayout ? 'flex-col' : 'flex-row'}`}
+                className={`flex-1 min-h-0 flex overflow-hidden view-transition-fade-up ${isFullLayout ? 'flex-col' : 'flex-row'}`}
             >
                 {!isFullLayout && (
-                    <aside className="w-[320px] h-full shrink-0 border-r border-white/5 bg-black/10 backdrop-blur-sm z-10 shadow-xl">
+                    <aside className="w-[320px] shrink-0 border-r border-white/5 bg-black/10 backdrop-blur-sm z-10 shadow-xl flex flex-col min-h-0">
                         <CampaignCockpit />
                     </aside>
                 )}
                 
-                <section className="flex-1 h-full overflow-hidden relative flex flex-col">
+                <section className="flex-1 min-h-0 min-w-0 overflow-hidden relative flex flex-col">
                     {renderViewContent()}
                 </section>
             </div>

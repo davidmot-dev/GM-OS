@@ -8,6 +8,8 @@ export interface GraphNode {
     faction?: string;
     x?: number;
     y?: number;
+    fx?: number;
+    fy?: number;
 }
 
 export interface GraphLink {
@@ -33,7 +35,9 @@ export const prepareSocialGraphData = (
         type: string;
         faction: string;
         search: string;
-    }
+    },
+    nodePositions?: Record<string, { x: number; y: number }>,
+    isLocked?: boolean
 ): SocialGraphData => {
     if (!campaignId) return { nodes: [], links: [] };
 
@@ -47,14 +51,18 @@ export const prepareSocialGraphData = (
             name: pc.name,
             avatar: pc.portraitUrl,
             type: 'pc' as const,
-            faction: pc.faction
+            faction: pc.faction,
+            fx: isLocked ? nodePositions?.[pc.id]?.x : undefined,
+            fy: isLocked ? nodePositions?.[pc.id]?.y : undefined
         })),
         ...campaignEntities.map(npc => ({
             id: npc.id,
             name: npc.name,
             avatar: npc.avatar,
             type: 'npc' as const,
-            faction: npc.faction
+            faction: npc.faction,
+            fx: isLocked ? nodePositions?.[npc.id]?.x : undefined,
+            fy: isLocked ? nodePositions?.[npc.id]?.y : undefined
         }))
     ];
 

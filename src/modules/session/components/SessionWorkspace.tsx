@@ -47,7 +47,7 @@ const SessionWorkspace: React.FC = () => {
     }
 
     return (
-        <section className="col-span-6 flex flex-col gap-6 p-6 overflow-y-auto custom-scrollbar">
+        <section className="h-full col-span-6 flex flex-col gap-6 p-6 overflow-y-auto custom-scrollbar">
             {/* Team Tracker Bar (v6 Premium Redesign) */}
             <div className="bg-app-bg/40 backdrop-blur-2xl border-b border-app-border/20 flex items-center px-8 h-20 gap-8 relative shadow-2xl rounded-2xl">
                 <div className="flex items-center gap-10">

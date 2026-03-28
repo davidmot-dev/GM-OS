@@ -160,6 +160,10 @@ export interface Campaign {
     notebookUrl?: string;
     systemPath?: string;
     campaignPath?: string;
+
+    // Social Graph Optimization
+    nodePositions?: Record<string, { x: number; y: number }>;
+    isGraphLocked?: boolean;
 }
 
 // ─────────────────────────────────────────────

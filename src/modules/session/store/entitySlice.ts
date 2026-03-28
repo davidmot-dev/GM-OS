@@ -40,6 +40,7 @@ export interface EntitySliceActions {
     updateEntity: (id: string, updates: Partial<Entity>) => void;
     deleteEntity: (id: string) => void;
     updateEntityHP: (entityId: string, hp: number) => void;
+    updateEntityMaxHP: (entityId: string, maxHp: number) => void;
     updateEntityHealth: (entityId: string, health: HealthSystem) => void;
     updateEntitySheetData: (id: string, fieldId: string, value: string | number | boolean) => void;
     autoSelectFirstEntity: () => void;
@@ -52,6 +53,7 @@ export interface EntitySliceActions {
     deleteCharacter: (playerId: string, characterId: string) => void;
     linkCharacterToCampaign: (playerId: string, characterId: string, campaignId: string | null) => void;
     updateCharacterHP: (playerId: string, characterId: string, hp: number) => void;
+    updateCharacterMaxHP: (playerId: string, characterId: string, maxHp: number) => void;
     updateCharacterHealth: (playerId: string, characterId: string, health: HealthSystem) => void;
     updateCharacter: (playerId: string, characterId: string, updates: Partial<PlayerCharacter>) => void;
     updateCharacterSheetData: (playerId: string, characterId: string, fieldId: string, value: string | number | boolean) => void;
@@ -90,7 +92,27 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
 
     updateEntity: (id, updates) =>
         set((state) => ({
-            entities: state.entities.map((e) => (e.id === id ? { ...e, ...updates } : e)),
+            entities: state.entities.map((e) => {
+                if (e.id !== id) return e;
+                const newEntity = { ...e, ...updates };
+
+                // Auto-sync HealthSystem if type is HP
+                if (newEntity.healthSystem?.type === 'hp') {
+                    const currentVal = updates.hp !== undefined ? updates.hp : newEntity.hp;
+                    const maxVal = updates.maxHp !== undefined ? updates.maxHp : newEntity.maxHp;
+                    newEntity.healthSystem = {
+                        ...newEntity.healthSystem,
+                        data: {
+                            ...newEntity.healthSystem.data,
+                            current: currentVal,
+                            max: maxVal
+                        },
+                        state: currentVal <= 0 ? 'dead' : (currentVal / maxVal) <= 0.25 ? 'critical' : (currentVal / maxVal) <= 0.5 ? 'wounded' : 'healthy'
+                    };
+                }
+
+                return newEntity;
+            }),
         })),
 
     deleteEntity: (id) => {
@@ -101,18 +123,56 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
 
     updateEntityHP: (entityId, hp) =>
         set((state) => ({
-            entities: state.entities.map((e) =>
-                e.id === entityId
-                    ? { ...e, hp, status: hp <= 0 ? 'dead' : hp < e.maxHp * 0.25 ? 'injured' : 'alive' }
-                    : e
-            ),
+            entities: state.entities.map((e) => {
+                if (e.id !== entityId) return e;
+                const updated = {
+                    ...e,
+                    hp,
+                    status: hp <= 0 ? 'dead' : hp < e.maxHp * 0.25 ? 'injured' : 'alive'
+                } as Entity;
+
+                // Sync HealthSystem
+                if (updated.healthSystem?.type === 'hp') {
+                    updated.healthSystem = {
+                        ...updated.healthSystem,
+                        data: { ...updated.healthSystem.data, current: hp },
+                        state: hp <= 0 ? 'dead' : (hp / updated.maxHp) <= 0.25 ? 'critical' : (hp / updated.maxHp) <= 0.5 ? 'wounded' : 'healthy'
+                    };
+                }
+                return updated;
+            }),
+        })),
+
+    updateEntityMaxHP: (entityId, maxHp) =>
+        set((state) => ({
+            entities: state.entities.map((e) => {
+                if (e.id !== entityId) return e;
+                const updated = { ...e, maxHp } as Entity;
+                // Sync HealthSystem
+                if (updated.healthSystem?.type === 'hp') {
+                    updated.healthSystem = {
+                        ...updated.healthSystem,
+                        data: { ...updated.healthSystem.data, max: maxHp },
+                        state: updated.hp <= 0 ? 'dead' : (updated.hp / maxHp) <= 0.25 ? 'critical' : (updated.hp / maxHp) <= 0.5 ? 'wounded' : 'healthy'
+                    };
+                }
+                return updated;
+            }),
         })),
 
     updateEntityHealth: (entityId, health) =>
         set((state) => ({
-            entities: state.entities.map((e) =>
-                e.id === entityId ? { ...e, healthSystem: health } : e
-            ),
+            entities: state.entities.map((e) => {
+                if (e.id !== entityId) return e;
+                const updated = { ...e, healthSystem: health } as Entity;
+                // Sync back to standard HP fields if type is HP
+                if (health.type === 'hp') {
+                    updated.hp = Number(health.data.current) || 0;
+                    updated.maxHp = Number(health.data.max) || 10;
+                    updated.status = updated.hp <= 0 ? 'dead' : updated.hp < updated.maxHp * 0.25 ? 'injured' : 'alive';
+                }
+                return updated;
+            }),
         })),
 
     updateEntitySheetData: (id, fieldId, value) =>
@@ -181,9 +241,43 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                 p.id === playerId
                     ? {
                           ...p,
-                          characters: p.characters.map((c) =>
-                              c.id === characterId ? { ...c, hp } : c
-                          ),
+                          characters: p.characters.map((c) => {
+                                if (c.id !== characterId) return c;
+                                const updated = { ...c, hp } as PlayerCharacter;
+                                // Sync HealthSystem
+                                if (updated.healthSystem?.type === 'hp') {
+                                    updated.healthSystem = {
+                                        ...updated.healthSystem,
+                                        data: { ...updated.healthSystem.data, current: hp },
+                                        state: hp <= 0 ? 'dead' : (hp / updated.maxHp) <= 0.25 ? 'critical' : (hp / updated.maxHp) <= 0.5 ? 'wounded' : 'healthy'
+                                    };
+                                }
+                                return updated;
+                          }),
+                      }
+                    : p
+            ),
+        })),
+
+    updateCharacterMaxHP: (playerId, characterId, maxHp) =>
+        set((state) => ({
+            players: state.players.map((p) =>
+                p.id === playerId
+                    ? {
+                          ...p,
+                          characters: p.characters.map((c) => {
+                                if (c.id !== characterId) return c;
+                                const updated = { ...c, maxHp } as PlayerCharacter;
+                                // Sync HealthSystem
+                                if (updated.healthSystem?.type === 'hp') {
+                                    updated.healthSystem = {
+                                        ...updated.healthSystem,
+                                        data: { ...updated.healthSystem.data, max: maxHp },
+                                        state: updated.hp <= 0 ? 'dead' : (updated.hp / maxHp) <= 0.25 ? 'critical' : (updated.hp / maxHp) <= 0.5 ? 'wounded' : 'healthy'
+                                    };
+                                }
+                                return updated;
+                          }),
                       }
                     : p
             ),
@@ -195,9 +289,16 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                 p.id === playerId
                     ? {
                           ...p,
-                          characters: p.characters.map((c) =>
-                              c.id === characterId ? { ...c, healthSystem: health } : c
-                          ),
+                          characters: p.characters.map((c) => {
+                                if (c.id !== characterId) return c;
+                                const updated = { ...c, healthSystem: health } as PlayerCharacter;
+                                // Sync back to standard HP fields if type is HP
+                                if (health.type === 'hp') {
+                                    updated.hp = Number(health.data.current) || 0;
+                                    updated.maxHp = Number(health.data.max) || 10;
+                                }
+                                return updated;
+                          }),
                       }
                     : p
             ),
@@ -209,9 +310,26 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                 p.id === playerId
                     ? {
                           ...p,
-                          characters: p.characters.map((c) =>
-                              c.id === characterId ? { ...c, ...updates } : c
-                          ),
+                          characters: p.characters.map((c) => {
+                                if (c.id !== characterId) return c;
+                                const updated = { ...c, ...updates };
+
+                                // Auto-sync HealthSystem if type is HP
+                                if (updated.healthSystem?.type === 'hp') {
+                                    const currentVal = updates.hp !== undefined ? updates.hp : updated.hp;
+                                    const maxVal = updates.maxHp !== undefined ? updates.maxHp : updated.maxHp;
+                                    updated.healthSystem = {
+                                        ...updated.healthSystem,
+                                        data: {
+                                            ...updated.healthSystem.data,
+                                            current: currentVal,
+                                            max: maxVal
+                                        },
+                                        state: currentVal <= 0 ? 'dead' : (currentVal / maxVal) <= 0.25 ? 'critical' : (currentVal / maxVal) <= 0.5 ? 'wounded' : 'healthy'
+                                    };
+                                }
+                                return updated;
+                          }),
                       }
                     : p
             ),

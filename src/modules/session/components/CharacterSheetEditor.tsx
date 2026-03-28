@@ -149,7 +149,7 @@ const CharacterSheetEditor: React.FC = () => {
         players, selectedPlayerId, selectedCharacterId,
         customSheetTemplates, updateCharacterSheetData, updateCharacterVisuals, updateCharacterNarrative,
         generatePlayerPortrait, isGeneratingAIImage,
-        updateCharacterHP, updateCharacter
+        updateCharacterHP, updateCharacterMaxHP, updateCharacter
     } = useSessionOSStore();
     const { mediaList, getMediaBlob } = useMediaStore();
 
@@ -403,7 +403,7 @@ const CharacterSheetEditor: React.FC = () => {
                                     <input 
                                         type="number" 
                                         value={character.maxHp}
-                                        onChange={(e) => updateCharacter(selectedPlayerId!, character.id, { maxHp: parseInt(e.target.value) || 0 })}
+                                        onChange={(e) => updateCharacterMaxHP(selectedPlayerId!, character.id, parseInt(e.target.value) || 0)}
                                         className="w-full bg-transparent text-center text-app-text/40 font-black text-sm focus:outline-none"
                                         title="Points de Vie Max"
                                     />

@@ -5170,7 +5170,7 @@ class SessionManager {
     this.GHOST_DURATION = 2 * 60 * 1e3;
   }
   // 2 minutes
-  registerClient(deviceId, pseudo, role) {
+  registerClient(deviceId, pseudo, role, playerName) {
     if (this.ghostTimeouts.has(deviceId)) {
       clearTimeout(this.ghostTimeouts.get(deviceId));
       this.ghostTimeouts.delete(deviceId);
@@ -5179,6 +5179,7 @@ class SessionManager {
     const context = {
       deviceId,
       pseudo: pseudo || existingSession?.pseudo || "Anonyme",
+      playerName: playerName || existingSession?.playerName,
       role,
       status: "active",
       lastSeen: Date.now()
@@ -5765,16 +5766,17 @@ function startRemoteServer() {
         let currentDeviceId = null;
         console.log("[Remote] New device connected");
         if (win && !win.isDestroyed()) {
+          console.log("[Remote] New client connected. Requesting full sync from MJ...");
           win.webContents.send("remote:request-sync");
         }
         ws.on("message", (message) => {
           try {
             const data = JSON.parse(message);
             if (data.type === "remote:register") {
-              const { deviceId, pseudo, role } = data.payload;
-              currentDeviceId = deviceId;
-              console.log(`[Remote] Registering client: ${pseudo} (${role})`);
-              sessionManager.registerClient(deviceId, pseudo, role);
+              const { deviceId, pseudo, role, playerName } = data.payload || {};
+              const actualDeviceId = deviceId || `remote-${Math.random().toString(36).substring(2, 9)}`;
+              currentDeviceId = actualDeviceId;
+              sessionManager.registerClient(actualDeviceId, pseudo || "Unknown", role || "remote", playerName);
               if (win && !win.isDestroyed()) {
                 win.webContents.send("remote:sync-clients", sessionManager.getAllClients());
               }
@@ -5782,6 +5784,7 @@ function startRemoteServer() {
               console.log("[Remote] Handshake received");
             } else {
               if (win && !win.isDestroyed()) {
+                console.log("[Remote] Action received from tablet:", data.type);
                 win.webContents.send("remote:action", data);
               }
             }
@@ -5802,6 +5805,12 @@ function startRemoteServer() {
         });
       });
     }
+    ipcMain.on("remote:request-client-sync", () => {
+      console.log("[Remote] MJ requested client sync");
+      if (win && !win.isDestroyed()) {
+        win.webContents.send("remote:sync-clients", sessionManager.getAllClients());
+      }
+    });
     server.listen(REMOTE_PORT, "0.0.0.0", () => {
       console.log(`[Remote] Server + Media proxy listening on 0.0.0.0:${REMOTE_PORT}`);
     });
@@ -5822,6 +5831,8 @@ ipcMain.handle("remote:cache-media", async (_event, buffer, id) => {
 });
 ipcMain.on("remote:broadcast-sync", (_event, data) => {
   if (wss) {
+    const segments = Object.keys(data || {});
+    console.log(`[Remote] Broadcasting sync (${segments.join(", ")}) to ${wss.clients.size} clients`);
     const message = JSON.stringify({ type: "sync", payload: data });
     wss.clients.forEach((client) => {
       if (client.readyState === 1) {

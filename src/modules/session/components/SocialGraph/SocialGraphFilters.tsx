@@ -4,7 +4,11 @@ import {
     ZoomOut, 
     Maximize2, 
     Search,
-    ChevronDown
+    ChevronDown,
+    Lock,
+    Unlock,
+    RefreshCw,
+    Sliders
 } from 'lucide-react';
 
 interface CustomSelectProps {
@@ -68,6 +72,23 @@ interface SocialGraphFiltersProps {
     onZoomReset: () => void;
     isHeaderHidden: boolean;
     onToggleHeader: () => void;
+    isLocked?: boolean;
+    onToggleLock?: () => void;
+    onResetLayout?: () => void;
+    
+    // Nouveaux réglages de physique
+    physicsSettings: {
+        charge: number;
+        distance: number;
+        collision: number;
+    };
+    setPhysicsSettings: {
+        setCharge: (val: number) => void;
+        setDistance: (val: number) => void;
+        setCollision: (val: number) => void;
+    };
+    isSettingsOpen: boolean;
+    setIsSettingsOpen: (val: boolean) => void;
 }
 
 const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
@@ -82,7 +103,14 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
     onZoomOut,
     onZoomReset,
     isHeaderHidden,
-    onToggleHeader
+    onToggleHeader,
+    isLocked,
+    onToggleLock,
+    onResetLayout,
+    physicsSettings,
+    setPhysicsSettings,
+    isSettingsOpen,
+    setIsSettingsOpen
 }) => {
     return (
         <div className="absolute top-6 left-6 z-10 flex flex-col gap-4 max-w-2xl">
@@ -105,6 +133,29 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
                     <button onClick={onZoomReset} className="p-3 hover:bg-white/10 rounded-xl transition-all text-slate-400 hover:text-white" title="Reset View">
                         <Search size={20} className="rotate-45" />
                     </button>
+                    <div className="w-px h-8 bg-white/10 self-center mx-1" />
+                    <button 
+                        onClick={onToggleLock} 
+                        className={`p-3 rounded-xl transition-all ${isLocked ? 'text-neonCyan bg-neonCyan/20 shadow-glow border border-neonCyan/30' : 'text-slate-400 hover:text-white hover:bg-white/10'}`} 
+                        title={isLocked ? "Libérer la disposition" : "Figer la disposition actuelle"}
+                    >
+                        {isLocked ? <Lock size={20} /> : <Unlock size={20} />}
+                    </button>
+                    <button 
+                        onClick={onResetLayout} 
+                        className="p-3 hover:bg-red-500/20 rounded-xl transition-all text-slate-400 hover:text-red-400" 
+                        title="Réinitialiser la disposition (Nettoyer le Nexus)"
+                    >
+                        <RefreshCw size={20} />
+                    </button>
+                    <div className="w-px h-8 bg-white/10 self-center mx-1" />
+                    <button 
+                        onClick={() => setIsSettingsOpen(!isSettingsOpen)} 
+                        className={`p-3 rounded-xl transition-all ${isSettingsOpen ? 'text-accent bg-accent/20 shadow-glow-accent border border-accent/30' : 'text-slate-400 hover:text-white hover:bg-white/10'}`} 
+                        title="Réglages de physique du Graphe"
+                    >
+                        <Sliders size={20} />
+                    </button>
                 </div>
 
                 <div className="flex-1 bg-black/60 backdrop-blur-xl border border-white/10 rounded-2xl p-2 flex items-center shadow-2xl min-w-[300px]">
@@ -120,6 +171,93 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
                     />
                 </div>
             </div>
+
+            {/* Physics Settings Popover */}
+            {isSettingsOpen && (
+                <div className="bg-black/80 backdrop-blur-2xl border border-white/10 rounded-2xl p-6 shadow-2xl animate-fade-in animate-slide-up-subtle w-[350px] space-y-6 mt-4">
+                    <div className="flex items-center justify-between border-b border-white/5 pb-3">
+                        <span className="text-[10px] font-black uppercase text-accent tracking-widest">Réglages du Nexus</span>
+                        <button onClick={() => setIsSettingsOpen(false)} className="text-slate-500 hover:text-white text-[10px] font-bold uppercase transition-colors">Fermer</button>
+                    </div>
+
+                    {/* Charge Slider */}
+                    <div className="space-y-3">
+                        <div className="flex justify-between items-center text-[10px] uppercase font-bold tracking-wider">
+                            <span className="text-slate-400">Atmosphère (Charge)</span>
+                            <span className="text-neonCyan">{physicsSettings.charge}</span>
+                        </div>
+                        <input 
+                            type="range" 
+                            min="-500" 
+                            max="-50" 
+                            step="10"
+                            value={physicsSettings.charge}
+                            onChange={(e) => setPhysicsSettings.setCharge(Number(e.target.value))}
+                            className="w-full h-1.5 bg-black/40 rounded-lg appearance-none cursor-pointer accent-neonCyan"
+                            title="Ajuster la force de répulsion entre les nœuds"
+                        />
+                        <div className="flex justify-between text-[8px] text-slate-600 font-bold uppercase">
+                            <span>Dense</span>
+                            <span>Aéré</span>
+                        </div>
+                    </div>
+
+                    {/* Distance Slider */}
+                    <div className="space-y-3">
+                        <div className="flex justify-between items-center text-[10px] uppercase font-bold tracking-wider">
+                            <span className="text-slate-400">Distance des Liens</span>
+                            <span className="text-neonCyan">{physicsSettings.distance}px</span>
+                        </div>
+                        <input 
+                            type="range" 
+                            min="50" 
+                            max="300" 
+                            step="10"
+                            value={physicsSettings.distance}
+                            onChange={(e) => setPhysicsSettings.setDistance(Number(e.target.value))}
+                            className="w-full h-1.5 bg-black/40 rounded-lg appearance-none cursor-pointer accent-neonCyan"
+                            title="Ajuster la longueur par défaut des liens"
+                        />
+                         <div className="flex justify-between text-[8px] text-slate-600 font-bold uppercase">
+                            <span>Serré</span>
+                            <span>Large</span>
+                        </div>
+                    </div>
+
+                    {/* Collision Slider */}
+                    <div className="space-y-3">
+                        <div className="flex justify-between items-center text-[10px] uppercase font-bold tracking-wider">
+                            <span className="text-slate-400">Volume de Bulle</span>
+                            <span className="text-neonCyan">{physicsSettings.collision}px</span>
+                        </div>
+                        <input 
+                            type="range" 
+                            min="10" 
+                            max="100" 
+                            step="5"
+                            value={physicsSettings.collision}
+                            onChange={(e) => setPhysicsSettings.setCollision(Number(e.target.value))}
+                            className="w-full h-1.5 bg-black/40 rounded-lg appearance-none cursor-pointer accent-neonCyan"
+                            title="Ajuster l'espace de collision autour de chaque personnage"
+                        />
+                         <div className="flex justify-between text-[8px] text-slate-600 font-bold uppercase">
+                            <span>Petit</span>
+                            <span>Imposant</span>
+                        </div>
+                    </div>
+                    
+                    <button 
+                        onClick={() => {
+                            setPhysicsSettings.setCharge(-100);
+                            setPhysicsSettings.setDistance(150);
+                            setPhysicsSettings.setCollision(40);
+                        }}
+                        className="w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[10px] font-bold text-slate-400 hover:text-white uppercase tracking-widest transition-all"
+                    >
+                        Paramètres par défaut
+                    </button>
+                </div>
+            )}
 
             {/* Filters Row */}
             <div className="flex items-center gap-4">
@@ -151,6 +289,5 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
         </div>
     );
 };
-
 export default SocialGraphFilters;
 export { CustomSelect };

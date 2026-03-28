@@ -32,7 +32,7 @@ const ModuleSnapshots: React.FC = () => {
     };
 
     return (
-        <aside className="col-span-3 bg-app-surface/80 border-l border-app-border p-4 flex flex-col gap-6 overflow-y-auto custom-scrollbar">
+        <aside className="h-full col-span-3 bg-app-surface/80 border-l border-app-border p-4 flex flex-col gap-6 overflow-y-auto custom-scrollbar">
             {/* Module Snapshot Section */}
             <div className="flex flex-col gap-4">
                 <h4 className="text-xs uppercase tracking-widest text-app-text/40 mb-2 font-bold px-1">État des Modules</h4>

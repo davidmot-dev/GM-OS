@@ -33,6 +33,9 @@ export interface CampaignSliceActions {
     deleteCampaign: (id: string) => void;
     updateCampaignLayout: (campaignId: string, layout: Partial<LayoutConfig>) => void;
     toggleActiveLocation: (mapId: string) => void;
+    freezeGraphLayout: (campaignId: string, positions: Record<string, { x: number; y: number }>) => void;
+    unfreezeGraphLayout: (campaignId: string) => void;
+    resetGraphLayout: (campaignId: string) => void;
 }
 
 export type CampaignSlice = CampaignSliceState & CampaignSliceActions;
@@ -59,10 +62,12 @@ export const createCampaignSlice: StateCreator<CampaignSlice, [], [], CampaignSl
         gmToast(`Campagne "${newCampaign.name}" créée.`, 'success');
     },
 
-    updateCampaign: (id, updates) =>
+    updateCampaign: (id, updates) => {
+        console.log(`[CampaignSlice] Updating campaign ${id}:`, updates);
         set((state) => ({
             campaigns: state.campaigns.map((c) => (c.id === id ? { ...c, ...updates } : c)),
-        })),
+        }));
+    },
 
     deleteCampaign: (id) => {
         const campaign = get().campaigns.find((c) => c.id === id);
@@ -107,4 +112,25 @@ export const createCampaignSlice: StateCreator<CampaignSlice, [], [], CampaignSl
             isPinned ? 'info' : 'success'
         );
     },
+
+    freezeGraphLayout: (campaignId, positions) =>
+        set((state) => ({
+            campaigns: state.campaigns.map((c) =>
+                c.id === campaignId ? { ...c, nodePositions: positions, isGraphLocked: true } : c
+            ),
+        })),
+
+    unfreezeGraphLayout: (campaignId) =>
+        set((state) => ({
+            campaigns: state.campaigns.map((c) =>
+                c.id === campaignId ? { ...c, isGraphLocked: false } : c
+            ),
+        })),
+
+    resetGraphLayout: (campaignId) =>
+        set((state) => ({
+            campaigns: state.campaigns.map((c) =>
+                c.id === campaignId ? { ...c, nodePositions: undefined, isGraphLocked: false } : c
+            ),
+        })),
 });

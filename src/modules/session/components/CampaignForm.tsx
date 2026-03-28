@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import CluesManager from './CluesManager';
-import { useSessionOSStore, type Campaign } from '../useSessionOSStore';
+import { useSessionOSStore } from '../store/index';
+import type { Campaign } from '../store/types';
 import { 
     Search,
     Image as ImageIcon, Sparkles, Layout, 
@@ -65,9 +66,37 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
         syncGemsWithDefaults();
     }, [syncGemsWithDefaults]);
 
+    // Async data rehydration: if fullCampaign becomes available after mount, 
+    // sync our local states to avoid overwriting store with empty data.
+    React.useEffect(() => {
+        if (fullCampaign && !isNew) {
+            if (!name && fullCampaign.name) setName(fullCampaign.name);
+            if (!system && fullCampaign.system) setSystem(fullCampaign.system);
+            if (!description && fullCampaign.description) setDescription(fullCampaign.description);
+            if (!synopsis && fullCampaign.synopsis) setSynopsis(fullCampaign.synopsis);
+            if (!wallpaperUrl && fullCampaign.wallpaperUrl) setWallpaperUrl(fullCampaign.wallpaperUrl);
+            if (!notebookUrl && fullCampaign.notebookUrl) setNotebookUrl(fullCampaign.notebookUrl);
+            if (!systemPath && fullCampaign.systemPath) setSystemPath(fullCampaign.systemPath);
+            if (!campaignPath && fullCampaign.campaignPath) setCampaignPath(fullCampaign.campaignPath);
+            if (activeLocationIds.length === 0 && fullCampaign.activeLocationIds?.length) {
+                setActiveLocationIds(fullCampaign.activeLocationIds);
+            }
+            if (Object.keys(aiPersonas).length === 0 && fullCampaign.aiPersonas) {
+                setAiPersonas(fullCampaign.aiPersonas);
+            }
+        }
+    }, [fullCampaign, isNew]);
+
     const campaignMaps = atlasMaps.filter(m => m.campaignId === fullCampaign?.id);
     const resolvedWallpaper = useMediaUrl(wallpaperUrl);
     const isEdit = !!fullCampaign;
+
+    const hasUnsavedChanges = isNew || 
+        name !== (fullCampaign?.name || '') ||
+        system !== (fullCampaign?.system || 'generic') ||
+        description !== (fullCampaign?.description || '') ||
+        synopsis !== (fullCampaign?.synopsis || '') ||
+        wallpaperUrl !== (fullCampaign?.wallpaperUrl || '');
 
     const handleSubmit = () => {
         const campaignData = {
@@ -154,7 +183,11 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                         type="button"
                         onClick={handleSubmit}
                         title="Synchroniser avec le Nexus"
-                        className="flex items-center gap-2 bg-gm-gold hover:bg-yellow-500 text-black font-black px-6 py-2 rounded-xl text-[10px] tracking-widest uppercase transition-all shadow-glow-gold/20"
+                        className={`flex items-center gap-2 font-black px-6 py-2 rounded-xl text-[10px] tracking-widest uppercase transition-all ${
+                            hasUnsavedChanges 
+                                ? 'bg-gm-gold text-black hover:bg-yellow-500 shadow-glow-gold/40 animate-pulse border border-gm-gold/50' 
+                                : 'bg-gm-gold/20 text-gm-gold/60 hover:bg-gm-gold/40 hover:text-gm-gold border border-transparent'
+                        }`}
                     >
                         <Save size={14} />
                         Synchroniser Nexus

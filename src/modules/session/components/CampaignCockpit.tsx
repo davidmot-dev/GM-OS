@@ -17,12 +17,14 @@ const CampaignCockpit: React.FC = () => {
     const sessionCount = sessions.filter(s => s.campaignId === activeCampaignId).length;
 
     return (
-        <aside className="col-span-3 premium-glass border-r-0 p-5 flex flex-col gap-6 overflow-y-auto custom-scrollbar">
-            <div className="absolute inset-y-0 right-0 w-[1px] bg-gradient-to-b from-transparent via-white/5 to-transparent pointer-events-none" />
-            {/* Campaign Card */}
+        <aside className="flex-1 min-h-0 premium-glass border-r-0 flex flex-col">
+            <div className="absolute inset-y-0 right-0 w-[1px] bg-gradient-to-b from-transparent via-white/5 to-transparent pointer-events-none z-10" />
+            
+            <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar w-full flex flex-col gap-6 p-5">
+                {/* Campaign Card */}
             <div
                 onClick={() => setCurrentView('campaign-details')}
-                className="bg-white/5 rounded-xl p-4 border-l-4 border-gm-gold shadow-[0_0_20px_rgba(212,175,55,0.1)] cursor-pointer hover:bg-white/10 hover:shadow-[0_0_25px_rgba(212,175,55,0.2)] transition-all group relative overflow-hidden"
+                className="flex-shrink-0 bg-white/5 rounded-xl p-4 border-l-4 border-gm-gold shadow-[0_0_20px_rgba(212,175,55,0.1)] cursor-pointer hover:bg-white/10 hover:shadow-[0_0_25px_rgba(212,175,55,0.2)] transition-all group relative overflow-hidden"
             >
                 <div className="absolute inset-0 bg-gradient-to-br from-gm-gold/5 to-transparent pointer-events-none" />
                 <div className="flex justify-between items-start mb-2">
@@ -47,7 +49,7 @@ const CampaignCockpit: React.FC = () => {
             </div>
 
             {/* Navigation Menu */}
-            <nav className="flex flex-col gap-1">
+            <nav className="flex flex-col gap-1 flex-shrink-0">
                 <p className="text-app-text/40 text-xs uppercase tracking-widest mb-2 px-3">Gestion</p>
                 <button
                     onClick={() => setCurrentView('cockpit')}
@@ -214,7 +216,7 @@ const CampaignCockpit: React.FC = () => {
 
             {/* Session Resources Section */}
             {activeSession && (activeSession.externalLink || activeSession.filePath) && (
-                <div className="flex flex-col gap-3 py-4 border-t border-app-border/40">
+                <div className="flex flex-col gap-3 py-4 border-t border-app-border/40 flex-shrink-0">
                     <p className="text-app-text/40 text-[10px] font-bold uppercase tracking-[0.2em] px-3 mb-1">Ressources Session</p>
                     <div className="flex flex-col gap-2 px-1">
                         {activeSession.externalLink && (
@@ -248,6 +250,7 @@ const CampaignCockpit: React.FC = () => {
                 </div>
             )}
 
+            </div>
         </aside>
     );
 };

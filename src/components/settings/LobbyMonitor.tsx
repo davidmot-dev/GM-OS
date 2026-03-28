@@ -38,8 +38,8 @@ const LobbyMonitor: React.FC = () => {
     };
 
     return (
-        <div className="bg-slate-900/50 border border-white/10 rounded-2xl overflow-hidden">
-            <div className="bg-white/5 px-4 py-3 border-b border-white/10 flex items-center justify-between">
+        <div className="bg-slate-900/50 border border-white/10 rounded-2xl overflow-hidden flex flex-col">
+            <div className="bg-white/5 px-4 py-3 border-b border-white/10 flex items-center justify-between shrink-0">
                 <div className="flex items-center gap-2">
                     <Users size={16} className="text-gm-cyan" />
                     <span className="text-xs font-black uppercase tracking-widest text-white">Lobby des Terminaux</span>
@@ -49,7 +49,7 @@ const LobbyMonitor: React.FC = () => {
                 </span>
             </div>
 
-            <div className="max-h-[300px] overflow-y-auto custom-scrollbar p-2 space-y-2">
+            <div className="max-h-[300px] flex flex-col gap-2 overflow-y-auto custom-scrollbar p-3 relative">
                 {clients.length === 0 ? (
                     <div className="py-8 text-center text-slate-500">
                         <p className="text-[10px] font-bold uppercase">Aucun appareil connecté</p>
@@ -67,7 +67,14 @@ const LobbyMonitor: React.FC = () => {
                                     {getRoleIcon(client.role)}
                                 </div>
                                 <div>
-                                    <p className="text-xs font-bold text-white leading-none">{client.pseudo}</p>
+                                    <p className="text-xs font-bold text-white leading-none">
+                                        {client.pseudo}
+                                        {client.playerName && (
+                                            <span className="ml-2 text-[10px] font-medium text-gm-cyan/60 italic lowercase tracking-tight">
+                                                ({client.playerName})
+                                            </span>
+                                        )}
+                                    </p>
                                     <p className="text-[9px] font-medium text-slate-500 uppercase mt-1">
                                         {client.role} • {client.deviceId.substring(0, 8)}...
                                     </p>
@@ -81,7 +88,7 @@ const LobbyMonitor: React.FC = () => {
                 )}
             </div>
             
-            <div className="bg-slate-950/50 p-3 border-t border-white/5 text-center">
+            <div className="bg-slate-950/50 p-3 border-t border-white/5 text-center shrink-0">
                 <p className="text-[9px] text-slate-500 italic">
                     Les tablettes se reconnectent automatiquement en cas de perte de signal.
                 </p>

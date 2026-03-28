@@ -48,7 +48,7 @@ const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
     };
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 flex-shrink-0">
             <div className="flex items-center justify-between px-3">
                 <p className="text-app-text/40 text-[10px] font-bold uppercase tracking-[0.2em]">Prép. Session</p>
                 <div className="flex items-center gap-1.5">
@@ -68,6 +68,7 @@ const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
                             className="flex items-center gap-2 p-1.5 hover:bg-app-surface/40 rounded-lg group transition-all"
                         >
                             <input
+                                title="Marquer comme terminé"
                                 type="checkbox"
                                 checked={item.isCompleted}
                                 onChange={() => toggleChecklistItem(session.id, item.id)}
@@ -77,6 +78,7 @@ const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
                             {editingId === item.id ? (
                                 <div className="flex-1 flex items-center gap-2">
                                     <input
+                                        title="Éditer la tâche"
                                         autoFocus
                                         className="flex-1 bg-app-bg border-none text-xs text-app-text p-0 focus:ring-0"
                                         value={editText}
@@ -84,7 +86,7 @@ const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
                                         onKeyDown={(e) => e.key === 'Enter' && saveEdit(item.id)}
                                         onBlur={() => saveEdit(item.id)}
                                     />
-                                    <button onClick={() => saveEdit(item.id)} className="text-emerald-500 hover:text-emerald-400">
+                                    <button onClick={() => saveEdit(item.id)} title="Valider la modification" className="text-emerald-500 hover:text-emerald-400">
                                         <Check size={14} />
                                     </button>
                                 </div>
@@ -130,6 +132,7 @@ const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
                 />
                 <button 
                     type="submit"
+                    title="Ajouter la tâche"
                     disabled={!newItemText.trim()}
                     className="absolute right-3.5 top-1/2 -translate-y-1/2 text-app-text/40 hover:text-accent disabled:opacity-0 transition-all"
                 >

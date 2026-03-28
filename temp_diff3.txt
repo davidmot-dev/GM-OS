@@ -1,0 +1,19 @@
+﻿commit 2dabdc61d54174512cddbcf92b43bc2530e7b606
+Author: davidmot-dev <david.mot@gmail.com>
+Date:   Fri Mar 27 19:33:15 2026 +0100
+
+    CHORE: Finalization of Deck-OS and documentation before v5.9
+
+diff --git a/src/modules/session/components/SessionViewRegistry.tsx b/src/modules/session/components/SessionViewRegistry.tsx
+index 3d709c1..69ef479 100644
+--- a/src/modules/session/components/SessionViewRegistry.tsx
++++ b/src/modules/session/components/SessionViewRegistry.tsx
+@@ -30,7 +30,7 @@ const SessionViewRegistry: React.FC<SessionViewRegistryProps> = ({ forgeMode })
+     const { currentView, setCurrentView } = useSessionOSStore();
+ 
+     // Determine if the current view should take full width or be split with the cockpit
+-    const isFullLayout = !['cockpit', 'campaign-details', 'campaign-editor', 'timeline-wiki', 'npc-gallery'].includes(currentView);
++    const isFullLayout = !['cockpit', 'campaign-details', 'campaign-editor', 'campaign-form', 'timeline-wiki', 'npc-gallery'].includes(currentView);
+ 
+     // Rendu du contenu de la vue
+     const renderViewContent = () => {

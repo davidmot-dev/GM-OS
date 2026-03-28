@@ -163,6 +163,17 @@ Le **Social Nexus** est un outil de visualisation dynamique des relations (PJ/PN
 - **Cartographie des Relations** : Flèches directionnelles et codes couleurs (Allié/Ennemi).
 - **Accès Rapide (Deep Link)** : Navigation directe vers les fiches via l'icône **ExternalLink**.
 
+### ⚛️ Physique du Nexus (Réglages Avancés)
+
+Le Social Nexus est piloté par un moteur physique (D3-Force) que vous pouvez configurer via l'icône **Sliders** (Réglages) :
+
+1.  **Atmosphère (Charge)** : Contrôle la force de répulsion globale. Plus la valeur est négative (ex: `-500`), plus les personnages s'écartent les uns des autres (idéal pour les réseaux denses).
+2.  **Distance des Liens** : Définit la longueur des traits reliant les personnages. Utile pour aérer le centre du graphe si trop d'alliés sont proches.
+3.  **Volume de Bulle (Collision)** : Crée une zone de protection autour de chaque portrait. Cela empêche les bulles de se chevaucher visuellement, même en cas de forte attraction.
+
+> [!TIP]
+> Si le graphe devient confus, utilisez le bouton **Réinitialiser** (icône Refresh) pour nettoyer le layout, ou cliquez sur **"Paramètres par défaut"** dans le panneau Sliders pour restaurer la configuration standard v5.
+
 ---
 
 ## 🕵️ Clues-OS (Gestion des Indices)

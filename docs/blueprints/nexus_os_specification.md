@@ -84,9 +84,34 @@ Pour garantir la fiabilité demandée, Nexus-OS doit passer les tests suivants :
 
 ---
 
+## 🧠 6. Stratégie d'Implémentation BMAD
+
+Suite au brainstorming du 28 Mars 2026, l'équipe a défini les priorités suivantes :
+
+### A. Rigueur des Données (Winston)
+
+- **Selective Store Slicing** : Création d'un `ExportInterpreter` pour ne capturer que les données de campagne utiles (exclure les préférences locales).
+- **Double-Pass UUID Validation** : Vérification de l'intégrité des relations avant export pour éviter les "dépendances orphelines".
+- **Migration-Ready Schema** : Versioning strict du `manifest.json` pour assurer la compatibilité ascendante.
+
+### B. Expérience Utilisateur (Sally)
+
+- **Harvesting HUD** : Interface "Glass" affichant la progression en temps réel du moissonnage des fichiers.
+- **Conflict Resolver UI** : Gestion interactive des doublons d'ID lors de l'import (Remplacer, Cloner, Fusionner).
+- **Portability Dashboard** : Indicateur de poids et de statut "Nexus-Ready" dans le Master Cockpit.
+
+### C. Performance & Fiabilité (Carson)
+
+- **Parallel Asset Scraper** : Utilisation de promesses parallèles pour le transfert des fichiers binaires.
+- **Checksum Verification** : Utilisation de hashes SHA-256 pour éviter les copies redondantes lors de l'import/export.
+- **Memory-Efficient Zipping** : Streaming des données vers l'archive `.gmos` pour supporter les fichiers volumineux sans saturation RAM.
+
+---
+
 ## 📂 Emplacements des fichiers
+
 - **Spécification** : `docs/blueprints/nexus_os_specification.md`
-- **Implémentation** : `src/modules/system/archive/NexusService.ts` (À venir)
+- **Implémentation** : `src/modules/system/archive/NexusService.ts` (Phase 1 : Asset Scraper)
 
 ---
 *Date de sauvegarde : 26 Mars 2026*

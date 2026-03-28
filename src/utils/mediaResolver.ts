@@ -1,6 +1,5 @@
 import { openDB } from 'idb';
 import { withTimeout } from './promiseUtils';
-import { Logger } from './logger'; // Added this line
 const mediaCache = new Map<string, string>();
 
 /**
@@ -17,44 +16,75 @@ export async function resolveToSendableUrl(src: string | undefined): Promise<str
     }
 
     if (src.startsWith('m-')) {
+        console.log(`[MediaResolver] Resolving m- ID: ${src}...`);
         // Check cache first
-        if (mediaCache.has(src)) return mediaCache.get(src)!;
+        if (mediaCache.has(src)) {
+             console.log(`[MediaResolver] ${src} found in cache.`);
+             return mediaCache.get(src)!;
+        }
 
         try {
-            const db = await withTimeout(openDB('gmos-media-db', 2), 3000, 'DB_TIMEOUT');
+            console.log(`[MediaResolver] Opening IndexedDB...`);
+            const db = await withTimeout(openDB('gmos-media-db'), 3000, 'DB_TIMEOUT');
+            console.log(`[MediaResolver] Fetching from DB...`);
             const item = await withTimeout(db.get('media', src), 3000, 'DB_GET_TIMEOUT');
-            if (item?.blob) {
-                const blob = item.blob as Blob;
-
-                // NEW: Use local HTTP proxy instead of Base64 to save bandwidth
-                const bridge = window.appBridge;
-                if (bridge?.remote?.cacheMedia && bridge?.remote?.getConnectionInfo) {
-                    try {
-                        const info = await bridge.remote.getConnectionInfo();
-                        const buffer = await blob.arrayBuffer();
-                        const success = await (bridge.remote as any).cacheMedia(buffer, src);
-                        if (success) {
-                            const result = `http://${info.ip}:${info.port}/temp/${src}`;
-                            mediaCache.set(src, result);
-                            return result;
-                        }
-                    } catch (err) {
-                        Logger.warn('[MediaResolver] Local cache export failed, falling back to Base64', err);
-                    }
-                }
-
-                // Fallback to Base64 for legacy support or if bridge is unavailable
-                const result = await withTimeout(new Promise<string>((resolve) => {
-                    const reader = new FileReader();
-                    reader.onload = () => resolve(reader.result as string);
-                    reader.onerror = () => resolve('');
-                    reader.readAsDataURL(blob);
-                }), 5000, 'FILEREADER_TIMEOUT');
-                if (result) mediaCache.set(src, result);
-                return result;
+            
+            if (!item) {
+                 console.log(`[MediaResolver] Item ${src} NOT FOUND in DB.`);
+                 return '';
             }
+            if (!item.blob) {
+                 console.log(`[MediaResolver] Item ${src} found but HAS NO BLOB.`);
+                 return '';
+            }
+            
+            const blob = item.blob as Blob;
+            console.log(`[MediaResolver] Blob retrieved, size: ${blob.size} bytes`);
+
+            // NEW: Use local HTTP proxy instead of Base64 to save bandwidth
+            const bridge = window.appBridge;
+            if (bridge?.remote?.cacheMedia && bridge?.remote?.getConnectionInfo) {
+                console.log(`[MediaResolver] Local cache export path executing...`);
+                try {
+                    const info = await bridge.remote.getConnectionInfo();
+                    const buffer = await blob.arrayBuffer();
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    const success = await (bridge.remote as any).cacheMedia(buffer, src);
+                    console.log(`[MediaResolver] cacheMedia success: ${success}`);
+                    if (success) {
+                        const result = `http://${info.ip}:${info.port}/temp/${src}`;
+                        mediaCache.set(src, result);
+                        console.log(`[MediaResolver] Resolution successful via temp server: ${result}`);
+                        return result;
+                    }
+                } catch (err) {
+                    console.warn('[MediaResolver] Local cache export failed, falling back to Base64', err);
+                }
+            } else {
+                 console.log(`[MediaResolver] Bridge cacheMedia unavailable, falling to Base64.`);
+            }
+
+            console.log(`[MediaResolver] Falling back to Base64 read...`);
+            // Fallback to Base64 for legacy support or if bridge is unavailable
+            const result = await withTimeout(new Promise<string>((resolve) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result as string);
+                reader.onerror = (e) => {
+                     console.error(`[MediaResolver] FileReader error`, e);
+                     resolve('');
+                }
+                reader.readAsDataURL(blob);
+            }), 5000, 'FILEREADER_TIMEOUT');
+            
+            if (result) {
+                 console.log(`[MediaResolver] Base64 created, length: ${result.length}`);
+                 mediaCache.set(src, result);
+            } else {
+                 console.log(`[MediaResolver] Base64 returned empty.`);
+            }
+            return result;
         } catch (e) {
-            Logger.error('[MediaResolver] Could not resolve m- ID', src, e);
+            console.error(`[MediaResolver] Error resolving ${src}`, e);
         }
         return '';
     }
