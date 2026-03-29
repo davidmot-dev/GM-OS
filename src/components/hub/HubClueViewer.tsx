@@ -22,14 +22,15 @@ export const HubClueViewer: React.FC<HubClueViewerProps> = ({ clue, onClose }) =
             >
                 {/* Backdrop with extreme blur for "Surgical" focus */}
                 <div 
-                    className="absolute inset-0 bg-slate-950/90 backdrop-blur-3xl"
+                    className="absolute inset-0 bg-app-bg/90 backdrop-blur-3xl"
                     onClick={onClose}
                 />
 
                 {/* Close Button */}
                 <button
                     onClick={onClose}
-                    className="absolute top-8 right-8 z-[210] p-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white/40 hover:text-white transition-all hover:scale-110 active:scale-95 group"
+                    className="absolute top-8 right-8 z-[210] p-4 bg-app-surface/40 hover:bg-app-surface border border-app-border/10 rounded-full text-app-text/40 hover:text-app-text transition-all hover:scale-110 active:scale-95 group"
+                    title="Fermer l'indice"
                 >
                     <X size={24} className="group-hover:rotate-90 transition-transform duration-500" />
                 </button>
@@ -43,7 +44,7 @@ export const HubClueViewer: React.FC<HubClueViewerProps> = ({ clue, onClose }) =
                     className="relative z-[205] w-full max-w-5xl max-h-full overflow-hidden flex flex-col md:flex-row gap-8 items-stretch"
                 >
                     {/* Media Section (Image or XXL Stylized Icon) */}
-                    <div className="flex-1 min-h-[300px] md:min-h-0 bg-slate-900/40 border border-white/5 rounded-[3rem] overflow-hidden relative shadow-2xl flex items-center justify-center group">
+                    <div className="flex-1 min-h-[300px] md:min-h-0 bg-app-surface/20 border border-app-border/10 rounded-[3rem] overflow-hidden relative shadow-2xl flex items-center justify-center group">
                         {clue.mediaUrl ? (
                             <>
                                 {/* Background Ambient Glow */}
@@ -59,12 +60,12 @@ export const HubClueViewer: React.FC<HubClueViewerProps> = ({ clue, onClose }) =
                             </>
                         ) : (
                             <div className="flex flex-col items-center gap-8 animate-pulse-slow">
-                                <div className="p-12 bg-white/5 rounded-full border border-white/10 shadow-[0_0_80px_rgba(255,255,255,0.05)]">
-                                    <FileSearch size={120} className="text-white/20 stroke-[1]" />
+                                <div className="p-12 bg-app-surface/10 rounded-full border border-app-border/10 shadow-[0_0_80px_rgba(0,0,0,0.05)]">
+                                    <FileSearch size={120} className="text-app-text/20 stroke-[1]" />
                                 </div>
                                 <div className="text-center space-y-2">
-                                    <p className="text-[10px] font-black uppercase tracking-[0.5em] text-white/10">Archives Sécurisées</p>
-                                    <p className="text-[8px] font-bold text-white/5 uppercase tracking-widest">Preuve immatérielle</p>
+                                    <p className="text-[10px] font-black uppercase tracking-[0.5em] text-app-text/10">Archives Sécurisées</p>
+                                    <p className="text-[8px] font-bold text-app-text/5 uppercase tracking-widest">Preuve immatérielle</p>
                                 </div>
                             </div>
                         )}
@@ -76,17 +77,17 @@ export const HubClueViewer: React.FC<HubClueViewerProps> = ({ clue, onClose }) =
                             {/* Metadata Badges */}
                             <div className="flex flex-wrap gap-3">
                                 {clue.revealedAt && (
-                                    <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-full border border-white/5">
-                                        <Calendar size={12} className="text-white/30" />
-                                        <span className="text-[9px] font-black text-white/40 uppercase tracking-widest">
+                                    <div className="flex items-center gap-2 px-3 py-1.5 bg-app-surface/40 rounded-full border border-app-border/20">
+                                        <Calendar size={12} className="text-app-text/30" />
+                                        <span className="text-[9px] font-black text-app-text/40 uppercase tracking-widest">
                                             {new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long' }).format(clue.revealedAt)}
                                         </span>
                                     </div>
                                 )}
                                 {clue.campaignMoment && (
-                                    <div className="flex items-center gap-2 px-3 py-1.5 bg-amber-500/10 rounded-full border border-amber-500/20">
-                                        <Bookmark size={12} className="text-amber-500/50" />
-                                        <span className="text-[9px] font-black text-amber-500/60 uppercase tracking-widest">
+                                    <div className="flex items-center gap-2 px-3 py-1.5 bg-accent/10 rounded-full border border-accent/20">
+                                        <Bookmark size={12} className="text-accent/50" />
+                                        <span className="text-[9px] font-black text-accent/60 uppercase tracking-widest">
                                             {clue.campaignMoment}
                                         </span>
                                     </div>
@@ -94,24 +95,24 @@ export const HubClueViewer: React.FC<HubClueViewerProps> = ({ clue, onClose }) =
                             </div>
 
                             {/* Title */}
-                            <h2 className="text-4xl md:text-5xl font-black text-white leading-none uppercase tracking-tighter">
+                            <h2 className="text-4xl md:text-5xl font-black text-app-text leading-none uppercase tracking-tighter">
                                 {clue.title}
                             </h2>
                         </div>
 
                         {/* Narrative Content */}
                         <div className="relative">
-                            <div className="absolute top-0 left-0 w-12 h-0.5 bg-white/20 mb-6" />
+                            <div className="absolute top-0 left-0 w-12 h-0.5 bg-accent/30 mb-6" />
                             <div className="max-h-[30vh] md:max-h-[40vh] overflow-y-auto custom-scrollbar-minimal pr-6 mt-8">
-                                <p className="text-2xl text-slate-300 leading-relaxed font-serif italic text-justify opacity-80">
+                                <p className="text-2xl text-app-text/80 leading-relaxed font-serif italic text-justify">
                                     {clue.content}
                                 </p>
                             </div>
                         </div>
 
                         {/* Footnote */}
-                        <div className="pt-8 border-t border-white/5">
-                            <p className="text-[10px] font-bold text-white/10 uppercase tracking-[0.3em]">Session History | GM-OS Legacy</p>
+                        <div className="pt-8 border-t border-app-border/10">
+                            <p className="text-[10px] font-bold text-app-text/20 uppercase tracking-[0.3em]">Session History | GM-OS Legacy</p>
                         </div>
                     </div>
                 </motion.div>

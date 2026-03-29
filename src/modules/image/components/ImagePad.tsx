@@ -43,25 +43,23 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
             ></div>
             <div className="absolute inset-0 bg-gradient-to-t from-app-bg/90 via-transparent to-transparent"></div>
 
-            {isProjected && (
                 <div className="absolute top-3 left-3 flex flex-col gap-1">
                     {activeTargets.map(targetLabel => (
                         <span
                             key={targetLabel}
-                            className={`${targetLabel === 'Player Hub' ? 'bg-accent text-slate-950' : 'bg-amber-500 text-white'} text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-tighter shadow-lg whitespace-nowrap`}
+                            className={`bg-accent text-app-bg text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-tighter shadow-lg whitespace-nowrap font-display`}
                         >
                             {targetLabel}
                         </span>
                     ))}
                 </div>
-            )}
 
             {/* Top Right Controls: Checkbox for Sequence and Remove */}
             <div className="absolute top-3 right-3 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
 
                 <button
                     onClick={(e) => { e.stopPropagation(); toggleMediaFavorite(media.id); }}
-                    className={`p-1 rounded-md transition-colors ${media.isFavorite ? 'bg-yellow-500/80 text-white' : 'bg-app-surface/50 text-slate-400 hover:text-yellow-400'}`}
+                    className={`p-1 rounded-md transition-colors ${media.isFavorite ? 'bg-accent text-app-bg shadow-glow-accent' : 'bg-app-surface/50 text-app-text/40 hover:text-accent'}`}
                     title={media.isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
                 >
                     <Star size={14} fill={media.isFavorite ? "currentColor" : "none"} />
@@ -78,7 +76,7 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
 
                 <button
                     onClick={(e) => { e.stopPropagation(); removeMedia(media.id); }}
-                    className="p-1 bg-red-900/40 hover:bg-red-600 text-white rounded-md transition-colors"
+                    className="p-1 bg-red-500/20 hover:bg-red-500 text-app-text rounded-md transition-colors border border-red-500/20"
                     title="Retirer"
                 >
                     <X size={14} />
@@ -88,7 +86,7 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                 <button
                     onClick={() => projectSolo(media)}
-                    className="bg-white/10 backdrop-blur-md border border-white/20 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-white/20 pointer-events-auto shadow-lg"
+                    className="bg-accent/20 backdrop-blur-md border border-accent/30 text-accent px-4 py-2 rounded-lg text-sm font-black uppercase tracking-widest hover:bg-accent/40 pointer-events-auto shadow-2xl font-display"
                 >
                     SOLO
                 </button>
@@ -97,13 +95,13 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
             <div className="absolute bottom-0 w-full p-4">
                 <div className="flex justify-between items-start">
                     <div className="flex-1 min-w-0 pr-2">
-                        <h4 className="text-sm font-bold text-white truncate drop-shadow-md group-hover:text-accent transition-colors">
+                        <h4 className="text-sm font-bold text-app-text truncate drop-shadow-md group-hover:text-accent transition-colors">
                             {media.name}
                         </h4>
-                        <div className="text-[7px] font-black text-white/20 uppercase tracking-tighter">[{media.id}]</div>
+                        <div className="text-[7px] font-black text-app-text/20 uppercase tracking-tighter">[{media.id}]</div>
                         <div className="flex items-center gap-2 mt-1">
                             {media.sizeInfo && (
-                                <span className="text-[10px] text-slate-300 font-mono bg-app-bg/40 px-1.5 py-0.5 rounded">
+                                <span className="text-[10px] text-app-text/60 font-mono bg-app-bg/40 px-1.5 py-0.5 rounded">
                                     {media.sizeInfo}
                                 </span>
                             )}
@@ -111,8 +109,9 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
                                 <select
                                     value={media.folderId || ''}
                                     onChange={(e) => moveMediaToFolder(media.id, e.target.value || null)}
-                                    className="text-[10px] text-slate-300 font-mono bg-app-bg/60 border border-app-border rounded px-1 py-0.5 focus:outline-none focus:border-accent hover:bg-app-bg/80 cursor-pointer pointer-events-auto"
+                                    className="text-[10px] text-app-text/60 font-mono bg-app-bg/60 border border-app-border/40 rounded px-1 py-0.5 focus:outline-none focus:border-accent hover:bg-app-bg/80 cursor-pointer pointer-events-auto"
                                     onClick={(e) => e.stopPropagation()} // Prevent trigger solo
+                                    title="Déplacer vers un dossier"
                                 >
                                     <option value="">Root</option>
                                     {folders.map(f => (

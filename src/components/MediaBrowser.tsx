@@ -176,7 +176,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
 
     // 5. Render Obsidian Edition
     return createPortal(
-        <div className="fixed inset-0 z-[100] flex bg-[#060e20] text-[#dee5ff] font-['Space_Grotesk'] overflow-hidden animate-in fade-in duration-500 select-none">
+        <div className="fixed inset-0 z-[100] flex bg-app-bg text-app-text font-sans overflow-hidden animate-in fade-in duration-500 select-none">
             {/* Full preview overlay */}
             {previewItem && (
                 <FullScreenPreview 
@@ -194,17 +194,17 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                 </div>
 
                 {/* SideNavBar Glassmorphic */}
-                <aside className="w-80 h-full bg-[#091328]/40 backdrop-blur-3xl border-r border-white/5 flex flex-col z-20 relative">
-                    <div className="p-8 border-b border-white/5">
+                <aside className="w-80 h-full bg-app-surface/40 backdrop-blur-3xl border-r border-app-border/10 flex flex-col z-20 relative">
+                    <div className="p-8 border-b border-app-border/10">
                         <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-2xl bg-[#53ddfc]/10 flex items-center justify-center shadow-[inset_0_0_20px_rgba(83,221,252,0.1)] border border-[#53ddfc]/20 group transition-all duration-500 hover:scale-105 active:scale-95">
-                                <UploadCloud className="text-[#53ddfc] group-hover:drop-shadow-[0_0_8px_rgba(83,221,252,0.8)] transition-all" size={24} />
+                            <div className="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center shadow-[inset_0_0_20px_rgba(var(--accent-rgb),0.1)] border border-accent/20 group transition-all duration-500 hover:scale-105 active:scale-95">
+                                <UploadCloud className="text-accent group-hover:drop-shadow-[0_0_8px_rgba(var(--accent-rgb),0.8)] transition-all" size={24} />
                             </div>
                             <div>
-                                <h1 className="text-base font-black uppercase tracking-[0.25em] text-[#dee5ff] drop-shadow-[0_0_10px_rgba(222,229,255,0.3)]">Media Hub</h1>
+                                <h1 className="text-base font-black uppercase tracking-[0.25em] text-app-text drop-shadow-[0_0_10px_rgba(var(--app-text-rgb),0.3)] font-display">Media Hub</h1>
                                 <div className="flex items-center gap-2 mt-1">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse shadow-[0_0_5px_#06b6d4]" />
-                                    <p className="text-[10px] font-bold text-white/30 uppercase tracking-widest leading-none">Nexus Protocol</p>
+                                    <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shadow-[0_0_5px_var(--accent)]" />
+                                    <p className="text-[10px] font-bold text-app-text/30 uppercase tracking-widest leading-none">Nexus Protocol</p>
                                 </div>
                             </div>
                         </div>
@@ -214,13 +214,13 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                         {/* Virtual Directories */}
                         <section>
                             <div className="flex items-center justify-between mb-4 px-2">
-                                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#53ddfc] flex items-center gap-2 opacity-60">
+                                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-accent flex items-center gap-2 opacity-60 font-display">
                                     <Folder size={14} />
                                     Dossiers de Collection
                                 </h3>
                                 <button 
                                     onClick={handleCreateCollection}
-                                    className="p-1 px-3 rounded-xl bg-[#53ddfc]/10 text-[#53ddfc] hover:bg-[#53ddfc]/20 transition-all border border-[#53ddfc]/20 text-[10px] font-black uppercase tracking-widest"
+                                    className="p-1 px-3 rounded-xl bg-accent/10 text-accent hover:bg-accent/20 transition-all border border-accent/20 text-[10px] font-black uppercase tracking-widest"
                                     title="Initialize New Unit"
                                 >
                                     <Plus size={14} />
@@ -234,21 +234,21 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                         setSelectedTags([]);
                                         setSmartFilter('none');
                                     }}
-                                    className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-bold transition-all duration-300 ${(!selectedCollectionId && selectedTags.length === 0 && smartFilter === 'none') ? 'bg-[#53ddfc]/10 text-[#53ddfc] border border-[#53ddfc]/30 shadow-[0_0_30px_rgba(83,221,252,0.15)]' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'}`}
+                                    className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-bold transition-all duration-300 ${(!selectedCollectionId && selectedTags.length === 0 && smartFilter === 'none') ? 'bg-accent/10 text-accent border border-accent/30 shadow-[0_0_30px_rgba(var(--accent-rgb),0.15)]' : 'text-app-text/40 hover:bg-app-text/5 hover:text-app-text/70'}`}
                                 >
                                     <Search size={18} className="opacity-50" />
                                     Global Archive
                                 </button>
 
                                 <div className="pt-3 space-y-1.5">
-                                    <h4 className="px-5 text-[9px] font-black text-white/15 uppercase tracking-[0.3em] mb-2">Smart Matrix</h4>
+                                    <h4 className="px-5 text-[9px] font-black text-app-text/15 uppercase tracking-[0.3em] mb-2 font-display">Smart Matrix</h4>
                                     <button
                                         onClick={() => {
                                             setSmartFilter('recent');
                                             setSelectedCollectionId(null);
                                             setSelectedTags([]);
                                         }}
-                                        className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-bold transition-all duration-300 ${smartFilter === 'recent' ? 'bg-amber-500/10 text-amber-500 border border-amber-500/30' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'}`}
+                                        className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-bold transition-all duration-300 ${smartFilter === 'recent' ? 'bg-amber-500/10 text-amber-500 border border-amber-500/30' : 'text-app-text/40 hover:bg-app-text/5 hover:text-app-text/70'}`}
                                     >
                                         <Clock size={18} className="opacity-50" />
                                         Latest Frequency
@@ -259,7 +259,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                             setSelectedCollectionId(null);
                                             setSelectedTags([]);
                                         }}
-                                        className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-bold transition-all duration-300 ${smartFilter === 'untagged' ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/30' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'}`}
+                                        className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-bold transition-all duration-300 ${smartFilter === 'untagged' ? 'bg-accent/10 text-accent border border-accent/30' : 'text-app-text/40 hover:bg-app-text/5 hover:text-app-text/70'}`}
                                     >
                                         <ShieldAlert size={18} className="opacity-50" />
                                         Unalias Content
@@ -267,7 +267,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                 </div>
                                 
                                 <div className="pt-6 space-y-1.5">
-                                    <h4 className="px-5 text-[9px] font-black text-white/15 uppercase tracking-[0.3em] mb-2">User Domains</h4>
+                                    <h4 className="px-5 text-[9px] font-black text-app-text/15 uppercase tracking-[0.3em] mb-2 font-display">User Domains</h4>
                                     {collections.map(coll => (
                                         <div key={coll.id} className="group flex items-center gap-1 pr-2">
                                             <button
@@ -276,15 +276,15 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                                     setSelectedTags([]);
                                                     setSmartFilter('none');
                                                 }}
-                                                className={`flex-1 flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-bold transition-all duration-300 ${selectedCollectionId === coll.id ? 'bg-blue-600/10 text-blue-400 border border-blue-400/30' : 'text-slate-500 hover:bg-white/5 hover:text-slate-300'}`}
+                                                className={`flex-1 flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-bold transition-all duration-300 ${selectedCollectionId === coll.id ? 'bg-accent/10 text-accent border border-accent/20 shadow-[0_0_20px_rgba(var(--accent-rgb),0.1)]' : 'text-app-text/30 hover:bg-app-text/5 hover:text-app-text/60'}`}
                                             >
-                                                <Folder size={18} className={`opacity-50 ${selectedCollectionId === coll.id ? 'text-blue-400' : ''}`} />
+                                                <Folder size={18} className={`opacity-50 ${selectedCollectionId === coll.id ? 'text-accent' : ''}`} />
                                                 <span className="truncate">{coll.name}</span>
                                             </button>
                                             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0 duration-300">
                                                 <button 
                                                     onClick={() => handleRenameCollection(coll.id, coll.name)} 
-                                                    className="p-2 text-slate-500 hover:text-blue-400 hover:bg-blue-400/10 rounded-lg transition-all"
+                                                    className="p-2 text-app-text/20 hover:text-accent hover:bg-accent/10 rounded-lg transition-all"
                                                     title="Renommer le dossier"
                                                     aria-label="Renommer le dossier"
                                                 >
@@ -292,7 +292,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                                 </button>
                                                 <button 
                                                     onClick={() => handleDeleteCollection(coll.id)} 
-                                                    className="p-2 text-slate-500 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all"
+                                                    className="p-2 text-app-text/20 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
                                                     title="Supprimer le dossier"
                                                     aria-label="Supprimer le dossier"
                                                 >
@@ -302,8 +302,8 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                         </div>
                                     ))}
                                     {collections.length === 0 && (
-                                        <div className="px-5 py-8 text-center border border-dashed border-white/5 rounded-2xl">
-                                            <p className="text-[10px] font-bold text-white/10 uppercase tracking-widest">No units detected</p>
+                                        <div className="px-5 py-8 text-center border border-dashed border-app-border/10 rounded-2xl">
+                                            <p className="text-[10px] font-bold text-app-text/10 uppercase tracking-widest">No units detected</p>
                                         </div>
                                     )}
                                 </div>
@@ -311,15 +311,15 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                         </section>
 
                         {/* Tactical Metadata Tags */}
-                        <section className="pt-8 border-t border-white/5">
+                        <section className="pt-8 border-t border-app-border/10">
                             <div className="flex items-center justify-between mb-5 px-2">
-                                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#53ddfc] flex items-center gap-2 opacity-60">
+                                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-accent flex items-center gap-2 opacity-60 font-display">
                                     <Tag size={14} />
                                     Tactical Tags
                                 </h3>
                                 <button 
                                     onClick={() => setTagLogic(tagLogic === 'AND' ? 'OR' : 'AND')}
-                                    className={`px-3 py-1 rounded-xl text-[9px] font-black tracking-widest transition-all border ${tagLogic === 'AND' ? 'bg-[#53ddfc]/10 border-[#53ddfc]/40 text-[#53ddfc] shadow-[0_0_10px_rgba(83,221,252,0.1)]' : 'bg-white/5 border-white/10 text-slate-500 hover:text-slate-300'}`}
+                                    className={`px-3 py-1 rounded-xl text-[9px] font-black tracking-widest transition-all border ${tagLogic === 'AND' ? 'bg-accent/10 border-accent/40 text-accent shadow-[0_0_10px_rgba(var(--accent-rgb),0.1)]' : 'bg-app-text/5 border-app-text/10 text-app-text/40 hover:text-app-text/70'}`}
                                     title={`Current Matrix Logic: ${tagLogic}`}
                                 >
                                     {tagLogic}
@@ -338,20 +338,20 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                             setSelectedCollectionId(null);
                                             setSmartFilter('none');
                                         }}
-                                        className={`px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-[0.1em] border transition-all duration-300 ${selectedTags.includes(tag) ? 'bg-[#53ddfc]/10 border-[#53ddfc]/40 text-[#53ddfc] shadow-[0_0_15px_rgba(83,221,252,0.1)]' : 'bg-white/5 border-white/5 text-white/20 hover:border-white/20 hover:text-white/60 hover:bg-white/10'}`}
+                                        className={`px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-[0.1em] border transition-all duration-300 ${selectedTags.includes(tag) ? 'bg-accent/10 border-accent/40 text-accent shadow-[0_0_15px_rgba(var(--accent-rgb),0.1)]' : 'bg-app-text/5 border-app-text/5 text-app-text/20 hover:border-app-text/20 hover:text-app-text/60 hover:bg-app-text/10'}`}
                                     >
                                         {tag}
                                     </button>
                                 ))}
                                 {allTags.length === 0 && (
-                                    <div className="text-[10px] font-bold text-white/5 uppercase tracking-widest text-center w-full py-4 italic">No tag traces found</div>
+                                    <div className="text-[10px] font-bold text-app-text/5 uppercase tracking-widest text-center w-full py-4 italic">No tag traces found</div>
                                 )}
                             </div>
                         </section>
                     </div>
                     
                     {/* Bottom Status & Actions */}
-                    <div className="p-6 border-t border-white/5 bg-black/20">
+                    <div className="p-6 border-t border-app-border/10 bg-app-bg/20">
                         <button
                             onClick={() => {
                                 if (confirm("INITIATE HUB PURGE? This operation is irreversible and will delete all assets and unit directories.")) {
@@ -370,28 +370,28 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                 <main className="flex-1 h-full flex flex-col relative z-20">
                     
                     {/* Integrated HUD Toolbar */}
-                    <header className="h-24 border-b border-white/5 flex items-center px-10 bg-[#0f1930]/40 backdrop-blur-3xl justify-between relative">
+                    <header className="h-24 border-b border-app-border/10 flex items-center px-10 bg-app-surface/40 backdrop-blur-3xl justify-between relative">
                         {/* Decorative HUD line */}
-                        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#53ddfc]/30 to-transparent shadow-[0_0_10px_rgba(83,221,252,0.5)]" />
+                        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-accent/30 to-transparent shadow-[0_0_10px_rgba(var(--accent-rgb),0.5)]" />
                         
                         <div className="flex items-center gap-8 flex-1 max-w-5xl">
                             {/* Search Tactical HUD */}
                             <div className="relative flex-1 group max-w-xl">
-                                <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-white/10 group-focus-within:text-[#53ddfc] group-focus-within:drop-shadow-[0_0_8px_rgba(83,221,252,0.4)] transition-all duration-500" size={18} />
+                                <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-app-text/10 group-focus-within:text-accent group-focus-within:drop-shadow-[0_0_8px_rgba(var(--accent-rgb),0.4)] transition-all duration-500" size={18} />
                                 <input 
                                     type="text" 
                                     placeholder="Search Tactical Assets..." 
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
-                                    className="w-full bg-[#060e20]/80 border border-white/5 rounded-2xl pl-14 pr-6 py-4 text-sm font-bold tracking-wide focus:outline-none focus:border-[#53ddfc]/40 focus:ring-1 focus:ring-[#53ddfc]/20 transition-all duration-500 placeholder:text-white/5 placeholder:uppercase placeholder:text-[10px] placeholder:tracking-[0.2em] text-[#dee5ff]"
+                                    className="w-full bg-app-bg/80 border border-app-border/10 rounded-2xl pl-14 pr-6 py-4 text-sm font-bold tracking-wide focus:outline-none focus:border-accent/40 focus:ring-1 focus:ring-accent/20 transition-all duration-500 placeholder:text-app-text/5 placeholder:uppercase placeholder:text-[10px] placeholder:tracking-[0.2em] text-app-text"
                                 />
                                 <div className="absolute right-5 top-1/2 -translate-y-1/2 flex items-center gap-1.5 opacity-0 group-focus-within:opacity-100 transition-opacity duration-500 pointer-events-none">
-                                    <div className="px-1.5 py-0.5 border border-[#53ddfc]/20 rounded text-[8px] font-black text-[#53ddfc]/50">SCAN MODE</div>
+                                    <div className="px-1.5 py-0.5 border border-accent/20 rounded text-[8px] font-black text-accent/50 font-display">SCAN MODE</div>
                                 </div>
                             </div>
 
                             {/* Matrix Type Tabs */}
-                            <div className="flex bg-[#060e20]/90 p-1.5 rounded-2xl border border-white/5 shadow-2xl">
+                            <div className="flex bg-app-bg/90 p-1.5 rounded-2xl border border-app-border/10 shadow-2xl">
                                 {[
                                     { id: 'all', label: 'ALL', icon: null },
                                     { id: 'image', label: 'IMAGE', icon: <ImageIcon size={14} /> },
@@ -402,7 +402,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                     <button
                                         key={btn.id}
                                         onClick={() => setTypeFilter(btn.id as MediaType | 'all')}
-                                        className={`flex items-center gap-2.5 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 ${typeFilter === btn.id ? 'bg-[#53ddfc] text-slate-950 shadow-[0_0_25px_rgba(83,221,252,0.4)] translate-y-[-1px]' : 'text-white/20 hover:text-white/70 hover:bg-white/5'}`}
+                                        className={`flex items-center gap-2.5 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 ${typeFilter === btn.id ? 'bg-accent text-app-bg shadow-[0_0_25px_rgba(var(--accent-rgb),0.4)] translate-y-[-1px]' : 'text-app-text/20 hover:text-app-text/70 hover:bg-app-text/5'}`}
                                     >
                                         {btn.icon}
                                         {btn.label}
@@ -416,7 +416,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                             {activeCampaignId && (
                                 <button
                                     onClick={() => setCampaignFilterEnabled(!campaignFilterEnabled)}
-                                    className={`flex items-center gap-3 px-6 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 border group ${campaignFilterEnabled ? 'bg-amber-500/10 border-amber-500/40 text-amber-500 shadow-[0_0_20px_rgba(245,158,11,0.15)]' : 'bg-[#060e20]/80 border-white/5 text-white/20 hover:border-white/20 hover:text-white/60'}`}
+                                    className={`flex items-center gap-3 px-6 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 border group ${campaignFilterEnabled ? 'bg-amber-500/10 border-amber-500/40 text-amber-500 shadow-[0_0_20px_rgba(245,158,11,0.15)]' : 'bg-app-bg/80 border-app-border/10 text-app-text/20 hover:border-app-text/20 hover:text-app-text/60'}`}
                                 >
                                     <Users size={16} className={`transition-transform duration-500 ${campaignFilterEnabled ? 'scale-110' : 'group-hover:scale-110'}`} />
                                     {campaignFilterEnabled ? "Focus Operational" : "Global Matrix"}
@@ -427,17 +427,17 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                             <div className="relative">
                                 <button
                                     onClick={() => setIsSortMenuOpen(!isSortMenuOpen)}
-                                    className={`flex items-center gap-3 px-6 py-3.5 bg-[#060e20]/80 border ${isSortMenuOpen ? 'border-[#53ddfc]/40 text-[#53ddfc] shadow-[0_0_20px_rgba(83,221,252,0.1)]' : 'border-white/5 text-white/30'} rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 group`}
+                                    className={`flex items-center gap-3 px-6 py-3.5 bg-app-bg/80 border ${isSortMenuOpen ? 'border-accent/40 text-accent shadow-[0_0_20px_rgba(var(--accent-rgb),0.1)]' : 'border-app-border/10 text-app-text/30'} rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 group`}
                                 >
-                                    <ListFilter size={18} className={`transition-colors duration-500 ${isSortMenuOpen ? 'text-[#53ddfc]' : 'group-hover:text-white/60 text-white/20'}`} />
+                                    <ListFilter size={18} className={`transition-colors duration-500 ${isSortMenuOpen ? 'text-accent' : 'group-hover:text-app-text/60 text-app-text/20'}`} />
                                     <span>{sortBy === 'date-desc' ? 'Plus récents' : sortBy === 'date-asc' ? 'Plus anciens' : sortBy === 'size-desc' ? 'Taille' : 'Nom (A-Z)'}</span>
-                                    <ChevronDown size={16} className={`transition-transform duration-500 ${isSortMenuOpen ? 'rotate-180 text-[#53ddfc]' : 'text-white/10 group-hover:text-white/30'}`} />
+                                    <ChevronDown size={16} className={`transition-transform duration-500 ${isSortMenuOpen ? 'rotate-180 text-accent' : 'text-app-text/10 group-hover:text-app-text/30'}`} />
                                 </button>
 
                                 {isSortMenuOpen && (
                                     <>
                                         <div className="fixed inset-0 z-40" onClick={() => setIsSortMenuOpen(false)} />
-                                        <div className="absolute right-0 top-[calc(100%+12px)] w-64 bg-[#091328]/95 border border-white/10 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-50 overflow-hidden backdrop-blur-2xl animate-in fade-in slide-in-from-top-4 duration-500 p-2 border-[#53ddfc]/10">
+                                        <div className="absolute right-0 top-[calc(100%+12px)] w-64 bg-app-surface/95 border border-app-border/20 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-50 overflow-hidden backdrop-blur-2xl animate-in fade-in slide-in-from-top-4 duration-500 p-2 border-accent/10">
                                             <div className="space-y-1">
                                                 {[
                                                     { id: 'date-desc', label: 'Plus récents', icon: <Clock size={16} />, desc: 'Les derniers imports' },
@@ -451,16 +451,16 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                                             setSortBy(option.id as 'date-desc' | 'date-asc' | 'size-desc' | 'name-asc');
                                                             setIsSortMenuOpen(false);
                                                         }}
-                                                        className={`w-full text-left px-5 py-4 rounded-2xl transition-all duration-300 group/opt ${sortBy === option.id ? 'bg-[#53ddfc] text-slate-950 shadow-[0_8px_20px_rgba(83,221,252,0.3)]' : 'hover:bg-white/5'}`}
+                                                        className={`w-full text-left px-5 py-4 rounded-2xl transition-all duration-300 group/opt ${sortBy === option.id ? 'bg-accent text-app-bg shadow-[0_8px_20px_rgba(var(--accent-rgb),0.3)]' : 'hover:bg-app-text/5'}`}
                                                     >
                                                         <div className="flex items-center justify-between mb-1">
                                                             <div className="flex items-center gap-3">
-                                                                <span className={sortBy === option.id ? 'text-slate-950' : 'text-[#53ddfc]/40'}>{option.icon}</span>
+                                                                <span className={sortBy === option.id ? 'text-app-bg' : 'text-accent/40'}>{option.icon}</span>
                                                                 <span className="text-[10px] font-black uppercase tracking-widest">{option.label}</span>
                                                             </div>
-                                                            {sortBy === option.id && <Check size={14} className="text-slate-950" />}
+                                                            {sortBy === option.id && <Check size={14} className="text-app-bg" />}
                                                         </div>
-                                                        <p className={`text-[9px] font-bold uppercase tracking-widest opacity-40 group-hover/opt:opacity-60 transition-opacity ${sortBy === option.id ? 'text-slate-950' : 'text-white'}`}>{option.desc}</p>
+                                                        <p className={`text-[9px] font-bold uppercase tracking-widest opacity-40 group-hover/opt:opacity-60 transition-opacity ${sortBy === option.id ? 'text-app-bg' : 'text-app-text'}`}>{option.desc}</p>
                                                     </button>
                                                 ))}
                                             </div>
@@ -470,7 +470,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                             </div>
 
                             {/* Main Import Interface */}
-                            <label className="bg-[#53ddfc] hover:bg-cyan-400 text-slate-950 px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] cursor-pointer transition-all duration-500 shadow-[0_0_30px_rgba(83,221,252,0.25)] hover:shadow-[0_0_40px_rgba(83,221,252,0.4)] hover:scale-[1.02] active:scale-95 flex items-center gap-3 group">
+                            <label className="bg-accent hover:bg-accent/80 text-app-bg px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] cursor-pointer transition-all duration-500 shadow-[0_0_30px_rgba(var(--accent-rgb),0.3)] hover:shadow-[0_0_40px_rgba(var(--accent-rgb),0.5)] hover:scale-[1.02] active:scale-95 flex items-center gap-3 group">
                                 <UploadCloud size={18} className="group-hover:translate-y-[-2px] transition-transform duration-500" />
                                 {isUploading ? "Uploading Data..." : "Import Tactical Asset"}
                                 <input 
@@ -484,7 +484,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
 
                             <button 
                                 onClick={onClose} 
-                                className="w-12 h-12 flex items-center justify-center bg-white/5 rounded-2xl text-white/20 hover:text-white hover:bg-red-500/20 transition-all border border-transparent hover:border-red-500/20 active:scale-90 group duration-500"
+                                className="w-12 h-12 flex items-center justify-center bg-app-text/5 rounded-2xl text-app-text/20 hover:text-app-text hover:bg-red-500/20 transition-all border border-transparent hover:border-red-500/20 active:scale-90 group duration-500"
                                 title="Deactivate Interface"
                             >
                                 <X size={24} className="group-hover:rotate-90 transition-transform duration-500" />
@@ -493,16 +493,16 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                     </header>
 
                     {/* Operational Content Area */}
-                    <div className="flex-1 overflow-y-auto p-12 custom-scrollbar bg-[#060e20]">
+                    <div className="flex-1 overflow-y-auto p-12 custom-scrollbar bg-app-bg">
                         
                         {displayMedia.length === 0 ? (
                             <div className="flex flex-col items-center justify-center h-full text-center max-w-md mx-auto">
-                                <div className="w-32 h-32 rounded-[2.5rem] bg-[#091328]/50 flex items-center justify-center border border-white/5 mb-10 shadow-[inset_0_0_30px_rgba(0,0,0,0.5)] relative">
-                                    <div className="absolute inset-0 rounded-[2.5rem] border border-[#53ddfc]/10 animate-ping opacity-20" />
-                                    <UploadCloud size={48} className="text-white/5 animate-pulse" />
+                                <div className="w-32 h-32 rounded-[2.5rem] bg-app-surface/50 flex items-center justify-center border border-app-border/10 mb-10 shadow-[inset_0_0_30px_rgba(0,0,0,0.5)] relative">
+                                    <div className="absolute inset-0 rounded-[2.5rem] border border-accent/10 animate-ping opacity-20" />
+                                    <UploadCloud size={48} className="text-app-text/5 animate-pulse" />
                                 </div>
-                                <h4 className="text-2xl font-black uppercase tracking-[0.4em] text-white/10 mb-4">No Data Detected</h4>
-                                <p className="text-[10px] font-bold text-white/5 uppercase tracking-[0.3em] leading-loose mb-10">
+                                <h4 className="text-2xl font-black uppercase tracking-[0.4em] text-app-text/10 mb-4 font-display">No Data Detected</h4>
+                                <p className="text-[10px] font-bold text-app-text/5 uppercase tracking-[0.3em] leading-loose mb-10">
                                     Archive empty or restricted by matrix filters. Please initialize new data sets or reset frequency.
                                 </p>
                                 <button 
@@ -514,7 +514,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                         setCampaignFilterEnabled(false);
                                         setSmartFilter('none');
                                     }}
-                                    className="px-10 py-4 rounded-2xl bg-white/5 hover:bg-[#53ddfc]/10 text-white/20 hover:text-[#53ddfc] text-[10px] font-black uppercase tracking-[0.25em] border border-white/10 hover:border-[#53ddfc]/30 transition-all duration-500"
+                                    className="px-10 py-4 rounded-2xl bg-app-text/5 hover:bg-accent/10 text-app-text/20 hover:text-accent text-[10px] font-black uppercase tracking-[0.25em] border border-app-text/10 hover:border-accent/30 transition-all duration-500"
                                 >
                                     Reset Frequency
                                 </button>
@@ -524,10 +524,10 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                 {displayMedia.map(media => (
                                     <div 
                                         key={media.id} 
-                                        className="group relative bg-[#091328]/40 border border-white/5 hover:border-[#53ddfc]/30 rounded-[2.5rem] overflow-hidden transition-all duration-700 hover:shadow-[0_0_60px_rgba(83,221,252,0.08)] hover:translate-y-[-12px] flex flex-col h-full shadow-2xl backdrop-blur-sm"
+                                        className="group relative bg-app-surface/40 border border-app-border/10 hover:border-accent/30 rounded-[2.5rem] overflow-hidden transition-all duration-700 hover:shadow-[0_0_60px_rgba(var(--accent-rgb),0.08)] hover:translate-y-[-12px] flex flex-col h-full shadow-2xl backdrop-blur-sm"
                                     >
                                         {/* Visual Tactical Scan Lines */}
-                                        <div className="absolute top-0 left-0 w-full h-[1px] bg-[#53ddfc]/20 opacity-0 group-hover:opacity-100 group-hover:animate-scan z-10 pointer-events-none" />
+                                        <div className="absolute top-0 left-0 w-full h-[1px] bg-accent/20 opacity-0 group-hover:opacity-100 group-hover:animate-scan z-10 pointer-events-none" />
 
                                         {/* Premium Thumbnail Container */}
                                         <div 
@@ -537,11 +537,11 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                             <MediaItemThumbnail media={media} />
                                             
                                             {/* Data Overlay Logic */}
-                                            <div className="absolute inset-x-0 bottom-0 p-8 bg-gradient-to-t from-[#060e20] via-[#060e20]/80 to-transparent translate-y-[20px] opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 z-10">
+                                            <div className="absolute inset-x-0 bottom-0 p-8 bg-gradient-to-t from-app-bg via-app-bg/80 to-transparent translate-y-[20px] opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 z-10">
                                                 <div className="flex items-center justify-between">
                                                     <div className="flex flex-col">
-                                                        <span className="text-[11px] font-black text-[#53ddfc] tracking-tighter drop-shadow-[0_0_8px_rgba(83,221,252,0.6)]">{formatSize(media.size)}</span>
-                                                        <span className="text-[8px] font-bold text-white/30 uppercase tracking-widest mt-1.5 opacity-60">
+                                                        <span className="text-[11px] font-black text-accent tracking-tighter drop-shadow-[0_0_8px_rgba(var(--accent-rgb),0.6)]">{formatSize(media.size)}</span>
+                                                        <span className="text-[8px] font-bold text-app-text/30 uppercase tracking-widest mt-1.5 opacity-60">
                                                             SYNCHRONIZED: {new Date(media.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: '2-digit' })}
                                                         </span>
                                                     </div>
@@ -560,7 +560,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                                         </button>
                                                         <button 
                                                             onClick={(e) => { e.stopPropagation(); onSelect(media.id); }}
-                                                            className="w-12 h-12 flex items-center justify-center bg-[#53ddfc] text-slate-950 rounded-full transition-all shadow-[0_0_30px_rgba(83,221,252,0.5)] hover:scale-110 active:scale-90"
+                                                            className="w-12 h-12 flex items-center justify-center bg-accent text-app-bg rounded-full transition-all shadow-[0_0_30px_rgba(var(--accent-rgb),0.5)] hover:scale-110 active:scale-90"
                                                             title="Select for Transmission"
                                                         >
                                                             <Check size={20} strokeWidth={3} />
@@ -571,11 +571,11 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
 
                                             {/* HUD Type Icon Badge */}
                                             <div className="absolute top-6 left-6 flex items-center gap-2">
-                                                <div className="w-10 h-10 rounded-2xl bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center text-white/40 opacity-60 group-hover:opacity-100 group-hover:text-[#53ddfc] group-hover:border-[#53ddfc]/20 transition-all duration-500">
+                                                <div className="w-10 h-10 rounded-2xl bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center text-white/40 opacity-60 group-hover:opacity-100 group-hover:text-accent group-hover:border-accent/20 transition-all duration-500">
                                                     {TYPE_ICONS[media.type] || <FileText size={18} />}
                                                 </div>
                                                 {media.isPersistent && (
-                                                    <div className="w-10 h-10 rounded-2xl bg-[#53ddfc]/10 backdrop-blur-md border border-[#53ddfc]/20 flex items-center justify-center text-[#53ddfc] shadow-[0_0_15px_rgba(83,221,252,0.2)]">
+                                                    <div className="w-10 h-10 rounded-2xl bg-accent/10 backdrop-blur-md border border-accent/20 flex items-center justify-center text-accent shadow-[0_0_15px_rgba(var(--accent-rgb),0.2)]">
                                                         <Lock size={16} />
                                                     </div>
                                                 )}
@@ -588,12 +588,12 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                             <div className="absolute -right-4 -bottom-4 w-12 h-12 border border-white/5 rotate-45 pointer-events-none opacity-20" />
                                             
                                             <div className="flex items-start justify-between mb-4 gap-4">
-                                                <h3 className="text-sm font-black uppercase tracking-wider text-[#dee5ff] group-hover:text-[#53ddfc] transition-colors leading-tight truncate flex-1" title={media.name}>
+                                                <h3 className="text-sm font-black uppercase tracking-wider text-app-text group-hover:text-accent transition-colors leading-tight truncate flex-1 font-display" title={media.name}>
                                                     {media.name}
                                                 </h3>
                                                 <button 
                                                     onClick={(e) => { e.stopPropagation(); handleRenameMedia(media.id, media.name); }}
-                                                    className="opacity-0 group-hover:opacity-40 hover:!opacity-100 transition-all text-white/50 hover:text-[#53ddfc]"
+                                                    className="opacity-0 group-hover:opacity-40 hover:!opacity-100 transition-all text-app-text/50 hover:text-accent"
                                                     title="Modifier l'identifiant"
                                                     aria-label="Modifier l'identifiant"
                                                 >
@@ -629,14 +629,13 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                                     );
                                                 })}
                                             </div>
-
                                             {/* Tactical Neural Tags */}
-                                            <div className="mt-auto pt-5 border-t border-white/5 flex items-center justify-between">
+                                            <div className="mt-auto pt-5 border-t border-app-border/10 flex items-center justify-between">
                                                 <div className="flex flex-wrap gap-2 items-center max-w-[75%] overflow-hidden">
                                                     {media.tags.map(t => (
-                                                        <span key={t} className="text-[9px] font-bold text-white/10 group-hover:text-[#53ddfc]/40 transition-colors uppercase tracking-widest">#{t}</span>
+                                                        <span key={t} className="text-[9px] font-bold text-app-text/10 group-hover:text-accent/40 transition-colors uppercase tracking-widest">#{t}</span>
                                                     ))}
-                                                    {media.tags.length === 0 && <span className="text-[8px] font-bold text-white/5 uppercase italic tracking-[0.2em]">NO_METADATA_LINK</span>}
+                                                    {media.tags.length === 0 && <span className="text-[8px] font-bold text-app-text/5 uppercase italic tracking-[0.2em]">NO_METADATA_LINK</span>}
                                                 </div>
                                                 
                                                 <div className="relative">
@@ -645,7 +644,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                                             e.stopPropagation();
                                                             setEditingMediaId(editingMediaId === media.id ? null : media.id);
                                                         }}
-                                                        className={`w-10 h-10 flex items-center justify-center rounded-2xl border transition-all duration-500 ${editingMediaId === media.id ? 'bg-[#53ddfc]/20 border-[#53ddfc]/40 text-[#53ddfc] shadow-[0_0_20px_rgba(83,221,252,0.1)]' : 'bg-white/5 border-transparent text-white/10 hover:text-[#53ddfc] hover:bg-[#53ddfc]/10'}`}
+                                                        className={`w-10 h-10 flex items-center justify-center rounded-2xl border transition-all duration-500 ${editingMediaId === media.id ? 'bg-accent/20 border-accent/40 text-accent shadow-[0_0_20px_rgba(var(--accent-rgb),0.1)]' : 'bg-app-text/5 border-transparent text-app-text/10 hover:text-accent hover:bg-accent/10'}`}
                                                         title="ÉDITION DÉTAILLÉE"
                                                     >
                                                         <Plus size={18} className={`transition-transform duration-500 ${editingMediaId === media.id ? 'rotate-45' : ''}`} />

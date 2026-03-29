@@ -20,7 +20,18 @@ export const WikiEntryForm: React.FC<WikiEntryFormProps> = ({ entry, onClose }) 
     const [newImageUrl, setNewImageUrl] = useState('');
     const [linkedEntityIds, setLinkedEntityIds] = useState<string[]>(entry?.linkedEntityIds || []);
 
-    const categories = ['npc', 'location', 'organization', 'lore', 'item'] as const;
+    const categories = ['npc', 'location', 'organization', 'lore', 'item', 'clue', 'rumor', 'other'] as const;
+
+    const categoryLabels: Record<string, string> = {
+        npc: 'PNJ',
+        location: 'Lieu',
+        organization: 'Organisation',
+        lore: 'Lore',
+        item: 'Objet',
+        clue: 'Indice',
+        rumor: 'Rumeur',
+        other: 'Autre'
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -91,7 +102,7 @@ export const WikiEntryForm: React.FC<WikiEntryFormProps> = ({ entry, onClose }) 
                         className="w-full bg-app-bg/40 border border-app-border rounded-xl px-4 py-2 text-sm text-app-text focus:outline-none focus:border-accent/50 transition-all"
                     >
                         {categories.map(cat => (
-                            <option key={cat} value={cat}>{cat.toUpperCase()}</option>
+                            <option key={cat} value={cat}>{categoryLabels[cat] || cat.toUpperCase()}</option>
                         ))}
                     </select>
                 </div>

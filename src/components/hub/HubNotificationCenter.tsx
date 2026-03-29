@@ -49,19 +49,19 @@ const HubNotificationCenter: React.FC = () => {
                         exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.2 } }}
                         className="pointer-events-auto group relative overflow-hidden"
                     >
-                        <div className="bg-slate-900/90 backdrop-blur-2xl border border-white/10 rounded-2xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex gap-4">
+                        <div className="bg-app-surface/90 backdrop-blur-2xl border border-app-border/20 rounded-2xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex gap-4">
                             {/* Accent line */}
                             <div className={`absolute top-0 left-0 h-full w-1 ${
                                 notif.type === 'alert' ? 'bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.5)]' : 
                                 notif.type === 'system' ? 'bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]' :
-                                'bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.5)]'
+                                'bg-accent shadow-[0_0_10px_var(--app-accent)]'
                             }`} />
 
                             {/* Icon */}
                             <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center border transition-all duration-300 ${
                                 notif.type === 'alert' ? 'bg-rose-500/10 text-rose-400 border-rose-500/20 shadow-[0_0_15px_rgba(244,63,94,0.1)]' :
                                 notif.type === 'system' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20 shadow-[0_0_15px_rgba(245,158,11,0.1)]' :
-                                'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]'
+                                'bg-accent/10 text-accent border-accent/20 shadow-[0_0_15px_var(--app-accent)]'
                             }`}>
                                 {notif.type === 'alert' ? <ShieldAlert size={22} /> : 
                                  notif.type === 'system' ? <Bell size={22} /> : 
@@ -83,20 +83,20 @@ const HubNotificationCenter: React.FC = () => {
                                     </button>
                                 </div>
 
-                                <h4 className="text-sm font-bold text-white mb-1 leading-tight">
+                                <h4 className="text-sm font-bold text-app-text mb-1 leading-tight">
                                     {notif.title}
                                 </h4>
                                 
-                                <p className="text-xs text-slate-300 line-clamp-3 leading-relaxed">
+                                <p className="text-xs text-app-text/80 line-clamp-3 leading-relaxed">
                                     {notif.content}
                                 </p>
 
                                 <div className="mt-3 flex items-center justify-between">
                                     <div className="flex gap-1.5 opacity-40">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-                                        <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse [animation-delay:0.2s]" />
+                                        <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                                        <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse [animation-delay:0.2s]" />
                                     </div>
-                                    <span className="text-[9px] font-bold text-white/10 italic">NEXUS-COMM v5.2</span>
+                                    <span className="text-[9px] font-bold text-app-text/10 italic">NEXUS-COMM v5.2</span>
                                 </div>
                             </div>
                         </div>

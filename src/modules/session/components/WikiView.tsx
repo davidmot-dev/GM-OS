@@ -27,7 +27,19 @@ const WikiView: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
-    const categories = ['all', 'npc', 'location', 'organization', 'lore', 'item'];
+    const categories = ['all', 'npc', 'location', 'organization', 'lore', 'item', 'clue', 'rumor', 'other'];
+
+    const categoryLabels: Record<string, string> = {
+        all: 'Tout',
+        npc: 'PNJ',
+        location: 'Lieu',
+        organization: 'Organisation',
+        lore: 'Lore',
+        item: 'Objet',
+        clue: 'Indice',
+        rumor: 'Rumeur',
+        other: 'Autre'
+    };
 
     const filteredEntries = wikiEntries
         .filter(e => e.campaignId === activeCampaignId)
@@ -58,13 +70,14 @@ const WikiView: React.FC = () => {
                             <button
                                 key={cat}
                                 onClick={() => setSelectedCategory(cat)}
-                                className={`px-2 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest border transition-all truncate ${
+                                className={`px-2 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest border transition-all truncate ${
                                     selectedCategory === cat 
                                         ? 'bg-accent/10 border-accent/40 text-accent' 
                                         : 'bg-app-bg/20 border-app-border text-app-text/40 hover:text-app-text'
                                   }`}
+                                title={categoryLabels[cat] || cat}
                             >
-                                {cat === 'all' ? 'Tout' : cat}
+                                {categoryLabels[cat] || cat}
                             </button>
                         ))}
                     </div>

@@ -101,7 +101,8 @@ contextBridge.exposeInMainWorld("appBridge", {
     listNotes: (vaultPath) => ipcRenderer.invoke("obsidian:list-notes", vaultPath),
     readNote: (relativePath, vaultPath) => ipcRenderer.invoke("obsidian:read-note", relativePath, vaultPath),
     writeNote: (relativePath, content, vaultPath) => ipcRenderer.invoke("obsidian:write-note", relativePath, content, vaultPath),
-    ensureDirectory: (relativePath, vaultPath) => ipcRenderer.invoke("obsidian:ensure-directory", relativePath, vaultPath)
+    ensureDirectory: (relativePath, vaultPath) => ipcRenderer.invoke("obsidian:ensure-directory", relativePath, vaultPath),
+    selectVault: () => ipcRenderer.invoke("obsidian:select-vault")
   },
   remote: {
     getConnectionInfo: () => ipcRenderer.invoke("remote:get-connection-info"),

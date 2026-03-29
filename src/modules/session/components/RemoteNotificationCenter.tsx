@@ -16,24 +16,24 @@ const RemoteNotificationCenter: React.FC = () => {
             {remoteNotifications.map((notif) => (
                 <div 
                     key={notif.id}
-                    className="pointer-events-auto bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-2xl p-4 shadow-2xl animate-in slide-in-from-right-10 fade-in duration-500 group relative overflow-hidden"
+                    className="pointer-events-auto bg-app-surface/95 backdrop-blur-xl border border-app-border/10 rounded-2xl p-4 shadow-2xl animate-in slide-in-from-right-10 fade-in duration-500 group relative overflow-hidden"
                 >
-                    {/* Progress strip: Dynamic width based on notification lifecycle could be implemented here */}
-                    <div className="absolute top-0 left-0 h-1 bg-cyan-500 shadow-[0_0_10px_#22d3ee]" style={{ width: '100%' }} />
+                    {/* Progress strip */}
+                    <div className="absolute top-0 left-0 h-1 bg-accent shadow-glow-accent w-full" />
                     
                     <div className="flex gap-4">
-                        <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center text-cyan-400 border border-cyan-500/30 shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+                        <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center text-accent border border-accent/30 shadow-glow-accent/20">
                             {notif.type === 'vitals_update' ? <Activity size={20} /> : <Shield size={20} />}
                         </div>
 
                         <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between mb-1">
-                                <span className="text-[10px] font-black uppercase tracking-widest text-cyan-400 flex items-center gap-1">
+                                <span className="text-[10px] font-black uppercase tracking-widest text-accent flex items-center gap-1">
                                     <Clock size={10} /> {new Date(notif.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                 </span>
                                 <button 
                                     onClick={() => clearRemoteNotification(notif.id)}
-                                    className="text-white/20 hover:text-white transition-colors"
+                                    className="text-app-text/20 hover:text-app-text transition-colors"
                                     title="Fermer la notification"
                                     aria-label="Fermer la notification"
                                 >
@@ -41,23 +41,23 @@ const RemoteNotificationCenter: React.FC = () => {
                                 </button>
                             </div>
 
-                            <h4 className="text-sm font-bold text-white leading-tight truncate">
-                                {notif.characterName} <span className="text-white/40 font-medium">({notif.playerName})</span>
+                            <h4 className="text-sm font-bold text-app-text leading-tight truncate">
+                                {notif.characterName} <span className="text-app-text/40 font-medium">({notif.playerName})</span>
                             </h4>
                             
-                            <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+                            <p className="text-xs text-app-text/70 mt-1 leading-relaxed">
                                 {notif.message}
                             </p>
 
                             <div className="flex items-center gap-2 mt-3">
-                                <div className="h-px flex-1 bg-white/5" />
-                                <span className="text-[9px] font-bold text-white/20 uppercase tracking-tighter">Tablet Hub Sync</span>
+                                <div className="h-px flex-1 bg-app-border/5" />
+                                <span className="text-[9px] font-bold text-app-text/20 uppercase tracking-tighter">Tablet Hub Sync</span>
                             </div>
                         </div>
                     </div>
 
                     {/* Background glow on hover */}
-                    <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500/0 via-cyan-500/5 to-cyan-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+                    <div className="absolute -inset-1 bg-gradient-to-r from-accent/0 via-accent/5 to-accent/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
                 </div>
             ))}
         </div>

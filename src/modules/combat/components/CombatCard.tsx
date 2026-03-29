@@ -137,8 +137,8 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
 
             <div className="flex items-center w-full">
                 {/* Initiative Block */}
-                <div className="flex flex-col items-center mr-6 shrink-0 bg-slate-800/40 rounded-lg p-3 border-l-4 border-gm-gold shadow-glow-gold">
-                    <span className="stitch-label mb-1">INIT</span>
+                <div className="flex flex-col items-center mr-6 shrink-0 bg-app-surface/40 rounded-lg p-3 border-l-4 border-gm-gold shadow-glow-gold">
+                    <span className="stitch-label mb-1 text-app-text/70">INIT</span>
                     <input
                         type="number"
                         value={(!combatant.init || Number.isNaN(combatant.init)) ? '' : combatant.init}
@@ -149,7 +149,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                 </div>
 
                 {/* Avatar / Icon */}
-                <div className="w-14 h-14 rounded-full overflow-hidden bg-slate-800/50 flex items-center justify-center border-2 border-primary/30 ring-4 ring-primary/5 shrink-0 shadow-lg">
+                <div className="w-14 h-14 rounded-full overflow-hidden bg-app-surface/50 flex items-center justify-center border-2 border-primary/30 ring-4 ring-primary/5 shrink-0 shadow-lg">
                     <ResolvedImage 
                         src={combatant.avatar} 
                         alt={combatant.name} 
@@ -162,7 +162,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                 <div className="flex-initial ml-6 flex flex-col justify-center min-w-[180px] max-w-[320px]">
                     <div className="flex items-center gap-3 relative group/name">
                         <div 
-                            className="font-black text-xl text-white tracking-tight truncate max-w-[220px] cursor-pointer hover:text-primary transition-colors flex items-center gap-2" 
+                            className="font-black text-xl text-app-text tracking-tight truncate max-w-[220px] cursor-pointer hover:text-primary transition-colors flex items-center gap-2" 
                             title="Cliquer pour renommer"
                             onClick={() => {
                                 gmPrompt(`Renommer ${combatant.name} :`, combatant.name, (newName: string) => {
@@ -180,10 +180,10 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                 value={combatant.faction}
                                 onChange={(e) => updateCombatant(combatant.id, { faction: e.target.value as 'player' | 'enemy' | 'neutral' | 'ally' })}
                                 className={`text-[9px] px-1.5 py-0.5 rounded font-black uppercase tracking-tighter outline-none cursor-pointer border transition-all appearance-none pr-4 ${
-                                    combatant.faction === 'enemy' ? 'bg-red-500/20 text-red-400 border-red-500/30' :
-                                    combatant.faction === 'ally' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' :
-                                    combatant.faction === 'player' ? 'bg-blue-600/20 text-blue-400 border-blue-500/30' :
-                                    'bg-slate-700 text-slate-300 border-slate-600'
+                                    combatant.faction === 'enemy' ? 'bg-red-500/20 text-red-500 border-red-500/30' :
+                                    combatant.faction === 'ally' ? 'bg-emerald-500/20 text-emerald-500 border-emerald-500/30' :
+                                    combatant.faction === 'player' ? 'bg-blue-600/20 text-blue-500 border-blue-500/30' :
+                                    'bg-app-surface border-app-border text-app-text/70'
                                 }`}
                                 title="Changer l'allégeance"
                             >
@@ -198,7 +198,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                         </div>
                         
                         <button
-                            className={`text-slate-400 hover:text-primary transition-colors p-1 rounded hover:bg-white/5 ${showStatusMenu ? 'text-primary bg-white/5' : ''}`}
+                            className={`text-app-text/60 hover:text-primary transition-colors p-1 rounded hover:bg-app-surface/50 ${showStatusMenu ? 'text-primary bg-app-surface/50' : ''}`}
                             onClick={() => setShowStatusMenu(!showStatusMenu)}
                             title="Lancer une altération d'état"
                         >
@@ -235,7 +235,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                             {combatant.statuses.map(status => (
                                 <span
                                     key={status.id}
-                                    className="inline-flex items-center gap-1 bg-slate-800/60 px-2 py-0.5 rounded text-xs border border-white/5 group cursor-pointer hover:bg-red-500/20 transition-colors"
+                                    className="inline-flex items-center gap-1 bg-app-surface/60 px-2 py-0.5 rounded text-xs border border-app-border group cursor-pointer hover:bg-red-500/20 transition-colors"
                                     onClick={() => removeStatus(combatant.id, status.id)}
                                     title={`Dissiper l'effet ${status.name}`}
                                 >
@@ -250,7 +250,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
 
                     {/* Cortex Suggested Action (Absolute Overlay) */}
                     {(suggestedAction || isSuggesting) && (
-                        <div className="absolute bottom-2 left-6 right-6 z-50 text-[11px] bg-slate-950/90 backdrop-blur-xl border border-accent/40 rounded-lg p-3 text-app-text/90 shadow-2xl flex items-start gap-2 animate-in zoom-in-95 slide-in-from-bottom-2 duration-300 motion-safe:scale-100 hover:scale-[1.02] transition-transform cursor-default">
+                        <div className="absolute bottom-2 left-6 right-6 z-50 text-[11px] bg-app-surface/95 backdrop-blur-xl border border-accent/40 rounded-lg p-3 text-app-text/90 shadow-2xl flex items-start gap-2 animate-in zoom-in-95 slide-in-from-bottom-2 duration-300 motion-safe:scale-100 hover:scale-[1.02] transition-transform cursor-default">
                             {suggestedAction && !isSuggesting && (
                                 <button 
                                     onClick={(e) => {
@@ -258,6 +258,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                         setSuggestedAction(null);
                                     }}
                                     className="absolute -top-1 -right-1 bg-black/80 rounded-full p-1 text-app-text/60 hover:text-red-400 transition-colors shadow-lg border border-white/10"
+                                    title="Fermer la suggestion"
                                 >
                                     <X size={12} />
                                 </button>
@@ -280,7 +281,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                             <Sparkles size={10} />
                                             Conseil Tactique
                                         </span>
-                                        <span className="italic leading-normal text-white drop-shadow-sm">
+                                        <span className="italic leading-normal text-app-text drop-shadow-sm">
                                             {suggestedAction}
                                         </span>
                                     </div>
@@ -307,7 +308,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                     <select 
                         value={combatant.targetId || ''}
                         onChange={(e) => setTarget(combatant.id, e.target.value || null)}
-                        className={`bg-black/40 text-[10px] border rounded px-1 py-0.5 outline-none w-full max-w-[120px] transition-all group-hover/target:border-accent/40 ${
+                        className={`bg-app-bg/50 text-[10px] border rounded px-1 py-0.5 outline-none w-full max-w-[120px] transition-all group-hover/target:border-accent/40 ${
                             currentTarget ? 'text-accent border-accent/20' : 'text-app-text/30 border-app-border/30'
                         }`}
                         title="Sélectionner une cible"
@@ -328,7 +329,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                             if (combatant.targetId) ids.push(combatant.targetId);
                             gmCustom('damage-calc', { targetIds: ids });
                         }}
-                        className="mt-2 flex items-center justify-center gap-2 w-full py-2 bg-slate-900/60 border border-primary/50 hover:bg-primary text-primary hover:text-slate-950 rounded-lg text-[10px] font-black transition-all uppercase tracking-[0.2em] shadow-glow-gold/20 active:scale-95"
+                        className="mt-2 flex items-center justify-center gap-2 w-full py-2 bg-app-surface/60 border border-primary/50 hover:bg-primary text-primary hover:text-white rounded-lg text-[10px] font-black transition-all uppercase tracking-[0.2em] shadow-glow-gold/20 active:scale-95"
                         title="Ouvrir le calculateur de dégâts pour ce groupe"
                     >
                         <Zap size={14} className="fill-current" />
@@ -391,14 +392,14 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                         <span className="stitch-label text-slate-200">{gaugeConfig.label}</span>
                                         <span className="text-[12px] font-black text-primary drop-shadow-[0_0_3px_rgba(231,176,8,0.3)]">{val}</span>
                                     </div>
-                                    <div className="flex gap-1 h-2.5 bg-slate-900/40 p-0.5 rounded-sm border border-white/5">
+                                    <div className="flex gap-1 h-2.5 bg-app-bg/40 p-0.5 rounded-sm border border-app-border/20">
                                         {Array.from({ length: segments }).map((_, sIdx) => (
                                             <div 
                                                 key={sIdx}
                                                 className={`flex-1 rounded-sm transition-all duration-300 ${
                                                     sIdx < activeSegments 
                                                         ? 'bg-primary shadow-glow-gold' 
-                                                        : 'bg-slate-800/60 border border-white/5'
+                                                        : 'bg-app-surface/60 border border-app-border/20'
                                                 }`}
                                             />
                                         ))}
@@ -421,7 +422,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                         <span className="stitch-label text-slate-200">{gaugeConfig.label}</span>
                                         <span className="text-[12px] font-black text-primary">{val}</span>
                                     </div>
-                                    <div className="h-3 bg-slate-900/90 rounded-full overflow-hidden border border-white/20 p-[1.5px]">
+                                    <div className="h-3 bg-app-bg/60 rounded-full overflow-hidden border border-app-border/30 p-[1.5px]">
                                         <div 
                                             className="h-full rounded-full transition-all duration-1000 ease-out bg-primary shadow-glow-gold"
                                             style={{ width: `${percent}%` }}
@@ -444,7 +445,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                     <span className="text-[10px] font-black uppercase tracking-wider text-app-text/80">{gaugeConfig.label}</span>
                                     <span className="text-[10px] font-bold text-app-text/90">{val}</span>
                                 </div>
-                                <div className="h-2 bg-app-bg border border-white/10 rounded-full overflow-hidden">
+                                <div className="h-2 bg-app-bg/40 border border-app-border/20 rounded-full overflow-hidden">
                                     <div 
                                         className={`h-full transition-all duration-500 shadow-sm ${gaugeConfig.color.startsWith('bg-') ? gaugeConfig.color : ''}`}
                                         style={{ 
@@ -482,10 +483,10 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                         title={`${stat.label}: ${val}/${max} (L-Click: -1 | R-Click: +1)`}
                                     >
                                         <div className="flex items-center justify-between px-1">
-                                            <span className="stitch-label text-slate-200">{stat.label}</span>
+                                            <span className="stitch-label text-app-text/70">{stat.label}</span>
                                             <span className="text-[11px] font-black text-primary">{val}</span>
                                         </div>
-                                        <div className="flex gap-1 h-1.5 bg-slate-900/40 p-[1px] rounded-full border border-white/5">
+                                        <div className="flex gap-1 h-1.5 bg-app-bg/40 p-[1px] rounded-full border border-app-border/20">
                                             {Array.from({ length: segments }).map((_, sIdx) => {
                                                 const isFilled = sIdx < activeSegments;
                                                 return (
@@ -494,7 +495,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                                         className={`flex-1 rounded-full transition-all duration-300 ${
                                                             isFilled 
                                                                 ? 'bg-primary shadow-glow-gold' 
-                                                                : 'bg-slate-800/60 border border-white/10' // Increased contrast for empty segments
+                                                                : 'bg-app-surface/60 border border-app-border/10'
                                                         }`}
                                                     />
                                                 );

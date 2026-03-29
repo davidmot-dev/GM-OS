@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { 
     MessageCircle, 
     X, 
     Save, 
-    Check, 
-    BellRing,
-    ChevronUp
+    Check
 } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
-import { format } from 'date-fns';
 
 interface Alert {
     id: string;
@@ -22,7 +19,7 @@ interface Alert {
 export const MessageAlertOverlay: React.FC = () => {
     const { messages, saveMessageToJournal } = useSessionOSStore();
     const [alerts, setAlerts] = useState<Alert[]>([]);
-    const [lastProcessedMessageId, setLastProcessedMessageId] = useState<string | null>(null);
+    const lastProcessedMessageId = useRef<string | null>(null);
 
     // Monitor messages for new ones coming from players
     useEffect(() => {
@@ -31,8 +28,8 @@ export const MessageAlertOverlay: React.FC = () => {
         const latestMsg = messages[messages.length - 1];
         
         // Only trigger for new messages NOT from GM and NOT already processed
-        if (latestMsg.fromId !== 'GM' && latestMsg.id !== lastProcessedMessageId) {
-            setLastProcessedMessageId(latestMsg.id);
+        if (latestMsg.fromId !== 'GM' && latestMsg.id !== lastProcessedMessageId.current) {
+            lastProcessedMessageId.current = latestMsg.id;
             
             // Add new alert (stack it)
             const newAlert: Alert = {
@@ -46,7 +43,7 @@ export const MessageAlertOverlay: React.FC = () => {
             
             setAlerts(prev => [...prev, newAlert]);
         }
-    }, [messages, lastProcessedMessageId]);
+    }, [messages]);
 
     const handleDismiss = (alertId: string) => {
         setAlerts(prev => prev.filter(a => a.id !== alertId));
@@ -66,9 +63,12 @@ export const MessageAlertOverlay: React.FC = () => {
                     key={alert.id}
                     className="w-80 bg-app-surface/90 border border-accent/30 rounded-2xl shadow-2xl backdrop-blur-2xl p-4 pointer-events-auto transform animate-in slide-in-from-right-10 duration-300 border-l-4 border-l-accent"
                     style={{ 
-                        opacity: 1 - (alerts.length - 1 - index) * 0.15,
-                        transform: `scale(${1 - (alerts.length - 1 - index) * 0.05}) translate-y-${(alerts.length - 1 - index) * 2}`
-                    }}
+                        '--alert-opacity': 1 - (alerts.length - 1 - index) * 0.15,
+                        '--alert-scale': 1 - (alerts.length - 1 - index) * 0.05,
+                        '--alert-translate': `${(alerts.length - 1 - index) * 2}px`,
+                        opacity: 'var(--alert-opacity)',
+                        transform: 'scale(var(--alert-scale)) translateY(var(--alert-translate))'
+                    } as React.CSSProperties}
                 >
                     <div className="flex items-start justify-between gap-3 mb-2">
                         <div className="flex items-center gap-2">
@@ -76,15 +76,16 @@ export const MessageAlertOverlay: React.FC = () => {
                                 <MessageCircle size={16} className="text-accent" />
                              </div>
                              <div className="flex flex-col">
-                                <span className="text-xs font-black uppercase tracking-widest text-accent">Nouveau Message</span>
-                                <span className="text-[10px] font-bold text-app-text/60 truncate max-w-[150px]">
-                                    {alert.character}
-                                </span>
+                                 <span className="text-xs font-black uppercase tracking-widest text-accent">Nouveau Message</span>
+                                 <span className="text-[10px] font-bold text-app-text/80 truncate max-w-[150px]">
+                                     {alert.character}
+                                 </span>
                              </div>
                         </div>
                         <button 
                             onClick={() => handleDismiss(alert.id)}
-                            className="p-1.5 hover:bg-white/10 rounded-lg transition-colors text-app-text/40 hover:text-red-400"
+                            title="Ignorer l'alerte"
+                            className="p-1.5 hover:bg-app-text/10 rounded-lg transition-colors text-app-text/40 hover:text-rose-500"
                         >
                             <X size={14} />
                         </button>
@@ -97,14 +98,16 @@ export const MessageAlertOverlay: React.FC = () => {
                     <div className="flex items-center gap-2 pt-1">
                         <button 
                             onClick={() => handleDismiss(alert.id)}
-                            className="flex-1 py-2 px-3 rounded-xl bg-app-bg border border-app-border text-[10px] font-bold uppercase tracking-wider hover:bg-app-surface text-app-text/60 hover:text-white transition-all flex items-center justify-center gap-2"
+                            title="Accepter"
+                            className="flex-1 py-2 px-3 rounded-xl bg-app-bg border border-app-border text-[10px] font-bold uppercase tracking-wider hover:bg-app-surface text-app-text/60 hover:text-app-text transition-all flex items-center justify-center gap-2"
                         >
                             <Check size={12} />
                             OK
                         </button>
                         <button 
                             onClick={() => handleSave(alert)}
-                            className="flex-1 py-2 px-3 rounded-xl bg-gm-gold/20 border border-gm-gold/30 text-[10px] font-bold uppercase tracking-wider text-gm-gold hover:bg-gm-gold hover:text-black transition-all flex items-center justify-center gap-2 shadow-lg shadow-gm-gold/10"
+                            title="Enregistrer dans le journal"
+                            className="flex-1 py-2 px-3 rounded-xl bg-gm-gold/20 border border-gm-gold/30 text-[10px] font-bold uppercase tracking-wider text-gm-gold hover:bg-gm-gold hover:text-app-bg transition-all flex items-center justify-center gap-2 shadow-lg shadow-gm-gold/10"
                         >
                             <Save size={12} />
                             Sauvegarder

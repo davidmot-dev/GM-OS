@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Power, Globe, Shield, Info, Terminal, MonitorPlay, Zap, Settings, Tablet } from 'lucide-react';
+import { X, Power, Globe, Shield, Info, Terminal, MonitorPlay, Zap, Settings, Tablet, BookOpen, FolderOpen, CheckCircle2 } from 'lucide-react';
 import { flushApplication } from '../utils/appUtils';
 import { useSessionStore, THEME_PALETTES } from '../store/useSessionStore';
 import type { ThemeID } from '../store/useSessionStore';
@@ -12,6 +12,7 @@ import { gmToast } from '../stores/useToastStore';
 import { Trash2, RefreshCw } from 'lucide-react';
 // import { useBackupSync } from '../hooks/useBackupSync';
 import LobbyMonitor from './settings/LobbyMonitor';
+import { useObsidianStore } from '../modules/session/useObsidianStore';
 
 /* GitHub Sync Section Removed at user request */
 
@@ -34,6 +35,10 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
     const { settings: tacticalSettings, updateSettings: updateTacticalSettings } = useTacticalAIStore();
     const [isCleaning, setIsCleaning] = useState(false);
     const [cleanupResult, setCleanupResult] = useState<{deletedCount: number, savedBytes: number} | null>(null);
+    
+    // Obsidian Store Integration
+    const { vaultPath, setVaultPath, browseVaultPath, fetchNotes, isLoading: isObsidianLoading, error: obsidianError } = useObsidianStore();
+    const [testStatus, setTestStatus] = useState<'idle' | 'success' | 'error'>('idle');
     
     const isBridgeActive = !!window.appBridge;
 
@@ -283,6 +288,91 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                 <h3 className="text-xs font-black uppercase tracking-[0.2em] text-app-text/40 px-1 border-l-2 border-accent/30 pl-3 italic">Intelligence Artificielle (Cloud)</h3>
                                 <div className="bg-app-surface/20 border border-app-border/20 rounded-[2rem] p-8">
                                     <AISettings />
+                                </div>
+                            </section>
+
+                            {/* Obsidian Integration Section */}
+                            <section className="space-y-6">
+                                <div className="flex items-center justify-between px-1">
+                                    <h3 className="text-xs font-black uppercase tracking-[0.2em] text-app-text/40 border-l-2 border-accent/30 pl-3 italic">Intégration Obsidian (Second Brain)</h3>
+                                    {testStatus === 'success' && (
+                                        <span className="flex items-center gap-1 text-[10px] text-emerald-500 font-black uppercase animate-pulse">
+                                            <CheckCircle2 size={12} /> Connecté
+                                        </span>
+                                    )}
+                                </div>
+                                <div className="bg-app-surface/20 border border-app-border/20 rounded-[2rem] p-8 space-y-6">
+                                    <div className="flex items-start gap-6">
+                                        <div className="w-12 h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-400 shrink-0 shadow-inner">
+                                            <BookOpen size={24} />
+                                        </div>
+                                        <div className="flex-1 space-y-1">
+                                            <h4 className="text-sm font-black uppercase tracking-tight text-app-text">Chemin du Coffre (Vault Path)</h4>
+                                            <p className="text-[10px] text-app-text/40 font-bold uppercase tracking-widest leading-relaxed">
+                                                Le chemin absolu vers votre dossier Obsidian. GM-OS lira vos notes pour alimenter le Codex et l'Oracle.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex gap-2">
+                                        <div className="flex-1 relative group">
+                                            <input 
+                                                type="text" 
+                                                value={vaultPath}
+                                                onChange={(e) => {
+                                                    setVaultPath(e.target.value);
+                                                    setTestStatus('idle');
+                                                }}
+                                                placeholder="C:\Users\VotreNom\Documents\MonCoffre"
+                                                className="w-full bg-app-bg/50 border border-app-border/30 rounded-xl px-4 py-3 text-xs font-bold text-app-text focus:border-purple-500/50 outline-none transition-all placeholder:text-app-text/10 group-hover:border-app-border/60"
+                                            />
+                                            <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <Settings size={14} className="text-app-text/20 animate-spin-slow" />
+                                            </div>
+                                        </div>
+                                        <button 
+                                            onClick={async () => {
+                                                await browseVaultPath();
+                                                setTestStatus('idle');
+                                            }}
+                                            className="flex items-center gap-2 bg-app-surface border border-app-border/30 px-4 rounded-xl text-app-text/60 hover:text-purple-400 hover:border-purple-500/30 transition-all active:scale-95"
+                                            title="Parcourir les dossiers"
+                                        >
+                                            <FolderOpen size={18} />
+                                        </button>
+                                        <button 
+                                            onClick={async () => {
+                                                setTestStatus('idle');
+                                                await fetchNotes();
+                                                const currentError = useObsidianStore.getState().error;
+                                                if (!currentError) {
+                                                    setTestStatus('success');
+                                                    gmToast("Connexion au coffre établie avec succès", "success");
+                                                } else {
+                                                    setTestStatus('error');
+                                                    gmToast(`Erreur : ${currentError}`, "error");
+                                                }
+                                            }}
+                                            disabled={isObsidianLoading || !vaultPath}
+                                            className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border ${
+                                                testStatus === 'success' 
+                                                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-500' 
+                                                : testStatus === 'error'
+                                                ? 'bg-red-500/10 border-red-500/30 text-red-500'
+                                                : 'bg-purple-500/10 border-purple-500/30 text-purple-400 hover:bg-purple-500 hover:text-white'
+                                            } disabled:opacity-30`}
+                                        >
+                                            {isObsidianLoading ? 'TEST...' : 'TESTER'}
+                                        </button>
+                                    </div>
+
+                                    {obsidianError && (
+                                        <div className="p-3 rounded-lg bg-red-500/5 border border-red-500/10">
+                                            <p className="text-[10px] text-red-500 font-bold uppercase tracking-tight italic">
+                                                Attention : {obsidianError}
+                                            </p>
+                                        </div>
+                                    )}
                                 </div>
                             </section>
 

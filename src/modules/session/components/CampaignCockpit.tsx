@@ -11,6 +11,7 @@ const CampaignCockpit: React.FC = () => {
     const { showCustom, showConfirm } = useModalStore();
 
     const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
+    const { theme } = useSessionStore();
 
     // Find active session for progress (mock logic for now)
     const activeSession = activeCampaign ? sessions.find(s => s.id === activeCampaign.activeSessionId && s.status === 'active') : null;
@@ -24,13 +25,19 @@ const CampaignCockpit: React.FC = () => {
                 {/* Campaign Card */}
             <div
                 onClick={() => setCurrentView('campaign-details')}
-                className="flex-shrink-0 bg-white/5 rounded-xl p-4 border-l-4 border-gm-gold shadow-[0_0_20px_rgba(212,175,55,0.1)] cursor-pointer hover:bg-white/10 hover:shadow-[0_0_25px_rgba(212,175,55,0.2)] transition-all group relative overflow-hidden"
+                className={`flex-shrink-0 bg-white/5 rounded-xl p-4 border-l-4 cursor-pointer transition-all group relative overflow-hidden ${
+                    theme === 'medieval' ? 'border-accent shadow-glow-accent/20' : 'border-gm-gold shadow-[0_0_20px_rgba(212,175,55,0.1)]'
+                } hover:bg-white/10 hover:shadow-glow-accent/40`}
             >
-                <div className="absolute inset-0 bg-gradient-to-br from-gm-gold/5 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent pointer-events-none" />
                 <div className="flex justify-between items-start mb-2">
                     <div>
-                        <h3 className="text-app-text font-bold text-lg group-hover:text-accent transition-colors">{activeCampaign?.name || 'Aucune Campagne Active'}</h3>
-                        <p className="text-app-text/60 text-xs uppercase tracking-widest font-semibold font-display">Campagne Active</p>
+                        <h3 className={`text-app-text font-bold text-lg group-hover:text-accent transition-colors ${theme === 'medieval' ? 'font-display tracking-[0.05em]' : ''}`}>
+                            {activeCampaign?.name || 'Aucune Campagne Active'}
+                        </h3>
+                        <p className={`text-app-text/60 text-[10px] uppercase tracking-[0.18em] ${theme === 'medieval' ? 'font-display italic' : 'font-semibold'}`}>
+                            {theme === 'medieval' ? 'Chronique Active' : 'Campagne Active'}
+                        </p>
                     </div>
                     <BookOpen className="text-accent group-hover:scale-110 transition-transform" size={24} />
                 </div>
@@ -50,13 +57,19 @@ const CampaignCockpit: React.FC = () => {
 
             {/* Navigation Menu */}
             <nav className="flex flex-col gap-1 flex-shrink-0">
-                <p className="text-app-text/40 text-xs uppercase tracking-widest mb-2 px-3">Gestion</p>
+                <p className={`text-app-text/40 text-[10px] uppercase tracking-[0.2em] mb-2 px-3 ${theme === 'medieval' ? 'font-display' : ''}`}>
+                    {theme === 'medieval' ? 'GESTION ARCANIQUE' : 'Gestion'}
+                </p>
                 <button
                     onClick={() => setCurrentView('cockpit')}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all nav-item-glow ${currentView === 'cockpit' ? 'bg-accent/10 text-accent border border-accent/20' : 'text-app-text/60 hover:bg-white/5 hover:text-app-text'}`}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all nav-item-glow ${
+                        currentView === 'cockpit' ? 'bg-accent/10 text-accent border border-accent/20' : 'text-app-text/60 hover:bg-white/5 hover:text-app-text'
+                    }`}
                 >
                     <LayoutDashboard className={currentView === 'cockpit' ? 'scale-110 shadow-glow-accent' : 'group-hover:scale-110 transition-transform'} size={20} />
-                    <span className="text-sm font-bold tracking-tight">Cockpit</span>
+                    <span className={`text-sm tracking-tight ${theme === 'medieval' ? 'font-display' : 'font-bold'}`}>
+                        Cockpit
+                    </span>
                 </button>
                 <button
                     onClick={() => setActiveModule('combat')}
@@ -67,10 +80,14 @@ const CampaignCockpit: React.FC = () => {
                 </button>
                 <button
                     onClick={() => setCurrentView('storyboard')}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all nav-item-glow ${currentView === 'storyboard' ? 'bg-accent/10 text-accent border border-accent/20' : 'text-app-text/60 hover:bg-white/5 hover:text-app-text'}`}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all nav-item-glow ${
+                        currentView === 'storyboard' ? 'bg-accent/10 text-accent border border-accent/20' : 'text-app-text/60 hover:bg-white/5 hover:text-app-text'
+                    }`}
                 >
                     <Zap className={currentView === 'storyboard' ? 'text-accent scale-110 shadow-glow-accent' : 'group-hover:scale-110 transition-transform'} size={20} />
-                    <span className="text-sm font-bold tracking-tight">Master Storyboard</span>
+                    <span className={`text-sm tracking-tight ${theme === 'medieval' ? 'font-display' : 'font-bold'}`}>
+                        Master Storyboard
+                    </span>
                 </button>
                 <button
                     onClick={() => setCurrentView('npc-gallery')}

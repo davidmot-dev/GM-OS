@@ -28,8 +28,8 @@ export class ForgeService {
   /**
    * Generates a complete, cohesive system (Driver + Template) from multiple sources.
    */
-  public async forgeSystem(items: ForgeContextItem[], userInstructions?: string): Promise<ForgeSystemResult> {
-    const prompt = this.getSystemForgePrompt(userInstructions);
+  public async forgeSystem(items: ForgeContextItem[], userInstructions?: string, targetName?: string): Promise<ForgeSystemResult> {
+    const prompt = this.getSystemForgePrompt(userInstructions, targetName);
     
     // Aggregate items into Gemini parts
     const parts: Array<{ text?: string, inline_data?: { mime_type: string, data: string } }> = [{ text: prompt }];
@@ -58,10 +58,12 @@ export class ForgeService {
     return response as ForgeSystemResult;
   }
 
-  private getSystemForgePrompt(userInstructions?: string): string {
+  private getSystemForgePrompt(userInstructions?: string, targetName?: string): string {
     return `
       Tu es l'ingénieur en chef de la Forge GM-OS, agissant en mode **🧠 SYSTEM ENGINEER (End-to-End Generation)**.
       Ton objectif est de créer un système de jeu complet et cohérent (Driver + Fiche) à partir des documents fournis.
+
+      ${targetName ? `MODE ENRICHISSEMENT : L'utilisateur souhaite améliorer le système existant nommé "${targetName}". Appuie-toi sur les bases de ce système pour l'étendre ou l'affiner. Ne réinvente rien qui soit déjà défini, enrichis-le.` : 'MODE CRÉATION : Génère un nouveau système complet.'}
 
       ${userInstructions ? `CONSIGNES UTILISATEUR PRIORITAIRES : "${userInstructions}"` : ''}
 

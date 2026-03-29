@@ -167,6 +167,7 @@ declare global {
             readNote: (relativePath: string, vaultPath?: string) => Promise<string | null>;
             writeNote: (relativePath: string, content: string, vaultPath?: string) => Promise<boolean>;
             ensureDirectory: (relativePath: string, vaultPath?: string) => Promise<boolean>;
+            selectVault: () => Promise<string | null>;
         };
         npc?: {
             listDatabases: (category: string) => Promise<string[]>;

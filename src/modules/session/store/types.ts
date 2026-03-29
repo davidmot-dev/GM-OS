@@ -108,6 +108,7 @@ export interface Entity {
     healthSystem?: HealthSystem;
     relations?: EntityRelation[];
     faction?: string;
+    isVisibleByPlayers?: boolean;
 }
 
 export interface PlayerCharacter {

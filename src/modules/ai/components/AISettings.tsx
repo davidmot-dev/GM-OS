@@ -416,23 +416,25 @@ const AISettings: React.FC = () => {
           </div>
           
           <div className="flex gap-2">
-            {diagnosticResults.oracle.status === 'error' && (
-              <button
-                onClick={async () => {
-                  try {
-                    await window.appBridge?.mcp?.restart?.();
-                    gmToast("Serveur Oracle redémarré.");
-                    runGlobalDiagnostic();
-                  } catch (e) {
-                    console.error(e);
-                  }
-                }}
-                className="px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-app-text/60 hover:text-white hover:bg-white/10 transition-all"
-                title="Réinitialiser le serveur MCP"
-              >
-                <RefreshCw size={16} />
-              </button>
-            )}
+            <button
+              onClick={async (e) => {
+                const btn = e.currentTarget;
+                btn.classList.add('animate-spin-once');
+                try {
+                  await window.appBridge?.mcp?.restart?.();
+                  gmToast("Serveur Oracle redémarré.");
+                  runGlobalDiagnostic();
+                } catch (e) {
+                  console.error(e);
+                } finally {
+                  setTimeout(() => btn.classList.remove('animate-spin-once'), 1000);
+                }
+              }}
+              className="px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-app-text/60 hover:text-white hover:bg-white/10 hover:border-accent/40 transition-all group"
+              title="Réinitialiser le serveur MCP (Oracle)"
+            >
+              <RefreshCw size={16} className="group-hover:rotate-180 transition-transform duration-500" />
+            </button>
             
             <button
               onClick={async () => {

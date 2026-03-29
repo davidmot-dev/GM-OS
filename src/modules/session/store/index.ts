@@ -88,12 +88,13 @@ interface CrossDomainActions {
 
     // Import massif (Chronicle Forge)
     addChronicle: (data: {
-        campaign: Omit<Campaign, 'id'>;
+        campaign: Omit<Campaign, 'id'> & { id?: string };
         entities: (Omit<Entity, 'id' | 'campaignId' | 'relations'> & {
             relations?: { targetName: string; type: EntityRelation['type']; description: string }[];
         })[];
         atlasMaps: Omit<AtlasMap, 'id' | 'campaignId'>[];
         wikiEntries: Omit<WikiEntry, 'id' | 'campaignId'>[];
+        existingCampaignId?: string;
     }) => void;
 
     exportActiveCampaignToObsidian: () => Promise<void>;
@@ -471,9 +472,13 @@ export const useSessionOSStore = create<SessionOSStore>()(
 
             // ── Chronicle Forge (Import Massif) ────────────
 
-            addChronicle: ({ campaign, entities, atlasMaps, wikiEntries }) => {
-                const campaignId = `c-${Date.now()}`;
-                const newCampaign: Campaign = { ...campaign, id: campaignId, activeLocationIds: [] };
+            addChronicle: ({ campaign, entities, atlasMaps, wikiEntries, existingCampaignId }) => {
+                const state = get();
+                const existing = existingCampaignId 
+                    ? state.campaigns.find(c => c.id === existingCampaignId)
+                    : state.campaigns.find(c => c.name.toLowerCase() === campaign.name.toLowerCase());
+                    
+                const campaignId = existing ? existing.id : `c-${Date.now()}`;
 
                 const entityIdMap: Record<string, string> = {};
                 const newEntities: Entity[] = entities.map((e) => {
@@ -506,16 +511,25 @@ export const useSessionOSStore = create<SessionOSStore>()(
                     campaignId,
                 }));
 
-                set((state) => ({
-                    campaigns: [...state.campaigns, newCampaign],
-                    entities: [...state.entities, ...newEntities],
-                    atlasMaps: [...state.atlasMaps, ...newAtlasMaps],
-                    wikiEntries: [...state.wikiEntries, ...newWikiEntries],
-                    activeCampaignId: campaignId,
-                    currentView: 'cockpit',
-                }));
+                set((state) => {
+                    const updatedCampaigns = existing 
+                        ? state.campaigns.map(c => c.id === existing.id ? { ...c, system: campaign.system || c.system } : c)
+                        : [...state.campaigns, { ...campaign, id: campaignId, activeLocationIds: [] } as Campaign];
 
-                gmToast(`Chronique "${newCampaign.name}" importée avec ${newEntities.length} entités.`, 'success');
+                    return {
+                        campaigns: updatedCampaigns,
+                        entities: [...state.entities, ...newEntities],
+                        atlasMaps: [...state.atlasMaps, ...newAtlasMaps],
+                        wikiEntries: [...state.wikiEntries, ...newWikiEntries],
+                        activeCampaignId: campaignId,
+                        currentView: 'cockpit',
+                    };
+                });
+
+                const msg = existing 
+                    ? `Chronique fusionnée avec "${existing.name}". ${newEntities.length} entités ajoutées.`
+                    : `Chronique "${campaign.name}" importée avec ${newEntities.length} entités.`;
+                gmToast(msg, 'success');
             },
 
             exportActiveCampaignToObsidian: async () => {

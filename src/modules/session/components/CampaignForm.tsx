@@ -154,9 +154,9 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
     ];
 
     return (
-        <div className="flex flex-col h-full w-full bg-[#0a0a0c] text-[#dee5ff] font-['Space_Grotesk'] overflow-hidden">
+        <div className="flex flex-col h-full w-full bg-app-bg text-app-text font-sans overflow-hidden">
             {/* Top Command Bar */}
-            <header className="h-16 flex items-center justify-between px-8 border-b border-white/5 bg-black/40 backdrop-blur-2xl z-50">
+            <header className="h-16 flex items-center justify-between px-8 border-b border-app-border/10 bg-app-surface/40 backdrop-blur-2xl z-50">
                 <div className="flex items-center gap-6">
                     <button 
                         type="button"
@@ -168,12 +168,12 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                     </button>
                     <div className="h-6 w-px bg-white/10" />
                     <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-gm-gold/10 flex items-center justify-center border border-gm-gold/20">
-                            <Fingerprint className="text-gm-gold" size={18} />
+                        <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center border border-accent/20">
+                            <Fingerprint className="text-accent" size={18} />
                         </div>
-                        <h1 className="text-sm font-black uppercase tracking-[0.2em] text-white/80">
-                            Editor <span className="text-white/20 px-2">//</span> 
-                            <span className="text-gm-gold">{isEdit ? 'Modification de Campagne' : 'Nouvelle Aventure'}</span>
+                        <h1 className="text-sm font-black uppercase tracking-[0.2em] text-app-text/80 font-display">
+                            Editor <span className="text-app-text/20 px-2 font-sans">//</span> 
+                            <span className="text-accent">{isEdit ? 'Modification de Campagne' : 'Nouvelle Aventure'}</span>
                         </h1>
                     </div>
                 </div>
@@ -185,8 +185,8 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                         title="Synchroniser avec le Nexus"
                         className={`flex items-center gap-2 font-black px-6 py-2 rounded-xl text-[10px] tracking-widest uppercase transition-all ${
                             hasUnsavedChanges 
-                                ? 'bg-gm-gold text-black hover:bg-yellow-500 shadow-glow-gold/40 animate-pulse border border-gm-gold/50' 
-                                : 'bg-gm-gold/20 text-gm-gold/60 hover:bg-gm-gold/40 hover:text-gm-gold border border-transparent'
+                                ? 'bg-accent text-app-bg hover:opacity-90 shadow-glow-accent/40 animate-pulse border border-accent/50' 
+                                : 'bg-accent/20 text-accent/60 hover:bg-accent/40 hover:text-accent border border-transparent'
                         }`}
                     >
                         <Save size={14} />
@@ -204,7 +204,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
 
             <div className="flex flex-1 overflow-hidden">
                 {/* Left Navigation Sidebar */}
-                <aside className="w-20 flex flex-col items-center py-8 gap-6 border-r border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl">
+                <aside className="w-20 flex flex-col items-center py-8 gap-6 border-r border-app-border/10 bg-app-surface/20 backdrop-blur-xl">
                     {sidebarItems.map(item => (
                         <button
                             key={item.id}
@@ -213,12 +213,12 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                             title={item.label}
                             className={`group relative w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 ${
                                 activeSection === item.id 
-                                ? 'bg-gm-gold text-black shadow-glow-gold' 
+                                ? 'bg-accent text-app-bg shadow-glow-accent' 
                                 : 'bg-white/5 text-white/20 hover:bg-white/10 hover:text-white/60'
                             }`}
                         >
                             <item.icon size={20} />
-                            <span className="absolute left-full ml-4 px-3 py-1.5 bg-black border border-white/10 rounded-lg text-[10px] font-black uppercase tracking-widest text-gm-gold opacity-0 group-hover:opacity-100 pointer-events-none transition-all translate-x-[-10px] group-hover:translate-x-0 z-50 whitespace-nowrap">
+                            <span className="absolute left-full ml-4 px-3 py-1.5 bg-app-bg border border-app-border/10 rounded-lg text-[10px] font-black uppercase tracking-widest text-accent opacity-0 group-hover:opacity-100 pointer-events-none transition-all translate-x-[-10px] group-hover:translate-x-0 z-50 whitespace-nowrap font-display">
                                 {item.label}
                             </span>
                         </button>
@@ -233,50 +233,50 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                 </aside>
 
                 {/* Main Content Area */}
-                <main className="flex-1 overflow-y-auto custom-scrollbar p-16 bg-[#0a0a0c]">
+                <main className="flex-1 overflow-y-auto custom-scrollbar p-16 bg-app-bg">
                     <div className="max-w-4xl mx-auto space-y-16 animate-in fade-in slide-in-from-bottom-8 duration-700">
                         
                         {/* 1. IDENTITY SECTION */}
                         {activeSection === 'identity' && (
                             <div className="space-y-12">
                                 <div className="space-y-2">
-                                    <h2 className="text-2xl font-black tracking-tight text-white flex items-center gap-4">
-                                        <Layout className="text-gm-gold" size={28} />
+                                    <h2 className="text-2xl font-black tracking-tight text-app-text flex items-center gap-4 font-display uppercase italic">
+                                        <Layout className="text-accent" size={28} />
                                         Identité Fondamentale
                                     </h2>
-                                    <p className="text-sm text-white/40 tracking-wide uppercase font-bold">Définissez les paramètres de base de votre univers.</p>
+                                    <p className="text-sm text-app-text/40 tracking-wide uppercase font-bold">Définissez les paramètres de base de votre univers.</p>
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                                     <div className="space-y-4">
-                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gm-gold/60 px-2 flex items-center gap-2">
+                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/60 px-2 flex items-center gap-2">
                                             <Edit3 size={12} /> Nom de l'Opération
                                         </label>
                                         <input 
                                             value={name}
                                             onChange={e => setName(e.target.value)}
                                             placeholder="ex: Chroniques du Vide"
-                                            className="w-full bg-[#121215] border border-white/5 rounded-2xl py-5 px-6 text-base font-bold tracking-wide focus:outline-none focus:border-gm-gold/40 focus:ring-1 focus:ring-gm-gold/20 transition-all text-[#dee5ff]"
+                                            className="w-full bg-app-surface/20 border border-app-border/10 rounded-2xl py-5 px-6 text-base font-bold tracking-wide focus:outline-none focus:border-accent/40 transition-all text-app-text shadow-inner"
                                         />
                                     </div>
                                     <div className="space-y-4">
-                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gm-gold/60 px-2 flex items-center gap-2">
+                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/60 px-2 flex items-center gap-2">
                                             <Sparkles size={12} /> Référentiel Système
                                         </label>
                                         <select 
                                             value={system}
                                             onChange={e => setSystem(e.target.value)}
                                             title="Référentiel Système"
-                                            className="w-full bg-[#121215] border border-white/5 rounded-2xl py-5 px-6 text-base font-bold tracking-wide focus:outline-none focus:border-gm-gold/40 transition-all text-[#dee5ff] appearance-none"
+                                            className="w-full bg-app-surface/20 border border-app-border/10 rounded-2xl py-5 px-6 text-base font-bold tracking-wide focus:outline-none focus:border-accent/40 transition-all text-app-text appearance-none cursor-pointer"
                                         >
-                                            <optgroup label="Systèmes de jeu (Drivers)">
+                                            <optgroup label="Systèmes de jeu (Drivers)" className="bg-app-bg text-app-text">
                                                 {allDrivers.map(d => (
-                                                    <option key={d.id} value={d.id}>{d.emoji} {d.name}</option>
+                                                    <option key={d.id} value={d.id} className="bg-app-bg text-app-text">{d.emoji} {d.name}</option>
                                                 ))}
                                             </optgroup>
-                                            <optgroup label="Templates UI">
+                                            <optgroup label="Templates UI" className="bg-app-bg text-app-text">
                                                 {allTemplates.map(t => (
-                                                    <option key={t.id} value={t.id}>{t.emoji} {t.name}</option>
+                                                    <option key={t.id} value={t.id} className="bg-app-bg text-app-text">{t.emoji} {t.name}</option>
                                                 ))}
                                             </optgroup>
                                         </select>
@@ -284,14 +284,14 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                 </div>
 
                                 <div className="space-y-4">
-                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gm-gold/60 px-2 flex items-center gap-2">
+                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/60 px-2 flex items-center gap-2">
                                         <Info size={12} /> Description Courte (Tagline)
                                     </label>
                                     <input 
                                         value={description}
                                         onChange={e => setDescription(e.target.value)}
                                         placeholder="Une brève accroche pour votre aventure..."
-                                        className="w-full bg-[#121215] border border-white/5 rounded-2xl py-5 px-6 text-base font-bold focus:outline-none focus:border-gm-gold/40 transition-all text-white/70"
+                                        className="w-full bg-app-surface/20 border border-app-border/10 rounded-2xl py-5 px-6 text-base font-bold focus:outline-none focus:border-accent/40 transition-all text-app-text/70 shadow-inner"
                                     />
                                 </div>
                             </div>
@@ -301,15 +301,15 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                         {activeSection === 'narrative' && (
                             <div className="space-y-12">
                                 <div className="space-y-2">
-                                    <h2 className="text-2xl font-black tracking-tight text-white flex items-center gap-4">
-                                        <BookOpen className="text-gm-gold" size={28} />
+                                    <h2 className="text-2xl font-black tracking-tight text-app-text flex items-center gap-4 font-display uppercase italic">
+                                        <BookOpen className="text-accent" size={28} />
                                         Trame Narrative
                                     </h2>
-                                    <p className="text-sm text-white/40 tracking-wide uppercase font-bold">Documentez les enjeux et le synopsis de l'intrigue.</p>
+                                    <p className="text-sm text-app-text/40 tracking-wide uppercase font-bold">Documentez les enjeux et le synopsis de l'intrigue.</p>
                                 </div>
 
                                 <div className="space-y-4">
-                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gm-gold/60 px-2 flex items-center gap-2">
+                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/60 px-2 flex items-center gap-2">
                                         <PenTool size={12} /> Synopsis de l'Aventure
                                     </label>
                                     <textarea 
@@ -317,7 +317,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                         onChange={e => setSynopsis(e.target.value)}
                                         placeholder="Détaillez ici les points clés de l'histoire..."
                                         rows={12}
-                                        className="w-full bg-[#121215] border border-white/5 rounded-[2.5rem] p-10 text-lg leading-relaxed focus:outline-none focus:border-gm-gold/40 transition-all font-serif italic text-white/60 resize-none custom-scrollbar"
+                                        className="w-full bg-app-surface/10 border border-app-border/10 rounded-[2.5rem] p-10 text-lg leading-relaxed focus:outline-none focus:border-accent/40 transition-all font-serif italic text-app-text/60 resize-none custom-scrollbar shadow-inner"
                                     />
                                 </div>
                             </div>
@@ -327,27 +327,27 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                         {activeSection === 'ambience' && (
                             <div className="space-y-12">
                                 <div className="space-y-2">
-                                    <h2 className="text-2xl font-black tracking-tight text-white flex items-center gap-4">
-                                        <ImageIcon className="text-gm-gold" size={28} />
+                                    <h2 className="text-2xl font-black tracking-tight text-app-text flex items-center gap-4 font-display uppercase italic">
+                                        <ImageIcon className="text-accent" size={28} />
                                         Ambiance Visuelle
                                     </h2>
-                                    <p className="text-sm text-white/40 tracking-wide uppercase font-bold">Configurez l'esthétique du centre de commandement.</p>
+                                    <p className="text-sm text-app-text/40 tracking-wide uppercase font-bold">Configurez l'esthétique du centre de commandement.</p>
                                 </div>
 
                                 <div 
-                                    className="relative aspect-video rounded-[3rem] bg-[#121215] border-2 border-dashed border-white/5 hover:border-gm-gold/30 transition-all duration-700 group cursor-pointer overflow-hidden flex items-center justify-center p-4 shadow-2xl"
+                                    className="relative aspect-video rounded-[3rem] bg-app-surface/20 border-2 border-dashed border-app-border/20 hover:border-accent/40 transition-all duration-700 group cursor-pointer overflow-hidden flex items-center justify-center p-4 shadow-2xl"
                                     onClick={() => setIsMediaBrowserOpen(true)}
                                 >
                                     {wallpaperUrl && resolvedWallpaper ? (
                                         <>
                                             <ResolvedAsset src={wallpaperUrl} className="w-full h-full object-cover rounded-[2.5rem] opacity-60 group-hover:opacity-100 transition-all duration-1000 group-hover:scale-105" />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60" />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-app-bg via-transparent to-transparent opacity-60" />
                                             <div className="absolute inset-x-8 bottom-8 p-10 opacity-0 group-hover:opacity-100 transition-all translate-y-4 group-hover:translate-y-0 duration-500">
-                                                <div className="px-10 py-4 bg-gm-gold text-black text-[10px] font-black uppercase tracking-[0.3em] rounded-2xl shadow-glow-gold">Changer le Wallpaper</div>
+                                                <div className="px-10 py-4 bg-accent text-app-bg text-[10px] font-black uppercase tracking-[0.3em] rounded-2xl shadow-glow-accent">Changer le Wallpaper</div>
                                             </div>
                                         </>
                                     ) : (
-                                        <div className="flex flex-col items-center gap-6 text-white/10 group-hover:text-gm-gold/40 transition-all duration-500">
+                                        <div className="flex flex-col items-center gap-6 text-app-text/10 group-hover:text-accent/40 transition-all duration-500">
                                             <ImageIcon size={64} strokeWidth={1} />
                                             <span className="text-xs font-black uppercase tracking-[0.4em]">Définir Wallpaper de Campagne</span>
                                         </div>
@@ -360,11 +360,11 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                         {activeSection === 'world' && (
                             <div className="space-y-12">
                                 <div className="space-y-2">
-                                    <h2 className="text-2xl font-black tracking-tight text-white flex items-center gap-4">
-                                        <Map className="text-gm-gold" size={28} />
+                                    <h2 className="text-2xl font-black tracking-tight text-app-text flex items-center gap-4 font-display uppercase italic">
+                                        <Map className="text-accent" size={28} />
                                         Atlas & Lieux Actifs
                                     </h2>
-                                    <p className="text-sm text-white/40 tracking-wide uppercase font-bold">Épinglez les dossiers tactiques pour y accéder en session.</p>
+                                    <p className="text-sm text-app-text/40 tracking-wide uppercase font-bold">Épinglez les dossiers tactiques pour y accéder en session.</p>
                                 </div>
 
                                 {campaignMaps.length > 0 ? (
@@ -384,35 +384,35 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                                     }}
                                                     className={`flex flex-col rounded-[2.5rem] border transition-all duration-500 overflow-hidden group ${
                                                         isActive
-                                                        ? 'bg-gm-gold/10 border-gm-gold/40 shadow-glow-gold/10'
-                                                        : 'bg-[#121215] border-white/5 hover:border-white/20'
+                                                        ? 'bg-accent/10 border-accent/40 shadow-glow-accent/10'
+                                                        : 'bg-app-surface/20 border-app-border/10 hover:border-app-border/20'
                                                     }`}
                                                 >
-                                                    <div className="aspect-[4/3] relative overflow-hidden bg-black/40">
+                                                    <div className="aspect-[4/3] relative overflow-hidden bg-app-bg/40">
                                                         <ResolvedAsset 
                                                             src={map.fileUrl} 
                                                             className={`w-full h-full object-cover transition-all duration-700 ${isActive ? 'scale-110 opacity-100' : 'opacity-40 grayscale group-hover:grayscale-0 group-hover:opacity-80'}`} 
                                                             alt={map.name}
                                                         />
                                                         {isActive && (
-                                                            <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gm-gold text-black flex items-center justify-center shadow-glow-gold">
+                                                            <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-accent text-app-bg flex items-center justify-center shadow-glow-accent">
                                                                 <Check size={16} strokeWidth={3} />
                                                             </div>
                                                         )}
                                                     </div>
                                                     <div className="p-6 text-center">
-                                                        <span className={`text-[10px] font-black uppercase tracking-widest ${isActive ? 'text-gm-gold' : 'text-white/30 group-hover:text-white/60'}`}>{map.name}</span>
+                                                        <span className={`text-[10px] font-black uppercase tracking-widest ${isActive ? 'text-accent font-display' : 'text-app-text/30 group-hover:text-app-text/60'}`}>{map.name}</span>
                                                     </div>
                                                 </button>
                                             );
                                         })}
                                     </div>
                                 ) : (
-                                    <div className="py-20 border-2 border-dashed border-white/5 rounded-[3rem] text-center flex flex-col items-center gap-6">
-                                        <MapPin size={48} className="text-white/10" />
+                                    <div className="py-20 border-2 border-dashed border-app-border/10 rounded-[3rem] text-center flex flex-col items-center gap-6">
+                                        <MapPin size={48} className="text-app-text/10" />
                                         <div className="space-y-2">
-                                            <p className="text-xs font-black uppercase tracking-widest text-white/20">Aucune carte associée</p>
-                                            <p className="text-[10px] text-white/10 font-bold uppercase tracking-widest max-w-xs px-6">Liez des cartes via le World Atlas pour les épingler ici.</p>
+                                            <p className="text-xs font-black uppercase tracking-widest text-app-text/20">Aucune carte associée</p>
+                                            <p className="text-[10px] text-app-text/10 font-bold uppercase tracking-widest max-w-xs px-6">Liez des cartes via le World Atlas pour les épingler ici.</p>
                                         </div>
                                     </div>
                                 )}
@@ -423,48 +423,48 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                         {activeSection === 'intelligence' && (
                             <div className="space-y-12">
                                 <div className="space-y-2">
-                                    <h2 className="text-2xl font-black tracking-tight text-white flex items-center gap-4">
-                                        <Sparkles className="text-gm-gold" size={28} />
+                                    <h2 className="text-2xl font-black tracking-tight text-app-text flex items-center gap-4 font-display uppercase italic">
+                                        <Sparkles className="text-accent" size={28} />
                                         Intelligence OS (AI)
                                     </h2>
-                                    <p className="text-sm text-white/40 tracking-wide uppercase font-bold">Configurez les vecteurs de résonance AI et RAG.</p>
+                                    <p className="text-sm text-app-text/40 tracking-wide uppercase font-bold">Configurez les vecteurs de résonance AI et RAG.</p>
                                 </div>
 
-                                <div className="p-10 rounded-[3rem] bg-gradient-to-br from-gm-purple/10 to-transparent border border-gm-purple/20 space-y-10">
+                                <div className="p-10 rounded-[3rem] bg-gradient-to-br from-violet-500/10 to-transparent border border-violet-500/20 space-y-10">
                                     <div className="flex items-center gap-6">
-                                        <div className="w-16 h-16 rounded-[1.5rem] bg-gm-purple/20 flex items-center justify-center text-gm-purple border border-gm-purple/30 shadow-glow-purple/10">
+                                        <div className="w-16 h-16 rounded-[1.5rem] bg-violet-500/20 flex items-center justify-center text-violet-400 border border-violet-500/30 shadow-glow-violet/10">
                                             <Brain size={32} />
                                         </div>
                                         <div>
-                                            <h3 className="text-lg font-black uppercase tracking-[0.2em] text-gm-purple">NotebookLM Integration</h3>
-                                            <p className="text-[10px] text-white/30 font-bold uppercase tracking-widest mt-1">Surcharge locale de la base de connaissances</p>
+                                            <h3 className="text-lg font-black uppercase tracking-[0.2em] text-violet-400 font-display">NotebookLM Integration</h3>
+                                            <p className="text-[10px] text-app-text/30 font-bold uppercase tracking-widest mt-1">Surcharge locale de la base de connaissances</p>
                                         </div>
                                     </div>
 
                                     <div className="space-y-4">
-                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gm-purple/60 px-2 flex items-center gap-2">
+                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-violet-500/60 px-2 flex items-center gap-2">
                                             <ExternalLink size={12} /> Knowledge UUID / URL
                                         </label>
                                         <input 
                                             value={notebookUrl}
                                             onChange={e => setNotebookUrl(e.target.value)}
                                             placeholder="Surchargez ici l'ID ou l'URL du NotebookLM..."
-                                            className="w-full bg-black/40 border border-white/10 rounded-2xl py-5 px-6 text-sm font-mono tracking-wider focus:outline-none focus:border-gm-purple/50 transition-all text-gm-purple shadow-inner"
+                                            className="w-full bg-app-bg/40 border border-app-border/10 rounded-2xl py-5 px-6 text-sm font-mono tracking-wider focus:outline-none focus:border-violet-500/50 transition-all text-violet-400 shadow-inner"
                                         />
                                     </div>
 
                                     <div className="flex flex-col md:flex-row gap-6">
                                         <div className="flex-1 space-y-3">
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/20 px-2 flex items-center gap-2">
+                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/20 px-2 flex items-center gap-2">
                                                 <PenTool size={12} /> System Rules Path
                                             </label>
-                                            <input value={systemPath} onChange={e => setSystemPath(e.target.value)} placeholder="ex: systems/pathfinder" className="w-full bg-black/20 border border-white/5 rounded-xl py-4 px-5 text-xs text-white/40 focus:outline-none focus:border-gm-purple/30 tracking-tight" />
+                                            <input value={systemPath} onChange={e => setSystemPath(e.target.value)} placeholder="ex: systems/pathfinder" className="w-full bg-app-bg/20 border border-app-border/10 rounded-xl py-4 px-5 text-xs text-app-text/40 focus:outline-none focus:border-violet-500/30 tracking-tight shadow-inner" />
                                         </div>
                                         <div className="flex-1 space-y-3">
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/20 px-2 flex items-center gap-2">
+                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/20 px-2 flex items-center gap-2">
                                                 <PenTool size={12} /> Campaign Notes Path
                                             </label>
-                                            <input value={campaignPath} onChange={e => setCampaignPath(e.target.value)} placeholder="ex: campaigns/ironhelm" className="w-full bg-black/20 border border-white/5 rounded-xl py-4 px-5 text-xs text-white/40 focus:outline-none focus:border-gm-purple/30 tracking-tight" />
+                                            <input value={campaignPath} onChange={e => setCampaignPath(e.target.value)} placeholder="ex: campaigns/ironhelm" className="w-full bg-app-bg/20 border border-app-border/10 rounded-xl py-4 px-5 text-xs text-app-text/40 focus:outline-none focus:border-violet-500/30 tracking-tight shadow-inner" />
                                         </div>
                                     </div>
                                 </div>
@@ -472,14 +472,14 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                 <div className="space-y-8">
                                     <div className="flex items-center justify-between">
                                         <div className="space-y-1">
-                                            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gm-purple">Neural Overrides</h3>
-                                            <p className="text-[9px] text-white/20 font-bold uppercase tracking-widest italic">Instructions spécifiques pour les Gems IA</p>
+                                            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-violet-500">Neural Overrides</h3>
+                                            <p className="text-[9px] text-app-text/20 font-bold uppercase tracking-widest italic">Instructions spécifiques pour les Gems IA</p>
                                         </div>
                                         <button
                                             type="button"
                                             onClick={handleAutoGenerate}
                                             disabled={isGenerating}
-                                            className="flex items-center gap-3 px-6 py-2.5 bg-gm-purple/10 hover:bg-gm-purple/20 text-gm-purple border border-gm-purple/30 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all disabled:opacity-50 shadow-glow-purple/5"
+                                            className="flex items-center gap-3 px-6 py-2.5 bg-violet-600 text-white border border-violet-500/30 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all disabled:opacity-50 shadow-glow-violet/5"
                                         >
                                             {isGenerating ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
                                             Auto-Générer
@@ -490,12 +490,12 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                         {gems.map(gem => {
                                             const hasOverride = !!aiPersonas[gem.id];
                                             return (
-                                                <div key={gem.id} className={`p-6 rounded-[2rem] border transition-all duration-500 flex flex-col gap-4 ${hasOverride ? 'bg-gm-purple/10 border-gm-purple/30 shadow-glow-purple/5' : 'bg-[#121215] border-white/5'}`}>
+                                                <div key={gem.id} className={`p-6 rounded-[2rem] border transition-all duration-500 flex flex-col gap-4 ${hasOverride ? 'bg-app-surface/40 border-violet-500/30 shadow-glow-violet/5' : 'bg-app-surface/20 border-app-border/10'}`}>
                                                     <div className="flex items-center gap-3">
-                                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${hasOverride ? 'bg-gm-purple text-black shadow-glow-purple/20' : 'bg-white/5 text-white/20'}`}>
+                                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${hasOverride ? 'bg-violet-600 text-white shadow-glow-violet/20' : 'bg-app-bg text-app-text/20'}`}>
                                                             <Sparkles size={16} />
                                                         </div>
-                                                        <span className="text-[10px] font-black uppercase tracking-widest text-white/60">{gem.name}</span>
+                                                        <span className="text-[10px] font-black uppercase tracking-widest text-app-text/60">{gem.name}</span>
                                                     </div>
                                                     <textarea 
                                                         value={aiPersonas[gem.id] || ''}
@@ -506,7 +506,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                                             setAiPersonas(next);
                                                         }}
                                                         rows={3}
-                                                        className="w-full bg-black/40 border border-white/5 rounded-2xl p-4 text-[11px] text-white/40 focus:border-gm-purple/40 resize-none outline-none custom-scrollbar transition-all"
+                                                        className="w-full bg-app-bg/40 border border-app-border/10 rounded-2xl p-4 text-[11px] text-app-text/40 focus:border-violet-500/40 resize-none outline-none custom-scrollbar transition-all shadow-inner"
                                                         placeholder={`Prompt override for ${gem.name}...`}
                                                     />
                                                 </div>

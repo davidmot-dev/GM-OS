@@ -17,6 +17,7 @@ import { useClockStore } from './store/useClockStore';
 import { useMusicStore } from './modules/music/useMusicStore';
 import { useImageStore } from './modules/image/useImageStore';
 import { useAmbientStore } from './modules/ambient/useAmbientStore';
+import { useDiceStore } from './stores/useDiceStore';
 import { useMediaStore } from './stores/useMediaStore';
 // import { mediaCleanupService } from './services/MediaCleanupService';
 import { getDifferentialPayload } from './utils/syncUtils';
@@ -149,6 +150,33 @@ function App() {
       }
     });
 
+    const syncFast = (segmentName: string) => {
+      try {
+        const payload: Record<string, any> = {};
+        if (segmentName === 'dice') {
+          const s = useDiceStore.getState();
+          payload.dice = { lastRoll: s.lastRoll, isDiceProjected: s.isDiceProjected, projectionTrigger: s.projectionTrigger };
+        } else if (segmentName === 'clock') {
+          const s = useClockStore.getState();
+          payload.clock = { 
+              timestamp: s.timestamp, mode: s.mode, isClockProjected: s.isClockProjected, 
+              theme: s.theme, tensions: s.tensions, timerRemaining: s.timerRemaining,
+              timerIsRunning: s.timerIsRunning, timerLabel: s.timerLabel, timerDuration: s.timerDuration
+          };
+        } else if (segmentName === 'combat') {
+          const s = useCombatStore.getState();
+          payload.combat = { combatants: s.combatants, currentTurnIdx: s.currentTurnIdx, round: s.round };
+        }
+
+        if (Object.keys(payload).length > 0) {
+          console.log(`[SyncFast] Sending high-priority segment: ${segmentName}`);
+          bridge.send('remote:broadcast-sync', payload);
+        }
+      } catch (e) {
+        console.error(`[SyncFast] Error syncing ${segmentName}:`, e);
+      }
+    };
+
     const handleSync = async (force: boolean = false) => {
       const now = Date.now();
       if (!force && now - lastSyncRef.current < 100) return;
@@ -158,7 +186,7 @@ function App() {
         const storyboardStore = useStoryboardStore.getState();
         const combatStore = useCombatStore.getState();
         const freshSessionOS = useSessionOSStore.getState();
-        const { sessions, campaigns, players, activeCampaignId, clues, customSheetTemplates, customGameDrivers } = freshSessionOS;
+        const { sessions, campaigns, entities, players, activeCampaignId, clues, customSheetTemplates, customGameDrivers } = freshSessionOS;
         
         const atmosId = soundStore.activeAtmosphereId;
         const atmosphere = soundStore.atmospheres.find(a => a.id === atmosId);
@@ -272,6 +300,13 @@ function App() {
           currentWidth: whiteboardStore.currentWidth
         };
 
+        const diceStore = useDiceStore.getState();
+        const dice = {
+          lastRoll: diceStore.lastRoll,
+          isDiceProjected: diceStore.isDiceProjected,
+          projectionTrigger: diceStore.projectionTrigger
+        };
+
         const activeCampaign = campaigns.find(c => String(c.id) === String(activeCampaignId));
         
         if (activeCampaignId) {
@@ -305,6 +340,14 @@ function App() {
                 }))
             ),
             activeCampaignId,
+            entities: await Promise.all(
+                entities
+                    .filter(e => e.isVisibleByPlayers && String(e.campaignId) === String(activeCampaignId))
+                    .map(async (e) => {
+                        const resolvedAvatar = await resolveToSendableUrl(e.avatar);
+                        return { ...e, avatar: resolvedAvatar };
+                    })
+            ),
             clues: await Promise.all(
                 clues
                     .filter(c => String(c.campaignId) === String(activeCampaignId)) // String comparison safety
@@ -326,7 +369,7 @@ function App() {
             console.log(`[Sync] Wallpaper resolved to: ${session.activeCampaignWallpaper.startsWith('data:') ? 'Data URI (Base64)' : session.activeCampaignWallpaper.substring(0, 100)}...`);
         }
 
-        const currentState = { sounds, moments, masterVolume: soundStore.masterVolume, combat, notes, whiteboard, clock, universalPads, session };
+        const currentState = { sounds, moments, masterVolume: soundStore.masterVolume, combat, notes, whiteboard, clock, universalPads, session, dice };
         const diffPayload = force ? currentState : getDifferentialPayload(currentState, lastBroadcastRef.current);
         
         if (Object.keys(diffPayload).length > 0) {
@@ -487,7 +530,7 @@ function App() {
     // Subscribe to stores to trigger direct sync on change
     // We use immediate=false for whiteboard to throttle rapid mouse movements
     const unsubWhiteboard = useWhiteboardStore.subscribe(() => handleSync(false));
-    const unsubClock = useClockStore.subscribe(() => handleSync(false));
+    const unsubClock = useClockStore.subscribe(() => syncFast('clock'));
     
     // Subscribe to stores for Universal Pad
     const unsubMusic = useMusicStore.subscribe(() => handleSync(false));
@@ -495,6 +538,7 @@ function App() {
     const unsubImage = useImageStore.subscribe(() => handleSync(false));
     const unsubAmbient = useAmbientStore.subscribe(() => handleSync(false));
     const unsubSessionOS = useSessionOSStore.subscribe(() => handleSync(false));
+    const unsubDice = useDiceStore.subscribe(() => syncFast('dice'));
     
     handleSync();
 
@@ -508,10 +552,11 @@ function App() {
       unsubImage();
       unsubAmbient();
       unsubSessionOS();
+      unsubDice();
       unsubscribeCombat();
       console.log('[App] Remote effect cleanup - IPC listeners removed.');
     };
-  }, [activeCampaignId, selectedSessionId, sessions, sessionOSStore]);
+  }, [activeCampaignId, selectedSessionId]);
 
   const renderModule = () => {
     switch (activeModule) {

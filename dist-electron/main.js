@@ -1,4 +1,4 @@
-import require$$0$6, { ipcMain, protocol, app, dialog, shell, screen, BrowserWindow, net } from "electron";
+import require$$0$6, { ipcMain, dialog, protocol, app, shell, screen, BrowserWindow, net } from "electron";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import * as require$$0 from "fs";
@@ -5161,6 +5161,16 @@ function registerObsidianHandlers() {
       console.error("[Obsidian Bridge] Error creating directory:", error);
       return false;
     }
+  });
+  ipcMain.handle("obsidian:select-vault", async (_event) => {
+    const { filePaths } = await dialog.showOpenDialog({
+      title: "Sélectionner le coffre Obsidian",
+      properties: ["openDirectory", "createDirectory"]
+    });
+    if (filePaths && filePaths.length > 0) {
+      return filePaths[0];
+    }
+    return null;
   });
 }
 class SessionManager {

@@ -90,22 +90,22 @@ export const HubMessenger: React.FC<HubMessengerProps> = ({ isOpen, onClose, cha
                     animate={{ x: 0, opacity: 1 }}
                     exit={{ x: '100%', opacity: 0 }}
                     transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                    className="fixed top-4 bottom-28 right-4 w-80 md:w-96 bg-slate-950/90 backdrop-blur-2xl border border-white/10 z-[100] flex flex-col shadow-[0_32px_64px_-12px_rgba(0,0,0,0.8)] rounded-[2.5rem] overflow-hidden"
+                    className="fixed top-4 bottom-28 right-4 w-80 md:w-96 bg-app-surface/95 backdrop-blur-2xl border border-app-border/40 z-[100] flex flex-col shadow-[0_32px_64px_-12px_rgba(0,0,0,0.4)] rounded-[2.5rem] overflow-hidden"
                 >
                     {/* Header */}
-                    <div className="p-4 border-b border-white/10 flex items-center justify-between bg-white/5">
+                    <div className="p-4 border-b border-app-border/20 flex items-center justify-between bg-app-surface/50">
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-indigo-500/20 rounded-lg text-indigo-400">
+                            <div className="p-2 bg-accent/20 rounded-lg text-accent">
                                 <MessageSquare size={20} />
                             </div>
                             <div>
-                                <h3 className="text-sm font-bold text-white uppercase tracking-wider">Messagerie</h3>
-                                <p className="text-[10px] text-indigo-400 font-medium">Canal {selectedRecipient.type === 'gm' ? 'Direct MJ' : selectedRecipient.type === 'all' ? 'Général' : 'Privé'}</p>
+                                <h3 className="text-sm font-bold text-app-text uppercase tracking-wider">Messagerie</h3>
+                                <p className="text-[10px] text-accent font-medium">Canal {selectedRecipient.type === 'gm' ? 'Direct MJ' : selectedRecipient.type === 'all' ? 'Général' : 'Privé'}</p>
                             </div>
                         </div>
                         <button 
                             onClick={onClose}
-                            className="p-2 hover:bg-white/10 rounded-full text-gray-400 transition-colors"
+                            className="p-2 hover:bg-app-text/10 rounded-full text-app-text/40 transition-colors"
                             title="Fermer la messagerie"
                         >
                             <X size={20} />
@@ -113,15 +113,16 @@ export const HubMessenger: React.FC<HubMessengerProps> = ({ isOpen, onClose, cha
                     </div>
 
                     {/* Recipient Selector */}
-                    <div className="px-4 py-2 bg-black/40 border-b border-white/5 overflow-x-auto flex items-center gap-2 no-scrollbar">
+                    <div className="px-4 py-2 bg-app-bg/40 border-b border-app-border/20 overflow-x-auto flex items-center gap-2 no-scrollbar">
                         {otherCharacters.map((char) => (
                             <button
                                 key={char.id}
                                 onClick={() => setSelectedRecipientId(char.id)}
+                                title={`Discuter avec ${char.name}`}
                                 className={`flex-shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-medium transition-all ${
                                     selectedRecipientId === char.id
-                                        ? 'bg-indigo-600 text-white shadow-lg'
-                                        : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                                        ? 'bg-accent text-app-bg shadow-lg'
+                                        : 'bg-app-text/5 text-app-text/60 hover:bg-app-text/10'
                                 }`}
                             >
                                 {char.type === 'gm' ? (
@@ -129,7 +130,7 @@ export const HubMessenger: React.FC<HubMessengerProps> = ({ isOpen, onClose, cha
                                 ) : char.type === 'all' ? (
                                     <Users size={12} />
                                 ) : (
-                                    <div className="w-4 h-4 rounded-full overflow-hidden bg-gray-700">
+                                    <div className="w-4 h-4 rounded-full overflow-hidden bg-app-surface border border-app-border/40">
                                         {char.portrait ? (
                                             <img src={char.portrait} alt={char.name} className="w-full h-full object-cover" />
                                         ) : (
@@ -147,7 +148,7 @@ export const HubMessenger: React.FC<HubMessengerProps> = ({ isOpen, onClose, cha
                     {/* Messages List */}
                     <div 
                         ref={scrollRef}
-                        className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-white/10"
+                        className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-app-text/10"
                     >
                         {chatMessages.length === 0 ? (
                             <div className="h-full flex flex-col items-center justify-center text-center p-6 opacity-30">
@@ -167,19 +168,19 @@ export const HubMessenger: React.FC<HubMessengerProps> = ({ isOpen, onClose, cha
                                     >
                                         <div className={`max-w-[85%] rounded-2xl p-3 text-sm ${
                                             isMe 
-                                                ? 'bg-indigo-600 text-white rounded-tr-none shadow-lg' 
-                                                : 'bg-white/10 text-white rounded-tl-none border border-white/5'
+                                                ? 'bg-accent text-app-bg rounded-tr-none shadow-lg' 
+                                                : 'bg-app-bg text-app-text rounded-tl-none border border-app-border'
                                         }`}>
                                             {msg.content}
                                         </div>
                                         <div className="flex items-center gap-1.5 mt-1">
                                             {!isMe && (
-                                                <span className="text-[9px] font-bold text-indigo-400 uppercase tracking-tighter">
+                                                <span className="text-[9px] font-bold text-accent uppercase tracking-tighter">
                                                     {msg.fromName}
                                                 </span>
                                             )}
-                                            {isBroadcast && <Users size={8} className="text-gray-500" />}
-                                            <span className="text-[9px] text-gray-500 uppercase tracking-tighter">
+                                            {isBroadcast && <Users size={8} className="text-app-text/40" />}
+                                            <span className="text-[9px] text-app-text/40 uppercase tracking-tighter">
                                                 {isMe ? 'VOUS' : ''} • {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                             </span>
                                         </div>
@@ -190,25 +191,27 @@ export const HubMessenger: React.FC<HubMessengerProps> = ({ isOpen, onClose, cha
                     </div>
 
                     {/* Input Area */}
-                    <div className="p-4 bg-white/5 border-t border-white/10">
+                    <div className="p-4 bg-app-surface/50 border-t border-app-border/20">
                         <div className="relative">
                             <textarea
                                 value={inputValue}
                                 onChange={(e) => setInputValue(e.target.value)}
                                 onKeyDown={handleKeyPress}
+                                title="Entrer un message"
                                 placeholder={`Message à ${selectedRecipient.name}...`}
-                                className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-4 pr-12 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-none min-h-[44px] max-h-32 transition-all"
+                                className="w-full bg-app-bg border border-app-border/40 rounded-xl py-3 pl-4 pr-12 text-sm text-app-text placeholder-app-text/30 focus:outline-none focus:ring-2 focus:ring-accent/40 resize-none min-h-[44px] max-h-32 transition-all"
                                 rows={1}
                             />
                             <button
                                 onClick={handleSend}
                                 disabled={!inputValue.trim()}
-                                className="absolute right-2 bottom-2 p-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:hover:bg-indigo-600 text-white rounded-lg transition-all shadow-lg"
+                                title="Envoyer le message"
+                                className="absolute right-2 bottom-2 p-2 bg-accent hover:brightness-110 disabled:opacity-50 text-app-bg rounded-lg transition-all shadow-lg"
                             >
                                 <Send size={16} />
                             </button>
                         </div>
-                        <p className="text-[10px] text-gray-500 mt-2 italic text-center">
+                        <p className="text-[10px] text-app-text/40 mt-2 italic text-center">
                             {selectedRecipientId === 'all' 
                                 ? 'Tout le monde pourra lire ce message.' 
                                 : `Seul ${selectedRecipient.name} pourra lire ce message.`}

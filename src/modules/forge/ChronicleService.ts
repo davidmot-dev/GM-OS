@@ -22,8 +22,8 @@ export class ChronicleForgeService {
   /**
    * Generates a complete narrative construct (Campaign, NPCs, Locations, Lore) using Gemini.
    */
-  public async forgeChronicle(items: ForgeContextItem[], systemDriver: GameDriver, userInstructions?: string): Promise<ChronicleForgeResult> {
-    const prompt = this.getChroniclePrompt(systemDriver, userInstructions);
+  public async forgeChronicle(items: ForgeContextItem[], systemDriver: GameDriver, userInstructions?: string, targetName?: string): Promise<ChronicleForgeResult> {
+    const prompt = this.getChroniclePrompt(systemDriver, userInstructions, targetName);
     
     // Aggregate items into Gemini parts
     const parts: Array<{ text?: string, inline_data?: { mime_type: string, data: string } }> = [{ text: prompt }];
@@ -52,7 +52,7 @@ export class ChronicleForgeService {
     return response as ChronicleForgeResult;
   }
 
-  private getChroniclePrompt(driver: GameDriver, userInstructions?: string): string {
+  private getChroniclePrompt(driver: GameDriver, userInstructions?: string, targetName?: string): string {
     const systemContext = `
       SYSTÈME DE JEU ACTIF : ${driver.name}
       LOGIQUE DE DÉS : ${driver.dice.logic} (${driver.dice.defaultDice})
@@ -62,6 +62,8 @@ export class ChronicleForgeService {
     return `
       Tu es l'archiviste légendaire de la Forge GM-OS, agissant en mode **📖 CHRONICLE ARCHITECT**.
       Ton objectif est d'extraire et de structurer une campagne de jeu de rôle complète à partir des documents fournis.
+
+      ${targetName ? `MODE ENRICHISSEMENT : L'utilisateur souhaite enrichir la campagne existante nommée "${targetName}". Ajoute de nouvelles intrigues, NPCs ou lieux qui s'intègrent naturellement à cet univers existant.` : 'MODE CRÉATION : Génère une nouvelle campagne complète.'}
 
       ${systemContext}
 

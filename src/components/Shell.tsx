@@ -168,7 +168,11 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
             {/* Sidebar */}
             <aside className="w-64 border-r border-app-border/50 bg-app-surface/30 backdrop-blur-xl flex flex-col p-4 z-20">
                 <div className="flex items-center gap-3 px-2 mb-8 mt-2">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-emerald-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-lg ${
+                        theme === 'medieval' 
+                            ? 'bg-accent shadow-accent/20' 
+                            : 'bg-gradient-to-br from-blue-500 to-emerald-500 shadow-blue-500/20'
+                    }`}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
                             <path d="m12 3-8.5 5v8l8.5 5 8.5-5V8z"></path>
                             <polyline points="12 22 12 13 2 9"></polyline>
@@ -177,11 +181,15 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         </svg>
                     </div>
                     <div className="flex flex-col">
-                        <span className={`text-xl font-bold tracking-tight leading-none ${theme === 'claire' ? 'text-app-text' : 'bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent'}`}>
-                            GM-OS v5
+                        <span className={`text-xl tracking-tight leading-none ${
+                            theme === 'medieval' ? 'font-medieval text-accent' : 'font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent'
+                        }`}>
+                            GM-OS <span className={theme === 'medieval' ? 'text-app-text/60' : ''}>v5</span>
                         </span>
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-accent mt-1 opacity-80 backdrop-blur-sm">
-                            {theme === 'medieval' ? 'Médiéval-Dark' : theme}
+                        <span className={`text-[10px] uppercase tracking-[0.2em] mt-1 opacity-80 backdrop-blur-sm ${
+                            theme === 'medieval' ? 'font-display text-accent' : 'font-black text-accent'
+                        }`}>
+                            {theme === 'medieval' ? 'MÉDIÉVAL-GRIMOIRE' : 'NEXUS-PROTOCOL'}
                         </span>
 
                     </div>
@@ -407,10 +415,18 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 flex flex-col relative overflow-hidden bg-[radial-gradient(circle_at_top_right,rgba(29,78,216,0.05),transparent_40%)]">
-                <header className="h-16 border-b border-app-border/20 flex items-center justify-between px-8 bg-app-surface/10 backdrop-blur-md z-10">
+            <main className={`flex-1 flex flex-col relative overflow-hidden ${
+                theme === 'medieval' 
+                    ? 'bg-[radial-gradient(circle_at_top_right,rgba(212,175,55,0.08),transparent_40%)]' 
+                    : 'bg-[radial-gradient(circle_at_top_right,rgba(29,78,216,0.05),transparent_40%)]'
+            }`}>
+                <header className={`h-16 border-b border-app-border/20 flex items-center justify-between px-8 backdrop-blur-md z-10 transition-all duration-500 ${
+                    theme === 'medieval' ? 'bg-app-surface/95 border-b-app-border/60 shadow-lg' : 'bg-app-surface/10'
+                }`}>
                     <div className="flex items-center gap-4">
-                        <h2 className="text-lg font-bold tracking-tight text-app-text uppercase italic">
+                        <h2 className={`text-lg tracking-widest text-app-text uppercase ${
+                            theme === 'medieval' ? 'font-display' : 'font-bold italic'
+                        }`}>
                             {activeModule === 'dashboard' ? 'SESSION' : activeModule} <span className="text-accent">OS</span>
                         </h2>
                     </div>
@@ -420,17 +436,23 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <div className={`flex items-center gap-4 px-4 py-1.5 rounded-full ${tacticalSettings.isEnabled ? 'bg-accent/10 border border-accent/20' : 'bg-app-surface border border-app-border opacity-50'}`}>
+                        <div className={`flex items-center gap-4 px-4 py-1.5 border ${
+                            theme === 'medieval' ? 'rounded-md border-app-border/40' : 'rounded-full border-app-accent/20'
+                        } ${tacticalSettings.isEnabled ? 'bg-accent/10' : 'bg-app-surface opacity-50'}`}>
                             <div className={`w-2 h-2 rounded-full ${tacticalSettings.isEnabled ? (tacticalStatus === 'analyzing' ? 'bg-emerald-400 animate-pulse' : 'bg-accent') : 'bg-app-text/20'} shadow-glow-accent`} />
-                             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/80">
-                                {tacticalSettings.isEnabled ? 'CORTEX ACTIVE' : 'CORTEX DISABLED'}
+                             <span className={`text-[10px] uppercase tracking-[0.22em] ${theme === 'medieval' ? 'font-display text-accent' : 'font-black text-accent/80'}`}>
+                                {tacticalSettings.isEnabled 
+                                    ? (theme === 'medieval' ? 'SCEAU ACTIF' : 'CORTEX ACTIVE') 
+                                    : (theme === 'medieval' ? 'SCEAU ROMPU' : 'CORTEX DISABLED')}
                              </span>
                         </div>
                         <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-accent animate-ping" />
-                             <span className="text-[10px] font-mono text-app-text/40 uppercase tracking-widest">System Link Active</span>
+                            <div className={`w-2 h-2 rounded-full bg-accent ${tacticalSettings.isEnabled ? 'animate-pulse' : 'animate-ping'}`} />
+                             <span className={`text-[10px] font-mono text-app-text/40 uppercase tracking-widest ${theme === 'medieval' ? 'font-display' : ''}`}>
+                                {theme === 'medieval' ? 'LIEN ÉTERNEL' : 'System Link Active'}
+                             </span>
                         </div>
-                        <div className="px-3 py-1.5 rounded-lg bg-app-bg border border-app-border text-xs font-mono text-app-text/40 shadow-xl">
+                        <div className={`px-3 py-1.5 rounded-lg bg-app-bg border border-app-border text-[9px] text-app-text/40 shadow-xl ${theme === 'medieval' ? 'font-display' : 'font-mono'}`}>
                             GM-OS_v5.1.1-ALPHA
                         </div>
                     </div>

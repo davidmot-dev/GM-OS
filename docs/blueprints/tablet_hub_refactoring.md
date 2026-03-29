@@ -62,7 +62,13 @@ Balayage laser Cyan traverse le portrait pour simuler une authentification sécu
 - Intégration des lancers de dés contextuels (clic sur une carac).
 - Gestion de l'inventaire en temps réel [TERMINÉ].
 - **Deep Sync Media Patch** : Résolution proactive des images `m-xxx` pour les clients distants [TERMINÉ].
+- **Selective Campaign Sync** : Filtrage automatique pour n'envoyer que les entités de la campagne active (`activeCampaignId`) [TERMINÉ].
 
+### Phase 4 : Social & Reconnaissance [TERMINÉ]
+
+- **Trombinoscope** : Galerie interactive de tous les PNJ marqués comme "Visibles" par le MJ.
+- **Détail PNJ** : Vue immersive (plein écran) lors du clic sur un portrait dans le Trombinoscope.
+- **Sync Tactique** : Mise à jour en temps réel de la visibilité des PNJ sans rafraîchissement manuel.
 ## 4. Architecture Technique (Nexus Bridge)
 
 - **Store** : `useClientStore` (local) + `useSessionOSStore` (sync).
@@ -76,7 +82,7 @@ Balayage laser Cyan traverse le portrait pour simuler une authentification sécu
 - `[x]` Onboarding v1 (Radar + Grille).
 - `[x]` Phase 2 : Synchronisation bi-directionnelle & Notifications MJ.
 - `[x]` Phase 3 : Interaction directe (Inventaire, Dés, Médias).
-
+- `[x]` Phase 4 : Trombinoscope & Détails PNJ.
 ---
-*Dernière mise à jour : 28 Mars 2026*
+*Dernière mise à jour : 29 Mars 2026*
 *Statut : PROJET TERMINÉ & INTÉGRÉ*

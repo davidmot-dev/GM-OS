@@ -23,9 +23,11 @@ Le Hub utilise un modèle de synchronisation "One-Way" (Maître vers Esclave) :
 3.  L'application prépare un payload `sync` contenant les extraits pertinents des stores :
     - `clock`: `isClockProjected`, `timestamp`, `tensions`, `theme`.
     - `combat`: `combatants` (avec avatars résolus), `round`, `currentTurnIdx`.
+    - `entities`: Liste filtrée des PNJ/Monstres de la campagne active (`activeCampaignId`) marqués comme `isVisibleByPlayers`.
     - `voiceLevel`: Intensité sonore pour le visualiseur.
 4.  Le payload est envoyé via IPC au Main Process Electron, puis diffusé vers tous les clients WebSocket connectés.
 5.  Le `TabletHub.tsx` reçoit le message `sync` et met à jour ses stores locaux via `useStore.setState()`.
+6.  **Filtrage Intelligent** : Pour optimiser la bande passante, le MJ n'envoie que les entités dont l'ID de campagne correspond à la session active, évitant ainsi de charger des PNJ d'autres aventures sur la tablette.
 
 ## 🛡️ Session Manager & Robustesse
 
@@ -50,6 +52,8 @@ graph TD
 ### Écrans de Rendu :
 - **Narrative Clock** : Utilise le `ClockVisualizer` en mode réduit (`scale-0.7`).
 - **Jauges de Tension** : Rendu dynamique via une grille responsive.
+- **Trombinoscope** : Galerie interactive filtrant les entités reçues via WebSocket. Affiche les portraits (`m-xxx`) résolus via le proxy local.
+- **Détails PNJ** : Vue modale immersive déclenchée par la sélection d'un PNJ dans le Trombinoscope.
 - **Header Widgets** : Zone auto-masquable basée sur l'état `isClockProjected`.
 
 ## 🧪 Tests Automatisés

@@ -15,7 +15,17 @@ interface HealthManagerProps {
 }
 
 export const HealthManager: React.FC<HealthManagerProps> = ({ id, type }) => {
-  const { players, entities, updateCharacterHealth, updateEntityHealth, handleApplyImpact: storeApplyImpact } = useSessionOSStore();
+  const { 
+    players, 
+    entities, 
+    updateCharacterHP,
+    updateCharacterMaxHP,
+    updateEntityHP,
+    updateEntityMaxHP,
+    updateCharacterHealth, 
+    updateEntityHealth, 
+    handleApplyImpact: storeApplyImpact 
+  } = useSessionOSStore();
   const [impactValue, setImpactValue] = useState(1);
   const [lastImpactType, setLastImpactType] = useState<string | undefined>(undefined);
   const [isHealing, setIsHealing] = useState(false);
@@ -122,8 +132,24 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type }) => {
         >
             {health.type === 'hp' && (
                 <HealthBarDriver 
-                    current={Number(health.data.current)} 
-                    max={Number(health.data.max)} 
+                    current={Number(health.data.current) || target.hp || 0} 
+                    max={Number(health.data.max) || target.maxHp || 10} 
+                    onCurrentChange={(val) => {
+                        if (type === 'pc') {
+                            const player = players.find(p => p.characters.some(c => c.id === id));
+                            if (player) updateCharacterHP(player.id, id, val);
+                        } else {
+                            updateEntityHP(id, val);
+                        }
+                    }}
+                    onMaxChange={(val) => {
+                        if (type === 'pc') {
+                            const player = players.find(p => p.characters.some(c => c.id === id));
+                            if (player) updateCharacterMaxHP(player.id, id, val);
+                        } else {
+                            updateEntityMaxHP(id, val);
+                        }
+                    }}
                     lastDamageType={lastImpactType}
                     isHealing={isHealing}
                 />

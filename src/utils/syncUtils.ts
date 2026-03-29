@@ -5,6 +5,10 @@
 export function isDeepEqual(obj1: unknown, obj2: unknown): boolean {
     if (obj1 === obj2) return true;
 
+    if (obj1 instanceof Date && obj2 instanceof Date) {
+        return obj1.getTime() === obj2.getTime();
+    }
+
     if (
         typeof obj1 !== "object" || 
         obj1 === null || 

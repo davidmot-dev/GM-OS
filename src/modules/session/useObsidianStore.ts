@@ -18,6 +18,7 @@ interface ObsidianState {
 
     // Actions
     setVaultPath: (path: string) => void;
+    browseVaultPath: () => Promise<void>;
     fetchNotes: () => Promise<void>;
     selectNote: (path: string) => Promise<void>;
     syncActiveNoteToOracle: (notebookId: string) => Promise<boolean>;
@@ -34,6 +35,22 @@ export const useObsidianStore = create<ObsidianState>()(
             error: null,
 
             setVaultPath: (path) => set({ vaultPath: path }),
+
+            browseVaultPath: async () => {
+                try {
+                    if (!window.appBridge?.obsidian?.selectVault) {
+                        throw new Error("Sélecteur de dossier non disponible");
+                    }
+                    const selectedPath = await window.appBridge.obsidian.selectVault();
+                    if (selectedPath) {
+                        set({ vaultPath: selectedPath });
+                        // Optionnel: rafraîchir les notes immédiatement
+                        await get().fetchNotes();
+                    }
+                } catch (err) {
+                    set({ error: (err as Error).message });
+                }
+            },
 
             fetchNotes: async () => {
                 const { vaultPath } = get();

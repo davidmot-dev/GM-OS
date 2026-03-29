@@ -1,4 +1,4 @@
-import { ipcMain } from 'electron';
+import { ipcMain, dialog } from 'electron';
 import path from 'node:path';
 import fs from 'fs-extra';
 
@@ -131,5 +131,17 @@ export function registerObsidianHandlers() {
             console.error('[Obsidian Bridge] Error creating directory:', error);
             return false;
         }
+    });
+
+    ipcMain.handle('obsidian:select-vault', async (_event) => {
+        const { filePaths } = await dialog.showOpenDialog({
+            title: 'Sélectionner le coffre Obsidian',
+            properties: ['openDirectory', 'createDirectory']
+        });
+
+        if (filePaths && filePaths.length > 0) {
+            return filePaths[0];
+        }
+        return null;
     });
 }

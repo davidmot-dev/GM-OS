@@ -3,15 +3,24 @@ import React from 'react';
 interface HealthBarDriverProps {
   current: number;
   max: number;
+  onCurrentChange?: (val: number) => void;
+  onMaxChange?: (val: number) => void;
   lastDamageType?: string;
   isHealing?: boolean;
 }
 
 /**
  * HealthBarDriver component
- * Visualizes HP as a premium, cinematic progress bar.
+ * Visualizes HP as a premium, cinematic progress bar with inline editing.
  */
-export const HealthBarDriver: React.FC<HealthBarDriverProps> = ({ current, max, lastDamageType, isHealing }) => {
+export const HealthBarDriver: React.FC<HealthBarDriverProps> = ({ 
+    current, 
+    max, 
+    onCurrentChange, 
+    onMaxChange, 
+    lastDamageType, 
+    isHealing 
+}) => {
   const percentage = Math.max(0, Math.min(100, (current / max) * 100));
   
   // Dynamic color orchestration
@@ -35,13 +44,27 @@ export const HealthBarDriver: React.FC<HealthBarDriverProps> = ({ current, max, 
   const isLow = percentage <= 20;
 
   return (
-    <div className="w-full h-8 flex flex-col justify-center gap-1.5 px-1 relative group/hp">
+    <div className="w-full h-8 flex flex-col justify-center gap-1 px-1 relative group/hp">
         {/* PV Labels */}
         <div className="flex justify-between items-end px-0.5">
             <span className="text-[10px] font-display font-black text-white/40 uppercase tracking-tighter">Vitality</span>
-            <span className={`text-xs font-display font-black tracking-tight ${percentage <= 25 ? 'text-rose-500 animate-pulse' : 'text-white/80'}`}>
-                {current} <span className="text-[10px] opacity-30">/ {max}</span>
-            </span>
+            <div className={`flex items-baseline gap-1 font-display font-black tracking-tight ${percentage <= 25 ? 'text-rose-500' : 'text-white/80'}`}>
+                <input 
+                    type="number" 
+                    value={current}
+                    onChange={(e) => onCurrentChange?.(parseInt(e.target.value) || 0)}
+                    className="w-8 bg-transparent text-right outline-none focus:text-accent transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none p-0 border-none"
+                    title="Actuel"
+                />
+                <span className="text-[10px] opacity-30 select-none">/</span>
+                <input 
+                    type="number" 
+                    value={max}
+                    onChange={(e) => onMaxChange?.(parseInt(e.target.value) || 1)}
+                    className="w-8 bg-transparent text-left opacity-30 focus:opacity-100 outline-none focus:text-accent transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none p-0 border-none text-[10px]"
+                    title="Max"
+                />
+            </div>
         </div>
 
         {/* Progress Container */}

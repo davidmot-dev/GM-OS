@@ -42,6 +42,7 @@ export interface EntitySliceActions {
     updateEntityHP: (entityId: string, hp: number) => void;
     updateEntityMaxHP: (entityId: string, maxHp: number) => void;
     updateEntityHealth: (entityId: string, health: HealthSystem) => void;
+    toggleEntityVisibility: (entityId: string) => void;
     updateEntitySheetData: (id: string, fieldId: string, value: string | number | boolean) => void;
     autoSelectFirstEntity: () => void;
 
@@ -124,46 +125,54 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
         if (entity) gmToast(`"${entity.name}" supprimé.`, 'info');
     },
 
-    updateEntityHP: (entityId, hp) =>
+    updateEntityHP: (entityId: string, hp: number) =>
         set((state) => ({
             entities: state.entities.map((e) => {
                 if (e.id !== entityId) return e;
-                const updated = {
-                    ...e,
-                    hp,
-                    status: hp <= 0 ? 'dead' : hp < e.maxHp * 0.25 ? 'injured' : 'alive'
-                } as Entity;
+                
+                // Calcul du nouvel état de santé
+                const nextHp = Math.max(0, hp);
+                const status = nextHp <= 0 ? 'dead' : nextHp < e.maxHp * 0.25 ? 'injured' : 'alive';
+                
+                // Préparation de la mise à jour
+                const updated = { ...e, hp: nextHp, status } as Entity;
 
-                // Sync HealthSystem
-                if (updated.healthSystem?.type === 'hp') {
+                // Synchronisation forcée du HealthSystem si présent (et de type HP)
+                const health = e.healthSystem || HealthInterpreter.createDefault('hp');
+                if (health.type === 'hp') {
                     updated.healthSystem = {
-                        ...updated.healthSystem,
-                        data: { ...updated.healthSystem.data, current: hp },
-                        state: hp <= 0 ? 'dead' : (hp / updated.maxHp) <= 0.25 ? 'critical' : (hp / updated.maxHp) <= 0.5 ? 'wounded' : 'healthy'
+                        ...health,
+                        data: { ...health.data, current: nextHp, max: e.maxHp },
+                        state: nextHp <= 0 ? 'dead' : (nextHp / e.maxHp) <= 0.25 ? 'critical' : (nextHp / e.maxHp) <= 0.5 ? 'wounded' : 'healthy'
+                    };
+                }
+                
+                return updated;
+            }),
+        })),
+
+    updateEntityMaxHP: (entityId: string, maxHp: number) =>
+        set((state) => ({
+            entities: state.entities.map((e) => {
+                if (e.id !== entityId) return e;
+                
+                const nextMax = Math.max(1, maxHp);
+                const updated = { ...e, maxHp: nextMax } as Entity;
+
+                // Synchronisation forcée du HealthSystem
+                const health = e.healthSystem || HealthInterpreter.createDefault('hp');
+                if (health.type === 'hp') {
+                    updated.healthSystem = {
+                        ...health,
+                        data: { ...health.data, current: e.hp, max: nextMax },
+                        state: e.hp <= 0 ? 'dead' : (e.hp / nextMax) <= 0.25 ? 'critical' : (e.hp / nextMax) <= 0.5 ? 'wounded' : 'healthy'
                     };
                 }
                 return updated;
             }),
         })),
 
-    updateEntityMaxHP: (entityId, maxHp) =>
-        set((state) => ({
-            entities: state.entities.map((e) => {
-                if (e.id !== entityId) return e;
-                const updated = { ...e, maxHp } as Entity;
-                // Sync HealthSystem
-                if (updated.healthSystem?.type === 'hp') {
-                    updated.healthSystem = {
-                        ...updated.healthSystem,
-                        data: { ...updated.healthSystem.data, max: maxHp },
-                        state: updated.hp <= 0 ? 'dead' : (updated.hp / maxHp) <= 0.25 ? 'critical' : (updated.hp / maxHp) <= 0.5 ? 'wounded' : 'healthy'
-                    };
-                }
-                return updated;
-            }),
-        })),
-
-    updateEntityHealth: (entityId, health) =>
+    updateEntityHealth: (entityId: string, health) =>
         set((state) => ({
             entities: state.entities.map((e) => {
                 if (e.id !== entityId) return e;
@@ -176,6 +185,13 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                 }
                 return updated;
             }),
+        })),
+
+    toggleEntityVisibility: (entityId) =>
+        set((state) => ({
+            entities: state.entities.map((e) => 
+                e.id === entityId ? { ...e, isVisibleByPlayers: !e.isVisibleByPlayers } : e
+            )
         })),
 
     updateEntitySheetData: (id, fieldId, value) =>
@@ -253,13 +269,16 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                           ...p,
                           characters: p.characters.map((c) => {
                                 if (c.id !== characterId) return c;
-                                const updated = { ...c, hp } as PlayerCharacter;
-                                // Sync HealthSystem
-                                if (updated.healthSystem?.type === 'hp') {
+                                const nextHp = Math.max(0, hp);
+                                const updated = { ...c, hp: nextHp } as PlayerCharacter;
+                                
+                                // Synchronisation forcée du HealthSystem
+                                const health = c.healthSystem || HealthInterpreter.createDefault('hp');
+                                if (health.type === 'hp') {
                                     updated.healthSystem = {
-                                        ...updated.healthSystem,
-                                        data: { ...updated.healthSystem.data, current: hp },
-                                        state: hp <= 0 ? 'dead' : (hp / updated.maxHp) <= 0.25 ? 'critical' : (hp / updated.maxHp) <= 0.5 ? 'wounded' : 'healthy'
+                                        ...health,
+                                        data: { ...health.data, current: nextHp, max: c.maxHp },
+                                        state: nextHp <= 0 ? 'dead' : (nextHp / c.maxHp) <= 0.25 ? 'critical' : (nextHp / c.maxHp) <= 0.5 ? 'wounded' : 'healthy'
                                     };
                                 }
                                 return updated;
@@ -277,13 +296,16 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                           ...p,
                           characters: p.characters.map((c) => {
                                 if (c.id !== characterId) return c;
-                                const updated = { ...c, maxHp } as PlayerCharacter;
-                                // Sync HealthSystem
-                                if (updated.healthSystem?.type === 'hp') {
+                                const nextMax = Math.max(1, maxHp);
+                                const updated = { ...c, maxHp: nextMax } as PlayerCharacter;
+                                
+                                // Synchronisation forcée du HealthSystem
+                                const health = c.healthSystem || HealthInterpreter.createDefault('hp');
+                                if (health.type === 'hp') {
                                     updated.healthSystem = {
-                                        ...updated.healthSystem,
-                                        data: { ...updated.healthSystem.data, max: maxHp },
-                                        state: updated.hp <= 0 ? 'dead' : (updated.hp / maxHp) <= 0.25 ? 'critical' : (updated.hp / maxHp) <= 0.5 ? 'wounded' : 'healthy'
+                                        ...health,
+                                        data: { ...health.data, current: c.hp, max: nextMax },
+                                        state: c.hp <= 0 ? 'dead' : (c.hp / nextMax) <= 0.25 ? 'critical' : (c.hp / nextMax) <= 0.5 ? 'wounded' : 'healthy'
                                     };
                                 }
                                 return updated;

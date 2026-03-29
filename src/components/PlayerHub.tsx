@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useImageStore } from '../modules/image/useImageStore';
 import { useCombatStore, type Combatant } from '../modules/combat/useCombatStore';
 import { useClockStore } from '../store/useClockStore';
@@ -27,8 +27,8 @@ const PlayerHub: React.FC = () => {
     const { backgroundMode, projectionTarget: whiteboardTarget } = useWhiteboardStore();
     const { isDiceProjected, lastRoll, projectionTrigger } = useDiceStore();
     const [showDice, setShowDice] = useState(false);
-    const diceTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-    const lastTriggerRef = React.useRef(0);
+    const diceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const lastTriggerRef = useRef(0);
 
     useEffect(() => {
         // On affiche seulement si le mode est ON et qu'un nouveau trigger (lancer) survient
@@ -158,7 +158,7 @@ const PlayerHub: React.FC = () => {
 
     const renderClockWidget = () => {
         return (
-            <div className="backdrop-blur-md bg-slate-950/40 border-b border-r border-white/10 p-8 rounded-br-[2rem] rounded-tr-xl rounded-bl-xl shadow-2xl flex items-center justify-center w-full min-h-[250px]">
+            <div className="backdrop-blur-md bg-app-surface/40 border-b border-r border-app-border/40 p-8 rounded-br-[2rem] rounded-tr-xl rounded-bl-xl shadow-2xl flex items-center justify-center w-full min-h-[250px]">
                 <ClockVisualizer theme={theme} timestamp={timestamp} mode={mode} />
             </div>
         );
@@ -169,7 +169,7 @@ const PlayerHub: React.FC = () => {
     const isMapActive = !!(mapUrl && projectionTarget === 'hub');
 
     return (
-        <div className="bg-[#221010] text-slate-100 font-cinematic selection:bg-red-600/30 w-full h-screen overflow-hidden flex flex-col relative select-none cursor-default">
+        <div className="bg-app-bg text-app-text font-cinematic selection:bg-accent/30 w-full h-screen overflow-hidden flex flex-col relative select-none cursor-default">
             {/* Map Background Layer (Z-0) */}
             {isMapActive && (
                 <div className="fixed inset-0 z-0">
@@ -192,7 +192,7 @@ const PlayerHub: React.FC = () => {
                             filter: `brightness(${(sharedFavorites.length > 0 || liveEntity) ? 0.15 : 0.4}) grayscale(20%)`
                         }}
                     ></div>
-                    {!resolvedBackground && <div className="fixed inset-0 z-0 bg-black"></div>}
+                    {!resolvedBackground && <div className="fixed inset-0 z-0 bg-app-bg"></div>}
                 </>
             )}
 
@@ -206,7 +206,7 @@ const PlayerHub: React.FC = () => {
 
             {/* Overlays for focus */}
             {(sharedFavorites.length > 0 || liveEntity) && (
-                <div className={`fixed inset-0 z-5 bg-black/${isMapActive ? '60' : '40'} backdrop-blur-[2px] pointer-events-none transition-all duration-700`}></div>
+                <div className={`fixed inset-0 z-5 bg-app-bg/${isMapActive ? '60' : '40'} backdrop-blur-[2px] pointer-events-none transition-all duration-700`}></div>
             )}
 
             {/* Main Content Area */}
@@ -220,11 +220,11 @@ const PlayerHub: React.FC = () => {
                             {tensions.length > 0 && (
                                 <div className="grid grid-cols-2 gap-4 w-full">
                                     {tensions.map(clock => (
-                                        <div key={clock.id} className="flex items-center gap-5 bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl p-5 shadow-xl w-full">
+                                        <div key={clock.id} className="flex items-center gap-5 bg-app-surface/60 backdrop-blur-xl border border-app-border/40 rounded-2xl p-5 shadow-xl w-full">
                                             <NarrativeClock clock={clock} theme={theme} size={75} />
                                             <div className="flex flex-col flex-1 overflow-hidden">
-                                                <p className={`text-xl font-black truncate w-full ${theme === 'cyberpunk' ? 'text-pink-400 font-mono tracking-wider' : theme === 'oldstyle' ? 'text-amber-500 font-serif' : 'text-slate-200 uppercase tracking-tight'}`}>{clock.name}</p>
-                                                <p className={`text-sm mt-0.5 font-bold ${theme === 'cyberpunk' ? 'text-cyan-400' : theme === 'oldstyle' ? 'text-amber-700/80 italic' : 'text-slate-400'}`}>
+                                                <p className={`text-xl font-black truncate w-full ${theme === 'cyberpunk' ? 'text-accent font-mono tracking-wider' : theme === 'oldstyle' ? 'text-amber-500 font-serif' : 'text-app-text uppercase tracking-tight'}`}>{clock.name}</p>
+                                                <p className={`text-sm mt-0.5 font-bold ${theme === 'cyberpunk' ? 'text-cyan-400' : theme === 'oldstyle' ? 'text-amber-700/80 italic' : 'text-app-text/60'}`}>
                                                     {clock.filledSegments} / {clock.totalSegments} Segments
                                                 </p>
                                             </div>
@@ -244,10 +244,10 @@ const PlayerHub: React.FC = () => {
                                 <div className={`grid grid-cols-1 ${(sharedFavorites.length + (liveEntity ? 1 : 0)) > 1 ? 'md:grid-cols-2 lg:grid-cols-3' : 'md:max-w-xl'} gap-8 md:gap-12 w-full place-items-center`}>
                                     
                                     {liveEntity && (
-                                        <div key={liveEntity.id} className={`bg-slate-900/90 backdrop-blur-3xl border-2 border-gm-cyan/30 rounded-[2rem] p-6 md:p-8 shadow-[0_0_50px_rgba(34,211,238,0.2)] flex flex-col gap-6 animate-in fade-in zoom-in slide-in-from-bottom-12 duration-1000 w-full hover:border-gm-cyan/60 transition-all group ${liveEntity.type === 'Oracle' ? 'md:max-w-2xl' : ''}`}>
+                                        <div key={liveEntity.id} className={`bg-app-surface/90 backdrop-blur-3xl border-2 border-accent/30 rounded-[2rem] p-6 md:p-8 shadow-[0_0_50px_rgba(var(--accent-rgb),0.2)] flex flex-col gap-6 animate-in fade-in zoom-in slide-in-from-bottom-12 duration-1000 w-full hover:border-accent/60 transition-all group ${liveEntity.type === 'Oracle' ? 'md:max-w-2xl' : ''}`}>
                                             <div className="flex flex-col items-center text-center gap-4 md:gap-6">
                                                 <div 
-                                                    className={`${liveEntity.type === 'Oracle' ? 'w-full aspect-[2/3] max-h-[75vh]' : 'size-28 md:size-40'} rounded-2xl overflow-hidden border-2 border-gm-cyan/20 shadow-glow-cyan bg-slate-950 group-hover:border-gm-cyan/50 transition-all scale-100 group-hover:scale-105 relative`}
+                                                    className={`${liveEntity.type === 'Oracle' ? 'w-full aspect-[2/3] max-h-[75vh]' : 'size-28 md:size-40'} rounded-2xl overflow-hidden border-2 border-accent/20 shadow-glow-accent bg-app-surface group-hover:border-accent/50 transition-all scale-100 group-hover:scale-105 relative`}
                                                     style={{ transform: `scale(${voiceScale})`, boxShadow: voiceGlow }}
                                                 >
                                                     <ResolvedImage src={liveEntity.avatar || liveEntity.imageUrl || liveEntity.portraitUrl} className="absolute inset-0 w-full h-full object-cover blur-xl opacity-30 scale-110" />
@@ -256,11 +256,11 @@ const PlayerHub: React.FC = () => {
 
                                                 {liveEntity.type !== 'Oracle' && (
                                                     <div className="flex flex-col items-center">
-                                                        <h3 className="text-2xl md:text-3xl font-black text-white tracking-tighter drop-shadow-lg uppercase bg-gradient-to-b from-white to-slate-400 bg-clip-text text-transparent">{liveEntity.name}</h3>
+                                                        <h3 className="text-2xl md:text-3xl font-black text-app-text tracking-tighter drop-shadow-lg uppercase bg-gradient-to-b from-app-text to-app-text/60 bg-clip-text text-transparent">{liveEntity.name}</h3>
                                                         <div className="flex items-center gap-3 mt-1">
-                                                            <span className="h-px w-6 bg-gm-cyan/40"></span>
-                                                            <p className="text-gm-cyan text-[10px] md:text-[12px] font-black uppercase tracking-[0.5em]">{liveEntity.subtitle || liveEntity.type || 'Personnage'}</p>
-                                                            <span className="h-px w-6 bg-gm-cyan/40"></span>
+                                                            <span className="h-px w-6 bg-accent/40"></span>
+                                                            <p className="text-accent text-[10px] md:text-[12px] font-black uppercase tracking-[0.5em]">{liveEntity.subtitle || liveEntity.type || 'Personnage'}</p>
+                                                            <span className="h-px w-6 bg-accent/40"></span>
                                                         </div>
                                                     </div>
                                                 )}
@@ -269,18 +269,18 @@ const PlayerHub: React.FC = () => {
                                             {liveEntity.type !== 'Oracle' && (
                                                 <>
                                                     {liveEntity.fields && Object.keys(liveEntity.fields).length > 0 && (
-                                                        <div className="grid grid-cols-2 gap-3 py-4 border-t border-b border-white/5">
+                                                        <div className="grid grid-cols-2 gap-3 py-4 border-t border-b border-app-border/20">
                                                             {Object.entries(liveEntity.fields).slice(0, 4).map(([k, v]) => (
                                                                 <div key={k} className="flex flex-col items-center text-center">
-                                                                    <span className="text-[8px] uppercase font-bold text-slate-500 tracking-widest">{k}</span>
-                                                                    <span className="text-xs font-bold text-slate-200">{String(v)}</span>
+                                                                    <span className="text-[8px] uppercase font-bold text-app-text/40 tracking-widest">{k}</span>
+                                                                    <span className="text-xs font-bold text-app-text">{String(v)}</span>
                                                                 </div>
                                                             ))}
                                                         </div>
                                                     )}
 
-                                                    <div className="relative pt-6 border-t border-white/10">
-                                                        <p className="font-serif text-slate-200 leading-relaxed italic text-sm md:text-base text-center whitespace-pre-wrap drop-shadow-md line-clamp-[10]">
+                                                    <div className="relative pt-6 border-t border-app-border/20">
+                                                        <p className="font-serif text-app-text/80 leading-relaxed italic text-sm md:text-base text-center whitespace-pre-wrap drop-shadow-md line-clamp-[10]">
                                                             {liveEntity.lore || liveEntity.description || "Aucun détail narratif supplémentaire."}
                                                         </p>
                                                     </div>
@@ -290,23 +290,23 @@ const PlayerHub: React.FC = () => {
                                     )}
 
                                     {sharedFavorites.map(fav => (
-                                        <div key={fav.id} className="bg-slate-950/80 backdrop-blur-2xl border border-white/10 rounded-[1.5rem] p-5 md:p-6 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.8)] flex flex-col gap-4 md:gap-5 animate-in fade-in zoom-in duration-700 w-full group">
+                                        <div key={fav.id} className="bg-app-surface/90 backdrop-blur-2xl border border-app-border/20 rounded-[1.5rem] p-5 md:p-6 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.8)] flex flex-col gap-4 md:gap-5 animate-in fade-in zoom-in duration-700 w-full group">
                                             <div className="flex flex-col items-center text-center gap-3 md:gap-4">
-                                                <div className="size-20 md:size-28 rounded-xl overflow-hidden border border-white/10 shadow-xl bg-slate-900 group-hover:border-white/30 transition-all scale-100 group-hover:scale-105 relative">
+                                                <div className="size-20 md:size-28 rounded-xl overflow-hidden border border-app-border/40 shadow-xl bg-app-surface group-hover:border-app-accent transition-all scale-100 group-hover:scale-105 relative">
                                                     <ResolvedImage src={fav.imageUrl || fav.tokenUrl} className="absolute inset-0 w-full h-full object-cover blur-lg opacity-40 scale-110" />
                                                     <ResolvedImage src={fav.imageUrl || fav.tokenUrl} alt={fav.name} className="relative z-10 w-full h-full object-contain" />
                                                 </div>
                                                 <div className="flex flex-col items-center">
-                                                    <h3 className="text-lg md:text-xl font-black text-white tracking-tighter uppercase opacity-90">{fav.name}</h3>
+                                                    <h3 className="text-lg md:text-xl font-black text-app-text tracking-tighter uppercase opacity-90">{fav.name}</h3>
                                                     <div className="flex items-center gap-2 mt-0.5">
-                                                        <span className="h-px w-3 bg-white/20"></span>
-                                                        <p className="text-slate-400 text-[8px] md:text-[9px] font-black uppercase tracking-[0.4em]">{fav.type}</p>
-                                                        <span className="h-px w-3 bg-white/20"></span>
+                                                        <span className="h-px w-3 bg-app-text/20"></span>
+                                                        <p className="text-app-text/60 text-[8px] md:text-[9px] font-black uppercase tracking-[0.4em]">{fav.type}</p>
+                                                        <span className="h-px w-3 bg-app-text/20"></span>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="relative pt-4 border-t border-white/5">
-                                                <p className="font-serif text-slate-300 leading-relaxed italic text-xs md:text-sm text-center line-clamp-[10]">
+                                            <div className="relative pt-4 border-t border-app-border/20">
+                                                <p className="font-serif text-app-text/70 leading-relaxed italic text-xs md:text-sm text-center line-clamp-[10]">
                                                     {fav.lore}
                                                 </p>
                                             </div>
@@ -322,40 +322,67 @@ const PlayerHub: React.FC = () => {
                         showDice ? 'opacity-100' : 'opacity-0'
                     }`}>
                         {lastRoll && (
-                            <div className={`bg-slate-950/80 backdrop-blur-3xl border-2 border-gm-cyan/30 rounded-[3rem] p-12 shadow-[0_0_100px_rgba(34,211,238,0.3)] flex flex-col items-center gap-8 max-w-2xl w-full transform transition-all duration-1000 ${
+                            <div className={`bg-app-surface/90 backdrop-blur-3xl border-2 border-accent/30 rounded-[3rem] p-12 shadow-[0_0_100px_rgba(var(--accent-rgb),0.3)] flex flex-col items-center gap-8 max-w-2xl w-full transform transition-all duration-1000 ${
                                 showDice ? 'scale-100 translate-y-0 animate-in zoom-in' : 'scale-95 translate-y-8 duration-700'
                             }`}>
                                 <div className="flex flex-col items-center gap-2 text-center">
-                                    <span className="text-gm-cyan text-xs font-black uppercase tracking-[0.5em] animate-pulse">Dice Result</span>
-                                    <h2 className="text-white/80 text-xl font-black tracking-tight uppercase drop-shadow-lg">{lastRoll.title}</h2>
+                                    <span className="text-accent text-xs font-black uppercase tracking-[0.5em] animate-pulse">Résultat du Dé</span>
+                                    <h2 className="text-app-text/80 text-xl font-black tracking-tight uppercase drop-shadow-lg">{lastRoll.title}</h2>
                                 </div>
 
-                                <div className="text-6xl md:text-8xl leading-tight font-black text-white drop-shadow-[0_0_40px_rgba(255,255,255,0.4)] transition-all text-center break-words max-w-full">
+                                <div className="text-6xl md:text-8xl leading-tight font-black text-app-text drop-shadow-[0_0_40px_rgba(var(--accent-rgb),0.4)] transition-all text-center break-words max-w-full">
                                     {lastRoll.totalDisplay}
                                 </div>
 
+                                <div className="flex flex-wrap gap-4 justify-center mt-4">
+                                    {(lastRoll.rolls as DieResult[]).map((r, i) => {
+                                        const cls = r.cssClass || '';
+                                        const isYZEBase = cls.includes('amber');
+                                        const isYZERose = cls.includes('rose');
+                                        const isYZEEmerald = cls.includes('emerald');
+                                        const isSuccess = cls.includes('!bg-') || r.isCritMax;
+                                        const isCritMin = r.isCritMin;
+                                        const isExploded = r.isExploded;
+                                        
+                                        let diceStyle = 'bg-app-bg/40 border-app-border/20 text-app-text/40';
+
+                                        if (isSuccess) {
+                                            // Priority 1: YZE Solid Colors
+                                            if (isYZEBase) diceStyle = 'bg-amber-500 border-amber-500 text-amber-950 shadow-glow-amber scale-110 z-10 font-black';
+                                            else if (isYZERose) diceStyle = 'bg-rose-500 border-rose-500 text-white shadow-glow-rose scale-110 z-10 font-black';
+                                            else if (isYZEEmerald) diceStyle = 'bg-emerald-500 border-emerald-500 text-emerald-950 shadow-glow-emerald scale-110 z-10 font-black';
+                                            // Priority 2: Generic Success (Emerald Border)
+                                            else diceStyle = 'bg-emerald-500/10 border-emerald-500 text-emerald-400 shadow-glow-emerald/40 scale-105 font-black border-2';
+                                        } else if (isCritMin) {
+                                            // Priority 3: Fails / Banes (Rose Border)
+                                            diceStyle = 'bg-rose-500/10 border-rose-500 text-rose-500 shadow-glow-rose/40 scale-105 font-black border-2';
+                                        } else if (isExploded) {
+                                            // Priority 4: Exploded Dice (Violet Border)
+                                            diceStyle = 'bg-violet-500/10 border-violet-500 text-violet-400 shadow-glow-violet/40 scale-105 font-black border-2';
+                                        } else {
+                                            // Normal dice - subtle
+                                            if (isYZEBase) diceStyle = 'bg-transparent border-amber-500/20 text-amber-500/80';
+                                            else if (isYZERose) diceStyle = 'bg-transparent border-rose-500/20 text-rose-500/80';
+                                            else if (isYZEEmerald) diceStyle = 'bg-transparent border-emerald-500/20 text-emerald-500/80';
+                                        }
+
+                                        return (
+                                            <div key={i} className={`size-16 flex items-center justify-center rounded-2xl text-2xl border transition-all ${diceStyle}`}>
+                                                {r.displayStr || r.val}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                                
                                 {lastRoll.tagSuccess !== undefined && (
-                                    <div className={`px-12 py-3 rounded-full text-2xl font-black uppercase tracking-[0.3em] shadow-2xl ${
+                                    <div className={`mt-4 px-12 py-3 rounded-full border-2 text-xl font-black uppercase tracking-[0.25em] backdrop-blur-md shadow-2xl transition-all ${
                                         lastRoll.tagSuccess 
-                                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 shadow-emerald-500/20' 
-                                            : 'bg-rose-500/20 text-rose-400 border border-rose-500/50 shadow-rose-500/20'
+                                            ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/50 shadow-glow-emerald/30' 
+                                            : 'bg-rose-500/10 text-rose-400 border-rose-500/50 shadow-glow-rose/30'
                                     }`}>
-                                        {lastRoll.tagSuccess ? 'Success' : 'Failure'}
+                                        {lastRoll.tagSuccess ? 'succès' : 'échec'}
                                     </div>
                                 )}
-
-                                <div className="flex flex-wrap gap-4 justify-center mt-4">
-                                    {(lastRoll.rolls as DieResult[]).map((r, i) => (
-                                        <div key={i} className={`size-16 flex items-center justify-center rounded-2xl text-2xl font-black border-2 transition-all ${
-                                            r.isExploded ? 'bg-indigo-500/20 border-indigo-400 text-indigo-300 shadow-glow-indigo/30 scale-110' :
-                                            r.isCritMax ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300 shadow-glow-emerald/30 scale-110' :
-                                            r.isCritMin ? 'bg-rose-500/20 border-rose-400 text-rose-300 shadow-glow-crimson/30 scale-90' :
-                                            'bg-white/5 border-white/10 text-white/50'
-                                        }`}>
-                                            {r.displayStr || r.val}
-                                        </div>
-                                    ))}
-                                </div>
                             </div>
                         )}
                     </div>
@@ -364,38 +391,38 @@ const PlayerHub: React.FC = () => {
                 {/* 3. Sync Status */}
                 <div className="absolute bottom-12 left-1/2 -translate-x-1/2 pointer-events-none">
                     {sharedFavorites.length > 0 && (
-                        <p className="text-[10px] font-black uppercase tracking-[0.5em] text-gm-cyan/40 animate-pulse">Knowledge Base Synchronized</p>
+                        <p className="text-[10px] font-black uppercase tracking-[0.5em] text-accent/40 animate-pulse">Knowledge Base Synchronized</p>
                     )}
                 </div>
             </div>
 
             {/* 4. Sidebar: Combat Tracker */}
             {hasCombatants && activeCombatant && (
-                <div className="fixed right-0 top-0 w-80 h-full z-50 bg-slate-900/40 backdrop-blur-xl border-l border-white/10 flex flex-col gap-4 p-6 shadow-2xl animate-in slide-in-from-right duration-500 pointer-events-auto">
-                    <div className="flex items-center justify-between mb-4 border-b border-white/10 pb-4">
+                <div className="fixed right-0 top-0 w-80 h-full z-50 bg-app-surface/40 backdrop-blur-xl border-l border-app-border/40 flex flex-col gap-4 p-6 shadow-2xl animate-in slide-in-from-right duration-500 pointer-events-auto" aria-label="Combat Tracker">
+                    <div className="flex items-center justify-between mb-4 border-b border-app-border/40 pb-4">
                         <div className="flex flex-col">
-                            <h1 className="text-white text-xl font-bold tracking-tight">Initiative</h1>
-                            <p className="text-red-400 text-xs font-bold uppercase">Round {round} • Turn {currentTurnIdx + 1}</p>
+                            <h1 className="text-app-text text-xl font-bold tracking-tight">Initiative</h1>
+                            <p className="text-rose-400 text-xs font-bold uppercase">Round {round} • Tour {currentTurnIdx + 1}</p>
                         </div>
                     </div>
 
                     <div className="flex flex-col gap-3">
                         {/* Active Turn */}
-                        <div className="flex flex-col gap-4 px-4 py-4 rounded-xl bg-red-500/20 ring-1 ring-red-500/50 shadow-glow-crimson relative overflow-hidden transition-all duration-700">
+                        <div className="flex flex-col gap-4 px-4 py-4 rounded-xl bg-rose-500/10 ring-1 ring-rose-500/40 shadow-glow-crimson relative overflow-hidden transition-all duration-700">
                             <div className="flex items-center gap-4">
-                                <ResolvedImage className="size-10 rounded-full border-2 border-red-500" src={activeCombatant.avatar} alt={activeCombatant.name} fallback={activeCombatant.name.charAt(0)} />
+                                <ResolvedImage className="size-10 rounded-full border-2 border-rose-500" src={activeCombatant.avatar} alt={activeCombatant.name} fallback={activeCombatant.name.charAt(0)} />
                                 <div className="flex flex-col">
-                                    <p className="text-white text-sm font-bold leading-none">{activeCombatant.name}</p>
-                                    <p className="text-red-400 text-[10px] font-bold uppercase mt-1">Active Turn</p>
+                                    <p className="text-app-text text-sm font-bold leading-none">{activeCombatant.name}</p>
+                                    <p className="text-rose-400 text-[10px] font-bold uppercase mt-1">Tour Actif</p>
                                 </div>
-                                <div className="ml-auto text-red-500 material-symbols-outlined">double_arrow</div>
+                                <div className="ml-auto text-rose-500 material-symbols-outlined">double_arrow</div>
                             </div>
 
                             {/* Health Indicators */}
-                            <div className="flex flex-wrap gap-2 pt-2 border-t border-red-500/20">
-                                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-black/60 border border-red-500/40">
-                                    <div className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)] animate-pulse" />
-                                    <span className="text-xs font-black text-red-100 tracking-normal">{activeCombatant.hp} / {activeCombatant.hpMax} HP</span>
+                            <div className="flex flex-wrap gap-2 pt-2 border-t border-rose-500/20">
+                                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-app-bg/60 border border-rose-500/40">
+                                    <div className="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.6)] animate-pulse" />
+                                    <span className="text-xs font-black text-rose-100 tracking-normal">{activeCombatant.hp} / {activeCombatant.hpMax} HP</span>
                                 </div>
                                 
                                 {activeCombatant.healthSystem && (
@@ -429,20 +456,20 @@ const PlayerHub: React.FC = () => {
 
                         {/* Queue */}
                         {upcomingCombatants.slice(0, 5).map((combatant, idx) => (
-                            <div key={combatant.id} className="flex flex-col gap-2 p-3 rounded-xl bg-white/5 border border-white/5 opacity-80 hover:opacity-100 hover:bg-white/10 transition-all cursor-pointer group">
+                            <div key={combatant.id} className="flex flex-col gap-2 p-3 rounded-xl bg-app-text/5 border border-app-border/10 opacity-80 hover:opacity-100 hover:bg-app-text/10 transition-all cursor-pointer group">
                                 <div className="flex items-center gap-4">
-                                    <ResolvedImage className="size-10 rounded-full border border-white/10 group-hover:border-white/30 transition-colors" src={combatant.avatar} alt={combatant.name} fallback={combatant.name.charAt(0)} />
+                                    <ResolvedImage className="size-10 rounded-full border border-app-border/20 group-hover:border-app-text transition-colors" src={combatant.avatar} alt={combatant.name} fallback={combatant.name.charAt(0)} />
                                     <div className="flex flex-col">
-                                        <p className="text-slate-200 text-sm font-medium leading-tight">{combatant.name}</p>
-                                        <p className="text-slate-500 text-[10px] uppercase tracking-tighter">{idx === 0 ? 'Next' : 'Upcoming'}</p>
+                                        <p className="text-app-text text-sm font-medium leading-tight">{combatant.name}</p>
+                                        <p className="text-app-text/40 text-[10px] uppercase tracking-tighter">{idx === 0 ? 'Suivant' : 'À venir'}</p>
                                     </div>
 
                                     {/* Mini HP Bar for upcoming */}
                                     <div className="ml-auto flex flex-col items-end gap-1">
-                                         <span className="text-[9px] font-bold text-slate-400 tracking-tighter">{combatant.hp} HP</span>
-                                         <div className="w-12 h-1 bg-white/10 rounded-full overflow-hidden">
+                                         <span className="text-[9px] font-bold text-app-text/60 tracking-tighter">{combatant.hp} HP</span>
+                                         <div className="w-12 h-1 bg-app-text/10 rounded-full overflow-hidden">
                                              <div 
-                                                className={`h-full transition-all ${combatant.hp / combatant.hpMax < 0.3 ? 'bg-red-500' : 'bg-emerald-500'}`} 
+                                                className={`h-full transition-all ${combatant.hp / combatant.hpMax < 0.3 ? 'bg-rose-500' : 'bg-emerald-500'}`} 
                                                 style={{ width: `${Math.min(100, (combatant.hp / combatant.hpMax) * 100)}%` }} 
                                              />
                                          </div>

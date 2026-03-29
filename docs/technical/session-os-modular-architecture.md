@@ -50,8 +50,9 @@ Les requêtes vers l'API Gemini transitent par un tunnel IPC sécurisé dans le 
 
 La synchronisation entre le Cockpit MJ et le Tablet Hub utilise un pont WebSocket bidirectionnel.
 
-- **Broadcast Sélectif** : Le MJ n'envoie que les données nécessaires à la session active.
+- **Broadcast Sélectif (Campagne & Visibilité)** : Le MJ n'envoie que les données nécessaires à la session active (`activeCampaignId`). De plus, pour les entités (PNJ, Monstres, Alliés), un second filtre `isVisibleByPlayers === true` garantit que seuls les éléments révélés sont transmis au Tablet Hub.
 - **Forge Sync** : Depuis la v5.11, le payload inclut les `customSheetTemplates` et `customGameDrivers`. Cela garantit que la tablette peut effectuer des calculs de règles et un rendu d'UI identique au MJ sans accès direct à la base de données locale.
+- **Trombinoscope Interface** : Le Tablet Hub consomme le flux filtré d'entités pour générer une galerie de reconnaissance en temps réel, synchronisée avec les actions de visibilité du MJ.
 
 ### Template Resolution Logic
 
@@ -80,4 +81,4 @@ La gestion des IDs `m-xxx` (Blob IDs stockés en local) nécessite une couche d'
 - **Hub Failsafe** : Le hook `useMediaUrl` sur les tablettes redirige automatiquement vers l'IP du MJ si un identifiant non résolu est détecté dans le store synchronisé.
 
 ---
-*Dernière mise à jour : 28 Mars 2026 - GM-OS v5 Stability Patch (Data Governance & Remote Media Protocol).*
+*Dernière mise à jour : 29 Mars 2026 - GM-OS v5 Stability Patch (Trombinoscope & Selective Sync Protocol).*

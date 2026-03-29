@@ -50,7 +50,7 @@ const FieldOptionsInput: React.FC<{
             value={text}
             onChange={e => handleChange(e.target.value)}
             placeholder="Ex: Épée, Hache, Arc..."
-            className="flex-1 bg-black/20 text-xs text-app-text/80 px-2 py-1 rounded border border-white/5 focus:outline-none focus:border-accent/30"
+            className="flex-1 bg-app-bg/20 text-xs text-app-text/80 px-2 py-1 rounded border border-app-border/10 focus:outline-none focus:border-accent/30"
         />
     );
 };
@@ -89,19 +89,21 @@ const SectionEditor: React.FC<{
     return (
         <div className="border border-app-border/40 rounded-2xl overflow-hidden bg-app-surface/20 backdrop-blur-sm">
             <div className="flex items-center gap-3 p-4 bg-app-surface/60 border-b border-app-border/20">
-                <button onClick={() => setIsOpen(!isOpen)} className="text-slate-500 hover:text-white transition-colors">
+                <button onClick={() => setIsOpen(!isOpen)} title={isOpen ? "Réduire" : "Développer"} className="text-app-text/40 hover:text-accent transition-colors">
                     {isOpen ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
                 </button>
                 <input
                     type="text"
                     value={section.label}
                     onChange={e => onUpdate({ ...section, label: e.target.value })}
-                    className="flex-1 bg-transparent font-bold text-base text-white focus:outline-none"
+                    className="flex-1 bg-transparent font-bold text-base text-app-text focus:outline-none"
                     placeholder="Nom de la section..."
+                    title="Nom de la section"
                 />
                 <button 
                     onClick={() => showConfirm(`Supprimer la section "${section.label}" et tous ses champs ?`, onDelete)} 
-                    className="p-2 text-slate-600 hover:text-red-400 transition-colors rounded-lg hover:bg-red-500/10"
+                    title="Supprimer la section"
+                    className="p-2 text-app-text/40 hover:text-red-500 transition-colors rounded-lg hover:bg-red-500/10"
                 >
                     <Trash2 size={16} />
                 </button>
@@ -110,33 +112,35 @@ const SectionEditor: React.FC<{
             {isOpen && (
                 <div className="p-4 space-y-3">
                     {section.fields.map((field, i) => (
-                        <div key={field.id} className="flex flex-col gap-3 p-3 bg-app-surface/30 rounded-xl border border-white/5 group relative transition-all hover:border-accent/20">
+                        <div key={field.id} className="flex flex-col gap-3 p-3 bg-app-surface/30 rounded-xl border border-app-border/10 group relative transition-all hover:border-accent/20">
                             <div className="flex items-center gap-4">
                                 <div className="flex-1 flex items-center gap-3">
-                                    <Pencil size={14} className="text-slate-600 animate-pulse-gentle" />
+                                    <Pencil size={14} className="text-app-text/20 animate-pulse-gentle" />
                                     <input
                                         type="text"
                                         value={field.label}
                                         onChange={e => updateField(i, { label: e.target.value })}
-                                        className="flex-1 bg-transparent text-sm font-medium text-slate-200 focus:outline-none"
+                                        className="flex-1 bg-transparent text-sm font-medium text-app-text/80 focus:outline-none"
                                         placeholder="Label du champ"
+                                        title="Label du champ"
                                     />
                                 </div>
                                 <select
                                     value={field.type}
+                                    title="Type de champ"
                                     onChange={e => updateField(i, { 
                                         type: e.target.value as SheetFieldType, 
                                         defaultValue: e.target.value === 'gauge' ? 50 : e.target.value === 'number' || e.target.value === 'rating' ? 0 : e.target.value === 'checkbox' ? false : '',
                                         ...(e.target.value === 'rating' ? { max: 5 } : {}),
                                         ...(e.target.value === 'select' ? { options: [] } : {})
                                     })}
-                                    className="bg-app-bg text-app-text/80 text-xs rounded-lg px-3 py-1.5 border border-white/10 focus:outline-none focus:ring-1 focus:ring-accent/40"
+                                    className="bg-app-bg text-app-text/80 text-xs rounded-lg px-3 py-1.5 border border-app-border/40 focus:outline-none focus:ring-1 focus:ring-accent/40"
                                 >
                                     {(Object.entries(FIELD_TYPE_LABELS) as [SheetFieldType, string][]).map(([type, label]) => (
                                         <option key={type} value={type}>{label}</option>
                                     ))}
                                 </select>
-                                <button onClick={() => removeField(i)} className="p-1.5 text-app-text/20 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all">
+                                <button onClick={() => removeField(i)} title="Supprimer le champ" className="p-1.5 text-app-text/20 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all">
                                     <Trash2 size={14} />
                                 </button>
                             </div>
@@ -158,8 +162,9 @@ const SectionEditor: React.FC<{
                                         min={1}
                                         max={20}
                                         value={field.max || 5}
+                                        title="Valeur maximale"
                                         onChange={e => updateField(i, { max: parseInt(e.target.value) || 5 })}
-                                        className="w-20 bg-black/20 text-xs text-app-text px-3 py-1 rounded border border-white/5 focus:outline-none focus:border-accent/30 text-center font-mono"
+                                        className="w-20 bg-app-bg/20 text-xs text-app-text px-3 py-1 rounded border border-app-border/10 focus:outline-none focus:border-accent/30 text-center font-mono"
                                     />
                                 </div>
                             )}
@@ -167,7 +172,8 @@ const SectionEditor: React.FC<{
                     ))}
                     <button
                         onClick={addField}
-                        className="w-full py-3 text-xs text-app-text/30 hover:text-accent border border-dashed border-app-border/40 hover:border-accent/40 rounded-xl transition-all flex items-center justify-center gap-2 font-bold uppercase tracking-[0.2em] bg-white/5 hover:bg-accent/5"
+                        title="Ajouter un champ"
+                        className="w-full py-3 text-xs text-app-text/30 hover:text-accent border border-dashed border-app-border/40 hover:border-accent/40 rounded-xl transition-all flex items-center justify-center gap-2 font-black uppercase tracking-[0.2em] bg-app-surface/40 hover:bg-accent/5"
                     >
                         <Plus size={14} /> Ajouter un composant
                     </button>
@@ -263,30 +269,33 @@ const SheetTemplateEditor: React.FC = () => {
     return (
         <div className="flex-1 flex flex-col overflow-hidden bg-app-bg select-none">
             {/* Top Premium Bar */}
-            <div className="h-20 border-b border-app-border/40 bg-app-surface/80 backdrop-blur-2xl px-8 flex items-center justify-between z-50">
-                <div className="flex items-center gap-6">
+            <div className="h-20 border-b border-app-border/20 bg-app-surface/40 backdrop-blur-xl px-8 flex items-center justify-between z-50">
+                <div className="flex-1 flex items-center gap-6">
                     <button 
                         onClick={handleBack}
-                        className="w-10 h-10 flex items-center justify-center rounded-xl bg-app-bg border border-app-border/40 text-app-text/60 hover:text-white hover:border-accent/40 transition-all shadow-lg hover:scale-105 active:scale-95 group"
+                        title="Retour à la bibliothèque"
+                        className="w-10 h-10 flex items-center justify-center rounded-xl bg-app-bg border border-app-border/40 text-app-text/60 hover:text-app-text hover:border-accent/40 transition-all shadow-lg hover:scale-105 active:scale-95 group"
                     >
                         <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
                     </button>
                     <div className="h-10 w-[1px] bg-app-border/20 mx-2" />
-                    <div className="flex items-center gap-4">
+                    <div className="flex-1 flex items-center gap-4">
                         <input
                             type="text"
                             value={template.emoji}
+                            title="Emoji du système"
                             onChange={e => handleUpdate({ emoji: e.target.value })}
                             className="w-12 h-12 bg-app-bg text-center text-2xl rounded-2xl p-1 border border-app-border/40 focus:outline-none focus:border-accent/50 shadow-inner"
                             maxLength={2}
                             readOnly={template.isBuiltin}
                         />
-                        <div>
+                        <div className="flex-1 min-w-0">
                             <input
                                 type="text"
                                 value={template.name}
                                 onChange={e => handleUpdate({ name: e.target.value })}
-                                className="bg-transparent text-xl font-black text-white focus:outline-none border-b border-transparent focus:border-accent/40 transition-all min-w-[200px]"
+                                title="Nom du système"
+                                className="bg-transparent text-xl font-black text-app-text focus:outline-none border-b border-transparent focus:border-accent/40 transition-all w-full min-w-[600px]"
                                 placeholder="Nom du système"
                                 readOnly={template.isBuiltin}
                             />
@@ -351,7 +360,7 @@ const SheetTemplateEditor: React.FC = () => {
                                 <div className="space-y-1">
                                     <p className="text-[10px] font-black uppercase tracking-widest text-app-text/30 mb-2">Moteur de Règles Lié</p>
                                     <div className="flex items-center gap-3 p-3 bg-app-bg/60 rounded-2xl border border-app-border/40">
-                                        <div className="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-400">
+                                        <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
                                             <Brain size={16} />
                                         </div>
                                         <div className="flex-1 overflow-hidden">

@@ -22,7 +22,7 @@ const ProjectorView: React.FC = () => {
     // it's supposed to animate (filtered by VoiceEngine).
     const syncActive = voiceLevel > 0.05;
     const voiceScale = syncActive ? 1 + (voiceLevel * 0.15) : 1;
-    const voiceGlow = syncActive ? `0 0 ${voiceLevel * 30}px rgba(6, 182, 212, ${voiceLevel})` : 'none';
+    const voiceGlow = syncActive ? `0 0 ${voiceLevel * 30}px rgba(var(--accent-rgb), ${voiceLevel})` : 'none';
     const resolvedUrl = useMediaUrl(imagePath || undefined);
     const { initDB } = useMediaStore();
 
@@ -65,7 +65,7 @@ const ProjectorView: React.FC = () => {
         
         // Hide scrollbars and set black background
         document.body.style.overflow = 'hidden';
-        document.body.style.backgroundColor = '#000';
+        document.body.style.backgroundColor = 'var(--app-bg)';
         document.body.style.margin = '0';
         document.body.style.padding = '0';
 
@@ -189,7 +189,7 @@ const ProjectorView: React.FC = () => {
             <div className="w-screen h-screen bg-app-bg overflow-hidden relative">
                 {isTargetMonitor ? (
                     <div className="relative w-full h-full">
-                        <PlayerMapCanvas onMapClick={(x, y) => useMapStore.getState().addPing(x, y, '#06b6d4')} />
+                        <PlayerMapCanvas onMapClick={(x, y) => useMapStore.getState().addPing(x, y, 'var(--accent)')} />
                     </div>
                 ) : (
                     <div className="flex items-center justify-center h-full text-app-text font-black uppercase tracking-widest text-2xl">

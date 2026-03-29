@@ -26,7 +26,6 @@ import { gmToast } from '../../../stores/useToastStore';
 import { gmConfirm } from '../../../stores/useModalStore';
 import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 
-
 interface NotebookSource {
   id: string;
   title: string;
@@ -40,9 +39,10 @@ interface Notebook {
 }
 
 const ChronicleForge: React.FC = () => {
-  const { customGameDrivers, addChronicle } = useSessionOSStore();
+  const { customGameDrivers, addChronicle, campaigns } = useSessionOSStore();
   
   const [contextItems, setContextItems] = useState<ForgeContextItem[]>([]);
+  const [existingCampaignName, setExistingCampaignName] = useState('');
   const [userInstructions, setUserInstructions] = useState('');
   const [isForging, setIsForging] = useState(false);
   const [result, setResult] = useState<ChronicleForgeResult | null>(null);
@@ -60,14 +60,12 @@ const ChronicleForge: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const callMcpToolWithRetry = async <T = unknown>(serverName: string, toolName: string, args: Record<string, unknown>): Promise<T> => {
-    const bridge = (window as { appBridge?: any }).appBridge;
+    const bridge = window.appBridge;
     if (!bridge?.mcp?.callTool) {
       throw new Error("Bridge MCP not available");
     }
     
-    const mcpBridge = bridge.mcp as { 
-      callTool: (server: string, tool: string, args: Record<string, unknown>) => Promise<any> 
-    };
+    const mcpBridge = bridge.mcp;
 
     const checkError = (res: unknown): boolean => {
       const str = typeof res === 'string' ? res : JSON.stringify(res);
@@ -75,18 +73,18 @@ const ChronicleForge: React.FC = () => {
     };
 
     try {
-      const result = await mcpBridge.callTool(serverName, toolName, args);
+      const toolResult = await mcpBridge.callTool(serverName, toolName, args);
       
-      if (checkError(result)) {
+      if (checkError(toolResult)) {
         await mcpBridge.callTool('notebooklm-mcp-server', 'refresh_auth', {});
-        return await mcpBridge.callTool(serverName, toolName, args) as T;
+        return await mcpBridge.callTool(serverName, toolName, args) as unknown as T;
       }
       
-      return result as T;
+      return toolResult as unknown as T;
     } catch (err: unknown) {
       if (checkError(err)) {
         await mcpBridge.callTool('notebooklm-mcp-server', 'refresh_auth', {});
-        return await mcpBridge.callTool(serverName, toolName, args) as T;
+        return await mcpBridge.callTool(serverName, toolName, args) as unknown as T;
       }
       throw err;
     }
@@ -96,9 +94,9 @@ const ChronicleForge: React.FC = () => {
     setIsNotebookModalOpen(true);
     setIsLoadingNotebooks(true);
     try {
-      const result = await callMcpToolWithRetry<{ notebooks?: Notebook[], data?: any, content?: any }>('notebooklm-mcp-server', 'notebook_list', { max_results: 100 });
+      const mcpResult = await callMcpToolWithRetry<{ notebooks?: Notebook[], data?: { notebooks: Notebook[] }, content?: string }>('notebooklm-mcp-server', 'notebook_list', { max_results: 100 });
       
-      const rawData = result.notebooks || result.data || result.content;
+      const rawData = mcpResult.notebooks || mcpResult.data?.notebooks || mcpResult.content;
       let notebooksToSet: Notebook[] = [];
 
       if (typeof rawData === 'string') {
@@ -111,7 +109,8 @@ const ChronicleForge: React.FC = () => {
       } else if (Array.isArray(rawData)) {
         notebooksToSet = rawData as Notebook[];
       } else if (rawData && typeof rawData === 'object') {
-        notebooksToSet = (rawData.notebooks || rawData.data || []) as Notebook[];
+        const obj = rawData as Record<string, unknown>;
+        notebooksToSet = (obj.notebooks || obj.data || []) as Notebook[];
       }
 
       setNotebooks(notebooksToSet);
@@ -126,9 +125,9 @@ const ChronicleForge: React.FC = () => {
   const handleNotebookSelect = async (notebookId: string) => {
     setIsLoadingNotebooks(true);
     try {
-      const result = await callMcpToolWithRetry<{ notebook?: any, content?: any }>('notebooklm-mcp-server', 'notebook_get', { notebook_id: notebookId });
+      const mcpResult = await callMcpToolWithRetry<{ notebook?: unknown, content?: unknown }>('notebooklm-mcp-server', 'notebook_get', { notebook_id: notebookId });
       
-      let notebookData = result.notebook || result.content;
+      let notebookData = mcpResult.notebook || mcpResult.content;
       if (typeof notebookData === 'string') {
         try {
           const parsed = JSON.parse(notebookData);
@@ -137,7 +136,7 @@ const ChronicleForge: React.FC = () => {
       }
 
       if (Array.isArray(notebookData) && notebookData[0]) {
-        const raw = notebookData[0];
+        const raw = notebookData[0] as unknown[];
         const title = raw[0] as string;
         const sourcesRaw = (raw[1] || []) as Array<[Array<string>, string]>;
         
@@ -177,9 +176,9 @@ const ChronicleForge: React.FC = () => {
         setImportingSources(prev => new Set(prev).add(sourceId));
 
         try {
-          const result = await callMcpToolWithRetry<{ content: unknown }>('notebooklm-mcp-server', 'source_get_content', { source_id: sourceId });
+          const mcpResult = await callMcpToolWithRetry<{ content: unknown }>('notebooklm-mcp-server', 'source_get_content', { source_id: sourceId });
 
-          let content = result.content;
+          let content = mcpResult.content;
           if (typeof content === 'string' && (content.startsWith('{') || content.startsWith('['))) {
             try {
               const parsed = JSON.parse(content);
@@ -249,7 +248,8 @@ const ChronicleForge: React.FC = () => {
       return;
     }
 
-    const driver = customGameDrivers.find(d => d.id === selectedDriverId);
+    const driver = customGameDrivers.find(d => d.id === selectedDriverId) || 
+                   DEFAULT_GAME_DRIVERS.find(d => d.id === selectedDriverId);
     if (!driver) {
       gmToast("Veuillez sélectionner un système de jeu.", "error");
       return;
@@ -258,18 +258,7 @@ const ChronicleForge: React.FC = () => {
     setIsForging(true);
     setResult(null);
     try {
-      // Find the driver (custom or default)
-      const driver = customGameDrivers.find(d => d.id === selectedDriverId) || 
-                     DEFAULT_GAME_DRIVERS.find(d => d.id === selectedDriverId);
-                     
-      if (!driver) {
-        gmToast("Système introuvable.", "error");
-        setIsForging(false);
-        return;
-      }
-
-      const forgeResult = await chronicleForgeService.forgeChronicle(contextItems, driver, userInstructions);
-
+      const forgeResult = await chronicleForgeService.forgeChronicle(contextItems, driver, userInstructions, existingCampaignName);
       setResult(forgeResult);
       gmToast("Chronique forgée avec succès.", "success");
     } catch (err) {
@@ -284,10 +273,11 @@ const ChronicleForge: React.FC = () => {
   const handleCommit = () => {
     if (!result) return;
     
-    // Get the templateId from the selected driver
     const driver = customGameDrivers.find(d => d.id === selectedDriverId) || 
                    DEFAULT_GAME_DRIVERS.find(d => d.id === selectedDriverId);
     const templateId = driver?.templateId || 'generic';
+
+    const existingCampaign = campaigns.find(c => c.name === existingCampaignName);
 
     addChronicle({
       campaign: {
@@ -295,26 +285,46 @@ const ChronicleForge: React.FC = () => {
         description: result.campaign.description || '',
         synopsis: result.campaign.synopsis || '',
         system: selectedDriverId,
-      } as any,
+        activeLocationIds: [],
+      },
       entities: (result.entities || []).map(e => ({
         ...e,
         name: e.name || 'NPC Inconnu',
+        type: (e.type as any) || 'npc',
+        role: (e.role as any) || 'neutral',
+        status: (e.status as any) || 'alive',
+        avatar: e.avatar || '',
+        hp: e.hp ?? 10,
+        maxHp: e.maxHp ?? 10,
+        ac: e.ac ?? 10,
+        speed: e.speed ?? 30,
+        initiative: e.initiative ?? 0,
+        description: e.description || '',
+        roleplayingNotes: e.roleplayingNotes || '',
+        gmSecretInfo: e.gmSecretInfo || '',
+        linkedMapIds: e.linkedMapIds || [],
         templateId: templateId,
-        linkedMapIds: (e as any).linkedMapIds || [], // Ensure initialized
-      })) as any,
+      })),
       atlasMaps: (result.locations || []).map(l => ({
         ...l,
         name: l.name || 'Lieu sans nom',
-        type: l.type || 'battlemap', 
-        linkedEntities: (l as any).linkedEntities || [], 
-      })) as any,
+        fileUrl: l.fileUrl || '',
+        isVideo: !!l.isVideo,
+        narrativeDescription: l.narrativeDescription || '',
+        gmNotes: l.gmNotes || '',
+        linkedEntities: l.linkedEntities || [],
+        type: (l.type as any) || 'battlemap', 
+      })),
       wikiEntries: (result.lore || []).map(l => ({
         ...l,
         title: l.title || 'Entrée sans titre',
-        tags: (l as any).tags || [],
-        imageUrls: (l as any).imageUrls || [],
-        linkedEntityIds: (l as any).linkedEntityIds || [],
-      })) as any,
+        content: l.content || '',
+        category: (l.category as any) || 'lore',
+        tags: l.tags || [],
+        imageUrls: l.imageUrls || [],
+        linkedEntityIds: l.linkedEntityIds || [],
+      })),
+      existingCampaignId: existingCampaign?.id,
     });
 
 
@@ -324,15 +334,19 @@ const ChronicleForge: React.FC = () => {
   };
 
   return (
-    <div className="h-full flex flex-col p-8 gap-8 animate-in fade-in duration-500">
+    <div className="h-full overflow-y-auto p-8 pt-20 flex flex-col gap-8 animate-in fade-in duration-500 custom-scrollbar bg-app-bg text-app-text font-sans">
       {/* Header Section */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-4xl font-black italic tracking-tighter text-white flex items-center gap-4">
-            <Hammer className="w-10 h-10 text-fuchsia-500 animate-pulse" />
-            CHRONICLE FORGE <span className="text-fuchsia-500/50 text-xl font-mono not-italic tracking-widest ml-4">v5.2</span>
-          </h1>
-          <p className="text-slate-500 font-mono text-xs mt-2 uppercase tracking-widest">Génération de scénarios par extraction de savoir</p>
+      <header className="flex items-center justify-between mb-0 pb-6 border-b border-accent/10">
+        <div className="flex items-center gap-4">
+          <div className="p-3 rounded-xl bg-accent/20 text-accent animate-pulse shadow-glow-accent/20 border border-accent/20">
+            <Hammer size={24} />
+          </div>
+          <div>
+            <h1 className="text-2xl font-black uppercase tracking-widest text-app-text font-display">
+              CHRONICLE FORGE <span className="text-accent/50 text-xs font-mono tracking-widest ml-2">v5.2</span>
+            </h1>
+            <p className="text-[10px] font-bold text-app-text/40 uppercase tracking-[0.3em]">Scénarisation & Extraction de Savoir</p>
+          </div>
         </div>
 
         <div className="flex items-center gap-4">
@@ -340,42 +354,43 @@ const ChronicleForge: React.FC = () => {
              <button
               onClick={startForge}
               disabled={isForging || contextItems.length === 0}
-              className={`flex items-center gap-3 px-8 py-4 rounded-2xl font-black text-sm uppercase transition-all shadow-glow-fuchsia/20 ${
+              className={`flex items-center gap-3 px-8 py-4 rounded-2xl font-black text-sm uppercase transition-all shadow-glow-accent/20 ${
                 isForging || contextItems.length === 0 
-                  ? 'bg-slate-800 text-slate-600 opacity-50 cursor-not-allowed border border-white/5' 
-                  : 'bg-fuchsia-600 text-white hover:scale-105 active:scale-95'
+                  ? 'bg-app-surface/20 text-app-text/20 opacity-50 cursor-not-allowed border border-app-border/10' 
+                  : 'bg-accent text-white hover:scale-105 active:scale-95'
               }`}
+              title="Démarrer la forge de la chronique"
              >
                {isForging ? <Zap className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
                Enflammer la Forge
              </button>
            )}
         </div>
-      </div>
+      </header>
 
-      <div className="grid grid-cols-12 gap-6 flex-1 min-h-0">
+      <div className="grid grid-cols-12 gap-6 pb-20">
         {/* Left Column: Context Inputs */}
-        <div className="col-span-4 flex flex-col gap-6 overflow-hidden">
+        <div className="col-span-4 flex flex-col gap-6">
           {/* Context Bin */}
-          <div className="flex-1 bg-[#151520] rounded-2xl border border-slate-800/50 p-5 flex flex-col min-h-0">
+          <div className="bg-app-surface/40 rounded-2xl border border-app-border/10 p-5 flex flex-col min-h-[400px]">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="flex items-center gap-2 text-lg font-bold text-fuchsia-300">
-                <FileText className="w-5 h-5" /> Source de Savoir
+              <h2 className="flex items-center gap-2 text-xl font-black uppercase tracking-widest text-accent font-display">
+                <FileText className="w-6 h-6" /> SOURCES DE SAVOIR
               </h2>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-2">
                 <button 
                   onClick={handleOpenNotebookLM}
-                  className="p-2 hover:bg-white/5 rounded-lg text-fuchsia-400 transition-colors"
+                  className="p-2.5 hover:bg-accent/10 rounded-xl text-accent transition-all hover:scale-110 active:scale-90 border border-transparent hover:border-accent/20"
                   title="Ouvrir NotebookLM"
                 >
-                  <Globe className="w-5 h-5" />
+                  <Globe className="w-6 h-6" />
                 </button>
                 <button 
                   onClick={() => fileInputRef.current?.click()}
-                  className="p-2 hover:bg-white/5 rounded-lg text-slate-400 transition-colors"
+                  className="p-2.5 hover:bg-white/5 rounded-xl text-app-text/40 transition-all hover:scale-110 active:scale-90 border border-transparent hover:border-app-border/10"
                   title="Télécharger un fichier"
                 >
-                  <FileUp className="w-5 h-5" />
+                  <FileUp className="w-6 h-6" />
                 </button>
               </div>
               <input 
@@ -384,31 +399,33 @@ const ChronicleForge: React.FC = () => {
                 onChange={handleFileUpload} 
                 className="hidden" 
                 multiple
+                title="Sélecteur de fichiers"
               />
             </div>
 
             <div className="flex-1 overflow-y-auto space-y-3 pr-2 scrollbar-thin scrollbar-thumb-white/5">
               {contextItems.length === 0 && (
                 <div className="h-full flex flex-col items-center justify-center text-center opacity-40">
-                  <div className="w-16 h-16 rounded-full border-2 border-dashed border-slate-700 flex items-center justify-center mb-4">
+                  <div className="w-16 h-16 rounded-full border-2 border-dashed border-app-border/20 flex items-center justify-center mb-4 text-app-text">
                     <FileUp className="w-8 h-8" />
                   </div>
                   <p className="text-sm">Glissez vos PDF ou notes ici</p>
                 </div>
               )}
               {contextItems.map(item => (
-                <div key={item.id} className="group relative bg-white/5 p-3 rounded-xl border border-white/5 hover:border-fuchsia-500/30 transition-all animate-in fade-in slide-in-from-left-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-indigo-500/20 rounded-lg">
-                      {item.type === 'pdf' ? <Shield className="w-4 h-4 text-indigo-400" /> : <FileText className="w-4 h-4 text-indigo-400" />}
+                <div key={item.id} className="group relative bg-app-text/5 p-4 rounded-xl border border-app-border/10 hover:border-accent/30 transition-all animate-in fade-in slide-in-from-left-4">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-accent/20 rounded-lg">
+                      {item.type === 'pdf' ? <Shield className="w-5 h-5 text-accent" /> : <FileText className="w-5 h-5 text-accent" />}
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">{item.name}</p>
-                      <p className="text-[10px] text-slate-500 uppercase tracking-widest">{item.type}</p>
+                    <div className="flex-1 min-w-0 text-app-text">
+                      <p className="text-base font-bold truncate">{item.name}</p>
+                      <p className="text-[10px] text-app-text/40 uppercase tracking-widest leading-none mt-1">{item.type}</p>
                     </div>
                     <button 
                       onClick={() => setContextItems(prev => prev.filter(i => i.id !== item.id))}
                       className="opacity-0 group-hover:opacity-100 p-1.5 hover:bg-red-500/20 hover:text-red-400 rounded-lg transition-all"
+                      title="Supprimer la source"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -419,27 +436,50 @@ const ChronicleForge: React.FC = () => {
           </div>
 
           {/* Prompt Area */}
-          <div className="h-48 bg-[#151520] rounded-2xl border border-slate-800/50 p-5 flex flex-col">
-            <h2 className="flex items-center gap-2 text-lg font-bold text-indigo-300 mb-3">
-              <Lightbulb className="w-5 h-5" /> Intentions du MJ
+          <div className="h-48 bg-app-surface/40 rounded-2xl border border-app-border/10 p-5 flex flex-col">
+            <h2 className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-accent font-display">
+              <Lightbulb className="w-4 h-4 text-amber-500" /> INTENTIONS DU MJ
             </h2>
             <textarea
               placeholder="Ex: Concentre-toi sur l'ambiance horrifique et souligne la rivalité entre les cultistes..."
               value={userInstructions}
               onChange={(e) => setUserInstructions(e.target.value)}
-              className="flex-1 bg-transparent border-none resize-none focus:outline-none text-sm text-slate-300 placeholder:text-slate-600"
+              className="flex-1 bg-transparent border-none resize-none focus:outline-none text-sm text-app-text/80 placeholder:text-app-text/30"
+              title="Consignes spécifiques pour la génération"
             />
           </div>
 
+          {/* Enrichment / Target Campaign */}
+          <div className="bg-app-surface/40 rounded-2xl border border-app-border/10 p-5 flex flex-col gap-3 hover:border-accent/30 transition-all">
+            <h2 className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-accent font-display">
+               <BookOpen size={14} className="animate-pulse" /> CAMPAGNE CIBLE
+            </h2>
+            <input 
+              type="text"
+              list="existing-campaigns"
+              value={existingCampaignName} 
+              onChange={(e) => setExistingCampaignName(e.target.value)} 
+              placeholder="Laisser vide pour une nouvelle chronique..." 
+              className="w-full bg-transparent text-sm text-app-text/80 focus:outline-none placeholder:text-app-text/30 font-sans border-b border-app-border/10 pb-1 focus:border-accent/50 transition-all" 
+              title="Nom de la campagne cible"
+            />
+            <datalist id="existing-campaigns">
+              {campaigns.map((c) => (
+                <option key={c.id} value={c.name} />
+              ))}
+            </datalist>
+          </div>
+
           {/* Driver Selector */}
-          <div className="bg-[#151520] rounded-2xl border border-slate-800/50 p-5">
-            <h2 className="flex items-center gap-2 text-lg font-bold text-fuchsia-300 mb-4 uppercase tracking-widest text-[10px]">
-              <Shield className="w-4 h-4" /> Système de Destination
+          <div className="bg-app-surface/40 rounded-2xl border border-app-border/10 p-5">
+            <h2 className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-accent font-display">
+              <Shield className="w-4 h-4" /> SYSTÈME DE JEU
             </h2>
             <select
               value={selectedDriverId}
               onChange={(e) => setSelectedDriverId(e.target.value)}
-              className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-xs text-fuchsia-100 outline-none focus:border-fuchsia-500/50 transition-all appearance-none cursor-pointer"
+              className="w-full bg-app-surface/60 border border-app-border/10 rounded-xl p-3 text-xs text-app-text outline-none focus:border-accent/50 transition-all appearance-none cursor-pointer"
+              title="Sélectionner le système de jeu"
             >
               <option value="">Sélectionner un système...</option>
               {DEFAULT_GAME_DRIVERS.map(driver => (
@@ -454,19 +494,20 @@ const ChronicleForge: React.FC = () => {
         </div>
 
         {/* Right Column: Blueprint Preview */}
-        <div className="col-span-8 bg-[#151520] rounded-2xl border border-slate-800/50 flex flex-col min-h-0 overflow-hidden shadow-2xl">
+        <div className="col-span-8 bg-app-surface/40 rounded-2xl border border-app-border/10 flex flex-col overflow-hidden shadow-2xl min-h-[600px] text-app-text font-sans">
           {result ? (
             <>
-              <div className="flex border-b border-slate-800/50">
+              <div className="flex border-b border-app-border/10">
                 {(['campaign', 'entities', 'locations', 'lore'] as const).map(tab => (
                   <button
                     key={tab}
                     onClick={() => setActivePreviewTab(tab)}
                     className={`flex-1 py-4 text-sm font-bold uppercase tracking-widest transition-all border-b-2 ${
                       activePreviewTab === tab 
-                        ? 'border-fuchsia-500 text-fuchsia-400 bg-fuchsia-500/5' 
-                        : 'border-transparent text-slate-500 hover:text-slate-300 hover:bg-white/5'
+                        ? 'border-accent text-accent bg-accent/5' 
+                        : 'border-transparent text-app-text/40 hover:text-app-text/60 hover:bg-app-text/5'
                     }`}
+                    title={`Passer à l'onglet ${tab}`}
                   >
                     <span className="flex items-center justify-center gap-2">
                       {tab === 'campaign' && <BookOpen className="w-4 h-4" />}
@@ -482,12 +523,12 @@ const ChronicleForge: React.FC = () => {
               <div className="flex-1 overflow-y-auto p-8 scrollbar-thin scrollbar-thumb-white/5">
                 {activePreviewTab === 'campaign' && (
                   <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
-                    <h3 className="text-3xl font-bold text-white">{result.campaign.name}</h3>
-                    <p className="text-xl text-fuchsia-300/80 italic">{result.campaign.description}</p>
+                    <h3 className="text-3xl font-bold text-app-text font-display uppercase tracking-tight">{result.campaign.name}</h3>
+                    <p className="text-xl text-accent/80 italic font-display">{result.campaign.description}</p>
                     <div className="prose prose-invert max-w-none">
-                      <div className="bg-white/5 p-6 rounded-2xl border border-white/5">
-                        <h4 className="text-sm font-bold uppercase text-slate-500 mb-4 tracking-widest">Synopsis de l'Intrigue</h4>
-                        <p className="text-slate-300 leading-relaxed text-lg">{result.campaign.synopsis}</p>
+                      <div className="bg-app-surface/60 p-6 rounded-2xl border border-app-border/10">
+                        <h4 className="text-[10px] font-black uppercase text-app-text/40 mb-4 tracking-widest font-display">Synopsis de l'Intrigue</h4>
+                        <p className="text-app-text/80 leading-relaxed text-lg font-sans">{result.campaign.synopsis}</p>
                       </div>
                     </div>
                   </div>
@@ -496,27 +537,27 @@ const ChronicleForge: React.FC = () => {
                 {activePreviewTab === 'entities' && (
                   <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-right-4">
                     {result.entities.map((ent, idx) => (
-                      <div key={idx} className="bg-white/5 rounded-2xl p-5 border border-white/5 hover:border-indigo-500/30 transition-all">
+                      <div key={idx} className="bg-app-text/5 rounded-2xl p-5 border border-app-border/10 hover:border-accent/30 transition-all">
                         <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-xl">
+                            <div className="w-12 h-12 rounded-xl bg-accent/20 border border-accent/30 flex items-center justify-center text-xl">
                               {ent.role === 'boss' ? '💀' : '👤'}
                             </div>
                             <div>
-                              <p className="font-bold text-lg">{ent.name}</p>
-                              <p className="text-xs text-indigo-400 font-mono uppercase tracking-tighter">{ent.type} • {ent.role}</p>
+                              <p className="font-bold text-lg font-display">{ent.name}</p>
+                              <p className="text-xs text-accent font-mono uppercase tracking-tighter">{ent.type} • {ent.role}</p>
                             </div>
                           </div>
                           <div className="flex flex-col items-end gap-1 font-mono">
-                            <span className="text-xs text-slate-500">HP {ent.hp}</span>
-                            <span className="text-xs text-slate-500">AC {ent.ac}</span>
+                            <span className="text-xs text-app-text/40 font-bold">HP {ent.hp}</span>
+                            <span className="text-xs text-app-text/40 font-bold">AC {ent.ac}</span>
                           </div>
                         </div>
-                        <p className="text-sm text-slate-400 italic mb-3">"{ent.description}"</p>
+                        <p className="text-sm text-app-text/60 italic mb-3 font-sans leading-relaxed">"{ent.description}"</p>
                         <div className="space-y-2">
-                          <div className="p-3 bg-white/5 rounded-lg border border-white/5 text-xs text-slate-300">
-                            <p className="font-bold text-indigo-300 mb-1 flex items-center gap-1"><Dna className="w-3 h-3" /> Note d'Interprétation</p>
-                            <p className="line-clamp-3">{ent.roleplayingNotes}</p>
+                          <div className="p-3 bg-app-surface/40 rounded-lg border border-app-border/10 text-xs text-app-text/80">
+                            <p className="font-bold text-accent mb-1 flex items-center gap-1 font-display"><Dna className="w-3 h-3" /> Note d'Interprétation</p>
+                            <p className="line-clamp-3 opacity-80">{ent.roleplayingNotes}</p>
                           </div>
                         </div>
                       </div>
@@ -527,21 +568,21 @@ const ChronicleForge: React.FC = () => {
                 {activePreviewTab === 'locations' && (
                   <div className="space-y-4 animate-in fade-in slide-in-from-right-4">
                     {result.locations.map((loc, idx) => (
-                      <div key={idx} className="bg-white/5 rounded-2xl p-6 border border-white/5 hover:border-fuchsia-500/30 transition-all flex gap-6">
-                        <div className="w-48 h-32 rounded-xl bg-slate-800 flex items-center justify-center border border-white/5 overflow-hidden">
-                           <MapPin className="w-12 h-12 text-slate-700" />
+                      <div key={idx} className="bg-app-text/5 rounded-2xl p-6 border border-app-border/10 hover:border-accent/30 transition-all flex gap-6">
+                        <div className="w-48 h-32 rounded-xl bg-app-surface/60 flex items-center justify-center border border-app-border/10 overflow-hidden">
+                           <MapPin className="w-12 h-12 text-app-text/10" />
                         </div>
                         <div className="flex-1">
-                          <h4 className="text-xl font-bold text-white mb-2">{loc.name}</h4>
-                          <p className="text-sm text-slate-400 line-clamp-2 mb-4 leading-relaxed">{loc.narrativeDescription}</p>
-                          <div className="flex items-center gap-4 text-xs font-mono text-slate-500">
-                             <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> Placeholder Map</span>
-                             <span className="flex items-center gap-1 hover:text-fuchsia-300 cursor-help transition-colors">
-                               <Shield className="w-3 h-3" /> GM Secrets Extracted
-                             </span>
-                          </div>
+                           <h4 className="text-xl font-bold text-app-text/90 mb-2 font-display">{loc.name}</h4>
+                           <p className="text-sm text-app-text/60 line-clamp-2 mb-4 leading-relaxed font-sans">{loc.narrativeDescription}</p>
+                           <div className="flex items-center gap-4 text-xs font-mono text-app-text/30">
+                              <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> Placeholder Map</span>
+                              <span className="flex items-center gap-1 hover:text-accent cursor-help transition-colors">
+                                <Shield className="w-3 h-3" /> GM Secrets Extracted
+                              </span>
+                           </div>
                         </div>
-                        <ChevronRight className="w-6 h-6 self-center text-slate-700" />
+                        <ChevronRight className="w-6 h-6 self-center text-app-text/20" />
                       </div>
                     ))}
                   </div>
@@ -550,18 +591,18 @@ const ChronicleForge: React.FC = () => {
                 {activePreviewTab === 'lore' && (
                   <div className="columns-2 gap-4 animate-in fade-in slide-in-from-right-4">
                     {result.lore.map((l, idx) => (
-                      <div key={idx} className="break-inside-avoid bg-white/5 rounded-2xl p-5 border border-white/5 mb-4 hover:border-fuchsia-400/30 transition-all group">
+                      <div key={idx} className="break-inside-avoid bg-app-text/5 rounded-2xl p-5 border border-app-border/10 mb-4 hover:border-accent/30 transition-all group">
                         <div className="flex items-center gap-2 mb-3">
-                           <span className={`w-2 h-2 rounded-full ${l.category === 'clue' ? 'bg-amber-400' : 'bg-indigo-400'}`} />
-                           <span className="text-[10px] uppercase font-bold tracking-widest text-slate-500">{l.category}</span>
+                           <span className={`w-2 h-2 rounded-full ${l.category === 'clue' ? 'bg-amber-400' : 'bg-accent'}`} />
+                           <span className="text-[10px] uppercase font-bold tracking-widest text-app-text/30 font-display">{l.category}</span>
                         </div>
-                        <h4 className="text-lg font-bold mb-2 group-hover:text-fuchsia-300 transition-colors">{l.title}</h4>
-                        <div className="text-sm text-slate-400 line-clamp-4 leading-relaxed bg-black/20 p-3 rounded-lg border border-white/5">
+                        <h4 className="text-lg font-bold mb-2 group-hover:text-accent transition-colors font-display">{l.title}</h4>
+                        <div className="text-sm text-app-text/60 line-clamp-4 leading-relaxed bg-app-surface/40 p-3 rounded-lg border border-app-border/10 font-sans">
                            {l.content}
                         </div>
                         <div className="flex flex-wrap gap-2 mt-3">
                           {l.tags?.map(t => (
-                            <span key={t} className="text-[10px] bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded border border-indigo-500/20">#{t}</span>
+                            <span key={t} className="text-[10px] bg-accent/10 text-accent px-2 py-0.5 rounded border border-accent/20 font-mono tracking-tighter uppercase font-bold">#{t}</span>
                           ))}
                         </div>
                       </div>
@@ -570,10 +611,11 @@ const ChronicleForge: React.FC = () => {
                 )}
               </div>
 
-              <div className="p-6 bg-white/5 border-t border-slate-800/50 flex items-center justify-center">
+              <div className="p-6 bg-app-surface/40 border-t border-app-border/10 flex items-center justify-center">
                  <button
                   onClick={handleCommit}
-                  className="flex items-center gap-3 px-12 py-4 bg-gradient-to-r from-fuchsia-600 to-indigo-600 rounded-2xl font-black text-xl shadow-[0_0_30px_rgba(217,70,239,0.3)] hover:scale-105 active:scale-95 transition-all"
+                  className="flex items-center gap-3 px-12 py-4 bg-accent rounded-2xl font-black text-xl shadow-glow-accent/40 hover:scale-105 active:scale-95 transition-all text-white font-display"
+                  title="Déployer la chronique dans votre Codex"
                  >
                    DÉPLOYER LA CHRONIQUE
                    <Rocket className="w-6 h-6" />
@@ -583,18 +625,18 @@ const ChronicleForge: React.FC = () => {
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center text-center p-12 space-y-6">
               <div className="w-32 h-32 relative">
-                <div className="absolute inset-0 bg-fuchsia-500/20 rounded-full blur-3xl animate-pulse" />
-                <div className="relative w-full h-full rounded-full border-2 border-indigo-500/30 flex items-center justify-center overflow-hidden">
-                   <Users className="w-16 h-16 text-indigo-400 animate-pulse" />
+                <div className="absolute inset-0 bg-accent/20 rounded-full blur-3xl animate-pulse" />
+                <div className="relative w-full h-full rounded-full border-2 border-accent/30 flex items-center justify-center overflow-hidden bg-app-surface/40">
+                   <Users className="w-16 h-16 text-accent animate-pulse" />
                 </div>
               </div>
               <div>
-                <h3 className="text-2xl font-bold mb-2">En attente de Transmutation</h3>
-                <p className="text-slate-500 max-w-md mx-auto">
+                <h3 className="text-2xl font-bold mb-2 font-display text-app-text">En attente de Transmutation</h3>
+                <p className="text-app-text/40 max-w-md mx-auto font-sans leading-relaxed">
                   Déposez vos sources de scénario et sélectionnez un système de jeu pour forger une nouvelle campagne structurée.
                 </p>
               </div>
-              <div className="flex items-center gap-4 text-xs font-mono text-slate-600">
+              <div className="flex items-center gap-4 text-xs font-mono text-app-text/20 uppercase tracking-widest font-bold">
                 <span className="flex items-center gap-1.5"><Shield className="w-3.5 h-3.5" /> IA SECURE PROMPT</span>
                 <span className="flex items-center gap-1.5"><Eye className="w-3.5 h-3.5" /> PREVIEW AVANT IMPORT</span>
               </div>
@@ -605,19 +647,19 @@ const ChronicleForge: React.FC = () => {
 
       {/* NotebookLM Modal Overlay */}
       {isNotebookModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-12 bg-black/80 backdrop-blur-sm animate-in fade-in">
-           <div className="w-full max-w-4xl bg-[#151520] border border-fuchsia-500/20 rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col h-[70vh]">
-              <div className="p-6 border-b border-white/5 flex items-center justify-between bg-fuchsia-500/5">
-                 <h2 className="text-xl font-bold uppercase tracking-wider text-fuchsia-300 flex items-center gap-3">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-12 bg-app-bg/80 backdrop-blur-sm animate-in fade-in">
+           <div className="w-full max-w-4xl bg-app-bg border border-accent/20 rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col h-[70vh] text-app-text font-sans">
+              <div className="p-6 border-b border-app-border/10 flex items-center justify-between bg-accent/5">
+                 <h2 className="text-xl font-bold uppercase tracking-wider text-accent flex items-center gap-3 font-display">
                    <Globe className="w-6 h-6" /> NotebookLM Browser
                  </h2>
-                 <button onClick={() => setIsNotebookModalOpen(false)} className="p-2 hover:bg-white/5 rounded-full text-slate-400"><X /></button>
+                 <button onClick={() => setIsNotebookModalOpen(false)} className="p-2 hover:bg-app-text/5 rounded-full text-app-text/40 transition-colors" title="Fermer"><X /></button>
               </div>
               <div className="flex-1 flex overflow-hidden">
-                 <div className="w-1/3 border-r border-white/5 overflow-y-auto p-4 space-y-2 bg-black/20">
+                 <div className="w-1/3 border-r border-app-border/10 overflow-y-auto p-4 space-y-2 bg-app-surface/20">
                     {isLoadingNotebooks && notebooks.length === 0 ? (
                       <div className="flex items-center justify-center h-40">
-                        <Zap className="w-8 h-8 text-fuchsia-500 animate-spin" />
+                        <Zap className="w-8 h-8 text-accent animate-spin" />
                       </div>
                     ) : (
                       notebooks.map(nb => (
@@ -626,11 +668,12 @@ const ChronicleForge: React.FC = () => {
                           onClick={() => handleNotebookSelect(nb.id)} 
                           className={`w-full text-left p-4 rounded-2xl transition-all border ${
                             selectedNotebook?.id === nb.id 
-                              ? 'bg-fuchsia-500/20 border-fuchsia-500/40 text-fuchsia-100 shadow-lg' 
-                              : 'border-transparent hover:bg-white/5 text-slate-400'
+                              ? 'bg-accent/20 border-accent/40 text-accent shadow-lg' 
+                              : 'border-transparent hover:bg-app-text/5 text-app-text/40'
                           }`}
+                          title={`Sélectionner le carnet ${nb.title}`}
                         >
-                          <div className="text-xs font-bold uppercase tracking-widest">{nb.title}</div>
+                          <div className="text-xs font-bold uppercase tracking-widest font-display">{nb.title}</div>
                         </button>
                       ))
                     )}
@@ -638,23 +681,24 @@ const ChronicleForge: React.FC = () => {
                  <div className="flex-1 p-6 overflow-y-auto custom-scrollbar">
                     {isLoadingNotebooks && selectedNotebook ? (
                       <div className="flex items-center justify-center h-full">
-                        <Zap className="w-12 h-12 text-fuchsia-500 animate-spin" />
+                        <Zap className="w-12 h-12 text-accent animate-spin" />
                       </div>
                     ) : selectedNotebook ? (
                       <div className="grid grid-cols-1 gap-3">
                         {notebookSources.map(s => (
-                          <div key={s.id} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5 hover:border-fuchsia-500/30 transition-all">
+                          <div key={s.id} className="flex items-center justify-between p-4 bg-app-surface/40 rounded-2xl border border-app-border/10 hover:border-accent/30 transition-all">
                             <span className="text-sm font-medium">{s.title}</span>
                             <button 
                               onClick={() => handleSourceImport(s.id, s.title)} 
                               disabled={importingSources.has(s.id)}
-                              className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 ${
+                              className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all fex items-center gap-2 ${
                                 importingSources.has(s.id)
-                                  ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
+                                  ? 'bg-app-surface/60 text-app-text/20 cursor-not-allowed'
                                   : contextItems.some(item => item.name === `[NB] ${s.title}`)
-                                    ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                                    : 'bg-fuchsia-500/20 text-fuchsia-300 hover:bg-fuchsia-500 hover:text-white'
+                                    ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold'
+                                    : 'bg-accent/20 text-accent hover:bg-accent hover:text-white font-bold'
                               }`}
+                              title={`Importer la source ${s.title}`}
                             >
                               {importingSources.has(s.id) ? (
                                 <>
@@ -675,7 +719,7 @@ const ChronicleForge: React.FC = () => {
                       </div>
                     ) : (
                       <div className="h-full flex flex-col items-center justify-center text-center opacity-20 italic">
-                        <BookOpen className="w-16 h-16 mb-4" />
+                        <BookOpen className="w-16 h-16 mb-4 text-app-text" />
                         <p>Sélectionnez un carnet pour voir les parchemins</p>
                       </div>
                     )}

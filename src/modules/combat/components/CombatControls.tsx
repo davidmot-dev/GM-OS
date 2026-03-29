@@ -64,7 +64,7 @@ const CombatControls: React.FC = () => {
                 cards: activeDriver.combat.initiativeCards,
                 resolver: (stat, combatant) => {
                     const sessionStore = useSessionOSStore.getState();
-                    const getStatValue = (data: Record<string, any>, statName: string) => {
+                    const getStatValue = (data: Record<string, unknown>, statName: string) => {
                         const lowStat = statName.toLowerCase();
                         // 1. Check sheetData case-insensitively
                         const entry = Object.entries(data || {}).find(([k]) => k.toLowerCase() === lowStat);
@@ -225,11 +225,11 @@ const CombatControls: React.FC = () => {
             </div>
 
             {/* Intelligent Initiative Section */}
-            <div className="flex flex-col gap-4 p-4 bg-slate-900/50 rounded-xl border border-slate-700/50 backdrop-blur-md mb-6 shadow-lg shadow-black/20">
+            <div className="flex flex-col gap-4 p-4 bg-app-surface/40 rounded-xl border border-app-border/50 backdrop-blur-md mb-6 shadow-lg">
                 <div className="flex items-center justify-between mb-1">
                     <div className="flex items-center gap-2">
-                        <Activity className="w-4 h-4 text-indigo-400" />
-                        <h3 className="font-bold text-slate-300 uppercase tracking-wider text-[10px]">Auto Initiative</h3>
+                        <Activity className="w-4 h-4 text-accent" />
+                        <h3 className="font-bold text-app-text/70 uppercase tracking-wider text-[10px]">Auto Initiative</h3>
                     </div>
                 </div>
 
@@ -244,7 +244,7 @@ const CombatControls: React.FC = () => {
                             <span className="font-black tracking-tighter text-lg uppercase">Jet Système</span>
                         </div>
                         <div className="flex flex-col items-center gap-1 text-[9px] text-indigo-100 font-medium opacity-90">
-                            <span className="px-2 py-0.5 bg-black/20 rounded-md backdrop-blur-sm border border-white/10 tracking-widest uppercase">
+                            <span className="px-2 py-0.5 bg-white/20 rounded-md backdrop-blur-sm border border-white/10 tracking-widest uppercase">
                                 {activeDriver.combat.initiativeCards 
                                     ? `CARTES UNIQUE (1-${activeDriver.combat.initiativeCards})` 
                                     : activeDriver.combat.initiativeFormula}
@@ -261,6 +261,7 @@ const CombatControls: React.FC = () => {
                         className="bg-app-bg border border-app-border rounded-lg text-app-text px-2 py-2 outline-none focus:border-gm-crimson text-xs flex-1"
                         value={diceMax}
                         onChange={(e) => setDiceMax(Number(e.target.value))}
+                        title="Sélectionner le type de dé"
                     >
                         {[4, 6, 8, 10, 12, 20, 100].map(d => (
                             <option key={d} value={d}>d{d}</option>
@@ -320,7 +321,7 @@ const CombatControls: React.FC = () => {
                         syncCombatantHPToSession();
                         gmToast("Points de Vie synchronisés !");
                     }}
-                    className="w-full bg-emerald-900/30 hover:bg-emerald-800/50 border border-emerald-500/30 text-emerald-400 px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-sm hover:shadow-glow-emerald"
+                    className="w-full bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-600 px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-sm"
                 >
                     <RefreshCw size={18} />
                     <span>Sync PV vers Session</span>
@@ -341,7 +342,7 @@ const CombatControls: React.FC = () => {
                             clearCombatants();
                         });
                     }}
-                    className="w-full mt-4 bg-red-900/20 hover:bg-red-900/50 text-red-500 hover:text-red-400 py-2 border border-red-900/50 rounded-lg flex items-center justify-center gap-2 transition-colors"
+                    className="w-full mt-4 bg-red-500/10 hover:bg-red-500/20 text-red-600 py-2 border border-red-500/30 rounded-lg flex items-center justify-center gap-2 transition-colors"
                 >
                     <Skull size={16} />
                     <span>Reset Combat</span>

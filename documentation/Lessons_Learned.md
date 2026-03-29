@@ -407,3 +407,23 @@ Le passage d'un état de visibilité (`isRevealed`) est le déclencheur idéal p
 1. **Détection de Changement d'État** : Utilisation d'une comparaison entre l'état local de l'éditeur et l'état actuel du store (`currentClue.isRevealed`) dans `handleSave`. Cela garantit que le timestamp (`revealedAt`) et l'événement journal ne sont générés que lors du passage de Masqué à Révélé.
 2. **Couplage Faible via `getState()`** : Pour injecter l'événement dans le `JournalStore` depuis le `CluesManager` sans créer de dépendances de rendu inutiles, l'accès direct via `useJournalStore.getState().addEvent` est privilégié. Cela permet une mise à jour silencieuse du journal pendant que l'UI de gestion d'indices reste fluide.
 3. **Double Temporalité** : Séparation stricte entre le temps réel (`Date.now()`) pour le tri technique et le "Moment de Campagne" (chaîne libre) pour la cohérence narrative. Cette flexibilité permet au MJ de corriger un oubli de révélation a posteriori sans casser la chronologie de l'histoire.
+
+## 34. Synchronisation Sélective & Performance (Tablet Hub v5.2)
+
+### 34.1 Défi
+Envoyer l'intégralité des entités de la base de données vers toutes les tablettes connectées saturait la mémoire des clients légers (mobiles) et présentait un risque de divulgation d'informations (PNJ de futures campagnes visibles dans le code source).
+
+### 34.2 Leçon
+Le filtrage doit être effectué au point d'émission (MJ PC) et non seulement à l'affichage (Hub).
+
+**Solution :** Implémentation du **Broadcast Filtré par Contexte**. Le payload `entities` du WebSocket est désormais généré à la volée en filtrant les entités par `activeCampaignId` ET `isVisibleByPlayers`. Cela divise par 10 la taille du message reçu par le Hub dans les grandes bibliothèques.
+
+## 35. Alignement UI & Cohérence des Formulaires Complexes
+
+### 35.1 Défi
+Dans des formulaires multi-clonnes (ex: statistiques PNJ), l'alignement horizontal des champs devient erratique si les sous-composants n'ont pas la même structure interne (ex: label à gauche vs label en haut).
+
+### 35.2 Leçon
+L'alignement par "Conteneurs Fantômes" ou grilles asymétriques est fragile. Il est préférable d'unifier la **structure de collision** des éléments.
+
+**Solution :** Refactoring vers une **Structure de Stack Unifiée** : `Icône -> Champ -> Label`. En appliquant ce schéma rigoureusement à toutes les statistiques, l'alignement horizontal des inputs (la zone d'interaction critique) devient automatique et résilient au redimensionnement.

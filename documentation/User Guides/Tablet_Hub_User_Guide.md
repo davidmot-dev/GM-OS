@@ -41,6 +41,11 @@ Le Tablet Hub affiche les éléments clés de votre session en temps réel :
 - **Édition de l'Inventaire** : Vous pouvez modifier votre inventaire en temps réel. Cliquez dans la zone "Inventaire", modifiez vos objets, et le changement est automatiquement transmis au MJ dès que vous quittez le champ.
 - **Notes & Description** : Modifiez votre description publique ou vos notes personnelles directement depuis la tablette pour une immersion totale.
 
+### 7. Trombinoscope (Galerie de PNJs)
+- **Reconnaissance Visuelle** : Accédez à l'onglet **Trombinoscope** pour voir tous les personnages (PNJs, Alliés, Monstres) que le MJ a marqué comme "Visibles pour les joueurs".
+- **Fiche Détail** : Cliquez sur un portrait pour l'afficher en grand. C'est l'outil idéal pour se souvenir d'un visage ou consulter les informations publiques d'un interlocuteur important.
+- **Mise à jour en direct** : Dès que le MJ coche la case "Public" sur un PNJ, celui-ci apparaît instantanément sur toutes les tablettes connectées.
+
 ## 💡 Conseils d'Utilisation
 
 - **Positionnement** : Placez la tablette au centre de la table pour que tous les joueurs voient l'horloge et les tensions, ou gardez-la près de vous comme extension tactile.

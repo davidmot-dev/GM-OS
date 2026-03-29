@@ -37,6 +37,22 @@
     box-shadow: 0 0 15px 2px rgba(6, 182, 212, 0.45);
   }
 
+  .shadow-glow-amber {
+    box-shadow: 0 0 15px 2px rgba(251, 191, 36, 0.45);
+  }
+
+  .shadow-glow-rose {
+    box-shadow: 0 0 15px 2px rgba(244, 63, 94, 0.45);
+  }
+
+  .shadow-glow-emerald {
+    box-shadow: 0 0 15px 2px rgba(16, 185, 129, 0.45);
+  }
+
+  .shadow-glow-accent {
+    box-shadow: 0 0 15px 2px var(--app-accent-glow, rgba(59, 130, 246, 0.45));
+  }
+
   .stitch-label {
     @apply text-[10px] font-bold uppercase tracking-[0.15em] text-slate-300/90;
     font-family: 'Inter', sans-serif;
@@ -122,29 +138,51 @@
   --app-bg: #020617;
   --app-surface: #0f172a;
   --app-border: #1e293b;
+  --app-text: #f8fafc;
+  --app-accent-glow: rgba(59, 130, 246, 0.45);
   --font-display: 'Plus Jakarta Sans', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
 
 :root[data-theme='cyberpunk'] {
+  --app-accent: #22d3ee;
+  --app-bg: #020617;
+  --app-surface: #0f172a;
+  --app-border: #1e293b;
+  --app-text: #f8fafc;
+  --app-accent-glow: rgba(34, 211, 238, 0.45);
   --font-display: 'Orbitron', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
 
 :root[data-theme='medieval'] {
+  --app-accent: #d97706; /* Amber 600 */
+  --app-bg: #1c1917;     /* Stone 950/900 */
+  --app-surface: #292524; /* Stone 800 */
+  --app-border: #44403c;  /* Stone 700 */
+  --app-text: #e7e5e4;   /* Stone 200 */
+  --app-accent-glow: rgba(212, 175, 55, 0.45);
   --font-display: 'Cinzel', 'MedievalSharp', serif;
   --font-mono: 'UnifrakturMaguntia', cursive;
 }
 
 :root[data-theme='modern'] {
+  --app-accent: #22d3ee;
+  --app-bg: #020617;
+  --app-surface: #0f172a;
+  --app-border: #1e293b;
+  --app-text: #f8fafc;
+  --app-accent-glow: rgba(34, 211, 238, 0.45);
   --font-display: 'Outfit', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
 
 :root[data-theme='claire'] {
+  --app-accent: #3b82f6;
   --app-text: #2c2420;
   --app-bg: #fbfbf9;
   --app-surface: #ffffff;
+  --app-border: #e7e5e4;
   --font-display: 'Inter', sans-serif;
 }
 
@@ -192,13 +230,12 @@ body {
 }
 
 [data-theme='medieval'] .bg-texture-overlay::before {
-  /* Effect de grain clair (poussière/texture) sur fond sombre */
-  background-image: 
-    radial-gradient(rgba(255, 255, 255, 0.08) 25%, transparent 28%),
-    radial-gradient(rgba(255, 255, 255, 0.08) 25%, transparent 28%);
-  background-size: 14px 14px;
-  background-position: 0 0, 7px 7px;
-  opacity: 1;
+  /* Effet Pierre / Parchemin sombre organique */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  background-size: 250px 250px;
+  opacity: 0.12;
+  mix-blend-mode: soft-light;
+  pointer-events: none;
 }
 
 
@@ -233,32 +270,56 @@ body {
 :root[data-theme='claire'] .text-slate-100,
 :root[data-theme='claire'] .text-slate-200,
 :root[data-theme='claire'] .text-slate-300,
-:root[data-theme='claire'] .text-slate-400 {
+:root[data-theme='claire'] .text-slate-400,
+:root[data-theme='claire'] .text-slate-500 {
   color: var(--app-text) !important;
 }
 
-:root[data-theme='claire'] .text-slate-500,
 :root[data-theme='claire'] .text-slate-600 {
-  color: #57534e !important; /* Muted contrast for Claire */
+  color: #78716c !important; /* Stone 500 equivalent */
 }
 
-/* Override background colors that would hide text */
-:root[data-theme='claire'] .bg-slate-900,
-:root[data-theme='claire'] .bg-slate-800,
-:root[data-theme='claire'] .bg-slate-700 {
-  background-color: #f5f5f4 !important;
+/* Force dark text for any text on lightened backgrounds */
+:root[data-theme='claire'] [class*='bg-slate-9'],
+:root[data-theme='claire'] [class*='bg-zinc-9'],
+:root[data-theme='claire'] [class*='bg-black'],
+:root[data-theme='claire'] [class*='bg-indigo-9'],
+:root[data-theme='claire'] [class*='bg-emerald-9'],
+:root[data-theme='claire'] [class*='bg-red-9'],
+:root[data-theme='claire'] .bg-slate-900\/50,
+:root[data-theme='claire'] .bg-zinc-900\/50 {
+  background-color: var(--claire-surface) !important;
   color: var(--app-text) !important;
+}
+
+/* Overlays and backdrops should be very subtle */
+:root[data-theme='claire'] .backdrop-blur-xl,
+:root[data-theme='claire'] .backdrop-blur-2xl,
+:root[data-theme='claire'] .backdrop-blur-3xl {
+  background-color: rgba(255, 255, 255, 0.4) !important;
 }
 
 :root[data-theme='claire'] .border-slate-800,
-:root[data-theme='claire'] .border-slate-700 {
-  border-color: #e7e5e4 !important;
+:root[data-theme='claire'] .border-slate-700,
+:root[data-theme='claire'] .border-white\/5,
+:root[data-theme='claire'] .border-white\/10 {
+  border-color: rgba(0, 0, 0, 0.08) !important;
 }
 
 :root[data-theme='claire'] .shadow-glow-accent,
 :root[data-theme='claire'] .shadow-glow-gold,
 :root[data-theme='claire'] .shadow-glow-cyan {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03) !important;
+}
+
+:root[data-theme='claire'] .premium-glass {
+  background: rgba(255, 255, 255, 0.5) !important;
+  border-color: rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+}
+
+:root[data-theme='claire'] .premium-glass::before {
+  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05), transparent) !important;
 }
 
 /* Force Lucide icons to follow text color */
@@ -446,4 +507,13 @@ input[type=number] {
 
 .card-back {
     transform: rotateY(180deg);
+}
+
+@keyframes spin-once {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-once {
+  animation: spin-once 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
