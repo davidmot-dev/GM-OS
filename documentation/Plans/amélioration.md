@@ -1,4 +1,4 @@
-# 🚀 GM-OS v5 : Roadmap & Stratégie (v5.6-BETA)
+# 🚀 GM-OS v5 : Roadmap & Stratégie (v5.6.5-BETA)
 
 Ce document centralise la vision, les victoires techniques et les chantiers futurs de GM-OS v5. Il sert de "Source de Vérité" pour l'évolution du système.
 
@@ -40,6 +40,8 @@ Ce document centralise la vision, les victoires techniques et les chantiers futu
 * [x] **Differential Sync (Deltas)** : Optimisation des messages pour un gain net de bande passante (> 90%).
 * [x] **Layout Manager v1 & Workspace Sync** : Sauvegarde et adaptation auto du layout selon le nombre d'écrans.
 * [x] **Media Cleanup Engine** : Nettoyage pro-actif des médias orphelins dans IndexedDB avec système de **Persistance (Asset Lock)**. [v5.1.2]
+* [x] **Campaign Deletion Cascade** : Suppression automatique et récursive de toutes les données liées (PNJ, Sessions, Atlas, Wiki, Indices) lors du retrait d'une campagne. [v5.2.0]
+* [x] **Media Tag Removal** : Nettoyage asynchrone des références de campagne dans le Media Hub via IndexedDB. [v5.2.0]
 
 ---
 
@@ -70,4 +72,4 @@ Ce document centralise la vision, les victoires techniques et les chantiers futu
 > **Priorité actuelle** : **Générateur de Butin** et **Amélioration du Brouillard de Guerre**.
 
 > [!IMPORTANT]
-> Version Actuelle : **5.1.1-STABLE** (Mars 2026)
+> Version Actuelle : **5.2.0-STABLE** (Mars 2026)

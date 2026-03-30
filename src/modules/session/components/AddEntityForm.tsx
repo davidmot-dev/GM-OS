@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Shield, Heart, Image as ImageIcon, Wind, Zap, Lock, BookOpen, Skull, Users, ArrowLeft } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import type { Entity } from '../useSessionOSStore';
@@ -7,7 +7,10 @@ import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { gmToast } from '../../../stores/useToastStore';
 
 const AddEntityForm: React.FC = () => {
-    const { addEntity, setIsAddingEntity, activeCampaignId, getActiveDriver } = useSessionOSStore();
+    const { 
+        addEntity, setIsAddingEntity, activeCampaignId, getActiveDriver,
+        pendingPreFill, clearPendingPreFill 
+    } = useSessionOSStore();
 
     const [name, setName] = useState('');
     const [type, setType] = useState<Entity['type']>('npc');
@@ -23,6 +26,21 @@ const AddEntityForm: React.FC = () => {
     
     const [isMediaBrowserOpen, setIsMediaBrowserOpen] = useState(false);
     const avatarUrl = useMediaUrl(avatarMediaId);
+
+    // Wiki Bridge Receiver
+    useEffect(() => {
+        if (pendingPreFill && pendingPreFill.type === 'npc') {
+            setName(pendingPreFill.data.title);
+            // On met le contenu dans les notes d'interprétation par défaut
+            setRoleplayingNotes(pendingPreFill.data.content);
+            if (pendingPreFill.data.imageUrl) {
+                setAvatarMediaId(pendingPreFill.data.imageUrl);
+            }
+            // Nettoyage immédiat pour éviter les ré-injections accidentelles
+            clearPendingPreFill();
+            gmToast("Données transmises depuis le Wiki.", 'success');
+        }
+    }, [pendingPreFill, clearPendingPreFill]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();

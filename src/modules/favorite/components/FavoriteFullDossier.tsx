@@ -12,6 +12,7 @@ import {
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { gmToast } from '../../../stores/useToastStore';
+import { useSessionOSStore } from '../../session/useSessionOSStore';
 
 export const FavoriteFullDossier: React.FC = () => {
     const { favorites, selectedFavoriteId, updateFavorite, setViewMode } = useFavoriteStore();
@@ -21,6 +22,10 @@ export const FavoriteFullDossier: React.FC = () => {
 
     const entity = favorites.find(f => f.id === selectedFavoriteId);
     const [formData, setFormData] = useState<Partial<FavoriteEntity>>(entity || {});
+
+    // Session Data
+    const campaigns = useSessionOSStore(s => s.campaigns);
+    const players = useSessionOSStore(s => s.players);
 
     // Media Browser State
     const [browserTarget, setBrowserTarget] = useState<'imageUrl' | 'tokenUrl' | null>(null);
@@ -317,8 +322,52 @@ export const FavoriteFullDossier: React.FC = () => {
                     {/* RIGHT COLUMN: MECHANICS */}
                     <div className="lg:col-span-4 p-8 space-y-12 bg-app-bg/50 backdrop-blur-sm">
 
-                        {/* Attributes Section */}
+                        {/* Ownership Section */}
                         <div className="space-y-6">
+                            <div className="flex items-center gap-2 text-slate-500">
+                                <span className="material-symbols-outlined text-[16px]">shield_person</span>
+                                <h3 className="text-[10px] font-black uppercase tracking-[0.2em]">Assignment</h3>
+                            </div>
+                            
+                            <div className="space-y-4">
+                                <section className="space-y-2 text-left">
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Campagne</label>
+                                    <select
+                                        title="Campagne"
+                                        value={formData.campaignId || ''}
+                                        onChange={e => setFormData({ ...formData, campaignId: e.target.value || undefined, ownerId: undefined })}
+                                        className="w-full bg-app-surface/50 border border-white/5 rounded-xl px-4 py-3 text-xs text-slate-300 focus:outline-none focus:border-accent/30"
+                                    >
+                                        <option value="">-- Aucune Campagne --</option>
+                                        {campaigns.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                                    </select>
+                                </section>
+
+                                {formData.campaignId && formData.type === 'item' && (
+                                    <section className="space-y-2 text-left animate-in fade-in">
+                                        <label className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest ml-1">Propriétaire Privé</label>
+                                        <select
+                                            title="Propriétaire"
+                                            value={formData.ownerId || ''}
+                                            onChange={e => setFormData({ ...formData, ownerId: e.target.value || undefined })}
+                                            className="w-full bg-emerald-500/10 border border-emerald-500/20 rounded-xl px-4 py-3 text-xs text-emerald-400 focus:outline-none focus:border-emerald-500/50"
+                                        >
+                                            <option value="">-- Aucun (Inventaire MJ) --</option>
+                                            {players
+                                                .flatMap(p => p.characters)
+                                                .filter(c => c.campaignId === formData.campaignId)
+                                                .map(c => (
+                                                    <option key={c.id} value={c.id}>{c.name}</option>
+                                                ))
+                                            }
+                                        </select>
+                                    </section>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Attributes Section */}
+                        <div className="space-y-6 pt-8 border-t border-white/5">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2 text-slate-500">
                                     <Activity size={16} />

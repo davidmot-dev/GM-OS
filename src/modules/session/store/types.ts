@@ -301,6 +301,7 @@ export interface AtlasMap {
     gmNotes: string;
     linkedEntities: AtlasLinkedEntity[];
     campaignId: string;
+    isVisited?: boolean;
 }
 
 // ─────────────────────────────────────────────

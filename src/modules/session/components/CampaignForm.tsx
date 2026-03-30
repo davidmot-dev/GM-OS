@@ -7,8 +7,10 @@ import {
     Image as ImageIcon, Sparkles, Layout, 
     Info, 
     ExternalLink, 
-    Save, X, BookOpen, Map, ArrowLeft, Fingerprint, Edit3, Loader2, MapPin, Brain, PenTool, Check
+    Save, X, BookOpen, Map, ArrowLeft, Fingerprint, Edit3, Loader2, MapPin, Brain, PenTool, Check,
+    Users
 } from 'lucide-react';
+import NpcManagement from './NpcManagement';
 import { useGemStore } from '../../../stores/useGemStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
@@ -24,13 +26,17 @@ interface CampaignFormProps {
     onClose: () => void;
 }
 
-type SectionId = 'identity' | 'narrative' | 'clues' | 'ambience' | 'world' | 'intelligence';
+type SectionId = 'identity' | 'narrative' | 'clues' | 'ambience' | 'world' | 'intelligence' | 'npc';
 
 const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose }) => {
     const { 
-        campaigns, activeCampaignId, atlasMaps, addCampaign, updateCampaign,
-        customSheetTemplates, customGameDrivers,
-        activeCampaignFormSection, setActiveCampaignFormSection
+        campaigns, activeCampaignId, atlasMaps, addCampaign, 
+        updateCampaign, 
+        activeCampaignFormSection: activeSection, 
+        setActiveCampaignFormSection: setActiveSection,
+        pendingPreFill,
+        clearPendingPreFill,
+        customSheetTemplates, customGameDrivers
     } = useSessionOSStore();
     
     // Identity logic
@@ -53,8 +59,6 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
     const [aiPersonas, setAiPersonas] = useState<Record<string, string>>(fullCampaign?.aiPersonas || {});
     
     // UI State
-    const activeSection = activeCampaignFormSection || 'identity';
-    const setActiveSection = setActiveCampaignFormSection;
     const [isMediaBrowserOpen, setIsMediaBrowserOpen] = useState(false);
     const [isGenerating, setIsGenerating] = useState(false);
     
@@ -148,6 +152,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
         { id: 'identity', icon: Layout, label: 'Identité' },
         { id: 'narrative', icon: BookOpen, label: 'Narration' },
         { id: 'clues', icon: Search, label: 'Indices' },
+        { id: 'npc', icon: Users, label: 'PNJ' },
         { id: 'ambience', icon: ImageIcon, label: 'Ambiance' },
         { id: 'world', icon: Map, label: 'Monde' },
         { id: 'intelligence', icon: Sparkles, label: 'Intelligence' },
@@ -323,6 +328,25 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                             </div>
                         )}
 
+                        {/* 2.5 CLUES SECTION */}
+                        {activeSection === 'clues' && <CluesManager />}
+
+                        {/* 2.6 NPC SECTION */}
+                        {activeSection === 'npc' && (
+                            <div className="h-full overflow-hidden flex flex-col">
+                                <div className="p-6 border-b border-app-border bg-app-surface/50">
+                                    <h2 className="text-xl font-bold flex items-center gap-2 font-display uppercase italic">
+                                        <Users className="text-accent" />
+                                        Gestion des PNJ
+                                    </h2>
+                                    <p className="text-[10px] text-app-text/40 font-bold uppercase tracking-widest mt-1">Configurez les acteurs de votre récit.</p>
+                                </div>
+                                <div className="flex-1 overflow-hidden">
+                                    <NpcManagement />
+                                </div>
+                            </div>
+                        )}
+
                         {/* 3. AMBIENCE SECTION */}
                         {activeSection === 'ambience' && (
                             <div className="space-y-12">
@@ -358,64 +382,91 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
 
                         {/* 4. WORLD SECTION */}
                         {activeSection === 'world' && (
-                            <div className="space-y-12">
-                                <div className="space-y-2">
-                                    <h2 className="text-2xl font-black tracking-tight text-app-text flex items-center gap-4 font-display uppercase italic">
-                                        <Map className="text-accent" size={28} />
-                                        Atlas & Lieux Actifs
-                                    </h2>
-                                    <p className="text-sm text-app-text/40 tracking-wide uppercase font-bold">Épinglez les dossiers tactiques pour y accéder en session.</p>
+                            <div className="p-6 space-y-6">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <h2 className="text-xl font-bold flex items-center gap-2">
+                                            <Map className="text-accent" />
+                                            Atlas & Lieux
+                                        </h2>
+                                        <p className="text-sm text-app-text/60 mt-1">
+                                            Gérez les cartes et les points d'intérêt de votre monde.
+                                        </p>
+                                    </div>
                                 </div>
 
-                                {campaignMaps.length > 0 ? (
-                                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
-                                        {campaignMaps.map(map => {
-                                            const isActive = activeLocationIds.includes(map.id);
-                                            return (
-                                                <button
-                                                    key={map.id}
-                                                    type="button"
+                                {/* Wiki Bridge for Locations */}
+                                {pendingPreFill && pendingPreFill.type === 'location' && (
+                                    <div className="p-4 rounded-xl bg-accent/10 border border-accent/30 flex items-start gap-4 animate-in slide-in-from-top-4">
+                                        <div className="p-2 rounded-lg bg-accent/20 text-accent">
+                                            <MapPin size={20} />
+                                        </div>
+                                        <div className="flex-1">
+                                            <h3 className="font-bold text-accent">Lieu importé du Wiki</h3>
+                                            <p className="text-sm text-app-text/80 mt-1">
+                                                Vous avez transféré <strong>{pendingPreFill.data.title}</strong> depuis le Wiki. 
+                                                Souhaitez-vous le créer comme un nouvel indice de type "Lieu" ?
+                                            </p>
+                                            <div className="flex gap-2 mt-3">
+                                                <button 
                                                     onClick={() => {
-                                                        if (isActive) {
-                                                            setActiveLocationIds(activeLocationIds.filter(id => id !== map.id));
-                                                        } else {
-                                                            setActiveLocationIds([...activeLocationIds, map.id]);
-                                                        }
+                                                        setActiveSection('clues');
+                                                        // CluesManager handles the rest
                                                     }}
-                                                    className={`flex flex-col rounded-[2.5rem] border transition-all duration-500 overflow-hidden group ${
-                                                        isActive
-                                                        ? 'bg-accent/10 border-accent/40 shadow-glow-accent/10'
-                                                        : 'bg-app-surface/20 border-app-border/10 hover:border-app-border/20'
-                                                    }`}
+                                                    className="px-3 py-1.5 rounded-lg bg-accent text-app-surface font-bold text-xs hover:bg-accent-bright transition-colors"
                                                 >
-                                                    <div className="aspect-[4/3] relative overflow-hidden bg-app-bg/40">
-                                                        <ResolvedAsset 
-                                                            src={map.fileUrl} 
-                                                            className={`w-full h-full object-cover transition-all duration-700 ${isActive ? 'scale-110 opacity-100' : 'opacity-40 grayscale group-hover:grayscale-0 group-hover:opacity-80'}`} 
-                                                            alt={map.name}
-                                                        />
-                                                        {isActive && (
-                                                            <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-accent text-app-bg flex items-center justify-center shadow-glow-accent">
-                                                                <Check size={16} strokeWidth={3} />
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                    <div className="p-6 text-center">
-                                                        <span className={`text-[10px] font-black uppercase tracking-widest ${isActive ? 'text-accent font-display' : 'text-app-text/30 group-hover:text-app-text/60'}`}>{map.name}</span>
-                                                    </div>
+                                                    Importer comme Indice
                                                 </button>
-                                            );
-                                        })}
-                                    </div>
-                                ) : (
-                                    <div className="py-20 border-2 border-dashed border-app-border/10 rounded-[3rem] text-center flex flex-col items-center gap-6">
-                                        <MapPin size={48} className="text-app-text/10" />
-                                        <div className="space-y-2">
-                                            <p className="text-xs font-black uppercase tracking-widest text-app-text/20">Aucune carte associée</p>
-                                            <p className="text-[10px] text-app-text/10 font-bold uppercase tracking-widest max-w-xs px-6">Liez des cartes via le World Atlas pour les épingler ici.</p>
+                                                <button 
+                                                    onClick={() => clearPendingPreFill()}
+                                                    className="px-3 py-1.5 rounded-lg bg-app-surface border border-app-border text-xs hover:text-red-400 transition-colors"
+                                                >
+                                                    Ignorer
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 )}
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {campaignMaps.map(map => {
+                                        const isActive = activeLocationIds.includes(map.id);
+                                        return (
+                                            <button
+                                                key={map.id}
+                                                type="button"
+                                                onClick={() => {
+                                                    if (isActive) {
+                                                        setActiveLocationIds(activeLocationIds.filter(id => id !== map.id));
+                                                    } else {
+                                                        setActiveLocationIds([...activeLocationIds, map.id]);
+                                                    }
+                                                }}
+                                                className={`flex flex-col rounded-[2.5rem] border transition-all duration-500 overflow-hidden group ${
+                                                    isActive
+                                                    ? 'bg-accent/10 border-accent/40 shadow-glow-accent/10'
+                                                    : 'bg-app-surface/20 border-app-border/10 hover:border-app-border/20'
+                                                }`}
+                                            >
+                                                <div className="aspect-[4/3] relative overflow-hidden bg-app-bg/40">
+                                                    <ResolvedAsset 
+                                                        src={map.fileUrl} 
+                                                        className={`w-full h-full object-cover transition-all duration-700 ${isActive ? 'scale-110 opacity-100' : 'opacity-40 grayscale group-hover:grayscale-0 group-hover:opacity-80'}`} 
+                                                        alt={map.name}
+                                                    />
+                                                    {isActive && (
+                                                        <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-accent text-app-bg flex items-center justify-center shadow-glow-accent">
+                                                            <Check size={16} strokeWidth={3} />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="p-6 text-center">
+                                                    <span className={`text-[10px] font-black uppercase tracking-widest ${isActive ? 'text-accent font-display' : 'text-app-text/30 group-hover:text-app-text/60'}`}>{map.name}</span>
+                                                </div>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
                             </div>
                         )}
 
@@ -517,10 +568,6 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                             </div>
                         )}
 
-                        {/* 6. CLUES SECTION */}
-                        {activeSection === 'clues' && (
-                            <CluesManager />
-                        )}
                     </div>
                 </main>
             </div>

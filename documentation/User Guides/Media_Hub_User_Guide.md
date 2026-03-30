@@ -11,7 +11,8 @@ Le Media Hub n'est pas qu'un simple explorateur de fichiers ; c'est une base de 
 1. **Stockage Persistant (IndexedDB)** : Vos fichiers sont stockés localement dans le navigateur/application. Ils restent disponibles même si vous déplacez les fichiers originaux sur votre ordinateur.
 2. **Multi-Formats** : Support natif des images, de l'audio (MP3, WAV), de la vidéo et des documents (PDF, MD).
 3. **Système de Tags & Campagnes** : Une méthode d'organisation transversale pour retrouver vos assets par thème ou par aventure.
-4. **Recherche Instantanée** : Filtrez des centaines de fichiers par nom, type ou tag en quelques millisecondes.
+4. **Nettoyage Intelligent** : Les étiquettes (tags) de campagne sont automatiquement retirées si la campagne associée est supprimée, gardant votre bibliothèque propre.
+5. **Recherche Instantanée** : Filtrez des centaines de fichiers par nom, type ou tag en quelques millisecondes.
 
 ## 🚀 Importer et Gérer vos Médias
 
@@ -71,6 +72,7 @@ Parfois, vous importez des assets pour une utilisation future ou des éléments 
 
 - **Stockage Local** : Le Media Hub utilise la technologie IndexedDB. La limite de stockage dépend de votre navigateur/système, mais elle permet généralement de stocker plusieurs gigaoctets de données.
 - **Nettoyage Automatique** : Pour optimiser les performances, GM-OS scanne régulièrement la base de données pour supprimer les fichiers "orphelins" (ceux qui ne sont liés à aucun PNJ, aucune playlist, aucun thème d'ambiance ou aucune campagne). Les fichiers marqués comme **Persistants** sont systématiquement épargnés.
+- **Déliaison de Campagne** : Lorsqu'une campagne est supprimée dans **Session-OS**, le Media Hub retire automatiquement l'ID de cette campagne de tous les médias indexés. Le fichier physique n'est pas supprimé, mais il ne sera plus "badgé" avec cette campagne.
 - **Vider le Hub** : Le bouton **"Vider le Hub"** supprime TOUTES les données stockées (y compris les fichiers persistants). À utiliser avec précaution !
 
 ---

@@ -32,6 +32,7 @@ export interface AtlasSliceActions {
     addLinkedEntity: (mapId: string, entity: Omit<AtlasLinkedEntity, 'id'>) => void;
     removeLinkedEntity: (mapId: string, entityId: string) => void;
     setSelectedAtlasMap: (id: string | null) => void;
+    toggleMapVisited: (id: string) => void;
     autoSelectFirstMap: () => void;
 }
 
@@ -94,6 +95,13 @@ export const createAtlasSlice: StateCreator<AtlasSlice, [], [], AtlasSlice> = (s
             });
         }
     },
+
+    toggleMapVisited: (id: string) =>
+        set((state) => ({
+            atlasMaps: state.atlasMaps.map((m) =>
+                m.id === id ? { ...m, isVisited: !m.isVisited } : m
+            ),
+        })),
 
     autoSelectFirstMap: () => {
         // Implémentée dans le root store (dépend de activeCampaignId du campaignSlice)

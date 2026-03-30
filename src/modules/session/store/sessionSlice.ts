@@ -17,8 +17,20 @@ import type { GameSession } from './types';
 // State
 // ─────────────────────────────────────────────
 
+export interface PendingPreFill {
+    type: 'npc' | 'clue' | 'location' | 'item' | 'lore' | 'rumor';
+    sourceId?: string;
+    data: {
+        title: string;
+        content: string;
+        imageUrl?: string;
+        mediaUrl?: string;
+    };
+}
+
 export interface SessionSliceState {
     sessions: GameSession[];
+    pendingPreFill: PendingPreFill | null;
 }
 
 // ─────────────────────────────────────────────
@@ -39,6 +51,8 @@ export interface SessionSliceActions {
     removeEntityFromSession: (sessionId: string, entityId: string) => void;
     clearSessionEntities: (sessionId: string) => void;
     deleteSession: (id: string) => void;
+    setPendingPreFill: (preFill: PendingPreFill) => void;
+    clearPendingPreFill: () => void;
 }
 
 export type SessionSlice = SessionSliceState & SessionSliceActions;
@@ -50,11 +64,16 @@ export type SessionSlice = SessionSliceState & SessionSliceActions;
 export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice> = (set) => ({
     // Initial State
     sessions: [],
+    pendingPreFill: null,
 
     // Actions
     addSession: (session) => {
         const id = `s-${Date.now()}`;
-        const newSession: GameSession = { ...session, id };
+        const newSession: GameSession = { 
+            ...session, 
+            id,
+            sessionEntityIds: session.sessionEntityIds || []
+        };
         set((state) => ({ sessions: [...state.sessions, newSession] }));
         gmToast(`Session #${newSession.number} créée.`, 'success');
         return id;
@@ -143,8 +162,8 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
     addEntityToSession: (sessionId, entityId) =>
         set((state) => ({
             sessions: state.sessions.map((s) =>
-                s.id === sessionId && !s.sessionEntityIds.includes(entityId)
-                    ? { ...s, sessionEntityIds: [...s.sessionEntityIds, entityId] }
+                s.id === sessionId && !(s.sessionEntityIds || []).includes(entityId)
+                    ? { ...s, sessionEntityIds: [...(s.sessionEntityIds || []), entityId] }
                     : s
             ),
         })),
@@ -172,4 +191,7 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
             gmToast(`Session #${session?.number} supprimée.`, 'success');
             return { sessions: newSessions };
         }),
+
+    setPendingPreFill: (preFill) => set({ pendingPreFill: preFill }),
+    clearPendingPreFill: () => set({ pendingPreFill: null }),
 });

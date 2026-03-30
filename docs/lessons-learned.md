@@ -69,8 +69,34 @@
 ### Filtrage des Données par Campagne
 **Problème :** Des indices d'une autre campagne (le cas "Milo") apparaissaient dans le Cockpit du MJ car la session ne vérifiait que l'état `isRevealed` et non l'appartenance à la campagne active.
 **Solution :** Imposition d'un filtrage systématique par `activeCampaignId` dans tous les sélecteurs de données du Session-OS (Cockpit, Oracle AI, Détails entité).
-**Apprentissage :** Dans un système multi-projets, "Filtrer par défaut" (Scope-by-Active) est plus sûr que "Filtrer au besoin". Chaque module doit être hermétique à l'ID de sa racine (Campagne/Projet).
+**Apprentissage :** Dans un système multi-projets, "Filtrage par défaut" (Scope-by-Active) est plus sûr que "Filtrer au besoin". Chaque module doit être hermétique à l'ID de sa racine (Campagne/Projet).
+
+## 📡 Réseau : Le Défi de la Confidentialité des Données Privées
+
+### Sécurisation de l'Inventaire PJ (Secure Sync)
+**Problème :** Envoyer tout le store des favoris aux tablettes permettrait à n'importe quel joueur de voir les objets secrets des autres en inspectant l'état local.
+**Solution :** Implémentation d'un filtrage pré-diffusion dans `App.tsx`. Le MJ ne "broadcast" pas tout, il cible l'envoi en fonction du `characterId` du destinataire.
+**Apprentissage :** La confiance ne doit pas reposer uniquement sur l'UI (masquage visuel). Le filtrage doit se faire au niveau du canal de transmission (MJ -> Réseau) pour garantir une isolation réelle.
+
+## 🧱 UX : Fluidité de Transition entre Modules (Ponts Magiques)
+
+### Le Piège de la Redirection "Early"
+**Problème :** En redirigeant l'utilisateur vers un autre module (ex: Wiki ➔ Favorite-OS), l'état de la vue source peut rester bloqué sur un ID inexistant, provoquant des écrans "en construction" au retour.
+**Solution :** Utilisation systématique de `setCurrentView('cockpit')` ou d'un reset de navigation lors de l'activation d'un pont inter-modules.
+**Apprentissage :** Une action "magique" qui change de contexte doit toujours s'accompagner d'un reset de la navigation interne du module source pour garantir un retour utilisateur sans accroc.
+
+### Auto-complétion de Contexte (Smart Prefill)
+**Problème :** L'importation d'éléments depuis le Wiki demandait trop de clics pour ré-assigner la campagne active.
+**Solution :** Injection automatique de `activeCampaignId` dans le module cible lors de la création déclenchée par le pont.
+**Apprentissage :** La réduction de la friction passe par la transmission du "Contexte Invisible" (ce que l'utilisateur est en train de faire) entre les magasins de données (Slices).
+
+## 🧱 Architecture : Nettoyage en Cascade (Deletion Cascade)
+
+### Le Problème du "Détachement vs Suppression"
+**Problème :** Supprimer une campagne laissait des PNJ, des cartes et des indices orphelins dans le store, ainsi que des badges obsolètes (ex: "Unit_C-17") dans le Media Hub.
+**Solution :** Surcharge globale de l'action `deleteCampaign` dans le store racine (`index.ts`). Cette action coordonne le filtrage de tous les sous-stores (Entities, Atlas, Chronicle) et déclenche un nettoyage asynchrone dans IndexedDB via le `MediaStore`.
+**Apprentissage :** Pour les entités globales (comme les PJ), préférez le "Détachement" (remise à `null` de l'ID) plutôt que la suppression. Pour les données purement narratives (Wiki, PNJ), la suppression physique "Hard Delete" est indispensable pour éviter la pollution de l'état.
 
 ---
-*Dernière mise à jour : 28 Mars 2026*
-*Statut : Tablet Hub finalisé & Patch de stabilité V5 déployé*
+*Dernière mise à jour : 30 Mars 2026*
+*Statut : Système de Nettoyage en Cascade opérationnel*

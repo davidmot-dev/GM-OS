@@ -5,11 +5,10 @@ import { Radar, User, Shield, Fingerprint, WifiOff, AlertCircle } from 'lucide-r
 
 type OnboardingStep = 'SCANNING' | 'SELECTION' | 'SYNCING';
 
-const LobbyOnboarding: React.FC = () => {
+export const LobbyOnboarding: React.FC = () => {
     const { setPseudo, setPlayerName, setCharacterId, completeOnboarding, resetIdentity } = useClientStore();
-    const { sessions } = useSessionOSStore();
+    const { sessions, activeCampaignId, campaigns, activeCampaignWallpaper, activeCampaignName } = useSessionOSStore();
     const players = useSessionOSStore(state => state.players);
-    const campaigns = useSessionOSStore(state => state.campaigns);
     
     const [step, setStep] = useState<OnboardingStep>('SCANNING');
     const [selectedCharId, setSelectedCharId] = useState<string | null>(null);
@@ -18,48 +17,70 @@ const LobbyOnboarding: React.FC = () => {
     const activeSession = useMemo(() => {
         if (!sessions || sessions.length === 0) return null;
         
+        let filteredSessions = sessions;
+        if (activeCampaignId) {
+            filteredSessions = sessions.filter(s => String(s.campaignId) === String(activeCampaignId));
+        }
+        
         // On cherche d'abord une session réellement active qui n'est pas la session de démo par défaut
-        const realActive = sessions.find(s => s.status === 'active' && s.id !== 's-1');
+        const realActive = filteredSessions.find(s => s.status === 'active' && s.id !== 's-1');
         if (realActive) return realActive;
 
-        // Sinon on prend n'importe quelle session active (y compris démo si c'est tout ce qu'on a)
-        return sessions.find(s => s.status === 'active') || sessions[0];
-    }, [sessions]);
+        // Sinon on prend n'importe quelle session active (y compris démo si c'est tout ce qu'on a),
+        // sinon on ne renvoie rien (on reste sur l'écran 'Recherche de session')
+        return filteredSessions.find(s => s.status === 'active') || null;
+    }, [sessions, activeCampaignId]);
 
     // Formater le nom de la session de manière lisible
     const sessionDisplayName = useMemo(() => {
         if (!activeSession) return "Aucune session active";
         
         const state = useSessionOSStore.getState();
-        const campaign = campaigns.find(c => c.id === activeSession.campaignId) || 
-                         campaigns.find(c => c.id === state.activeCampaignId);
-        const campaignName = campaign?.name || state.activeCampaignName || "Campagne";
-        const sessionNum = activeSession.number || 1;
-        const sessionDate = activeSession.date 
-          ? new Date(activeSession.date).toLocaleDateString('fr-FR') 
-          : "Date inconnue";
-
-        // Si c'est la session de démo, on le laisse paraître un peu mais proprement
-        if (activeSession.id === 's-1' && !campaign) {
-            return `Session de Démonstration (#${sessionNum})`;
+        const campaign = campaigns.find(c => String(c.id) === String(activeSession.campaignId)) || 
+                         campaigns.find(c => String(c.id) === String(activeCampaignId));
+        const campaignName = campaign?.name || activeCampaignName || state.activeCampaignName || "Campagne";
+        
+        const sessionNum = activeSession.id === 's-1' ? 'Démo' : (activeSession.number ?? '1');
+        
+        // Formater la date en DD/MM/YYYY si possible
+        let sessionDate = new Date().toLocaleDateString('fr-FR');
+        if (activeSession.date) {
+            try {
+                // Tenter de nettoyer ou de formater activeSession.date si c'est YYYY-MM-DD
+                const d = new Date(activeSession.date);
+                if (!isNaN(d.getTime())) {
+                    sessionDate = d.toLocaleDateString('fr-FR');
+                } else {
+                    sessionDate = activeSession.date; // Garder la string telle quelle
+                }
+            } catch (_e) {
+                // Ignore
+            }
         }
-
+        
         return `${campaignName} • Session ${sessionNum} • ${sessionDate}`;
-    }, [activeSession, campaigns]);
+    }, [activeSession, campaigns, activeCampaignId, activeCampaignName]);
 
     // Filtrer les PJ présents dans la session (détection des IDs de personnages OU de leurs joueurs parents)
     const presentPcs = useMemo(() => {
         if (!activeSession) return [];
         
-        return players.reduce<(import('../../modules/session/store/types').PlayerCharacter & { playerName: string })[]>((acc, player) => {
-            const isPlayerInSession = activeSession.sessionEntityIds.includes(player.id);
+        const sessionIds = (activeSession.sessionEntityIds || []).map(id => String(id));
+        
+        console.log('[Lobby] Calculating presentPcs. Session IDs:', sessionIds);
+        
+        const result = players.reduce<(import('../../modules/session/store/types').PlayerCharacter & { playerName: string })[]>((acc, player) => {
+            const isPlayerInSession = sessionIds.includes(String(player.id));
             
-            const playerSessionChars = player.characters
-                .filter(char => isPlayerInSession || activeSession.sessionEntityIds.includes(char.id))
+            const playerSessionChars = (player.characters || [])
+                .filter(char => isPlayerInSession || sessionIds.includes(String(char.id)))
                 .map(char => ({ ...char, playerName: player.realName }));
             
             return [...acc, ...playerSessionChars];
         }, []);
+
+        console.log('[Lobby] Present PCs count:', result.length);
+        return result;
     }, [activeSession, players]);
 
     // Gestion des transitions d'étapes (Onboarding & Session Guard)
@@ -184,6 +205,19 @@ const LobbyOnboarding: React.FC = () => {
     // --- RENDER: SELECTION (Character Grid) ---
     return (
         <div className="fixed inset-0 z-[100] flex flex-col items-center bg-app-bg/95 backdrop-blur-2xl p-6 overflow-y-auto">
+            {/* Background Atmosphere */}
+            <div className="absolute inset-0 z-0 transition-opacity duration-1000">
+                {activeCampaignWallpaper ? (
+                    <img 
+                        src={activeCampaignWallpaper} 
+                        alt="" 
+                        className="w-full h-full object-cover opacity-20 grayscale-[0.2]"
+                    />
+                ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-slate-900 via-slate-950 to-black opacity-60" />
+                )}
+            </div>
+
             {/* Top Bar for Reset/Logout */}
             <div className="absolute top-8 left-8 z-50">
                 <button 

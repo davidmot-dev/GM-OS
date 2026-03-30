@@ -34,6 +34,7 @@ interface MediaStoreState {
     updateMediaTags: (id: string, tags: string[]) => Promise<void>;
     renameMedia: (id: string, newName: string) => Promise<void>;
     updateMediaCampaigns: (id: string, campaignIds: string[]) => Promise<void>;
+    removeCampaignReference: (campaignId: string) => Promise<void>;
     getMediaBlob: (id: string) => Promise<Blob | undefined>;
     
     // Collections
@@ -295,6 +296,40 @@ export const useMediaStore = create<MediaStoreState>((set, get) => ({
         } catch (err) {
             console.error('Failed to update media campaigns:', err);
             throw new Error('Failed to update campaigns.');
+        }
+    },
+
+    removeCampaignReference: async (campaignId: string) => {
+        try {
+            console.log(`[MediaStore] removeCampaignReference for: ${campaignId}`);
+            const db = await getDB();
+            const tx = db.transaction(STORE_NAME, 'readwrite');
+            const store = tx.objectStore(STORE_NAME);
+            
+            const allItems = await store.getAll();
+            let updatedCount = 0;
+
+            for (const item of allItems) {
+                if (item.campaignIds?.includes(campaignId)) {
+                    item.campaignIds = item.campaignIds.filter((id: string) => id !== campaignId);
+                    await store.put(item);
+                    updatedCount++;
+                }
+            }
+            
+            await tx.done;
+            console.log(`[MediaStore] Cleanup complete. ${updatedCount} media items updated.`);
+
+            if (updatedCount > 0) {
+                set((state) => ({
+                    mediaList: state.mediaList.map(m => ({
+                        ...m,
+                        campaignIds: m.campaignIds.filter(id => id !== campaignId)
+                    }))
+                }));
+            }
+        } catch (err) {
+            console.error('Failed to remove campaign reference in MediaStore:', err);
         }
     },
 

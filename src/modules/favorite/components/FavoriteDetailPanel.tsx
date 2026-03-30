@@ -9,6 +9,7 @@ import {
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { gmToast } from '../../../stores/useToastStore';
+import { useSessionOSStore } from '../../session/useSessionOSStore';
 
 export const FavoriteDetailPanel: React.FC = () => {
     const {
@@ -21,6 +22,10 @@ export const FavoriteDetailPanel: React.FC = () => {
     const entity = favorites.find(f => f.id === selectedFavoriteId);
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState<Partial<FavoriteEntity>>(entity || {});
+
+    // Session Data
+    const campaigns = useSessionOSStore(s => s.campaigns);
+    const players = useSessionOSStore(s => s.players);
 
     // Media Browser State
     const [browserTarget, setBrowserTarget] = useState<'imageUrl' | 'tokenUrl' | null>(null);
@@ -141,6 +146,42 @@ export const FavoriteDetailPanel: React.FC = () => {
                                 className="w-full bg-app-bg border border-app-border rounded-lg p-2 text-sm text-center text-slate-300 focus:outline-none focus:border-accent"
                                 placeholder="Subtitle (e.g. Ruler of mountains)..."
                             />
+                            
+                            {/* Campaign & Owner Selectors */}
+                            <div className="space-y-4 pt-2">
+                                <section className="space-y-2 text-left">
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Campagne Associée</label>
+                                    <select
+                                        value={formData.campaignId || ''}
+                                        onChange={e => setFormData({ ...formData, campaignId: e.target.value || undefined, ownerId: undefined })}
+                                        className="w-full bg-app-bg border border-app-border rounded-lg px-3 py-2 text-sm text-slate-300 focus:outline-none focus:border-accent"
+                                    >
+                                        <option value="">-- Aucune Campagne --</option>
+                                        {campaigns.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                                    </select>
+                                </section>
+
+                                {formData.campaignId && entity.type === 'item' && (
+                                    <section className="space-y-2 text-left animate-in fade-in">
+                                        <label className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest ml-1">Propriétaire Privé</label>
+                                        <select
+                                            value={formData.ownerId || ''}
+                                            onChange={e => setFormData({ ...formData, ownerId: e.target.value || undefined })}
+                                            className="w-full bg-emerald-500/10 border border-emerald-500/30 rounded-lg px-3 py-2 text-sm text-emerald-400 focus:outline-none focus:border-emerald-500"
+                                        >
+                                            <option value="">-- Aucun (Inventaire MJ) --</option>
+                                            {players
+                                                .flatMap(p => p.characters)
+                                                .filter(c => c.campaignId === formData.campaignId)
+                                                .map(c => (
+                                                    <option key={c.id} value={c.id}>{c.name}</option>
+                                                ))
+                                            }
+                                        </select>
+                                    </section>
+                                )}
+                            </div>
+
                             <div className="space-y-4">
                                 <section className="space-y-2 text-left">
                                     <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Portrait URL / Media</label>

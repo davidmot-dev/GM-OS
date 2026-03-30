@@ -30,8 +30,12 @@ export interface FavoriteEntity {
     secretNotes?: string;
     /** Indique si l'élément est épinglé */
     isStarred?: boolean;
-    /** État de synchronisation avec le Player Hub */
+    /** État de synchronisation publique avec le Player Hub */
     isSyncedToPlayerHub?: boolean;
+    /** ID de la campagne liée (pour filtrer et assigner) */
+    campaignId?: string;
+    /** ID du Personnage-Joueur propriétaire (rend l'objet privé au Tablet Hub) */
+    ownerId?: string;
 }
 
 interface FavoriteState {

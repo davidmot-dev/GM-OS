@@ -421,9 +421,214 @@ Le filtrage doit être effectué au point d'émission (MJ PC) et non seulement �
 ## 35. Alignement UI & Cohérence des Formulaires Complexes
 
 ### 35.1 Défi
+## 18. Refactoring de Modules Complexes (Media Hub)
+
+### 18.1 Défi
+
+Un composant monolithique (`MediaHub.tsx`) devient illisible et difficile à maintenir dès qu'il intègre des fonctionnalités transverses (Recherche, Grille, Détails Tactiques, Previews).
+
+### 18.2 Leçon
+
+L'extraction préventive de sous-composants spécialisés (`TacticalDetailPanel`, `MediaItemThumbnail`) améliore non seulement la lisibilité mais aussi la performance (moindre surface de re-render).
+
+**Solution :** Découpage du Media Hub en une "Orchestration" (`MediaHub.tsx`) et des "Éléments de Structure" atomiques. Cela a permis d'implémenter le panneau latéral HUD Obsidian de manière isolée, sans risquer de casser la grille de navigation principale ou le moteur de recherche.
+
+---
+
+## 19. Robustesse des Stores (Optional Chaining)
+
+### 19.1 Défi
+
+L'introduction de services automatisés (ex: `MediaCleanupService`) interagissant avec plusieurs stores Zustand peut provoquer des plantages "Cannot read property of undefined" si un store est accédé avant son initialisation complète ou si une propriété attendue est absente.
+
+### 19.2 Leçon
+
+L'utilisation systématique du **Optional Chaining (`?.`)** et des valeurs par défaut est impérative pour les services de maintenance transverse.
+
+**Solution :** Refactoring des accesseurs de store dans les boucles de nettoyage. Au lieu de `store.subStore.items`, l'utilisation de `store?.subStore?.items ?? []` garantit que le service ne casse jamais le thread principal de l'application, même en cas d'incohérence passagère des données.
+
+## 20. Contexte Matériel & UX Adaptative (Workspace Sync v2)
+
+### 20.1 Défi
+
+Offrir une expérience utilisateur fluide sur des setups variés (un portable seul vs un bureau avec 3 écrans) sans forcer le MJ à redimensionner ses fenêtres manuellement à chaque changement de matériel.
+
+### 20.2 Leçon
+
+L'interface doit être une fonction de l'environnement matériel, pas seulement de l'état logique.
+
+**Solution :** Branchement sur les événements `screen` d'Electron via le bridge. La connaissance du `displayCount` dans le store global permet de définir des **règles de priorité de rendu** (ex: auto-clôture des panneaux secondaires sur petit écran). Cela transforme GM-OS d'une application statique en un environnement "pro-actif" qui libère de la charge cognitive au MJ.
+
+---
+
+## 21. Refonte d'Éditeurs Modulaires (Obisidian Nexus)
+
+### 21.1 Défi
+
+L'ajout de nombreuses fonctionnalités (Auras, Mobilité, Sync Audio/Lumière) à un éditeur monolithique le rend illisible et difficile à utiliser, surtout sur des écrans chargés.
+
+### 21.2 Leçon
+
+Le découpage en **sous-composants métier** (`TacticalSwitch`, `ObsidianSelect`) et une architecture par colonnes améliore radicalement l'expérience utilisateur.
+
+**Solution :** Refonte de l'Éditeur de Danger en style **Obsidian Nexus**. L'interface a été scindée en trois zones claires : Sélection (liste latérale), Configuration Visuelle (nom/couleur), et Configuration Tactique/Audio (toggles et dropdowns). L'adoption du **Glassmorphism** et du mode **Large Modal (6xl)** permet de présenter toutes les options complexes sans aucun défilement nécessaire sur la plupart des résolutions.
+
+## 22. Recherche Transverse & Clavier Global (Spotlight)
+
+### 22.1 Défi
+
+Permettre une recherche rapide à travers plusieurs stores Zustand indépendants (Session, Music, Ambient, Sound) sans créer de dépendances circulaires ou de surcharges de rendu massives lors de la saisie de texte.
+
+### 22.2 Leçon
+
+Le calcul des résultats doit être centralisé dans un hook dédié et les actions d'exécution doivent être injectées dynamiquement pour rester découplé des modules.
+
+**Solution :** Implémentation du hook `useSpotlight`. Il agrège les données de 4 stores différents via un `useMemo` optimisé qui ne recalcule que si la `query` ou les listes sources changent. Le raccourci clavier est géré par un `useEffect` sur `window` au niveau racine, garantissant une disponibilité permanente (`z-index: 9999`).
+
+## 23. Résolution d'Avatars & Performance (Social Nexus v2)
+
+### 23.1 Défi
+
+Le rendu d'un graphe social contenant des dizaines d'entités provoquait des saccades car chaque nœud tentait de résoudre son avatar (URL locale vs web vs blob) simultanément, surchargeant le thread principal.
+
+### 23.2 Leçon
+
+La résolution de média doit être asynchrone et bénéficier d'une couche de cache dédiée (Memoization).
+
+**Solution :** Création du service **`useAvatarResolver`**. Ce hook encapsule la logique complexe de priorité des images (Portrait > Token > Fallback) et utilise un cache interne pour éviter de recalculer les URLs à chaque frame du canvas. Le résultat est une fluidité de 60fps constante sur le Social Nexus, même avec des campagnes massives.
+
+## 24. Persistance des Workspaces (Layout Manager)
+
+### 24.1 Défi
+
+Restaurer la configuration précise des fenêtres lors du changement de campagne sans écraser les données par mégarde.
+
+### 24.2 Leçon
+
+Il est crucial de distinguer les changements d'état initiés par l'utilisateur de ceux initiés par le système de restauration.
+
+**Solution :** Utilisation d'un flag `isRestoring` dans le `LayoutManager`. Cela empêche l'auto-save d'enregistrer des états intermédiaires pendant la phase de chargement, garantissant l'intégrité de la configuration visuelle de chaque campagne.
+
+---
+
+## 25. Dépendances de Nettoyage Cross-Stores (Media Cleanup)
+
+### 25.1 Défi
+
+L'introduction de nouveaux modules (Music OS, Ambient OS) a créé une faille dans le service de nettoyage automatique. Le script de nettoyage ne scannait que les stores "historiques", ignorant les nouvelles playlists et thèmes. Cela a conduit à la suppression massive de fichiers audio actifs, perçus à tort comme orphelins.
+
+### 25.2 Leçon
+
+Toute nouvelle structure de données utilisant des IDs du MediaStore (`m-xxxx`) **doit** obligatoirement être enregistrée dans la whitelist du `MediaCleanupService`.
+
+**Solution :** Refactoring du service pour inclure l'interrogation systématique de `useMusicStore` (playlists/pads) et `useAmbientStore` (presets/tracks). La robustesse du nettoyage est désormais liée à l'exhaustivité de la collecte des références.
+
+## 26. Activation Audio Distante & Autoplay Policy
+
+### 26.1 Défi
+
+Les navigateurs bloquent le son tant qu'une interaction utilisateur n'a pas eu lieu sur la page. Lors d'un contrôle via **Remote Pad**, l'interaction a lieu sur le mobile, pas sur le PC. Le son restait donc "suspendu" sur le PC hôte, même si l'ordre de lecture était bien reçu.
+
+### 26.2 Leçon
+
+La réception d'un signal WebSocket distant doit être considérée comme une interaction utilisateur valide pour forcer la reprise du contexte audio.
+
+**Solution :** Ajout systématique de `context.resume()` dans les méthodes `play()` de tous les moteurs audio (`Music`, `Sound`, `Ambient`). De plus, pour les thèmes Ambient, le trigger distant force désormais l'état de lecture (`isPlaying: true`) pour contourner le comportement par défaut de simple chargement passif.
+
+---
+27. Débogage du Lancement Electron (Windows AppLocker/WDAC)
+
+### 27.1 Défi
+
+L'application refuse de démarrer avec une erreur `spawn UNKNOWN` (errno -4094) lors du lancement d'Electron via `vite-plugin-electron`. L'erreur persiste même en essayant de lancer le binaire `electron.exe` manuellement.
+
+### 27.2 Leçon
+
+Sur certains systèmes Windows (particulièrement en environnement pro ou sécurisé), les **politiques de contrôle d'application (AppLocker ou WDAC)** bloquent l'exécution de tout binaire non autorisé situé dans le dossier `node_modules`.
+
+**Solution :**
+1. Identifier la source du blocage via l'Observateur d'Événements Windows (Journaux Microsoft-Windows-AppLocker).
+2. Ajouter une **exclusion** dans la Sécurité Windows (Windows Defender) pour le dossier complet du projet ou autoriser spécifiquement le binaire : `node_modules\electron\dist\electron.exe`.
+3. Le "déblocage" de fichier simple (`Unblock-File`) est souvent insuffisant face à une politique WDAC stricte.
+
+---
+
+## 28. Sécurité Critique & Suppression de l'Auto-Backup (Git Sync)
+
+### 28.1 Défi
+
+L'implémentation d'un système de backup Git automatisé en arrière-plan a causé des régressions critiques (suppression de fichiers du projet) dues à des conflits de processus et des verrous de fichiers. Malgré des tentatives de sécurisation via `git rm --cached`, la complexité de maintenir un état Git propre en parallèle de l'utilisation active de l'application représentait un risque inacceptable pour l'intégrité des données utilisateur.
+
+### 28.2 Leçon
+
+**La simplicité est la forme suprême de la sécurité.** Pour un outil de création comme GM-OS, l'intégrité du répertoire de travail prime sur toute automatisation de sauvegarde complexe.
+
+**Solution Finale (Mars 2026) :**
+La fonctionnalité d'auto-backup Git a été **intégralement supprimée** du noyau de l'application.
+
+- Suppression du service backend `GitBackupService`.
+- Suppression des déclencheurs UI et des hooks de synchronisation.
+- Recentrage sur les sauvegardes locales robustes (Zustand Persist) et les exports manuels de session, laissant la gestion Git (versioning) à la discrétion de l'utilisateur via des outils externes spécialisés.
+
+## 30. Rendu Canvas & Cycle de Vie React
+
+### 30.1 Défi
+Lors du chargement d'une carte, le brouillard de guerre disparaissait ou ne s'appliquait pas correctement au premier rendu, car le redimensionnement du composant (basé sur la résolution de l'image) se heurtait à l'initialisation du moteur de brouillard.
+
+### 30.2 Leçon
+Toute modification de `canvas.width` ou `canvas.height` **efface instantanément le contenu du canvas** (buffer clearing). 
+
+**Solution :** Dans un workflow React, l'initialisation et le redimensionnement du moteur de rendu Canvas doivent être atomiques. Il faut impérativement re-charger l'état (`loadFromDataUrl`) ou re-remplir (`fillBlack`) immédiatement après un changement de dimension déclenché par l'état (useEffect).
+
+## 31. Registres d'État par Asset (Map Persistence)
+
+### 31.1 Défi
+Le brouillard de guerre était auparavant global. Changer de carte écrasait le brouillard précédent, empêchant le MJ de préparer plusieurs scènes tactiques à l'avance ou de revenir sur une carte explorée.
+
+### 31.2 Leçon
+L'état d'un module ne doit pas être une variable simple unique mais un **Registre indexé par l'Asset ID/URL**.
+
+**Solution :** Utilisation d'un `FogRegistry` (`Record<string, string>`). En liant l'exploration à l'URL de l'image, la persistance devient "invisible" pour l'utilisateur. Le changement de carte devient alors une simple opération de lecture dans le registre, garantissant une expérience fluide et sans perte de données.
+
+## 33. Traçabilité des Indices & Intégration Narratives (v5.2)
+
+### 33.1 Défi
+Maintenir une chronologie cohérente des découvertes des joueurs sans surcharger manuellement le journal de session, tout en permettant au MJ de noter le contexte narratif exact (Moment de campagne) au moment de la révélation.
+
+### 33.2 Leçon
+Le passage d'un état de visibilité (`isRevealed`) est le déclencheur idéal pour automatiser la documentation narrative, mais il doit être protégé contre les doubles déclenchements.
+
+**Solution :** 
+1. **Détection de Changement d'État** : Utilisation d'une comparaison entre l'état local de l'éditeur et l'état actuel du store (`currentClue.isRevealed`) dans `handleSave`. Cela garantit que le timestamp (`revealedAt`) et l'événement journal ne sont générés que lors du passage de Masqué à Révélé.
+2. **Couplage Faible via `getState()`** : Pour injecter l'événement dans le `JournalStore` depuis le `CluesManager` sans créer de dépendances de rendu inutiles, l'accès direct via `useJournalStore.getState().addEvent` est privilégié. Cela permet une mise à jour silencieuse du journal pendant que l'UI de gestion d'indices reste fluide.
+3. **Double Temporalité** : Séparation stricte entre le temps réel (`Date.now()`) pour le tri technique et le "Moment de Campagne" (chaîne libre) pour la cohérence narrative. Cette flexibilité permet au MJ de corriger un oubli de révélation a posteriori sans casser la chronologie de l'histoire.
+
+## 34. Synchronisation Sélective & Performance (Tablet Hub v5.2)
+
+### 34.1 Défi
+Envoyer l'intégralité des entités de la base de données vers toutes les tablettes connectées saturait la mémoire des clients légers (mobiles) et présentait un risque de divulgation d'informations (PNJ de futures campagnes visibles dans le code source).
+
+### 34.2 Leçon
+Le filtrage doit être effectué au point d'émission (MJ PC) et non seulement à l'affichage (Hub).
+
+**Solution :** Implémentation du **Broadcast Filtré par Contexte**. Le payload `entities` du WebSocket est désormais généré à la volée en filtrant les entités par `activeCampaignId` ET `isVisibleByPlayers`. Cela divise par 10 la taille du message reçu par le Hub dans les grandes bibliothèques.
+
+## 35. Alignement UI & Cohérence des Formulaires Complexes
+
+### 35.1 Défi
 Dans des formulaires multi-clonnes (ex: statistiques PNJ), l'alignement horizontal des champs devient erratique si les sous-composants n'ont pas la même structure interne (ex: label à gauche vs label en haut).
 
 ### 35.2 Leçon
 L'alignement par "Conteneurs Fantômes" ou grilles asymétriques est fragile. Il est préférable d'unifier la **structure de collision** des éléments.
 
 **Solution :** Refactoring vers une **Structure de Stack Unifiée** : `Icône -> Champ -> Label`. En appliquant ce schéma rigoureusement à toutes les statistiques, l'alignement horizontal des inputs (la zone d'interaction critique) devient automatique et résilient au redimensionnement.
+
+## 36. Architecture : Nettoyage en Cascade & Intégrité Inter-Modules (v5.2)
+
+### 36.1 Défi
+La suppression d'une campagne est une opération complexe qui touche potentiellement tous les modules de l'OS. Une suppression "simple" laissait des centaines d'objets orphelins (PNJ, Cartes, Wiki) et des badges de campagne erronés dans le Media Hub, dégradant les performances et la clarté de l'interface.
+
+### 36.2 Leçon
+Les suppressions de haut niveau (Campagne, Joueur) doivent être orchestrées par le **Root Store** via un pattern de surcharge (Override).
+
+**Solution :** Implémentation du **"Deletion Cascade Pattern"**. L'action `deleteCampaign` du store racine filtre récursivement toutes les listes de données. Parallèlement, elle déclenche un nettoyage asynchrone dans **IndexedDB** pour retirer les références de campagne des métadonnées des fichiers médias. Les personnages joueurs (PJs) sont quant à eux "détachés" (campaignId ➔ null) au lieu d'être supprimés, préservant le travail du MJ sur le long terme.

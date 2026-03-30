@@ -10,7 +10,9 @@ import {
     User,
     LogOut,
     Users,
-    Sparkles
+    Sparkles,
+    Globe,
+    Package
 } from 'lucide-react';
 import { useImageStore } from '../modules/image/useImageStore';
 import { useCombatStore, type Combatant } from '../modules/combat/useCombatStore';
@@ -34,7 +36,9 @@ import { HubMessenger } from './hub/HubMessenger';
 import HubNotificationCenter from './hub/HubNotificationCenter';
 import { HubClueViewer } from './hub/HubClueViewer';
 import { HubNpcViewer } from './hub/HubNpcViewer';
-import { type Clue, type Entity } from '../modules/session/store/types';
+import { HubAtlasViewer } from './hub/HubAtlasViewer';
+import { HubItemViewer } from './hub/HubItemViewer';
+import { type Clue, type Entity, type AtlasMap } from '../modules/session/store/types';
 
 /**
  * Attempts to resolve an m-xxx media ID to a data: URI using the local IndexedDB.
@@ -66,12 +70,12 @@ const TabletHub: React.FC = () => {
     const { isClockProjected, timestamp, mode, theme, tensions } = useClockStore();
     const { favorites } = useFavoriteStore();
     const { combatants, currentTurnIdx, round, isCombatProjected } = useCombatStore();
-    const { clues, activeCampaignId, entities } = useSessionOSStore();
+    const { clues, activeCampaignId, entities, atlasMaps } = useSessionOSStore();
 
     const activeHubId = projections['hub'];
     const [liveImagePath, setLiveImagePath] = useState<string | null | undefined>(undefined);
     const [liveEntity, setLiveEntity] = useState<ProjectedEntity | null>(null);
-    const [currentTab, setCurrentTab] = useState<'live' | 'archives' | 'trombinoscope'>('live');
+    const [currentTab, setCurrentTab] = useState<'live' | 'archives' | 'trombinoscope' | 'atlas' | 'inventory'>('live');
     const [isInventoryOpen, setIsInventoryOpen] = useState(false);
     const [isMessengerOpen, setIsMessengerOpen] = useState(false);
     const [lastReadMessageTime, setLastReadMessageTime] = useState(Date.now());
@@ -92,6 +96,9 @@ const TabletHub: React.FC = () => {
     const [resolvedFavorites, setResolvedFavorites] = useState<FavoriteEntity[]>([]);
     const [resolvedNpcs, setResolvedNpcs] = useState<Entity[]>([]);
     const [selectedNpc, setSelectedNpc] = useState<Entity | null>(null);
+    const [resolvedAtlasMaps, setResolvedAtlasMaps] = useState<AtlasMap[]>([]);
+    const [selectedAtlasMap, setSelectedAtlasMap] = useState<AtlasMap | null>(null);
+    const [selectedItem, setSelectedItem] = useState<FavoriteEntity | null>(null);
 
     const { isDiceProjected, lastRoll, projectionTrigger } = useDiceStore();
     const [showDice, setShowDice] = useState(false);
@@ -106,6 +113,8 @@ const TabletHub: React.FC = () => {
             (m.fromId === characterId && m.toId === 'GM')
         )
     ).length;
+
+    const inventoryItems = favorites.filter(f => f.type === 'item' && (f.ownerId === characterId || f.isSyncedToPlayerHub));
 
     const toggleMessenger = () => {
         setIsMessengerOpen(!isMessengerOpen);
@@ -194,12 +203,19 @@ const TabletHub: React.FC = () => {
                             players: incomingSession.players || [],
                             clues: incomingSession.clues || [],
                             entities: incomingSession.entities || [],
+                            atlasMaps: incomingSession.atlasMaps || [],
                             activeCampaignId: incomingSession.activeCampaignId || null,
                             activeCampaignName: incomingSession.activeCampaignName || null,
                             activeCampaignWallpaper: incomingSession.activeCampaignWallpaper || null,
                             customSheetTemplates: incomingSession.customSheetTemplates || [],
                             customGameDrivers: incomingSession.customGameDrivers || []
                         });
+
+                        if (incomingSession.favorites) {
+                            useFavoriteStore.setState({
+                                favorites: incomingSession.favorites || []
+                            });
+                        }
                     }
 
                     if (data.payload.notes?.public !== undefined) {
@@ -411,6 +427,27 @@ const TabletHub: React.FC = () => {
         resolveAll();
         return () => { cancelled = true; };
     }, [entities, activeCampaignId]);
+
+    // Resolve m-xxx IDs in Atlas Maps
+    useEffect(() => {
+        let cancelled = false;
+        const activeMaps = (atlasMaps || []).filter(m => 
+            String(m.campaignId) === String(activeCampaignId) && 
+            m.isVisited
+        );
+        
+        const resolveAll = async () => {
+            const resolved = await Promise.all(
+                activeMaps.map(async (map) => ({
+                    ...map,
+                    fileUrl: await resolveMediaToDataUrl(map.fileUrl) || map.fileUrl,
+                }))
+            );
+            if (!cancelled) setResolvedAtlasMaps(resolved);
+        };
+        resolveAll();
+        return () => { cancelled = true; };
+    }, [atlasMaps, activeCampaignId]);
 
     // Sort the upcoming combatants among visible ones
     const upcomingCombatants: Combatant[] = [];
@@ -709,6 +746,155 @@ const TabletHub: React.FC = () => {
                             </div>
                         </div>
                     )}
+
+                    {currentTab === 'atlas' && (
+                        <div className="w-full h-full p-4 overflow-hidden flex flex-col pointer-events-auto">
+                            <div className="flex items-center justify-between mb-8 px-4">
+                                <div className="space-y-1">
+                                    <h2 className="text-3xl font-black tracking-tight text-app-text flex items-center gap-4">
+                                        <Globe className="text-accent" size={30} />
+                                        Atlas des Lieux Visités
+                                    </h2>
+                                    <p className="text-[10px] text-app-text/30 font-bold uppercase tracking-[0.5em]">Cartographie des territoires explorés par le groupe.</p>
+                                </div>
+                                <div className="flex gap-2">
+                                    <div className="text-[10px] font-black bg-emerald-500/10 border border-emerald-500/20 px-6 py-2 rounded-full text-emerald-400 uppercase tracking-widest flex items-center gap-2">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                                        {resolvedAtlasMaps.length} Lieux Découverts
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex-1 overflow-y-auto custom-scrollbar-minimal pr-4 pb-32">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                                    {resolvedAtlasMaps.map((map, idx) => (
+                                        <div 
+                                            key={map.id}
+                                            onClick={() => setSelectedAtlasMap(map)}
+                                            className={`group relative flex flex-col gap-5 p-5 rounded-[3rem] bg-app-surface/40 border border-app-border/10 hover:bg-app-surface/80 hover:border-accent/30 transition-all duration-700 cursor-pointer animate-in fade-in slide-in-from-bottom-8 duration-700 delay-${Math.min(idx * 70, 700)}`}
+                                        >
+                                            <div className="relative aspect-video w-full rounded-[2.5rem] overflow-hidden bg-app-bg shadow-2xl">
+                                                <div className="absolute inset-0 bg-gradient-to-t from-app-bg/90 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-700 z-10" />
+                                                
+                                                {map.fileUrl ? (
+                                                    <ResolvedImage 
+                                                        src={map.fileUrl} 
+                                                        className="w-full h-full object-cover group-hover:scale-110 transition-all duration-1000" 
+                                                    />
+                                                ) : (
+                                                    <div className="w-full h-full flex items-center justify-center bg-app-surface/20">
+                                                        <Globe size={48} className="text-app-text/5 rotate-12" />
+                                                    </div>
+                                                )}
+
+                                                <div className="absolute top-4 right-4 z-20">
+                                                     <div className="px-3 py-1 bg-black/40 backdrop-blur-md rounded-full border border-white/10 text-[7px] font-black text-white/60 uppercase tracking-widest">
+                                                        {map.type}
+                                                     </div>
+                                                </div>
+
+                                                <div className="absolute bottom-6 left-0 right-0 z-20 flex justify-center opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-700">
+                                                    <div className="px-6 py-2 bg-accent text-app-bg rounded-full text-[9px] font-black uppercase tracking-[0.2em] shadow-glow-accent">
+                                                        Consulter l'Atlas
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="px-2 space-y-2">
+                                                <h3 className="text-lg font-black text-app-text uppercase tracking-tight truncate group-hover:text-accent transition-colors duration-500">{map.name}</h3>
+                                                <p className="text-[10px] font-serif text-app-text/40 leading-relaxed italic line-clamp-2 italic">
+                                                    {map.narrativeDescription || "Documentation en attente..."}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ))}
+
+                                    {resolvedAtlasMaps.length === 0 && (
+                                        <div className="col-span-full py-32 flex flex-col items-center justify-center text-center gap-8 border-2 border-dashed border-app-border/20 rounded-[4rem] bg-app-surface/20">
+                                            <div className="p-12 bg-app-surface/40 rounded-full border border-app-border/10">
+                                                <Globe size={80} className="text-app-text/5 animate-pulse" />
+                                            </div>
+                                            <div className="space-y-3">
+                                                <p className="text-sm font-black uppercase tracking-[0.4em] text-app-text/20">Territoires inconnus</p>
+                                                <p className="max-w-xs text-[10px] text-app-text/10 font-bold uppercase leading-relaxed">
+                                                    Aucun lieu n'a encore été marqué comme visité par le Maître de Jeu.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {currentTab === 'inventory' && (
+                        <div className="w-full h-full p-4 overflow-hidden flex flex-col pointer-events-auto">
+                            <div className="flex items-center justify-between mb-8 px-4">
+                                <div className="space-y-1">
+                                    <h2 className="text-3xl font-black tracking-tight text-app-text flex items-center gap-4">
+                                        <Package className="text-accent" size={30} />
+                                        Inventaire Personnel
+                                    </h2>
+                                    <p className="text-[10px] text-app-text/30 font-bold uppercase tracking-[0.5em]">Trésors, reliques et objets du groupe.</p>
+                                </div>
+                                <div className="flex gap-2">
+                                    <div className="text-[10px] font-black bg-amber-500/10 border border-amber-500/20 px-6 py-2 rounded-full text-amber-500 uppercase tracking-widest flex items-center gap-2">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                                        {inventoryItems.length} Objets
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex-1 overflow-y-auto custom-scrollbar-minimal pr-4 pb-32">
+                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 place-items-start">
+                                    {inventoryItems.map((item, idx) => (
+                                        <div 
+                                            key={item.id}
+                                            onClick={() => setSelectedItem(item)}
+                                            className={`group relative flex flex-col gap-4 p-4 rounded-[2.5rem] bg-app-surface/40 border border-app-border/10 hover:bg-app-surface/80 hover:border-amber-500/30 transition-all duration-500 cursor-pointer animate-in fade-in slide-in-from-bottom-4 duration-500 delay-${Math.min(idx * 50, 500)} w-full`}
+                                        >
+                                            <div className="relative aspect-square w-full rounded-[2rem] overflow-hidden bg-app-bg shadow-xl flex items-center justify-center">
+                                                <div className="absolute inset-0 bg-gradient-to-t from-app-bg/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-10" />
+                                                {item.imageUrl ? (
+                                                    <ResolvedImage 
+                                                        src={item.imageUrl} 
+                                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" 
+                                                    />
+                                                ) : (
+                                                    <Package className="text-app-text/20" size={64} />
+                                                )}
+                                                <div className="absolute bottom-4 left-0 right-0 z-20 flex justify-center opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+                                                    <div className="px-4 py-1.5 bg-amber-500/90 backdrop-blur-md rounded-full text-[8px] font-black text-white uppercase tracking-widest">
+                                                        Inspecter
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="px-1 text-center space-y-1">
+                                                <h3 className="text-[11px] font-black text-app-text uppercase tracking-wider truncate border-b border-app-border/10 pb-2">{item.name}</h3>
+                                                {item.subtitle && (
+                                                    <p className="text-[8px] font-bold text-accent/60 uppercase tracking-widest truncate">{item.subtitle}</p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
+
+                                    {inventoryItems.length === 0 && (
+                                        <div className="col-span-full py-32 flex flex-col items-center justify-center text-center gap-8 border-2 border-dashed border-app-border/20 rounded-[4rem] bg-app-surface/20 w-full">
+                                            <div className="p-12 bg-app-surface/40 rounded-full border border-app-border/10">
+                                                <Package size={80} className="text-app-text/5" />
+                                            </div>
+                                            <div className="space-y-3">
+                                                <p className="text-sm font-black uppercase tracking-[0.4em] text-app-text/20">Inventaire Vide</p>
+                                                <p className="max-w-xs text-[10px] text-app-text/10 font-bold uppercase leading-relaxed">
+                                                    Aucun objet assigné à votre personnage.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -758,6 +944,22 @@ const TabletHub: React.FC = () => {
                     >
                         <Users size={14} />
                         PNJ
+                    </button>
+                    <button 
+                        onClick={() => setCurrentTab('atlas')}
+                        title="Atlas des Lieux"
+                        className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${currentTab === 'atlas' ? 'bg-emerald-600 text-white shadow-[0_0_20px_rgba(16,185,129,0.3)]' : 'text-app-text/40 hover:text-app-text'}`}
+                    >
+                        <Globe size={14} />
+                        Lieux
+                    </button>
+                    <button 
+                        onClick={() => setCurrentTab('inventory')}
+                        title="Inventaire Personnel"
+                        className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${currentTab === 'inventory' ? 'bg-amber-600 text-white shadow-[0_0_20px_rgba(217,119,6,0.3)]' : 'text-app-text/40 hover:text-app-text'}`}
+                    >
+                        <Package size={14} />
+                        Sac
                     </button>
                     <button 
                         onClick={() => setIsInventoryOpen(!isInventoryOpen)}
@@ -883,6 +1085,18 @@ const TabletHub: React.FC = () => {
             <HubNpcViewer 
                 npc={selectedNpc} 
                 onClose={() => setSelectedNpc(null)} 
+            />
+
+            {/* Atlas Viewer Modal */}
+            <HubAtlasViewer 
+                map={selectedAtlasMap} 
+                onClose={() => setSelectedAtlasMap(null)} 
+            />
+
+            {/* Item Viewer Modal */}
+            <HubItemViewer 
+                item={selectedItem} 
+                onClose={() => setSelectedItem(null)} 
             />
 
             {/* Dice Projection Overlay */}

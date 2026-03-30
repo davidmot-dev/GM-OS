@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useSessionOSStore } from '../../modules/session/store/index';
-import { MessageSquare, Send, X, Users, Shield } from 'lucide-react';
+import { MessageSquare, Send, X, Users, Shield, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface HubMessengerProps {
@@ -13,6 +13,7 @@ interface HubMessengerProps {
 export const HubMessenger: React.FC<HubMessengerProps> = ({ isOpen, onClose, characterId, characterName }) => {
     const [inputValue, setInputValue] = useState('');
     const [selectedRecipientId, setSelectedRecipientId] = useState<string>('GM');
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     
     const messages = useSessionOSStore((state) => state.messages);
     const players = useSessionOSStore((state) => state.players);
@@ -112,37 +113,80 @@ export const HubMessenger: React.FC<HubMessengerProps> = ({ isOpen, onClose, cha
                         </button>
                     </div>
 
-                    {/* Recipient Selector */}
-                    <div className="px-4 py-2 bg-app-bg/40 border-b border-app-border/20 overflow-x-auto flex items-center gap-2 no-scrollbar">
-                        {otherCharacters.map((char) => (
-                            <button
-                                key={char.id}
-                                onClick={() => setSelectedRecipientId(char.id)}
-                                title={`Discuter avec ${char.name}`}
-                                className={`flex-shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-medium transition-all ${
-                                    selectedRecipientId === char.id
-                                        ? 'bg-accent text-app-bg shadow-lg'
-                                        : 'bg-app-text/5 text-app-text/60 hover:bg-app-text/10'
-                                }`}
-                            >
-                                {char.type === 'gm' ? (
-                                    <Shield size={12} />
-                                ) : char.type === 'all' ? (
-                                    <Users size={12} />
+                    {/* Recipient Selector (Dropdown) */}
+                    <div className="px-4 py-3 bg-app-bg/40 border-b border-app-border/20 relative z-50">
+                        <button
+                            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                            className="w-full flex items-center justify-between px-3 py-2 bg-app-surface border border-app-border/40 hover:border-accent/40 rounded-xl transition-all shadow-sm"
+                            title="Choisir le destinataire"
+                        >
+                            <div className="flex items-center gap-2 text-sm font-medium">
+                                <span className="text-app-text/60 mr-1 text-xs uppercase tracking-wider">À :</span>
+                                {selectedRecipient.type === 'gm' ? (
+                                    <Shield size={14} className="text-accent" />
+                                ) : selectedRecipient.type === 'all' ? (
+                                    <Users size={14} className="text-accent" />
                                 ) : (
-                                    <div className="w-4 h-4 rounded-full overflow-hidden bg-app-surface border border-app-border/40">
-                                        {char.portrait ? (
-                                            <img src={char.portrait} alt={char.name} className="w-full h-full object-cover" />
+                                    <div className="w-5 h-5 rounded-full overflow-hidden bg-app-surface border border-accent/40">
+                                        {selectedRecipient.portrait ? (
+                                            <img src={selectedRecipient.portrait} alt={selectedRecipient.name} className="w-full h-full object-cover" />
                                         ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-[8px] font-bold">
-                                                {char.name[0]}
+                                            <div className="w-full h-full flex items-center justify-center text-[9px] font-bold text-accent">
+                                                {selectedRecipient.name[0]}
                                             </div>
                                         )}
                                     </div>
                                 )}
-                                {char.name.split(' ')[0]}
-                            </button>
-                        ))}
+                                <span className={selectedRecipient.type !== 'pc' ? 'text-accent' : 'text-app-text'}>
+                                    {selectedRecipient.name}
+                                </span>
+                            </div>
+                            <ChevronDown size={16} className={`text-app-text/60 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180 text-accent' : ''}`} />
+                        </button>
+
+                        <AnimatePresence>
+                            {isDropdownOpen && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="absolute top-[calc(100%+0.5rem)] left-4 right-4 bg-app-surface border border-app-border/60 shadow-2xl rounded-xl overflow-hidden backdrop-blur-3xl z-50 max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-app-text/10"
+                                >
+                                    {otherCharacters.map((char) => (
+                                        <button
+                                            key={char.id}
+                                            onClick={() => {
+                                                setSelectedRecipientId(char.id);
+                                                setIsDropdownOpen(false);
+                                            }}
+                                            className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-app-text/5 transition-colors border-l-2 text-sm ${
+                                                selectedRecipientId === char.id
+                                                    ? 'bg-accent/10 border-accent font-bold text-accent'
+                                                    : 'border-transparent text-app-text/80'
+                                            }`}
+                                        >
+                                            {char.type === 'gm' ? (
+                                                <Shield size={14} className={selectedRecipientId === char.id ? 'text-accent' : 'text-app-text/60'} />
+                                            ) : char.type === 'all' ? (
+                                                <Users size={14} className={selectedRecipientId === char.id ? 'text-accent' : 'text-app-text/60'} />
+                                            ) : (
+                                                <div className="w-5 h-5 rounded-full overflow-hidden bg-app-bg border border-app-border/40">
+                                                    {char.portrait ? (
+                                                        <img src={char.portrait} alt={char.name} className="w-full h-full object-cover" />
+                                                    ) : (
+                                                        <div className="w-full h-full flex items-center justify-center text-[10px] font-bold">
+                                                            {char.name[0]}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+                                            {char.name}
+                                        </button>
+                                    ))}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
 
                     {/* Messages List */}

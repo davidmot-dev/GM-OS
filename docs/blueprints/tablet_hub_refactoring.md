@@ -69,6 +69,14 @@ Balayage laser Cyan traverse le portrait pour simuler une authentification sécu
 - **Trombinoscope** : Galerie interactive de tous les PNJ marqués comme "Visibles" par le MJ.
 - **Détail PNJ** : Vue immersive (plein écran) lors du clic sur un portrait dans le Trombinoscope.
 - **Sync Tactique** : Mise à jour en temps réel de la visibilité des PNJ sans rafraîchissement manuel.
+
+### Phase 5 : Inventaire Privé & Équipement (Nouvelle) [TERMINÉ]
+
+- **Onglet Inventaire (Sac)** : Nouveau point de navigation dans le Hub.
+- **Filtrage par Propriétaire** : Seuls les objets assignés au `characterId` du joueur (ou publics) s'affichent.
+- **Hub Item Viewer** : Modal dédié affichant l'image narrative et la description, sans les notes techniques du MJ.
+- **Secure Broadcast** : Les données privées sont filtrées côté MJ avant diffusion réseau pour garantir une étanchéité totale.
+
 ## 4. Architecture Technique (Nexus Bridge)
 
 - **Store** : `useClientStore` (local) + `useSessionOSStore` (sync).
@@ -83,6 +91,7 @@ Balayage laser Cyan traverse le portrait pour simuler une authentification sécu
 - `[x]` Phase 2 : Synchronisation bi-directionnelle & Notifications MJ.
 - `[x]` Phase 3 : Interaction directe (Inventaire, Dés, Médias).
 - `[x]` Phase 4 : Trombinoscope & Détails PNJ.
+- `[x]` Phase 5 : Inventaire Privé & Équipement.
 ---
-*Dernière mise à jour : 29 Mars 2026*
+*Dernière mise à jour : 30 Mars 2026*
 *Statut : PROJET TERMINÉ & INTÉGRÉ*

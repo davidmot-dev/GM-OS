@@ -10,9 +10,12 @@ import {
     Users,
     Trash2,
     Edit2,
-    BookOpen
+    BookOpen,
+    Sparkles
 } from 'lucide-react';
 import { gmCustom } from '../../../stores/useModalStore';
+import { useSessionStore } from '../../../store/useSessionStore';
+import { gmToast } from '../../../stores/useToastStore';
 
 const WikiView: React.FC = () => {
     const {
@@ -21,7 +24,13 @@ const WikiView: React.FC = () => {
         deleteWikiEntry,
         entities,
         selectedWikiEntryId,
-        setSelectedWikiEntryId
+        setSelectedWikiEntryId,
+        pendingPreFill,
+        setPendingPreFill,
+        setCurrentView,
+        setIsAddingEntity,
+        setSelectedEntity,
+        setActiveCampaignFormSection
     } = useSessionOSStore();
 
     const [searchQuery, setSearchQuery] = useState('');
@@ -48,6 +57,43 @@ const WikiView: React.FC = () => {
                      e.content.toLowerCase().includes(searchQuery.toLowerCase()));
 
     const selectedEntry = wikiEntries.find(e => e.id === selectedWikiEntryId);
+
+    const handleBridgeAction = () => {
+        if (!selectedEntry) return;
+
+        // Pré-remplissage des données pour la création
+        const preFillData = {
+            title: selectedEntry.title,
+            content: selectedEntry.content || '',
+            imageUrl: selectedEntry.imageUrls?.[0] || '',
+            mediaUrl: selectedEntry.imageUrls?.[0] || ''
+        };
+
+        if (selectedEntry.category === 'clue' || selectedEntry.category === 'rumor') {
+            setPendingPreFill({ type: selectedEntry.category as 'clue' | 'rumor', data: preFillData });
+            setCurrentView('campaign-editor');
+            setActiveCampaignFormSection('clues');
+        } else if (selectedEntry.category === 'location') {
+            setPendingPreFill({ type: 'location', data: preFillData });
+            setCurrentView('campaign-editor');
+            setActiveCampaignFormSection('world');
+        } else if (selectedEntry.category === 'npc') {
+            setPendingPreFill({ type: 'npc', data: preFillData });
+            setCurrentView('campaign-editor');
+            setActiveCampaignFormSection('npc');
+        } else if (selectedEntry.category === 'item' || selectedEntry.category === 'lore') {
+            setPendingPreFill({ type: selectedEntry.category as 'item' | 'lore', data: preFillData });
+            useSessionStore.getState().setActiveModule('favorite');
+            setCurrentView('cockpit'); // Reset la vue interne du Session-OS
+        } else {
+            // Fallback générique
+            setPendingPreFill({ type: 'lore', data: preFillData });
+            setCurrentView('campaign-editor');
+            setActiveCampaignFormSection('narrative');
+        }
+        
+        gmToast(`Pont Magique activé : ${selectedEntry.title} prêt pour l'import 🪄`);
+    };
 
     return (
         <div className="flex h-full bg-app-bg/20">
@@ -146,6 +192,16 @@ const WikiView: React.FC = () => {
                                     </div>
                                 </div>
                                 <div className="flex gap-2">
+                                    {/* Wiki Bridge Action Button */}
+                                    <button 
+                                        onClick={handleBridgeAction}
+                                        className="flex items-center gap-2 px-3 py-2 bg-accent/20 border border-accent/40 rounded-xl text-accent hover:bg-accent/30 transition-all group/magic shadow-glow-accent/5"
+                                        title="Transformer en élément de jeu (PNJ, Indice, Lieu...)"
+                                    >
+                                        <Sparkles size={18} className="group-hover/magic:scale-110 transition-transform" />
+                                        <span className="text-[10px] font-black uppercase tracking-widest hidden md:inline">Pont Magique</span>
+                                    </button>
+
                                     <button 
                                         onClick={() => gmCustom('wiki-entry-edit', selectedEntry)}
                                         className="p-2 bg-app-surface border border-app-border rounded-xl text-app-text/40 hover:text-accent transition-all"

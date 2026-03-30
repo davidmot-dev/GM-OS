@@ -23,6 +23,7 @@ import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { resolveSheetTemplate } from '../logic/templateResolver';
 
 import { createCampaignSlice, type CampaignSlice } from './campaignSlice';
+import { useMediaStore } from '../../../stores/useMediaStore';
 import { createSessionSlice, type SessionSlice } from './sessionSlice';
 import { createEntitySlice, type EntitySlice } from './entitySlice';
 import { createAtlasSlice, type AtlasSlice } from './atlasSlice';
@@ -290,6 +291,41 @@ export const useSessionOSStore = create<SessionOSStore>()(
                         content: `La campagne "${campaign?.name || id}" est maintenant active.`,
                     });
                 }
+            },
+
+            /** Override deleteCampaign pour un nettoyage en cascade */
+            deleteCampaign: (id) => {
+                const state = get();
+                const campaign = state.campaigns.find((c) => c.id === id);
+                if (!campaign) return;
+
+                // 1. Appel du delete de base du slice (pour virer la campagne de la liste)
+                // Note: On le fait manuellement ici pour avoir un contrôle total sur l'ordre
+                set((state) => ({
+                    campaigns: state.campaigns.filter((c) => c.id !== id),
+                    activeCampaignId: state.activeCampaignId === id ? null : state.activeCampaignId,
+                    
+                    // 2. Nettoyage massif (Session-OS)
+                    entities: state.entities.filter(e => e.campaignId !== id),
+                    sessions: state.sessions.filter(s => s.campaignId !== id),
+                    atlasMaps: state.atlasMaps.filter(m => m.campaignId !== id),
+                    wikiEntries: state.wikiEntries.filter(w => w.campaignId !== id),
+                    timelineEvents: state.timelineEvents.filter(t => t.campaignId !== id),
+                    clues: state.clues.filter(c => c.campaignId !== id),
+                    
+                    // Détachement des personnages PJ (on ne les supprime pas car ils sont liés aux Players)
+                    players: state.players.map(p => ({
+                        ...p,
+                        characters: p.characters.map(c => 
+                            c.campaignId === id ? { ...c, campaignId: null } : c
+                        )
+                    }))
+                }));
+
+                // 3. Nettoyage Media-OS (Async - IndexedDB)
+                useMediaStore.getState().removeCampaignReference(id);
+
+                gmToast(`Campagne "${campaign.name}" et ses données liées ont été supprimées.`, 'info');
             },
 
             /** Override setCurrentView pour effets de bord UI */

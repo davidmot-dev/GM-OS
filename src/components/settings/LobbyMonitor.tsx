@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Users, Tablet, Smartphone, XCircle, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Users, Tablet, Smartphone, XCircle, CheckCircle2, AlertCircle, Trash2, RotateCw } from 'lucide-react';
 import type { ClientContext } from '../../types/shared';
 
 const LobbyMonitor: React.FC = () => {
@@ -44,9 +44,31 @@ const LobbyMonitor: React.FC = () => {
                     <Users size={16} className="text-gm-cyan" />
                     <span className="text-xs font-black uppercase tracking-widest text-white">Lobby des Terminaux</span>
                 </div>
-                <span className="bg-gm-cyan/20 text-gm-cyan text-[10px] font-black px-2 py-0.5 rounded-full">
-                    {clients.filter(c => c.status === 'active').length} Actifs
-                </span>
+                <div className="flex items-center gap-2">
+                    <span className="bg-gm-cyan/20 text-gm-cyan text-[10px] font-black px-2 py-0.5 rounded-full">
+                        {clients.filter(c => c.status === 'active').length} Actifs
+                    </span>
+                    <button 
+                        onClick={() => {
+                            if (window.appBridge?.send) {
+                                window.appBridge.send('remote:clear-disconnected');
+                                // Show immediate feedback by filtering locally until sync
+                                setClients(prev => prev.filter(c => c.status === 'active'));
+                            }
+                        }}
+                        className="p-1.5 hover:bg-rose-500/20 text-slate-500 hover:text-rose-400 rounded-lg transition-all"
+                        title="Vider les déconnectés"
+                    >
+                        <Trash2 size={14} />
+                    </button>
+                    <button 
+                        onClick={() => window.appBridge?.send?.('remote:request-client-sync')}
+                        className="p-1.5 hover:bg-white/10 text-slate-500 hover:text-white rounded-lg transition-all"
+                        title="Rafraîchir"
+                    >
+                        <RotateCw size={14} />
+                    </button>
+                </div>
             </div>
 
             <div className="max-h-[300px] flex flex-col gap-2 overflow-y-auto custom-scrollbar p-3 relative">

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import type { AtlasMap } from '../useSessionOSStore';
-import { Search, FolderOpen, Film, Globe, Swords, Map, Building2, MapPin, Trash2, Pin } from 'lucide-react';
+import { Search, FolderOpen, Film, Globe, Swords, Map, Building2, MapPin, Trash2, Pin, CheckCircle2 } from 'lucide-react';
 import { useMapStore } from '../../map/useMapStore';
 import { useMediaStore } from '../../../stores/useMediaStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { ResolvedAsset } from '../../../components/ResolvedAsset';
+import { gmToast } from '../../../stores/useToastStore';
 
 const TYPE_META: Record<AtlasMap['type'], { label: string; icon: React.ReactNode; color: string }> = {
     'battlemap': { label: 'Battlemap', icon: <Swords size={10} />, color: 'text-red-400 bg-red-500/10 border-red-500/20' },
@@ -22,8 +23,9 @@ const MapCard: React.FC<{
     isPinned: boolean,
     onClick: () => void,
     onDelete: () => void,
-    onTogglePin: () => void
-}> = ({ map, isSelected, isProjected, isPinned, onClick, onDelete, onTogglePin }) => {
+    onTogglePin: () => void,
+    onToggleVisited: () => void
+}> = ({ map, isSelected, isProjected, isPinned, onClick, onDelete, onTogglePin, onToggleVisited }) => {
     const typeMeta = TYPE_META[map.type] || { label: 'Inconnu', icon: <Map size={10} />, color: 'text-slate-400 bg-slate-500/10 border-slate-500/20' };
 
     return (
@@ -68,7 +70,11 @@ const MapCard: React.FC<{
                         )}
                         {isProjected && (
                             <span className="inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded border text-emerald-400 bg-emerald-500/10 border-emerald-500/20">
-                                ● Actif
+                            </span>
+                        )}
+                        {map.isVisited && (
+                            <span className="inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded border text-emerald-400 bg-emerald-500/10 border-emerald-500/20">
+                                <CheckCircle2 size={8} /> Visité
                             </span>
                         )}
                     </div>
@@ -77,6 +83,14 @@ const MapCard: React.FC<{
             
             {/* Action Buttons */}
             <div className="flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                {/* Visited Button */}
+                <button
+                    onClick={(e) => { e.stopPropagation(); onToggleVisited(); }}
+                    className={`p-1.5 rounded-lg transition-all ${map.isVisited ? 'text-emerald-400 bg-emerald-500/10' : 'text-app-text/20 hover:text-emerald-400/60'}`}
+                    title={map.isVisited ? "Marquer comme non visité" : "Marquer comme visité"}
+                >
+                    <CheckCircle2 size={13} fill={map.isVisited ? "currentColor" : "none"} className={map.isVisited ? "text-emerald-400" : ""} />
+                </button>
                 {/* Pin Button */}
                 <button
                     onClick={(e) => { e.stopPropagation(); onTogglePin(); }}
@@ -101,14 +115,29 @@ const MapCard: React.FC<{
 const AtlasLibrary: React.FC = () => {
     const { 
         atlasMaps, selectedAtlasMapId, setSelectedAtlasMap, 
-        addAtlasMap, deleteAtlasMap, activeCampaignId,
-        campaigns, toggleActiveLocation 
+        addAtlasMap, deleteAtlasMap, toggleMapVisited, activeCampaignId,
+        campaigns, toggleActiveLocation,
+        pendingPreFill, clearPendingPreFill 
     } = useSessionOSStore();
     const { mapUrl } = useMapStore();
     const { mediaList } = useMediaStore();
 
     const [search, setSearch] = useState('');
     const [isBrowserOpen, setIsBrowserOpen] = useState(false);
+    const [wikiPreFill, setWikiPreFill] = useState<{ name: string, description: string } | null>(null);
+
+    // Wiki Bridge Receiver
+    React.useEffect(() => {
+        if (pendingPreFill && pendingPreFill.type === 'location') {
+            setWikiPreFill({
+                name: pendingPreFill.data.title,
+                description: pendingPreFill.data.content
+            });
+            setIsBrowserOpen(true);
+            clearPendingPreFill();
+            gmToast(`Lieu Wiki détecté : ${pendingPreFill.data.title}. Choisissez un visuel.`, 'info');
+        }
+    }, [pendingPreFill, clearPendingPreFill]);
 
     const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
     const activeLocationIds = activeCampaign?.activeLocationIds || [];
@@ -123,15 +152,18 @@ const AtlasLibrary: React.FC = () => {
         if (!media) return;
 
         addAtlasMap({
-            name: media.name.replace(/\.[^/.]+$/, ''),
-            fileUrl: mediaId, // Save the mediaId instead of blob URL
+            name: wikiPreFill?.name || media.name.replace(/\.[^/.]+$/, ''),
+            fileUrl: mediaId,
             isVideo: media.type === 'video',
-            type: 'battlemap',
-            narrativeDescription: '',
+            type: 'dungeon', // Par défaut pour un lieu Wiki
+            narrativeDescription: wikiPreFill?.description || '',
             gmNotes: '',
             linkedEntities: [],
             campaignId: activeCampaignId || 'c-1'
         });
+
+        // Reset pre-fill
+        setWikiPreFill(null);
     };
 
     return (
@@ -166,6 +198,7 @@ const AtlasLibrary: React.FC = () => {
                         onClick={() => setSelectedAtlasMap(map.id)}
                         onDelete={() => deleteAtlasMap(map.id)}
                         onTogglePin={() => toggleActiveLocation(map.id)}
+                        onToggleVisited={() => toggleMapVisited(map.id)}
                     />
                 ))}
                 {filtered.length === 0 && (

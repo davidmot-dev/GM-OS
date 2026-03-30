@@ -33,6 +33,7 @@ Dans le composant `WikiView`, un bouton "Action Magique" apparaît selon la cat�
 - **Indice** : "📌 Épingler Indice"
 - **Lieu** : "🗺️ Ajouter à l'Atlas"
 - **Objet** : "📦 Ajouter aux Favoris"
+- **Lore** : "📜 Archivé dans les Favoris"
 
 ### C. Le Récepteur (Formulaires Cibles)
 Chaque formulaire (ex: `AddEntityForm`) écoute cet état au montage :
@@ -50,6 +51,14 @@ Chaque formulaire (ex: `AddEntityForm`) écoute cet état au montage :
 | **Cat: Clue** | Clue Deck | Titre -> Titre, Contenu -> Contenu, Image -> MediaUrl | Ouvre `ClueEditor` |
 | **Cat: Location** | Atlas Map | Titre -> Nom, Contenu -> Description | Ouvre `AddAtlasMapForm` |
 | **Cat: Item** | Favorite-OS | Titre -> Nom, Contenu -> Description | Ouvre `AddFavoriteForm` |
+| **Cat: Lore** | Favorite-OS | Titre -> Nom, Contenu -> Description | Ouvre `AddFavoriteForm` |
+
+---
+
+## 3.1. Automatisation de Contexte (V2)
+Pour réduire la saisie redondante, le pont magique injecte désormais automatiquement le contexte de la session :
+- **ID de Campagne** : Si une campagne est active dans le Session-OS, elle est automatiquement liée au nouveau favori créé.
+- **Statut de Synchronisation** : Par défaut, les nouveaux favoris créés via le pont sont marqués comme `isSyncedToPlayerHub = false` pour permettre au MJ de valider le contenu avant diffusion.
 
 ---
 

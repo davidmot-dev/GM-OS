@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSessionOSStore, type Clue } from '../useSessionOSStore';
 import { useJournalStore } from '../../journal/useJournalStore';
 import { useImageStore } from '../../image/useImageStore';
@@ -7,16 +7,18 @@ import {
     Search, Plus, Trash2, Edit3, Eye, EyeOff, 
     MapPin, Users,
     ChevronRight, Save, X, Sparkles, ImageIcon,
-    ExternalLink, Play
+    ExternalLink
 } from 'lucide-react';
 import { gmToast } from '../../../stores/useToastStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { ResolvedAsset } from '../../../components/ResolvedAsset';
+import type { ProjectedEntity } from '../../image/types';
 
 const CluesManager: React.FC = () => {
     const { 
-        clues, activeCampaignId, addClue, updateClue, deleteClue, 
-        atlasMaps, entities, editingClueId, setEditingClueId
+        clues, activeCampaignId, addClue, updateClue, deleteClue,
+        atlasMaps, entities, editingClueId, setEditingClueId,
+        pendingPreFill, clearPendingPreFill
     } = useSessionOSStore();
 
     const [editingClue, setEditingClue] = useState<Partial<Clue> | null>(null);
@@ -41,6 +43,27 @@ const CluesManager: React.FC = () => {
             }
         }
     }, [editingClueId, campaignClues, setEditingClueId]);
+    
+    // Wiki Bridge Receiver
+    useEffect(() => {
+        if (pendingPreFill && (pendingPreFill.type === 'clue' || pendingPreFill.type === 'item' || pendingPreFill.type === 'rumor' || pendingPreFill.type === 'location')) {
+            const { title, content, mediaUrl, imageUrl } = pendingPreFill.data;
+            
+            let prefix = '';
+            if (pendingPreFill.type === 'rumor') prefix = '[RUMEUR] ';
+            if (pendingPreFill.type === 'location') prefix = '[LIEU] ';
+            
+            setEditingClue({ 
+                title: prefix + (title || ''), 
+                content: content || '', 
+                mediaUrl: mediaUrl || imageUrl || '',
+                isRevealed: false 
+            });
+            setIsAdding(true);
+            clearPendingPreFill();
+            gmToast(pendingPreFill.type === 'location' ? "Lieu prêt à l'import 📍" : "Fragment importé du Wiki 📖");
+        }
+    }, [pendingPreFill, clearPendingPreFill]);
 
     // Safety check for activeCampaignId
     if (!activeCampaignId) {
@@ -113,16 +136,16 @@ const CluesManager: React.FC = () => {
             return;
         }
 
-        const entityToProject = {
+        const entityToProject: ProjectedEntity = {
             id: clue.id || 'temp-clue',
             name: clue.title || 'Indice',
             subtitle: 'Preuve Collectée',
             avatar: clue.mediaUrl || '',
             description: clue.content || '',
-            type: 'clue' as any,
+            type: 'clue',
         };
 
-        projectEntity(entityToProject as any);
+        projectEntity(entityToProject);
         gmToast(projectedEntity?.id === clue.id ? 'Projection coupée' : 'Indice envoyé au Hub');
     };
 

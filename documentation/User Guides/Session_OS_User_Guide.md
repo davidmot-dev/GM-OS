@@ -27,6 +27,21 @@ Lors de la création d'une campagne, vous devez configurer plusieurs éléments 
 - **Wallpaper** : Une image d'ambiance qui définit le fond visuel de tout votre OS pendant cette campagne.
 - **Chemins RAG (Cerveau AI)** : Indiquez des dossiers locaux (dans `/docs`) contenant votre lore. L'IA Oracle indexera ces dossiers pour répondre à vos questions sur le monde.
 
+### 🗑️ Suppression et Nettoyage de Campagne
+
+La suppression d'une campagne est une action **permanente** qui déclenche un nettoyage en cascade pour garder votre OS performant et organisé.
+
+> [!CAUTION]
+> **Ce qui est supprimé définitivement :**
+> - Tous les **PNJ et Monstres** créés pour cette campagne.
+> - Toutes les **Sessions et Notes de préparation** associées.
+> - Toutes les **Cartes de l'Atlas** et leurs configurations (Battlemaps, Brouillard).
+> - Toutes les **entrées Wiki, Timeline et Indices** liés.
+>
+> **Ce qui est conservé :**
+> - **Personnages Joueurs (PJ)** : Ils sont détachés de la campagne mais restent dans votre Roster global.
+> - **Fichiers médias** : Les images et sons restent dans le **Media Hub**, mais les étiquettes (tags) de la campagne supprimée sont retirées automatiquement.
+
 ---
 
 ## 🧠 Le Système de Règles (Drivers)

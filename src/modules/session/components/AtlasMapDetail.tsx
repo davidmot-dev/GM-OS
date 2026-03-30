@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useMapStore } from '../../map/useMapStore';
-import { Lock, Eye, Send, Film, Image as ImageIcon, Globe, Swords, Map, Building2, MapPin, type LucideIcon, Pin } from 'lucide-react';
+import { Lock, Eye, Send, Film, Image as ImageIcon, Globe, Swords, Map, Building2, MapPin, type LucideIcon, Pin, CheckCircle2 } from 'lucide-react';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaStore } from '../../../stores/useMediaStore';
@@ -24,7 +24,7 @@ const AtlasMapDetail: React.FC = () => {
         atlasMaps, selectedAtlasMapId, updateAtlasMap, setCurrentView,
         clues, setActiveCampaignFormSection, setEditingClueId,
         generateAtlasMapImage, isGeneratingAIImage,
-        campaigns, toggleActiveLocation, activeCampaignId
+        campaigns, toggleActiveLocation, activeCampaignId, toggleMapVisited
     } = useSessionOSStore();
     const { setMap } = useMapStore();
 
@@ -154,6 +154,18 @@ const AtlasMapDetail: React.FC = () => {
                             </div>
                         </div>
                         <div className="flex items-center gap-3">
+                            <button
+                                onClick={() => toggleMapVisited(selectedMap.id)}
+                                className={`flex items-center gap-2 font-black py-2.5 px-4 rounded-xl text-sm transition-all border ${
+                                    selectedMap.isVisited 
+                                    ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400 shadow-glow-emerald' 
+                                    : 'bg-app-surface/40 border-white/10 text-white/60 hover:text-white hover:bg-white/10'
+                                }`}
+                                title={selectedMap.isVisited ? "Marquer comme non visité" : "Marquer comme visité"}
+                            >
+                                <CheckCircle2 size={16} fill={selectedMap.isVisited ? "currentColor" : "none"} />
+                                {selectedMap.isVisited ? 'Visité' : 'Non visité'}
+                            </button>
                             <button
                                 onClick={() => toggleActiveLocation(selectedMap.id)}
                                 className={`flex items-center gap-2 font-black py-2.5 px-4 rounded-xl text-sm transition-all border ${

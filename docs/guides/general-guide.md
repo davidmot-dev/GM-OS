@@ -1,5 +1,19 @@
 # Guide de l'Utilisateur GM-OS v5
 
+### 🎮 Expérience Joueur : Tablet Hub & Inventaire
+
+Les joueurs disposent désormais d'un **Tablet Hub** réactif qui est leur interface principale durant la session.
+- **Inventaire (Sac)** : Les objets que vous assignez aux joueurs dans **Favorite-OS** apparaissent instantanément dans leur onglet "Sac". Ils peuvent cliquer sur un objet pour en voir l'image et la description narrative en plein écran.
+- **Trombinoscope** : Une galerie des PNJ rencontrés (si marqués comme visibles par vous).
+- **Lancers de Dés** : Les joueurs peuvent lancer des dés depuis leur fiche de personnage, avec résultats synchronisés sur le Cockpit du MJ.
+
+### 🛡️ Gestion de Session : Lobby & Cohérence
+
+Le Lobby a été amélioré pour une meilleure visibilité :
+- **Liste des Joueurs** : Défilement automatique pour voir tous les joueurs connectés, même en grand nombre.
+- **Identification** : Le lobby affiche clairement le **Nom de la Session** active pour éviter toute confusion lors de la connexion.
+- **Sécurité** : Les personnages ne sont visibles dans le lobby qu'une fois la session officiellement démarrée.
+
 ## 🎛️ Session-OS : Le Cockpit du MJ
 
 Le Cockpit est le centre névralgique de votre partie. Il regroupe les outils de narration et de suivi en temps réel.
@@ -30,5 +44,5 @@ Si vous venez d'effectuer un grand ménage dans vos PNJ ou campagnes et souhaite
 4. Le système vous informera du nombre de fichiers supprimés et du gain d'espace.
 
 ---
-*Dernière mise à jour : 28 Mars 2026*
+*Dernière mise à jour : 30 Mars 2026*
 *Statut : Document à jour pour le Stability Patch V5*

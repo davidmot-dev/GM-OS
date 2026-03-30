@@ -1,13 +1,38 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FavoriteSidebar } from './FavoriteSidebar';
 import { FavoriteTopBar } from './FavoriteTopBar';
 import { FavoriteGrid } from './FavoriteGrid';
 import { FavoriteDetailPanel } from './FavoriteDetailPanel';
 import { FavoriteFullDossier } from './FavoriteFullDossier';
-import { useFavoriteStore } from '../useFavoriteStore';
+import { useFavoriteStore, type FavoriteType } from '../useFavoriteStore';
+import { useSessionOSStore } from '../../session/useSessionOSStore';
 
 export const FavoriteDashboard: React.FC = () => {
-    const { selectedFavoriteId, viewMode } = useFavoriteStore();
+    const { selectedFavoriteId, viewMode, addFavorite, selectFavorite, setViewMode } = useFavoriteStore();
+    const { pendingPreFill, clearPendingPreFill, activeCampaignId } = useSessionOSStore();
+
+    useEffect(() => {
+        if (pendingPreFill && (pendingPreFill.type === 'lore' || pendingPreFill.type === 'item')) {
+            const { title, content, imageUrl } = pendingPreFill.data;
+            
+            // Création automatique du favori à partir des données du Wiki
+            const newId = addFavorite({
+                type: pendingPreFill.type as FavoriteType,
+                name: title,
+                lore: content,
+                imageUrl: imageUrl,
+                isStarred: true,
+                campaignId: activeCampaignId || undefined
+            });
+
+            // Sélection et passage en mode détail pour finaliser l'édition
+            selectFavorite(newId);
+            setViewMode('detail');
+
+            // Nettoyage immédiat du pont
+            clearPendingPreFill();
+        }
+    }, [pendingPreFill, addFavorite, selectFavorite, setViewMode, clearPendingPreFill, activeCampaignId]);
 
     return (
         <div className="flex h-screen w-full overflow-hidden bg-app-bg font-sans text-slate-100 antialiased">

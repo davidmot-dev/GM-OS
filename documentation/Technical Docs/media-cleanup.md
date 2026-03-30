@@ -19,6 +19,13 @@ The service is implemented as a **Singleton** to ensure a single cleanup process
   3. Identifies entries in IndexedDB that are NOT in the reference set AND do not have the `isPersistent` flag set to `true`.
   4. Deletes these orphaned entries.
 
+### Campaign Reference Removal (Asynchronous)
+
+In addition to physical cleanup, the `MediaStore` provides `removeCampaignReference(campaignId: string)`. This method :
+1.  Iterates through all `MediaItem` in IndexedDB.
+2.  Removes the specified `campaignId` from the `campaignIds` array of each item.
+3.  Updates the active `mediaList` in Zustand for real-time UI synchronization.
+
 ## Reference Collection Logic
 
 The service scans the following stores to find media IDs (starting with `m-`) :
@@ -45,4 +52,4 @@ Successfully deleted items are logged with :
 
 ---
 
-*Last Updated: 2026-03-24*
+*Last Updated: 2026-03-30*

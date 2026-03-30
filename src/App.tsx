@@ -12,6 +12,7 @@ import { useStoryboardStore } from './modules/storyboard/useStoryboardStore';
 import { useMapStore } from './modules/map/useMapStore';
 import { useCombatStore } from './modules/combat/useCombatStore';
 import { useSessionOSStore } from './modules/session/useSessionOSStore';
+import { useFavoriteStore } from './modules/favorite/useFavoriteStore';
 import { useWhiteboardStore, type WhiteboardTool, type Point, type DrawingPath } from './modules/whiteboard/useWhiteboardStore';
 import { useClockStore } from './store/useClockStore';
 import { useMusicStore } from './modules/music/useMusicStore';
@@ -186,7 +187,8 @@ function App() {
         const storyboardStore = useStoryboardStore.getState();
         const combatStore = useCombatStore.getState();
         const freshSessionOS = useSessionOSStore.getState();
-        const { sessions, campaigns, entities, players, activeCampaignId, clues, customSheetTemplates, customGameDrivers } = freshSessionOS;
+        const favoriteStore = useFavoriteStore.getState();
+        const { sessions, campaigns, entities, players, activeCampaignId, clues, atlasMaps, customSheetTemplates, customGameDrivers } = freshSessionOS;
         
         const atmosId = soundStore.activeAtmosphereId;
         const atmosphere = soundStore.atmospheres.find(a => a.id === atmosId);
@@ -247,8 +249,11 @@ function App() {
           .map(m => ({ id: m.id, name: m.name }));
 
 
-        const activeSession = sessions.find((s: import('./modules/session/store/types').GameSession) => s.status === 'active' && s.campaignId === activeCampaignId) || 
-                              (sessions.length > 0 ? [...sessions].reverse().find((s: import('./modules/session/store/types').GameSession) => s.campaignId === activeCampaignId) : undefined);
+        const activeSession = sessions.find((s: import('./modules/session/store/types').GameSession) => 
+            s.status === 'active' && String(s.campaignId) === String(activeCampaignId)
+        ) || (sessions.length > 0 ? [...sessions].reverse().find((s: import('./modules/session/store/types').GameSession) => 
+            String(s.campaignId) === String(activeCampaignId)
+        ) : undefined);
 
         const notes = {
           public: activeSession?.publicSummary || activeSession?.sessionNotes || 'Aucun résumé public.',
@@ -314,20 +319,19 @@ function App() {
             if (activeCampaign?.wallpaperUrl) {
                 console.log(`[Sync] Campaign has wallpaper defined: ${activeCampaign.wallpaperUrl.substring(0, 50)}...`);
             } else {
-                console.warn(`[Sync] Campaign ${activeCampaignId} has NO wallpaperUrl defined in store!`);
+                console.warn(`[Sync] Campaign ${activeCampaignId} has NO wallpaperUrl defined in store! Using fallback.`);
             }
         } else {
             console.error(`[Sync] CRITICAL: activeCampaignId is NULL in SessionOSStore!`);
         }
 
         const session = {
-            sessions,
-            campaigns,
+            campaigns: campaigns || [],
             players: await Promise.all(
-                players.map(async (p: import('./modules/session/store/types').Player) => ({
+                (players || []).map(async (p: import('./modules/session/store/types').Player) => ({
                     ...p,
                     characters: await Promise.all(
-                        p.characters.map(async (c) => {
+                        (p.characters || []).map(async (c) => {
                             const resolvedPortrait = await resolveToSendableUrl(c.portraitUrl);
                             const resolvedToken = c.tokenUrl ? await resolveToSendableUrl(c.tokenUrl) : undefined;
                             return {
@@ -339,7 +343,7 @@ function App() {
                     )
                 }))
             ),
-            activeCampaignId,
+            activeCampaignId: String(activeCampaignId),
             entities: await Promise.all(
                 entities
                     .filter(e => e.isVisibleByPlayers && String(e.campaignId) === String(activeCampaignId))
@@ -359,11 +363,51 @@ function App() {
                         };
                     })
             ),
+            favorites: await Promise.all(
+                (favoriteStore.favorites || [])
+                    .filter(f => f.isSyncedToPlayerHub || (String(f.campaignId) === String(activeCampaignId) && f.ownerId))
+                    .map(async f => {
+                        const resolvedImage = f.imageUrl ? await resolveToSendableUrl(f.imageUrl) : undefined;
+                        const resolvedToken = f.tokenUrl ? await resolveToSendableUrl(f.tokenUrl) : undefined;
+                        return { ...f, imageUrl: resolvedImage, tokenUrl: resolvedToken };
+                    })
+            ),
+            sessions: sessions.map(s => ({ 
+                id: String(s.id), 
+                campaignId: String(s.campaignId), 
+                date: s.date,
+                status: s.status,
+                number: s.number,
+                sessionEntityIds: s.sessionEntityIds || []
+            })),
+            activeSession: activeSession ? {
+                id: String(activeSession.id),
+                campaignId: String(activeSession.campaignId),
+                status: activeSession.status,
+                number: activeSession.number,
+                sessionEntityIds: activeSession.sessionEntityIds || [],
+                publicSummary: activeSession.publicSummary,
+                gmSecrets: activeSession.gmSecrets
+            } : null,
             activeCampaignName: activeCampaign?.name || null,
             activeCampaignWallpaper: activeCampaign?.wallpaperUrl ? await resolveToSendableUrl(activeCampaign.wallpaperUrl) : null,
             customSheetTemplates,
-            customGameDrivers
+            customGameDrivers,
+            atlasMaps: await Promise.all(
+                (atlasMaps || [])
+                    .filter(m => m.isVisited && String(m.campaignId) === String(activeCampaignId))
+                    .map(async m => {
+                        const resolvedUrl = await resolveToSendableUrl(m.fileUrl);
+                        return { ...m, fileUrl: resolvedUrl };
+                    })
+            ),
         };
+
+        // --- DEBUG LOGS FOR VISIBILITY ISSUES ---
+        if (activeSession) {
+            console.log(`[Sync] Session "${activeSession.id}" has ${activeSession.sessionEntityIds?.length || 0} entities:`, activeSession.sessionEntityIds);
+            console.log(`[Sync] Players being sent:`, session.players.map(p => ({ id: p.id, chars: p.characters.map(c => c.id) })));
+        }
 
         if (session.activeCampaignWallpaper) {
             console.log(`[Sync] Wallpaper resolved to: ${session.activeCampaignWallpaper.startsWith('data:') ? 'Data URI (Base64)' : session.activeCampaignWallpaper.substring(0, 100)}...`);

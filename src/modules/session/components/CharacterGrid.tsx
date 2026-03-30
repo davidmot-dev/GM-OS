@@ -9,7 +9,9 @@ import { Heart, UserPlus, ChevronDown, Mail, Swords, Eye, Trash2 } from 'lucide-
 import { useImageStore } from '../../image/useImageStore';
 
 const CharacterGrid: React.FC = () => {
-    const { players, selectedPlayerId, selectedCharacterId, campaigns, linkCharacterToCampaign, updateCharacterHP, setSelectedCharacter } = useSessionOSStore();
+    const { players, selectedPlayerId, selectedCharacterId, campaigns, linkCharacterToCampaign, updateCharacterHP, setSelectedCharacter, sessions, activeCampaignId, addEntityToSession, removeEntityFromSession } = useSessionOSStore();
+    
+    const activeSession = sessions.find(s => s.status === 'active' && String(s.campaignId) === String(activeCampaignId));
 
     const selectedPlayer = players.find(p => p.id === selectedPlayerId);
     const resolvedPlayerAvatar = useMediaUrl(selectedPlayer?.avatarUrl);
@@ -85,6 +87,21 @@ const CharacterGrid: React.FC = () => {
                                         useSessionOSStore.getState().deleteCharacter(selectedPlayer.id, character.id);
                                     }
                                 }}
+                                activeSession={activeSession}
+                                isProjectedInSession={activeSession?.sessionEntityIds?.includes(character.id)}
+                                onToggleSession={(project) => {
+                                    if (!activeSession) {
+                                        gmToast("Aucune session active pour cette campagne", "error");
+                                        return;
+                                    }
+                                    if (project) {
+                                        addEntityToSession(activeSession.id, character.id);
+                                        gmToast(`${character.name} ajouté à la session active`);
+                                    } else {
+                                        removeEntityFromSession(activeSession.id, character.id);
+                                        gmToast(`${character.name} retiré de la session`);
+                                    }
+                                }}
                             />
                         ))}
                     </div>
@@ -114,7 +131,10 @@ const CharacterCard: React.FC<{
     onLink: (campaignId: string | null) => void;
     onHPChange: (delta: number) => void;
     onDelete: () => void;
-}> = ({ character, campaigns, isSelected, onSelect, onLink, onHPChange, onDelete }) => {
+    activeSession?: import('../store/types').GameSession | null;
+    isProjectedInSession?: boolean;
+    onToggleSession: (project: boolean) => void;
+}> = ({ character, campaigns, isSelected, onSelect, onLink, onHPChange, onDelete, activeSession, isProjectedInSession, onToggleSession }) => {
     const linkedCampaign = campaigns.find(c => c.id === character.campaignId);
     const hpPercent = (character.hp / character.maxHp) * 100;
     const hpColor = hpPercent > 60 ? 'bg-emerald-500' : hpPercent > 30 ? 'bg-amber-500' : 'bg-red-600';
@@ -223,13 +243,29 @@ const CharacterCard: React.FC<{
                                 }
                             };
                             useImageStore.getState().projectEntity(projectedPJ);
-                            gmToast(`${character.name} projeté sur le Hub !`);
+                            gmToast(`${character.name} projeté sur l'écran principal !`);
                         }}
                         className="p-1.5 rounded-lg border border-blue-500/30 text-blue-500 hover:bg-blue-500/10 transition-all flex items-center justify-center"
-                        title="Projeter sur le Hub"
+                        title="Projeter sur l'écran principal"
                     >
                         <Eye size={14} />
                     </button>
+                    {activeSession && (
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onToggleSession(!isProjectedInSession);
+                            }}
+                            className={`p-1.5 rounded-lg border transition-all flex items-center justify-center ${
+                                isProjectedInSession 
+                                ? 'bg-amber-500/20 border-amber-500 text-amber-500 shadow-glow-amber/20' 
+                                : 'border-amber-500/30 text-amber-500/60 hover:bg-amber-500/10'
+                            }`}
+                            title={isProjectedInSession ? "Retirer de la tablette" : "Envoyer sur la tablette"}
+                        >
+                            <UserPlus size={14} />
+                        </button>
+                    )}
                     <div className="relative flex-1">
                         <select
                             title="Lier à une campagne"
