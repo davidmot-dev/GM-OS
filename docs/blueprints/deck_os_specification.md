@@ -3,6 +3,7 @@
 Ce document archive la spécification complète et le plan d'implémentation pour le module **Deck-OS** de GM-OS v5, conçu pour une gestion fluide et immersive des cartes de jeu (Drama Decks, Criticals, Loot, etc.).
 
 ## 📋 Résumé du Concept
+
 Un moteur de tirage de cartes basé sur le système de fichiers, permettant au MJ de gérer plusieurs paquets de cartes physiques (images) sans surcharger la base de données média de l'application.
 
 ---
@@ -11,6 +12,7 @@ Un moteur de tirage de cartes basé sur le système de fichiers, permettant au M
 
 ### 1. Stockage & Convention (Filesystem)
 Les cartes sont stockées directement dans le dossier `/public` pour un accès direct via URL :
+
 ```text
 /public/assets/decks/
   └── [system_id]/          # Identifiant du Driver (ex: torg, dnd5e)
@@ -21,7 +23,8 @@ Les cartes sont stockées directement dans le dossier `/public` pour un accès d
           └── card_N.png    # N-ième carte
 ```
 
-### 2. Modèle de Données (Store `useSessionOSStore.ts`)
+### 2. Modèle de Données (Store `deckSlice.ts`)
+
 ```typescript
 type CardFormat = 'poker' | 'tarot';
 
@@ -38,44 +41,36 @@ interface DeckManifest {
     startAtZero: boolean;   // (default: `false`)
     useDiscard: boolean;    // Si vrai, les cartes tirées vont en défausse
 }
-
-interface DeckSessionState {
-    deckId: string;
-    remainingIndices: number[]; // Tableau des cartes restantes [1..N]
-    discardedIndices: number[]; // Tableau des cartes en défausse
-    currentCardIndex: number | null; // Carte actuellement face visible
-}
 ```
 
 ---
 
 ## 🚀 Fonctionnalités du Module
 
-### 1. Gestion des Decks (GM Editor)
+### 1. Gestion des Decks (useDeckLibrary)
 - Interface pour déclarer un nouveau deck en pointant vers un dossier de `/public/assets/decks/`.
 - Configuration du format (Poker/Tarot) et du mode de tirage (avec ou sans défausse).
 - Liaison à un ou plusieurs Drivers.
 
-### 2. Dashboard de Tirage (In-Session)
+### 2. Dashboard de Tirage (useDeckPlayer)
 - **Pile de Pioche** : Affichage visuel du dos de la carte (`back.png`).
 - **Piocher** : Tirage aléatoire d'un index parmi les restants.
 - **Défausser** : Action manuelle pour écarter une carte sans en tirer une nouvelle.
-- **Reset (Mélanger)** : Réinitialisation complète du deck (remet toutes les cartes de la défausse dans la pioche).
-- **Formatage** : Utilisation de CSS `aspect-ratio` et `object-fit: cover` pour garantir une interface stable et sans déformation.
+- **Retourner (Flip)** : Permet de prévisualiser le verso ou de cacher la carte.
+- **Reset (Mélanger)** : Réinitialisation complète du deck.
 
 ### 3. Interconnexions
-- **Projection Hub (Seer's Eye)** : Intégration d'un bouton de projection en temps réel. L'activation projette immédiatement la carte courante. La désactivation vide les Hubs.
-- **Mode Oracle (Clean View)** : Les entités de type `Oracle` (cartes de deck) sont affichées sur les Hubs sans métadonnées textuelles, privilégiant l'immersion visuelle.
-- **Synchronisation Robuste** : Utilisation d'identifiants uniques temporels pour garantir la mise à jour des images lors d'un retournement de carte (flip).
-- **Journalisation Auto** : Chaque action de tirage génère un événement de type `ORACLE` dans **Journal-OS**.
+- **Projection Hub (Seer's Eye)** : Intégration d'un bouton de projection en temps réel.
+- **Mode Oracle (Clean View)** : Affichage sur les Hubs sans métadonnées pour l'immersion.
+- **Accessibilité (A11y)** : Support complet de la navigation au clavier et des lecteurs d'écran.
 
 ---
 
 ## 📂 Emplacements des fichiers de référence
 - **Composant Principal** : `src/modules/session/components/DeckPlayer.tsx`
+- **Logic Hooks** : `src/modules/session/hooks/useDeckPlayer.ts`
 - **Store Zustand** : `src/modules/session/store/deckSlice.ts`
-- **Hubs de Restitution** : `src/components/PlayerHub.tsx`, `src/components/TabletHub.tsx`
 
 ---
-*Date de mise à jour : 27 Mars 2026*
-*Statut : Terminé & Déploiement validé*
+*Dernière mise à jour : 31 Mars 2026*
+*Statut : [COMPLETED] - Modélisation par Hooks & Accessibilité Validée.*

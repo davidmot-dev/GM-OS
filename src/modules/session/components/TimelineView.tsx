@@ -96,12 +96,14 @@ const TimelineView: React.FC = () => {
                                             <button 
                                                 onClick={() => gmCustom('timeline-event-edit', event)}
                                                 className="p-1.5 hover:bg-app-bg rounded-lg text-app-text/20 hover:text-accent transition-all"
+                                                title="Modifier l'événement"
                                             >
                                                 <Edit2 size={14} />
                                             </button>
                                             <button 
                                                 onClick={() => deleteTimelineEvent(event.id)}
                                                 className="p-1.5 hover:bg-app-bg rounded-lg text-app-text/20 hover:text-rose-400 transition-all"
+                                                title="Supprimer l'événement"
                                             >
                                                 <Trash2 size={14} />
                                             </button>
@@ -119,10 +121,10 @@ const TimelineView: React.FC = () => {
                                                 {atlasMaps.find(m => m.id === event.locationId)?.name}
                                             </div>
                                         )}
-                                        {((event as any).involvedEntityIds || []).length > 0 && (
+                                        {((event as { involvedEntityIds?: string[] }).involvedEntityIds || []).length > 0 && (
                                             <div className="flex items-center gap-2 text-[10px] font-bold text-app-text/40">
                                                 <Users size={12} className="text-accent" />
-                                                {((event as any).involvedEntityIds || []).length} Participants
+                                                {((event as { involvedEntityIds?: string[] }).involvedEntityIds || []).length} Participants
                                             </div>
                                         )}
                                     </div>

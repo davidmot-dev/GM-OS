@@ -12,6 +12,9 @@ import os from 'node:os';
 import type { WebSocket } from 'ws';
 import log from 'electron-log';
 
+// Set app name explicitly to gm-os-v5 to lock the storage path before any getPath calls
+app.name = 'gm-os-v5';
+
 // Configure electron-log
 log.transports.file.level = 'info';
 log.transports.console.level = 'debug';

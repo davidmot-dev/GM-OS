@@ -1,4 +1,4 @@
-import require$$0$6, { ipcMain, dialog, protocol, app, shell, screen, BrowserWindow, net } from "electron";
+import require$$0$6, { ipcMain, dialog, app, protocol, shell, screen, BrowserWindow, net } from "electron";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import * as require$$0 from "fs";
@@ -5332,6 +5332,7 @@ class OllamaService {
 const require$1 = createRequire(import.meta.url);
 const pdf = require$1("pdf-parse");
 const { WebSocketServer } = require$1("ws");
+app.name = "gm-os-v5";
 log.transports.file.level = "info";
 log.transports.console.level = "debug";
 log.initialize();

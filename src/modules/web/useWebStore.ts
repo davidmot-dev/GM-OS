@@ -5,7 +5,7 @@ import type { WebLink, WebBridge } from './types';
 /**
  * Interface d'état globale pour le Web-OS (Marque-pages).
  */
-interface WebState {
+export interface WebState {
     /** Liste des liens configurés */
     links: WebLink[];
     /** Ajoute un nouveau lien avec un ID généré */

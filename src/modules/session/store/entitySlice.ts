@@ -21,6 +21,19 @@ import type {
     DamageImpact,
 } from './types';
 
+export function syncHealthSystem(currentHp: number, maxHp: number, existingHealth?: HealthSystem): HealthSystem | undefined {
+    // If there's an existing system that isn't HP, do not override it.
+    if (existingHealth && existingHealth.type !== 'hp') {
+        return existingHealth;
+    }
+    const health = existingHealth || HealthInterpreter.createDefault('hp');
+    return {
+        ...health,
+        data: { ...health.data, current: currentHp, max: maxHp },
+        state: currentHp <= 0 ? 'dead' : (currentHp / maxHp) <= 0.25 ? 'critical' : (currentHp / maxHp) <= 0.5 ? 'wounded' : 'healthy'
+    };
+}
+
 // ─────────────────────────────────────────────
 // State
 // ─────────────────────────────────────────────
@@ -100,20 +113,10 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                 if (e.id !== id) return e;
                 const newEntity = { ...e, ...updates };
 
-                // Auto-sync HealthSystem if type is HP
-                if (newEntity.healthSystem?.type === 'hp') {
-                    const currentVal = updates.hp !== undefined ? updates.hp : newEntity.hp;
-                    const maxVal = updates.maxHp !== undefined ? updates.maxHp : newEntity.maxHp;
-                    newEntity.healthSystem = {
-                        ...newEntity.healthSystem,
-                        data: {
-                            ...newEntity.healthSystem.data,
-                            current: currentVal,
-                            max: maxVal
-                        },
-                        state: currentVal <= 0 ? 'dead' : (currentVal / maxVal) <= 0.25 ? 'critical' : (currentVal / maxVal) <= 0.5 ? 'wounded' : 'healthy'
-                    };
-                }
+                // Auto-sync HealthSystem
+                const currentVal = updates.hp !== undefined ? updates.hp : newEntity.hp;
+                const maxVal = updates.maxHp !== undefined ? updates.maxHp : newEntity.maxHp;
+                newEntity.healthSystem = syncHealthSystem(currentVal, maxVal, newEntity.healthSystem);
 
                 return newEntity;
             }),
@@ -137,15 +140,8 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                 // Préparation de la mise à jour
                 const updated = { ...e, hp: nextHp, status } as Entity;
 
-                // Synchronisation forcée du HealthSystem si présent (et de type HP)
-                const health = e.healthSystem || HealthInterpreter.createDefault('hp');
-                if (health.type === 'hp') {
-                    updated.healthSystem = {
-                        ...health,
-                        data: { ...health.data, current: nextHp, max: e.maxHp },
-                        state: nextHp <= 0 ? 'dead' : (nextHp / e.maxHp) <= 0.25 ? 'critical' : (nextHp / e.maxHp) <= 0.5 ? 'wounded' : 'healthy'
-                    };
-                }
+                // Synchronisation forcée du HealthSystem
+                updated.healthSystem = syncHealthSystem(nextHp, e.maxHp, e.healthSystem);
                 
                 return updated;
             }),
@@ -160,14 +156,7 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                 const updated = { ...e, maxHp: nextMax } as Entity;
 
                 // Synchronisation forcée du HealthSystem
-                const health = e.healthSystem || HealthInterpreter.createDefault('hp');
-                if (health.type === 'hp') {
-                    updated.healthSystem = {
-                        ...health,
-                        data: { ...health.data, current: e.hp, max: nextMax },
-                        state: e.hp <= 0 ? 'dead' : (e.hp / nextMax) <= 0.25 ? 'critical' : (e.hp / nextMax) <= 0.5 ? 'wounded' : 'healthy'
-                    };
-                }
+                updated.healthSystem = syncHealthSystem(e.hp, nextMax, e.healthSystem);
                 return updated;
             }),
         })),
@@ -273,14 +262,7 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                                 const updated = { ...c, hp: nextHp } as PlayerCharacter;
                                 
                                 // Synchronisation forcée du HealthSystem
-                                const health = c.healthSystem || HealthInterpreter.createDefault('hp');
-                                if (health.type === 'hp') {
-                                    updated.healthSystem = {
-                                        ...health,
-                                        data: { ...health.data, current: nextHp, max: c.maxHp },
-                                        state: nextHp <= 0 ? 'dead' : (nextHp / c.maxHp) <= 0.25 ? 'critical' : (nextHp / c.maxHp) <= 0.5 ? 'wounded' : 'healthy'
-                                    };
-                                }
+                                updated.healthSystem = syncHealthSystem(nextHp, c.maxHp, c.healthSystem);
                                 return updated;
                           }),
                       }
@@ -300,14 +282,7 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                                 const updated = { ...c, maxHp: nextMax } as PlayerCharacter;
                                 
                                 // Synchronisation forcée du HealthSystem
-                                const health = c.healthSystem || HealthInterpreter.createDefault('hp');
-                                if (health.type === 'hp') {
-                                    updated.healthSystem = {
-                                        ...health,
-                                        data: { ...health.data, current: c.hp, max: nextMax },
-                                        state: c.hp <= 0 ? 'dead' : (c.hp / nextMax) <= 0.25 ? 'critical' : (c.hp / nextMax) <= 0.5 ? 'wounded' : 'healthy'
-                                    };
-                                }
+                                updated.healthSystem = syncHealthSystem(c.hp, nextMax, c.healthSystem);
                                 return updated;
                           }),
                       }
@@ -346,20 +321,10 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                                 if (c.id !== characterId) return c;
                                 const updated = { ...c, ...updates };
 
-                                // Auto-sync HealthSystem if type is HP
-                                if (updated.healthSystem?.type === 'hp') {
-                                    const currentVal = updates.hp !== undefined ? updates.hp : updated.hp;
-                                    const maxVal = updates.maxHp !== undefined ? updates.maxHp : updated.maxHp;
-                                    updated.healthSystem = {
-                                        ...updated.healthSystem,
-                                        data: {
-                                            ...updated.healthSystem.data,
-                                            current: currentVal,
-                                            max: maxVal
-                                        },
-                                        state: currentVal <= 0 ? 'dead' : (currentVal / maxVal) <= 0.25 ? 'critical' : (currentVal / maxVal) <= 0.5 ? 'wounded' : 'healthy'
-                                    };
-                                }
+                                // Auto-sync HealthSystem
+                                const currentVal = updates.hp !== undefined ? updates.hp : updated.hp;
+                                const maxVal = updates.maxHp !== undefined ? updates.maxHp : updated.maxHp;
+                                updated.healthSystem = syncHealthSystem(currentVal, maxVal, updated.healthSystem);
                                 return updated;
                           }),
                       }
@@ -416,11 +381,11 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
         get().updateCharacterNarrative(playerId, characterId, updates);
 
         // Envoyer l'action au MJ via le pont distant (Electron/WebSocket)
-        if (typeof window !== 'undefined' && (window as any).appBridge?.remote?.sendAction) {
-            (window as any).appBridge.remote.sendAction({
-                type: 'session:update-character-narrative',
-                payload: { playerId, characterId, updates }
-            });
+        if (typeof window !== 'undefined' && window.appBridge?.remote?.broadcastToTablets) {
+            window.appBridge.remote.broadcastToTablets(
+                'session:update-character-narrative',
+                { playerId, characterId, updates }
+            );
         }
     },
 
@@ -471,7 +436,8 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
         if (updates.hp !== undefined) messageParts.push(`PV: ${updates.hp}/${character.maxHp}`);
 
         if (messageParts.length > 0) {
-            (get() as any).addRemoteNotification({
+            const store = get() as unknown as import('./index').SessionOSStore;
+            store.addRemoteNotification?.({
                 type: 'vitals_update',
                 characterId,
                 characterName: character.name,

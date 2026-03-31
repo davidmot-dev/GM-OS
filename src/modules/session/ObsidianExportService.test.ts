@@ -5,7 +5,7 @@ import type { Campaign, Entity } from './useSessionOSStore';
 describe('ObsidianExportService', () => {
     beforeEach(() => {
         // Mock window.appBridge
-        (window as any).appBridge = {
+        (window as unknown as { appBridge: unknown }).appBridge = {
             obsidian: {
                 writeNote: vi.fn().mockResolvedValue(true),
                 ensureDirectory: vi.fn().mockResolvedValue(true),

@@ -2,7 +2,7 @@
 
 Ce guide détaille les APIs, les structures de données et les services centraux du module **Deck-OS** de GM-OS v5.
 
-## 📋 Types & Interfaces (`src/modules/session/types/deck.ts`)
+## 📋 Types & Interfaces (`src/modules/session/store/types.ts`)
 
 ### `DeckManifest`
 | Champ | Type | Description |
@@ -11,7 +11,7 @@ Ce guide détaille les APIs, les structures de données et les services centraux
 | `name` | `string` | Libellé affiché dans l'interface MJ. |
 | `folderPath` | `string` | Chemin relatif vers `/public/assets/decks/`. |
 | `cardCount` | `number` | Nombre total de cartes indexées. |
-| `format` | `'poker' \| 'tarot'` | Ration d'aspect (2:3 pour Poker, etc.). |
+| `format` | `'poker' | 'tarot'` | Ration d'aspect (2:3 pour Poker, etc.). |
 | `filenamePattern` | `string` | Pattern de nommage (ex: `card_{n}`). |
 
 ## 🧠 Gestion d'État (`deckSlice.ts`)
@@ -21,7 +21,6 @@ Le store `deckSlice` expose les actions suivantes :
 - **`drawCard(deckId)`** : Calcule un index aléatoire parmi les `remainingIndices`, le déplace dans `discardedIndices`, et met à jour `currentCardIndex`.
 - **`discardCard(deckId)`** : Envoie la carte actuelle en défausse sans en tirer une nouvelle.
 - **`shuffleDeck(deckId)`** : Réinitialise la pioche en fusionnant `remainingIndices` et `discardedIndices`.
-- **`toggleProjection(deckId)`** : Gère l'activation/désactivation du mode projection vers les Hubs.
 
 ## 🔄 Flux de Projection
 
@@ -42,16 +41,28 @@ projectEntity({
 
 ## 🧩 Composants Clés
 
-### `DeckPlayer (DeckPlayer.tsx)`
-Interface de contrôle du MJ. Il écoute l'état du store et permet de piocher, mélanger et projeter les cartes. Il gère l'animation de translation/transformation des cartes.
+### `DeckPlayer` (`DeckPlayer.tsx`)
+Interface de contrôle du MJ. Il écoute l'état du store via `useDeckPlayer` et permet de piocher, mélanger et projeter les cartes. Il gère l'animation de translation/transformation des cartes.
 
-### `RuleEngineEditor (RuleEngineEditor.tsx)`
-Permet au MJ de configurer les decks disponibles, d'ajuster les chemins de fichiers et de lier les decks aux drivers de jeu.
+### `DeckLibrary` (`DeckLibrary.tsx`)
+Permet au MJ de configurer les decks disponibles, d'ajuster les chemins de fichiers et de lier les decks aux drivers de jeu via `useDeckLibrary`.
 
 ## 🛠️ Services & Hooks
 
-### `useDeck(deckId)`
-Custom Hook simplifiant l'accès à l'état d'un deck spécifique. Il retourne les raccourcis vers les actions de tirage et l'image de la carte courante.
+### `useDeckLibrary()`
+Custom Hook gérant la bibliothèque de paquets (CRUD).
+- **Actions** : `addDeck`, `updateDeck`, `deleteDeck`.
+- **État** : Gère l'état local du formulaire d'édition et le filtrage par système (`generic` + système de la campagne active).
 
-### `DeckInterpreter (Services)`
-Service utilitaire permettant de traduire un index de carte en URL d'image en fonction du pattern configuré dans le manifest.
+### `useDeckPlayer()`
+Custom Hook pilotant l'interface de jeu pour un deck spécifique.
+- **Actions** : `handleDraw`, `handleDiscard`, `handleShuffle`, `handleFlip`.
+- **Projection Hub** : Synchronise automatiquement l'état de la carte (recto/verso) avec le `projectEntity` de l'UI globale.
+
+### `DeckInterpreter` (`logic/DeckInterpreter.ts`)
+Service utilitaire centralisant la logique de nommage des fichiers.
+- **Conventions par défaut** : Extension `.png`, pattern de nommage `card_{n}`.
+- **Méthodes** : `getCardImageUrl`, `getBackImageUrl`, `calculateAspectRatio`.
+
+---
+*Dernière mise à jour : 31 Mars 2026 - GM-OS v5 Stability Patch (Modular Hooks).*

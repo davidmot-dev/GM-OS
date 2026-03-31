@@ -1,16 +1,5 @@
-/**
- * DeckPlayer — Interface de jeu Deck-OS
- * 
- * Permet de piocher des cartes avec un effet de glissement physique.
- * Gère l'orientation (Portrait/Paysage) et le format (Poker/Tarot).
- * 
- * @module session/components/DeckPlayer
- */
-
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
-import { DeckInterpreter } from '../logic/DeckInterpreter';
-import { useImageStore } from '../../image/useImageStore';
 import { 
     Layers, 
     RefreshCw, 
@@ -21,57 +10,27 @@ import {
     Eye,
     EyeOff
 } from 'lucide-react';
+import { useDeckPlayer } from '../hooks/useDeckPlayer';
 
 const DeckPlayer: React.FC = () => {
-    const { 
-        decks, 
-        deckStates, 
-        drawCard, 
-        discardCard, 
-        shuffleDeck,
-        setCurrentView,
+    const { setCurrentView, decks } = useSessionOSStore();
+    const {
+        activeDeck,
+        activeState,
+        activeDeckId,
+        isFlipped,
+        drawCount,
+        cardBackUrl,
+        currentCardUrl,
+        aspectRatio,
         isProjecting,
-        toggleProjection 
-    } = useSessionOSStore();
-
-    const [activeDeckId, setActiveDeckId] = useState<string | null>(null);
-    const [isFlipped, setIsFlipped] = useState(false);
-    const [drawCount, setDrawCount] = useState(0); // For triggering animation key
-
-    // Derive the effective deck ID (default to first deck)
-    const effectiveDeckId = activeDeckId ?? (decks.length > 0 ? decks[0].id : null);
-
-    const activeDeck = decks.find(d => d.id === effectiveDeckId);
-    const activeState = effectiveDeckId ? deckStates[effectiveDeckId] : null;
-
-    // Pre-compute URLs (null-safe, before hooks boundary)
-    const cardBackUrl = activeDeck ? DeckInterpreter.getBackImageUrl(activeDeck.folderPath, activeDeck) : '';
-    const currentCardUrl = (activeDeck && activeState && activeState.currentCardIndex !== null)
-        ? DeckInterpreter.getCardImageUrl(activeDeck.folderPath, activeState.currentCardIndex, activeDeck)
-        : null;
-
-    // ✅ Hook declared BEFORE any early return (Rules of Hooks)
-    const handleFlip = useCallback(() => {
-        const nextFlipped = !isFlipped;
-        setIsFlipped(nextFlipped);
-
-        if (!isProjecting || !activeDeck || !activeState || activeState.currentCardIndex === null) return;
-
-        const idx = activeState.currentCardIndex;
-        const cardName = DeckInterpreter.getCardMetadata(activeDeck, idx)?.name || `Carte #${idx}`;
-        const avatarUrl = nextFlipped
-            ? `/${cardBackUrl}`    // Card back → project back image (hidden)
-            : `/${currentCardUrl}`; // Card front → project card face
-
-        useImageStore.getState().projectEntity({
-            id: `card-${activeDeck.id}-${idx}-${Date.now()}`,
-            name: nextFlipped ? '▪▪▪ Carte Cachée ▪▪▪' : cardName,
-            subtitle: nextFlipped ? 'Retournée' : `Oracle : ${activeDeck.name}`,
-            avatar: avatarUrl,
-            type: 'Oracle',
-            lore: nextFlipped ? '' : (DeckInterpreter.getCardMetadata(activeDeck, idx)?.description || '')
-        });
-    }, [isFlipped, isProjecting, activeDeck, activeState, cardBackUrl, currentCardUrl]);
+        setActiveDeckId,
+        handleFlip,
+        handleDraw,
+        handleDiscard,
+        handleShuffle,
+        toggleProjection
+    } = useDeckPlayer();
 
     if (!activeDeck || !activeState) {
         return (
@@ -79,8 +38,9 @@ const DeckPlayer: React.FC = () => {
                 <Layers size={48} strokeWidth={1} />
                 <p className="text-sm font-black uppercase tracking-widest">Aucun paquet configuré</p>
                 <button 
+                    type="button"
                     onClick={() => setCurrentView('deck-library')} 
-                    className="px-6 py-2 bg-gm-gold/10 text-gm-gold border border-gm-gold/20 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-gm-gold/20 transition-all"
+                    className="px-6 py-2 bg-gm-gold/10 text-gm-gold border border-gm-gold/20 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-gm-gold/20 transition-all focus:outline-none focus:ring-2 focus:ring-gm-gold/40"
                 >
                     Aller à la Bibliothèque
                 </button>
@@ -88,28 +48,16 @@ const DeckPlayer: React.FC = () => {
         );
     }
 
-    const aspectRatio = DeckInterpreter.calculateAspectRatio(activeDeck.format, activeDeck.orientation);
-
-    const handleDraw = () => {
-        setIsFlipped(false);
-        drawCard(activeDeck.id);
-        setDrawCount(prev => prev + 1);
-    };
-
-    const handleDiscard = () => {
-        setIsFlipped(false);
-        discardCard(activeDeck.id);
-    };
-
     return (
         <div className="flex flex-col h-full w-full bg-[#0a0a0c] overflow-hidden p-8 gap-8">
             {/* Header / Selector */}
             <header className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                     <button 
+                        type="button"
                         onClick={() => setCurrentView('deck-library')}
                         title="Retour à la Bibliothèque"
-                        className="p-2 rounded-lg bg-white/5 text-white/40 hover:text-white hover:bg-white/10 transition-all"
+                        className="p-2 rounded-lg bg-white/5 text-white/40 hover:text-white hover:bg-white/10 transition-all focus:outline-none"
                     >
                         <ChevronLeft size={20} />
                     </button>
@@ -126,8 +74,9 @@ const DeckPlayer: React.FC = () => {
 
                 <div className="flex gap-2">
                     <button 
+                        type="button"
                         onClick={() => setCurrentView('deck-library')}
-                        className="mr-4 px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all bg-white/5 text-white/40 border border-white/5 hover:bg-white/10 hover:text-white flex items-center gap-2"
+                        className="mr-4 px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all bg-white/5 text-white/40 border border-white/5 hover:bg-white/10 hover:text-white flex items-center gap-2 focus:outline-none"
                     >
                         <Layers size={14} /> Bibliothèque
                     </button>
@@ -135,8 +84,9 @@ const DeckPlayer: React.FC = () => {
                     {decks.map(d => (
                         <button
                             key={d.id}
-                            onClick={() => { setActiveDeckId(d.id); setIsFlipped(false); }}
-                            className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all border ${
+                            type="button"
+                            onClick={() => setActiveDeckId(d.id)}
+                            className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all border focus:outline-none ${
                                 activeDeckId === d.id 
                                 ? 'bg-gm-gold text-black border-gm-gold shadow-glow-gold/20' 
                                 : 'bg-white/5 text-white/40 border-white/5 hover:bg-white/10'
@@ -149,9 +99,10 @@ const DeckPlayer: React.FC = () => {
                     <div className="h-8 w-px bg-white/10 mx-2" />
 
                     <button 
+                        type="button"
                         onClick={toggleProjection}
                         title={isProjecting ? "Arrêter la projection Hub" : "Projeter sur Player Hub"}
-                        className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all border ${
+                        className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all border focus:outline-none ${
                             isProjecting 
                             ? 'bg-gm-blue/20 text-gm-blue border-gm-blue/40 shadow-glow-blue/20' 
                             : 'bg-white/5 text-white/20 border-white/5 hover:bg-white/10 hover:text-white/60'
@@ -167,9 +118,12 @@ const DeckPlayer: React.FC = () => {
             <div className="flex-1 flex items-center justify-center relative">
                 {/* Left Side: The Pile (Pioche) */}
                 <div className="absolute left-10 flex flex-col items-center gap-4">
-                    <div 
-                        className={`relative group transition-all ${activeState.remainingIndices.length > 0 ? 'cursor-pointer hover:scale-105 active:scale-95' : 'opacity-30 cursor-not-allowed'}`} 
+                    <button 
+                        type="button"
+                        className={`relative group transition-all focus:outline-none ${activeState.remainingIndices.length > 0 ? 'cursor-pointer hover:scale-105 active:scale-95' : 'opacity-30 cursor-not-allowed'}`} 
                         onClick={() => activeState.remainingIndices.length > 0 && handleDraw()}
+                        title="Piocher une carte"
+                        disabled={activeState.remainingIndices.length === 0}
                     >
                         {/* Stacked effect */}
                         {activeState.remainingIndices.length > 2 && <div className="absolute inset-0 translate-x-1 translate-y-1 bg-black/40 border border-white/5 rounded-xl -z-10" />}
@@ -197,18 +151,20 @@ const DeckPlayer: React.FC = () => {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </button>
                     <span className="text-[10px] font-black uppercase tracking-tighter text-white/20">Pioche</span>
                 </div>
 
                 {/* Center: The Active Card (Zone de Jeu) */}
                 <div className="flex flex-col items-center gap-12">
                     {currentCardUrl ? (
-                        <div 
+                        <button 
+                            type="button"
                             key={`card-${drawCount}`}
-                            className={`card-perspective animate-glide-card cursor-pointer`}
+                            className={`card-perspective animate-glide-card cursor-pointer focus:outline-none`}
                             style={{ width: activeDeck.orientation === 'landscape' ? '480px' : '400px', aspectRatio }}
                             onClick={() => handleFlip()}
+                            title="Retourner la carte"
                         >
                             <div className={`card-inner h-full w-full relative ${isFlipped ? 'card-flipped' : ''}`}>
                                 {/* Front (or rather the actual card content) */}
@@ -220,7 +176,7 @@ const DeckPlayer: React.FC = () => {
                                     <img src={`/${cardBackUrl}`} alt="Dos de carte" className="w-full h-full object-cover grayscale opacity-40" />
                                 </div>
                             </div>
-                        </div>
+                        </button>
                     ) : (
                         <div 
                             className="rounded-[2rem] border-2 border-dashed border-white/5 flex flex-col items-center justify-center text-white/5 gap-4"
@@ -234,26 +190,29 @@ const DeckPlayer: React.FC = () => {
                     {/* Bottom Controls */}
                     <div className="flex gap-4 p-4 rounded-3xl bg-black/40 backdrop-blur-xl border border-white/5 shadow-2xl">
                         <button 
+                            type="button"
                             onClick={handleDraw}
                             disabled={activeState.remainingIndices.length === 0}
-                            className="flex flex-col items-center gap-1.5 p-4 rounded-2xl hover:bg-white/5 text-white/40 hover:text-gm-gold transition-all disabled:opacity-20"
+                            className="flex flex-col items-center gap-1.5 p-4 rounded-2xl hover:bg-white/5 text-white/40 hover:text-gm-gold transition-all disabled:opacity-20 focus:outline-none"
                         >
                             <RefreshCw size={24} />
                             <span className="text-[9px] font-black uppercase tracking-widest">Piocher</span>
                         </button>
                         <div className="w-px h-12 self-center bg-white/5" />
                         <button 
+                            type="button"
                             onClick={handleDiscard}
-                            disabled={!activeState.currentCardIndex}
-                            className="flex flex-col items-center gap-1.5 p-4 rounded-2xl hover:bg-white/5 text-white/40 hover:text-red-400 transition-all disabled:opacity-20"
+                            disabled={activeState.currentCardIndex === null}
+                            className="flex flex-col items-center gap-1.5 p-4 rounded-2xl hover:bg-white/5 text-white/40 hover:text-red-400 transition-all disabled:opacity-20 focus:outline-none"
                         >
                             <Trash2 size={24} />
                             <span className="text-[9px] font-black uppercase tracking-widest">Défausser</span>
                         </button>
                         <div className="w-px h-12 self-center bg-white/5" />
                         <button 
-                            onClick={() => shuffleDeck(activeDeck.id)}
-                            className="flex flex-col items-center gap-1.5 p-4 rounded-2xl hover:bg-white/5 text-white/40 hover:text-gm-purple transition-all"
+                            type="button"
+                            onClick={handleShuffle}
+                            className="flex flex-col items-center gap-1.5 p-4 rounded-2xl hover:bg-white/5 text-white/40 hover:text-gm-purple transition-all focus:outline-none"
                         >
                             <RotateCcw size={24} />
                             <span className="text-[9px] font-black uppercase tracking-widest">Remélanger</span>
@@ -264,7 +223,7 @@ const DeckPlayer: React.FC = () => {
                 {/* Right Side: The Discard (Défausse) */}
                 <div className="absolute right-10 flex flex-col items-center gap-4">
                      <div 
-                        className={`rounded-xl border border-dashed transition-all ${
+                        className={`rounded-xl border border-dashed transition-all flex items-center justify-center ${
                             activeState.discardedIndices.length > 0 
                             ? 'bg-red-500/5 border-red-500/20' 
                             : 'bg-white/5 border-white/5'
@@ -272,7 +231,7 @@ const DeckPlayer: React.FC = () => {
                         style={{ width: activeDeck.orientation === 'landscape' ? '187px' : '156px', aspectRatio }}
                     >
                         {activeState.discardedIndices.length > 0 && (
-                            <div className="h-full w-full flex items-center justify-center text-red-500/40 font-black text-xl">
+                            <div className="text-red-500/40 font-black text-xl">
                                 {activeState.discardedIndices.length}
                             </div>
                         )}

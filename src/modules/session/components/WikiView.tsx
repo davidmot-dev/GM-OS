@@ -25,11 +25,8 @@ const WikiView: React.FC = () => {
         entities,
         selectedWikiEntryId,
         setSelectedWikiEntryId,
-        pendingPreFill,
         setPendingPreFill,
         setCurrentView,
-        setIsAddingEntity,
-        setSelectedEntity,
         setActiveCampaignFormSection
     } = useSessionOSStore();
 

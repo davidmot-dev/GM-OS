@@ -97,6 +97,20 @@
 **Solution :** Surcharge globale de l'action `deleteCampaign` dans le store racine (`index.ts`). Cette action coordonne le filtrage de tous les sous-stores (Entities, Atlas, Chronicle) et déclenche un nettoyage asynchrone dans IndexedDB via le `MediaStore`.
 **Apprentissage :** Pour les entités globales (comme les PJ), préférez le "Détachement" (remise à `null` de l'ID) plutôt que la suppression. Pour les données purement narratives (Wiki, PNJ), la suppression physique "Hard Delete" est indispensable pour éviter la pollution de l'état.
 
+## ♿ Accessibilité (A11y) : Levier de Qualité
+
+### Correction Systématique des Lints
+**Problème :** Des centaines d'alertes A11y (htmlFor manquant, labels orphelins, div cliquables) polluaient les rapports de build.
+**Solution :** Refonte de `SheetFields.tsx` et des modules de `Session-OS` pour imposer des IDs uniques et des boutons sémantiques (`type="button"`).
+**Apprentissage :** Suivre les règles d'accessibilité n'est pas qu'une contrainte inclusive ; cela force une structure HTML plus propre, facilite les tests automatisés (locators stables) et améliore naturellement la navigation au clavier.
+
+## 🧱 Architecture : Découplage par Hooks (Logic-to-Hook)
+
+### Extraction de la Logique Métier Complex
+**Problème :** `DeckLibrary.tsx` et `DeckPlayer.tsx` étaient devenus des "God Components" mélangeant gestion de formulaire, calculs de tirage et rendu UI.
+**Solution :** Création de `useDeckLibrary` et `useDeckPlayer`. Le composant React ne devient qu'une fonction pure de l'état retourné par le hook.
+**Apprentissage :** Le découplage facilite grandement les tests unitaires (Vitest) car on peut tester la machine à état (le hook) sans monter l'arborescence DOM complexe. C'est le standard obligatoire pour GM-OS v5.
+
 ---
-*Dernière mise à jour : 30 Mars 2026*
-*Statut : Système de Nettoyage en Cascade opérationnel*
+*Dernière mise à jour : 31 Mars 2026*
+*Statut : Standards A11y & Modularisation validés.*

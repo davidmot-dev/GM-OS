@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import CluesManager from './CluesManager';
 import { useSessionOSStore } from '../store/index';
 import type { Campaign } from '../store/types';
@@ -11,14 +11,10 @@ import {
     Users
 } from 'lucide-react';
 import NpcManagement from './NpcManagement';
-import { useGemStore } from '../../../stores/useGemStore';
-import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
-import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { ResolvedAsset } from '../../../components/ResolvedAsset';
-import { gmToast } from '../../../stores/useToastStore';
-import { personaGeneratorService } from '../../ai/PersonaGeneratorService';
+import { useCampaignEditor, type CampaignSectionId } from '../hooks/useCampaignEditor';
 
 interface CampaignFormProps {
     campaign?: Campaign | { campaignId: string };
@@ -26,129 +22,38 @@ interface CampaignFormProps {
     onClose: () => void;
 }
 
-type SectionId = 'identity' | 'narrative' | 'clues' | 'ambience' | 'world' | 'intelligence' | 'npc';
-
 const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose }) => {
-    const { 
-        campaigns, activeCampaignId, atlasMaps, addCampaign, 
-        updateCampaign, 
-        activeCampaignFormSection: activeSection, 
-        setActiveCampaignFormSection: setActiveSection,
-        pendingPreFill,
-        clearPendingPreFill,
-        customSheetTemplates, customGameDrivers
-    } = useSessionOSStore();
-    
-    // Identity logic
-    const propCampaign = campaign && 'id' in campaign ? campaign as Campaign : 
-                        (campaign && 'campaignId' in campaign ? campaigns.find(c => c.id === (campaign as { campaignId: string }).campaignId) : undefined);
-    
-    // Fallback to active campaign if no prop is provided (e.g. standalone view from cockpit)
-    // Only happens if not explicitly in 'isNew' mode
-    const fullCampaign = isNew ? undefined : (propCampaign || campaigns.find(c => c.id === activeCampaignId));
+    const { pendingPreFill, clearPendingPreFill } = useSessionOSStore();
+    const {
+        name, setName,
+        system, setSystem,
+        description, setDescription,
+        synopsis, setSynopsis,
+        wallpaperUrl, setWallpaperUrl,
+        notebookUrl, setNotebookUrl,
+        systemPath, setSystemPath,
+        campaignPath, setCampaignPath,
+        activeLocationIds, setActiveLocationIds,
+        aiPersonas, setAiPersonas,
+        
+        isMediaBrowserOpen, setIsMediaBrowserOpen,
+        isGenerating,
+        activeSection, setActiveSection,
+        
+        allTemplates,
+        allDrivers,
+        gems,
+        campaignMaps,
+        isEdit,
+        hasUnsavedChanges,
+        
+        handleSubmit,
+        handleAutoGenerate
+    } = useCampaignEditor({ campaign, isNew, onClose });
 
-    const [name, setName] = useState(fullCampaign?.name || '');
-    const [system, setSystem] = useState(fullCampaign?.system || 'generic');
-    const [description, setDescription] = useState(fullCampaign?.description || '');
-    const [synopsis, setSynopsis] = useState(fullCampaign?.synopsis || '');
-    const [wallpaperUrl, setWallpaperUrl] = useState(fullCampaign?.wallpaperUrl || '');
-    const [notebookUrl, setNotebookUrl] = useState(fullCampaign?.notebookUrl || '');
-    const [systemPath, setSystemPath] = useState(fullCampaign?.systemPath || '');
-    const [campaignPath, setCampaignPath] = useState(fullCampaign?.campaignPath || '');
-    const [activeLocationIds, setActiveLocationIds] = useState<string[]>(fullCampaign?.activeLocationIds || []);
-    const [aiPersonas, setAiPersonas] = useState<Record<string, string>>(fullCampaign?.aiPersonas || {});
-    
-    // UI State
-    const [isMediaBrowserOpen, setIsMediaBrowserOpen] = useState(false);
-    const [isGenerating, setIsGenerating] = useState(false);
-    
-    const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
-    const allDrivers = [...DEFAULT_GAME_DRIVERS, ...customGameDrivers];
-    const { gems, syncGemsWithDefaults } = useGemStore();
-    
-    React.useEffect(() => {
-        syncGemsWithDefaults();
-    }, [syncGemsWithDefaults]);
-
-    // Async data rehydration: if fullCampaign becomes available after mount, 
-    // sync our local states to avoid overwriting store with empty data.
-    React.useEffect(() => {
-        if (fullCampaign && !isNew) {
-            if (!name && fullCampaign.name) setName(fullCampaign.name);
-            if (!system && fullCampaign.system) setSystem(fullCampaign.system);
-            if (!description && fullCampaign.description) setDescription(fullCampaign.description);
-            if (!synopsis && fullCampaign.synopsis) setSynopsis(fullCampaign.synopsis);
-            if (!wallpaperUrl && fullCampaign.wallpaperUrl) setWallpaperUrl(fullCampaign.wallpaperUrl);
-            if (!notebookUrl && fullCampaign.notebookUrl) setNotebookUrl(fullCampaign.notebookUrl);
-            if (!systemPath && fullCampaign.systemPath) setSystemPath(fullCampaign.systemPath);
-            if (!campaignPath && fullCampaign.campaignPath) setCampaignPath(fullCampaign.campaignPath);
-            if (activeLocationIds.length === 0 && fullCampaign.activeLocationIds?.length) {
-                setActiveLocationIds(fullCampaign.activeLocationIds);
-            }
-            if (Object.keys(aiPersonas).length === 0 && fullCampaign.aiPersonas) {
-                setAiPersonas(fullCampaign.aiPersonas);
-            }
-        }
-    }, [fullCampaign, isNew]);
-
-    const campaignMaps = atlasMaps.filter(m => m.campaignId === fullCampaign?.id);
     const resolvedWallpaper = useMediaUrl(wallpaperUrl);
-    const isEdit = !!fullCampaign;
 
-    const hasUnsavedChanges = isNew || 
-        name !== (fullCampaign?.name || '') ||
-        system !== (fullCampaign?.system || 'generic') ||
-        description !== (fullCampaign?.description || '') ||
-        synopsis !== (fullCampaign?.synopsis || '') ||
-        wallpaperUrl !== (fullCampaign?.wallpaperUrl || '');
-
-    const handleSubmit = () => {
-        const campaignData = {
-            name,
-            system,
-            description,
-            synopsis,
-            wallpaperUrl,
-            notebookUrl,
-            systemPath,
-            campaignPath,
-            activeLocationIds,
-            aiPersonas
-        } as Partial<Campaign>;
-
-        if (isEdit && fullCampaign) {
-            updateCampaign(fullCampaign.id, campaignData);
-            gmToast('Paramètres de campagne mis à jour.');
-        } else {
-            addCampaign(campaignData as Omit<Campaign, 'id'>);
-            gmToast('Nouvelle campagne initialisée.');
-        }
-        onClose();
-    };
-
-    const handleAutoGenerate = async () => {
-        if (!name) {
-            gmToast('Nom de campagne requis pour la génération.', 'error');
-            return;
-        }
-        setIsGenerating(true);
-        try {
-            const personas = await personaGeneratorService.generateAllPersonas({
-                name,
-                universe: system,
-                style: description || system,
-                objective: synopsis
-            }, false);
-            setAiPersonas(personas);
-            gmToast('Résonances Éthériques synchronisées.');
-        } catch (error) {
-            gmToast('Échec de la synchronisation neurale.', 'error');
-        } finally {
-            setIsGenerating(false);
-        }
-    };
-
-    const sidebarItems: { id: SectionId; icon: any; label: string }[] = [
+    const sidebarItems: { id: CampaignSectionId; icon: React.ElementType; label: string }[] = [
         { id: 'identity', icon: Layout, label: 'Identité' },
         { id: 'narrative', icon: BookOpen, label: 'Narration' },
         { id: 'clues', icon: Search, label: 'Indices' },
@@ -200,6 +105,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                     <button 
                         type="button"
                         onClick={onClose}
+                        title="Fermer l'éditeur"
                         className="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl text-white/20 hover:text-white hover:bg-red-500/20 transition-all border border-white/5"
                     >
                         <X size={18} />
@@ -429,7 +335,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                 )}
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    {campaignMaps.map(map => {
+                                    {campaignMaps.map((map: { id: string; name: string; fileUrl: string }) => {
                                         const isActive = activeLocationIds.includes(map.id);
                                         return (
                                             <button
@@ -437,7 +343,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                                 type="button"
                                                 onClick={() => {
                                                     if (isActive) {
-                                                        setActiveLocationIds(activeLocationIds.filter(id => id !== map.id));
+                                                        setActiveLocationIds(activeLocationIds.filter((id: string) => id !== map.id));
                                                     } else {
                                                         setActiveLocationIds([...activeLocationIds, map.id]);
                                                     }
@@ -538,7 +444,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                     </div>
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                        {gems.map(gem => {
+                                        {gems.map((gem: { id: string; name: string }) => {
                                             const hasOverride = !!aiPersonas[gem.id];
                                             return (
                                                 <div key={gem.id} className={`p-6 rounded-[2rem] border transition-all duration-500 flex flex-col gap-4 ${hasOverride ? 'bg-app-surface/40 border-violet-500/30 shadow-glow-violet/5' : 'bg-app-surface/20 border-app-border/10'}`}>

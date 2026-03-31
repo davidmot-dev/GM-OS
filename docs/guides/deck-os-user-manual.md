@@ -6,53 +6,48 @@ Ce manuel vous accompagne pas à pas dans l'utilisation du module **Deck-OS** de
 
 ## 🃏 1. Accéder au Module Deck-OS
 
-Le module Deck-OS est accessible directement depuis le **Master Cockpit** (Tableau de bord du MJ) dans la section **Decks**. 
+Le module Deck-OS est accessible directement depuis le **Master Cockpit** (Tableau de bord du MJ) dans la section **Decks**. Il se compose de deux vues principales :
 
-### Raccourcis Disponibles :
-- **Pioche (Face cachée)** : Représentée par le dos de la carte.
-- **Pioche (Face visible)** : Représentée par la dernière carte tirée.
-
----
-
-## 🎲 2. Piocher & Tirer une Carte (Pas à Pas)
-
-1.  **Survol du Deck** : Survolez la pile de pioche (dos de la carte) pour faire apparaître les contrôles de tirage.
-2.  **Appui sur "Tirer" (Icône Plus)** : Cliquez sur le bouton central pour piocher une carte aléatoire.
-3.  **Appui sur "Mélanger" (Icône Flèches croisées)** : En cas de deck vide ou si vous souhaitez réinitialiser la pioche, cet appui fusionne la défausse dans la pioche.
-
-> [!NOTE]
-> Le nombre de cartes restantes est affiché au-dessus de la pile de pioche pour un suivi en temps réel.
+- **Bibliothèque de Decks** : Pour choisir, filtrer (par système de jeu) et configurer vos paquets.
+- **Lecteur de Deck (Active Player)** : L'interface de tirage et de projection active.
 
 ---
 
-## 👁️ 3. Projeter aux Joueurs (Mode Oracle)
+## 🎲 2. Gérer la Bibliothèque
 
-Le mode **Seer's Eye** (l'Œil de l'Oracle) permet de projeter la carte actuelle vers le **Player Hub** (écran géant) et le **Tablet Hub** (tablettes des joueurs).
+1. **Filtrage Automatique** : La bibliothèque affiche par défaut les decks **Génériques** et ceux spécifiques au **Système de la Campagne** active.
+2. **Ajouter/Éditer** : Cliquez sur l'icône de **Plus** pour ajouter un deck, ou sur le **Crayon** d'un deck existant pour modifier ses chemins (dossier, extension, format).
+3. **Sélection** : Cliquez sur la carte d'un deck pour l'activer dans le Lecteur.
+
+---
+
+## 🃏 3. Tirer & Jouer une Carte
+
+Dans le Lecteur actif :
+1. **Pile de Pioche** : Cliquez sur le dos de la carte pour piocher. Le nombre de cartes restantes est affiché dynamiquement.
+2. **Retourner (Flip)** : Cliquez sur la carte visible pour la retourner (afficher son dos ou sa face). 
+3. **Mélanger (Shuffle)** : Cliquez sur l'icône de flèches croisées pour remettre toutes les cartes dans la pioche.
+
+---
+
+## 👁️ 4. Projeter aux Joueurs (Mode Oracle)
+
+Le mode **Seer's Eye** (l'Œil de l'Oracle) permet de projeter la carte actuelle vers le **Player Hub** et le **Tablet Hub**.
 
 ### Comment Activer la Projection :
-1.  **Localisez l'icône de l'Œil** : Dans le coin supérieur droit du module Deck.
-2.  **Cliquez pour Activer** : L'icône devient **Cyan** (Active). La carte apparaît alors instantanément sur tous les écrans connectés.
-3.  **Clean View (Automatique)** : Les joueurs ne voient **que l'image de la carte**. Toutes les informations techniques (nom, description, statistiques) sont masquées pour préserver l'immersion.
-4.  **Désactivation** : Ré-appuyez sur l'icône pour couper la projection. Les écrans distants se videront automatiquement.
+1. **Icône de l'Œil** : Située en haut à droite du Lecteur.
+2. **Synchronisation en Temps Réel** : Une fois active, tout changement (tirage, mélange, retournement) est répercuté instantanément sur les écrans des joueurs.
+3. **Confidentialité** : Les joueurs ne voient que l'image de la carte (recto ou verso selon votre choix).
 
 ---
 
-## 🔄 4. Retourner une Carte Projetée (Flip)
+## ⌨️ 5. Accessibilité & Raccourcis
 
-Si vous projetez déjà une carte et que vous souhaitez en tirer une nouvelle (ou retourner la même) :
-- Le système détecte automatiquement le changement d'image.
-- La mise à jour est **immédiate** sur les écrans des joueurs.
-- Inutile de désactiver/réactiver la projection pour chaque carte.
-
----
-
-## ⚙️ 5. Configuration Expert (Rule Engine)
-
-Pour ajouter de nouveaux paquets de cartes ou modifier un deck existant :
-1.  Ouvrez le **Rule Engine Editor**.
-2.  Sélectionnez l'onglet **Decks**.
-3.  Modifiez le chemin du dossier (ex: `assets/decks/votre-dossier`).
-4.  Ajustez le format (Poker ou Tarot) selon les dimensions de vos images.
+- **Navigation Clavier** : Tous les boutons sont accessibles via la touche `Tab` et activables avec `Entrée` ou `Espace`.
+- **Labels Descriptifs** : Chaque action possède un label textuel clair pour les lecteurs d'écran.
 
 > [!TIP]
-> Pour un affichage optimal, assurez-vous que vos images de cartes ont un ratio d'aspect constant (ex: 2:3 pour du format Poker).
+> Pour un affichage optimal sur grand écran, utilisez des images au format `.png` avec un ratio cohérent (2:3 pour du format Poker).
+
+---
+*Dernière mise à jour : 31 Mars 2026*

@@ -1,79 +1,35 @@
-import React, { useEffect } from 'react';
-import { useSessionOSStore } from '../useSessionOSStore';
+import React from 'react';
 import { 
     Sparkles, Brain, Save, ArrowLeft, PenTool, Music, Beaker, User,
     BookOpen, Dice5, Zap, Map, type LucideIcon 
 } from 'lucide-react';
-import { useGemStore } from '../../../stores/useGemStore';
 import type { GameDriver, TacticalConfig } from '../../../types/drivers';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { gmToast } from '../../../stores/useToastStore';
-import { personaGeneratorService } from '../../ai/PersonaGeneratorService';
 import { Loader2 } from 'lucide-react';
-
-const DEFAULT_RANGES: TacticalConfig['ranges'] = {
-    contact: { label: 'Corps à corps', maxUnits: 1, modifier: 0 },
-    courte: { label: 'Portée courte', maxUnits: 3, modifier: 0 },
-    moyenne: { label: 'Portée moyenne', maxUnits: 6, modifier: -2 },
-    longue: { label: 'Portée longue', maxUnits: 12, modifier: -5 },
-    extreme: { label: 'Portée extrême', maxUnits: 24, modifier: -10 }
-};
+import { useRuleEngine } from '../hooks/useRuleEngine';
 
 export const RuleEngineEditor: React.FC = () => {
-    const driver = useSessionOSStore(state => {
-        const { editingDriverId, customGameDrivers, getGameDriver } = state;
-        if (!editingDriverId) return null;
-        return Boolean(customGameDrivers) && getGameDriver(editingDriverId);
-    });
-
-    const { 
-        setEditingDriverId, 
-        updateGameDriver, 
-        setCurrentView,
-        customSheetTemplates 
-    } = useSessionOSStore();
-
-    const { gems, syncGemsWithDefaults } = useGemStore();
-    const [isGenerating, setIsGenerating] = React.useState(false);
-    const [activeSection, setActiveSection] = React.useState<'core' | 'combat' | 'tactical' | 'ai' | 'notebook'>('core');
-
-    useEffect(() => {
-        syncGemsWithDefaults();
-    }, [syncGemsWithDefaults]);
+    const {
+        driver,
+        activeSection,
+        setActiveSection,
+        isGenerating,
+        dice,
+        combat,
+        tactical,
+        handleUpdate,
+        handleBack,
+        handleAutoGenerate,
+        customSheetTemplates,
+        gems
+    } = useRuleEngine();
 
     if (!driver) return (
         <div className="flex-1 flex items-center justify-center bg-app-bg text-app-text/40 font-display uppercase tracking-widest text-xs">
             Chargement du moteur de règles...
         </div>
     );
-
-    const handleUpdate = (updates: Partial<GameDriver>) => {
-        updateGameDriver(driver.id, updates);
-    };
-
-    const handleBack = () => {
-        setEditingDriverId(null);
-        setCurrentView('templates');
-    };
-
-    const handleAutoGenerate = async () => {
-        setIsGenerating(true);
-        try {
-            const context = {
-                name: driver.name,
-                universe: driver.description || driver.name,
-                style: 'Technique et immersif'
-            };
-            const personas = await personaGeneratorService.generateAllPersonas(context, true);
-            handleUpdate({ aiPersonas: personas });
-            gmToast("Résonances aethériques synchronisées", "success");
-        } catch (error) {
-            console.error("Génération error:", error);
-            gmToast("Échec de la résonance", "error");
-        } finally {
-            setIsGenerating(false);
-        }
-    };
 
     const navItems = [
         { id: 'core', label: 'Système', icon: Dice5, color: 'text-cyan-400', bg: 'bg-cyan-500/10' },
@@ -82,10 +38,6 @@ export const RuleEngineEditor: React.FC = () => {
         { id: 'ai', label: 'Intelligence', icon: Sparkles, color: 'text-violet-400', bg: 'bg-violet-500/10' },
         { id: 'notebook', label: 'Knowledge', icon: BookOpen, color: 'text-blue-400', bg: 'bg-blue-500/10' },
     ];
-
-    const dice = driver.dice || { engine: 'standard', defaultDice: '1d20' };
-    const combat = driver.combat || { initiativeFormula: 'dex', initiativeSort: 'desc', defaultHealthType: 'hp' };
-    const tactical = driver.tactical || { useTacticalAI: true, ranges: DEFAULT_RANGES };
 
     return (
         <div className="flex-1 flex flex-col h-full overflow-hidden bg-app-bg font-sans text-app-text/90">
@@ -373,7 +325,7 @@ export const RuleEngineEditor: React.FC = () => {
                                                                     onChange={e => {
                                                                         const val = parseFloat(e.target.value);
                                                                         const newRanges = { ...(tactical.ranges || {}) } as TacticalConfig['ranges'];
-                                                                        (newRanges as any)[rangeKey] = { ...range, maxUnits: isNaN(val) ? 0 : val };
+                                                                        newRanges[rangeKey as keyof TacticalConfig['ranges']] = { ...range, maxUnits: isNaN(val) ? 0 : val };
                                                                         handleUpdate({ tactical: { ...tactical, ranges: newRanges } });
                                                                     }}
                                                                     className="w-24 bg-app-bg/40 text-center py-2.5 rounded-xl border border-app-border/10 text-xs font-mono text-emerald-400 focus:border-emerald-500/50 outline-none"
@@ -387,7 +339,7 @@ export const RuleEngineEditor: React.FC = () => {
                                                                     onChange={e => {
                                                                         const val = parseInt(e.target.value);
                                                                         const newRanges = { ...(tactical.ranges || {}) } as TacticalConfig['ranges'];
-                                                                        (newRanges as any)[rangeKey] = { ...range, modifier: val };
+                                                                        newRanges[rangeKey as keyof TacticalConfig['ranges']] = { ...range, modifier: val };
                                                                         handleUpdate({ tactical: { ...tactical, ranges: newRanges } });
                                                                     }}
                                                                     className={`w-24 bg-app-bg/40 text-center py-2.5 rounded-xl border border-app-border/10 text-xs font-mono focus:border-emerald-500/50 outline-none ${range.modifier > 0 ? 'text-emerald-400' : range.modifier < 0 ? 'text-rose-400' : 'text-app-text/40'}`}
@@ -450,7 +402,7 @@ export const RuleEngineEditor: React.FC = () => {
                                             <div className="h-px bg-app-border/10 flex-1" />
                                         </h3>
                                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                            {gems.map(gem => {
+                                            {gems.map((gem: { id: string; name: string; icon: string }) => {
                                                 const iconMap: Record<string, LucideIcon> = { BookOpen, PenTool, Music, Beaker, Map, User, Sparkles, Brain };
                                                 const Icon = iconMap[gem.icon] || Brain;
                                                 const currValue = driver.aiPersonas?.[gem.id] || '';

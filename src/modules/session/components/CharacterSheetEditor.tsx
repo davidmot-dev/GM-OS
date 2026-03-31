@@ -1,250 +1,42 @@
-import React, { useState } from 'react';
-import { useSessionOSStore } from '../useSessionOSStore';
-import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
-import type { SheetField } from '../../../data/defaultSheetTemplates';
-import { Save, CheckSquare, Square, FolderOpen, Layers, FileText, Trash2, Lock, BookOpen, Eye, Heart, Sparkles, Package, Tablet, PenTool } from 'lucide-react';
+import React from 'react';
+import { Save, FolderOpen, Layers, FileText, Trash2, Lock, BookOpen, Eye, Heart, Sparkles, Package, Tablet, PenTool } from 'lucide-react';
 import { useImageStore } from '../../image/useImageStore';
 import { gmToast } from '../../../stores/useToastStore';
-import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { MediaBrowser } from '../../../components/MediaBrowser';
-import { useMediaStore } from '../../../stores/useMediaStore';
 import AIPromptOverlay from '../../ai/components/AIPromptOverlay';
-import { resolveSheetTemplate } from '../logic/templateResolver';
+import { 
+    FieldGauge, FieldNumber, FieldText, 
+    FieldCheckbox, FieldSelect, FieldTextarea, FieldRating 
+} from './fields/SheetFields';
+import { useCharacterEditor } from '../hooks/useCharacterEditor';
 
-// --- Sub-components ---
-
-const FieldGauge: React.FC<{
-    field: SheetField;
-    value: number;
-    onChange: (val: number) => void;
-}> = ({ field, value, onChange }) => (
-    <div className="group space-y-2">
-        <div className="flex justify-between items-center">
-            <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{field.label}</label>
-            <span className="text-[10px] font-black text-accent font-mono">{value}%</span>
-        </div>
-        <div className="relative h-2 bg-app-bg rounded-full overflow-hidden border border-app-border/40">
-            <div
-                className="absolute inset-y-0 left-0 bg-accent transition-all duration-300"
-                style={{ width: `${value}%` }}
-            />
-            <input
-                type="range" min={0} max={100} step={1} value={value}
-                onChange={e => onChange(parseInt(e.target.value))}
-                className="absolute inset-0 w-full opacity-0 cursor-pointer z-10 h-full"
-            />
-        </div>
-    </div>
-);
-
-const FieldNumber: React.FC<{
-    field: SheetField;
-    value: number;
-    onChange: (val: number) => void;
-}> = ({ field, value, onChange }) => (
-    <div className="flex items-center justify-between p-3 bg-app-bg/40 rounded-xl border border-app-border/40">
-        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{field.label}</label>
-        <input
-            type="number"
-            value={value}
-            onChange={e => onChange(Number(e.target.value))}
-            className="w-16 bg-app-surface text-app-text text-center font-mono text-sm font-bold rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-accent/40"
-        />
-    </div>
-);
-
-const FieldText: React.FC<{
-    field: SheetField;
-    value: string;
-    onChange: (val: string) => void;
-}> = ({ field, value, onChange }) => (
-    <div className="flex items-center gap-3 p-3 bg-app-bg/40 rounded-xl border border-app-border/40">
-        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40 w-28 flex-shrink-0">{field.label}</label>
-        <input
-            type="text"
-            value={value}
-            onChange={e => onChange(e.target.value)}
-            className="flex-1 bg-transparent text-app-text text-sm font-medium focus:outline-none border-b border-app-border focus:border-accent/50 transition-colors pb-0.5"
-        />
-    </div>
-);
-
-const FieldCheckbox: React.FC<{
-    field: SheetField;
-    value: boolean;
-    onChange: (val: boolean) => void;
-}> = ({ field, value, onChange }) => (
-    <button
-        onClick={() => onChange(!value)}
-        className="flex items-center gap-3 p-3 bg-app-bg/40 rounded-xl border border-app-border/40 w-full hover:border-accent/20 transition-all"
-    >
-        {value ? <CheckSquare size={16} className="text-accent flex-shrink-0" /> : <Square size={16} className="text-app-text/20 flex-shrink-0" />}
-        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40 cursor-pointer">{field.label}</label>
-    </button>
-);
-const FieldSelect: React.FC<{
-    field: SheetField;
-    value: string;
-    onChange: (val: string) => void;
-}> = ({ field, value, onChange }) => (
-    <div className="flex items-center justify-between p-3 bg-app-bg/40 rounded-xl border border-app-border/40">
-        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{field.label}</label>
-        <select
-            value={value}
-            onChange={e => onChange(e.target.value)}
-            className="w-48 bg-app-surface text-app-text text-[11px] rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-accent/40 border border-white/5"
-        >
-            <option value="" disabled>-- Sélectionner --</option>
-            {(field.options || []).map(opt => (
-                <option key={opt} value={opt}>{opt}</option>
-            ))}
-        </select>
-    </div>
-);
-
-const FieldTextarea: React.FC<{
-    field: SheetField;
-    value: string;
-    onChange: (val: string) => void;
-}> = ({ field, value, onChange }) => (
-    <div className="flex flex-col gap-2 p-3 bg-app-bg/40 rounded-xl border border-app-border/40">
-        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{field.label}</label>
-        <textarea
-            value={value}
-            onChange={e => onChange(e.target.value)}
-            rows={2}
-            className="w-full bg-transparent text-app-text text-sm focus:outline-none border-b border-app-border/40 focus:border-accent/40 transition-colors resize-none custom-scrollbar"
-        />
-    </div>
-);
-
-const FieldRating: React.FC<{
-    field: SheetField;
-    value: number;
-    onChange: (val: number) => void;
-}> = ({ field, value, onChange }) => {
-    const max = field.max || 5;
-    return (
-        <div className="flex items-center justify-between p-3 bg-app-bg/40 rounded-xl border border-app-border/40 hover:border-accent/20 transition-all">
-            <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{field.label}</label>
-            <div className="flex items-center gap-1.5">
-                {Array.from({ length: max }).map((_, i) => (
-                    <button
-                        key={i}
-                        onClick={() => onChange(i + 1 === value ? 0 : i + 1)}
-                        className={`w-3.5 h-3.5 rounded-full transition-all border ${
-                            i < value 
-                                ? 'bg-accent border-accent scale-110 shadow-[0_0_8px_rgba(var(--color-accent),0.5)]' 
-                                : 'bg-black/20 border-white/10 hover:border-accent/50'
-                        }`}
-                    />
-                ))}
-            </div>
-        </div>
-    );
-};
 // --- Main Component ---
 
 const CharacterSheetEditor: React.FC = () => {
-    const {
-        players, selectedPlayerId, selectedCharacterId,
-        customSheetTemplates, updateCharacterSheetData, updateCharacterVisuals, updateCharacterNarrative,
-        generatePlayerPortrait, isGeneratingAIImage,
-        updateCharacterHP, updateCharacterMaxHP,
-        updateCharacterHubOptions,
-        campaigns
-    } = useSessionOSStore();
-    const { mediaList, getMediaBlob } = useMediaStore();
-
-    const selectedPlayer = players.find(p => p.id === selectedPlayerId);
-    const character = selectedPlayer?.characters.find(c => c.id === selectedCharacterId);
-
-    const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
-    const template = resolveSheetTemplate(character, campaigns, allTemplates);
-
-    // Compute default data from template, merged with saved sheetData
-    const getInitialData = (): Record<string, string | number | boolean> => {
-        if (!character || !template) return {};
-        const out: Record<string, string | number | boolean> = {};
-        for (const section of template.sections) {
-            for (const field of section.fields) {
-                out[field.id] = character.sheetData?.[field.id] ?? field.defaultValue;
-            }
+    const editor = useCharacterEditor();
+    const hpBarRef = React.useRef<HTMLDivElement>(null);
+    React.useEffect(() => {
+        if (hpBarRef.current && editor.character && editor.character.maxHp > 0) {
+            hpBarRef.current.style.width = `${Math.max(0, Math.min(100, (editor.character.hp / editor.character.maxHp) * 100))}%`;
         }
-        return out;
-    };
+    }, [editor.character, editor.character?.hp, editor.character?.maxHp]);
 
-    const [localData, setLocalData] = useState<Record<string, string | number | boolean>>(getInitialData);
-    const [saved, setSaved] = useState(false);
-    const [mediaBrowserTarget, setMediaBrowserTarget] = useState<'portrait' | 'token' | 'document' | null>(null);
-    const [description, setDescription] = useState(character?.description ?? '');
-    const [gmNotes, setGmNotes] = useState(character?.gmNotes ?? '');
-    const [playerNotes, setPlayerNotes] = useState(character?.playerNotes ?? '');
-    const [inventory, setInventory] = useState(character?.inventory ?? '');
-    const [showAIPrompt, setShowAIPrompt] = useState(false);
-
-    const portraitUrl = useMediaUrl(character?.portraitUrl);
-    const tokenUrl = useMediaUrl(character?.tokenUrl);
-
-    if (!character || !template) return null;
-
-    const getValue = (fieldId: string, defaultValue: number | string | boolean) => {
-        return localData[fieldId] ?? defaultValue;
-    };
-
-    const updateLocal = (fieldId: string, value: string | number | boolean) => {
-        setSaved(false);
-        setLocalData(prev => ({ ...prev, [fieldId]: value }));
-    };
-
-    const handleSave = () => {
-        if (!selectedPlayer) return;
-        // Save sheet data
-        for (const [fieldId, value] of Object.entries(localData)) {
-            updateCharacterSheetData(selectedPlayer.id, character.id, fieldId, value);
-        }
-        // Save narrative fields
-        updateCharacterNarrative(selectedPlayer.id, character.id, { description, gmNotes, playerNotes, inventory });
-        setSaved(true);
-        setTimeout(() => setSaved(false), 2000);
-    };
-
-    const handleMediaSelect = (mediaId: string) => {
-        if (!selectedPlayer || !mediaBrowserTarget) return;
-        if (mediaBrowserTarget === 'document') {
-            const current = character.linkedDocumentIds ?? [];
-            if (!current.includes(mediaId)) {
-                updateCharacterNarrative(selectedPlayer.id, character.id, {
-                    linkedDocumentIds: [...current, mediaId]
-                });
-            }
-            setMediaBrowserTarget(null);
-            return;
-        }
-        updateCharacterVisuals(selectedPlayer.id, character.id, {
-            [mediaBrowserTarget === 'portrait' ? 'portraitUrl' : 'tokenUrl']: mediaId,
-        });
-        setMediaBrowserTarget(null);
-    };
-
-    const handleRemoveDocument = (docId: string) => {
-        if (!selectedPlayer) return;
-        const current = character.linkedDocumentIds ?? [];
-        updateCharacterNarrative(selectedPlayer.id, character.id, {
-            linkedDocumentIds: current.filter(id => id !== docId)
-        });
-    };
-
-    const openDocument = async (docId: string) => {
-        const blob = await getMediaBlob(docId);
-        if (!blob) return;
-        const url = URL.createObjectURL(blob);
-        window.open(url, '_blank');
-    };
+    if (!editor.character || !editor.template) return null;
+    const { 
+        character, template,
+        description, gmNotes, playerNotes, inventory,
+        setDescription, setGmNotes, setPlayerNotes, setInventory,
+        portraitUrl, tokenUrl,
+        getValue, updateLocal, handleSave, saved,
+        mediaBrowserTarget, setMediaBrowserTarget, handleMediaSelect, handleRemoveDocument, openDocument, mediaList,
+        showAIPrompt, setShowAIPrompt, isGeneratingAIImage, handleGeneratePortrait,
+        updateCharacterHP, updateCharacterMaxHP, updateCharacterHubOptions
+    } = editor;
 
     // Separate gauge fields from other fields for layout
     const gaugeFields = (section: typeof template.sections[0]) => section.fields.filter(f => f.type === 'gauge');
     const otherFields = (section: typeof template.sections[0]) => section.fields.filter(f => f.type !== 'gauge');
+
 
     return (
         <div className="flex-1 flex flex-col overflow-hidden">
@@ -397,7 +189,7 @@ const CharacterSheetEditor: React.FC = () => {
                                     <input 
                                         type="number" 
                                         value={character.hp}
-                                        onChange={(e) => updateCharacterHP(selectedPlayerId!, character.id, parseInt(e.target.value) || 0)}
+                                        onChange={(e) => updateCharacterHP(parseInt(e.target.value) || 0)}
                                         className="w-full bg-transparent text-center text-white font-black text-sm focus:outline-none"
                                         title="Points de Vie actuels"
                                     />
@@ -407,7 +199,7 @@ const CharacterSheetEditor: React.FC = () => {
                                     <input 
                                         type="number" 
                                         value={character.maxHp}
-                                        onChange={(e) => updateCharacterMaxHP(selectedPlayerId!, character.id, parseInt(e.target.value) || 0)}
+                                        onChange={(e) => updateCharacterMaxHP(parseInt(e.target.value) || 0)}
                                         className="w-full bg-transparent text-center text-app-text/40 font-black text-sm focus:outline-none"
                                         title="Points de Vie Max"
                                     />
@@ -416,8 +208,8 @@ const CharacterSheetEditor: React.FC = () => {
                             
                             <div className="w-full bg-app-bg h-1.5 rounded-full overflow-hidden border border-app-border/40 ring-1 ring-white/5 p-[1px]">
                                 <div
+                                    ref={hpBarRef}
                                     className={`h-full rounded-full transition-all duration-500 ${character.hp / character.maxHp > 0.6 ? 'bg-gradient-to-r from-emerald-600 to-emerald-400' : character.hp / character.maxHp > 0.3 ? 'bg-gradient-to-r from-amber-600 to-amber-400' : 'bg-gradient-to-r from-rose-700 to-rose-500'}`}
-                                    style={{ width: `${Math.max(0, Math.min(100, (character.hp / character.maxHp) * 100))}%` }}
                                 />
                             </div>
                         </div>
@@ -547,27 +339,27 @@ const CharacterSheetEditor: React.FC = () => {
                             <FieldCheckbox 
                                 field={{ id: 'showHP', label: 'Afficher PV', type: 'checkbox', defaultValue: true }} 
                                 value={character.hubOptions?.showHP ?? true} 
-                                onChange={(val) => selectedPlayer && updateCharacterHubOptions(selectedPlayer.id, character.id, { showHP: val })} 
+                                onChange={(val) => updateCharacterHubOptions({ showHP: val })} 
                             />
                             <FieldCheckbox 
                                 field={{ id: 'showMP', label: 'Afficher PM', type: 'checkbox', defaultValue: true }} 
                                 value={character.hubOptions?.showMP ?? true} 
-                                onChange={(val) => selectedPlayer && updateCharacterHubOptions(selectedPlayer.id, character.id, { showMP: val })} 
+                                onChange={(val) => updateCharacterHubOptions({ showMP: val })} 
                             />
                             <FieldCheckbox 
                                 field={{ id: 'showAP', label: 'Afficher PA', type: 'checkbox', defaultValue: true }} 
                                 value={character.hubOptions?.showAP ?? true} 
-                                onChange={(val) => selectedPlayer && updateCharacterHubOptions(selectedPlayer.id, character.id, { showAP: val })} 
+                                onChange={(val) => updateCharacterHubOptions({ showAP: val })} 
                             />
                             <FieldCheckbox 
                                 field={{ id: 'showInventory', label: 'Afficher Inventaire', type: 'checkbox', defaultValue: true }} 
                                 value={character.hubOptions?.showInventory ?? true} 
-                                onChange={(val) => selectedPlayer && updateCharacterHubOptions(selectedPlayer.id, character.id, { showInventory: val })} 
+                                onChange={(val) => updateCharacterHubOptions({ showInventory: val })} 
                             />
                             <FieldCheckbox 
                                 field={{ id: 'showRelations', label: 'Afficher Relations', type: 'checkbox', defaultValue: true }} 
                                 value={character.hubOptions?.showRelations ?? true} 
-                                onChange={(val) => selectedPlayer && updateCharacterHubOptions(selectedPlayer.id, character.id, { showRelations: val })} 
+                                onChange={(val) => updateCharacterHubOptions({ showRelations: val })} 
                             />
                         </div>
                         <p className="text-[9px] text-app-text/20 italic">Déterminez quels éléments sont visibles par le joueur sur sa tablette.</p>
@@ -612,6 +404,7 @@ const CharacterSheetEditor: React.FC = () => {
                                             <button
                                                 onClick={() => handleRemoveDocument(docId)}
                                                 className="opacity-0 group-hover:opacity-100 p-1 text-app-text/20 hover:text-red-400 transition-all"
+                                                title="Supprimer"
                                             >
                                                 <Trash2 size={12} />
                                             </button>
@@ -631,11 +424,7 @@ const CharacterSheetEditor: React.FC = () => {
                 isGenerating={isGeneratingAIImage}
                 title={`Portrait IA : ${character.name}`}
                 placeholder="Ex: cape rouge déchirée, tatouages mystiques, regard d'acier..."
-                onGenerate={(instructions) => {
-                    if (selectedPlayer && character) {
-                        generatePlayerPortrait(selectedPlayer.id, character.id, instructions).then(() => setShowAIPrompt(false));
-                    }
-                }}
+                onGenerate={handleGeneratePortrait}
             />
         </div>
     );

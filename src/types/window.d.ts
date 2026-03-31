@@ -16,6 +16,7 @@ import { TaxonomyState } from '../modules/tactical-ai/useTaxonomyStore';
 import { VoiceState } from '../modules/voice/useVoiceStore';
 import { ClockState } from '../store/useClockStore';
 import { ImageBridge } from '../modules/image/types';
+import { WebState } from '../modules/web/useWebStore';
 
 declare global {
     export interface DisplayInfo {
@@ -185,16 +186,16 @@ declare global {
 
     interface Window {
         appBridge?: AppBridge;
-        useMusicStore: { getState: () => MusicState; setState: (s: Partial<MusicState>) => void; subscribe: (cb: (s: MusicState) => void) => () => void };
-        useLightStore: { getState: () => LightState; setState: (s: Partial<LightState>) => void; subscribe: (cb: (s: LightState) => void) => () => void };
-        useMapStore: { getState: () => MapState; setState: (s: Partial<MapState>) => void; subscribe: (cb: (s: MapState) => void) => () => void };
-        useImageStore: { getState: () => ImageState; setState: (s: Partial<ImageState>) => void; subscribe: (cb: (s: ImageState) => void) => () => void };
-        useSoundStore: { getState: () => SoundState; setState: (s: Partial<SoundState>) => void; subscribe: (cb: (s: SoundState) => void) => () => void };
-        useAmbientStore: { getState: () => AmbientState; setState: (s: Partial<AmbientState>) => void; subscribe: (cb: (s: AmbientState) => void) => () => void };
-        useStoryboardStore: { getState: () => StoryboardState; setState: (s: Partial<StoryboardState>) => void; subscribe: (cb: (s: StoryboardState) => void) => () => void };
-        useToastStore: { getState: () => ToastState; setState: (s: Partial<ToastState>) => void; subscribe: (cb: (s: ToastState) => void) => () => void };
-        useSessionOSStore: { getState: () => SessionOSState; setState: (s: Partial<SessionOSState>) => void; subscribe: (cb: (s: SessionOSState) => void) => () => void };
-        useCombatStore: { getState: () => CombatState; setState: (s: Partial<CombatState>) => void; subscribe: (cb: (s: CombatState) => void) => () => void };
+        useMusicStore: { getState: () => MusicState & { applySnapshot?: (s: unknown) => void }; setState: (s: Partial<MusicState>) => void; subscribe: (cb: (s: MusicState) => void) => () => void };
+        useLightStore: { getState: () => LightState & { applySnapshot?: (s: unknown) => void }; setState: (s: Partial<LightState>) => void; subscribe: (cb: (s: LightState) => void) => () => void };
+        useMapStore: { getState: () => MapState & { applySnapshot?: (s: unknown) => void }; setState: (s: Partial<MapState>) => void; subscribe: (cb: (s: MapState) => void) => () => void };
+        useImageStore: { getState: () => ImageState & { applySnapshot?: (s: unknown) => void }; setState: (s: Partial<ImageState>) => void; subscribe: (cb: (s: ImageState) => void) => () => void };
+        useSoundStore: { getState: () => SoundState & { applySnapshot?: (s: unknown) => void }; setState: (s: Partial<SoundState>) => void; subscribe: (cb: (s: SoundState) => void) => () => void };
+        useAmbientStore: { getState: () => AmbientState & { applySnapshot?: (s: unknown) => void }; setState: (s: Partial<AmbientState>) => void; subscribe: (cb: (s: AmbientState) => void) => () => void };
+        useStoryboardStore: { getState: () => StoryboardState & { applySnapshot?: (s: unknown) => void }; setState: (s: Partial<StoryboardState>) => void; subscribe: (cb: (s: StoryboardState) => void) => () => void };
+        useToastStore: { getState: () => ToastState & { applySnapshot?: (s: unknown) => void }; setState: (s: Partial<ToastState>) => void; subscribe: (cb: (s: ToastState) => void) => () => void };
+        useSessionOSStore: { getState: () => SessionOSState & { applySnapshot?: (s: unknown) => void }; setState: (s: Partial<SessionOSState>) => void; subscribe: (cb: (s: SessionOSState) => void) => () => void };
+        useCombatStore: { getState: () => CombatState & { applySnapshot?: (s: unknown) => void }; setState: (s: Partial<CombatState>) => void; subscribe: (cb: (s: CombatState) => void) => () => void };
         useClockStore: { getState: () => ClockState; setState: (s: Partial<ClockState>) => void; subscribe: (cb: (s: ClockState) => void) => () => void };
         useFavoriteStore: { getState: () => FavoriteState; setState: (s: Partial<FavoriteState>) => void; subscribe: (cb: (s: FavoriteState) => void) => () => void };
         useJournalStore: { getState: () => JournalState; setState: (s: Partial<JournalState>) => void; subscribe: (cb: (s: JournalState) => void) => () => void };
@@ -202,6 +203,7 @@ declare global {
         useTacticalAIStore: { getState: () => TacticalAIState; setState: (s: Partial<TacticalAIState>) => void; subscribe: (cb: (s: TacticalAIState) => void) => () => void };
         useTaxonomyStore: { getState: () => TaxonomyState; setState: (s: Partial<TaxonomyState>) => void; subscribe: (cb: (s: TaxonomyState) => void) => () => void };
         useVoiceStore: { getState: () => VoiceState; setState: (s: Partial<VoiceState>) => void; subscribe: (cb: (s: VoiceState) => void) => () => void };
+        useWebStore: { getState: () => WebState; setState: (s: Partial<WebState>) => void; subscribe: (cb: (s: WebState) => void) => () => void };
         
         hueEngine?: { 
             applyScene: (id: string | null, isAutomatic?: boolean) => Promise<void>; 

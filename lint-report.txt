@@ -1,0 +1,135 @@
+
+C:\Projet_David\GM-OS-v5\src\modules\session\ObsidianExportService.test.ts
+  8:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Projet_David\GM-OS-v5\src\modules\session\components\AddEntityForm.tsx
+  33:13  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Projet_David\GM-OS-v5\src\modules\session\components\AddEntityForm.tsx:33:13
+  31 |     useEffect(() => {
+  32 |         if (pendingPreFill && pendingPreFill.type === 'npc') {
+> 33 |             setName(pendingPreFill.data.title);
+     |             ^^^^^^^ Avoid calling setState() directly within an effect
+  34 |             // On met le contenu dans les notes d'interprétation par défaut
+  35 |             setRoleplayingNotes(pendingPreFill.data.content);
+  36 |             if (pendingPreFill.data.imageUrl) {  react-hooks/set-state-in-effect
+
+C:\Projet_David\GM-OS-v5\src\modules\session\components\CampaignDetails.tsx
+  4:10  error  'gmCustom' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Projet_David\GM-OS-v5\src\modules\session\components\CampaignForm.tsx
+   56:56   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  337:61   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  345:108  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  446:57   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Projet_David\GM-OS-v5\src\modules\session\components\CluesManager.tsx
+  56:13  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Projet_David\GM-OS-v5\src\modules\session\components\CluesManager.tsx:56:13
+  54 |             if (pendingPreFill.type === 'location') prefix = '[LIEU] ';
+  55 |             
+> 56 |             setEditingClue({ 
+     |             ^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  57 |                 title: prefix + (title || ''), 
+  58 |                 content: content || '', 
+  59 |                 mediaUrl: mediaUrl || imageUrl || '',  react-hooks/set-state-in-effect
+
+C:\Projet_David\GM-OS-v5\src\modules\session\components\MessageAlertOverlay.tsx
+  44:13  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Projet_David\GM-OS-v5\src\modules\session\components\MessageAlertOverlay.tsx:44:13
+  42 |             };
+  43 |             
+> 44 |             setAlerts(prev => [...prev, newAlert]);
+     |             ^^^^^^^^^ Avoid calling setState() directly within an effect
+  45 |         }
+  46 |     }, [messages]);
+  47 |  react-hooks/set-state-in-effect
+
+C:\Projet_David\GM-OS-v5\src\modules\session\components\NpcDetail.tsx
+  423:66  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Projet_David\GM-OS-v5\src\modules\session\components\RuleEngineEditor.tsx
+  405:61  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Projet_David\GM-OS-v5\src\modules\session\components\SocialGraph.tsx
+   58:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  125:35  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Projet_David\GM-OS-v5\src\modules\session\components\TimelineView.tsx
+  122:53  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  125:61  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Projet_David\GM-OS-v5\src\modules\session\components\WikiView.tsx
+  28:9  error  'pendingPreFill' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  31:9  error  'setIsAddingEntity' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  32:9  error  'setSelectedEntity' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Projet_David\GM-OS-v5\src\modules\session\components\health\ClockDriver.tsx
+  2:10  error  'Shield' is defined but never used       @typescript-eslint/no-unused-vars
+  2:18  error  'ShieldAlert' is defined but never used  @typescript-eslint/no-unused-vars
+  2:31  error  'ShieldOff' is defined but never used    @typescript-eslint/no-unused-vars
+
+C:\Projet_David\GM-OS-v5\src\modules\session\data\sessionMocks.ts
+  1:43  error  'WikiEntry' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Projet_David\GM-OS-v5\src\modules\session\hooks\useCampaignEditor.test.ts
+  55:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  56:36  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Projet_David\GM-OS-v5\src\modules\session\hooks\useCharacterEditor.test.ts
+  55:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Projet_David\GM-OS-v5\src\modules\session\hooks\useCharacterEditor.ts
+   53:9   warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+   59:8   warning  React Hook useEffect has missing dependencies: 'character?.description', 'character?.gmNotes', 'character?.inventory', and 'character?.playerNotes'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  162:43  error    Unexpected any. Specify a different type                                                                                                                                                                 @typescript-eslint/no-explicit-any
+
+C:\Projet_David\GM-OS-v5\src\modules\session\hooks\useRuleEngine.test.ts
+  64:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  64:77  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  70:36  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Projet_David\GM-OS-v5\src\modules\session\logic\DeckInterpreter.test.ts
+  21:71  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Projet_David\GM-OS-v5\src\modules\session\logic\crossDomainHelpers.test.ts
+   3:15   error  'SessionOSStore' is defined but never used  @typescript-eslint/no-unused-vars
+  11:20   error  Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+  12:18   error  Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+  13:18   error  Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+  25:36   error  Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+  35:113  error  Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+  57:98   error  Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+  75:18   error  Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+  82:51   error  Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+  83:49   error  Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+
+C:\Projet_David\GM-OS-v5\src\modules\session\logic\crossDomainHelpers.ts
+  40:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Projet_David\GM-OS-v5\src\modules\session\store\entitySlice.test.ts
+  4:15  error  'HealthSystem' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 44 problems (42 errors, 2 warnings)
+  0 errors and 1 warning potentially fixable with the `--fix` option.
+

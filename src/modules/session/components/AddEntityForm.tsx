@@ -28,6 +28,7 @@ const AddEntityForm: React.FC = () => {
     const avatarUrl = useMediaUrl(avatarMediaId);
 
     // Wiki Bridge Receiver
+    /* eslint-disable react-hooks/set-state-in-effect */
     useEffect(() => {
         if (pendingPreFill && pendingPreFill.type === 'npc') {
             setName(pendingPreFill.data.title);
@@ -41,6 +42,7 @@ const AddEntityForm: React.FC = () => {
             gmToast("Données transmises depuis le Wiki.", 'success');
         }
     }, [pendingPreFill, clearPendingPreFill]);
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -86,9 +88,12 @@ const AddEntityForm: React.FC = () => {
             <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-12 flex-1 overflow-hidden">
                 {/* Left Col: Media Selection */}
                 <div className="w-full md:w-[400px] flex-shrink-0 flex flex-col gap-6">
-                    <div 
-                        className="aspect-[4/5] rounded-3xl overflow-hidden border-2 border-accent/10 shadow-2xl relative group bg-app-surface cursor-pointer"
+                    <button 
+                        type="button"
+                        className="aspect-[4/5] w-full rounded-3xl overflow-hidden border-2 border-accent/10 shadow-2xl relative group bg-app-surface cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent"
                         onClick={() => setIsMediaBrowserOpen(true)}
+                        title="Choisir un portrait"
+                        aria-label="Choisir un portrait"
                     >
                         {avatarUrl ? (
                             <img src={avatarUrl} alt="Portrait" className="w-full h-full object-cover" />
@@ -101,7 +106,7 @@ const AddEntityForm: React.FC = () => {
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
                             <ImageIcon size={32} className="text-white" />
                         </div>
-                    </div>
+                    </button>
 
                     {/* Type & Role Selector */}
                     <div className="space-y-4">
@@ -150,8 +155,9 @@ const AddEntityForm: React.FC = () => {
                 {/* Right Col: Fields */}
                 <div className="flex-1 flex flex-col gap-6 overflow-y-auto custom-scrollbar pr-2">
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-accent pl-1">Nom complet / Titre</label>
+                        <label htmlFor="entity-name" className="text-[10px] font-black uppercase tracking-widest text-accent pl-1">Nom complet / Titre</label>
                         <input
+                            id="entity-name"
                             type="text"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
@@ -163,8 +169,9 @@ const AddEntityForm: React.FC = () => {
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40 pl-1 italic">Sous-titre / Description courte</label>
+                        <label htmlFor="entity-description" className="text-[10px] font-black uppercase tracking-widest text-app-text/40 pl-1 italic">Sous-titre / Description courte</label>
                         <input
+                            id="entity-description"
                             type="text"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
@@ -177,21 +184,22 @@ const AddEntityForm: React.FC = () => {
                     {/* Stats Grid */}
                     <div className="grid grid-cols-4 gap-3">
                         {[
-                            { label: 'PV Max', val: maxHp, set: setMaxHp, icon: <Heart size={14} className="text-red-400" /> },
-                            { label: 'CA', val: ac, set: setAc, icon: <Shield size={14} className="text-blue-400" /> },
-                            { label: 'Vitesse', val: speed, set: setSpeed, icon: <Wind size={14} className="text-emerald-400" /> },
-                            { label: 'Init.', val: initiative, set: setInitiative, icon: <Zap size={14} className="text-amber-400" /> },
+                            { id: 'entity-hp', label: 'PV Max', val: maxHp, set: setMaxHp, icon: <Heart size={14} className="text-red-400" /> },
+                            { id: 'entity-ac', label: 'CA', val: ac, set: setAc, icon: <Shield size={14} className="text-blue-400" /> },
+                            { id: 'entity-speed', label: 'Vitesse', val: speed, set: setSpeed, icon: <Wind size={14} className="text-emerald-400" /> },
+                            { id: 'entity-initiative', label: 'Init.', val: initiative, set: setInitiative, icon: <Zap size={14} className="text-amber-400" /> },
                         ].map((stat, i) => (
                             <div key={i} className="bg-app-surface/40 border border-white/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1 group hover:border-accent/20 transition-all">
                                 {stat.icon}
                                 <input
+                                    id={stat.id}
                                     type="number"
                                     value={stat.val}
                                     onChange={(e) => stat.set(parseInt(e.target.value) || 0)}
                                     className="w-full bg-transparent border-none text-center text-white font-black text-sm focus:ring-0"
                                     title={stat.label}
                                 />
-                                <span className="text-[9px] uppercase font-bold text-app-text/20 tracking-wider">{stat.label}</span>
+                                <label htmlFor={stat.id} className="text-[9px] uppercase font-bold text-app-text/20 tracking-wider">{stat.label}</label>
                             </div>
                         ))}
                     </div>
@@ -201,9 +209,10 @@ const AddEntityForm: React.FC = () => {
                         <div className="p-4 rounded-2xl bg-app-surface/30 border border-white/5 flex flex-col gap-2">
                             <div className="flex items-center gap-2 mb-1">
                                 <BookOpen size={14} className="text-app-text/40 pointer-events-none" />
-                                <h4 className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Notes d'Interprétation</h4>
+                                <label htmlFor="entity-roleplaying-notes" className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Notes d'Interprétation</label>
                             </div>
                             <textarea
+                                id="entity-roleplaying-notes"
                                 className="w-full bg-transparent border-none text-app-text/60 text-xs leading-relaxed resize-none focus:ring-0 placeholder:text-app-text/10 min-h-[80px]"
                                 value={roleplayingNotes}
                                 onChange={(e) => setRoleplayingNotes(e.target.value)}
@@ -218,9 +227,10 @@ const AddEntityForm: React.FC = () => {
                             </div>
                             <div className="flex items-center gap-2 mb-1 relative z-10">
                                 <Lock size={14} className="text-accent pointer-events-none" />
-                                <h4 className="text-[10px] font-black uppercase tracking-widest text-accent">Informations Secrètes</h4>
+                                <label htmlFor="entity-secret-info" className="text-[10px] font-black uppercase tracking-widest text-accent">Informations Secrètes</label>
                             </div>
                             <textarea
+                                id="entity-secret-info"
                                 className="w-full bg-transparent border-none text-app-text/60 text-xs leading-relaxed resize-none focus:ring-0 placeholder:text-app-text/10 min-h-[80px] relative z-10"
                                 value={gmSecretInfo}
                                 onChange={(e) => setGmSecretInfo(e.target.value)}

@@ -184,7 +184,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         <span className={`text-xl tracking-tight leading-none ${
                             theme === 'medieval' ? 'font-medieval text-accent' : 'font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent'
                         }`}>
-                            GM-OS <span className={theme === 'medieval' ? 'text-app-text/60' : ''}>v5</span>
+                            GM-OS <span className={theme === 'medieval' ? 'text-app-text/60' : ''}>v6</span>
                         </span>
                         <span className={`text-[10px] uppercase tracking-[0.2em] mt-1 opacity-80 backdrop-blur-sm ${
                             theme === 'medieval' ? 'font-display text-accent' : 'font-black text-accent'
@@ -453,7 +453,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                              </span>
                         </div>
                         <div className={`px-3 py-1.5 rounded-lg bg-app-bg border border-app-border text-[9px] text-app-text/40 shadow-xl ${theme === 'medieval' ? 'font-display' : 'font-mono'}`}>
-                            GM-OS_v5.1.1-ALPHA
+                            GM-OS_v6.0.0-DEV
                         </div>
                     </div>
                 </header>

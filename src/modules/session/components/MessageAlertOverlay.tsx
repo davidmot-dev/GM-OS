@@ -41,6 +41,7 @@ export const MessageAlertOverlay: React.FC = () => {
                 timestamp: latestMsg.timestamp
             };
             
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setAlerts(prev => [...prev, newAlert]);
         }
     }, [messages]);
@@ -61,14 +62,11 @@ export const MessageAlertOverlay: React.FC = () => {
             {alerts.slice(-3).map((alert, index) => (
                 <div 
                     key={alert.id}
-                    className="w-80 bg-app-surface/90 border border-accent/30 rounded-2xl shadow-2xl backdrop-blur-2xl p-4 pointer-events-auto transform animate-in slide-in-from-right-10 duration-300 border-l-4 border-l-accent"
-                    style={{ 
-                        '--alert-opacity': 1 - (alerts.length - 1 - index) * 0.15,
-                        '--alert-scale': 1 - (alerts.length - 1 - index) * 0.05,
-                        '--alert-translate': `${(alerts.length - 1 - index) * 2}px`,
-                        opacity: 'var(--alert-opacity)',
-                        transform: 'scale(var(--alert-scale)) translateY(var(--alert-translate))'
-                    } as React.CSSProperties}
+                    className={`w-80 bg-app-surface/90 border border-accent/30 rounded-2xl shadow-2xl backdrop-blur-2xl p-4 pointer-events-auto transform animate-in slide-in-from-right-10 duration-300 border-l-4 border-l-accent ${
+                        alerts.length - 1 - index === 0 ? 'opacity-100 scale-100 translate-y-0' :
+                        alerts.length - 1 - index === 1 ? 'opacity-[0.85] scale-[0.95] translate-y-[2px]' :
+                        'opacity-70 scale-[0.90] translate-y-[4px]'
+                    }`}
                 >
                     <div className="flex items-start justify-between gap-3 mb-2">
                         <div className="flex items-center gap-2">
@@ -83,6 +81,7 @@ export const MessageAlertOverlay: React.FC = () => {
                              </div>
                         </div>
                         <button 
+                            type="button"
                             onClick={() => handleDismiss(alert.id)}
                             title="Ignorer l'alerte"
                             className="p-1.5 hover:bg-app-text/10 rounded-lg transition-colors text-app-text/40 hover:text-rose-500"
@@ -97,6 +96,7 @@ export const MessageAlertOverlay: React.FC = () => {
 
                     <div className="flex items-center gap-2 pt-1">
                         <button 
+                            type="button"
                             onClick={() => handleDismiss(alert.id)}
                             title="Accepter"
                             className="flex-1 py-2 px-3 rounded-xl bg-app-bg border border-app-border text-[10px] font-bold uppercase tracking-wider hover:bg-app-surface text-app-text/60 hover:text-app-text transition-all flex items-center justify-center gap-2"
@@ -105,6 +105,7 @@ export const MessageAlertOverlay: React.FC = () => {
                             OK
                         </button>
                         <button 
+                            type="button"
                             onClick={() => handleSave(alert)}
                             title="Enregistrer dans le journal"
                             className="flex-1 py-2 px-3 rounded-xl bg-gm-gold/20 border border-gm-gold/30 text-[10px] font-bold uppercase tracking-wider text-gm-gold hover:bg-gm-gold hover:text-app-bg transition-all flex items-center justify-center gap-2 shadow-lg shadow-gm-gold/10"

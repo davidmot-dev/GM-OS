@@ -18,7 +18,8 @@ describe('DeckInterpreter', () => {
 
     describe('initializeIndices', () => {
         it('should create a shuffled array of indices', () => {
-            const indices = DeckInterpreter.initializeIndices(54);
+            const manifest = { cardCount: 54, startAtZero: false } as Parameters<typeof DeckInterpreter.initializeIndices>[0];
+            const indices = DeckInterpreter.initializeIndices(manifest);
             expect(indices).toHaveLength(54);
             expect(indices).toContain(1);
             expect(indices).toContain(54);

@@ -80,5 +80,16 @@ La gestion des IDs `m-xxx` (Blob IDs stockés en local) nécessite une couche d'
 - **Broadcast Resolution** : Avant l'envoi du signal `sync`, le MJ résout tous les médias en URLs absolues pointant vers son serveur local (`http://[IP]:3001/temp/[ID]`).
 - **Hub Failsafe** : Le hook `useMediaUrl` sur les tablettes redirige automatiquement vers l'IP du MJ si un identifiant non résolu est détecté dans le store synchronisé.
 
+## 8. Standards d'Accessibilité (A11y) & Qualité
+
+### Protocoles UI
+Tous les composants de `Session-OS` doivent respecter les standards d'accessibilité WCAG (Niveau AA) :
+- **ID & Labeling** : Utilisation stricte de `htmlFor` sur les labels et `id` uniques sur les inputs.
+- **Rôle Sémantique** : Conversion des `div` cliquables en `button type="button"` pour assurer la navigabilité au clavier.
+- **Feedback d'État** : Utilisation de `aria-checked` (chaîne "true"/"false") pour les éléments personnalisés.
+
+### Modularité par Hooks
+La logique métier complexe ne doit jamais résider dans le composant UI. Elle doit être extraite dans un custom hook spécialisé (ex: `useDeckPlayer`) et validée via des tests unitaires **Vitest**.
+
 ---
-*Dernière mise à jour : 29 Mars 2026 - GM-OS v5 Stability Patch (Trombinoscope & Selective Sync Protocol).*
+*Dernière mise à jour : 31 Mars 2026 - GM-OS v5 Stability Patch (Modular Hooks & A11y Standard).*

@@ -16,6 +16,13 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { gmToast } from '../../../stores/useToastStore';
+import {
+    handleGenerateEntityPortrait,
+    handleGenerateAtlasMapImage,
+    handleGeneratePlayerPortrait,
+    handleAddChronicle,
+    handleExportActiveCampaignToObsidian
+} from '../logic/crossDomainHelpers';
 import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 import { hueEngine } from '../../light/HueEngine';
 import { useJournalStore } from '../../journal/useJournalStore';
@@ -23,6 +30,7 @@ import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { resolveSheetTemplate } from '../logic/templateResolver';
 
 import { createCampaignSlice, type CampaignSlice } from './campaignSlice';
+import { INITIAL_DATA } from '../data/sessionMocks';
 import { useMediaStore } from '../../../stores/useMediaStore';
 import { createSessionSlice, type SessionSlice } from './sessionSlice';
 import { createEntitySlice, type EntitySlice } from './entitySlice';
@@ -42,14 +50,6 @@ import type {
     EntityRelation,
     SessionModuleSnapshot,
 } from './types';
-import type { Playlist } from '../../music/useMusicStore';
-import type { Atmosphere } from '../../sound/useSoundStore';
-import type { AmbientTrackState } from '../../ambient/useAmbientStore';
-import type { LightScene } from '../../light/useLightStore';
-import type { ImageMedia, ImageFolder } from '../../image/types';
-import type { WebLink } from '../../web/types';
-import type { Combatant } from '../../combat/useCombatStore';
-
 // ─────────────────────────────────────────────
 // Cross-domain actions type
 // ─────────────────────────────────────────────
@@ -120,125 +120,8 @@ export type SessionOSStore = CampaignSlice &
 // ─────────────────────────────────────────────
 // Mock Data (Données de démonstration)
 // ─────────────────────────────────────────────
+// Moved to src/modules/session/data/sessionMocks.ts
 
-const INITIAL_DATA = {
-    campaigns: [
-        {
-            id: 'c-1',
-            name: 'The Eternal Quest',
-            system: 'generic',
-            description: 'A dark fantasy adventure in the Underdark.',
-            synopsis: 'The party is currently investigating the iron citadel.',
-            activeSessionId: 's-1',
-            activeLocationIds: ['am-1', 'am-2'],
-            notebookUrl: 'https://notebooklm.google.com/notebook/campaign-c1-override',
-        },
-        {
-            id: 'c-2',
-            name: "Les Ombres d'Eldoria",
-            system: 'generic',
-            description: "Un voyage épique dans les terres d'Eldoria.",
-            synopsis: "Le groupe enquête sur la disparition du roi d'Eldoria.",
-            activeLocationIds: ['am-3'],
-        },
-    ] as Campaign[],
-    sessions: [
-        {
-            id: 's-1',
-            campaignId: 'c-1',
-            number: 4,
-            date: new Date().toISOString(),
-            status: 'active' as const,
-            publicSummary: 'The party has arrived at the gates of Ironhelm Fortress.',
-            gmSecrets: 'Captain Varick is actually a Doppelganger.',
-            checklist: [
-                { id: 'item-1', text: 'Review map coordinates', isCompleted: true },
-                { id: 'item-2', text: 'Audit NPC stat blocks', isCompleted: true },
-                { id: 'item-3', text: 'Set atmospheric lighting', isCompleted: false },
-                { id: 'item-4', text: 'Queue combat soundtrack', isCompleted: false },
-            ],
-            sessionEntityIds: ['e-1', 'e-4'],
-        },
-    ],
-    entities: [
-        {
-            id: 'e-1', name: 'Baron Varick', type: 'npc' as const, role: 'hostile' as const, status: 'alive' as const,
-            avatar: 'https://api.dicebear.com/9.x/adventurer/svg?seed=Varick&backgroundColor=b6e3f4',
-            hp: 85, maxHp: 85, ac: 16, speed: 30, initiative: 3,
-            description: 'Doppelganger / Seigneur de Guerre',
-            roleplayingNotes: "Parle avec une autorité froide et calculée.",
-            gmSecretInfo: "C'est un Doppelganger.",
-            linkedMapIds: ['am-1'], campaignId: 'c-1', templateId: 'generic', sheetData: {},
-        },
-        {
-            id: 'e-2', name: 'Sylvara la Driade', type: 'npc' as const, role: 'neutral' as const, status: 'alive' as const,
-            avatar: 'https://api.dicebear.com/9.x/adventurer/svg?seed=Sylvara&backgroundColor=ffdfbf',
-            hp: 52, maxHp: 52, ac: 14, speed: 35, initiative: 4,
-            description: 'Driade / Gardienne de la Forêt',
-            roleplayingNotes: 'Méfiante envers les étrangers.',
-            gmSecretInfo: 'Elle sait où se trouve le portail vers le plan Féerique.',
-            linkedMapIds: ['am-2'], campaignId: 'c-1', templateId: 'generic', sheetData: {},
-        },
-        {
-            id: 'e-3', name: 'Ignathor', type: 'monster' as const, role: 'boss' as const, status: 'alive' as const,
-            avatar: 'https://api.dicebear.com/9.x/bottts/svg?seed=Ignathor&backgroundColor=ffd5dc',
-            hp: 256, maxHp: 256, ac: 22, speed: 40, initiative: 0,
-            description: 'Dragon Rouge Ancien / Boss Final',
-            roleplayingNotes: 'Arrogant, condescendant.',
-            gmSecretInfo: "Faiblesse secrète : l'Orbe de Feu Primordial.",
-            linkedMapIds: ['am-3'], campaignId: 'c-2', templateId: 'generic', sheetData: {},
-        },
-        {
-            id: 'e-4', name: 'Capitaine Ren', type: 'npc' as const, role: 'ally' as const, status: 'alive' as const,
-            avatar: 'https://api.dicebear.com/9.x/adventurer/svg?seed=Ren&backgroundColor=c0aede',
-            hp: 68, maxHp: 75, ac: 18, speed: 30, initiative: 2,
-            description: "Humain / Garde d'Élite",
-            roleplayingNotes: 'Loyale, directe, professionnelle.',
-            gmSecretInfo: 'Elle suspecte que Varick n\'est pas qui il prétend être.',
-            linkedMapIds: ['am-1'], campaignId: 'c-1', templateId: 'generic', sheetData: {},
-        },
-    ] as Entity[],
-    players: [
-        {
-            id: 'p-1', realName: 'Thomas D.',
-            avatarUrl: 'https://api.dicebear.com/9.x/adventurer/svg?seed=Thomas&backgroundColor=b6e3f4',
-            isOnline: true,
-            characters: [
-                { id: 'pc-1', name: 'Aldric le Paladin', classRace: 'Humain / Serment des Anciens', portraitUrl: 'https://api.dicebear.com/9.x/adventurer/svg?seed=Aldric&backgroundColor=b6e3f4', hp: 42, maxHp: 58, campaignId: 'c-1', templateId: 'generic', sheetData: {}, inventory: '' },
-            ],
-        },
-        {
-            id: 'p-2', realName: 'Marie C.',
-            avatarUrl: 'https://api.dicebear.com/9.x/adventurer/svg?seed=Marie&backgroundColor=ffdfbf',
-            isOnline: false,
-            characters: [
-                { id: 'pc-3', name: 'Elowen la Druide', classRace: 'Elfe / Cercle de la Lune', portraitUrl: 'https://api.dicebear.com/9.x/adventurer/svg?seed=Elowen&backgroundColor=ffdfbf', hp: 60, maxHp: 60, campaignId: 'c-2', templateId: 'generic', sheetData: {}, inventory: '' },
-            ],
-        },
-        {
-            id: 'p-3', realName: 'Lucas R.',
-            avatarUrl: 'https://api.dicebear.com/9.x/adventurer/svg?seed=Lucas&backgroundColor=c0aede',
-            isOnline: true,
-            characters: [
-                { id: 'pc-4', name: 'Balder le Barbare', classRace: 'Nain / Voie du Berserker', portraitUrl: 'https://api.dicebear.com/9.x/adventurer/svg?seed=Balder&backgroundColor=ffd5dc', hp: 72, maxHp: 90, campaignId: 'c-1', templateId: 'generic', sheetData: {}, inventory: '' },
-            ],
-        },
-    ],
-    atlasMaps: [
-        { id: 'am-1', name: "Forteresse d'Ironhelm", fileUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&q=80&w=1200', isVideo: false, type: 'battlemap' as const, campaignId: 'c-1', narrativeDescription: "Une imposante forteresse de pierre noire.", gmNotes: "Baron Varick est un doppelganger.", linkedEntities: [{ id: 'le-1', name: 'Baron Varick', category: 'npc' as const }] },
-        { id: 'am-2', name: 'Forêt des Murmures', fileUrl: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&q=80&w=1200', isVideo: false, type: 'region' as const, campaignId: 'c-1', narrativeDescription: 'Une forêt ancienne.', gmNotes: 'Les Driades ici sont hostiles.', linkedEntities: [] },
-        { id: 'am-3', name: 'Caverne du Dragon Rouge', fileUrl: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&q=80&w=1200', isVideo: false, type: 'dungeon' as const, campaignId: 'c-2', narrativeDescription: "Un réseau de tunnels.", gmNotes: 'Ignathor dort dans la chambre finale.', linkedEntities: [] },
-    ] as AtlasMap[],
-    timelineEvents: [
-        { id: 'te-1', campaignId: 'c-1', date: '14 Janvier, 1492 DR', title: "Arrivée à Ironhelm", description: 'Le groupe arrive aux portes de la forteresse.', type: 'session' as const, involvedEntityIds: ['p-1', 'p-2'] },
-    ],
-    wikiEntries: [
-        { id: 'we-1', campaignId: 'c-1', title: "La Forteresse d'Ironhelm", content: "# Ironhelm\nUne pile de pierre noire.", category: 'location' as const, tags: ['nain', 'forteresse'], imageUrls: [], linkedEntityIds: ['am-1'] },
-    ],
-    clues: [
-        { id: 'clue-1', campaignId: 'c-1', title: "Le Médaillon Sanglant", content: "Un médaillon trouvé sur un garde mort, marqué du sceau de Varick.", locationId: 'am-1', ownerId: 'e-1', isRevealed: false },
-    ] as Clue[],
-};
 
 // ─────────────────────────────────────────────
 // Store Assembly
@@ -395,32 +278,22 @@ export const useSessionOSStore = create<SessionOSStore>()(
 
             saveSystemSnapshot: (sessionId) => {
                 try {
-                    const gWindow = window as unknown as {
-                        useMusicStore?: { getState: () => { playlists: Playlist[]; activePlaylistId: string | null; deckA: { activePadId: string | null; volume: number; isLooping: boolean; isPlaying: boolean }; deckB: { activePadId: string | null; volume: number; isLooping: boolean; isPlaying: boolean }; crossfader: number; masterVolume: number } };
-                        useSoundStore?: { getState: () => { activeAtmosphereId: string | null; masterVolume: number; atmospheres: Atmosphere[] } };
-                        useAmbientStore?: { getState: () => { tracks: AmbientTrackState[]; masterVolume: number } };
-                        useLightStore?: { getState: () => { activeSceneId: string | null; globalBrightness: number; scenes: Record<string, LightScene> } };
-                        useImageStore?: { getState: () => { projections: Record<string, string | null>; mediaList: ImageMedia[]; folders: ImageFolder[] } };
-                        useWebStore?: { getState: () => { links: WebLink[] } };
-                        useCombatStore?: { getState: () => { combatants: Combatant[]; currentTurnIdx: number; round: number } };
-                    };
-
-                    const musicState = gWindow.useMusicStore?.getState();
-                    const soundState = gWindow.useSoundStore?.getState();
-                    const ambientState = gWindow.useAmbientStore?.getState();
-                    const lightState = gWindow.useLightStore?.getState();
-                    const imageState = gWindow.useImageStore?.getState();
-                    const webState = gWindow.useWebStore?.getState();
-                    const combatState = gWindow.useCombatStore?.getState();
+                    const musicState = window.useMusicStore?.getState();
+                    const soundState = window.useSoundStore?.getState();
+                    const ambientState = window.useAmbientStore?.getState();
+                    const lightState = window.useLightStore?.getState();
+                    const imageState = window.useImageStore?.getState();
+                    const webState = window.useWebStore?.getState();
+                    const combatState = window.useCombatStore?.getState();
 
                     const snapshot: SessionModuleSnapshot = {
                         timestamp: Date.now(),
                         music: musicState ? { activePlaylistId: musicState.activePlaylistId, playlists: musicState.playlists, deckA: musicState.deckA, deckB: musicState.deckB, crossfader: musicState.crossfader, masterVolume: musicState.masterVolume } : undefined,
                         sound: soundState ? { activeAtmosphereId: soundState.activeAtmosphereId, masterVolume: soundState.masterVolume, activePadIds: [], atmospheres: soundState.atmospheres } : undefined,
-                        ambient: ambientState ? { activeTracks: ambientState.tracks.map(t => ({ id: t.id, url: t.url, volume: t.volume, isPlaying: t.isPlaying })), masterVolume: ambientState.masterVolume, tracks: ambientState.tracks } : undefined,
+                        ambient: ambientState ? { activeTracks: ambientState.tracks.map((t: import('../../ambient/useAmbientStore').AmbientTrackState) => ({ id: t.id, url: t.url, volume: t.volume, isPlaying: t.isPlaying })), masterVolume: ambientState.masterVolume, tracks: ambientState.tracks } : undefined,
                         light: lightState ? { activeSceneId: lightState.activeSceneId as string, globalBrightness: lightState.globalBrightness as number, scenes: lightState.scenes } : undefined,
                         image: imageState ? { projections: imageState.projections, mediaList: imageState.mediaList, folders: imageState.folders } : undefined,
-                        web: webState ? { links: webState.links.map(l => l.url), fullLinks: webState.links } : undefined,
+                        web: webState ? { links: webState.links.map((l: import('../../web/types').WebLink) => l.url), fullLinks: webState.links } : undefined,
                         combat: combatState ? { combatants: combatState.combatants, currentTurnIdx: combatState.currentTurnIdx, round: combatState.round } : undefined,
                     };
 
@@ -436,17 +309,16 @@ export const useSessionOSStore = create<SessionOSStore>()(
 
             applySystemSnapshot: async (snapshot) => {
                 try {
-                    type SnapshotStore<T> = { getState: () => { applySnapshot?: (s: T) => void | Promise<void> } };
-                    if (snapshot.music) (window as unknown as { useMusicStore?: SnapshotStore<typeof snapshot.music> }).useMusicStore?.getState().applySnapshot?.(snapshot.music);
-                    if (snapshot.sound) (window as unknown as { useSoundStore?: SnapshotStore<typeof snapshot.sound> }).useSoundStore?.getState().applySnapshot?.(snapshot.sound);
-                    if (snapshot.ambient) (window as unknown as { useAmbientStore?: SnapshotStore<typeof snapshot.ambient> }).useAmbientStore?.getState().applySnapshot?.(snapshot.ambient);
+                    if (snapshot.music) window.useMusicStore?.getState().applySnapshot?.(snapshot.music);
+                    if (snapshot.sound) window.useSoundStore?.getState().applySnapshot?.(snapshot.sound);
+                    if (snapshot.ambient) window.useAmbientStore?.getState().applySnapshot?.(snapshot.ambient);
                     if (snapshot.light) {
-                        (window as unknown as { useLightStore?: SnapshotStore<typeof snapshot.light> }).useLightStore?.getState().applySnapshot?.(snapshot.light);
+                        window.useLightStore?.getState().applySnapshot?.(snapshot.light);
                         if (snapshot.light.activeSceneId) hueEngine.applyScene(snapshot.light.activeSceneId, true);
                     }
-                    if (snapshot.image) (window as unknown as { useImageStore?: SnapshotStore<typeof snapshot.image> }).useImageStore?.getState().applySnapshot?.(snapshot.image);
-                    if (snapshot.web) (window as unknown as { useWebStore?: SnapshotStore<typeof snapshot.web> }).useWebStore?.getState().applySnapshot?.(snapshot.web);
-                    if (snapshot.combat) (window as unknown as { useCombatStore?: SnapshotStore<typeof snapshot.combat> }).useCombatStore?.getState().applySnapshot?.(snapshot.combat);
+                    if (snapshot.image) window.useImageStore?.getState().applySnapshot?.(snapshot.image);
+                    if (snapshot.web) window.useWebStore?.getState().applySnapshot?.(snapshot.web);
+                    if (snapshot.combat) window.useCombatStore?.getState().applySnapshot?.(snapshot.combat);
                     gmToast('État du système restauré avec succès !', 'success');
                 } catch (err) {
                     console.error('Failed to apply system snapshot:', err);
@@ -455,126 +327,17 @@ export const useSessionOSStore = create<SessionOSStore>()(
 
             // ── AI Generation ──────────────────────────────
 
-            generateEntityPortrait: async (entityId, instructions) => {
-                const entity = get().entities.find((e) => e.id === entityId);
-                if (!entity) return;
-                set({ isGeneratingAIImage: true });
-                try {
-                    const { aiService } = await import('../../ai/AIService');
-                    const cleanDesc = (entity.description || '').replace(/\n/g, ' ').substring(0, 300);
-                    const prompt = instructions ?? `A professional fantasy RPG character portrait of ${entity.name}. ${cleanDesc}. High quality digital art, cinematic lighting, 8k.`;
-                    const mediaId = await aiService.generateImage(prompt);
-                    get().updateEntity(entityId, { avatar: mediaId });
-                } catch (err) {
-                    console.error('AI Portrait Error:', err);
-                } finally {
-                    set({ isGeneratingAIImage: false });
-                }
-            },
+            generateEntityPortrait: async (entityId, instructions) => handleGenerateEntityPortrait(set, get, entityId, instructions),
 
-            generateAtlasMapImage: async (mapId, instructions) => {
-                const map = get().atlasMaps.find((m) => m.id === mapId);
-                if (!map) return;
-                set({ isGeneratingAIImage: true });
-                try {
-                    const { aiService } = await import('../../ai/AIService');
-                    const cleanDesc = (map.narrativeDescription || '').replace(/\n/g, ' ').substring(0, 300);
-                    const prompt = instructions ?? `Fantasy RPG environment art: ${map.name}. ${cleanDesc}. Cinematic, epic scale, high quality.`;
-                    const mediaId = await aiService.generateImage(prompt);
-                    get().updateAtlasMap(mapId, { fileUrl: mediaId, isVideo: false });
-                } catch (err) {
-                    console.error('AI Map Error:', err);
-                } finally {
-                    set({ isGeneratingAIImage: false });
-                }
-            },
+            generateAtlasMapImage: async (mapId, instructions) => handleGenerateAtlasMapImage(set, get, mapId, instructions),
 
-            generatePlayerPortrait: async (playerId, characterId, instructions) => {
-                const player = get().players.find((p) => p.id === playerId);
-                const char = player?.characters.find((c) => c.id === characterId);
-                if (!char) return;
-                set({ isGeneratingAIImage: true });
-                try {
-                    const { aiService } = await import('../../ai/AIService');
-                    const prompt = `A heroic character portrait of ${char.name}. ${char.classRace}. Professional digital art, cinematic lighting, 8k. ${instructions ? `Additional: ${instructions}` : ''}`;
-                    const mediaId = await aiService.generateImage(prompt);
-                    get().updateCharacterVisuals(playerId, characterId, { portraitUrl: mediaId });
-                } catch (err) {
-                    console.error('AI Player Portrait Error:', err);
-                } finally {
-                    set({ isGeneratingAIImage: false });
-                }
-            },
+            generatePlayerPortrait: async (playerId, characterId, instructions) => handleGeneratePlayerPortrait(set, get, playerId, characterId, instructions),
 
             // ── Chronicle Forge (Import Massif) ────────────
 
-            addChronicle: ({ campaign, entities, atlasMaps, wikiEntries, existingCampaignId }) => {
-                const state = get();
-                const existing = existingCampaignId 
-                    ? state.campaigns.find(c => c.id === existingCampaignId)
-                    : state.campaigns.find(c => c.name.toLowerCase() === campaign.name.toLowerCase());
-                    
-                const campaignId = existing ? existing.id : `c-${Date.now()}`;
+            addChronicle: (payload) => handleAddChronicle(set, get, payload),
 
-                const entityIdMap: Record<string, string> = {};
-                const newEntities: Entity[] = entities.map((e) => {
-                    const id = `e-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
-                    entityIdMap[e.name] = id;
-                    return { ...e, id, campaignId, relations: [] };
-                });
-
-                // Résoudre les relations par nom
-                newEntities.forEach((entity, idx) => {
-                    const rawRelations = entities[idx].relations ?? [];
-                    entity.relations = rawRelations.map((r) => ({
-                        targetId: entityIdMap[r.targetName] ?? '',
-                        targetType: 'npc' as const,
-                        type: r.type,
-                        description: r.description,
-                    })).filter((r) => r.targetId);
-                });
-
-                const newAtlasMaps: AtlasMap[] = atlasMaps.map((m) => ({
-                    ...m,
-                    id: `am-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-                    campaignId,
-                    linkedEntities: [],
-                }));
-
-                const newWikiEntries: WikiEntry[] = wikiEntries.map((w) => ({
-                    ...w,
-                    id: `we-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-                    campaignId,
-                }));
-
-                set((state) => {
-                    const updatedCampaigns = existing 
-                        ? state.campaigns.map(c => c.id === existing.id ? { ...c, system: campaign.system || c.system } : c)
-                        : [...state.campaigns, { ...campaign, id: campaignId, activeLocationIds: [] } as Campaign];
-
-                    return {
-                        campaigns: updatedCampaigns,
-                        entities: [...state.entities, ...newEntities],
-                        atlasMaps: [...state.atlasMaps, ...newAtlasMaps],
-                        wikiEntries: [...state.wikiEntries, ...newWikiEntries],
-                        activeCampaignId: campaignId,
-                        currentView: 'cockpit',
-                    };
-                });
-
-                const msg = existing 
-                    ? `Chronique fusionnée avec "${existing.name}". ${newEntities.length} entités ajoutées.`
-                    : `Chronique "${campaign.name}" importée avec ${newEntities.length} entités.`;
-                gmToast(msg, 'success');
-            },
-
-            exportActiveCampaignToObsidian: async () => {
-                const { obsidianExportService } = await import('../ObsidianExportService');
-                const state = get();
-                const campaign = state.campaigns.find((c) => c.id === state.activeCampaignId);
-                if (!campaign) return;
-                await obsidianExportService.exportCampaign(campaign, state.entities, state.atlasMaps, state.wikiEntries);
-            },
+            exportActiveCampaignToObsidian: () => handleExportActiveCampaignToObsidian(get),
 
             // ── Session Launch ─────────────────────────────
 

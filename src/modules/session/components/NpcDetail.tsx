@@ -420,7 +420,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                     <div className="grid grid-cols-2 gap-4">
                                         {section.fields.map(field => {
                                             const value = selectedNpc.sheetData?.[field.id] ?? field.defaultValue;
-                                            const onChange = (v: any) => updateEntitySheetData(selectedNpc.id, field.id, v);
+                                            const onChange = (v: string | number | boolean) => updateEntitySheetData(selectedNpc.id, field.id, v);
                                             
                                             if (field.type === 'gauge') return <FieldGauge key={field.id} field={field} value={value as number} onChange={onChange} />;
                                             if (field.type === 'number') return <FieldNumber key={field.id} field={field} value={value as number} onChange={onChange} />;

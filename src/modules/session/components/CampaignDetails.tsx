@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { ChevronLeft, Info, Calendar, Users, MapPin, Edit3, Sparkles, Share2 } from 'lucide-react';
-import { gmCustom, useModalStore } from '../../../stores/useModalStore';
+import { useModalStore } from '../../../stores/useModalStore';
 import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 

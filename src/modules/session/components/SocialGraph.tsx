@@ -55,6 +55,7 @@ const SocialGraph: React.FC = () => {
     const [graphCollision, setGraphCollision] = useState<number>(40);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const graphRef = useRef<any>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -122,6 +123,7 @@ const SocialGraph: React.FC = () => {
             fg.d3Force('link').distance(graphDistance).strength(1);
             
             // Collision Dynamique
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const d3 = (window as any).d3;
             if (d3) {
                 fg.d3Force('collide', d3.forceCollide(graphCollision));

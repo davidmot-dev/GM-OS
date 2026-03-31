@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, ShieldAlert, ShieldOff } from 'lucide-react';
+
 
 interface ClockDriverProps {
   filled: number;

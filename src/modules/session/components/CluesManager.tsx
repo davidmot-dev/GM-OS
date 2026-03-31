@@ -53,6 +53,7 @@ const CluesManager: React.FC = () => {
             if (pendingPreFill.type === 'rumor') prefix = '[RUMEUR] ';
             if (pendingPreFill.type === 'location') prefix = '[LIEU] ';
             
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setEditingClue({ 
                 title: prefix + (title || ''), 
                 content: content || '', 
@@ -203,8 +204,9 @@ const CluesManager: React.FC = () => {
 
                         <div className="space-y-6">
                             <div className="space-y-3">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-white/30 px-2">Titre de l'Indice</label>
+                                <label htmlFor="clue-title" className="text-[10px] font-black uppercase tracking-widest text-white/30 px-2">Titre de l'Indice</label>
                                 <input 
+                                    id="clue-title"
                                     value={editingClue.title || ''}
                                     onChange={e => setEditingClue({ ...editingClue, title: e.target.value })}
                                     placeholder="ex: Le Médaillon Sanglant"
@@ -214,9 +216,12 @@ const CluesManager: React.FC = () => {
 
                             <div className="space-y-3">
                                 <label className="text-[10px] font-black uppercase tracking-widest text-white/30 px-2">Visuel de l'Indice</label>
-                                <div 
+                                <button 
+                                    type="button"
                                     onClick={() => setIsMediaBrowserOpen(true)}
-                                    className="group relative w-full aspect-video bg-black/40 border border-white/5 rounded-2xl overflow-hidden cursor-pointer hover:border-gm-gold/40 transition-all flex items-center justify-center"
+                                    className="group relative w-full aspect-video bg-black/40 border border-white/5 rounded-2xl overflow-hidden cursor-pointer hover:border-gm-gold/40 transition-all flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-gm-gold/50"
+                                    title="Changer le visuel de l'indice"
+                                    aria-label="Changer le visuel de l'indice"
                                 >
                                     {editingClue.mediaUrl ? (
                                         <>
@@ -231,12 +236,13 @@ const CluesManager: React.FC = () => {
                                             <span className="text-[9px] font-black uppercase tracking-widest">Ajouter un Visuel</span>
                                         </div>
                                     )}
-                                </div>
+                                </button>
                             </div>
 
                             <div className="space-y-3">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-white/30 px-2">Contenu / Description</label>
+                                <label htmlFor="clue-content" className="text-[10px] font-black uppercase tracking-widest text-white/30 px-2">Contenu / Description</label>
                                 <textarea 
+                                    id="clue-content"
                                     value={editingClue.content || ''}
                                     onChange={e => setEditingClue({ ...editingClue, content: e.target.value })}
                                     placeholder="Détaillez ce que les joueurs découvrent..."
@@ -247,11 +253,12 @@ const CluesManager: React.FC = () => {
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-3">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-white/30 px-2 flex items-center gap-2">
+                                    <label htmlFor="clue-location" className="text-[10px] font-black uppercase tracking-widest text-white/30 px-2 flex items-center gap-2">
                                         <MapPin size={12} /> Lieu Associé
                                     </label>
                                     <div className="relative">
                                         <select 
+                                            id="clue-location"
                                             value={editingClue.locationId || ''}
                                             onChange={e => setEditingClue({ ...editingClue, locationId: e.target.value || undefined })}
                                             className="w-full bg-black/40 border border-white/5 rounded-xl py-3 px-4 text-xs font-bold text-white/60 outline-none appearance-none cursor-pointer pr-10"
@@ -264,11 +271,12 @@ const CluesManager: React.FC = () => {
                                     </div>
                                 </div>
                                 <div className="space-y-3">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-white/30 px-2 flex items-center gap-2">
+                                    <label htmlFor="clue-owner" className="text-[10px] font-black uppercase tracking-widest text-white/30 px-2 flex items-center gap-2">
                                         <Users size={12} /> PNJ Lié
                                     </label>
                                     <div className="relative">
                                         <select 
+                                            id="clue-owner"
                                             value={editingClue.ownerId || ''}
                                             onChange={e => setEditingClue({ ...editingClue, ownerId: e.target.value || undefined })}
                                             className="w-full bg-black/40 border border-white/5 rounded-xl py-3 px-4 text-xs font-bold text-white/60 outline-none appearance-none cursor-pointer pr-10"
@@ -283,10 +291,11 @@ const CluesManager: React.FC = () => {
                             </div>
 
                             <div className="space-y-3">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-white/30 px-2 flex items-center gap-2">
+                                <label htmlFor="clue-moment" className="text-[10px] font-black uppercase tracking-widest text-white/30 px-2 flex items-center gap-2">
                                     <Sparkles size={12} /> Moment de l'intrigue
                                 </label>
                                 <input 
+                                    id="clue-moment"
                                     value={editingClue.campaignMoment || ''}
                                     onChange={e => setEditingClue({ ...editingClue, campaignMoment: e.target.value })}
                                     placeholder="ex: Session 22, Acte II"
@@ -306,8 +315,9 @@ const CluesManager: React.FC = () => {
                                 </div>
                                 <button
                                     onClick={() => setEditingClue({ ...editingClue, isRevealed: !editingClue.isRevealed })}
-                                    className={`relative w-12 h-6 rounded-full transition-all ${editingClue.isRevealed ? 'bg-gm-gold' : 'bg-white/10'}`}
+                                    className={`relative w-12 h-6 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-gm-gold/50 ${editingClue.isRevealed ? 'bg-gm-gold' : 'bg-white/10'}`}
                                     title={editingClue.isRevealed ? "Masquer aux joueurs" : "Révéler aux joueurs"}
+                                    aria-pressed={editingClue.isRevealed ? "true" : "false"}
                                 >
                                     <div className={`absolute top-1 w-4 h-4 rounded-full bg-black shadow-lg transition-all ${editingClue.isRevealed ? 'translate-x-6' : 'translate-x-0'}`} />
                                 </button>

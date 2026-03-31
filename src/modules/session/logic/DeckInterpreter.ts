@@ -56,8 +56,8 @@ export const DeckInterpreter = {
      * Génère l'URL d'une image de carte basée sur la convention de dossier.
      */
     getCardImageUrl: (folderPath: string, index: number, manifest: DeckManifest): string => {
-        const ext = manifest.extension || '.jpg';
-        const pattern = manifest.filenamePattern || '{n}';
+        const ext = manifest.extension || '.png';
+        const pattern = manifest.filenamePattern || 'card_{n}';
         const padding = manifest.padding || 0;
         const indexStr = padding > 0 ? String(index).padStart(padding, '0') : String(index);
         const filename = pattern.replace('{n}', indexStr);
