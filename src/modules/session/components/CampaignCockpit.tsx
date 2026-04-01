@@ -6,11 +6,22 @@ import { BookOpen, LayoutDashboard, Swords, Users, Users2, Map as MapIcon, Archi
 import SessionChecklist from './SessionChecklist';
 
 const CampaignCockpit: React.FC = () => {
-    const { campaigns, activeCampaignId, sessions, setCurrentView, currentView, updateSession, applySystemSnapshot } = useSessionOSStore();
+    const { 
+        campaigns, 
+        activeCampaignId, 
+        sessions, 
+        setCurrentView, 
+        currentView, 
+        updateSession, 
+        applySystemSnapshot,
+        decks
+    } = useSessionOSStore();
     const { setActiveModule } = useSessionStore();
     const { showCustom, showConfirm } = useModalStore();
 
     const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
+    const campaignSystem = activeCampaign?.system || 'generic';
+    const hasLinkedDeck = decks.some(d => d.systemId === campaignSystem);
     const { theme } = useSessionStore();
 
     // Find active session for progress (mock logic for now)
@@ -132,10 +143,14 @@ const CampaignCockpit: React.FC = () => {
                     <span className="text-sm font-medium">System Forge</span>
                 </button>
                 <button
-                    onClick={() => setCurrentView('deck-player')}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all nav-item-glow ${currentView === 'deck-player' ? 'bg-gm-gold/10 text-gm-gold border border-gm-gold/20' : 'text-app-text/60 hover:bg-white/5 hover:text-app-text'}`}
+                    onClick={() => setCurrentView(hasLinkedDeck ? 'deck-player' : 'deck-library')}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all nav-item-glow ${
+                        currentView === 'deck-player' || currentView === 'deck-library' 
+                        ? 'bg-gm-gold/10 text-gm-gold border border-gm-gold/20' 
+                        : 'text-app-text/60 hover:bg-white/5 hover:text-app-text'
+                    }`}
                 >
-                    <Layers className={currentView === 'deck-player' ? 'text-gm-gold scale-110 shadow-glow-gold' : 'group-hover:scale-110 transition-transform'} size={20} />
+                    <Layers className={currentView === 'deck-player' || currentView === 'deck-library' ? 'text-gm-gold scale-110 shadow-glow-gold' : 'group-hover:scale-110 transition-transform'} size={20} />
                     <span className="text-sm font-bold tracking-tight text-left">Deck-OS</span>
                 </button>
 

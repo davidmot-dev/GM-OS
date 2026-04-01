@@ -131,7 +131,6 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
         return () => {
             isMounted = false;
             // Add a small delay for revocation to give the browser time to finish any pending internal requests
-            // (fixes some ERR_FILE_NOT_FOUND issues on fast-switching media)
             if (objectUrl) {
                 const urlToRevoke = objectUrl;
                 setTimeout(() => {
@@ -139,7 +138,7 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
                 }, 1000);
             }
         };
-    }, [sourceIdOrUrl, getMediaBlob]);
+    }, [sourceIdOrUrl]); // Removed getMediaBlob to prevent redundant cycles if the store is unstable
 
     return resolvedUrl;
 };

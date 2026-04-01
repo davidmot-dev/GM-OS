@@ -26,14 +26,12 @@ export function resolveSheetTemplate(
     // 2. Check campaign system
     if (character.campaignId) {
         const campaign = campaigns.find(c => c.id === character.campaignId);
-        if (campaign && campaign.system) {
+        if (campaign && campaign.system && campaign.system !== 'generic') {
             const systemTemplate = allTemplates.find(t => t.id === campaign.system);
             if (systemTemplate) {
                 return systemTemplate;
             }
-            console.warn(`[TemplateResolver] Système ${campaign.system} de la campagne ${campaign.name} non trouvé dans les templates`);
-        } else if (campaign) {
-            console.warn(`[TemplateResolver] La campagne ${campaign.name} n'a pas de système défini`);
+            // Silent fallback if template is missing, as reconcileTemplates will fix it permanently
         }
     }
 

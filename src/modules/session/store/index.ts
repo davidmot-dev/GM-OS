@@ -164,6 +164,7 @@ export const useSessionOSStore = create<SessionOSStore>()(
                     currentView: 'cockpit',
                     selectedSessionId: null,
                     selectedAtlasMapId: null,
+                    selectedDeckId: null,
                 });
                 if (id) {
                     const campaign = get().campaigns.find((c) => c.id === id);
@@ -374,7 +375,8 @@ export const useSessionOSStore = create<SessionOSStore>()(
                 set({ 
                     sessions: updatedSessions, 
                     campaigns: updatedCampaigns,
-                    currentView: 'cockpit' 
+                    currentView: 'cockpit',
+                    selectedDeckId: null
                 });
             },
 
@@ -387,23 +389,38 @@ export const useSessionOSStore = create<SessionOSStore>()(
                 const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
                 
                 let hasChanges = false;
+
+                // 1. Repair Campaign Systems (Force generic if missing)
+                const newCampaigns = campaigns.map(c => {
+                    if (c.system && c.system !== 'generic') {
+                        const exists = allTemplates.some(t => t.id === c.system);
+                        if (!exists) {
+                            hasChanges = true;
+                            console.warn(`[Reconcile] Système '${c.system}' introuvable pour la campagne '${c.name}'. Réinitialisation sur 'generic'.`);
+                            return { ...c, system: 'generic' };
+                        }
+                    }
+                    return c;
+                });
+
+                // 2. Reconcile Player Templates
                 const newPlayers = players.map(p => ({
                     ...p,
-                    characters: p.characters.map(c => {
-                        if (!c.campaignId) return c;
+                    characters: p.characters.map(char => {
+                        if (!char.campaignId) return char;
                         
-                        const resolvedTemplate = resolveSheetTemplate(c, campaigns, allTemplates);
-                        if (c.templateId !== resolvedTemplate.id) {
+                        const resolvedTemplate = resolveSheetTemplate(char, newCampaigns, allTemplates);
+                        if (char.templateId !== resolvedTemplate.id) {
                             hasChanges = true;
-                            console.log(`[Reconcile] Template de ${c.name} changé : ${c.templateId} -> ${resolvedTemplate.id}`);
-                            return { ...c, templateId: resolvedTemplate.id };
+                            console.log(`[Reconcile] Template de ${char.name} changé : ${char.templateId} -> ${resolvedTemplate.id}`);
+                            return { ...char, templateId: resolvedTemplate.id };
                         }
-                        return c;
+                        return char;
                     })
                 }));
 
                 if (hasChanges) {
-                    set({ players: newPlayers });
+                    set({ players: newPlayers, campaigns: newCampaigns });
                 }
             },
         }),
@@ -421,29 +438,51 @@ export const useSessionOSStore = create<SessionOSStore>()(
                         if (m.fileUrl?.startsWith('blob:')) m.fileUrl = '';
                     });
                     
+                    // Nettoyer la persistance indésirable
+                    state.selectedDeckId = null;
+
                     // Lancement de la réconciliation des templates
                     if (typeof state.reconcileTemplates === 'function') {
                         state.reconcileTemplates();
                     }
                 }
             },
-            partialize: (state) => ({
-                campaigns: state.campaigns,
-                sessions: state.sessions,
-                entities: state.entities,
-                players: state.players,
-                atlasMaps: state.atlasMaps,
-                timelineEvents: state.timelineEvents,
-                wikiEntries: state.wikiEntries,
-                clues: state.clues,
-                customSheetTemplates: state.customSheetTemplates,
-                customGameDrivers: state.customGameDrivers,
-                activeCampaignId: state.activeCampaignId,
-                decks: state.decks,
-                deckStates: state.deckStates,
-                selectedDeckId: state.selectedDeckId,
-                isProjecting: state.isProjecting,
-            }),
+            partialize: (state) => {
+                const isElectron = typeof window !== 'undefined' && !!(window as unknown as { appBridge?: unknown }).appBridge;
+                
+                // Si on n'est pas dans Electron (ex: Tablet Hub), on ne persiste que le strict minimum
+                // pour éviter le QuotaExceededError du localStorage (limité à 5 Mo).
+                // Les données lourdes seront resynchronisées via WebSocket/Sync dès la connexion.
+                if (!isElectron) {
+                    return {
+                        activeCampaignId: state.activeCampaignId,
+                        currentView: state.currentView,
+                        selectedPlayerId: state.selectedPlayerId,
+                        selectedAtlasMapId: state.selectedAtlasMapId,
+                        selectedEntityId: state.selectedEntityId,
+                        isProjecting: state.isProjecting,
+                    };
+                }
+
+                // Dans Electron (Master), on persiste tout pour le fonctionnement hors-ligne.
+                return {
+                    campaigns: state.campaigns,
+                    sessions: state.sessions,
+                    entities: state.entities,
+                    players: state.players,
+                    atlasMaps: state.atlasMaps,
+                    timelineEvents: state.timelineEvents,
+                    wikiEntries: state.wikiEntries,
+                    clues: state.clues,
+                    customSheetTemplates: state.customSheetTemplates,
+                    customGameDrivers: state.customGameDrivers,
+                    activeCampaignId: state.activeCampaignId,
+                    decks: state.decks,
+                    deckStates: state.deckStates,
+                    isProjecting: state.isProjecting,
+                    currentView: state.currentView,
+                };
+            },
         }
     )
 );

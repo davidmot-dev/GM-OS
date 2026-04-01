@@ -11,18 +11,40 @@ export const useDeckPlayer = () => {
         discardCard, 
         shuffleDeck,
         isProjecting,
-        toggleProjection 
+        toggleProjection,
+        selectedDeckId,
+        selectDeck,
+        activeCampaignId,
+        campaigns
     } = useSessionOSStore();
 
-    const [activeDeckId, setActiveDeckId] = useState<string | null>(null);
     const [isFlipped, setIsFlipped] = useState(false);
     const [drawCount, setDrawCount] = useState(0);
 
-    // Derive the effective deck ID (default to first deck)
-    const effectiveDeckId = useMemo(() => 
-        activeDeckId ?? (decks.length > 0 ? decks[0].id : null),
-        [activeDeckId, decks]
+    const activeCampaign = useMemo(() => 
+        campaigns.find(c => c.id === activeCampaignId),
+        [campaigns, activeCampaignId]
     );
+    const currentSystemId = activeCampaign?.system || 'generic';
+
+    // Derive the effective deck ID (SMART AUTO-SELECT)
+    const effectiveDeckId = useMemo(() => {
+        // 1. Priorité au deck explicitement sélectionné par l'utilisateur
+        if (selectedDeckId && decks.some(d => d.id === selectedDeckId)) {
+            return selectedDeckId;
+        }
+
+        // 2. Recherche d'un deck correspondant au système de la campagne
+        const systemDeck = decks.find(d => d.systemId === currentSystemId);
+        if (systemDeck) return systemDeck.id;
+
+        // 3. Fallback sur un deck générique
+        const genericDeck = decks.find(d => d.systemId === 'generic');
+        if (genericDeck) return genericDeck.id;
+
+        // 4. Aucune correspondance automatique sécurisée
+        return null;
+    }, [selectedDeckId, decks, currentSystemId]);
 
     const activeDeck = useMemo(() => 
         decks.find(d => d.id === effectiveDeckId),
@@ -103,7 +125,7 @@ export const useDeckPlayer = () => {
         isProjecting,
         
         // Actions
-        setActiveDeckId,
+        setActiveDeckId: selectDeck,
         handleFlip,
         handleDraw,
         handleDiscard,

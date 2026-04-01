@@ -179,8 +179,12 @@ export class SoundEngine {
     public stop(padId: string) {
         const source = this.padSources.get(padId);
         if (source) {
-            source.stop();
-            source.disconnect();
+            try {
+                source.stop();
+                source.disconnect();
+            } catch {
+                // Ignore if already stopped
+            }
             this.padSources.delete(padId);
         }
 
@@ -189,6 +193,15 @@ export class SoundEngine {
             gain.disconnect();
             this.padGains.delete(padId);
         }
+    }
+
+    /**
+     * Décharge le buffer audio d'un pad pour libérer de la mémoire.
+     * @param padId Identifiant du pad.
+     */
+    public unloadAudio(padId: string) {
+        this.stop(padId);
+        this.audioBuffers.delete(padId);
     }
 
     /**

@@ -20,6 +20,8 @@ const DeckLibrary: React.FC = () => {
         isAdding,
         editingDeckId,
         filteredDecks,
+        showAllDecks,
+        setShowAllDecks,
         availableSystems,
         currentSystemId,
         form,
@@ -27,6 +29,7 @@ const DeckLibrary: React.FC = () => {
         handleEdit,
         handleSave,
         handleDelete,
+        handleSelect,
         resetForm
     } = useDeckLibrary();
 
@@ -46,14 +49,30 @@ const DeckLibrary: React.FC = () => {
                     </div>
                 </div>
 
-                <button 
-                    type="button"
-                    onClick={() => { resetForm(); setIsAdding(true); }}
-                    className="flex items-center gap-2 bg-gm-gold hover:bg-yellow-500 text-black font-black px-6 py-2.5 rounded-xl text-[10px] tracking-widest uppercase transition-all shadow-glow-gold/20 focus:outline-none focus:ring-2 focus:ring-gm-gold/50"
-                >
-                    <Plus size={14} />
-                    Nouveau Paquet
-                </button>
+                <div className="flex items-center gap-3">
+                    <button 
+                        type="button"
+                        onClick={() => setShowAllDecks(!showAllDecks)}
+                        className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-[10px] tracking-widest uppercase transition-all border ${
+                            showAllDecks 
+                            ? 'bg-gm-gold/20 border-gm-gold text-gm-gold shadow-glow-gold/10' 
+                            : 'bg-white/5 border-white/10 text-white/40 hover:text-white hover:border-white/20'
+                        }`}
+                        title={showAllDecks ? "Filtrer par système actif" : "Afficher tous les systèmes"}
+                    >
+                        <Layers size={14} />
+                        {showAllDecks ? 'Tout Voir' : 'Filtre Système'}
+                    </button>
+
+                    <button 
+                        type="button"
+                        onClick={() => { resetForm(); setIsAdding(true); }}
+                        className="flex items-center gap-2 bg-gm-gold hover:bg-yellow-500 text-black font-black px-6 py-2.5 rounded-xl text-[10px] tracking-widest uppercase transition-all shadow-glow-gold/20 focus:outline-none focus:ring-2 focus:ring-gm-gold/50"
+                    >
+                        <Plus size={14} />
+                        Nouveau Paquet
+                    </button>
+                </div>
             </header>
 
             {/* Decks Grid */}
@@ -61,10 +80,20 @@ const DeckLibrary: React.FC = () => {
                 {filteredDecks.length === 0 && !isAdding && (
                     <div className="col-span-full py-20 border-2 border-dashed border-white/5 rounded-[2.5rem] flex flex-col items-center justify-center text-white/10 gap-4">
                         <Layers size={48} strokeWidth={1} />
-                        <span className="text-xs font-black uppercase tracking-widest text-center">
-                            Aucun paquet disponible pour ce système<br/>
-                            <span className="text-[10px] opacity-40">(Filtre : Generic + {currentSystemId})</span>
-                        </span>
+                        <div className="flex flex-col items-center gap-2">
+                            <span className="text-xs font-black uppercase tracking-widest text-center">
+                                Aucun paquet disponible pour ce système<br/>
+                                <span className="text-[10px] opacity-40">(Filtre : Generic + {currentSystemId})</span>
+                            </span>
+                            {!showAllDecks && (
+                                <button 
+                                    onClick={() => setShowAllDecks(true)}
+                                    className="mt-4 text-[10px] font-black uppercase tracking-widest text-gm-gold hover:underline"
+                                >
+                                    Afficher tous les paquets
+                                </button>
+                            )}
+                        </div>
                     </div>
                 )}
 
@@ -125,7 +154,7 @@ const DeckLibrary: React.FC = () => {
                             </div>
                             <button 
                                 type="button"
-                                onClick={() => setCurrentView('deck-player')}
+                                onClick={() => { handleSelect(deck.id); setCurrentView('deck-player'); }}
                                 className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-gm-gold hover:text-black rounded-xl text-[9px] font-black uppercase tracking-widest transition-all focus:outline-none focus:ring-2 focus:ring-gm-gold/40"
                             >
                                 Charger

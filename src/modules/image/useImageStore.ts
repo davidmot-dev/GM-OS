@@ -204,7 +204,12 @@ export const useImageStore = create<ImageState>()(
                 });
 
                 if (target === 'hub') {
-                    window.appBridge?.image?.syncHubData('image', media.path);
+                    // Resolve m-xxx IDs to sendable URLs before broadcasting to remote clients
+                    import('../../utils/mediaResolver').then(({ resolveToSendableUrl }) => {
+                        resolveToSendableUrl(media.path).then(resolvedPath => {
+                            window.appBridge?.image?.syncHubData('image', resolvedPath || media.path);
+                        });
+                    });
                 } else {
                     window.appBridge?.image?.launchDisplay([media.path], target);
                 }
@@ -231,7 +236,11 @@ export const useImageStore = create<ImageState>()(
                 });
 
                 if (target === 'hub') {
-                    window.appBridge?.image?.syncHubData('image', url);
+                    import('../../utils/mediaResolver').then(({ resolveToSendableUrl }) => {
+                        resolveToSendableUrl(url).then(resolvedUrl => {
+                            window.appBridge?.image?.syncHubData('image', resolvedUrl || url);
+                        });
+                    });
                 } else {
                     window.appBridge?.image?.launchDisplay([url], target);
                 }
@@ -426,7 +435,29 @@ export const useImageStore = create<ImageState>()(
                 projectionTarget: state.projectionTarget,
                 folders: state.folders,
                 projections: state.projections
-            })
+            }),
+            onRehydrateStorage: () => (state) => {
+                if (!state) return;
+                // Clean up stale projection references: any media ID that no longer
+                // exists in the library (e.g. from a deleted campaign) is cleared.
+                const existingIds = new Set(state.mediaList.map(m => m.id));
+                const cleanedProjections: Record<string, string | null> = {};
+                let hadStale = false;
+                for (const [target, value] of Object.entries(state.projections)) {
+                    // Keep null, HTTP URLs, data URIs, and media IDs that exist in the library
+                    const isStaleMediaId = value && value.startsWith('m-') && !existingIds.has(value);
+                    if (isStaleMediaId) {
+                        console.warn(`[ImageStore] Stale projection cleared on target "${target}" (ID: ${value})`);
+                        cleanedProjections[target] = null;
+                        hadStale = true;
+                    } else {
+                        cleanedProjections[target] = value;
+                    }
+                }
+                if (hadStale) {
+                    state.projections = cleanedProjections;
+                }
+            }
         }
     )
 );

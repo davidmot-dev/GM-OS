@@ -8,11 +8,13 @@ export const useDeckLibrary = () => {
     const { 
         decks, addDeck, updateDeck, deleteDeck,
         activeCampaignId, campaigns,
-        customSheetTemplates, customGameDrivers 
+        customSheetTemplates, customGameDrivers,
+        selectDeck
     } = useSessionOSStore();
 
     const [isAdding, setIsAdding] = useState(false);
     const [editingDeckId, setEditingDeckId] = useState<string | null>(null);
+    const [showAllDecks, setShowAllDecks] = useState(true);
 
     // Form State
     const [name, setName] = useState('');
@@ -44,10 +46,10 @@ export const useDeckLibrary = () => {
     
     const currentSystemId = activeCampaign?.system || 'generic';
 
-    const filteredDecks = useMemo(() => 
-        decks.filter(d => d.systemId === 'generic' || d.systemId === currentSystemId),
-        [decks, currentSystemId]
-    );
+    const filteredDecks = useMemo(() => {
+        if (showAllDecks) return decks;
+        return decks.filter(d => d.systemId === 'generic' || d.systemId === currentSystemId);
+    }, [decks, currentSystemId, showAllDecks]);
 
     const resetForm = () => {
         setName('');
@@ -112,6 +114,8 @@ export const useDeckLibrary = () => {
         isAdding,
         editingDeckId,
         filteredDecks,
+        showAllDecks,
+        setShowAllDecks,
         availableSystems,
         currentSystemId,
         
@@ -135,6 +139,7 @@ export const useDeckLibrary = () => {
         handleEdit,
         handleSave,
         handleDelete: deleteDeck,
+        handleSelect: selectDeck,
         resetForm
     };
 };

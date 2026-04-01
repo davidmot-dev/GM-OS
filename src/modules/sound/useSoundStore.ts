@@ -197,26 +197,29 @@ export const useSoundStore = create<SoundState>()(
                 )
             })),
 
-            clearPad: (padId) => set((state) => ({
-                atmospheres: state.atmospheres.map(a =>
-                    a.id === state.activeAtmosphereId
-                        ? {
-                            ...a, pads: {
-                                ...a.pads, [padId]: {
-                                    ...a.pads[padId],
-                                    title: '',
-                                    filePath: null,
-                                    isActive: false,
-                                    linkedLightSceneId: null,
-                                    keyMapping: null,
-                                    midiMapping: null,
-                                    volume: 1.0
+            clearPad: (padId) => {
+                soundEngine.unloadAudio(padId);
+                set((state) => ({
+                    atmospheres: state.atmospheres.map(a =>
+                        a.id === state.activeAtmosphereId
+                            ? {
+                                ...a, pads: {
+                                    ...a.pads, [padId]: {
+                                        ...a.pads[padId],
+                                        title: '',
+                                        filePath: null,
+                                        isActive: false,
+                                        linkedLightSceneId: null,
+                                        keyMapping: null,
+                                        midiMapping: null,
+                                        volume: 1.0
+                                    }
                                 }
                             }
-                        }
-                        : a
-                )
-            })),
+                            : a
+                    )
+                }));
+            },
 
             triggerPad: async (padId) => {
                 const atmosId = get().activeAtmosphereId;

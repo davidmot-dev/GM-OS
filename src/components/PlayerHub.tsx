@@ -8,6 +8,7 @@ import { useMediaUrl } from '../hooks/useMediaUrl';
 import PlayerMapCanvas from '../modules/map/components/PlayerMapCanvas';
 import { PlayerDrawingCanvas } from '../modules/whiteboard/components/PlayerDrawingCanvas';
 import { useWhiteboardStore } from '../modules/whiteboard/useWhiteboardStore';
+import { useSessionOSStore } from '../modules/session/useSessionOSStore';
 import { ResolvedImage } from './ResolvedImage';
 import type { ProjectedEntity } from '../modules/image/types';
 import NarrativeClock from '../modules/clock/components/NarrativeClock';
@@ -26,6 +27,7 @@ const PlayerHub: React.FC = () => {
     const { mapUrl, projectionTarget } = useMapStore();
     const { backgroundMode, projectionTarget: whiteboardTarget } = useWhiteboardStore();
     const { isDiceProjected, lastRoll, projectionTrigger } = useDiceStore();
+    const { activeCampaignWallpaper } = useSessionOSStore();
     const [showDice, setShowDice] = useState(false);
     const diceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const lastTriggerRef = useRef(0);
@@ -74,7 +76,8 @@ const PlayerHub: React.FC = () => {
                 useWhiteboardStore.persist.rehydrate(),
                 useVoiceStore.persist.rehydrate(),
                 useImageStore.persist.rehydrate(),
-                useDiceStore.persist.rehydrate()
+                useDiceStore.persist.rehydrate(),
+                useSessionOSStore.persist.rehydrate()
             ]);
         };
         rehydrateAll();
@@ -113,7 +116,8 @@ const PlayerHub: React.FC = () => {
                 'gmos-voice-storage': () => useVoiceStore.persist.rehydrate(),
                 'gm-os-tactical-ai': () => useTacticalAIStore.persist.rehydrate(),
                 'gmos-image-storage': () => useImageStore.persist.rehydrate(),
-                'gmos-dice-storage': () => useDiceStore.persist.rehydrate()
+                'gmos-dice-storage': () => useDiceStore.persist.rehydrate(),
+                'gmos-v5-session-os-storage': () => useSessionOSStore.persist.rehydrate()
             };
 
             if (e.key && keys[e.key]) keys[e.key]();
@@ -164,7 +168,7 @@ const PlayerHub: React.FC = () => {
         );
     };
 
-    const backgroundPath = liveImagePath !== undefined ? liveImagePath : activeMedia?.path;
+    const backgroundPath = liveImagePath !== undefined ? liveImagePath : (activeMedia?.path || activeCampaignWallpaper);
     const resolvedBackground = useMediaUrl(backgroundPath || undefined);
     const isMapActive = !!(mapUrl && projectionTarget === 'hub');
 

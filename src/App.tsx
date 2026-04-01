@@ -583,6 +583,9 @@ function App() {
     const unsubAmbient = useAmbientStore.subscribe(() => handleSync(false));
     const unsubSessionOS = useSessionOSStore.subscribe(() => handleSync(false));
     const unsubDice = useDiceStore.subscribe(() => syncFast('dice'));
+    const unsubFavorite = useFavoriteStore.subscribe(() => handleSync(false));
+    const unsubStoryboard = useStoryboardStore.subscribe(() => handleSync(false));
+    const unsubCombat = useCombatStore.subscribe(() => handleSync(false));
     
     handleSync();
 
@@ -597,6 +600,9 @@ function App() {
       unsubAmbient();
       unsubSessionOS();
       unsubDice();
+      unsubFavorite();
+      unsubStoryboard();
+      unsubCombat();
       unsubscribeCombat();
       console.log('[App] Remote effect cleanup - IPC listeners removed.');
     };
