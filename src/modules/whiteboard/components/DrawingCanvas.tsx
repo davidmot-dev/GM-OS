@@ -16,7 +16,6 @@ export const DrawingCanvas = forwardRef<DrawingCanvasRef>((_, ref) => {
         currentColor, 
         currentWidth, 
         addPath, 
-        removePath, 
         setLaserPointer, 
         laserPointer,
         setActivePath,
@@ -261,11 +260,6 @@ export const DrawingCanvas = forwardRef<DrawingCanvasRef>((_, ref) => {
             };
             addPath(newPath);
             
-            if (currentTool === 'laser') {
-                setTimeout(() => {
-                    removePath(id);
-                }, 2000);
-            }
         }
         setCurrentPoints([]);
     };

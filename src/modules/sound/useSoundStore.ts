@@ -222,9 +222,18 @@ export const useSoundStore = create<SoundState>()(
             },
 
             triggerPad: async (padId) => {
-                const atmosId = get().activeAtmosphereId;
-                const activeAtmos = get().atmospheres.find(a => a.id === atmosId);
+                const state = get();
+                let atmosId = state.activeAtmosphereId;
+                let activeAtmos = state.atmospheres.find(a => a.id === atmosId);
+
+                // Fallback: Si aucune atmosphère active, on cherche dans la première
+                if (!activeAtmos && state.atmospheres.length > 0) {
+                    activeAtmos = state.atmospheres[0];
+                    atmosId = activeAtmos.id;
+                }
+
                 const pad = activeAtmos?.pads[padId];
+                console.log(`[SoundStore] Triggering pad ${padId} in atmosphere ${activeAtmos?.name || 'unknown'}`);
 
                 if (pad && pad.filePath) {
                     try {

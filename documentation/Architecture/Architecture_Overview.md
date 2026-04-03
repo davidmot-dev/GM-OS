@@ -12,7 +12,8 @@ GM-OS repose sur quatre piliers fondamentaux :
 2. **State Management (Zustand)** : Stores persistants gérant l'état et déclenchant les Engines via abonnements. Inclut désormais un **Layout Manager** et un **Dice Store** persistant.
 3. **Engines & Services (Singleton)** : Logique lourde (Audio, Dés, IA) découplée de React pour la performance.
 4. **Bridge (`appBridge`)** : Couche d'abstraction facilitant le passage entre Electron, Tauri ou le Web. Intègre désormais une **détection d'événements matériels (Workspace Sync v2)** pour l'adaptation dynamique.
-5. **Cross-Window Sync** : Utilisation d'événements `storage` pour forcer la réhydratation des stores Zustand dans les fenêtres secondaires (Player Hub).
+5. **Decoupling Strategy (v5.3)** : Utilisation d'un accès dynamique via l'objet global `window` pour les moteurs métier au sein des composants UI racine (Shell, Header). Cela évite les dépendances circulaires au démarrage tout en permettant un contrôle total (ex: Panic Button).
+6. **Cross-Window Sync** : Utilisation d'événements `storage` pour forcer la réhydratation des stores Zustand dans les fenêtres secondaires (Player Hub).
 
 ```mermaid
 graph TD
@@ -60,6 +61,7 @@ GM-OS est un système modulaire où le **Session OS** agit comme chef d'orchestr
 
 ### 2. Le Stack Audio Engine
 Le système audio est divisé en quatre moteurs spécialisés, tous synchronisés pour l'immersion :
+- **Global Stop Control (`Panic Button`)** : Orchestrateur de haut niveau capable de stopper simultanément tous les moteurs (Music, Ambient, Sound) ainsi que les projections d'images et les éclairages. [v5.3.0]
 - **Music-OS (`MusicEngine`)** : Double platine (Deck A/B) avec crossfader et streaming.
 - **Ambient-OS (`AmbientEngine`)** : Mixeur 8 pistes pour les boucles d'ambiance avec correction de phase.
 - **Sound-OS (`SoundEngine`)** : Sampler basse latence pour les effets sonores (SFX).

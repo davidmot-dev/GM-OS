@@ -1,9 +1,10 @@
 import React from 'react';
-import { X, Star } from 'lucide-react';
+import { X, Star, Edit2 } from 'lucide-react';
 import type { ImageMedia } from '../types';
 import { useImageStore } from '../useImageStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { useHardwareStore } from '../../../stores/useHardwareStore';
+import { gmPrompt } from '../../../stores/useModalStore';
 
 interface ImagePadProps {
     media: ImageMedia;
@@ -13,7 +14,7 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
     const {
         projections,
         projectSolo, toggleMediaActive, removeMedia,
-        folders, moveMediaToFolder, toggleMediaFavorite
+        folders, moveMediaToFolder, toggleMediaFavorite, renameMedia
     } = useImageStore();
     const { getDisplayLabel } = useHardwareStore();
 
@@ -56,6 +57,25 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
 
             {/* Top Right Controls: Checkbox for Sequence and Remove */}
             <div className="absolute top-3 right-3 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                
+                <button
+                    onClick={(e) => { 
+                        e.stopPropagation(); 
+                        gmPrompt(
+                            "Renommer le média", 
+                            media.name, 
+                            (newName) => {
+                                if (newName && newName.trim()) {
+                                    renameMedia(media.id, newName.trim());
+                                }
+                            }
+                        );
+                    }}
+                    className="p-1 bg-app-surface/50 text-app-text/40 hover:text-accent rounded-md transition-colors"
+                    title="Renommer"
+                >
+                    <Edit2 size={14} />
+                </button>
 
                 <button
                     onClick={(e) => { e.stopPropagation(); toggleMediaFavorite(media.id); }}
@@ -85,7 +105,7 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
 
             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                 <button
-                    onClick={() => projectSolo(media)}
+                    onClick={(e) => { e.stopPropagation(); projectSolo(media); }}
                     className="bg-accent/20 backdrop-blur-md border border-accent/30 text-accent px-4 py-2 rounded-lg text-sm font-black uppercase tracking-widest hover:bg-accent/40 pointer-events-auto shadow-2xl font-display"
                 >
                     SOLO

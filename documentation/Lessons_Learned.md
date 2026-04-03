@@ -623,12 +623,22 @@ L'alignement par "Conteneurs Fantômes" ou grilles asymétriques est fragile. Il
 
 **Solution :** Refactoring vers une **Structure de Stack Unifiée** : `Icône -> Champ -> Label`. En appliquant ce schéma rigoureusement à toutes les statistiques, l'alignement horizontal des inputs (la zone d'interaction critique) devient automatique et résilient au redimensionnement.
 
-## 36. Architecture : Nettoyage en Cascade & Intégrité Inter-Modules (v5.2)
+## 37. Dépendances Circulaires & UI Global (Shell v5.3)
 
-### 36.1 Défi
-La suppression d'une campagne est une opération complexe qui touche potentiellement tous les modules de l'OS. Une suppression "simple" laissait des centaines d'objets orphelins (PNJ, Cartes, Wiki) et des badges de campagne erronés dans le Media Hub, dégradant les performances et la clarté de l'interface.
+### 37.1 Défi
+L'intégration du bouton **Stop All** dans le `MasterAudioController` (situé dans le Shell) nécessitait l'import de tous les moteurs audio (`MusicEngine`, `AmbientEngine`). Cela a créé une boucle de dépendances critique : `Shell -> AudioController -> Engines -> Stores -> UI Components -> Shell`. Résultat : le moteur audio se bloquait au démarrage (plus de son).
 
-### 36.2 Leçon
-Les suppressions de haut niveau (Campagne, Joueur) doivent être orchestrées par le **Root Store** via un pattern de surcharge (Override).
+### 37.2 Leçon
+Pour les composants UI globaux (situés haut dans l'arborescence DOM comme le Shell ou le Header), **évitez les imports statiques de singletons métier**.
 
-**Solution :** Implémentation du **"Deletion Cascade Pattern"**. L'action `deleteCampaign` du store racine filtre récursivement toutes les listes de données. Parallèlement, elle déclenche un nettoyage asynchrone dans **IndexedDB** pour retirer les références de campagne des métadonnées des fichiers médias. Les personnages joueurs (PJs) sont quant à eux "détachés" (campaignId ➔ null) au lieu d'être supprimés, préservant le travail du MJ sur le long terme.
+**Solution :** Utilisation d'un **Accès Dynamique via `window`**. En exposant les moteurs sur l'objet global (`window.musicEngine`), l'UI peut déclencher des actions au moment du clic sans forcer le chargement de toute la chaîne de dépendances au démarrage. Le typage est sécurisé via une interface locale `GMWindow extends Window` évitant ainsi l'usage de `any`.
+
+## 38. UX de Projection : Fiabilité du Single-Click (Image OS v5.3)
+
+### 38.1 Défi
+Une régression obligeait le MJ à cliquer deux fois pour projeter la première image d'une session. Ce délai est inacceptable en situation de jeu réelle ("Stress GM").
+
+### 38.2 Leçon
+La synchronisation entre le store global et l'état local d'une fenêtre secondaire (Hub/Projecteur) doit être proactive dès le montage du composant.
+
+**Solution :** Le hook `useEffect` de synchronisation dans les vues déportées a été corrigé pour traiter immédiatement la valeur initiale du store lors du montage, garantissant une projection instantanée au premier clic.

@@ -9,7 +9,8 @@ import {
     RotateCw,
     Trash2
 } from 'lucide-react';
-import { RemoteDrawingCanvas, type DrawingPath, type Point } from './RemoteDrawingCanvas';
+import RemoteDrawingCanvas from './RemoteDrawingCanvas';
+import { type DrawingPath, type Point, type WhiteboardTool } from '../types/remote.types';
 
 interface RemoteWhiteboardViewProps {
     whiteboard: {
@@ -17,11 +18,11 @@ interface RemoteWhiteboardViewProps {
         activePath: DrawingPath | null;
         laserPointer: Point | null;
         backgroundMode: 'dark' | 'light';
-        currentTool: string;
+        currentTool: WhiteboardTool;
         currentColor: string;
         currentWidth: number;
     };
-    onAction: (type: string, payload: any) => void;
+    onAction: (type: string, payload: unknown) => void;
 }
 
 const RemoteWhiteboardView: React.FC<RemoteWhiteboardViewProps> = ({ whiteboard, onAction }) => {
@@ -80,7 +81,7 @@ const RemoteWhiteboardView: React.FC<RemoteWhiteboardViewProps> = ({ whiteboard,
             </div>
 
             {/* Canvas Area */}
-            <div className="flex-1 relative">
+            <div className="aspect-video w-full max-h-[55vh] md:max-h-[60vh] relative bg-slate-900/40 rounded-xl overflow-hidden shadow-inner border border-white/5">
                 <RemoteDrawingCanvas 
                     whiteboard={whiteboard} 
                     onAction={onAction} 

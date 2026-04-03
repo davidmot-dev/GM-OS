@@ -341,6 +341,7 @@ ipcMain.handle('light:request', async (_event, url: string, method: string, body
 
 // --- Image OS Handlers ---
 const projectorWindows = new Map<string, BrowserWindow>();
+const currentDisplayPaths = new Map<string, string[]>();
 let hubWindow: BrowserWindow | null = null;
 
 ipcMain.handle('image:get-displays', () => {
@@ -420,6 +421,7 @@ ipcMain.on('session:launch-hub-window', (_event, mode = 'hub') => {
 
 ipcMain.on('image:launch-display', (_event, paths: string[], target: string) => {
     console.log(`[Image OS] Launch Display -> Target: ${target}, Paths:`, paths);
+    currentDisplayPaths.set(target, paths);
 
     if (target === 'hub') {
         // Just trigger the sync logic for local hub window if any
@@ -472,9 +474,9 @@ ipcMain.on('image:launch-display', (_event, paths: string[], target: string) => 
 
         // Load the projector route
         if (VITE_DEV_SERVER_URL) {
-            projWin.loadURL(`${VITE_DEV_SERVER_URL}?window=projector`);
+            projWin.loadURL(`${VITE_DEV_SERVER_URL}?window=projector&displayId=${target}`);
         } else {
-            projWin.loadFile(path.join(RENDERER_DIST, 'index.html'), { query: { window: 'projector' } });
+            projWin.loadFile(path.join(RENDERER_DIST, 'index.html'), { query: { window: 'projector', displayId: target } });
         }
 
         // Wait for finish load before sending image
@@ -484,6 +486,13 @@ ipcMain.on('image:launch-display', (_event, paths: string[], target: string) => 
     } else {
         // Window already exists, just update image
         projWin.webContents.send('image:update-display', paths);
+    }
+});
+
+ipcMain.on('image:request-current-display', (event, target: string) => {
+    const paths = currentDisplayPaths.get(target);
+    if (paths && paths.length > 0) {
+        event.sender.send('image:update-display', paths);
     }
 });
 

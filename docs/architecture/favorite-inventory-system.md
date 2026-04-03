@@ -42,13 +42,22 @@ const syncFavorites = allFavorites.filter(fav => {
 });
 ```
 
+### Diffusion Instantanée (Zero Latency)
+Depuis la v5.15, `App.tsx` s'abonne aux changements du `useFavoriteStore`. Toute modification (ajout d'un objet, changement de propriétaire) déclenche un broadcast immédiat vers les tablettes connectées.
+
 ## 4. Rendu côté Joueur (Tablet Hub)
 
 Le Tablet Hub écoute le flux de synchronisation et met à jour son store local `useFavoriteStore`.
-L'interface utilisateur (`TabletHub.tsx`) dispose d'un onglet **Inventaire** qui affiche une grille d'objets.
+L'interface utilisateur (`TabletHub.tsx`) segmente l'affichage pour plus de clarté :
 
+- **Flux "Direct" (Live)** : Affiche uniquement les favoris de type `npc`, `location` ou `lore`. Cela permet de se concentrer sur l'ambiance narrative sans encombrer l'écran avec les objets de l'inventaire.
+- **Onglet "Sac" (Inventory)** : Affiche exclusivement les favoris de type `item`. C'est l'espace personnel du joueur pour consulter ses possessions.
 - **Isolation** : Un joueur A ne peut jamais voir dans son code ou son état les objets assignés au joueur B.
 - **Visualisation** : Le composant `HubItemViewer` assure une vue immersive de l'objet, masquant les notes techniques ou secrètes du MJ pour ne montrer que le "Lore" et l'image.
+
+---
+*Dernière mise à jour : 1 Avril 2026*
+*Statut : Synchronisation instantanée et segmentation Live/Sac validées.*
 
 ---
 *Date : 30 Mars 2026*

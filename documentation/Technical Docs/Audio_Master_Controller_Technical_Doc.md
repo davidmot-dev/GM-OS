@@ -25,6 +25,22 @@ Instead of a single global gain node that could cause routing complexity, each a
 ### 3. Synchronization Mechanism
 Engines subscribe to the `AudioMasterStore` on initialization. Updates are applied using `setTargetAtTime` with a 100ms constant to ensure smooth transitions without audio artifacts.
 
+### 4. Panic Button (Stop All) Logic
+Implemented in v5.3, the Panic Button provides a synchronized shutdown of all media and lighting subsystems. 
+- **Method**: `handleStopAll` in `MasterAudioController.tsx`.
+- **Target Subsystems**:
+  - `MusicEngine.stopAll()`: Halts all playback decks.
+  - `SoundEngine.stopAll()`: Stops all active SFX.
+  - `AmbientEngine.fadeOutAll(1.0)`: Performs a swift 1-second fade out on all ambient tracks.
+  - `useImageStore.blackoutAll()`: Clears all projected images to black.
+  - `hueEngine.extinguishAll()`: Turns off all smart lighting.
+
+### 5. Technical Pattern: Window-based Decoupling
+To avoid circular dependencies within the global `Shell` (which imports the `MasterAudioController`), the engines are not imported at the top-level of the UI component. 
+- **Implementation**: Engines are accessed via the `window` object (e.g., `(window as any).musicEngine`) inside the event handler.
+- **Safety**: Each engine is responsible for exposing its singleton on the `window` object during its own initialization.
+
 ## UI Components
 - **MasterAudioController**: Located in the global `Shell` header.
 - **Visuals**: Glassmorphism design, dynamic CSS-variable-based gradients for the slider, and "Aura/Glow" effects for the Focus button.
+- **Panic Button**: A dedicated power icon (red in Modern, burgundy in Medieval) for immediate emergency stops.

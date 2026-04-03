@@ -115,6 +115,14 @@ export const useWhiteboardStore = create<WhiteboardState>()(
 
             addPath: (path) => set((state) => {
                 const newPaths = [...state.paths, path];
+                
+                // Si c'est un tracé temporaire (laser), on programme sa suppression
+                if (path.isTemporary) {
+                    setTimeout(() => {
+                        useWhiteboardStore.getState().removePath(path.id);
+                    }, 2000);
+                }
+
                 return {
                     paths: newPaths,
                     undoStack: path.isTemporary ? state.undoStack : [...state.undoStack, state.paths],

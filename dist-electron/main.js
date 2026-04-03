@@ -5591,6 +5591,7 @@ ipcMain.handle("light:request", async (_event, url, method, body) => {
   });
 });
 const projectorWindows = /* @__PURE__ */ new Map();
+const currentDisplayPaths = /* @__PURE__ */ new Map();
 let hubWindow = null;
 ipcMain.handle("image:get-displays", () => {
   const displays = screen.getAllDisplays();
@@ -5659,6 +5660,7 @@ ipcMain.on("session:launch-hub-window", (_event, mode = "hub") => {
 });
 ipcMain.on("image:launch-display", (_event, paths, target) => {
   console.log(`[Image OS] Launch Display -> Target: ${target}, Paths:`, paths);
+  currentDisplayPaths.set(target, paths);
   if (target === "hub") {
     if (hubWindow && !hubWindow.isDestroyed()) {
       hubWindow.webContents.send("image:update-display", paths);
@@ -5699,15 +5701,21 @@ ipcMain.on("image:launch-display", (_event, paths, target) => {
       projectorWindows.delete(target);
     });
     if (VITE_DEV_SERVER_URL) {
-      projWin.loadURL(`${VITE_DEV_SERVER_URL}?window=projector`);
+      projWin.loadURL(`${VITE_DEV_SERVER_URL}?window=projector&displayId=${target}`);
     } else {
-      projWin.loadFile(path.join(RENDERER_DIST, "index.html"), { query: { window: "projector" } });
+      projWin.loadFile(path.join(RENDERER_DIST, "index.html"), { query: { window: "projector", displayId: target } });
     }
     projWin.webContents.on("did-finish-load", () => {
       projWin?.webContents.send("image:update-display", paths);
     });
   } else {
     projWin.webContents.send("image:update-display", paths);
+  }
+});
+ipcMain.on("image:request-current-display", (event, target) => {
+  const paths = currentDisplayPaths.get(target);
+  if (paths && paths.length > 0) {
+    event.sender.send("image:update-display", paths);
   }
 });
 ipcMain.on("image:close-all-displays", () => {

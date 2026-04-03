@@ -78,39 +78,23 @@
 **Solution :** Implémentation d'un filtrage pré-diffusion dans `App.tsx`. Le MJ ne "broadcast" pas tout, il cible l'envoi en fonction du `characterId` du destinataire.
 **Apprentissage :** La confiance ne doit pas reposer uniquement sur l'UI (masquage visuel). Le filtrage doit se faire au niveau du canal de transmission (MJ -> Réseau) pour garantir une isolation réelle.
 
-## 🧱 UX : Fluidité de Transition entre Modules (Ponts Magiques)
+## 📡 Réseau : Stratégies de Synchronisation de Haute Précision
 
-### Le Piège de la Redirection "Early"
-**Problème :** En redirigeant l'utilisateur vers un autre module (ex: Wiki ➔ Favorite-OS), l'état de la vue source peut rester bloqué sur un ID inexistant, provoquant des écrans "en construction" au retour.
-**Solution :** Utilisation systématique de `setCurrentView('cockpit')` ou d'un reset de navigation lors de l'activation d'un pont inter-modules.
-**Apprentissage :** Une action "magique" qui change de contexte doit toujours s'accompagner d'un reset de la navigation interne du module source pour garantir un retour utilisateur sans accroc.
+### L'Importance de la Souscription Explicite
+**Problème :** Donner un objet ou modifier des PV ne se reflétait pas instantanément sur Hub, exigeant un rafraîchissement manuel. Bien que le payload de sync soit prêt, le MJ ne "savait pas" qu'il devait broadcaster car il ne surveillait pas les bons stores.
+**Solution :** Ajout d'abonnements au store (`store.subscribe()`) dans le module racine `App.tsx`. Toute modification du store des favoris, du combat ou du storyboard déclenche un broadcast immédiat.
+**Apprentissage :** Dans un système de synchronisation "Push", ne jamais se fier aux cycles de rendu React pour l'émission de données. Une écoute directe sur les magasins d'état est indispensable pour une expérience sans latence.
 
-### Auto-complétion de Contexte (Smart Prefill)
-**Problème :** L'importation d'éléments depuis le Wiki demandait trop de clics pour ré-assigner la campagne active.
-**Solution :** Injection automatique de `activeCampaignId` dans le module cible lors de la création déclenchée par le pont.
-**Apprentissage :** La réduction de la friction passe par la transmission du "Contexte Invisible" (ce que l'utilisateur est en train de faire) entre les magasins de données (Slices).
+### Résolution de Médias en Processus Amont
+**Problème :** Envoyer un ID local (`m-xxx`) à un client distant est inutile sans résolution. Les failsafes "centraux" (côté Hub) sont complexes à maintenir pour chaque composant.
+**Solution :** Centraliser la résolution de l'ID en URL diffusable directement dans les actions du store MJ (`projectSolo`, `projectUrl`). Le Hub reçoit alors une URL valide (HTTP Proxy ou Data URI) prête à l'emploi.
+**Apprentissage :** La "Sendability" d'une donnée doit être garantie par l'émetteur. Plus le message est "prêt à consommer", plus l'UI cliente sera fluide et robuste.
 
-## 🧱 Architecture : Nettoyage en Cascade (Deletion Cascade)
-
-### Le Problème du "Détachement vs Suppression"
-**Problème :** Supprimer une campagne laissait des PNJ, des cartes et des indices orphelins dans le store, ainsi que des badges obsolètes (ex: "Unit_C-17") dans le Media Hub.
-**Solution :** Surcharge globale de l'action `deleteCampaign` dans le store racine (`index.ts`). Cette action coordonne le filtrage de tous les sous-stores (Entities, Atlas, Chronicle) et déclenche un nettoyage asynchrone dans IndexedDB via le `MediaStore`.
-**Apprentissage :** Pour les entités globales (comme les PJ), préférez le "Détachement" (remise à `null` de l'ID) plutôt que la suppression. Pour les données purement narratives (Wiki, PNJ), la suppression physique "Hard Delete" est indispensable pour éviter la pollution de l'état.
-
-## ♿ Accessibilité (A11y) : Levier de Qualité
-
-### Correction Systématique des Lints
-**Problème :** Des centaines d'alertes A11y (htmlFor manquant, labels orphelins, div cliquables) polluaient les rapports de build.
-**Solution :** Refonte de `SheetFields.tsx` et des modules de `Session-OS` pour imposer des IDs uniques et des boutons sémantiques (`type="button"`).
-**Apprentissage :** Suivre les règles d'accessibilité n'est pas qu'une contrainte inclusive ; cela force une structure HTML plus propre, facilite les tests automatisés (locators stables) et améliore naturellement la navigation au clavier.
-
-## 🧱 Architecture : Découplage par Hooks (Logic-to-Hook)
-
-### Extraction de la Logique Métier Complex
-**Problème :** `DeckLibrary.tsx` et `DeckPlayer.tsx` étaient devenus des "God Components" mélangeant gestion de formulaire, calculs de tirage et rendu UI.
-**Solution :** Création de `useDeckLibrary` et `useDeckPlayer`. Le composant React ne devient qu'une fonction pure de l'état retourné par le hook.
-**Apprentissage :** Le découplage facilite grandement les tests unitaires (Vitest) car on peut tester la machine à état (le hook) sans monter l'arborescence DOM complexe. C'est le standard obligatoire pour GM-OS v5.
+### Segmentation de l'État par Usage UI (Live vs Sac)
+**Problème :** Un flux continu d'objets (Items) dans le dashboard principal du Hub polluait l'ambiance narrative et rendait le défilement illisible.
+**Solution :** Segmentation logique au niveau du rendu Hub. Filtrage strict du dashboard pour les types `npc/location` et déplacement automatique des `item` dans un onglet dédié.
+**Apprentissage :** Même synchronisées, les données brutes ne doivent pas être "tout ou rien" au niveau de l'affichage. La hiérarchisation par type mime/nature de donnée est cruciale pour l'UX sur petit écran (tablette/mobile).
 
 ---
-*Dernière mise à jour : 31 Mars 2026*
-*Statut : Standards A11y & Modularisation validés.*
+*Dernière mise à jour : 1 Avril 2026*
+*Statut : Standards de Synchronisation v5.15 validés.*

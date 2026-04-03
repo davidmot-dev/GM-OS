@@ -51,6 +51,7 @@ Les requêtes vers l'API Gemini transitent par un tunnel IPC sécurisé dans le 
 La synchronisation entre le Cockpit MJ et le Tablet Hub utilise un pont WebSocket bidirectionnel.
 
 - **Broadcast Sélectif (Campagne & Visibilité)** : Le MJ n'envoie que les données nécessaires à la session active (`activeCampaignId`). De plus, pour les entités (PNJ, Monstres, Alliés), un second filtre `isVisibleByPlayers === true` garantit que seuls les éléments révélés sont transmis au Tablet Hub.
+- **Sync Subscriptions (Zero-Latency)** : Pour garantir une mise à jour instantanée sans rafraîchissement manuel, le composant racine `App.tsx` s'abonne explicitement aux changements de plusieurs stores clés (`useFavoriteStore`, `useStoryboardStore`, `useCombatStore`). Cela déclenche un broadcast WebSockets immédiat dès qu'un objet est donné ou qu'un PV est modifié.
 - **Forge Sync** : Depuis la v5.11, le payload inclut les `customSheetTemplates` et `customGameDrivers`. Cela garantit que la tablette peut effectuer des calculs de règles et un rendu d'UI identique au MJ sans accès direct à la base de données locale.
 - **Trombinoscope Interface** : Le Tablet Hub consomme le flux filtré d'entités pour générer une galerie de reconnaissance en temps réel, synchronisée avec les actions de visibilité du MJ.
 
@@ -77,8 +78,9 @@ Pour éviter toute fuite de données entre projets ("Data Leakage"), Session-OS 
 
 La gestion des IDs `m-xxx` (Blob IDs stockés en local) nécessite une couche d'abstraction pour les clients distants.
 
-- **Broadcast Resolution** : Avant l'envoi du signal `sync`, le MJ résout tous les médias en URLs absolues pointant vers son serveur local (`http://[IP]:3001/temp/[ID]`).
+- **Broadcast Resolution** : Avant l'envoi du signal `sync`, le MJ résout tous les médias en URLs absolues ou Data URIs via son proxy local (`http://[IP]:3001/temp/[ID]`). Le `useImageStore` assure cette résolution via `resolveToSendableUrl` avant chaque `syncHubData`.
 - **Hub Failsafe** : Le hook `useMediaUrl` sur les tablettes redirige automatiquement vers l'IP du MJ si un identifiant non résolu est détecté dans le store synchronisé.
+- **Persistence Cleanup** : Le store d'images utilise `onRehydrateStorage` pour purger automatiquement les projections orphelines (IDs de médias inexistants) au démarrage, évitant l'affichage de "ghost images" d'anciennes campagnes.
 
 ## 8. Standards d'Accessibilité (A11y) & Qualité
 
@@ -92,4 +94,4 @@ Tous les composants de `Session-OS` doivent respecter les standards d'accessibil
 La logique métier complexe ne doit jamais résider dans le composant UI. Elle doit être extraite dans un custom hook spécialisé (ex: `useDeckPlayer`) et validée via des tests unitaires **Vitest**.
 
 ---
-*Dernière mise à jour : 31 Mars 2026 - GM-OS v5 Stability Patch (Modular Hooks & A11y Standard).*
+*Dernière mise à jour : 1 Avril 2026 - GM-OS v5.15 Sync & Media Stability Update.*

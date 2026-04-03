@@ -92,6 +92,7 @@ Les fiches sont entièrement adaptables :
 
 Le **Cockpit** est l'écran par défaut une fois une campagne lancée. Il affiche en temps réel :
 
+- **Le Header Global (v5.3)** : Situé tout en haut, il contient désormais le **Bouton Panique (Stop All)** pour tout éteindre en urgence, le curseur de volume master, et le bouton **Focus Chat** pour tamiser l'ambiance sonore.
 - **Les Personnages Actifs** : Portraits et barres de vie mis à jour instantanément.
 - **Le Workspace** : Une zone d'édition rapide pour vos notes de session.
 - **Les Snapshots** : Voir section ci-dessous.

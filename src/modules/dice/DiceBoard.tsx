@@ -17,20 +17,35 @@ interface RollRecord extends RollResult {
     batchId?: string;
 }
 
-interface QuickRoll {
-    id: string;
-    label: string;
-    formula: string; // ex: 1d20+5
-}
-
 type DiceMode = 'standard' | 'formula' | 'pool' | 'pool_explode' | 'threshold' | 'advantage' | 'disadvantage' | 'exploding' | 'fate' | 'rolemaster' | 'yze';
+
+interface RemoteDiceOptions {
+    sides?: number;
+    die?: number;
+    count?: number;
+    modifier?: number;
+    mode?: string;
+    target?: number;
+    gearCount?: number;
+    title?: string;
+}
 
 const DiceBoard: React.FC = () => {
     // Tactical Bridge State
     const { tokens, gridSize } = useMapStore();
     const [lastSelectedTokenId, setLastSelectedTokenId] = useState<string | null>(null);
     const [targetTokenId, setTargetTokenId] = useState<string | null>(null);
-    const { isDiceProjected, setIsDiceProjected, triggerDiceProjection } = useDiceStore();
+    const { 
+        isDiceProjected, 
+        setIsDiceProjected, 
+        triggerDiceProjection, 
+        quickRolls, 
+        addQuickRoll: storeAddQuickRoll, 
+        removeQuickRoll: storeRemoveQuickRoll,
+        history,
+        setLastRoll,
+        clearHistory
+    } = useDiceStore();
     // Le timer est désormais géré au niveau du Player Hub via projectionTrigger
 
     const handleToggleProjection = () => {
@@ -51,13 +66,6 @@ const DiceBoard: React.FC = () => {
     const [targetRule, setTargetRule] = useState<'over' | 'under'>('over');
     const [batchCount, setBatchCount] = useState<number>(1);
 
-    // Data
-    const [history, setHistory] = useState<RollRecord[]>([]);
-    const [quickRolls, setQuickRolls] = useState<QuickRoll[]>([
-        { id: 'qr1', label: 'Attaque Épée Longue', formula: '1d20+7' },
-        { id: 'qr2', label: 'Dégâts', formula: '1d8+4' },
-        { id: 'qr3', label: 'Lancer D66', formula: '1d66' }
-    ]);
     const [newQuickRollLabel, setNewQuickRollLabel] = useState('');
     const [newQuickRollFormula, setNewQuickRollFormula] = useState('');
     const [isAddingQuickRoll, setIsAddingQuickRoll] = useState(false);
@@ -128,83 +136,89 @@ const DiceBoard: React.FC = () => {
         }
     }, [activeDriver, activeDriver?.id]); // Only re-run when actual system changes
 
-    const executeRoll = useCallback((sides: number = 20, isFormulaText: boolean = false, customFormula: string = "") => {
+    const executeRoll = useCallback((sides: number = 20, isFormulaText: boolean = false, customFormula: string = "", remoteOverrides?: RemoteDiceOptions) => {
         let result: RollResult;
         
-        if (useSystemDriver && activeDriver) {
-            const modVal = typeof modifier === 'string' ? (parseInt(modifier.replace('+', ''), 10) || 0) : modifier;
+        // Paramètres finaux (priorité aux overrides distants, puis à l'UI locale)
+        const finalCount = (remoteOverrides?.count !== undefined) ? remoteOverrides.count : diceCount;
+        const finalModifier = (remoteOverrides?.modifier !== undefined) ? remoteOverrides.modifier : modifier;
+        const finalMode = (remoteOverrides?.mode as DiceMode) ?? mode;
+        const finalTarget = (remoteOverrides?.target !== undefined) ? remoteOverrides.target : target;
+        const finalGearCount = (remoteOverrides?.gearCount !== undefined) ? remoteOverrides.gearCount : gearCount;
+
+        if (useSystemDriver && activeDriver && !remoteOverrides) {
+            const modVal = typeof finalModifier === 'string' ? (parseInt(finalModifier.replace('+', ''), 10) || 0) : finalModifier;
             result = DiceEngine.rollFromConfig(activeDriver.dice, {
                 modifier: modVal,
-                baseCount: diceCount,
-                gearCount: gearCount,
-                targetOverwrite: target
+                baseCount: finalCount,
+                gearCount: finalGearCount,
+                targetOverwrite: finalTarget
             });
             return { result, title: `Système: ${activeDriver.name}` };
         }
 
-        let title = `${diceCount}d${sides}`;
-        const modVal = typeof modifier === 'string' ? (parseInt(modifier.replace('+', ''), 10) || 0) : modifier;
+        let title = remoteOverrides?.title || `${finalCount}d${sides}`;
+        const modVal = typeof finalModifier === 'string' ? (parseInt(finalModifier.replace('+', ''), 10) || 0) : finalModifier;
 
         if (isFormulaText) {
             const formObj = customFormula || formulaInput;
             result = DiceEngine.rollFormula(formObj);
             title = `Formule: ${formObj}`;
         } else {
-            switch (mode) {
+            switch (finalMode) {
                 case 'standard':
-                    result = DiceEngine.rollStandard(sides, diceCount, modVal, false); // Always false for standard
+                    result = DiceEngine.rollStandard(sides, finalCount, modVal, false);
                     break;
                 case 'exploding':
-                    result = DiceEngine.rollStandard(sides, diceCount, modVal, true);
-                    title = `Explosif ${diceCount}d${sides}`;
+                    result = DiceEngine.rollStandard(sides, finalCount, modVal, true);
+                    title = `Explosif ${finalCount}d${sides}`;
                     break;
                 case 'pool':
-                    result = DiceEngine.rollPool(sides, diceCount, modVal, target, false); // Always false for pool
-                    title = `Pool ${diceCount}d${sides} (Diff ${target})`;
+                    result = DiceEngine.rollPool(sides, finalCount, modVal, finalTarget, false);
+                    title = `Pool ${finalCount}d${sides} (Diff ${finalTarget})`;
                     break;
                 case 'pool_explode':
-                    result = DiceEngine.rollPool(sides, diceCount, modVal, target, true);
-                    title = `Pool Exp. ${diceCount}d${sides} (Diff ${target})`;
+                    result = DiceEngine.rollPool(sides, finalCount, modVal, finalTarget, true);
+                    title = `Pool Exp. ${finalCount}d${sides} (Diff ${finalTarget})`;
                     break;
                 case 'threshold':
-                    result = DiceEngine.rollThreshold(sides, diceCount, modVal, target, targetRule);
-                    title = `Test ${diceCount}d${sides} ${targetRule === 'over' ? '≥' : '≤'} ${target}`;
+                    result = DiceEngine.rollThreshold(sides, finalCount, modVal, finalTarget, targetRule);
+                    title = `Test ${finalCount}d${sides} ${targetRule === 'over' ? '≥' : '≤'} ${finalTarget}`;
                     break;
                 case 'advantage':
-                    result = DiceEngine.rollAdvantage(sides, modVal, true, target, targetRule);
+                    result = DiceEngine.rollAdvantage(sides, modVal, true, finalTarget, targetRule);
                     title = `Avantage 2d${sides}`;
                     break;
                 case 'disadvantage':
-                    result = DiceEngine.rollAdvantage(sides, modVal, false, target, targetRule);
+                    result = DiceEngine.rollAdvantage(sides, modVal, false, finalTarget, targetRule);
                     title = `Désavantage 2d${sides}`;
                     break;
                 case 'fate':
-                    result = DiceEngine.rollFate(diceCount, modVal);
-                    title = `FATE ${diceCount}dF`;
+                    result = DiceEngine.rollFate(finalCount, modVal);
+                    title = `FATE ${finalCount}dF`;
                     break;
                 case 'rolemaster':
                     result = DiceEngine.rollRolemaster(modVal);
                     title = `Rolemaster d100`;
                     break;
                 case 'yze':
-                    result = DiceEngine.rollYZE(diceCount, gearCount);
-                    title = `YZE (${diceCount} Base + ${gearCount} Gear)`;
+                    result = DiceEngine.rollYZE(finalCount, finalGearCount);
+                    title = `YZE (${finalCount} Base + ${finalGearCount} Gear)`;
                     break;
                 default:
-                    result = DiceEngine.rollStandard(sides, diceCount, modVal);
+                    result = DiceEngine.rollStandard(sides, finalCount, modVal);
             }
         }
         return { result, title };
     }, [useSystemDriver, activeDriver, modifier, diceCount, gearCount, target, formulaInput, mode, targetRule]);
 
-    const handleRoll = useCallback((sides: number = 20, isFormulaText: boolean = false, customFormula: string = "") => {
+    const handleRoll = useCallback((sides: number = 20, isFormulaText: boolean = false, customFormula: string = "", remoteOverrides?: RemoteDiceOptions) => {
         try {
             const batchId = batchCount > 1 ? generateId() : undefined;
             const newRecords: RollRecord[] = [];
-            const { setLastRoll } = (window as unknown as Record<string, { getState: () => { setLastRoll: (r: RollRecord) => void } }>).useDiceStore.getState();
-
+            
             for (let i = 0; i < batchCount; i++) {
-                const { result, title } = executeRoll(sides, isFormulaText, customFormula);
+                const { result, title } = executeRoll(sides, isFormulaText, customFormula, remoteOverrides);
 
                 let repTitle = title;
                 if (batchCount > 1) repTitle = `${title} (Jet ${i + 1}/${batchCount})`;
@@ -227,30 +241,18 @@ const DiceBoard: React.FC = () => {
                     }
                 }
             }
-
-            setHistory((prev) => [...newRecords.reverse(), ...prev].slice(0, 50));
         } catch (error) {
             console.error("Erreur de lancer:", error);
         }
-    }, [batchCount, executeRoll, isDiceProjected, triggerDiceProjection]);
+    }, [batchCount, executeRoll, isDiceProjected, triggerDiceProjection, setLastRoll]);
 
     const handleQuickRoll = (formula: string, label: string) => {
-        handleRoll(0, true, formula);
-        // Rename the last added history to match label
-        setHistory((prev) => {
-            const updated = [...prev];
-            // Since we batch-added them, the newest are at the start. Update the title.
-            // If batch = 1, just update 0. If batch > 1, update 0 to batchCount
-            for (let i = 0; i < batchCount && i < updated.length; i++) {
-                updated[i].title = `${label} ${batchCount > 1 ? `(Jet ${batchCount - i}/${batchCount})` : ''}`.trim();
-            }
-            return updated;
-        });
+        handleRoll(0, true, formula, { mode: 'formula', title: label });
     };
 
     const addQuickRoll = () => {
         if (newQuickRollLabel && newQuickRollFormula) {
-            setQuickRolls([...quickRolls, { id: generateId(), label: newQuickRollLabel, formula: newQuickRollFormula }]);
+            storeAddQuickRoll(newQuickRollLabel, newQuickRollFormula);
             setIsAddingQuickRoll(false);
             setNewQuickRollLabel('');
             setNewQuickRollFormula('');
@@ -258,30 +260,10 @@ const DiceBoard: React.FC = () => {
     };
 
     const removeQuickRoll = (id: string) => {
-        setQuickRolls(quickRolls.filter(qr => qr.id !== id));
+        storeRemoveQuickRoll(id);
     };
 
-    // --- Remote Control Listeners ---
-    React.useEffect(() => {
-        const handleRemoteRoll = (e: Event) => {
-            const detail = (e as CustomEvent<{ die?: number }>).detail;
-            if (detail?.die) {
-                console.log("[DiceBoard] Remote Roll Triggered:", detail.die);
-                handleRoll(detail.die);
-            }
-        };
-        const handleRemoteClear = () => {
-            console.log("[DiceBoard] Remote Clear Triggered");
-            setHistory([]);
-        };
-
-        window.addEventListener('remote:roll-die', handleRemoteRoll);
-        window.addEventListener('remote:clear-dice', handleRemoteClear);
-        return () => {
-            window.removeEventListener('remote:roll-die', handleRemoteRoll);
-            window.removeEventListener('remote:clear-dice', handleRemoteClear);
-        };
-    }, [handleRoll]);
+    // --- Remote Control Listeners removed: handled globally in App.tsx now ---
 
     return (
         <div className="flex h-[calc(100vh-8rem)] gap-6 text-app-text">
@@ -688,7 +670,7 @@ const DiceBoard: React.FC = () => {
                     <div className="flex items-center justify-between mb-4 pb-2 border-b border-app-border">
                         <h3 className="text-sm font-bold text-app-text/90 uppercase tracking-widest">Historique</h3>
                         <button
-                            onClick={() => setHistory([])}
+                            onClick={clearHistory}
                             disabled={history.length === 0}
                             className="flex items-center gap-1.5 text-xs font-medium text-app-text/50 hover:text-app-text transition-colors disabled:opacity-30"
                         >
@@ -701,7 +683,7 @@ const DiceBoard: React.FC = () => {
                             <div key={record.id} className="flex flex-col gap-2 p-3 rounded-xl bg-app-bg/50 border border-app-border/50 hover:bg-app-bg transition-colors relative">
                                 {record.batchId && <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500/20 rounded-l-xl"></div>}
                                 <div className="flex items-center justify-between">
-                                    <span className="text-xs text-app-text/50">{record.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
+                                    <span className="text-xs text-app-text/50">{new Date(record.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
                                     <span className="text-xs font-semibold text-accent max-w-[60%] truncate text-right">{record.title}</span>
                                 </div>
                                 <div className="flex items-center justify-between">

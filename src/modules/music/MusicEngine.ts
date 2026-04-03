@@ -374,6 +374,15 @@ export class MusicEngine {
     }
 
     /**
+     * Arrête toute lecture musicale en cours sur les deux platines.
+     */
+    stopAll() {
+        this.deckA.stop();
+        this.deckB.stop();
+        console.log('[MusicEngine] All decks stopped.');
+    }
+
+    /**
      * Reprend le contexte audio si suspendu par le navigateur.
      */
     async resume() {
@@ -404,3 +413,8 @@ export class MusicEngine {
 
 
 export const musicEngine = new MusicEngine();
+
+// Export for cross-store access
+if (typeof window !== 'undefined') {
+    (window as any).musicEngine = musicEngine;
+}

@@ -296,7 +296,15 @@ export class AmbientEngine {
 // Singleton for Ambient OS
 export let ambientEngine = new AmbientEngine();
 
+// Export for cross-store access
+if (typeof window !== 'undefined') {
+    (window as unknown as { ambientEngine: AmbientEngine }).ambientEngine = ambientEngine;
+}
+
 /** @internal - For testing only */
 export const resetAmbientEngine = () => {
     ambientEngine = new AmbientEngine();
+     if (typeof window !== 'undefined') {
+        (window as unknown as { ambientEngine: AmbientEngine }).ambientEngine = ambientEngine;
+    }
 };

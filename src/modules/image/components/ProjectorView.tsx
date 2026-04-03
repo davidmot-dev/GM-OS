@@ -12,7 +12,12 @@ import { useCombatStore } from '../../combat/useCombatStore';
 
 
 const ProjectorView: React.FC = () => {
-    const { projectionTarget } = useMapStore();
+    const storeTarget = useMapStore(state => state.projectionTarget);
+    const urlDisplayId = new URLSearchParams(window.location.search).get('displayId');
+    const targetId = (urlDisplayId || storeTarget) as string;
+
+    const projectedUrls = useImageStore(state => state.projectedUrls);
+    const mediaList = useImageStore(state => state.mediaList);
     const { backgroundMode } = useWhiteboardStore();
     const [imagePath, setImagePath] = useState<string | null>(null);
     const [voiceLevel, setVoiceLevel] = useState(0);
@@ -51,18 +56,6 @@ const ProjectorView: React.FC = () => {
             setImagePath('__tactical_map__');
         }
 
-        // Initialize from Image Store projections if available
-        const imageState = useImageStore.getState();
-        const targetId = projectionTarget as string;
-        if (targetId) {
-            const myProjectionId = imageState.projections[targetId];
-            if (myProjectionId) {
-                const media = imageState.mediaList.find(m => m.id === myProjectionId);
-                if (media) setImagePath(media.path);
-                else setImagePath(myProjectionId);
-            }
-        }
-        
         // Hide scrollbars and set black background
         document.body.style.overflow = 'hidden';
         document.body.style.backgroundColor = 'var(--app-bg)';
@@ -90,6 +83,10 @@ const ProjectorView: React.FC = () => {
                     setVoiceLevel(parseFloat(data) || 0);
                 }
             });
+
+            // Demande l'image actuelle auprès du Main lors du boot pour éviter d'en rater l'assignation
+            const bootTarget = new URLSearchParams(window.location.search).get('displayId') || useMapStore.getState().projectionTarget;
+            window.appBridge.send('image:request-current-display', bootTarget);
         }
 
         return () => {
@@ -97,6 +94,27 @@ const ProjectorView: React.FC = () => {
             document.body.style.backgroundColor = '';
         };
     }, [initDB]);
+
+    // Reactive sync from Image Store using projectedUrls (guarantees instant resolved URLs across windows)
+    useEffect(() => {
+        if (!targetId) return;
+
+        let activeUrl = projectedUrls[targetId];
+
+        // Fallback: if we are a generic 'monitor', take the first available monitor projection
+        if (!activeUrl && targetId === 'monitor') {
+            const monitorTargets = Object.keys(projectedUrls).filter(k => k !== 'hub');
+            if (monitorTargets.length > 0) {
+                activeUrl = projectedUrls[monitorTargets[0]];
+            }
+        }
+
+        if (activeUrl && activeUrl !== imagePath) {
+            // Because projectedUrls stores the fully resolved HTTP/Blob URL, 
+            // the new window instantly gets the exact URL it needs without doing ID lookups.
+            setImagePath(activeUrl);
+        }
+    }, [projectedUrls, targetId, imagePath]);
 
     // Rehydrate Stores on storage changes (Cross-window Sync)
     useEffect(() => {
@@ -158,16 +176,40 @@ const ProjectorView: React.FC = () => {
         detectType();
     }, [imagePath, getMediaBlob]);
 
+    // Fade Out -> Fade In Sequence State
+    const [displayUrl, setDisplayUrl] = useState<string | undefined>(undefined);
+    const [isFadingOut, setIsFadingOut] = useState(false);
+
+    useEffect(() => {
+        if (resolvedUrl && resolvedUrl !== displayUrl) {
+            if (displayUrl) {
+                // If there's an existing image, fade it out first
+                setIsFadingOut(true);
+                const timer = setTimeout(() => {
+                    setDisplayUrl(resolvedUrl);
+                    setIsFadingOut(false);
+                }, 800); // 800ms duration for Fade Out
+                return () => clearTimeout(timer);
+            } else {
+                // First boot, no previous image, show directly
+                setDisplayUrl(resolvedUrl);
+            }
+        } else if (!resolvedUrl && displayUrl) {
+            // Unmount/Blackout
+            setDisplayUrl(undefined);
+            setIsFadingOut(false);
+        }
+    }, [resolvedUrl, displayUrl]);
+
     // While resolving a media ID, we wait for the blob URL to avoid broken image icons
-    const isResolving = imagePath?.startsWith('m-') && !resolvedUrl && imagePath !== '__tactical_map__' && imagePath !== '__whiteboard__';
+    // isResolving is unused but documented here
 
     if (!imagePath) {
         return <div className="w-screen h-screen bg-app-bg" />;
     }
     
-    if (isResolving) {
-        return <div className="w-screen h-screen bg-app-bg flex items-center justify-center" />;
-    }
+    // We removed the 'isResolving' blackout to allow for smoother transitions.
+    // The image container will be rendered, and the image will appear when resolvedUrl is ready.
 
     // SPECIAL MODE: Whiteboard
     if (imagePath === '__whiteboard__') {
@@ -180,9 +222,9 @@ const ProjectorView: React.FC = () => {
 
     // SPECIAL MODE: Tactical Map
     // We show the map if explicitly requested OR as a fallback if the monitor is active but no other image is set
-    if (imagePath === '__tactical_map__' || (projectionTarget === 'monitor' && !imagePath)) {
+    if (imagePath === '__tactical_map__' || (targetId === 'monitor' && !imagePath)) {
         // We use the store's current state. If the target is 'monitor', we render the canvas.
-        const isTargetMonitor = projectionTarget === 'monitor';
+        const isTargetMonitor = targetId === 'monitor';
 
         
         return (
@@ -202,31 +244,33 @@ const ProjectorView: React.FC = () => {
 
     return (
         <div className="w-screen h-screen bg-app-bg flex items-center justify-center overflow-hidden">
-            {resolvedUrl && mediaType === 'video' ? (
+            {displayUrl && mediaType === 'video' ? (
                 <video
-                    src={resolvedUrl}
+                    src={displayUrl}
                     autoPlay
                     loop
                     muted
-                    className="max-w-full max-h-full object-contain"
+                    className="max-w-full max-h-full object-contain animate-in fade-in duration-1000"
                 />
-            ) : resolvedUrl ? (
+            ) : displayUrl ? (
                 <div className="relative w-full h-full flex items-center justify-center">
-                    {/* Blurred background */}
+                    {/* Blurred background fades synchronously */}
                     <img
-                        src={resolvedUrl}
+                        src={displayUrl}
                         alt=""
-                        className="absolute inset-0 w-full h-full object-cover blur-[80px] opacity-40 scale-125"
+                        className={`absolute inset-0 w-full h-full object-cover blur-[80px] scale-125 transition-opacity duration-[800ms] ${isFadingOut ? 'opacity-0' : 'opacity-40 animate-in fade-in'}`}
                     />
-                    {/* Crisp centered image */}
+
+                    {/* Current Crisp Image with independent key to force unmount -> CSS fade in */}
                     <img
-                        src={resolvedUrl}
-                        alt="Projection"
+                        key={`curr-${displayUrl}`}
+                        src={displayUrl}
+                        alt="Current Projection"
                         style={{
                             transform: `scale(${voiceScale})`,
                             boxShadow: voiceGlow,
                         }}
-                        className="relative z-10 max-w-full max-h-full object-contain transition-all duration-75 animate-in fade-in rounded-lg"
+                        className={`relative z-20 max-w-full max-h-full object-contain transition-opacity duration-[800ms] rounded-lg shadow-2xl ${isFadingOut ? 'opacity-0' : 'opacity-100 animate-in fade-in zoom-in-95'}`}
                     />
                 </div>
             ) : null}

@@ -1,7 +1,8 @@
 import React from 'react';
-import { Volume2, VolumeX, Mic, Zap } from 'lucide-react';
+import { Volume2, VolumeX, Mic, Zap, Power } from 'lucide-react';
 import { useAudioMasterStore } from '../../stores/useAudioMasterStore';
 import { useSessionStore } from '../../store/useSessionStore';
+import { useToastStore } from '../../stores/useToastStore';
 
 const MasterAudioController: React.FC = () => {
     const { 
@@ -14,6 +15,36 @@ const MasterAudioController: React.FC = () => {
 
     const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setMasterVolume(parseFloat(e.target.value));
+    };
+
+    const handleStopAll = async () => {
+        interface GMWindow extends Window {
+            soundEngine?: { stopAll: () => void };
+            musicEngine?: { stopAll: () => void };
+            ambientEngine?: { fadeOutAll: (d: number) => void };
+            useImageStore?: { getState: () => { blackoutAll: () => void } };
+            hueEngine?: { extinguishAll: () => Promise<void> };
+        }
+        const win = window as unknown as GMWindow;
+        try {
+            // 1. All Audio Modules via window to avoid circular dependencies
+            if (win.soundEngine) win.soundEngine.stopAll();
+            if (win.musicEngine) win.musicEngine.stopAll();
+            if (win.ambientEngine) win.ambientEngine.fadeOutAll(1.0); // Quick 1s fade
+
+            // 2. Projections & Displays
+            if (win.useImageStore) win.useImageStore.getState().blackoutAll();
+
+            // 3. Lighting (Hue)
+            if (win.hueEngine) {
+                await win.hueEngine.extinguishAll();
+            }
+
+            useToastStore.getState().showToast('Arrêt Global : Tous les médias et effets ont été stoppés.', 'success');
+        } catch (error) {
+            console.error('[PanicButton] Failed to stop everything:', error);
+            useToastStore.getState().showToast('Erreur lors de l’arrêt global.', 'error');
+        }
     };
 
     return (
@@ -39,6 +70,7 @@ const MasterAudioController: React.FC = () => {
                     step="0.01" 
                     value={masterVolume} 
                     onChange={handleVolumeChange}
+                    aria-label="Volume Master"
                     className={`w-full h-1.5 appearance-none cursor-pointer accent-accent ${
                         theme === 'medieval' ? 'bg-app-bg' : 'bg-app-bg/50 rounded-lg'
                     }`}
@@ -77,6 +109,22 @@ const MasterAudioController: React.FC = () => {
 
                 {/* Micro-animation indicator */}
                 <div className={`w-1 h-1 rounded-full absolute right-2 top-2 ${isFocusMode ? 'bg-accent animate-ping' : 'bg-app-text/10'}`} />
+            </button>
+
+            {/* Panic Button / Stop All */}
+            <button
+                onClick={handleStopAll}
+                className={`flex items-center gap-2 px-4 py-2 border transition-all duration-300 group/panic ${
+                    theme === 'medieval' 
+                    ? 'rounded-md bg-red-900/20 border-red-900/40 text-red-400 hover:bg-red-900/40' 
+                    : 'rounded-xl bg-red-500/10 border-red-500/20 text-red-500 hover:bg-red-500/20 hover:border-red-500/40 hover:shadow-glow-red/20'
+                }`}
+                title="ARRÊT GLOBAL (Panique)"
+            >
+                <Power size={16} className="group-hover/panic:scale-110 transition-transform" />
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] hidden sm:inline">
+                    Stop All
+                </span>
             </button>
         </div>
     );

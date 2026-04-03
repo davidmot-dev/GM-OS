@@ -26,9 +26,10 @@ Ce document centralise la vision, les victoires techniques et les chantiers futu
 * [x] **Universal Search (Spotlight)** : Recherche globale ultra-rapide (`CMD+K`) sur tous les modules.
 
 ### 🔊 Audio Engine & Immersion
-*Atmosphère sonore et réactivité vocale.*
+*Atmosphere sonore et réactivité vocale.*
 
 * [x] **Master Soundscape Controller** : Curseur master global et bouton **Focus Chat** (tamisage auto musique/ambiance).
+* [x] **Global Panic Button (Stop All)** : Arrêt d'urgence synchronisé de tous les médias (Audio, Vidéo, Lumière). [v5.3.0]
 * [x] **Voice-OS Advanced** : Profilage psychologique IA pour réglages vocaux et synchronisation avec les portraits.
 * [x] **Audio-Map Sync** : Lecture synchrone des pistes liées aux tokens et cartes animées.
 * [x] **Ducking Narratif v2** : Contrôles Attack/Range/Release complets pour la musique par rapport à la voix.
@@ -39,9 +40,14 @@ Ce document centralise la vision, les victoires techniques et les chantiers futu
 * [x] **Tablet Hub 1.0 & Remote Control** : Pilotage second-écran via WebSocket ultra-basse latence.
 * [x] **Differential Sync (Deltas)** : Optimisation des messages pour un gain net de bande passante (> 90%).
 * [x] **Layout Manager v1 & Workspace Sync** : Sauvegarde et adaptation auto du layout selon le nombre d'écrans.
+* [x] **Shell Decoupling** : Résolution des dépendances circulaires via l'accès dynamique `window` pour les moteurs globaux. [v5.3.0]
 * [x] **Media Cleanup Engine** : Nettoyage pro-actif des médias orphelins dans IndexedDB avec système de **Persistance (Asset Lock)**. [v5.1.2]
 * [x] **Campaign Deletion Cascade** : Suppression automatique et récursive de toutes les données liées (PNJ, Sessions, Atlas, Wiki, Indices) lors du retrait d'une campagne. [v5.2.0]
 * [x] **Media Tag Removal** : Nettoyage asynchrone des références de campagne dans le Media Hub via IndexedDB. [v5.2.0]
+
+### 🖼️ Visual Experience (Mise à jour v5.3)
+* [x] **Smooth Projection Transitions** : Système de Fade Out / Fade In pour les changements d'images.
+* [x] **Single-Click Projection Reliability** : Correction de l'initialisation du moteur de projection (suppression du double-clic).
 
 ---
 
@@ -65,6 +71,7 @@ Ce document centralise la vision, les victoires techniques et les chantiers futu
 
 ## 📅 Historique des Versions (Changelog Flash)
 - **v5.1.1** (Mars 2026) : Stabilisation du Git Backup, isolation de branche orphaned, et correction du crash de sérialisation JSON.
+- **v5.3.0** (Avril 2026) : Implémentation du Panic Button, transitions d'images fluides et résolution des dépendances circulaires du Shell.
 
 ---
 
@@ -72,4 +79,4 @@ Ce document centralise la vision, les victoires techniques et les chantiers futu
 > **Priorité actuelle** : **Générateur de Butin** et **Amélioration du Brouillard de Guerre**.
 
 > [!IMPORTANT]
-> Version Actuelle : **5.2.0-STABLE** (Mars 2026)
+> Version Actuelle : **5.3.0-STABLE** (Avril 2026)

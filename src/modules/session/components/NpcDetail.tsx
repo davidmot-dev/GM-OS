@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
-import { Swords, MapPin, Monitor, Heart, Shield, Wind, Zap, Lock, BookOpen, ArrowLeft, Edit2, CheckCircle, Image as ImageIcon, Sparkles, Layers, Skull, Search } from 'lucide-react';
+import { Swords, MapPin, Monitor, Heart, Shield, Wind, Zap, Lock, BookOpen, ArrowLeft, Edit2, CheckCircle, Image as ImageIcon, Sparkles, Layers, Skull, Search, Users } from 'lucide-react';
 import { DEFAULT_SHEET_TEMPLATES, type SheetField } from '../../../data/defaultSheetTemplates';
 import { useMapStore } from '../../map/useMapStore';
 import { useCombatStore } from '../../combat/useCombatStore';
@@ -12,6 +12,27 @@ import { ResolvedImage } from '../../../components/ResolvedImage';
 import AIPromptOverlay from '../../ai/components/AIPromptOverlay';
 import { useVoiceAutomation } from '../../voice/hooks/useVoiceAutomation';
 import { HealthManager } from './health/HealthManager';
+
+const ROLE_COLORS = {
+    ally: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20',
+    neutral: 'bg-slate-500/10 text-slate-400 border-slate-500/20 hover:bg-slate-500/20',
+    hostile: 'bg-red-500/10 text-red-400 border-red-500/20 hover:bg-red-500/20',
+    boss: 'bg-purple-500/10 text-purple-400 border-purple-500/20 hover:bg-purple-500/20 shadow-[0_0_15px_rgba(168,85,247,0.1)]',
+};
+
+const ROLE_LABELS = {
+    ally: 'Allié',
+    neutral: 'Neutre',
+    hostile: 'Hostile',
+    boss: 'Boss',
+};
+
+const ROLE_ICONS = {
+    ally: Shield,
+    neutral: Users,
+    hostile: Swords,
+    boss: Skull,
+};
 
 // --- Sub-components ---
 const FieldGauge: React.FC<{
@@ -329,6 +350,18 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                     <p className="text-app-text/40 text-sm italic">{selectedNpc.description}</p>
                                 </div>
                                 <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => {
+                                            const roles: (keyof typeof ROLE_LABELS)[] = ['ally', 'neutral', 'hostile', 'boss'];
+                                            const nextRole = roles[(roles.indexOf(selectedNpc.role || 'neutral') + 1) % roles.length];
+                                            updateEntity(selectedNpc.id, { role: nextRole });
+                                        }}
+                                        className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all ${ROLE_COLORS[selectedNpc.role || 'neutral']}`}
+                                        title="Changer l'allégeance"
+                                    >
+                                        {React.createElement(ROLE_ICONS[selectedNpc.role || 'neutral'], { size: 14 })}
+                                        <span className="text-[10px] font-black uppercase tracking-widest">{ROLE_LABELS[selectedNpc.role || 'neutral']}</span>
+                                    </button>
                                     <button
                                         onClick={() => updateEntity(selectedNpc.id, { status: selectedNpc.status === 'dead' ? 'alive' : 'dead' })}
                                         className={`p-2 rounded-xl border-2 transition-all ${selectedNpc.status === 'dead' ? 'bg-rose-600 border-rose-400 text-white' : 'bg-app-surface border-app-border text-app-text/20 hover:text-rose-500 hover:border-rose-500/50'}`}

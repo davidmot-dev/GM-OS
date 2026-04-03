@@ -14,6 +14,18 @@ Le bouton **Focus Chat** (icône éclair/micro) est un outil puissant pour les m
 - **Résultat** : L'atmosphère reste présente ("tamisage total") mais ne couvre plus jamais votre voix ou celle de vos joueurs.
 - **Retour au calme** : Cliquez à nouveau pour faire revenir progressivement la musique à son niveau précédent.
 
+## 🚨 Stop All (Bouton Panique)
+
+Le bouton **Stop All** (icône de bouton Power rouge/bourgogne) est votre arrêt d'urgence global. Il est situé à gauche du curseur de volume.
+
+- **Action** : Un seul clic déclenche une extinction totale et immédiate.
+- **Effets** :
+  - **Musique** : Arrêt de toutes les pistes en cours (Decks A & B).
+  - **Ambiances** : Fondu rapide de 1 seconde pour toutes les pistes d'ambiance.
+  - **SFX** : Coupure instantanée de tous les bruitages.
+  - **Images** : Extinction de toutes les projections (écran noir sur les moniteurs et le Hub).
+  - **Lumières** : Extinction immédiate de toutes les lumières Philips Hue synchronisées.
+
 ## 💡 Astuces GM
-- Utilisez le **Focus Chat** dès que vous commencez une description d'ambiance longue pour captiver l'attention.
-- Le volume des **SFX (Bruitages)** comme les dés ou les sorts est moins réduit que la musique en mode Focus, pour garder l'aspect tactique vivant.
+- Utilisez **Stop All** à la fin d'une session, lors d'une pause, ou pour créer un silence dramatique immédiat après un événement de jeu majeur.
+- Le **Focus Chat** est préférable pour les moments de dialogue, tandis que **Stop All** est destiné aux fins de scènes ou aux urgences.

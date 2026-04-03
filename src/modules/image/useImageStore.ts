@@ -21,6 +21,8 @@ interface ImageState {
     projectionTarget: ProjectionTarget;
     /** État des projections par cible (id cible -> id média ou URL) */
     projections: Record<string, string | null>; 
+    /** URLs prêtes à être projetées par cible (id cible -> URL HTTP/Data) */
+    projectedUrls: Record<string, string | null>; 
     /** Liste des moniteurs physiques détectés */
     displays: DisplayInfo[];
     /** ID du dossier actif dans la bibliothèque */
@@ -34,6 +36,8 @@ interface ImageState {
     removeMedia: (id: string) => void;
     /** Active/Désactive un média pour le diaporama */
     toggleMediaActive: (id: string) => void;
+    /** Renomme un média */
+    renameMedia: (id: string, newName: string) => void;
     /** Ajoute/Retire des favoris */
     toggleMediaFavorite: (id: string) => void;
     /** Définit la cible de projection par défaut */
@@ -94,6 +98,7 @@ export const useImageStore = create<ImageState>()(
             ],
             projectionTarget: 'hub',
             projections: {},
+            projectedUrls: {},
             displays: [],
             folders: [
                 { id: 'f1', name: 'Backgrounds' },
@@ -132,20 +137,28 @@ export const useImageStore = create<ImageState>()(
                 set((state) => {
                     const newMediaList = state.mediaList.filter(m => m.id !== id);
                     const newProjections = { ...state.projections };
+                    const newProjectedUrls = { ...state.projectedUrls };
 
                     Object.keys(newProjections).forEach(target => {
                         if (newProjections[target] === id) {
                             newProjections[target] = null;
+                            newProjectedUrls[target] = null;
                         }
                     });
 
-                    return { mediaList: newMediaList, projections: newProjections };
+                    return { mediaList: newMediaList, projections: newProjections, projectedUrls: newProjectedUrls };
                 });
             },
 
             toggleMediaActive: (id) => {
                 set((state) => ({
                     mediaList: state.mediaList.map(m => m.id === id ? { ...m, active: !m.active } : m)
+                }));
+            },
+
+            renameMedia: (id, newName) => {
+                set((state) => ({
+                    mediaList: state.mediaList.map(m => m.id === id ? { ...m, name: newName } : m)
                 }));
             },
 
@@ -203,16 +216,20 @@ export const useImageStore = create<ImageState>()(
                     content: `Média "${media.name}" projeté sur : ${target === 'hub' ? 'Player Hub' : 'Écran externe'}`
                 });
 
-                if (target === 'hub') {
-                    // Resolve m-xxx IDs to sendable URLs before broadcasting to remote clients
-                    import('../../utils/mediaResolver').then(({ resolveToSendableUrl }) => {
-                        resolveToSendableUrl(media.path).then(resolvedPath => {
-                            window.appBridge?.image?.syncHubData('image', resolvedPath || media.path);
-                        });
+                // Always resolve m-xxx IDs to sendable URLs for any target
+                import('../../utils/mediaResolver').then(({ resolveToSendableUrl }) => {
+                    resolveToSendableUrl(media.path).then(resolvedPath => {
+                        const finalPath = resolvedPath || media.path;
+                        
+                        set(s => ({ projectedUrls: { ...s.projectedUrls, [target]: finalPath } }));
+
+                        if (target === 'hub') {
+                            window.appBridge?.image?.syncHubData('image', finalPath);
+                        } else {
+                            window.appBridge?.image?.launchDisplay([finalPath], target);
+                        }
                     });
-                } else {
-                    window.appBridge?.image?.launchDisplay([media.path], target);
-                }
+                });
             },
 
             projectUrl: (url) => {
@@ -235,15 +252,20 @@ export const useImageStore = create<ImageState>()(
                     content: `Source "${url}" projetée sur : ${target === 'hub' ? 'Player Hub' : 'Écran externe'}`
                 });
 
-                if (target === 'hub') {
-                    import('../../utils/mediaResolver').then(({ resolveToSendableUrl }) => {
-                        resolveToSendableUrl(url).then(resolvedUrl => {
-                            window.appBridge?.image?.syncHubData('image', resolvedUrl || url);
-                        });
+                // Always resolve m-xxx IDs to sendable URLs for any target
+                import('../../utils/mediaResolver').then(({ resolveToSendableUrl }) => {
+                    resolveToSendableUrl(url).then(resolvedUrl => {
+                        const finalUrl = resolvedUrl || url;
+
+                        set(s => ({ projectedUrls: { ...s.projectedUrls, [target]: finalUrl } }));
+
+                        if (target === 'hub') {
+                            window.appBridge?.image?.syncHubData('image', finalUrl);
+                        } else {
+                            window.appBridge?.image?.launchDisplay([finalUrl], target);
+                        }
                     });
-                } else {
-                    window.appBridge?.image?.launchDisplay([url], target);
-                }
+                });
             },
 
             projectEntity: async (entity) => {
@@ -295,10 +317,16 @@ export const useImageStore = create<ImageState>()(
                 
                 if (resolvedAvatar) {
                     window.appBridge?.image?.syncHubData('image', resolvedAvatar);
-                    set((state) => ({ projections: { ...state.projections, hub: resolvedAvatar } }));
+                    set((state) => ({ 
+                        projections: { ...state.projections, hub: resolvedAvatar },
+                        projectedUrls: { ...state.projectedUrls, hub: resolvedAvatar } 
+                    }));
                 } else if (avatarSrc && !avatarSrc.startsWith('m-')) {
                     window.appBridge?.image?.syncHubData('image', avatarSrc);
-                    set((state) => ({ projections: { ...state.projections, hub: avatarSrc } }));
+                    set((state) => ({ 
+                        projections: { ...state.projections, hub: avatarSrc },
+                        projectedUrls: { ...state.projectedUrls, hub: avatarSrc }
+                    }));
                 }
             },
 
@@ -355,6 +383,7 @@ export const useImageStore = create<ImageState>()(
 
                 set((state) => ({
                     projections: { ...state.projections, [target]: null },
+                    projectedUrls: { ...state.projectedUrls, [target]: null },
                     projectedEntity: target === 'hub' ? null : state.projectedEntity
                 }));
 
@@ -370,7 +399,7 @@ export const useImageStore = create<ImageState>()(
                 const state = get();
                 const allTargets = Object.keys(state.projections);
 
-                set({ projections: {}, projectedEntity: null });
+                set({ projections: {}, projectedUrls: {}, projectedEntity: null });
 
                 window.appBridge?.image?.syncHubData('image', '');
                 window.appBridge?.image?.syncHubData('entity', '');
@@ -405,11 +434,17 @@ export const useImageStore = create<ImageState>()(
                         if (mediaId) {
                             const media = get().mediaList.find(m => m.id === mediaId);
                             if (media) {
-                                if (target === 'hub') {
-                                    window.appBridge?.image?.syncHubData('image', media.path);
-                                } else {
-                                    window.appBridge?.image?.launchDisplay([media.path], target);
-                                }
+                                // Sync back to URLs during snapshot restore
+                                import('../../utils/mediaResolver').then(({ resolveToSendableUrl }) => {
+                                    resolveToSendableUrl(media.path).then(finalPath => {
+                                        set(s => ({ projectedUrls: { ...s.projectedUrls, [target]: finalPath || media.path }}));
+                                        if (target === 'hub') {
+                                            window.appBridge?.image?.syncHubData('image', finalPath || media.path);
+                                        } else {
+                                            window.appBridge?.image?.launchDisplay([finalPath || media.path], target);
+                                        }
+                                    });
+                                });
                             }
                         }
                     });
@@ -422,6 +457,7 @@ export const useImageStore = create<ImageState>()(
                 set({
                     mediaList: [],
                     projections: {},
+                    projectedUrls: {},
                     folders: [],
                     activeFolderId: null,
                     projectedEntity: null
@@ -434,7 +470,8 @@ export const useImageStore = create<ImageState>()(
                 mediaList: state.mediaList,
                 projectionTarget: state.projectionTarget,
                 folders: state.folders,
-                projections: state.projections
+                projections: state.projections,
+                projectedUrls: state.projectedUrls
             }),
             onRehydrateStorage: () => (state) => {
                 if (!state) return;
@@ -442,6 +479,7 @@ export const useImageStore = create<ImageState>()(
                 // exists in the library (e.g. from a deleted campaign) is cleared.
                 const existingIds = new Set(state.mediaList.map(m => m.id));
                 const cleanedProjections: Record<string, string | null> = {};
+                const cleanedProjectedUrls: Record<string, string | null> = { ...state.projectedUrls };
                 let hadStale = false;
                 for (const [target, value] of Object.entries(state.projections)) {
                     // Keep null, HTTP URLs, data URIs, and media IDs that exist in the library
@@ -449,6 +487,7 @@ export const useImageStore = create<ImageState>()(
                     if (isStaleMediaId) {
                         console.warn(`[ImageStore] Stale projection cleared on target "${target}" (ID: ${value})`);
                         cleanedProjections[target] = null;
+                        cleanedProjectedUrls[target] = null;
                         hadStale = true;
                     } else {
                         cleanedProjections[target] = value;
@@ -456,6 +495,7 @@ export const useImageStore = create<ImageState>()(
                 }
                 if (hadStale) {
                     state.projections = cleanedProjections;
+                    state.projectedUrls = cleanedProjectedUrls;
                 }
             }
         }
