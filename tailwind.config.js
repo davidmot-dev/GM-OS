@@ -87,6 +87,10 @@ export default {
                 'glitch-skew': 'glitch-skew 4s infinite linear alternate-reverse',
                 'spark': 'spark 0.2s infinite',
                 'ping-expand': 'ping-expand 1.5s ease-out forwards',
+                // Nexus-HUD animations
+                'rise': 'rise 4s ease-in infinite',
+                'scan': 'scan 2s linear infinite',
+                'shimmer': 'shimmer 1.5s ease-in-out infinite',
             },
             keyframes: {
                 glitch: {
@@ -131,7 +135,24 @@ export default {
                 'ping-expand': {
                     '0%': { transform: 'scale(0.2)', opacity: 0.8 },
                     '100%': { transform: 'scale(2)', opacity: 0 },
-                }
+                },
+                // Nexus-HUD
+                'rise': {
+                    '0%': { transform: 'translateY(0) scale(1)', opacity: 0.6 },
+                    '80%': { opacity: 0.3 },
+                    '100%': { transform: 'translateY(-200px) scale(0.5)', opacity: 0 },
+                },
+                'scan': {
+                    '0%': { transform: 'translateY(-100%)', opacity: 0 },
+                    '10%': { opacity: 1 },
+                    '90%': { opacity: 1 },
+                    '100%': { transform: 'translateY(600%)', opacity: 0 },
+                },
+                'shimmer': {
+                    '0%': { transform: 'translateX(-100%)', opacity: 0.5 },
+                    '50%': { opacity: 0.8 },
+                    '100%': { transform: 'translateX(200%)', opacity: 0.5 },
+                },
             }
         },
     },

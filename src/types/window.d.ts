@@ -170,6 +170,39 @@ declare global {
             ensureDirectory: (relativePath: string, vaultPath?: string) => Promise<boolean>;
             selectVault: () => Promise<string | null>;
         };
+        /**
+         * Nexus-OS : Système de packaging & portabilité (.gmos)
+         * Implémenté dans le main process Electron.
+         */
+        nexus?: {
+            /**
+             * Streame un seul asset Media Hub vers le cache du main process.
+             * À appeler pour chaque asset AVANT exportBundle.
+             */
+            registerAsset: (mediaHubId: string, dataUrl: string) => Promise<{ ok: boolean; error?: string }>;
+            /** Vide le cache d'assets du main process. */
+            clearAssets: () => Promise<{ ok: boolean }>;
+            /**
+             * Exporte une campagne dans un bundle .gmos.
+             * Les Media Hub assets sont transférés via registerAsset avant cet appel.
+             */
+            exportBundle: (
+                campaignId: string,
+                outputPath: string,
+                stateJson: string,
+                manifestJson: string,
+                assetRefs: string[]
+            ) => Promise<import('../modules/system/archive/nexus.types').NexusExportResult>;
+            /**
+             * Importe un bundle .gmos et retourne son contenu brut.
+             * @param filePath - Chemin du fichier .gmos à importer
+             */
+            importBundle: (filePath: string) => Promise<import('../modules/system/archive/nexus.types').NexusImportRaw>;
+            /** Ouvre un sélecteur de fichier pour choisir le chemin d'export. */
+            selectExportPath: () => Promise<string | null>;
+            /** Ouvre un sélecteur de fichier pour choisir un bundle .gmos à importer. */
+            selectImportFile: () => Promise<string | null>;
+        };
         npc?: {
             listDatabases: (category: string) => Promise<string[]>;
             loadDatabase: (category: string, name: string) => Promise<Record<string, string[]>>;

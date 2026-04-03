@@ -43,6 +43,12 @@ Si vous venez d'effectuer un grand ménage dans vos PNJ ou campagnes et souhaite
 3. Cliquez sur le bouton **"Nettoyer"**.
 4. Le système vous informera du nombre de fichiers supprimés et du gain d'espace.
 
+## 🛰️ Portabilité des Campagnes (Nexus-OS)
+
+GM-OS intègre un système complet de portabilité appelé **Nexus-OS**. Il permet d'exporter une campagne entière (PNJs, cartes, images, sons) dans un fichier `.gmos` et de la réimporter sur n'importe quel autre poste.
+
+Pour le guide complet, consultez : `docs/guides/nexus-os-user-guide.md`
+
 ---
-*Dernière mise à jour : 30 Mars 2026*
-*Statut : Document à jour pour le Stability Patch V5*
+*Dernière mise à jour : 3 Avril 2026*
+*Statut : Document à jour — Nexus-OS v1.0 intégré.*

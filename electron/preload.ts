@@ -132,6 +132,22 @@ contextBridge.exposeInMainWorld('appBridge', {
         syncData: (targetDir: string, branchName: string, message?: string) => 
             ipcRenderer.invoke('git:sync', targetDir, branchName, message),
         saveData: (data: unknown) => ipcRenderer.invoke('backup:save-data', data)
+    },
+    nexus: {
+        selectExportPath: () => ipcRenderer.invoke('nexus:select-export-path'),
+        selectImportFile: () => ipcRenderer.invoke('nexus:select-import-file'),
+        // Streaming d'un seul asset vers le main process (évite la limite de taille IPC)
+        registerAsset: (mediaHubId: string, dataUrl: string) =>
+            ipcRenderer.invoke('nexus:register-asset', mediaHubId, dataUrl),
+        clearAssets: () => ipcRenderer.invoke('nexus:clear-assets'),
+        exportBundle: (
+            campaignId: string,
+            outputPath: string,
+            stateJson: string,
+            manifestJson: string,
+            assetRefs: string[]
+        ) => ipcRenderer.invoke('nexus:export-bundle', campaignId, outputPath, stateJson, manifestJson, assetRefs),
+        importBundle: (filePath: string) => ipcRenderer.invoke('nexus:import-bundle', filePath),
     }
 })
 

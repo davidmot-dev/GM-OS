@@ -1,16 +1,17 @@
-# Blueprint : Nexus-OS - Système de Packaging & Portabilité Totale
+# Blueprint : Nexus-OS — Système de Packaging & Portabilité Totale
 
 Ce document définit la spécification technique exhaustive pour le module **Nexus-OS**, responsable de l'archivage, de l'exportation et de la restauration complète (données + médias) des campagnes et des systèmes de jeu.
 
 ---
 
 ## 📋 1. Vision & Objectifs
+
 Nexus-OS permet de transformer une entité complexe (Campagne ou Driver) en un paquet autonome (`.gmos`), garantissant que le MJ peut déplacer son travail d'un ordinateur à un autre sans perdre aucune image, relation ou configuration.
 
 ### Les 3 Piliers :
-1.  **Harvesting (Moissonnage)** : Capture physique de tous les fichiers binaires liés.
-2.  **Relocation (Relocalisation)** : Transformation des chemins absolus en chemins relatifs (et inversement).
-3.  **Context-Aware (Conscience du Contexte)** : Intelligence de liaison pour ne rien oublier (PNJs, Relations, Journaux).
+1. **Harvesting (Moissonnage)** : Capture physique de tous les fichiers binaires liés (Media Hub IDs `m-xxx` + chemins absolus).
+2. **Relocation (Relocalisation)** : Transformation des références locales en chemins relatifs dans l'archive, et remappage inverse à l'import.
+3. **Context-Aware (Conscience du Contexte)** : Intelligence de liaison pour ne rien oublier (PNJs, Relations, Journaux, Sons, Playlists).
 
 ---
 
@@ -19,100 +20,150 @@ Nexus-OS permet de transformer une entité complexe (Campagne ou Driver) en un p
 ### A. Le Bundle `.gmos` (Structure de l'Archive)
 L'archive est un dossier compressé (Format ZIP) avec la structure suivante :
 ```text
-archive_campagne_torg.gmos/
-├── manifest.json            # Métadonnées, version et liste des dépendances
-├── state.json               # Extraction des slices de stores (Zustand)
+archive_campagne.gmos/
+├── manifest.json            # Métadonnées, version, assetMap (checksums SHA-256)
+├── state.json               # Extraction complète des slices de stores (Zustand)
 └── assets/                  # Dossier racine des médias moissonnés
-    ├── profiles/            # Portraits PNJs, Avatars PJs
+    ├── profiles/            # Portraits PNJs, Avatars PJs (Media Hub m-xxx)
     ├── maps/                # Battlemaps, Vidéos d'ambiance
+    ├── audio/               # Sons locaux (Sound Pads, Music Playlists)
     ├── decks/               # Contenu complet des paquets de cartes
-    └── sounds/              # (Optionnel) Musiques et effets liés
+    └── misc/                # Autres fichiers non classifiés
 ```
 
-### B. Moteur d'Extraction (Scraper)
-Le moteur parcourt récursivement les dépendances :
-1.  **Racine** : `Campaign ID`.
-2.  **Niveau 1** : Sessions, AtlasMaps, WikiEntries, TimelineEvents, Clues.
-3.  **Niveau 2** : Événements Journal liés aux Sessions, Entités (PNJ) présentes sur les cartes ou dans les sessions.
-4.  **Niveau 3** : Relations sociales des entités trouvées, Fiches de personnages (SheetData).
-5.  **Niveau 4** : GameDrivers et SheetTemplates requis (Manifeste uniquement).
+### B. Fichiers Clés
+| Fichier | Rôle |
+|---|---|
+| `src/modules/system/archive/NexusService.ts` | Orchestrateur renderer — scraping, harvest, streaming IPC |
+| `src/modules/system/archive/nexus.types.ts` | Types TypeScript partagés |
+| `src/modules/system/archive/NexusHUD.tsx` | Interface de progression (Glassmorphism) |
+| `electron/nexus_bridge.ts` | Main process — ZIP, checksums, cache assets |
+| `electron/preload.ts` | Exposition du pont IPC au renderer (`window.appBridge.nexus`) |
+| `src/types/window.d.ts` | Typage TypeScript des méthodes IPC |
 
 ---
 
 ## 🗺️ 3. Cartographie des Dépendances d'Actifs
-Chaque champ "URL" ou "Path" détecté déclenche une opération de moissonnage :
 
-- **Campaign-OS** : `wallpaperUrl`, `ragPath`, `notebookUrl`.
-- **NPC/PC-OS** : `avatar`, `portraitUrl`, `tokenUrl`, `badges[].icon`.
-- **Map-OS** : `fileUrl` (Auto-détection Image vs Vidéo).
-- **Wiki-OS** : `imageUrls` (Scan du tableau d'images).
-- **Deck-OS** : `folderPath` (Copie récursive de tout le répertoire).
-- **Journal-OS** : Scan des métadonnées pour les références d'images.
+### Médias collectés par `collectAssetPaths()` :
+- **Campaign-OS** : `wallpaperUrl`
+- **NPC/PC-OS** : `entity.avatar`, `playerCharacter.portraitUrl`, `playerCharacter.tokenUrl`
+- **Map-OS** : `atlasMap.fileUrl` (Auto-détection Image vs Vidéo)
+- **Wiki-OS** : `wikiEntry.imageUrls[]`
+- **Clue-OS** : `clue.mediaUrl`
+- **Deck-OS** : `deckManifest.folderPath` (Copie récursive)
+- **Sound-OS** : `soundPad.filePath` (fichiers audio locaux des atmosphères)
+- **Music-OS** : `musicPad.url` (uniquement les pads de type `'local'`)
+
+### Règles de filtrage :
+| Type | Inclus ? |
+|---|---|
+| `m-xxx` (Media Hub IndexedDB) | ✅ Résolu via `getMediaBlob()` → base64 |
+| `C:\Users\...` (chemin absolu) | ✅ Copie directe par le main process |
+| `https://...` (URL distante) | ❌ Non-portable, ignoré avec comptage diagnostic |
+| `blob:...` (URL temporaire) | ❌ Invalide après redémarrage, ignoré |
 
 ---
 
 ## 🔄 4. Processus de Relocalisation (Relinker)
 
 | Phase | Action Technique |
-| :--- | :--- |
-| **EXPORT** | Pour chaque URL : `C:/User/Me/Map.jpg` -> `assets/maps/Map.jpg`. Sauvegarde du mapping original. |
-| **IMPORT** | 1. Extraction dans le dossier média local. <br> 2. Reconstruction de l'URL : `assets/maps/Map.jpg` -> `[Local_Media_Hub_Path]/Map.jpg`. |
+|:---|:---|
+| **EXPORT** | `collectAssetPaths()` → `splitAssetRefs()` → `resolveMediaHubAssets()` (IDB→base64) → Streaming IPC → ZIP |
+| **IMPORT** | Extraction ZIP → Écriture MediaHub (`storeMediaBlob`) → `buildAssetMap()` → `remapPaths()` → `injectState()` → Restauration stores audio |
+
+### Protocole Streaming IPC (évite les limites de taille)
+Le transfert des assets Media Hub utilise un pattern streaming pour éviter les limites de sérialisation du `contextBridge` Electron :
+
+1. `nexus.clearAssets()` — vide le cache main process
+2. `nexus.registerAsset(id, dataUrl)` × N — un asset à la fois
+3. `nexus.exportBundle(...)` — le bridge lit depuis `pendingAssetCache` (Map mémoire)
+4. `pendingAssetCache.clear()` — nettoyage post-ZIP automatique
+
+> ⚠️ **Critique** : Ne jamais passer `inlineAssets` comme paramètre direct de `exportBundle`. La limite de sérialisation du `contextBridge` Electron tronque silencieusement les objets dépassant ~50 Mo.
 
 ---
 
-## 🧪 5. Protocole de Test Élevé (High-Reliability Testing)
+## ⚡ 5. Processus d'Export (Phases)
 
-Pour garantir la fiabilité demandée, Nexus-OS doit passer les tests suivants :
-
-### T1 : Test d'Intégrité de Référence (Circular Checks)
-- **Scénario** : PNJ A est l'ami de PNJ B, et PNJ B est l'ennemi de PNJ A.
-- **Vérification** : L'archive doit maintenir la cohérence des UUID sans créer de doublons ou de liens brisés lors de la ré-injection.
-
-### T2 : Test de Moissonnage Global (Asset Harvest)
-- **Scénario** : Une campagne utilise 50 images dispersées sur 5 disques durs différents.
-- **Vérification** : Le scanner doit confirmer que 100% des fichiers sont présents dans le bundle final. Un rapport d'erreur est généré si un fichier manque à l'appel.
-
-### T3 : Test "Round-Trip" (Cycle Complet)
-1.  Exportation d'une campagne complexe.
-2.  Nettoyage complet du store GM-OS (Appel de `.reset()`).
-3.  Importation de l'archive.
-4.  **Vérification automatique** : Comparaison profonde (Deep Equal) du `state.json` original vs `state.json` restauré.
-
-### T4 : Test de Sécurité (Sandboxing)
-- **Scénario** : Tenter d'importer une archive corrompue ou contenant des chemins de fichiers malveillants.
-- **Vérification** : Validation du schéma JSON et assainissement (sanitization) des chemins avant toute opération de fichier.
+| # | Phase | % HUD | Description |
+|---|---|---|---|
+| 1 | `scraping` | 10% | Extraction de l'état via `scrapeCampaignData()` |
+| 2 | `harvesting` | 25-45% | `collectAssetPaths()` + résolution des `m-xxx` IDs |
+| 2b | `packaging` | 55-70% | Streaming des blobs vers le cache IPC (`registerAsset`) |
+| 3 | `packaging` | 70% | Appel `exportBundle` → ZIP via archiver (streaming) |
+| 4 | `done` | 100% | Toast succès + rapport des assets manquants |
 
 ---
 
-## 🧠 6. Stratégie d'Implémentation BMAD
+## 📥 6. Processus d'Import (Phases)
 
-Suite au brainstorming du 28 Mars 2026, l'équipe a défini les priorités suivantes :
+| # | Phase | % HUD | Description |
+|---|---|---|---|
+| 1 | `extracting` | 10% | Lecture ZIP → manifest + state |
+| 2 | `remapping` | 20-50% | Écriture assets dans MediaHub IndexedDB (`storeMediaBlob`) |
+| 3 | `remapping` | 50-75% | `detectConflicts()` → `ConflictResolver UI` → `applyResolution()` |
+| 4 | `remapping` | 80% | `remapPaths()` sur l'état → mise à jour des IDs |
+| 5 | `injecting` | 85% | `injectState()` dans tous les stores Zustand |
+| 6 | `injecting` | 90% | Restauration `useSoundStore.atmospheres` + fusion `useMusicStore.playlists` |
+| 7 | `done` | 100% | Toast succès |
 
-### A. Rigueur des Données (Winston)
+---
 
-- **Selective Store Slicing** : Création d'un `ExportInterpreter` pour ne capturer que les données de campagne utiles (exclure les préférences locales).
-- **Double-Pass UUID Validation** : Vérification de l'intégrité des relations avant export pour éviter les "dépendances orphelines".
-- **Migration-Ready Schema** : Versioning strict du `manifest.json` pour assurer la compatibilité ascendante.
+## 🎭 7. Conflict Resolver
 
-### B. Expérience Utilisateur (Sally)
+Lorsqu'une campagne importée a le même ID qu'une campagne existante, 3 stratégies sont disponibles :
 
-- **Harvesting HUD** : Interface "Glass" affichant la progression en temps réel du moissonnage des fichiers.
-- **Conflict Resolver UI** : Gestion interactive des doublons d'ID lors de l'import (Remplacer, Cloner, Fusionner).
-- **Portability Dashboard** : Indicateur de poids et de statut "Nexus-Ready" dans le Master Cockpit.
+| Stratégie | Comportement |
+|---|---|
+| `replace` | Écrase la campagne existante (comportement par défaut silencieux) |
+| `clone` | Régénère tous les UUIDs → nouvelle campagne indépendante |
+| `cancel` | Annule l'import, aucune modification |
 
-### C. Performance & Fiabilité (Carson)
+---
 
-- **Parallel Asset Scraper** : Utilisation de promesses parallèles pour le transfert des fichiers binaires.
-- **Checksum Verification** : Utilisation de hashes SHA-256 pour éviter les copies redondantes lors de l'import/export.
-- **Memory-Efficient Zipping** : Streaming des données vers l'archive `.gmos` pour supporter les fichiers volumineux sans saturation RAM.
+## 🎵 8. Portabilité Audio (Niveau 5)
+
+- **Sound Board** : Les `Atmosphere[]` (groupes de pads sonores) sont capturées dans `state.json.atmospheres`.
+- **Music Playlists** : Les `Playlist[]` locales sont capturées dans `state.json.playlists`.
+- **Fichiers audio locaux** : `.mp3`, `.wav`, `.ogg`, `.flac` → routés dans `assets/audio/`.
+- **À l'import** : `useSoundStore.setState({ atmospheres })` et fusion par ID dans `useMusicStore`.
+
+---
+
+## 🧪 9. Protocole de Test
+
+### T1 : Intégrité de Référence
+- Scénario : Relations circulaires entre PNJs
+- Vérification : UUID cohérents après round-trip
+
+### T2 : Moissonnage Global
+- Scénario : Campagne avec 57 médias Media Hub
+- Vérification : `manifest.assetMap.length === 57` + dossier `assets/profiles/` présent dans le ZIP
+
+### T3 : Round-Trip Complet
+1. Export → renommer en `.zip` → vérifier `assets/` présent
+2. Reset du store → Import
+3. Vérification : tous les avatars, cartes et pads sonores fonctionnels
+
+### T4 : Sécurité
+- Rejet des bundles avec `schemaVersion` incompatible
+- Protection contre le path traversal (regex `/../`) dans les `relativePath`
 
 ---
 
 ## 📂 Emplacements des fichiers
 
-- **Spécification** : `docs/blueprints/nexus_os_specification.md`
-- **Implémentation** : `src/modules/system/archive/NexusService.ts` (Phase 1 : Asset Scraper)
+| Type | Chemin |
+|---|---|
+| Spécification | `docs/blueprints/nexus_os_specification.md` |
+| Service principal | `src/modules/system/archive/NexusService.ts` |
+| Types | `src/modules/system/archive/nexus.types.ts` |
+| HUD | `src/modules/system/archive/NexusHUD.tsx` |
+| Bridge IPC | `electron/nexus_bridge.ts` |
+| Preload | `electron/preload.ts` |
+| Types globaux | `src/types/window.d.ts` |
 
 ---
-*Date de sauvegarde : 26 Mars 2026*
-*Statut : Blueprint Complet / Audit de Dépendances Terminé*
+*Date de mise à jour : 3 Avril 2026*
+*Statut : **Implémenté & Fonctionnel** — Portabilité médias (images + audio) opérationnelle. Streaming IPC validé sur 57 assets.*

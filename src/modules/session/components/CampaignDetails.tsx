@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
-import { ChevronLeft, Info, Calendar, Users, MapPin, Edit3, Sparkles, Share2 } from 'lucide-react';
+import { ChevronLeft, Info, Calendar, Users, MapPin, Edit3, Sparkles, Share2, Package, Upload, DownloadCloud } from 'lucide-react';
 import { useModalStore } from '../../../stores/useModalStore';
 import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
+import { nexusService } from '../../system/archive/NexusService';
+import type { NexusProgress, NexusConflict, NexusConflictResolution } from '../../system/archive/nexus.types';
+import { NexusHUD } from '../../system/archive/NexusHUD';
+import { NexusConflictResolver } from '../../system/archive/NexusConflictResolver';
 
 const CampaignDetails: React.FC = () => {
     const { campaigns, activeCampaignId, sessions, setCurrentView, entities, atlasMaps, customSheetTemplates, customGameDrivers, setSelectedAtlasMap } = useSessionOSStore();
@@ -11,6 +15,50 @@ const CampaignDetails: React.FC = () => {
     const campaignSessions = sessions.filter(s => s.campaignId === activeCampaignId);
     const campaignNPCs = entities.filter(e => e.type === 'npc' && e.campaignId === activeCampaignId);
     const activeLocations = atlasMaps.filter(m => campaign?.activeLocationIds?.includes(m.id));
+
+    // ── Nexus-OS State (doit être avant le early return) ──────────────────
+    const [nexusProgress, setNexusProgress] = useState<NexusProgress | null>(null);
+    const isNexusAvailable = typeof window !== 'undefined' && !!window.appBridge?.nexus;
+
+    // ── Conflict Resolver State ───────────────────────────────────────────
+    const [conflictState, setConflictState] = useState<NexusConflict[] | null>(null);
+    // Ref vers la fonction de résolution — permet au callback onConflict
+    // de retourner une Promise résolue par l'interaction utilisateur
+    const resolverRef = useRef<((resolution: NexusConflictResolution) => void) | null>(null);
+
+    const handleExport = async () => {
+        if (!activeCampaignId) return;
+        nexusService.onProgress(setNexusProgress);
+        setNexusProgress({ phase: 'scraping', progress: 0, message: 'Démarrage de l\'export...' });
+        await nexusService.exportBundle(activeCampaignId);
+        setTimeout(() => setNexusProgress(null), 3000);
+    };
+
+    const handleImport = async () => {
+        nexusService.onProgress(setNexusProgress);
+        setNexusProgress({ phase: 'importing', progress: 0, message: 'Sélectionnez un fichier .gmos...' });
+
+        // Callback onConflict : affiche le modal et suspend l'import
+        // jusqu'à ce que l'utilisateur clique sur une stratégie
+        const onConflict = (conflicts: NexusConflict[]): Promise<NexusConflictResolution> => {
+            setConflictState(conflicts);
+            return new Promise<NexusConflictResolution>((resolve) => {
+                resolverRef.current = resolve;
+            });
+        };
+
+        await nexusService.importBundle(onConflict);
+        setConflictState(null);
+        setTimeout(() => setNexusProgress(null), 3000);
+    };
+
+    // Handler résolution : appelé par NexusConflictResolver au clic
+    const handleConflictResolve = (resolution: NexusConflictResolution) => {
+        setConflictState(null);
+        resolverRef.current?.(resolution);
+        resolverRef.current = null;
+    };
+    // ─────────────────────────────────────────────────────────────────────
 
     if (!campaign) return null;
 
@@ -21,6 +69,7 @@ const CampaignDetails: React.FC = () => {
         campaign.system;
 
     return (
+        <>
         <div className="flex-1 flex flex-col gap-6 p-6 h-full overflow-y-auto custom-scrollbar bg-app-bg/20">
             {/* Header / Breadcrumbs */}
             <div className="flex items-center gap-4">
@@ -265,7 +314,63 @@ const CampaignDetails: React.FC = () => {
                     </div>
                 </div>
             </div>
+            {/* Nexus-OS Section */}
+            <div className="bg-app-surface/60 rounded-xl border border-amber-500/20 p-6 flex flex-col gap-4">
+                <div className="flex items-center gap-3 text-amber-400">
+                    <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
+                        <Package size={18} />
+                    </div>
+                    <div>
+                        <h3 className="font-bold text-sm uppercase tracking-wide">Nexus-OS</h3>
+                        <p className="text-[10px] text-app-text/40">Portabilité &amp; Archivage de Campagne</p>
+                    </div>
+                    {!isNexusAvailable && (
+                        <span className="ml-auto text-[9px] bg-app-surface border border-app-border text-app-text/30 px-2 py-1 rounded font-mono uppercase">
+                            Hors Electron
+                        </span>
+                    )}
+                </div>
+
+                {/* Actions */}
+                <div className="flex gap-3">
+                    <button
+                        id="nexus-export-btn"
+                        onClick={handleExport}
+                        disabled={!isNexusAvailable || !!nexusProgress}
+                        className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 rounded-lg text-sm text-amber-400 transition-all font-bold disabled:opacity-30 disabled:cursor-not-allowed"
+                        title={!isNexusAvailable ? 'Disponible uniquement dans l\'application Electron' : `Exporter ${campaign.name} en .gmos`}
+                    >
+                        <DownloadCloud size={16} />
+                        Exporter (.gmos)
+                    </button>
+                    <button
+                        id="nexus-import-btn"
+                        onClick={handleImport}
+                        disabled={!isNexusAvailable || !!nexusProgress}
+                        className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-app-surface hover:bg-app-surface/80 border border-app-border rounded-lg text-sm text-app-text/60 hover:text-app-text/90 transition-all font-bold disabled:opacity-30 disabled:cursor-not-allowed"
+                        title={!isNexusAvailable ? 'Disponible uniquement dans l\'application Electron' : 'Importer un bundle .gmos'}
+                    >
+                        <Upload size={16} />
+                        Importer (.gmos)
+                    </button>
+                </div>
+
+                <p className="text-[9px] text-app-text/25 leading-relaxed">
+                    L'export crée un bundle portable contenant toutes les données et médias de la campagne.
+                    L'import remplace exclusivement les données de cette campagne cible.
+                </p>
+            </div>
         </div>
+        {/* Nexus HUD v2 — overlay glassmorphism plein écran */}
+        <NexusHUD progress={nexusProgress} />
+        {/* Nexus Conflict Resolver — modal décision utilisateur */}
+        {conflictState && (
+            <NexusConflictResolver
+                conflicts={conflictState}
+                onResolve={handleConflictResolve}
+            />
+        )}
+        </>
     );
 };
 

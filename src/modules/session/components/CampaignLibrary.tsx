@@ -1,11 +1,16 @@
 import React from 'react';
-import { Plus, Search, BookOpen, Trash2, ArrowRight, Settings } from 'lucide-react';
+import { Plus, Search, BookOpen, Trash2, ArrowRight, Settings, Package, Upload } from 'lucide-react';
 import { gmConfirm, gmCustom } from '../../../stores/useModalStore';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
+import { nexusService } from '../../system/archive/NexusService';
+import { NexusHUD } from '../../system/archive/NexusHUD';
+import { NexusConflictResolver } from '../../system/archive/NexusConflictResolver';
+import type { NexusProgress, NexusConflict, NexusConflictResolution } from '../../system/archive/nexus.types';
+import { useState, useRef } from 'react';
 
 const CampaignLibrary: React.FC = () => {
-    const { campaigns, setActiveCampaign, setCurrentView, activeCampaignId, customSheetTemplates, customGameDrivers } = useSessionOSStore();
+    const { campaigns, setActiveCampaign, setCurrentView, activeCampaignId, customSheetTemplates, customGameDrivers, entities, atlasMaps, wikiEntries, clues } = useSessionOSStore();
 
     const getSystemName = (systemId: string) => {
         const customDriver = customGameDrivers?.find(d => d.id === systemId);
@@ -14,6 +19,68 @@ const CampaignLibrary: React.FC = () => {
         const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...(customSheetTemplates || [])];
         return allTemplates.find(t => t.id === systemId)?.name || systemId;
     };
+
+    /**
+     * Compte le nombre total de références media pour une campagne.
+     * Identique à ce que fait NexusService.collectAssetPaths(), mais
+     * calculé côté UI pour l'affichage du badge.
+     * Une ref est un ID Media Hub (commence par "m-") ou un chemin absolu.
+     */
+    const getMediaAssetCount = (campaignId: string): number => {
+        const isMediaRef = (ref: string | undefined | null) =>
+            !!ref && !ref.startsWith('http') && !ref.startsWith('blob:') && ref.trim().length > 0;
+
+        let count = 0;
+        const campaign = campaigns.find(c => c.id === campaignId);
+
+        if (campaign?.wallpaperUrl && isMediaRef(campaign.wallpaperUrl)) count++;
+
+        entities
+            .filter(e => e.campaignId === campaignId)
+            .forEach(e => { if (isMediaRef(e.avatar)) count++; });
+
+        atlasMaps
+            .filter(m => m.campaignId === campaignId)
+            .forEach(m => { if (isMediaRef(m.fileUrl)) count++; });
+
+        wikiEntries
+            .filter(w => w.campaignId === campaignId)
+            .forEach(w => { count += (w.imageUrls ?? []).filter(isMediaRef).length; });
+
+        clues
+            .filter(cl => cl.campaignId === campaignId)
+            .forEach(cl => { if (isMediaRef(cl.mediaUrl)) count++; });
+
+        return count;
+    };
+
+    // ── Nexus-OS State ────────────────────────────────────────────────────
+    const [nexusProgress, setNexusProgress] = useState<NexusProgress | null>(null);
+    const [conflictState, setConflictState] = useState<NexusConflict[] | null>(null);
+    const resolverRef = useRef<((resolution: NexusConflictResolution) => void) | null>(null);
+
+    const handleImport = async () => {
+        nexusService.onProgress(setNexusProgress);
+        setNexusProgress({ phase: 'importing', progress: 0, message: 'Sélectionnez un fichier .gmos...' });
+
+        const onConflict = (conflicts: NexusConflict[]): Promise<NexusConflictResolution> => {
+            setConflictState(conflicts);
+            return new Promise<NexusConflictResolution>((resolve) => {
+                resolverRef.current = resolve;
+            });
+        };
+
+        await nexusService.importBundle(onConflict);
+        setConflictState(null);
+        setTimeout(() => setNexusProgress(null), 3000);
+    };
+
+    const handleConflictResolve = (resolution: NexusConflictResolution) => {
+        setConflictState(null);
+        resolverRef.current?.(resolution);
+        resolverRef.current = null;
+    };
+    // ─────────────────────────────────────────────────────────────────────
 
     const handleSelectCampaign = (id: string) => {
         setActiveCampaign(id);
@@ -36,6 +103,16 @@ const CampaignLibrary: React.FC = () => {
                         className="w-full bg-app-surface/60 border border-app-border/40 rounded-xl py-3 pl-11 pr-4 text-app-text/80 focus:outline-none focus:ring-1 focus:ring-accent/50 transition-all font-display"
                     />
                 </div>
+                
+                {/* Global Import Action */}
+                <button
+                    onClick={handleImport}
+                    className="flex items-center gap-2 bg-app-surface/60 border border-app-border/40 px-6 py-3 rounded-xl text-app-text/60 font-bold hover:bg-app-surface hover:text-app-text transition-all"
+                >
+                    <Upload size={20} />
+                    IMPORT NEXUS BUNDLE
+                </button>
+
                 <button
                     onClick={() => gmCustom('campaign-add')}
                     className="flex items-center gap-2 bg-accent px-6 py-3 rounded-xl text-app-bg font-bold hover:brightness-110 transition-all shadow-glow-accent/20 hover:-translate-y-0.5"
@@ -111,14 +188,51 @@ const CampaignLibrary: React.FC = () => {
                                         </div>
                                     ))}
                                 </div>
-                                <div className="flex items-center gap-1 text-accent font-bold text-xs group-hover:translate-x-1 transition-transform">
-                                    MANAGE <ArrowRight size={14} />
+                                <div className="flex items-center gap-2">
+                                    {/* Badge Nexus-Ready — basé sur le compte réel des assets media */}
+                                    {(() => {
+                                        const assetCount = getMediaAssetCount(campaign.id);
+                                        return assetCount > 0 ? (
+                                            <span
+                                                title={`${assetCount} fichier(s) média détecté(s) — Export Nexus complet disponible`}
+                                                className="flex items-center gap-1 text-[9px] bg-sky-500/10 text-sky-400 border border-sky-500/20 px-2 py-0.5 rounded-full font-black uppercase tracking-widest"
+                                            >
+                                                <Package size={8} />
+                                                Nexus-Ready
+                                            </span>
+                                        ) : (
+                                            <span
+                                                title="Aucun fichier média — Export Nexus léger (JSON uniquement)"
+                                                className="flex items-center gap-1 text-[9px] text-app-text/20 border border-app-border/20 px-2 py-0.5 rounded-full font-black uppercase tracking-widest"
+                                            >
+                                                <Package size={8} />
+                                                Nexus
+                                            </span>
+                                        );
+                                    })()}
+                                    <div className="flex items-center gap-1 text-accent font-bold text-xs group-hover:translate-x-1 transition-transform">
+                                        MANAGE <ArrowRight size={14} />
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 ))}
             </div>
+
+            {/* Nexus Overlays */}
+            {nexusProgress && (
+                <NexusHUD 
+                    progress={nexusProgress} 
+                />
+            )}
+
+            {conflictState && (
+                <NexusConflictResolver 
+                    conflicts={conflictState} 
+                    onResolve={handleConflictResolve}
+                />
+            )}
         </div>
     );
 };

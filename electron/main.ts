@@ -35,6 +35,7 @@ interface AIProxyResponse {
 import { registerRagHandlers } from './RAGEngine'
 import { registerMcpHandlers } from './mcp_bridge'
 import { registerObsidianHandlers } from './obsidian_bridge'
+import { registerNexusHandlers } from './nexus_bridge'
 import { sessionManager } from './SessionManager'
 import { OllamaService } from './OllamaService'
 // import { GitBackupService } from './GitBackupService'
@@ -67,6 +68,8 @@ registerRagHandlers();
 registerMcpHandlers();
 // Register Obsidian Bridge
 registerObsidianHandlers();
+// Register Nexus-OS Bridge (Campaign Portability)
+registerNexusHandlers();
 
 // Register gmos protocol as privileged
 protocol.registerSchemesAsPrivileged([
