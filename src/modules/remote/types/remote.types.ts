@@ -40,6 +40,8 @@ export interface RemoteUniversalPad {
     isActive?: boolean;
 }
 
+import { type DiceConfig } from '../../../types/drivers';
+
 export interface RemoteSyncData {
     sounds: RemoteSound[];
     moments: RemoteMoment[];
@@ -63,6 +65,10 @@ export interface RemoteSyncData {
         currentWidth: number;
     };
     universalPads: RemoteUniversalPad[];
+    session?: {
+        campaignId: string;
+        activeDiceConfig: DiceConfig | null;
+    };
 }
 
 export type RemoteActionType = 

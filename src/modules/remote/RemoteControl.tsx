@@ -18,10 +18,11 @@ import RemoteSoundboard from './components/RemoteSoundboard';
 import RemoteCombatTracker from './components/RemoteCombatTracker';
 import RemoteStoryboard from './components/RemoteStoryboard';
 import RemoteNotes from './components/RemoteNotes';
+import RemoteDiceResultOverlay from './components/RemoteDiceResultOverlay';
 import RemoteWhiteboardView from './components/RemoteWhiteboardView';
 
 const RemoteControl: React.FC = () => {
-    const { status, syncData, sendAction } = useRemoteSync();
+    const { status, syncData, lastDiceResult, clearDiceResult, sendAction } = useRemoteSync();
     const [activeTab, setActiveTab] = useState<'pads' | 'dice' | 'sound' | 'combat' | 'whiteboard' | 'notes' | 'story'>('pads');
     const [isAventureMode] = useState(() => typeof window !== 'undefined' ? window.location.search.includes('mode=adventure') : false);
 
@@ -47,6 +48,7 @@ const RemoteControl: React.FC = () => {
             case 'dice':
                 return (
                     <RemoteDicePad 
+                        activeDiceConfig={syncData.session?.activeDiceConfig}
                         onRoll={(dice) => sendAction('remote:dice:roll', dice)} 
                         onClear={() => sendAction('remote:dice:clear', {})}
                     />
@@ -160,6 +162,12 @@ const RemoteControl: React.FC = () => {
 
             <div className="fixed -top-20 -right-20 w-64 h-64 bg-accent/5 rounded-full blur-[120px] pointer-events-none" />
             <div className="fixed -bottom-20 -left-20 w-64 h-64 bg-rose-500/5 rounded-full blur-[120px] pointer-events-none" />
+
+            {/* Global Dice Result Overlay */}
+            <RemoteDiceResultOverlay 
+                result={lastDiceResult} 
+                onClose={clearDiceResult} 
+            />
         </div>
     );
 };

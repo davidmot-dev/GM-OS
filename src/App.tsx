@@ -86,7 +86,9 @@ interface UniversalPad {
 function App() {
   const lastSyncRef = React.useRef(0);
   const lastBroadcastRef = React.useRef<Record<string, unknown>>({});
+  const lastBroadcastedRollId = React.useRef<string | null>(null);
   const { activeModule, theme } = useSessionStore();
+  const lastRoll = useDiceStore(state => state.lastRoll);
   const sessionOSStore = useSessionOSStore();
   const { activeCampaignId } = sessionOSStore;
   const { isMediaHubOpen, closeMediaHub } = useModalStore();
@@ -108,6 +110,18 @@ function App() {
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
+
+  // Diffusion automatique des résultats de dés vers les Remote MJ (Centralisée)
+  useEffect(() => {
+    if (lastRoll && window.appBridge?.remote?.broadcastUIAction && lastRoll.id !== lastBroadcastedRollId.current) {
+      console.log('[App] Auto-broadcasting dice result to remotes:', lastRoll.id);
+      lastBroadcastedRollId.current = lastRoll.id;
+      window.appBridge.remote.broadcastUIAction({
+        type: 'dice:result',
+        payload: lastRoll
+      });
+    }
+  }, [lastRoll]);
 
   /* 
   // Automatic Media Cleanup on startup (Main PC only)
@@ -307,8 +321,11 @@ function App() {
       };
 
       const activeCampaign = campaigns.find(c => String(c.id) === String(currentCampaignId));
-      
+      const activeDriver = sessionOSStore.getActiveDriver();
+
       const session = {
+          campaignId: currentCampaignId,
+          activeDiceConfig: activeDriver?.dice || null,
           campaigns: campaigns || [],
           players: await Promise.all(
               (players || []).map(async (p: import('./modules/session/store/types').Player) => ({
@@ -398,7 +415,7 @@ function App() {
         const err = e instanceof Error ? e.message : String(e);
         console.error("[Sync] Error in handleSync:", err); 
     }
-  }, [activeCampaignId]);
+  }, [activeCampaignId, sessionOSStore]);
 
   const handleAction = useCallback((data: RemoteAction) => {
     const { type, payload } = data;
@@ -407,7 +424,18 @@ function App() {
 
     // --- DICE ACTIONS ---
     if (type === 'dice:roll' || type === 'remote:dice:roll') {
-      const p = payload as { sides?: number, die?: number, count?: number, modifier?: number, mode?: string, target?: number, title?: string, gearCount?: number };
+      const p = payload as { 
+        sides?: number, 
+        die?: number, 
+        count?: number, 
+        modifier?: number, 
+        mode?: string, 
+        target?: number, 
+        title?: string, 
+        formula?: string,
+        gearCount?: number, 
+        useSystem?: boolean 
+      };
       const sides = p.sides || p.die || 20;
       const count = p.count || 1;
       const modifier = p.modifier || 0;
@@ -416,24 +444,70 @@ function App() {
       
       console.log(`[App] Global Dice Roll: ${count}d${sides} (${mode})`);
       
+      const activeDriver = sessionOSStore.getActiveDriver();
       let result;
-      if (mode === 'standard') result = DiceEngine.rollStandard(sides, count, modifier);
-      else if (mode === 'exploding') result = DiceEngine.rollStandard(sides, count, modifier, true);
-      else if (mode === 'pool') result = DiceEngine.rollPool(sides, count, modifier, target);
-      else if (mode === 'pool_explode') result = DiceEngine.rollPool(sides, count, modifier, target, true);
-      else if (mode === 'yze') result = DiceEngine.rollYZE(count, p.gearCount || 0);
-      else result = DiceEngine.rollStandard(sides, count, modifier);
+      let finalTitle = p.title || `${count}d${sides}`;
+
+      // 1. Priorité au Mode Système si explicitement demandé
+      if (p.useSystem && activeDriver) {
+        result = DiceEngine.rollFromConfig(activeDriver.dice, {
+          modifier,
+          baseCount: count,
+          gearCount: p.gearCount || 0,
+          targetOverwrite: target
+        });
+        finalTitle = p.title || `Système (${activeDriver.name})`;
+      } else {
+        // 2. Fallback sur la logique manuelle étendue
+        switch (mode) {
+          case 'standard': 
+            result = DiceEngine.rollStandard(sides, count, modifier); 
+            break;
+          case 'exploding': 
+            result = DiceEngine.rollStandard(sides, count, modifier, true); 
+            break;
+          case 'threshold': 
+            result = DiceEngine.rollThreshold(sides, count, modifier, target); 
+            break;
+          case 'pool': 
+            result = DiceEngine.rollPool(sides, count, modifier, target); 
+            break;
+          case 'pool_explode': 
+            result = DiceEngine.rollPool(sides, count, modifier, target, true); 
+            break;
+          case 'advantage': 
+            result = DiceEngine.rollAdvantage(sides, modifier, true, target); 
+            break;
+          case 'disadvantage': 
+            result = DiceEngine.rollAdvantage(sides, modifier, false, target); 
+            break;
+          case 'yze': 
+            result = DiceEngine.rollYZE(count, p.target || p.gearCount || 0); 
+            break;
+          case 'fate': 
+            result = DiceEngine.rollFate(count, modifier); 
+            break;
+          case 'rolemaster': 
+            result = DiceEngine.rollRolemaster(modifier); 
+            break;
+          case 'formula':
+            result = DiceEngine.rollFormula(p.formula || p.title || '1d20'); 
+            break;
+          default: 
+            result = DiceEngine.rollStandard(sides, count, modifier);
+        }
+      }
 
       const record = {
         ...result,
         id: Math.random().toString(36).substring(7),
         timestamp: new Date(),
-        title: p.title || `${count}d${sides}`
+        title: finalTitle
       };
 
       const diceStore = useDiceStore.getState();
       diceStore.setLastRoll(record);
-      
+
       if (diceStore.isDiceProjected) {
         diceStore.triggerDiceProjection();
       }

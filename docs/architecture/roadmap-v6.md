@@ -23,6 +23,7 @@ Ce document trace les grandes orientations du projet suite à la stabilisation d
 
 L'objectif est d'assurer une étanchéité parfaite des données tout en simplifiant le flux du MJ.
 
+- **[x] Nexus-Link — Remote MJ Feedback loop** : Synchronisation réactive des jets de dés (local/remote) vers tous les MJ connectés.
 - **[ ] Oracle IA Contextuel** : Intégration complète de l'historique de la chronique dans les prompts pour des réponses cohérentes avec la narration passée.
 - **[ ] Nexus-OS v2 — Driver Export** : Exporter non seulement les campagnes, mais aussi les GameDrivers (systèmes de règles) comme bundles autonomes.
 - **[ ] Nexus-OS v2 — Vérification des URLs distantes** : Avertir l'utilisateur des URLs HTTP non-portables dans le HUD (avec suggestion de migration vers le Media Hub).
@@ -64,5 +65,5 @@ Extension des capacités de création et de partage.
 | Migration URLs HTTP → Media Hub (campagne Anges de Feu) | Moyenne | ⭕ Manuel |
 
 ---
-*Dernière mise à jour : 3 Avril 2026*
-*Statut : Phase 0 terminée. Phase 1 ouverte.*
+*Dernière mise à jour : 4 Avril 2026*
+*Statut : Phase 0 terminée. Phase 1 — Nexus-Link (Dés) opérationnel.*

@@ -393,8 +393,11 @@ export const useSessionOSStore = create<SessionOSStore>()(
                 // 1. Repair Campaign Systems (Force generic if missing)
                 const newCampaigns = campaigns.map(c => {
                     if (c.system && c.system !== 'generic') {
-                        const exists = allTemplates.some(t => t.id === c.system);
-                        if (!exists) {
+                        const existsInTemplates = allTemplates.some(t => t.id === c.system);
+                        const existsInDrivers = DEFAULT_GAME_DRIVERS.some(d => d.id === c.system) || 
+                                              get().customGameDrivers.some(d => d.id === c.system);
+                        
+                        if (!existsInTemplates && !existsInDrivers) {
                             hasChanges = true;
                             console.warn(`[Reconcile] Système '${c.system}' introuvable pour la campagne '${c.name}'. Réinitialisation sur 'generic'.`);
                             return { ...c, system: 'generic' };

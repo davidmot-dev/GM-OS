@@ -1,6 +1,13 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useClientStore } from '../../../stores/useClientStore';
 import { type RemoteSyncData, type RemoteActionType } from '../types/remote.types';
+import { type RollResult as BaseRollResult } from '../../dice/DiceEngine';
+
+export interface RollRecord extends BaseRollResult {
+    id: string;
+    timestamp: Date;
+    title: string;
+}
 
 const INITIAL_SYNC_DATA: RemoteSyncData = {
     sounds: [],
@@ -26,10 +33,12 @@ const BACKOFF_MAX = 30000;
 export const useRemoteSync = () => {
     const [status, setStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
     const [syncData, setSyncData] = useState<RemoteSyncData>(INITIAL_SYNC_DATA);
+    const [lastDiceResult, setLastDiceResult] = useState<RollRecord | null>(null);
+    const resultTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const socketRef = useRef<WebSocket | null>(null);
     const backoffRef = useRef(BACKOFF_INITIAL);
     const connectRef = useRef<(() => void) | null>(null);
-    const reconnectTimerRef = useRef<any>(null);
+    const reconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     
     const { deviceId, pseudo, setStatus: setClientStatus } = useClientStore();
 
@@ -97,6 +106,12 @@ export const useRemoteSync = () => {
                                 : data.payload
                         };
                     });
+                } else if (data.type === 'dice:result') {
+                    setLastDiceResult(data.payload);
+                    if (resultTimeoutRef.current) clearTimeout(resultTimeoutRef.current);
+                    resultTimeoutRef.current = setTimeout(() => {
+                        setLastDiceResult(null);
+                    }, 15000);
                 }
             } catch (err) {
                 console.error('[Remote] Failed to parse message:', err);
@@ -129,9 +144,19 @@ export const useRemoteSync = () => {
         }
     }, []);
 
+    const clearDiceResult = useCallback(() => {
+        if (resultTimeoutRef.current) {
+            clearTimeout(resultTimeoutRef.current);
+            resultTimeoutRef.current = null;
+        }
+        setLastDiceResult(null);
+    }, []);
+
     return {
         status,
         syncData,
+        lastDiceResult,
+        clearDiceResult,
         sendAction
     };
 };

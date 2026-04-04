@@ -21,9 +21,10 @@ export const useNotebookLM = () => {
 
     const extractNotebookId = useCallback((url: string): string | null => {
         if (!url) return null;
-        // Search for UUID pattern: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-        const match = url.match(/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/i);
-        return match ? match[0] : null;
+        // Robust regex to extract UUID or alphanumeric ID from various URL formats
+        const match = url.match(/notebooks\/([a-f0-9-]{36}|[a-zA-Z0-9_-]+)/i) || 
+                     url.match(/([a-f0-9-]{36})/i);
+        return match ? match[1] : url.trim();
     }, []);
 
     const queryNotebook = useCallback(async (notebookId: string, query: string) => {

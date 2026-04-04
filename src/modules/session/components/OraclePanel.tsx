@@ -13,9 +13,10 @@ interface OraclePanelProps {
     onClose: () => void;
     campaignNotebookUrl?: string;
     templateNotebookUrl?: string;
+    driverNotebookUrl?: string;
 }
 
-const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNotebookUrl, templateNotebookUrl }) => {
+const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNotebookUrl, templateNotebookUrl, driverNotebookUrl }) => {
     const { messages, isQuerying, queryNotebook, extractNotebookId, clearChat } = useNotebookLM();
     const { activeGemId, gems, setActiveGemId, syncGemsWithDefaults } = useGemStore();
     const activeDriver = useSessionOSStore(state => state.getActiveDriver());
@@ -72,16 +73,24 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
     }, [isOpen, syncGemsWithDefaults]);
 
     // Initial state based on props - but we'll use a local state that follows props
-    const [userSelectedType, setUserSelectedType] = useState<'campaign' | 'template' | null>(null);
+    const [userSelectedType, setUserSelectedType] = useState<'campaign' | 'driver' | 'template' | null>(null);
 
-    // Derived state for the actual active type
+    // Derived state for the actual active type (Priority: Campaign > Driver > Template)
     const selectedUrlType = useMemo(() => {
         if (userSelectedType === 'campaign' && campaignNotebookUrl) return 'campaign';
+        if (userSelectedType === 'driver' && driverNotebookUrl) return 'driver';
         if (userSelectedType === 'template' && templateNotebookUrl) return 'template';
-        return campaignNotebookUrl ? 'campaign' : 'template';
-    }, [userSelectedType, campaignNotebookUrl, templateNotebookUrl]);
+        
+        if (campaignNotebookUrl) return 'campaign';
+        if (driverNotebookUrl) return 'driver';
+        return 'template';
+    }, [userSelectedType, campaignNotebookUrl, driverNotebookUrl, templateNotebookUrl]);
 
-    const activeNotebookUrl = selectedUrlType === 'campaign' ? campaignNotebookUrl : templateNotebookUrl;
+    const activeNotebookUrl = useMemo(() => {
+        if (selectedUrlType === 'campaign') return campaignNotebookUrl;
+        if (selectedUrlType === 'driver') return driverNotebookUrl;
+        return templateNotebookUrl;
+    }, [selectedUrlType, campaignNotebookUrl, driverNotebookUrl, templateNotebookUrl]);
     
     // Memoize notebook ID to avoid recalculating unnecessarily
     const notebookId = useMemo(() => activeNotebookUrl ? extractNotebookId(activeNotebookUrl) : null, [activeNotebookUrl, extractNotebookId]);
@@ -96,7 +105,13 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
         setViewMode(mode);
     };
 
-    const hasBoth = !!campaignNotebookUrl && !!templateNotebookUrl && campaignNotebookUrl !== templateNotebookUrl;
+    const availableSources = [
+        { type: 'campaign', url: campaignNotebookUrl },
+        { type: 'driver', url: driverNotebookUrl },
+        { type: 'template', url: templateNotebookUrl }
+    ].filter(s => !!s.url);
+
+    const hasMultipleSources = availableSources.length > 1;
 
     useEffect(() => {
         if (scrollRef.current) {
@@ -319,22 +334,22 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                         </div>
 
                         {/* Source Toggle Group */}
-                        {hasBoth && (
+                        {hasMultipleSources && (
                             <div className="flex bg-app-surface/60 rounded-xl p-1 border border-white/5">
-                                <button
-                                    onClick={() => setUserSelectedType('template')}
-                                    className={`px-3 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all ${selectedUrlType === 'template' ? 'bg-accent text-app-bg shadow-glow-accent/20' : 'text-app-text/40 hover:text-app-text/60'}`}
-                                    title="Source : Système de jeu"
-                                >
-                                    SYS
-                                </button>
-                                <button
-                                    onClick={() => setUserSelectedType('campaign')}
-                                    className={`px-3 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all ${selectedUrlType === 'campaign' ? 'bg-blue-600 text-white shadow-lg' : 'text-app-text/40 hover:text-app-text/60'}`}
-                                    title="Source : Campagne / Univers"
-                                >
-                                    CAMP
-                                </button>
+                                {availableSources.map(source => (
+                                    <button
+                                        key={source.type}
+                                        onClick={() => setUserSelectedType(source.type as any)}
+                                        className={`px-3 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all ${
+                                            selectedUrlType === source.type 
+                                                ? 'bg-accent text-app-bg shadow-glow-accent/20' 
+                                                : 'text-app-text/40 hover:text-app-text/60'
+                                        }`}
+                                        title={`Source : ${source.type === 'campaign' ? 'Campagne' : source.type === 'driver' ? 'Système (Règles)' : 'Template UI'}`}
+                                    >
+                                        {source.type === 'campaign' ? 'CAMP' : 'SYS'}
+                                    </button>
+                                ))}
                             </div>
                         )}
 

@@ -152,18 +152,28 @@ Lorsqu'une campagne importée a le même ID qu'une campagne existante, 3 straté
 
 ---
 
-## 📂 Emplacements des fichiers
-
-| Type | Chemin |
-|---|---|
-| Spécification | `docs/blueprints/nexus_os_specification.md` |
-| Service principal | `src/modules/system/archive/NexusService.ts` |
-| Types | `src/modules/system/archive/nexus.types.ts` |
-| HUD | `src/modules/system/archive/NexusHUD.tsx` |
-| Bridge IPC | `electron/nexus_bridge.ts` |
 | Preload | `electron/preload.ts` |
 | Types globaux | `src/types/window.d.ts` |
 
 ---
-*Date de mise à jour : 3 Avril 2026*
-*Statut : **Implémenté & Fonctionnel** — Portabilité médias (images + audio) opérationnelle. Streaming IPC validé sur 57 assets.*
+
+## 📡 10. Nexus-Link : Synchronisation Temps Réel
+
+Le module Nexus gère également la communication bidirectionnelle entre le Cockpit MJ et les périphériques mobiles via WebSocket.
+
+### A. Protocole `broadcastUIAction`
+- **Rôle** : Permet au processus principal (Electron) d'émettre des ordres visuels vers tous les Remote MJ connectés sans passer par le store global persistant.
+- **Canal** : `remote:broadcast-ui-action` (IPC) → WebSocket Server → Clients.
+
+### B. Diffusion Réactive (Reactive Broadcasting)
+Pour garantir une parité totale entre les actions locales (boutons GM) et les actions distantes :
+1. Les composants (locaux ou distants) modifient le store standard (ex: `useDiceStore.lastRoll`).
+2. Un abonnement global (`useEffect`) dans `App.tsx` détecte le changement d'état.
+3. L'action est automatiquement diffusée via `broadcastUIAction`.
+
+> 💡 **Avantage** : Cette architecture assure que n'importe quelle source de lancer (clic sur dé, raccourci clavier, ou bouton mobile) génère un feedback visuel synchronisé sur tous les écrans MJ.
+
+---
+
+*Date de mise à jour : 4 Avril 2026*
+*Statut : **Implémenté & Fonctionnel** — Portabilité médias (v1.0) et Synchronisation Réactive des dés opérationnelles.*

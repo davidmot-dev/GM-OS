@@ -6,6 +6,7 @@ import SessionSnapshotModal from './components/SessionSnapshotModal';
 import RemoteNotificationCenter from './components/RemoteNotificationCenter';
 import { useSessionOSStore } from './useSessionOSStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../data/defaultSheetTemplates';
+import { DEFAULT_GAME_DRIVERS } from '../../data/defaultGameDrivers';
 
 /**
  * SessionDashboard - Point d'entrée principal de l'OS de Session.
@@ -16,6 +17,7 @@ const SessionDashboard: React.FC = () => {
         activeCampaignId, 
         campaigns, 
         customSheetTemplates,
+        customGameDrivers,
         isHeaderHidden
     } = useSessionOSStore();
 
@@ -23,12 +25,16 @@ const SessionDashboard: React.FC = () => {
     const [isSnapshotModalOpen, setIsSnapshotModalOpen] = useState(false);
     const [forgeMode, setForgeMode] = useState<'system' | 'chronicle'>('system');
 
-    // Résolution contextuelle de la campagne active
-    const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
-    
-    // Résolution des URLs de NotebookLM pour l'Oracle
-    const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
-    const activeTemplate = allTemplates.find(t => t.id === activeCampaign?.system);
+    // Résolution contextuelle réactive (Phase 8 Logic)
+    const { activeCampaign, activeDriver, activeTemplate } = React.useMemo(() => {
+        const camp = campaigns.find(c => c.id === activeCampaignId);
+        const driver = [...DEFAULT_GAME_DRIVERS, ...customGameDrivers].find(d => d.id === camp?.system);
+        const template = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates].find(t => t.id === camp?.system);
+        
+        return { activeCampaign: camp, activeDriver: driver, activeTemplate: template };
+    }, [activeCampaignId, campaigns, customGameDrivers, customSheetTemplates]);
+
+    const driverNotebookUrl = activeDriver?.defaultNotebookUrl;
     const templateNotebookUrl = activeTemplate?.defaultNotebookUrl;
 
     return (
@@ -53,6 +59,7 @@ const SessionDashboard: React.FC = () => {
                 onClose={() => setIsOracleOpen(false)} 
                 campaignNotebookUrl={activeCampaign?.notebookUrl}
                 templateNotebookUrl={templateNotebookUrl}
+                driverNotebookUrl={driverNotebookUrl}
             />
 
             {isSnapshotModalOpen && (

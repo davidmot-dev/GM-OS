@@ -54,22 +54,17 @@ export function useCampaignEditor({ campaign, isNew, onClose }: UseCampaignEdito
 
     useEffect(() => {
         if (fullCampaign && !isNew) {
-            if (!name && fullCampaign.name) setName(fullCampaign.name);
-            if (!system && fullCampaign.system) setSystem(fullCampaign.system);
-            if (!description && fullCampaign.description) setDescription(fullCampaign.description);
-            if (!synopsis && fullCampaign.synopsis) setSynopsis(fullCampaign.synopsis);
-            if (!wallpaperUrl && fullCampaign.wallpaperUrl) setWallpaperUrl(fullCampaign.wallpaperUrl);
-            if (!notebookUrl && fullCampaign.notebookUrl) setNotebookUrl(fullCampaign.notebookUrl);
-            if (!systemPath && fullCampaign.systemPath) setSystemPath(fullCampaign.systemPath);
-            if (!campaignPath && fullCampaign.campaignPath) setCampaignPath(fullCampaign.campaignPath);
-            if (activeLocationIds.length === 0 && fullCampaign.activeLocationIds?.length) {
-                setActiveLocationIds(fullCampaign.activeLocationIds);
-            }
-            if (Object.keys(aiPersonas).length === 0 && fullCampaign.aiPersonas) {
-                setAiPersonas(fullCampaign.aiPersonas);
-            }
+            setName(fullCampaign.name || '');
+            setSystem(fullCampaign.system || 'generic');
+            setDescription(fullCampaign.description || '');
+            setSynopsis(fullCampaign.synopsis || '');
+            setWallpaperUrl(fullCampaign.wallpaperUrl || '');
+            setNotebookUrl(fullCampaign.notebookUrl || '');
+            setSystemPath(fullCampaign.systemPath || '');
+            setCampaignPath(fullCampaign.campaignPath || '');
+            setActiveLocationIds(fullCampaign.activeLocationIds || []);
+            setAiPersonas(fullCampaign.aiPersonas || {});
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fullCampaign, isNew]);
 
     const campaignMaps = atlasMaps.filter(m => m.campaignId === fullCampaign?.id);

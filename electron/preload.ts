@@ -118,6 +118,7 @@ contextBridge.exposeInMainWorld('appBridge', {
         },
         removeActions: () => ipcRenderer.removeAllListeners('remote:action'),
         sendSync: (data: unknown) => ipcRenderer.send('remote:broadcast-sync', data),
+        broadcastUIAction: (action: unknown) => ipcRenderer.send('remote:broadcast-ui-action', action),
         cacheMedia: (buffer: ArrayBuffer, id: string) => ipcRenderer.invoke('remote:cache-media', buffer, id),
     },
     logger: {

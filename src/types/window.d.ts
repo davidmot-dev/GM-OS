@@ -123,6 +123,7 @@ declare global {
         remote: {
             getConnectionInfo?: () => Promise<{ ip: string; port: number }>;
             sendSync?: (payload: SyncPayload) => void;
+            broadcastUIAction?: (action: any) => void;
             broadcastToTablets: (type: string, payload: unknown) => void;
             getDisplays: () => Promise<DisplayInfo[]>;
             openProjectionWindow: (displayId: string, url: string) => void;

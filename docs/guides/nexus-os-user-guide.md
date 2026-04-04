@@ -82,5 +82,5 @@ L'export Nexus inclut également :
 
 ---
 
-*Dernière mise à jour : 3 Avril 2026*
-*Statut : Nexus-OS v1.0 — Portabilité médias et audio opérationnelle.*
+*Dernière mise à jour : 4 Avril 2026*
+*Statut : Nexus-OS v1.1 — Portabilité médias et Synchronisation temps réel (Dés) opérationnelles.*

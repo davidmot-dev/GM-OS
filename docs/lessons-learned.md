@@ -123,5 +123,5 @@
 
 ---
 
-*Dernière mise à jour : 3 Avril 2026*
-*Statut : Standards de Portabilité Nexus-OS v1.0 validés. Streaming IPC anti-truncation documenté.*
+*Dernière mise à jour : 4 Avril 2026*
+*Statut : Standards de Portabilité Nexus-OS v1.1 validés. Synchronisation réactive via Store documentée.*

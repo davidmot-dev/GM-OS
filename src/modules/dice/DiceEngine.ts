@@ -448,7 +448,7 @@ export class DiceEngine {
         // If an engine is specified, prioritize it
         if (config.engine === 'year-zero' || config.engine === 'yze') {
             const count = options?.baseCount ?? (parseInt(config.defaultDice) || 6);
-            const gear = options?.gearCount ?? 0;
+            const gear = options?.targetOverwrite ?? options?.gearCount ?? 0;
             const mod = options?.modifier ?? 0;
             // In YZE, modifiers add/remove base dice
             return this.rollYZE(Math.max(1, count + mod), gear);
