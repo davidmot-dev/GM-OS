@@ -134,10 +134,12 @@ Lorsqu'une campagne importée a le même ID qu'une campagne existante, 3 straté
 ## 🧪 9. Protocole de Test
 
 ### T1 : Intégrité de Référence
+
 - Scénario : Relations circulaires entre PNJs
 - Vérification : UUID cohérents après round-trip
 
 ### T2 : Moissonnage Global
+
 - Scénario : Campagne avec 57 médias Media Hub
 - Vérification : `manifest.assetMap.length === 57` + dossier `assets/profiles/` présent dans le ZIP
 
@@ -173,7 +175,13 @@ Pour garantir une parité totale entre les actions locales (boutons GM) et les a
 
 > 💡 **Avantage** : Cette architecture assure que n'importe quelle source de lancer (clic sur dé, raccourci clavier, ou bouton mobile) génère un feedback visuel synchronisé sur tous les écrans MJ.
 
+### C. Theater Mode (Projection Immersive)
+Le Tablet/Player Hub implémente un mode d'affichage dit "Theater Mode" pour les événements critiques (lancers de dés).
+- **Priorité d'Affichage** : Overlay plein écran avec `z-[100]`, utilisant `framer-motion` (`AnimatePresence`) pour des transitions fluides.
+- **Design System** : Utilise des variables CSS dynamiques (`--app-accent-rgb`) pour générer des halos lumineux thématiques (`drop-shadow`, `box-shadow`) sans re-render massif.
+- **Réactivité** : Disparition automatique après 5 secondes pour minimiser l'obstruction visuelle.
+
 ---
 
-*Date de mise à jour : 4 Avril 2026*
-*Statut : **Implémenté & Fonctionnel** — Portabilité médias (v1.0) et Synchronisation Réactive des dés opérationnelles.*
+*Dernière mise à jour : 4 Avril 2026*
+*Statut : **Implémenté & Fonctionnel** — Portabilité médias (v1.0), Synchronisation Réactive et Theater Mode (Dés) opérationnels.*

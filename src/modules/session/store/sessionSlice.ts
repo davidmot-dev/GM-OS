@@ -72,6 +72,7 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
         const newSession: GameSession = { 
             ...session, 
             id,
+            checklist: session.checklist || [],
             sessionEntityIds: session.sessionEntityIds || []
         };
         set((state) => ({ sessions: [...state.sessions, newSession] }));
@@ -111,7 +112,7 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
                 s.id === sessionId
                     ? {
                           ...s,
-                          checklist: s.checklist.map((item) =>
+                          checklist: (s.checklist || []).map((item) =>
                               item.id === itemId
                                   ? { ...item, isCompleted: !item.isCompleted }
                                   : item
@@ -128,7 +129,7 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
                     ? {
                           ...s,
                           checklist: [
-                              ...s.checklist,
+                              ...(s.checklist || []),
                               { id: `ci-${Date.now()}`, text, isCompleted: false },
                           ],
                       }
@@ -140,7 +141,7 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
         set((state) => ({
             sessions: state.sessions.map((s) =>
                 s.id === sessionId
-                    ? { ...s, checklist: s.checklist.filter((item) => item.id !== itemId) }
+                    ? { ...s, checklist: (s.checklist || []).filter((item) => item.id !== itemId) }
                     : s
             ),
         })),
@@ -151,7 +152,7 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
                 s.id === sessionId
                     ? {
                           ...s,
-                          checklist: s.checklist.map((item) =>
+                          checklist: (s.checklist || []).map((item) =>
                               item.id === itemId ? { ...item, text } : item
                           ),
                       }
@@ -172,7 +173,7 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
         set((state) => ({
             sessions: state.sessions.map((s) =>
                 s.id === sessionId
-                    ? { ...s, sessionEntityIds: s.sessionEntityIds.filter((id) => id !== entityId) }
+                    ? { ...s, sessionEntityIds: (s.sessionEntityIds || []).filter((id) => id !== entityId) }
                     : s
             ),
         })),

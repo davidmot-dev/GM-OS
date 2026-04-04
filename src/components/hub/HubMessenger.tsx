@@ -28,9 +28,13 @@ export const HubMessenger: React.FC<HubMessengerProps> = ({ isOpen, onClose, cha
             { id: 'all', name: 'Tous les Joueurs', portrait: '', type: 'all' }
         ];
 
+        if (!activeCampaignId) return others;
+
         players.forEach(p => {
             p.characters.forEach(c => {
-                if (c.id !== characterId && c.campaignId === activeCampaignId) {
+                // Ensure strict string comparison for campaign alignment
+                const isSameCampaign = c.campaignId && String(c.campaignId) === String(activeCampaignId);
+                if (c.id !== characterId && isSameCampaign) {
                     others.push({ id: c.id, name: c.name, portrait: c.portraitUrl, type: 'pc' });
                 }
             });

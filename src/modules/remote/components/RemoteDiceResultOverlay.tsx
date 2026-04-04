@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Dices, Trophy } from 'lucide-react';
 import { type RollRecord } from '../hooks/useRemoteSync';
+import { type DieResult } from '../../dice/DiceEngine';
 
 interface RemoteDiceResultOverlayProps {
     result: RollRecord | null;
@@ -9,94 +9,95 @@ interface RemoteDiceResultOverlayProps {
 }
 
 const RemoteDiceResultOverlay: React.FC<RemoteDiceResultOverlayProps> = ({ result, onClose }) => {
+    // Standard timer for 15s
+    React.useEffect(() => {
+        if (result) {
+            const timer = setTimeout(onClose, 15000);
+            return () => clearTimeout(timer);
+        }
+    }, [result, onClose]);
+
     return (
         <AnimatePresence>
             {result && (
                 <motion.div
-                    initial={{ y: -100, opacity: 0, scale: 0.95 }}
-                    animate={{ y: 0, opacity: 1, scale: 1 }}
-                    exit={{ y: -50, opacity: 0, scale: 0.9 }}
-                    transition={{ type: "spring", damping: 20, stiffness: 300 }}
-                    className="fixed top-4 left-4 right-4 z-[200] pointer-events-none"
-                    style={{ maxWidth: '600px', margin: '0 auto' }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md cursor-pointer"
+                    onClick={onClose}
                 >
-                    <div 
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onClose();
-                        }}
-                        className="pointer-events-auto premium-glass rounded-3xl border border-white/10 shadow-2xl overflow-hidden active:scale-95 transition-transform cursor-pointer group relative"
+                    <motion.div
+                        initial={{ scale: 0.8, opacity: 0, y: 20 }}
+                        animate={{ scale: 1, opacity: 1, y: 0 }}
+                        exit={{ scale: 0.9, opacity: 0, y: -20 }}
+                        onClick={(e) => e.stopPropagation()}
+                        className="relative w-full max-w-lg premium-glass rounded-[40px] border border-white/10 shadow-3xl overflow-hidden p-8 flex flex-col items-center gap-6"
                     >
-                        {/* Auto-dismiss progress indicator */}
+                        {/* Progress bar for auto-dismiss */}
                         <motion.div 
                             initial={{ width: '100%' }}
                             animate={{ width: '0%' }}
                             transition={{ duration: 15, ease: "linear" }}
-                            className="absolute bottom-0 left-0 h-1 bg-accent/40"
+                            className="absolute bottom-0 left-0 h-1.5 bg-accent/60 shadow-glow-accent/40"
                         />
 
-                        <div className="p-4 flex items-center gap-4">
-                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-glow-sm ${
-                                (result.successes && result.successes > 0) || result.tagSuccess
-                                    ? 'bg-emerald-500/20 text-emerald-500 border border-emerald-500/20' 
-                                    : 'bg-accent/20 text-accent border border-accent/20'
-                            }`}>
-                                {((result.successes && result.successes > 0) || result.tagSuccess) ? <Trophy size={24} /> : <Dices size={24} />}
-                            </div>
-
-                            <div className="flex-1 min-w-0">
-                                <span className="text-[10px] font-black uppercase text-slate-500 tracking-widest block mb-0.5">
-                                    {result.title || 'Jet de dés'}
-                                </span>
-                                <div className="flex items-baseline gap-2">
-                                    <h2 className="text-2xl font-black text-white truncate leading-none">
-                                        {result.totalDisplay || result.total}
-                                    </h2>
-                                    {result.successes !== undefined && (
-                                        <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-                                            <span className="text-[10px] font-black text-emerald-500 uppercase">
-                                                {result.successes} Succès
-                                            </span>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-
-                            <div className="flex flex-col items-end gap-1">
-                                <div className="p-2 rounded-full bg-white/5 text-slate-500 group-hover:text-white transition-colors">
-                                    <X size={16} />
-                                </div>
-                                <span className="text-[8px] font-black text-slate-600 uppercase tracking-tighter">Fermer</span>
-                            </div>
+                        <div className="text-center space-y-1">
+                            <span className="text-xs font-black uppercase tracking-[0.3em] text-accent/80 drop-shadow-sm">
+                                {result.title || 'DÉTAIL DU JET'}
+                            </span>
                         </div>
 
-                        {/* Individual rolls detail */}
-                        {result.rolls && result.rolls.length > 0 && (
-                            <div className="px-4 pb-4 flex flex-wrap gap-2 max-h-32 overflow-y-auto custom-scrollbar border-t border-white/5 pt-3 mt-1">
-                                {result.rolls.map((roll, idx) => (
-                                    <div 
-                                        key={idx}
-                                        className={`px-2.5 py-1 rounded-xl text-xs font-black border transition-all ${
-                                            roll.isCritMax 
-                                                ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-500 shadow-glow-emerald/10' 
-                                                : roll.isCritMin 
-                                                    ? 'bg-rose-500/10 border-rose-500/50 text-rose-500 shadow-glow-rose/10'
-                                                    : roll.isExploded
-                                                        ? 'bg-amber-500/10 border-amber-500/50 text-amber-500'
-                                                        : 'bg-white/5 border-white/10 text-slate-300'
-                                        }`}
-                                    >
-                                        {roll.displayStr || roll.val}
-                                    </div>
-                                ))}
-                                {result.modifier !== 0 && (
-                                    <div className="px-2.5 py-1 rounded-xl text-xs font-black bg-accent/10 border border-accent/20 text-accent">
-                                        Mod: {result.modifier > 0 ? '+' : ''}{result.modifier}
-                                    </div>
-                                )}
-                            </div>
+                        <div className="relative group">
+                            <div className="absolute inset-0 bg-white/5 rounded-full blur-3xl group-hover:bg-white/10 transition-all duration-500" />
+                            <h2 className="relative text-7xl md:text-9xl font-black text-white tracking-tighter drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]">
+                                {result.totalDisplay || result.total}
+                            </h2>
+                        </div>
+
+                        <div className="flex flex-wrap gap-3 justify-center max-w-full">
+                            {(result.rolls as DieResult[]).map((r, i) => (
+                                <div 
+                                    key={i} 
+                                    className={`size-12 md:size-14 flex items-center justify-center rounded-xl md:rounded-2xl text-xl md:text-2xl border transition-all ${
+                                        r.cssClass ? r.cssClass : 
+                                        r.isCritMax ? '!bg-emerald-500 border-emerald-500 !text-white shadow-glow-emerald/40' :
+                                        r.isCritMin ? '!bg-rose-500 border-rose-500 !text-white shadow-glow-rose/40' :
+                                        r.isExploded ? '!bg-amber-500/20 border-amber-500/50 text-amber-500 shadow-glow-amber/20' :
+                                        'bg-app-bg/40 border-app-border/20 text-app-text/40'
+                                    }`}
+                                >
+                                    {r.displayStr || r.val}
+                                </div>
+                            ))}
+                            {result.modifier !== 0 && (
+                                <div className="size-12 md:size-14 flex items-center justify-center rounded-xl md:rounded-2xl text-lg md:text-xl border border-accent/20 bg-accent/5 text-accent font-black">
+                                    {result.modifier > 0 ? '+' : ''}{result.modifier}
+                                </div>
+                            )}
+                        </div>
+
+                        {(result.successes !== undefined || result.tagSuccess !== undefined) && (
+                            <motion.div 
+                                initial={{ y: 10, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                transition={{ delay: 0.3 }}
+                                className={`mt-2 px-10 py-3 rounded-full border-2 text-xl font-black uppercase tracking-[0.25em] backdrop-blur-md shadow-2xl transition-all ${
+                                    (result.tagSuccess || (result.successes && result.successes > 0))
+                                        ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/50 shadow-glow-emerald/30' 
+                                        : 'bg-rose-500/10 text-rose-400 border-rose-500/50 shadow-glow-rose/30'
+                                }`}
+                            >
+                                {(result.tagSuccess || (result.successes && result.successes > 0)) ? 'Succès' : 'Échec'}
+                            </motion.div>
                         )}
-                    </div>
+
+                        <div className="mt-2 text-[10px] font-black text-white/20 uppercase tracking-widest flex items-center gap-2">
+                            <span className="w-4 h-px bg-white/10" />
+                            CLIQUER POUR FERMER
+                            <span className="w-4 h-px bg-white/10" />
+                        </div>
+                    </motion.div>
                 </motion.div>
             )}
         </AnimatePresence>

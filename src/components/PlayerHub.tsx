@@ -41,7 +41,7 @@ const PlayerHub: React.FC = () => {
             if (diceTimerRef.current) clearTimeout(diceTimerRef.current);
             diceTimerRef.current = setTimeout(() => {
                 setShowDice(false);
-            }, 5000);
+            }, 15000); // 15 seconds visibility instead of 5
 
             return () => clearTimeout(timerShow);
         } else if (!isDiceProjected) {
@@ -339,43 +339,20 @@ const PlayerHub: React.FC = () => {
                                 </div>
 
                                 <div className="flex flex-wrap gap-4 justify-center mt-4">
-                                    {(lastRoll.rolls as DieResult[]).map((r, i) => {
-                                        const cls = r.cssClass || '';
-                                        const isYZEBase = cls.includes('amber');
-                                        const isYZERose = cls.includes('rose');
-                                        const isYZEEmerald = cls.includes('emerald');
-                                        const isSuccess = cls.includes('!bg-') || r.isCritMax;
-                                        const isCritMin = r.isCritMin;
-                                        const isExploded = r.isExploded;
-                                        
-                                        let diceStyle = 'bg-app-bg/40 border-app-border/20 text-app-text/40';
-
-                                        if (isSuccess) {
-                                            // Priority 1: YZE Solid Colors
-                                            if (isYZEBase) diceStyle = 'bg-amber-500 border-amber-500 text-amber-950 shadow-glow-amber scale-110 z-10 font-black';
-                                            else if (isYZERose) diceStyle = 'bg-rose-500 border-rose-500 text-white shadow-glow-rose scale-110 z-10 font-black';
-                                            else if (isYZEEmerald) diceStyle = 'bg-emerald-500 border-emerald-500 text-emerald-950 shadow-glow-emerald scale-110 z-10 font-black';
-                                            // Priority 2: Generic Success (Emerald Border)
-                                            else diceStyle = 'bg-emerald-500/10 border-emerald-500 text-emerald-400 shadow-glow-emerald/40 scale-105 font-black border-2';
-                                        } else if (isCritMin) {
-                                            // Priority 3: Fails / Banes (Rose Border)
-                                            diceStyle = 'bg-rose-500/10 border-rose-500 text-rose-500 shadow-glow-rose/40 scale-105 font-black border-2';
-                                        } else if (isExploded) {
-                                            // Priority 4: Exploded Dice (Violet Border)
-                                            diceStyle = 'bg-violet-500/10 border-violet-500 text-violet-400 shadow-glow-violet/40 scale-105 font-black border-2';
-                                        } else {
-                                            // Normal dice - subtle
-                                            if (isYZEBase) diceStyle = 'bg-transparent border-amber-500/20 text-amber-500/80';
-                                            else if (isYZERose) diceStyle = 'bg-transparent border-rose-500/20 text-rose-500/80';
-                                            else if (isYZEEmerald) diceStyle = 'bg-transparent border-emerald-500/20 text-emerald-500/80';
-                                        }
-
-                                        return (
-                                            <div key={i} className={`size-16 flex items-center justify-center rounded-2xl text-2xl border transition-all ${diceStyle}`}>
-                                                {r.displayStr || r.val}
-                                            </div>
-                                        );
-                                    })}
+                                    {(lastRoll.rolls as DieResult[]).map((r, i) => (
+                                        <div 
+                                            key={i} 
+                                            className={`size-16 flex items-center justify-center rounded-2xl text-2xl border transition-all ${
+                                                r.cssClass ? r.cssClass : 
+                                                r.isCritMax ? '!bg-emerald-500 border-emerald-500 !text-white shadow-glow-emerald/40' :
+                                                r.isCritMin ? '!bg-rose-500 border-rose-500 !text-white shadow-glow-rose/40' :
+                                                r.isExploded ? '!bg-amber-500/20 border-amber-500/50 text-amber-500 shadow-glow-amber/20' :
+                                                'bg-app-bg/40 border-app-border/20 text-app-text/40'
+                                            }`}
+                                        >
+                                            {r.displayStr || r.val}
+                                        </div>
+                                    ))}
                                 </div>
                                 
                                 {lastRoll.tagSuccess !== undefined && (

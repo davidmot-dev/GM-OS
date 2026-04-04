@@ -14,17 +14,21 @@ import type { Player, PlayerCharacter, SessionMessage } from '../store/types';
 import { format } from 'date-fns';
 
 export const CockpitMessenger: React.FC = () => {
-    const { messages, players, sendDirectMessage, saveMessageToJournal } = useSessionOSStore();
+    const { messages, players, sendDirectMessage, saveMessageToJournal, activeCampaignId } = useSessionOSStore();
     const [selectedFilter, setSelectedFilter] = useState<'all' | string>('all');
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [messageInput, setMessageInput] = useState('');
 
     // Get characters from online players AND characters who have sent messages
     const activeCharacters = useMemo(() => {
-        // 1. Get characters from online players
+        // 1. Get characters from online players (filtered by active campaign)
         const onlineChars = players
             .filter((p: Player) => p.isOnline)
-            .flatMap((p: Player) => p.characters.map((c: PlayerCharacter) => ({ id: c.id, name: c.name })));
+            .flatMap((p: Player) => 
+                (p.characters || [])
+                    .filter((c: PlayerCharacter) => c.campaignId === activeCampaignId)
+                    .map((c: PlayerCharacter) => ({ id: c.id, name: c.name }))
+            );
 
         // 2. Get characters from message history (in case they went offline)
         const historyChars = messages
@@ -39,7 +43,7 @@ export const CockpitMessenger: React.FC = () => {
         return Array.from(uniqueMap.entries())
             .map(([id, name]) => ({ id, name }))
             .sort((a, b) => a.name.localeCompare(b.name));
-    }, [messages, players]);
+    }, [messages, players, activeCampaignId]);
 
     const filteredMessages = selectedFilter === 'all' 
         ? messages 
@@ -88,7 +92,6 @@ export const CockpitMessenger: React.FC = () => {
                         </span>
                         <ChevronDown size={10} className={`transition-transform ${isFilterOpen ? 'rotate-180' : ''}`} />
                     </button>
-
                     {isFilterOpen && (
                         <div className="absolute right-0 top-full mt-1 w-32 bg-app-surface border border-app-border shadow-2xl rounded-lg z-50 overflow-hidden py-1">
                             <button 

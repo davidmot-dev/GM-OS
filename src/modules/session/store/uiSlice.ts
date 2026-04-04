@@ -166,9 +166,13 @@ export const createUiSlice: StateCreator<UiSlice, [], [], UiSlice> = (set, get) 
         })),
 
     addSessionMessage: (message) =>
-        set((state) => ({
-            messages: [...state.messages, message].slice(-100), // Garder les 100 derniers
-        })),
+        set((state) => {
+            // Éviter les doublons (fréquant en cas de sync multi-canaux)
+            if (state.messages.some(m => m.id === message.id)) return state;
+            return {
+                messages: [...state.messages, message].slice(-100), // Garder les 100 derniers
+            };
+        }),
 
     remoteSendMessage: (toId, toName, fromId, fromName, content) => {
         const msg: import('./types').SessionMessage = {

@@ -94,9 +94,18 @@
 ## 🧱 Architecture : Isolation Logicielle & Data Leakage
 
 ### Filtrage des Données par Campagne
-**Problème :** Des indices d'une autre campagne apparaissaient dans le Cockpit.
-**Solution :** Filtrage systématique par `activeCampaignId` dans tous les sélecteurs.
-**Apprentissage :** "Filtrage par défaut" (Scope-by-Active) est plus sûr que "Filtrer au besoin".
+**Problème :** Des indices ou personnages d'une autre campagne apparaissaient dans le Cockpit ou le Hub.
+**Solution :** Filtrage systématique par `activeCampaignId` dans tous les sélecteurs. Attention particulère à la comparaison d'IDs (`String(a) === String(b)`) pour éviter les faux-négatifs dus au typage mixte (string vs number).
+**Apprentissage :** "Filtrage par défaut" (Scope-by-Active) est plus sûr que "Filtrer au besoin". La conversion explicite en String dans les `useMemo` garantit une réactivité fiable même après une restauration de base de données.
+
+---
+
+## 🎨 UI/UX : Overlays Immersifs (Theater Mode)
+
+### Gestion des Priorités Visuelles
+**Problème :** Les résultats de dés étaient difficiles à lire sur mobile car noyés dans l'interface standard.
+**Solution :** Implémentation du "Theater Mode" utilisant un overlay plein écran (`fixed inset-0`) avec un `z-index` très élevé (`z-[100]`) et un flou prononcé sur le reste de l'application.
+**Apprentissage :** Pour les événements de haute importance (dés, notifications critiques), un changement radical de contexte visuel (Theater Mode) est plus efficace qu'un simple widget flottant. L'utilisation de `AnimatePresence` de Framer Motion est indispensable pour gérer les transitions d'entrée/sortie fluides sans "flash" visuel.
 
 ---
 

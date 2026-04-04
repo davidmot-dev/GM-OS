@@ -53,13 +53,13 @@ const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
                 <p className="text-app-text/40 text-[10px] font-bold uppercase tracking-[0.2em]">Prép. Session</p>
                 <div className="flex items-center gap-1.5">
                     <span className="text-[10px] font-mono text-accent">
-                        {session.checklist.filter(i => i.isCompleted).length}/{session.checklist.length}
+                        {(session.checklist || []).filter(i => i.isCompleted).length}/{(session.checklist || []).length}
                     </span>
                 </div>
             </div>
 
             <div className="flex flex-col gap-1 max-h-[300px] overflow-y-auto px-1 custom-scrollbar">
-                {session.checklist.length === 0 ? (
+                {(!session.checklist || session.checklist.length === 0) ? (
                     <p className="text-[10px] text-app-text/50 italic text-center py-4">Aucune tâche prévue...</p>
                 ) : (
                     session.checklist.map(item => (

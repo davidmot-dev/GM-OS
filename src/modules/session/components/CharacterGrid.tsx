@@ -72,7 +72,9 @@ const CharacterGrid: React.FC = () => {
                     </div>
                 ) : (
                     <div className="grid grid-cols-2 gap-6">
-                        {selectedPlayer.characters.map(character => (
+                        {selectedPlayer.characters
+                            .filter(c => !activeCampaignId || c.campaignId === activeCampaignId)
+                            .map(character => (
                             <CharacterCard
                                 key={character.id}
                                 character={character}

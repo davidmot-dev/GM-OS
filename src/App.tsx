@@ -140,6 +140,27 @@ function App() {
   }, [isMainPC]);
   */
 
+  // --- MESSAGING BRIDGE (GM SIDE) ---
+  // If the GM-OS Main window triggers a message (via remoteSendMessage), 
+  // we catch the CustomEvent and broadcast it to all connected hubs/tablets.
+  useEffect(() => {
+    if (!isMainPC) return;
+
+    const handleSendMessage = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      if (window.appBridge?.remote?.broadcastUIAction) {
+        console.log('[App] Broadcasting GM message to Bridge:', customEvent.detail.id);
+        window.appBridge.remote.broadcastUIAction({
+          type: 'session:receive-message',
+          payload: customEvent.detail
+        });
+      }
+    };
+
+    window.addEventListener('session:send-message', handleSendMessage);
+    return () => window.removeEventListener('session:send-message', handleSendMessage);
+  }, [isMainPC]);
+
   const syncFast = useCallback((segmentName: string) => {
     try {
       const payload: Record<string, any> = {};
@@ -555,6 +576,11 @@ function App() {
     if (type === 'session:update-character-narrative' || type === 'remote:session:update-character-narrative') {
       const { playerId, characterId, updates } = payload as { playerId: string; characterId: string; updates: any };
       useSessionOSStore.getState().updateCharacterNarrative(playerId, characterId, updates);
+    }
+
+    if (type === 'session:send-message') {
+      console.log('[App] Receiving player message from remote:', payload.id);
+      useSessionOSStore.getState().addSessionMessage(payload as import('./modules/session/store/types').SessionMessage);
     }
 
     if (type === 'storyboard:trigger' || type === 'remote:story:trigger') {

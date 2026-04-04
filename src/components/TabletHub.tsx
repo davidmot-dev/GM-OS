@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
     Monitor, 
     Archive, 
@@ -369,9 +370,18 @@ const TabletHub: React.FC = () => {
             <HubItemViewer item={selectedItem} onClose={() => setSelectedItem(null)} />
 
             {/* Dice Animation Overlay */}
-            <div className={`fixed inset-0 z-[100] flex items-center justify-center p-12 pointer-events-none transition-all duration-1000 ${showDice ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
-                {showDice && <DiceResultDisplay />}
-            </div>
+            <AnimatePresence>
+                {showDice && (
+                    <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[100] flex items-center justify-center p-12 bg-app-surface/40 backdrop-blur-md"
+                    >
+                        <DiceResultDisplay />
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };
@@ -382,17 +392,72 @@ const DiceResultDisplay: React.FC = () => {
     if (!lastRoll) return null;
 
     return (
-        <div className="bg-app-surface/90 backdrop-blur-3xl border-2 border-accent/30 rounded-[3rem] p-12 shadow-glow-accent flex flex-col items-center gap-8 max-w-2xl w-full animate-in zoom-in">
-            <h2 className="text-app-text/80 text-xl font-black tracking-tight uppercase">{lastRoll.title}</h2>
-            <div className="text-6xl md:text-8xl font-black text-app-text drop-shadow-[0_0_40px_var(--app-accent)]">{lastRoll.totalDisplay}</div>
-            <div className="flex flex-wrap gap-4 justify-center">
+        <motion.div 
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            className="relative bg-app-surface/95 backdrop-blur-[40px] border-2 border-accent/40 rounded-[3rem] p-8 md:p-12 shadow-[0_0_80px_rgba(var(--accent-rgb),0.3)] flex flex-col items-center gap-6 max-w-2xl w-full"
+        >
+            {/* Background Decorative Glow */}
+            <div className="absolute inset-0 bg-accent/5 rounded-[4rem] pointer-events-none" />
+            
+            <div className="relative flex flex-col items-center gap-3 text-center">
+                <div className="flex items-center gap-4">
+                    <div className="h-[2px] w-12 bg-gradient-to-r from-transparent to-accent/60" />
+                    <span className="text-accent text-[10px] font-black uppercase tracking-[0.8em] py-1 px-4 border border-accent/20 rounded-full">
+                        Séquence du Destin
+                    </span>
+                    <div className="h-[2px] w-12 bg-gradient-to-l from-transparent to-accent/60" />
+                </div>
+                <h2 className="text-app-text font-black text-xl md:text-2xl tracking-tight uppercase drop-shadow-2xl opacity-80 mt-1">
+                    {lastRoll.title}
+                </h2>
+            </div>
+
+            {/* Total Result */}
+            <div className="relative">
+                <div className="absolute inset-0 bg-accentBlur blur-[60px] opacity-20 animate-pulse" />
+                <div className="relative text-7xl md:text-8xl leading-none font-black text-app-text drop-shadow-[0_0_40px_rgba(var(--accent-rgb),0.5)] text-center tracking-tighter">
+                    {lastRoll.totalDisplay}
+                </div>
+            </div>
+
+            {/* Individual Dice */}
+            <div className="flex flex-wrap gap-5 justify-center mt-6">
                 {(lastRoll.rolls as DieResult[]).map((r, i) => (
-                    <div key={i} className={`size-14 md:size-16 flex items-center justify-center rounded-2xl text-2xl border bg-app-surface/40 border-app-border/40`}>
+                    <motion.div 
+                        key={i}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.05 }}
+                        className={`size-14 md:size-16 flex items-center justify-center rounded-xl text-xl md:text-2xl font-black border-2 transition-all shadow-lg ${
+                            r.cssClass ? r.cssClass : 
+                            r.isCritMax ? 'bg-emerald-500 border-emerald-400 text-white shadow-glow-emerald/50' :
+                            r.isCritMin ? 'bg-rose-600 border-rose-500 text-white shadow-glow-rose/50' :
+                            r.isExploded ? 'bg-amber-500/20 border-amber-400 text-amber-400 shadow-glow-amber/30' :
+                            'bg-app-surface/40 border-app-border/30 text-app-text/40'
+                        }`}
+                    >
                         {r.displayStr || r.val}
-                    </div>
+                    </motion.div>
                 ))}
             </div>
-        </div>
+
+            {/* Final Tag */}
+            {lastRoll.tagSuccess !== undefined && (
+                <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                    className={`mt-4 px-10 py-3 rounded-2xl border-2 text-lg md:text-xl font-black uppercase tracking-[0.3em] backdrop-blur-2xl shadow-xl transition-all ${
+                        lastRoll.tagSuccess 
+                            ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/60 shadow-glow-emerald/40' 
+                            : 'bg-rose-500/20 text-rose-400 border-rose-500/60 shadow-glow-rose/40'
+                    }`}
+                >
+                    {lastRoll.tagSuccess ? 'Réussite' : 'Échec'}
+                </motion.div>
+            )}
+        </motion.div>
     );
 };
 

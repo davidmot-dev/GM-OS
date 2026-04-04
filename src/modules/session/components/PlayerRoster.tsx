@@ -6,7 +6,7 @@ import type { Player } from '../useSessionOSStore';
 import { Search, UserPlus, Trash2 } from 'lucide-react';
 
 const PlayerRoster: React.FC = () => {
-    const { players, selectedPlayerId, setSelectedPlayer, togglePlayerOnline } = useSessionOSStore();
+    const { players, selectedPlayerId, setSelectedPlayer, togglePlayerOnline, activeCampaignId } = useSessionOSStore();
     const [searchQuery, setSearchQuery] = useState('');
 
     const filtered = players.filter(p =>
@@ -40,6 +40,7 @@ const PlayerRoster: React.FC = () => {
                         key={player.id}
                         player={player}
                         isSelected={selectedPlayerId === player.id}
+                        activeCampaignId={activeCampaignId}
                         onClick={() => setSelectedPlayer(player.id)}
                         onToggleOnline={(e) => {
                             e.stopPropagation();
@@ -75,10 +76,11 @@ const PlayerRoster: React.FC = () => {
 const PlayerCard: React.FC<{ 
     player: Player; 
     isSelected: boolean; 
+    activeCampaignId: string | null;
     onClick: () => void;
     onToggleOnline: (e: React.MouseEvent) => void;
     onDelete: (e: React.MouseEvent) => void;
-}> = ({ player, isSelected, onClick, onToggleOnline, onDelete }) => {
+}> = ({ player, isSelected, activeCampaignId, onClick, onToggleOnline, onDelete }) => {
     const resolvedAvatar = useMediaUrl(player.avatarUrl);
     return (
         <div
@@ -101,7 +103,7 @@ const PlayerCard: React.FC<{
                     {player.realName}
                 </p>
                 <p className="text-xs text-app-text/40 truncate">
-                    {player.characters.length} personnage{player.characters.length > 1 ? 's' : ''}
+                    {player.characters.filter(c => c.campaignId === activeCampaignId).length} personnage{player.characters.filter(c => c.campaignId === activeCampaignId).length > 1 ? 's' : ''}
                 </p>
             </div>
             <div className="flex flex-col gap-1 items-end">

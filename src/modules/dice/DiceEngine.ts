@@ -100,15 +100,27 @@ export class DiceEngine {
 
         for (let i = 0; i < count; i++) {
             let val;
+            let isFirst = true;
             do {
                 val = this.roll(faces);
+                const isCritMax = val === faces;
+                const isCritMin = val === 1;
+                const isExploded = !isFirst;
+                
+                let cssClass = '';
+                if (isCritMax) cssClass = '!bg-emerald-500 border-emerald-500 !text-white shadow-glow-emerald/40 animate-pulse';
+                else if (isCritMin) cssClass = '!bg-rose-500 border-rose-500 !text-white shadow-glow-rose/40';
+                else if (isExploded) cssClass = '!bg-amber-500/20 border-amber-500/50 text-amber-500 shadow-glow-amber/20';
+
                 rolls.push({
                     val,
-                    isCritMax: val === faces,
-                    isCritMin: val === 1,
-                    isExploded: rolls.length >= count // Identify extra dice as exploded
+                    isCritMax,
+                    isCritMin,
+                    isExploded,
+                    cssClass
                 });
                 total += val;
+                isFirst = false;
             } while (exploding && val === faces);
         }
 
@@ -152,20 +164,30 @@ export class DiceEngine {
         for (let i = 0; i < count; i++) {
             const val = this.roll(faces);
             const isCritFail = val === 1;
+            const isCritMax = val >= target;
             if (isCritFail) ones++;
-            if (val >= target) successes++;
+            if (isCritMax) successes++;
 
-            rolls.push({ val, isCritMax: val >= target, isCritMin: isCritFail, isExploded: false });
+            let cssClass = '';
+            if (isCritMax) cssClass = '!bg-emerald-500 border-emerald-500 !text-white shadow-glow-emerald/40';
+            else if (isCritFail) cssClass = '!bg-rose-500 border-rose-500 !text-white shadow-glow-rose/40';
+
+            rolls.push({ val, isCritMax, isCritMin: isCritFail, isExploded: false, cssClass });
 
             if (exploding && val === faces) {
                 let keepExploding = true;
                 while (keepExploding) {
                     const extraVal = this.roll(faces);
                     const isExtraFail = extraVal === 1;
+                    const isExtraMax = extraVal >= target;
                     if (isExtraFail) ones++;
-                    if (extraVal >= target) successes++;
+                    if (isExtraMax) successes++;
 
-                    rolls.push({ val: extraVal, isCritMax: extraVal >= target, isCritMin: isExtraFail, isExploded: true });
+                    let xCssClass = '!bg-amber-500/20 border-amber-500/50 text-amber-500 shadow-glow-amber/20';
+                    if (isExtraMax) xCssClass = '!bg-emerald-500 border-emerald-500 !text-white shadow-glow-emerald/60 animate-pulse';
+                    else if (isExtraFail) xCssClass = '!bg-rose-500 border-rose-500 !text-white shadow-glow-rose/60';
+
+                    rolls.push({ val: extraVal, isCritMax: isExtraMax, isCritMin: isExtraFail, isExploded: true, cssClass: xCssClass });
                     if (extraVal !== faces) keepExploding = false;
                 }
             }

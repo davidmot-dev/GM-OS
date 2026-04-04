@@ -135,6 +135,7 @@
   --background: 240 10% 3.9%;
   --foreground: 0 0% 98%;
   --app-accent: #3b82f6; 
+  --app-accent-rgb: 59, 130, 246;
   --app-bg: #020617;
   --app-surface: #0f172a;
   --app-border: #1e293b;
@@ -146,6 +147,7 @@
 
 :root[data-theme='cyberpunk'] {
   --app-accent: #22d3ee;
+  --app-accent-rgb: 34, 211, 238;
   --app-bg: #020617;
   --app-surface: #0f172a;
   --app-border: #1e293b;
@@ -157,6 +159,7 @@
 
 :root[data-theme='medieval'] {
   --app-accent: #d97706; /* Amber 600 */
+  --app-accent-rgb: 217, 119, 6;
   --app-bg: #1c1917;     /* Stone 950/900 */
   --app-surface: #292524; /* Stone 800 */
   --app-border: #44403c;  /* Stone 700 */
@@ -168,6 +171,7 @@
 
 :root[data-theme='modern'] {
   --app-accent: #22d3ee;
+  --app-accent-rgb: 34, 211, 238;
   --app-bg: #020617;
   --app-surface: #0f172a;
   --app-border: #1e293b;
