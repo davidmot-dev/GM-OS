@@ -3,6 +3,7 @@ import { useMapStore } from '../useMapStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import MapTokenNode from './MapTokenNode';
 import MapPingLayer from './MapPingLayer';
+import { AmbianceLayer } from './AmbianceLayer';
 import WeatherLayer from './WeatherLayer';
 import MagicLayer from './MagicLayer';
 import DangerZoneLayer from './DangerZoneLayer';
@@ -13,6 +14,7 @@ interface PlayerMapCanvasProps {
 }
 
 const PlayerMapCanvas: React.FC<PlayerMapCanvasProps> = ({ onMapClick }) => {
+    const mapStore = useMapStore();
     const { 
         projectedMapUrl, projectedIsVideo, projectedFogDataUrl,
         projectedMapWidth, projectedMapHeight,
@@ -20,7 +22,7 @@ const PlayerMapCanvas: React.FC<PlayerMapCanvasProps> = ({ onMapClick }) => {
         projectedTokens,
         projectedIsMapMuted, projectedMapVolume, mapOutputDeviceId,
         viewResetCounter
-    } = useMapStore();
+    } = mapStore;
 
     // Use projected state for the hub
     const mapUrl = projectedMapUrl;
@@ -270,8 +272,11 @@ const PlayerMapCanvas: React.FC<PlayerMapCanvasProps> = ({ onMapClick }) => {
                 {/* 6. Pings Layer (Above Fog so they remain visible) */}
                 <MapPingLayer isProjectedView={true} />
 
-                {/* 7. Weather Layer */}
-                <WeatherLayer isProjectedView={true} />
+                {mapStore.projectedWeatherType !== 'none' && mapStore.layerVisibility.weather && (
+                    <WeatherLayer isProjectedView={true} />
+                )}
+                
+                {mapStore.layerVisibility.ambiance && <AmbianceLayer isProjectedView={true} />}
             </div>
             
             {/* Vignette effect */}

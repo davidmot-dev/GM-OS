@@ -1,7 +1,7 @@
 import React from 'react';
 import { useMapStore } from '../useMapStore';
 import { useMapUIStore } from '../useMapUIStore';
-import type { MapTool, FogMode, WeatherType } from '../types';
+import type { MapTool, FogMode, WeatherType, TimeOfDay } from '../types';
 import { useCombatStore } from '../../combat/useCombatStore';
 import { gmConfirm, gmCustom } from '../../../stores/useModalStore';
 import {
@@ -9,7 +9,7 @@ import {
     Cast, Maximize, Users, MousePointer2, PlusCircle, Trash2, MapPin, FolderOpen,
     SkipBack, SkipForward, Swords, CloudRain, CloudSnow, Cloud, Sparkles, Triangle,
     ShieldAlert, Zap, GripHorizontal, Settings2, Volume2, VolumeX, ChevronDown, Check,
-    Link, Mountain
+    Link, Mountain, Sunrise, Sun, Cloudy, Sunset, Moon
 } from 'lucide-react';
 
 
@@ -80,6 +80,7 @@ const MapControls: React.FC = () => {
         gridOpacity, setGridOpacity,
         weatherType, setWeather,
         weatherIntensity,
+        timeOfDay, setTimeOfDay,
         projectionTarget, clearProjectedState,
         magicEffects, clearMagicEffects, removeMagicEffect,
         dangerZones, removeDangerZone, clearDangerZones,
@@ -622,6 +623,40 @@ const MapControls: React.FC = () => {
                             />
                         </div>
                     )}
+                </section>
+
+                <hr className="border-gray-800" />
+
+                {/* Time of Day Section */}
+                <section>
+                    <h3 className="text-xs text-slate-400 uppercase tracking-wider mb-3 font-bold px-1">Moment de la Journée</h3>
+                    <div className="flex gap-1.5 mb-2">
+                        {[
+                            { id: 'dawn', icon: Sunrise, label: 'Aube', color: 'text-orange-400' },
+                            { id: 'day', icon: Sun, label: 'Jour', color: 'text-yellow-400' },
+                            { id: 'overcast', icon: Cloudy, label: 'Gris', color: 'text-slate-400' },
+                            { id: 'dusk', icon: Sunset, label: 'Crép.', color: 'text-purple-400' },
+                            { id: 'night', icon: Moon, label: 'Nuit', color: 'text-indigo-400' },
+                        ].map((t) => {
+                            const isActive = timeOfDay === t.id;
+                            const Icon = t.icon;
+                            return (
+                                <button
+                                    key={t.id}
+                                    onClick={() => setTimeOfDay(t.id as TimeOfDay)}
+                                    className={`flex-1 flex flex-col items-center justify-center p-2 rounded border transition-all ${
+                                        isActive 
+                                        ? 'bg-accent/20 border-accent shadow-glow-accent/20 text-accent' 
+                                        : 'bg-app-bg border-app-border text-slate-500 hover:bg-app-surface'
+                                    }`}
+                                    title={t.label}
+                                >
+                                    <Icon size={18} className={isActive ? 'text-accent' : t.color} />
+                                    <span className="text-[8px] mt-1 font-bold uppercase truncate w-full text-center">{t.label}</span>
+                                </button>
+                            );
+                        })}
+                    </div>
                 </section>
 
                 <hr className="border-gray-800" />

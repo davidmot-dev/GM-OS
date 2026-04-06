@@ -128,6 +128,26 @@ L'utilisation de bordures "lumineuses" via `mask-composite` (style Bento Box) n�
 
 ---
 
+## 🎨 UI/UX : Défis du Rendu Multi-Calques & Projection (Map-OS)
+
+### Synchronisation des Calques Dynamiques
+
+**Problème :** Certains calques (ex: `AmbianceLayer`) reçoivent des états différents (Master/Projecté). Si le composant ne différencie pas l'origine de l'état, l'écran des joueurs (Hub) n'affiche pas les changements faits par le MJ.
+
+**Solution :** Utilisation d'une prop `isProjectedView` systématique pour les calques d'effet. Le composant commute alors sa souscription Zustand entre l'état local et l'état de projection.
+
+**Apprentissage :** Dans un workflow multi-écrans (GM-OS), les composants de rendu doivent vivre dans deux "modes" distincts. Le passage explicite par prop est plus robuste que la détection automatique de l'environnement (ex: checking window titles).
+
+### Conflits de Blend-Modes (Multiply vs Backdrop-Filter)
+
+**Problème :** L'application de `mix-blend-mode: multiply` sur un conteneur principal (`div`) qui a la propriété `pointer-events: none` peut rendre les filtres (`backdrop-filter`) de ses enfants invisibles dans Chromium si un parent possède une transformation CSS (zoom/pan).
+
+**Solution :** Déplacer le `mix-blend-mode` à l'intérieur du conteneur, directement sur l'élément qui porte la couleur de fond et les filtres. 
+
+**Apprentissage :** Le groupement des propriétés de mélange (blending) et de filtrage sur le même élément évite de créer des contextes d'empilement (stacking contexts) contradictoires.
+
+---
+
 Dernière mise à jour : 6 Avril 2026
 
 Statut : Oracle IA Contextuel, Nexus-OS v2 (Remote Check) et Standards de Synchronisation documentés.

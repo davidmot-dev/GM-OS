@@ -135,6 +135,26 @@ Depuis la v6.1.0-dev, l'interface de **Session-OS** a été entièrement refondu
 
 ---
 
+## 🌅 Moment de la Journée & Ambiance Atlas (Map-OS)
+
+Le MJ peut désormais transformer instantanément l'atmosphère d'une carte via le panneau de contrôle de l'Atlas.
+
+### Utilisation du Sélecteur
+
+Le panneau d'Ambiance propose 5 moments clés :
+
+- **Aube (Dawn)** : Teinte orangée et douce, contraste réduit.
+- **Jour (Day)** : Teinte naturelle, luminosité standard.
+- **Grisâtre (Overcast)** : Teinte froide et désaturée. **Note** : Sélectionner ce mode augmente automatiquement l'intensité de la pluie/neige si elle est active.
+- **Crépuscule (Dusk)** : Teinte pourpre et dorée, ambiance chaleureuse.
+- **Nuit (Night)** : Bleu profond, luminosité réduite à 60%. Optimisé pour être jouable tout en restant immersif.
+
+### Visibilité des Calques
+
+Vous pouvez masquer l'effet d'ambiance à tout moment via le bouton **"Ambiance (Heure)"** dans le gestionnaire de calques, ce qui ramènera la carte à ses couleurs d'origine sans changer le réglage temporel.
+
+---
+
 ## 🔧 Conseils & Dépannage
 
 | Problème | Solution |

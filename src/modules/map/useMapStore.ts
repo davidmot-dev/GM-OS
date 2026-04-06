@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { 
     MapToken, MapPing, MagicEffect, DangerZone, 
-    WeatherType, LayerId, LayerVisibility, FogRegistry, MapPreset, DangerZonePreset 
+    WeatherType, TimeOfDay, LayerId, LayerVisibility, FogRegistry, MapPreset, DangerZonePreset 
 } from './types';
 import { useJournalStore } from '../journal/useJournalStore';
 
@@ -23,6 +23,7 @@ interface MapState {
     // Environment
     weatherType: WeatherType;
     weatherIntensity: number;
+    timeOfDay: TimeOfDay;
 
     // Grid
     isGridEnabled: boolean;
@@ -73,6 +74,7 @@ interface MapState {
     toggleLayer: (layerId: LayerId) => void;
 
     setWeather: (type: WeatherType, intensity?: number) => void;
+    setTimeOfDay: (time: TimeOfDay) => void;
 
     setGridEnabled: (enabled: boolean) => void;
     setGridSize: (size: number) => void;
@@ -100,6 +102,7 @@ interface MapState {
 
     projectedWeatherType: WeatherType;
     projectedWeatherIntensity: number;
+    projectedTimeOfDay: TimeOfDay;
     projectedMapWidth: number;
     projectedMapHeight: number;
     projectedIsGridEnabled: boolean;
@@ -146,7 +149,8 @@ export const useMapStore = create<MapState>()(
                 tokens: true,
                 magic: true,
                 danger: true,
-                weather: true
+                weather: true,
+                ambiance: true
             },
             tokens: [],
             pings: [],
@@ -160,6 +164,7 @@ export const useMapStore = create<MapState>()(
 
             weatherType: 'none',
             weatherIntensity: 0.5,
+            timeOfDay: 'day',
             mapWidth: 0,
             mapHeight: 0,
 
@@ -187,6 +192,7 @@ export const useMapStore = create<MapState>()(
             projectedDangerZones: [],
             projectedWeatherType: 'none',
             projectedWeatherIntensity: 0.5,
+            projectedTimeOfDay: 'day',
             projectedMapWidth: 0,
             projectedMapHeight: 0,
             projectedIsGridEnabled: false,
@@ -308,6 +314,18 @@ export const useMapStore = create<MapState>()(
                 if (get().projectionTarget) get().syncToPlayers();
             },
 
+            setTimeOfDay: (timeOfDay: TimeOfDay) => {
+                const updates: Partial<MapState> = { timeOfDay };
+                
+                // Logic: Overcast increases weather intensity if not already high
+                if (timeOfDay === 'overcast') {
+                    updates.weatherIntensity = Math.max(0.7, get().weatherIntensity);
+                }
+
+                set(updates);
+                if (get().projectionTarget) get().syncToPlayers();
+            },
+
             setGridEnabled: (isGridEnabled: boolean) => {
                 set({ isGridEnabled });
                 if (get().projectionTarget) get().syncToPlayers();
@@ -343,6 +361,7 @@ export const useMapStore = create<MapState>()(
                     projectedMagicEffects: [...state.magicEffects],
                     projectedWeatherType: state.weatherType,
                     projectedWeatherIntensity: state.weatherIntensity,
+                    projectedTimeOfDay: state.timeOfDay,
                     projectedMapWidth: state.mapWidth,
                     projectedMapHeight: state.mapHeight,
                     projectedIsGridEnabled: state.isGridEnabled,
@@ -419,6 +438,7 @@ export const useMapStore = create<MapState>()(
                     magicEffects: state.magicEffects,
                     weatherType: state.weatherType,
                     weatherIntensity: state.weatherIntensity,
+                    timeOfDay: state.timeOfDay,
                     isGridEnabled: state.isGridEnabled,
                     gridSize: state.gridSize,
                     gridColor: state.gridColor,
@@ -445,6 +465,7 @@ export const useMapStore = create<MapState>()(
                     magicEffects: preset.magicEffects,
                     weatherType: preset.weatherType,
                     weatherIntensity: preset.weatherIntensity,
+                    timeOfDay: preset.timeOfDay || 'day',
                     isGridEnabled: preset.isGridEnabled,
                     gridSize: preset.gridSize,
                     gridColor: preset.gridColor,
@@ -485,6 +506,7 @@ export const useMapStore = create<MapState>()(
                 tokens: state.tokens,
                 weatherType: state.weatherType,
                 weatherIntensity: state.weatherIntensity,
+                timeOfDay: state.timeOfDay,
                 mapWidth: state.mapWidth,
                 mapHeight: state.mapHeight,
                 isGridEnabled: state.isGridEnabled,
@@ -509,6 +531,7 @@ export const useMapStore = create<MapState>()(
                 projectedTokens: state.projectedTokens,
                 projectedWeatherType: state.projectedWeatherType,
                 projectedWeatherIntensity: state.projectedWeatherIntensity,
+                projectedTimeOfDay: state.projectedTimeOfDay,
                 projectedMapWidth: state.projectedMapWidth,
                 projectedMapHeight: state.projectedMapHeight,
                 projectedIsGridEnabled: state.projectedIsGridEnabled,

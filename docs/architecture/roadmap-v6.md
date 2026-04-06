@@ -37,10 +37,11 @@ L'objectif est d'assurer une étanchéité parfaite des données tout en simplif
 Refonte des systèmes de jeu pour une automatisation intelligente.
 
 - **[ ] Character Sheet Calculation Engine** : Moteur de calcul intégré capable d'interpréter des formules complexes (ex: `1d20 + @StrMod + @Level`).
+- **[ ] Character Sheet Calculation Engine** : Moteur de calcul intégré capable d'interpréter des formules complexes (ex: `1d20 + @StrMod + @Level`).
 - **[ ] Tactical Combat Assistant** : Interface IA suggérant des actions de PNJ en fonction de la situation tactique sur l'Atlas.
 - **[ ] Échanges d'objets (P2P)** : Permettre aux joueurs de se donner des objets via le Hub (nécessite validation MJ).
 - **[ ] Notes Privées PJ** : Zone de prise de notes persistante côté serveur MJ.
-- **[ ] MapStore** : Gère l'état de l'atlas (pions, brouillard, météo). Intégré au flux `remote:broadcast-sync` via une souscription active dans l'App-Root pour une réactivité temps réel.
+- **[x] MapStore & Ambiance System** : Gestion de l'état de l'atlas (pions, brouillard, météo) intégrée au flux de synchronisation réactif. Système de moments de la journée avec filtres dynamiques (v6.1.0-dev).
 
 ---
 
@@ -69,6 +70,7 @@ Extension des capacités de création et de partage.
 | Conscience de session pour l'Oracle IA (PJ/Indices) | Moyenne | ✅ Complété |
 | Validation polymorphe pour imports partiels Nexus-OS | Haute | ✅ Résolu |
 | Migration URLs HTTP → Media Hub (campagne Anges de Feu) | Moyenne | ✅ Complété (Auto-Migration v2) |
+| Synchronisation Ambiance & Blend-modes (Map-OS) | Haute | ✅ Résolu |
 
 ---
 *Dernière mise à jour : 6 Avril 2026*

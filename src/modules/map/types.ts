@@ -71,6 +71,7 @@ export interface DangerZone {
 export type FogMode = 'reveal' | 'hide';
 export type MapTool = 'brush' | 'rect' | 'circle' | 'move_token' | 'ping' | 'magic' | 'danger';
 export type WeatherType = 'none' | 'rain' | 'snow' | 'smoke';
+export type TimeOfDay = 'dawn' | 'day' | 'overcast' | 'dusk' | 'night';
 
 export interface MapPreset {
     id: string;
@@ -98,9 +99,10 @@ export interface MapPreset {
     zoom: number;
     panX: number;
     panY: number;
+    timeOfDay?: TimeOfDay;
 }
 
-export type LayerId = 'fog' | 'grid' | 'tokens' | 'magic' | 'danger' | 'weather';
+export type LayerId = 'fog' | 'grid' | 'tokens' | 'magic' | 'danger' | 'weather' | 'ambiance';
 
 export type LayerVisibility = Record<LayerId, boolean>;
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { useMapStore } from '../useMapStore';
 import { 
     Eye, EyeOff, Layers, 
-    Grid, Users, Zap, AlertTriangle, CloudRain 
+    Grid, Users, Zap, AlertTriangle, CloudRain, Sun 
 } from 'lucide-react';
 import type { LayerId } from '../types';
 
@@ -16,6 +16,7 @@ const MapLayersPanel: React.FC = () => {
         { id: 'magic', label: 'Effets Magiques', icon: <Zap className="w-4 h-4 text-purple-400" /> },
         { id: 'danger', label: 'Zones de Danger', icon: <AlertTriangle className="w-4 h-4 text-rose-400" /> },
         { id: 'weather', label: 'Météo (Weather)', icon: <CloudRain className="w-4 h-4 text-sky-400" /> },
+        { id: 'ambiance', label: 'Ambiance (Heure)', icon: <Sun className="w-4 h-4 text-amber-400" /> },
     ];
 
     return (

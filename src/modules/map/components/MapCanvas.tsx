@@ -7,6 +7,7 @@ import MapPingLayer from './MapPingLayer';
 import WeatherLayer from './WeatherLayer';
 import MagicLayer from './MagicLayer';
 import DangerZoneLayer from './DangerZoneLayer';
+import { AmbianceLayer } from './AmbianceLayer';
 
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { useMapNavigation } from '../hooks/useMapNavigation';
@@ -279,6 +280,7 @@ const MapCanvas: React.FC = () => {
 
                 <MapPingLayer isProjectedView={false} />
                 {mapStore.layerVisibility.weather && <WeatherLayer isProjectedView={false} />}
+                {mapStore.layerVisibility.ambiance && <AmbianceLayer />}
 
                 <canvas ref={previewCanvasRef} className="absolute inset-0 w-full h-full z-40 pointer-events-none" />
 
