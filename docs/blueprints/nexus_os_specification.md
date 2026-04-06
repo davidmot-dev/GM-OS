@@ -12,7 +12,8 @@ Nexus-OS permet de transformer une entité complexe (Campagne ou Driver) en un p
 
 1. **Harvesting (Moissonnage)** : Capture physique de tous les fichiers binaires liés (Media Hub IDs `m-xxx` + chemins absolus).
 2. **Relocation (Relocalisation)** : Transformation des références locales en chemins relatifs dans l'archive, et remappage inverse à l'import.
-3. **Context-Aware (Conscience du Contexte)** : Intelligence de liaison pour ne rien oublier (PNJs, Relations, Journaux, Sons, Playlists).
+3. **Context-Aware (Conscience du Contexte)** : Intelligence de liaison pour ne rien oublier.
+4. **Fragmented Bundles (Bundles Fragmentés)** : Capacité à exporter des sous-entités (Drivers/Systèmes) indépendamment d'une campagne.
 
 ---
 
@@ -23,15 +24,10 @@ Nexus-OS permet de transformer une entité complexe (Campagne ou Driver) en un p
 L'archive est un dossier compressé (Format ZIP) avec la structure suivante :
 
 ```text
-archive_campagne.gmos/
-├── manifest.json            # Métadonnées, version, assetMap (checksums SHA-256)
-├── state.json               # Extraction complète des slices de stores (Zustand)
-└── assets/                  # Dossier racine des médias moissonnés
-    ├── profiles/            # Portraits PNJs, Avatars PJs (Media Hub m-xxx)
-    ├── maps/                # Battlemaps, Vidéos d'ambiance
-    ├── audio/               # Sons locaux (Sound Pads, Music Playlists)
-    ├── decks/               # Contenu complet des paquets de cartes
-    └── misc/                # Autres fichiers non classifiés
+archive_campagne.gmos / .gmos-driver
+├── manifest.json            # Métadonnées, version, bundleType (campaign|driver), assetMap
+├── state.json               # Extraction (CampaignState ou DriverState)
+└── assets/                  # Dossier racine des médias moissonnés (optionnel pour les drivers)
 ```
 
 ### B. Fichiers Clés
@@ -161,9 +157,10 @@ Ce test simule le cycle de vie complet d'une campagne :
 3. **Inject** : Injection forcée dans les stores via `injectState()`.
 4. **Audit** : Comparaison de l'état final avec l'état initial (Deep Equality).
 
-### T4 : Sécurité & Sandboxing
-
-- Rejet des bundles avec `schemaVersion` incompatible.
+### T4 : Sécurité & Validation Polymorphe
+- **Schéma Adaptatif** : Le validateur (`validateManifest`) ajuste ses exigences selon `bundleType`.
+    - **Campaign** : Requiert `campaignId` et `campaignName`.
+    - **Driver** : Requiert `driverId` et `driverName`.
 - Protection contre le **Path Traversal** : Rejet des `relativePath` contenant `../`, `..\\` ou des racines absolues.
 
 ### 🛠️ Stratégie de Mocking (Environnement Headless)

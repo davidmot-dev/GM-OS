@@ -722,26 +722,36 @@ export class NexusService {
 
         const m = manifest as Record<string, unknown>;
 
-        if (m.schemaVersion !== NEXUS_SCHEMA_VERSION) {
+        if (m['schemaVersion'] !== NEXUS_SCHEMA_VERSION) {
             errors.push(
-                `Version de schéma incompatible : attendu ${NEXUS_SCHEMA_VERSION}, reçu ${m.schemaVersion}.`
+                `Version de schéma incompatible : attendu ${NEXUS_SCHEMA_VERSION}, reçu ${m['schemaVersion']}.`
             );
         }
 
-        if (typeof m.campaignId !== 'string' || !m.campaignId) {
-            errors.push('Le champ campaignId est manquant ou invalide.');
+        const type = (m['bundleType'] as string) || 'campaign';
+
+        if (type === 'driver') {
+            if (typeof m['driverId'] !== 'string' || !m['driverId']) {
+                errors.push('Le champ driverId est manquant ou invalide.');
+            }
+            if (typeof m['driverName'] !== 'string' || !m['driverName']) {
+                errors.push('Le champ driverName est manquant ou invalide.');
+            }
+        } else {
+            if (typeof m['campaignId'] !== 'string' || !m['campaignId']) {
+                errors.push('Le champ campaignId est manquant ou invalide.');
+            }
+            if (typeof m['campaignName'] !== 'string' || !m['campaignName']) {
+                errors.push('Le champ campaignName est manquant ou invalide.');
+            }
         }
 
-        if (typeof m.campaignName !== 'string' || !m.campaignName) {
-            errors.push('Le champ campaignName est manquant ou invalide.');
-        }
-
-        if (typeof m.exportedAt !== 'string') {
+        if (typeof m['exportedAt'] !== 'string') {
             errors.push('Le champ exportedAt est manquant ou invalide.');
         }
 
         // Validation des entrées d'assets (protection path traversal)
-        const assetMap = m.assetMap as AssetEntry[] | undefined;
+        const assetMap = m['assetMap'] as AssetEntry[] | undefined;
         if (assetMap) {
             assetMap.forEach((entry, idx) => {
                 if (this.isDangerousPath(entry.relativePath)) {

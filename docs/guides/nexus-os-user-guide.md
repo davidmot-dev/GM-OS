@@ -51,6 +51,26 @@ Nexus-OS est le système de **portabilité** de GM-OS. Il vous permet de :
 
 ---
 
+## 🏎️ Partage de Systèmes de Jeu (Drivers)
+
+GM-OS v2 introduit la possibilité d'exporter vos **GameDrivers** (créés via le *System Forge*) indépendamment de vos campagnes. Cela permet de partager uniquement les règles et les modèles de fiches de personnages.
+
+### Exporter un Driver
+
+1.  Rendez-vous dans la **Librairie de Modèles** (Onglet `Drivers`).
+2.  Sélectionnez le Driver que vous souhaitez partager.
+3.  Dans le panneau d'aperçu à droite, cliquez sur le bouton **"EXPORTER"**.
+4.  Le fichier généré aura l'extension `.gmos-driver`.
+
+### Importer un Driver
+
+1.  Ouvrez la **Librairie de Modèles** (Onglet `Drivers`).
+2.  Cliquez sur le bouton global **"IMPORTER DRIVER"** en haut de la liste.
+3.  Sélectionnez votre fichier `.gmos-driver`.
+4.  Si un driver du même nom existe déjà, le système vous proposera de le **Cloner** pour éviter d'écraser votre travail actuel.
+
+---
+
 ## 📊 Indicateur "Nexus-Ready"
 
 Dans la bibliothèque, chaque campagne affiche un badge **Nexus-Ready** :

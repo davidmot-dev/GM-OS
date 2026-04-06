@@ -94,6 +94,20 @@ L'utilisation de bordures "lumineuses" via `mask-composite` (style Bento Box) n�
 
 ---
 
+## 📦 Nexus-OS : Validation Polymorphe de Manifestes
+
+### Le piège de la validation rigide
+
+**Problème :** Lors de l'extension de Nexus-OS aux **Drivers**, le validateur core échouait car il exigeait systématiquement des métadonnées de campagne (`campaignId`), absentes des paquets de règles isolés.
+
+**Solution :**
+1.  **Conscience du Type** : Utilisation du champ `bundleType` dans le manifeste pour embrancher la logique de validation.
+2.  **Accès Défensif (TypeScript)** : Utilisation de l'accès par crochet `m['field']` sur les objets `Record<string, unknown>` pour éviter les erreurs de type strict sans sacrifier la flexibilité.
+
+**Apprentissage :** Pour tout système de "Plugin" ou d'archive modulaire, la validation doit être décorréler du schéma global et être contextuelle au type d'objet transporté. Cela permet d'ajouter de nouveaux types de bundles (ex: Atlas-only, Sound-Pack) sans modifier le moteur de validation central.
+
+---
+
 Dernière mise à jour : 6 Avril 2026
 
 Statut : Oracle IA Contextuel et Standards de Synchronisation documentés.

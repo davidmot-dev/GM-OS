@@ -430,6 +430,32 @@ describe('validateManifest', () => {
         const errors = service.validateManifest(maliciousManifest);
         expect(errors.some((e) => e.includes('malveillant'))).toBe(true);
     });
+
+    it('valide un manifeste de driver correct sans campaignId', () => {
+        const driverManifest: Partial<NexusManifest> = {
+            schemaVersion: NEXUS_SCHEMA_VERSION,
+            bundleId: 'nexus-drv-test',
+            bundleType: 'driver',
+            driverId: 'drv-test',
+            driverName: 'Test Driver',
+            exportedAt: new Date().toISOString(),
+            gmosVersion: '5.3.0',
+            assetMap: [],
+        };
+        const errors = service.validateManifest(driverManifest);
+        expect(errors).toHaveLength(0);
+    });
+
+    it('rejette un manifeste de driver sans driverId', () => {
+        const invalidDriverManifest = {
+            schemaVersion: NEXUS_SCHEMA_VERSION,
+            bundleType: 'driver' as const,
+            driverName: 'Test Driver',
+            exportedAt: new Date().toISOString(),
+        };
+        const errors = service.validateManifest(invalidDriverManifest);
+        expect(errors.some((e) => e.includes('driverId'))).toBe(true);
+    });
 });
 
 // ─────────────────────────────────────────────

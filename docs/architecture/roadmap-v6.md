@@ -27,7 +27,7 @@ L'objectif est d'assurer une étanchéité parfaite des données tout en simplif
 - **[x] UI Premium (Glassmorphism 2.0)** : Refonte visuelle complète des composants de Session-OS.
 - **[x] Map-OS Projection Restoration** : Restauration du flux de synchronisation atlas vers Hub/Moniteurs.
 - **[x] Oracle IA Contextuel** : Intelligence "Session-Aware" injectant personnages, indices et historique dans les prompts.
-- **[ ] Nexus-OS v2 — Driver Export** : Exporter non seulement les campagnes, mais aussi les GameDrivers (systèmes de règles) comme bundles autonomes.
+- **[x] Nexus-OS v2 — Driver Export** : Exporter non seulement les campagnes, mais aussi les GameDrivers (systèmes de règles) comme bundles autonomes.
 - **[ ] Nexus-OS v2 — Vérification des URLs distantes** : Avertir l'utilisateur des URLs HTTP non-portables dans le HUD (avec suggestion de migration vers le Media Hub).
 
 ---
@@ -66,9 +66,10 @@ Extension des capacités de création et de partage.
 | Tests Vitest pour `NexusService` (round-trip) | Moyenne | ✅ Complété |
 | Cycle de rendu infini dans `MapCanvas` (zoom bounce) | Haute | ✅ Résolu |
 | Projection Map-OS rompue sur clients distants | Haute | ✅ Résolu |
-| Conscience de session pour l'Oracle IA (PJ/Indices) | Moyenne | ✅ Finalisé |
+| Conscience de session pour l'Oracle IA (PJ/Indices) | Moyenne | ✅ Complété |
+| Validation polymorphe pour imports partiels Nexus-OS | Haute | ✅ Résolu |
 | Migration URLs HTTP → Media Hub (campagne Anges de Feu) | Moyenne | ✅ En cours (Logs actifs) |
 
 ---
 *Dernière mise à jour : 6 Avril 2026*
-*Statut : Navigation stabilisée. Oracle IA Contextuel opérationnel.*
+*Statut : Navigation stabilisée. Oracle IA Contextuel et Export Drivers Nexus v2 opérationnels.*

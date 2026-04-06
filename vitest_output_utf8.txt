@@ -1,0 +1,177 @@
+﻿
+[1m[46m RUN [49m[22m [36mv4.1.0 [39m[90mC:/Projet_David/GM-OS-v5[39m
+
+[90mstdout[2m | src/modules/system/archive/NexusService.test.ts[2m > [22m[2mINTEGRATION : Round-Trip complet (Scrape -> Import)[2m > [22m[2mpr├®serve l'int├®grit├® des donn├®es apr├¿s un cycle complet export/import
+[22m[39m[NexusService] ├ëtat inject├® avec succ├¿s pour la campagne : c-test-001
+
+ [31mÔØ»[39m src/modules/system/archive/NexusService.test.ts [2m([22m[2m49 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[32m 19[2mms[22m[39m
+     [32mÔ£ô[39m extrait uniquement la campagne cible[32m 1[2mms[22m[39m
+     [32mÔ£ô[39m filtre les entit├®s par campaignId[32m 1[2mms[22m[39m
+     [32mÔ£ô[39m filtre les personnages joueurs par campaignId[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m filtre les sessions par campaignId[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m filtre les cartes atlas par campaignId[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m l├¿ve une erreur si la campagne est introuvable[32m 1[2mms[22m[39m
+     [32mÔ£ô[39m inclut les indices (clues) de la campagne[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m collecte le wallpaper de la campagne[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m collecte l'avatar des entit├®s[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m collecte les portraits et tokens des personnages joueurs[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m collecte les fichiers de carte (atlas)[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m collecte plusieurs images wiki[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m collecte les m├®dias des indices (clues)[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m ignore les URLs HTTP distantes[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m ignore les blob URLs[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m valide un manifeste correct sans erreur[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m rejette un non-objet[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m rejette un manifeste avec une mauvaise version de sch├®ma[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m rejette un manifeste sans campaignId[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m d├®tecte les chemins d'assets malveillants (path traversal)[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m accepte les chemins relatifs s├╗rs dans assets/[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m rejette les path traversal avec ../[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m rejette les path traversal avec ..\[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m rejette les chemins absolus Windows[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m rejette les cha├«nes vides ou nulles[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m remappe le wallpaper de la campagne[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m remappe les avatars des entit├®s[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m remappe les portraits et tokens des personnages[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m pr├®serve les refs non-mapp├®es (fichiers non trouv├®s)[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m remappe les images wiki[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m remappe les m├®dias des indices (clues)[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m round-trip : originalRef -> relativePath -> resolvedPath (T3 blueprint)[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m d├®tecte un conflit quand la campagne import├®e a le m├¬me ID[32m 0[2mms[22m[39m
+[31m     [31m├ù[31m retourne z├®ro conflit si la campagne import├®e a un ID diff├®rent[39m[32m 4[2mms[22m[39m
+     [32mÔ£ô[39m inclut le nombre d'entit├®s et de sessions du bundle dans le conflit[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m utilise entityCount de l'├®tat si le manifest n'a pas de stats[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m ne modifie rien si la strat├®gie n'est pas "clone"[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m g├®n├¿re un nouvel ID de campagne pour la strat├®gie "clone"[32m 1[2mms[22m[39m
+     [32mÔ£ô[39m ajoute "(Copie)" au nom de la campagne clon├®e[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m r├®g├®n├¿re les IDs de toutes les entit├®s lors du clonage[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m met ├á jour le campaignId des entit├®s clon├®es avec le nouvel ID[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m r├®g├®n├¿re les IDs des sessions et cartes atlas lors du clonage[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m les entit├®s originales ne sont pas mut├®es (immutabilit├®)[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m s├®pare correctement les IDs Media Hub des chemins absolus[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m retourne des tableaux vides si le Set est vide[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m inclut les entit├®s li├®es par des relations sociales (cross-campagne)[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m n'inclut pas les entit├®s cross-campagne si aucune relation n'existe[32m 0[2mms[22m[39m
+     [32mÔ£ô[39m pr├®serve l'int├®grit├® des donn├®es apr├¿s un cycle complet export/import[32m 1[2mms[22m[39m
+[31m     [31m├ù[31m g├®n├¿re un bundle valide via buildManifest[39m[32m 0[2mms[22m[39m
+node.exe : 
+Au caractère Ligne:1 : 1
++ & "C:\Program 
+Files\nodejs/node.exe" "C:\
+Users\david\AppData\Roaming
+\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
+    + CategoryInfo         
+     : NotSpecified: (:St  
+  ring) [], RemoteExcept   
+ ion
+    + FullyQualifiedErrorI 
+   d : NativeCommandError
+ 
+[31mÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»
+[39m[1m[41m Failed Tests 
+2 [49m[22m[31mÔÄ»ÔÄ»ÔÄ»Ô
+Ä»ÔÄ»ÔÄ»ÔÄ»[39m
+
+[41m[1m FAIL [22m[49m s
+rc/modules/system/archive/N
+exusService.test.ts[2m > 
+[22mdetectConflicts[2m > 
+[22mretourne z├®ro 
+conflit si la campagne 
+import├®e a un ID 
+diff├®rent
+[31m[1mAssertionError[22
+m: expected [ { type: 
+'campaign', ÔÇª(6) } ] to 
+have a length of +0 but 
+got 1[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 0[39m
+[31m+ 1[39m
+
+[36m [2mÔØ»[22m src/modu
+les/system/archive/NexusSer
+vice.test.ts:[2m594:27[22
+m[39m
+    [90m592|[39m         
+}[33m;[39m
+    [90m593|[39m         
+const conflicts = service.d
+etectConflicts(baseManifest
+, differÔÇª
+    [90m594|[39m         
+[34mexpect[39m(conflicts)
+[33m.[39m[34mtoHaveLengt
+h[39m([34m0[39m)[33m;[
+39m
+    [90m   |[39m         
+                  
+[31m^[39m
+    [90m595|[39m     
+})[33m;[39m
+    [90m596|[39m
+
+[31m[2mÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»
+[1/2]ÔÄ»[22m[39m
+
+[41m[1m FAIL [22m[49m s
+rc/modules/system/archive/N
+exusService.test.ts[2m > 
+[22mINTEGRATION : 
+Round-Trip complet (Scrape 
+-> Import)[2m > 
+[22mg├®n├¿re un bundle 
+valide via buildManifest
+[31m[1mTypeError[22m: 
+service.buildManifest is 
+not a function[39m
+[36m [2mÔØ»[22m src/modu
+les/system/archive/NexusSer
+vice.test.ts:[2m844:34[22
+m[39m
+    [90m842|[39m         
+[35mconst[39m state 
+[33m=[39m service[33m.[
+39m[34mscrapeCampaignData
+[39m([33mCAMPAIGN_ID[39m)
+[33m;[39m
+    [90m843|[39m         
+[35mconst[39m assetRefs 
+[33m=[39m service[33m.[
+39m[34mcollectAssetPaths[
+39m(state)[33m;[39m
+    [90m844|[39m         
+[35mconst[39m manifest 
+[33m=[39m service[33m.[
+39m[34mbuildManifest[39m(
+state[33m,[39m 
+assetRefs)[33m;[39m
+    [90m   |[39m         
+                         
+[31m^[39m
+    [90m845|[39m
+    [90m846|[39m         
+[34mexpect[39m(manifest[
+33m.[39mcampaignId)[33m.
+[39m[34mtoBe[39m([33mCAM
+PAIGN_ID[39m)[33m;[39m
+
+[31m[2mÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»
+[2/2]ÔÄ»[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m47 passed[39m[22m[90m (49)[39m
+[2m   Start at [22m 19:24:58
+[2m   Duration [22m 983ms[2m (transform 86ms, setup 150ms, import 75ms, tests 19ms, environment 582ms)[22m
+
