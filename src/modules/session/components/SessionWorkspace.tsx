@@ -2,14 +2,16 @@ import React from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useMapStore } from '../../map/useMapStore';
 import { Eye, Edit3, Lock, History, Search, Layers, MapPin, Pin, Plus } from 'lucide-react';
-import { useModalStore } from '../../../stores/useModalStore';
 import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 
 import SessionClueDeck from './SessionClueDeck';
 
 const SessionWorkspace: React.FC = () => {
-    const { sessions, activeCampaignId, entities, updateSessionPublicSummary, updateSessionGmSecrets, campaigns, atlasMaps, players, updateCharacterHP } = useSessionOSStore();
+    const { 
+        sessions, activeCampaignId, entities, updateSessionPublicSummary, updateSessionGmSecrets, 
+        campaigns, atlasMaps, players, updateCharacterHP, navigateToAtlasMap, navigateToNpcDetail
+    } = useSessionOSStore();
     const { mapUrl, mapName, isVideo, setMap } = useMapStore();
     const resolvedMapUrl = useMediaUrl(mapUrl || undefined);
     
@@ -49,7 +51,7 @@ const SessionWorkspace: React.FC = () => {
     return (
         <section className="h-full col-span-6 flex flex-col gap-6 p-6 overflow-y-auto custom-scrollbar">
             {/* Team Tracker Bar (v6 Premium Redesign) */}
-            <div className="bg-app-bg/40 backdrop-blur-2xl border-b border-app-border/20 flex items-center px-8 h-20 gap-8 relative shadow-2xl rounded-2xl">
+            <div className="glass-bento flex items-center px-8 h-24 gap-10 relative flex-shrink-0">
                 <div className="flex items-center gap-10">
                     {/* PC List */}
                     <div className="flex flex-col justify-center">
@@ -106,7 +108,7 @@ const SessionWorkspace: React.FC = () => {
                                         key={npc.id} 
                                         className="w-12 h-12 rounded-xl border-2 border-app-bg bg-app-surface relative group cursor-pointer hover:border-accent/50 transition-all hover:scale-110 shadow-lg"
                                     >
-                                        <div className="w-full h-full rounded-lg overflow-hidden" onClick={() => useModalStore.getState().showCustom('npc-detail', { entityId: npc.id })}>
+                                        <div className="w-full h-full rounded-lg overflow-hidden" onClick={() => navigateToNpcDetail(npc.id)}>
                                             <ResolvedAsset src={npc.avatar} alt={npc.name} className="w-full h-full object-cover grayscale-[0.5] group-hover:grayscale-0 transition-all" />
                                         </div>
                                         <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border border-app-bg ${npc.status === 'alive' ? 'bg-emerald-500' : npc.status === 'injured' ? 'bg-amber-500' : 'bg-red-600'}`}></div>
@@ -145,7 +147,7 @@ const SessionWorkspace: React.FC = () => {
             {/* Double Journal Split Pane */}
             <div className="flex-1 grid grid-cols-2 gap-4 min-h-[400px]">
                 {/* Public Summary */}
-                <div className="bg-app-surface/40 rounded-xl border border-app-border/20 p-5 focus-within:ring-1 focus-within:ring-accent/50 flex flex-col transition-all shadow-lg backdrop-blur-sm">
+                <div className="glass-bento p-6 focus-within:ring-1 focus-within:ring-accent/50 flex flex-col transition-all group">
                     <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
                             <Eye size={18} className="text-app-text/40" />
@@ -162,7 +164,7 @@ const SessionWorkspace: React.FC = () => {
                 </div>
 
                 {/* GM Secrets */}
-                <div className="bg-app-surface/40 rounded-xl border border-app-border/20 p-5 focus-within:ring-1 focus-within:ring-accent/50 flex flex-col transition-all shadow-lg backdrop-blur-sm border-dashed relative overflow-hidden">
+                <div className="glass-bento bg-accent/5 focus-within:ring-1 focus-within:ring-accent/50 flex flex-col transition-all border-dashed border-accent/20 relative overflow-hidden group p-6">
                     <div className="absolute top-0 right-0 p-2 opacity-10 pointer-events-none">
                         <Lock size={120} className="text-accent/20" />
                     </div>
@@ -189,13 +191,13 @@ const SessionWorkspace: React.FC = () => {
                         <MapPin size={14} className="text-accent" />
                         <span className="text-[10px] text-app-text/40 font-bold uppercase tracking-widest">Lieux Épinglés</span>
                     </div>
-                    <div className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar no-scrollbar">
+                    <div className="flex gap-3 flex-wrap pb-2">
                         {activeLocations.map(loc => (
                             <button
                                 key={loc.id}
                                 onClick={() => {
                                     setMap(loc.fileUrl, loc.isVideo, loc.name);
-                                    useSessionOSStore.getState().setSelectedAtlasMap(loc.id);
+                                    navigateToAtlasMap(loc.id);
                                 }}
                                 className={`flex-shrink-0 flex items-center gap-3 p-2 pr-4 rounded-xl border transition-all hover:scale-105 active:scale-95 ${
                                     mapName === loc.name 
@@ -219,7 +221,7 @@ const SessionWorkspace: React.FC = () => {
             )}
 
             {/* Active Map Preview */}
-            <div className="h-64 bg-app-surface/40 rounded-xl border border-app-border overflow-hidden relative group">
+            <div className="h-64 glass-bento overflow-hidden relative group p-0">
                 <div className="absolute inset-0 bg-gradient-to-t from-app-bg via-transparent to-transparent z-10"></div>
                 <div className="absolute bottom-4 left-4 z-20">
                     <h5 className="text-app-text/90 font-bold">{mapName || 'Aucune Carte Active'}</h5>

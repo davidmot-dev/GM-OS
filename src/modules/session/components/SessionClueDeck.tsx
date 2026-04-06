@@ -49,12 +49,16 @@ const SessionClueDeck: React.FC = () => {
                     <button 
                         onClick={() => scroll('left')}
                         className="p-1 rounded-full bg-app-surface border border-app-border/40 text-app-text/40 hover:text-accent transition-all"
+                        title="Faire défiler vers la gauche"
+                        aria-label="Faire défiler vers la gauche"
                     >
                         <ChevronLeft size={14} />
                     </button>
                     <button 
                         onClick={() => scroll('right')}
                         className="p-1 rounded-full bg-app-surface border border-app-border/40 text-app-text/40 hover:text-accent transition-all"
+                        title="Faire défiler vers la droite"
+                        aria-label="Faire défiler vers la droite"
                     >
                         <ChevronRight size={14} />
                     </button>
@@ -78,7 +82,10 @@ const SessionClueDeck: React.FC = () => {
 
                 {/* Quick Add Placeholder */}
                 <button 
-                    onClick={() => useSessionOSStore.getState().setCurrentView('world-atlas')}
+                    onClick={() => {
+                        useSessionOSStore.getState().setActiveCampaignFormSection('clues');
+                        useSessionOSStore.getState().setCurrentView('campaign-editor');
+                    }}
                     className="flex-shrink-0 w-48 h-32 rounded-2xl border-2 border-dashed border-app-border/10 hover:border-accent/30 hover:bg-accent/5 flex flex-col items-center justify-center gap-2 text-app-text/20 hover:text-accent transition-all group/add snap-start"
                 >
                     <FileText size={20} className="group-hover/add:scale-110 transition-transform" />
@@ -103,7 +110,7 @@ interface ClueCardProps {
 
 const ClueCard: React.FC<ClueCardProps> = ({ clue, onProject }) => {
     return (
-        <div className="flex-shrink-0 w-64 h-32 rounded-2xl bg-app-surface/60 border border-white/5 relative overflow-hidden group snap-start hover:border-accent/40 transition-all shadow-xl">
+        <div className="glass-bento flex-shrink-0 w-64 h-32 relative overflow-hidden group snap-start hover:border-accent/40 transition-all p-0">
             {/* Background Image with blur */}
             <div className="absolute inset-0 opacity-20 group-hover:opacity-40 transition-opacity">
                 <ResolvedAsset src={clue.mediaUrl} className="w-full h-full object-cover blur-[2px]" />
@@ -150,8 +157,14 @@ const ClueCard: React.FC<ClueCardProps> = ({ clue, onProject }) => {
                         Projeter
                     </button>
                     <button 
-                        onClick={() => useSessionOSStore.getState().setCurrentView('world-atlas')}
+                        onClick={() => {
+                            useSessionOSStore.getState().setActiveCampaignFormSection('clues');
+                            useSessionOSStore.getState().setEditingClueId(clue.id);
+                            useSessionOSStore.getState().setCurrentView('campaign-editor');
+                        }}
                         className="p-1.5 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all"
+                        title="Détails de l'indice"
+                        aria-label="Détails de l'indice"
                     >
                         <Search size={14} />
                     </button>

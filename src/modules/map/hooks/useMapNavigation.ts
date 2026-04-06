@@ -37,7 +37,11 @@ export const useMapNavigation = (
         };
     }, [panX, panY, zoom, containerRef]);
 
-    const handleWheel = useCallback((e: React.WheelEvent) => {
+    const handleWheel = useCallback((e: WheelEvent | React.WheelEvent) => {
+        // Prevent default zoom/scroll on the browser or parent containers
+        if (e.cancelable) e.preventDefault();
+        e.stopPropagation();
+
         const delta = -e.deltaY;
         const scaleFactor = delta > 0 ? 1.1 : 0.9;
         const newZoom = Math.min(Math.max(zoom * scaleFactor, 0.1), 10);

@@ -75,6 +75,10 @@ interface CrossDomainActions {
         activeCampaignId: string | null;
     };
 
+    // Atomic Navigation Helpers (évite les race conditions lors du changement de vue)
+    navigateToAtlasMap: (id: string) => void;
+    navigateToNpcDetail: (id: string) => void;
+
     // Overrides des setters UI (avec effets de bord cross-domain)
     setActiveCampaign: (id: string | null) => void;
     setCurrentView: (view: UiSlice['currentView']) => void;
@@ -217,8 +221,6 @@ export const useSessionOSStore = create<SessionOSStore>()(
                 set({ currentView: view });
                 if (view === 'npc-gallery') {
                     set({ isAddingEntity: false, selectedEntityId: null });
-                } else if (view === 'world-atlas') {
-                    set({ selectedAtlasMapId: null });
                 }
             },
 
@@ -233,6 +235,32 @@ export const useSessionOSStore = create<SessionOSStore>()(
                         content: map.narrativeDescription || `Le groupe se déplace vers ${map.name}.`,
                     });
                 }
+            },
+
+            navigateToAtlasMap: (id) => {
+                // On regroupe les deux changements d'état dans un seul appel atomique
+                set({ 
+                    selectedAtlasMapId: id,
+                    currentView: 'world-atlas'
+                });
+                
+                const map = get().atlasMaps.find((m) => m.id === id);
+                if (map) {
+                    useJournalStore.getState().addEvent({
+                        type: 'LOCATION',
+                        title: `📍 Navigation Rapide: ${map.name}`,
+                        content: map.narrativeDescription || `Accès direct à la carte ${map.name} depuis le Master Cockpit.`,
+                    });
+                }
+            },
+
+            navigateToNpcDetail: (id) => {
+                // On regroupe les deux changements d'état
+                set({ 
+                    selectedEntityId: id,
+                    currentView: 'npc-gallery',
+                    isAddingEntity: false 
+                });
             },
 
             /** Auto-sélection de la première carte de la campagne active */

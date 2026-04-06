@@ -9,6 +9,7 @@ import {
     ChevronRight, Save, X, Sparkles, ImageIcon,
     ExternalLink
 } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { gmToast } from '../../../stores/useToastStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { ResolvedAsset } from '../../../components/ResolvedAsset';
@@ -162,8 +163,21 @@ const CluesManager: React.FC = () => {
         }
     };
 
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: { staggerChildren: 0.1 }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { y: 20, opacity: 0 },
+        visible: { y: 0, opacity: 1 }
+    };
+
     return (
-        <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-700">
+        <div className="space-y-12">
             <div className="flex items-center justify-between">
                 <div className="space-y-2">
                     <h2 className="text-2xl font-black tracking-tight text-white flex items-center gap-4">
@@ -190,7 +204,7 @@ const CluesManager: React.FC = () => {
             {(editingClue || isAdding) && editingClue ? (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                     {/* Editor Side */}
-                    <div className="space-y-8 p-10 rounded-[3rem] bg-[#121215] border border-white/5 shadow-2xl overflow-y-auto max-h-[70vh] custom-scrollbar">
+                    <div className="space-y-8 p-10 rounded-[3rem] glass-bento border border-white/5 shadow-2xl flex-1 min-h-[600px]">
                         <div className="flex items-center justify-between mb-4">
                             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gm-gold">Éditeur de Fragment</span>
                             <button 
@@ -353,7 +367,7 @@ const CluesManager: React.FC = () => {
                             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gm-purple/60">Aperçu Visuel (Player Hub)</span>
                         </div>
                         
-                        <div className={`aspect-[4/5] rounded-[3.5rem] bg-[#0c0c0e] border border-white/10 shadow-glow-white/5 overflow-hidden relative group p-12 flex flex-col items-center justify-center text-center gap-8 ${justRevealed === editingClue.id ? 'animate-clue-reveal ring-4 ring-gm-gold/50 shadow-glow-gold' : ''}`}>
+                        <div className={`min-h-[600px] flex-1 rounded-[3.5rem] glass-bento !bg-[#0c0c0e]/40 border border-white/10 shadow-glow-white/5 overflow-hidden relative group p-12 pb-32 flex flex-col items-center justify-center text-center gap-8 ${justRevealed === editingClue.id ? 'animate-clue-reveal ring-4 ring-gm-gold/50 shadow-glow-gold' : ''}`}>
                             <div className="absolute inset-0 z-0">
                                 {editingClue.mediaUrl && (
                                     <>
@@ -409,11 +423,17 @@ const CluesManager: React.FC = () => {
                     </div>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <motion.div 
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                >
                     {campaignClues.map(clue => (
-                        <div 
+                        <motion.div 
                             key={clue.id}
-                            className="group relative flex flex-col bg-[#121215] border border-white/5 rounded-[2.5rem] p-8 transition-all duration-500 hover:border-gm-gold/40 hover:shadow-glow-gold/5"
+                            variants={itemVariants}
+                            className="group relative flex flex-col glass-bento !rounded-[2.5rem] p-8 transition-all duration-500 hover:border-gm-gold/40 hover:shadow-glow-gold/5"
                         >
                             <div className="flex items-center justify-between mb-6">
                                 <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all overflow-hidden ${clue.isRevealed ? 'bg-gm-gold/10 text-gm-gold' : 'bg-white/5 text-white/20'}`}>
@@ -481,7 +501,7 @@ const CluesManager: React.FC = () => {
                                     <span className="text-[8px] font-black text-white/40 uppercase tracking-widest">{clue.campaignMoment}</span>
                                 </div>
                             )}
-                        </div>
+                        </motion.div>
                     ))}
 
                     {campaignClues.length === 0 && (
@@ -502,7 +522,7 @@ const CluesManager: React.FC = () => {
                             </button>
                         </div>
                     )}
-                </div>
+                </motion.div>
             )}
 
             <MediaBrowser 

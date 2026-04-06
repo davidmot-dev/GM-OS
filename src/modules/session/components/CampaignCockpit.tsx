@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useSessionStore } from '../../../store/useSessionStore';
 import { useModalStore } from '../../../stores/useModalStore';
@@ -36,11 +37,11 @@ const CampaignCockpit: React.FC = () => {
                 {/* Campaign Card */}
             <div
                 onClick={() => setCurrentView('campaign-details')}
-                className={`flex-shrink-0 bg-white/5 rounded-xl p-4 border-l-4 cursor-pointer transition-all group relative overflow-hidden ${
-                    theme === 'medieval' ? 'border-accent shadow-glow-accent/20' : 'border-gm-gold shadow-[0_0_20px_rgba(212,175,55,0.1)]'
-                } hover:bg-white/10 hover:shadow-glow-accent/40`}
+                className={`flex-shrink-0 glass-bento rounded-xl p-4 cursor-pointer transition-all group relative ${
+                    theme === 'medieval' ? 'shadow-glow-accent/20' : 'shadow-glow-gold/10'
+                } hover:scale-[1.02] hover:shadow-glow-accent/40`}
             >
-                <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-br from-accent/10 to-transparent pointer-events-none" />
                 <div className="flex justify-between items-start mb-2">
                     <div>
                         <h3 className={`text-app-text font-bold text-lg group-hover:text-accent transition-colors ${theme === 'medieval' ? 'font-display tracking-[0.05em]' : ''}`}>
@@ -157,7 +158,8 @@ const CampaignCockpit: React.FC = () => {
 
                 {activeSession ? (
                     <div className="flex flex-col gap-1 mt-1">
-                        <button
+                        <motion.button
+                            variants={{ hidden: { opacity: 0, x: -10 }, show: { opacity: 1, x: 0 } }}
                             onClick={() => showConfirm(
                                 'La session est-elle terminée ?',
                                 () => updateSession(activeSession.id, { status: 'done' }),
@@ -165,11 +167,15 @@ const CampaignCockpit: React.FC = () => {
                                 'OUI, TERMINER',
                                 'NON, CONTINUER'
                             )}
-                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 hover:bg-emerald-500/20"
+                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all glass-bento relative overflow-hidden"
                         >
-                            <Play size={20} fill="currentColor" className="animate-pulse" />
-                            <span className="text-sm font-bold uppercase tracking-tighter">Session Active</span>
-                        </button>
+                            <div className="absolute inset-0 bg-emerald-500/10 pointer-events-none" />
+                            <div className="absolute inset-0 bg-emerald-500/5 animate-pulse pointer-events-none" />
+                            <div className="absolute inset-y-0 left-0 w-0.5 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                            
+                            <Play size={20} fill="currentColor" className="text-emerald-500 relative z-10 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)] group-hover:scale-110 transition-transform" />
+                            <span className="text-sm font-bold uppercase tracking-tighter text-emerald-400 relative z-10 drop-shadow-md">Session Active</span>
+                        </motion.button>
                         
                         <button
                             onClick={() => showCustom('session-notes')}

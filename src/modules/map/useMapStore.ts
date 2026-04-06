@@ -334,6 +334,7 @@ export const useMapStore = create<MapState>()(
 
             syncToPlayers: () => {
                 set(state => ({
+                    projectionTarget: 'hub',
                     projectedMapUrl: state.mapUrl,
                     projectedIsVideo: state.isVideo,
                     projectedFogDataUrl: state.fogDataUrl,
@@ -515,6 +516,7 @@ export const useMapStore = create<MapState>()(
                 projectedGridColor: state.projectedGridColor,
                 projectedGridOpacity: state.projectedGridOpacity,
                 projectedMagicEffects: state.projectedMagicEffects,
+                projectedDangerZones: state.projectedDangerZones,
                 projectedIsMapMuted: state.projectedIsMapMuted,
                 projectedMapVolume: state.projectedMapVolume
             })
@@ -523,5 +525,5 @@ export const useMapStore = create<MapState>()(
 );
 
 if (typeof window !== 'undefined') {
-    (window as any).useMapStore = useMapStore;
+    (window as Window & { useMapStore?: any }).useMapStore = useMapStore;
 }

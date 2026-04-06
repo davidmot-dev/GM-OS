@@ -5,6 +5,7 @@ import MapTokenNode from './MapTokenNode';
 import MapPingLayer from './MapPingLayer';
 import WeatherLayer from './WeatherLayer';
 import MagicLayer from './MagicLayer';
+import DangerZoneLayer from './DangerZoneLayer';
 
 
 interface PlayerMapCanvasProps {
@@ -58,7 +59,7 @@ const PlayerMapCanvas: React.FC<PlayerMapCanvasProps> = ({ onMapClick }) => {
         const ch = containerRef.current.clientHeight || window.innerHeight;
         if (cw === 0 || ch === 0) return;
 
-        const scale = Math.max(cw / effectiveWidth, ch / effectiveHeight);
+        const scale = Math.min(cw / effectiveWidth, ch / effectiveHeight);
         const px = (cw - effectiveWidth * scale) / 2;
         const py = (ch - effectiveHeight * scale) / 2;
         
@@ -67,9 +68,19 @@ const PlayerMapCanvas: React.FC<PlayerMapCanvasProps> = ({ onMapClick }) => {
 
     // Independent Fit-to-screen on load/resize
     useEffect(() => {
-        console.log(`[PlayerMapCanvas] Fitting to screen: ${effectiveWidth}x${effectiveHeight} into ${containerRef.current?.clientWidth}x${containerRef.current?.clientHeight}`);
-        fitToScreen();
-    }, [fitToScreen, mapUrl, effectiveWidth, effectiveHeight]);
+        console.log(`[PlayerMapCanvas] Resetting dimensions and fitting to screen for new map: ${mapUrl}`);
+        const timer = setTimeout(() => {
+            setVideoDimensions({ w: 0, h: 0 });
+            setImageDimensions({ w: 0, h: 0 });
+            fitToScreen();
+        }, 100);
+        return () => clearTimeout(timer);
+    }, [fitToScreen, mapUrl]);
+
+    useEffect(() => {
+        const timer = setTimeout(() => fitToScreen(), 0);
+        return () => clearTimeout(timer);
+    }, [fitToScreen, effectiveWidth, effectiveHeight]);
 
     useEffect(() => {
         if (!containerRef.current) return;
@@ -80,7 +91,10 @@ const PlayerMapCanvas: React.FC<PlayerMapCanvasProps> = ({ onMapClick }) => {
 
     // Handle View Resets from GM
     useEffect(() => {
-        if (viewResetCounter > 0) fitToScreen();
+        if (viewResetCounter > 0) {
+            const timer = setTimeout(() => fitToScreen(), 0);
+            return () => clearTimeout(timer);
+        }
     }, [viewResetCounter, fitToScreen]);
 
     // Add storage listener for cross-window sync
@@ -210,7 +224,7 @@ const PlayerMapCanvas: React.FC<PlayerMapCanvasProps> = ({ onMapClick }) => {
                             const video = e.currentTarget;
                             setVideoDimensions({ w: video.videoWidth, h: video.videoHeight });
                         }}
-                        className="absolute inset-0 w-full h-full object-cover z-10 pointer-events-none" 
+                        className="absolute inset-0 w-full h-full object-contain z-10 pointer-events-none" 
                     />
                 ) : resolvedMapUrl ? (
                     <img 
@@ -220,7 +234,7 @@ const PlayerMapCanvas: React.FC<PlayerMapCanvasProps> = ({ onMapClick }) => {
                             const img = e.currentTarget;
                             setImageDimensions({ w: img.naturalWidth, h: img.naturalHeight });
                         }}
-                        className="absolute inset-0 w-full h-full object-cover z-10 pointer-events-none" 
+                        className="absolute inset-0 w-full h-full object-contain z-10 pointer-events-none" 
                     />
                 ) : null}
 
@@ -243,6 +257,9 @@ const PlayerMapCanvas: React.FC<PlayerMapCanvasProps> = ({ onMapClick }) => {
 
                 {/* 4. Magic Effects Layer (Under Fog) */}
                 <MagicLayer isProjectedView={true} />
+                
+                {/* 4b. Danger Zones Layer (Under Fog) */}
+                <DangerZoneLayer isProjectedView={true} />
 
                 {/* 5. Fog Layer (Masking everything below) */}
                 <canvas

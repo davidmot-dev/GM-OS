@@ -105,6 +105,29 @@
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
   }
 
+  .glass-bento {
+    background: var(--glass-bg, rgba(15, 23, 42, 0.45));
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.08));
+    box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  .glass-bento::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(to bottom right, var(--glass-highlight, rgba(255, 255, 255, 0.15)), transparent 50%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
   /* View Transitions */
   @keyframes fadeInUp {
     from {
@@ -143,6 +166,9 @@
   --app-accent-glow: rgba(59, 130, 246, 0.45);
   --font-display: 'Plus Jakarta Sans', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
+  --glass-bg: rgba(15, 23, 42, 0.45);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-highlight: rgba(255, 255, 255, 0.15);
 }
 
 :root[data-theme='cyberpunk'] {
@@ -155,6 +181,9 @@
   --app-accent-glow: rgba(34, 211, 238, 0.45);
   --font-display: 'Orbitron', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
+  --glass-bg: rgba(2, 6, 23, 0.6);
+  --glass-border: rgba(34, 211, 238, 0.15);
+  --glass-highlight: rgba(34, 211, 238, 0.25);
 }
 
 :root[data-theme='medieval'] {
@@ -167,6 +196,9 @@
   --app-accent-glow: rgba(212, 175, 55, 0.45);
   --font-display: 'Cinzel', 'MedievalSharp', serif;
   --font-mono: 'UnifrakturMaguntia', cursive;
+  --glass-bg: rgba(28, 25, 23, 0.65);
+  --glass-border: rgba(217, 119, 6, 0.12);
+  --glass-highlight: rgba(217, 119, 6, 0.2);
 }
 
 :root[data-theme='modern'] {
@@ -179,6 +211,9 @@
   --app-accent-glow: rgba(34, 211, 238, 0.45);
   --font-display: 'Outfit', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
+  --glass-bg: rgba(15, 23, 42, 0.5);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-highlight: rgba(255, 255, 255, 0.2);
 }
 
 :root[data-theme='claire'] {
@@ -188,6 +223,9 @@
   --app-surface: #ffffff;
   --app-border: #e7e5e4;
   --font-display: 'Inter', sans-serif;
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-highlight: rgba(255, 255, 255, 0.5);
 }
 
 /* Force Font Theme on all text */

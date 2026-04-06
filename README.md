@@ -1,4 +1,4 @@
-# 🌌 GM-OS v5.9 : The Ultimate Game Master Toolkit
+# 🌌 GM-OS v6.0.0-dev : The Ultimate Game Master Toolkit
 
 GM-OS v5 est une plateforme de gestion de sessions de Jeu de Rôle (JdR) de nouvelle génération, conçue pour offrir aux Maîtres de Jeu (MJ) une immersion totale et un contrôle sans précédent sur l'ambiance, le combat et la narration.
 
@@ -23,11 +23,14 @@ GM-OS v5 est une plateforme de gestion de sessions de Jeu de Rôle (JdR) de nouv
   - **Dice OS** : Moteur de lancer de dés 3D avec seuils d'entrée manuels.
   - **NPC OS** : Galerie de PNJ avec génération d'avatars et profils vocaux intelligents.
 - **SYSTEM OS** :
+  - **Nexus-OS** : Système de packaging et portabilité totale (`.gmos`). Exportez vos campagnes avec tous leurs médias et restaurez-les en un clic.
   - **Hybrid AI Bridge** : Support natif d'**Ollama** pour une IA 100% locale et privée.
   - **Sync Différentielle** : Optimisation des messages WebSocket pour un Tablet Hub ultra-réactif.
+
 - **CLUES OS** : Système transverse de gestion d'indices et preuves avec traçabilité temporelle, moments narratifs et archivage automatique dans le **Journal-OS**.
 
 ## 🛠️ Stack Technique
+
 
 - **Frontend** : [React 18](https://reactjs.org/) + [TypeScript](https://www.typescriptlang.org/)
 - **Build Tool** : [Vite](https://vitejs.dev/)
@@ -55,15 +58,12 @@ Le projet sépare strictement l'interface utilisateur de la logique système via
 Plus d'informations techniques et guides d'utilisation sont disponibles dans le dossier `documentation/` :
 
 - **[Architecture (Logic Flow)](file:///c:/Projet_David/GM-OS-v5/documentation/Architecture/Deck-OS_Architecture.md)** : Flux de données MJ -> Store -> Hubs.
-- **[Documentation Technique (Deck-OS)](file:///c:/Projet_David/GM-OS-v5/documentation/Technical%20Docs/Deck-OS_Technical_Doc.md)** : API et Store Zustand du module de cartes.
-- **[Manuel Utilisateur (Deck-OS)](file:///c:/Projet_David/GM-OS-v5/documentation/User%20Guides/Deck-OS_User_Manual.md)** : Guide pas à pas pour le Maître de Jeu.
-- **[Architecture (Brain vs Body)](file:///c:/Projet_David/GM-OS-v5/documentation/Architecture/rule-engine-ai.md)** : Fonctionnement du Moteur de Règles et de l'IA.
-- **[Documentation Technique (Social Nexus)](file:///c:/Projet_David/GM-OS-v5/documentation/Technical%20Docs/Social_Nexus_Technical_Doc.md)** : Architecture du graphe de relations.
-- **[Documentation Technique (Nettoyage)](file:///c:/Projet_David/GM-OS-v5/documentation/Technical%20Docs/media-cleanup.md)** : Fonctionnement du service de maintenance des médias.
-- **[Documentation Technique (Clues-OS)](file:///c:/Projet_David/GM-OS-v5/documentation/Technical%20Docs/Clues-OS_Technical_Doc.md)** : Système de gestion et révélation d'indices.
-- **[Lessons Learned](file:///c:/Projet_David/GM-OS-v5/documentation/Lessons_Learned.md)** : Défis et solutions de l'architecture v5.
+- **[Spécifications v6 (Nexus-OS)](file:///c:/Projet_David/GM-OS-v5/docs/blueprints/nexus_os_specification.md)** : Système de portabilité et archivage médias.
+- **[Roadmap v6](file:///c:/Projet_David/GM-OS-v5/docs/architecture/roadmap-v6.md)** : État d'avancement et vision de la Phase 1.
+- **[Lessons Learned](file:///c:/Projet_David/GM-OS-v5/docs/lessons-learned.md)** : Défis techniques, mocks Vitest et refactoring CSS.
 
 ### 🤖 Gemini CLI Integration
+
 
 Le projet intègre désormais **Gemini CLI** pour des opérations assistées par IA directement en terminal.
 

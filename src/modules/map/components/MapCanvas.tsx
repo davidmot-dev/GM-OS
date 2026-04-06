@@ -76,7 +76,8 @@ const MapCanvas: React.FC = () => {
             img.src = resolvedMapUrl;
             img.onload = () => handleDimensions(img.width, img.height);
         }
-    }, [resolvedMapUrl, mapStore.isVideo, mapStore.setMapDimensions, fitToScreen, mapStore]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [resolvedMapUrl, mapStore.isVideo]);
 
     // Audio & Device Sync
     useEffect(() => {
@@ -184,13 +185,26 @@ const MapCanvas: React.FC = () => {
         handleInteractionEnd(coords);
     };
 
+    // Native Wheel Listener (Non-Passive)
+    // React's onWheel is passive by default, preventing preventDefault() which is needed for map zoom
+    useEffect(() => {
+        const container = containerRef.current;
+        if (!container) return;
+
+        const onNativeWheel = (e: WheelEvent) => {
+            handleWheel(e);
+        };
+
+        container.addEventListener('wheel', onNativeWheel, { passive: false });
+        return () => container.removeEventListener('wheel', onNativeWheel);
+    }, [handleWheel]);
+
     return (
         <div 
             ref={containerRef} 
             className={`relative w-full h-full bg-obsidian-dark overflow-hidden border border-gray-700 rounded-xl ${
                 isPanning ? 'cursor-grabbing' : uiStore.currentTool === 'move_token' ? 'cursor-default' : 'cursor-crosshair'
             }`}
-            onWheel={handleWheel}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}

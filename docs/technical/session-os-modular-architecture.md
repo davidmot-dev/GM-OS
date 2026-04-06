@@ -2,6 +2,8 @@
 
 Ce document décrit l'architecture standard du module `Session-OS` après la refonte du 27 Mars 2026. Cette structure doit servir de modèle pour tous les autres OS du projet.
 
+---
+
 ## 1. Gestion d'État (Store Zustand)
 
 ### Slicing Pattern
@@ -18,6 +20,8 @@ Le store est divisé en "tranches" (Slices) isolées par domaine métier. Chaque
 - **Migration** : Gérée via la propriété `version` (actuelle : 10). Toute modification structurelle de l'état persistant DOIT incrémenter cette version.
 - **Actions Cross-Domain** : Les fonctions nécessitant de modifier plusieurs slices (ex: `launchSession`) sont définies dans `store/index.ts`.
 
+---
+
 ## 2. Architecture de l'Interface (UI)
 
 ### Registry Pattern
@@ -26,14 +30,18 @@ Le rendu des vues est délégué à un registre centralisé.
 
 - **SessionHeader.tsx** : Composant de navigation fixe.
 - **SessionViewRegistry.tsx** : Mappe l'état `currentView` vers le composant React correspondant. Gère les deux types de layout :
-    1. **Full Layout** : Le composant occupe les 12 colonnes de la grille.
-    2. **Split Layout** : Affiche le `CampaignCockpit` (3 cols) et le contenu (9 cols).
+  1. **Full Layout** : Le composant occupe les 12 colonnes de la grille.
+  2. **Split Layout** : Affiche le `CampaignCockpit` (3 cols) et le contenu (9 cols).
+
+---
 
 ## 3. Standards de Code
 
 - **Typage** : Aucun usage de `any`. Utiliser les interfaces de `types.ts`.
 - **Logique Métier** : Doit être extraite dans des services ou interpréteurs (`logic/HealthInterpreter.ts`) pour être testable indépendamment de React.
 - **Notifications** : Utiliser exclusivement `gmToast(message, type)` pour les feedbacks utilisateur.
+
+---
 
 ## 4. AI Forge & Performance
 
@@ -43,6 +51,8 @@ Les requêtes vers l'API Gemini transitent par un tunnel IPC sécurisé dans le 
 
 - **Timeout** : Fixé à **300 secondes (5 minutes)** pour permettre l'analyse de documents PDF volumineux.
 - **Payload Logging** : Les services (`ChronicleService`, `ForgeService`) loggent systématiquement la taille du payload envoyé en MB pour le monitoring de charge.
+
+---
 
 ## 5. Hub Synchronization Engine (Nexus Bridge)
 
@@ -59,9 +69,11 @@ La synchronisation entre le Cockpit MJ et le Tablet Hub utilise un pont WebSocke
 
 La résolution de la fiche de personnage (`logic/templateResolver.ts`) suit une hiérarchie stricte pour garantir la cohérence visuelle :
 
-1. **Template Spécifique** : Si `character.templateId` est défini et valide.
-2. **Template Système** : Recherche un template correspondant au `gameSystem` de la campagne.
-3. **Template Générique** : Fallback sur le template par défaut de Session-OS.
+- **Template Spécifique** : Si `character.templateId` est défini et valide.
+- **Template Système** : Recherche un template correspondant au `gameSystem` de la campagne.
+- **Template Générique** : Fallback sur le template par défaut de Session-OS.
+
+---
 
 ## 6. Gouvernance des Données & Isolation (Scope-by-Active)
 
@@ -71,6 +83,8 @@ Pour éviter toute fuite de données entre projets ("Data Leakage"), Session-OS 
 
 - **activeCampaignId** : Chaque requête d'affichage (indices, PNJs, cartes) doit inclure une clause `campaignId === activeCampaignId`.
 - **Composants Critiques** : `SessionClueDeck.tsx` (Deck MJ) et `OraclePanel.tsx` (Contexte IA) sont les gardiens de cette isolation.
+
+---
 
 ## 7. Résolution Médias & Proxy Distant
 
@@ -82,16 +96,61 @@ La gestion des IDs `m-xxx` (Blob IDs stockés en local) nécessite une couche d'
 - **Hub Failsafe** : Le hook `useMediaUrl` sur les tablettes redirige automatiquement vers l'IP du MJ si un identifiant non résolu est détecté dans le store synchronisé.
 - **Persistence Cleanup** : Le store d'images utilise `onRehydrateStorage` pour purger automatiquement les projections orphelines (IDs de médias inexistants) au démarrage, évitant l'affichage de "ghost images" d'anciennes campagnes.
 
+---
+
 ## 8. Standards d'Accessibilité (A11y) & Qualité
 
 ### Protocoles UI
+
 Tous les composants de `Session-OS` doivent respecter les standards d'accessibilité WCAG (Niveau AA) :
+
 - **ID & Labeling** : Utilisation stricte de `htmlFor` sur les labels et `id` uniques sur les inputs.
 - **Rôle Sémantique** : Conversion des `div` cliquables en `button type="button"` pour assurer la navigabilité au clavier.
 - **Feedback d'État** : Utilisation de `aria-checked` (chaîne "true"/"false") pour les éléments personnalisés.
 
 ### Modularité par Hooks
+
 La logique métier complexe ne doit jamais résider dans le composant UI. Elle doit être extraite dans un custom hook spécialisé (ex: `useDeckPlayer`) et validée via des tests unitaires **Vitest**.
 
 ---
-*Dernière mise à jour : 1 Avril 2026 - GM-OS v5.15 Sync & Media Stability Update.*
+
+## 9. Design System : Glassmorphism 2.0 & Bento Style
+
+Depuis la v6.1.0-dev, Session-OS utilise un standard visuel avancé basé sur le "Glassmorphism 2.0".
+
+### Utilitaire `.glass-bento`
+
+- **Structure** : Utilise un `backdrop-filter: blur(20px)` combiné à une saturation de 180% pour une profondeur maximale.
+- **Bordures Lumineuses** : Implémentées via un pseudo-élément `::before` utilisant un masque CSS combiné (`mask-composite: exclude`). Cela crée un liseré de gradient interne ultra-fin qui réagit à la lumière.
+- **Micro-animations** : Intégration systématique de `framer-motion` pour les entrées en cascade (`staggerChildren`) et les transitions de vues fluides.
+
+### Adaptabilité Thématique (Variables CSS)
+
+Le design system repose sur trois jetons heritables par thème (`:root[data-theme]`) :
+
+- `--glass-bg` : Couleur de fond semi-transparente.
+- `--glass-border` : Couleur de la bordure externe.
+- `--glass-highlight` : Couleur de l'éclat interne (halo).
+
+---
+
+---
+
+## 10. Navigation Patterns & Atomic State Transitions
+
+### Principe d'Atomicité de Navigation
+
+Depuis la v6.1.1-dev (6 Avril 2026), Session-OS utilise un pattern de transition d'état atomique pour éviter les conditions de course (Race Conditions) lors de la navigation entre modules (ex: du Cockpit vers l'Atlas Map).
+
+- **Problème** : Changer la vue (`currentView`) et l'entité sélectionnée (`selectedAtlasMapId`) via deux appels séparés au store provoquait un rendu intermédiaire où l'une des deux données était nulle, causant des plantages UI ou des réinitialisations de sélection.
+- **Solution** : Utilisation d'actions atomiques regroupées dans le store racine (`store/index.ts`).
+  - `navigateToAtlasMap(id)` : Change la vue vers `world-atlas` ET fixe le `selectedAtlasMapId` dans un seul appel `set()`.
+  - `navigateToNpcDetail(id)` : Change la vue vers `npc-gallery` ET fixe le `selectedEntityId` de manière atomique.
+
+### Standard d'Interaction (Cross-Domain)
+
+Toute navigation déclenchée depuis le Cockpit (Lieux Épinglés, PNJs Actifs) DOIT passer par ces actions atomiques pour garantir que le composant de destination reçoit l'état complet dès son premier cycle de rendu.
+
+---
+
+*Dernière mise à jour : 6 Avril 2026 - GM-OS v6.1.1 Atomic Navigation & Tactical Zoom Fix.*

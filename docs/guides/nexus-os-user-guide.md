@@ -18,12 +18,12 @@ Nexus-OS est le système de **portabilité** de GM-OS. Il vous permet de :
 
 ### Depuis la Bibliothèque de Campagnes
 
-1. Ouvrez la **Bibliothèque de Campagnes** (icône livre en haut).
-2. Sélectionnez votre campagne (clic sur la carte).
-3. Cliquez sur **"Exporter (Nexus)"** — l'icône de satellite dans les actions de la campagne.
-4. Une fenêtre "Nexus HUD" s'ouvre — elle affiche la progression en temps réel.
-5. Une fenêtre de dialogue vous demande **où sauvegarder** le fichier `.gmos`.
-6. L'export se déroule automatiquement en plusieurs phases :
+1.  Ouvrez la **Bibliothèque de Campagnes** (icône livre en haut).
+2.  Sélectionnez votre campagne (clic sur la carte).
+3.  Cliquez sur **"Exporter (Nexus)"** — l'icône de satellite dans les actions de la campagne.
+4.  Une fenêtre "Nexus HUD" s'ouvre — elle affiche la progression en temps réel.
+5.  Une fenêtre de dialogue vous demande **où sauvegarder** le fichier `.gmos`.
+6.  L'export se déroule automatiquement en plusieurs phases :
 
 | Phase | Ce qui se passe |
 | :--- | :--- |
@@ -40,20 +40,21 @@ Nexus-OS est le système de **portabilité** de GM-OS. Il vous permet de :
 
 ### Méthode 1 : Bouton dédié dans la Bibliothèque
 
-1. Ouvrez la **Bibliothèque de Campagnes**.
-2. Cliquez sur le bouton **"Importer un bundle Nexus"** (icône en bas de la bibliothèque).
-3. Sélectionnez votre fichier `.gmos` dans la fenêtre de dialogue.
-4. Le Nexus HUD s'ouvre et affiche la progression.
-5. Si la campagne importée a le même nom qu'une campagne existante, un **Conflict Resolver** s'affiche :
-   - **Remplacer** : Écrase la version existante.
-   - **Cloner** : Importe comme nouvelle campagne indépendante.
-   - **Annuler** : Arrête l'import.
+1.  Ouvrez la **Bibliothèque de Campagnes**.
+2.  Cliquez sur le bouton **"Importer un bundle Nexus"** (icône en bas de la bibliothèque).
+3.  Sélectionnez votre fichier `.gmos` dans la fenêtre de dialogue.
+4.  Le Nexus HUD s'ouvre et affiche la progression.
+5.  Si la campagne importée a le même nom qu'une campagne existante, un **Conflict Resolver** s'affiche :
+    - **Remplacer** : Écrase la version existante.
+    - **Cloner** : Importe comme nouvelle campagne indépendante.
+    - **Annuler** : Arrête l'import.
 
 ---
 
 ## 📊 Indicateur "Nexus-Ready"
 
 Dans la bibliothèque, chaque campagne affiche un badge **Nexus-Ready** :
+
 - 🟢 **Nexus-Ready** : Tous les médias sont locaux ou dans le Media Hub → export complet garanti.
 - 🟡 **Partiel** : Certains médias sont des URLs distantes (ex: images depuis Internet) → non inclus dans l'export.
 - 🔴 **Non portable** : Majorité des médias sont externes.
@@ -88,8 +89,19 @@ Pour les moments critiques comme les jets de dés, le Tablet Hub et le Player Hu
 ## 💬 Messagerie Sécurisée & Confidentialité
 
 Le système de messagerie du Hub a été renforcé pour garantir l'immersion :
+
 - **Filtrage par Campagne** : Vous ne voyez que les personnages appartenant à la campagne active. Aucun risque de "spoiler" ou de confusion avec les PJs d'autres aventures.
 - **Messages Ciblés** : Les messages privés envoyés par le MJ ne sont visibles que par le destinataire concernatif, avec une notification discrète.
+
+---
+
+## 💎 Design Premium : Glassmorphism 2.0 & Bento Style
+
+Depuis la v6.1.0-dev, l'interface de **Session-OS** a été entièrement refondue pour offrir une expérience plus immersive et luxueuse.
+
+- **Style Bento Box** : Vos cartes de campagnes et les panels du cockpit utilisent désormais une structure "Bento" avec des bordures lumineuses organiques (glows).
+- **Glassmorphism Avancé** : L'utilisation de flous cinématiques (`backdrop-filter`) et de saturations enrichies permet une meilleure lisibilité quel que soit le thème (Cyberpunk, Medieval, Modern, Claire).
+- **Transitions Fluides** : Toutes vos interactions sont maintenant accompagnées de micro-animations (entrées en cascade, effets de survol magnétiques).
 
 ---
 
@@ -104,5 +116,8 @@ Le système de messagerie du Hub a été renforcé pour garantir l'immersion :
 
 ---
 
-*Dernière mise à jour : 4 Avril 2026*
-*Statut : Nexus-OS v1.1 — Portabilité médias et Synchronisation temps réel (Dés) opérationnelles.*
+### État du Système
+
+Dernière mise à jour : 6 Avril 2026
+
+Statut : Nexus-OS v1.1 — Portabilité médias, Synchronisation temps réel et UI Premium Glassmorphism 2.0 opérationnelles.

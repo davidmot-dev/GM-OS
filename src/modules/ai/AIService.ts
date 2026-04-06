@@ -61,8 +61,13 @@ export class AIService {
       throw new Error(`API Key manquante pour le fournisseur ${activeProvider}`);
     }
 
+    const liveContext = this.getLiveSessionContext();
     const ragContext = await ragService.getRelevantContext(ragOptions);
-    const fullContext = customContext ? `${customContext}\n\n${ragContext}` : ragContext;
+    const fullContext = `--- CONTEXTE VIVANT (SESSION ACTUELLE) ---
+${liveContext}
+
+--- CONTEXTE RAG (RÈGLES ET LORE) ---
+${customContext ? `${customContext}\n\n${ragContext}` : ragContext}`;
 
     const gemStore = (await import('../../stores/useGemStore')).useGemStore.getState();
     const gem = gemStore.gems.find(g => g.id === gemId) || gemStore.gems[0];
@@ -96,9 +101,10 @@ export class AIService {
 
 Tu es un assistant de Maître de Jeu expert pour GM-OS. Ton alias actuel est "${gem.name}".
 RÈGLES IMPORTANTES :
-1. Analyse le contexte RAG fourni (règles et lore locaux).
+1. Analyse le contexte RAG fourni (règles et lore locaux) ET le contexte VIVANT (état de la session).
 2. Réponds impérativement en français, de manière concise et immersive.
 3. Si la question porte sur un point de règle, cite le document source si possible.
+4. Utilise le "Contexte Vivant" pour citer les personnages présents, les indices trouvés ou l'historique récent de la chronique.
 
 CONTEXTE LOCAL RÉCUPÉRÉ :
 ${fullContext}`;
@@ -595,6 +601,60 @@ ${fullContext}`;
     } catch (err) {
       console.error("[AIService] Prompt suggestion failed:", err);
       return "";
+    }
+  }
+
+  /**
+   * Extrait les données dynamiques des stores pour fournir un contexte "Vivant" à l'IA.
+   */
+  private getLiveSessionContext(): string {
+    try {
+      const osStore = useSessionOSStore.getState();
+      const journalStore = useJournalStore.getState();
+      const activeCampaignId = osStore.activeCampaignId;
+
+      if (!activeCampaignId) return "Aucune campagne active.";
+
+      const campaign = osStore.campaigns.find(c => c.id === activeCampaignId);
+      
+      // 1. Personnages Joueurs (Vitals & Info)
+      const party = osStore.players.flatMap(p => p.characters)
+        .filter(c => c.campaignId === activeCampaignId)
+        .map(c => `- ${c.name} (${c.classRace}): HP ${c.hp}/${c.maxHp}${c.description ? ` - ${c.description}` : ''}`);
+
+      // 2. PNJs / Entités actives
+      const npcs = osStore.entities
+        .filter(e => e.campaignId === activeCampaignId && e.status === 'alive')
+        .map(e => `- ${e.name} (${e.role}): ${e.description}`);
+
+      // 3. Indices (uniquement révélés)
+      const clues = (osStore.clues || [])
+        .filter(c => c.campaignId === activeCampaignId && c.isRevealed)
+        .map(c => `- ${c.title}: ${c.content}`);
+
+      // 4. Événements récents (Journal/Chronique)
+      const lastEvents = (journalStore.journals.find(j => j.id === journalStore.activeJournalId)?.events || [])
+        .slice(-10) // 10 derniers événements
+        .map(e => `[${new Date(e.timestamp).toLocaleTimeString('fr-FR')}] ${e.title}: ${e.content}`);
+
+      return `## Campagne: ${campaign?.name || "Inconnue"}
+${campaign?.synopsis ? `Synopsis: ${campaign.synopsis}\n` : ''}
+
+### Groupe (PJ)
+${party.length > 0 ? party.join('\n') : "Aucun personnage joueur actif."}
+
+### PNJs & Alliés
+${npcs.length > 0 ? npcs.join('\n') : "Aucun PNJ notable recensé."}
+
+### Indices Révélés
+${clues.length > 0 ? clues.join('\n') : "Aucun indice découvert pour le moment."}
+
+### Historique Récent (Chronologie)
+${lastEvents.length > 0 ? lastEvents.join('\n') : "Aucun événement récent dans la chronique."}
+`;
+    } catch (err) {
+      console.error("[AIService] Failed to gather live context:", err);
+      return "Erreur lors de la récupération du contexte session.";
     }
   }
 }

@@ -23,6 +23,7 @@ import { ResolvedImage } from '../../../components/ResolvedImage';
 import AIPromptOverlay from '../../ai/components/AIPromptOverlay';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { gmConfirm } from '../../../stores/useModalStore';
+import { motion } from 'framer-motion';
 
 const ROLE_COLORS = {
     ally: 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
@@ -178,7 +179,12 @@ const NpcGallery: React.FC = () => {
                 </div>
 
                 {/* Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-8">
+                <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, staggerChildren: 0.05 }}
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-8"
+                >
                     {filteredEntities.map((npc) => (
                         <NpcGalleryItem
                             key={npc.id}
@@ -229,7 +235,7 @@ const NpcGallery: React.FC = () => {
                             <p className="text-[9px] text-slate-700 mt-1 font-mono group-hover:text-slate-500">SYSTEM_RESERV_SLOT_00</p>
                         </div>
                     </button>
-                </div>
+                </motion.div>
 
                 {filteredEntities.length === 0 && search && (
                     <div className="flex flex-col items-center justify-center py-32 text-slate-700">
@@ -302,10 +308,13 @@ const NpcGalleryItem: React.FC<{
 }> = ({ npc, isSelected, isPinned, onSelect, onTogglePin, onGenerateImage, onPickImage, onDelete }) => {
     
     return (
-        <div
+        <motion.div
             onClick={onSelect}
-            className={`group relative h-[28rem] rounded-2xl overflow-hidden cursor-pointer transition-all border border-app-border bg-app-surface/40 backdrop-blur-md hover:border-accent/30 ${
-                isSelected ? 'ring-2 ring-accent shadow-[0_0_30px_rgba(var(--accent-rgb),0.2)] bg-app-surface/80' : ''
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.4 }}
+            className={`group relative h-[28rem] rounded-2xl overflow-hidden cursor-pointer transition-all border border-app-border glass-bento !bg-app-surface/40 backdrop-blur-md hover:border-accent/30 ${
+                isSelected ? 'ring-2 ring-accent shadow-glow-accent/20 bg-app-surface/80' : ''
             }`}
         >
             {/* Header / Avatar Area */}
@@ -432,7 +441,7 @@ const NpcGalleryItem: React.FC<{
                     </div>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 };
 

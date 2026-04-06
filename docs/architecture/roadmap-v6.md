@@ -24,10 +24,11 @@ Ce document trace les grandes orientations du projet suite à la stabilisation d
 L'objectif est d'assurer une étanchéité parfaite des données tout en simplifiant le flux du MJ.
 
 - **[x] Nexus-Link — Remote MJ Feedback loop** : Synchronisation réactive des jets de dés (local/remote) vers tous les MJ connectés.
-- **[ ] Oracle IA Contextuel** : Intégration complète de l'historique de la chronique dans les prompts pour des réponses cohérentes avec la narration passée.
+- **[x] UI Premium (Glassmorphism 2.0)** : Refonte visuelle complète des composants de Session-OS.
+- **[x] Map-OS Projection Restoration** : Restauration du flux de synchronisation atlas vers Hub/Moniteurs.
+- **[x] Oracle IA Contextuel** : Intelligence "Session-Aware" injectant personnages, indices et historique dans les prompts.
 - **[ ] Nexus-OS v2 — Driver Export** : Exporter non seulement les campagnes, mais aussi les GameDrivers (systèmes de règles) comme bundles autonomes.
 - **[ ] Nexus-OS v2 — Vérification des URLs distantes** : Avertir l'utilisateur des URLs HTTP non-portables dans le HUD (avec suggestion de migration vers le Media Hub).
-- **[ ] UI Premium (Glassmorphism 2.0)** : Refonte visuelle complète des composants de Session-OS.
 
 ---
 
@@ -39,6 +40,7 @@ Refonte des systèmes de jeu pour une automatisation intelligente.
 - **[ ] Tactical Combat Assistant** : Interface IA suggérant des actions de PNJ en fonction de la situation tactique sur l'Atlas.
 - **[ ] Échanges d'objets (P2P)** : Permettre aux joueurs de se donner des objets via le Hub (nécessite validation MJ).
 - **[ ] Notes Privées PJ** : Zone de prise de notes persistante côté serveur MJ.
+- **[ ] MapStore** : Gère l'état de l'atlas (pions, brouillard, météo). Intégré au flux `remote:broadcast-sync` via une souscription active dans l'App-Root pour une réactivité temps réel.
 
 ---
 
@@ -58,12 +60,15 @@ Extension des capacités de création et de partage.
 
 | Item | Priorité | Statut |
 |---|---|---|
-| Styles inline dans `NexusHUD.tsx` (barres de progression) | Faible | 🟡 En attente |
-| Styles inline dans `RemoteWhiteboardView.tsx` | Faible | 🟡 En attente |
-| Bouton sans `title` dans `CampaignDetails.tsx` | Faible | 🟡 En attente |
-| Tests Vitest pour `NexusService` (round-trip) | Moyenne | ⭕ À créer |
-| Migration URLs HTTP → Media Hub (campagne Anges de Feu) | Moyenne | ⭕ Manuel |
+| Styles inline dans `NexusHUD.tsx` (barres de progression) | Faible | ✅ Complété |
+| Styles inline dans `RemoteWhiteboardView.tsx` | Faible | ✅ Complété |
+| Bouton sans `title` dans `CampaignDetails.tsx` | Faible | ✅ Complété |
+| Tests Vitest pour `NexusService` (round-trip) | Moyenne | ✅ Complété |
+| Cycle de rendu infini dans `MapCanvas` (zoom bounce) | Haute | ✅ Résolu |
+| Projection Map-OS rompue sur clients distants | Haute | ✅ Résolu |
+| Conscience de session pour l'Oracle IA (PJ/Indices) | Moyenne | ✅ Finalisé |
+| Migration URLs HTTP → Media Hub (campagne Anges de Feu) | Moyenne | ✅ En cours (Logs actifs) |
 
 ---
-*Dernière mise à jour : 4 Avril 2026*
-*Statut : Phase 0 terminée. Phase 1 — Nexus-Link (Dés) opérationnel.*
+*Dernière mise à jour : 6 Avril 2026*
+*Statut : Navigation stabilisée. Oracle IA Contextuel opérationnel.*

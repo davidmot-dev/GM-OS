@@ -17,7 +17,6 @@ const ProjectorView: React.FC = () => {
     const targetId = (urlDisplayId || storeTarget) as string;
 
     const projectedUrls = useImageStore(state => state.projectedUrls);
-    const mediaList = useImageStore(state => state.mediaList);
     const { backgroundMode } = useWhiteboardStore();
     const [imagePath, setImagePath] = useState<string | null>(null);
     const [voiceLevel, setVoiceLevel] = useState(0);
@@ -222,9 +221,9 @@ const ProjectorView: React.FC = () => {
 
     // SPECIAL MODE: Tactical Map
     // We show the map if explicitly requested OR as a fallback if the monitor is active but no other image is set
-    if (imagePath === '__tactical_map__' || (targetId === 'monitor' && !imagePath)) {
-        // We use the store's current state. If the target is 'monitor', we render the canvas.
-        const isTargetMonitor = targetId === 'monitor';
+    if (imagePath === '__tactical_map__' || (targetId && targetId !== 'hub' && !imagePath)) {
+        // We use the store's current state. If the target is NOT the hub, we render the canvas.
+        const isTargetMonitor = targetId && targetId !== 'hub';
 
         
         return (

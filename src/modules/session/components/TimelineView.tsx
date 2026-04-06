@@ -14,6 +14,7 @@ import {
     Book
 } from 'lucide-react';
 import { gmCustom } from '../../../stores/useModalStore';
+import { motion } from 'framer-motion';
 
 const TimelineView: React.FC = () => {
     const { 
@@ -32,27 +33,40 @@ const TimelineView: React.FC = () => {
 
     const getIcon = (type: string) => {
         switch (type) {
-            case 'combat': return <Swords size={16} className="text-rose-400" />;
-            case 'quest': return <Scroll size={16} className="text-accent" />;
-            case 'lore': return <Book size={16} className="text-purple-400" />;
-            case 'session': return <Calendar size={16} className="text-emerald-400" />;
-            default: return <MessageSquare size={16} className="text-blue-400" />;
+            case 'combat': return <Swords size={18} className="text-rose-400" />;
+            case 'quest': return <Scroll size={18} className="text-accent" />;
+            case 'lore': return <Book size={18} className="text-purple-400" />;
+            case 'session': return <Calendar size={18} className="text-emerald-400" />;
+            default: return <MessageSquare size={18} className="text-blue-400" />;
         }
+    };
+
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: { staggerChildren: 0.05 }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { x: -20, opacity: 0 },
+        visible: { x: 0, opacity: 1, transition: { duration: 0.4, ease: [0.33, 1, 0.68, 1] as const } }
     };
 
     return (
         <div className="flex flex-col h-full bg-app-bg/20">
-            {/* Toolbar */}
-            <div className="px-8 py-4 flex items-center justify-between bg-app-surface/20 border-b border-app-border">
+            {/* Toolbar (Glass) */}
+            <div className="px-8 py-6 flex items-center justify-between bg-black/20 border-b border-white/5 backdrop-blur-md">
                 <div className="flex gap-2">
                     {['all', 'session', 'combat', 'quest', 'lore'].map(t => (
                         <button
                             key={t}
                             onClick={() => setFilter(t)}
-                            className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all ${
+                            className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all ${
                                 filter === t 
-                                    ? 'bg-accent/10 border-accent/40 text-accent' 
-                                    : 'bg-app-bg/40 border-app-border text-app-text/40 hover:text-app-text hover:border-app-border/60'
+                                    ? 'bg-accent/20 border-accent/40 text-accent shadow-glow-accent/10' 
+                                    : 'bg-white/5 border-white/5 text-app-text/40 hover:text-app-text hover:border-white/10'
                             }`}
                         >
                             {t === 'all' ? 'Tous' : t}
@@ -62,82 +76,103 @@ const TimelineView: React.FC = () => {
 
                 <button 
                     onClick={() => gmCustom('timeline-event-add')}
-                    className="flex items-center gap-2 px-4 py-2 bg-accent text-app-bg rounded-xl text-xs font-black uppercase tracking-widest shadow-glow-accent/20 hover:opacity-90 transition-all"
+                    className="flex items-center gap-2 px-5 py-2.5 bg-accent text-app-bg rounded-xl text-[10px] font-black uppercase tracking-widest shadow-glow-accent/20 hover:opacity-90 transition-all active:scale-95"
                 >
-                    <Plus size={14} />
+                    <Plus size={14} strokeWidth={3} />
                     Nouvel Événement
                 </button>
             </div>
 
             {/* Timeline List */}
-            <div className="flex-1 overflow-y-auto px-8 py-8 custom-scrollbar">
-                <div className="max-w-4xl mx-auto space-y-8 relative">
-                    {/* Vertical Line */}
-                    <div className="absolute left-[21px] top-4 bottom-4 w-0.5 bg-app-border/40" />
+            <div className="flex-1 overflow-y-auto px-8 py-12 custom-scrollbar">
+                <motion.div 
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="max-w-5xl mx-auto space-y-12 relative"
+                >
+                    {/* Vertical Line (Glowing) */}
+                    <div className="absolute left-[22.5px] top-6 bottom-6 w-0.5 bg-gradient-to-b from-accent/0 via-accent/20 to-accent/0 shadow-[0_0_10px_rgba(var(--accent-rgb),0.2)]" />
 
                     {campaignEvents.length > 0 ? (
                         campaignEvents.map((event) => (
-                            <div key={event.id} className="relative pl-14 group">
-                                {/* Dot */}
-                                <div className="absolute left-0 top-1.5 w-11 h-11 rounded-2xl bg-app-bg border border-app-border flex items-center justify-center z-10 group-hover:border-accent transition-all group-hover:shadow-glow-accent/10">
+                            <motion.div 
+                                key={event.id} 
+                                variants={itemVariants}
+                                className="relative pl-20 group"
+                            >
+                                {/* Dot (Bento Style) */}
+                                <div className="absolute left-0 top-0 w-12 h-12 rounded-2xl bg-black/60 border border-white/5 flex items-center justify-center z-10 group-hover:border-accent shadow-xl transition-all group-hover:shadow-glow-accent/20 group-hover:-translate-y-0.5">
+                                    <div className="absolute inset-0 bg-accent/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
                                     {getIcon(event.type)}
                                 </div>
 
-                                {/* Content */}
-                                <div className="bg-app-surface/40 border border-app-border rounded-2xl p-6 hover:bg-app-surface/60 transition-all hover:border-accent/20">
-                                    <div className="flex items-center justify-between mb-4">
-                                        <div className="flex items-center gap-3">
-                                            <span className="text-[10px] font-black text-accent bg-accent/10 px-2 py-0.5 rounded uppercase tracking-wider">
+                                {/* Content (Glass Bento) */}
+                                <div className="glass-bento rounded-[2.5rem] border border-white/5 p-8 hover:bg-white/5 transition-all group-hover:shadow-2xl">
+                                    <div className="flex items-center justify-between mb-6">
+                                        <div className="flex items-center gap-4">
+                                            <span className="text-[10px] font-black text-accent bg-accent/10 px-3 py-1 rounded-full uppercase tracking-widest border border-accent/20">
                                                 {event.date}
                                             </span>
-                                            <h3 className="text-sm font-black text-app-text tracking-wide">{event.title}</h3>
+                                            <h3 className="text-base font-black text-app-text tracking-tight uppercase group-hover:text-accent transition-colors">{event.title}</h3>
                                         </div>
-                                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">
                                             <button 
                                                 onClick={() => gmCustom('timeline-event-edit', event)}
-                                                className="p-1.5 hover:bg-app-bg rounded-lg text-app-text/20 hover:text-accent transition-all"
+                                                className="p-2 hover:bg-white/5 rounded-xl text-app-text/20 hover:text-accent transition-all border border-transparent hover:border-white/10"
                                                 title="Modifier l'événement"
                                             >
-                                                <Edit2 size={14} />
+                                                <Edit2 size={16} />
                                             </button>
                                             <button 
                                                 onClick={() => deleteTimelineEvent(event.id)}
-                                                className="p-1.5 hover:bg-app-bg rounded-lg text-app-text/20 hover:text-rose-400 transition-all"
+                                                className="p-2 hover:bg-white/5 rounded-xl text-app-text/20 hover:text-rose-400 transition-all border border-transparent hover:border-white/10"
                                                 title="Supprimer l'événement"
                                             >
-                                                <Trash2 size={14} />
+                                                <Trash2 size={16} />
                                             </button>
                                         </div>
                                     </div>
 
-                                    <p className="text-sm text-app-text/60 leading-relaxed mb-6">
+                                    <p className="text-sm text-app-text/60 leading-relaxed mb-8 font-medium">
                                         {event.description}
                                     </p>
 
-                                    <div className="flex flex-wrap gap-4 pt-4 border-t border-app-border/40">
+                                    <div className="flex flex-wrap gap-6 pt-6 border-t border-white/5">
                                         {event.locationId && (
-                                            <div className="flex items-center gap-2 text-[10px] font-bold text-app-text/40">
-                                                <MapPin size={12} className="text-accent" />
-                                                {atlasMaps.find(m => m.id === event.locationId)?.name}
+                                            <div className="flex items-center gap-2.5 text-[10px] font-black uppercase tracking-widest text-app-text/30">
+                                                <MapPin size={14} className="text-accent" />
+                                                <span className="group-hover:text-app-text/60 transition-colors">
+                                                    {atlasMaps.find(m => m.id === event.locationId)?.name}
+                                                </span>
                                             </div>
                                         )}
                                         {((event as { involvedEntityIds?: string[] }).involvedEntityIds || []).length > 0 && (
-                                            <div className="flex items-center gap-2 text-[10px] font-bold text-app-text/40">
-                                                <Users size={12} className="text-accent" />
-                                                {((event as { involvedEntityIds?: string[] }).involvedEntityIds || []).length} Participants
+                                            <div className="flex items-center gap-2.5 text-[10px] font-black uppercase tracking-widest text-app-text/30">
+                                                <Users size={14} className="text-accent" />
+                                                <span className="group-hover:text-app-text/60 transition-colors">
+                                                    {((event as { involvedEntityIds?: string[] }).involvedEntityIds || []).length} Participants
+                                                </span>
                                             </div>
                                         )}
                                     </div>
                                 </div>
-                            </div>
+                            </motion.div>
                         ))
                     ) : (
-                        <div className="flex flex-col items-center justify-center py-20 text-app-text/20 gap-4">
-                            <LucideHistory size={48} strokeWidth={1} />
-                            <p className="font-bold text-sm tracking-widest uppercase">Aucun événement enregistré</p>
-                        </div>
+                        <motion.div 
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className="flex flex-col items-center justify-center py-32 text-app-text/20 gap-6"
+                        >
+                            <LucideHistory size={64} strokeWidth={1} className="opacity-20 translate-y-4" />
+                            <div className="text-center">
+                                <p className="font-black text-xs tracking-[0.4em] uppercase">Silence dans les Archives</p>
+                                <p className="text-[10px] opacity-40 mt-2 uppercase tracking-[0.2em]">Aucun événement enregistré dans cette période</p>
+                            </div>
+                        </motion.div>
                     )}
-                </div>
+                </motion.div>
             </div>
         </div>
     );

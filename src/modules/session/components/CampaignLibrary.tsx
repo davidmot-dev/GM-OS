@@ -1,5 +1,6 @@
 import React from 'react';
 import { Plus, Search, BookOpen, Trash2, ArrowRight, Settings, Package, Upload } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { gmConfirm, gmCustom } from '../../../stores/useModalStore';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
@@ -107,7 +108,7 @@ const CampaignLibrary: React.FC = () => {
                 {/* Global Import Action */}
                 <button
                     onClick={handleImport}
-                    className="flex items-center gap-2 bg-app-surface/60 border border-app-border/40 px-6 py-3 rounded-xl text-app-text/60 font-bold hover:bg-app-surface hover:text-app-text transition-all"
+                    className="flex items-center gap-2 glass-bento px-6 py-3 rounded-xl text-app-text/60 font-bold hover:text-app-text transition-all hover:-translate-y-0.5"
                 >
                     <Upload size={20} />
                     IMPORT NEXUS BUNDLE
@@ -122,11 +123,26 @@ const CampaignLibrary: React.FC = () => {
                 </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <motion.div 
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                initial="hidden"
+                animate="visible"
+                variants={{
+                    hidden: { opacity: 0 },
+                    visible: {
+                        opacity: 1,
+                        transition: { staggerChildren: 0.1 }
+                    }
+                }}
+            >
                 {campaigns.map(campaign => (
-                    <div
+                    <motion.div
                         key={campaign.id}
-                        className={`group relative overflow-hidden rounded-2xl border-2 transition-all duration-500 hover:scale-[1.02] cursor-pointer shadow-xl ${campaign.id === activeCampaignId ? 'border-accent bg-app-surface/80 shadow-glow-accent/5' : 'border-app-border/40 bg-app-surface/40 hover:border-app-border/80'}`}
+                        variants={{
+                            hidden: { opacity: 0, y: 20 },
+                            visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+                        }}
+                        className={`group glass-bento relative overflow-hidden rounded-2xl transition-all duration-500 hover:scale-[1.02] cursor-pointer shadow-xl ${campaign.id === activeCampaignId ? 'ring-2 ring-accent shadow-glow-accent/20' : 'hover:ring-1 hover:ring-white/20 hover:shadow-glow-accent/5'}`}
                         onClick={() => handleSelectCampaign(campaign.id)}
                     >
                         {/* Background subtle image if available */}
@@ -216,9 +232,9 @@ const CampaignLibrary: React.FC = () => {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
                 ))}
-            </div>
+            </motion.div>
 
             {/* Nexus Overlays */}
             {nexusProgress && (

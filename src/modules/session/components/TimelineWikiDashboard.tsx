@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import TimelineView from './TimelineView';
 import WikiView from './WikiView';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const TimelineWikiDashboard: React.FC = () => {
     const { setCurrentView, activeCampaignId, campaigns, wikiTab, setWikiTab } = useSessionOSStore();
@@ -17,9 +18,9 @@ const TimelineWikiDashboard: React.FC = () => {
     if (!activeCampaign) return null;
 
     return (
-        <div className="flex flex-col h-full bg-app-bg text-app-text animate-in fade-in duration-500">
-            {/* Header */}
-            <div className="flex items-center justify-between px-8 py-4 bg-app-surface/40 border-b border-app-border backdrop-blur-md">
+        <div className="flex flex-col h-full bg-app-bg text-app-text">
+            {/* Header Area (Glassmorphism 2.0) */}
+            <header className="flex items-center justify-between px-8 py-6 bg-app-surface/20 border-b border-app-border/40 backdrop-blur-3xl shrink-0 z-20">
                 <div className="flex items-center gap-6">
                     <button 
                         onClick={() => setCurrentView('campaign-details')}
@@ -38,13 +39,13 @@ const TimelineWikiDashboard: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="flex items-center gap-1 p-1 bg-app-bg/60 rounded-xl border border-app-border">
+                <div className="flex items-center gap-1 p-1 bg-black/40 rounded-2xl border border-white/5 backdrop-blur-md">
                     <button
                         onClick={() => setWikiTab('timeline')}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${
+                        className={`flex items-center gap-2 px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
                             wikiTab === 'timeline' 
-                                ? 'bg-accent text-app-bg shadow-glow-accent/20' 
-                                : 'text-app-text/40 hover:text-app-text hover:bg-app-surface'
+                                ? 'bg-accent text-app-bg shadow-glow-accent' 
+                                : 'text-app-text/40 hover:text-app-text hover:bg-white/5'
                         }`}
                     >
                         <History size={14} />
@@ -52,25 +53,36 @@ const TimelineWikiDashboard: React.FC = () => {
                     </button>
                     <button
                         onClick={() => setWikiTab('wiki')}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${
+                        className={`flex items-center gap-2 px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
                             wikiTab === 'wiki' 
-                                ? 'bg-accent text-app-bg shadow-glow-accent/20' 
-                                : 'text-app-text/40 hover:text-app-text hover:bg-app-surface'
+                                ? 'bg-accent text-app-bg shadow-glow-accent' 
+                                : 'text-app-text/40 hover:text-app-text hover:bg-white/5'
                         }`}
                     >
                         <Book size={14} />
                         Wiki du Monde
                     </button>
                 </div>
-            </div>
+            </header>
 
-            {/* Content Area */}
+            {/* Content Area with Transitions */}
             <div className="flex-1 overflow-hidden relative">
-                {wikiTab === 'timeline' ? (
-                    <TimelineView />
-                ) : (
-                    <WikiView />
-                )}
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={wikiTab}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.3, ease: [0.33, 1, 0.68, 1] }}
+                        className="h-full"
+                    >
+                        {wikiTab === 'timeline' ? (
+                            <TimelineView />
+                        ) : (
+                            <WikiView />
+                        )}
+                    </motion.div>
+                </AnimatePresence>
             </div>
         </div>
     );

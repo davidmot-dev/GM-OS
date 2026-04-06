@@ -163,7 +163,7 @@ function App() {
 
   const syncFast = useCallback((segmentName: string) => {
     try {
-      const payload: Record<string, any> = {};
+      const payload: Record<string, unknown> = {};
       if (segmentName === 'dice') {
         const s = useDiceStore.getState();
         payload.dice = { lastRoll: s.lastRoll, isDiceProjected: s.isDiceProjected, projectionTrigger: s.projectionTrigger };
@@ -185,6 +185,15 @@ function App() {
             activeDrawerId: s.activeDrawerId,
             pathsCount: s.paths.length,
             version: s.version
+        };
+      } else if (segmentName === 'map') {
+        const s = useMapStore.getState();
+        payload.map = {
+          projectionTarget: s.projectionTarget,
+          projectedMapUrl: s.projectedMapUrl,
+          projectedTokens: s.projectedTokens,
+          projectedPings: s.projectedPings,
+          projectedFogDataUrl: s.projectedFogDataUrl
         };
       }
 
@@ -340,6 +349,28 @@ function App() {
         isDiceProjected: diceStore.isDiceProjected,
         projectionTrigger: diceStore.projectionTrigger
       };
+      
+      const mapStore = useMapStore.getState();
+      const map = {
+          projectionTarget: mapStore.projectionTarget,
+          projectedMapUrl: mapStore.projectedMapUrl,
+          projectedIsVideo: mapStore.projectedIsVideo,
+          projectedFogDataUrl: mapStore.projectedFogDataUrl,
+          projectedTokens: mapStore.projectedTokens,
+          projectedPings: mapStore.projectedPings,
+          projectedMagicEffects: mapStore.projectedMagicEffects,
+          projectedWeatherType: mapStore.projectedWeatherType,
+          projectedWeatherIntensity: mapStore.projectedWeatherIntensity,
+          projectedMapWidth: mapStore.projectedMapWidth,
+          projectedMapHeight: mapStore.projectedMapHeight,
+          projectedIsGridEnabled: mapStore.projectedIsGridEnabled,
+          projectedGridSize: mapStore.projectedGridSize,
+          projectedGridColor: mapStore.projectedGridColor,
+          projectedGridOpacity: mapStore.projectedGridOpacity,
+          projectedIsMapMuted: mapStore.projectedIsMapMuted,
+          projectedMapVolume: mapStore.projectedMapVolume,
+          projectedDangerZones: mapStore.projectedDangerZones
+      };
 
       const activeCampaign = campaigns.find(c => String(c.id) === String(currentCampaignId));
       const activeDriver = sessionOSStore.getActiveDriver();
@@ -424,7 +455,7 @@ function App() {
           ),
       };
 
-      const currentState = { sounds, moments, masterVolume: soundStore.masterVolume, combat, notes, whiteboard, clock, universalPads, session, dice };
+      const currentState = { sounds, moments, masterVolume: soundStore.masterVolume, combat, notes, whiteboard, clock, universalPads, session, dice, map };
       const diffPayload = force ? currentState : getDifferentialPayload(currentState, lastBroadcastRef.current);
       
       if (Object.keys(diffPayload).length > 0) {
@@ -436,7 +467,7 @@ function App() {
         const err = e instanceof Error ? e.message : String(e);
         console.error("[Sync] Error in handleSync:", err); 
     }
-  }, [activeCampaignId, sessionOSStore]);
+  }, [activeCampaignId, sessionOSStore, resolveToSendableUrl]);
 
   const handleAction = useCallback((data: RemoteAction) => {
     const { type, payload } = data;
@@ -729,7 +760,15 @@ function App() {
     const unsubFavorite = useFavoriteStore.subscribe(() => handleSync(false));
     const unsubStoryboard = useStoryboardStore.subscribe(() => handleSync(false));
     const unsubCombat = useCombatStore.subscribe(() => syncFast('combat'));
-    
+    const unsubMap = useMapStore.subscribe((state, prevState) => {
+        // High frequency for pings/tokens, full sync for map changes
+        if (state.projectedMapUrl !== prevState.projectedMapUrl || state.projectionTarget !== prevState.projectionTarget) {
+            handleSync(false);
+        } else {
+            syncFast('map');
+        }
+    });
+
     handleSync();
 
     return () => {
@@ -746,6 +785,7 @@ function App() {
       unsubFavorite();
       unsubStoryboard();
       unsubCombat();
+      unsubMap();
       unsubscribeCombat();
       console.log('[App] Remote effect cleanup - IPC listeners removed.');
     };

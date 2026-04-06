@@ -4,6 +4,7 @@ import {
     Book, Bot, User, Trash2, BookOpen, PenTool, Music, Beaker, Map,
     ChevronDown, type LucideIcon 
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNotebookLM } from '../hooks/useNotebookLM';
 import { useGemStore } from '../../../stores/useGemStore';
 import { useSessionOSStore } from '../useSessionOSStore';
@@ -183,7 +184,7 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
             )}
 
             <aside 
-                className={`fixed inset-y-0 right-0 w-[650px] max-w-full premium-glass border-l border-cyan-500/20 shadow-2xl z-[100] transform transition-transform duration-500 ease-out flex flex-col ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+                className={`fixed inset-y-0 right-0 w-[650px] max-w-full glass-bento border-l border-cyan-500/20 shadow-2xl z-[100] transform transition-transform duration-500 ease-out flex flex-col ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
             >
                 <div className="absolute inset-0 bg-cyan-500/5 pointer-events-none" />
                 {/* Header */}
@@ -204,9 +205,9 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                         <div className="relative group max-w-[240px] flex-1">
                             <button 
                                 onClick={() => setIsGemMenuOpen(!isGemMenuOpen)}
-                                className={`w-full flex items-center gap-3 p-1.5 pr-4 rounded-2xl transition-all border nav-item-glow ${
+                                className={`w-full flex items-center gap-3 p-1.5 pr-4 rounded-2xl transition-all border ${
                                     isGemMenuOpen 
-                                        ? 'bg-cyan-500/10 border-cyan-400/40 shadow-[0_0_15px_rgba(6,182,212,0.1)]' 
+                                        ? 'bg-cyan-500/20 border-cyan-400/40 shadow-glow-accent/20' 
                                         : 'bg-white/5 border-white/5 hover:border-cyan-500/30 hover:bg-white/10'
                                 }`}
                             >
@@ -339,7 +340,7 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                                 {availableSources.map(source => (
                                     <button
                                         key={source.type}
-                                        onClick={() => setUserSelectedType(source.type as any)}
+                                        onClick={() => setUserSelectedType(source.type as 'campaign' | 'driver' | 'template')}
                                         className={`px-3 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all ${
                                             selectedUrlType === source.type 
                                                 ? 'bg-accent text-app-bg shadow-glow-accent/20' 
@@ -393,21 +394,35 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                                         <p className="text-sm max-w-xs">{activeGem?.description || "Posez vos questions sur les règles ou l'univers."}</p>
                                     </div>
                                 ) : (
-                                    messages.map((msg, idx) => (
-                                        <div key={idx} className={`flex gap-4 ${msg.role === 'assistant' ? 'bg-accent/5 -mx-6 px-6 py-6' : ''}`}>
-                                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${msg.role === 'assistant' ? 'bg-accent text-app-bg' : 'bg-app-surface text-app-text/40'}`}>
-                                                {msg.role === 'assistant' ? <GemIcon size={18} /> : <User size={18} />}
-                                            </div>
-                                            <div className="space-y-1 overflow-hidden">
-                                                <p className={`text-[10px] font-black uppercase tracking-widest ${msg.role === 'assistant' ? 'text-accent' : 'text-app-text/20'}`}>
-                                                    {msg.role === 'assistant' ? activeGem?.name : 'Maître du Jeu'}
-                                                </p>
-                                                <div className="text-sm leading-relaxed text-app-text/80 whitespace-pre-wrap prose prose-invert prose-sm max-w-none">
-                                                    {msg.content}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))
+                                    <div className="space-y-6">
+                                        <AnimatePresence initial={false}>
+                                            {messages.map((msg, idx) => (
+                                                <motion.div 
+                                                    key={idx}
+                                                    initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                    transition={{ duration: 0.4, ease: "easeOut" }}
+                                                    className={`glass-bento flex gap-4 p-4 transition-all !rounded-2xl ${
+                                                        msg.role === 'assistant' 
+                                                            ? 'bg-accent/5 border-accent/10' 
+                                                            : 'bg-white/5 border-white/5'
+                                                    }`}
+                                                >
+                                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 shadow-lg ${msg.role === 'assistant' ? 'bg-accent text-app-bg' : 'bg-app-surface text-app-text/40'}`}>
+                                                        {msg.role === 'assistant' ? <GemIcon size={18} /> : <User size={18} />}
+                                                    </div>
+                                                    <div className="space-y-1 overflow-hidden flex-1">
+                                                        <p className={`text-[9px] font-black uppercase tracking-widest ${msg.role === 'assistant' ? 'text-accent' : 'text-app-text/20'}`}>
+                                                            {msg.role === 'assistant' ? activeGem?.name : 'Maître du Jeu'}
+                                                        </p>
+                                                        <div className="text-sm leading-relaxed text-app-text/80 whitespace-pre-wrap prose prose-invert prose-sm max-w-none">
+                                                            {msg.content}
+                                                        </div>
+                                                    </div>
+                                                </motion.div>
+                                            ))}
+                                        </AnimatePresence>
+                                    </div>
                                 )}
                                 {isQuerying && (
                                     <div className="flex gap-4 animate-pulse">
@@ -423,11 +438,11 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                                 )}
                             </div>
 
-                            {/* Input Area */}
-                            <div className="p-6 border-t border-app-border bg-app-surface/20 shrink-0">
+                            {/* Input Area (Bento Style) */}
+                            <div className="p-6 border-t border-app-border/40 bg-app-surface/20 shrink-0">
                                 <form 
                                     onSubmit={handleSendMessage}
-                                    className="relative group"
+                                    className="relative group glass-bento !rounded-3xl p-1"
                                 >
                                     <textarea
                                         value={input}
@@ -440,12 +455,12 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                                         }}
                                         placeholder="Écrivez votre question ici..."
                                         rows={3}
-                                        className="w-full bg-app-bg border border-app-border/40 rounded-2xl py-4 pl-4 pr-14 text-sm focus:outline-none focus:ring-1 focus:ring-accent/40 transition-all resize-none font-medium custom-scrollbar"
+                                        className="w-full bg-app-bg/40 backdrop-blur-md border-none rounded-[1.4rem] py-4 pl-4 pr-14 text-sm focus:outline-none transition-all resize-none font-medium custom-scrollbar"
                                     />
                                     <button
                                         type="submit"
                                         disabled={!input.trim() || isQuerying}
-                                        className={`absolute right-3 bottom-3 p-2.5 rounded-xl transition-all ${!input.trim() || isQuerying ? 'text-app-text/20 bg-app-surface' : 'bg-accent text-app-bg shadow-glow-accent/20 hover:scale-110 active:scale-95'}`}
+                                        className={`absolute right-3 bottom-3 w-10 h-10 rounded-xl flex items-center justify-center transition-all ${!input.trim() || isQuerying ? 'text-app-text/20 bg-app-surface' : 'bg-accent text-app-bg shadow-glow-accent/20 hover:scale-105 active:scale-95'}`}
                                         title="Envoyer la question"
                                     >
                                         <Send size={18} />

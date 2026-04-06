@@ -94,7 +94,7 @@ const AIChatPanel: React.FC = () => {
               <h3 className="text-sm font-bold tracking-tight uppercase">AI Companion</h3>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[10px] font-mono text-app-text/40 uppercase tracking-widest leading-none">Contextual RAG Active</span>
+                <span className="text-[10px] font-mono text-app-text/40 uppercase tracking-widest leading-none">Contextual Oracle Active</span>
               </div>
             </div>
           </div>

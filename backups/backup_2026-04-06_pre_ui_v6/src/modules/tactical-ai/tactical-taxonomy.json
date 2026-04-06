@@ -1,0 +1,109 @@
+{
+  "mappings": [
+    {
+      "keywords": ["feu", "flamme", "incendie", "brûle"],
+      "tags": ["fire", "damage"],
+      "intensity": 0.8,
+      "hardware": { "scene": "Fire", "color": "#FF3300", "priority": 1 },
+      "audio": { "effect": "target_lock.mp3" },
+      "ambientSceneId": "scene-tension"
+    },
+    {
+      "keywords": ["soin", "guérit", "lumière", "divin"],
+      "tags": ["heal", "holy"],
+      "intensity": 0.6,
+      "hardware": { "scene": "Holy Light", "color": "#00ffff", "priority": 2 },
+      "audio": { "effect": "target_lock.mp3" }
+    },
+    {
+      "keywords": ["froid", "glace", "neige", "gel"],
+      "tags": ["ice", "slow"],
+      "intensity": 0.5,
+      "hardware": { "scene": "Arctic", "color": "#000080", "priority": 2 },
+      "audio": { "effect": "ice_shatter.mp3" }
+    },
+    {
+      "keywords": ["foudre", "tonnerre", "éclair"],
+      "tags": ["lightning", "shock"],
+      "intensity": 1.0,
+      "hardware": { "scene": "Storm", "color": "#ffffff", "priority": 1 },
+      "audio": { "effect": "thunder_crack.mp3" },
+      "ambientSceneId": "scene-action"
+    },
+    {
+      "keywords": ["poison", "venin", "empoisonné"],
+      "tags": ["acid", "debuff"],
+      "intensity": 0.7,
+      "hardware": { "scene": "Poison", "color": "#00ff00", "priority": 2 },
+      "audio": { "effect": "proximity_alarm.mp3" }
+    },
+    {
+      "keywords": ["étourdi", "stun", "confus"],
+      "tags": ["status", "disorient"],
+      "intensity": 0.9,
+      "hardware": { "scene": "Stun", "color": "#ff00ff", "priority": 1 },
+      "audio": { "effect": "target_lock.mp3" }
+    },
+    {
+      "keywords": ["à terre", "chute", "renversé"],
+      "tags": ["status", "prone"],
+      "intensity": 0.6,
+      "hardware": { "scene": "Prone", "color": "#8b4513", "priority": 2 }
+    },
+    {
+      "keywords": ["concentration", "focus"],
+      "tags": ["status", "buff"],
+      "intensity": 0.5,
+      "hardware": { "scene": "Concentration", "color": "#800080", "priority": 2 }
+    },
+    {
+      "keywords": ["invisibilité", "invisible", "caché"],
+      "tags": ["status", "stealth"],
+      "intensity": 0.3,
+      "hardware": { "scene": "Stealth", "color": "#E1EE7C", "priority": 2 }
+    },
+    {
+      "keywords": ["béni", "bénédiction", "bénis"],
+      "tags": ["status", "holy"],
+      "intensity": 0.7,
+      "hardware": { "scene": "Blessing", "color": "#ffd700", "priority": 2 },
+      "audio": { "effect": "target_lock.mp3" }
+    },
+    {
+      "keywords": ["maudit", "malédiction"],
+      "tags": ["status", "curse"],
+      "intensity": 0.8,
+      "hardware": { "scene": "Curse", "color": "#ff0000", "priority": 2 }
+    },
+    {
+      "keywords": ["contact", "melo", "corps à corps", "engagé"],
+      "tags": ["range", "danger"],
+      "intensity": 0.8,
+      "hardware": { "scene": "Combat Range", "color": "#ff0000", "priority": 10 },
+      "audio": { "effect": "proximity_alarm.mp3" }
+    },
+    {
+      "keywords": ["courte", "proche", "short"],
+      "tags": ["range", "engagement"],
+      "intensity": 0.6,
+      "hardware": { "scene": "Tactical Green", "color": "#00ff00", "priority": 11 },
+      "audio": { "effect": "target_lock.mp3" }
+    },
+    {
+      "keywords": ["moyenne", "medium"],
+      "tags": ["range", "medium"],
+      "intensity": 0.4,
+      "hardware": { "scene": "Neutral", "color": "#0000ff", "priority": 12 }
+    },
+    {
+      "keywords": ["longue", "long"],
+      "tags": ["range", "long"],
+      "intensity": 0.3
+    },
+    {
+      "keywords": ["extrême", "extreme"],
+      "tags": ["range", "extreme"],
+      "intensity": 0.2
+    }
+  ]
+}
