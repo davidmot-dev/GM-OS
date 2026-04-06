@@ -49108,6 +49108,7 @@ function requireAdmZip() {
 var admZipExports = requireAdmZip();
 const AdmZip = /* @__PURE__ */ getDefaultExportFromCjs(admZipExports);
 const NEXUS_EXTENSION = ".gmos";
+const NEXUS_DRIVER_EXTENSION = ".gmos-driver";
 const SCHEMA_VERSION = 1;
 const MEDIA_HUB_ID_PATTERN = /^m-\d+/;
 const pendingAssetCache = /* @__PURE__ */ new Map();
@@ -49158,8 +49159,8 @@ function isDangerousRelativePath(p) {
 function isResolvedFilePath(ref) {
   return path$1.isAbsolute(ref) && !MEDIA_HUB_ID_PATTERN.test(ref);
 }
-async function handleExportBundle(campaignId, outputPath, stateJson, manifestJson, assetRefs) {
-  console.log(`[Nexus Bridge] Export démarré : ${campaignId} → ${outputPath}`);
+async function handleExportBundle(contextId, outputPath, stateJson, manifestJson, assetRefs) {
+  console.log(`[Nexus Bridge] Export démarré : ${contextId} → ${outputPath}`);
   const inlineAssetsCount = pendingAssetCache.size;
   console.log(`[Nexus Bridge] ${inlineAssetsCount} asset(s) en cache mémoire prêts à archiver.`);
   const missingAssets = [];
@@ -49257,8 +49258,11 @@ async function handleExportBundle(campaignId, outputPath, stateJson, manifestJso
       const finalManifest = {
         schemaVersion: SCHEMA_VERSION,
         bundleId: partialManifest.bundleId ?? `nexus-${Date.now()}`,
-        campaignId,
-        campaignName: partialManifest.campaignName ?? campaignId,
+        bundleType: partialManifest.bundleType ?? "campaign",
+        campaignId: partialManifest.campaignId,
+        campaignName: partialManifest.campaignName,
+        driverId: partialManifest.driverId,
+        driverName: partialManifest.driverName,
         exportedAt: partialManifest.exportedAt ?? (/* @__PURE__ */ new Date()).toISOString(),
         gmosVersion: partialManifest.gmosVersion ?? "5.3.0",
         requiredDriverIds: partialManifest.requiredDriverIds ?? [],
@@ -49276,7 +49280,8 @@ async function handleExportBundle(campaignId, outputPath, stateJson, manifestJso
       };
       await fs.writeFile(path$1.join(tempDir, "manifest.json"), JSON.stringify(finalManifest, null, 2), "utf-8");
       await fs.writeFile(path$1.join(tempDir, "state.json"), stateJson, "utf-8");
-      const finalOutputPath = outputPath.endsWith(NEXUS_EXTENSION) ? outputPath : `${outputPath}${NEXUS_EXTENSION}`;
+      const extension = partialManifest.bundleType === "driver" ? NEXUS_DRIVER_EXTENSION : NEXUS_EXTENSION;
+      const finalOutputPath = outputPath.endsWith(extension) ? outputPath : `${outputPath}${extension}`;
       await createZipBundle(tempDir, finalOutputPath);
       console.log(`[Nexus Bridge] Export terminé : ${finalOutputPath} (${assetMap.length} assets, ${missingAssets.length} manquants)`);
       return {
@@ -49380,7 +49385,7 @@ async function handleImportBundle(filePath) {
     } catch {
       console.warn("[Nexus Bridge] Impossible d'extraire les données audio du state.json.");
     }
-    console.log(`[Nexus Bridge] Import parsé : ${manifest.campaignName}, ${Object.keys(assetData).length} assets`);
+    console.log(`[Nexus Bridge] Import parsé : Bundle = ${manifest.bundleId}, ${Object.keys(assetData).length} assets`);
     return {
       success: true,
       manifestJson,
@@ -49411,28 +49416,32 @@ function registerNexusHandlers() {
   });
   ipcMain.handle(
     "nexus:export-bundle",
-    async (_event, campaignId, outputPath, stateJson, manifestJson, assetRefs) => {
-      return handleExportBundle(campaignId, outputPath, stateJson, manifestJson, assetRefs);
+    async (_event, contextId, outputPath, stateJson, manifestJson, assetRefs) => {
+      return handleExportBundle(contextId, outputPath, stateJson, manifestJson, assetRefs);
     }
   );
   ipcMain.handle("nexus:import-bundle", async (_event, filePath) => {
     return handleImportBundle(filePath);
   });
-  ipcMain.handle("nexus:select-export-path", async () => {
+  ipcMain.handle("nexus:select-export-path", async (_event, bundleType) => {
+    const ext = bundleType === "driver" ? NEXUS_DRIVER_EXTENSION : NEXUS_EXTENSION;
+    const defaultName = bundleType === "driver" ? `driver_gmos_${Date.now()}${ext}` : `campagne_gmos_${Date.now()}${ext}`;
+    const filterName = bundleType === "driver" ? "GM-OS Driver" : "GM-OS Bundle";
+    const filterExt = ext.replace(".", "");
     const { filePath } = await dialog.showSaveDialog({
-      title: "Exporter la Campagne GM-OS",
-      defaultPath: `campagne_gmos_${Date.now()}${NEXUS_EXTENSION}`,
+      title: bundleType === "driver" ? "Exporter le GameDriver GM-OS" : "Exporter la Campagne GM-OS",
+      defaultPath: defaultName,
       filters: [
-        { name: "GM-OS Bundle", extensions: ["gmos"] }
+        { name: filterName, extensions: [filterExt] }
       ]
     });
     return filePath ?? null;
   });
   ipcMain.handle("nexus:select-import-file", async () => {
     const { filePaths } = await dialog.showOpenDialog({
-      title: "Importer une Campagne GM-OS (.gmos)",
+      title: "Importer une Archive GM-OS (.gmos / .gmos-driver)",
       filters: [
-        { name: "GM-OS Bundle", extensions: ["gmos"] }
+        { name: "GM-OS Archive", extensions: ["gmos", "gmos-driver"] }
       ],
       properties: ["openFile"]
     });

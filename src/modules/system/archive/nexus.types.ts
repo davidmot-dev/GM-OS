@@ -28,8 +28,14 @@ import type { DeckManifest, DeckSessionState } from '../../session/store/types';
 /** Version du schéma du manifeste. Incrémenter lors de changements incompatibles. */
 export const NEXUS_SCHEMA_VERSION = 1;
 
-/** Extension officielle des archives Nexus-OS */
+/** Extension officielle des archives Nexus-OS (Campagnes) */
 export const NEXUS_EXTENSION = '.gmos';
+
+/** Extension officielle des archives Nexus-OS (Game Drivers) */
+export const NEXUS_DRIVER_EXTENSION = '.gmos-driver';
+
+/** Type de bundle Nexus-OS */
+export type NexusBundleType = 'campaign' | 'driver';
 
 // ─────────────────────────────────────────────
 // MANIFEST
@@ -61,10 +67,16 @@ export interface NexusManifest {
     schemaVersion: typeof NEXUS_SCHEMA_VERSION;
     /** Identifiant unique de l'archive */
     bundleId: string;
-    /** ID de la campagne source */
-    campaignId: string;
-    /** Nom de la campagne (pour affichage sans décompression) */
-    campaignName: string;
+    /** Type du bundle (rétrocompatibilité: par défaut 'campaign' si absent) */
+    bundleType?: NexusBundleType;
+    /** ID de la campagne source (optionnel si bundleType === 'driver') */
+    campaignId?: string;
+    /** Nom de la campagne (optionnel si bundleType === 'driver') */
+    campaignName?: string;
+    /** ID du GameDriver source (si bundleType === 'driver') */
+    driverId?: string;
+    /** Nom du GameDriver (si bundleType === 'driver') */
+    driverName?: string;
     /** Timestamp ISO 8601 de l'export */
     exportedAt: string;
     /** Version de GM-OS ayant généré l'archive */
@@ -141,8 +153,21 @@ export interface NexusCampaignState {
     /**
      * Niveau 5 — Playlists musicales (Music Decks).
      * Chaque Playlist contient ses MusicPads avec leur url.
+    /**
+     * Niveau 5 — Playlists musicales (Music Decks).
+     * Chaque Playlist contient ses MusicPads avec leur url.
      */
     playlists?: Playlist[];
+}
+
+/**
+ * Représentation sérialisée d'un GameDriver et de ses dépendances.
+ */
+export interface NexusDriverState {
+    /** Le système de règles exporté */
+    gameDriver: import('../../../types/drivers').GameDriver;
+    /** Le template de fiche personnalisé exporté avec ce driver, le cas échéant */
+    sheetTemplate?: import('../../../data/defaultSheetTemplates').SheetTemplate;
 }
 
 // ─────────────────────────────────────────────
@@ -249,19 +274,19 @@ export type NexusConflictStrategy = 'replace' | 'clone' | 'cancel';
  */
 export interface NexusConflict {
     /** Type d'entité en conflit */
-    type: 'campaign';
+    type: 'campaign' | 'driver';
     /** ID en conflit dans le store actuel */
     existingId: string;
-    /** Nom de la campagne existante */
+    /** Nom de l'entité existante */
     existingName: string;
-    /** Nom de la campagne dans le bundle importé */
+    /** Nom de l'entité dans le bundle importé */
     incomingName: string;
     /** Date d'export du bundle */
     exportedAt: string;
-    /** Nombre d'entités dans le bundle */
-    entityCount: number;
-    /** Nombre de sessions dans le bundle */
-    sessionCount: number;
+    /** Nombre d'entités dans le bundle (spécifique aux campagnes) */
+    entityCount?: number;
+    /** Nombre de sessions dans le bundle (spécifique aux campagnes) */
+    sessionCount?: number;
 }
 
 /**

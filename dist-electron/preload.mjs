@@ -129,12 +129,12 @@ contextBridge.exposeInMainWorld("appBridge", {
     saveData: (data) => ipcRenderer.invoke("backup:save-data", data)
   },
   nexus: {
-    selectExportPath: () => ipcRenderer.invoke("nexus:select-export-path"),
+    selectExportPath: (bundleType) => ipcRenderer.invoke("nexus:select-export-path", bundleType),
     selectImportFile: () => ipcRenderer.invoke("nexus:select-import-file"),
     // Streaming d'un seul asset vers le main process (évite la limite de taille IPC)
     registerAsset: (mediaHubId, dataUrl) => ipcRenderer.invoke("nexus:register-asset", mediaHubId, dataUrl),
     clearAssets: () => ipcRenderer.invoke("nexus:clear-assets"),
-    exportBundle: (campaignId, outputPath, stateJson, manifestJson, assetRefs) => ipcRenderer.invoke("nexus:export-bundle", campaignId, outputPath, stateJson, manifestJson, assetRefs),
+    exportBundle: (contextId, outputPath, stateJson, manifestJson, assetRefs) => ipcRenderer.invoke("nexus:export-bundle", contextId, outputPath, stateJson, manifestJson, assetRefs),
     importBundle: (filePath) => ipcRenderer.invoke("nexus:import-bundle", filePath)
   }
 });

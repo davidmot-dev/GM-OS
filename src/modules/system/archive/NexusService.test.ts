@@ -590,7 +590,8 @@ describe('detectConflicts', () => {
             ...baseState,
             campaign: { ...mockCampaign, id: 'c-brand-new-id' },
         };
-        const conflicts = service.detectConflicts(baseManifest, differentState);
+        const differentManifest = { ...baseManifest, campaignId: 'c-brand-new-id' };
+        const conflicts = service.detectConflicts(differentManifest, differentState);
         expect(conflicts).toHaveLength(0);
     });
 

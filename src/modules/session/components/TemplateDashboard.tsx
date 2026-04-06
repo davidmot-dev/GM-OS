@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { DEFAULT_SHEET_TEMPLATES, type SheetTemplate } from '../../../data/defaultSheetTemplates';
-import { Search, Hammer, Trash2, Copy, FileText, Sparkles, CheckCircle2, ChevronRight, Pencil } from 'lucide-react';
+import { Search, Hammer, Trash2, Copy, FileText, Sparkles, CheckCircle2, ChevronRight, Pencil, DownloadCloud, Upload } from 'lucide-react';
 import { gmToast } from '../../../stores/useToastStore';
 import { useModalStore } from '../../../stores/useModalStore';
 import type { GameDriver } from '../../../types/drivers';
+import { nexusService } from '../../system/archive/NexusService';
+import type { NexusProgress, NexusConflict, NexusConflictResolution } from '../../system/archive/nexus.types';
+import { NexusHUD } from '../../system/archive/NexusHUD';
+import { NexusConflictResolver } from '../../system/archive/NexusConflictResolver';
 
 const TemplateDashboard: React.FC = () => {
     const { 
@@ -22,6 +26,43 @@ const TemplateDashboard: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<'sheets' | 'drivers'>('sheets');
+
+    // ── Nexus-OS State ──────────────────────────────────────────────
+    const [nexusProgress, setNexusProgress] = useState<NexusProgress | null>(null);
+    const isNexusAvailable = typeof window !== 'undefined' && !!window.appBridge?.nexus;
+    const [conflictState, setConflictState] = useState<NexusConflict[] | null>(null);
+    const resolverRef = useRef<((resolution: NexusConflictResolution) => void) | null>(null);
+
+    const handleExportDriver = async (driverId: string) => {
+        if (!driverId) return;
+        nexusService.onProgress(setNexusProgress);
+        setNexusProgress({ phase: 'scraping', progress: 0, message: 'Démarrage de l\'export...' });
+        await nexusService.exportDriverBundle(driverId);
+        setTimeout(() => setNexusProgress(null), 3000);
+    };
+
+    const handleImportDriver = async () => {
+        nexusService.onProgress(setNexusProgress);
+        setNexusProgress({ phase: 'importing', progress: 0, message: 'Sélectionnez un fichier .gmos-driver...' });
+
+        const onConflict = (conflicts: NexusConflict[]): Promise<NexusConflictResolution> => {
+            setConflictState(conflicts);
+            return new Promise<NexusConflictResolution>((resolve) => {
+                resolverRef.current = resolve;
+            });
+        };
+
+        await nexusService.importBundle(onConflict);
+        setConflictState(null);
+        setTimeout(() => setNexusProgress(null), 3000);
+    };
+
+    const handleConflictResolve = (resolution: NexusConflictResolution) => {
+        setConflictState(null);
+        resolverRef.current?.(resolution);
+        resolverRef.current = null;
+    };
+    // ────────────────────────────────────────────────────────────────
 
     const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
     
@@ -66,6 +107,7 @@ const TemplateDashboard: React.FC = () => {
     const selectedTemplate = selectedItem && activeTab === 'sheets' ? (selectedItem as SheetTemplate) : null;
 
     return (
+        <>
         <div className="flex-1 flex overflow-hidden h-full bg-app-bg animate-in fade-in duration-500">
             {/* Left Column: Library */}
             <div className="flex-1 flex flex-col border-r border-app-border/40 min-w-[600px]">
@@ -79,13 +121,24 @@ const TemplateDashboard: React.FC = () => {
                             </h2>
                             <p className="text-app-text/40 text-xs font-bold uppercase tracking-[0.2em] mt-1 ml-1 text-accent/60">Archives de la Forge GM-OS</p>
                         </div>
-                        <button 
-                            onClick={() => setCurrentView('forge')}
-                            className="flex items-center gap-2 bg-accent hover:bg-accent/90 text-app-bg font-black px-6 py-3 rounded-xl text-xs tracking-[0.15em] transition-all shadow-glow-accent/20 hover:scale-105 active:scale-95 group"
-                        >
-                            <Hammer size={18} className="group-hover:rotate-12 transition-transform" />
-                            CRÉER VIA FORGE
-                        </button>
+                        <div className="flex gap-2">
+                            {activeTab === 'drivers' && isNexusAvailable && (
+                                <button 
+                                    onClick={handleImportDriver}
+                                    className="flex items-center gap-2 bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-400 font-black px-6 py-3 rounded-xl text-xs tracking-[0.15em] transition-all shadow-glow-accent/20 hover:scale-105 active:scale-95 group"
+                                >
+                                    <Upload size={18} className="group-hover:-translate-y-1 transition-transform" />
+                                    IMPORTER DRIVER
+                                </button>
+                            )}
+                            <button 
+                                onClick={() => setCurrentView('forge')}
+                                className="flex items-center gap-2 bg-accent hover:bg-accent/90 text-app-bg font-black px-6 py-3 rounded-xl text-xs tracking-[0.15em] transition-all shadow-glow-accent/20 hover:scale-105 active:scale-95 group"
+                            >
+                                <Hammer size={18} className="group-hover:rotate-12 transition-transform" />
+                                CRÉER VIA FORGE
+                            </button>
+                        </div>
                     </div>
 
                     {/* Tabs */}
@@ -201,16 +254,26 @@ const TemplateDashboard: React.FC = () => {
                                     </button>
                                 )}
                                 {activeTab === 'drivers' && selectedItem && (
-                                    <button
-                                        onClick={() => {
-                                            const driver = selectedItem as GameDriver;
-                                            setEditingDriverId(driver.id);
-                                            setCurrentView('driver-editor');
-                                        }}
-                                        className="flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent border border-accent/30 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-accent/20 transition-all shadow-lg"
-                                    >
-                                        <Pencil size={14} /> ÉDITER LE MOTEUR
-                                    </button>
+                                    <div className="flex gap-2">
+                                        {isNexusAvailable && (
+                                            <button
+                                                onClick={() => handleExportDriver(selectedItem.id)}
+                                                className="flex items-center gap-2 px-4 py-2 bg-amber-500/10 text-amber-500 border border-amber-500/30 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-amber-500/20 transition-all shadow-lg"
+                                            >
+                                                <DownloadCloud size={14} /> EXPORTER
+                                            </button>
+                                        )}
+                                        <button
+                                            onClick={() => {
+                                                const driver = selectedItem as GameDriver;
+                                                setEditingDriverId(driver.id);
+                                                setCurrentView('driver-editor');
+                                            }}
+                                            className="flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent border border-accent/30 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-accent/20 transition-all shadow-lg"
+                                        >
+                                            <Pencil size={14} /> ÉDITER LE MOTEUR
+                                        </button>
+                                    </div>
                                 )}
                             </div>
                             <div className="flex items-center gap-4">
@@ -326,6 +389,16 @@ const TemplateDashboard: React.FC = () => {
                 </div>
             </div>
         </div>
+        {/* Nexus HUD v2 — overlay glassmorphism plein écran */}
+        <NexusHUD progress={nexusProgress} />
+        {/* Nexus Conflict Resolver — modal décision utilisateur */}
+        {conflictState && (
+            <NexusConflictResolver
+                conflicts={conflictState}
+                onResolve={handleConflictResolve}
+            />
+        )}
+        </>
     );
 };
 

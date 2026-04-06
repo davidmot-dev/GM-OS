@@ -30,6 +30,7 @@ import { createWriteStream } from 'node:fs';
 // ─────────────────────────────────────────────
 
 const NEXUS_EXTENSION = '.gmos';
+const NEXUS_DRIVER_EXTENSION = '.gmos-driver';
 const SCHEMA_VERSION = 1;
 
 /** Types d'assets reconnus comme "Media Hub IDs" (format m-xxx) */
@@ -51,8 +52,11 @@ interface AssetEntry {
 interface NexusManifestFull {
     schemaVersion: number;
     bundleId: string;
-    campaignId: string;
-    campaignName: string;
+    bundleType?: 'campaign' | 'driver';
+    campaignId?: string;
+    campaignName?: string;
+    driverId?: string;
+    driverName?: string;
     exportedAt: string;
     gmosVersion: string;
     requiredDriverIds: string[];
@@ -183,21 +187,20 @@ function isResolvedFilePath(ref: string): boolean {
 /**
  * Exporte une campagne dans un fichier .gmos.
  *
- * @param campaignId - ID de la campagne
- * @param outputPath - Chemin de destination du .gmos
- * @param stateJson - Données de campagne sérialisées
+ * @param contextId - ID du contexte exporté (Campagne ou Driver)
+ * @param outputPath - Chemin de destination
+ * @param stateJson - Données sérialisées
  * @param manifestJson - Manifeste partiel (sans assetMap final)
  * @param assetRefs - Références d'assets (chemins absolus uniquement, les m-xxx sont dans inlineAssets)
- * @param inlineAssets - Media Hub IDs pré-résolus en base64 data URLs par le renderer
  */
 async function handleExportBundle(
-    campaignId: string,
+    contextId: string,
     outputPath: string,
     stateJson: string,
     manifestJson: string,
     assetRefs: string[]
 ): Promise<ExportResult> {
-    console.log(`[Nexus Bridge] Export démarré : ${campaignId} → ${outputPath}`);
+    console.log(`[Nexus Bridge] Export démarré : ${contextId} → ${outputPath}`);
     
     // Lire les assets depuis le cache mémoire (rempli par nexus:register-asset)
     const inlineAssetsCount = pendingAssetCache.size;
@@ -324,8 +327,11 @@ async function handleExportBundle(
             const finalManifest: NexusManifestFull = {
                 schemaVersion: SCHEMA_VERSION,
                 bundleId: partialManifest.bundleId ?? `nexus-${Date.now()}`,
-                campaignId,
-                campaignName: partialManifest.campaignName ?? campaignId,
+                bundleType: partialManifest.bundleType ?? 'campaign',
+                campaignId: partialManifest.campaignId,
+                campaignName: partialManifest.campaignName,
+                driverId: partialManifest.driverId,
+                driverName: partialManifest.driverName,
                 exportedAt: partialManifest.exportedAt ?? new Date().toISOString(),
                 gmosVersion: partialManifest.gmosVersion ?? '5.3.0',
                 requiredDriverIds: partialManifest.requiredDriverIds ?? [],
@@ -347,9 +353,10 @@ async function handleExportBundle(
             await fs.writeFile(path.join(tempDir, 'state.json'), stateJson, 'utf-8');
 
             // ── Phase 3 : Compression ZIP ────────────────────────────────────
-            const finalOutputPath = outputPath.endsWith(NEXUS_EXTENSION)
+            const extension = partialManifest.bundleType === 'driver' ? NEXUS_DRIVER_EXTENSION : NEXUS_EXTENSION;
+            const finalOutputPath = outputPath.endsWith(extension)
                 ? outputPath
-                : `${outputPath}${NEXUS_EXTENSION}`;
+                : `${outputPath}${extension}`;
 
             await createZipBundle(tempDir, finalOutputPath);
 
@@ -486,7 +493,7 @@ async function handleImportBundle(filePath: string): Promise<ImportRaw> {
             console.warn('[Nexus Bridge] Impossible d\'extraire les données audio du state.json.');
         }
 
-        console.log(`[Nexus Bridge] Import parsé : ${manifest.campaignName}, ${Object.keys(assetData).length} assets`);
+        console.log(`[Nexus Bridge] Import parsé : Bundle = ${manifest.bundleId}, ${Object.keys(assetData).length} assets`);
 
         return {
             success: true,
@@ -530,13 +537,13 @@ export function registerNexusHandlers() {
         'nexus:export-bundle',
         async (
             _event,
-            campaignId: string,
+            contextId: string,
             outputPath: string,
             stateJson: string,
             manifestJson: string,
             assetRefs: string[]
         ) => {
-            return handleExportBundle(campaignId, outputPath, stateJson, manifestJson, assetRefs);
+            return handleExportBundle(contextId, outputPath, stateJson, manifestJson, assetRefs);
         }
     );
 
@@ -546,12 +553,19 @@ export function registerNexusHandlers() {
     });
 
     // ── Sélecteur de chemin d'export ─────────────────────────────────────
-    ipcMain.handle('nexus:select-export-path', async () => {
+    ipcMain.handle('nexus:select-export-path', async (_event, bundleType?: 'campaign' | 'driver') => {
+        const ext = bundleType === 'driver' ? NEXUS_DRIVER_EXTENSION : NEXUS_EXTENSION;
+        const defaultName = bundleType === 'driver' 
+            ? `driver_gmos_${Date.now()}${ext}` 
+            : `campagne_gmos_${Date.now()}${ext}`;
+        const filterName = bundleType === 'driver' ? 'GM-OS Driver' : 'GM-OS Bundle';
+        const filterExt = ext.replace('.', '');
+
         const { filePath } = await dialog.showSaveDialog({
-            title: 'Exporter la Campagne GM-OS',
-            defaultPath: `campagne_gmos_${Date.now()}${NEXUS_EXTENSION}`,
+            title: bundleType === 'driver' ? 'Exporter le GameDriver GM-OS' : 'Exporter la Campagne GM-OS',
+            defaultPath: defaultName,
             filters: [
-                { name: 'GM-OS Bundle', extensions: ['gmos'] },
+                { name: filterName, extensions: [filterExt] },
             ],
         });
 
@@ -561,9 +575,9 @@ export function registerNexusHandlers() {
     // ── Sélecteur de fichier d'import ─────────────────────────────────────
     ipcMain.handle('nexus:select-import-file', async () => {
         const { filePaths } = await dialog.showOpenDialog({
-            title: 'Importer une Campagne GM-OS (.gmos)',
+            title: 'Importer une Archive GM-OS (.gmos / .gmos-driver)',
             filters: [
-                { name: 'GM-OS Bundle', extensions: ['gmos'] },
+                { name: 'GM-OS Archive', extensions: ['gmos', 'gmos-driver'] },
             ],
             properties: ['openFile'],
         });

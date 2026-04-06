@@ -37,6 +37,7 @@ import type {
     NexusOperationPhase,
     AssetEntry,
     NexusConflict,
+    NexusDriverState,
     NexusConflictResolution,
     OnConflictCallback,
 } from './nexus.types';
@@ -44,6 +45,8 @@ import {
     NEXUS_SCHEMA_VERSION,
     DEFAULT_NEXUS_EXPORT_OPTIONS,
 } from './nexus.types';
+import type { GameDriver } from '../../../types/drivers';
+import type { SheetTemplate } from '../../../data/defaultSheetTemplates';
 import type {
     Campaign,
     Entity,
@@ -221,6 +224,29 @@ export class NexusService {
             playlists,             // Niveau 5 : Music playlists
         };
     }
+
+    /**
+     * Extrait les données d'un GameDriver et son template associé.
+     */
+    public scrapeDriverData(driverId: string): NexusDriverState {
+        const store = useSessionOSStore.getState();
+        const customGameDrivers = store.customGameDrivers ?? [];
+        const customSheetTemplates = store.customSheetTemplates ?? [];
+
+        const gameDriver = customGameDrivers.find((d: GameDriver) => d.id === driverId);
+        if (!gameDriver) {
+            throw new Error(`[NexusService] Driver introuvable : ${driverId}`);
+        }
+
+        // Si l'ID du driver correspond à un template (convention GM-OS), l'exporter
+        const sheetTemplate = customSheetTemplates.find((t: SheetTemplate) => t.id === driverId);
+
+        return {
+            gameDriver,
+            sheetTemplate,
+        };
+    }
+
 
     // ─────────────────────────────────────────────
     // EXPORT : Moissonnage des assets (Harvest)
@@ -448,7 +474,8 @@ export class NexusService {
     ): Omit<NexusManifest, 'assetMap' | 'stats'> & { assetRefList: string[] } {
         return {
             schemaVersion: NEXUS_SCHEMA_VERSION,
-            bundleId: `nexus-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+            bundleId: `nexus-camp-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+            bundleType: 'campaign',
             campaignId: state.campaign.id,
             campaignName: state.campaign.name,
             exportedAt: new Date().toISOString(),
@@ -465,6 +492,24 @@ export class NexusService {
             assetRefList: Array.from(assetRefs),
         };
     }
+
+    public buildDriverManifest(
+        state: NexusDriverState
+    ): Omit<NexusManifest, 'assetMap' | 'stats'> & { assetRefList: string[] } {
+        return {
+            schemaVersion: NEXUS_SCHEMA_VERSION,
+            bundleId: `nexus-drv-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+            bundleType: 'driver',
+            driverId: state.gameDriver.id,
+            driverName: state.gameDriver.name,
+            exportedAt: new Date().toISOString(),
+            gmosVersion: GMOS_VERSION,
+            requiredDriverIds: [], // Les drivers exportent leur propre base
+            requiredTemplateIds: [], 
+            assetRefList: [], // Les drivers/templates n'ont pas d'assets pour le moment
+        };
+    }
+
 
     // ─────────────────────────────────────────────
     // EXPORT : Orchestrateur principal
@@ -601,6 +646,58 @@ export class NexusService {
             console.error('[NexusService] Export échoué:', err);
             this.emitProgress('error', 0, message);
             gmToast(`Export échoué : ${message}`, 'error');
+            return { success: false, missingAssets: [], error: message };
+        }
+    }
+
+    /**
+     * Exporte un GameDriver dans un bundle `.gmos-driver`.
+     */
+    public async exportDriverBundle(
+        driverId: string
+    ): Promise<NexusExportResult> {
+        if (!window.appBridge?.nexus) {
+            console.warn('[NexusService] appBridge.nexus non disponible.');
+            return { success: false, missingAssets: [], error: 'Bridge IPC non disponible.' };
+        }
+
+        try {
+            this.emitProgress('scraping', 20, 'Extraction des données système...');
+            const state = this.scrapeDriverData(driverId);
+
+            this.emitProgress('packaging', 50, 'Construction du manifeste...');
+            const partialManifest = this.buildDriverManifest(state);
+            const stateJson = JSON.stringify(state);
+
+            const outputPath = await window.appBridge.nexus.selectExportPath('driver');
+            if (!outputPath) {
+                this.emitProgress('idle', 0, '');
+                return { success: false, missingAssets: [], error: 'Export annulé par l\'utilisateur.' };
+            }
+
+            this.emitProgress('packaging', 70, 'Création de l\'archive du driver...');
+            const result = await window.appBridge.nexus.exportBundle(
+                driverId,
+                outputPath,
+                stateJson,
+                JSON.stringify(partialManifest),
+                [] 
+            );
+
+            if (result.success) {
+                this.emitProgress('done', 100, 'Export terminé avec succès !');
+                gmToast(`Driver exporté : ${state.gameDriver.name}.gmos-driver`, 'success');
+            } else {
+                this.emitProgress('error', 0, result.error ?? 'Erreur inconnue');
+                gmToast('Erreur lors de l\'export.', 'error');
+            }
+
+            return result;
+        } catch (err) {
+            const message = err instanceof Error ? err.message : 'Erreur inconnue';
+            console.error('[NexusService] Export échoué:', err);
+            this.emitProgress('error', 0, message);
+            gmToast(`Export driver échoué : ${message}`, 'error');
             return { success: false, missingAssets: [], error: message };
         }
     }
@@ -871,6 +968,56 @@ export class NexusService {
         }
     }
 
+    /**
+     * Stores Zustand : `useSessionOSStore.setState` mettra à jour à la fois 
+     * `customGameDrivers` et `customSheetTemplates`.
+     *
+     * @param state - Données du driver à injecter
+     */
+    private injectDriverState(state: NexusDriverState): void {
+        const store = useSessionOSStore.getState();
+        const driverId = state.gameDriver.id;
+
+        const previousState = {
+            customGameDrivers: store.customGameDrivers ? [...store.customGameDrivers] : [],
+            customSheetTemplates: store.customSheetTemplates ? [...store.customSheetTemplates] : [],
+        };
+
+        try {
+            useSessionOSStore.setState((s) => {
+                const gameDrivers = s.customGameDrivers ?? [];
+                const updatedDrivers = [
+                    ...gameDrivers.filter((d: GameDriver) => d.id !== driverId),
+                    state.gameDriver,
+                ];
+
+                const sheetTemplates = s.customSheetTemplates ?? [];
+                let updatedTemplates = sheetTemplates;
+
+                // Si le bundle contient un template, le lier au même ID
+                if (state.sheetTemplate) {
+                    updatedTemplates = [
+                        ...sheetTemplates.filter((t: SheetTemplate) => t.id !== state.sheetTemplate!.id),
+                        state.sheetTemplate,
+                    ];
+                }
+
+                return {
+                    customGameDrivers: updatedDrivers,
+                    customSheetTemplates: updatedTemplates,
+                };
+            });
+            console.log(`[NexusService] Driver injecté avec succès : ${driverId}`);
+        } catch (err) {
+            console.error('[NexusService] Injection driver échouée, rollback...', err);
+            useSessionOSStore.setState({
+                customGameDrivers: previousState.customGameDrivers,
+                customSheetTemplates: previousState.customSheetTemplates,
+            });
+            throw err;
+        }
+    }
+
     // ─────────────────────────────────────────────
     // IMPORT : Détection de conflits
     // ─────────────────────────────────────────────
@@ -881,28 +1028,43 @@ export class NexusService {
      *
      * Un conflit existe si la campagne du bundle possède le même ID
      * qu'une campagne déjà présente dans le store.
+     * d'une campagne intégrée ou d'un driver déjà présent.
      */
     public detectConflicts(
         manifest: NexusManifest,
-        campaignState: NexusCampaignState
+        incomingState?: NexusCampaignState | NexusDriverState
     ): NexusConflict[] {
         const store = useSessionOSStore.getState();
         const conflicts: NexusConflict[] = [];
 
-        const existingCampaign = store.campaigns.find(
-            (c: Campaign) => c.id === campaignState.campaign.id
-        );
+        if (manifest.bundleType === 'driver') {
+            const existingDriver = store.customGameDrivers?.find((d: GameDriver) => d.id === manifest.driverId);
+            if (existingDriver) {
+                conflicts.push({
+                    type: 'driver',
+                    existingId: existingDriver.id,
+                    existingName: existingDriver.name,
+                    incomingName: manifest.driverName ?? existingDriver.name,
+                    exportedAt: manifest.exportedAt,
+                });
+            }
+        } else {
+            const castedState = incomingState as NexusCampaignState | undefined;
+            const existingCampaign = store.campaigns.find(
+                (c: Campaign) => c.id === (manifest.campaignId ?? castedState?.campaign.id)
+            );
 
-        if (existingCampaign) {
-            conflicts.push({
-                type: 'campaign',
-                existingId: existingCampaign.id,
-                existingName: existingCampaign.name,
-                incomingName: manifest.campaignName,
-                exportedAt: manifest.exportedAt,
-                entityCount: manifest.stats?.entityCount ?? campaignState.entities.length,
-                sessionCount: manifest.stats?.sessionCount ?? campaignState.sessions.length,
-            });
+            if (existingCampaign) {
+                conflicts.push({
+                    type: 'campaign',
+                    existingId: existingCampaign.id,
+                    existingName: existingCampaign.name,
+                    incomingName: manifest.campaignName ?? existingCampaign.name,
+                    exportedAt: manifest.exportedAt,
+                    entityCount: manifest.stats?.entityCount ?? castedState?.entities.length ?? 0,
+                    sessionCount: manifest.stats?.sessionCount ?? castedState?.sessions.length ?? 0,
+                });
+            }
         }
 
         return conflicts;
@@ -966,6 +1128,38 @@ export class NexusService {
         };
     }
 
+    /**
+     * Applique la stratégie "Clone" à un état importé de type Driver :
+     * régénère l'ID du driver et de son template (s'il existe).
+     */
+    public applyResolutionToDriver(
+        state: NexusDriverState,
+        resolution: NexusConflictResolution
+    ): NexusDriverState {
+        if (resolution.strategy !== 'clone') return state;
+
+        const newDriverId = `tpl-${crypto.randomUUID()}`;
+
+        const newState: NexusDriverState = {
+            gameDriver: {
+                ...state.gameDriver,
+                id: newDriverId,
+                name: `${state.gameDriver.name} (Copie)`,
+            },
+        };
+
+        if (state.sheetTemplate) {
+            newState.sheetTemplate = {
+                ...state.sheetTemplate,
+                id: newDriverId,
+                name: `${state.sheetTemplate.name} (Copie)`,
+            };
+        }
+
+        return newState;
+    }
+
+
     // ─────────────────────────────────────────────
     // IMPORT : Orchestrateur principal
     // ─────────────────────────────────────────────
@@ -1027,17 +1221,24 @@ export class NexusService {
             }
 
             // Phase 4 : Parsing de l'état
-            let campaignState: NexusCampaignState;
+            let campaignState: NexusCampaignState | undefined;
+            let driverState: NexusDriverState | undefined;
+            const isDriver = manifest.bundleType === 'driver';
+
             try {
-                campaignState = JSON.parse(raw.stateJson) as NexusCampaignState;
+                if (isDriver) {
+                    driverState = JSON.parse(raw.stateJson) as NexusDriverState;
+                } else {
+                    campaignState = JSON.parse(raw.stateJson) as NexusCampaignState;
+                }
             } catch {
-                const errMsg = 'L\'état de campagne (state.json) est corrompu.';
+                const errMsg = `L'état (state.json) est corrompu.`;
                 this.emitProgress('error', 0, errMsg);
                 gmToast(errMsg, 'error');
                 return { success: false, failedAssets: [], warnings: [], error: errMsg };
             }
 
-            // Phase 5 : Remappage des assets
+            // Phase 5 : Remappage des assets (campagnes uniquement)
             this.emitProgress('remapping', 60, 'Relocalisation des médias...');
             const failedAssets: string[] = [];
             const assetMap: Record<string, string> = {};
@@ -1076,7 +1277,7 @@ export class NexusService {
             }
 
             // Phase 5b : Détection et résolution des conflits
-            const conflicts = this.detectConflicts(manifest, campaignState);
+            const conflicts = this.detectConflicts(manifest, isDriver ? driverState : campaignState);
             let resolution: NexusConflictResolution = { strategy: 'replace' };
 
             if (conflicts.length > 0) {
@@ -1097,57 +1298,84 @@ export class NexusService {
                 return { success: false, failedAssets: [], warnings: [], error: 'Import annulé par l\'utilisateur.' };
             }
 
-            // Phase 6 : Remappage des chemins dans l'état
-            let remappedState = this.remapPaths(campaignState, assetMap);
+            // Phrase 6 & 7 & 8 séparées par type
+            if (isDriver && driverState) {
+                // DRIVER IMPORT
+                let finalState = driverState;
+                if (resolution.strategy === 'clone') {
+                    this.emitProgress('remapping', 80, 'Clonage du driver...');
+                    finalState = this.applyResolutionToDriver(finalState, resolution);
+                }
 
-            // Si stratégie "clone" : régénération des UUIDs
-            if (resolution.strategy === 'clone') {
-                this.emitProgress('remapping', 80, 'Clonage de la campagne...');
-                remappedState = this.applyResolutionToState(remappedState, resolution);
+                this.emitProgress('injecting', 85, 'Injection dans la base de données système...');
+                this.injectDriverState(finalState);
+
+                // Fin Driver
+                this.emitProgress('done', 100, 'Import terminé !');
+                gmToast(`GameDriver "${manifest.driverName}" importé avec succès !`, 'success');
+
+                return {
+                    success: true,
+                    campaignName: manifest.driverName,
+                    failedAssets: [],
+                    warnings: [],
+                };
+            } else if (campaignState) {
+                // CAMPAIGN IMPORT
+                // Phase 6 : Remappage des chemins dans l'état
+                let remappedState = this.remapPaths(campaignState, assetMap);
+
+                // Si stratégie "clone" : régénération des UUIDs
+                if (resolution.strategy === 'clone') {
+                    this.emitProgress('remapping', 80, 'Clonage de la campagne...');
+                    remappedState = this.applyResolutionToState(remappedState, resolution);
+                }
+
+                this.emitProgress('injecting', 85, 'Injection dans la base de données...');
+                this.injectState(remappedState);
+
+                // Phase 7 : Restauration des stores audio (Sound Pads + Music Playlists)
+                if (remappedState.atmospheres && remappedState.atmospheres.length > 0) {
+                    useSoundStore.setState({ atmospheres: remappedState.atmospheres });
+                    console.log(`[NexusService] ${remappedState.atmospheres.length} atmosphère(s) audio restaurée(s).`);
+                }
+
+                if (remappedState.playlists && remappedState.playlists.length > 0) {
+                    const musicState = useMusicStore.getState();
+                    const existingIds = new Set(musicState.playlists.map(p => p.id));
+                    const newPlaylists = remappedState.playlists.filter(p => !existingIds.has(p.id));
+                    const updatedPlaylists = musicState.playlists.map(p => {
+                        const incoming = remappedState.playlists!.find(ip => ip.id === p.id);
+                        return incoming ?? p;
+                    });
+                    useMusicStore.setState({ playlists: [...updatedPlaylists, ...newPlaylists] });
+                    console.log(`[NexusService] ${remappedState.playlists.length} playlist(s) musicale(s) restaurée(s).`);
+                }
+
+                // Phase 8 : Succès
+                this.emitProgress('done', 100, 'Import terminé !');
+
+                const warnings: string[] = [];
+                if (manifest.requiredDriverIds && manifest.requiredDriverIds.length > 0) {
+                    warnings.push(
+                        `Drivers requis : ${manifest.requiredDriverIds.join(', ')} — vérifiez qu'ils sont bien installés.`
+                    );
+                }
+                if (failedAssets.length > 0) {
+                    warnings.push(`${failedAssets.length} asset(s) n'ont pas pu être importés.`);
+                }
+
+                gmToast(`Campagne "${manifest.campaignName}" importée avec succès !`, 'success');
+
+                return {
+                    success: true,
+                    campaignName: manifest.campaignName,
+                    failedAssets,
+                    warnings,
+                };
             }
 
-            this.emitProgress('injecting', 85, 'Injection dans la base de données...');
-            this.injectState(remappedState);
-
-            // Phase 7 : Restauration des stores audio (Sound Pads + Music Playlists)
-            if (remappedState.atmospheres && remappedState.atmospheres.length > 0) {
-                useSoundStore.setState({ atmospheres: remappedState.atmospheres });
-                console.log(`[NexusService] ${remappedState.atmospheres.length} atmosphère(s) audio restaurée(s).`);
-            }
-
-            if (remappedState.playlists && remappedState.playlists.length > 0) {
-                const musicState = useMusicStore.getState();
-                const existingIds = new Set(musicState.playlists.map(p => p.id));
-                const newPlaylists = remappedState.playlists.filter(p => !existingIds.has(p.id));
-                const updatedPlaylists = musicState.playlists.map(p => {
-                    const incoming = remappedState.playlists!.find(ip => ip.id === p.id);
-                    return incoming ?? p;
-                });
-                useMusicStore.setState({ playlists: [...updatedPlaylists, ...newPlaylists] });
-                console.log(`[NexusService] ${remappedState.playlists.length} playlist(s) musicale(s) restaurée(s).`);
-            }
-
-            // Phase 8 : Succès
-            this.emitProgress('done', 100, 'Import terminé !');
-
-            const warnings: string[] = [];
-            if (manifest.requiredDriverIds.length > 0) {
-                warnings.push(
-                    `Drivers requis : ${manifest.requiredDriverIds.join(', ')} — vérifiez qu'ils sont bien installés.`
-                );
-            }
-            if (failedAssets.length > 0) {
-                warnings.push(`${failedAssets.length} asset(s) n'ont pas pu être importés.`);
-            }
-
-            gmToast(`Campagne "${manifest.campaignName}" importée avec succès !`, 'success');
-
-            return {
-                success: true,
-                campaignName: manifest.campaignName,
-                failedAssets,
-                warnings,
-            };
+            return { success: false, failedAssets: [], warnings: [], error: 'Type de bundle inconnu ou état manquant.' };
 
         } catch (err) {
             const message = err instanceof Error ? err.message : 'Erreur inconnue';
