@@ -1,0 +1,322 @@
+import React, { useState, useEffect, useMemo } from 'react';
+import { useClientStore } from '../../stores/useClientStore';
+import { useSessionOSStore } from '../../modules/session/useSessionOSStore';
+import { Radar, User, Shield, Fingerprint, WifiOff, AlertCircle } from 'lucide-react';
+
+type OnboardingStep = 'SCANNING' | 'SELECTION' | 'SYNCING';
+
+export const LobbyOnboarding: React.FC = () => {
+    const { setPseudo, setPlayerName, setCharacterId, completeOnboarding, resetIdentity } = useClientStore();
+    const { sessions, activeCampaignId, campaigns, activeCampaignWallpaper, activeCampaignName } = useSessionOSStore();
+    const players = useSessionOSStore(state => state.players);
+    
+    const [step, setStep] = useState<OnboardingStep>('SCANNING');
+    const [selectedCharId, setSelectedCharId] = useState<string | null>(null);
+
+    // Trouver la session active
+    const activeSession = useMemo(() => {
+        if (!sessions || sessions.length === 0) return null;
+        
+        let filteredSessions = sessions;
+        if (activeCampaignId) {
+            filteredSessions = sessions.filter(s => String(s.campaignId) === String(activeCampaignId));
+        }
+        
+        // On cherche d'abord une session réellement active qui n'est pas la session de démo par défaut
+        const realActive = filteredSessions.find(s => s.status === 'active' && s.id !== 's-1');
+        if (realActive) return realActive;
+
+        // Sinon on prend n'importe quelle session active (y compris démo si c'est tout ce qu'on a),
+        // sinon on ne renvoie rien (on reste sur l'écran 'Recherche de session')
+        return filteredSessions.find(s => s.status === 'active') || null;
+    }, [sessions, activeCampaignId]);
+
+    // Formater le nom de la session de manière lisible
+    const sessionDisplayName = useMemo(() => {
+        if (!activeSession) return "Aucune session active";
+        
+        const state = useSessionOSStore.getState();
+        const campaign = campaigns.find(c => String(c.id) === String(activeSession.campaignId)) || 
+                         campaigns.find(c => String(c.id) === String(activeCampaignId));
+        const campaignName = campaign?.name || activeCampaignName || state.activeCampaignName || "Campagne";
+        
+        const sessionNum = activeSession.id === 's-1' ? 'Démo' : (activeSession.number ?? '1');
+        
+        // Formater la date en DD/MM/YYYY si possible
+        let sessionDate = new Date().toLocaleDateString('fr-FR');
+        if (activeSession.date) {
+            try {
+                // Tenter de nettoyer ou de formater activeSession.date si c'est YYYY-MM-DD
+                const d = new Date(activeSession.date);
+                if (!isNaN(d.getTime())) {
+                    sessionDate = d.toLocaleDateString('fr-FR');
+                } else {
+                    sessionDate = activeSession.date; // Garder la string telle quelle
+                }
+            } catch (_e) {
+                // Ignore
+            }
+        }
+        
+        return `${campaignName} • Session ${sessionNum} • ${sessionDate}`;
+    }, [activeSession, campaigns, activeCampaignId, activeCampaignName]);
+
+    // Filtrer les PJ présents dans la session (détection des IDs de personnages OU de leurs joueurs parents)
+    const presentPcs = useMemo(() => {
+        if (!activeSession) return [];
+        
+        const sessionIds = (activeSession.sessionEntityIds || []).map(id => String(id));
+        
+        console.log('[Lobby] Calculating presentPcs. Session IDs:', sessionIds);
+        
+        const result = players.reduce<(import('../../modules/session/store/types').PlayerCharacter & { playerName: string })[]>((acc, player) => {
+            const isPlayerInSession = sessionIds.includes(String(player.id));
+            
+            const playerSessionChars = (player.characters || [])
+                .filter(char => isPlayerInSession || sessionIds.includes(String(char.id)))
+                .map(char => ({ ...char, playerName: player.realName }));
+            
+            return [...acc, ...playerSessionChars];
+        }, []);
+
+        console.log('[Lobby] Present PCs count:', result.length);
+        return result;
+    }, [activeSession, players]);
+
+    // Gestion des transitions d'étapes (Onboarding & Session Guard)
+    useEffect(() => {
+        if (!activeSession) {
+            if (step !== 'SCANNING') {
+                // Utilisation d'un micro-task pour éviter le warning de render en cascade
+                queueMicrotask(() => setStep('SCANNING'));
+            }
+            return;
+        }
+
+        if (step === 'SCANNING') {
+            const timer = setTimeout(() => setStep('SELECTION'), 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [activeSession, step]);
+
+    const handleSelectCharacter = (char: { id: string; name: string; playerName: string }) => {
+        setSelectedCharId(char.id);
+        setStep('SYNCING');
+        
+        // Simulation de scan biométrique
+        setTimeout(() => {
+            setPseudo(char.name);
+            setPlayerName(char.playerName); // On stocke aussi le nom du joueur
+            setCharacterId(char.id);
+            completeOnboarding();
+        }, 2500);
+    };
+
+    // --- RENDER: SCANNING (No Session) ---
+    if (step === 'SCANNING' || !activeSession) {
+        return (
+            <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-app-bg p-6 overflow-hidden">
+                <div className="relative mb-12">
+                    {/* Radar Circles */}
+                    <div className="absolute inset-0 border-2 border-accent/20 rounded-full animate-ping duration-[3000ms]" />
+                    <div className="absolute inset-0 border-2 border-accent/10 rounded-full animate-ping duration-[5000ms] delay-700" />
+                    
+                    <div className="relative w-48 h-48 bg-accent/5 rounded-full flex items-center justify-center border border-accent/20 backdrop-blur-sm">
+                        <Radar className="text-accent animate-pulse" size={64} strokeWidth={1} />
+                        
+                        {/* Scanning Sweep */}
+                        <div className="absolute inset-0 border-t-2 border-accent/60 rounded-full animate-spin duration-[4000ms] pointer-events-none" />
+                    </div>
+                </div>
+
+                <div className="text-center max-w-sm">
+                    <h1 className="text-3xl font-black text-app-text tracking-tighter uppercase mb-4 animate-pulse">
+                        Saisie du Signal...
+                    </h1>
+                    <div className="flex items-center justify-center gap-2 text-accent/60 mb-8">
+                        <div className="w-2 h-2 bg-accent rounded-full animate-bounce" />
+                        <span className="text-xs font-black uppercase tracking-widest">Recherche de session active</span>
+                    </div>
+                    
+                    <div className="p-4 bg-app-surface/50 border border-app-border/10 rounded-2xl flex items-start gap-4 text-left">
+                        <WifiOff className="text-app-text/40 shrink-0" size={20} />
+                        <div>
+                            <p className="text-app-text/60 text-xs font-bold leading-relaxed lowercase">
+                                <span className="text-app-text uppercase">Note au joueur :</span> le Hub est actuellement en veille. Demandez à votre Maître de Jeu de lancer une session depuis le cockpit GM-OS.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // --- RENDER: SYNCING (Biometric Scan) ---
+    if (step === 'SYNCING') {
+        const char = presentPcs.find(c => c.id === selectedCharId);
+        return (
+            <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-app-bg p-6">
+                <div className="relative w-64 h-64 mb-12">
+                    {/* Character Frame */}
+                    <div className="absolute inset-0 border-2 border-accent rounded-[3rem] overflow-hidden">
+                        {char?.portraitUrl ? (
+                            <img src={char.portraitUrl} alt="" className="w-full h-full object-cover grayscale opacity-50" />
+                        ) : (
+                            <div className="w-full h-full bg-app-surface flex items-center justify-center">
+                                <User className="text-app-text/20" size={80} />
+                            </div>
+                        )}
+                        
+                        {/* Scan Line */}
+                        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent to-transparent h-12 w-full animate-scan opacity-80" />
+                        <div className="absolute inset-0 bg-accent/10 animate-pulse" />
+                    </div>
+                    
+                    {/* Corner Brackets */}
+                    <div className="absolute -top-2 -left-2 w-8 h-8 border-t-4 border-l-4 border-accent rounded-tl-xl" />
+                    <div className="absolute -top-2 -right-2 w-8 h-8 border-t-4 border-r-4 border-accent rounded-tr-xl" />
+                    <div className="absolute -bottom-2 -left-2 w-8 h-8 border-b-4 border-l-4 border-accent rounded-bl-xl" />
+                    <div className="absolute -bottom-2 -right-2 w-8 h-8 border-b-4 border-r-4 border-accent rounded-br-xl" />
+                </div>
+
+                <div className="text-center">
+                    <div className="flex items-center justify-center gap-4 mb-4">
+                        <Fingerprint className="text-accent animate-pulse" size={32} />
+                        <h2 className="text-4xl font-black text-app-text uppercase tracking-tighter">Synchronisation</h2>
+                    </div>
+                    <p className="text-accent font-mono text-sm tracking-[0.3em] uppercase opacity-60">
+                        {char?.name} — Protocol V5.0
+                    </p>
+                </div>
+
+                <style>{`
+                    @keyframes scan {
+                        0% { transform: translateY(-100%); }
+                        100% { transform: translateY(500%); }
+                    }
+                    .animate-scan {
+                        animation: scan 2s linear infinite;
+                    }
+                `}</style>
+            </div>
+        );
+    }
+
+    // --- RENDER: SELECTION (Character Grid) ---
+    return (
+        <div className="fixed inset-0 z-[100] flex flex-col items-center bg-app-bg/95 backdrop-blur-2xl p-6 overflow-y-auto">
+            {/* Background Atmosphere */}
+            <div className="absolute inset-0 z-0 transition-opacity duration-1000">
+                {activeCampaignWallpaper ? (
+                    <img 
+                        src={activeCampaignWallpaper} 
+                        alt="" 
+                        className="w-full h-full object-cover opacity-20 grayscale-[0.2]"
+                    />
+                ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-slate-900 via-slate-950 to-black opacity-60" />
+                )}
+            </div>
+
+            {/* Top Bar for Reset/Logout */}
+            <div className="absolute top-8 left-8 z-50">
+                <button 
+                    onClick={resetIdentity}
+                    className="flex items-center gap-2 px-4 py-2 bg-app-surface border border-app-border/20 rounded-full text-[10px] font-black text-app-text/40 uppercase tracking-widest hover:text-rose-500 hover:border-rose-500/30 transition-all group"
+                >
+                    <div className="w-1.5 h-1.5 rounded-full bg-rose-500/40 group-hover:bg-rose-500 group-hover:animate-pulse" />
+                    Quitter la session
+                </button>
+            </div>
+
+            <div className="w-full max-w-5xl mt-12 mb-12 relative z-10">
+                <div className="text-center mb-16">
+                    <h1 className="text-6xl font-black text-app-text tracking-tightest uppercase mb-4">
+                        Qui es-tu ?
+                    </h1>
+                    <div className="flex items-center justify-center gap-3">
+                        <div className="h-[1px] w-12 bg-accent/40" />
+                        <div className="flex flex-col items-center">
+                            <span className="text-[10px] font-bold text-app-text/40 tracking-[0.2em] uppercase">
+                                Agent de la Session
+                            </span>
+                            <span className="text-sm font-medium text-accent/90 text-center max-w-[280px] leading-tight px-4" title={sessionDisplayName}>
+                                {sessionDisplayName}
+                            </span>
+                        </div>
+                        <div className="h-[1px] w-12 bg-accent/40" />
+                    </div>
+                </div>
+
+                {presentPcs.length > 0 ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {presentPcs.map((char) => (
+                            <button
+                                key={char.id}
+                                onClick={() => handleSelectCharacter(char)}
+                                className="group relative flex flex-col bg-app-surface/50 border border-app-border/10 rounded-[2.5rem] overflow-hidden hover:border-accent/50 hover:bg-app-surface transition-all duration-500 hover:shadow-[0_0_50px_-12px_var(--app-accent)] active:scale-95"
+                            >
+                                {/* Character Backdrop Effect */}
+                                <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                
+                                {/* Player Name Badge (Top Right) */}
+                                <div className="absolute top-4 right-4 z-10">
+                                    <div className="flex flex-col items-end">
+                                        <span className="text-[8px] font-black text-accent/40 uppercase tracking-widest mb-0.5 opacity-0 group-hover:opacity-100 transition-opacity">Joueur</span>
+                                        <span className="px-3 py-1.5 bg-accent text-app-bg text-[10px] font-black uppercase tracking-[0.1em] rounded-lg shadow-lg group-hover:scale-110 transition-all duration-300">
+                                            {char.playerName}
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div className="aspect-[4/3] w-full overflow-hidden bg-app-bg relative">
+                                    {char.portraitUrl ? (
+                                        <img 
+                                            src={char.portraitUrl} 
+                                            alt={char.name} 
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center">
+                                            <User className="text-app-text/10" size={64} />
+                                        </div>
+                                    )}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-app-bg via-transparent to-transparent opacity-60" />
+                                </div>
+
+                                <div className="p-8 text-left relative">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <span className="px-3 py-1 bg-accent/10 border border-accent/20 text-accent text-[10px] font-black uppercase tracking-widest rounded-full">
+                                            Connectable
+                                        </span>
+                                        <Shield size={16} className="text-app-text/20 group-hover:text-accent transition-colors" />
+                                    </div>
+                                    <h3 className="text-2xl font-black text-app-text uppercase tracking-tighter mb-1 select-none">
+                                        {char.name}
+                                    </h3>
+                                    <p className="text-app-text/40 text-[10px] font-bold uppercase tracking-widest select-none leading-relaxed mt-2">
+                                        {char.classRace || "Héros d'Eldoria"}
+                                    </p>
+                                </div>
+                            </button>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="flex flex-col items-center justify-center p-20 bg-app-surface/30 border-2 border-dashed border-app-border/10 rounded-[3rem]">
+                        <AlertCircle className="text-app-text/20 mb-6" size={48} />
+                        <h3 className="text-xl font-black text-app-text/40 uppercase tracking-tighter mb-2">Aucun PJ détecté</h3>
+                        <p className="text-app-text/30 text-xs text-center max-w-xs uppercase leading-relaxed font-bold">
+                            Le Maître de Jeu doit ajouter vos personnages à la session pour qu'ils apparaissent ici.
+                        </p>
+                    </div>
+                )}
+            </div>
+            
+            <div className="mt-auto pb-8 text-app-text/20 font-bold text-[10px] uppercase tracking-[0.2em]">
+                GM-OS V5 • Tablet HUB Client • nexus_bridge_initialized
+            </div>
+        </div>
+    );
+};
+
+export default LobbyOnboarding;
