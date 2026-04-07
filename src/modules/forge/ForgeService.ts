@@ -1,3 +1,5 @@
+import { AIService } from '../ai/AIService';
+import { useAIStore } from '../../stores/useAIStore';
 import type { GameDriver } from '../../types/drivers';
 import type { SheetTemplate } from '../../data/defaultSheetTemplates';
 
@@ -30,32 +32,31 @@ export class ForgeService {
    */
   public async forgeSystem(items: ForgeContextItem[], userInstructions?: string, targetName?: string): Promise<ForgeSystemResult> {
     const prompt = this.getSystemForgePrompt(userInstructions, targetName);
-    
-    // Aggregate items into Gemini parts
-    const parts: Array<{ text?: string, inline_data?: { mime_type: string, data: string } }> = [{ text: prompt }];
-    
+    const aiService = AIService.getInstance();
+    const { activeProvider } = useAIStore.getState();
+
+    // 1. PRÉPARATION DU CONTENU
+    let consolidatedText = "";
+    const attachments: { data: string, mimeType: string }[] = [];
+
     items.forEach(item => {
       if (item.type === 'text') {
-        parts.push({ text: `CONTENU DU DOCUMENT [${item.name}] :\n\n${item.content}` });
+        consolidatedText += `\n\nCONTENU DU DOCUMENT [${item.name}] :\n\n${item.content}`;
       } else {
-        parts.push({
-          inline_data: {
-            mime_type: item.mimeType || 'application/pdf',
-            data: item.content
-          }
+        attachments.push({
+          data: item.content,
+          mimeType: item.mimeType || 'application/pdf'
         });
       }
     });
 
-    const body = {
-      contents: [{ parts }],
-      generationConfig: {
-        response_mime_type: "application/json"
-      }
-    };
+    // 2. VÉRIFICATION DE CAPACITÉ VISUELLE
+    if (attachments.length > 0 && activeProvider !== 'gemini') {
+      throw new Error("Gemma 4 ne supporte pas l'analyse visuelle de multiples fichiers. Veuillez utiliser NotebookLM pour extraire le texte au préalable.");
+    }
 
-    const response = await this.callForgeAIRaw(body);
-    return response as ForgeSystemResult;
+    const fullPrompt = `${consolidatedText}\n\nINSTRUCTIONS FINALES : ${prompt}`;
+    return aiService.generateJSON<ForgeSystemResult>(fullPrompt, "Tu es l'ingénieur en chef de la Forge GM-OS.", attachments);
   }
 
   private getSystemForgePrompt(userInstructions?: string, targetName?: string): string {
@@ -224,70 +225,29 @@ export class ForgeService {
   }
 
   private async callForgeAI(prompt: string, fileBase64?: string, mimeType?: string, rawText?: string): Promise<unknown> {
-    const parts: Array<{ text?: string, inline_data?: { mime_type: string, data: string } }> = [{ text: prompt }];
+    const aiService = AIService.getInstance();
+    const { activeProvider } = useAIStore.getState();
 
+    // 1. CAS TEXTE PUR (OU TEXTE EXTRAIT PAR NOTEBOOKLM)
     if (rawText) {
-      parts.push({ text: `CONTENU DU DOCUMENT À ANALYSER :\n\n${rawText}` });
-    } else if (fileBase64 && mimeType) {
-      parts.push({
-        inline_data: {
-          mime_type: mimeType,
-          data: fileBase64
-        }
-      });
-    } else {
-      throw new Error("No content provided for analysis.");
+      const fullPrompt = `CONTENU DU DOCUMENT À ANALYSER :\n\n${rawText}\n\nREQUÊTE : ${prompt}`;
+      return aiService.generateJSON(fullPrompt, "Tu es un expert en ingénierie de données pour GM-OS.");
     }
 
-    const body = {
-      contents: [{ parts }],
-      generationConfig: {
-        response_mime_type: "application/json"
-      }
-    };
-
-    return this.callForgeAIRaw(body);
-  }
-
-  private async callForgeAIRaw(body: { contents: Array<{ parts: Array<{ text?: string, inline_data?: { mime_type: string, data: string } }> }>, generationConfig?: { response_mime_type: string } }): Promise<unknown> {
-    if (!window.appBridge?.ai?.proxyRequest) {
-      throw new Error("AI Bridge not available");
-    }
-
-    const { configs } = (await import('../../stores/useAIStore')).useAIStore.getState();
-    const config = configs.gemini;
-    const modelId = config.modelId || 'gemini-1.5-flash';
-    const apiKey = config.apiKey?.trim().replace(/[\r\n]/g, '');
-
-    if (!apiKey) {
-      throw new Error("Clé API Gemini manquante. Veuillez la configurer dans les paramètres IA.");
-    }
-    
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${apiKey}`;
-    const headers = { 'Content-Type': 'application/json' };
-
-    try {
-      const payloadSize = JSON.stringify(body).length;
-      console.log(`[Forge Service] Sending AI request (${(payloadSize / 1024 / 1024).toFixed(2)} MB)...`);
-      
-      const response = await window.appBridge.ai.proxyRequest(url, 'POST', headers, body);
-      
-      if (!response.ok) {
-        throw new Error(`AI Forge Error: ${response.statusText}`);
+    // 2. CAS DOCUMENT DIRECT (PDF/IMAGE)
+    if (fileBase64 && mimeType) {
+      // Si on n'est pas sur Gemini, la vision directe n'est pas supportée
+      if (activeProvider !== 'gemini') {
+        throw new Error("Gemma 4 ne supporte pas l'analyse visuelle directe. Veuillez utiliser NotebookLM pour extraire le texte du document au préalable.");
       }
 
-      const data = response.data as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
-      const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      
-      if (!textResponse) {
-        throw new Error("Empty response from AI Forge");
-      }
-
-      return JSON.parse(textResponse);
-    } catch (error) {
-      console.error("[Forge Service] AI Call failed:", error);
-      throw error;
+      return aiService.generateJSON(prompt, "Tu es un expert en ingénierie de données pour GM-OS.", [{
+        data: fileBase64,
+        mimeType: mimeType
+      }]);
     }
+
+    throw new Error("Aucun contenu fourni pour l'analyse.");
   }
 }
 

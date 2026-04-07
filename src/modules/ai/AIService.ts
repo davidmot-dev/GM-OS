@@ -122,7 +122,10 @@ ${fullContext}`;
         return { text, metadata: { provider: 'ollama', model } };
       } catch (error: unknown) {
         const message = error instanceof Error ? error.message : String(error);
-        throw new Error(`Erreur Ollama: ${message}`);
+        if (message.includes('Ollama est inaccessible')) {
+          throw error; // Transmettre l'erreur déjà formatée par le backend
+        }
+        throw new Error(`Erreur Connexion Ollama: ${message}`);
       }
     }
 
@@ -601,6 +604,105 @@ ${fullContext}`;
     } catch (err) {
       console.error("[AIService] Prompt suggestion failed:", err);
       return "";
+    }
+  }
+
+  /**
+   * Génère une réponse structurée (JSON) de manière agnostique.
+   * Supporte Gemini (mode JSON natif + Multimodal) et Ollama (via extraction Regex).
+   */
+  public async generateJSON<T>(
+    prompt: string, 
+    systemPrompt: string, 
+    attachments?: { data: string, mimeType: string }[]
+  ): Promise<T> {
+    const { activeProvider, configs } = useAIStore.getState();
+    const config = configs[activeProvider];
+
+    console.log(`[AIService] generateJSON call (${activeProvider}) ${attachments?.length ? `with ${attachments.length} attachments` : ''}`);
+
+    // 1. CAS GEMINI (NATIF + VISUEL)
+    if (activeProvider === 'gemini') {
+      const apiKey = config.apiKey?.trim().replace(/[\r\n]/g, '');
+      const model = config.modelId || 'gemini-1.5-flash';
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+      
+      if (!window.appBridge?.ai?.proxyRequest) throw new Error("Bridge AI non disponible.");
+
+      const parts: any[] = [{ text: `${systemPrompt}\n\nREQUÊTE : ${prompt}` }];
+      
+      if (attachments && attachments.length > 0) {
+        attachments.forEach(attachment => {
+          parts.push({
+            inline_data: {
+              mime_type: attachment.mimeType,
+              data: attachment.data
+            }
+          });
+        });
+      }
+
+      const response = await window.appBridge.ai.proxyRequest(url, 'POST', { 'Content-Type': 'application/json' }, {
+        contents: [{ parts }],
+        generationConfig: { 
+          response_mime_type: "application/json",
+          temperature: 0.2
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erreur API Gemini JSON: ${response.statusText}`);
+      }
+
+      const data = response.data as GeminiResponse;
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!text) throw new Error("Réponse JSON vide de Gemini.");
+      
+      return JSON.parse(text) as T;
+    }
+
+    // 2. CAS OLLAMA / ANTHROPIC / AUTRES (EXTRACTION)
+    const enhancedSystemPrompt = `${systemPrompt}
+    
+    IMPORTANT : Tu dois répondre UNIQUEMENT avec un bloc JSON valide. 
+    Ne fournis aucune explication, aucun commentaire ni aucun bloc de code Markdown autour du JSON.
+    Ta réponse doit commencer par { ou [ et se terminer par } ou ].`;
+
+    const response = await this.generateText(prompt, enhancedSystemPrompt);
+    
+    try {
+      return this.extractStructuredJSON<T>(response.text);
+    } catch (err) {
+      console.error("[AIService] Extraction JSON échouée. Tentative de parsing brut...", err);
+      try {
+        return JSON.parse(response.text) as T;
+      } catch {
+        throw new Error("Impossible de parser la réponse en JSON.");
+      }
+    }
+  }
+
+  /**
+   * Extrait un bloc JSON d'une chaîne de texte potentiellement polluée.
+   */
+  private extractStructuredJSON<T>(input: string): T {
+    // Nettoyage des balises markdown si présentes
+    const cleaned = input.replace(/```json/g, '').replace(/```/g, '').trim();
+    
+    // Recherche de la structure JSON la plus large possible
+    const jsonMatch = cleaned.match(/(\{[\s\S]*\}|\[[\s\S]*\])/);
+    
+    if (!jsonMatch) {
+      console.error("[AIService] Échec d'extraction JSON. Réponse brute (début):", input.substring(0, 300));
+      throw new Error("Aucun bloc JSON détecté dans la chaîne. Le modèle a peut-être renvoyé du texte conversationnel au lieu de données structurées.");
+    }
+    
+    const jsonStr = jsonMatch[0];
+    try {
+      return JSON.parse(jsonStr) as T;
+    } catch (parseError) {
+      console.error("[AIService] Erreur de parsing du JSON extrait:", jsonStr.substring(0, 300));
+      throw parseError;
     }
   }
 

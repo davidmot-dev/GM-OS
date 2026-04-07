@@ -9,6 +9,7 @@ import type { GameDriver } from '../../../types/drivers';
 import type { SheetTemplate } from '../../../data/defaultSheetTemplates';
 import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 import ChronicleForge from './ChronicleForge';
+import { useAIStore } from '../../../stores/useAIStore';
 
 interface NotebookSource {
   id: string;
@@ -29,6 +30,7 @@ interface ForgeDashboardProps {
 }
 
 const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
+  const { activeProvider } = useAIStore();
   const { saveGameDriver, addSheetTemplate } = useSessionOSStore();
   const [contextItems, setContextItems] = useState<ForgeContextItem[]>([]);
   const [existingSystemName, setExistingSystemName] = useState('');
@@ -339,12 +341,18 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
           <div className="p-3 rounded-xl bg-accent/20 text-accent animate-pulse shadow-glow-accent/20 border border-accent/20">
             <Hammer size={24} />
           </div>
-          <div>
+          <div className="flex items-center gap-4">
             <h1 className="text-2xl font-black uppercase tracking-widest text-app-text font-display">
               SYSTEM FORGE <span className="text-accent/50 text-xs font-mono tracking-widest ml-2">v5.1</span>
             </h1>
-            <p className="text-[10px] font-bold text-app-text/40 uppercase tracking-[0.3em]">Extraction neuronale & Design de Systèmes</p>
+            <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border flex items-center gap-2 ${
+               activeProvider === 'gemini' ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400 shadow-glow-emerald/20'
+             }`}>
+               <Sparkles size={12} className={activeProvider === 'gemini' ? '' : 'animate-pulse'} />
+               Moteur : {activeProvider === 'gemini' ? 'Gemini 1.5' : 'Gemma 4' }
+             </div>
           </div>
+          <p className="text-[10px] font-bold text-app-text/40 uppercase tracking-[0.3em]">Extraction neuronale & Design de Systèmes</p>
         </div>
 
         <div className="flex items-center gap-4">
@@ -576,9 +584,9 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                   Déposez un PDF de règles, des notes de système ou liez un NotebookLM pour forger une architecture GM-OS complète.
                 </p>
               </div>
-              <div className="flex items-center gap-4 text-xs font-mono text-app-text/20 uppercase tracking-widest font-bold">
-                <span className="flex items-center gap-1.5"><Rocket className="w-3.5 h-3.5" /> GPT-4o POWERED</span>
-                <span className="flex items-center gap-1.5"><Globe className="w-3.5 h-3.5" /> MULTIMODAL EXTRACTION</span>
+              <div className="flex items-center gap-6 text-[9px] font-bold border border-white/5 bg-white/5 px-6 py-2 rounded-full text-app-text/40 uppercase tracking-widest font-mono">
+                <span className="flex items-center gap-1.5"><Rocket className="w-3.5 h-3.5" /> AI {activeProvider === 'gemini' ? 'Gemini 1.5 Cloud' : 'Gemma 4 Local'}</span>
+                <span className="flex items-center gap-1.5 border-l border-white/10 pl-6"><Globe className="w-3.5 h-3.5" /> Multimodal Extraction</span>
               </div>
             </div>
           )}

@@ -1,3 +1,5 @@
+import { AIService } from '../ai/AIService';
+import { useAIStore } from '../../stores/useAIStore';
 import type { Campaign, Entity, AtlasMap, WikiEntry, EntityRelation } from '../session/useSessionOSStore';
 import type { GameDriver } from '../../types/drivers';
 import type { ForgeContextItem } from './ForgeService';
@@ -24,32 +26,31 @@ export class ChronicleForgeService {
    */
   public async forgeChronicle(items: ForgeContextItem[], systemDriver: GameDriver, userInstructions?: string, targetName?: string): Promise<ChronicleForgeResult> {
     const prompt = this.getChroniclePrompt(systemDriver, userInstructions, targetName);
-    
-    // Aggregate items into Gemini parts
-    const parts: Array<{ text?: string, inline_data?: { mime_type: string, data: string } }> = [{ text: prompt }];
-    
+    const aiService = AIService.getInstance();
+    const { activeProvider } = useAIStore.getState();
+
+    // 1. PRÉPARATION DU CONTENU
+    let consolidatedText = "";
+    const attachments: { data: string, mimeType: string }[] = [];
+
     items.forEach(item => {
       if (item.type === 'text') {
-        parts.push({ text: `DOCUMENT NARRATIF [${item.name}] :\n\n${item.content}` });
+        consolidatedText += `\n\nDOCUMENT NARRATIF [${item.name}] :\n\n${item.content}`;
       } else {
-        parts.push({
-          inline_data: {
-            mime_type: item.mimeType || 'application/pdf',
-            data: item.content
-          }
+        attachments.push({
+          data: item.content,
+          mimeType: item.mimeType || 'application/pdf'
         });
       }
     });
 
-    const body = {
-      contents: [{ parts }],
-      generationConfig: {
-        response_mime_type: "application/json"
-      }
-    };
+    // 2. VÉRIFICATION DE CAPACITÉ VISUELLE
+    if (attachments.length > 0 && activeProvider !== 'gemini') {
+      throw new Error("Gemma 4 ne supporte pas l'analyse visuelle de multiples documents. Veuillez utiliser NotebookLM pour extraire le texte au préalable.");
+    }
 
-    const response = await this.callChronicleAIRaw(body);
-    return response as ChronicleForgeResult;
+    const fullPrompt = `${consolidatedText}\n\nINSTRUCTIONS FINALES : ${prompt}`;
+    return aiService.generateJSON<ChronicleForgeResult>(fullPrompt, "Tu es un expert en narration JdR pour GM-OS.", attachments);
   }
 
   private getChroniclePrompt(driver: GameDriver, userInstructions?: string, targetName?: string): string {
@@ -125,46 +126,6 @@ export class ChronicleForgeService {
     `;
   }
 
-  private async callChronicleAIRaw(body: { contents: Array<{ parts: Array<{ text?: string, inline_data?: { mime_type: string, data: string } }> }>, generationConfig?: { response_mime_type: string } }): Promise<unknown> {
-    if (!window.appBridge?.ai?.proxyRequest) {
-      throw new Error("AI Bridge not available");
-    }
-
-    const { configs } = (await import('../../stores/useAIStore')).useAIStore.getState();
-    const config = configs.gemini;
-    const modelId = config.modelId || 'gemini-1.5-pro';
-    const apiKey = config.apiKey?.trim().replace(/[\r\n]/g, '');
-
-    if (!apiKey) {
-      throw new Error("Clé API Gemini manquante. Veuillez la configurer dans les paramètres IA.");
-    }
-    
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${apiKey}`;
-    const headers = { 'Content-Type': 'application/json' };
-
-    try {
-      const payloadSize = JSON.stringify(body).length;
-      console.log(`[Chronicle Service] Sending AI request (${(payloadSize / 1024 / 1024).toFixed(2)} MB)...`);
-      
-      const response = await window.appBridge.ai.proxyRequest(url, 'POST', headers, body);
-      
-      if (!response.ok) {
-        throw new Error(`AI Chronicle Error: ${response.statusText}`);
-      }
-
-      const data = response.data as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
-      const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      
-      if (!textResponse) {
-        throw new Error("Empty response from AI Chronicle");
-      }
-
-      return JSON.parse(textResponse);
-    } catch (error) {
-      console.error("[Chronicle Service] AI Call failed:", error);
-      throw error;
-    }
-  }
 }
 
 export const chronicleForgeService = ChronicleForgeService.getInstance();

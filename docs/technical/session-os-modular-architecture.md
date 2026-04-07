@@ -153,4 +153,29 @@ Toute navigation déclenchée depuis le Cockpit (Lieux Épinglés, PNJs Actifs) 
 
 ---
 
-*Dernière mise à jour : 6 Avril 2026 - GM-OS v6.1.1 Atomic Navigation & Tactical Zoom Fix.*
+## 11. Unified & Agnostic AI Core (Gemma 4 & Stability)
+
+Depuis la v6.2.0-dev (7 Avril 2026), Session-OS intègre un moteur d'IA agnostique capable de basculer dynamiquement entre Cloud et Local-First, avec une pile réseau optimisée pour Windows.
+
+### Orchestration Réseau & Stabilité (Electron Native Bridge)
+
+Pour résoudre les instabilités réseau chroniques de Windows (erreurs `fetch failed` dues à la résolution IPv6 de Node.js), GM-OS utilise désormais trois piliers de stabilité :
+
+- **Electron `net.fetch`** : Dans `OllamaService.ts`, nous avons migré du `fetch` natif de Node.js vers le module `net` d'Electron. Ce module utilise la pile réseau de Chromium (Chrome), qui est nativement plus performante pour franchir les pare-feu Windows et gérer les DNS locaux.
+- **Forçage DNS IPv4 (`127.0.0.1`)** : Utilisation systématique de l'adresse `127.0.0.1` au lieu de `localhost` pour éviter toute tentative de résolution IPv6 (`::1`) par le système, souvent rejetée par Ollama.
+- **Priorité DNS Globale** : Injection de `dns.setDefaultResultOrder('ipv4first')` dans le processus principal (`main.ts`).
+
+### Orchestration Agnostique (`AIService.ts`)
+
+Le coeur de l'intelligence ne dépend plus d'une API spécifique. Il utilise une interface unifiée :
+- **Routage Dynamique** : Bascule entre `gemini` et `ollama` selon la configuration du `useAIStore`.
+- **Génération JSON Robuste** : Utilisation d'extracteurs Regex pour garantir la validité des schémas JSON produits par les modèles locaux (ex: Gemma 4), qui incluent souvent des préambules explicatifs.
+
+### Stratégie "Local-First" & Fallback
+
+- **Souveraineté des Données** : Les calculs narratifs et résumés de session sont prioritairement routés vers **Gemma 4 26B MoE** via Ollama.
+- **Support Multimodal (Cloud-Bridge)** : En l'absence de vision locale performante, le système utilise **NotebookLM** ou **Gemini** comme pont d'extraction avant de confier la narration textuelle au modèle local.
+
+---
+
+*Dernière mise à jour : 7 Avril 2026 - GM-OS v6.2.0 Stabilisation Réseau & Gemma 4 Integration.*

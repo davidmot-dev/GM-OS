@@ -1,4 +1,5 @@
-// Utilisation du fetch natif de Node.js (v18+)
+// Utilisation du net.fetch d'Electron pour éviter les bugs réseau de Node.js sur Windows
+import { net } from 'electron';
 
 export interface OllamaChatResponse {
     model: string;
@@ -11,14 +12,14 @@ export interface OllamaChatResponse {
 }
 
 export class OllamaService {
-    private baseUrl = 'http://localhost:11434';
+    private baseUrl = 'http://127.0.0.1:11434';
 
     /**
      * Vérifie si le serveur Ollama est accessible
      */
     async checkStatus(): Promise<boolean> {
         try {
-            const response = await fetch(`${this.baseUrl}/api/tags`);
+            const response = await net.fetch(`${this.baseUrl}/api/tags`);
             return response.ok;
         } catch (error) {
             console.error('[Ollama] Erreur de vérification du statut:', error);
@@ -31,7 +32,7 @@ export class OllamaService {
      */
     async chat(model: string, messages: { role: string; content: string }[]): Promise<string> {
         try {
-            const response = await fetch(`${this.baseUrl}/api/chat`, {
+            const response = await net.fetch(`${this.baseUrl}/api/chat`, {
                 method: 'POST',
                 body: JSON.stringify({
                     model: model,
@@ -47,8 +48,16 @@ export class OllamaService {
 
             const data = await response.json() as OllamaChatResponse;
             return data.message.content;
-        } catch (error) {
-            console.error('[Ollama] Erreur de chat:', error);
+        } catch (error: unknown) {
+            const err = error as Error & { code?: string; cause?: unknown };
+            console.error('[Ollama] Erreur de chat complète:', {
+                message: err.message,
+                code: err.code,
+                cause: err.cause
+            });
+            if (err.code === 'ECONNREFUSED' || err.message?.includes('fetch failed')) {
+                throw new Error(`Ollama est inaccessible sur ${this.baseUrl} (Erreur: ${err.message}). Si Ollama tourne dans le navigateur mais pas ici, vérifiez le Pare-feu Windows pour l'application.`);
+            }
             throw error;
         }
     }
@@ -58,7 +67,7 @@ export class OllamaService {
      */
     async listModels(): Promise<string[]> {
         try {
-            const response = await fetch(`${this.baseUrl}/api/tags`);
+            const response = await net.fetch(`${this.baseUrl}/api/tags`);
             if (!response.ok) return [];
             
             const data = await response.json() as { models?: { name: string }[] };
@@ -75,7 +84,7 @@ export class OllamaService {
     async pullModel(name: string): Promise<boolean> {
         try {
             console.log(`[Ollama] Pulling model: ${name}`);
-            const response = await fetch(`${this.baseUrl}/api/pull`, {
+            const response = await net.fetch(`${this.baseUrl}/api/pull`, {
                 method: 'POST',
                 body: JSON.stringify({ name, stream: false }),
                 headers: { 'Content-Type': 'application/json' }
@@ -94,7 +103,7 @@ export class OllamaService {
     async generateImage(model: string, prompt: string): Promise<string> {
         try {
             console.log(`[Ollama] Generating image with: ${model}`);
-            const response = await fetch(`${this.baseUrl}/api/generate`, {
+            const response = await net.fetch(`${this.baseUrl}/api/generate`, {
                 method: 'POST',
                 body: JSON.stringify({
                     model: model,

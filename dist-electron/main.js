@@ -1,4 +1,4 @@
-import require$$0$7, { ipcMain, dialog, app, protocol, shell, screen, BrowserWindow, net } from "electron";
+import require$$0$7, { ipcMain, dialog, net, app, protocol, shell, screen, BrowserWindow } from "electron";
 import path$1 from "node:path";
 import require$$2$3, { fileURLToPath } from "node:url";
 import * as require$$0$1 from "fs";
@@ -12,6 +12,7 @@ import http from "node:http";
 import https from "node:https";
 import { createRequire } from "node:module";
 import os from "node:os";
+import dns from "node:dns";
 import require$$0$5, { spawn } from "child_process";
 import require$$1$1 from "os";
 import require$$2$1 from "events";
@@ -49507,14 +49508,14 @@ class SessionManager {
 const sessionManager = new SessionManager();
 class OllamaService {
   constructor() {
-    this.baseUrl = "http://localhost:11434";
+    this.baseUrl = "http://127.0.0.1:11434";
   }
   /**
    * Vérifie si le serveur Ollama est accessible
    */
   async checkStatus() {
     try {
-      const response = await fetch(`${this.baseUrl}/api/tags`);
+      const response = await net.fetch(`${this.baseUrl}/api/tags`);
       return response.ok;
     } catch (error2) {
       console.error("[Ollama] Erreur de vérification du statut:", error2);
@@ -49526,7 +49527,7 @@ class OllamaService {
    */
   async chat(model, messages) {
     try {
-      const response = await fetch(`${this.baseUrl}/api/chat`, {
+      const response = await net.fetch(`${this.baseUrl}/api/chat`, {
         method: "POST",
         body: JSON.stringify({
           model,
@@ -49542,7 +49543,15 @@ class OllamaService {
       const data = await response.json();
       return data.message.content;
     } catch (error2) {
-      console.error("[Ollama] Erreur de chat:", error2);
+      const err = error2;
+      console.error("[Ollama] Erreur de chat complète:", {
+        message: err.message,
+        code: err.code,
+        cause: err.cause
+      });
+      if (err.code === "ECONNREFUSED" || err.message?.includes("fetch failed")) {
+        throw new Error(`Ollama est inaccessible sur ${this.baseUrl} (Erreur: ${err.message}). Si Ollama tourne dans le navigateur mais pas ici, vérifiez le Pare-feu Windows pour l'application.`);
+      }
       throw error2;
     }
   }
@@ -49551,7 +49560,7 @@ class OllamaService {
    */
   async listModels() {
     try {
-      const response = await fetch(`${this.baseUrl}/api/tags`);
+      const response = await net.fetch(`${this.baseUrl}/api/tags`);
       if (!response.ok) return [];
       const data = await response.json();
       return data.models?.map((m) => m.name) || [];
@@ -49566,7 +49575,7 @@ class OllamaService {
   async pullModel(name) {
     try {
       console.log(`[Ollama] Pulling model: ${name}`);
-      const response = await fetch(`${this.baseUrl}/api/pull`, {
+      const response = await net.fetch(`${this.baseUrl}/api/pull`, {
         method: "POST",
         body: JSON.stringify({ name, stream: false }),
         headers: { "Content-Type": "application/json" }
@@ -49584,7 +49593,7 @@ class OllamaService {
   async generateImage(model, prompt) {
     try {
       console.log(`[Ollama] Generating image with: ${model}`);
-      const response = await fetch(`${this.baseUrl}/api/generate`, {
+      const response = await net.fetch(`${this.baseUrl}/api/generate`, {
         method: "POST",
         body: JSON.stringify({
           model,
@@ -49607,6 +49616,9 @@ class OllamaService {
 const require$1 = createRequire(import.meta.url);
 const pdf = require$1("pdf-parse");
 const { WebSocketServer } = require$1("ws");
+if (os.platform() === "win32") {
+  dns.setDefaultResultOrder("ipv4first");
+}
 app.name = "gm-os-v5";
 log$1.transports.file.level = "info";
 log$1.transports.console.level = "debug";

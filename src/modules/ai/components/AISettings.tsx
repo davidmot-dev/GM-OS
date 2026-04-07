@@ -351,6 +351,7 @@ const AISettings: React.FC = () => {
                       )}
                       {p.id === 'ollama' && (
                         <>
+                          <option value="gemma4:26b">Gemma 4 26B (Optimal Text)</option>
                           <option value="phi3">Phi-3 (Léger & Rapide)</option>
                           <option value="gemma2:2b">Gemma 2 2B (Efficace)</option>
                           <option value="mistral">Mistral (Polyvalent)</option>
@@ -370,6 +371,28 @@ const AISettings: React.FC = () => {
                 )}
               </div>
             </div>
+
+            {p.id === 'ollama' && !discoveredModels.includes('gemma4:26b') && (
+              <button
+                onClick={async () => {
+                  try {
+                    gmToast("Téléchargement de Gemma 4 lancé (Vérifiez votre terminal Ollama)...");
+                    await window.appBridge?.ai?.ollamaPull?.('gemma4:26b');
+                    gmToast("Gemma 4 est prêt !", "success");
+                    // Refresh models
+                    const models = await window.appBridge?.ai?.ollamaListModels?.();
+                    if (models) setDiscoveredModels(models);
+                   } catch (error) {
+                    console.error("Gemma 4 Pull error:", error);
+                    gmToast("Erreur lors du téléchargement.", "error");
+                  }
+                }}
+                className="mt-4 w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-accent/20 border border-accent/40 text-[10px] font-black uppercase tracking-widest text-accent hover:bg-accent hover:text-white transition-all shadow-lg shadow-accent/10"
+              >
+                <Cpu size={14} className="animate-pulse" />
+                Télécharger Gemma 4 (26B MoE)
+              </button>
+            )}
 
             {configs[p.id]?.apiKey && (
               <div className="mt-4 flex items-center gap-2 text-[9px] font-bold uppercase tracking-widest text-emerald-500/60 bg-emerald-500/5 px-3 py-2 rounded-lg border border-emerald-500/10">

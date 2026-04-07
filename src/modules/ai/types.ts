@@ -13,5 +13,6 @@ export type AIResponse = {
 
 export interface AIServiceInterface {
   generateText(prompt: string, context?: string): Promise<AIResponse>;
+  generateJSON<T>(prompt: string, systemPrompt: string): Promise<T>;
   generateEmbeddings(text: string): Promise<number[]>;
 }

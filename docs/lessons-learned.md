@@ -148,6 +148,41 @@ L'utilisation de bordures "lumineuses" via `mask-composite` (style Bento Box) n�
 
 ---
 
-Dernière mise à jour : 6 Avril 2026
+## 🧠 Intelligence Artificielle Locale : Souveraineté & Défis
 
-Statut : Oracle IA Contextuel, Nexus-OS v2 (Remote Check) et Standards de Synchronisation documentés.
+### Extraction JSON vs Native Schema Support
+
+**Problème :** Contrairement aux APIs Cloud (Gemini, OpenAI), les modèles locaux via Ollama (comme Gemma 4) ne supportent pas toujours le mode "JSON strict" de manière native et fiable. Ils ont tendance à "préambuler" la réponse (ex: "Voici le JSON demandé...") ce qui casse le `JSON.parse`.
+
+**Solution :** Implémentation d'un service d'IA agnostique doté d'un extracteur Regex `/{[\s\S]*}/` robuste. Cela permet de "pêcher" l'objet JSON au milieu d'une réponse verbeuse.
+
+**Apprentissage :** Pour une architecture local-first, le code doit être "tolérant au bruit" des LLM locaux. La validation du schéma (Zod/Interfaces) doit intervenir après l'extraction et non pendant la requête.
+
+### Dilemme du Contexte Multimodal
+
+**Problème :** Gemma 4 26B MoE est exceptionnel pour le texte, mais aveugle aux images/PDF (contrairement à Gemini 1.5 Flash).
+
+**Solution :** Utilisation d'une architecture hybride. NotebookLM (Cloud) sert de processeur de vision/document pour extraire la "vérité textuelle", qui est ensuite injectée dans le contexte local de Gemma 4 pour la génération narrative finale.
+
+**Apprentissage :** L'agence IA locale ne signifie pas l'abandon du Cloud, mais sa relégation à des fonctions "sensorielles" (Vision/OCR), laissant le "cerveau créatif" en local pour la confidentialité.
+
+---
+
+## 📡 Réseau : Stabilisation Electron vs Windows (Ollama)
+
+### Le Piège de la pile réseau Node.js
+
+**Problème :** L'appel de services locaux (`localhost`) via la pile réseau native de Node.js (`fetch`) échoue souvent sur Windows à cause d'une résolution prioritaire vers IPv6 (`::1`), alors que de nombreux serveurs locaux (dont Ollama) n'écoutent que sur IPv4 (`127.0.0.1`). Cela génère des erreurs `fetch failed` ou `ERR_CONNECTION_REFUSED` intermittentes.
+
+**Solution :**
+1.  **Migration vers `net.fetch` (Electron)** : Utilisation de la pile réseau de Chromium (Chrome), plus robuste et mieux intégrée au système de certificats et de pare-feu Windows.
+2.  **Forçage IP Littérale** : Abandon de `localhost` au profit de `127.0.0.1` dans les configurations de service.
+3.  **DNS Priority Swap** : Utilisation de `dns.setDefaultResultOrder('ipv4first')` dans le processus principal pour garantir que l'application privilégie systématiquement l'IPv4.
+
+**Apprentissage :** Dans un environnement Electron sur Windows, ne jamais faire confiance à la pile réseau de Node.js pour les communications inter-services locales critiques. Passer par le pont natif d'Electron est la seule garantie de stabilité 100%.
+
+---
+
+Dernière mise à jour : 7 Avril 2026
+
+Statut : Stabilisation réseau Windows et intégration Gemma 4 (26B MoE) documentées.

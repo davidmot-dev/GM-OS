@@ -19,11 +19,12 @@ import {
   Eye,
   X
 } from 'lucide-react';
-import { useSessionOSStore } from '../../session/useSessionOSStore';
+import { useSessionOSStore, type WikiEntry, type AtlasMap, type Entity } from '../../session/useSessionOSStore';
 import { type ForgeContextItem } from '../ForgeService';
 import { chronicleForgeService, type ChronicleForgeResult } from '../ChronicleService';
 import { gmToast } from '../../../stores/useToastStore';
 import { gmConfirm } from '../../../stores/useModalStore';
+import { useAIStore } from '../../../stores/useAIStore';
 import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 
 interface NotebookSource {
@@ -39,6 +40,7 @@ interface Notebook {
 }
 
 const ChronicleForge: React.FC = () => {
+  const { activeProvider } = useAIStore();
   const { customGameDrivers, addChronicle, campaigns } = useSessionOSStore();
   
   const [contextItems, setContextItems] = useState<ForgeContextItem[]>([]);
@@ -290,9 +292,9 @@ const ChronicleForge: React.FC = () => {
       entities: (result.entities || []).map(e => ({
         ...e,
         name: e.name || 'NPC Inconnu',
-        type: (e.type as any) || 'npc',
-        role: (e.role as any) || 'neutral',
-        status: (e.status as any) || 'alive',
+        type: (e.type as Entity['type']) || 'npc',
+        role: (e.role as Entity['role']) || 'neutral',
+        status: (e.status as Entity['status']) || 'alive',
         avatar: e.avatar || '',
         hp: e.hp ?? 10,
         maxHp: e.maxHp ?? 10,
@@ -313,13 +315,13 @@ const ChronicleForge: React.FC = () => {
         narrativeDescription: l.narrativeDescription || '',
         gmNotes: l.gmNotes || '',
         linkedEntities: l.linkedEntities || [],
-        type: (l.type as any) || 'battlemap', 
+        type: (l.type as AtlasMap['type']) || 'battlemap', 
       })),
       wikiEntries: (result.lore || []).map(l => ({
         ...l,
         title: l.title || 'Entrée sans titre',
         content: l.content || '',
-        category: (l.category as any) || 'lore',
+        category: (l.category as WikiEntry['category']) || 'lore',
         tags: l.tags || [],
         imageUrls: l.imageUrls || [],
         linkedEntityIds: l.linkedEntityIds || [],
@@ -341,12 +343,18 @@ const ChronicleForge: React.FC = () => {
           <div className="p-3 rounded-xl bg-accent/20 text-accent animate-pulse shadow-glow-accent/20 border border-accent/20">
             <Hammer size={24} />
           </div>
-          <div>
+          <div className="flex items-center gap-4">
             <h1 className="text-2xl font-black uppercase tracking-widest text-app-text font-display">
               CHRONICLE FORGE <span className="text-accent/50 text-xs font-mono tracking-widest ml-2">v5.2</span>
             </h1>
-            <p className="text-[10px] font-bold text-app-text/40 uppercase tracking-[0.3em]">Scénarisation & Extraction de Savoir</p>
+            <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border flex items-center gap-2 ${
+               activeProvider === 'gemini' ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400 shadow-glow-emerald/20'
+             }`}>
+               <Sparkles size={12} className={activeProvider === 'gemini' ? '' : 'animate-pulse'} />
+               Moteur : {activeProvider === 'gemini' ? 'Gemini 1.5' : 'Gemma 4' }
+             </div>
           </div>
+          <p className="text-[10px] font-bold text-app-text/40 uppercase tracking-[0.3em]">Scénarisation & Extraction de Savoir</p>
         </div>
 
         <div className="flex items-center gap-4">

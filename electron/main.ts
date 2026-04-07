@@ -9,6 +9,12 @@ const require = createRequire(import.meta.url);
 const pdf = require('pdf-parse');
 const { WebSocketServer } = require('ws');
 import os from 'node:os';
+import dns from 'node:dns';
+
+// Fix pour les échecs de fetch sur Windows vers 127.0.0.1
+if (os.platform() === 'win32') {
+    dns.setDefaultResultOrder('ipv4first');
+}
 import type { WebSocket } from 'ws';
 import log from 'electron-log';
 

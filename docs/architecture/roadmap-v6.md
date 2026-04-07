@@ -29,6 +29,7 @@ L'objectif est d'assurer une étanchéité parfaite des données tout en simplif
 - **[x] Oracle IA Contextuel** : Intelligence "Session-Aware" injectant personnages, indices et historique dans les prompts.
 - **[x] Nexus-OS v2 — Driver Export** : Exporter non seulement les campagnes, mais aussi les GameDrivers (systèmes de règles) comme bundles autonomes.
 - **[x] Nexus-OS v2 — Vérification & Localisation des URLs distantes** : Détection automatique des URLs HTTP non-portables avec téléchargement interactif vers le Media Hub.
+- **[x] Agnostic AI Core & Local Stability** : Intégration de Gemma 4 26B MoE via Ollama avec stabilisation réseau (`net.fetch`) et forçage DNS IPv4 pour Windows.
 
 ---
 
@@ -73,5 +74,5 @@ Extension des capacités de création et de partage.
 | Synchronisation Ambiance & Blend-modes (Map-OS) | Haute | ✅ Résolu |
 
 ---
-*Dernière mise à jour : 6 Avril 2026*
-*Statut : Navigation stabilisée. Oracle IA Contextuel et Export Drivers Nexus v2 opérationnels.*
+*Dernière mise à jour : 7 Avril 2026*
+*Statut : Navigation stabilisée. IA Agnostique (Cloud/Local) 100% opérationnelle sur Windows.*
