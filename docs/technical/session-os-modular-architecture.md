@@ -81,8 +81,10 @@ La résolution de la fiche de personnage (`logic/templateResolver.ts`) suit une 
 
 Pour éviter toute fuite de données entre projets ("Data Leakage"), Session-OS impose un filtrage strict à la source de l'UI.
 
+
 - **activeCampaignId** : Chaque requête d'affichage (indices, PNJs, cartes) doit inclure une clause `campaignId === activeCampaignId`.
 - **Composants Critiques** : `SessionClueDeck.tsx` (Deck MJ) et `OraclePanel.tsx` (Contexte IA) sont les gardiens de cette isolation.
+
 
 ---
 
@@ -178,4 +180,22 @@ Le coeur de l'intelligence ne dépend plus d'une API spécifique. Il utilise une
 
 ---
 
-*Dernière mise à jour : 7 Avril 2026 - GM-OS v6.2.0 Stabilisation Réseau & Gemma 4 Integration.*
+## 12. Narrative Synchronization & Player Private Notes
+
+Depuis la v6.2.1-dev, Session-OS intègre un système de prise de notes privées persistantes pour les joueurs, synchronisé en temps réel avec le serveur MJ.
+
+### Protocole de Synchronisation (`useHubSync.ts`)
+
+La synchronisation repose sur trois piliers pour garantir la stabilité et éviter les boucles de rendu :
+
+- **Action Distante** : L'action `session:update-character-narrative` est utilisée pour envoyer les mises à jour depuis la tablette vers le MJ.
+- **Debounce & Buffer** : Le composant `PlayerPrivateNotes` utilise un délai de 1.5s (debounce) avant d'émettre une mise à jour, limitant la charge réseau.
+- **Stabilité par Ref (`lastSyncRef`)** : Pour éviter que le retour du serveur (écho) n'écrase la saisie en cours du joueur, le composant utilise un `lastSyncRef`. Si la note reçue du serveur correspond à la dernière note envoyée par le client, la mise à jour de l'état local est ignorée.
+
+### Architecture du Store MJ
+
+Côté MJ, la mise à jour est interceptée par le `RemoteListener` qui appelle `updateCharacterNarrative` dans l' `entitySlice`. Les données sont stockées dans le champ `playerNotes` de l'objet `PlayerCharacter`, garantissant la persistance dans le bundle de campagne `.gmos`.
+
+---
+
+*Dernière mise à jour : 7 Avril 2026 - GM-OS v6.2.1-dev : Implémentation Notes Privées PJ.*

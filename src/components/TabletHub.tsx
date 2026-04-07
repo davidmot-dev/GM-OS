@@ -30,6 +30,7 @@ import { HubTrombinoscope } from './hub/HubTrombinoscope';
 import { HubAtlas } from './hub/HubAtlas';
 import { HubInventory } from './hub/HubInventory';
 import { useHubSync } from '../modules/session/hooks/useHubSync';
+import PlayerPrivateNotes from '../modules/session/components/PlayerPrivateNotes';
 import { type Clue, type Entity, type AtlasMap } from '../modules/session/store/types';
 import { type FavoriteEntity } from '../modules/favorite/useFavoriteStore';
 import { useDiceStore } from '../stores/useDiceStore';
@@ -70,6 +71,7 @@ const TabletHub: React.FC = () => {
 
     const [currentTab, setCurrentTab] = useState<'live' | 'archives' | 'trombinoscope' | 'atlas' | 'inventory'>('live');
     const [isInventoryOpen, setIsInventoryOpen] = useState(false);
+    const [isNotesOpen, setIsNotesOpen] = useState(false);
     const [isMessengerOpen, setIsMessengerOpen] = useState(false);
     const [selectedClue, setSelectedClue] = useState<Clue | null>(null);
     const [selectedNpc, setSelectedNpc] = useState<Entity | null>(null);
@@ -91,9 +93,9 @@ const TabletHub: React.FC = () => {
         )
     ).length;
 
-    const characterName = players
-        .flatMap(p => p.characters)
-        .find(c => c.id === characterId)?.name || 'Joueur';
+    const playerWithChar = players.find(p => p.characters.some(c => c.id === characterId));
+    const characterName = playerWithChar?.characters.find(c => c.id === characterId)?.name || 'Joueur';
+    const playerId = playerWithChar?.id;
 
     const visibleCombatants = combatants.filter(c => 
         c.isPlayer || !c.statuses?.some(s => ['invisible', 'invisibilité', 'caché', 'hidden'].includes(s.name.toLowerCase()))
@@ -309,8 +311,15 @@ const TabletHub: React.FC = () => {
                         Fiche
                     </button>
                     <button 
+                        onClick={() => setIsNotesOpen(!isNotesOpen)}
+                        className={`relative flex items-center gap-2 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${isNotesOpen ? 'bg-indigo-600 text-white shadow-glow-indigo/40' : 'text-app-text/40 hover:text-app-text'}`}
+                    >
+                        <BookOpen size={14} />
+                        Notes
+                    </button>
+                    <button 
                         onClick={toggleMessenger}
-                        className={`relative flex items-center gap-2 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${isMessengerOpen ? 'bg-indigo-600 text-white' : 'text-app-text/40 hover:text-app-text'}`}
+                        className={`relative flex items-center gap-2 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${isMessengerOpen ? 'bg-indigo-600 text-white shadow-glow-indigo/40' : 'text-app-text/40 hover:text-app-text'}`}
                     >
                         <MessageSquare size={14} />
                         Messages
@@ -360,6 +369,18 @@ const TabletHub: React.FC = () => {
             {characterId && (
                 <>
                     {isInventoryOpen && <HubCharacterSheet onClose={() => setIsInventoryOpen(false)} />}
+                    <AnimatePresence>
+                        {isNotesOpen && playerId && (
+                            <motion.div 
+                                initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: 20, scale: 0.95 }}
+                                className="fixed bottom-24 right-8 z-[150] w-full max-w-sm pointer-events-auto"
+                            >
+                                <PlayerPrivateNotes playerId={playerId} characterId={characterId} />
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                     <HubMessenger isOpen={isMessengerOpen} onClose={() => setIsMessengerOpen(false)} characterId={characterId} characterName={characterName} />
                 </>
             )}

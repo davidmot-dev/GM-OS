@@ -197,11 +197,23 @@ export const useHubSync = () => {
             }
         };
 
+        const handleUpdateNarrative = (e: Event) => {
+            const customEvent = e as CustomEvent;
+            if (socketRef.current?.readyState === WebSocket.OPEN) {
+                socketRef.current.send(JSON.stringify({
+                    type: 'session:update-character-narrative',
+                    payload: customEvent.detail
+                }));
+            }
+        };
+
         window.addEventListener('session:send-message', handleSendMessage);
+        window.addEventListener('session:update-character-narrative', handleUpdateNarrative);
         connect();
 
         return () => {
             window.removeEventListener('session:send-message', handleSendMessage);
+            window.removeEventListener('session:update-character-narrative', handleUpdateNarrative);
             if (window.appBridge?.off) {
                 window.appBridge.off('image:sync-hub-data', handleIpcUpdate);
             }

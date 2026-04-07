@@ -183,6 +183,23 @@ L'utilisation de bordures "lumineuses" via `mask-composite` (style Bento Box) n�
 
 ---
 
-Dernière mise à jour : 7 Avril 2026
+---
 
-Statut : Stabilisation réseau Windows et intégration Gemma 4 (26B MoE) documentées.
+## 📡 Réseau & Sync : Le Piège de la Boucle de Nettoyage (Cleanup Loop)
+
+### État Local vs État Store (La Boucle des Notes Privées)
+
+**Problème :** Lors de l'implémentation des notes privées sur tablette (v6.2.1-dev), l'utilisation d'un `useEffect` pour sauvegarder au démontage a créé un bug critique. L'effet dépendait de `localNotes`, déclenchant son nettoyage à chaque changement d'état. Le nettoyage appelait `remoteUpdateCharacterNarrative`, qui mettait à jour le store MJ, qui renvoyait un signal `sync` à la tablette, qui mettait à jour `localNotes`, et ainsi de suite à chaque touche pressée.
+
+**Solution :**
+1.  **Isolation de la Dépendance** : Retirer `localNotes` du tableau de dépendances de l'effet de nettoyage.
+2.  **Utilisation de Refs** : Utiliser un `notesRef` mis à jour de manière synchrone à chaque touche, mais consommé uniquement dans le nettoyage (cleanup) ou le délai de sauvegarde (debounce).
+3.  **Filtrage par Echo** : Comparer la valeur reçue du store avec la dernière valeur envoyée avant de mettre à jour l'état local (guard clause).
+
+**Apprentissage :** Dans un système distribué à haute réactivité (Sync WebSockets), le nettoyage d'un `useEffect` ne doit jamais dépendre d'une donnée qui change fréquemment si ce nettoyage émet lui-même un signal réseau modifiant cette donnée. Les `refs` sont indispensables pour capturer la "dernière volonté" de l'utilisateur sans polluer le cycle de rendu.
+
+---
+
+Dernière mise à jour : 7 Avril 2026 (23h40)
+
+Statut : Stabilisation réseau Windows, intégration Gemma 4 et correction des boucles de sync documentées.

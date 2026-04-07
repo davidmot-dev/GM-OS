@@ -381,11 +381,19 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
         get().updateCharacterNarrative(playerId, characterId, updates);
 
         // Envoyer l'action au MJ via le pont distant (Electron/WebSocket)
-        if (typeof window !== 'undefined' && window.appBridge?.remote?.broadcastToTablets) {
-            window.appBridge.remote.broadcastToTablets(
-                'session:update-character-narrative',
-                { playerId, characterId, updates }
-            );
+        if (typeof window !== 'undefined') {
+            if (window.appBridge?.remote?.broadcastToTablets) {
+                // Mode Electron (MJ ou Hub intégré)
+                window.appBridge.remote.broadcastToTablets(
+                    'session:update-character-narrative',
+                    { playerId, characterId, updates }
+                );
+            } else {
+                // Mode Browser (Tablette distante) via CustomEvent capturé par useHubSync
+                window.dispatchEvent(new CustomEvent('session:update-character-narrative', {
+                    detail: { playerId, characterId, updates }
+                }));
+            }
         }
     },
 

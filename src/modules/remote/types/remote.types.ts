@@ -91,7 +91,9 @@ export type RemoteActionType =
     | 'whiteboard:set-background'
     | 'whiteboard:set-tool'
     | 'whiteboard:set-color'
-    | 'whiteboard:set-width';
+    | 'whiteboard:set-width'
+    | 'session:update-character-narrative'
+    | 'session:send-message';
 
 export interface RemoteAction {
     type: RemoteActionType;
