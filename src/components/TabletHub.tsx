@@ -64,7 +64,8 @@ const TabletHub: React.FC = () => {
         activeCampaignWallpaper,
         sessions,
         isOnboarded,
-        characterId
+        characterId,
+        transferRequests
     } = useHubSync();
 
     const { resetIdentity } = useClientStore();
@@ -258,7 +259,16 @@ const TabletHub: React.FC = () => {
                     {currentTab === 'archives' && <HubArchives clues={clues} activeCampaignId={activeCampaignId} onSelectClue={setSelectedClue} />}
                     {currentTab === 'trombinoscope' && <HubTrombinoscope npcs={resolvedNpcs} onSelectNpc={setSelectedNpc} />}
                     {currentTab === 'atlas' && <HubAtlas atlasMaps={resolvedAtlasMaps} onSelectMap={setSelectedAtlasMap} />}
-                    {currentTab === 'inventory' && <HubInventory items={inventoryItems} onSelectItem={setSelectedItem} />}
+                    {currentTab === 'inventory' && (
+                        <HubInventory 
+                            items={inventoryItems} 
+                            structuredItems={playerWithChar?.characters.find(c => c.id === characterId)?.inventoryItems || []}
+                            characters={players.flatMap(p => p.characters).filter(c => c.campaignId === activeCampaignId)}
+                            transferRequests={transferRequests}
+                            currentCharacterId={characterId}
+                            onSelectItem={setSelectedItem} 
+                        />
+                    )}
                 </div>
             </div>
 
@@ -286,7 +296,7 @@ const TabletHub: React.FC = () => {
                             { id: 'archives', icon: Archive, label: 'Archives', color: undefined },
                             { id: 'trombinoscope', icon: Users, label: 'PNJ', color: 'indigo' },
                             { id: 'atlas', icon: Globe, label: 'Lieux', color: 'emerald' },
-                            { id: 'inventory', icon: Package, label: 'Sac', color: 'amber' }
+                            { id: 'inventory', icon: Package, label: 'Inventaire', color: 'amber' }
                         ] as const
                     ).map((tab) => (
                         <button 

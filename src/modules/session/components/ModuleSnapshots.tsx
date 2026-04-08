@@ -205,7 +205,7 @@ const ModuleSnapshots: React.FC = () => {
                     </button>
                 </div>
                 <div className="flex justify-between gap-1">
-                    {[4, 6, 8, 20, 100].map((sides) => (
+                    {[4, 6, 8, 10, 12, 20, 100].map((sides) => (
                         <button
                             key={sides}
                             onClick={() => rollDice(sides)}

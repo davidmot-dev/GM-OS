@@ -10,7 +10,8 @@ import SessionClueDeck from './SessionClueDeck';
 const SessionWorkspace: React.FC = () => {
     const { 
         sessions, activeCampaignId, entities, updateSessionPublicSummary, updateSessionGmSecrets, 
-        campaigns, atlasMaps, players, updateCharacterHP, navigateToAtlasMap, navigateToNpcDetail
+        campaigns, atlasMaps, players, updateCharacterHP, navigateToAtlasMap, navigateToNpcDetail,
+        navigateToPlayerDetail
     } = useSessionOSStore();
     const { mapUrl, mapName, isVideo, setMap } = useMapStore();
     const resolvedMapUrl = useMediaUrl(mapUrl || undefined);
@@ -60,10 +61,12 @@ const SessionWorkspace: React.FC = () => {
                             {(session.sessionEntityIds || []).map(id => {
                                 // Find character among all players
                                 let pc = null;
+                                let ownerId = '';
                                 for (const p of players) {
                                     const char = p.characters.find(c => c.id === id);
                                     if (char && char.campaignId === activeCampaignId) {
                                         pc = char;
+                                        ownerId = p.id;
                                         break;
                                     }
                                 }
@@ -72,7 +75,7 @@ const SessionWorkspace: React.FC = () => {
 
                                 return (
                                     <div key={pc.id} className="w-12 h-12 rounded-full border-2 border-app-bg bg-app-surface relative group cursor-pointer hover:z-20 transition-all hover:scale-110">
-                                        <div className="w-full h-full rounded-full overflow-hidden" onClick={() => updateEntityHP(pc.id, -5)}>
+                                        <div className="w-full h-full rounded-full overflow-hidden" onClick={() => navigateToPlayerDetail(ownerId, pc.id)}>
                                             <ResolvedAsset src={pc.portraitUrl} alt={pc.name} className="w-full h-full object-cover" title={`${pc.name}: ${pc.hp}/${pc.maxHp}`} />
                                         </div>
                                         <div className={`absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-app-bg ${pc.hp > pc.maxHp * 0.5 ? 'bg-green-500' : pc.hp > 0 ? 'bg-yellow-500' : 'bg-red-500'}`}></div>

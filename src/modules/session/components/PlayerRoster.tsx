@@ -3,11 +3,27 @@ import { useSessionOSStore } from '../useSessionOSStore';
 import { gmCustom } from '../../../stores/useModalStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import type { Player } from '../useSessionOSStore';
-import { Search, UserPlus, Trash2 } from 'lucide-react';
+import { Search, UserPlus, Trash2, Camera } from 'lucide-react';
+import { MediaBrowser } from '../../../components/MediaBrowser';
 
 const PlayerRoster: React.FC = () => {
-    const { players, selectedPlayerId, setSelectedPlayer, togglePlayerOnline, activeCampaignId } = useSessionOSStore();
+    const { players, selectedPlayerId, setSelectedPlayer, togglePlayerOnline, activeCampaignId, updatePlayer } = useSessionOSStore();
     const [searchQuery, setSearchQuery] = useState('');
+    const [mediaBrowserOpen, setMediaBrowserOpen] = useState(false);
+    const [activePlayerIdForAvatar, setActivePlayerIdForAvatar] = useState<string | null>(null);
+
+    const handleAvatarClick = (e: React.MouseEvent, playerId: string) => {
+        e.stopPropagation();
+        setActivePlayerIdForAvatar(playerId);
+        setMediaBrowserOpen(true);
+    };
+
+    const handleMediaSelect = (url: string) => {
+        if (activePlayerIdForAvatar) {
+            updatePlayer(activePlayerIdForAvatar, { avatarUrl: url });
+        }
+        setMediaBrowserOpen(false);
+    };
 
     const filtered = players.filter(p =>
         p.realName.toLowerCase().includes(searchQuery.toLowerCase())
@@ -52,12 +68,22 @@ const PlayerRoster: React.FC = () => {
                                 useSessionOSStore.getState().deletePlayer(player.id);
                             }
                         }}
+                        onAvatarClick={(e) => handleAvatarClick(e, player.id)}
                     />
                 ))}
                 {filtered.length === 0 && (
                     <p className="text-app-text/20 text-sm text-center p-4">Aucun joueur trouvé</p>
                 )}
             </div>
+
+            {/* Media Browser for Player Avatars */}
+            <MediaBrowser
+                isOpen={mediaBrowserOpen}
+                onClose={() => setMediaBrowserOpen(false)}
+                onSelect={handleMediaSelect}
+                allowedTypes={['image']}
+                title="Changer l'avatar du joueur"
+            />
 
             {/* Footer */}
             <div className="p-4 border-t border-app-border">
@@ -80,7 +106,8 @@ const PlayerCard: React.FC<{
     onClick: () => void;
     onToggleOnline: (e: React.MouseEvent) => void;
     onDelete: (e: React.MouseEvent) => void;
-}> = ({ player, isSelected, activeCampaignId, onClick, onToggleOnline, onDelete }) => {
+    onAvatarClick: (e: React.MouseEvent) => void;
+}> = ({ player, isSelected, activeCampaignId, onClick, onToggleOnline, onDelete, onAvatarClick }) => {
     const resolvedAvatar = useMediaUrl(player.avatarUrl);
     return (
         <div
@@ -90,12 +117,15 @@ const PlayerCard: React.FC<{
                 : 'hover:bg-app-surface/60 border border-transparent'
                 }`}
         >
-            <div className="relative flex-shrink-0">
+            <div className="relative flex-shrink-0 group/avatar" onClick={onAvatarClick}>
                 <img
                     src={resolvedAvatar || undefined}
                     alt={player.realName}
-                    className="w-10 h-10 rounded-full bg-app-surface object-cover border border-app-border"
+                    className="w-10 h-10 rounded-full bg-app-surface object-cover border border-app-border group-hover/avatar:opacity-40 transition-opacity"
                 />
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity text-accent">
+                    <Camera size={16} />
+                </div>
                 <span className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-app-bg ${player.isOnline ? 'bg-emerald-400' : 'bg-app-text/20'}`}></span>
             </div>
             <div className="min-w-0 flex-1">

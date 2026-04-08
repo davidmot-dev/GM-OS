@@ -31,7 +31,9 @@ const SocialGraph: React.FC = () => {
         campaigns,
         freezeGraphLayout,
         unfreezeGraphLayout,
-        resetGraphLayout
+        resetGraphLayout,
+        navigateToNpcDetail,
+        navigateToPlayerDetail
     } = useSessionOSStore();
 
     const activeCampaign = useMemo(() => 
@@ -384,11 +386,12 @@ const SocialGraph: React.FC = () => {
                     onSaveFaction={handleSaveFaction}
                     onViewFullProfile={() => {
                         if (selectedNode.type === 'npc') {
-                            setCurrentView('npc-gallery');
-                            setSelectedEntity(selectedNode.id);
+                            navigateToNpcDetail(selectedNode.id);
                         } else {
-                            setCurrentView('players');
-                            setSelectedCharacter(selectedNode.id);
+                            const player = players.find(p => p.characters.some(c => c.id === selectedNode.id));
+                            if (player) {
+                                navigateToPlayerDetail(player.id, selectedNode.id);
+                            }
                         }
                     }}
                     activeRelations={data.links.filter(l => 

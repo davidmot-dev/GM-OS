@@ -69,6 +69,13 @@ Si vous venez d'effectuer un grand ménage dans vos PNJ ou campagnes :
 GM-OS intègre un système complet de portabilité appelé **Nexus-OS**. Il permet d'exporter une campagne entière (PNJs, cartes, images, sons) dans un fichier `.gmos`.
 
 Pour le guide complet, consultez : `docs/guides/nexus-os-user-guide.md`
+### Gestion des Échanges P2P (Validation MJ)
+
+Depuis la v6.2.2-dev, les joueurs peuvent s'échanger directement des objets. Cependant, le MJ garde le contrôle total sur l'économie du jeu :
+
+- **Notifications de Requête** : Lorsqu'un joueur initie un échange, une notification apparaît dans le **TradeRequestPanel** de votre Cockpit.
+- **Validation Interactive** : Vous pouvez voir l'objet, son origine et sa destination. Cliquez sur **"Approuver"** pour finaliser le transfert ou **"Rejeter"** pour annuler l'échange.
+- **Conséquence Narratives** : L'objet ne quitte l'inventaire du donneur et n'arrive chez le destinataire qu'**après** votre validation.
 
 ---
 *Dernière mise à jour : 6 Avril 2026*

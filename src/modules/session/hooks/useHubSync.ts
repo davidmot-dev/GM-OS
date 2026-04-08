@@ -39,7 +39,7 @@ export const useHubSync = () => {
     const { timestamp, mode, theme, tensions, isClockProjected } = useClockStore();
     const { favorites } = useFavoriteStore();
     const { combatants, currentTurnIdx, round, isCombatProjected } = useCombatStore();
-    const { clues, activeCampaignId, activeCampaignName, activeCampaignWallpaper, entities, atlasMaps, sessions } = useSessionOSStore();
+    const { clues, activeCampaignId, activeCampaignName, activeCampaignWallpaper, entities, atlasMaps, sessions, transferRequests } = useSessionOSStore();
     const { deviceId, pseudo, playerName, characterId, setStatus: setClientStatus, isOnboarded } = useClientStore();
 
     // Derived UI State
@@ -140,6 +140,23 @@ export const useHubSync = () => {
                     }
                 }
 
+                // Handle specific P2P events if they are not yet in the global sync
+                if (data.type === 'session:request-item-transfer') {
+                    useSessionOSStore.getState().requestItemTransfer(
+                        data.payload.fromCharId,
+                        data.payload.toCharId,
+                        data.payload.item
+                    );
+                }
+
+                if (data.type === 'session:approve-item-transfer') {
+                    useSessionOSStore.getState().approveItemTransfer(data.payload.requestId);
+                }
+
+                if (data.type === 'session:reject-item-transfer') {
+                    useSessionOSStore.getState().rejectItemTransfer(data.payload.requestId);
+                }
+
                 if (data.type === 'session:receive-message' && data.payload) {
                     const msg = data.payload;
                     useSessionOSStore.getState().addSessionMessage(msg);
@@ -157,6 +174,10 @@ export const useHubSync = () => {
                             fromName: msg.fromName
                         });
                     }
+                }
+                if (data.type === 'session:request-item-transfer' && data.payload) {
+                    const { fromCharId, toCharId, item } = data.payload;
+                    useSessionOSStore.getState().requestItemTransfer(fromCharId, toCharId, item);
                 }
             } catch (err) {
                 console.error('[useHubSync] Sync parsing error:', err);
@@ -207,13 +228,34 @@ export const useHubSync = () => {
             }
         };
 
+        const handleRequestTransfer = (e: Event) => {
+            const customEvent = e as CustomEvent;
+            
+            // 1. Local update (Optimistic UI)
+            useSessionOSStore.getState().requestItemTransfer(
+                customEvent.detail.fromCharId,
+                customEvent.detail.toCharId,
+                customEvent.detail.item
+            );
+
+            // 2. Network broadcast
+            if (socketRef.current?.readyState === WebSocket.OPEN) {
+                socketRef.current.send(JSON.stringify({
+                    type: 'session:request-item-transfer',
+                    payload: customEvent.detail
+                }));
+            }
+        };
+
         window.addEventListener('session:send-message', handleSendMessage);
         window.addEventListener('session:update-character-narrative', handleUpdateNarrative);
+        window.addEventListener('session:request-item-transfer', handleRequestTransfer);
         connect();
 
         return () => {
             window.removeEventListener('session:send-message', handleSendMessage);
             window.removeEventListener('session:update-character-narrative', handleUpdateNarrative);
+            window.removeEventListener('session:request-item-transfer', handleRequestTransfer);
             if (window.appBridge?.off) {
                 window.appBridge.off('image:sync-hub-data', handleIpcUpdate);
             }
@@ -267,6 +309,77 @@ export const useHubSync = () => {
         }
     }, [isDiceProjected, projectionTrigger]);
 
+    // --- Notifications d'Échanges P2P ---
+    const lastApprovedRequestsRef = useRef<string[]>([]);
+    
+    useEffect(() => {
+        if (!transferRequests || !characterId) return;
+
+        // 1. Détecter les objets REÇUS
+        const approvedForMe = transferRequests.filter(r => 
+            r.toCharacterId === characterId && 
+            r.status === 'approved' && 
+            !lastApprovedRequestsRef.current.includes(r.id)
+        );
+
+        if (approvedForMe.length > 0) {
+            approvedForMe.forEach(req => {
+                useSessionOSStore.getState().addHubNotification({
+                    title: 'Objet Reçu !',
+                    content: `Vous avez reçu "${req.item.name}" de la part d'un allié.`,
+                    fromName: 'SYSTÈME',
+                    type: 'system'
+                });
+                lastApprovedRequestsRef.current.push(req.id);
+            });
+        }
+
+        // 2. Détecter les objets DONNÉS (validés par le MJ)
+        const approvedByMe = transferRequests.filter(r => 
+            r.fromCharacterId === characterId && 
+            r.status === 'approved' && 
+            !lastApprovedRequestsRef.current.includes(r.id)
+        );
+
+        if (approvedByMe.length > 0) {
+            approvedByMe.forEach(req => {
+                useSessionOSStore.getState().addHubNotification({
+                    title: 'Échange Validé',
+                    content: `Votre don de "${req.item.name}" a été accepté par le MJ.`,
+                    fromName: 'SYSTÈME',
+                    type: 'system'
+                });
+                lastApprovedRequestsRef.current.push(req.id);
+            });
+        }
+
+        // 3. Détecter les objets REJETÉS
+        const rejectedByMe = transferRequests.filter(r => 
+            r.fromCharacterId === characterId && 
+            r.status === 'rejected' && 
+            !lastApprovedRequestsRef.current.includes(r.id)
+        );
+
+        if (rejectedByMe.length > 0) {
+            rejectedByMe.forEach(req => {
+                useSessionOSStore.getState().addHubNotification({
+                    title: 'Échange Refusé',
+                    content: `Le MJ a refusé votre don de "${req.item.name}".`,
+                    fromName: 'SYSTÈME',
+                    type: 'alert'
+                });
+                lastApprovedRequestsRef.current.push(req.id);
+            });
+        }
+    }, [transferRequests, characterId]);
+
+    // Cleanup old approved requests from ref to avoid memory leak
+    useEffect(() => {
+        if (!transferRequests) return;
+        const currentIds = transferRequests.map(r => r.id);
+        lastApprovedRequestsRef.current = lastApprovedRequestsRef.current.filter(id => currentIds.includes(id));
+    }, [transferRequests]);
+
     return {
         status,
         liveImagePath,
@@ -292,6 +405,7 @@ export const useHubSync = () => {
         activeCampaignName,
         activeCampaignWallpaper,
         sessions,
+        transferRequests,
         isOnboarded,
         characterId
     };

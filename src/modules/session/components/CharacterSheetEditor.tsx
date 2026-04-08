@@ -1,5 +1,5 @@
 import React from 'react';
-import { Save, FolderOpen, Layers, FileText, Trash2, Lock, BookOpen, Eye, Heart, Sparkles, Package, Tablet, PenTool } from 'lucide-react';
+import { Save, FolderOpen, Layers, FileText, Trash2, Lock, BookOpen, Eye, Heart, Sparkles, Package, Tablet, PenTool, Plus, Send, Check, X } from 'lucide-react';
 import { useImageStore } from '../../image/useImageStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
@@ -14,6 +14,8 @@ import { useCharacterEditor } from '../hooks/useCharacterEditor';
 
 const CharacterSheetEditor: React.FC = () => {
     const editor = useCharacterEditor();
+    const [isAddingItem, setIsAddingItem] = React.useState(false);
+    const [newItemName, setNewItemName] = React.useState('');
     const hpBarRef = React.useRef<HTMLDivElement>(null);
     React.useEffect(() => {
         if (hpBarRef.current && editor.character && editor.character.maxHp > 0) {
@@ -30,7 +32,8 @@ const CharacterSheetEditor: React.FC = () => {
         getValue, updateLocal, handleSave, saved,
         mediaBrowserTarget, setMediaBrowserTarget, handleMediaSelect, handleRemoveDocument, openDocument, mediaList,
         showAIPrompt, setShowAIPrompt, isGeneratingAIImage, handleGeneratePortrait,
-        updateCharacterHP, updateCharacterMaxHP, updateCharacterHubOptions
+        updateCharacterHP, updateCharacterMaxHP, updateCharacterHubOptions,
+        addInventoryItem, removeInventoryItem
     } = editor;
 
     // Separate gauge fields from other fields for layout
@@ -289,14 +292,130 @@ const CharacterSheetEditor: React.FC = () => {
                     {/* Inventory */}
                     <div className="col-span-9 space-y-3">
                         <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-accent border-b border-accent/20 pb-2 flex items-center gap-2">
-                            <Package size={12} /> Inventaire & Équipement
+                            <Package size={12} /> Sac à Dos (Interactif)
+                        </h3>
+                        
+                        <div className="bg-app-bg/40 border border-app-border rounded-xl overflow-hidden">
+                            <div className="p-4 space-y-4">
+                                {(character.inventoryItems ?? []).length === 0 ? (
+                                    <div className="py-8 text-center border-2 border-dashed border-app-border/40 rounded-xl">
+                                        <Package className="mx-auto text-app-text/10 mb-2" size={32} />
+                                        <p className="text-[10px] font-bold text-app-text/20 uppercase tracking-widest">Le sac à dos est vide</p>
+                                    </div>
+                                ) : (
+                                    <div className="grid grid-cols-2 gap-3">
+                                        {(character.inventoryItems ?? []).map((item) => (
+                                            <div key={item.id} className="group flex items-center gap-3 p-3 bg-app-surface/60 border border-app-border/40 rounded-xl hover:border-accent/30 transition-all">
+                                                <div className="w-10 h-10 rounded-lg bg-black/40 flex items-center justify-center text-accent/40">
+                                                    <Package size={20} />
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <h4 className="text-[11px] font-black text-app-text uppercase truncate">{item.name}</h4>
+                                                    <p className="text-[9px] text-app-text/40 font-bold uppercase tracking-tighter">
+                                                        {item.type} • <span className={
+                                                            item.rarity === 'légendaire' ? 'text-orange-500' :
+                                                            item.rarity === 'rare' ? 'text-blue-500' :
+                                                            item.rarity === 'atypique' ? 'text-emerald-500' :
+                                                            'text-app-text/40'
+                                                        }>{item.rarity}</span> • Qté: {item.quantity}
+                                                    </p>
+                                                </div>
+                                                <button 
+                                                    onClick={() => {
+                                                        removeInventoryItem(item.id);
+                                                        gmToast(`Objet "${item.name}" supprimé`);
+                                                    }}
+                                                    className="opacity-0 group-hover:opacity-100 p-2 hover:bg-red-500/10 hover:text-red-500 rounded-lg transition-all"
+                                                >
+                                                    <Trash2 size={14} />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {isAddingItem ? (
+                                    <div className="flex gap-2 animate-in fade-in zoom-in-95 duration-300">
+                                        <input 
+                                            autoFocus
+                                            type="text"
+                                            value={newItemName}
+                                            onChange={(e) => setNewItemName(e.target.value)}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter' && newItemName.trim()) {
+                                                    addInventoryItem({
+                                                        name: newItemName.trim(),
+                                                        type: 'objet',
+                                                        rarity: 'commun',
+                                                        quantity: 1,
+                                                        description: ''
+                                                    });
+                                                    gmToast(`Objet "${newItemName.trim()}" ajouté !`);
+                                                    setNewItemName('');
+                                                    setIsAddingItem(false);
+                                                }
+                                                if (e.key === 'Escape') {
+                                                    setIsAddingItem(false);
+                                                    setNewItemName('');
+                                                }
+                                            }}
+                                            placeholder="Nom de l'objet..."
+                                            className="flex-1 bg-black/40 border border-accent/40 rounded-xl px-4 py-2 text-sm text-app-text focus:outline-none focus:ring-1 focus:ring-accent/50"
+                                        />
+                                        <button 
+                                            onClick={() => {
+                                                if (newItemName.trim()) {
+                                                    addInventoryItem({
+                                                        name: newItemName.trim(),
+                                                        type: 'objet',
+                                                        rarity: 'commun',
+                                                        quantity: 1,
+                                                        description: ''
+                                                    });
+                                                    gmToast(`Objet "${newItemName.trim()}" ajouté !`);
+                                                    setNewItemName('');
+                                                    setIsAddingItem(false);
+                                                }
+                                            }}
+                                            className="p-3 bg-accent text-app-bg rounded-xl hover:opacity-90 transition-all font-black"
+                                        >
+                                            <Check size={16} />
+                                        </button>
+                                        <button 
+                                            onClick={() => {
+                                                setIsAddingItem(false);
+                                                setNewItemName('');
+                                            }}
+                                            className="p-3 bg-app-surface border border-app-border text-app-text/40 rounded-xl hover:text-red-500 transition-all"
+                                        >
+                                            <X size={16} />
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <button 
+                                        onClick={() => setIsAddingItem(true)}
+                                        className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-accent/20 hover:border-accent/50 hover:bg-accent/5 text-accent rounded-xl transition-all text-[10px] font-black uppercase tracking-[0.2em]"
+                                    >
+                                        <Plus size={14} />
+                                        Ajouter un objet
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                        <p className="text-[9px] text-app-text/20 italic">Ces objets sont interactifs sur le Hub du joueur et peuvent être échangés entre joueurs.</p>
+                    </div>
+
+                    {/* Inventory Legacy */}
+                    <div className="col-span-9 space-y-3 opacity-60">
+                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40 border-b border-app-border/40 pb-2 flex items-center gap-2">
+                            <FileText size={12} /> Notes d'Inventaire (Ancien système)
                         </h3>
                         <textarea
                             value={inventory}
                             onChange={e => setInventory(e.target.value)}
-                            rows={6}
-                            placeholder="Objets, armes, trésors possédés par le personnage…"
-                            className="w-full bg-app-bg/40 border border-app-border rounded-xl p-4 text-sm text-app-text placeholder-app-text/20 resize-none focus:outline-none focus:ring-1 focus:ring-accent/30 focus:border-accent/20 transition-all leading-relaxed custom-scrollbar font-mono"
+                            rows={4}
+                            placeholder="Anciennes notes d'inventaire..."
+                            className="w-full bg-app-bg/20 border border-app-border rounded-xl p-4 text-sm text-app-text/60 placeholder-app-text/10 resize-none focus:outline-none leading-relaxed font-mono"
                         />
                     </div>
 

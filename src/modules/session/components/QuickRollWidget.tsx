@@ -8,6 +8,7 @@ const QuickRollWidget: React.FC = () => {
         { label: 'd6', expression: '1d6' },
         { label: 'd8', expression: '1d8' },
         { label: 'd10', expression: '1d10' },
+        { label: 'd12', expression: '1d12' },
         { label: 'd20', expression: '1d20', highlight: true },
         { label: 'd%', expression: '1d100' },
     ];
@@ -28,7 +29,7 @@ const QuickRollWidget: React.FC = () => {
                 </button>
             </div>
 
-            <div className="grid grid-cols-6 gap-2">
+            <div className="grid grid-cols-7 gap-2">
                 {quickDice.map((dice) => (
                     <button
                         key={dice.label}

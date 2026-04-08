@@ -127,6 +127,7 @@ export interface PlayerCharacter {
     playerNotes?: string;
     linkedDocumentIds?: string[];
     inventory?: string;
+    inventoryItems?: InventoryItem[];
     healthSystem?: HealthSystem;
     relations?: EntityRelation[];
     faction?: string;
@@ -273,6 +274,17 @@ export interface SessionMessage {
     content: string;
     timestamp: number;
     isRead: boolean;
+}
+
+export interface TransferRequest {
+    id: string;
+    fromCharacterId: string;
+    fromCharacterName: string;
+    toCharacterId: string;
+    toCharacterName: string;
+    item: InventoryItem;
+    timestamp: number;
+    status: 'pending' | 'approved' | 'rejected';
 }
 
 // ─────────────────────────────────────────────

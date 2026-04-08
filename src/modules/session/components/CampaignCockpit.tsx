@@ -5,6 +5,7 @@ import { useSessionStore } from '../../../store/useSessionStore';
 import { useModalStore } from '../../../stores/useModalStore';
 import { BookOpen, LayoutDashboard, Swords, Users, Users2, Map as MapIcon, Archive, PlusCircle, Library, FileText, ExternalLink, File, StickyNote, Play, RefreshCw, Eye, Hammer, Zap, Layers } from 'lucide-react';
 import SessionChecklist from './SessionChecklist';
+import TradeRequestPanel from './TradeRequestPanel';
 
 const CampaignCockpit: React.FC = () => {
     const { 
@@ -247,6 +248,9 @@ const CampaignCockpit: React.FC = () => {
                     </button>
                 </div>
             </nav>
+
+            {/* P2P Trades Validation */}
+            <TradeRequestPanel />
 
             {/* Checklist Section */}
             {activeSession && (

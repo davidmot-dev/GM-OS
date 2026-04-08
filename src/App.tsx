@@ -445,6 +445,7 @@ function App() {
           activeCampaignWallpaper: activeCampaign?.wallpaperUrl ? await resolveToSendableUrl(activeCampaign.wallpaperUrl) : null,
           customSheetTemplates,
           customGameDrivers,
+          transferRequests: freshSessionOS.transferRequests || [],
           atlasMaps: await Promise.all(
               (atlasMaps || [])
                   .filter(m => m.isVisited && String(m.campaignId) === String(currentCampaignId))
@@ -612,6 +613,22 @@ function App() {
     if (type === 'session:send-message') {
       console.log('[App] Receiving player message from remote:', payload.id);
       useSessionOSStore.getState().addSessionMessage(payload as import('./modules/session/store/types').SessionMessage);
+    }
+
+    if (type === 'session:request-item-transfer' || type === 'remote:session:request-item-transfer') {
+      const { fromCharId, toCharId, item } = payload as { fromCharId: string; toCharId: string; item: any };
+      console.log(`[App] Receiving transfer request: ${item.name} from ${fromCharId} to ${toCharId}`);
+      useSessionOSStore.getState().requestItemTransfer(fromCharId, toCharId, item);
+    }
+
+    if (type === 'session:approve-item-transfer' || type === 'remote:session:approve-item-transfer') {
+      const { requestId } = payload as { requestId: string };
+      useSessionOSStore.getState().approveItemTransfer(requestId);
+    }
+
+    if (type === 'session:reject-item-transfer' || type === 'remote:session:reject-item-transfer') {
+      const { requestId } = payload as { requestId: string };
+      useSessionOSStore.getState().rejectItemTransfer(requestId);
     }
 
     if (type === 'storyboard:trigger' || type === 'remote:story:trigger') {

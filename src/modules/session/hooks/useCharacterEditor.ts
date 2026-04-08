@@ -13,6 +13,7 @@ export function useCharacterEditor() {
         generatePlayerPortrait, isGeneratingAIImage,
         updateCharacterHP, updateCharacterMaxHP,
         updateCharacterHubOptions,
+        addInventoryItem, removeInventoryItem,
         campaigns
     } = useSessionOSStore();
 
@@ -159,6 +160,8 @@ export function useCharacterEditor() {
         // Store direct actions
         updateCharacterHP: (hp: number) => { if(selectedPlayer && character) updateCharacterHP(selectedPlayer.id, character.id, hp); },
         updateCharacterMaxHP: (maxHp: number) => { if(selectedPlayer && character) updateCharacterMaxHP(selectedPlayer.id, character.id, maxHp); },
-        updateCharacterHubOptions: (opts: Partial<NonNullable<PlayerCharacter['hubOptions']>>) => { if(selectedPlayer && character) updateCharacterHubOptions(selectedPlayer.id, character.id, opts); }
+        updateCharacterHubOptions: (opts: Partial<NonNullable<PlayerCharacter['hubOptions']>>) => { if(selectedPlayer && character) updateCharacterHubOptions(selectedPlayer.id, character.id, opts); },
+        addInventoryItem: (item: any) => { if(selectedPlayer && character) addInventoryItem(selectedPlayer.id, character.id, item); },
+        removeInventoryItem: (itemId: string) => { if(selectedPlayer && character) removeInventoryItem(selectedPlayer.id, character.id, itemId); }
     };
 }

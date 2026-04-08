@@ -198,8 +198,26 @@ L'utilisation de bordures "lumineuses" via `mask-composite` (style Bento Box) n�
 
 **Apprentissage :** Dans un système distribué à haute réactivité (Sync WebSockets), le nettoyage d'un `useEffect` ne doit jamais dépendre d'une donnée qui change fréquemment si ce nettoyage émet lui-même un signal réseau modifiant cette donnée. Les `refs` sont indispensables pour capturer la "dernière volonté" de l'utilisateur sans polluer le cycle de rendu.
 
+## 📡 Réseau & Sync : Échanges P2P & Validation MJ
+
+### L'importance du Nettoyage d'État (Atomic Transfer)
+
+**Problème :** Lors d'un don d'objet (v6.2.2-dev), l'objet était transféré avec son statut `pending`. S'il n'était pas nettoyé au moment de l'injection chez le destinataire, l'objet restait grisé et "gelé", rendant l'échange caduc.
+
+**Solution :** Nettoyage explicite des drapeaux temporaires (`delete item.status`) dans le store MJ juste avant l'appel à `addInventoryItem` pour le destinataire.
+
+**Apprentissage :** Dans un transfert d'entité entre domaines (ex: Joueur A -> Joueur B), l'objet doit être "réinitialisé" à un état pur pour garantir son intégration sans effets de bord hérités de son ancien contexte.
+
+### Piège de la Portée des Imports (Global React Scope)
+
+**Problème :** L'usage de `React.useRef` ou `React.useEffect` dans un fichier n'importe que les hooks nommés (`import { useRef } from 'react'`) provoque une erreur `ReferenceError: React is not defined`. 
+
+**Solution :** Toujours privilégier les imports nommés directs (`useRef()`) pour la cohérence ou assurer l'import du défaut (`import React from 'react'`) si l'on souhaite utiliser l'espace de noms.
+
+**Apprentissage :** Ne jamais copier-coller des patterns utilisant l'espace de noms `React.` dans des fichiers utilisant des imports destructurés sans vérifier l'import de base.
+
 ---
 
-Dernière mise à jour : 7 Avril 2026 (23h40)
+Dernière mise à jour : 8 Avril 2026
 
-Statut : Stabilisation réseau Windows, intégration Gemma 4 et correction des boucles de sync documentées.
+Statut : Stabilisation réseau Windows, intégration Gemma 4 et système d'échange P2P documentés.

@@ -63,6 +63,7 @@ export interface EntitySliceActions {
     addPlayer: (player: Omit<Player, 'id'>) => void;
     deletePlayer: (playerId: string) => void;
     togglePlayerOnline: (playerId: string) => void;
+    updatePlayer: (playerId: string, updates: Partial<Player>) => void;
     addCharacterToPlayer: (playerId: string, character: Omit<PlayerCharacter, 'id'>) => void;
     deleteCharacter: (playerId: string, characterId: string) => void;
     linkCharacterToCampaign: (playerId: string, characterId: string, campaignId: string | null, templateId?: string) => void;
@@ -77,6 +78,10 @@ export interface EntitySliceActions {
     addLootToCharacter: (playerId: string, characterId: string, item: string) => void;
     updateCharacterHubOptions: (playerId: string, characterId: string, options: Partial<PlayerCharacter['hubOptions']>) => void;
     remoteUpdateCharacterVitals: (playerId: string, characterId: string, updates: { hp?: number; mp?: number; ap?: number }) => void;
+
+    // Inventory Management (Structured)
+    addInventoryItem: (playerId: string, characterId: string, item: Omit<import('./types').InventoryItem, 'id'>) => void;
+    removeInventoryItem: (playerId: string, characterId: string, itemId: string) => void;
 
     // Health / Impact System
     handleApplyImpact: (targetId: string, targetType: 'pc' | 'npc', impact: DamageImpact) => void;
@@ -208,6 +213,13 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
         set((state) => ({
             players: state.players.map((p) =>
                 p.id === playerId ? { ...p, isOnline: !p.isOnline } : p
+            ),
+        })),
+
+    updatePlayer: (playerId, updates) =>
+        set((state) => ({
+            players: state.players.map((p) =>
+                p.id === playerId ? { ...p, ...updates } : p
             ),
         })),
 
@@ -409,6 +421,44 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                                   : c
                           ),
                       }
+                    : p
+            ),
+        }));
+    },
+
+    addInventoryItem: (playerId, characterId, item) => {
+        const newItem: import('./types').InventoryItem = { 
+            ...item, 
+            id: `it-${crypto.randomUUID()}` 
+        };
+        set((state) => ({
+            players: state.players.map((p) =>
+                p.id === playerId
+                    ? {
+                        ...p,
+                        characters: p.characters.map((c) =>
+                            c.id === characterId
+                                ? { ...c, inventoryItems: [...(c.inventoryItems ?? []), newItem] }
+                                : c
+                        ),
+                    }
+                    : p
+            ),
+        }));
+    },
+
+    removeInventoryItem: (playerId, characterId, itemId) => {
+        set((state) => ({
+            players: state.players.map((p) =>
+                p.id === playerId
+                    ? {
+                        ...p,
+                        characters: p.characters.map((c) =>
+                            c.id === characterId
+                                ? { ...c, inventoryItems: (c.inventoryItems ?? []).filter(i => i.id !== itemId) }
+                                : c
+                        ),
+                    }
                     : p
             ),
         }));

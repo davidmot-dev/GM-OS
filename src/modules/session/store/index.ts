@@ -78,6 +78,7 @@ interface CrossDomainActions {
     // Atomic Navigation Helpers (évite les race conditions lors du changement de vue)
     navigateToAtlasMap: (id: string) => void;
     navigateToNpcDetail: (id: string) => void;
+    navigateToPlayerDetail: (playerId: string, characterId: string) => void;
 
     // Overrides des setters UI (avec effets de bord cross-domain)
     setActiveCampaign: (id: string | null) => void;
@@ -260,6 +261,14 @@ export const useSessionOSStore = create<SessionOSStore>()(
                     selectedEntityId: id,
                     currentView: 'npc-gallery',
                     isAddingEntity: false 
+                });
+            },
+
+            navigateToPlayerDetail: (playerId, characterId) => {
+                set({
+                    selectedPlayerId: playerId,
+                    selectedCharacterId: characterId,
+                    currentView: 'players'
                 });
             },
 

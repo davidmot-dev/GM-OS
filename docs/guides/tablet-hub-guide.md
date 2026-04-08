@@ -25,11 +25,14 @@ Depuis la v6.2.1-dev, vous disposez d'une zone de texte personnelle et persistan
 
 ---
 
-## 🎒 Inventaire & Fiche de Personnage
+## 🎒 Sac à Dos & Échanges (P2P)
 
-- Cliquez sur l'icône **Sac à dos** pour ouvrir votre fiche complète.
-- Vous pouvez y suivre vos Points de Vie (PV), votre équipement et vos capacités.
-- Toute modification faite par le MJ sur vos PV est répercutée instantanément sur votre écran.
+L'onglet **Sac** (accessible via l'icône sac à dos) vous permet de gérer votre équipement de manière interactive.
+
+- **Échanges P2P** : Pour donner un objet à un allié, cliquez sur le bouton **"Donner"** à côté de l'objet, puis sélectionnez le destinataire dans la liste des personnages joueurs actifs.
+- **Validation MJ** : Une fois le don initié, l'objet apparaît avec une icône d'horloge (En attente). L'échange doit être validé par le Maître du Jeu pour être effectif.
+- **Notifications de Réception** : Lorsqu'un allié vous donne un objet et que le MJ valide, une notification apparaît en bas de votre écran et l'objet est automatiquement ajouté à votre inventaire.
+- **PV & Stats** : Vos points de vie et statistiques sont synchronisés en temps réel. Toute mise à jour du MJ est immédiatement visible sur votre interface.
 
 ---
 

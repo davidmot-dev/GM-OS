@@ -31,6 +31,7 @@ export interface PendingPreFill {
 export interface SessionSliceState {
     sessions: GameSession[];
     pendingPreFill: PendingPreFill | null;
+    transferRequests: import('./types').TransferRequest[];
 }
 
 // ─────────────────────────────────────────────
@@ -53,6 +54,11 @@ export interface SessionSliceActions {
     deleteSession: (id: string) => void;
     setPendingPreFill: (preFill: PendingPreFill) => void;
     clearPendingPreFill: () => void;
+
+    // P2P Item Transfers
+    requestItemTransfer: (fromCharId: string, toCharId: string, item: import('./types').InventoryItem) => void;
+    approveItemTransfer: (requestId: string) => void;
+    rejectItemTransfer: (requestId: string) => void;
 }
 
 export type SessionSlice = SessionSliceState & SessionSliceActions;
@@ -61,10 +67,11 @@ export type SessionSlice = SessionSliceState & SessionSliceActions;
 // Creator
 // ─────────────────────────────────────────────
 
-export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice> = (set) => ({
+export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice> = (set, get) => ({
     // Initial State
     sessions: [],
     pendingPreFill: null,
+    transferRequests: [],
 
     // Actions
     addSession: (session) => {
@@ -195,4 +202,99 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
 
     setPendingPreFill: (preFill) => set({ pendingPreFill: preFill }),
     clearPendingPreFill: () => set({ pendingPreFill: null }),
+
+    // ─── P2P Item Transfers ───────────────────────
+
+    requestItemTransfer: (fromCharId, toCharId, item) => {
+        const state = get() as unknown as import('./index').SessionOSStore;
+        const fromChar = state.players.flatMap(p => p.characters).find(c => c.id === fromCharId);
+        const toChar = state.players.flatMap(p => p.characters).find(c => c.id === toCharId);
+
+        if (!fromChar || !toChar) return;
+
+        const request: import('./types').TransferRequest = {
+            id: `tr-${Date.now()}`,
+            fromCharacterId: fromCharId,
+            fromCharacterName: fromChar.name,
+            toCharacterId: toCharId,
+            toCharacterName: toChar.name,
+            item,
+            timestamp: Date.now(),
+            status: 'pending'
+        };
+
+        set((state) => ({ transferRequests: [...state.transferRequests, request] }));
+        gmToast(`Demande d'échange envoyée pour validation MJ.`, 'info');
+    },
+
+    approveItemTransfer: (requestId) => {
+        const state = get() as unknown as import('./index').SessionOSStore;
+        const request = state.transferRequests.find(r => r.id === requestId);
+        
+        if (!request || request.status !== 'pending') return;
+
+        // 1. Trouver le player ID de l'expéditeur et du destinataire
+        const fromPlayer = state.players.find(p => p.characters.some(c => c.id === request.fromCharacterId));
+        const toPlayer = state.players.find(p => p.characters.some(c => c.id === request.toCharacterId));
+
+        if (!fromPlayer || !toPlayer) {
+            gmToast("Erreur : Personnage introuvable.", "error");
+            return;
+        }
+
+        // 2. Effectuer le transfert atomique
+        const cleanItem = { ...request.item };
+        delete (cleanItem as any).status; // L'objet n'est plus en attente pour le destinataire
+
+        state.removeInventoryItem(fromPlayer.id, request.fromCharacterId, request.item.id);
+        state.addInventoryItem(toPlayer.id, request.toCharacterId, cleanItem);
+
+        // 3. Mettre à jour le statut de la requête
+        set((state) => ({
+            transferRequests: state.transferRequests.map(r => 
+                r.id === requestId ? { ...r, status: 'approved' } : r
+            )
+        }));
+
+        gmToast(`Échange de "${request.item.name}" approuvé !`, 'success');
+        
+        // 4. Log dans le journal de session
+        set((state) => ({
+            sessions: state.sessions.map(s => 
+                s.status === 'active' 
+                    ? { 
+                        ...s, 
+                        logs: [
+                            ...(s.logs || []), 
+                            { 
+                                id: crypto.randomUUID(), 
+                                timestamp: Date.now(), 
+                                type: 'info', 
+                                message: `Échange validé : ${request.fromCharacterName} → ${request.toCharacterName} (${request.item.name})` 
+                            }
+                        ] 
+                    } 
+                    : s
+            )
+        }));
+        
+        // Log dans le journal
+        const journal = (window as any).useJournalStore?.getState();
+        if (journal) {
+            journal.addEvent({
+                type: 'SYSTEM',
+                title: 'Échange d\'objets',
+                content: `${request.fromCharacterName} a donné ${request.item.name} à ${request.toCharacterName}.`
+            });
+        }
+    },
+
+    rejectItemTransfer: (requestId) => {
+        set((state) => ({
+            transferRequests: state.transferRequests.map(r => 
+                r.id === requestId ? { ...r, status: 'rejected' } : r
+            )
+        }));
+        gmToast("Échange refusé.", "info");
+    },
 });

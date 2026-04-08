@@ -39,7 +39,7 @@ Refonte des systèmes de jeu pour une automatisation intelligente.
 
 - **[ ] Character Sheet Calculation Engine** : Moteur de calcul intégré capable d'interpréter des formules complexes (ex: `1d20 + @StrMod + @Level`).
 - **[ ] Tactical Combat Assistant** : Interface IA suggérant des actions de PNJ en fonction de la situation tactique sur l'Atlas.
-- **[ ] Échanges d'objets (P2P)** : Permettre aux joueurs de se donner des objets via le Hub (nécessite validation MJ).
+- **[x] Échanges d'objets (P2P)** : Permettre aux joueurs de se donner des objets via le Hub avec validation MJ (v6.2.2-dev).
 - **[x] Notes Privées PJ** : Zone de prise de notes persistante côté serveur MJ. (v6.2.1-dev)
 - **[x] MapStore & Ambiance System** : Gestion de l'état de l'atlas (pions, brouillard, météo) intégrée au flux de synchronisation réactif. Système de moments de la journée avec filtres dynamiques (v6.1.0-dev).
 
