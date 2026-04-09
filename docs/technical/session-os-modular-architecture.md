@@ -95,7 +95,10 @@ Pour éviter toute fuite de données entre projets ("Data Leakage"), Session-OS 
 La gestion des IDs `m-xxx` (Blob IDs stockés en local) nécessite une couche d'abstraction pour les clients distants.
 
 - **Broadcast Resolution** : Avant l'envoi du signal `sync`, le MJ résout tous les médias en URLs absolues ou Data URIs via son proxy local (`http://[IP]:3001/temp/[ID]`). Le `useImageStore` assure cette résolution via `resolveToSendableUrl` avant chaque `syncHubData`.
+- **Intégrité des Identifiants (m- prefix)** : Depuis la v6.1.2-dev, le MJ garantit la conservation du préfixe `m-` dans l'URL du proxy. Cela assure la correspondance directe avec les fichiers stockés dans le dossier `TEMP_MEDIA` du MJ, évitant les erreurs 404 sur les tablettes.
+- **Pont de Protocoles (Custom Schemes)** : Le hook `useMediaUrl` détecte et traduit les schémas propriétaires MJ (ex: `gmos://media/`) en URLs HTTP valides pour le proxy Nexus Bridge. Cela permet aux tablettes distantes d'afficher des images stockées physiquement sur le PC du MJ.
 - **Hub Failsafe** : Le hook `useMediaUrl` sur les tablettes redirige automatiquement vers l'IP du MJ si un identifiant non résolu est détecté dans le store synchronisé.
+- **Deduplication Logic** : Le moteur de rendu des Hubs (Player/Tablet) déduplique dynamiquement les entités. Si une entité est projetée en mode "Spotlight" (Focalisation), elle est automatiquement masquée de la liste des "Favoris Partagés" pour éviter la redondance visuelle.
 - **Persistence Cleanup** : Le store d'images utilise `onRehydrateStorage` pour purger automatiquement les projections orphelines (IDs de médias inexistants) au démarrage, évitant l'affichage de "ghost images" d'anciennes campagnes.
 
 ---
@@ -180,7 +183,17 @@ Le coeur de l'intelligence ne dépend plus d'une API spécifique. Il utilise une
 
 ---
 
-## 12. Narrative Synchronization & Player Private Notes
+## 12. AI NPC Dialogue Prep (Neural Liaison Expansion)
+
+Depuis la v6.1.2-dev, le système "Neural Liaison" a été étendu pour inclure les profiles complets des PNJs favoris (épinglés dans la session) dans le contexte de l'IA.
+
+- **Extraction Automatique** : Le `getLiveSessionContext` de `AIService.ts` agrège dynamiquement les noms, rôles et descriptions de toutes les entités actives (`status: 'alive'`).
+- **Synergie avec le Persona "L'Acteur"** : Ce persona (`id: 'actor'`) est optimisé pour utiliser ces données injectées afin de générer des répliques, des motivations et des accents spécifiques aux PNJs présents, sans saisie manuelle du MJ.
+- **Architecture Data-Driven** : Comme ce contexte est "injecté" au moment de la requête, l'Oracle reste parfaitement à jour même si le MJ modifie un PNJ "à la volée" juste avant de poser une question.
+
+---
+
+## 13. Narrative Synchronization & Player Private Notes
 
 Depuis la v6.2.1-dev, Session-OS intègre un système de prise de notes privées persistantes pour les joueurs, synchronisé en temps réel avec le serveur MJ.
 
@@ -198,4 +211,4 @@ Côté MJ, la mise à jour est interceptée par le `RemoteListener` qui appelle 
 
 ---
 
-*Dernière mise à jour : 7 Avril 2026 - GM-OS v6.2.1-dev : Implémentation Notes Privées PJ.*
+*Dernière mise à jour : 9 Avril 2026 - GM-OS v6.1.2-dev : Stabilisation Proxy Média & Hub Sync.*

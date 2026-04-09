@@ -309,9 +309,20 @@ export const useImageStore = create<ImageState>()(
                 const avatarSrc = entity.avatar || entity.imageUrl || entity.portraitUrl || '';
                 const resolvedAvatar = await resolveToSendableUrl(avatarSrc);
 
-                const entityToSend = resolvedAvatar !== avatarSrc 
-                    ? { ...entity, avatar: resolvedAvatar, imageUrl: resolvedAvatar, portraitUrl: resolvedAvatar }
-                    : entity;
+                // Map 'attributes' from FavoriteEntity to 'fields' for ProjectedEntity compatibility
+                const rawFields = entity.fields || (entity as any).attributes || {};
+                const fields: Record<string, string> = {};
+                Object.entries(rawFields).forEach(([k, v]) => {
+                    fields[k] = String(v);
+                });
+
+                const entityToSend = {
+                    ...entity,
+                    avatar: resolvedAvatar,
+                    imageUrl: resolvedAvatar,
+                    portraitUrl: resolvedAvatar,
+                    fields
+                };
 
                 window.appBridge?.image?.syncHubData('entity', JSON.stringify(entityToSend));
                 

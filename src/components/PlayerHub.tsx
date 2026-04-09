@@ -141,24 +141,17 @@ const PlayerHub: React.FC = () => {
         const n = s.name.toLowerCase();
         return n === 'invisible' || n === 'invisibilité' || n === 'caché' || n === 'hidden';
     }))) ? realActiveCombatant : null;
+    
+    const upcomingCombatants = visibleCombatants.filter(c => combatants.indexOf(c) > currentTurnIdx);
+    
     const sharedFavorites = favorites.filter(f => f.isSyncedToPlayerHub);
 
-    // Sort the upcoming combatants among visible ones
-    const upcomingCombatants: Combatant[] = [];
-    if (hasCombatants && visibleCombatants.length > 1) {
-        // Find index of active in visible list
-        const visibleIdx = activeCombatant ? visibleCombatants.findIndex(c => c.id === activeCombatant.id) : -1;
-        if (visibleIdx !== -1) {
-            let i = (visibleIdx + 1) % visibleCombatants.length;
-            while (i !== visibleIdx) {
-                upcomingCombatants.push(visibleCombatants[i]);
-                i = (i + 1) % visibleCombatants.length;
-            }
-        } else {
-            // If active is hidden, just show all visible
-            upcomingCombatants.push(...visibleCombatants);
-        }
-    }
+    // Dynamic Theater Entity Selection
+    const theaterEntity = (liveEntity?.displayMode === 'theater') 
+        ? liveEntity 
+        : sharedFavorites.find(f => f.displayMode === 'theater');
+
+    const isTheaterActive = !!theaterEntity;
 
     const renderClockWidget = () => {
         return (
@@ -210,7 +203,7 @@ const PlayerHub: React.FC = () => {
 
             {/* Overlays for focus */}
             {(sharedFavorites.length > 0 || liveEntity) && (
-                <div className={`fixed inset-0 z-5 bg-app-bg/${isMapActive ? '60' : '40'} backdrop-blur-[2px] pointer-events-none transition-all duration-700`}></div>
+                <div className={`fixed inset-0 z-5 bg-app-bg/${isMapActive ? '60' : '40'} backdrop-blur-[2px] pointer-events-none transition-all duration-700 ${isTheaterActive ? 'opacity-0' : 'opacity-100'}`}></div>
             )}
 
             {/* Main Content Area */}
@@ -245,9 +238,13 @@ const PlayerHub: React.FC = () => {
                     {(sharedFavorites.length > 0 || liveEntity) && (
                         <div className="w-full h-full flex items-center justify-center overflow-hidden pointer-events-auto">
                             <div className="w-full max-h-full overflow-y-auto custom-scrollbar p-4 md:p-8 flex flex-col items-center justify-center">
-                                <div className={`grid grid-cols-1 ${(sharedFavorites.length + (liveEntity ? 1 : 0)) > 1 ? 'md:grid-cols-2 lg:grid-cols-3' : 'md:max-w-xl'} gap-8 md:gap-12 w-full place-items-center`}>
-                                    
-                                    {liveEntity && (
+                                {(() => {
+                                    const uniqueFavorites = sharedFavorites.filter(f => f.id !== theaterEntity?.id && f.id !== liveEntity?.id);
+                                    const showLive = liveEntity && theaterEntity?.id !== liveEntity.id;
+                                    const count = uniqueFavorites.length + (showLive ? 1 : 0);
+                                    return (
+                                        <div className={`grid grid-cols-1 ${count > 1 ? 'md:grid-cols-2 lg:grid-cols-3' : 'md:max-w-xl'} gap-8 md:gap-12 w-full place-items-center`}>
+                                            {showLive && (
                                         <div key={liveEntity.id} className={`bg-app-surface/90 backdrop-blur-3xl border-2 border-accent/30 rounded-[2rem] p-6 md:p-8 shadow-[0_0_50px_rgba(var(--accent-rgb),0.2)] flex flex-col gap-6 animate-in fade-in zoom-in slide-in-from-bottom-12 duration-1000 w-full hover:border-accent/60 transition-all group ${liveEntity.type === 'Oracle' ? 'md:max-w-2xl' : ''}`}>
                                             <div className="flex flex-col items-center text-center gap-4 md:gap-6">
                                                 <div 
@@ -272,9 +269,9 @@ const PlayerHub: React.FC = () => {
                                             
                                             {liveEntity.type !== 'Oracle' && (
                                                 <>
-                                                    {liveEntity.fields && Object.keys(liveEntity.fields).length > 0 && (
+                                                    {(liveEntity.fields || (liveEntity as any).attributes) && (
                                                         <div className="grid grid-cols-2 gap-3 py-4 border-t border-b border-app-border/20">
-                                                            {Object.entries(liveEntity.fields).slice(0, 4).map(([k, v]) => (
+                                                            {Object.entries(liveEntity.fields || (liveEntity as any).attributes).slice(0, 4).map(([k, v]) => (
                                                                 <div key={k} className="flex flex-col items-center text-center">
                                                                     <span className="text-[8px] uppercase font-bold text-app-text/40 tracking-widest">{k}</span>
                                                                     <span className="text-xs font-bold text-app-text">{String(v)}</span>
@@ -292,8 +289,7 @@ const PlayerHub: React.FC = () => {
                                             )}
                                         </div>
                                     )}
-
-                                    {sharedFavorites.map(fav => (
+                                    {uniqueFavorites.map(fav => (
                                         <div key={fav.id} className="bg-app-surface/90 backdrop-blur-2xl border border-app-border/20 rounded-[1.5rem] p-5 md:p-6 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.8)] flex flex-col gap-4 md:gap-5 animate-in fade-in zoom-in duration-700 w-full group">
                                             <div className="flex flex-col items-center text-center gap-3 md:gap-4">
                                                 <div className="size-20 md:size-28 rounded-xl overflow-hidden border border-app-border/40 shadow-xl bg-app-surface group-hover:border-app-accent transition-all scale-100 group-hover:scale-105 relative">
@@ -309,6 +305,17 @@ const PlayerHub: React.FC = () => {
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            {fav.attributes && Object.keys(fav.attributes).length > 0 && (
+                                                <div className="grid grid-cols-2 gap-2 py-2 border-t border-b border-app-border/10">
+                                                    {Object.entries(fav.attributes).slice(0, 2).map(([k, v]) => (
+                                                        <div key={k} className="flex flex-col items-center text-center">
+                                                            <span className="text-[7px] uppercase font-bold text-app-text/30 tracking-widest">{k}</span>
+                                                            <span className="text-[10px] font-bold text-app-text/60">{String(v)}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
                                             <div className="relative pt-4 border-t border-app-border/20">
                                                 <p className="font-serif text-app-text/70 leading-relaxed italic text-xs md:text-sm text-center line-clamp-[10]">
                                                     {fav.lore}
@@ -316,7 +323,9 @@ const PlayerHub: React.FC = () => {
                                             </div>
                                         </div>
                                     ))}
-                                </div>
+                                        </div>
+                                    );
+                                })()}
                             </div>
                         </div>
                     )}
@@ -478,8 +487,62 @@ const PlayerHub: React.FC = () => {
                 </div>
             )}
 
+            {/* 6. Theater Mode Overlay (Z-100) - Escaping all container transforms */}
+            {theaterEntity && (
+                <div key={`theater-${theaterEntity.id}`} className="fixed inset-0 z-[100] bg-black/95 flex flex-col items-center justify-center animate-in fade-in zoom-in duration-1000 pointer-events-auto">
+                    {/* Blurred Background */}
+                    <div className="absolute inset-0 opacity-40 select-none pointer-events-none">
+                        <ResolvedImage 
+                            src={theaterEntity.avatar || theaterEntity.imageUrl || theaterEntity.portraitUrl} 
+                            className="w-full h-full object-cover blur-[120px] scale-110" 
+                        />
+                    </div>
+                    
+                    {/* Focus Image */}
+                    <div className="relative z-10 w-full h-full flex flex-col items-center justify-center p-12 md:p-24 overflow-hidden">
+                        <div className="relative group max-h-full flex flex-col items-center max-w-6xl">
+                            <ResolvedImage 
+                                src={theaterEntity.avatar || theaterEntity.imageUrl || theaterEntity.portraitUrl} 
+                                alt={theaterEntity.name}
+                                className="max-w-full max-h-[80vh] object-contain shadow-[0_0_150px_rgba(0,0,0,0.9)] rounded-3xl border border-white/10 animate-in zoom-in-95 duration-1000"
+                            />
+                            
+                            {/* Floating Cinematic Caption */}
+                            <div className="mt-16 text-center animate-in slide-in-from-bottom-12 duration-1000 delay-500 fill-mode-both">
+                                <h3 className="text-6xl md:text-8xl font-black text-white tracking-tighter uppercase drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
+                                    {theaterEntity.name}
+                                </h3>
+                                {(theaterEntity.subtitle || theaterEntity.type) && (
+                                    <div className="flex items-center justify-center gap-6 mt-6">
+                                        <div className="h-px w-24 bg-accent/60 shadow-glow-accent" />
+                                        <p className="text-accent text-2xl md:text-3xl font-black uppercase tracking-[0.8em] drop-shadow-md">
+                                            {theaterEntity.subtitle || theaterEntity.type}
+                                        </p>
+                                        <div className="h-px w-24 bg-accent/60 shadow-glow-accent" />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Interactive Indicators */}
+                    <div className="absolute top-12 right-16 flex flex-col items-end gap-2">
+                        <div className="text-[12px] font-black text-accent shadow-glow-accent uppercase tracking-[1.2em] animate-pulse">
+                            Theater Focus Active
+                        </div>
+                        <div className="h-1 w-full bg-accent/40 rounded-full overflow-hidden">
+                            <div className="h-full w-full bg-accent animate-[shimmer_2s_infinite]" />
+                        </div>
+                    </div>
+                    
+                    {/* Corner Borders */}
+                    <div className="absolute top-8 left-8 size-32 border-t-2 border-l-2 border-accent/30 rounded-tl-3xl pointer-events-none" />
+                    <div className="absolute bottom-8 right-8 size-32 border-b-2 border-r-2 border-accent/30 rounded-br-3xl pointer-events-none" />
+                </div>
+            )}
+
             {/* 5. Polish Overlays */}
-            <div className="fixed inset-0 pointer-events-none z-50 shadow-[inset_0_0_150px_rgba(0,0,0,0.8)] opacity-50"></div>
+            <div className={`fixed inset-0 pointer-events-none z-50 shadow-[inset_0_0_150px_rgba(0,0,0,0.8)] opacity-50 transition-opacity duration-1000 ${isTheaterActive ? 'opacity-80' : 'opacity-50'}`}></div>
             <div className="fixed inset-0 pointer-events-none z-50 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.2)_100%)]"></div>
         </div>
     );

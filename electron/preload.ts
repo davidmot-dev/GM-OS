@@ -75,6 +75,8 @@ contextBridge.exposeInMainWorld('appBridge', {
     utils: {
         formatFileUrl: (path: string) => {
             if (!path) return '';
+            // Si le chemin contient déjà un protocole (ex: gmos://, http://, data:), on le retourne tel quel
+            if (path.includes('://') || path.startsWith('data:')) return path;
             const normalized = path.replace(/\\/g, '/');
             return `file:///${encodeURI(normalized).replace(/#/g, '%23').replace(/\?/g, '%3F')}`;
         }

@@ -8,7 +8,7 @@ import { gmToast } from '../../../stores/useToastStore';
 import { Heart, UserPlus, ChevronDown, Mail, Swords, Eye, Trash2 } from 'lucide-react';
 import { useImageStore } from '../../image/useImageStore';
 
-const CharacterGrid: React.FC = () => {
+const CharacterGrid: React.FC<{ ignoreCampaignFilter?: boolean }> = ({ ignoreCampaignFilter = false }) => {
     const { players, selectedPlayerId, selectedCharacterId, campaigns, linkCharacterToCampaign, updateCharacterHP, setSelectedCharacter, sessions, activeCampaignId, addEntityToSession, removeEntityFromSession } = useSessionOSStore();
     
     const activeSession = sessions.find(s => s.status === 'active' && String(s.campaignId) === String(activeCampaignId));
@@ -61,7 +61,7 @@ const CharacterGrid: React.FC = () => {
                 <div className="flex items-center justify-between mb-4">
                     <h3 className="text-app-text/60 font-bold text-sm uppercase tracking-widest flex items-center gap-2">
                         <span className="text-accent">⚔</span>
-                        Personnages Actifs
+                        {ignoreCampaignFilter ? 'Tous les Personnages' : 'Personnages Actifs'}
                     </h3>
                     <span className="text-xs text-app-text/20">{selectedPlayer.characters.length} au total</span>
                 </div>
@@ -73,7 +73,7 @@ const CharacterGrid: React.FC = () => {
                 ) : (
                     <div className="grid grid-cols-2 gap-6">
                         {selectedPlayer.characters
-                            .filter(c => !activeCampaignId || c.campaignId === activeCampaignId)
+                            .filter(c => ignoreCampaignFilter || !activeCampaignId || c.campaignId === activeCampaignId)
                             .map(character => (
                             <CharacterCard
                                 key={character.id}

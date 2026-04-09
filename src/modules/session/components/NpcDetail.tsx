@@ -12,6 +12,8 @@ import { ResolvedImage } from '../../../components/ResolvedImage';
 import AIPromptOverlay from '../../ai/components/AIPromptOverlay';
 import { useVoiceAutomation } from '../../voice/hooks/useVoiceAutomation';
 import { HealthManager } from './health/HealthManager';
+import { useSheetCalculator } from '../hooks/useSheetCalculator';
+import { Calculator } from 'lucide-react';
 
 const ROLE_COLORS = {
     ally: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20',
@@ -176,6 +178,21 @@ const FieldRating: React.FC<{
     );
 };
 
+const FieldFormula: React.FC<{
+    field: SheetField;
+    value: number;
+}> = ({ field, value }) => (
+    <div className="flex items-center justify-between p-3 bg-accent/5 rounded-xl border border-accent/20 shadow-inner group">
+        <label className="text-[10px] font-black uppercase tracking-widest text-accent/60 flex items-center gap-2">
+            <Calculator size={12} className="group-hover:rotate-12 transition-transform" />
+            {field.label}
+        </label>
+        <span className="text-[11px] font-black text-white bg-accent/20 px-3 py-1 rounded-lg border border-accent/10 min-w-[3rem] text-center font-mono">
+            {value}
+        </span>
+    </div>
+);
+
 
 interface NpcDetailProps {
     embeddedId?: string;
@@ -198,14 +215,16 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
     } = useSessionOSStore();
     const { closeModal } = useModalStore();
     const { addToken } = useMapStore();
+    const currentId = embeddedId || selectedEntityId;
+    const selectedNpc = entities.find(e => e.id === currentId);
+    const currentTemplate = customSheetTemplates.find(t => t.id === selectedNpc?.sheetTemplateId);
+    const { evaluateFormula } = useSheetCalculator(selectedNpc || null, currentTemplate || null);
     useVoiceAutomation();
 
-    const currentId = embeddedId || selectedEntityId;
     const [isEditing, setIsEditing] = useState(false);
     const [isMediaBrowserOpen, setIsMediaBrowserOpen] = useState(false);
     const [showAIPrompt, setShowAIPrompt] = useState(false);
 
-    const selectedNpc = entities.find(e => e.id === currentId);
 
     const handleClose = () => {
         if (embeddedId) {
@@ -462,6 +481,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                             if (field.type === 'select') return <FieldSelect key={field.id} field={field} value={value as string} onChange={onChange} />;
                                             if (field.type === 'textarea') return <FieldTextarea key={field.id} field={field} value={value as string} onChange={onChange} />;
                                             if (field.type === 'rating') return <FieldRating key={field.id} field={field} value={value as number} onChange={onChange} />;
+                                            if (field.type === 'formula') return <FieldFormula key={field.id} field={field} value={evaluateFormula(field.formula || '')} />;
                                             
                                             return null;
                                         })}

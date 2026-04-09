@@ -9,11 +9,32 @@ import {
     FieldCheckbox, FieldSelect, FieldTextarea, FieldRating 
 } from './fields/SheetFields';
 import { useCharacterEditor } from '../hooks/useCharacterEditor';
+import { useSheetCalculator } from '../hooks/useSheetCalculator';
+import { Calculator } from 'lucide-react';
+
+// --- Sub-components ---
+const FieldFormula: React.FC<{
+    field: SheetField;
+    value: number;
+}> = ({ field, value }) => (
+    <div className="flex items-center justify-between p-3 bg-accent/5 rounded-xl border border-accent/20 shadow-inner group">
+        <label className="text-[10px] font-black uppercase tracking-widest text-accent/60 flex items-center gap-2">
+            <Calculator size={12} className="group-hover:rotate-12 transition-transform" />
+            {field.label}
+        </label>
+        <div className="flex items-center gap-2">
+            <span className="text-[11px] font-black text-white bg-accent/20 px-3 py-1 rounded-lg border border-accent/10 min-w-[3rem] text-center font-mono">
+                {value}
+            </span>
+        </div>
+    </div>
+);
 
 // --- Main Component ---
 
 const CharacterSheetEditor: React.FC = () => {
     const editor = useCharacterEditor();
+    const { evaluateFormula } = useSheetCalculator(editor.character as PlayerCharacter | null, editor.template, editor.localData);
     const [isAddingItem, setIsAddingItem] = React.useState(false);
     const [newItemName, setNewItemName] = React.useState('');
     const hpBarRef = React.useRef<HTMLDivElement>(null);
@@ -263,6 +284,9 @@ const CharacterSheetEditor: React.FC = () => {
                                                 );
                                                 if (field.type === 'rating') return (
                                                     <FieldRating key={field.id} field={field} value={Number(val)} onChange={v => updateLocal(field.id, v)} />
+                                                );
+                                                if (field.type === 'formula') return (
+                                                    <FieldFormula key={field.id} field={field} value={evaluateFormula(field.formula || '')} />
                                                 );
                                                 return null;
                                             })}

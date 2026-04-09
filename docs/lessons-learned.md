@@ -80,6 +80,14 @@ L'utilisation de bordures "lumineuses" via `mask-composite` (style Bento Box) n�
 
 **Apprentissage :** La sécurité des données dans un JdR distribué doit être gérée par l'émetteur du contexte, pas par le récepteur (IA).
 
+### Émergence Fonctionnelle : AI NPC Dialogue Prep
+
+**Problème :** Demander à l'IA d'incarner un PNJ spécifique nécessitait auparavant de lui copier-coller sa description.
+
+**Solution :** Plutôt que de coder une nouvelle fonctionnalité complexe, nous avons exploité la synergie entre le système de **"Live Context Injection"** (injectant les PNJs épinglés) et le persona **"L'Acteur"**.
+
+**Apprentissage :** Les fonctionnalités les plus puissantes d'un système IA agentique naissent souvent de la combinaison de briques de base bien conçues (Context + Persona) plutôt que d'implémentations ad-hoc. L'IA "apprend" ses fonctionnalités par les données qu'on lui donne au runtime.
+
 ---
 
 ## 📡 Réseau : Le Défi de la Confidentialité des Données Privées
@@ -218,6 +226,60 @@ L'utilisation de bordures "lumineuses" via `mask-composite` (style Bento Box) n�
 
 ---
 
-Dernière mise à jour : 8 Avril 2026
+## 🧮 Moteur de Calcul & Réactivité (Calculation Engine)
 
-Statut : Stabilisation réseau Windows, intégration Gemma 4 et système d'échange P2P documentés.
+### Synchronisation LocalData vs Store
+
+**Problème :** Pour les fiches de personnages (v6.2.3-dev), l'utilisation du store MJ pour alimenter le moteur de calcul créait une latence : les changements n'étaient visibles qu'après sauvegarde.
+
+**Solution :** Injection d'un paramètre `overrideData` dans le hook `useSheetCalculator`, permettant de court-circuiter le store avec les données encore en cours de saisie dans l'état local du `CharacterSheetEditor`.
+
+**Apprentissage :** Pour les interfaces de type "Formulaires avec Calcul", la logique de dérivation doit toujours privilégier l'état local immédiat (non-sauvegardé) pour garantir une expérience utilisateur fluide (WYSIWYG).
+
+### Le Piège des Variables "Fantômes"
+
+**Problème :** Si un champ (ex: `@Force`) n'a jamais été renseigné par l'utilisateur, il n'existe pas dans l'objet `sheetData`. Le moteur de calcul `expr-eval` lançait une erreur car la variable était indéfinie dans le contexte.
+
+**Solution :** Initialisation exhaustive du contexte en parcourant le `SheetTemplate` au préalable. Chaque label/id présent dans le template reçoit une valeur par défaut (`field.defaultValue` ou `0`) avant l'évaluation.
+
+**Apprentissage :** Un moteur de calcul utilisateur doit être "totalement résolu". Ne jamais laisser le moteur de parsing découvrir des variables inconnues ; le contexte doit être pré-peuplé de manière défensive pour garantir le succès des formules même sur des fiches vierges.
+
+---
+
+---
+
+## 🖼️ Média & Proxy : Le Défi de la Portabilité Distante (Tablet Hub)
+
+### Intégrité des Identifiants (Prefix m-)
+
+**Problème :** Lors de la projection d'images générées par l'IA (`m-xxxx`), l'interface supprimait le préfixe avant de demander le fichier au proxy MJ (`/temp/xxxx`). Cependant, le stockage physique conservait l'identifiant complet, causant des erreurs 404 systématiques pour la tablette.
+
+**Solution :** Standardisation de la conservation de l'identifiant complet (ID = Clé de fichier) dans toute la chaîne de transport.
+
+**Apprentissage :** Dans un système de cache par ID, l'identifiant ne doit jamais être transformé entre la demande client et la résolution serveur. L'ID est l'unique source de vérité.
+
+### Traduction de Protocoles (Custom Schemes)
+
+**Problème :** Les avatarsMJ utilisent le schéma `gmos://media/` pour les chemins locaux. Les navigateurs tablettes bloquent ces schémas inconnus (`ERR_UNKNOWN_URL_SCHEME`).
+
+**Solution :** Implémentation d'un traducteur de protocole dans le hook `useMediaUrl` qui détecte `gmos://` et le transmute en URL HTTP pointant vers le proxy Nexus Bridge (`http://[IP]:3001/media/...`).
+
+**Apprentissage :** Un client web distant ne doit jamais recevoir de schémas propriétaires ou de protocoles `file://`. Le MJ doit agir comme un traducteur de protocole transparent (Protocol Proxy).
+
+---
+
+## 🎨 UI/UX : Gestion de la Redondance de Projection
+
+### Déduplication Automatisée des Hubs
+
+**Problème :** Envoyer un PNJ en "Spotlight" tout en gardant son icône partagée en "Favori" créait un affichage en double sur le Hub, gaspillant de l'espace visuel et créant de la confusion chez les joueurs.
+
+**Solution :** Utilisation d'une liste dédupliquée (`uniqueFavorites`) calculée à la volée dans `PlayerHub.tsx` et `TabletHub.tsx`, filtrant les favoris dont l'ID correspond à l'entité Spotlight active.
+
+**Apprentissage :** Une interface "miroir" doit posséder une intelligence de mise en page. Plus l'écran est partagé, plus l'état UI doit être filtré pour ne garder que l'information la plus pertinente d'une entité donnée.
+
+---
+
+Dernière mise à jour : 9 Avril 2026
+
+Statut : Stabilisation réseau Windows, intégration Gemma 4, système d'échange P2P, Moteur de Calcul et Synchronisation Tablet Hub documentés.

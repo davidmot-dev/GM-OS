@@ -34,7 +34,7 @@ const PlayerManagement: React.FC = () => {
                     
                     <div className="flex-1 flex overflow-hidden">
                         <PlayerRoster />
-                        <CharacterGrid />
+                        <CharacterGrid ignoreCampaignFilter={true} />
                     </div>
                 </>
             )}

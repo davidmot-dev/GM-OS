@@ -53,10 +53,9 @@ export async function resolveToSendableUrl(src: string | undefined): Promise<str
                     const success = await (bridge.remote as any).cacheMedia(buffer, src);
                     console.log(`[MediaResolver] cacheMedia response for ${src}: ${success}`);
                     
-                    if (success && info && info.ip) {
+                    if (success && info && info.ip && info.ip !== '127.0.0.1' && info.ip !== 'localhost') {
                         // The server on port 3001 serves files from the temp directory.
-                        const id = src.replace('m-', '');
-                        const result = `http://${info.ip}:${info.port}/temp/${id}`;
+                        const result = `http://${info.ip}:${info.port}/temp/${src}`;
                         console.log(`[MediaResolver] Resolved ${src} to ${result}`);
                         mediaCache.set(src, result);
                         return result;
@@ -91,6 +90,32 @@ export async function resolveToSendableUrl(src: string | undefined): Promise<str
             console.error(`[MediaResolver] Error resolving ${src}`, e);
         }
         return '';
+    }
+    
+    // NEW: Handle absolute local paths (C:\, D:\, /, \\, gmos://media/)
+    const cleanPath = src.replace(/^(file:\/\/\/|gmos:\/\/media\/)/i, '');
+    const isLocalPath = cleanPath.startsWith('C:') || 
+                        cleanPath.startsWith('D:') || 
+                        cleanPath.startsWith('/') || 
+                        cleanPath.startsWith('\\') ||
+                        cleanPath.includes('\\') || // Backslashes are a strong hint for Windows paths
+                        cleanPath.startsWith('temp/'); // Handle common relative temp directory
+
+    if (isLocalPath) {
+        const bridge = window.appBridge;
+        if (bridge?.remote?.getConnectionInfo) {
+            try {
+                const info = await bridge.remote.getConnectionInfo();
+                if (info && info.ip && info.ip !== '127.0.0.1' && info.ip !== 'localhost') {
+                    const encodedPath = encodeURIComponent(cleanPath.replace(/\\/g, '/'));
+                    const result = `http://${info.ip}:${info.port}/media/${encodedPath}`;
+                    console.log(`[MediaResolver] Local path resolved to proxy: ${result}`);
+                    return result;
+                }
+            } catch (err) {
+                console.warn('[MediaResolver] Connection info fetch failed:', err);
+            }
+        }
     }
     
     return src;

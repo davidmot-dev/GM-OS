@@ -25,7 +25,7 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
                 }
 
                 // Return directly if it's already a usable URL
-                if (sourceIdOrUrl.startsWith('http')) {
+                if (sourceIdOrUrl.startsWith('http') || sourceIdOrUrl.startsWith('gmos://') || sourceIdOrUrl.startsWith('blob:')) {
                     if (isMounted) setResolvedUrl(sourceIdOrUrl);
                     return;
                 }
@@ -81,8 +81,7 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
                     // use the media proxy on port 3001 of the GM's machine
                     if (!window.appBridge) {
                         const host = window.location.hostname; // Main PC IP
-                        const id = sourceIdOrUrl.replace('m-', '');
-                        const remoteUrl = `http://${host}:3001/temp/${id}`;
+                        const remoteUrl = `http://${host}:3001/temp/${sourceIdOrUrl}`;
                         console.log(`[useMediaUrl] Remote failsafe: resolving ${sourceIdOrUrl} to ${remoteUrl}`);
                         if (isMounted) setResolvedUrl(remoteUrl);
                         return;
@@ -98,8 +97,7 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
                     if (window.appBridge?.utils?.formatFileUrl) {
                         return window.appBridge.utils.formatFileUrl(sourceIdOrUrl);
                     }
-                    
-                    const cleanPath = (typeof sourceIdOrUrl === 'string') ? sourceIdOrUrl.replace(/^file:\/\/\//, '') : '';
+                    const cleanPath = (typeof sourceIdOrUrl === 'string') ? sourceIdOrUrl.replace(/^(file:\/\/\/|gmos:\/\/media\/)/i, '') : '';
                     
                     // If we are in Electron (main MJ app), use the custom secure protocol
                     if (window.appBridge && (cleanPath.startsWith('C:') || cleanPath.startsWith('D:') || cleanPath.startsWith('/') || cleanPath.startsWith('\\'))) {
@@ -107,9 +105,24 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
                     }
                     
                     // If we are on a remote device (tablet), use the media proxy on port 3001
-                    if (!window.appBridge && (cleanPath.startsWith('C:') || cleanPath.startsWith('D:') || cleanPath.startsWith('/') || cleanPath.startsWith('\\'))) {
+                    if (!window.appBridge && 
+                        (
+                            cleanPath.startsWith('C:') || 
+                            cleanPath.startsWith('D:') || 
+                            cleanPath.startsWith('/') || 
+                            cleanPath.startsWith('\\') ||
+                            cleanPath.startsWith('temp/') ||
+                            cleanPath.startsWith('npcs/') ||
+                            cleanPath.includes('\\')
+                        )
+                    ) {
                         const host = window.location.hostname; // Main PC IP
-                        return `http://${host}:3001/media/${encodeURIComponent(cleanPath)}`;
+                        // Classification: temp/ and m- IDs go to /temp/, others to /media/
+                        const isTemp = cleanPath.startsWith('temp/') || cleanPath.startsWith('m-');
+                        const endpoint = isTemp ? 'temp' : 'media';
+                        const finalCleanPath = isTemp ? cleanPath.replace('temp/', '') : cleanPath;
+                        
+                        return `http://${host}:3001/${endpoint}/${encodeURIComponent(finalCleanPath.replace(/\\/g, '/'))}`;
                     }
 
                     if (cleanPath.startsWith('C:') || cleanPath.startsWith('D:') || cleanPath.startsWith('/') || cleanPath.startsWith('\\')) {

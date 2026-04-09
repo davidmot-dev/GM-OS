@@ -1,13 +1,14 @@
 // src/data/defaultSheetTemplates.ts
 // Defines the built-in character sheet templates.
 
-export type SheetFieldType = 'number' | 'text' | 'checkbox' | 'gauge' | 'select' | 'textarea' | 'rating';
+export type SheetFieldType = 'number' | 'text' | 'checkbox' | 'gauge' | 'select' | 'textarea' | 'rating' | 'formula';
 
 export interface SheetField {
     id: string;
     label: string;
     type: SheetFieldType;
     defaultValue: number | string | boolean;
+    formula?: string;   // Used for 'formula' type
     options?: string[]; // Used for 'select' type
     max?: number;       // Used for 'rating' or 'gauge' absolute maximum
 }

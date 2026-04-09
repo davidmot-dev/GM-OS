@@ -36,6 +36,10 @@ export interface FavoriteEntity {
     campaignId?: string;
     /** ID du Personnage-Joueur propriétaire (rend l'objet privé au Tablet Hub) */
     ownerId?: string;
+    /** Répliques de dialogue générées par l'IA Oracle */
+    dialoguePrep?: string[];
+    /** Mode d'affichage sur le Player Hub */
+    displayMode?: 'card' | 'theater';
 }
 
 interface FavoriteState {
@@ -152,8 +156,11 @@ export const useFavoriteStore = create<FavoriteState>()(
                     if (imageStore) {
                         const isCurrentlyProjected = imageStore.getState().projectedEntity?.id === id;
                         
-                        if (updates.isSyncedToPlayerHub === true && !isCurrentlyProjected) {
-                            imageStore.getState().projectEntity({ ...favBefore, ...updates });
+                        // If we are enabling sync, or if we are already synced and updating something (like displayMode)
+                        if ((updates.isSyncedToPlayerHub === true && !isCurrentlyProjected) || (favBefore.isSyncedToPlayerHub && isCurrentlyProjected)) {
+                            // Fetch the latest state of the favorite after the set() above would have finished or just merge here
+                            const updatedFav = { ...favBefore, ...updates };
+                            imageStore.getState().projectEntity(updatedFav);
                         } else if (updates.isSyncedToPlayerHub === false && isCurrentlyProjected) {
                             imageStore.getState().projectEntity(null); 
                         }

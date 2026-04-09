@@ -433,7 +433,7 @@ ${fullContext}`;
       
       const payload = {
         contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { responseModalalities: ["IMAGE"] }
+        generationConfig: { response_modalities: ["IMAGE"] }
       };
 
 

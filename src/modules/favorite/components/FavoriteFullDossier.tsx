@@ -13,6 +13,8 @@ import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { gmToast } from '../../../stores/useToastStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
+import { aiService } from '../../ai/AIService';
+import { MessageSquare, Copy } from 'lucide-react';
 
 export const FavoriteFullDossier: React.FC = () => {
     const { favorites, selectedFavoriteId, updateFavorite, setViewMode } = useFavoriteStore();
@@ -27,8 +29,9 @@ export const FavoriteFullDossier: React.FC = () => {
     const campaigns = useSessionOSStore(s => s.campaigns);
     const players = useSessionOSStore(s => s.players);
 
-    // Media Browser State
+    // UI States
     const [browserTarget, setBrowserTarget] = useState<'imageUrl' | 'tokenUrl' | null>(null);
+    const [isGeneratingDialogues, setIsGeneratingDialogues] = useState(false);
 
     // Resolved URLs for display
     const resolvedImageUrl = useMediaUrl(formData.imageUrl);
@@ -54,6 +57,45 @@ export const FavoriteFullDossier: React.FC = () => {
             updateFavorite(entity.id, formData);
             gmToast(`${formData.name || entity.name} dossier mis à jour !`);
         }
+    };
+
+    const handleGenerateDialogues = async () => {
+        if (!entity || isGeneratingDialogues) return;
+        
+        setIsGeneratingDialogues(true);
+        try {
+            const systemPrompt = `Tu es un assistant de Maître de Jeu expert. 
+            TACHE : Génère 5 répliques de dialogue typiques pour ce PNJ.
+            RÈGLES :
+            1. Les répliques doivent refléter sa personnalité, son lore et ses notes secrètes.
+            2. Réponds UNIQUEMENT sous forme d'un tableau JSON de chaînes de caractères : ["Réplique 1", "Réplique 2", ...].
+            3. Langue : Français.
+            4. Sois immersif et concis.`;
+            
+            const prompt = `Génère 5 répliques pour :
+            Nom : ${entity.name}
+            Titre : ${entity.subtitle || 'N/A'}
+            Lore : ${entity.lore || 'N/A'}
+            Notes Secrètes (à utiliser pour le ton) : ${entity.secretNotes || 'N/A'}
+            Attributs : ${JSON.stringify(entity.attributes || {})}
+            `;
+            
+            const result = await aiService.generateJSON<string[]>(prompt, systemPrompt);
+            if (Array.isArray(result)) {
+                updateFavorite(entity.id, { dialoguePrep: result });
+                gmToast("Répliques générées avec succès !");
+            }
+        } catch (err) {
+            console.error("Failed to generate dialogues", err);
+            gmToast("Échec de la génération des répliques", "error");
+        } finally {
+            setIsGeneratingDialogues(false);
+        }
+    };
+
+    const handleCopyDialogue = (text: string) => {
+        navigator.clipboard.writeText(text);
+        gmToast("Réplique copiée !");
     };
 
     const typeConfig = {
@@ -142,21 +184,43 @@ export const FavoriteFullDossier: React.FC = () => {
 
                     <div className="h-6 w-px bg-white/10 mx-2" />
 
-                    <button
-                        onClick={() => {
-                            const newVal = !formData.isSyncedToPlayerHub;
-                            setFormData(prev => ({ ...prev, isSyncedToPlayerHub: newVal }));
-                            updateFavorite(entity.id, { isSyncedToPlayerHub: newVal });
-                            gmToast(`${formData.name || entity.name} ${newVal ? 'partagé avec' : 'retiré du'} Player Hub!`);
-                        }}
-                        className={`px-4 py-2 rounded-xl border font-bold text-[10px] tracking-widest transition-all flex items-center gap-2
-                            ${formData.isSyncedToPlayerHub
-                                ? 'bg-accent/20 border-accent text-accent shadow-glow-accent'
-                                : 'bg-app-bg border-white/10 text-slate-500 hover:text-slate-300 hover:border-white/20'}`}
-                    >
-                        <span className="material-symbols-outlined text-sm">{formData.isSyncedToPlayerHub ? 'visibility' : 'visibility_off'}</span>
-                        PLAYER HUB
-                    </button>
+                    <div className="flex gap-2">
+                        <button
+                            onClick={() => {
+                                const newVal = !formData.isSyncedToPlayerHub;
+                                setFormData(prev => ({ ...prev, isSyncedToPlayerHub: newVal }));
+                                updateFavorite(entity.id, { isSyncedToPlayerHub: newVal });
+                                gmToast(`${formData.name || entity.name} ${newVal ? 'partagé avec' : 'retiré du'} Player Hub!`);
+                            }}
+                            className={`px-4 py-2 rounded-xl border font-bold text-[10px] tracking-widest transition-all flex items-center gap-2
+                                ${formData.isSyncedToPlayerHub
+                                    ? 'bg-accent/20 border-accent text-accent shadow-glow-accent'
+                                    : 'bg-app-bg border-white/10 text-slate-500 hover:text-slate-300 hover:border-white/20'}`}
+                        >
+                            <span className="material-symbols-outlined text-sm">{formData.isSyncedToPlayerHub ? 'visibility' : 'visibility_off'}</span>
+                            PLAYER HUB
+                        </button>
+
+                        {formData.isSyncedToPlayerHub && (
+                            <button
+                                onClick={() => {
+                                    const newMode = formData.displayMode === 'theater' ? 'card' : 'theater';
+                                    setFormData(prev => ({ ...prev, displayMode: newMode }));
+                                    updateFavorite(entity.id, { displayMode: newMode });
+                                    gmToast(`Mode ${newMode === 'theater' ? 'Théâtre' : 'Carte'} actif sur le Hub.`);
+                                }}
+                                className={`w-10 rounded-xl border transition-all flex items-center justify-center
+                                    ${formData.displayMode === 'theater'
+                                        ? 'bg-amber-500/20 border-amber-500 text-amber-500 shadow-glow-amber/20'
+                                        : 'bg-app-bg border-white/10 text-slate-500 hover:text-slate-300 hover:border-white/20'}`}
+                                title={formData.displayMode === 'theater' ? 'Vue Carte' : 'Vue Théâtre (Agrandir)'}
+                            >
+                                <span className="material-symbols-outlined text-sm">
+                                    {formData.displayMode === 'theater' ? 'close_fullscreen' : 'fullscreen'}
+                                </span>
+                            </button>
+                        )}
+                    </div>
 
                     <div className="h-6 w-px bg-white/10 mx-2" />
 
@@ -317,6 +381,52 @@ export const FavoriteFullDossier: React.FC = () => {
                                 placeholder="Plot hooks, secrets, mechanical weaknesses..."
                             />
                         </div>
+
+                        {/* AI Dialogue Prep Section */}
+                        {formData.type === 'npc' && (
+                            <div className="pt-8 border-t border-white/5 space-y-6">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2 text-slate-500">
+                                        <MessageSquare size={16} />
+                                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em]">AI Dialogue Prep</h3>
+                                    </div>
+                                    <button
+                                        onClick={handleGenerateDialogues}
+                                        disabled={isGeneratingDialogues}
+                                        className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                                            isGeneratingDialogues 
+                                                ? 'bg-accent/10 text-accent/50 animate-pulse' 
+                                                : 'bg-accent text-slate-950 hover:scale-105 active:scale-95 shadow-lg shadow-accent/20'
+                                        }`}
+                                    >
+                                        <Sparkles size={14} className={isGeneratingDialogues ? 'animate-spin' : ''} />
+                                        {isGeneratingDialogues ? 'Consultation de l\'Oracle...' : 'Générer via l\'Oracle'}
+                                    </button>
+                                </div>
+
+                                <div className="grid grid-cols-1 gap-4">
+                                    {entity.dialoguePrep && entity.dialoguePrep.length > 0 ? (
+                                        entity.dialoguePrep.map((line, idx) => (
+                                            <div 
+                                                key={idx} 
+                                                onClick={() => handleCopyDialogue(line)}
+                                                className="group relative bg-app-surface/40 hover:bg-accent/5 border border-white/5 hover:border-accent/20 rounded-2xl p-6 cursor-pointer transition-all animate-in slide-in-from-bottom-4"
+                                                style={{ animationDelay: `${idx * 150}ms` }}
+                                            >
+                                                <p className="text-lg text-slate-300 italic pr-12 leading-relaxed">"{line}"</p>
+                                                <div className="absolute top-6 right-6 p-2 rounded-lg bg-accent/10 text-accent opacity-0 group-hover:opacity-100 transition-all">
+                                                    <Copy size={16} />
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="py-12 text-center border-2 border-dashed border-white/5 rounded-3xl bg-app-surface/20">
+                                            <p className="text-xs text-slate-600 font-bold uppercase tracking-[0.3em]">Posez vos questions à l'Oracle pour préparer les répliques</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     {/* RIGHT COLUMN: MECHANICS */}

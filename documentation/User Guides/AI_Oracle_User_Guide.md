@@ -45,6 +45,12 @@ Un doute sur une mécanique ?
 1. Sélectionnez le Persona **Le Sage**.
 2. Demandez : *"Comment fonctionne la règle de panique dans ce système ?"* (L'IA cherchera la réponse dans le PDF de règles lié à votre campagne).
 
+### AI NPC Dialogue Prep (Prise de contact immédiate)
+L'Oracle est "Session-Aware". Il connaît les PNJs que vous avez épinglés dans votre session via le module **NPC-OS**.
+1. Sélectionnez le Persona **L'Acteur**.
+2. Demandez simplement : *"Prépare-moi une réplique pour [Nom du PNJ] qui vient de se faire voler sa bourse."*
+3. **Magie** : L'IA puise automatiquement dans la description et les notes d'interprétation du PNJ pour vous répondre avec le bon ton.
+
 ## ⚙️ Configuration & Connexion
 L'Oracle nécessite une connexion à NotebookLM via le pont MCP.
 - **Status Hub** : Vérifiez que le voyant en bas du panneau est **VERT** (Bridged).

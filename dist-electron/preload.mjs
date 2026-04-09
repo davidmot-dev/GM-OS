@@ -73,6 +73,7 @@ contextBridge.exposeInMainWorld("appBridge", {
   utils: {
     formatFileUrl: (path) => {
       if (!path) return "";
+      if (path.includes("://") || path.startsWith("data:")) return path;
       const normalized = path.replace(/\\/g, "/");
       return `file:///${encodeURI(normalized).replace(/#/g, "%23").replace(/\?/g, "%3F")}`;
     }

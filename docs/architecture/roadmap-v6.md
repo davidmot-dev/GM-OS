@@ -30,6 +30,7 @@ L'objectif est d'assurer une étanchéité parfaite des données tout en simplif
 - **[x] Nexus-OS v2 — Driver Export** : Exporter non seulement les campagnes, mais aussi les GameDrivers (systèmes de règles) comme bundles autonomes.
 - **[x] Nexus-OS v2 — Vérification & Localisation des URLs distantes** : Détection automatique des URLs HTTP non-portables avec téléchargement interactif vers le Media Hub.
 - **[x] Agnostic AI Core & Local Stability** : Intégration de Gemma 4 26B MoE via Ollama avec stabilisation réseau (`net.fetch`) et forçage DNS IPv4 pour Windows.
+- **[x] Tablet Hub Media Proxy & Protocol Sync** : Résolution des erreurs 404 (préfixe m-) et support des protocoles gmos:// pour tablettes distantes.
 
 ---
 
@@ -37,7 +38,7 @@ L'objectif est d'assurer une étanchéité parfaite des données tout en simplif
 
 Refonte des systèmes de jeu pour une automatisation intelligente.
 
-- **[ ] Character Sheet Calculation Engine** : Moteur de calcul intégré capable d'interpréter des formules complexes (ex: `1d20 + @StrMod + @Level`).
+- **[x] Character Sheet Calculation Engine** : Moteur de calcul intégré capable d'interpréter des formules complexes (ex: `1d20 + @StrMod + @Level`). Support de la réactivité live et résolution par labels.
 - **[ ] Tactical Combat Assistant** : Interface IA suggérant des actions de PNJ en fonction de la situation tactique sur l'Atlas.
 - **[x] Échanges d'objets (P2P)** : Permettre aux joueurs de se donner des objets via le Hub avec validation MJ (v6.2.2-dev).
 - **[x] Notes Privées PJ** : Zone de prise de notes persistante côté serveur MJ. (v6.2.1-dev)
@@ -53,7 +54,7 @@ Extension des capacités de création et de partage.
 - **[ ] Multimedia Narrative Engine** : Support natif pour les ambiances spatialisées et vidéos de fond synchronisées sur les Hubs.
 - **[ ] Synchronisation P2P (Tauri)** : Migration du pont WebSocket vers Peer-to-Peer.
 - **[ ] Timeline Interactive** : Visualisation chronologique des événements générés depuis le Wiki.
-- **[ ] AI NPC Dialogue Prep** : Génération de répliques à la volée via l'Oracle pour les favoris.
+- **[x] AI NPC Dialogue Prep** : Génération de répliques à la volée via l'Oracle pour les favoris. (v6.1.2-dev)
 
 ---
 
@@ -71,7 +72,9 @@ Extension des capacités de création et de partage.
 | Validation polymorphe pour imports partiels Nexus-OS | Haute | ✅ Résolu |
 | Migration URLs HTTP → Media Hub (campagne Anges de Feu) | Moyenne | ✅ Complété (Auto-Migration v2) |
 | Synchronisation Ambiance & Blend-modes (Map-OS) | Haute | ✅ Résolu |
+| Rendu Proxy Tablet Hub (m- prefix & protocol gmos://) | Haute | ✅ Résolu |
+| Doublons d'entités (Spotlight vs Favorite) sur Hubs | Moyenne | ✅ Résolu |
 
 ---
-*Dernière mise à jour : 7 Avril 2026 (23h30)*
-*Statut : Navigation stabilisée. IA Agnostique (Cloud/Local) & Notes Privées PJ 100% opérationnelles.*
+*Dernière mise à jour : 9 Avril 2026 (10h30)*
+*Statut : Navigation stabilisée. IA Agnostique, Notes Privées & Synchronisation Tablet Hub 100% opérationnels.*

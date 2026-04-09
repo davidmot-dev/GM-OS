@@ -19,6 +19,7 @@ const FIELD_TYPE_LABELS: Record<SheetFieldType, string> = {
     select: 'Liste déroulante',
     textarea: 'Texte multiligne',
     rating: 'Échelle (Ex: 1 à 5)',
+    formula: 'Formule (Calculée)',
 };
 
 // Sub-component for options input
@@ -145,6 +146,22 @@ const SectionEditor: React.FC<{
                                 </button>
                             </div>
                             
+                            {field.type === 'formula' && (
+                                <div className="flex flex-col gap-2 pl-8">
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-[10px] text-accent font-black uppercase tracking-widest">Équation</span>
+                                        <input 
+                                            type="text"
+                                            value={field.formula || ''}
+                                            title="Formule de calcul (ex: 1d20 + @StrMod)"
+                                            onChange={e => updateField(i, { formula: e.target.value })}
+                                            className="flex-1 bg-app-bg/20 text-xs text-accent px-3 py-1.5 rounded border border-accent/20 focus:outline-none focus:border-accent/50 font-mono shadow-inner"
+                                            placeholder="Ex: 1d20 + @StrMod + 5"
+                                        />
+                                    </div>
+                                    <p className="text-[9px] text-app-text/40 italic">Utilisez @NomDuChamp pour référencer une autre variable.</p>
+                                </div>
+                            )}
                             {field.type === 'select' && (
                                 <div className="flex items-center gap-3 pl-8">
                                     <span className="text-[10px] text-app-text/40 uppercase font-black tracking-widest">Options</span>

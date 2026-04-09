@@ -104,7 +104,9 @@ export const useHubSync = () => {
                     const { type, data: payload } = data.payload;
                     if (type === 'image') setLiveImagePath(payload || null);
                     if (type === 'entity') {
-                        setLiveEntity(payload ? JSON.parse(payload) : null);
+                        const entity = payload ? JSON.parse(payload) : null;
+                        console.log(`[useHubSync] Received Hub Entity: ${entity?.name}, Avatar: ${entity?.avatar}`);
+                        setLiveEntity(entity);
                     }
                 }
 
@@ -380,10 +382,16 @@ export const useHubSync = () => {
         lastApprovedRequestsRef.current = lastApprovedRequestsRef.current.filter(id => currentIds.includes(id));
     }, [transferRequests]);
 
+    // Theater Logic (Alignment with PlayerHub)
+    const theaterEntity = (liveEntity?.displayMode === 'theater')
+        ? liveEntity
+        : resolvedFavorites.find(f => f.displayMode === 'theater');
+
     return {
         status,
         liveImagePath,
         liveEntity,
+        theaterEntity,
         voiceLevel,
         sessionSummary,
         showDice,

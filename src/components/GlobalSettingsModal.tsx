@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Power, Globe, Shield, Info, Terminal, MonitorPlay, Zap, Settings, Tablet, BookOpen, FolderOpen, CheckCircle2 } from 'lucide-react';
+import { X, Power, Globe, Shield, Info, Terminal, MonitorPlay, Zap, Settings, Tablet, BookOpen, FolderOpen, CheckCircle2, Brain } from 'lucide-react';
 import { flushApplication } from '../utils/appUtils';
 import { useSessionStore, THEME_PALETTES } from '../store/useSessionStore';
 import type { ThemeID } from '../store/useSessionStore';
@@ -20,7 +20,7 @@ interface GlobalSettingsModalProps {
     onClose: () => void;
 }
 
-type TabID = 'system' | 'tactical' | 'remote';
+type TabID = 'system' | 'ai' | 'tactical' | 'remote';
 
 const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) => {
     const [activeTab, setActiveTab] = useState<TabID>('system');
@@ -107,6 +107,13 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                     >
                         <Zap size={18} />
                         Tactique
+                    </button>
+                    <button 
+                        onClick={() => setActiveTab('ai')}
+                        className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-sm ${activeTab === 'ai' ? 'bg-accent/10 text-accent border border-accent/20' : 'text-app-text/60 hover:bg-app-surface/40 hover:text-app-text border border-transparent'}`}
+                    >
+                        <Brain size={18} />
+                        IA
                     </button>
                     <button 
                         onClick={() => setActiveTab('remote')}
@@ -283,13 +290,6 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                 </div>
                             </section>
 
-                            {/* AI Configuration Section */}
-                            <section className="space-y-6">
-                                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-app-text/40 px-1 border-l-2 border-accent/30 pl-3 italic">Intelligence Artificielle (Cloud)</h3>
-                                <div className="bg-app-surface/20 border border-app-border/20 rounded-[2rem] p-8">
-                                    <AISettings />
-                                </div>
-                            </section>
 
                             {/* Obsidian Integration Section */}
                             <section className="space-y-6">
@@ -446,6 +446,26 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                 <div className="flex gap-4">
                                      <div className="p-2 bg-app-surface rounded-lg border border-app-border"><Info size={16} /></div>
                                      <div className="p-2 bg-app-surface rounded-lg border border-app-border"><MonitorPlay size={16} /></div>
+                                </div>
+                            </section>
+                        </div>
+                    )}
+
+                    {activeTab === 'ai' && (
+                        <div className="flex-1 overflow-y-auto p-8 custom-scrollbar space-y-8 animate-in fade-in slide-in-from-right-2 duration-300">
+                            <section className="space-y-6">
+                                <div className="flex items-center gap-4 mb-2">
+                                    <div className="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center text-accent shadow-glow-accent/10">
+                                        <Brain size={24} />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-xl font-black uppercase tracking-tighter text-app-text">Paramètres IA</h3>
+                                        <p className="text-[10px] text-app-text/60 font-black uppercase tracking-widest mt-0.5">Configuration des modèles et des GEMS assistés</p>
+                                    </div>
+                                </div>
+                                
+                                <div className="bg-app-surface/20 border border-app-border/20 rounded-[2rem] p-8 shadow-inner-white/5">
+                                    <AISettings />
                                 </div>
                             </section>
                         </div>

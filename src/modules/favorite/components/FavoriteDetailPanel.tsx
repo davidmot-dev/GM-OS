@@ -10,6 +10,8 @@ import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { gmToast } from '../../../stores/useToastStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
+import { aiService } from '../../ai/AIService';
+import { Sparkles, MessageSquare, Copy } from 'lucide-react';
 
 export const FavoriteDetailPanel: React.FC = () => {
     const {
@@ -27,8 +29,9 @@ export const FavoriteDetailPanel: React.FC = () => {
     const campaigns = useSessionOSStore(s => s.campaigns);
     const players = useSessionOSStore(s => s.players);
 
-    // Media Browser State
+    // UI States
     const [browserTarget, setBrowserTarget] = useState<'imageUrl' | 'tokenUrl' | null>(null);
+    const [isGeneratingDialogues, setIsGeneratingDialogues] = useState(false);
 
     // Resolved URLs for display
     const resolvedImageUrl = useMediaUrl(formData.imageUrl);
@@ -63,6 +66,45 @@ export const FavoriteDetailPanel: React.FC = () => {
     const handleCancel = () => {
         setFormData({ ...entity });
         setIsEditing(false);
+    };
+    
+    const handleGenerateDialogues = async () => {
+        if (!entity || isGeneratingDialogues) return;
+        
+        setIsGeneratingDialogues(true);
+        try {
+            const systemPrompt = `Tu es un assistant de Maître de Jeu expert. 
+            TACHE : Génère 5 répliques de dialogue typiques pour ce PNJ.
+            RÈGLES :
+            1. Les répliques doivent refléter sa personnalité, son lore et ses notes secrètes.
+            2. Réponds UNIQUEMENT sous forme d'un tableau JSON de chaînes de caractères : ["Réplique 1", "Réplique 2", ...].
+            3. Langue : Français.
+            4. Sois immersif et concis.`;
+            
+            const prompt = `Génère 5 répliques pour :
+            Nom : ${entity.name}
+            Titre : ${entity.subtitle || 'N/A'}
+            Lore : ${entity.lore || 'N/A'}
+            Notes Secrètes (à utiliser pour le ton) : ${entity.secretNotes || 'N/A'}
+            Attributs : ${JSON.stringify(entity.attributes || {})}
+            `;
+            
+            const result = await aiService.generateJSON<string[]>(prompt, systemPrompt);
+            if (Array.isArray(result)) {
+                updateFavorite(entity.id, { dialoguePrep: result });
+                gmToast("Répliques générées avec succès !");
+            }
+        } catch (err) {
+            console.error("Failed to generate dialogues", err);
+            gmToast("Échec de la génération des répliques", "error");
+        } finally {
+            setIsGeneratingDialogues(false);
+        }
+    };
+
+    const handleCopyDialogue = (text: string) => {
+        navigator.clipboard.writeText(text);
+        gmToast("Réplique copiée !");
     };
 
     const typeColor =
@@ -399,6 +441,51 @@ export const FavoriteDetailPanel: React.FC = () => {
                     )}
                 </div>
 
+                {entity.type === 'npc' && (
+                    <div className="space-y-4 pt-4 border-t border-white/5">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2 text-slate-500">
+                                <MessageSquare size={16} />
+                                <h4 className="text-xs font-bold uppercase tracking-widest">Dialogue Prep</h4>
+                            </div>
+                            <button
+                                onClick={handleGenerateDialogues}
+                                disabled={isGeneratingDialogues}
+                                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
+                                    isGeneratingDialogues 
+                                        ? 'bg-accent/10 text-accent/50 animate-pulse' 
+                                        : 'bg-accent text-slate-950 hover:scale-105 active:scale-95 shadow-glow-accent/20'
+                                }`}
+                            >
+                                <Sparkles size={12} className={isGeneratingDialogues ? 'animate-spin' : ''} />
+                                {isGeneratingDialogues ? 'Génération...' : 'Oracle'}
+                            </button>
+                        </div>
+                        
+                        <div className="space-y-2">
+                            {entity.dialoguePrep && entity.dialoguePrep.length > 0 ? (
+                                entity.dialoguePrep.map((line, idx) => (
+                                    <div 
+                                        key={idx} 
+                                        onClick={() => handleCopyDialogue(line)}
+                                        className="group relative bg-app-surface/40 hover:bg-accent/5 border border-white/5 hover:border-accent/20 rounded-xl p-3 cursor-pointer transition-all animate-in slide-in-from-right-4"
+                                        style={{ animationDelay: `${idx * 100}ms` }}
+                                    >
+                                        <p className="text-xs text-slate-300 italic pr-6 leading-relaxed line-clamp-3">"{line}"</p>
+                                        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <Copy size={12} className="text-accent/60" />
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="py-4 text-center border border-dashed border-white/5 rounded-xl">
+                                    <p className="text-[10px] text-slate-600 uppercase tracking-widest">Aucune réplique préparée</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
+
                 <div className="pt-6 mt-auto space-y-3">
                     {entity.type === 'npc' && (
                         <button
@@ -441,21 +528,42 @@ export const FavoriteDetailPanel: React.FC = () => {
                         </button>
                     )}
 
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            const newVal = !entity.isSyncedToPlayerHub;
-                            updateFavorite(entity.id, { isSyncedToPlayerHub: newVal });
-                            gmToast(`${entity.name} ${newVal ? 'partagé avec' : 'retiré du'} Player Hub!`);
-                        }}
-                        className={`w-full py-3 rounded-xl border font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-lg
-                            ${entity.isSyncedToPlayerHub
-                                ? 'bg-accent/20 border-accent text-accent shadow-glow-accent'
-                                : 'bg-app-bg border-white/10 text-slate-500 hover:text-slate-300 hover:border-white/20'}`}
-                    >
-                        <span className="material-symbols-outlined text-sm">{entity.isSyncedToPlayerHub ? 'visibility' : 'visibility_off'}</span>
-                        PLAYER HUB SYNC
-                    </button>
+                    <div className="flex gap-2">
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                const newVal = !entity.isSyncedToPlayerHub;
+                                updateFavorite(entity.id, { isSyncedToPlayerHub: newVal });
+                                gmToast(`${entity.name} ${newVal ? 'partagé avec' : 'retiré du'} Player Hub!`);
+                            }}
+                            className={`flex-1 py-3 rounded-xl border font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-lg
+                                ${entity.isSyncedToPlayerHub
+                                    ? 'bg-accent/20 border-accent text-accent shadow-glow-accent'
+                                    : 'bg-app-bg border-white/10 text-slate-500 hover:text-slate-300 hover:border-white/20'}`}
+                        >
+                            <span className="material-symbols-outlined text-sm">{entity.isSyncedToPlayerHub ? 'visibility' : 'visibility_off'}</span>
+                            PLAYER HUB SYNC
+                        </button>
+
+                        {entity.isSyncedToPlayerHub && (
+                            <button
+                                onClick={() => {
+                                    const newMode = entity.displayMode === 'theater' ? 'card' : 'theater';
+                                    updateFavorite(entity.id, { displayMode: newMode });
+                                    gmToast(`Mode ${newMode === 'theater' ? 'Théâtre' : 'Carte'} actif.`);
+                                }}
+                                className={`w-12 rounded-xl border transition-all flex items-center justify-center shadow-lg
+                                    ${entity.displayMode === 'theater'
+                                        ? 'bg-amber-500/20 border-amber-500 text-amber-500 shadow-glow-amber/20'
+                                        : 'bg-app-bg border-white/10 text-slate-500 hover:text-slate-300 hover:border-white/20'}`}
+                                title={entity.displayMode === 'theater' ? 'Vue Carte' : 'Vue Théâtre (Agrandir)'}
+                            >
+                                <span className="material-symbols-outlined text-sm">
+                                    {entity.displayMode === 'theater' ? 'close_fullscreen' : 'fullscreen'}
+                                </span>
+                            </button>
+                        )}
+                    </div>
 
                     <button
                         onClick={() => setViewMode('detail')}

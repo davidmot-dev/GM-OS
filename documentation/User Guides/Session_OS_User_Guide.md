@@ -68,6 +68,10 @@ Inutile de rédiger manuellement les instructions de vos assistants. Un bouton *
 
 **Précision** : Le système utilise une génération séquentielle optimisée pour **Ollama**, garantissant des instructions riches et sans coupures.
 
+### AI NPC Dialogue Prep (Nouveauté v6.1.2)
+
+L'Oracle est désormais synchronisé avec vos PNJs actifs. Si vous avez épinglé un PNJ dans votre galerie, vous pouvez utiliser le Persona **"L'Acteur"** pour générer des répliques personnalisées à la volée. L'IA injecte automatiquement les motivations et le background du PNJ dans sa "conscience live" pour garantir une interprétation fidèle.
+
 ---
 
 ## 👥 Joueurs & Fiches de Jeu
@@ -228,3 +232,22 @@ Session OS s'y intègre nativement :
 - Consultez une règle du **Wiki** sans perdre votre contexte de jeu.
 
 [Voir le guide complet du Spotlight](./Universal_Search_User_Guide.md)
+
+---
+
+## 📱 Tablet Hub & Synchronisation Distante
+
+Le **Tablet Hub** est l'interface dédiée aux joueurs (sur tablette ou second écran). Depuis la v6.1.2-dev, la synchronisation a été renforcée pour une immersion totale.
+
+### 🖼️ Affichage des Médias MJ
+Vous pouvez désormais projeter en toute confiance :
+- **Images IA** : Les portraits générés par l'IA Oracle s'affichent instantanément sur toutes les tablettes.
+- **Chemins Locaux (Bridge)** : Même si vos images sont stockées sur votre disque dur (`C:\...`), GM-OS fait office de pont (proxy) pour les envoyer aux tablettes via votre réseau local.
+- **Smart De-duplication** : Si vous focalisez un PNJ (Spotlight) alors qu'il est déjà affiché dans les Favoris Partagés, GM-OS masque automatiquement le doublon pour garder l'écran aéré.
+
+### 🎒 Inventaire & Collaboration
+- **Transferts P2P** : Les joueurs peuvent s'échanger des objets via leur onglet **Sac**. Le MJ reçoit une notification pour valider ou refuser la transaction.
+- **Notes Privées** : Chaque joueur dispose d'une zone de texte persistante et privée pour noter ses théories ou inventaires personnels, sauvée directement sur le serveur du MJ.
+
+> [!TIP]
+> Pour une expérience optimale sur tablette, assurez-vous que tous les appareils sont sur le même réseau Wi-Fi que le PC du MJ et que le **Nexus Bridge** est actif (icône antenne verte dans le Cockpit).
