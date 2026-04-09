@@ -50,11 +50,18 @@ Refonte des systèmes de jeu pour une automatisation intelligente.
 
 Extension des capacités de création et de partage.
 
-- **[ ] Forge Social Integration** : Partage de templates de fiches et de drivers système entre utilisateurs.
-- **[ ] Multimedia Narrative Engine** : Support natif pour les ambiances spatialisées et vidéos de fond synchronisées sur les Hubs.
 - **[ ] Synchronisation P2P (Tauri)** : Migration du pont WebSocket vers Peer-to-Peer.
 - **[x] Timeline Interactive** : Visualisation chronologique des événements générés depuis le Wiki.
 - **[x] AI NPC Dialogue Prep** : Génération de répliques à la volée via l'Oracle pour les favoris. (v6.1.2-dev)
+
+---
+
+## 📅 Prochainement (En Attente)
+
+Ces fonctionnalités sont prévues mais temporairement mises de côté pour prioriser les mécaniques de jeu core.
+
+- **[ ] Forge Social Integration** : Partage de templates de fiches et de drivers système entre utilisateurs.
+- **[ ] Multimedia Narrative Engine** : Support natif pour les ambiances spatialisées et vidéos de fond synchronisées sur les Hubs.
 
 ---
 
@@ -76,5 +83,5 @@ Extension des capacités de création et de partage.
 | Doublons d'entités (Spotlight vs Favorite) sur Hubs | Moyenne | ✅ Résolu |
 
 ---
-*Dernière mise à jour : 9 Avril 2026 (10h30)*
+*Dernière mise à jour : 9 Avril 2026 (11h15)*
 *Statut : Navigation stabilisée. IA Agnostique, Notes Privées & Synchronisation Tablet Hub 100% opérationnels.*
