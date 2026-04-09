@@ -39,7 +39,7 @@ L'objectif est d'assurer une étanchéité parfaite des données tout en simplif
 Refonte des systèmes de jeu pour une automatisation intelligente.
 
 - **[x] Character Sheet Calculation Engine** : Moteur de calcul intégré capable d'interpréter des formules complexes (ex: `1d20 + @StrMod + @Level`). Support de la réactivité live et résolution par labels.
-- **[ ] Tactical Combat Assistant** : Interface IA suggérant des actions de PNJ en fonction de la situation tactique sur l'Atlas.
+- **[x] Tactical Combat Assistant** : Interface IA suggérant des actions de PNJ en fonction de la situation tactique sur l'Atlas. (v6.2.3-dev)
 - **[x] Échanges d'objets (P2P)** : Permettre aux joueurs de se donner des objets via le Hub avec validation MJ (v6.2.2-dev).
 - **[x] Notes Privées PJ** : Zone de prise de notes persistante côté serveur MJ. (v6.2.1-dev)
 - **[x] MapStore & Ambiance System** : Gestion de l'état de l'atlas (pions, brouillard, météo) intégrée au flux de synchronisation réactif. Système de moments de la journée avec filtres dynamiques (v6.1.0-dev).
@@ -83,5 +83,5 @@ Ces fonctionnalités sont prévues mais temporairement mises de côté pour prio
 | Doublons d'entités (Spotlight vs Favorite) sur Hubs | Moyenne | ✅ Résolu |
 
 ---
-*Dernière mise à jour : 9 Avril 2026 (11h15)*
-*Statut : Navigation stabilisée. IA Agnostique, Notes Privées & Synchronisation Tablet Hub 100% opérationnels.*
+*Dernière mise à jour : 9 Avril 2026 (17h15)*
+*Statut : Navigation stabilisée. IA Agnostique & Assistant Tactique 100% opérationnels.*

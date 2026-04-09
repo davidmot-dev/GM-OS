@@ -61,6 +61,64 @@ export const useTacticalAIStore = create<TacticalAIState>()(
       setAdvices: (activeAdvices) => set({ activeAdvices }),
 
       setIsPanelOpen: (isPanelOpen) => set({ isPanelOpen }),
+      
+      requestTacticalAnalysis: async (combatantId: string) => {
+        const getStore = () => (useTacticalAIStore as any).getState() as TacticalAIState;
+
+        set({ status: 'analyzing' });
+
+        try {
+          const { useCombatStore } = await import('../combat/useCombatStore');
+          const { useMapStore } = await import('../map/useMapStore');
+          const { aiService } = await import('../ai/AIService');
+          const { TacticalNarrativeService } = await import('./logic/TacticalNarrativeService');
+
+          const combatState = useCombatStore.getState();
+          const mapState = useMapStore.getState();
+          
+          const actor = combatState.combatants.find(c => c.id === combatantId);
+          if (!actor) {
+            setStatus('idle');
+            return;
+          }
+
+          const narrativeReport = TacticalNarrativeService.getSituationalReport(
+              actor,
+              combatState.combatants,
+              mapState.tokens,
+              mapState.dangerZones,
+              mapState.gridSize
+          );
+
+          const systemPrompt = `Tu es "Le Stratège", un expert en tactique militaire pour jeux de rôle. 
+Ton rôle est d'analyser la situation et de donner des conseils narratifs et stratégiques.
+N'utilise PAS de jargon technique "meta" (ex: pas de "Bonus de +2", pas de "Action mineure"), parle uniquement en termes de fiction et de placements.
+Réponds exclusivement en JSON valide sous la forme d'un tableau d'objets TacticalAdvice.
+
+Interface TacticalAdvice attendue :
+{
+  "id": "string",
+  "sourceId": "${combatantId}",
+  "type": "position" | "status" | "macro-flank" | "macro-rout",
+  "message": "Ton conseil narratif ici",
+  "priority": 1 (basse) à 3 (critique)
+}`;
+
+          set({ activeAdvices: advices as any[], status: 'idle' });
+          getStore().addLog({ 
+            type: 'tactical', 
+            message: `Analyse stratégique générée pour ${actor.name}.` 
+          });
+
+        } catch (error) {
+          console.error("[TacticalAIStore] Analysis failed:", error);
+          set({ status: 'error' });
+          getStore().addLog({ 
+            type: 'error', 
+            message: "L'analyse tactique a échoué (IA indisponible ou erreur de parsing)." 
+          });
+        }
+      }
     }),
     {
       name: 'gm-os-tactical-ai',

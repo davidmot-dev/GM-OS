@@ -1,11 +1,12 @@
-import { Brain, VolumeX, Volume2, ShieldCheck, ShieldAlert, Zap, Wand2, History, Navigation } from 'lucide-react';
+import { Brain, VolumeX, Volume2, ShieldCheck, ShieldAlert, Zap, Wand2, History } from 'lucide-react';
 import { useTacticalAIStore } from '../useTacticalAIStore';
 import { huePriorityQueue, HuePriority } from '../services/HuePriorityQueue';
 import { gmToast } from '../../../stores/useToastStore';
 import { audioCurationService } from '../services/AudioCurationService';
+import { TacticalAdvicePanel } from './TacticalAdvicePanel';
 
 export const TacticalAIControlPanel: React.FC = () => {
-  const { settings, logs, hardwareStatus, updateSettings, clearLogs, isPanelOpen, setIsPanelOpen, activeAdvices } = useTacticalAIStore();
+  const { settings, logs, hardwareStatus, updateSettings, clearLogs, isPanelOpen, setIsPanelOpen } = useTacticalAIStore();
 
   const toggleSensor = () => {
     const nextValue = !settings.isMuted;
@@ -96,46 +97,8 @@ export const TacticalAIControlPanel: React.FC = () => {
       </div>
 
       {/* 2. Insights Actifs (w-1/4) */}
-      <div className="w-1/4 flex flex-col border-r border-white/5 bg-black/10">
-        <div className="p-4 flex items-center gap-2 text-[10px] font-bold text-accent uppercase tracking-widest border-b border-white/5 shrink-0 bg-accent/5">
-            <ShieldAlert size={14} /> Insights Tactiques
-        </div>
-        <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
-            {activeAdvices.length === 0 ? (
-                <div className="h-full flex flex-col items-center justify-center text-white/20">
-                  <Navigation size={24} className="mb-2 opacity-10" />
-                  <span className="text-[10px] uppercase font-bold tracking-tighter text-center px-4">Analyse requise</span>
-                </div>
-            ) : (
-                activeAdvices.map((advice) => {
-                    // Styles dynamiques selon le type d'avis
-                    let bgClass = "bg-accent/10 border-accent/20";
-                    let textClass = "text-white/90";
-                    if (advice.type === 'macro-rout') {
-                        bgClass = "bg-red-500/20 border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.3)] animate-pulse";
-                        textClass = "text-red-100 font-bold";
-                    } else if (advice.type === 'macro-flank') {
-                        bgClass = "bg-amber-500/10 border-amber-500/40";
-                    }
-
-                    return (
-                        <div key={advice.id} className={`p-3 rounded-xl border flex items-start gap-3 animate-in fade-in duration-300 ${bgClass}`}>
-                            <div className="mt-0.5 shrink-0">
-                                {advice.type === 'macro-rout' && <ShieldAlert size={16} className="text-red-400 animate-bounce" />}
-                                {advice.type === 'macro-flank' && <Zap size={14} className="text-amber-400" />}
-                                {advice.type === 'range' && <Navigation size={14} className="text-sky-400" />}
-                                {advice.type === 'dispel' && <ShieldAlert size={14} className="text-amber-500" />}
-                                {advice.type === 'magic' && <Wand2 size={14} className="text-purple-400" />}
-                                {['status', 'position'].includes(advice.type) && <Zap size={14} className="text-accent" />}
-                            </div>
-                            <p className={`text-[11px] leading-snug ${textClass}`}>
-                                {advice.message}
-                            </p>
-                        </div>
-                    );
-                })
-            )}
-        </div>
+      <div className="w-1/4 border-r border-white/5">
+        <TacticalAdvicePanel />
       </div>
 
       {/* 3. Contrôles (w-1/4) */}

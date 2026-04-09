@@ -1,5 +1,7 @@
 # Blueprint : Tactical Combat Assistant (Cortex AI)
 
+**Status : Implementé (v6.2.3-dev - 9 Avril 2026)**
+
 Ce document décrit l'architecture et les étapes d'implémentation de l'assistant tactique IA conçu pour GM-OS v6.
 
 ## 🎯 Objectifs
