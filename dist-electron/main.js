@@ -44120,7 +44120,7 @@ function requireStreamx() {
   const STREAM_DESTROYED = new Error("Stream was destroyed");
   const PREMATURE_CLOSE = new Error("Premature close");
   const FIFO = requireFastFifo();
-  const TextDecoder = requireTextDecoder();
+  const TextDecoder2 = requireTextDecoder();
   const qmt = typeof queueMicrotask === "undefined" ? (fn) => commonjsGlobal.process.nextTick(fn) : queueMicrotask;
   const MAX = (1 << 29) - 1;
   const OPENING = 1;
@@ -44690,7 +44690,7 @@ function requireStreamx() {
       }
     }
     setEncoding(encoding) {
-      const dec = new TextDecoder(encoding);
+      const dec = new TextDecoder2(encoding);
       const map2 = this._readableState.map || echo;
       this._readableState.map = mapOrSkip;
       return this;
@@ -49523,7 +49523,7 @@ class OllamaService {
     }
   }
   /**
-   * Envoie une requête de chat au modèle local
+   * Envoie une requête de chat au modèle local (Bloquant)
    */
   async chat(model, messages) {
     try {
@@ -49533,7 +49533,6 @@ class OllamaService {
           model,
           messages,
           stream: false
-          // On désactive le stream pour simplifier l'intégration initiale
         }),
         headers: { "Content-Type": "application/json" }
       });
@@ -49552,6 +49551,49 @@ class OllamaService {
       if (err.code === "ECONNREFUSED" || err.message?.includes("fetch failed")) {
         throw new Error(`Ollama est inaccessible sur ${this.baseUrl} (Erreur: ${err.message}). Si Ollama tourne dans le navigateur mais pas ici, vérifiez le Pare-feu Windows pour l'application.`);
       }
+      throw error2;
+    }
+  }
+  /**
+   * Envoie une requête de chat au modèle local avec streaming (Réactifs)
+   */
+  async chatStream(model, messages, onToken) {
+    try {
+      const response = await net.fetch(`${this.baseUrl}/api/chat`, {
+        method: "POST",
+        body: JSON.stringify({
+          model,
+          messages,
+          stream: true
+        }),
+        headers: { "Content-Type": "application/json" }
+      });
+      if (!response.ok) {
+        throw new Error(`Ollama stream error: ${response.statusText}`);
+      }
+      const reader = response.body?.getReader();
+      if (!reader) throw new Error("Réponse vide d'Ollama (Stream body introuvable).");
+      const decoder2 = new TextDecoder();
+      let leftover = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        leftover += decoder2.decode(value, { stream: true });
+        const lines = leftover.split("\n");
+        leftover = lines.pop() || "";
+        for (const line of lines) {
+          if (!line.trim()) continue;
+          try {
+            const json2 = JSON.parse(line);
+            if (json2.message?.content) {
+              onToken(json2.message.content);
+            }
+          } catch (e) {
+          }
+        }
+      }
+    } catch (error2) {
+      console.error("[Ollama] Stream error:", error2);
       throw error2;
     }
   }
@@ -50235,6 +50277,19 @@ ipcMain.handle("ai:ollama-chat", async (_event, model, messages) => {
 });
 ipcMain.handle("ai:ollama-generate-image", async (_event, model, prompt) => {
   return await ollamaService.generateImage(model, prompt);
+});
+ipcMain.handle("ai:ollama-chat-stream", async (event, model, messages) => {
+  try {
+    await ollamaService.chatStream(model, messages, (token) => {
+      if (!event.sender.isDestroyed()) {
+        event.sender.send("ai:ollama-stream-token", token);
+      }
+    });
+    return { success: true };
+  } catch (error2) {
+    console.error("[AI Main] Streaming error:", error2);
+    throw error2;
+  }
 });
 ipcMain.handle("ai:ollama-list-models", async () => {
   return await ollamaService.listModels();

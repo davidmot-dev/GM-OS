@@ -87,10 +87,16 @@ contextBridge.exposeInMainWorld("appBridge", {
     reindex: () => ipcRenderer.invoke("ai:reindex"),
     // Ollama Local AI
     ollamaChat: (model, messages) => ipcRenderer.invoke("ai:ollama-chat", model, messages),
+    ollamaChatStream: (model, messages) => ipcRenderer.invoke("ai:ollama-chat-stream", model, messages),
     ollamaStatus: () => ipcRenderer.invoke("ai:ollama-status"),
     ollamaListModels: () => ipcRenderer.invoke("ai:ollama-list-models"),
     ollamaPull: (model) => ipcRenderer.invoke("ai:ollama-pull", model),
-    ollamaGenerateImage: (model, prompt) => ipcRenderer.invoke("ai:ollama-generate-image", model, prompt)
+    ollamaGenerateImage: (model, prompt) => ipcRenderer.invoke("ai:ollama-generate-image", model, prompt),
+    onStreamToken: (callback) => {
+      const listener = (_event, token) => callback(token);
+      ipcRenderer.on("ai:ollama-stream-token", listener);
+      return () => ipcRenderer.off("ai:ollama-stream-token", listener);
+    }
   },
   mcp: {
     listTools: (serverName) => ipcRenderer.invoke("mcp:list-tools", serverName),
