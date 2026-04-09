@@ -55,10 +55,26 @@ Chaque formulaire (ex: `AddEntityForm`) écoute cet état au montage :
 
 ---
 
-## 3.1. Automatisation de Contexte (V2)
-Pour réduire la saisie redondante, le pont magique injecte désormais automatiquement le contexte de la session :
 - **ID de Campagne** : Si une campagne est active dans le Session-OS, elle est automatiquement liée au nouveau favori créé.
 - **Statut de Synchronisation** : Par défaut, les nouveaux favoris créés via le pont sont marqués comme `isSyncedToPlayerHub = false` pour permettre au MJ de valider le contenu avant diffusion.
+
+---
+
+## 3.2. Pont Temporel (Timeline Extension)
+
+Depuis la v6.1.3-dev, le Pont Magique inclut une dimension temporelle :
+- **Source** : Champ `eventDate` dans `WikiEntry`.
+- **Cible** : `TimelineView`.
+- **Mécanisme** : **Projection Virtuelle**. Le Wiki n'exporte pas de données vers la Timeline ; la Timeline *consomme* les données du Wiki au moment du rendu.
+- **Interactivité** : Navigation bidirectionnelle (Deep-Linking) permettant de remonter au Lore source depuis un point chronologique.
+
+---
+
+## 3.3. IA Neural Liaison (Dialogue Prep)
+
+L'Assistant de Liaison Wiki automatise la préparation des interactions :
+- **Génération de Répliques** : En utilisant le contenu de l'article Wiki d'un PNJ favori, l'Oracle IA (le persona "Acteur") peut générer des lignes de dialogue, des rumeurs ou des motivations secrètes immédiatement exploitables.
+- **Contexte Vivant** : Les données du Wiki sont injectées dynamiquement dans le prompt pour garantir que l'IA ne dévie pas des faits historiques ou physiques établis dans l'encyclopédie de la campagne.
 
 ---
 

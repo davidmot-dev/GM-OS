@@ -280,6 +280,30 @@ L'utilisation de bordures "lumineuses" via `mask-composite` (style Bento Box) n�
 
 ---
 
+## 🏛️ Architecture : Pattern de Projection Virtuelle (Timeline Bridge)
+
+### Le dilemme de la duplication vs Intégrité
+
+**Problème :** Faire apparaître des articles Wiki dans la Chronologie (v6.1.3-dev) posait un risque de duplication de données. Si chaque article créait un événement `TimelineEvent` séparé, il faudrait synchroniser les modifications (titre, contenu, date) dans les deux sens, augmentant énormément la complexité et le risque d'incohérence.
+
+**Solution :** Utilisation du **Pattern de Projection Virtuelle**. Le store reste la source de vérité pour les deux collections. Au moment du rendu, le moteur UI fusionne dynamiquement les deux sources.
+
+**Apprentissage :** Pour des features de type "Timeline" ou "Agrégateur", il est toujours préférable de calculer la vue au runtime plutôt que de tenter de synchroniser des objets dupliqués en base de données local. Cela garde l'état "pur" et préserve l'herméticité des domaines (Wiki vs Chronique).
+
+---
+
+## 🧠 Intelligence Artificielle : Injection de Contexte PNJ (Neural Liaison)
+
+### La transformation par la donnée vivante
+
+**Problème :** Initialement, l'IA Oracle était trop générique pour aider le MJ à préparer des sessions spécifiques.
+
+**Solution :** Extension du `LiveContext` pour inclure les métadonnées complètes des PNJs épinglés.
+
+**Apprentissage :** Dans un système agentique, la puissance de l'IA est directement proportionnelle à la qualité du **Contexte de Session**. Injecter dynamiquement les PNJs "favoris" permet à l'IA de passer du statut de "Conseiller Général" à celui de "Co-Scénariste" capable de générer des dialogues cohérents sans aucune saisie manuelle supplémentaire du MJ.
+
+---
+
 Dernière mise à jour : 9 Avril 2026
 
-Statut : Stabilisation réseau Windows, intégration Gemma 4, système d'échange P2P, Moteur de Calcul et Synchronisation Tablet Hub documentés.
+Statut : Stabilisation réseau Windows, intégration Gemma 4, système d'échange P2P, Moteur de Calcul et Synchronisation Tablet Hub documentés. Intégration Wiki-Timeline et Neural Dialogue Prep ajoutés.

@@ -27,6 +27,14 @@ Dès qu'un indice est marqué comme **Révélé** dans votre gestionnaire de cam
 - **Herméticité** : Le système filtre intelligemment les indices pour n'afficher que ceux appartenant à la **campagne active**.
 - **Projection Hub** : D'un simple clic sur l'icône de partage, l'indice (image et texte) est envoyé instantanément sur les tablettes des joueurs connectés au **Tablet Hub**.
 
+### Chronologie Interactive & Lore
+
+Depuis la v6.1.3-dev, votre Wiki et votre Chronologie travaillent ensemble :
+
+- **Wiki Daté** : Lors de la création d'un article Wiki, remplissez le champ **"Date de l'événement"**.
+- **Fusion Temporelle** : L'onglet **Chronologie** affiche désormais automatiquement ces articles à leur place historique, marqués d'un badge violet.
+- **Consultation Rapide** : Cliquez sur un événement de type Wiki dans la Timeline pour ouvrir instantanément l'article correspondant. C'est l'outil parfait pour naviguer dans l'histoire de votre monde.
+
 ### Navigation & Projection de l'Atlas
 
 Le module Map-OS permet désormais une projection fluide et synchronisée :
@@ -44,6 +52,7 @@ L'Oracle IA n'est pas qu'un simple chatbot ; il a accès au contexte "vivant" de
     - Les **PNJs** actuellement en vie dans la campagne.
     - Les **derniers événements** de votre chronique.
 - **Interactions Immersives** : Vous pouvez lui demander des conseils basés sur les personnages présents (ex: *"Suggère une interaction entre le Scribe et le Guerrier suite à leur dernière trouvaille"*).
+- **Prép-Dialogue IA** : Besoin d'une réplique pour un PNJ favori ? L'Oracle utilise maintenant le profil des PNJs épinglés dans votre session pour générer des répliques, des motivations ou des secrets cohérents avec leur description Wiki. 
 - **IA Localisée** : Le contexte est strictement limité à la campagne en cours pour éviter toute confusion.
 
 ## 🛠️ Maintenance du Système

@@ -19,6 +19,7 @@ export const WikiEntryForm: React.FC<WikiEntryFormProps> = ({ entry, onClose }) 
     const [imageUrls, setImageUrls] = useState<string[]>(entry?.imageUrls || []);
     const [newImageUrl, setNewImageUrl] = useState('');
     const [linkedEntityIds, setLinkedEntityIds] = useState<string[]>(entry?.linkedEntityIds || []);
+    const [eventDate, setEventDate] = useState(entry?.eventDate || '');
 
     const categories = ['npc', 'location', 'organization', 'lore', 'item', 'clue', 'rumor', 'other'] as const;
 
@@ -45,15 +46,13 @@ export const WikiEntryForm: React.FC<WikiEntryFormProps> = ({ entry, onClose }) 
             tags,
             imageUrls,
             linkedEntityIds,
+            eventDate,
         };
 
         if (entry) {
             updateWikiEntry(entry.id, entryData);
         } else {
-            addWikiEntry({
-                ...entryData,
-                id: crypto.randomUUID(),
-            } as WikiEntry);
+            addWikiEntry(entryData);
         }
         onClose();
     };
@@ -105,6 +104,16 @@ export const WikiEntryForm: React.FC<WikiEntryFormProps> = ({ entry, onClose }) 
                             <option key={cat} value={cat}>{categoryLabels[cat] || cat.toUpperCase()}</option>
                         ))}
                     </select>
+                </div>
+                <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Date de l'événement (Optionnel)</label>
+                    <input
+                        type="text"
+                        value={eventDate}
+                        onChange={e => setEventDate(e.target.value)}
+                        placeholder="Ex: 1250 DG ou Hiver 1492"
+                        className="w-full bg-app-bg/40 border border-app-border rounded-xl px-4 py-2 text-sm text-app-text focus:outline-none focus:border-accent/50 transition-all"
+                    />
                 </div>
             </div>
 

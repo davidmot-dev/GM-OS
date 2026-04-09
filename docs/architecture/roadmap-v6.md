@@ -53,7 +53,7 @@ Extension des capacités de création et de partage.
 - **[ ] Forge Social Integration** : Partage de templates de fiches et de drivers système entre utilisateurs.
 - **[ ] Multimedia Narrative Engine** : Support natif pour les ambiances spatialisées et vidéos de fond synchronisées sur les Hubs.
 - **[ ] Synchronisation P2P (Tauri)** : Migration du pont WebSocket vers Peer-to-Peer.
-- **[ ] Timeline Interactive** : Visualisation chronologique des événements générés depuis le Wiki.
+- **[x] Timeline Interactive** : Visualisation chronologique des événements générés depuis le Wiki.
 - **[x] AI NPC Dialogue Prep** : Génération de répliques à la volée via l'Oracle pour les favoris. (v6.1.2-dev)
 
 ---

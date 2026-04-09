@@ -19,18 +19,46 @@ import { motion } from 'framer-motion';
 const TimelineView: React.FC = () => {
     const { 
         timelineEvents, 
+        wikiEntries,
         activeCampaignId, 
         deleteTimelineEvent,
-        atlasMaps
+        atlasMaps,
+        setSelectedWikiEntryId,
+        setWikiTab
     } = useSessionOSStore();
 
     const [filter, setFilter] = useState<string>('all');
 
     const campaignEvents = timelineEvents
         .filter(e => e.campaignId === activeCampaignId)
-        .filter(e => filter === 'all' || e.type === filter)
-        .sort((a, b) => b.id.localeCompare(a.id)); 
+        .filter(e => filter === 'all' || e.type === filter);
 
+    // Fusionner avec les entrées Wiki possédant une date
+    const wikiEvents = wikiEntries
+        .filter(e => e.campaignId === activeCampaignId && e.eventDate)
+        .filter(e => filter === 'all' || e.category === filter || (filter === 'lore' && (e.category === 'lore' || e.category === 'organization' || e.category === 'rumor')))
+        .map(entry => ({
+            id: entry.id,
+            campaignId: entry.campaignId,
+            date: entry.eventDate!,
+            title: entry.title,
+            description: entry.content.substring(0, 200) + (entry.content.length > 200 ? '...' : ''),
+            type: entry.category === 'npc' ? 'lore' : (entry.category === 'location' ? 'lore' : 'lore'), // Mapping simplifié
+            isWikiSource: true,
+            originalCategory: entry.category
+        }));
+
+    const mergedEvents = [...campaignEvents, ...wikiEvents]
+        .sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id)); 
+
+    const handleEventClick = (event: any) => {
+        if (event.isWikiSource) {
+            setSelectedWikiEntryId(event.id);
+            setWikiTab('wiki');
+        } else {
+            gmCustom('timeline-event-edit', event);
+        }
+    };
     const getIcon = (type: string) => {
         switch (type) {
             case 'combat': return <Swords size={18} className="text-rose-400" />;
@@ -94,12 +122,13 @@ const TimelineView: React.FC = () => {
                     {/* Vertical Line (Glowing) */}
                     <div className="absolute left-[22.5px] top-6 bottom-6 w-0.5 bg-gradient-to-b from-accent/0 via-accent/20 to-accent/0 shadow-[0_0_10px_rgba(var(--accent-rgb),0.2)]" />
 
-                    {campaignEvents.length > 0 ? (
-                        campaignEvents.map((event) => (
+                    {mergedEvents.length > 0 ? (
+                        mergedEvents.map((event: any) => (
                             <motion.div 
                                 key={event.id} 
                                 variants={itemVariants}
-                                className="relative pl-20 group"
+                                className={`relative pl-20 group ${event.isWikiSource ? 'cursor-pointer' : ''}`}
+                                onClick={() => event.isWikiSource && handleEventClick(event)}
                             >
                                 {/* Dot (Bento Style) */}
                                 <div className="absolute left-0 top-0 w-12 h-12 rounded-2xl bg-black/60 border border-white/5 flex items-center justify-center z-10 group-hover:border-accent shadow-xl transition-all group-hover:shadow-glow-accent/20 group-hover:-translate-y-0.5">
@@ -114,23 +143,40 @@ const TimelineView: React.FC = () => {
                                             <span className="text-[10px] font-black text-accent bg-accent/10 px-3 py-1 rounded-full uppercase tracking-widest border border-accent/20">
                                                 {event.date}
                                             </span>
+                                            {event.isWikiSource && (
+                                                <span className="text-[8px] font-black text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded border border-purple-400/20 uppercase tracking-widest">
+                                                    WIKI: {event.originalCategory}
+                                                </span>
+                                            )}
                                             <h3 className="text-base font-black text-app-text tracking-tight uppercase group-hover:text-accent transition-colors">{event.title}</h3>
                                         </div>
                                         <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">
-                                            <button 
-                                                onClick={() => gmCustom('timeline-event-edit', event)}
-                                                className="p-2 hover:bg-white/5 rounded-xl text-app-text/20 hover:text-accent transition-all border border-transparent hover:border-white/10"
-                                                title="Modifier l'événement"
-                                            >
-                                                <Edit2 size={16} />
-                                            </button>
-                                            <button 
-                                                onClick={() => deleteTimelineEvent(event.id)}
-                                                className="p-2 hover:bg-white/5 rounded-xl text-app-text/20 hover:text-rose-400 transition-all border border-transparent hover:border-white/10"
-                                                title="Supprimer l'événement"
-                                            >
-                                                <Trash2 size={16} />
-                                            </button>
+                                            {!event.isWikiSource ? (
+                                                <>
+                                                    <button 
+                                                        onClick={(e) => { e.stopPropagation(); gmCustom('timeline-event-edit', event); }}
+                                                        className="p-2 hover:bg-white/5 rounded-xl text-app-text/20 hover:text-accent transition-all border border-transparent hover:border-white/10"
+                                                        title="Modifier l'événement"
+                                                    >
+                                                        <Edit2 size={16} />
+                                                    </button>
+                                                    <button 
+                                                        onClick={(e) => { e.stopPropagation(); deleteTimelineEvent(event.id); }}
+                                                        className="p-2 hover:bg-white/5 rounded-xl text-app-text/20 hover:text-rose-400 transition-all border border-transparent hover:border-white/10"
+                                                        title="Supprimer l'événement"
+                                                    >
+                                                        <Trash2 size={16} />
+                                                    </button>
+                                                </>
+                                            ) : (
+                                                <button 
+                                                    onClick={() => handleEventClick(event)}
+                                                    className="flex items-center gap-2 px-3 py-1.5 bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-purple-500 hover:text-white transition-all"
+                                                >
+                                                    <Book size={12} />
+                                                    Voir Article
+                                                </button>
+                                            )}
                                         </div>
                                     </div>
 

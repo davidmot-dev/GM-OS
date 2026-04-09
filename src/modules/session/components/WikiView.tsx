@@ -11,7 +11,8 @@ import {
     Trash2,
     Edit2,
     BookOpen,
-    Sparkles
+    Sparkles,
+    History as LucideHistory
 } from 'lucide-react';
 import { gmCustom } from '../../../stores/useModalStore';
 import { useSessionStore } from '../../../store/useSessionStore';
@@ -214,6 +215,12 @@ const WikiView: React.FC = () => {
                                                         </span>
                                                     ))}
                                                 </div>
+                                                {selectedEntry.eventDate && (
+                                                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-accent/60">
+                                                        <LucideHistory size={12} />
+                                                        <span>Date : {selectedEntry.eventDate}</span>
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     </div>

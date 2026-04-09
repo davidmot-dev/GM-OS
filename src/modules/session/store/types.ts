@@ -341,6 +341,7 @@ export interface WikiEntry {
     tags: string[];
     imageUrls: string[];
     linkedEntityIds: string[];
+    eventDate?: string;
 }
 
 export interface InventoryItem {

@@ -190,6 +190,17 @@ Depuis la v6.1.2-dev, le système "Neural Liaison" a été étendu pour inclure 
 - **Extraction Automatique** : Le `getLiveSessionContext` de `AIService.ts` agrège dynamiquement les noms, rôles et descriptions de toutes les entités actives (`status: 'alive'`).
 - **Synergie avec le Persona "L'Acteur"** : Ce persona (`id: 'actor'`) est optimisé pour utiliser ces données injectées afin de générer des répliques, des motivations et des accents spécifiques aux PNJs présents, sans saisie manuelle du MJ.
 - **Architecture Data-Driven** : Comme ce contexte est "injecté" au moment de la requête, l'Oracle reste parfaitement à jour même si le MJ modifie un PNJ "à la volée" juste avant de poser une question.
+- **Neural Dialogue Preparation** : Depuis la v6.1.3-dev, le persona "Acteur" peut être invoqué spécifiquement pour préparer des répliques. Il combine les `favoriteNPCs` de la session avec le contexte de l'article Wiki sélectionné pour offrir des options de dialogue prêtes à l'emploi.
+
+---
+
+## 14. Wiki-Timeline Bridge (Virtual Projection)
+
+Depuis la v6.1.3-dev, le Wiki et la Chronologie sont synchronisés via un pattern de "Projection Virtuelle".
+
+- **Temporal Pivot (`eventDate`)** : Le champ `eventDate` ajouté à `WikiEntry` sert d'identifiant temporel pour le moteur de fusion.
+- **Pattern de Fusion à l'Exécution** : Le composant `TimelineView.tsx` ne duplique pas les données. Il effectue une fusion (`merge`) au moment du rendu entre les événements manuels (`timelineEvents`) et les articles Wiki datés. Cela garantit que toute modification dans le Wiki est immédiatement répercutée dans la Timeline sans risque de corruption de données ou de désynchronisation.
+- **Deep-Linking & Navigation** : L'état `selectedWikiEntryId` et l'action `setWikiTab` sont utilisés pour permettre une navigation instantanée depuis un événement de la Timeline vers l'archive source dans le Wiki.
 
 ---
 
