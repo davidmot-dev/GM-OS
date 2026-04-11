@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Trash2, Folder, Tag, Users, Check, Image as ImageIcon, Music, Film, FileText, Lock, Unlock, ShieldCheck } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import type { MediaItem, MediaCollection } from '../../../stores/useMediaStore';
 import type { Campaign } from '../../session/useSessionOSStore';
 import { MediaItemThumbnail } from './MediaItemThumbnail';
@@ -36,6 +37,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
     campaigns, 
     onSelect 
 }) => {
+    const { t, i18n } = useTranslation(['modules', 'common']);
     const [newTag, setNewTag] = useState('');
 
     const formatSize = (bytes: number) => {
@@ -57,11 +59,11 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                     <div className="flex flex-col">
                         <h3 className="text-lg font-black uppercase tracking-widest text-app-text truncate max-w-[280px] font-display" title={media.name}>{media.name}</h3>
                         <div className="flex items-center gap-2">
-                             <span className="text-[10px] font-bold text-accent/60 uppercase tracking-[0.3em] font-display">Neural Interface</span>
+                             <span className="text-[10px] font-bold text-accent/60 uppercase tracking-[0.3em] font-display">{t('image.detail.neuralInterface')}</span>
                              {media.isPersistent && (
                                  <div className="flex items-center gap-1.5 px-2 py-0.5 bg-accent/10 rounded-full border border-accent/20">
                                      <ShieldCheck size={8} className="text-accent" />
-                                     <span className="text-[8px] font-black text-accent uppercase tracking-widest">Persistant</span>
+                                     <span className="text-[8px] font-black text-accent uppercase tracking-widest">{t('image.detail.persistent')}</span>
                                  </div>
                              )}
                         </div>
@@ -70,8 +72,8 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                 <button 
                     onClick={onClose}
                     className="w-12 h-12 flex items-center justify-center bg-app-text/5 hover:bg-app-text/10 text-app-text/20 hover:text-app-text rounded-2xl transition-all border border-app-border/10 hover:border-app-border/20"
-                    title="Fermer le panneau tactique"
-                    aria-label="Fermer le panneau tactique"
+                    title={t('image.detail.actions.closePanel')}
+                    aria-label={t('image.detail.actions.closePanel')}
                 >
                     <X size={20} />
                 </button>
@@ -95,7 +97,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                     <button 
                         onClick={() => toggleMediaPersistence(media.id)}
                         className={`absolute top-6 right-6 w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 backdrop-blur-md border ${media.isPersistent ? 'bg-accent/20 border-accent/40 text-accent shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)]' : 'bg-black/40 border-app-border/10 text-app-text/20 hover:text-app-text/60 hover:bg-black/60'}`}
-                        title={media.isPersistent ? "Désactiver la persistance (Risque de suppression)" : "Activer la persistance (Protéger du nettoyage)"}
+                        title={media.isPersistent ? t('image.detail.actions.disablePersistence') : t('image.detail.actions.enablePersistence')}
                     >
                         {media.isPersistent ? <Lock size={20} /> : <Unlock size={20} />}
                     </button>
@@ -108,11 +110,11 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                         className="flex items-center justify-center gap-3 py-4 bg-accent text-app-bg rounded-2xl font-black text-[11px] uppercase tracking-widest hover:scale-[1.02] transition-all shadow-[0_0_30px_rgba(var(--accent-rgb),0.3)]"
                     >
                         <Check size={16} strokeWidth={3} />
-                        Sélectionner
+                        {t('image.detail.actions.select')}
                     </button>
                     <button 
                         onClick={() => {
-                            if (confirm(`INITIATE DELETION: "${media.name}"?`)) {
+                            if (confirm(t('image.detail.deleteConfirm', { name: media.name }))) {
                                 deleteMedia(media.id);
                                 onClose();
                             }
@@ -120,7 +122,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                         className="flex items-center justify-center gap-3 py-4 bg-red-500/10 text-red-500 border border-red-500/20 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-red-500/20 transition-all"
                     >
                         <Trash2 size={16} />
-                        Supprimer
+                        {t('image.detail.actions.delete')}
                     </button>
                 </div>
 
@@ -128,7 +130,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                 <section>
                     <div className="flex items-center gap-3 mb-6">
                         <Folder size={14} className="text-accent/40" />
-                        <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-app-text/30 font-display">Classification Dossier</h4>
+                        <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-app-text/30 font-display">{t('image.detail.classification')}</h4>
                     </div>
                     <div className="space-y-2">
                         {collections.map(coll => (
@@ -146,7 +148,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                         ))}
                         {collections.length === 0 && (
                             <div className="py-6 text-center border-2 border-dashed border-app-border/10 rounded-3xl">
-                                <p className="text-[10px] italic text-app-text/5 uppercase tracking-widest font-bold">Aucun dossier configuré</p>
+                                <p className="text-[10px] italic text-app-text/5 uppercase tracking-widest font-bold">{t('image.detail.noFolders')}</p>
                             </div>
                         )}
                     </div>
@@ -156,7 +158,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                 <section>
                     <div className="flex items-center gap-3 mb-6">
                         <Tag size={14} className="text-accent/40" />
-                        <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-app-text/30 font-display">Matrice de Tags</h4>
+                        <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-app-text/30 font-display">{t('image.detail.matrixTags')}</h4>
                     </div>
                     <div className="bg-app-surface/40 border border-app-border/10 rounded-[2rem] p-6 space-y-6">
                         <div className="flex flex-wrap gap-2">
@@ -166,18 +168,18 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                                     <button 
                                         onClick={() => updateMediaTags(media.id, media.tags.filter(tag => tag !== t))}
                                         className="hover:text-red-400 opacity-40 hover:opacity-100 transition-all"
-                                        title={`Retirer le tag ${t}`}
-                                        aria-label={`Retirer le tag ${t}`}
+                                        title={t('image.detail.actions.removeTag', { tag: t })}
+                                        aria-label={t('image.detail.actions.removeTag', { tag: t })}
                                     >
                                         <X size={12} />
                                     </button>
                                 </span>
                             ))}
-                            {media.tags.length === 0 && <span className="text-[9px] font-bold text-app-text/10 uppercase italic tracking-widest">No Active Links</span>}
+                            {media.tags.length === 0 && <span className="text-[9px] font-bold text-app-text/10 uppercase italic tracking-widest">{t('image.detail.noTags')}</span>}
                         </div>
                         <input
                             type="text"
-                            placeholder="TRANSMETTRE NOUVEAU TAG..."
+                            placeholder={t('image.detail.placeholders.newTag')}
                             value={newTag}
                             onChange={e => setNewTag(e.target.value)}
                             className="w-full bg-app-bg/60 border border-app-border/10 rounded-2xl px-6 py-4 text-xs font-bold text-accent outline-none placeholder:text-app-text/10 uppercase tracking-[0.2em] focus:border-accent/30 transition-all font-display"
@@ -197,15 +199,15 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                 {/* Metadata Section */}
                 <section className="bg-app-surface/20 rounded-3xl p-6 space-y-4">
                     <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest">
-                        <span className="text-app-text/20">Identifiant</span>
+                        <span className="text-app-text/20">{t('image.detail.identifier')}</span>
                         <span className="text-app-text/60 font-mono text-[9px]">{media.id.split('-')[0]}</span>
                     </div>
                     <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest">
-                        <span className="text-app-text/20">Date d'import</span>
-                        <span className="text-app-text/60">{new Date(media.createdAt).toLocaleDateString('fr-FR')}</span>
+                        <span className="text-app-text/20">{t('image.detail.importDate')}</span>
+                        <span className="text-app-text/60">{new Date(media.createdAt).toLocaleDateString(i18n.language === 'fr' ? 'fr-FR' : 'en-US')}</span>
                     </div>
                     <div className="pt-4 border-t border-app-border/10">
-                        <span className="text-[9px] font-black text-app-text/20 uppercase tracking-[0.3em] block mb-3 font-display">Attribution Opérationnelle</span>
+                        <span className="text-[9px] font-black text-app-text/20 uppercase tracking-[0.3em] block mb-3 font-display">{t('image.detail.operationalAttribution')}</span>
                         <div className="flex flex-wrap gap-2">
                              {campaigns.map(campaign => {
                                  const isLinked = media.campaignIds.includes(campaign.id);
@@ -219,8 +221,8 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                                              updateMediaCampaigns(media.id, newCampaignIds);
                                          }}
                                          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all duration-300 border ${isLinked ? 'bg-amber-500/20 text-amber-500 border-amber-500/40 shadow-[0_0_15px_rgba(245,158,11,0.1)]' : 'bg-app-surface/5 text-app-text/20 border-transparent hover:border-app-border/10 hover:text-app-text/40'}`}
-                                         title={isLinked ? `Délier de ${campaign.name}` : `Lier à ${campaign.name}`}
-                                         aria-label={isLinked ? `Délier de ${campaign.name}` : `Lier à ${campaign.name}`}
+                                         title={isLinked ? t('image.detail.actions.unlinkCampaign', { name: campaign.name }) : t('image.detail.actions.linkCampaign', { name: campaign.name })}
+                                         aria-label={isLinked ? t('image.detail.actions.unlinkCampaign', { name: campaign.name }) : t('image.detail.actions.linkCampaign', { name: campaign.name })}
                                      >
                                          <Users size={10} className={isLinked ? 'opacity-100' : 'opacity-30'} />
                                          {campaign.name}
@@ -228,7 +230,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                                  );
                              })}
                              {campaigns.length === 0 && (
-                                 <span className="text-[8px] font-bold text-app-text/5 uppercase italic tracking-widest">Aucune unité opérationnelle détectée</span>
+                                 <span className="text-[8px] font-bold text-app-text/5 uppercase italic tracking-widest">{t('image.detail.noCampaigns')}</span>
                              )}
                         </div>
                     </div>

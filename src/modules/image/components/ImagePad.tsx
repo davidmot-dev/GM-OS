@@ -5,6 +5,7 @@ import { useImageStore } from '../useImageStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { useHardwareStore } from '../../../stores/useHardwareStore';
 import { gmPrompt } from '../../../stores/useModalStore';
+import { useTranslation } from 'react-i18next';
 
 interface ImagePadProps {
     media: ImageMedia;
@@ -16,6 +17,7 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
         projectSolo, toggleMediaActive, removeMedia,
         folders, moveMediaToFolder, toggleMediaFavorite, renameMedia
     } = useImageStore();
+    const { t } = useTranslation(['modules', 'common']);
     const { getDisplayLabel } = useHardwareStore();
 
     // Find all targets currently projecting this media
@@ -62,7 +64,7 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
                     onClick={(e) => { 
                         e.stopPropagation(); 
                         gmPrompt(
-                            "Renommer le média", 
+                            t('image.pad.renamePrompt'), 
                             media.name, 
                             (newName) => {
                                 if (newName && newName.trim()) {
@@ -72,7 +74,7 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
                         );
                     }}
                     className="p-1 bg-app-surface/50 text-app-text/40 hover:text-accent rounded-md transition-colors"
-                    title="Renommer"
+                    title={t('image.pad.rename')}
                 >
                     <Edit2 size={14} />
                 </button>
@@ -80,7 +82,7 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
                 <button
                     onClick={(e) => { e.stopPropagation(); toggleMediaFavorite(media.id); }}
                     className={`p-1 rounded-md transition-colors ${media.isFavorite ? 'bg-accent text-app-bg shadow-glow-accent' : 'bg-app-surface/50 text-app-text/40 hover:text-accent'}`}
-                    title={media.isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
+                    title={media.isFavorite ? t('image.pad.removeFromFavs') : t('image.pad.addToFavs')}
                 >
                     <Star size={14} fill={media.isFavorite ? "currentColor" : "none"} />
                 </button>
@@ -91,13 +93,13 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
                     onChange={() => toggleMediaActive(media.id)}
                     onClick={(e) => e.stopPropagation()}
                     className="w-4 h-4 rounded border-app-border bg-app-surface/50 text-accent cursor-pointer focus:ring-0 focus:ring-offset-0"
-                    title="Inclure dans la séquence"
+                    title={t('image.pad.includeSequenceTooltip')}
                 />
 
                 <button
                     onClick={(e) => { e.stopPropagation(); removeMedia(media.id); }}
                     className="p-1 bg-red-500/20 hover:bg-red-500 text-app-text rounded-md transition-colors border border-red-500/20"
-                    title="Retirer"
+                    title={t('image.pad.remove')}
                 >
                     <X size={14} />
                 </button>
@@ -108,7 +110,7 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
                     onClick={(e) => { e.stopPropagation(); projectSolo(media); }}
                     className="bg-accent/20 backdrop-blur-md border border-accent/30 text-accent px-4 py-2 rounded-lg text-sm font-black uppercase tracking-widest hover:bg-accent/40 pointer-events-auto shadow-2xl font-display"
                 >
-                    SOLO
+                    {t('image.pad.solo')}
                 </button>
             </div>
 
@@ -131,9 +133,9 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
                                     onChange={(e) => moveMediaToFolder(media.id, e.target.value || null)}
                                     className="text-[10px] text-app-text/60 font-mono bg-app-bg/60 border border-app-border/40 rounded px-1 py-0.5 focus:outline-none focus:border-accent hover:bg-app-bg/80 cursor-pointer pointer-events-auto"
                                     onClick={(e) => e.stopPropagation()} // Prevent trigger solo
-                                    title="Déplacer vers un dossier"
+                                    title={t('image.pad.moveFolderTooltip')}
                                 >
-                                    <option value="">Root</option>
+                                    <option value="">{t('image.folders.root')}</option>
                                     {folders.map(f => (
                                         <option key={f.id} value={f.id}>{f.name}</option>
                                     ))}

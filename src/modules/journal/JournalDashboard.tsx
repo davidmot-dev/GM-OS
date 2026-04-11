@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { gmToast } from '../../stores/useToastStore';
+import { useTranslation } from 'react-i18next';
 
 const eventIcons: Record<string, React.ReactNode> = {
   AUDIO: <Music className="size-4 text-blue-400" />,
@@ -33,6 +34,7 @@ const eventIcons: Record<string, React.ReactNode> = {
 };
 
 const JournalDashboard: React.FC = () => {
+  const { t } = useTranslation();
   const [isSummarizing, setIsSummarizing] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const { 
@@ -50,7 +52,7 @@ const JournalDashboard: React.FC = () => {
 
   const activeJournal = journals.find(j => j.id === activeJournalId);
   const events = activeJournal?.events || [];
-  const hasAISummary = events.some(e => e.title === '✨ Résumé Narratif (IA)');
+  const hasAISummary = events.some(e => e.title === t('modules:journal.events.ai_summary'));
 
   const handleAISummary = async () => {
     if (!activeJournalId || events.length === 0) return;
@@ -58,10 +60,10 @@ const JournalDashboard: React.FC = () => {
     setIsSummarizing(true);
     try {
       await generateAISummary(activeJournalId);
-      gmToast("Résumé narratif généré !", "success");
+      gmToast(t('modules:journal.messages.summary_generated'), "success");
     } catch (err) {
       console.error(err);
-      gmToast("Erreur lors de la génération du résumé.", "error");
+      gmToast(t('modules:journal.messages.summary_error'), "error");
     } finally {
       setIsSummarizing(false);
     }
@@ -73,9 +75,9 @@ const JournalDashboard: React.FC = () => {
     setIsSyncing(true);
     try {
       await syncToNotebook(activeJournalId);
-      gmToast("Synchronisé avec NotebookLM !", "success");
+      gmToast(t('modules:journal.messages.sync_success'), "success");
     } catch (err: any) {
-      gmToast(err.message || "Erreur de synchronisation.", "error");
+      gmToast(err.message || t('modules:journal.messages.sync_error'), "error");
     } finally {
       setIsSyncing(false);
     }
@@ -100,16 +102,18 @@ const JournalDashboard: React.FC = () => {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-black uppercase tracking-tighter flex items-center gap-2">
               <Book className="size-6 text-accent" />
-              Journal OS
+              {t('modules:journal.dashboard.title')}
             </h2>
             <button 
               onClick={() => {
-                const defaultName = `Session du ${format(new Date(), 'dd/MM/yyyy HH:mm')}`;
+                const defaultName = t('modules:journal.messages.default_session_name', {
+                  date: format(new Date(), 'dd/MM/yyyy HH:mm')
+                });
                 useJournalStore.getState().addJournal(defaultName);
-                gmToast(`Nouveau journal créé : ${defaultName}`, 'success');
+                gmToast(t('modules:journal.messages.new_journal_created', { name: defaultName }), 'success');
               }}
               className="p-2 bg-accent/10 hover:bg-accent/20 rounded-lg text-accent transition-all active:scale-95"
-              title="Nouveau journal"
+              title={t('modules:journal.dashboard.new_journal')}
             >
               <Plus className="size-5" />
             </button>
@@ -124,7 +128,7 @@ const JournalDashboard: React.FC = () => {
             }`}
           >
             {isRecording ? <StopCircle className="size-4" /> : <Mic className="size-4" />}
-            {isRecording ? 'Session en cours...' : 'Nouvelle Session'}
+            {isRecording ? t('modules:journal.dashboard.session_in_progress') : t('modules:journal.dashboard.new_session')}
           </button>
         </header>
 
@@ -149,7 +153,7 @@ const JournalDashboard: React.FC = () => {
                 <button 
                    onClick={(e) => { e.stopPropagation(); deleteJournal(j.id); }}
                    className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-500/20 rounded text-red-400 transition-all"
-                   title="Supprimer la session"
+                   title={t('modules:journal.dashboard.delete_session')}
                 >
                   <Trash2 className="size-3" />
                 </button>
@@ -168,7 +172,7 @@ const JournalDashboard: React.FC = () => {
         <header className="h-20 border-b border-app-border flex items-center justify-between px-8 bg-app-surface/10 backdrop-blur-xl">
           <div className="flex items-center gap-4">
             <h1 className="text-lg font-black tracking-tight text-white italic truncate max-w-md">
-              {activeJournal?.title || "Sélectionnez une session"}
+              {activeJournal?.title || t('modules:journal.dashboard.select_session')}
             </h1>
           </div>
 
@@ -183,7 +187,7 @@ const JournalDashboard: React.FC = () => {
               } disabled:opacity-20 disabled:grayscale`}
             >
               {isSummarizing ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" />}
-              {isSummarizing ? 'Analyse...' : 'Résumer par IA'}
+              {isSummarizing ? t('modules:journal.dashboard.analyzing') : t('modules:journal.dashboard.summarize_ia')}
             </button>
 
             {hasAISummary && (
@@ -197,7 +201,7 @@ const JournalDashboard: React.FC = () => {
                 }`}
               >
                 {isSyncing ? <Loader2 className="size-4 animate-spin" /> : <Book className="size-4" />}
-                Sync Notebook
+                {t('modules:journal.dashboard.sync_notebook')}
               </button>
             )}
 
@@ -205,7 +209,7 @@ const JournalDashboard: React.FC = () => {
               onClick={handleExport}
               disabled={!activeJournal}
               className="p-2.5 bg-app-surface border border-app-border hover:bg-app-bg rounded-xl text-slate-400 hover:text-white transition-all shadow-lg disabled:opacity-20"
-              title="Exporter le journal"
+              title={t('modules:journal.dashboard.export_journal')}
             >
               <Download className="size-5" />
             </button>
@@ -217,14 +221,14 @@ const JournalDashboard: React.FC = () => {
             <div className="h-full flex flex-col items-center justify-center text-app-text-muted opacity-50 space-y-6">
               <History className="size-24 animate-pulse" />
               <div className="text-center">
-                <p className="text-2xl font-black uppercase tracking-widest italic mb-2">Historique Vide</p>
-                <p className="text-sm font-medium tracking-tight">Activez une session pour commencer l'enregistrement narratif.</p>
+                <p className="text-2xl font-black uppercase tracking-widest italic mb-2">{t('modules:journal.dashboard.empty_history')}</p>
+                <p className="text-sm font-medium tracking-tight">{t('modules:journal.dashboard.empty_desc')}</p>
               </div>
             </div>
           ) : events.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-app-text-muted opacity-50 space-y-3">
               <Book className="size-16" />
-              <p className="text-lg font-bold italic tracking-tighter">Prêt pour l'aventure...</p>
+              <p className="text-lg font-bold italic tracking-tighter">{t('modules:journal.dashboard.ready_for_adventure')}</p>
             </div>
           ) : (
             <>
@@ -257,7 +261,7 @@ const JournalDashboard: React.FC = () => {
                       <button 
                         onClick={() => removeEvent(activeJournalId, event.id)}
                         className="opacity-0 group-hover:opacity-100 p-2 hover:bg-red-500/10 rounded-xl text-slate-600 hover:text-red-400 transition-all"
-                        title="Supprimer l'événement"
+                        title={t('modules:journal.dashboard.delete_event')}
                       >
                         <Trash2 className="size-4" />
                       </button>
@@ -273,8 +277,8 @@ const JournalDashboard: React.FC = () => {
                     <FileText className="size-5 text-accent" />
                   </div>
                   <div>
-                    <h3 className="text-base font-black uppercase tracking-[0.2em] text-accent">Note de Fin de Session</h3>
-                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-tighter opacity-80">Vos pensées personnelles pour enrichir le prochain résumé IA.</p>
+                    <h3 className="text-base font-black uppercase tracking-[0.2em] text-accent">{t('modules:journal.dashboard.final_note_title')}</h3>
+                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-tighter opacity-80">{t('modules:journal.dashboard.final_note_desc')}</p>
                   </div>
                 </div>
                 <textarea
@@ -284,7 +288,7 @@ const JournalDashboard: React.FC = () => {
                       updateJournalNote(activeJournalId, e.target.value);
                     }
                   }}
-                  placeholder="Points clés non loggués, ressentis des joueurs, intentions pour le prochain scénario..."
+                  placeholder={t('modules:journal.dashboard.final_note_placeholder')}
                   className="w-full h-48 bg-app-surface/20 border border-app-border/40 rounded-2xl p-6 text-sm text-slate-300 placeholder:text-slate-700 focus:outline-none focus:border-accent/40 focus:bg-accent/5 transition-all resize-none custom-scrollbar shadow-inner leading-relaxed"
                 />
               </div>

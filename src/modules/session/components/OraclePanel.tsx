@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { 
     Sparkles, X, ExternalLink, RefreshCw, Send, MessageSquare, 
     Book, Bot, User, Trash2, BookOpen, PenTool, Music, Beaker, Map,
@@ -18,6 +19,7 @@ interface OraclePanelProps {
 }
 
 const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNotebookUrl, templateNotebookUrl, driverNotebookUrl }) => {
+    const { t } = useTranslation(['settings', 'modules']);
     const { messages, isQuerying, queryNotebook, extractNotebookId, clearChat } = useNotebookLM();
     const { activeGemId, gems, setActiveGemId, syncGemsWithDefaults } = useGemStore();
     const activeDriver = useSessionOSStore(state => state.getActiveDriver());
@@ -222,8 +224,8 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                                         Persona
                                     </div>
                                     <div className="flex items-center gap-1.5 leading-tight">
-                                        <h2 className="text-app-text font-black text-xs tracking-tight truncate">
-                                            {activeGem?.name || 'AI Oracle'}
+                                    <h2 className="text-app-text font-black text-xs tracking-tight truncate">
+                                            {activeGem ? t(activeGem.name) : 'AI Oracle'}
                                         </h2>
                                         <ChevronDown size={11} className={`text-accent/30 transition-transform duration-300 ${isGemMenuOpen ? 'rotate-180' : ''}`} />
                                     </div>
@@ -264,18 +266,18 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                                                     </div>
                                                     <div className="text-left pr-4 min-w-0 flex-1">
                                                         <div className="text-xs font-black uppercase tracking-tight flex items-center gap-2">
-                                                            {gem.name}
+                                                            {t(gem.name)}
                                                             {hasDriverOverride && (
                                                                 <div 
                                                                     className={`px-1.5 py-0.5 rounded text-[7px] font-black border ${isActive ? 'bg-app-bg/20 border-white/20 text-white' : 'bg-accent/10 border-accent/20 text-accent'}`}
-                                                                    title="Synchronisé avec le système"
+                                                                    title={t('modules:session.oracle.synced_with_system', 'Synchronisé avec le système')}
                                                                 >
                                                                     SYNC
                                                                 </div>
                                                             )}
                                                         </div>
                                                         <div className={`text-[9px] font-medium leading-tight line-clamp-2 mt-0.5 ${isActive ? 'text-app-bg/80' : 'text-app-text/40'}`}>
-                                                            {gem.description}
+                                                            {t(gem.description)}
                                                         </div>
                                                     </div>
                                                     {isActive && (
@@ -390,8 +392,8 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                                         <div className="w-20 h-20 rounded-3xl bg-accent/5 border border-accent/10 flex items-center justify-center mb-6">
                                             <GemIcon size={40} className="text-accent" />
                                         </div>
-                                        <h4 className="text-lg font-bold mb-2">Consultation : {activeGem?.name}</h4>
-                                        <p className="text-sm max-w-xs">{activeGem?.description || "Posez vos questions sur les règles ou l'univers."}</p>
+                                        <h4 className="text-lg font-bold mb-2">Consultation : {activeGem ? t(activeGem.name) : 'AI Oracle'}</h4>
+                                        <p className="text-sm max-w-xs">{activeGem ? t(activeGem.description) : "Posez vos questions sur les règles ou l'univers."}</p>
                                     </div>
                                 ) : (
                                     <div className="space-y-6">
@@ -413,7 +415,7 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                                                     </div>
                                                     <div className="space-y-1 overflow-hidden flex-1">
                                                         <p className={`text-[9px] font-black uppercase tracking-widest ${msg.role === 'assistant' ? 'text-accent' : 'text-app-text/20'}`}>
-                                                            {msg.role === 'assistant' ? activeGem?.name : 'Maître du Jeu'}
+                                                            {msg.role === 'assistant' ? (activeGem ? t(activeGem.name) : 'AI Oracle') : 'Maître du Jeu'}
                                                         </p>
                                                         <div className="text-sm leading-relaxed text-app-text/80 whitespace-pre-wrap prose prose-invert prose-sm max-w-none">
                                                             {msg.content}

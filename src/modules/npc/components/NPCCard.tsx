@@ -12,8 +12,10 @@ import { useVoiceStore } from '../../voice/useVoiceStore';
 import AIPromptOverlay from '../../ai/components/AIPromptOverlay';
 import { useJournalStore } from '../../journal/useJournalStore';
 import { RecipientSelector } from '../../session/components/RecipientSelector';
+import { useTranslation } from 'react-i18next';
 
 const NPCCard: React.FC = () => {
+    const { t } = useTranslation(['modules', 'common']);
     const { currentEntity, saveToMemo, isGenerating, selectAvatar, generateAvatar, isGeneratingAIAvatar, toggleDeadStatus } = useNPCStore();
     const [showAIPrompt, setShowAIPrompt] = useState(false);
     const { addCombatant } = useCombatStore();
@@ -46,8 +48,8 @@ const NPCCard: React.FC = () => {
         return (
             <div className="text-center p-12 border-2 border-dashed border-app-border rounded-3xl text-slate-500 max-w-lg">
                 <Share2 size={48} className="mx-auto mb-4 opacity-20" />
-                <p className="text-xl font-display uppercase tracking-widest italic">En attente de génération</p>
-                <p className="text-sm mt-2 opacity-60">Sélectionnez un univers et cliquez sur le bouton de tirage</p>
+                <p className="text-xl font-display uppercase tracking-widest italic">{t('npc.card.waiting_title')}</p>
+                <p className="text-sm mt-2 opacity-60">{t('npc.card.waiting_desc')}</p>
             </div>
         );
     }
@@ -71,9 +73,9 @@ const NPCCard: React.FC = () => {
                 statuses: [],
                 faction: 'enemy' // Default to enemy for Combat OS addition
             });
-            gmToast(`${currentEntity.name} ajouté au Combat OS !`);
+            gmToast(t('npc.card.combat_success', { name: currentEntity.name }));
         } else {
-            gmAlert("Seuls les PNJ peuvent être ajoutés au Combat OS");
+            gmAlert(t('npc.card.combat_error_npcs'));
         }
     };
 
@@ -85,12 +87,12 @@ const NPCCard: React.FC = () => {
             y: 200,
             size: 1
         });
-        gmToast(`${currentEntity!.name} ajouté à la Map`);
+        gmToast(t('npc.card.map_success', { name: currentEntity!.name }));
     };
 
     const handleAddToJournal = () => {
         if (!isSessionActive || !activeSession) {
-            gmAlert("Aucune session active. Lancez une session dans le Cockpit pour exporter vers le Wiki.");
+            gmAlert(t('npc.card.wiki_error_session'));
             return;
         }
 
@@ -108,7 +110,7 @@ const NPCCard: React.FC = () => {
             linkedEntityIds: []
         });
 
-        gmToast(`${currentEntity.name} ajouté au Wiki de la session !`);
+        gmToast(t('npc.card.wiki_export_success', { name: currentEntity.name }));
     };
 
     const handleAddToFavorite = () => {
@@ -128,7 +130,7 @@ const NPCCard: React.FC = () => {
             lore: `Generated from NPC OS on ${new Date().toLocaleDateString()}`,
             isStarred: false
         });
-        gmToast(`${currentEntity.name} ajouté au Panthéon !`);
+        gmToast(t('npc.card.favorite_success', { name: currentEntity.name }));
     };
     
     const handleGiveToPC = (playerId: string, characterId: string) => {
@@ -166,8 +168,13 @@ const NPCCard: React.FC = () => {
         // Add to Journal
         useJournalStore.getState().addEvent({
             type: 'SYSTEM',
-            title: `Don de NPC-OS : ${currentEntity.name}`,
-            content: `Élément : **${currentEntity.name}** (${currentEntity.category})\nDonné à : **${recipientName}**\n\n*Détails : ${lootString}*`
+            title: t('npc.card.give_journal_title', { name: currentEntity.name }),
+            content: t('npc.card.give_journal_content', { 
+                name: currentEntity.name, 
+                category: currentEntity.category, 
+                recipient: recipientName,
+                details: lootString
+            })
         });
         
         addLootToCharacter(playerId, characterId, lootString);
@@ -218,7 +225,7 @@ const NPCCard: React.FC = () => {
                     {currentEntity?.isDead && (
                         <div className="absolute inset-0 z-20 flex items-center justify-center bg-rose-950/20 backdrop-grayscale-[0.5]">
                             <div className="bg-rose-600 text-white text-[10px] font-black px-2 py-0.5 rounded shadow-lg shadow-rose-900/50 uppercase tracking-tighter rotate-[-10deg] border border-rose-400/50">
-                                Mort
+                                {t('npc.card.dead')}
                             </div>
                         </div>
                     )}
@@ -226,14 +233,14 @@ const NPCCard: React.FC = () => {
                         <div
                             onClick={(e) => { e.stopPropagation(); selectAvatar(); }}
                             className="p-2 bg-white/10 hover:bg-white/20 rounded-full transition-all cursor-pointer"
-                            title="Importer un fichier"
+                            title={t('npc.card.ai_import_file')}
                         >
                             <Share2 size={24} className="text-white" />
                         </div>
                         <div
                             onClick={(e) => { e.stopPropagation(); setShowAIPrompt(true); }}
                             className="p-2 bg-accent text-slate-950 rounded-full hover:scale-110 transition-all shadow-glow-accent cursor-pointer"
-                            title="Générer par IA"
+                            title={t('npc.card.ai_generate')}
                         >
                             <Sparkles size={24} />
                         </div>
@@ -253,20 +260,20 @@ const NPCCard: React.FC = () => {
                             ? 'bg-rose-600 border-rose-400 text-white shadow-glow-rose scale-110' 
                             : 'bg-app-surface/90 border-app-border text-slate-400 hover:text-rose-500 hover:border-rose-500/50 hover:bg-app-surface'
                         }`}
-                        title={currentEntity.isDead ? "Ressusciter" : "Marquer comme Mort"}
+                        title={currentEntity.isDead ? t('npc.card.revive') : t('npc.card.mark_dead')}
                     >
                         <Skull size={18} />
                     </button>
                     <button
                         onClick={(e) => { e.stopPropagation(); generateVoiceProfile(currentEntity); }}
                         className="text-[10px] uppercase font-bold tracking-widest text-emerald-400/80 px-2 py-1 border border-emerald-500/20 rounded bg-emerald-500/10 flex items-center gap-1 backdrop-blur-sm hover:bg-emerald-500/20 transition-colors"
-                        title="Générer un profil vocal IA"
+                        title={t('npc.card.voice_gen_tooltip')}
                     >
                         <Sparkles size={10} />
-                        Vocal
+                        {t('npc.card.voice_gen')}
                     </button>
                     <div className="text-[10px] uppercase font-bold tracking-widest text-accent/50 px-2 py-1 border border-accent/20 rounded bg-accent/5 flex items-center backdrop-blur-sm">
-                        {currentEntity.category}
+                        {t(`npc.categories.${currentEntity.category}`)}
                     </div>
                 </div>
             </div>
@@ -300,32 +307,32 @@ const NPCCard: React.FC = () => {
                                     // ensure fields are present
                                 };
                                 useImageStore.getState().projectEntity(projected);
-                                gmToast(`${currentEntity.name} projeté sur le Player Hub !`);
+                                gmToast(t('npc.card.project_success', { name: currentEntity.name }));
                             }
                         }}
                         className="p-2 bg-app-surface hover:bg-accent/20 text-slate-400 hover:text-accent transition-colors"
-                        title="Projeter sur le Hub"
+                        title={t('npc.card.project')}
                     >
                         <Eye size={20} />
                     </button>
                     <button
                         onClick={handleAddToFavorite}
                         className="p-2 bg-app-surface hover:bg-amber-500/20 rounded-lg text-slate-400 hover:text-amber-400 transition-colors"
-                        title="Ajouter aux Favoris"
+                        title={t('npc.card.favorite_add')}
                     >
                         <Star size={20} />
                     </button>
                     <button
                         onClick={saveToMemo}
                         className="p-2 bg-app-surface hover:bg-app-bg/50 rounded-lg text-slate-400 hover:text-white transition-colors"
-                        title="Sauvegarder en Mémo"
+                        title={t('npc.card.save_memo')}
                     >
                         <Save size={20} />
                     </button>
                     <button
                         onClick={handleAddToJournal}
                         className={`p-2 rounded-lg transition-all ${isSessionActive ? 'bg-accent/10 text-accent border border-accent/20' : 'bg-app-surface text-slate-400 hover:text-white hover:bg-app-bg/50'}`}
-                        title={isSessionActive ? "Exporter vers le Wiki de la Session" : "Ajouter au Wiki (Session requise)"}
+                        title={isSessionActive ? t('npc.card.wiki_export') : t('npc.card.wiki_export_hint')}
                     >
                         <FileText size={20} />
                     </button>
@@ -338,7 +345,7 @@ const NPCCard: React.FC = () => {
                             className="flex items-center gap-2 px-4 py-2 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-600/30 font-bold rounded-xl transition-all hover:scale-105 active:scale-95"
                         >
                             <MapPin size={18} />
-                            <span className="text-xs uppercase tracking-wider">Map</span>
+                            <span className="text-xs uppercase tracking-wider">{t('npc.card.map_add')}</span>
                         </button>
                     )}
 
@@ -348,7 +355,7 @@ const NPCCard: React.FC = () => {
                             className="flex items-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl shadow-lg shadow-rose-900/20 transition-all hover:scale-105 active:scale-95"
                         >
                             <Sword size={18} />
-                        <span className="text-xs uppercase tracking-wider">Combat</span>
+                        <span className="text-xs uppercase tracking-wider">{t('npc.card.combat_add')}</span>
                     </button>
                     )}
 
@@ -359,10 +366,10 @@ const NPCCard: React.FC = () => {
                             ? 'bg-amber-500 text-app-bg border-amber-400 shadow-glow-amber/20'
                             : 'bg-app-surface text-app-text/60 border-app-border/40 hover:text-accent hover:border-accent/40'
                         }`}
-                        title="Donner cet objet à un personnage joueur"
+                        title={t('npc.card.give_tooltip')}
                     >
                         <Package size={18} />
-                        <span className="text-xs uppercase tracking-wider">Donner à...</span>
+                        <span className="text-xs uppercase tracking-wider">{t('npc.card.give_to')}</span>
                     </button>
                 </div>
             </div>
@@ -381,8 +388,8 @@ const NPCCard: React.FC = () => {
                 isOpen={showAIPrompt}
                 onClose={() => setShowAIPrompt(false)}
                 isGenerating={isGeneratingAIAvatar}
-                title={`Illustration IA : ${currentEntity.name}`}
-                placeholder="Ex: portrait cyberpunk, éclairage néon, cicatrices..."
+                title={t('npc.card.ai_illustration_title', { name: currentEntity.name })}
+                placeholder={t('npc.card.ai_illustration_placeholder')}
                 initialPrompt={currentEntity.suggestedPrompt}
                 onGenerate={(instructions: string) => {
                     generateAvatar(instructions).then(() => setShowAIPrompt(false));
@@ -393,3 +400,4 @@ const NPCCard: React.FC = () => {
 };
 
 export default NPCCard;
+

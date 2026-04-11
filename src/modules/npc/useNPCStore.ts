@@ -136,8 +136,8 @@ export const useNPCStore = create<NPCState>()(
                             ['nom', 'name', 'titre', 'character', 'personnage'].includes(k.toLowerCase())
                         );
                         
-                        const val = nameKey ? obj[nameKey] : (Object.values(obj)[0] || "Unnamed Entity");
-                        return String(val || "Unnamed Entity");
+                        const val = nameKey ? obj[nameKey] : (Object.values(obj)[0] || "Entity");
+                        return String(val || "Entity");
                     };
 
                     let entityFields = fields;
@@ -242,7 +242,9 @@ export const useNPCStore = create<NPCState>()(
                 } catch (err) {
                     console.error("AI Avatar Generation Error:", err);
                     const { gmToast } = await import('../../stores/useToastStore');
-                    gmToast("Erreur lors de la génération IA", "error");
+                    // We import i18next dynamically here as this is a non-component file
+                    const i18n = (await import('i18next')).default;
+                    gmToast(i18n.t('npc.card.ai_error', { defaultValue: "AI generation error" }), "error");
                 } finally {
                     set({ isGeneratingAIAvatar: false });
                 }

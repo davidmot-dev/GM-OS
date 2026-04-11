@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import CampaignCockpit from './CampaignCockpit';
 import SessionWorkspace from './SessionWorkspace';
 import ModuleSnapshots from './ModuleSnapshots';
@@ -27,6 +28,7 @@ interface SessionViewRegistryProps {
 }
 
 const SessionViewRegistry: React.FC<SessionViewRegistryProps> = ({ forgeMode }) => {
+    const { t } = useTranslation();
     const { currentView, setCurrentView } = useSessionOSStore();
 
     // Determine if the current view should take full width or be split with the cockpit
@@ -94,13 +96,13 @@ const SessionViewRegistry: React.FC<SessionViewRegistryProps> = ({ forgeMode }) 
                         <div className="w-16 h-16 rounded-full bg-app-surface flex items-center justify-center mb-4 opacity-50">
                             <Sparkles className="animate-spin-slow text-app-text/40" />
                         </div>
-                        <h2 className="text-xl font-bold text-app-text/60 font-display">Vue "{currentView}" en construction</h2>
-                        <p className="text-app-text/40 text-sm mb-6 font-medium">Cette section sera disponible prochainement.</p>
+                        <h2 className="text-xl font-bold text-app-text/60 font-display">{t('modules:session.registry.view_under_construction', { view: currentView })}</h2>
+                        <p className="text-app-text/40 text-sm mb-6 font-medium">{t('modules:session.registry.coming_soon')}</p>
                         <button
                             onClick={() => setCurrentView('cockpit')}
                             className="px-6 py-2 bg-app-surface hover:bg-app-surface/80 text-app-text/80 rounded-lg text-sm font-bold transition-all border border-app-border"
                         >
-                            RETOUR AU COCKPIT
+                            {t('modules:session.registry.back_to_cockpit')}
                         </button>
                     </div>
                 );

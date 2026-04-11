@@ -5,10 +5,11 @@ import { gmConfirm, gmPrompt } from '../../../stores/useModalStore';
 import { 
     UserPlus, RefreshCw, Dices, Save, Play, Skull, 
     ArrowDown01, ArrowUp10, Sparkles, Zap, Activity,
-    MonitorPlay, MonitorOff
+    MonitorPlay, MonitorOff, Sword, Shield
 } from 'lucide-react';
 import { gmCustom } from '../../../stores/useModalStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
+import { useTranslation } from 'react-i18next';
 
 const CombatControls: React.FC = () => {
     const {
@@ -24,6 +25,8 @@ const CombatControls: React.FC = () => {
         setIsCombatProjected
     } = useCombatStore();
 
+    const { t } = useTranslation(['modules', 'common']);
+
     const {
         activeCampaignId,
         selectedSessionId,
@@ -35,7 +38,7 @@ const CombatControls: React.FC = () => {
     const [diceMax, setDiceMax] = useState<number>(20);
 
     const handleAddCombatant = () => {
-        gmPrompt('Nom du nouveau combattant :', 'Nouveau Combattant', (name) => {
+        gmPrompt(`${t('combat.card.rename_prompt', { name: '' })}`, t('combat.controls.add_combatant'), (name) => {
             if (name.trim()) {
                 addCombatant({
                     name: name.trim(),
@@ -120,40 +123,40 @@ const CombatControls: React.FC = () => {
 
     const handleSaveCombat = () => {
         if (!activeCampaignId) {
-            gmToast("Aucune campagne active pour l'export.", "error");
+            gmToast(t('combat.messages.no_campaign'), "error");
             return;
         }
 
         const combatants = useCombatStore.getState().combatants;
         if (combatants.length === 0) {
-            gmToast("Aucun combattant à exporter.", "warning");
+            gmToast(t('combat.messages.no_combatants'), "warning");
             return;
         }
 
-        const dateStr = new Date().toLocaleDateString('fr-FR', { 
+        const dateStr = new Date().toLocaleDateString(navigator.language, { 
             day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' 
         });
 
-        let content = `### ⚔️ Rapport de Combat - ${dateStr}\n\n`;
-        content += `**Fin du Round :** ${round}\n\n`;
-        content += `#### Participants :\n`;
+        let content = t('combat.report.header', { date: dateStr });
+        content += t('combat.report.round', { round });
+        content += t('combat.report.participants');
         
         const players = combatants.filter(c => c.isPlayer);
         const enemies = combatants.filter(c => !c.isPlayer);
 
         if (players.length > 0) {
-            content += `\n**Alliés & Joueurs :**\n`;
+            content += t('combat.report.players_section');
             players.forEach(c => {
-                const statusStr = c.statuses.length > 0 ? ` [${c.statuses.map(s => s.name).join(', ')}]` : '';
-                content += `- **${c.name}** : ${c.hp}/${c.hpMax} PV${statusStr}\n`;
+                const statusStr = c.statuses.length > 0 ? ` [${c.statuses.map(s => t(`combat.status.presets.${s.name.toLowerCase().replace(/\s/g, '_')}`, { defaultValue: s.name })).join(', ')}]` : '';
+                content += t('combat.report.entry', { name: c.name, hp: c.hp, hpMax: c.hpMax, statuses: statusStr });
             });
         }
 
         if (enemies.length > 0) {
-            content += `\n**Ennemis :**\n`;
+            content += t('combat.report.enemies_section');
             enemies.forEach(c => {
-                const statusStr = c.statuses.length > 0 ? ` [${c.statuses.map(s => s.name).join(', ')}]` : '';
-                content += `- **${c.name}** : ${c.hp}/${c.hpMax} PV${statusStr}\n`;
+                const statusStr = c.statuses.length > 0 ? ` [${c.statuses.map(s => t(`combat.status.presets.${s.name.toLowerCase().replace(/\s/g, '_')}`, { defaultValue: s.name })).join(', ')}]` : '';
+                content += t('combat.report.entry', { name: c.name, hp: c.hp, hpMax: c.hpMax, statuses: statusStr });
             });
         }
 
@@ -161,7 +164,7 @@ const CombatControls: React.FC = () => {
             campaignId: activeCampaignId,
             sessionId: selectedSessionId || undefined,
             date: dateStr,
-            title: `Combat - Round ${round}`,
+            title: t('combat.report.title', { round }),
             description: content,
             type: 'combat',
             involvedEntityIds: combatants.map(c => c.sourceEntityId || c.sourcePlayerId).filter(Boolean) as string[]
@@ -172,7 +175,7 @@ const CombatControls: React.FC = () => {
         // and final HP sync just in case
         syncCombatantHPToSession();
 
-        gmToast("Résumé de combat exporté et statuts propagés !");
+        gmToast(t('modules:combat.messages.exported'));
     };
 
     return (
@@ -181,7 +184,7 @@ const CombatControls: React.FC = () => {
             {/* Header */}
             <div className="flex items-center justify-between mb-2 border-b border-app-border/50 pb-2">
                 <h2 className="text-xl font-display font-bold text-app-text uppercase tracking-widest">
-                    Contrôles
+                    {t('modules:combat.controls.title_full', { defaultValue: 'CONTRÔLES DE COMBAT' })}
                 </h2>
                 <button
                     onClick={() => setIsCombatProjected(!isCombatProjected)}
@@ -190,7 +193,7 @@ const CombatControls: React.FC = () => {
                         ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow-glow-emerald/20' 
                         : 'bg-red-500/10 text-red-400/50 border border-red-500/10 opacity-60 grayscale'
                     }`}
-                    title={isCombatProjected ? "Désactiver la projection sur le Hub" : "Activer la projection sur le Hub"}
+                    title={isCombatProjected ? t('modules:projection.deactivate') : t('modules:projection.activate')}
                 >
                     {isCombatProjected ? <MonitorPlay size={18} /> : <MonitorOff size={18} />}
                     <span className="text-[10px] font-black uppercase tracking-tighter">
@@ -201,11 +204,11 @@ const CombatControls: React.FC = () => {
 
             {/* Active Driver Indicator */}
             <div className="mb-6 flex flex-col gap-1">
-                <span className="text-[10px] text-app-text/30 font-black uppercase tracking-widest">Système Actif</span>
+                <span className="text-[10px] text-app-text/30 font-black uppercase tracking-widest">{t('modules:combat.controls.active_system')}</span>
                 <div className={`px-3 py-2 rounded-lg border flex items-center gap-2 group transition-all ${activeDriver ? 'bg-amber-500/10 border-amber-500/30 text-amber-400' : 'bg-app-bg/50 border-app-border/20 text-app-text/40'}`}>
                     <Sparkles size={14} className={activeDriver ? 'animate-pulse' : 'opacity-20'} />
                     <span className="text-xs font-black uppercase tracking-wider truncate">
-                        {activeDriver?.name || 'Standard Dice-OS'}
+                        {activeDriver?.name || t('modules:combat.controls.auto_init.standard_dice_os')}
                     </span>
                 </div>
             </div>
@@ -213,13 +216,13 @@ const CombatControls: React.FC = () => {
             {/* Main Action: Next Turn */}
             <div className="bg-gm-crimson/10 border border-gm-crimson/30 p-4 rounded-xl mb-6 shadow-glow-crimson flex flex-col items-center">
                 <div className="text-app-text/70 text-sm uppercase tracking-wider mb-2">
-                    Round <span className="text-app-text font-bold text-xl ml-1">{round.toString().padStart(2, '0')}</span>
+                    {t('modules:combat.controls.round')} <span className="text-app-text font-bold text-xl ml-1">{round.toString().padStart(2, '0')}</span>
                 </div>
                 <button
                     onClick={nextTurn}
                     className="w-full bg-gm-crimson hover:bg-red-500 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-all duration-300 shadow-lg hover:shadow-glow-crimson group"
                 >
-                    <span className="text-lg">TOUR SUIVANT</span>
+                    <span className="text-lg">{t('modules:combat.controls.next_turn')}</span>
                     <Play fill="currentColor" size={20} className="group-hover:translate-x-1 transition-transform" />
                 </button>
             </div>
@@ -229,7 +232,7 @@ const CombatControls: React.FC = () => {
                 <div className="flex items-center justify-between mb-1">
                     <div className="flex items-center gap-2">
                         <Activity className="w-4 h-4 text-accent" />
-                        <h3 className="font-bold text-app-text/70 uppercase tracking-wider text-[10px]">Auto Initiative</h3>
+                        <h3 className="font-bold text-app-text/70 uppercase tracking-wider text-[10px]">{t('modules:combat.controls.auto_init.title')}</h3>
                     </div>
                 </div>
 
@@ -241,16 +244,16 @@ const CombatControls: React.FC = () => {
                         <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                         <div className="flex items-center gap-2 mb-1">
                             <Zap className="w-5 h-5 text-yellow-300 animate-pulse" />
-                            <span className="font-black tracking-tighter text-lg uppercase">Jet Système</span>
+                            <span className="font-black tracking-tighter text-lg uppercase">{t('modules:combat.controls.auto_init.system')}</span>
                         </div>
                         <div className="flex flex-col items-center gap-1 text-[9px] text-indigo-100 font-medium opacity-90">
                             <span className="px-2 py-0.5 bg-white/20 rounded-md backdrop-blur-sm border border-white/10 tracking-widest uppercase">
                                 {activeDriver.combat.initiativeCards 
-                                    ? `CARTES UNIQUE (1-${activeDriver.combat.initiativeCards})` 
-                                    : activeDriver.combat.initiativeFormula}
+                                    ? t('modules:combat.controls.auto_init.cards', { max: activeDriver.combat.initiativeCards }) 
+                                    : t('modules:combat.controls.auto_init.formula', { formula: activeDriver.combat.initiativeFormula })}
                             </span>
                             <span className="opacity-60 italic uppercase tracking-tighter">
-                                {activeDriver.combat.initiativeSort === 'asc' ? 'Ordre Croissant' : 'Ordre Décroissant'}
+                                {activeDriver.combat.initiativeSort === 'asc' ? t('modules:combat.controls.auto_init.asc') : t('modules:combat.controls.auto_init.desc')}
                             </span>
                         </div>
                     </button>
@@ -261,7 +264,7 @@ const CombatControls: React.FC = () => {
                         className="bg-app-bg border border-app-border rounded-lg text-app-text px-2 py-2 outline-none focus:border-gm-crimson text-xs flex-1"
                         value={diceMax}
                         onChange={(e) => setDiceMax(Number(e.target.value))}
-                        title="Sélectionner le type de dé"
+                        title={t('common:actions.select_dice')}
                     >
                         {[4, 6, 8, 10, 12, 20, 100].map(d => (
                             <option key={d} value={d}>d{d}</option>
@@ -270,10 +273,10 @@ const CombatControls: React.FC = () => {
                     <button
                         onClick={() => rollAutoInitiative({ diceMax })}
                         className="bg-app-bg hover:bg-gm-crimson/20 border border-gm-crimson/50 text-gm-crimson px-3 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors flex-[2] text-xs font-bold uppercase tracking-tighter"
-                        title="Jette l'initiative standard pour tous ceux à 0"
+                        title={t('modules:combat.controls.auto_init.standard_tooltip')}
                     >
                         <Dices size={14} />
-                        <span>Standard</span>
+                        <span>{t('modules:combat.controls.auto_init.standard')}</span>
                     </button>
                 </div>
             </div>
@@ -285,7 +288,7 @@ const CombatControls: React.FC = () => {
                     className="w-full bg-app-bg hover:bg-app-surface border border-app-border hover:border-app-border/80 text-app-text/80 hover:text-app-text px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors"
                 >
                     <UserPlus size={18} />
-                    <span>Ajouter Combattant</span>
+                    <span>{t('modules:combat.controls.add_combatant')}</span>
                 </button>
 
                 <button
@@ -293,23 +296,23 @@ const CombatControls: React.FC = () => {
                     className="w-full bg-gm-crimson/10 hover:bg-gm-crimson/20 border border-gm-crimson/30 text-gm-crimson px-4 py-3 rounded-xl flex items-center justify-center gap-2 transition-all shadow-glow-crimson/10 group"
                 >
                     <Zap size={18} className="group-hover:animate-pulse" />
-                    <span className="font-bold uppercase tracking-widest text-xs">Calculateur de Dégâts</span>
+                    <span className="font-bold uppercase tracking-widest text-xs">{t('modules:combat.controls.damage_calc')}</span>
                 </button>
 
                 <div className="grid grid-cols-2 gap-2 mt-2">
                     <button
-                        onClick={() => sortInitiative(false)}
+                         onClick={() => sortInitiative(false)}
                         className="bg-app-bg hover:bg-app-surface border border-app-border text-app-text/80 hover:text-app-text p-2 rounded-lg flex items-center justify-center gap-1 transition-colors text-sm"
-                        title="Trier (Décroissant)"
+                        title={t('modules:combat.controls.sort_desc')}
                     >
-                        <ArrowDown01 size={16} /> Trie
+                        <ArrowDown01 size={16} /> {t('common:actions.sort')}
                     </button>
                     <button
                         onClick={() => sortInitiative(true)}
                         className="bg-app-bg hover:bg-app-surface border border-app-border text-app-text/80 hover:text-app-text p-2 rounded-lg flex items-center justify-center gap-1 transition-colors text-sm"
-                        title="Trier (Croissant)"
+                        title={t('modules:combat.controls.sort_asc')}
                     >
-                        <ArrowUp10 size={16} /> Trie
+                        <ArrowUp10 size={16} /> {t('common:actions.sort')}
                     </button>
                 </div>
             </div>
@@ -317,35 +320,35 @@ const CombatControls: React.FC = () => {
             {/* Sync & Advanced */}
             <div className="mt-auto space-y-4 pt-6 border-t border-app-border">
                 <button
-                    onClick={() => {
+                     onClick={() => {
                         syncCombatantHPToSession();
-                        gmToast("Points de Vie synchronisés !");
+                        gmToast(t('modules:combat.messages.hp_synced'));
                     }}
                     className="w-full bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-600 px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-sm"
                 >
                     <RefreshCw size={18} />
-                    <span>Sync PV vers Session</span>
+                    <span>{t('modules:combat.controls.sync_hp')}</span>
                 </button>
 
-                <button 
+                 <button 
                     onClick={handleSaveCombat} 
                     className="w-full bg-app-bg hover:bg-app-surface/60 border border-app-border flex items-center justify-center gap-2 py-3 rounded-lg text-app-text/70 hover:text-app-text transition-all shadow-lg group" 
-                    title="Sauvegarder et terminer le combat"
+                    title={t('modules:combat.controls.end_combat')}
                 >
                     <Save size={18} className="group-hover:scale-110 transition-transform" /> 
-                    <span className="font-bold uppercase tracking-wider text-xs">Fin de combat</span>
+                    <span className="font-bold uppercase tracking-wider text-xs">{t('modules:combat.controls.end_combat')}</span>
                 </button>
 
-                <button
+                 <button
                     onClick={() => {
-                        gmConfirm('Voulez-vous vraiment vider la liste des combattants ?', () => {
+                        gmConfirm(t('modules:combat.messages.reset_confirm'), () => {
                             clearCombatants();
                         });
                     }}
                     className="w-full mt-4 bg-red-500/10 hover:bg-red-500/20 text-red-600 py-2 border border-red-500/30 rounded-lg flex items-center justify-center gap-2 transition-colors"
                 >
                     <Skull size={16} />
-                    <span>Reset Combat</span>
+                    <span>{t('modules:combat.controls.reset_combat')}</span>
                 </button>
             </div>
         </aside>

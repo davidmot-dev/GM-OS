@@ -31,6 +31,9 @@ L'objectif est d'assurer une étanchéité parfaite des données tout en simplif
 - **[x] Nexus-OS v2 — Vérification & Localisation des URLs distantes** : Détection automatique des URLs HTTP non-portables avec téléchargement interactif vers le Media Hub.
 - **[x] Agnostic AI Core & Local Stability** : Intégration de Gemma 4 26B MoE via Ollama avec stabilisation réseau (`net.fetch`) et forçage DNS IPv4 pour Windows.
 - **[x] Tablet Hub Media Proxy & Protocol Sync** : Résolution des erreurs 404 (préfixe m-) et support des protocoles gmos:// pour tablettes distantes.
+- **[x] Session-OS Module Extraction & i18n** : Modularisation de la logique (PNJ, Indices, Notes) dans des hooks réutilisables et localisation complète (Fr/En).
+- **[x] Nexus-OS v2 Core — Security & Manifest** : Validation proactive des chemins d'importation et assainissement des manifestes de campagne contre les injections de chemins malveillants.
+- **[x] Global I18n Standardization** : Mise en œuvre du standard de nesting de niveau 2 pour les nouveaux modules i18next afin d'éviter les collisions de namespaces.
 
 ---
 
@@ -86,7 +89,9 @@ Ces fonctionnalités sont prévues mais temporairement mises de côté pour prio
 | Stabilisation Build v6 (TS Strict & verbatrimModuleSyntax) | Haute | ✅ Résolu |
 | Fuite de connexions WebSocket (Double notifications Hub) | Haute | ✅ Résolu |
 | Densité visuelle Tablet Hub (Optimisation échelle UI)  | Moyenne | ✅ Complété |
+| Incohérence des accents dans le Calculateur de Dégâts (Encodage) | Haute | ✅ Résolu (v6.2.6-dev) |
+| Nesting I18n conflict (Map vs Module) | Haute | ✅ Résolu |
 
 ---
-*Dernière mise à jour : 9 Avril 2026 (23h21)*
-*Statut : Version 6.2.0 FINALISÉE. Consolidation du système de Loot, stabilisation WebSocket & Cerveau Global opérationnels.*
+*Dernière mise à jour : 11 Avril 2026 (15h25)*
+*Statut : Version 6.2.5 FINALISÉE. Transition v6.2.6-dev : Localisation Session/Nexus & Sécurité Manifeste opérationnelles.*

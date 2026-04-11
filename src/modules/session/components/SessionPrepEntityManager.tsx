@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSessionOSStore, type Entity } from '../useSessionOSStore';
 import { Plus, X, Search, User, Shield, Skull } from 'lucide-react';
 import { ResolvedImage } from '../../../components/ResolvedImage';
@@ -8,6 +9,7 @@ interface SessionPrepEntityManagerProps {
 }
 
 const SessionPrepEntityManager: React.FC<SessionPrepEntityManagerProps> = ({ sessionId }) => {
+    const { t } = useTranslation();
     const { 
         entities, 
         activeCampaignId, 
@@ -44,10 +46,10 @@ const SessionPrepEntityManager: React.FC<SessionPrepEntityManagerProps> = ({ ses
         <div className="flex flex-col gap-6">
             {/* Active List */}
             <div className="flex flex-col gap-2">
-                <span className="text-[9px] text-app-text/60 font-bold uppercase tracking-widest ml-1 mb-1">In Session</span>
+                <span className="text-[9px] text-app-text/60 font-bold uppercase tracking-widest ml-1 mb-1">{t('modules:session.focus.entity_manager.in_session')}</span>
                 {activeEntities.length === 0 ? (
                     <div className="p-4 border border-dashed border-app-border rounded-xl text-center">
-                        <p className="text-[10px] text-app-text/40 italic">No entities linked yet.</p>
+                        <p className="text-[10px] text-app-text/40 italic">{t('modules:session.focus.entity_manager.no_entities')}</p>
                     </div>
                 ) : (
                     <div className="flex flex-col gap-2">
@@ -84,7 +86,7 @@ const SessionPrepEntityManager: React.FC<SessionPrepEntityManagerProps> = ({ ses
                     <Search size={14} className="text-app-text/40" />
                     <input 
                         type="text" 
-                        placeholder="Chercher un PNJ ou Monstre..." 
+                        placeholder={t('modules:session.focus.entity_manager.search_placeholder')} 
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="bg-transparent border-none text-[11px] text-app-text p-0 focus:ring-0 w-full placeholder:text-app-text/40"
@@ -109,7 +111,7 @@ const SessionPrepEntityManager: React.FC<SessionPrepEntityManagerProps> = ({ ses
                         </button>
                     ))}
                     {availableEntities.length === 0 && (
-                        <p className="text-[9px] text-app-text/50 italic text-center py-2">All available entities linked.</p>
+                        <p className="text-[9px] text-app-text/50 italic text-center py-2">{t('modules:session.focus.entity_manager.all_linked')}</p>
                     )}
                 </div>
             </div>

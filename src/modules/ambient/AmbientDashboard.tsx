@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Trash2, Layers, Music, Activity, Plus, Save, RotateCcw } from 'lucide-react';
 import { useAmbientStore, type AmbientTheme, type AmbientTrackState } from './useAmbientStore';
 import AmbientTrack from './components/AmbientTrack';
@@ -41,6 +42,7 @@ const MasterVisualizer: React.FC = () => {
 };
 
 const AmbientDashboard: React.FC = () => {
+    const { t } = useTranslation();
     const { tracks, presets, scenes, customUniverses, loadTheme, saveTheme, deleteTheme, saveScene, deleteScene, addUniverse, fadeOutAll, applyScene, outputDeviceId, setOutputDevice, updateTrack, reset } = useAmbientStore();
     const { getAudioLabel } = useHardwareStore();
 
@@ -53,7 +55,7 @@ const AmbientDashboard: React.FC = () => {
             const media = mediaList.find((m: { id: string; name: string }) => m.id === mediaId);
             if (media) {
                 const track = tracks[browserTarget];
-                const isDefaultLabel = track.label.toLowerCase().startsWith('piste') || track.label === '';
+                const isDefaultLabel = track.label === 'modules:ambient.presets.tracks.default_track' || track.label === '';
                 updateTrack(browserTarget, { 
                     url: mediaId, 
                     label: isDefaultLabel ? media.name : track.label 
@@ -74,14 +76,14 @@ const AmbientDashboard: React.FC = () => {
     const themesInUniverse = useMemo(() =>
         presets
             .filter((p: AmbientTheme) => p.universe === selectedUniverse)
-            .sort((a: AmbientTheme, b: AmbientTheme) => a.name.localeCompare(b.name)),
-        [presets, selectedUniverse]
+            .sort((a: AmbientTheme, b: AmbientTheme) => t(a.name).localeCompare(t(b.name))),
+        [presets, selectedUniverse, t]
     );
     const [selectedTheme, setSelectedTheme] = useState(themesInUniverse[0]?.name || '');
 
     // Synchronize selectedTheme if themes change or current one is deleted
     useEffect(() => {
-        if (!themesInUniverse.find(t => t.name === selectedTheme)) {
+        if (!themesInUniverse.find(tObj => tObj.name === selectedTheme)) {
             // eslint-disable-next-line
             setSelectedTheme(themesInUniverse[0]?.name || '');
         }
@@ -114,7 +116,7 @@ const AmbientDashboard: React.FC = () => {
     };
 
     const handleSaveNewTheme = () => {
-        gmPrompt("Nom du nouveau thème ?", "", (name) => {
+        gmPrompt(t('modules:ambient.messages.new_theme_prompt'), "", (name) => {
             if (name.trim()) {
                 saveTheme(selectedUniverse, name.trim());
                 setSelectedTheme(name.trim());
@@ -123,16 +125,16 @@ const AmbientDashboard: React.FC = () => {
     };
 
     const handleDeleteTheme = () => {
-        const theme = themesInUniverse.find(t => t.name === selectedTheme);
+        const theme = themesInUniverse.find(tObj => tObj.name === selectedTheme);
         if (!theme) return;
 
-        gmConfirm(`Supprimer le thème "${theme.name}" ?`, () => {
+        gmConfirm(t('modules:ambient.messages.delete_theme_confirm', { name: t(theme.name) }), () => {
             deleteTheme(theme.id);
         });
     };
 
     const handleAddUniverse = () => {
-        gmPrompt("Nom du nouvel univers ?", "", (name) => {
+        gmPrompt(t('modules:ambient.messages.new_universe_prompt'), "", (name) => {
             const trimmed = name.trim();
             if (trimmed) {
                 addUniverse(trimmed);
@@ -142,7 +144,7 @@ const AmbientDashboard: React.FC = () => {
     };
 
     const handleSaveScene = () => {
-        gmPrompt("Nom de la nouvelle scène ?", "", (name) => {
+        gmPrompt(t('modules:ambient.messages.new_scene_prompt'), "", (name) => {
             const trimmed = name.trim();
             if (trimmed) {
                 saveScene(trimmed);
@@ -158,7 +160,7 @@ const AmbientDashboard: React.FC = () => {
                 onClose={() => setBrowserTarget(null)}
                 onSelect={handleMediaSelect}
                 allowedTypes={['audio']}
-                title="Sélectonner une Ambiance"
+                title={t('modules:ambient.dashboard.select_ambiance')}
             />
             <div className="flex flex-col md:flex-row items-center justify-between gap-6 bg-app-surface/60 border border-app-border/50 p-6 rounded-3xl backdrop-blur-md shadow-2xl relative overflow-hidden">
                 {/* Background Glow */}
@@ -171,8 +173,8 @@ const AmbientDashboard: React.FC = () => {
                     {/* Universe Select */}
                     <div className="flex flex-col px-3 relative group/uni">
                         <div className="flex items-center justify-between mb-1">
-                            <label className="text-[8px] font-black text-app-text/60 uppercase">Univers</label>
-                            <button onClick={handleAddUniverse} className="opacity-0 group-hover/uni:opacity-100 transition-opacity p-0.5" title="Nouvel Univers">
+                            <label className="text-[8px] font-black text-app-text/60 uppercase">{t('modules:ambient.dashboard.universe')}</label>
+                            <button onClick={handleAddUniverse} className="opacity-0 group-hover/uni:opacity-100 transition-opacity p-0.5" title={t('modules:ambient.dashboard.new_universe')}>
                                 <Plus size={8} className="text-gm-cyan" />
                             </button>
                         </div>
@@ -185,9 +187,9 @@ const AmbientDashboard: React.FC = () => {
                                 setSelectedTheme(firstTheme);
                             }}
                             className="bg-transparent text-xs font-bold text-app-text/70 focus:outline-none focus:text-app-text cursor-pointer"
-                            title="Sélectionner l'Univers"
+                            title={t('modules:ambient.dashboard.select_universe')}
                         >
-                            {universes.map((u: string) => <option key={u} value={u} className="bg-app-surface text-app-text">{u}</option>)}
+                            {universes.map((u: string) => <option key={u} value={u} className="bg-app-surface text-app-text">{t(u)}</option>)}
                         </select>
                     </div>
 
@@ -195,27 +197,27 @@ const AmbientDashboard: React.FC = () => {
 
                     {/* Theme Select */}
                     <div className="flex flex-col px-3 min-w-[140px]">
-                        <label className="text-[8px] font-black text-app-text/60 uppercase mb-1">Thème d'Ambiance</label>
+                        <label className="text-[8px] font-black text-app-text/60 uppercase mb-1">{t('modules:ambient.dashboard.ambiance_theme')}</label>
                         <div className="flex items-center gap-2">
                             <select
                                 value={selectedTheme}
                                 onChange={(e) => handleThemeChange(e.target.value)}
                                 className="bg-transparent text-sm font-black text-gm-cyan focus:outline-none cursor-pointer flex-1"
-                                title="Sélectionner le Thème"
+                                title={t('modules:ambient.dashboard.select_theme')}
                             >
                                 {themesInUniverse.length > 0 ? (
-                                    themesInUniverse.map((t: AmbientTheme) => (
-                                        <option key={t.id} value={t.name} className="bg-app-surface text-app-text">{t.name}</option>
+                                    themesInUniverse.map((tObj: AmbientTheme) => (
+                                        <option key={tObj.id} value={tObj.name} className="bg-app-surface text-app-text">{t(tObj.name)}</option>
                                     ))
                                 ) : (
-                                    <option value="" className="bg-app-surface text-app-text">(Vide)</option>
+                                    <option value="" className="bg-app-surface text-app-text">{t('modules:ambient.dashboard.empty')}</option>
                                 )}
                             </select>
                             {themesInUniverse.length > 0 && (
                                 <button
                                     onClick={handleDeleteTheme}
                                     className="p-1 text-app-text/60 hover:text-red-500 transition-colors"
-                                    title="Supprimer ce thème"
+                                    title={t('modules:ambient.dashboard.delete_theme')}
                                 >
                                     <Trash2 size={12} />
                                 </button>
@@ -227,14 +229,14 @@ const AmbientDashboard: React.FC = () => {
                         <button
                             onClick={() => loadTheme(selectedUniverse, selectedTheme)}
                             className="p-2.5 bg-gm-cyan/10 hover:bg-gm-cyan/20 text-gm-cyan rounded-xl transition-all border border-gm-cyan/10 flex items-center justify-center"
-                            title="Recharger"
+                            title={t('modules:ambient.dashboard.reload')}
                         >
                             <Layers size={16} />
                         </button>
                         <button
                             onClick={handleSaveNewTheme}
                             className="p-2.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 rounded-xl transition-all border border-emerald-500/10 flex items-center justify-center"
-                            title="Sauvegarder Nouveau"
+                            title={t('modules:ambient.dashboard.save_new')}
                         >
                             <Save size={16} />
                         </button>
@@ -252,9 +254,9 @@ const AmbientDashboard: React.FC = () => {
                                 ambientEngine.setOutputDevice(newId);
                             }}
                             className="bg-app-surface border-none text-app-text/70 text-[10px] rounded-lg py-1 px-2 focus:ring-1 focus:ring-gm-cyan appearance-none cursor-pointer w-28 truncate"
-                            title="Audio Output Device"
+                            title={t('modules:ambient.dashboard.audio_output')}
                         >
-                            <option value="default">System Default</option>
+                            <option value="default">{t('modules:ambient.dashboard.system_default')}</option>
                             {audioDevices.map(device =>
                                 <option key={device.deviceId} value={device.deviceId}>
                                     {getAudioLabel(device.deviceId)}
@@ -269,12 +271,12 @@ const AmbientDashboard: React.FC = () => {
                         className="flex items-center gap-2 px-6 py-4 bg-red-600/10 hover:bg-red-600/20 text-red-500 border border-red-500/20 rounded-2xl font-black text-xs transition-all uppercase tracking-widest active:scale-95 shadow-lg group"
                     >
                         <Trash2 size={16} className="group-hover:rotate-12 transition-transform" />
-                        SILENCE
+                        {t('modules:ambient.dashboard.silence')}
                     </button>
 
                     <button
-                        onClick={() => gmConfirm("Voulez-vous vraiment réinitialiser le module Ambient OS ? Toutes les pistes et configurations seront perdues.", () => reset())}
-                        title="Réinitialiser le module"
+                        onClick={() => gmConfirm(t('modules:ambient.messages.reset_confirm'), () => reset())}
+                        title={t('modules:ambient.dashboard.reset_module')}
                         className="size-12 bg-red-500/5 border border-red-500/10 text-red-500/50 rounded-2xl flex items-center justify-center hover:bg-red-500/20 hover:text-red-500 transition-all active:scale-95 shadow-lg"
                     >
                         <RotateCcw size={18} />
@@ -286,11 +288,11 @@ const AmbientDashboard: React.FC = () => {
             <div className="flex items-center gap-3 px-2 overflow-x-auto scrollbar-hide py-1">
                 <div className="flex items-center gap-2 text-gm-emerald bg-gm-emerald/10 border border-gm-emerald/20 px-3 py-2 rounded-xl group relative">
                     <Activity size={14} />
-                    <span className="text-[10px] font-black uppercase tracking-tight">Quick Scenes</span>
+                    <span className="text-[10px] font-black uppercase tracking-tight">{t('modules:ambient.dashboard.quick_scenes')}</span>
                     <button 
                         onClick={handleSaveScene}
                         className="ml-2 p-1 bg-gm-emerald/20 hover:bg-gm-emerald/40 rounded-lg transition-colors"
-                        title="Sauvegarder l'état actuel"
+                        title={t('modules:ambient.dashboard.save_current_state')}
                     >
                         <Save size={10} />
                     </button>
@@ -301,7 +303,7 @@ const AmbientDashboard: React.FC = () => {
                             onClick={() => applyScene(scene.id)}
                             className="px-5 py-2.5 rounded-xl bg-app-surface/60 border border-app-border hover:border-gm-cyan/50 hover:bg-app-surface transition-all text-[11px] font-bold uppercase tracking-wide whitespace-nowrap"
                         >
-                            <span className="text-app-text/70 group-hover:text-app-text transition-colors">{scene.name} <span className="opacity-30">[{scene.id.substring(0, 8)}]</span></span>
+                            <span className="text-app-text/70 group-hover:text-app-text transition-colors">{t(scene.name)} <span className="opacity-30">[{scene.id.substring(0, 8)}]</span></span>
                         </button>
                         
                         {/* Delete button for custom scenes (ones that aren't the hardcoded defaults) */}
@@ -309,10 +311,10 @@ const AmbientDashboard: React.FC = () => {
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    gmConfirm(`Supprimer la scène "${scene.name}" ?`, () => deleteScene(scene.id));
+                                    gmConfirm(t('modules:ambient.messages.delete_scene_confirm', { name: t(scene.name) }), () => deleteScene(scene.id));
                                 }}
                                 className="absolute -top-1 -right-1 p-1 bg-red-500 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity shadow-lg z-10 hover:scale-110"
-                                title="Supprimer la scène"
+                                title={t('modules:ambient.dashboard.delete_scene')}
                             >
                                 <Plus size={10} className="rotate-45" />
                             </button>
@@ -340,16 +342,16 @@ const AmbientDashboard: React.FC = () => {
                 <div className="flex items-center gap-4">
                     <span className="flex items-center gap-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_5px_#10b981]" />
-                        Engine Ready
+                        {t('modules:ambient.dashboard.engine_ready')}
                     </span>
                     <span className="text-app-border">|</span>
                     <span>Buffer: 48kHz PCM</span>
                     <span className="text-app-border">|</span>
-                    <span>Latence: ~12ms</span>
+                    <span>{t('modules:ambient.dashboard.latency')}: ~12ms</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <Music size={12} />
-                    <span>Master Bus: Dynamics Active</span>
+                    <span>{t('modules:ambient.dashboard.master_bus')}</span>
                 </div>
             </div>
         </div>

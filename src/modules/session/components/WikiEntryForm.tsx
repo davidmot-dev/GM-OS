@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useSessionOSStore, type WikiEntry } from '../useSessionOSStore';
 import { Save, X, Plus } from 'lucide-react';
 import { MediaImage } from '../../../components/MediaImage';
+import { useTranslation } from 'react-i18next';
+
 
 interface WikiEntryFormProps {
     entry?: WikiEntry;
@@ -9,7 +11,9 @@ interface WikiEntryFormProps {
 }
 
 export const WikiEntryForm: React.FC<WikiEntryFormProps> = ({ entry, onClose }) => {
+    const { t } = useTranslation();
     const { activeCampaignId, addWikiEntry, updateWikiEntry, entities } = useSessionOSStore();
+
     
     const [title, setTitle] = useState(entry?.title || '');
     const [content, setContent] = useState(entry?.content || '');
@@ -23,16 +27,6 @@ export const WikiEntryForm: React.FC<WikiEntryFormProps> = ({ entry, onClose }) 
 
     const categories = ['npc', 'location', 'organization', 'lore', 'item', 'clue', 'rumor', 'other'] as const;
 
-    const categoryLabels: Record<string, string> = {
-        npc: 'PNJ',
-        location: 'Lieu',
-        organization: 'Organisation',
-        lore: 'Lore',
-        item: 'Objet',
-        clue: 'Indice',
-        rumor: 'Rumeur',
-        other: 'Autre'
-    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -83,48 +77,48 @@ export const WikiEntryForm: React.FC<WikiEntryFormProps> = ({ entry, onClose }) 
         <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Titre de l'article</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.wiki_form.title_label')}</label>
                     <input
                         required
                         type="text"
                         value={title}
                         onChange={e => setTitle(e.target.value)}
-                        placeholder="Ex: La Forêt des Murmures"
+                        placeholder={t('modules:session.wiki_form.title_placeholder')}
                         className="w-full bg-app-bg/40 border border-app-border rounded-xl px-4 py-2 text-sm text-app-text focus:outline-none focus:border-accent/50 transition-all"
                     />
                 </div>
                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Catégorie</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.wiki_form.category_label')}</label>
                     <select
                         value={category}
                         onChange={e => setCategory(e.target.value as WikiEntry['category'])}
                         className="w-full bg-app-bg/40 border border-app-border rounded-xl px-4 py-2 text-sm text-app-text focus:outline-none focus:border-accent/50 transition-all"
                     >
                         {categories.map(cat => (
-                            <option key={cat} value={cat}>{categoryLabels[cat] || cat.toUpperCase()}</option>
+                            <option key={cat} value={cat}>{t(`modules:session.wiki_form.categories.${cat}`)}</option>
                         ))}
                     </select>
                 </div>
                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Date de l'événement (Optionnel)</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.wiki_form.date_label')}</label>
                     <input
                         type="text"
                         value={eventDate}
                         onChange={e => setEventDate(e.target.value)}
-                        placeholder="Ex: 1250 DG ou Hiver 1492"
+                        placeholder={t('modules:session.wiki_form.date_placeholder')}
                         className="w-full bg-app-bg/40 border border-app-border rounded-xl px-4 py-2 text-sm text-app-text focus:outline-none focus:border-accent/50 transition-all"
                     />
                 </div>
             </div>
 
             <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Contenu (Markdown supporté)</label>
+                <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.wiki_form.content_label')}</label>
                 <textarea
                     required
                     value={content}
                     onChange={e => setContent(e.target.value)}
                     rows={8}
-                    placeholder="Rédigez l'histoire ou les détails de cet élément..."
+                    placeholder={t('modules:session.wiki_form.content_placeholder')}
                     className="w-full bg-app-bg/40 border border-app-border rounded-xl px-4 py-3 text-sm text-app-text focus:outline-none focus:border-accent/50 transition-all resize-none custom-scrollbar"
                 />
             </div>
@@ -132,17 +126,17 @@ export const WikiEntryForm: React.FC<WikiEntryFormProps> = ({ entry, onClose }) 
             <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-4">
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Tags</label>
+                        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.wiki_form.tags_label')}</label>
                         <div className="flex gap-2">
                             <input
                                 type="text"
                                 value={newTag}
                                 onChange={e => setNewTag(e.target.value)}
                                 onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addTag())}
-                                placeholder="Ajouter un tag..."
+                                placeholder={t('modules:session.wiki_form.tags_placeholder')}
                                 className="flex-1 bg-app-bg/20 border border-app-border rounded-lg px-3 py-1.5 text-[10px] text-app-text focus:outline-none focus:border-accent/50 transition-all"
                             />
-                            <button type="button" onClick={addTag} className="p-1.5 bg-app-surface border border-app-border rounded-lg text-accent hover:bg-accent/10 transition-all">
+                            <button type="button" onClick={addTag} title={t('modules:session.wiki_form.tags_placeholder')} className="p-1.5 bg-app-surface border border-app-border rounded-lg text-accent hover:bg-accent/10 transition-all">
                                 <Plus size={14} />
                             </button>
                         </div>
@@ -159,17 +153,17 @@ export const WikiEntryForm: React.FC<WikiEntryFormProps> = ({ entry, onClose }) 
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Images (URLs)</label>
+                        <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.wiki_form.images_label')}</label>
                         <div className="flex gap-2">
                             <input
                                 type="text"
                                 value={newImageUrl}
                                 onChange={e => setNewImageUrl(e.target.value)}
                                 onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addImage())}
-                                placeholder="Lien d'image..."
+                                placeholder={t('modules:session.wiki_form.images_placeholder')}
                                 className="flex-1 bg-app-bg/20 border border-app-border rounded-lg px-3 py-1.5 text-[10px] text-app-text focus:outline-none focus:border-accent/50 transition-all"
                             />
-                            <button type="button" onClick={addImage} className="p-1.5 bg-app-surface border border-app-border rounded-lg text-accent hover:bg-accent/10 transition-all">
+                            <button type="button" onClick={addImage} title={t('modules:session.wiki_form.images_placeholder')} className="p-1.5 bg-app-surface border border-app-border rounded-lg text-accent hover:bg-accent/10 transition-all">
                                 <Plus size={14} />
                             </button>
                         </div>
@@ -191,7 +185,7 @@ export const WikiEntryForm: React.FC<WikiEntryFormProps> = ({ entry, onClose }) 
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Entités Liées</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.wiki_form.entities_label')}</label>
                     <div className="max-h-48 overflow-y-auto border border-app-border rounded-xl p-2 space-y-1 custom-scrollbar bg-app-bg/20">
                         {entities.filter(e => e.campaignId === activeCampaignId).map(entity => (
                             <button
@@ -218,16 +212,17 @@ export const WikiEntryForm: React.FC<WikiEntryFormProps> = ({ entry, onClose }) 
                     onClick={onClose}
                     className="px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest text-app-text/40 hover:text-app-text transition-all"
                 >
-                    Annuler
+                    {t('modules:session.wiki_form.cancel')}
                 </button>
                 <button
                     type="submit"
                     className="flex items-center gap-2 px-8 py-2 bg-accent text-app-bg rounded-xl text-xs font-black uppercase tracking-widest shadow-glow-accent/20 hover:opacity-90 transition-all"
                 >
                     <Save size={14} />
-                    {entry ? 'Enregistrer les modifications' : 'Créer l\'article'}
+                    {entry ? t('modules:session.wiki_form.save_edit') : t('modules:session.wiki_form.save_create')}
                 </button>
             </div>
+
         </form>
     );
 };

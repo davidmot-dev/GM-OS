@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useMapStore } from '../useMapStore';
 import type { DangerZonePreset } from '../types';
 import { 
@@ -16,6 +17,7 @@ import { useSoundStore } from '../../sound/useSoundStore';
  * Redesigned with "Obsidian Nexus" aesthetic.
  */
 const DangerZonePresetEditor: React.FC = () => {
+    const { t } = useTranslation(['modules', 'common']);
     const { dangerZonePresets, addDangerZonePreset, updateDangerZonePreset, removeDangerZonePreset } = useMapStore();
     
     // External Stores for Dropdowns
@@ -41,7 +43,7 @@ const DangerZonePresetEditor: React.FC = () => {
 
     const handleCreate = () => {
         const newPreset: Omit<DangerZonePreset, 'id'> = {
-            name: 'Nouveau Modèle',
+            name: t('map.dangerEditor.newModel'),
             color: '#53ddfc', // Default to Obsidian Cyan
         };
         const added = addDangerZonePreset(newPreset);
@@ -63,11 +65,11 @@ const DangerZonePresetEditor: React.FC = () => {
                 <div className="p-6 border-b border-[#192540] flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         <Layers size={18} className="text-cyan-400" />
-                        <span className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-400/80">Modèles</span>
+                        <span className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-400/80">{t('map.dangerEditor.models')}</span>
                     </div>
                     <button 
                         onClick={handleCreate}
-                        title="Créer un nouveau modèle"
+                        title={t('map.dangerEditor.newModel') as string}
                         className="p-2 bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 border border-cyan-500/20 rounded-lg transition-all active:scale-95"
                     >
                         <Plus size={16} />
@@ -99,7 +101,7 @@ const DangerZonePresetEditor: React.FC = () => {
                                     {preset.name}
                                 </span>
                                 {preset.isAura && (
-                                    <span className="text-[10px] text-cyan-400/60 uppercase font-black tracking-tighter">Aura Active</span>
+                                    <span className="text-[10px] text-cyan-400/60 uppercase font-black tracking-tighter">{t('map.dangerEditor.auraActive')}</span>
                                 )}
                             </div>
                             <ChevronRight size={14} className={`transition-all ${selectedPresetId === preset.id ? 'text-cyan-400 translate-x-0' : 'opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0'}`} />
@@ -144,39 +146,39 @@ const DangerZonePresetEditor: React.FC = () => {
                                 className="flex items-center gap-2 px-5 py-2.5 bg-rose-500/5 text-rose-500 hover:bg-rose-500/15 border border-rose-500/20 rounded-xl text-xs font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95"
                             >
                                 <Trash2 size={14} />
-                                Supprimer
+                                {t('map.dangerEditor.delete')}
                             </button>
                         </div>
 
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
                             {/* Left Column: Visual & Identity */}
                             <section className="space-y-6">
-                                <SectionHeader icon={Palette} title="Configuration Visuelle" />
+                                <SectionHeader icon={Palette} title={t('map.dangerEditor.visualConfig')} />
                                 
                                 <div className="p-6 bg-[#0f1930]/40 backdrop-blur-md rounded-2xl border border-[#192540] relative overflow-hidden group">
                                     <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 blur-3xl pointer-events-none group-hover:bg-cyan-500/10 transition-colors" />
                                     
                                     <div className="space-y-6">
                                         <div className="space-y-2">
-                                            <label className="text-[10px] font-black text-cyan-400/60 uppercase tracking-widest ml-1">Appellation du Modèle</label>
+                                            <label className="text-[10px] font-black text-cyan-400/60 uppercase tracking-widest ml-1">{t('map.dangerEditor.modelName')}</label>
                                             <input 
                                                 type="text" 
                                                 value={selectedPreset.name}
                                                 onChange={(e) => handleUpdate({ name: e.target.value })}
                                                 className="w-full bg-[#060e20] border-b-2 border-[#40485d] focus:border-cyan-400 px-4 py-3 text-lg font-bold text-white transition-all outline-none rounded-t-lg"
-                                                placeholder="Ex: Tempête de Givre"
+                                                placeholder={t('map.dangerEditor.placeholderName') as string}
                                             />
                                         </div>
                                         
                                         <div className="space-y-2">
-                                            <label className="text-[10px] font-black text-cyan-400/60 uppercase tracking-widest ml-1">Signature Chromatique</label>
+                                            <label className="text-[10px] font-black text-cyan-400/60 uppercase tracking-widest ml-1">{t('map.dangerEditor.signature')}</label>
                                             <div className="flex gap-4 p-4 bg-[#060e20]/50 rounded-xl border border-[#192540]">
                                                 <div className="relative">
                                                     <input 
                                                         type="color" 
                                                         value={selectedPreset.color}
                                                         onChange={(e) => handleUpdate({ color: e.target.value })}
-                                                        title="Choisir la couleur de signature"
+                                                        title={t('map.dangerEditor.signature') as string}
                                                         className="w-14 h-14 bg-transparent cursor-pointer rounded-lg overflow-hidden border-none p-0"
                                                     />
                                                     <div className="absolute inset-0 pointer-events-none rounded-lg ring-1 ring-white/10 ring-inset" />
@@ -186,21 +188,21 @@ const DangerZonePresetEditor: React.FC = () => {
                                                         type="text" 
                                                         value={selectedPreset.color}
                                                         onChange={(e) => handleUpdate({ color: e.target.value })}
-                                                        title="Code hexadécimal de la couleur"
                                                         className="bg-transparent text-xl font-mono font-black text-white outline-none uppercase tracking-tighter w-28"
+                                                        title={t('map.dangerEditor.hexCode') as string}
                                                     />
-                                                    <span className="text-[9px] text-slate-500 font-bold uppercase tracking-widest italic">Code Hexadécimal</span>
+                                                    <span className="text-[9px] text-slate-500 font-bold uppercase tracking-widest italic">{t('map.dangerEditor.hexCode')}</span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <SectionHeader icon={AlertCircle} title="Propriétés Tactiques" color="text-emerald-400" />
+                                <SectionHeader icon={AlertCircle} title={t('map.dangerEditor.tacticalProps')} color="text-emerald-400" />
                                 <div className="p-6 bg-[#0f1930]/40 backdrop-blur-md rounded-2xl border border-[#192540] space-y-6">
                                     <TacticalSwitch 
-                                        label="Émission d'Aura" 
-                                        description="Le modèle suit dynamiquement le jeton assigné."
+                                        label={t('map.dangerEditor.auraLabel')} 
+                                        description={t('map.dangerEditor.auraDesc')}
                                         active={!!selectedPreset.isAura}
                                         onToggle={() => handleUpdate({ isAura: !selectedPreset.isAura })}
                                     />
@@ -208,8 +210,8 @@ const DangerZonePresetEditor: React.FC = () => {
                                     <div className="h-px bg-slate-800/50" />
 
                                     <TacticalSwitch 
-                                        label="Entrave de Mouvement" 
-                                        description="Définit cette zone comme un terrain difficile."
+                                        label={t('map.dangerEditor.movementLabel')} 
+                                        description={t('map.dangerEditor.movementDesc')}
                                         active={!!selectedPreset.isDifficultTerrain}
                                         color="emerald"
                                         onToggle={() => handleUpdate({ isDifficultTerrain: !selectedPreset.isDifficultTerrain })}
@@ -218,7 +220,7 @@ const DangerZonePresetEditor: React.FC = () => {
                                     {selectedPreset.isDifficultTerrain && (
                                         <div className="space-y-4 pt-2 animate-in slide-in-from-top-4 fade-in duration-300">
                                             <div className="flex justify-between items-center mb-1">
-                                                <label className="text-[10px] font-black text-emerald-400/60 uppercase tracking-widest">Multiplicateur de Coût</label>
+                                                <label className="text-[10px] font-black text-emerald-400/60 uppercase tracking-widest">{t('map.dangerEditor.multiCost')}</label>
                                                 <span className="bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-lg text-xs font-black italic">
                                                     x{selectedPreset.movementCost || 2.0}
                                                 </span>
@@ -231,13 +233,13 @@ const DangerZonePresetEditor: React.FC = () => {
                                                     step="0.5"
                                                     value={selectedPreset.movementCost || 2.0}
                                                     onChange={(e) => handleUpdate({ movementCost: parseFloat(e.target.value) })}
-                                                    title="Ajuster le multiplicateur de coût de mouvement"
+                                                    title={t('map.dangerEditor.multiCost') as string}
                                                     className="w-full accent-emerald-500 hover:accent-emerald-400 transition-all cursor-pointer"
                                                 />
                                             </div>
                                             <div className="flex justify-between text-[8px] font-bold text-slate-500 uppercase">
-                                                <span>Normal (1.0)</span>
-                                                <span>Létal (5.0)</span>
+                                                <span>{t('map.dangerEditor.normal')}</span>
+                                                <span>{t('map.dangerEditor.lethal')}</span>
                                             </div>
                                         </div>
                                     )}
@@ -246,34 +248,37 @@ const DangerZonePresetEditor: React.FC = () => {
 
                             {/* Right Column: Interaction & Audio */}
                             <section className="space-y-6">
-                                <SectionHeader icon={Zap} title="Domotique & Audio" color="text-amber-400" />
+                                <SectionHeader icon={Zap} title={t('map.dangerEditor.domotics')} color="text-amber-400" />
                                 
                                 <div className="p-6 bg-[#0f1930]/40 backdrop-blur-md rounded-2xl border border-[#192540] space-y-6">
                                     <ObsidianSelect 
-                                        label="Scène Lumineuse (Philips Hue)"
+                                        label={t('map.dangerEditor.lightScene')}
                                         icon={Lightbulb}
                                         value={selectedPreset.hueSceneId || ''}
                                         options={Object.values(lightScenes).map(s => ({ id: s.id, name: s.name }))}
                                         onChange={(val) => handleUpdate({ hueSceneId: val })}
                                         accent="amber"
+                                        placeholder={t('common:none') || '-- Aucun --'}
                                     />
 
                                     <ObsidianSelect 
-                                        label="Atmosphère Ambient OS"
+                                        label={t('map.dangerEditor.ambientAtmo')}
                                         icon={Music}
                                         value={selectedPreset.audioAtmosphereId || ''}
                                         options={ambientTracks.map((t, i) => ({ id: t.id, name: t.label || `Piste ${i+1}` }))}
                                         onChange={(val) => handleUpdate({ audioAtmosphereId: val })}
                                         accent="blue"
+                                        placeholder={t('common:none') || '-- Aucun --'}
                                     />
 
                                     <ObsidianSelect 
-                                        label="Déclencheur Audio (Pad)"
+                                        label={t('map.dangerEditor.audioPad')}
                                         icon={Volume2}
                                         value={selectedPreset.audioPadId || ''}
                                         options={soundPads.map(p => ({ id: p.id, name: p.title || `Pad ${p.id}` }))}
                                         onChange={(val) => handleUpdate({ audioPadId: val })}
                                         accent="cyan"
+                                        placeholder={t('common:none') || '-- Aucun --'}
                                     />
                                 </div>
 
@@ -284,9 +289,9 @@ const DangerZonePresetEditor: React.FC = () => {
                                          <Sparkles className="text-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.5)]" size={18} />
                                      </div>
                                      <div className="space-y-2 text-slate-300">
-                                         <p className="text-[10px] font-black text-amber-400 uppercase tracking-widest pl-1">Protocole GM-OS</p>
+                                         <p className="text-[10px] font-black text-amber-400 uppercase tracking-widest pl-1">{t('map.dangerEditor.protocol')}</p>
                                          <p className="text-xs leading-relaxed italic opacity-80">
-                                            \"Les presets configurés ici servent de matrices pour le dessin tactique. Les changements sont propagés instantanément au moteur de rendu et aux interfaces Player Hub.\""
+                                            {t('map.dangerEditor.protocolDesc')}
                                          </p>
                                      </div>
                                 </div>
@@ -300,15 +305,15 @@ const DangerZonePresetEditor: React.FC = () => {
                             <div className="absolute inset-0 animate-pulse bg-cyan-500/5 rounded-full blur-2xl" />
                         </div>
                         <div className="text-center space-y-2">
-                            <h3 className="text-xl font-bold text-slate-400 uppercase tracking-[0.3em]">Initialisation Requise</h3>
-                            <p className="text-sm italic text-slate-500 px-10">Sélectionnez un modèle existant ou initialisez une nouvelle matrice matricielle.</p>
+                            <h3 className="text-xl font-bold text-slate-400 uppercase tracking-[0.3em]">{t('map.dangerEditor.initRequired')}</h3>
+                            <p className="text-sm italic text-slate-500 px-10">{t('map.dangerEditor.initDesc')}</p>
                         </div>
                         <button 
                             onClick={handleCreate}
                             className="group flex items-center gap-3 px-8 py-3 bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 border border-cyan-500/30 rounded-2xl font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95"
                         >
                             <Plus size={18} className="group-hover:rotate-90 transition-transform duration-300" />
-                            Nouvelle Matrice
+                            {t('map.dangerEditor.newMatrix')}
                         </button>
                     </div>
                 )}

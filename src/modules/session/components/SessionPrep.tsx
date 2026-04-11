@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { 
     ChevronLeft, 
@@ -10,6 +11,7 @@ import {
 import { gmConfirm } from '../../../stores/useModalStore';
 
 const SessionPrep: React.FC = () => {
+    const { t } = useTranslation();
     const { 
         sessions, 
         activeCampaignId, 
@@ -45,12 +47,12 @@ const SessionPrep: React.FC = () => {
     if (!activeCampaignId) return (
         <div className="flex-1 flex flex-col items-center justify-center p-10 bg-app-bg">
             <AlertCircle size={48} className="text-slate-700 mb-4" />
-            <p className="text-slate-400 font-bold uppercase tracking-widest">No Active Campaign</p>
+            <p className="text-slate-400 font-bold uppercase tracking-widest">{t('modules:session.prep.no_active_campaign')}</p>
             <button 
                 onClick={() => setCurrentView('library')}
                 className="mt-6 px-6 py-2 bg-accent text-white rounded-lg font-bold"
             >
-                SELECT CAMPAIGN
+                {t('modules:session.prep.select_campaign')}
             </button>
         </div>
     );
@@ -63,18 +65,18 @@ const SessionPrep: React.FC = () => {
                     <button 
                         onClick={() => setCurrentView('cockpit')}
                         className="p-3 bg-app-surface/50 hover:bg-app-surface/80 rounded-xl text-app-text/40 hover:text-app-text transition-all border border-app-border active:scale-95"
-                        title="Retour au Cockpit"
+                        title={t('modules:session.prep.back_to_cockpit')}
                     >
                         <ChevronLeft size={24} />
                     </button>
                     <div>
                         <div className="flex items-center gap-2">
                             <span className="text-[10px] text-accent font-bold uppercase tracking-widest bg-accent/10 px-2 py-0.5 rounded border border-accent/20">
-                                {activeCampaign?.name || 'Campagne'}
+                                {activeCampaign?.name || t('modules:session.prep.no_active_campaign')}
                             </span>
-                            <h2 className="text-2xl font-black text-app-text tracking-tight">Liste des Sessions</h2>
+                            <h2 className="text-2xl font-black text-app-text tracking-tight">{t('modules:session.prep.list_title')}</h2>
                         </div>
-                        <p className="text-[10px] text-app-text/40 uppercase tracking-[0.2em] font-bold mt-1">Gérer et préparer vos prochaines aventures</p>
+                        <p className="text-[10px] text-app-text/40 uppercase tracking-[0.2em] font-bold mt-1">{t('modules:session.prep.list_subtitle')}</p>
                     </div>
                 </div>
 
@@ -83,7 +85,7 @@ const SessionPrep: React.FC = () => {
                     className="flex items-center gap-3 px-6 py-3 bg-accent hover:brightness-110 text-white rounded-xl font-bold text-sm shadow-glow-accent transition-all active:scale-95"
                 >
                     <Plus size={20} />
-                    CRÉER UNE SESSION
+                    {t('modules:session.prep.create_session')}
                 </button>
             </header>
 
@@ -92,7 +94,7 @@ const SessionPrep: React.FC = () => {
                     {campaignSessions.length === 0 ? (
                         <div className="flex-1 flex flex-col items-center justify-center py-20 opacity-30">
                             <BookOpen size={64} className="mb-6" />
-                            <p className="text-lg font-bold uppercase tracking-widest text-center">Aucune session trouvée.<br/>Commencez par en créer une !</p>
+                            <p className="text-lg font-bold uppercase tracking-widest text-center whitespace-pre-line">{t('modules:session.prep.no_sessions')}</p>
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -107,7 +109,7 @@ const SessionPrep: React.FC = () => {
                                 >
                                     <div className="flex items-center justify-between mb-4">
                                         <div className="px-3 py-1 bg-accent/10 text-accent text-[10px] font-black rounded-lg uppercase tracking-widest border border-accent/20">
-                                            Session #{s.number}
+                                            {t('modules:session.prep.session_card_number', { number: s.number })}
                                         </div>
                                         <div className={`w-3 h-3 rounded-full ${
                                             s.status === 'active' ? 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.5)]' : 
@@ -119,26 +121,26 @@ const SessionPrep: React.FC = () => {
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 gmConfirm(
-                                                    `Voulez-vous vraiment supprimer la Session #${s.number} ? Cette action est irréversible.`,
+                                                    t('modules:session.prep.delete_confirm', { number: s.number }),
                                                     () => deleteSession(s.id),
                                                     () => {},
-                                                    "Supprimer",
-                                                    "Annuler"
+                                                    t('modules:session.prep.delete_btn'),
+                                                    t('modules:session.prep.cancel_btn')
                                                 );
                                             }}
                                             className="ml-2 p-2 text-app-text/20 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
-                                            title="Supprimer la session"
+                                            title={t('modules:session.prep.delete_tooltip')}
                                         >
                                             <Trash2 size={16} />
                                         </button>
                                     </div>
                                     
                                     <h4 className="text-2xl font-black text-app-text mb-2 truncate">{new Date(s.date).toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' })}</h4>
-                                    <p className="text-xs text-app-text/40 uppercase tracking-widest font-bold mb-6">{s.status}</p>
+                                    <p className="text-xs text-app-text/40 uppercase tracking-widest font-bold mb-6">{t(`modules:session.prep.status.${s.status}`)}</p>
                                     
                                     <div className="mt-auto flex items-center gap-3 text-[10px] font-black text-accent/60 group-hover:text-accent transition-colors uppercase tracking-[0.2em] border-t border-app-border pt-6">
                                         <BookOpen size={14} />
-                                        PRÉPARER LA SESSION
+                                        {t('modules:session.prep.prepare_btn')}
                                     </div>
 
                                     {/* Decorative subtle background elements */}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSessionOSStore, type Clue } from '../useSessionOSStore';
 import { useJournalStore } from '../../journal/useJournalStore';
 import { useImageStore } from '../../image/useImageStore';
@@ -16,6 +17,7 @@ import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import type { ProjectedEntity } from '../../image/types';
 
 const CluesManager: React.FC = () => {
+    const { t } = useTranslation(['modules']);
     const { 
         clues, activeCampaignId, addClue, updateClue, deleteClue,
         atlasMaps, entities, editingClueId, setEditingClueId,
@@ -63,16 +65,16 @@ const CluesManager: React.FC = () => {
             });
             setIsAdding(true);
             clearPendingPreFill();
-            gmToast(pendingPreFill.type === 'location' ? "Lieu prêt à l'import 📍" : "Fragment importé du Wiki 📖");
+            gmToast(pendingPreFill.type === 'location' ? t('modules:session.clues_manager.toasts.location_import') : t('modules:session.clues_manager.toasts.wiki_import'));
         }
-    }, [pendingPreFill, clearPendingPreFill]);
+    }, [pendingPreFill, clearPendingPreFill, t]);
 
     // Safety check for activeCampaignId
     if (!activeCampaignId) {
         return (
             <div className="flex flex-col items-center justify-center p-20 text-white/20 gap-4">
                 <Search size={48} strokeWidth={1} />
-                <p className="text-xs font-black uppercase tracking-widest">Activez une campagne pour gérer les indices</p>
+                <p className="text-xs font-black uppercase tracking-widest">{t('modules:session.clues_manager.no_campaign')}</p>
             </div>
         );
     }
@@ -83,7 +85,7 @@ const CluesManager: React.FC = () => {
 
     const handleSave = () => {
         if (!editingClue || !editingClue.title) {
-            gmToast('Le titre est requis', 'error');
+            gmToast(t('modules:session.clues_manager.toasts.title_required'), 'error');
             return;
         }
 
@@ -108,10 +110,10 @@ const CluesManager: React.FC = () => {
                 ...clueToSave,
                 isRevealed: editingClue.isRevealed ?? false,
             } as Omit<Clue, 'id'>);
-            gmToast('Indice ajouté au Nexus');
+            gmToast(t('modules:session.clues_manager.toasts.save_success_add'));
         } else if (editingClue.id) {
             updateClue(editingClue.id, clueToSave);
-            gmToast('Indice synchronisé');
+            gmToast(t('modules:session.clues_manager.toasts.save_success_update'));
             
             if (isRevealing) {
                 setJustRevealed(editingClue.id);
@@ -120,8 +122,11 @@ const CluesManager: React.FC = () => {
                 // TRACÉ DANS LE JOURNAL OS
                 addEvent({
                     type: 'NOTE',
-                    title: `🔎 Indice Révélé : ${clueToSave.title}`,
-                    content: `**Moment :** ${clueToSave.campaignMoment || 'Non spécifié'}\n\n**Description :** ${clueToSave.content || 'Aucune description'}`,
+                    title: t('modules:session.clues_manager.journal.reveal_log', { title: clueToSave.title }),
+                    content: t('modules:session.clues_manager.journal.reveal_log_content', { 
+                        moment: clueToSave.campaignMoment || 'Non spécifié',
+                        content: clueToSave.content || 'Aucune description'
+                    }),
                     metadata: { clueId: editingClue.id, type: 'evidence', mediaUrl: clueToSave.mediaUrl }
                 });
             }
@@ -134,21 +139,21 @@ const CluesManager: React.FC = () => {
 
     const handleProject = (clue: Partial<Clue>) => {
         if (!clue.isRevealed) {
-            gmToast('Révelez l\'indice avant de le projeter', 'warning');
+            gmToast(t('modules:session.clues_manager.toasts.reveal_warning'), 'warning');
             return;
         }
 
         const entityToProject: ProjectedEntity = {
             id: clue.id || 'temp-clue',
-            name: clue.title || 'Indice',
-            subtitle: 'Preuve Collectée',
+            name: clue.title || t('modules:session.clues_manager.clue_title_label'),
+            subtitle: t('modules:session.clues_manager.npc_link'),
             avatar: clue.mediaUrl || '',
             description: clue.content || '',
             type: 'clue',
         };
 
         projectEntity(entityToProject);
-        gmToast(projectedEntity?.id === clue.id ? 'Projection coupée' : 'Indice envoyé au Hub');
+        gmToast(projectedEntity?.id === clue.id ? t('modules:session.clues_manager.toasts.project_off') : t('modules:session.clues_manager.toasts.project_on'));
     };
 
     const handleEdit = (clue: Clue) => {
@@ -157,9 +162,9 @@ const CluesManager: React.FC = () => {
     };
 
     const handleDelete = (id: string) => {
-        if (window.confirm('Voulez-vous vraiment supprimer cet indice ?')) {
+        if (window.confirm(t('modules:session.clues_manager.delete_confirm'))) {
             deleteClue(id);
-            gmToast('Fragment d\'indice supprimé');
+            gmToast(t('modules:session.clues_manager.toasts.delete_success'));
         }
     };
 
@@ -182,9 +187,9 @@ const CluesManager: React.FC = () => {
                 <div className="space-y-2">
                     <h2 className="text-2xl font-black tracking-tight text-white flex items-center gap-4">
                         <Search className="text-gm-gold" size={28} />
-                        Gestion des Indices
+                        {t('modules:session.clues_manager.title')}
                     </h2>
-                    <p className="text-sm text-white/40 tracking-wide uppercase font-bold">Documentez les preuves et secrets de votre intrigue.</p>
+                    <p className="text-sm text-white/40 tracking-wide uppercase font-bold">{t('modules:session.clues_manager.subtitle')}</p>
                 </div>
                 {!editingClue && !isAdding && (
                     <button
@@ -193,10 +198,10 @@ const CluesManager: React.FC = () => {
                             setIsAdding(true);
                         }}
                         className="flex items-center gap-2 bg-gm-gold text-black font-black px-6 py-3 rounded-xl text-[10px] tracking-widest uppercase transition-all shadow-glow-gold/20 hover:scale-105"
-                        title="Ajouter un nouvel indice"
+                        title={t('modules:session.clues_manager.add_fragment_tooltip')}
                     >
                         <Plus size={14} />
-                        Nouveau Fragment
+                        {t('modules:session.clues_manager.new_fragment')}
                     </button>
                 )}
             </div>
@@ -206,11 +211,11 @@ const CluesManager: React.FC = () => {
                     {/* Editor Side */}
                     <div className="space-y-8 p-10 rounded-[3rem] glass-bento border border-white/5 shadow-2xl flex-1 min-h-[600px]">
                         <div className="flex items-center justify-between mb-4">
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gm-gold">Éditeur de Fragment</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gm-gold">{t('modules:session.clues_manager.editor_title')}</span>
                             <button 
                                 onClick={() => { setEditingClue(null); setIsAdding(false); setEditingClueId(null); }} 
                                 className="text-white/20 hover:text-white transition-all"
-                                title="Fermer l'éditeur"
+                                title={t('modules:session.campaign_form.close_tooltip')}
                             >
                                 <X size={20} />
                             </button>
@@ -218,48 +223,48 @@ const CluesManager: React.FC = () => {
 
                         <div className="space-y-6">
                             <div className="space-y-3">
-                                <label htmlFor="clue-title" className="text-[10px] font-black uppercase tracking-widest text-white/30 px-2">Titre de l'Indice</label>
+                                <label htmlFor="clue-title" className="text-[10px] font-black uppercase tracking-widest text-white/30 px-2">{t('modules:session.clues_manager.clue_title_label')}</label>
                                 <input 
                                     id="clue-title"
                                     value={editingClue.title || ''}
                                     onChange={e => setEditingClue({ ...editingClue, title: e.target.value })}
-                                    placeholder="ex: Le Médaillon Sanglant"
+                                    placeholder={t('modules:session.clues_manager.clue_title_placeholder')}
                                     className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 px-6 text-base font-bold text-white focus:border-gm-gold/40 outline-none transition-all"
                                 />
                             </div>
 
                             <div className="space-y-3">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-white/30 px-2">Visuel de l'Indice</label>
+                                <label className="text-[10px] font-black uppercase tracking-widest text-white/30 px-2">{t('modules:session.clues_manager.visual_label')}</label>
                                 <button 
                                     type="button"
                                     onClick={() => setIsMediaBrowserOpen(true)}
                                     className="group relative w-full aspect-video bg-black/40 border border-white/5 rounded-2xl overflow-hidden cursor-pointer hover:border-gm-gold/40 transition-all flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-gm-gold/50"
-                                    title="Changer le visuel de l'indice"
-                                    aria-label="Changer le visuel de l'indice"
+                                    title={t('modules:session.clues_manager.change_image')}
+                                    aria-label={t('modules:session.clues_manager.change_image')}
                                 >
                                     {editingClue.mediaUrl ? (
                                         <>
                                             <ResolvedAsset src={resolvedMedia || ''} className="w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-700" />
                                             <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <span className="text-[10px] font-black uppercase tracking-widest text-white">Changer l'Image</span>
+                                                <span className="text-[10px] font-black uppercase tracking-widest text-white">{t('modules:session.clues_manager.change_image')}</span>
                                             </div>
                                         </>
                                     ) : (
                                         <div className="flex flex-col items-center gap-2 text-white/20 group-hover:text-gm-gold/40 transition-colors">
                                             <ImageIcon size={32} strokeWidth={1} />
-                                            <span className="text-[9px] font-black uppercase tracking-widest">Ajouter un Visuel</span>
+                                            <span className="text-[9px] font-black uppercase tracking-widest">{t('modules:session.clues_manager.add_visual')}</span>
                                         </div>
                                     )}
                                 </button>
                             </div>
 
                             <div className="space-y-3">
-                                <label htmlFor="clue-content" className="text-[10px] font-black uppercase tracking-widest text-white/30 px-2">Contenu / Description</label>
+                                <label htmlFor="clue-content" className="text-[10px] font-black uppercase tracking-widest text-white/30 px-2">{t('modules:session.clues_manager.content_label')}</label>
                                 <textarea 
                                     id="clue-content"
                                     value={editingClue.content || ''}
                                     onChange={e => setEditingClue({ ...editingClue, content: e.target.value })}
-                                    placeholder="Détaillez ce que les joueurs découvrent..."
+                                    placeholder={t('modules:session.clues_manager.content_placeholder')}
                                     rows={5}
                                     className="w-full bg-black/40 border border-white/5 rounded-[2rem] p-6 text-sm text-white/60 focus:border-gm-gold/40 outline-none transition-all resize-none custom-scrollbar"
                                 />
@@ -268,7 +273,7 @@ const CluesManager: React.FC = () => {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-3">
                                     <label htmlFor="clue-location" className="text-[10px] font-black uppercase tracking-widest text-white/30 px-2 flex items-center gap-2">
-                                        <MapPin size={12} /> Lieu Associé
+                                        <MapPin size={12} /> {t('modules:session.clues_manager.location_label')}
                                     </label>
                                     <div className="relative">
                                         <select 
@@ -276,9 +281,9 @@ const CluesManager: React.FC = () => {
                                             value={editingClue.locationId || ''}
                                             onChange={e => setEditingClue({ ...editingClue, locationId: e.target.value || undefined })}
                                             className="w-full bg-black/40 border border-white/5 rounded-xl py-3 px-4 text-xs font-bold text-white/60 outline-none appearance-none cursor-pointer pr-10"
-                                            title="Sélectionner un lieu"
+                                            title={t('modules:session.clues_manager.location_label')}
                                         >
-                                            <option value="">Aucun lieu</option>
+                                            <option value="">{t('modules:session.clues_manager.no_location')}</option>
                                             {campaignMaps.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
                                         </select>
                                         <ChevronRight size={14} className="absolute right-3 top-1/2 -translate-y-1/2 rotate-90 text-white/20 pointer-events-none" />
@@ -286,7 +291,7 @@ const CluesManager: React.FC = () => {
                                 </div>
                                 <div className="space-y-3">
                                     <label htmlFor="clue-owner" className="text-[10px] font-black uppercase tracking-widest text-white/30 px-2 flex items-center gap-2">
-                                        <Users size={12} /> PNJ Lié
+                                        <Users size={12} /> {t('modules:session.clues_manager.npc_label')}
                                     </label>
                                     <div className="relative">
                                         <select 
@@ -294,9 +299,9 @@ const CluesManager: React.FC = () => {
                                             value={editingClue.ownerId || ''}
                                             onChange={e => setEditingClue({ ...editingClue, ownerId: e.target.value || undefined })}
                                             className="w-full bg-black/40 border border-white/5 rounded-xl py-3 px-4 text-xs font-bold text-white/60 outline-none appearance-none cursor-pointer pr-10"
-                                            title="Sélectionner un PNJ"
+                                            title={t('modules:session.clues_manager.npc_label')}
                                         >
-                                            <option value="">Aucun PNJ</option>
+                                            <option value="">{t('modules:session.clues_manager.no_npc')}</option>
                                             {campaignEntities.filter(ent => ent.type === 'npc').map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
                                         </select>
                                         <ChevronRight size={14} className="absolute right-3 top-1/2 -translate-y-1/2 rotate-90 text-white/20 pointer-events-none" />
@@ -306,13 +311,13 @@ const CluesManager: React.FC = () => {
 
                             <div className="space-y-3">
                                 <label htmlFor="clue-moment" className="text-[10px] font-black uppercase tracking-widest text-white/30 px-2 flex items-center gap-2">
-                                    <Sparkles size={12} /> Moment de l'intrigue
+                                    <Sparkles size={12} /> {t('modules:session.clues_manager.moment_label')}
                                 </label>
                                 <input 
                                     id="clue-moment"
                                     value={editingClue.campaignMoment || ''}
                                     onChange={e => setEditingClue({ ...editingClue, campaignMoment: e.target.value })}
-                                    placeholder="ex: Session 22, Acte II"
+                                    placeholder={t('modules:session.clues_manager.moment_placeholder')}
                                     className="w-full bg-black/40 border border-white/5 rounded-xl py-3 px-4 text-xs font-bold text-white/60 focus:border-gm-gold/40 outline-none transition-all"
                                 />
                             </div>
@@ -323,14 +328,14 @@ const CluesManager: React.FC = () => {
                                         {editingClue.isRevealed ? <Eye size={18} /> : <EyeOff size={18} />}
                                     </div>
                                     <div>
-                                        <p className="text-[10px] font-black uppercase tracking-widest text-white">État de Révélation</p>
-                                        <p className="text-[9px] text-white/20 font-bold uppercase tracking-widest mt-0.5">Visible par les joueurs sur le Hub</p>
+                                        <p className="text-[10px] font-black uppercase tracking-widest text-white">{t('modules:session.clues_manager.revelation_label')}</p>
+                                        <p className="text-[9px] text-white/20 font-bold uppercase tracking-widest mt-0.5">{t('modules:session.clues_manager.revelation_desc')}</p>
                                     </div>
                                 </div>
                                 <button
                                     onClick={() => setEditingClue({ ...editingClue, isRevealed: !editingClue.isRevealed })}
                                     className={`relative w-12 h-6 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-gm-gold/50 ${editingClue.isRevealed ? 'bg-gm-gold' : 'bg-white/10'}`}
-                                    title={editingClue.isRevealed ? "Masquer aux joueurs" : "Révéler aux joueurs"}
+                                    title={editingClue.isRevealed ? t('modules:session.clues_manager.hidden') : t('modules:session.clues_manager.revealed')}
                                     aria-pressed={editingClue.isRevealed ? "true" : "false"}
                                 >
                                     <div className={`absolute top-1 w-4 h-4 rounded-full bg-black shadow-lg transition-all ${editingClue.isRevealed ? 'translate-x-6' : 'translate-x-0'}`} />
@@ -342,17 +347,17 @@ const CluesManager: React.FC = () => {
                                 <button 
                                     onClick={handleSave}
                                     className="flex-1 flex items-center justify-center gap-3 bg-gm-gold text-black font-black py-4 rounded-2xl text-[10px] tracking-widest uppercase shadow-glow-gold/10 hover:opacity-90 transition-all active:scale-95"
-                                    title="Sauvegarder l'indice"
+                                    title={isAdding ? t('modules:session.clues_manager.save_button_add') : t('modules:session.clues_manager.save_button_update')}
                                 >
                                     <Save size={16} />
-                                    {isAdding ? 'Enregistrer le Fragment' : 'Actualiser l\'Indice'}
+                                    {isAdding ? t('modules:session.clues_manager.save_button_add') : t('modules:session.clues_manager.save_button_update')}
                                 </button>
                                 
                                 {editingClue.id && editingClue.isRevealed && (
                                     <button 
                                         onClick={() => handleProject(editingClue)}
                                         className={`flex-none flex items-center justify-center w-14 bg-white/5 border border-white/10 rounded-2xl transition-all hover:bg-white/10 active:scale-95 ${projectedEntity?.id === editingClue.id ? 'text-gm-gold border-gm-gold/40 shadow-glow-gold/20' : 'text-white/40'}`}
-                                        title="Projeter au Player Hub"
+                                        title={t('modules:session.clues_manager.project_tooltip')}
                                     >
                                         <ExternalLink size={20} />
                                     </button>
@@ -364,7 +369,7 @@ const CluesManager: React.FC = () => {
                     <div className="space-y-8 sticky top-0">
                         <div className="flex items-center gap-3 px-4">
                             <Sparkles className="text-gm-purple" size={16} />
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gm-purple/60">Aperçu Visuel (Player Hub)</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gm-purple/60">{t('modules:session.clues_manager.preview_title')}</span>
                         </div>
                         
                         <div className={`min-h-[600px] flex-1 rounded-[3.5rem] glass-bento !bg-[#0c0c0e]/40 border border-white/10 shadow-glow-white/5 overflow-hidden relative group p-12 pb-32 flex flex-col items-center justify-center text-center gap-8 ${justRevealed === editingClue.id ? 'animate-clue-reveal ring-4 ring-gm-gold/50 shadow-glow-gold' : ''}`}>
@@ -390,11 +395,11 @@ const CluesManager: React.FC = () => {
                             
                             <div className="relative z-10 space-y-4 max-w-sm">
                                 <h3 className="text-2xl font-black text-white tracking-tight uppercase tracking-[0.1em] leading-tight">
-                                    {editingClue.title || 'Indice Non Défini'}
+                                    {editingClue.title || t('modules:session.clues_manager.empty_selection')}
                                 </h3>
                                 <div className="h-0.5 w-12 bg-white/10 mx-auto rounded-full group-hover:w-20 group-hover:bg-gm-gold/40 transition-all duration-700" />
                                 <p className="text-sm text-white/60 leading-relaxed italic font-serif opacity-80 max-h-40 overflow-hidden text-ellipsis">
-                                    {editingClue.content || 'Le contenu de l\'indice apparaîtra ici une fois renseigné.'}
+                                    {editingClue.content || t('modules:session.clues_manager.preview_empty_content')}
                                 </p>
                             </div>
                             
@@ -403,19 +408,19 @@ const CluesManager: React.FC = () => {
                                     {(editingClue.locationId) && (
                                         <div className="px-3 py-1 bg-white/5 border border-white/10 rounded-full flex items-center gap-2">
                                             <MapPin size={10} className="text-gm-gold" />
-                                            <span className="text-[8px] font-black uppercase tracking-widest text-white/40">Localisé</span>
+                                            <span className="text-[8px] font-black uppercase tracking-widest text-white/40">{t('modules:session.clues_manager.localized')}</span>
                                         </div>
                                     )}
                                     {(editingClue.ownerId) && (
                                         <div className="px-3 py-1 bg-white/5 border border-white/10 rounded-full flex items-center gap-2">
                                             <Users size={10} className="text-gm-gold" />
-                                            <span className="text-[8px] font-black uppercase tracking-widest text-white/40">Liaison PNJ</span>
+                                            <span className="text-[8px] font-black uppercase tracking-widest text-white/40">{t('modules:session.clues_manager.npc_link')}</span>
                                         </div>
                                     )}
                                 </div>
                                 {!editingClue.isRevealed && (
                                     <div className="flex items-center gap-2 px-4 py-2 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-[8px] font-black uppercase tracking-[0.2em] shadow-glow-red/5">
-                                        <EyeOff size={10} /> Dissimulé aux Joueurs
+                                        <EyeOff size={10} /> {t('modules:session.clues_manager.hidden_label')}
                                     </div>
                                 )}
                             </div>
@@ -447,14 +452,14 @@ const CluesManager: React.FC = () => {
                                     <button 
                                         onClick={() => handleEdit(clue)}
                                         className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white/20 hover:text-white hover:bg-white/10 transition-all border border-white/5"
-                                        title="Modifier cet indice"
+                                        title={t('modules:session.clues_manager.edit_tooltip')}
                                     >
                                         <Edit3 size={16} />
                                     </button>
                                     <button 
                                         onClick={() => handleDelete(clue.id)}
                                         className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white/20 hover:text-rose-500 hover:bg-rose-500/10 transition-all border border-white/5"
-                                        title="Supprimer cet indice"
+                                        title={t('modules:session.clues_manager.delete_tooltip')}
                                     >
                                         <Trash2 size={16} />
                                     </button>
@@ -486,7 +491,7 @@ const CluesManager: React.FC = () => {
                                 <div className="ml-auto flex flex-col items-end gap-1">
                                     <div className={`px-3 py-1 rounded-lg flex items-center gap-2 text-[9px] font-black uppercase tracking-widest ${clue.isRevealed ? 'bg-gm-gold/20 text-gm-gold' : 'bg-white/5 text-white/20'}`}>
                                         {clue.isRevealed ? <Eye size={12} /> : <EyeOff size={12} />}
-                                        {clue.isRevealed ? 'Revealed' : 'Hidden'}
+                                        {clue.isRevealed ? t('modules:session.clues_manager.revealed') : t('modules:session.clues_manager.hidden')}
                                     </div>
                                     {clue.isRevealed && clue.revealedAt && (
                                         <p className="text-[8px] font-bold text-white/20 uppercase tracking-tighter">
@@ -508,8 +513,8 @@ const CluesManager: React.FC = () => {
                         <div className="col-span-full py-24 border-2 border-dashed border-white/5 rounded-[3rem] text-center flex flex-col items-center gap-6">
                             <Search size={48} className="text-white/10" strokeWidth={1} />
                             <div className="space-y-2">
-                                <p className="text-xs font-black uppercase tracking-widest text-white/20">Aucun indice répertorié</p>
-                                <p className="text-[10px] text-white/10 font-bold uppercase tracking-widest max-w-xs px-6 opacity-40">Documentez les secrets de votre campagne pour orchestrer des découvertes mémorables.</p>
+                                <p className="text-xs font-black uppercase tracking-widest text-white/20">{t('modules:session.clues_manager.empty_state_title')}</p>
+                                <p className="text-[10px] text-white/10 font-bold uppercase tracking-widest max-w-xs px-6 opacity-40">{t('modules:session.clues_manager.empty_state_desc')}</p>
                             </div>
                             <button
                                 onClick={() => {
@@ -518,7 +523,7 @@ const CluesManager: React.FC = () => {
                                 }}
                                 className="mt-4 px-8 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-white transition-all shadow-lg shadow-black/40"
                             >
-                                Initialiser le Premier Fragment
+                                {t('modules:session.clues_manager.init_first')}
                             </button>
                         </div>
                     )}
@@ -535,7 +540,7 @@ const CluesManager: React.FC = () => {
                     setIsMediaBrowserOpen(false);
                 }}
                 allowedTypes={['image']}
-                title="Saisie Visuelle: Fragment d'Indice"
+                title={t('modules:session.clues_manager.add_visual')}
             />
         </div>
     );

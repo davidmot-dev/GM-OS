@@ -168,6 +168,6 @@ Vous pouvez masquer l'effet d'ambiance à tout moment via le bouton **"Ambiance 
 
 ### État du Système
 
-Dernière mise à jour : 6 Avril 2026
+Dernière mise à jour : 11 Avril 2026
 
-Statut : Nexus-OS v1.1 — Portabilité médias, Synchronisation temps réel et UI Premium Glassmorphism 2.0 opérationnelles.
+Statut : Nexus-OS v2.0 — Portabilité totale, Exportation de Drivers, HUD Multilingue (I18n) et validation de sécurité du manifeste opérationnels.

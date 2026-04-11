@@ -32,14 +32,14 @@ export interface SheetTemplate {
 export const DEFAULT_SHEET_TEMPLATES: SheetTemplate[] = [
     {
         id: 'generic',
-        name: 'Générique',
+        name: 'Generic',
         emoji: '📋',
         isBuiltin: true,
         defaultNotebookUrl: 'https://notebooklm.google.com/notebook/generic-default',
         sections: [
             {
                 id: 'stats',
-                label: 'Statistiques',
+                label: 'Statistics',
                 fields: [
                     { id: 'stat1', label: 'Stat 1', type: 'gauge', defaultValue: 50 },
                     { id: 'stat2', label: 'Stat 2', type: 'gauge', defaultValue: 50 },
@@ -47,7 +47,7 @@ export const DEFAULT_SHEET_TEMPLATES: SheetTemplate[] = [
             },
             {
                 id: 'info',
-                label: 'Informations',
+                label: 'Information',
                 fields: [
                     { id: 'info1', label: 'Info 1', type: 'text', defaultValue: '' },
                 ],

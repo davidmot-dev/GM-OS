@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { 
     Calendar, 
@@ -22,6 +23,7 @@ import SessionChecklist from './SessionChecklist';
 import SessionPrepEntityManager from './SessionPrepEntityManager';
 
 const SessionFocusEditor: React.FC = () => {
+    const { t } = useTranslation();
     const { 
         sessions, 
         selectedSessionId, 
@@ -42,14 +44,14 @@ const SessionFocusEditor: React.FC = () => {
         return (
             <div className="flex-1 flex flex-col items-center justify-center bg-app-bg p-10">
                 <BookOpen size={64} className="text-slate-800 mb-6" />
-                <p className="text-slate-500 font-bold uppercase tracking-widest">Session Not Found</p>
+                <p className="text-slate-500 font-bold uppercase tracking-widest">{t('modules:session.focus.not_found')}</p>
                 <button 
                     onClick={() => setCurrentView('session-prep')}
                     className="mt-6 px-6 py-2 bg-app-surface text-app-text/60 rounded-lg font-bold"
-                    title="Retourner à la liste des sessions"
-                    aria-label="Retourner à la liste des sessions"
+                    title={t('modules:session.focus.back_to_list_tooltip')}
+                    aria-label={t('modules:session.focus.back_to_list_tooltip')}
                 >
-                    BACK TO LIST
+                    {t('modules:session.focus.back_to_list')}
                 </button>
             </div>
         );
@@ -94,19 +96,19 @@ const SessionFocusEditor: React.FC = () => {
                     <button 
                         onClick={() => setCurrentView('session-prep')}
                         className="p-3 bg-app-surface/50 hover:bg-accent/10 hover:text-accent rounded-xl transition-all border border-app-border active:scale-95"
-                        title="Retourner à la liste des sessions"
-                        aria-label="Retourner à la liste des sessions"
+                        title={t('modules:session.focus.back_to_list_tooltip')}
+                        aria-label={t('modules:session.focus.back_to_list_tooltip')}
                     >
                         <ChevronLeft size={24} />
                     </button>
                     <div>
                         <div className="flex items-center gap-3">
-                            <span className="px-2 py-0.5 bg-accent/20 text-accent text-[10px] font-bold rounded uppercase tracking-widest">{activeCampaign?.name || 'Campagne'}</span>
+                            <span className="px-2 py-0.5 bg-accent/20 text-accent text-[10px] font-bold rounded uppercase tracking-widest">{activeCampaign?.name || t('modules:session.prep.no_active_campaign')}</span>
                             <span className="text-app-text/60 font-bold text-[10px]">/</span>
-                            <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 text-[10px] font-bold rounded uppercase tracking-widest">Session #{session.number}</span>
-                            <h2 className="text-2xl font-black tracking-tight text-app-text">Détails de Préparation</h2>
+                            <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 text-[10px] font-bold rounded uppercase tracking-widest">{t('modules:session.prep.session_card_number', { number: session.number })}</span>
+                            <h2 className="text-2xl font-black tracking-tight text-app-text">{t('modules:session.focus.title')}</h2>
                         </div>
-                        <p className="text-xs text-app-text/60 font-medium mt-1">Édition immersive de la session du {new Date(session.date).toLocaleDateString()}</p>
+                        <p className="text-xs text-app-text/60 font-medium mt-1">{t('modules:session.focus.subtitle', { date: new Date(session.date).toLocaleDateString() })}</p>
                     </div>
                 </div>
 
@@ -123,7 +125,7 @@ const SessionFocusEditor: React.FC = () => {
                                     : 'text-app-text/30 hover:text-app-text/60 hover:bg-white/5'
                                 }`}
                             >
-                                {status}
+                                {t(`modules:session.prep.status.${status}`)}
                             </button>
                         ))}
                     </div>
@@ -133,7 +135,7 @@ const SessionFocusEditor: React.FC = () => {
                         className="flex items-center gap-3 px-6 py-3 bg-accent hover:brightness-110 text-white rounded-xl font-bold text-sm shadow-glow-accent transition-all active:scale-95"
                     >
                         <Save size={18} />
-                        SAUVEGARDER & FERMER
+                        {t('modules:session.focus.save_close')}
                     </button>
                 </div>
             </header>
@@ -153,7 +155,7 @@ const SessionFocusEditor: React.FC = () => {
                         <motion.div variants={itemVariants} className="flex flex-col gap-4">
                             <div className="flex items-center gap-3 text-accent group/title">
                                 <MessageSquare size={20} className="group-hover/title:rotate-12 transition-transform" />
-                                <h3 className="text-sm font-black uppercase tracking-[0.3em]">Narration & Synopsis</h3>
+                                <h3 className="text-sm font-black uppercase tracking-[0.3em]">{t('modules:session.focus.narration_title')}</h3>
                             </div>
                             
                             <div className="glass-bento rounded-[2.5rem] border border-white/5 overflow-hidden flex flex-col shadow-2xl focus-within:border-accent/30 transition-colors">
@@ -162,14 +164,14 @@ const SessionFocusEditor: React.FC = () => {
                                     <div className="flex flex-col p-8 gap-6">
                                         <div className="flex items-center justify-between opacity-80">
                                             <span className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
-                                                <Eye size={12} /> Synopsis Joueurs
+                                                <Eye size={12} /> {t('modules:session.focus.synopsis_players')}
                                             </span>
-                                            <span className="text-[10px] font-mono">MDD • PUBLIC</span>
+                                            <span className="text-[10px] font-mono">{t('modules:session.focus.synopsis_mdd')}</span>
                                         </div>
                                         <textarea 
                                             value={session.publicSummary}
                                             onChange={(e) => updateSession(session.id, { publicSummary: e.target.value })}
-                                            placeholder="Que savent les joueurs à ce stade ? Résumez ici ce qui sera visible dans leur journal de quête..."
+                                            placeholder={t('modules:session.focus.synopsis_placeholder')}
                                             className="flex-1 bg-transparent border-none focus:ring-0 text-lg leading-relaxed text-app-text outline-none resize-none p-0 placeholder:text-app-text/40"
                                         />
                                     </div>
@@ -178,26 +180,26 @@ const SessionFocusEditor: React.FC = () => {
                                     <div className="flex flex-col p-8 gap-6 bg-accent/[0.04]">
                                         <div className="flex items-center justify-between text-accent">
                                             <span className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
-                                                <Lock size={12} /> Secrets du MJ
+                                                <Lock size={12} /> {t('modules:session.focus.secrets_title')}
                                             </span>
-                                            <span className="text-[10px] font-mono font-bold tracking-tighter cursor-help" title="Ces notes ne sont jamais partagées aux joueurs">TOP SECRET</span>
+                                            <span className="text-[10px] font-mono font-bold tracking-tighter cursor-help" title={t('modules:session.focus.secrets_tooltip')}>{t('modules:session.focus.secrets_security')}</span>
                                         </div>
                                         <textarea 
                                             value={session.gmSecrets}
                                             onChange={(e) => updateSession(session.id, { gmSecrets: e.target.value })}
-                                            placeholder="Notes de préparation, plot twists, stats de boss, récompenses cachées..."
+                                            placeholder={t('modules:session.focus.secrets_placeholder')}
                                             className="flex-1 bg-transparent border-none focus:ring-0 text-lg leading-relaxed text-accent outline-none italic resize-none p-0 placeholder:text-accent/50 scroll-pt-10 scrollbar-thin"
                                         />
                                     </div>
                                 </div>
                                 <div className="bg-white/5 px-8 py-4 border-t border-white/5 flex items-center justify-between opacity-80 hover:opacity-100 transition-opacity">
                                     <div className="flex gap-8 text-[11px] font-mono font-bold uppercase tracking-widest text-app-text/40">
-                                        <span>Mots: {session.publicSummary.split(/\s+/).filter(Boolean).length + session.gmSecrets.split(/\s+/).filter(Boolean).length}</span>
-                                        <span>Caractères: {session.publicSummary.length + session.gmSecrets.length}</span>
+                                        <span>{t('modules:session.focus.stats_words', { count: session.publicSummary.split(/\s+/).filter(Boolean).length + session.gmSecrets.split(/\s+/).filter(Boolean).length })}</span>
+                                        <span>{t('modules:session.focus.stats_chars', { count: session.publicSummary.length + session.gmSecrets.length })}</span>
                                     </div>
                                     <div className="text-[9px] font-black uppercase flex items-center gap-2 text-accent/60">
                                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-glow-emerald"></div>
-                                        Sync Neural : ACTIVE
+                                        {t('modules:session.focus.sync_status')}
                                     </div>
                                 </div>
                             </div>
@@ -206,16 +208,16 @@ const SessionFocusEditor: React.FC = () => {
                         <motion.div variants={itemVariants} className="flex flex-col gap-4">
                             <div className="flex items-center gap-3 text-gm-cyan">
                                 <StickyNote size={20} />
-                                <h3 className="text-sm font-black uppercase tracking-[0.3em]">Notes de Session (Cockpit)</h3>
+                                <h3 className="text-sm font-black uppercase tracking-[0.3em]">{t('modules:session.focus.notes_title')}</h3>
                             </div>
                             <div className="glass-bento rounded-[2.5rem] border border-white/5 p-8 shadow-xl flex flex-col gap-4">
                                 <p className="text-[10px] text-app-text/40 font-black uppercase tracking-widest leading-relaxed">
-                                    Notes prises en temps réel • Archivage Automatique
+                                    {t('modules:session.focus.notes_subtitle')}
                                 </p>
                                 <textarea 
                                     value={session.sessionNotes || ''}
                                     onChange={(e) => updateSession(session.id, { sessionNotes: e.target.value })}
-                                    placeholder="Aucune note n'a encore été prise pour cette session..."
+                                    placeholder={t('modules:session.focus.notes_placeholder')}
                                     className="w-full bg-transparent border-none rounded-2xl p-4 text-sm leading-relaxed text-app-text/90 outline-none resize-none min-h-[200px] focus:ring-0 transition-all custom-scrollbar placeholder:text-app-text/20"
                                 />
                             </div>
@@ -225,7 +227,7 @@ const SessionFocusEditor: React.FC = () => {
                         <motion.div variants={itemVariants} className="flex flex-col gap-4">
                             <div className="flex items-center gap-3 text-app-text/30">
                                 <CheckSquare size={20} />
-                                <h3 className="text-sm font-black uppercase tracking-[0.3em]">Checklist de Session</h3>
+                                <h3 className="text-sm font-black uppercase tracking-[0.3em]">{t('modules:session.focus.checklist_title')}</h3>
                             </div>
                             <div className="glass-bento rounded-[2.5rem] border border-white/5 p-8 shadow-xl">
                                 <SessionChecklist sessionId={session.id} />
@@ -239,14 +241,14 @@ const SessionFocusEditor: React.FC = () => {
                         <motion.div variants={itemVariants} className="glass-bento rounded-[2.5rem] border border-white/5 p-8 shadow-2xl">
                             <div className="flex items-center gap-3 mb-6 text-app-text/40">
                                 <Calendar size={18} className="text-accent" />
-                                <span className="text-[10px] font-black uppercase tracking-widest">Date de la Partie</span>
+                                <span className="text-[10px] font-black uppercase tracking-widest">{t('modules:session.focus.date_title')}</span>
                             </div>
                             <input 
                                 type="date"
                                 value={session.date}
                                 onChange={(e) => updateSession(session.id, { date: e.target.value })}
-                                title="Choisir la date de la session"
-                                aria-label="Date de la session"
+                                title={t('modules:session.focus.date_tooltip')}
+                                aria-label={t('modules:session.focus.date_tooltip')}
                                 className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-4 text-sm font-black text-accent focus:ring-accent/30 focus:border-accent/40 shadow-inner transition-all appearance-none"
                             />
                         </motion.div>
@@ -255,14 +257,14 @@ const SessionFocusEditor: React.FC = () => {
                         <motion.div variants={itemVariants} className="glass-bento rounded-[2.5rem] border border-white/5 p-8 shadow-2xl flex flex-col gap-8">
                             <div className="flex items-center gap-3 text-app-text/40">
                                 <Link size={18} className="text-accent" />
-                                <span className="text-[10px] font-black uppercase tracking-widest">Ressources Annexes</span>
+                                <span className="text-[10px] font-black uppercase tracking-widest">{t('modules:session.focus.resources_title')}</span>
                             </div>
                             
                             {/* HTTP Link */}
                             <div className="flex flex-col gap-3">
                                 <label className="text-[9px] text-app-text/30 uppercase font-black ml-1 flex items-center gap-2">
                                     <div className="w-1 h-1 rounded-full bg-accent"></div>
-                                    Lien Externe (HTTP/S)
+                                    {t('modules:session.focus.resource_link_label')}
                                 </label>
                                 <div className="relative group/input">
                                     <input 
@@ -280,7 +282,7 @@ const SessionFocusEditor: React.FC = () => {
                             <div className="flex flex-col gap-3">
                                 <label className="text-[9px] text-app-text/30 uppercase font-black ml-1 flex items-center gap-2">
                                     <div className="w-1 h-1 rounded-full bg-accent"></div>
-                                    Chemin Local (Preload)
+                                    {t('modules:session.focus.resource_file_label')}
                                 </label>
                                 <div className="relative group/input">
                                     <input 
@@ -292,7 +294,7 @@ const SessionFocusEditor: React.FC = () => {
                                     />
                                     <File size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-app-text/20 group-focus-within/input:text-accent transition-colors" />
                                 </div>
-                                <p className="text-[8px] text-app-text/20 italic px-1 opacity-60">Les liens locaux nécessitent le pont appBridge.</p>
+                                <p className="text-[8px] text-app-text/20 italic px-1 opacity-60">{t('modules:session.focus.resource_file_hint')}</p>
                             </div>
                         </motion.div>
 
@@ -301,7 +303,7 @@ const SessionFocusEditor: React.FC = () => {
                             <div className="flex items-center justify-between text-blue-400">
                                 <div className="flex items-center gap-3">
                                     <Users size={20} />
-                                    <h3 className="text-sm font-black uppercase tracking-[0.3em]">PJ Presents</h3>
+                                    <h3 className="text-sm font-black uppercase tracking-[0.3em]">{t('modules:session.focus.players_title')}</h3>
                                 </div>
                                 <span className="text-[10px] font-black opacity-40">({linkedPlayers.length})</span>
                             </div>
@@ -331,13 +333,13 @@ const SessionFocusEditor: React.FC = () => {
                                     })}
                                     {campaignCharacters.length === 0 && (
                                         <div className="flex-1 py-8 text-center border-2 border-dashed border-white/5 rounded-3xl opacity-40">
-                                            <p className="text-[10px] text-app-text/50 font-black uppercase tracking-widest leading-relaxed">Aucun PJ lié</p>
+                                            <p className="text-[10px] text-app-text/50 font-black uppercase tracking-widest leading-relaxed">{t('modules:session.focus.no_players')}</p>
                                         </div>
                                     )}
                                 </div>
                                 <div className="flex items-center gap-2 text-[9px] text-app-text/20 italic font-medium uppercase tracking-wider">
                                     <div className="w-1 h-1 bg-accent rounded-full animate-pulse"></div>
-                                    Click : Toggle Presence
+                                    {t('modules:session.focus.toggle_presence_hint')}
                                 </div>
                             </div>
                         </motion.div>
@@ -347,7 +349,7 @@ const SessionFocusEditor: React.FC = () => {
                             <div className="flex items-center justify-between text-accent">
                                 <div className="flex items-center gap-3">
                                     <Skull size={20} />
-                                    <h3 className="text-sm font-black uppercase tracking-[0.3em]">PNJ & Monstres</h3>
+                                    <h3 className="text-sm font-black uppercase tracking-[0.3em]">{t('modules:session.focus.npcs_title')}</h3>
                                 </div>
                                 <span className="text-[10px] font-black opacity-40">({linkedNpcs.length})</span>
                             </div>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { gmCustom } from '../../../stores/useModalStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
@@ -7,6 +8,7 @@ import { Search, UserPlus, Trash2, Camera } from 'lucide-react';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 
 const PlayerRoster: React.FC = () => {
+    const { t } = useTranslation(['modules']);
     const { players, selectedPlayerId, setSelectedPlayer, togglePlayerOnline, activeCampaignId, updatePlayer } = useSessionOSStore();
     const [searchQuery, setSearchQuery] = useState('');
     const [mediaBrowserOpen, setMediaBrowserOpen] = useState(false);
@@ -35,13 +37,13 @@ const PlayerRoster: React.FC = () => {
             <div className="p-5 border-b border-app-border">
                 <h3 className="text-app-text font-bold text-sm uppercase tracking-widest mb-3 flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-accent"></span>
-                    Roster des Joueurs
+                    {t('modules:session.players.title')}
                 </h3>
                 <div className="relative">
                     <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-text/40" />
                     <input
                         type="text"
-                        placeholder="Rechercher un joueur..."
+                        placeholder={t('modules:session.players.search_placeholder')}
                         value={searchQuery}
                         onChange={e => setSearchQuery(e.target.value)}
                         className="w-full bg-app-surface border border-app-border rounded-lg pl-9 pr-3 py-2 text-sm text-app-text/80 placeholder-app-text/20 focus:ring-1 focus:ring-accent/50 focus:outline-none"
@@ -64,7 +66,7 @@ const PlayerRoster: React.FC = () => {
                         }}
                         onDelete={(e) => {
                             e.stopPropagation();
-                            if (window.confirm(`Êtes-vous sûr de vouloir supprimer le joueur ${player.realName} et TOUS ses personnages ? Cette action est irréversible.`)) {
+                            if (window.confirm(t('modules:session.players.delete_confirm', { name: player.realName }))) {
                                 useSessionOSStore.getState().deletePlayer(player.id);
                             }
                         }}
@@ -72,7 +74,7 @@ const PlayerRoster: React.FC = () => {
                     />
                 ))}
                 {filtered.length === 0 && (
-                    <p className="text-app-text/20 text-sm text-center p-4">Aucun joueur trouvé</p>
+                    <p className="text-app-text/20 text-sm text-center p-4">{t('modules:session.players.no_results')}</p>
                 )}
             </div>
 
@@ -82,7 +84,7 @@ const PlayerRoster: React.FC = () => {
                 onClose={() => setMediaBrowserOpen(false)}
                 onSelect={handleMediaSelect}
                 allowedTypes={['image']}
-                title="Changer l'avatar du joueur"
+                title={t('modules:session.players.avatar_change_title')}
             />
 
             {/* Footer */}
@@ -92,7 +94,7 @@ const PlayerRoster: React.FC = () => {
                     className="w-full flex items-center justify-center gap-2 border border-accent/40 text-accent hover:bg-accent/10 py-2.5 rounded-lg text-sm font-bold transition-all"
                 >
                     <UserPlus size={16} />
-                    Ajouter un Joueur
+                    {t('modules:session.players.add_button')}
                 </button>
             </div>
         </div>
@@ -108,6 +110,7 @@ const PlayerCard: React.FC<{
     onDelete: (e: React.MouseEvent) => void;
     onAvatarClick: (e: React.MouseEvent) => void;
 }> = ({ player, isSelected, activeCampaignId, onClick, onToggleOnline, onDelete, onAvatarClick }) => {
+    const { t } = useTranslation(['modules']);
     const resolvedAvatar = useMediaUrl(player.avatarUrl);
     return (
         <div
@@ -133,7 +136,7 @@ const PlayerCard: React.FC<{
                     {player.realName}
                 </p>
                 <p className="text-xs text-app-text/40 truncate">
-                    {player.characters.filter(c => c.campaignId === activeCampaignId).length} personnage{player.characters.filter(c => c.campaignId === activeCampaignId).length > 1 ? 's' : ''}
+                    {t('modules:session.players.character_count', { count: player.characters.filter(c => c.campaignId === activeCampaignId).length })}
                 </p>
             </div>
             <div className="flex flex-col gap-1 items-end">
@@ -144,14 +147,14 @@ const PlayerCard: React.FC<{
                         ? 'text-emerald-400 border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/20' 
                         : 'text-app-text/40 border-app-border bg-app-surface/50 hover:bg-app-surface hover:text-app-text/60'
                     }`}
-                    title={player.isOnline ? "Passer Hors Ligne" : "Passer En Ligne"}
+                    title={player.isOnline ? t('modules:session.players.set_offline') : t('modules:session.players.set_online')}
                 >
-                    {player.isOnline ? 'En ligne' : 'Hors ligne'}
+                    {player.isOnline ? t('modules:session.players.status_online') : t('modules:session.players.status_offline')}
                 </button>
                 <button
                     onClick={onDelete}
                     className="p-1 px-2 rounded-md border border-red-500/20 text-red-500/40 hover:text-red-500 hover:bg-red-500/10 transition-all"
-                    title="Supprimer le joueur"
+                    title={t('modules:session.players.delete_tooltip')}
                 >
                     <Trash2 size={12} />
                 </button>

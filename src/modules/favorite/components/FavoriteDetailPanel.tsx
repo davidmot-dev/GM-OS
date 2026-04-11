@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useFavoriteStore, type FavoriteEntity } from '../useFavoriteStore';
 import { useCombatStore } from '../../combat/useCombatStore';
 import { useMapStore } from '../../map/useMapStore';
@@ -14,6 +15,7 @@ import { aiService } from '../../ai/AIService';
 import { Sparkles, MessageSquare, Copy } from 'lucide-react';
 
 export const FavoriteDetailPanel: React.FC = () => {
+    const { t } = useTranslation(['modules', 'common']);
     const {
         favorites, selectedFavoriteId, updateFavorite,
         selectFavorite, setViewMode
@@ -59,7 +61,7 @@ export const FavoriteDetailPanel: React.FC = () => {
         if (entity.id && formData) {
             updateFavorite(entity.id, formData);
             setIsEditing(false);
-            gmToast("Entité mise à jour avec succès !");
+            gmToast(t('common:success_save'));
         }
     };
 
@@ -92,11 +94,11 @@ export const FavoriteDetailPanel: React.FC = () => {
             const result = await aiService.generateJSON<string[]>(prompt, systemPrompt);
             if (Array.isArray(result)) {
                 updateFavorite(entity.id, { dialoguePrep: result });
-                gmToast("Répliques générées avec succès !");
+                gmToast(t('common:success_operation'));
             }
         } catch (err) {
             console.error("Failed to generate dialogues", err);
-            gmToast("Échec de la génération des répliques", "error");
+            gmToast(t('common:error_generic'), "error");
         } finally {
             setIsGeneratingDialogues(false);
         }
@@ -104,7 +106,7 @@ export const FavoriteDetailPanel: React.FC = () => {
 
     const handleCopyDialogue = (text: string) => {
         navigator.clipboard.writeText(text);
-        gmToast("Réplique copiée !");
+        gmToast(t('common:success_operation')); // Copied toast
     };
 
     const typeColor =
@@ -120,16 +122,16 @@ export const FavoriteDetailPanel: React.FC = () => {
                 onClose={() => setBrowserTarget(null)}
                 onSelect={handleMediaSelect}
                 allowedTypes={['image']}
-                title={`Sélectionner une ${browserTarget === 'tokenUrl' ? 'icône/token' : 'image de portrait'}`}
+                title={t('common:mediaBrowser.importAsset')}
             />
             <div className="flex items-center justify-between">
-                <h2 className="text-xl font-bold text-slate-100">{isEditing ? 'Editing Dossier' : 'Details'}</h2>
+                <h2 className="text-xl font-bold text-slate-100">{isEditing ? t('modules:favorite.detail.title_editing') : t('modules:favorite.detail.title_details')}</h2>
                 <div className="flex items-center gap-2">
                     {!isEditing ? (
                         <button
                             onClick={() => setIsEditing(true)}
                             className="p-2 rounded-lg bg-app-surface border border-app-border hover:bg-accent/20 text-slate-400 hover:text-accent transition-all"
-                            title="Edit Dossier"
+                            title={t('common:edit')}
                         >
                             <Edit3 size={18} />
                         </button>
@@ -138,14 +140,14 @@ export const FavoriteDetailPanel: React.FC = () => {
                             <button
                                 onClick={handleSave}
                                 className="p-2 rounded-lg bg-accent/20 text-accent hover:bg-accent/30 transition-all"
-                                title="Save Changes"
+                                title={t('common:save')}
                             >
                                 <Save size={18} />
                             </button>
                             <button
                                 onClick={handleCancel}
                                 className="p-2 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 transition-all"
-                                title="Cancel"
+                                title={t('common:cancel')}
                             >
                                 <X size={18} />
                             </button>
@@ -179,39 +181,39 @@ export const FavoriteDetailPanel: React.FC = () => {
                                 value={formData.name || ''}
                                 onChange={e => setFormData({ ...formData, name: e.target.value })}
                                 className="w-full bg-app-surface border-b-2 border-accent/50 text-white text-xl font-bold text-center focus:outline-none focus:border-accent transition-colors"
-                                placeholder="Name..."
+                                placeholder={t('common:placeholder_input')}
                             />
                             <input
                                 type="text"
                                 value={formData.subtitle || ''}
                                 onChange={e => setFormData({ ...formData, subtitle: e.target.value })}
                                 className="w-full bg-app-bg border border-app-border rounded-lg p-2 text-sm text-center text-slate-300 focus:outline-none focus:border-accent"
-                                placeholder="Subtitle (e.g. Ruler of mountains)..."
+                                placeholder={t('common:standby')}
                             />
                             
                             {/* Campaign & Owner Selectors */}
                             <div className="space-y-4 pt-2">
                                 <section className="space-y-2 text-left">
-                                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Campagne Associée</label>
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">{t('common:aventure')}</label>
                                     <select
                                         value={formData.campaignId || ''}
                                         onChange={e => setFormData({ ...formData, campaignId: e.target.value || undefined, ownerId: undefined })}
                                         className="w-full bg-app-bg border border-app-border rounded-lg px-3 py-2 text-sm text-slate-300 focus:outline-none focus:border-accent"
                                     >
-                                        <option value="">-- Aucune Campagne --</option>
+                                        <option value="">-- {t('common:standby')} --</option>
                                         {campaigns.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                                     </select>
                                 </section>
 
                                 {formData.campaignId && entity.type === 'item' && (
                                     <section className="space-y-2 text-left animate-in fade-in">
-                                        <label className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest ml-1">Propriétaire Privé</label>
+                                        <label className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest ml-1">{t('common:playerHub')}</label>
                                         <select
                                             value={formData.ownerId || ''}
                                             onChange={e => setFormData({ ...formData, ownerId: e.target.value || undefined })}
                                             className="w-full bg-emerald-500/10 border border-emerald-500/30 rounded-lg px-3 py-2 text-sm text-emerald-400 focus:outline-none focus:border-emerald-500"
                                         >
-                                            <option value="">-- Aucun (Inventaire MJ) --</option>
+                                            <option value="">-- {t('common:gm')} --</option>
                                             {players
                                                 .flatMap(p => p.characters)
                                                 .filter(c => c.campaignId === formData.campaignId)
@@ -226,38 +228,38 @@ export const FavoriteDetailPanel: React.FC = () => {
 
                             <div className="space-y-4">
                                 <section className="space-y-2 text-left">
-                                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Portrait URL / Media</label>
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">{t('modules:favorite.media.portrait_label')}</label>
                                     <div className="flex gap-2">
                                         <input
                                             type="text"
                                             value={formData.imageUrl || ''}
                                             onChange={e => setFormData({ ...formData, imageUrl: e.target.value })}
                                             className="flex-1 bg-app-bg border border-app-border rounded-lg px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-accent font-mono"
-                                            placeholder="https://... ou m-..."
+                                            placeholder="https://... m-..."
                                         />
                                         <button
                                             onClick={() => setBrowserTarget('imageUrl')}
                                             className="p-2 rounded-lg bg-app-surface border border-app-border text-slate-400 hover:text-accent transition-colors"
-                                            title="Parcourir le Media Hub"
+                                            title={t('modules:favorite.media.browse_hub')}
                                         >
                                             <FolderOpen size={14} />
                                         </button>
                                     </div>
                                 </section>
                                 <section className="space-y-2 text-left">
-                                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Token URL / Media</label>
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">{t('modules:favorite.media.token_label')}</label>
                                     <div className="flex gap-2">
                                         <input
                                             type="text"
                                             value={formData.tokenUrl || ''}
                                             onChange={e => setFormData({ ...formData, tokenUrl: e.target.value })}
                                             className="flex-1 bg-app-bg border border-app-border rounded-lg px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-accent font-mono"
-                                            placeholder="https://... ou m-..."
+                                            placeholder="https://... m-..."
                                         />
                                         <button
                                             onClick={() => setBrowserTarget('tokenUrl')}
                                             className="p-2 rounded-lg bg-app-surface border border-app-border text-slate-400 hover:text-accent transition-colors"
-                                            title="Parcourir le Media Hub"
+                                            title={t('modules:favorite.media.browse_hub')}
                                         >
                                             <FolderOpen size={14} />
                                         </button>
@@ -277,7 +279,7 @@ export const FavoriteDetailPanel: React.FC = () => {
 
                 <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                        <h4 className="text-xs font-bold uppercase tracking-widest text-slate-500">Quick Traits</h4>
+                        <h4 className="text-xs font-bold uppercase tracking-widest text-slate-500">{t('modules:favorite.detail.traits')}</h4>
                         {isEditing && (
                             <button
                                 onClick={() => {
@@ -332,7 +334,9 @@ export const FavoriteDetailPanel: React.FC = () => {
                                     </>
                                 ) : (
                                     <>
-                                        <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1">{key}</p>
+                                        <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1">
+                                            {t([`modules:favorite.attributes.${key.trim().toLowerCase()}`, key])}
+                                        </p>
                                         <p className="text-sm font-bold text-slate-200">{value}</p>
                                     </>
                                 )}
@@ -343,7 +347,7 @@ export const FavoriteDetailPanel: React.FC = () => {
 
                 <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                        <h4 className="text-xs font-bold uppercase tracking-widest text-slate-500">Gauges & Stats</h4>
+                        <h4 className="text-xs font-bold uppercase tracking-widest text-slate-500">{t('modules:favorite.detail.gauges')}</h4>
                         {isEditing && (
                             <button
                                 onClick={() => {
@@ -426,17 +430,17 @@ export const FavoriteDetailPanel: React.FC = () => {
                 </div>
 
                 <div className="space-y-4">
-                    <h4 className="text-xs font-bold uppercase tracking-widest text-slate-500">Background Lore</h4>
+                    <h4 className="text-xs font-bold uppercase tracking-widest text-slate-500">{t('modules:favorite.detail.lore')}</h4>
                     {isEditing ? (
                         <textarea
                             value={formData.lore || ''}
                             onChange={e => setFormData({ ...formData, lore: e.target.value })}
                             className="w-full bg-app-surface/50 border border-app-border/50 rounded-xl p-4 text-sm text-slate-300 focus:outline-none focus:border-accent/50 min-h-[120px] custom-scrollbar"
-                            placeholder="Describe history, motivations, secrets..."
+                            placeholder={t('common:standby')}
                         />
                     ) : (
                         <p className="text-sm text-slate-400 leading-relaxed italic">
-                            {entity.lore || "No lore recorded yet."}
+                            {entity.lore || t('modules:favorite.detail.no_lore')}
                         </p>
                     )}
                 </div>
@@ -446,7 +450,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2 text-slate-500">
                                 <MessageSquare size={16} />
-                                <h4 className="text-xs font-bold uppercase tracking-widest">Dialogue Prep</h4>
+                                <h4 className="text-xs font-bold uppercase tracking-widest">{t('modules:favorite.detail.dialogue_prep')}</h4>
                             </div>
                             <button
                                 onClick={handleGenerateDialogues}
@@ -458,7 +462,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                 }`}
                             >
                                 <Sparkles size={12} className={isGeneratingDialogues ? 'animate-spin' : ''} />
-                                {isGeneratingDialogues ? 'Génération...' : 'Oracle'}
+                                {isGeneratingDialogues ? t('common:standby') : t('modules:favorite.oracle.title')}
                             </button>
                         </div>
                         
@@ -479,7 +483,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                 ))
                             ) : (
                                 <div className="py-4 text-center border border-dashed border-white/5 rounded-xl">
-                                    <p className="text-[10px] text-slate-600 uppercase tracking-widest">Aucune réplique préparée</p>
+                                    <p className="text-[10px] text-slate-600 uppercase tracking-widest">{t('modules:favorite.detail.no_lore')}</p>
                                 </div>
                             )}
                         </div>
@@ -500,12 +504,12 @@ export const FavoriteDetailPanel: React.FC = () => {
                                     faction: 'neutral',
                                     statuses: []
                                 });
-                                gmToast(`${entity.name} envoyé au Combat OS!`);
+                                gmToast(t('common:success_operation'));
                             }}
                             className="w-full py-3 bg-rose-600 hover:bg-rose-500 text-white rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-lg"
                         >
                             <Sword size={18} />
-                            SEND TO COMBAT
+                            {t('modules:favorite.detail.send_combat')}
                         </button>
                     )}
 
@@ -519,12 +523,12 @@ export const FavoriteDetailPanel: React.FC = () => {
                                     y: 200,
                                     size: 1
                                 });
-                                gmToast(`${entity.name} envoyé sur la Map!`);
+                                gmToast(t('common:success_operation'));
                             }}
                             className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-lg"
                         >
                             <MapPin size={18} />
-                            SEND TO MAP
+                            {t('modules:favorite.detail.send_map')}
                         </button>
                     )}
 
@@ -534,7 +538,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                 e.stopPropagation();
                                 const newVal = !entity.isSyncedToPlayerHub;
                                 updateFavorite(entity.id, { isSyncedToPlayerHub: newVal });
-                                gmToast(`${entity.name} ${newVal ? 'partagé avec' : 'retiré du'} Player Hub!`);
+                                gmToast(t('common:success_operation'));
                             }}
                             className={`flex-1 py-3 rounded-xl border font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-lg
                                 ${entity.isSyncedToPlayerHub
@@ -542,7 +546,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                     : 'bg-app-bg border-white/10 text-slate-500 hover:text-slate-300 hover:border-white/20'}`}
                         >
                             <span className="material-symbols-outlined text-sm">{entity.isSyncedToPlayerHub ? 'visibility' : 'visibility_off'}</span>
-                            PLAYER HUB SYNC
+                            {t('modules:favorite.detail.hub_sync')}
                         </button>
 
                         {entity.isSyncedToPlayerHub && (
@@ -550,13 +554,13 @@ export const FavoriteDetailPanel: React.FC = () => {
                                 onClick={() => {
                                     const newMode = entity.displayMode === 'theater' ? 'card' : 'theater';
                                     updateFavorite(entity.id, { displayMode: newMode });
-                                    gmToast(`Mode ${newMode === 'theater' ? 'Théâtre' : 'Carte'} actif.`);
+                                    gmToast(newMode === 'theater' ? t('modules:favorite.actions.theater_active') : t('modules:favorite.actions.card_active'));
                                 }}
                                 className={`w-12 rounded-xl border transition-all flex items-center justify-center shadow-lg
                                     ${entity.displayMode === 'theater'
                                         ? 'bg-amber-500/20 border-amber-500 text-amber-500 shadow-glow-amber/20'
                                         : 'bg-app-bg border-white/10 text-slate-500 hover:text-slate-300 hover:border-white/20'}`}
-                                title={entity.displayMode === 'theater' ? 'Vue Carte' : 'Vue Théâtre (Agrandir)'}
+                                title={entity.displayMode === 'theater' ? t('modules:favorite.oracle.card_view') : t('modules:favorite.oracle.theater_view')}
                             >
                                 <span className="material-symbols-outlined text-sm">
                                     {entity.displayMode === 'theater' ? 'close_fullscreen' : 'fullscreen'}
@@ -569,7 +573,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                         onClick={() => setViewMode('detail')}
                         className="w-full py-3 bg-accent hover:bg-accent/80 text-slate-950 rounded-xl font-bold text-sm transition-transform active:scale-95 shadow-lg"
                     >
-                        OPEN FULL DOSSIER
+                        {t('modules:favorite.detail.full_dossier')}
                     </button>
                 </div>
             </div>

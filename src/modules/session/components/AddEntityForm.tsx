@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Shield, Heart, Image as ImageIcon, Wind, Zap, Lock, BookOpen, Skull, Users, ArrowLeft } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import type { Entity } from '../useSessionOSStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { gmToast } from '../../../stores/useToastStore';
-
 const AddEntityForm: React.FC = () => {
+    const { t } = useTranslation(['modules', 'common']);
     const { 
         addEntity, setIsAddingEntity, activeCampaignId, getActiveDriver,
         pendingPreFill, clearPendingPreFill 
@@ -39,7 +40,7 @@ const AddEntityForm: React.FC = () => {
             }
             // Nettoyage immédiat pour éviter les ré-injections accidentelles
             clearPendingPreFill();
-            gmToast("Données transmises depuis le Wiki.", 'success');
+            gmToast(t('modules:session.toasts.wiki_data_received'), 'success');
         }
     }, [pendingPreFill, clearPendingPreFill]);
     /* eslint-enable react-hooks/set-state-in-effect */
@@ -67,7 +68,7 @@ const AddEntityForm: React.FC = () => {
             templateId: getActiveDriver()?.templateId || 'generic',
         });
 
-        gmToast(`${name} créé avec succès !`);
+        gmToast(t('modules:session.toasts.entity_created', { name }));
         setIsAddingEntity(false);
     };
 
@@ -80,9 +81,9 @@ const AddEntityForm: React.FC = () => {
                     className="flex items-center gap-2 px-4 py-2 bg-app-surface border border-app-border text-app-text/40 hover:text-accent hover:border-accent/50 rounded-xl transition-all font-bold text-sm uppercase tracking-widest group"
                 >
                     <ArrowLeft size={18} className="transition-transform group-hover:-translate-x-1" />
-                    Annuler
+                    {t('common:actions.cancel')}
                 </button>
-                <h2 className="text-2xl font-black text-white tracking-widest uppercase italic">Nouveau Personnage</h2>
+                <h2 className="text-2xl font-black text-white tracking-widest uppercase italic">{t('modules:session.forms.add_entity_title')}</h2>
             </div>
 
             <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-12 flex-1 overflow-hidden">
@@ -92,15 +93,15 @@ const AddEntityForm: React.FC = () => {
                         type="button"
                         className="aspect-[4/5] w-full rounded-3xl overflow-hidden border-2 border-accent/10 shadow-2xl relative group bg-app-surface cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent"
                         onClick={() => setIsMediaBrowserOpen(true)}
-                        title="Choisir un portrait"
-                        aria-label="Choisir un portrait"
+                        title={t('modules:session.forms.labels.avatar_select')}
+                        aria-label={t('modules:session.forms.labels.avatar_select')}
                     >
                         {avatarUrl ? (
                             <img src={avatarUrl} alt="Portrait" className="w-full h-full object-cover" />
                         ) : (
                             <div className="w-full h-full flex flex-col items-center justify-center text-app-text/10 group-hover:text-accent transition-colors">
                                 <ImageIcon size={64} className="mb-2" />
-                                <p className="text-[10px] font-black uppercase tracking-widest">Choisir un portrait</p>
+                                <p className="text-[10px] font-black uppercase tracking-widest">{t('modules:session.forms.labels.avatar_select')}</p>
                             </div>
                         )}
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
@@ -112,19 +113,19 @@ const AddEntityForm: React.FC = () => {
                     <div className="space-y-4">
                         <div className="space-y-2">
                             <p className="text-[10px] font-black uppercase tracking-widest text-app-text/40 pl-1 flex items-center gap-2">
-                                <Users size={12} /> Type d'Entité
+                                <Users size={12} /> {t('modules:session.forms.labels.type')}
                             </p>
                             <div className="flex gap-2">
-                                {(['pc', 'npc', 'monster'] as const).map(t => (
+                                {(['pc', 'npc', 'monster'] as const).map(typeVal => (
                                     <button
-                                        key={t}
+                                        key={typeVal}
                                         type="button"
-                                        onClick={() => setType(t)}
+                                        onClick={() => setType(typeVal)}
                                         className={`flex-1 py-2 rounded-xl text-[10px] font-black uppercase transition-all border ${
-                                            type === t ? 'bg-accent text-white border-accent' : 'bg-app-surface border-app-border text-app-text/40 hover:border-app-border/60'
+                                            type === typeVal ? 'bg-accent text-white border-accent' : 'bg-app-surface border-app-border text-app-text/40 hover:border-app-border/60'
                                         }`}
                                     >
-                                        {t === 'pc' ? 'Joueur' : t === 'npc' ? 'PNJ' : 'Monstre'}
+                                        {t(`modules:session.forms.types.${typeVal}`)}
                                     </button>
                                 ))}
                             </div>
@@ -132,7 +133,7 @@ const AddEntityForm: React.FC = () => {
 
                         <div className="space-y-2">
                             <p className="text-[10px] font-black uppercase tracking-widest text-app-text/40 pl-1 flex items-center gap-2">
-                                <Skull size={12} /> Alignement / Rôle
+                                <Skull size={12} /> {t('modules:session.forms.labels.alignment')}
                             </p>
                             <div className="grid grid-cols-2 gap-2">
                                 {(['ally', 'neutral', 'hostile', 'boss'] as const).map(r => (
@@ -144,7 +145,7 @@ const AddEntityForm: React.FC = () => {
                                             role === r ? 'bg-white text-app-bg border-white' : 'bg-app-surface border-app-border text-app-text/40 hover:border-app-border/60'
                                         }`}
                                     >
-                                        {r === 'ally' ? 'Allié' : r === 'neutral' ? 'Neutre' : r === 'hostile' ? 'Hostile' : 'Boss'}
+                                        {t(`modules:session.npc_detail.affinity.${r}`)}
                                     </button>
                                 ))}
                             </div>
@@ -155,29 +156,29 @@ const AddEntityForm: React.FC = () => {
                 {/* Right Col: Fields */}
                 <div className="flex-1 flex flex-col gap-6 overflow-y-auto custom-scrollbar pr-2">
                     <div className="flex flex-col gap-1.5">
-                        <label htmlFor="entity-name" className="text-[10px] font-black uppercase tracking-widest text-accent pl-1">Nom complet / Titre</label>
+                        <label htmlFor="entity-name" className="text-[10px] font-black uppercase tracking-widest text-accent pl-1">{t('modules:session.forms.labels.name')}</label>
                         <input
                             id="entity-name"
                             type="text"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            placeholder="Ex: Baron Varick l'Imposteur"
+                            placeholder={t('modules:session.forms.placeholders.name')}
                             className="w-full bg-app-surface/50 border border-app-border rounded-2xl px-6 py-4 text-xl font-bold text-white focus:ring-1 focus:ring-accent/50 focus:border-accent/50 focus:outline-none transition-all placeholder:text-app-text/10"
                             required
-                            title="Nom du personnage"
+                            title={t('modules:session.forms.labels.name')}
                         />
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                        <label htmlFor="entity-description" className="text-[10px] font-black uppercase tracking-widest text-app-text/40 pl-1 italic">Sous-titre / Description courte</label>
+                        <label htmlFor="entity-description" className="text-[10px] font-black uppercase tracking-widest text-app-text/40 pl-1 italic">{t('modules:session.forms.labels.description')}</label>
                         <input
                             id="entity-description"
                             type="text"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
-                            placeholder="Ex: Humain Paladin de l'Ordre d'Or"
+                            placeholder={t('modules:session.forms.placeholders.description')}
                             className="w-full bg-app-surface/30 border border-app-border rounded-xl px-4 py-2 text-sm text-app-text/60 focus:ring-1 focus:ring-accent/50 focus:outline-none placeholder:text-app-text/10"
-                            title="Description courte"
+                            title={t('modules:session.forms.labels.description')}
                         />
                     </div>
 
@@ -197,9 +198,9 @@ const AddEntityForm: React.FC = () => {
                                     value={stat.val}
                                     onChange={(e) => stat.set(parseInt(e.target.value) || 0)}
                                     className="w-full bg-transparent border-none text-center text-white font-black text-sm focus:ring-0"
-                                    title={stat.label}
+                                    title={t(`modules:session.forms.labels.${stat.id.split('-')[1]}`)}
                                 />
-                                <label htmlFor={stat.id} className="text-[9px] uppercase font-bold text-app-text/20 tracking-wider">{stat.label}</label>
+                                <label htmlFor={stat.id} className="text-[9px] uppercase font-bold text-app-text/20 tracking-wider">{t(`modules:session.forms.labels.${stat.id.split('-')[1]}`)}</label>
                             </div>
                         ))}
                     </div>
@@ -209,14 +210,14 @@ const AddEntityForm: React.FC = () => {
                         <div className="p-4 rounded-2xl bg-app-surface/30 border border-white/5 flex flex-col gap-2">
                             <div className="flex items-center gap-2 mb-1">
                                 <BookOpen size={14} className="text-app-text/40 pointer-events-none" />
-                                <label htmlFor="entity-roleplaying-notes" className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Notes d'Interprétation</label>
+                                <label htmlFor="entity-roleplaying-notes" className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.forms.labels.notes')}</label>
                             </div>
                             <textarea
                                 id="entity-roleplaying-notes"
                                 className="w-full bg-transparent border-none text-app-text/60 text-xs leading-relaxed resize-none focus:ring-0 placeholder:text-app-text/10 min-h-[80px]"
                                 value={roleplayingNotes}
                                 onChange={(e) => setRoleplayingNotes(e.target.value)}
-                                placeholder="Comment jouer ce personnage, sa voix, ses tics..."
+                                placeholder={t('modules:session.forms.placeholders.notes')}
                             />
                         </div>
 
@@ -227,14 +228,14 @@ const AddEntityForm: React.FC = () => {
                             </div>
                             <div className="flex items-center gap-2 mb-1 relative z-10">
                                 <Lock size={14} className="text-accent pointer-events-none" />
-                                <label htmlFor="entity-secret-info" className="text-[10px] font-black uppercase tracking-widest text-accent">Informations Secrètes</label>
+                                <label htmlFor="entity-secret-info" className="text-[10px] font-black uppercase tracking-widest text-accent">{t('modules:session.forms.labels.secrets')}</label>
                             </div>
                             <textarea
                                 id="entity-secret-info"
                                 className="w-full bg-transparent border-none text-app-text/60 text-xs leading-relaxed resize-none focus:ring-0 placeholder:text-app-text/10 min-h-[80px] relative z-10"
                                 value={gmSecretInfo}
                                 onChange={(e) => setGmSecretInfo(e.target.value)}
-                                placeholder="Ses vraies intentions, ses secrets..."
+                                placeholder={t('modules:session.forms.placeholders.secrets')}
                             />
                         </div>
                     </div>
@@ -247,13 +248,13 @@ const AddEntityForm: React.FC = () => {
                     onClick={() => setIsAddingEntity(false)}
                     className="px-8 py-3 rounded-xl bg-app-surface hover:bg-app-surface/80 text-app-text/60 font-bold text-xs transition-all border border-white/5"
                 >
-                    Annuler
+                    {t('common:actions.cancel')}
                 </button>
                 <button
                     onClick={handleSubmit}
                     className="px-12 py-3 rounded-xl bg-accent hover:bg-accent/80 text-white font-black text-xs transition-all shadow-glow-accent"
                 >
-                    Créer le Personnage
+                    {t('modules:session.forms.create')}
                 </button>
             </div>
 
@@ -265,7 +266,7 @@ const AddEntityForm: React.FC = () => {
                     setIsMediaBrowserOpen(false);
                 }}
                 allowedTypes={['image']}
-                title="Portrait du Personnage"
+                title={t('modules:session.forms.labels.template')}
             />
         </div>
     );

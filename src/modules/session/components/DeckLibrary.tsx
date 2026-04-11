@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { 
     Plus, 
@@ -15,6 +16,7 @@ import type { CardFormat, CardOrientation } from '../store/types';
 import { useDeckLibrary } from '../hooks/useDeckLibrary';
 
 const DeckLibrary: React.FC = () => {
+    const { t } = useTranslation();
     const { setCurrentView } = useSessionOSStore();
     const {
         isAdding,
@@ -43,9 +45,9 @@ const DeckLibrary: React.FC = () => {
                     <div>
                         <h1 className="text-sm font-black uppercase tracking-[0.2em] text-white/80">
                             Deck-OS <span className="text-white/20 px-2">//</span> 
-                            <span className="text-gm-gold">Bibliothèque Tactique</span>
+                            <span className="text-gm-gold">{t('modules:session.deck_module.library.title')}</span>
                         </h1>
-                        <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest mt-1">Gestion des paquets de cartes et éléments narratifs</p>
+                        <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest mt-1">{t('modules:session.deck_module.library.subtitle')}</p>
                     </div>
                 </div>
 
@@ -58,10 +60,10 @@ const DeckLibrary: React.FC = () => {
                             ? 'bg-gm-gold/20 border-gm-gold text-gm-gold shadow-glow-gold/10' 
                             : 'bg-white/5 border-white/10 text-white/40 hover:text-white hover:border-white/20'
                         }`}
-                        title={showAllDecks ? "Filtrer par système actif" : "Afficher tous les systèmes"}
+                        title={showAllDecks ? t('modules:session.deck_module.library.tooltip_filter_active') : t('modules:session.deck_module.library.tooltip_filter_all')}
                     >
                         <Layers size={14} />
-                        {showAllDecks ? 'Tout Voir' : 'Filtre Système'}
+                        {showAllDecks ? t('modules:session.deck_module.library.filter_all') : t('modules:session.deck_module.library.filter_system')}
                     </button>
 
                     <button 
@@ -70,7 +72,7 @@ const DeckLibrary: React.FC = () => {
                         className="flex items-center gap-2 bg-gm-gold hover:bg-yellow-500 text-black font-black px-6 py-2.5 rounded-xl text-[10px] tracking-widest uppercase transition-all shadow-glow-gold/20 focus:outline-none focus:ring-2 focus:ring-gm-gold/50"
                     >
                         <Plus size={14} />
-                        Nouveau Paquet
+                        {t('modules:session.deck_module.library.new_deck')}
                     </button>
                 </div>
             </header>
@@ -82,15 +84,15 @@ const DeckLibrary: React.FC = () => {
                         <Layers size={48} strokeWidth={1} />
                         <div className="flex flex-col items-center gap-2">
                             <span className="text-xs font-black uppercase tracking-widest text-center">
-                                Aucun paquet disponible pour ce système<br/>
-                                <span className="text-[10px] opacity-40">(Filtre : Generic + {currentSystemId})</span>
+                                {t('modules:session.deck_module.library.empty_state')}<br/>
+                                <span className="text-[10px] opacity-40">{t('modules:session.deck_module.library.empty_state_filter_hint', { systemId: currentSystemId })}</span>
                             </span>
                             {!showAllDecks && (
                                 <button 
                                     onClick={() => setShowAllDecks(true)}
                                     className="mt-4 text-[10px] font-black uppercase tracking-widest text-gm-gold hover:underline"
                                 >
-                                    Afficher tous les paquets
+                                    {t('modules:session.deck_module.library.show_all_btn')}
                                 </button>
                             )}
                         </div>
@@ -123,7 +125,7 @@ const DeckLibrary: React.FC = () => {
                                         {deck.systemId}
                                     </span>
                                     <span className="px-2 py-0.5 rounded bg-gm-gold/10 text-[8px] font-black text-gm-gold uppercase tracking-tighter">
-                                        {deck.cardCount} cartes
+                                        {t('modules:session.deck_module.library.card_count', { count: deck.cardCount })}
                                     </span>
                                 </div>
                             </div>
@@ -132,7 +134,7 @@ const DeckLibrary: React.FC = () => {
                                     type="button"
                                     onClick={() => handleEdit(deck)}
                                     className="p-2 rounded-lg bg-white/5 text-white/20 hover:text-white transition-all focus:outline-none focus:ring-1 focus:ring-white/20"
-                                    title="Modifier la configuration"
+                                    title={t('modules:session.deck_module.library.edit_tooltip')}
                                 >
                                     <Settings2 size={14} />
                                 </button>
@@ -140,7 +142,7 @@ const DeckLibrary: React.FC = () => {
                                     type="button"
                                     onClick={() => handleDelete(deck.id)}
                                     className="p-2 rounded-lg bg-white/5 text-white/20 hover:text-red-500 transition-all focus:outline-none focus:ring-1 focus:ring-red-500/40"
-                                    title="Supprimer le paquet"
+                                    title={t('modules:session.deck_module.library.delete_tooltip')}
                                 >
                                     <Trash2 size={14} />
                                 </button>
@@ -157,7 +159,7 @@ const DeckLibrary: React.FC = () => {
                                 onClick={() => { handleSelect(deck.id); setCurrentView('deck-player'); }}
                                 className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-gm-gold hover:text-black rounded-xl text-[9px] font-black uppercase tracking-widest transition-all focus:outline-none focus:ring-2 focus:ring-gm-gold/40"
                             >
-                                Charger
+                                {t('modules:session.deck_module.library.load_btn')}
                                 <ArrowRight size={12} />
                             </button>
                         </div>
@@ -169,7 +171,7 @@ const DeckLibrary: React.FC = () => {
                     <div className="col-span-1 md:col-span-2 lg:col-span-1 h-auto rounded-[2rem] bg-gradient-to-br from-[#1a1a20] to-[#0d0d0f] border border-gm-gold/30 p-8 space-y-6 shadow-glow-gold/10 animate-in zoom-in-95 duration-300">
                         <div className="flex justify-between items-center mb-2">
                             <h3 className="text-gm-gold text-xs font-black uppercase tracking-[0.2em]">
-                                {editingDeckId ? 'Modification Deck' : 'Initialisation Deck'}
+                                {editingDeckId ? t('modules:session.deck_module.editor.title_edit') : t('modules:session.deck_module.editor.title_new')}
                             </h3>
                             <button type="button" onClick={resetForm} className="text-white/20 hover:text-white transition-all focus:outline-none"><X size={18} /></button>
                         </div>
@@ -177,22 +179,22 @@ const DeckLibrary: React.FC = () => {
                         <div className="space-y-4">
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1.5">
-                                    <label htmlFor="deck-name" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1">Nom du Paquet</label>
+                                    <label htmlFor="deck-name" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1">{t('modules:session.deck_module.editor.name_label')}</label>
                                     <input 
                                         id="deck-name"
                                         value={form.name}
                                         onChange={e => form.setName(e.target.value)}
                                         className="w-full bg-black/40 border border-white/5 rounded-xl py-2.5 px-4 text-xs focus:border-gm-gold/40 transition-all outline-none"
-                                        placeholder="ex: Drama Deck Torg"
+                                        placeholder={t('modules:session.deck_module.editor.name_placeholder')}
                                     />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label htmlFor="deck-system" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1">Référentiel Système</label>
+                                    <label htmlFor="deck-system" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1">{t('modules:session.deck_module.editor.system_label')}</label>
                                     <select 
                                         id="deck-system"
                                         value={form.systemId}
                                         onChange={e => form.setSystemId(e.target.value)}
-                                        title="Sélectionner le système de jeu"
+                                        title={t('modules:session.deck_module.editor.system_placeholder')}
                                         className="w-full bg-black/40 border border-white/5 rounded-xl py-2.5 px-4 text-xs focus:border-gm-gold/40 transition-all outline-none appearance-none font-bold"
                                     >
                                         {availableSystems.map(sys => (
@@ -206,40 +208,40 @@ const DeckLibrary: React.FC = () => {
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1.5">
-                                    <label htmlFor="deck-format" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1">Format</label>
+                                    <label htmlFor="deck-format" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1">{t('modules:session.deck_module.editor.format_label')}</label>
                                     <select 
                                         id="deck-format"
                                         value={form.format}
-                                        title="Format de la carte"
+                                        title={t('modules:session.deck_module.editor.format_label')}
                                         onChange={e => form.setFormat(e.target.value as CardFormat)}
                                         className="w-full bg-black/40 border border-white/5 rounded-xl py-2.5 px-4 text-[10px] uppercase font-black tracking-widest focus:border-gm-gold/40 transition-all outline-none"
                                     >
-                                        <option value="poker">POKER (2.5x3.5)</option>
-                                        <option value="tarot">TAROT (2.75x4.75)</option>
+                                        <option value="poker">{t('modules:session.deck_module.editor.formats.poker')}</option>
+                                        <option value="tarot">{t('modules:session.deck_module.editor.formats.tarot')}</option>
                                     </select>
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label htmlFor="deck-orientation" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1">Orientation</label>
+                                    <label htmlFor="deck-orientation" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1">{t('modules:session.deck_module.editor.orientation_label')}</label>
                                     <select 
                                         id="deck-orientation"
                                         value={form.orientation}
-                                        title="Orientation de la carte"
+                                        title={t('modules:session.deck_module.editor.orientation_label')}
                                         onChange={e => form.setOrientation(e.target.value as CardOrientation)}
                                         className="w-full bg-black/40 border border-white/5 rounded-xl py-2.5 px-4 text-[10px] uppercase font-black tracking-widest focus:border-gm-gold/40 transition-all outline-none"
                                     >
-                                        <option value="portrait">PORTRAIT</option>
-                                        <option value="landscape">PAYSAGE</option>
+                                        <option value="portrait">{t('modules:session.deck_module.editor.orientations.portrait')}</option>
+                                        <option value="landscape">{t('modules:session.deck_module.editor.orientations.landscape')}</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1.5">
-                                    <label htmlFor="deck-extension-select" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1">Extension</label>
+                                    <label htmlFor="deck-extension-select" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1">{t('modules:session.deck_module.editor.extension_label')}</label>
                                     <select 
                                         id="deck-extension-select"
                                         value={form.extension}
-                                        title="Format de fichier image"
+                                        title={t('modules:session.deck_module.editor.extension_tooltip')}
                                         onChange={e => form.setExtension(e.target.value)}
                                         className="w-full bg-black/40 border border-white/5 rounded-xl py-2.5 px-4 text-xs focus:border-gm-gold/40 transition-all outline-none"
                                     >
@@ -252,23 +254,23 @@ const DeckLibrary: React.FC = () => {
                                     </select>
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label htmlFor="deck-padding" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1">Zero Padding</label>
+                                    <label htmlFor="deck-padding" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1">{t('modules:session.deck_module.editor.padding_label')}</label>
                                     <select 
                                         id="deck-padding"
                                         value={form.padding}
-                                        title="Nombre de chiffres pour la numérotation"
+                                        title={t('modules:session.deck_module.editor.padding_tooltip')}
                                         onChange={e => form.setPadding(parseInt(e.target.value))}
                                         className="w-full bg-black/40 border border-white/5 rounded-xl py-2.5 px-4 text-xs focus:border-gm-gold/40 transition-all outline-none"
                                     >
-                                        <option value={0}>Aucun (1, 2, ...)</option>
-                                        <option value={2}>2 chiffres (01, 02, ...)</option>
-                                        <option value={3}>3 chiffres (001, 002, ...)</option>
+                                        <option value={0}>{t('modules:session.deck_module.editor.padding_none')}</option>
+                                        <option value={2}>{t('modules:session.deck_module.editor.padding_2')}</option>
+                                        <option value={3}>{t('modules:session.deck_module.editor.padding_3')}</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div className="space-y-1.5">
-                                <label htmlFor="deck-card-count" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1">Nombre de Cartes</label>
+                                <label htmlFor="deck-card-count" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1">{t('modules:session.deck_module.editor.count_label')}</label>
                                 <input 
                                     id="deck-card-count"
                                     type="number"
@@ -280,20 +282,20 @@ const DeckLibrary: React.FC = () => {
 
                             <div className="space-y-1.5">
                                 <label htmlFor="deck-folder-path" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1 flex items-center gap-2">
-                                    <FolderOpen size={10} /> Chemin Assets (Relatif à /public)
+                                    <FolderOpen size={10} /> {t('modules:session.deck_module.editor.path_label')}
                                 </label>
                                 <input 
                                     id="deck-folder-path"
                                     value={form.folderPath}
                                     onChange={e => form.setFolderPath(e.target.value)}
                                     className="w-full bg-black/40 border border-white/5 rounded-xl py-2.5 px-4 text-[10px] font-mono tracking-tighter text-white/60 focus:border-gm-gold/40 transition-all outline-none"
-                                    placeholder="assets/decks/system/deck-id"
+                                    placeholder={t('modules:session.deck_module.editor.path_placeholder')}
                                 />
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1.5">
-                                    <label htmlFor="deck-extension-input" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1">Extension</label>
+                                    <label htmlFor="deck-extension-input" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1">{t('modules:session.deck_module.editor.extension_label')}</label>
                                     <input 
                                         id="deck-extension-input"
                                         value={form.extension}
@@ -303,13 +305,13 @@ const DeckLibrary: React.FC = () => {
                                     />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label htmlFor="deck-filename-pattern" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1">Pattern Nom ({'{n}'})</label>
+                                    <label htmlFor="deck-filename-pattern" className="text-[9px] font-black uppercase tracking-widest text-white/40 px-1">{t('modules:session.deck_module.editor.pattern_label')}</label>
                                     <input 
                                         id="deck-filename-pattern"
                                         value={form.filenamePattern}
                                         onChange={e => form.setFilenamePattern(e.target.value)}
                                         className="w-full bg-black/40 border border-white/5 rounded-xl py-2 px-4 text-[10px] font-mono text-white/60 focus:border-gm-gold/40 transition-all outline-none"
-                                        placeholder="card_{n}"
+                                        placeholder={t('modules:session.deck_module.editor.pattern_placeholder')}
                                     />
                                 </div>
                             </div>
@@ -323,7 +325,7 @@ const DeckLibrary: React.FC = () => {
                                         id="useDiscard"
                                         className="w-4 h-4 rounded bg-black border-white/10 text-gm-gold focus:ring-gm-gold/30"
                                     />
-                                    <label htmlFor="useDiscard" className="text-[9px] font-black uppercase tracking-widest text-white/40 cursor-pointer">Gérer Défausse</label>
+                                    <label htmlFor="useDiscard" className="text-[9px] font-black uppercase tracking-widest text-white/40 cursor-pointer">{t('modules:session.deck_module.editor.discard_label')}</label>
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <input 
@@ -333,14 +335,14 @@ const DeckLibrary: React.FC = () => {
                                         id="startAtZero"
                                         className="w-4 h-4 rounded bg-black border-white/10 text-gm-gold focus:ring-gm-gold/30"
                                     />
-                                    <label htmlFor="startAtZero" className="text-[9px] font-black uppercase tracking-widest text-white/40 cursor-pointer">Commencer à 0</label>
+                                    <label htmlFor="startAtZero" className="text-[9px] font-black uppercase tracking-widest text-white/40 cursor-pointer">{t('modules:session.deck_module.editor.start_zero_label')}</label>
                                 </div>
                                 <button 
                                     type="button"
                                     onClick={handleSave}
                                     className="px-6 py-2 bg-gm-gold text-black rounded-xl text-[10px] font-black uppercase tracking-widest shadow-glow-gold/20 active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-gm-gold/50"
                                 >
-                                    {editingDeckId ? 'Mettre à jour' : 'Valider'}
+                                    {editingDeckId ? t('modules:session.deck_module.editor.update_btn') : t('modules:session.deck_module.editor.validate_btn')}
                                 </button>
                             </div>
                         </div>

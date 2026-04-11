@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { ClockMode, ClockTheme } from '../../../store/useClockStore';
 import { useClockStore } from '../../../store/useClockStore';
+import { useTranslation } from 'react-i18next';
 
 interface ClockVisualizerProps {
     theme: ClockTheme;
@@ -11,6 +12,7 @@ interface ClockVisualizerProps {
 const ClockVisualizer: React.FC<ClockVisualizerProps> = ({ theme, timestamp, mode }) => {
     const { timerRemaining, timerDuration, timerLabel, calendars, activeCalendarId, getFantasyDate } = useClockStore();
     const [realtimeDate, setRealtimeDate] = useState(new Date());
+    const { t, i18n } = useTranslation('modules');
 
     useEffect(() => {
         if (mode === 'realtime') {
@@ -26,7 +28,7 @@ const ClockVisualizer: React.FC<ClockVisualizerProps> = ({ theme, timestamp, mod
         if (mode === 'fantasy' && fantasyDate) {
             return `${fantasyDate.hour.toString().padStart(2, '0')}:${fantasyDate.minute.toString().padStart(2, '0')}:${fantasyDate.second.toString().padStart(2, '0')}`;
         }
-        return d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        return d.toLocaleTimeString(i18n.language, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     };
 
     const formatDate = (d: Date) => {
@@ -46,7 +48,7 @@ const ClockVisualizer: React.FC<ClockVisualizerProps> = ({ theme, timestamp, mod
             }
             return dateStr;
         }
-        return d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        return d.toLocaleDateString(i18n.language, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
     };
 
     const renderCyberpunk = () => (
@@ -161,7 +163,7 @@ const ClockVisualizer: React.FC<ClockVisualizerProps> = ({ theme, timestamp, mod
 
                 <div className="absolute bottom-[-80px] text-center w-full">
                     <p className="font-serif italic text-amber-200/80 text-xl tracking-[0.2em] font-bold drop-shadow-md">
-                        {mode === 'fantasy' ? formatDate(date).toUpperCase() : date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }).toUpperCase()}
+                        {mode === 'fantasy' ? formatDate(date).toUpperCase() : date.toLocaleDateString(i18n.language, { day: 'numeric', month: 'long', year: 'numeric' }).toUpperCase()}
                     </p>
                 </div>
             </div>
@@ -265,7 +267,7 @@ const ClockVisualizer: React.FC<ClockVisualizerProps> = ({ theme, timestamp, mod
                             {(timerRemaining % 60).toString().padStart(2, '0')}
                         </span>
                         <span className={`uppercase tracking-[0.5em] font-bold mt-4 text-center max-w-md px-4 ${theme === 'oldstyle' ? 'font-serif italic text-amber-600' : 'text-app-text/50'}`}>
-                            {timerLabel || (theme === 'oldstyle' ? "Sablier de Destin" : "Minuteur Actif")}
+                            {timerLabel || (theme === 'oldstyle' ? t('clock.visualizer.hourglass') : t('clock.visualizer.active_timer'))}
                         </span>
                     </div>
                 </div>

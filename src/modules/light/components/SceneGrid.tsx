@@ -3,9 +3,11 @@ import { useLightStore } from '../useLightStore';
 import type { LightScene } from '../useLightStore';
 import { hueEngine } from '../HueEngine';
 import { gmPrompt } from '../../../stores/useModalStore';
+import { useTranslation } from 'react-i18next';
 
 export const SceneGrid: React.FC = () => {
     const { scenes, activeSceneId, saveSceneSnapshot, clearScene } = useLightStore();
+    const { t } = useTranslation('modules');
 
     // Sort scenes by ID to maintain grid order SCENE_01 to SCENE_18
     const sortedScenes = Object.values(scenes).sort((a, b) => a.id.localeCompare(b.id));
@@ -24,15 +26,15 @@ export const SceneGrid: React.FC = () => {
     const handleRename = (e: React.MouseEvent, scene: LightScene) => {
         e.stopPropagation();
         gmPrompt(
-            "Rename Scene:",
+            t('light.grid.rename_prompt'),
             scene.name,
             (newName: string) => {
                 if (newName && newName.trim() !== '') {
                     useLightStore.getState().updateSceneMetadata(scene.id, newName.trim(), scene.icon, scene.color);
                 }
             },
-            "Save",
-            "Cancel"
+            t('light.grid.save_button'),
+            t('light.grid.cancel_button')
         );
     };
 
@@ -49,10 +51,10 @@ export const SceneGrid: React.FC = () => {
                                 key={scene.id}
                                 onClick={(e) => handleCapture(e, scene.id)}
                                 className="aspect-square rounded-xl bg-app-surface/30 border border-app-border/50 hover:border-accent/40 flex flex-col items-center justify-center gap-3 cursor-pointer group transition-all duration-300 relative"
-                                title="Click to Capture Current Lights"
+                                title={t('light.grid.capture_tooltip')}
                             >
                                 <span className="material-symbols-outlined text-app-text/40 text-3xl group-hover:text-accent transition-colors">add</span>
-                                <span className="text-[10px] font-bold text-app-text/40 uppercase tracking-tight group-hover:text-accent">Capture</span>
+                                <span className="text-[10px] font-bold text-app-text/40 uppercase tracking-tight group-hover:text-accent">{t('light.grid.capture')}</span>
                             </div>
                         );
                     }
@@ -96,7 +98,7 @@ export const SceneGrid: React.FC = () => {
                             <div
                                 onClick={(e) => handleCapture(e, scene.id)}
                                 className="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                                title="Overwrite with Current Lights"
+                                title={t('light.grid.overwrite_tooltip')}
                             >
                                 <span className="material-symbols-outlined text-slate-500 text-sm hover:text-white">photo_camera</span>
                             </div>
@@ -104,7 +106,7 @@ export const SceneGrid: React.FC = () => {
                             <div
                                 onClick={(e) => { e.stopPropagation(); clearScene(scene.id); }}
                                 className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                                title="Clear Scene"
+                                title={t('light.grid.clear_tooltip')}
                             >
                                 <span className="material-symbols-outlined text-slate-500 text-sm hover:text-red-500">close</span>
                             </div>
@@ -112,7 +114,7 @@ export const SceneGrid: React.FC = () => {
                             <div
                                 onClick={(e) => handleRename(e, scene)}
                                 className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                                title="Rename Scene"
+                                title={t('light.grid.rename_tooltip')}
                             >
                                 <span className="material-symbols-outlined text-slate-500 text-sm hover:text-white">edit</span>
                             </div>

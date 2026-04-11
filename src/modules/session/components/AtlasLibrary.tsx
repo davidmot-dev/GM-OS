@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import type { AtlasMap } from '../useSessionOSStore';
 import { Search, FolderOpen, Film, Globe, Swords, Map, Building2, MapPin, Trash2, Pin, CheckCircle2 } from 'lucide-react';
@@ -8,12 +9,12 @@ import { MediaBrowser } from '../../../components/MediaBrowser';
 import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import { gmToast } from '../../../stores/useToastStore';
 
-const TYPE_META: Record<AtlasMap['type'], { label: string; icon: React.ReactNode; color: string }> = {
-    'battlemap': { label: 'Battlemap', icon: <Swords size={10} />, color: 'text-red-400 bg-red-500/10 border-red-500/20' },
-    'world-map': { label: 'Monde', icon: <Globe size={10} />, color: 'text-blue-400 bg-blue-500/10 border-blue-500/20' },
-    'region': { label: 'Region', icon: <Map size={10} />, color: 'text-green-400 bg-green-500/10 border-green-500/20' },
-    'city': { label: 'Ville', icon: <Building2 size={10} />, color: 'text-amber-400 bg-amber-500/10 border-amber-500/20' },
-    'dungeon': { label: 'Lieu', icon: <MapPin size={10} />, color: 'text-purple-400 bg-purple-500/10 border-purple-500/20' },
+const TYPE_META: Record<AtlasMap['type'], { labelKey: string; icon: React.ReactNode; color: string }> = {
+    'battlemap': { labelKey: 'modules:session.world_atlas.library.types.battlemap', icon: <Swords size={10} />, color: 'text-red-400 bg-red-500/10 border-red-500/20' },
+    'world-map': { labelKey: 'modules:session.world_atlas.library.types.world-map', icon: <Globe size={10} />, color: 'text-blue-400 bg-blue-500/10 border-blue-500/20' },
+    'region': { labelKey: 'modules:session.world_atlas.library.types.region', icon: <Map size={10} />, color: 'text-green-400 bg-green-500/10 border-green-500/20' },
+    'city': { labelKey: 'modules:session.world_atlas.library.types.city', icon: <Building2 size={10} />, color: 'text-amber-400 bg-amber-500/10 border-amber-500/20' },
+    'dungeon': { labelKey: 'modules:session.world_atlas.library.types.dungeon', icon: <MapPin size={10} />, color: 'text-purple-400 bg-purple-500/10 border-purple-500/20' },
 };
 
 const MapCard: React.FC<{
@@ -26,7 +27,8 @@ const MapCard: React.FC<{
     onTogglePin: () => void,
     onToggleVisited: () => void
 }> = ({ map, isSelected, isProjected, isPinned, onClick, onDelete, onTogglePin, onToggleVisited }) => {
-    const typeMeta = TYPE_META[map.type] || { label: 'Inconnu', icon: <Map size={10} />, color: 'text-slate-400 bg-slate-500/10 border-slate-500/20' };
+    const { t } = useTranslation();
+    const typeMeta = TYPE_META[map.type] || { labelKey: 'modules:session.world_atlas.library.unknown_type', icon: <Map size={10} />, color: 'text-slate-400 bg-slate-500/10 border-slate-500/20' };
 
     return (
         <div
@@ -38,7 +40,7 @@ const MapCard: React.FC<{
             <button
                 onClick={onClick}
                 className="flex-1 flex items-center gap-3 text-left focus:outline-none min-w-0"
-                title={`Sélectionner ${map.name}`}
+                title={t('modules:session.world_atlas.library.select_map', { name: map.name })}
             >
                 {/* Thumbnail */}
                 <div className="w-12 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-app-bg border border-app-border/20">
@@ -61,11 +63,11 @@ const MapCard: React.FC<{
                     </p>
                     <div className="flex items-center gap-1.5 mt-1 flex-wrap">
                         <span className={`inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded border ${typeMeta.color}`}>
-                            {typeMeta.icon} {typeMeta.label}
+                            {typeMeta.icon} {t(typeMeta.labelKey)}
                         </span>
                         {map.isVideo && (
                             <span className="inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded border text-purple-400 bg-purple-500/10 border-purple-500/20">
-                                <Film size={8} /> Animé
+                                <Film size={8} /> {t('modules:session.world_atlas.library.animated')}
                             </span>
                         )}
                         {isProjected && (
@@ -74,7 +76,7 @@ const MapCard: React.FC<{
                         )}
                         {map.isVisited && (
                             <span className="inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded border text-emerald-400 bg-emerald-500/10 border-emerald-500/20">
-                                <CheckCircle2 size={8} /> Visité
+                                <CheckCircle2 size={8} /> {t('modules:session.world_atlas.library.visited')}
                             </span>
                         )}
                     </div>
@@ -87,7 +89,7 @@ const MapCard: React.FC<{
                 <button
                     onClick={(e) => { e.stopPropagation(); onToggleVisited(); }}
                     className={`p-1.5 rounded-lg transition-all ${map.isVisited ? 'text-emerald-400 bg-emerald-500/10' : 'text-app-text/20 hover:text-emerald-400/60'}`}
-                    title={map.isVisited ? "Marquer comme non visité" : "Marquer comme visité"}
+                    title={map.isVisited ? t('modules:session.world_atlas.library.mark_unvisited') : t('modules:session.world_atlas.library.mark_visited')}
                 >
                     <CheckCircle2 size={13} fill={map.isVisited ? "currentColor" : "none"} className={map.isVisited ? "text-emerald-400" : ""} />
                 </button>
@@ -95,7 +97,7 @@ const MapCard: React.FC<{
                 <button
                     onClick={(e) => { e.stopPropagation(); onTogglePin(); }}
                     className={`p-1.5 rounded-lg transition-all ${isPinned ? 'text-accent bg-accent/10' : 'text-app-text/20 hover:text-accent/60'}`}
-                    title={isPinned ? "Retirer du Cockpit" : "Épingler au Cockpit"}
+                    title={isPinned ? t('modules:session.world_atlas.library.unpin_from_cockpit') : t('modules:session.world_atlas.library.pin_to_cockpit')}
                 >
                     <Pin size={13} fill={isPinned ? "currentColor" : "none"} />
                 </button>
@@ -103,7 +105,7 @@ const MapCard: React.FC<{
                 <button
                     onClick={(e) => { e.stopPropagation(); onDelete(); }}
                     className="p-1.5 hover:text-red-400 text-app-text/20 transition-colors"
-                    title="Supprimer la carte"
+                    title={t('modules:session.world_atlas.library.delete_map')}
                 >
                     <Trash2 size={13} />
                 </button>
@@ -119,6 +121,7 @@ const AtlasLibrary: React.FC = () => {
         campaigns, toggleActiveLocation,
         pendingPreFill, clearPendingPreFill 
     } = useSessionOSStore();
+    const { t } = useTranslation();
     const { mapUrl } = useMapStore();
     const { mediaList } = useMediaStore();
 
@@ -135,9 +138,9 @@ const AtlasLibrary: React.FC = () => {
             });
             setIsBrowserOpen(true);
             clearPendingPreFill();
-            gmToast(`Lieu Wiki détecté : ${pendingPreFill.data.title}. Choisissez un visuel.`, 'info');
+            gmToast(t('modules:session.world_atlas.library.wiki_location_detected', { name: pendingPreFill.data.title }), 'info');
         }
-    }, [pendingPreFill, clearPendingPreFill]);
+    }, [pendingPreFill, clearPendingPreFill, t]);
 
     const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
     const activeLocationIds = activeCampaign?.activeLocationIds || [];
@@ -172,13 +175,13 @@ const AtlasLibrary: React.FC = () => {
             <div className="p-4 border-b border-app-border">
                 <div className="flex items-center gap-2 mb-3">
                     <Globe size={16} className="text-accent" />
-                    <h3 className="text-app-text font-bold text-sm uppercase tracking-widest">World Atlas</h3>
+                    <h3 className="text-app-text font-bold text-sm uppercase tracking-widest">{t('modules:session.world_atlas.title')}</h3>
                 </div>
                 <div className="relative">
                     <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-text/40" />
                     <input
                         type="text"
-                        placeholder="Rechercher une carte..."
+                        placeholder={t('modules:session.world_atlas.library.search_placeholder')}
                         value={search}
                         onChange={e => setSearch(e.target.value)}
                         className="w-full bg-app-bg border border-app-border rounded-lg pl-8 pr-3 py-1.5 text-xs text-app-text/60 placeholder:text-app-text/20 focus:ring-1 focus:ring-accent/50 focus:outline-none"
@@ -202,7 +205,7 @@ const AtlasLibrary: React.FC = () => {
                     />
                 ))}
                 {filtered.length === 0 && (
-                    <p className="text-app-text/20 text-xs text-center p-4">Aucune carte trouvée</p>
+                    <p className="text-app-text/20 text-xs text-center p-4">{t('modules:session.world_atlas.library.no_maps_found')}</p>
                 )}
             </div>
 
@@ -213,7 +216,7 @@ const AtlasLibrary: React.FC = () => {
                     className="w-full flex items-center justify-center gap-2 border border-accent/40 text-accent hover:bg-accent/10 py-2.5 rounded-lg text-xs font-bold transition-all"
                 >
                     <FolderOpen size={14} />
-                    Importer depuis Media Hub
+                    {t('modules:session.world_atlas.library.import_from_media')}
                 </button>
             </div>
 
@@ -222,7 +225,7 @@ const AtlasLibrary: React.FC = () => {
                 onClose={() => setIsBrowserOpen(false)}
                 onSelect={handleMediaSelect}
                 allowedTypes={['image', 'video']}
-                title="Sélecteur de Cartes (Atlas)"
+                title={t('modules:session.world_atlas.library.media_browser_title')}
             />
         </div>
     );

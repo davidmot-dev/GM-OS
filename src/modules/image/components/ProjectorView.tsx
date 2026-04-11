@@ -9,9 +9,11 @@ import { useVoiceStore } from '../../voice/useVoiceStore';
 import { useTacticalAIStore } from '../../tactical-ai/useTacticalAIStore';
 import { useImageStore } from '../useImageStore';
 import { useCombatStore } from '../../combat/useCombatStore';
+import { useTranslation } from 'react-i18next';
 
 
 const ProjectorView: React.FC = () => {
+    const { t } = useTranslation('common');
     const storeTarget = useMapStore(state => state.projectionTarget);
     const urlDisplayId = new URLSearchParams(window.location.search).get('displayId');
     const targetId = (urlDisplayId || storeTarget) as string;
@@ -234,7 +236,7 @@ const ProjectorView: React.FC = () => {
                     </div>
                 ) : (
                     <div className="flex items-center justify-center h-full text-app-text font-black uppercase tracking-widest text-2xl">
-                        Standby
+                        {t('standby')}
                     </div>
                 )}
             </div>

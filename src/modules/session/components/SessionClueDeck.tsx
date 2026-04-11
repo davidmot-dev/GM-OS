@@ -1,10 +1,12 @@
 import React, { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useImageStore } from '../../image/useImageStore';
 import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import { Share2, ChevronLeft, ChevronRight, Search, FileText } from 'lucide-react';
 
 const SessionClueDeck: React.FC = () => {
+    const { t } = useTranslation(['modules']);
     const { clues, activeCampaignId } = useSessionOSStore();
     const { projectEntity } = useImageStore();
     const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -39,26 +41,26 @@ const SessionClueDeck: React.FC = () => {
             <div className="flex items-center justify-between px-1">
                 <div className="flex items-center gap-2">
                     <div className="p-1 px-2 rounded bg-amber-500/10 border border-amber-500/20 text-amber-500 text-[10px] font-black uppercase tracking-widest">
-                        Deck de Session
+                        {t('modules:session.clues.deck_title')}
                     </div>
                     <span className="text-[10px] text-app-text/40 font-bold uppercase tracking-widest">
-                        Indices Révélés ({revealedClues.length})
+                        {t('modules:session.clues.revealed_count', { count: revealedClues.length })}
                     </span>
                 </div>
                 <div className="flex items-center gap-2 opacity-0 group-hover/deck:opacity-100 transition-opacity">
                     <button 
                         onClick={() => scroll('left')}
                         className="p-1 rounded-full bg-app-surface border border-app-border/40 text-app-text/40 hover:text-accent transition-all"
-                        title="Faire défiler vers la gauche"
-                        aria-label="Faire défiler vers la gauche"
+                        title={t('modules:session.clues.scroll_left_tooltip')}
+                        aria-label={t('modules:session.clues.scroll_left_tooltip')}
                     >
                         <ChevronLeft size={14} />
                     </button>
                     <button 
                         onClick={() => scroll('right')}
                         className="p-1 rounded-full bg-app-surface border border-app-border/40 text-app-text/40 hover:text-accent transition-all"
-                        title="Faire défiler vers la droite"
-                        aria-label="Faire défiler vers la droite"
+                        title={t('modules:session.clues.scroll_right_tooltip')}
+                        aria-label={t('modules:session.clues.scroll_right_tooltip')}
                     >
                         <ChevronRight size={14} />
                     </button>
@@ -72,7 +74,7 @@ const SessionClueDeck: React.FC = () => {
                 {revealedClues.length === 0 ? (
                     <div className="flex-shrink-0 w-full h-32 rounded-2xl border border-dashed border-app-border/20 flex flex-col items-center justify-center text-app-text/20">
                         <Search size={24} className="mb-2 opacity-20" />
-                        <span className="text-[10px] font-bold uppercase tracking-widest">Aucun indice révélé</span>
+                        <span className="text-[10px] font-bold uppercase tracking-widest">{t('modules:session.clues.no_revealed')}</span>
                     </div>
                 ) : (
                     revealedClues.map(clue => (
@@ -89,7 +91,7 @@ const SessionClueDeck: React.FC = () => {
                     className="flex-shrink-0 w-48 h-32 rounded-2xl border-2 border-dashed border-app-border/10 hover:border-accent/30 hover:bg-accent/5 flex flex-col items-center justify-center gap-2 text-app-text/20 hover:text-accent transition-all group/add snap-start"
                 >
                     <FileText size={20} className="group-hover/add:scale-110 transition-transform" />
-                    <span className="text-[8px] font-black uppercase tracking-tighter">Gérer les indices</span>
+                    <span className="text-[8px] font-black uppercase tracking-tighter">{t('modules:session.clues.manage_clues')}</span>
                 </button>
             </div>
         </div>
@@ -109,6 +111,7 @@ interface ClueCardProps {
 }
 
 const ClueCard: React.FC<ClueCardProps> = ({ clue, onProject }) => {
+    const { t } = useTranslation(['modules']);
     return (
         <div className="glass-bento flex-shrink-0 w-64 h-32 relative overflow-hidden group snap-start hover:border-accent/40 transition-all p-0">
             {/* Background Image with blur */}
@@ -121,11 +124,11 @@ const ClueCard: React.FC<ClueCardProps> = ({ clue, onProject }) => {
 
             <div className="absolute inset-x-0 top-3 px-4 flex justify-between items-start z-10">
                 <span className="text-[8px] font-black text-accent uppercase tracking-widest bg-accent/10 px-1.5 py-0.5 rounded border border-accent/20">
-                    Indice
+                    {t('modules:session.clues.clue_label')}
                 </span>
                 {clue.revealedAt && (
                     <span className="text-[7px] font-bold text-white/20 uppercase tracking-tighter">
-                        {new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short' }).format(clue.revealedAt)}
+                        {new Intl.DateTimeFormat(undefined, { dateStyle: 'short' }).format(clue.revealedAt)}
                     </span>
                 )}
             </div>
@@ -154,7 +157,7 @@ const ClueCard: React.FC<ClueCardProps> = ({ clue, onProject }) => {
                         className="flex items-center gap-2 px-3 py-1.5 bg-accent text-app-bg rounded-lg text-[10px] font-black uppercase tracking-tighter hover:scale-105 active:scale-95 transition-all shadow-glow-accent/20"
                     >
                         <Share2 size={12} />
-                        Projeter
+                        {t('modules:session.clues.project_clue')}
                     </button>
                     <button 
                         onClick={() => {
@@ -163,8 +166,8 @@ const ClueCard: React.FC<ClueCardProps> = ({ clue, onProject }) => {
                             useSessionOSStore.getState().setCurrentView('campaign-editor');
                         }}
                         className="p-1.5 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all"
-                        title="Détails de l'indice"
-                        aria-label="Détails de l'indice"
+                        title={t('modules:session.clues.details_tooltip')}
+                        aria-label={t('modules:session.clues.details_tooltip')}
                     >
                         <Search size={14} />
                     </button>

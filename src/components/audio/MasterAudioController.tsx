@@ -3,8 +3,10 @@ import { Volume2, VolumeX, Mic, Zap, Power } from 'lucide-react';
 import { useAudioMasterStore } from '../../stores/useAudioMasterStore';
 import { useSessionStore } from '../../store/useSessionStore';
 import { useToastStore } from '../../stores/useToastStore';
+import { useTranslation } from 'react-i18next';
 
 const MasterAudioController: React.FC = () => {
+    const { t } = useTranslation(['common', 'modules']);
     const { 
         masterVolume, 
         setMasterVolume, 
@@ -40,10 +42,10 @@ const MasterAudioController: React.FC = () => {
                 await win.hueEngine.extinguishAll();
             }
 
-            useToastStore.getState().showToast('Arrêt Global : Tous les médias et effets ont été stoppés.', 'success');
+            useToastStore.getState().showToast(t('modules:session.toasts.stop_all_success'), 'success');
         } catch (error) {
             console.error('[PanicButton] Failed to stop everything:', error);
-            useToastStore.getState().showToast('Erreur lors de l’arrêt global.', 'error');
+            useToastStore.getState().showToast(t('modules:session.toasts.stop_all_error'), 'error');
         }
     };
 
@@ -70,7 +72,7 @@ const MasterAudioController: React.FC = () => {
                     step="0.01" 
                     value={masterVolume} 
                     onChange={handleVolumeChange}
-                    aria-label="Volume Master"
+                    aria-label={t('audio')}
                     className={`w-full h-1.5 appearance-none cursor-pointer accent-accent ${
                         theme === 'medieval' ? 'bg-app-bg' : 'bg-app-bg/50 rounded-lg'
                     }`}
@@ -119,7 +121,7 @@ const MasterAudioController: React.FC = () => {
                     ? 'rounded-md bg-red-900/20 border-red-900/40 text-red-400 hover:bg-red-900/40' 
                     : 'rounded-xl bg-red-500/10 border-red-500/20 text-red-500 hover:bg-red-500/20 hover:border-red-500/40 hover:shadow-glow-red/20'
                 }`}
-                title="ARRÊT GLOBAL (Panique)"
+                title={t('common:actions.stop_all')}
             >
                 <Power size={16} className="group-hover/panic:scale-110 transition-transform" />
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] hidden sm:inline">

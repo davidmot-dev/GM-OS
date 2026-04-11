@@ -10,6 +10,7 @@
  */
 
 import type { StateCreator } from 'zustand';
+import i18next from 'i18next';
 import { gmToast } from '../../../stores/useToastStore';
 import type { GameSession } from './types';
 
@@ -83,7 +84,7 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
             sessionEntityIds: session.sessionEntityIds || []
         };
         set((state) => ({ sessions: [...state.sessions, newSession] }));
-        gmToast(`Session #${newSession.number} créée.`, 'success');
+        gmToast(i18next.t('modules:session.toasts.session_created', { number: newSession.number }), 'success');
         return id;
     },
 
@@ -196,7 +197,7 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
         set((state) => {
             const session = state.sessions.find((s) => s.id === id);
             const newSessions = state.sessions.filter((s) => s.id !== id);
-            gmToast(`Session #${session?.number} supprimée.`, 'success');
+            gmToast(i18next.t('modules:session.toasts.session_deleted', { number: session?.number }), 'success');
             return { sessions: newSessions };
         }),
 
@@ -224,7 +225,7 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
         };
 
         set((state) => ({ transferRequests: [...state.transferRequests, request] }));
-        gmToast(`Demande d'échange envoyée pour validation MJ.`, 'info');
+        gmToast(i18next.t('modules:session.toasts.transfer_request_sent'), 'info');
     },
 
     approveItemTransfer: (requestId) => {
@@ -238,7 +239,7 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
         const toPlayer = state.players.find(p => p.characters.some(c => c.id === request.toCharacterId));
 
         if (!fromPlayer || !toPlayer) {
-            gmToast("Erreur : Personnage introuvable.", "error");
+            gmToast(i18next.t('modules:session.toasts.transfer_error_char_not_found'), "error");
             return;
         }
 
@@ -256,7 +257,7 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
             )
         }));
 
-        gmToast(`Échange de "${request.item.name}" approuvé !`, 'success');
+        gmToast(i18next.t('modules:session.toasts.transfer_approved', { item: request.item.name }), 'success');
         
 
         // Log dans le journal
@@ -264,8 +265,12 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
         if (journal) {
             journal.addEvent({
                 type: 'SYSTEM',
-                title: 'Échange d\'objets',
-                content: `${request.fromCharacterName} a donné ${request.item.name} à ${request.toCharacterName}.`
+                title: i18next.t('modules:session.events.item_transfer_title'),
+                content: i18next.t('modules:session.events.item_transfer_content', { 
+                    from: request.fromCharacterName, 
+                    item: request.item.name, 
+                    to: request.toCharacterName 
+                })
             });
         }
     },
@@ -276,6 +281,6 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
                 r.id === requestId ? { ...r, status: 'rejected' } : r
             )
         }));
-        gmToast("Échange refusé.", "info");
+        gmToast(i18next.t('modules:session.toasts.transfer_rejected'), "info");
     },
 });

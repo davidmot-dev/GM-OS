@@ -8,6 +8,7 @@
  */
 
 import type { StateCreator } from 'zustand';
+import i18next from 'i18next';
 import { gmToast } from '../../../stores/useToastStore';
 import { useJournalStore } from '../../journal/useJournalStore';
 import { HealthInterpreter } from '../logic/HealthInterpreter';
@@ -110,7 +111,7 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
     addEntity: (entity) => {
         const newEntity: Entity = { ...entity, id: `e-${Date.now()}` };
         set((state) => ({ entities: [...state.entities, newEntity] }));
-        gmToast(`Entité "${newEntity.name}" créée.`, 'success');
+        gmToast(i18next.t('modules:session.toasts.entity_created', { name: newEntity.name }), 'success');
     },
 
     updateEntity: (id, updates) =>
@@ -131,7 +132,7 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
     deleteEntity: (id) => {
         const entity = get().entities.find((e) => e.id === id);
         set((state) => ({ entities: state.entities.filter((e) => e.id !== id) }));
-        if (entity) gmToast(`"${entity.name}" supprimé.`, 'info');
+        if (entity) gmToast(i18next.t('modules:session.toasts.entity_deleted', { name: entity.name }), 'info');
     },
 
     updateEntityHP: (entityId: string, hp: number) =>
@@ -513,7 +514,7 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                 characterId,
                 characterName: character.name,
                 playerName: player.realName,
-                message: `Modification à distance : ${messageParts.join(', ')}`,
+                message: i18next.t('modules:session.toasts.remote_vitals_update', { details: messageParts.join(', ') }),
             });
         }
     },
@@ -534,8 +535,12 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
 
             useJournalStore.getState().addEvent({
                 type: 'COMBAT',
-                title: `💥 Impact sur ${entity.name}`,
-                content: `HP : ${newHp} / ${entity.maxHp} — État : ${updatedHealth.state}`,
+                title: i18next.t('modules:session.events.impact_title', { name: entity.name }),
+                content: i18next.t('modules:session.events.impact_content', { 
+                    hp: newHp, 
+                    max: entity.maxHp, 
+                    state: updatedHealth.state 
+                }),
             });
         } else {
             const player = players.find((p) =>
@@ -551,8 +556,12 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
 
             useJournalStore.getState().addEvent({
                 type: 'COMBAT',
-                title: `💥 Impact sur ${character.name}`,
-                content: `HP : ${newHp} / ${character.maxHp} — État : ${updatedHealth.state}`,
+                title: i18next.t('modules:session.events.impact_title', { name: character.name }),
+                content: i18next.t('modules:session.events.impact_content', { 
+                    hp: newHp, 
+                    max: character.maxHp, 
+                    state: updatedHealth.state 
+                }),
             });
         }
     },

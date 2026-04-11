@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import type { Entity } from '../useSessionOSStore';
 import { useCombatStore } from '../../combat/useCombatStore';
@@ -32,14 +33,8 @@ const ROLE_COLORS = {
     boss: 'bg-purple-500/20 text-purple-600 dark:text-purple-400 border-purple-500/30 shadow-[0_0_15px_rgba(168,85,247,0.2)]',
 };
 
-const ROLE_LABELS = {
-    ally: 'Allié',
-    neutral: 'Neutre',
-    hostile: 'Hostile',
-    boss: 'Boss',
-};
-
 const NpcGallery: React.FC = () => {
+    const { t } = useTranslation();
     const { 
         entities, 
         activeCampaignId, 
@@ -89,8 +84,8 @@ const NpcGallery: React.FC = () => {
             {/* Left Sidebar - Controls */}
             <aside className="w-80 h-full bg-app-surface border-r border-app-border flex flex-col p-6 overflow-y-auto custom-scrollbar transition-colors">
                 <div className="mb-8">
-                    <h2 className="text-2xl font-black text-accent font-display tracking-tighter uppercase">PNJ & Monstres</h2>
-                    <p className="text-[10px] text-slate-500 font-bold tracking-[0.2em] uppercase">Tactical Database</p>
+                    <h2 className="text-2xl font-black text-accent font-display tracking-tighter uppercase">{t('modules:session.npc_gallery.title')}</h2>
+                    <p className="text-[10px] text-slate-500 font-bold tracking-[0.2em] uppercase">{t('modules:session.npc_gallery.subtitle')}</p>
                 </div>
 
                 {/* Search */}
@@ -99,7 +94,7 @@ const NpcGallery: React.FC = () => {
                         <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-600 transition-colors group-focus-within:text-accent" />
                         <input
                             type="text"
-                            placeholder="Rechercher..."
+                            placeholder={t('modules:session.npc_gallery.search_placeholder')}
                             className="w-full bg-app-bg/50 border-b-2 border-app-border py-3 pl-10 pr-4 text-sm text-app-text focus:outline-none focus:border-accent transition-all placeholder:text-slate-600/50"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
@@ -109,36 +104,36 @@ const NpcGallery: React.FC = () => {
 
                 {/* Filters */}
                 <nav className="flex-1 space-y-2">
-                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 ml-2">Filtres</p>
+                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 ml-2">{t('modules:session.npc_gallery.filters_label')}</p>
                     <FilterButton 
                         active={filter === 'all'} 
                         onClick={() => setFilter('all')} 
                         icon={<Users size={18} />} 
-                        label="Tous" 
+                        label={t('modules:session.npc_gallery.filter_all')} 
                     />
                     <FilterButton 
                         active={filter === 'npc'} 
                         onClick={() => setFilter('npc')} 
                         icon={<UserPlus size={18} />} 
-                        label="PNJ" 
+                        label={t('modules:session.npc_gallery.filter_npc')} 
                     />
                     <FilterButton 
                         active={filter === 'monster'} 
                         onClick={() => setFilter('monster')} 
                         icon={<Skull size={18} />} 
-                        label="Monstres" 
+                        label={t('modules:session.npc_gallery.filter_monsters')} 
                     />
                     <FilterButton 
                         active={filter === 'ally'} 
                         onClick={() => setFilter('ally')} 
                         icon={<Heart size={18} />} 
-                        label="Alliés" 
+                        label={t('modules:session.npc_gallery.filter_allies')} 
                     />
                     <FilterButton 
                         active={filter === 'hostile'} 
                         onClick={() => setFilter('hostile')} 
                         icon={<Swords size={18} />} 
-                        label="Hostiles" 
+                        label={t('modules:session.npc_gallery.filter_hostiles')} 
                     />
                 </nav>
 
@@ -149,7 +144,7 @@ const NpcGallery: React.FC = () => {
                         className="w-full bg-accent/10 hover:bg-accent/20 text-accent border border-accent/30 font-display font-bold py-4 rounded-xl shadow-[0_0_20px_rgba(var(--accent-rgb),0.15)] hover:shadow-[0_0_25px_rgba(var(--accent-rgb),0.25)] active:scale-95 transition-all flex items-center justify-center gap-3 group"
                     >
                         <Plus size={20} className="group-hover:rotate-90 transition-transform duration-300" />
-                        NOUVEAU PNJ
+                        {t('modules:session.npc_gallery.new_npc')}
                     </button>
                 </div>
             </aside>
@@ -160,8 +155,8 @@ const NpcGallery: React.FC = () => {
                 <div className="flex justify-between items-end mb-10">
                     <div className="relative">
                         <h1 className="text-2xl md:text-3xl font-black font-display tracking-tighter text-app-text leading-tight uppercase">
-                            Liste des<br/>
-                            <span className="text-accent italic">entités</span>
+                            {t('modules:session.npc_gallery.list_title')}<br/>
+                            <span className="text-accent italic">{t('modules:session.npc_gallery.list_accent')}</span>
                         </h1>
                         <div className="absolute -left-3 top-0 w-1 h-8 bg-accent/30"></div>
                         <div className="h-1 w-16 bg-accent mt-3 shadow-[0_0_15px_rgba(var(--accent-rgb),0.5)]"></div>
@@ -170,10 +165,10 @@ const NpcGallery: React.FC = () => {
                     <div className="flex gap-3 text-slate-500 font-mono text-[10px] tracking-widest uppercase mb-4">
                         <div className="flex items-center gap-2 px-4 py-2 bg-app-surface/50 rounded-full border border-app-border">
                             <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse"></span>
-                            ACTIVE_CAMPAIGN: ONLINE
+                            {t('modules:session.npc_gallery.status_active')}
                         </div>
                         <div className="px-4 py-2 bg-app-surface/50 rounded-full border border-app-border">
-                            COUNT: {filteredEntities.length}
+                            {t('modules:session.npc_gallery.count_label')}: {filteredEntities.length}
                         </div>
                     </div>
                 </div>
@@ -194,13 +189,16 @@ const NpcGallery: React.FC = () => {
                             onSelect={() => setSelectedEntity(npc.id)}
                             onTogglePin={() => {
                                 if (!session) return;
-                                if (pinnedIds.includes(npc.id)) {
+                                const isCurrentlyPinned = pinnedIds.includes(npc.id);
+                                if (isCurrentlyPinned) {
                                     removeEntityFromSession(session.id, npc.id);
-                                    gmToast(`${npc.name} retiré de la session`);
                                 } else {
                                     addEntityToSession(session.id, npc.id);
-                                    gmToast(`${npc.name} épinglé à la session`);
                                 }
+                                const msg = isCurrentlyPinned 
+                                    ? t('modules:session.toasts.entity_removed', { name: npc.name })
+                                    : t('modules:session.toasts.entity_pinned', { name: npc.name });
+                                gmToast(msg);
                             }}
                             onGenerateImage={() => {
                                 setEditingNpcId(npc.id);
@@ -212,13 +210,14 @@ const NpcGallery: React.FC = () => {
                             }}
                             onDelete={() => {
                                 gmConfirm(
-                                    `Voulez-vous vraiment supprimer définitivement "${npc.name}" ?`,
+                                    t('modules:session.npc_gallery.delete_confirm', { name: npc.name }),
                                     () => {
                                         deleteEntity(npc.id);
-                                        gmToast(`${npc.name} a été supprimé.`);
+                                        gmToast(t('modules:session.toasts.entity_deleted', { name: npc.name }));
                                     }
                                 );
                             }}
+                            t={t}
                         />
                     ))}
 
@@ -231,8 +230,8 @@ const NpcGallery: React.FC = () => {
                             <Plus size={32} className="text-slate-600 group-hover:text-accent group-hover:rotate-90 transition-all duration-300" />
                         </div>
                         <div className="text-center">
-                            <span className="font-display font-black text-slate-500 uppercase tracking-widest text-xs group-hover:text-accent transition-colors">Initialiser une Entité</span>
-                            <p className="text-[9px] text-slate-700 mt-1 font-mono group-hover:text-slate-500">SYSTEM_RESERV_SLOT_00</p>
+                            <span className="font-display font-black text-slate-500 uppercase tracking-widest text-xs group-hover:text-accent transition-colors">{t('modules:session.npc_gallery.empty_state_init')}</span>
+                            <p className="text-[9px] text-slate-700 mt-1 font-mono group-hover:text-slate-500">{t('modules:session.npc_gallery.empty_state_slot')}</p>
                         </div>
                     </button>
                 </motion.div>
@@ -240,7 +239,7 @@ const NpcGallery: React.FC = () => {
                 {filteredEntities.length === 0 && search && (
                     <div className="flex flex-col items-center justify-center py-32 text-slate-700">
                         <Search size={64} className="mb-6 opacity-10" />
-                        <p className="text-sm italic font-mono uppercase tracking-[0.3em]">Aucun résultat pour "{search}"</p>
+                        <p className="text-sm italic font-mono uppercase tracking-[0.3em]">{t('modules:session.npc_gallery.no_results', { query: search })}</p>
                     </div>
                 )}
             </main>
@@ -250,8 +249,8 @@ const NpcGallery: React.FC = () => {
                 isOpen={showAIPrompt}
                 onClose={() => { setShowAIPrompt(false); setEditingNpcId(null); }}
                 isGenerating={isGeneratingAIImage}
-                title={`Illustration IA : ${editingNpc?.name}`}
-                placeholder="Ex: guerrier nain, armure de plaque, barbe tressée..."
+                title={t('modules:session.npc_gallery.ai_title', { name: editingNpc?.name })}
+                placeholder={t('modules:session.npc_gallery.ai_placeholder')}
                 onGenerate={(instructions) => {
                     if (editingNpcId) {
                         generateEntityPortrait(editingNpcId, instructions).then(() => {
@@ -304,8 +303,9 @@ const NpcGalleryItem: React.FC<{
     onTogglePin: () => void,
     onGenerateImage: () => void,
     onPickImage: () => void,
-    onDelete: () => void
-}> = ({ npc, isSelected, isPinned, onSelect, onTogglePin, onGenerateImage, onPickImage, onDelete }) => {
+    onDelete: () => void,
+    t: any
+}> = ({ npc, isSelected, isPinned, onSelect, onTogglePin, onGenerateImage, onPickImage, onDelete, t }) => {
     
     return (
         <motion.div
@@ -333,7 +333,7 @@ const NpcGalleryItem: React.FC<{
                         className={`p-2.5 rounded-xl transition-all shadow-xl backdrop-blur-md ${
                             isPinned ? 'bg-accent text-white scale-110 shadow-accent/20' : 'bg-black/40 text-slate-300 hover:text-accent border border-white/10'
                         }`}
-                        title={isPinned ? 'Retirer de la session' : 'Épingler à la session'}
+                        title={isPinned ? t('modules:session.npc_gallery.unpin_tooltip') : t('modules:session.npc_gallery.pin_tooltip')}
                     >
                         <Pin size={18} fill={isPinned ? 'currentColor' : 'none'} />
                     </button>
@@ -342,21 +342,21 @@ const NpcGalleryItem: React.FC<{
                         <button
                             onClick={(e) => { e.stopPropagation(); onDelete(); }}
                             className="p-2.5 bg-red-500/20 backdrop-blur-md rounded-xl text-red-400 hover:bg-red-500 hover:text-white border border-red-500/30 transition-all"
-                            title="Supprimer définitivement"
+                            title={t('modules:session.npc_gallery.delete_tooltip')}
                         >
                             <Trash2 size={18} />
                         </button>
                         <button
                             onClick={(e) => { e.stopPropagation(); onPickImage(); }}
                             className="p-2.5 bg-black/40 backdrop-blur-md rounded-xl text-slate-300 hover:text-accent border border-white/10 transition-all"
-                            title="Changer l'image (Galerie)"
+                            title={t('modules:session.npc_gallery.browse_tooltip')}
                         >
                             <ImageIcon size={18} />
                         </button>
                         <button
                             onClick={(e) => { e.stopPropagation(); onGenerateImage(); }}
                             className="p-2.5 bg-accent text-white rounded-xl hover:scale-110 transition-all shadow-[0_0_15px_rgba(var(--accent-rgb),0.4)]"
-                            title="Générer par IA"
+                            title={t('modules:session.npc_gallery.ai_tooltip')}
                         >
                             <Sparkles size={18} />
                         </button>
@@ -368,7 +368,7 @@ const NpcGalleryItem: React.FC<{
             <div className="p-6 h-56 flex flex-col relative text-app-text">
                 {/* Role Badge */}
                 <div className={`absolute -top-3 right-6 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border ${ROLE_COLORS[npc.role as keyof typeof ROLE_COLORS] || 'bg-slate-500/20 text-slate-400 border-white/10'}`}>
-                    {ROLE_LABELS[npc.role as keyof typeof ROLE_LABELS] || npc.role}
+                    {t(`modules:session.npc_gallery.roles.${npc.role}`, { defaultValue: npc.role })}
                 </div>
 
                 <div className="mb-auto">
@@ -376,7 +376,7 @@ const NpcGalleryItem: React.FC<{
                         {npc.name}
                     </h3>
                     <p className="text-[10px] text-slate-500 font-bold italic tracking-wide truncate">
-                        {npc.description || 'Classe / Race non définie'}
+                        {npc.description || t('modules:session.npc_gallery.default_description')}
                     </p>
                 </div>
 
@@ -384,7 +384,7 @@ const NpcGalleryItem: React.FC<{
                 <div className="mt-4 pt-4 border-t border-white/5 flex flex-col gap-3">
                     {/* Simplified HP Gauge */}
                     <div className="flex justify-between items-center text-[10px] font-black text-slate-600 mb-1 tracking-widest uppercase">
-                        <span>Vitalité</span>
+                        <span>{t('modules:session.npc_gallery.hp_label')}</span>
                         <span className={npc.hp / npc.maxHp < 0.3 ? 'text-red-400' : 'text-accent'}>{npc.hp} / {npc.maxHp} HP</span>
                     </div>
                     <div className="w-full h-1 bg-black/10 rounded-full overflow-hidden">
@@ -403,7 +403,7 @@ const NpcGalleryItem: React.FC<{
                             className="flex-1 flex items-center justify-center gap-2 bg-app-surface border border-app-border text-slate-500 hover:bg-app-bg hover:text-accent h-9 rounded-lg font-bold text-[10px] uppercase tracking-widest transition-all"
                         >
                             <FileText size={12} />
-                            Fiche
+                            {t('modules:session.npc_gallery.details_btn')}
                         </button>
                         <button 
                             onClick={(e) => {
@@ -420,10 +420,10 @@ const NpcGalleryItem: React.FC<{
                                     sourceEntityId: npc.id,
                                     statuses: []
                                 });
-                                gmToast(`${npc.name} ajouté au combat !`);
+                                gmToast(t('modules:session.toasts.entity_added_to_combat', { name: npc.name }));
                             }}
                             className="w-9 h-9 flex items-center justify-center bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white rounded-lg transition-all"
-                            title="Ajouter au combat"
+                            title={t('modules:session.npc_gallery.add_combat_tooltip')}
                         >
                             <Swords size={14} />
                         </button>
@@ -431,10 +431,10 @@ const NpcGalleryItem: React.FC<{
                             onClick={(e) => {
                                 e.stopPropagation();
                                 useImageStore.getState().projectEntity(npc);
-                                gmToast(`${npc.name} projeté !`);
+                                gmToast(t('modules:session.toasts.entity_projected', { name: npc.name }));
                             }}
                             className="w-9 h-9 flex items-center justify-center bg-accent/10 border border-accent/20 text-accent hover:bg-accent hover:text-white rounded-lg transition-all"
-                            title="Projeter l'image"
+                            title={t('modules:session.npc_gallery.project_tooltip')}
                         >
                             <Eye size={14} />
                         </button>

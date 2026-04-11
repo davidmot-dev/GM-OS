@@ -1,8 +1,10 @@
 import React from 'react';
 import { useNPCStore } from '../useNPCStore';
 import { Trash2, Trash, User, MapPin, Package, Zap, Quote, ChevronRight, Skull } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const NPCHistory: React.FC = () => {
+    const { t } = useTranslation(['modules', 'common']);
     const { savedEntities, deleteFromMemo, setCurrentEntity, clearHistory } = useNPCStore();
 
     if (savedEntities.length === 0) {
@@ -11,8 +13,8 @@ const NPCHistory: React.FC = () => {
                 <div className="w-12 h-12 rounded-full border border-app-border flex items-center justify-center mb-4">
                     <Trash2 size={24} className="opacity-20" />
                 </div>
-                <p className="text-xs uppercase tracking-widest font-bold mb-1">Mémos vides</p>
-                <p className="text-[10px]">Sauvegardez vos générations favorites ici.</p>
+                <p className="text-xs uppercase tracking-widest font-bold mb-1">{t('npc.history.empty_title')}</p>
+                <p className="text-[10px]">{t('npc.history.empty_desc')}</p>
             </div>
         );
     }
@@ -31,11 +33,11 @@ const NPCHistory: React.FC = () => {
     return (
         <div className="h-full flex flex-col">
             <div className="p-4 flex items-center justify-between border-b border-app-border bg-app-bg/30">
-                <span className="text-[10px] uppercase font-bold text-slate-500 tracking-widest">Historique Mémos</span>
+                <span className="text-[10px] uppercase font-bold text-slate-500 tracking-widest">{t('npc.history.title')}</span>
                 <button
-                    onClick={() => { if (confirm("Vider l'historique ?")) clearHistory(); }}
+                    onClick={() => { if (window.confirm(t('npc.history.clear_confirm'))) clearHistory(); }}
                     className="p-1 hover:bg-rose-500/10 hover:text-rose-500 rounded transition-colors text-slate-600"
-                    title="Tout effacer"
+                    title={t('npc.history.clear')}
                 >
                     <Trash size={14} />
                 </button>
@@ -69,13 +71,13 @@ const NPCHistory: React.FC = () => {
                                 </p>
                                 {entity.isDead && <Skull size={10} className="text-rose-500 shrink-0" />}
                             </div>
-                            <p className="text-[8px] text-slate-500 uppercase">{entity.category}</p>
+                            <p className="text-[8px] text-slate-500 uppercase">{t(`npc.categories.${entity.category}`)}</p>
                         </div>
 
                         <button
                             onClick={(e) => { e.stopPropagation(); deleteFromMemo(entity.id); }}
                             className="p-1.5 opacity-0 group-hover:opacity-100 hover:bg-rose-500/20 hover:text-rose-500 rounded transition-all text-slate-500"
-                            title="Supprimer du mémo"
+                            title={t('npc.history.delete_tooltip')}
                         >
                             <Trash2 size={12} />
                         </button>
@@ -89,3 +91,4 @@ const NPCHistory: React.FC = () => {
 };
 
 export default NPCHistory;
+

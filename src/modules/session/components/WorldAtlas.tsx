@@ -1,11 +1,13 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSessionOSStore } from '../useSessionOSStore';
+import { ArrowLeft } from 'lucide-react';
 import AtlasLibrary from './AtlasLibrary';
 import AtlasMapDetail from './AtlasMapDetail';
 import AtlasLinkedEntities from './AtlasLinkedEntities';
-import { useSessionOSStore } from '../useSessionOSStore';
-import { ArrowLeft } from 'lucide-react';
 
 const WorldAtlas: React.FC = () => {
+    const { t } = useTranslation();
     const { setCurrentView } = useSessionOSStore();
 
     return (
@@ -17,7 +19,7 @@ const WorldAtlas: React.FC = () => {
                     className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-app-surface border border-app-border text-app-text/40 hover:text-accent hover:border-accent/50 transition-all font-bold text-[10px] uppercase tracking-widest group"
                 >
                     <ArrowLeft size={14} className="transition-transform group-hover:-translate-x-1" />
-                    Retour au Cockpit
+                    {t('modules:session.world_atlas.back_to_cockpit')}
                 </button>
             </div>
 

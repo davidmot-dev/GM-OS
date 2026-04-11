@@ -1,19 +1,21 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { History, Trash2, ArrowRight, User } from 'lucide-react';
 import { CharacterPortrait } from './LootPoolViewer';
 
 const LootHistoryViewer: React.FC = () => {
+    const { t } = useTranslation(['modules']);
     const { lootHistory, clearLootHistory } = useSessionOSStore();
 
     const formatTime = (ts: number) => {
         const diff = Date.now() - ts;
         const mins = Math.floor(diff / 60000);
-        if (mins < 1) return "À l'instant";
-        if (mins < 60) return `Il y a ${mins} min`;
+        if (mins < 1) return t('modules:loot.history.time.just_now');
+        if (mins < 60) return t('modules:loot.history.time.mins_ago', { count: mins });
         const hours = Math.floor(mins / 60);
-        if (hours < 24) return `Il y a ${hours} h`;
+        if (hours < 24) return t('modules:loot.history.time.hours_ago', { count: hours });
         return new Date(ts).toLocaleDateString();
     };
 
@@ -21,8 +23,8 @@ const LootHistoryViewer: React.FC = () => {
         return (
             <div className="flex flex-col items-center justify-center p-8 text-app-text/40 border-2 border-dashed border-white/5 rounded-xl bg-white/2">
                 <History size={48} className="mb-3 opacity-20" />
-                <p className="text-sm font-medium">L'historique est vide.</p>
-                <p className="text-[10px] uppercase tracking-widest mt-1">Les objets distribués apparaîtront ici</p>
+                <p className="text-sm font-medium">{t('modules:loot.history.empty')}</p>
+                <p className="text-[10px] uppercase tracking-widest mt-1">{t('modules:loot.history.empty_hint')}</p>
             </div>
         );
     }
@@ -32,13 +34,13 @@ const LootHistoryViewer: React.FC = () => {
             <div className="flex justify-between items-center px-1">
                 <div className="flex items-center gap-2">
                     <History size={20} className="text-accent" />
-                    <h3 className="text-sm font-bold uppercase tracking-tighter">Historique des Gains</h3>
+                    <h3 className="text-sm font-bold uppercase tracking-tighter">{t('modules:loot.history.title')}</h3>
                 </div>
                 <button 
                     onClick={() => clearLootHistory()}
                     className="text-[10px] font-bold uppercase tracking-widest text-red-400/60 hover:text-red-400 transition-colors"
                 >
-                    Tout vider
+                    {t('modules:loot.history.clear_all')}
                 </button>
             </div>
 
@@ -65,7 +67,7 @@ const LootHistoryViewer: React.FC = () => {
                                             entry.rarity === 'rare' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
                                             'bg-white/5 text-app-text/40 border border-white/10'
                                         }`}>
-                                            {entry.rarity}
+                                            {t(`modules:loot.rarities.${entry.rarity || 'common'}`)}
                                         </span>
                                     </div>
                                     <span className="text-[10px] text-app-text/30">

@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { 
   FileText, 
   FileUp, 
@@ -40,6 +41,7 @@ interface Notebook {
 }
 
 const ChronicleForge: React.FC = () => {
+  const { t } = useTranslation(['modules']);
   const { activeProvider } = useAIStore();
   const { customGameDrivers, addChronicle, campaigns } = useSessionOSStore();
   
@@ -118,7 +120,7 @@ const ChronicleForge: React.FC = () => {
       setNotebooks(notebooksToSet);
     } catch (err) {
       console.error(err);
-      gmToast("Impossible de récupérer les notebooks.", "error");
+      gmToast(t('modules:session.forge_module.notebook.fetch_error'), "error");
     } finally {
       setIsLoadingNotebooks(false);
     }
@@ -163,7 +165,7 @@ const ChronicleForge: React.FC = () => {
       }
     } catch (err) {
       console.error(err);
-      gmToast("Échec de la récupération des sources.", "error");
+      gmToast(t('modules:session.forge_module.notebook.sources_fetch_error'), "error");
     } finally {
       setIsLoadingNotebooks(false);
     }
@@ -173,7 +175,7 @@ const ChronicleForge: React.FC = () => {
     if (importingSources.has(sourceId)) return;
 
     gmConfirm(
-      `Voulez-vous importer "${title}" de NotebookLM dans la forge ?`,
+      t('modules:session.forge_module.notebook.import_confirm', { title }),
       async () => {
         setImportingSources(prev => new Set(prev).add(sourceId));
 
@@ -196,11 +198,11 @@ const ChronicleForge: React.FC = () => {
             timestamp: Date.now()
           };
           setContextItems(prev => [...prev, newItem]);
-          gmToast(`${title} importé avec succès.`, "success");
+          gmToast(t('modules:session.forge_module.notebook.import_success', { title }), "success");
 
         } catch (err) {
           console.error(err);
-          gmToast("Échec de l'importation.", "error");
+          gmToast(t('modules:session.forge_module.notebook.import_error'), "error");
         } finally {
           setImportingSources(prev => {
             const next = new Set(prev);
@@ -246,14 +248,14 @@ const ChronicleForge: React.FC = () => {
 
   const startForge = async () => {
     if (contextItems.length === 0) {
-      gmToast("Aucune source de savoir détectée.", "error");
+      gmToast(t('modules:session.chronicle_forge_module.sources_empty'), "error");
       return;
     }
 
     const driver = customGameDrivers.find(d => d.id === selectedDriverId) || 
                    DEFAULT_GAME_DRIVERS.find(d => d.id === selectedDriverId);
     if (!driver) {
-      gmToast("Veuillez sélectionner un système de jeu.", "error");
+      gmToast(t('modules:session.chronicle_forge_module.system_select'), "error");
       return;
     }
 
@@ -262,7 +264,7 @@ const ChronicleForge: React.FC = () => {
     try {
       const forgeResult = await chronicleForgeService.forgeChronicle(contextItems, driver, userInstructions, existingCampaignName);
       setResult(forgeResult);
-      gmToast("Chronique forgée avec succès.", "success");
+      gmToast(t('modules:session.chronicle_forge_module.deploy_success'), "success");
     } catch (err) {
       console.error(err);
       const errorMessage = err instanceof Error ? err.message : "Échec de la forge.";
@@ -283,7 +285,7 @@ const ChronicleForge: React.FC = () => {
 
     addChronicle({
       campaign: {
-        name: result.campaign.name || 'Sans titre',
+        name: result.campaign.name || t('modules:session.chronicle_forge_module.untitled'),
         description: result.campaign.description || '',
         synopsis: result.campaign.synopsis || '',
         system: selectedDriverId,
@@ -291,7 +293,7 @@ const ChronicleForge: React.FC = () => {
       },
       entities: (result.entities || []).map(e => ({
         ...e,
-        name: e.name || 'NPC Inconnu',
+        name: e.name || t('modules:session.chronicle_forge_module.unknown_npc'),
         type: (e.type as Entity['type']) || 'npc',
         role: (e.role as Entity['role']) || 'neutral',
         status: (e.status as Entity['status']) || 'alive',
@@ -309,7 +311,7 @@ const ChronicleForge: React.FC = () => {
       })),
       atlasMaps: (result.locations || []).map(l => ({
         ...l,
-        name: l.name || 'Lieu sans nom',
+        name: l.name || t('modules:session.chronicle_forge_module.unnamed_location'),
         fileUrl: l.fileUrl || '',
         isVideo: !!l.isVideo,
         narrativeDescription: l.narrativeDescription || '',
@@ -319,7 +321,7 @@ const ChronicleForge: React.FC = () => {
       })),
       wikiEntries: (result.lore || []).map(l => ({
         ...l,
-        title: l.title || 'Entrée sans titre',
+        title: l.title || t('modules:session.chronicle_forge_module.untitled_entry'),
         content: l.content || '',
         category: (l.category as WikiEntry['category']) || 'lore',
         tags: l.tags || [],
@@ -330,7 +332,7 @@ const ChronicleForge: React.FC = () => {
     });
 
 
-    gmToast("Chronique déployée dans le Codex.", "success");
+    gmToast(t('modules:session.chronicle_forge_module.deploy_success'), "success");
     setResult(null);
     setContextItems([]);
   };
@@ -345,16 +347,16 @@ const ChronicleForge: React.FC = () => {
           </div>
           <div className="flex items-center gap-4">
             <h1 className="text-2xl font-black uppercase tracking-widest text-app-text font-display">
-              CHRONICLE FORGE <span className="text-accent/50 text-xs font-mono tracking-widest ml-2">v5.2</span>
+               {t('modules:session.chronicle_forge_module.title').toUpperCase()} <span className="text-accent/50 text-xs font-mono tracking-widest ml-2">v5.2</span>
             </h1>
             <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border flex items-center gap-2 ${
                activeProvider === 'gemini' ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400 shadow-glow-emerald/20'
              }`}>
                <Sparkles size={12} className={activeProvider === 'gemini' ? '' : 'animate-pulse'} />
-               Moteur : {activeProvider === 'gemini' ? 'Gemini 1.5' : 'Gemma 4' }
+               {t('modules:session.forge_module.engine_label')} : {activeProvider === 'gemini' ? 'Gemini 1.5' : 'Gemma 4' }
              </div>
           </div>
-          <p className="text-[10px] font-bold text-app-text/40 uppercase tracking-[0.3em]">Scénarisation & Extraction de Savoir</p>
+          <p className="text-[10px] font-bold text-app-text/40 uppercase tracking-[0.3em]">{t('modules:session.chronicle_forge_module.subtitle')}</p>
         </div>
 
         <div className="flex items-center gap-4">
@@ -367,10 +369,10 @@ const ChronicleForge: React.FC = () => {
                   ? 'bg-app-surface/20 text-app-text/20 opacity-50 cursor-not-allowed border border-app-border/10' 
                   : 'bg-accent text-white hover:scale-105 active:scale-95'
               }`}
-              title="Démarrer la forge de la chronique"
+              title={t('modules:session.chronicle_forge_module.ignite_button')}
              >
                {isForging ? <Zap className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
-               Enflammer la Forge
+               {t('modules:session.chronicle_forge_module.ignite_button')}
              </button>
            )}
         </div>
@@ -383,20 +385,20 @@ const ChronicleForge: React.FC = () => {
           <div className="bg-app-surface/40 rounded-2xl border border-app-border/10 p-5 flex flex-col min-h-[400px]">
             <div className="flex items-center justify-between mb-4">
               <h2 className="flex items-center gap-2 text-xl font-black uppercase tracking-widest text-accent font-display">
-                <FileText className="w-6 h-6" /> SOURCES DE SAVOIR
+                <FileText className="w-6 h-6" /> {t('modules:session.chronicle_forge_module.sources_title')}
               </h2>
               <div className="flex items-center gap-2">
                 <button 
                   onClick={handleOpenNotebookLM}
                   className="p-2.5 hover:bg-accent/10 rounded-xl text-accent transition-all hover:scale-110 active:scale-90 border border-transparent hover:border-accent/20"
-                  title="Ouvrir NotebookLM"
+                  title={t('modules:session.forge_module.notebook.title')}
                 >
                   <Globe className="w-6 h-6" />
                 </button>
                 <button 
                   onClick={() => fileInputRef.current?.click()}
                   className="p-2.5 hover:bg-white/5 rounded-xl text-app-text/40 transition-all hover:scale-110 active:scale-90 border border-transparent hover:border-app-border/10"
-                  title="Télécharger un fichier"
+                  title={t('modules:session.forge_module.load_files_tooltip')}
                 >
                   <FileUp className="w-6 h-6" />
                 </button>
@@ -417,7 +419,7 @@ const ChronicleForge: React.FC = () => {
                   <div className="w-16 h-16 rounded-full border-2 border-dashed border-app-border/20 flex items-center justify-center mb-4 text-app-text">
                     <FileUp className="w-8 h-8" />
                   </div>
-                  <p className="text-sm">Glissez vos PDF ou notes ici</p>
+                  <p className="text-sm">{t('modules:session.chronicle_forge_module.sources_empty')}</p>
                 </div>
               )}
               {contextItems.map(item => (
@@ -446,30 +448,30 @@ const ChronicleForge: React.FC = () => {
           {/* Prompt Area */}
           <div className="h-48 bg-app-surface/40 rounded-2xl border border-app-border/10 p-5 flex flex-col">
             <h2 className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-accent font-display">
-              <Lightbulb className="w-4 h-4 text-amber-500" /> INTENTIONS DU MJ
+              <Lightbulb className="w-4 h-4 text-amber-500" /> {t('modules:session.chronicle_forge_module.intentions_label')}
             </h2>
             <textarea
-              placeholder="Ex: Concentre-toi sur l'ambiance horrifique et souligne la rivalité entre les cultistes..."
+              placeholder={t('modules:session.chronicle_forge_module.intentions_placeholder')}
               value={userInstructions}
               onChange={(e) => setUserInstructions(e.target.value)}
               className="flex-1 bg-transparent border-none resize-none focus:outline-none text-sm text-app-text/80 placeholder:text-app-text/30"
-              title="Consignes spécifiques pour la génération"
+              title={t('modules:session.chronicle_forge_module.intentions_label')}
             />
           </div>
 
           {/* Enrichment / Target Campaign */}
           <div className="bg-app-surface/40 rounded-2xl border border-app-border/10 p-5 flex flex-col gap-3 hover:border-accent/30 transition-all">
             <h2 className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-accent font-display">
-               <BookOpen size={14} className="animate-pulse" /> CAMPAGNE CIBLE
+               <BookOpen size={14} className="animate-pulse" /> {t('modules:session.chronicle_forge_module.target_label')}
             </h2>
             <input 
               type="text"
               list="existing-campaigns"
               value={existingCampaignName} 
               onChange={(e) => setExistingCampaignName(e.target.value)} 
-              placeholder="Laisser vide pour une nouvelle chronique..." 
+              placeholder={t('modules:session.chronicle_forge_module.target_placeholder')} 
               className="w-full bg-transparent text-sm text-app-text/80 focus:outline-none placeholder:text-app-text/30 font-sans border-b border-app-border/10 pb-1 focus:border-accent/50 transition-all" 
-              title="Nom de la campagne cible"
+              title={t('modules:session.chronicle_forge_module.target_label')}
             />
             <datalist id="existing-campaigns">
               {campaigns.map((c) => (
@@ -481,15 +483,15 @@ const ChronicleForge: React.FC = () => {
           {/* Driver Selector */}
           <div className="bg-app-surface/40 rounded-2xl border border-app-border/10 p-5">
             <h2 className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-accent font-display">
-              <Shield className="w-4 h-4" /> SYSTÈME DE JEU
+              <Shield className="w-4 h-4" /> {t('modules:session.chronicle_forge_module.system_label')}
             </h2>
             <select
               value={selectedDriverId}
               onChange={(e) => setSelectedDriverId(e.target.value)}
               className="w-full bg-app-surface/60 border border-app-border/10 rounded-xl p-3 text-xs text-app-text outline-none focus:border-accent/50 transition-all appearance-none cursor-pointer"
-              title="Sélectionner le système de jeu"
+              title={t('modules:session.chronicle_forge_module.system_label')}
             >
-              <option value="">Sélectionner un système...</option>
+              <option value="">{t('modules:session.chronicle_forge_module.system_select')}</option>
               {DEFAULT_GAME_DRIVERS.map(driver => (
                 <option key={driver.id} value={driver.id}>{driver.emoji} {driver.name}</option>
               ))}
@@ -522,7 +524,7 @@ const ChronicleForge: React.FC = () => {
                       {tab === 'entities' && <Users className="w-4 h-4" />}
                       {tab === 'locations' && <MapPin className="w-4 h-4" />}
                       {tab === 'lore' && <Lightbulb className="w-4 h-4" />}
-                      {tab}
+                      {t(`modules:session.chronicle_forge_module.tabs.${tab}`)}
                     </span>
                   </button>
                 ))}
@@ -535,7 +537,7 @@ const ChronicleForge: React.FC = () => {
                     <p className="text-xl text-accent/80 italic font-display">{result.campaign.description}</p>
                     <div className="prose prose-invert max-w-none">
                       <div className="bg-app-surface/60 p-6 rounded-2xl border border-app-border/10">
-                        <h4 className="text-[10px] font-black uppercase text-app-text/40 mb-4 tracking-widest font-display">Synopsis de l'Intrigue</h4>
+                        <h4 className="text-[10px] font-black uppercase text-app-text/40 mb-4 tracking-widest font-display">{t('modules:session.chronicle_forge_module.synopsis_title')}</h4>
                         <p className="text-app-text/80 leading-relaxed text-lg font-sans">{result.campaign.synopsis}</p>
                       </div>
                     </div>
@@ -564,7 +566,7 @@ const ChronicleForge: React.FC = () => {
                         <p className="text-sm text-app-text/60 italic mb-3 font-sans leading-relaxed">"{ent.description}"</p>
                         <div className="space-y-2">
                           <div className="p-3 bg-app-surface/40 rounded-lg border border-app-border/10 text-xs text-app-text/80">
-                            <p className="font-bold text-accent mb-1 flex items-center gap-1 font-display"><Dna className="w-3 h-3" /> Note d'Interprétation</p>
+                            <p className="font-bold text-accent mb-1 flex items-center gap-1 font-display"><Dna className="w-3 h-3" /> {t('modules:session.chronicle_forge_module.roleplaying_notes')}</p>
                             <p className="line-clamp-3 opacity-80">{ent.roleplayingNotes}</p>
                           </div>
                         </div>
@@ -586,7 +588,7 @@ const ChronicleForge: React.FC = () => {
                            <div className="flex items-center gap-4 text-xs font-mono text-app-text/30">
                               <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> Placeholder Map</span>
                               <span className="flex items-center gap-1 hover:text-accent cursor-help transition-colors">
-                                <Shield className="w-3 h-3" /> GM Secrets Extracted
+                                <Shield className="w-3 h-3" /> {t('modules:session.chronicle_forge_module.gm_secrets')}
                               </span>
                            </div>
                         </div>
@@ -623,9 +625,9 @@ const ChronicleForge: React.FC = () => {
                  <button
                   onClick={handleCommit}
                   className="flex items-center gap-3 px-12 py-4 bg-accent rounded-2xl font-black text-xl shadow-glow-accent/40 hover:scale-105 active:scale-95 transition-all text-white font-display"
-                  title="Déployer la chronique dans votre Codex"
+                  title={t('modules:session.chronicle_forge_module.deploy_button')}
                  >
-                   DÉPLOYER LA CHRONIQUE
+                   {t('modules:session.chronicle_forge_module.deploy_button')}
                    <Rocket className="w-6 h-6" />
                  </button>
               </div>
@@ -639,9 +641,9 @@ const ChronicleForge: React.FC = () => {
                 </div>
               </div>
               <div>
-                <h3 className="text-2xl font-bold mb-2 font-display text-app-text">En attente de Transmutation</h3>
+                <h3 className="text-2xl font-bold mb-2 font-display text-app-text">{t('modules:session.forge_module.awaiting_transmutation')}</h3>
                 <p className="text-app-text/40 max-w-md mx-auto font-sans leading-relaxed">
-                  Déposez vos sources de scénario et sélectionnez un système de jeu pour forger une nouvelle campagne structurée.
+                  {t('modules:session.chronicle_forge_module.preview_desc')}
                 </p>
               </div>
               <div className="flex items-center gap-4 text-xs font-mono text-app-text/20 uppercase tracking-widest font-bold">
@@ -659,7 +661,7 @@ const ChronicleForge: React.FC = () => {
            <div className="w-full max-w-4xl bg-app-bg border border-accent/20 rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col h-[70vh] text-app-text font-sans">
               <div className="p-6 border-b border-app-border/10 flex items-center justify-between bg-accent/5">
                  <h2 className="text-xl font-bold uppercase tracking-wider text-accent flex items-center gap-3 font-display">
-                   <Globe className="w-6 h-6" /> NotebookLM Browser
+                   <Globe className="w-6 h-6" /> {t('modules:session.forge_module.notebook.title')}
                  </h2>
                  <button onClick={() => setIsNotebookModalOpen(false)} className="p-2 hover:bg-app-text/5 rounded-full text-app-text/40 transition-colors" title="Fermer"><X /></button>
               </div>
@@ -728,7 +730,7 @@ const ChronicleForge: React.FC = () => {
                     ) : (
                       <div className="h-full flex flex-col items-center justify-center text-center opacity-20 italic">
                         <BookOpen className="w-16 h-16 mb-4 text-app-text" />
-                        <p>Sélectionnez un carnet pour voir les parchemins</p>
+                        <p>{t('modules:session.forge_module.notebook.select_notebook_hint')}</p>
                       </div>
                     )}
                  </div>

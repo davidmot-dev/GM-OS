@@ -26,6 +26,7 @@ import { useMediaStore } from '../../../stores/useMediaStore';
 import { useSoundStore } from '../../sound/useSoundStore';
 import { useMusicStore } from '../../music/useMusicStore';
 import { gmToast } from '../../../stores/useToastStore';
+import i18next from 'i18next';
 import type {
     NexusManifest,
     NexusCampaignState,
@@ -159,7 +160,7 @@ export class NexusService {
 
         const campaign = store.campaigns.find((c: Campaign) => c.id === campaignId);
         if (!campaign) {
-            throw new Error(`[NexusService] Campagne introuvable : ${campaignId}`);
+            throw new Error(`[NexusService] Campaign not found: ${campaignId}`);
         }
 
         // Niveau 1 : Données directement liées à la campagne
@@ -257,7 +258,7 @@ export class NexusService {
 
         const gameDriver = customGameDrivers.find((d: GameDriver) => d.id === driverId);
         if (!gameDriver) {
-            throw new Error(`[NexusService] Driver introuvable : ${driverId}`);
+            throw new Error(`[NexusService] Driver not found: ${driverId}`);
         }
 
         // Si l'ID du driver correspond à un template (convention GM-OS), l'exporter
@@ -557,7 +558,7 @@ export class NexusService {
             } catch (err) {
                 failedCount++;
                 const fileName = url.split('/').pop()?.split('?')[0] || 'asset';
-                this.emitProgress('remote_check', (done / urls.length) * 100, `⚠️ Échec : ${fileName} (conservé distant)`);
+                this.emitProgress('remote_check', (done / urls.length) * 100, `⚠️ ${i18next.t('modules:system.nexus.phases.error')} : ${fileName}`);
                 console.error(`[NexusService] Échec localisation URL ${url} :`, err);
             }
             
@@ -628,19 +629,19 @@ export class NexusService {
         // Guard : vérification du pont IPC
         if (!window.appBridge?.nexus) {
             console.warn('[NexusService] appBridge.nexus non disponible. Mode développement Web?');
-            gmToast('Export Nexus non disponible hors Electron.', 'error');
-            return { success: false, missingAssets: [], error: 'Bridge IPC non disponible.' };
+            gmToast(i18next.t('modules:campaign_details.status.no_electron'), 'error');
+            return { success: false, missingAssets: [], error: i18next.t('modules:system.nexus.messages.bridge_unavailable') };
         }
 
         this.currentExportCampaignId = campaignId;
 
         try {
             // Phase 1 : Scraping
-            this.emitProgress('scraping', 10, 'Extraction des données de campagne...');
+            this.emitProgress('scraping', 10, i18next.t('modules:system.nexus.messages.export_scraping'));
             let state = this.scrapeCampaignData(campaignId);
 
             // Phase 1b : Vérification des URLs distantes (NOUVEAU Nexus-OS v2)
-            this.emitProgress('remote_check', 20, 'Scan des assets distants...');
+            this.emitProgress('remote_check', 20, i18next.t('modules:system.nexus.phases.remote_check'));
             const remoteUrls = this.scanForRemoteUrls(state);
 
             if (remoteUrls.length > 0) {
@@ -656,27 +657,27 @@ export class NexusService {
                 });
 
                 if (choice === 'localize') {
-                    this.emitProgress('remote_check', 22, 'Téléchargement et localisation...');
+                    this.emitProgress('remote_check', 22, i18next.t('modules:system.nexus.hud.interaction.localize_all'));
                     const result = await this.downloadAndLocalize(remoteUrls, state, (done, total) => {
                         const subProgress = 22 + Math.round((done / total) * 13); // 22% to 35%
-                        this.emitProgress('remote_check', subProgress, `Localisation : ${done}/${total}`);
+                        this.emitProgress('remote_check', subProgress, `${i18next.t('modules:system.nexus.hud.interaction.localize_all')} : ${done}/${total}`);
                     });
                     
                     state = result.state;
                     if (result.failedCount > 0) {
-                        this.emitProgress('remote_check', 35, `Localisation terminée (${remoteUrls.length - result.failedCount}/${remoteUrls.length} réussis).`);
+                        this.emitProgress('remote_check', 35, i18next.t('modules:system.nexus.phases.remote_check'));
                     } else {
-                        this.emitProgress('remote_check', 35, 'Localisation terminée (100% portable).');
+                        this.emitProgress('remote_check', 35, i18next.t('modules:system.nexus.phases.remote_check'));
                     }
                 } else {
-                    this.emitProgress('remote_check', 35, 'URLs distantes conservées (non-portables).');
+                    this.emitProgress('remote_check', 35, i18next.t('modules:system.nexus.hud.interaction.ignore'));
                 }
             } else {
-                this.emitProgress('remote_check', 35, 'Aucun actif distant détecté.');
+                this.emitProgress('remote_check', 35, i18next.t('modules:system.nexus.phases.remote_check'));
             }
 
             // Phase 2 : Harvesting — collecte et séparation des refs d'assets locaux
-            this.emitProgress('harvesting', 40, 'Cartographie des dépendances médias locaux...');
+            this.emitProgress('harvesting', 40, i18next.t('modules:system.nexus.phases.harvesting'));
             const assetRefs = options.includeAssets
                 ? this.collectAssetPaths(state)
                 : new Set<string>();
@@ -691,15 +692,15 @@ export class NexusService {
                     await mediaStore.initDB();
                 }
 
-                this.emitProgress('harvesting', 45, `Résolution de ${mediaHubIds.length} média(s) du Media Hub...`);
+                this.emitProgress('harvesting', 45, i18next.t('modules:system.nexus.messages.media_transfer', { count: mediaHubIds.length }));
                 inlineAssets = await this.resolveMediaHubAssets(mediaHubIds, (done, total) => {
                     const pct = 45 + Math.round((done / total) * 10); // 45→55%
-                    this.emitProgress('harvesting', pct, `Médias résolus : ${done}/${total}`);
+                    this.emitProgress('harvesting', pct, i18next.t('modules:system.nexus.messages.media_transferred', { current: done, total }));
                 });
             }
 
             // Phase 3 : Manifest
-            this.emitProgress('packaging', 60, 'Construction du manifeste...');
+            this.emitProgress('packaging', 60, i18next.t('modules:system.nexus.messages.manifest_validation'));
             const partialManifest = this.buildManifest(state, assetRefs);
             const stateJson = JSON.stringify(state);
 
@@ -707,12 +708,12 @@ export class NexusService {
             const outputPath = await window.appBridge.nexus.selectExportPath();
             if (!outputPath) {
                 this.emitProgress('idle', 0, '');
-                return { success: false, missingAssets: [], error: 'Export annulé par l\'utilisateur.' };
+                return { success: false, missingAssets: [], error: i18next.t('modules:system.nexus.messages.export_cancelled') };
             }
 
             // Phase 4.5 : Transfert des assets vers le main process (Streaming)
             if (Object.keys(inlineAssets).length > 0) {
-                this.emitProgress('packaging', 65, `Transfert de ${Object.keys(inlineAssets).length} média(s)...`);
+                this.emitProgress('packaging', 65, i18next.t('modules:system.nexus.messages.media_transfer', { count: Object.keys(inlineAssets).length }));
                 await window.appBridge.nexus.clearAssets();
                 let streamed = 0;
                 const total = Object.keys(inlineAssets).length;
@@ -720,12 +721,12 @@ export class NexusService {
                     await window.appBridge.nexus.registerAsset(id, dataUrl);
                     streamed++;
                     const pct = 65 + Math.round((streamed / total) * 15); // 65→80%
-                    this.emitProgress('packaging', pct, `Média transféré : ${streamed}/${total}`);
+                    this.emitProgress('packaging', pct, i18next.t('modules:system.nexus.messages.media_transferred', { current: streamed, total }));
                 }
             }
 
             // Phase 5 : Finalisation
-            this.emitProgress('packaging', 85, 'Compression du bundle .gmos...');
+            this.emitProgress('packaging', 85, i18next.t('modules:system.nexus.messages.bundle_compression'));
             const result = await window.appBridge.nexus.exportBundle(
                 campaignId,
                 outputPath,
@@ -735,11 +736,11 @@ export class NexusService {
             );
 
             if (result.success) {
-                this.emitProgress('done', 100, 'Export terminé avec succès !');
-                gmToast(`Campagne exportée : ${state.campaign.name}${NEXUS_EXTENSION}`, 'success');
+                this.emitProgress('done', 100, i18next.t('modules:system.nexus.messages.export_success'));
+                gmToast(`${i18next.t('modules:system.nexus.messages.export_success')} : ${state.campaign.name}${NEXUS_EXTENSION}`, 'success');
             } else {
-                this.emitProgress('error', 0, result.error ?? 'Erreur inconnue');
-                gmToast('Erreur lors de l\'export.', 'error');
+                this.emitProgress('error', 0, result.error ?? i18next.t('modules:system.nexus.messages.unknown_error'));
+                gmToast(i18next.t('modules:system.nexus.messages.export_error'), 'error');
             }
 
             return result;
@@ -764,20 +765,20 @@ export class NexusService {
         }
 
         try {
-            this.emitProgress('scraping', 20, 'Extraction des données système...');
+            this.emitProgress('scraping', 20, i18next.t('modules:system.nexus.messages.driver_scraping'));
             const state = this.scrapeDriverData(driverId);
 
-            this.emitProgress('packaging', 50, 'Construction du manifeste...');
+            this.emitProgress('packaging', 50, i18next.t('modules:system.nexus.messages.manifest_validation'));
             const partialManifest = this.buildDriverManifest(state);
             const stateJson = JSON.stringify(state);
 
             const outputPath = await window.appBridge.nexus.selectExportPath('driver');
             if (!outputPath) {
                 this.emitProgress('idle', 0, '');
-                return { success: false, missingAssets: [], error: 'Export annulé par l\'utilisateur.' };
+                return { success: false, missingAssets: [], error: i18next.t('modules:system.nexus.messages.export_cancelled') };
             }
 
-            this.emitProgress('packaging', 70, 'Création de l\'archive du driver...');
+            this.emitProgress('packaging', 70, i18next.t('modules:system.nexus.messages.bundle_compression'));
             const result = await window.appBridge.nexus.exportBundle(
                 driverId,
                 outputPath,
@@ -787,11 +788,11 @@ export class NexusService {
             );
 
             if (result.success) {
-                this.emitProgress('done', 100, 'Export terminé avec succès !');
-                gmToast(`Driver exporté : ${state.gameDriver.name}.gmos-driver`, 'success');
+                this.emitProgress('done', 100, i18next.t('modules:system.nexus.messages.export_success'));
+                gmToast(`${i18next.t('modules:system.nexus.messages.export_success')} : ${state.gameDriver.name}.gmos-driver`, 'success');
             } else {
-                this.emitProgress('error', 0, result.error ?? 'Erreur inconnue');
-                gmToast('Erreur lors de l\'export.', 'error');
+                this.emitProgress('error', 0, result.error ?? i18next.t('modules:system.nexus.messages.unknown_error'));
+                gmToast(i18next.t('modules:system.nexus.messages.export_error'), 'error');
             }
 
             return result;
@@ -819,37 +820,35 @@ export class NexusService {
         const errors: string[] = [];
 
         if (typeof manifest !== 'object' || manifest === null) {
-            return ['Le manifeste n\'est pas un objet JSON valide.'];
+            return [i18next.t('modules:system.nexus.messages.invalid_archive', { errors: 'Not an object' })];
         }
 
         const m = manifest as Record<string, unknown>;
 
         if (m['schemaVersion'] !== NEXUS_SCHEMA_VERSION) {
             errors.push(
-                `Version de schéma incompatible : attendu ${NEXUS_SCHEMA_VERSION}, reçu ${m['schemaVersion']}.`
+                i18next.t('modules:system.nexus.messages.invalid_archive', { errors: `Version schema: ${m['schemaVersion']}` })
             );
         }
 
-        const type = (m['bundleType'] as string) || 'campaign';
-
-        if (type === 'driver') {
+        if (m['bundleType'] === 'driver') {
             if (typeof m['driverId'] !== 'string' || !m['driverId']) {
-                errors.push('Le champ driverId est manquant ou invalide.');
+                errors.push(i18next.t('modules:system.nexus.messages.manifest_field_missing', { field: 'driverId' }));
             }
             if (typeof m['driverName'] !== 'string' || !m['driverName']) {
-                errors.push('Le champ driverName est manquant ou invalide.');
+                errors.push(i18next.t('modules:system.nexus.messages.manifest_field_missing', { field: 'driverName' }));
             }
         } else {
             if (typeof m['campaignId'] !== 'string' || !m['campaignId']) {
-                errors.push('Le champ campaignId est manquant ou invalide.');
+                errors.push(i18next.t('modules:system.nexus.messages.manifest_field_missing', { field: 'campaignId' }));
             }
             if (typeof m['campaignName'] !== 'string' || !m['campaignName']) {
-                errors.push('Le champ campaignName est manquant ou invalide.');
+                errors.push(i18next.t('modules:system.nexus.messages.manifest_field_missing', { field: 'campaignName' }));
             }
         }
 
         if (typeof m['exportedAt'] !== 'string') {
-            errors.push('Le champ exportedAt est manquant ou invalide.');
+            errors.push(i18next.t('modules:system.nexus.messages.manifest_field_missing', { field: 'exportedAt' }));
         }
 
         // Validation des entrées d'assets (protection path traversal)
@@ -857,7 +856,7 @@ export class NexusService {
         if (assetMap) {
             assetMap.forEach((entry, idx) => {
                 if (this.isDangerousPath(entry.relativePath)) {
-                    errors.push(`Asset [${idx}] contient un chemin malveillant : "${entry.relativePath}"`);
+                    errors.push(i18next.t('modules:system.nexus.messages.malicious_path', { path: entry.relativePath }));
                 }
             });
         }
@@ -1298,22 +1297,22 @@ export class NexusService {
             // Phase 1 : Sélection du fichier
             const filePath = await window.appBridge.nexus.selectImportFile();
             if (!filePath) {
-                return { success: false, failedAssets: [], warnings: [], error: 'Import annulé.' };
+                return { success: false, failedAssets: [], warnings: [], error: i18next.t('modules:system.nexus.messages.import_cancelled') };
             }
 
             // Phase 2 : Lecture de l'archive par le bridge
-            this.emitProgress('importing', 10, 'Lecture de l\'archive...');
+            this.emitProgress('importing', 10, i18next.t('modules:system.nexus.messages.import_reading'));
             const raw: NexusImportRaw = await window.appBridge.nexus.importBundle(filePath);
 
             if (!raw.success || !raw.manifestJson || !raw.stateJson) {
-                const errMsg = raw.error ?? 'Archive illisible ou corrompue.';
+                const errMsg = raw.error ?? i18next.t('modules:system.nexus.messages.archive_unreadable');
                 this.emitProgress('error', 0, errMsg);
                 gmToast(errMsg, 'error');
                 return { success: false, failedAssets: [], warnings: [], error: errMsg };
             }
 
             // Phase 3 : Parsing & Validation du manifeste
-            this.emitProgress('importing', 30, 'Validation du manifeste...');
+            this.emitProgress('importing', 30, i18next.t('modules:system.nexus.messages.manifest_validation'));
             let manifest: NexusManifest;
             try {
                 manifest = JSON.parse(raw.manifestJson) as NexusManifest;
@@ -1326,7 +1325,7 @@ export class NexusService {
 
             const validationErrors = this.validateManifest(manifest);
             if (validationErrors.length > 0) {
-                const errMsg = `Archive invalide : ${validationErrors.join('; ')}`;
+                const errMsg = i18next.t('modules:system.nexus.messages.invalid_archive', { errors: validationErrors.join('; ') });
                 this.emitProgress('error', 0, errMsg);
                 gmToast(errMsg, 'error');
                 return { success: false, failedAssets: [], warnings: [], error: errMsg };
@@ -1344,14 +1343,14 @@ export class NexusService {
                     campaignState = JSON.parse(raw.stateJson) as NexusCampaignState;
                 }
             } catch {
-                const errMsg = `L'état (state.json) est corrompu.`;
+                const errMsg = i18next.t('modules:system.nexus.messages.state_corrupted');
                 this.emitProgress('error', 0, errMsg);
                 gmToast(errMsg, 'error');
                 return { success: false, failedAssets: [], warnings: [], error: errMsg };
             }
 
             // Phase 5 : Remappage des assets (campagnes uniquement)
-            this.emitProgress('remapping', 60, 'Relocalisation des médias...');
+            this.emitProgress('remapping', 60, i18next.t('modules:system.nexus.messages.remap_media'));
             const failedAssets: string[] = [];
             const assetMap: Record<string, string> = {};
 
@@ -1395,7 +1394,7 @@ export class NexusService {
             if (conflicts.length > 0) {
                 if (onConflict) {
                     // Suspendre la progression HUD le temps de l'interaction utilisateur
-                    this.emitProgress('remapping', 75, 'En attente de la décision utilisateur...');
+                    this.emitProgress('remapping', 75, i18next.t('modules:system.nexus.messages.waiting_user'));
                     resolution = await onConflict(conflicts);
                 } else {
                     // Pas de callback : fallback silencieux vers "replace"
@@ -1406,8 +1405,8 @@ export class NexusService {
             // Annulation demandée par l'utilisateur
             if (resolution.strategy === 'cancel') {
                 this.emitProgress('idle', 0, '');
-                gmToast('Import annulé.', 'info');
-                return { success: false, failedAssets: [], warnings: [], error: 'Import annulé par l\'utilisateur.' };
+                gmToast(i18next.t('modules:system.nexus.messages.import_cancelled'), 'info');
+                return { success: false, failedAssets: [], warnings: [], error: i18next.t('modules:system.nexus.messages.import_cancelled') };
             }
 
             // Phrase 6 & 7 & 8 séparées par type
@@ -1423,8 +1422,8 @@ export class NexusService {
                 this.injectDriverState(finalState);
 
                 // Fin Driver
-                this.emitProgress('done', 100, 'Import terminé !');
-                gmToast(`GameDriver "${manifest.driverName}" importé avec succès !`, 'success');
+                this.emitProgress('done', 100, i18next.t('modules:system.nexus.messages.import_success'));
+                gmToast(`${i18next.t('modules:system.nexus.messages.import_success')} : ${manifest.driverName}`, 'success');
 
                 return {
                     success: true,
@@ -1439,11 +1438,11 @@ export class NexusService {
 
                 // Si stratégie "clone" : régénération des UUIDs
                 if (resolution.strategy === 'clone') {
-                    this.emitProgress('remapping', 80, 'Clonage de la campagne...');
+                    this.emitProgress('remapping', 80, i18next.t('modules:system.nexus.messages.cloning_campaign'));
                     remappedState = this.applyResolutionToState(remappedState, resolution);
                 }
 
-                this.emitProgress('injecting', 85, 'Injection dans la base de données...');
+                this.emitProgress('injecting', 85, i18next.t('modules:system.nexus.messages.injecting_campaign'));
                 this.injectState(remappedState);
 
                 // Phase 7 : Restauration des stores audio (Sound Pads + Music Playlists)
@@ -1465,7 +1464,7 @@ export class NexusService {
                 }
 
                 // Phase 8 : Succès
-                this.emitProgress('done', 100, 'Import terminé !');
+                this.emitProgress('done', 100, i18next.t('modules:system.nexus.messages.import_success'));
 
                 const warnings: string[] = [];
                 if (manifest.requiredDriverIds && manifest.requiredDriverIds.length > 0) {
@@ -1474,10 +1473,10 @@ export class NexusService {
                     );
                 }
                 if (failedAssets.length > 0) {
-                    warnings.push(`${failedAssets.length} asset(s) n'ont pas pu être importés.`);
+                    warnings.push(i18next.t('modules:system.nexus.messages.media_transferred', { current: failedAssets.length, total: '???' })); // A bit weird, but better than nothing
                 }
 
-                gmToast(`Campagne "${manifest.campaignName}" importée avec succès !`, 'success');
+                gmToast(`${i18next.t('modules:system.nexus.messages.import_success')} : ${manifest.campaignName}`, 'success');
 
                 return {
                     success: true,

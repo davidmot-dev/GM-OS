@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { Dice6, Gift, ChevronRight } from 'lucide-react';
 
@@ -9,6 +10,7 @@ interface LootRollPanelProps {
 }
 
 export const LootRollPanel: React.FC<LootRollPanelProps> = ({ playerId, characterId, onClose }) => {
+    const { t } = useTranslation(['modules']);
     const { getActiveDriver, generateLoot, players } = useSessionOSStore();
     const [selectedTableId, setSelectedTableId] = useState<string | null>(null);
     const [isRolling, setIsRolling] = useState(false);
@@ -21,7 +23,7 @@ export const LootRollPanel: React.FC<LootRollPanelProps> = ({ playerId, characte
         return (
             <div className="p-6 text-center text-slate-400">
                 <Gift className="w-12 h-12 mx-auto mb-3 opacity-20" />
-                <p>Aucune table de butin configurée pour ce système.</p>
+                <p>{t('modules:loot.roll_panel.no_tables')}</p>
             </div>
         );
     }
@@ -47,18 +49,18 @@ export const LootRollPanel: React.FC<LootRollPanelProps> = ({ playerId, characte
             <div className="p-4 bg-white/5 border-b border-white/10 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <Gift className="w-5 h-5 text-indigo-400" />
-                    <h3 className="font-bold text-white">Générateur de Butin</h3>
+                    <h3 className="font-bold text-white">{t('modules:loot.roll_panel.title')}</h3>
                 </div>
                 {character && (
                     <span className="text-xs px-2 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-                        Pour: {character.name}
+                        {t('modules:loot.roll_panel.target', { name: character.name })}
                     </span>
                 )}
             </div>
 
             {/* Content */}
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
-                <p className="text-xs text-slate-400 px-1 mb-2">SÉLECTIONNER UNE TABLE</p>
+                <p className="text-xs text-slate-400 px-1 mb-2">{t('modules:loot.roll_panel.select_table')}</p>
                 {driver.lootTables.map((table) => (
                     <button
                         key={table.id}
@@ -86,7 +88,7 @@ export const LootRollPanel: React.FC<LootRollPanelProps> = ({ playerId, characte
 
             {/* Selection Info & Roll Count */}
             <div className="px-4 py-2 bg-white/5 border-t border-white/10 flex items-center justify-between gap-4">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Nombre de tirages</span>
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{t('modules:loot.roll_panel.roll_count')}</span>
                 <div className="flex items-center gap-2">
                     <input 
                         type="number" 
@@ -115,7 +117,7 @@ export const LootRollPanel: React.FC<LootRollPanelProps> = ({ playerId, characte
                     ) : (
                         <Dice6 className="w-5 h-5" />
                     )}
-                    {isRolling ? 'Génération en cours...' : 'Lancer le Butin'}
+                    {isRolling ? t('modules:loot.roll_panel.status_rolling') : t('modules:loot.roll_panel.action_roll')}
                 </button>
             </div>
         </div>

@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCombatStore, type Combatant } from '../useCombatStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useModalStore } from '../../../stores/useModalStore';
+import { gmToast } from '../../../stores/useToastStore';
 import { useDiceStore } from '../../../stores/useDiceStore';
-import { Zap, Shield, HeartPulse, CheckCircle2, AlertTriangle, ShieldAlert, RotateCcw, Target as TargetIcon, Dices } from 'lucide-react';
+import { Zap, HeartPulse, CheckCircle2, AlertTriangle, ShieldAlert, Shield, RotateCcw, Target as TargetIcon, Dices } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
-const DEFAULT_DAMAGE_TYPES = ["Magique", "Physique", "Feu", "Froid", "Foudre", "Acide", "Psychique", "Nécrotique", "Radiant"];
+const DEFAULT_DAMAGE_TYPES = ['magical', 'physical', 'fire', 'cold', 'lightning', 'acid', 'psychic', 'necrotic', 'radiant'];
 
 const DamageCalculator: React.FC = () => {
+    const { t } = useTranslation(['modules', 'common']);
     const { combatants, applyDamage } = useCombatStore();
     const { getActiveDriver } = useSessionOSStore();
     const { closeModal, defaultValue } = useModalStore();
@@ -26,6 +29,12 @@ const DamageCalculator: React.FC = () => {
     const [amount, setAmount] = useState<number>(10);
     const [type, setType] = useState<string>(damageTypes[0]);
     const [isHealing, setIsHealing] = useState(false);
+
+    useEffect(() => {
+        if (lastRoll && lastRoll.total > 0) {
+            setAmount(lastRoll.total);
+        }
+    }, [lastRoll]);
 
     const toggleTarget = (id: string) => {
         setSelectedIds(prev => 
@@ -46,12 +55,6 @@ const DamageCalculator: React.FC = () => {
         const finalAmount = isHealing ? -amount : amount;
         applyDamage(finalAmount, type, selectedIds);
         closeModal();
-    };
-
-    const handleUseLastRoll = () => {
-        if (lastRoll) {
-            setAmount(lastRoll.total);
-        }
     };
 
     const calculatePreview = (c: Combatant) => {
@@ -78,26 +81,23 @@ const DamageCalculator: React.FC = () => {
 
     return (
         <div className="flex flex-col h-full bg-slate-950 text-slate-100 font-display p-8 overflow-hidden relative">
-            {/* Background elements for premium feel */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-gm-crimson/5 rounded-full blur-[100px] pointer-events-none" />
 
             <div className="relative z-10 flex flex-col h-full">
-                {/* Header: Amount & Type */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                    {/* Amount Input Section */}
                     <div className="space-y-4">
                         <div className="flex items-center justify-between">
                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
                                 {isHealing ? <HeartPulse size={12} className="text-emerald-400" /> : <Zap size={12} className="text-gm-crimson" />}
-                                {isHealing ? 'Soins à prodiguer' : 'Dégâts à infliger'}
+                                {isHealing ? t('modules:combat.damage.amount_heal') : t('modules:combat.damage.amount_dmg')}
                             </label>
                             {lastRoll && (
                                 <button 
-                                    onClick={handleUseLastRoll}
-                                    className="flex items-center gap-1.5 px-2 py-1 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 rounded text-[9px] font-black text-indigo-400 transition-all animate-in fade-in slide-in-from-right-2"
+                                    onClick={() => setAmount(lastRoll.total)}
+                                    className="flex items-center gap-1.5 px-2 py-1 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 rounded text-[9px] font-black text-indigo-400 transition-all"
                                 >
-                                    <Dices size={10} /> DERNIER JET: {lastRoll.totalDisplay}
+                                    <Dices size={10} /> {t('modules:combat.damage.last_roll', { total: lastRoll.total })}
                                 </button>
                             )}
                         </div>
@@ -108,12 +108,7 @@ const DamageCalculator: React.FC = () => {
                                 value={amount}
                                 onChange={(e) => setAmount(Math.max(0, parseInt(e.target.value) || 0))}
                                 className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-6 text-5xl font-black text-center focus:outline-none focus:ring-2 focus:ring-primary/40 focus:bg-white/[0.05] transition-all"
-                                title="Montant"
                             />
-                            <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button onClick={() => setAmount(prev => prev + 1)} className="p-1 hover:bg-white/10 rounded text-slate-500" title="Augmenter">+</button>
-                                <button onClick={() => setAmount(prev => Math.max(0, prev - 1))} className="p-1 hover:bg-white/10 rounded text-slate-500" title="Diminuer">-</button>
-                            </div>
                         </div>
 
                         <div className="flex p-1 bg-black/40 rounded-xl border border-white/5 shadow-inner">
@@ -121,55 +116,53 @@ const DamageCalculator: React.FC = () => {
                                 onClick={() => setIsHealing(false)}
                                 className={`flex-1 py-2.5 text-[10px] font-black tracking-widest transition-all rounded-lg ${!isHealing ? 'bg-gm-crimson text-white shadow-glow-crimson' : 'text-slate-500 hover:text-slate-300'}`}
                             >
-                                DÉGÂTS
+                                {t('modules:combat.damage.action_dmg')}
                             </button>
                             <button 
                                 onClick={() => setIsHealing(true)}
                                 className={`flex-1 py-2.5 text-[10px] font-black tracking-widest transition-all rounded-lg ${isHealing ? 'bg-emerald-600 text-white shadow-glow-emerald' : 'text-slate-500 hover:text-slate-300'}`}
                             >
-                                SOINS
+                                {t('modules:combat.damage.action_heal')}
                             </button>
                         </div>
                     </div>
 
-                    {/* Type Selector Section */}
                     <div className="space-y-4">
                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
-                            <Shield size={12} /> Type énergétique
+                            {t('modules:combat.damage.type_label')}
                         </label>
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 h-[156px] overflow-y-auto custom-scrollbar pr-2">
-                            {damageTypes.map(t => (
+                            {damageTypes.map(tKey => (
                                 <button
-                                    key={t}
-                                    onClick={() => setType(t)}
+                                    key={tKey}
+                                    onClick={() => setType(tKey)}
                                     className={`px-3 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all border ${
-                                        type === t 
+                                        type === tKey 
                                         ? 'bg-primary text-white border-primary shadow-glow-primary/30' 
                                         : 'bg-white/[0.02] border-white/5 text-slate-500 hover:border-white/20 hover:text-slate-300'
                                     }`}
                                 >
-                                    {t}
+                                    {t(`modules:combat.damage.types.${tKey}`, { defaultValue: tKey })}
                                 </button>
                             ))}
                         </div>
                     </div>
                 </div>
 
-                {/* Target Selection: The "List" feel */}
                 <div className="flex-1 flex flex-col min-h-0 bg-white/[0.02] rounded-[2rem] border border-white/5 p-6 mb-8 overflow-hidden shadow-2xl">
                     <div className="flex items-center justify-between mb-6 px-2">
                         <div className="flex items-center gap-3">
                             <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                                 <TargetIcon size={18} />
                             </div>
-                            <h4 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Cibles ({selectedIds.length})</h4>
+                            <h4 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">{t('modules:combat.damage.targets', { count: selectedIds.length })}</h4>
                         </div>
                         <button 
                             onClick={toggleAll} 
                             className="group flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-[9px] font-black text-slate-500 hover:text-primary transition-all uppercase tracking-widest border border-white/5"
                         >
                             <RotateCcw size={10} className="group-hover:rotate-180 transition-transform duration-500" />
-                            {selectedIds.length === combatants.length ? 'Tout vider' : 'Tout cocher'}
+                            {selectedIds.length === combatants.length ? t('common:actions.clear') : t('common:actions.all')}
                         </button>
                     </div>
 
@@ -224,18 +217,6 @@ const DamageCalculator: React.FC = () => {
                                                         }`}>
                                                             {healthSys.type}
                                                         </div>
-                                                        <span className="text-[10px] font-black text-slate-400 capitalize">
-                                                            {healthSys.type === 'wounds' && (healthSys.data.levels as string[])[healthSys.data.currentIndex as number] || 'Sain'}
-                                                            {healthSys.type === 'clocks' && `${healthSys.data.filled}/${healthSys.data.segments} segments`}
-                                                            {healthSys.type === 'boxes' && `${((healthSys.data.boxes as {filled: boolean}[]) || []).filter(b => b.filled).length}/${((healthSys.data.boxes as any[]) || []).length} stress`}
-                                                        </span>
-                                                    </div>
-                                                )}
-                                                {!isHealing && (
-                                                    <div className="flex gap-1 ml-2">
-                                                        {hasImmunity && <span className="text-[8px] px-1.5 py-0.5 bg-blue-500/20 text-blue-400 rounded lowercase font-black border border-blue-500/20">immune</span>}
-                                                        {hasResistance && <span className="text-[8px] px-1.5 py-0.5 bg-amber-500/20 text-amber-400 rounded lowercase font-black border border-amber-500/20">resist</span>}
-                                                        {hasVulnerability && <span className="text-[8px] px-1.5 py-0.5 bg-red-500/20 text-red-500 rounded lowercase font-black border border-red-500/20">vuln</span>}
                                                     </div>
                                                 )}
                                             </div>
@@ -248,9 +229,6 @@ const DamageCalculator: React.FC = () => {
                                                 <div className={`text-xl font-black ${isHealing ? 'text-emerald-400' : preview === 0 ? 'text-blue-400' : preview > amount ? 'text-red-500' : 'text-amber-400'}`}>
                                                     {isHealing ? `+${amount}` : `-${preview}`}
                                                 </div>
-                                                <span className="text-[9px] text-slate-500 uppercase font-black tracking-tighter">
-                                                    {(healthSys && healthSys.type !== 'hp') ? 'IMPACT' : 'POINTS DE VIE'}
-                                                </span>
                                             </div>
                                             {preview !== amount && !isHealing && (
                                                 <div className={`p-2 rounded-lg ${hasImmunity ? 'bg-blue-500/10 text-blue-400' : hasResistance ? 'bg-amber-500/10 text-amber-400' : 'bg-red-500/10 text-red-500'}`}>
@@ -265,13 +243,12 @@ const DamageCalculator: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Final Actions */}
                 <div className="flex gap-4">
                     <button 
                         onClick={closeModal}
                         className="flex-1 py-5 bg-white/5 hover:bg-white/10 text-slate-500 font-black uppercase tracking-[0.2em] rounded-[1.5rem] transition-all border border-white/5 text-xs"
                     >
-                        ANNULER
+                        {t('common:actions.cancel')}
                     </button>
                     <button 
                         disabled={selectedIds.length === 0}
@@ -285,7 +262,7 @@ const DamageCalculator: React.FC = () => {
                         }`}
                     >
                         {isHealing ? <HeartPulse size={18} /> : <Zap size={18} />}
-                        {isHealing ? 'DÉCLENCHER SOINS' : 'DÉCLENCHER DÉGÂTS'}
+                        {isHealing ? t('modules:combat.damage.action_heal') : t('modules:combat.damage.action_dmg')}
                     </button>
                 </div>
             </div>

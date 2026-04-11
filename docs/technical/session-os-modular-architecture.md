@@ -234,4 +234,35 @@ Depuis la v6.2.5-dev, Session-OS dispose d'un moteur de distribution de butin.
 
 ---
 
-*Dernière mise à jour : 9 Avril 2026 - GM-OS v6.2.5-dev : Loot System, WebSocket Stabilization & UI Density.*
+## 16. Extraction de Logique Métier (Hooks Spécialisés)
+
+Depuis la v6.2.6-dev (11 Avril 2026), Session-OS a finalisé l'extraction de sa logique métier des composants UI vers des hooks spécialisés.
+
+- **useSessionNPCs** : Gère le filtrage, la visibilité et l'état des PNJs de la session active. Centralise la logique de "Status Toggle" (Vivant/Mort) et de "Visibility Toggle" pour le Hub.
+- **useSessionClues** : Orchestre le "Clue Deck", gérant les états de découverte (Hidden/Revealed) et la projection vers le Player Hub.
+- **useSessionNotes** : Encapsule la persistance et la synchronisation des notes de session du MJ, incluant le support de l'auto-save et du multilingue.
+
+Ce pattern permet :
+1. **Tests Unitaires** : Validation de la logique via Vitest sans dépendance au DOM.
+2. **Réutilisabilité** : Partage de la même logique entre le Cockpit, le Wiki et les vues détaillées.
+3. **Lisibilité** : Réduction de la taille des composants UI de ~40%.
+
+---
+
+## 17. Standard d'Internationalisation (I18n) & Localisation
+
+Le projet GM-OS utilise `i18next` pour le support multilingue. Suite à la découverte de collisions de namespaces (Nesting Pitfall), un standard strict est imposé :
+
+### Standard de Nesting (Indentation)
+
+- **Namespace Unique** : Chaque module majeur utilise son propre namespace (ex: `modules`, `common`).
+- **Nesting de Niveau 2** : Les nouveaux sous-modules ne doivent jamais être imbriqués dans des objets existants partagés (comme `map`). Ils doivent être déclarés au premier niveau sous leur module parent dans le JSON.
+- **Exemple Correct** : `modules:session.notes` est correct. `modules:map.session_notes` est interdit.
+
+### Encodage & Sécurité
+
+- **UTF-8 Strict** : Tous les fichiers `.json` de locales doivent être encodés en UTF-8 (sans BOM). L'utilisation de caractères double-encodés (ex: `Ã‰`) est proscrite et doit être corrigée immédiatement via le script de réparation d'encodage.
+
+---
+
+*Dernière mise à jour : 11 Avril 2026 - GM-OS v6.2.6-dev : Logic Extraction (Hooks), I18n Standardization & encoding fix.*

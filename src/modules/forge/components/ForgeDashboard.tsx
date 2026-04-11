@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDebugStore } from '../../../stores/useDebugStore';
 import { Hammer, FileUp, Globe, X, Rocket, Zap, Sparkles } from 'lucide-react';
 import { forgeService, type ForgeContextItem, type ForgeSystemResult } from '../ForgeService';
@@ -30,6 +31,7 @@ interface ForgeDashboardProps {
 }
 
 const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
+  const { t } = useTranslation(['modules']);
   const { activeProvider } = useAIStore();
   const { saveGameDriver, addSheetTemplate } = useSessionOSStore();
   const [contextItems, setContextItems] = useState<ForgeContextItem[]>([]);
@@ -83,9 +85,9 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
       const result = await mcpBridge.callTool(serverName, toolName, args);
       
       if (checkError(result)) {
-        addLog("AETHER EXPIRED. RE-IGNITING HEARTBEAT...");
+        addLog(t('modules:session.forge_module.notebook.connecting'));
         await mcpBridge.callTool('notebooklm-mcp-server', 'refresh_auth', {});
-        addLog("RE-LINKED. RETRYING OPERATION...");
+        addLog(t('modules:session.forge_module.notebook.browsing', { id: 'RETRY' }));
         const retryResult = await mcpBridge.callTool(serverName, toolName, args);
         if (checkError(retryResult)) {
           throw new Error("RETRY FAILED: STILL EXPIRED.");
@@ -96,9 +98,9 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
       return result as unknown as T;
     } catch (err: unknown) {
       if (checkError(err)) {
-        addLog("AETHER EXPIRED (CATCH). RE-IGNITING...");
+        addLog(t('modules:session.forge_module.notebook.connecting'));
         await mcpBridge.callTool('notebooklm-mcp-server', 'refresh_auth', {});
-        addLog("RE-LINKED. RETRYING...");
+        addLog(t('modules:session.forge_module.notebook.browsing', { id: 'RETRY' }));
         return await mcpBridge.callTool(serverName, toolName, args) as unknown as T;
       }
       throw err;
@@ -143,7 +145,7 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
   const handleOpenNotebookLM = async () => {
     setIsNotebookModalOpen(true);
     setIsLoadingNotebooks(true);
-    addLog("CONNECTING TO NOTEBOOKLM AETHER...");
+    addLog(t('modules:session.forge_module.notebook.connecting'));
     try {
       const result = await callMcpToolWithRetry<{ notebooks?: Notebook[], data?: { notebooks: Notebook[] }, content?: string }>('notebooklm-mcp-server', 'notebook_list', { max_results: 100 });
       
@@ -165,9 +167,9 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
       }
 
       setNotebooks(notebooksToSet);
-      addLog(`LINKED: ${notebooksToSet.length || 0} NOTEBOOKS DISCOVERED.`);
+      addLog(t('modules:session.forge_module.notebook.linked_count', { count: notebooksToSet.length || 0 }));
     } catch (err) {
-      addLog("ERROR: COULD NOT RETRIEVE NOTEBOOKS.");
+      addLog(t('modules:session.forge_module.notebook.fetch_error'));
       console.error(err);
     } finally {
       setIsLoadingNotebooks(false);
@@ -176,7 +178,7 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
 
   const handleNotebookSelect = async (notebookId: string) => {
     setIsLoadingNotebooks(true);
-    addLog(`BROWSING ARCHIVES: ${notebookId}`);
+    addLog(t('modules:session.forge_module.notebook.browsing', { id: notebookId }));
     try {
       const result = await callMcpToolWithRetry<{ notebook?: unknown, content?: unknown }>('notebooklm-mcp-server', 'notebook_get', { notebook_id: notebookId });
       
@@ -207,17 +209,17 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
 
         setSelectedNotebook(mappedNotebook);
         setNotebookSources(mappedSources);
-        addLog(`SUCCESS: ${mappedSources.length} SOURCES EXTRACTED.`);
+        addLog(t('modules:session.forge_module.notebook.sources_extracted', { count: mappedSources.length }));
       } else if (notebookData && typeof notebookData === 'object') {
         const data = notebookData as Notebook & { sources?: NotebookSource[] };
         setSelectedNotebook(data);
         setNotebookSources(data.sources || []);
-        addLog(`SUCCESS: ${data.sources?.length || 0} SOURCES EXTRACTED.`);
+        addLog(t('modules:session.forge_module.notebook.sources_extracted', { count: data.sources?.length || 0 }));
       } else {
         throw new Error("Notebook data not found in response");
       }
     } catch (err) {
-      addLog("ERROR: FAILED TO FETCH SOURCES.");
+      addLog(t('modules:session.forge_module.notebook.sources_fetch_error'));
       console.error(err);
     } finally {
       setIsLoadingNotebooks(false);
@@ -228,9 +230,9 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
     if (importingSources.has(sourceId)) return;
     
     gmConfirm(
-      `Voulez-vous importer "${title}" de NotebookLM dans la forge ?`,
+      t('modules:session.forge_module.notebook.import_confirm', { title }),
       async () => {
-        addLog(`IMPORTING SCROLL: ${title}...`);
+        addLog(t('modules:session.forge_module.notebook.importing', { title }));
         setImportingSources(prev => new Set(prev).add(sourceId));
         
         try {
@@ -250,8 +252,8 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
             content: typeof content === 'string' ? content : JSON.stringify(content),
             mimeType: 'text/plain'
           }]);
-          addLog(`SUCCESS: ${title} ADDED TO BUCKET.`);
-          gmToast(`${title} importé avec succès.`, "success");
+          addLog(t('modules:session.forge_module.notebook.import_success', { title }));
+          gmToast(t('modules:session.forge_module.notebook.import_success', { title }), "success");
           
           setImportingSources(prev => {
             const next = new Set(prev);
@@ -260,9 +262,9 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
           });
 
         } catch (err) {
-          addLog("ERROR: IMPORT FAILED.");
+          addLog(t('modules:session.forge_module.notebook.import_error'));
           console.error(err);
-          gmToast("Échec de l'importation.", "error");
+          gmToast(t('modules:session.forge_module.notebook.import_error'), "error");
           setImportingSources(prev => {
             const next = new Set(prev);
             next.delete(sourceId);
@@ -283,7 +285,7 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
 
     setIsAnalyzing(true);
     setLogs([]);
-    addLog("IGNITING SYSTEM FORGE v5.1...");
+    addLog(t('modules:session.forge_module.igniting'));
     addLog("AGGREGATING MULTIMODAL CONTEXT...");
 
     try {
@@ -323,8 +325,8 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
 
     saveGameDriver(driver);
     addSheetTemplate(template);
-
-    addLog("SYSTEM QUENCHED: BRAIN & BODY SAVED TO LIBRARY.");
+    
+    addLog(t('modules:session.forge_module.sync_success'));
     setAnalysisResult(null);
     setContextItems([]);
   };
@@ -343,16 +345,16 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
           </div>
           <div className="flex items-center gap-4">
             <h1 className="text-2xl font-black uppercase tracking-widest text-app-text font-display">
-              SYSTEM FORGE <span className="text-accent/50 text-xs font-mono tracking-widest ml-2">v5.1</span>
+              {t('modules:session.forge_module.title').toUpperCase()} <span className="text-accent/50 text-xs font-mono tracking-widest ml-2">v5.1</span>
             </h1>
             <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border flex items-center gap-2 ${
                activeProvider === 'gemini' ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400 shadow-glow-emerald/20'
              }`}>
                <Sparkles size={12} className={activeProvider === 'gemini' ? '' : 'animate-pulse'} />
-               Moteur : {activeProvider === 'gemini' ? 'Gemini 1.5' : 'Gemma 4' }
+               {t('modules:session.forge_module.engine_label')} : {activeProvider === 'gemini' ? 'Gemini 1.5' : 'Gemma 4' }
              </div>
           </div>
-          <p className="text-[10px] font-bold text-app-text/40 uppercase tracking-[0.3em]">Extraction neuronale & Design de Systèmes</p>
+          <p className="text-[10px] font-bold text-app-text/40 uppercase tracking-[0.3em]">{t('modules:session.forge_module.subtitle')}</p>
         </div>
 
         <div className="flex items-center gap-4">
@@ -360,9 +362,9 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
              <button
                onClick={() => setAnalysisResult(null)}
                className="px-6 py-3 rounded-xl bg-app-surface/40 hover:bg-app-surface border border-app-border text-[10px] font-black uppercase tracking-widest text-app-text/40 hover:text-app-text transition-all"
-               title="Réinitialiser la forge"
+               title={t('modules:session.forge_module.reset_button')}
              >
-               RESET FORGE
+               {t('modules:session.forge_module.reset_button')}
              </button>
            )}
            {!analysisResult && (
@@ -374,10 +376,10 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                   ? 'bg-app-surface/20 text-app-text/20 opacity-50 cursor-not-allowed border border-app-border/10' 
                   : 'bg-accent text-app-text hover:scale-105 active:scale-95'
               }`}
-              title="Démarrer l'analyse de forge"
+              title={t('modules:session.forge_module.ignite_button')}
              >
                {isAnalyzing ? <Zap className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
-               Enflammer la Forge
+               {t('modules:session.forge_module.ignite_button')}
              </button>
            )}
         </div>
@@ -389,16 +391,16 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
           {/* Metadata / Output Target */}
           <div className="bg-app-surface/40 rounded-2xl border border-app-border/10 p-5 flex flex-col gap-3 hover:border-accent/30 transition-all">
             <h2 className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-accent font-display">
-               <Rocket size={14} className="animate-pulse" /> Destination du Savoir
+               <Rocket size={14} className="animate-pulse" /> {t('modules:session.forge_module.destination_label')}
             </h2>
             <input 
               type="text"
               list="existing-systems"
               value={existingSystemName} 
               onChange={(e) => setExistingSystemName(e.target.value)} 
-              placeholder="Laisser vide pour un nouveau système..." 
+              placeholder={t('modules:session.forge_module.destination_placeholder')} 
               className="w-full bg-transparent text-sm text-app-text/80 focus:outline-none placeholder:text-app-text/30 font-sans border-b border-app-border/10 pb-1 focus:border-accent/50 transition-all" 
-              title="Nom du système de jeu"
+              title={t('modules:session.forge_module.destination_label')}
             />
             <datalist id="existing-systems">
               {DEFAULT_GAME_DRIVERS.map((d) => (
@@ -410,14 +412,14 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
           {/* User Instructions Extension */}
           <div className="bg-app-surface/40 rounded-2xl border border-app-border/10 p-5 flex flex-col gap-3 hover:border-accent/30 transition-all">
             <h2 className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-accent font-display">
-               <Sparkles size={14} className="text-amber-500" /> Intentions Neuronales
+               <Sparkles size={14} className="text-amber-500" /> {t('modules:session.forge_module.intentions_label')}
             </h2>
             <textarea 
               value={userInstructions} 
               onChange={(e) => setUserInstructions(e.target.value)} 
-              placeholder="Ex: Utilise un système de dés explosifs, ajoute une jauge de Folie, thématique sombre..." 
+              placeholder={t('modules:session.forge_module.intentions_placeholder')} 
               className="w-full bg-transparent text-xs text-app-text/60 focus:outline-none placeholder:text-app-text/20 font-sans border border-app-border/10 rounded-xl p-3 focus:border-accent/50 transition-all min-h-[100px] resize-none" 
-              title="Instructions spécifiques pour l'IA"
+              title={t('modules:session.forge_module.intentions_label')}
             />
           </div>
 
@@ -426,20 +428,20 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
           <div className="flex-1 bg-app-surface/40 rounded-2xl border border-app-border/10 p-5 flex flex-col min-h-[400px]">
             <div className="flex items-center justify-between mb-4">
               <h2 className="flex items-center gap-2 text-2xl font-black uppercase tracking-tighter text-accent font-display">
-                <FileUp className="w-6 h-6" /> Context Bucket
+                <FileUp className="w-6 h-6" /> {t('modules:session.forge_module.context_title')}
               </h2>
               <div className="flex items-center gap-2">
                 <button 
                   onClick={handleOpenNotebookLM}
                   className="p-2.5 hover:bg-accent/10 rounded-xl text-accent transition-all hover:scale-110 active:scale-90 border border-transparent hover:border-accent/20"
-                  title="Ouvrir NotebookLM Browser"
+                  title={t('modules:session.forge_module.notebook_browser_tooltip')}
                 >
                   <Globe className="w-6 h-6" />
                 </button>
                 <button 
                   onClick={() => (document.getElementById('forge-file-input') as HTMLInputElement)?.click()}
                   className="p-2.5 hover:bg-app-text/5 rounded-xl text-app-text/40 transition-all hover:scale-110 active:scale-90 border border-transparent hover:border-app-border/10"
-                  title="Télécharger des fichiers locaux"
+                  title={t('modules:session.forge_module.load_files_tooltip')}
                 >
                   <FileUp className="w-6 h-6" />
                 </button>
@@ -460,7 +462,7 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                   <div className="w-16 h-16 rounded-full border-2 border-dashed border-app-border/20 flex items-center justify-center mb-4 text-app-text">
                     <Rocket className="w-8 h-8" />
                   </div>
-                  <p className="text-sm">Attente de matière brute...</p>
+                  <p className="text-sm">{t('modules:session.forge_module.context_empty')}</p>
                 </div>
               )}
               {contextItems.map((item, idx) => (
@@ -503,13 +505,13 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
             <>
               <div className="flex-1 p-8 overflow-y-auto space-y-8 scrollbar-thin scrollbar-thumb-white/5">
                 <div className="animate-in fade-in slide-in-from-top-4">
-                  <h3 className="text-3xl font-black uppercase tracking-tighter text-app-text mb-2 font-display">System Core Constructed</h3>
+                  <h3 className="text-3xl font-black uppercase tracking-tighter text-app-text mb-2 font-display">{t('modules:session.forge_module.status_constructed')}</h3>
                   <div className="h-1 w-20 bg-accent rounded-full mb-8" />
                 </div>
 
                 <div className="grid grid-cols-2 gap-8">
                   <section className="space-y-4">
-                    <h4 className="text-xs font-black text-accent uppercase tracking-widest">Driver Metadata</h4>
+                    <h4 className="text-xs font-black text-accent uppercase tracking-widest">{t('modules:session.forge_module.metadata_label')}</h4>
                     <div className="bg-app-text/5 p-6 rounded-2xl border border-app-border/10 space-y-4">
                       <div className="space-y-1">
                         <label className="text-[10px] uppercase font-bold text-app-text/30 tracking-widest">System Name</label>
@@ -529,7 +531,7 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                   </section>
 
                   <section className="space-y-4">
-                    <h4 className="text-xs font-black text-accent uppercase tracking-widest">Mechanics Overview</h4>
+                    <h4 className="text-xs font-black text-accent uppercase tracking-widest">{t('modules:session.forge_module.mechanics_label')}</h4>
                     <div className="bg-emerald-500/5 p-6 rounded-2xl border border-emerald-500/10 h-full">
                        <ul className="space-y-3">
                          {analysisResult.driver.combat?.statsToTrack?.map((d, i) => (
@@ -544,12 +546,12 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                 </div>
 
                 <section className="space-y-4">
-                   <h4 className="text-xs font-black text-accent uppercase tracking-widest">Sheet Blueprints</h4>
+                   <h4 className="text-xs font-black text-accent uppercase tracking-widest">{t('modules:session.forge_module.blueprints_label')}</h4>
                    <div className="grid grid-cols-3 gap-4">
                      {analysisResult.template.sections?.map((section, idx) => (
                         <div key={idx} className="bg-app-text/5 p-4 rounded-xl border border-app-border/10">
                            <p className="text-xs font-black uppercase text-accent mb-2 truncate">{section.label}</p>
-                           <p className="text-[10px] opacity-40">{section.fields.length} Functional Fields</p>
+                           <p className="text-[10px] opacity-40">{t('modules:session.forge_module.functional_fields', { count: section.fields.length })}</p>
                         </div>
                      ))}
                    </div>
@@ -557,15 +559,15 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                 
                 <div className="bg-accent p-6 rounded-2xl border border-accent/20 flex items-center justify-between shadow-glow-accent/20">
                    <div>
-                     <p className="text-white font-black text-lg">PRÊT À L'INJECTION</p>
-                     <p className="text-white/60 text-xs font-medium italic">Le système est synchronisé et prêt pour utilisation immédiate.</p>
+                     <p className="text-white font-black text-lg">{t('modules:session.forge_module.ready_label')}</p>
+                     <p className="text-white/60 text-xs font-medium italic">{t('modules:session.forge_module.sync_success')}</p>
                    </div>
                    <button 
                     onClick={handleForgeSave}
                     className="px-8 py-3 bg-white text-accent rounded-xl font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl"
-                    title="Sauvegarder le système forgé"
+                    title={t('modules:session.forge_module.save_button')}
                    >
-                     Quencher le Métal
+                     {t('modules:session.forge_module.save_button')}
                    </button>
                 </div>
               </div>
@@ -575,15 +577,14 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
               <div className="w-32 h-32 relative">
                 <div className="absolute inset-0 bg-accent/20 rounded-full blur-3xl animate-pulse" />
                 <div className="relative w-full h-full rounded-full border-2 border-accent/30 flex items-center justify-center overflow-hidden bg-app-surface/40">
-                   <Hammer className="w-16 h-16 text-accent animate-pulse" />
-                </div>
-              </div>
-              <div>
-                <h3 className="text-2xl font-bold mb-2 font-display text-app-text uppercase">En attente de Transmutation</h3>
+                   </div>
+               </div>
+               <div>
+                <h3 className="text-2xl font-bold mb-2 font-display text-app-text uppercase">{t('modules:session.forge_module.awaiting_transmutation')}</h3>
                 <p className="text-app-text/40 max-w-md mx-auto font-sans leading-relaxed">
-                  Déposez un PDF de règles, des notes de système ou liez un NotebookLM pour forger une architecture GM-OS complète.
+                  {t('modules:session.forge_module.transmutation_desc')}
                 </p>
-              </div>
+               </div>
               <div className="flex items-center gap-6 text-[9px] font-bold border border-white/5 bg-white/5 px-6 py-2 rounded-full text-app-text/40 uppercase tracking-widest font-mono">
                 <span className="flex items-center gap-1.5"><Rocket className="w-3.5 h-3.5" /> AI {activeProvider === 'gemini' ? 'Gemini 1.5 Cloud' : 'Gemma 4 Local'}</span>
                 <span className="flex items-center gap-1.5 border-l border-white/10 pl-6"><Globe className="w-3.5 h-3.5" /> Multimodal Extraction</span>
@@ -599,7 +600,7 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
            <div className="w-full max-w-4xl bg-app-bg border border-accent/20 rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col h-[70vh] text-app-text font-sans">
               <div className="p-6 border-b border-app-border/10 flex items-center justify-between bg-accent/5">
                  <h2 className="text-xl font-bold uppercase tracking-wider text-accent flex items-center gap-3 font-display">
-                   <Globe className="w-6 h-6" /> NotebookLM Browser
+                   <Globe className="w-6 h-6" /> {t('modules:session.forge_module.notebook.title')}
                  </h2>
                  <button onClick={() => setIsNotebookModalOpen(false)} className="p-2 hover:bg-app-text/5 rounded-full text-app-text/40 transition-colors" title="Fermer"><X /></button>
               </div>
@@ -646,17 +647,17 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                                     ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold'
                                     : 'bg-accent/20 text-accent hover:bg-accent hover:text-white font-bold'
                               }`}
-                              title={`Importer la source ${s.title}`}
+                              title={t('modules:session.forge_module.notebook.browsing', { id: s.title })}
                             >
                               {importingSources.has(s.id) ? (
                                 <>
                                   <Zap className="size-3 animate-spin" />
-                                  Extraction...
+                                  {t('modules:session.forge_module.igniting')}
                                 </>
                               ) : contextItems.some(item => item.name === `[NB] ${s.title}`) ? (
                                 <>
                                   <Sparkles className="size-3" />
-                                  Importé
+                                  {t('modules:session.forge_module.notebook.import_success', { title: '' }).split(' ')[1]}
                                 </>
                               ) : (
                                 'Import'
@@ -668,7 +669,7 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                     ) : (
                       <div className="h-full flex flex-col items-center justify-center text-center opacity-20 italic">
                         <Rocket className="w-16 h-16 mb-4 text-app-text" />
-                        <p>Sélectionnez un carnet pour voir les parchemins</p>
+                        <p>{t('modules:session.forge_module.notebook.select_notebook_hint')}</p>
                       </div>
                     )}
                  </div>

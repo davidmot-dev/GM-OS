@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Package, Sparkles, ChevronRight } from 'lucide-react';
 import type { InventoryItem } from '../useSessionOSStore';
 
@@ -8,6 +9,7 @@ interface LootNotificationProps {
 }
 
 const LootNotification: React.FC<LootNotificationProps> = ({ items, onClose }) => {
+    const { t } = useTranslation(['modules']);
     const [visible, setVisible] = useState(false);
 
     useEffect(() => {
@@ -39,8 +41,8 @@ const LootNotification: React.FC<LootNotificationProps> = ({ items, onClose }) =
                         <Package size={24} />
                     </div>
                     <div>
-                        <h3 className="text-lg font-black tracking-tight text-white uppercase leading-none mb-1">Butin Reçu !</h3>
-                        <p className="text-[10px] font-bold text-cyan-400 uppercase tracking-[0.2em] opacity-80">Trésors ajoutés à la fiche</p>
+                        <h3 className="text-lg font-black tracking-tight text-white uppercase leading-none mb-1">{t('modules:loot.notifications.title')}</h3>
+                        <p className="text-[10px] font-bold text-cyan-400 uppercase tracking-[0.2em] opacity-80">{t('modules:loot.notifications.subtitle')}</p>
                     </div>
                 </div>
 
@@ -51,9 +53,9 @@ const LootNotification: React.FC<LootNotificationProps> = ({ items, onClose }) =
                             className={`flex items-center justify-between p-3 bg-white/5 border border-white/5 rounded-2xl hover:bg-white/10 transition-colors animate-in slide-in-from-right duration-300 [--tw-enter-delay:${idx * 100}ms]`}
                         >
                             <div className="flex flex-col">
-                                <span className="text-xs font-bold text-slate-200">{String(item.name || 'Objet sans nom')}</span>
+                                <span className="text-xs font-bold text-slate-200">{String(item.name || t('modules:loot.notifications.placeholder_name'))}</span>
                                 <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">
-                                    {item.type} • {item.rarity || 'Commun'}
+                                    {t(`modules:loot.types.${item.type || 'item'}`)} • {t(`modules:loot.rarities.${item.rarity || 'common'}`)}
                                 </span>
                             </div>
                             <div className="text-cyan-400 font-mono font-black text-sm bg-cyan-400/10 px-2 py-1 rounded-lg border border-cyan-400/20">
@@ -65,13 +67,13 @@ const LootNotification: React.FC<LootNotificationProps> = ({ items, onClose }) =
 
                 <div className="pt-2 flex items-center justify-between relative z-10 mt-2">
                     <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest italic flex items-center gap-1">
-                        <ChevronRight size={10} className="text-cyan-400/40" /> Fiche de personnage mise à jour
+                        <ChevronRight size={10} className="text-cyan-400/40" /> {t('modules:loot.notifications.footer_hint')}
                     </span>
                     <button 
                         onClick={() => { setVisible(false); setTimeout(onClose, 800); }} 
                         className="text-[10px] font-black text-white/20 hover:text-white uppercase tracking-widest transition-colors p-1"
                     >
-                        Fermer
+                        {t('modules:loot.notifications.close')}
                     </button>
                 </div>
                 

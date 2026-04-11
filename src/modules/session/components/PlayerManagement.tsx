@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Users } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import PlayerRoster from './PlayerRoster';
@@ -6,6 +7,7 @@ import CharacterGrid from './CharacterGrid';
 import PlayerCharacterDetail from './PlayerCharacterDetail';
 
 const PlayerManagement: React.FC = () => {
+    const { t } = useTranslation(['modules']);
     const { selectedCharacterId, setCurrentView } = useSessionOSStore();
 
     return (
@@ -22,12 +24,12 @@ const PlayerManagement: React.FC = () => {
                                 className="flex items-center gap-2 px-4 py-2 bg-app-surface border border-app-border text-app-text/60 hover:text-accent hover:border-accent/50 rounded-xl transition-all font-bold text-sm uppercase tracking-widest group"
                             >
                                 <ArrowLeft size={18} className="transition-transform group-hover:-translate-x-1" />
-                                Retour au Cockpit
+                                {t('modules:session.players.back_to_cockpit')}
                             </button>
                             <div className="h-8 w-px bg-app-border hidden md:block"></div>
                             <div className="flex items-center gap-3">
                                 <Users size={20} className="text-accent" />
-                                <h2 className="text-xl font-black text-app-text uppercase tracking-tight">Roster des Joueurs</h2>
+                                <h2 className="text-xl font-black text-app-text uppercase tracking-tight">{t('modules:session.players.title')}</h2>
                             </div>
                         </div>
                     </div>

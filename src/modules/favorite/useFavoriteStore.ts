@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { useJournalStore } from '../journal/useJournalStore';
+import i18next from 'i18next';
 
 export type FavoriteType = 'npc' | 'place' | 'item' | 'lore';
 
@@ -170,8 +171,8 @@ export const useFavoriteStore = create<FavoriteState>()(
                     if (!favBefore.isSyncedToPlayerHub && updates.isSyncedToPlayerHub) {
                         useJournalStore.getState().addEvent({
                             type: 'SYSTEM',
-                            title: 'Élément favori partagé',
-                            content: `L'élément "${favBefore.name}" (${favBefore.type}) a été montré sur le Player Hub.`
+                            title: i18next.t('modules:favorite.actions.synced_player'),
+                            content: `${i18next.t(`modules:favorite.categories.${favBefore.type}`)}: "${favBefore.name}"`
                         });
                     }
                 }

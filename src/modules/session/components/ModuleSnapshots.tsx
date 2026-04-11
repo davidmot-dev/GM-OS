@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Music, Pause, Play, Volume2, EyeOff, HeartCrack, CheckCircle, Skull, Zap, Layers } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useCombatStore } from '../../combat/useCombatStore';
@@ -6,6 +7,7 @@ import { useMusicStore } from '../../music/useMusicStore';
 import { CockpitMessenger } from './CockpitMessenger';
 
 const ModuleSnapshots: React.FC = () => {
+    const { t } = useTranslation(['modules']);
     const { rollDice, diceRolls, clearDiceRolls } = useSessionOSStore();
     const { combatants, currentTurnIdx, round } = useCombatStore();
     const { deckA, deckB, masterVolume, setMasterVolume, stopAll, playDeck } = useMusicStore();
@@ -36,13 +38,13 @@ const ModuleSnapshots: React.FC = () => {
         <aside className="h-full col-span-3 bg-app-surface/80 border-l border-app-border p-4 flex flex-col gap-6 overflow-y-auto custom-scrollbar">
             {/* Module Snapshot Section */}
             <div className="flex flex-col gap-4">
-                <h4 className="text-xs uppercase tracking-widest text-app-text/40 mb-2 font-bold px-1">État des Modules</h4>
+                <h4 className="text-xs uppercase tracking-widest text-app-text/40 mb-2 font-bold px-1">{t('session.snapshots.title')}</h4>
 
                 {/* Track 1: Active Encounter */}
                 <div className="flex flex-col gap-2">
                     <div className="flex items-center justify-between text-[10px] text-app-text/40 font-bold uppercase tracking-wider px-1">
-                        <span>Ordre de Combat</span>
-                        <span className="text-accent">Round {round}</span>
+                        <span>{t('session.snapshots.combat_order')}</span>
+                        <span className="text-accent">{t('session.snapshots.round_hash', { number: round })}</span>
                     </div>
                     
                     {combatants.length > 0 ? (
@@ -78,12 +80,12 @@ const ModuleSnapshots: React.FC = () => {
                                 );
                             })}
                             {combatants.length > 5 && (
-                                <p className="text-[10px] text-app-text/20 text-center italic mt-1">+ {combatants.length - 5} autres...</p>
+                                <p className="text-[10px] text-app-text/20 text-center italic mt-1">{t('session.snapshots.others_count', { count: combatants.length - 5 })}</p>
                             )}
                         </div>
                     ) : (
                         <div className="bg-app-bg/20 rounded-xl border border-dashed border-app-border/40 p-4 text-center">
-                            <p className="text-[10px] text-app-text/20 italic">Aucun combat actif</p>
+                            <p className="text-[10px] text-app-text/20 italic">{t('session.snapshots.no_active_encounter')}</p>
                         </div>
                     )}
                 </div>
@@ -91,7 +93,7 @@ const ModuleSnapshots: React.FC = () => {
                 {/* Track 2: Audio Environment */}
                 <div className="flex flex-col gap-2">
                     <div className="flex items-center justify-between text-[10px] text-app-text/40 font-bold uppercase tracking-wider px-1">
-                        <span>Environnement Audio</span>
+                        <span>{t('session.snapshots.audio_environment')}</span>
                     </div>
                     <div className="bg-app-bg/40 rounded-xl border border-app-border/40 p-3">
                         <div className="flex items-center gap-3">
@@ -100,10 +102,10 @@ const ModuleSnapshots: React.FC = () => {
                             </div>
                             <div className="flex-1 min-w-0">
                                 <p className="text-xs text-app-text font-bold truncate">
-                                    {activeTrackLabel || 'Silence'}
+                                    {activeTrackLabel || t('session.snapshots.audio_silence')}
                                 </p>
                                 <p className="text-[10px] text-app-text/40 truncate italic">
-                                    {isAudioPlaying ? 'Deck ' + activeDeck : 'En attente'}
+                                    {isAudioPlaying ? t('session.snapshots.audio_deck_label', { deck: activeDeck }) : t('session.snapshots.audio_waiting')}
                                 </p>
                             </div>
                             <button 
@@ -138,7 +140,7 @@ const ModuleSnapshots: React.FC = () => {
                 {/* Track 3: Conditions */}
                 <div className="flex flex-col gap-2">
                     <div className="flex items-center justify-between text-[10px] text-app-text/40 font-bold uppercase tracking-wider px-1">
-                        <span>Conditions Actives</span>
+                        <span>{t('session.snapshots.active_conditions')}</span>
                     </div>
                     {allActiveStatuses.length > 0 ? (
                         <div className="grid grid-cols-2 gap-2">
@@ -152,26 +154,26 @@ const ModuleSnapshots: React.FC = () => {
                             ))}
                             {allActiveStatuses.length > 4 && (
                                 <div className="col-span-2 text-[10px] text-slate-600 text-center italic">
-                                    + {allActiveStatuses.length - 4} autres...
+                                    {t('session.snapshots.others_count', { count: allActiveStatuses.length - 4 })}
                                 </div>
                             )}
                         </div>
                     ) : (
                         <div className="bg-slate-800/20 rounded-xl border border-dashed border-slate-700/50 p-4 text-center">
-                            <p className="text-[10px] text-slate-600 italic">Aucune altération d'état</p>
+                            <p className="text-[10px] text-slate-600 italic">{t('session.snapshots.no_condition')}</p>
                         </div>
                     )}
                 </div>
                 {/* Track 4: Deck-OS */}
                 <div className="flex flex-col gap-2">
                     <div className="flex items-center justify-between text-[10px] text-app-text/40 font-bold uppercase tracking-wider px-1 border-t border-white/5 pt-4 mt-2">
-                        <span>Cartes & Destinée</span>
+                        <span>{t('session.snapshots.cards_destiny')}</span>
                         <div className="flex gap-2">
                             <button 
                                 onClick={() => useSessionOSStore.getState().setCurrentView('deck-library')}
                                 className="text-accent hover:underline lowercase tracking-tight"
                             >
-                                gérer
+                                {t('session.snapshots.manage')}
                             </button>
                         </div>
                     </div>
@@ -185,7 +187,7 @@ const ModuleSnapshots: React.FC = () => {
                             </div>
                             <div className="flex flex-col items-start">
                                 <span className="text-xs text-app-text font-bold uppercase tracking-wider group-hover:text-gm-gold transition-colors">Deck-OS</span>
-                                <span className="text-[9px] text-app-text/40 uppercase tracking-widest font-black">Lancer le moteur</span>
+                                <span className="text-[9px] text-app-text/40 uppercase tracking-widest font-black">{t('session.snapshots.start_engine')}</span>
                             </div>
                         </div>
                     </button>
@@ -196,12 +198,12 @@ const ModuleSnapshots: React.FC = () => {
             {/* Quick Roll Tray */}
             <div className="mt-auto bg-app-bg p-4 rounded-xl border border-app-border/40 shadow-lg">
                 <div className="flex justify-between items-center mb-3">
-                    <span className="text-[10px] text-app-text/40 font-bold uppercase tracking-widest">Jet Rapide</span>
+                    <span className="text-[10px] text-app-text/40 font-bold uppercase tracking-widest">{t('session.snapshots.quick_roll')}</span>
                     <button
                         onClick={() => clearDiceRolls()}
                         className="text-accent text-[10px] font-bold hover:underline"
                     >
-                        HISTORIQUE
+                        {t('session.snapshots.history')}
                     </button>
                 </div>
                 <div className="flex justify-between gap-1">

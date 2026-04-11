@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useMapStore } from '../useMapStore';
 import { useMapUIStore } from '../useMapUIStore';
 import { FogEngine } from '../FogEngine';
@@ -14,6 +15,7 @@ import { useMapNavigation } from '../hooks/useMapNavigation';
 import { useMapInteraction } from '../hooks/useMapInteraction';
 
 const MapCanvas: React.FC = () => {
+    const { t } = useTranslation(['modules', 'common']);
     // Stores
     const mapStore = useMapStore();
     const uiStore = useMapUIStore();
@@ -229,8 +231,8 @@ const MapCanvas: React.FC = () => {
             {!resolvedMapUrl && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-500 z-0">
                     <span className="text-4xl mb-2">🗺️</span>
-                    <p className="text-xl font-bold font-display">Aucune carte chargée</p>
-                    <p className="text-sm">Utilisez le panneau latéral pour importer une image ou vidéo.</p>
+                    <p className="text-xl font-bold font-display">{t('map.canvas.empty', { defaultValue: 'Aucune carte chargée' })}</p>
+                    <p className="text-sm">{t('map.canvas.emptySub', { defaultValue: 'Utilisez le panneau latéral pour importer une image ou vidéo.' })}</p>
                 </div>
             )}
 

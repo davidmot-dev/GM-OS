@@ -2,9 +2,11 @@ import React from 'react';
 import { useLightStore } from '../useLightStore';
 import type { HueLight } from '../useLightStore';
 import { hueEngine } from '../HueEngine';
+import { useTranslation } from 'react-i18next';
 
 export const BulbFooter: React.FC = () => {
     const { lights } = useLightStore();
+    const { t } = useTranslation('modules');
     const lightList = Object.values(lights);
 
     const handleColorChange = (id: string, hexColor: string) => {
@@ -51,7 +53,7 @@ export const BulbFooter: React.FC = () => {
     if (lightList.length === 0) {
         return (
             <footer className="bg-app-surface/50 border-t border-app-border p-4 h-24 flex items-center justify-center">
-                <span className="text-slate-500 font-bold text-xs">No lights discovered.</span>
+                <span className="text-slate-500 font-bold text-xs">{t('light.footer.no_lights')}</span>
             </footer>
         );
     }
@@ -78,7 +80,7 @@ export const BulbFooter: React.FC = () => {
                                         type="color"
                                         onChange={(e) => handleColorChange(light.id, e.target.value)}
                                         className="size-6 rounded border border-app-border cursor-pointer p-0 bg-transparent hover:border-accent/50 transition-colors"
-                                        title="Change Color"
+                                        title={t('light.footer.change_color')}
                                     />
                                     <div className="flex items-center bg-app-bg/80 border border-app-border rounded px-2 py-1 w-full hover:border-accent/30 transition-colors">
                                         <span className="material-symbols-outlined text-sm text-slate-500 mr-2">tune</span>
@@ -87,24 +89,24 @@ export const BulbFooter: React.FC = () => {
                                             onChange={(e) => handleEffectChange(light.id, e.target.value)}
                                             className="bg-transparent border-none p-0 text-xs font-bold text-accent focus:ring-0 cursor-pointer outline-none w-full"
                                         >
-                                            <option value="none" className="bg-app-bg text-app-text/50">Steady</option>
-                                            <option value="colorloop" className="bg-app-bg text-accent">Colorloop</option>
-                                            <option value="candle" className="bg-app-bg text-amber-500">Candle</option>
-                                            <option value="fire" className="bg-app-bg text-red-500">Fire</option>
-                                            <option value="police" className="bg-app-bg text-blue-500">Police</option>
-                                            <option value="lightning" className="bg-app-bg text-app-text/70">Storm</option>
-                                            <option value="glitch" className="bg-app-bg text-green-400">Glitch</option>
-                                            <option value="tv" className="bg-app-bg text-cyan-200">CRT TV</option>
-                                            <option value="arcane" className="bg-app-bg text-purple-400">Arcane</option>
-                                            <option value="warp" className="bg-app-bg text-fuchsia-400">Warp Speed</option>
-                                            <option value="underwater" className="bg-app-bg text-cyan-500">Underwater</option>
-                                            <option value="dragon" className="bg-app-bg text-orange-500">Dragon Breath</option>
-                                            <option value="holy" className="bg-app-bg text-yellow-300">Holy Aura</option>
-                                            <option value="neon" className="bg-app-bg text-pink-500">Broken Neon</option>
-                                            <option value="heartbeat" className="bg-app-bg text-red-600">Heartbeat</option>
-                                            <option value="flashlight" className="bg-app-bg text-white">Flashlight</option>
-                                            <option value="radiation" className="bg-app-bg text-emerald-400">Radiation</option>
-                                            <option value="breathing" className="bg-app-bg text-app-text/60">Breathing</option>
+                                            <option value="none" className="bg-app-bg text-app-text/50">{t('light.footer.effects.steady')}</option>
+                                            <option value="colorloop" className="bg-app-bg text-accent">{t('light.footer.effects.colorloop')}</option>
+                                            <option value="candle" className="bg-app-bg text-amber-500">{t('light.footer.effects.candle')}</option>
+                                            <option value="fire" className="bg-app-bg text-red-500">{t('light.footer.effects.fire')}</option>
+                                            <option value="police" className="bg-app-bg text-blue-500">{t('light.footer.effects.police')}</option>
+                                            <option value="lightning" className="bg-app-bg text-app-text/70">{t('light.footer.effects.storm')}</option>
+                                            <option value="glitch" className="bg-app-bg text-green-400">{t('light.footer.effects.glitch')}</option>
+                                            <option value="tv" className="bg-app-bg text-cyan-200">{t('light.footer.effects.tv')}</option>
+                                            <option value="arcane" className="bg-app-bg text-purple-400">{t('light.footer.effects.arcane')}</option>
+                                            <option value="warp" className="bg-app-bg text-fuchsia-400">{t('light.footer.effects.warp')}</option>
+                                            <option value="underwater" className="bg-app-bg text-cyan-500">{t('light.footer.effects.underwater')}</option>
+                                            <option value="dragon" className="bg-app-bg text-orange-500">{t('light.footer.effects.dragon')}</option>
+                                            <option value="holy" className="bg-app-bg text-yellow-300">{t('light.footer.effects.holy')}</option>
+                                            <option value="neon" className="bg-app-bg text-pink-500">{t('light.footer.effects.neon')}</option>
+                                            <option value="heartbeat" className="bg-app-bg text-red-600">{t('light.footer.effects.heartbeat')}</option>
+                                            <option value="flashlight" className="bg-app-bg text-white">{t('light.footer.effects.flashlight')}</option>
+                                            <option value="radiation" className="bg-app-bg text-emerald-400">{t('light.footer.effects.radiation')}</option>
+                                            <option value="breathing" className="bg-app-bg text-app-text/60">{t('light.footer.effects.breathing')}</option>
                                         </select>
                                     </div>
                                 </div>

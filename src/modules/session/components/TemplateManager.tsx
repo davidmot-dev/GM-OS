@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useModalStore } from '../../../stores/useModalStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
@@ -7,15 +8,15 @@ import { Plus, Trash2, ChevronDown, ChevronRight, Pencil, Sparkles, Brain, BookO
 import { useGemStore } from '../../../stores/useGemStore';
 import { aiService } from '../../ai/AIService';
 
-const FIELD_TYPE_LABELS: Record<SheetFieldType, string> = {
-    gauge: 'Jauge (%)',
-    number: 'Nombre',
-    text: 'Texte',
-    checkbox: 'Case à cocher',
-    select: 'Liste déroulante',
-    textarea: 'Texte multiligne',
-    rating: 'Échelle (Ex: 1 à 5)',
-};
+const getFieldTypeLabels = (t: any): Record<SheetFieldType, string> => ({
+    gauge: t('modules:session.template_manager.field_types.gauge'),
+    number: t('modules:session.template_manager.field_types.number'),
+    text: t('modules:session.template_manager.field_types.text'),
+    checkbox: t('modules:session.template_manager.field_types.checkbox'),
+    select: t('modules:session.template_manager.field_types.select'),
+    textarea: t('modules:session.template_manager.field_types.textarea'),
+    rating: t('modules:session.template_manager.field_types.rating'),
+});
 
 // Sub-component to handle options input without immediate splitting/joining issues
 const FieldOptionsInput: React.FC<{
@@ -43,12 +44,13 @@ const FieldOptionsInput: React.FC<{
         onUpdate(split);
     };
 
+    const { t } = useTranslation(['modules']);
     return (
         <input 
             type="text"
             value={text}
             onChange={e => handleChange(e.target.value)}
-            placeholder="Ex: Épée, Hache, Arc..."
+            placeholder={t('modules:session.template_manager.editor.field_options_placeholder')}
             className="flex-1 bg-black/20 text-xs text-app-text/80 px-2 py-1 rounded border border-white/5 focus:outline-none focus:border-accent/30"
         />
     );
@@ -60,8 +62,8 @@ const SectionEditor: React.FC<{
     onUpdate: (updated: SheetSection) => void;
     onDelete: () => void;
 }> = ({ section, onUpdate, onDelete }) => {
-    const { showConfirm } = useModalStore();
-    const [isOpen, setIsOpen] = useState(true);
+    const { t } = useTranslation(['modules']);
+    const fieldTypeLabels = getFieldTypeLabels(t);
 
     const updateField = (index: number, updates: Partial<SheetField>) => {
         const newFields = [...section.fields];
@@ -72,7 +74,7 @@ const SectionEditor: React.FC<{
     const addField = () => {
         const newField: SheetField = {
             id: `field-${Date.now()}`,
-            label: 'Nouveau Champ',
+            label: t('modules:session.template_manager.editor.default_field_name'),
             type: 'gauge',
             defaultValue: 50,
         };
@@ -81,7 +83,7 @@ const SectionEditor: React.FC<{
 
     const removeField = (index: number) => {
         showConfirm(
-            `Supprimer le champ "${section.fields[index].label}" ?`,
+            t('modules:session.template_manager.editor.confirm_delete_field', { name: section.fields[index].label }),
             () => onUpdate({ ...section, fields: section.fields.filter((_, i) => i !== index) })
         );
     };
@@ -100,7 +102,7 @@ const SectionEditor: React.FC<{
                     className="flex-1 bg-transparent font-bold text-sm text-white focus:outline-none"
                 />
                 <button 
-                    onClick={() => showConfirm(`Supprimer la section "${section.label}" et tous ses champs ?`, onDelete)} 
+                    onClick={() => showConfirm(t('modules:session.template_manager.editor.confirm_delete_section', { name: section.label }), onDelete)} 
                     className="p-1.5 text-slate-600 hover:text-red-400 transition-colors rounded-lg hover:bg-red-500/10"
                 >
                     <Trash2 size={14} />
@@ -120,7 +122,7 @@ const SectionEditor: React.FC<{
                                     value={field.label}
                                     onChange={e => updateField(i, { label: e.target.value })}
                                     className="flex-1 bg-transparent text-sm text-slate-200 focus:outline-none min-w-0"
-                                    placeholder="Nom du champ"
+                                    placeholder={t('modules:session.template_manager.editor.field_name_placeholder')}
                                 />
                                 <select
                                     value={field.type}
@@ -132,7 +134,7 @@ const SectionEditor: React.FC<{
                                     })}
                                     className="bg-app-bg text-app-text/80 text-[11px] rounded-lg px-2 py-1 border border-white/10 focus:outline-none focus:ring-1 focus:ring-accent/40"
                                 >
-                                    {(Object.entries(FIELD_TYPE_LABELS) as [SheetFieldType, string][]).map(([type, label]) => (
+                                    {(Object.entries(fieldTypeLabels) as [SheetFieldType, string][]).map(([type, label]) => (
                                         <option key={type} value={type}>{label}</option>
                                     ))}
                                 </select>
@@ -144,7 +146,7 @@ const SectionEditor: React.FC<{
                             {/* Configuration supplementaire pour les champs complexes */}
                             {field.type === 'select' && (
                                 <div className="flex items-center gap-2 pl-5">
-                                    <span className="text-[10px] text-app-text/40 uppercase font-bold">Options :</span>
+                                    <span className="text-[10px] text-app-text/40 uppercase font-bold">{t('modules:session.template_manager.editor.field_options')}</span>
                                     <FieldOptionsInput 
                                         options={field.options || []} 
                                         onUpdate={newOptions => updateField(i, { options: newOptions })} 
@@ -153,7 +155,7 @@ const SectionEditor: React.FC<{
                             )}
                             {field.type === 'rating' && (
                                 <div className="flex items-center gap-2 pl-5">
-                                    <span className="text-[10px] text-app-text/40 uppercase font-bold">Valeur max :</span>
+                                    <span className="text-[10px] text-app-text/40 uppercase font-bold">{t('modules:session.template_manager.editor.max_value_label')}</span>
                                     <input 
                                         type="number"
                                         min={1}
@@ -170,7 +172,7 @@ const SectionEditor: React.FC<{
                         onClick={addField}
                         className="w-full py-1.5 text-xs text-app-text/20 hover:text-accent border border-dashed border-app-border/40 hover:border-accent/40 rounded-lg transition-all flex items-center justify-center gap-1"
                     >
-                        <Plus size={12} /> Ajouter un champ
+                        <Plus size={12} /> {t('modules:session.template_manager.editor.add_field')}
                     </button>
                 </div>
             )}
@@ -184,6 +186,7 @@ const TemplateEditor: React.FC<{
     onUpdate: (updated: SheetTemplate) => void;
     onDelete?: () => void;
 }> = ({ template, onUpdate, onDelete }) => {
+    const { t } = useTranslation(['settings', 'modules']);
     const updateSection = (index: number, updated: SheetSection) => {
         const newSections = [...template.sections];
         newSections[index] = updated;
@@ -197,7 +200,7 @@ const TemplateEditor: React.FC<{
     const addSection = () => {
         const newSection: SheetSection = {
             id: `section-${Date.now()}`,
-            label: 'Nouvelle Section',
+            label: t('modules:session.template_manager.editor.default_section_name'),
             fields: [],
         };
         onUpdate({ ...template, sections: [...template.sections, newSection] });
@@ -219,7 +222,7 @@ const TemplateEditor: React.FC<{
                     value={template.name}
                     onChange={e => onUpdate({ ...template, name: e.target.value })}
                     className="flex-1 bg-transparent text-lg font-bold text-white focus:outline-none border-b border-white/10 focus:border-gm-gold/50 transition-colors pb-1"
-                    placeholder="Nom du template"
+                    placeholder={t('modules:session.template_manager.editor.template_name_placeholder')}
                 />
             </div>
 
@@ -229,18 +232,18 @@ const TemplateEditor: React.FC<{
                     <Sparkles size={16} />
                 </div>
                 <div className="flex-1">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-blue-500/70 mb-1">NotebookLM par défaut</p>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-blue-500/70 mb-1">{t('modules:session.template_manager.editor.notebook_link_label')}</p>
                     <input 
                         type="text"
                         value={template.defaultNotebookUrl || ''}
                         onChange={e => onUpdate({ ...template, defaultNotebookUrl: e.target.value })}
-                        placeholder="https://notebooklm.google.com/notebook/..."
+                        placeholder={t('modules:session.template_manager.editor.notebook_link_placeholder')}
                         className="w-full bg-transparent text-xs text-app-text/80 focus:outline-none border-b border-white/5 focus:border-accent/50 transition-colors pb-0.5"
                     />
                 </div>
                 {onDelete && (
                     <button onClick={onDelete} className="px-3 py-1.5 text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-all font-bold uppercase tracking-widest border border-red-500/20">
-                        Supprimer
+                        {t('modules:session.template_manager.manager.delete_btn')}
                     </button>
                 )}
             </div>
@@ -248,9 +251,9 @@ const TemplateEditor: React.FC<{
             {/* AI Personas Override */}
             <div className="space-y-3 mt-6">
                 <h4 className="text-xs font-black uppercase tracking-tight text-app-text flex items-center gap-2">
-                    <Sparkles size={14} className="text-accent" /> Personnas IA Spécialisés (Optionnel)
+                    <Sparkles size={14} className="text-accent" /> {t('modules:session.template_manager.editor.ai_personas_title')}
                 </h4>
-                <p className="text-[10px] text-app-text/60">Définissez une personnalité spécifique pour ce système de jeu. Laissez vide pour utiliser vos paramètres IA globaux.</p>
+                <p className="text-[10px] text-app-text/60">{t('modules:session.template_manager.editor.ai_personas_subtitle')}</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {useGemStore.getState().gems.map(gem => {
                         const iconMap: Record<string, LucideIcon> = { BookOpen, PenTool, Music, Beaker, User, Sparkles, Brain };
@@ -260,7 +263,7 @@ const TemplateEditor: React.FC<{
                             <div key={gem.id} className="p-3 bg-app-surface/40 border border-white/5 rounded-xl space-y-2 focus-within:border-accent/30 transition-colors">
                                 <div className="flex items-center gap-2">
                                     <Icon size={14} className="text-accent" />
-                                    <span className="text-[10px] font-bold text-white uppercase tracking-widest">{gem.name}</span>
+                                    <span className="text-[10px] font-bold text-white uppercase tracking-widest">{t(gem.name)}</span>
                                 </div>
                                 <textarea
                                     value={currValue}
@@ -274,7 +277,7 @@ const TemplateEditor: React.FC<{
                                         }
                                         onUpdate({ ...template, aiPersonas: newPersonas });
                                     }}
-                                    placeholder={`Surcharge des instructions pour ${gem.name}...`}
+                                    placeholder={t('modules:session.template_manager.editor.ai_personas_placeholder', { name: t(gem.name) })}
                                     className="w-full h-20 bg-black/40 border border-app-border/40 rounded-xl p-3 text-xs text-app-text/80 focus:border-accent/50 outline-none transition-all font-mono"
                                 />
                             </div>
@@ -285,7 +288,7 @@ const TemplateEditor: React.FC<{
 
             {/* Sections */}
             <div className="space-y-2 mt-6">
-                <h4 className="text-xs font-black uppercase tracking-tight text-app-text mb-3">Sections & Champs</h4>
+                <h4 className="text-xs font-black uppercase tracking-tight text-app-text mb-3">{t('modules:session.template_manager.editor.sections_champs_title')}</h4>
                 {template.sections.map((section, i) => (
                     <SectionEditor
                         key={section.id}
@@ -298,7 +301,7 @@ const TemplateEditor: React.FC<{
                     onClick={addSection}
                     className="w-full py-2 text-xs text-app-text/20 hover:text-accent border border-dashed border-app-border/40 hover:border-accent/40 rounded-xl transition-all flex items-center justify-center gap-2 font-bold uppercase tracking-widest"
                 >
-                    <Plus size={14} /> Ajouter une section
+                    <Plus size={14} /> {t('modules:session.template_manager.editor.add_section')}
                 </button>
             </div>
         </div>
@@ -307,6 +310,7 @@ const TemplateEditor: React.FC<{
 
 // --- Main TemplateManager ---
 const TemplateManager: React.FC = () => {
+    const { t } = useTranslation(['modules']);
     const { customSheetTemplates, addSheetTemplate, updateSheetTemplate, deleteSheetTemplate } = useSessionOSStore();
     const { showConfirm, showPrompt } = useModalStore();
     const [selectedId, setSelectedId] = useState<string | null>(customSheetTemplates[0]?.id ?? null);
@@ -317,10 +321,10 @@ const TemplateManager: React.FC = () => {
 
     const handleCreateNew = () => {
         const newTemplate = {
-            name: 'Nouveau Système',
+            name: t('modules:session.template_manager.manager.new_system_name'),
             emoji: '📋',
             sections: [
-                { id: `section-${Date.now()}`, label: 'Statistiques', fields: [] }
+                { id: `section-${Date.now()}`, label: t('modules:session.template_manager.manager.default_section_stats'), fields: [] }
             ],
         };
         addSheetTemplate(newTemplate);
@@ -333,7 +337,7 @@ const TemplateManager: React.FC = () => {
 
     const handleGenerateWithAI = () => {
         showPrompt(
-            "Entrez le nom du jeu à générer :",
+            t('modules:session.template_manager.manager.prompt_system_name'),
             "",
             async (systemQuery) => {
                 if (!systemQuery.trim()) return;
@@ -358,8 +362,8 @@ const TemplateManager: React.FC = () => {
                     setIsGenerating(false);
                 }
             },
-            "Générer",
-            "Annuler"
+            t('modules:session.template_manager.manager.generate_btn'),
+            t('modules:session.template_manager.manager.cancel_btn')
         );
     };
 
@@ -372,7 +376,7 @@ const TemplateManager: React.FC = () => {
             {/* Sidebar */}
             <div className="w-64 flex-shrink-0 border-r border-app-border bg-app-surface/50 flex flex-col">
                 <div className="p-4 border-b border-app-border">
-                    <h3 className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Modèles de Fiches</h3>
+                    <h3 className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.template_manager.manager.sidebar_title')}</h3>
                 </div>
                 <div className="flex-1 overflow-y-auto p-3 space-y-1">
                     {allTemplates.map(t => (
@@ -384,7 +388,7 @@ const TemplateManager: React.FC = () => {
                             <span className="text-lg">{t.emoji}</span>
                             <div className="min-w-0">
                                 <p className="text-xs font-bold truncate">{t.name}</p>
-                                {t.isBuiltin && <p className="text-[9px] text-slate-600 uppercase tracking-widest">Intégré</p>}
+                                {t.isBuiltin && <p className="text-[9px] text-slate-600 uppercase tracking-widest">{t('modules:session.template_manager.manager.builtin_tag')}</p>}
                             </div>
                         </button>
                     ))}
@@ -394,7 +398,7 @@ const TemplateManager: React.FC = () => {
                         onClick={handleCreateNew}
                         className="w-full flex items-center justify-center gap-2 py-2.5 bg-gm-gold/10 border border-gm-gold/30 text-gm-gold hover:bg-gm-gold/20 rounded-xl text-xs font-bold uppercase tracking-widest transition-all"
                     >
-                        <Plus size={14} /> Nouveau Modèle
+                        <Plus size={14} /> {t('modules:session.template_manager.manager.new_template_btn')}
                     </button>
                     <button
                         onClick={handleGenerateWithAI}
@@ -408,11 +412,11 @@ const TemplateManager: React.FC = () => {
                         {isGenerating ? (
                             <>
                                 <div className="w-3.5 h-3.5 border-2 border-accent/30 border-t-accent rounded-full animate-spin" />
-                                Génération...
+                                {t('modules:session.template_manager.manager.generating_state')}
                             </>
                         ) : (
                             <>
-                                <Wand2 size={14} /> Générer via l'IA
+                                <Wand2 size={14} /> {t('modules:session.template_manager.manager.generate_ai_btn')}
                             </>
                         )}
                     </button>
@@ -429,7 +433,7 @@ const TemplateManager: React.FC = () => {
                                 <span className="text-2xl">{selectedTemplate.emoji}</span>
                                 <div>
                                     <p className="font-bold text-white">{selectedTemplate.name}</p>
-                                    <p className="text-xs text-amber-600">Template intégré — non modifiable. Dupliquez-le pour le personnaliser.</p>
+                                    <p className="text-xs text-amber-600">{t('modules:session.template_manager.manager.builtin_warning')}</p>
                                 </div>
                             </div>
                             <div className="opacity-50 pointer-events-none">
@@ -442,7 +446,7 @@ const TemplateManager: React.FC = () => {
                             onUpdate={handleUpdate}
                             onDelete={() => {
                                 showConfirm(
-                                    `Supprimer définitivement le modèle "${selectedTemplate.name}" ?`,
+                                    t('modules:session.template_manager.manager.delete_confirm', { name: selectedTemplate.name }),
                                     () => {
                                         deleteSheetTemplate(selectedTemplate.id);
                                         setSelectedId(null);
@@ -453,7 +457,7 @@ const TemplateManager: React.FC = () => {
                     )
                 ) : (
                     <div className="flex-1 flex items-center justify-center text-slate-600 italic text-sm h-full">
-                        Sélectionnez un modèle à gauche
+                        {t('modules:session.template_manager.manager.empty_selection')}
                     </div>
                 )}
             </div>

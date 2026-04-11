@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useModalStore } from '../stores/useModalStore';
+import { useTranslation } from 'react-i18next';
 import { 
     AlertCircle, HelpCircle, Edit3, UserPlus, ShieldPlus, BookOpen, Users, Play, Cast, 
-    History as LucideHistory, X, Lightbulb, Zap, Settings2
+    History as LucideHistory, X, Lightbulb, Zap, Settings2, Sparkles, Package
 } from 'lucide-react';
 import type { Campaign, WikiEntry, TimelineEvent, SessionModuleSnapshot } from '../modules/session/useSessionOSStore';
 import { AddPlayerForm } from '../modules/session/components/AddPlayerForm';
@@ -24,7 +25,7 @@ import SnapshotVisualizerModal from '../modules/session/components/SnapshotVisua
 import DamageCalculator from '../modules/combat/components/DamageCalculator';
 import DangerZonePresetEditor from '../modules/map/components/DangerZonePresetEditor';
 import NarrativeModal from '../modules/map/components/NarrativeModal';
-import { Sparkles, Package } from 'lucide-react';
+// Secondary imports consolidated above
 import LootOS from '../modules/session/components/LootOS';
 
 const ModalProvider: React.FC = () => {
@@ -34,6 +35,7 @@ const ModalProvider: React.FC = () => {
         isMediaHubOpen, closeModal, closeMediaHub 
     } = useModalStore();
 
+    const { t } = useTranslation(['common']);
     const [inputValue, setInputValue] = useState('');
 
     useEffect(() => {
@@ -53,14 +55,14 @@ const ModalProvider: React.FC = () => {
                             <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-500">
                                 <AlertCircle size={28} />
                             </div>
-                            <h3 className="text-lg font-bold text-white">Attention</h3>
+                            <h3 className="text-lg font-bold text-white">{t('common:attention')}</h3>
                         </div>
                         <p className="text-slate-300 mb-6 leading-relaxed">{message}</p>
                         <button
                             onClick={onConfirm || closeModal}
                             className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-colors shadow-lg shadow-blue-600/20"
                         >
-                            {confirmLabel || 'OK'}
+                            {confirmLabel || t('common:ok')}
                         </button>
                     </div>
                 </div>
@@ -73,7 +75,7 @@ const ModalProvider: React.FC = () => {
                             <div className="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500">
                                 <HelpCircle size={28} />
                             </div>
-                            <h3 className="text-lg font-bold text-white">Confirmation</h3>
+                            <h3 className="text-lg font-bold text-white">{t('common:confirmation')}</h3>
                         </div>
                         <p className="text-slate-300 mb-6 leading-relaxed">{message}</p>
                         <div className="flex gap-3">
@@ -81,7 +83,7 @@ const ModalProvider: React.FC = () => {
                                 onClick={onCancel || closeModal}
                                 className="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl transition-colors"
                             >
-                                {cancelLabel || 'Annuler'}
+                                {cancelLabel || t('common:cancel')}
                             </button>
                             <button
                                 onClick={() => {
@@ -90,7 +92,7 @@ const ModalProvider: React.FC = () => {
                                 }}
                                 className="flex-1 py-3 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-xl transition-colors shadow-lg shadow-amber-600/20"
                             >
-                                {confirmLabel || 'Confirmer'}
+                                {confirmLabel || t('common:confirm')}
                             </button>
                         </div>
                     </div>
@@ -104,7 +106,7 @@ const ModalProvider: React.FC = () => {
                             <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-500">
                                 <Edit3 size={28} />
                             </div>
-                            <h3 className="text-lg font-bold text-white">Saisie</h3>
+                            <h3 className="text-lg font-bold text-white">{t('common:prompt_title')}</h3>
                         </div>
                         <p className="text-slate-400 text-sm mb-4">{message}</p>
                         <input
@@ -113,8 +115,8 @@ const ModalProvider: React.FC = () => {
                             value={inputValue}
                             onChange={(e) => setInputValue(e.target.value)}
                             className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white mb-6 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all font-medium"
-                            title="Saisie utilisateur"
-                            placeholder="Saisissez ici..."
+                            title={t('common:prompt_title')}
+                            placeholder={t('common:placeholder_input')}
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
                                     onPromptConfirm?.(inputValue);
@@ -127,7 +129,7 @@ const ModalProvider: React.FC = () => {
                                 onClick={closeModal}
                                 className="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl transition-colors"
                             >
-                                {cancelLabel || 'Annuler'}
+                                {cancelLabel || t('common:cancel')}
                             </button>
                             <button
                                 onClick={() => {
@@ -136,7 +138,7 @@ const ModalProvider: React.FC = () => {
                                 }}
                                 className="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-colors shadow-lg shadow-emerald-600/20"
                             >
-                                {confirmLabel || 'Valider'}
+                                {confirmLabel || t('common:validate')}
                             </button>
                         </div>
                     </div>
@@ -181,32 +183,32 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'loot-os' && <Package size={18} />}
                                     </div>
                                     <h3 className="font-bold text-white uppercase tracking-wider text-sm">
-                                        {customVariant === 'player-add' && 'Ajouter un Joueur'}
-                                        {customVariant === 'character-add' && 'Nouveau Personnage'}
-                                        {customVariant === 'campaign-add' && 'Nouvelle Campagne'}
-                                        {customVariant === 'campaign-edit' && 'Modifier la Campagne'}
-                                        {customVariant === 'npc-detail' && 'Détails du PNJ'}
-                                        {customVariant === 'session-select' && 'Choisir une Session'}
-                                        {customVariant === 'map-projection-select' && 'Projeter la Carte'}
-                                        {customVariant === 'whiteboard-projection-select' && 'Projeter le Tableau'}
-                                        {customVariant === 'timeline-event-add' && 'Ajouter un Événement'}
-                                        {customVariant === 'timeline-event-edit' && 'Modifier l\'Événement'}
-                                        {customVariant === 'wiki-entry-add' && 'Nouvelle Entrée Wiki'}
-                                        {customVariant === 'wiki-entry-edit' && 'Modifier l\'Entrée Wiki'}
-                                        {customVariant === 'light-scene-select' && 'Lier une Scène de Lumière'}
-                                        {customVariant === 'session-notes' && 'Notes de Session'}
-                                        {customVariant === 'session-summary' && 'Résumé de Session'}
-                                        {customVariant === 'snapshot-viewer' && 'Aperçu du Snapshot'}
-                                        {customVariant === 'damage-calc' && 'Calculateur de Dégâts'}
-                                        {customVariant === 'danger-preset-editor' && 'Gestion des Presets de Danger'}
-                                        {customVariant === 'narrative-display' && 'Vision de l\'Oracle'}
-                                        {customVariant === 'loot-os' && 'Loot-OS : Gestion du Butin'}
+                                        {customVariant === 'player-add' && t('common:modals.player_add')}
+                                        {customVariant === 'character-add' && t('common:modals.character_add')}
+                                        {customVariant === 'campaign-add' && t('common:modals.campaign_add')}
+                                        {customVariant === 'campaign-edit' && t('common:modals.campaign_edit')}
+                                        {customVariant === 'npc-detail' && t('common:modals.npc_detail')}
+                                        {customVariant === 'session-select' && t('common:modals.session_select')}
+                                        {customVariant === 'map-projection-select' && t('common:modals.map_projection')}
+                                        {customVariant === 'whiteboard-projection-select' && t('common:modals.whiteboard_projection')}
+                                        {customVariant === 'timeline-event-add' && t('common:modals.timeline_event_add')}
+                                        {customVariant === 'timeline-event-edit' && t('common:modals.timeline_event_edit')}
+                                        {customVariant === 'wiki-entry-add' && t('common:modals.wiki_entry_add')}
+                                        {customVariant === 'wiki-entry-edit' && t('common:modals.wiki_entry_edit')}
+                                        {customVariant === 'light-scene-select' && t('common:modals.light_scene_select')}
+                                        {customVariant === 'session-notes' && t('common:modals.session_notes')}
+                                        {customVariant === 'session-summary' && t('common:modals.session_summary')}
+                                        {customVariant === 'snapshot-viewer' && t('common:modals.snapshot_viewer')}
+                                        {customVariant === 'damage-calc' && t('common:modals.damage_calc')}
+                                        {customVariant === 'danger-preset-editor' && t('common:modals.danger_preset_editor')}
+                                        {customVariant === 'narrative-display' && t('common:modals.narrative_oracle')}
+                                        {customVariant === 'loot-os' && t('common:modals.loot_os')}
                                     </h3>
                                 </div>
                                 <button 
                                     onClick={closeModal} 
                                     className="p-2 hover:bg-slate-800 rounded-full text-slate-400 hover:text-white transition-all"
-                                    title="Fermer la fenêtre"
+                                    title={t('common:close_window')}
                                 >
                                     <X size={20} />
                                 </button>

@@ -35,9 +35,9 @@ export const useDiceStore = create<DiceState>()(
             lastRoll: null,
             history: [],
             quickRolls: [
-                { id: 'qr1', label: 'Attaque Épée Longue', formula: '1d20+7' },
-                { id: 'qr2', label: 'Dégâts', formula: '1d8+4' },
-                { id: 'qr3', label: 'Lancer D66', formula: '1d66' }
+                { id: 'qr1', label: 'dice.quick_rolls.defaults.attack', formula: '1d20+7' },
+                { id: 'qr2', label: 'dice.quick_rolls.defaults.damage', formula: '1d8+4' },
+                { id: 'qr3', label: 'dice.quick_rolls.defaults.d66', formula: '1d66' }
             ],
             isDiceProjected: false,
             projectionTrigger: 0,
@@ -56,7 +56,22 @@ export const useDiceStore = create<DiceState>()(
             }))
         }),
         {
-            name: 'gmos-dice-storage'
+            name: 'gmos-dice-storage',
+            version: 1,
+            migrate: (persistedState: any, version: number) => {
+                if (version === 0 && persistedState.quickRolls) {
+                    return {
+                        ...persistedState,
+                        quickRolls: persistedState.quickRolls.map((qr: any) => {
+                            if (qr.label === 'Attaque Épée Longue') return { ...qr, label: 'dice.quick_rolls.defaults.attack' };
+                            if (qr.label === 'Dégâts') return { ...qr, label: 'dice.quick_rolls.defaults.damage' };
+                            if (qr.label === 'Lancer D66') return { ...qr, label: 'dice.quick_rolls.defaults.d66' };
+                            return qr;
+                        })
+                    };
+                }
+                return persistedState;
+            }
         }
     )
 );

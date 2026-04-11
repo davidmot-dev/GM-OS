@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FavoriteSidebar } from './FavoriteSidebar';
 import { FavoriteTopBar } from './FavoriteTopBar';
 import { FavoriteGrid } from './FavoriteGrid';
@@ -8,6 +9,7 @@ import { useFavoriteStore, type FavoriteType } from '../useFavoriteStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 
 export const FavoriteDashboard: React.FC = () => {
+    const { t } = useTranslation(['modules', 'common']);
     const { selectedFavoriteId, viewMode, addFavorite, selectFavorite, setViewMode } = useFavoriteStore();
     const { pendingPreFill, clearPendingPreFill, activeCampaignId } = useSessionOSStore();
 
@@ -50,13 +52,13 @@ export const FavoriteDashboard: React.FC = () => {
                             <section>
                                 <div className="flex items-end justify-between mb-6">
                                     <div>
-                                        <h2 className="text-3xl font-extrabold tracking-tight">Favorite Entities</h2>
-                                        <p className="text-slate-400 mt-1">A curated collection of your most critical campaign elements.</p>
+                                        <h2 className="text-3xl font-extrabold tracking-tight">{t('modules:favorite.dashboard.title')}</h2>
+                                        <p className="text-slate-400 mt-1">{t('modules:favorite.dashboard.description')}</p>
                                     </div>
                                     <div className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase tracking-widest">
-                                        <span>Sort by:</span>
+                                        <span>{t('modules:favorite.dashboard.sort_by')}:</span>
                                         <button className="flex items-center gap-1 text-accent hover:text-accent/80 transition-colors">
-                                            Recent <span className="material-symbols-outlined text-[14px]">expand_more</span>
+                                            {t('modules:favorite.dashboard.recent')} <span className="material-symbols-outlined text-[14px]">expand_more</span>
                                         </button>
                                     </div>
                                 </div>

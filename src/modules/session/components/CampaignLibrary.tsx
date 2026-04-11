@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Plus, Search, BookOpen, Trash2, ArrowRight, Settings, Package, Upload } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { gmConfirm, gmCustom } from '../../../stores/useModalStore';
@@ -8,9 +9,9 @@ import { nexusService } from '../../system/archive/NexusService';
 import { NexusHUD } from '../../system/archive/NexusHUD';
 import { NexusConflictResolver } from '../../system/archive/NexusConflictResolver';
 import type { NexusProgress, NexusConflict, NexusConflictResolution } from '../../system/archive/nexus.types';
-import { useState, useRef } from 'react';
-
+// Nexus-OS State
 const CampaignLibrary: React.FC = () => {
+    const { t } = useTranslation(['common', 'modules']);
     const { campaigns, setActiveCampaign, setCurrentView, activeCampaignId, customSheetTemplates, customGameDrivers, entities, atlasMaps, wikiEntries, clues } = useSessionOSStore();
 
     const getSystemName = (systemId: string) => {
@@ -62,7 +63,7 @@ const CampaignLibrary: React.FC = () => {
 
     const handleImport = async () => {
         nexusService.onProgress(setNexusProgress);
-        setNexusProgress({ phase: 'importing', progress: 0, message: 'Sélectionnez un fichier .gmos...' });
+        setNexusProgress({ phase: 'importing', progress: 0, message: t('modules:session.campaign_details.toasts.nexus_import_select') });
 
         const onConflict = (conflicts: NexusConflict[]): Promise<NexusConflictResolution> => {
             setConflictState(conflicts);
@@ -91,8 +92,8 @@ const CampaignLibrary: React.FC = () => {
     return (
         <div className="flex-1 flex flex-col gap-6 p-8 h-full overflow-y-auto custom-scrollbar bg-app-bg">
             <div className="flex flex-col gap-2">
-                <h2 className="text-3xl font-black text-app-text/90 uppercase tracking-tighter">Campaign Library</h2>
-                <p className="text-app-text/40 font-medium">Select a world to manage or create a new epic adventure.</p>
+                <h2 className="text-3xl font-black text-app-text/90 uppercase tracking-tighter">{t('modules:session.campaign_library.title')}</h2>
+                <p className="text-app-text/40 font-medium">{t('modules:session.campaign_library.subtitle')}</p>
             </div>
 
             <div className="flex items-center gap-4 py-4">
@@ -100,7 +101,7 @@ const CampaignLibrary: React.FC = () => {
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-app-text/20 group-focus-within:text-accent transition-colors" size={20} />
                     <input
                         type="text"
-                        placeholder="Search campaigns..."
+                        placeholder={t('modules:session.campaign_library.actions.search_placeholder')}
                         className="w-full bg-app-surface/60 border border-app-border/40 rounded-xl py-3 pl-11 pr-4 text-app-text/80 focus:outline-none focus:ring-1 focus:ring-accent/50 transition-all font-display"
                     />
                 </div>
@@ -111,7 +112,7 @@ const CampaignLibrary: React.FC = () => {
                     className="flex items-center gap-2 glass-bento px-6 py-3 rounded-xl text-app-text/60 font-bold hover:text-app-text transition-all hover:-translate-y-0.5"
                 >
                     <Upload size={20} />
-                    IMPORT NEXUS BUNDLE
+                    {t('modules:session.campaign_library.actions.import_nexus')}
                 </button>
 
                 <button
@@ -119,7 +120,7 @@ const CampaignLibrary: React.FC = () => {
                     className="flex items-center gap-2 bg-accent px-6 py-3 rounded-xl text-app-bg font-bold hover:brightness-110 transition-all shadow-glow-accent/20 hover:-translate-y-0.5"
                 >
                     <Plus size={20} />
-                    CREATE NEW CAMPAIGN
+                    {t('modules:session.campaign_library.actions.create_campaign')}
                 </button>
             </div>
 
@@ -165,7 +166,7 @@ const CampaignLibrary: React.FC = () => {
                                                 e.stopPropagation(); 
                                                 gmCustom('campaign-edit', campaign); 
                                             }}
-                                            title="Éditer"
+                                            title={t('common:actions.edit')}
                                         >
                                             <Settings size={18} />
                                         </button>
@@ -173,11 +174,11 @@ const CampaignLibrary: React.FC = () => {
                                             className="p-2 text-app-text/20 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
                                             onClick={(e) => { 
                                                 e.stopPropagation(); 
-                                                gmConfirm(`Supprimer définitivement "${campaign.name}" ?`, () => {
+                                                gmConfirm(t('modules:session.campaign_library.status.delete_confirm', { name: campaign.name }), () => {
                                                     useSessionOSStore.getState().deleteCampaign(campaign.id);
                                                 });
                                             }}
-                                            title="Supprimer"
+                                            title={t('common:actions.delete')}
                                         >
                                             <Trash2 size={18} />
                                         </button>
@@ -187,7 +188,7 @@ const CampaignLibrary: React.FC = () => {
                                 <div className="flex items-center gap-2">
                                     <span className="text-[10px] bg-app-bg text-app-text/40 px-2 py-0.5 rounded font-black uppercase tracking-widest">{getSystemName(campaign.system)}</span>
                                     {campaign.id === activeCampaignId && (
-                                        <span className="text-[10px] bg-accent text-app-bg px-2 py-0.5 rounded font-black uppercase tracking-widest animate-pulse">ACTIVE</span>
+                                        <span className="text-[10px] bg-accent text-app-bg px-2 py-0.5 rounded font-black uppercase tracking-widest animate-pulse">{t('modules:session.campaign_library.status.active')}</span>
                                     )}
                                 </div>
                                 <p className="text-app-text/40 text-xs mt-3 line-clamp-2 leading-relaxed italic">
@@ -210,7 +211,7 @@ const CampaignLibrary: React.FC = () => {
                                         const assetCount = getMediaAssetCount(campaign.id);
                                         return assetCount > 0 ? (
                                             <span
-                                                title={`${assetCount} fichier(s) média détecté(s) — Export Nexus complet disponible`}
+                                                title={t('modules:session.campaign_library.status.nexus_ready_tooltip', { count: assetCount })}
                                                 className="flex items-center gap-1 text-[9px] bg-sky-500/10 text-sky-400 border border-sky-500/20 px-2 py-0.5 rounded-full font-black uppercase tracking-widest"
                                             >
                                                 <Package size={8} />
@@ -218,7 +219,7 @@ const CampaignLibrary: React.FC = () => {
                                             </span>
                                         ) : (
                                             <span
-                                                title="Aucun fichier média — Export Nexus léger (JSON uniquement)"
+                                                title={t('modules:session.campaign_library.status.nexus_lite_tooltip')}
                                                 className="flex items-center gap-1 text-[9px] text-app-text/20 border border-app-border/20 px-2 py-0.5 rounded-full font-black uppercase tracking-widest"
                                             >
                                                 <Package size={8} />
@@ -227,7 +228,7 @@ const CampaignLibrary: React.FC = () => {
                                         );
                                     })()}
                                     <div className="flex items-center gap-1 text-accent font-bold text-xs group-hover:translate-x-1 transition-transform">
-                                        MANAGE <ArrowRight size={14} />
+                                        {t('modules:session.campaign_library.actions.manage')} <ArrowRight size={14} />
                                     </div>
                                 </div>
                             </div>

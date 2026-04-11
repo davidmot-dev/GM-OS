@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import i18n from '../i18n';
+import { DEFAULT_LANGUAGE } from '../config/languages';
 
 export type ThemeID = 'cyberpunk' | 'medieval' | 'modern' | 'claire';
 export type ModuleID = 'dashboard' | 'music' | 'sound' | 'ambient' | 'combat' | 'npc' | 'clock' | 'light' | 'image' | 'map' | 'table' | 'web' | 'voice' | 'favorite' | 'debug' | 'dice' | 'whiteboard' | 'obsidian' | 'journal';
@@ -21,6 +23,7 @@ interface SessionState {
     isAIPanelOpen: boolean;
     isMessengerOpen: boolean;
     displayCount: number;
+    language: string;
 
     // Actions
     setActiveModule: (id: ModuleID) => void;
@@ -30,6 +33,7 @@ interface SessionState {
     toggleAIPanel: (force?: boolean) => void;
     toggleMessenger: (force?: boolean) => void;
     setDisplayCount: (count: number) => void;
+    setLanguage: (lang: string) => void;
     getBackupData: () => {
         activeModule: string;
         theme: string;
@@ -87,6 +91,7 @@ export const useSessionStore = create<SessionState>()(
             isAIPanelOpen: false,
             isMessengerOpen: false,
             displayCount: 1,
+            language: localStorage.getItem('gmos-language') || DEFAULT_LANGUAGE,
 
             setActiveModule: (activeModule) => set({ activeModule }),
             setTheme: (theme) => set({ 
@@ -104,6 +109,11 @@ export const useSessionStore = create<SessionState>()(
                 isMessengerOpen: force !== undefined ? force : !state.isMessengerOpen
             })),
             setDisplayCount: (displayCount) => set({ displayCount }),
+            setLanguage: (language) => {
+                set({ language });
+                i18n.changeLanguage(language);
+                localStorage.setItem('gmos-language', language);
+            },
             getBackupData: () => ({
                 activeModule: get().activeModule,
                 theme: get().theme,

@@ -8,29 +8,30 @@ import { HealthManager } from '../../session/components/health/HealthManager';
 import { useTacticalAIStore } from '../../tactical-ai/useTacticalAIStore';
 import { aiService } from '../../ai/AIService';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
+import { useTranslation } from 'react-i18next';
 
 const PRESET_STATUSES = [
-    { name: 'Poison', icon: '🤢', duration: 3 },
-    { name: 'En feu', icon: '🔥', duration: 3 },
-    { name: 'Étourdi', icon: '💫', duration: 1 },
-    { name: 'À terre', icon: '⏬', duration: 0 },
-    { name: 'Saignement', icon: '🩸', duration: 3 },
-    { name: 'Épuisé', icon: '🔋', duration: 5 },
-    { name: 'Aveuglé', icon: '🕶️', duration: 2 },
-    { name: 'Effrayé', icon: '😱', duration: 2 },
-    { name: 'Confus', icon: '🌀', duration: 2 },
-    { name: 'Charmé', icon: '💖', duration: 5 },
-    { name: 'Agrippé', icon: '⚓', duration: 0 },
-    { name: 'Entravé', icon: '🕸️', duration: 0 },
-    { name: 'Caché', icon: '👤', duration: 0 },
-    { name: 'Béni', icon: '✨', duration: 10 },
-    { name: 'Maudit', icon: '💀', duration: 10 },
-    { name: 'Froid', icon: '❄️', duration: 3 },
-    { name: 'Invisibilité', icon: '👻', duration: 10 },
-    { name: 'Concentration', icon: '🧠', duration: 0 },
-    { name: 'Soin', icon: '🩹', duration: 1 },
-    { name: 'Foudre', icon: '⚡', duration: 1 },
-    { name: 'Mort', icon: '💀', duration: 0 },
+    { name: 'poison', icon: '🤢', duration: 3 },
+    { name: 'fire', icon: '🔥', duration: 3 },
+    { name: 'stunned', icon: '💫', duration: 1 },
+    { name: 'prone', icon: '⏬', duration: 0 },
+    { name: 'bleeding', icon: '🩸', duration: 3 },
+    { name: 'exhausted', icon: '🔋', duration: 5 },
+    { name: 'blinded', icon: '🕶️', duration: 2 },
+    { name: 'frightened', icon: '😱', duration: 2 },
+    { name: 'confused', icon: '🌀', duration: 2 },
+    { name: 'charmed', icon: '💖', duration: 5 },
+    { name: 'grappled', icon: '⚓', duration: 0 },
+    { name: 'restrained', icon: '🕸️', duration: 0 },
+    { name: 'hidden', icon: '👤', duration: 0 },
+    { name: 'blessed', icon: '✨', duration: 10 },
+    { name: 'cursed', icon: '💀', duration: 10 },
+    { name: 'cold', icon: '❄️', duration: 3 },
+    { name: 'invisible', icon: '👻', duration: 10 },
+    { name: 'concentration', icon: '🧠', duration: 0 },
+    { name: 'heal', icon: '🩹', duration: 1 },
+    { name: 'lightning', icon: '⚡', duration: 1 },
+    { name: 'dead', icon: '💀', duration: 0 },
 ];
 
 interface CombatCardProps {
@@ -48,6 +49,8 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
         addStatus, // Kept addStatus as it's used for adding statuses
         removeStatus // Kept removeStatus as it's used for removing statuses
     } = useCombatStore();
+
+    const { t } = useTranslation(['modules', 'common']);
 
     const { 
         entities, players, customSheetTemplates,
@@ -114,17 +117,21 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
         setSuggestedAction(null);
         try {
             const tacticalContext = myAdvices.filter(a => a.type === 'range' || a.type === 'dispel').map(a => a.message).join('. ');
-            const prompt = `En tant que Cerveau Tactique de GM-OS, propose de manière extrêmement concise (max 2 phrases) la meilleure action pour le PNJ/Monstre "${combatant.name}". 
-            Variables actuelles : PV: ${combatant.hp}/${combatant.hpMax}, Classe d'Armure: ${combatant.extraStats?.ac?.value || 'inconnue'}, Statuts actifs: ${combatant.statuses.map(s => s.name).join(', ') || 'Aucun'}. 
-            Contexte de positionnement : ${tacticalContext || 'Cible hors de vue ou aucune donnée de distance'}.
-            Environnement: (Cible déclarée: ${currentTarget?.name || 'Aucune'}). 
-            Ne mets pas de texte introductif, donne juste directement l'action conseillée en français.`;
+            const prompt = t('modules:ai.prompt', {
+                name: combatant.name,
+                hp: combatant.hp,
+                hpMax: combatant.hpMax,
+                ac: combatant.extraStats?.ac?.value || '?',
+                statuses: combatant.statuses.map(s => t(`combat.status.presets.${s.name.toLowerCase()}`, { defaultValue: s.name })).join(', ') || t('common:status.none'),
+                tacticalContext: tacticalContext || t('combat.card.target_none'),
+                target: currentTarget?.name || t('combat.card.target_none')
+            });
             
             const response = await aiService.generateText(prompt);
             setSuggestedAction(response.text.trim());
         } catch (error) {
             console.error("[CombatCard] Erreur Cortex:", error);
-            setSuggestedAction("Le Cortex est indisponible pour le moment.");
+            setSuggestedAction(t('combat.messages.ai_unavailable'));
         } finally {
             setIsSuggesting(false);
         }
@@ -163,9 +170,9 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                     <div className="flex items-center gap-3 relative group/name">
                         <div 
                             className="font-black text-xl text-app-text tracking-tight truncate max-w-[220px] cursor-pointer hover:text-primary transition-colors flex items-center gap-2" 
-                            title="Cliquer pour renommer"
+                            title={t('combat.card.rename')}
                             onClick={() => {
-                                gmPrompt(`Renommer ${combatant.name} :`, combatant.name, (newName: string) => {
+                                gmPrompt(t('combat.card.rename_prompt', { name: combatant.name }), combatant.name, (newName: string) => {
                                     if (newName.trim()) updateCombatant(combatant.id, { name: newName.trim() });
                                 });
                             }}
@@ -173,7 +180,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                             {combatant.name}
                             <Edit2 size={14} className="opacity-0 group-hover/name:opacity-50 transition-opacity" />
                         </div>
-                        {combatant.isPlayer && <span className="text-[9px] bg-primary text-slate-900 px-1.5 py-0.5 rounded font-black uppercase tracking-tighter">PJ</span>}
+                        {combatant.isPlayer && <span className="text-[9px] bg-primary text-slate-900 px-1.5 py-0.5 rounded font-black uppercase tracking-tighter">{t('combat.card.faction.player')}</span>}
                         
                         <div className="relative flex items-center gap-1 group/faction">
                             <select 
@@ -185,12 +192,12 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                     combatant.faction === 'player' ? 'bg-blue-600/20 text-blue-500 border-blue-500/30' :
                                     'bg-app-surface border-app-border text-app-text/70'
                                 }`}
-                                title="Changer l'allégeance"
+                                title={t('combat.card.faction_change')}
                             >
-                                <option value="player">PJ</option>
-                                <option value="enemy">Hostile</option>
-                                <option value="ally">Allié</option>
-                                <option value="neutral">Neutre</option>
+                                <option value="player">{t('combat.card.faction.player')}</option>
+                                <option value="enemy">{t('combat.card.faction.enemy')}</option>
+                                <option value="ally">{t('combat.card.faction.ally')}</option>
+                                <option value="neutral">{t('combat.card.faction.neutral')}</option>
                             </select>
                             <div className="absolute right-1 pointer-events-none opacity-40 group-hover/faction:opacity-100">
                                 <PlusCircle size={8} />
@@ -200,7 +207,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                         <button
                             className={`text-app-text/60 hover:text-primary transition-colors p-1 rounded hover:bg-app-surface/50 ${showStatusMenu ? 'text-primary bg-app-surface/50' : ''}`}
                             onClick={() => setShowStatusMenu(!showStatusMenu)}
-                            title="Lancer une altération d'état"
+                            title={t('combat.card.status_add')}
                         >
                             <PlusCircle size={18} />
                         </button>
@@ -210,7 +217,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                 className={`text-app-text/50 hover:text-accent transition-colors p-1 rounded hover:bg-app-surface/50 ${isSuggesting ? 'animate-pulse text-accent' : ''}`}
                                 onClick={handleSuggestAction}
                                 disabled={isSuggesting}
-                                title="Demander conseil au Cortex (Action suggérée)"
+                                title={t('combat.card.cortex_advice')}
                             >
                                 {isSuggesting ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
                             </button>
@@ -237,7 +244,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                     key={status.id}
                                     className="inline-flex items-center gap-1 bg-app-surface/60 px-2 py-0.5 rounded text-xs border border-app-border group cursor-pointer hover:bg-red-500/20 transition-colors"
                                     onClick={() => removeStatus(combatant.id, status.id)}
-                                    title={`Dissiper l'effet ${status.name}`}
+                                    title={t('combat.card.status_remove', { name: t(`combat.status.presets.${status.name.toLowerCase()}`, { defaultValue: status.name }) })}
                                 >
                                     <span>{status.icon}</span>
                                     <span className={status.duration > 0 ? "text-app-text/70" : "text-gm-cyan"}>
@@ -258,7 +265,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                         setSuggestedAction(null);
                                     }}
                                     className="absolute -top-1 -right-1 bg-black/80 rounded-full p-1 text-app-text/60 hover:text-red-400 transition-colors shadow-lg border border-white/10"
-                                    title="Fermer la suggestion"
+                                    title={t('combat.card.cortex_close')}
                                 >
                                     <X size={12} />
                                 </button>
@@ -270,16 +277,16 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                 {isSuggesting ? (
                                     <div className="flex flex-col gap-1">
                                         <span className="text-accent font-black uppercase tracking-widest animate-pulse flex items-center gap-2">
-                                            Cortex Analyze...
+                                            {t('combat.card.cortex_analyzing')}
                                             <Loader2 size={10} className="animate-spin" />
                                         </span>
-                                        <span className="text-[10px] text-app-text/40 italic">Scénario tactique en cours de calcul...</span>
+                                        <span className="text-[10px] text-app-text/40 italic">{t('combat.card.cortex_thinking')}</span>
                                     </div>
                                 ) : (
                                     <div className="flex flex-col gap-1">
                                         <span className="text-accent font-black uppercase tracking-widest text-[9px] mb-0.5 opacity-80 flex items-center gap-1.5">
                                             <Sparkles size={10} />
-                                            Conseil Tactique
+                                            {t('combat.card.cortex_title')}
                                         </span>
                                         <span className="italic leading-normal text-app-text drop-shadow-sm">
                                             {suggestedAction}
@@ -303,7 +310,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                 <div className="flex flex-col gap-1.5 min-w-[120px] shrink-0 items-end pr-2 group/target relative">
                     <div className="flex items-center gap-2 stitch-label opacity-60">
                         <Crosshair size={12} className={currentTarget ? 'text-primary animate-pulse' : ''} />
-                        <span>CIBLE</span>
+                        <span>{t('combat.card.target')}</span>
                     </div>
                     <select 
                         value={combatant.targetId || ''}
@@ -311,9 +318,9 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                         className={`bg-app-bg/50 text-[10px] border rounded px-1 py-0.5 outline-none w-full max-w-[120px] transition-all group-hover/target:border-accent/40 ${
                             currentTarget ? 'text-accent border-accent/20' : 'text-app-text/30 border-app-border/30'
                         }`}
-                        title="Sélectionner une cible"
+                        title={t('combat.card.target_select')}
                     >
-                        <option value="">Aucune</option>
+                        <option value="">{t('combat.card.target_none')}</option>
                         {combatants
                             .filter(c => c.id !== combatant.id)
                             .map(c => (
@@ -330,10 +337,10 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                             gmCustom('damage-calc', { targetIds: ids });
                         }}
                         className="mt-2 flex items-center justify-center gap-2 w-full py-2 bg-app-surface/60 border border-primary/50 hover:bg-primary text-primary hover:text-white rounded-lg text-[10px] font-black transition-all uppercase tracking-[0.2em] shadow-glow-gold/20 active:scale-95"
-                        title="Ouvrir le calculateur de dégâts pour ce groupe"
+                        title={t('combat.card.calculate_tooltip')}
                     >
                         <Zap size={14} className="fill-current" />
-                        <span>CALCULER</span>
+                        <span>{t('combat.card.calculate')}</span>
                     </button>
                     {currentTarget && (
                         <div className="flex items-center gap-1 mt-0.5 max-w-[120px]">
@@ -349,7 +356,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                 <button
                     className="w-8 h-8 flex items-center justify-center text-app-text/40 hover:text-red-500 hover:bg-red-500/10 rounded-full transition-colors shrink-0"
                     onClick={() => removeCombatant(combatant.id)}
-                    title="Supprimer du combat"
+                    title={t('combat.card.delete')}
                 >
                     <X size={18} />
                 </button>
@@ -512,7 +519,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                 <div className="mt-3 pt-3 border-t border-app-border/50 w-full animate-in slide-in-from-top-2 fade-in duration-200">
                     <div className="flex flex-col gap-3">
                         <div className="flex items-center gap-2 bg-app-bg/50 p-2 rounded border border-app-border w-fit">
-                            <span className="text-sm text-app-text/70">Durée :</span>
+                            <span className="text-sm text-app-text/70">{t('combat.status.duration')}</span>
                             <div className="flex items-center">
                                 <button
                                     className="px-2 py-0.5 bg-app-surface hover:bg-app-surface/80 rounded-l text-app-text"
@@ -524,14 +531,14 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                     value={customDuration}
                                     onChange={(e) => setCustomDuration(parseInt(e.target.value) || 0)}
                                     className="w-12 bg-app-bg text-center text-app-text py-0.5 border-y border-app-border outline-none text-sm custom-scrollbar"
-                                    title="0 = Infini"
+                                    title={t('combat.status.infinite')}
                                 />
                                 <button
                                     className="px-2 py-0.5 bg-app-surface hover:bg-app-surface/80 rounded-r text-app-text"
                                     onClick={() => setCustomDuration(customDuration + 1)}
                                 >+</button>
                             </div>
-                            <span className="text-xs text-app-text/50 italic ml-2">(0 = Infini)</span>
+                            <span className="text-xs text-app-text/50 italic ml-2">({t('combat.status.infinite')})</span>
                         </div>
                         <div className="flex flex-wrap gap-2">
                             {PRESET_STATUSES.map((status, idx) => (
@@ -544,7 +551,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                     }}
                                 >
                                     <span>{status.icon}</span>
-                                    <span className="text-app-text/80">{status.name}</span>
+                                    <span className="text-app-text/80">{t(`combat.status.presets.${status.name}`)}</span>
                                 </button>
                             ))}
                         </div>

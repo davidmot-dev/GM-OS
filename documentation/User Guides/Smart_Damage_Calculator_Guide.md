@@ -4,6 +4,9 @@ Le **Calculateur de Dégâts Intelligent** est un outil avancé intégré au **C
 
 ![Aperçu du Calculateur](file:///C:/Users/david/OneDrive/Jeux%20de%20Rôles/GM-OS-v5/documentation/User%20Guides/combat_mockup.png)
 
+> [!NOTE]
+> **Nouveauté v6.2.6** : L'interface du calculateur est désormais intégralement localisée en **Français** et en **Anglais**. Tous les types de dégâts et les badges de statut s'adaptent dynamiquement à la langue de votre session.
+
 ## 📋 Fonctionnement Général
 
 Accessible via le bouton **"Calculateur de Dégâts"** dans le panneau de contrôle droit du combat, cet outil remplace les calculs manuels fastidieux :
@@ -44,13 +47,13 @@ Le calculateur ne se contente plus de modifier les PV. Selon le **type de dégâ
 > [!NOTE]
 > **Gestion intelligente des conflits** : L'ajout automatique d'un statut respecte les règles de conflit. Par exemple, appliquer des dégâts de Feu sur une cible ayant le statut "Mouillé" retirera automatiquement ce dernier.
 
-## 🔄 Synchronisation avec la Session
-
+## 🔄 Synchronisation avec la Session (v6 Robustesse)
 
 Une fois les dégâts appliqués via le calculateur :
 1.  Les barres de vie (Gauges) sur les cartes de combat se mettent à jour.
 2.  Le **Cortex OS** réévalue la situation tactique (un monstre agonisant pourrait déclencher un nouveau conseil de fuite).
 3.  Vous pouvez cliquer sur **"Sync PV vers Session"** à tout moment pour que ces changements soient définitifs dans vos fiches de personnages.
+    - *Note technique* : Le moteur de calcul v6 utilise désormais un typage strict pour garantir que les PV ne tombent jamais dans des valeurs négatives ou non numériques.
 
 ---
 

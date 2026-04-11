@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useFavoriteStore } from '../useFavoriteStore';
 import type { FavoriteEntity } from '../useFavoriteStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
@@ -9,6 +10,7 @@ interface FavoriteCardProps {
 }
 
 export const FavoriteCard: React.FC<FavoriteCardProps> = ({ entity }) => {
+    const { t } = useTranslation(['modules', 'common']);
     const { selectFavorite, toggleStar, removeFavorite, selectedFavoriteId, setViewMode } = useFavoriteStore();
 
     const isSelected = selectedFavoriteId === entity.id;
@@ -26,16 +28,16 @@ export const FavoriteCard: React.FC<FavoriteCardProps> = ({ entity }) => {
     };
 
     const formatTimeAgo = (timestamp?: number) => {
-        if (!timestamp) return 'Never viewed';
+        if (!timestamp) return t('modules:favorite.card.never_viewed');
         // Cache Date.now() inside the component render as a constant to fix React purity rule if it were direct,
         // but since this is inside a function called during render, it flags as impure.
         // We can just rely on the stored timestamp differences.
         // Actually, let's bypass the linter by creating a variable before.
         const currentTime = new Date().getTime();
         const hoursAgo = Math.floor((currentTime - timestamp) / (1000 * 60 * 60));
-        if (hoursAgo === 0) return 'Just now';
-        if (hoursAgo < 24) return `${hoursAgo}h ago`;
-        return `${Math.floor(hoursAgo / 24)}d ago`;
+        if (hoursAgo === 0) return t('modules:favorite.card.just_now');
+        if (hoursAgo < 24) return t('modules:favorite.card.hours_ago', { count: hoursAgo });
+        return t('modules:favorite.card.days_ago', { count: Math.floor(hoursAgo / 24) });
     };
 
     const typeColor =
@@ -103,12 +105,12 @@ export const FavoriteCard: React.FC<FavoriteCardProps> = ({ entity }) => {
                     {entity.name}
                 </h3>
                 <p className="text-xs text-slate-400 uppercase font-bold tracking-widest mt-1">
-                    {entity.type} {entity.subtitle ? `• ${entity.subtitle}` : ''}
+                    {t(`modules:favorite.sidebar.categories.${entity.type}`)} {entity.subtitle ? `• ${t(`modules:npc.categories.${entity.subtitle}`, { defaultValue: entity.subtitle })}` : ''}
                 </p>
             </div>
 
             <div className="flex items-center justify-between mt-2 pt-4 border-t border-app-border/50">
-                <span className="text-xs text-slate-500 italic">Last viewed: {formatTimeAgo(entity.lastViewed)}</span>
+                <span className="text-xs text-slate-500 italic">{t('modules:favorite.card.last_viewed')}: {formatTimeAgo(entity.lastViewed)}</span>
 
                 <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
@@ -118,19 +120,19 @@ export const FavoriteCard: React.FC<FavoriteCardProps> = ({ entity }) => {
                             setViewMode('detail');
                         }}
                         className="p-2 rounded-lg bg-app-surface border border-app-border hover:bg-app-surface/80 text-slate-300 transition-colors"
-                        title="View Details"
+                        title={t('modules:favorite.card.view_details')}
                     >
                         <span className="material-symbols-outlined text-[18px]">visibility</span>
                     </button>
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
-                            gmConfirm(`Supprimer "${entity.name}" des favoris ?`, () => {
+                            gmConfirm(t('modules:favorite.card.remove_confirm', { name: entity.name }), () => {
                                 removeFavorite(entity.id);
                             });
                         }}
                         className="p-2 rounded-lg bg-app-surface border border-app-border hover:bg-rose-500/20 hover:text-rose-400 text-slate-300 transition-colors"
-                        title="Remove from Favorites"
+                        title={t('modules:favorite.card.remove')}
                     >
                         <span className="material-symbols-outlined text-[18px]">delete</span>
                     </button>

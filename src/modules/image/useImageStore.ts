@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import type { ImageMedia, ProjectionTarget, DisplayInfo, ImageFolder, ProjectedEntity } from './types';
 import { useJournalStore } from '../journal/useJournalStore';
 import { gmToast } from '../../stores/useToastStore';
+import i18n from '../../i18n';
 
 // AppBridge is now defined globally in src/types/window.d.ts
 
@@ -212,8 +213,11 @@ export const useImageStore = create<ImageState>()(
 
                 useJournalStore.getState().addEvent({
                     type: 'SYSTEM',
-                    title: 'Image projetée',
-                    content: `Média "${media.name}" projeté sur : ${target === 'hub' ? 'Player Hub' : 'Écran externe'}`
+                    title: i18n.t('modules:image.events.imageProjected.title'),
+                    content: i18n.t('modules:image.events.imageProjected.content', { 
+                        name: media.name, 
+                        target: target === 'hub' ? i18n.t('common:playerHub') : i18n.t('common:externalDisplay')
+                    })
                 });
 
                 // Always resolve m-xxx IDs to sendable URLs for any target
@@ -248,8 +252,11 @@ export const useImageStore = create<ImageState>()(
 
                 useJournalStore.getState().addEvent({
                     type: 'SYSTEM',
-                    title: 'URL projetée',
-                    content: `Source "${url}" projetée sur : ${target === 'hub' ? 'Player Hub' : 'Écran externe'}`
+                    title: i18n.t('modules:image.events.urlProjected.title'),
+                    content: i18n.t('modules:image.events.urlProjected.content', { 
+                        url, 
+                        target: target === 'hub' ? i18n.t('common:playerHub') : i18n.t('common:externalDisplay')
+                    })
                 });
 
                 // Always resolve m-xxx IDs to sendable URLs for any target
@@ -284,7 +291,7 @@ export const useImageStore = create<ImageState>()(
                         window.appBridge?.image?.launchDisplay([], target);
                     }
                     
-                    gmToast(`Retrait de ${entity.name} du Player Hub.`);
+                    gmToast(i18n.t('modules:image.notifications.entityRemoved', { name: entity.name }));
                     return;
                 }
 
@@ -300,8 +307,11 @@ export const useImageStore = create<ImageState>()(
 
                 useJournalStore.getState().addEvent({
                     type: 'NPC',
-                    title: 'Entité projetée',
-                    content: `Fiche de "${entity.name}" (${entity.subtitle || 'Entité'}) envoyée au Player Hub.`
+                    title: i18n.t('modules:image.events.entityProjected.title'),
+                    content: i18n.t('modules:image.events.entityProjected.content', { 
+                        name: entity.name, 
+                        subtitle: entity.subtitle || i18n.t('common:unknown')
+                    })
                 });
 
                 const { resolveToSendableUrl } = await import('../../utils/mediaResolver');
@@ -423,7 +433,7 @@ export const useImageStore = create<ImageState>()(
             },
 
             clearAll: () => {
-                if (confirm('Êtes-vous sûr de vouloir supprimer toutes les images ?')) {
+                if (confirm(i18n.t('modules:image.dashboard.resetConfirm'))) {
                     set({ mediaList: [] });
                 }
             },

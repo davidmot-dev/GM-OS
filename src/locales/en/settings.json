@@ -1,0 +1,300 @@
+{
+  "title": "OS Settings",
+  "version_subtitle": "GM-OS v6.2.0 (System Forge Edition)",
+  "close_tooltip": "Close Settings",
+  "categories_label": "Categories",
+  "tabs": {
+    "system": "System",
+    "tactical": "Tactical",
+    "ai": "AI",
+    "remote": "Remote"
+  },
+  "sections": {
+    "system_status": "System Status",
+    "customization": "Appearance (Look & Feel)",
+    "hardware": "Hardware & Routing (Alias)",
+    "obsidian": "Obsidian Integration (Second Brain)",
+    "maintenance": "Maintenance & Optimization",
+    "danger_zone": "Danger Zone",
+    "language": "Language & Region",
+    "rules": "Tactical Rules"
+  },
+  "themes": {
+    "cyberpunk": "Cyberpunk",
+    "medieval": "Medieval",
+    "modern": "Modern",
+    "claire": "Light Mode"
+  },
+  "system": {
+    "bridge_label": "Electron/Tauri Bridge",
+    "connected": "CONNECTED",
+    "disconnected": "DISCONNECTED",
+    "environment": "Environment",
+    "theme_label": "Global Theme Choice",
+    "palette_label": "Accent Palette ({{theme}})",
+    "active_sample": "ACTIVE Sample",
+    "language_label": "Interface Language",
+    "language_description": "Select the global language for the OS and AI."
+  },
+  "hardware": {
+    "audio_outputs": "Audio Outputs",
+    "monitors": "Monitors & Screens",
+    "refresh": "Refresh",
+    "no_devices": "No devices detected",
+    "no_monitors": "No monitors detected via Bridge",
+    "audio_alias_placeholder": "Assign an alias (e.g.: GM Speakers)",
+    "monitor_alias_placeholder": "Assign an alias (e.g.: Living Room TV)"
+  },
+  "obsidian": {
+    "vault_path": "Vault Path",
+    "vault_description": "Absolute path to your Obsidian folder. GM-OS will read your notes to power the Codex and Oracle.",
+    "vault_placeholder": "C:\\Users\\YourName\\Documents\\MyVault",
+    "browse_tooltip": "Browse folders",
+    "test_button": "TEST",
+    "testing": "TEST...",
+    "connected": "Connected",
+    "error_prefix": "Attention: "
+  },
+  "maintenance": {
+    "media_cleanup_title": "Media Index Cleanup",
+    "media_cleanup_desc": "Remove orphan files to free up space.",
+    "media_cleanup_last": "Last: {{count}} items ({{size}} MB freed)",
+    "cleanup_button": "CLEANUP",
+    "cleaning": "CLEANING..."
+  },
+  "danger": {
+    "factory_reset_title": "Factory Reset",
+    "factory_reset_desc": "Erase all local data, campaigns, files, and theme settings. This action is irreversible.",
+    "reset_button": "TOTAL RESET"
+  },
+  "tactical": {
+    "master_switch": "Tactical Cortex (Master Switch)",
+    "switch_desc": "Enable or disable global tactical AI",
+    "enable_tooltip": "Enable Tactical AI",
+    "disable_tooltip": "Disable Tactical AI",
+    "taxonomy": {
+      "title": "Tactical Rule Edition",
+      "search_placeholder": "Search...",
+      "add_rule": "Add a rule",
+      "reset": "Reset",
+      "confirm_reset": "Reset taxonomy rules to default values?",
+      "confirm_delete": "Delete this tactical rule?",
+      "engine_label": "Taxonomy Engine",
+      "select_rule_hint": "Select a rule to edit it",
+      "categories": {
+        "ranges": "Ranges (System)",
+        "status": "Statuses & Effects",
+        "elements": "Elements",
+        "others": "Others"
+      },
+      "editor": {
+        "title": "TACTICAL RULE EDITION",
+        "trigger_keywords": "Trigger Keywords",
+        "categories_tags": "Categories (Tags)",
+        "global_intensity": "Global Intensity",
+        "hardware_alerts": "Hardware Alerts (Hue)",
+        "alert_color": "Alert Color",
+        "scene_name": "Scene Name",
+        "priority_label": "Priority (1 = Max)",
+        "audio_echoes": "Audio Echoes",
+        "sound_effect": "Sound Effect (One-shot)",
+        "contextual_ambiance": "Contextual Ambiance",
+        "none": "None",
+        "default_silence": "Default (Silence)",
+        "intense_action": "Intense Action",
+        "heavy_tension": "Dull Tension",
+        "ethereal_mystery": "Ethereal Mystery"
+      }
+    }
+  },
+  "ai": {
+    "title": "AI Settings",
+    "subtitle": "Model configuration and assisted GEMS",
+    "cloud_config_title": "Cloud AI Configuration",
+    "cloud_config_desc": "Connect your accounts to enable GEMS. Your keys are stored locally.",
+    "global_diagnostic": "Global Diagnostic",
+    "providers": {
+      "gemini_label": "Google Gemini",
+      "openai_label": "OpenAI (ChatGPT)",
+      "anthropic_label": "Anthropic (Claude)",
+      "ollama_label": "Ollama (Local)",
+      "gemini_desc": "Flash or Pro models. Ideal for RAG and long prompts.",
+      "openai_desc": "GPT-4o or o1. Industry standard, balanced and precise.",
+      "anthropic_desc": "Claude 3.5 Sonnet. Excellent for creative writing and RP.",
+      "ollama_desc": "Local models (Phi-3, Gemma 2). 100% private, no subscription."
+    },
+    "status": {
+      "active": "Active",
+      "select": "Select",
+      "api_key": "API Key",
+      "api_key_placeholder": "Enter your {{name}} key...",
+      "local_status": "Local Status",
+      "ollama_ready": "Ollama Server Ready",
+      "key_configured": "Key configured locally"
+    },
+    "actions": {
+      "pull_phi3": "Pull phi3",
+      "pull_phi3_tooltip": "Download recommended model (phi3)",
+      "pull_gemma": "Download Gemma 4 (26B MoE)",
+      "refresh_models": "Refresh models",
+      "reindex_docs": "Refresh documents",
+      "reindexing": "Indexing...",
+      "diagnostic_active": "Conn. Established",
+      "diagnostic_missing": "Key Missing",
+      "diagnostic_error": "API Error",
+      "diagnostic_server_active": "Server Active",
+      "diagnostic_mcp_missing": "Bridge Missing",
+      "diagnostic_unreachable": "Unreachable",
+      "diagnostic_oracle_online": "Oracle Online",
+      "diagnostic_empty_res": "Empty Response",
+      "diagnostic_mcp_absent": "Bridge absent",
+      "diagnostic_expired": "Session expired"
+    },
+    "labels": {
+      "model": "Model",
+      "model_select_tooltip": "Select AI Model",
+      "manual_input": "-- Manual Input --",
+      "selected_model": "Selected model: "
+    },
+    "oracle": {
+      "title": "AI Oracle (NotebookLM)",
+      "desc": "Connect your Google account to allow the Oracle to access your personal notebooks.",
+      "status_label": "Connection Status",
+      "status_expired": "Authentication seems expired or corrupted.",
+      "status_hint": "If the Oracle stops responding, a reconnection might be necessary.",
+      "restart_tooltip": "Reset MCP Server (Oracle)",
+      "reconnect_force": "Force Reconnection",
+      "reconnect": "Reconnect Oracle",
+      "reconnect_note": "A restart might be required if authentication is lost."
+    },
+    "obsidian": {
+      "title": "OBSIDIAN",
+      "subtitle": "Vault Integration & Knowledge Graph",
+      "status_offline": "Vault Offline",
+      "status_active": "Vault Active",
+      "sync_button": "Sync",
+      "open_vault": "Open Vault",
+      "config_hint": "Configuration required in external-mcp-obsidian"
+    },
+    "audio": {
+      "title": "Audio Devices",
+      "subtitle": "I/O for Voice & Ambient Analysis",
+      "input_source": "Input Source",
+      "monitoring": "Monitoring",
+      "no_device": "No device detected"
+    },
+    "rag": {
+      "title": "Knowledge Base (RAG)",
+      "desc": "PDF and Markdown files in your /docs folder are analyzed."
+    },
+    "perf": {
+      "title": "Performance & Streaming",
+      "desc": "Optimize AI responsiveness and analysis depth for a smooth experience.",
+      "stream_label": "Real-time Streaming",
+      "stream_desc": "Displays tokens as they are generated",
+      "lite_label": "Lite Context Mode",
+      "lite_desc": "Accelerated analysis (Max speed)"
+    },
+    "gems": {
+      "title": "GEMS Customization",
+      "desc": "Define the precise behavior of your assistants.",
+      "label": "Assistant (GEM)",
+      "save_gem": "Save",
+      "base": "Base",
+      "override": "Override: {{systemId}}",
+      "templates": {
+        "sage": {
+          "name": "The Sage",
+          "desc": "Expert in rules and game mechanics.",
+          "instr": "You are the Sage. Your expertise is in game rules, statistics, and mechanics. Be precise and technical.",
+          "overrides": {
+            "dnd-5e": "You are Archmage Elminster. You know every line of the Monster Manual and every spell. Your tone is learned, majestic and full of arcane wisdom."
+          }
+        },
+        "scribe": {
+          "name": "The Scribe",
+          "desc": "Chronicler of your adventures.",
+          "instr": "You are the Scribe. Your role is to record the story, summarize sessions, and organize campaign notes.",
+          "overrides": {
+            "dnd-5e": "You are Volo, the famous chronicler. You tell heroic epics with panache and enthusiasm. Your style is epic and colorful."
+          }
+        },
+        "oracle": {
+          "name": "The Oracle",
+          "desc": "Master of narration and improvisation.",
+          "instr": "You are the Oracle. You excel in narrative improvisation, atmosphere creation, and dramatic twists.",
+          "overrides": {
+            "dnd-5e": "You are the narrative Dungeon Master. You excel in describing fantastic landscapes, epic combats and court intrigues."
+          }
+        },
+        "bard": {
+          "name": "The Bard",
+          "desc": "Inspirator of lore and poetry.",
+          "instr": "You are the Bard. Your role is to enrich the world with poetry, songs, and deep lore details.",
+          "overrides": {
+            "dnd-5e": "You are a wandering bard from the Forgotten Realms. You know all the ballads and legends of heroes of yore."
+          }
+        },
+        "alchemist": {
+          "name": "The Alchemist",
+          "desc": "Creator of loot, potions, and NPCs.",
+          "instr": "You are the Alchemist. You specialize in generating technical content: magic items, potions, and NPC stats.",
+          "overrides": {
+            "dnd-5e": "You are an expert dwarf artisan in smithing and alchemy. You design legendary weapons and mystic brews."
+          }
+        },
+        "actor": {
+          "name": "The Actor",
+          "desc": "Specialist in NPC incarnation.",
+          "instr": "You are the Actor. Your role is to help the GM perform NPCs: accents, speech patterns, and motivations.",
+          "overrides": {
+            "dnd-5e": "You embody the merchants, kings and beggars of the fantasy world with an assumed theatricality."
+          }
+        },
+        "cartographer": {
+          "name": "The Cartographer",
+          "desc": "Specialist in place descriptions.",
+          "instr": "You are the Cartographer. Your expertise is in detailed descriptions of places, landscapes, and architecture.",
+          "overrides": {
+            "dnd-5e": "You are an explorer of the Geographers Society. You describe legendary dungeons, fantastic cities and wild landscapes. Your style is grandiose, emphasizing epic scale, magical details and forgotten architectural wonders."
+          }
+        },
+        "strategist": {
+          "name": "The Strategist",
+          "desc": "Expert in tactics and combat analysis.",
+          "instr": "You are the Strategist. Your role is to analyze combat situations and suggest heroic or pragmatic maneuvers.",
+          "overrides": {
+            "dnd-5e": "You are a veteran general of Waterdeep. You see the battlefield as a chessboard of blood and steel. Your advice is direct, pragmatic and always narrative-focused."
+          }
+        }
+      }
+    }
+  },
+  "remote": {
+    "gm_remote_title": "GM Remote Control",
+    "gm_remote_subtitle": "Control your session via smartphone",
+    "tablet_hub_title": "Tablet Hub",
+    "tablet_hub_subtitle": "Remote Display (Stats & Tensions)",
+    "waiting_url": "Waiting for URL...",
+    "direct_connection": "Direct Connection",
+    "active": "Active",
+    "functions_label": "Available Functions",
+    "streaming_label": "WebSocket Streaming",
+    "functions": {
+      "soundboard_label": "Soundboard FX",
+      "soundboard_desc": "Trigger sounds",
+      "dice_label": "Dice Roller",
+      "dice_desc": "Roll the dice",
+      "scene_label": "Scene Master",
+      "scene_desc": "Change ambiances"
+    },
+    "lobby": {
+      "title": "Device Lobby",
+      "active_suffix": "Active",
+      "clear_tooltip": "Clear disconnected",
+      "refresh_tooltip": "Refresh",
+      "no_devices": "No devices connected",
+      "reconnect_note": "Tablets reconnect automatically if signal is lost."
+    }
+  }
+}

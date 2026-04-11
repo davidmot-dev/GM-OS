@@ -9,6 +9,7 @@
  */
 
 import type { StateCreator } from 'zustand';
+import i18next from 'i18next';
 import { DeckInterpreter } from '../logic/DeckInterpreter';
 import type { DeckManifest, DeckSessionState } from './types';
 import { gmToast } from '../../../stores/useToastStore';
@@ -60,7 +61,7 @@ export const createDeckSlice: StateCreator<DeckSlice, [], [], DeckSlice> = (set,
                 }
             }
         }));
-        gmToast(`Paquet "${newDeck.name}" ajouté.`, 'success');
+        gmToast(i18next.t('modules:session.toasts.deck_added', { name: newDeck.name }), 'success');
     },
 
     updateDeck: (id, updates) => {
@@ -108,7 +109,7 @@ export const createDeckSlice: StateCreator<DeckSlice, [], [], DeckSlice> = (set,
         const { card, newRemaining } = DeckInterpreter.draw(workingRemaining);
         
         if (card === null) {
-            gmToast("Plus de cartes dans la pioche !", "info");
+            gmToast(i18next.t('modules:session.toasts.deck_empty'), "info");
             return;
         }
 
@@ -125,7 +126,7 @@ export const createDeckSlice: StateCreator<DeckSlice, [], [], DeckSlice> = (set,
         }));
 
 
-        gmToast(`Carte tirée (${deck.name})`, 'success');
+        gmToast(i18next.t('modules:session.toasts.card_drawn', { name: deck.name }), 'success');
 
         // [PREMIUM] Projection & Journalisation
         if (get().isProjecting) {
@@ -154,8 +155,8 @@ export const createDeckSlice: StateCreator<DeckSlice, [], [], DeckSlice> = (set,
                 const cardName = DeckInterpreter.getCardMetadata(deck, card)?.name || `Carte #${card + (deck.startAtZero ? 0 : 1)}`;
                 journal.addEvent({
                     type: 'ORACLE',
-                    title: `Tirage : ${cardName}`,
-                    content: `Paquet : **${deck.name}**\nRésultat : ${cardName}`,
+                    title: i18next.t('modules:session.events.card_draw_title', { card: cardName }),
+                    content: i18next.t('modules:session.events.card_draw_content', { deck: deck.name, card: cardName }),
                     metadata: { 
                         deckId, 
                         cardIndex: card,
@@ -200,7 +201,7 @@ export const createDeckSlice: StateCreator<DeckSlice, [], [], DeckSlice> = (set,
                 }
             }
         }));
-        gmToast("Paquet régénéré et mélangé.", "info");
+        gmToast(i18next.t('modules:session.toasts.deck_shuffled'), "info");
     },
 
     resetDeck: (deckId) => {
@@ -232,10 +233,10 @@ export const createDeckSlice: StateCreator<DeckSlice, [], [], DeckSlice> = (set,
             if (wasProjecting) {
                 // ❌ Désactivation → vider les Hubs
                 mod.useImageStore.getState().projectEntity(null);
-                gmToast("Projection Hub DÉSACTIVÉE", "info");
+                gmToast(i18next.t('modules:session.toasts.projection_off'), "info");
             } else {
                 // ✅ Activation → projeter la carte courante si elle existe
-                gmToast("Projection Hub ACTIVÉE", "info");
+                gmToast(i18next.t('modules:session.toasts.projection_on'), "info");
 
                 // Chercher la carte active parmi tous les decks (prioriser activeDeckId si possible)
                 const state = get();

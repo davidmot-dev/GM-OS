@@ -97,7 +97,8 @@ Le transfert des assets Media Hub utilise un pattern streaming pour éviter les 
 | 2 | `harvesting` | 35-50% | `collectAssetPaths()` + résolution des `m-xxx` IDs |
 | 2b | `packaging` | 55-70% | Streaming des blobs vers le cache IPC (`registerAsset`) |
 | 3 | `packaging` | 75% | Appel `exportBundle` → ZIP via archiver (streaming) |
-| 4 | `done` | 100% | Toast succès + rapport des actifs localisés/échoués |
+| 4 | `clearing` | 90% | Nettoyage du cache IPC et des fichiers temporaires |
+| 5 | `done` | 100% | Toast succès + rapport des actifs localisés/échoués |
 
 ---
 
@@ -234,4 +235,5 @@ Le Tablet/Player Hub implémente un mode d'affichage dit "Theater Mode" pour les
 
 ### ✒️ Signature & Statut
 
-*Statut : **Transition v6 amorcée** — Portabilité totale, Tests d'intégration automatisés et Standard "Zero Inline Style" validés.*
+*Dernière mise à jour : 11 Avril 2026*
+*Statut : **Nexus-OS v2 OPÉRATIONNEL** — Portabilité totale, Scan d'URLs distantes, HUD Multilingue (I18n) et Tests d'intégration automatisés validés.*

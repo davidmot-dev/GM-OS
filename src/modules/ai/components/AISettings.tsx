@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Brain, Key, Cpu, ShieldCheck, Eye, EyeOff, Sparkles, RefreshCw, BookOpen, PenTool, Music, Beaker, User, Settings2, Save, ExternalLink, Map, type LucideIcon } from 'lucide-react';
 import { useAIStore } from '../../../stores/useAIStore';
 import { useGemStore } from '../../../stores/useGemStore';
@@ -8,6 +9,7 @@ import type { AIProvider } from '../types';
 import { aiService } from '../AIService';
 
 const AISettings: React.FC = () => {
+  const { t } = useTranslation(['settings', 'modules']);
   const { configs, updateConfig, activeProvider, setProvider } = useAIStore();
   const { gems, updateGem, syncGemsWithDefaults } = useGemStore();
   const activeCampaign = useSessionOSStore(state => state.campaigns.find(c => c.id === state.activeCampaignId));
@@ -19,6 +21,8 @@ const AISettings: React.FC = () => {
   const [selectedGemId, setSelectedGemId] = useState<string>('sage');
   const [isEditingOverride, setIsEditingOverride] = useState(false);
   const [isReindexing, setIsReindexing] = useState(false);
+  
+  const [isObsidianActive, setIsObsidianActive] = useState(false);
   
   const [diagnosticResults, setDiagnosticResults] = useState<Record<string, { status: 'success' | 'error' | 'loading' | 'idle', message?: string }>>({
     gemini: { status: 'idle' },
@@ -34,6 +38,11 @@ const AISettings: React.FC = () => {
 
   useEffect(() => {
     syncGemsWithDefaults();
+    
+    // Check Obsidian status via bridge
+    if (window.appBridge?.mcp?.checkStatus) {
+      window.appBridge.mcp.checkStatus('obsidian').then((active: boolean) => setIsObsidianActive(active));
+    }
   }, [syncGemsWithDefaults]);
 
   useEffect(() => {
@@ -73,7 +82,6 @@ const AISettings: React.FC = () => {
   const runGlobalDiagnostic = async () => {
     const providersToTest = ['gemini', 'openai', 'anthropic', 'ollama', 'oracle'];
     
-    // Reset results
     const newResults = { ...diagnosticResults };
     providersToTest.forEach(p => newResults[p] = { status: 'loading' });
     setDiagnosticResults(newResults);
@@ -82,95 +90,94 @@ const AISettings: React.FC = () => {
     try {
       if (configs.gemini.apiKey) {
         await aiService.listModels(configs.gemini.apiKey);
-        setDiagnosticResults(prev => ({ ...prev, gemini: { status: 'success', message: 'Connexion établie' } }));
+        setDiagnosticResults(prev => ({ ...prev, gemini: { status: 'success', message: t('ai.actions.diagnostic_active') } }));
       } else {
-        setDiagnosticResults(prev => ({ ...prev, gemini: { status: 'error', message: 'Clé manquante' } }));
+        setDiagnosticResults(prev => ({ ...prev, gemini: { status: 'error', message: t('ai.actions.diagnostic_missing') } }));
       }
     } catch {
-      setDiagnosticResults(prev => ({ ...prev, gemini: { status: 'error', message: 'Erreur API' } }));
+      setDiagnosticResults(prev => ({ ...prev, gemini: { status: 'error', message: t('ai.actions.diagnostic_error') } }));
     }
 
-    // 2. Test OpenAI (Mock or Ping)
+    // 2. Test OpenAI
     try {
       if (configs.openai.apiKey) {
-        setDiagnosticResults(prev => ({ ...prev, openai: { status: 'success', message: 'Configuré' } }));
+        setDiagnosticResults(prev => ({ ...prev, openai: { status: 'success', message: t('ai.actions.diagnostic_active') } }));
       } else {
-        setDiagnosticResults(prev => ({ ...prev, openai: { status: 'error', message: 'Clé manquante' } }));
+        setDiagnosticResults(prev => ({ ...prev, openai: { status: 'error', message: t('ai.actions.diagnostic_missing') } }));
       }
     } catch {
-      setDiagnosticResults(prev => ({ ...prev, openai: { status: 'error', message: 'Erreur' } }));
+      setDiagnosticResults(prev => ({ ...prev, openai: { status: 'error', message: t('ai.actions.diagnostic_error') } }));
     }
 
     // 3. Test Anthropic
     try {
       if (configs.anthropic.apiKey) {
-        setDiagnosticResults(prev => ({ ...prev, anthropic: { status: 'success', message: 'Configuré' } }));
+        setDiagnosticResults(prev => ({ ...prev, anthropic: { status: 'success', message: t('ai.actions.diagnostic_active') } }));
       } else {
-        setDiagnosticResults(prev => ({ ...prev, anthropic: { status: 'error', message: 'Clé manquante' } }));
+        setDiagnosticResults(prev => ({ ...prev, anthropic: { status: 'error', message: t('ai.actions.diagnostic_missing') } }));
       }
     } catch {
-      setDiagnosticResults(prev => ({ ...prev, anthropic: { status: 'error', message: 'Erreur' } }));
+      setDiagnosticResults(prev => ({ ...prev, anthropic: { status: 'error', message: t('ai.actions.diagnostic_error') } }));
     }
 
     // 4. Test Ollama
     try {
       if (window.appBridge?.ai?.ollamaListModels) {
         await window.appBridge.ai.ollamaListModels();
-        setDiagnosticResults(prev => ({ ...prev, ollama: { status: 'success', message: 'Serveur actif' } }));
+        setDiagnosticResults(prev => ({ ...prev, ollama: { status: 'success', message: t('ai.actions.diagnostic_server_active') } }));
       } else {
-        setDiagnosticResults(prev => ({ ...prev, ollama: { status: 'error', message: 'Bridge inexistant' } }));
+        setDiagnosticResults(prev => ({ ...prev, ollama: { status: 'error', message: t('ai.actions.diagnostic_mcp_missing') } }));
       }
     } catch {
-      setDiagnosticResults(prev => ({ ...prev, ollama: { status: 'error', message: 'Serveur injoignable' } }));
+      setDiagnosticResults(prev => ({ ...prev, ollama: { status: 'error', message: t('ai.actions.diagnostic_unreachable') } }));
     }
 
-    // 5. Test Oracle (NotebookLM)
+    // 5. Test Oracle
     try {
       if (window.appBridge?.mcp?.callTool) {
-        // notebook_list is a standard tool for notebooklm-mcp-server
         const res = await window.appBridge.mcp.callTool('notebooklm', 'notebook_list', { max_results: 1 });
         if (res && res.content) {
-          setDiagnosticResults(prev => ({ ...prev, oracle: { status: 'success', message: 'Oracle en ligne' } }));
+          setDiagnosticResults(prev => ({ ...prev, oracle: { status: 'success', message: t('ai.actions.diagnostic_oracle_online') } }));
         } else {
-          setDiagnosticResults(prev => ({ ...prev, oracle: { status: 'error', message: 'Réponse vide' } }));
+          setDiagnosticResults(prev => ({ ...prev, oracle: { status: 'error', message: t('ai.actions.diagnostic_empty_res') } }));
         }
       } else {
-        setDiagnosticResults(prev => ({ ...prev, oracle: { status: 'error', message: 'Bridge MCP Absent' } }));
+        setDiagnosticResults(prev => ({ ...prev, oracle: { status: 'error', message: t('ai.actions.diagnostic_mcp_absent') } }));
       }
     } catch (err: unknown) {
       const errorMsg = String(err instanceof Error ? err.message : err);
-      setDiagnosticResults(prev => ({ ...prev, oracle: { status: 'error', message: errorMsg.includes('16') ? 'Session expirée' : 'Erreur' } }));
+      setDiagnosticResults(prev => ({ ...prev, oracle: { status: 'error', message: errorMsg.includes('16') ? t('ai.actions.diagnostic_expired') : t('ai.actions.diagnostic_error') } }));
     }
   };
 
   const providers: { id: AIProvider; name: string; icon: React.ReactNode; color: string; desc: string }[] = [
     { 
       id: 'gemini', 
-      name: 'Google Gemini', 
+      name: t('ai.providers.gemini_label'), 
       icon: <Sparkles size={24} />,
       color: 'text-blue-400',
-      desc: 'Modèles Flash ou Pro. Idéal pour le RAG et les prompts longs.'
+      desc: t('ai.providers.gemini_desc')
     },
     { 
       id: 'openai', 
-      name: 'OpenAI (ChatGPT)', 
+      name: t('ai.providers.openai_label'), 
       icon: <Cpu size={24} />,
       color: 'text-emerald-500',
-      desc: 'GPT-4o ou o1. Standard de l\'industrie, équilibré et précis.'
+      desc: t('ai.providers.openai_desc')
     },
     { 
       id: 'anthropic', 
-      name: 'Anthropic (Claude)', 
+      name: t('ai.providers.anthropic_label'), 
       icon: <Brain size={24} />,
       color: 'text-gm-violet',
-      desc: 'Claude 3.5 Sonnet. Excellent pour l\'écriture créative et le RP.'
+      desc: t('ai.providers.anthropic_desc')
     },
     { 
       id: 'ollama', 
-      name: 'Ollama (Local)', 
+      name: t('ai.providers.ollama_label'), 
       icon: <Cpu size={24} />,
       color: 'text-orange-400',
-      desc: 'Modèles locaux (Phi-3, Gemma 2). 100% privé, sans abonnement.'
+      desc: t('ai.providers.ollama_desc')
     },
   ];
 
@@ -182,9 +189,9 @@ const AISettings: React.FC = () => {
             <Brain size={24} />
           </div>
           <div>
-            <h4 className="text-sm font-black uppercase tracking-tight text-app-text">Configuration de l'IA Cloud</h4>
+            <h4 className="text-sm font-black uppercase tracking-tight text-app-text">{t('ai.cloud_config_title')}</h4>
             <p className="text-xs text-app-text/60 mt-1">
-              Connectez vos comptes pour activer les GEMS. Vos clés sont stockées localement.
+              {t('ai.cloud_config_desc')}
             </p>
           </div>
         </div>
@@ -194,7 +201,7 @@ const AISettings: React.FC = () => {
           className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-[10px] font-black uppercase tracking-widest text-app-text transition-all"
         >
           <Beaker size={14} className={Object.values(diagnosticResults).some(r => r.status === 'loading') ? 'animate-pulse' : ''} />
-          Diagnostic Global
+          {t('ai.global_diagnostic')}
         </button>
       </div>
 
@@ -237,7 +244,7 @@ const AISettings: React.FC = () => {
                     : 'bg-white/5 text-app-text/40 hover:bg-white/10 hover:text-white'
                 }`}
               >
-                {activeProvider === p.id ? 'Actif' : 'Sélectionner'}
+                {activeProvider === p.id ? t('ai.status.active') : t('ai.status.select')}
               </button>
             </div>
 
@@ -246,14 +253,14 @@ const AISettings: React.FC = () => {
                 <div className="space-y-2">
                   <label className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40 flex items-center gap-2">
                     <Key size={12} className="text-accent" />
-                    Clé API
+                    {t('ai.status.api_key')}
                   </label>
                   <div className="relative">
                     <input
                       type={showKeys[p.id] ? 'text' : 'password'}
                       value={configs[p.id]?.apiKey || ''}
                       onChange={(e) => updateConfig(p.id, { apiKey: e.target.value })}
-                      placeholder={`Saisissez votre clé ${p.name}...`}
+                      placeholder={t('ai.status.api_key_placeholder', { name: p.name })}
                       className="w-full bg-black/40 border border-app-border/40 rounded-xl px-4 py-3 text-xs text-app-text focus:border-accent/50 outline-none transition-all font-mono"
                     />
                     <button 
@@ -270,12 +277,12 @@ const AISettings: React.FC = () => {
                 <div className="space-y-2">
                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40 flex items-center gap-2">
                     <ShieldCheck size={12} className="text-emerald-500" />
-                    Statut Local
+                    {t('ai.status.local_status')}
                   </label>
                   <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-emerald-500/5 border border-emerald-500/10">
                     <div className="flex items-center gap-2 text-emerald-500 text-[10px] font-bold uppercase tracking-widest">
                       <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                      Serveur Ollama Prêt
+                      {t('ai.status.ollama_ready')}
                     </div>
                     <button
                       onClick={async () => {
@@ -285,9 +292,9 @@ const AISettings: React.FC = () => {
                         }
                       }}
                       className="text-[10px] font-black uppercase tracking-widest text-accent bg-accent/10 px-2 py-1 rounded border border-accent/20 hover:bg-accent/20 transition-all"
-                      title="Télécharger le modèle recommandé (phi3)"
+                      title={t('ai.actions.pull_phi3_tooltip')}
                     >
-                      Pull phi3
+                      {t('ai.actions.pull_phi3')}
                     </button>
                   </div>
                 </div>
@@ -297,22 +304,33 @@ const AISettings: React.FC = () => {
                 <div className="flex items-center gap-2 mb-2">
                   <label className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40 flex items-center gap-2">
                     <Cpu size={12} className="text-accent" />
-                    Modèle
+                    {t('ai.labels.model')}
                   </label>
-                  {p.id === 'gemini' && (
+                  {(p.id === 'gemini' || p.id === 'ollama') && (
                     <button 
-                      onClick={() => {
-                        updateConfig('gemini', { apiKey: configs.gemini.apiKey }); 
+                      onClick={async () => {
+                        setIsLoadingModels(true);
+                        try {
+                          let models = [];
+                          if (p.id === 'gemini') {
+                             models = await aiService.listModels(configs.gemini.apiKey);
+                          } else {
+                             models = await window.appBridge?.ai?.ollamaListModels?.();
+                          }
+                          setDiscoveredModels(models);
+                        } finally {
+                          setIsLoadingModels(false);
+                        }
                       }}
                       className={`text-accent/60 hover:text-accent transition-all ${isLoadingModels ? 'animate-spin' : ''}`}
-                      title="Rafraîchir la liste des modèles"
+                      title={t('ai.actions.refresh_models')}
                     >
                       <RefreshCw size={10} />
                     </button>
                   )}
                 </div>
                 <select
-                  title="Sélectionner le modèle d'IA"
+                  title={t('ai.labels.model_select_tooltip')}
                   value={configs[p.id]?.modelId || ''}
                   onChange={(e) => updateConfig(p.id, { modelId: e.target.value })}
                   className="w-full bg-black/40 border border-app-border/40 rounded-xl px-4 py-3 text-xs text-app-text focus:border-accent/50 outline-none transition-all appearance-none cursor-pointer"
@@ -322,51 +340,46 @@ const AISettings: React.FC = () => {
                       {discoveredModels.map(name => (
                         <option key={name} value={name}>{name}</option>
                       ))}
-                      <option value="custom">-- Saisie Manuelle --</option>
+                      <option value="custom">{t('ai.labels.manual_input')}</option>
                     </>
                   ) : (
                     <>
                       {p.id === 'gemini' && (
                         <>
-                          <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
-                          <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
                           <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
-                          <option value="imagen-3.0-generate-001">Imagen 3 (Portrait)</option>
-                          <option value="imagen-3.0-fast-generate-001">Imagen 3 Fast (Portrait)</option>
+                          <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+                          <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
                         </>
                       )}
                       {p.id === 'openai' && (
                         <>
-                          <option value="gpt-4o">GPT-4o (Expert)</option>
-                          <option value="gpt-4o-mini">GPT-4o Mini (Rapide)</option>
-                          <option value="o1-preview">OpenAI o1 (Raisonnement)</option>
+                          <option value="gpt-4o">GPT-4o</option>
+                          <option value="gpt-4o-mini">GPT-4o Mini</option>
+                          <option value="o1-preview">OpenAI o1</option>
                         </>
                       )}
                       {p.id === 'anthropic' && (
                         <>
-                          <option value="claude-3-5-sonnet-latest">Claude 3.5 Sonnet (Recommandé)</option>
-                          <option value="claude-3-opus-20240229">Claude 3 Opus (Créatif)</option>
-                          <option value="claude-3-5-haiku-latest">Claude 3.5 Haiku (Vitesse)</option>
+                          <option value="claude-3-5-sonnet-latest">Claude 3.5 Sonnet</option>
+                          <option value="claude-3-opus-20240229">Claude 3 Opus</option>
+                          <option value="claude-3-5-haiku-latest">Claude 3.5 Haiku</option>
                         </>
                       )}
                       {p.id === 'ollama' && (
                         <>
-                          <option value="gemma4:26b">Gemma 4 26B (Optimal Text)</option>
-                          <option value="phi3">Phi-3 (Léger & Rapide)</option>
-                          <option value="gemma2:2b">Gemma 2 2B (Efficace)</option>
-                          <option value="mistral">Mistral (Polyvalent)</option>
-                          <option value="x/flux2-klein:latest">Flux.2 Klein (Image)</option>
-                          <option value="flux">Flux (Image)</option>
+                          <option value="gemma4:26b">Gemma 4 26B</option>
+                          <option value="phi3">Phi-3</option>
+                          <option value="mistral">Mistral</option>
                         </>
                       )}
-                      <option value="custom">-- Saisie Manuelle --</option>
+                      <option value="custom">{t('ai.labels.manual_input')}</option>
                     </>
                   )}
                 </select>
                 
                 {(configs[p.id]?.modelId === 'custom' || (p.id === 'gemini' && discoveredModels.length === 0)) && (
                   <div className="mt-2 text-app-text/60 italic text-[9px] uppercase tracking-widest pl-1">
-                    Modèle sélectionné: <span className="text-accent font-bold">{configs[p.id]?.modelId}</span>
+                    {t('ai.labels.selected_model')} <span className="text-accent font-bold">{configs[p.id]?.modelId}</span>
                   </div>
                 )}
               </div>
@@ -376,35 +389,88 @@ const AISettings: React.FC = () => {
               <button
                 onClick={async () => {
                   try {
-                    gmToast("Téléchargement de Gemma 4 lancé (Vérifiez votre terminal Ollama)...");
+                    gmToast(t('ai.actions.pull_gemma_start'));
                     await window.appBridge?.ai?.ollamaPull?.('gemma4:26b');
-                    gmToast("Gemma 4 est prêt !", "success");
-                    // Refresh models
+                    gmToast(t('ai.actions.pull_gemma_success'), "success");
                     const models = await window.appBridge?.ai?.ollamaListModels?.();
                     if (models) setDiscoveredModels(models);
                    } catch (error) {
                     console.error("Gemma 4 Pull error:", error);
-                    gmToast("Erreur lors du téléchargement.", "error");
+                    gmToast(t('ai.actions.pull_gemma_error'), "error");
                   }
                 }}
                 className="mt-4 w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-accent/20 border border-accent/40 text-[10px] font-black uppercase tracking-widest text-accent hover:bg-accent hover:text-white transition-all shadow-lg shadow-accent/10"
               >
                 <Cpu size={14} className="animate-pulse" />
-                Télécharger Gemma 4 (26B MoE)
+                {t('ai.actions.pull_gemma')}
               </button>
             )}
 
             {configs[p.id]?.apiKey && (
               <div className="mt-4 flex items-center gap-2 text-[9px] font-bold uppercase tracking-widest text-emerald-500/60 bg-emerald-500/5 px-3 py-2 rounded-lg border border-emerald-500/10">
                 <ShieldCheck size={12} />
-                Clé configurée localement
+                {t('ai.status.key_configured')}
               </div>
             )}
           </div>
         ))}
       </div>
 
-      {/* AI Oracle (NotebookLM) Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Obsidian Section */}
+        <div className="p-4 rounded-2xl bg-gm-emerald/5 border border-gm-emerald/20 flex flex-col gap-4">
+          <div className="flex gap-4">
+            <div className="p-3 rounded-xl bg-gm-emerald/10 text-gm-emerald">
+              <BookOpen size={24} />
+            </div>
+            <div>
+              <p className="text-white text-xs font-black uppercase tracking-widest leading-none">{t('ai.obsidian.title')}</p>
+              <p className="text-white/40 text-[9px] font-bold uppercase tracking-tight mt-1">{t('ai.obsidian.subtitle')}</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-gm-emerald text-[10px] font-bold uppercase tracking-widest">
+              <div className={`w-2 h-2 rounded-full ${isObsidianActive ? 'bg-gm-emerald animate-pulse' : 'bg-slate-800'}`} />
+              {isObsidianActive ? t('ai.obsidian.status_active') : t('ai.obsidian.status_offline')}
+            </div>
+            <div className="flex gap-2">
+              <button className="text-[10px] font-black uppercase tracking-widest text-gm-emerald bg-gm-emerald/10 px-3 py-1.5 rounded-lg border border-gm-emerald/20 hover:bg-gm-emerald/20 transition-all">
+                {t('ai.obsidian.sync_button')}
+              </button>
+              <button className="text-[10px] font-black uppercase tracking-widest text-gm-emerald bg-gm-emerald/10 px-3 py-1.5 rounded-lg border border-gm-emerald/20 hover:bg-gm-emerald/20 transition-all">
+                {t('ai.obsidian.open_vault')}
+              </button>
+            </div>
+          </div>
+          <p className="text-[10px] font-medium text-slate-500 italic">{t('ai.obsidian.config_hint')}</p>
+        </div>
+
+        {/* Audio Section */}
+        <div className="p-4 rounded-2xl bg-gm-cyan/5 border border-gm-cyan/20 flex flex-col gap-4">
+          <div className="flex gap-4">
+            <div className="p-3 rounded-xl bg-gm-cyan/10 text-gm-cyan">
+              <Music size={24} />
+            </div>
+            <div>
+              <p className="text-white text-xs font-black uppercase tracking-widest leading-none">{t('ai.audio.title')}</p>
+              <p className="text-white/40 text-[9px] font-bold uppercase tracking-tight mt-1">{t('ai.audio.subtitle')}</p>
+            </div>
+          </div>
+          
+          <div className="space-y-2">
+             <div className="flex items-center justify-between">
+               <span className="text-[9px] font-black uppercase tracking-widest text-app-text/40">{t('ai.audio.input_source')}</span>
+               <span className="text-[9px] font-bold text-gm-cyan">{t('ai.audio.no_device')}</span>
+             </div>
+             <div className="h-1 bg-black/40 rounded-full overflow-hidden">
+               <div className="h-full bg-gm-cyan w-0 transition-all duration-300" />
+             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Oracle Section */}
       <div className="p-4 rounded-2xl bg-accent/5 border border-accent/20 space-y-4">
         <div className="flex gap-4">
           <div className="p-3 rounded-xl bg-accent/10 text-accent">
@@ -412,7 +478,7 @@ const AISettings: React.FC = () => {
           </div>
           <div>
             <div className="flex items-center gap-3">
-              <h4 className="text-sm font-black uppercase tracking-tight text-app-text">AI Oracle (NotebookLM)</h4>
+              <h4 className="text-sm font-black uppercase tracking-tight text-app-text">{t('ai.oracle.title')}</h4>
               {diagnosticResults.oracle.status !== 'idle' && (
                 <div className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest ${
                   diagnosticResults.oracle.status === 'success' ? 'bg-emerald-500/20 text-emerald-400' : 
@@ -423,18 +489,18 @@ const AISettings: React.FC = () => {
               )}
             </div>
             <p className="text-xs text-app-text/60 mt-1">
-              Connectez votre compte Google pour permettre à l'Oracle d'accéder à vos carnets de notes personnels.
+              {t('ai.oracle.desc')}
             </p>
           </div>
         </div>
 
         <div className="bg-black/20 rounded-xl p-4 border border-white/5 flex items-center justify-between gap-4">
           <div className="space-y-1">
-            <p className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Statut de la connexion</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('ai.oracle.status_label')}</p>
             <p className="text-xs text-app-text/80">
               {diagnosticResults.oracle.status === 'error' 
-                ? "L'authentification semble expirée ou corrompue." 
-                : "Si l'Oracle ne répond plus, une reconnexion peut être nécessaire."}
+                ? t('ai.oracle.status_expired') 
+                : t('ai.oracle.status_hint')}
             </p>
           </div>
           
@@ -445,7 +511,7 @@ const AISettings: React.FC = () => {
                 btn.classList.add('animate-spin-once');
                 try {
                   await window.appBridge?.mcp?.restart?.();
-                  gmToast("Serveur Oracle redémarré.");
+                  gmToast(t('common:success_operation'));
                   runGlobalDiagnostic();
                 } catch (e) {
                   console.error(e);
@@ -454,7 +520,7 @@ const AISettings: React.FC = () => {
                 }
               }}
               className="px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-app-text/60 hover:text-white hover:bg-white/10 hover:border-accent/40 transition-all group"
-              title="Réinitialiser le serveur MCP (Oracle)"
+              title={t('ai.oracle.restart_tooltip')}
             >
               <RefreshCw size={16} className="group-hover:rotate-180 transition-transform duration-500" />
             </button>
@@ -464,31 +530,31 @@ const AISettings: React.FC = () => {
                 try {
                   const result = await window.appBridge?.mcp?.reauthenticate();
                   if (result?.success) {
-                    gmToast("La fenêtre de connexion a été lancée dans votre navigateur.");
+                    gmToast(t('common:check_browser'));
                   }
                 } catch (error) {
                   console.error("Re-authentication failed:", error);
-                  gmToast("Erreur lors du lancement de l'authentification.", "error");
+                  gmToast(t('common:error_generic'), "error");
                 }
               }}
               className="flex items-center gap-2 px-6 py-3 rounded-xl bg-accent text-white border border-accent shadow-glow-accent/20 hover:scale-105 active:scale-95 transition-all font-black uppercase tracking-widest text-[10px]"
             >
               <ExternalLink size={16} />
-              {diagnosticResults.oracle.status === 'error' ? 'Forcer la Reconnexion' : "Reconnecter l'Oracle"}
+              {diagnosticResults.oracle.status === 'error' ? t('ai.oracle.reconnect_force') : t('ai.oracle.reconnect')}
             </button>
           </div>
         </div>
       </div>
 
-      <div className="p-4 rounded-2xl bg-gm-emerald/5 border border-gm-emerald/20 flex items-center justify-between gap-4 mt-8">
+      <div className="p-4 rounded-2xl bg-gm-emerald/5 border border-gm-emerald/20 flex items-center justify-between gap-4">
         <div className="flex gap-4">
           <div className="p-3 rounded-xl bg-gm-emerald/10 text-gm-emerald">
             <BookOpen size={24} />
           </div>
           <div>
-            <h4 className="text-sm font-black uppercase tracking-tight text-app-text">Base de Connaissance (RAG)</h4>
+            <h4 className="text-sm font-black uppercase tracking-tight text-app-text">{t('ai.rag.title')}</h4>
             <p className="text-xs text-app-text/60 mt-1">
-              Les fichiers PDF et Markdown dans votre dossier <code className="text-gm-emerald">/docs</code> sont analysés.
+              {t('ai.rag.desc')}
             </p>
           </div>
         </div>
@@ -514,26 +580,25 @@ const AISettings: React.FC = () => {
           }`}
         >
           <RefreshCw size={16} className={isReindexing ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'} />
-          {isReindexing ? 'Indexation...' : 'Actualiser les documents'}
+          {isReindexing ? t('ai.actions.reindexing') : t('ai.actions.reindex_docs')}
         </button>
       </div>
 
       {/* Performance & Streaming Section */}
-      <div className="p-4 rounded-2xl bg-gm-violet/5 border border-gm-violet/20 space-y-4 shadow-lg shadow-gm-violet/5 mb-8">
+      <div className="p-4 rounded-2xl bg-gm-violet/5 border border-gm-violet/20 space-y-4 shadow-lg shadow-gm-violet/5">
         <div className="flex gap-4">
           <div className="p-3 rounded-xl bg-gm-violet/10 text-gm-violet">
             <RefreshCw size={24} />
           </div>
           <div>
-            <h4 className="text-sm font-black uppercase tracking-tight text-app-text">Performance & Streaming</h4>
+            <h4 className="text-sm font-black uppercase tracking-tight text-app-text">{t('ai.perf.title')}</h4>
             <p className="text-xs text-app-text/60 mt-1">
-              Optimisez la réactivité de l'IA et la profondeur de l'analyse pour une expérience fluide.
+              {t('ai.perf.desc')}
             </p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Streaming Toggle */}
           <div className={`p-4 rounded-xl border transition-all cursor-pointer flex items-center justify-between ${useAIStore.getState().streamEnabled ? 'bg-gm-violet/10 border-gm-violet/30 shadow-glow-gm-violet/10' : 'bg-black/20 border-white/5 opacity-60'}`}
                onClick={() => useAIStore.getState().setStreamEnabled(!useAIStore.getState().streamEnabled)}>
             <div className="flex gap-3 items-center">
@@ -541,16 +606,12 @@ const AISettings: React.FC = () => {
                 <RefreshCw size={16} className={useAIStore.getState().streamEnabled ? 'animate-spin-slow' : ''} />
               </div>
               <div>
-                <div className="text-[10px] font-black uppercase tracking-widest leading-none">Streaming Temps Réel</div>
-                <div className="text-[9px] text-app-text/40 mt-1 uppercase tracking-tight whitespace-nowrap">Affiche les tokens au fur et à mesure</div>
+                <div className="text-[10px] font-black uppercase tracking-widest leading-none">{t('ai.perf.stream_label')}</div>
+                <div className="text-[9px] text-app-text/40 mt-1 uppercase tracking-tight whitespace-nowrap">{t('ai.perf.stream_desc')}</div>
               </div>
-            </div>
-            <div className={`w-10 h-5 rounded-full relative transition-colors ${useAIStore.getState().streamEnabled ? 'bg-gm-violet' : 'bg-slate-800'}`}>
-              <div className={`absolute top-1 w-3 h-3 rounded-full bg-white transition-all ${useAIStore.getState().streamEnabled ? 'right-1' : 'left-1'}`} />
             </div>
           </div>
 
-          {/* Lite Context Toggle */}
           <div className={`p-4 rounded-xl border transition-all cursor-pointer flex items-center justify-between ${useAIStore.getState().liteContext ? 'bg-emerald-500/10 border-emerald-500/30 shadow-glow-emerald/10' : 'bg-black/20 border-white/5 opacity-60'}`}
                onClick={() => useAIStore.getState().setLiteContext(!useAIStore.getState().liteContext)}>
             <div className="flex gap-3 items-center">
@@ -558,12 +619,9 @@ const AISettings: React.FC = () => {
                 <Cpu size={16} />
               </div>
               <div>
-                <div className="text-[10px] font-black uppercase tracking-widest leading-none">Mode "Lite" Context</div>
-                <div className="text-[9px] text-app-text/40 mt-1 uppercase tracking-tight whitespace-nowrap">Analyse accélérée (Vitesse max)</div>
+                <div className="text-[10px] font-black uppercase tracking-widest leading-none">{t('ai.perf.lite_label')}</div>
+                <div className="text-[9px] text-app-text/40 mt-1 uppercase tracking-tight whitespace-nowrap">{t('ai.perf.lite_desc')}</div>
               </div>
-            </div>
-            <div className={`w-10 h-5 rounded-full relative transition-colors ${useAIStore.getState().liteContext ? 'bg-emerald-500' : 'bg-slate-800'}`}>
-              <div className={`absolute top-1 w-3 h-3 rounded-full bg-white transition-all ${useAIStore.getState().liteContext ? 'right-1' : 'left-1'}`} />
             </div>
           </div>
         </div>
@@ -574,9 +632,9 @@ const AISettings: React.FC = () => {
           <Settings2 size={24} />
         </div>
         <div>
-          <h4 className="text-sm font-black uppercase tracking-tight text-app-text">Personnalisation des GEMS</h4>
+          <h4 className="text-sm font-black uppercase tracking-tight text-app-text">{t('ai.gems.title')}</h4>
           <p className="text-xs text-app-text/60 mt-1">
-            Définissez le comportement précis de vos assistants.
+            {t('ai.gems.desc')}
           </p>
         </div>
       </div>
@@ -584,7 +642,7 @@ const AISettings: React.FC = () => {
       <div className="bg-app-surface border border-app-border/20 rounded-2xl overflow-hidden shadow-xl">
         <div className="grid grid-cols-1 lg:grid-cols-3 min-h-[400px]">
           <div className="border-r border-app-border/10 bg-black/20 p-4 space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40 mb-4 block px-2">Assistant (GEM)</label>
+            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40 mb-4 block px-2">{t('ai.gems.label')}</label>
             {gems.map((gem) => {
               const Icon = iconMap[gem.icon] || Brain;
               return (
@@ -599,8 +657,8 @@ const AISettings: React.FC = () => {
                 >
                   <Icon size={18} className={selectedGemId === gem.id ? 'text-white' : 'text-accent opacity-60 group-hover:opacity-100'} />
                   <div className="text-left">
-                    <div className="text-xs font-black uppercase tracking-tight">{gem.name}</div>
-                    <div className={`text-[9px] font-medium opacity-60 truncate max-w-[120px]`}>{gem.description}</div>
+                    <div className="text-xs font-black uppercase tracking-tight">{t(gem.name)}</div>
+                    <div className={`text-[9px] font-medium opacity-60 truncate max-w-[120px]`}>{t(gem.description)}</div>
                   </div>
                 </button>
               );
@@ -616,8 +674,8 @@ const AISettings: React.FC = () => {
                 <>
                   <div className="flex items-center justify-between">
                     <div>
-                      <h5 className="font-black uppercase tracking-tight text-lg text-app-text">{gem.name}</h5>
-                      <p className="text-xs text-app-text/40">{gem.description}</p>
+                      <h5 className="font-black uppercase tracking-tight text-lg text-app-text">{t(gem.name)}</h5>
+                      <p className="text-xs text-app-text/40">{t(gem.description)}</p>
                     </div>
                     <button 
                        onClick={() => {
@@ -630,18 +688,17 @@ const AISettings: React.FC = () => {
                        }}
                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500/20 transition-all"
                      >
-                       <Save size={14} /> Enregistrer
+                       <Save size={14} /> {t('ai.gems.save_gem')}
                      </button>
                   </div>
 
                   <div className="flex p-1 bg-black/40 rounded-xl w-fit">
-                    <button onClick={() => setIsEditingOverride(false)} className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${!isEditingOverride ? 'bg-white/10 text-white' : 'text-app-text/40'}`}>Base</button>
-                    <button onClick={() => setIsEditingOverride(true)} className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${isEditingOverride ? 'bg-accent/20 text-accent' : 'text-app-text/40'}`}>Override: {systemId}</button>
+                    <button onClick={() => setIsEditingOverride(false)} className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${!isEditingOverride ? 'bg-white/10 text-white' : 'text-app-text/40'}`}>{t('ai.gems.base')}</button>
+                    <button onClick={() => setIsEditingOverride(true)} className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${isEditingOverride ? 'bg-accent/20 text-accent' : 'text-app-text/40'}`}>{t('ai.gems.override', { systemId })}</button>
                   </div>
 
-                  <div className="space-y-2">
                     <textarea 
-                      value={isEditingOverride ? (gem.systemOverrides?.[systemId] || gem.baseInstructions) : gem.baseInstructions}
+                      value={t(isEditingOverride ? (gem.systemOverrides?.[systemId] || gem.baseInstructions) : gem.baseInstructions)}
                       onChange={(e) => {
                         const newVal = e.target.value;
                         if (isEditingOverride) {
@@ -652,7 +709,6 @@ const AISettings: React.FC = () => {
                       }}
                       className="w-full h-48 bg-black/40 border border-app-border/40 rounded-xl p-4 text-xs text-app-text/80 outline-none font-mono"
                     />
-                  </div>
                 </>
               );
             })()}

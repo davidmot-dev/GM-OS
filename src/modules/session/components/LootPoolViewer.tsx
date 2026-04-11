@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { Package, User, Trash2, Gift } from 'lucide-react';
@@ -26,6 +27,7 @@ export const CharacterPortrait: React.FC<{ character?: { portraitUrl: string; na
 };
 
 const LootPoolViewer: React.FC = () => {
+    const { t } = useTranslation(['modules']);
     const { 
         lootPool, 
         players, 
@@ -53,8 +55,8 @@ const LootPoolViewer: React.FC = () => {
         return (
             <div className="flex flex-col items-center justify-center p-8 text-app-text/40 border-2 border-dashed border-white/5 rounded-xl bg-white/2">
                 <Package size={48} className="mb-3 opacity-20" />
-                <p className="text-sm font-medium">Le pool de butin est vide.</p>
-                <p className="text-[10px] uppercase tracking-widest mt-1">Générez des objets pour commencer</p>
+                <p className="text-sm font-medium">{t('modules:loot.pool.empty')}</p>
+                <p className="text-[10px] uppercase tracking-widest mt-1">{t('modules:loot.pool.empty_hint')}</p>
             </div>
         );
     }
@@ -64,13 +66,15 @@ const LootPoolViewer: React.FC = () => {
             <div className="flex justify-between items-center px-1">
                 <div className="flex items-center gap-2">
                     <Package size={20} className="text-accent" />
-                    <h3 className="text-sm font-bold uppercase tracking-tighter">Pool de Butin ({lootPool.length})</h3>
+                    <h3 className="text-sm font-bold uppercase tracking-tighter">
+                        {t('modules:loot.pool.title', { count: lootPool.length })}
+                    </h3>
                 </div>
                 <button 
                     onClick={() => clearLootPool()}
                     className="text-[10px] font-bold uppercase tracking-widest text-red-400/60 hover:text-red-400 transition-colors"
                 >
-                    Tout vider
+                    {t('modules:loot.pool.clear_all')}
                 </button>
             </div>
 
@@ -91,7 +95,7 @@ const LootPoolViewer: React.FC = () => {
                                         {item.name} {item.quantity > 1 ? `(x${item.quantity})` : ''}
                                     </span>
                                     <span className="text-[9px] uppercase tracking-widest text-app-text/40 font-bold">
-                                        {item.rarity} • {item.type}
+                                        {t(`modules:loot.rarities.${item.rarity || 'common'}`)} • {t(`modules:loot.types.${item.type || 'item'}`)}
                                     </span>
                                 </div>
                                 <button 
@@ -111,7 +115,7 @@ const LootPoolViewer: React.FC = () => {
                                                 key={`${player.id}-${char.id}`}
                                                 onClick={() => handleAssign(item.id, player.id, char.id)}
                                                 className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-white/5 border border-white/5 hover:border-accent/30 hover:bg-accent/10 transition-all group/btn"
-                                                title={`Donner à ${char.name}`}
+                                                title={t('modules:loot.pool.assign_to', { name: char.name })}
                                             >
                                                 <CharacterPortrait character={char} size={20} />
                                                 <span className="text-[10px] font-bold text-app-text/60 group-hover/btn:text-accent truncate max-w-[80px]">
@@ -123,7 +127,7 @@ const LootPoolViewer: React.FC = () => {
                                 )}
                                 {sessionEntityIds.length === 0 && (
                                     <span className="text-[8px] uppercase font-bold text-app-text/20 py-2 italic">
-                                        Aucun personnage actif
+                                        {t('modules:loot.pool.no_active_chars')}
                                     </span>
                                 )}
                             </div>

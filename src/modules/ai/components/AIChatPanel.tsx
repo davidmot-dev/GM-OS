@@ -9,6 +9,7 @@ import {
   Cpu,
   type LucideIcon
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useAIStore } from '../../../stores/useAIStore';
 import { useSessionStore } from '../../../store/useSessionStore';
 import { useGemStore } from '../../../stores/useGemStore';
@@ -22,6 +23,7 @@ interface Message {
 }
 
 const AIChatPanel: React.FC = () => {
+  const { t } = useTranslation(['settings', 'modules', 'common']);
   const { isAIPanelOpen, toggleAIPanel } = useSessionStore();
   const { activeProvider, setProvider } = useAIStore();
   const [input, setInput] = useState('');
@@ -31,7 +33,7 @@ const AIChatPanel: React.FC = () => {
     {
       id: '1',
       role: 'assistant',
-      content: "Bonjour David. Je suis prêt à vous assister pour votre session. Quel Gem souhaitez-vous solliciter ?",
+      content: t('modules:ai.welcome_bot', 'Bonjour David. Je suis prêt à vous assister pour votre session. Quel Gem souhaitez-vous solliciter ?'),
       gemId: storeGems[0]?.id || 'sage'
     }
   ]);
@@ -138,7 +140,7 @@ const AIChatPanel: React.FC = () => {
                  }`}
                >
                  <Icon size={18} />
-                 <span className="text-[9px] font-black uppercase tracking-widest">{gem.name}</span>
+                 <span className="text-[9px] font-black uppercase tracking-widest">{t(gem.name)}</span>
                </button>
              );
           })}
@@ -167,7 +169,7 @@ const AIChatPanel: React.FC = () => {
                     {msg.gemId === 'oracle' && <Eye size={10} />}
                   </div>
                   <span className="text-[9px] font-black uppercase tracking-widest opacity-60">
-                    {msg.gemId?.toUpperCase()}
+                    {t(storeGems.find(g => g.id === msg.gemId)?.name || 'AI')}
                   </span>
                 </div>
               )}
@@ -231,7 +233,9 @@ const AIChatPanel: React.FC = () => {
             onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSend())}
             rows={3}
             className="w-full bg-black/30 border border-app-border/30 rounded-xl p-4 pr-12 text-sm text-app-text/80 placeholder:text-app-text/20 focus:ring-1 focus:ring-accent/50 focus:border-accent/40 outline-none resize-none transition-all duration-300 group-hover:border-app-border/50"
-            placeholder={`Demandez à ${activeGem === 'sage' ? 'votre Sage des règles' : activeGem === 'scribe' ? 'votre Scribe de notes' : 'votre Oracle créatif'}...`}
+            placeholder={t('modules:ai.input_placeholder', { 
+              gem: t(storeGems.find(g => g.id === activeGem)?.name || '')
+            }, `Demandez à ${activeGem === 'sage' ? 'votre Sage des règles' : activeGem === 'scribe' ? 'votre Scribe de notes' : 'votre Oracle créatif'}...`)}
           />
           <button 
             onClick={handleSend}

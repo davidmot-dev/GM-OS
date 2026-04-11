@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import type { TableBridge, TableData, TableResult } from './types';
 import { TableEngine } from './TableEngine';
 import { useJournalStore } from '../journal/useJournalStore';
+import i18next from 'i18next';
 
 interface TableState {
     universes: string[];
@@ -114,8 +115,15 @@ export const useTableStore = create<TableState>()(
                 // Log the actual roll result to Journal only when shared
                 useJournalStore.getState().addEvent({
                     type: 'ORACLE',
-                    title: `Partage Table : ${currentResult.tableName}`,
-                    content: `Jet: ${currentResult.rawRoll} (Mod: ${currentResult.modifier}) -> ${currentResult.finalValue}\nRésultat : **${currentResult.entry.title}**\n${currentResult.entry.description || ''}${recipientName ? `\n\n*Donné à : ${recipientName}*` : ''}`
+                    title: i18next.t('modules:random_tables.journal.share_title', { table: currentResult.tableName }),
+                    content: i18next.t('modules:random_tables.journal.share_content', { 
+                        raw: currentResult.rawRoll, 
+                        mod: currentResult.modifier, 
+                        final: currentResult.finalValue,
+                        title: currentResult.entry.title,
+                        desc: currentResult.entry.description || '',
+                        recipient: recipientName ? i18next.t('modules:random_tables.journal.given_to', { name: recipientName }) : ''
+                    })
                 });
 
                 // UI feedback

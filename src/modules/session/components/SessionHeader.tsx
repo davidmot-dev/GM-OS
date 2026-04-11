@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Users, Sparkles, Hammer } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useSessionStore } from '../../../store/useSessionStore';
@@ -18,16 +19,21 @@ const SessionHeader: React.FC<SessionHeaderProps> = ({
     forgeMode,
     setForgeMode
 }) => {
+    const { t } = useTranslation();
     const { currentView, setCurrentView } = useSessionOSStore();
     const { theme } = useSessionStore();
 
     const getTitle = () => {
         switch (currentView) {
-            case 'cockpit': return 'Master Cockpit';
-            case 'timeline-wiki': return 'Chroniques';
-            case 'forge': return 'System Forge';
-            case 'templates': return 'Bibliothèque des Fiches';
-            case 'social-graph': return 'Social Nexus (Graphe Social)';
+            case 'cockpit': return t('modules:session.header.master_cockpit');
+            case 'timeline-wiki': return t('modules:session.header.chronicles');
+            case 'forge': return t('modules:session.header.forge');
+            case 'templates': return t('modules:session.header.sheet_library');
+            case 'template-editor': return t('modules:session.header.template_editor');
+            case 'social-graph': return t('modules:session.header.social_nexus');
+            case 'players': return t('modules:session.header.players');
+            case 'session-prep': return t('modules:session.header.session_prep');
+            case 'session-focus': return t('modules:session.header.session_focus');
             default: return currentView.replace('-', ' ');
         }
     };
@@ -46,7 +52,7 @@ const SessionHeader: React.FC<SessionHeaderProps> = ({
                     <h1 className={`text-app-text text-lg tracking-[0.15em] uppercase ${
                         theme === 'medieval' ? 'font-display' : 'font-bold tracking-tight'
                     }`}>
-                        {theme === 'medieval' ? 'GRIMOIRE' : 'Session'} <span className="text-accent opacity-80">OS</span>
+                        {theme === 'medieval' ? t('modules:session.header.grimoire_label') : t('modules:session.header.session_label')} <span className="text-accent opacity-80">OS</span>
                         <span className={`ml-4 ${
                             theme === 'medieval' ? 'text-accent/40 font-display text-sm italic' : 'text-gm-gold font-light opacity-80'
                         }`}>
@@ -69,7 +75,7 @@ const SessionHeader: React.FC<SessionHeaderProps> = ({
                             forgeMode === 'system' ? 'bg-accent text-white shadow-glow-accent' : 'text-app-text/60'
                         }`}
                     >
-                        <Hammer size={12} /> System Forge
+                        <Hammer size={12} /> {t('modules:session.header.forge')}
                     </button>
                     <button
                         onClick={() => setForgeMode('chronicle')}
@@ -79,7 +85,7 @@ const SessionHeader: React.FC<SessionHeaderProps> = ({
                             forgeMode === 'chronicle' ? 'bg-fuchsia-600/80 text-white shadow-glow-fuchsia/40' : 'text-app-text/60'
                         }`}
                     >
-                        <Sparkles size={12} /> Chronicle Forge
+                        <Sparkles size={12} /> {t('modules:session.header.chronicle_forge')}
                     </button>
                 </div>
             )}
@@ -93,7 +99,7 @@ const SessionHeader: React.FC<SessionHeaderProps> = ({
                         } text-app-text hover:bg-app-surface hover:text-accent`}
                     >
                         <Sparkles size={18} className="rotate-[-45deg]" />
-                        {theme === 'medieval' ? 'RETOUR AU CONSEIL' : 'Retour Cockpit'}
+                        {theme === 'medieval' ? t('modules:session.header.back_to_council') : t('modules:session.header.back_to_cockpit')}
                     </button>
                 )}
                 <button
@@ -105,10 +111,10 @@ const SessionHeader: React.FC<SessionHeaderProps> = ({
                             ? 'bg-accent text-white border-accent shadow-glow-accent' 
                             : `bg-app-surface/50 text-accent border-accent/30 hover:bg-accent/10 hover:border-accent/50 hover:shadow-glow-accent/20`
                     }`}
-                    title="Consult the AI Oracle"
+                    title={t('modules:session.header.tooltip_oracle')}
                 >
                     <Sparkles size={18} className={isOracleOpen ? 'animate-pulse' : ''} />
-                    Oracle
+                    {t('modules:session.header.oracle')}
                 </button>
                 <button
                     onClick={() => setIsSnapshotModalOpen(true)}
@@ -117,10 +123,10 @@ const SessionHeader: React.FC<SessionHeaderProps> = ({
                             ? 'bg-emerald-800/20 text-emerald-300 border-emerald-800/40 hover:bg-emerald-800/30' 
                             : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20'
                     }`}
-                    title="Capturer l'état actuel"
+                    title={t('modules:session.header.tooltip_snapshot')}
                 >
                     <Sparkles size={18} />
-                    Snapshot
+                    {t('modules:session.header.snapshot')}
                 </button>
             </div>
         </header>

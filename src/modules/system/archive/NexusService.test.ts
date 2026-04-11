@@ -78,6 +78,18 @@ vi.mock('../../sound/useSoundStore', () => ({
     },
 }));
 
+// Mock i18next
+vi.mock('i18next', () => ({
+    default: {
+        t: (key: string, options?: any) => {
+            if (options?.errors) return `${key}: ${options.errors}`;
+            if (options?.field) return `${key}: ${options.field}`;
+            if (options?.path) return `${key}: ${options.path}`;
+            return key;
+        }
+    }
+}));
+
 
 // ─────────────────────────────────────────────
 // FIXTURES
@@ -273,7 +285,7 @@ describe('scrapeCampaignData', () => {
 
     it('lève une erreur si la campagne est introuvable', () => {
         expect(() => service.scrapeCampaignData('c-inexistant')).toThrow(
-            '[NexusService] Campagne introuvable : c-inexistant'
+            '[NexusService] Campaign not found: c-inexistant'
         );
     });
 
@@ -403,7 +415,7 @@ describe('validateManifest', () => {
     it('rejette un manifeste avec une mauvaise version de schéma', () => {
         const invalidManifest = { ...validManifest, schemaVersion: 99 };
         const errors = service.validateManifest(invalidManifest);
-        expect(errors.some((e) => e.includes('schéma incompatible'))).toBe(true);
+        expect(errors.some((e) => e.includes('Version schema'))).toBe(true);
     });
 
     it('rejette un manifeste sans campaignId', () => {
@@ -428,7 +440,7 @@ describe('validateManifest', () => {
             ],
         };
         const errors = service.validateManifest(maliciousManifest);
-        expect(errors.some((e) => e.includes('malveillant'))).toBe(true);
+        expect(errors.some((e) => e.includes('modules:system.nexus.messages.malicious_path'))).toBe(true);
     });
 
     it('valide un manifeste de driver correct sans campaignId', () => {

@@ -1,9 +1,11 @@
 import { useState, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { DeckInterpreter } from '../logic/DeckInterpreter';
 import { useImageStore } from '../../image/useImageStore';
 
 export const useDeckPlayer = () => {
+    const { t } = useTranslation();
     const { 
         decks, 
         deckStates, 
@@ -74,15 +76,15 @@ export const useDeckPlayer = () => {
         if (!isProjecting || !activeDeck || !activeState || activeState.currentCardIndex === null) return;
 
         const idx = activeState.currentCardIndex;
-        const cardName = DeckInterpreter.getCardMetadata(activeDeck, idx)?.name || `Carte #${idx}`;
+        const cardName = DeckInterpreter.getCardMetadata(activeDeck, idx)?.name || t('modules:session.deck_module.player.projection.card_name_fallback', { idx });
         const avatarUrl = nextFlipped
             ? `/${cardBackUrl}`
             : `/${currentCardUrl}`;
 
         useImageStore.getState().projectEntity({
             id: `card-${activeDeck.id}-${idx}-${Date.now()}`,
-            name: nextFlipped ? '▪▪▪ Carte Cachée ▪▪▪' : cardName,
-            subtitle: nextFlipped ? 'Retournée' : `Oracle : ${activeDeck.name}`,
+            name: nextFlipped ? t('modules:session.deck_module.player.projection.hidden_name') : cardName,
+            subtitle: nextFlipped ? t('modules:session.deck_module.player.projection.hidden_subtitle') : t('modules:session.deck_module.player.projection.oracle_subtitle', { name: activeDeck.name }),
             avatar: avatarUrl,
             type: 'Oracle',
             lore: nextFlipped ? '' : (DeckInterpreter.getCardMetadata(activeDeck, idx)?.description || '')

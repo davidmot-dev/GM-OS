@@ -9,6 +9,7 @@ import {
   Book, 
   Settings 
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useSpotlight, type SpotlightResult } from '../hooks/useSpotlight';
 
 export const SpotlightSearch: React.FC = () => {
@@ -22,6 +23,7 @@ export const SpotlightSearch: React.FC = () => {
         setSelectedIndex 
     } = useSpotlight();
 
+    const { t } = useTranslation(['common']);
     const inputRef = useRef<HTMLInputElement>(null);
     const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -70,7 +72,7 @@ export const SpotlightSearch: React.FC = () => {
                         type="text"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
-                        placeholder="Rechercher une entité, musique, règle..."
+                        placeholder={t('common:spotlight.placeholder')}
                         className="flex-1 bg-transparent border-none outline-none text-slate-100 placeholder:text-slate-500 text-lg"
                     />
                     <div className="flex items-center space-x-2">
@@ -79,7 +81,7 @@ export const SpotlightSearch: React.FC = () => {
                         </div>
                         <button 
                             onClick={() => setIsOpen(false)}
-                            title="Fermer la recherche"
+                            title={t('common:spotlight.close_tooltip')}
                             className="p-1 hover:bg-slate-700 rounded-md transition-colors text-slate-400"
                         >
                             <X className="w-4 h-4" />
@@ -105,22 +107,22 @@ export const SpotlightSearch: React.FC = () => {
                     ) : query.trim() ? (
                         <div className="px-6 py-12 text-center">
                             <Search className="w-12 h-12 text-slate-700 mx-auto mb-4 opacity-20" />
-                            <p className="text-slate-400 text-lg font-medium">Aucun résultat pour "{query}"</p>
-                            <p className="text-slate-500 text-sm mt-1">Essayez un autre mot-clé ou vérifiez l'orthographe.</p>
+                            <p className="text-slate-400 text-lg font-medium">{t('common:spotlight.no_results', { query })}</p>
+                            <p className="text-slate-500 text-sm mt-1">{t('common:spotlight.no_results_sub')}</p>
                         </div>
                     ) : (
                         <div className="px-4 py-3 space-y-4">
-                            <div className="text-[10px] uppercase tracking-wider text-slate-500 font-bold px-2">Suggestions</div>
+                            <div className="text-[10px] uppercase tracking-wider text-slate-500 font-bold px-2">{t('common:spotlight.suggestions')}</div>
                             <div className="grid grid-cols-2 gap-2">
-                                <QuickTip icon={User} label="PNJ & Héros" />
-                                <QuickTip icon={Music} label="Ambiances Sonores" />
-                                <QuickTip icon={Book} label="Wiki & Règles" />
-                                <QuickTip icon={Settings} label="Système & Drivers" />
+                                <QuickTip icon={User} label={t('common:spotlight.quick_tips.npcs')} />
+                                <QuickTip icon={Music} label={t('common:spotlight.quick_tips.audio')} />
+                                <QuickTip icon={Book} label={t('common:spotlight.quick_tips.wiki')} />
+                                <QuickTip icon={Settings} label={t('common:spotlight.quick_tips.system')} />
                             </div>
                             <div className="flex items-center justify-center p-6 border border-dashed border-slate-800 rounded-xl bg-slate-800/10">
                                 <div className="text-center">
                                     <Sparkles className="w-5 h-5 text-accent mx-auto mb-2" />
-                                    <p className="text-xs text-slate-400">Tapez <span className="text-slate-200 font-bold">CMD+K</span> n'importe où pour ouvrir </p>
+                                    <p className="text-xs text-slate-400">{t('common:spotlight.shortcut_hint_prefix')}<span className="text-slate-200 font-bold">CMD+K</span>{t('common:spotlight.shortcut_hint_suffix')} </p>
                                 </div>
                             </div>
                         </div>
@@ -132,11 +134,11 @@ export const SpotlightSearch: React.FC = () => {
                     <div className="flex items-center space-x-4">
                         <div className="flex items-center">
                             <div className="flex items-center px-1 py-0.5 rounded border border-slate-800 bg-slate-900 mr-1.5 font-mono">↑↓</div>
-                            <span>Naviguer</span>
+                            <span>{t('common:spotlight.nav_hint')}</span>
                         </div>
                         <div className="flex items-center">
                             <div className="flex items-center px-1 py-0.5 rounded border border-slate-800 bg-slate-900 mr-1.5 font-mono">ENTER</div>
-                            <span>Sélectionner</span>
+                            <span>{t('common:spotlight.select_hint')}</span>
                         </div>
                     </div>
                     <div className="flex items-center font-medium text-slate-400">
@@ -154,6 +156,7 @@ const ResultItem: React.FC<{
     onSelect: () => void;
     onHover: () => void;
 }> = ({ result, isSelected, onSelect, onHover }) => {
+    const { t } = useTranslation(['common']);
     const Icon = result.icon;
     
     return (
@@ -183,7 +186,7 @@ const ResultItem: React.FC<{
             </div>
             {isSelected && (
                 <div className="flex items-center text-accent/50 animate-pulse">
-                    <span className="text-[10px] font-bold mr-2 uppercase tracking-tighter">Ouvrir</span>
+                    <span className="text-[10px] font-bold mr-2 uppercase tracking-tighter">{t('common:spotlight.open_hint')}</span>
                     <CornerDownLeft className="w-3 h-3" />
                 </div>
             )}

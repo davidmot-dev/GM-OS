@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useSessionStore } from '../../../store/useSessionStore';
 import { useModalStore } from '../../../stores/useModalStore';
@@ -8,6 +9,7 @@ import SessionChecklist from './SessionChecklist';
 import TradeRequestPanel from './TradeRequestPanel';
 
 const CampaignCockpit: React.FC = () => {
+    const { t } = useTranslation();
     const { 
         campaigns, 
         activeCampaignId, 
@@ -46,18 +48,18 @@ const CampaignCockpit: React.FC = () => {
                 <div className="flex justify-between items-start mb-2">
                     <div>
                         <h3 className={`text-app-text font-bold text-lg group-hover:text-accent transition-colors ${theme === 'medieval' ? 'font-display tracking-[0.05em]' : ''}`}>
-                            {activeCampaign?.name || 'Aucune Campagne Active'}
+                            {activeCampaign?.name || t('modules:session.cockpit.none_active')}
                         </h3>
                         <p className={`text-app-text/60 text-[10px] uppercase tracking-[0.18em] ${theme === 'medieval' ? 'font-display italic' : 'font-semibold'}`}>
-                            {theme === 'medieval' ? 'Chronique Active' : 'Campagne Active'}
+                            {theme === 'medieval' ? t('modules:session.cockpit.active_chronicle') : t('modules:session.cockpit.active_campaign')}
                         </p>
                     </div>
                     <BookOpen className="text-accent group-hover:scale-110 transition-transform" size={24} />
                 </div>
                 <div className="mt-4 flex flex-col gap-2">
                     <div className="flex justify-between text-xs text-app-text/40">
-                        <span>Progression de la Session</span>
-                        <span>Étape {activeSession?.number || 0}/{sessionCount || 0}</span>
+                        <span>{t('modules:session.cockpit.session_progress')}</span>
+                        <span>{t('modules:session.cockpit.session_step', { current: activeSession?.number || 0, total: sessionCount || 0 })}</span>
                     </div>
                     <div className="w-full bg-app-bg h-1.5 rounded-full overflow-hidden">
                         <div
@@ -71,7 +73,7 @@ const CampaignCockpit: React.FC = () => {
             {/* Navigation Menu */}
             <nav className="flex flex-col gap-1 flex-shrink-0">
                 <p className={`text-app-text/40 text-[10px] uppercase tracking-[0.2em] mb-2 px-3 ${theme === 'medieval' ? 'font-display' : ''}`}>
-                    {theme === 'medieval' ? 'GESTION ARCANIQUE' : 'Gestion'}
+                    {theme === 'medieval' ? t('modules:session.cockpit.management_arcanic') : t('modules:session.cockpit.management')}
                 </p>
                 <button
                     onClick={() => setCurrentView('cockpit')}
@@ -81,7 +83,7 @@ const CampaignCockpit: React.FC = () => {
                 >
                     <LayoutDashboard className={currentView === 'cockpit' ? 'scale-110 shadow-glow-accent' : 'group-hover:scale-110 transition-transform'} size={20} />
                     <span className={`text-sm tracking-tight ${theme === 'medieval' ? 'font-display' : 'font-bold'}`}>
-                        Cockpit
+                        {t('modules:session.cockpit.view_cockpit')}
                     </span>
                 </button>
                 <button
@@ -89,7 +91,7 @@ const CampaignCockpit: React.FC = () => {
                     className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-app-text/80 hover:bg-app-surface hover:text-app-text transition-all w-full text-left"
                 >
                     <Swords size={20} />
-                    <span className="text-sm font-medium">Rencontres</span>
+                    <span className="text-sm font-medium">{t('modules:session.cockpit.view_encounters')}</span>
                 </button>
                 <button
                     onClick={() => setCurrentView('storyboard')}
@@ -99,7 +101,7 @@ const CampaignCockpit: React.FC = () => {
                 >
                     <Zap className={currentView === 'storyboard' ? 'text-accent scale-110 shadow-glow-accent' : 'group-hover:scale-110 transition-transform'} size={20} />
                     <span className={`text-sm tracking-tight ${theme === 'medieval' ? 'font-display' : 'font-bold'}`}>
-                        Master Storyboard
+                        {t('modules:session.cockpit.view_storyboard')}
                     </span>
                 </button>
                 <button
@@ -107,21 +109,21 @@ const CampaignCockpit: React.FC = () => {
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'npc-gallery' ? 'bg-accent/10 text-accent' : 'text-app-text/80 hover:bg-app-bg hover:text-app-text'}`}
                 >
                     <Users size={20} />
-                    <span className="text-sm font-medium">Galerie PNJ</span>
+                    <span className="text-sm font-medium">{t('modules:session.cockpit.view_npc_gallery')}</span>
                 </button>
                 <button
                     onClick={() => setCurrentView('social-graph')}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'social-graph' ? 'bg-accent/10 text-accent' : 'text-app-text/80 hover:bg-app-bg hover:text-app-text'}`}
                 >
                     <Users size={20} className={currentView === 'social-graph' ? 'text-accent' : 'text-app-text/60'} />
-                    <span className="text-sm font-medium">Graphe Social</span>
+                    <span className="text-sm font-medium">{t('modules:session.cockpit.view_social_graph')}</span>
                 </button>
                 <button
                     onClick={() => setCurrentView('world-atlas')}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'world-atlas' ? 'bg-accent/10 text-accent' : 'text-app-text/80 hover:bg-app-bg hover:text-app-text'}`}
                 >
                     <MapIcon size={20} />
-                    <span className="text-sm font-medium">Atlas du Monde</span>
+                    <span className="text-sm font-medium">{t('modules:session.cockpit.view_world_atlas')}</span>
                 </button>
                 <button
                     onClick={() => showCustom('loot-os')}
@@ -131,7 +133,7 @@ const CampaignCockpit: React.FC = () => {
                 >
                     <Archive size={20} className={currentView === 'loot-os' ? 'text-accent scale-110 shadow-glow-accent' : 'group-hover:scale-110 transition-transform'} />
                     <span className={`text-sm tracking-tight ${theme === 'medieval' ? 'font-display' : 'font-bold'}`}>
-                        Loot-OS
+                        {t('modules:session.cockpit.view_loot_os')}
                     </span>
                 </button>
                 <button
@@ -139,14 +141,14 @@ const CampaignCockpit: React.FC = () => {
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'session-prep' ? 'bg-accent/10 text-accent' : 'text-app-text/80 hover:bg-app-bg hover:text-app-text'}`}
                 >
                     <PlusCircle size={20} className={currentView === 'session-prep' ? 'text-accent' : 'text-app-text/60'} />
-                    <span className="text-sm font-medium">Préparation de Session</span>
+                    <span className="text-sm font-medium">{t('modules:session.cockpit.view_session_prep')}</span>
                 </button>
                 <button
                     onClick={() => setCurrentView('forge')}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'forge' ? 'bg-accent/10 text-accent' : 'text-app-text/80 hover:bg-app-bg hover:text-app-text'}`}
                 >
                     <Hammer size={20} className={currentView === 'forge' ? 'text-accent' : 'text-app-text/60'} />
-                    <span className="text-sm font-medium">System Forge</span>
+                    <span className="text-sm font-medium">{t('modules:session.cockpit.view_system_forge')}</span>
                 </button>
                 <button
                     onClick={() => setCurrentView(hasLinkedDeck ? 'deck-player' : 'deck-library')}
@@ -157,7 +159,7 @@ const CampaignCockpit: React.FC = () => {
                     }`}
                 >
                     <Layers className={currentView === 'deck-player' || currentView === 'deck-library' ? 'text-gm-gold scale-110 shadow-glow-gold' : 'group-hover:scale-110 transition-transform'} size={20} />
-                    <span className="text-sm font-bold tracking-tight text-left">Deck-OS</span>
+                    <span className="text-sm font-bold tracking-tight text-left">{t('modules:session.cockpit.view_deck_os')}</span>
                 </button>
 
 
@@ -166,11 +168,11 @@ const CampaignCockpit: React.FC = () => {
                         <motion.button
                             variants={{ hidden: { opacity: 0, x: -10 }, show: { opacity: 1, x: 0 } }}
                             onClick={() => showConfirm(
-                                'La session est-elle terminée ?',
+                                t('modules:session.cockpit.session_done_confirm'),
                                 () => updateSession(activeSession.id, { status: 'done' }),
                                 undefined,
-                                'OUI, TERMINER',
-                                'NON, CONTINUER'
+                                t('modules:session.cockpit.confirm_finish'),
+                                t('modules:session.cockpit.confirm_continue')
                             )}
                             className="flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all glass-bento relative overflow-hidden"
                         >
@@ -179,7 +181,7 @@ const CampaignCockpit: React.FC = () => {
                             <div className="absolute inset-y-0 left-0 w-0.5 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                             
                             <Play size={20} fill="currentColor" className="text-emerald-500 relative z-10 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)] group-hover:scale-110 transition-transform" />
-                            <span className="text-sm font-bold uppercase tracking-tighter text-emerald-400 relative z-10 drop-shadow-md">Session Active</span>
+                            <span className="text-sm font-bold uppercase tracking-tighter text-emerald-400 relative z-10 drop-shadow-md">{t('modules:session.cockpit.active_session')}</span>
                         </motion.button>
                         
                         <button
@@ -187,31 +189,31 @@ const CampaignCockpit: React.FC = () => {
                             className="flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all text-app-text/60 hover:bg-accent/10 hover:text-accent"
                         >
                             <StickyNote size={20} className="text-accent/60 group-hover:text-accent transition-colors" />
-                            <span className="text-sm font-bold uppercase tracking-tighter">Notes de Session</span>
+                            <span className="text-sm font-bold uppercase tracking-tighter">{t('modules:session.cockpit.session_notes')}</span>
                         </button>
 
                         {activeSession.moduleSnapshot && (
                             <div className="flex flex-col gap-1 mt-1">
                                 <button
                                     onClick={() => showConfirm(
-                                        'Voulez-vous restaurer l\'état complet de GM-OS à partir de ce snapshot ?',
+                                        t('modules:session.cockpit.restore_snapshot_confirm'),
                                         () => applySystemSnapshot(activeSession.moduleSnapshot!),
                                         undefined,
-                                        'OUI, RESTAURER',
-                                        'ANNULER'
+                                        t('modules:session.cockpit.confirm_restore'),
+                                        t('modules:session.cockpit.cancel')
                                     )}
                                     className="flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all text-emerald-400 hover:bg-emerald-500/10 border border-emerald-500/10"
-                                    title="Appliquer la configuration sauvegardée"
+                                    title={t('modules:session.cockpit.restore_state')}
                                 >
                                     <RefreshCw size={20} className="group-hover:rotate-180 transition-transform duration-500" />
-                                    <span className="text-sm font-bold uppercase tracking-tighter flex-1">Restaurer État</span>
+                                    <span className="text-sm font-bold uppercase tracking-tighter flex-1">{t('modules:session.cockpit.restore_state')}</span>
                                 </button>
                                 <button
-                                    onClick={() => showCustom('snapshot-viewer', { snapshot: activeSession.moduleSnapshot, sessionName: `Session #${activeSession.number}` })}
+                                    onClick={() => showCustom('snapshot-viewer', { snapshot: activeSession.moduleSnapshot, sessionName: t('modules:session.cockpit.session_hash', { number: activeSession.number }) })}
                                     className="flex items-center gap-3 px-3 py-1.5 rounded-lg group w-full text-left transition-all text-emerald-400/60 hover:text-emerald-400 hover:bg-emerald-500/5 text-[10px]"
                                 >
                                     <Eye size={14} />
-                                    <span className="font-bold uppercase tracking-widest">Voir le contenu</span>
+                                    <span className="font-bold uppercase tracking-widest">{t('modules:session.cockpit.view_content')}</span>
                                 </button>
                             </div>
                         )}
@@ -223,7 +225,7 @@ const CampaignCockpit: React.FC = () => {
                             className="flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all text-app-text/60 hover:bg-accent/10 hover:text-accent mt-1"
                         >
                             <Play size={20} className="text-accent/60 group-hover:text-accent transition-colors" />
-                            <span className="text-sm font-bold uppercase tracking-tighter">Lancer Session</span>
+                            <span className="text-sm font-bold uppercase tracking-tighter">{t('modules:session.cockpit.launch_session')}</span>
                         </button>
                     )
                 )}
@@ -234,21 +236,21 @@ const CampaignCockpit: React.FC = () => {
                         className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'library' ? 'bg-accent/10 text-accent' : 'text-app-text/80 hover:bg-app-bg hover:text-app-text'}`}
                     >
                         <Library size={20} className={currentView === 'library' ? 'text-accent' : 'text-app-text/60'} />
-                        <span className="text-sm font-bold uppercase tracking-tighter">Bibliothèque</span>
+                        <span className="text-sm font-bold uppercase tracking-tighter">{t('modules:session.cockpit.library')}</span>
                     </button>
                     <button
                         onClick={() => setCurrentView('players')}
                         className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'players' ? 'bg-accent/10 text-accent' : 'text-app-text/80 hover:bg-app-bg hover:text-app-text'}`}
                     >
                         <Users2 size={20} className={currentView === 'players' ? 'text-accent' : 'text-app-text/60'} />
-                        <span className="text-sm font-bold uppercase tracking-tighter text-left">Joueurs</span>
+                        <span className="text-sm font-bold uppercase tracking-tighter text-left">{t('modules:session.cockpit.players')}</span>
                     </button>
                     <button
                         onClick={() => setCurrentView('templates')}
                         className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'templates' ? 'bg-accent/10 text-accent' : 'text-app-text/80 hover:bg-app-bg hover:text-app-text'}`}
                     >
                         <FileText size={20} className={currentView === 'templates' ? 'text-accent' : 'text-app-text/60'} />
-                        <span className="text-sm font-bold uppercase tracking-tighter text-left">Fiches de Jeu</span>
+                        <span className="text-sm font-bold uppercase tracking-tighter text-left">{t('modules:session.cockpit.sheet_templates')}</span>
                     </button>
                 </div>
             </nav>
@@ -264,7 +266,7 @@ const CampaignCockpit: React.FC = () => {
             {/* Session Resources Section */}
             {activeSession && (activeSession.externalLink || activeSession.filePath) && (
                 <div className="flex flex-col gap-3 py-4 border-t border-app-border/40 flex-shrink-0">
-                    <p className="text-app-text/40 text-[10px] font-bold uppercase tracking-[0.2em] px-3 mb-1">Ressources Session</p>
+                    <p className="text-app-text/40 text-[10px] font-bold uppercase tracking-[0.2em] px-3 mb-1">{t('modules:session.cockpit.session_resources')}</p>
                     <div className="flex flex-col gap-2 px-1">
                         {activeSession.externalLink && (
                             <a 
@@ -274,7 +276,7 @@ const CampaignCockpit: React.FC = () => {
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg bg-emerald-500/5 border border-emerald-500/10 text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500/30 transition-all group"
                             >
                                 <ExternalLink size={16} className="group-hover:scale-110 transition-transform" />
-                                <span className="text-xs font-bold truncate">Ouvrir le Lien HTTP</span>
+                                <span className="text-xs font-bold truncate">{t('modules:session.cockpit.open_http_link')}</span>
                             </a>
                         )}
                         {activeSession.filePath && (
@@ -290,7 +292,7 @@ const CampaignCockpit: React.FC = () => {
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg bg-cyan-500/5 border border-cyan-500/10 text-cyan-400 hover:bg-cyan-500/10 hover:border-cyan-500/30 transition-all group"
                             >
                                 <File size={16} className="group-hover:scale-110 transition-transform" />
-                                <span className="text-xs font-bold truncate">Accéder au Fichier</span>
+                                <span className="text-xs font-bold truncate">{t('modules:session.cockpit.access_file')}</span>
                             </button>
                         )}
                     </div>

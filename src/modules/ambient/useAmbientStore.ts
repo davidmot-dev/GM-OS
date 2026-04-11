@@ -64,7 +64,7 @@ interface AmbientState {
 
 const INITIAL_TRACKS: AmbientTrackState[] = Array(8).fill(null).map((_, i) => ({
     id: `track-${i}`,
-    label: `Piste ${i + 1}`,
+    label: `modules:ambient.presets.tracks.default_track`,
     url: '',
     volume: 0.5,
     isPlaying: false,
@@ -74,33 +74,33 @@ const INITIAL_TRACKS: AmbientTrackState[] = Array(8).fill(null).map((_, i) => ({
 const DEFAULT_PRESETS: AmbientTheme[] = [
     {
         id: 'cp-arc',
-        universe: 'Cyberpunk',
-        name: 'Arcologie',
+        universe: 'modules:ambient.presets.universes.cyberpunk',
+        name: 'modules:ambient.presets.themes.arcology',
         tracks: [
-            { label: 'Vent de Spire', url: '', volume: 0.4, color: '#06b6d4' },
-            { label: 'Drones de Sécurité', url: '', volume: 0.2, color: '#f43f5e' },
-            { label: 'Murmure de Clim', url: '', volume: 0.6, color: '#94a3b8' },
-            { label: 'Annonces Corporatives', url: '', volume: 0.3, color: '#fbbf24' }
+            { label: 'modules:ambient.presets.tracks.spire_wind', url: '', volume: 0.4, color: '#06b6d4' },
+            { label: 'modules:ambient.presets.tracks.security_drones', url: '', volume: 0.2, color: '#f43f5e' },
+            { label: 'modules:ambient.presets.tracks.ac_hum', url: '', volume: 0.6, color: '#94a3b8' },
+            { label: 'modules:ambient.presets.tracks.corp_announcements', url: '', volume: 0.3, color: '#fbbf24' }
         ]
     },
     {
         id: 'cp-club',
-        universe: 'Cyberpunk',
-        name: 'Club Néon',
+        universe: 'modules:ambient.presets.universes.cyberpunk',
+        name: 'modules:ambient.presets.themes.neon_club',
         tracks: [
-            { label: 'Basses Synth', url: '', volume: 0.7, color: '#d946ef' },
-            { label: 'Foule Distante', url: '', volume: 0.4, color: '#8b5cf6' },
-            { label: 'Neon Buzz', url: '', volume: 0.2, color: '#2dd4bf' }
+            { label: 'modules:ambient.presets.tracks.synth_bass', url: '', volume: 0.7, color: '#d946ef' },
+            { label: 'modules:ambient.presets.tracks.distant_crowd', url: '', volume: 0.4, color: '#8b5cf6' },
+            { label: 'modules:ambient.presets.tracks.neon_buzz', url: '', volume: 0.2, color: '#2dd4bf' }
         ]
     },
     {
         id: 'fan-forest',
-        universe: 'Fantastique',
-        name: 'Forêt Enchantée',
+        universe: 'modules:ambient.presets.universes.fantasy',
+        name: 'modules:ambient.presets.themes.enchanted_forest',
         tracks: [
-            { label: 'Oiseaux', url: '', volume: 0.5, color: '#22c55e' },
-            { label: 'Ruisseau', url: '', volume: 0.6, color: '#3b82f6' },
-            { label: 'Feuillage', url: '', volume: 0.3, color: '#f59e0b' }
+            { label: 'modules:ambient.presets.tracks.birds', url: '', volume: 0.5, color: '#22c55e' },
+            { label: 'modules:ambient.presets.tracks.stream', url: '', volume: 0.6, color: '#3b82f6' },
+            { label: 'modules:ambient.presets.tracks.foliage', url: '', volume: 0.3, color: '#f59e0b' }
         ]
     }
 ];
@@ -108,22 +108,22 @@ const DEFAULT_PRESETS: AmbientTheme[] = [
 const DEFAULT_SCENES: AmbientScene[] = [
     {
         id: 'scene-quiet',
-        name: 'Calme Plat',
-        description: 'Ambiance de fond discrète',
+        name: 'modules:ambient.scenes.quiet.name',
+        description: 'modules:ambient.scenes.quiet.desc',
         trackVolumes: [0.2, 0.2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1],
         activeTracks: [true, true, true, false, false, false, false, false]
     },
     {
         id: 'scene-tension',
-        name: 'Tension',
-        description: 'Renforcement des basses et textures',
+        name: 'modules:ambient.scenes.tension.name',
+        description: 'modules:ambient.scenes.tension.desc',
         trackVolumes: [0.4, 0.4, 0.3, 0.7, 0.7, 0.2, 0.2, 0.2],
         activeTracks: [true, true, true, true, true, false, false, false]
     },
     {
         id: 'scene-action',
-        name: 'Action / Danger',
-        description: 'Volume maximum sur toutes les pistes',
+        name: 'modules:ambient.scenes.action.name',
+        description: 'modules:ambient.scenes.action.desc',
         trackVolumes: [0.8, 0.8, 0.6, 0.9, 0.9, 0.8, 0.8, 0.8],
         activeTracks: [true, true, true, true, true, true, true, true]
     }
@@ -180,7 +180,7 @@ export const useAmbientStore = create<AmbientState>()(
                 const newScene: AmbientScene = {
                     id: `scene-${Date.now()}`,
                     name,
-                    description: 'Scène personnalisée',
+                    description: 'modules:ambient.scenes.custom_scene',
                     trackVolumes: currentTracks.map(t => t.volume),
                     activeTracks: currentTracks.map(t => t.isPlaying)
                 };

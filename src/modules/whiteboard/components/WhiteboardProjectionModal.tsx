@@ -4,12 +4,14 @@ import { useImageStore } from '../../image/useImageStore';
 import { useWhiteboardStore } from '../useWhiteboardStore';
 import { useModalStore } from '../../../stores/useModalStore';
 import { useHardwareStore } from '../../../stores/useHardwareStore';
+import { useTranslation } from 'react-i18next';
 
 const WhiteboardProjectionModal: React.FC = () => {
     const { displays, fetchDisplays } = useImageStore();
     const { clearProjectedState } = useWhiteboardStore();
     const { closeModal } = useModalStore();
     const { getDisplayLabel } = useHardwareStore();
+    const { t } = useTranslation('modules');
 
     useEffect(() => {
         if (window.appBridge?.image?.getDisplays) {
@@ -45,7 +47,7 @@ const WhiteboardProjectionModal: React.FC = () => {
     return (
         <div className="flex flex-col gap-4">
             <p className="text-sm text-app-text/60 mb-2">
-                Choisissez la destination pour projeter le Whiteboard :
+                {t('whiteboard.projection.choose_dest')}
             </p>
 
             <div className="grid grid-cols-1 gap-3">
@@ -58,19 +60,19 @@ const WhiteboardProjectionModal: React.FC = () => {
                         <Cast size={24} />
                     </div>
                     <div className="flex-1">
-                        <h4 className="font-bold text-app-text">Synchroniser Player Hub</h4>
-                        <p className="text-xs text-app-text/40">Affiche le Whiteboard sur l'onglet Joueur interne (Dessin collaboratif).</p>
+                        <h4 className="font-bold text-app-text">{t('whiteboard.projection.sync_hub')}</h4>
+                        <p className="text-xs text-app-text/40">{t('whiteboard.projection.sync_hub_desc')}</p>
                     </div>
                 </button>
 
                 <div className="h-px bg-app-border/20 my-1" />
 
                 {/* Option 2: Monitors */}
-                <h5 className="text-[10px] font-black uppercase tracking-widest text-app-text/40 px-1">Moniteurs Détectés</h5>
+                <h5 className="text-[10px] font-black uppercase tracking-widest text-app-text/40 px-1">{t('whiteboard.projection.monitors_detected')}</h5>
                 
                 {displays.length === 0 ? (
                     <div className="p-4 bg-app-surface/50 rounded-xl border border-dashed border-app-border text-center">
-                        <p className="text-xs text-app-text/40 italic">Aucun moniteur externe détecté.</p>
+                        <p className="text-xs text-app-text/40 italic">{t('whiteboard.projection.no_monitor')}</p>
                     </div>
                 ) : (
                     displays.map(display => (
@@ -84,7 +86,7 @@ const WhiteboardProjectionModal: React.FC = () => {
                             </div>
                             <div className="flex-1">
                                 <h4 className="font-bold text-app-text">{getDisplayLabel(display.id)}</h4>
-                                <p className="text-xs text-app-text/40">Projeter le Whiteboard en plein écran sur ce moniteur.</p>
+                                <p className="text-xs text-app-text/40">{t('whiteboard.projection.project_monitor_desc')}</p>
                             </div>
                             <ExternalLink size={16} className="text-app-text/20 group-hover:text-app-text/40 transition-colors" />
                         </button>

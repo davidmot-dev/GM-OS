@@ -29,6 +29,7 @@ import {
     Sparkles,
     BookOpen
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useSessionStore, THEME_PALETTES } from '../store/useSessionStore';
 import type { ThemeID } from '../store/useSessionStore';
 import { useModalStore } from '../stores/useModalStore';
@@ -94,6 +95,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
     } = useSessionStore();
 
     const { openMediaHub, showCustom } = useModalStore();
+    const { t } = useTranslation(['common', 'modules']);
     const tacticalStatus = useTacticalAIStore((state) => state.status);
 
     // Appliquer le thème et la couleur d'accentuation au document
@@ -107,8 +109,6 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
         root.style.setProperty('--app-surface', palette.surface);
         root.style.setProperty('--app-border', palette.border);
         root.style.setProperty('--font-display', palette.fonts);
-
-
 
         // Mise à jour des classes de thème pour des ajustements CSS fins
         root.classList.remove('theme-cyberpunk', 'theme-medieval', 'theme-modern');
@@ -125,11 +125,11 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
         console.log('[Shell] Launching Player Hub...');
         if (window.appBridge?.session?.launchHubWindow) {
             console.log('[Shell] Calling bridge launchHubWindow');
-            gmToast('Lancement du Player Hub...', 'info');
+            gmToast(t('common:launching_hub'), 'info');
             window.appBridge.session.launchHubWindow();
         } else {
             console.warn('[Shell] Bridge launchHubWindow not found');
-            alert("Veuillez lancer le Player Hub dans un onglet `http://localhost:5173/?window=hub` ou via le bridge Electron.");
+            alert(t('common:error_launch_hub', "Veuillez lancer le Player Hub dans un onglet `http://localhost:5173/?window=hub` ou via le bridge Electron."));
         }
     };
 
@@ -137,7 +137,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
         console.log('[Shell] Launching Tablet Hub...');
         // We use the same bridge if available, or just instruct
         if (window.appBridge?.session?.launchHubWindow) {
-            gmToast('Lancement du Hub Tablette...', 'info');
+            gmToast(t('common:launching_tablet'), 'info');
             // Check if the bridge supports a custom tag, if not, we might need a separate call or manual open
             // For now, we'll try to use the bridge if it handles new windows generally,
             // but the most reliable way for "deportable" is the URL.
@@ -149,7 +149,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
     };
     
     const handleQuitApp = () => {
-        if (confirm("Voulez-vous vraiment quitter GM-OS ?")) {
+        if (confirm(t('common:quit_confirm'))) {
             if (window.appBridge?.app?.quit) {
                 window.appBridge.app.quit();
             } else {
@@ -198,137 +198,137 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                 <nav className="flex-1 flex flex-col gap-1 overflow-y-auto pr-2 custom-scrollbar">
                     <NavItem
                         icon={<LayoutDashboard size={20} />}
-                        label="Session OS"
+                        label={t('modules:names.dashboard')}
                         active={activeModule === 'dashboard'}
                         onClick={() => setActiveModule('dashboard')}
                     />
                     <NavItem
                         icon={<BookOpen size={20} />}
-                        label="Journal OS"
+                        label={t('modules:names.journal')}
                         active={activeModule === 'journal'}
                         onClick={() => setActiveModule('journal')}
                     />
 
                     <div className="my-3 mx-2 h-px bg-app-border/20" />
 
-                    <div className="px-3 mb-2 text-[10px] font-bold text-app-text/60 uppercase tracking-widest">Audio</div>
+                    <div className="px-3 mb-2 text-[10px] font-bold text-app-text/60 uppercase tracking-widest">{t('common:audio', 'Audio')}</div>
                     <NavItem
                         icon={<Music size={20} />}
-                        label="Music OS"
+                        label={t('modules:names.music')}
                         active={activeModule === 'music'}
                         onClick={() => setActiveModule('music')}
                     />
                     <NavItem
                         icon={<Volume2 size={20} />}
-                        label="Sound OS"
+                        label={t('modules:names.sound')}
                         active={activeModule === 'sound'}
                         onClick={() => setActiveModule('sound')}
                     />
                     <NavItem
                         icon={<Wind size={20} />}
-                        label="Ambient OS"
+                        label={t('modules:names.ambient')}
                         active={activeModule === 'ambient'}
                         onClick={() => setActiveModule('ambient')}
                     />
                     <NavItem
                         icon={<Mic2 size={20} />}
-                        label="Voice OS"
+                        label={t('modules:names.voice')}
                         active={activeModule === 'voice'}
                         onClick={() => setActiveModule('voice')}
                     />
 
                     <div className="my-3 mx-2 h-px bg-app-border/20" />
 
-                    <div className="px-3 mb-2 text-[10px] font-bold text-app-text/40 uppercase tracking-widest">Global</div>
+                    <div className="px-3 mb-2 text-[10px] font-bold text-app-text/40 uppercase tracking-widest">{t('common:global', 'Global')}</div>
                     <NavItem
                         icon={<Star size={20} className="text-amber-500" />}
-                        label="Favorite OS"
+                        label={t('modules:names.favorite')}
                         active={activeModule === 'favorite'}
                         onClick={() => setActiveModule('favorite')}
                     />
                     <NavItem
                         icon={<Sparkles size={20} className="text-purple-400" />}
-                        label="Obsidian"
+                        label={t('modules:names.obsidian')}
                         active={activeModule === 'obsidian'}
                         onClick={() => setActiveModule('obsidian')}
                     />
                     <NavItem
                         icon={<Brain size={20} className="text-accent" />}
-                        label="AI GEMS"
+                        label={t('common:aiPanel')}
                         active={isAIPanelOpen}
                         onClick={() => toggleAIPanel()}
                     />
 
                     <div className="my-3 mx-2 h-px bg-app-border/20" />
 
-                    <div className="px-3 mb-2 text-[10px] font-bold text-app-text/40 uppercase tracking-widest">Aventure</div>
+                    <div className="px-3 mb-2 text-[10px] font-bold text-app-text/40 uppercase tracking-widest">{t('common:aventure', 'Aventure')}</div>
                     <NavItem
                         icon={<Sword size={20} />}
-                        label="Combat OS"
+                        label={t('modules:names.combat')}
                         active={activeModule === 'combat'}
                         onClick={() => setActiveModule('combat')}
                     />
                     <NavItem
                         icon={<Dices size={20} />}
-                        label="Dice OS"
+                        label={t('modules:names.dice')}
                         active={activeModule === 'dice'}
                         onClick={() => setActiveModule('dice')}
                     />
                     <NavItem
                         icon={<Users size={20} />}
-                        label="NPC OS"
+                        label={t('modules:names.npc')}
                         active={activeModule === 'npc'}
                         onClick={() => setActiveModule('npc')}
                     />
                     <NavItem
                         icon={<MapIcon size={20} />}
-                        label="Map OS"
+                        label={t('modules:names.map')}
                         active={activeModule === 'map'}
                         onClick={() => setActiveModule('map')}
                     />
 
                     <div className="my-3 mx-2 h-px bg-app-border/20" />
 
-                    <div className="px-3 mb-2 text-[10px] font-bold text-app-text/40 uppercase tracking-widest">Outils</div>
+                    <div className="px-3 mb-2 text-[10px] font-bold text-app-text/40 uppercase tracking-widest">{t('common:outils', 'Outils')}</div>
                     <NavItem
                         icon={<FolderOpen size={20} className="text-gm-cyan" />}
-                        label="Media Hub"
+                        label={t('common:mediaHub', 'Media Hub')}
                         active={false}
                         onClick={() => openMediaHub()}
                     />
                     <NavItem
                         icon={<ImageIcon size={20} />}
-                        label="Image OS"
+                        label={t('modules:names.image')}
                         active={activeModule === 'image'}
                         onClick={() => setActiveModule('image')}
                     />
                     <NavItem
                         icon={<Clock size={20} />}
-                        label="Clock OS"
+                        label={t('modules:names.clock')}
                         active={activeModule === 'clock'}
                         onClick={() => setActiveModule('clock')}
                     />
                     <NavItem
                         icon={<Lightbulb size={20} />}
-                        label="Light OS"
+                        label={t('modules:names.light')}
                         active={activeModule === 'light'}
                         onClick={() => setActiveModule('light')}
                     />
                     <NavItem
                         icon={<Table size={20} />}
-                        label="Table OS"
+                        label={t('modules:names.table')}
                         active={activeModule === 'table'}
                         onClick={() => setActiveModule('table')}
                     />
                     <NavItem
                         icon={<Globe size={20} />}
-                        label="Web OS"
+                        label={t('modules:names.web')}
                         active={activeModule === 'web'}
                         onClick={() => setActiveModule('web')}
                     />
                     <NavItem
                         icon={<Edit3 size={20} />}
-                        label="Whiteboard OS"
+                        label={t('modules:names.whiteboard')}
                         active={activeModule === 'whiteboard'}
                         onClick={() => setActiveModule('whiteboard')}
                     />
@@ -339,28 +339,28 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         <button 
                             onClick={() => setIsPanelOpen(!isPanelOpen)}
                             className={`flex-1 py-3 flex items-center justify-center transition-all group ${isPanelOpen ? 'text-accent bg-accent/10' : 'text-app-text/50 hover:text-accent hover:bg-accent/10'}`}
-                            title="Cortex Tactique"
+                            title={t('modules:tooltips.cortex')}
                         >
                             <Brain size={18} className={`${tacticalAIStatus === 'analyzing' ? 'animate-pulse' : ''} group-hover:scale-110 transition-transform`} />
                         </button>
                         <button 
                             onClick={cycleTheme}
                             className="flex-1 py-3 flex items-center justify-center text-app-text/50 hover:text-accent hover:bg-accent/10 transition-all group border-l border-app-border/50"
-                            title={`Thème : ${theme}`}
+                            title={`${t('modules:tooltips.theme_prefix')}${theme}`}
                         >
                             <Palette size={18} className="group-hover:rotate-12 transition-transform" />
                         </button>
                         <button 
                             onClick={() => setActiveModule('debug')}
                             className={`flex-1 py-3 flex items-center justify-center transition-all border-x border-app-border/50 ${activeModule === 'debug' ? 'text-blue-400 bg-blue-400/10' : 'text-app-text/50 hover:text-blue-400 hover:bg-blue-400/10'}`}
-                            title="Debug & Logs"
+                            title={t('modules:tooltips.debug_logs')}
                         >
                             <Terminal size={18} />
                         </button>
                         <button 
                             onClick={() => showCustom('global-settings')}
                             className="flex-1 py-3 flex items-center justify-center text-app-text/50 hover:text-gm-gold hover:bg-gm-gold/10 transition-all duration-300 relative group"
-                            title="Paramètres de l'OS"
+                            title={t('modules:tooltips.os_settings')}
                         >
                             <Settings size={18} className="group-hover:rotate-90 transition-transform duration-500" />
                             <div className="absolute inset-0 bg-gm-gold/0 group-hover:bg-gm-gold/5 transition-colors" />
@@ -368,7 +368,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         <button 
                             onClick={() => SessionService.saveFullSession()}
                             className="flex-1 py-3 flex items-center justify-center text-app-text/50 hover:text-gm-cyan hover:bg-gm-cyan/10 border-x border-app-border/50 transition-all duration-300 relative group"
-                            title="Sauvegarder la session"
+                            title={t('modules:tooltips.save_session')}
                         >
                             <Save size={18} className="group-hover:scale-110 transition-transform" />
                             <div className="absolute inset-0 bg-gm-cyan/0 group-hover:bg-gm-cyan/5 transition-colors" />
@@ -376,7 +376,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         <button 
                             onClick={() => SessionService.loadFullSession()}
                             className="flex-1 py-3 flex items-center justify-center text-app-text/50 hover:text-gm-violet hover:bg-gm-violet/10 border-app-border/50 transition-all duration-300 relative group"
-                            title="Charger une session"
+                            title={t('modules:tooltips.load_session')}
                         >
                             <Download size={18} className="group-hover:-translate-y-0.5 transition-transform" />
                             <div className="absolute inset-0 bg-gm-violet/0 group-hover:bg-gm-violet/5 transition-colors" />
@@ -384,12 +384,11 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                     </div>
                     <div className="group relative p-4 rounded-[1.25rem] bg-gradient-to-br from-app-surface/40 to-app-bg/60 border border-app-border/30 shadow-2xl backdrop-blur-2xl transition-all duration-300 hover:border-accent/30 overflow-hidden">
                         <div className="absolute -right-4 -top-4 w-24 h-24 bg-accent/10 rounded-full blur-3xl group-hover:bg-accent/20 transition-all duration-500" />
-                        
-                        <div className="flex items-center justify-center gap-4 relative z-10 px-2">
-                            <button
+                                            <div className="flex items-center justify-center gap-4 relative z-10 px-2">
+                             <button
                                 onClick={handleLaunchHub}
                                 className="p-3 rounded-xl bg-sky-500/5 text-sky-400/60 hover:text-sky-400 hover:bg-sky-500/10 hover:shadow-glow-sky transition-all border border-sky-500/10"
-                                title="Launch Player Hub"
+                                title={t('modules:tooltips.launch_player_hub')}
                             >
                                 <MonitorPlay size={20} />
                             </button>
@@ -397,7 +396,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                             <button
                                 onClick={handleLaunchTabletHub}
                                 className="p-3 rounded-xl bg-indigo-500/5 text-indigo-400/60 hover:text-indigo-400 hover:bg-indigo-500/10 hover:shadow-glow-indigo transition-all border border-indigo-500/10"
-                                title="Launch Tablet Hub (Semi-Hub)"
+                                title={t('modules:tooltips.launch_tablet_hub')}
                             >
                                 <Tablet size={20} />
                             </button>
@@ -405,7 +404,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                             <button
                                 onClick={handleQuitApp}
                                 className="p-3 rounded-xl bg-red-500/5 text-red-500/40 hover:text-red-500 hover:bg-red-500/10 hover:shadow-glow-red transition-all border border-red-500/10"
-                                title="QUITTER GM-OS"
+                                title={t('modules:tooltips.quit_app')}
                             >
                                 <Power size={20} />
                             </button>
@@ -427,7 +426,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         <h2 className={`text-lg tracking-widest text-app-text uppercase ${
                             theme === 'medieval' ? 'font-display' : 'font-bold italic'
                         }`}>
-                            {activeModule === 'dashboard' ? 'SESSION' : activeModule} <span className="text-accent">OS</span>
+                            {activeModule === 'dashboard' ? t('common:sessionMode') : t(`modules:names.${activeModule}`)} <span className="text-accent">OS</span>
                         </h2>
                     </div>
 
@@ -436,20 +435,20 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <div className={`flex items-center gap-4 px-4 py-1.5 border ${
+                         <div className={`flex items-center gap-4 px-4 py-1.5 border ${
                             theme === 'medieval' ? 'rounded-md border-app-border/40' : 'rounded-full border-app-accent/20'
                         } ${tacticalSettings.isEnabled ? 'bg-accent/10' : 'bg-app-surface opacity-50'}`}>
                             <div className={`w-2 h-2 rounded-full ${tacticalSettings.isEnabled ? (tacticalStatus === 'analyzing' ? 'bg-emerald-400 animate-pulse' : 'bg-accent') : 'bg-app-text/20'} shadow-glow-accent`} />
                              <span className={`text-[10px] uppercase tracking-[0.22em] ${theme === 'medieval' ? 'font-display text-accent' : 'font-black text-accent/80'}`}>
                                 {tacticalSettings.isEnabled 
-                                    ? (theme === 'medieval' ? 'SCEAU ACTIF' : 'CORTEX ACTIVE') 
-                                    : (theme === 'medieval' ? 'SCEAU ROMPU' : 'CORTEX DISABLED')}
+                                    ? (theme === 'medieval' ? t('modules:tactical.seal_active') : t('modules:tactical.cortex_active')) 
+                                    : (theme === 'medieval' ? t('modules:tactical.seal_broken') : t('modules:tactical.cortex_disabled'))}
                              </span>
                         </div>
                         <div className="flex items-center gap-2">
                             <div className={`w-2 h-2 rounded-full bg-accent ${tacticalSettings.isEnabled ? 'animate-pulse' : 'animate-ping'}`} />
                              <span className={`text-[10px] font-mono text-app-text/40 uppercase tracking-widest ${theme === 'medieval' ? 'font-display' : ''}`}>
-                                {theme === 'medieval' ? 'LIEN ÉTERNEL' : 'System Link Active'}
+                                {theme === 'medieval' ? t('common:tactical.eternal_link', 'LIEN ÉTERNEL') : t('common:tactical.system_link', 'System Link Active')}
                              </span>
                         </div>
                         <div className={`px-3 py-1.5 rounded-lg bg-app-bg border border-app-border text-[9px] text-app-text/40 shadow-xl ${theme === 'medieval' ? 'font-display' : 'font-mono'}`}>

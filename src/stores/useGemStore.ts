@@ -22,82 +22,82 @@ interface GemState {
 const defaultGems: GemDefinition[] = [
   {
     id: 'sage',
-    name: 'Le Sage',
+    name: 'settings:ai.gems.templates.sage.name',
     icon: 'BookOpen',
-    description: 'Expert en règles et mécaniques de jeu.',
-    baseInstructions: 'Tu es le Sage. Ton expertise porte sur les règles de jeu, les statistiques et la mécanique. Sois précis et technique.',
+    description: 'settings:ai.gems.templates.sage.desc',
+    baseInstructions: 'settings:ai.gems.templates.sage.instr',
     systemOverrides: {
-      'dnd-5e': "Tu es l'Archimage Elminster. Tu connais chaque ligne du Manuel des Monstres et chaque sortilège. Ton ton est docte, majestueux et plein de sagesse arcanique."
+      'dnd-5e': 'settings:ai.gems.templates.sage.overrides.dnd-5e'
     }
   },
   {
     id: 'scribe',
-    name: 'Le Scribe',
+    name: 'settings:ai.gems.templates.scribe.name',
     icon: 'PenTool',
-    description: 'Chroniqueur de vos aventures.',
-    baseInstructions: "Tu es le Scribe. Ton rôle est de consigner l'histoire, de résumer les sessions et d'organiser les notes de campagne.",
+    description: 'settings:ai.gems.templates.scribe.desc',
+    baseInstructions: 'settings:ai.gems.templates.scribe.instr',
     systemOverrides: {
-      'dnd-5e': "Tu es Volo, le chroniqueur célèbre. Tu racontes les épopées héroïques avec panache et enthousiasme. Ton style est épique et coloré."
+      'dnd-5e': 'settings:ai.gems.templates.scribe.overrides.dnd-5e'
     }
   },
   {
     id: 'oracle',
-    name: "L'Oracle",
+    name: 'settings:ai.gems.templates.oracle.name',
     icon: 'Sparkles',
-    description: 'Maître de la narration et de l\'improvisation.',
-    baseInstructions: "Tu es l'Oracle. Tu excelles dans l'improvisation narrative, la création d'ambiance et les rebondissements dramatiques.",
+    description: 'settings:ai.gems.templates.oracle.desc',
+    baseInstructions: 'settings:ai.gems.templates.oracle.instr',
     systemOverrides: {
-      'dnd-5e': "Tu es le Maître du Donjon narratif. Tu excelles dans la description de paysages fantastiques, de combats épiques et d'intrigues de cour."
+      'dnd-5e': 'settings:ai.gems.templates.oracle.overrides.dnd-5e'
     }
   },
   {
     id: 'bard',
-    name: 'Le Barde',
+    name: 'settings:ai.gems.templates.bard.name',
     icon: 'Music',
-    description: 'Inspirateur de lore et de poésie.',
-    baseInstructions: "Tu es le Barde. Ton rôle est d'enrichir l'univers avec de la poésie, des chansons et des détails de lore profonds.",
+    description: 'settings:ai.gems.templates.bard.desc',
+    baseInstructions: 'settings:ai.gems.templates.bard.instr',
     systemOverrides: {
-      'dnd-5e': "Tu es un barde itinérant des Royaumes Oubliés. Tu connais toutes les ballades et les légendes des héros d'autrefois."
+      'dnd-5e': 'settings:ai.gems.templates.bard.overrides.dnd-5e'
     }
   },
   {
     id: 'alchemist',
-    name: "L'Alchimiste",
+    name: 'settings:ai.gems.templates.alchemist.name',
     icon: 'Beaker',
-    description: 'Créateur de butin, potions et PNJ.',
-    baseInstructions: "Tu es l'Alchimiste. Tu es spécialisé dans la génération technique de contenu : objets magiques, potions, et caractéristiques de PNJ.",
+    description: 'settings:ai.gems.templates.alchemist.desc',
+    baseInstructions: 'settings:ai.gems.templates.alchemist.instr',
     systemOverrides: {
-      'dnd-5e': "Tu es un artisan nain expert en forge et en alchimie. Tu conçois des armes légendaires et des breuvages mystiques."
+      'dnd-5e': 'settings:ai.gems.templates.alchemist.overrides.dnd-5e'
     }
   },
   {
     id: 'actor',
-    name: "L'Acteur",
+    name: 'settings:ai.gems.templates.actor.name',
     icon: 'User',
-    description: 'Spécialiste de l\'incarnation des PNJ.',
-    baseInstructions: "Tu es l'Acteur. Ton rôle est d'aider le MJ à interpréter ses PNJ : accents, tics de langage, motivations et dialogues types.",
+    description: 'settings:ai.gems.templates.actor.desc',
+    baseInstructions: 'settings:ai.gems.templates.actor.instr',
     systemOverrides: {
-      'dnd-5e': "Tu incarnes les marchands, les rois et les mendiants du monde fantastique avec une théâtralité assumée."
+      'dnd-5e': 'settings:ai.gems.templates.actor.overrides.dnd-5e'
     }
   },
   {
     id: 'cartographer',
-    name: 'Le Cartographe',
+    name: 'settings:ai.gems.templates.cartographer.name',
     icon: 'Map',
-    description: 'Spécialiste dans la description des lieux.',
-    baseInstructions: "Tu es le Cartographe. Ton expertise porte sur la description détaillée des lieux, des paysages et de l'architecture. Aide le MJ à peindre des tableaux vivants pour ses joueurs. Décris les textures, les odeurs, les sons et l'ambiance visuelle avec une précision photographique et évocatrice.",
+    description: 'settings:ai.gems.templates.cartographer.desc',
+    baseInstructions: 'settings:ai.gems.templates.cartographer.instr',
     systemOverrides: {
-      'dnd-5e': "Tu es un explorateur de la Société des Géographes. Tu décris les donjons légendaires, les cités fantastiques et les paysages sauvages. Ton style est grandiose, soulignant l'échelle épique, les détails magiques et les merveilles architecturales oubliées."
+      'dnd-5e': 'settings:ai.gems.templates.cartographer.overrides.dnd-5e'
     }
   },
   {
     id: 'strategist',
-    name: 'Le Stratège',
+    name: 'settings:ai.gems.templates.strategist.name',
     icon: 'Sword',
-    description: 'Expert en tactique et analyse de combat.',
-    baseInstructions: "Tu es le Stratège. Ton rôle est d'analyser les situations de combat et de suggérer des manoeuvres héroïques ou pragmatiques. Ton ton est calme, analytique et purement fictionnel (pas de jargon de règles).",
+    description: 'settings:ai.gems.templates.strategist.desc',
+    baseInstructions: 'settings:ai.gems.templates.strategist.instr',
     systemOverrides: {
-      'dnd-5e': "Tu es un général vétéran de Waterdeep. Tu vois le champ de bataille comme un échiquier de sang et d'acier. Tes conseils sont directs, pragmatiques et toujours tournés vers la victoire narrative."
+      'dnd-5e': 'settings:ai.gems.templates.strategist.overrides.dnd-5e'
     }
   }
 ];
@@ -113,13 +113,56 @@ export const useGemStore = create<GemState>()(
         gems: state.gems.map(g => g.id === id ? { ...g, ...updates } : g)
       })),
       syncGemsWithDefaults: () => set((state) => {
-        const missing = defaultGems.filter(dg => !state.gems.find(g => g.id === dg.id));
-        if (missing.length === 0) return state;
-        return { gems: [...state.gems, ...missing] };
+        const newGems = [...state.gems];
+        let changed = false;
+
+        // 1. Add missing gems
+        defaultGems.forEach(dg => {
+          if (!newGems.find(g => g.id === dg.id)) {
+            newGems.push(dg);
+            changed = true;
+          }
+        });
+
+        // 2. Migrate existing hardcoded strings to keys
+        // We do this EVERY time sync is called to ensure that if a user switches languages,
+        // their default gems (which were stored as strings) get updated to keys.
+        newGems.forEach((g, idx) => {
+          const dg = defaultGems.find(d => d.id === g.id);
+          if (dg) {
+            // We consider it a default string if it doesn't contain a dot (translation key marker)
+            // or if it matches exactly one of the known default strings (FR or EN)
+            const isKey = g.name.includes('.');
+            if (!isKey) {
+              // Migration: update to keys to support multi-language
+              newGems[idx] = { 
+                ...g, 
+                name: dg.name, 
+                description: dg.description,
+                baseInstructions: dg.baseInstructions
+              };
+              changed = true;
+            }
+          }
+        });
+
+        if (!changed) return state;
+        return { gems: newGems };
       })
     }),
     {
-      name: 'gmos-gem-storage'
+      name: 'gmos-gem-storage',
+      version: 1,
+      migrate: (persistedState: any, version: number) => {
+        if (version === 0) {
+          // Force apply default gems to ensure keys are used instead of old hardcoded strings
+          return {
+            ...persistedState,
+            gems: defaultGems
+          };
+        }
+        return persistedState;
+      }
     }
   )
 );

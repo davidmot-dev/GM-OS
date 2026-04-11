@@ -7,6 +7,7 @@ import { useMapStore } from '../map/useMapStore';
 import { tacticalService } from '../map/TacticalService';
 import { Target, Info, Cast, XCircle } from 'lucide-react';
 import { useDiceStore } from '../../stores/useDiceStore';
+import { useTranslation } from 'react-i18next';
 
 const generateId = () => Math.random().toString(36).substring(7);
 
@@ -31,6 +32,7 @@ interface RemoteDiceOptions {
 }
 
 const DiceBoard: React.FC = () => {
+    const { t } = useTranslation(['modules', 'common']);
     // Tactical Bridge State
     const { tokens, gridSize } = useMapStore();
     const [lastSelectedTokenId, setLastSelectedTokenId] = useState<string | null>(null);
@@ -154,7 +156,7 @@ const DiceBoard: React.FC = () => {
                 gearCount: finalGearCount,
                 targetOverwrite: finalTarget
             });
-            return { result, title: `Système: ${activeDriver.name}` };
+            return { result, title: t('dice.results.system', { name: activeDriver.name }) };
         }
 
         let title = remoteOverrides?.title || `${finalCount}d${sides}`;
@@ -163,7 +165,7 @@ const DiceBoard: React.FC = () => {
         if (isFormulaText) {
             const formObj = customFormula || formulaInput;
             result = DiceEngine.rollFormula(formObj);
-            title = `Formule: ${formObj}`;
+            title = t('dice.results.formula', { formula: formObj });
         } else {
             switch (finalMode) {
                 case 'standard':
@@ -171,39 +173,40 @@ const DiceBoard: React.FC = () => {
                     break;
                 case 'exploding':
                     result = DiceEngine.rollStandard(sides, finalCount, modVal, true);
-                    title = `Explosif ${finalCount}d${sides}`;
+                    title = t('dice.results.exploding', { count: finalCount, sides });
                     break;
                 case 'pool':
                     result = DiceEngine.rollPool(sides, finalCount, modVal, finalTarget, false);
-                    title = `Pool ${finalCount}d${sides} (Diff ${finalTarget})`;
+                    title = t('dice.results.pool', { count: finalCount, sides, target: finalTarget });
                     break;
                 case 'pool_explode':
                     result = DiceEngine.rollPool(sides, finalCount, modVal, finalTarget, true);
-                    title = `Pool Exp. ${finalCount}d${sides} (Diff ${finalTarget})`;
+                    title = t('dice.results.pool_explode', { count: finalCount, sides, target: finalTarget });
                     break;
                 case 'threshold':
                     result = DiceEngine.rollThreshold(sides, finalCount, modVal, finalTarget, targetRule);
-                    title = `Test ${finalCount}d${sides} ${targetRule === 'over' ? '≥' : '≤'} ${finalTarget}`;
+                    const ruleSym = targetRule === 'over' ? '≥' : '≤';
+                    title = t('dice.results.threshold', { count: finalCount, sides, rule: ruleSym, target: finalTarget });
                     break;
                 case 'advantage':
                     result = DiceEngine.rollAdvantage(sides, modVal, true, finalTarget, targetRule);
-                    title = `Avantage 2d${sides}`;
+                    title = t('dice.results.advantage', { sides });
                     break;
                 case 'disadvantage':
                     result = DiceEngine.rollAdvantage(sides, modVal, false, finalTarget, targetRule);
-                    title = `Désavantage 2d${sides}`;
+                    title = t('dice.results.disadvantage', { sides });
                     break;
                 case 'fate':
                     result = DiceEngine.rollFate(finalCount, modVal);
-                    title = `FATE ${finalCount}dF`;
+                    title = t('dice.results.fate', { count: finalCount });
                     break;
                 case 'rolemaster':
                     result = DiceEngine.rollRolemaster(modVal);
-                    title = `Rolemaster d100`;
+                    title = t('dice.results.rolemaster');
                     break;
                 case 'yze':
                     result = DiceEngine.rollYZE(finalCount, finalGearCount);
-                    title = `YZE (${finalCount} Base + ${finalGearCount} Gear)`;
+                    title = t('dice.results.yze', { base: finalCount, gear: finalGearCount });
                     break;
                 default:
                     result = DiceEngine.rollStandard(sides, finalCount, modVal);
@@ -221,7 +224,7 @@ const DiceBoard: React.FC = () => {
                 const { result, title } = executeRoll(sides, isFormulaText, customFormula, remoteOverrides);
 
                 let repTitle = title;
-                if (batchCount > 1) repTitle = `${title} (Jet ${i + 1}/${batchCount})`;
+                if (batchCount > 1) repTitle = t('dice.results.batch', { title, current: i + 1, total: batchCount });
 
                 const record = {
                     ...result,
@@ -281,47 +284,47 @@ const DiceBoard: React.FC = () => {
                                     className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${useSystemDriver ? 'bg-accent text-app-bg border-accent/40 shadow-glow-accent/20' : 'bg-app-bg text-app-text/40 border-app-border hover:border-app-border/80'}`}
                                 >
                                     <Zap size={14} className={useSystemDriver ? 'animate-pulse' : ''} />
-                                    MODE SYSTÈME: {activeDriver.name.toUpperCase()}
+                                    {t('dice.system_mode', { name: activeDriver.name.toUpperCase() })}
                                 </button>
                             )}
                         </div>
-                        <button onClick={resetConfig} title="Réinitialiser la configuration" className="text-xs flex items-center gap-1.5 text-app-text/60 hover:text-accent transition-colors bg-app-bg px-3 py-1.5 rounded-lg border border-app-border/80">
-                            <RotateCcw size={14} /> Réinitialiser
+                        <button onClick={resetConfig} title={t('dice.reset')} className="text-xs flex items-center gap-1.5 text-app-text/60 hover:text-accent transition-colors bg-app-bg px-3 py-1.5 rounded-lg border border-app-border/80">
+                            <RotateCcw size={14} /> {t('dice.reset')}
                         </button>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div className="space-y-2">
-                            <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">Mode</label>
+                            <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">{t('dice.inputs.mode')}</label>
                             <select
                                 value={mode}
                                 onChange={(e) => setMode(e.target.value as DiceMode)}
-                                title="Mode de jet de dés"
-                                aria-label="Choisir le mode de jet de dés"
+                                title={t('dice.inputs.mode')}
+                                aria-label={t('dice.inputs.mode')}
                                 className="w-full bg-app-bg border border-app-border rounded-xl py-2 px-3 text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/50 transition-all text-app-text"
                             >
-                                <option value="standard">Standard d20/d6</option>
-                                <option value="exploding">Somme Explosive</option>
-                                <option value="formula">Formule Libre</option>
-                                <option value="threshold">Jet de Seuil (Target)</option>
-                                <option value="pool">Pool de Dés (Succès)</option>
-                                <option value="pool_explode">Pool Explosif</option>
-                                <option value="advantage">Avantage (Garde Meilleur)</option>
-                                <option value="disadvantage">Désavantage (Garde Pire)</option>
-                                <option value="yze">Year Zero Engine</option>
-                                <option value="fate">FATE / Fudge</option>
-                                <option value="rolemaster">Rolemaster</option>
+                                <option value="standard">{t('dice.modes.standard')}</option>
+                                <option value="exploding">{t('dice.modes.exploding')}</option>
+                                <option value="formula">{t('dice.modes.formula')}</option>
+                                <option value="threshold">{t('dice.modes.threshold')}</option>
+                                <option value="pool">{t('dice.modes.pool')}</option>
+                                <option value="pool_explode">{t('dice.modes.pool_explode')}</option>
+                                <option value="advantage">{t('dice.modes.advantage')}</option>
+                                <option value="disadvantage">{t('dice.modes.disadvantage')}</option>
+                                <option value="yze">{t('dice.modes.yze')}</option>
+                                <option value="fate">{t('dice.modes.fate')}</option>
+                                <option value="rolemaster">{t('dice.modes.rolemaster')}</option>
                             </select>
                         </div>
 
                         {mode === 'formula' ? (
                             <div className="space-y-2 col-span-2">
-                                <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">Expression (ex: 2d6+1d4-2)</label>
+                                <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">{t('dice.inputs.formula_label')}</label>
                                 <div className="flex bg-app-bg border border-app-border rounded-xl overflow-hidden focus-within:border-accent focus-within:ring-1 focus-within:ring-accent/50 h-[38px]">
                                     <input
                                         type="text" value={formulaInput} onChange={e => setFormulaInput(e.target.value)}
                                         className="w-full bg-transparent px-4 py-2 font-mono text-sm text-app-text outline-none"
-                                        placeholder="Entrez une formule..."
+                                        placeholder={t('dice.inputs.formula_placeholder')}
                                     />
                                 </div>
                             </div>
@@ -330,7 +333,7 @@ const DiceBoard: React.FC = () => {
                                 {/* Qty & Mod */}
                                 {mode === 'yze' ? (
                                     <div className="space-y-2">
-                                        <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">Dés Base/Equip</label>
+                                        <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">{t('dice.inputs.base_dice')} / {t('dice.inputs.gear_dice')}</label>
                                         <div className="flex space-x-2">
                                             <div className="flex flex-1 bg-app-bg border border-app-border rounded-xl overflow-hidden shadow-inner h-[38px]">
                                                 <span className="bg-yellow-500/20 text-yellow-600 dark:text-yellow-500 text-xs px-2 flex items-center border-r border-app-border">B</span>
@@ -338,8 +341,8 @@ const DiceBoard: React.FC = () => {
                                                     type="number" 
                                                     value={diceCount} 
                                                     onChange={(e) => setDiceCount(Math.max(1, parseInt(e.target.value) || 1))}
-                                                    title="Dés de base"
-                                                    aria-label="Nombre de dés de base"
+                                                    title={t('dice.inputs.base_dice')}
+                                                    aria-label={t('dice.inputs.base_dice')}
                                                     className="w-full bg-transparent text-center font-semibold text-app-text outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
                                                 />
                                                 <div className="flex flex-col border-l border-app-border">
@@ -353,8 +356,8 @@ const DiceBoard: React.FC = () => {
                                                     type="number" 
                                                     value={gearCount} 
                                                     onChange={(e) => setGearCount(Math.max(0, parseInt(e.target.value) || 0))}
-                                                    title="Dés d'équipement"
-                                                    aria-label="Nombre de dés d'équipement"
+                                                    title={t('dice.inputs.gear_dice')}
+                                                    aria-label={t('dice.inputs.gear_dice')}
                                                     className="w-full bg-transparent text-center font-semibold text-app-text outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
                                                 />
                                                 <div className="flex flex-col border-l border-app-border">
@@ -366,15 +369,15 @@ const DiceBoard: React.FC = () => {
                                     </div>
                                 ) : (
                                     <div className="space-y-2">
-                                        <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">Quantité</label>
+                                        <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">{t('dice.inputs.qty')}</label>
                                         <div className="flex bg-app-bg border border-app-border rounded-xl overflow-hidden h-[38px]">
                                             <button onClick={() => setDiceCount(Math.max(1, diceCount - 1))} className="px-3 hover:bg-app-surface text-app-text/60 transition-colors">-</button>
                                             <input 
                                                 type="number" 
                                                 value={diceCount} 
                                                 onChange={(e) => setDiceCount(Math.max(1, parseInt(e.target.value) || 1))} 
-                                                title="Quantité de dés"
-                                                aria-label="Nombre de dés à lancer"
+                                                title={t('dice.inputs.qty')}
+                                                aria-label={t('dice.inputs.qty')}
                                                 className="w-full bg-transparent text-center font-semibold text-app-text outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
                                             />
                                             <button onClick={() => setDiceCount(diceCount + 1)} className="px-3 hover:bg-app-surface text-app-text/60 transition-colors">+</button>
@@ -383,7 +386,7 @@ const DiceBoard: React.FC = () => {
                                 )}
 
                                 <div className={`space-y-2 ${['yze'].includes(mode) ? 'hidden' : ''}`}>
-                                    <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">Modificateur</label>
+                                    <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">{t('dice.inputs.mod')}</label>
                                     <div className="flex bg-app-bg border border-app-border rounded-xl overflow-hidden h-[38px]">
                                         <button onClick={() => setModifier((typeof modifier === 'number' ? modifier : parseInt(modifier.toString().replace('+', '')) || 0) - 1)} className="px-3 hover:bg-app-surface text-app-text/60 transition-colors">-</button>
                                         <input 
@@ -394,8 +397,8 @@ const DiceBoard: React.FC = () => {
                                                 if (raw === '' || raw === '-' || raw === '+') setModifier(raw);
                                                 else setModifier(parseInt(raw.replace('+', ''), 10) || 0);
                                             }} 
-                                            title="Modificateur de jet"
-                                            aria-label="Ajouter un bonus ou malus au jet"
+                                            title={t('dice.inputs.mod')}
+                                            aria-label={t('dice.inputs.mod')}
                                             className="w-full bg-transparent text-center font-semibold text-app-text outline-none" 
                                         />
                                         <button onClick={() => setModifier((typeof modifier === 'number' ? modifier : parseInt(modifier.toString().replace('+', '')) || 0) + 1)} className="px-3 hover:bg-app-surface text-app-text/60 transition-colors">+</button>
@@ -403,15 +406,15 @@ const DiceBoard: React.FC = () => {
                                 </div>
 
                                     <div className="space-y-2">
-                                        <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">Répétitions</label>
+                                        <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">{t('dice.inputs.repeat')}</label>
                                         <div className="flex bg-app-bg border border-app-border rounded-xl overflow-hidden h-[38px]">
                                             <button onClick={() => setBatchCount(Math.max(1, batchCount - 1))} className="px-3 hover:bg-app-surface text-app-text/60 transition-colors">-</button>
                                             <input 
                                                 type="number" 
                                                 value={batchCount} 
                                                 onChange={(e) => setBatchCount(Math.min(20, Math.max(1, parseInt(e.target.value) || 1)))}
-                                                title="Nombre de répétitions"
-                                                aria-label="Répéter le jet plusieurs fois"
+                                                title={t('dice.inputs.repeat')}
+                                                aria-label={t('dice.inputs.repeat')}
                                                 className="w-full bg-transparent text-center font-semibold text-app-text outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
                                             />
                                             <button onClick={() => setBatchCount(Math.min(20, batchCount + 1))} className="px-3 hover:bg-app-surface text-app-text/60 transition-colors">+</button>
@@ -423,13 +426,13 @@ const DiceBoard: React.FC = () => {
                         {/* Dynamic Inputs depending on mode */}
                         {['pool', 'pool_explode', 'threshold', 'advantage', 'disadvantage'].includes(mode) && (
                             <div className="space-y-2">
-                                <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">Seuil & Règle</label>
+                                <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">{t('dice.inputs.threshold_rule')}</label>
                                 <div className="flex bg-app-bg border border-app-border rounded-xl overflow-hidden h-[38px]">
                                     <select 
                                         value={targetRule} 
                                         onChange={e => setTargetRule(e.target.value as 'over' | 'under')} 
-                                        title="Règle du seuil"
-                                        aria-label="Coup au dessus ou en dessous"
+                                        title={t('dice.inputs.threshold_rule')}
+                                        aria-label={t('dice.inputs.threshold_rule')}
                                         className="bg-app-surface text-app-text text-xs px-2 outline-none border-r border-app-border"
                                     >
                                         <option value="over">≥</option>
@@ -440,8 +443,8 @@ const DiceBoard: React.FC = () => {
                                         type="number" 
                                         value={target} 
                                         onChange={(e) => setTarget(parseInt(e.target.value) || 0)}
-                                        title="Valeur du seuil"
-                                        aria-label="Entrer manuellement le seuil"
+                                        title={t('dice.inputs.threshold_rule')}
+                                        aria-label={t('dice.inputs.threshold_rule')}
                                         className="w-full bg-transparent text-center font-semibold text-app-text outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
                                     />
                                     <button onClick={() => setTarget(target + 1)} className="px-2 hover:bg-app-surface text-app-text/60 transition-colors">+</button>
@@ -458,7 +461,7 @@ const DiceBoard: React.FC = () => {
                 <div className="bg-app-surface/60 p-5 rounded-2xl border border-app-border backdrop-blur-md shadow-xl flex flex-col items-center justify-center min-h-[160px]">
                     {['formula', 'fate', 'rolemaster', 'yze'].includes(mode) ? (
                         <button onClick={() => handleRoll(0, mode === 'formula')} className="px-8 py-4 bg-accent hover:bg-accent/90 text-white shadow-lg shadow-accent/20 rounded-xl text-xl font-bold uppercase tracking-widest transition-transform active:scale-95">
-                            LANCER
+                            {t('dice.actions.roll')}
                         </button>
                     ) : (
                         <div className="grid grid-cols-4 lg:grid-cols-7 gap-4 w-full">
@@ -483,11 +486,11 @@ const DiceBoard: React.FC = () => {
                     <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
                             <Zap className="text-amber-500" size={18} />
-                            <h3 className="text-sm font-bold text-app-text/90 uppercase tracking-widest">Quick Rolls</h3>
+                            <h3 className="text-sm font-bold text-app-text/90 uppercase tracking-widest">{t('dice.quick_rolls.title')}</h3>
                         </div>
                         {!isAddingQuickRoll && (
                             <button onClick={() => setIsAddingQuickRoll(true)} className="text-xs flex items-center gap-1 text-app-text/60 hover:text-accent transition-colors bg-app-surface px-3 py-1.5 rounded-lg border border-app-border">
-                                <BookmarkPlus size={14} /> Ajouter
+                                <BookmarkPlus size={14} /> {t('dice.actions.add_quick')}
                             </button>
                         )}
                     </div>
@@ -495,11 +498,11 @@ const DiceBoard: React.FC = () => {
                     {isAddingQuickRoll && (
                         <div className="flex items-center gap-3 mb-4 bg-app-bg p-3 rounded-xl border border-accent/30">
                             <input
-                                type="text" placeholder="Nom (ex: Soin)" value={newQuickRollLabel} onChange={(e) => setNewQuickRollLabel(e.target.value)}
+                                type="text" placeholder={t('dice.quick_rolls.placeholder_name')} value={newQuickRollLabel} onChange={(e) => setNewQuickRollLabel(e.target.value)}
                                 className="flex-1 bg-transparent border-b border-app-border focus:border-accent text-sm py-1 outline-none text-app-text"
                             />
                             <input
-                                type="text" placeholder="Formule (ex: 2d8+3)" value={newQuickRollFormula} onChange={(e) => setNewQuickRollFormula(e.target.value)}
+                                type="text" placeholder={t('dice.quick_rolls.placeholder_formula')} value={newQuickRollFormula} onChange={(e) => setNewQuickRollFormula(e.target.value)}
                                 className="flex-1 bg-transparent border-b border-app-border focus:border-accent text-sm py-1 outline-none text-app-text"
                             />
                             <button onClick={addQuickRoll} className="px-4 py-1.5 bg-accent hover:bg-accent/90 text-white rounded-lg text-xs font-semibold transition-colors">OK</button>
@@ -511,18 +514,18 @@ const DiceBoard: React.FC = () => {
                         {quickRolls.map(qr => (
                             <div key={qr.id} className="group flex items-center gap-px bg-app-bg/50 border border-app-border hover:border-accent/50 rounded-xl overflow-hidden transition-all shadow-md">
                                 <button
-                                    onClick={() => handleQuickRoll(qr.formula, qr.label)}
+                                    onClick={() => handleQuickRoll(qr.formula, t(qr.label))}
                                     className="px-4 py-2 hover:bg-app-surface transition-colors flex flex-col items-start"
                                 >
-                                    <span className="text-sm font-semibold text-app-text">{qr.label}</span>
+                                    <span className="text-sm font-semibold text-app-text">{t(qr.label)}</span>
                                     <span className="text-[10px] text-accent font-mono tracking-wider">{qr.formula}</span>
                                 </button>
-                                <button onClick={() => removeQuickRoll(qr.id)} title={`Supprimer ${qr.label}`} className="px-2 self-stretch hover:bg-rose-500/20 text-app-text/50 hover:text-rose-500 transition-colors">
+                                <button onClick={() => removeQuickRoll(qr.id)} title={t('common:actions.delete') + " " + t(qr.label)} className="px-2 self-stretch hover:bg-rose-500/20 text-app-text/50 hover:text-rose-500 transition-colors">
                                     <X size={14} />
                                 </button>
                             </div>
                         ))}
-                        {quickRolls.length === 0 && <p className="text-xs text-app-text/50 italic py-2">Aucun raccourci pour l'instant.</p>}
+                        {quickRolls.length === 0 && <p className="text-xs text-app-text/50 italic py-2">{t('dice.quick_rolls.empty')}</p>}
                     </div>
                 </div>
             </div>
@@ -535,30 +538,30 @@ const DiceBoard: React.FC = () => {
                     <div className="bg-accent/10 border border-accent/30 rounded-2xl p-4 backdrop-blur-md">
                         <div className="flex items-center gap-2 mb-3">
                             <Target className="text-accent" size={16} />
-                            <h3 className="text-xs font-bold text-accent uppercase tracking-widest">Conseil Tactique</h3>
+                            <h3 className="text-xs font-bold text-accent uppercase tracking-widest">{t('dice.tactical.title')}</h3>
                         </div>
                         <div className="grid grid-cols-2 gap-3 mb-3">
                             <div className="space-y-1">
-                                <label className="text-[10px] text-app-text/40 uppercase">Attaquant</label>
+                                <label className="text-[10px] text-app-text/40 uppercase">{t('dice.tactical.attacker')}</label>
                                 <select 
                                     value={lastSelectedTokenId || ''} 
                                     onChange={e => setLastSelectedTokenId(e.target.value)}
-                                    title="Attaquant"
+                                    title={t('dice.tactical.attacker')}
                                     className="w-full bg-app-bg/50 border border-app-border rounded-lg text-xs py-1 px-2 outline-none"
                                 >
-                                    <option value="">Sélectionner...</option>
+                                    <option value="">{t('common:actions.select')}...</option>
                                     {tokens.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
                                 </select>
                             </div>
                             <div className="space-y-1">
-                                <label className="text-[10px] text-app-text/40 uppercase">Cible</label>
+                                <label className="text-[10px] text-app-text/40 uppercase">{t('dice.tactical.target')}</label>
                                 <select 
                                     value={targetTokenId || ''} 
                                     onChange={e => setTargetTokenId(e.target.value)}
-                                    title="Cible"
+                                    title={t('dice.tactical.target')}
                                     className="w-full bg-app-bg/50 border border-app-border rounded-lg text-xs py-1 px-2 outline-none"
                                 >
-                                    <option value="">Sélectionner...</option>
+                                    <option value="">{t('common:actions.select')}...</option>
                                     {tokens.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
                                 </select>
                             </div>
@@ -572,11 +575,11 @@ const DiceBoard: React.FC = () => {
                                 return (
                                     <div className="bg-app-bg/40 rounded-xl p-3 border border-accent/20 flex items-center justify-between animate-in fade-in slide-in-from-top-2 duration-300">
                                         <div className="flex flex-col">
-                                            <span className="text-[10px] text-accent font-bold uppercase">{range.category}</span>
-                                            <span className="text-xs text-app-text/80">{range.distanceUnits} cases ({Math.round(range.distancePx)}px)</span>
+                                            <span className="text-[10px] text-accent font-bold uppercase">{t('dice.tactical.range_category', { category: range.category })}</span>
+                                            <span className="text-xs text-app-text/80">{t('dice.tactical.distance', { units: range.distanceUnits, px: Math.round(range.distancePx) })}</span>
                                         </div>
                                         <div className="flex flex-col items-end">
-                                            <span className="text-[10px] text-app-text/40 uppercase">Modificateur</span>
+                                            <span className="text-[10px] text-app-text/40 uppercase">{t('dice.inputs.mod')}</span>
                                             <button 
                                                 onClick={() => setModifier(range.modifier)}
                                                 className="text-sm font-black text-accent hover:text-accent/80 transition-colors bg-accent/10 px-2 py-0.5 rounded border border-accent/30 flex items-center gap-1"
@@ -592,11 +595,11 @@ const DiceBoard: React.FC = () => {
                         })()}
                         {!lastSelectedTokenId || !targetTokenId ? (
                             <div className="text-[10px] text-app-text/30 italic flex items-center gap-1.5 justify-center py-2 h-[42px]">
-                                <Info size={12} /> Sélectionnez deux jetons pour voir le calcul de portée
+                                <Info size={12} /> {t('dice.tactical.hint')}
                             </div>
                         ) : lastSelectedTokenId === targetTokenId ? (
                             <div className="text-[10px] text-rose-400/50 italic flex items-center gap-1.5 justify-center py-2 h-[42px]">
-                                L'attaquant et la cible doivent être différents
+                                {t('dice.tactical.error_same')}
                             </div>
                         ) : null}
                     </div>
@@ -610,7 +613,7 @@ const DiceBoard: React.FC = () => {
                         <div className="absolute top-4 right-4 z-40 flex items-center gap-2 opacity-0 group-hover/result:opacity-100 transition-opacity">
                             <button
                                 onClick={handleToggleProjection}
-                                title={isDiceProjected ? "Arrêter la projection" : "Projeter sur le Player Hub (5s)"}
+                                title={isDiceProjected ? t('dice.status.project_stop') : t('dice.status.project_start')}
                                 className={`p-2 rounded-lg border transition-all ${
                                     isDiceProjected 
                                         ? 'bg-red-500/20 border-red-500/50 text-red-500 hover:bg-red-500/30' 
@@ -625,7 +628,7 @@ const DiceBoard: React.FC = () => {
                     {isDiceProjected && (
                         <div className="absolute top-4 left-4 z-40">
                              <span className="flex items-center gap-1.5 px-2 py-1 rounded bg-accent/10 border border-accent/30 text-[9px] font-black text-accent uppercase tracking-widest animate-pulse">
-                                <Cast size={10} /> Projection Active
+                                <Cast size={10} /> {t('dice.status.projected')}
                              </span>
                         </div>
                     )}
@@ -641,7 +644,7 @@ const DiceBoard: React.FC = () => {
                             </div>
                             {history[0].tagSuccess !== undefined && (
                                 <div className={`px-4 py-1 mb-2 rounded-full text-xs font-bold uppercase tracking-widest z-10 shadow-lg ${history[0].tagSuccess ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/50' : 'bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/50'}`}>
-                                    {history[0].tagSuccess ? 'Succès' : 'Échec'}
+                                    {history[0].tagSuccess ? t('dice.status.success') : t('dice.status.failure')}
                                 </div>
                             )}
                             <div className="flex flex-wrap gap-2 mt-2 justify-center z-10 max-h-[8rem] w-full overflow-y-auto custom-scrollbar px-2 py-1">
@@ -660,7 +663,7 @@ const DiceBoard: React.FC = () => {
                     ) : (
                         <div className="text-center opacity-50 relative z-10">
                             <Dices size={48} className="mx-auto mb-4 text-app-text/40" />
-                            <p className="text-app-text/50 font-medium">En attente d'un lancer...</p>
+                            <p className="text-app-text/50 font-medium">{t('dice.status.waiting')}</p>
                         </div>
                     )}
                 </div>
@@ -668,13 +671,13 @@ const DiceBoard: React.FC = () => {
                 {/* History Log */}
                 <div className="flex-1 bg-app-surface/60 border border-app-border rounded-2xl p-5 flex flex-col overflow-hidden backdrop-blur-md shadow-xl">
                     <div className="flex items-center justify-between mb-4 pb-2 border-b border-app-border">
-                        <h3 className="text-sm font-bold text-app-text/90 uppercase tracking-widest">Historique</h3>
+                        <h3 className="text-sm font-bold text-app-text/90 uppercase tracking-widest">{t('dice.history.title')}</h3>
                         <button
                             onClick={clearHistory}
                             disabled={history.length === 0}
                             className="flex items-center gap-1.5 text-xs font-medium text-app-text/50 hover:text-app-text transition-colors disabled:opacity-30"
                         >
-                            <RotateCcw size={12} /> Vider
+                            <RotateCcw size={12} /> {t('dice.actions.clear')}
                         </button>
                     </div>
 
@@ -708,7 +711,7 @@ const DiceBoard: React.FC = () => {
                                 </div>
                                 {record.tagSuccess !== undefined && (
                                     <div className={`mt-1 text-[10px] uppercase font-bold text-right ${record.tagSuccess ? 'text-emerald-500' : 'text-rose-500'}`}>
-                                        {record.tagSuccess ? 'Succès' : 'Échec'}
+                                        {record.tagSuccess ? t('dice.status.success') : t('dice.status.failure')}
                                     </div>
                                 )}
                             </div>

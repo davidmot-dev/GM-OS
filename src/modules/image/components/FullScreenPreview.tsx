@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { X, Music } from 'lucide-react';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import type { MediaItem } from '../../../stores/useMediaStore';
+import { useTranslation } from 'react-i18next';
 
 interface FullScreenPreviewProps {
     media: MediaItem;
@@ -9,6 +10,7 @@ interface FullScreenPreviewProps {
 }
 
 export const FullScreenPreview: React.FC<FullScreenPreviewProps> = ({ media, onClose }) => {
+    const { t } = useTranslation(['common', 'modules']);
     const url = useMediaUrl(media.id);
 
     useEffect(() => {
@@ -31,8 +33,8 @@ export const FullScreenPreview: React.FC<FullScreenPreviewProps> = ({ media, onC
             <button 
                 onClick={onClose}
                 className="absolute top-8 right-8 p-4 bg-app-text/5 hover:bg-app-text/10 text-app-text/40 hover:text-app-text rounded-2xl transition-all border border-app-border/10 hover:border-app-border/20 hover:scale-110 active:scale-95 z-20 group"
-                title="Deactivate Preview"
-                aria-label="Fermer la prévisualisation"
+                title={t('modules:image.preview.close')}
+                aria-label={t('modules:image.preview.close')}
             >
                 <X size={24} className="group-hover:rotate-90 transition-transform duration-500" />
             </button>
@@ -54,7 +56,7 @@ export const FullScreenPreview: React.FC<FullScreenPreviewProps> = ({ media, onC
                             <h3 className="text-2xl font-black text-app-text uppercase tracking-[0.3em] mb-3 drop-shadow-[0_0_15px_rgba(var(--app-text-rgb),0.2)] font-display">{media.name}</h3>
                             <div className="flex items-center justify-center gap-3">
                                 <div className="w-2 h-2 rounded-full bg-accent" />
-                                <p className="text-app-text/20 text-[10px] font-black uppercase tracking-[0.4em] font-display">Sonic Frequency Decoded</p>
+                                <p className="text-app-text/20 text-[10px] font-black uppercase tracking-[0.4em] font-display">{t('modules:image.preview.audioStatus')}</p>
                             </div>
                         </div>
                         <audio src={url} autoPlay controls className="w-full h-14 rounded-2xl relative z-10 opacity-80 hover:opacity-100 transition-opacity" />
@@ -69,7 +71,7 @@ export const FullScreenPreview: React.FC<FullScreenPreviewProps> = ({ media, onC
             </div>
 
             <div className="absolute bottom-12 px-8 py-3 bg-black/40 border border-app-border/5 rounded-full text-app-text/20 text-[10px] uppercase font-black tracking-[0.5em] backdrop-blur-md font-display">
-                ESC TO DISCONNECT
+                {t('common:pressEscToClose')}
             </div>
         </div>
     );

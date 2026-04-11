@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useWhiteboardStore, type WhiteboardTool } from '../useWhiteboardStore';
+import { useTranslation } from 'react-i18next';
 
 interface WhiteboardToolbarProps {
     className?: string;
@@ -25,15 +26,16 @@ const WhiteboardToolbar: React.FC<WhiteboardToolbarProps> = ({ className = "" })
         backgroundMode,
         setBackgroundMode
     } = useWhiteboardStore();
+    const { t } = useTranslation('modules');
 
     const isLight = backgroundMode === 'light';
 
     const tools: { id: WhiteboardTool; icon: LucideIcon; label: string }[] = [
-        { id: 'brush', icon: Pencil, label: 'Crayon' },
-        { id: 'eraser', icon: Eraser, label: 'Gomme' },
-        { id: 'laser', icon: Zap, label: 'Laser' },
-        { id: 'rect', icon: Square, label: 'Rectangle' },
-        { id: 'circle', icon: Circle, label: 'Cercle' },
+        { id: 'brush', icon: Pencil, label: t('whiteboard.tools.brush') },
+        { id: 'eraser', icon: Eraser, label: t('whiteboard.tools.eraser') },
+        { id: 'laser', icon: Zap, label: t('whiteboard.tools.laser') },
+        { id: 'rect', icon: Square, label: t('whiteboard.tools.rect') },
+        { id: 'circle', icon: Circle, label: t('whiteboard.tools.circle') },
     ];
 
     const colors = [
@@ -71,11 +73,11 @@ const WhiteboardToolbar: React.FC<WhiteboardToolbarProps> = ({ className = "" })
                 <button
                     onClick={() => setBackgroundMode(isLight ? 'dark' : 'light')}
                     className={`p-3 rounded-xl transition-all relative group ${isLight ? 'text-amber-600 hover:bg-amber-600/10' : 'text-app-text/50 hover:text-accent hover:bg-white/5'}`}
-                    title={isLight ? 'Mode Sombre' : 'Mode Clair'}
+                    title={isLight ? t('whiteboard.background.title_dark') : t('whiteboard.background.title_light')}
                 >
                     {isLight ? <Sun size={20} /> : <Moon size={20} />}
                     <div className="absolute left-full ml-4 px-2 py-1 rounded bg-gm-violet text-[10px] font-black uppercase tracking-widest whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-30">
-                        {isLight ? 'Passer en Sombre' : 'Passer en Blanc'}
+                        {isLight ? t('whiteboard.background.switch_dark') : t('whiteboard.background.switch_light')}
                     </div>
                 </button>
             </div>

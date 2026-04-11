@@ -1,43 +1,34 @@
-# 🌌 GM-OS v6.0.0-dev : The Ultimate Game Master Toolkit
+# 🌌 GM-OS v6.3.0 : The Ultimate Game Master Toolkit
 
-GM-OS v5 est une plateforme de gestion de sessions de Jeu de Rôle (JdR) de nouvelle génération, conçue pour offrir aux Maîtres de Jeu (MJ) une immersion totale et un contrôle sans précédent sur l'ambiance, le combat et la narration.
+GM-OS v6.3.0 est une plateforme de gestion de sessions de Jeu de Rôle (JdR) de nouvelle génération, conçue pour offrir aux Maîtres de Jeu (MJ) une immersion totale et un contrôle sans précédent sur l'ambiance, le combat et la narration via une architecture modulaire et performante.
 
-## 🚀 Fonctionnalités Clés
+## 🚀 Fonctionnalités Clés (v6 Evolution)
 
+- **🌍 I18n READY** : Support complet du Français et de l'Anglais. Le système utilise désormais un standard de nesting strict et une résilience d'encodage UTF8 pour garantir une interface sans glitch.
 - **MASTER STORYBOARD** : Table de montage cinématographique horizontale. Synchronisez Musique, Lumières, Cartes et Visuels en une seule séquence déclenchable d'un clic.
 - **GM REMOTE CONTROL** : Pilotage déporté sur tablette/smartphone via QR Code. Gérez les dés, les sons, le combat et vos notes de session sans quitter vos joueurs des yeux.
-- **TABLET HUB** : Tableau de bord secondaire pour tablettes. Déportez l'Horloge, les Chronos et les Jauges de Tension en temps réel via WebSocket.
-- **SESSION OS** : Centre névralgique de vos campagnes. Gérez vos sessions, joueurs et snapshots d'état système.
-- **AUDIO ENGINE** :
+- **SESSIO-OS MODULAR** : Refonte v6 des services de session. Les notes de joueurs sont désormais synchronisées en temps réel entre le MJ et les tablettes.
+- **AUDIO ENGINE v6** :
   - **Music OS** : Gestion de playlists multi-sources avec fondus enchaînés.
   - **Ambient OS** : Mixage en temps réel de 8 pistes d'ambiance avec positionnement spatial.
-  - **Sound OS** : Pads de bruitages instantanés et atmosphères sonores.
-  - **Voice OS** : Modulateur de voix en temps réel avec **Auto-Ducking** (réduction de musique automatique) et profilage vocal intelligent.
+  - **Voice OS** : Modulateur de voix avec **Auto-Ducking** matériel et profilage vocal intelligent.
 - **VISUAL OS** :
   - **Image OS** : Projection d'illustrations et cartes vers le **Player Hub** via protocole local sécurisé `gmos://`.
-  - **Map OS** : Gestion de cartes interactives avec brouillard de guerre, tokens et **Vision de l'Oracle**.
-  - **Deck-OS** : Système immersif de gestion de paquets de cartes (Drama, Crit, Loot). Comprend le tirage aléatoire, la défausse et la projection **Seer's Eye** avec mode **Oracle (Clean View)**.
+  - **Map OS** : Gestion de cartes avec brouillard de guerre **persistant par asset**, tokens et **Vision de l'Oracle (IA)**.
 - **ADVENTURE TOOLS** :
-  - **CORTEX TACTIQUE (AI) v2.0** : Widget horizontal d'analyse comportementale de groupe (Flanquement, Repli) et suggestions tactiques.
-  - **Combat OS** : Suivi d'initiative avancé, gestion des PV et mapping automatique de statuts.
-  - **Dice OS** : Moteur de lancer de dés 3D avec seuils d'entrée manuels.
-  - **NPC OS** : Galerie de PNJ avec génération d'avatars et profils vocaux intelligents.
+  - **CORTEX TACTIQUE (AI) v3** : Analyse comportementale parallèle (Narration + JSON) pour des conseils immédiats.
+  - **Combat OS & Calculator** : Suivi d'initiative et calculateur de dégâts intelligent localisé.
 - **SYSTEM OS** :
-  - **Nexus-OS** : Système de packaging et portabilité totale (`.gmos`). Exportez vos campagnes avec tous leurs médias et restaurez-les en un clic.
+  - **Nexus-OS v2** : Système de portabilité totale (`.gmos`). Gestion intelligente des URL distantes et scan récursif d'assets.
   - **Hybrid AI Bridge** : Support natif d'**Ollama** pour une IA 100% locale et privée.
-  - **Sync Différentielle** : Optimisation des messages WebSocket pour un Tablet Hub ultra-réactif.
 
-- **CLUES OS** : Système transverse de gestion d'indices et preuves avec traçabilité temporelle, moments narratifs et archivage automatique dans le **Journal-OS**.
-
-## 🛠️ Stack Technique
-
+## 🛠️ Stack Technique v6
 
 - **Frontend** : [React 18](https://reactjs.org/) + [TypeScript](https://www.typescriptlang.org/)
 - **Build Tool** : [Vite](https://vitejs.dev/)
 - **Styling** : [Tailwind CSS](https://tailwindcss.com/)
-- **State** : [Zustand](https://github.com/pmndrs/zustand) (Persistence via LocalStorage)
-- **Icons** : [Lucide React](https://lucide.dev/)
-- **Bridge** : API Unifiée pour **Electron** et **Tauri**.
+- **State** : [Zustand](https://github.com/pmndrs/zustand) (Persistence via LocalStorage/IndexedDB)
+- **Bridge** : API Unifiée pour **Electron** et **Tauri** (Protocole `window.appBridge`).
 
 ## 📦 Installation & Démarrage
 
@@ -53,30 +44,16 @@ npm run dev
 
 Le projet sépare strictement l'interface utilisateur de la logique système via un objet global `window.appBridge`. Cela permet de faire tourner GM-OS aussi bien dans un navigateur que dans un conteneur natif (Electron/Tauri) sans modification du code UI.
 
-## 📚 Documentation
+## 📚 Documentation Centralisée
 
-Plus d'informations techniques et guides d'utilisation sont disponibles dans le dossier `documentation/` :
+Toute la documentation a été synchronisée pour la v6.2.6. Consultez l'index pour explorer les guides :
 
-- **[Architecture (Logic Flow)](file:///c:/Projet_David/GM-OS-v5/documentation/Architecture/Deck-OS_Architecture.md)** : Flux de données MJ -> Store -> Hubs.
-- **[Spécifications v6 (Nexus-OS)](file:///c:/Projet_David/GM-OS-v5/docs/blueprints/nexus_os_specification.md)** : Système de portabilité et archivage médias.
-- **[Roadmap v6](file:///c:/Projet_David/GM-OS-v5/docs/architecture/roadmap-v6.md)** : État d'avancement et vision de la Phase 1.
-- **[Lessons Learned](file:///c:/Projet_David/GM-OS-v5/docs/lessons-learned.md)** : Défis techniques, mocks Vitest et refactoring CSS.
+👉 **[Index de la Documentation](./documentation/User%20Guides/00_Documentation_Index.md)**
 
-### 🤖 Gemini CLI Integration
-
-
-Le projet intègre désormais **Gemini CLI** pour des opérations assistées par IA directement en terminal.
-
-**Installation & Login :**
-
-1. Installez les dépendances : `npm install`
-2. Connectez-vous : `npx @google/gemini-cli login`
-
-**Usage :**
-
-- `npm run gemini -- "ta question"` : Pose une question générale.
-- `npm run gemini:doc -- "Explique le système Oracle"` : Pose une question avec le contexte complet de la documentation locale.
+- **[Roadmap Master v6](./docs/architecture/roadmap-v6.md)** : Suivi technique de la refonte.
+- **[Lessons Learned (Master)](./documentation/Lessons_Learned.md)** : Base de connaissances technique (v5 & v6).
+- **[Guide de Migration](./instructions.md)** : Règles d'or du standard de code GM-OS.
 
 ---
 
-*Développé pour l'immersion. Conçu pour le contrôle.*
+*GM-OS v6 : Développé pour l'immersion. Conçu pour le contrôle.*

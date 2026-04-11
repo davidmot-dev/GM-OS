@@ -5,6 +5,7 @@ import type { MapToken } from '../types';
 import { useCombatStore, type StatusEffect } from '../../combat/useCombatStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { Shield, Trash2, Eye, EyeOff } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface MapTokenNodeProps {
     token: MapToken;
@@ -13,6 +14,7 @@ interface MapTokenNodeProps {
 }
 
 const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = false, localZoom }) => {
+    const { t } = useTranslation(['modules', 'common']);
     const { 
         updateToken, updateProjectedToken, removeToken, zoom: gmZoom 
     } = useMapStore();
@@ -129,7 +131,7 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
                             updateToken(token.id, { isVisible: !isVisible });
                         }}
                         className={`p-1 rounded-full shadow-lg border border-white/20 transition-colors ${isVisible ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-gray-600 hover:bg-gray-500'}`}
-                        title={isVisible ? "Hide from Players" : "Show to Players"}
+                        title={isVisible ? t('map.token.hide') : t('map.token.show')}
                     >
                         {isVisible ? <Eye size={14} /> : <EyeOff size={14} />}
                     </button>
@@ -139,7 +141,7 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
                             removeToken(token.id);
                         }}
                         className="bg-red-600 text-white p-1 rounded-full shadow-lg hover:bg-red-500 border border-white/20"
-                        title="Remove Token"
+                        title={t('map.token.remove')}
                     >
                         <Trash2 size={14} />
                     </button>
@@ -165,7 +167,7 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
 
             {/* Hover Tooltip (Name + HP) */}
             <div className="absolute -bottom-8 whitespace-nowrap bg-app-bg/90 backdrop-blur-sm border border-app-border text-xs px-2 py-1 rounded opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none z-50 text-slate-200 shadow-xl font-bold">
-                {combatant ? `${combatant.name} (${combatant.hp}/${combatant.hpMax})` : (token.name || 'Token')}
+                {combatant ? `${combatant.name} (${combatant.hp}/${combatant.hpMax})` : (token.name || t('map.token.defaultName'))}
             </div>
         </div>
     );

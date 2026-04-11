@@ -5,6 +5,7 @@ import { useMediaStore } from '../../stores/useMediaStore';
 import { ragService } from './RAGService';
 import type { AIResponse } from './types';
 import type { JournalEvent } from '../journal/types';
+import i18n from '../../i18n';
 
 interface GeminiResponse {
   candidates?: {
@@ -203,7 +204,8 @@ export class AIService {
     const journalStore = useJournalStore.getState();
     const activeJournal = journalStore.journals.find(j => j.id === journalStore.activeJournalId);
 
-    const summaryPrompt = `En tant que Chroniqueur Expert, transforme ces logs de session de jeu de rôle en un résumé narratif captivant.
+    const summaryPrompt = i18n.language === 'fr' 
+      ? `En tant que Chroniqueur Expert, transforme ces logs de session de jeu de rôle en un résumé narratif captivant.
     Les événements sont chronologiques. Crée un récit fluide, avec des titres de sections, des moments forts et des développements d'intrigue.
     
     ${activeJournal?.finalNote ? `IMPORTANT - NOTE FINALE DU MJ :\n"${activeJournal.finalNote}"\nPrends bien en compte ces notes pour conclure le résumé.` : ''}
@@ -212,7 +214,17 @@ export class AIService {
     LOGS DE LA SESSION :
     ${eventLog}
     
-    RÉSUMÉ FINAL :`;
+    RÉSUMÉ FINAL :`
+      : `As an Expert Chronicler, transform these role-playing session logs into a compelling narrative summary.
+    Events are chronological. Create a fluid narrative with section titles, highlights, and plot developments.
+    
+    ${activeJournal?.finalNote ? `IMPORTANT - GM FINAL NOTE:\n"${activeJournal.finalNote}"\nTake these notes into account to conclude the summary.` : ''}
+ 
+
+    SESSION LOGS:
+    ${eventLog}
+    
+    FINAL SUMMARY:`;
 
     try {
       if (activeProvider === 'gemini') {
@@ -508,7 +520,8 @@ export class AIService {
    */
   public async enrichNPCEntity(fields: Record<string, string>, category: string, universe: string): Promise<Record<string, string>> {
      const fieldsPrompt = Object.entries(fields).map(([k, v]) => `${k}: ${v}`).join('\n');
-     const prompt = `Voici les attributs d'un(e) [${category}] dans l'univers [${universe}]. 
+     const prompt = i18n.language === 'fr'
+       ? `Voici les attributs d'un(e) [${category}] dans l'univers [${universe}]. 
      TACHE : Améliore ces descriptions pour les rendre immersives, narratives et riches en détails.
      RÈGLES :
      1. Garde EXACTEMENT les mêmes noms de clés (labels).
@@ -516,6 +529,15 @@ export class AIService {
      3. Ne déforme pas l'essence de l'attribut original mais rend-le "vivant".
      
      ATTRIBUTS BRUTS :
+     ${fieldsPrompt}`
+       : `Here are the attributes of a [${category}] in the [${universe}] universe.
+     TASK: Improve these descriptions to make them immersive, narrative, and rich in detail.
+     RULES:
+     1. Keep EXACTLY the same key names (labels).
+     2. Answer ONLY with a valid JSON object containing the original keys and the new enriched values in English.
+     3. Do not distort the essence of the original attribute but make it "alive".
+     
+     RAW ATTRIBUTES:
      ${fieldsPrompt}`;
 
      try {
@@ -638,7 +660,7 @@ ${customContext ? `${customContext}\n\n${ragContext}` : ragContext}`;
     const activeCampaign = useSessionOSStore.getState().campaigns.find(c => c.id === useSessionOSStore.getState().activeCampaignId);
     const systemId = activeCampaign?.system?.toLowerCase() || 'generic';
 
-    let personaInstructions = gem.systemOverrides?.[systemId] || gem.baseInstructions;
+    let personaInstructions = i18n.t(gem.systemOverrides?.[systemId] || gem.baseInstructions);
 
     try {
       const systemGemsRaw = await window.appBridge?.ai?.readDoc?.(`systems/${systemId}/gems.json`);
@@ -652,14 +674,18 @@ ${customContext ? `${customContext}\n\n${ragContext}` : ragContext}`;
     const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...useSessionOSStore.getState().customSheetTemplates];
     const sheetTemplate = allTemplates.find(t => t.id === systemId);
     if (sheetTemplate?.aiPersonas?.[gemId]) {
-       personaInstructions = sheetTemplate.aiPersonas[gemId];
+       personaInstructions = i18n.t(sheetTemplate.aiPersonas[gemId]);
     }
 
     return `${personaInstructions}
 
-Tu es un assistant de Maître de Jeu expert pour GM-OS. Ton alias actuel est "${gem.name}".
-Réponds impérativement en français, de manière concise et immersive.
-Si possible, cite le document source pour les points de règle.
+Tu es un assistant de Maître de Jeu expert pour GM-OS. Ton alias actuel est "${i18n.t(gem.name)}".
+${i18n.language === 'fr' 
+      ? 'Réponds impérativement en français, de manière concise et immersive.' 
+      : 'You must answer in English, in a concise and immersive way.'}
+${i18n.language === 'fr'
+      ? 'Si possible, cite le document source pour les points de règle.'
+      : 'If possible, cite the source document for rule points.'}
 
 CONTEXTE RÉCUPÉRÉ (RAG + SESSION) :
 ${fullContext}

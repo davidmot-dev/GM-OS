@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { gmCustom } from '../../../stores/useModalStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
@@ -9,6 +10,7 @@ import { Heart, UserPlus, ChevronDown, Mail, Swords, Eye, Trash2 } from 'lucide-
 import { useImageStore } from '../../image/useImageStore';
 
 const CharacterGrid: React.FC<{ ignoreCampaignFilter?: boolean }> = ({ ignoreCampaignFilter = false }) => {
+    const { t } = useTranslation(['modules']);
     const { players, selectedPlayerId, selectedCharacterId, campaigns, linkCharacterToCampaign, updateCharacterHP, setSelectedCharacter, sessions, activeCampaignId, addEntityToSession, removeEntityFromSession } = useSessionOSStore();
     
     const activeSession = sessions.find(s => s.status === 'active' && String(s.campaignId) === String(activeCampaignId));
@@ -19,7 +21,7 @@ const CharacterGrid: React.FC<{ ignoreCampaignFilter?: boolean }> = ({ ignoreCam
     if (!selectedPlayer) {
         return (
             <div className="flex-1 flex items-center justify-center text-app-text/20 bg-app-bg/20">
-                <p className="italic text-sm">Sélectionnez un joueur dans le roster</p>
+                <p className="italic text-sm">{t('modules:session.characters.select_hint')}</p>
             </div>
         );
     }
@@ -47,10 +49,10 @@ const CharacterGrid: React.FC<{ ignoreCampaignFilter?: boolean }> = ({ ignoreCam
                     <div className="flex items-center gap-2 mt-2">
                         <span className={`inline-flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-full ${selectedPlayer.isOnline ? 'bg-emerald-500/10 text-emerald-400' : 'bg-app-surface text-app-text/40'}`}>
                             <span className={`w-1.5 h-1.5 rounded-full ${selectedPlayer.isOnline ? 'bg-emerald-400 animate-pulse' : 'bg-app-text/20'}`}></span>
-                            {selectedPlayer.isOnline ? 'En ligne' : 'Hors ligne'}
+                            {selectedPlayer.isOnline ? t('modules:session.players.status_online') : t('modules:session.players.status_offline')}
                         </span>
                         <span className="text-xs text-app-text/20">
-                            {selectedPlayer.characters.length} personnage{selectedPlayer.characters.length > 1 ? 's' : ''}
+                            {t('modules:session.players.character_count', { count: selectedPlayer.characters.length })}
                         </span>
                     </div>
                 </div>
@@ -61,14 +63,14 @@ const CharacterGrid: React.FC<{ ignoreCampaignFilter?: boolean }> = ({ ignoreCam
                 <div className="flex items-center justify-between mb-4">
                     <h3 className="text-app-text/60 font-bold text-sm uppercase tracking-widest flex items-center gap-2">
                         <span className="text-accent">⚔</span>
-                        {ignoreCampaignFilter ? 'Tous les Personnages' : 'Personnages Actifs'}
+                        {ignoreCampaignFilter ? t('modules:session.characters.title_all') : t('modules:session.characters.title')}
                     </h3>
-                    <span className="text-xs text-app-text/20">{selectedPlayer.characters.length} au total</span>
+                    <span className="text-xs text-app-text/20">{t('modules:session.characters.total_suffix', { count: selectedPlayer.characters.length })}</span>
                 </div>
 
                 {selectedPlayer.characters.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-16 text-app-text/20 gap-3">
-                        <p className="text-sm">Ce joueur n'a pas encore de personnages</p>
+                        <p className="text-sm">{t('modules:session.characters.no_characters')}</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-2 gap-6">
@@ -85,7 +87,7 @@ const CharacterGrid: React.FC<{ ignoreCampaignFilter?: boolean }> = ({ ignoreCam
                                 onLink={(campaignId) => linkCharacterToCampaign(selectedPlayer.id, character.id, campaignId)}
                                 onHPChange={(delta) => updateCharacterHP(selectedPlayer.id, character.id, character.hp + delta)}
                                 onDelete={() => {
-                                    if (window.confirm(`Êtes-vous sûr de vouloir supprimer le personnage ${character.name} ? Cette action est irréversible.`)) {
+                                    if (window.confirm(t('modules:session.characters.delete_confirm', { name: character.name }))) {
                                         useSessionOSStore.getState().deleteCharacter(selectedPlayer.id, character.id);
                                     }
                                 }}
@@ -93,15 +95,15 @@ const CharacterGrid: React.FC<{ ignoreCampaignFilter?: boolean }> = ({ ignoreCam
                                 isProjectedInSession={activeSession?.sessionEntityIds?.includes(character.id)}
                                 onToggleSession={(project) => {
                                     if (!activeSession) {
-                                        gmToast("Aucune session active pour cette campagne", "error");
+                                        gmToast(t('modules:session.characters.hub_no_session_error'), "error");
                                         return;
                                     }
                                     if (project) {
                                         addEntityToSession(activeSession.id, character.id);
-                                        gmToast(`${character.name} ajouté à la session active`);
+                                        gmToast(t('modules:session.characters.hub_added', { name: character.name }));
                                     } else {
                                         removeEntityFromSession(activeSession.id, character.id);
-                                        gmToast(`${character.name} retiré de la session`);
+                                        gmToast(t('modules:session.characters.hub_removed', { name: character.name }));
                                     }
                                 }}
                             />
@@ -117,7 +119,7 @@ const CharacterGrid: React.FC<{ ignoreCampaignFilter?: boolean }> = ({ ignoreCam
                     className="flex items-center gap-2 bg-accent hover:brightness-110 text-app-bg font-bold py-2.5 px-5 rounded-xl text-sm transition-all shadow-glow-accent/20 active:scale-95"
                 >
                     <UserPlus size={16} />
-                    Ajouter un Personnage
+                    {t('modules:session.characters.add_button')}
                 </button>
             </div>
         </div>
@@ -137,6 +139,7 @@ const CharacterCard: React.FC<{
     isProjectedInSession?: boolean;
     onToggleSession: (project: boolean) => void;
 }> = ({ character, campaigns, isSelected, onSelect, onLink, onHPChange, onDelete, activeSession, isProjectedInSession, onToggleSession }) => {
+    const { t } = useTranslation(['modules']);
     const linkedCampaign = campaigns.find(c => c.id === character.campaignId);
     const hpPercent = (character.hp / character.maxHp) * 100;
     const hpColor = hpPercent > 60 ? 'bg-emerald-500' : hpPercent > 30 ? 'bg-amber-500' : 'bg-red-600';
@@ -171,7 +174,7 @@ const CharacterCard: React.FC<{
                         onDelete();
                     }}
                     className="absolute top-2 left-2 p-1.5 bg-black/40 hover:bg-red-600/80 text-white/40 hover:text-white rounded-lg backdrop-blur-md transition-all z-30 opacity-0 group-hover:opacity-100 shadow-xl"
-                    title="Supprimer le personnage"
+                    title={t('modules:session.characters.delete_tooltip')}
                 >
                     <Trash2 size={14} />
                 </button>
@@ -189,7 +192,7 @@ const CharacterCard: React.FC<{
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1 text-app-text/40 text-xs">
                             <Heart size={11} className="text-rose-500" />
-                            <span>Points de Vie</span>
+                            <span>{t('modules:session.characters.hp_label')}</span>
                         </div>
                         <div className="flex items-center gap-1">
                             <button onClick={() => onHPChange(-1)} className="w-4 h-4 rounded bg-app-surface text-app-text/40 hover:text-red-400 hover:bg-app-border text-xs flex items-center justify-center transition-colors">−</button>
@@ -207,7 +210,7 @@ const CharacterCard: React.FC<{
                     <button 
                         onClick={onSelect}
                         className={`flex-1 py-1.5 text-xs font-bold rounded-lg border transition-all ${isSelected ? 'bg-accent text-app-bg border-accent' : 'border-accent/30 text-accent hover:bg-accent/10'}`}>
-                        Fiche
+                        {t('modules:session.characters.sheet_btn')}
                     </button>
                     <button
                         onClick={(e) => {
@@ -223,13 +226,13 @@ const CharacterCard: React.FC<{
                                 sourcePlayerId: character.id,
                                 statuses: []
                             });
-                            gmToast(`${character.name} ajouté au combat !`);
+                            gmToast(t('modules:session.characters.combat_add_success', { name: character.name }));
                         }}
                         className="p-1.5 px-2.5 rounded-lg border border-red-500/30 text-red-500 hover:bg-red-500/10 transition-all flex items-center justify-center gap-1.5"
-                        title="Ajouter au Combat"
+                        title={t('modules:session.characters.combat_btn')}
                     >
                         <Swords size={14} />
-                        <span className="text-[10px] font-bold uppercase">Combat</span>
+                        <span className="text-[10px] font-bold uppercase">{t('modules:session.characters.combat_btn')}</span>
                     </button>
                     <button
                         onClick={(e) => {
@@ -245,10 +248,10 @@ const CharacterCard: React.FC<{
                                 }
                             };
                             useImageStore.getState().projectEntity(projectedPJ);
-                            gmToast(`${character.name} projeté sur l'écran principal !`);
+                            gmToast(t('modules:session.characters.project_success', { name: character.name }));
                         }}
                         className="p-1.5 rounded-lg border border-blue-500/30 text-blue-500 hover:bg-blue-500/10 transition-all flex items-center justify-center"
-                        title="Projeter sur l'écran principal"
+                        title={t('modules:session.characters.project_tooltip')}
                     >
                         <Eye size={14} />
                     </button>
@@ -263,7 +266,7 @@ const CharacterCard: React.FC<{
                                 ? 'bg-amber-500/20 border-amber-500 text-amber-500 shadow-glow-amber/20' 
                                 : 'border-amber-500/30 text-amber-500/60 hover:bg-amber-500/10'
                             }`}
-                            title={isProjectedInSession ? "Retirer de la tablette" : "Envoyer sur la tablette"}
+                            title={isProjectedInSession ? t('modules:session.characters.hub_remove') : t('modules:session.characters.hub_send')}
                         >
                             <UserPlus size={14} />
                         </button>
@@ -275,7 +278,7 @@ const CharacterCard: React.FC<{
                             onChange={e => onLink(e.target.value || null)}
                             className="w-full py-1.5 text-xs rounded-lg bg-app-surface border border-app-border text-app-text/40 hover:border-app-border/80 focus:ring-1 focus:ring-accent/50 focus:outline-none appearance-none pl-2 pr-6 transition-all cursor-pointer"
                         >
-                            <option value="" className="bg-app-bg">Aucune campagne</option>
+                            <option value="" className="bg-app-bg">{t('modules:session.characters.no_campaign')}</option>
                             {campaigns.map(c => (
                                 <option key={c.id} value={c.id} className="bg-app-bg">{c.name}</option>
                             ))}

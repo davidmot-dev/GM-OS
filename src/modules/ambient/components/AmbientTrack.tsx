@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Play, Square, Volume2, Lightbulb, Trash2 } from 'lucide-react';
 import { gmCustom } from '../../../stores/useModalStore';
 import { useAmbientStore, type AmbientTrackState } from '../useAmbientStore';
@@ -11,31 +12,31 @@ interface AmbientTrackProps {
 }
 
 const TrackVisualizer: React.FC<{ index: number; color: string; isPlaying: boolean }> = ({ index, color, isPlaying }) => {
-    const [data, setData] = useState<Uint8Array>(new Uint8Array(16));
-    const requestRef = useRef<number>(0);
+    const [data, setData] = useState(new Uint8Array(16).fill(0));
+    const rafRef = useRef<number>();
 
     useEffect(() => {
-        const analyser = ambientEngine.tracks[index].getAnalyser();
-        const bufferLength = analyser.frequencyBinCount;
-        const dataArray = new Uint8Array(bufferLength);
-
-        const update = () => {
-            if (isPlaying) {
-                analyser.getByteFrequencyData(dataArray);
-                setData(new Uint8Array(dataArray.slice(0, 16)));
-                requestRef.current = requestAnimationFrame(update);
-            }
-        };
-
-        if (isPlaying) {
-            requestRef.current = requestAnimationFrame(update);
+        if (!isPlaying) {
+            setData(new Uint8Array(16).fill(0));
+            return;
         }
 
-        return () => {
-            if (requestRef.current) cancelAnimationFrame(requestRef.current);
+        const update = () => {
+            const track = ambientEngine.tracks[index];
+            if (track) {
+                const analyser = track.getAnalyser();
+                const freqData = new Uint8Array(16);
+                analyser.getByteFrequencyData(freqData);
+                setData(freqData);
+            }
+            rafRef.current = requestAnimationFrame(update);
         };
-    }, [index, isPlaying]);
 
+        rafRef.current = requestAnimationFrame(update);
+        return () => {
+            if (rafRef.current) cancelAnimationFrame(rafRef.current);
+        };
+    }, [isPlaying, index]);
 
     return (
         <div className="flex items-end justify-center gap-[2px] h-4 w-full px-2 overflow-hidden pointer-events-none opacity-50">
@@ -51,6 +52,7 @@ const TrackVisualizer: React.FC<{ index: number; color: string; isPlaying: boole
 };
 
 const AmbientTrack: React.FC<AmbientTrackProps> = ({ track, index, onRequestMediaBrowser }) => {
+    const { t } = useTranslation();
     const { toggleTrack, setTrackVolume, updateTrack } = useAmbientStore();
 
     const handleFileSelect = () => {
@@ -67,10 +69,10 @@ const AmbientTrack: React.FC<AmbientTrackProps> = ({ track, index, onRequestMedi
             <div className="w-full text-center">
                 <input
                     type="text"
-                    value={track.label}
+                    value={t(track.label, { index: index + 1 })}
                     onChange={(e) => updateTrack(index, { label: e.target.value })}
                     className="w-full bg-transparent text-[10px] font-bold uppercase tracking-widest text-app-text/50 text-center focus:text-app-text focus:outline-none"
-                    placeholder="NOM DE PISTE"
+                    placeholder={t('modules:ambient.presets.tracks.default_track', { index: index + 1 }).toUpperCase()}
                 />
                 <div className="text-[7px] font-black text-white/20 mt-0.5 uppercase tracking-tighter">[{track.id}]</div>
 
@@ -140,7 +142,7 @@ const AmbientTrack: React.FC<AmbientTrackProps> = ({ track, index, onRequestMedi
                     onClick={handleFileSelect}
                     className="text-[8px] font-bold text-app-text/50 hover:text-app-text hover:underline transition-all"
                 >
-                    {track.url ? "CHANGER" : "CHARGER"}
+                    {track.url ? t('common:actions.change') : t('common:actions.load')}
                 </button>
                 <button
                     onClick={(e) => {
@@ -151,7 +153,7 @@ const AmbientTrack: React.FC<AmbientTrackProps> = ({ track, index, onRequestMedi
                         });
                     }}
                     className={`p-1 rounded-full transition-all ${track.linkedLightSceneId ? 'text-gm-cyan bg-gm-cyan/10 drop-shadow-glow-cyan' : 'text-app-text/40 hover:text-gm-cyan hover:bg-gm-cyan/5'}`}
-                    title={track.linkedLightSceneId ? "Lumière Liée" : "Lier une Lumière"}
+                    title={track.linkedLightSceneId ? t('modules:ambient.dashboard.linked_light') : t('modules:ambient.dashboard.link_light')}
                 >
                     <Lightbulb size={12} fill={track.linkedLightSceneId ? "currentColor" : "none"} />
                 </button>
@@ -160,14 +162,14 @@ const AmbientTrack: React.FC<AmbientTrackProps> = ({ track, index, onRequestMedi
                         e.stopPropagation();
                         if (track.isPlaying) toggleTrack(index);
                         updateTrack(index, {
-                            label: `Piste ${index + 1}`,
+                            label: `modules:ambient.presets.tracks.default_track`,
                             url: '',
                             volume: 0.5,
                             linkedLightSceneId: undefined
                         });
                     }}
                     className="p-1 rounded-full text-app-text/40 hover:text-red-500 hover:bg-red-500/10 transition-all"
-                    title="Effacer la piste"
+                    title={t('modules:ambient.dashboard.delete_track')}
                 >
                     <Trash2 size={12} />
                 </button>
@@ -177,3 +179,4 @@ const AmbientTrack: React.FC<AmbientTrackProps> = ({ track, index, onRequestMedi
 };
 
 export default AmbientTrack;
+

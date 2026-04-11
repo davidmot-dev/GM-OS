@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import LootGeneratorPanel from './LootGeneratorPanel';
 import LootPoolViewer from './LootPoolViewer';
 import LootHistoryViewer from './LootHistoryViewer';
@@ -7,23 +8,20 @@ import { useSessionOSStore } from '../useSessionOSStore';
 import { motion } from 'framer-motion';
 
 const LootOS: React.FC = () => {
+    const { t } = useTranslation(['modules']);
     const { lootPool } = useSessionOSStore();
     const [activeTab, setActiveTab] = useState<'generate' | 'pool' | 'history'>('generate');
 
     const totalValue = lootPool.reduce((acc, it) => acc + (Number(it.value) || 0) * (it.quantity || 1), 0);
     const magicItemsCount = lootPool.filter(it => it.rarity && !['common', 'currency'].includes(it.rarity)).length;
 
-    const gmQuotes = [
-        "Le butin n'est pas qu'une récompense, c'est un moteur narratif. Un objet maudit vaut parfois mieux qu'une épée +1.",
-        "Un trésor est souvent gardé. Qu'est-ce qui protégeait ces pièces ?",
-        "La rareté attire la convoitise. Préparez une rencontre sociale si le butin est trop visible.",
-        "L'équilibre économique est fragile. Un excès d'or peut changer le destin d'un royaume.",
-        "N'oubliez pas d'inclure des jetons personnels ou des objets liés aux histoires des PJ."
-    ];
+    const gmQuotes = t('modules:loot.gm_tips.quotes', { returnObjects: true }) as string[];
     
-    // On utilise l'ID de la session ou un timestamp pour stabiliser le conseil par session
-    const quoteIndex = Math.floor((Date.now() / 3600000) % gmQuotes.length);
-    const dailyQuote = gmQuotes[quoteIndex];
+    const dailyQuote = useMemo(() => {
+        if (!Array.isArray(gmQuotes) || gmQuotes.length === 0) return '';
+        const quoteIndex = Math.floor((Date.now() / 3600000) % gmQuotes.length);
+        return gmQuotes[quoteIndex];
+    }, [gmQuotes]);
 
     return (
         <div className="flex flex-col h-full bg-slate-900/50 backdrop-blur-xl">
@@ -36,7 +34,7 @@ const LootOS: React.FC = () => {
                     }`}
                 >
                     <Sparkles size={14} />
-                    Génération
+                    {t('modules:loot.tabs.generate')}
                 </button>
                 <button
                     onClick={() => setActiveTab('pool')}
@@ -45,7 +43,7 @@ const LootOS: React.FC = () => {
                     }`}
                 >
                     <Package size={14} />
-                    Pool Actif
+                    {t('modules:loot.tabs.pool')}
                 </button>
                 <button
                     onClick={() => setActiveTab('history')}
@@ -54,7 +52,7 @@ const LootOS: React.FC = () => {
                     }`}
                 >
                     <History size={14} />
-                    Historique
+                    {t('modules:loot.tabs.history')}
                 </button>
             </div>
 
@@ -92,24 +90,24 @@ const LootOS: React.FC = () => {
                 {/* Side Stats / Quick Info */}
                 <div className="w-64 border-l border-white/5 bg-black/10 p-5 hidden lg:flex flex-col gap-6">
                     <div className="flex flex-col gap-2">
-                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-app-text/30">Résumé Trésor</span>
+                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-app-text/30">{t('modules:loot.stats.title')}</span>
                         <div className="glass-bento p-3 flex flex-col gap-1">
                             <div className="flex justify-between items-center">
-                                <span className="text-[10px] text-app-text/60 font-medium">Valeur Totale</span>
+                                <span className="text-[10px] text-app-text/60 font-medium">{t('modules:loot.stats.total_value')}</span>
                                 <div className="flex items-center gap-1 text-gm-gold">
                                     <span className="text-xs font-bold">{totalValue.toLocaleString()}</span>
                                     <Coins size={12} />
                                 </div>
                             </div>
                             <div className="flex justify-between items-center text-[10px]">
-                                <span className="text-app-text/40">Objets Magiques</span>
+                                <span className="text-app-text/40">{t('modules:loot.stats.magic_items')}</span>
                                 <span className="text-violet-400 font-bold">{magicItemsCount}</span>
                             </div>
                         </div>
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-app-text/30">Conseils GM</span>
+                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-app-text/30">{t('modules:loot.gm_tips.title')}</span>
                         <p className="text-[11px] text-app-text/50 leading-relaxed italic">
                             "{dailyQuote}"
                         </p>

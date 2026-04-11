@@ -19,6 +19,8 @@ import {
 } from '@dnd-kit/sortable';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { CSS } from '@dnd-kit/utilities';
+import { Sword } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface SortableCombatCardProps {
     combatant: Combatant;
@@ -51,6 +53,7 @@ const SortableCombatCard: React.FC<SortableCombatCardProps> = ({ combatant, isAc
 };
 
 const InitiativeList: React.FC = () => {
+    const { t } = useTranslation(['modules', 'common']);
     const { combatants, currentTurnIdx, reorderCombatants } = useCombatStore();
     const { getActiveDriver } = useSessionOSStore();
     const activeDriver = getActiveDriver();
@@ -77,11 +80,10 @@ const InitiativeList: React.FC = () => {
 
     if (combatants.length === 0) {
         return (
-            <div className="flex-1 flex items-center justify-center bg-app-surface/50 rounded-xl border border-dashed border-app-border m-4">
-                <div className="text-center text-app-text/50">
-                    <p className="mb-2">La liste d'initiative est vide.</p>
-                    <p className="text-sm">Utilisez les contrôles pour ajouter des combattants.</p>
-                </div>
+             <div className="flex-1 flex flex-col items-center justify-center text-app-text/20 p-8 text-center animate-in fade-in duration-500">
+                <Zap size={64} className="mb-4 opacity-10 rotate-12 text-accent" />
+                <h3 className="text-xl font-display font-black uppercase tracking-widest">{t('modules:combat.initiative.empty_title')}</h3>
+                <p className="max-w-[200px] text-sm font-medium mt-2">{t('modules:combat.initiative.empty_desc')}</p>
             </div>
         );
     }

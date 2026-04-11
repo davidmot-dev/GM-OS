@@ -13,6 +13,7 @@ import {
 import { useTableStore } from './useTableStore';
 import { useSessionOSStore } from '../session/useSessionOSStore';
 import { RecipientSelector } from '../session/components/RecipientSelector';
+import { useTranslation } from 'react-i18next';
 
 const TableDashboard: React.FC = () => {
     const {
@@ -33,6 +34,7 @@ const TableDashboard: React.FC = () => {
         clearCurrentResult,
         sendToSession
     } = useTableStore();
+    const { t } = useTranslation('modules');
 
     const { 
         activeCampaignId, 
@@ -79,7 +81,7 @@ const TableDashboard: React.FC = () => {
         const player = players.find(p => p.id === playerId);
         const character = entities.find(e => e.id === characterId);
 
-        const recipientName = character?.name || player?.realName || "un PJ";
+        const recipientName = character?.name || player?.realName || t('random_tables.main.recipient_fallback');
         
         // Log to Journal via store with recipient
         sendToSession(recipientName);
@@ -87,7 +89,7 @@ const TableDashboard: React.FC = () => {
         let lootString = `**${currentResult.entry.title}** (${currentResult.tableName})\n`;
         lootString += `_${currentResult.entry.description}_`;
         if (currentResult.entry.effect) {
-            lootString += `\n**Effet:** ${currentResult.entry.effect}`;
+            lootString += `\n**${t('random_tables.main.effect_prefix')}** ${currentResult.entry.effect}`;
         }
         
         addLootToCharacter(playerId, characterId, lootString);
@@ -100,33 +102,33 @@ const TableDashboard: React.FC = () => {
             <aside className="w-80 border-r border-app-border bg-app-surface/50 p-6 flex flex-col space-y-6">
                 <div>
                     <h2 className="text-xs font-bold uppercase tracking-widest text-accent mb-4 flex items-center gap-2">
-                        <Database className="w-4 h-4" /> Config & Selection
+                        <Database className="w-4 h-4" /> {t('random_tables.sidebar.config_title')}
                     </h2>
 
                     <div className="space-y-4">
                         {/* Universe Select */}
                         <div>
-                            <label className="block text-xs text-app-text/50 mb-1 ml-1">Univers / Jeu</label>
+                            <label className="block text-xs text-app-text/50 mb-1 ml-1">{t('random_tables.sidebar.universe_label')}</label>
                             <select
                                 value={selectedUniverse}
                                 onChange={(e) => selectUniverse(e.target.value)}
                                 className="w-full bg-app-surface border border-app-border rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-accent/50"
                             >
-                                <option value="">Choisir un univers...</option>
+                                <option value="">{t('random_tables.sidebar.choose_universe')}</option>
                                 {universes.map(u => <option key={u} value={u}>{u}</option>)}
                             </select>
                         </div>
 
                         {/* Table Select */}
                         <div>
-                            <label className="block text-xs text-app-text/50 mb-1 ml-1">Table Aléatoire</label>
+                            <label className="block text-xs text-app-text/50 mb-1 ml-1">{t('random_tables.sidebar.table_label')}</label>
                             <select
                                 value={selectedTable}
                                 onChange={(e) => selectTable(e.target.value)}
                                 disabled={!selectedUniverse}
                                 className="w-full bg-app-surface border border-app-border rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-accent/50 disabled:opacity-50"
                             >
-                                <option value="">Choisir une table...</option>
+                                <option value="">{t('random_tables.sidebar.choose_table')}</option>
                                 {tables.map(t => <option key={t} value={t}>{t}</option>)}
                             </select>
                         </div>
@@ -138,10 +140,10 @@ const TableDashboard: React.FC = () => {
                     <div className="bg-accent/5 border border-accent/20 rounded-xl p-4 space-y-2">
                         <div className="flex items-center gap-2 text-accent font-medium">
                             <Hash className="w-4 h-4" />
-                            <span>Jet Requis : {currentTableData.dice}</span>
+                            <span>{t('random_tables.sidebar.roll_required', { dice: currentTableData.dice })}</span>
                         </div>
                         <p className="text-xs text-app-text/60 italic">
-                            Les modificateurs seront ajoutés au résultat brut.
+                            {t('random_tables.sidebar.modifier_notice')}
                         </p>
                     </div>
                 )}
@@ -149,7 +151,7 @@ const TableDashboard: React.FC = () => {
                 {/* Modifiers & Roll */}
                 <div className="space-y-4 pt-4 border-t border-app-border">
                     <div>
-                        <label className="block text-xs text-app-text/50 mb-1 ml-1">Modificateur de Jet</label>
+                        <label className="block text-xs text-app-text/50 mb-1 ml-1">{t('random_tables.sidebar.modifier_label')}</label>
                         <input
                             type="number"
                             value={modifier}
@@ -160,7 +162,7 @@ const TableDashboard: React.FC = () => {
 
                     <div className="grid grid-cols-2 gap-2">
                         <div>
-                            <label className="block text-xs text-app-text/50 mb-1 ml-1">Jet Manuel</label>
+                            <label className="block text-xs text-app-text/50 mb-1 ml-1">{t('random_tables.sidebar.manual_roll_label')}</label>
                             <input
                                 type="text"
                                 value={manualRoll}
@@ -178,7 +180,7 @@ const TableDashboard: React.FC = () => {
                             disabled={!currentTableData}
                             className="mt-5 flex items-center justify-center gap-2 bg-app-surface hover:bg-app-surface/70 border border-app-border rounded-lg px-4 transition-colors disabled:opacity-50"
                         >
-                            Afficher
+                            {t('random_tables.sidebar.show_button')}
                         </button>
                     </div>
 
@@ -188,14 +190,14 @@ const TableDashboard: React.FC = () => {
                         className="w-full flex items-center justify-center gap-3 bg-accent hover:bg-accent/80 text-slate-950 font-bold py-4 rounded-xl transition-all shadow-glow-accent active:scale-95 disabled:opacity-50"
                     >
                         <Dices className="w-6 h-6" />
-                        <span>LANCER</span>
+                        <span>{t('random_tables.sidebar.launch_button')}</span>
                     </button>
                 </div>
 
                 {/* History Mini-List */}
                 <div className="flex-1 overflow-hidden flex flex-col pt-4">
                     <h3 className="text-[10px] font-bold uppercase tracking-widest text-app-text/50 mb-2 flex items-center gap-2 px-1">
-                        <History className="w-3 h-3" /> Historique Récent
+                        <History className="w-3 h-3" /> {t('random_tables.sidebar.history_title')}
                     </h3>
                     <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-2 text-app-text/60">
                         {history.slice(0, 10).map((res, i) => (
@@ -217,9 +219,9 @@ const TableDashboard: React.FC = () => {
                             <Dices className="w-16 h-16 text-app-text/30" />
                         </div>
                         <div>
-                            <h2 className="text-2xl font-light">En attente de tirage</h2>
+                            <h2 className="text-2xl font-light">{t('random_tables.main.waiting_title')}</h2>
                             <p className="text-app-text/50 max-w-sm">
-                                Sélectionnez une table dans la barre latérale pour commencer à générer des résultats aléatoires.
+                                {t('random_tables.main.waiting_desc')}
                             </p>
                         </div>
                     </div>
@@ -235,14 +237,14 @@ const TableDashboard: React.FC = () => {
                                             {currentResult.finalValue}
                                         </div>
                                         <div className="opacity-70 text-xs font-mono">
-                                            Jet Brut: {currentResult.rawRoll} <br />
-                                            Mod: {currentResult.modifier >= 0 ? '+' : ''}{currentResult.modifier}
+                                            {t('random_tables.main.raw_roll')}: {currentResult.rawRoll} <br />
+                                            {t('random_tables.main.mod')}: {currentResult.modifier >= 0 ? '+' : ''}{currentResult.modifier}
                                         </div>
                                     </div>
                                     <h1 className="text-3xl font-bold mt-4">{currentResult.entry.title}</h1>
                                 </div>
                                 <div className="text-right">
-                                    <div className="opacity-50 text-[10px] uppercase tracking-tighter mb-1 font-bold">Source: {currentResult.tableName}</div>
+                                    <div className="opacity-50 text-[10px] uppercase tracking-tighter mb-1 font-bold">{t('random_tables.main.source', { table: currentResult.tableName })}</div>
                                     <BookOpen className="w-8 h-8 opacity-20 ml-auto" />
                                 </div>
                             </div>
@@ -260,7 +262,7 @@ const TableDashboard: React.FC = () => {
                                     <div className="bg-red-500/10 border border-red-500/30 rounded-2xl p-6 flex gap-4">
                                         <AlertTriangle className="w-6 h-6 text-red-400 shrink-0" />
                                         <div className="space-y-1">
-                                            <div className="text-xs font-bold uppercase tracking-widest text-red-400">Effet Mécanique</div>
+                                            <div className="text-xs font-bold uppercase tracking-widest text-red-400">{t('random_tables.main.mechanical_effect')}</div>
                                             <div className="text-red-200 text-lg">{currentResult.entry.effect}</div>
                                         </div>
                                     </div>
@@ -273,22 +275,22 @@ const TableDashboard: React.FC = () => {
                                         className="flex-[2] flex items-center justify-center gap-3 bg-app-surface hover:bg-app-surface/80 py-4 rounded-xl border border-app-border transition-all group"
                                     >
                                         <Send className="w-5 h-5 text-accent group-hover:translate-x-1 transition-transform" />
-                                        <span>Log Session</span>
+                                        <span>{t('random_tables.main.log_session')}</span>
                                     </button>
                                     
                                     <button
                                         onClick={() => setShowRecipientSelector(true)}
                                         className="flex-1 flex items-center justify-center gap-3 bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 py-4 rounded-xl border border-amber-500/30 transition-all group"
-                                        title="Donner à un PJ"
+                                        title={t('random_tables.main.give_tooltip')}
                                     >
                                         <Package className="w-5 h-5" />
-                                        <span>Donner</span>
+                                        <span>{t('random_tables.main.give_button')}</span>
                                     </button>
 
                                     <button
                                         onClick={clearCurrentResult}
                                         className="bg-app-surface hover:bg-red-900/30 p-4 border border-app-border rounded-xl transition-all group"
-                                        title="Effacer"
+                                        title={t('random_tables.main.clear_tooltip')}
                                     >
                                         <Trash2 className="w-5 h-5 text-app-text/40 group-hover:text-red-400" />
                                     </button>

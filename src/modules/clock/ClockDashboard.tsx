@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import ClockVisualizer from './components/ClockVisualizer';
 import NarrativeClock from './components/NarrativeClock';
+import { useTranslation } from 'react-i18next';
 
 
 const ClockDashboard: React.FC = () => {
@@ -50,6 +51,7 @@ const ClockDashboard: React.FC = () => {
         getFantasyDate,
         setFantasyDate
     } = useClockStore();
+    const { t } = useTranslation('modules');
 
     const fantasyDate = getFantasyDate();
 
@@ -75,18 +77,17 @@ const ClockDashboard: React.FC = () => {
     }, [timerIsRunning, timerRemaining, tickTimer]);
 
     const themes: { id: typeof theme; label: string }[] = [
-        { id: 'modern', label: 'Moderne' },
-        { id: 'cyberpunk', label: 'Cyberpunk' },
-        { id: 'oldstyle', label: 'Old Style' },
+        { id: 'modern', label: t('clock.themes.modern') },
+        { id: 'cyberpunk', label: t('clock.themes.cyberpunk') },
+        { id: 'oldstyle', label: t('clock.themes.oldstyle') },
     ];
 
 
     const modes: { id: typeof mode; label: string; icon: React.ElementType }[] = [
-
-        { id: 'realtime', label: 'Temps Réel', icon: Clock },
-        { id: 'static', label: 'Statique', icon: Settings },
-        { id: 'timer', label: 'Minuteur', icon: Timer },
-        { id: 'fantasy', label: 'Fantastique', icon: Calendar },
+        { id: 'realtime', label: t('clock.modes.realtime'), icon: Clock },
+        { id: 'static', label: t('clock.modes.static'), icon: Settings },
+        { id: 'timer', label: t('clock.modes.timer'), icon: Timer },
+        { id: 'fantasy', label: t('clock.modes.fantasy'), icon: Calendar },
     ];
 
     return (
@@ -95,12 +96,12 @@ const ClockDashboard: React.FC = () => {
             <div className="col-span-3 space-y-6 overflow-y-auto pr-2 custom-scrollbar">
                 <section className="bg-app-surface/80 border border-app-border rounded-xl p-4 shadow-xl backdrop-blur-sm">
                     <h3 className="text-sm font-semibold text-app-text/60 mb-4 flex items-center gap-2 uppercase tracking-wider">
-                        <LayoutGrid size={16} /> Configuration
+                        <LayoutGrid size={16} /> {t('clock.config')}
                     </h3>
 
                     <div className="space-y-4">
                         <div>
-                            <label className="text-xs text-app-text/50 mb-2 block uppercase font-medium">Mode de Temps</label>
+                            <label className="text-xs text-app-text/50 mb-2 block uppercase font-medium">{t('clock.time_mode')}</label>
                             <div className="grid grid-cols-2 gap-2">
                                 {modes.map((m) => (
                                     <button
@@ -119,7 +120,7 @@ const ClockDashboard: React.FC = () => {
                         </div>
 
                         <div>
-                            <label className="text-xs text-app-text/50 mb-2 block uppercase font-medium">Thème Visuel</label>
+                            <label className="text-xs text-app-text/50 mb-2 block uppercase font-medium">{t('clock.visual_theme')}</label>
                             <div className="grid grid-cols-3 gap-2">
                                 {themes.map((t) => (
                                     <button
@@ -139,13 +140,13 @@ const ClockDashboard: React.FC = () => {
                         {mode === 'fantasy' && (
                             <div className="bg-slate-800/30 border border-slate-700/50 rounded-lg p-3 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
                                 <div>
-                                    <label className="text-xs text-slate-500 uppercase font-medium block mb-2">Calendrier</label>
+                                    <label className="text-xs text-slate-500 uppercase font-medium block mb-2">{t('clock.calendar')}</label>
                                     <select
                                         className="w-full bg-app-bg border border-app-border rounded p-2 text-xs text-app-text focus:outline-none focus:border-accent"
                                         value={activeCalendarId || ''}
                                         onChange={(e) => selectCalendar(e.target.value)}
                                     >
-                                        <option value="" disabled>Choisir un calendrier...</option>
+                                        <option value="" disabled>{t('clock.choose_calendar')}</option>
                                         {availableCalendars.map(calId => (
                                             <option key={calId} value={calId}>{calId}</option>
                                         ))}
@@ -156,7 +157,7 @@ const ClockDashboard: React.FC = () => {
                                     <div className="space-y-3 pt-2 border-t border-app-border/50">
                                         <div className="grid grid-cols-2 gap-2">
                                             <div>
-                                                <label className="text-[10px] text-slate-500 uppercase block mb-1">Année</label>
+                                                <label className="text-[10px] text-slate-500 uppercase block mb-1">{t('clock.year')}</label>
                                                 <input
                                                     type="number"
                                                     className="w-full bg-app-bg border border-app-border rounded p-1.5 text-xs text-app-text"
@@ -165,7 +166,7 @@ const ClockDashboard: React.FC = () => {
                                                 />
                                             </div>
                                             <div>
-                                                <label className="text-[10px] text-slate-500 uppercase block mb-1">Jour</label>
+                                                <label className="text-[10px] text-slate-500 uppercase block mb-1">{t('clock.day')}</label>
                                                 <input
                                                     type="number"
                                                     className="w-full bg-app-bg border border-app-border rounded p-1.5 text-xs text-app-text"
@@ -175,7 +176,7 @@ const ClockDashboard: React.FC = () => {
                                             </div>
                                         </div>
                                         <div>
-                                            <label className="text-[10px] text-slate-500 uppercase block mb-1">Mois</label>
+                                            <label className="text-[10px] text-slate-500 uppercase block mb-1">{t('clock.month')}</label>
                                             <select
                                                 className="w-full bg-app-bg border border-app-border rounded p-1.5 text-xs text-app-text"
                                                 value={fantasyDate.monthIndex}
@@ -218,7 +219,7 @@ const ClockDashboard: React.FC = () => {
 
                         {mode === 'static' && (
                             <div className="bg-slate-800/30 border border-slate-700/50 rounded-lg p-3 space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
-                                <label className="text-xs text-slate-500 uppercase font-medium block">Réglage Manuel</label>
+                                <label className="text-xs text-slate-500 uppercase font-medium block">{t('clock.manual_setting')}</label>
                                 <div className="space-y-2">
                                     <input
                                         type="date"
@@ -252,13 +253,13 @@ const ClockDashboard: React.FC = () => {
                 {/* Timer Control Section */}
                 <section className="bg-app-surface/80 border border-app-border rounded-xl p-4 shadow-xl backdrop-blur-sm">
                     <h3 className="text-sm font-semibold text-app-text/60 mb-4 flex items-center gap-2 uppercase tracking-wider">
-                        <Timer size={16} /> Minuteur
+                        <Timer size={16} /> {t('clock.timer_section')}
                     </h3>
 
                     <div className="space-y-2 mb-4">
                         <input
                             type="text"
-                            placeholder="Message du minuteur..."
+                            placeholder={t('clock.timer_placeholder')}
                             className="w-full bg-app-surface/80 border border-app-border rounded-lg p-2 text-xs text-app-text placeholder:text-app-text/30 focus:outline-none focus:border-accent"
                             value={timerLabel}
                             onChange={(e) => setTimerLabel(e.target.value)}
@@ -293,14 +294,14 @@ const ClockDashboard: React.FC = () => {
                                 onClick={startTimer}
                                 className="flex-1 bg-emerald-600/20 border border-emerald-500/50 text-emerald-400 p-2 rounded-lg text-xs font-bold uppercase hover:bg-emerald-600/30 transition-colors flex items-center justify-center gap-2"
                             >
-                                <Play size={14} fill="currentColor" /> Départ
+                                <Play size={14} fill="currentColor" /> {t('clock.start')}
                             </button>
                         ) : (
                             <button
                                 onClick={pauseTimer}
                                 className="flex-1 bg-amber-600/20 border border-amber-500/50 text-amber-400 p-2 rounded-lg text-xs font-bold uppercase hover:bg-amber-600/30 transition-colors flex items-center justify-center gap-2"
                             >
-                                <Pause size={14} fill="currentColor" /> Pause
+                                <Pause size={14} fill="currentColor" /> {t('clock.pause')}
                             </button>
                         )}
                         <button
@@ -315,12 +316,12 @@ const ClockDashboard: React.FC = () => {
                 {/* Tension Clocks Grid Add */}
                 <section className="bg-app-surface/80 border border-app-border rounded-xl p-4 shadow-xl backdrop-blur-sm">
                     <h3 className="text-sm font-semibold text-app-text/60 mb-4 flex items-center gap-2 uppercase tracking-wider">
-                        <Plus size={16} /> Nouvelle Jauge
+                        <Plus size={16} /> {t('clock.new_gauge')}
                     </h3>
                     <div className="flex flex-col gap-3">
                         <input
                             type="text"
-                            placeholder="Nom de la jauge..."
+                            placeholder={t('clock.gauge_placeholder')}
                             className="bg-app-surface/80 border border-app-border rounded-lg p-2 text-xs text-app-text placeholder:text-app-text/30 focus:outline-none focus:border-accent"
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
@@ -336,7 +337,7 @@ const ClockDashboard: React.FC = () => {
                             {[4, 6, 8, 10, 12].map(s => (
                                 <button
                                     key={s}
-                                    onClick={() => addTensionClock(`Jauge ${s} seg`, s)}
+                                    onClick={() => addTensionClock(t('clock.gauge_default', { segments: s }), s)}
                                     className="bg-app-bg/50 border border-app-border text-app-text/50 px-2 py-1 rounded text-[10px] font-bold hover:bg-app-surface hover:text-accent transition-all"
                                 >
                                     +{s}
@@ -358,7 +359,7 @@ const ClockDashboard: React.FC = () => {
                                 ? 'bg-accent/20 border-accent text-accent shadow-glow-accent'
                                 : 'bg-app-surface/50 border-app-border text-app-text/50 hover:text-app-text'
                                 }`}
-                            title={isClockProjected ? "Caché du Player Hub" : "Affiché sur le Player Hub"}
+                            title={isClockProjected ? t('clock.projection.hide') : t('clock.projection.show')}
                         >
                             <Monitor size={16} />
                         </button>
@@ -405,7 +406,7 @@ const ClockDashboard: React.FC = () => {
                                     <div className="text-center">
                                         <p className="text-xs font-bold text-slate-300 truncate w-full max-w-[120px] uppercase tracking-tight">{clock.name}</p>
                                         <p className="text-[10px] text-slate-500 font-mono italic">
-                                            {clock.filledSegments} / {clock.totalSegments} Segments
+                                            {clock.filledSegments} / {clock.totalSegments} {t('clock.segments')}
                                         </p>
                                     </div>
                                 </div>
@@ -415,8 +416,8 @@ const ClockDashboard: React.FC = () => {
                         {tensions.length === 0 && (
                             <div className="col-span-4 h-full flex flex-col items-center justify-center text-slate-600 border-2 border-dashed border-slate-800/50 rounded-xl py-8">
                                 <Plus size={32} className="mb-2 opacity-20" />
-                                <p className="text-sm font-medium italic">Aucune jauge active</p>
-                                <p className="text-[10px] uppercase mt-1">Créez-en une pour suivre la tension narrative</p>
+                                <p className="text-sm font-medium italic">{t('clock.empty.no_gauges')}</p>
+                                <p className="text-[10px] uppercase mt-1">{t('clock.empty.create_hint')}</p>
                             </div>
                         )}
                     </div>

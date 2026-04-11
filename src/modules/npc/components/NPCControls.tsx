@@ -1,23 +1,25 @@
 import React from 'react';
 import { useNPCStore, type NPCCategory } from '../useNPCStore';
 import { Users, MapPin, Box, Zap, MessageSquare, Dices, Sparkles, type LucideIcon } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const NPCControls: React.FC = () => {
+    const { t } = useTranslation(['modules', 'common']);
     const { config, setConfig, availableUniverses, generate, isGenerating } = useNPCStore();
 
     const categories: { id: NPCCategory, label: string, icon: LucideIcon }[] = [
-        { id: 'npcs', label: 'PNJ', icon: Users },
-        { id: 'places', label: 'Lieux', icon: MapPin },
-        { id: 'items', label: 'Objets', icon: Box },
-        { id: 'events', label: 'Événements', icon: Zap },
-        { id: 'rumors', label: 'Rumeurs', icon: MessageSquare },
+        { id: 'npcs', label: t('npc.categories.npcs'), icon: Users },
+        { id: 'places', label: t('npc.categories.places'), icon: MapPin },
+        { id: 'items', label: t('npc.categories.items'), icon: Box },
+        { id: 'events', label: t('npc.categories.events'), icon: Zap },
+        { id: 'rumors', label: t('npc.categories.rumors'), icon: MessageSquare },
     ];
 
     return (
         <div className="p-4 flex flex-col gap-4 border-b border-app-border bg-app-surface/50">
             <h2 className="text-accent font-display font-bold text-lg flex items-center gap-2">
                 <Dices size={20} />
-                Générateur Universel
+                {t('npc.title')}
             </h2>
 
             {/* Category Selectors */}
@@ -45,7 +47,7 @@ const NPCControls: React.FC = () => {
             <div className="flex flex-col gap-3">
                 {/* Level 1: Universe */}
                 <div className="flex flex-col gap-1">
-                    <label className="text-[10px] uppercase font-bold text-slate-500 ml-1 font-sans tracking-tight">Univers (Préfixe)</label>
+                    <label className="text-[10px] uppercase font-bold text-slate-500 ml-1 font-sans tracking-tight">{t('npc.controls.universe')}</label>
                     <select
                         value={config?.universe?.split('_')[0] || ''}
                         onChange={(e) => {
@@ -59,13 +61,13 @@ const NPCControls: React.FC = () => {
                         {Array.from(new Set(availableUniverses.map(u => u.split('_')[0]))).sort().map(prefix => (
                             <option key={prefix} value={prefix}>{prefix}</option>
                         ))}
-                        {availableUniverses.length === 0 && <option disabled>Aucune base</option>}
+                        {availableUniverses.length === 0 && <option disabled>{t('npc.controls.no_base')}</option>}
                     </select>
                 </div>
 
                 {/* Level 2: Theme */}
                 <div className="flex flex-col gap-1 animate-in slide-in-from-top-1 duration-200">
-                    <label className="text-[10px] uppercase font-bold text-slate-500 ml-1 font-sans tracking-tight">Thème / Fichier</label>
+                    <label className="text-[10px] uppercase font-bold text-slate-500 ml-1 font-sans tracking-tight">{t('npc.controls.theme')}</label>
                     <select
                         value={config?.universe || ''}
                         onChange={(e) => setConfig({ universe: e.target.value })}
@@ -95,7 +97,7 @@ const NPCControls: React.FC = () => {
                     }`}
                 >
                     <Sparkles size={12} className={config.aiEnabled ? 'animate-pulse' : ''} />
-                    {config.aiEnabled ? 'IA : Enrichissement Actif' : 'IA : Désactivée'}
+                    {config.aiEnabled ? t('npc.controls.ai_enrichment_on') : t('npc.controls.ai_enrichment_off')}
                 </button>
 
                 <button
@@ -105,7 +107,9 @@ const NPCControls: React.FC = () => {
                 >
                     <Dices size={20} className={isGenerating ? 'animate-spin' : 'group-hover:rotate-12 transition-transform'} />
                     <span className="uppercase tracking-wider text-xs font-sans">
-                        {isGenerating ? 'Génération...' : `Générer ${categories.find(c => c.id === config.category)?.label}`}
+                        {isGenerating 
+                            ? t('npc.controls.generating') 
+                            : t('npc.controls.generate', { category: categories.find(c => c.id === config.category)?.label })}
                     </span>
                 </button>
             </div>
@@ -114,3 +118,4 @@ const NPCControls: React.FC = () => {
 };
 
 export default NPCControls;
+

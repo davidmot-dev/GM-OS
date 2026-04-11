@@ -10,8 +10,9 @@ import { useImageStore } from './useImageStore';
 import ImagePad from './components/ImagePad';
 import { MediaBrowser } from '../../components/MediaBrowser';
 import { useMediaStore } from '../../stores/useMediaStore';
-import { gmConfirm } from '../../stores/useModalStore';
+import { gmConfirm, gmPrompt } from '../../stores/useModalStore';
 import { useHardwareStore } from '../../stores/useHardwareStore';
+import { useTranslation } from 'react-i18next';
 
 const ImageDashboard: React.FC = () => {
     const {
@@ -20,6 +21,7 @@ const ImageDashboard: React.FC = () => {
         folders, activeFolderId, setActiveFolderId, addFolder, removeFolder,
         currentView, setCurrentView, reset
     } = useImageStore();
+    const { t } = useTranslation(['modules', 'common']);
     const { getDisplayLabel } = useHardwareStore();
 
     React.useEffect(() => {
@@ -45,10 +47,11 @@ const ImageDashboard: React.FC = () => {
     };
 
     const handleCreateFolder = () => {
-        const name = prompt('Nom du nouveau dossier :');
-        if (name) {
-            addFolder(name);
-        }
+        gmPrompt(t('image.folders.newPrompt'), '', (name) => {
+            if (name) {
+                addFolder(name);
+            }
+        });
     };
 
     let displayedMedia = mediaList;
@@ -59,10 +62,10 @@ const ImageDashboard: React.FC = () => {
     }
 
     const currentFolderName = currentView === 'favorites'
-        ? 'Favorites'
+        ? t('image.sidebar.favorites')
         : (activeFolderId
-            ? folders.find(f => f.id === activeFolderId)?.name || 'Inconnu'
-            : 'All Media');
+            ? folders.find(f => f.id === activeFolderId)?.name || t('common:unknown')
+            : t('image.sidebar.mediaLibrary'));
 
 
     return (
@@ -72,7 +75,7 @@ const ImageDashboard: React.FC = () => {
                 onClose={() => setIsBrowserOpen(false)}
                 onSelect={handleMediaSelect}
                 allowedTypes={['image']}
-                title="Importer des Images"
+                title={t('image.sidebar.mediaLibrary')}
             />
 
 
@@ -85,32 +88,32 @@ const ImageDashboard: React.FC = () => {
                         <button
                             onClick={blackout}
                             className="bg-rose-500/10 border border-rose-500/20 text-rose-500 hover:bg-rose-500/20 hover:border-rose-500/40 font-black py-4 rounded-2xl transition-all flex flex-col items-center justify-center gap-2 text-[10px] tracking-[0.2em] group"
-                            title="Éteindre l'écran cible uniquement"
+                            title={t('image.dashboard.blackout.targetTooltip')}
                         >
                             <div className="p-2 rounded-full bg-rose-500/10 group-hover:scale-110 transition-transform shadow-glow-rose">
                                 <Ban size={18} />
                             </div>
-                            TARGET
+                            {t('image.dashboard.blackout.target')}
                         </button>
                         <button
                             onClick={blackoutAll}
                             className="bg-rose-600 hover:bg-rose-500 text-white font-black py-4 rounded-2xl shadow-glow-rose transition-all flex flex-col items-center justify-center gap-2 text-[10px] tracking-[0.2em] group"
-                            title="Éteindre TOUS les écrans"
+                            title={t('image.dashboard.blackout.allTooltip')}
                         >
                             <div className="p-2 rounded-full bg-white/20 group-hover:scale-110 transition-transform shadow-lg">
                                 <Ban size={18} />
                             </div>
-                            ALL
+                            {t('image.dashboard.blackout.all')}
                         </button>
                     </div>
 
                     <button
-                        onClick={() => gmConfirm("Voulez-vous vraiment réinitialiser le module Image OS ? Toutes les images, dossiers et projections seront perdus.", () => reset())}
+                        onClick={() => gmConfirm(t('image.dashboard.resetConfirm'), () => reset())}
                         className="w-full bg-app-bg/60 border border-red-500/10 text-red-500/40 hover:bg-red-500/10 hover:text-red-500 font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-3 text-[10px] tracking-widest uppercase hover:border-red-500/30 group"
-                        title="Réinitialiser le module"
+                        title={t('image.dashboard.resetTooltip')}
                     >
                         <RotateCcw size={14} className="group-hover:-rotate-180 transition-transform duration-500" />
-                        RESTORE DEFAULT
+                        {t('image.dashboard.restoreDefault')}
                     </button>
                 </div>
 
@@ -122,26 +125,26 @@ const ImageDashboard: React.FC = () => {
                             className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors ${currentView === 'library' && activeFolderId === null ? 'bg-accent/20 text-accent' : 'text-slate-400 hover:bg-app-surface/50'}`}
                         >
                             <FolderIcon size={18} />
-                            <span className="text-sm font-medium">Media Library</span>
+                            <span className="text-sm font-medium">{t('image.sidebar.mediaLibrary')}</span>
                         </div>
                         <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-app-surface/50 transition-colors cursor-pointer opacity-50">
                             <HistoryIcon size={18} />
-                            <span className="text-sm font-medium">Recent Uploads</span>
+                            <span className="text-sm font-medium">{t('image.sidebar.recentUploads')}</span>
                         </div>
                         <div
                             onClick={() => setCurrentView('favorites')}
                             className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors ${currentView === 'favorites' ? 'bg-accent/20 text-accent' : 'text-slate-400 hover:bg-app-surface/50'}`}
                         >
                             <StarIcon size={18} />
-                            <span className="text-sm font-medium">Favorites</span>
+                            <span className="text-sm font-medium">{t('image.sidebar.favorites')}</span>
                         </div>
                     </nav>
                 </div>
 
                 <div className="bg-app-surface/30 p-3 rounded-lg flex-grow overflow-y-auto custom-scrollbar flex flex-col">
                     <div className="flex items-center justify-between mb-3 px-1">
-                        <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Folder Tree</h3>
-                        <button onClick={handleCreateFolder} className="text-slate-400 hover:text-accent transition-colors" title="Nouveau dossier">
+                        <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('image.sidebar.folderTree')}</h3>
+                        <button onClick={handleCreateFolder} className="text-slate-400 hover:text-accent transition-colors" title={t('image.folders.new')}>
                             <Plus size={14} />
                         </button>
                     </div>
@@ -157,7 +160,7 @@ const ImageDashboard: React.FC = () => {
                                 <button
                                     onClick={(e) => { e.stopPropagation(); removeFolder(folder.id); }}
                                     className="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-red-400 transition-all p-1"
-                                    title="Supprimer dossier"
+                                    title={t('image.folders.delete')}
                                 >
                                     <Ban size={12} />
                                 </button>
@@ -168,8 +171,8 @@ const ImageDashboard: React.FC = () => {
 
                 <div className="mt-auto pt-4 border-t border-app-border flex flex-col gap-3">
                     <div className="flex justify-between items-center text-[10px] text-slate-500 uppercase tracking-widest font-bold">
-                        <span>Local Storage</span>
-                        <span>{mediaList.length} Items</span>
+                        <span>{t('image.sidebar.localStorage')}</span>
+                        <span>{t('image.storage.itemsCount', { count: mediaList.length })}</span>
                     </div>
                 </div>
             </aside>
@@ -212,7 +215,7 @@ const ImageDashboard: React.FC = () => {
                             <SearchIcon size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
                             <input
                                 className="bg-app-surface border-none rounded-xl pl-10 pr-4 py-2 text-sm w-64 focus:ring-1 focus:ring-accent text-white"
-                                placeholder="Search assets..."
+                                placeholder={t('common:search')}
                                 type="text"
                             />
                         </div>
@@ -221,7 +224,7 @@ const ImageDashboard: React.FC = () => {
                             <button 
                                 onClick={() => navigateSequence(-1)}
                                 className="p-2 hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
-                                title="Précédent"
+                                title={t('common:previous')}
                             >
                                 <ChevronLeft size={20} />
                             </button>
@@ -229,12 +232,12 @@ const ImageDashboard: React.FC = () => {
                                 onClick={projectSequence}
                                 className="bg-accent text-slate-950 px-6 py-2 font-bold text-sm tracking-wide shadow-glow-accent hover:brightness-110 active:scale-[0.98] transition-all"
                             >
-                                DIAPORAMA
+                                {t('image.dashboard.diaporama')}
                             </button>
                             <button 
                                 onClick={() => navigateSequence(1)}
                                 className="p-2 hover:bg-white/10 text-slate-400 hover:text-white transition-colors border-l border-app-border"
-                                title="Suivant"
+                                title={t('common:next')}
                             >
                                 <ChevronRight size={20} />
                             </button>
@@ -243,7 +246,7 @@ const ImageDashboard: React.FC = () => {
 
                         <div className="w-10 h-10 rounded-full bg-app-surface border border-app-border flex items-center justify-center overflow-hidden">
                             {/* Dummy Profile */}
-                            <div className="w-full h-full bg-app-surface flex items-center justify-center text-white font-bold">GM</div>
+                            <div className="w-full h-full bg-app-surface flex items-center justify-center text-white font-bold">{t('common:gm')}</div>
                         </div>
                     </div>
                 </header>
@@ -256,7 +259,7 @@ const ImageDashboard: React.FC = () => {
                     <div className="flex gap-2">
                         <button 
                             className="p-2 rounded-lg bg-app-bg border border-app-border text-slate-400 hover:text-white transition-colors"
-                            title="Filtrer"
+                            title={t('common:filter')}
                         >
                             <Filter size={20} />
                         </button>
@@ -277,7 +280,7 @@ const ImageDashboard: React.FC = () => {
                         <div className="w-12 h-12 rounded-full bg-app-surface flex items-center justify-center text-accent group-hover:bg-accent/20 group-hover:text-accent transition-colors">
                             <Plus size={24} />
                         </div>
-                        <p className="text-slate-500 font-bold text-sm group-hover:text-accent transition-colors">Add New Media</p>
+                        <p className="text-slate-500 font-bold text-sm group-hover:text-accent transition-colors">{t('image.dashboard.addNew')}</p>
                     </div>
                 </div>
             </main>

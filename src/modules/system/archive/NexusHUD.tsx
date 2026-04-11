@@ -10,6 +10,7 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     Package,
     Database,
@@ -37,61 +38,61 @@ interface PhaseConfig {
 
 const PHASE_CONFIG: Record<NexusOperationPhase, PhaseConfig> = {
     idle: {
-        label: 'En attente',
+        label: 'modules:system.nexus.phases.idle',
         icon: Package,
         color: 'text-app-text/40',
         glow: 'shadow-none',
     },
     scraping: {
-        label: 'Extraction des données',
+        label: 'modules:system.nexus.phases.scraping',
         icon: Database,
         color: 'text-amber-400',
         glow: 'shadow-[0_0_30px_rgba(251,191,36,0.3)]',
     },
     harvesting: {
-        label: 'Moissonnage des médias',
+        label: 'modules:system.nexus.phases.harvesting',
         icon: HardDrive,
         color: 'text-orange-400',
         glow: 'shadow-[0_0_30px_rgba(251,146,60,0.3)]',
     },
     remote_check: {
-        label: 'Vérification des liens distants',
+        label: 'modules:system.nexus.phases.remote_check',
         icon: Zap,
         color: 'text-indigo-400',
         glow: 'shadow-[0_0_30px_rgba(129,140,248,0.3)]',
     },
     packaging: {
-        label: 'Compression du bundle',
+        label: 'modules:system.nexus.phases.packaging',
         icon: FileArchive,
         color: 'text-yellow-400',
         glow: 'shadow-[0_0_30px_rgba(250,204,21,0.3)]',
     },
     importing: {
-        label: 'Lecture de l\'archive',
+        label: 'modules:system.nexus.phases.importing',
         icon: Download,
         color: 'text-sky-400',
         glow: 'shadow-[0_0_30px_rgba(56,189,248,0.3)]',
     },
     remapping: {
-        label: 'Relocalisation des médias',
+        label: 'modules:system.nexus.phases.remapping',
         icon: Layers,
         color: 'text-violet-400',
         glow: 'shadow-[0_0_30px_rgba(167,139,250,0.3)]',
     },
     injecting: {
-        label: 'Injection dans la base',
+        label: 'modules:system.nexus.phases.injecting',
         icon: ArrowDownToLine,
         color: 'text-emerald-400',
         glow: 'shadow-[0_0_30px_rgba(52,211,153,0.3)]',
     },
     done: {
-        label: 'Opération terminée',
+        label: 'modules:system.nexus.phases.done',
         icon: CheckCircle2,
         color: 'text-emerald-400',
         glow: 'shadow-[0_0_40px_rgba(52,211,153,0.4)]',
     },
     error: {
-        label: 'Erreur',
+        label: 'modules:system.nexus.phases.error',
         icon: AlertCircle,
         color: 'text-rose-400',
         glow: 'shadow-[0_0_30px_rgba(251,113,133,0.3)]',
@@ -148,6 +149,7 @@ const PhaseTimeline: React.FC<{ currentPhase: NexusOperationPhase; isImport: boo
     currentPhase,
     isImport,
 }) => {
+    const { t } = useTranslation();
     const phases = isImport ? IMPORT_PHASES : EXPORT_PHASES;
     const currentIdx = phases.indexOf(currentPhase);
 
@@ -189,7 +191,7 @@ const PhaseTimeline: React.FC<{ currentPhase: NexusOperationPhase; isImport: boo
                                     isActive ? 'text-amber-400' : isDone ? 'text-emerald-400/60' : 'text-app-text/20'
                                 }`}
                             >
-                                {config.label.split(' ')[0]}
+                                {t(config.label).split(' ')[0]}
                             </span>
                         </div>
                         {idx < phases.length - 1 && (
@@ -211,6 +213,7 @@ const PhaseTimeline: React.FC<{ currentPhase: NexusOperationPhase; isImport: boo
 // ─────────────────────────────────────────────
 
 export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteraction }) => {
+    const { t, i18n } = useTranslation();
     const [visible, setVisible] = useState(false);
     const [logs, setLogs] = useState<string[]>([]);
     const [isExiting, setIsExiting] = useState(false);
@@ -256,7 +259,8 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
             progress?.message &&
             progress.message !== prevProgressRef.current?.message
         ) {
-            const newLog = `[${new Date().toLocaleTimeString('fr-FR', {
+            const currentLang = i18n.language === 'fr' ? 'fr-FR' : 'en-US';
+            const newLog = `[${new Date().toLocaleTimeString(currentLang, {
                 hour: '2-digit',
                 minute: '2-digit',
                 second: '2-digit',
@@ -344,12 +348,12 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
                             <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-0.5">
                                     <Zap size={10} className="text-amber-400/60" />
-                                    <span className="text-[9px] text-amber-400/60 font-bold uppercase tracking-[0.2em]">
-                                        Nexus-OS
+                                    <span className="text-[9px] text-amber-400/60 font-black uppercase tracking-[0.2em]">
+                                        {t('modules:system.nexus.hud.title')}
                                     </span>
                                 </div>
                                 <h2 className={`text-lg font-black ${config.color} leading-tight`}>
-                                    {config.label}
+                                    {t(config.label)}
                                 </h2>
                                 <p className="text-[11px] text-app-text/40 font-mono mt-0.5 truncate">
                                     {progress?.message ?? '...'}
@@ -406,7 +410,7 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
                                 <div className="w-2 h-2 rounded-full bg-emerald-500/60" />
                             </div>
                             <span className="text-[8px] text-app-text/20 font-mono uppercase tracking-widest">
-                                nexus.log
+                                {t('modules:system.nexus.hud.log_title')}
                             </span>
                         </div>
 
@@ -429,7 +433,7 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
                             ))}
                             {logs.length === 0 && (
                                 <p className="text-[10px] font-mono text-app-text/20 italic">
-                                    Initialisation...
+                                    {t('modules:system.nexus.hud.initialization')}
                                 </p>
                             )}
                             <div ref={logsEndRef} />
@@ -442,9 +446,9 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
                             <div className="flex items-start gap-3 mb-4">
                                 <AlertCircle size={18} className="text-indigo-400 mt-0.5 shrink-0" />
                                 <div>
-                                    <h4 className="text-sm font-bold text-indigo-100">Optimisation de la portabilité</h4>
+                                    <h4 className="text-sm font-bold text-indigo-100">{t('modules:system.nexus.hud.interaction.title')}</h4>
                                     <p className="text-[11px] text-indigo-200/60 leading-relaxed mt-1">
-                                        {progress.remoteUrlCount} URLs distantes détectées. Pour garantir que votre campagne fonctionne sans internet, Nexus peut télécharger et localiser ces fichiers.
+                                        {t('modules:system.nexus.hud.interaction.desc', { count: progress.remoteUrlCount })}
                                     </p>
                                 </div>
                             </div>
@@ -455,13 +459,13 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
                                     className="flex-1 py-2 px-4 bg-indigo-500 hover:bg-indigo-400 text-white text-[11px] font-bold rounded-lg transition-colors flex items-center justify-center gap-2"
                                 >
                                     <Download size={14} />
-                                    Tout localiser
+                                    {t('modules:system.nexus.hud.interaction.localize_all')}
                                 </button>
                                 <button
                                     onClick={() => onResolveInteraction?.('ignore')}
                                     className="flex-1 py-2 px-4 bg-white/5 hover:bg-white/10 text-app-text/60 text-[11px] font-bold rounded-lg transition-colors border border-white/10"
                                 >
-                                    Ignorer
+                                    {t('modules:system.nexus.hud.interaction.ignore')}
                                 </button>
                             </div>
                         </div>
@@ -481,8 +485,8 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
                             )}
                             <span className="text-xs font-bold">
                                 {isDone
-                                    ? 'Fermeture automatique dans 3 secondes...'
-                                    : `Erreur : ${progress?.message ?? 'Inconnue'}`}
+                                    ? t('modules:system.nexus.hud.auto_close')
+                                    : `${t('modules:system.nexus.hud.error_prefix')}${progress?.message ?? t('modules:system.nexus.messages.unknown_error')}`}
                             </span>
                         </div>
                     )}

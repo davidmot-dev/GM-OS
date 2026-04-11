@@ -1,7 +1,9 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useFavoriteStore } from '../useFavoriteStore';
 
 export const FavoriteTopBar: React.FC = () => {
+    const { t } = useTranslation(['modules', 'common']);
     const { searchQuery, setSearchQuery } = useFavoriteStore();
 
     return (
@@ -13,7 +15,7 @@ export const FavoriteTopBar: React.FC = () => {
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="w-full bg-app-surface/50 border-app-border focus:ring-1 focus:ring-accent focus:border-accent rounded-xl pl-10 py-2 text-sm transition-all placeholder:text-slate-600 outline-none text-slate-200"
-                        placeholder="Search the Pantheon..."
+                        placeholder={t('modules:favorite.topbar.search_placeholder')}
                         type="text"
                     />
                 </div>
@@ -22,7 +24,7 @@ export const FavoriteTopBar: React.FC = () => {
             <div className="flex items-center gap-3">
                 <button className="flex items-center gap-2 px-4 py-2 rounded-xl border border-app-border hover:bg-app-surface/80 transition-colors text-sm font-semibold text-slate-300">
                     <span className="material-symbols-outlined text-[18px]">file_export</span>
-                    Export
+                    {t('modules:favorite.topbar.export')}
                 </button>
                 <div className="h-6 w-[1px] bg-app-border mx-1"></div>
                 <button className="p-2 rounded-xl text-slate-500 hover:bg-app-surface/80 hover:text-slate-300 transition-colors">

@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import type { JournalState, JournalEvent, Journal } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import { format } from 'date-fns';
+import i18next from 'i18next';
 
 const formatDuration = (ms: number): string => {
   const seconds = Math.floor((ms / 1000) % 60);
@@ -18,10 +19,11 @@ export const useJournalStore = create<JournalState>()(
       activeJournalId: null,
       isRecording: false,
 
-      startJournal: (campaignName, sessionName = 'Nouvelle Session', startSnapshot) => {
+      startJournal: (campaignName, sessionName, startSnapshot) => {
         const id = uuidv4();
         const now = Date.now();
-        const title = `${campaignName} - ${format(now, 'dd/MM HH:mm')} (${sessionName})`;
+        const actualSessionName = sessionName || i18next.t('modules:journal.dashboard.new_session');
+        const title = `${campaignName} - ${format(now, 'dd/MM HH:mm')} (${actualSessionName})`;
 
         const newJournal: Journal = {
           id,
@@ -41,23 +43,28 @@ export const useJournalStore = create<JournalState>()(
         
         get().addEvent({
           type: 'SYSTEM',
-          title: 'Début de la Session',
-          content: `${sessionName} lancée le ${format(now, 'dd/MM/yyyy à HH:mm:ss')}`
+          title: i18next.t('modules:journal.events.session_start'),
+          content: i18next.t('modules:journal.events.session_start_content', { 
+            name: actualSessionName, 
+            date: format(now, 'dd/MM/yyyy à HH:mm:ss') 
+          })
         });
 
         if (startSnapshot) {
           if (startSnapshot.presentPlayers && startSnapshot.presentPlayers.length > 0) {
             get().addEvent({
               type: 'SYSTEM',
-              title: 'Joueurs Présents',
-              content: `Membres du groupe actifs :\n${startSnapshot.presentPlayers.map(p => `- ${p}`).join('\n')}`
+              title: i18next.t('modules:journal.events.players_present'),
+              content: i18next.t('modules:journal.events.players_present_content', { 
+                players: startSnapshot.presentPlayers.map(p => `- ${p}`).join('\n')
+              })
             });
           }
 
           if (startSnapshot.publicSummary) {
             get().addEvent({
               type: 'NOTE',
-              title: 'Synopsis / Contexte Joueurs',
+              title: i18next.t('modules:journal.events.synopsis'),
               content: startSnapshot.publicSummary
             });
           }
@@ -78,14 +85,16 @@ export const useJournalStore = create<JournalState>()(
         // Add termination events before stopping recording
         get().addEvent({
           type: 'SYSTEM',
-          title: 'Fin de la Session',
-          content: `Session terminée le ${format(now, 'dd/MM/yyyy à HH:mm:ss')}`
+          title: i18next.t('modules:journal.events.session_end'),
+          content: i18next.t('modules:journal.events.session_end_content', { 
+            date: format(now, 'dd/MM/yyyy à HH:mm:ss') 
+          })
         });
 
         get().addEvent({
           type: 'SYSTEM',
-          title: 'Durée de jeu',
-          content: `La session a duré : ${durationStr}`
+          title: i18next.t('modules:journal.events.session_duration'),
+          content: i18next.t('modules:journal.events.session_duration_content', { duration: durationStr })
         });
 
         // Process Snapshot Data
@@ -93,7 +102,7 @@ export const useJournalStore = create<JournalState>()(
           if (snapshot.notes) {
             get().addEvent({
               type: 'NOTE',
-              title: 'Notes de fin de session',
+              title: i18next.t('modules:journal.events.end_session_notes'),
               content: snapshot.notes
             });
           }
@@ -104,8 +113,8 @@ export const useJournalStore = create<JournalState>()(
               .join('\n');
             get().addEvent({
               type: 'SYSTEM',
-              title: 'État des Personnages (PJs)',
-              content: `Personnages présents en fin de session :\n${pcContent}`
+              title: i18next.t('modules:journal.events.pc_status'),
+              content: i18next.t('modules:journal.events.pc_status_content', { pcContent })
             });
           }
 
@@ -115,8 +124,8 @@ export const useJournalStore = create<JournalState>()(
               .join('\n');
             get().addEvent({
               type: 'SYSTEM',
-              title: 'État des PNJ / Monstres',
-              content: `Entités actives en fin de session :\n${npcContent}`
+              title: i18next.t('modules:journal.events.npc_status'),
+              content: i18next.t('modules:journal.events.npc_status_content', { npcContent })
             });
           }
 
@@ -126,8 +135,10 @@ export const useJournalStore = create<JournalState>()(
               .join('\n');
             get().addEvent({
               type: 'SYSTEM',
-              title: 'Checklist restante',
-              content: `Éléments non terminés :\n${checklistContent}`
+              title: i18next.t('modules:journal.events.checklist_remaining'),
+              content: i18next.t('modules:journal.events.checklist_remaining_content', { 
+                checklist: checklistContent 
+              })
             });
           }
 
@@ -137,16 +148,16 @@ export const useJournalStore = create<JournalState>()(
               .join('\n');
             get().addEvent({
               type: 'SYSTEM',
-              title: 'État de Clock-OS',
-              content: `Jauges actives :\n${clockContent}`
+              title: i18next.t('modules:journal.events.clock_status'),
+              content: i18next.t('modules:journal.events.clock_status_content', { clockContent })
             });
           }
 
           if (snapshot.whiteboardSnapshot) {
             get().addEvent({
               type: 'SYSTEM',
-              title: 'Sauvegarde Whiteboard',
-              content: 'Une copie du Whiteboard a été archivée avec cette session.',
+              title: i18next.t('modules:journal.events.whiteboard_save'),
+              content: i18next.t('modules:journal.events.whiteboard_save_content'),
               metadata: { whiteboardPaths: snapshot.whiteboardSnapshot }
             });
           }
@@ -225,15 +236,15 @@ export const useJournalStore = create<JournalState>()(
 
           get().addEvent({
             type: 'SYSTEM',
-            title: '✨ Résumé Narratif (IA)',
+            title: i18next.t('modules:journal.events.ai_summary'),
             content: summary
           });
         } catch (err) {
           console.error("[JournalStore] AI Summary failed:", err);
           get().addEvent({
             type: 'SYSTEM',
-            title: '⚠️ Échec du résumé IA',
-            content: "Une erreur est survenue lors de la génération du résumé narratif."
+            title: i18next.t('modules:journal.events.ai_summary_failed'),
+            content: i18next.t('modules:journal.events.ai_summary_error')
           });
         }
       },
@@ -243,9 +254,9 @@ export const useJournalStore = create<JournalState>()(
         if (!journal) return;
 
         // Find the AI summary event
-        const summaryEvent = journal.events.find(e => e.title === '✨ Résumé Narratif (IA)');
+        const summaryEvent = journal.events.find(e => e.title === i18next.t('modules:journal.events.ai_summary'));
         if (!summaryEvent) {
-          throw new Error("Aucun résumé IA trouvé pour ce journal.");
+          throw new Error(i18next.t('modules:journal.messages.no_ai_summary'));
         }
 
         // Get notebook URL from SessionOS
@@ -255,7 +266,7 @@ export const useJournalStore = create<JournalState>()(
           const campaign = campaigns.find(c => c.id === activeCampaignId);
 
           if (!campaign?.notebookUrl) {
-            throw new Error("Aucun Notebook configuré pour cette campagne.");
+            throw new Error(i18next.t('modules:journal.messages.no_notebook'));
           }
 
           // Extract ID from URL: https://notebooklm.google.com/notebook/ID
@@ -263,7 +274,7 @@ export const useJournalStore = create<JournalState>()(
           const notebookId = notebookIdMatch ? notebookIdMatch[1] : null;
 
           if (!notebookId) {
-            throw new Error("URL Notebook invalide.");
+            throw new Error(i18next.t('modules:journal.messages.invalid_notebook_url'));
           }
 
           // Call MCP tool (this would typically be handled by a service or directly if in a supported environment)
@@ -271,12 +282,10 @@ export const useJournalStore = create<JournalState>()(
           // For now, we simulate the call via bridge or notify the user if we can't do it directly.
           console.log(`[JournalStore] Syncing to Notebook: ${notebookId}`);
           
-          // Instruction: Use the notebooklm-mcp-server_notebook_add_text tool if possible.
-          // In a real implementation, this would be an IPC call to the main process which has access to MCP.
           if (window.appBridge?.notebooklm?.addText) {
             await window.appBridge.notebooklm.addText(notebookId, summaryEvent.content, `Résumé Session: ${journal.title}`);
           } else {
-            throw new Error("Interface NotebookLM non disponible.");
+            throw new Error(i18next.t('modules:journal.messages.notebook_not_available'));
           }
 
         } catch (err: any) {

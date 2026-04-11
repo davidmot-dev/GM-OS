@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useMapStore } from '../../map/useMapStore';
 import { Lock, Eye, Send, Film, Image as ImageIcon, Globe, Swords, Map, Building2, MapPin, type LucideIcon, Pin, CheckCircle2 } from 'lucide-react';
@@ -11,12 +12,12 @@ import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import type { AtlasMap } from '../useSessionOSStore';
 import { Search } from 'lucide-react';
 
-const TYPE_META: Record<AtlasMap['type'], { label: string; icon: LucideIcon; color: string }> = {
-    'battlemap': { label: 'Battlemap', icon: Swords, color: 'text-red-400 border-red-500/30 bg-red-500/10' },
-    'world-map': { label: 'Monde', icon: Globe, color: 'text-blue-400 border-blue-500/30 bg-blue-500/10' },
-    'region': { label: 'Région', icon: Map, color: 'text-green-400 border-green-500/30 bg-green-500/10' },
-    'city': { label: 'Ville', icon: Building2, color: 'text-amber-400 border-amber-500/30 bg-amber-500/10' },
-    'dungeon': { label: 'Lieu', icon: MapPin, color: 'text-purple-400 border-purple-500/30 bg-purple-500/10' },
+const TYPE_META: Record<AtlasMap['type'], { labelKey: string; icon: LucideIcon; color: string }> = {
+    'battlemap': { labelKey: 'modules:session.world_atlas.library.types.battlemap', icon: Swords, color: 'text-red-400 border-red-500/30 bg-red-500/10' },
+    'world-map': { labelKey: 'modules:session.world_atlas.library.types.world-map', icon: Globe, color: 'text-blue-400 border-blue-500/30 bg-blue-500/10' },
+    'region': { labelKey: 'modules:session.world_atlas.library.types.region', icon: Map, color: 'text-green-400 border-green-500/30 bg-green-500/10' },
+    'city': { labelKey: 'modules:session.world_atlas.library.types.city', icon: Building2, color: 'text-amber-400 border-amber-500/30 bg-amber-500/10' },
+    'dungeon': { labelKey: 'modules:session.world_atlas.library.types.dungeon', icon: MapPin, color: 'text-purple-400 border-purple-500/30 bg-purple-500/10' },
 };
 
 const AtlasMapDetail: React.FC = () => {
@@ -26,6 +27,7 @@ const AtlasMapDetail: React.FC = () => {
         generateAtlasMapImage, isGeneratingAIImage,
         campaigns, toggleActiveLocation, activeCampaignId, toggleMapVisited
     } = useSessionOSStore();
+    const { t } = useTranslation();
     const { setMap } = useMapStore();
 
     const selectedMap = atlasMaps.find(m => m.id === selectedAtlasMapId);
@@ -43,7 +45,7 @@ const AtlasMapDetail: React.FC = () => {
             <div className="flex-1 flex items-center justify-center bg-app-bg/50 text-app-text/20">
                 <div className="text-center">
                     <p className="text-3xl mb-2">🗺️</p>
-                    <p className="text-sm">Sélectionne une carte dans la bibliothèque</p>
+                    <p className="text-sm">{t('modules:session.world_atlas.select_map_hint')}</p>
                 </div>
             </div>
         );
@@ -89,7 +91,7 @@ const AtlasMapDetail: React.FC = () => {
                 ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center bg-app-surface border-2 border-dashed border-app-border p-6 text-center">
                         <div className="w-8 h-8 rounded-full border-2 border-accent border-t-transparent animate-spin mb-3" />
-                        <p className="text-app-text/40 font-bold text-sm">Chargement du fichier...</p>
+                        <p className="text-app-text/40 font-bold text-sm">{t('modules:session.world_atlas.loading_file')}</p>
                     </div>
                 )}
                 
@@ -99,7 +101,7 @@ const AtlasMapDetail: React.FC = () => {
                         className="flex items-center gap-2 bg-app-surface/60 hover:bg-white/10 text-white font-bold py-1.5 px-3 rounded-lg text-[10px] transition-all border border-white/10 backdrop-blur-md"
                     >
                         <ImageIcon size={12} />
-                        Médiathèque
+                        {t('modules:session.world_atlas.detail.media_hub')}
                     </button>
                     <button 
                         onClick={() => setShowAIPrompt(true)}
@@ -107,14 +109,14 @@ const AtlasMapDetail: React.FC = () => {
                         className="flex items-center gap-2 bg-accent text-slate-950 font-bold py-1.5 px-3 rounded-lg text-[10px] transition-all border border-accent/20 shadow-glow-accent"
                     >
                         <Sparkles size={12} />
-                        Générer par IA
+                        {t('modules:session.world_atlas.detail.generate_ai')}
                     </button>
                 </div>
 
                 {isGeneratingAIImage && (
                     <div className="absolute inset-0 bg-black/60 backdrop-blur-md flex flex-col items-center justify-center z-30">
                         <Sparkles size={48} className="text-accent animate-spin mb-4" />
-                        <span className="text-xs font-black uppercase tracking-[0.3em] text-accent animate-pulse">Expansion du monde...</span>
+                        <span className="text-xs font-black uppercase tracking-[0.3em] text-accent animate-pulse">{t('modules:session.world_atlas.expanding_world')}</span>
                     </div>
                 )}
 
@@ -139,16 +141,16 @@ const AtlasMapDetail: React.FC = () => {
                                                 ? `${meta.color} border-white/20 shadow-lg scale-105` 
                                                 : 'text-white/40 border-white/5 hover:text-white/60 hover:bg-white/5'
                                             }`}
-                                            title={meta.label}
+                                            title={t(meta.labelKey)}
                                         >
                                             <Icon size={10} />
-                                            {meta.label}
+                                            {t(meta.labelKey)}
                                         </button>
                                     );
                                 })}
                                 {selectedMap.isVideo && (
                                     <span className="inline-flex items-center gap-1 text-[9px] font-bold px-2 py-1 rounded-lg bg-purple-500/80 text-white ml-2">
-                                        <Film size={9} /> Animé
+                                        <Film size={9} /> {t('modules:session.world_atlas.library.animated')}
                                     </span>
                                 )}
                             </div>
@@ -161,10 +163,10 @@ const AtlasMapDetail: React.FC = () => {
                                     ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400 shadow-glow-emerald' 
                                     : 'bg-app-surface/40 border-white/10 text-white/60 hover:text-white hover:bg-white/10'
                                 }`}
-                                title={selectedMap.isVisited ? "Marquer comme non visité" : "Marquer comme visité"}
+                                title={selectedMap.isVisited ? t('modules:session.world_atlas.library.mark_unvisited') : t('modules:session.world_atlas.library.mark_visited')}
                             >
                                 <CheckCircle2 size={16} fill={selectedMap.isVisited ? "currentColor" : "none"} />
-                                {selectedMap.isVisited ? 'Visité' : 'Non visité'}
+                                {selectedMap.isVisited ? t('modules:session.world_atlas.detail.visited') : t('modules:session.world_atlas.detail.not_visited')}
                             </button>
                             <button
                                 onClick={() => toggleActiveLocation(selectedMap.id)}
@@ -173,17 +175,17 @@ const AtlasMapDetail: React.FC = () => {
                                     ? 'bg-accent/20 border-accent text-accent shadow-glow-accent' 
                                     : 'bg-app-surface/40 border-white/10 text-white/60 hover:text-white hover:bg-white/10'
                                 }`}
-                                title={isPinned ? "Retirer du Cockpit" : "Épingler au Cockpit"}
+                                title={isPinned ? t('modules:session.world_atlas.library.unpin_from_cockpit') : t('modules:session.world_atlas.library.pin_to_cockpit')}
                             >
                                 <Pin size={16} fill={isPinned ? "currentColor" : "none"} />
-                                {isPinned ? 'Épinglé' : 'Épingler'}
+                                {isPinned ? t('modules:session.world_atlas.detail.pinned') : t('modules:session.world_atlas.detail.pin')}
                             </button>
                             <button
                                 onClick={handleSendToMapOS}
                                 className="flex items-center gap-2 bg-accent hover:bg-accent/80 text-white font-black py-2.5 px-5 rounded-xl text-sm transition-all shadow-glow-accent"
                             >
                                 <Send size={16} />
-                                Send to Map-OS
+                                {t('modules:session.world_atlas.detail.send_to_mapos')}
                             </button>
                         </div>
                     </div>
@@ -194,7 +196,7 @@ const AtlasMapDetail: React.FC = () => {
             <div className="px-6 py-4 bg-black/20 border-b border-app-border flex flex-col gap-3">
                 <div className="flex items-center gap-2">
                     <Search size={14} className="text-gm-gold" />
-                    <h4 className="text-[10px] font-black uppercase tracking-widest text-gm-gold/60">Indices du Lieu</h4>
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-gm-gold/60">{t('modules:session.world_atlas.detail.location_clues')}</h4>
                 </div>
                 <div className="flex flex-wrap gap-3">
                     {clues.filter(c => c.locationId === selectedMap.id && c.campaignId === activeCampaignId).length > 0 ? (
@@ -220,12 +222,12 @@ const AtlasMapDetail: React.FC = () => {
                                 </div>
                                 <div className="flex-1 min-w-0 pr-4">
                                     <p className="text-[10px] font-black text-white/80 group-hover:text-gm-gold transition-colors truncate">{clue.title}</p>
-                                    <p className="text-[8px] font-bold text-white/20 uppercase tracking-widest leading-none mt-0.5">Cliquez pour voir</p>
+                                    <p className="text-[8px] font-bold text-white/20 uppercase tracking-widest leading-none mt-0.5">{t('modules:session.cockpit.click_to_view')}</p>
                                 </div>
                             </button>
                         ))
                     ) : (
-                        <p className="text-[10px] text-app-text/10 italic">Aucun indice découvert dans ce lieu.</p>
+                        <p className="text-[10px] text-app-text/10 italic">{t('modules:session.world_atlas.detail.no_clues_found')}</p>
                     )}
                 </div>
             </div>
@@ -236,14 +238,14 @@ const AtlasMapDetail: React.FC = () => {
                 <div className="border-r border-app-border p-5 flex flex-col overflow-hidden">
                     <div className="flex items-center gap-2 mb-3">
                         <Eye size={14} className="text-app-text/40" />
-                        <h4 className="text-xs font-bold text-app-text/40 uppercase tracking-widest">Description Narrative</h4>
-                        <span className="text-[9px] text-app-text/20 bg-app-surface/60 px-1.5 py-0.5 rounded-full">Public</span>
+                        <h4 className="text-xs font-bold text-app-text/40 uppercase tracking-widest">{t('modules:session.world_atlas.detail.narrative_description')}</h4>
+                        <span className="text-[9px] text-app-text/20 bg-app-surface/60 px-1.5 py-0.5 rounded-full">{t('modules:session.world_atlas.detail.public_label')}</span>
                     </div>
                     <textarea
                         className="flex-1 bg-transparent border-none text-app-text/80 text-sm leading-relaxed resize-none focus:ring-0 focus:outline-none custom-scrollbar placeholder:text-app-text/10"
                         value={selectedMap.narrativeDescription}
                         onChange={e => updateAtlasMap(selectedMap.id, { narrativeDescription: e.target.value })}
-                        placeholder="Ce que les joueurs voient et ressentent en arrivant ici..."
+                        placeholder={t('modules:session.world_atlas.detail.narrative_placeholder')}
                     />
                 </div>
 
@@ -254,14 +256,14 @@ const AtlasMapDetail: React.FC = () => {
                     </div>
                     <div className="flex items-center gap-2 mb-3 relative z-10">
                         <Lock size={14} className="text-accent" />
-                        <h4 className="text-xs font-bold text-accent uppercase tracking-widest">Notes MJ</h4>
-                        <span className="text-[9px] text-app-text/20 bg-app-surface/60 px-1.5 py-0.5 rounded-full">Privé</span>
+                        <h4 className="text-xs font-bold text-accent uppercase tracking-widest">{t('modules:session.world_atlas.detail.gm_notes')}</h4>
+                        <span className="text-[9px] text-app-text/20 bg-app-surface/60 px-1.5 py-0.5 rounded-full">{t('modules:session.world_atlas.detail.private_label')}</span>
                     </div>
                     <textarea
                         className="flex-1 bg-transparent border-none text-app-text/80 text-sm leading-relaxed resize-none focus:ring-0 focus:outline-none custom-scrollbar placeholder:text-app-text/10 border-l-2 border-accent/30 pl-3 relative z-10"
                         value={selectedMap.gmNotes}
                         onChange={e => updateAtlasMap(selectedMap.id, { gmNotes: e.target.value })}
-                        placeholder="Secrets, trappes, événements déclencheurs, DCs..."
+                        placeholder={t('modules:session.world_atlas.detail.gm_notes_placeholder')}
                     />
                 </div>
             </div>
@@ -271,12 +273,12 @@ const AtlasMapDetail: React.FC = () => {
                 <div className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-20 backdrop-blur-sm">
                     <div className="bg-app-bg border border-app-border rounded-2xl w-full max-w-5xl h-full flex flex-col overflow-hidden shadow-2xl">
                         <div className="p-4 border-b border-app-border flex items-center justify-between">
-                            <h3 className="font-bold text-lg">Changer le média de la carte</h3>
+                            <h3 className="font-bold text-lg">{t('modules:session.world_atlas.detail.change_media')}</h3>
                             <button 
                                 onClick={() => setIsChoosingMedia(false)}
                                 className="text-app-text/40 hover:text-white transition-colors"
                             >
-                                Fermer
+                                {t('modules:session.world_atlas.detail.close')}
                             </button>
                         </div>
                         <div className="flex-1 overflow-hidden">
@@ -294,8 +296,8 @@ const AtlasMapDetail: React.FC = () => {
                 isOpen={showAIPrompt}
                 onClose={() => setShowAIPrompt(false)}
                 isGenerating={isGeneratingAIImage}
-                title={`Décor IA : ${selectedMap.name}`}
-                placeholder="Ex: citadelle flottante au-dessus des nuages, architecture luminescente, ambiance onirique..."
+                title={t('modules:session.world_atlas.detail.ai_backdrop_title', { name: selectedMap.name })}
+                placeholder={t('modules:session.world_atlas.detail.ai_backdrop_placeholder')}
                 onGenerate={(instructions) => {
                     generateAtlasMapImage(selectedMap.id, instructions).then(() => setShowAIPrompt(false));
                 }}

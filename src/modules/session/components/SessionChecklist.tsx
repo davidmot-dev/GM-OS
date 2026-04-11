@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { Plus, Trash2, Edit3, Check } from 'lucide-react';
 
@@ -7,6 +8,7 @@ interface SessionChecklistProps {
 }
 
 const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
+    const { t } = useTranslation();
     const { 
         sessions, 
         activeCampaignId, 
@@ -50,7 +52,7 @@ const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
     return (
         <div className="flex flex-col gap-4 flex-shrink-0">
             <div className="flex items-center justify-between px-3">
-                <p className="text-app-text/40 text-[10px] font-bold uppercase tracking-[0.2em]">Prép. Session</p>
+                <p className="text-app-text/40 text-[10px] font-bold uppercase tracking-[0.2em]">{t('modules:session.checklist.prep_session')}</p>
                 <div className="flex items-center gap-1.5">
                     <span className="text-[10px] font-mono text-accent">
                         {(session.checklist || []).filter(i => i.isCompleted).length}/{(session.checklist || []).length}
@@ -60,7 +62,7 @@ const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
 
             <div className="flex flex-col gap-1 max-h-[300px] overflow-y-auto px-1 custom-scrollbar">
                 {(!session.checklist || session.checklist.length === 0) ? (
-                    <p className="text-[10px] text-app-text/50 italic text-center py-4">Aucune tâche prévue...</p>
+                    <p className="text-[10px] text-app-text/50 italic text-center py-4">{t('modules:session.checklist.no_task')}</p>
                 ) : (
                     session.checklist.map(item => (
                         <div
@@ -68,7 +70,7 @@ const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
                             className="flex items-center gap-2 p-1.5 hover:bg-app-surface/40 rounded-lg group transition-all"
                         >
                             <input
-                                title="Marquer comme terminé"
+                                title={t('modules:session.checklist.tooltip_complete')}
                                 type="checkbox"
                                 checked={item.isCompleted}
                                 onChange={() => toggleChecklistItem(session.id, item.id)}
@@ -78,7 +80,7 @@ const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
                             {editingId === item.id ? (
                                 <div className="flex-1 flex items-center gap-2">
                                     <input
-                                        title="Éditer la tâche"
+                                        title={t('modules:session.checklist.tooltip_edit_task')}
                                         autoFocus
                                         className="flex-1 bg-app-bg border-none text-xs text-app-text p-0 focus:ring-0"
                                         value={editText}
@@ -86,7 +88,7 @@ const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
                                         onKeyDown={(e) => e.key === 'Enter' && saveEdit(item.id)}
                                         onBlur={() => saveEdit(item.id)}
                                     />
-                                    <button onClick={() => saveEdit(item.id)} title="Valider la modification" className="text-emerald-500 hover:text-emerald-400">
+                                    <button onClick={() => saveEdit(item.id)} title={t('modules:session.checklist.tooltip_validate')} className="text-emerald-500 hover:text-emerald-400">
                                         <Check size={14} />
                                     </button>
                                 </div>
@@ -103,14 +105,14 @@ const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
                                 <button 
                                     onClick={() => startEditing(item.id, item.text)}
                                     className="p-1 text-app-text/40 hover:text-accent transition-colors"
-                                    title="Modifier la tâche"
+                                    title={t('modules:session.checklist.tooltip_modify')}
                                 >
                                     <Edit3 size={12} />
                                 </button>
                                 <button 
                                     onClick={() => removeChecklistItem(session.id, item.id)}
                                     className="p-1 text-app-text/40 hover:text-red-400 transition-colors"
-                                    title="Supprimer la tâche"
+                                    title={t('modules:session.checklist.tooltip_delete')}
                                 >
                                     <Trash2 size={12} />
                                 </button>
@@ -124,15 +126,15 @@ const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
             <form onSubmit={handleAddItem} className="mt-2 px-2 relative group">
                 <input
                     type="text"
-                    placeholder="Ajouter une tâche de préparation..."
+                    placeholder={t('modules:session.checklist.add_placeholder')}
                     value={newItemText}
                     onChange={(e) => setNewItemText(e.target.value)}
                     className="w-full bg-app-surface/60 border border-app-border rounded-lg py-2 pl-3 pr-10 text-[11px] text-app-text placeholder:text-app-text/40 focus:outline-none focus:border-accent/30 transition-all"
-                    title="Texte de la nouvelle tâche"
+                    title={t('modules:session.checklist.tooltip_new_task')}
                 />
                 <button 
                     type="submit"
-                    title="Ajouter la tâche"
+                    title={t('modules:session.checklist.tooltip_add')}
                     disabled={!newItemText.trim()}
                     className="absolute right-3.5 top-1/2 -translate-y-1/2 text-app-text/40 hover:text-accent disabled:opacity-0 transition-all"
                 >

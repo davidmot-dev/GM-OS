@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { DEFAULT_SHEET_TEMPLATES, type SheetTemplate } from '../../../data/defaultSheetTemplates';
 import { Search, Hammer, Trash2, Copy, FileText, Sparkles, CheckCircle2, ChevronRight, Pencil, DownloadCloud, Upload } from 'lucide-react';
@@ -11,6 +12,7 @@ import { NexusHUD } from '../../system/archive/NexusHUD';
 import { NexusConflictResolver } from '../../system/archive/NexusConflictResolver';
 
 const TemplateDashboard: React.FC = () => {
+    const { t } = useTranslation(['common', 'modules']);
     const { 
         customSheetTemplates, 
         deleteSheetTemplate, 
@@ -36,14 +38,14 @@ const TemplateDashboard: React.FC = () => {
     const handleExportDriver = async (driverId: string) => {
         if (!driverId) return;
         nexusService.onProgress(setNexusProgress);
-        setNexusProgress({ phase: 'scraping', progress: 0, message: 'Démarrage de l\'export...' });
+        setNexusProgress({ phase: 'scraping', progress: 0, message: t('modules:session.campaign_details.toasts.nexus_export_start') });
         await nexusService.exportDriverBundle(driverId);
         setTimeout(() => setNexusProgress(null), 3000);
     };
 
     const handleImportDriver = async () => {
         nexusService.onProgress(setNexusProgress);
-        setNexusProgress({ phase: 'importing', progress: 0, message: 'Sélectionnez un fichier .gmos-driver...' });
+        setNexusProgress({ phase: 'importing', progress: 0, message: t('modules:session.campaign_details.toasts.nexus_import_select') });
 
         const onConflict = (conflicts: NexusConflict[]): Promise<NexusConflictResolution> => {
             setConflictState(conflicts);
@@ -77,7 +79,10 @@ const TemplateDashboard: React.FC = () => {
     const handleDelete = (e: React.MouseEvent, id: string, name: string) => {
         e.stopPropagation();
         showConfirm(
-            `Supprimer ${activeTab === 'sheets' ? 'le modèle' : 'le système'} "${name}" ?`,
+            t('modules:session.template_dashboard.status.delete_confirm', { 
+                type: activeTab === 'sheets' ? t('modules:session.template_dashboard.status.type_template') : t('modules:session.template_dashboard.status.type_driver'),
+                name 
+            }),
             () => {
                 if (activeTab === 'sheets') {
                     deleteSheetTemplate(id);
@@ -85,23 +90,23 @@ const TemplateDashboard: React.FC = () => {
                     deleteGameDriver(id);
                 }
                 if (selectedId === id) setSelectedId(null);
-                gmToast(activeTab === 'sheets' ? 'Modèle supprimé' : 'Système supprimé');
+                gmToast(activeTab === 'sheets' ? t('modules:session.template_dashboard.status.template_deleted') : t('modules:session.template_dashboard.status.system_deleted'));
             },
             undefined,
-            'SUPPRIMER',
-            'ANNULER'
+            t('common:actions.delete').toUpperCase(),
+            t('common:actions.cancel').toUpperCase()
         );
     };
 
     const handleDuplicate = (e: React.MouseEvent, template: SheetTemplate) => {
         e.stopPropagation();
         addSheetTemplate({
-            name: `${template.name} (Copie)`,
+            name: t('modules:session.template_dashboard.status.duplicate_suffix', { name: template.name }),
             emoji: template.emoji,
             sections: JSON.parse(JSON.stringify(template.sections)),
             defaultNotebookUrl: template.defaultNotebookUrl
         });
-        gmToast('Modèle dupliqué');
+        gmToast(t('modules:session.template_dashboard.toasts.template_duplicated'));
     };
 
     const selectedTemplate = selectedItem && activeTab === 'sheets' ? (selectedItem as SheetTemplate) : null;
@@ -117,9 +122,9 @@ const TemplateDashboard: React.FC = () => {
                         <div>
                             <h2 className="text-3xl font-black text-app-text uppercase tracking-tight flex items-center gap-3">
                                 <FileText className="text-accent" size={32} />
-                                Bibliothèque des Systèmes
+                                {t('modules:session.template_dashboard.title')}
                             </h2>
-                            <p className="text-app-text/40 text-xs font-bold uppercase tracking-[0.2em] mt-1 ml-1 text-accent/60">Archives de la Forge GM-OS</p>
+                            <p className="text-app-text/40 text-xs font-bold uppercase tracking-[0.2em] mt-1 ml-1 text-accent/60">{t('modules:session.template_dashboard.subtitle')}</p>
                         </div>
                         <div className="flex gap-2">
                             {activeTab === 'drivers' && isNexusAvailable && (
@@ -128,7 +133,7 @@ const TemplateDashboard: React.FC = () => {
                                     className="flex items-center gap-2 bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-400 font-black px-6 py-3 rounded-xl text-xs tracking-[0.15em] transition-all shadow-glow-accent/20 hover:scale-105 active:scale-95 group"
                                 >
                                     <Upload size={18} className="group-hover:-translate-y-1 transition-transform" />
-                                    IMPORTER DRIVER
+                                    {t('modules:session.template_dashboard.actions.import_driver')}
                                 </button>
                             )}
                             <button 
@@ -136,7 +141,7 @@ const TemplateDashboard: React.FC = () => {
                                 className="flex items-center gap-2 bg-accent hover:bg-accent/90 text-app-bg font-black px-6 py-3 rounded-xl text-xs tracking-[0.15em] transition-all shadow-glow-accent/20 hover:scale-105 active:scale-95 group"
                             >
                                 <Hammer size={18} className="group-hover:rotate-12 transition-transform" />
-                                CRÉER VIA FORGE
+                                {t('modules:session.template_dashboard.actions.create_forge')}
                             </button>
                         </div>
                     </div>
@@ -147,13 +152,13 @@ const TemplateDashboard: React.FC = () => {
                             onClick={() => { setActiveTab('sheets'); setSelectedId(allTemplates[0].id); }}
                             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black tracking-widest transition-all ${activeTab === 'sheets' ? 'bg-accent text-app-bg shadow-glow-accent/20' : 'text-app-text/40 hover:text-app-text/60'}`}
                         >
-                            <FileText size={14} /> FICHES (UI)
+                            <FileText size={14} /> {t('modules:session.template_dashboard.tabs.sheets')}
                         </button>
                         <button 
                             onClick={() => { setActiveTab('drivers'); setSelectedId(customGameDrivers[0]?.id || null); }}
                             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black tracking-widest transition-all ${activeTab === 'drivers' ? 'bg-accent text-app-bg shadow-glow-accent/20' : 'text-app-text/40 hover:text-app-text/60'}`}
                         >
-                            <Sparkles size={14} /> RÈGLES (DRIVERS)
+                            <Sparkles size={14} /> {t('modules:session.template_dashboard.tabs.drivers')}
                         </button>
                     </div>
 
@@ -161,7 +166,7 @@ const TemplateDashboard: React.FC = () => {
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-app-text/20 group-focus-within:text-accent transition-colors" size={20} />
                         <input
                             type="text"
-                            placeholder={activeTab === 'sheets' ? "Rechercher une fiche..." : "Rechercher un livre de règles..."}
+                            placeholder={activeTab === 'sheets' ? t('modules:session.template_dashboard.actions.search_sheets_placeholder') : t('modules:session.template_dashboard.actions.search_drivers_placeholder')}
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="w-full bg-app-surface/40 border border-app-border/40 rounded-2xl py-4 pl-12 pr-4 text-sm focus:outline-none focus:ring-1 focus:ring-accent/40 focus:border-accent/20 transition-all font-medium placeholder-app-text/20"
@@ -174,8 +179,8 @@ const TemplateDashboard: React.FC = () => {
                     {activeTab === 'drivers' && customGameDrivers.length === 0 ? (
                         <div className="h-full flex flex-col items-center justify-center opacity-20 text-center space-y-4">
                             <Hammer size={64} className="animate-pulse" />
-                            <p className="text-xl font-black uppercase tracking-widest">Aucune règle forgée</p>
-                            <p className="text-xs font-bold max-w-xs">Utilisez le livre de règles dans la Forge pour extraire les mécaniques de dés et l'IA.</p>
+                            <p className="text-xl font-black uppercase tracking-widest">{t('modules:session.template_dashboard.status.no_drivers_found')}</p>
+                            <p className="text-xs font-bold max-w-xs">{t('modules:session.template_dashboard.status.no_drivers_hint')}</p>
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -195,7 +200,7 @@ const TemplateDashboard: React.FC = () => {
                                                 <button 
                                                     onClick={(e) => handleDuplicate(e, item as SheetTemplate)}
                                                     className="p-2 bg-app-surface border border-app-border rounded-lg text-app-text/40 hover:text-accent hover:border-accent/40 transition-all"
-                                                    title="Dupliquer"
+                                                    title={t('common:actions.duplicate')}
                                                 >
                                                     <Copy size={14} />
                                                 </button>
@@ -204,7 +209,7 @@ const TemplateDashboard: React.FC = () => {
                                                 <button 
                                                     onClick={(e) => handleDelete(e, item.id, item.name)}
                                                     className="p-2 bg-app-surface border border-app-border rounded-lg text-app-text/40 hover:text-red-400 hover:border-red-400/40 transition-all"
-                                                    title="Supprimer"
+                                                    title={t('common:actions.delete')}
                                                 >
                                                     <Trash2 size={14} />
                                                 </button>
@@ -216,13 +221,13 @@ const TemplateDashboard: React.FC = () => {
                                     <div className="flex items-center gap-3">
                                         <span className="text-[10px] font-bold uppercase tracking-widest text-accent bg-accent/10 px-2 py-0.5 rounded-full border border-accent/20">
                                             {activeTab === 'sheets' 
-                                                ? `${(item as SheetTemplate).sections.reduce((acc, s) => acc + s.fields.length, 0)} Champs`
-                                                : `IA Driver v${(item as GameDriver).version || '1.0'}`
+                                                ? t('modules:session.template_dashboard.status.fields_count', { count: (item as SheetTemplate).sections.reduce((acc, s) => acc + s.fields.length, 0) })
+                                                : t('modules:session.template_dashboard.status.driver_version', { version: (item as GameDriver).version || '1.0' })
                                             }
                                         </span>
                                         {activeTab === 'sheets' && (item as SheetTemplate).isBuiltin && (
                                             <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-full border border-emerald-400/20">
-                                                Système Officiel
+                                                {t('modules:session.template_dashboard.status.builtin')}
                                             </span>
                                         )}
                                     </div>
@@ -240,7 +245,7 @@ const TemplateDashboard: React.FC = () => {
                         <div className="sticky top-0 z-10 bg-gradient-to-b from-app-surface to-transparent pb-6 -mt-8 pt-8">
                             <div className="flex items-center justify-between mb-4">
                                 <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent opacity-60">
-                                    {activeTab === 'sheets' ? 'Prévisualisation UI' : 'Moteur de Règles AI'}
+                                    {activeTab === 'sheets' ? t('modules:session.template_dashboard.preview.ui_preview') : t('modules:session.template_dashboard.preview.ai_engine')}
                                 </span>
                                 {selectedTemplate && (
                                     <button
@@ -250,7 +255,7 @@ const TemplateDashboard: React.FC = () => {
                                         }}
                                         className="flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent border border-accent/30 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-accent/20 transition-all shadow-lg"
                                     >
-                                        <Pencil size={14} /> {selectedTemplate.isBuiltin ? 'RÉSONANCE & CUSTOM' : 'ÉDITER LE MODÈLE'}
+                                        <Pencil size={14} /> {selectedTemplate.isBuiltin ? t('modules:session.template_dashboard.actions.resonance_custom') : t('modules:session.template_dashboard.actions.edit_template')}
                                     </button>
                                 )}
                                 {activeTab === 'drivers' && selectedItem && (
@@ -260,7 +265,7 @@ const TemplateDashboard: React.FC = () => {
                                                 onClick={() => handleExportDriver(selectedItem.id)}
                                                 className="flex items-center gap-2 px-4 py-2 bg-amber-500/10 text-amber-500 border border-amber-500/30 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-amber-500/20 transition-all shadow-lg"
                                             >
-                                                <DownloadCloud size={14} /> EXPORTER
+                                                <DownloadCloud size={14} /> {t('common:actions.export').toUpperCase()}
                                             </button>
                                         )}
                                         <button
@@ -271,7 +276,7 @@ const TemplateDashboard: React.FC = () => {
                                             }}
                                             className="flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent border border-accent/30 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-accent/20 transition-all shadow-lg"
                                         >
-                                            <Pencil size={14} /> ÉDITER LE MOTEUR
+                                            <Pencil size={14} /> {t('modules:session.template_dashboard.actions.edit_engine')}
                                         </button>
                                     </div>
                                 )}
@@ -284,7 +289,7 @@ const TemplateDashboard: React.FC = () => {
                                         <p className="text-[10px] text-app-text/40 font-bold uppercase tracking-widest px-2 py-0.5 rounded bg-white/5 border border-white/10">{selectedTemplate.id}</p>
                                     )}
                                     <p className="text-[9px] text-app-text/40 font-bold uppercase tracking-widest">
-                                        {activeTab === 'sheets' ? 'Générateur de fiches visuelles' : 'Logique de dés & Assistance MJ'}
+                                        {activeTab === 'sheets' ? t('modules:session.template_dashboard.preview.ui_subtitle') : t('modules:session.template_dashboard.preview.ai_subtitle')}
                                     </p>
                                 </div>
                             </div>
@@ -325,15 +330,15 @@ const TemplateDashboard: React.FC = () => {
                                     <div className="p-6 rounded-2xl bg-black/40 border border-app-border/20 space-y-4">
                                         <div className="flex items-center gap-3 text-accent border-b border-white/5 pb-3">
                                             <Sparkles size={16} />
-                                            <h4 className="text-xs font-black uppercase tracking-widest">Mécaniques de Dés</h4>
+                                            <h4 className="text-xs font-black uppercase tracking-widest">{t('modules:session.template_dashboard.preview.sections.dice_mechanics')}</h4>
                                         </div>
                                         <div className="grid grid-cols-2 gap-4">
                                             <div className="bg-app-surface/40 p-3 rounded-lg border border-white/5 text-center">
-                                                <p className="text-[9px] text-app-text/40 font-bold uppercase mb-1">Dés Par Défaut</p>
+                                                <p className="text-[9px] text-app-text/40 font-bold uppercase mb-1">{t('modules:session.template_dashboard.preview.labels.default_dice')}</p>
                                                 <p className="text-sm font-mono font-black text-accent uppercase">{(selectedItem as GameDriver).dice?.defaultDice || '1D20'}</p>
                                             </div>
                                             <div className="bg-app-surface/40 p-3 rounded-lg border border-white/5 text-center">
-                                                <p className="text-[9px] text-app-text/40 font-bold uppercase mb-1">Logique</p>
+                                                <p className="text-[9px] text-app-text/40 font-bold uppercase mb-1">{t('modules:session.template_dashboard.preview.labels.logic')}</p>
                                                 <p className="text-xs font-black text-emerald-400 uppercase">{(selectedItem as GameDriver).dice?.logic || 'SUM'}</p>
                                             </div>
                                         </div>
@@ -342,17 +347,17 @@ const TemplateDashboard: React.FC = () => {
                                     <div className="p-6 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 space-y-4">
                                         <div className="flex items-center gap-3 text-indigo-400 border-b border-indigo-500/10 pb-3">
                                             <Hammer size={16} />
-                                            <h4 className="text-xs font-black uppercase tracking-widest">Protocoles de l'IA</h4>
+                                            <h4 className="text-xs font-black uppercase tracking-widest">{t('modules:session.template_dashboard.preview.sections.ai_protocols')}</h4>
                                         </div>
                                         <p className="text-xs text-app-text/60 italic leading-relaxed line-clamp-6">
-                                            {(selectedItem as GameDriver).aiInstructions || "Aucune instruction spécifique n'a été extraite."}
+                                            {(selectedItem as GameDriver).aiInstructions || t('modules:session.template_dashboard.preview.status.no_instructions')}
                                         </p>
                                     </div>
 
                                     <div className="p-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 space-y-4">
                                         <div className="flex items-center gap-3 text-emerald-400 border-b border-emerald-500/10 pb-3">
                                             <CheckCircle2 size={16} />
-                                            <h4 className="text-xs font-black uppercase tracking-widest">Combat & Tracking</h4>
+                                            <h4 className="text-xs font-black uppercase tracking-widest">{t('modules:session.template_dashboard.preview.sections.combat_tracking')}</h4>
                                         </div>
                                         <div className="space-y-2">
                                             {(selectedItem as GameDriver).combat?.statsToTrack?.map((s, i) => (
@@ -368,23 +373,23 @@ const TemplateDashboard: React.FC = () => {
                         </div>
                     </>
                 ) : (
-                    <div className="h-full flex items-center justify-center opacity-20 italic">
-                        Sélectionnez un élément pour voir les détails...
+                    <div className="h-full flex items-center justify-center opacity-20 italic text-center px-4">
+                        {t('modules:session.template_dashboard.preview.status.empty_selection')}
                     </div>
                 )}
 
                 {/* Bottom Call to Action */}
                 <div className="mt-12 p-6 rounded-2xl bg-gradient-to-br from-accent/10 to-purple-500/10 border border-accent/20 text-center">
                     <Sparkles className="mx-auto text-accent mb-3 animate-pulse" size={24} />
-                    <h3 className="text-sm font-bold text-app-text mb-2">Envie d'optimiser ?</h3>
+                    <h3 className="text-sm font-bold text-app-text mb-2">{t('modules:session.template_dashboard.cta.title')}</h3>
                     <p className="text-xs text-app-text/40 mb-6 leading-relaxed">
-                        Le <b>System Forge</b> peut extraire la logique de règles complexes directement depuis vos PDF pour automatiser Dice-OS.
+                        {t('modules:session.template_dashboard.cta.description')}
                     </p>
                     <button 
                          onClick={() => setCurrentView('forge')}
                          className="w-full bg-app-bg border border-accent/40 hover:border-accent text-accent font-black py-4 rounded-xl text-[10px] tracking-[0.2em] transition-all hover:bg-accent hover:text-app-bg shadow-lg shadow-accent/5 group"
                     >
-                        OUVRIR LA FORGE <ChevronRight size={14} className="inline ml-1 group-hover:translate-x-1 transition-transform" />
+                        {t('modules:session.template_dashboard.actions.open_forge')} <ChevronRight size={14} className="inline ml-1 group-hover:translate-x-1 transition-transform" />
                     </button>
                 </div>
             </div>

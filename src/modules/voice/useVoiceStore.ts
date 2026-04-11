@@ -93,37 +93,37 @@ const DEFAULT_EFFECTS: VoiceEffects = {
 const INITIAL_PRESETS: VoicePreset[] = [
     {
         id: 'clean',
-        name: 'Clean',
+        name: 'modules:voice.presets.clean.name',
         icon: 'Mic2',
-        description: 'Voix naturelle avec légère compression.',
+        description: 'modules:voice.presets.clean.desc',
         effects: { ...DEFAULT_EFFECTS, duckingEnabled: true }
     },
     {
         id: 'ghost',
-        name: 'Spectre',
+        name: 'modules:voice.presets.ghost.name',
         icon: 'Ghost',
-        description: 'Voix éthérée avec beaucoup de reverb et pitch haut.',
+        description: 'modules:voice.presets.ghost.desc',
         effects: { ...DEFAULT_EFFECTS, pitch: 4, reverb: 0.7, formant: 40, duckingEnabled: true }
     },
     {
         id: 'ogre',
-        name: 'Ogre',
+        name: 'modules:voice.presets.ogre.name',
         icon: 'Skull',
-        description: 'Voix caverneuse, grave et massive.',
+        description: 'modules:voice.presets.ogre.desc',
         effects: { ...DEFAULT_EFFECTS, pitch: -5, formant: -60, reverb: 0.3, duckingEnabled: true }
     },
     {
         id: 'robot',
-        name: 'Androïde',
+        name: 'modules:voice.presets.robot.name',
         icon: 'Cpu',
-        description: 'Effet métallique et distorsion numérique.',
+        description: 'modules:voice.presets.robot.desc',
         effects: { ...DEFAULT_EFFECTS, distortion: 0.5, formant: 20, pitch: -1, duckingEnabled: true }
     },
     {
         id: 'dragon',
-        name: 'Dragon',
+        name: 'modules:voice.presets.dragon.name',
         icon: 'Flame',
-        description: 'Grogne profond avec distorsion et sub-harmoniques.',
+        description: 'modules:voice.presets.dragon.desc',
         effects: { ...DEFAULT_EFFECTS, pitch: -8, distortion: 0.4, formant: -80, reverb: 0.5, duckingEnabled: true }
     }
 ];
@@ -293,8 +293,9 @@ export const useVoiceStore = create<VoiceState>()(
                     if (profile.reverb !== undefined) updateEffect('reverb', profile.reverb);
                     if (profile.distortion !== undefined) updateEffect('distortion', profile.distortion);
 
+                    const translate = (await import('i18next')).default;
                     set({ lastSyncedEntityName: npc.name || 'Unknown NPC' });
-                    gmToast(`Voice-OS : Profil généré par ${provider.toUpperCase()} (${model})`, "info");
+                    gmToast(translate.t('modules:voice.messages.profile_generated', { provider: provider.toUpperCase(), model }), "info");
                 } catch (err) {
                     console.error("Voice profiling failed:", err);
                 }

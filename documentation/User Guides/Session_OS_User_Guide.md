@@ -98,7 +98,7 @@ Le **Cockpit** est l'écran par défaut une fois une campagne lancée. Il affich
 
 - **Le Header Global (v5.3)** : Situé tout en haut, il contient désormais le **Bouton Panique (Stop All)** pour tout éteindre en urgence, le curseur de volume master, et le bouton **Focus Chat** pour tamiser l'ambiance sonore.
 - **Les Personnages Actifs** : Portraits et barres de vie mis à jour instantanément.
-- **Le Workspace** : Une zone d'édition rapide pour vos notes de session.
+- **Le Workspace & Session Notes** : Zone d'édition rapide et multilingue pour vos notes de session. Supporte désormais l'auto-sauvegarde atomique et la synchronisation avec le Cerveau IA.
 - **Les Snapshots** : Voir section ci-dessous.
 
 ---
@@ -247,7 +247,8 @@ Vous pouvez désormais projeter en toute confiance :
 
 ### 🎒 Inventaire & Collaboration
 - **Transferts P2P** : Les joueurs peuvent s'échanger des objets via leur onglet **Sac**. Le MJ reçoit une notification pour valider ou refuser la transaction.
-- **Notes Privées** : Chaque joueur dispose d'une zone de texte persistante et privée pour noter ses théories ou inventaires personnels, sauvée directement sur le serveur du MJ.
+- **Notes Privées (Joueur)** : Chaque joueur dispose d'une zone de texte persistante pour noter ses théories. Depuis la v6.2.1-dev, ces notes sont synchronisées en temps réel vers le serveur MJ et sauvées dans le bundle de campagne.
+- **Multi-langage Intégré** : Toutes les interfaces de la tablette s'adaptent automatiquement à la langue configurée par le MJ (Session Prep, Clues, Private Notes).
 
 > [!TIP]
 > Pour une expérience optimale sur tablette, assurez-vous que tous les appareils sont sur le même réseau Wi-Fi que le PC du MJ et que le **Nexus Bridge** est actif (icône antenne verte dans le Cockpit).

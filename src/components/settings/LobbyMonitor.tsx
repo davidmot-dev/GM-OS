@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Users, Tablet, Smartphone, XCircle, CheckCircle2, AlertCircle, Trash2, RotateCw } from 'lucide-react';
 import type { ClientContext } from '../../types/shared';
 
 const LobbyMonitor: React.FC = () => {
+    const { t } = useTranslation('settings');
     const [clients, setClients] = useState<ClientContext[]>([]);
 
     useEffect(() => {
@@ -42,11 +44,11 @@ const LobbyMonitor: React.FC = () => {
             <div className="bg-white/5 px-4 py-3 border-b border-white/10 flex items-center justify-between shrink-0">
                 <div className="flex items-center gap-2">
                     <Users size={16} className="text-gm-cyan" />
-                    <span className="text-xs font-black uppercase tracking-widest text-white">Lobby des Terminaux</span>
+                    <span className="text-xs font-black uppercase tracking-widest text-white">{t('remote.lobby.title')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <span className="bg-gm-cyan/20 text-gm-cyan text-[10px] font-black px-2 py-0.5 rounded-full">
-                        {clients.filter(c => c.status === 'active').length} Actifs
+                        {clients.filter(c => c.status === 'active').length} {t('remote.lobby.active_suffix')}
                     </span>
                     <button 
                         onClick={() => {
@@ -57,14 +59,14 @@ const LobbyMonitor: React.FC = () => {
                             }
                         }}
                         className="p-1.5 hover:bg-rose-500/20 text-slate-500 hover:text-rose-400 rounded-lg transition-all"
-                        title="Vider les déconnectés"
+                        title={t('remote.lobby.clear_tooltip')}
                     >
                         <Trash2 size={14} />
                     </button>
                     <button 
                         onClick={() => window.appBridge?.send?.('remote:request-client-sync')}
                         className="p-1.5 hover:bg-white/10 text-slate-500 hover:text-white rounded-lg transition-all"
-                        title="Rafraîchir"
+                        title={t('remote.lobby.refresh_tooltip')}
                     >
                         <RotateCw size={14} />
                     </button>
@@ -74,7 +76,7 @@ const LobbyMonitor: React.FC = () => {
             <div className="max-h-[300px] flex flex-col gap-2 overflow-y-auto custom-scrollbar p-3 relative">
                 {clients.length === 0 ? (
                     <div className="py-8 text-center text-slate-500">
-                        <p className="text-[10px] font-bold uppercase">Aucun appareil connecté</p>
+                        <p className="text-[10px] font-bold uppercase">{t('remote.lobby.no_devices')}</p>
                     </div>
                 ) : (
                     clients.map((client) => (
@@ -112,7 +114,7 @@ const LobbyMonitor: React.FC = () => {
             
             <div className="bg-slate-950/50 p-3 border-t border-white/5 text-center shrink-0">
                 <p className="text-[9px] text-slate-500 italic">
-                    Les tablettes se reconnectent automatiquement en cas de perte de signal.
+                    {t('remote.lobby.reconnect_note')}
                 </p>
             </div>
         </div>

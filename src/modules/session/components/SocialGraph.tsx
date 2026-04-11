@@ -2,6 +2,10 @@ import React, { useMemo, useState, useRef, useCallback, useEffect } from 'react'
 import ForceGraph2D from 'react-force-graph-2d';
 import { useSessionOSStore, type EntityRelation } from '../useSessionOSStore';
 import { Users } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import * as d3 from 'd3';
+
+
 
 // Logic & Utils
 import { prepareSocialGraphData, getUniqueFactions, type GraphNode, type GraphLink } from '../logic/socialNexusUtils';
@@ -15,13 +19,13 @@ import NodeDetailPanel from './SocialGraph/NodeDetailPanel';
 import RelationForm from './SocialGraph/RelationForm';
 
 const SocialGraph: React.FC = () => {
+    const { t } = useTranslation();
     const { 
         entities, 
         players, 
         activeCampaignId, 
         setSelectedEntity, 
         setSelectedCharacter, 
-        setCurrentView, 
         addRelation, 
         removeRelation, 
         updateEntity, 
@@ -125,11 +129,8 @@ const SocialGraph: React.FC = () => {
             fg.d3Force('link').distance(graphDistance).strength(1);
             
             // Collision Dynamique
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const d3 = (window as any).d3;
-            if (d3) {
-                fg.d3Force('collide', d3.forceCollide(graphCollision));
-            }
+            fg.d3Force('collide', d3.forceCollide(graphCollision));
+
             
             fg.d3Force('center').strength(0.05);
 
@@ -144,8 +145,9 @@ const SocialGraph: React.FC = () => {
                     }
                 }
             } catch {
-                console.warn('[SocialGraph] Erreur de relance simulation D3 non critique:');
+                console.warn('[SocialGraph] Simulation d3 reheat error (non-critical)');
             }
+
         }
     }, [data.nodes, data.links, graphCharge, graphDistance, graphCollision]);
 
@@ -185,8 +187,9 @@ const SocialGraph: React.FC = () => {
                     }
                 }
             } catch {
-                console.warn('[SocialGraph] Échec du rafraîchissement visuel mais positions réinitialisées.');
+                console.warn('[SocialGraph] Visual refresh faled but positions reset.');
             }
+
         }, 150);
     }, [activeCampaignId, resetGraphLayout]);
 
@@ -282,11 +285,13 @@ const SocialGraph: React.FC = () => {
             targetId: newRelTarget,
             targetType: 'npc',
             type: newRelType as EntityRelation['type'],
-            description: newRelDesc || 'Relation manuelle'
+            description: newRelDesc || t('modules:session.social_graph.relation_form.desc_placeholder')
         });
+
         setNewRelTarget('');
         setNewRelDesc('');
-    }, [selectedNodeId, data.nodes, newRelTarget, newRelType, newRelDesc, addRelation]);
+    }, [selectedNodeId, data.nodes, newRelTarget, newRelType, newRelDesc, addRelation, t]);
+
 
     const handleRemoveRelation = useCallback((targetId: string) => {
         const node = data.nodes.find(n => n.id === selectedNodeId);
@@ -420,22 +425,24 @@ const SocialGraph: React.FC = () => {
                 <div className="absolute bottom-10 left-10 p-6 bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl z-10">
                     <div className="flex items-center gap-3 text-slate-400 mb-4">
                         <Users size={16} />
-                        <span className="text-[10px] font-black uppercase tracking-widest">Légende des Liens</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest">{t('modules:session.social_graph.legend_title')}</span>
                     </div>
+
                     <div className="grid grid-cols-2 gap-x-8 gap-y-3">
                         {[
-                            { label: 'Famille', color: '#eab308' },
-                            { label: 'Allié', color: '#22c55e' },
-                            { label: 'Ennemi', color: '#ef4444' },
-                            { label: 'Romance', color: '#d946ef' },
-                            { label: 'Mentor', color: '#3b82f6' },
-                            { label: 'Rival', color: '#f97316' }
+                            { label: t('modules:session.social_graph.legend.family'), color: '#eab308' },
+                            { label: t('modules:session.social_graph.legend.ally'), color: '#22c55e' },
+                            { label: t('modules:session.social_graph.legend.hostile'), color: '#ef4444' },
+                            { label: t('modules:session.social_graph.legend.friend'), color: '#d946ef' },
+                            { label: t('modules:session.social_graph.legend.neutral'), color: '#3b82f6' },
+                            { label: t('modules:session.social_graph.legend.rival'), color: '#f97316' }
                         ].map(item => (
                             <div key={item.label} className="flex items-center gap-3">
                                 <div className="w-3 h-3 rounded-full shadow-glow" style={{ backgroundColor: item.color }} />
                                 <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">{item.label}</span>
                             </div>
                         ))}
+
                     </div>
                 </div>
             )}

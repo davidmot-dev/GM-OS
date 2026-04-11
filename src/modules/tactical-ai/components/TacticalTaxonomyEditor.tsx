@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { 
     Plus, Trash2, Undo2, Hash, Zap, Palette, Music, 
     ArrowRight, Search, LayoutList, Sliders, ChevronRight
@@ -7,6 +8,7 @@ import { useTaxonomyStore } from '../useTaxonomyStore';
 import type { TaxonomyMapping } from '../useTaxonomyStore';
 
 export const TacticalTaxonomyEditor: React.FC = () => {
+    const { t } = useTranslation('settings');
     const { mappings, addMapping, updateMapping, removeMapping, resetToDefault, ensureRangeRules } = useTaxonomyStore();
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
@@ -29,10 +31,10 @@ export const TacticalTaxonomyEditor: React.FC = () => {
 
     // Grouping logic
     const groups = [
-        { id: 'range', label: 'Portées (Système)', icon: ArrowRight },
-        { id: 'status', label: 'Statuts & Effets', icon: Hash },
-        { id: 'element', label: 'Éléments', icon: Zap },
-        { id: 'custom', label: 'Autres', icon: LayoutList }
+        { id: 'range', label: t('tactical.taxonomy.categories.ranges'), icon: ArrowRight },
+        { id: 'status', label: t('tactical.taxonomy.categories.status'), icon: Hash },
+        { id: 'element', label: t('tactical.taxonomy.categories.elements'), icon: Zap },
+        { id: 'custom', label: t('tactical.taxonomy.categories.others'), icon: LayoutList }
     ];
 
     const getGroupForResult = (m: TaxonomyMapping) => {
@@ -111,12 +113,12 @@ export const TacticalTaxonomyEditor: React.FC = () => {
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2 text-app-text/60">
                             <LayoutList size={16} />
-                            <span className="text-[10px] font-black uppercase tracking-widest">Règles ({mappings.length})</span>
+                            <span className="text-[10px] font-black uppercase tracking-widest">{t('settings:sections.rules') || 'Règles'} ({mappings.length})</span>
                         </div>
                         <button 
                             onClick={handleAdd}
                             className="p-1.5 rounded-lg bg-accent/10 text-accent hover:bg-accent/20 transition-all shadow-glow-accent/5"
-                            title="Ajouter une règle"
+                            title={t('tactical.taxonomy.add_rule')}
                         >
                             <Plus size={16} />
                         </button>
@@ -125,7 +127,7 @@ export const TacticalTaxonomyEditor: React.FC = () => {
                         <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-text/30" />
                         <input 
                             type="text"
-                            placeholder="Rechercher..."
+                            placeholder={t('tactical.taxonomy.search_placeholder')}
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="w-full bg-app-bg/50 border border-app-border/30 rounded-lg py-2 pl-9 pr-4 text-xs font-bold outline-none focus:border-accent/50 transition-all"
@@ -176,12 +178,12 @@ export const TacticalTaxonomyEditor: React.FC = () => {
                 <div className="p-4 border-t border-app-border/10">
                     <button 
                         onClick={() => {
-                            if(confirm("Réinitialiser la taxonomie aux valeurs par défaut ?")) resetToDefault();
+                            if(confirm(t('tactical.taxonomy.confirm_reset') || "Réinitialiser ?")) resetToDefault();
                         }}
                         className="w-full py-2 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-app-text/40 hover:text-red-500 transition-colors"
                     >
                         <Undo2 size={14} />
-                        Réinitialiser
+                        {t('tactical.taxonomy.reset')}
                     </button>
                 </div>
             </div>
@@ -197,12 +199,12 @@ export const TacticalTaxonomyEditor: React.FC = () => {
                                     {selectedMapping.keywords[0]}
                                 </h3>
                                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-app-text/40 flex items-center gap-2">
-                                    <Zap size={12} className="text-accent" /> ÉDITION DE RÈGLE TACTIQUE
+                                    <Zap size={12} className="text-accent" /> {t('tactical.taxonomy.editor.title')}
                                 </p>
                             </div>
                             <button
                                 onClick={() => {
-                                    if(confirm("Supprimer cette règle ?")) {
+                                    if(confirm(t('tactical.taxonomy.confirm_delete') || "Supprimer ?")) {
                                         removeMapping(selectedIndex!);
                                         setSelectedIndex(null);
                                     }
@@ -220,7 +222,7 @@ export const TacticalTaxonomyEditor: React.FC = () => {
                                 <section className="space-y-4">
                                     <div className="flex items-center gap-2 text-app-text/60">
                                         <Hash size={16} />
-                                        <span className="text-[10px] font-black uppercase tracking-widest">Mots-clés Déclencheurs</span>
+                                        <span className="text-[10px] font-black uppercase tracking-widest">{t('tactical.taxonomy.editor.trigger_keywords')}</span>
                                     </div>
                                     <div className="flex flex-wrap gap-2">
                                         {selectedMapping.keywords.map(k => (
@@ -244,7 +246,7 @@ export const TacticalTaxonomyEditor: React.FC = () => {
                                 <section className="space-y-4">
                                     <div className="flex items-center gap-2 text-app-text/60">
                                         <ArrowRight size={16} />
-                                        <span className="text-[10px] font-black uppercase tracking-widest">Catégories (Tags)</span>
+                                        <span className="text-[10px] font-black uppercase tracking-widest">{t('tactical.taxonomy.editor.categories_tags')}</span>
                                     </div>
                                     <div className="flex flex-wrap gap-2">
                                         {selectedMapping.tags.map(t => (
@@ -269,7 +271,7 @@ export const TacticalTaxonomyEditor: React.FC = () => {
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2 text-app-text/60">
                                             <Sliders size={16} />
-                                            <span className="text-[10px] font-black uppercase tracking-widest">Intensité Globale</span>
+                                            <span className="text-[10px] font-black uppercase tracking-widest">{t('tactical.taxonomy.editor.global_intensity')}</span>
                                         </div>
                                         <span className="text-xs font-mono font-black text-accent">{Math.round(selectedMapping.intensity * 100)}%</span>
                                     </div>
@@ -291,12 +293,12 @@ export const TacticalTaxonomyEditor: React.FC = () => {
                                 <section className="space-y-4">
                                     <div className="flex items-center gap-2 text-app-text/60">
                                         <Palette size={16} />
-                                        <span className="text-[10px] font-black uppercase tracking-widest">Alertes Hardware (Hue)</span>
+                                        <span className="text-[10px] font-black uppercase tracking-widest">{t('tactical.taxonomy.editor.hardware_alerts')}</span>
                                     </div>
                                     <div className="p-4 rounded-2xl bg-app-bg/50 border border-app-border/40 space-y-4 shadow-xl">
                                         <div className="flex items-center justify-between gap-4">
                                             <div className="flex-1 space-y-1">
-                                                <p className="text-[10px] font-bold uppercase tracking-widest text-app-text/30">Couleur d'Alerte</p>
+                                                <p className="text-[10px] font-bold uppercase tracking-widest text-app-text/30">{t('tactical.taxonomy.editor.alert_color')}</p>
                                                 <p className="text-xs font-black font-mono text-app-text/60 uppercase">{selectedMapping.hardware?.color || '#000000'}</p>
                                             </div>
                                             <input 
@@ -307,7 +309,7 @@ export const TacticalTaxonomyEditor: React.FC = () => {
                                             />
                                         </div>
                                         <div className="space-y-1">
-                                            <p className="text-[10px] font-bold uppercase tracking-widest text-app-text/30">Nom de la Scène</p>
+                                            <p className="text-[10px] font-bold uppercase tracking-widest text-app-text/30">{t('tactical.taxonomy.editor.scene_name')}</p>
                                             <input 
                                                 type="text"
                                                 value={selectedMapping.hardware?.scene || ''}
@@ -316,7 +318,7 @@ export const TacticalTaxonomyEditor: React.FC = () => {
                                             />
                                         </div>
                                         <div className="flex items-center justify-between">
-                                            <p className="text-[10px] font-bold uppercase tracking-widest text-app-text/30">Priorité (1 = Max)</p>
+                                            <p className="text-[10px] font-bold uppercase tracking-widest text-app-text/30">{t('tactical.taxonomy.editor.priority_label')}</p>
                                             <div className="flex items-center gap-2">
                                                 {[1, 2, 3].map(p => (
                                                     <button
@@ -338,17 +340,17 @@ export const TacticalTaxonomyEditor: React.FC = () => {
                                 <section className="space-y-4">
                                     <div className="flex items-center gap-2 text-app-text/60">
                                         <Music size={16} />
-                                        <span className="text-[10px] font-black uppercase tracking-widest">Échos Audio</span>
+                                        <span className="text-[10px] font-black uppercase tracking-widest">{t('tactical.taxonomy.editor.audio_echoes')}</span>
                                     </div>
                                     <div className="space-y-4">
                                         <div className="space-y-1">
-                                            <p className="text-[10px] font-bold uppercase tracking-widest text-app-text/30">Effet Sonore (One-shot)</p>
+                                            <p className="text-[10px] font-bold uppercase tracking-widest text-app-text/30">{t('tactical.taxonomy.editor.sound_effect')}</p>
                                             <select 
                                                 value={selectedMapping.audio?.effect || ''}
                                                 onChange={(e) => handleUpdateNested('audio', 'effect', e.target.value)}
                                                 className="w-full bg-app-bg/50 border border-app-border/40 rounded-lg px-3 py-2 text-xs font-bold text-accent outline-none"
                                             >
-                                                <option value="" className="bg-app-bg text-app-text/40">Aucun</option>
+                                                <option value="" className="bg-app-bg text-app-text/40">{t('tactical.taxonomy.editor.none')}</option>
                                                 {soundFiles.map(file => (
                                                     <option key={file} value={file} className="bg-app-bg text-white">
                                                         {file.replace(/\.(mp3|wav|ogg|m4a)$/i, '').replace(/_/g, ' ')}
@@ -357,16 +359,16 @@ export const TacticalTaxonomyEditor: React.FC = () => {
                                             </select>
                                         </div>
                                         <div className="space-y-1">
-                                            <p className="text-[10px] font-bold uppercase tracking-widest text-app-text/30">Ambiance Contextuelle</p>
+                                            <p className="text-[10px] font-bold uppercase tracking-widest text-app-text/30">{t('tactical.taxonomy.editor.contextual_ambiance')}</p>
                                             <select 
                                                 value={selectedMapping.ambientSceneId || ''}
                                                 onChange={(e) => handleUpdate('ambientSceneId', e.target.value)}
                                                 className="w-full bg-app-bg/50 border border-app-border/40 rounded-lg px-3 py-2 text-xs font-bold text-GM-Gold outline-none"
                                             >
-                                                <option value="" className="bg-app-bg text-app-text/40">Par défaut (Silence)</option>
-                                                <option value="scene-action" className="bg-app-bg text-red-500">Action Intense</option>
-                                                <option value="scene-tension" className="bg-app-bg text-amber-500">Tension Sourde</option>
-                                                <option value="scene-mystery" className="bg-app-bg text-purple-500">Mystère Éthéré</option>
+                                                <option value="" className="bg-app-bg text-app-text/40">{t('tactical.taxonomy.editor.default_silence')}</option>
+                                                <option value="scene-action" className="bg-app-bg text-red-500">{t('tactical.taxonomy.editor.intense_action')}</option>
+                                                <option value="scene-tension" className="bg-app-bg text-amber-500">{t('tactical.taxonomy.editor.heavy_tension')}</option>
+                                                <option value="scene-mystery" className="bg-app-bg text-purple-500">{t('tactical.taxonomy.editor.ethereal_mystery')}</option>
                                             </select>
                                         </div>
                                     </div>
@@ -381,8 +383,8 @@ export const TacticalTaxonomyEditor: React.FC = () => {
                             <Zap size={48} />
                         </div>
                         <div>
-                            <p className="text-xl font-black uppercase tracking-tighter">Taxonomy Engine</p>
-                            <p className="text-xs font-bold uppercase tracking-widest">Sélectionnez une règle pour la modifier</p>
+                            <p className="text-xl font-black uppercase tracking-tighter">{t('tactical.taxonomy.engine_label')}</p>
+                            <p className="text-xs font-bold uppercase tracking-widest">{t('tactical.taxonomy.select_rule_hint')}</p>
                         </div>
                     </div>
                 )}

@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { 
     MessageSquare, 
     ChevronDown, 
@@ -14,6 +15,7 @@ import type { Player, PlayerCharacter, SessionMessage } from '../store/types';
 import { format } from 'date-fns';
 
 export const CockpitMessenger: React.FC = () => {
+    const { t } = useTranslation(['modules']);
     const { messages, players, sendDirectMessage, saveMessageToJournal, activeCampaignId } = useSessionOSStore();
     const [selectedFilter, setSelectedFilter] = useState<'all' | string>('all');
     const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -50,7 +52,7 @@ export const CockpitMessenger: React.FC = () => {
         : messages.filter(m => m.fromId === selectedFilter || m.toId === selectedFilter);
 
     const getCharacterName = (id: string, name: string) => {
-        if (id === 'GM') return 'MJ';
+        if (id === 'GM') return t('session.messenger.gm_label');
         return name;
     };
 
@@ -58,8 +60,8 @@ export const CockpitMessenger: React.FC = () => {
         if (!messageInput.trim()) return;
         
         const recipientName = selectedFilter === 'all' 
-            ? 'Tous les joueurs' 
-            : (activeCharacters.find(c => c.id === selectedFilter)?.name || 'Joueur');
+            ? t('session.messenger.all_players')
+            : (activeCharacters.find(c => c.id === selectedFilter)?.name || t('session.messenger.player_label'));
             
         sendDirectMessage(selectedFilter, recipientName, messageInput.trim());
         setMessageInput('');
@@ -78,7 +80,7 @@ export const CockpitMessenger: React.FC = () => {
             <div className="flex items-center justify-between px-3 py-2 border-b border-app-border/20 bg-app-surface/40">
                 <div className="flex items-center gap-2 text-app-text/60">
                     <MessageSquare size={14} className="text-accent" />
-                    <span className="text-[10px] font-bold uppercase tracking-wider">Messages</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider">{t('session.messenger.title')}</span>
                 </div>
                 
                 <div className="relative">
@@ -88,7 +90,7 @@ export const CockpitMessenger: React.FC = () => {
                     >
                         <Filter size={10} className="text-accent/60" />
                         <span className="text-[9px] font-bold uppercase truncate max-w-[60px]">
-                            {selectedFilter === 'all' ? 'Tout' : (activeCharacters.find(c => c.id === selectedFilter)?.name || 'Joueur')}
+                            {selectedFilter === 'all' ? t('session.messenger.filter_all') : (activeCharacters.find(c => c.id === selectedFilter)?.name || t('session.messenger.player_label'))}
                         </span>
                         <ChevronDown size={10} className={`transition-transform ${isFilterOpen ? 'rotate-180' : ''}`} />
                     </button>
@@ -98,7 +100,7 @@ export const CockpitMessenger: React.FC = () => {
                                 onClick={() => { setSelectedFilter('all'); setIsFilterOpen(false); }}
                                 className={`w-full text-left px-3 py-1.5 text-[10px] hover:bg-accent/10 transition-colors ${selectedFilter === 'all' ? 'text-accent font-bold' : 'text-app-text/70'}`}
                             >
-                                Tout
+                                {t('session.messenger.filter_all')}
                             </button>
                             {activeCharacters.map(char => (
                                 <button 
@@ -119,7 +121,7 @@ export const CockpitMessenger: React.FC = () => {
                 {filteredMessages.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full opacity-20 py-4">
                         <MessageSquare size={24} />
-                        <span className="text-[10px] mt-1 italic uppercase tracking-widest">Aucun message</span>
+                        <span className="text-[10px] mt-1 italic uppercase tracking-widest">{t('session.messenger.no_message')}</span>
                     </div>
                 ) : (
                     filteredMessages.map((msg) => (
@@ -147,7 +149,7 @@ export const CockpitMessenger: React.FC = () => {
                             {msg.fromId !== 'GM' && (
                                 <button 
                                     onClick={() => saveMessageToJournal(msg.id)}
-                                    title="Sauvegarder dans le Journal"
+                                    title={t('session.messenger.tooltip_save_journal')}
                                     className="absolute -right-1 -top-1 p-1 rounded-full bg-gm-gold text-black scale-0 group-hover:scale-100 transition-all shadow-lg hover:bg-white active:scale-90"
                                 >
                                     <Save size={10} />
@@ -165,13 +167,13 @@ export const CockpitMessenger: React.FC = () => {
                     value={messageInput}
                     onChange={(e) => setMessageInput(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder={`Ecrire à ${selectedFilter === 'all' ? 'tout le monde' : (activeCharacters.find(c => c.id === selectedFilter)?.name || '...')}`}
+                    placeholder={selectedFilter === 'all' ? t('session.messenger.write_to_all') : t('session.messenger.write_to_recipient', { recipient: (activeCharacters.find(c => c.id === selectedFilter)?.name || '...') })}
                     className="flex-1 bg-app-surface/60 border border-app-border/40 rounded-lg py-1.5 px-3 text-[11px] placeholder:text-app-text/30 focus:outline-none focus:border-accent/50 transition-colors"
                 />
                 <button 
                     onClick={handleSend}
                     disabled={!messageInput.trim()}
-                    title="Envoyer le message"
+                    title={t('session.messenger.tooltip_send')}
                     className="p-1.5 rounded-lg bg-accent/20 hover:bg-accent/40 text-accent transition-all disabled:opacity-20 disabled:scale-95 active:scale-90"
                 >
                     <Send size={14} />
@@ -181,7 +183,7 @@ export const CockpitMessenger: React.FC = () => {
             <div className="px-2 py-1.5 bg-app-surface/40 border-t border-app-border/10 flex justify-between items-center">
                  <div className="flex items-center gap-1 opacity-30">
                     <Clock size={8} />
-                    <span className="text-[8px] font-mono uppercase tracking-tighter text-app-text/40">Session Uniquement</span>
+                    <span className="text-[8px] font-mono uppercase tracking-tighter text-app-text/40">{t('session.messenger.session_only')}</span>
                  </div>
                  <div className="w-1 h-1 rounded-full bg-accent/40 animate-pulse" />
             </div>

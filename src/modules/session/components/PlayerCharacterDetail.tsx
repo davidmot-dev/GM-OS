@@ -1,9 +1,11 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { ArrowLeft } from 'lucide-react';
 import CharacterSheetEditor from './CharacterSheetEditor';
 
 const PlayerCharacterDetail: React.FC = () => {
+    const { t } = useTranslation(['modules']);
     const { players, selectedPlayerId, selectedCharacterId, setSelectedCharacter, updateCharacter } = useSessionOSStore();
 
     const selectedPlayer = players.find(p => p.id === selectedPlayerId);
@@ -12,7 +14,7 @@ const PlayerCharacterDetail: React.FC = () => {
     if (!character || !selectedPlayerId) {
         return (
             <div className="flex-1 flex items-center justify-center bg-app-bg/20 text-app-text/20 italic text-sm">
-                Sélectionnez un personnage pour afficher sa fiche
+                {t('modules:session.characters.detail_hint')}
             </div>
         );
     }
@@ -26,7 +28,7 @@ const PlayerCharacterDetail: React.FC = () => {
                     className="flex items-center gap-2 px-4 py-2 bg-app-surface border border-app-border text-app-text/40 hover:text-accent hover:border-accent/50 rounded-xl transition-all font-bold text-sm uppercase tracking-widest group"
                 >
                     <ArrowLeft size={16} className="transition-transform group-hover:-translate-x-1" />
-                    Retour
+                    {t('modules:session.characters.back_to_list')}
                 </button>
                 <div className="flex-1 flex flex-col items-start gap-1">
                     <input 
@@ -34,14 +36,14 @@ const PlayerCharacterDetail: React.FC = () => {
                         value={character.name}
                         onChange={(e) => updateCharacter(selectedPlayerId, character.id, { name: e.target.value })}
                         className="bg-transparent text-xl font-black text-app-text focus:outline-none focus:ring-1 focus:ring-accent/20 rounded px-1 -ml-1 w-full"
-                        placeholder="Nom du personnage"
+                        placeholder={t('modules:session.characters.name_placeholder')}
                     />
                     <input 
                         type="text"
                         value={character.classRace}
                         onChange={(e) => updateCharacter(selectedPlayerId, character.id, { classRace: e.target.value })}
                         className="bg-transparent text-xs text-app-text/40 italic focus:outline-none focus:ring-1 focus:ring-accent/20 rounded px-1 -ml-1 w-full"
-                        placeholder="Classe / Race"
+                        placeholder={t('modules:session.characters.class_race_placeholder')}
                     />
                 </div>
             </div>

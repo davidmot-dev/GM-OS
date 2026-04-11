@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useSessionOSStore, type TimelineEvent } from '../useSessionOSStore';
 import { useClockStore } from '../../../store/useClockStore';
 import { Save, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+
 
 interface TimelineEventFormProps {
     event?: TimelineEvent;
@@ -9,8 +11,10 @@ interface TimelineEventFormProps {
 }
 
 export const TimelineEventForm: React.FC<TimelineEventFormProps> = ({ event, onClose }) => {
+    const { t } = useTranslation();
     const { activeCampaignId, addTimelineEvent, updateTimelineEvent, atlasMaps, entities } = useSessionOSStore();
     const clock = useClockStore();
+
     
     const [title, setTitle] = useState(event?.title || '');
     const [date, setDate] = useState(event?.date || '');
@@ -68,70 +72,73 @@ export const TimelineEventForm: React.FC<TimelineEventFormProps> = ({ event, onC
         <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Titre de l'événement</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.timeline_form.title_label')}</label>
                     <input
                         required
                         type="text"
                         value={title}
                         onChange={e => setTitle(e.target.value)}
-                        placeholder="Ex: La Bataille de Phandalin"
+                        placeholder={t('modules:session.timeline_form.title_placeholder')}
                         className="w-full bg-app-bg/40 border border-app-border rounded-xl px-4 py-2 text-sm text-app-text focus:outline-none focus:border-accent/50 transition-all"
                     />
                 </div>
                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Date (Calendrier de jeu)</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.timeline_form.date_label')}</label>
                     <input
                         type="text"
                         value={date}
                         onChange={e => setDate(e.target.value)}
-                        placeholder="Ex: 14 Hammer, 1492 DR"
+                        placeholder={t('modules:session.timeline_form.date_placeholder')}
                         className="w-full bg-app-bg/40 border border-app-border rounded-xl px-4 py-2 text-sm text-app-text focus:outline-none focus:border-accent/50 transition-all"
                     />
                 </div>
             </div>
 
+
             <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Type d'événement</label>
+                <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.timeline_form.type_label')}</label>
                 <div className="flex flex-wrap gap-2">
-                    {(['session', 'combat', 'quest', 'lore'] as const).map(t => (
+                    {(['session', 'combat', 'quest', 'lore', 'major', 'minor', 'discovery'] as const).map(itemType => (
                         <button
-                            key={t}
+                            key={itemType}
                             type="button"
-                            onClick={() => setType(t)}
+                            onClick={() => setType(itemType as any)}
                             className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
-                                type === t 
+                                type === itemType 
                                     ? 'bg-accent/10 border-accent/40 text-accent shadow-glow-accent/10' 
                                     : 'bg-app-bg/20 border-app-border text-app-text/40 hover:text-app-text'
                             }`}
                         >
-                            {t}
+                            {t(`modules:session.timeline_form.types.${itemType}`)}
                         </button>
                     ))}
                 </div>
             </div>
 
+
             <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Description</label>
+                <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.timeline_form.desc_label')}</label>
                 <textarea
                     required
                     value={description}
                     onChange={e => setDescription(e.target.value)}
                     rows={4}
-                    placeholder="Décrivez ce qu'il s'est passé..."
+                    placeholder={t('modules:session.timeline_form.desc_placeholder')}
                     className="w-full bg-app-bg/40 border border-app-border rounded-xl px-4 py-2 text-sm text-app-text focus:outline-none focus:border-accent/50 transition-all resize-none"
                 />
             </div>
 
+
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Lieu (Atlas)</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.npc_detail.sections.maps')}</label>
                     <select
-                        title="Sélectionner un lieu"
+                        title={t('modules:session.npc_detail.sections.maps')}
                         value={locationId}
                         onChange={e => setLocationId(e.target.value)}
                         className="w-full bg-app-bg/40 border border-app-border rounded-xl px-4 py-2 text-sm text-app-text focus:outline-none focus:border-accent/50 transition-all"
                     >
-                        <option value="">Aucun lieu lié</option>
+                        <option value="">{t('modules:session.npc_detail.sections.no_map')}</option>
                         {atlasMaps.filter(m => m.campaignId === activeCampaignId).map(map => (
                             <option key={map.id} value={map.id}>{map.name}</option>
                         ))}
@@ -139,7 +146,7 @@ export const TimelineEventForm: React.FC<TimelineEventFormProps> = ({ event, onC
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">Participants</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.wiki_form.entities_label')}</label>
                     <div className="max-h-32 overflow-y-auto border border-app-border rounded-xl p-2 space-y-1 custom-scrollbar bg-app-bg/20">
                         {entities.filter(e => e.campaignId === activeCampaignId).map(entity => (
                             <button
@@ -166,16 +173,17 @@ export const TimelineEventForm: React.FC<TimelineEventFormProps> = ({ event, onC
                     onClick={onClose}
                     className="px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest text-app-text/40 hover:text-app-text transition-all"
                 >
-                    Annuler
+                    {t('modules:session.timeline_form.cancel')}
                 </button>
                 <button
                     type="submit"
                     className="flex items-center gap-2 px-8 py-2 bg-accent text-app-bg rounded-xl text-xs font-black uppercase tracking-widest shadow-glow-accent/20 hover:opacity-90 transition-all"
                 >
                     <Save size={14} />
-                    {event ? 'Enregistrer' : 'Créer l\'événement'}
+                    {event ? t('modules:session.timeline_form.save_edit') : t('modules:session.timeline_form.save_create')}
                 </button>
             </div>
+
         </form>
     );
 };

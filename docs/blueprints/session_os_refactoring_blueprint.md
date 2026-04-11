@@ -164,13 +164,13 @@ const { view, campaignId } = useSessionOSStore(
 
 ---
 
-## ✅ Statut d'Exécution (Audit Final)
-
-### Mission Accomplie - 27 Mars 2026
-
+### Mission Accomplie - 27 Mars 2026 (Core)
 - **Architecture de Store (Phase 1)** : ✅ RÉUSSIE (Store modulaire en 7 slices).
 - **Registry Pattern (Phase 2)** : ✅ RÉUSSIE (Découplage Header/Registry validé).
-- **Expérience Utilisateur (Phase 3)** : ✅ RÉUSSIE (Transitions Premium, Glassmorphism, Glow Cyan).
-- **Stabilité & Build** : ✅ 0 erreur TypeScript après refonte.
 
-**Note de Clôture** : La refonte architecturale et visuelle de Session-OS est terminée. Le module est désormais le standard de référence pour la modernité de GM-OS v5.
+### Extension & Modularité - 11 Avril 2026 (v6.2.6-dev)
+- **Extraction de Logique (Phase 4)** : ✅ RÉUSSIE (Hooks `useSessionNPCs`, `useSessionClues`, `useSessionNotes` extraits).
+- **Localisation Complète (Phase 5)** : ✅ RÉUSSIE (Support Fr/En intégral + Correction encodage).
+- **Stabilité & Build** : ✅ 0 erreur TypeScript après modularisation des hooks.
+
+**Note de Clôture** : La refonte architecturale, visuelle et logique de Session-OS est terminée. Le module est désormais le standard de référence pour la modernité et la portabilité de GM-OS v6.
