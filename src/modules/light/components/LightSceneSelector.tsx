@@ -27,7 +27,7 @@ const LightSceneSelector: React.FC<LightSceneSelectorProps> = ({ data }) => {
 
     const handleSelect = (sceneId: string | null) => {
         if (data.type === 'music' && data.playlistId !== undefined && data.padIndex !== undefined) {
-            updatePad(data.playlistId, data.padIndex, { lightLinkId: sceneId || undefined });
+            updatePad(data.playlistId, data.padIndex, { linkedLightSceneId: sceneId || undefined });
         } else if (data.type === 'sound' && data.padId) {
             setPadLightLink(data.padId, sceneId);
         } else if (data.type === 'ambient' && data.trackIndex !== undefined) {

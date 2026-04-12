@@ -3,7 +3,7 @@ import { midiEngine } from './MidiEngine';
 
 export const useMidiControls = () => {
     const refreshMidi = useCallback(() => {
-        midiEngine.initialize();
+        midiEngine.initialize(true);
     }, []);
 
     useEffect(() => {

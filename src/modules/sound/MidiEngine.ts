@@ -70,11 +70,13 @@ export class MidiEngine {
 
     /**
      * Initialise l'accès à l'API Web MIDI du navigateur.
+     * @param force Si vrai, force une nouvelle demande d'accès même si déjà initialisé.
      */
-    public async initialize(): Promise<void> {
-        if (this.initialized) return;
-        if (this.initializationPromise) return this.initializationPromise;
+    public async initialize(force: boolean = false): Promise<void> {
+        if (this.initialized && !force) return;
+        if (this.initializationPromise && !force) return this.initializationPromise;
 
+        this.initialized = false; // Reset to allow re-initialization if forced
         this.initializationPromise = (async () => {
             interface MIDINavigator {
                 requestMIDIAccess?: (options?: unknown) => Promise<GMMIDIAccess>;
@@ -92,8 +94,9 @@ export class MidiEngine {
                 console.warn('[MIDI] Web MIDI API not supported in this browser.');
             }
         })();
-
-        return this.initializationPromise;
+        
+        await this.initializationPromise;
+        this.initializationPromise = null; // Clear promise so we can re-init later if needed
     }
 
     /**

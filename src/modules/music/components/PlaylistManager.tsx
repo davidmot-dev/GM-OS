@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Music, Link, Edit3, Trash2, GripVertical, MoreHorizontal, Lightbulb } from 'lucide-react';
 import { useMusicStore } from '../useMusicStore';
 import type { MusicPad as MusicPadType } from '../useMusicStore';
@@ -144,7 +144,7 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
             </div>
 
             {/* Light Link Indicator */}
-            {pad.lightLinkId && (
+            {pad.linkedLightSceneId && (
                 <div className="absolute bottom-2 left-2 p-1.5 text-gm-cyan drop-shadow-glow-cyan animate-pulse">
                     <Lightbulb size={12} fill="currentColor" />
                 </div>
@@ -193,7 +193,7 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                                 label: `Pad ${index + 1}`, 
                                 type: 'local', 
                                 keybind: undefined,
-                                lightLinkId: undefined,
+                                linkedLightSceneId: undefined,
                                 loopA: null,
                                 loopB: null
                             });
@@ -213,9 +213,9 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                             });
                             setIsMenuOpen(false);
                         }}
-                        className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all ${pad.lightLinkId ? 'bg-gm-cyan/20 border-gm-cyan text-gm-cyan' : 'bg-app-surface border-app-border/50 hover:bg-gm-cyan hover:border-gm-cyan'}`}
+                        className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all ${pad.linkedLightSceneId ? 'bg-gm-cyan/20 border-gm-cyan text-gm-cyan' : 'bg-app-surface border-app-border/50 hover:bg-gm-cyan hover:border-gm-cyan'}`}
                     >
-                        <Lightbulb size={12} /> {pad.lightLinkId ? 'LIÉ' : 'LIER LUMIÈRE'}
+                        <Lightbulb size={12} /> {pad.linkedLightSceneId ? 'LIÉ' : 'LIER LUMIÈRE'}
                     </button>
                 </div>
             )}
@@ -225,9 +225,16 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
 
 
 const PlaylistManager: React.FC = () => {
-    const { playlists, activePlaylistId, reorderPads, updatePad } = useMusicStore();
+    const { playlists, activePlaylistId, setActivePlaylistId, reorderPads, updatePad } = useMusicStore();
     const currentPlaylistId = activePlaylistId || playlists[0]?.id;
     const activePlaylist = playlists.find(p => p.id === currentPlaylistId) || playlists[0];
+
+    // Auto-select first playlist if none is active
+    useEffect(() => {
+        if (!activePlaylistId && activePlaylist) {
+            setActivePlaylistId(activePlaylist.id);
+        }
+    }, [activePlaylistId, activePlaylist, setActivePlaylistId]);
 
     // Media Browser State
     const [browserTarget, setBrowserTarget] = useState<{ index: number, playlistId: string } | null>(null);
@@ -252,7 +259,7 @@ const PlaylistManager: React.FC = () => {
         if (over && active.id !== over.id) {
             const oldIndex = activePlaylist.pads.findIndex(p => p.id === active.id);
             const newIndex = activePlaylist.pads.findIndex(p => p.id === over.id);
-            reorderPads(currentPlaylistId, oldIndex, newIndex);
+            reorderPads(activePlaylist.id, oldIndex, newIndex);
         }
     };
 
@@ -279,15 +286,18 @@ const PlaylistManager: React.FC = () => {
                         items={padIds.slice(0, 5)}
                         strategy={rectSortingStrategy}
                     >
-                        {activePlaylist.pads.slice(0, 5).map((pad, i) => (
-                            <Pad
-                                key={pad.id}
-                                pad={pad}
-                                index={i}
-                                playlistId={currentPlaylistId}
-                                onRequestMediaBrowser={() => setBrowserTarget({ index: i, playlistId: currentPlaylistId })}
-                            />
-                        ))}
+                        {activePlaylist.pads.slice(0, 5).map((pad, i) => {
+                            const actualPLId = activePlaylist.id;
+                            return (
+                                <Pad
+                                    key={pad.id}
+                                    pad={pad}
+                                    index={i}
+                                    playlistId={actualPLId}
+                                    onRequestMediaBrowser={() => setBrowserTarget({ index: i, playlistId: actualPLId })}
+                                />
+                            );
+                        })}
                     </SortableContext>
                 </DndContext>
             </div>

@@ -13,7 +13,7 @@ export interface MusicPad {
     type: PadType;
     loopA: number | null;
     loopB: number | null;
-    lightLinkId?: string;
+    linkedLightSceneId?: string;
     keybind?: string;
 }
 
@@ -67,7 +67,7 @@ interface MusicState {
     loadToDeck: (deck: 'A' | 'B', pad: MusicPad) => Promise<void>;
     playDeck: (deck: 'A' | 'B') => Promise<void>;
     stopDeck: (deck: 'A' | 'B') => void;
-    stopAll: () => void;
+    stopAll: () => Promise<void>;
     toggleLoop: (deck: 'A' | 'B') => void;
 
     // V3 Auto-Logic
@@ -181,7 +181,8 @@ export const useMusicStore = create<MusicState>()(
                             url: '',
                             type: 'local',
                             loopA: null,
-                            loopB: null
+                            loopB: null,
+                            linkedLightSceneId: undefined
                         }))
                     }]
                 })),
@@ -300,22 +301,22 @@ export const useMusicStore = create<MusicState>()(
                 },
 
 
-                stopAll: () => {
+                stopAll: async () => {
                     const duration = get().autoFadeDuration;
                     musicEngine.deckA.fadeOut(duration);
                     musicEngine.deckB.fadeOut(duration);
                     get().addLog("ARRÊT TOTAL (Progressif)");
 
-                    // Light Reversion
-                    const gWin = window as any;
-                    const lightStore = gWin.useLightStore;
-                    const hue = gWin.hueEngine;
-
-                    if (lightStore && hue) {
-                        const { isSyncEnabled } = lightStore.getState();
+                    // 5. Revert Lights if sync enabled
+                    try {
+                        const { useLightStore } = await import('../light/useLightStore');
+                        const { hueEngine } = await import('../light/HueEngine');
+                        const { isSyncEnabled } = useLightStore.getState();
                         if (isSyncEnabled) {
-                            hue.revertToManualScene();
+                            hueEngine.revertToManualScene();
                         }
+                    } catch (e) {
+                        console.error("[MusicStore] Light reversion failed", e);
                     }
                 },
 
@@ -392,18 +393,19 @@ export const useMusicStore = create<MusicState>()(
                     });
 
                     // 4. Trigger Light if linked and sync enabled
-                    const gWin = window as any;
-                    const lightStore = gWin.useLightStore;
-                    const hue = gWin.hueEngine;
+                    try {
+                        const { useLightStore } = await import('../light/useLightStore');
+                        const { hueEngine } = await import('../light/HueEngine');
+                        const { isSyncEnabled } = useLightStore.getState();
 
-                    if (lightStore && hue) {
-                        const { isSyncEnabled } = lightStore.getState();
-                        if (isSyncEnabled && pad.lightLinkId) {
+                        if (isSyncEnabled && pad.linkedLightSceneId) {
                             // Delay to let audio loading/decoding breathe
                             setTimeout(() => {
-                                hue.applyScene(pad.lightLinkId!);
+                                hueEngine.applyScene(pad.linkedLightSceneId!, true);
                             }, 300);
                         }
+                    } catch (e) {
+                        console.warn("[MusicStore] Light trigger skipped or failed", e);
                     }
                 },
 
@@ -466,7 +468,8 @@ export const useMusicStore = create<MusicState>()(
                                     url: '',
                                     type: 'local',
                                     loopA: null,
-                                    loopB: null
+                                    loopB: null,
+                                    linkedLightSceneId: undefined
                                 }))
                             }
                         ],
@@ -492,6 +495,38 @@ export const useMusicStore = create<MusicState>()(
                 autoFadeDuration: state.autoFadeDuration,
                 outputDeviceId: state.outputDeviceId
             }),
+            version: 1,
+            migrate: (persistedState: any, version: number) => {
+                // Handle both null (no previous version) and 0 (initial version)
+                if (version === 0 || version === null || version === undefined) {
+                    console.log('[MusicStore] Migrating storage to v1...');
+                    const state = persistedState as any;
+                    if (state && state.playlists) {
+                        state.playlists = state.playlists.map((p: any) => ({
+                            ...p,
+                            pads: p.pads.map((pad: any) => {
+                                // Migrate old lightLinkId to linkedLightSceneId
+                                if (pad.lightLinkId !== undefined && pad.linkedLightSceneId === undefined) {
+                                    const { lightLinkId, ...rest } = pad;
+                                    return { ...rest, linkedLightSceneId: lightLinkId || undefined };
+                                }
+                                return pad;
+                            })
+                        }));
+                        console.log('[MusicStore] Migration complete.', state.playlists);
+                    }
+                    return state ?? persistedState;
+                }
+                return persistedState;
+            },
+            onRehydrateStorage: () => (state) => {
+                if (state) {
+                    console.log('[MusicStore] Rehydrated from storage. Playlists:', state.playlists?.map(p => ({
+                        name: p.name,
+                        pads: p.pads.map(pad => ({ label: pad.label, linkedLightSceneId: pad.linkedLightSceneId }))
+                    })));
+                }
+            }
         }
     )
 );
