@@ -1,4 +1,20 @@
-import { ClientContext } from '../src/types/shared';
+/**
+ * ClientContext — Interface locale au process Electron (main).
+ * 
+ * ⚠️ Ne pas importer depuis '../src/types/shared' ici :
+ *    le main process ne peut pas résoudre les types du renderer.
+ *    Cette interface doit rester en sync avec src/types/shared.ts.
+ */
+export interface ClientContext {
+    deviceId: string;
+    pseudo: string;
+    playerName?: string;
+    characterId?: string;
+    role: 'combat' | 'narrative' | 'player' | 'remote' | 'hub';
+    status: 'active' | 'ghost' | 'disconnected';
+    lastSeen: number;
+}
+
 
 export class SessionManager {
     private sessions = new Map<string, ClientContext>();
