@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
     Monitor, 
@@ -36,6 +36,9 @@ import { type FavoriteEntity } from '../modules/favorite/useFavoriteStore';
 import { useDiceStore } from '../stores/useDiceStore';
 import { useSessionOSStore } from '../modules/session/useSessionOSStore';
 import { useClientStore } from '../stores/useClientStore';
+import { usePerformanceControl } from '../hooks/usePerformanceControl';
+import { usePerformanceStore } from '../stores/usePerformanceStore';
+import { VoiceReactiveAvatar } from './hub/VoiceReactiveAvatar';
 import type { DieResult } from '../modules/dice/DiceEngine';
 
 const TabletHub: React.FC = () => {
@@ -70,6 +73,8 @@ const TabletHub: React.FC = () => {
     } = useHubSync();
 
     const { resetIdentity } = useClientStore();
+    const performance = usePerformanceControl();
+    const { setLowGraphics } = usePerformanceStore();
 
     const [currentTab, setCurrentTab] = useState<'live' | 'archives' | 'trombinoscope' | 'atlas' | 'inventory'>('live');
     const [isInventoryOpen, setIsInventoryOpen] = useState(false);
@@ -86,34 +91,33 @@ const TabletHub: React.FC = () => {
     const messages = useSessionOSStore((state) => state.messages);
     const players = useSessionOSStore((state) => state.players);
 
-    // Derived State
-    const unreadCount = messages.filter(m => 
+    // Derived State - Memoized for performance
+    const unreadCount = useMemo(() => messages.filter(m => 
         m.timestamp > lastReadMessageTime && 
         (
             (m.fromId === 'GM' && (m.toId === characterId || m.toId === 'all' || !m.toId)) || 
             (m.fromId === characterId && m.toId === 'GM')
         )
-    ).length;
-
-    const playerWithChar = players.find(p => p.characters.some(c => c.id === characterId));
+    ).length, [messages, lastReadMessageTime, characterId]);
+ 
+    const playerWithChar = useMemo(() => players.find(p => p.characters.some(c => c.id === characterId)), [players, characterId]);
     const characterName = playerWithChar?.characters.find(c => c.id === characterId)?.name || 'Joueur';
     const playerId = playerWithChar?.id;
-
-    const visibleCombatants = combatants.filter(c => 
+ 
+    const visibleCombatants = useMemo(() => combatants.filter(c => 
         c.isPlayer || !c.statuses?.some(s => ['invisible', 'invisibilité', 'caché', 'hidden'].includes(s.name.toLowerCase()))
-    );
-
-    const activeCombatant = visibleCombatants.find((_, idx) => idx === currentTurnIdx) || null;
+    ), [combatants]);
+ 
+    const activeCombatant = useMemo(() => visibleCombatants.find((_, idx) => idx === currentTurnIdx) || null, [visibleCombatants, currentTurnIdx]);
     const hasCombatants = isCombatProjected && visibleCombatants.length > 0;
-
-    const upcomingCombatants = visibleCombatants.length > 1 
+ 
+    const upcomingCombatants = useMemo(() => visibleCombatants.length > 1 
         ? visibleCombatants.filter(c => c.id !== activeCombatant?.id)
-        : [];
-
-    // Items (type === 'item') are inventory-only and must NOT appear in the live dashboard
-    const liveFavorites = resolvedFavorites.filter(f => f.type !== 'item');
-    const inventoryItems = resolvedFavorites.filter(f => f.type === 'item');
-
+        : [], [visibleCombatants, activeCombatant]);
+ 
+    const liveFavorites = useMemo(() => resolvedFavorites.filter(f => f.type !== 'item'), [resolvedFavorites]);
+    const inventoryItems = useMemo(() => resolvedFavorites.filter(f => f.type === 'item'), [resolvedFavorites]);
+ 
     const isTheaterActive = !!theaterEntity;
 
     const toggleMessenger = () => {
@@ -131,22 +135,32 @@ const TabletHub: React.FC = () => {
         '--hub-bg-url': resolvedBackground ? `url('${resolvedBackground}')` : "none",
         '--hub-bg-opacity': resolvedBackground ? 1 : 0,
         '--hub-blur-bg-url': activeCampaignWallpaper ? `url("${activeCampaignWallpaper}")` : "none",
-        '--voice-scale': voiceLevel > 0.05 ? 1 + (voiceLevel * 0.15) : 1, 
-        '--voice-glow': voiceLevel > 0.05 ? `0 0 ${voiceLevel * 30}px rgba(6, 182, 212, ${voiceLevel})` : '0 0 0 transparent' 
     } as React.CSSProperties;
 
     const isWhiteboardActive = projections['hub'] === 'whiteboard'; // Alignement si tableau blanc actif
 
     return (
-        <div className="min-h-screen bg-app-bg text-app-text font-inter overflow-hidden flex flex-col relative select-none" style={rootStyles}>
+        <div className={`min-h-screen bg-app-bg text-app-text font-inter overflow-hidden flex flex-col relative select-none ${performance.isLowGraphics ? '' : 'will-change-transform'}`} style={rootStyles}>
             
             {/* Status & Connection */}
-            <div className={`fixed top-4 right-4 z-50 p-1.5 rounded-full backdrop-blur-md border ${
-                status === 'connected' 
-                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' 
-                    : 'bg-rose-500/10 text-rose-400 border-rose-500/20 animate-pulse'
-            }`} title={status === 'connected' ? 'Synchronisé' : 'Déconnecté du MJ'}>
-                {status === 'connected' ? <Wifi size={14} /> : <WifiOff size={14} />}
+            <div className={`fixed top-4 right-4 z-50 flex items-center gap-2`}>
+                <button 
+                    onClick={() => setLowGraphics(!performance.isLowGraphics)}
+                    className={`p-1.5 px-3 rounded-full backdrop-blur-md border text-[9px] font-black uppercase tracking-widest transition-all ${
+                        performance.isLowGraphics
+                            ? 'bg-amber-500/20 text-amber-400 border-amber-500/30'
+                            : 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30'
+                    }`}
+                >
+                    {performance.isLowGraphics ? 'Mode Performance' : 'Mode Qualité'}
+                </button>
+                <div className={`p-1.5 rounded-full backdrop-blur-md border ${
+                    status === 'connected' 
+                        ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' 
+                        : 'bg-rose-500/10 text-rose-400 border-rose-500/20 animate-pulse'
+                }`} title={status === 'connected' ? 'Synchronisé' : 'Déconnecté du MJ'}>
+                    {status === 'connected' ? <Wifi size={14} /> : <WifiOff size={14} />}
+                </div>
             </div>
 
             {/* Campaign Header */}
@@ -182,7 +196,7 @@ const TabletHub: React.FC = () => {
             
             {/* Overlay for focus (when an entity is displayed front-and-center) */}
             {(liveFavorites.length > 0 || liveEntity) && (
-                <div className={`fixed inset-0 z-5 bg-black/40 backdrop-blur-[1px] pointer-events-none transition-all duration-700 ${isTheaterActive ? 'opacity-0' : 'opacity-100'}`}></div>
+                <div className={`fixed inset-0 z-5 bg-black/40 pointer-events-none transition-all duration-700 ${isTheaterActive ? 'opacity-0' : 'opacity-100'} ${performance.isLowGraphics ? '' : 'backdrop-blur-[1px]'}`}></div>
             )}
 
             {/* Main Content Area */}
@@ -191,7 +205,7 @@ const TabletHub: React.FC = () => {
                 {/* Widgets: Clock & Narrative Indicators */}
                 <div className="flex flex-col gap-4 mb-6 pl-12 w-full max-w-[460px] pointer-events-auto animate-in fade-in slide-in-from-left duration-700">
                     {isClockProjected && String(mode) !== 'hidden' && (
-                        <div className="backdrop-blur-md bg-app-surface/40 border border-app-border/40 p-2 rounded-2xl shadow-2xl flex items-center justify-center w-full aspect-square max-w-[250px] overflow-hidden">
+                        <div className={`bg-app-surface/40 border border-app-border/40 p-2 rounded-2xl shadow-2xl flex items-center justify-center w-full aspect-square max-w-[250px] overflow-hidden ${performance.blurClass}`}>
                             <div className="scale-[0.5] origin-center transform-gpu">
                                 <ClockVisualizer theme={theme} timestamp={timestamp} mode={mode} />
                             </div>
@@ -201,7 +215,7 @@ const TabletHub: React.FC = () => {
                     {isClockProjected && tensions.length > 0 && (
                         <div className="grid grid-cols-2 gap-4 w-full h-fit overflow-y-auto max-h-[220px] pr-2 custom-scrollbar">
                             {tensions.map(clock => (
-                                <div key={clock.id} className="flex items-center gap-3 bg-app-surface/60 backdrop-blur-xl border border-app-border/40 rounded-2xl p-3 shadow-xl">
+                                <div key={clock.id} className={`flex items-center gap-3 bg-app-surface/60 border border-app-border/40 rounded-2xl p-3 shadow-xl ${performance.blurClass}`}>
                                     <NarrativeClock clock={clock} theme={theme} size={48} />
                                     <div className="flex flex-col flex-1 overflow-hidden">
                                         <p className={`text-sm font-black truncate w-full ${theme === 'cyberpunk' ? 'text-accent font-mono tracking-wider' : 'text-app-text uppercase tracking-tight'}`}>{clock.name}</p>
@@ -216,26 +230,59 @@ const TabletHub: React.FC = () => {
                 </div>
 
                 {/* Centered Content Area */}
-                <div className={`flex-1 flex items-center justify-center transition-all duration-1000 ${hasCombatants ? 'pr-0 md:pr-72' : ''} pointer-events-none overflow-hidden`}>
-                    {currentTab === 'live' && (liveFavorites.length > 0 || liveEntity) && (
+                <div className={`flex-1 flex items-center justify-center transition-all duration-1000 ${hasCombatants ? 'pr-0 md:pr-72' : ''} md:pl-32 pointer-events-none overflow-hidden`}>
+                    {currentTab === 'live' && (liveFavorites.length > 0 || liveEntity || (liveImagePath && liveImagePath !== activeCampaignWallpaper)) && (
                         <div className="w-full h-full flex items-center justify-center overflow-hidden pointer-events-auto">
                             <div className="w-full max-h-full overflow-y-auto custom-scrollbar p-4 md:p-8 flex flex-col items-center justify-center">
                                 {(() => {
                                     const uniqueFavorites = liveFavorites.filter(f => f.id !== theaterEntity?.id && f.id !== liveEntity?.id);
                                     const showLive = liveEntity && theaterEntity?.id !== liveEntity.id;
-                                    const count = uniqueFavorites.length + (showLive ? 1 : 0);
+                                    const showProjection = liveImagePath && liveImagePath !== activeCampaignWallpaper;
+                                    const count = uniqueFavorites.length + (showLive ? 1 : 0) + (showProjection ? 1 : 0);
+                                    
                                     return (
-                                        <div className={`grid grid-cols-1 ${count > 1 ? 'md:grid-cols-2 lg:grid-cols-3' : 'md:max-w-xl'} gap-8 md:gap-12 w-full place-items-center`}>
-                                            {showLive && (
-                                        <div key={liveEntity.id} className={`bg-app-surface/90 backdrop-blur-3xl border-2 border-accent/30 rounded-[2rem] p-6 md:p-8 shadow-[0_0_50px_rgba(var(--accent-rgb),0.2)] flex flex-col gap-6 animate-in fade-in zoom-in slide-in-from-bottom-12 duration-1000 w-full hover:border-accent/60 transition-all group ${liveEntity.type === 'Oracle' ? 'md:max-w-2xl' : ''}`}>
-                                            <div className="flex flex-col items-center text-center gap-4 md:gap-6">
-                                                <div 
-                                                    className={`${liveEntity.type === 'Oracle' ? 'w-full aspect-[2/3] max-h-[75vh]' : 'size-28 md:size-40'} rounded-2xl overflow-hidden border-2 border-accent/20 shadow-glow-accent bg-app-surface group-hover:border-accent/50 transition-all scale-100 group-hover:scale-105 relative`}
-                                                    style={{ transform: `scale(var(--voice-scale))`, boxShadow: 'var(--voice-glow)' }}
-                                                >
-                                                    <ResolvedImage src={liveEntity.avatar || liveEntity.imageUrl || liveEntity.portraitUrl} className="absolute inset-0 w-full h-full object-cover blur-xl opacity-30 scale-110" />
-                                                    <ResolvedImage src={liveEntity.avatar || liveEntity.imageUrl || liveEntity.portraitUrl} alt={liveEntity.name} className={`relative z-10 w-full h-full ${liveEntity.type === 'Oracle' ? 'object-contain' : 'object-cover'}`} />
+                                        <div className={`grid grid-cols-1 ${count > 1 ? 'md:grid-cols-2 lg:grid-cols-3' : 'md:max-w-4xl'} gap-8 md:gap-12 w-full place-items-center`}>
+                                            {/* Explicit Image Projection Card */}
+                                            {showProjection && (
+                                                <div className={`relative bg-app-surface/90 border-2 border-accent/40 rounded-[2rem] p-4 shadow-[0_0_50px_rgba(var(--accent-rgb),0.3)] flex flex-col gap-4 animate-in fade-in zoom-in slide-in-from-bottom-12 duration-1000 w-full group overflow-hidden ${performance.heavyBlurClass} ${count > 1 ? 'md:col-span-2' : ''}`}>
+                                                    {/* Header Label */}
+                                                    <div className="flex items-center justify-between px-2">
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+                                                            <span className="text-[10px] font-black text-accent uppercase tracking-[0.3em]">Flux Visuel Actif</span>
+                                                        </div>
+                                                        <span className="text-[9px] font-bold text-app-text/30 uppercase font-mono tracking-tighter">Sync: V6.3.0</span>
+                                                    </div>
+
+                                                    {/* Image Container */}
+                                                    <div className="relative aspect-video rounded-xl overflow-hidden border border-accent/20 bg-black/40">
+                                                        <ResolvedImage 
+                                                            src={liveImagePath} 
+                                                            className="w-full h-full object-contain relative z-10" 
+                                                        />
+                                                        
+                                                        {/* Scanline Effect */}
+                                                        <div className="absolute inset-0 z-20 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(255,0,0,0.03),rgba(0,255,0,0.01),rgba(0,0,255,0.03))] bg-[length:100%_2px,3px_100%] opacity-40" />
+                                                        
+                                                        <div className="absolute inset-0 z-0 opacity-20 blur-2xl">
+                                                            <ResolvedImage src={liveImagePath} className="w-full h-full object-cover" />
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    {/* Footer Decorative Line */}
+                                                    <div className="h-1 w-full bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
                                                 </div>
+                                            )}
+
+                                            {showLive && (
+                                        <div key={liveEntity.id} className={`bg-app-surface/90 border-2 border-accent/30 rounded-[2rem] p-6 md:p-8 shadow-[0_0_50px_rgba(var(--accent-rgb),0.2)] flex flex-col gap-6 animate-in fade-in zoom-in slide-in-from-bottom-12 duration-1000 w-full hover:border-accent/60 transition-all group ${liveEntity.type === 'Oracle' ? 'md:max-w-2xl' : ''} ${performance.heavyBlurClass} ${performance.shadowClass}`}>
+                                            <div className="flex flex-col items-center text-center gap-4 md:gap-6">
+                                                <VoiceReactiveAvatar 
+                                                    imageUrl={liveEntity.avatar || liveEntity.imageUrl || liveEntity.portraitUrl} 
+                                                    name={liveEntity.name} 
+                                                    type={liveEntity.type}
+                                                    isPerformanceLimited={performance.isLowGraphics}
+                                                />
 
                                                 {liveEntity.type !== 'Oracle' && (
                                                     <div className="flex flex-col items-center">
@@ -260,7 +307,7 @@ const TabletHub: React.FC = () => {
                                     )}
 
                                     {uniqueFavorites.map(fav => (
-                                        <div key={fav.id} className="bg-app-surface/90 backdrop-blur-2xl border border-app-border/20 rounded-[1.5rem] p-5 md:p-6 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.8)] flex flex-col gap-4 md:gap-5 animate-in fade-in zoom-in duration-700 w-full group">
+                                        <div key={fav.id} className={`bg-app-surface/90 border border-app-border/20 rounded-[1.5rem] p-5 md:p-6 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.8)] flex flex-col gap-4 md:gap-5 animate-in fade-in zoom-in duration-700 w-full group ${performance.heavyBlurClass}`}>
                                             <div className="flex flex-col items-center text-center gap-3 md:gap-4">
                                                 <div className="size-20 md:size-28 rounded-xl overflow-hidden border border-app-border/40 shadow-xl bg-app-surface group-hover:border-accent transition-all scale-100 group-hover:scale-105 relative">
                                                     <ResolvedImage src={fav.imageUrl || fav.tokenUrl} className="absolute inset-0 w-full h-full object-cover blur-lg opacity-40 scale-110" />
@@ -308,7 +355,7 @@ const TabletHub: React.FC = () => {
 
             {/* Floatings: Session Summary */}
             {sessionSummary && currentTab === 'live' && (
-                <div className="fixed bottom-28 left-8 z-[60] w-full max-w-2xl bg-app-surface/20 backdrop-blur-md border border-app-border/40 rounded-[2.5rem] p-8 shadow-2xl animate-in fade-in slide-in-from-bottom-8 duration-1000 pointer-events-auto">
+                <div className={`fixed bottom-28 left-8 z-[60] w-full max-w-2xl bg-app-surface/20 border border-app-border/40 rounded-[2.5rem] p-8 shadow-2xl animate-in fade-in slide-in-from-bottom-8 duration-1000 pointer-events-auto ${performance.blurClass}`}>
                     <div className="flex items-center gap-5 mb-6 opacity-40">
                         <BookOpen size={20} className="text-app-text" />
                         <h3 className="text-[10px] font-black text-app-text uppercase tracking-[0.4em]">Chroniques de Séance</h3>
@@ -323,7 +370,7 @@ const TabletHub: React.FC = () => {
 
             {/* Bottom Navigation */}
             <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] pointer-events-auto" aria-label="Navigation Hub">
-                <div className="bg-app-surface/80 backdrop-blur-2xl border border-app-border/40 p-1.5 rounded-full shadow-2xl flex items-center gap-1">
+                <div className={`bg-app-surface/80 border border-app-border/40 p-1.5 rounded-full shadow-2xl flex items-center gap-1 ${performance.heavyBlurClass}`}>
                     {(
                         [
                             { id: 'live', icon: Monitor, label: 'Direct', color: undefined },
@@ -386,7 +433,7 @@ const TabletHub: React.FC = () => {
 
             {/* Combat Overlay */}
             {hasCombatants && activeCombatant && (
-                <aside className="fixed right-4 top-4 w-80 h-[calc(100vh-2rem)] z-50 bg-app-surface/60 backdrop-blur-2xl border border-app-border/40 flex flex-col gap-4 p-6 rounded-[2rem] shadow-2xl animate-in slide-in-from-right pointer-events-auto">
+                <aside className={`fixed right-4 top-4 w-80 h-[calc(100vh-2rem)] z-50 bg-app-surface/60 border border-app-border/40 flex flex-col gap-4 p-6 rounded-[2rem] shadow-2xl animate-in slide-in-from-right pointer-events-auto ${performance.heavyBlurClass}`}>
                     <h2 className="text-app-text text-lg font-bold tracking-tight border-b border-app-border/40 pb-3">Initiative</h2>
                     <div className="flex flex-col gap-2 overflow-y-auto custom-scrollbar pr-2">
                         <div className="flex flex-col gap-3 p-3 rounded-2xl bg-rose-500/10 border border-rose-500/30 shadow-glow-crimson">
@@ -437,11 +484,11 @@ const TabletHub: React.FC = () => {
             {/* Dice Animation Overlay */}
             <AnimatePresence>
                 {showDice && (
-                    <motion.div 
+                        <motion.div 
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[120] flex items-center justify-center p-12 bg-app-surface/40 backdrop-blur-md pointer-events-none"
+                        className={`fixed inset-0 z-[120] flex items-center justify-center p-12 bg-app-surface/40 pointer-events-none ${performance.blurClass}`}
                     >
                         <DiceResultDisplay />
                     </motion.div>
@@ -462,7 +509,7 @@ const TabletHub: React.FC = () => {
                         <div className="absolute inset-0 opacity-40 select-none pointer-events-none">
                             <ResolvedImage 
                                 src={theaterEntity.avatar || theaterEntity.imageUrl || theaterEntity.portraitUrl} 
-                                className="w-full h-full object-cover blur-[120px] scale-110" 
+                                className={`w-full h-full object-cover scale-110 ${performance.isLowGraphics ? 'blur-lg' : 'blur-[120px]'}`} 
                             />
                         </div>
                         
@@ -518,13 +565,14 @@ const TabletHub: React.FC = () => {
 // Internal sub-component for clarity
 const DiceResultDisplay: React.FC = () => {
     const { lastRoll } = useDiceStore();
+    const performance = usePerformanceControl();
     if (!lastRoll) return null;
 
     return (
         <motion.div 
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            className="relative bg-app-surface/95 backdrop-blur-[40px] border-2 border-accent/40 rounded-[3rem] p-8 md:p-12 shadow-[0_0_80px_rgba(var(--accent-rgb),0.3)] flex flex-col items-center gap-6 max-w-2xl w-full"
+            className={`relative bg-app-surface/95 border-2 border-accent/40 rounded-[3rem] p-8 md:p-12 shadow-[0_0_80px_rgba(var(--accent-rgb),0.3)] flex flex-col items-center gap-6 max-w-2xl w-full ${performance.isLowGraphics ? 'backdrop-blur-none' : 'backdrop-blur-[40px]'}`}
         >
             {/* Background Decorative Glow */}
             <div className="absolute inset-0 bg-accent/5 rounded-[4rem] pointer-events-none" />

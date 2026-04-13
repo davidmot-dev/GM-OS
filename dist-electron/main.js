@@ -49456,7 +49456,16 @@ class SessionManager {
     this.GHOST_DURATION = 2 * 60 * 1e3;
   }
   // 2 minutes
-  registerClient(deviceId, pseudo, role, playerName) {
+  registerClient(deviceId, pseudo, role, playerName, characterId) {
+    if (characterId) {
+      const collision = Array.from(this.sessions.values()).find(
+        (c) => c.characterId === characterId && c.deviceId !== deviceId && (c.status === "active" || c.status === "ghost")
+      );
+      if (collision) {
+        console.warn(`[SessionManager] Character Collision: ${characterId} already taken by ${collision.deviceId}`);
+        throw new Error("character_taken");
+      }
+    }
     if (this.ghostTimeouts.has(deviceId)) {
       clearTimeout(this.ghostTimeouts.get(deviceId));
       this.ghostTimeouts.delete(deviceId);
@@ -49466,6 +49475,7 @@ class SessionManager {
       deviceId,
       pseudo: pseudo || existingSession?.pseudo || "Anonyme",
       playerName: playerName || existingSession?.playerName,
+      characterId: characterId || existingSession?.characterId,
       role,
       status: "active",
       lastSeen: Date.now()
@@ -49502,6 +49512,13 @@ class SessionManager {
     if (session) {
       session.status = status;
       session.lastSeen = Date.now();
+    }
+  }
+  clearDisconnected() {
+    for (const [deviceId, session] of this.sessions.entries()) {
+      if (session.status !== "active") {
+        this.disconnectClient(deviceId);
+      }
     }
   }
 }
@@ -50122,12 +50139,24 @@ function startRemoteServer() {
           try {
             const data = JSON.parse(message);
             if (data.type === "remote:register") {
-              const { deviceId, pseudo, role, playerName } = data.payload || {};
+              const { deviceId, pseudo, role, playerName, characterId } = data.payload || {};
               const actualDeviceId = deviceId || `remote-${Math.random().toString(36).substring(2, 9)}`;
               currentDeviceId = actualDeviceId;
-              sessionManager.registerClient(actualDeviceId, pseudo || "Unknown", role || "remote", playerName);
-              if (win && !win.isDestroyed()) {
-                win.webContents.send("remote:sync-clients", sessionManager.getAllClients());
+              try {
+                sessionManager.registerClient(actualDeviceId, pseudo || "Unknown", role || "remote", playerName, characterId);
+                if (win && !win.isDestroyed()) {
+                  win.webContents.send("remote:sync-clients", sessionManager.getAllClients());
+                }
+              } catch (err) {
+                if (err.message === "character_taken") {
+                  ws.send(JSON.stringify({
+                    type: "remote:error",
+                    payload: {
+                      code: "character_taken",
+                      message: "Signature biométrique déjà active sur un autre terminal."
+                    }
+                  }));
+                }
               }
             } else if (data.type === "remote:hello") {
               console.log("[Remote] Handshake received");
@@ -50235,6 +50264,11 @@ ipcMain.handle("remote:get-connection-info", () => {
   };
 });
 ipcMain.on("remote:request-client-sync", (event) => {
+  event.reply("remote:sync-clients", sessionManager.getAllClients());
+});
+ipcMain.on("remote:clear-disconnected", (event) => {
+  console.log("[Remote] MJ requested clearing of non-active clients");
+  sessionManager.clearDisconnected();
   event.reply("remote:sync-clients", sessionManager.getAllClients());
 });
 ipcMain.handle("ai:list-docs", async () => {

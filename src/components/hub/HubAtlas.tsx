@@ -8,7 +8,7 @@ interface HubAtlasProps {
     onSelectMap: (map: AtlasMap) => void;
 }
 
-export const HubAtlas: React.FC<HubAtlasProps> = ({ atlasMaps, onSelectMap }) => {
+export const HubAtlas: React.FC<HubAtlasProps> = React.memo(({ atlasMaps, onSelectMap }) => {
     return (
         <div className="w-full h-full p-4 overflow-hidden flex flex-col pointer-events-auto">
             <div className="flex items-center justify-between mb-8 px-4">
@@ -89,4 +89,4 @@ export const HubAtlas: React.FC<HubAtlasProps> = ({ atlasMaps, onSelectMap }) =>
             </div>
         </div>
     );
-};
+});

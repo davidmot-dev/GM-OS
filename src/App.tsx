@@ -454,6 +454,7 @@ function App() {
                       return { ...m, fileUrl: resolvedUrl };
                   })
           ),
+          characterLocks: freshSessionOS.connectedCharacters || {}
       };
 
       const currentState = { sounds, moments, masterVolume: soundStore.masterVolume, combat, notes, whiteboard, clock, universalPads, session, dice, map };
@@ -753,9 +754,28 @@ function App() {
       }
     });
 
-    bridge.on('remote:request-sync', () => {
+    bridge.on('remote:request-sync', (_event) => {
         console.log('[Sync] Remote requested full state sync');
         handleSync(true);
+    });
+
+    bridge.on('remote:sync-clients', (_event, clients: import('./types/shared').ClientContext[]) => {
+        if (!clients || !Array.isArray(clients)) {
+            console.warn('[Sync] Received invalid clients list from Electron:', clients);
+            return;
+        }
+        
+        console.log('[Sync] Received clients update from Electron:', clients.length);
+        const locks: Record<string, string> = {};
+        
+        clients.forEach(c => {
+            if ((c.status === 'active' || c.status === 'ghost') && c.characterId) {
+                locks[c.characterId] = c.deviceId;
+            }
+        });
+        
+        console.log('[Sync] Updating character locks:', Object.keys(locks).length, 'locks active');
+        useSessionOSStore.getState().setCharacterLocks(locks);
     });
     
     // Cleanup any existing listeners to be safe before adding new one
@@ -794,7 +814,9 @@ function App() {
     handleSync();
 
     return () => {
-      bridge.off('remote:request-sync', () => handleSync(true));
+      // Note: bridge.off requires the exact same listener function, which is not easily captured here 
+      // because of how appBridge wraps listeners. Since this is the root App component, 
+      // these global listeners will stay until the window is destroyed.
       cleanupAction();
       unsubWhiteboard();
       unsubClock();

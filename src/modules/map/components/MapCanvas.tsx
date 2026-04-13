@@ -175,6 +175,8 @@ const MapCanvas: React.FC = () => {
             updatePanning(e.clientX, e.clientY);
             return;
         }
+        if (uiStore.isDraggingToken) return;
+        
         const coords = getCoordinates(e.clientX, e.clientY);
         handleInteractionMove(coords, zoom);
     };

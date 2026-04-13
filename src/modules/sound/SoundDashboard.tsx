@@ -89,7 +89,7 @@ const SoundDashboard: React.FC = () => {
                              <span>{pads.filter(p => p.isActive).length} ACTIVE CHANNELS</span>
                         </div>
                     </div>
-                    <div>GM-OS SOUND ENGINE v5.0.4</div>
+                    <div>GM-OS SOUND ENGINE v6.3.0</div>
                 </footer>
             </main>
         </div>

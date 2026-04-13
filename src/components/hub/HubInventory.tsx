@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { Package, Send, User, ChevronRight, X, Clock, Trash2 } from 'lucide-react';
 import { ResolvedImage } from '../ResolvedImage';
 import { type FavoriteEntity } from '../../modules/favorite/useFavoriteStore';
@@ -14,7 +14,7 @@ interface HubInventoryProps {
     onSelectItem: (item: any) => void;
 }
 
-export const HubInventory: React.FC<HubInventoryProps> = ({ 
+export const HubInventory: React.FC<HubInventoryProps> = memo(({ 
     items, 
     structuredItems = [], 
     characters = [], 
@@ -262,4 +262,4 @@ export const HubInventory: React.FC<HubInventoryProps> = ({
             </AnimatePresence>
         </div>
     );
-};
+});

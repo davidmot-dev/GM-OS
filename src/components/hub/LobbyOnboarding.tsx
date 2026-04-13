@@ -1,14 +1,15 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, memo } from 'react';
 import { useClientStore } from '../../stores/useClientStore';
 import { useSessionOSStore } from '../../modules/session/useSessionOSStore';
 import { Radar, User, Shield, Fingerprint, WifiOff, AlertCircle } from 'lucide-react';
 
 type OnboardingStep = 'SCANNING' | 'SELECTION' | 'SYNCING';
 
-export const LobbyOnboarding: React.FC = () => {
-    const { setPseudo, setPlayerName, setCharacterId, completeOnboarding, resetIdentity } = useClientStore();
+const LobbyOnboarding: React.FC = memo(() => {
+    const { deviceId, setPseudo, setPlayerName, setCharacterId, completeOnboarding, resetIdentity, lastError, setLastError } = useClientStore();
     const { sessions, activeCampaignId, campaigns, activeCampaignWallpaper, activeCampaignName } = useSessionOSStore();
     const players = useSessionOSStore(state => state.players);
+    const characterLocks = useSessionOSStore(state => state.connectedCharacters);
     
     const [step, setStep] = useState<OnboardingStep>('SCANNING');
     const [selectedCharId, setSelectedCharId] = useState<string | null>(null);
@@ -80,8 +81,18 @@ export const LobbyOnboarding: React.FC = () => {
         }, []);
 
         console.log('[Lobby] Present PCs count:', result.length);
-        return result;
-    }, [activeSession, players]);
+        
+        // Filter out already connected characters to prevent multi-selection
+        // BUT allow reclaiming if it's the SAME deviceId (reconnection)
+        const filtered = result.filter(pc => {
+            const lockOwnerId = characterLocks[String(pc.id)];
+            return !lockOwnerId || lockOwnerId === deviceId;
+        });
+        
+        console.log('[Lobby] Available PCs count:', filtered.length, 'Locks:', characterLocks);
+        
+        return filtered;
+    }, [activeSession, players, characterLocks, deviceId]);
 
     // Gestion des transitions d'étapes (Onboarding & Session Guard)
     useEffect(() => {
@@ -100,15 +111,24 @@ export const LobbyOnboarding: React.FC = () => {
     }, [activeSession, step]);
 
     const handleSelectCharacter = (char: { id: string; name: string; playerName: string }) => {
+        console.log('[Lobby] Character selected, locking immediately:', char.id);
+        
+        setLastError(null); // Clear any previous error
         setSelectedCharId(char.id);
         setStep('SYNCING');
         
+        // Verrouillage immédiat pour re-déclencher l'enregistrement WebSocket
+        // et notifier le MJ que ce personnage est pris avant la fin de l'animation.
+        setPseudo(char.name);
+        setPlayerName(char.playerName); 
+        setCharacterId(char.id);
+        
         // Simulation de scan biométrique
         setTimeout(() => {
-            setPseudo(char.name);
-            setPlayerName(char.playerName); // On stocke aussi le nom du joueur
-            setCharacterId(char.id);
-            completeOnboarding();
+            // Uniquement si aucune erreur n'est apparue entre temps (collision serveur)
+            if (!useClientStore.getState().lastError) {
+                completeOnboarding();
+            }
         }, 2500);
     };
 
@@ -151,6 +171,39 @@ export const LobbyOnboarding: React.FC = () => {
         );
     }
 
+    // --- RENDER: ERROR (e.g., Collision) ---
+    if (lastError) {
+        return (
+            <div className="fixed inset-0 z-[120] flex flex-col items-center justify-center bg-rose-950/20 backdrop-blur-3xl p-6">
+                <div className="relative mb-12">
+                    <div className="absolute inset-0 bg-rose-500/20 rounded-full blur-3xl animate-pulse" />
+                    <div className="relative w-48 h-48 bg-rose-500/10 rounded-full flex items-center justify-center border-2 border-rose-500/50">
+                        <AlertCircle className="text-rose-500 animate-bounce" size={80} strokeWidth={1.5} />
+                    </div>
+                </div>
+
+                <div className="text-center max-w-md">
+                    <h2 className="text-4xl font-black text-rose-500 uppercase tracking-tightest mb-4">
+                        Accès Refusé
+                    </h2>
+                    <p className="text-app-text/80 text-lg font-bold mb-12 leading-relaxed">
+                        {lastError}
+                    </p>
+                    
+                    <button 
+                        onClick={() => {
+                            setLastError(null);
+                            setStep('SELECTION');
+                        }}
+                        className="px-12 py-5 bg-rose-600 hover:bg-rose-500 text-white rounded-full text-lg font-black uppercase tracking-widest shadow-glow-rose/40 transition-all active:scale-95"
+                    >
+                        Choisir un autre signal
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
     // --- RENDER: SYNCING (Biometric Scan) ---
     if (step === 'SYNCING') {
         const char = presentPcs.find(c => c.id === selectedCharId);
@@ -185,7 +238,7 @@ export const LobbyOnboarding: React.FC = () => {
                         <h2 className="text-4xl font-black text-app-text uppercase tracking-tighter">Synchronisation</h2>
                     </div>
                     <p className="text-accent font-mono text-sm tracking-[0.3em] uppercase opacity-60">
-                        {char?.name} — Protocol V5.0
+                        {char?.name} — Protocol V6.3.0
                     </p>
                 </div>
 
@@ -317,6 +370,6 @@ export const LobbyOnboarding: React.FC = () => {
             </div>
         </div>
     );
-};
+});
 
 export default LobbyOnboarding;

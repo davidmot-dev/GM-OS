@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, memo } from 'react';
 import { useSessionOSStore } from '../../modules/session/store/index';
 import { MessageSquare, Send, X, Users, Shield, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -10,7 +10,7 @@ interface HubMessengerProps {
     characterName: string;
 }
 
-export const HubMessenger: React.FC<HubMessengerProps> = ({ isOpen, onClose, characterId, characterName }) => {
+export const HubMessenger: React.FC<HubMessengerProps> = memo(({ isOpen, onClose, characterId, characterName }) => {
     const [inputValue, setInputValue] = useState('');
     const [selectedRecipientId, setSelectedRecipientId] = useState<string>('GM');
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -269,4 +269,4 @@ export const HubMessenger: React.FC<HubMessengerProps> = ({ isOpen, onClose, cha
             )}
         </AnimatePresence>
     );
-};
+});

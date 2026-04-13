@@ -9,6 +9,7 @@ interface ClientState {
     isOnboarded: boolean;
     characterId: string | null;
     playerName: string;
+    lastError: string | null;
     
     // Actions
     setPseudo: (pseudo: string) => void;
@@ -17,6 +18,7 @@ interface ClientState {
     setRole: (role: ClientState['role']) => void;
     setStatus: (status: ClientState['status']) => void;
     completeOnboarding: () => void;
+    setLastError: (error: string | null) => void;
     resetIdentity: () => void;
 }
 
@@ -38,6 +40,7 @@ export const useClientStore = create<ClientState>()(
             isOnboarded: false,
             characterId: null,
             playerName: '',
+            lastError: null,
 
             setPseudo: (pseudo) => set({ pseudo }),
             setPlayerName: (playerName) => set({ playerName }),
@@ -45,6 +48,7 @@ export const useClientStore = create<ClientState>()(
             setRole: (role) => set({ role }),
             setStatus: (status) => set({ status }),
             completeOnboarding: () => set({ isOnboarded: true }),
+            setLastError: (lastError) => set({ lastError }),
             resetIdentity: () => set({
                 deviceId: generateUUID(),
                 pseudo: '',
@@ -52,7 +56,8 @@ export const useClientStore = create<ClientState>()(
                 status: 'disconnected',
                 isOnboarded: false,
                 characterId: null,
-                playerName: ''
+                playerName: '',
+                lastError: null
             }),
         }),
         {

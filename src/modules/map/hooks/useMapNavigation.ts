@@ -8,7 +8,7 @@ export const useMapNavigation = (
     mapHeight: number
 ) => {
     const { zoom, panX, panY, setViewState } = useMapStore();
-    const { isPanning, setIsPanning } = useMapUIStore();
+    const { isPanning, setIsPanning, isDraggingToken } = useMapUIStore();
     const lastPanPos = useRef<{ x: number, y: number } | null>(null);
 
     const fitToScreen = useCallback((targetW = mapWidth, targetH = mapHeight) => {
@@ -58,9 +58,10 @@ export const useMapNavigation = (
     }, [zoom, panX, panY, setViewState, containerRef]);
 
     const startPanning = useCallback((clientX: number, clientY: number) => {
+        if (isDraggingToken) return;
         setIsPanning(true);
         lastPanPos.current = { x: clientX, y: clientY };
-    }, [setIsPanning]);
+    }, [setIsPanning, isDraggingToken]);
 
     const updatePanning = useCallback((clientX: number, clientY: number) => {
         if (!isPanning || !lastPanPos.current) return;

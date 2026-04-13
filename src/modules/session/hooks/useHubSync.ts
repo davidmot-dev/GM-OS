@@ -7,6 +7,7 @@ import { useFavoriteStore, type FavoriteEntity } from '../../favorite/useFavorit
 import { useDiceStore } from '../../../stores/useDiceStore';
 import { useClientStore } from '../../../stores/useClientStore';
 import { useSessionOSStore } from '../useSessionOSStore';
+import { useSyncStore } from '../../../stores/useSyncStore';
 import { type Entity, type AtlasMap } from '../store/types';
 import type { ProjectedEntity } from '../../image/types';
 
@@ -46,7 +47,7 @@ export const useHubSync = () => {
     const [status, setStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
     const [liveImagePath, setLiveImagePath] = useState<string | null | undefined>(undefined);
     const [liveEntity, setLiveEntity] = useState<ProjectedEntity | null>(null);
-    const [voiceLevel, setVoiceLevel] = useState(0);
+    const setVoiceLevel = useSyncStore(state => state.setVoiceLevel);
     const [sessionSummary, setSessionSummary] = useState<string>('');
     const [showDice, setShowDice] = useState(false);
 
@@ -116,6 +117,15 @@ export const useHubSync = () => {
                 try {
                     const data = JSON.parse(event.data);
                     
+                    if (data.type === 'remote:error') {
+                        const { code, message } = data.payload || {};
+                        console.error(`[useHubSync] Server Error (${code}):`, message);
+                        if (code === 'character_taken') {
+                            useClientStore.getState().setCharacterId(null);
+                            useClientStore.getState().setLastError(message);
+                        }
+                    }
+
                     if (data.type === 'hub-projection') {
                         const { type, data: payload } = data.payload;
                         if (type === 'image') setLiveImagePath(payload || null);
@@ -147,7 +157,8 @@ export const useHubSync = () => {
                                 activeCampaignName: session.activeCampaignName || null,
                                 activeCampaignWallpaper: session.activeCampaignWallpaper || null,
                                 customSheetTemplates: session.customSheetTemplates || [],
-                                customGameDrivers: session.customGameDrivers || []
+                                customGameDrivers: session.customGameDrivers || [],
+                                connectedCharacters: session.characterLocks || {}
                             });
 
                             if (session.favorites) {
@@ -427,7 +438,6 @@ export const useHubSync = () => {
         liveImagePath,
         liveEntity,
         theaterEntity,
-        voiceLevel,
         sessionSummary,
         showDice,
         resolvedFavorites,

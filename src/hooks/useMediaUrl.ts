@@ -99,8 +99,17 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
                     }
                     const cleanPath = (typeof sourceIdOrUrl === 'string') ? sourceIdOrUrl.replace(/^(file:\/\/\/|gmos:\/\/media\/)/i, '') : '';
                     
-                    // If we are in Electron (main MJ app), use the custom secure protocol
-                    if (window.appBridge && (cleanPath.startsWith('C:') || cleanPath.startsWith('D:') || cleanPath.startsWith('/') || cleanPath.startsWith('\\'))) {
+                    // If we are in Electron (main MJ app), use the custom secure protocol for all local paths
+                    if (window.appBridge && (
+                        cleanPath.startsWith('C:') || 
+                        cleanPath.startsWith('D:') || 
+                        cleanPath.startsWith('/') || 
+                        cleanPath.startsWith('\\') ||
+                        cleanPath.startsWith('temp/') ||
+                        cleanPath.startsWith('npcs/') ||
+                        cleanPath.startsWith('portraits/') ||
+                        cleanPath.startsWith('characters/')
+                    )) {
                         return `gmos://media/${cleanPath.replace(/\\/g, '/')}`;
                     }
                     

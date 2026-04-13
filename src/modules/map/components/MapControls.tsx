@@ -11,6 +11,7 @@ import {
     ShieldAlert, Zap, GripHorizontal, Settings2, Volume2, VolumeX, ChevronDown, Check,
     Link, Mountain, Sunrise, Sun, Cloudy, Sunset, Moon, Brain
 } from 'lucide-react';
+import { ResolvedImage } from '../../../components/ResolvedImage';
 import { useTranslation } from 'react-i18next';
 import { useTacticalAIStore } from '../../tactical-ai/useTacticalAIStore';
 
@@ -995,7 +996,11 @@ const MapCombatantItem: React.FC<MapCombatantItemProps> = ({ combatant, tokens, 
         <div className="flex items-center justify-between p-2 bg-app-bg/30 border border-app-border rounded">
             <div className="flex items-center gap-3 overflow-hidden">
                 {combatant.avatar ? (
-                    <img src={combatant.avatar} alt="" className="w-6 h-6 rounded-full object-cover border border-app-border" />
+                    <ResolvedImage 
+                        src={combatant.avatar} 
+                        alt="" 
+                        className="w-6 h-6 rounded-full object-cover border border-app-border" 
+                    />
                 ) : (
                     <div className="w-6 h-6 rounded-full bg-app-surface border border-app-border flex items-center justify-center">
                         <span className="text-[10px] uppercase text-gm-crimson">{combatant.name.substring(0, 2)}</span>

@@ -345,7 +345,7 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
           </div>
           <div className="flex items-center gap-4">
             <h1 className="text-2xl font-black uppercase tracking-widest text-app-text font-display">
-              {t('modules:session.forge_module.title').toUpperCase()} <span className="text-accent/50 text-xs font-mono tracking-widest ml-2">v5.1</span>
+              {t('modules:session.forge_module.title').toUpperCase()} <span className="text-accent/50 text-xs font-mono tracking-widest ml-2">v6.3.0</span>
             </h1>
             <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border flex items-center gap-2 ${
                activeProvider === 'gemini' ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400 shadow-glow-emerald/20'

@@ -8,7 +8,7 @@ interface HubTrombinoscopeProps {
     onSelectNpc: (npc: Entity) => void;
 }
 
-export const HubTrombinoscope: React.FC<HubTrombinoscopeProps> = ({ npcs, onSelectNpc }) => {
+export const HubTrombinoscope: React.FC<HubTrombinoscopeProps> = React.memo(({ npcs, onSelectNpc }) => {
     return (
         <div className="w-full h-full p-4 overflow-hidden flex flex-col pointer-events-auto">
             <div className="flex items-center justify-between mb-8 px-4">
@@ -73,4 +73,4 @@ export const HubTrombinoscope: React.FC<HubTrombinoscopeProps> = ({ npcs, onSele
             </div>
         </div>
     );
-};
+});

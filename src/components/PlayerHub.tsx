@@ -235,15 +235,57 @@ const PlayerHub: React.FC = () => {
 
                 {/* 2. Central Theater Area */}
                 <div className={`flex-1 flex items-center justify-center p-4 md:p-12 transition-all duration-1000 ${hasCombatants ? 'pr-80' : ''} pointer-events-none`}>
-                    {(sharedFavorites.length > 0 || liveEntity) && (
+                    {(sharedFavorites.length > 0 || liveEntity || (liveImagePath && liveImagePath !== activeCampaignWallpaper)) && (
                         <div className="w-full h-full flex items-center justify-center overflow-hidden pointer-events-auto">
                             <div className="w-full max-h-full overflow-y-auto custom-scrollbar p-4 md:p-8 flex flex-col items-center justify-center">
                                 {(() => {
                                     const uniqueFavorites = sharedFavorites.filter(f => f.id !== theaterEntity?.id && f.id !== liveEntity?.id);
                                     const showLive = liveEntity && theaterEntity?.id !== liveEntity.id;
-                                    const count = uniqueFavorites.length + (showLive ? 1 : 0);
+                                    const showProjection = liveImagePath && liveImagePath !== activeCampaignWallpaper;
+                                    const count = uniqueFavorites.length + (showLive ? 1 : 0) + (showProjection ? 1 : 0);
+                                    
                                     return (
-                                        <div className={`grid grid-cols-1 ${count > 1 ? 'md:grid-cols-2 lg:grid-cols-3' : 'md:max-w-xl'} gap-8 md:gap-12 w-full place-items-center`}>
+                                        <div className={`grid grid-cols-1 ${count > 1 ? 'md:grid-cols-2 lg:grid-cols-3' : 'md:max-w-5xl'} gap-8 md:gap-12 w-full place-items-center`}>
+                                            {/* Explicit Image Projection Card */}
+                                            {showProjection && (
+                                                <div className={`relative bg-app-surface/90 backdrop-blur-3xl border-2 border-accent/40 rounded-[2.5rem] p-6 shadow-[0_0_80px_rgba(var(--accent-rgb),0.3)] flex flex-col gap-6 animate-in fade-in zoom-in slide-in-from-bottom-12 duration-1000 w-full group overflow-hidden ${count > 1 ? 'md:col-span-2' : ''}`}>
+                                                    {/* Header Label */}
+                                                    <div className="flex items-center justify-between px-4">
+                                                        <div className="flex items-center gap-3">
+                                                            <div className="w-2.5 h-2.5 rounded-full bg-accent animate-ping" />
+                                                            <span className="text-xs font-black text-accent uppercase tracking-[0.4em]">Reception Visuelle</span>
+                                                        </div>
+                                                        <div className="flex items-center gap-4 text-app-text/30 font-mono text-[10px]">
+                                                            <span>FRQ: 142.9 MHz</span>
+                                                            <span className="h-3 w-px bg-app-border/40" />
+                                                            <span>Sync: 6.3</span>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Image Container */}
+                                                    <div className="relative aspect-video rounded-2xl overflow-hidden border border-accent/20 bg-black/60 shadow-inner">
+                                                        <ResolvedImage 
+                                                            src={liveImagePath} 
+                                                            className="w-full h-full object-contain relative z-10" 
+                                                        />
+                                                        
+                                                        {/* Scanline Effect */}
+                                                        <div className="absolute inset-0 z-20 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(255,0,0,0.03),rgba(0,255,0,0.01),rgba(0,0,255,0.03))] bg-[length:100%_3px,4px_100%] opacity-30" />
+                                                        
+                                                        {/* Ambient Blur behind */}
+                                                        <div className="absolute inset-0 z-0 opacity-40 blur-3xl scale-125">
+                                                            <ResolvedImage src={liveImagePath} className="w-full h-full object-cover" />
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    {/* Footer Info */}
+                                                    <div className="flex flex-col gap-1 px-2">
+                                                        <div className="h-0.5 w-full bg-gradient-to-r from-transparent via-accent/30 to-transparent mb-1" />
+                                                        <p className="text-[10px] text-center font-bold text-accent/50 uppercase tracking-[0.2em]">Projection Image-OS Active</p>
+                                                    </div>
+                                                </div>
+                                            )}
+
                                             {showLive && (
                                         <div key={liveEntity.id} className={`bg-app-surface/90 backdrop-blur-3xl border-2 border-accent/30 rounded-[2rem] p-6 md:p-8 shadow-[0_0_50px_rgba(var(--accent-rgb),0.2)] flex flex-col gap-6 animate-in fade-in zoom-in slide-in-from-bottom-12 duration-1000 w-full hover:border-accent/60 transition-all group ${liveEntity.type === 'Oracle' ? 'md:max-w-2xl' : ''}`}>
                                             <div className="flex flex-col items-center text-center gap-4 md:gap-6">

@@ -596,14 +596,27 @@ function startRemoteServer() {
                         // console.log('[Remote] message received:', data);
                         
                         if (data.type === 'remote:register') {
-                            const { deviceId, pseudo, role, playerName } = data.payload || {};
+                            const { deviceId, pseudo, role, playerName, characterId } = data.payload || {};
                             const actualDeviceId = deviceId || `remote-${Math.random().toString(36).substring(2, 9)}`;
                             currentDeviceId = actualDeviceId;
-                            sessionManager.registerClient(actualDeviceId, pseudo || 'Unknown', (role as any) || 'remote', playerName);
                             
-                            // Immediately broadcast updated client list to MJ
-                            if (win && !win.isDestroyed()) {
-                                win.webContents.send('remote:sync-clients', sessionManager.getAllClients());
+                            try {
+                                sessionManager.registerClient(actualDeviceId, pseudo || 'Unknown', (role as any) || 'remote', playerName, characterId);
+                                
+                                // Immediately broadcast updated client list to MJ
+                                if (win && !win.isDestroyed()) {
+                                    win.webContents.send('remote:sync-clients', sessionManager.getAllClients());
+                                }
+                            } catch (err: any) {
+                                if (err.message === 'character_taken') {
+                                    ws.send(JSON.stringify({ 
+                                        type: 'remote:error', 
+                                        payload: { 
+                                            code: 'character_taken', 
+                                            message: 'Signature biométrique déjà active sur un autre terminal.' 
+                                        } 
+                                    }));
+                                }
                             }
                         } else if (data.type === 'remote:hello') {
                             console.log('[Remote] Handshake received');
@@ -735,6 +748,12 @@ ipcMain.handle('remote:get-connection-info', () => {
 });
 
 ipcMain.on('remote:request-client-sync', (event) => {
+    event.reply('remote:sync-clients', sessionManager.getAllClients());
+});
+
+ipcMain.on('remote:clear-disconnected', (event) => {
+    console.log('[Remote] MJ requested clearing of non-active clients');
+    sessionManager.clearDisconnected();
     event.reply('remote:sync-clients', sessionManager.getAllClients());
 });
 

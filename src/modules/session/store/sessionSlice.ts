@@ -33,6 +33,7 @@ export interface SessionSliceState {
     sessions: GameSession[];
     pendingPreFill: PendingPreFill | null;
     transferRequests: import('./types').TransferRequest[];
+    connectedCharacters: Record<string, string>; // NEW: Mapping of characterId -> deviceId for active locks
 }
 
 // ─────────────────────────────────────────────
@@ -55,6 +56,7 @@ export interface SessionSliceActions {
     deleteSession: (id: string) => void;
     setPendingPreFill: (preFill: PendingPreFill) => void;
     clearPendingPreFill: () => void;
+    setCharacterLocks: (locks: Record<string, string>) => void; // NEW: Setter for character locks
 
     // P2P Item Transfers
     requestItemTransfer: (fromCharId: string, toCharId: string, item: import('./types').InventoryItem) => void;
@@ -73,6 +75,7 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
     sessions: [],
     pendingPreFill: null,
     transferRequests: [],
+    connectedCharacters: {},
 
     // Actions
     addSession: (session) => {
@@ -203,6 +206,7 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
 
     setPendingPreFill: (preFill) => set({ pendingPreFill: preFill }),
     clearPendingPreFill: () => set({ pendingPreFill: null }),
+    setCharacterLocks: (locks) => set({ connectedCharacters: locks }),
 
     // ─── P2P Item Transfers ───────────────────────
 

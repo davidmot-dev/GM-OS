@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { Heart, ChevronLeft, Package, BookOpen, PenTool, Shield, Layout } from 'lucide-react';
 import { useSessionOSStore } from '../../modules/session/useSessionOSStore';
 import { useClientStore } from '../../stores/useClientStore';
@@ -241,4 +241,4 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
     );
 };
 
-export default HubCharacterSheet;
+export default memo(HubCharacterSheet);

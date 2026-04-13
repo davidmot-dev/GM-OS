@@ -30,7 +30,7 @@ const CyberpunkSplash: React.FC = () => {
                 {/* Title and Version */}
                 <div className="text-center space-y-2">
                     <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-white animate-glitch-long" style={{ textShadow: '2px 0 #a855f7, -2px 0 #22d3ee' }}>
-                        GM-OS v5.1
+                        GM-OS v6.3.0
                     </h1>
                     <p className="text-neonCyan/60 text-sm uppercase tracking-widest font-mono">Initialization Sequence Engaged</p>
                 </div>

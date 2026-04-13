@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Archive, Search } from 'lucide-react';
 import { ResolvedImage } from '../ResolvedImage';
 import { type Clue } from '../../modules/session/store/types';
@@ -9,7 +9,7 @@ interface HubArchivesProps {
     onSelectClue: (clue: Clue) => void;
 }
 
-export const HubArchives: React.FC<HubArchivesProps> = ({ clues, activeCampaignId, onSelectClue }) => {
+export const HubArchives: React.FC<HubArchivesProps> = memo(({ clues, activeCampaignId, onSelectClue }) => {
     const revealedClues = clues.filter(c => c.isRevealed && String(c.campaignId) === String(activeCampaignId));
 
     return (
@@ -73,4 +73,4 @@ export const HubArchives: React.FC<HubArchivesProps> = ({ clues, activeCampaignI
             </div>
         </div>
     );
-};
+});

@@ -33,7 +33,8 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
     });
     const displayInvisible = !isVisible || isActuallyInvisibleInCombat;
     
-    const resolvedAvatar = useMediaUrl(token.avatar || undefined);
+    const avatarToUse = token.avatar || combatant?.avatar;
+    const resolvedAvatar = useMediaUrl(avatarToUse || undefined);
     const isSelected = selectedTokenId === token.id;
 
     const [isDragging, setIsDragging] = useState(false);
@@ -115,6 +116,8 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
             onPointerUp={handlePointerUp}
             onPointerCancel={handlePointerUp}
             onMouseDown={(e) => e.stopPropagation()}
+            onMouseMove={(e) => e.stopPropagation()}
+            onMouseUp={(e) => e.stopPropagation()}
             onContextMenu={(e) => {
                 // La suppression par clic droit doit TOUJOURS fonctionner pour le MJ
                 e.preventDefault();
@@ -149,7 +152,7 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
             )}
 
             {/* Avatar image */}
-            {token.avatar && resolvedAvatar ? (
+            {avatarToUse && resolvedAvatar ? (
                 <img src={resolvedAvatar} alt="avatar" className="w-full h-full object-cover rounded-full pointer-events-none" />
             ) : (
                 <Shield size={24 * token.size} className={combatant?.isPlayer ? 'text-gm-violet' : 'text-gm-crimson'} />
