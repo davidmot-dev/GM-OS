@@ -23,7 +23,7 @@ Chaque module doit être validé selon les critères suivants :
 | Session | `src/modules/session` | P0 | ✅ Corrigé | Refonte du store (SessionManager, SnapshotService). |
 | **Remote** (`src/modules/remote`) | P1 | ✅ Corrigé | Refonte Nexus P1 : Modularisation `SyncServer` & Rôles. |
 | **Security** (Electron / Store) | **P0** | ✅ Corrigé | Migration API Keys vers `safeStorage`. |
-| **Shared** (`src/types/shared.ts`)| P1 | 🟡 À Analyser | Cohérence des interfaces globales. |
+| **Shared** (`src/types/shared.ts`) | P1 | ✅ Corrigé | Migration vers types granulaires (domain/) & Re-exports. |
 
 ### 2. AI & Intelligence (Le "Cortex")
 | Module | Priorité | Statut | Points d'Attention |
