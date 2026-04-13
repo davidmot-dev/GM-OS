@@ -16,6 +16,7 @@ import type { ProjectedEntity } from '../../image/types';
  */
 async function resolveMediaToDataUrl(src: string | undefined): Promise<string | undefined> {
     if (!src) return undefined;
+    // Si l'URL est déjà résolue (HTTP, data:, blob:), la retourner directement
     if (!src.startsWith('m-')) return src;
     try {
         // ⚠️ Ne pas spécifier de version ici pour éviter un VersionError
@@ -32,6 +33,14 @@ async function resolveMediaToDataUrl(src: string | undefined): Promise<string | 
         }
     } catch (e) {
         console.error('[useHubSync] Could not resolve m-id:', src, e);
+    }
+    // Fallback HTTP proxy : si on est sur tablette (pas d'appBridge),
+    // le PC a mis le fichier dans /temp/ — on le récupère via HTTP
+    if (!window.appBridge) {
+        const host = window.location.hostname;
+        const remoteUrl = `http://${host}:3001/temp/${src}`;
+        console.log(`[useHubSync] Remote HTTP fallback: ${src} → ${remoteUrl}`);
+        return remoteUrl;
     }
     return undefined;
 }
