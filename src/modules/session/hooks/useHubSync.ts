@@ -18,7 +18,9 @@ async function resolveMediaToDataUrl(src: string | undefined): Promise<string | 
     if (!src) return undefined;
     if (!src.startsWith('m-')) return src;
     try {
-        const db = await openDB('gmos-media-db', 1);
+        // ⚠️ Ne pas spécifier de version ici pour éviter un VersionError
+        // si la DB a été mise à jour par useMediaStore (actuellement v4).
+        const db = await openDB('gmos-media-db');
         const item = await db.get('media', src);
         if (item?.blob) {
             return await new Promise<string>((resolve, reject) => {
