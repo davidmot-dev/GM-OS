@@ -12,7 +12,7 @@
 import type { StateCreator } from 'zustand';
 import i18next from 'i18next';
 import { gmToast } from '../../../stores/useToastStore';
-import type { GameSession } from './types';
+import type { GameSession, TransferRequest } from './types';
 
 // ─────────────────────────────────────────────
 // State
@@ -32,7 +32,7 @@ export interface PendingPreFill {
 export interface SessionSliceState {
     sessions: GameSession[];
     pendingPreFill: PendingPreFill | null;
-    transferRequests: import('./types').TransferRequest[];
+    transferRequests: TransferRequest[];
     connectedCharacters: Record<string, string>; // NEW: Mapping of characterId -> deviceId for active locks
 }
 

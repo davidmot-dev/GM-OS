@@ -11,7 +11,7 @@
  */
 
 import type { StateCreator } from 'zustand';
-import type { CurrentView } from './types';
+import type { CurrentView, RemoteNotification, HubNotification, SessionMessage } from './types';
 
 // ─────────────────────────────────────────────
 // State
@@ -36,9 +36,9 @@ export interface UiSliceState {
     activeCampaignName: string | null;
     activeCampaignWallpaper: string | null;
     editingClueId: string | null;
-    remoteNotifications: import('./types').RemoteNotification[];
-    hubNotifications: import('./types').HubNotification[];
-    messages: import('./types').SessionMessage[];
+    remoteNotifications: RemoteNotification[];
+    hubNotifications: HubNotification[];
+    messages: SessionMessage[];
 }
 
 // ─────────────────────────────────────────────
@@ -63,11 +63,11 @@ export interface UiSliceActions {
     setEditingClueId: (id: string | null) => void;
     rollDice: (die: number) => void;
     clearDiceHistory: () => void;
-    addRemoteNotification: (notif: Omit<import('./types').RemoteNotification, 'id' | 'timestamp' | 'isRead'>) => void;
+    addRemoteNotification: (notif: Omit<RemoteNotification, 'id' | 'timestamp' | 'isRead'>) => void;
     clearRemoteNotification: (id: string) => void;
-    addHubNotification: (notif: Omit<import('./types').HubNotification, 'id' | 'timestamp'>) => void;
+    addHubNotification: (notif: Omit<HubNotification, 'id' | 'timestamp'>) => void;
     clearHubNotification: (id: string) => void;
-    addSessionMessage: (message: import('./types').SessionMessage) => void;
+    addSessionMessage: (message: SessionMessage) => void;
     remoteSendMessage: (toId: string, toName: string, fromId: string, fromName: string, content: string) => void;
     sendDirectMessage: (toId: string, toName: string, content: string) => void;
     saveMessageToJournal: (messageId: string) => void;
@@ -175,7 +175,7 @@ export const createUiSlice: StateCreator<UiSlice, [], [], UiSlice> = (set, get) 
         }),
 
     remoteSendMessage: (toId, toName, fromId, fromName, content) => {
-        const msg: import('./types').SessionMessage = {
+        const msg: SessionMessage = {
             id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
             fromId,
             fromName,
@@ -196,7 +196,7 @@ export const createUiSlice: StateCreator<UiSlice, [], [], UiSlice> = (set, get) 
     },
 
     sendDirectMessage: (toId, toName, content) => {
-        const msg: import('./types').SessionMessage = {
+        const msg: SessionMessage = {
             id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
             fromId: 'GM',
             fromName: 'Maître du Jeu',
