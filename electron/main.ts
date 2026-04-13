@@ -42,6 +42,7 @@ import { registerRagHandlers } from './RAGEngine'
 import { registerMcpHandlers } from './mcp_bridge'
 import { registerObsidianHandlers } from './obsidian_bridge'
 import { registerNexusHandlers } from './nexus_bridge'
+import { registerSecurityHandlers } from './SecurityManager'
 import { sessionManager } from './SessionManager'
 import { OllamaService } from './OllamaService'
 // import { GitBackupService } from './GitBackupService'
@@ -76,6 +77,8 @@ registerMcpHandlers();
 registerObsidianHandlers();
 // Register Nexus-OS Bridge (Campaign Portability)
 registerNexusHandlers();
+// Register native Keychain Security
+registerSecurityHandlers();
 
 // Register gmos protocol as privileged
 protocol.registerSchemesAsPrivileged([

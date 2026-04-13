@@ -46,7 +46,10 @@ export class TacticalNarrativeService {
         dangerZones: DangerZone[],
         gridSize: number
     ): TacticalContext {
-        const actorToken = allTokens.find(t => t.name.toLowerCase().trim() === actor.name.toLowerCase().trim());
+        const actorToken = allTokens.find(t => 
+            t.linkedCombatantId === actor.id || 
+            t.name.toLowerCase().trim() === actor.name.toLowerCase().trim()
+        );
         
         const allies: TacticalContext['allies'] = [];
         const enemies: TacticalContext['enemies'] = [];
@@ -57,7 +60,10 @@ export class TacticalNarrativeService {
             allCombatants.forEach(c => {
                 if (c.id === actor.id) return;
                 
-                const token = allTokens.find(t => t.name.toLowerCase().trim() === c.name.toLowerCase().trim());
+                const token = allTokens.find(t => 
+                    t.linkedCombatantId === c.id || 
+                    t.name.toLowerCase().trim() === c.name.toLowerCase().trim()
+                );
                 if (!token) return;
 
                 const distancePx = GridEngine.calculateDistance(actorPoint, { x: token.x, y: token.y });

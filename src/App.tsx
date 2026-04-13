@@ -19,6 +19,8 @@ import { useMusicStore } from './modules/music/useMusicStore';
 import { useImageStore } from './modules/image/useImageStore';
 import { useAmbientStore } from './modules/ambient/useAmbientStore';
 import { useDiceStore } from './stores/useDiceStore';
+import { useAIStore } from './stores/useAIStore';
+import { useLightStore } from './modules/light/useLightStore';
 import { DiceEngine } from './modules/dice/DiceEngine';
 import { useMediaStore } from './stores/useMediaStore';
 import { getDifferentialPayload } from './utils/syncUtils';
@@ -746,6 +748,10 @@ function App() {
     
     // Initialisation du MediaStore pour les résolutions d'URL (m-ID)
     useMediaStore.getState().initDB();
+
+    // Synchronisation du Trousseau de Clés (Keychain)
+    useAIStore.getState().syncWithKeychain();
+    useLightStore.getState().syncWithKeychain();
 
     // Synchroniser automatiquement la carte si le Combat-OS change (pour l'invisibilité des jetons liés)
     const unsubscribeCombat = useCombatStore.subscribe((state, prevState) => {

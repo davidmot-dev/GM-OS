@@ -121,6 +121,8 @@ interface LightState {
     forgetBridge: () => void;
     /** Réinitialise complètement le store */
     reset: () => void;
+    /** Synchronise le token de connexion avec le trousseau natif */
+    syncWithKeychain: () => Promise<void>;
 }
 
 
@@ -145,7 +147,7 @@ const createDefaultScenes = (): Record<string, LightScene> => {
 
 export const useLightStore = create<LightState>()(
     persist(
-        (set) => ({
+        (set, get) => ({
             bridgeIp: null,
             username: null,
             status: 'disconnected',
@@ -160,11 +162,19 @@ export const useLightStore = create<LightState>()(
             lastManualSceneId: null,
             isSyncEnabled: true, // Enabled by default
 
-            setConnection: (status, ip, username) => set((state) => ({
-                status,
-                bridgeIp: ip !== undefined ? ip : state.bridgeIp,
-                username: username !== undefined ? username : state.username
-            })),
+            setConnection: (status, ip, username) => {
+                // Sécurité : Si un username (token Hue) est fourni, on l'enregistre dans le trousseau natif
+                if (username && window.appBridge?.security) {
+                    window.appBridge.security.saveSecret('hue-bridge-token', username);
+                }
+
+                set((state) => ({
+                    status,
+                    bridgeIp: ip !== undefined ? ip : state.bridgeIp,
+                    // On ne stocke pas le username dans l'état persistant
+                    username: username !== undefined ? username : state.username
+                }));
+            },
 
             setLights: (lights) => set({ lights }),
 
@@ -231,12 +241,17 @@ export const useLightStore = create<LightState>()(
 
             setSyncEnabled: (val: boolean) => set({ isSyncEnabled: val }),
 
-            forgetBridge: () => set({
-                bridgeIp: null,
-                username: null,
-                status: 'disconnected',
-                lights: {}
-            }),
+            forgetBridge: () => {
+                if (window.appBridge?.security) {
+                    window.appBridge.security.deleteSecret('hue-bridge-token');
+                }
+                set({
+                    bridgeIp: null,
+                    username: null,
+                    status: 'disconnected',
+                    lights: {}
+                });
+            },
 
             applySnapshot: (snapshot) => {
 
@@ -267,13 +282,40 @@ export const useLightStore = create<LightState>()(
                     transitionTimeMs: 5000,
                     isSyncEnabled: true
                 });
+            },
+
+            syncWithKeychain: async () => {
+                if (!window.appBridge?.security) return;
+
+                const state = get();
+                let hasChanges = false;
+                let newUsername = state.username;
+
+                // 1. Migration : Si le username traîne en clair dans le localStorage
+                if (state.username) {
+                    await window.appBridge.security.saveSecret('hue-bridge-token', state.username);
+                    // On ne le nettoie pas tout de suite de l'état "en mémoire", 
+                    // mais le partialize s'occupera de ne pas l'écrire au prochain save.
+                }
+
+                // 2. Récupération : On charge le token depuis le trousseau
+                const securedToken = await window.appBridge.security.getSecret('hue-bridge-token');
+                if (securedToken && securedToken !== state.username) {
+                    newUsername = securedToken;
+                    hasChanges = true;
+                }
+
+                if (hasChanges) {
+                    set({ username: newUsername });
+                }
             }
         }),
         {
             name: 'gm-os-light-storage-v1',
             partialize: (state) => ({
                 bridgeIp: state.bridgeIp,
-                username: state.username,
+                // On exclut explicitement le username du stockage localStorage
+                username: undefined, 
                 scenes: state.scenes,
                 globalBrightness: state.globalBrightness,
                 transitionTimeMs: state.transitionTimeMs,

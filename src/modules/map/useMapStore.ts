@@ -5,6 +5,7 @@ import type {
     WeatherType, TimeOfDay, LayerId, LayerVisibility, FogRegistry, MapPreset, DangerZonePreset 
 } from './types';
 import { useJournalStore } from '../journal/useJournalStore';
+import { fogDB } from '../../utils/indexedDB';
 
 interface MapState {
     mapUrl: string | null;
@@ -202,10 +203,19 @@ export const useMapStore = create<MapState>()(
             projectedIsMapMuted: false,
             projectedMapVolume: 0.5,
 
-            setMap: (mapUrl: string | null, isVideo = false, mapName = 'Sans titre', narrativeDescription?: string) => {
+            setMap: async (mapUrl: string | null, isVideo = false, mapName = 'Sans titre', narrativeDescription?: string) => {
                 const state = get();
-                const savedFog = mapUrl ? state.fogRegistry[mapUrl] : null;
+                
+                // Load fog from IndexedDB instead of memory registry primarily
+                let savedFog: string | null = null;
+                if (mapUrl) {
+                    savedFog = await fogDB.getItem(mapUrl);
+                    // Fallback to memory registry for legacy transition
+                    if (!savedFog) savedFog = state.fogRegistry[mapUrl];
+                }
+
                 set({ mapUrl, isVideo, mapName, fogDataUrl: savedFog || null });
+                
                 if (mapUrl) {
                     useJournalStore.getState().addEvent({
                         type: 'LOCATION',
@@ -216,13 +226,20 @@ export const useMapStore = create<MapState>()(
                 if (get().projectionTarget) get().syncToPlayers();
             },
 
-            setFogDataUrl: (fogDataUrl: string | null) => {
+            setFogDataUrl: async (fogDataUrl: string | null) => {
                 const mapUrl = get().mapUrl;
+                if (!mapUrl) return;
+
                 const updatedRegistry = { ...get().fogRegistry };
-                if (mapUrl) {
-                    if (fogDataUrl) updatedRegistry[mapUrl] = fogDataUrl;
-                    else delete updatedRegistry[mapUrl];
+                if (fogDataUrl) {
+                    updatedRegistry[mapUrl] = fogDataUrl;
+                    // Persist to IndexedDB
+                    await fogDB.setItem(mapUrl, fogDataUrl);
+                } else {
+                    delete updatedRegistry[mapUrl];
+                    await fogDB.removeItem(mapUrl);
                 }
+
                 set({ fogDataUrl, fogRegistry: updatedRegistry });
                 if (get().projectionTarget) get().syncToPlayers();
             },
@@ -453,9 +470,16 @@ export const useMapStore = create<MapState>()(
                 set(state => ({ mapPresets: [...state.mapPresets, newPreset] }));
             },
 
-            loadPreset: (id: string) => {
+            loadPreset: async (id: string) => {
                 const preset = get().mapPresets.find(p => p.id === id);
                 if (!preset) return;
+
+                // Load fog from DB if missing in preset but available in DB for that URL
+                let finalFog = preset.fogDataUrl;
+                if (!finalFog && preset.mapUrl) {
+                    finalFog = await fogDB.getItem(preset.mapUrl);
+                }
+
                 set({
                     mapUrl: preset.mapUrl,
                     mapName: preset.mapName,
@@ -470,7 +494,7 @@ export const useMapStore = create<MapState>()(
                     gridSize: preset.gridSize,
                     gridColor: preset.gridColor,
                     gridOpacity: preset.gridOpacity,
-                    fogDataUrl: preset.fogDataUrl,
+                    fogDataUrl: finalFog,
                     mapWidth: preset.mapWidth,
                     mapHeight: preset.mapHeight,
                     zoom: preset.zoom,
@@ -500,8 +524,8 @@ export const useMapStore = create<MapState>()(
                 mapUrl: state.mapUrl,
                 mapName: state.mapName,
                 isVideo: state.isVideo,
-                fogDataUrl: state.fogDataUrl,
-                fogRegistry: state.fogRegistry,
+                // fogDataUrl: Removed from persistence (Stored in IndexedDB)
+                // fogRegistry: Removed from persistence
                 layerVisibility: state.layerVisibility,
                 tokens: state.tokens,
                 weatherType: state.weatherType,

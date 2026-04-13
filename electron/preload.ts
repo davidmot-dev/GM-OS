@@ -135,6 +135,11 @@ contextBridge.exposeInMainWorld('appBridge', {
         error: (message: string, ...args: unknown[]) => ipcRenderer.send('log:message', 'error', message, ...args),
         debug: (message: string, ...args: unknown[]) => ipcRenderer.send('log:message', 'debug', message, ...args),
     },
+    security: {
+        getSecret: (id: string) => ipcRenderer.invoke('security:get-secret', id),
+        saveSecret: (id: string, value: string) => ipcRenderer.invoke('security:set-secret', id, value),
+        deleteSecret: (id: string) => ipcRenderer.invoke('security:delete-secret', id),
+    },
     git: {
         getStatus: () => ipcRenderer.invoke('git:status'),
         setupBranch: (branchName: string) => ipcRenderer.invoke('git:setup-branch', branchName),

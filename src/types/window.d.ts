@@ -136,6 +136,17 @@ declare global {
             quit: () => void;
             onDisplayChanged: (callback: (count: number) => void) => () => void;
         };
+        logger?: {
+            info: (message: string, ...args: any[]) => void;
+            warn: (message: string, ...args: any[]) => void;
+            error: (message: string, ...args: any[]) => void;
+            debug: (message: string, ...args: any[]) => void;
+        };
+        security?: {
+            getSecret: (id: string) => Promise<string | null>;
+            saveSecret: (id: string, value: string) => Promise<boolean>;
+            deleteSecret: (id: string) => Promise<boolean>;
+        };
         ai?: {
             listDocs: () => Promise<AIDocument[]>;
             readDoc: (filePath: string) => Promise<string | null>;
