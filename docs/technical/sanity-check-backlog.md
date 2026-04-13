@@ -21,7 +21,7 @@ Chaque module doit être validé selon les critères suivants :
 | :--- | :---: | :--- | :--- |
 | **System** (`src/modules/system`) | P0 | ✅ Corrigé | Bootstrapping & Initialisation centralisée. |
 | **Session** (`src/modules/session`) | P0 | 🟡 À Analyser | State persistence & snapshots. |
-| **Remote** (`src/modules/remote`) | P1 | 🟡 À Analyser | WebSocket / P2P stability. |
+| **Remote** (`src/modules/remote`) | P1 | ✅ Corrigé | Refonte Nexus P1 : Modularisation `SyncServer` & Rôles. |
 | **Security** (Electron / Store) | **P0** | ✅ Corrigé | Migration API Keys vers `safeStorage`. |
 | **Shared** (`src/types/shared.ts`)| P1 | 🟡 À Analyser | Cohérence des interfaces globales. |
 
@@ -56,7 +56,7 @@ Chaque module doit être validé selon les critères suivants :
 ### 5. Services & Tools
 | Module | Priorité | Statut | Points d'Attention |
 | :--- | :---: | :--- | :--- |
-| **Nexus Bridge** | P1 | 🟡 À Analyser | Import/Export data integrity. |
+| **Nexus Bridge** | P1 | ✅ Corrigé | Centralisation via `SyncServer` & `handleSync`. |
 | **Forms/Forge** | P3 | 🟡 À Analyser | Générateurs de contenu. |
 | **Clock-OS** | P3 | 🟡 À Analyser | Time sync between Master/Hub. |
 | **Favorite** | P3 | 🟡 À Analyser | Persistence des raccourcis. |

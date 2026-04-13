@@ -85,33 +85,41 @@ export const useRemoteSync = () => {
         socket.onmessage = (event) => {
             try {
                 const data = JSON.parse(event.data);
-                if (data.type === 'sync' || data.type.startsWith('sync:')) {
-                    const key = data.type === 'sync' ? null : data.type.split(':')[1];
-                    setSyncData(prev => {
-                        if (!key) {
-                            return {
-                                ...prev,
-                                ...data.payload,
-                                combat: data.payload.combat ? { ...prev.combat, ...data.payload.combat } : prev.combat,
-                                notes: data.payload.notes ? { ...prev.notes, ...data.payload.notes } : prev.notes,
-                                whiteboard: data.payload.whiteboard ? { ...prev.whiteboard, ...data.payload.whiteboard } : prev.whiteboard
-                            };
-                        }
-                        const typedKey = key as keyof RemoteSyncData;
-                        const previousValue = prev[typedKey];
-                        return {
-                            ...prev,
-                            [typedKey]: typeof data.payload === 'object' && !Array.isArray(data.payload)
-                                ? { ...(previousValue as Record<string, unknown>), ...data.payload }
-                                : data.payload
-                        };
-                    });
-                } else if (data.type === 'dice:result') {
+                
+                // Unified Sync Logic
+                if (data.type === 'sync') {
+                    setSyncData(prev => ({
+                        ...prev,
+                        ...data.payload,
+                        // Deep merge for specific complex objects if needed
+                        combat: data.payload.combat ? { ...prev.combat, ...data.payload.combat } : prev.combat,
+                        notes: data.payload.notes ? { ...prev.notes, ...data.payload.notes } : prev.notes,
+                        whiteboard: data.payload.whiteboard ? { ...prev.whiteboard, ...data.payload.whiteboard } : prev.whiteboard
+                    }));
+                } 
+                // Legacy Sync Segments
+                else if (data.type.startsWith('sync:')) {
+                    const key = data.type.split(':')[1] as keyof RemoteSyncData;
+                    setSyncData(prev => ({
+                        ...prev,
+                        [key]: typeof data.payload === 'object' && !Array.isArray(data.payload)
+                            ? { ...(prev[key] as Record<string, unknown>), ...data.payload }
+                            : data.payload
+                    }));
+                }
+                // Specific UI Actions
+                else if (data.type === 'dice:result') {
                     setLastDiceResult(data.payload);
                     if (resultTimeoutRef.current) clearTimeout(resultTimeoutRef.current);
                     resultTimeoutRef.current = setTimeout(() => {
                         setLastDiceResult(null);
                     }, 15000);
+                }
+                // Handle Remote Errors (e.g. Character Collision)
+                else if (data.type === 'remote:error') {
+                    console.error('[Remote Error]', data.payload);
+                    setStatus('error');
+                    // Notification logic could be added here
                 }
             } catch (err) {
                 console.error('[Remote] Failed to parse message:', err);

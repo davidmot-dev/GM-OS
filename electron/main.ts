@@ -45,6 +45,7 @@ import { registerNexusHandlers } from './nexus_bridge'
 import { registerSecurityHandlers } from './SecurityManager'
 import { sessionManager } from './SessionManager'
 import { OllamaService } from './OllamaService'
+import { SyncServer } from './SyncServer'
 // import { GitBackupService } from './GitBackupService'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -99,7 +100,7 @@ export const RENDERER_DIST = path.join(process.env.APP_ROOT, 'dist')
 process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 'public') : RENDERER_DIST
 
 let win: BrowserWindow | null
-let wss: import('ws').WebSocketServer | null = null;
+let syncServer: SyncServer | null = null;
 const REMOTE_PORT = 3001;
 const TEMP_MEDIA_DIR = path.join(app.getPath('userData'), 'temp-media');
 
@@ -131,6 +132,10 @@ function createWindow() {
     } else {
         win.loadFile(path.join(RENDERER_DIST, 'index.html'))
     }
+
+    // Initialize Nexus Sync Engine
+    syncServer = new SyncServer(win, REMOTE_PORT, TEMP_MEDIA_DIR);
+    syncServer.start();
 }
 
 // --- Session Management Handlers ---
@@ -376,17 +381,13 @@ ipcMain.on('image:sync-hub-data', (_event, type: string, imagePath: string) => {
         }
     }
 
-    // NEW: Broadcast to WebSockets for Tablet/Remote devices
-    if (wss) {
-        const message = JSON.stringify({ 
+    // NEW: Broadcast to WebSockets for Tablet/Remote devices (via SyncServer)
+    if (win && !win.isDestroyed()) {
+        const action = { 
             type: 'hub-projection', 
             payload: { type, data: imagePath } 
-        });
-        wss.clients.forEach((client: ExtendedWebSocket) => {
-            if (client.readyState === 1) { // 1 = OPEN
-                client.send(message);
-            }
-        });
+        };
+        ipcMain.emit('remote:broadcast-ui-action', null, action);
     }
 });
 
@@ -517,213 +518,8 @@ ipcMain.on('image:close-all-displays', () => {
         }
     }
     projectorWindows.clear();
-});
-
-// --- Remote Control Server ---
-function startRemoteServer() {
-    try {
-        // Create an HTTP server to serve media files and handle the websocket
-        const server = http.createServer((req, res) => {
-            console.log(`[Remote Proxy] Request: ${req.url}`);
-            
-            // Support serving local files via /media/path-to-file
-            if (req.url && req.url.startsWith('/media/')) {
-                const encodedPath = req.url.substring(7); // Remove /media/
-                const filePath = decodeURIComponent(encodedPath);
-                console.log(`[Remote Proxy] Attempting to serve: ${filePath}`);
-                
-                // Security check or simple existence check
-                if (fs.existsSync(filePath) && fs.lstatSync(filePath).isFile()) {
-                    const ext = path.extname(filePath).toLowerCase();
-                    const mimeTypes: Record<string, string> = {
-                        '.png': 'image/png',
-                        '.jpg': 'image/jpeg',
-                        '.jpeg': 'image/jpeg',
-                        '.gif': 'image/gif',
-                        '.webp': 'image/webp',
-                        '.svg': 'image/svg+xml',
-                        '.mp3': 'audio/mpeg',
-                        '.wav': 'audio/wav'
-                    };
-                    res.writeHead(200, { 
-                        'Content-Type': mimeTypes[ext] || 'application/octet-stream',
-                        'Access-Control-Allow-Origin': '*' 
-                    });
-                    fs.createReadStream(filePath).pipe(res);
-                } else {
-                    console.warn(`[Remote Proxy] File NOT FOUND: ${filePath}`);
-                    res.writeHead(404);
-                    res.end('Media not found');
-                }
-                return;
-            }
-
-            // NEW: Support serving temp media files from IndexedDB cache
-            if (req.url && req.url.startsWith('/temp/')) {
-                const fileName = req.url.substring(6); // Remove /temp/
-                const filePath = path.join(TEMP_MEDIA_DIR, fileName);
-                
-                if (fs.existsSync(filePath)) {
-                    res.writeHead(200, { 
-                        'Content-Type': 'image/webp', // Default to webp or guess by extension if needed
-                        'Access-Control-Allow-Origin': '*' 
-                    });
-                    fs.createReadStream(filePath).pipe(res);
-                } else {
-                    res.writeHead(404);
-                    res.end('Temp Media not found');
-                }
-                return;
-            }
-            res.writeHead(404);
-            res.end();
-        });
-
-        wss = new WebSocketServer({ server });
-        console.log(`[Remote] Server + Media started on port ${REMOTE_PORT}`);
-
-        if (wss) {
-            wss.on('connection', (ws: import('ws').WebSocket) => {
-                let currentDeviceId: string | null = null;
-                console.log('[Remote] New device connected');
-                
-                // Send initial sync data
-                if (win && !win.isDestroyed()) {
-                    console.log('[Remote] New client connected. Requesting full sync from MJ...');
-                    win.webContents.send('remote:request-sync');
-                }
-                
-                ws.on('message', (message: string) => {
-                    try {
-                        const data = JSON.parse(message);
-                        // console.log('[Remote] message received:', data);
-                        
-                        if (data.type === 'remote:register') {
-                            const { deviceId, pseudo, role, playerName, characterId } = data.payload || {};
-                            const actualDeviceId = deviceId || `remote-${Math.random().toString(36).substring(2, 9)}`;
-                            currentDeviceId = actualDeviceId;
-                            
-                            try {
-                                sessionManager.registerClient(actualDeviceId, pseudo || 'Unknown', (role as any) || 'remote', playerName, characterId);
-                                
-                                // Immediately broadcast updated client list to MJ
-                                if (win && !win.isDestroyed()) {
-                                    win.webContents.send('remote:sync-clients', sessionManager.getAllClients());
-                                }
-                            } catch (err: any) {
-                                if (err.message === 'character_taken') {
-                                    ws.send(JSON.stringify({ 
-                                        type: 'remote:error', 
-                                        payload: { 
-                                            code: 'character_taken', 
-                                            message: 'Signature biométrique déjà active sur un autre terminal.' 
-                                        } 
-                                    }));
-                                }
-                            }
-                        } else if (data.type === 'remote:hello') {
-                            console.log('[Remote] Handshake received');
-                        } else {
-                            // Forward action to renderer process (GM)
-                            const isP2P = data.type === 'session:send-message' && data.payload && 
-                                          data.payload.toId !== 'GM' && data.payload.toId !== 'all';
-                            
-                            if (win && !win.isDestroyed() && !isP2P) {
-                                console.log('[Remote] Action received from tablet:', data.type);
-                                win.webContents.send('remote:action', data);
-                            }
-
-                            // Broadcasting: If it's a message for others or a broadcast, forward it via WS
-                            if (data.type === 'session:send-message') {
-                                const payload = data.payload;
-                                if (payload && payload.toId !== 'GM' && wss) {
-                                    console.log(`[Remote] WebSocket Broadcast: Forwarding message from ${payload.fromName} to ${payload.toId}`);
-                                    // Change event type so the receiving tablets handle it as an incoming message
-                                    const broadcastData = { ...data, type: 'session:receive-message' };
-                                    const p2pMsg = JSON.stringify(broadcastData);
-                                    wss.clients.forEach((client: ExtendedWebSocket) => {
-                                        if (client !== ws && client.readyState === 1) { // Forward to OTHERS
-                                            client.send(p2pMsg);
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                    } catch (err) {
-                        console.error('[Remote] Failed to parse message:', err);
-                    }
-                });
-
-                ws.on('close', () => {
-                    if (currentDeviceId) {
-                        console.log(`[Remote] Client went ghost: ${currentDeviceId}`);
-                        sessionManager.ghostClient(currentDeviceId);
-                        // Broadcast ghost status to MJ
-                        if (win && !win.isDestroyed()) {
-                            win.webContents.send('remote:sync-clients', sessionManager.getAllClients());
-                        }
-                    } else {
-                        console.log('[Remote] Anonymous device disconnected');
-                    }
-                });
-            });
-        }
-
-        // --- IPC Handlers for Remote Control Management ---
-        ipcMain.on('remote:request-client-sync', () => {
-            console.log('[Remote] MJ requested client sync');
-            if (win && !win.isDestroyed()) {
-                win.webContents.send('remote:sync-clients', sessionManager.getAllClients());
-            }
-        });
-
-        // Use 0.0.0.0 to ensure it's accessible from other devices on the LAN
-        server.listen(REMOTE_PORT, '0.0.0.0', () => {
-            console.log(`[Remote] Server + Media proxy listening on 0.0.0.0:${REMOTE_PORT}`);
-        });
-
-    } catch (err) {
-        console.error('[Remote] Failed to start server:', err);
-    }
+})// WebSocket server logic has been moved to electron/SyncServer.ts
 }
-
-ipcMain.handle('remote:cache-media', async (_event, buffer: Buffer, id: string) => {
-    try {
-        await fs.ensureDir(TEMP_MEDIA_DIR);
-        const filePath = path.join(TEMP_MEDIA_DIR, id);
-        await fs.writeFile(filePath, buffer);
-        return true;
-    } catch (error) {
-        console.error('[Main] Error caching media:', error);
-        return false;
-    }
-});
-
-// Broadcast data to all connected remote devices
-ipcMain.on('remote:broadcast-sync', (_event, data) => {
-    if (wss) {
-        const segments = Object.keys(data || {});
-        console.log(`[Remote] Broadcasting sync (${segments.join(', ')}) to ${wss.clients.size} clients`);
-        const message = JSON.stringify({ type: 'sync', payload: data });
-        wss.clients.forEach((client: ExtendedWebSocket) => {
-            if (client.readyState === 1) { // 1 = OPEN
-                client.send(message);
-            }
-        });
-    }
-});
-
-// NEW: Broadcast a specific UI action to all connected remote devices (e.g., messages)
-ipcMain.on('remote:broadcast-ui-action', (_event, action) => {
-    if (wss) {
-        console.log(`[Remote] Broadcasting UI action: ${action.type} to ${wss.clients.size} clients`);
-        const message = JSON.stringify(action);
-        wss.clients.forEach((client: ExtendedWebSocket) => {
-            if (client.readyState === 1) { // 1 = OPEN
-                client.send(message);
-            }
-        });
-    }
 });
 
 // --- Local IP Helper ---
