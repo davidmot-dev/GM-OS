@@ -1,8 +1,16 @@
-import type { ModuleID, ThemeID } from '../../store/useSessionStore';
-
 /**
- * Types liés à la gestion des campagnes et du layout global.
+ * GM-OS v6 — Campaign Domain Types
+ *
+ * Regroupe les interfaces liées aux campagnes et à la configuration de layout.
+ *
+ * @module types/campaign
  */
+
+import type { ModuleID, ThemeID } from '../store/useSessionStore';
+
+// ─────────────────────────────────────────────
+// Layout
+// ─────────────────────────────────────────────
 
 export interface LayoutConfig {
     activeModule: ModuleID;
@@ -31,8 +39,11 @@ export type CurrentView =
     | 'storyboard'
     | 'deck-library'
     | 'deck-player'
-    | 'campaign-details'
     | 'campaign-form';
+
+// ─────────────────────────────────────────────
+// Campaign
+// ─────────────────────────────────────────────
 
 export interface Campaign {
     id: string;

@@ -1,5 +1,9 @@
 /**
- * Types liés au Deck-OS (Cartes & Paquets).
+ * GM-OS v6 — Deck-OS Domain Types
+ *
+ * Regroupe les interfaces liées aux paquets de cartes (Deck-OS).
+ *
+ * @module types/deck
  */
 
 export type CardFormat = 'poker' | 'tarot';
