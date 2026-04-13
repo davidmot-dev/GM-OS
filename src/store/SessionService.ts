@@ -12,7 +12,7 @@ import { withTimeout } from '../utils/promiseUtils';
 import { Logger } from '../utils/logger';
 
 export const SessionService = {
-    async saveFullSession() {
+    async saveFullSession(silent = false) {
         const sessionState = useSessionStore.getState();
         const osState = useSessionOSStore.getState();
         const npcState = useNPCStore.getState();
@@ -61,13 +61,15 @@ export const SessionService = {
 
         try {
             if (window.appBridge?.session?.saveSession) {
-                Logger.info('[Session] Starting save session');
+                if (!silent) Logger.info('[Session] Starting save session');
                 const savePromise = window.appBridge.session.saveSession(fullData as Record<string, unknown>);
                 const success = await withTimeout(savePromise, 5000, 'La sauvegarde a pris trop de temps');
                 
                 if (success) {
-                    Logger.info('[Session] Session saved successfully');
-                    gmToast('Session sauvegardée avec succès 💾');
+                    if (!silent) {
+                        Logger.info('[Session] Session saved successfully');
+                        gmToast('Session sauvegardée avec succès 💾');
+                    }
                 }
             } else {
                 // Fallback or development
@@ -77,11 +79,13 @@ export const SessionService = {
                 gmToast('Sauvegarde simulée (Mode Dev)');
             }
         } catch (error) {
-            Logger.error('[Session] Save error', error);
-            console.error('Erreur lors de la sauvegarde:', error);
-            gmToast(`Erreur: ${error instanceof Error ? error.message : 'Échec de la sauvegarde'} ❌`);
+            if (!silent) {
+                Logger.error('[Session] Save error', error);
+                console.error('Erreur lors de la sauvegarde:', error);
+                gmToast(`Erreur: ${error instanceof Error ? error.message : 'Échec de la sauvegarde'} ❌`);
+            }
         } finally {
-            setLoading(false);
+            if (!silent) setLoading(false);
         }
     },
 

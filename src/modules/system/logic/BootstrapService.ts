@@ -3,6 +3,7 @@ import { useMediaStore } from '../../../stores/useMediaStore';
 import { useAIStore } from '../../../stores/useAIStore';
 import { useLightStore } from '../../light/useLightStore';
 import { useSessionStore } from '../../../store/useSessionStore';
+import { sessionBackupManager } from '../../session/logic/SessionBackupManager';
 
 /**
  * Service centralisé pour orchestrer le démarrage de GM-OS.
@@ -35,7 +36,10 @@ export class BootstrapService {
             console.log('[Bootstrap] 📡 Démarrage des services de fond (Spatial Triggers)...');
             spatialTriggerService.startWatching();
 
-            // 4. Marquage du système comme "Prêt"
+            // 4. Démarrage du cycle de sauvegarde automatique (15 min)
+            sessionBackupManager.start();
+
+            // 5. Marquage du système comme "Prêt"
             useSessionStore.getState().setSystemReady(true);
             this.isInitialized = true;
             

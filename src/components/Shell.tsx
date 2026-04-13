@@ -44,6 +44,7 @@ import { useHardwareBridge } from '../modules/tactical-ai/hooks/useHardwareBridg
 import { useAudioTactical } from '../modules/tactical-ai/hooks/useAudioTactical';
 import { useHueAutoConnect } from '../modules/light/hooks/useHueAutoConnect';
 import { useLayoutManager } from '../modules/session/hooks/useLayoutManager';
+import { useSessionOSStore } from '../modules/session/useSessionOSStore';
 import { gmToast } from '../stores/useToastStore';
 
 interface NavItemProps {
@@ -161,6 +162,12 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
     };
 
     const { isPanelOpen, setIsPanelOpen, status: tacticalAIStatus, settings: tacticalSettings } = useTacticalAIStore();
+    const lastBackupAt = useSessionOSStore((state) => state.lastBackupAt);
+
+    // Formatter pour le backup
+    const backupLabel = lastBackupAt 
+        ? new Date(lastBackupAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+        : '--:--';
 
     return (
         <div data-theme={theme} className="flex h-screen bg-app-bg text-app-text overflow-hidden font-sans selection:bg-accent/30 bg-texture-overlay theme-root">
@@ -367,10 +374,13 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         </button>
                         <button 
                             onClick={() => SessionService.saveFullSession()}
-                            className="flex-1 py-3 flex items-center justify-center text-app-text/50 hover:text-gm-cyan hover:bg-gm-cyan/10 border-x border-app-border/50 transition-all duration-300 relative group"
+                            className="flex-1 py-3 flex flex-col items-center justify-center text-app-text/50 hover:text-gm-cyan hover:bg-gm-cyan/10 border-x border-app-border/50 transition-all duration-300 relative group"
                             title={t('modules:tooltips.save_session')}
                         >
                             <Save size={18} className="group-hover:scale-110 transition-transform" />
+                            <span className="text-[7px] mt-0.5 opacity-50 font-mono tracking-tighter">
+                                {backupLabel}
+                            </span>
                             <div className="absolute inset-0 bg-gm-cyan/0 group-hover:bg-gm-cyan/5 transition-colors" />
                         </button>
                         <button 

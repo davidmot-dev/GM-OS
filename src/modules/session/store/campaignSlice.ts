@@ -12,6 +12,7 @@
 import type { StateCreator } from 'zustand';
 import { gmToast } from '../../../stores/useToastStore';
 import type { Campaign, LayoutConfig } from './types';
+import { sessionBackupManager } from '../logic/SessionBackupManager';
 
 // ─────────────────────────────────────────────
 // State
@@ -69,8 +70,12 @@ export const createCampaignSlice: StateCreator<CampaignSlice, [], [], CampaignSl
         }));
     },
 
-    deleteCampaign: (id) => {
+    deleteCampaign: async (id) => {
         const campaign = get().campaigns.find((c) => c.id === id);
+        
+        // Safety Backup before deletion
+        await sessionBackupManager.triggerImmediateBackup();
+
         set((state) => ({
             campaigns: state.campaigns.filter((c) => c.id !== id),
             activeCampaignId: state.activeCampaignId === id ? null : state.activeCampaignId,

@@ -61,6 +61,7 @@ interface CrossDomainActions {
     saveSystemSnapshot: (sessionId: string) => void;
     applySystemSnapshot: (snapshot: SessionModuleSnapshot) => Promise<void>;
     clearDiceRolls: () => void;
+    setLastBackupAt: (timestamp: string) => void;
 
     // Sélecteurs cross-domain
     getActiveDriver: () => import('../../../types/drivers').GameDriver | null;
@@ -148,6 +149,8 @@ export const useSessionOSStore = create<SessionOSStore>()(
             ...createCluesSlice(set as Parameters<typeof createCluesSlice>[0], get as Parameters<typeof createCluesSlice>[1], api as Parameters<typeof createCluesSlice>[2]),
             ...createDeckSlice(set as Parameters<typeof createDeckSlice>[0], get as Parameters<typeof createDeckSlice>[1], api as Parameters<typeof createDeckSlice>[2]),
             ...createLootSlice(set as Parameters<typeof createLootSlice>[0], get as Parameters<typeof createLootSlice>[1], api as Parameters<typeof createLootSlice>[2]),
+
+            lastBackupAt: null as string | null,
 
             // ── Hydratation des données initiales ─────────
             campaigns: INITIAL_DATA.campaigns,
@@ -382,7 +385,9 @@ export const useSessionOSStore = create<SessionOSStore>()(
 
             // ── Session Launch ─────────────────────────────
 
-            launchSession: (sessionId) => {
+            setLastBackupAt: (timestamp) => set({ lastBackupAt: timestamp }),
+
+    launchSession: (sessionId) => {
                 const { sessions, campaigns } = get();
                 const session = sessions.find((s) => s.id === sessionId);
                 if (!session) return;
