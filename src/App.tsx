@@ -21,10 +21,11 @@ import { useAmbientStore } from './modules/ambient/useAmbientStore';
 import { useDiceStore } from './stores/useDiceStore';
 import { useAIStore } from './stores/useAIStore';
 import { useLightStore } from './modules/light/useLightStore';
+import { BootstrapService } from './modules/system/logic/BootstrapService';
+import { useHydration } from './hooks/useHydration';
+import { useHueAutoConnect } from './modules/light/hooks/useHueAutoConnect';
 import { DiceEngine } from './modules/dice/DiceEngine';
-import { useMediaStore } from './stores/useMediaStore';
 import { getDifferentialPayload } from './utils/syncUtils';
-import { spatialTriggerService } from './modules/map/SpatialTriggerService';
 import { useDisplayDetection } from './hooks/useDisplayDetection';
 import { resolveToSendableUrl } from './utils/mediaResolver';
 
@@ -104,7 +105,18 @@ function App() {
 
   // Workspace Sync v2: Intelligent display detection (Main GM window only)
   const isMainPC = !isProjector && !isHub && !isTablet && !isRemote;
+  const isHydrated = useHydration();
+  const isSystemReady = useSessionStore(state => state.isSystemReady);
+  
+  // Le système est "prêt" si hydraté et (si Main PC) si le bootstrap est fini
+  const isAppReady = isHydrated && (isMainPC ? isSystemReady : true);
+
   useDisplayDetection(isMainPC);
+  
+  // --- AUTO-CONNECT HUE BRIDGES (GM SEULEMENT) ---
+  if (isMainPC) {
+      useHueAutoConnect();
+  }
   
   // Automated GitHub Backup (DISABLED)
   // useBackupSync();
@@ -112,6 +124,13 @@ function App() {
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
+
+  // --- BOOTSTRAP DU SYSTÈME (GM SEULEMENT) ---
+  useEffect(() => {
+    if (isMainPC && isHydrated && !isSystemReady) {
+      BootstrapService.bootstrap();
+    }
+  }, [isMainPC, isHydrated, isSystemReady]);
 
   // Diffusion automatique des résultats de dés vers les Remote MJ (Centralisée)
   useEffect(() => {
@@ -743,16 +762,6 @@ function App() {
       return;
     }
 
-    // Démarrage de la surveillance des triggers spatiaux (GM uniquement)
-    spatialTriggerService.startWatching();
-    
-    // Initialisation du MediaStore pour les résolutions d'URL (m-ID)
-    useMediaStore.getState().initDB();
-
-    // Synchronisation du Trousseau de Clés (Keychain)
-    useAIStore.getState().syncWithKeychain();
-    useLightStore.getState().syncWithKeychain();
-
     // Synchroniser automatiquement la carte si le Combat-OS change (pour l'invisibilité des jetons liés)
     const unsubscribeCombat = useCombatStore.subscribe((state, prevState) => {
       if (state.combatants !== prevState.combatants) {
@@ -871,6 +880,12 @@ function App() {
   const isHubView = searchParams.get('window') === 'hub' || pathname.includes('/player-hub');
   const isTabletView = searchParams.get('window') === 'tablet' || pathname.includes('/tablet-hub');
   const isRemoteView = searchParams.get('window') === 'remote' || pathname.includes('/remote');
+
+  if (!isAppReady) {
+    return <div className="h-screen w-screen bg-black flex items-center justify-center">
+      <div className="text-cyan-500 font-mono animate-pulse">GM-OS BOOTING...</div>
+    </div>;
+  }
 
   return (
     <Suspense fallback={<div className="h-screen w-screen bg-black" />}>

@@ -19,7 +19,7 @@ Chaque module doit être validé selon les critères suivants :
 ### 1. Infrastructure Core
 | Module | Priorité | Statut | Points d'Attention |
 | :--- | :---: | :--- | :--- |
-| **System** (`src/modules/system`) | P0 | 🟡 À Analyser | Bootstrapping & Initialisation. |
+| **System** (`src/modules/system`) | P0 | ✅ Corrigé | Bootstrapping & Initialisation centralisée. |
 | **Session** (`src/modules/session`) | P0 | 🟡 À Analyser | State persistence & snapshots. |
 | **Remote** (`src/modules/remote`) | P1 | 🟡 À Analyser | WebSocket / P2P stability. |
 | **Security** (Electron / Store) | **P0** | ✅ Corrigé | Migration API Keys vers `safeStorage`. |

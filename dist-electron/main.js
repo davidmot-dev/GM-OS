@@ -1,4 +1,4 @@
-import require$$0$7, { ipcMain, dialog, net, app, protocol, shell, screen, BrowserWindow } from "electron";
+import require$$0$7, { ipcMain, dialog, app, safeStorage, net, protocol, shell, screen, BrowserWindow } from "electron";
 import path$1 from "node:path";
 import require$$2$3, { fileURLToPath } from "node:url";
 import * as require$$0$1 from "fs";
@@ -49449,6 +49449,98 @@ function registerNexusHandlers() {
     return filePaths?.[0] ?? null;
   });
 }
+class SecurityManager {
+  constructor() {
+    this.secrets = {};
+    this.secretsPath = path$1.join(app.getPath("userData"), "vault", "secrets.enc");
+    this.ensureStoreExists();
+    this.loadSecrets();
+  }
+  /**
+   * Garantit que le dossier du coffre-fort existe.
+   */
+  ensureStoreExists() {
+    const dir2 = path$1.dirname(this.secretsPath);
+    if (!fs.existsSync(dir2)) {
+      fs.mkdirpSync(dir2);
+    }
+  }
+  /**
+   * Charge et déchiffre les secrets depuis le disque.
+   */
+  loadSecrets() {
+    if (!fs.existsSync(this.secretsPath)) {
+      this.secrets = {};
+      return;
+    }
+    try {
+      const encryptedData = fs.readFileSync(this.secretsPath);
+      if (encryptedData.length === 0) {
+        this.secrets = {};
+        return;
+      }
+      if (safeStorage.isEncryptionAvailable()) {
+        const decryptedData = safeStorage.decryptString(encryptedData);
+        this.secrets = JSON.parse(decryptedData);
+      } else {
+        console.error("[SecurityManager] Encryption not available on this system.");
+      }
+    } catch (error2) {
+      console.error("[SecurityManager] Failed to load or decrypt secrets:", error2);
+      this.secrets = {};
+    }
+  }
+  /**
+   * Chiffre et sauvegarde les secrets sur le disque.
+   */
+  saveSecrets() {
+    try {
+      if (safeStorage.isEncryptionAvailable()) {
+        const dataString = JSON.stringify(this.secrets);
+        const encryptedBuffer = safeStorage.encryptString(dataString);
+        fs.writeFileSync(this.secretsPath, encryptedBuffer);
+      }
+    } catch (error2) {
+      console.error("[SecurityManager] Failed to encrypt or save secrets:", error2);
+    }
+  }
+  /**
+   * Enregistre un secret de manière sécurisée.
+   */
+  setSecret(id, value) {
+    this.secrets[id] = value;
+    this.saveSecrets();
+  }
+  /**
+   * Récupère un secret déchiffré.
+   */
+  getSecret(id) {
+    return this.secrets[id] || null;
+  }
+  /**
+   * Supprime un secret.
+   */
+  deleteSecret(id) {
+    if (this.secrets[id]) {
+      delete this.secrets[id];
+      this.saveSecrets();
+    }
+  }
+}
+function registerSecurityHandlers() {
+  const manager = new SecurityManager();
+  ipcMain.handle("security:get-secret", (_2, id) => {
+    return manager.getSecret(id);
+  });
+  ipcMain.handle("security:set-secret", (_2, id, value) => {
+    manager.setSecret(id, value);
+    return true;
+  });
+  ipcMain.handle("security:delete-secret", (_2, id) => {
+    manager.deleteSecret(id);
+    return true;
+  });
+}
 class SessionManager {
   constructor() {
     this.sessions = /* @__PURE__ */ new Map();
@@ -49708,6 +49800,7 @@ registerRagHandlers();
 registerMcpHandlers();
 registerObsidianHandlers();
 registerNexusHandlers();
+registerSecurityHandlers();
 protocol.registerSchemesAsPrivileged([
   { scheme: "gmos", privileges: { standard: true, secure: true, supportFetchAPI: true, bypassCSP: true, stream: true } }
 ]);

@@ -24,6 +24,7 @@ interface SessionState {
     isMessengerOpen: boolean;
     displayCount: number;
     language: string;
+    isSystemReady: boolean;
 
     // Actions
     setActiveModule: (id: ModuleID) => void;
@@ -34,6 +35,7 @@ interface SessionState {
     toggleMessenger: (force?: boolean) => void;
     setDisplayCount: (count: number) => void;
     setLanguage: (lang: string) => void;
+    setSystemReady: (ready: boolean) => void;
     getBackupData: () => {
         activeModule: string;
         theme: string;
@@ -92,6 +94,7 @@ export const useSessionStore = create<SessionState>()(
             isMessengerOpen: false,
             displayCount: 1,
             language: localStorage.getItem('gmos-language') || DEFAULT_LANGUAGE,
+            isSystemReady: false,
 
             setActiveModule: (activeModule) => set({ activeModule }),
             setTheme: (theme) => set({ 
@@ -114,6 +117,7 @@ export const useSessionStore = create<SessionState>()(
                 i18n.changeLanguage(language);
                 localStorage.setItem('gmos-language', language);
             },
+            setSystemReady: (isSystemReady) => set({ isSystemReady }),
             getBackupData: () => ({
                 activeModule: get().activeModule,
                 theme: get().theme,
