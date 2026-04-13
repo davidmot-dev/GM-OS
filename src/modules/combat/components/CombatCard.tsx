@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useCombatStore, type Combatant } from '../useCombatStore';
-import { X, Shield, PlusCircle, Edit2, Brain, Crosshair, Sparkles, Loader2, Zap } from 'lucide-react';
+import { X, Shield, PlusCircle, Edit2, Brain, Crosshair, Sparkles, Loader2, Zap, User, Swords, ShieldCheck, Users } from 'lucide-react';
 import { ResolvedImage } from '../../../components/ResolvedImage';
+import { Select } from '../../../components/common/Select';
 import { gmPrompt, gmCustom } from '../../../stores/useModalStore';
 import { useSessionOSStore, type Entity } from '../../session/useSessionOSStore';
 import { HealthManager } from '../../session/components/health/HealthManager';
@@ -182,26 +183,29 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                         </div>
                         {combatant.isPlayer && <span className="text-[9px] bg-primary text-slate-900 px-1.5 py-0.5 rounded font-black uppercase tracking-tighter">{t('combat.card.faction.player')}</span>}
                         
-                        <div className="relative flex items-center gap-1 group/faction">
-                            <select 
+                        <div className="relative">
+                            <Select
                                 value={combatant.faction}
-                                onChange={(e) => updateCombatant(combatant.id, { faction: e.target.value as 'player' | 'enemy' | 'neutral' | 'ally' })}
-                                className={`text-[9px] px-1.5 py-0.5 rounded font-black uppercase tracking-tighter outline-none cursor-pointer border transition-all appearance-none pr-4 ${
-                                    combatant.faction === 'enemy' ? 'bg-red-500/20 text-red-500 border-red-500/30' :
-                                    combatant.faction === 'ally' ? 'bg-emerald-500/20 text-emerald-500 border-emerald-500/30' :
-                                    combatant.faction === 'player' ? 'bg-blue-600/20 text-blue-500 border-blue-500/30' :
-                                    'bg-app-surface border-app-border text-app-text/70'
-                                }`}
+                                onChange={(value) => updateCombatant(combatant.id, { faction: value as any })}
+                                options={[
+                                    { value: 'player', label: t('combat.card.faction.player'), icon: <User size={12} /> },
+                                    { value: 'enemy', label: t('combat.card.faction.enemy'), icon: <Swords size={12} /> },
+                                    { value: 'ally', label: t('combat.card.faction.ally'), icon: <ShieldCheck size={12} /> },
+                                    { value: 'neutral', label: t('combat.card.faction.neutral'), icon: <Users size={12} /> }
+                                ]}
+                                className="min-w-[100px]"
                                 title={t('combat.card.faction_change')}
-                            >
-                                <option value="player">{t('combat.card.faction.player')}</option>
-                                <option value="enemy">{t('combat.card.faction.enemy')}</option>
-                                <option value="ally">{t('combat.card.faction.ally')}</option>
-                                <option value="neutral">{t('combat.card.faction.neutral')}</option>
-                            </select>
-                            <div className="absolute right-1 pointer-events-none opacity-40 group-hover/faction:opacity-100">
-                                <PlusCircle size={8} />
-                            </div>
+                                renderOption={(opt) => (
+                                    <span className={`text-[10px] font-black uppercase tracking-wider ${
+                                        opt.value === 'enemy' ? 'text-red-500' :
+                                        opt.value === 'ally' ? 'text-emerald-500' :
+                                        opt.value === 'player' ? 'text-blue-500' :
+                                        'text-app-text/70'
+                                    }`}>
+                                        {opt.label}
+                                    </span>
+                                )}
+                            />
                         </div>
                         
                         <button
@@ -312,22 +316,23 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                         <Crosshair size={12} className={currentTarget ? 'text-primary animate-pulse' : ''} />
                         <span>{t('combat.card.target')}</span>
                     </div>
-                    <select 
+                    <Select
                         value={combatant.targetId || ''}
-                        onChange={(e) => setTarget(combatant.id, e.target.value || null)}
-                        className={`bg-app-bg/50 text-[10px] border rounded px-1 py-0.5 outline-none w-full max-w-[120px] transition-all group-hover/target:border-accent/40 ${
-                            currentTarget ? 'text-accent border-accent/20' : 'text-app-text/30 border-app-border/30'
-                        }`}
+                        onChange={(value) => setTarget(combatant.id, value || null)}
+                        placeholder={t('combat.card.target_none')}
+                        options={[
+                            { value: '', label: t('combat.card.target_none') },
+                            ...combatants
+                                .filter(c => c.id !== combatant.id)
+                                .map(c => ({
+                                    value: c.id,
+                                    label: c.name,
+                                    icon: <Crosshair size={12} />
+                                }))
+                        ]}
+                        className="w-full max-w-[140px]"
                         title={t('combat.card.target_select')}
-                    >
-                        <option value="">{t('combat.card.target_none')}</option>
-                        {combatants
-                            .filter(c => c.id !== combatant.id)
-                            .map(c => (
-                                <option key={c.id} value={c.id}>{c.name}</option>
-                            ))
-                        }
-                    </select>
+                    />
 
                     {/* Quick Calculator Button */}
                     <button

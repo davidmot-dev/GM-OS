@@ -8,6 +8,7 @@ import {
     MonitorPlay, MonitorOff, Sword, Shield
 } from 'lucide-react';
 import { gmCustom } from '../../../stores/useModalStore';
+import { Select } from '../../../components/common/Select';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useTranslation } from 'react-i18next';
 
@@ -260,16 +261,17 @@ const CombatControls: React.FC = () => {
                 )}
 
                 <div className="flex gap-2">
-                    <select
-                        className="bg-app-bg border border-app-border rounded-lg text-app-text px-2 py-2 outline-none focus:border-gm-crimson text-xs flex-1"
-                        value={diceMax}
-                        onChange={(e) => setDiceMax(Number(e.target.value))}
+                    <Select
+                        value={diceMax.toString()}
+                        onChange={(value) => setDiceMax(Number(value))}
+                        options={[4, 6, 8, 10, 12, 20, 100].map(d => ({
+                            value: d.toString(),
+                            label: `d${d}`,
+                            icon: <Dices size={14} className="text-app-accent/60" />
+                        }))}
+                        className="flex-1 min-w-[100px]"
                         title={t('common:actions.select_dice')}
-                    >
-                        {[4, 6, 8, 10, 12, 20, 100].map(d => (
-                            <option key={d} value={d}>d{d}</option>
-                        ))}
-                    </select>
+                    />
                     <button
                         onClick={() => rollAutoInitiative({ diceMax })}
                         className="bg-app-bg hover:bg-gm-crimson/20 border border-gm-crimson/50 text-gm-crimson px-3 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors flex-[2] text-xs font-bold uppercase tracking-tighter"

@@ -80,7 +80,7 @@ export interface PersistenceBadge {
 
 export interface HealthSystem {
     type: string;
-    data: Record<string, string | number | boolean | object | null>;
+    data: Record<string, unknown>;
     state: 'healthy' | 'scratched' | 'wounded' | 'critical' | 'dead';
     badges: PersistenceBadge[];
 }
@@ -104,7 +104,7 @@ export interface Entity {
     campaignId: string;
     sourceRef?: string;
     templateId?: string;
-    sheetData?: Record<string, string | number | boolean>;
+    sheetData?: Record<string, unknown>;
     healthSystem?: HealthSystem;
     relations?: EntityRelation[];
     faction?: string;
@@ -121,7 +121,7 @@ export interface PlayerCharacter {
     maxHp: number;
     campaignId: string | null;
     templateId: string;
-    sheetData: Record<string, string | number | boolean>;
+    sheetData: Record<string, unknown>;
     description?: string;
     gmNotes?: string;
     playerNotes?: string;

@@ -3,75 +3,23 @@ import { persist } from 'zustand/middleware';
 import { DiceEngine } from '../dice/DiceEngine';
 import { gmToast } from '../../stores/useToastStore';
 import { useJournalStore } from '../journal/useJournalStore';
-import type { HealthSystem, Player, Entity, PlayerCharacter } from '../session/useSessionOSStore';
+import type { HealthSystem, Player, Entity, PlayerCharacter, SessionOSState } from '../session/useSessionOSStore';
+import { 
+    type Combatant, 
+    type StatusEffect 
+} from './types';
+import { 
+    STATUS_CONFLICT_MAP, 
+    calculateDamageImpact, 
+    filterConflictingStatuses, 
+    generateEffectId, 
+    processStatusDurations, 
+    resolveInitiativeFormula 
+} from './logic/CombatRules';
 
-/**
- * Représente un effet d'état appliqué à un combattant (ex: Brûlé, Étourdi).
- */
-export interface StatusEffect {
-    /** Identifiant unique de l'instance d'effet */
-    id: string; 
-    /** Nom de l'effet (utilisé pour les conflits et la logique) */
-    name: string;
-    /** Durée en rounds (0 = infini) */
-    duration: number; 
-    /** Icône représentative (Emoji ou nom Lucide) */
-    icon: string; 
-}
-
-/**
- * Entité participant à un combat.
- * Peut être liée à un personnage joueur (PC) ou un PNJ (NPC).
- */
-export interface Combatant {
-    id: string;
-    name: string;
-    /** Valeur d'initiative pour l'ordre de passage */
-    init: number;
-    hp: number;
-    hpMax: number;
-    /** Indique si le combattant est un PJ */
-    isPlayer: boolean;
-    /** Faction pour l'affichage et l'IA (Ami, Ennemi, Neutre) */
-    faction: 'player' | 'enemy' | 'neutral' | 'ally';
-    /** ID du combattant actuellement ciblé */
-    targetId?: string;
-    /** Lien vers l'ID du PlayerCharacter dans Session-OS (si isPlayer: true) */
-    sourcePlayerId?: string; 
-    /** Lien vers l'ID de l'entité NPC/Monstre dans Session-OS (si isPlayer: false) */
-    sourceEntityId?: string; 
-    /** URL de l'avatar ou du jeton */
-    avatar?: string;
-    /** Liste des effets d'état actifs */
-    statuses: StatusEffect[];
-    /** Statistiques additionnelles (Mana, Santé Mentale, etc.) */
-    extraStats?: Record<string, { value: number; max: number }>; 
-    resistances?: string[];
-    vulnerabilities?: string[];
-    immunities?: string[];
-    /** Système de santé spécifique (ex: D&D 5e, Savage Worlds) */
-    healthSystem?: HealthSystem;
-}
-
-// Conflicting status effects: adding a key status will automatically remove the value statuses
-export const STATUS_CONFLICT_MAP: Record<string, string[]> = {
-    'En feu': ['Mouillé', 'Sous l\'eau', 'Gelé'],
-    'Mouillé': ['En feu'],
-    'Sous l\'eau': ['En feu'],
-    'Gelé': ['En feu'],
-    'Inconscient': ['Debout', 'En garde'],
-    'Debout': ['À terre'],
-    'À terre': ['Debout'],
-    'Invisible': ['En feu', 'En garde'],
-    'Béni': ['Maudit'],
-    'Maudit': ['Béni'],
-    'Effrayé': ['Concentration', 'Béni'],
-    'Confus': ['Concentration'],
-    'Épuisé': ['En garde', 'Concentration'],
-    'Agrippé': ['Debout'],
-    'Soin': ['Empoisonné', 'Saignement'],
-    'Choqué': ['Concentration']
-};
+// Re-export pour compatibilité descendante
+export type { Combatant, StatusEffect };
+export { STATUS_CONFLICT_MAP, COMBAT_AUTO_STATUS_RULES } from './logic/CombatRules';
 
 /**
  * Interface d'état globale pour le Combat-OS.
@@ -201,7 +149,7 @@ export const useCombatStore = create<CombatState>()(
                 set((state) => ({
                     combatants: [...state.combatants, { 
                         ...combatant, 
-                        id: Math.random().toString(36).substring(2, 9),
+                        id: generateEffectId(),
                         faction: combatant.faction || (combatant.isPlayer ? 'player' : 'enemy')
                     }]
                 }));
@@ -296,32 +244,12 @@ export const useCombatStore = create<CombatState>()(
                             if (cardIdx < cardPool.length) rolled = cardPool[cardIdx++];
                             else rolled = Math.floor(Math.random() * (cards || 10)) + 1;
                         } else if (formula) {
-                            let evaluatedFormula = formula;
-                            if (resolver) {
-                                const varRegex = /\[([^\]]+)\]|\\b([a-zA-ZÀ-ÿ_]+)\\b/gi;
-                                const matches = Array.from(formula.matchAll(varRegex));
-                                matches.sort((a, b) => b[0].length - a[0].length);
-                                matches.forEach(match => {
-                                    const fullMatch = match[0];
-                                    const innerVar = match[1] || match[2];
-                                    if (innerVar.toLowerCase() === 'd' && /^\\d*d\\d+$/i.test(fullMatch)) return;
-                                    const val = resolver(innerVar, c);
-                                    if (val !== undefined && !Number.isNaN(val)) {
-                                        evaluatedFormula = evaluatedFormula.replace(fullMatch, val.toString());
-                                    }
-                                });
-                            }
-                            evaluatedFormula = evaluatedFormula.replace(/[a-zA-ZÀ-ÿ_]+/g, (match) => {
-                                if (match.toLowerCase() === 'd') return match;
-                                return '0';
+                            rolled = resolveInitiativeFormula({
+                                formula,
+                                combatant: c,
+                                resolver,
+                                diceMax
                             });
-                            evaluatedFormula = evaluatedFormula.replace(/[^0-9dD+\\-\\*/\\s]/g, '');
-                            try {
-                                const res = DiceEngine.rollFormula(evaluatedFormula);
-                                rolled = Number.isNaN(res.total) ? 0 : res.total;
-                            } catch {
-                                rolled = Math.floor(Math.random() * diceMax) + 1;
-                            }
                         } else {
                             rolled = Math.floor(Math.random() * diceMax) + 1;
                         }
@@ -366,11 +294,7 @@ export const useCombatStore = create<CombatState>()(
                         if (i === nextIdx) {
                             return {
                                 ...c,
-                                statuses: c.statuses.reduce((acc, s) => {
-                                    if (s.duration === 0) acc.push(s);
-                                    else if (s.duration > 1) acc.push({ ...s, duration: s.duration - 1 });
-                                    return acc;
-                                }, [] as StatusEffect[])
+                                statuses: processStatusDurations(c.statuses)
                             };
                         }
                         return c;
@@ -425,10 +349,10 @@ export const useCombatStore = create<CombatState>()(
                     return {
                         combatants: state.combatants.map(c => {
                             if (c.id === combatantId) {
-                                const filteredStatuses = c.statuses.filter(s => !conflicts.includes(s.name));
+                                const filteredStatuses = filterConflictingStatuses(c.statuses, status.name);
                                 return {
                                     ...c,
-                                    statuses: [...filteredStatuses, { ...status, id: Math.random().toString(36).substring(2, 9) }]
+                                    statuses: [...filteredStatuses, { ...status, id: generateEffectId() }]
                                 };
                             }
                             return c;
@@ -457,7 +381,7 @@ export const useCombatStore = create<CombatState>()(
 
             syncCombatantHPToSession: () => {
                 const { combatants } = get();
-                const sessionStore = (window as unknown as { useSessionOSStore?: { getState: () => any } }).useSessionOSStore?.getState();
+                const sessionStore = (window as unknown as { useSessionOSStore?: { getState: () => SessionOSState } }).useSessionOSStore?.getState();
                 if (!sessionStore) return;
                 combatants.forEach(c => {
                     if (c.isPlayer && c.sourcePlayerId) {
@@ -473,7 +397,7 @@ export const useCombatStore = create<CombatState>()(
 
             propagateStatusToSession: () => {
                 const { combatants } = get();
-                const sessionStore = (window as unknown as { useSessionOSStore?: { getState: () => any } }).useSessionOSStore?.getState();
+                const sessionStore = (window as unknown as { useSessionOSStore?: { getState: () => SessionOSState } }).useSessionOSStore?.getState();
                 if (!sessionStore) return;
                 combatants.forEach(c => {
                     const isMort = c.statuses.some(s => s.name.toLowerCase() === 'mort' || s.icon === '💀');
@@ -498,38 +422,31 @@ export const useCombatStore = create<CombatState>()(
                     const sessionStore = (window as unknown as { useSessionOSStore?: { getState: () => any } }).useSessionOSStore?.getState();
                     const newCombatants = state.combatants.map(c => {
                         if (!targetIds.includes(c.id)) return c;
+                        
+                        // Interaction avec Session-OS (Persistance métier)
                         if (sessionStore) {
                             const targetId = c.isPlayer ? c.sourcePlayerId : c.sourceEntityId;
                             const targetType = c.isPlayer ? 'pc' : 'npc';
                             if (targetId) {
                                 sessionStore.handleApplyImpact(targetId, targetType, { value: Math.abs(amount), type, isRecovery: isHeal });
+                                
+                                // Rafraîchir les métadonnées (healthSystem, etc.)
                                 const updatedSource = targetType === 'pc' 
                                     ? (sessionStore.players as Player[]).flatMap((p: Player) => p.characters).find((char: PlayerCharacter) => char.id === targetId)
                                     : (sessionStore.entities as Entity[]).find((e: Entity) => e.id === targetId);
                                 if (updatedSource && updatedSource.healthSystem) c.healthSystem = updatedSource.healthSystem;
                             }
                         }
-                        let finalAmount = amount;
-                        if (!isHeal) {
-                            if (c.immunities?.includes(type)) finalAmount = 0;
-                            else if (c.resistances?.includes(type)) finalAmount = Math.floor(amount / 2);
-                            else if (c.vulnerabilities?.includes(type)) finalAmount = amount * 2;
-                        }
-                        const newHp = Math.min(c.hpMax, Math.max(0, c.hp - finalAmount));
-                        let newStatuses = [...c.statuses];
-                        const typeLower = type.toLowerCase();
-                        let statusToAdd: Omit<StatusEffect, 'id'> | null = null;
-                        if (typeLower.includes('feu')) statusToAdd = { name: 'En feu', duration: 3, icon: '🔥' };
-                        else if (typeLower.includes('froid')) statusToAdd = { name: 'Gelé', duration: 2, icon: '❄️' };
-                        else if (typeLower.includes('acide')) statusToAdd = { name: 'Corrodé', duration: 2, icon: '🧪' };
-                        else if (typeLower.includes('foudre')) statusToAdd = { name: 'Choqué', duration: 1, icon: '⚡' };
-                        else if (isHeal) statusToAdd = { name: 'Soin', duration: 1, icon: '💖' };
 
+                        // Calcul pur des conséquences (Moteur de règles)
+                        const { newHp, statusToAdd } = calculateDamageImpact({ amount, type, target: c });
+                        
+                        let newStatuses = [...c.statuses];
                         if (statusToAdd) {
-                            const conflicts = STATUS_CONFLICT_MAP[statusToAdd.name] || [];
-                            newStatuses = newStatuses.filter(s => !conflicts.includes(s.name));
-                            newStatuses.push({ ...statusToAdd, id: Math.random().toString(36).substring(2, 9) });
+                            const filtered = filterConflictingStatuses(newStatuses, statusToAdd.name);
+                            newStatuses = [...filtered, { ...statusToAdd, id: generateEffectId() }];
                         }
+                        
                         return { ...c, hp: newHp, statuses: newStatuses };
                     });
                     return { combatants: newCombatants };

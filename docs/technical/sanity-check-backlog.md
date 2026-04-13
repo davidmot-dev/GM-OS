@@ -20,7 +20,7 @@ Chaque module doit être validé selon les critères suivants :
 | Module | Priorité | Statut | Points d'Attention |
 | :--- | :---: | :--- | :--- |
 | **System** (`src/modules/system`) | P0 | ✅ Corrigé | Bootstrapping & Initialisation centralisée. |
-| **Session** (`src/modules/session`) | P0 | 🟡 À Analyser | State persistence & snapshots. |
+| Session | `src/modules/session` | P0 | ✅ Corrigé | Refonte du store (SessionManager, SnapshotService). |
 | **Remote** (`src/modules/remote`) | P1 | ✅ Corrigé | Refonte Nexus P1 : Modularisation `SyncServer` & Rôles. |
 | **Security** (Electron / Store) | **P0** | ✅ Corrigé | Migration API Keys vers `safeStorage`. |
 | **Shared** (`src/types/shared.ts`)| P1 | 🟡 À Analyser | Cohérence des interfaces globales. |
@@ -37,7 +37,7 @@ Chaque module doit être validé selon les critères suivants :
 | Module | Priorité | Statut | Points d'Attention |
 | :--- | :---: | :--- | :--- |
 | **Map-OS** (`src/modules/map`) | **P0** | ✅ Corrigé | **ID-based mapping** & performance Fog. |
-| **Combat-OS** | P1 | 🟡 À Analyser | Calculs de dégâts & Status Effects. |
+| **Combat-OS** | P1 | ✅ Corrigé | Refonte Dropdowns (Stitch), Découplage Logique & Tests. |
 | **Dice-OS** | P2 | 🟡 À Analyser | Moteur de simulation 3D vs Logique. |
 | **NPC-OS** | P1 | 🟡 À Analyser | Gallery synchronization. |
 | **Journal** (Wiki/Timeline) | P2 | 🟡 À Analyser | Cohérence des dates du monde. |
