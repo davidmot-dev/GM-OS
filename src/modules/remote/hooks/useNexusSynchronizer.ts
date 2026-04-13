@@ -117,10 +117,14 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
             };
 
             // ── RÉSOLUTION GLOBALE DES MÉDIAS (m-xxx → URL HTTP/base64) ────────
-            // Toutes les images liées à des entités, lieux, joueurs et favoris
-            // doivent être résolues côté PC avant d'être envoyées à la tablette.
+            // Champs réels utilisés par les composants Hub :
+            //   Entity    → .avatar
+            //   AtlasMap  → .fileUrl
+            //   Clue      → .mediaUrl
+            //   Player    → .avatarUrl  |  PlayerCharacter → .portraitUrl
+            //   Favorite  → .imageUrl, .tokenUrl
 
-            // 4a. Portraits des personnages joueurs
+            // 4a. Avatars des joueurs et portraits des personnages
             const resolvedPlayers = await Promise.all(players.map(async (player) => ({
                 ...player,
                 avatarUrl: player.avatarUrl ? await resolveToSendableUrl(player.avatarUrl) : undefined,
@@ -130,38 +134,37 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                 }))),
             })));
 
-            // 4b. Portraits des entités (PNJ, créatures, lieux)
+            // 4b. Avatars des entités (PNJ, créatures) — champ réel : .avatar
             const resolvedEntities = await Promise.all(entities.map(async (entity) => ({
                 ...entity,
-                portraitUrl: (entity as { portraitUrl?: string }).portraitUrl
-                    ? await resolveToSendableUrl((entity as { portraitUrl?: string }).portraitUrl!)
-                    : undefined,
-                imageUrl: (entity as { imageUrl?: string }).imageUrl
-                    ? await resolveToSendableUrl((entity as { imageUrl?: string }).imageUrl!)
-                    : undefined,
+                avatar: entity.avatar ? await resolveToSendableUrl(entity.avatar) : '',
             })));
 
-            // 4c. Images des lieux (atlasMaps)
+            // 4c. Images des lieux (AtlasMap) — champ réel : .fileUrl
             const resolvedAtlasMaps = await Promise.all(atlasMaps.map(async (map) => ({
                 ...map,
-                imageUrl: (map as { imageUrl?: string }).imageUrl
-                    ? await resolveToSendableUrl((map as { imageUrl?: string }).imageUrl!)
-                    : undefined,
+                fileUrl: map.fileUrl ? await resolveToSendableUrl(map.fileUrl) : '',
             })));
 
-            // 4d. Wallpaper de campagne
+            // 4d. Indices (Clue) — champ réel : .mediaUrl
+            const resolvedClues = await Promise.all(clues.map(async (clue) => ({
+                ...clue,
+                mediaUrl: clue.mediaUrl ? await resolveToSendableUrl(clue.mediaUrl) : undefined,
+            })));
+
+            // 4e. Wallpaper de campagne
             const resolvedWallpaper = freshSessionOS.activeCampaignWallpaper
                 ? await resolveToSendableUrl(freshSessionOS.activeCampaignWallpaper)
                 : null;
 
-            // 4e. Favoris (images de cartes)
+            // 4f. Favoris — champs réels : .imageUrl, .tokenUrl
             const resolvedFavorites = await Promise.all(favoriteStore.favorites.map(async (fav) => ({
                 ...fav,
                 imageUrl: (fav as { imageUrl?: string }).imageUrl
                     ? await resolveToSendableUrl((fav as { imageUrl?: string }).imageUrl!)
                     : undefined,
-                coverUrl: (fav as { coverUrl?: string }).coverUrl
-                    ? await resolveToSendableUrl((fav as { coverUrl?: string }).coverUrl!)
+                tokenUrl: (fav as { tokenUrl?: string }).tokenUrl
+                    ? await resolveToSendableUrl((fav as { tokenUrl?: string }).tokenUrl!)
                     : undefined,
             })));
 
@@ -182,7 +185,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                     players: resolvedPlayers,
                     entities: resolvedEntities,
                     atlasMaps: resolvedAtlasMaps,
-                    clues,
+                    clues: resolvedClues,
                     customSheetTemplates,
                     customGameDrivers,
                     activeCampaignId: currentCampaignId,
