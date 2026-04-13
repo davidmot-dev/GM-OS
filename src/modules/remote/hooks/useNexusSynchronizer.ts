@@ -116,6 +116,15 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                 private: activeSession?.gmSecrets || 'Confidentiel.'
             };
 
+            // 4b. RÉSOLUTION DES PORTRAITS JOUEURS (m-xxx → URL HTTP ou base64)
+            const resolvedPlayers = await Promise.all(players.map(async (player) => ({
+                ...player,
+                characters: await Promise.all((player.characters || []).map(async (char) => ({
+                    ...char,
+                    portraitUrl: char.portraitUrl ? await resolveToSendableUrl(char.portraitUrl) : undefined,
+                }))),
+            })));
+
             const fullState = {
                 sounds, moments: storyboardStore.moments.filter(m => String(m.campaignId) === String(currentCampaignId)).map(m => ({ id: m.id, name: m.name })),
                 masterVolume: soundStore.masterVolume,
@@ -130,7 +139,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                 session: {
                     sessions: sessions,
                     campaigns: campaigns,
-                    players: players,
+                    players: resolvedPlayers,   // ✅ portraits résolus (m-xxx → URL)
                     entities: entities,
                     atlasMaps: atlasMaps,
                     clues: clues,
