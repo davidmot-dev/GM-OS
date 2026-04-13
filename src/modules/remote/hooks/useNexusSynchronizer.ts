@@ -125,7 +125,23 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                 clock: { timestamp: clockStore.timestamp, tensions: clockStore.tensions, timerRemaining: clockStore.timerRemaining, timerIsRunning: clockStore.timerIsRunning },
                 universalPads,
                 dice: { lastRoll: diceStore.lastRoll, isDiceProjected: diceStore.isDiceProjected },
-                map: { projectionTarget: mapStore.projectionTarget, projectedMapUrl: mapStore.projectedMapUrl, projectedTokens: mapStore.projectedTokens, projectedPings: mapStore.projectedPings }
+                map: { projectionTarget: mapStore.projectionTarget, projectedMapUrl: mapStore.projectedMapUrl, projectedTokens: mapStore.projectedTokens, projectedPings: mapStore.projectedPings },
+                // ── Session Data (needed by Hub for character selection & standby logic) ──
+                session: {
+                    sessions: sessions,
+                    campaigns: campaigns,
+                    players: players,
+                    entities: entities,
+                    atlasMaps: atlasMaps,
+                    clues: clues,
+                    customSheetTemplates: customSheetTemplates,
+                    customGameDrivers: customGameDrivers,
+                    activeCampaignId: currentCampaignId,
+                    activeCampaignName: freshSessionOS.activeCampaignName,
+                    activeCampaignWallpaper: freshSessionOS.activeCampaignWallpaper,
+                    characterLocks: freshSessionOS.connectedCharacters,
+                    favorites: favoriteStore.favorites,
+                },
             };
 
             const diffPayload = force ? fullState : getDifferentialPayload(fullState, lastBroadcastRef.current);
