@@ -210,7 +210,26 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                 window.appBridge.send('remote:broadcast-sync', diffPayload, 'gm');
 
                 const playerDiff = JSON.parse(JSON.stringify(diffPayload));
+                
+                // Sanitization for Player Role
                 if (playerDiff.notes) playerDiff.notes.private = '•••••';
+                
+                if (playerDiff.session?.entities) {
+                    playerDiff.session.entities = playerDiff.session.entities.map((e: any) => ({
+                        ...e,
+                        gmSecretInfo: '•••••',
+                        roleplayingNotes: '•••••'
+                    }));
+                }
+
+                if (playerDiff.combat?.combatants) {
+                    playerDiff.combat.combatants = playerDiff.combat.combatants.map((c: any) => ({
+                        ...c,
+                        gmSecretInfo: '•••••',
+                        roleplayingNotes: '•••••'
+                    }));
+                }
+
                 window.appBridge.send('remote:broadcast-sync', playerDiff, 'player');
 
                 lastBroadcastRef.current = fullState;

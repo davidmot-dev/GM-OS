@@ -38,8 +38,8 @@ Chaque module doit être validé selon les critères suivants :
 | :--- | :---: | :--- | :--- |
 | **Map-OS** (`src/modules/map`) | **P0** | ✅ Corrigé | **ID-based mapping** & performance Fog. |
 | **Combat-OS** | P1 | ✅ Corrigé | Refonte Dropdowns (Stitch), Découplage Logique & Tests. |
+| **NPC-OS** (`src/modules/session`) | P1 | ✅ Corrigé | Sync Galerie, Secrets MJ & Sécurité Hub. |
 | **Dice-OS** | P2 | 🟡 À Analyser | Moteur de simulation 3D vs Logique. |
-| **NPC-OS** | P1 | 🟡 À Analyser | Gallery synchronization. |
 | **Journal** (Wiki/Timeline) | P2 | 🟡 À Analyser | Cohérence des dates du monde. |
 | **Whiteboard** | P2 | 🟡 À Analyser | Latence de dessin synchronisé. |
 | **Tables** | P3 | 🟡 À Analyser | Gestion des rencontres aléatoires. |

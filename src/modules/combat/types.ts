@@ -39,6 +39,10 @@ export interface Combatant {
     avatar?: string;
     /** Liste des effets d'état actifs */
     statuses: StatusEffect[];
+    /** Notes de roleplay de l'entité */
+    roleplayingNotes?: string;
+    /** Informations secrètes du MJ */
+    gmSecretInfo?: string;
     /** Statistiques additionnelles (Mana, Santé Mentale, etc.) */
     extraStats?: Record<string, { value: number; max: number }>; 
     resistances?: string[];

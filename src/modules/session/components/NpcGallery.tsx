@@ -418,7 +418,9 @@ const NpcGalleryItem: React.FC<{
                                     faction: npc.role === 'ally' ? 'ally' : 
                                              (npc.role === 'hostile' || npc.role === 'boss') ? 'enemy' : 'neutral',
                                     sourceEntityId: npc.id,
-                                    statuses: []
+                                    statuses: [],
+                                    roleplayingNotes: npc.roleplayingNotes,
+                                    gmSecretInfo: npc.gmSecretInfo
                                 });
                                 gmToast(t('modules:session.toasts.entity_added_to_combat', { name: npc.name }));
                             }}

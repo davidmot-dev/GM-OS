@@ -175,6 +175,7 @@ export const useCombatStore = create<CombatState>()(
                 set((state) => ({
                     combatants: state.combatants.map(c => c.id === id ? { ...c, ...updates } : c)
                 }));
+                get().syncCombatantToSession(id);
                 get().broadcastSync();
             },
 
@@ -359,6 +360,7 @@ export const useCombatStore = create<CombatState>()(
                         })
                     };
                 });
+                get().syncCombatantToSession(combatantId);
                 get().broadcastSync();
             },
 
@@ -371,6 +373,7 @@ export const useCombatStore = create<CombatState>()(
                         return c;
                     })
                 }));
+                get().syncCombatantToSession(combatantId);
                 get().broadcastSync();
             },
 
@@ -379,20 +382,41 @@ export const useCombatStore = create<CombatState>()(
                 get().broadcastSync();
             },
 
-            syncCombatantHPToSession: () => {
-                const { combatants } = get();
+            syncCombatantToSession: (id: string) => {
+                const combatant = get().combatants.find(c => c.id === id);
+                if (!combatant) return;
+
                 const sessionStore = (window as unknown as { useSessionOSStore?: { getState: () => SessionOSState } }).useSessionOSStore?.getState();
                 if (!sessionStore) return;
-                combatants.forEach(c => {
-                    if (c.isPlayer && c.sourcePlayerId) {
-                        sessionStore.players.forEach((p: Player) => {
-                            const char = p.characters.find((char: PlayerCharacter) => char.id === c.sourcePlayerId);
-                            if (char) sessionStore.updateCharacterHP(p.id, char.id, c.hp);
-                        });
-                    } else if (!c.isPlayer && c.sourceEntityId) {
-                        if (typeof sessionStore.updateEntityHP === 'function') sessionStore.updateEntityHP(c.sourceEntityId, c.hp);
+
+                // 1. Sync HP
+                if (combatant.isPlayer && combatant.sourcePlayerId) {
+                    sessionStore.players.forEach((p: Player) => {
+                        const char = p.characters.find((char: PlayerCharacter) => char.id === combatant.sourcePlayerId);
+                        if (char) sessionStore.updateCharacterHP(p.id, char.id, combatant.hp);
+                    });
+                } else if (!combatant.isPlayer && combatant.sourceEntityId) {
+                    if (typeof sessionStore.updateEntityHP === 'function') {
+                        sessionStore.updateEntityHP(combatant.sourceEntityId, combatant.hp);
                     }
-                });
+                    
+                    // 2. Sync Narrative & Status
+                    const isMort = combatant.statuses.some(s => s.name.toLowerCase() === 'mort' || s.icon === '💀');
+                    const entityUpdates: Partial<Entity> = {
+                        status: isMort ? 'dead' : 'alive',
+                        roleplayingNotes: combatant.roleplayingNotes,
+                        gmSecretInfo: combatant.gmSecretInfo
+                    };
+                    
+                    if (typeof sessionStore.updateEntity === 'function') {
+                        sessionStore.updateEntity(combatant.sourceEntityId, entityUpdates);
+                    }
+                }
+            },
+
+            syncCombatantHPToSession: () => {
+                const { combatants } = get();
+                combatants.forEach(c => get().syncCombatantToSession(c.id));
             },
 
             propagateStatusToSession: () => {
@@ -419,25 +443,9 @@ export const useCombatStore = create<CombatState>()(
             applyDamage: (amount, type, targetIds) => {
                 set((state) => {
                     const isHeal = amount < 0;
-                    const sessionStore = (window as unknown as { useSessionOSStore?: { getState: () => any } }).useSessionOSStore?.getState();
                     const newCombatants = state.combatants.map(c => {
                         if (!targetIds.includes(c.id)) return c;
                         
-                        // Interaction avec Session-OS (Persistance métier)
-                        if (sessionStore) {
-                            const targetId = c.isPlayer ? c.sourcePlayerId : c.sourceEntityId;
-                            const targetType = c.isPlayer ? 'pc' : 'npc';
-                            if (targetId) {
-                                sessionStore.handleApplyImpact(targetId, targetType, { value: Math.abs(amount), type, isRecovery: isHeal });
-                                
-                                // Rafraîchir les métadonnées (healthSystem, etc.)
-                                const updatedSource = targetType === 'pc' 
-                                    ? (sessionStore.players as Player[]).flatMap((p: Player) => p.characters).find((char: PlayerCharacter) => char.id === targetId)
-                                    : (sessionStore.entities as Entity[]).find((e: Entity) => e.id === targetId);
-                                if (updatedSource && updatedSource.healthSystem) c.healthSystem = updatedSource.healthSystem;
-                            }
-                        }
-
                         // Calcul pur des conséquences (Moteur de règles)
                         const { newHp, statusToAdd } = calculateDamageImpact({ amount, type, target: c });
                         
@@ -451,6 +459,9 @@ export const useCombatStore = create<CombatState>()(
                     });
                     return { combatants: newCombatants };
                 });
+                
+                // Synchronisation différée pour la stabilité
+                targetIds.forEach(id => get().syncCombatantToSession(id));
                 get().broadcastSync();
             },
 
