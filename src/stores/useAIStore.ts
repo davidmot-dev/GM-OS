@@ -44,10 +44,7 @@ export const useAIStore = create<AIState>()(
             ...state.configs,
             [provider]: { 
               ...state.configs[provider], 
-              ...config,
-              // On retire la clé de l'état "config" pour ne pas qu'elle soit persistée par erreur
-              // Elle sera récupérée dynamiquement via getApiKey
-              apiKey: undefined 
+              ...config
             }
           }
         }));

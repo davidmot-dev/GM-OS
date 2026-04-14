@@ -29,7 +29,7 @@ Chaque module doit être validé selon les critères suivants :
 | Module | Priorité | Statut | Points d'Attention |
 | :--- | :---: | :--- | :--- |
 | **AI (Oracle)** (`src/modules/ai`) | P1 | ✅ Corrigé | Neural Liaison centralisée, support Secrets MJ & Tests Vitest. |
-| **Tactical-AI** | P1 | 🟡 À Analyser | Précision des conseils de combat. |
+| **Tactical-AI** (`src/modules/tactical-ai`) | P1 | ✅ Corrigé | Stabilisation Neural Liaison (Oracle) & Isolation Bridge. |
 | **RAG Engine** (Electron) | P2 | 🟡 À Analyser | Indexation & Performance. |
 | **Ollama Service** (Electron) | P2 | 🟡 À Analyser | Connectivité locale. |
 
@@ -77,4 +77,4 @@ Chaque module doit être validé selon les critères suivants :
 4.  **Validation** : Mise à jour du statut dans ce fichier.
 
 > [!NOTE]
-> **Prochaine Action Immédiate** : Commencer par le module **Security [P0]** (API Keys) car il impacte la confidentialité.
+> **Prochaine Action Immédiate** : Vérifier la cohérence de la **RAG Engine [P2]** et sa liaison avec les documents locaux (Obsidian).
