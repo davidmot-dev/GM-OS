@@ -10,9 +10,49 @@ const mediaCache = new Map<string, string>();
 export async function resolveToSendableUrl(src: string | undefined): Promise<string> {
     if (!src) return '';
     
-    // If it's already a data URI or blob URL, return as-is
-    if (src.startsWith('data:') || src.startsWith('blob:') || src.startsWith('http')) {
+    // If it's already a blob URL or remote HTTP URL, return as-is
+    if (src.startsWith('blob:') || (src.startsWith('http') && !src.includes('127.0.0.1') && !src.includes('localhost'))) {
         return src;
+    }
+
+    // Special case: Data URI (Base64)
+    // We want to avoid sending huge Base64 strings in the sync payload.
+    // We convert them to a temp file on the GM side and serve them via proxy.
+    if (src.startsWith('data:')) {
+        const bridge = window.appBridge;
+        if (bridge?.remote?.cacheMedia && bridge?.remote?.getConnectionInfo) {
+            try {
+                const info = await bridge.remote.getConnectionInfo();
+                if (info && info.ip && info.ip !== '127.0.0.1' && info.ip !== 'localhost') {
+                    // Generate a stable ID based on the content to avoid duplicate writes
+                    const parts = src.split(',');
+                    const content = parts[1] || '';
+                    // Simple hash for stability (first 100 chars + length)
+                    const hash = `data-${content.length}-${content.substring(0, 50).replace(/[^a-zA-Z0-9]/g, '')}`;
+                    
+                    if (mediaCache.has(hash)) return mediaCache.get(hash)!;
+
+                    const byteString = atob(content);
+                    const ab = new ArrayBuffer(byteString.length);
+                    const ia = new Uint8Array(ab);
+                    for (let i = 0; i < byteString.length; i++) {
+                        ia[i] = byteString.charCodeAt(i);
+                    }
+                    
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    const success = await (bridge.remote as any).cacheMedia(ab, hash);
+                    if (success) {
+                        const result = `http://${info.ip}:${info.port}/temp/${hash}`;
+                        console.log(`[MediaResolver] Data URI proxied to: ${result}`);
+                        mediaCache.set(hash, result);
+                        return result;
+                    }
+                }
+            } catch (err) {
+                console.warn('[MediaResolver] Data URI proxying failed:', err);
+            }
+        }
+        return src; // Fallback to raw Base64 if proxying fails
     }
 
     if (src.startsWith('m-')) {

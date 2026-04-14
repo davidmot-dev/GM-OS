@@ -66,7 +66,7 @@ Chaque module doit être validé selon les critères suivants :
 | Module | Priorité | Statut | Points d'Attention |
 | :--- | :---: | :--- | :--- |
 | **Player Hub** | P1 | 🟡 À Analyser | Fluidité des animations & synchronisation. |
-| **Tablet Hub** | P1 | 🟡 À Analyser | Performance sur matériel physique & Low-lag voice. |
+| **Tablet Hub** | P1 | ✅ Corrigé | Sync Wallpaper (Nexus Relay) & Optimisation Base64 (Relais Proxy). |
 
 ---
 

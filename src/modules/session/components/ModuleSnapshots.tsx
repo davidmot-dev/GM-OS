@@ -38,13 +38,13 @@ const ModuleSnapshots: React.FC = () => {
         <aside className="h-full col-span-3 bg-app-surface/80 border-l border-app-border p-4 flex flex-col gap-6 overflow-y-auto custom-scrollbar">
             {/* Module Snapshot Section */}
             <div className="flex flex-col gap-4">
-                <h4 className="text-xs uppercase tracking-widest text-app-text/40 mb-2 font-bold px-1">{t('session.snapshots.title')}</h4>
+                <h4 className="text-xs uppercase tracking-widest text-app-text/40 mb-2 font-bold px-1">{t('modules:session.snapshots.title')}</h4>
 
                 {/* Track 1: Active Encounter */}
                 <div className="flex flex-col gap-2">
                     <div className="flex items-center justify-between text-[10px] text-app-text/40 font-bold uppercase tracking-wider px-1">
-                        <span>{t('session.snapshots.combat_order')}</span>
-                        <span className="text-accent">{t('session.snapshots.round_hash', { number: round })}</span>
+                        <span>{t('modules:session.snapshots.combat_order')}</span>
+                        <span className="text-accent">{t('modules:session.snapshots.round_hash', { number: round })}</span>
                     </div>
                     
                     {combatants.length > 0 ? (
@@ -80,7 +80,7 @@ const ModuleSnapshots: React.FC = () => {
                                 );
                             })}
                             {combatants.length > 5 && (
-                                <p className="text-[10px] text-app-text/20 text-center italic mt-1">{t('session.snapshots.others_count', { count: combatants.length - 5 })}</p>
+                                <p className="text-[10px] text-app-text/20 text-center italic mt-1">{t('modules:session.snapshots.others_count', { count: combatants.length - 5 })}</p>
                             )}
                         </div>
                     ) : (
@@ -154,7 +154,7 @@ const ModuleSnapshots: React.FC = () => {
                             ))}
                             {allActiveStatuses.length > 4 && (
                                 <div className="col-span-2 text-[10px] text-slate-600 text-center italic">
-                                    {t('session.snapshots.others_count', { count: allActiveStatuses.length - 4 })}
+                                    {t('modules:session.snapshots.others_count', { count: allActiveStatuses.length - 4 })}
                                 </div>
                             )}
                         </div>

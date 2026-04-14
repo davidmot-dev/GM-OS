@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, memo } from 'react';
 import { useClientStore } from '../../stores/useClientStore';
 import { useSessionOSStore } from '../../modules/session/useSessionOSStore';
 import { Radar, User, Shield, Fingerprint, WifiOff, AlertCircle } from 'lucide-react';
+import { useMediaUrl } from '../../hooks/useMediaUrl';
 
 type OnboardingStep = 'SCANNING' | 'SELECTION' | 'SYNCING';
 
@@ -13,6 +14,16 @@ const LobbyOnboarding: React.FC = memo(() => {
     
     const [step, setStep] = useState<OnboardingStep>('SCANNING');
     const [selectedCharId, setSelectedCharId] = useState<string | null>(null);
+    const resolvedWallpaper = useMediaUrl(activeCampaignWallpaper || undefined);
+    
+    useEffect(() => {
+        if (activeCampaignWallpaper) {
+            console.log(`[LobbyOnboarding] Wallpaper State:`, {
+                id: activeCampaignWallpaper,
+                resolved: resolvedWallpaper
+            });
+        }
+    }, [activeCampaignWallpaper, resolvedWallpaper]);
 
     // Trouver la session active
     const activeSession = useMemo(() => {
@@ -260,9 +271,9 @@ const LobbyOnboarding: React.FC = memo(() => {
         <div className="fixed inset-0 z-[100] flex flex-col items-center bg-app-bg/95 backdrop-blur-2xl p-6 overflow-y-auto">
             {/* Background Atmosphere */}
             <div className="absolute inset-0 z-0 transition-opacity duration-1000">
-                {activeCampaignWallpaper ? (
+                {resolvedWallpaper ? (
                     <img 
-                        src={activeCampaignWallpaper} 
+                        src={resolvedWallpaper} 
                         alt="" 
                         className="w-full h-full object-cover opacity-20 grayscale-[0.2]"
                     />

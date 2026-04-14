@@ -1413,9 +1413,7 @@
       "navigation_desc": "The group is moving to {{name}}.",
       "quick_navigation": "📍 Quick Navigation: {{name}}",
       "quick_navigation_desc": "Direct access to map {{name}} from the Master Cockpit."
-    }
-  },
-  "session": {
+    },
     "clues": {
       "deck_title": "Session Deck",
       "revealed_count": "Revealed Clues ({{count}})",
@@ -2116,72 +2114,72 @@
     },
     "campaign_form": {
       "back_to_cockpit": "Back to Cockpit",
-      "title_edit": "Campaign Modification",
-      "title_new": "New Adventure",
-      "sync_nexus": "Sync Nexus",
-      "sync_nexus_tooltip": "Synchronize with Nexus",
+      "title_edit": "Campaign Configuration",
+      "title_new": "Initialize Adventure",
+      "sync_nexus": "Nexus Sync",
+      "sync_nexus_tooltip": "Propagate data to the Nexus",
       "close_tooltip": "Close editor",
       "sidebar": {
         "identity": "Identity",
         "narrative": "Narrative",
         "clues": "Clues",
-        "npc": "NPC",
-        "ambience": "Ambience",
-        "world": "World",
+        "npc": "NPCs",
+        "ambience": "Atmosphere",
+        "world": "Atlas & Locations",
         "intelligence": "Intelligence"
       },
       "identity": {
-        "title": "Fundamental Identity",
-        "subtitle": "Define the basic parameters of your universe.",
+        "title": "Campaign Identity",
+        "subtitle": "Configure fundamental information and game engine parameters.",
         "name_label": "Operation Name",
         "name_placeholder": "e.g.: Chronicles of the Void",
         "system_label": "System Repository",
         "system_groups": {
-          "drivers": "Game Systems (Drivers)",
-          "templates": "UI Templates"
+          "drivers": "Game Engines (Drivers)",
+          "templates": "User Interface (Templates)"
         },
-        "description_label": "Short Description (Tagline)",
-        "description_placeholder": "A brief hook for your adventure..."
+        "description_label": "Tagline / Teaser",
+        "description_placeholder": "A brief presentation of your adventure..."
       },
       "narrative": {
         "title": "Narrative Arc",
-        "subtitle": "Document the stakes and synopsis of the plot.",
-        "synopsis_label": "Adventure Synopsis",
-        "synopsis_placeholder": "Detail here the key points of the story..."
+        "subtitle": "Document the synopsis and major plot points.",
+        "synopsis_label": "Global Synopsis",
+        "synopsis_placeholder": "Outline the starting point and main story thread..."
       },
       "npc": {
-        "title": "NPC Management",
-        "subtitle": "Configure the actors of your story."
+        "title": "Actors & Cast",
+        "subtitle": "Manage the NPC and creature database."
       },
       "ambience": {
-        "title": "Visual Ambience",
-        "subtitle": "Configure the aesthetics of the command center.",
+        "title": "Visual Atmosphere",
+        "subtitle": "Configure the command center's aesthetic theme.",
         "change_wallpaper": "Change Wallpaper",
-        "set_wallpaper": "Set Campaign Wallpaper"
+        "set_wallpaper": "Set Campaign Backdrop"
       },
       "world": {
-        "title": "Atlas & Locations",
-        "subtitle": "Manage the maps and points of interest in your world.",
-        "wiki_import_title": "Location imported from Wiki",
-        "wiki_import_desc": "You have transferred **{{title}}** from the Wiki. Do you want to create it as a new \"Location\" type clue?",
-        "import_as_clue": "Import as Clue",
-        "ignore": "Ignore"
+        "title": "Atlas & Geography",
+        "subtitle": "Manage map deployment and points of interest.",
+        "wiki_import_title": "Location Detected",
+        "wiki_import_desc": "You have transferred **{{title}}** from the Wiki. Would you like to integrate it as a new geographic clue?",
+        "import_as_clue": "Convert to Clue",
+        "ignore": "Keep as is"
       },
       "intelligence": {
-        "title": "OS Intelligence (AI)",
-        "subtitle": "Configure AI resonance and RAG vectors.",
-        "notebook_title": "NotebookLM Integration",
-        "notebook_subtitle": "Local knowledge base override",
+        "title": "Intelligence Engine (AI)",
+        "subtitle": "Configure AI resonance vectors and NotebookLM integration.",
+        "notebook_title": "Knowledge Base Integration",
+        "notebook_subtitle": "Local persistence override",
         "notebook_label": "Knowledge UUID / URL",
-        "notebook_placeholder": "Override NotebookLM ID or URL here...",
-        "rules_path_label": "System Rules Path",
+        "notebook_placeholder": "Paste NotebookLM ID or URL...",
+        "rules_path_label": "Rules Path",
         "rules_path_placeholder": "e.g.: systems/pathfinder",
-        "notes_path_label": "Campaign Notes Path",
+        "notes_path_label": "Notes Path",
         "notes_path_placeholder": "e.g.: campaigns/ironhelm",
         "neural_overrides": "Neural Overrides",
-        "neural_overrides_subtitle": "Specific instructions for AI Gems",
-        "auto_generate": "Auto-Generate",
-        "gem_prompt_placeholder": "Prompt override for {{name}}..."
+        "neural_overrides_subtitle": "Priority directives for AI Gems",
+        "auto_generate": "Auto-Generation",
+        "gem_prompt_placeholder": "Custom instructions for {{name}}..."
       }
     },
     "snapshots": {

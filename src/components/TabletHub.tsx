@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
     Monitor, 
@@ -130,11 +130,21 @@ const TabletHub: React.FC = () => {
         ? liveImagePath
         : (activeHubId || activeCampaignWallpaper);
     const resolvedBackground = useMediaUrl(backgroundPath || undefined);
+    const resolvedCampaignWallpaper = useMediaUrl(activeCampaignWallpaper || undefined);
+
+    useEffect(() => {
+        if (activeCampaignWallpaper) {
+            console.log(`[TabletHub] Background wallpaper:`, {
+                id: activeCampaignWallpaper,
+                resolved: resolvedCampaignWallpaper
+            });
+        }
+    }, [activeCampaignWallpaper, resolvedCampaignWallpaper]);
 
     const rootStyles = {
         '--hub-bg-url': resolvedBackground ? `url('${resolvedBackground}')` : "none",
         '--hub-bg-opacity': resolvedBackground ? 1 : 0,
-        '--hub-blur-bg-url': activeCampaignWallpaper ? `url("${activeCampaignWallpaper}")` : "none",
+        '--hub-blur-bg-url': resolvedCampaignWallpaper ? `url("${resolvedCampaignWallpaper}")` : "none",
     } as React.CSSProperties;
 
     const isWhiteboardActive = projections['hub'] === 'whiteboard'; // Alignement si tableau blanc actif
@@ -177,10 +187,10 @@ const TabletHub: React.FC = () => {
 
             {/* Background Layers */}
             {/* Layer 1 (z-0): Campaign wallpaper — always visible as base atmosphere */}
-            {activeCampaignWallpaper && isOnboarded && (
+            {resolvedCampaignWallpaper && (
                 <div 
                     className="fixed inset-0 z-0 bg-cover bg-center pointer-events-none brightness-[0.35] grayscale-[20%]"
-                    style={{ backgroundImage: `url('${activeCampaignWallpaper}')` }}
+                    style={{ backgroundImage: `url('${resolvedCampaignWallpaper}')` }}
                 />
             )}
             {/* Layer 2 (z-1): Active projection (NPC, image projetée) */}

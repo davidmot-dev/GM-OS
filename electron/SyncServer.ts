@@ -50,8 +50,10 @@ export class SyncServer {
         if (req.url.startsWith('/media/')) {
             const encodedPath = req.url.substring(7);
             const filePath = decodeURIComponent(encodedPath);
+            console.log(`[SyncServer] Requesting media: ${filePath}`);
             
             if (fs.existsSync(filePath) && fs.lstatSync(filePath).isFile()) {
+                console.log(`[SyncServer] Serving media file: ${filePath}`);
                 const ext = path.extname(filePath).toLowerCase();
                 const mimeTypes: Record<string, string> = {
                     '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
@@ -64,6 +66,7 @@ export class SyncServer {
                 });
                 fs.createReadStream(filePath).pipe(res);
             } else {
+                console.warn(`[SyncServer] Media file not found: ${filePath}`);
                 res.writeHead(404);
                 res.end('Media not found');
             }
@@ -74,14 +77,24 @@ export class SyncServer {
         if (req.url.startsWith('/temp/')) {
             const fileName = req.url.substring(6);
             const filePath = path.join(this.tempMediaDir, fileName);
+            console.log(`[SyncServer] Requesting temp asset: ${fileName} -> ${filePath}`);
             
             if (fs.existsSync(filePath)) {
+                console.log(`[SyncServer] Serving temp asset: ${fileName}`);
+                const ext = path.extname(filePath).toLowerCase();
+                const mimeTypes: Record<string, string> = {
+                    '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
+                    '.gif': 'image/gif', '.webp': 'image/webp', '.svg': 'image/svg+xml',
+                    '.mp3': 'audio/mpeg', '.wav': 'audio/wav'
+                };
+                
                 res.writeHead(200, { 
-                    'Content-Type': 'image/webp',
+                    'Content-Type': mimeTypes[ext] || 'image/webp', // Default to webp if no ext (historical)
                     'Access-Control-Allow-Origin': '*' 
                 });
                 fs.createReadStream(filePath).pipe(res);
             } else {
+                console.warn(`[SyncServer] Temp asset not found: ${fileName}`);
                 res.writeHead(404);
                 res.end('Temp Media not found');
             }
@@ -198,6 +211,21 @@ export class SyncServer {
         ipcMain.on('remote:clear-disconnected', () => {
             sessionManager.clearDisconnected();
             this.updateGMClients();
+        });
+
+        ipcMain.handle('remote:cache-media', async (_event, buffer: ArrayBuffer, id: string) => {
+            try {
+                if (!this.tempMediaDir) return false;
+                await fs.ensureDir(this.tempMediaDir);
+                // We keep the ID as the filename (e.g. m-123)
+                const filePath = path.join(this.tempMediaDir, id);
+                await fs.writeFile(filePath, Buffer.from(buffer));
+                console.log(`[Nexus Sync] Media cached: ${id} at ${filePath}`);
+                return true;
+            } catch (err) {
+                console.error(`[Nexus Sync] Failed to cache media ${id}:`, err);
+                return false;
+            }
         });
     }
 

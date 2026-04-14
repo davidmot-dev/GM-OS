@@ -153,9 +153,15 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
             })));
 
             // 4e. Wallpaper de campagne
-            const resolvedWallpaper = freshSessionOS.activeCampaignWallpaper
-                ? await resolveToSendableUrl(freshSessionOS.activeCampaignWallpaper)
+            const activeCampaign = campaigns.find(c => c.id === currentCampaignId);
+            const rawWallpaper = activeCampaign?.wallpaperUrl || freshSessionOS.activeCampaignWallpaper;
+            const resolvedWallpaper = rawWallpaper
+                ? await resolveToSendableUrl(rawWallpaper)
                 : null;
+
+            if (resolvedWallpaper) {
+                console.log(`[NexusSync] Wallpaper resolved: ${rawWallpaper.substring(0, 30)}... -> ${resolvedWallpaper.substring(0, 50)}...`);
+            }
 
             // 4f. Favoris — champs réels : .imageUrl, .tokenUrl
             const resolvedFavorites = await Promise.all(favoriteStore.favorites.map(async (fav) => ({

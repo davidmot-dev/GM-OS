@@ -24,6 +24,15 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
                     return;
                 }
 
+                // Optimization: If the source matches the already resolved URL (e.g. data URI already proxied), skip
+                if (sourceIdOrUrl === resolvedUrl) {
+                    return;
+                }
+
+                if (sourceIdOrUrl.includes('m-') || sourceIdOrUrl.includes('temp/')) {
+                    console.log(`[useMediaUrl] Resolving media: "${sourceIdOrUrl.substring(0, 50)}${sourceIdOrUrl.length > 50 ? '...' : ''}"`);
+                }
+
                 // Return directly if it's already a usable URL
                 if (sourceIdOrUrl.startsWith('http') || sourceIdOrUrl.startsWith('gmos://') || sourceIdOrUrl.startsWith('blob:')) {
                     if (isMounted) setResolvedUrl(sourceIdOrUrl);
