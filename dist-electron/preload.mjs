@@ -84,7 +84,7 @@ contextBridge.exposeInMainWorld("appBridge", {
     extractPDF: (filePath) => ipcRenderer.invoke("ai:extract-pdf", filePath),
     proxyRequest: (url, method, headers, body) => ipcRenderer.invoke("ai:proxy-request", url, method, headers, body),
     searchContext: (systemId, campaignName) => ipcRenderer.invoke("ai:search-context", systemId, campaignName),
-    reindex: () => ipcRenderer.invoke("ai:reindex"),
+    reindex: (customPath) => ipcRenderer.invoke("ai:reindex", customPath),
     // Ollama Local AI
     ollamaChat: (model, messages) => ipcRenderer.invoke("ai:ollama-chat", model, messages),
     ollamaChatStream: (model, messages) => ipcRenderer.invoke("ai:ollama-chat-stream", model, messages),

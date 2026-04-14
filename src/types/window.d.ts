@@ -153,7 +153,7 @@ declare global {
             extractPdf: (filePath: string) => Promise<string>;
             proxyRequest: (url: string, method: string, headers: Record<string, string>, body: unknown) => Promise<AIProxyResponse>;
             searchContext: (systemId: string, campaignName: string) => Promise<string>;
-            reindex: () => Promise<boolean>;
+            reindex: (customPath?: string) => Promise<boolean>;
             ollamaChat: (model: string, messages: { role: string; content: string }[]) => Promise<string>;
             ollamaStatus: () => Promise<boolean>;
             ollamaListModels: () => Promise<string[]>;

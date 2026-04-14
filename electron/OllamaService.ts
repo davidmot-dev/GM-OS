@@ -1,5 +1,5 @@
 // Utilisation du net.fetch d'Electron pour éviter les bugs réseau de Node.js sur Windows
-import { net } from 'electron';
+import { net, ipcMain } from 'electron';
 
 export interface OllamaChatResponse {
     model: string;
@@ -174,5 +174,46 @@ export class OllamaService {
             console.error('[Ollama] Erreur de génération d\'image:', error);
             throw error;
         }
+    }
+
+    /**
+     * Enregistre les gestionnaires IPC pour Ollama
+     */
+    static registerHandlers() {
+        const service = new OllamaService();
+
+        ipcMain.handle('ai:ollama-status', async () => {
+            return await service.checkStatus();
+        });
+
+        ipcMain.handle('ai:ollama-chat', async (_event, model: string, messages: { role: string; content: string }[]) => {
+            return await service.chat(model, messages);
+        });
+
+        ipcMain.handle('ai:ollama-generate-image', async (_event, model: string, prompt: string) => {
+            return await service.generateImage(model, prompt);
+        });
+
+        ipcMain.handle('ai:ollama-chat-stream', async (event, model: string, messages: { role: string; content: string }[]) => {
+            try {
+                await service.chatStream(model, messages, (token) => {
+                    if (!event.sender.isDestroyed()) {
+                        event.sender.send('ai:ollama-stream-token', token);
+                    }
+                });
+                return { success: true };
+            } catch (error) {
+                console.error('[Ollama Bridge] Streaming error:', error);
+                throw error;
+            }
+        });
+
+        ipcMain.handle('ai:ollama-list-models', async () => {
+            return await service.listModels();
+        });
+
+        ipcMain.handle('ai:ollama-pull', async (_event, model: string) => {
+            return await service.pullModel(model);
+        });
     }
 }

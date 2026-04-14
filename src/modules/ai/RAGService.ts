@@ -1,4 +1,5 @@
 import { useSessionOSStore } from '../session/useSessionOSStore';
+import { useObsidianStore } from '../session/useObsidianStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../data/defaultSheetTemplates';
 
 export interface DocEntry {
@@ -24,30 +25,28 @@ export class RAGService {
 
   /**
    * Scans the docs directory and returns relevant content based on active session.
+   * Leverages the dynamic backend RAG Engine.
    */
   public async getRelevantContext(options: { systemOnly?: boolean; systemName?: string } = {}): Promise<string> {
+    const osStore = useSessionOSStore.getState();
+    const obsidianStore = useObsidianStore.getState();
+    
+    // 1. Align RAG Path with Obsidian Vault if available
+    if (obsidianStore.vaultPath && window.appBridge?.ai?.reindex) {
+        // We trigger a background reindex if the path changed handled by RAGEngine.ts logic
+        window.appBridge.ai.reindex(obsidianStore.vaultPath).catch(console.error);
+    }
+
     if (options.systemOnly && options.systemName) {
       return this.getContextForSpecificSystem(options.systemName);
     }
 
-    const osStore = useSessionOSStore.getState();
     const activeCampaign = osStore.campaigns.find(c => c.id === osStore.activeCampaignId);
     
-    if (!activeCampaign) return "";
-
-    // If explicit paths are provided, we use them directly
-    if (activeCampaign.systemPath || activeCampaign.campaignPath) {
-      console.log(`[RAG Service] Explicit Paths found -> System: ${activeCampaign.systemPath}, Campaign: ${activeCampaign.campaignPath}`);
-      return this.getContextFromExplicitPaths(activeCampaign.systemPath, activeCampaign.campaignPath);
-    }
-
     const rawSystemId = activeCampaign?.system || 'unknown';
     const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...osStore.customSheetTemplates];
     const systemId = allTemplates.find(t => t.id === rawSystemId)?.name || rawSystemId;
-    
     const campaignName = activeCampaign?.name || 'unknown';
-
-    console.log(`[RAG Service] Optimized Search -> System: ${systemId}, Campaign: ${campaignName}`);
 
     if (!window.appBridge?.ai?.searchContext) {
         console.error("[RAG Service] Bridge searchContext not available.");
@@ -55,12 +54,9 @@ export class RAGService {
     }
 
     try {
+        console.log(`[RAG Service] Targeted Search -> System: ${systemId}, Campaign: ${campaignName}`);
         const context = await window.appBridge.ai.searchContext(systemId, campaignName);
-        if (!context) {
-            console.warn("[RAG Service] No context found via optimized engine.");
-            return "";
-        }
-        return context;
+        return context || "";
     } catch (error) {
         console.error("[RAG Service] Search error:", error);
         return "";

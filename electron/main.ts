@@ -5,8 +5,6 @@ import fs from 'fs-extra'
 import http from 'node:http'
 import https from 'node:https'
 import { createRequire } from 'node:module';
-const require = createRequire(import.meta.url);
-const pdf = require('pdf-parse');
 const { WebSocketServer } = require('ws');
 import os from 'node:os';
 import dns from 'node:dns';
@@ -80,6 +78,8 @@ registerObsidianHandlers();
 registerNexusHandlers();
 // Register native Keychain Security
 registerSecurityHandlers();
+// Register Ollama Local AI Service
+OllamaService.registerHandlers();
 
 // Register gmos protocol as privileged
 protocol.registerSchemesAsPrivileged([
@@ -89,7 +89,6 @@ protocol.registerSchemesAsPrivileged([
 // Ignore certificate errors for local HTTPS requests (like Philips Hue Bridge)
 app.commandLine.appendSwitch('ignore-certificate-errors')
 
-const ollamaService = new OllamaService();
 // const gitBackupService = new GitBackupService(process.env.APP_ROOT);
 
 // 🚧 Use ['ENV_NAME'] avoid vite:define dev replacement
@@ -557,100 +556,7 @@ ipcMain.on('remote:clear-disconnected', (event) => {
 });
 
 // --- AI RAG Handlers ---
-ipcMain.handle('ai:list-docs', async () => {
-    const docsPath = path.join(APP_ROOT, 'docs');
-    if (!fs.existsSync(docsPath)) return [];
-    
-    async function getFiles(dir: string): Promise<unknown[]> {
-      const items = await fs.readdir(dir, { withFileTypes: true });
-      const result = await Promise.all(items.map(async item => {
-        const fullPath = path.join(dir, item.name);
-        const relativePath = path.relative(docsPath, fullPath);
-        
-        if (item.isDirectory()) {
-          return {
-            name: item.name,
-            path: relativePath,
-            type: 'directory',
-            children: await getFiles(fullPath)
-          };
-        }
-        
-        return {
-          name: item.name,
-          path: relativePath,
-          type: 'file',
-          extension: path.extname(item.name).toLowerCase()
-        };
-      }));
-      return result;
-    }
-
-    return getFiles(docsPath);
-  });
-
-ipcMain.handle('ai:read-doc', async (_event, relativePath: string) => {
-    const fullPath = path.join(APP_ROOT, 'docs', relativePath);
-    if (!fs.existsSync(fullPath)) return null;
-    return fs.readFileSync(fullPath, 'utf-8');
-  });
-
-// --- Ollama Local AI Handlers ---
-ipcMain.handle('ai:ollama-status', async () => {
-    return await ollamaService.checkStatus();
-});
-
-ipcMain.handle('ai:ollama-chat', async (_event, model: string, messages: { role: string; content: string }[]) => {
-    return await ollamaService.chat(model, messages);
-});
-
-ipcMain.handle('ai:ollama-generate-image', async (_event, model: string, prompt: string) => {
-    return await ollamaService.generateImage(model, prompt);
-});
-
-ipcMain.handle('ai:ollama-chat-stream', async (event, model: string, messages: { role: string; content: string }[]) => {
-    try {
-        await ollamaService.chatStream(model, messages, (token) => {
-            if (!event.sender.isDestroyed()) {
-                event.sender.send('ai:ollama-stream-token', token);
-            }
-        });
-        return { success: true };
-    } catch (error) {
-        console.error('[AI Main] Streaming error:', error);
-        throw error;
-    }
-});
-
-ipcMain.handle('ai:ollama-list-models', async () => {
-    return await ollamaService.listModels();
-});
-
-ipcMain.handle('ai:ollama-pull', async (_event, model: string) => {
-    return await ollamaService.pullModel(model);
-});
-
-ipcMain.handle('ai:extract-pdf', async (_event, relativePath: string) => {
-    const fullPath = path.join(APP_ROOT, 'docs', relativePath);
-    console.log(`[AI Main] Extracting PDF: ${fullPath}`);
-    
-    if (!fs.existsSync(fullPath)) {
-      console.error(`[AI Main] PDF file not found: ${fullPath}`);
-      return "Fichier introuvable.";
-    }
-    
-    try {
-      const dataBuffer = fs.readFileSync(fullPath);
-      console.log(`[AI Main] Buffer read, size: ${dataBuffer.length} bytes. Parsing...`);
-      
-      const data = await pdf(dataBuffer);
-      console.log(`[AI Main] PDF parsed successfully. Text length: ${data.text?.length || 0}`);
-      return data.text || "PDF vide ou illisible.";
-    } catch (error) {
-      console.error("[AI Main] PDF Extraction Error:", error);
-      return `Erreur lors de l'extraction du PDF : ${error instanceof Error ? error.message : String(error)}`;
-    }
-  });
+// AI handlers are now managed in RAGEngine.ts
 
 ipcMain.handle('ai:proxy-request', async (_event, url: string, method: string, headers: Record<string, string>, body: unknown): Promise<AIProxyResponse> => {
     return new Promise((resolve, reject) => {

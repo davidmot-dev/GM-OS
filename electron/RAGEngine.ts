@@ -2,13 +2,20 @@ import { ipcMain } from 'electron';
 import path from 'node:path';
 import fs from 'fs-extra';
 import { createRequire } from 'node:module';
+
 const require = createRequire(import.meta.url);
-const pdf = require('pdf-parse');
+let pdf: any;
+try {
+    pdf = require('pdf-parse');
+} catch (e) {
+    console.error('[RAG Engine] Failed to load pdf-parse:', e);
+}
 
 interface IndexedFile {
     mtime: number;
     content: string;
     path: string;
+    type: 'markdown' | 'pdf' | 'text';
 }
 
 export class RAGEngine {
@@ -19,6 +26,15 @@ export class RAGEngine {
 
     private constructor() {
         this.docsPath = path.join(process.env.APP_ROOT || '', 'docs');
+    }
+
+    public setDocsPath(newPath: string) {
+        if (newPath && newPath !== this.docsPath) {
+            console.log(`[RAG Engine] Updating docs path to: ${newPath}`);
+            this.docsPath = newPath;
+            this.index.clear();
+            this.updateIndex();
+        }
     }
 
     public static getInstance(): RAGEngine {
@@ -77,34 +93,36 @@ export class RAGEngine {
 
     /**
      * Search relevant content for a given system and campaign
+     * Optimized for targeted indexing
      */
     public async getRelevantContext(systemId: string, campaignName: string): Promise<string> {
-        // Ensure index is at least partially ready
         if (this.index.size === 0) await this.updateIndex();
 
         const sys = systemId.toLowerCase();
         const camp = campaignName.toLowerCase();
         const results: string[] = [];
 
+        // Targeted search: prioritizing files that match system or campaign names
+        // or are located in folders with those names.
         for (const [relPath, file] of this.index.entries()) {
             const lowerPath = relPath.toLowerCase();
+            const segments = lowerPath.split(/[/\\]/);
             
-            // Logic:
-            // 1. If inside systems/[sys], it's highly relevant
-            // 2. If inside campaigns/[camp], it's highly relevant
-            // 3. If file name matches sys or camp, it's relevant
-            
-            const isSystemFile = lowerPath.includes(`systems/${sys}`) || lowerPath.includes(`systems\\${sys}`);
-            const isCampaignFile = lowerPath.includes(`campaigns/${camp}`) || lowerPath.includes(`campaigns\\${camp}`);
-            const isMatchedByName = lowerPath.includes(sys) || lowerPath.includes(camp);
+            const isSystemRelevant = segments.some(s => s.includes(sys)) || lowerPath.includes('systems');
+            const isCampaignRelevant = segments.some(s => s.includes(camp)) || lowerPath.includes('campaigns');
 
-            if (isSystemFile || isCampaignFile || isMatchedByName) {
-                const header = `[Source: ${relPath}]\n`;
-                results.push(header + file.content);
+            if (isSystemRelevant || isCampaignRelevant) {
+                // High precision match: if the folder/file explicitly matches the ID
+                const score = (lowerPath.includes(sys) ? 2 : 0) + (lowerPath.includes(camp) ? 2 : 0);
+                
+                if (score > 0 || (isSystemRelevant && lowerPath.includes('systems')) || (isCampaignRelevant && lowerPath.includes('campaigns'))) {
+                   const header = `[Source: ${relPath}]\n`;
+                   results.push(header + file.content);
+                }
             }
         }
 
-        return results.join('\n\n---\n\n');
+        return results.slice(0, 15).join('\n\n---\n\n'); // Limit to top 15 matches for token safety
     }
 
     private async getAllFiles(dir: string): Promise<string[]> {
@@ -157,13 +175,73 @@ export function registerRagHandlers() {
         return await engine.getRelevantContext(systemId, campaignName);
     });
 
-    ipcMain.handle('ai:reindex', async () => {
+    ipcMain.handle('ai:reindex', async (_event, customPath?: string) => {
+        if (customPath) engine.setDocsPath(customPath);
         await engine.updateIndex();
         return true;
     });
 
+    ipcMain.handle('ai:list-docs', async () => {
+        const root = RAGEngine.getInstance()['docsPath'];
+        if (!await fs.pathExists(root)) return [];
+        
+        async function getFiles(dir: string): Promise<any[]> {
+            const items = await fs.readdir(dir, { withFileTypes: true });
+            const result = await Promise.all(items.map(async item => {
+                const fullPath = path.join(dir, item.name);
+                const relativePath = path.relative(root, fullPath);
+                
+                if (item.name.startsWith('.')) return null;
+
+                if (item.isDirectory()) {
+                    return {
+                        name: item.name,
+                        path: relativePath,
+                        type: 'directory',
+                        children: await getFiles(fullPath)
+                    };
+                }
+                
+                return {
+                    name: item.name,
+                    path: relativePath,
+                    type: 'file',
+                    extension: path.extname(item.name).toLowerCase()
+                };
+            }));
+            return result.filter(r => r !== null);
+        }
+
+        return getFiles(root);
+    });
+
+    ipcMain.handle('ai:read-doc', async (_event, relativePath: string) => {
+        const root = RAGEngine.getInstance()['docsPath'];
+        const fullPath = path.join(root, relativePath);
+        if (!await fs.pathExists(fullPath) || !fullPath.startsWith(root)) return null;
+        return fs.readFile(fullPath, 'utf-8');
+    });
+
+    ipcMain.handle('ai:extract-pdf', async (_event, relativePath: string) => {
+        const root = RAGEngine.getInstance()['docsPath'];
+        const fullPath = path.join(root, relativePath);
+        if (!await fs.pathExists(fullPath) || !fullPath.startsWith(root)) return "Fichier introuvable.";
+
+        try {
+            const dataBuffer = await fs.readFile(fullPath);
+            if (pdf) {
+                const data = await pdf(dataBuffer);
+                return data.text || '';
+            }
+            return "PDF Parser non disponible.";
+        } catch (error) {
+            console.error("[RAGEngine] PDF Extraction Error:", error);
+            return "Erreur lors de l'extraction.";
+        }
+    });
+
     // Start background indexing periodically
-    setInterval(() => engine.updateIndex(), 1000 * 60 * 5); // Every 5 minutes
+    setInterval(() => engine.updateIndex(), 1000 * 60 * 15); // Every 15 minutes (less frequent to save IO)
     // Initial scan
     setTimeout(() => engine.updateIndex(), 5000);
 }

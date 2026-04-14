@@ -1,80 +1,31 @@
-# 📋 GM-OS v6 : Backlog de "Sanity Check" & Stabilisation
+# Sanity Check Backlog : GM-OS v6 Stabilization
 
-Ce document permet de suivre l'audit et la remise aux normes v6 de chaque module du projet.
+Ce document suit l'audit et la stabilisation chirurgicale des modules v5 pour garantir leur robustesse dans la v6.
 
-## 🛠️ Critères d'Audit (Standard GM-OS v6)
+## 🔴 Priorités Immédiates (Audit en cours)
 
-Chaque module doit être validé selon les critères suivants :
-1.  **[TYPE] Typage Strict** : Utilisation d'interfaces explicites, aucun `any`.
-2.  **[BRDG] Bridge Isolation** : Utilisation exclusive de `window.appBridge` pour les entrées/sorties natives.
-3.  **[DECP] Découplage Logic** : Séparation de la logique métier dans des fichiers `.ts` ou hooks.
-4.  **[TEST] Test Coverage** : Présence de tests unitaires Vitest pour la logique métier.
-5.  **[SECU] Sécurité** : Pas de stockage de secrets en clair (localStorage).
-6.  **[SURG] Approche Chirurgicale** : Modification minimale du code existant pour éviter les régressions ; préserver la logique métier validée.
+### 1. Intelligence Artificielle (Cortex)
+- **Criterions** : [TYPE], [BRDG], [DECP], [TEST], [SECU]
+- **Statut** : ✅ **Corrigé**
+- **Actions effectuées** :
+    - [x] **Gestionnaire d'État (useAIStore)** : Fix bug saisie clé API.
+    - [x] **RAG Engine (Cortex)** : Stabilisation lecture PDF, alignement Obsidian Vault et indexation ciblée (Système/Campagne).
+    - [x] **Refacto Backend** : Centralisation des handlers IA/Ollama hors du `main.ts`.
 
----
+### 2. Sécurité & Bridge
+- **Criterion** : [SECU]
+- **Statut** : 🟡 Audit Partiel
+- **Prochaine Action** : Vérifier les permissions d'accès aux fichiers via le bridge (SecurityManager).
 
-## 🏗️ Suivi des Modules
+## 🟢 ÉVALUÉS & STABLES (v6-Ready)
 
-### 1. Infrastructure Core
-| Module | Priorité | Statut | Points d'Attention |
-| :--- | :---: | :--- | :--- |
-| **System** (`src/modules/system`) | P0 | ✅ Corrigé | Bootstrapping & Initialisation centralisée. |
-| Session | `src/modules/session` | P0 | ✅ Corrigé | Refonte du store (SessionManager, SnapshotService). |
-| **Remote** (`src/modules/remote`) | P1 | ✅ Corrigé | Refonte Nexus P1 : Modularisation `SyncServer` & Rôles. |
-| **Security** (Electron / Store) | **P0** | ✅ Corrigé | Migration API Keys vers `safeStorage`. |
-| **Shared** (`src/types/shared.ts`)| P1 | ✅ Corrigé | Types éclatés en 6 fichiers granulaires + re-exports compat. |
-
-### 2. AI & Intelligence (Le "Cortex")
-| Module | Priorité | Statut | Points d'Attention |
-| :--- | :---: | :--- | :--- |
-| **AI (Oracle)** (`src/modules/ai`) | P1 | ✅ Corrigé | Neural Liaison centralisée, support Secrets MJ & Tests Vitest. |
-| **Tactical-AI** (`src/modules/tactical-ai`) | P1 | ✅ Corrigé | Stabilisation Neural Liaison (Oracle) & Isolation Bridge. |
-| **RAG Engine** (Electron) | P2 | 🟡 À Analyser | Indexation & Performance. |
-| **Ollama Service** (Electron) | P2 | 🟡 À Analyser | Connectivité locale. |
-
-### 3. Gameplay & Tactical
-| Module | Priorité | Statut | Points d'Attention |
-| :--- | :---: | :--- | :--- |
-| **Map-OS** (`src/modules/map`) | **P0** | ✅ Corrigé | **ID-based mapping** & performance Fog. |
-| **Combat-OS** | P1 | ✅ Corrigé | Refonte Dropdowns (Stitch), Découplage Logique & Tests. |
-| **NPC-OS** (`src/modules/session`) | P1 | ✅ Corrigé | Sync Galerie, Secrets MJ & Sécurité Hub. |
-| **Dice-OS** | P2 | 🟡 À Analyser | Moteur de simulation 3D vs Logique. |
-| **Journal** (Wiki/Timeline) | P2 | 🟡 À Analyser | Cohérence des dates du monde. |
-| **Whiteboard** | P2 | 🟡 À Analyser | Latence de dessin synchronisé. |
-| **Tables** | P3 | 🟡 À Analyser | Gestion des rencontres aléatoires. |
-
-### 4. Immersion Multimedia
-| Module | Priorité | Statut | Points d'Attention |
-| :--- | :---: | :--- | :--- |
-| **Music-OS** | P2 | 🟡 À Analyser | Speaker management logic. |
-| **Ambient-OS** | P2 | 🟡 À Analyser | Layering & Presets. |
-| **Sound-OS** | P2 | 🟡 À Analyser | SFX collision & trigger. |
-| **Voice-OS** | P2 | 🟡 À Analyser | AudioWorklet stabilization. |
-| **Image-OS** | P2 | 🟡 À Analyser | Projection protocol compatibility. |
-
-### 5. Services & Tools
-| Module | Priorité | Statut | Points d'Attention |
-| :--- | :---: | :--- | :--- |
-| **Nexus Bridge** | P1 | ✅ Corrigé | Centralisation via `SyncServer` & `handleSync`. |
-| **Forms/Forge** | P3 | 🟡 À Analyser | Générateurs de contenu. |
-| **Clock-OS** | P3 | 🟡 À Analyser | Time sync between Master/Hub. |
-| **Favorite** | P3 | 🟡 À Analyser | Persistence des raccourcis. |
-| **Debug** | P3 | 🟡 À Analyser | Dev Tools visibility. |
-
-### 6. Hubs & Clients (Expérience Joueur)
-| Module | Priorité | Statut | Points d'Attention |
-| :--- | :---: | :--- | :--- |
-| **Player Hub** | P1 | 🟡 À Analyser | Fluidité des animations & synchronisation. |
-| **Tablet Hub** | P1 | ✅ Corrigé | Sync Wallpaper (Nexus Relay) & Optimisation Base64 (Relais Proxy). |
-
----
+| Module | Statut | Commentaire |
+| :--- | :--- | :--- |
+| **Tactical-AI** | 🟢 OK | Découplage v6 effectué. |
+| **Cortex (RAG)** | 🟢 OK | Stabilisation et liaison Obsidian OK. |
 
 ## 🏃 Flux de Travail
 1.  **Analyse** : Ouvrir le module, vérifier les 5 critères de base.
 2.  **Plan de Correction** : Si des défauts sont trouvés.
 3.  **Correction** : Application des changements.
 4.  **Validation** : Mise à jour du statut dans ce fichier.
-
-> [!NOTE]
-> **Prochaine Action Immédiate** : Vérifier la cohérence de la **RAG Engine [P2]** et sa liaison avec les documents locaux (Obsidian).

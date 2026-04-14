@@ -89,7 +89,7 @@ contextBridge.exposeInMainWorld('appBridge', {
             ipcRenderer.invoke('ai:proxy-request', url, method, headers, body),
         searchContext: (systemId: string, campaignName: string) => 
             ipcRenderer.invoke('ai:search-context', systemId, campaignName),
-        reindex: () => ipcRenderer.invoke('ai:reindex'),
+        reindex: (customPath?: string) => ipcRenderer.invoke('ai:reindex', customPath),
         // Ollama Local AI
         ollamaChat: (model: string, messages: { role: string; content: string }[]) => ipcRenderer.invoke('ai:ollama-chat', model, messages),
         ollamaChatStream: (model: string, messages: { role: string; content: string }[]) => ipcRenderer.invoke('ai:ollama-chat-stream', model, messages),
