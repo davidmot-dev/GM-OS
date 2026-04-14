@@ -28,7 +28,7 @@ Chaque module doit être validé selon les critères suivants :
 ### 2. AI & Intelligence (Le "Cortex")
 | Module | Priorité | Statut | Points d'Attention |
 | :--- | :---: | :--- | :--- |
-| **AI (Oracle)** (`src/modules/ai`) | P1 | 🟡 À Analyser | MCP Bridge & Context handling. |
+| **AI (Oracle)** (`src/modules/ai`) | P1 | ✅ Corrigé | Neural Liaison centralisée, support Secrets MJ & Tests Vitest. |
 | **Tactical-AI** | P1 | 🟡 À Analyser | Précision des conseils de combat. |
 | **RAG Engine** (Electron) | P2 | 🟡 À Analyser | Indexation & Performance. |
 | **Ollama Service** (Electron) | P2 | 🟡 À Analyser | Connectivité locale. |

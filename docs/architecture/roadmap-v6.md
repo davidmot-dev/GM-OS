@@ -93,5 +93,5 @@ Ces fonctionnalités sont prévues mais temporairement mises de côté pour prio
 | Nesting I18n conflict (Map vs Module) | Haute | ✅ Résolu |
 
 ---
-*Dernière mise à jour : 11 Avril 2026 (15h25)*
-*Statut : Version 6.2.5 FINALISÉE. Transition v6.2.6-dev : Localisation Session/Nexus & Sécurité Manifeste opérationnelles.*
+*Dernière mise à jour : 14 Avril 2026 (22h13)*
+*Statut : Version 6.2.5 FINALISÉE. Transition v6.2.6-dev : Infrastructure Neural Liaison (IA Oracle) opérationnelle et stabilisée.*
