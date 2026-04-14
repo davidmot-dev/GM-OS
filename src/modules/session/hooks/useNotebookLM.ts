@@ -1,27 +1,25 @@
-import { useState, useCallback, useMemo } from 'react';
-import { useGemStore } from '../../../stores/useGemStore';
-import { useSessionOSStore } from '../useSessionOSStore';
+import { useState, useCallback } from 'react';
+import { useOracleContext } from '../../ai/hooks/useOracleContext';
 
 interface Message {
     role: 'user' | 'assistant';
     content: string;
 }
 
+/**
+ * Hook spécialisé pour la communication avec NotebookLM via le pont MCP GM-OS.
+ * Intègre automatiquement le contexte vivant de la session (Neural Liaison).
+ */
 export const useNotebookLM = () => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [isQuerying, setIsQuerying] = useState(false);
     
-    // Get active GEM and campaign info
-    const { activeGemId, gems } = useGemStore();
-    const { activeCampaignId, campaigns, getActiveDriver } = useSessionOSStore();
-
-    const activeGem = useMemo(() => gems.find(g => g.id === activeGemId), [gems, activeGemId]);
-    const activeCampaign = useMemo(() => campaigns.find(c => c.id === activeCampaignId), [campaigns, activeCampaignId]);
-    const activeDriver = getActiveDriver();
+    // Récupération du contexte vivant et du persona actif via le hook centralisé
+    const { snapshot, activeGem, activeCampaign, activeDriver } = useOracleContext();
 
     const extractNotebookId = useCallback((url: string): string | null => {
         if (!url) return null;
-        // Robust regex to extract UUID or alphanumeric ID from various URL formats
+        // Extraction robuste de l'ID depuis l'URL NotebookLM
         const match = url.match(/notebooks\/([a-f0-9-]{36}|[a-zA-Z0-9_-]+)/i) || 
                      url.match(/([a-f0-9-]{36})/i);
         return match ? match[1] : url.trim();
@@ -31,24 +29,18 @@ export const useNotebookLM = () => {
         if (!notebookId || !query.trim() || isQuerying) return;
 
         setIsQuerying(true);
+        // On affiche uniquement la requête utilisateur brute dans l'UI pour la lisibilité
         setMessages(prev => [...prev, { role: 'user', content: query }]);
 
         try {
-            // Build the persona-aware prompt
+            // 1. Détermination des consignes du Persona (Calcul des priorités d'override)
             let personaPrompt = "";
             if (activeGem) {
-                const systemId = activeCampaign?.system;
-                
-                // Priority 0: User-defined override in the current Campaign
                 const campaignOverride = activeCampaign?.aiPersonas?.[activeGem.id];
-                
-                // Priority 1: User-defined override in the current Driver (Rule Engine)
                 const driverOverride = activeDriver?.aiPersonas?.[activeGem.id];
+                const systemOverride = activeCampaign?.system ? activeGem.systemOverrides?.[activeCampaign.system] : null;
                 
-                // Priority 2: Built-in system override for this Gem
-                const systemOverride = systemId ? activeGem.systemOverrides?.[systemId] : null;
-                
-                // Final selection: Campaign > Driver > System > Base
+                // Priorité : Campagne > Système/Driver > Base instructions
                 personaPrompt = campaignOverride || driverOverride || systemOverride || activeGem.baseInstructions;
             }
 
@@ -56,6 +48,7 @@ export const useNotebookLM = () => {
                 throw new Error("Bridge MCP non disponible");
             }
 
+            // 2. Configuration du Persona (Phase de pré-vol)
             if (personaPrompt) {
                 try {
                     await window.appBridge.mcp.callTool('notebooklm-mcp-server', 'chat_configure', {
@@ -65,31 +58,33 @@ export const useNotebookLM = () => {
                         response_length: 'default'
                     });
                 } catch (err) {
-                    console.warn("useNotebookLM: Failed to configure persona, continuing with query", err);
+                    console.warn("useNotebookLM: Configuration persona échouée, poursuite sans consignes", err);
                 }
             }
 
+            // 3. Injection du Contexte Vital (Neural Liaison)
+            // On combine l'instantané de session capturé par useOracleContext avec la question
+            const enrichedQuery = `[LIAISON NEURALE : ÉTAT DE LA SESSION]\n${snapshot}\n\n[MESSAGE DU MJ]\n${query}\n\n(Réponds toujours en français)`;
+
             const response = await window.appBridge.mcp.callTool('notebooklm-mcp-server', 'notebook_query', {
                 notebook_id: notebookId,
-                query: `${query}\n\n(Réponds toujours en français)`
+                query: enrichedQuery
             });
 
             if (response && response.content) {
                 setMessages(prev => [...prev, { role: 'assistant', content: response.content as string }]);
             } else {
-                setMessages(prev => [...prev, { role: 'assistant', content: "Désolé, je n'ai pas pu obtenir de réponse de l'Oracle." }]);
+                setMessages(prev => [...prev, { role: 'assistant', content: "L'Oracle reste silencieux... (Réponse vide)" }]);
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error("useNotebookLM: Query failed", error);
-            setMessages(prev => [...prev, { role: 'assistant', content: "Erreur de connexion avec l'Oracle." }]);
+            setMessages(prev => [...prev, { role: 'assistant', content: `Rupture de liaison : ${error.message || 'Erreur MCP'}` }]);
         } finally {
             setIsQuerying(false);
         }
-    }, [isQuerying, activeGem, activeCampaign, activeDriver?.aiPersonas]);
+    }, [isQuerying, activeGem, activeCampaign, activeDriver, snapshot]);
 
-    const clearChat = useCallback(() => {
-        setMessages([]);
-    }, []);
+    const clearChat = useCallback(() => setMessages([]), []);
     
     const reauthenticate = useCallback(async () => {
         try {
