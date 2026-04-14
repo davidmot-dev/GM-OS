@@ -37,11 +37,11 @@ describe('TacticalNarrativeService', () => {
             50
         );
 
-        expect(report).toContain('SITUATION TACTIQUE POUR : Elara');
-        expect(report).toContain('Orc 1 (enemy) à 1 cases [Portée Contact]');
-        expect(report).toContain('Orc 2 (enemy) à 1 cases [Portée Contact]');
-        expect(report).toContain('ALERTE : Elara est FLANQUÉ par Orc 1 et Orc 2 !');
-        expect(report).toContain('DANGERS ENVIRONNEMENTAUX : Feu');
+        expect(report).toContain('## ANALYSE TACTIQUE MICRO : Elara');
+        expect(report).toContain('* Orc 1 à 1 cases [Portée Contact]');
+        expect(report).toContain('* Orc 2 à 1 cases [Portée Contact]');
+        expect(report).toContain('ALERTE : FLANQUÉ par Orc 1 et Orc 2 !');
+        expect(report).toContain('RISQUES TERRAIN : Feu');
     });
 
     it('should handle missing tokens gracefully', () => {
@@ -52,7 +52,7 @@ describe('TacticalNarrativeService', () => {
             [] as DangerZone[]
         );
 
-        expect(report).toContain("n'a pas de pion correspondant");
+        expect(report).toContain("Absent de la carte Atlas");
     });
 
     it('should calculate faction health correctly', () => {
@@ -65,7 +65,6 @@ describe('TacticalNarrativeService', () => {
 
         // My faction: Elara (20/20) = 100%
         // Enemy faction: Orc 1 (10/10) + Orc 2 (5/10) = 15/20 = 75%
-        expect(report).toContain('Santé globale du groupe player : 100%');
-        expect(report).toContain('Santé globale du groupe adverse : 75%');
+        expect(report).toContain('Morphologie du Combat : Allies 100% vs Enemies 75%');
     });
 });

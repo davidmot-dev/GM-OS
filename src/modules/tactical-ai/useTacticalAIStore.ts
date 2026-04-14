@@ -16,8 +16,6 @@ export const useTacticalAIStore = create<TacticalAIState>()(
       secrets: {
         hueBridgeIp: '',
         hueUsername: '',
-        openAIKey: '',
-        geminiKey: '',
       },
       logs: [],
       activeAdvices: [],
@@ -52,7 +50,7 @@ export const useTacticalAIStore = create<TacticalAIState>()(
           hardwareStatus: { ...state.hardwareStatus, ...status },
         })),
 
-      requestTacticalAnalysis: async (combatantId?: string) => {
+      requestTacticalAnalysis: async (combatantId?: string, macroContext?: string) => {
         const getStore = () => (useTacticalAIStore as any).getState() as TacticalAIState;
 
         set({ status: 'analyzing', strategicNarration: '', activeAdvices: [] });
@@ -80,7 +78,8 @@ export const useTacticalAIStore = create<TacticalAIState>()(
               combatState.combatants,
               mapState.tokens,
               mapState.dangerZones,
-              mapState.gridSize
+              mapState.gridSize,
+              macroContext
           );
 
           // 1. PHASE NARRATION (Streaming)
@@ -134,7 +133,10 @@ export const useTacticalAIStore = create<TacticalAIState>()(
       name: 'gm-os-tactical-ai',
       partialize: (state) => ({
         settings: state.settings,
-        secrets: state.secrets,
+        secrets: {
+          hueBridgeIp: state.secrets.hueBridgeIp,
+          hueUsername: state.secrets.hueUsername,
+        },
         logs: state.logs,
         activeAdvices: state.activeAdvices,
         status: state.status

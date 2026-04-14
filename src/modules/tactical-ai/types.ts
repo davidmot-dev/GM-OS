@@ -1,8 +1,6 @@
 export interface TacticalAISecrets {
   hueBridgeIp?: string;
   hueUsername?: string;
-  openAIKey?: string;
-  geminiKey?: string;
 }
 
 export interface TacticalAISettings {
@@ -65,5 +63,5 @@ export interface TacticalAIState {
   setAdvices: (advices: TacticalAdvice[]) => void;
   setHardwareStatus: (status: Partial<TacticalAIState['hardwareStatus']>) => void;
   setIsPanelOpen: (isOpen: boolean) => void;
-  requestTacticalAnalysis: (combatantId?: string) => Promise<void>;
+  requestTacticalAnalysis: (combatantId?: string, macroContext?: string) => Promise<void>;
 }

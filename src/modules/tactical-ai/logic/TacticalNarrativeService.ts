@@ -14,6 +14,7 @@ export interface TacticalContext {
         alliesHealthPercent: number;
         enemiesHealthPercent: number;
     };
+    macroContext?: string; // Neural Liaison snapshot
 }
 
 /**
@@ -30,9 +31,10 @@ export class TacticalNarrativeService {
         allCombatants: Combatant[],
         allTokens: MapToken[],
         dangerZones: DangerZone[],
-        gridSize: number = 50
+        gridSize: number = 50,
+        macroContext?: string
     ): string {
-        const context = this.buildContext(actor, allCombatants, allTokens, dangerZones, gridSize);
+        const context = this.buildContext(actor, allCombatants, allTokens, dangerZones, gridSize, macroContext);
         return this.formatNarrativePrompt(context);
     }
 
@@ -44,7 +46,8 @@ export class TacticalNarrativeService {
         allCombatants: Combatant[],
         allTokens: MapToken[],
         dangerZones: DangerZone[],
-        gridSize: number
+        gridSize: number,
+        macroContext?: string
     ): TacticalContext {
         const actorToken = allTokens.find(t => 
             t.linkedCombatantId === actor.id || 
@@ -129,7 +132,8 @@ export class TacticalNarrativeService {
             factionStatus: {
                 alliesHealthPercent: Math.round(myHealth.currentPercent),
                 enemiesHealthPercent: Math.round(enemyHealth.currentPercent)
-            }
+            },
+            macroContext
         };
     }
 
@@ -137,48 +141,50 @@ export class TacticalNarrativeService {
      * Transforme le contexte en une chaîne de caractères narrative optimisée pour le prompt IA.
      */
     private static formatNarrativePrompt(ctx: TacticalContext): string {
-        const { actor, actorToken, enemies, allies, isFlanked, flankedBy, nearbyDangerZones, factionStatus } = ctx;
+        const { actor, actorToken, enemies, allies, isFlanked, flankedBy, nearbyDangerZones, factionStatus, macroContext } = ctx;
 
-        let prompt = `SITUATION TACTIQUE POUR : ${actor.name}\n`;
-        prompt += `Statut : ${actor.hp}/${actor.hpMax} PV. Faction : ${actor.faction}.\n`;
+        let prompt = `## ANALYSE TACTIQUE MICRO : ${actor.name}\n`;
+        prompt += `- Santé : ${actor.hp}/${actor.hpMax} PV. Faction : ${actor.faction}.\n`;
         
         if (actor.statuses.length > 0) {
-            prompt += `États actifs : ${actor.statuses.map(s => s.name).join(', ')}.\n`;
+            prompt += `- États actifs : ${actor.statuses.map(s => s.name).join(', ')}.\n`;
         }
 
         if (!actorToken) {
-            prompt += `Note : Ce personnage n'a pas de pion correspondant sur la carte Atlas.\n`;
+            prompt += `- Note : Absent de la carte Atlas.\n`;
         } else {
-            prompt += `Position : Identifiée sur la grille Atlas.\n`;
+            prompt += `- Position : Valide (Atlas).\n`;
             
             if (isFlanked) {
-                prompt += `ALERTE : ${actor.name} est FLANQUÉ par ${flankedBy.join(' et ')} !\n`;
+                prompt += `- ALERTE : FLANQUÉ par ${flankedBy.join(' et ')} !\n`;
             }
 
             if (enemies.length > 0) {
-                prompt += `Ennemis à proximité :\n`;
+                prompt += `- Proximité Ennemi :\n`;
                 enemies.sort((a, b) => a.distance - b.distance).forEach(e => {
-                    prompt += `- ${e.combatant.name} (${e.combatant.faction}) à ${e.distance} cases [Portée ${e.rangeCategory}]. Santé: ${e.combatant.hp}/${e.combatant.hpMax} PV.\n`;
+                    prompt += `  * ${e.combatant.name} à ${e.distance} cases [Portée ${e.rangeCategory}]. Santé: ${e.combatant.hp}/${e.combatant.hpMax} PV.\n`;
                 });
             } else {
-                prompt += `Aucun ennemi identifié sur la carte.\n`;
+                prompt += `- Aucun ennemi sur carte.\n`;
             }
 
             if (allies.length > 0) {
                 const closeAllies = allies.filter(a => a.distance <= 2);
                 if (closeAllies.length > 0) {
-                    prompt += `Alliés en soutien direct (moins de 2 cases) : ${closeAllies.map(a => a.combatant.name).join(', ')}.\n`;
+                    prompt += `- Soutien direct (alliés < 2 cases) : ${closeAllies.map(a => a.combatant.name).join(', ')}.\n`;
                 }
             }
 
             if (nearbyDangerZones.length > 0) {
-                prompt += `DANGERS ENVIRONNEMENTAUX : ${nearbyDangerZones.map(dz => dz.name || 'Zone de danger').join(', ')} à proximité immédiate.\n`;
+                prompt += `- RISQUES TERRAIN : ${nearbyDangerZones.map(dz => dz.name || 'Zone de danger').join(', ')}.\n`;
             }
         }
 
-        prompt += `MORPHOLOGIE DU COMBAT :\n`;
-        prompt += `- Santé globale du groupe ${actor.faction} : ${factionStatus.alliesHealthPercent}%\n`;
-        prompt += `- Santé globale du groupe adverse : ${factionStatus.enemiesHealthPercent}%\n`;
+        prompt += `- Morphologie du Combat : Allies ${factionStatus.alliesHealthPercent}% vs Enemies ${factionStatus.enemiesHealthPercent}%\n`;
+
+        if (macroContext) {
+            prompt += `\n## CONTEXTE GLOBAL (Neural Liaison)\n${macroContext}\n`;
+        }
 
         return prompt;
     }

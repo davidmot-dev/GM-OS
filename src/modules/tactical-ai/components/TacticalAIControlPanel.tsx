@@ -41,10 +41,10 @@ export const TacticalAIControlPanel: React.FC = () => {
 
   return (
     <div 
-      className="w-[70rem] max-w-[95vw] h-80 bg-slate-950/90 backdrop-blur-3xl border border-accent/30 rounded-[2rem] shadow-[0_0_50px_-12px_rgba(0,0,0,1)] flex overflow-hidden ring-1 ring-white/10 shadow-accent/20"
+      className="w-[72rem] max-w-[95vw] h-85 bg-slate-950/80 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] shadow-[0_0_100px_-20px_rgba(0,0,0,0.8)] flex overflow-hidden ring-1 ring-white/10 shadow-glow-accent/5 transition-all duration-500"
       style={{ 
         position: 'fixed',
-        bottom: '2rem',
+        bottom: '3rem',
         left: '50%',
         transform: 'translateX(-50%)',
         zIndex: 9999
@@ -64,34 +64,37 @@ export const TacticalAIControlPanel: React.FC = () => {
             </div>
           </div>
           
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2.5">
             <div 
               title={hardwareStatus.hue === 'connected' ? 'Hue Bridge Connecté' : 'Hue Bridge Offline (Pairing requis)'}
-              className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-[10px] font-black uppercase tracking-tighter transition-all ${
+              className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl border text-[10px] font-black uppercase tracking-tight transition-all duration-300 ${
                 hardwareStatus.hue === 'connected' 
-                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' 
+                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400 shadow-glow-emerald/10' 
                   : 'bg-red-500/10 border-red-500/30 text-red-400 opacity-60 animate-pulse'
               }`}
             >
-              <Zap size={12} fill={hardwareStatus.hue === 'connected' ? 'currentColor' : 'none'} />
+              <Zap size={13} fill={hardwareStatus.hue === 'connected' ? 'currentColor' : 'none'} />
               Hue Bridge
             </div>
 
             <div 
               title={hardwareStatus.audio === 'ready' ? 'Audio Immersif Prêt' : 'Assets Audio Manquants'}
-              className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-[10px] font-black uppercase tracking-tighter transition-all ${
+              className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl border text-[10px] font-black uppercase tracking-tight transition-all duration-300 ${
                 hardwareStatus.audio === 'ready' 
-                  ? 'bg-blue-500/10 border-blue-500/30 text-blue-400' 
+                  ? 'bg-blue-500/10 border-blue-500/30 text-blue-400 shadow-glow-blue/10' 
                   : 'bg-amber-500/10 border-amber-500/30 text-amber-400'
               }`}
             >
-              <Volume2 size={12} />
-              Audio Server
+              <Volume2 size={13} />
+              Audio Logic
             </div>
           </div>
         </div>
 
-        <button onClick={() => setIsPanelOpen(false)} className="mt-4 flex flex-col items-center justify-center p-3 rounded-xl bg-white/5 text-white/40 hover:text-white hover:bg-white/10 transition-all uppercase text-[10px] font-bold tracking-widest border border-white/5">
+        <button 
+          onClick={() => setIsPanelOpen(false)} 
+          className="mt-6 flex items-center justify-center gap-2 p-3.5 rounded-2xl bg-white/5 text-white/40 hover:text-white hover:bg-white/10 transition-all uppercase text-[10px] font-black tracking-widest border border-white/5 shadow-inner"
+        >
             Fermer Cortex
         </button>
       </div>
@@ -147,24 +150,24 @@ export const TacticalAIControlPanel: React.FC = () => {
       </div>
 
       {/* 4. Logs (w-[20%]) */}
-      <div className="w-[20%] flex flex-col bg-black/20 shrink-0">
-          <div className="px-5 py-3 flex items-center justify-between border-b border-white/5">
-            <div className="flex items-center gap-2 text-[10px] font-bold text-white/40 uppercase tracking-widest">
-              <History size={12} /> Analytics
+      <div className="w-[20%] flex flex-col bg-black/40 shrink-0 border-l border-white/5">
+          <div className="px-5 py-4 flex items-center justify-between border-b border-white/10">
+            <div className="flex items-center gap-2 text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">
+              <History size={12} className="text-accent/40" /> Flux Neural
             </div>
-            <button onClick={clearLogs} className="text-[10px] hover:text-white text-white/20 transition-colors uppercase font-bold">Clear</button>
+            <button onClick={clearLogs} className="text-[10px] hover:text-red-400 text-white/20 transition-colors uppercase font-black tracking-widest">Wipe</button>
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
             {logs.length === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center text-white/20">
-                <Wand2 size={24} className="mb-2 opacity-10" />
-                <span className="text-[10px] uppercase font-bold tracking-tighter px-4 text-center">En attente...</span>
+              <div className="h-full flex flex-col items-center justify-center text-white/10 text-center px-4">
+                <Wand2 size={32} className="mb-3 opacity-20 animate-pulse" />
+                <span className="text-[11px] uppercase font-black tracking-[0.2em] leading-tight">Aucune activité détectée</span>
               </div>
             ) : (
               logs.slice(0, 10).map((log) => (
-                <div key={log.id} className="p-3 rounded-xl bg-slate-950/40 border border-white/5">
-                  <p className="text-[11px] text-white/90 leading-snug" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif', fontStyle: 'normal' }}>{log.message}</p>
-                  <span className="text-[9px] font-mono text-white/20 mt-1 block tracking-tighter">
+                <div key={log.id} className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-white/10 transition-all group">
+                  <p className="text-[11px] text-white/70 group-hover:text-white/90 leading-relaxed transition-colors" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>{log.message}</p>
+                  <span className="text-[9px] font-mono text-white/20 mt-2 block tracking-tighter opacity-50">
                     {new Date(log.timestamp).toLocaleTimeString()}
                   </span>
                 </div>
