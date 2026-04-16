@@ -57,7 +57,7 @@ Chaque module doit être validé selon les critères suivants :
 | **Sound-OS** | P2 | ✅ Corrigé | SFX collision & trigger. |
 | **Voice-OS** | P2 | ✅ Corrigé | v6.3.2 : AudioWorklet stabilization & Clipping protection. |
 | **Image-OS** | P2 | ✅ Corrigé | v6.3.2 : IPC-First Protocol & Fix React Keys (Performance). |
-| **Light-OS** | P2 | ✅ Corrigé | v6.3.3 : Fix Persistence/Keychain & Auto-Connect logic. |
+| **Light-OS** | P2 | ✅ Corrigé | v6.3.4 : Fix Race Condition, Double Call & Sync Bootstrap. |
 
 ### 5. Services & Tools
 

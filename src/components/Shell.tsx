@@ -82,7 +82,6 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
     useTacticalOrchestrator();
 
     // Global persistence/sync hooks
-    useHueAutoConnect();
     useLayoutManager();
 
     const {

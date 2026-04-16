@@ -165,7 +165,12 @@ export const useLightStore = create<LightState>()(
             setConnection: (status, ip, username) => {
                 // Sécurité : Si un username (token Hue) est fourni, on l'enregistre dans le trousseau natif
                 if (username && window.appBridge?.security) {
+                    console.log(`[Light OS] 🛡️ Token reçu. Enregistrement dans le trousseau...`);
                     window.appBridge.security.saveSecret('hue-bridge-token', username);
+                } else if (username === null) {
+                    // Note : On ne supprime PAS du trousseau ici, seul forgetBridge le fait.
+                    // On vide seulement la mémoire vive pour cette session.
+                    console.log(`[Light OS] 💡 Statut déconnecté ou erreur : Nettoyage du token en mémoire vive.`);
                 }
 
                 set((state) => ({
@@ -285,35 +290,37 @@ export const useLightStore = create<LightState>()(
             },
 
             syncWithKeychain: async () => {
-                if (!window.appBridge?.security) {
-                    console.warn('[Light OS] Security Bridge not available for keychain sync');
+                const security = window.appBridge?.security;
+                if (!security) {
+                    console.warn('[Light OS] 🛡️ API Security non disponible (Bridge absent)');
                     return;
                 }
 
                 console.log('[Light OS] 🔐 Synchronisation avec le trousseau...');
                 const state = get();
-                let hasChanges = false;
-                let newUsername = state.username;
-
-                // 1. Migration : Si le username traîne en clair dans le localStorage
-                if (state.username) {
-                    await window.appBridge.security.saveSecret('hue-bridge-token', state.username);
-                    // On ne le nettoie pas tout de suite de l'état "en mémoire", 
-                    // mais le partialize s'occupera de ne pas l'écrire au prochain save.
-                }
 
                 // 2. Récupération : On charge le token depuis le trousseau
-                const securedToken = await window.appBridge.security.getSecret('hue-bridge-token');
-                if (securedToken && securedToken !== state.username) {
-                    console.log('[Light OS] ✅ Token récupéré depuis le trousseau.');
-                    newUsername = securedToken;
-                    hasChanges = true;
-                } else if (!securedToken) {
-                    console.warn('[Light OS] ⚠️ Aucun token trouvé dans le trousseau.');
-                }
+                try {
+                    const securedToken = await security.getSecret('hue-bridge-token');
+                    console.log(`[Light OS] 🔐 Keychain Get Result:`, { 
+                        type: typeof securedToken, 
+                        exists: !!securedToken,
+                        content: securedToken ? (securedToken.substring(0, 5) + '...') : 'EMPTY'
+                    });
 
-                if (hasChanges) {
-                    set({ username: newUsername });
+                    if (securedToken && typeof securedToken === 'string' && securedToken.length > 0) {
+                        console.log('[Light OS] ✅ TOKEN_FOUND : Restauration immédiate.');
+                        set({ username: securedToken });
+                    } else {
+                        console.log('[Light OS] ℹ️ Aucun jeton trouvé dans le trousseau natif.');
+                        // Si on a un jeton en mémoire mais pas dans le keychain, on le sauvegarde (Migration)
+                        if (state.username) {
+                            console.log('[Light OS] 💾 Migration : Sauvegarde du jeton présent en mémoire vers le Keychain.');
+                            await security.saveSecret('hue-bridge-token', state.username);
+                        }
+                    }
+                } catch (err) {
+                    console.error('[Light OS] ❌ Erreur critique Keychain:', err);
                 }
             }
         }),
@@ -321,8 +328,7 @@ export const useLightStore = create<LightState>()(
             name: 'gm-os-light-storage-v1',
             partialize: (state) => ({
                 bridgeIp: state.bridgeIp,
-                // On exclut explicitement le username du stockage localStorage
-                username: undefined, 
+                // On ne mentionne PAS username ici pour éviter tout écrasement par undefined au chargement
                 scenes: state.scenes,
                 globalBrightness: state.globalBrightness,
                 transitionTimeMs: state.transitionTimeMs,

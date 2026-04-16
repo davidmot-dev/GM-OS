@@ -1,45 +1,72 @@
 import { useEffect } from 'react';
 import { useLightStore } from '../useLightStore';
-import { hueEngine } from '../HueEngine';
+import { hueEngine } from '../HueEngine'; // Instance en minuscule
+import { useSessionStore } from '../../../store/useSessionStore';
 
 /**
- * Hook to handle automatic Philips Hue connection on application startup.
- * It checks for persisted credentials in the useLightStore and triggers
- * a light fetch to validate the connection without user intervention.
+ * Hook global pour gérer la reconnexion automatique au pont Hue au démarrage.
+ * S'assure que le système est prêt (bootstrap fini) avant de tenter quoi que ce soit.
  */
-export const useHueAutoConnect = () => {
-    const status = useLightStore((state) => state.status);
-    const bridgeIp = useLightStore((state) => state.bridgeIp);
-    const username = useLightStore((state) => state.username);
-    const setConnection = useLightStore((state) => state.setConnection);
+export const useHueAutoConnect = (isMainPC: boolean) => {
+    const { status, bridgeIp, username, setConnection, setLights } = useLightStore();
+    const isSystemReady = useSessionStore(state => state.isSystemReady);
 
     useEffect(() => {
-        // Only trigger auto-connect if we're disconnected but have credentials
-        if (status === 'disconnected' && bridgeIp && username) {
-            console.log(`[Light OS] Credentials detected (IP: ${bridgeIp}). Attempting auto-connect...`);
-            
-            // Set temporary status to show we are working
-            setConnection('discovering');
+        if (isMainPC) {
+            console.log(`[Light OS] 🕵️ Surveillance Token: ${username ? 'PRÉSENT (' + username.substring(0, 5) + '...)' : 'ABSENT'} | Status: ${status}`);
+        }
+    }, [username, status, isMainPC]);
 
+    useEffect(() => {
+        // Diagnostic initial
+        if (isMainPC) {
+            console.log('[Light OS] 🌀 Hook useHueAutoConnect vérification...', {
+                isSystemReady,
+                status,
+                hasIp: !!bridgeIp,
+                hasToken: !!username
+            });
+        }
+
+        // On n'active l'auto-connexion QUE sur le PC du MJ et une fois le bootstrap fini
+        if (!isMainPC || !isSystemReady) return;
+
+        // Petit délai de sécurité pour laisser l'état Zustand se propager après le bootstrap
+        const timer = setTimeout(() => {
             const performConnect = async () => {
-                try {
-                    await hueEngine.fetchLights();
-                    console.log(`[Light OS] Auto-connection successful.`);
-                    setConnection('connected');
-                } catch (err) {
-                    console.error(`[Light OS] Auto-connection failed:`, err);
-                    
-                    if (err instanceof Error && err.message === "UNAUTHORIZED") {
-                        console.warn('[Light OS] Token is invalid. Pairing was lost on the Bridge side.');
-                        // On garde l'IP mais on vide le username s'il est pourri
-                        setConnection('disconnected', undefined, null);
-                    } else if (useLightStore.getState().status === 'discovering') {
-                        setConnection('disconnected');
+                // On récupère les valeurs FRAICHES depuis le store
+                const currentStore = useLightStore.getState();
+                const currentStatus = currentStore.status;
+                const currentToken = currentStore.username;
+                const currentIp = currentStore.bridgeIp;
+
+                if (currentStatus === 'disconnected' && currentIp && currentToken) {
+                    console.log(`[Light OS] 📡 Tentative de reconnexion automatique vers ${currentIp}...`);
+                    try {
+                        setConnection('discovering');
+                        
+                        // Utilisation de l'instance hueEngine
+                        await hueEngine.fetchLights();
+                        
+                        setConnection('connected');
+                        console.log('[Light OS] ✅ Reconnexion automatique réussie.');
+                    } catch (err) {
+                        console.error('[Light OS] ❌ Échec de la reconnexion automatique:', err);
+                        
+                        if (err instanceof Error && err.message === "UNAUTHORIZED") {
+                            console.warn('[Light OS] ⚠️ Le jeton est invalide. L\'appairage a été perdu côté Pont.');
+                            setConnection('disconnected', undefined, null);
+                        } else {
+                            // Erreur réseau ou autre : on reste en déconnecté mais on garde le token
+                            setConnection('disconnected');
+                        }
                     }
                 }
             };
 
             performConnect();
-        }
-    }, [status, bridgeIp, username, setConnection]);
+        }, 500);
+
+        return () => clearTimeout(timer);
+    }, [isSystemReady, isMainPC, bridgeIp, username, status, setConnection, setLights]);
 };

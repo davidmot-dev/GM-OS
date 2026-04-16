@@ -128,6 +128,10 @@ export const useSessionStore = create<SessionState>()(
         }),
         {
             name: 'gmos-session-storage',
+            partialize: (state) => {
+                const { isSystemReady, ...persistedState } = state;
+                return persistedState;
+            }
         }
     )
 );

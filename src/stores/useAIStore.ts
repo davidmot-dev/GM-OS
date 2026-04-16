@@ -60,26 +60,37 @@ export const useAIStore = create<AIState>()(
       setLiteContext: (liteContext) => set({ liteContext }),
 
       syncWithKeychain: async () => {
-        if (!window.appBridge?.security) return;
+        const security = window.appBridge?.security;
+        if (!security) {
+          console.warn('[AI Store] 🛡️ API Security non disponible (Bridge absent)');
+          return;
+        }
 
+        console.log('[AI Store] 🔐 Synchronisation avec le trousseau...');
         const currentConfigs = { ...get().configs };
         let hasChanges = false;
 
         for (const provider of Object.keys(currentConfigs) as AIProvider[]) {
           const secretId = `ai-key-${provider}`;
           
-          // 1. Migration : Si une clé traîne encore en clair dans le localStorage
-          if (currentConfigs[provider].apiKey) {
-            await window.appBridge.security.saveSecret(secretId, currentConfigs[provider].apiKey!);
-            currentConfigs[provider].apiKey = undefined; // On nettoie le store local
-            hasChanges = true;
-          }
-
-          // 2. Récupération : On charge la clé depuis le trousseau natif
-          const securedKey = await window.appBridge.security.getSecret(secretId);
-          if (securedKey) {
-            currentConfigs[provider].apiKey = securedKey;
-            hasChanges = true;
+          try {
+            // 1. Récupération : On charge la clé depuis le trousseau natif
+            const securedKey = await security.getSecret(secretId);
+            
+            if (securedKey && typeof securedKey === 'string' && securedKey.length > 0) {
+              console.log(`[AI Store] ✅ Clé récupérée pour "${provider}"`);
+              currentConfigs[provider].apiKey = securedKey;
+              hasChanges = true;
+            } else {
+              // 2. Migration : Si une clé traîne encore en clair en mémoire vive (venant du localStorage legacy)
+              if (currentConfigs[provider].apiKey) {
+                console.log(`[AI Store] 💾 Migration de la clé "${provider}" vers le Keychain.`);
+                await security.saveSecret(secretId, currentConfigs[provider].apiKey!);
+                // Note: On ne supprime pas encore de la mémoire pour permettre l'usage immédiat
+              }
+            }
+          } catch (err) {
+            console.error(`[AI Store] ❌ Erreur Keychain pour "${provider}":`, err);
           }
         }
 
@@ -90,23 +101,32 @@ export const useAIStore = create<AIState>()(
     }),
     {
       name: 'gm-os-ai-settings',
-      // On exclut explicitement les clés API de la persistance brute
-      partialize: (state) => ({
-        activeProvider: state.activeProvider,
-        streamEnabled: state.streamEnabled,
-        liteContext: state.liteContext,
-        configs: Object.fromEntries(
-          Object.entries(state.configs).map(([k, v]) => [k, { ...v, apiKey: undefined }])
-        )
-      }),
-      merge: (persistedState, currentState) => ({
-        ...currentState,
-        ...(persistedState as AIState),
-        configs: {
-          ...currentState.configs,
-          ...((persistedState as AIState)?.configs || {})
-        }
-      }),
+      // On exclut totalement les clés API de la persistance brute pour la sécurité
+      partialize: (state) => {
+        const cleanConfigs = Object.fromEntries(
+          Object.entries(state.configs).map(([k, v]) => {
+            const { apiKey, ...rest } = v;
+            return [k, rest];
+          })
+        );
+        return {
+          activeProvider: state.activeProvider,
+          streamEnabled: state.streamEnabled,
+          liteContext: state.liteContext,
+          configs: cleanConfigs
+        };
+      },
+      merge: (persistedState, currentState) => {
+        const typedPersisted = persistedState as AIState;
+        return {
+          ...currentState,
+          ...typedPersisted,
+          configs: {
+            ...currentState.configs,
+            ...(typedPersisted?.configs || {})
+          }
+        };
+      },
     }
   )
 );

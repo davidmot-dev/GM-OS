@@ -114,9 +114,7 @@ function App() {
   useDisplayDetection(isMainPC);
   
   // --- AUTO-CONNECT HUE BRIDGES (GM SEULEMENT) ---
-  if (isMainPC) {
-      useHueAutoConnect();
-  }
+  useHueAutoConnect(isMainPC);
   
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
