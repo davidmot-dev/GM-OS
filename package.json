@@ -73,5 +73,9 @@
     "vite-plugin-electron": "^0.29.0",
     "vite-plugin-electron-renderer": "^0.14.6",
     "vitest": "^4.0.18"
+  },
+  "peerDependencies": {
+    "@types/three": "^0.183.1",
+    "three": "^0.183.2"
   }
 }

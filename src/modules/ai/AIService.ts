@@ -67,15 +67,16 @@ export class AIService {
 
     if (activeProvider === 'ollama') {
       const model = config.modelId || 'phi3';
+      const endpoint = config.endpoint;
       try {
         if (!window.appBridge?.ai?.ollamaChat) throw new Error("Bridge Ollama non disponible.");
         
         const text = await window.appBridge.ai.ollamaChat(model, [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: prompt }
-        ]);
+        ], endpoint);
         
-        return { text, metadata: { provider: 'ollama', model } };
+        return { text, metadata: { provider: 'ollama', model, endpoint } };
       } catch (error: unknown) {
         const message = error instanceof Error ? error.message : String(error);
         if (message.includes('Ollama est inaccessible')) {
@@ -267,17 +268,18 @@ export class AIService {
       if (activeProvider === 'ollama') {
         try {
           let model = config.modelId || 'flux';
+          const endpoint = config.endpoint;
           // Force flux if a text model is used for image generation
           const isTextModel = model.includes('phi') || model.includes('gemma') || model.includes('mistral') || model.includes('llama');
           if (isTextModel) {
              console.log(`[AI Service] Modèle texte détecté (${model}), redirection vers Flux pour l'image...`);
-             model = 'x/flux2-klein:latest'; // Default standard flux identified in user tags
+             model = 'x/flux2-klein:latest'; 
           }
 
-          console.log(`[AI Service] Envoi de la requête Ollama Image (Modèle: ${model})...`);
+          console.log(`[AI Service] Envoi de la requête Ollama Image (Modèle: ${model}, Endpoint: ${endpoint})...`);
           if (!window.appBridge?.ai?.ollamaGenerateImage) throw new Error("Bridge Ollama Generate Image non disponible.");
           
-          const base64Response = await window.appBridge.ai.ollamaGenerateImage(model, prompt);
+          const base64Response = await window.appBridge.ai.ollamaGenerateImage(model, prompt, endpoint);
           
           if (base64Response) {
              let base64Data = base64Response;
@@ -501,12 +503,24 @@ export class AIService {
    * @param apiKey Clé API Google Gemini.
    * @returns Liste des IDs de modèles.
    */
-  public async listModels(apiKey: string): Promise<string[]> {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`;
-    const response = await window.appBridge?.ai?.proxyRequest?.(url, 'GET', {}, {}) as { ok: boolean; data: { models?: { name: string }[] } };
-    if (response?.ok) {
-      const data = response.data;
-      return (data.models || []).map((m) => m.name.replace('models/', ''));
+  public async listModels(apiKey?: string): Promise<string[]> {
+    const { activeProvider, configs } = useAIStore.getState();
+    const config = configs[activeProvider];
+
+    if (activeProvider === 'ollama') {
+      if (window.appBridge?.ai?.ollamaListModels) {
+        return await window.appBridge.ai.ollamaListModels(config.endpoint);
+      }
+      return [];
+    }
+
+    if (activeProvider === 'gemini' && apiKey) {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`;
+      const response = await window.appBridge?.ai?.proxyRequest?.(url, 'GET', {}, {}) as { ok: boolean; data: { models?: { name: string }[] } };
+      if (response?.ok) {
+        const data = response.data;
+        return (data.models || []).map((m) => m.name.replace('models/', ''));
+      }
     }
     return [];
   }
@@ -611,6 +625,7 @@ export class AIService {
     
     if (activeProvider === 'ollama') {
       const model = config.modelId || 'phi3';
+      const endpoint = config.endpoint;
       if (!window.appBridge?.ai?.ollamaChatStream) throw new Error("Bridge Ollama Stream non disponible.");
       
       const unsubscribe = window.appBridge.ai.onStreamToken((token) => {
@@ -621,7 +636,7 @@ export class AIService {
         await window.appBridge.ai.ollamaChatStream(model, [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: prompt }
-        ]);
+        ], endpoint);
       } finally {
         unsubscribe();
       }

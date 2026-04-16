@@ -319,7 +319,28 @@
       "fate": "FATE {{count}}dF",
       "rolemaster": "Rolemaster d100",
       "yze": "YZE ({{base}} Base + {{gear}} Gear)",
-      "batch": "{{title}} (Roll {{current}}/{{total}})"
+      "batch": "{{title}} (Roll {{current}}/{{total}})",
+      "details": {
+        "exploded": "Exploded!",
+        "critical": "Critical!",
+        "dropped": "Dropped",
+        "base": "Base",
+        "gear": "Gear"
+      }
+    },
+    "fate_ranks": {
+      "legendary": "Legendary",
+      "superb": "Superb",
+      "good": "Good",
+      "neutral": "Neutral",
+      "poor": "Poor"
+    },
+    "settings": {
+      "title": "Global Options",
+      "enable_3d": "Physics 3D Rendering",
+      "enable_3d_desc": "Disable for better performance on remote hubs",
+      "show_math": "Calculation Details",
+      "clear_history": "Clear History"
     }
   },
   "favorite": {
@@ -1070,6 +1091,9 @@
       "map_success": "{{name}} added to Map",
       "give_to": "Give to...",
       "give_tooltip": "Give this item to a player character",
+      "gallery_export": "Save to Gallery",
+      "gallery_export_success": "{{name}} added to the Gallery!",
+      "gallery_error_session": "No active session for Gallery export.",
       "give_journal_title": "NPC-OS Gift: {{name}}",
       "give_journal_content": "Element: **{{name}}** ({{category}})\nGiven to: **{{recipient}}**\n\n*Details: {{details}}*",
       "ai_illustration_title": "AI Illustration: {{name}}",

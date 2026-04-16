@@ -130,11 +130,14 @@
       "api_key_placeholder": "Saisissez votre clé {{name}}...",
       "local_status": "Statut Local",
       "ollama_ready": "Serveur Ollama Prêt",
+      "ollama_offline": "Ollama Déconnecté",
       "key_configured": "Clé configurée localement"
     },
     "actions": {
       "pull_phi3": "Pull phi3",
       "pull_phi3_tooltip": "Télécharger le modèle recommandé (phi3)",
+      "pull_phi3_success": "Phi-3 téléchargé avec succès !",
+      "pull_phi3_error": "Échec du téléchargement de Phi-3",
       "pull_gemma": "Télécharger Gemma 4 (26B MoE)",
       "refresh_models": "Actualiser les modèles",
       "reindex_docs": "Actualiser les documents",
@@ -154,6 +157,7 @@
       "model": "Modèle",
       "model_select_tooltip": "Sélectionner le modèle d'IA",
       "manual_input": "-- Saisie Manuelle --",
+      "endpoint_url": "URL du Point de Terminaison",
       "selected_model": "Modèle sélectionné: "
     },
     "oracle": {

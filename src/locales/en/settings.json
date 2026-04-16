@@ -130,11 +130,14 @@
       "api_key_placeholder": "Enter your {{name}} key...",
       "local_status": "Local Status",
       "ollama_ready": "Ollama Server Ready",
+      "ollama_offline": "Ollama Offline",
       "key_configured": "Key configured locally"
     },
     "actions": {
       "pull_phi3": "Pull phi3",
       "pull_phi3_tooltip": "Download recommended model (phi3)",
+      "pull_phi3_success": "Phi-3 successfully downloaded!",
+      "pull_phi3_error": "Failed to download Phi-3",
       "pull_gemma": "Download Gemma 4 (26B MoE)",
       "refresh_models": "Refresh models",
       "reindex_docs": "Refresh documents",
@@ -154,6 +157,7 @@
       "model": "Model",
       "model_select_tooltip": "Select AI Model",
       "manual_input": "-- Manual Input --",
+      "endpoint_url": "Endpoint URL",
       "selected_model": "Selected model: "
     },
     "oracle": {

@@ -50,4 +50,6 @@ export interface Combatant {
     immunities?: string[];
     /** Système de santé spécifique (ex: D&D 5e, Savage Worlds) */
     healthSystem?: HealthSystem;
+    /** Données de fiche locales (force, santé, sang-froid, etc.) */
+    sheetData?: Record<string, string | number | boolean>;
 }

@@ -12,9 +12,13 @@ import { Plus, Minus, Heart, Settings2, Swords } from 'lucide-react';
 interface HealthManagerProps {
   id: string;
   type: 'pc' | 'npc';
+  /** Optional: Initial health system if target entity is not in store (standalone mode) */
+  initialHealthSystem?: HealthSystem;
+  /** Callback for when health changes (useful for standalone mode updates) */
+  onHealthChange?: (newHealth: HealthSystem) => void;
 }
 
-export const HealthManager: React.FC<HealthManagerProps> = ({ id, type }) => {
+export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialHealthSystem, onHealthChange }) => {
   const { 
     players, 
     entities, 
@@ -24,8 +28,10 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type }) => {
     updateEntityMaxHP,
     updateCharacterHealth, 
     updateEntityHealth, 
-    handleApplyImpact: storeApplyImpact 
+    handleApplyImpact: storeApplyImpact
   } = useSessionOSStore();
+  
+  const [internalHealth, setInternalHealth] = useState<HealthSystem | null>(null);
   const [impactValue, setImpactValue] = useState(1);
   const [lastImpactType, setLastImpactType] = useState<string | undefined>(undefined);
   const [isHealing, setIsHealing] = useState(false);
@@ -41,23 +47,45 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type }) => {
     ? players.flatMap(p => p.characters).find(c => c.id === id)
     : entities.find(e => e.id === id);
 
-  if (!target) return null;
-  
+  // 1. Resolve Current Health State
+  // Priority: Internal State (Immediate Feedback) > Store Target > initialHealthSystem > Default
   const defaultType = activeDriver?.combat?.defaultHealthType || 'hp';
-  const health = target.healthSystem || HealthInterpreter.createDefault(defaultType);
+  
+  let health: HealthSystem;
+  if (internalHealth) {
+    health = internalHealth;
+  } else if (target?.healthSystem) {
+    health = target.healthSystem;
+  } else if (initialHealthSystem) {
+    health = initialHealthSystem;
+  } else if (target) {
+     health = HealthInterpreter.createDefault(defaultType);
+  } else {
+     health = HealthInterpreter.createDefault(defaultType);
+  }
 
-  const handleApplyImpact = (isRecovery: boolean, partId?: string) => {
+  // NOTE: We don't return null if target is missing, to allow standalone combatants.
+  // if (!target) return null; // Removed to fix standalone bug
+
+  const triggerImpact = (isRecovery: boolean, partId?: string) => {
     const impact = DamageCalculator.translateRoll(impactValue, activeDriver?.id || 'generic', { isRecovery, location: partId });
     
-    // Call store action
-    storeApplyImpact(id, type, impact);
+    // 1. Update Persistent Store if target exists
+    if (target) {
+        storeApplyImpact(id, type, impact);
+    } 
     
+    // 2. Local Logic for immediate feedback and standalone mode
+    const nextHealth = HealthInterpreter.calculateNextState(health, impact);
+    setInternalHealth(nextHealth);
+    if (onHealthChange) onHealthChange(nextHealth);
+
     // Visual Feedback
     setLastImpactType(impact.type || 'generic');
     setIsHealing(isRecovery);
     if (!isRecovery) {
         setIsDamaged(true);
-        setTimeout(() => setIsDamaged(false), 400); // Duration of glitch animation
+        setTimeout(() => setIsDamaged(false), 400);
     }
     
     setTimeout(() => {
@@ -72,12 +100,18 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type }) => {
     const nextType = engines[(currentIndex + 1) % engines.length];
     
     const nextHealth = HealthInterpreter.createDefault(nextType);
-    if (type === 'pc') {
-      const player = players.find(p => p.characters.some(c => c.id === id));
-      if (player) updateCharacterHealth(player.id, id, nextHealth);
-    } else {
-      updateEntityHealth(id, nextHealth);
+    
+    if (target) {
+        if (type === 'pc') {
+            const player = players.find(p => p.characters.some(c => c.id === id));
+            if (player) updateCharacterHealth(player.id, id, nextHealth);
+        } else {
+            updateEntityHealth(id, nextHealth);
+        }
     }
+
+    setInternalHealth(nextHealth);
+    if (onHealthChange) onHealthChange(nextHealth);
   };
 
   return (
@@ -123,17 +157,17 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type }) => {
       `}>
         <div 
             className="flex-1 px-1 h-full flex flex-col justify-center min-w-0 cursor-pointer"
-            onClick={() => handleApplyImpact(false)}
+            onClick={() => triggerImpact(false)}
             onContextMenu={(e) => {
                 e.preventDefault();
-                handleApplyImpact(true);
+                triggerImpact(true);
             }}
             title="L-Click: Dégâts | R-Click: Soins"
         >
             {health.type === 'hp' && (
                 <HealthBarDriver 
-                    current={Number(health.data.current) || target.hp || 0} 
-                    max={Number(health.data.max) || target.maxHp || 10} 
+                    current={Number(health.data.current) ?? (target as any)?.hp ?? 0} 
+                    max={Number(health.data.max) ?? (target as any)?.maxHp ?? 10} 
                     onCurrentChange={(val) => {
                         if (type === 'pc') {
                             const player = players.find(p => p.characters.some(c => c.id === id));
@@ -158,7 +192,7 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type }) => {
             {health.type === 'anatomy' && (
                 <AnatomicalSilhouette 
                     parts={health.data.parts as Record<string, { status: PartStatus }>} 
-                    onPartClick={(partId, isRecovery) => handleApplyImpact(isRecovery, partId)} 
+                    onPartClick={(partId, isRecovery) => triggerImpact(isRecovery, partId)} 
                 />
             )}
             {health.type === 'wounds' && (
@@ -198,7 +232,7 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type }) => {
             {/* Action buttons (Stacked Icon + Value) */}
             <div className="flex items-center gap-3 bg-black/40 p-1 px-2 rounded-xl border border-white/10">
                 <button 
-                  onClick={() => handleApplyImpact(false)}
+                  onClick={() => triggerImpact(false)}
                   className="flex flex-col items-center justify-center w-11 h-11 rounded-lg hover:bg-rose-500/20 transition-all group/dmg"
                   title="Infliger dégâts"
                 >
@@ -235,7 +269,7 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type }) => {
                 </div>
 
                 <button 
-                  onClick={() => handleApplyImpact(true)}
+                  onClick={() => triggerImpact(true)}
                   className="flex flex-col items-center justify-center w-11 h-11 rounded-lg hover:bg-emerald-500/20 transition-all group/heal"
                   title="Soigner"
                 >

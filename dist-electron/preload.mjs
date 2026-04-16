@@ -86,12 +86,12 @@ contextBridge.exposeInMainWorld("appBridge", {
     searchContext: (systemId, campaignName) => ipcRenderer.invoke("ai:search-context", systemId, campaignName),
     reindex: (customPath) => ipcRenderer.invoke("ai:reindex", customPath),
     // Ollama Local AI
-    ollamaChat: (model, messages) => ipcRenderer.invoke("ai:ollama-chat", model, messages),
-    ollamaChatStream: (model, messages) => ipcRenderer.invoke("ai:ollama-chat-stream", model, messages),
-    ollamaStatus: () => ipcRenderer.invoke("ai:ollama-status"),
-    ollamaListModels: () => ipcRenderer.invoke("ai:ollama-list-models"),
-    ollamaPull: (model) => ipcRenderer.invoke("ai:ollama-pull", model),
-    ollamaGenerateImage: (model, prompt) => ipcRenderer.invoke("ai:ollama-generate-image", model, prompt),
+    ollamaChat: (model, messages, endpoint) => ipcRenderer.invoke("ai:ollama-chat", model, messages, endpoint),
+    ollamaChatStream: (model, messages, endpoint) => ipcRenderer.invoke("ai:ollama-chat-stream", model, messages, endpoint),
+    ollamaStatus: (endpoint) => ipcRenderer.invoke("ai:ollama-status", endpoint),
+    ollamaListModels: (endpoint) => ipcRenderer.invoke("ai:ollama-list-models", endpoint),
+    ollamaPull: (model, endpoint) => ipcRenderer.invoke("ai:ollama-pull", model, endpoint),
+    ollamaGenerateImage: (model, prompt, endpoint) => ipcRenderer.invoke("ai:ollama-generate-image", model, prompt, endpoint),
     onStreamToken: (callback) => {
       const listener = (_event, token) => callback(token);
       ipcRenderer.on("ai:ollama-stream-token", listener);

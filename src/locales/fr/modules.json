@@ -319,7 +319,28 @@
       "fate": "FATE {{count}}dF",
       "rolemaster": "Rolemaster d100",
       "yze": "YZE ({{base}} Base + {{gear}} Equip)",
-      "batch": "{{title}} (Jet {{current}}/{{total}})"
+      "batch": "{{title}} (Jet {{current}}/{{total}})",
+      "details": {
+        "exploded": "Explosé !",
+        "critical": "Critique !",
+        "dropped": "Ignoré",
+        "base": "Base",
+        "gear": "Équip."
+      }
+    },
+    "fate_ranks": {
+      "legendary": "Légendaire",
+      "superb": "Superbe",
+      "good": "Bon",
+      "neutral": "Neutre",
+      "poor": "Mauvais"
+    },
+    "settings": {
+      "title": "Options Globales",
+      "enable_3d": "Rendu 3D Physiques",
+      "enable_3d_desc": "Désactivez pour plus de performance sur les hubs lointains",
+      "show_math": "Détails du calcul",
+      "clear_history": "Vider l'historique"
     }
   },
   "favorite": {
@@ -1070,6 +1091,9 @@
       "map_success": "{{name}} ajouté à la Map",
       "give_to": "Donner à...",
       "give_tooltip": "Donner cet objet à un personnage joueur",
+      "gallery_export": "Enregistrer dans la Galerie",
+      "gallery_export_success": "{{name}} ajouté à la Galerie !",
+      "gallery_error_session": "Aucune session active pour l'export Galerie.",
       "give_journal_title": "Don de NPC-OS : {{name}}",
       "give_journal_content": "Élément : **{{name}}** ({{category}})\nDonné à : **{{recipient}}**\n\n*Détails : {{details}}*",
       "ai_illustration_title": "Illustration IA : {{name}}",

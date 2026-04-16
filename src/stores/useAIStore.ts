@@ -25,7 +25,11 @@ export const useAIStore = create<AIState>()(
         gemini: { provider: 'gemini', modelId: 'gemini-1.5-flash' },
         openai: { provider: 'openai', modelId: 'gpt-4o' },
         anthropic: { provider: 'anthropic', modelId: 'claude-3-5-sonnet-latest' },
-        ollama: { provider: 'ollama', modelId: 'gemma4:26b' },
+        ollama: { 
+          provider: 'ollama', 
+          modelId: 'gemma4:26b',
+          endpoint: 'http://127.0.0.1:11434'
+        },
       },
       streamEnabled: true,
       liteContext: false,

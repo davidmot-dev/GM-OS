@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNPCStore } from '../useNPCStore';
-import { Save, Sword, FileText, Share2, User, MapPin, Package, Zap, Quote, Star, Eye, Sparkles, Skull } from 'lucide-react';
+import { Save, Sword, FileText, Share2, User, MapPin, Package, Zap, Quote, Star, Eye, Sparkles, Skull, Database, Plus } from 'lucide-react';
 import { useCombatStore } from '../../combat/useCombatStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useMapStore } from '../../map/useMapStore';
@@ -19,7 +19,17 @@ const NPCCard: React.FC = () => {
     const { currentEntity, saveToMemo, isGenerating, selectAvatar, generateAvatar, isGeneratingAIAvatar, toggleDeadStatus } = useNPCStore();
     const [showAIPrompt, setShowAIPrompt] = useState(false);
     const { addCombatant } = useCombatStore();
-    const { sessions, selectedSessionId, addWikiEntry, addLootToCharacter, players, entities } = useSessionOSStore();
+    const { 
+        sessions, 
+        selectedSessionId, 
+        addWikiEntry, 
+        addLootToCharacter, 
+        players, 
+        entities, 
+        addEntity, 
+        addAtlasMap, 
+        activeCampaignId 
+    } = useSessionOSStore();
     const [showRecipientSelector, setShowRecipientSelector] = useState(false);
     const { addToken } = useMapStore();
     const { addFavorite } = useFavoriteStore();
@@ -181,6 +191,62 @@ const NPCCard: React.FC = () => {
         setShowRecipientSelector(false);
     };
 
+    const handleSaveToGallery = () => {
+        if (!activeCampaignId) {
+            gmAlert(t('npc.card.gallery_error_session'));
+            return;
+        }
+
+        if (currentEntity!.category === 'npcs') {
+            // Map NPC-OS to Session-OS Entity
+            const description = Object.entries(currentEntity!.fields)
+                .map(([k, v]) => `**${k}**: ${v}`)
+                .join('\n');
+
+            const hpStr = currentEntity!.fields['PV'] || currentEntity!.fields['HP'] || '10';
+            const acStr = currentEntity!.fields['CA'] || currentEntity!.fields['AC'] || '10';
+            const hp = parseInt(hpStr.toString());
+            const ac = parseInt(acStr.toString());
+
+            addEntity({
+                name: currentEntity!.name,
+                type: 'npc',
+                role: 'neutral',
+                status: currentEntity!.isDead ? 'dead' : 'alive',
+                avatar: avatarSrc || '',
+                hp: isNaN(hp) ? 10 : hp,
+                maxHp: isNaN(hp) ? 10 : hp,
+                ac: isNaN(ac) ? 10 : ac,
+                speed: 30,
+                initiative: 0,
+                description: description,
+                roleplayingNotes: currentEntity!.gmNotes || '',
+                gmSecretInfo: `Generated from NPC-OS (${currentEntity!.category})`,
+                linkedMapIds: [],
+                campaignId: activeCampaignId,
+                isVisibleByPlayers: false,
+                sheetData: currentEntity!.fields
+            });
+            gmToast(t('npc.card.gallery_export_success', { name: currentEntity!.name }));
+        } else if (currentEntity!.category === 'places') {
+            // Map NPC-OS to AtlasMap
+            addAtlasMap({
+                name: currentEntity!.name,
+                fileUrl: avatarSrc || '',
+                isVideo: false,
+                type: 'region',
+                narrativeDescription: Object.entries(currentEntity!.fields)
+                    .map(([k, v]) => `**${k}**: ${v}`)
+                    .join('\n'),
+                gmNotes: currentEntity!.gmNotes || '',
+                linkedEntities: [],
+                campaignId: activeCampaignId,
+                isVisited: false
+            });
+            gmToast(t('npc.card.gallery_export_success', { name: currentEntity!.name }));
+        }
+    };
+
     const getIcon = () => {
         switch (currentEntity.category) {
             case 'npcs': return <User className="text-accent" />;
@@ -336,6 +402,15 @@ const NPCCard: React.FC = () => {
                     >
                         <FileText size={20} />
                     </button>
+                    {(currentEntity.category === 'npcs' || currentEntity.category === 'places') && (
+                        <button
+                            onClick={handleSaveToGallery}
+                            className={`p-2 rounded-lg transition-all ${activeCampaignId ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500/30' : 'bg-app-surface text-slate-400 hover:text-white hover:bg-app-bg/50'}`}
+                            title={activeCampaignId ? t('npc.card.gallery_export', { name: currentEntity.name }) : t('npc.card.gallery_error_session')}
+                        >
+                            <Database size={20} />
+                        </button>
+                    )}
                 </div>
 
                 <div className="flex gap-3">

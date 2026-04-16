@@ -58,7 +58,7 @@ export const HealthInterpreter = {
                     badges: [] 
                 };
             default:
-                return { type: 'hp', data: { current: 0, max: 0 }, state: 'dead', badges: [] };
+                return { type: 'hp', data: { current: 10, max: 10 }, state: 'healthy', badges: [] };
         }
     },
 

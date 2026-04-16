@@ -1,13 +1,13 @@
 import React, { useState, useCallback } from 'react';
 import { DiceEngine } from './DiceEngine';
 import type { RollResult } from './DiceEngine';
-import { Dices, RotateCcw, Zap, BookmarkPlus, X } from 'lucide-react';
+import { Dices, RotateCcw, Zap, BookmarkPlus, X, Target, Settings, Info, XCircle, Cast } from 'lucide-react';
 import { useSessionOSStore } from '../session/useSessionOSStore';
 import { useMapStore } from '../map/useMapStore';
 import { tacticalService } from '../map/TacticalService';
-import { Target, Info, Cast, XCircle } from 'lucide-react';
 import { useDiceStore } from '../../stores/useDiceStore';
 import { useTranslation } from 'react-i18next';
+import { getFateRankLabel, getDieCssClass } from './DiceUIUtils';
 
 const generateId = () => Math.random().toString(36).substring(7);
 
@@ -46,7 +46,9 @@ const DiceBoard: React.FC = () => {
         removeQuickRoll: storeRemoveQuickRoll,
         history,
         setLastRoll,
-        clearHistory
+        clearHistory,
+        enable3D,
+        setEnable3D
     } = useDiceStore();
     // Le timer est désormais géré au niveau du Player Hub via projectionTrigger
 
@@ -71,6 +73,7 @@ const DiceBoard: React.FC = () => {
     const [newQuickRollLabel, setNewQuickRollLabel] = useState('');
     const [newQuickRollFormula, setNewQuickRollFormula] = useState('');
     const [isAddingQuickRoll, setIsAddingQuickRoll] = useState(false);
+    const [showSettings, setShowSettings] = useState(false);
 
     const diceTypes = [4, 6, 8, 10, 12, 20, 100];
 
@@ -288,10 +291,42 @@ const DiceBoard: React.FC = () => {
                                 </button>
                             )}
                         </div>
-                        <button onClick={resetConfig} title={t('dice.reset')} className="text-xs flex items-center gap-1.5 text-app-text/60 hover:text-accent transition-colors bg-app-bg px-3 py-1.5 rounded-lg border border-app-border/80">
-                            <RotateCcw size={14} /> {t('dice.reset')}
-                        </button>
+                        <div className="flex items-center gap-2">
+                            <button 
+                                onClick={() => setShowSettings(!showSettings)}
+                                className={`p-1.5 rounded-lg transition-all border ${showSettings ? 'bg-accent text-white border-accent' : 'bg-app-bg text-app-text/40 border-app-border hover:border-app-border/80'}`}
+                            >
+                                <Settings size={14} />
+                            </button>
+                            <button onClick={resetConfig} title={t('dice.reset')} className="text-xs flex items-center gap-1.5 text-app-text/60 hover:text-accent transition-colors bg-app-bg px-3 py-1.5 rounded-lg border border-app-border/80 text-nowrap">
+                                <RotateCcw size={14} /> {t('dice.reset')}
+                            </button>
+                        </div>
                     </div>
+
+                    {showSettings && (
+                        <div className="mb-6 p-4 rounded-xl bg-app-bg/40 border border-app-border animate-in fade-in slide-in-from-top-2">
+                             <h4 className="text-[10px] font-black text-app-text/40 uppercase tracking-widest mb-3">{t('dice.settings.title')}</h4>
+                             <div className="flex flex-wrap gap-6">
+                                <label className="flex items-center gap-3 cursor-pointer group">
+                                    <div className="relative">
+                                        <input 
+                                            type="checkbox" 
+                                            checked={enable3D} 
+                                            onChange={e => setEnable3D(e.target.checked)} 
+                                            className="sr-only peer"
+                                        />
+                                        <div className="w-10 h-5 bg-app-surface border border-app-border rounded-full peer peer-checked:bg-emerald-500/20 peer-checked:border-emerald-500/50 transition-all"></div>
+                                        <div className="absolute left-1 top-1 w-3 h-3 bg-app-text/20 rounded-full transition-all peer-checked:translate-x-5 peer-checked:bg-emerald-500 shadow-sm"></div>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="text-xs font-bold text-app-text/80 group-hover:text-app-text">{t('dice.settings.enable_3d')}</span>
+                                        <span className="text-[9px] text-app-text/40">{t('dice.settings.enable_3d_desc')}</span>
+                                    </div>
+                                </label>
+                             </div>
+                        </div>
+                    )}
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div className="space-y-2">
@@ -649,13 +684,15 @@ const DiceBoard: React.FC = () => {
                             )}
                             <div className="flex flex-wrap gap-2 mt-2 justify-center z-10 max-h-[8rem] w-full overflow-y-auto custom-scrollbar px-2 py-1">
                                 {history[0].rolls.map((r, i) => (
-                                    <span key={i} className={`w-8 h-8 flex items-center justify-center rounded-lg text-xs font-bold shadow-inner ${r.cssClass ? r.cssClass + ' bg-app-bg border border-app-border' :
-                                        r.isExploded ? 'bg-accent/30 text-accent-dark dark:text-accent-light border border-accent/50' :
-                                            r.isCritMax ? 'bg-emerald-500/30 text-emerald-700 dark:text-emerald-100 border border-emerald-400/50' :
-                                                r.isCritMin ? 'bg-rose-500/30 text-rose-700 dark:text-rose-100 border border-rose-400/50' :
-                                                    'bg-app-surface border border-app-border text-app-text/80'
-                                        }`}>
+                                    <span key={i} className={`w-10 h-10 flex flex-col items-center justify-center rounded-lg text-xs font-black shadow-inner relative group ${getDieCssClass(r)}`}>
                                         {r.displayStr ? r.displayStr : r.val}
+                                        {r.fateRank !== undefined && (
+                                            <span className="absolute -top-1 -right-1 px-1 bg-accent text-[8px] rounded text-white shadow-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                                                {getFateRankLabel(r.fateRank, t)}
+                                            </span>
+                                        )}
+                                        {r.source === 'gear' && <span className="absolute bottom-0 right-1 text-[8px] opacity-40 font-bold uppercase">G</span>}
+                                        {r.source === 'base' && <span className="absolute bottom-0 right-1 text-[8px] opacity-40 font-bold uppercase">B</span>}
                                     </span>
                                 ))}
                             </div>
@@ -692,12 +729,7 @@ const DiceBoard: React.FC = () => {
                                 <div className="flex items-center justify-between">
                                     <div className="flex flex-wrap gap-1 max-w-[60%] items-center">
                                         {record.rolls.map((r, idx) => (
-                                            <span key={idx} className={`text-[10px] px-1.5 py-0.5 rounded flex items-center justify-center ${r.cssClass ? r.cssClass.replace('text-', 'bg-app-bg border border-') :
-                                                r.isExploded ? 'bg-accent/20 text-accent' :
-                                                    r.isCritMax ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400' :
-                                                        r.isCritMin ? 'bg-rose-500/20 text-rose-600 dark:text-rose-400' :
-                                                            'bg-app-surface text-app-text/60'
-                                                }`}>
+                                            <span key={idx} className={`text-[10px] px-1.5 py-0.5 rounded flex items-center justify-center font-bold ${getDieCssClass(r)}`}>
                                                 {r.displayStr || r.val}
                                             </span>
                                         ))}

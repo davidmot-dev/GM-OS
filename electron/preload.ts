@@ -91,12 +91,12 @@ contextBridge.exposeInMainWorld('appBridge', {
             ipcRenderer.invoke('ai:search-context', systemId, campaignName),
         reindex: (customPath?: string) => ipcRenderer.invoke('ai:reindex', customPath),
         // Ollama Local AI
-        ollamaChat: (model: string, messages: { role: string; content: string }[]) => ipcRenderer.invoke('ai:ollama-chat', model, messages),
-        ollamaChatStream: (model: string, messages: { role: string; content: string }[]) => ipcRenderer.invoke('ai:ollama-chat-stream', model, messages),
-        ollamaStatus: () => ipcRenderer.invoke('ai:ollama-status'),
-        ollamaListModels: () => ipcRenderer.invoke('ai:ollama-list-models'),
-        ollamaPull: (model: string) => ipcRenderer.invoke('ai:ollama-pull', model),
-        ollamaGenerateImage: (model: string, prompt: string) => ipcRenderer.invoke('ai:ollama-generate-image', model, prompt),
+        ollamaChat: (model: string, messages: { role: string; content: string }[], endpoint?: string) => ipcRenderer.invoke('ai:ollama-chat', model, messages, endpoint),
+        ollamaChatStream: (model: string, messages: { role: string; content: string }[], endpoint?: string) => ipcRenderer.invoke('ai:ollama-chat-stream', model, messages, endpoint),
+        ollamaStatus: (endpoint?: string) => ipcRenderer.invoke('ai:ollama-status', endpoint),
+        ollamaListModels: (endpoint?: string) => ipcRenderer.invoke('ai:ollama-list-models', endpoint),
+        ollamaPull: (model: string, endpoint?: string) => ipcRenderer.invoke('ai:ollama-pull', model, endpoint),
+        ollamaGenerateImage: (model: string, prompt: string, endpoint?: string) => ipcRenderer.invoke('ai:ollama-generate-image', model, prompt, endpoint),
         onStreamToken: (callback: (token: string) => void) => {
             const listener = (_event: Electron.IpcRendererEvent, token: string) => callback(token);
             ipcRenderer.on('ai:ollama-stream-token', listener);

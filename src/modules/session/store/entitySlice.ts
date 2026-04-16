@@ -526,10 +526,12 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
 
         if (targetType === 'npc') {
             const entity = entities.find((e) => e.id === targetId);
-            if (!entity || !entity.healthSystem) return;
+            if (!entity) return;
 
-            const updatedHealth = HealthInterpreter.calculateNextState(entity.healthSystem, impact);
+            const baseHealth = entity.healthSystem || HealthInterpreter.createDefault('hp');
+            const updatedHealth = HealthInterpreter.calculateNextState(baseHealth, impact);
             const newHp = (updatedHealth.data.current as number) ?? entity.hp;
+            
             get().updateEntityHealth(targetId, updatedHealth);
             get().updateEntityHP(targetId, newHp);
 
@@ -547,10 +549,12 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                 p.characters.some((c) => c.id === targetId)
             );
             const character = player?.characters.find((c) => c.id === targetId);
-            if (!player || !character || !character.healthSystem) return;
+            if (!player || !character) return;
 
-            const updatedHealth = HealthInterpreter.calculateNextState(character.healthSystem, impact);
+            const baseHealth = character.healthSystem || HealthInterpreter.createDefault('hp');
+            const updatedHealth = HealthInterpreter.calculateNextState(baseHealth, impact);
             const newHp = (updatedHealth.data.current as number) ?? character.hp;
+            
             get().updateCharacterHealth(player.id, targetId, updatedHealth);
             get().updateCharacterHP(player.id, targetId, newHp);
 

@@ -11,6 +11,7 @@ import { gmCustom } from '../../../stores/useModalStore';
 import { Select } from '../../../components/common/Select';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useTranslation } from 'react-i18next';
+import { HealthInterpreter } from '../../session/logic/HealthInterpreter';
 
 const CombatControls: React.FC = () => {
     const {
@@ -46,6 +47,11 @@ const CombatControls: React.FC = () => {
                     init: 0,
                     hp: 10,
                     hpMax: 10,
+                    healthSystem: HealthInterpreter.createDefault(activeDriver?.combat?.defaultHealthType || 'hp'),
+                    sheetData: (activeDriver?.ui_config?.gauges || []).reduce((acc: any, g: any) => {
+                        acc[g.fieldId] = 0;
+                        return acc;
+                    }, {}),
                     isPlayer: false,
                     faction: 'enemy',
                     statuses: []

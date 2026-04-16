@@ -60,10 +60,12 @@ const AISettings: React.FC = () => {
       } else if (activeProvider === 'ollama' && window.appBridge?.ai?.ollamaListModels) {
         setIsLoadingModels(true);
         try {
-          const models = await window.appBridge.ai.ollamaListModels();
+          const endpoint = configs.ollama.endpoint;
+          const models = await window.appBridge.ai.ollamaListModels(endpoint);
           setDiscoveredModels(models);
         } catch (err) {
           console.error("Failed to discover Ollama models:", err);
+          setDiscoveredModels([]);
         } finally {
           setIsLoadingModels(false);
         }
@@ -122,9 +124,14 @@ const AISettings: React.FC = () => {
 
     // 4. Test Ollama
     try {
-      if (window.appBridge?.ai?.ollamaListModels) {
-        await window.appBridge.ai.ollamaListModels();
-        setDiagnosticResults(prev => ({ ...prev, ollama: { status: 'success', message: t('ai.actions.diagnostic_server_active') } }));
+      if (window.appBridge?.ai?.ollamaStatus) {
+        const endpoint = configs.ollama.endpoint;
+        const online = await window.appBridge.ai.ollamaStatus(endpoint);
+        if (online) {
+          setDiagnosticResults(prev => ({ ...prev, ollama: { status: 'success', message: t('ai.actions.diagnostic_server_active') } }));
+        } else {
+          setDiagnosticResults(prev => ({ ...prev, ollama: { status: 'error', message: t('ai.actions.diagnostic_unreachable') } }));
+        }
       } else {
         setDiagnosticResults(prev => ({ ...prev, ollama: { status: 'error', message: t('ai.actions.diagnostic_mcp_missing') } }));
       }
@@ -274,28 +281,56 @@ const AISettings: React.FC = () => {
               )}
 
               {p.id === 'ollama' && (
-                <div className="space-y-2">
-                   <label className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40 flex items-center gap-2">
-                    <ShieldCheck size={12} className="text-emerald-500" />
-                    {t('ai.status.local_status')}
-                  </label>
-                  <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-emerald-500/5 border border-emerald-500/10">
-                    <div className="flex items-center gap-2 text-emerald-500 text-[10px] font-bold uppercase tracking-widest">
-                      <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                      {t('ai.status.ollama_ready')}
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40 flex items-center gap-2">
+                      <ExternalLink size={12} className="text-accent" />
+                      {t('ai.labels.endpoint_url', 'Endpoint URL')}
+                    </label>
+                    <input
+                      type="text"
+                      value={configs.ollama.endpoint || ''}
+                      onChange={(e) => updateConfig('ollama', { endpoint: e.target.value })}
+                      placeholder="http://127.0.0.1:11434"
+                      className="w-full bg-black/40 border border-app-border/40 rounded-xl px-4 py-3 text-xs text-app-text focus:border-accent/50 outline-none transition-all font-mono"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40 flex items-center gap-2">
+                      <ShieldCheck size={12} className={diagnosticResults.ollama.status === 'success' ? "text-emerald-500" : "text-app-text/20"} />
+                      {t('ai.status.local_status')}
+                    </label>
+                    <div className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${
+                      diagnosticResults.ollama.status === 'success' 
+                        ? 'bg-emerald-500/5 border-emerald-500/10' 
+                        : 'bg-red-500/5 border-red-500/10'
+                    }`}>
+                      <div className={`flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest ${
+                        diagnosticResults.ollama.status === 'success' ? 'text-emerald-500' : 'text-red-400'
+                      }`}>
+                        <div className={`w-2 h-2 rounded-full ${
+                          diagnosticResults.ollama.status === 'success' ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'
+                        }`} />
+                        {diagnosticResults.ollama.status === 'success' ? t('ai.status.ollama_ready') : t('ai.status.ollama_offline', 'Ollama Offline')}
+                      </div>
+                      <button
+                        onClick={async () => {
+                          const ok = await window.appBridge?.ai?.ollamaPull?.('phi3', configs.ollama.endpoint);
+                          if (ok) {
+                            gmToast(t('ai.actions.pull_phi3_success', 'Phi-3 downloaded!'));
+                            const models = await window.appBridge?.ai?.ollamaListModels?.(configs.ollama.endpoint);
+                            if (models) setDiscoveredModels(models);
+                          } else {
+                            gmToast(t('ai.actions.pull_phi3_error', 'Failed to start download'), 'error');
+                          }
+                        }}
+                        className="text-[10px] font-black uppercase tracking-widest text-accent bg-accent/10 px-2 py-1 rounded border border-accent/20 hover:bg-accent/20 transition-all"
+                        title={t('ai.actions.pull_phi3_tooltip')}
+                      >
+                        {t('ai.actions.pull_phi3')}
+                      </button>
                     </div>
-                    <button
-                      onClick={async () => {
-                        const ok = await window.appBridge?.ai?.ollamaPull?.('phi3');
-                        if (ok) {
-                          updateConfig('ollama', { apiKey: '' });
-                        }
-                      }}
-                      className="text-[10px] font-black uppercase tracking-widest text-accent bg-accent/10 px-2 py-1 rounded border border-accent/20 hover:bg-accent/20 transition-all"
-                      title={t('ai.actions.pull_phi3_tooltip')}
-                    >
-                      {t('ai.actions.pull_phi3')}
-                    </button>
                   </div>
                 </div>
               )}
@@ -315,7 +350,7 @@ const AISettings: React.FC = () => {
                           if (p.id === 'gemini') {
                              models = await aiService.listModels(configs.gemini.apiKey);
                           } else {
-                             models = await window.appBridge?.ai?.ollamaListModels?.();
+                             models = await window.appBridge?.ai?.ollamaListModels?.(configs.ollama.endpoint);
                           }
                           setDiscoveredModels(models);
                         } finally {
@@ -390,9 +425,9 @@ const AISettings: React.FC = () => {
                 onClick={async () => {
                   try {
                     gmToast(t('ai.actions.pull_gemma_start'));
-                    await window.appBridge?.ai?.ollamaPull?.('gemma4:26b');
+                    await window.appBridge?.ai?.ollamaPull?.('gemma4:26b', configs.ollama.endpoint);
                     gmToast(t('ai.actions.pull_gemma_success'), "success");
-                    const models = await window.appBridge?.ai?.ollamaListModels?.();
+                    const models = await window.appBridge?.ai?.ollamaListModels?.(configs.ollama.endpoint);
                     if (models) setDiscoveredModels(models);
                    } catch (error) {
                     console.error("Gemma 4 Pull error:", error);

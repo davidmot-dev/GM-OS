@@ -4,6 +4,7 @@ export type AIModelConfig = {
   provider: AIProvider;
   modelId: string;
   apiKey?: string;
+  endpoint?: string;
 };
 
 export type AIResponse = {

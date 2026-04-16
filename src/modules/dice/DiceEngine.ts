@@ -1,15 +1,12 @@
-/**
- * Logique avancée pour les lancers de dés (GM-OS v5)
- * Supporte TOUS les systèmes de l'ancienne version V3.
- */
-
 export interface DieResult {
     val: number | string;
+    sides?: number; // Needed for 3D box
     isCritMax?: boolean;
     isCritMin?: boolean;
     isExploded?: boolean;
     displayStr?: string;
-    cssClass?: string;
+    isDropped?: boolean; // For advantage/disadvantage
+    source?: 'base' | 'gear' | 'digit'; // For YZE or Digits
 }
 
 export interface RollResult {
@@ -20,6 +17,7 @@ export interface RollResult {
     fails?: number;
     tagSuccess?: boolean;
     totalDisplay: string;
+    fateRank?: number; // For Fate/Fudge results
 }
 
 export class DiceEngine {
@@ -52,19 +50,19 @@ export class DiceEngine {
             const r1 = this.roll(baseFace);
             const r2 = this.roll(baseFace);
 
-            rolls.push({ val: r1, cssClass: 'die-digit-1 text-rose-400' });
-            rolls.push({ val: r2, cssClass: 'die-digit-2 text-blue-400' });
+            rolls.push({ val: r1, sides: 6, source: 'digit' });
+            rolls.push({ val: r2, sides: 6, source: 'digit' });
 
             let val = (r1 * 10) + r2;
 
             if (isTriple) {
                 const r3 = this.roll(baseFace);
-                rolls.push({ val: r3, cssClass: 'die-digit-3 text-emerald-400' });
+                rolls.push({ val: r3, sides: 6, source: 'digit' });
                 val = (r1 * 100) + (r2 * 10) + r3;
             }
 
             if (count > 1 && i < count - 1) {
-                rolls.push({ val: '•', cssClass: 'opacity-50' });
+                rolls.push({ val: '•' });
             }
 
             totals.push(val + modifier);
@@ -73,7 +71,7 @@ export class DiceEngine {
         const totalDisplay = count === 1 ? totals[0].toString() : totals.join(' / ');
 
         return {
-            total: totals[0] || 0, // Fallback if count is 0
+            total: totals[0] || 0,
             rolls,
             modifier,
             totalDisplay
@@ -95,6 +93,23 @@ export class DiceEngine {
             return this.rollDigits(faces, count, modifier);
         }
 
+        // --- SPECIAL D100 HANDLING (2 x D10) ---
+        if (faces === 100) {
+            const rolls: RollResult['rolls'] = [];
+            let total = 0;
+            for (let i = 0; i < count; i++) {
+                const tens = (Math.floor(Math.random() * 10)) * 10;
+                const units = Math.floor(Math.random() * 10);
+                let val = tens + units;
+                if (val === 0) val = 100;
+
+                rolls.push({ val: tens === 0 ? '00' : tens, sides: 10, source: 'digit' });
+                rolls.push({ val: units, sides: 10, source: 'digit' });
+                total += val;
+            }
+            return { total: total + modifier, rolls, modifier, totalDisplay: (total + modifier).toString() };
+        }
+
         const rolls: RollResult['rolls'] = [];
         let total = 0;
 
@@ -107,17 +122,12 @@ export class DiceEngine {
                 const isCritMin = val === 1;
                 const isExploded = !isFirst;
                 
-                let cssClass = '';
-                if (isCritMax) cssClass = '!bg-emerald-500 border-emerald-500 !text-white shadow-glow-emerald/40 animate-pulse';
-                else if (isCritMin) cssClass = '!bg-rose-500 border-rose-500 !text-white shadow-glow-rose/40';
-                else if (isExploded) cssClass = '!bg-amber-500/20 border-amber-500/50 text-amber-500 shadow-glow-amber/20';
-
                 rolls.push({
                     val,
+                    sides: faces,
                     isCritMax,
                     isCritMin,
-                    isExploded,
-                    cssClass
+                    isExploded
                 });
                 total += val;
                 isFirst = false;
@@ -168,11 +178,7 @@ export class DiceEngine {
             if (isCritFail) ones++;
             if (isCritMax) successes++;
 
-            let cssClass = '';
-            if (isCritMax) cssClass = '!bg-emerald-500 border-emerald-500 !text-white shadow-glow-emerald/40';
-            else if (isCritFail) cssClass = '!bg-rose-500 border-rose-500 !text-white shadow-glow-rose/40';
-
-            rolls.push({ val, isCritMax, isCritMin: isCritFail, isExploded: false, cssClass });
+            rolls.push({ val, sides: faces, isCritMax, isCritMin: isCritFail, isExploded: false });
 
             if (exploding && val === faces) {
                 let keepExploding = true;
@@ -183,11 +189,7 @@ export class DiceEngine {
                     if (isExtraFail) ones++;
                     if (isExtraMax) successes++;
 
-                    let xCssClass = '!bg-amber-500/20 border-amber-500/50 text-amber-500 shadow-glow-amber/20';
-                    if (isExtraMax) xCssClass = '!bg-emerald-500 border-emerald-500 !text-white shadow-glow-emerald/60 animate-pulse';
-                    else if (isExtraFail) xCssClass = '!bg-rose-500 border-rose-500 !text-white shadow-glow-rose/60';
-
-                    rolls.push({ val: extraVal, isCritMax: isExtraMax, isCritMin: isExtraFail, isExploded: true, cssClass: xCssClass });
+                    rolls.push({ val: extraVal, sides: faces, isCritMax: isExtraMax, isCritMin: isExtraFail, isExploded: true });
                     if (extraVal !== faces) keepExploding = false;
                 }
             }
@@ -236,8 +238,8 @@ export class DiceEngine {
         return {
             total,
             rolls: [
-                { val: kept, isCritMax: kept === faces, isCritMin: kept === 1 },
-                { val: dropped, cssClass: 'opacity-40 line-through', displayStr: `(${dropped})` }
+                { val: kept, sides: faces, isCritMax: kept === faces, isCritMin: kept === 1 },
+                { val: dropped, sides: faces, isDropped: true, displayStr: `(${dropped})` }
             ],
             modifier,
             tagSuccess: success,
@@ -264,13 +266,16 @@ export class DiceEngine {
         }
 
         const total = sum + modifier;
-        const adj = total >= 8 ? "Légendaire" : total >= 4 ? "Superbe" : total >= 2 ? "Bon" : total <= -2 ? "Mauvais" : "Neutre";
+        // Logic de rang Fate simplifiée à transmettre au component I18next
+        // -2 = Mauvais, 0 = Neutre, 2 = Bon, 4 = Superbe, 8 = Légendaire (selon v3)
+        // On renvoie juste le total, l'UI s'occupera de la string localisée.
 
         return {
             total,
             rolls,
             modifier,
-            totalDisplay: `${total > 0 ? '+' + total : total} (${adj})`
+            fateRank: total,
+            totalDisplay: `${total > 0 ? '+' + total : total}`
         };
     }
 
@@ -287,21 +292,21 @@ export class DiceEngine {
         let total = 0;
         const first = this.roll(100);
 
-        rolls.push({ val: first, isCritMax: first >= 96, isCritMin: first <= 5 });
+        rolls.push({ val: first, sides: 100, isCritMax: first >= 96, isCritMin: first <= 5 });
         total = first;
 
         if (first >= 96) {
             let next;
             do {
                 next = this.roll(100);
-                rolls.push({ val: next, isCritMax: next >= 96, isCritMin: false, isExploded: true });
+                rolls.push({ val: next, sides: 100, isCritMax: next >= 96, isCritMin: false, isExploded: true });
                 total += next;
             } while (next >= 96);
         } else if (first <= 5) {
             let next;
             do {
                 next = this.roll(100);
-                rolls.push({ val: next, isCritMax: false, isCritMin: next >= 96, isExploded: true, displayStr: `-${next}` });
+                rolls.push({ val: next, sides: 100, isCritMax: false, isCritMin: next >= 96, isExploded: true, displayStr: `-${next}` });
                 total -= next;
             } while (next >= 96);
         }
@@ -326,18 +331,12 @@ export class DiceEngine {
             const v = this.roll(6);
             if (v === 6) successes++;
 
-            const isBane = false; // "il y a des fléaux que sur les 1 des dés de Gear"
-            const isCrit = v === 6;
-
-            let cssClass = 'border-amber-500/50 text-amber-500'; // Normal
-            if (isCrit) cssClass = '!bg-amber-500 border-amber-500 !text-amber-950 font-black drop-shadow-[0_0_10px_rgba(251,191,36,1)] z-10 scale-110'; // Rempli, fort en évidence sans glow sur le 1
-            else if (isBane) cssClass = 'border-amber-500/50 text-amber-500';
-
             rolls.push({
                 val: v,
-                isCritMax: isCrit,
-                isCritMin: isBane,
-                cssClass
+                sides: 6,
+                isCritMax: v === 6,
+                isCritMin: false,
+                source: 'base'
             });
         }
 
@@ -346,18 +345,12 @@ export class DiceEngine {
             if (v === 6) successes++;
             if (v === 1) banes++;
 
-            const isBane = v === 1;
-            const isCrit = v === 6;
-
-            let cssClass = 'border-rose-500/50 text-rose-500'; // Normal
-            if (isCrit) cssClass = '!bg-rose-500 border-rose-500 !text-white font-black drop-shadow-[0_0_10px_rgba(244,63,94,1)] z-10 scale-110'; // Rempli
-            else if (isBane) cssClass = 'border-rose-500/80 !text-rose-400 drop-shadow-[0_0_8px_rgba(244,63,94,1)] border-2 font-black'; // Glow rouge
-
             rolls.push({
                 val: v,
-                isCritMax: isCrit,
-                isCritMin: isBane,
-                cssClass
+                sides: 6,
+                isCritMax: v === 6,
+                isCritMin: v === 1,
+                source: 'gear'
             });
         }
 
@@ -381,8 +374,6 @@ export class DiceEngine {
      * @returns Tableau de tokens ou null si invalide.
      */
     static parseSettings(formula: string): string[] | null {
-        // Tokenisation de la formule: ex "2d6-1d4+5" => ["2d6", "-1d4", "+5"]
-        // C'est basique mais ça reproduit "window.utils.parseDiceFormula" de la v3.
         const clean = formula.replace(/\s+/g, '');
         const regex = /([+-]?[^+-]+)/g;
         const matches = clean.match(regex);
@@ -441,7 +432,7 @@ export class DiceEngine {
                     for (let i = 0; i < count; i++) {
                         let v = this.roll(faces);
                         if (isNeg) v = -v;
-                        rolls.push({ val: v, isCritMin: isNeg, isCritMax: (!isNeg && v === faces) });
+                        rolls.push({ val: v, sides: faces, isCritMin: isNeg, isCritMax: (!isNeg && v === faces) });
                         total += v;
                     }
                 }
@@ -472,7 +463,6 @@ export class DiceEngine {
             const count = options?.baseCount ?? (parseInt(config.defaultDice) || 6);
             const gear = options?.targetOverwrite ?? options?.gearCount ?? 0;
             const mod = options?.modifier ?? 0;
-            // In YZE, modifiers add/remove base dice
             return this.rollYZE(Math.max(1, count + mod), gear);
         }
 
@@ -481,7 +471,6 @@ export class DiceEngine {
         }
 
         if (config.engine === '2d20') {
-            // Basic 2d20 logic: 2d20 vs threshold
             return this.rollPool(20, 2, options?.modifier ?? 0, (options?.targetOverwrite ?? config.successThreshold) || 12, false);
         }
 

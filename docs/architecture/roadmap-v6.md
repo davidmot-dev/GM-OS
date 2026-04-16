@@ -48,6 +48,7 @@ Refonte des systèmes de jeu pour une automatisation intelligente.
 - **[x] Échanges d'objets (P2P)** : Permettre aux joueurs de se donner des objets via le Hub avec validation MJ (v6.2.2-dev).
 - **[x] Notes Privées PJ** : Zone de prise de notes persistante côté serveur MJ. (v6.2.1-dev)
 - **[x] MapStore & Ambiance System** : Gestion de l'état de l'atlas (pions, brouillard, météo) intégrée au flux de synchronisation réactif. Système de moments de la journée avec filtres dynamiques (v6.1.0-dev).
+- **[x] Moteur de Rendu 3D Dice-OS** : Intégration de Three.js, support géométrique d4-d20, logique d100 et esthétique "Crystal" stabilisée. (v6.3.0-dev - 16 Avril 2026)
 
 ---
 
@@ -91,7 +92,10 @@ Ces fonctionnalités sont prévues mais temporairement mises de côté pour prio
 | Densité visuelle Tablet Hub (Optimisation échelle UI)  | Moyenne | ✅ Complété |
 | Incohérence des accents dans le Calculateur de Dégâts (Encodage) | Haute | ✅ Résolu (v6.2.6-dev) |
 | Nesting I18n conflict (Map vs Module) | Haute | ✅ Résolu |
+| Intégration High-Fidelity 3D Dice | Moyenne | ✅ Complété |
+| Bug Syntax 500 dans DiceBox3D | Haute | ✅ Corrigé |
+| Précision géométrique d10 (Manual Modeling) | Moyenne | ✅ Validé |
 
 ---
-*Dernière mise à jour : 14 Avril 2026 (22h35)*
-*Statut : Version 6.2.5 FINALISÉE. Transition v6.2.6-dev : Stabilisation du module Tactical AI (Cortex) avec liaison Oracle (Neural Liaison) et sécurisation du store de clés API.*
+*Dernière mise à jour : 16 Avril 2026 (07h56)*
+*Statut : Version 6.3.0 en cours de stabilisation. Focus : Rendu 3D Dice-OS stabilisé et intégration Hub validée.*

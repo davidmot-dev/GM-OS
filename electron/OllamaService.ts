@@ -17,12 +17,13 @@ export class OllamaService {
     /**
      * Vérifie si le serveur Ollama est accessible
      */
-    async checkStatus(): Promise<boolean> {
+    async checkStatus(endpoint?: string): Promise<boolean> {
+        const url = endpoint || this.baseUrl;
         try {
-            const response = await net.fetch(`${this.baseUrl}/api/tags`);
+            const response = await net.fetch(`${url}/api/tags`);
             return response.ok;
         } catch (error) {
-            console.error('[Ollama] Erreur de vérification du statut:', error);
+            console.error(`[Ollama] Erreur de vérification du statut sur ${url}:`, error);
             return false;
         }
     }
@@ -30,9 +31,10 @@ export class OllamaService {
     /**
      * Envoie une requête de chat au modèle local (Bloquant)
      */
-    async chat(model: string, messages: { role: string; content: string }[]): Promise<string> {
+    async chat(model: string, messages: { role: string; content: string }[], endpoint?: string): Promise<string> {
+        const url = endpoint || this.baseUrl;
         try {
-            const response = await net.fetch(`${this.baseUrl}/api/chat`, {
+            const response = await net.fetch(`${url}/api/chat`, {
                 method: 'POST',
                 body: JSON.stringify({
                     model: model,
@@ -43,20 +45,16 @@ export class OllamaService {
             });
 
             if (!response.ok) {
-                throw new Error(`Ollama error: ${response.statusText}`);
+                const errorText = await response.text().catch(() => response.statusText);
+                throw new Error(`Ollama error (${response.status}): ${errorText}`);
             }
 
             const data = await response.json() as OllamaChatResponse;
             return data.message.content;
         } catch (error: unknown) {
             const err = error as Error & { code?: string; cause?: unknown };
-            console.error('[Ollama] Erreur de chat complète:', {
-                message: err.message,
-                code: err.code,
-                cause: err.cause
-            });
             if (err.code === 'ECONNREFUSED' || err.message?.includes('fetch failed')) {
-                throw new Error(`Ollama est inaccessible sur ${this.baseUrl} (Erreur: ${err.message}). Si Ollama tourne dans le navigateur mais pas ici, vérifiez le Pare-feu Windows pour l'application.`);
+                throw new Error(`Ollama est inaccessible sur ${url}. Assurez-vous qu'Ollama est lancé et que le port est correct.`);
             }
             throw error;
         }
@@ -65,9 +63,10 @@ export class OllamaService {
     /**
      * Envoie une requête de chat au modèle local avec streaming (Réactifs)
      */
-    async chatStream(model: string, messages: { role: string; content: string }[], onToken: (token: string) => void): Promise<void> {
+    async chatStream(model: string, messages: { role: string; content: string }[], onToken: (token: string) => void, endpoint?: string): Promise<void> {
+        const url = endpoint || this.baseUrl;
         try {
-            const response = await net.fetch(`${this.baseUrl}/api/chat`, {
+            const response = await net.fetch(`${url}/api/chat`, {
                 method: 'POST',
                 body: JSON.stringify({
                     model: model,
@@ -116,15 +115,16 @@ export class OllamaService {
     /**
      * Liste les modèles installés localement
      */
-    async listModels(): Promise<string[]> {
+    async listModels(endpoint?: string): Promise<string[]> {
+        const url = endpoint || this.baseUrl;
         try {
-            const response = await net.fetch(`${this.baseUrl}/api/tags`);
+            const response = await net.fetch(`${url}/api/tags`);
             if (!response.ok) return [];
             
             const data = await response.json() as { models?: { name: string }[] };
             return data.models?.map((m) => m.name) || [];
         } catch (error) {
-            console.error('[Ollama] Erreur de listing des modèles:', error);
+            console.error(`[Ollama] Erreur de listing des modèles sur ${url}:`, error);
             return [];
         }
     }
@@ -132,29 +132,30 @@ export class OllamaService {
     /**
      * Télécharge un modèle depuis la bibliothèque Ollama
      */
-    async pullModel(name: string): Promise<boolean> {
+    async pullModel(name: string, endpoint?: string): Promise<boolean> {
+        const url = endpoint || this.baseUrl;
         try {
-            console.log(`[Ollama] Pulling model: ${name}`);
-            const response = await net.fetch(`${this.baseUrl}/api/pull`, {
+            console.log(`[Ollama] Pulling model: ${name} from ${url}`);
+            const response = await net.fetch(`${url}/api/pull`, {
                 method: 'POST',
                 body: JSON.stringify({ name, stream: false }),
                 headers: { 'Content-Type': 'application/json' }
             });
             return response.ok;
         } catch (error) {
-            console.error(`[Ollama] Erreur lors du pull de ${name}:`, error);
+            console.error(`[Ollama] Erreur lors du pull de ${name} sur ${url}:`, error);
             return false;
         }
     }
 
     /**
      * Génère une image via l'API Ollama (modèles expérimentaux type Flux)
-     * Retourne généralement du texte en Base64 ou formaté en Markdown
      */
-    async generateImage(model: string, prompt: string): Promise<string> {
+    async generateImage(model: string, prompt: string, endpoint?: string): Promise<string> {
+        const url = endpoint || this.baseUrl;
         try {
-            console.log(`[Ollama] Generating image with: ${model}`);
-            const response = await net.fetch(`${this.baseUrl}/api/generate`, {
+            console.log(`[Ollama] Generating image with: ${model} at ${url}`);
+            const response = await net.fetch(`${url}/api/generate`, {
                 method: 'POST',
                 body: JSON.stringify({
                     model: model,
@@ -171,7 +172,7 @@ export class OllamaService {
             const data = await response.json() as { response: string };
             return data.response;
         } catch (error) {
-            console.error('[Ollama] Erreur de génération d\'image:', error);
+            console.error(`[Ollama] Erreur de génération d'image sur ${url}:`, error);
             throw error;
         }
     }
@@ -182,25 +183,25 @@ export class OllamaService {
     static registerHandlers() {
         const service = new OllamaService();
 
-        ipcMain.handle('ai:ollama-status', async () => {
-            return await service.checkStatus();
+        ipcMain.handle('ai:ollama-status', async (_event, endpoint?: string) => {
+            return await service.checkStatus(endpoint);
         });
 
-        ipcMain.handle('ai:ollama-chat', async (_event, model: string, messages: { role: string; content: string }[]) => {
-            return await service.chat(model, messages);
+        ipcMain.handle('ai:ollama-chat', async (_event, model: string, messages: { role: string; content: string }[], endpoint?: string) => {
+            return await service.chat(model, messages, endpoint);
         });
 
-        ipcMain.handle('ai:ollama-generate-image', async (_event, model: string, prompt: string) => {
-            return await service.generateImage(model, prompt);
+        ipcMain.handle('ai:ollama-generate-image', async (_event, model: string, prompt: string, endpoint?: string) => {
+            return await service.generateImage(model, prompt, endpoint);
         });
 
-        ipcMain.handle('ai:ollama-chat-stream', async (event, model: string, messages: { role: string; content: string }[]) => {
+        ipcMain.handle('ai:ollama-chat-stream', async (event, model: string, messages: { role: string; content: string }[], endpoint?: string) => {
             try {
                 await service.chatStream(model, messages, (token) => {
                     if (!event.sender.isDestroyed()) {
                         event.sender.send('ai:ollama-stream-token', token);
                     }
-                });
+                }, endpoint);
                 return { success: true };
             } catch (error) {
                 console.error('[Ollama Bridge] Streaming error:', error);
@@ -208,12 +209,12 @@ export class OllamaService {
             }
         });
 
-        ipcMain.handle('ai:ollama-list-models', async () => {
-            return await service.listModels();
+        ipcMain.handle('ai:ollama-list-models', async (_event, endpoint?: string) => {
+            return await service.listModels(endpoint);
         });
 
-        ipcMain.handle('ai:ollama-pull', async (_event, model: string) => {
-            return await service.pullModel(model);
+        ipcMain.handle('ai:ollama-pull', async (_event, model: string, endpoint?: string) => {
+            return await service.pullModel(model, endpoint);
         });
     }
 }

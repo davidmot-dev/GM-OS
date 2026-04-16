@@ -98,18 +98,22 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
         e.preventDefault();
         e.stopPropagation();
         
-        const sheetData = sourceCharacter?.sheetData as Record<string, string | number> | undefined;
+        const sheetData = (sourceCharacter?.sheetData || combatant.sheetData) as Record<string, string | number | boolean> | undefined;
         const currentVal = Number(sheetData?.[fieldId] || 0);
         const newVal = Math.max(0, currentVal + delta);
         
         if (combatant.isPlayer && combatant.sourcePlayerId) {
-            // Correctly find the player ID to which this character belongs
             const player = players.find(p => p.characters.some(c => c.id === combatant.sourcePlayerId));
             if (player) {
                 updateCharacterSheetData(player.id, combatant.sourcePlayerId, fieldId, newVal);
             }
         } else if (combatant.sourceEntityId) {
             updateEntitySheetData(combatant.sourceEntityId, fieldId, newVal);
+        } else {
+            // Standalone update
+            updateCombatant(combatant.id, { 
+                sheetData: { ...(combatant.sheetData || {}), [fieldId]: newVal } 
+            });
         }
     };
 
@@ -307,6 +311,10 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                   <HealthManager 
                     id={combatant.isPlayer ? combatant.sourcePlayerId! : combatant.sourceEntityId!} 
                     type={combatant.isPlayer ? 'pc' : 'npc'} 
+                    initialHealthSystem={combatant.healthSystem}
+                    onHealthChange={(newHealth) => {
+                      updateCombatant(combatant.id, { healthSystem: newHealth });
+                    }}
                   />
                 </div>
 
@@ -370,8 +378,8 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
             {activeDriver?.ui_config?.gauges && activeDriver.ui_config.gauges.length > 0 ? (
                 <div className="mt-4 flex gap-6 px-3">
                     {activeDriver.ui_config.gauges.map((gaugeConfig: { fieldId: string; label: string; style: string; color: string }, idx: number) => {
-                        // Extract value from sheetData
-                        const sheetData = sourceCharacter?.sheetData as Record<string, string | number> | undefined;
+                        // Extract value from sheetData (persistent or local)
+                        const sheetData = (sourceCharacter?.sheetData || combatant.sheetData) as Record<string, string | number | boolean> | undefined;
                         const sheetValRaw = sheetData?.[gaugeConfig.fieldId];
                         const val = typeof sheetValRaw === 'number' ? sheetValRaw : parseInt(String(sheetValRaw || 0), 10);
                         

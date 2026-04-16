@@ -17,16 +17,20 @@ import { useVoiceStore } from '../modules/voice/useVoiceStore';
 import { useTacticalAIStore } from '../modules/tactical-ai/useTacticalAIStore';
 import { useDiceStore } from '../stores/useDiceStore';
 import type { DieResult } from '../modules/dice/DiceEngine';
+import { useTranslation } from 'react-i18next';
+import { getFateRankLabel, getDieCssClass } from '../modules/dice/DiceUIUtils';
+import PlayerDiceBox3D from '../modules/dice/DiceBox3D';
 
 
 const PlayerHub: React.FC = () => {
+    const { t } = useTranslation(['modules', 'common']);
     const { mediaList, projections } = useImageStore();
     const { isClockProjected, timestamp, mode, theme, tensions } = useClockStore();
     const { favorites } = useFavoriteStore();
     const { combatants, currentTurnIdx, round, isCombatProjected } = useCombatStore();
     const { mapUrl, projectionTarget } = useMapStore();
     const { backgroundMode, projectionTarget: whiteboardTarget } = useWhiteboardStore();
-    const { isDiceProjected, lastRoll, projectionTrigger } = useDiceStore();
+    const { isDiceProjected, lastRoll, projectionTrigger, enable3D } = useDiceStore();
     const { activeCampaignWallpaper } = useSessionOSStore();
     const [showDice, setShowDice] = useState(false);
     const diceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -41,7 +45,7 @@ const PlayerHub: React.FC = () => {
             if (diceTimerRef.current) clearTimeout(diceTimerRef.current);
             diceTimerRef.current = setTimeout(() => {
                 setShowDice(false);
-            }, 15000); // 15 seconds visibility instead of 5
+            }, 10000); // 10 seconds visibility
 
             return () => clearTimeout(timerShow);
         } else if (!isDiceProjected) {
@@ -372,16 +376,21 @@ const PlayerHub: React.FC = () => {
                         </div>
                     )}
 
-                    {/* Dice Projection Overlay */}
+                    {/* Dice 3D Layer */}
+                    <PlayerDiceBox3D active={showDice && enable3D} lastRoll={lastRoll} />
+
+                    {/* Dice Projection Overlay (2D Results) */}
                     <div className={`fixed inset-0 z-[70] flex items-center justify-center p-12 pointer-events-none transition-all duration-1000 ${
                         showDice ? 'opacity-100' : 'opacity-0'
                     }`}>
                         {lastRoll && (
                             <div className={`bg-app-surface/90 backdrop-blur-3xl border-2 border-accent/30 rounded-[3rem] p-12 shadow-[0_0_100px_rgba(var(--accent-rgb),0.3)] flex flex-col items-center gap-8 max-w-2xl w-full transform transition-all duration-1000 ${
-                                showDice ? 'scale-100 translate-y-0 animate-in zoom-in' : 'scale-95 translate-y-8 duration-700'
-                            }`}>
+                                showDice 
+                                    ? `scale-100 translate-y-0 animate-in zoom-in ${enable3D ? 'delay-[1500ms]' : ''}` 
+                                    : 'scale-95 translate-y-8 duration-700'
+                            } ${showDice && enable3D ? 'opacity-40 hover:opacity-100 transition-opacity' : ''}`}>
                                 <div className="flex flex-col items-center gap-2 text-center">
-                                    <span className="text-accent text-xs font-black uppercase tracking-[0.5em] animate-pulse">Résultat du Dé</span>
+                                    <span className="text-accent text-xs font-black uppercase tracking-[0.5em] animate-pulse">{t('dice.status.success').toUpperCase()}</span>
                                     <h2 className="text-app-text/80 text-xl font-black tracking-tight uppercase drop-shadow-lg">{lastRoll.title}</h2>
                                 </div>
 
@@ -393,15 +402,14 @@ const PlayerHub: React.FC = () => {
                                     {(lastRoll.rolls as DieResult[]).map((r, i) => (
                                         <div 
                                             key={i} 
-                                            className={`size-16 flex items-center justify-center rounded-2xl text-2xl border transition-all ${
-                                                r.cssClass ? r.cssClass : 
-                                                r.isCritMax ? '!bg-emerald-500 border-emerald-500 !text-white shadow-glow-emerald/40' :
-                                                r.isCritMin ? '!bg-rose-500 border-rose-500 !text-white shadow-glow-rose/40' :
-                                                r.isExploded ? '!bg-amber-500/20 border-amber-500/50 text-amber-500 shadow-glow-amber/20' :
-                                                'bg-app-bg/40 border-app-border/20 text-app-text/40'
-                                            }`}
+                                            className={`size-16 flex flex-col items-center justify-center rounded-2xl text-2xl font-black border transition-all relative group ${getDieCssClass(r)}`}
                                         >
                                             {r.displayStr || r.val}
+                                            {r.fateRank !== undefined && (
+                                                <span className="absolute -top-2 -right-2 px-2 py-0.5 bg-accent text-[10px] rounded-lg text-white shadow-xl font-black uppercase">
+                                                    {getFateRankLabel(r.fateRank, t)}
+                                                </span>
+                                            )}
                                         </div>
                                     ))}
                                 </div>
@@ -412,7 +420,7 @@ const PlayerHub: React.FC = () => {
                                             ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/50 shadow-glow-emerald/30' 
                                             : 'bg-rose-500/10 text-rose-400 border-rose-500/50 shadow-glow-rose/30'
                                     }`}>
-                                        {lastRoll.tagSuccess ? 'succès' : 'échec'}
+                                        {lastRoll.tagSuccess ? t('dice.status.success') : t('dice.status.failure')}
                                     </div>
                                 )}
                             </div>

@@ -21,8 +21,10 @@ interface DiceState {
     quickRolls: QuickRoll[];
     isDiceProjected: boolean;
     projectionTrigger: number;
+    enable3D: boolean;
     setLastRoll: (roll: RollRecord) => void;
     setIsDiceProjected: (projected: boolean) => void;
+    setEnable3D: (enabled: boolean) => void;
     triggerDiceProjection: () => void;
     clearHistory: () => void;
     addQuickRoll: (label: string, formula: string) => void;
@@ -41,11 +43,13 @@ export const useDiceStore = create<DiceState>()(
             ],
             isDiceProjected: false,
             projectionTrigger: 0,
+            enable3D: true,
             setLastRoll: (roll) => set((state) => ({
                 lastRoll: roll,
                 history: [roll, ...state.history].slice(0, 50)
             })),
             setIsDiceProjected: (isDiceProjected) => set({ isDiceProjected }),
+            setEnable3D: (enable3D) => set({ enable3D }),
             triggerDiceProjection: () => set({ projectionTrigger: Date.now() }),
             clearHistory: () => set({ history: [], lastRoll: null, isDiceProjected: false, projectionTrigger: 0 }),
             addQuickRoll: (label, formula) => set((state) => ({
