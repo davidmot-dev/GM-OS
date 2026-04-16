@@ -35,9 +35,11 @@ Pour un PNJ, cliquez sur **"COMBAT"** ou **"SEND TO COMBAT"**.
 Pour un PNJ ou un Lieu, cliquez sur **"MAP"** ou **"SEND TO MAP"**.
 - Un pion (Token) est créé instantanément au centre de votre carte active, prêt à être positionné.
 
-### 3. 📺 Vers Player Hub (Projection)
-Activez l'interrupteur **"PLAYER HUB"** sur un dossier.
-- L'illustration et le nom de l'entité sont projetés sur l'écran des joueurs. Si vous parlez avec **Voice-OS**, l'avatar s'animera dynamiquement !
+### 3. 📺 Vers Player Hub (Projection Unifiée)
+Activez l'interrupteur **"SYCHRO"** ou cliquez sur l'icône **"PROJECTER"** sur un dossier.
+- **Réception Visuelle** : L'illustration et le nom de l'entité sont projetés sur l'écran des joueurs dans une grille élégante.
+- **Neural Hub Sync** : Si vous parlez avec votre micro, l'interface du Hub réagit dynamiquement pour indiquer que ce personnage est en train de s'exprimer.
+- **Intelligence Anti-Doublon** : Le système gère intelligemment les projections multiples. Si vous projetez une image d'ambiance en même temps que la fiche d'un PNJ, l'interface s'organise automatiquement sans créer de redondance visuelle inutile.
 
 ---
 

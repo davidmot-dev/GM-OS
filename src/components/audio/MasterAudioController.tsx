@@ -4,6 +4,7 @@ import { useAudioMasterStore } from '../../stores/useAudioMasterStore';
 import { useSessionStore } from '../../store/useSessionStore';
 import { useToastStore } from '../../stores/useToastStore';
 import { useTranslation } from 'react-i18next';
+import { useFavoriteStore } from '../../modules/favorite/useFavoriteStore';
 
 const MasterAudioController: React.FC = () => {
     const { t } = useTranslation(['common', 'modules']);
@@ -41,6 +42,9 @@ const MasterAudioController: React.FC = () => {
             if (win.hueEngine) {
                 await win.hueEngine.extinguishAll();
             }
+
+            // 4. Favorites & Projections (Full Hub Sync cleanup)
+            useFavoriteStore.getState().clearAllHubProjections();
 
             useToastStore.getState().showToast(t('modules:session.toasts.stop_all_success'), 'success');
         } catch (error) {

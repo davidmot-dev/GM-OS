@@ -99,7 +99,10 @@ La gestion des IDs `m-xxx` (Blob IDs stockés en local) nécessite une couche d'
 - **Intégrité des Identifiants (m- prefix)** : Depuis la v6.1.2-dev, le MJ garantit la conservation du préfixe `m-` dans l'URL du proxy. Cela assure la correspondance directe avec les fichiers stockés dans le dossier `TEMP_MEDIA` du MJ, évitant les erreurs 404 sur les tablettes.
 - **Pont de Protocoles (Custom Schemes)** : Le hook `useMediaUrl` détecte et traduit les schémas propriétaires MJ (ex: `gmos://media/`) en URLs HTTP valides pour le proxy Nexus Bridge. Cela permet aux tablettes distantes d'afficher des images stockées physiquement sur le PC du MJ.
 - **Hub Failsafe** : Le hook `useMediaUrl` sur les tablettes redirige automatiquement vers l'IP du MJ si un identifiant non résolu est détecté dans le store synchronisé.
-- **Deduplication Logic** : Le moteur de rendu des Hubs (Player/Tablet) déduplique dynamiquement les entités. Si une entité est projetée en mode "Spotlight" (Focalisation), elle est automatiquement masquée de la liste des "Favoris Partagés" pour éviter la redondance visuelle.
+- **Deduplication Logic** : Le moteur de rendu des Hubs (Player/Tablet) déduplique dynamiquement les entités. Pour éviter la saturation visuelle (ex: afficher 3 fois le même PNJ), il suit une priorité stricte :
+  1. `liveEntity` (Priorité Alpha) est affichée.
+  2. Les `favorites` sont filtrés pour exclure tout ID ou Nom déjà présent dans `liveEntity`.
+  3. `liveImagePath` est masqué si l'URL de l'image correspond à l'avatar d'une entité déjà affichée sur l'écran.
 - **Persistence Cleanup** : Le store d'images utilise `onRehydrateStorage` pour purger automatiquement les projections orphelines (IDs de médias inexistants) au démarrage, évitant l'affichage de "ghost images" d'anciennes campagnes.
 
 ---

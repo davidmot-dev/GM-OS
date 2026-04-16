@@ -29,6 +29,7 @@ import { HubArchives } from './hub/HubArchives';
 import { HubTrombinoscope } from './hub/HubTrombinoscope';
 import { HubAtlas } from './hub/HubAtlas';
 import { HubInventory } from './hub/HubInventory';
+import { HubProjectionCard } from './hub/HubProjectionCard';
 import { useHubSync } from '../modules/session/hooks/useHubSync';
 import PlayerPrivateNotes from '../modules/session/components/PlayerPrivateNotes';
 import { type Clue, type Entity, type AtlasMap } from '../modules/session/store/types';
@@ -68,8 +69,7 @@ const TabletHub: React.FC = () => {
         sessions,
         isOnboarded,
         characterId,
-        transferRequests,
-        theaterEntity
+        transferRequests
     } = useHubSync();
 
     const { resetIdentity } = useClientStore();
@@ -115,11 +115,8 @@ const TabletHub: React.FC = () => {
         ? visibleCombatants.filter(c => c.id !== activeCombatant?.id)
         : [], [visibleCombatants, activeCombatant]);
  
-    const liveFavorites = useMemo(() => resolvedFavorites.filter(f => f.type !== 'item'), [resolvedFavorites]);
     const inventoryItems = useMemo(() => resolvedFavorites.filter(f => f.type === 'item'), [resolvedFavorites]);
  
-    const isTheaterActive = !!theaterEntity;
-
     const toggleMessenger = () => {
         setIsMessengerOpen(!isMessengerOpen);
         if (!isMessengerOpen) setLastReadMessageTime(Date.now());
@@ -146,8 +143,6 @@ const TabletHub: React.FC = () => {
         '--hub-bg-opacity': resolvedBackground ? 1 : 0,
         '--hub-blur-bg-url': resolvedCampaignWallpaper ? `url("${resolvedCampaignWallpaper}")` : "none",
     } as React.CSSProperties;
-
-    const isWhiteboardActive = projections['hub'] === 'whiteboard'; // Alignement si tableau blanc actif
 
     return (
         <div className={`min-h-screen bg-app-bg text-app-text font-inter overflow-hidden flex flex-col relative select-none ${performance.isLowGraphics ? '' : 'will-change-transform'}`} style={rootStyles}>
@@ -205,8 +200,8 @@ const TabletHub: React.FC = () => {
             />
             
             {/* Overlay for focus (when an entity is displayed front-and-center) */}
-            {(liveFavorites.length > 0 || liveEntity) && (
-                <div className={`fixed inset-0 z-5 bg-black/40 pointer-events-none transition-all duration-700 ${isTheaterActive ? 'opacity-0' : 'opacity-100'} ${performance.isLowGraphics ? '' : 'backdrop-blur-[1px]'}`}></div>
+            {(resolvedFavorites.length > 0 || liveEntity) && (
+                <div className={`fixed inset-0 z-5 bg-black/40 pointer-events-none transition-all duration-700 opacity-100 ${performance.isLowGraphics ? '' : 'backdrop-blur-[1px]'}`}></div>
             )}
 
             {/* Main Content Area */}
@@ -241,105 +236,38 @@ const TabletHub: React.FC = () => {
 
                 {/* Centered Content Area */}
                 <div className={`flex-1 flex items-center justify-center transition-all duration-1000 ${hasCombatants ? 'pr-0 md:pr-72' : ''} md:pl-32 pointer-events-none overflow-hidden`}>
-                    {currentTab === 'live' && (liveFavorites.length > 0 || liveEntity || (liveImagePath && liveImagePath !== activeCampaignWallpaper)) && (
+                    {currentTab === 'live' && (resolvedFavorites.length > 0 || liveEntity || (liveImagePath && liveImagePath !== activeCampaignWallpaper)) && (
                         <div className="w-full h-full flex items-center justify-center overflow-hidden pointer-events-auto">
                             <div className="w-full max-h-full overflow-y-auto custom-scrollbar p-4 md:p-8 flex flex-col items-center justify-center">
                                 {(() => {
-                                    const uniqueFavorites = liveFavorites.filter(f => f.id !== theaterEntity?.id && f.id !== liveEntity?.id);
-                                    const showLive = liveEntity && theaterEntity?.id !== liveEntity.id;
-                                    const showProjection = liveImagePath && liveImagePath !== activeCampaignWallpaper;
-                                    const count = uniqueFavorites.length + (showLive ? 1 : 0) + (showProjection ? 1 : 0);
+                                    // 1. Filter favorites to avoid duplication with liveEntity
+                                    const filteredFavorites = resolvedFavorites.filter(fav => 
+                                        !liveEntity || (fav.id !== liveEntity.id && fav.name.toLowerCase() !== liveEntity.name.toLowerCase())
+                                    );
+
+                                    // 2. Identify all images already shown in entity cards
+                                    const shownImages = new Set<string>();
+                                    if (liveEntity) {
+                                        if (liveEntity.avatar) shownImages.add(liveEntity.avatar);
+                                        if (liveEntity.imageUrl) shownImages.add(liveEntity.imageUrl);
+                                        if (liveEntity.portraitUrl) shownImages.add(liveEntity.portraitUrl);
+                                    }
+                                    filteredFavorites.forEach(fav => {
+                                        if (fav.imageUrl) shownImages.add(fav.imageUrl);
+                                    });
+
+                                    // 3. Decide if we show the raw image card
+                                    const isWallpaper = liveImagePath === activeCampaignWallpaper;
+                                    const imageAlreadyShownAsEntity = !!liveImagePath && shownImages.has(liveImagePath);
+                                    const showImageCard = !!liveImagePath && !isWallpaper && !imageAlreadyShownAsEntity;
+
+                                    const count = filteredFavorites.length + (liveEntity ? 1 : 0) + (showImageCard ? 1 : 0);
                                     
                                     return (
                                         <div className={`grid grid-cols-1 ${count > 1 ? 'md:grid-cols-2 lg:grid-cols-3' : 'md:max-w-4xl'} gap-8 md:gap-12 w-full place-items-center`}>
-                                            {/* Explicit Image Projection Card */}
-                                            {showProjection && (
-                                                <div className={`relative bg-app-surface/90 border-2 border-accent/40 rounded-[2rem] p-4 shadow-[0_0_50px_rgba(var(--accent-rgb),0.3)] flex flex-col gap-4 animate-in fade-in zoom-in slide-in-from-bottom-12 duration-1000 w-full group overflow-hidden ${performance.heavyBlurClass} ${count > 1 ? 'md:col-span-2' : ''}`}>
-                                                    {/* Header Label */}
-                                                    <div className="flex items-center justify-between px-2">
-                                                        <div className="flex items-center gap-2">
-                                                            <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-                                                            <span className="text-[10px] font-black text-accent uppercase tracking-[0.3em]">Flux Visuel Actif</span>
-                                                        </div>
-                                                        <span className="text-[9px] font-bold text-app-text/30 uppercase font-mono tracking-tighter">Sync: V6.3.0</span>
-                                                    </div>
-
-                                                    {/* Image Container */}
-                                                    <div className="relative aspect-video rounded-xl overflow-hidden border border-accent/20 bg-black/40">
-                                                        <ResolvedImage 
-                                                            src={liveImagePath} 
-                                                            className="w-full h-full object-contain relative z-10" 
-                                                        />
-                                                        
-                                                        {/* Scanline Effect */}
-                                                        <div className="absolute inset-0 z-20 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(255,0,0,0.03),rgba(0,255,0,0.01),rgba(0,0,255,0.03))] bg-[length:100%_2px,3px_100%] opacity-40" />
-                                                        
-                                                        <div className="absolute inset-0 z-0 opacity-20 blur-2xl">
-                                                            <ResolvedImage src={liveImagePath} className="w-full h-full object-cover" />
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    {/* Footer Decorative Line */}
-                                                    <div className="h-1 w-full bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
-                                                </div>
-                                            )}
-
-                                            {showLive && (
-                                        <div key={liveEntity.id} className={`bg-app-surface/90 border-2 border-accent/30 rounded-[2rem] p-6 md:p-8 shadow-[0_0_50px_rgba(var(--accent-rgb),0.2)] flex flex-col gap-6 animate-in fade-in zoom-in slide-in-from-bottom-12 duration-1000 w-full hover:border-accent/60 transition-all group ${liveEntity.type === 'Oracle' ? 'md:max-w-2xl' : ''} ${performance.heavyBlurClass} ${performance.shadowClass}`}>
-                                            <div className="flex flex-col items-center text-center gap-4 md:gap-6">
-                                                <VoiceReactiveAvatar 
-                                                    imageUrl={liveEntity.avatar || liveEntity.imageUrl || liveEntity.portraitUrl} 
-                                                    name={liveEntity.name} 
-                                                    type={liveEntity.type}
-                                                    isPerformanceLimited={performance.isLowGraphics}
-                                                />
-
-                                                {liveEntity.type !== 'Oracle' && (
-                                                    <div className="flex flex-col items-center">
-                                                        <h3 className="text-2xl md:text-3xl font-black text-app-text tracking-tighter drop-shadow-lg uppercase bg-gradient-to-b from-app-text to-app-text/60 bg-clip-text text-transparent">{liveEntity.name}</h3>
-                                                        <div className="flex items-center gap-3 mt-1">
-                                                            <span className="h-px w-6 bg-accent/40"></span>
-                                                            <p className="text-accent text-[10px] md:text-[12px] font-black uppercase tracking-[0.5em]">{liveEntity.subtitle || liveEntity.type || 'Personnage'}</p>
-                                                            <span className="h-px w-6 bg-accent/40"></span>
-                                                        </div>
-                                                    </div>
-                                                )}
-                                            </div>
-                                            
-                                            {liveEntity.type !== 'Oracle' && (
-                                                <div className="relative pt-6 border-t border-app-border/20">
-                                                    <p className="font-serif text-app-text/80 leading-relaxed italic text-sm md:text-base text-center whitespace-pre-wrap drop-shadow-md line-clamp-[10]">
-                                                        {liveEntity.lore || liveEntity.description || "Aucun détail narratif supplémentaire."}
-                                                    </p>
-                                                </div>
-                                            )}
-                                        </div>
-                                    )}
-
-                                    {uniqueFavorites.map(fav => (
-                                        <div key={fav.id} className={`bg-app-surface/90 border border-app-border/20 rounded-[1.5rem] p-5 md:p-6 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.8)] flex flex-col gap-4 md:gap-5 animate-in fade-in zoom-in duration-700 w-full group ${performance.heavyBlurClass}`}>
-                                            <div className="flex flex-col items-center text-center gap-3 md:gap-4">
-                                                <div className="size-20 md:size-28 rounded-xl overflow-hidden border border-app-border/40 shadow-xl bg-app-surface group-hover:border-accent transition-all scale-100 group-hover:scale-105 relative">
-                                                    <ResolvedImage src={fav.imageUrl || fav.tokenUrl} className="absolute inset-0 w-full h-full object-cover blur-lg opacity-40 scale-110" />
-                                                    <ResolvedImage src={fav.imageUrl || fav.tokenUrl} alt={fav.name} className="relative z-10 w-full h-full object-contain" />
-                                                </div>
-                                                <div className="flex flex-col items-center">
-                                                    <h3 className="text-lg md:text-xl font-black text-app-text tracking-tighter uppercase opacity-90">{fav.name}</h3>
-                                                    <div className="flex items-center gap-2 mt-0.5">
-                                                        <span className="h-px w-3 bg-app-text/20"></span>
-                                                        <p className="text-app-text/60 text-[8px] md:text-[9px] font-black uppercase tracking-[0.4em]">{fav.type}</p>
-                                                        <span className="h-px w-3 bg-app-text/20"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className="relative pt-4 border-t border-app-border/20">
-                                                <p className="font-serif text-app-text/70 leading-relaxed italic text-xs md:text-sm text-center line-clamp-[10]">
-                                                    {fav.lore}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    ))}
+                                            {showImageCard && <HubProjectionCard src={liveImagePath!} count={count} />}
+                                            {liveEntity && <HubProjectionCard entity={liveEntity} count={count} />}
+                                            {filteredFavorites.map(fav => <HubProjectionCard key={fav.id} entity={fav} count={count} />)}
                                         </div>
                                     );
                                 })()}
@@ -501,70 +429,6 @@ const TabletHub: React.FC = () => {
                         className={`fixed inset-0 z-[120] flex items-center justify-center p-12 bg-app-surface/40 pointer-events-none ${performance.blurClass}`}
                     >
                         <DiceResultDisplay />
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            {/* Theater Mode Overlay (Z-200) - Alignement cinématique complet */}
-            <AnimatePresence>
-                {theaterEntity && (
-                    <motion.div 
-                        key={`theater-${theaterEntity.id}`}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[200] bg-black/95 flex flex-col items-center justify-center pointer-events-auto"
-                    >
-                        {/* Blurred Background */}
-                        <div className="absolute inset-0 opacity-40 select-none pointer-events-none">
-                            <ResolvedImage 
-                                src={theaterEntity.avatar || theaterEntity.imageUrl || theaterEntity.portraitUrl} 
-                                className={`w-full h-full object-cover scale-110 ${performance.isLowGraphics ? 'blur-lg' : 'blur-[120px]'}`} 
-                            />
-                        </div>
-                        
-                        {/* Focus Image */}
-                        <div className="relative z-10 w-full h-full flex flex-col items-center justify-center p-12 md:p-24 overflow-hidden">
-                            <motion.div 
-                                initial={{ scale: 0.95, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                transition={{ duration: 1, ease: "easeOut" }}
-                                className="relative group max-h-full flex flex-col items-center max-w-6xl"
-                            >
-                                <ResolvedImage 
-                                    src={theaterEntity.avatar || theaterEntity.imageUrl || theaterEntity.portraitUrl} 
-                                    alt={theaterEntity.name}
-                                    className="max-w-full max-h-[70vh] object-contain shadow-[0_0_150px_rgba(0,0,0,0.9)] rounded-3xl border border-white/10"
-                                />
-                                
-                                {/* Floating Cinematic Caption */}
-                                <div className="mt-8 md:mt-16 text-center">
-                                    <h3 className="text-4xl md:text-7xl font-black text-white tracking-tighter uppercase drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
-                                        {theaterEntity.name}
-                                    </h3>
-                                    {(theaterEntity.subtitle || theaterEntity.type) && (
-                                        <div className="flex items-center justify-center gap-6 mt-4 md:mt-6">
-                                            <div className="h-px w-12 md:w-24 bg-accent/60 shadow-glow-accent" />
-                                            <p className="text-accent text-xl md:text-2xl font-black uppercase tracking-[0.6em] md:tracking-[0.8em] drop-shadow-md">
-                                                {theaterEntity.subtitle || theaterEntity.type}
-                                            </p>
-                                            <div className="h-px w-12 md:w-24 bg-accent/60 shadow-glow-accent" />
-                                        </div>
-                                    )}
-                                </div>
-                            </motion.div>
-                        </div>
-
-                        {/* Interactive Indicators */}
-                        <div className="absolute top-12 right-16 flex flex-col items-end gap-2">
-                            <div className="text-[10px] md:text-[12px] font-black text-accent shadow-glow-accent uppercase tracking-[1em] animate-pulse">
-                                Theater Focus Active
-                            </div>
-                        </div>
-                        
-                        {/* Corner Borders */}
-                        <div className="absolute top-8 left-8 size-24 md:size-32 border-t-2 border-l-2 border-accent/30 rounded-tl-3xl pointer-events-none" />
-                        <div className="absolute bottom-8 right-8 size-24 md:size-32 border-b-2 border-r-2 border-accent/30 rounded-br-3xl pointer-events-none" />
                     </motion.div>
                 )}
             </AnimatePresence>

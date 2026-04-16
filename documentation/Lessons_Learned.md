@@ -160,5 +160,18 @@ Le cycle de vie d'un bundle Nexus-OS suit un protocole de test strict : Scrape -
 1. **Nesting Level 2** : Tout nouveau module doit être déclaré à la racine de son namespace parent.
 2. **Encodage Strict** : Utilisation d'un script de réparation Node.js automatisé pour mapper les séquences corrompues.
 
+## 14. Hub UX : Dénucléarisation du Mode "Théâtre" (Minimalisme Narratif)
+
+### 14.1 Défi
+L'introduction d'un mode "Théâtre" (vue splitée avec détails techniques à droite) complexifiait inutilement le flux de synchronisation MJ-Hub et surchargeait visuellement l'écran des joueurs avec des données peu pertinentes pour l'immersion (listes d'attributs, jauges secondaires).
+
+### 14.2 Leçon
+**Moins c'est plus.** Pour les écrans de projection (Hubs), l'image est le vecteur principal d'immersion. Toute donnée textuelle non-essentielle doit être masquée par défaut.
+
+**Solution :**
+1. **Purge du code mort** : Suppression des états `isTheater` et `displayMode`.
+2. **Grille Unifiée** : Utilisation d'une grille intelligente d'entités (`HubProjectionCard`) qui s'adapte au nombre d'éléments projetés.
+3. **Déduplication Native** : Filtrage automatique pour garantir qu'un PNJ n'apparaît qu'une seule fois, simplifiant ainsi la logique de rendu et évitant les bugs de redondance visuelle ("Visual Noise").
+
 ---
-*Dernière mise à jour : 11 Avril 2026 - GM-OS v6.3.0.*
+*Dernière mise à jour : 16 Avril 2026 - GM-OS v6.3.2 - Hub Unification & Clean Sweep.*

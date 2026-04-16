@@ -549,24 +549,6 @@ export const FavoriteDetailPanel: React.FC = () => {
                             {t('modules:favorite.detail.hub_sync')}
                         </button>
 
-                        {entity.isSyncedToPlayerHub && (
-                            <button
-                                onClick={() => {
-                                    const newMode = entity.displayMode === 'theater' ? 'card' : 'theater';
-                                    updateFavorite(entity.id, { displayMode: newMode });
-                                    gmToast(newMode === 'theater' ? t('modules:favorite.actions.theater_active') : t('modules:favorite.actions.card_active'));
-                                }}
-                                className={`w-12 rounded-xl border transition-all flex items-center justify-center shadow-lg
-                                    ${entity.displayMode === 'theater'
-                                        ? 'bg-amber-500/20 border-amber-500 text-amber-500 shadow-glow-amber/20'
-                                        : 'bg-app-bg border-white/10 text-slate-500 hover:text-slate-300 hover:border-white/20'}`}
-                                title={entity.displayMode === 'theater' ? t('modules:favorite.oracle.card_view') : t('modules:favorite.oracle.theater_view')}
-                            >
-                                <span className="material-symbols-outlined text-sm">
-                                    {entity.displayMode === 'theater' ? 'close_fullscreen' : 'fullscreen'}
-                                </span>
-                            </button>
-                        )}
                     </div>
 
                     <button

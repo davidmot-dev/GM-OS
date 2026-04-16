@@ -58,9 +58,11 @@ export const useHubSync = () => {
     const [status, setStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
     const [liveImagePath, setLiveImagePath] = useState<string | null | undefined>(undefined);
     const [liveEntity, setLiveEntity] = useState<ProjectedEntity | null>(null);
+    const voiceLevel = useSyncStore(state => state.voiceLevel);
     const setVoiceLevel = useSyncStore(state => state.setVoiceLevel);
     const [sessionSummary, setSessionSummary] = useState<string>('');
     const [showDice, setShowDice] = useState(false);
+    const [mapPings, setMapPings] = useState<{ x: number, y: number, color: string, timestamp: number }[]>([]);
 
     // Resolved Assets
     const [resolvedFavorites, setResolvedFavorites] = useState<FavoriteEntity[]>([]);
@@ -75,6 +77,41 @@ export const useHubSync = () => {
     const host = window.location.hostname;
     const port = 3001;
     const connectRef = useRef<() => void>(() => {});
+
+    // --- Core Logic : Sync Payload Processor ---
+    const applySyncPayload = useCallback((payload: any) => {
+        if (!payload) return;
+        const { clock, combat, voiceLevel: vLevel, session, notes, dice } = payload;
+        
+        if (clock) useClockStore.setState(prev => ({ ...prev, ...clock }));
+        if (combat) useCombatStore.setState(prev => ({ ...prev, ...combat }));
+        if (vLevel !== undefined) setVoiceLevel(vLevel);
+        if (notes?.public !== undefined) setSessionSummary(notes.public);
+        if (dice) useDiceStore.setState(prev => ({ ...prev, ...dice }));
+
+        if (session) {
+            useSessionOSStore.setState({ 
+                sessions: session.sessions || [],
+                campaigns: session.campaigns || [],
+                players: session.players || [],
+                clues: session.clues || [],
+                entities: session.entities || [],
+                atlasMaps: session.atlasMaps || [],
+                activeCampaignId: session.activeCampaignId || null,
+                activeCampaignName: session.activeCampaignName || null,
+                activeCampaignWallpaper: session.activeCampaignWallpaper || null,
+                customSheetTemplates: session.customSheetTemplates || [],
+                customGameDrivers: session.customGameDrivers || [],
+                connectedCharacters: session.characterLocks || {}
+            });
+
+            if (session.favorites) {
+                useFavoriteStore.setState({
+                    favorites: session.favorites || []
+                });
+            }
+        }
+    }, [setVoiceLevel]);
 
     // WebSocket Connection Logic
     useEffect(() => {
@@ -142,42 +179,16 @@ export const useHubSync = () => {
                         if (type === 'image') setLiveImagePath(payload || null);
                         if (type === 'entity') {
                             const entity = payload ? JSON.parse(payload) : null;
-                            console.log(`[useHubSync] Received Hub Entity: ${entity?.name}`);
-                            setLiveEntity(entity);
+                            if (entity && (entity.name === 'TEST' || entity.id?.startsWith('mock-') || !entity.id)) {
+                                setLiveEntity(null);
+                            } else {
+                                setLiveEntity(entity);
+                            }
                         }
                     }
 
                     if (data.type === 'sync' && data.payload) {
-                        const { clock, combat, voiceLevel: vLevel, session, notes, dice } = data.payload;
-                        
-                        if (clock) useClockStore.setState(prev => ({ ...prev, ...clock }));
-                        if (combat) useCombatStore.setState(prev => ({ ...prev, ...combat }));
-                        if (vLevel !== undefined) setVoiceLevel(vLevel);
-                        if (notes?.public !== undefined) setSessionSummary(notes.public);
-                        if (dice) useDiceStore.setState(prev => ({ ...prev, ...dice }));
-
-                        if (session) {
-                            useSessionOSStore.setState({ 
-                                sessions: session.sessions || [],
-                                campaigns: session.campaigns || [],
-                                players: session.players || [],
-                                clues: session.clues || [],
-                                entities: session.entities || [],
-                                atlasMaps: session.atlasMaps || [],
-                                activeCampaignId: session.activeCampaignId || null,
-                                activeCampaignName: session.activeCampaignName || null,
-                                activeCampaignWallpaper: session.activeCampaignWallpaper || null,
-                                customSheetTemplates: session.customSheetTemplates || [],
-                                customGameDrivers: session.customGameDrivers || [],
-                                connectedCharacters: session.characterLocks || {}
-                            });
-
-                            if (session.favorites) {
-                                useFavoriteStore.setState({
-                                    favorites: session.favorites || []
-                                });
-                            }
-                        }
+                        applySyncPayload(data.payload);
                     }
 
                     // Handle specific P2P events
@@ -239,12 +250,41 @@ export const useHubSync = () => {
         const handleIpcUpdate = (_event: unknown, ...args: unknown[]) => {
             const [type, data] = args as [string, string];
             if (type === 'image') setLiveImagePath(data || null);
-            else if (type === 'entity') setLiveEntity(data ? JSON.parse(data) : null);
+            else if (type === 'entity') {
+                const entity = data ? JSON.parse(data) : null;
+                // Neutralisation des entités "fantômes"
+                if (entity && (entity.name === 'TEST' || entity.id?.startsWith('mock-') || !entity.id)) {
+                    setLiveEntity(null);
+                } else {
+                    setLiveEntity(entity);
+                }
+            }
             else if (type === 'voice-level') setVoiceLevel(parseFloat(data) || 0);
+            else if (type === 'map-ping') {
+                const ping = typeof data === 'string' ? JSON.parse(data) : data;
+                setMapPings(prev => [...prev.slice(-10), { ...ping, timestamp: Date.now() }]);
+            }
+        };
+
+        const handleBroadcastSync = (_e: any, payload: any) => {
+            console.log('[useHubSync] Sync received via BRIDGE (IPC)');
+            
+            // Gestion du Panic Button / Reset Global
+            if (payload?.type === 'FULL_RESET') {
+                setLiveImagePath(null);
+                setLiveEntity(null);
+                return;
+            }
+
+            applySyncPayload(payload);
         };
 
         if (window.appBridge?.on) {
             window.appBridge.on('image:sync-hub-data', handleIpcUpdate);
+            window.appBridge.on('map:ping', (_e: any, data: any) => handleIpcUpdate(null, 'map-ping', data));
+            
+            // Bridge V6 : Ecoute de la diffusion globale (Alternative au WebSocket)
+            window.appBridge.on('remote:broadcast-sync', handleBroadcastSync);
         }
 
         const handleSendMessage = (e: Event) => {
@@ -317,6 +357,8 @@ export const useHubSync = () => {
             window.removeEventListener('session:remove-inventory-item', handleRemoveItem);
             if (window.appBridge?.off) {
                 window.appBridge.off('image:sync-hub-data', handleIpcUpdate);
+                window.appBridge.off('map:ping', handleIpcUpdate);
+                window.appBridge.off('remote:broadcast-sync', handleBroadcastSync);
             }
         };
     }, []);
@@ -326,7 +368,12 @@ export const useHubSync = () => {
         let mounted = true;
         const resolveAssets = async () => {
             // Favorites
-            const sharedFavs = favorites.filter(f => f.isSyncedToPlayerHub || f.ownerId === characterId);
+            // Favorites : On ne synchronise que ce qui est explicitement partagé, 
+            // ou ce qui appartient au personnage actif (si défini et non nul).
+            const sharedFavs = favorites.filter(f => 
+                f.isSyncedToPlayerHub || 
+                (characterId && f.ownerId === characterId)
+            );
             const resFavs = await Promise.all(sharedFavs.map(async f => ({
                 ...f,
                 imageUrl: await resolveMediaToDataUrl(f.imageUrl) || f.imageUrl,
@@ -439,16 +486,11 @@ export const useHubSync = () => {
         lastApprovedRequestsRef.current = lastApprovedRequestsRef.current.filter(id => currentIds.includes(id));
     }, [transferRequests]);
 
-    // Theater Logic (Alignment with PlayerHub)
-    const theaterEntity = (liveEntity?.displayMode === 'theater')
-        ? liveEntity
-        : resolvedFavorites.find(f => f.displayMode === 'theater');
-
     return {
         status,
         liveImagePath,
         liveEntity,
-        theaterEntity,
+        voiceLevel,
         sessionSummary,
         showDice,
         resolvedFavorites,
@@ -471,6 +513,8 @@ export const useHubSync = () => {
         sessions,
         transferRequests,
         isOnboarded,
-        characterId
+        characterId,
+        mapPings,
+        setMapPings
     };
 };

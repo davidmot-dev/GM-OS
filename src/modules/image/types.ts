@@ -33,7 +33,6 @@ export interface ProjectedEntity {
     lore?: string;
     type?: string;
     fields?: Record<string, string>;
-    displayMode?: 'card' | 'theater';
 }
 
 export interface ImageBridge {

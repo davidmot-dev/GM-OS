@@ -39,8 +39,6 @@ export interface FavoriteEntity {
     ownerId?: string;
     /** Répliques de dialogue générées par l'IA Oracle */
     dialoguePrep?: string[];
-    /** Mode d'affichage sur le Player Hub */
-    displayMode?: 'card' | 'theater';
 }
 
 interface FavoriteState {
@@ -70,6 +68,8 @@ interface FavoriteState {
     toggleStar: (id: string) => void;
     /** Change le mode d'affichage (grille ou détail) */
     setViewMode: (mode: 'grid' | 'detail') => void;
+    /** Désactive toutes les synchronisations Hub (Panic Button) */
+    clearAllHubProjections: () => void;
 }
 
 // Initial mock data
@@ -153,16 +153,23 @@ export const useFavoriteStore = create<FavoriteState>()(
 
                 // Handle projection sync
                 if (favBefore) {
-                    const imageStore = (window as unknown as { useImageStore?: { getState: () => { projectedEntity?: { id: string }, projectEntity: (e: any) => Promise<void> } } }).useImageStore;
+                    const imageStore = (window as unknown as { useImageStore?: { 
+                        getState: () => { 
+                            projectedEntity?: { id: string }, 
+                            projectEntity: (e: any) => Promise<void> 
+                        } 
+                    } }).useImageStore;
+                    
                     if (imageStore) {
                         const isCurrentlyProjected = imageStore.getState().projectedEntity?.id === id;
+                        const isNowSynced = updates.isSyncedToPlayerHub ?? favBefore.isSyncedToPlayerHub;
                         
-                        // If we are enabling sync, or if we are already synced and updating something (like displayMode)
-                        if ((updates.isSyncedToPlayerHub === true && !isCurrentlyProjected) || (favBefore.isSyncedToPlayerHub && isCurrentlyProjected)) {
-                            // Fetch the latest state of the favorite after the set() above would have finished or just merge here
+                        if (isNowSynced) {
+                            // On force la mise à jour (UPDATE) même si l'ID est identique
                             const updatedFav = { ...favBefore, ...updates };
                             imageStore.getState().projectEntity(updatedFav);
-                        } else if (updates.isSyncedToPlayerHub === false && isCurrentlyProjected) {
+                        } else if (isCurrentlyProjected) {
+                            // Si on vient de couper la synchro ET que c'était projeté, on blackout
                             imageStore.getState().projectEntity(null); 
                         }
                     }
@@ -205,7 +212,22 @@ export const useFavoriteStore = create<FavoriteState>()(
                 )
             })),
 
-            setViewMode: (mode) => set({ viewMode: mode })
+            setViewMode: (mode) => set({ viewMode: mode }),
+
+            clearAllHubProjections: () => {
+                set((state) => ({
+                    favorites: state.favorites.map(fav => ({ 
+                        ...fav, 
+                        isSyncedToPlayerHub: false
+                    }))
+                }));
+                
+                // On notifie également le ImageStore pour être sûr
+                const imageStore = (window as unknown as { useImageStore?: { getState: () => { blackoutAllHub: () => void } } }).useImageStore;
+                if (imageStore) {
+                    imageStore.getState().blackoutAllHub();
+                }
+            }
         }),
         {
             name: 'gm-os-favorites-storage',

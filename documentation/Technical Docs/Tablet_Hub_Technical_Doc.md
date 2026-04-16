@@ -24,6 +24,8 @@ Le Hub utilise un modèle de synchronisation "One-Way" (Maître vers Esclave) :
     - `clock`: `isClockProjected`, `timestamp`, `tensions`, `theme`.
     - `combat`: `combatants` (avec avatars résolus), `round`, `currentTurnIdx`.
     - `entities`: Liste filtrée des PNJ/Monstres de la campagne active (`activeCampaignId`) marqués comme `isVisibleByPlayers`.
+    - `liveEntity`: L'entité actuellement projetée en "Spotlight".
+    - `liveImagePath`: Image d'ambiance ou de scène projetée.
     - `voiceLevel`: Intensité sonore pour le visualiseur.
 4.  Le payload est envoyé via IPC au Main Process Electron, puis diffusé vers tous les clients WebSocket connectés.
 5.  Le `TabletHub.tsx` reçoit le message `sync` et met à jour ses stores locaux via `useStore.setState()`.
@@ -50,11 +52,13 @@ graph TD
 ```
 
 ### Écrans de Rendu :
-- **Narrative Clock** : Utilise le `ClockVisualizer` en mode réduit (`scale-0.7`).
+- **Narrative Clock** : Utilise le `ClockVisualizer`.
 - **Jauges de Tension** : Rendu dynamique via une grille responsive.
-- **Trombinoscope** : Galerie interactive filtrant les entités reçues via WebSocket. Affiche les portraits (`m-xxx`) résolus via le proxy local.
-- **Détails PNJ** : Vue modale immersive déclenchée par la sélection d'un PNJ dans le Trombinoscope.
-- **Header Widgets** : Zone auto-masquable basée sur l'état `isClockProjected`.
+- **Grille de Projection Unifiée** : Utilise le composant `HubProjectionCard` pour afficher les entités et images.
+- **Déduplication Intelligente** : Un algorithme de filtrage (ID > Nom > Image) garantit qu'une entité n'apparaît qu'une seule fois à l'écran, même si elle est à la fois "Projetée" et "Synchronisée".
+- **Trombinoscope** : Galerie interactive filtrant les entités reçues via WebSocket.
+- **Détails PNJ** : Vue modale immersive.
+- **Footer Réactif** : Indicateur de volume sonore (`voiceLevel`) intégré pour un feedback vocal en temps réel.
 
 ## 🧪 Tests Automatisés
 

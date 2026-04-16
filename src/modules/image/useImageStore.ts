@@ -72,6 +72,8 @@ interface ImageState {
     blackout: () => void;
     /** Coupe toutes les projections actives */
     blackoutAll: () => void;
+    /** Coupe spécifiquement toutes les synchronisations vers les Hubs (Panic Button) */
+    blackoutAllHub: () => void;
 
     /** Navigue manuellement dans la séquence : -1 (précédent), 1 (suivant) */
     navigateSequence: (direction: -1 | 1) => void;
@@ -279,6 +281,7 @@ export const useImageStore = create<ImageState>()(
                 const state = get();
                 const target = state.projectionTarget as string;
                 
+                // FIX: On ne toggle OFF que si l'ID est identique.
                 if (state.projectedEntity?.id === entity?.id && entity !== null) {
                     set({ projectedEntity: null });
                     window.appBridge?.image?.syncHubData('entity', '');
@@ -429,6 +432,18 @@ export const useImageStore = create<ImageState>()(
                     if (target !== 'hub') {
                         window.appBridge?.image?.launchDisplay([], target);
                     }
+                });
+            },
+
+            /** Coupe spécifiquement toutes les synchronisations vers les Hubs (Panic Button) */
+            blackoutAllHub: () => {
+                set({ projectedEntity: null });
+                window.appBridge?.image?.syncHubData('image', '');
+                window.appBridge?.image?.syncHubData('entity', '');
+                // On notifie également via un broadcast IPC global si dispo
+                window.appBridge?.remote?.broadcastSync?.({ 
+                    type: 'FULL_RESET',
+                    timestamp: Date.now() 
                 });
             },
 

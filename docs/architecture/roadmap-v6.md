@@ -85,7 +85,7 @@ Ces fonctionnalités sont prévues mais temporairement mises de côté pour prio
 | Validation polymorphe pour imports partiels Nexus-OS | Haute | ✅ Résolu |
 | Migration URLs HTTP → Media Hub (campagne Anges de Feu) | Moyenne | ✅ Complété (Auto-Migration v2) |
 | Rendu Proxy Tablet Hub (m- prefix & protocol gmos://) | Haute | ✅ Résolu |
-| Doublons d'entités (Spotlight vs Favorite) on Hubs | Moyenne | ✅ Résolu |
+| Doublons d'entités (Spotlight vs Favorite) sur Hubs | Haute | ✅ Résolu (v6.3.2) |
 | Optimisation Latence Cortex (Parallel Execution) | Haute | ✅ Complété |
 | Stabilisation Build v6 (TS Strict & verbatrimModuleSyntax) | Haute | ✅ Résolu |
 | Fuite de connexions WebSocket (Double notifications Hub) | Haute | ✅ Résolu |
@@ -97,5 +97,17 @@ Ces fonctionnalités sont prévues mais temporairement mises de côté pour prio
 | Précision géométrique d10 (Manual Modeling) | Moyenne | ✅ Validé |
 
 ---
-*Dernière mise à jour : 16 Avril 2026 (07h56)*
-*Statut : Version 6.3.0 en cours de stabilisation. Focus : Rendu 3D Dice-OS stabilisé et intégration Hub validée.*
+*Dernière mise à jour : 16 Avril 2026 (09h40)*
+*Statut : Version 6.3.2 - Unification & Nettoyage Hub Complet.*
+
+### [v6.3.1-dev] - Player Hub Stabilization & Premium Refactoring
+- [x] **Architecture Hub** : Migration du `PlayerHub` vers le hook unifié `useHubSync`.
+- [x] **Modularisation** : Extraction des widgets (`HubCombatTracker`, `HubClockWidgets`).
+- [x] **Premium Visuals** : Ajout des scanlines v6, transitions Framer Motion et effets de grain cinématique.
+- [x] **Bridge Isolation** : Suppression des dépendances directes à `appBridge` dans l'UI du Hub.
+
+### [v6.3.2-dev] - Unification & Déduplication Hub
+- [x] **Purger le mode Théâtre** : Suppression complète de `displayMode` et des boutons "Agrandir/Réduire".
+- [x] **Unification visuelle** : `HubProjectionCard` devient le seul vecteur de rendu.
+- [x] **Système Anti-Doublon** : Filtrage intelligent par ID, Nom et URL d'image sur Player et Tablet Hub.
+- [x] **Correction Critique** : Fix `ReferenceError` sur `HubCombatTracker` et restauration du signal vocal.

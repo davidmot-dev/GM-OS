@@ -30,18 +30,23 @@ Le Tablet Hub affiche les éléments clés de votre session en temps réel :
 - Affiche les horloges de tension (ex: "Alerte Gardes", "Rituel") sous l'horloge principale.
 - Les jauges se remplissent et changent de couleur en temps réel selon les actions du MJ.
 
-### 4. Indicateur de Voix (Voice Visualizer)
-- Le contour du Hub réagit dynamiquement au niveau sonore du MJ, créant une ambiance immersive "vivante" sur la table de jeu.
+### 4. Réception Visuelle (Spotlight & Sync)
+- **Projection Automatique** : Le Hub affiche désormais une grille élégante ("Réception Visuelle") dès que le MJ projette un PNJ, un lieu ou une image de scène. Plus besoin d'action côté joueur.
+- **Grille Intelligente** : Si plusieurs éléments sont projetés, ils s'organisent automatiquement en grille (jusqu'à 3 colonnes).
+- **Zéro Doublon** : Le système est assez intelligent pour ne pas afficher deux fois le même personnage si le MJ le projette par plusieurs moyens différents.
 
-### 5. État de la Connexion
+### 5. Indicateur Vocal Discret (Neural Signal)
+- Une barre lumineuse subtile au bas de l'écran réagit dynamiquement à la voix du MJ. Ce signal "vivant" permet de savoir instantanément qui parle, même dans le noir ou pendant une phase narrative intense.
+
+### 6. État de la Connexion
 - Un indicateur (Wifi/WifiOff) en haut à droite vous informe si la tablette est bien synchronisée via le serveur WebSocket.
 
-### 6. Fiche de Personnage Interactive
+### 7. Fiche de Personnage Interactive
 - **Affichage Fidèle** : Le Hub utilise désormais le système de templates de GM-OS. Votre fiche s'affiche avec le design spécifique à votre jeu (ex: Cthulhu Hack, Cyberpunk, etc.).
 - **Édition de l'Inventaire** : Vous pouvez modifier votre inventaire en temps réel. Cliquez dans la zone "Inventaire", modifiez vos objets, et le changement est automatiquement transmis au MJ dès que vous quittez le champ.
 - **Notes & Description** : Modifiez votre description publique ou vos notes personnelles directement depuis la tablette pour une immersion totale.
 
-### 7. Trombinoscope (Galerie de PNJs)
+### 8. Trombinoscope (Galerie de PNJs)
 - **Reconnaissance Visuelle** : Accédez à l'onglet **Trombinoscope** pour voir tous les personnages (PNJs, Alliés, Monstres) que le MJ a marqué comme "Visibles pour les joueurs".
 - **Fiche Détail** : Cliquez sur un portrait pour l'afficher en grand. C'est l'outil idéal pour se souvenir d'un visage ou consulter les informations publiques d'un interlocuteur important.
 - **Mise à jour en direct** : Dès que le MJ coche la case "Public" sur un PNJ, celui-ci apparaît instantanément sur toutes les tablettes connectées.

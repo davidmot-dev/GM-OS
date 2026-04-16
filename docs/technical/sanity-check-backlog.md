@@ -64,16 +64,16 @@ Chaque module doit être validé selon les critères suivants :
 | :--- | :---: | :--- | :--- |
 | **Nexus Bridge** | P1 | ✅ Corrigé | Centralisation via `SyncServer` & `handleSync`. |
 | **Forms/Forge** | P3 | 🟡 À Analyser | Générateurs de contenu. |
-| **Clock-OS** | P3 | 🟡 À Analyser | Time sync between Master/Hub. |
-| **Favorite** | P3 | 🟡 À Analyser | Persistence des raccourcis. |
+| **Clock-OS** | P3 | ✅ Corrigé | Projection unifiée & Déduplication intelligente. |
+| **Favorite** | P3 | ✅ Corrigé | Persistence & Sync Hub Multi-Entités (v6.3.2). |
 | **Debug** | P3 | 🟡 À Analyser | Dev Tools visibility. |
 
 ### 6. Hubs & Clients (Expérience Joueur)
 
 | Module | Priorité | Statut | Points d'Attention |
 | :--- | :---: | :--- | :--- |
-| **Player Hub** | P1 | 🟡 À Analyser | Fluidité des animations & synchronisation. |
-| **Tablet Hub** | P1 | ✅ Corrigé | Sync Wallpaper (Nexus Relay) & Optimisation Base64 (Relais Proxy). |
+| **Player Hub** | P1 | ✅ Corrigé | Unification v6.3.2 : Dénucléarisation mode Théâtre & Déduplication. |
+| **Tablet Hub** | P1 | ✅ Corrigé | Sync unifiée PNJ/Images & Signal Vocal (HubFooters). |
 
 ---
 

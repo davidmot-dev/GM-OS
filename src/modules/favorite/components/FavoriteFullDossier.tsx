@@ -220,25 +220,6 @@ export const FavoriteFullDossier: React.FC = () => {
                             {t('modules:favorite.sections.player_hub')}
                         </button>
 
-                        {formData.isSyncedToPlayerHub && (
-                            <button
-                                onClick={() => {
-                                    const newMode = formData.displayMode === 'theater' ? 'card' : 'theater';
-                                    setFormData(prev => ({ ...prev, displayMode: newMode }));
-                                    updateFavorite(entity.id, { displayMode: newMode });
-                                    gmToast(newMode === 'theater' ? t('modules:favorite.actions.theater_active') : t('modules:favorite.actions.card_active'));
-                                }}
-                                className={`w-10 rounded-xl border transition-all flex items-center justify-center
-                                    ${formData.displayMode === 'theater'
-                                        ? 'bg-amber-500/20 border-amber-500 text-amber-500 shadow-glow-amber/20'
-                                        : 'bg-app-bg border-white/10 text-slate-500 hover:text-slate-300 hover:border-white/20'}`}
-                                title={formData.displayMode === 'theater' ? t('common:sections.card') : t('common:sections.theater')}
-                            >
-                                <span className="material-symbols-outlined text-sm">
-                                    {formData.displayMode === 'theater' ? 'close_fullscreen' : 'fullscreen'}
-                                </span>
-                            </button>
-                        )}
                     </div>
 
                     <div className="h-6 w-px bg-white/10 mx-2" />
