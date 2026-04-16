@@ -80,9 +80,19 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
                     // Try local IndexedDB first
                     const blob = await getMediaBlob(sourceIdOrUrl);
                     if (blob) {
-                        const url = URL.createObjectURL(blob);
-                        objectUrl = url;
-                        if (isMounted) setResolvedUrl(url);
+                        // 🛡️ CONVERSION BASE64 SÉCURISÉE (Évite les bugs file:// et webSecurity Blob d'Electron)
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                            if (isMounted) {
+                                const base64data = reader.result as string;
+                                setResolvedUrl(base64data);
+                            }
+                        };
+                        reader.onerror = () => {
+                            console.error("[useMediaUrl] Erreur FileReader:", reader.error);
+                            if (isMounted) setResolvedUrl(undefined);
+                        };
+                        reader.readAsDataURL(blob);
                         return;
                     }
 

@@ -2,29 +2,32 @@
 
 Ce document détaille l'implémentation du système de contrôle déporté (Remote Control) pour GM-OS v5.
 
-## 🏗️ Architecture Globale
+## 🏗️ Architecture Globale (Nexus Sync v6)
 
-Le système repose sur une communication **Full-Duplex** via WebSockets entre le processus principal d'Electron et un client web (navigateur mobile).
+Le système repose sur une communication **Full-Duplex** via WebSockets et un serveur de médias hybride, orchestré par la classe `SyncServer`.
 
-### 1. Serveur WebSocket (Main Process)
-- **Fichier** : `electron/main.ts`
-- **Bibliothèque** : `ws` (Node.js)
-- **Port** : 3001
-- **Rôle** : Reçoit les actions des appareils mobiles et les redirige vers la fenêtre principale via IPC. Gère également le broadcast des données de synchronisation du PC vers les mobiles.
+### 1. Nexus Sync Server (Main Process)
+- **Fichier** : `electron/SyncServer.ts`
+- **Rôle** : 
+    - **WebSocket Server** : Gère les connexions entrantes des clients (Player Hub, Tablettes, Mobiles).
+    - **Media Proxy** : Sert les fichiers locaux (`/media/`) et les assets temporaires (`/temp/`) via HTTP pour contourner les restrictions CORS/Security des navigateurs mobiles.
+    - **Role Management** : Identifie les clients par leur rôle (`gm`, `player`, `remote`).
+    - **P2P Relay** : Permet le transfert direct de messages entre clients (ex: Chats) sans traitement par le GM PC.
 
 ### 2. Pont de Communication (Preload)
 - **Fichier** : `electron/preload.ts`
-- **Bridge API** : `window.appBridge.remote`
+- **Bridge API** : `window.appBridge.nexus`
 - **Méthodes** :
-    - `getConnectionInfo()` : Récupère l'IP locale et le port.
-    - `onAction(callback)` : Permet au Renderer d'écouter les commandes distantes.
+    - `getConnectionInfo()` : Récupère l'IP locale et le port du serveur de média.
+    - `onSyncClients(callback)` : Liste des terminaux connectés en temps réel.
 
-### 3. Orchestration et Routage (Renderer Process)
-- **Fichier** : `src/App.tsx`
+### 3. Orchestration Nexus (Renderer Process)
+- **Fichier** : `src/modules/system/logic/NexusService.ts`
 - **Rôle** : 
-    - **Routage** : Identifie le paramètre `?window=remote` pour rendre exclusivement le composant `RemoteControl` (en Lazy Loading pour éviter les dépendances Electron sur mobile).
-    - **Synchronisation** : Surveille les stores Zustand (`useSoundStore`, `useCombatStore`, `useSessionOSStore`) et envoie les changements à Electron pour diffusion.
-    - **Exécution** : Reçoit les types d'actions (ex: `dice:roll`) et appelle les méthodes correspondantes des stores locaux.
+    - **Nexus Link** : Maintient le heartbeat et la reconnexion automatique.
+    - **Delta Sync** : Calcule les différences d'état avant diffusion pour optimiser la bande passante.
+    - **Biometric Signature** : Gère l'unicité de connexion par personnage via `character_taken`.
+
 
 ## 📡 Protocole de Communication
 

@@ -39,6 +39,7 @@ export interface UiSliceState {
     remoteNotifications: RemoteNotification[];
     hubNotifications: HubNotification[];
     messages: SessionMessage[];
+    isSystemSyncing: boolean;
 }
 
 // ─────────────────────────────────────────────
@@ -71,6 +72,7 @@ export interface UiSliceActions {
     remoteSendMessage: (toId: string, toName: string, fromId: string, fromName: string, content: string) => void;
     sendDirectMessage: (toId: string, toName: string, content: string) => void;
     saveMessageToJournal: (messageId: string) => void;
+    setSystemSyncing: (isSyncing: boolean) => void;
 }
 
 export type UiSlice = UiSliceState & UiSliceActions;
@@ -102,6 +104,7 @@ export const createUiSlice: StateCreator<UiSlice, [], [], UiSlice> = (set, get) 
     remoteNotifications: [],
     hubNotifications: [],
     messages: [],
+    isSystemSyncing: false,
 
     // Actions
     setCurrentView: (view) => set({ currentView: view }),
@@ -233,5 +236,10 @@ export const createUiSlice: StateCreator<UiSlice, [], [], UiSlice> = (set, get) 
                 content: msg.content,
             });
         });
+    },
+
+    setSystemSyncing: (isSyncing) => {
+        console.log(`[UiSlice] System Syncing: ${isSyncing}`);
+        set({ isSystemSyncing: isSyncing });
     },
 });

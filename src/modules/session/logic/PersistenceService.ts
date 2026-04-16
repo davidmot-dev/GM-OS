@@ -74,6 +74,13 @@ export const syncStorageAcrossWindows = (rehydrate: () => Promise<void>) => {
     if (typeof window !== 'undefined') {
         window.addEventListener('storage', (event) => {
             if (event.key === 'gmos-v5-session-os-storage') {
+                // Prevent rehydration if the current window is currently performing an atomic sync (like Nexus import)
+                // This prevents race conditions where storage updates itself while being re-populated.
+                const store = (window as any).useSessionOSStore?.getState();
+                if (store?.isSystemSyncing) {
+                    console.log('[PersistenceService] Storage update ignored: system is syncing.');
+                    return;
+                }
                 rehydrate();
             }
         });

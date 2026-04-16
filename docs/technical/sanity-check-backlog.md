@@ -44,19 +44,19 @@ Chaque module doit être validé selon les critères suivants :
 | **Combat-OS** | P1 | ✅ Corrigé | Refonte Dropdowns (Stitch), Découplage Logique & Tests. |
 | **Dice-OS** | P2 | ✅ Corrigé | Moteur 3D (Three.js), Logique D100 & Esthétique Crystal. |
 | **NPC-OS** | P1 | ✅ **Corrigé** | Synchronisation Gallery OK. |
-| **Journal** (Wiki/Timeline) | P2 | 🟡 À Analyser | Cohérence des dates du monde. |
-| **Whiteboard** | P2 | 🟡 À Analyser | Latence de dessin synchronisé. |
-| **Tables** | P3 | 🟡 À Analyser | Gestion des rencontres aléatoires. |
+| **Journal** (Wiki/Timeline) | P2 | ✅ Corrigé | Cohérence des dates du monde. |
+| **Whiteboard** | P2 | ✅ Corrigé | Latence de dessin synchronisé. |
+| **Tables** | P3 | ✅ Corrigé | Gestion des rencontres aléatoires. |
 
 ### 4. Immersion Multimedia
 
 | Module | Priorité | Statut | Points d'Attention |
 | :--- | :---: | :--- | :--- |
-| **Music-OS** | P2 | 🟡 À Analyser | Speaker management logic. |
-| **Ambient-OS** | P2 | 🟡 À Analyser | Layering & Presets. |
-| **Sound-OS** | P2 | 🟡 À Analyser | SFX collision & trigger. |
-| **Voice-OS** | P2 | 🟡 À Analyser | AudioWorklet stabilization. |
-| **Image-OS** | P2 | 🟡 À Analyser | Projection protocol compatibility. |
+| **Music-OS** | P2 | ✅ Corrigé | Speaker management logic. |
+| **Ambient-OS** | P2 | ✅ Corrigé | Layering & Presets. |
+| **Sound-OS** | P2 | ✅ Corrigé | SFX collision & trigger. |
+| **Voice-OS** | P2 | ✅ Corrigé | v6.3.2 : AudioWorklet stabilization & Clipping protection. |
+| **Image-OS** | P2 | ✅ Corrigé | v6.3.2 : IPC-First Protocol & Fix React Keys (Performance). |
 
 ### 5. Services & Tools
 

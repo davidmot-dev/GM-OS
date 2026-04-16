@@ -1,280 +1,143 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { useMediaStore } from '../../../stores/useMediaStore';
 import { useMapStore } from '../../map/useMapStore';
 import { useWhiteboardStore } from '../../whiteboard/useWhiteboardStore';
 import PlayerMapCanvas from '../../map/components/PlayerMapCanvas';
 import { PlayerDrawingCanvas } from '../../whiteboard/components/PlayerDrawingCanvas';
-import { useVoiceStore } from '../../voice/useVoiceStore';
-import { useTacticalAIStore } from '../../tactical-ai/useTacticalAIStore';
 import { useImageStore } from '../useImageStore';
-import { useCombatStore } from '../../combat/useCombatStore';
 import { useTranslation } from 'react-i18next';
 
-
+/**
+ * ProjectorView - VERSION DEBUG ROBUSTE
+ */
 const ProjectorView: React.FC = () => {
     const { t } = useTranslation('common');
     const storeTarget = useMapStore(state => state.projectionTarget);
     const urlDisplayId = new URLSearchParams(window.location.search).get('displayId');
-    const targetId = (urlDisplayId || storeTarget) as string;
+    const targetId = (urlDisplayId || storeTarget || 'hub') as string;
 
-    const projectedUrls = useImageStore(state => state.projectedUrls);
-    const { backgroundMode } = useWhiteboardStore();
+    const projections = useImageStore(state => state.projections);
+    
+    const [ipcCount, setIpcCount] = useState(0);
     const [imagePath, setImagePath] = useState<string | null>(null);
-    const [voiceLevel, setVoiceLevel] = useState(0);
 
-    // Voice Sync Animation values
-    // We don't check 'isSyncNPC' here because the Projector receives 'voice-level' ONLY if 
-    // it's supposed to animate (filtered by VoiceEngine).
-    const syncActive = voiceLevel > 0.05;
-    const voiceScale = syncActive ? 1 + (voiceLevel * 0.15) : 1;
-    const voiceGlow = syncActive ? `0 0 ${voiceLevel * 30}px rgba(var(--accent-rgb), ${voiceLevel})` : 'none';
     const resolvedUrl = useMediaUrl(imagePath || undefined);
-    const { initDB } = useMediaStore();
-
+    const { initDB, getMediaBlob } = useMediaStore();
     const [mediaType, setMediaType] = useState<'image' | 'video' | 'unknown'>('unknown');
-    const { getMediaBlob } = useMediaStore();
 
+    const updateImageSource = useCallback((newSource: string | null) => {
+        console.log(`[ProjectorView] [${targetId}] Updating Source:`, newSource);
+        setImagePath(newSource);
+    }, [targetId]);
+
+    // Initialisation
     useEffect(() => {
-        initDB();
-        
-        // Rehydrate on mount to catch existing state
-        const syncAtStart = async () => {
-            await Promise.all([
-                useMapStore.persist.rehydrate(),
-                useWhiteboardStore.persist.rehydrate(),
-                useVoiceStore.persist.rehydrate(),
-                useImageStore.persist.rehydrate(),
-                useCombatStore.persist.rehydrate()
-            ]);
+        const boot = async () => {
+            console.log(`[ProjectorView] Booting for target: ${targetId}`);
+            await initDB();
+            // Force rehydratation immédiate
+            useImageStore.persist.rehydrate();
+            
+            // 📡 AUTO-SYNC : Signaler au MJ qu'on est prêt
+            window.appBridge?.image?.syncHubData('projector-ready', targetId);
         };
-        syncAtStart();
+        boot();
 
-        // Fallback: If store says we are projecting to monitor, auto-set tactical map mode
-        // This helps if the IPC event was missed or happened before window was ready
-        const currentTarget = useMapStore.getState().projectionTarget;
-        if (currentTarget === 'monitor' && !imagePath) {
-            setImagePath('__tactical_map__');
-        }
-
-        // Hide scrollbars and set black background
-        document.body.style.overflow = 'hidden';
-        document.body.style.backgroundColor = 'var(--app-bg)';
-        document.body.style.margin = '0';
-        document.body.style.padding = '0';
-
-        // Listen for IPC updates
         if (window.appBridge?.on) {
-            window.appBridge.on('image:update-display', (_event: unknown, paths: unknown) => {
-                const typedPaths = paths as string[];
-                if (typedPaths && typedPaths.length > 0 && typedPaths[0]) {
-                    setImagePath(typedPaths[0]);
-                } else {
-                    setImagePath(null); // Blackout
-                }
+            // Nettoyage des anciens écouteurs pour éviter les fuites
+            const removeUpdate = window.appBridge.on('image:update-display', (_event: unknown, paths: string[]) => {
+                setIpcCount(c => c + 1);
+                const data = paths && paths.length > 0 ? paths[0] : 'EMPTY';
+                console.log(`[ProjectorView] [${targetId}] IPC Received:`, paths);
+                updateImageSource(data === 'EMPTY' ? null : data);
             });
 
-            window.appBridge.on('image:clear-display', () => {
-                setImagePath(null);
-            });
-
-            window.appBridge.on('image:sync-hub-data', (_event: unknown, ...args: unknown[]) => {
+            // 📡 Écoute du canal GLOBAL (Broadcast)
+            const removeSync = window.appBridge.on('image:sync-hub-data', (_event: unknown, ...args: unknown[]) => {
                 const [type, data] = args as [string, string];
-                if (type === 'voice-level') {
-                    setVoiceLevel(parseFloat(data) || 0);
+                if (type === 'image') {
+                    setIpcCount(c => c + 1);
+                    console.log(`[ProjectorView] [${targetId}] Global Sync Received:`, data);
+                    updateImageSource(data || null);
                 }
             });
-
-            // Demande l'image actuelle auprès du Main lors du boot pour éviter d'en rater l'assignation
-            const bootTarget = new URLSearchParams(window.location.search).get('displayId') || useMapStore.getState().projectionTarget;
-            window.appBridge.send('image:request-current-display', bootTarget);
+            
+            return () => {
+                if (typeof removeUpdate === 'function') removeUpdate();
+                if (typeof removeSync === 'function') removeSync();
+            };
         }
+    }, [initDB, targetId, updateImageSource]);
 
-        return () => {
-            document.body.style.overflow = '';
-            document.body.style.backgroundColor = '';
-        };
-    }, [initDB]);
-
-    // Reactive sync from Image Store using projectedUrls (guarantees instant resolved URLs across windows)
+    // Synchronisation via le Store (UNIQUEMENT AU BOOT)
+    // Le store Zustand n'est pas synchronisé entre les fenêtres Electron en temps réel.
+    // Dès qu'on reçoit un IPC (ipcCount > 0), le store local devient obsolète et on l'ignore définitivement.
     useEffect(() => {
-        if (!targetId) return;
+        if (!targetId || ipcCount > 0) return;
+        
+        const activeMediaId = projections[targetId];
+        
+        console.log(`[ProjectorView] [${targetId}] Store Sync Check:`, activeMediaId);
 
-        let activeUrl = projectedUrls[targetId];
-
-        // Fallback: if we are a generic 'monitor', take the first available monitor projection
-        if (!activeUrl && targetId === 'monitor') {
-            const monitorTargets = Object.keys(projectedUrls).filter(k => k !== 'hub');
-            if (monitorTargets.length > 0) {
-                activeUrl = projectedUrls[monitorTargets[0]];
-            }
+        if (activeMediaId !== undefined && activeMediaId !== imagePath) {
+            console.log(`[ProjectorView] [${targetId}] Store Syncing to:`, activeMediaId);
+            updateImageSource(activeMediaId || null);
         }
+    }, [projections, targetId, imagePath, updateImageSource, ipcCount]);
 
-        if (activeUrl && activeUrl !== imagePath) {
-            // Because projectedUrls stores the fully resolved HTTP/Blob URL, 
-            // the new window instantly gets the exact URL it needs without doing ID lookups.
-            setImagePath(activeUrl);
-        }
-    }, [projectedUrls, targetId, imagePath]);
-
-    // Rehydrate Stores on storage changes (Cross-window Sync)
+    // Détection du type de média
     useEffect(() => {
-        const handleStorage = (e: StorageEvent) => {
-            if (e.key === 'gmos-map-storage') {
-                useMapStore.persist.rehydrate();
-            }
-            if (e.key === 'gm-os-whiteboard-storage-v1') {
-                useWhiteboardStore.persist.rehydrate();
-            }
-            if (e.key === 'gmos-voice-storage') {
-                useVoiceStore.persist.rehydrate();
-            }
-            if (e.key === 'gm-os-tactical-ai') {
-                useTacticalAIStore.persist.rehydrate();
-            }
-            if (e.key === 'gmos-image-storage') {
-                useImageStore.persist.rehydrate();
-            }
-            if (e.key === 'gmos-combat-storage') {
-                useCombatStore.persist.rehydrate();
-            }
-        };
-
-        window.addEventListener('storage', handleStorage);
-        return () => window.removeEventListener('storage', handleStorage);
-    }, []);
-
-    useEffect(() => {
-        // Detect media type
-        if (!imagePath || imagePath === '__tactical_map__' || imagePath === '__whiteboard__') {
-            setMediaType(prev => prev !== 'unknown' ? 'unknown' : prev);
-            return;
-        }
-
+        if (!imagePath || imagePath.startsWith('__')) return;
         const detectType = async () => {
             if (imagePath.startsWith('m-')) {
                 const blob = await getMediaBlob(imagePath);
-                if (blob) {
-                    if (blob.type.startsWith('video/')) {
-                        setMediaType('video');
-                    } else {
-                        setMediaType('image');
-                    }
-                } else {
-                    setMediaType('image'); // default fallback
-                }
+                setMediaType(blob?.type.startsWith('video/') ? 'video' : 'image');
             } else {
-                // Infer from extension
-                const ext = imagePath.split('.').pop()?.toLowerCase();
-                if (['mp4', 'webm', 'ogg'].includes(ext || '')) {
-                    setMediaType('video');
-                } else {
-                    setMediaType('image');
-                }
+                setMediaType('image');
             }
         };
-
         detectType();
     }, [imagePath, getMediaBlob]);
 
-    // Fade Out -> Fade In Sequence State
-    const [displayUrl, setDisplayUrl] = useState<string | undefined>(undefined);
-    const [isFadingOut, setIsFadingOut] = useState(false);
-
-    useEffect(() => {
-        if (resolvedUrl && resolvedUrl !== displayUrl) {
-            if (displayUrl) {
-                // If there's an existing image, fade it out first
-                setIsFadingOut(true);
-                const timer = setTimeout(() => {
-                    setDisplayUrl(resolvedUrl);
-                    setIsFadingOut(false);
-                }, 800); // 800ms duration for Fade Out
-                return () => clearTimeout(timer);
-            } else {
-                // First boot, no previous image, show directly
-                setDisplayUrl(resolvedUrl);
-            }
-        } else if (!resolvedUrl && displayUrl) {
-            // Unmount/Blackout
-            setDisplayUrl(undefined);
-            setIsFadingOut(false);
-        }
-    }, [resolvedUrl, displayUrl]);
-
-    // While resolving a media ID, we wait for the blob URL to avoid broken image icons
-    // isResolving is unused but documented here
-
-    if (!imagePath) {
-        return <div className="w-screen h-screen bg-app-bg" />;
-    }
-    
-    // We removed the 'isResolving' blackout to allow for smoother transitions.
-    // The image container will be rendered, and the image will appear when resolvedUrl is ready.
-
-    // SPECIAL MODE: Whiteboard
-    if (imagePath === '__whiteboard__') {
-        return (
-            <div className={`w-screen h-screen overflow-hidden relative transition-colors duration-500 ${backgroundMode === 'light' ? 'bg-white' : 'bg-app-bg'}`}>
-                <PlayerDrawingCanvas />
-            </div>
-        );
-    }
-
-    // SPECIAL MODE: Tactical Map
-    // We show the map if explicitly requested OR as a fallback if the monitor is active but no other image is set
-    if (imagePath === '__tactical_map__' || (targetId && targetId !== 'hub' && !imagePath)) {
-        // We use the store's current state. If the target is NOT the hub, we render the canvas.
-        const isTargetMonitor = targetId && targetId !== 'hub';
-
-        
-        return (
-            <div className="w-screen h-screen bg-app-bg overflow-hidden relative">
-                {isTargetMonitor ? (
-                    <div className="relative w-full h-full">
-                        <PlayerMapCanvas onMapClick={(x, y) => useMapStore.getState().addPing(x, y, 'var(--accent)')} />
-                    </div>
-                ) : (
-                    <div className="flex items-center justify-center h-full text-app-text font-black uppercase tracking-widest text-2xl">
-                        {t('standby')}
-                    </div>
-                )}
-            </div>
-        );
-    }
-
     return (
-        <div className="w-screen h-screen bg-app-bg flex items-center justify-center overflow-hidden">
-            {displayUrl && mediaType === 'video' ? (
-                <video
-                    src={displayUrl}
-                    autoPlay
-                    loop
-                    muted
-                    className="max-w-full max-h-full object-contain animate-in fade-in duration-1000"
+        <div className="w-screen h-screen bg-black flex items-center justify-center overflow-hidden relative">
+            {!imagePath && <div className="text-white/10 uppercase text-xs tracking-widest">{t('common:standby')}</div>}
+            
+            {resolvedUrl && mediaType === 'video' ? (
+                <video 
+                    key={imagePath || 'vid'} 
+                    src={resolvedUrl} 
+                    autoPlay 
+                    loop 
+                    muted 
+                    className="w-full h-full object-contain animate-in fade-in duration-500" 
                 />
-            ) : displayUrl ? (
-                <div className="relative w-full h-full flex items-center justify-center">
-                    {/* Blurred background fades synchronously */}
-                    <img
-                        src={displayUrl}
-                        alt=""
-                        className={`absolute inset-0 w-full h-full object-cover blur-[80px] scale-125 transition-opacity duration-[800ms] ${isFadingOut ? 'opacity-0' : 'opacity-40 animate-in fade-in'}`}
+            ) : resolvedUrl ? (
+                <div key={imagePath || 'img'} className="w-full h-full relative flex items-center justify-center animate-in fade-in duration-700">
+                    {/* Background Blur for atmosphere */}
+                    <img 
+                        src={resolvedUrl} 
+                        alt="" 
+                        className="absolute inset-0 w-full h-full object-cover blur-3xl opacity-30 transform scale-110" 
                     />
-
-                    {/* Current Crisp Image with independent key to force unmount -> CSS fade in */}
-                    <img
-                        key={`curr-${displayUrl}`}
-                        src={displayUrl}
-                        alt="Current Projection"
-                        style={{
-                            transform: `scale(${voiceScale})`,
-                            boxShadow: voiceGlow,
-                        }}
-                        className={`relative z-20 max-w-full max-h-full object-contain transition-opacity duration-[800ms] rounded-lg shadow-2xl ${isFadingOut ? 'opacity-0' : 'opacity-100 animate-in fade-in zoom-in-95'}`}
+                    {/* Main Image */}
+                    <img 
+                        src={resolvedUrl} 
+                        alt="GM-OS Projector" 
+                        className="relative z-10 max-w-[95%] max-h-[95%] object-contain shadow-2xl" 
                     />
                 </div>
-            ) : null}
+            ) : imagePath && (
+                <div className="flex flex-col items-center gap-4 text-accent/20">
+                    <div className="w-6 h-6 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                </div>
+            )}
+
+            {/* Subtle overlay for identity */}
+            <div className="absolute bottom-4 right-4 text-[10px] text-white/5 uppercase tracking-[0.3em]">
+                Image-OS // Terminal Active
+            </div>
         </div>
     );
 };

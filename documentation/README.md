@@ -29,12 +29,15 @@ Ce répertoire contient l'archive de tous les guides de mise en œuvre, walkthro
 - **[Tablet_Hub_Technical_Doc.md](./Technical%20Docs/Tablet_Hub_Technical_Doc.md)** : Architecture de synchronisation temps-réel.
 - **[Map_OS_Technical_Doc.md](./Technical%20Docs/Map_OS_Technical_Doc.md)** : Architecture des calques et brouillard de guerre.
 - **[Social_Nexus_Technical_Doc.md](./Technical%20Docs/Social_Nexus_Technical_Doc.md)** : Architecture du graphe de relations sociales.
+- **[Bridge_Architecture_Standard.md](./Technical%20Docs/Bridge_Architecture_Standard.md)** : Standard d'isolation et communication inter-fenêtres.
 - **[Git-Backup-System.md](./Technical%20Docs/Git-Backup-System.md)** : Architecture du système de sauvegarde et isolation Git.
 
-## Planification
+## Planification & Historique
 
 - **[Roadmap & Améliorations](./Plans/am%C3%A9lioration.md)** : La liste consolidée des fonctionnalités et victoires techniques.
+- **[Vague de Stabilisation v6.3.2 (Avril 2026)](./History/2026-04-16-v6-stabilization-wave.md)** : Rapport sur la résolution des race conditions et optimisations 60 FPS.
 - **[Lessons_Learned.md](./Lessons_Learned.md)** : Retours d'expérience consolidés sur la synchronisation, le typage strict et la robustesse Git.
+
 - **[AppBridge_v2_Standardization.md](../c:/Users/david/.gemini/antigravity/brain/d493bc42-29db-4269-b5ae-9023789a04d7/walkthrough.md)** : Détails techniques sur le typage strict et les deltas.
 
 > [!NOTE]

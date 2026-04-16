@@ -960,123 +960,78 @@ export class NexusService {
         const store = useSessionOSStore.getState();
         const campaignId = state.campaign.id;
 
-        // Snapshot de l'état avant injection (rollback si nécessaire)
-        const previousState = {
-            campaigns: [...store.campaigns],
-            entities: [...store.entities],
-            players: [...store.players],
-            sessions: [...store.sessions],
-            atlasMaps: [...store.atlasMaps],
+        console.log(`[NexusService] Preparing atomic injection for campaign: ${campaignId}`);
+
+        // 1. Campagnes
+        const updatedCampaigns = store.campaigns.some(c => c.id === campaignId)
+            ? store.campaigns.map(c => c.id === campaignId ? state.campaign : c)
+            : [...store.campaigns, state.campaign];
+
+        // 2. Entités
+        const updatedEntities = [
+            ...store.entities.filter(e => e.campaignId !== campaignId),
+            ...state.entities,
+        ];
+
+        // 3. Joueurs & Personnages
+        const playersWithoutThisCampaign = store.players.map(p => ({
+            ...p,
+            characters: p.characters.filter(c => c.campaignId !== campaignId),
+        }));
+
+        const mergedPlayers = playersWithoutThisCampaign.map(existing => {
+            const imported = state.players.find(p => p.id === existing.id);
+            if (!imported) return existing;
+            return {
+                ...existing,
+                characters: [...existing.characters, ...imported.characters],
+            };
+        });
+
+        const newPlayers = state.players.filter(
+            p => !store.players.some(ep => ep.id === p.id)
+        );
+        const finalPlayers = [...mergedPlayers, ...newPlayers];
+
+        // 4. Sous-systèmes (Sessions, Maps, Wiki, etc.)
+        const nextPartialState: any = {
+            campaigns: updatedCampaigns,
+            entities: updatedEntities,
+            players: finalPlayers,
+            sessions: [
+                ...store.sessions.filter(s => s.campaignId !== campaignId),
+                ...state.sessions,
+            ],
+            atlasMaps: [
+                ...store.atlasMaps.filter(m => m.campaignId !== campaignId),
+                ...state.atlasMaps,
+            ],
         };
 
-        try {
-            // 1. Campagne : mise à jour ou ajout
-            const campaignExists = store.campaigns.some((c: Campaign) => c.id === campaignId);
-            if (campaignExists) {
-                store.updateCampaign(campaignId, state.campaign);
-            } else {
-                // Inject directement avec l'ID préservé
-                useSessionOSStore.setState((s) => ({
-                    campaigns: [...s.campaigns, state.campaign],
-                }));
-            }
-
-            // 2. Entités : suppression des anciennes, injection des nouvelles
-            // On ne touche qu'aux entités de cette campagne
-            useSessionOSStore.setState((s) => ({
-                entities: [
-                    ...s.entities.filter((e: Entity) => e.campaignId !== campaignId),
-                    ...state.entities,
-                ],
-            }));
-
-            // 3. Joueurs & Personnages : fusion propre
-            // On preserve les joueurs existants, on met à jour leurs personnages pour cette campagne
-            useSessionOSStore.setState((s) => {
-                const playersWithoutThisCampaign = s.players.map((p: Player) => ({
-                    ...p,
-                    characters: p.characters.filter((c) => c.campaignId !== campaignId),
-                }));
-
-                // Merge : pour les joueurs importés, leurs personnages remplacent les anciens
-                const mergedPlayers = playersWithoutThisCampaign.map((existing: Player) => {
-                    const imported = state.players.find((p: Player) => p.id === existing.id);
-                    if (!imported) return existing;
-                    return {
-                        ...existing,
-                        characters: [
-                            ...existing.characters,
-                            ...imported.characters,
-                        ],
-                    };
-                });
-
-                // Joueurs entièrement nouveaux (non présents dans le store actuel)
-                const newPlayers = state.players.filter(
-                    (p: Player) => !s.players.some((ep: Player) => ep.id === p.id)
-                );
-
-                return { players: [...mergedPlayers, ...newPlayers] };
-            });
-
-            // 4. Sessions
-            useSessionOSStore.setState((s) => ({
-                sessions: [
-                    ...s.sessions.filter((se: GameSession) => se.campaignId !== campaignId),
-                    ...state.sessions,
-                ],
-            }));
-
-            // 5. Atlas Maps
-            useSessionOSStore.setState((s) => ({
-                atlasMaps: [
-                    ...s.atlasMaps.filter((m: AtlasMap) => m.campaignId !== campaignId),
-                    ...state.atlasMaps,
-                ],
-            }));
-
-            // 6. Wiki, Timeline, Clues
-            if (store.wikiEntries !== undefined) {
-                useSessionOSStore.setState((s) => ({
-                    wikiEntries: [
-                        ...((s.wikiEntries ?? []).filter((w: WikiEntry) => w.campaignId !== campaignId)),
-                        ...state.wikiEntries,
-                    ],
-                }));
-            }
-
-            if (store.timelineEvents !== undefined) {
-                useSessionOSStore.setState((s) => ({
-                    timelineEvents: [
-                        ...((s.timelineEvents ?? []).filter((e: TimelineEvent) => e.campaignId !== campaignId)),
-                        ...state.timelineEvents,
-                    ],
-                }));
-            }
-
-            if (store.clues !== undefined) {
-                useSessionOSStore.setState((s) => ({
-                    clues: [
-                        ...((s.clues ?? []).filter((cl: Clue) => cl.campaignId !== campaignId)),
-                        ...state.clues,
-                    ],
-                }));
-            }
-
-            console.log(`[NexusService] État injecté avec succès pour la campagne : ${campaignId}`);
-
-        } catch (err) {
-            // Rollback : restauration de l'état précédent
-            console.error('[NexusService] Injection échouée, rollback...', err);
-            useSessionOSStore.setState({
-                campaigns: previousState.campaigns,
-                entities: previousState.entities,
-                players: previousState.players,
-                sessions: previousState.sessions,
-                atlasMaps: previousState.atlasMaps,
-            });
-            throw err;
+        if (store.wikiEntries !== undefined) {
+            nextPartialState.wikiEntries = [
+                ...(store.wikiEntries.filter(w => w.campaignId !== campaignId)),
+                ...(state.wikiEntries ?? []),
+            ];
         }
+
+        if (store.timelineEvents !== undefined) {
+            nextPartialState.timelineEvents = [
+                ...(store.timelineEvents.filter(e => e.campaignId !== campaignId)),
+                ...(state.timelineEvents ?? []),
+            ];
+        }
+
+        if (store.clues !== undefined) {
+            nextPartialState.clues = [
+                ...(store.clues.filter(c => c.campaignId !== campaignId)),
+                ...(state.clues ?? []),
+            ];
+        }
+
+        // Injection atomique
+        useSessionOSStore.setState(nextPartialState);
+        console.log(`[NexusService] Atomic injection complete for: ${campaignId}`);
     }
 
     /**
@@ -1373,8 +1328,11 @@ export class NexusService {
                         );
                         const originalRef = assetEntry?.originalRef;
 
+                        const campaignId = manifest.campaignId ?? (isDriver ? null : campaignState?.campaign.id);
                         const newMediaId = await mediaStore.addMedia(
-                            new File([blob], fileName, { type: blob.type })
+                            new File([blob], fileName, { type: blob.type }),
+                            ['nexus-import'],
+                            campaignId ? [campaignId] : []
                         );
 
                         if (newMediaId && originalRef) {
@@ -1399,6 +1357,12 @@ export class NexusService {
                 } else {
                     // Pas de callback : fallback silencieux vers "replace"
                     console.warn('[NexusService] Conflit détecté, aucun callback défini — stratégie "replace" appliquée.');
+                }
+
+                // Si stratégie 'replace' et qu'un ID de campagne est présent, on nettoie les anciennes références média
+                // pour éviter de saturer le Media Hub avec des imports orphelins.
+                if (resolution.strategy === 'replace' && manifest.campaignId) {
+                    await mediaStore.removeCampaignReference(manifest.campaignId);
                 }
             }
 
@@ -1434,56 +1398,57 @@ export class NexusService {
             } else if (campaignState) {
                 // CAMPAIGN IMPORT
                 // Phase 6 : Remappage des chemins dans l'état
-                let remappedState = this.remapPaths(campaignState, assetMap);
+                const remappedState = this.remapPaths(campaignState, assetMap);
 
-                // Si stratégie "clone" : régénération des UUIDs
-                if (resolution.strategy === 'clone') {
-                    this.emitProgress('remapping', 80, i18next.t('modules:system.nexus.messages.cloning_campaign'));
-                    remappedState = this.applyResolutionToState(remappedState, resolution);
+                // Phrase 6 & 7 & 8 : Sync & Landing
+                const finalState = resolution.strategy === 'clone'
+                    ? this.applyResolutionToState(remappedState, resolution)
+                    : remappedState;
+
+                const store = useSessionOSStore.getState();
+                
+                // Activer le mode Sync (bloque les re-renders intempestifs)
+                store.setSystemSyncing(true);
+
+                try {
+                    this.emitProgress('injecting', 85, i18next.t('modules:system.nexus.messages.injecting_campaign'));
+                    this.injectState(finalState);
+
+                    // Phase 7 : Restauration des stores audio
+                    if (finalState.atmospheres && finalState.atmospheres.length > 0) {
+                        useSoundStore.setState({ atmospheres: finalState.atmospheres });
+                    }
+
+                    if (finalState.playlists && finalState.playlists.length > 0) {
+                        const musicState = useMusicStore.getState();
+                        const existingIds = new Set(musicState.playlists.map(p => p.id));
+                        const newPlaylists = finalState.playlists.filter(p => !existingIds.has(p.id));
+                        const updatedPlaylists = musicState.playlists.map(p => {
+                            const incoming = finalState.playlists!.find(ip => ip.id === p.id);
+                            return incoming ?? p;
+                        });
+                        useMusicStore.setState({ playlists: [...updatedPlaylists, ...newPlaylists] });
+                    }
+
+                    // CRITIQUE : Navigation Landing Post-Import
+                    console.log(`[NexusService] Finalizing import for ${finalState.campaign.id}. Landing on Cockpit.`);
+                    store.setActiveCampaign(finalState.campaign.id);
+                    store.setCurrentView('cockpit');
+
+                    // Phase 8 : Succès
+                    this.emitProgress('done', 100, i18next.t('modules:system.nexus.messages.import_success'));
+                    gmToast(`${i18next.t('modules:system.nexus.messages.import_success')} : ${manifest.campaignName}`, 'success');
+
+                    return {
+                        success: true,
+                        campaignName: manifest.campaignName,
+                        failedAssets,
+                        warnings: [],
+                    };
+                } finally {
+                    // Désactiver le mode Sync
+                    store.setSystemSyncing(false);
                 }
-
-                this.emitProgress('injecting', 85, i18next.t('modules:system.nexus.messages.injecting_campaign'));
-                this.injectState(remappedState);
-
-                // Phase 7 : Restauration des stores audio (Sound Pads + Music Playlists)
-                if (remappedState.atmospheres && remappedState.atmospheres.length > 0) {
-                    useSoundStore.setState({ atmospheres: remappedState.atmospheres });
-                    console.log(`[NexusService] ${remappedState.atmospheres.length} atmosphère(s) audio restaurée(s).`);
-                }
-
-                if (remappedState.playlists && remappedState.playlists.length > 0) {
-                    const musicState = useMusicStore.getState();
-                    const existingIds = new Set(musicState.playlists.map(p => p.id));
-                    const newPlaylists = remappedState.playlists.filter(p => !existingIds.has(p.id));
-                    const updatedPlaylists = musicState.playlists.map(p => {
-                        const incoming = remappedState.playlists!.find(ip => ip.id === p.id);
-                        return incoming ?? p;
-                    });
-                    useMusicStore.setState({ playlists: [...updatedPlaylists, ...newPlaylists] });
-                    console.log(`[NexusService] ${remappedState.playlists.length} playlist(s) musicale(s) restaurée(s).`);
-                }
-
-                // Phase 8 : Succès
-                this.emitProgress('done', 100, i18next.t('modules:system.nexus.messages.import_success'));
-
-                const warnings: string[] = [];
-                if (manifest.requiredDriverIds && manifest.requiredDriverIds.length > 0) {
-                    warnings.push(
-                        `Drivers requis : ${manifest.requiredDriverIds.join(', ')} — vérifiez qu'ils sont bien installés.`
-                    );
-                }
-                if (failedAssets.length > 0) {
-                    warnings.push(i18next.t('modules:system.nexus.messages.media_transferred', { current: failedAssets.length, total: '???' })); // A bit weird, but better than nothing
-                }
-
-                gmToast(`${i18next.t('modules:system.nexus.messages.import_success')} : ${manifest.campaignName}`, 'success');
-
-                return {
-                    success: true,
-                    campaignName: manifest.campaignName,
-                    failedAssets,
-                    warnings,
-                };
             }
 
             return { success: false, failedAssets: [], warnings: [], error: 'Type de bundle inconnu ou état manquant.' };

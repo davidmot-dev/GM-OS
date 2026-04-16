@@ -63,6 +63,13 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
 
     const handleSync = useCallback(async (force: boolean = false) => {
         if (!isMainPC) return;
+        
+        // Skip sync if the system is performing an atomic operation (Nexus import)
+        if (useSessionOSStore.getState().isSystemSyncing) {
+            console.log('[NexusSync] Sync skipped: system is syncing.');
+            return;
+        }
+
         const now = Date.now();
         if (!force && now - lastSyncRef.current < 100) return;
         lastSyncRef.current = now;

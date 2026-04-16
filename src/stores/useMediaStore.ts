@@ -48,7 +48,7 @@ interface MediaStoreState {
 const DB_NAME = 'gmos-media-db';
 const STORE_NAME = 'media';
 const COLLECTIONS_STORE = 'collections';
-const DB_VERSION = 4; // Incremented to match existing database on disk (VersionError fix)
+const DB_VERSION = 5; // Incremented to match existing database on disk (VersionError fix)
 
 let dbPromise: Promise<IDBPDatabase> | null = null;
 

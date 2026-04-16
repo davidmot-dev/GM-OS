@@ -1,161 +1,62 @@
 import { openDB } from 'idb';
 import { withTimeout } from './promiseUtils';
+
 const mediaCache = new Map<string, string>();
 
 /**
  * Resolves a media source (m-xxx ID or path) to a sendable URL.
- * For m-xxx IDs, it returns a base64 data URI.
- * For other paths, it returns them as-is.
+ * 
+ * 🛡️ RESTAURATION STABLE v5 (Base64 Method)
+ * Note: Les Blobs sont désactivés car instables dans Electron entre fenêtres.
  */
 export async function resolveToSendableUrl(src: string | undefined): Promise<string> {
     if (!src) return '';
     
-    // If it's already a blob URL or remote HTTP URL, return as-is
-    if (src.startsWith('blob:') || (src.startsWith('http') && !src.includes('127.0.0.1') && !src.includes('localhost'))) {
+    // Déjà résolu (DataURL ou Remote)
+    if (src.startsWith('blob:') || src.startsWith('data:') || (src.startsWith('http') && !src.includes('127.0.0.1') && !src.includes('localhost'))) {
         return src;
     }
 
-    // Special case: Data URI (Base64)
-    // We want to avoid sending huge Base64 strings in the sync payload.
-    // We convert them to a temp file on the GM side and serve them via proxy.
-    if (src.startsWith('data:')) {
-        const bridge = window.appBridge;
-        if (bridge?.remote?.cacheMedia && bridge?.remote?.getConnectionInfo) {
-            try {
-                const info = await bridge.remote.getConnectionInfo();
-                if (info && info.ip && info.ip !== '127.0.0.1' && info.ip !== 'localhost') {
-                    // Generate a stable ID based on the content to avoid duplicate writes
-                    const parts = src.split(',');
-                    const content = parts[1] || '';
-                    // Simple hash for stability (first 100 chars + length)
-                    const hash = `data-${content.length}-${content.substring(0, 50).replace(/[^a-zA-Z0-9]/g, '')}`;
-                    
-                    if (mediaCache.has(hash)) return mediaCache.get(hash)!;
-
-                    const byteString = atob(content);
-                    const ab = new ArrayBuffer(byteString.length);
-                    const ia = new Uint8Array(ab);
-                    for (let i = 0; i < byteString.length; i++) {
-                        ia[i] = byteString.charCodeAt(i);
-                    }
-                    
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    const success = await (bridge.remote as any).cacheMedia(ab, hash);
-                    if (success) {
-                        const result = `http://${info.ip}:${info.port}/temp/${hash}`;
-                        console.log(`[MediaResolver] Data URI proxied to: ${result}`);
-                        mediaCache.set(hash, result);
-                        return result;
-                    }
-                }
-            } catch (err) {
-                console.warn('[MediaResolver] Data URI proxying failed:', err);
-            }
-        }
-        return src; // Fallback to raw Base64 if proxying fails
-    }
-
-    if (src.startsWith('m-')) {
-        console.log(`[MediaResolver] Resolving m- ID: ${src}...`);
-        // Check cache first
-        if (mediaCache.has(src)) {
-             console.log(`[MediaResolver] ${src} found in cache.`);
-             return mediaCache.get(src)!;
-        }
+    // Gestion des IDs médias (m-xxx ou UUID standard)
+    const isMediaId = src.startsWith('m-') || /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i.test(src);
+    
+    if (isMediaId) {
+        if (mediaCache.has(src)) return mediaCache.get(src)!;
+        
+        console.log(`[MediaResolver] Resolving potential MediaID: ${src}`);
 
         try {
-            console.log(`[MediaResolver] Opening IndexedDB...`);
-            const db = await withTimeout(openDB('gmos-media-db'), 3000, 'DB_TIMEOUT');
-            console.log(`[MediaResolver] Fetching from DB...`);
-            const item = await withTimeout(db.get('media', src), 3000, 'DB_GET_TIMEOUT');
+            const db = await withTimeout(openDB('gmos-media-db', 5), 4000, 'DB_OPEN_TIMEOUT');
+            const item = await withTimeout(db.get('media', src), 2000, 'DB_READ_TIMEOUT');
             
-            if (!item) {
-                 console.log(`[MediaResolver] Item ${src} NOT FOUND in DB.`);
-                 return '';
-            }
-            if (!item.blob) {
-                 console.log(`[MediaResolver] Item ${src} found but HAS NO BLOB.`);
-                 return '';
+            if (!item || !item.blob) {
+                console.warn(`[MediaResolver] Media ID ${src} not found in IndexedDB.`);
+                return ''; // Arrêt net : on ne veut pas que cet ID soit traité comme un fichier disque
             }
             
             const blob = item.blob as Blob;
-            console.log(`[MediaResolver] Blob retrieved, size: ${blob.size} bytes`);
 
-            // NEW: Use local HTTP proxy instead of Base64 to save bandwidth
-            const bridge = window.appBridge;
-            if (bridge?.remote?.cacheMedia && bridge?.remote?.getConnectionInfo) {
-                console.log(`[MediaResolver] Local cache export path executing for ${src}...`);
-                try {
-                    const info = await bridge.remote.getConnectionInfo();
-                    const buffer = await blob.arrayBuffer();
-                    
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    const success = await (bridge.remote as any).cacheMedia(buffer, src);
-                    console.log(`[MediaResolver] cacheMedia response for ${src}: ${success}`);
-                    
-                    if (success && info && info.ip && info.ip !== '127.0.0.1' && info.ip !== 'localhost') {
-                        // The server on port 3001 serves files from the temp directory.
-                        const result = `http://${info.ip}:${info.port}/temp/${src}`;
-                        console.log(`[MediaResolver] Resolved ${src} to ${result}`);
-                        mediaCache.set(src, result);
-                        return result;
-                    }
-                } catch (err) {
-                    console.warn('[MediaResolver] Local cache export failed:', err);
-                }
-            } else {
-                 console.log(`[MediaResolver] Bridge cacheMedia unavailable, falling back to Base64.`);
-            }
-
-            console.log(`[MediaResolver] Falling back to Base64 read...`);
-            // Fallback to Base64 for legacy support or if bridge is unavailable
             const result = await withTimeout(new Promise<string>((resolve) => {
                 const reader = new FileReader();
                 reader.onload = () => resolve(reader.result as string);
-                reader.onerror = (e) => {
-                     console.error(`[MediaResolver] FileReader error`, e);
-                     resolve('');
-                }
+                reader.onerror = () => resolve('');
                 reader.readAsDataURL(blob);
-            }), 5000, 'FILEREADER_TIMEOUT');
+            }), 10000, 'BASE64_TIMEOUT');
             
             if (result) {
-                 console.log(`[MediaResolver] Base64 created, length: ${result.length}`);
-                 mediaCache.set(src, result);
-            } else {
-                 console.log(`[MediaResolver] Base64 returned empty.`);
+                mediaCache.set(src, result);
+                return result;
             }
-            return result;
         } catch (e) {
-            console.error(`[MediaResolver] Error resolving ${src}`, e);
+            console.error(`[MediaResolver] Error resolving ${src}:`, e);
         }
-        return '';
+        return ''; // Échec de résolution IndexedDB -> Pas d'image
     }
     
-    // NEW: Handle absolute local paths (C:\, D:\, /, \\, gmos://media/)
-    const cleanPath = src.replace(/^(file:\/\/\/|gmos:\/\/media\/)/i, '');
-    const isLocalPath = cleanPath.startsWith('C:') || 
-                        cleanPath.startsWith('D:') || 
-                        cleanPath.startsWith('/') || 
-                        cleanPath.startsWith('\\') ||
-                        cleanPath.includes('\\') || // Backslashes are a strong hint for Windows paths
-                        cleanPath.startsWith('temp/'); // Handle common relative temp directory
-
-    if (isLocalPath) {
-        const bridge = window.appBridge;
-        if (bridge?.remote?.getConnectionInfo) {
-            try {
-                const info = await bridge.remote.getConnectionInfo();
-                if (info && info.ip && info.ip !== '127.0.0.1' && info.ip !== 'localhost') {
-                    const encodedPath = encodeURIComponent(cleanPath.replace(/\\/g, '/'));
-                    const result = `http://${info.ip}:${info.port}/media/${encodedPath}`;
-                    console.log(`[MediaResolver] Local path resolved to proxy: ${result}`);
-                    return result;
-                }
-            } catch (err) {
-                console.warn('[MediaResolver] Connection info fetch failed:', err);
-            }
-        }
+    // Uniquement pour les vrais chemins de fichiers (contenant des séparateurs de dossiers)
+    const isPath = src.includes('/') || src.includes('\\');
+    if (isPath && window.appBridge?.utils?.formatFileUrl) {
+        return window.appBridge.utils.formatFileUrl(src);
     }
     
     return src;

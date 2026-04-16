@@ -2,16 +2,23 @@
 
 Le **Tablet Hub** est une extension de GM-OS conçue pour transformer n'importe quelle tablette ou smartphone en un tableau de bord dynamique et tactile. Il permet de déporter l'affichage des statistiques de combat, de l'horloge et des jauges de tension, libérant ainsi l'écran principal pour la narration.
 
-## 🚀 Connexion Rapide
+## 🚀 Connexion Rapide (Nexus Sync v6)
 
-Il existe deux façons de connecter une tablette au GM-OS :
+Il existe deux façons de connecter une tablette au GM-OS via le protocole **Nexus** :
 
 1.  **QR-Code (Recommandé)** :
     - Ouvrez les **Paramètres OS** sur votre instance principale.
     - Allez dans l'onglet **Télécommande**.
-    - Scannez le QR-Code de la section **Tablet Hub** avec votre tablette.
-2.  **URL Manuelle** :
-    - Sur votre tablette, ouvrez un navigateur et saisissez l'adresse affichée dans les paramètres (ex: `http://192.168.1.15:5173/?window=tablet`).
+    - Scannez le QR-Code de la section **Nexus Link** avec votre tablette.
+2.  **Signature Biométrique** :
+    - Lors de la première connexion, vous devrez choisir votre personnage.
+    - **Sécurité** : Si un autre joueur utilise déjà cette fiche, le Hub bloquera la connexion ("Signature biométrique déjà active") pour éviter les conflits d'édition.
+
+### ⚡ Performance & Fluidité (v6.3)
+Le Hub a été optimisé pour garantir une expérience à **60 FPS**, même sur du matériel ancien :
+- **Optimisation GPU** : Les effets visuels lourds (flou, lueurs) sont désormais gérés par le processeur graphique.
+- **Micro-Sync** : Les mises à jour de données sont compressées (Delta Sync) pour réduire le lag réseau sur WiFi instable.
+
 
 ## 🛠️ Fonctionnalités du Hub
 

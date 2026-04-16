@@ -65,7 +65,8 @@ const VoiceDashboard: React.FC = () => {
         outputDeviceId,
         availableOutputs,
         setOutputDeviceId,
-        lastSyncedEntityName
+        lastSyncedEntityName,
+        isWorkletReady
     } = useVoiceStore();
     const { getAudioLabel } = useHardwareStore();
     const { t } = useTranslation();
@@ -112,10 +113,15 @@ const VoiceDashboard: React.FC = () => {
                         </span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <Zap size={14} className="text-amber-500" />
+                        <Zap size={14} className={isWorkletReady ? "text-amber-500" : "text-slate-600"} />
                         <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                            {t('modules:voice.dashboard.dsp_load')}: 4%
+                            {t('modules:voice.dashboard.dsp_load')}: {isWorkletReady ? '4%' : 'N/A'}
                         </span>
+                        {!isWorkletReady && isActive && (
+                            <span className="text-[8px] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded border border-red-500/30 animate-pulse">
+                                FALLBACK ACTIVE
+                            </span>
+                        )}
                     </div>
                     {isDucking && (
                         <div className="flex items-center gap-2 px-2 py-0.5 bg-amber-500/20 border border-amber-500/30 rounded text-amber-500 animate-pulse">
@@ -153,7 +159,11 @@ const VoiceDashboard: React.FC = () => {
                         🔄 {t('modules:voice.dashboard.sync_npc')}
                     </button>
                     <button 
-                        onClick={() => toggleActive()}
+                        onClick={async () => {
+                            // User interaction: crucial for AudioContext resume
+                            await voiceEngine.initialize();
+                            toggleActive();
+                        }}
                         className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${isActive ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/20' : 'bg-app-surface text-slate-300'}`}
                     >
                         {isActive ? t('modules:voice.dashboard.mic_on') : t('modules:voice.dashboard.mic_off')}

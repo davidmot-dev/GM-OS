@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { X, Star, Edit2 } from 'lucide-react';
 import type { ImageMedia } from '../types';
 import { useImageStore } from '../useImageStore';
@@ -11,23 +11,36 @@ interface ImagePadProps {
     media: ImageMedia;
 }
 
-const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
-    const {
-        projections,
-        projectSolo, toggleMediaActive, removeMedia,
-        folders, moveMediaToFolder, toggleMediaFavorite, renameMedia
-    } = useImageStore();
+/**
+ * ImagePad - Représente une case d'image dans la galerie.
+ * Optimisé avec React.memo et des sélecteurs Zustand granulaires pour éviter 
+ * les re-rendus inutiles lors de mises à jour globales du store.
+ */
+const ImagePad: React.FC<ImagePadProps> = React.memo(({ media }) => {
+    // 🛡️ Sélecteurs stricts pour éviter les re-rendus de masse
+    const projectSolo = useImageStore(state => state.projectSolo);
+    const toggleMediaActive = useImageStore(state => state.toggleMediaActive);
+    const removeMedia = useImageStore(state => state.removeMedia);
+    const toggleMediaFavorite = useImageStore(state => state.toggleMediaFavorite);
+    const renameMedia = useImageStore(state => state.renameMedia);
+    const moveMediaToFolder = useImageStore(state => state.moveMediaToFolder);
+    const folders = useImageStore(state => state.folders);
+    
+    // On ne surveille que projections, pas tout le store
+    const projections = useImageStore(state => state.projections);
+    
     const { t } = useTranslation(['modules', 'common']);
     const { getDisplayLabel } = useHardwareStore();
 
-    // Find all targets currently projecting this media
-    const activeTargets = Object.entries(projections)
-        .filter(([, mediaId]) => mediaId === media.id)
-        .map(([targetId]) => getDisplayLabel(targetId));
+    // Calcul mémoïsé des cibles actives pour ce média spécifique
+    const activeTargets = useMemo(() => {
+        return Object.entries(projections)
+            .filter(([, mediaId]) => mediaId === media.id)
+            .map(([targetId]) => getDisplayLabel(targetId));
+    }, [projections, media.id, getDisplayLabel]);
 
     const isProjected = activeTargets.length > 0;
 
-    // Use the Stitch HTML styling, adapting active / playing states
     const borderClass = isProjected
         ? "ring-4 ring-accent shadow-glow-accent border-white/5"
         : "border-white/5 hover:border-accent/50 hover:shadow-glow-accent";
@@ -46,20 +59,19 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
             ></div>
             <div className="absolute inset-0 bg-gradient-to-t from-app-bg/90 via-transparent to-transparent"></div>
 
-                <div className="absolute top-3 left-3 flex flex-col gap-1">
-                    {activeTargets.map(targetLabel => (
-                        <span
-                            key={targetLabel}
-                            className={`bg-accent text-app-bg text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-tighter shadow-lg whitespace-nowrap font-display`}
-                        >
-                            {targetLabel}
-                        </span>
-                    ))}
-                </div>
+            <div className="absolute top-3 left-3 flex flex-col gap-1">
+                {activeTargets.map(targetLabel => (
+                    <span
+                        key={targetLabel}
+                        className={`bg-accent text-app-bg text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-tighter shadow-lg whitespace-nowrap font-display`}
+                    >
+                        {targetLabel}
+                    </span>
+                ))}
+            </div>
 
-            {/* Top Right Controls: Checkbox for Sequence and Remove */}
+            {/* Top Right Controls */}
             <div className="absolute top-3 right-3 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                
                 <button
                     onClick={(e) => { 
                         e.stopPropagation(); 
@@ -106,12 +118,9 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
             </div>
 
             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                <button
-                    onClick={(e) => { e.stopPropagation(); projectSolo(media); }}
-                    className="bg-accent/20 backdrop-blur-md border border-accent/30 text-accent px-4 py-2 rounded-lg text-sm font-black uppercase tracking-widest hover:bg-accent/40 pointer-events-auto shadow-2xl font-display"
-                >
-                    {t('image.pad.solo')}
-                </button>
+                <div className="bg-accent/20 backdrop-blur-md border border-accent/30 text-accent px-4 py-2 rounded-lg text-sm font-black uppercase tracking-widest hover:bg-accent/40 pointer-events-auto shadow-2xl font-display">
+                    {isProjected ? t('image.pad.stop') : t('image.pad.solo')}
+                </div>
             </div>
 
             <div className="absolute bottom-0 w-full p-4">
@@ -132,7 +141,7 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
                                     value={media.folderId || ''}
                                     onChange={(e) => moveMediaToFolder(media.id, e.target.value || null)}
                                     className="text-[10px] text-app-text/60 font-mono bg-app-bg/60 border border-app-border/40 rounded px-1 py-0.5 focus:outline-none focus:border-accent hover:bg-app-bg/80 cursor-pointer pointer-events-auto"
-                                    onClick={(e) => e.stopPropagation()} // Prevent trigger solo
+                                    onClick={(e) => e.stopPropagation()}
                                     title={t('image.pad.moveFolderTooltip')}
                                 >
                                     <option value="">{t('image.folders.root')}</option>
@@ -147,6 +156,6 @@ const ImagePad: React.FC<ImagePadProps> = ({ media }) => {
             </div>
         </div>
     );
-};
+});
 
 export default ImagePad;

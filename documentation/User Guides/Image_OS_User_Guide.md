@@ -24,10 +24,12 @@ En haut de l'interface, vous pouvez sélectionner l'écran de destination :
 ### Modes de Projection
 
 - **Transitions Fluides (v5.3)** : La projection d'une image n'est plus brutale. Le système effectue désormais un fondu au noir (Fade Out) suivi d'une apparition progressive (Fade In). Ce rendu premium garantit une immersion cinématique sans "flash" visuel.
-- **Solo** : Un simple clic sur une image l'envoie instantanément sur l'écran cible. La fiabilité a été renforcée : l'image s'affiche désormais dès la première sélection sans nécessiter de second clic.
+- **Solo (Régie unifiée v6)** : Un simple clic sur une image l'envoie instantanément sur l'écran cible. La fiabilité a été portée à 100% : l'image s'affiche désormais dès la première sélection sans nécessiter de second clic, même si la fenêtre vient d'être ouverte.
+- **Synchronisation Automatique** : Si vous ouvrez un écran de projection (Moniteur 1, 2) alors qu'une image est déjà active pour cette cible, l'image s'affichera automatiquement dès l'ouverture de la fenêtre.
 - **Diaporama (Sequence)** : Cochez les cases "Sequence" sur vos images, puis lancez le diaporama via le bouton **DIAPORAMA** en haut à droite.
   - **Navigation** : Utilisez les flèches **Précédent** et **Suivant** à côté du bouton pour faire défiler manuellement votre séquence.
 - **Entity (NPC/PC)** : GM-OS projette une fiche complète (nom, portrait, stats publiques) vers le Player Hub en mode "Diorama" tout en affichant l'image brute sur vos écrans secondaires.
+- **Mode Standby** : Lorsqu'aucune image n'est projetée sur un écran, celui-ci affiche un texte discret "EN ATTENTE" (Standby), garantissant que l'écran reste actif sans polluer l'immersion avant le début d'une scène.
 
 ## 📁 Organisation de la Bibliothèque
 

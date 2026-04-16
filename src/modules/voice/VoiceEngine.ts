@@ -58,6 +58,11 @@ export class VoiceEngine {
                 latencyHint: 'interactive'
             });
 
+            // Ensure context is running (required for many browsers/Tauri)
+            if (this.context.state === 'suspended') {
+                await this.context.resume();
+            }
+
             const { currentEffects } = useVoiceStore.getState();
 
             // Apple Google Meet-style constraints for voice clarity
@@ -105,6 +110,7 @@ export class VoiceEngine {
 
             // 6. AudioWorklet (Voice Processor)
             try {
+                // Use absolute path from public root, but ensure it's loaded properly
                 await this.context.audioWorklet.addModule('/audio/voice-processor.js');
                 this.voiceWorklet = new AudioWorkletNode(this.context, 'voice-processor');
                 
@@ -115,9 +121,11 @@ export class VoiceEngine {
                 this.voiceWorklet.parameters.get('distortion')?.setValueAtTime(initialEffects.distortion || 0, this.context.currentTime);
                 this.voiceWorklet.parameters.get('bitcrush')?.setValueAtTime(initialEffects.bitcrush || 0, this.context.currentTime);
 
-                console.log('[VoiceEngine] AudioWorklet Loaded');
+                useVoiceStore.getState().setWorkletReady(true);
+                console.log('[VoiceEngine] AudioWorklet Loaded & Registered');
             } catch (e) {
                 console.error('[VoiceEngine] Failed to load AudioWorklet:', e);
+                useVoiceStore.getState().setWorkletReady(false);
             }
 
             // 7. Reverb
@@ -139,7 +147,7 @@ export class VoiceEngine {
 
             // 10. Master Limiter (Brickwall)
             this.limiter = this.context.createDynamicsCompressor();
-            this.limiter.threshold.value = -1.0;   // Hard limit near peak
+            this.limiter.threshold.value = -3.0;   // Safe limit to prevent distortion downstream
             this.limiter.knee.value = 0;           // Hard knee for limiting
             this.limiter.ratio.value = 20;         // High ratio to block peaks
             this.limiter.attack.value = 0.001;     // Instant attack

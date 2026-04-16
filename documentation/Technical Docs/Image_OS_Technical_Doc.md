@@ -19,35 +19,26 @@ The module communicates through the `ImageBridge` interface:
 - **Sequence/Diaporama**: Manages a list of "active" media for sequential projection.
 - **Persistence**: The state is persisted in `localStorage` (`gmos-image-storage`) to allow recovery after a restart.
 
-## 🔄 Synchronization Logic
+## 🔄 Synchronization Logic (v6.3.2)
 
-### Cross-Window Sync (Zustand + Storage)
+### 1. IPC-First Protocol (Race Condition Protection)
 
-Since the **Player Hub** and **Projector Views** are separate Electron windows, they subscribe to `localStorage` events to rehydrate their local stores when the GM makes a change in the Dashboard.
+The projection module implements an **IPC Priority** mechanism to solve race conditions between the initial window mount and real-time commands.
 
-### IPC Projection Sync
+- **Verrou IPC (`ipcCount`)**: The display window (Projector/Hub) maintains a counter of received IPC messages. 
+- **Store Decoupling**: Once the first IPC message is received, the window **ignores** any updates from the local Zustand store. This ensures that a stale or desynchronized store (typical in multi-window Electron) cannot overwrite a live projection command.
+- **Projector-Ready Signal**: When a new window is opened, it broadcasts a `projector-ready` signal. the Master Store listens to this and re-transmits the current projection state via IPC to ensure immediate synchronization.
 
-For immediate visual updates (like a Blackout), the module uses IPC messages:
+### 2. React Rendering Optimization
 
-1. **GM clicks Blackout**: `useImageStore` updates the `projections` state AND calls `syncHubData('image', '')`.
-2. **Main Process**: Broadcasts `image:sync-hub-data` to all relevant windows.
-3. **Player Hub**: Receives the signal and sets `liveImagePath` to `null`.
-4. **useMediaUrl Hook**: Upon receiving a `null` or empty source, it clears the `resolvedUrl`, resulting in an instant black screen.
+- **Key Management**: To avoid massive UI lags or crashes, the `key` prop of `<img>` and `<video>` tags is bound to the **Media Path** (`m-xxxx`) rather than the Base64/Blob URL. 
+- **Base64 Resolver**: Media are resolved to Base64 strings in memory to bypass Electron's `file://` and `blob:` security restrictions, ensuring consistent rendering across all secondary windows.
 
-## 🎞️ Smooth Transition Logic (v5.3)
+## ⚡ Reliability & Initialization
 
-To ensure a premium cinematic experience, image projections now use a **Fade Out / Fade In** sequence.
-- **Workflow**:
-  1. Trigger new projection.
-  2. The display component triggers a CSS transition to `opacity: 0` (300ms).
-  3. After the fade-out, the source URL is swapped.
-  4. The component triggers a CSS transition to `opacity: 1` (300ms).
-- **Benefit**: Eliminates harsh cuts and "flashing" when switching between two high-resolution assets.
-
-## ⚡ Single-Click Initialization
-
-A previous regression requiring a double-click to initialize the first projection has been resolved in v5.3. 
-- **Fix**: The `useEffect` in `PlayerHubView.tsx` and `ProjectorView.tsx` now correctly handles the initial mount state by synchronizing the local state with the global store immediately upon identification of a valid `liveImagePath`.
+The previous issue requiring multiple clicks for initialization has been resolved by:
+1. **Source Validation**: The `onRehydrateStorage` middleware now validates projections using `media.path` consistency checks.
+2. **Mount Sync**: Windows perform a one-time sync from the Store only if no IPC messages have been received yet, bridging the gap between window launch and IPC readiness.
 
 ## 🎞️ Diaporama / Slideshow Logic
 

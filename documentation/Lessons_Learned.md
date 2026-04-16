@@ -173,5 +173,35 @@ L'introduction d'un mode "Théâtre" (vue splitée avec détails techniques à d
 2. **Grille Unifiée** : Utilisation d'une grille intelligente d'entités (`HubProjectionCard`) qui s'adapte au nombre d'éléments projetés.
 3. **Déduplication Native** : Filtrage automatique pour garantir qu'un PNJ n'apparaît qu'une seule fois, simplifiant ainsi la logique de rendu et évitant les bugs de redondance visuelle ("Visual Noise").
 
+## 15. Projections & IPC Race Condition (Multi-Fenêtres)
+
+### 15.1 Défi
+Lors de l'ouverture d'un projecteur, l'ordre de projection est souvent envoyé via IPC avant que la fenêtre React cible ne soit totalement initialisée. De plus, le Store global (Zustand) injecté au démarrage peut contenir des données obsolètes qui écrasent l'ordre IPC reçu.
+
+### 15.2 Leçon
+Le signal direct (IPC) doit primer sur l'état persistant une fois la connexion établie.
+
+**Solution :** Implémentation d'un **Verrou IPC Définitif** (`ipcCount`). Dès que le projecteur reçoit son premier message direct, il incrémente un compteur et ignore définitivement toutes les mises à jour provenant de son Store local (Zustand). Cela garantit que seule la volonté en temps réel du MJ est affichée.
+
+## 16. Hydratation & Validation de Données (ID vs Path)
+
+### 16.1 Défi
+Le système de nettoyage automatique (Cleanup) au démarrage du Store tentait de valider les projections en comparant des **Chemins de média** (`m-127...`) avec des **UUID technico-fonctionnels**. Cette erreur de type provoquait l'effacement systématique des images projetées au démarrage.
+
+### 16.2 Leçon
+La validation de l'état persistant doit utiliser la même source de vérité que celle stockée (le `Path` pour les projections).
+
+**Solution :** Correction du middleware de réhydratation pour valider les clés via un Set de `media.path`.
+
+## 17. Optimisation React : Clés de Rendu Complexes
+
+### 17.1 Défi
+L'utilisation de chaînes Base64 massives (plusieurs Mo) comme `key` dans React provoque un ralentissement extrême, voire un crash du moteur de rendu Chrome, car React tente de comparer ces chaînes géantes à chaque cycle.
+
+### 17.2 Leçon
+Une `key` React doit rester courte et performante.
+
+**Solution :** Utilisation systématique de l'ID média (`m-xxx`) au lieu de l'URL résolue pour les propriétés `key`.
+
 ---
-*Dernière mise à jour : 16 Avril 2026 - GM-OS v6.3.2 - Hub Unification & Clean Sweep.*
+*Dernière mise à jour : 16 Avril 2026 - GM-OS v6.3.2 - Stabilization Wave & IPC Security.*

@@ -47,6 +47,8 @@ interface VoiceState {
     lastSyncedEntityId: string | null;
     lastSyncedEntityName: string | null;
     
+    isWorkletReady: boolean; // Diagnostic: true if AudioWorklet loaded successfully
+    
     // Actions
 
     toggleActive: (active?: boolean) => void;
@@ -64,6 +66,7 @@ interface VoiceState {
     
     setOutputDeviceId: (deviceId: string | null) => void;
     setAvailableOutputs: (devices: MediaDeviceInfo[]) => void;
+    setWorkletReady: (ready: boolean) => void;
     
     syncWithNpc: (npc: { name: string; description: string; roleplayingNotes: string; id: string }) => void;
     generateVoiceProfile: (npc: { name: string; gmNotes: string; fields: Record<string, string> }) => Promise<void>;
@@ -141,6 +144,7 @@ export const useVoiceStore = create<VoiceState>()(
             activePresetId: 'clean',
             
             inputLevel: 0,
+            isWorkletReady: false,
             outputDeviceId: null,
             availableOutputs: [],
             
@@ -187,6 +191,7 @@ export const useVoiceStore = create<VoiceState>()(
 
             setOutputDeviceId: (deviceId) => set({ outputDeviceId: deviceId }),
             setAvailableOutputs: (devices) => set({ availableOutputs: devices }),
+            setWorkletReady: (ready) => set({ isWorkletReady: ready }),
             
             lastSyncedEntityId: null,
         lastSyncedEntityName: null,
