@@ -193,15 +193,14 @@ La validation de l'état persistant doit utiliser la même source de vérité qu
 
 **Solution :** Correction du middleware de réhydratation pour valider les clés via un Set de `media.path`.
 
-## 17. Optimisation React : Clés de Rendu Complexes
+## 17. Optimisation des Clés de Rendu React (Performance)
+Pour les listes dynamiques projetées (Image-OS), utiliser des IDs uniques courts (`m-xxxx`) au lieu de chaînes de données massives (URLs Base64) pour les attributs `key`. Cela évite des re-renders coûteux et des freezes du processeur lors de la synchronisation d'états volumineux.
 
-### 17.1 Défi
-L'utilisation de chaînes Base64 massives (plusieurs Mo) comme `key` dans React provoque un ralentissement extrême, voire un crash du moteur de rendu Chrome, car React tente de comparer ces chaînes géantes à chaque cycle.
+## 18. Encapsulation de la Logique MCP (Bridge Isolation)
+Dans une architecture multi-agents utilisant des serveurs MCP (ex: NotebookLM), la logique d'appel d'outils et la gestion des erreurs d'authentification (refresh_auth) doivent être encapsulées dans des services métier (`ForgeService`) plutôt que dans les composants UI. Cela isole les composants des spécificités du Bridge et facilite le test unitaire de la logique d'intégration.
 
-### 17.2 Leçon
-Une `key` React doit rester courte et performante.
-
-**Solution :** Utilisation systématique de l'ID média (`m-xxx`) au lieu de l'URL résolue pour les propriétés `key`.
+## 19. Résilience de la Persistance via Keychain (Light-OS)
+Pour les secrets ne pouvant être persistés dans le `localStorage` (ex: Jeton Philips Hue), la synchronisation avec le trousseau natif doit être explicitement gérée au démarrage via un `BootstrapService`. Le hook d'auto-connexion doit être réactif à l'arrivée asynchrone de ce jeton et gérer l'erreur `UNAUTHORIZED` pour invalider proprement l'état en cas de désappairage externe.
 
 ---
-*Dernière mise à jour : 16 Avril 2026 - GM-OS v6.3.2 - Stabilization Wave & IPC Security.*
+*Dernière mise à jour : 16 Avril 2026 - GM-OS v6.3.3 - Final Stabilization & Auto-Connect Resilience.*

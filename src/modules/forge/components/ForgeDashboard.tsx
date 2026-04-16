@@ -68,45 +68,6 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
     setLogs(prev => [...prev.slice(-10), `> ${msg}`]);
   };
 
-  const callMcpToolWithRetry = async <T = unknown>(serverName: string, toolName: string, args: Record<string, unknown>): Promise<T> => {
-    const bridge = window.appBridge;
-    if (!bridge?.mcp?.callTool) {
-      throw new Error("Bridge MCP not available");
-    }
-    
-    const mcpBridge = bridge.mcp;
-
-    const checkError = (res: unknown): boolean => {
-      const str = typeof res === 'string' ? res : JSON.stringify(res);
-      return str.includes("Authentication expired") || str.includes("RPC Error 16") || str.includes("expired");
-    };
-
-    try {
-      const result = await mcpBridge.callTool(serverName, toolName, args);
-      
-      if (checkError(result)) {
-        addLog(t('modules:session.forge_module.notebook.connecting'));
-        await mcpBridge.callTool('notebooklm-mcp-server', 'refresh_auth', {});
-        addLog(t('modules:session.forge_module.notebook.browsing', { id: 'RETRY' }));
-        const retryResult = await mcpBridge.callTool(serverName, toolName, args);
-        if (checkError(retryResult)) {
-          throw new Error("RETRY FAILED: STILL EXPIRED.");
-        }
-        return retryResult as unknown as T;
-      }
-      
-      return result as unknown as T;
-    } catch (err: unknown) {
-      if (checkError(err)) {
-        addLog(t('modules:session.forge_module.notebook.connecting'));
-        await mcpBridge.callTool('notebooklm-mcp-server', 'refresh_auth', {});
-        addLog(t('modules:session.forge_module.notebook.browsing', { id: 'RETRY' }));
-        return await mcpBridge.callTool(serverName, toolName, args) as unknown as T;
-      }
-      throw err;
-    }
-  };
-
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const files = Array.from(e.target.files);
@@ -147,7 +108,7 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
     setIsLoadingNotebooks(true);
     addLog(t('modules:session.forge_module.notebook.connecting'));
     try {
-      const result = await callMcpToolWithRetry<{ notebooks?: Notebook[], data?: { notebooks: Notebook[] }, content?: string }>('notebooklm-mcp-server', 'notebook_list', { max_results: 100 });
+      const result = await forgeService.callMcpTool<{ notebooks?: Notebook[], data?: { notebooks: Notebook[] }, content?: string }>('notebooklm-mcp-server', 'notebook_list', { max_results: 100 });
       
       const rawData = result.notebooks || result.data?.notebooks || result.content;
       let notebooksToSet: Notebook[] = [];
@@ -180,7 +141,7 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
     setIsLoadingNotebooks(true);
     addLog(t('modules:session.forge_module.notebook.browsing', { id: notebookId }));
     try {
-      const result = await callMcpToolWithRetry<{ notebook?: unknown, content?: unknown }>('notebooklm-mcp-server', 'notebook_get', { notebook_id: notebookId });
+      const result = await forgeService.callMcpTool<{ notebook?: unknown, content?: unknown }>('notebooklm-mcp-server', 'notebook_get', { notebook_id: notebookId });
       
       let notebookData = result.notebook || result.content;
       if (typeof notebookData === 'string') {
@@ -236,7 +197,7 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
         setImportingSources(prev => new Set(prev).add(sourceId));
         
         try {
-          const result = await callMcpToolWithRetry<{ content: unknown }>('notebooklm-mcp-server', 'source_get_content', { source_id: sourceId });
+          const result = await forgeService.callMcpTool<{ content: unknown }>('notebooklm-mcp-server', 'source_get_content', { source_id: sourceId });
           
           let content = result.content;
           if (typeof content === 'string' && (content.startsWith('{') || content.startsWith('['))) {
@@ -345,7 +306,7 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
           </div>
           <div className="flex items-center gap-4">
             <h1 className="text-2xl font-black uppercase tracking-widest text-app-text font-display">
-              {t('modules:session.forge_module.title').toUpperCase()} <span className="text-accent/50 text-xs font-mono tracking-widest ml-2">v6.3.0</span>
+              {t('modules:session.forge_module.title').toUpperCase()} <span className="text-accent/50 text-xs font-mono tracking-widest ml-2">v6.3.2</span>
             </h1>
             <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border flex items-center gap-2 ${
                activeProvider === 'gemini' ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400 shadow-glow-emerald/20'

@@ -16,18 +16,30 @@ export const useHueAutoConnect = () => {
     useEffect(() => {
         // Only trigger auto-connect if we're disconnected but have credentials
         if (status === 'disconnected' && bridgeIp && username) {
-            console.log(`[Light OS] Auto-connecting to Hue Bridge at ${bridgeIp}...`);
+            console.log(`[Light OS] Credentials detected (IP: ${bridgeIp}). Attempting auto-connect...`);
             
             // Set temporary status to show we are working
             setConnection('discovering');
 
-            hueEngine.fetchLights().then(() => {
-                console.log(`[Light OS] Auto-connection successful.`);
-                setConnection('connected');
-            }).catch((err) => {
-                console.error(`[Light OS] Auto-connection failed:`, err);
-                setConnection('disconnected');
-            });
+            const performConnect = async () => {
+                try {
+                    await hueEngine.fetchLights();
+                    console.log(`[Light OS] Auto-connection successful.`);
+                    setConnection('connected');
+                } catch (err) {
+                    console.error(`[Light OS] Auto-connection failed:`, err);
+                    
+                    if (err instanceof Error && err.message === "UNAUTHORIZED") {
+                        console.warn('[Light OS] Token is invalid. Pairing was lost on the Bridge side.');
+                        // On garde l'IP mais on vide le username s'il est pourri
+                        setConnection('disconnected', undefined, null);
+                    } else if (useLightStore.getState().status === 'discovering') {
+                        setConnection('disconnected');
+                    }
+                }
+            };
+
+            performConnect();
         }
     }, [status, bridgeIp, username, setConnection]);
 };

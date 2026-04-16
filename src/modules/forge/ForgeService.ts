@@ -249,6 +249,46 @@ export class ForgeService {
 
     throw new Error("Aucun contenu fourni pour l'analyse.");
   }
+
+  /**
+   * Encapsulates MCP tool calls with retry logic for authentication.
+   * Centralizes Bridge usage for the Forge module.
+   */
+  public async callMcpTool<T = unknown>(serverName: string, toolName: string, args: Record<string, unknown>): Promise<T> {
+    const bridge = window.appBridge;
+    if (!bridge?.mcp?.callTool) {
+      throw new Error("Bridge MCP not available");
+    }
+    
+    const mcpBridge = bridge.mcp;
+
+    const isAuthError = (res: unknown): boolean => {
+      const str = typeof res === 'string' ? res : JSON.stringify(res);
+      return str.includes("Authentication expired") || str.includes("RPC Error 16") || str.includes("expired");
+    };
+
+    try {
+      const result = await mcpBridge.callTool(serverName, toolName, args);
+      
+      if (isAuthError(result)) {
+        // Attempt one-time silent refresh
+        await mcpBridge.callTool('notebooklm-mcp-server', 'refresh_auth', {});
+        const retryResult = await mcpBridge.callTool(serverName, toolName, args);
+        if (isAuthError(retryResult)) {
+          throw new Error("MCP_AUTH_EXPIRED: Still expired after refresh.");
+        }
+        return retryResult as unknown as T;
+      }
+      
+      return result as unknown as T;
+    } catch (err: unknown) {
+      if (isAuthError(err)) {
+        await mcpBridge.callTool('notebooklm-mcp-server', 'refresh_auth', {});
+        return await mcpBridge.callTool(serverName, toolName, args) as unknown as T;
+      }
+      throw err;
+    }
+  }
 }
 
 export const forgeService = ForgeService.getInstance();

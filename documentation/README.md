@@ -35,6 +35,7 @@ Ce répertoire contient l'archive de tous les guides de mise en œuvre, walkthro
 ## Planification & Historique
 
 - **[Roadmap & Améliorations](./Plans/am%C3%A9lioration.md)** : La liste consolidée des fonctionnalités et victoires techniques.
+- **[Vague de Stabilisation v6.3.3 (Avril 2026)](./walkthroughs/v6_3_3_Stabilization_Report.md)** : Rapport final sur la résilience de Light-OS et l'audit final Forge/Debug.
 - **[Vague de Stabilisation v6.3.2 (Avril 2026)](./History/2026-04-16-v6-stabilization-wave.md)** : Rapport sur la résolution des race conditions et optimisations 60 FPS.
 - **[Lessons_Learned.md](./Lessons_Learned.md)** : Retours d'expérience consolidés sur la synchronisation, le typage strict et la robustesse Git.
 

@@ -97,15 +97,28 @@ export class HueEngine {
         const url = `https://${bridgeIp}/api/${username}${endpoint}`;
         try {
             const bridge = window.appBridge?.light;
+            let data: any;
+
             if (bridge) {
-                return await bridge.request(url, method, body);
+                data = await bridge.request(url, method, body);
             } else {
                 const res = await fetch(url, {
                     method,
                     body: body ? JSON.stringify(body) : undefined
                 });
-                return await res.json();
+                data = await res.json();
             }
+
+            // Check for common Hue error responses (Array of objects)
+            if (Array.isArray(data) && data[0]?.error) {
+                const error = data[0].error;
+                if (error.type === 1) { // Unauthorized user
+                    console.error('[HueEngine] Token invalid or expired:', error.description);
+                    throw new Error("UNAUTHORIZED");
+                }
+            }
+
+            return data;
         } catch (e) {
             console.error(`[HueEngine] Req failed: ${method} ${endpoint}`, e);
             throw e;

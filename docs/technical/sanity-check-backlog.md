@@ -57,16 +57,17 @@ Chaque module doit être validé selon les critères suivants :
 | **Sound-OS** | P2 | ✅ Corrigé | SFX collision & trigger. |
 | **Voice-OS** | P2 | ✅ Corrigé | v6.3.2 : AudioWorklet stabilization & Clipping protection. |
 | **Image-OS** | P2 | ✅ Corrigé | v6.3.2 : IPC-First Protocol & Fix React Keys (Performance). |
+| **Light-OS** | P2 | ✅ Corrigé | v6.3.3 : Fix Persistence/Keychain & Auto-Connect logic. |
 
 ### 5. Services & Tools
 
 | Module | Priorité | Statut | Points d'Attention |
 | :--- | :---: | :--- | :--- |
 | **Nexus Bridge** | P1 | ✅ Corrigé | Centralisation via `SyncServer` & `handleSync`. |
-| **Forms/Forge** | P3 | 🟡 À Analyser | Générateurs de contenu. |
+| **Forms/Forge** | P3 | ✅ Corrigé | v6.3.2 : Découplage callMcpTool & Tests unitaires. |
 | **Clock-OS** | P3 | ✅ Corrigé | Projection unifiée & Déduplication intelligente. |
 | **Favorite** | P3 | ✅ Corrigé | Persistence & Sync Hub Multi-Entités (v6.3.2). |
-| **Debug** | P3 | 🟡 À Analyser | Dev Tools visibility. |
+| **Debug** | P3 | ✅ Corrigé | v6.3.2 : Interception console & Persistance localStorage validée. |
 
 ### 6. Hubs & Clients (Expérience Joueur)
 

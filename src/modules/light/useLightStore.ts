@@ -285,8 +285,12 @@ export const useLightStore = create<LightState>()(
             },
 
             syncWithKeychain: async () => {
-                if (!window.appBridge?.security) return;
+                if (!window.appBridge?.security) {
+                    console.warn('[Light OS] Security Bridge not available for keychain sync');
+                    return;
+                }
 
+                console.log('[Light OS] 🔐 Synchronisation avec le trousseau...');
                 const state = get();
                 let hasChanges = false;
                 let newUsername = state.username;
@@ -301,8 +305,11 @@ export const useLightStore = create<LightState>()(
                 // 2. Récupération : On charge le token depuis le trousseau
                 const securedToken = await window.appBridge.security.getSecret('hue-bridge-token');
                 if (securedToken && securedToken !== state.username) {
+                    console.log('[Light OS] ✅ Token récupéré depuis le trousseau.');
                     newUsername = securedToken;
                     hasChanges = true;
+                } else if (!securedToken) {
+                    console.warn('[Light OS] ⚠️ Aucun token trouvé dans le trousseau.');
                 }
 
                 if (hasChanges) {
