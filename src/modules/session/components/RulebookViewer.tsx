@@ -47,7 +47,7 @@ export const RulebookViewer: React.FC = () => {
     }
 
     const navItems = [
-        { id: 'workshop', label: 'Atelier Forge', icon: Sparkles, color: 'text-purple-400', bg: 'bg-purple-500/10' },
+        { id: 'workshop', label: t('modules:session.rule_engine_editor.nav.workshop'), icon: Sparkles, color: 'text-purple-400', bg: 'bg-purple-500/10' },
         { id: 'core', label: t('modules:session.rule_engine_editor.nav.core'), icon: Dice5, color: 'text-cyan-400', bg: 'bg-cyan-500/10' },
         { id: 'combat', label: t('modules:session.rule_engine_editor.nav.combat'), icon: Zap, color: 'text-indigo-400', bg: 'bg-indigo-500/10' },
         { id: 'tactical', label: t('modules:session.rule_engine_editor.nav.tactical'), icon: Map, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
@@ -102,7 +102,7 @@ export const RulebookViewer: React.FC = () => {
                                     : 'text-white/40 hover:text-white'
                             }`}
                         >
-                            Atelier de Forge
+                            {t('modules:session.rule_engine_editor.nav.workshop')}
                         </button>
                         <button 
                             onClick={() => setActiveSection('core')}
@@ -112,7 +112,7 @@ export const RulebookViewer: React.FC = () => {
                                     : 'text-white/40 hover:text-white'
                             }`}
                         >
-                            Référence Système
+                            {t('modules:session.rule_engine_editor.nav.system_ref')}
                         </button>
                     </div>
 
@@ -279,7 +279,7 @@ export const RulebookViewer: React.FC = () => {
                                                     </div>
                                                     <div>
                                                         <div className="text-sm font-black uppercase tracking-tight">{t('modules:session.rule_engine_editor.tactical.ai_toggle')}</div>
-                                                        <p className="text-[10px] opacity-40 uppercase font-bold">{driver.tactical.useTacticalAI ? 'Activé' : 'Désactivé'}</p>
+                                                        <p className="text-[10px] opacity-40 uppercase font-bold">{driver.tactical.useTacticalAI ? t('common:status.enabled') : t('common:status.disabled')}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -287,7 +287,7 @@ export const RulebookViewer: React.FC = () => {
                                     ) : (
                                         <div className="p-20 text-center opacity-20 border-2 border-dashed border-white/10 rounded-[3rem]">
                                             <Map size={64} className="mx-auto mb-4" />
-                                            <p className="uppercase font-black tracking-widest">Pas de configuration tactique</p>
+                                            <p className="uppercase font-black tracking-widest">{t('modules:session.rule_engine_editor.tactical.no_config')}</p>
                                         </div>
                                     )}
                                 </div>
@@ -367,7 +367,7 @@ export const RulebookViewer: React.FC = () => {
                                     ) : (
                                         <div className="p-20 text-center opacity-20 border-2 border-dashed border-white/10 rounded-[3rem]">
                                             <Archive size={64} className="mx-auto mb-4" />
-                                            <p className="uppercase font-black tracking-widest">Aucune table de butin définie</p>
+                                            <p className="uppercase font-black tracking-widest">{t('modules:session.rule_engine_editor.loot.no_config')}</p>
                                         </div>
                                     )}
                                 </div>
@@ -399,11 +399,11 @@ export const RulebookViewer: React.FC = () => {
                                                 rel="noopener noreferrer"
                                                 className="px-8 py-4 bg-blue-500 text-black font-black uppercase text-sm tracking-widest rounded-2xl shadow-glow-blue/40 hover:scale-105 transition-all flex items-center gap-3"
                                             >
-                                                Ouvrir le NotebookLM <ChevronRight size={18} />
+                                                {t('modules:session.rule_engine_editor.notebook.open_button')} <ChevronRight size={18} />
                                             </a>
                                         ) : (
                                             <div className="px-8 py-4 bg-white/5 border border-white/10 rounded-2xl text-app-text/20 font-black uppercase text-xs tracking-widest">
-                                                Aucun NotebookLM lié
+                                                {t('modules:session.rule_engine_editor.notebook.no_link')}
                                             </div>
                                         )}
                                     </div>

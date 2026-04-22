@@ -419,7 +419,7 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
               {/* Rules Atelier Settings */}
               <div className="bg-purple-500/10 rounded-2xl border border-purple-500/20 p-5 flex flex-col gap-4 animate-in slide-in-from-left-4">
                 <h2 className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-purple-400 font-display">
-                   <Shield size={14} /> {t('campaign_form.identity.system_label') || 'Système de Jeu'}
+                   <Shield size={14} /> {t('session.campaign_form.identity.system_label') || 'Système de Jeu'}
                 </h2>
                 
                 <div className="relative group">
@@ -445,12 +445,12 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                 <div className="h-px bg-white/5 my-1" />
 
                 <h2 className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-purple-400 font-display">
-                   <Sparkles size={14} /> Sujet de Forge Libre
+                   <Sparkles size={14} /> {t('modules:session.forge_module.atelier.custom_subject_label')}
                 </h2>
                 <textarea 
                   value={brainstormStore.customSubject} 
                   onChange={(e) => brainstormStore.setCustomSubject(e.target.value)} 
-                  placeholder="Ex: Règles de combat aérien, Système de santé mentale..." 
+                  placeholder={t('modules:session.forge_module.atelier.custom_subject_placeholder')} 
                   className="w-full bg-white/5 text-xs text-app-text/80 focus:outline-none placeholder:text-white/10 font-sans border border-white/10 rounded-xl p-4 focus:border-purple-500/50 transition-all min-h-[120px] resize-none" 
                 />
                 <button
@@ -463,7 +463,7 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                     !selectedNotebook ? 'bg-white/5 text-white/10 cursor-not-allowed' : 'bg-purple-600 text-white shadow-glow-purple/30 hover:scale-105 active:scale-95'
                   }`}
                 >
-                  Analyser les sources
+                  {t('modules:session.forge_module.atelier.analyze_button')}
                 </button>
               </div>
             </>
@@ -505,7 +505,7 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                   <div className="w-16 h-16 rounded-full border-2 border-dashed border-app-border/20 flex items-center justify-center mb-4 text-app-text">
                     <Rocket className="w-8 h-8" />
                   </div>
-                  <p className="text-sm">Aucune source sélectionnée</p>
+                  <p className="text-sm">{t('modules:session.forge_module.atelier.empty_sources')}</p>
                 </div>
               )}
               
@@ -560,12 +560,12 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                   {forgeStore.isProcessing ? (
                     <>
                       <Zap className="w-5 h-5 animate-spin" />
-                      Transmutation en cours...
+                      {t('modules:session.forge_module.atelier.transmuting')}
                     </>
                   ) : (
                     <>
                       <Hammer className="w-5 h-5" />
-                      Forger le Système
+                      {t('modules:session.forge_module.atelier.forge_button')}
                     </>
                   )}
                 </button>
@@ -579,7 +579,7 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                     }}
                     className="w-full py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest text-red-400 hover:bg-red-400/10 transition-colors"
                   >
-                    Arrêter la forge
+                    {t('modules:session.forge_module.atelier.abort_forge')}
                   </button>
                 )}
               </div>
@@ -593,17 +593,17 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
           {activeTab === 'structure' ? (
             forgeStore.analysisResult ? (
               <div className="flex-1 p-8 overflow-y-auto space-y-8 custom-scrollbar">
-                <h3 className="text-3xl font-black uppercase tracking-tighter font-display">ADN Construit</h3>
+                <h3 className="text-3xl font-black uppercase tracking-tighter font-display">{t('modules:session.forge_module.atelier.adn_built')}</h3>
                 <div className="h-1 w-20 bg-accent rounded-full" />
                 
                 <div className="grid grid-cols-2 gap-8">
                   <div className="bg-app-text/5 p-6 rounded-2xl border border-app-border/10 space-y-4">
-                    <p className="text-[10px] uppercase font-bold text-accent tracking-widest">Configuration</p>
+                    <p className="text-[10px] uppercase font-bold text-accent tracking-widest">{t('modules:session.forge_module.atelier.configuration')}</p>
                     <p className="text-xl font-bold font-display">{forgeStore.analysisResult.driver.name}</p>
                     <p className="text-xs opacity-60">{forgeStore.analysisResult.driver.dice?.defaultDice} engine</p>
                   </div>
                   <div className="bg-emerald-500/5 p-6 rounded-2xl border border-emerald-500/10 space-y-4">
-                    <p className="text-[10px] uppercase font-bold text-emerald-400 tracking-widest">Mécaniques</p>
+                    <p className="text-[10px] uppercase font-bold text-emerald-400 tracking-widest">{t('modules:session.forge_module.atelier.mechanics')}</p>
                     <ul className="space-y-2">
                       {forgeStore.analysisResult.driver.combat?.statsToTrack?.map((s, i) => (
                         <li key={i} className="text-xs font-bold flex items-center gap-2"><Zap size={12} /> {s.label}</li>
@@ -614,30 +614,30 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
 
                 <div className="p-8 bg-accent rounded-2xl flex items-center justify-between">
                   <div>
-                    <p className="text-white font-black text-xl">Système prêt pour la forge</p>
-                    <p className="text-white/60 text-xs">Cliquez pour enregistrer dans GM-OS</p>
+                    <p className="text-white font-black text-xl">{t('modules:session.forge_module.atelier.ready_title')}</p>
+                    <p className="text-white/60 text-xs">{t('modules:session.forge_module.atelier.ready_desc')}</p>
                   </div>
                   <button 
                     onClick={handleForgeSave}
                     className="px-8 py-4 bg-white text-accent rounded-xl font-black uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all"
                   >
-                    Enregistrer
+                    {t('modules:session.forge_module.atelier.btn_save')}
                   </button>
                 </div>
               </div>
             ) : (
               <div className="flex-1 flex flex-col items-center justify-center text-center p-12 space-y-6">
                  <Rocket size={64} className="text-accent/20 animate-bounce" />
-                 <h3 className="text-2xl font-bold font-display uppercase">En attente de transmutation</h3>
-                 <p className="text-app-text/40 max-w-md mx-auto">Sélectionnez vos documents de règles à gauche pour extraire la structure du jeu.</p>
+                 <h3 className="text-2xl font-bold font-display uppercase">{t('modules:session.forge_module.atelier.waiting_transmutation')}</h3>
+                 <p className="text-app-text/40 max-w-md mx-auto">{t('modules:session.forge_module.atelier.transmutation_waiting_desc')}</p>
               </div>
             )
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center text-center p-12 space-y-6 relative overflow-hidden">
                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-purple-600/10 blur-[120px] rounded-full pointer-events-none" />
                <Sparkles size={64} className="text-purple-400/20 animate-pulse" />
-               <h3 className="text-2xl font-bold font-display uppercase text-purple-400">Atelier de Brainstorm</h3>
-               <p className="text-app-text/40 max-w-md mx-auto">Choisissez vos sources à gauche pour générer des idées, ou utilisez le champ "Forge Libre" pour un sujet spécifique.</p>
+               <h3 className="text-2xl font-bold font-display uppercase text-purple-400">{t('modules:session.forge_module.atelier.brainstorm_title')}</h3>
+               <p className="text-app-text/40 max-w-md mx-auto">{t('modules:session.forge_module.atelier.brainstorm_desc')}</p>
                
                {brainstormStore.step !== 'idle' && <BrainstormOverlay />}
             </div>
@@ -700,7 +700,7 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                                         : 'bg-accent/20 text-accent hover:bg-accent hover:text-white'
                                     }`}
                                   >
-                                    ADN
+                                    {t('modules:session.forge_module.atelier.source_adn_btn')}
                                   </button>
                                   <button 
                                     onClick={() => {
@@ -717,7 +717,7 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                                         : 'bg-purple-500/20 text-purple-400 border border-purple-500/30'
                                     }`}
                                   >
-                                    Atelier
+                                    {t('modules:session.forge_module.atelier.source_atelier_btn')}
                                   </button>
                                 </div>
                               </div>

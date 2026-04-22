@@ -253,15 +253,6 @@ const CampaignCockpit: React.FC = () => {
                         <FileText size={20} className={currentView === 'templates' ? 'text-accent' : 'text-app-text/60'} />
                         <span className="text-sm font-bold uppercase tracking-tighter text-left">{t('modules:session.cockpit.sheet_models')}</span>
                     </button>
-                    <button
-                        onClick={() => {
-                            setCurrentView('rulebook');
-                        }}
-                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all mt-1 border border-accent/20 bg-accent/5 hover:bg-accent/10 text-accent`}
-                    >
-                        <Hammer size={20} className="text-accent" />
-                        <span className="text-sm font-bold uppercase tracking-tighter text-left">{t('modules:session.cockpit.consult_rules')}</span>
-                    </button>
                 </div>
             </nav>
 

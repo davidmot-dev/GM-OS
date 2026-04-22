@@ -1062,10 +1062,11 @@
     "favorite": "Favoris",
     "debug": "Console Debug",
     "dice": "Dice-OS",
-    "whiteboard": "Whiteboard",
+    "whiteboard": "Tableau Blanc",
     "obsidian": "Nexus Wiki",
-    "journal": "Journal de Bord",
-    "save": "Sauvegarder",
+    "journal": "Journal de Jeu",
+    "rulebook": "Grimoire",
+    "save": "Enregistrer",
     "cancel": "Annuler",
     "loading": "Chargement...",
     "success": "Succès",
@@ -1351,8 +1352,27 @@
         "error_no_system": "Aucun système actif pour classer la fiche.",
         "error_write": "Impossible d'écrire la fiche dans le RAG",
         "btn_reset": "Réinitialiser",
-        "btn_back": "Retour",
-        "btn_finish": "Terminer"
+        "btn_back": "Forger d'autres règles",
+        "btn_finish": "Terminer",
+        "brainstorm_title": "Atelier de Brainstorm",
+        "brainstorm_desc": "Choisissez vos sources à gauche pour générer des idées, ou utilisez le champ \"Forge Libre\" pour un sujet spécifique.",
+        "custom_subject_label": "Sujet de Forge Libre",
+        "custom_subject_placeholder": "Ex: Règles de combat aérien, Système de santé mentale...",
+        "analyze_button": "Analyser les sources",
+        "source_adn_btn": "ADN",
+        "source_atelier_btn": "Atelier",
+        "empty_sources": "Aucune source sélectionnée",
+        "transmuting": "Transmutation en cours...",
+        "forge_button": "Forger le Système",
+        "abort_forge": "Arrêter la forge",
+        "waiting_transmutation": "En attente de transmutation",
+        "transmutation_waiting_desc": "Sélectionnez vos documents de règles à gauche pour extraire la structure du jeu.",
+        "adn_built": "ADN Construit",
+        "configuration": "Configuration",
+        "mechanics": "Mécaniques",
+        "ready_title": "Système prêt pour la forge",
+        "ready_desc": "Cliquez pour enregistrer dans GM-OS",
+        "btn_save": "Enregistrer"
       },
       "notebook": {
         "title": "Navigateur NotebookLM",
@@ -1367,6 +1387,36 @@
         "import_success": "{{title}} ajouté au bac avec succès.",
         "import_error": "ERREUR : ÉCHEC DE L'IMPORTATION.",
         "select_notebook_hint": "Sélectionnez un carnet pour voir les parchemins"
+      },
+      "workshop_viewer": {
+        "syncing": "Synchronisation de l'Atelier...",
+        "search_placeholder": "Rechercher une règle ou une note...",
+        "create_button": "Créer une Règle",
+        "available_files": "{{count}} fiches disponibles",
+        "no_results_title": "Aucune fiche trouvée",
+        "no_results_desc": "Utilisez l'Atelier de Forge pour générer de nouvelles règles.",
+        "rule_forged": "RÈGLE FORGÉE",
+        "ai_generated_desc": "Documentation forge générée via Intelligence Artificielle.",
+        "md_version": "MD VERSION",
+        "dynamic_grimoire": "Grimoire Dynamique",
+        "export_obsidian": "Exporter vers Obsidian",
+        "edit_rule": "Éditer la règle",
+        "close_grimoire": "Fermer le Grimoire",
+        "share_players": "Partager aux Joueurs",
+        "rule_title_placeholder": "TITRE DE LA RÈGLE...",
+        "grimoire_edition": "Édition Grimoire",
+        "cancel": "Annuler",
+        "save": "Sauvegarder",
+        "markdown_editor": "Éditeur Markdown",
+        "editor_placeholder": "Écrivez votre règle ici en Markdown...",
+        "filter_all": "Toutes les fiches",
+        "filter_rules": "Règles Forgées",
+        "filter_memories": "Souvenirs",
+        "filter_scenarios": "Scénarios",
+        "save_success": "Règle sauvegardée avec succès.",
+        "save_error": "Erreur lors de la sauvegarde.",
+        "critical_save_error": "Une erreur critique est survenue lors de la sauvegarde.",
+        "dynamic_render": "Rendu Dynamique"
       }
     },
     "chronicle_forge_module": {
@@ -1839,6 +1889,7 @@
         "search_placeholder": "Rechercher des campagnes...",
         "import_nexus": "IMPORTER UN BUNDLE NEXUS",
         "create_campaign": "CRÉER UNE CAMPAGNE",
+        "deactivate_campaign": "DÉSACTIVER LA CAMPAGNE",
         "manage": "GÉRER"
       },
       "status": {
@@ -1992,7 +2043,9 @@
         "tactical": "Tactique",
         "ai": "Intelligence",
         "loot": "Trésors",
-        "notebook": "Connaissance"
+        "notebook": "Connaissance",
+        "workshop": "Atelier",
+        "system_ref": "Référence Système"
       },
       "core": {
         "title": "Système de Jeu Core",
@@ -2023,6 +2076,9 @@
         "title": "Combat & Initiative",
         "initiative_subtitle": "Séquence Temporelle",
         "description": "Gérez la brutalité des rencontres. Définissez comment l'ordre de combat est établi et comment la santé des entités est suivie.",
+        "stats_title": "Statistiques Suivies",
+        "initiative_title": "Initiative & Séquence",
+        "damage_title": "Types de Dégâts",
         "init_formula_label": "Formule Initiative",
         "init_formula_placeholder": "Ex: 1d20 + @Init",
         "health_type_label": "Gestion de la Santé",
@@ -2063,7 +2119,9 @@
           "extreme": "Portée extrême"
         },
 
-        "grid_placeholder": "Unités..."
+        "grid_placeholder": "Unités...",
+        "no_config": "Pas de configuration tactique",
+        "ai_toggle": "Optimisation Tactique"
       },
       "ai": {
         "title": "Intelligence Artificielle",
@@ -2078,12 +2136,14 @@
         "persona_prompt_placeholder": "Consignes personnalisées pour {{name}}...",
         "style_technical": "Technique et immersif",
         "sync_success": "Résonances éthériques synchronisées",
-        "sync_error": "Échec de la résonance"
+        "sync_error": "Échec de la résonance",
+        "instructions_label": "Protocoles Système (Prompt Global)"
       },
 
       "loot": {
         "title": "Tables de Butin",
         "subtitle": "Générateur de Trésors",
+        "no_config": "Aucune table de butin définie",
         "description": "Définissez les récompenses et trésors. Vous pouvez créer des tables simples ou imbriquées pour générer des loots complexes.",
         "new_table_name": "Nouvelle Table",
         "create_btn": "Créer une Table",
@@ -2112,7 +2172,9 @@
         "description": "Connectez votre base de connaissance externe pour une érudition infinie de l'IA.",
         "link_label": "Point d'Entrée Neural Link",
         "placeholder": "https://notebooklm.google.com/notebook/...",
-        "hint": "En liant un Notebook, l'Oracle pourra citer des passages précis des règles ou du lore lors de vos sessions."
+        "hint": "En liant un Notebook, l'Oracle pourra citer des passages précis des règles ou du lore lors de vos sessions.",
+        "open_button": "Ouvrir le NotebookLM",
+        "no_link": "Aucun NotebookLM lié"
       }
     },
     "forms": {
@@ -2288,11 +2350,14 @@
         "subtitle": "Configurez les informations fondamentales et le moteur de jeu.",
         "name_label": "Nom de l'Opération",
         "name_placeholder": "ex: Les Chroniques du Vide",
-        "system_label": "Référentiel Système",
+        "system_label": "Système de Jeu",
         "system_groups": {
           "drivers": "Moteurs de Jeu (Drivers)",
           "templates": "Interface Utilisateur (Templates)"
         },
+        "obsidian_vault_label": "Coffre Obsidian (Nexus Wiki)",
+        "obsidian_vault_placeholder": "Chemin vers votre coffre Obsidian...",
+        "btn_browse": "Parcourir",
         "description_label": "Tagline / Accroche",
         "description_placeholder": "Une brève présentation pour votre aventure..."
       },

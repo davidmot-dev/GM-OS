@@ -13,10 +13,11 @@ Bienvenue dans le centre de connaissances de GM-OS. Ce répertoire centralise to
 *   **[Light-OS User Guide](./User%20Guides/Light-OS_User_Guide.md)** : (En cours de rédaction) Manuel des effets lumineux.
 
 ## 🚀 Suivi du Développement
+*   **[Roadmap & Jalons](./docs/planning/2026-04-22-ui-stabilization-milestone.md)** : Suivi des fonctionnalités et des corrections.
 *   **[Lessons Learned](./Lessons_Learned.md)** : Base de connaissances sur les défis et solutions techniques.
-*   **[Roadmap & Jalons](./docs/planning/2026-04-21-immersion-stabilization-milestones.md)** : Suivi des fonctionnalités et des corrections.
 
 ## 📝 Historique des Walkthroughs
+*   **[Stabilisation UI & Obsidian (2026-04-22)](./walkthroughs/2026-04-22-ui-obsidian-stabilization.md)**
 *   **[Partage de Règles (2026-04-22)](./walkthroughs/2026-04-22-rule-sharing-implementation.md)**
 *   **[Expansion Light-OS (2026-04-21)](./walkthroughs/2026-04-21-light-os-expansion.md)**
 *   **[Stabilisation Nexus & Dice (2026-04-21)](./walkthroughs/2026-04-21-nexus-dice-stabilization.md)**

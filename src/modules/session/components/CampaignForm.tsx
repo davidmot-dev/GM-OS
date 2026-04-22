@@ -10,13 +10,14 @@ import {
     Info, 
     ExternalLink, 
     Save, X, BookOpen, Map, ArrowLeft, Fingerprint, Edit3, Loader2, MapPin, Brain, PenTool, Check,
-    Users
+    Users, Folder
 } from 'lucide-react';
 import NpcManagement from './NpcManagement';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import { useCampaignEditor, type CampaignSectionId } from '../hooks/useCampaignEditor';
+import { Select } from '../../../components/common/Select';
 
 interface CampaignFormProps {
     campaign?: Campaign | { campaignId: string };
@@ -38,6 +39,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
         campaignPath, setCampaignPath,
         activeLocationIds, setActiveLocationIds,
         aiPersonas, setAiPersonas,
+        obsidianPath, setObsidianPath,
         
         isMediaBrowserOpen, setIsMediaBrowserOpen,
         isGenerating,
@@ -47,12 +49,28 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
         allDrivers,
         gems,
         campaignMaps,
+        clues,
         isEdit,
         hasUnsavedChanges,
         
         handleSubmit,
         handleAutoGenerate
     } = useCampaignEditor({ campaign, isNew, onClose });
+
+    const systemOptions = [
+        { value: 'drivers-header', label: t('modules:session.campaign_form.identity.system_groups.drivers'), isHeader: true },
+        ...allDrivers.map(d => ({
+            value: d.id,
+            label: d.name,
+            icon: <span className="text-lg">{d.emoji}</span>
+        })),
+        { value: 'templates-header', label: t('modules:session.campaign_form.identity.system_groups.templates'), isHeader: true },
+        ...allTemplates.map(t_val => ({
+            value: t_val.id,
+            label: t_val.name,
+            icon: <span className="text-lg">{t_val.emoji}</span>
+        }))
+    ];
 
     const resolvedWallpaper = useMediaUrl(wallpaperUrl);
 
@@ -179,23 +197,14 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/60 px-2 flex items-center gap-2">
                                             <Sparkles size={12} /> {t('modules:session.campaign_form.identity.system_label')}
                                         </label>
-                                        <select 
+                                        <Select 
                                             value={system}
-                                            onChange={e => setSystem(e.target.value)}
+                                            onChange={setSystem}
+                                            options={systemOptions}
                                             title={t('modules:session.campaign_form.identity.system_label')}
-                                            className="w-full bg-app-surface/20 border border-app-border/10 rounded-2xl py-5 px-6 text-base font-bold tracking-wide focus:outline-none focus:border-accent/40 transition-all text-app-text appearance-none cursor-pointer"
-                                        >
-                                            <optgroup label={t('modules:session.campaign_form.identity.system_groups.drivers')} className="bg-app-bg text-app-text">
-                                                {allDrivers.map(d => (
-                                                    <option key={d.id} value={d.id} className="bg-app-bg text-app-text">{d.emoji} {d.name}</option>
-                                                ))}
-                                            </optgroup>
-                                            <optgroup label={t('modules:session.campaign_form.identity.system_groups.templates')} className="bg-app-bg text-app-text">
-                                                {allTemplates.map(t_val => (
-                                                    <option key={t_val.id} value={t_val.id} className="bg-app-bg text-app-text">{t_val.emoji} {t_val.name}</option>
-                                                ))}
-                                            </optgroup>
-                                        </select>
+                                            className="w-full"
+                                            buttonClassName="!bg-app-surface/20 !border-app-border/10 !rounded-2xl !py-5 !px-6 !text-base !font-bold !tracking-wide"
+                                        />
                                     </div>
                                 </div>
 
@@ -209,6 +218,32 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                         placeholder={t('modules:session.campaign_form.identity.description_placeholder')}
                                         className="w-full bg-app-surface/20 border border-app-border/10 rounded-2xl py-5 px-6 text-base font-bold focus:outline-none focus:border-accent/40 transition-all text-app-text/70 shadow-inner"
                                     />
+                                </div>
+
+                                <div className="space-y-4">
+                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/60 px-2 flex items-center gap-2">
+                                        <Folder size={12} /> {t('modules:session.campaign_form.identity.obsidian_vault_label')}
+                                    </label>
+                                    <div className="flex gap-4">
+                                        <input 
+                                            value={obsidianPath}
+                                            readOnly
+                                            placeholder={t('modules:session.campaign_form.identity.obsidian_vault_placeholder')}
+                                            className="flex-1 bg-app-surface/20 border border-app-border/10 rounded-2xl py-5 px-6 text-base font-bold focus:outline-none text-app-text/40 shadow-inner"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={async () => {
+                                                if (window.appBridge?.obsidian?.selectVault) {
+                                                    const path = await window.appBridge.obsidian.selectVault();
+                                                    if (path) setObsidianPath(path);
+                                                }
+                                            }}
+                                            className="px-8 py-5 bg-accent/10 border border-accent/20 rounded-2xl text-accent font-black uppercase tracking-widest text-[10px] hover:bg-accent hover:text-app-bg transition-all"
+                                        >
+                                            {t('modules:session.campaign_form.identity.btn_browse')}
+                                        </button>
+                                    </div>
                                 </div>
 
                             </div>

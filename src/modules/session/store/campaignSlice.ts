@@ -13,6 +13,7 @@ import type { StateCreator } from 'zustand';
 import { gmToast } from '../../../stores/useToastStore';
 import type { Campaign, LayoutConfig } from './types';
 import { sessionBackupManager } from '../logic/SessionBackupManager';
+import { useObsidianStore } from '../useObsidianStore';
 
 // ─────────────────────────────────────────────
 // State
@@ -65,6 +66,12 @@ export const createCampaignSlice: StateCreator<CampaignSlice, [], [], CampaignSl
 
     updateCampaign: (id, updates) => {
         console.log(`[CampaignSlice] Updating campaign ${id}:`, updates);
+        
+        // Sync Obsidian Vault if this is the active campaign and obsidianPath is being updated
+        if (id === get().activeCampaignId && updates.obsidianPath) {
+            useObsidianStore.getState().setVaultPath(updates.obsidianPath);
+        }
+
         set((state) => ({
             campaigns: state.campaigns.map((c) => (c.id === id ? { ...c, ...updates } : c)),
         }));

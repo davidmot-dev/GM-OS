@@ -4,6 +4,10 @@
   "activeModule": "Active Module",
   "theme": "Theme",
   "sessionMode": "Session Mode",
+  "status": {
+    "enabled": "Enabled",
+    "disabled": "Disabled"
+  },
 
   "spotlight": {
     "placeholder": "Search for an entity, music, rule...",

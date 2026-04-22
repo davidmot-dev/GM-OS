@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useBrainstormStore } from '../store/useBrainstormStore';
 import { forgeService } from '../../ForgeService';
 import { useSessionOSStore } from '../../../session/useSessionOSStore';
-import { X, Zap, Sparkles, Rocket, ChevronLeft, Shield, AlertTriangle } from 'lucide-react';
+import { X, Zap, Sparkles, Rocket, ChevronLeft, Shield, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { DEFAULT_GAME_DRIVERS } from '../../../../data/defaultGameDrivers';
 import DiscoveryUI from './DiscoveryUI';
 import type { BrainstormCandidate } from '../types';
@@ -16,7 +16,7 @@ import type { BrainstormCandidate } from '../types';
 export const BrainstormOverlay: React.FC = () => {
   const { t } = useTranslation(['modules', 'common']);
   const brainstormStore = useBrainstormStore();
-  const { activeCampaignId, campaigns, updateCampaign, customGameDrivers } = useSessionOSStore();
+  const { activeCampaignId, campaigns, updateCampaign, customGameDrivers, setCurrentView } = useSessionOSStore();
   
   const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
   const allDrivers = [...DEFAULT_GAME_DRIVERS, ...customGameDrivers];
@@ -39,7 +39,6 @@ export const BrainstormOverlay: React.FC = () => {
   const handleSubjectForge = useCallback(async (subject: string) => {
     if (!brainstormStore.notebookId) return;
     brainstormStore.setProcessing(true);
-    brainstormStore.setSubject(subject);
     try {
       const candidates = await forgeService.discoverCandidates(
         brainstormStore.notebookId,
@@ -130,7 +129,7 @@ export const BrainstormOverlay: React.FC = () => {
             <div className="h-8 w-px bg-white/5 mx-2" />
 
             <div className="flex flex-col">
-              <span className="text-[10px] font-black text-white/20 uppercase tracking-widest mb-0.5">{t('campaign_form.identity.system_label')}</span>
+              <span className="text-[10px] font-black text-white/20 uppercase tracking-widest mb-0.5">{t('session.campaign_form.identity.system_label')}</span>
               <button 
                 onClick={() => brainstormStore.setError('SELECT_SYSTEM')}
                 className="flex items-center gap-2 text-xs font-bold text-purple-400 hover:text-white transition-all group"
@@ -256,7 +255,7 @@ export const BrainstormOverlay: React.FC = () => {
             <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="flex items-center justify-between mb-8">
                 <button 
-                  onClick={() => brainstormStore.setStep('discovery')}
+                  onClick={() => brainstormStore.startDiscovery()}
                   className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-purple-400 hover:text-white transition-colors"
                 >
                   <ChevronLeft size={16} /> {t('session.forge_module.atelier.back_to_subjects')}
@@ -280,7 +279,14 @@ export const BrainstormOverlay: React.FC = () => {
                       </span>
                       <Rocket size={16} className="text-white/10 group-hover:text-purple-400 transition-colors" />
                     </div>
-                    <h3 className="text-xl font-bold font-display text-white group-hover:text-purple-400 transition-colors">{candidate.title}</h3>
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-xl font-bold font-display text-white group-hover:text-purple-400 transition-colors flex items-center gap-2">
+                        {candidate.title}
+                        {brainstormStore.forgedCandidateIds.includes(candidate.id) && (
+                          <CheckCircle2 size={16} className="text-emerald-400" />
+                        )}
+                      </h3>
+                    </div>
                     <p className="text-sm text-white/40 leading-relaxed line-clamp-3">{candidate.summary}</p>
                     <div className="mt-4 flex flex-wrap gap-2">
                       {candidate.tags.map(tag => (
@@ -332,6 +338,16 @@ export const BrainstormOverlay: React.FC = () => {
 
                <div className="flex justify-end gap-6 pt-8">
                  <button onClick={() => brainstormStore.setStep('listing')} className="px-10 py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl font-black uppercase tracking-widest transition-all">{t('session.forge_module.atelier.btn_back')}</button>
+                 <button 
+                   onClick={() => {
+                     brainstormStore.reset();
+                     setCurrentView('rule-workshop');
+                   }} 
+                   className="px-12 py-4 bg-accent/20 border border-accent/40 text-accent hover:bg-accent hover:text-white rounded-2xl font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
+                 >
+                   <BookOpen size={18} />
+                   {t('modules:session.header.grimoire_label')}
+                 </button>
                  <button onClick={() => brainstormStore.reset()} className="px-12 py-4 bg-purple-600 hover:bg-purple-500 text-white rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-purple-900/20 transition-all hover:scale-105 active:scale-95">{t('session.forge_module.atelier.btn_finish')}</button>
                </div>
             </div>

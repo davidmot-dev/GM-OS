@@ -1,6 +1,7 @@
 import { gmToast } from '../../../stores/useToastStore';
 import { useJournalStore } from '../../journal/useJournalStore';
 import { useMediaStore } from '../../../stores/useMediaStore';
+import { useObsidianStore } from '../useObsidianStore';
 import type { SessionOSStore } from '../store/index';
 import type { GameSession, Campaign } from '../store/types';
 
@@ -27,12 +28,21 @@ export class SessionManager {
 
         if (id) {
             const campaign = state.campaigns.find((c) => c.id === id);
+            
+            // Sync Obsidian Vault if path is defined
+            if (campaign?.obsidianPath) {
+                useObsidianStore.getState().setVaultPath(campaign.obsidianPath);
+            }
+
             useJournalStore.getState().stopJournal();
             useJournalStore.getState().addEvent({
                 type: 'SYSTEM',
                 title: 'Campagne activée',
                 content: `La campagne "${campaign?.name || id}" est maintenant active.`,
             });
+        } else {
+            useJournalStore.getState().stopJournal();
+            gmToast('Campagne désactivée.', 'info');
         }
     }
 
@@ -67,6 +77,12 @@ export class SessionManager {
         );
 
         const campaign = updatedCampaigns.find(c => c.id === session.campaignId);
+
+        // Sync Obsidian Vault if path is defined
+        if (campaign?.obsidianPath) {
+            useObsidianStore.getState().setVaultPath(campaign.obsidianPath);
+        }
+
         set({
             sessions: updatedSessions,
             campaigns: updatedCampaigns,

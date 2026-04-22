@@ -63,6 +63,7 @@ export interface Campaign {
     notebookUrl?: string;
     systemPath?: string;
     campaignPath?: string;
+    obsidianPath?: string;
 
     // Social Graph Optimization
     nodePositions?: Record<string, { x: number; y: number }>;

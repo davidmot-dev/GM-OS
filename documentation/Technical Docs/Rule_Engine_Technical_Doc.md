@@ -35,3 +35,7 @@ Le service `ObsidianExportService` permet de copier les règles vers un coffre e
 
 ## 🛡️ Zéro-Any & Types
 Toutes les fiches de règles utilisent l'interface `RuleCard` pour garantir un typage strict durant la manipulation dans l'UI.
+## 🛡️ Robustesse de l'UI
+Pour garantir une expérience stable dans Electron, l'application évite les éléments HTML natifs pouvant provoquer des comportements imprévisibles du gestionnaire de fenêtres (ex: `<select>`).
+- **Composant Select** : Un composant React personnalisé (`src/components/common/Select.tsx`) est utilisé pour les listes déroulantes, assurant que les menus restent des overlays internes à l'application.
+- **Groupement** : Le composant supporte des en-têtes de groupes (`isHeader`) pour organiser logiquement les options (ex: Pilotes vs Templates).

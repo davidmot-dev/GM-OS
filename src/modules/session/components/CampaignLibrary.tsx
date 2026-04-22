@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Plus, Search, BookOpen, Trash2, ArrowRight, Settings, Package, Upload } from 'lucide-react';
+import { Plus, Search, BookOpen, Trash2, ArrowRight, Settings, Package, Upload, Power } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { gmConfirm, gmCustom } from '../../../stores/useModalStore';
 import { useSessionOSStore } from '../useSessionOSStore';
@@ -114,6 +114,16 @@ const CampaignLibrary: React.FC = () => {
                     <Upload size={20} />
                     {t('modules:session.campaign_library.actions.import_nexus')}
                 </button>
+
+                {activeCampaignId && (
+                    <button
+                        onClick={() => setActiveCampaign(null)}
+                        className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 px-6 py-3 rounded-xl text-red-500 font-bold hover:bg-red-500 hover:text-white transition-all hover:-translate-y-0.5"
+                    >
+                        <Power size={20} />
+                        {t('modules:session.campaign_library.actions.deactivate_campaign')}
+                    </button>
+                )}
 
                 <button
                     onClick={() => gmCustom('campaign-add')}

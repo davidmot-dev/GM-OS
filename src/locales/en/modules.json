@@ -1036,6 +1036,7 @@
     "whiteboard": "Whiteboard",
     "obsidian": "Nexus Wiki",
     "journal": "Game Journal",
+    "rulebook": "Rulebook",
     "save": "Save",
     "cancel": "Cancel",
     "loading": "Loading...",
@@ -1316,8 +1317,27 @@
         "error_no_system": "No active system to classify the sheet.",
         "error_write": "Unable to write sheet to RAG",
         "btn_reset": "Reset",
-        "btn_back": "Back",
-        "btn_finish": "Finish"
+        "btn_back": "Forge More Rules",
+        "btn_finish": "Finish",
+        "brainstorm_title": "Brainstorm Atelier",
+        "brainstorm_desc": "Select your sources on the left to generate ideas, or use the 'Free Forge' field for a specific subject.",
+        "custom_subject_label": "Free Forge Subject",
+        "custom_subject_placeholder": "e.g., Aerial combat rules, Mental health system...",
+        "analyze_button": "Analyze Sources",
+        "source_adn_btn": "DNA",
+        "source_atelier_btn": "Atelier",
+        "empty_sources": "No sources selected",
+        "transmuting": "Transmuting...",
+        "forge_button": "Forge System",
+        "abort_forge": "Abort Forge",
+        "waiting_transmutation": "Awaiting Transmutation",
+        "transmutation_waiting_desc": "Select your rule documents on the left to extract the game structure.",
+        "adn_built": "Built DNA",
+        "configuration": "Configuration",
+        "mechanics": "Mechanics",
+        "ready_title": "System ready for forge",
+        "ready_desc": "Click to save in GM-OS",
+        "btn_save": "Save"
       },
       "notebook": {
         "title": "NotebookLM Browser",
@@ -1332,6 +1352,36 @@
         "import_success": "{{title}} successfully added to bucket.",
         "import_error": "ERROR: IMPORT FAILED.",
         "select_notebook_hint": "Select a notebook to view scrolls"
+      },
+      "workshop_viewer": {
+        "syncing": "Synchronizing Atelier...",
+        "search_placeholder": "Search a rule or note...",
+        "create_button": "Create a Rule",
+        "available_files": "{{count}} sheets available",
+        "no_results_title": "No sheets found",
+        "no_results_desc": "Use the Forge Atelier to generate new rules.",
+        "rule_forged": "FORGED RULE",
+        "ai_generated_desc": "Forge documentation generated via Artificial Intelligence.",
+        "md_version": "MD VERSION",
+        "dynamic_grimoire": "Dynamic Grimoire",
+        "export_obsidian": "Export to Obsidian",
+        "edit_rule": "Edit rule",
+        "close_grimoire": "Close Grimoire",
+        "share_players": "Share with Players",
+        "rule_title_placeholder": "RULE TITLE...",
+        "grimoire_edition": "Grimoire Edition",
+        "cancel": "Cancel",
+        "save": "Save",
+        "markdown_editor": "Markdown Editor",
+        "editor_placeholder": "Write your rule here in Markdown...",
+        "filter_all": "All Cards",
+        "filter_rules": "Forged Rules",
+        "filter_memories": "Memories",
+        "filter_scenarios": "Scenarios",
+        "save_success": "Rule saved successfully.",
+        "save_error": "Error while saving.",
+        "critical_save_error": "A critical error occurred while saving.",
+        "dynamic_render": "Dynamic Render"
       }
     },
     "chronicle_forge_module": {
@@ -1804,6 +1854,7 @@
         "search_placeholder": "Search campaigns...",
         "import_nexus": "IMPORT NEXUS BUNDLE",
         "create_campaign": "CREATE NEW CAMPAIGN",
+        "deactivate_campaign": "DEACTIVATE CAMPAIGN",
         "manage": "MANAGE"
       },
       "status": {
@@ -1957,7 +2008,9 @@
         "tactical": "Tactical",
         "ai": "Intelligence",
         "loot": "Loot",
-        "notebook": "Knowledge"
+        "notebook": "Knowledge",
+        "workshop": "Workshop",
+        "system_ref": "System Reference"
       },
       "core": {
         "title": "Core Game System",
@@ -1988,6 +2041,9 @@
         "title": "Combat & Initiative",
         "initiative_subtitle": "Time Sequence",
         "description": "Manage the brutality of encounters. Define how combat order is established and how entity health is tracked.",
+        "stats_title": "Tracked Statistics",
+        "initiative_title": "Initiative & Sequence",
+        "damage_title": "Damage Types",
         "init_formula_label": "Initiative Formula",
         "init_formula_placeholder": "Ex: 1d20 + @Init",
         "health_type_label": "Health Management",
@@ -2028,7 +2084,9 @@
           "extreme": "Extreme Range"
         },
 
-        "grid_placeholder": "Units..."
+        "grid_placeholder": "Units...",
+        "no_config": "No tactical configuration",
+        "ai_toggle": "Tactical Optimization"
       },
       "ai": {
         "title": "Artificial Intelligence",
@@ -2043,12 +2101,14 @@
         "persona_prompt_placeholder": "Custom instructions for {{name}}...",
         "style_technical": "Technical and immersive",
         "sync_success": "Aetheric resonances synchronized",
-        "sync_error": "Resonance failed"
+        "sync_error": "Resonance failed",
+        "instructions_label": "System Protocols (Global Prompt)"
       },
 
       "loot": {
         "title": "Loot Tables",
         "subtitle": "Treasure Generator",
+        "no_config": "No loot tables defined",
         "description": "Define rewards and treasures. You can create simple or nested tables to generate complex loot.",
         "new_table_name": "New Table",
         "create_btn": "Create a Table",
@@ -2077,7 +2137,9 @@
         "description": "Connect your external knowledge base for infinite AI erudition.",
         "link_label": "Neural Link Entry Point",
         "placeholder": "https://notebooklm.google.com/notebook/...",
-        "hint": "By linking a Notebook, the Oracle will be able to cite specific passages of rules or lore during your sessions."
+        "hint": "By linking a Notebook, the Oracle will be able to cite specific passages of rules or lore during your sessions.",
+        "open_button": "Open NotebookLM",
+        "no_link": "No NotebookLM linked"
       }
     },
     "forms": {
@@ -2253,11 +2315,14 @@
         "subtitle": "Configure fundamental information and game engine parameters.",
         "name_label": "Operation Name",
         "name_placeholder": "e.g.: Chronicles of the Void",
-        "system_label": "System Repository",
+        "system_label": "Game System",
         "system_groups": {
           "drivers": "Game Engines (Drivers)",
           "templates": "User Interface (Templates)"
         },
+        "obsidian_vault_label": "Obsidian Vault (Nexus Wiki)",
+        "obsidian_vault_placeholder": "Path to your Obsidian vault...",
+        "btn_browse": "Browse",
         "description_label": "Tagline / Teaser",
         "description_placeholder": "A brief presentation of your adventure..."
       },

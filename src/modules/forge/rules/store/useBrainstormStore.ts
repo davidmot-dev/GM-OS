@@ -14,6 +14,7 @@ export const useBrainstormStore = create<BrainstormState>((set) => ({
   notebookId: null,
   selectedSourceIds: [],
   customSubject: '',
+  forgedCandidateIds: [],
 
   setNotebook: (id) => set({ notebookId: id }),
   setSources: (ids) => set({ selectedSourceIds: ids }),
@@ -25,7 +26,8 @@ export const useBrainstormStore = create<BrainstormState>((set) => ({
     step: 'discovery', 
     error: null,
     candidates: [],
-    activeCard: null 
+    activeCard: null,
+    forgedCandidateIds: [] 
   }),
 
   setSubject: (subject) => set({
@@ -38,7 +40,6 @@ export const useBrainstormStore = create<BrainstormState>((set) => ({
 
   setCandidates: (candidates) => set({ 
     candidates, 
-    step: 'listing', 
     isProcessing: false 
   }),
 
@@ -51,7 +52,8 @@ export const useBrainstormStore = create<BrainstormState>((set) => ({
   completeForge: (card) => set((state) => ({ 
     activeCard: card, 
     isProcessing: false,
-    step: 'completed'
+    step: 'completed',
+    forgedCandidateIds: [...state.forgedCandidateIds, card.id]
   })),
 
   setError: (error) => set({ 
@@ -66,6 +68,7 @@ export const useBrainstormStore = create<BrainstormState>((set) => ({
     error: null,
     isProcessing: false,
     selectedSourceIds: [],
-    customSubject: ''
+    customSubject: '',
+    forgedCandidateIds: []
   })
 }));

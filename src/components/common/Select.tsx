@@ -7,6 +7,7 @@ export interface SelectOption {
     value: string;
     label: string | ReactNode;
     icon?: ReactNode;
+    isHeader?: boolean;
 }
 
 interface SelectProps {
@@ -19,6 +20,7 @@ interface SelectProps {
     title?: string;
     disabled?: boolean;
     renderOption?: (option: SelectOption) => ReactNode;
+    buttonClassName?: string;
 }
 
 /**
@@ -35,7 +37,8 @@ export const Select: React.FC<SelectProps> = ({
     className = '',
     title,
     disabled = false,
-    renderOption
+    renderOption,
+    buttonClassName = ''
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -72,6 +75,7 @@ export const Select: React.FC<SelectProps> = ({
                     rounded-lg text-sm text-app-text transition-all duration-300
                     focus:outline-none focus:border-app-accent/50
                     ${isOpen ? 'border-app-accent/50 shadow-glow-accent/10' : ''}
+                    ${buttonClassName}
                 `}
             >
                 <div className="flex items-center gap-2 truncate">
@@ -108,34 +112,43 @@ export const Select: React.FC<SelectProps> = ({
                                     Aucune option disponible
                                 </div>
                             ) : (
-                                options.map((option) => (
-                                    <button
-                                        key={option.value}
-                                        type="button"
-                                        onClick={() => handleSelect(option.value)}
-                                        className={`
-                                            flex items-center justify-between w-full px-3 py-2.5 rounded-lg
-                                            text-sm text-left transition-all group
-                                            ${value === option.value 
-                                                ? 'bg-app-accent/20 text-app-accent font-bold' 
-                                                : 'hover:bg-app-text/5 text-app-text/80'
-                                            }
-                                        `}
-                                    >
-                                        <div className="flex items-center gap-2.5 truncate">
-                                            {option.icon && (
-                                                <span className={`${value === option.value ? 'text-app-accent' : 'text-app-text/40 group-hover:text-app-text/60'}`}>
-                                                    {option.icon}
-                                                </span>
-                                            )}
-                                            {renderOption ? renderOption(option) : (
-                                                <span className="truncate">{option.label}</span>
-                                            )}
+                                options.map((option, index) => (
+                                    option.isHeader ? (
+                                        <div 
+                                            key={`header-${index}`} 
+                                            className="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-app-accent/50 bg-app-accent/5 mt-1 first:mt-0"
+                                        >
+                                            {option.label}
                                         </div>
-                                        {value === option.value && (
-                                            <Check size={14} className="text-app-accent flex-shrink-0" />
-                                        )}
-                                    </button>
+                                    ) : (
+                                        <button
+                                            key={option.value}
+                                            type="button"
+                                            onClick={() => handleSelect(option.value)}
+                                            className={`
+                                                flex items-center justify-between w-full px-3 py-2.5 rounded-lg
+                                                text-sm text-left transition-all group
+                                                ${value === option.value 
+                                                    ? 'bg-app-accent/20 text-app-accent font-bold' 
+                                                    : 'hover:bg-app-text/5 text-app-text/80'
+                                                }
+                                            `}
+                                        >
+                                            <div className="flex items-center gap-2.5 truncate">
+                                                {option.icon && (
+                                                    <span className={`${value === option.value ? 'text-app-accent' : 'text-app-text/40 group-hover:text-app-text/60'}`}>
+                                                        {option.icon}
+                                                    </span>
+                                                )}
+                                                {renderOption ? renderOption(option) : (
+                                                    <span className="truncate">{option.label}</span>
+                                                )}
+                                            </div>
+                                            {value === option.value && (
+                                                <Check size={14} className="text-app-accent flex-shrink-0" />
+                                            )}
+                                        </button>
+                                    )
                                 ))
                             )}
                         </div>

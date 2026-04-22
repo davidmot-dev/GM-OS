@@ -30,6 +30,7 @@ export interface BrainstormState {
   notebookId: string | null;
   selectedSourceIds: string[];
   customSubject: string;
+  forgedCandidateIds: string[];
   
   // Actions
   setNotebook: (id: string) => void;

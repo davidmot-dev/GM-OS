@@ -39,6 +39,7 @@ const SessionHeader: React.FC<SessionHeaderProps> = ({
             case 'players': return t('modules:session.header.players');
             case 'session-prep': return t('modules:session.header.session_prep');
             case 'session-focus': return t('modules:session.header.session_focus');
+            case 'rulebook': return t('modules:session.header.rules_label');
             default: return currentView.replace('-', ' ');
         }
     };

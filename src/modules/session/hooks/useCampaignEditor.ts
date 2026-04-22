@@ -38,6 +38,7 @@ export function useCampaignEditor({ campaign, isNew, onClose }: UseCampaignEdito
     const [notebookUrl, setNotebookUrl] = useState(fullCampaign?.notebookUrl || '');
     const [systemPath, setSystemPath] = useState(fullCampaign?.systemPath || '');
     const [campaignPath, setCampaignPath] = useState(fullCampaign?.campaignPath || '');
+    const [obsidianPath, setObsidianPath] = useState(fullCampaign?.obsidianPath || '');
     const [activeLocationIds, setActiveLocationIds] = useState<string[]>(fullCampaign?.activeLocationIds || []);
     const [aiPersonas, setAiPersonas] = useState<Record<string, string>>(fullCampaign?.aiPersonas || {});
     
@@ -62,6 +63,7 @@ export function useCampaignEditor({ campaign, isNew, onClose }: UseCampaignEdito
             setNotebookUrl(fullCampaign.notebookUrl || '');
             setSystemPath(fullCampaign.systemPath || '');
             setCampaignPath(fullCampaign.campaignPath || '');
+            setObsidianPath(fullCampaign.obsidianPath || '');
             setActiveLocationIds(fullCampaign.activeLocationIds || []);
             setAiPersonas(fullCampaign.aiPersonas || {});
         }
@@ -87,6 +89,7 @@ export function useCampaignEditor({ campaign, isNew, onClose }: UseCampaignEdito
             notebookUrl,
             systemPath,
             campaignPath,
+            obsidianPath,
             activeLocationIds,
             aiPersonas
         } as Partial<Campaign>;
@@ -136,6 +139,7 @@ export function useCampaignEditor({ campaign, isNew, onClose }: UseCampaignEdito
         campaignPath, setCampaignPath,
         activeLocationIds, setActiveLocationIds,
         aiPersonas, setAiPersonas,
+        obsidianPath, setObsidianPath,
         
         isMediaBrowserOpen, setIsMediaBrowserOpen,
         isGenerating,

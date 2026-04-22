@@ -62,3 +62,12 @@ Ce document consigne les défis techniques, les erreurs rencontrées et les solu
 ### 2. Export Inter-App (Obsidian)
 - **Défi** : Les MJ souhaitent conserver leurs règles forgées par l'IA dans leur coffre Obsidian personnel.
 - **Solution** : Implémenter un `ObsidianExportService` qui utilise le bridge pour écrire directement dans le dossier du coffre (vault) configuré, en gérant la conversion des métadonnées en frontmatter YAML.
+## 🎨 UI & Composants (2026-04-22)
+
+### 1. Bug des Fenêtres Externes (Native Select)
+- **Défi** : L'utilisation d'un élément `<select>` HTML natif dans l'interface Electron provoquait, sur certains systèmes, l'ouverture de la liste d'options dans une fenêtre OS séparée, hors du container GM-OS.
+- **Solution** : Remplacer systématiquement les `<select>` natifs par un composant `Select` personnalisé (React/Framer Motion). Ce composant simule le comportement d'un menu déroulant via un overlay interne, garantissant que l'UI reste confinée et stable dans le shell de l'application.
+
+### 2. Gestion de l'État "Nul" (Campagne Active)
+- **Défi** : Désactiver une campagne sans laisser le système dans un état instable ou avec des chemins de fichiers (Obsidian) orphelins.
+- **Solution** : Autoriser explicitement `null` pour `activeCampaignId` et synchroniser la mise à jour des chemins système (vault Obsidian) lors de cette transition. Cela permet un état de "repos" propre de l'application entre deux sessions ou campagnes.
