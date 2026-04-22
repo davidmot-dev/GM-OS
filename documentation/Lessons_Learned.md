@@ -1,73 +1,88 @@
 # 🧠 Lessons Learned - GM-OS v5
 
-Ce document consigne les défis techniques, les erreurs rencontrées et les solutions architecturales adoptées lors du développement de GM-OS v5.
+Ce document consigne les défis techniques, les erreurs rencontrées et les solutions architecturales adoptées lors du développement de GM-OS v5 et v6.
 
-## 🌉 MCP & Communication Inter-Processus
+---
 
-### 1. Corruption de flux JSON-RPC (2026-04-18)
-- **Défi** : Le serveur MCP Python renvoyait parfois des logs de debug (stdout) mélangés avec les réponses JSON, corrompant le parsing côté Electron.
-- **Solution** : 
-    - Rediriger tous les logs Python vers `stderr` ou un fichier log dédié.
-    - Utiliser un wrapper (`run_mcp.py`) pour isoler l'environnement d'exécution.
-    - Implémenter un buffer robuste dans `mcp_bridge.ts` pour accumuler les chunks de stdout jusqu'à obtenir un JSON complet.
+## 🔄 Synchronisation d'État & Bridge (Architecture Bridge)
 
-### 2. Désencapsulage des résultats MCP (2026-04-18)
-- **Défi** : Le protocole MCP enveloppe les retours d'outils dans un tableau `content`. Si le résultat est lui-même un JSON stringifié, l'UI doit faire plusieurs `JSON.parse`.
-- **Solution** : Implémenter un "Intelligent Unwrapper" dans le bridge Electron qui détecte les patterns `{"status": "success", ...}` et renvoie l'objet métier directement. Cela simplifie considérablement le code des composants React.
+### 1. Synchronisation Multi-Fenêtres (Zustand Persist)
+- **Défi** : Les stores Zustand (`persist`) ne se synchronisent pas automatiquement entre les fenêtres MJ et Player Hub.
+- **Leçon** : L'utilisation d'événements `storage` couplée à une réhydratation manuelle est plus légère que des messages IPC constants.
+- **Solution** : Écoute de `window.addEventListener('storage', ...)` et appel à `Store.persist.rehydrate()` lors de modifications clés (ex: dés, horloge).
 
-### 3. Expiration de Session Silencieuse (RPC Error 16)
-- **Défi** : NotebookLM (via l'API interne) invalide les sessions après un certain temps, renvoyant une erreur 16 opaque.
-- **Solution** : Créer un mécanisme de "Self-Healing" dans le bridge qui intercepte ce code d'erreur spécifique, déclenche une ré-authentification automatique via un process CLI masqué, et redémarre le serveur MCP de manière transparente pour l'utilisateur.
+### 2. Synchronisation de l'État Global (Deltas)
+- **Défi** : Envoyer le store complet (>1Mo) à chaque seconde saturait le réseau.
+- **Solution** : **Differential Sync (Deltas)**. Utilisation d'un utilitaire `isDeepEqual` pour ne diffuser que les propriétés modifiées. Réduction de 90% du trafic.
 
-## 🏗️ Architecture & Build
+### 3. IPC Race Condition
+- **Défi** : L'ordre de projection envoyé via IPC arrivait parfois avant que la fenêtre React cible ne soit initialisée.
+- **Solution** : **Verrou IPC Définitif** (`ipcCount`). Le projecteur ignore les données de son store local dès qu'il reçoit son premier signal direct, garantissant que la volonté du MJ prime sur l'état persistant.
+
+---
+
+## 🏗️ Architecture, Build & Typage
 
 ### 1. Conflits ESM / CommonJS dans Electron
-- **Défi** : L'utilisation de dépendances natives (ex: `ws`, `bufferutil`) dans le `main process` d'Electron provoque des erreurs de bundle avec Vite si `type: "module"` est activé.
-- **Solution** : 
-    - Externaliser les modules natifs dans `vite.config.ts`.
-    - Utiliser `createRequire(import.meta.url)` dans `main.ts` pour charger les modules CJS de manière sécurisée dans un environnement ESM.
+- **Défi** : Modules natifs (`ws`, `bufferutil`) incompatibles avec le bundle Vite ESM.
+- **Solution** : Externalisation dans `vite.config.ts` et usage de `createRequire(import.meta.url)` dans `main.ts`.
 
-### 2. Typage Strict "Zéro-Any"
-- **Défi** : Les objets complexes provenant d'APIs externes (NotebookLM) sont difficiles à typer intégralement.
-- **Solution** : Utiliser des interfaces TypeScript strictes même pour les réponses dynamiques. Si le type est inconnu, utiliser `unknown` avec un type guard au lieu de `any`.
+### 2. Typage Strict "Zéro-Any" (Standard AppBridge v2)
+- **Défi** : L'usage de `any` rendait le code fragile lors de la migration Electron -> Tauri.
+- **Solution** : Centralisation des interfaces (`DisplayInfo`, `RemoteAction`) dans `window.d.ts` et interdiction stricte de `any`. Utilisation d'interfaces stricts même pour les retours d'IA (NotebookLM).
 
-### 3. Le Grimoire et le découplage UI
-- **Découplage Forge/Grimoire** : La consultation des règles doit être isolée de l'interface de création (Forge) pour éviter toute confusion ou modification accidentelle. L'implémentation d'une vue `rulebook` dédiée (Grimoire) permet une expérience de lecture premium et sereine.
-- **État Global de Navigation** : L'utilisation de l'état global pour synchroniser les onglets des dashboards (ex: `templateDashboardTab`) facilite une navigation contextuelle cohérente depuis plusieurs points d'entrée (Cockpit, Header).
+### 3. Découplage UI (Forge/Grimoire)
+- **Défi** : Confusion entre l'interface de création de règles (Forge) et de consultation (Grimoire).
+- **Solution** : Isolation stricte des vues. Le Grimoire est une vue de lecture premium, tandis que la Forge est un atelier de génération.
 
-### 4. Sensibilité aux Slashes dans les URLs (Ollama) (2026-04-18)
-- **Défi** : Ollama renvoie une erreur 405 (Method Not Allowed) si l'URL de l'endpoint contient un slash final (ex: `http://127.0.0.1:11434/`), car la concaténation produit `//api/chat`.
-- **Solution** : Implémenter une normalisation systématique dans le service de bridge (Electron) pour supprimer les slashes de fin (`replace(/\/$/, '')`) avant toute requête, rendant l'interface robuste aux erreurs de saisie utilisateur.
+---
 
-## 💡 Immersion & Performance (V6)
+## 💡 Immersion & Performance
 
-### 1. Boucles Logiques vs Rendu React (Light-OS) (2026-04-21)
-- **Défi** : Mettre à jour l'état React 10 fois par seconde pour des effets lumineux (stroboscope, glitch) sature le bridge et provoque des lags UI.
-- **Solution** : Exécuter les boucles d'effets directement dans une instance de service (`HueEngine.ts`) sans passer par le store global pour les étapes intermédiaires. Seul l'état de l'effet actif est stocké dans Zustand. Utiliser `setInterval`/`setTimeout` gérés manuellement dans le service.
+### 1. Gestion des Médias (HTTP Proxy vs WebSocket)
+- **Défi** : Le transfert d'images en Base64 via WebSocket saturait la bande passante.
+- **Solution** : **Local Asset Middleware**. Les fichiers sont servis par un proxy HTTP local. Le WebSocket ne transmet plus que des URLs courtes.
 
-### 2. Réactivité Physique du Graphe (Nexus Social) (2026-04-21)
-- **Défi** : Les réglages physiques (gravité, collision) du graphe D3 semblaient "gelés" lors de la modification via les sliders.
-- **Solution** : Pour que D3 réagisse immédiatement aux changements de paramètres, il faut forcer `simulation.alphaTarget(0.3).restart()` tant que l'utilisateur manipule les réglages. Sans cela, la simulation se stabilise trop vite et ne traite pas les nouvelles forces.
+### 2. CSS vs React pour les micro-animations
+- **Leçon** : Le CSS natif est plus performant pour les animations haute fréquence (vocal scales).
+- **Solution** : Utilisation de variables CSS (`--voice-scale`) injectées via React pour laisser le moteur CSS gérer le rendu fluide sans re-renders massifs.
 
-### 3. Synchronisation P2P des Dés (Dice-OS) (2026-04-21)
-- **Défi** : Les lancers de dés projetés sur le hub ne s'affichaient pas de manière fiable.
-- **Solution** : S'assurer que le rôle `hub` (projection) est explicitement inclus dans les cibles de broadcast `syncFast`. Synchroniser l'ID unique du déclencheur de projection (`projectionTrigger`) au lieu de se fier uniquement aux changements de données brutes.
+### 3. Mixage Audio & Ducking
+- **Défi** : Réduire le volume de plusieurs moteurs audio (Music, Ambient) sans "clics" lors de la détection de voix.
+- **Solution** : Nœud `duckingGain` piloté par le store VoiceOS avec `setTargetAtTime` pour des fondus parfaits.
 
-## 📜 Gestion des Règles & Partage (2026-04-22)
+---
 
-### 1. Affichage Prioritaire des Règles (Hub Visibility)
-- **Défi** : Le partage d'une règle markdown par le MJ ne déclenchait pas automatiquement l'ouverture de la vue sur les tablettes des joueurs.
-- **Solution** : Utiliser une action distante dédiée `session:display-rule` via le bridge au lieu d'un simple message de chat. Côté Tablet Hub, le hook `useHubSync` intercepte cette action et met à jour un état `sharedRule` qui pilote l'affichage d'un modal `HubRuleViewer` à haute priorité (Z-index élevé).
+## 🤖 IA, MCP & Forge
 
-### 2. Export Inter-App (Obsidian)
-- **Défi** : Les MJ souhaitent conserver leurs règles forgées par l'IA dans leur coffre Obsidian personnel.
-- **Solution** : Implémenter un `ObsidianExportService` qui utilise le bridge pour écrire directement dans le dossier du coffre (vault) configuré, en gérant la conversion des métadonnées en frontmatter YAML.
-## 🎨 UI & Composants (2026-04-22)
+### 1. Corruption de flux JSON-RPC (MCP)
+- **Défi** : Logs Python mélangés avec les réponses JSON.
+- **Solution** : Redirection des logs vers `stderr` et buffering robuste dans le bridge pour accumuler les chunks JSON complets.
+
+### 2. Assainissement des Données LLM (Sanitizer)
+- **Défi** : Les LLM renvoient parfois des structures imbriquées imprévisibles au lieu de texte simple.
+- **Solution** : Couche d'**Assainissement des Données** systématique avant injection dans le store global pour aplatir les objets et garantir des types `string`.
+
+### 3. Expiration de Session (NotebookLM)
+- **Défi** : Sessions API NotebookLM expirant silencieusement (RPC Error 16).
+- **Solution** : Mécanisme de **Self-Healing** interceptant le code 16 et relançant une authentification automatique transparente.
+
+---
+
+## 🎨 UI & Composants (Stabilisation v6)
 
 ### 1. Bug des Fenêtres Externes (Native Select)
-- **Défi** : L'utilisation d'un élément `<select>` HTML natif dans l'interface Electron provoquait, sur certains systèmes, l'ouverture de la liste d'options dans une fenêtre OS séparée, hors du container GM-OS.
-- **Solution** : Remplacer systématiquement les `<select>` natifs par un composant `Select` personnalisé (React/Framer Motion). Ce composant simule le comportement d'un menu déroulant via un overlay interne, garantissant que l'UI reste confinée et stable dans le shell de l'application.
+- **Défi** : Les `<select>` HTML natifs ouvraient parfois des fenêtres OS séparées dans Electron.
+- **Solution** : Migration systématique vers un composant `Select` personnalisé (Framer Motion) confiné au shell de l'application.
 
-### 2. Gestion de l'État "Nul" (Campagne Active)
-- **Défi** : Désactiver une campagne sans laisser le système dans un état instable ou avec des chemins de fichiers (Obsidian) orphelins.
-- **Solution** : Autoriser explicitement `null` pour `activeCampaignId` et synchroniser la mise à jour des chemins système (vault Obsidian) lors de cette transition. Cela permet un état de "repos" propre de l'application entre deux sessions ou campagnes.
+### 2. Gestion de l'État "Repos" (Campagne Nulle)
+- **Défi** : Instabilité lors de la désactivation d'une campagne.
+- **Solution** : Support explicite de `null` pour `activeCampaignId` et synchronisation des chemins système (Obsidian vault) lors de la transition.
+
+### 3. Masquage Physique (Brouillard de Guerre)
+- **Leçon** : Remplacer la logique logicielle complexe par une hiérarchie de rendu simple.
+- **Solution** : Calque de brouillard placé physiquement au-dessus (`z-20`) des pions (`z-16`), laissant le moteur de rendu gérer nativement l'occultation.
+
+---
+
+*Dernière mise à jour : 22 Avril 2026 - GM-OS v6.5.0 - Consolidation & Stabilisation UI.*

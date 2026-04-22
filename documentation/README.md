@@ -1,28 +1,41 @@
-# 📚 Index de la Documentation - GM-OS v5
+# 📚 GM-OS v5 - Centre de Documentation
 
-Bienvenue dans le centre de connaissances de GM-OS. Ce répertoire centralise toute la documentation technique, architecturale et utilisateur du projet.
+Ce répertoire est la source unique de vérité pour toute la documentation technique, architecturale et utilisateur du projet.
 
-## 🛠️ Documentation Technique
-*   **[Rule Engine & Sharing](./Technical%20Docs/Rule_Engine_Technical_Doc.md)** : Système de partage de règles et lore.
-*   **[Light-OS Technical Doc](./Technical%20Docs/Light-OS_Technical_Doc.md)** : Moteur d'ambiance et gestion Philips Hue.
-*   **[Social Nexus Technical Doc](./Technical%20Docs/Social_Nexus_Technical_Doc.md)** : Moteur de graphe relationnel D3.js.
-*   **[Architecture Overview](./Architecture/)** : (En cours de rédaction) Vue d'ensemble du pont Bridge/Electron.
-*   **[Guide de Compilation & Déploiement](./Technical%20Docs/Compilation_Deployment_Guide.md)** : Procédures de build et mise en production.
+---
+
+## 🏛️ Architecture & Fondations
+*   **[Architecture Overview](./Architecture/)** : Vue d'ensemble du pont Bridge/Electron et isolation des modules.
+*   **[AppBridge Standard](./Planning/AppBridge_Architecture_Standard.md)** : Protocoles de communication inter-processus.
+*   **[Standards de Code v6](./Planning/V6_Code_Standards.md)** : Règles de typage, React et Tailwind.
+*   **[Lessons Learned](./Lessons_Learned.md)** : Rétrospective technique et solutions aux défis majeurs.
+
+## 🛠️ Documentation Technique (Modules)
+*   **[Rule Engine & Sharing](./Technical%20Docs/Rule_Engine_Technical_Doc.md)** : Forge de règles et partage aux joueurs.
+*   **[Light-OS](./Technical%20Docs/Light-OS_Technical_Doc.md)** : Ambiance lumineuse (Philips Hue).
+*   **[Social Nexus](./Technical%20Docs/Social_Nexus_Technical_Doc.md)** : Graphe relationnel D3.js.
+*   **[Map-OS](./Technical%20Docs/Map_OS_Technical_Doc.md)** : Cartographie, calques et brouillard de guerre.
+*   **[Tablet Hub](./Technical%20Docs/Tablet_Hub_Technical_Doc.md)** : Synchronisation second écran.
+*   **[Compilation & Déploiement](./Technical%20Docs/Compilation_Deployment_Guide.md)** : Build et packaging .exe.
+*   *Voir aussi : [Index Technique Complet](./Technical%20Docs/)*
 
 ## 📖 Guides Utilisateur
-*   **[Rule Sharing Guide](./User%20Guides/Rule_Sharing_Guide.md)** : Manuel de partage des règles aux joueurs.
-*   **[Light-OS User Guide](./User%20Guides/Light-OS_User_Guide.md)** : (En cours de rédaction) Manuel des effets lumineux.
+*   **[Rule Sharing Guide](./User%20Guides/Rule_Sharing_Guide.md)** : Manuel de partage des règles.
+*   **[AI Oracle Guide](./User%20Guides/AI_Oracle_User_Guide.md)** : Utilisation de l'IA pour la narration.
+*   **[Session OS Guide](./User%20Guides/Session_OS_User_Guide.md)** : Gestion des campagnes et chronologies.
+*   *Voir aussi : [Index des Guides Utilisateur](./User%20Guides/)*
 
-## 🚀 Suivi du Développement
-*   **[Roadmap & Jalons](./docs/planning/2026-04-22-ui-stabilization-milestone.md)** : Suivi des fonctionnalités et des corrections.
-*   **[Lessons Learned](./Lessons_Learned.md)** : Base de connaissances sur les défis et solutions techniques.
+## 🚀 Planification & Suivi
+*   **[Dernier Jalon : Stabilisation UI (22/04/2026)](./Planning/2026-04-22-ui-stabilization-milestone.md)**
+*   **[Sanity Check Backlog](./Planning/Sanity_Check_Backlog.md)** : État de santé des modules.
+*   **[Roadmap & Améliorations](./Planning/amélioration.md)**
+*   *Voir aussi : [Archives de Planification](./Planning/)*
 
 ## 📝 Historique des Walkthroughs
-*   **[Stabilisation UI & Obsidian (2026-04-22)](./walkthroughs/2026-04-22-ui-obsidian-stabilization.md)**
-*   **[Partage de Règles (2026-04-22)](./walkthroughs/2026-04-22-rule-sharing-implementation.md)**
-*   **[Expansion Light-OS (2026-04-21)](./walkthroughs/2026-04-21-light-os-expansion.md)**
-*   **[Stabilisation Nexus & Dice (2026-04-21)](./walkthroughs/2026-04-21-nexus-dice-stabilization.md)**
+*   **[Stabilisation UI & Obsidian (2026-04-22)](./Walkthroughs/2026-04-22-ui-obsidian-stabilization.md)**
+*   **[Partage de Règles (2026-04-22)](./Walkthroughs/2026-04-22-rule-sharing-implementation.md)**
+*   *Voir aussi : [Tous les Walkthroughs](./Walkthroughs/)*
 
 ---
 > [!IMPORTANT]
-> Conformément aux règles du projet, toute modification majeure doit être documentée ici.
+> Toute nouvelle fonctionnalité ou refonte doit être documentée dans ce répertoire selon les standards définis dans [V6_Code_Standards.md](./Planning/V6_Code_Standards.md).
