@@ -7,6 +7,7 @@ Bienvenue dans le centre de connaissances de GM-OS. Ce répertoire centralise to
 *   **[Light-OS Technical Doc](./Technical%20Docs/Light-OS_Technical_Doc.md)** : Moteur d'ambiance et gestion Philips Hue.
 *   **[Social Nexus Technical Doc](./Technical%20Docs/Social_Nexus_Technical_Doc.md)** : Moteur de graphe relationnel D3.js.
 *   **[Architecture Overview](./Architecture/)** : (En cours de rédaction) Vue d'ensemble du pont Bridge/Electron.
+*   **[Guide de Compilation & Déploiement](./Technical%20Docs/Compilation_Deployment_Guide.md)** : Procédures de build et mise en production.
 
 ## 📖 Guides Utilisateur
 *   **[Rule Sharing Guide](./User%20Guides/Rule_Sharing_Guide.md)** : Manuel de partage des règles aux joueurs.
