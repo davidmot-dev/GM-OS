@@ -5,6 +5,7 @@ import fs from 'fs-extra'
 import http from 'node:http'
 import https from 'node:https'
 import { createRequire } from 'node:module';
+const require = createRequire(import.meta.url);
 const { WebSocketServer } = require('ws');
 import os from 'node:os';
 import dns from 'node:dns';
@@ -517,8 +518,6 @@ ipcMain.on('image:close-all-displays', () => {
         }
     }
     projectorWindows.clear();
-})// WebSocket server logic has been moved to electron/SyncServer.ts
-}
 });
 
 // --- Local IP Helper ---

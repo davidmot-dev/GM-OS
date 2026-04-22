@@ -1,6 +1,7 @@
 import React from 'react';
 import { CheckSquare, Square } from 'lucide-react';
 import type { SheetField } from '../../../../data/defaultSheetTemplates';
+import { Select, type SelectOption } from '../../../../components/common/Select';
 
 export const FieldGauge: React.FC<{
     field: SheetField;
@@ -93,23 +94,26 @@ export const FieldSelect: React.FC<{
     field: SheetField;
     value: string;
     onChange: (val: string) => void;
-}> = ({ field, value, onChange }) => (
-    <div className="flex items-center justify-between p-3 bg-app-bg/40 rounded-xl border border-app-border/40">
-        <label htmlFor={field.id} className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{field.label}</label>
-        <select
-            id={field.id}
-            value={value}
-            onChange={e => onChange(e.target.value)}
-            title={field.label}
-            className="w-48 bg-app-surface text-app-text text-[11px] rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-accent/40 border border-white/5"
-        >
-            <option value="" disabled>-- Sélectionner --</option>
-            {(field.options || []).map(opt => (
-                <option key={opt} value={opt}>{opt}</option>
-            ))}
-        </select>
-    </div>
-);
+}> = ({ field, value, onChange }) => {
+    const options: SelectOption[] = (field.options || []).map(opt => ({
+        value: opt,
+        label: opt
+    }));
+
+    return (
+        <div className="flex items-center justify-between p-3 bg-app-bg/40 rounded-xl border border-app-border/40 overflow-visible">
+            <label htmlFor={field.id} className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{field.label}</label>
+            <Select
+                value={value}
+                onChange={onChange}
+                options={options}
+                className="w-48"
+                placeholder="-- Sélectionner --"
+                title={field.label}
+            />
+        </div>
+    );
+};
 
 export const FieldTextarea: React.FC<{
     field: SheetField;

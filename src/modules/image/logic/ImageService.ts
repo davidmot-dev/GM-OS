@@ -21,9 +21,8 @@ export class ImageService {
             
             // 🛡️ CAS LOCAL (Monitor / Player / Monitor2/3/4)
             if (target !== 'hub') {
-                console.log(`[ImageService] Sending Local Projection via launchDisplay and syncHubData (Broadcast)`);
+                console.log(`[ImageService] Sending Local Projection via launchDisplay`);
                 bridge?.image?.launchDisplay([mediaPath], target);
-                bridge?.image?.syncHubData('image', mediaPath);
                 
                 useImageStore.getState().setProjection(target, mediaPath);
                 return mediaPath;
@@ -84,8 +83,6 @@ export class ImageService {
         } else {
             // Pour les écrans, on envoie launchDisplay avec un tableau vide
             window.appBridge?.image?.launchDisplay([], target);
-            // 📡 Broadcast de sécurité : Force le blackout sur le canal global
-            window.appBridge?.image?.syncHubData('image', '');
         }
         
         store.setProjection(target, null);

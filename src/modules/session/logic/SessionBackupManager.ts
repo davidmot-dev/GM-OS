@@ -13,6 +13,7 @@ class SessionBackupManager {
     private static instance: SessionBackupManager;
     private timer: NodeJS.Timeout | null = null;
     private readonly INTERVAL_MS = 15 * 60 * 1000; // 15 minutes
+    private readonly IS_AUTO_BACKUP_ENABLED = false; // Désactivé à la demande de l'utilisateur
 
     public static getInstance(): SessionBackupManager {
         if (!SessionBackupManager.instance) {
@@ -25,6 +26,11 @@ class SessionBackupManager {
      * Starts the automatic backup cycle.
      */
     public start() {
+        if (!this.IS_AUTO_BACKUP_ENABLED) {
+            Logger.info('[BackupManager] Auto-backup is disabled by configuration');
+            return;
+        }
+
         if (this.timer) {
             Logger.info('[BackupManager] Already started');
             return;

@@ -12,7 +12,7 @@ export const Sidebar: React.FC = () => {
             console.log("No IP to pair");
             return;
         }
-        useLightStore.getState().setConnection('pairing');
+        await useLightStore.getState().setConnection('pairing');
 
         // Poll for 30 seconds (every 2 seconds)
         let attempts = 0;
@@ -22,8 +22,8 @@ export const Sidebar: React.FC = () => {
             try {
                 const token = await hueEngine.pair(bridgeIp);
                 if (token) {
-                    useLightStore.getState().setConnection('connected', bridgeIp, token);
-                    hueEngine.fetchLights();
+                    await useLightStore.getState().setConnection('connected', bridgeIp, token);
+                    await hueEngine.fetchLights();
                     return true;
                 }
             } catch (e: unknown) {
@@ -43,7 +43,7 @@ export const Sidebar: React.FC = () => {
                 clearInterval(poll);
             } else if (attempts >= maxAttempts) {
                 clearInterval(poll);
-                useLightStore.getState().setConnection('disconnected');
+                await useLightStore.getState().setConnection('disconnected');
                 alert(t('light.sidebar.prompt_timeout'));
             }
         }, 2000);
@@ -54,13 +54,13 @@ export const Sidebar: React.FC = () => {
     };
 
     const handleDiscover = async () => {
-        useLightStore.getState().setConnection('discovering');
+        await useLightStore.getState().setConnection('discovering');
         const ip = await hueEngine.discoverBridge();
         if (ip) {
-            useLightStore.getState().setConnection('disconnected', ip);
+            await useLightStore.getState().setConnection('disconnected', ip);
             // Auto try pair? No, user should click pair which tells them to press button.
         } else {
-            useLightStore.getState().setConnection('disconnected');
+            await useLightStore.getState().setConnection('disconnected');
             alert(t('light.sidebar.prompt_no_bridge'));
         }
     };
@@ -109,15 +109,15 @@ export const Sidebar: React.FC = () => {
                     </div>
                 )}
                 {status === 'connected' && (
-                    <button onClick={() => useLightStore.getState().setConnection('disconnected', null, null)} className="py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-lg text-xs font-bold transition-colors">
+                    <button onClick={async () => await useLightStore.getState().setConnection('disconnected', null, null)} className="py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-lg text-xs font-bold transition-colors">
                         {t('light.sidebar.disconnect')}
                     </button>
                 )}
                 {bridgeIp && (
                     <button 
-                        onClick={() => {
+                        onClick={async () => {
                             if (window.confirm(t('light.sidebar.forget_confirm'))) {
-                                useLightStore.getState().forgetBridge();
+                                await useLightStore.getState().forgetBridge();
                             }
                         }}
                         className="py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-2"

@@ -34,4 +34,4 @@ Implémenter un moteur de calcul dynamique capable d'interpréter des formules c
 - Optimisation des performances pour les fiches comportant plus de 100 calculs simultanés.
 
 ---
-*Archivé dans docs/history/walkthrough-calculation-engine.md*
+*Archivé dans doc./history/walkthrough-calculation-engine.md*

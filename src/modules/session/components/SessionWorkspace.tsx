@@ -60,7 +60,7 @@ const SessionWorkspace: React.FC = () => {
                     <div className="flex flex-col justify-center">
                         <span className="text-[9px] font-bold tracking-[0.3em] text-accent uppercase opacity-60 mb-1 block ml-1">{t('modules:session.workspace.group')}</span>
                         <div className="flex -space-x-3">
-                            {(session.sessionEntityIds || []).map(id => {
+                            {Array.from(new Set(session.sessionEntityIds || [])).map(id => {
                                 // Find character among all players
                                 let pc = null;
                                 let ownerId = '';
@@ -105,7 +105,7 @@ const SessionWorkspace: React.FC = () => {
                     <div className="flex flex-col justify-center">
                         <span className="text-[9px] font-bold tracking-[0.3em] text-accent uppercase opacity-60 mb-1 block ml-1">{t('modules:session.workspace.active_npcs')}</span>
                         <div className="flex gap-3">
-                            {(session.sessionEntityIds || []).map(id => {
+                            {Array.from(new Set(session.sessionEntityIds || [])).map(id => {
                                 const npc = entities.find(e => e.id === id);
                                 if (!npc) return null;
                                 return (
@@ -113,8 +113,11 @@ const SessionWorkspace: React.FC = () => {
                                         key={npc.id} 
                                         className="w-12 h-12 rounded-xl border-2 border-app-bg bg-app-surface relative group cursor-pointer hover:border-accent/50 transition-all hover:scale-110 shadow-lg"
                                     >
-                                        <div className="w-full h-full rounded-lg overflow-hidden" onClick={() => navigateToNpcDetail(npc.id)}>
+                                        <div className="w-full h-full rounded-lg overflow-hidden relative group" onClick={() => navigateToNpcDetail(npc.id)}>
                                             <ResolvedAsset src={npc.avatar} alt={npc.name} className="w-full h-full object-cover grayscale-[0.5] group-hover:grayscale-0 transition-all" />
+                                            <div className="absolute inset-0 bg-accent/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <Eye size={18} className="text-white drop-shadow-lg" />
+                                            </div>
                                         </div>
                                         <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border border-app-bg ${npc.status === 'alive' ? 'bg-emerald-500' : npc.status === 'injured' ? 'bg-amber-500' : 'bg-red-600'}`}></div>
                                         

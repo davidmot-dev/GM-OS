@@ -9,9 +9,9 @@ Ce répertoire contient l'archive de tous les guides de mise en œuvre, walkthro
 - **[Oracle - Driver Personas](./walkthroughs/Oracle_Driver_Personas.md)** : Guide sur l'intégration des gèmes contextuels via les Drivers.
 - **[Oracle - MCP Integration](./walkthroughs/Oracle_MCP_Integration.md)** : Détails sur le pont MCP pour l'Oracle.
 - **[Oracle - French Prompting](./walkthroughs/Oracle_French_Prompting.md)** : Forçage de la langue française.
-- [Session OS (Campagnes & Chronologie)](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/documentation/User%20Guides/Session_OS_User_Guide.md)
-- [Master Storyboard (Orchestration Immersion)](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/documentation/User%20Guides/Storyboard_User_Guide.md)
-- [Table OS (Butins & Aléatoire)](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/documentation/User%20Guides/Table_OS_User_Guide.md)
+- [Session OS (Campagnes & Chronologie)](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/doc./user-guides/Session_OS_User_Guide.md)
+- [Master Storyboard (Orchestration Immersion)](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/doc./user-guides/Storyboard_User_Guide.md)
+- [Table OS (Butins & Aléatoire)](file:///C:/Users/david/OneDrive/Jeux%20de%20R%C3%B4les/GM-OS-v5/doc./user-guides/Table_OS_User_Guide.md)
 - **[Obsidian - Bridge Integration](./walkthroughs/Obsidian_Bridge_Integration.md)** : Utilisation du module Obsidian et sync Oracle.
 - **[Oracle - Gem Selector](./walkthroughs/Oracle_Gem_Selector.md)** : Documentation sur le sélecteur d'assistants.
 - **[Oracle_Base_Personas.md](./walkthroughs/Oracle_Base_Personas.md)** : Configuration des personas par défaut du système.

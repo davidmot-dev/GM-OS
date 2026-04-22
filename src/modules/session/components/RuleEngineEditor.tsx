@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { 
     Sparkles, Brain, Save, ArrowLeft, PenTool, Music, Beaker, User,
-    BookOpen, Dice5, Zap, Map, Archive, Plus, Trash2, type LucideIcon 
+    BookOpen, Dice5, Zap, Map, Archive, Plus, Trash2, type LucideIcon, Eye 
 } from 'lucide-react';
 import type { GameDriver, TacticalConfig } from '../../../types/drivers';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
@@ -76,7 +76,8 @@ export const RuleEngineEditor: React.FC = () => {
                                 <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded bg-accent/10 text-accent border border-accent/20">
                                     {t('modules:session.rule_engine_editor.core_label')}
                                 </span>
-                                <span className="text-[9px] text-app-text/20 font-bold uppercase tracking-tighter">ID: {driver.id}</span>
+                                <span className="text-[9px] text-app-text/20 font-bold uppercase tracking-tighter">{t('common:id_label')}: {driver.id}</span>
+
                             </div>
                         </div>
                     </div>
@@ -169,17 +170,31 @@ export const RuleEngineEditor: React.FC = () => {
                                     <div className="p-8 bg-app-surface/20 border border-app-border/10 rounded-[2.5rem] backdrop-blur-sm flex flex-col justify-center">
                                         <div className="mb-6">
                                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/60 mb-3 block px-1">{t('modules:session.rule_engine_editor.core.sheet_link_label')}</label>
-                                            <select 
-                                                value={driver.templateId}
-                                                onChange={e => handleUpdate({ templateId: e.target.value })}
-                                                className="w-full bg-app-bg/40 px-5 py-4 rounded-2xl border border-app-border/20 text-sm text-app-text focus:border-accent/50 outline-none transition-all appearance-none cursor-pointer"
-                                                title={t('modules:session.rule_engine_editor.core.sheet_link_label')}
-                                            >
-                                                <option value="">{t('modules:session.rule_engine_editor.core.sheet_link_none')}</option>
-                                                {[...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates].map(t => (
-                                                    <option key={t.id} value={t.id}>{t.emoji} {t.name}</option>
-                                                ))}
-                                            </select>
+                                            <div className="flex gap-2">
+                                                <select 
+                                                    value={driver.templateId}
+                                                    onChange={e => handleUpdate({ templateId: e.target.value })}
+                                                    className="flex-1 bg-app-bg/40 px-5 py-4 rounded-2xl border border-app-border/20 text-sm text-app-text focus:border-accent/50 outline-none transition-all appearance-none cursor-pointer"
+                                                    title={t('modules:session.rule_engine_editor.core.sheet_link_label')}
+                                                >
+                                                    <option value="">{t('modules:session.rule_engine_editor.core.sheet_link_none')}</option>
+                                                    {[...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates].map(t => (
+                                                        <option key={t.id} value={t.id}>{t.name}</option>
+                                                    ))}
+                                                </select>
+                                                {driver.templateId && (
+                                                    <button 
+                                                        onClick={() => {
+                                                            setEditingTemplateId(driver.templateId);
+                                                            setCurrentView('template-editor');
+                                                        }}
+                                                        className="p-4 bg-accent/20 border border-accent/40 text-accent rounded-2xl hover:bg-accent hover:text-white transition-all shadow-glow-accent/20"
+                                                        title={t('common:actions.view')}
+                                                    >
+                                                        <Eye size={20} />
+                                                    </button>
+                                                )}
+                                            </div>
                                         </div>
                                         <p className="text-[11px] text-app-text/40 leading-relaxed italic px-2">
                                             {t('modules:session.rule_engine_editor.core.sheet_link_description')}
@@ -346,7 +361,7 @@ export const RuleEngineEditor: React.FC = () => {
                                                                         handleUpdate({ tactical: { ...tactical, ranges: newRanges } });
                                                                     }}
                                                                     className={`w-24 bg-app-bg/40 text-center py-2.5 rounded-xl border border-app-border/10 text-xs font-mono focus:border-emerald-500/50 outline-none ${range.modifier > 0 ? 'text-emerald-400' : range.modifier < 0 ? 'text-rose-400' : 'text-app-text/40'}`}
-                                                                    placeholder="Mod."
+                                                                    placeholder={t('modules:session.rule_engine_editor.tactical.modifier_placeholder')}
                                                                 />
                                                             </div>
                                                         </div>
@@ -399,6 +414,35 @@ export const RuleEngineEditor: React.FC = () => {
                                         />
                                     </div>
 
+                                    <div className="p-8 bg-app-surface/20 border border-app-border/10 rounded-[2.5rem] backdrop-blur-sm relative overflow-hidden group">
+                                        <div className="flex items-center gap-4 mb-4">
+                                            <div className="p-3 rounded-2xl bg-violet-500/10 text-violet-400">
+                                                <Archive size={20} />
+                                            </div>
+                                            <div className="flex-1">
+                                                <h4 className="text-[11px] font-black uppercase tracking-[0.3em] text-violet-400 font-mono">
+                                                    Chemin de l'Atelier (RAG)
+                                                </h4>
+                                                <p className="text-[9px] text-app-text/40 font-bold uppercase tracking-tight mt-1">
+                                                    Répertoire où seront sauvegardées et consultées les fiches de règles
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="relative">
+                                            <input 
+                                                type="text"
+                                                value={driver.ragPath || ''}
+                                                onChange={e => handleUpdate({ ragPath: e.target.value })}
+                                                placeholder="ex: systems/my-system/rules"
+                                                className="w-full bg-app-bg/40 px-6 py-4 rounded-2xl border border-app-border/10 focus:border-violet-500/40 outline-none transition-all font-mono text-sm"
+                                            />
+                                            <p className="text-[9px] text-app-text/20 font-bold uppercase tracking-widest mt-3 px-2 flex items-center gap-2">
+                                                <Sparkles size={10} className="text-violet-400" />
+                                                Le chemin doit être relatif au dossier <code className="text-violet-400/60">docs/</code> pour l'indexation IA.
+                                            </p>
+                                        </div>
+                                    </div>
+
                                     <div className="space-y-6">
                                         <h3 className="text-xs font-black uppercase tracking-[0.3em] text-app-text/40 flex items-center gap-4 px-2">
                                             {t('modules:session.rule_engine_editor.ai.personas_title')}
@@ -435,7 +479,8 @@ export const RuleEngineEditor: React.FC = () => {
                                                                  }
                                                                  handleUpdate({ aiPersonas: newPersonas });
                                                             }}
-                                                            placeholder={t('modules:session.campaign_form.intelligence.ai_placeholder', { name: t(gem.name) })}
+                                                            placeholder={t('modules:session.rule_engine_editor.ai.persona_prompt_placeholder', { name: t(gem.name) })}
+
                                                             className="w-full h-36 bg-app-bg/40 border border-app-border/10 rounded-2xl p-4 text-xs text-app-text/60 focus:border-violet-500/40 outline-none transition-all font-mono resize-none leading-relaxed custom-scrollbar"
                                                         />
                                                     </div>
@@ -502,7 +547,7 @@ export const RuleEngineEditor: React.FC = () => {
                                                         <div className="flex items-center justify-between mb-2 px-1">
                                                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-400/60">{t('modules:session.rule_engine_editor.loot.table_name_label')}</label>
                                                             <span className="text-[8px] font-mono text-app-text/20 bg-black/20 px-2 py-0.5 rounded border border-white/5 select-all" title="Cliquez pour sélectionner l'ID">
-                                                                ID: {table.id}
+                                                                {t('common:id_label')}: {table.id}
                                                             </span>
                                                         </div>
                                                         <input 
@@ -708,8 +753,9 @@ export const RuleEngineEditor: React.FC = () => {
                                         </div>
                                         <div className="p-6 rounded-2xl bg-app-surface/20 border border-app-border/10 space-y-3">
                                             <p className="text-[11px] text-app-text/40 leading-relaxed font-medium">
-                                                <strong className="text-blue-400/80 uppercase font-bold">Note :</strong> {t('modules:session.rule_engine_editor.notebook.hint')}
+                                                <strong className="text-blue-400/80 uppercase font-bold">{t('common:note')} :</strong> {t('modules:session.rule_engine_editor.notebook.hint')}
                                             </p>
+
                                             <div className="flex gap-2">
                                                 <div className="w-1.5 h-1.5 rounded-full bg-blue-500/30" />
                                                 <div className="w-1.5 h-1.5 rounded-full bg-blue-500/30" />

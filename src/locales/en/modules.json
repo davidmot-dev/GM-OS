@@ -1184,7 +1184,8 @@
       "launch_session": "Launch Session",
       "library": "Library",
       "players": "Players",
-      "sheet_templates": "Game Sheets",
+      "sheet_models": "Sheet Models",
+      "consult_rules": "Consult Rulebook",
       "session_resources": "Session Resources",
       "open_http_link": "Open HTTP Link",
       "access_file": "Access File"
@@ -1263,10 +1264,12 @@
       "back_to_cockpit": "Back to Cockpit",
       "oracle": "Oracle",
       "snapshot": "Snapshot",
+      "rules_label": "Rules",
       "session_prep": "Session Prep",
       "session_focus": "Session Focus",
       "tooltip_oracle": "Consult the AI Oracle",
-      "tooltip_snapshot": "Capture current state"
+      "tooltip_snapshot": "Capture current state",
+      "tooltip_rules": "Consult Rulebook"
     },
     "forge_module": {
       "title": "System Forge",
@@ -1293,6 +1296,29 @@
       "awaiting_transmutation": "Awaiting Transmutation",
       "transmutation_desc": "Drop a rules PDF, system notes, or link a NotebookLM to forge a complete GM-OS architecture.",
       "functional_fields": "{{count}} Functional Fields",
+      "tabs": {
+        "structure": "System Structure",
+        "rules": "Rules Atelier"
+      },
+      "atelier": {
+        "discovery_title": "Detected Subjects",
+        "discovery_subtitle": "Click on a subject to forge its rules",
+        "discovery_empty": "No subjects detected. Relaunch analysis or define a custom subject.",
+        "discovery_processing": "DNA Extraction...",
+        "discovery_processing_sub": "Analyzing NotebookLM sources",
+        "forging_title": "Crystallization in progress",
+        "forging_subtitle": "Forging detailed markdown sheet",
+        "success_title": "Crystallization Successful",
+        "success_subtitle": "Indexed in campaign RAG",
+        "back_to_subjects": "Back to subjects",
+        "current_subject": "Current Subject",
+        "error_title": "Transmutation Error",
+        "error_no_system": "No active system to classify the sheet.",
+        "error_write": "Unable to write sheet to RAG",
+        "btn_reset": "Reset",
+        "btn_back": "Back",
+        "btn_finish": "Finish"
+      },
       "notebook": {
         "title": "NotebookLM Browser",
         "connecting": "CONNECTING TO NOTEBOOKLM AETHER...",
@@ -1919,6 +1945,12 @@
     },
     "rule_engine_editor": {
       "loading": "Loading rule engine...",
+      "back_to_templates": "Back to library",
+      "emoji_title": "System Icon",
+      "name_placeholder": "Game system name...",
+      "core_label": "System Core",
+      "sync_success": "Rule engine configuration synchronized",
+      "sync_btn": "Synchronize",
       "nav": {
         "core": "System",
         "combat": "Combat",
@@ -1927,61 +1959,125 @@
         "loot": "Loot",
         "notebook": "Knowledge"
       },
-      "sync_toast": "Rule engine configuration synchronized",
-      "sync_btn": "Synchronize",
       "core": {
         "title": "Core Game System",
-        "desc": "Configure the mechanical foundations of your game. These parameters define how dice are interpreted by the system.",
+        "description": "Configure the mechanical foundations of your game. These parameters define how dice are interpreted by the system.",
         "engine_label": "Resolution Engine",
+        "engine_options": {
+          "standard": "Standard (X + Mods)",
+          "exploding": "Exploding Dice",
+          "formula": "Free Formula",
+          "threshold": "Success Threshold",
+          "pool": "Dice Pool",
+          "pool_explode": "Exploding Pool",
+          "advantage": "Advantage (2d20 High)",
+          "disadvantage": "Disadvantage (2d20 Low)",
+          "year-zero": "Year Zero (6s)",
+          "yze": "YZE Step Dice",
+          "fate": "FATE / Fudge",
+          "rolemaster": "Rolemaster (D100 Open)",
+          "twodtwenty": "2D20 System"
+        },
         "default_dice_label": "Default Dice Formula",
+        "default_dice_placeholder": "Ex: 1d20 + @StrMod",
         "sheet_link_label": "Character Sheet Link",
-        "sheet_link_desc": "Linking allows the AI to automate characteristic filling and use the correct modifiers during rolls."
+        "sheet_link_none": "No linked template",
+        "sheet_link_description": "Linking allows the AI to automate characteristic filling and use the correct modifiers during rolls."
       },
       "combat": {
         "title": "Combat & Initiative",
-        "desc": "Manage the brutality of encounters. Define how combat order is established and how entity health is tracked.",
+        "initiative_subtitle": "Time Sequence",
+        "description": "Manage the brutality of encounters. Define how combat order is established and how entity health is tracked.",
         "init_formula_label": "Initiative Formula",
+        "init_formula_placeholder": "Ex: 1d20 + @Init",
         "health_type_label": "Health Management",
-        "sort_order_label": "Time Sort Order",
-        "sort_desc": "Descending (High Start)",
-        "sort_asc": "Ascending (Low Start)",
-        "cards_title": "Card Draw",
-        "cards_label": "Deck Size (Initiative)",
-        "cards_desc": "If enabled, each entity draws a unique value between 1 and N per round. Perfect for Savage Worlds or Year Zero."
+        "health_options": {
+          "hp": "Hit Points (Classic)",
+          "wounds": "Wounds (Savage)",
+          "boxes": "Stress Boxes (FATE)",
+          "clocks": "Clocks (PbtA)",
+          "anatomy": "Anatomy (Localized)"
+        },
+        "sort_order_label": "Sort Order",
+        "descending_title": "High first",
+        "descending": "Descending",
+        "ascending_title": "Low first",
+        "ascending": "Ascending",
+        "card_draw_title": "Card Draw",
+        "card_draw_description": "If enabled, each entity draws a unique value between 1 and N per round. Perfect for Savage Worlds or Year Zero.",
+        "deck_size_label": "Deck Size",
+        "deck_size_placeholder": "Ex: 54"
       },
       "tactical": {
         "title": "Tactical Cortex",
-        "desc": "The cortex analyzes distances on the map to suggest bonuses or penalties to combat rolls based on defined zones.",
-        "enable": "Enable Tactical Optimization",
-        "enable_desc": "Automatic range modifier calculation",
+        "subtitle": "Range Analysis",
+        "description": "The cortex analyzes distances on the map to suggest bonuses or penalties to combat rolls based on defined zones.",
+        "enable_ai_label": "Tactical Optimization",
+        "enable_ai_description": "Automatic range modifier calculation",
+        "disable_ai_title": "Disable tactical AI",
+        "enable_ai_title": "Enable tactical AI",
         "zone_label": "Influence Zone",
-        "threshold_label": "Max Threshold (Grid Units)",
-        "modifier_label": "Modifier"
+        "max_threshold_label": "Max Threshold (Grid Units)",
+        "modifier_label": "Modifier",
+        "modifier_placeholder": "Mod.",
+        "ranges": {
+          "contact": "Contact",
+          "courte": "Short Range",
+          "moyenne": "Medium Range",
+          "longue": "Long Range",
+          "extreme": "Extreme Range"
+        },
+
+        "grid_placeholder": "Units..."
       },
       "ai": {
         "title": "Artificial Intelligence",
-        "desc": "Define the AI's consciousness for this system. The global prompt defines rules, while resonances handle roles.",
-        "gen_personas_btn": "Generate Personas",
-        "gen_personas_loading": "Generating...",
-        "protocols_label": "System Protocols (Global Prompt)",
-        "protocols_placeholder": "Ex: D&D 5e system. Initiative = 1d20+DEX. Criticals do 2x damage dice. AI must always suggest a tactical option during its turn...",
-        "resonances_title": "Aetheric Resonance / Role Gems"
+        "subtitle": "System Consciousness",
+        "description": "Define the AI's consciousness for this system. The global prompt defines rules, while resonances handle roles.",
+        "generate_btn": "Generate Personas",
+        "generating": "Generating...",
+        "global_prompt_label": "System Protocols (Global Prompt)",
+        "global_prompt_placeholder": "Ex: D&D 5e system. Initiative = 1d20+DEX. Criticals do 2x damage dice...",
+        "personas_title": "Aetheric Resonance / Role Gems",
+        "persona_type_label": "Neural Fragment {{id}}",
+        "persona_prompt_placeholder": "Custom instructions for {{name}}...",
+        "style_technical": "Technical and immersive",
+        "sync_success": "Aetheric resonances synchronized",
+        "sync_error": "Resonance failed"
       },
+
       "loot": {
         "title": "Loot Tables",
-        "desc": "Define rewards and treasures. You can create simple or nested tables to generate complex loot.",
-        "create_table_btn": "Create a Table",
+        "subtitle": "Treasure Generator",
+        "description": "Define rewards and treasures. You can create simple or nested tables to generate complex loot.",
+        "new_table_name": "New Table",
+        "create_btn": "Create a Table",
+        "delete_table": "Delete table",
         "table_name_label": "Table Name",
         "rolls_label": "Draws (Dice)",
         "weighted_label": "Weighted (Unique)",
         "entries_title": "Table Entries",
-        "add_entry_btn": "Add an Entry"
+        "add_entry_btn": "Add an Entry",
+        "new_item_name": "New Item",
+        "entry_types": {
+          "item": "Item / Loot",
+          "table": "Sub-Table",
+          "currency": "Currency / Gold"
+        },
+        "placeholder_display_name": "Display name...",
+        "placeholder_name": "Item name...",
+        "weight_label": "Weight / Chance",
+        "chance_label": "Chance (%)",
+        "qty_label": "Quantity",
+        "target_id_label": "Target ID",
+        "placeholder_table_id": "table-xyz"
       },
       "notebook": {
         "title": "NotebookLM Sync",
-        "desc": "Connect your external knowledge base for infinite AI erudition.",
-        "entry_point_label": "Neural Link Entry Point",
-        "note": "Note: By linking a Notebook, the Oracle will be able to cite specific passages of rules or lore during your sessions."
+        "description": "Connect your external knowledge base for infinite AI erudition.",
+        "link_label": "Neural Link Entry Point",
+        "placeholder": "https://notebooklm.google.com/notebook/...",
+        "hint": "By linking a Notebook, the Oracle will be able to cite specific passages of rules or lore during your sessions."
       }
     },
     "forms": {

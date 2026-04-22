@@ -1,7 +1,10 @@
 {
+  "note": "Note",
+  "id_label": "ID",
   "activeModule": "Active Module",
   "theme": "Theme",
   "sessionMode": "Session Mode",
+
   "spotlight": {
     "placeholder": "Search for an entity, music, rule...",
     "close_tooltip": "Close search",
@@ -126,6 +129,7 @@
     "globalMatrix": "Global Matrix",
     "sort": {
       "label": "Sort",
+      "date": { "label": "Date", "desc": "Sort by chronology" },
       "recent": { "label": "Recent", "desc": "Latest imports" },
       "oldest": { "label": "Oldest", "desc": "From the beginning" },
       "size": { "label": "Size", "desc": "File weight" },

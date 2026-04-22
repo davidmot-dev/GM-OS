@@ -24,7 +24,9 @@ export class PersonaGeneratorService {
         { id: 'alchemist', name: 'L\'ALCHIMISTE', description: 'Loot, PNJ secondaires et Objets.' },
         { id: 'cartographer', name: 'LE CARTOGRAPHE', description: 'Géographie, Lieux et Architectures.' },
         { id: 'actor', name: 'L\'ACTEUR', description: 'Incarnation de PNJ, dialogues et motivations.' },
+        { id: 'strategist', name: 'LE STRATÈGE', description: 'Expert en tactique et analyse de combat. Manœuvres et survie.' },
     ];
+
 
     private constructor() {}
 
@@ -74,7 +76,7 @@ Objectif : ${context.objective || 'Immersion totale et aide à la narration'}
 
 INSTRUCTIONS POUR LE PERSONA :
 Génère un PROMPT SYSTÈME détaillé pour cet agent.
-🧩 STRUCTURE OBLIGATOIRE DU TEXTE DU PROMPT :
+STRUCTURE OBLIGATOIRE DU TEXTE DU PROMPT :
 1. IDENTITÉ (Nom, Rôle, Spécialité)
 2. MISSION (Responsabilités, Doit faire / Ne doit pas faire)
 3. CAPACITÉS (Actions possibles)
@@ -93,10 +95,10 @@ Le texte doit être du texte brut directement utilisable comme instruction syst�
 
 RÉPONSE (PROMPT SYSTÈME) :`;
 
-        const response = await aiService.generateText(prompt, undefined, persona.id, {
+        const response = await aiService.generateText(prompt, undefined, 'sage', {
             systemOnly,
-            systemName: context.universe // Note: 'universe' contains the system name in our context
-        });
+            systemName: context.universe 
+        }, true); // Force LITE mode for persona generation
         let text = response.text.trim();
         
         // Nettoyage au cas où l'IA ignorerait les consignes de formatage

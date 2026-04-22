@@ -105,8 +105,8 @@ const SocialGraph: React.FC = () => {
             type: typeFilter, 
             faction: factionFilter, 
             search: searchQuery 
-        }, activeCampaign?.nodePositions, isGraphLocked), 
-    [entities, players, activeCampaignId, typeFilter, factionFilter, searchQuery, activeCampaign?.nodePositions, isGraphLocked]);
+        }, activeCampaign?.nodePositions, isGraphLocked && !isSettingsOpen), 
+    [entities, players, activeCampaignId, typeFilter, factionFilter, searchQuery, activeCampaign?.nodePositions, isGraphLocked, isSettingsOpen]);
 
     const uniqueFactions = useMemo(() => 
         getUniqueFactions(entities, players, activeCampaignId),
@@ -117,39 +117,35 @@ const SocialGraph: React.FC = () => {
         resolveBatch(data.nodes);
     }, [data.nodes, resolveBatch]);
 
+    // Fallback avatar constant (match useAvatarResolver)
+    const FALLBACK_AVATAR = 'https://api.dicebear.com/9.x/adventurer-neutral/svg?seed=NPC&backgroundColor=b6e3f4';
+
     // Graph Engine Initialization & Reactive Force Updates
     useEffect(() => {
         if (graphRef.current && data.nodes.length > 0) {
             const fg = graphRef.current;
             
-            // Charge Dynamique
-            fg.d3Force('charge').strength(graphCharge).distanceMax(1000);
-            
-            // Liens Dynamiques
-            fg.d3Force('link').distance(graphDistance).strength(1);
-            
-            // Collision Dynamique
-            fg.d3Force('collide', d3.forceCollide(graphCollision));
-
-            
-            fg.d3Force('center').strength(0.05);
-
-            // Relancer la simulation avec protection contre les fonctions manquantes
+            // Mise à jour des forces via l'API du composant
             try {
-                if (typeof fg.d3ReheatActive === 'function') {
-                    fg.d3ReheatActive();
-                } else {
-                    const sim = typeof fg.d3Simulation === 'function' ? fg.d3Simulation() : null;
-                    if (sim && typeof sim.alpha === 'function') {
-                        sim.alpha(0.3).restart();
+                if (fg.d3Force('charge')) fg.d3Force('charge').strength(graphCharge).distanceMax(1000);
+                if (fg.d3Force('link')) fg.d3Force('link').distance(graphDistance);
+                fg.d3Force('collide', d3.forceCollide(graphCollision));
+                
+                const sim = fg.d3Simulation();
+                if (sim) {
+                    // Si les réglages sont ouverts, on garde la simulation active (alphaTarget > 0)
+                    // pour que les changements soient fluides et visibles immédiatement
+                    if (isSettingsOpen) {
+                        sim.alphaTarget(0.3).restart();
+                    } else {
+                        sim.alphaTarget(0).alpha(0.5).restart();
                     }
                 }
-            } catch {
-                console.warn('[SocialGraph] Simulation d3 reheat error (non-critical)');
+            } catch (e) {
+                console.warn('[SocialGraph] Physics update error:', e);
             }
-
         }
-    }, [data.nodes, data.links, graphCharge, graphDistance, graphCollision]);
+    }, [data.nodes, data.links, graphCharge, graphDistance, graphCollision, isSettingsOpen]);
 
     const handleToggleLock = useCallback(() => {
         if (!activeCampaignId) return;
@@ -177,19 +173,14 @@ const SocialGraph: React.FC = () => {
             const fg = graphRef.current;
             if (!fg) return;
             
-            try {
-                if (typeof fg.d3ReheatActive === 'function') {
-                    fg.d3ReheatActive();
-                } else {
-                    const sim = typeof fg.d3Simulation === 'function' ? fg.d3Simulation() : null;
-                    if (sim && typeof sim.alpha === 'function') {
-                        sim.alpha(0.5).restart();
-                    }
-                }
-            } catch {
-                console.warn('[SocialGraph] Visual refresh faled but positions reset.');
+            const sim = typeof fg.d3Simulation === 'function' ? fg.d3Simulation() : null;
+            if (sim) {
+                sim.nodes().forEach((node: any) => {
+                    node.fx = null;
+                    node.fy = null;
+                });
+                sim.alpha(0.5).restart();
             }
-
         }, 150);
     }, [activeCampaignId, resetGraphLayout]);
 
@@ -216,6 +207,8 @@ const SocialGraph: React.FC = () => {
         }
         setIsEditingFaction(false);
     }, [selectedNodeId, data.nodes, players, tempFaction, updateCharacter, updateEntity]);
+
+    const [, setForceUpdate] = useState(0);
 
     const paintNode = useCallback((node: GraphNode, ctx: CanvasRenderingContext2D, globalScale: number) => {
         const size = node.type === 'pc' ? 24 : 20;
@@ -254,18 +247,29 @@ const SocialGraph: React.FC = () => {
             if (!imgCache.current[resolvedAvatar]) {
                 const img = new Image();
                 img.src = resolvedAvatar;
-                img.onload = () => { imgCache.current[resolvedAvatar] = img; };
+                img.onload = () => { 
+                    imgCache.current[resolvedAvatar] = img;
+                    setForceUpdate(v => v + 1);
+                };
+                img.onerror = () => {
+                    // Fallback if image fails to load
+                    imgCache.current[resolvedAvatar] = new Image();
+                    imgCache.current[resolvedAvatar].src = FALLBACK_AVATAR;
+                    imgCache.current[resolvedAvatar].onload = () => setForceUpdate(v => v + 1);
+                };
             } else {
                 const img = imgCache.current[resolvedAvatar];
-                ctx.save();
-                ctx.beginPath();
-                ctx.arc(nx, ny, size - 1, 0, 2 * Math.PI, false);
-                ctx.clip();
-                ctx.drawImage(img, nx - size, ny - size, size * 2, size * 2);
-                ctx.restore();
+                if (img.complete && img.naturalWidth !== 0) {
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(nx, ny, size - 1, 0, 2 * Math.PI, false);
+                    ctx.clip();
+                    ctx.drawImage(img, nx - size, ny - size, size * 2, size * 2);
+                    ctx.restore();
+                }
             }
         }
-    }, [selectedNodeId, resolvedAvatars]);
+    }, [selectedNodeId, resolvedAvatars, FALLBACK_AVATAR]);
 
     const handleNodeClick = useCallback((node: GraphNode) => {
         setSelectedNodeId(node.id);
@@ -370,8 +374,9 @@ const SocialGraph: React.FC = () => {
                         linkWidth={2}
                         onNodeClick={handleNodeClick}
                         onBackgroundClick={() => setSelectedNodeId(null)}
-                        cooldownTicks={isGraphLocked ? 0 : 200}
-                        d3VelocityDecay={isGraphLocked ? 1 : 0.4}
+                        cooldownTicks={(isGraphLocked && !isSettingsOpen) ? 0 : 200}
+                        d3VelocityDecay={(isGraphLocked && !isSettingsOpen) ? 1 : 0.1}
+                        d3AlphaDecay={isSettingsOpen ? 0.01 : 0.02}
                         enableNodeDrag={!isGraphLocked}
                     />
                 )}

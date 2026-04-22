@@ -13,6 +13,7 @@ import type { StateCreator } from 'zustand';
 import i18next from 'i18next';
 import { gmToast } from '../../../stores/useToastStore';
 import type { GameSession, TransferRequest } from './types';
+import { sanitizeSession } from '../logic/sanitization';
 
 // ─────────────────────────────────────────────
 // State
@@ -54,6 +55,7 @@ export interface SessionSliceActions {
     removeEntityFromSession: (sessionId: string, entityId: string) => void;
     clearSessionEntities: (sessionId: string) => void;
     deleteSession: (id: string) => void;
+    sanitizeAllSessions: () => void;
     setPendingPreFill: (preFill: PendingPreFill) => void;
     clearPendingPreFill: () => void;
     setCharacterLocks: (locks: Record<string, string>) => void; // NEW: Setter for character locks
@@ -80,12 +82,12 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
     // Actions
     addSession: (session) => {
         const id = `s-${Date.now()}`;
-        const newSession: GameSession = { 
+        const newSession = sanitizeSession({ 
             ...session, 
             id,
             checklist: session.checklist || [],
             sessionEntityIds: session.sessionEntityIds || []
-        };
+        });
         set((state) => ({ sessions: [...state.sessions, newSession] }));
         gmToast(i18next.t('modules:session.toasts.session_created', { number: newSession.number }), 'success');
         return id;
@@ -203,6 +205,11 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
             gmToast(i18next.t('modules:session.toasts.session_deleted', { number: session?.number }), 'success');
             return { sessions: newSessions };
         }),
+
+    sanitizeAllSessions: () =>
+        set((state) => ({
+            sessions: state.sessions.map(sanitizeSession),
+        })),
 
     setPendingPreFill: (preFill) => set({ pendingPreFill: preFill }),
     clearPendingPreFill: () => set({ pendingPreFill: null }),

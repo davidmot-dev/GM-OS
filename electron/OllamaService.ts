@@ -18,7 +18,7 @@ export class OllamaService {
      * Vérifie si le serveur Ollama est accessible
      */
     async checkStatus(endpoint?: string): Promise<boolean> {
-        const url = endpoint || this.baseUrl;
+        const url = (endpoint || this.baseUrl).replace(/\/$/, '');
         try {
             const response = await net.fetch(`${url}/api/tags`);
             return response.ok;
@@ -32,7 +32,7 @@ export class OllamaService {
      * Envoie une requête de chat au modèle local (Bloquant)
      */
     async chat(model: string, messages: { role: string; content: string }[], endpoint?: string): Promise<string> {
-        const url = endpoint || this.baseUrl;
+        const url = (endpoint || this.baseUrl).replace(/\/$/, '');
         try {
             const response = await net.fetch(`${url}/api/chat`, {
                 method: 'POST',
@@ -64,7 +64,7 @@ export class OllamaService {
      * Envoie une requête de chat au modèle local avec streaming (Réactifs)
      */
     async chatStream(model: string, messages: { role: string; content: string }[], onToken: (token: string) => void, endpoint?: string): Promise<void> {
-        const url = endpoint || this.baseUrl;
+        const url = (endpoint || this.baseUrl).replace(/\/$/, '');
         try {
             const response = await net.fetch(`${url}/api/chat`, {
                 method: 'POST',
@@ -116,7 +116,7 @@ export class OllamaService {
      * Liste les modèles installés localement
      */
     async listModels(endpoint?: string): Promise<string[]> {
-        const url = endpoint || this.baseUrl;
+        const url = (endpoint || this.baseUrl).replace(/\/$/, '');
         try {
             const response = await net.fetch(`${url}/api/tags`);
             if (!response.ok) return [];
@@ -133,7 +133,7 @@ export class OllamaService {
      * Télécharge un modèle depuis la bibliothèque Ollama
      */
     async pullModel(name: string, endpoint?: string): Promise<boolean> {
-        const url = endpoint || this.baseUrl;
+        const url = (endpoint || this.baseUrl).replace(/\/$/, '');
         try {
             console.log(`[Ollama] Pulling model: ${name} from ${url}`);
             const response = await net.fetch(`${url}/api/pull`, {
@@ -152,7 +152,7 @@ export class OllamaService {
      * Génère une image via l'API Ollama (modèles expérimentaux type Flux)
      */
     async generateImage(model: string, prompt: string, endpoint?: string): Promise<string> {
-        const url = endpoint || this.baseUrl;
+        const url = (endpoint || this.baseUrl).replace(/\/$/, '');
         try {
             console.log(`[Ollama] Generating image with: ${model} at ${url}`);
             const response = await net.fetch(`${url}/api/generate`, {

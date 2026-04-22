@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { DEFAULT_SHEET_TEMPLATES, type SheetTemplate } from '../../../data/defaultSheetTemplates';
-import { Search, Hammer, Trash2, Copy, FileText, Sparkles, CheckCircle2, ChevronRight, Pencil, DownloadCloud, Upload } from 'lucide-react';
+import { Search, Hammer, Trash2, Copy, FileText, Sparkles, CheckCircle2, ChevronRight, Pencil, DownloadCloud, Upload, Eye } from 'lucide-react';
 import { gmToast } from '../../../stores/useToastStore';
 import { useModalStore } from '../../../stores/useModalStore';
 import type { GameDriver } from '../../../types/drivers';
@@ -21,13 +21,19 @@ const TemplateDashboard: React.FC = () => {
         customGameDrivers,
         deleteGameDriver,
         setEditingTemplateId,
-        setEditingDriverId
+        setEditingDriverId,
+        templateDashboardTab,
+        setTemplateDashboardTab,
+        activeCampaignId,
+        campaigns
     } = useSessionOSStore();
     
     const { showConfirm } = useModalStore();
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedId, setSelectedId] = useState<string | null>(null);
-    const [activeTab, setActiveTab] = useState<'sheets' | 'drivers'>('sheets');
+
+    const activeTab = templateDashboardTab;
+    const setActiveTab = setTemplateDashboardTab;
 
     // ── Nexus-OS State ──────────────────────────────────────────────
     const [nexusProgress, setNexusProgress] = useState<NexusProgress | null>(null);
@@ -64,6 +70,28 @@ const TemplateDashboard: React.FC = () => {
         resolverRef.current?.(resolution);
         resolverRef.current = null;
     };
+    
+    // Auto-select active driver when entering drivers tab
+    React.useEffect(() => {
+        if (activeTab === 'drivers' && !selectedId) {
+            const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
+            if (activeCampaign?.system) {
+                const driver = customGameDrivers.find(d => d.id === activeCampaign.system);
+                if (driver) {
+                    setSelectedId(driver.id);
+                } else if (customGameDrivers.length > 0) {
+                    setSelectedId(customGameDrivers[0].id);
+                }
+            } else if (customGameDrivers.length > 0) {
+                setSelectedId(customGameDrivers[0].id);
+            }
+        } else if (activeTab === 'sheets' && !selectedId) {
+            const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
+            if (allTemplates.length > 0) {
+                setSelectedId(allTemplates[0].id);
+            }
+        }
+    }, [activeTab, activeCampaignId, customGameDrivers, selectedId]);
     // ────────────────────────────────────────────────────────────────
 
     const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
@@ -260,6 +288,14 @@ const TemplateDashboard: React.FC = () => {
                                 )}
                                 {activeTab === 'drivers' && selectedItem && (
                                     <div className="flex gap-2">
+                                        <button
+                                            onClick={() => {
+                                                setCurrentView('rulebook');
+                                            }}
+                                            className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 text-emerald-500 border border-emerald-500/30 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500/20 transition-all shadow-lg"
+                                        >
+                                            <Eye size={14} /> {t('modules:session.header.grimoire_label').toUpperCase()}
+                                        </button>
                                         {isNexusAvailable && (
                                             <button
                                                 onClick={() => handleExportDriver(selectedItem.id)}
@@ -368,6 +404,27 @@ const TemplateDashboard: React.FC = () => {
                                             ))}
                                         </div>
                                     </div>
+
+                                    {/* AI Personas Section */}
+                                    {((selectedItem as GameDriver).aiPersonas && Object.keys((selectedItem as GameDriver).aiPersonas || {}).length > 0) && (
+                                        <div className="p-6 rounded-2xl bg-violet-500/10 border border-violet-500/20 space-y-4">
+                                            <div className="flex items-center gap-3 text-violet-400 border-b border-violet-500/10 pb-3">
+                                                <Sparkles size={16} />
+                                                <h4 className="text-xs font-black uppercase tracking-widest">{t('modules:session.rule_engine_editor.ai.personas_title')}</h4>
+                                            </div>
+                                            <div className="space-y-3">
+                                                {Object.entries((selectedItem as GameDriver).aiPersonas || {}).map(([id, text]) => (
+                                                    <div key={id} className="p-3 rounded-lg bg-black/20 border border-white/5 space-y-2">
+                                                        <div className="flex items-center justify-between">
+                                                            <span className="text-[10px] font-black uppercase tracking-widest text-violet-400">{t(`modules:session.rule_engine_editor.ai.persona_type_label`, { id })}</span>
+                                                            <div className="w-1.5 h-1.5 rounded-full bg-violet-500 shadow-glow-violet" />
+                                                        </div>
+                                                        <p className="text-[10px] text-app-text/60 italic leading-relaxed line-clamp-3">{text}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>

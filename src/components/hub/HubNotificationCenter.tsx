@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { MessageSquare, Bell, X, ShieldAlert } from 'lucide-react';
 import { useSessionOSStore } from '../../modules/session/useSessionOSStore';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -87,9 +88,11 @@ const HubNotificationCenter: React.FC = () => {
                                     {notif.title}
                                 </h4>
                                 
-                                <p className="text-xs text-app-text/80 line-clamp-3 leading-relaxed">
-                                    {notif.content}
-                                </p>
+                                <div className="text-xs text-app-text/80 line-clamp-4 leading-relaxed prose-sm prose-invert prose-p:my-0.5 prose-li:my-0">
+                                    <ReactMarkdown>
+                                        {notif.content}
+                                    </ReactMarkdown>
+                                </div>
 
                                 <div className="mt-3 flex items-center justify-between">
                                     <div className="flex gap-1.5 opacity-40">

@@ -442,10 +442,10 @@ export class HueEngine {
                     break;
 
                 case 'holy':
-                    payload.transitiontime = 30;
-                    payload.bri = Math.max(10, Math.min(254, 150 + Math.sin(tick * 0.1) * 100));
-                    payload.xy = this.applyXyVariance(baseXy, 0.005);
-                    interval = 3000;
+                    payload.transitiontime = 15;
+                    payload.bri = Math.max(80, Math.min(254, 170 + Math.sin(tick * 0.4) * 80));
+                    payload.xy = this.applyXyVariance(baseXy, 0.02);
+                    interval = 1500;
                     break;
 
                 case 'neon':
@@ -496,6 +496,185 @@ export class HueEngine {
                     payload.xy = baseXy;
                     interval = 2000;
                     break;
+
+                case 'lumiere-ville':
+                    payload.transitiontime = 5;
+                    // Sodium amber base [0.55, 0.40]
+                    if (Math.random() > 0.95) { // Passing car
+                        payload.bri = 254;
+                        payload.xy = this.hexToXy('#ffffff');
+                        payload.transitiontime = 1;
+                        interval = 200;
+                    } else {
+                        payload.bri = Math.max(80, baseBri + this.getRandomFloat(-20, 20));
+                        payload.xy = [0.55, 0.40];
+                        interval = 1000;
+                    }
+                    break;
+
+                case 'foret-profonde':
+                    payload.transitiontime = 40;
+                    payload.bri = Math.max(30, Math.min(180, 100 + Math.sin(tick * 0.1) * 50));
+                    payload.xy = (tick % 2 === 0) ? this.hexToXy('#064e3b') : this.hexToXy('#14532d');
+                    interval = 4000;
+                    break;
+
+                case 'cyber-night':
+                    payload.transitiontime = 0;
+                    const cyberColors = ['#ff00ff', '#00ffff', '#ffff00', '#ff0000'];
+                    payload.xy = this.hexToXy(cyberColors[Math.floor(Math.random() * cyberColors.length)]);
+                    payload.bri = Math.random() > 0.2 ? 254 : 50;
+                    interval = 150 + Math.random() * 300;
+                    break;
+
+                case 'disco':
+                    payload.transitiontime = 2;
+                    payload.xy = [Math.random(), Math.random()];
+                    payload.bri = 254;
+                    interval = 300;
+                    break;
+
+                case 'aurore':
+                    payload.transitiontime = 50;
+                    const auroreColors = ['#22c55e', '#3b82f6', '#a855f7'];
+                    payload.xy = this.hexToXy(auroreColors[tick % auroreColors.length]);
+                    payload.bri = 120 + Math.sin(tick * 0.2) * 60;
+                    interval = 5000;
+                    break;
+
+                case 'lave':
+                    payload.transitiontime = 15;
+                    payload.bri = 180 + Math.sin(tick * 0.4) * 70;
+                    payload.xy = (tick % 2 === 0) ? this.hexToXy('#ff4500') : this.hexToXy('#8b0000');
+                    interval = 1500;
+                    break;
+
+                case 'fantome':
+                    payload.transitiontime = 10;
+                    payload.bri = Math.random() > 0.9 ? 0 : 40 + Math.sin(tick * 0.5) * 20;
+                    payload.xy = this.hexToXy('#e0f2fe');
+                    interval = 800;
+                    break;
+
+                case 'terminal':
+                    payload.transitiontime = 0;
+                    payload.bri = 100 + this.getRandomFloat(-30, 30);
+                    payload.xy = this.hexToXy('#22c55e'); // Green terminal
+                    interval = 100 + Math.random() * 100;
+                    break;
+
+                case 'stroboscope':
+                    payload.transitiontime = 0;
+                    payload.bri = (tick % 2 === 0) ? 254 : 0;
+                    payload.xy = this.hexToXy('#ffffff');
+                    interval = 100;
+                    break;
+
+                case 'crepuscule':
+                    payload.transitiontime = 100;
+                    const sunsetColors = ['#f59e0b', '#dc2626', '#7e22ce'];
+                    payload.xy = this.hexToXy(sunsetColors[tick % sunsetColors.length]);
+                    payload.bri = 100 - (tick % 10) * 5;
+                    interval = 10000;
+                    break;
+
+                case 'toxique':
+                    payload.transitiontime = 20;
+                    payload.bri = 150 + Math.sin(tick * 0.5) * 80;
+                    payload.xy = (tick % 2 === 0) ? this.hexToXy('#84cc16') : this.hexToXy('#facc15');
+                    interval = 2000;
+                    break;
+
+                case 'zen':
+                    payload.transitiontime = 60;
+                    payload.bri = 100 + Math.sin(tick * 0.1) * 30;
+                    payload.xy = this.hexToXy('#fafaf9');
+                    interval = 6000;
+                    break;
+
+                case 'neant':
+                    payload.transitiontime = 30;
+                    if (Math.random() > 0.98) { // Sparkle
+                        payload.bri = 254;
+                        payload.xy = this.hexToXy('#ffffff');
+                        payload.transitiontime = 0;
+                        interval = 150;
+                    } else {
+                        payload.bri = 10 + Math.sin(tick * 0.2) * 5;
+                        payload.xy = this.hexToXy('#2e1065');
+                        interval = 3000;
+                    }
+                    break;
+
+                case 'alerte':
+                    payload.transitiontime = 2;
+                    payload.bri = (tick % 2 === 0) ? 254 : 20;
+                    payload.xy = this.hexToXy('#ff0000');
+                    interval = 500;
+                    break;
+
+                case 'abysses':
+                    payload.transitiontime = 40;
+                    payload.bri = 40 + Math.sin(tick * 0.2) * 30;
+                    payload.xy = this.applyXyVariance(this.hexToXy('#1e3a8a'), 0.05);
+                    interval = 4000;
+                    break;
+
+                case 'trou-noir':
+                    payload.transitiontime = 20;
+                    if (Math.random() > 0.9) { // Gravity pull
+                        payload.bri = 5;
+                        interval = 1000;
+                    } else {
+                        payload.bri = 40;
+                        payload.xy = this.hexToXy('#4c1d95');
+                        interval = 2000;
+                    }
+                    break;
+
+                case 'hyperspace':
+                    payload.transitiontime = 0;
+                    payload.bri = Math.random() > 0.5 ? 254 : 150;
+                    payload.xy = Math.random() > 0.8 ? this.hexToXy('#ffffff') : this.hexToXy('#06b6d4');
+                    interval = 100;
+                    break;
+
+                case 'reacteur':
+                    payload.transitiontime = 1;
+                    payload.bri = 200 + this.getRandomFloat(-54, 54);
+                    payload.xy = this.applyXyVariance(this.hexToXy('#e0f2fe'), 0.02);
+                    interval = 150;
+                    break;
+
+                case 'passerelle':
+                    payload.transitiontime = 20;
+                    payload.bri = 150 + Math.sin(tick * 0.1) * 20;
+                    if (tick % 10 === 0) { // Beep blink
+                        payload.bri = 254;
+                        payload.transitiontime = 0;
+                    }
+                    payload.xy = this.hexToXy('#bae6fd');
+                    interval = 2000;
+                    break;
+
+                case 'alien':
+                    payload.transitiontime = 30;
+                    payload.bri = 100 + Math.sin(tick * 0.3) * 60;
+                    payload.xy = (tick % 2 === 0) ? this.hexToXy('#701a75') : this.hexToXy('#f97316');
+                    interval = 3000;
+                    break;
+
+                case 'lever-soleil':
+                    payload.transitiontime = 100; // 10s transitions
+                    const sunriseStep = tick % 30; // 5-minute cycle
+                    if (sunriseStep < 5) payload.xy = this.hexToXy('#450a0a'); // Deep Red
+                    else if (sunriseStep < 12) payload.xy = this.hexToXy('#f97316'); // Orange
+                    else if (sunriseStep < 20) payload.xy = this.hexToXy('#fbbf24'); // Gold
+                    else payload.xy = this.hexToXy('#fff7ed'); // Warm White
+                    
+                    payload.bri = Math.min(254, 40 + (sunriseStep * 8));
+                    interval = 10000;
+                    break;
             }
 
             // Apply global brightness to the effect
@@ -511,7 +690,13 @@ export class HueEngine {
                 await this.request('PUT', `/lights/${id}/state`, payload);
 
                 // If interval changed dynamically (glitch, neon, etc.), re-schedule
-                if (['glitch', 'tv', 'lightning', 'neon', 'heartbeat', 'flashlight'].includes(effectName)) {
+                const dynamicEffects = [
+                    'glitch', 'tv', 'lightning', 'neon', 'heartbeat', 'flashlight',
+                    'lumiere-ville', 'cyber-night', 'terminal', 'stroboscope', 'neant', 
+                    'trou-noir', 'hyperspace', 'reacteur'
+                ];
+
+                if (dynamicEffects.includes(effectName)) {
                     if (this.softwareEffectIntervals[id]) {
                         clearTimeout(this.softwareEffectIntervals[id]);
                         this.softwareEffectIntervals[id] = setTimeout(loop, interval);
@@ -522,9 +707,15 @@ export class HueEngine {
             }
         };
 
+        const dynamicEffectsList = [
+            'glitch', 'tv', 'lightning', 'neon', 'heartbeat', 'flashlight',
+            'lumiere-ville', 'cyber-night', 'terminal', 'stroboscope', 'neant', 
+            'trou-noir', 'hyperspace', 'reacteur'
+        ];
+
         // First run
         loop();
-        if (!['glitch', 'tv', 'lightning', 'neon', 'heartbeat', 'flashlight'].includes(effectName)) {
+        if (!dynamicEffectsList.includes(effectName)) {
             this.softwareEffectIntervals[id] = setInterval(loop, interval);
         } else {
             this.softwareEffectIntervals[id] = setTimeout(loop, interval); // managed in loop

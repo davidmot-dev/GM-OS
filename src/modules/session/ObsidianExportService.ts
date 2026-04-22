@@ -70,6 +70,42 @@ export class ObsidianExportService {
         }
     }
 
+    public async exportRule(
+        title: string,
+        content: string,
+        category: string = 'Règle',
+        tags: string[] = [],
+        vaultPath?: string
+    ): Promise<{ success: boolean; message: string }> {
+        if (!window.appBridge?.obsidian?.writeNote) {
+            return { success: false, message: "Obsidian Bridge non disponible." };
+        }
+
+        const sanitizedTitle = title.replace(/[<>:"/\\|?*]/g, '');
+        const path = `Règles/${sanitizedTitle}.md`;
+
+        const ruleContent = `---
+tags: [règle, ${category}, ${tags.join(', ')}]
+category: ${category}
+date: ${new Date().toLocaleDateString()}
+---
+# ${title}
+
+${content}
+
+---
+*Généré par GM-OS v5 — Forge des Règles*
+`;
+
+        try {
+            await window.appBridge.obsidian.writeNote(path, ruleContent, vaultPath);
+            return { success: true, message: `Règle "${title}" exportée vers Obsidian !` };
+        } catch (error) {
+            console.error("[Obsidian Export] Error exporting rule:", error);
+            return { success: false, message: `Erreur d'exportation : ${(error as Error).message}` };
+        }
+    }
+
     private formatCampaignNote(campaign: Campaign): string {
         return `---
 tags: [campaign, scenario]

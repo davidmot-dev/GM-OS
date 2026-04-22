@@ -116,6 +116,7 @@ interface MapState {
     projectionTarget: 'hub' | 'monitor' | null;
     syncToPlayers: () => void;
     clearProjectedState: () => void;
+    resetProjectionState: () => void;
 
     // Map Presets
     mapPresets: MapPreset[];
@@ -396,8 +397,18 @@ export const useMapStore = create<MapState>()(
                 projectedMapUrl: null,
                 projectedIsVideo: false,
                 projectedFogDataUrl: null,
+                projectedPings: [],
+                projectedDangerZones: [],
+            }),
+
+            resetProjectionState: () => set({
+                projectionTarget: null,
+                projectedMapUrl: null,
+                projectedIsVideo: false,
+                projectedFogDataUrl: null,
                 projectedTokens: [],
                 projectedPings: [],
+                projectedMagicEffects: [],
                 projectedDangerZones: [],
             }),
 

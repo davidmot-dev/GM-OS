@@ -55,6 +55,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                 window.appBridge.send('remote:broadcast-sync', payload, 'remote');
                 window.appBridge.send('remote:broadcast-sync', payload, 'gm');
                 window.appBridge.send('remote:broadcast-sync', payload, 'player');
+                window.appBridge.send('remote:broadcast-sync', payload, 'hub');
             }
         } catch (e) {
             console.error(`[NexusSync] Fast-Sync Error (${segmentName}):`, e);
@@ -71,7 +72,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
         }
 
         const now = Date.now();
-        if (!force && now - lastSyncRef.current < 100) return;
+        if (!force && now - lastSyncRef.current < 500) return; // Increased from 100ms to 500ms
         lastSyncRef.current = now;
 
         try {
@@ -189,7 +190,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                 whiteboard: { paths: whiteboardStore.paths, activePath: whiteboardStore.activePath, laserPointer: whiteboardStore.laserPointer, backgroundMode: whiteboardStore.backgroundMode },
                 clock: { timestamp: clockStore.timestamp, tensions: clockStore.tensions, timerRemaining: clockStore.timerRemaining, timerIsRunning: clockStore.timerIsRunning },
                 universalPads,
-                dice: { lastRoll: diceStore.lastRoll, isDiceProjected: diceStore.isDiceProjected },
+                dice: { lastRoll: diceStore.lastRoll, isDiceProjected: diceStore.isDiceProjected, projectionTrigger: diceStore.projectionTrigger },
                 map: { projectionTarget: mapStore.projectionTarget, projectedMapUrl: mapStore.projectedMapUrl, projectedTokens: mapStore.projectedTokens, projectedPings: mapStore.projectedPings },
                 // ── Session Data ──────────────────────────────────────────────────
                 session: {
@@ -202,12 +203,21 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                     customSheetTemplates,
                     customGameDrivers,
                     activeCampaignId: currentCampaignId,
-                    activeCampaignName: freshSessionOS.activeCampaignName,
+                    activeCampaignName: freshSessionOS.activeCampaignName || campaigns.find(c => c.id === currentCampaignId)?.name || 'NONE',
                     activeCampaignWallpaper: resolvedWallpaper,
                     characterLocks: freshSessionOS.connectedCharacters,
                     favorites: resolvedFavorites,
                 },
             };
+
+            if (isMainPC) {
+                console.log('[NexusSync] Broadcasting state update:', {
+                    activeCampaignId: currentCampaignId,
+                    activeCampaignName: fullState.session.activeCampaignName,
+                    sessions: fullState.session.sessions.length,
+                    activeSessionId: fullState.session.sessions.find(s => s.status === 'active')?.id
+                });
+            }
 
             const diffPayload = force ? fullState : getDifferentialPayload(fullState, lastBroadcastRef.current);
             
@@ -238,6 +248,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                 }
 
                 window.appBridge.send('remote:broadcast-sync', playerDiff, 'player');
+                window.appBridge.send('remote:broadcast-sync', playerDiff, 'hub'); // Ensuring Hubs get the player-sanitized data too
 
                 lastBroadcastRef.current = fullState;
             }

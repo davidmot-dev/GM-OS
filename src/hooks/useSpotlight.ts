@@ -14,6 +14,7 @@ import {
   Zap,
   Volume2,
   Settings,
+  Hammer,
   type LucideIcon
 } from 'lucide-react';
 
@@ -45,6 +46,28 @@ export const useSpotlight = () => {
     setSelectedWikiEntryId,
     setCurrentView 
   } = useSessionOSStore();
+
+  const [ruleForgeDocs, setRuleForgeDocs] = useState<any[]>([]);
+
+  // Fetch rule forge docs on mount
+  useEffect(() => {
+    const fetchDocs = async () => {
+      try {
+        const docs = await window.appBridge?.ai?.listDocs?.() || [];
+        // Flatten the tree to a simple list of files
+        const flatten = (items: any[]): any[] => {
+          return items.reduce((acc, item) => {
+            if (item.type === 'directory') return [...acc, ...flatten(item.children || [])];
+            return [...acc, item];
+          }, []);
+        };
+        setRuleForgeDocs(flatten(docs));
+      } catch (err) {
+        console.error("Error fetching docs for spotlight:", err);
+      }
+    };
+    fetchDocs();
+  }, []);
   
   const { playlists, playPad } = useMusicStore();
   const { presets, scenes, loadTheme, applyScene } = useAmbientStore();
@@ -200,6 +223,24 @@ export const useSpotlight = () => {
       }
     });
 
+    // 6.5 Rule Forge Docs (Fiches)
+    ruleForgeDocs.forEach(doc => {
+      if (doc.name.toLowerCase().includes(searchStr)) {
+        matches.push({
+          id: `forged-${doc.path}`,
+          type: 'rule',
+          title: doc.name.replace('.md', ''),
+          subtitle: `Forge • ${doc.path}`,
+          icon: Hammer,
+          action: () => {
+            setActiveModule('dashboard' as ModuleID);
+            setCurrentView('rule-workshop');
+            setIsOpen(false);
+          }
+        });
+      }
+    });
+
     // 7. Core Actions
     if ('settings'.includes(searchStr)) {
       matches.push({
@@ -216,8 +257,8 @@ export const useSpotlight = () => {
       });
     }
 
-    return matches.slice(0, 8); // Limit to top 8 results
-  }, [query, entities, atlasMaps, wikiEntries, customGameDrivers, playlists, presets, scenes, atmospheres, setActiveModule, setCurrentView, setSelectedAtlasMap, setSelectedEntity, setSelectedWikiEntryId, playPad, loadTheme, applyScene]);
+    return matches; // Show all results as requested
+  }, [query, entities, atlasMaps, wikiEntries, customGameDrivers, ruleForgeDocs, playlists, presets, scenes, atmospheres, setActiveModule, setCurrentView, setSelectedAtlasMap, setSelectedEntity, setSelectedWikiEntryId, playPad, loadTheme, applyScene]);
 
   const toggle = useCallback(() => setIsOpen(prev => !prev), []);
 

@@ -87,7 +87,7 @@ interface LightState {
 
     // Actions - Connection
     /** Met à jour les paramètres de connexion au pont */
-    setConnection: (status: ConnectionStatus, ip?: string | null, username?: string | null) => void;
+    setConnection: (status: ConnectionStatus, ip?: string | null, username?: string | null) => Promise<void>;
 
     // Actions - Devices
     /** Définit la liste des lampes disponibles */
@@ -118,7 +118,7 @@ interface LightState {
         scenes?: Record<string, LightScene>;
     }) => void;
     /** Oublie les identifiants de connexion du pont */
-    forgetBridge: () => void;
+    forgetBridge: () => Promise<void>;
     /** Réinitialise complètement le store */
     reset: () => void;
     /** Synchronise le token de connexion avec le trousseau natif */
@@ -162,11 +162,16 @@ export const useLightStore = create<LightState>()(
             lastManualSceneId: null,
             isSyncEnabled: true, // Enabled by default
 
-            setConnection: (status, ip, username) => {
+            setConnection: async (status, ip, username) => {
                 // Sécurité : Si un username (token Hue) est fourni, on l'enregistre dans le trousseau natif
                 if (username && window.appBridge?.security) {
                     console.log(`[Light OS] 🛡️ Token reçu. Enregistrement dans le trousseau...`);
-                    window.appBridge.security.saveSecret('hue-bridge-token', username);
+                    try {
+                        await window.appBridge.security.saveSecret('hue-bridge-token', username);
+                        console.log(`[Light OS] ✅ Token sauvegardé avec succès dans le trousseau.`);
+                    } catch (error) {
+                        console.error(`[Light OS] ❌ Échec de la sauvegarde du token dans le trousseau:`, error);
+                    }
                 } else if (username === null) {
                     // Note : On ne supprime PAS du trousseau ici, seul forgetBridge le fait.
                     // On vide seulement la mémoire vive pour cette session.
@@ -176,7 +181,7 @@ export const useLightStore = create<LightState>()(
                 set((state) => ({
                     status,
                     bridgeIp: ip !== undefined ? ip : state.bridgeIp,
-                    // On ne stocke pas le username dans l'état persistant
+                    // On ne stocke pas le username dans l'état persistant (Zustand persist)
                     username: username !== undefined ? username : state.username
                 }));
             },
@@ -246,9 +251,14 @@ export const useLightStore = create<LightState>()(
 
             setSyncEnabled: (val: boolean) => set({ isSyncEnabled: val }),
 
-            forgetBridge: () => {
+            forgetBridge: async () => {
                 if (window.appBridge?.security) {
-                    window.appBridge.security.deleteSecret('hue-bridge-token');
+                    try {
+                        await window.appBridge.security.deleteSecret('hue-bridge-token');
+                        console.log(`[Light OS] 🗑️ Token supprimé du trousseau.`);
+                    } catch (error) {
+                        console.error(`[Light OS] ❌ Échec de la suppression du token:`, error);
+                    }
                 }
                 set({
                     bridgeIp: null,

@@ -43,4 +43,14 @@ Le `useMapStore` gère deux états miroirs : l'état **Master** et l'état **Pro
 Lorsqu'un calque comme `AmbianceLayer` est rendu dans le `PlayerMapCanvas`, il reçoit la prop `isProjectedView={true}`, ce qui lui impose d'écouter `projectedTimeOfDay` au lieu de l'état local du MJ. Cela garantit une synchronisation parfaite entre l'écran du MJ et les Hubs/Moniteurs des joueurs.
 
 ---
-*Dernière mise à jour : 6 Avril 2026*
+
+## 5. Persistent Fog v2 (Performance & Persistence)
+
+La v6.3.0 introduit une refonte du moteur de brouillard pour supporter les cartes haute résolution (4K+) sans dégradation du framerate.
+
+- **Fog Registry Optimization** : Le stockage du brouillard est passé d'une matrice dense à un système de **Chunks compressés**. Seules les zones modifiées par le MJ sont sérialisées et transmises.
+- **RLE Compression (Run-Length Encoding)** : Les données de masque sont compressées avant synchronisation, réduisant la charge utile WebSockets de ~80% sur les grandes cartes.
+- **Persistance Nexus** : Le registre de brouillard est désormais inclus dans le manifeste `.gmos`, permettant de restaurer l'état exact de l'exploration lors de la réimportation d'une campagne.
+
+---
+*Dernière mise à jour : 17 Avril 2026 - GM-OS v6.3.2 : Persistent Fog v2.*

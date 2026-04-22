@@ -5,18 +5,28 @@ import { useAIStore } from '../../../stores/useAIStore';
 import { useGemStore } from '../../../stores/useGemStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { gmToast } from '../../../stores/useToastStore';
+import { Select } from '../../../components/common/Select';
 import type { AIProvider } from '../types';
 import { aiService } from '../AIService';
 
 const AISettings: React.FC = () => {
   const { t } = useTranslation(['settings', 'modules']);
-  const { configs, updateConfig, activeProvider, setProvider } = useAIStore();
+  const { configs, updateConfig, activeProvider, setProvider, syncWithKeychain } = useAIStore();
   const { gems, updateGem, syncGemsWithDefaults } = useGemStore();
   const activeCampaign = useSessionOSStore(state => state.campaigns.find(c => c.id === state.activeCampaignId));
   const systemId = activeCampaign?.system?.toLowerCase() || 'generic';
   
-  const [discoveredModels, setDiscoveredModels] = useState<string[]>([]);
-  const [isLoadingModels, setIsLoadingModels] = useState(false);
+  const [discoveredModels, setDiscoveredModels] = useState<Record<string, string[]>>({
+    gemini: [],
+    ollama: [],
+    openai: [],
+    anthropic: [],
+    oracle: []
+  });
+  const [isLoadingModels, setIsLoadingModels] = useState<Record<string, boolean>>({
+    gemini: false,
+    ollama: false
+  });
   const [showKeys, setShowKeys] = useState<Record<string, boolean>>({});
   const [selectedGemId, setSelectedGemId] = useState<string>('sage');
   const [isEditingOverride, setIsEditingOverride] = useState(false);
@@ -29,6 +39,8 @@ const AISettings: React.FC = () => {
     openai: { status: 'idle' },
     anthropic: { status: 'idle' },
     ollama: { status: 'idle' },
+    ollama_cloud: { status: 'idle' },
+    custom: { status: 'idle' },
     oracle: { status: 'idle' }
   });
 
@@ -43,46 +55,46 @@ const AISettings: React.FC = () => {
     if (window.appBridge?.mcp?.checkStatus) {
       window.appBridge.mcp.checkStatus('obsidian').then((active: boolean) => setIsObsidianActive(active));
     }
-  }, [syncGemsWithDefaults]);
+    
+    syncWithKeychain();
+  }, [syncGemsWithDefaults, syncWithKeychain]);
 
   useEffect(() => {
     const fetchModels = async () => {
       if (activeProvider === 'gemini' && configs.gemini.apiKey) {
-        setIsLoadingModels(true);
+        setIsLoadingModels(prev => ({ ...prev, gemini: true }));
         try {
           const data = await aiService.listModels(configs.gemini.apiKey);
-          setDiscoveredModels(data);
+          setDiscoveredModels(prev => ({ ...prev, gemini: data }));
         } catch (err) {
           console.error("Failed to discover Gemini models:", err);
         } finally {
-          setIsLoadingModels(false);
+          setIsLoadingModels(prev => ({ ...prev, gemini: false }));
         }
-      } else if (activeProvider === 'ollama' && window.appBridge?.ai?.ollamaListModels) {
-        setIsLoadingModels(true);
+      } else if ((activeProvider === 'ollama' || activeProvider === 'ollama_cloud') && window.appBridge?.ai?.ollamaListModels) {
+        setIsLoadingModels(prev => ({ ...prev, [activeProvider]: true }));
         try {
-          const endpoint = configs.ollama.endpoint;
+          const endpoint = configs[activeProvider].endpoint;
           const models = await window.appBridge.ai.ollamaListModels(endpoint);
-          setDiscoveredModels(models);
+          setDiscoveredModels(prev => ({ ...prev, [activeProvider]: models }));
         } catch (err) {
-          console.error("Failed to discover Ollama models:", err);
-          setDiscoveredModels([]);
+          console.error(`Failed to discover ${activeProvider} models:`, err);
+          setDiscoveredModels(prev => ({ ...prev, [activeProvider]: [] }));
         } finally {
-          setIsLoadingModels(false);
+          setIsLoadingModels(prev => ({ ...prev, [activeProvider]: false }));
         }
-      } else {
-        setDiscoveredModels([]);
       }
     };
 
     fetchModels();
-  }, [activeProvider, configs.gemini.apiKey]);
+  }, [activeProvider, configs.gemini.apiKey, configs.ollama.endpoint, configs.ollama_cloud.endpoint]);
 
   const toggleKeyVisibility = (provider: string) => {
     setShowKeys(prev => ({ ...prev, [provider]: !prev[provider] }));
   };
 
   const runGlobalDiagnostic = async () => {
-    const providersToTest = ['gemini', 'openai', 'anthropic', 'ollama', 'oracle'];
+    const providersToTest = ['gemini', 'openai', 'anthropic', 'ollama', 'ollama_cloud', 'custom', 'oracle'];
     
     const newResults = { ...diagnosticResults };
     providersToTest.forEach(p => newResults[p] = { status: 'loading' });
@@ -122,21 +134,35 @@ const AISettings: React.FC = () => {
       setDiagnosticResults(prev => ({ ...prev, anthropic: { status: 'error', message: t('ai.actions.diagnostic_error') } }));
     }
 
-    // 4. Test Ollama
+    // 4. Test Ollama Local
     try {
       if (window.appBridge?.ai?.ollamaStatus) {
-        const endpoint = configs.ollama.endpoint;
-        const online = await window.appBridge.ai.ollamaStatus(endpoint);
-        if (online) {
-          setDiagnosticResults(prev => ({ ...prev, ollama: { status: 'success', message: t('ai.actions.diagnostic_server_active') } }));
-        } else {
-          setDiagnosticResults(prev => ({ ...prev, ollama: { status: 'error', message: t('ai.actions.diagnostic_unreachable') } }));
-        }
-      } else {
-        setDiagnosticResults(prev => ({ ...prev, ollama: { status: 'error', message: t('ai.actions.diagnostic_mcp_missing') } }));
+        const online = await window.appBridge.ai.ollamaStatus(configs.ollama.endpoint);
+        setDiagnosticResults(prev => ({ ...prev, ollama: { status: online ? 'success' : 'error', message: online ? t('ai.actions.diagnostic_server_active') : t('ai.actions.diagnostic_unreachable') } }));
       }
     } catch {
       setDiagnosticResults(prev => ({ ...prev, ollama: { status: 'error', message: t('ai.actions.diagnostic_unreachable') } }));
+    }
+
+    // 4b. Test Ollama Cloud
+    try {
+      if (configs.ollama_cloud.endpoint) {
+        if (window.appBridge?.ai?.ollamaStatus) {
+          const online = await window.appBridge.ai.ollamaStatus(configs.ollama_cloud.endpoint);
+          setDiagnosticResults(prev => ({ ...prev, ollama_cloud: { status: online ? 'success' : 'error', message: online ? t('ai.actions.diagnostic_server_active') : t('ai.actions.diagnostic_unreachable') } }));
+        }
+      } else {
+        setDiagnosticResults(prev => ({ ...prev, ollama_cloud: { status: 'idle' } }));
+      }
+    } catch {
+      setDiagnosticResults(prev => ({ ...prev, ollama_cloud: { status: 'error', message: t('ai.actions.diagnostic_unreachable') } }));
+    }
+
+    // 4c. Test Custom API (Check if endpoint and key are set)
+    if (configs.custom.endpoint) {
+      setDiagnosticResults(prev => ({ ...prev, custom: { status: 'success', message: t('ai.actions.diagnostic_configured', 'Configuré') } }));
+    } else {
+      setDiagnosticResults(prev => ({ ...prev, custom: { status: 'error', message: t('ai.actions.diagnostic_missing') } }));
     }
 
     // 5. Test Oracle
@@ -186,6 +212,20 @@ const AISettings: React.FC = () => {
       color: 'text-orange-400',
       desc: t('ai.providers.ollama_desc')
     },
+    { 
+      id: 'ollama_cloud', 
+      name: t('ai.providers.ollama_cloud_label', 'Ollama Cloud'), 
+      icon: <Sparkles size={24} />,
+      color: 'text-sky-400',
+      desc: t('ai.providers.ollama_cloud_desc', 'Ollama distant via HTTPS')
+    },
+    { 
+      id: 'custom', 
+      name: t('ai.providers.custom_label', 'Custom API'), 
+      icon: <Settings2 size={24} />,
+      color: 'text-slate-400',
+      desc: t('ai.providers.custom_desc', 'API compatible OpenAI/Custom')
+    },
   ];
 
   return (
@@ -212,14 +252,14 @@ const AISettings: React.FC = () => {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 gap-4 overflow-visible relative">
         {providers.map((p) => (
           <div 
             key={p.id}
-            className={`p-6 rounded-2xl border transition-all duration-300 ${
+            className={`p-6 rounded-2xl border transition-all duration-300 relative ${
               activeProvider === p.id 
-                ? 'bg-app-surface border-accent shadow-glow-accent/10 ring-1 ring-accent/20' 
-                : 'bg-app-surface/40 border-app-border/20 grayscale opacity-60 hover:grayscale-0 hover:opacity-100'
+                ? 'bg-app-surface border-accent shadow-glow-accent/10 ring-1 ring-accent/20 z-50' 
+                : 'bg-app-surface/40 border-app-border/20 grayscale opacity-60 hover:grayscale-0 hover:opacity-100 z-0'
             }`}
           >
             <div className="flex items-start justify-between mb-6">
@@ -256,7 +296,7 @@ const AISettings: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {p.id !== 'ollama' && (
+              {(p.id !== 'ollama') && (
                 <div className="space-y-2">
                   <label className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40 flex items-center gap-2">
                     <Key size={12} className="text-accent" />
@@ -280,7 +320,7 @@ const AISettings: React.FC = () => {
                 </div>
               )}
 
-              {p.id === 'ollama' && (
+              {(p.id === 'ollama' || p.id === 'ollama_cloud' || p.id === 'custom') && (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40 flex items-center gap-2">
@@ -289,48 +329,50 @@ const AISettings: React.FC = () => {
                     </label>
                     <input
                       type="text"
-                      value={configs.ollama.endpoint || ''}
-                      onChange={(e) => updateConfig('ollama', { endpoint: e.target.value })}
-                      placeholder="http://127.0.0.1:11434"
+                      value={configs[p.id]?.endpoint || ''}
+                      onChange={(e) => updateConfig(p.id, { endpoint: e.target.value.trim() })}
+                      placeholder={p.id === 'ollama' ? "http://127.0.0.1:11434" : "https://api.provider.com/v1"}
                       className="w-full bg-black/40 border border-app-border/40 rounded-xl px-4 py-3 text-xs text-app-text focus:border-accent/50 outline-none transition-all font-mono"
                     />
                   </div>
+                </div>
+              )}
 
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40 flex items-center gap-2">
-                      <ShieldCheck size={12} className={diagnosticResults.ollama.status === 'success' ? "text-emerald-500" : "text-app-text/20"} />
-                      {t('ai.status.local_status')}
-                    </label>
-                    <div className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${
-                      diagnosticResults.ollama.status === 'success' 
-                        ? 'bg-emerald-500/5 border-emerald-500/10' 
-                        : 'bg-red-500/5 border-red-500/10'
+              {p.id === 'ollama' && (
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text/40 flex items-center gap-2">
+                    <ShieldCheck size={12} className={diagnosticResults.ollama.status === 'success' ? "text-emerald-500" : "text-app-text/20"} />
+                    {t('ai.status.local_status')}
+                  </label>
+                  <div className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${
+                    diagnosticResults.ollama.status === 'success' 
+                      ? 'bg-emerald-500/5 border-emerald-500/10' 
+                      : 'bg-red-500/5 border-red-500/10'
+                  }`}>
+                    <div className={`flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest ${
+                      diagnosticResults.ollama.status === 'success' ? 'text-emerald-500' : 'text-red-400'
                     }`}>
-                      <div className={`flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest ${
-                        diagnosticResults.ollama.status === 'success' ? 'text-emerald-500' : 'text-red-400'
-                      }`}>
-                        <div className={`w-2 h-2 rounded-full ${
-                          diagnosticResults.ollama.status === 'success' ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'
-                        }`} />
-                        {diagnosticResults.ollama.status === 'success' ? t('ai.status.ollama_ready') : t('ai.status.ollama_offline', 'Ollama Offline')}
-                      </div>
-                      <button
-                        onClick={async () => {
-                          const ok = await window.appBridge?.ai?.ollamaPull?.('phi3', configs.ollama.endpoint);
-                          if (ok) {
-                            gmToast(t('ai.actions.pull_phi3_success', 'Phi-3 downloaded!'));
-                            const models = await window.appBridge?.ai?.ollamaListModels?.(configs.ollama.endpoint);
-                            if (models) setDiscoveredModels(models);
-                          } else {
-                            gmToast(t('ai.actions.pull_phi3_error', 'Failed to start download'), 'error');
-                          }
-                        }}
-                        className="text-[10px] font-black uppercase tracking-widest text-accent bg-accent/10 px-2 py-1 rounded border border-accent/20 hover:bg-accent/20 transition-all"
-                        title={t('ai.actions.pull_phi3_tooltip')}
-                      >
-                        {t('ai.actions.pull_phi3')}
-                      </button>
+                      <div className={`w-2 h-2 rounded-full ${
+                        diagnosticResults.ollama.status === 'success' ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'
+                      }`} />
+                      {diagnosticResults.ollama.status === 'success' ? t('ai.status.ollama_ready') : t('ai.status.ollama_offline', 'Ollama Offline')}
                     </div>
+                    <button
+                      onClick={async () => {
+                        const ok = await window.appBridge?.ai?.ollamaPull?.('phi3', configs.ollama.endpoint);
+                        if (ok) {
+                          gmToast(t('ai.actions.pull_phi3_success', 'Phi-3 downloaded!'));
+                          const models = await window.appBridge?.ai?.ollamaListModels?.(configs.ollama.endpoint);
+                          if (models) setDiscoveredModels(prev => ({ ...prev, ollama: models }));
+                        } else {
+                          gmToast(t('ai.actions.pull_phi3_error', 'Failed to start download'), 'error');
+                        }
+                      }}
+                      className="text-[10px] font-black uppercase tracking-widest text-accent bg-accent/10 px-2 py-1 rounded border border-accent/20 hover:bg-accent/20 transition-all"
+                      title={t('ai.actions.pull_phi3_tooltip')}
+                    >
+                      {t('ai.actions.pull_phi3')}
+                    </button>
                   </div>
                 </div>
               )}
@@ -341,78 +383,69 @@ const AISettings: React.FC = () => {
                     <Cpu size={12} className="text-accent" />
                     {t('ai.labels.model')}
                   </label>
-                  {(p.id === 'gemini' || p.id === 'ollama') && (
+                  {(p.id === 'gemini' || p.id === 'ollama' || p.id === 'ollama_cloud') && (
                     <button 
                       onClick={async () => {
-                        setIsLoadingModels(true);
+                        setIsLoadingModels(prev => ({ ...prev, [p.id]: true }));
                         try {
                           let models = [];
                           if (p.id === 'gemini') {
                              models = await aiService.listModels(configs.gemini.apiKey);
                           } else {
-                             models = await window.appBridge?.ai?.ollamaListModels?.(configs.ollama.endpoint);
+                             models = await window.appBridge?.ai?.ollamaListModels?.(configs[p.id].endpoint);
                           }
-                          setDiscoveredModels(models);
+                          setDiscoveredModels(prev => ({ ...prev, [p.id]: models }));
                         } finally {
-                          setIsLoadingModels(false);
+                          setIsLoadingModels(prev => ({ ...prev, [p.id]: false }));
                         }
                       }}
-                      className={`text-accent/60 hover:text-accent transition-all ${isLoadingModels ? 'animate-spin' : ''}`}
+                      className={`text-accent/60 hover:text-accent transition-all ${isLoadingModels[p.id] ? 'animate-spin' : ''}`}
                       title={t('ai.actions.refresh_models')}
                     >
                       <RefreshCw size={10} />
                     </button>
                   )}
                 </div>
-                <select
-                  title={t('ai.labels.model_select_tooltip')}
-                  value={configs[p.id]?.modelId || ''}
-                  onChange={(e) => updateConfig(p.id, { modelId: e.target.value })}
-                  className="w-full bg-black/40 border border-app-border/40 rounded-xl px-4 py-3 text-xs text-app-text focus:border-accent/50 outline-none transition-all appearance-none cursor-pointer"
-                >
-                  {(p.id === 'gemini' || p.id === 'ollama') && discoveredModels.length > 0 ? (
-                    <>
-                      {discoveredModels.map(name => (
-                        <option key={name} value={name}>{name}</option>
-                      ))}
-                      <option value="custom">{t('ai.labels.manual_input')}</option>
-                    </>
-                  ) : (
-                    <>
-                      {p.id === 'gemini' && (
-                        <>
-                          <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
-                          <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
-                          <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
-                        </>
-                      )}
-                      {p.id === 'openai' && (
-                        <>
-                          <option value="gpt-4o">GPT-4o</option>
-                          <option value="gpt-4o-mini">GPT-4o Mini</option>
-                          <option value="o1-preview">OpenAI o1</option>
-                        </>
-                      )}
-                      {p.id === 'anthropic' && (
-                        <>
-                          <option value="claude-3-5-sonnet-latest">Claude 3.5 Sonnet</option>
-                          <option value="claude-3-opus-20240229">Claude 3 Opus</option>
-                          <option value="claude-3-5-haiku-latest">Claude 3.5 Haiku</option>
-                        </>
-                      )}
-                      {p.id === 'ollama' && (
-                        <>
-                          <option value="gemma4:26b">Gemma 4 26B</option>
-                          <option value="phi3">Phi-3</option>
-                          <option value="mistral">Mistral</option>
-                        </>
-                      )}
-                      <option value="custom">{t('ai.labels.manual_input')}</option>
-                    </>
-                  )}
-                </select>
                 
-                {(configs[p.id]?.modelId === 'custom' || (p.id === 'gemini' && discoveredModels.length === 0)) && (
+                <Select
+                  value={configs[p.id]?.modelId || ''}
+                  onChange={(val) => updateConfig(p.id, { modelId: val })}
+                  options={[
+                    ...((p.id === 'gemini' || p.id === 'ollama' || p.id === 'ollama_cloud') && (discoveredModels[p.id]?.length || 0) > 0 
+                      ? discoveredModels[p.id].map(name => ({ value: name, label: name }))
+                      : [
+                          ...(p.id === 'gemini' ? [
+                            { value: 'gemini-2.0-flash', label: 'Gemini 2.0 Flash' },
+                            { value: 'gemini-1.5-flash', label: 'Gemini 1.5 Flash' },
+                            { value: 'gemini-1.5-pro', label: 'Gemini 1.5 Pro' }
+                          ] : []),
+                          ...(p.id === 'openai' ? [
+                            { value: 'gpt-4o', label: 'GPT-4o' },
+                            { value: 'gpt-4o-mini', label: 'GPT-4o Mini' },
+                            { value: 'o1-preview', label: 'OpenAI o1' }
+                          ] : []),
+                          ...(p.id === 'anthropic' ? [
+                            { value: 'claude-3-5-sonnet-latest', label: 'Claude 3.5 Sonnet' },
+                            { value: 'claude-3-opus-20240229', label: 'Claude 3 Opus' },
+                            { value: 'claude-3-5-haiku-latest', label: 'Claude 3.5 Haiku' }
+                          ] : []),
+                          ...(p.id === 'ollama' || p.id === 'ollama_cloud' ? [
+                            { value: 'phi3', label: 'Phi-3 (Mini)' },
+                            { value: 'llama3', label: 'Llama 3' },
+                            { value: 'mistral', label: 'Mistral' },
+                            { value: 'gemma', label: 'Gemma' }
+                          ] : []),
+                          ...(p.id === 'custom' ? [
+                            { value: 'custom-model', label: 'Custom Model' }
+                          ] : [])
+                        ]
+                    ),
+                    { value: 'custom', label: t('ai.labels.manual_input') }
+                  ]}
+                  title={t('ai.labels.model_select_tooltip')}
+                />
+                
+                {(configs[p.id]?.modelId === 'custom' || (p.id === 'gemini' && (discoveredModels.gemini?.length || 0) === 0)) && (
                   <div className="mt-2 text-app-text/60 italic text-[9px] uppercase tracking-widest pl-1">
                     {t('ai.labels.selected_model')} <span className="text-accent font-bold">{configs[p.id]?.modelId}</span>
                   </div>
@@ -420,7 +453,7 @@ const AISettings: React.FC = () => {
               </div>
             </div>
 
-            {p.id === 'ollama' && !discoveredModels.includes('gemma4:26b') && (
+            {p.id === 'ollama' && !discoveredModels.ollama.includes('gemma4:26b') && (
               <button
                 onClick={async () => {
                   try {
@@ -428,7 +461,7 @@ const AISettings: React.FC = () => {
                     await window.appBridge?.ai?.ollamaPull?.('gemma4:26b', configs.ollama.endpoint);
                     gmToast(t('ai.actions.pull_gemma_success'), "success");
                     const models = await window.appBridge?.ai?.ollamaListModels?.(configs.ollama.endpoint);
-                    if (models) setDiscoveredModels(models);
+                    if (models) setDiscoveredModels(prev => ({ ...prev, ollama: models }));
                    } catch (error) {
                     console.error("Gemma 4 Pull error:", error);
                     gmToast(t('ai.actions.pull_gemma_error'), "error");

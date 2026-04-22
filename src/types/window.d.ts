@@ -150,6 +150,7 @@ declare global {
         ai?: {
             listDocs: () => Promise<AIDocument[]>;
             readDoc: (filePath: string) => Promise<string | null>;
+            writeDoc: (filePath: string, content: string) => Promise<boolean>;
             extractPdf: (filePath: string) => Promise<string>;
             proxyRequest: (url: string, method: string, headers: Record<string, string>, body: unknown) => Promise<AIProxyResponse>;
             searchContext: (systemId: string, campaignName: string) => Promise<string>;

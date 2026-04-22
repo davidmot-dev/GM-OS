@@ -34,13 +34,20 @@ const LobbyOnboarding: React.FC = memo(() => {
             filteredSessions = sessions.filter(s => String(s.campaignId) === String(activeCampaignId));
         }
         
-        // On cherche d'abord une session réellement active qui n'est pas la session de démo par défaut
-        const realActive = filteredSessions.find(s => s.status === 'active' && s.id !== 's-1');
-        if (realActive) return realActive;
+        // 1. On cherche d'abord une session réellement active dans la campagne courante (hors démo)
+        const realActiveInCampaign = filteredSessions.find(s => s.status === 'active' && s.id !== 's-1');
+        if (realActiveInCampaign) return realActiveInCampaign;
 
-        // Sinon on prend n'importe quelle session active (y compris démo si c'est tout ce qu'on a),
-        // sinon on ne renvoie rien (on reste sur l'écran 'Recherche de session')
-        return filteredSessions.find(s => s.status === 'active') || null;
+        // 2. Si rien trouvé, on cherche n'importe quelle session active (hors démo) dans TOUTES les sessions
+        // Cela sauve le Hub si le GM a changé de campagne active tout en laissant une session tourner ailleurs
+        const realActiveAnywhere = sessions.find(s => s.status === 'active' && s.id !== 's-1');
+        if (realActiveAnywhere) {
+            console.warn('[LobbyOnboarding] Found active session outside current campaign:', realActiveAnywhere.campaignId);
+            return realActiveAnywhere;
+        }
+
+        // 3. Fallback ultime sur la session de démo s-1 si elle est active (dans la campagne ou ailleurs)
+        return sessions.find(s => s.status === 'active' && s.id === 's-1') || null;
     }, [sessions, activeCampaignId]);
 
     // Formater le nom de la session de manière lisible
@@ -109,14 +116,15 @@ const LobbyOnboarding: React.FC = memo(() => {
     useEffect(() => {
         if (!activeSession) {
             if (step !== 'SCANNING') {
-                // Utilisation d'un micro-task pour éviter le warning de render en cascade
                 queueMicrotask(() => setStep('SCANNING'));
             }
             return;
         }
 
+        console.log('[LobbyOnboarding] Active session detected:', activeSession.id, 'Status:', activeSession.status);
+
         if (step === 'SCANNING') {
-            const timer = setTimeout(() => setStep('SELECTION'), 2000);
+            const timer = setTimeout(() => setStep('SELECTION'), 1500);
             return () => clearTimeout(timer);
         }
     }, [activeSession, step]);
@@ -143,10 +151,38 @@ const LobbyOnboarding: React.FC = memo(() => {
         }, 2500);
     };
 
+    // DEBUG PANEL - Visible only in dev or via triple click (mocked here as always for debug)
+    const renderDebugOverlay = () => (
+        <div className="fixed bottom-4 left-4 z-[9999] bg-black/80 backdrop-blur-md border border-app-border/40 p-4 rounded-xl text-[10px] font-mono text-app-text/60 max-w-xs shadow-2xl pointer-events-none select-none">
+            <h5 className="text-accent font-bold mb-2 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+                HUB SYNC DEBUG
+            </h5>
+            <div className="space-y-1">
+                <p><span className="text-app-text/40">Campaign ID:</span> {activeCampaignId || 'NONE'}</p>
+                <p><span className="text-app-text/40">Campaign Name:</span> {activeCampaignName || 'NONE'}</p>
+                <p><span className="text-app-text/40">Sessions Count:</span> {sessions?.length || 0}</p>
+                <div className="mt-2 pt-2 border-t border-white/5">
+                    <p className="text-app-text/80 font-bold mb-1">Active Session:</p>
+                    {activeSession ? (
+                        <div className="text-emerald-400">
+                            <p>ID: {activeSession.id}</p>
+                            <p>CID: {activeSession.campaignId}</p>
+                            <p>Num: #{activeSession.number}</p>
+                        </div>
+                    ) : (
+                        <p className="text-red-400 italic">None Detected</p>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+
     // --- RENDER: SCANNING (No Session) ---
     if (step === 'SCANNING' || !activeSession) {
         return (
             <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-app-bg p-6 overflow-hidden">
+                {renderDebugOverlay()}
                 <div className="relative mb-12">
                     {/* Radar Circles */}
                     <div className="absolute inset-0 border-2 border-accent/20 rounded-full animate-ping duration-[3000ms]" />

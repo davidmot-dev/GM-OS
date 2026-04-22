@@ -1,4 +1,4 @@
-export type AIProvider = 'gemini' | 'openai' | 'anthropic' | 'ollama';
+export type AIProvider = 'gemini' | 'openai' | 'anthropic' | 'ollama' | 'ollama_cloud' | 'custom';
 
 export type AIModelConfig = {
   provider: AIProvider;

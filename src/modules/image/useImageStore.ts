@@ -54,6 +54,7 @@ interface ImageState {
         folders?: ImageFolder[];
     }) => void;
     reset: () => void;
+    clearActiveProjections: () => void;
 }
 
 export const useImageStore = create<ImageState>()(
@@ -244,7 +245,10 @@ export const useImageStore = create<ImageState>()(
                 }
             },
 
-            reset: () => { get().blackoutAll(); set({ mediaList: [], projections: {}, folders: [], activeFolderId: null, projectedEntity: null }); }
+            reset: () => { get().blackoutAll(); set({ mediaList: [], projections: {}, folders: [], activeFolderId: null, projectedEntity: null }); },
+            clearActiveProjections: () => {
+                set({ projections: {}, projectedEntity: null });
+            }
         }),
         {
             name: 'gmos-image-storage',

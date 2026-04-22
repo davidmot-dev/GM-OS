@@ -26,7 +26,7 @@ Ce patch se concentre sur la robustesse du Tablet Hub, l'isolation des données 
 - **Feedback** : Confirmation par toast après suppression réussie.
 
 ## Documentation & NotebookLM
-- Mise à jour de `lessons-learned.md` avec les nouveaux protocoles média.
+- Mise à jour de `docs/dev/Lessons_Learned_Archive.md` avec les nouveaux protocoles média.
 - Synchronisation complète du compagnon **NotebookLM** (`GM-OS v5.9 Documentation Base`) avec les dernières spécifications techniques.
 - L'IA Oracle dispose désormais d'un contexte à jour pour assister le MJ.
 

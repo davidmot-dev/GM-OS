@@ -681,6 +681,14 @@
     "footer": {
       "no_lights": "Aucune lampe détectée.",
       "change_color": "Changer la Couleur",
+      "categories": {
+        "urban": "🏙️ Urbain & Tech",
+        "nature": "🌲 Nature & Éléments",
+        "fantasy": "⚔️ Fantastique & Magie",
+        "space": "🚀 Espace & SF",
+        "alerts": "🚨 Alertes & Danger",
+        "misc": "⚙️ Divers"
+      },
       "effects": {
         "steady": "Statique",
         "colorloop": "Cycle de Couleurs",
@@ -691,15 +699,36 @@
         "glitch": "Glitch",
         "tv": "Télévision CRT",
         "arcane": "Arcanique",
-        "warp": "Vissage",
+        "warp": "Saut Spatial",
         "underwater": "Sous-marin",
         "dragon": "Souffle de Dragon",
         "holy": "Aura Sacrée",
         "neon": "Néon Défectueux",
-        "heartbeat": "Battement de CÅ“ur",
+        "heartbeat": "Battement de Cœur",
         "flashlight": "Lampe Torche",
         "radiation": "Radiation",
-        "breathing": "Respiration"
+        "breathing": "Respiration",
+        "lumiere-ville": "Lumières de la ville",
+        "terminal": "Terminal Retro",
+        "cyber-night": "Cyberpunk Night",
+        "stroboscope": "Stroboscope",
+        "foret-profonde": "Forêt d'Émeraude",
+        "aurore": "Aurore Boréale",
+        "crepuscule": "Crépuscule",
+        "abysses": "Abysses",
+        "lever-soleil": "Lever de Soleil",
+        "lave": "Lave Fusion",
+        "fantome": "Spectre / Fantôme",
+        "neant": "Le Néant",
+        "trou-noir": "Trou Noir",
+        "hyperspace": "Hyper-vitesse",
+        "reacteur": "Cœur de Réacteur",
+        "passerelle": "Passerelle Stellaire",
+        "alien": "Ruche Alien",
+        "alerte": "Alerte Rouge",
+        "toxique": "Nuage Toxique",
+        "disco": "Disco Party",
+        "zen": "Méditation Zen"
       }
     }
   },
@@ -1184,7 +1213,8 @@
       "launch_session": "Lancer Session",
       "library": "Bibliothèque",
       "players": "Joueurs",
-      "sheet_templates": "Fiches de Jeu",
+      "sheet_models": "Modèles de fiches",
+      "consult_rules": "Consulter Grimoire",
       "session_resources": "Ressources Session",
       "open_http_link": "Ouvrir le Lien HTTP",
       "access_file": "Accéder au Fichier"
@@ -1269,10 +1299,12 @@
       "back_to_cockpit": "Retour Cockpit",
       "oracle": "Oracle",
       "snapshot": "Snapshot",
+      "rules_label": "Règles",
       "session_prep": "Préparation de Session",
       "session_focus": "Détails de Session",
       "tooltip_oracle": "Consulter l'Oracle IA",
-      "tooltip_snapshot": "Capturer l'état actuel"
+      "tooltip_snapshot": "Capturer l'état actuel",
+      "tooltip_rules": "Consulter le Grimoire de règles"
     },
     "forge_module": {
       "title": "Forge du Système",
@@ -1299,6 +1331,29 @@
       "awaiting_transmutation": "En attente de Transmutation",
       "transmutation_desc": "Déposez un PDF de règles ou liez un NotebookLM pour forger une architecture GM-OS complète.",
       "functional_fields": "{{count}} Champs Fonctionnels",
+      "tabs": {
+        "structure": "Structure Système",
+        "rules": "Atelier de Règles"
+      },
+      "atelier": {
+        "discovery_title": "Sujets Détectés",
+        "discovery_subtitle": "Cliquez sur un sujet pour forger ses règles",
+        "discovery_empty": "Aucun sujet détecté. Relancez l'analyse ou définissez un sujet personnalisé.",
+        "discovery_processing": "Extraction de l'ADN...",
+        "discovery_processing_sub": "Analyse des sources NotebookLM en cours",
+        "forging_title": "Cristallisation en cours",
+        "forging_subtitle": "Forge de la fiche markdown détaillée",
+        "success_title": "Cristallisation Réussie",
+        "success_subtitle": "Indexé dans le RAG de campagne",
+        "back_to_subjects": "Retour aux sujets",
+        "current_subject": "Sujet Actuel",
+        "error_title": "Erreur de Transmutation",
+        "error_no_system": "Aucun système actif pour classer la fiche.",
+        "error_write": "Impossible d'écrire la fiche dans le RAG",
+        "btn_reset": "Réinitialiser",
+        "btn_back": "Retour",
+        "btn_finish": "Terminer"
+      },
       "notebook": {
         "title": "Navigateur NotebookLM",
         "connecting": "CONNEXION À L'ÉTHER NOTEBOOKLM...",
@@ -1327,6 +1382,7 @@
       "system_label": "SYSTÈME DE JEU",
       "system_select": "Sélectionner un système...",
       "deploy_button": "DÉPLOYER LA CHRONIQUE",
+      "deploy_success": "Chronique déployée dans le Codex.",
       "tabs": {
         "campaign": "Campagne",
         "entities": "Entités",
@@ -1335,7 +1391,6 @@
       },
       "preview_empty": "En attente de Transmutation",
       "preview_desc": "Déposez vos sources de scénario et sélectionnez un système pour forger une campagne structurée.",
-      "deploy_success": "Chronique déployée dans le Codex.",
       "synopsis_title": "Synopsis de l'Intrigue",
       "roleplaying_notes": "Notes d'Interprétation",
       "gm_secrets": "Secrets du MJ Extraits",
@@ -1802,13 +1857,13 @@
         "search_sheets_placeholder": "Rechercher une fiche...",
         "search_drivers_placeholder": "Rechercher un livre de règles...",
         "resonance_custom": "RÉSONANCE & CUSTOM",
-        "edit_template": "ÉDITER LE MODÃˆLE",
+        "edit_template": "ÉDITER LE MODÈLE",
         "edit_engine": "ÉDITER LE MOTEUR",
         "open_forge": "OUVRIR LA FORGE"
       },
       "tabs": {
         "sheets": "FICHES (UI)",
-        "drivers": "RÃˆGLES (DRIVERS)"
+        "drivers": "RÈGLES (DRIVERS)"
       },
       "status": {
         "delete_confirm": "Supprimer {{type}} \"{{name}}\" ?",
@@ -1925,69 +1980,139 @@
     },
     "rule_engine_editor": {
       "loading": "Chargement du moteur de règles...",
+      "back_to_templates": "Retour à la bibliothèque",
+      "emoji_title": "Icône du système",
+      "name_placeholder": "Nom du système de jeu...",
+      "core_label": "Noyau Système",
+      "sync_success": "Configuration du moteur synchronisée",
+      "sync_btn": "Synchroniser",
       "nav": {
         "core": "Système",
         "combat": "Combat",
         "tactical": "Tactique",
         "ai": "Intelligence",
         "loot": "Trésors",
-        "notebook": "Knowledge"
+        "notebook": "Connaissance"
       },
-      "sync_toast": "Configuration du moteur synchronisée",
-      "sync_btn": "Synchroniser",
       "core": {
         "title": "Système de Jeu Core",
-        "desc": "Configurez les fondations mécaniques de votre jeu. Ces paramètres définissent comment les dés sont interprétés par le système.",
+        "description": "Configurez les fondations mécaniques de votre jeu. Ces paramètres définissent comment les dés sont interprétés par le système.",
         "engine_label": "Moteur de Résolution",
+        "engine_options": {
+          "standard": "Standard (X + Mods)",
+          "exploding": "Dés Explosifs",
+          "formula": "Formule Libre",
+          "threshold": "Succès par Seuil",
+          "pool": "Pool de Dés",
+          "pool_explode": "Pool Explosif",
+          "advantage": "Avantage (2d20 High)",
+          "disadvantage": "Désavantage (2d20 Low)",
+          "year-zero": "Year Zero (6s)",
+          "yze": "YZE Step Dice",
+          "fate": "FATE / Fudge",
+          "rolemaster": "Rolemaster (D100 Open)",
+          "twodtwenty": "2D20 System"
+        },
         "default_dice_label": "Formule de Dés par défaut",
+        "default_dice_placeholder": "Ex: 1d20 + @StrMod",
         "sheet_link_label": "Liaison Fiche de Personnage",
-        "sheet_link_desc": "La liaison permet à l'IA d'automatiser le remplissage des caractéristiques et d'utiliser les bons modificateurs lors des jets."
+        "sheet_link_none": "Aucun modèle lié",
+        "sheet_link_description": "La liaison permet à l'IA d'automatiser le remplissage des caractéristiques et d'utiliser les bons modificateurs lors des jets."
       },
       "combat": {
         "title": "Combat & Initiative",
-        "desc": "Gérez la brutalité des rencontres. Définissez comment l'ordre de combat est établi et comment la santé des entités est suivie.",
+        "initiative_subtitle": "Séquence Temporelle",
+        "description": "Gérez la brutalité des rencontres. Définissez comment l'ordre de combat est établi et comment la santé des entités est suivie.",
         "init_formula_label": "Formule Initiative",
+        "init_formula_placeholder": "Ex: 1d20 + @Init",
         "health_type_label": "Gestion de la Santé",
-        "sort_order_label": "Ordre de tri temporel",
-        "sort_desc": "Décroissant (High Start)",
-        "sort_asc": "Croissant (Low Start)",
-        "cards_title": "Tirage par Cartes",
-        "cards_label": "Taille du Deck (Initiative)",
-        "cards_desc": "Si activé, chaque entité tire une valeur unique entre 1 et N par round. Idéal pour Savage Worlds ou Year Zero."
+        "health_options": {
+          "hp": "Points de Vie (Classique)",
+          "wounds": "Blessures (Savage)",
+          "boxes": "Cases de Stress (FATE)",
+          "clocks": "Horloges (PbtA)",
+          "anatomy": "Anatomie (Localisé)"
+        },
+        "sort_order_label": "Ordre de tri",
+        "descending_title": "Plus haut en premier",
+        "descending": "Décroissant",
+        "ascending_title": "Plus bas en premier",
+        "ascending": "Croissant",
+        "card_draw_title": "Tirage par Cartes",
+        "card_draw_description": "Si activé, chaque entité tire une valeur unique entre 1 et N par round. Idéal pour Savage Worlds ou Year Zero.",
+        "deck_size_label": "Taille du Deck",
+        "deck_size_placeholder": "Ex: 54"
       },
       "tactical": {
         "title": "Cortex Tactique",
-        "desc": "Le cortex analyse les distances sur la carte pour suggérer des bonus ou malus aux jets de combat selon des zones définies.",
-        "enable": "Activer l'Optimisation Tactique",
-        "enable_desc": "Calcul automatique des modificateurs de portée",
+        "subtitle": "Analyse de Portée",
+        "description": "Le cortex analyse les distances sur la carte pour suggérer des bonus ou malus aux jets de combat selon des zones définies.",
+        "enable_ai_label": "Optimisation Tactique",
+        "enable_ai_description": "Calcul automatique des modificateurs de portée",
+        "disable_ai_title": "Désactiver l'IA tactique",
+        "enable_ai_title": "Activer l'IA tactique",
         "zone_label": "Zone d'influence",
-        "threshold_label": "Seuil Max (Unités Grille)",
-        "modifier_label": "Modificateur"
+        "max_threshold_label": "Seuil Max (Unités Grille)",
+        "modifier_label": "Modificateur",
+        "modifier_placeholder": "Mod.",
+        "ranges": {
+          "contact": "Corps à corps",
+          "courte": "Portée courte",
+          "moyenne": "Portée moyenne",
+          "longue": "Portée longue",
+          "extreme": "Portée extrême"
+        },
+
+        "grid_placeholder": "Unités..."
       },
       "ai": {
         "title": "Intelligence Artificielle",
-        "desc": "Définissez la conscience de l'IA pour ce système. Le prompt global définit les règles, tandis que les résonances gèrent les rôles.",
-        "gen_personas_btn": "Générer les Personas",
-        "gen_personas_loading": "En cours...",
-        "protocols_label": "Protocoles Système (Prompt Global)",
-        "protocols_placeholder": "Ex: Système D&D 5e. Initiative = 1d20+DEX. Les critiques font 2x les dés de dégâts. L'IA doit toujours suggérer une option tactique lors de son tour...",
-        "resonances_title": "Aetheric Resonance / Gemmes de Rôle"
+        "subtitle": "Conscience du Système",
+        "description": "Définissez la conscience de l'IA pour ce système. Le prompt global définit les règles, tandis que les résonances gèrent les rôles.",
+        "generate_btn": "Générer les Personas",
+        "generating": "Génération...",
+        "global_prompt_label": "Protocoles Système (Prompt Global)",
+        "global_prompt_placeholder": "Ex: Système D&D 5e. Initiative = 1d20+DEX. Les critiques font 2x les dés de dégâts...",
+        "personas_title": "Résonance Éthérique / Gemmes de Rôle",
+        "persona_type_label": "Fragment Neural {{id}}",
+        "persona_prompt_placeholder": "Consignes personnalisées pour {{name}}...",
+        "style_technical": "Technique et immersif",
+        "sync_success": "Résonances éthériques synchronisées",
+        "sync_error": "Échec de la résonance"
       },
+
       "loot": {
         "title": "Tables de Butin",
-        "desc": "Définissez les récompenses et trésors. Vous pouvez créer des tables simples ou imbriquées pour générer des loots complexes.",
-        "create_table_btn": "Créer une Table",
+        "subtitle": "Générateur de Trésors",
+        "description": "Définissez les récompenses et trésors. Vous pouvez créer des tables simples ou imbriquées pour générer des loots complexes.",
+        "new_table_name": "Nouvelle Table",
+        "create_btn": "Créer une Table",
+        "delete_table": "Supprimer la table",
         "table_name_label": "Nom de la Table",
         "rolls_label": "Tirages (Dés)",
         "weighted_label": "Pondéré (Unique)",
         "entries_title": "Entrées de la Table",
-        "add_entry_btn": "Ajouter une Entrée"
+        "add_entry_btn": "Ajouter une Entrée",
+        "new_item_name": "Nouvel Objet",
+        "entry_types": {
+          "item": "Objet / Loot",
+          "table": "Sous-Table",
+          "currency": "Monnaie / Or"
+        },
+        "placeholder_display_name": "Nom affiché...",
+        "placeholder_name": "Nom de l'objet...",
+        "weight_label": "Poids / Chance",
+        "chance_label": "Chance (%)",
+        "qty_label": "Quantité",
+        "target_id_label": "ID Cible",
+        "placeholder_table_id": "table-xyz"
       },
       "notebook": {
         "title": "NotebookLM Sync",
-        "desc": "Connectez votre base de connaissance externe pour une érudition infinie de l'IA.",
-        "entry_point_label": "Point d'Entrée Neural Link",
-        "note": "Note : En liant un Notebook, l'Oracle pourra citer des passages précis des règles ou du lore lors de vos sessions."
+        "description": "Connectez votre base de connaissance externe pour une érudition infinie de l'IA.",
+        "link_label": "Point d'Entrée Neural Link",
+        "placeholder": "https://notebooklm.google.com/notebook/...",
+        "hint": "En liant un Notebook, l'Oracle pourra citer des passages précis des règles ou du lore lors de vos sessions."
       }
     },
     "forms": {
@@ -2048,7 +2173,7 @@
       "create_via_forge": "CRÉER VIA FORGE",
       "tabs": {
         "sheets": "FICHES (UI)",
-        "drivers": "RÃˆGLES (DRIVERS)"
+        "drivers": "RÈGLES (DRIVERS)"
       },
       "search_sheets": "Rechercher une fiche...",
       "search_drivers": "Rechercher un livre de règles...",
@@ -2065,7 +2190,7 @@
         "subtitle_ui": "Générateur de fiches visuelles",
         "subtitle_ai": "Logique de dés & Assistance MJ",
         "edit_resonance": "RÉSONANCE & CUSTOM",
-        "edit_template": "ÉDITER LE MODÃˆLE",
+        "edit_template": "ÉDITER LE MODÈLE",
         "export": "EXPORTER",
         "edit_engine": "ÉDITER LE MOTEUR"
       },

@@ -48,10 +48,10 @@ Le projet sépare strictement l'interface utilisateur de la logique système via
 
 Toute la documentation a été synchronisée pour la v6.2.6. Consultez l'index pour explorer les guides :
 
-👉 **[Index de la Documentation](./documentation/User%20Guides/00_Documentation_Index.md)**
+👉 **[Index de la Documentation](./docs/README.md)**
 
-- **[Roadmap Master v6](./docs/architecture/roadmap-v6.md)** : Suivi technique de la refonte.
-- **[Lessons Learned (Master)](./documentation/Lessons_Learned.md)** : Base de connaissances technique (v5 & v6).
+- **[Roadmap Master v6](./doc./architecture/roadmap-v6.md)** : Suivi technique de la refonte.
+- **[Lessons Learned (Master)](./docs/dev/Lessons_Learned_Archive.md)** : Base de connaissances technique (v5 & v6).
 - **[Guide de Migration](./instructions.md)** : Règles d'or du standard de code GM-OS.
 
 ---

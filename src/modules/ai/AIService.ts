@@ -56,126 +56,182 @@ export class AIService {
     ragOptions: { systemOnly?: boolean; systemName?: string } = {},
     lite?: boolean
   ): Promise<AIResponse> {
-    const { activeProvider, configs } = useAIStore.getState();
+    const { activeProvider } = useAIStore.getState();
+    const TIMEOUT_MS = 1800000; // 30 minutes
+    const systemPrompt = await this.prepareSystemPrompt(prompt, customContext, gemId, ragOptions, lite);
+
+    console.groupCollapsed(`[AIService] Full Prompt Details (${prompt.length + systemPrompt.length} chars)`);
+    console.log("--- SYSTEM PROMPT ---");
+    console.log(systemPrompt);
+    console.log("--- USER PROMPT ---");
+    console.log(prompt);
+    console.groupEnd();
+
+    console.log(`[AIService] Sending ${activeProvider} request (${prompt.length + systemPrompt.length} chars)...`);
+
+    return Promise.race([
+      this.executeRequest(activeProvider, prompt, systemPrompt, gemId, ragOptions, lite),
+      new Promise<AIResponse>((_, reject) => 
+        setTimeout(() => reject(new Error(`TIMEOUT: ${activeProvider} n'a pas répondu après 30min.`)), TIMEOUT_MS)
+      )
+    ]);
+  }
+
+  private async executeRequest(
+    activeProvider: string,
+    prompt: string,
+    systemPrompt: string,
+    gemId: string,
+    ragOptions: any,
+    lite?: boolean
+  ): Promise<AIResponse> {
+    const { configs } = useAIStore.getState();
     const config = configs[activeProvider];
 
-    if (activeProvider !== 'ollama' && !config.apiKey) {
+    if (activeProvider !== 'ollama' && !config.apiKey && activeProvider !== 'custom') {
       throw new Error(`API Key manquante pour le fournisseur ${activeProvider}`);
     }
 
-    const systemPrompt = await this.prepareSystemPrompt(prompt, customContext, gemId, ragOptions, lite);
+    let retries = 0;
+    const MAX_RETRIES = 2;
 
-    if (activeProvider === 'ollama') {
-      const model = config.modelId || 'phi3';
-      const endpoint = config.endpoint;
+    while (retries <= MAX_RETRIES) {
       try {
-        if (!window.appBridge?.ai?.ollamaChat) throw new Error("Bridge Ollama non disponible.");
-        
-        const text = await window.appBridge.ai.ollamaChat(model, [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: prompt }
-        ], endpoint);
-        
-        return { text, metadata: { provider: 'ollama', model, endpoint } };
-      } catch (error: unknown) {
-        const message = error instanceof Error ? error.message : String(error);
-        if (message.includes('Ollama est inaccessible')) {
-          throw error; // Transmettre l'erreur déjà formatée par le backend
-        }
-        throw new Error(`Erreur Connexion Ollama: ${message}`);
-      }
-    }
-
-    if (activeProvider === 'gemini') {
-      const apiKey = config.apiKey?.trim().replace(/[\r\n]/g, '');
-      const model = config.modelId || 'gemini-1.5-flash';
-      
-      const tryVersion = async (version: string) => {
-        const url = `https://generativelanguage.googleapis.com/${version}/models/${model}:generateContent?key=${apiKey}`;
-        if (!window.appBridge?.ai?.proxyRequest) throw new Error("Bridge AI non disponible.");
-
-        return window.appBridge.ai.proxyRequest(url, 'POST', { 'Content-Type': 'application/json' }, {
-          contents: [{ parts: [{ text: `${systemPrompt}\n\nUtilisateur: ${prompt}` }] }],
-          generationConfig: { temperature: 0.7, maxOutputTokens: 4096 }
-        });
-      };
-
-      try {
-        const initialVersion = model.startsWith('gemini-2') ? 'v1beta' : 'v1';
-        let bridgeResponse = await tryVersion(initialVersion);
-        
-        if (bridgeResponse.status === 404 && initialVersion === 'v1') {
-          bridgeResponse = await tryVersion('v1beta');
+        if (activeProvider === 'ollama' || activeProvider === 'ollama_cloud') {
+          const model = config.modelId || 'phi3';
+          const endpoint = config.endpoint;
+          if (!window.appBridge?.ai?.ollamaChat) throw new Error("Bridge Ollama non disponible.");
+          
+          // Note: The current ollamaChat bridge might not support API Keys yet.
+          // If needed, we'll have to upgrade the bridge or use proxyRequest for OpenAI-compatible Ollama Cloud providers.
+          const text = await window.appBridge.ai.ollamaChat(model, [
+            { role: 'user', content: `${systemPrompt}\n\n--- TA MISSION ---\n${prompt}` }
+          ], endpoint);
+          
+          return { text, metadata: { provider: activeProvider, model, endpoint } };
         }
 
-        if (!bridgeResponse.ok) {
-          const errorData = (bridgeResponse.data as { error?: { message?: string } }) || {};
-          if (bridgeResponse.status === 429) {
-            if (model !== 'gemini-2.0-flash-lite') {
-               const fallbackUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`;
-               const fallbackRes = await window.appBridge?.ai?.proxyRequest?.(fallbackUrl, 'POST', { 'Content-Type': 'application/json' }, {
-                 contents: [{ parts: [{ text: `${systemPrompt}\n\nUtilisateur: ${prompt}` }] }],
-                 generationConfig: { temperature: 0.7, maxOutputTokens: 4096 }
-               });
-               if (fallbackRes?.ok) {
-                 const data = fallbackRes.data as GeminiResponse;
-                 return { text: data.candidates?.[0]?.content?.parts?.[0]?.text || "Réponse fallback.", metadata: { provider: 'gemini', model: 'gemini-2.0-flash-lite' } };
-               }
-            }
-            throw new Error("Quota insuffisant chez Google.");
+        if (activeProvider === 'custom') {
+          const apiKey = config.apiKey?.trim();
+          const model = config.modelId;
+          const endpoint = config.endpoint; // ex: https://api.together.xyz/v1/chat/completions
+          
+          if (!endpoint) throw new Error("Endpoint manquant pour le fournisseur Custom.");
+          if (!window.appBridge?.ai?.proxyRequest) throw new Error("Bridge AI non disponible.");
+
+          const bridgeResponse = await window.appBridge.ai.proxyRequest(endpoint, 'POST', {
+            'Content-Type': 'application/json',
+            ...(apiKey ? { 'Authorization': `Bearer ${apiKey}` } : {})
+          }, {
+            model,
+            messages: [
+              { role: 'system', content: systemPrompt },
+              { role: 'user', content: prompt }
+            ]
+          });
+
+          if (!bridgeResponse.ok) {
+            throw new Error(`Erreur API Custom (${bridgeResponse.status}): ${bridgeResponse.statusText}`);
           }
-          throw new Error(`Erreur API Gemini (${bridgeResponse.status}): ${errorData.error?.message || bridgeResponse.statusText}`);
+
+          const data = bridgeResponse.data as any;
+          const text = data.choices?.[0]?.message?.content || data.text || JSON.stringify(data);
+          return { text, metadata: { provider: 'custom', model } };
         }
 
-        const data = bridgeResponse.data as GeminiResponse;
-        const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "Pas de réponse.";
-        return { text, metadata: { provider: 'gemini', model } };
-      } catch (error: unknown) {
-        const message = error instanceof Error ? error.message : String(error);
-        throw new Error(message || "Erreur inconnue.");
-      }
-    }
+        if (activeProvider === 'gemini') {
+          const apiKey = config.apiKey?.trim().replace(/[\r\n]/g, '');
+          const model = config.modelId || 'gemini-1.5-flash';
+          
+          const tryVersion = async (version: string) => {
+            const url = `https://generativelanguage.googleapis.com/${version}/models/${model}:generateContent?key=${apiKey}`;
+            if (!window.appBridge?.ai?.proxyRequest) throw new Error("Bridge AI non disponible.");
 
-    if (activeProvider === 'anthropic') {
-      const apiKey = config.apiKey?.trim();
-      if (!apiKey) throw new Error("Clé API Anthropic non configurée.");
-      const model = config.modelId || 'claude-3-5-sonnet-latest';
-      const url = `https://api.anthropic.com/v1/messages`;
-      
-      if (!window.appBridge?.ai?.proxyRequest) throw new Error("Bridge AI non disponible.");
+            return window.appBridge.ai.proxyRequest(url, 'POST', { 'Content-Type': 'application/json' }, {
+              contents: [{ parts: [{ text: `${systemPrompt}\n\nUtilisateur: ${prompt}` }] }],
+              generationConfig: { temperature: 0.7, maxOutputTokens: 4096 }
+            });
+          };
 
-      try {
-        const bridgeResponse = await window.appBridge.ai.proxyRequest(url, 'POST', {
-          'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01'
-        }, {
-          model,
-          max_tokens: 4096,
-          messages: [
-            { role: 'user', content: `${systemPrompt}\n\nUtilisateur: ${prompt}` }
-          ]
-        });
+          const initialVersion = model.startsWith('gemini-2') ? 'v1beta' : 'v1';
+          let bridgeResponse = await tryVersion(initialVersion);
+          
+          if (bridgeResponse.status === 404 && initialVersion === 'v1') {
+            bridgeResponse = await tryVersion('v1beta');
+          }
 
-        if (!bridgeResponse.ok) {
-          const errorData = (bridgeResponse.data as { error?: { message?: string } }) || {};
-          throw new Error(`Erreur API Anthropic (${bridgeResponse.status}): ${errorData.error?.message || bridgeResponse.statusText}`);
+          if (!bridgeResponse.ok) {
+            const errorData = (bridgeResponse.data as { error?: { message?: string } }) || {};
+            if (bridgeResponse.status === 429) {
+              if (model !== 'gemini-2.0-flash-lite') {
+                 const fallbackUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`;
+                 const fallbackRes = await window.appBridge?.ai?.proxyRequest?.(fallbackUrl, 'POST', { 'Content-Type': 'application/json' }, {
+                   contents: [{ parts: [{ text: `${systemPrompt}\n\nUtilisateur: ${prompt}` }] }],
+                   generationConfig: { temperature: 0.7, maxOutputTokens: 4096 }
+                 });
+                 if (fallbackRes?.ok) {
+                   const data = fallbackRes.data as GeminiResponse;
+                   return { text: data.candidates?.[0]?.content?.parts?.[0]?.text || "Réponse fallback.", metadata: { provider: 'gemini', model: 'gemini-2.0-flash-lite' } };
+                 }
+              }
+              throw new Error("Quota insuffisant chez Google.");
+            }
+            throw new Error(`Erreur API Gemini (${bridgeResponse.status}): ${errorData.error?.message || bridgeResponse.statusText}`);
+          }
+
+          const data = bridgeResponse.data as GeminiResponse;
+          const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "Pas de réponse.";
+          return { text, metadata: { provider: 'gemini', model } };
         }
 
-        const data = bridgeResponse.data as { content: { type: string; text: string }[] };
-        const textElement = data.content?.find(c => c.type === 'text');
-        const text = textElement?.text || "Pas de réponse.";
-        return { text, metadata: { provider: 'anthropic', model } };
-      } catch (error: unknown) {
-        const message = error instanceof Error ? error.message : String(error);
-        throw new Error(message || "Erreur Anthropic inconnue.");
+        if (activeProvider === 'anthropic') {
+          const apiKey = config.apiKey?.trim();
+          if (!apiKey) throw new Error("Clé API Anthropic non configurée.");
+          const model = config.modelId || 'claude-3-5-sonnet-latest';
+          const url = `https://api.anthropic.com/v1/messages`;
+          
+          if (!window.appBridge?.ai?.proxyRequest) throw new Error("Bridge AI non disponible.");
+
+          const bridgeResponse = await window.appBridge.ai.proxyRequest(url, 'POST', {
+            'Content-Type': 'application/json',
+            'x-api-key': apiKey,
+            'anthropic-version': '2023-06-01'
+          }, {
+            model,
+            max_tokens: 4096,
+            messages: [
+              { role: 'user', content: `${systemPrompt}\n\nUtilisateur: ${prompt}` }
+            ]
+          });
+
+          if (!bridgeResponse.ok) {
+            const errorData = (bridgeResponse.data as { error?: { message?: string } }) || {};
+            throw new Error(`Erreur API Anthropic (${bridgeResponse.status}): ${errorData.error?.message || bridgeResponse.statusText}`);
+          }
+
+          const data = bridgeResponse.data as { content: { type: string; text: string }[] };
+          const textElement = data.content?.find(c => c.type === 'text');
+          const text = textElement?.text || "Pas de réponse.";
+          return { text, metadata: { provider: 'anthropic', model } };
+        }
+
+        return {
+          text: `[Simulation ${activeProvider}] Réponse simulée.`,
+          metadata: { provider: activeProvider, model: config.modelId }
+        };
+
+      } catch (error: any) {
+        const message = error?.message || String(error);
+        if (message.includes('ERR_NETWORK_CHANGED') && retries < MAX_RETRIES) {
+          retries++;
+          console.warn(`[AIService] ERR_NETWORK_CHANGED détecté. Tentative ${retries}/${MAX_RETRIES}...`);
+          await new Promise(r => setTimeout(r, 1000)); // Petit délai
+          continue;
+        }
+        throw error;
       }
     }
-
-    return {
-      text: `[Simulation ${activeProvider}] Réponse basée sur le contexte RAG récupéré (${ragContext.length} chars).`,
-      metadata: { provider: activeProvider, model: config.modelId }
-    };
+    throw new Error("Échec de la requête AI après plusieurs tentatives.");
   }
 
   /**
@@ -675,7 +731,12 @@ ${customContext ? `${customContext}\n\n${ragContext}` : ragContext}`;
     const activeCampaign = useSessionOSStore.getState().campaigns.find(c => c.id === useSessionOSStore.getState().activeCampaignId);
     const systemId = activeCampaign?.system?.toLowerCase() || 'generic';
 
-    let personaInstructions = i18n.t(gem.systemOverrides?.[systemId] || gem.baseInstructions);
+    const translateOrDefault = (key: string, def: string) => {
+      const t = i18n.t(key);
+      return (t === key || !t) ? def : t;
+    };
+
+    let personaInstructions = translateOrDefault(gem.systemOverrides?.[systemId] || gem.baseInstructions, "Tu es un assistant IA expert.");
 
     try {
       const systemGemsRaw = await window.appBridge?.ai?.readDoc?.(`systems/${systemId}/gems.json`);
@@ -689,12 +750,15 @@ ${customContext ? `${customContext}\n\n${ragContext}` : ragContext}`;
     const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...useSessionOSStore.getState().customSheetTemplates];
     const sheetTemplate = allTemplates.find(t => t.id === systemId);
     if (sheetTemplate?.aiPersonas?.[gemId]) {
-       personaInstructions = i18n.t(sheetTemplate.aiPersonas[gemId]);
+       const templateInstr = translateOrDefault(sheetTemplate.aiPersonas[gemId], "");
+       if (templateInstr) personaInstructions = templateInstr;
     }
+
+    const alias = translateOrDefault(gem.name, "Assistant");
 
     return `${personaInstructions}
 
-Tu es un assistant de Maître de Jeu expert pour GM-OS. Ton alias actuel est "${i18n.t(gem.name)}".
+Tu es un assistant de Maître de Jeu expert pour GM-OS. Ton alias actuel est "${alias}".
 ${i18n.language === 'fr' 
       ? 'Réponds impérativement en français, de manière concise et immersive.' 
       : 'You must answer in English, in a concise and immersive way.'}
@@ -703,9 +767,7 @@ ${i18n.language === 'fr'
       : 'If possible, cite the source document for rule points.'}
 
 CONTEXTE RÉCUPÉRÉ (RAG + SESSION) :
-${fullContext}
-
-Prompt utilisateur : ${prompt}`;
+${fullContext}`;
   }
 
   /**
@@ -727,37 +789,111 @@ Prompt utilisateur : ${prompt}`;
     if (activeProvider === 'gemini') {
       const apiKey = config.apiKey?.trim().replace(/[\r\n]/g, '');
       const model = config.modelId || 'gemini-1.5-flash';
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+      let url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+      
+      if (!apiKey) {
+        console.error("[AIService] ❌ Erreur : Clé API Gemini absente !");
+      } else {
+        let finalKey = apiKey;
+        // Détection de clé doublée (bug potentiel de synchronisation)
+        if (apiKey.length > 20 && apiKey.length % 2 === 0) {
+          const half = apiKey.length / 2;
+          if (apiKey.substring(0, half) === apiKey.substring(half)) {
+            console.warn("[AIService] ⚠️ Détection d'une clé doublée ! Correction automatique...");
+            finalKey = apiKey.substring(0, half);
+          }
+        }
+        
+        const masked = `${finalKey.substring(0, 5)}...${finalKey.substring(finalKey.length - 5)}`;
+        console.log(`[AIService] 🔑 Utilisation de la clé Gemini: ${masked} (${finalKey.length} chars)`);
+        
+        // On met à jour l'URL avec la clé potentiellement corrigée
+        if (finalKey !== apiKey) {
+          const model = config.modelId || 'gemini-1.5-flash';
+          const newUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${finalKey}`;
+          // On continue avec la clé corrigée
+          url = newUrl;
+        }
+      }
       
       if (!window.appBridge?.ai?.proxyRequest) throw new Error("Bridge AI non disponible.");
 
-      const parts: any[] = [{ text: `${systemPrompt}\n\nREQUÊTE : ${prompt}` }];
+      const TIMEOUT_MS = 600000; // 10 minutes
       
+      const payload: any = {
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { 
+          response_mime_type: "application/json",
+          temperature: 0.2
+        }
+      };
+
+      if (systemPrompt) {
+        payload.system_instruction = {
+          parts: [{ text: systemPrompt }]
+        };
+      }
+
       if (attachments && attachments.length > 0) {
         attachments.forEach(attachment => {
-          parts.push({
+          const base64Data = attachment.data.includes('base64,') 
+            ? attachment.data.split('base64,')[1] 
+            : attachment.data;
+            
+          payload.contents[0].parts.push({
             inline_data: {
               mime_type: attachment.mimeType,
-              data: attachment.data
+              data: base64Data
             }
           });
         });
       }
 
-      const response = await window.appBridge.ai.proxyRequest(url, 'POST', { 'Content-Type': 'application/json' }, {
-        contents: [{ parts }],
-        generationConfig: { 
-          response_mime_type: "application/json",
-          temperature: 0.2
+      let response: any;
+      let retries = 0;
+      const MAX_RETRIES = 2;
+
+      while (retries <= MAX_RETRIES) {
+        try {
+          response = await Promise.race([
+            window.appBridge.ai.proxyRequest(url, 'POST', { 'Content-Type': 'application/json' }, payload),
+            new Promise((_, reject) => 
+              setTimeout(() => reject(new Error("TIMEOUT: Gemini n'a pas répondu après 10min.")), TIMEOUT_MS)
+            )
+          ]) as any;
+
+          if (response.ok) break;
+
+          // Si pas OK, on regarde si c'est une erreur retryable (503, 429)
+          const isRetryable = response.status === 503 || response.status === 429;
+          if (isRetryable && retries < MAX_RETRIES) {
+            throw new Error(`Status ${response.status}`);
+          }
+          break; // Pas retryable ou max atteint
+        } catch (error: any) {
+          const errorMsg = error.message || '';
+          const isRetryableError = errorMsg.includes('503') || errorMsg.includes('429') || errorMsg.includes('Service Unavailable');
+          
+          if (isRetryableError && retries < MAX_RETRIES) {
+            retries++;
+            const delay = retries * 2000;
+            console.warn(`[AIService] ⏳ Erreur temporaire Gemini (${errorMsg}). Tentative ${retries}/${MAX_RETRIES} dans ${delay}ms...`);
+            await new Promise(resolve => setTimeout(resolve, delay));
+            continue;
+          }
+          throw error;
         }
-      });
+      }
 
       if (!response.ok) {
-        throw new Error(`Erreur API Gemini JSON: ${response.statusText}`);
+        const errorData = response.data;
+        console.error("[AIService] Gemini API Error Details:", typeof errorData === 'object' ? JSON.stringify(errorData) : errorData);
+        throw new Error(`Erreur API Gemini JSON: ${response.statusText || response.status}. ${typeof errorData === 'object' ? (errorData.error?.message || '') : ''}`);
       }
 
       const data = response.data as GeminiResponse;
       const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      console.log(`[AIService] Raw JSON response from Gemini (first 200 chars):`, text?.substring(0, 200));
       if (!text) throw new Error("Réponse JSON vide de Gemini.");
       
       return JSON.parse(text) as T;
@@ -771,6 +907,7 @@ Prompt utilisateur : ${prompt}`;
     Ta réponse doit commencer par { ou [ et se terminer par } ou ].`;
 
     const response = await this.generateText(prompt, enhancedSystemPrompt, 'sage', {}, options.lite);
+    console.log(`[AIService] Raw JSON response from ${activeProvider} (first 200 chars):`, response.text.substring(0, 200));
     
     try {
       return this.extractStructuredJSON<T>(response.text);
@@ -801,11 +938,42 @@ Prompt utilisateur : ${prompt}`;
     
     const jsonStr = jsonMatch[0];
     try {
+      // First attempt: direct parse
       return JSON.parse(jsonStr) as T;
     } catch (parseError) {
-      console.error("[AIService] Erreur de parsing du JSON extrait:", jsonStr.substring(0, 300));
-      throw parseError;
+      console.warn("[AIService] Initial JSON parse failed, attempting sanitization...");
+      try {
+        // Second attempt: sanitize common AI mistakes
+        const sanitized = this.sanitizeJSON(jsonStr);
+        return JSON.parse(sanitized) as T;
+      } catch (secondError) {
+        console.error("[AIService] Erreur de parsing du JSON extrait:", jsonStr.substring(0, 500));
+        throw parseError; // Throw the original error for better context
+      }
     }
+  }
+
+  /**
+   * Tries to repair common JSON malformations from AI models.
+   */
+  private sanitizeJSON(json: string): string {
+    let s = json.trim();
+    
+    // 1. Remove trailing commas before closing braces/brackets
+    s = s.replace(/,\s*([\}\]])/g, '$1');
+    
+    // 2. Fix unquoted keys or keys with single quotes
+    // Matches keys that are either unquoted (alphanumeric/underscore) or single-quoted
+    s = s.replace(/([{,]\s*)(['"])?([a-zA-Z0-9_]+)(['"])?\s*:/g, (match, prefix, q1, key, q2) => {
+      return `${prefix}"${key}":`;
+    });
+
+    // 3. Convert single quotes to double quotes for string values (heuristic)
+    // Be careful not to break apostrophes inside words. 
+    // This is a simplified version targeting 'value' pattern.
+    s = s.replace(/:\s*'([^']*)'/g, ': "$1"');
+
+    return s;
   }
 
   /**
@@ -838,9 +1006,17 @@ Prompt utilisateur : ${prompt}`;
         .map(c => `- ${c.title}: ${c.content}`);
 
       // 4. Événements récents (Journal/Chronique)
-      const lastEvents = (journalStore.journals.find(j => j.id === journalStore.activeJournalId)?.events || [])
-        .slice(lite ? -3 : -10) // 10 derniers événements (ou 3 en lite)
+      const lastEvents = lite ? [] : (journalStore.journals.find(j => j.id === journalStore.activeJournalId)?.events || [])
+        .slice(-10) 
         .map(e => `[${new Date(e.timestamp).toLocaleTimeString('fr-FR')}] ${e.title}: ${e.content}`);
+
+      if (lite) {
+        return `## Campagne: ${campaign?.name || "Inconnue"}
+### Groupe (PJ)
+${party.length > 0 ? party.join('\n') : "N/A"}
+### PNJs & Alliés
+${npcs.length > 0 ? npcs.join('\n') : "N/A"}`;
+      }
 
       return `## Campagne: ${campaign?.name || "Inconnue"}
 ${campaign?.synopsis ? `Synopsis: ${campaign.synopsis}\n` : ''}

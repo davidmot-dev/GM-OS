@@ -39,6 +39,7 @@ export type CurrentView =
     | 'storyboard'
     | 'deck-library'
     | 'deck-player'
+    | 'rulebook'
     | 'campaign-form';
 
 // ─────────────────────────────────────────────

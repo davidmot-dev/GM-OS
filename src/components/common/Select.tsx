@@ -17,6 +17,7 @@ interface SelectProps {
     placeholder?: string;
     className?: string;
     title?: string;
+    disabled?: boolean;
     renderOption?: (option: SelectOption) => ReactNode;
 }
 
@@ -33,6 +34,7 @@ export const Select: React.FC<SelectProps> = ({
     placeholder = 'Sélectionner...',
     className = '',
     title,
+    disabled = false,
     renderOption
 }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -49,17 +51,24 @@ export const Select: React.FC<SelectProps> = ({
     };
 
     return (
-        <div ref={containerRef} className={`relative flex flex-col gap-1.5 ${className}`} title={title}>
+        <div 
+            ref={containerRef} 
+            className={`relative flex flex-col gap-1.5 overflow-visible ${className}`} 
+            style={{ zIndex: isOpen ? 1000 : 'auto' }}
+            title={title}
+        >
             {label && (
                 <span className="stitch-label px-1">{label}</span>
             )}
             
             <button
                 type="button"
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={() => !disabled && setIsOpen(!isOpen)}
+                disabled={disabled}
                 className={`
                     flex items-center justify-between w-full px-3 py-2
-                    bg-app-bg/50 hover:bg-app-surface/60 border border-app-border/40 
+                    ${disabled ? 'opacity-50 cursor-not-allowed bg-app-bg/20' : 'bg-app-bg/50 hover:bg-app-surface/60 cursor-pointer'} 
+                    border border-app-border/40 
                     rounded-lg text-sm text-app-text transition-all duration-300
                     focus:outline-none focus:border-app-accent/50
                     ${isOpen ? 'border-app-accent/50 shadow-glow-accent/10' : ''}
@@ -87,7 +96,7 @@ export const Select: React.FC<SelectProps> = ({
                         exit={{ opacity: 0, y: -4, scale: 0.98 }}
                         transition={{ duration: 0.15, ease: 'easeOut' }}
                         className="
-                            absolute top-[calc(100%+0.5rem)] left-0 right-0 z-[100]
+                            absolute top-[calc(100%+0.5rem)] left-0 right-0 z-[1000]
                             bg-app-surface border border-app-border shadow-2xl rounded-xl 
                             overflow-hidden backdrop-blur-xl
                             max-h-64 overflow-y-auto custom-scrollbar

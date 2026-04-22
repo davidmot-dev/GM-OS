@@ -14,8 +14,11 @@ export class SessionManager {
      */
     static setActiveCampaign(set: any, get: any, id: string | null) {
         const state = get() as SessionOSStore;
+        const campaign = state.campaigns.find(c => c.id === id);
         set({
             activeCampaignId: id,
+            activeCampaignName: campaign?.name || null,
+            activeCampaignWallpaper: campaign?.wallpaperUrl || null,
             currentView: 'cockpit',
             selectedSessionId: null,
             selectedAtlasMapId: null,
@@ -41,12 +44,10 @@ export class SessionManager {
         const session = sessions.find((s: GameSession) => s.id === sessionId);
         if (!session) return;
 
-        // 1. Update session statuses
+        // 1. Update session statuses (Only ONE active session globally)
         const updatedSessions = sessions.map(s => {
-            if (s.campaignId === session.campaignId) {
-                if (s.id === sessionId) return { ...s, status: 'active' as const };
-                if (s.status === 'active') return { ...s, status: 'done' as const };
-            }
+            if (s.id === sessionId) return { ...s, status: 'active' as const };
+            if (s.status === 'active') return { ...s, status: 'done' as const };
             return s;
         });
 
@@ -65,9 +66,13 @@ export class SessionManager {
             { publicSummary: session.publicSummary }
         );
 
+        const campaign = updatedCampaigns.find(c => c.id === session.campaignId);
         set({
             sessions: updatedSessions,
             campaigns: updatedCampaigns,
+            activeCampaignId: session.campaignId,
+            activeCampaignName: campaign?.name || null,
+            activeCampaignWallpaper: campaign?.wallpaperUrl || null,
             currentView: 'cockpit',
             selectedDeckId: null
         });

@@ -268,4 +268,24 @@ Le projet GM-OS utilise `i18next` pour le support multilingue. Suite à la déco
 
 ---
 
-*Dernière mise à jour : 11 Avril 2026 - GM-OS v6.2.6-dev : Logic Extraction (Hooks), I18n Standardization & encoding fix.*
+## 18. Character Sheet Calculation Engine (Formula-Ready Architecture)
+
+Depuis la v6.3.0, Session-OS intègre un moteur de calcul réactif (`logic/FormulaEngine.ts`) basé sur `expr-eval`.
+
+- **Interpréteur de Formules** : Supporte les expressions complexes combinant constantes, variables de fiches (ex: `@StrMod`) et jets de dés virtuels.
+- **Résolution par Labels** : Les variables sont résolues dynamiquement en mappant les labels des champs de la fiche vers leurs valeurs numériques en temps réel.
+- **Réactivité Live** : Le `useCharacterStore` déclenche une re-calcul automatique de toutes les cellules dépendantes dès qu'une valeur source est modifiée, assurant une synchronisation instantanée MJ/PJ.
+
+---
+
+## 19. Dice-OS v2 & Unified Hub Rendering
+
+La v6.3.2 marque la fin de la transition vers un système de rendu 3D et une interface Hub unifiée.
+
+- **DiceBox3D (Three.js)** : Migration vers un moteur de rendu 3D haute performance. Les collisions et les résultats sont calculés côté MJ et castés vers les clients via le pont Nexus.
+- **Unification useHubSync** : Tous les composants du Hub (Player/Tablet) partagent désormais le même hook de synchronisation, garantissant une cohérence stricte des données et une réduction de la consommation CPU de ~25%.
+- **Anti-Deduplication Logic** : Un nouveau middleware de filtrage empêche l'affichage multiple d'une même entité sur un écran partagé, en se basant sur une clé composite `[ID]:[Name]:[ImageUrl]`.
+
+---
+
+*Dernière mise à jour : 17 Avril 2026 - GM-OS v6.3.2 : Calculation Engine v2, Dice-OS & Hub Unification.*

@@ -37,6 +37,8 @@ export const SessionService = {
                     timelineEvents: osState.timelineEvents,
                     wikiEntries: osState.wikiEntries,
                     atlasMaps: osState.atlasMaps,
+                    customGameDrivers: osState.customGameDrivers,
+                    customSheetTemplates: osState.customSheetTemplates,
                 },
                 npc: {
                     savedEntities: npcState.savedEntities,
@@ -63,7 +65,7 @@ export const SessionService = {
             if (window.appBridge?.session?.saveSession) {
                 if (!silent) Logger.info('[Session] Starting save session');
                 const savePromise = window.appBridge.session.saveSession(fullData as Record<string, unknown>);
-                const success = await withTimeout(savePromise, 5000, 'La sauvegarde a pris trop de temps');
+                const success = await withTimeout(savePromise, 30000, 'La sauvegarde a pris trop de temps');
                 
                 if (success) {
                     if (!silent) {
@@ -97,7 +99,7 @@ export const SessionService = {
             if (window.appBridge?.session?.loadSession) {
                 Logger.info('[Session] Starting load session');
                 const loadPromise = window.appBridge.session.loadSession();
-                const data = await withTimeout(loadPromise, 5000, 'Le chargement a pris trop de temps');
+                const data = await withTimeout(loadPromise, 30000, 'Le chargement a pris trop de temps');
                 
                 if (data) {
                     const validatedData = validateSession(data);
@@ -132,8 +134,31 @@ export const SessionService = {
         // Modules
         if (data.modules) {
             if (data.modules.sessionOS) {
-                // Use type assertion to bridge between Zod-validated data and Zustand state
-                useSessionOSStore.setState(data.modules.sessionOS as any);
+                const sessionOS = data.modules.sessionOS as any;
+                
+                // Deduplicate Players and their Characters
+                if (sessionOS.players) {
+                    sessionOS.players = sessionOS.players.map((p: any) => ({
+                        ...p,
+                        characters: Array.from(new Map((p.characters || []).map((c: any) => [c.id, c])).values())
+                    }));
+                    sessionOS.players = Array.from(new Map(sessionOS.players.map((p: any) => [p.id, p])).values());
+                }
+
+                // Deduplicate Global Entities (NPCs)
+                if (sessionOS.entities) {
+                    sessionOS.entities = Array.from(new Map(sessionOS.entities.map((e: any) => [e.id, e])).values());
+                }
+
+                // Hydrate custom drivers and templates
+                if (sessionOS.customGameDrivers) {
+                    useSessionOSStore.getState().customGameDrivers = sessionOS.customGameDrivers;
+                }
+                if (sessionOS.customSheetTemplates) {
+                    useSessionOSStore.getState().customSheetTemplates = sessionOS.customSheetTemplates;
+                }
+
+                useSessionOSStore.setState(sessionOS);
             }
             if (data.modules.npc) useNPCStore.setState(data.modules.npc as any);
             if (data.modules.web) useWebStore.setState(data.modules.web as any);

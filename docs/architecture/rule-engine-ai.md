@@ -26,10 +26,12 @@ interface GameDriver {
     // Logique de jeu
     dice: { defaultDice: string; logic: DiceRollLogic };
     
-    // Intelligence Artificielle
+    // Intelligence Artificielle (Hybrid Stack)
     aiInstructions: string;    // Prompt global MJ/Oracle
     aiPersonas: Record<string, string>; // Surcharges par rôle (Sage, Scribe...)
     defaultNotebookUrl?: string; // Lien vers le savoir externe (NotebookLM)
+    aiProvider: 'ollama' | 'gemini' | 'openai'; // Choix du moteur
+    aiVoiceProfile?: string;   // Profilage vocal spécifique
 }
 ```
 
@@ -62,9 +64,16 @@ Lorsque le **System Forge** analyse un document :
 
 Le module **Gemini CLI** (`@google/gemini-cli`) est intégré en tant qu'outil de développement de bas niveau :
 
-- **Contexte Projet** : Le CLI a accès aux dossiers `documentation/` et `src/modules/` via le script `scripts/gemini-bridge.js`.
+- **Contexte Projet** : Le CLI a accès aux dossiers `docs/` et `src/modules/` via le script `scripts/gemini-bridge.js`.
 - **Automatisation** : Utilisé pour générer des fichiers de structure (ex: `WeatherLayer.tsx`) ou analyser la cohérence entre les Drivers et l'UI.
+- **Vision de l'Oracle** : Extension narrative utilisant l'IA pour synthétiser l'état spatial (Map) et tactique (Combat).
 - **Accessibilité** : Commandes disponibles via `npm run gemini` et `npm run gemini:doc`.
+
+## 7. Gestion des Factions (Smart Mapping)
+
+L'architecture v5 introduit un mapping intelligent des allégeances entre les modules :
+- **NPC Gallery (Role)** -> **Combat OS (Faction)** : Conversion automatique des types de PNJ en allégeances tactiques (Allié, Hostile, Neutre).
+- **Combat OS** -> **Map OS (Oracle)** : Transmission de l'état de santé et de la faction pour une narration contextuelle et des conseils tactiques.
 
 ## Contact Technique
 

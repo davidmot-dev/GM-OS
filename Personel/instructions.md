@@ -51,7 +51,7 @@ Ce guide définit les règles obligatoires pour la refonte de GM-OS vers une arc
 - **Règle d'Or :** Toute modification du code (nouvelle feature, refonte, correction d'architecture) DOIT s'accompagner d'une mise à jour de la documentation associée (README, User Guides, Architecture Docs).
 - **Contenu Obligatoire :**
   - **README.md :** Doit refléter l'état actuel des modules et des fonctionnalités majeures.
-  - **Roadmap & Plans (CRITIQUE) :** Mettre à jour systématiquement les fichiers dans `documentation/Plans/` après chaque itération. Veiller à la cohérence entre le Backlog (à vider) et les Jalons Atteints (à remplir).
+  - **Roadmap & Plans (CRITIQUE) :** Mettre à jour systématiquement les fichiers dans `documentation/docs/planning/` après chaque itération. Veiller à la cohérence entre le Backlog (à vider) et les Jalons Atteints (à remplir).
   - **User Guides :** Mettre à jour les procédures pour l'utilisateur final (`documentation/User Guides/`).
   - **Documentation Technique :** Documenter les nouveaux services (`documentation/Technical Docs/`).
   - **Architecture :** Mettre à jour les diagrammes ou descriptions de flux dans `documentation/Architecture/`.

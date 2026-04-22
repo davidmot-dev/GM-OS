@@ -1,14 +1,15 @@
+/** RAG Service — Document Management */
 import { useSessionOSStore } from '../session/useSessionOSStore';
 import { useObsidianStore } from '../session/useObsidianStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../data/defaultSheetTemplates';
 
-export interface DocEntry {
+export type DocEntry = {
   name: string;
   path: string;
   type: 'file' | 'directory';
   extension?: string;
   children?: DocEntry[];
-}
+};
 
 export class RAGService {
   private static instance: RAGService;
@@ -38,7 +39,7 @@ export class RAGService {
     }
 
     if (options.systemOnly && options.systemName) {
-      return this.getContextForSpecificSystem(options.systemName);
+      return this.getContextForSpecificSystem(options.systemName, (options as any).limit);
     }
 
     const activeCampaign = osStore.campaigns.find(c => c.id === osStore.activeCampaignId);
@@ -168,8 +169,8 @@ export class RAGService {
   /**
    * Used specifically for the AI Generator to fetch a system's rules
    */
-  public async getContextForSpecificSystem(systemName: string): Promise<string> {
-    console.log(`[RAG Service] Fetching raw context for system generation: ${systemName}`);
+  public async getContextForSpecificSystem(systemName: string, limit?: number): Promise<string> {
+    console.log(`[RAG Service] Fetching raw context for system generation: ${systemName} (limit: ${limit || 'none'})`);
     if (!window.appBridge?.ai?.listDocs) return "";
     const docs = await window.appBridge.ai.listDocs() as DocEntry[];
     const contents: string[] = [];
@@ -177,6 +178,8 @@ export class RAGService {
 
     const searchRecursive = async (items: DocEntry[], isInsideTargetRoot = false) => {
       for (const item of items) {
+        if (limit && contents.length >= limit) break; // Respect the limit
+        
         const itemName = item.name.toLowerCase();
         // Match if directory name contains target or target contains directory name (e.g. "D&D" vs "dnd-5e" might be tricky, but "cyberpunk" vs "cyberpunk-red" works)
         const matchesName = itemName.includes(target) || target.includes(itemName);

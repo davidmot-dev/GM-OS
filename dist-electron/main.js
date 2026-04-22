@@ -27,6 +27,7 @@ import require$$1$3 from "node:stream";
 import require$$2$2 from "node:string_decoder";
 import require$$0$a from "zlib";
 import require$$0$b from "crypto";
+import { WebSocketServer as WebSocketServer$1, WebSocket } from "ws";
 var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
 function getDefaultExportFromCjs(x) {
   return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x["default"] : x;
@@ -4757,12 +4758,25 @@ function requireSrc() {
 var srcExports = requireSrc();
 const log$1 = /* @__PURE__ */ getDefaultExportFromCjs(srcExports);
 const require$2 = createRequire(import.meta.url);
-const pdf$1 = require$2("pdf-parse");
+let pdf;
+try {
+  pdf = require$2("pdf-parse");
+} catch (e) {
+  console.error("[RAG Engine] Failed to load pdf-parse:", e);
+}
 class RAGEngine {
   constructor() {
     this.index = /* @__PURE__ */ new Map();
     this.isIndexing = false;
     this.docsPath = path$1.join(process.env.APP_ROOT || "", "docs");
+  }
+  setDocsPath(newPath) {
+    if (newPath && newPath !== this.docsPath) {
+      console.log(`[RAG Engine] Updating docs path to: ${newPath}`);
+      this.docsPath = newPath;
+      this.index.clear();
+      this.updateIndex();
+    }
   }
   static getInstance() {
     if (!RAGEngine.instance) {
@@ -4813,6 +4827,7 @@ class RAGEngine {
   }
   /**
    * Search relevant content for a given system and campaign
+   * Optimized for targeted indexing
    */
   async getRelevantContext(systemId, campaignName) {
     if (this.index.size === 0) await this.updateIndex();
@@ -4821,16 +4836,19 @@ class RAGEngine {
     const results = [];
     for (const [relPath, file2] of this.index.entries()) {
       const lowerPath = relPath.toLowerCase();
-      const isSystemFile = lowerPath.includes(`systems/${sys}`) || lowerPath.includes(`systems\\${sys}`);
-      const isCampaignFile = lowerPath.includes(`campaigns/${camp}`) || lowerPath.includes(`campaigns\\${camp}`);
-      const isMatchedByName = lowerPath.includes(sys) || lowerPath.includes(camp);
-      if (isSystemFile || isCampaignFile || isMatchedByName) {
-        const header = `[Source: ${relPath}]
+      const segments = lowerPath.split(/[/\\]/);
+      const isSystemRelevant = segments.some((s) => s.includes(sys)) || lowerPath.includes("systems");
+      const isCampaignRelevant = segments.some((s) => s.includes(camp)) || lowerPath.includes("campaigns");
+      if (isSystemRelevant || isCampaignRelevant) {
+        const score = (lowerPath.includes(sys) ? 2 : 0) + (lowerPath.includes(camp) ? 2 : 0);
+        if (score > 0 || isSystemRelevant && lowerPath.includes("systems") || isCampaignRelevant && lowerPath.includes("campaigns")) {
+          const header = `[Source: ${relPath}]
 `;
-        results.push(header + file2.content);
+          results.push(header + file2.content);
+        }
       }
     }
-    return results.join("\n\n---\n\n");
+    return results.slice(0, 15).join("\n\n---\n\n");
   }
   async getAllFiles(dir2) {
     const results = [];
@@ -4858,8 +4876,8 @@ class RAGEngine {
         return text.length > MAX_SIZE ? text.substring(0, MAX_SIZE) + "... [Tronqué]" : text;
       } else if (ext === ".pdf") {
         const dataBuffer = await fs.readFile(filePath);
-        if (typeof pdf$1 === "function") {
-          const data = await pdf$1(dataBuffer);
+        if (typeof pdf === "function") {
+          const data = await pdf(dataBuffer);
           return data.text || "";
         }
       }
@@ -4874,14 +4892,89 @@ function registerRagHandlers() {
   ipcMain.handle("ai:search-context", async (_event, systemId, campaignName) => {
     return await engine.getRelevantContext(systemId, campaignName);
   });
-  ipcMain.handle("ai:reindex", async () => {
+  ipcMain.handle("ai:reindex", async (_event, customPath) => {
+    if (customPath) engine.setDocsPath(customPath);
     await engine.updateIndex();
     return true;
   });
-  setInterval(() => engine.updateIndex(), 1e3 * 60 * 5);
+  ipcMain.handle("ai:list-docs", async () => {
+    const root = RAGEngine.getInstance()["docsPath"];
+    console.log(`[RAG Engine] Listing docs in root: ${root}`);
+    if (!await fs.pathExists(root)) {
+      console.warn(`[RAG Engine] Root path does not exist: ${root}`);
+      return [];
+    }
+    async function getFiles(dir2) {
+      const items = await fs.readdir(dir2, { withFileTypes: true });
+      const result = await Promise.all(items.map(async (item) => {
+        const fullPath = path$1.join(dir2, item.name);
+        const relativePath = path$1.relative(root, fullPath);
+        if (item.name.startsWith(".")) return null;
+        if (item.isDirectory()) {
+          return {
+            name: item.name,
+            path: relativePath.replace(/\\/g, "/"),
+            type: "directory",
+            children: await getFiles(fullPath)
+          };
+        }
+        return {
+          name: item.name,
+          path: relativePath.replace(/\\/g, "/"),
+          type: "file",
+          extension: path$1.extname(item.name).toLowerCase()
+        };
+      }));
+      return result.filter((r) => r !== null);
+    }
+    return getFiles(root);
+  });
+  ipcMain.handle("ai:read-doc", async (_event, relativePath) => {
+    const root = RAGEngine.getInstance()["docsPath"];
+    const fullPath = path$1.join(root, relativePath);
+    if (!await fs.pathExists(fullPath) || !fullPath.startsWith(root)) return null;
+    return fs.readFile(fullPath, "utf-8");
+  });
+  ipcMain.handle("ai:extract-pdf", async (_event, relativePath) => {
+    const root = RAGEngine.getInstance()["docsPath"];
+    const fullPath = path$1.join(root, relativePath);
+    if (!await fs.pathExists(fullPath) || !fullPath.startsWith(root)) return "Fichier introuvable.";
+    try {
+      const dataBuffer = await fs.readFile(fullPath);
+      if (pdf) {
+        const data = await pdf(dataBuffer);
+        return data.text || "";
+      }
+      return "PDF Parser non disponible.";
+    } catch (error2) {
+      console.error("[RAGEngine] PDF Extraction Error:", error2);
+      return "Erreur lors de l'extraction.";
+    }
+  });
+  ipcMain.handle("ai:write-doc", async (_event, relativePath, content) => {
+    const root = RAGEngine.getInstance()["docsPath"];
+    const fullPath = path$1.join(root, relativePath);
+    console.log(`[RAG Engine] Writing doc: ${relativePath} -> ${fullPath}`);
+    if (!fullPath.startsWith(root)) {
+      console.error(`[RAG Engine] Security Violation: Attempted to write outside docs: ${fullPath}`);
+      return false;
+    }
+    try {
+      await fs.ensureDir(path$1.dirname(fullPath));
+      await fs.writeFile(fullPath, content, "utf-8");
+      RAGEngine.getInstance().updateIndex();
+      return true;
+    } catch (error2) {
+      console.error("[RAG Engine] Error writing doc:", error2);
+      return false;
+    }
+  });
+  setInterval(() => engine.updateIndex(), 1e3 * 60 * 15);
   setTimeout(() => engine.updateIndex(), 5e3);
 }
 const DEBUG_LOG_PATH = "C:\\Users\\david\\mcp_bridge_debug.log";
+const PYTHON_EXE = "C:\\Users\\david\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe";
+const WRAPPER_SCRIPT = "C:\\Users\\david\\.antigravity\\notebooklm-mcp\\run_mcp.py";
 function logToDebugFile(msg) {
   try {
     const timestamp = (/* @__PURE__ */ new Date()).toISOString();
@@ -4948,10 +5041,14 @@ async function ensureMcpServer() {
   serverSpawnPromise = (async () => {
     isInitialized = false;
     initializationPromise = null;
-    logToDebugFile("Spawning NotebookLM MCP Server with --debug flag...");
-    const proc = spawn("python", ["-m", "notebooklm_mcp.server", "--debug"], {
+    logToDebugFile(`Spawning NotebookLM MCP Server with wrapper: ${WRAPPER_SCRIPT}`);
+    const proc = spawn(PYTHON_EXE, [WRAPPER_SCRIPT, "server", "--debug"], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PYTHONUNBUFFERED: "1" }
+      env: {
+        ...process.env,
+        PYTHONUNBUFFERED: "1",
+        NOTEBOOKLM_CONFIG: "C:\\Users\\david\\.antigravity\\notebooklm-mcp\\notebooklm-config.json"
+      }
     });
     proc.stdout?.on("data", (data) => {
       stdoutBuffer += data.toString();
@@ -4963,23 +5060,29 @@ async function ensureMcpServer() {
           logToDebugFile(`<<< RECV: ${line}`);
           try {
             const response = JSON.parse(line);
+            logToDebugFile(`[Bridge] Parsed ID: ${response.id}, Method: ${response.method || "N/A"}`);
             if (response.id !== void 0) {
               const pending = pendingRequests.get(response.id);
               if (pending) {
+                logToDebugFile(`[Bridge] Matching pending request found for ID ${response.id} (${pending.method})`);
                 clearTimeout(pending.timeout);
                 if (response.error) {
                   const errorDetails = JSON.stringify(response.error);
                   logToDebugFile(`!!! ERROR for ID ${response.id}: ${errorDetails}`);
                   pending.reject(new Error(`${response.error.message || "Unknown error"} (Data: ${errorDetails})`));
                 } else {
+                  logToDebugFile(`[Bridge] Resolving ID ${response.id} with ${JSON.stringify(response.result).substring(0, 100)}...`);
                   pending.resolve(response.result);
                 }
                 pendingRequests.delete(response.id);
+              } else {
+                logToDebugFile(`[Bridge] WARNING: Received response for unknown ID ${response.id}`);
               }
             } else if (response.method === "notifications/message") {
               logToDebugFile(`[Server Notification] ${response.params?.message}`);
             }
-          } catch {
+          } catch (e) {
+            logToDebugFile(`[Bridge] JSON Parse Error or Handling Error: ${e}`);
             logToDebugFile(`[Raw Output] ${line}`);
           }
         }
@@ -5014,9 +5117,11 @@ async function callMcp(method, params) {
     await ensureHandshake();
   }
   const id = requestId++;
+  logToDebugFile(`[Bridge] Preparing request ${id} for method: ${method}`);
   return new Promise((resolve, reject2) => {
     const timeout2 = setTimeout(() => {
       const timeoutMsg = `MCP Request ${id} (${method}) timed out after 60s`;
+      logToDebugFile(`!!! TIMEOUT: ${timeoutMsg}`);
       console.error(`[MCP Bridge] ${timeoutMsg}`);
       pendingRequests.delete(id);
       reject2(new Error(timeoutMsg));
@@ -5028,7 +5133,7 @@ async function callMcp(method, params) {
       method,
       params
     }) + "\n";
-    logToDebugFile(`>>> SEND: ${request.trim()}`);
+    logToDebugFile(`>>> SEND [ID:${id}]: ${request.trim().substring(0, 200)}...`);
     process2.stdin?.write(request);
   });
 }
@@ -5058,11 +5163,16 @@ function registerMcpHandlers() {
           let parsed = null;
           try {
             parsed = JSON.parse(textContent);
-            if (parsed.status === "success" && typeof parsed.answer === "string") {
-              return { content: parsed.answer || "L'Oracle n'a pas trouvé de réponse précise pour ce notebook." };
+            if (parsed.status === "success") {
+              logToDebugFile(`[Bridge] Success detected, unwrapping content...`);
+              if (typeof parsed.answer === "string") {
+                return { content: parsed.answer || "L'Oracle n'a pas trouvé de réponse précise pour ce notebook." };
+              }
+              return parsed;
             }
             if (parsed.status === "error") {
-              throw new Error(parsed.error || "Erreur inconnue provenant de l'Oracle.");
+              const errorMsg = parsed.message || parsed.error || "Erreur inconnue provenant de l'Oracle.";
+              throw new Error(errorMsg);
             }
           } catch (e) {
             const err = e;
@@ -5083,14 +5193,13 @@ function registerMcpHandlers() {
   ipcMain.handle("mcp:reauthenticate", async () => {
     logToDebugFile(`[Auth] Triggering re-authentication CLI...`);
     try {
-      const pythonPath = process.env.PYTHON_PATH || "python";
-      const authProcess = spawn(pythonPath, ["-m", "notebooklm_mcp.auth_cli"], {
-        shell: true,
+      const authProcess = spawn(PYTHON_EXE, [WRAPPER_SCRIPT, "auth_cli"], {
+        shell: false,
         detached: true,
         stdio: "ignore"
       });
       authProcess.unref();
-      logToDebugFile(`[Auth] Auth CLI process spawned.`);
+      logToDebugFile(`[Auth] Auth CLI process spawned via wrapper.`);
       return { success: true, message: "Authentification lancée." };
     } catch (error2) {
       logToDebugFile(`[Auth] Error: ${error2}`);
@@ -49622,21 +49731,23 @@ class OllamaService {
   /**
    * Vérifie si le serveur Ollama est accessible
    */
-  async checkStatus() {
+  async checkStatus(endpoint) {
+    const url = (endpoint || this.baseUrl).replace(/\/$/, "");
     try {
-      const response = await net.fetch(`${this.baseUrl}/api/tags`);
+      const response = await net.fetch(`${url}/api/tags`);
       return response.ok;
     } catch (error2) {
-      console.error("[Ollama] Erreur de vérification du statut:", error2);
+      console.error(`[Ollama] Erreur de vérification du statut sur ${url}:`, error2);
       return false;
     }
   }
   /**
    * Envoie une requête de chat au modèle local (Bloquant)
    */
-  async chat(model, messages) {
+  async chat(model, messages, endpoint) {
+    const url = (endpoint || this.baseUrl).replace(/\/$/, "");
     try {
-      const response = await net.fetch(`${this.baseUrl}/api/chat`, {
+      const response = await net.fetch(`${url}/api/chat`, {
         method: "POST",
         body: JSON.stringify({
           model,
@@ -49646,19 +49757,15 @@ class OllamaService {
         headers: { "Content-Type": "application/json" }
       });
       if (!response.ok) {
-        throw new Error(`Ollama error: ${response.statusText}`);
+        const errorText = await response.text().catch(() => response.statusText);
+        throw new Error(`Ollama error (${response.status}): ${errorText}`);
       }
       const data = await response.json();
       return data.message.content;
     } catch (error2) {
       const err = error2;
-      console.error("[Ollama] Erreur de chat complète:", {
-        message: err.message,
-        code: err.code,
-        cause: err.cause
-      });
       if (err.code === "ECONNREFUSED" || err.message?.includes("fetch failed")) {
-        throw new Error(`Ollama est inaccessible sur ${this.baseUrl} (Erreur: ${err.message}). Si Ollama tourne dans le navigateur mais pas ici, vérifiez le Pare-feu Windows pour l'application.`);
+        throw new Error(`Ollama est inaccessible sur ${url}. Assurez-vous qu'Ollama est lancé et que le port est correct.`);
       }
       throw error2;
     }
@@ -49666,9 +49773,10 @@ class OllamaService {
   /**
    * Envoie une requête de chat au modèle local avec streaming (Réactifs)
    */
-  async chatStream(model, messages, onToken) {
+  async chatStream(model, messages, onToken, endpoint) {
+    const url = (endpoint || this.baseUrl).replace(/\/$/, "");
     try {
-      const response = await net.fetch(`${this.baseUrl}/api/chat`, {
+      const response = await net.fetch(`${url}/api/chat`, {
         method: "POST",
         body: JSON.stringify({
           model,
@@ -49709,42 +49817,44 @@ class OllamaService {
   /**
    * Liste les modèles installés localement
    */
-  async listModels() {
+  async listModels(endpoint) {
+    const url = (endpoint || this.baseUrl).replace(/\/$/, "");
     try {
-      const response = await net.fetch(`${this.baseUrl}/api/tags`);
+      const response = await net.fetch(`${url}/api/tags`);
       if (!response.ok) return [];
       const data = await response.json();
       return data.models?.map((m) => m.name) || [];
     } catch (error2) {
-      console.error("[Ollama] Erreur de listing des modèles:", error2);
+      console.error(`[Ollama] Erreur de listing des modèles sur ${url}:`, error2);
       return [];
     }
   }
   /**
    * Télécharge un modèle depuis la bibliothèque Ollama
    */
-  async pullModel(name) {
+  async pullModel(name, endpoint) {
+    const url = (endpoint || this.baseUrl).replace(/\/$/, "");
     try {
-      console.log(`[Ollama] Pulling model: ${name}`);
-      const response = await net.fetch(`${this.baseUrl}/api/pull`, {
+      console.log(`[Ollama] Pulling model: ${name} from ${url}`);
+      const response = await net.fetch(`${url}/api/pull`, {
         method: "POST",
         body: JSON.stringify({ name, stream: false }),
         headers: { "Content-Type": "application/json" }
       });
       return response.ok;
     } catch (error2) {
-      console.error(`[Ollama] Erreur lors du pull de ${name}:`, error2);
+      console.error(`[Ollama] Erreur lors du pull de ${name} sur ${url}:`, error2);
       return false;
     }
   }
   /**
    * Génère une image via l'API Ollama (modèles expérimentaux type Flux)
-   * Retourne généralement du texte en Base64 ou formaté en Markdown
    */
-  async generateImage(model, prompt) {
+  async generateImage(model, prompt, endpoint) {
+    const url = (endpoint || this.baseUrl).replace(/\/$/, "");
     try {
-      console.log(`[Ollama] Generating image with: ${model}`);
-      const response = await net.fetch(`${this.baseUrl}/api/generate`, {
+      console.log(`[Ollama] Generating image with: ${model} at ${url}`);
+      const response = await net.fetch(`${url}/api/generate`, {
         method: "POST",
         body: JSON.stringify({
           model,
@@ -49759,13 +49869,239 @@ class OllamaService {
       const data = await response.json();
       return data.response;
     } catch (error2) {
-      console.error("[Ollama] Erreur de génération d'image:", error2);
+      console.error(`[Ollama] Erreur de génération d'image sur ${url}:`, error2);
       throw error2;
     }
   }
+  /**
+   * Enregistre les gestionnaires IPC pour Ollama
+   */
+  static registerHandlers() {
+    const service = new OllamaService();
+    ipcMain.handle("ai:ollama-status", async (_event, endpoint) => {
+      return await service.checkStatus(endpoint);
+    });
+    ipcMain.handle("ai:ollama-chat", async (_event, model, messages, endpoint) => {
+      return await service.chat(model, messages, endpoint);
+    });
+    ipcMain.handle("ai:ollama-generate-image", async (_event, model, prompt, endpoint) => {
+      return await service.generateImage(model, prompt, endpoint);
+    });
+    ipcMain.handle("ai:ollama-chat-stream", async (event, model, messages, endpoint) => {
+      try {
+        await service.chatStream(model, messages, (token) => {
+          if (!event.sender.isDestroyed()) {
+            event.sender.send("ai:ollama-stream-token", token);
+          }
+        }, endpoint);
+        return { success: true };
+      } catch (error2) {
+        console.error("[Ollama Bridge] Streaming error:", error2);
+        throw error2;
+      }
+    });
+    ipcMain.handle("ai:ollama-list-models", async (_event, endpoint) => {
+      return await service.listModels(endpoint);
+    });
+    ipcMain.handle("ai:ollama-pull", async (_event, model, endpoint) => {
+      return await service.pullModel(model, endpoint);
+    });
+  }
+}
+class SyncServer {
+  constructor(mainWindow, port, tempMediaDir) {
+    this.wss = null;
+    this.server = null;
+    this.mainWindow = mainWindow;
+    this.port = port;
+    this.tempMediaDir = tempMediaDir;
+  }
+  start() {
+    try {
+      this.server = http.createServer((req, res) => this.handleHttpRequest(req, res));
+      this.wss = new WebSocketServer$1({ server: this.server });
+      this.wss.on("connection", (ws) => {
+        this.handleConnection(ws);
+      });
+      this.server.listen(this.port, "0.0.0.0", () => {
+        console.log(`[Nexus Sync] Server + Media proxy listening on 0.0.0.0:${this.port}`);
+      });
+      this.registerIpcHandlers();
+    } catch (err) {
+      console.error("[Nexus Sync] Failed to start server:", err);
+    }
+  }
+  handleHttpRequest(req, res) {
+    if (!req.url) return;
+    if (req.url.startsWith("/media/")) {
+      const encodedPath = req.url.substring(7);
+      const filePath = decodeURIComponent(encodedPath);
+      console.log(`[SyncServer] Requesting media: ${filePath}`);
+      if (fs.existsSync(filePath) && fs.lstatSync(filePath).isFile()) {
+        console.log(`[SyncServer] Serving media file: ${filePath}`);
+        const ext = path$1.extname(filePath).toLowerCase();
+        const mimeTypes = {
+          ".png": "image/png",
+          ".jpg": "image/jpeg",
+          ".jpeg": "image/jpeg",
+          ".gif": "image/gif",
+          ".webp": "image/webp",
+          ".svg": "image/svg+xml",
+          ".mp3": "audio/mpeg",
+          ".wav": "audio/wav"
+        };
+        res.writeHead(200, {
+          "Content-Type": mimeTypes[ext] || "application/octet-stream",
+          "Access-Control-Allow-Origin": "*"
+        });
+        fs.createReadStream(filePath).pipe(res);
+      } else {
+        console.warn(`[SyncServer] Media file not found: ${filePath}`);
+        res.writeHead(404);
+        res.end("Media not found");
+      }
+      return;
+    }
+    if (req.url.startsWith("/temp/")) {
+      const fileName = req.url.substring(6);
+      const filePath = path$1.join(this.tempMediaDir, fileName);
+      console.log(`[SyncServer] Requesting temp asset: ${fileName} -> ${filePath}`);
+      if (fs.existsSync(filePath)) {
+        console.log(`[SyncServer] Serving temp asset: ${fileName}`);
+        const ext = path$1.extname(filePath).toLowerCase();
+        const mimeTypes = {
+          ".png": "image/png",
+          ".jpg": "image/jpeg",
+          ".jpeg": "image/jpeg",
+          ".gif": "image/gif",
+          ".webp": "image/webp",
+          ".svg": "image/svg+xml",
+          ".mp3": "audio/mpeg",
+          ".wav": "audio/wav"
+        };
+        res.writeHead(200, {
+          "Content-Type": mimeTypes[ext] || "image/webp",
+          // Default to webp if no ext (historical)
+          "Access-Control-Allow-Origin": "*"
+        });
+        fs.createReadStream(filePath).pipe(res);
+      } else {
+        console.warn(`[SyncServer] Temp asset not found: ${fileName}`);
+        res.writeHead(404);
+        res.end("Temp Media not found");
+      }
+      return;
+    }
+    res.writeHead(404);
+    res.end();
+  }
+  handleConnection(ws) {
+    console.log("[Nexus Sync] New device connected");
+    if (this.mainWindow && !this.mainWindow.isDestroyed()) {
+      this.mainWindow.webContents.send("remote:request-sync");
+    }
+    ws.on("message", (message) => {
+      try {
+        const data = JSON.parse(message);
+        if (data.type === "remote:register") {
+          this.handleRegister(ws, data.payload);
+        } else if (data.type === "remote:hello") {
+          console.log("[Nexus Sync] Handshake received");
+        } else {
+          this.forwardToGM(ws, data);
+        }
+      } catch (err) {
+        console.error("[Nexus Sync] Failed to parse message:", err);
+      }
+    });
+    ws.on("close", () => {
+      if (ws.deviceId) {
+        console.log(`[Nexus Sync] Client disconnected: ${ws.deviceId}`);
+        sessionManager.ghostClient(ws.deviceId);
+        this.updateGMClients();
+      }
+    });
+  }
+  handleRegister(ws, payload) {
+    const { deviceId, pseudo, role, playerName, characterId } = payload || {};
+    const actualDeviceId = deviceId || `remote-${Math.random().toString(36).substring(2, 9)}`;
+    ws.deviceId = actualDeviceId;
+    ws.role = role || "player";
+    try {
+      sessionManager.registerClient(actualDeviceId, pseudo || "Unknown", role || "remote", playerName, characterId);
+      this.updateGMClients();
+      ws.send(JSON.stringify({ type: "remote:registered", payload: { deviceId: actualDeviceId, role: ws.role } }));
+    } catch (err) {
+      if (err.message === "character_taken") {
+        ws.send(JSON.stringify({
+          type: "remote:error",
+          payload: {
+            code: "character_taken",
+            message: "Signature biométrique déjà active sur un autre terminal."
+          }
+        }));
+      }
+    }
+  }
+  forwardToGM(ws, data) {
+    if (data.type === "session:send-message" && data.payload?.toId !== "GM") {
+      this.broadcastAction({ ...data, type: "session:receive-message" }, ws);
+    }
+    const isStrictP2P = data.type === "session:send-message" && data.payload?.toId !== "GM" && data.payload?.toId !== "all";
+    if (this.mainWindow && !this.mainWindow.isDestroyed() && !isStrictP2P) {
+      this.mainWindow.webContents.send("remote:action", data);
+    }
+  }
+  broadcastAction(action, sender, targetRole) {
+    if (!this.wss) return;
+    const message = JSON.stringify(action);
+    this.wss.clients.forEach((client) => {
+      if (client !== sender && client.readyState === WebSocket.OPEN) {
+        if (!targetRole || client.role === targetRole) {
+          client.send(message);
+        }
+      }
+    });
+  }
+  updateGMClients() {
+    if (this.mainWindow && !this.mainWindow.isDestroyed()) {
+      this.mainWindow.webContents.send("remote:sync-clients", sessionManager.getAllClients());
+    }
+  }
+  registerIpcHandlers() {
+    ipcMain.on("remote:broadcast-sync", (_event, data, role) => {
+      this.broadcastAction({ type: "sync", payload: data }, void 0, role);
+    });
+    ipcMain.on("remote:broadcast-ui-action", (_event, action, role) => {
+      this.broadcastAction(action, void 0, role);
+    });
+    ipcMain.on("remote:request-client-sync", () => {
+      this.updateGMClients();
+    });
+    ipcMain.on("remote:clear-disconnected", () => {
+      sessionManager.clearDisconnected();
+      this.updateGMClients();
+    });
+    ipcMain.handle("remote:cache-media", async (_event, buffer, id) => {
+      try {
+        if (!this.tempMediaDir) return false;
+        await fs.ensureDir(this.tempMediaDir);
+        const filePath = path$1.join(this.tempMediaDir, id);
+        await fs.writeFile(filePath, Buffer.from(buffer));
+        console.log(`[Nexus Sync] Media cached: ${id} at ${filePath}`);
+        return true;
+      } catch (err) {
+        console.error(`[Nexus Sync] Failed to cache media ${id}:`, err);
+        return false;
+      }
+    });
+  }
+  stop() {
+    this.wss?.close();
+    this.server?.close();
+  }
 }
 const require$1 = createRequire(import.meta.url);
-const pdf = require$1("pdf-parse");
 const { WebSocketServer } = require$1("ws");
 if (os.platform() === "win32") {
   dns.setDefaultResultOrder("ipv4first");
@@ -49801,17 +50137,17 @@ registerMcpHandlers();
 registerObsidianHandlers();
 registerNexusHandlers();
 registerSecurityHandlers();
+OllamaService.registerHandlers();
 protocol.registerSchemesAsPrivileged([
   { scheme: "gmos", privileges: { standard: true, secure: true, supportFetchAPI: true, bypassCSP: true, stream: true } }
 ]);
 app.commandLine.appendSwitch("ignore-certificate-errors");
-const ollamaService = new OllamaService();
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
 const MAIN_DIST = __dirname$1;
 const RENDERER_DIST = path$1.join(process.env.APP_ROOT, "dist");
 process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path$1.join(process.env.APP_ROOT, "public") : RENDERER_DIST;
 let win;
-let wss = null;
+let syncServer = null;
 const REMOTE_PORT = 3001;
 const TEMP_MEDIA_DIR = path$1.join(app.getPath("userData"), "temp-media");
 function createWindow() {
@@ -49837,6 +50173,8 @@ function createWindow() {
   } else {
     win.loadFile(path$1.join(RENDERER_DIST, "index.html"));
   }
+  syncServer = new SyncServer(win, REMOTE_PORT, TEMP_MEDIA_DIR);
+  syncServer.start();
 }
 const SESSIONS_DIR = path$1.join(process.env.APP_ROOT || "", "sessions");
 ipcMain.handle("save-session", async (_event, data) => {
@@ -50050,16 +50388,12 @@ ipcMain.on("image:sync-hub-data", (_event, type, imagePath) => {
       projWin.webContents.send("image:sync-hub-data", type, imagePath);
     }
   }
-  if (wss) {
-    const message = JSON.stringify({
+  if (win && !win.isDestroyed()) {
+    const action = {
       type: "hub-projection",
       payload: { type, data: imagePath }
-    });
-    wss.clients.forEach((client) => {
-      if (client.readyState === 1) {
-        client.send(message);
-      }
-    });
+    };
+    ipcMain.emit("remote:broadcast-ui-action", null, action);
   }
 });
 ipcMain.on("session:launch-hub-window", (_event, mode = "hub") => {
@@ -50167,176 +50501,6 @@ ipcMain.on("image:close-all-displays", () => {
   }
   projectorWindows.clear();
 });
-function startRemoteServer() {
-  try {
-    const server = http.createServer((req, res) => {
-      console.log(`[Remote Proxy] Request: ${req.url}`);
-      if (req.url && req.url.startsWith("/media/")) {
-        const encodedPath = req.url.substring(7);
-        const filePath = decodeURIComponent(encodedPath);
-        console.log(`[Remote Proxy] Attempting to serve: ${filePath}`);
-        if (fs.existsSync(filePath) && fs.lstatSync(filePath).isFile()) {
-          const ext = path$1.extname(filePath).toLowerCase();
-          const mimeTypes = {
-            ".png": "image/png",
-            ".jpg": "image/jpeg",
-            ".jpeg": "image/jpeg",
-            ".gif": "image/gif",
-            ".webp": "image/webp",
-            ".svg": "image/svg+xml",
-            ".mp3": "audio/mpeg",
-            ".wav": "audio/wav"
-          };
-          res.writeHead(200, {
-            "Content-Type": mimeTypes[ext] || "application/octet-stream",
-            "Access-Control-Allow-Origin": "*"
-          });
-          fs.createReadStream(filePath).pipe(res);
-        } else {
-          console.warn(`[Remote Proxy] File NOT FOUND: ${filePath}`);
-          res.writeHead(404);
-          res.end("Media not found");
-        }
-        return;
-      }
-      if (req.url && req.url.startsWith("/temp/")) {
-        const fileName = req.url.substring(6);
-        const filePath = path$1.join(TEMP_MEDIA_DIR, fileName);
-        if (fs.existsSync(filePath)) {
-          res.writeHead(200, {
-            "Content-Type": "image/webp",
-            // Default to webp or guess by extension if needed
-            "Access-Control-Allow-Origin": "*"
-          });
-          fs.createReadStream(filePath).pipe(res);
-        } else {
-          res.writeHead(404);
-          res.end("Temp Media not found");
-        }
-        return;
-      }
-      res.writeHead(404);
-      res.end();
-    });
-    wss = new WebSocketServer({ server });
-    console.log(`[Remote] Server + Media started on port ${REMOTE_PORT}`);
-    if (wss) {
-      wss.on("connection", (ws) => {
-        let currentDeviceId = null;
-        console.log("[Remote] New device connected");
-        if (win && !win.isDestroyed()) {
-          console.log("[Remote] New client connected. Requesting full sync from MJ...");
-          win.webContents.send("remote:request-sync");
-        }
-        ws.on("message", (message) => {
-          try {
-            const data = JSON.parse(message);
-            if (data.type === "remote:register") {
-              const { deviceId, pseudo, role, playerName, characterId } = data.payload || {};
-              const actualDeviceId = deviceId || `remote-${Math.random().toString(36).substring(2, 9)}`;
-              currentDeviceId = actualDeviceId;
-              try {
-                sessionManager.registerClient(actualDeviceId, pseudo || "Unknown", role || "remote", playerName, characterId);
-                if (win && !win.isDestroyed()) {
-                  win.webContents.send("remote:sync-clients", sessionManager.getAllClients());
-                }
-              } catch (err) {
-                if (err.message === "character_taken") {
-                  ws.send(JSON.stringify({
-                    type: "remote:error",
-                    payload: {
-                      code: "character_taken",
-                      message: "Signature biométrique déjà active sur un autre terminal."
-                    }
-                  }));
-                }
-              }
-            } else if (data.type === "remote:hello") {
-              console.log("[Remote] Handshake received");
-            } else {
-              const isP2P = data.type === "session:send-message" && data.payload && data.payload.toId !== "GM" && data.payload.toId !== "all";
-              if (win && !win.isDestroyed() && !isP2P) {
-                console.log("[Remote] Action received from tablet:", data.type);
-                win.webContents.send("remote:action", data);
-              }
-              if (data.type === "session:send-message") {
-                const payload = data.payload;
-                if (payload && payload.toId !== "GM" && wss) {
-                  console.log(`[Remote] WebSocket Broadcast: Forwarding message from ${payload.fromName} to ${payload.toId}`);
-                  const broadcastData = { ...data, type: "session:receive-message" };
-                  const p2pMsg = JSON.stringify(broadcastData);
-                  wss.clients.forEach((client) => {
-                    if (client !== ws && client.readyState === 1) {
-                      client.send(p2pMsg);
-                    }
-                  });
-                }
-              }
-            }
-          } catch (err) {
-            console.error("[Remote] Failed to parse message:", err);
-          }
-        });
-        ws.on("close", () => {
-          if (currentDeviceId) {
-            console.log(`[Remote] Client went ghost: ${currentDeviceId}`);
-            sessionManager.ghostClient(currentDeviceId);
-            if (win && !win.isDestroyed()) {
-              win.webContents.send("remote:sync-clients", sessionManager.getAllClients());
-            }
-          } else {
-            console.log("[Remote] Anonymous device disconnected");
-          }
-        });
-      });
-    }
-    ipcMain.on("remote:request-client-sync", () => {
-      console.log("[Remote] MJ requested client sync");
-      if (win && !win.isDestroyed()) {
-        win.webContents.send("remote:sync-clients", sessionManager.getAllClients());
-      }
-    });
-    server.listen(REMOTE_PORT, "0.0.0.0", () => {
-      console.log(`[Remote] Server + Media proxy listening on 0.0.0.0:${REMOTE_PORT}`);
-    });
-  } catch (err) {
-    console.error("[Remote] Failed to start server:", err);
-  }
-}
-ipcMain.handle("remote:cache-media", async (_event, buffer, id) => {
-  try {
-    await fs.ensureDir(TEMP_MEDIA_DIR);
-    const filePath = path$1.join(TEMP_MEDIA_DIR, id);
-    await fs.writeFile(filePath, buffer);
-    return true;
-  } catch (error2) {
-    console.error("[Main] Error caching media:", error2);
-    return false;
-  }
-});
-ipcMain.on("remote:broadcast-sync", (_event, data) => {
-  if (wss) {
-    const segments = Object.keys(data || {});
-    console.log(`[Remote] Broadcasting sync (${segments.join(", ")}) to ${wss.clients.size} clients`);
-    const message = JSON.stringify({ type: "sync", payload: data });
-    wss.clients.forEach((client) => {
-      if (client.readyState === 1) {
-        client.send(message);
-      }
-    });
-  }
-});
-ipcMain.on("remote:broadcast-ui-action", (_event, action) => {
-  if (wss) {
-    console.log(`[Remote] Broadcasting UI action: ${action.type} to ${wss.clients.size} clients`);
-    const message = JSON.stringify(action);
-    wss.clients.forEach((client) => {
-      if (client.readyState === 1) {
-        client.send(message);
-      }
-    });
-  }
-});
 function getLocalIP() {
   const interfaces = os.networkInterfaces();
   for (const name of Object.keys(interfaces)) {
@@ -50363,84 +50527,6 @@ ipcMain.on("remote:clear-disconnected", (event) => {
   console.log("[Remote] MJ requested clearing of non-active clients");
   sessionManager.clearDisconnected();
   event.reply("remote:sync-clients", sessionManager.getAllClients());
-});
-ipcMain.handle("ai:list-docs", async () => {
-  const docsPath = path$1.join(APP_ROOT, "docs");
-  if (!fs.existsSync(docsPath)) return [];
-  async function getFiles(dir2) {
-    const items = await fs.readdir(dir2, { withFileTypes: true });
-    const result = await Promise.all(items.map(async (item) => {
-      const fullPath = path$1.join(dir2, item.name);
-      const relativePath = path$1.relative(docsPath, fullPath);
-      if (item.isDirectory()) {
-        return {
-          name: item.name,
-          path: relativePath,
-          type: "directory",
-          children: await getFiles(fullPath)
-        };
-      }
-      return {
-        name: item.name,
-        path: relativePath,
-        type: "file",
-        extension: path$1.extname(item.name).toLowerCase()
-      };
-    }));
-    return result;
-  }
-  return getFiles(docsPath);
-});
-ipcMain.handle("ai:read-doc", async (_event, relativePath) => {
-  const fullPath = path$1.join(APP_ROOT, "docs", relativePath);
-  if (!fs.existsSync(fullPath)) return null;
-  return fs.readFileSync(fullPath, "utf-8");
-});
-ipcMain.handle("ai:ollama-status", async () => {
-  return await ollamaService.checkStatus();
-});
-ipcMain.handle("ai:ollama-chat", async (_event, model, messages) => {
-  return await ollamaService.chat(model, messages);
-});
-ipcMain.handle("ai:ollama-generate-image", async (_event, model, prompt) => {
-  return await ollamaService.generateImage(model, prompt);
-});
-ipcMain.handle("ai:ollama-chat-stream", async (event, model, messages) => {
-  try {
-    await ollamaService.chatStream(model, messages, (token) => {
-      if (!event.sender.isDestroyed()) {
-        event.sender.send("ai:ollama-stream-token", token);
-      }
-    });
-    return { success: true };
-  } catch (error2) {
-    console.error("[AI Main] Streaming error:", error2);
-    throw error2;
-  }
-});
-ipcMain.handle("ai:ollama-list-models", async () => {
-  return await ollamaService.listModels();
-});
-ipcMain.handle("ai:ollama-pull", async (_event, model) => {
-  return await ollamaService.pullModel(model);
-});
-ipcMain.handle("ai:extract-pdf", async (_event, relativePath) => {
-  const fullPath = path$1.join(APP_ROOT, "docs", relativePath);
-  console.log(`[AI Main] Extracting PDF: ${fullPath}`);
-  if (!fs.existsSync(fullPath)) {
-    console.error(`[AI Main] PDF file not found: ${fullPath}`);
-    return "Fichier introuvable.";
-  }
-  try {
-    const dataBuffer = fs.readFileSync(fullPath);
-    console.log(`[AI Main] Buffer read, size: ${dataBuffer.length} bytes. Parsing...`);
-    const data = await pdf(dataBuffer);
-    console.log(`[AI Main] PDF parsed successfully. Text length: ${data.text?.length || 0}`);
-    return data.text || "PDF vide ou illisible.";
-  } catch (error2) {
-    console.error("[AI Main] PDF Extraction Error:", error2);
-    return `Erreur lors de l'extraction du PDF : ${error2 instanceof Error ? error2.message : String(error2)}`;
-  }
 });
 ipcMain.handle("ai:proxy-request", async (_event, url, method, headers2, body) => {
   return new Promise((resolve, reject2) => {

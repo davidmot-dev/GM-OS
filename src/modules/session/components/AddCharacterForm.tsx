@@ -7,7 +7,7 @@ import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 
 export const AddCharacterForm: React.FC = () => {
-    const { addCharacterToPlayer, selectedPlayerId, customSheetTemplates } = useSessionOSStore();
+    const { addCharacterToPlayer, selectedPlayerId, customSheetTemplates, activeCampaignId } = useSessionOSStore();
     const { closeModal } = useModalStore();
 
     const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
@@ -30,7 +30,7 @@ export const AddCharacterForm: React.FC = () => {
             maxHp,
             hp: maxHp,
             portraitUrl: portraitMediaId || 'https://api.dicebear.com/9.x/adventurer/svg?seed=' + name,
-            campaignId: null,
+            campaignId: activeCampaignId, // Automatically link to active campaign
             templateId,
             sheetData: {},
         });

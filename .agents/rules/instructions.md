@@ -1,5 +1,10 @@
 ---
 trigger: always_on
+---
+
+---
+
+trigger: always_on
 glob: "**/*.{ts,tsx,js,jsx}"
 description: "Règles de migration pour GM-OS v5 (React, TypeScript, Tailwind, Bridge-Agnostic, Testing)"
 ---
@@ -26,11 +31,13 @@ Ce guide définit les règles obligatoires pour la refonte de GM-OS vers une arc
 - **Découplage :** La logique (calculs, gestion audio) doit être dans des fichiers `.ts` séparés des composants React.
 - **Hooks :** Encapsuler la logique complexe dans des Custom Hooks (ex: `useAudioEngine`, `useMidi`).
 
-## 4. Typage Strict (TypeScript)
+## 4. Typage Strict (TypeScript) - Exigence Zéro-Any
 
-- **Règle :** Aucun `any`.
-- **Interfaces :** Chaque entité (Pad, Deck, NPC) doit avoir une interface stricte.
+- **Règle d'Or :** L'usage de `any` est strictement interdit dans toute l'application.
+- **Zéro Tolérance :** Tout nouveau code ou refonte doit utiliser des interfaces TypeScript explicites ou `unknown` (avec narrowing) si le type est réellement dynamique. Interdire `any` même pour les objets globaux (`window`).
+- **Interfaces :** Chaque entité (Pad, Deck, NPC, Store) doit posséder une interface stricte et complète.
 - **Persistence :** Ne pas stocker d'objets complexes (AudioBuffer, HTMLMediaElement) dans l'état global, seulement des IDs, chemins ou métadonnées.
+- **CSS :** Zéro styles inline (`style={{...}}`). Utiliser exclusivement Tailwind ou des classes dans `index.css`.
 
 ## 5. Tests Automatisés & Robustesse
 
@@ -43,3 +50,25 @@ Ce guide définit les règles obligatoires pour la refonte de GM-OS vers une arc
 
 - **Règle :** Utiliser Zustand ou le Context API pour les données globales partagées (ex: Settings, Session).
 - **Synchronisation :** L'UI doit être une fonction pure de l'état global.
+
+## 7. Maintenance Systématique de la Documentation
+
+- **Règle d'Or :** Toute modification du code (nouvelle feature, refonte, correction d'architecture) DOIT s'accompagner d'une mise à jour de la documentation associée (README, User Guides, Architecture Docs).
+- **Contenu Obligatoire :**
+  - **README.md :** Doit refléter l'état actuel des modules et des fonctionnalités majeures.
+  - **Roadmap & Plans (CRITIQUE) :** Mettre à jour systématiquement les fichiers dans `documentation/docs/planning/` après chaque itération. Veiller à la cohérence entre le Backlog (à vider) et les Jalons Atteints (à remplir).
+  - **User Guides :** Mettre à jour les procédures pour l'utilisateur final (`documentation/User Guides/`).
+  - **Documentation Technique :** Documenter les nouveaux services (`documentation/Technical Docs/`).
+  - **Architecture :** Mettre à jour les diagrammes ou descriptions de flux dans `documentation/Architecture/`.
+  - **Lessons Learned :** Consigner les défis techniques et solutions trouvées dans `documentation/Lessons_Learned.md`.
+- **Historique des Walkthroughs :** Sauvegarder systématiquement chaque `walkthrough.md` finalisé dans `documentation/walkthroughs/` avec un nom descriptif (ex: `2026-03-21-media-cleanup-v1.md`).
+- **Lieu Unique :** Centraliser toute la documentation dans le dossier `documentation/` du projet.
+
+## 8. Consultation de la Documentation Technique
+
+- **Règle Impérative :** Avant de commencer tout nouveau développement ou refonte, l'agent doit impérativement lire l'intégralité de la documentation technique existante liée au module concerné (ex: `documentation/Technical Docs/`).
+- **Prise en Compte :** Toutes les remarques, contraintes architecturales et leçons apprises (`Lessons_Learned.md`) documentées doivent être prises en compte et respectées scrupuleusement dans la nouvelle implémentation.
+
+## 9. Initiative
+
+- **Règle Impérative :** Si l'agent ne trouve pas de solution, il doit me poser des questions pour soit continuer à investiguer, soit brainstormer avec moi pour préciser les besoins  

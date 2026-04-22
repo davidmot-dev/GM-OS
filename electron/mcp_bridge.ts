@@ -7,6 +7,8 @@ import * as fs from 'fs';
  */
 
 const DEBUG_LOG_PATH = 'C:\\Users\\david\\mcp_bridge_debug.log';
+const PYTHON_EXE = 'C:\\Users\\david\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe';
+const WRAPPER_SCRIPT = 'C:\\Users\\david\\.antigravity\\notebooklm-mcp\\run_mcp.py';
 
 function logToDebugFile(msg: string) {
     try {
@@ -88,11 +90,15 @@ async function ensureMcpServer(): Promise<ChildProcess> {
     serverSpawnPromise = (async () => {
         isInitialized = false;
         initializationPromise = null;
-        logToDebugFile('Spawning NotebookLM MCP Server with --debug flag...');
+        logToDebugFile(`Spawning NotebookLM MCP Server with wrapper: ${WRAPPER_SCRIPT}`);
         
-        const proc = spawn('python', ['-m', 'notebooklm_mcp.server', '--debug'], {
+        const proc = spawn(PYTHON_EXE, [WRAPPER_SCRIPT, 'server', '--debug'], {
             stdio: ['pipe', 'pipe', 'pipe'],
-            env: { ...process.env, PYTHONUNBUFFERED: '1' }
+            env: { 
+                ...process.env, 
+                PYTHONUNBUFFERED: '1',
+                NOTEBOOKLM_CONFIG: 'C:\\Users\\david\\.antigravity\\notebooklm-mcp\\notebooklm-config.json'
+            }
         });
 
         proc.stdout?.on('data', (data: Buffer) => {
@@ -107,25 +113,30 @@ async function ensureMcpServer(): Promise<ChildProcess> {
                     logToDebugFile(`<<< RECV: ${line}`);
                     try {
                         const response = JSON.parse(line);
+                        logToDebugFile(`[Bridge] Parsed ID: ${response.id}, Method: ${response.method || 'N/A'}`);
                         
                         if (response.id !== undefined) {
                             const pending = pendingRequests.get(response.id);
                             if (pending) {
+                                logToDebugFile(`[Bridge] Matching pending request found for ID ${response.id} (${pending.method})`);
                                 clearTimeout(pending.timeout);
                                 if (response.error) {
                                     const errorDetails = JSON.stringify(response.error);
                                     logToDebugFile(`!!! ERROR for ID ${response.id}: ${errorDetails}`);
                                     pending.reject(new Error(`${response.error.message || 'Unknown error'} (Data: ${errorDetails})`));
                                 } else {
+                                    logToDebugFile(`[Bridge] Resolving ID ${response.id} with ${JSON.stringify(response.result).substring(0, 100)}...`);
                                     pending.resolve(response.result);
                                 }
                                 pendingRequests.delete(response.id);
+                            } else {
+                                logToDebugFile(`[Bridge] WARNING: Received response for unknown ID ${response.id}`);
                             }
                         } else if (response.method === 'notifications/message') {
                             logToDebugFile(`[Server Notification] ${response.params?.message}`);
                         }
-                    } catch {
-                        // Not JSON? Log as raw output
+                    } catch (e) {
+                        logToDebugFile(`[Bridge] JSON Parse Error or Handling Error: ${e}`);
                         logToDebugFile(`[Raw Output] ${line}`);
                     }
                 }
@@ -168,10 +179,12 @@ async function callMcp(method: string, params: Record<string, unknown>) {
     }
 
     const id = requestId++;
+    logToDebugFile(`[Bridge] Preparing request ${id} for method: ${method}`);
     
     return new Promise((resolve, reject) => {
         const timeout = setTimeout(() => {
             const timeoutMsg = `MCP Request ${id} (${method}) timed out after 60s`;
+            logToDebugFile(`!!! TIMEOUT: ${timeoutMsg}`);
             console.error(`[MCP Bridge] ${timeoutMsg}`);
             pendingRequests.delete(id);
             reject(new Error(timeoutMsg));
@@ -186,7 +199,7 @@ async function callMcp(method: string, params: Record<string, unknown>) {
             params
         }) + '\n';
         
-        logToDebugFile(`>>> SEND: ${request.trim()}`);
+        logToDebugFile(`>>> SEND [ID:${id}]: ${request.trim().substring(0, 200)}...`);
         process.stdin?.write(request);
     });
 }
@@ -229,11 +242,17 @@ export function registerMcpHandlers() {
                     let parsed: Record<string, unknown> | null = null;
                     try {
                         parsed = JSON.parse(textContent) as Record<string, unknown>;
-                        if (parsed.status === 'success' && typeof parsed.answer === 'string') {
-                            return { content: parsed.answer || "L'Oracle n'a pas trouvé de réponse précise pour ce notebook." };
+                        if (parsed.status === 'success') {
+                            logToDebugFile(`[Bridge] Success detected, unwrapping content...`);
+                            if (typeof parsed.answer === 'string') {
+                                return { content: parsed.answer || "L'Oracle n'a pas trouvé de réponse précise pour ce notebook." };
+                            }
+                            // Return the full parsed object so UI can access fields like .notebooks, .sources, etc.
+                            return parsed;
                         }
                         if (parsed.status === 'error') {
-                            throw new Error((parsed.error as string) || "Erreur inconnue provenant de l'Oracle.");
+                            const errorMsg = (parsed.message as string) || (parsed.error as string) || "Erreur inconnue provenant de l'Oracle.";
+                            throw new Error(errorMsg);
                         }
                     } catch (e: unknown) {
                         const err = e as Error;
@@ -259,14 +278,13 @@ export function registerMcpHandlers() {
     ipcMain.handle('mcp:reauthenticate', async () => {
         logToDebugFile(`[Auth] Triggering re-authentication CLI...`);
         try {
-            const pythonPath = process.env.PYTHON_PATH || 'python';
-            const authProcess = spawn(pythonPath, ['-m', 'notebooklm_mcp.auth_cli'], { 
-                shell: true,
+            const authProcess = spawn(PYTHON_EXE, [WRAPPER_SCRIPT, 'auth_cli'], { 
+                shell: false,
                 detached: true,
                 stdio: 'ignore'
             });
             authProcess.unref();
-            logToDebugFile(`[Auth] Auth CLI process spawned.`);
+            logToDebugFile(`[Auth] Auth CLI process spawned via wrapper.`);
             return { success: true, message: "Authentification lancée." };
         } catch (error) {
             logToDebugFile(`[Auth] Error: ${error}`);

@@ -101,4 +101,5 @@ export interface GameDriver {
     // Metadata for AI
     aiInstructions: string; // Specialized instructions for the Oracle/Sage to understand rules
     aiPersonas?: Record<string, string>; // gemId -> instructions override
+    ragPath?: string; // Optional custom path for RAG rules storage (e.g. "systems/my-system/rules")
 }

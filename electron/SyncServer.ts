@@ -8,7 +8,7 @@ import { sessionManager } from './SessionManager';
 interface ExtendedWebSocket extends WebSocket {
     isAlive?: boolean;
     deviceId?: string;
-    role?: 'gm' | 'player' | 'remote';
+    role?: 'gm' | 'player' | 'remote' | 'hub';
 }
 
 export class SyncServer {

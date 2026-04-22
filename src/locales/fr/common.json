@@ -1,7 +1,10 @@
 {
+  "note": "Note",
+  "id_label": "ID",
   "activeModule": "Module Actif",
   "theme": "Thème",
   "sessionMode": "Mode Session",
+
   "spotlight": {
     "placeholder": "Rechercher une entité, musique, règle...",
     "close_tooltip": "Fermer la recherche",
@@ -126,6 +129,7 @@
     "globalMatrix": "Matrice Globale",
     "sort": {
       "label": "Tri",
+      "date": { "label": "Date", "desc": "Trier par chronologie" },
       "recent": { "label": "Plus récents", "desc": "Les derniers imports" },
       "oldest": { "label": "Plus anciens", "desc": "Depuis le début" },
       "size": { "label": "Taille", "desc": "Poids du fichier" },

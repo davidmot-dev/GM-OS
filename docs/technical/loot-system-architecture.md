@@ -57,4 +57,14 @@ Informations stockées par entrée :
 
 ---
 
-*Dernière mise à jour : 9 Avril 2026*
+## 🎲 Loot Generator & Rule Engine Integration
+
+Depuis la v6.3.0, le système de loot est branché sur le **Rule Engine** pour permettre la génération procédurale d'objets.
+
+- **Rule Engine Bridge** : Le `lootSlice` peut invoquer des tables de butin définies dans le `GameDriver` actif.
+- **Génération Contextuelle** : Les objets générés héritent automatiquement des propriétés définies par le système de règles (ex: bonus magiques calculés selon le niveau de rencontre).
+- **Injection Automatique** : Une fois généré, l'objet est directement injecté dans le `lootPool` pour distribution.
+
+---
+
+*Dernière mise à jour : 17 Avril 2026 - GM-OS v6.3.2 : Rule Engine Integration.*

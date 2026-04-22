@@ -1,40 +1,30 @@
-# 🔧 Documentation Technique : Social Nexus (Social Graph)
+# 🔗 Social Nexus : Documentation Technique
 
-Le **Social Nexus** est le module de visualisation et de gestion des relations sociales de GM-OS v5. Il utilise un graphe de force interactif pour représenter les liens entre les PNJ et les PJ d'une campagne active.
+Le **Social Nexus** est un moteur de visualisation de graphes relationnels utilisant D3.js pour représenter les liens entre les personnages (PJ et PNJ).
 
 ## 🏗️ Architecture
 
-Le module est construit sur une séparation stricte entre la couche de rendu (UI) et la préparation des données (Logic).
+### 1. Structure de Données
+Le graphe est alimenté par les données de session :
+*   **Nodes** : PJ (Joueurs) et PNJ (Non-Joueurs).
+*   **Links** : Relations définies dans la session (Amis, Ennemis, Famille, etc.).
 
-1.  **Moteur de Rendu** : `react-force-graph-2d` (Canvas API).
-    - Choix technologique : Le Canvas offre des performances supérieures au SVG pour les graphes denses et permet des animations fluides à 60fps même avec des centaines de nœuds.
-2.  **Gestion de l'État** : `useSessionOSStore` (Zustand).
-    - Les relations sont stockées de manière persistante dans la structure `socialRelations` du store de session.
-3.  **Préparation des Données** : `socialNexusUtils.ts`.
-    - Les données brutes des entités sont transformées en nœuds (`nodes`) et liens (`links`) compatibles avec le simulateur physique de d3-force.
+### 2. Moteur de Simulation (D3.js)
+La simulation utilise plusieurs forces :
+*   `forceLink` : Maintient les noeuds connectés à une certaine distance.
+*   `forceManyBody` : Gère la répulsion/attraction entre les noeuds (Gravité).
+*   `forceCenter` : Maintient le graphe au centre du conteneur.
+*   `forceCollide` : Évite que les avatars ne se chevauchent.
 
-## 🎨 Fonctionnalités & Implémentation
+### 3. Réactivité des Réglages
+Pour permettre une édition interactive, le composant React `SocialGraph.tsx` surveille les changements de paramètres physiques :
+*   Lorsqu'un slider est manipulé, la simulation est relancée avec `alphaTarget(0.3)`.
+*   Cela permet au graphe de se réorganiser en temps réel sans attendre la stabilisation naturelle de D3.
 
-### Rendu des Portraits (Canvas Media)
-Le rendu des avatars dans le canvas utilise un cache d'images dynamique.
-- **Résolution** : Les identifiants `m-xxxx` (Media Hub) et les chemins locaux sont résolus via `useMediaStore` pour obtenir des ObjectURLs (`blob:`).
-- **Optimization** : Les images sont pré-chargées et stockées dans un objet de cache pour éviter les clignotements lors des re-renders.
+## 🖼️ Gestion des Avatars
+*   **Résolution** : Le hook `useAvatarResolver` convertit les chemins locaux ou distants en URLs utilisables par le navigateur.
+*   **Format** : Les portraits sont rendus dans des éléments `<pattern>` SVG pour être affichés sous forme de cercles avec bordure.
+*   **Fallbacks** : Si une image est manquante, un cercle de couleur avec l'initiale du nom est affiché.
 
-### Relations Directionnelles (Asymétrie)
-Le module supporte le concept de relations non-réciproques.
-- **Visualisation** : Utilisation de `linkDirectionalArrowLength` et `linkCurvature` pour représenter les sentiments croisés entre deux nœuds sans chevauchement.
-- **Codage sémantique** : Les couleurs et la direction sont calculées dynamiquement selon les métadonnées de la relation (`source_perception`, `target_perception`).
-
-### Factions & Filtrage
-Le filtrage par faction s'appuie sur le moteur de recherche global de la session.
-- **Logic** : `prepareSocialGraphData` filtre récursivement les nœuds orphelins si leur faction ne correspond pas au filtre actif, garantissant un graphe lisible et contextuel.
-
-### Navigation Deep-Link
-Le passage du graphe à la fiche détaillée (`NpcDetail`) court-circuite le reset automatique du store.
-- **State Management** : L'ID de l'entité est injecté dans `selectedEntityId` juste après le changement de vue (`setCurrentView`), forçant le mode "Détail" au montage du composant `NpcGallery`.
-
-## 📂 Fichiers Clés
-- `src/modules/session/components/SocialGraph.tsx` : Interface et rendu Canvas.
-- `src/modules/session/logic/socialNexusUtils.ts` : Moteur de préparation et filtrage.
-- `src/modules/session/useSessionOSStore.ts` : Persistance et états de navigation.
-- `src/modules/session/logic/socialNexusUtils.test.ts` : Tests unitaires de la structure du graphe.
+## 📡 Synchronisation Hub
+L'état du graphe (position des noeuds, zoom) est synchronisé avec les Hubs (Tablette/Joueur) via le bridge P2P pour garantir que tout le monde voit la même disposition tactique des relations.

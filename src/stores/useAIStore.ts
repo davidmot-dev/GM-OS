@@ -27,20 +27,36 @@ export const useAIStore = create<AIState>()(
         anthropic: { provider: 'anthropic', modelId: 'claude-3-5-sonnet-latest' },
         ollama: { 
           provider: 'ollama', 
-          modelId: 'gemma4:26b',
+          modelId: 'phi3',
           endpoint: 'http://127.0.0.1:11434'
         },
+        ollama_cloud: {
+          provider: 'ollama_cloud',
+          modelId: 'llama3',
+          endpoint: 'https://votre-ollama-cloud.com'
+        },
+        custom: {
+          provider: 'custom',
+          modelId: 'custom-model',
+          endpoint: 'https://api.custom.com/v1'
+        }
       },
       streamEnabled: true,
       liteContext: false,
 
       setProvider: (provider) => set({ activeProvider: provider }),
 
-      updateConfig: (provider, config) => {
+      updateConfig: async (provider, config) => {
         // Sécurité : Si une clé API est fournie, on l'enregistre dans le trousseau natif
         // au lieu du store persistant (localStorage)
-        if (config.apiKey && window.appBridge?.security) {
-          window.appBridge.security.saveSecret(`ai-key-${provider}`, config.apiKey);
+        if (config.apiKey !== undefined && window.appBridge?.security) {
+          try {
+            console.log(`[AI Store] 🔐 Tentative de sauvegarde sécurisée pour "${provider}"...`);
+            await window.appBridge.security.saveSecret(`ai-key-${provider}`, config.apiKey);
+            console.log(`[AI Store] ✅ Clé sauvegardée avec succès dans le trousseau pour "${provider}"`);
+          } catch (err) {
+            console.error(`[AI Store] ❌ Échec de la sauvegarde dans le trousseau pour "${provider}":`, err);
+          }
         }
 
         set((state) => ({
@@ -70,23 +86,28 @@ export const useAIStore = create<AIState>()(
         const currentConfigs = { ...get().configs };
         let hasChanges = false;
 
-        for (const provider of Object.keys(currentConfigs) as AIProvider[]) {
+        const providers = Object.keys(currentConfigs) as AIProvider[];
+        
+        for (const provider of providers) {
           const secretId = `ai-key-${provider}`;
           
           try {
             // 1. Récupération : On charge la clé depuis le trousseau natif
             const securedKey = await security.getSecret(secretId);
             
-            if (securedKey && typeof securedKey === 'string' && securedKey.length > 0) {
-              console.log(`[AI Store] ✅ Clé récupérée pour "${provider}"`);
-              currentConfigs[provider].apiKey = securedKey;
+            if (securedKey && typeof securedKey === 'string' && securedKey.length > 5) {
+              console.log(`[AI Store] ✅ Clé récupérée avec succès pour "${provider}" (${securedKey.length} chars)`);
+              currentConfigs[provider] = {
+                ...currentConfigs[provider],
+                apiKey: securedKey
+              };
               hasChanges = true;
             } else {
+              console.log(`[AI Store] ℹ️ Aucune clé trouvée dans le trousseau pour "${provider}"`);
               // 2. Migration : Si une clé traîne encore en clair en mémoire vive (venant du localStorage legacy)
               if (currentConfigs[provider].apiKey) {
                 console.log(`[AI Store] 💾 Migration de la clé "${provider}" vers le Keychain.`);
                 await security.saveSecret(secretId, currentConfigs[provider].apiKey!);
-                // Note: On ne supprime pas encore de la mémoire pour permettre l'usage immédiat
               }
             }
           } catch (err) {

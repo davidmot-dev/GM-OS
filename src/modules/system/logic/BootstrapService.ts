@@ -3,6 +3,8 @@ import { useMediaStore } from '../../../stores/useMediaStore';
 import { useAIStore } from '../../../stores/useAIStore';
 import { useLightStore } from '../../light/useLightStore';
 import { useSessionStore } from '../../../store/useSessionStore';
+import { useImageStore } from '../../image/useImageStore';
+import { useMapStore } from '../../map/useMapStore';
 import { sessionBackupManager } from '../../session/logic/SessionBackupManager';
 
 /**
@@ -17,6 +19,10 @@ export class BootstrapService {
         if (this.isInitialized) return;
         
         console.log('[Bootstrap] ⚙️ Initialisation du système...');
+        
+        // Nettoyage des projections résiduelles de la session précédente (évite l'ouverture automatique au démarrage)
+        useImageStore.getState().clearActiveProjections();
+        useMapStore.getState().resetProjectionState();
 
         try {
             // 1. Initialisation de la base de données Media (IndexedDB)
@@ -36,8 +42,8 @@ export class BootstrapService {
             console.log('[Bootstrap] 📡 Démarrage des services de fond (Spatial Triggers)...');
             spatialTriggerService.startWatching();
 
-            // 4. Démarrage du cycle de sauvegarde automatique (15 min)
-            sessionBackupManager.start();
+            // 4. Désactivation du cycle de sauvegarde automatique (Évite les timeouts sur sessions lourdes)
+            // sessionBackupManager.start();
 
             // 5. Marquage du système comme "Prêt"
             useSessionStore.getState().setSystemReady(true);

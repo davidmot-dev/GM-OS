@@ -2,6 +2,7 @@ import { AIService } from '../ai/AIService';
 import { useAIStore } from '../../stores/useAIStore';
 import type { GameDriver } from '../../types/drivers';
 import type { SheetTemplate } from '../../data/defaultSheetTemplates';
+import type { BrainstormCandidate, BrainstormCard } from './rules/types';
 
 export interface ForgeContextItem {
   id?: string;
@@ -35,14 +36,18 @@ export class ForgeService {
     const aiService = AIService.getInstance();
     const { activeProvider } = useAIStore.getState();
 
-    // 1. PRÉPARATION DU CONTENU
+    // 1. PRÉPARATION DU CONTENU (Capé pour éviter les surcharges)
     let consolidatedText = "";
     const attachments: { data: string, mimeType: string }[] = [];
+    const MAX_TEXT_CHARS = 100000;
+    const MAX_ATTACHMENTS = 5;
 
     items.forEach(item => {
       if (item.type === 'text') {
-        consolidatedText += `\n\nCONTENU DU DOCUMENT [${item.name}] :\n\n${item.content}`;
-      } else {
+        if (consolidatedText.length < MAX_TEXT_CHARS) {
+          consolidatedText += `\n\nCONTENU DU DOCUMENT [${item.name}] :\n\n${item.content}`;
+        }
+      } else if (attachments.length < MAX_ATTACHMENTS) {
         attachments.push({
           data: item.content,
           mimeType: item.mimeType || 'application/pdf'
@@ -50,13 +55,25 @@ export class ForgeService {
       }
     });
 
+    if (consolidatedText.length >= MAX_TEXT_CHARS) {
+      console.warn("[ForgeService] Context text truncated to 100k chars.");
+      consolidatedText = consolidatedText.substring(0, MAX_TEXT_CHARS) + "\n\n[TEXTE TRONQUÉ POUR SURCHARGE]";
+    }
+
     // 2. VÉRIFICATION DE CAPACITÉ VISUELLE
     if (attachments.length > 0 && activeProvider !== 'gemini') {
       throw new Error("Gemma 4 ne supporte pas l'analyse visuelle de multiples fichiers. Veuillez utiliser NotebookLM pour extraire le texte au préalable.");
     }
 
     const fullPrompt = `${consolidatedText}\n\nINSTRUCTIONS FINALES : ${prompt}`;
-    return aiService.generateJSON<ForgeSystemResult>(fullPrompt, "Tu es l'ingénieur en chef de la Forge GM-OS.", attachments);
+    const systemPrompt = `Tu es l'ingénieur en chef de la Forge GM-OS, agissant en mode **🧠 SYSTEM ENGINEER**. 
+    Tu dois générer EXCLUSIVEMENT un objet JSON valide suivant le schéma fourni. 
+    Pas de texte avant, pas d'explications après. Si tu ne peux pas générer le système, renvoie un objet vide {}.`;
+
+    console.error(`[ForgeService] Sending request to ${activeProvider} (LITE MODE: ON)...`);
+    const result = await aiService.generateJSON<ForgeSystemResult>(fullPrompt, systemPrompt, attachments, { lite: true });
+    console.error(`[ForgeService] ${activeProvider} responded!`);
+    return result;
   }
 
   private getSystemForgePrompt(userInstructions?: string, targetName?: string): string {
@@ -231,23 +248,76 @@ export class ForgeService {
     // 1. CAS TEXTE PUR (OU TEXTE EXTRAIT PAR NOTEBOOKLM)
     if (rawText) {
       const fullPrompt = `CONTENU DU DOCUMENT À ANALYSER :\n\n${rawText}\n\nREQUÊTE : ${prompt}`;
-      return aiService.generateJSON(fullPrompt, "Tu es un expert en ingénierie de données pour GM-OS.");
+      console.error(`[ForgeService] Analyzing text with ${activeProvider} (LITE MODE)...`);
+      return aiService.generateJSON(fullPrompt, "Tu es un expert en ingénierie de données JdR pour GM-OS. Réponds UNIQUEMENT en JSON pur.", [], { lite: true });
     }
 
     // 2. CAS DOCUMENT DIRECT (PDF/IMAGE)
     if (fileBase64 && mimeType) {
       // Si on n'est pas sur Gemini, la vision directe n'est pas supportée
       if (activeProvider !== 'gemini') {
-        throw new Error("Gemma 4 ne supporte pas l'analyse visuelle directe. Veuillez utiliser NotebookLM pour extraire le texte du document au préalable.");
+        throw new Error("L'analyse visuelle directe n'est supportée que par Gemini. Veuillez utiliser NotebookLM pour extraire le texte.");
       }
 
-      return aiService.generateJSON(prompt, "Tu es un expert en ingénierie de données pour GM-OS.", [{
+      console.error(`[ForgeService] Analyzing visual document with Gemini (LITE MODE)...`);
+      return aiService.generateJSON(prompt, "Tu es un expert en analyse de documents JdR. Extrais les données structurées UNIQUEMENT en JSON.", [{
         data: fileBase64,
         mimeType: mimeType
-      }]);
+      }], { lite: true });
     }
 
     throw new Error("Aucun contenu fourni pour l'analyse.");
+  }
+
+  /**
+   * Scans NotebookLM to discover rule/scenario candidates.
+   */
+  public async discoverCandidates(notebookId: string, sourceIds?: string[], subject?: string): Promise<BrainstormCandidate[]> {
+    const subjectContext = subject ? ` concernant spécifiquement : "${subject}"` : "";
+    const prompt = `Analyses les sources de ce notebook et listes 5 à 8 éléments de règles, décisions de MJ ou éléments de scénario intéressants à formaliser${subjectContext}.
+    Réponds EXCLUSIVEMENT sous forme d'un tableau JSON d'objets avec les champs : id (slug), title, category ('rule'|'decision'|'memory'|'scenario'), summary, tags (array).`;
+    
+    const result = await this.callMcpTool<{content: string}>('notebooklm-mcp-server', 'notebook_query', {
+      notebook_id: notebookId,
+      query: prompt,
+      source_ids: sourceIds
+    });
+
+    if (!result?.content) throw new Error("Réponse vide de NotebookLM");
+    
+    try {
+      const jsonStr = result.content.match(/\[[\s\S]*\]/)?.[0] || result.content;
+      return JSON.parse(jsonStr);
+    } catch (e) {
+      console.error("Failed to parse candidates JSON", result.content);
+      throw new Error("Format JSON invalide reçu de NotebookLM");
+    }
+  }
+
+  /**
+   * Forges a complete card for a specific candidate.
+   */
+  public async forgeCard(notebookId: string, candidate: BrainstormCandidate, systemId: string, sourceIds?: string[]): Promise<BrainstormCard> {
+    const prompt = `Formalises une fiche complète pour l'élément suivant : "${candidate.title}" (Catégorie: ${candidate.category}).
+    Le contenu doit être en Markdown riche, structuré, et prêt à être utilisé par un MJ. 
+    Inclus des exemples concrets si possible. 
+    Si c'est une règle, précise les jets de dés. 
+    Réponds EXCLUSIVEMENT avec le contenu Markdown de la fiche.`;
+    
+    const result = await this.callMcpTool<{content: string}>('notebooklm-mcp-server', 'notebook_query', {
+      notebook_id: notebookId,
+      query: prompt,
+      source_ids: sourceIds // Pass source filters
+    });
+
+    if (!result?.content) throw new Error("Réponse vide de NotebookLM");
+
+    return {
+      ...candidate,
+      content: result.content,
+      systemId,
+      forgedAt: Date.now()
+    };
   }
 
   /**
@@ -262,18 +332,38 @@ export class ForgeService {
     
     const mcpBridge = bridge.mcp;
 
-    const isAuthError = (res: unknown): boolean => {
-      const str = typeof res === 'string' ? res : JSON.stringify(res);
-      return str.includes("Authentication expired") || str.includes("RPC Error 16") || str.includes("expired");
+    const isAuthError = (err: any): boolean => {
+      if (!err) return false;
+      const str = (err?.message || (typeof err === 'string' ? err : JSON.stringify(err))).toLowerCase();
+      return str.includes('auth') || str.includes('login') || str.includes('expired') || str.includes('credentials');
+    };
+
+    const TIMEOUT_MS = 600000; // 10 minutes
+
+    const callWithTimeout = async (name: string, tool: string, a: any) => {
+      return Promise.race([
+        mcpBridge.callTool(name, tool, a),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error(`MCP_TIMEOUT: ${name}.${tool} non répondu après 10min.`)), TIMEOUT_MS)
+        )
+      ]);
     };
 
     try {
-      const result = await mcpBridge.callTool(serverName, toolName, args);
+      console.log(`[ForgeService] Calling MCP Tool: ${serverName}.${toolName}`, args);
+      const result = await callWithTimeout(serverName, toolName, args);
       
       if (isAuthError(result)) {
-        // Attempt one-time silent refresh
-        await mcpBridge.callTool('notebooklm-mcp-server', 'refresh_auth', {});
-        const retryResult = await mcpBridge.callTool(serverName, toolName, args);
+        console.warn(`[ForgeService] Auth error detected in result, attempting refresh...`);
+        try {
+          await callWithTimeout('notebooklm-mcp-server', 'refresh_auth', {});
+          await new Promise(resolve => setTimeout(resolve, 2500));
+          await callWithTimeout('notebooklm-mcp-server', 'healthcheck', {}).catch(() => {});
+        } catch (e) {
+          console.warn("[ForgeService] Silent refresh failed", e);
+        }
+        
+        const retryResult = await callWithTimeout(serverName, toolName, args);
         if (isAuthError(retryResult)) {
           throw new Error("MCP_AUTH_EXPIRED: Still expired after refresh.");
         }
@@ -283,8 +373,15 @@ export class ForgeService {
       return result as unknown as T;
     } catch (err: unknown) {
       if (isAuthError(err)) {
-        await mcpBridge.callTool('notebooklm-mcp-server', 'refresh_auth', {});
-        return await mcpBridge.callTool(serverName, toolName, args) as unknown as T;
+        console.warn(`[ForgeService] Auth error detected in catch, attempting refresh...`);
+        try {
+          await callWithTimeout('notebooklm-mcp-server', 'refresh_auth', {});
+          await new Promise(resolve => setTimeout(resolve, 2500));
+          await callWithTimeout('notebooklm-mcp-server', 'healthcheck', {}).catch(() => {});
+          return await callWithTimeout(serverName, toolName, args) as unknown as T;
+        } catch (retryErr) {
+          throw new Error("MCP_AUTH_EXPIRED: Recovery failed.");
+        }
       }
       throw err;
     }

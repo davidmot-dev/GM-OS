@@ -30,6 +30,7 @@ import { HubTrombinoscope } from './hub/HubTrombinoscope';
 import { HubAtlas } from './hub/HubAtlas';
 import { HubInventory } from './hub/HubInventory';
 import { HubProjectionCard } from './hub/HubProjectionCard';
+import { HubRuleViewer } from './hub/HubRuleViewer';
 import { useHubSync } from '../modules/session/hooks/useHubSync';
 import PlayerPrivateNotes from '../modules/session/components/PlayerPrivateNotes';
 import { type Clue, type Entity, type AtlasMap } from '../modules/session/store/types';
@@ -69,7 +70,9 @@ const TabletHub: React.FC = () => {
         sessions,
         isOnboarded,
         characterId,
-        transferRequests
+        transferRequests,
+        sharedRule,
+        setSharedRule
     } = useHubSync();
 
     const { resetIdentity } = useClientStore();
@@ -418,6 +421,7 @@ const TabletHub: React.FC = () => {
             <HubNpcViewer npc={selectedNpc} onClose={() => setSelectedNpc(null)} />
             <HubAtlasViewer map={selectedAtlasMap} onClose={() => setSelectedAtlasMap(null)} />
             <HubItemViewer item={selectedItem} onClose={() => setSelectedItem(null)} />
+            <HubRuleViewer rule={sharedRule} onClose={() => setSharedRule(null)} />
 
             {/* Dice Animation Overlay */}
             <AnimatePresence>

@@ -84,6 +84,7 @@ contextBridge.exposeInMainWorld('appBridge', {
     ai: {
         listDocs: () => ipcRenderer.invoke('ai:list-docs'),
         readDoc: (filePath: string) => ipcRenderer.invoke('ai:read-doc', filePath),
+        writeDoc: (filePath: string, content: string) => ipcRenderer.invoke('ai:write-doc', filePath, content),
         extractPDF: (filePath: string) => ipcRenderer.invoke('ai:extract-pdf', filePath),
         proxyRequest: (url: string, method: string, headers: Record<string, string>, body: unknown) => 
             ipcRenderer.invoke('ai:proxy-request', url, method, headers, body),

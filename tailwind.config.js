@@ -39,6 +39,7 @@ export default {
                 arcaneGold: '#d4af37',
                 arcaneGlow: '#7e22ce',
                 accent: 'var(--app-accent)',
+                'app-accent': 'var(--app-accent)',
                 'app-bg': 'var(--app-bg)',
                 'app-surface': 'var(--app-surface)',
                 'app-border': 'var(--app-border)',

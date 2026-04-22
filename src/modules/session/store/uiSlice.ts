@@ -28,6 +28,7 @@ export interface UiSliceState {
     selectedEntityId: string | null;
     editingTemplateId: string | null;
     editingDriverId: string | null;
+    templateDashboardTab: 'sheets' | 'drivers';
     diceRolls: { die: number; result: number; timestamp: number }[];
     isAddingEntity: boolean;
     isGeneratingAIImage: boolean;
@@ -57,6 +58,7 @@ export interface UiSliceActions {
     setSelectedEntity: (id: string | null) => void;
     setEditingTemplateId: (id: string | null) => void;
     setEditingDriverId: (id: string | null) => void;
+    setTemplateDashboardTab: (tab: 'sheets' | 'drivers') => void;
     setIsAddingEntity: (isAdding: boolean) => void;
     setIsGeneratingAIImage: (isGenerating: boolean) => void;
     setActiveCampaignFormSection: (section: string | null) => void;
@@ -93,6 +95,7 @@ export const createUiSlice: StateCreator<UiSlice, [], [], UiSlice> = (set, get) 
     selectedEntityId: null,
     editingTemplateId: null,
     editingDriverId: null,
+    templateDashboardTab: 'sheets',
     diceRolls: [],
     isAddingEntity: false,
     isGeneratingAIImage: false,
@@ -117,6 +120,7 @@ export const createUiSlice: StateCreator<UiSlice, [], [], UiSlice> = (set, get) 
     setSelectedEntity: (id) => set({ selectedEntityId: id }),
     setEditingTemplateId: (id) => set({ editingTemplateId: id }),
     setEditingDriverId: (id) => set({ editingDriverId: id }),
+    setTemplateDashboardTab: (tab) => set({ templateDashboardTab: tab }),
     setIsAddingEntity: (isAdding) => set({ isAddingEntity: isAdding }),
     setIsGeneratingAIImage: (isGenerating) => set({ isGeneratingAIImage: isGenerating }),
     setActiveCampaignFormSection: (section) => set({ activeCampaignFormSection: section }),

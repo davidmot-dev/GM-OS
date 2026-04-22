@@ -16,6 +16,7 @@ import {
     handleAddChronicle,
     handleExportActiveCampaignToObsidian
 } from '../logic/crossDomainHelpers';
+import { sanitizeSessions } from '../logic/sanitization';
 import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 
@@ -131,7 +132,7 @@ export const useSessionOSStore = create<SessionOSStore>()(
 
             // ── Data Initialization ──────────────────────
             campaigns: INITIAL_DATA.campaigns,
-            sessions: INITIAL_DATA.sessions,
+            sessions: sanitizeSessions(INITIAL_DATA.sessions),
             entities: INITIAL_DATA.entities,
             players: INITIAL_DATA.players,
             atlasMaps: INITIAL_DATA.atlasMaps,
@@ -279,7 +280,13 @@ export const useSessionOSStore = create<SessionOSStore>()(
                 if (hasChanges) set({ players: newPlayers, campaigns: newCampaigns });
             },
         }),
-        PersistenceService
+        {
+            ...PersistenceService,
+            onRehydrateStorage: () => () => {
+                // state.sanitizeAllSessions() removed to prevent infinite sync loops
+                // Sanitization is handled during session addition or explicitly via SessionManager if needed.
+            }
+        }
     )
 );
 

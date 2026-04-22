@@ -68,6 +68,7 @@ const MediaBrowser = lazy(() => import('./components/MediaBrowser').then(m => ({
 const GlobalKeybinds = lazy(() => import('./components/GlobalKeybinds').then(m => ({ default: m.GlobalKeybinds })));
 const SpotlightSearch = lazy(() => import('./components/SpotlightSearch').then(m => ({ default: m.SpotlightSearch })));
 const MessageAlertOverlay = lazy(() => import('./modules/session/components/MessageAlertOverlay').then(m => ({ default: m.MessageAlertOverlay })));
+const BrainstormOverlay = lazy(() => import('./modules/forge/rules/components/BrainstormOverlay').then(m => ({ default: m.BrainstormOverlay })));
 
 const PlaceholderModule = ({ name }: { name: string }) => (
   <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
@@ -92,6 +93,8 @@ function App() {
   const sessionOSStore = useSessionOSStore();
   const { activeCampaignId } = sessionOSStore;
   const { isMediaHubOpen, closeMediaHub } = useModalStore();
+  const { syncWithKeychain: syncAIKeys } = useAIStore();
+  const { syncWithKeychain: syncHueKeys } = useLightStore();
   const [showSplash, setShowSplash] = useState(true);
 
   const searchParams = new URLSearchParams(window.location.search);
@@ -119,6 +122,13 @@ function App() {
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
+
+  useEffect(() => {
+    if (isMainPC && isHydrated) {
+      syncAIKeys();
+      syncHueKeys();
+    }
+  }, [isMainPC, isHydrated, syncAIKeys, syncHueKeys]);
 
   // --- BOOTSTRAP DU SYSTÈME (GM SEULEMENT) ---
   useEffect(() => {
@@ -498,6 +508,7 @@ function App() {
           
           <Suspense fallback={null}>
             <MessageAlertOverlay />
+            <BrainstormOverlay />
           </Suspense>
           
           <Shell>{renderModule()}</Shell>

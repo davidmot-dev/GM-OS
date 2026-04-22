@@ -109,7 +109,12 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
     // ─── Entities ────────────────────────────────
 
     addEntity: (entity) => {
-        const newEntity: Entity = { ...entity, id: `e-${Date.now()}` };
+        const defaultAvatar = 'https://api.dicebear.com/9.x/adventurer-neutral/svg?seed=NPC&backgroundColor=b6e3f4';
+        const newEntity: Entity = { 
+            avatar: defaultAvatar,
+            ...entity, 
+            id: `e-${Date.now()}` 
+        };
         set((state) => ({ entities: [...state.entities, newEntity] }));
         gmToast(i18next.t('modules:session.toasts.entity_created', { name: newEntity.name }), 'success');
     },
@@ -204,8 +209,12 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
     // ─── Players & Characters ────────────────────
 
     addPlayer: (player) => {
-        const newPlayer: Player = { ...player, id: `p-${Date.now()}` };
-        set((state) => ({ players: [...state.players, newPlayer] }));
+        const id = `p-${crypto.randomUUID()}`;
+        const newPlayer: Player = { ...player, id };
+        set((state) => {
+            if (state.players.some(p => p.id === id)) return state;
+            return { players: [...state.players, newPlayer] };
+        });
     },
 
     deletePlayer: (playerId) =>
@@ -226,11 +235,19 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
         })),
 
     addCharacterToPlayer: (playerId, character) => {
-        const newChar: PlayerCharacter = { ...character, id: `pc-${Date.now()}` };
+        const id = `pc-${crypto.randomUUID()}`;
+        const defaultPortrait = `https://api.dicebear.com/9.x/adventurer/svg?seed=${encodeURIComponent(character.name)}&backgroundColor=b6e3f4`;
+        const newChar: PlayerCharacter = { 
+            portraitUrl: defaultPortrait,
+            ...character, 
+            id 
+        };
         set((state) => ({
-            players: state.players.map((p) =>
-                p.id === playerId ? { ...p, characters: [...p.characters, newChar] } : p
-            ),
+            players: state.players.map((p) => {
+                if (p.id !== playerId) return p;
+                if (p.characters.some(c => c.id === id)) return p;
+                return { ...p, characters: [...p.characters, newChar] };
+            }),
         }));
     },
 

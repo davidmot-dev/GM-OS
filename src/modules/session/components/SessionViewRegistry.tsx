@@ -20,6 +20,8 @@ import SocialGraph from './SocialGraph';
 import CampaignForm from './CampaignForm';
 import DeckLibrary from './DeckLibrary';
 import DeckPlayer from './DeckPlayer';
+import { RulebookViewer } from './RulebookViewer';
+import { RuleWorkshopViewer } from './RuleWorkshopViewer';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { Sparkles } from 'lucide-react';
 
@@ -28,7 +30,7 @@ interface SessionViewRegistryProps {
 }
 
 const SessionViewRegistry: React.FC<SessionViewRegistryProps> = ({ forgeMode }) => {
-    const { t } = useTranslation();
+    const { t } = useTranslation(['modules', 'common']);
     const { currentView, setCurrentView } = useSessionOSStore();
 
     // Determine if the current view should take full width or be split with the cockpit
@@ -37,6 +39,10 @@ const SessionViewRegistry: React.FC<SessionViewRegistryProps> = ({ forgeMode }) 
     // Rendu du contenu de la vue
     const renderViewContent = () => {
         switch (currentView) {
+            case 'rulebook':
+                return <RulebookViewer />;
+            case 'rule-workshop':
+                return <RuleWorkshopViewer />;
             case 'library':
                 return <CampaignLibrary />;
             case 'world-atlas':

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Users, Sparkles, Hammer } from 'lucide-react';
+import { Users, Sparkles, Hammer, BookOpen } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useSessionStore } from '../../../store/useSessionStore';
 
@@ -20,7 +20,12 @@ const SessionHeader: React.FC<SessionHeaderProps> = ({
     setForgeMode
 }) => {
     const { t } = useTranslation();
-    const { currentView, setCurrentView } = useSessionOSStore();
+    const { 
+        currentView, 
+        setCurrentView, 
+        setWikiTab,
+        setTemplateDashboardTab 
+    } = useSessionOSStore();
     const { theme } = useSessionStore();
 
     const getTitle = () => {
@@ -115,6 +120,20 @@ const SessionHeader: React.FC<SessionHeaderProps> = ({
                 >
                     <Sparkles size={18} className={isOracleOpen ? 'animate-pulse' : ''} />
                     {t('modules:session.header.oracle')}
+                </button>
+                <button
+                    onClick={() => {
+                        setCurrentView('rulebook');
+                    }}
+                    className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-sm font-bold transition-all border ${
+                        theme === 'medieval' 
+                            ? 'bg-amber-800/20 text-amber-300 border-amber-800/40 hover:bg-amber-800/30' 
+                            : 'bg-amber-500/10 text-amber-400 border-amber-500/20 hover:bg-amber-500/20'
+                    }`}
+                    title={t('modules:session.header.tooltip_rules')}
+                >
+                    <BookOpen size={18} />
+                    {theme === 'medieval' ? t('modules:session.header.grimoire_label') : t('modules:session.header.rules_label')}
                 </button>
                 <button
                     onClick={() => setIsSnapshotModalOpen(true)}

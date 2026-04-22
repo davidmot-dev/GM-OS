@@ -62,6 +62,7 @@ export const useHubSync = () => {
     const setVoiceLevel = useSyncStore(state => state.setVoiceLevel);
     const [sessionSummary, setSessionSummary] = useState<string>('');
     const [showDice, setShowDice] = useState(false);
+    const [sharedRule, setSharedRule] = useState<{ title: string, content: string, category?: string } | null>(null);
     const [mapPings, setMapPings] = useState<{ x: number, y: number, color: string, timestamp: number }[]>([]);
 
     // Resolved Assets
@@ -90,24 +91,46 @@ export const useHubSync = () => {
         if (dice) useDiceStore.setState(prev => ({ ...prev, ...dice }));
 
         if (session) {
-            useSessionOSStore.setState({ 
-                sessions: session.sessions || [],
-                campaigns: session.campaigns || [],
-                players: session.players || [],
-                clues: session.clues || [],
-                entities: session.entities || [],
-                atlasMaps: session.atlasMaps || [],
-                activeCampaignId: session.activeCampaignId || null,
-                activeCampaignName: session.activeCampaignName || null,
-                activeCampaignWallpaper: session.activeCampaignWallpaper || null,
-                customSheetTemplates: session.customSheetTemplates || [],
-                customGameDrivers: session.customGameDrivers || [],
-                connectedCharacters: session.characterLocks || {}
+            const activeSession = (session.sessions || []).find((s: any) => s.status === 'active');
+            
+            console.log('[useHubSync] Session payload received:', {
+                payloadActiveCampaignId: session.activeCampaignId,
+                payloadActiveCampaignName: session.activeCampaignName,
+                activeSessionFound: activeSession ? `${activeSession.id} (${activeSession.campaignId})` : 'NONE',
+                sessionsCount: session.sessions?.length
             });
 
-            if (session.favorites) {
+            useSessionOSStore.setState(prev => {
+                const updates: any = {};
+                if (session.sessions !== undefined) updates.sessions = session.sessions;
+                if (session.campaigns !== undefined) updates.campaigns = session.campaigns;
+                if (session.players !== undefined) updates.players = session.players;
+                if (session.clues !== undefined) updates.clues = session.clues;
+                if (session.entities !== undefined) updates.entities = session.entities;
+                if (session.atlasMaps !== undefined) updates.atlasMaps = session.atlasMaps;
+                
+                // Prioritize explicit metadata from payload, fallback to finding in campaign list
+                updates.activeCampaignId = session.activeCampaignId ?? prev.activeCampaignId;
+                updates.activeCampaignName = session.activeCampaignName ?? 
+                                           (session.campaigns || prev.campaigns).find((c: any) => c.id === updates.activeCampaignId)?.name;
+                
+                if (session.activeCampaignWallpaper !== undefined) updates.activeCampaignWallpaper = session.activeCampaignWallpaper;
+                if (session.customSheetTemplates !== undefined) updates.customSheetTemplates = session.customSheetTemplates;
+                if (session.customGameDrivers !== undefined) updates.customGameDrivers = session.customGameDrivers;
+                if (session.characterLocks !== undefined) updates.connectedCharacters = session.characterLocks;
+                
+                console.log('[useHubSync] Applying store updates:', {
+                    newCampaignId: updates.activeCampaignId,
+                    newCampaignName: updates.activeCampaignName
+                });
+                
+                return { ...prev, ...updates };
+            });
+
+            if (session.favorites !== undefined) {
+                console.log('[useHubSync] Syncing favorites:', session.favorites.length);
                 useFavoriteStore.setState({
-                    favorites: session.favorites || []
+                    favorites: session.favorites
                 });
             }
         }
@@ -226,6 +249,10 @@ export const useHubSync = () => {
                             });
                         }
                     }
+
+                    if (data.type === 'session:display-rule' && data.payload) {
+                        setSharedRule(data.payload);
+                    }
                 } catch (err) {
                     console.error('[useHubSync] Sync parsing error:', err);
                 }
@@ -263,6 +290,9 @@ export const useHubSync = () => {
             else if (type === 'map-ping') {
                 const ping = typeof data === 'string' ? JSON.parse(data) : data;
                 setMapPings(prev => [...prev.slice(-10), { ...ping, timestamp: Date.now() }]);
+            }
+            else if (type === 'session:display-rule') {
+                setSharedRule(data as any);
             }
         };
 
@@ -514,6 +544,8 @@ export const useHubSync = () => {
         transferRequests,
         isOnboarded,
         characterId,
+        sharedRule,
+        setSharedRule,
         mapPings,
         setMapPings
     };

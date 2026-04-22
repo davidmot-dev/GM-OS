@@ -39,7 +39,7 @@ const GrimoireSplash: React.FC = () => {
 
                     <div className="text-center space-y-4 relative z-10 font-cinzel">
                         <h1 className="text-6xl md:text-8xl font-fraktur text-[#2d1b15] tracking-normal">
-                            GM-OS <span className="text-4xl align-top opacity-70">vVI.III</span>
+                            GM-OS <span className="text-4xl align-top opacity-70">vVI.V</span>
                         </h1>
                         <div className="flex items-center justify-center gap-4">
                             <div className="h-px w-12 bg-[#4a3728]/30"></div>

@@ -183,7 +183,11 @@ export function registerRagHandlers() {
 
     ipcMain.handle('ai:list-docs', async () => {
         const root = RAGEngine.getInstance()['docsPath'];
-        if (!await fs.pathExists(root)) return [];
+        console.log(`[RAG Engine] Listing docs in root: ${root}`);
+        if (!await fs.pathExists(root)) {
+            console.warn(`[RAG Engine] Root path does not exist: ${root}`);
+            return [];
+        }
         
         async function getFiles(dir: string): Promise<any[]> {
             const items = await fs.readdir(dir, { withFileTypes: true });
@@ -196,7 +200,7 @@ export function registerRagHandlers() {
                 if (item.isDirectory()) {
                     return {
                         name: item.name,
-                        path: relativePath,
+                        path: relativePath.replace(/\\/g, '/'),
                         type: 'directory',
                         children: await getFiles(fullPath)
                     };
@@ -204,7 +208,7 @@ export function registerRagHandlers() {
                 
                 return {
                     name: item.name,
-                    path: relativePath,
+                    path: relativePath.replace(/\\/g, '/'),
                     type: 'file',
                     extension: path.extname(item.name).toLowerCase()
                 };
@@ -237,6 +241,29 @@ export function registerRagHandlers() {
         } catch (error) {
             console.error("[RAGEngine] PDF Extraction Error:", error);
             return "Erreur lors de l'extraction.";
+        }
+    });
+
+    ipcMain.handle('ai:write-doc', async (_event, relativePath: string, content: string) => {
+        const root = RAGEngine.getInstance()['docsPath'];
+        const fullPath = path.join(root, relativePath);
+        console.log(`[RAG Engine] Writing doc: ${relativePath} -> ${fullPath}`);
+
+        // Security check: ensure the path is inside the docs folder
+        if (!fullPath.startsWith(root)) {
+            console.error(`[RAG Engine] Security Violation: Attempted to write outside docs: ${fullPath}`);
+            return false;
+        }
+
+        try {
+            await fs.ensureDir(path.dirname(fullPath));
+            await fs.writeFile(fullPath, content, 'utf-8');
+            // Trigger reindex after write
+            RAGEngine.getInstance().updateIndex();
+            return true;
+        } catch (error) {
+            console.error('[RAG Engine] Error writing doc:', error);
+            return false;
         }
     });
 

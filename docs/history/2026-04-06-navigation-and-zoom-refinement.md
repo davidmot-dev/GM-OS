@@ -20,7 +20,7 @@ Ce document archive les travaux réalisés pour stabiliser l'expérience utilisa
 ## 📂 Documentation Mise à jour
 Suite au workflow `[doc]`, les fichiers suivants ont été actualisés :
 - `roadmap-v6.md` : Mise à jour du statut des phases 0 et 1.
-- `lessons-learned.md` : Documentation des pièges de dépendances Zustand et des événements passifs.
+- `docs/dev/Lessons_Learned_Archive.md` : Documentation des pièges de dépendances Zustand et des événements passifs.
 - `session-os-modular-architecture.md` : Ajout des standards de navigation atomique.
 - `general-guide.md` : Mention de la fluidité accrue pour les utilisateurs.
 
