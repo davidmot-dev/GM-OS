@@ -52,11 +52,11 @@ Refonte des systèmes de jeu pour une automatisation intelligente.
 
 ---
 
-## 🏺 Phase 3 : World Building & Forge (Août 2026+)
+## 🏺 Phase 3 : World Building & Forge (Avril 2026—En cours)
 
-Extension des capacités de création et de partage.
+Extension des capacités de création et de partage. Migration vers une infrastructure décentralisée.
 
-- **[ ] Synchronisation P2P (Tauri)** : Migration du pont WebSocket vers Peer-to-Peer.
+- **[/] Synchronisation P2P (Tauri)** : Migration du pont WebSocket vers Peer-to-Peer. (En cours de planification)
 - **[x] Timeline Interactive** : Visualisation chronologique des événements générés depuis le Wiki.
 - **[x] AI NPC Dialogue Prep** : Génération de répliques à la volée via l'Oracle pour les favoris. (v6.1.2-dev)
 
@@ -97,8 +97,8 @@ Ces fonctionnalités sont prévues mais temporairement mises de côté pour prio
 | Précision géométrique d10 (Manual Modeling) | Moyenne | ✅ Validé |
 
 ---
-*Dernière mise à jour : 16 Avril 2026 (09h40)*
-*Statut : Version 6.3.2 - Unification & Nettoyage Hub Complet.*
+*Dernière mise à jour : 22 Avril 2026 (23h30)*
+*Statut : Version 6.5.0 - Début de la Phase 3 (P2P Architecture).*
 
 ### [v6.3.1-dev] - Player Hub Stabilization & Premium Refactoring
 - [x] **Architecture Hub** : Migration du `PlayerHub` vers le hook unifié `useHubSync`.
