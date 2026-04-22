@@ -16,7 +16,8 @@ Ce répertoire est la source unique de vérité pour toute la documentation tech
 *   **[Social Nexus](./Technical%20Docs/Social_Nexus_Technical_Doc.md)** : Graphe relationnel D3.js.
 *   **[Map-OS](./Technical%20Docs/Map_OS_Technical_Doc.md)** : Cartographie, calques et brouillard de guerre.
 *   **[Tablet Hub](./Technical%20Docs/Tablet_Hub_Technical_Doc.md)** : Synchronisation second écran.
-*   **[Compilation & Déploiement](./Technical%20Docs/Compilation_Deployment_Guide.md)** : Build et packaging .exe.
+*   **[Compilation & Déploiement (Windows)](./Technical%20Docs/Compilation_Deployment_Guide.md)** : Build et packaging .exe.
+*   **[Installation Guide (Linux)](./Technical%20Docs/Linux_Installation_Guide.md)** : Configuration spécifique pour Linux (AppImage, CORS).
 *   *Voir aussi : [Index Technique Complet](./Technical%20Docs/)*
 
 ## 📖 Guides Utilisateur

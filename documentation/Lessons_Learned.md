@@ -19,6 +19,11 @@ Ce document consigne les défis techniques, les erreurs rencontrées et les solu
 - **Défi** : L'ordre de projection envoyé via IPC arrivait parfois avant que la fenêtre React cible ne soit initialisée.
 - **Solution** : **Verrou IPC Définitif** (`ipcCount`). Le projecteur ignore les données de son store local dès qu'il reçoit son premier signal direct, garantissant que la volonté du MJ prime sur l'état persistant.
 
+### 4. Portabilité des Chemins (MCP & Python) (2026-04-22)
+- **Défi** : Le bridge MCP utilisait des chemins codés en dur (`C:\Users\david...`), empêchant l'application de fonctionner sur une autre machine après compilation.
+- **Solution** : Refonte du service `mcp_bridge.ts` pour utiliser `process.env.USERPROFILE` et `path.join`. Le script Python `run_mcp.py` a également été rendu portable.
+- **Leçon** : Toujours utiliser des chemins relatifs ou basés sur les dossiers système standards (`AppData`, `UserProfile`) pour les services externes.
+
 ---
 
 ## 🏗️ Architecture, Build & Typage

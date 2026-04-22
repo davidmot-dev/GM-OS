@@ -1,14 +1,19 @@
-import { ipcMain } from 'electron';
+import { ipcMain, app } from 'electron';
 import { spawn, ChildProcess } from 'child_process';
 import * as fs from 'fs';
+import * as path from 'path';
 
 /**
- * MCP Bridge
+ * MCP Bridge - Chemins dynamiques pour la portabilité
  */
 
-const DEBUG_LOG_PATH = 'C:\\Users\\david\\mcp_bridge_debug.log';
-const PYTHON_EXE = 'C:\\Users\\david\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe';
-const WRAPPER_SCRIPT = 'C:\\Users\\david\\.antigravity\\notebooklm-mcp\\run_mcp.py';
+const USER_HOME = process.env.USERPROFILE || process.env.HOME || '';
+const ANTIGRAVITY_DIR = path.join(USER_HOME, '.antigravity', 'notebooklm-mcp');
+
+const DEBUG_LOG_PATH = path.join(USER_HOME, 'mcp_bridge_debug.log');
+const PYTHON_EXE = 'python'; // Utilise le python du PATH par défaut
+const WRAPPER_SCRIPT = path.join(ANTIGRAVITY_DIR, 'run_mcp.py');
+const CONFIG_PATH = path.join(ANTIGRAVITY_DIR, 'notebooklm-config.json');
 
 function logToDebugFile(msg: string) {
     try {
@@ -97,7 +102,7 @@ async function ensureMcpServer(): Promise<ChildProcess> {
             env: { 
                 ...process.env, 
                 PYTHONUNBUFFERED: '1',
-                NOTEBOOKLM_CONFIG: 'C:\\Users\\david\\.antigravity\\notebooklm-mcp\\notebooklm-config.json'
+                NOTEBOOKLM_CONFIG: CONFIG_PATH
             }
         });
 
