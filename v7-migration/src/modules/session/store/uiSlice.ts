@@ -13,6 +13,8 @@
 import type { StateCreator } from 'zustand';
 import type { CurrentView, RemoteNotification, HubNotification, SessionMessage } from './types';
 
+import { AppBridge } from '../../../bridge/AppBridge';
+
 // ─────────────────────────────────────────────
 // State
 // ─────────────────────────────────────────────
@@ -218,12 +220,10 @@ export const createUiSlice: StateCreator<UiSlice, [], [], UiSlice> = (set, get) 
         set((state) => ({ messages: [...state.messages, msg].slice(-100) }));
 
         // Broadcast aux Hubs
-        if (window.appBridge?.send) {
-            window.appBridge.send('remote:broadcast-ui-action', {
-                type: 'session:receive-message',
-                payload: msg
-            });
-        }
+        AppBridge.ipc.send('remote:broadcast-ui-action', {
+            type: 'session:receive-message',
+            payload: msg
+        });
     },
 
     saveMessageToJournal: (messageId) => {

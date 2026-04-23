@@ -1,4 +1,5 @@
 import { useMediaStore } from '../../stores/useMediaStore';
+import { AppBridge } from '../../bridge/AppBridge';
 
 /**
  * Représente une piste d'ambiance individuelle.
@@ -69,11 +70,7 @@ class AmbientTrack {
                 }
                 arrayBuffer = await blob.arrayBuffer();
             } else {
-                let finalUrl = url;
-                if (url && !url.startsWith('http') && !url.startsWith('blob:') && !url.startsWith('gmos://')) {
-                    const cleanPath = url.replace(/^file:\/\/\//, '').replace(/\\/g, '/');
-                    finalUrl = `gmos://media/${cleanPath}`;
-                }
+                const finalUrl = AppBridge.utils.formatFileUrl(url);
                 const encodedUrl = encodeURI(finalUrl).replace(/%5C/g, '/');
 
                 const response = await fetch(encodedUrl);

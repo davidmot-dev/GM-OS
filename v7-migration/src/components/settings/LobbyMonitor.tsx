@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Users, Tablet, Smartphone, XCircle, CheckCircle2, AlertCircle, Trash2, RotateCw } from 'lucide-react';
 import type { ClientContext } from '../../types/shared';
+import { AppBridge } from '../../bridge/AppBridge';
 
 const LobbyMonitor: React.FC = () => {
     const { t } = useTranslation('settings');
@@ -13,16 +14,12 @@ const LobbyMonitor: React.FC = () => {
             setClients(data);
         };
 
-        if (window.appBridge?.on) {
-            window.appBridge.on('remote:sync-clients', handleSyncClients);
-            // Request initial list
-            window.appBridge.send('remote:request-client-sync');
-        }
+        AppBridge.ipc.on('remote:sync-clients', handleSyncClients);
+        // Request initial list
+        AppBridge.ipc.send('remote:request-client-sync');
 
         return () => {
-            if (window.appBridge?.off) {
-                window.appBridge.off('remote:sync-clients', handleSyncClients);
-            }
+            AppBridge.ipc.off('remote:sync-clients', handleSyncClients);
         };
     }, []);
 
@@ -52,11 +49,9 @@ const LobbyMonitor: React.FC = () => {
                     </span>
                     <button 
                         onClick={() => {
-                            if (window.appBridge?.send) {
-                                window.appBridge.send('remote:clear-disconnected');
-                                // Show immediate feedback by filtering locally until sync
-                                setClients(prev => prev.filter(c => c.status === 'active'));
-                            }
+                            AppBridge.ipc.send('remote:clear-disconnected');
+                            // Show immediate feedback by filtering locally until sync
+                            setClients(prev => prev.filter(c => c.status === 'active'));
                         }}
                         className="p-1.5 hover:bg-rose-500/20 text-slate-500 hover:text-rose-400 rounded-lg transition-all"
                         title={t('remote.lobby.clear_tooltip')}
@@ -64,7 +59,7 @@ const LobbyMonitor: React.FC = () => {
                         <Trash2 size={14} />
                     </button>
                     <button 
-                        onClick={() => window.appBridge?.send?.('remote:request-client-sync')}
+                        onClick={() => AppBridge.ipc.send('remote:request-client-sync')}
                         className="p-1.5 hover:bg-white/10 text-slate-500 hover:text-white rounded-lg transition-all"
                         title={t('remote.lobby.refresh_tooltip')}
                     >

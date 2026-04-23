@@ -4,6 +4,9 @@ import react from '@vitejs/plugin-react'
 import electron from 'vite-plugin-electron'
 import renderer from 'vite-plugin-electron-renderer'
 
+// Détection du lancement via Tauri
+const isTauri = process.env.TAURI_ENV_PLATFORM !== undefined || process.env.TAURI_PLATFORM !== undefined;
+
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
@@ -13,7 +16,7 @@ export default defineConfig({
   },
   plugins: [
     react(),
-    electron([
+    !isTauri && electron([
       {
         entry: 'electron/main.ts',
         vite: {
@@ -40,7 +43,7 @@ export default defineConfig({
         },
       },
     ]),
-    renderer(),
+    !isTauri && renderer(),
   ],
   test: {
     globals: true,

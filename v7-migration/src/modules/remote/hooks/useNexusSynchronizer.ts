@@ -14,6 +14,7 @@ import { useDiceStore } from '../../../stores/useDiceStore';
 import { useMapStore } from '../../map/useMapStore';
 import { getDifferentialPayload } from '../../../utils/syncUtils';
 import { resolveToSendableUrl } from '../../../utils/mediaResolver';
+import { AppBridge } from '../../../bridge/AppBridge';
 
 export const useNexusSynchronizer = (isMainPC: boolean) => {
     const lastSyncRef = useRef(0);
@@ -52,10 +53,10 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
             }
 
             if (Object.keys(payload).length > 0) {
-                window.appBridge.send('remote:broadcast-sync', payload, 'remote');
-                window.appBridge.send('remote:broadcast-sync', payload, 'gm');
-                window.appBridge.send('remote:broadcast-sync', payload, 'player');
-                window.appBridge.send('remote:broadcast-sync', payload, 'hub');
+                AppBridge.ipc.send('remote:broadcast-sync', payload, 'remote');
+                AppBridge.ipc.send('remote:broadcast-sync', payload, 'gm');
+                AppBridge.ipc.send('remote:broadcast-sync', payload, 'player');
+                AppBridge.ipc.send('remote:broadcast-sync', payload, 'hub');
             }
         } catch (e) {
             console.error(`[NexusSync] Fast-Sync Error (${segmentName}):`, e);
@@ -223,8 +224,8 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
             
             if (Object.keys(diffPayload).length > 0) {
                 // Roles: remote/gm see everything. player sees sanitized.
-                window.appBridge.send('remote:broadcast-sync', diffPayload, 'remote');
-                window.appBridge.send('remote:broadcast-sync', diffPayload, 'gm');
+                AppBridge.ipc.send('remote:broadcast-sync', diffPayload, 'remote');
+                AppBridge.ipc.send('remote:broadcast-sync', diffPayload, 'gm');
 
                 const playerDiff = JSON.parse(JSON.stringify(diffPayload));
                 
@@ -247,8 +248,8 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                     }));
                 }
 
-                window.appBridge.send('remote:broadcast-sync', playerDiff, 'player');
-                window.appBridge.send('remote:broadcast-sync', playerDiff, 'hub'); // Ensuring Hubs get the player-sanitized data too
+                AppBridge.ipc.send('remote:broadcast-sync', playerDiff, 'player');
+                AppBridge.ipc.send('remote:broadcast-sync', playerDiff, 'hub'); // Ensuring Hubs get the player-sanitized data too
 
                 lastBroadcastRef.current = fullState;
             }

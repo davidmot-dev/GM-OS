@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useMediaStore } from '../stores/useMediaStore';
+import { AppBridge } from '../bridge/AppBridge';
 
 /**
  * A hook that takes an ID or a URL and transparently returns a usable source string.
@@ -113,50 +114,20 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
                     if (sourceIdOrUrl.startsWith('data:') || sourceIdOrUrl.startsWith('blob:')) {
                         return sourceIdOrUrl;
                     }
-                    if (window.appBridge?.utils?.formatFileUrl) {
-                        return window.appBridge.utils.formatFileUrl(sourceIdOrUrl);
-                    }
-                    const cleanPath = (typeof sourceIdOrUrl === 'string') ? sourceIdOrUrl.replace(/^(file:\/\/\/|gmos:\/\/media\/)/i, '') : '';
                     
-                    // If we are in Electron (main MJ app), use the custom secure protocol for all local paths
-                    if (window.appBridge && (
-                        cleanPath.startsWith('C:') || 
-                        cleanPath.startsWith('D:') || 
-                        cleanPath.startsWith('/') || 
-                        cleanPath.startsWith('\\') ||
-                        cleanPath.startsWith('temp/') ||
-                        cleanPath.startsWith('npcs/') ||
-                        cleanPath.startsWith('portraits/') ||
-                        cleanPath.startsWith('characters/')
-                    )) {
-                        return `gmos://media/${cleanPath.replace(/\\/g, '/')}`;
+                    // MJ App (Electron or Tauri)
+                    if (AppBridge.utils.hasSupport) {
+                        return AppBridge.utils.formatFileUrl(sourceIdOrUrl);
                     }
                     
-                    // If we are on a remote device (tablet), use the media proxy on port 3001
-                    if (!window.appBridge && 
-                        (
-                            cleanPath.startsWith('C:') || 
-                            cleanPath.startsWith('D:') || 
-                            cleanPath.startsWith('/') || 
-                            cleanPath.startsWith('\\') ||
-                            cleanPath.startsWith('temp/') ||
-                            cleanPath.startsWith('npcs/') ||
-                            cleanPath.includes('\\')
-                        )
-                    ) {
-                        const host = window.location.hostname; // Main PC IP
-                        // Classification: temp/ and m- IDs go to /temp/, others to /media/
-                        const isTemp = cleanPath.startsWith('temp/') || cleanPath.startsWith('m-');
-                        const endpoint = isTemp ? 'temp' : 'media';
-                        const finalCleanPath = isTemp ? cleanPath.replace('temp/', '') : cleanPath;
-                        
-                        return `http://${host}:3001/${endpoint}/${encodeURIComponent(finalCleanPath.replace(/\\/g, '/'))}`;
-                    }
-
-                    if (cleanPath.startsWith('C:') || cleanPath.startsWith('D:') || cleanPath.startsWith('/') || cleanPath.startsWith('\\')) {
-                        return `file:///${cleanPath.replace(/\\/g, '/')}`;
-                    }
-                    return sourceIdOrUrl;
+                    // Remote device (tablet/player hub) - use the media proxy on port 3001
+                    const host = window.location.hostname;
+                    const cleanPath = sourceIdOrUrl.replace(/^(file:\/\/\/|gmos:\/\/media\/)/i, '');
+                    const isTemp = cleanPath.startsWith('temp/') || cleanPath.startsWith('m-');
+                    const endpoint = isTemp ? 'temp' : 'media';
+                    const finalCleanPath = isTemp ? cleanPath.replace('temp/', '') : cleanPath;
+                    
+                    return `http://${host}:3001/${endpoint}/${encodeURIComponent(finalCleanPath.replace(/\\/g, '/'))}`;
                 })();
                 
                 if (isMounted) setResolvedUrl(formatted);

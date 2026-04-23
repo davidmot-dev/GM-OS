@@ -12,6 +12,7 @@ import type { DocEntry } from '../../ai/RAGService';
 import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 import { gmToast } from '../../../stores/useToastStore';
 import { obsidianExportService } from '../ObsidianExportService';
+import { AppBridge } from '../../../bridge/AppBridge';
 
 interface RuleCard {
     id: string;
@@ -172,30 +173,28 @@ export const RuleWorkshopViewer: React.FC = () => {
             category: selectedCard.category || 'rule'
         };
 
-        if (window.appBridge?.send) {
-            // Diffusion via le bridge pour l'affichage en Popup (Tablettes, Joueurs)
-            window.appBridge.send('remote:broadcast-ui-action', { 
-                type: 'session:display-rule', 
-                payload: payload 
-            });
+        // Diffusion via le bridge pour l'affichage en Popup (Tablettes, Joueurs)
+        AppBridge.ipc.send('remote:broadcast-ui-action', { 
+            type: 'session:display-rule', 
+            payload: payload 
+        });
 
-            // Envoi également d'un message court pour l'historique du chat
-            const msg = {
-                id: `rule-msg-${Date.now()}`,
-                fromId: 'GM',
-                fromName: 'MJ',
-                toId: 'all',
-                toName: 'Tous',
-                content: `📜 **RÈGLE PARTAGÉE : ${selectedCard.title}** (Affichée sur votre écran)`,
-                timestamp: Date.now(),
-                isRead: false
-            };
+        // Envoi également d'un message court pour l'historique du chat
+        const msg = {
+            id: `rule-msg-${Date.now()}`,
+            fromId: 'GM',
+            fromName: 'MJ',
+            toId: 'all',
+            toName: 'Tous',
+            content: `📜 **RÈGLE PARTAGÉE : ${selectedCard.title}** (Affichée sur votre écran)`,
+            timestamp: Date.now(),
+            isRead: false
+        };
 
-            window.appBridge.send('remote:broadcast-ui-action', { 
-                type: 'session:receive-message', 
-                payload: msg 
-            });
-        }
+        AppBridge.ipc.send('remote:broadcast-ui-action', { 
+            type: 'session:receive-message', 
+            payload: msg 
+        });
         
         // Notification locale
         gmToast(`Règle "${selectedCard.title}" partagée aux joueurs.`, 'success');

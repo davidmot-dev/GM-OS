@@ -28,7 +28,7 @@ Ce répertoire est la source unique de vérité pour toute la documentation tech
 
 ## 🚀 Planification & Migration v7
 *   **[Migration Tauri (v7)](./Migration/)** : Plans, blueprints et statut de la transition vers Tauri.
-*   **[Dernier Jalon : Abstraction Bridge (23/04/2026)](./Migration/Migration_Checklist_and_Sequence.md)**
+*   **[Dernier Jalon : Multimédia & Immersion (23/04/2026)](./Migration/Migration_Checklist_and_Sequence.md)**
 *   **[Sanity Check Backlog](./Planning/Sanity_Check_Backlog.md)** : État de santé des modules.
 *   **[Roadmap & Améliorations](./Planning/amélioration.md)**
 *   *Voir aussi : [Archives de Planification](./Planning/)*

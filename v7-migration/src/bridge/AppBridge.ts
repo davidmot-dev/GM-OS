@@ -22,7 +22,23 @@ class AppBridgeAdapter {
         if (isElectron) {
             return (window as any).appBridge;
         }
-        // Fallback pour le développement web ou Tauri non encore implémenté
+        return null;
+    }
+
+    /**
+     * Appelle une commande Rust via Tauri invoke.
+     * @private
+     */
+    private async invokeTauri<T>(command: string, args?: any): Promise<T | null> {
+        if (isTauri && (window as any).__TAURI__) {
+            try {
+                const { invoke } = (window as any).__TAURI__.core;
+                return await invoke(command, args);
+            } catch (error) {
+                console.error(`[AppBridge] Tauri invoke error (${command}):`, error);
+                return null;
+            }
+        }
         return null;
     }
 
@@ -64,8 +80,12 @@ class AppBridgeAdapter {
      * Utilitaires
      */
     public utils = {
-        get hasSupport() { return !!this.bridge?.utils; },
+        get hasSupport() { return !!this.bridge?.utils || isTauri; },
         formatFileUrl: (path: string): string => {
+            if (isTauri && (window as any).__TAURI__) {
+                // Tauri v2 convertFileSrc equivalent
+                return (window as any).__TAURI__.core.convertFileSrc(path);
+            }
             if (this.bridge?.utils?.formatFileUrl) {
                 return this.bridge.utils.formatFileUrl(path);
             }
@@ -77,14 +97,27 @@ class AppBridgeAdapter {
      * Session & Système
      */
     public session = {
-        get hasSupport() { return !!this.bridge?.session; },
+        get hasSupport() { return !!this.bridge?.session || isTauri; },
         saveSession: async (data: Record<string, unknown>): Promise<boolean> => {
+            if (isTauri) {
+                const res = await this.invokeTauri<string>('save_session', { 
+                    data: JSON.stringify(data),
+                    path: 'sessions/autosave.json' // Path temporaire pour test
+                });
+                return !!res;
+            }
             if (this.bridge?.session?.saveSession) {
                 return await this.bridge.session.saveSession(data);
             }
             return false;
         },
         loadSession: async (): Promise<Record<string, unknown> | null> => {
+            if (isTauri) {
+                const content = await this.invokeTauri<string>('load_session', { 
+                    path: 'sessions/autosave.json' 
+                });
+                return content ? JSON.parse(content) : null;
+            }
             if (this.bridge?.session?.loadSession) {
                 return await this.bridge.session.loadSession();
             }
@@ -101,20 +134,29 @@ class AppBridgeAdapter {
      * Sécurité & Secrets (Trousseau)
      */
     public security = {
-        get hasSupport() { return !!this.bridge?.security; },
+        get hasSupport() { return !!this.bridge?.security || isTauri; },
         getSecret: async (id: string): Promise<string | null> => {
+            if (isTauri) {
+                return await this.invokeTauri<string | null>('get_secret', { id });
+            }
             if (this.bridge?.security?.getSecret) {
                 return await this.bridge.security.getSecret(id);
             }
             return null;
         },
         saveSecret: async (id: string, value: string): Promise<boolean> => {
+            if (isTauri) {
+                return await this.invokeTauri<boolean>('save_secret', { id, value }) || false;
+            }
             if (this.bridge?.security?.saveSecret) {
                 return await this.bridge.security.saveSecret(id, value);
             }
             return false;
         },
         deleteSecret: async (id: string): Promise<boolean> => {
+            if (isTauri) {
+                return await this.invokeTauri<boolean>('delete_secret', { id }) || false;
+            }
             if (this.bridge?.security?.deleteSecret) {
                 return await this.bridge.security.deleteSecret(id);
             }
@@ -126,30 +168,105 @@ class AppBridgeAdapter {
      * MCP (Model Context Protocol) - NotebookLM, etc.
      */
     public mcp = {
-        get hasSupport() { return !!this.bridge?.mcp; },
+        get hasSupport() { return !!this.bridge?.mcp || isTauri; },
         listTools: async (serverName: string): Promise<any[]> => {
+            if (isTauri) {
+                // Pour l'instant, on liste les outils via une commande Rust
+                const res = await this.invokeTauri<any>('call_mcp_tool', { method: 'tools/list', params: {} });
+                return res?.tools || [];
+            }
             if (this.bridge?.mcp?.listTools) {
                 return await this.bridge.mcp.listTools(serverName);
             }
             return [];
         },
         callTool: async (serverName: string, toolName: string, args: Record<string, unknown>): Promise<any> => {
+            if (isTauri) {
+                return await this.invokeTauri<any>('call_mcp_tool', { 
+                    method: 'tools/call', 
+                    params: { name: toolName, arguments: args } 
+                });
+            }
             if (this.bridge?.mcp?.callTool) {
                 return await this.bridge.mcp.callTool(serverName, toolName, args);
             }
             return { error: 'MCP not available' };
         },
         reauthenticate: async (): Promise<{ success: boolean; message: string }> => {
+            if (isTauri) {
+                // TODO: Implémenter l'auth CLI via Rust
+                return { success: false, message: 'Not implemented in Tauri yet' };
+            }
             if (this.bridge?.mcp?.reauthenticate) {
                 return await this.bridge.mcp.reauthenticate();
             }
             return { success: false, message: 'MCP not available' };
         },
         restart: async (): Promise<{ success: boolean; message: string }> => {
+            if (isTauri) {
+                await this.invokeTauri('stop_mcp_server');
+                // En Tauri, on redémarre au besoin lors du premier appel, 
+                // ou on peut appeler start_mcp_server ici avec des chemins par défaut.
+                return { success: true, message: 'Serveur MCP arrêté (sera relancé au prochain appel)' };
+            }
             if (this.bridge?.mcp?.restart) {
                 return await this.bridge.mcp.restart();
             }
             return { success: false, message: 'MCP not available' };
+        }
+    };
+
+    /**
+     * Images & Projections
+     */
+    public image = {
+        get hasSupport() { return !!this.bridge?.image || isTauri; },
+        getDisplays: async (): Promise<any[]> => {
+            if (isTauri && (window as any).__TAURI__) {
+                // En Tauri v2, on peut lister les moniteurs
+                try {
+                    // Note: 'availableMonitors' est souvent utilisé pour le choix de projection
+                    const monitors = await (window as any).__TAURI__.window.availableMonitors();
+                    return monitors.map((m: any, index: number) => ({
+                        id: `monitor-${index}`,
+                        label: m.name || `Écran ${index + 1}`,
+                        bounds: m.size,
+                        isPrimary: false // À affiner si besoin
+                    }));
+                } catch (e) {
+                    console.error("[AppBridge] Failed to get monitors:", e);
+                    return [];
+                }
+            }
+            if (this.bridge?.image?.getDisplays) {
+                return await this.bridge.image.getDisplays();
+            }
+            return [];
+        }
+    };
+    public ai = {
+        get hasSupport() { return !!this.bridge?.ai || isTauri; },
+        listDocs: async (): Promise<any[]> => {
+            if (isTauri) {
+                // TODO: Implémenter via Rust ou FS plugin
+                return [];
+            }
+            if (this.bridge?.ai?.listDocs) return await this.bridge.ai.listDocs();
+            return [];
+        },
+        readDoc: async (path: string): Promise<string | null> => {
+            if (isTauri) {
+                return await this.fs.readTextFile(path);
+            }
+            if (this.bridge?.ai?.readDoc) return await this.bridge.ai.readDoc(path);
+            return null;
+        },
+        writeDoc: async (path: string, content: string): Promise<boolean> => {
+            if (isTauri) {
+                return await this.fs.writeTextFile(path, content);
+            }
+            if (this.bridge?.ai?.writeDoc) return await this.bridge.ai.writeDoc(path, content);
+            return false;
         }
     };
 
@@ -255,32 +372,59 @@ class AppBridgeAdapter {
      * FS - Système de fichiers
      */
     public fs = {
-        get hasSupport() { return !!this.bridge?.fs; },
+        get hasSupport() { return !!this.bridge?.fs || isTauri; },
         readTextFile: async (path: string): Promise<string | null> => {
+            if (isTauri) {
+                return await this.invokeTauri<string>('plugin:fs|read_text_file', { path });
+            }
             if (this.bridge?.fs?.readTextFile) {
                 return await this.bridge.fs.readTextFile(path);
             }
             return null;
         },
         writeTextFile: async (path: string, content: string): Promise<boolean> => {
+            if (isTauri) {
+                await this.invokeTauri('plugin:fs|write_text_file', { path, contents: Array.from(new TextEncoder().encode(content)) });
+                return true;
+            }
             if (this.bridge?.fs?.writeTextFile) {
                 return await this.bridge.fs.writeTextFile(path, content);
             }
             return false;
         },
         exists: async (path: string): Promise<boolean> => {
+            if (isTauri) {
+                return await this.invokeTauri<boolean>('plugin:fs|exists', { path }) || false;
+            }
             if (this.bridge?.fs?.exists) {
                 return await this.bridge.fs.exists(path);
             }
             return false;
         },
         selectFile: async (options?: any): Promise<string | null> => {
+            if (isTauri) {
+                // Utilisation du plugin dialog via invoke
+                const res = await this.invokeTauri<any>('plugin:dialog|open', { 
+                    multiple: false,
+                    directory: false,
+                    ...options 
+                });
+                return typeof res === 'string' ? res : (Array.isArray(res) ? res[0] : null);
+            }
             if (this.bridge?.fs?.selectFile) {
                 return await this.bridge.fs.selectFile(options);
             }
             return null;
         },
         selectFolder: async (options?: any): Promise<string | null> => {
+            if (isTauri) {
+                const res = await this.invokeTauri<string | null>('plugin:dialog|open', { 
+                    multiple: false,
+                    directory: true,
+                    ...options 
+                });
+                return res;
+            }
             if (this.bridge?.fs?.selectFolder) {
                 return await this.bridge.fs.selectFolder(options);
             }
@@ -292,13 +436,20 @@ class AppBridgeAdapter {
      * App - Cycle de vie et informations
      */
     public app = {
-        get hasSupport() { return !!this.bridge?.app; },
+        get hasSupport() { return !!this.bridge?.app || isTauri; },
         quit: () => {
+            if (isTauri) {
+                this.invokeTauri('quit_app');
+                return;
+            }
             if (this.bridge?.app?.quit) {
                 this.bridge.app.quit();
             }
         },
         getVersion: async (): Promise<string> => {
+            if (isTauri) {
+                return await this.invokeTauri<string>('get_app_version') || "0.1.0-tauri";
+            }
             if (this.bridge?.app?.getVersion) {
                 return await this.bridge.app.getVersion();
             }
@@ -311,6 +462,10 @@ class AppBridgeAdapter {
             return "";
         },
         relaunch: () => {
+            if (isTauri) {
+                this.invokeTauri('relaunch_app');
+                return;
+            }
             if (this.bridge?.app?.relaunch) {
                 this.bridge.app.relaunch();
             }
@@ -327,8 +482,11 @@ class AppBridgeAdapter {
      * Displays - Gestion des écrans et Projection
      */
     public displays = {
-        get hasSupport() { return !!this.bridge?.displays || !!this.bridge?.image || !!this.bridge?.remote?.getDisplays; },
+        get hasSupport() { return !!this.bridge?.displays || !!this.bridge?.image || !!this.bridge?.remote?.getDisplays || isTauri; },
         list: async (): Promise<DisplayInfo[]> => {
+            if (isTauri) {
+                return await this.invokeTauri<DisplayInfo[]>('get_displays') || [];
+            }
             // Tentative via différents points d'entrée historiques
             if (this.bridge?.displays?.list) return await this.bridge.displays.list();
             if (this.bridge?.image?.getDisplays) return await this.bridge.image.getDisplays();
@@ -336,11 +494,18 @@ class AppBridgeAdapter {
             return [];
         },
         identify: async (): Promise<void> => {
+            if (isTauri) {
+                await this.invokeTauri('identify_display');
+                return;
+            }
             if (this.bridge?.displays?.identify) {
                 await this.bridge.displays.identify();
             }
         },
         setProjection: async (displayId: string | number, enabled: boolean, options?: any): Promise<boolean> => {
+            if (isTauri) {
+                return await this.invokeTauri<boolean>('set_projection', { displayId: displayId.toString(), enabled }) || false;
+            }
             if (this.bridge?.displays?.setProjection) {
                 return await this.bridge.displays.setProjection(displayId, enabled, options);
             }
@@ -360,7 +525,7 @@ class AppBridgeAdapter {
      * Git - Synchronisation de données
      */
     public git = {
-        get hasSupport() { return !!this.bridge?.git; },
+        get hasSupport() { return !!this.bridge?.git || isTauri; },
         getStatus: async () => {
             if (this.bridge?.git?.getStatus) return await this.bridge.git.getStatus();
             return { available: false, isRepo: false, branch: '', exists: false };
@@ -397,6 +562,11 @@ class AppBridgeAdapter {
             if (this.bridge?.off) this.bridge.off(channel, callback);
         },
         send: (channel: string, ...args: any[]) => {
+            if (isTauri && (window as any).__TAURI__) {
+                const { emit } = (window as any).__TAURI__.event;
+                emit(channel, ...args);
+                return;
+            }
             if (this.bridge?.send) this.bridge.send(channel, ...args);
         }
     };

@@ -25,12 +25,16 @@ Ce document définit l'ordre de priorité et la complexité de chaque étape de 
 ### 2. Le Moteur Rust (Premier Lancement v7)
 *Rendre l'application fonctionnelle sous Tauri avec les premières commandes Rust.*
 
-| Tâche | Difficulté | Importance | Statut |
+| Tâche | Priorité | Difficulté | Statut |
 | :--- | :---: | :---: | :---: |
-| Commandes Rust : Filesystem (Save/Load) | 🟡 | ⭐⭐⭐⭐⭐ | 🌑 |
-| Commandes Rust : Keychain (Security) | 🟠 | ⭐⭐⭐⭐ | 🌑 |
-| Configuration Tauri : Permissions & Scopes | 🟡 | ⭐⭐⭐⭐⭐ | 🌑 |
-| Premier Build & Lancement Technique | 🟠 | ⭐⭐⭐⭐⭐ | 🌑 |
+| Configuration Plugins Tauri (FS, Dialog, Shell) | 🔴 | ⭐ | ✅ |
+| Implémentation Rust : Session (Save/Load) | 🔴 | ⭐⭐⭐ | ✅ |
+| Implémentation Rust : App (Quit/Restart) | 🟢 | ⭐ | ✅ |
+| Implémentation Rust : Keychain (Security) | 🔴 | ⭐⭐⭐ | ✅ |
+| Implémentation Rust : Multi-moniteurs (Displays) | 🟡 | ⭐⭐ | ✅ |
+| Implémentation Rust : Pont Processus (MCP Bridge) | 🟠 | ⭐⭐⭐⭐ | ✅ |
+| Connexion AppBridge -> Tauri Invoke | 🔴 | ⭐⭐ | ✅ |
+| Système de Log Rust (tauri-plugin-log) | 🟡 | ⭐ | ✅ |
 
 ### 3. Modules "Standing" (Performance & Immersion)
 *Optimiser les fonctions qui consomment le plus de ressources.*
@@ -40,7 +44,7 @@ Ce document définit l'ordre de priorité et la complexité de chaque étape de 
 | Nexus-OS v3 (Compression Rust) | 🔴 | ⭐⭐⭐⭐ | 🌑 |
 | Dice-OS Projection (Multiple Windows) | 🔴 | ⭐⭐⭐⭐⭐ | 🌑 |
 | Audio/Voice Level Sync (IPC rapide) | 🟠 | ⭐⭐⭐ | 🌑 |
-| Image/Video Streaming (tauri:// protocol) | 🟠 | ⭐⭐⭐⭐ | 🌑 |
+| Image/Video Streaming (tauri:// protocol) | 🟠 | ⭐⭐⭐⭐ | ✅ |
 
 ### 4. IA & Connectivité Avancée
 *Dernière phase avant le décommissionnement.*

@@ -6,6 +6,16 @@
     "main"
   ],
   "permissions": [
-    "core:default"
+    "core:default",
+    "core:path:default",
+    "core:event:default",
+    "core:window:default",
+    "core:app:default",
+    "core:resources:default",
+    "core:image:default",
+    "core:protocol:asset",
+    "core:fs:default",
+    "shell:default",
+    "dialog:default"
   ]
 }

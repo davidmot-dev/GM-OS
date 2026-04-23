@@ -18,9 +18,17 @@ Il est **strictement interdit** d'importer les modules suivants dans `/src/rende
 
 ## 3. Structure du Bridge (`window.appBridge`)
 
-Le bridge est structuré par module fonctionnel pour éviter un objet "fourre-tout" massif.
+Le bridge est structuré par module fonctionnel pour éviter un objet "fourre-tout" massif. Depuis la v7 (Tauri), nous utilisons une classe **Agnostic AppBridge** qui sert de couche de traduction automatique entre les environnements Electron et Tauri.
 
-### Exemple de structure :
+### Utilisation recommandée :
+```typescript
+import { AppBridge } from '../bridge/AppBridge';
+
+// Exemple d'appel agnostique
+const displays = await AppBridge.image.getDisplays();
+```
+
+## 4. Structure du Bridge
 ```typescript
 interface AppBridge {
     system: SystemBridge;    // Boot, Versions, Logs

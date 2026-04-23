@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { DisplayInfo } from '../modules/image/types';
+import { AppBridge } from '../bridge/AppBridge';
 
 export interface AudioDeviceInfo {
     deviceId: string;
@@ -51,9 +52,9 @@ export const useHardwareStore = create<HardwareState>()(
             },
 
             fetchDisplays: async () => {
-                if (window.appBridge?.image?.getDisplays) {
+                if (AppBridge.image.hasSupport) {
                     try {
-                        const displays = await window.appBridge.image.getDisplays();
+                        const displays = await AppBridge.image.getDisplays();
                         set({ displays });
                     } catch (error) {
                         console.error('[HardwareStore] Failed to fetch displays:', error);

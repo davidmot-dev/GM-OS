@@ -54,8 +54,8 @@ export async function resolveToSendableUrl(src: string | undefined): Promise<str
         return ''; // Échec de résolution IndexedDB -> Pas d'image
     }
     
-    // Uniquement pour les vrais chemins de fichiers (contenant des séparateurs de dossiers)
-    const isPath = src.includes('/') || src.includes('\\');
+    // Uniquement pour les vrais chemins de fichiers (contenant des séparateurs de dossiers ou commençant par des lettres de lecteur)
+    const isPath = src.includes('/') || src.includes('\\') || /^[a-zA-Z]:/.test(src);
     if (isPath) {
         return AppBridge.utils.formatFileUrl(src);
     }

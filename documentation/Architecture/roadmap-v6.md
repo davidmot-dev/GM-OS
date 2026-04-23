@@ -57,7 +57,8 @@ Refonte des systèmes de jeu pour une automatisation intelligente.
 Extension des capacités de création et de partage. Migration vers une infrastructure décentralisée.
 
 - **[x] Initialisation GM-OS v7 (Tauri)** : Création de l'environnement isolé et du Pont Agnostique (23 Avril 2026).
-- **[/] Migration Rust Backend** : Portage des commandes IPC vers le moteur Tauri (En cours).
+- **[x] Migration Rust Backend (Bridge Core)** : Portage des commandes IPC vers le moteur Tauri (23 Avril 2026).
+- **[x] Multimedia & Immersion v7** : Support natif du protocole `asset://` et résolution automatique des chemins média.
 - **[ ] Synchronisation P2P Native** : Migration du pont WebSocket vers Peer-to-Peer via Rust/Libp2p.
 
 ---
@@ -97,8 +98,8 @@ Ces fonctionnalités sont prévues mais temporairement mises de côté pour prio
 | Précision géométrique d10 (Manual Modeling) | Moyenne | ✅ Validé |
 
 ---
-*Dernière mise à jour : 22 Avril 2026 (23h30)*
-*Statut : Version 6.5.0 - Début de la Phase 3 (P2P Architecture).*
+*Dernière mise à jour : 23 Avril 2026 (10h30)*
+*Statut : Version 7.0.0-alpha - Phase 3 (Multimedia) Terminée.*
 
 ### [v6.3.1-dev] - Player Hub Stabilization & Premium Refactoring
 - [x] **Architecture Hub** : Migration du `PlayerHub` vers le hook unifié `useHubSync`.

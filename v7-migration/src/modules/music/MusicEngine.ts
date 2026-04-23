@@ -3,6 +3,7 @@
  * Gère le mixage, les platines, les boucles A/B et le routage via Streaming HTML5.
  */
 import { useMediaStore } from '../../stores/useMediaStore';
+import { AppBridge } from '../../bridge/AppBridge';
 
 export interface DeckState {
     isPlaying: boolean;
@@ -106,12 +107,7 @@ class MusicDeck {
 
             if (isLocalPath) {
                 console.log(`[MusicDeck] Local path detected: ${url}`);
-                if (window.appBridge?.utils?.formatFileUrl) {
-                    finalUrl = window.appBridge.utils.formatFileUrl(url);
-                } else {
-                    const normalizedPath = url.replace(/^file:\/\/\//, '').replace(/\\/g, '/');
-                    finalUrl = `gmos://media/${normalizedPath}`;
-                }
+                finalUrl = AppBridge.utils.formatFileUrl(url);
             }
         }
 

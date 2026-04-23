@@ -1,4 +1,5 @@
 import { useMediaStore } from '../../stores/useMediaStore';
+import { AppBridge } from '../../bridge/AppBridge';
 
 export class SoundEngine {
     private static instance: SoundEngine;
@@ -77,13 +78,10 @@ export class SoundEngine {
      * @returns URL formatée.
      */
     public formatUrl(filePath: string): string {
-        if (filePath.startsWith('http') || filePath.startsWith('data:') || filePath.startsWith('file://')) {
+        if (filePath.startsWith('http') || filePath.startsWith('data:') || filePath.startsWith('blob:')) {
             return filePath;
         }
-        if (window.appBridge?.utils?.formatFileUrl) {
-            return window.appBridge.utils.formatFileUrl(filePath);
-        }
-        return filePath;
+        return AppBridge.utils.formatFileUrl(filePath);
     }
 
     /**

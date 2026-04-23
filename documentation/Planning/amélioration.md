@@ -47,7 +47,14 @@ Ce document centralise la vision et les chantiers de GM-OS. Depuis Avril 2026, l
 
 ---
 
+### 🏛️ Jalons v7 Atteints (Avril 2026)
+- [x] **Agnostic Bridge Class** : Découplage total des moteurs Electron et Tauri via une couche de traduction dynamique.
+- [x] **Multimedia Native Support** : Support complet du protocole `asset://` pour le streaming fluide des médias haute résolution.
+
+---
+
 ## 📅 Historique Récent
+- **v7.0.0-alpha** (23 Avril 2026) : Migration majeure vers Tauri. Pont agnostique et multimédia natif opérationnels.
 - **v6.3.2** (16 Avril 2026) : Unification Hub et nettoyage du mode Théâtre. Correction des fuites WebSocket.
 - **v6.3.1** (14 Avril 2026) : Migration Player Hub vers useHubSync et ajout des effets visuels Premium (Scanlines, Grain).
 - **v6.3.0** (11 Avril 2026) : Augmentation de version mineure, synchronisation globale de la documentation et correction de l'encodage des locales.
@@ -58,7 +65,7 @@ Ce document centralise la vision et les chantiers de GM-OS. Depuis Avril 2026, l
 ---
 
 > [!TIP]
-> **Priorité actuelle** : Stabilisation des nouveaux hooks et déploiement du système de calcul de fiches.
+> **Priorité actuelle** : Stabilisation de la v7 sous Tauri et gestion des fenêtres de projection.
 
 > [!IMPORTANT]
-> Version Actuelle : **6.3.2** (Avril 2026)
+> Version Actuelle : **7.0.0-alpha** (Avril 2026)

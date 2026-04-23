@@ -23,7 +23,7 @@ Ce document assure le suivi granulaire pour **chaque sous-composant** du systèm
 | Sous-Module | Description | Interface Bridge | Impl. Rust | Statut |
 | :--- | :--- | :---: | :---: | :--- |
 | **Oracle Chat** | Proxy Gemini / Ollama API | ✅ | ❌ | 🟡 Partiel |
-| **MCP Bridge** | Pont vers NotebookLM (Python) | ✅ | ❌ | 🟡 Partiel |
+| **MCP Bridge** | Pont vers NotebookLM (Python) | ✅ | ✅ | 🟢 Terminé (Bridge) |
 | **AI Forge** | Génération de règles et systèmes | ✅ | ❌ | 🟡 Partiel |
 | **Security / Keys** | Gestion sécurisée des clés API | ✅ | ❌ | 🟡 Partiel |
 
@@ -31,18 +31,19 @@ Ce document assure le suivi granulaire pour **chaque sous-composant** du systèm
 | Sous-Module | Composants Clés | Interface Bridge | Impl. Rust | Statut |
 | :--- | :--- | :---: | :---: | :--- |
 | **Dice-OS** | Three.js Engine, Physics, Sync | ❌ | ❌ | 🌑 À faire |
-| **Map OS v2** | Ambiance System, Fog of War, Layers | ❌ | ❌ | 🌑 À faire |
+| **Map OS v2** | Ambiance System, Fog of War, Layers | ✅ | ❌ | 🟡 Partiel |
 | **Combat OS** | Initiative, Tracker, Player Sync | ❌ | ❌ | 🌑 À faire |
 | **Tactical AI** | Taxonomy, Enemy Behaviors | ❌ | ❌ | 🌑 À faire |
-| **Filesystem** | Lecture/Écriture agnostique | ✅ | ❌ | 🟡 Partiel |
-| **App Lifecycle** | Quit, Restart, Version | ✅ | ❌ | 🟡 Partiel |
+| **Filesystem** | Lecture/Écriture agnostique | ✅ | ✅ | 🟢 Terminé (Bridge) |
+| **App Lifecycle** | Quit, Restart, Version | ✅ | ✅ | 🟢 Terminé (Bridge) |
+| **Security** | Secrets OS Keychain | ✅ | ✅ | 🟢 Terminé (Bridge) |
 
 ## 🔊 4. Multimédia & Immersion
 | Sous-Module | Description | Interface Bridge | Impl. Rust | Statut |
 | :--- | :--- | :---: | :---: | :--- |
-| **Audio OS** | Music (Decks), Ambient (8 channels), Sound FX | ❌ | ❌ | 🌑 À faire |
+| **Audio OS** | Music (Decks), Ambient (8 channels), Sound FX | ✅ | ❌ | 🟡 Partiel |
 | **Voice OS** | Modulateur, Ducking, Level Sync | ❌ | ❌ | 🌑 À faire |
-| **Visuals** | Image OS, Video Projections, Whiteboard | ❌ | ❌ | 🌑 À faire |
+| **Visuals** | Image OS, Video Projections, Whiteboard | ✅ | ❌ | 🟡 Partiel |
 | **Home Auto** | Light OS (Philips Hue) | ❌ | ❌ | 🌑 À faire |
 
 ## 🌐 5. Connectivité & Infrastructure
@@ -51,7 +52,8 @@ Ce document assure le suivi granulaire pour **chaque sous-composant** du systèm
 | **Remote Bridge** | WebSocket Sync (v6) -> P2P (v7) | ❌ | ❌ | 🌑 À faire |
 | **Tablet Hub** | Interface dédiée joueurs / projection | ❌ | ❌ | 🌑 À faire |
 | **Logger / Debug**| Interception console, Error tracking | ✅ | ❌ | 🟡 Partiel |
-| **Media Assets** | Asset Lock, File URL Formatting | ✅ | ❌ | 🟡 Partiel |
+| **Media Assets** | Asset Lock, File URL Formatting | ✅ | ✅ | 🟢 Terminé (Bridge) |
+| **Displays** | Multi-monitor detection | ✅ | ✅ | 🟢 Terminé (Bridge) |
 
 ---
 *Dernière mise à jour : 23 Avril 2026 - GM-OS v7 Migration Tracker*
