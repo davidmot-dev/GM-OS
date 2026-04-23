@@ -30,7 +30,7 @@ Ce document assure le suivi granulaire pour **chaque sous-composant** du systèm
 ## 🎲 3. Monde & Mécaniques (Détail)
 | Sous-Module | Composants Clés | Interface Bridge | Impl. Rust | Statut |
 | :--- | :--- | :---: | :---: | :--- |
-| **Dice-OS** | Three.js Engine, Physics, Sync | ❌ | ❌ | 🌑 À faire |
+| **Dice-OS** | Three.js Engine, Physics, Sync | ✅ | ❌ | 🟡 Partiel |
 | **Map OS v2** | Ambiance System, Fog of War, Layers | ✅ | ❌ | 🟡 Partiel |
 | **Combat OS** | Initiative, Tracker, Player Sync | ❌ | ❌ | 🌑 À faire |
 | **Tactical AI** | Taxonomy, Enemy Behaviors | ❌ | ❌ | 🌑 À faire |
@@ -43,14 +43,14 @@ Ce document assure le suivi granulaire pour **chaque sous-composant** du systèm
 | :--- | :--- | :---: | :---: | :--- |
 | **Audio OS** | Music (Decks), Ambient (8 channels), Sound FX | ✅ | ❌ | 🟡 Partiel |
 | **Voice OS** | Modulateur, Ducking, Level Sync | ❌ | ❌ | 🌑 À faire |
-| **Visuals** | Image OS, Video Projections, Whiteboard | ✅ | ❌ | 🟡 Partiel |
+| **Visuals** | Image OS, Video Projections, Whiteboard | ✅ | ✅ | ✅ Terminé |
 | **Home Auto** | Light OS (Philips Hue) | ❌ | ❌ | 🌑 À faire |
 
 ## 🌐 5. Connectivité & Infrastructure
 | Sous-Module | Description | Interface Bridge | Impl. Rust | Statut |
 | :--- | :--- | :---: | :---: | :--- |
 | **Remote Bridge** | WebSocket Sync (v6) -> P2P (v7) | ❌ | ❌ | 🌑 À faire |
-| **Tablet Hub** | Interface dédiée joueurs / projection | ❌ | ❌ | 🌑 À faire |
+| **Tablet Hub** | Interface dédiée joueurs / projection | ✅ | ❌ | 🟡 Partiel |
 | **Logger / Debug**| Interception console, Error tracking | ✅ | ❌ | 🟡 Partiel |
 | **Media Assets** | Asset Lock, File URL Formatting | ✅ | ✅ | 🟢 Terminé (Bridge) |
 | **Displays** | Multi-monitor detection | ✅ | ✅ | 🟢 Terminé (Bridge) |

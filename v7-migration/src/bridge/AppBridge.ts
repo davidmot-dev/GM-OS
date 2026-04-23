@@ -43,6 +43,37 @@ class AppBridgeAdapter {
     }
 
     /**
+     * Gestion des événements IPC (Agnostique)
+     */
+    public on(channel: string, callback: (...args: any[]) => void): () => void {
+        if (isTauri && (window as any).__TAURI__) {
+            const { listen } = (window as any).__TAURI__.event;
+            let unlistenFn: (() => void) | null = null;
+            
+            listen(channel, (event: any) => {
+                callback(event, event.payload);
+            }).then(un => unlistenFn = un);
+
+            return () => { if (unlistenFn) unlistenFn(); };
+        }
+        if (this.bridge?.on) {
+            return this.bridge.on(channel, callback);
+        }
+        return () => {};
+    }
+
+    public emit(channel: string, payload?: any): void {
+        if (isTauri && (window as any).__TAURI__) {
+            const { emit } = (window as any).__TAURI__.event;
+            emit(channel, payload);
+            return;
+        }
+        if (this.bridge?.emit) {
+            this.bridge.emit(channel, payload);
+        }
+    }
+
+    /**
      * Logger système
      */
     public logger = {
@@ -123,10 +154,80 @@ class AppBridgeAdapter {
             }
             return null;
         },
-        launchHubWindow: (tag?: string): void => {
+        launchHubWindow: async (tag?: string): Promise<void> => {
+            if (isTauri) {
+                const label = tag || 'hub';
+                const url = `index.html?window=${label}`;
+                await this.window.open({
+                    id: `window-${label}`,
+                    title: label === 'tablet' ? 'GM-OS Tablet Hub' : 'GM-OS Player Hub',
+                    url
+                });
+                return;
+            }
             if (this.bridge?.session?.launchHubWindow) {
                 this.bridge.session.launchHubWindow(tag);
             }
+        }
+    };
+
+    /**
+     * Gestion des Fenêtres (Tauri Native)
+     */
+    public window = {
+        get hasSupport() { return isTauri || !!(window as any).appBridge?.window; },
+        open: async (options: { 
+            id: string, 
+            title: string, 
+            url: string, 
+            x?: number, 
+            y?: number, 
+            width?: number, 
+            height?: number,
+            decorations?: boolean,
+            transparent?: boolean
+        }): Promise<boolean> => {
+            if (isTauri && (window as any).__TAURI__) {
+                try {
+                    const { WebviewWindow } = (window as any).__TAURI__.window;
+                    const webview = new WebviewWindow(options.id, {
+                        url: options.url,
+                        title: options.title,
+                        x: options.x,
+                        y: options.y,
+                        width: options.width || 1280,
+                        height: options.height || 720,
+                        decorations: options.decorations ?? true,
+                        transparent: options.transparent ?? false,
+                    });
+
+                    await new Promise((resolve, reject) => {
+                        webview.once('tauri://created', () => resolve(true));
+                        webview.once('tauri://error', (e: any) => reject(e));
+                    });
+                    return true;
+                } catch (e) {
+                    console.error("[AppBridge] Failed to open window:", e);
+                    return false;
+                }
+            }
+            // Fallback Electron (si implémenté dans le bridge v6)
+            if ((window as any).appBridge?.window?.open) {
+                return await (window as any).appBridge.window.open(options);
+            }
+            return false;
+        },
+        close: async (id: string): Promise<boolean> => {
+            if (isTauri && (window as any).__TAURI__) {
+                const { getAllWindows } = (window as any).__TAURI__.window;
+                const windows = await getAllWindows();
+                const target = windows.find((w: any) => w.label === id);
+                if (target) {
+                    await target.close();
+                    return true;
+                }
+            }
+            return false;
         }
     };
 
@@ -223,15 +324,14 @@ class AppBridgeAdapter {
         get hasSupport() { return !!this.bridge?.image || isTauri; },
         getDisplays: async (): Promise<any[]> => {
             if (isTauri && (window as any).__TAURI__) {
-                // En Tauri v2, on peut lister les moniteurs
                 try {
-                    // Note: 'availableMonitors' est souvent utilisé pour le choix de projection
                     const monitors = await (window as any).__TAURI__.window.availableMonitors();
                     return monitors.map((m: any, index: number) => ({
                         id: `monitor-${index}`,
                         label: m.name || `Écran ${index + 1}`,
                         bounds: m.size,
-                        isPrimary: false // À affiner si besoin
+                        position: m.position,
+                        isPrimary: false
                     }));
                 } catch (e) {
                     console.error("[AppBridge] Failed to get monitors:", e);
@@ -242,6 +342,52 @@ class AppBridgeAdapter {
                 return await this.bridge.image.getDisplays();
             }
             return [];
+        },
+        launchDisplay: async (paths: string[], displayId: string): Promise<void> => {
+            if (isTauri) {
+                // 1. Trouver les coordonnées du moniteur si c'est un moniteur physique
+                let x = undefined;
+                let y = undefined;
+                
+                if (displayId.startsWith('monitor-')) {
+                    const displays = await this.image.getDisplays();
+                    const targetMonitor = displays.find(d => d.id === displayId);
+                    if (targetMonitor && targetMonitor.position) {
+                        x = targetMonitor.position.x;
+                        y = targetMonitor.position.y;
+                    }
+                }
+
+                // 2. Ouvrir la fenêtre de projection si elle n'existe pas
+                const url = `index.html?window=projector&displayId=${displayId}`;
+                await this.window.open({
+                    id: `projector-${displayId}`,
+                    title: `GM-OS Projection - ${displayId}`,
+                    url,
+                    x,
+                    y,
+                    decorations: false,
+                });
+
+                // 2. Envoyer les données via IPC
+                // Attendre un peu que la fenêtre soit prête (ou utiliser un signal de retour)
+                setTimeout(() => {
+                    this.emit('image:update-display', paths);
+                }, 500);
+                return;
+            }
+            if (this.bridge?.image?.launchDisplay) {
+                this.bridge.image.launchDisplay(paths, displayId);
+            }
+        },
+        syncHubData: (type: string, data: any): void => {
+            if (isTauri) {
+                this.emit('image:sync-hub-data', type, data);
+                return;
+            }
+            if (this.bridge?.image?.syncHubData) {
+                this.bridge.image.syncHubData(type, data);
+            }
         }
     };
     public ai = {

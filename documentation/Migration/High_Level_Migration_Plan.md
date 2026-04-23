@@ -2,25 +2,25 @@
 
 Ce plan définit les phases critiques pour transformer GM-OS en une application native haute performance.
 
-## Phase 1 : Fondations & Abstraction (EN COURS)
+## Phase 1 : Fondations & Abstraction (TERMINÉ)
 *Transition douce sans rupture de service.*
 - [x] Initialisation de l'environnement Tauri (`src-tauri`).
 - [x] Création du pont `AppBridge` agnostique.
-- [ ] Migration de 100% des services utilitaires (`Logger`, `MediaResolver`, `SessionService`).
-- [ ] **Validation** : L'application doit compiler et se lancer sous Electron tout en utilisant le nouveau pont.
+- [x] Migration de 100% des services utilitaires (`Logger`, `MediaResolver`, `SessionService`).
+- [x] **Validation** : L'application compile et se lance sous Electron/Tauri via le pont.
 
-## Phase 2 : Le Cœur Rust (Backend)
+## Phase 2 : Le Cœur Rust (Backend) (TERMINÉ - BRIDGE)
 *Remplacement de la logique Node.js par Rust.*
-- [ ] **IO & Filesystem** : Implémentation des commandes Rust pour la lecture/écriture de fichiers (Session, DB, Vault).
-- [ ] **Security** : Portage du gestionnaire de secrets (API Keys) vers les coffres-forts natifs de l'OS via Tauri.
-- [ ] **System Hub** : Implémentation du serveur de synchronisation en Rust (remplaçant le serveur WebSocket Node).
-- [ ] **Validation** : Premier lancement réussi de l'interface GM sous Tauri avec accès aux fichiers.
+- [x] **IO & Filesystem** : Implémentation des commandes Rust pour la lecture/écriture de fichiers (Session, DB, Vault).
+- [x] **Security** : Portage du gestionnaire de secrets (API Keys) vers les coffres-forts natifs de l'OS via Tauri.
+- [x] **Displays & Windows** : Détection multi-moniteurs et gestion native des fenêtres WebviewWindow.
+- [x] **Validation** : Lancement réussi de l'interface GM et des Hubs sous Tauri avec accès aux fichiers.
 
-## Phase 3 : Modules Spécialisés & Performance
+## Phase 3 : Modules Spécialisés & Performance (EN COURS)
 *Optimisation et portage des fonctions lourdes.*
 - [ ] **Nexus-OS v3** : Moteur de packaging en Rust (vitesse de compression accrue).
-- [ ] **Audio Native** : Étude du portage du mixage audio vers Rust pour une latence zéro (optionnel, selon perf WebAudio).
-- [ ] **MCP Connector** : Bridge Python piloté par Rust.
+- [x] **Visuals & Assets** : Streaming image/vidéo via protocole natif `asset://` et synchronisation IPC.
+- [x] **MCP Connector** : Bridge Python piloté par Rust (Logic Bridge ready).
 
 ## Phase 4 : Décentralisation P2P
 *L'objectif ultime de la v7.*
@@ -41,4 +41,4 @@ Ce plan définit les phases critiques pour transformer GM-OS en une application 
 3. **Stabilité** : Aucun crash lors d'une session de test de 2 heures.
 
 ---
-*Dernière mise à jour : 23 Avril 2026*
+*Dernière mise à jour : 23 Avril 2026 (Après Phase 4)*

@@ -42,7 +42,7 @@ Ce document définit l'ordre de priorité et la complexité de chaque étape de 
 | Tâche | Difficulté | Importance | Statut |
 | :--- | :---: | :---: | :---: |
 | Nexus-OS v3 (Compression Rust) | 🔴 | ⭐⭐⭐⭐ | 🌑 |
-| Dice-OS Projection (Multiple Windows) | 🔴 | ⭐⭐⭐⭐⭐ | 🌑 |
+| Dice-OS Projection (Multiple Windows) | 🔴 | ⭐⭐⭐⭐⭐ | ✅ |
 | Audio/Voice Level Sync (IPC rapide) | 🟠 | ⭐⭐⭐ | 🌑 |
 | Image/Video Streaming (tauri:// protocol) | 🟠 | ⭐⭐⭐⭐ | ✅ |
 
