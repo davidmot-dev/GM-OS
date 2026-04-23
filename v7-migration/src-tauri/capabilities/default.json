@@ -13,9 +13,11 @@
     "core:app:default",
     "core:resources:default",
     "core:image:default",
-    "core:protocol:asset",
-    "core:fs:default",
+    "core:webview:default",
+    "fs:default",
+    "fs:allow-read",
     "shell:default",
+    "shell:allow-open",
     "dialog:default"
   ]
 }
