@@ -1,0 +1,53 @@
+{
+  "name": [
+    "Maison Témoin du Lotissement Clairval",
+    "Maison Témoin des Allées Neuves",
+    "Maison Témoin du Numéro 0",
+    "Maison Témoin des Volets Impeccables",
+    "Maison Témoin du Salon Parfait",
+    "Maison Témoin du Couloir Trop Long",
+    "Maison Témoin des Pièces Identiques",
+    "Maison Témoin du Jardin Sans Traces",
+    "Maison Témoin du Hall Silencieux",
+    "Maison Témoin des Lumières Fixes"
+  ],
+
+  "description": [
+    "Une maison témoin impeccablement rangée, où rien ne semble avoir été touché depuis des mois.",
+    "Une maison témoin située au bout d’une allée neuve, entourée de terrains encore vides.",
+    "Une maison témoin portant le numéro 0, absent de tous les plans du lotissement.",
+    "Une maison témoin dont les volets sont toujours parfaitement alignés.",
+    "Une maison témoin où le salon semble trop symétrique pour être naturel.",
+    "Une maison témoin dont le couloir paraît légèrement plus long qu’il ne devrait.",
+    "Une maison témoin où plusieurs pièces semblent étrangement identiques.",
+    "Une maison témoin dont le jardin ne porte aucune trace de pas, même après la pluie.",
+    "Une maison témoin où le hall d’entrée absorbe tous les sons.",
+    "Une maison témoin où les lumières restent fixes, sans jamais clignoter."
+  ],
+
+  "ambiance": [
+    "Une perfection artificielle et dérangeante.",
+    "Une nouveauté froide et impersonnelle.",
+    "Une absence totale d’identité.",
+    "Une symétrie inquiétante.",
+    "Une mise en scène trop parfaite.",
+    "Une distorsion spatiale subtile.",
+    "Une répétition troublante.",
+    "Une propreté anormale.",
+    "Un silence absorbant.",
+    "Une lumière figée."
+  ],
+
+  "secret": [
+    "Les meubles changent légèrement de place entre deux visites.",
+    "Le numéro 0 apparaît et disparaît selon l’heure.",
+    "Les volets se referment seuls à la tombée de la nuit.",
+    "Un coussin du salon semble toujours déplacé.",
+    "Le couloir s’allonge de quelques centimètres chaque nuit.",
+    "Deux pièces identiques ne devraient pas exister selon les plans.",
+    "Le jardin reste parfaitement lisse, même après un passage.",
+    "Le hall renvoie un écho qui ne correspond à aucun bruit.",
+    "Une lumière s’allume dans une pièce qui n’existe pas.",
+    "Une silhouette apparaît parfois derrière une vitre… mais seulement de l’extérieur."
+  ]
+}

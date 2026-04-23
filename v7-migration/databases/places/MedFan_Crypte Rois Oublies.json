@@ -1,0 +1,53 @@
+{
+  "name": [
+    "Crypte des Couronnes Brisées",
+    "Crypte du Sépulcre Éteint",
+    "Crypte des Trônes de Pierre",
+    "Crypte du Roi Sans Nom",
+    "Crypte des Sceaux Effacés",
+    "Crypte des Tombeaux Silencieux",
+    "Crypte du Dernier Souverain",
+    "Crypte des Couronnes de Poussière",
+    "Crypte des Royaumes Perdus",
+    "Crypte du Sang Fossilisé"
+  ],
+
+  "description": [
+    "Une crypte où reposent des rois dont les couronnes ont été brisées avant l’enterrement.",
+    "Un sépulcre éteint où aucune torche ne reste allumée plus d’un instant.",
+    "Une crypte où des trônes de pierre entourent les sarcophages royaux.",
+    "Un tombeau central dédié à un roi dont le nom a été effacé partout.",
+    "Une crypte où les sceaux royaux ont été volontairement grattés.",
+    "Un ensemble de tombeaux silencieux où même les pas ne résonnent pas.",
+    "Une crypte dédiée au dernier souverain d’un royaume disparu.",
+    "Un lieu où les couronnes reposent en poussière sur les sarcophages.",
+    "Une crypte abritant les rois de royaumes aujourd’hui oubliés.",
+    "Un tombeau où le sang fossilisé forme des motifs étranges."
+  ],
+
+  "ambiance": [
+    "Un silence funéraire.",
+    "Une royauté éteinte.",
+    "Une poussière sacrée.",
+    "Une absence d’identité.",
+    "Une mémoire effacée.",
+    "Un calme absolu.",
+    "Une fin de dynastie.",
+    "Une désagrégation lente.",
+    "Une histoire perdue.",
+    "Une fossilisation sanglante."
+  ],
+
+  "secret": [
+    "Une couronne brisée se reforme légèrement chaque nuit.",
+    "Le sépulcre éteint s’illumine brièvement à l’aube.",
+    "Un trône de pierre est tiède au toucher.",
+    "Le tombeau du roi sans nom murmure un titre oublié.",
+    "Un sceau effacé réapparaît sous la pleine lune.",
+    "Un tombeau silencieux contient un souffle encore chaud.",
+    "Le dernier souverain tient une clé dans sa main de pierre.",
+    "Une couronne de poussière se soulève quand un héritier approche.",
+    "Un sarcophage des royaumes perdus vibre faiblement.",
+    "Le sang fossilisé change de motif selon le visiteur."
+  ]
+}

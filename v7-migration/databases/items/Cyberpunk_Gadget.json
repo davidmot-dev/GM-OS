@@ -1,0 +1,43 @@
+{
+    "name": [
+        "Puce de Crédit Craquée", "Injecteur de Stimulants V3", "Drone Espion 'Moustique'", "Brouilleur Neural", "Masque à Gaz Tactique",
+        "Disque Dur Crypté", "Gants Haptiques Militaires", "Scanner Rétinien Portable", "Pistolet à Impulsion EMP", "Kit de Piratage Russe",
+        "Implant Oculaire Recyclé", "Batterie à Fusion de Poche", "Émetteur de Leurre Holographique", "Couteau Laser", "Monocle de Visée"
+    ],
+    "description": [
+        "Un petit boîtier noir mat avec des connecteurs en or.",
+        "Un appareil bricolé avec des fils apparents et du scotch isolant.",
+        "Un équipement militaire haut de gamme, propre et sans rayure.",
+        "Couvert de graffitis néons et de stickers de groupes de rock.",
+        "Un objet lourd et encombrant, dégageant une chaleur constante.",
+        "Un dispositif minuscule, facile à dissimuler dans la paume.",
+        "L'écran est fissuré mais les données s'affichent encore.",
+        "Fabriqué en polymère transparent laissant voir les circuits internes.",
+        "Un design rétro-futuriste avec des tubes cathodiques miniatures.",
+        "Recouvert d'une texture synthétique imitant la peau humaine."
+    ],
+    "ambiance": [
+        "Émet un bourdonnement électrique à la limite de l'audible.",
+        "Des LEDs rouges clignotent frénétiquement en présence de réseaux.",
+        "L'objet chauffe rapidement lors de son utilisation.",
+        "Une voix synthétique annonce les statuts en japonais.",
+        "L'interface projette une lumière bleue apaisante.",
+        "L'objet semble aspirer les données des appareils voisins.",
+        "Provoque une légère migraine quand il est activé.",
+        "Vibre silencieusement à chaque notification interceptée.",
+        "Dégage une odeur chimique d'ozone et de plastique brûlé.",
+        "L'utilisation est fluide, presque organique."
+    ],
+    "secret": [
+        "Contient les preuves d'un crime commis par une mégacorporation.",
+        "Un traceur GPS est caché à l'intérieur, actif en permanence.",
+        "L'objet contient une IA primitive qui tente de communiquer.",
+        "C'est un prototype volé recherché par la police secrète.",
+        "L'activation de l'objet alerte un syndicat du crime local.",
+        "Il contient les coordonnées d'un bunker oublié.",
+        "L'appareil est piégé et explosera si on tente de l'ouvrir.",
+        "Il a appartenu à un hacker légendaire présumé mort.",
+        "L'objet modifie subtilement la mémoire de son utilisateur.",
+        "Il permet d'accéder à une fréquence radio clandestine."
+    ]
+}

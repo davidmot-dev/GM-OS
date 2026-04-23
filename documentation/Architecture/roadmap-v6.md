@@ -56,9 +56,9 @@ Refonte des systèmes de jeu pour une automatisation intelligente.
 
 Extension des capacités de création et de partage. Migration vers une infrastructure décentralisée.
 
-- **[/] Synchronisation P2P (Tauri)** : Migration du pont WebSocket vers Peer-to-Peer. (En cours de planification)
-- **[x] Timeline Interactive** : Visualisation chronologique des événements générés depuis le Wiki.
-- **[x] AI NPC Dialogue Prep** : Génération de répliques à la volée via l'Oracle pour les favoris. (v6.1.2-dev)
+- **[x] Initialisation GM-OS v7 (Tauri)** : Création de l'environnement isolé et du Pont Agnostique (23 Avril 2026).
+- **[/] Migration Rust Backend** : Portage des commandes IPC vers le moteur Tauri (En cours).
+- **[ ] Synchronisation P2P Native** : Migration du pont WebSocket vers Peer-to-Peer via Rust/Libp2p.
 
 ---
 

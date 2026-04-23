@@ -1,0 +1,30 @@
+{
+    "name": "Météo et Conditions de Voyage",
+    "dice": "1d6",
+    "entries": [
+        {
+            "min": -99, "max": 1,
+            "title": "Catastrophique",
+            "description": "Une tempête violente s'abat sur la région (blizzard, orage électrique ou tempête de sable selon l'environnement). La visibilité est presque nulle.",
+            "effect": "Mouvement réduit de moitié. Désavantage (ou malus de -5) sur tous les tests de Perception (Vue/Ouïe) et de Survie. Épuisement accéléré."
+        },
+        {
+            "min": 2, "max": 3,
+            "title": "Mauvais temps",
+            "description": "Des pluies battantes ou des vents très forts rendent la progression pénible. Le sol devient boueux et glissant.",
+            "effect": "Malus de -2 aux jets de Navigation, d'Acrobatie ou de Conduite. Les feux de camp sont impossibles à allumer sans magie/technologie."
+        },
+        {
+            "min": 4, "max": 5,
+            "title": "Clément",
+            "description": "Le ciel est partiellement couvert, la température est moyenne. Le vent est une brise légère.",
+            "effect": "Aucun effet mécanique. Conditions de jeu normales."
+        },
+        {
+            "min": 6, "max": 99,
+            "title": "Conditions parfaites",
+            "description": "Une journée magnifique, le ciel est dégagé et la température est idéale pour voyager.",
+            "effect": "Avantage (ou bonus de +2) sur les jets de Survie et de Navigation. Les personnages récupèrent 1 PV supplémentaire lors des repos courts grâce au bon moral."
+        }
+    ]
+}

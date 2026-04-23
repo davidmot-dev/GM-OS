@@ -1,0 +1,65 @@
+{
+    "firstNames": [
+        "Wyatt", "Clint", "Abigail", "Jesse", "Martha", "Cole", "Sadie", "Elias", "Nora", "Silas", "June", "Boone",
+        "Harper", "Caleb", "Rosie", "Hank", "Lydia", "Amos", "Ruby", "Zeke", "Daisy", "Gideon", "Molly", "Virgil",
+        "Cassidy", "Etta", "Rufus", "Belle", "Jed", "Annie", "Tobias", "Pearl", "Seth", "Hazel", "Roy", "Clara",
+        "Wade", "Mae", "Orson", "Tilly", "Ephraim", "Georgia", "Franklin", "Opal", "Clyde", "Hattie", "Levi", "Mabel"
+    ],
+    "lastNames": [
+        "McGraw", "Hollister", "Carver", "Dalton", "Boone", "McKenna", "Hawthorne", "Caldwell", "Ridgeway", "Thatcher",
+        "Blackwell", "Coltrane", "Harding", "Whitlock", "Granger", "Holliday", "McCoy", "Baxter", "Crowley", "Davenport",
+        "Fletcher", "Hawkins", "Mercer", "Pritchard", "Sullivan", "Tolliver", "Underwood", "Weston", "Yarbrough", "Walker",
+        "Bishop", "Clayton", "Dawson", "Ellison", "Frost", "Garrison", "Hargrove", "Jennings", "Kincaid", "Langston",
+        "Morrison", "Nash", "Prescott", "Quincy", "Rutherford", "Sawyer", "Templeton", "Vaughn", "Wheeler", "Youngblood"
+    ],
+    "jobs": [
+        "Shérif", "Hors-la-loi", "Éleveur de bétail", "Cowboy", "Propriétaire de saloon", "Chasseur de primes", "Joueur professionnel",
+        "Forgeron", "Conducteur de diligence", "Médecin de campagne", "Pasteur", "Marchand ambulant", "Chercheur d’or",
+        "Trappeur", "Éclaireur", "Fossoyeur", "Tenancier de bordel", "Ranger", "Pisteur", "Charpentier", "Banquier",
+        "Fermier", "Dresseur de chevaux", "Cuisinier de camp", "Contrebandier", "Messager", "Garde du train", "Pionnier",
+        "Chasseur de bisons", "Explorateur", "Mineur", "Fabricant de selles", "Tanneur", "Juge itinérant", "Photographe",
+        "Musicien de saloon", "Dompteur de bêtes", "Gardien de ranch", "Éleveur de moutons", "Dresseur de chiens",
+        "Chasseur de serpents", "Vendeur d’élixirs", "Charognard", "Garde du télégraphe", "Ingénieur ferroviaire",
+        "Cavalier postal", "Pilleur de trains", "Éleveur de poulets", "Coureur des plaines"
+    ],
+    "traits": [
+        "Taciturne", "Bavard", "Méfiant", "Courageux", "Bagarreur", "Superstitieux", "Fumeur de cigare", "Boit trop",
+        "Regard perçant", "Toujours calme", "Râleur", "Optimiste", "Pessimiste", "Rieur", "Dur en affaires", "Franc",
+        "Trop curieux", "Trop prudent", "Parle lentement", "Parle fort", "A un accent marqué", "A une démarche lourde",
+        "A une démarche légère", "A un rire tonitruant", "A un rire nerveux", "A une voix grave", "A une voix douce",
+        "A une moustache imposante", "A un regard triste", "A un regard fou", "A un regard dur", "A un humour noir",
+        "A une obsession pour l’or", "A une obsession pour les chevaux", "A une obsession pour les armes",
+        "A une obsession pour les cartes", "A une obsession pour la justice", "A une mémoire parfaite",
+        "A une mémoire défaillante", "A un tic nerveux", "A une cicatrice visible", "A un chapeau fétiche",
+        "A une démarche claudicante", "A une voix cassée", "A un sourire charmeur", "A un air menaçant",
+        "A un air innocent", "A un air fatigué", "A un air déterminé"
+    ],
+    "looks": [
+        "Chapeau de cowboy usé", "Bottes en cuir poussiéreuses", "Manteau long", "Poncho élimé", "Ceinture à cartouches",
+        "Colt rutilant", "Foulard rouge", "Chemise à carreaux", "Gilet en cuir", "Éperons brillants", "Moustache épaisse",
+        "Barbe mal taillée", "Cheveux longs attachés", "Cicatrice sur la joue", "Œil plissé", "Bottes renforcées",
+        "Veste en daim", "Pantalon râpé", "Écharpe en laine", "Chapeau noir", "Chapeau blanc", "Bottes de cavalier",
+        "Chemise blanche impeccable", "Gants en cuir", "Holster décoré", "Ceinture large", "Bottes boueuses",
+        "Manteau en peau", "Chapeau troué", "Chemise ouverte", "Bandana bleu", "Bottes cloutées", "Veste sombre",
+        "Pantalon en toile", "Éperons rouillés", "Chapeau à large bord", "Gilet brodé", "Chemise tachée",
+        "Bottes de ranch", "Poncho coloré", "Chapeau poussiéreux", "Manteau épais", "Gants troués",
+        "Chemise sombre", "Bottes usées", "Holster simple", "Chapeau décoré", "Veste en cuir noir", "Pantalon sombre"
+    ],
+    "secrets": [
+        "A braqué une banque", "A tué un homme par accident", "A un frère recherché", "A un passé de hors-la-loi",
+        "A un trésor caché", "A trahi son ancien gang", "A un enfant illégitime", "A un casier judiciaire secret",
+        "A survécu à une pendaison", "A un ennemi juré", "A un passé militaire trouble", "A un amour perdu",
+        "A un pacte avec un bandit", "A un cheval volé", "A un faux nom", "A un avis de recherche oublié",
+        "A un lien avec un shérif corrompu", "A un passé de joueur professionnel", "A un secret sur une mine d’or",
+        "A un passé de pistolero célèbre", "A un tatouage de gang", "A un coffre enterré", "A un passé de tueur à gages",
+        "A un secret sur un massacre", "A un ancien partenaire disparu", "A un secret sur un train volé",
+        "A un passé de contrebandier", "A un secret sur une ville fantôme", "A un passé de soldat",
+        "A un secret sur un duel truqué", "A un passé de voleur de chevaux", "A un secret sur un ranch brûlé",
+        "A un passé de chasseur de primes", "A un secret sur une attaque de diligence", "A un passé de fugitif",
+        "A un secret sur une famille influente", "A un passé de mercenaire", "A un secret sur un trésor maudit",
+        "A un passé de vagabond", "A un secret sur une rivière d’or", "A un passé de garde du train",
+        "A un secret sur un shérif disparu", "A un passé de mineur", "A un secret sur un duel perdu",
+        "A un passé de bandit repenti", "A un secret sur une carte volée", "A un passé de pistolero",
+        "A un secret sur un meurtre non résolu", "A un passé de survivant solitaire"
+    ]
+}

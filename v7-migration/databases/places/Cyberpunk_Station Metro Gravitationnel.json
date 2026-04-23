@@ -1,0 +1,53 @@
+{
+  "name": [
+    "Station Grav‑Line Delta",
+    "Station du Tunnel Luminescent",
+    "Station Orbital‑Niveau 3",
+    "Station des Rails Magnétiques",
+    "Station du Corridor Supersonique",
+    "Station Grav‑Loop Centrale",
+    "Station des Portes Pressurisées",
+    "Station du Hall Résonnant",
+    "Station Grav‑Transit 7",
+    "Station des Annonces Fantômes"
+  ],
+
+  "description": [
+    "Une station gravitationnelle où les trains se déplacent à vitesse quasi orbitale.",
+    "Une station éclairée par un tunnel luminescent qui pulse au rythme des trains.",
+    "Une station située au troisième niveau orbital, accessible par ascenseur pressurisé.",
+    "Une station où les rails magnétiques vibrent en continu, même sans train.",
+    "Un corridor supersonique où l’air est aspiré avant chaque passage.",
+    "Une station centrale où les trains tournent en boucle autour d’un noyau gravitationnel.",
+    "Une station équipée de portes pressurisées qui s’ouvrent avec un souffle violent.",
+    "Un hall immense où chaque bruit résonne comme amplifié.",
+    "Une station de transit rapide reliant plusieurs arcologies.",
+    "Une station où les annonces automatiques se déclenchent sans train prévu."
+  ],
+
+  "ambiance": [
+    "Une vitesse écrasante.",
+    "Une lumière pulsée et hypnotique.",
+    "Une verticalité vertigineuse.",
+    "Une vibration magnétique constante.",
+    "Une pression atmosphérique instable.",
+    "Une rotation gravitationnelle.",
+    "Une tension pressurisée.",
+    "Une résonance métallique.",
+    "Une urgence permanente.",
+    "Une automatisation défaillante."
+  ],
+
+  "secret": [
+    "Un train fantôme apparaît parfois sur les capteurs.",
+    "Le tunnel luminescent change de couleur selon la présence humaine.",
+    "Un ascenseur orbital s’arrête à un niveau non répertorié.",
+    "Les rails magnétiques émettent un signal codé.",
+    "Le corridor supersonique souffle parfois avant l’heure prévue.",
+    "Le noyau gravitationnel semble légèrement décalé.",
+    "Une porte pressurisée s’ouvre vers un quai inexistant.",
+    "Le hall résonne d’un bruit qui ne correspond à aucun train.",
+    "Un train Grav‑Transit 7 circule sans conducteur.",
+    "Une annonce fantôme mentionne une destination effacée des cartes."
+  ]
+}

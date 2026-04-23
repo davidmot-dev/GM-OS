@@ -1,0 +1,48 @@
+{
+    "name": "Attaques de la Nuée",
+    "dice": "1d6",
+    "entries": [
+        {
+            "min": 1,
+            "max": 1,
+            "title": "VORACITÉ",
+            "description": "La Nuée dévore tout sur son passage, et la nourriture ne manque pas, ici.",
+            "effect": "La Nuée récupère 2 points de Santé, ce qui la rend plus difficile à repousser."
+        },
+        {
+            "min": 2,
+            "max": 2,
+            "title": "PHÉROMONES",
+            "description": "La Nuée s’agite de plus en plus et diffuse une quantité de phéromones.",
+            "effect": "Ajoutez 1 à son prochain jet de dé sur cette table. L’effet est cumulatif."
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "SUFFOCATION",
+            "description": "Les créatures volent en tous sens, l’air en est rempli. Elles s’introduisent dans les yeux, les oreilles et la bouche de leurs victimes, les empêchant de respirer.",
+            "effect": "Quiconque se trouve dans la zone occupée par la Nuée doit effectuer un test d’ENDURANCE. En cas d’échec, la victime ne peut pas agir au Round suivant, et la Nuée effectue l’attaque RONGER JUSQU’À L’OS contre elle à sa prochaine action."
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "NUÉE AFFAMÉE",
+            "description": "La Nuée est si affamée qu’elle dévore tout, et les polymères et alliages de l’armure des joueurs font parfaitement l’affaire. Ceux qui ne portent pas d’armure se retrouvent avec des vêtements en charpie, mais ne subissent aucun dégât.",
+            "effect": "Tous les personnages pris dans la Nuée et portant une armure subissent une attaque portée avec huit dés de base et des Dégâts de 1. Tout dégât infligé est immédiatement retiré de leur Protection."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "FRÉNÉSIE DÉVORANTE",
+            "description": "La Nuée a faim et tente d’avaler tout ce qu’elle enveloppe. Les créatures trouvent le moyen de se faufiler dessous.",
+            "effect": "Tous les personnages qui se trouvent à l’intérieur subissent une attaque portée avec six dés de base et des Dégâts de 1. Leur Protection est réduite de moitié (arrondie à l’entier inférieur)."
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "RONGER JUSQU’À L’OS",
+            "description": "La Nuée se concentre sur une cible. Les créatures trouvent le moyen de se faufiler dessous. Si l’attaque inflige le moindre dégât, la Nuée a déchiqueté la victime.",
+            "effect": "Attaque portée avec huit dés de base et des Dégâts de 1. Sa Protection est réduite de moitié (arrondie à l’entier inférieur). La victime subit une blessure critique même si elle n’est pas Brisée. À chaque Round par la suite, la Nuée consacre automatiquement une de ses actions à porter cette attaque contre la même cible, à sa prochaine initiative, jusqu’à ce que la victime soit rongée jusqu’à l’os, secourue, ou que la Nuée soit repoussée."
+        }
+    ]
+}

@@ -1,0 +1,706 @@
+{
+    "name": "100 Rues ou Places - GdS-Cth-Investigateur",
+    "dice": "1d100",
+    "entries": [
+        {
+            "min": 1,
+            "max": 1,
+            "title": "Main Street",
+            "description": "Une grande rue bordée de commerces et de bureaux.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 2,
+            "max": 2,
+            "title": "Chestnut Street",
+            "description": "Une rue résidentielle calme, avec des maisons en brique et de grands jardins.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "Jefferson Street",
+            "description": "Une rue résidentielle avec des maisons de style victorien.",
+            "effect": "Forte présence de police dans la zone."
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "Bellevue Avenue",
+            "description": "Une grande avenue bordée de monuments majestueux.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "Adams Street",
+            "description": "Une rue commerçante animée, avec de nombreuses boutiques et des restaurants.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "Cherry Street",
+            "description": "Une rue paisible avec de grandes maisons spacieuses.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 7,
+            "max": 7,
+            "title": "Willow Lane",
+            "description": "Une rue mal éclairée en périphérie de la ville.",
+            "effect": "Visibilité réduite la nuit (malus aux tests d'Observation)."
+        },
+        {
+            "min": 8,
+            "max": 8,
+            "title": "Poplar Avenue",
+            "description": "Une ancienne avenue aux bâtiments défraîchis.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 9,
+            "max": 9,
+            "title": "Bay Street",
+            "description": "Une rue proche du port, avec des bars malfamés et des hôtels de passe.",
+            "effect": "Zone dangereuse (risque de rencontres hostiles)."
+        },
+        {
+            "min": 10,
+            "max": 10,
+            "title": "Hickory Lane",
+            "description": "Une rue où passe un petit ruisseau.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 11,
+            "max": 11,
+            "title": "Hill Street",
+            "description": "Une rue descendant d'une colline où se trouve, à son sommet, une ancienne église.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 12,
+            "max": 12,
+            "title": "Terrace Street",
+            "description": "La rue menant au cimetière.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 13,
+            "max": 13,
+            "title": "Front Street",
+            "description": "Une rue tranquille où poussent de grands chênes majestueux.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 14,
+            "max": 14,
+            "title": "Maple Avenue",
+            "description": "Une avenue animée où s'est installée la communauté polonaise.",
+            "effect": "Possibilité de trouver des traducteurs ou informations liées à la Pologne."
+        },
+        {
+            "min": 15,
+            "max": 15,
+            "title": "Cliff Road",
+            "description": "Une large rue avec de nombreux bars, vide en journée et animée en soirée.",
+            "effect": "Activité nocturne intense."
+        },
+        {
+            "min": 16,
+            "max": 16,
+            "title": "Court Street",
+            "description": "Une vieille rue au tracé biscornu.",
+            "effect": "L'on évite de s'y retrouver tard le soir (Sentiment d'insécurité)."
+        },
+        {
+            "min": 17,
+            "max": 17,
+            "title": "King's Street",
+            "description": "Une toute petite rue méconnue.",
+            "effect": "Idéal pour la discrétion (bonus aux tests de Discrétion)."
+        },
+        {
+            "min": 18,
+            "max": 18,
+            "title": "James Boulevard",
+            "description": "Un boulevard où s'amassent les étudiants le week-end pour profiter des parcs environnants.",
+            "effect": "Foule importante les week-ends."
+        },
+        {
+            "min": 19,
+            "max": 19,
+            "title": "Honeygrove Alley",
+            "description": "Une rue pavée en descente où se trouve un charmant salon de thé.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 20,
+            "max": 20,
+            "title": "Sunrise Boulevard",
+            "description": "Un grand boulevard bordé d'immeubles.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 21,
+            "max": 21,
+            "title": "Garden Street",
+            "description": "Une rue étroite rarement éclairée par la lumière du soleil.",
+            "effect": "Obscurité quasi-permanente."
+        },
+        {
+            "min": 22,
+            "max": 22,
+            "title": "Federal Avenue",
+            "description": "Une grande avenue donnant sur la mairie.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 23,
+            "max": 23,
+            "title": "Brown Street",
+            "description": "Une rue tranquille éclairée par des lanternes la nuit.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 24,
+            "max": 24,
+            "title": "Ocean Alley",
+            "description": "Une grande rue où se trouve un établissement pénitencier ainsi qu'un asile.",
+            "effect": "Présence de gardes et de personnel médical."
+        },
+        {
+            "min": 25,
+            "max": 25,
+            "title": "Oak Street",
+            "description": "Une rue en plein centre-ville, cœur du quartier italien.",
+            "effect": "Possibilité de trouver des traducteurs ou informations liées à l'Italie."
+        },
+        {
+            "min": 26,
+            "max": 26,
+            "title": "Planck Road",
+            "description": "Une longue route allant du centre-ville jusqu'à la ville voisine.",
+            "effect": "Axe de transport majeur."
+        },
+        {
+            "min": 27,
+            "max": 27,
+            "title": "Shaw Alley",
+            "description": "Une rue malfamée où se trouvent d'anciens entrepôts.",
+            "effect": "Zone industrielle désaffectée propice aux activités illégales."
+        },
+        {
+            "min": 28,
+            "max": 28,
+            "title": "Little Indian Creek",
+            "description": "Une ruelle étroite et pavée, perpendiculaire à deux grandes avenues.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 29,
+            "max": 29,
+            "title": "Fountain Square",
+            "description": "Une place où trône une petite fontaine en bronze finement ouvragée, d'un artiste inconnu.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 30,
+            "max": 30,
+            "title": "Goose Hollow Road",
+            "description": "Une rue menant au nouveau quartier industriel en plein essor.",
+            "effect": "Bruit et activité industrielle."
+        },
+        {
+            "min": 31,
+            "max": 31,
+            "title": "Blackwood Road",
+            "description": "Une route considérée par beaucoup comme maudite.",
+            "effect": "Nombreux accidents signalés (Danger environnemental)."
+        },
+        {
+            "min": 32,
+            "max": 32,
+            "title": "Powers Dead End",
+            "description": "Une impasse bordée de pots de fleurs mal entretenus, donnant une allure désespérante à l'endroit.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 33,
+            "max": 33,
+            "title": "Island Pond Road",
+            "description": "Une route parfaitement rectiligne passant sur un vieux pont de bois.",
+            "effect": "Le pont devrait être rénové (risque de fragilité structurelle)."
+        },
+        {
+            "min": 34,
+            "max": 34,
+            "title": "Agnes Street",
+            "description": "Une ruelle près d'un parc, où les arbres plongent l'endroit dans une semi-obscurité le jour.",
+            "effect": "Ombres inquiétantes la nuit (Jet de SAN 0/1 possible)."
+        },
+        {
+            "min": 35,
+            "max": 35,
+            "title": "Victory Plaza",
+            "description": "Une place commémorative dédiée aux soldats tombés au combat, avec un monument imposant.",
+            "effect": "Lieu de rassemblement patriotique."
+        },
+        {
+            "min": 36,
+            "max": 36,
+            "title": "Union Square",
+            "description": "Une place historique où ont lieu les grandes annonces et les célébrations.",
+            "effect": "Point névralgique pour les rumeurs et informations publiques."
+        },
+        {
+            "min": 37,
+            "max": 37,
+            "title": "Bookside Avenue",
+            "description": "Une grande et large avenue où s'installe le marché les jours consacrés.",
+            "effect": "Marché actif périodiquement."
+        },
+        {
+            "min": 38,
+            "max": 38,
+            "title": "Foundation Street",
+            "description": "Une rue abritant désormais des établissements de la finance.",
+            "effect": "Quartier riche et sécurisé."
+        },
+        {
+            "min": 39,
+            "max": 39,
+            "title": "Meteorite Alley",
+            "description": "Une allée végétalisée construite à l'emplacement légendaire de la chute d'une météorite.",
+            "effect": "Point d'intérêt occulte ou folklorique."
+        },
+        {
+            "min": 40,
+            "max": 40,
+            "title": "Worthen Road",
+            "description": "Une rue proche des ateliers de tanneurs dégageant des fumées nauséabondes.",
+            "effect": "Odeur pestilentielle (Jet d'Endurance pour éviter les nausées)."
+        },
+        {
+            "min": 41,
+            "max": 41,
+            "title": "Third Street",
+            "description": "Une rue ponctuée de petits entrepôts et d'ateliers d'artisans.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 42,
+            "max": 42,
+            "title": "Mill Road",
+            "description": "Une rue menant à l'ancien moulin sur la colline.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 43,
+            "max": 43,
+            "title": "Railroad Avenue",
+            "description": "Une avenue longeant la voie ferrée.",
+            "effect": "Nuisances sonores régulières."
+        },
+        {
+            "min": 44,
+            "max": 44,
+            "title": "Harbor Avenue",
+            "description": "Une rue longeant le port avec un club select réservé aux capitaines.",
+            "effect": "Accès restreint au club (nécessite grade ou contact)."
+        },
+        {
+            "min": 45,
+            "max": 45,
+            "title": "Liberty Square",
+            "description": "Une place spacieuse ornée d'une imposante statue de l'un des fondateurs.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 46,
+            "max": 46,
+            "title": "Gold Street",
+            "description": "Une rue du centre-ville avec des inscriptions historiques des premiers chercheurs d'or.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 47,
+            "max": 47,
+            "title": "Lucky Street",
+            "description": "Une rue avec une plaque commémorative indiquant tous les mineurs décédés lors de l'extraction de l'or.",
+            "effect": "Lieu de mémoire chargé émotionnellement."
+        },
+        {
+            "min": 48,
+            "max": 48,
+            "title": "Mary Street",
+            "description": "Une rue bordant un petit lac avec une île fleurie.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 49,
+            "max": 49,
+            "title": "Danube Street",
+            "description": "Une rue boisée agréable pour la promenade.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 50,
+            "max": 50,
+            "title": "Water Street",
+            "description": "Une rue bordée par un petit bois.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 51,
+            "max": 51,
+            "title": "Preacher Street",
+            "description": "Une rue résidentielle avec de nombreuses maisons identiques.",
+            "effect": "Difficulté de repérage (malus aux tests d'Orientation)."
+        },
+        {
+            "min": 52,
+            "max": 52,
+            "title": "Oak Plaza",
+            "description": "Une place verdoyante ombragée par de vieux chênes majestueux.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 53,
+            "max": 53,
+            "title": "Winter Street",
+            "description": "Une rue qui a gardé tout son charme de l'ancien temps.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 54,
+            "max": 54,
+            "title": "Hawthorne Street",
+            "description": "Une rue envahie par le lierre et les ronces de manière surnaturelle.",
+            "effect": "Terrain difficile ; ambiance oppressante."
+        },
+        {
+            "min": 55,
+            "max": 55,
+            "title": "Glen Boulevard",
+            "description": "Une rue abritant de nombreux pavillons de toutes les couleurs.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 56,
+            "max": 56,
+            "title": "Commerce Court",
+            "description": "Place historique des ventes aux enchères.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 57,
+            "max": 57,
+            "title": "Gordon Street",
+            "description": "Une rue peu fréquentée passant sous le pont de la voie ferrée.",
+            "effect": "Lieu sombre et isolé."
+        },
+        {
+            "min": 58,
+            "max": 58,
+            "title": "Pomona Avenue",
+            "description": "L'artère principale de la ville.",
+            "effect": "Accès facile à tous types de commerces."
+        },
+        {
+            "min": 59,
+            "max": 59,
+            "title": "Cobblestone Street",
+            "description": "Une rue étroite et sinueuse réputée pour ses restaurants.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 60,
+            "max": 60,
+            "title": "Dover Dead End",
+            "description": "Une impasse où vivent quelques sans-abris dans des abris de fortune.",
+            "effect": "Source potentielle d'informations de rue."
+        },
+        {
+            "min": 61,
+            "max": 61,
+            "title": "Ada Street",
+            "description": "Une rue aux airs bohèmes prisée par les artistes.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 62,
+            "max": 62,
+            "title": "Emerald Esplanade",
+            "description": "Une grande place arborée et bien entretenue.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 63,
+            "max": 63,
+            "title": "Hillcrest Road",
+            "description": "Rue bordée de demeures aristocratiques et d'antiquaires.",
+            "effect": "Idéal pour la recherche d'objets anciens."
+        },
+        {
+            "min": 64,
+            "max": 64,
+            "title": "Ford Dead End",
+            "description": "Une impasse parfumée par les lavandes et les pêchers.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 65,
+            "max": 65,
+            "title": "Ridgeway Avenue",
+            "description": "Une avenue animée très fréquentée par les touristes.",
+            "effect": "Foule constante en journée."
+        },
+        {
+            "min": 66,
+            "max": 66,
+            "title": "Hartford Street",
+            "description": "Rue historique aux mains de bandes organisées.",
+            "effect": "Zone à haut risque (criminalité)."
+        },
+        {
+            "min": 67,
+            "max": 67,
+            "title": "Dennis Alley",
+            "description": "Une rue animée du quartier chinois.",
+            "effect": "Possibilité de trouver des produits exotiques ou informations spécifiques."
+        },
+        {
+            "min": 68,
+            "max": 68,
+            "title": "Grey Birch Lane",
+            "description": "Une petite rue accueillant des commerces de luxe.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 69,
+            "max": 69,
+            "title": "Woodlake Street",
+            "description": "Une rue traversant toute la ville avec de nombreux hôtels.",
+            "effect": "Zone d'hébergement privilégiée."
+        },
+        {
+            "min": 70,
+            "max": 70,
+            "title": "Providence Alley",
+            "description": "Une rue commerçante spécialisée dans les produits exotiques.",
+            "effect": "Accès à des composants rares."
+        },
+        {
+            "min": 71,
+            "max": 71,
+            "title": "Torchwood Street",
+            "description": "Lieu d'un massacre non élucidé en 1857.",
+            "effect": "Ambiance sinistre ; intérêt historique occulte."
+        },
+        {
+            "min": 72,
+            "max": 72,
+            "title": "Newfield Street",
+            "description": "Une rue bordée d'arbres et de restaurants.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 73,
+            "max": 73,
+            "title": "Chambers Street",
+            "description": "Une rue fermée depuis quelque temps par les autorités.",
+            "effect": "Entrée interdite ou surveillée."
+        },
+        {
+            "min": 74,
+            "max": 74,
+            "title": "Arkham Road",
+            "description": "Route réputée pour ses bibliothèques spécialisées dans l'occulte.",
+            "effect": "Bonus aux tests de Bibliothèque sur des thèmes ésotériques."
+        },
+        {
+            "min": 75,
+            "max": 75,
+            "title": "Brookfarm Street",
+            "description": "Rue abritant de nombreux bureaux récents.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 76,
+            "max": 76,
+            "title": "Cortella Way",
+            "description": "Petite rue donnant sur un jardin public particulièrement calme.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 77,
+            "max": 77,
+            "title": "Mouth Street",
+            "description": "Rue en déperdition squattée par des voyous.",
+            "effect": "Rencontre hostile probable."
+        },
+        {
+            "min": 78,
+            "max": 78,
+            "title": "Clerical Lane",
+            "description": "Rue pavée commençant sur une place avec un immense obélisque.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 79,
+            "max": 79,
+            "title": "Barstow Road",
+            "description": "Rue située en bordure de la plaine immense.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 80,
+            "max": 80,
+            "title": "Lincoln Street",
+            "description": "Une rue avec une forte pente.",
+            "effect": "Effort physique requis pour les piétons."
+        },
+        {
+            "min": 81,
+            "max": 81,
+            "title": "Fairview Street",
+            "description": "Rue pavée avec des épiceries et boutiques de souvenirs.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 82,
+            "max": 82,
+            "title": "Townsend Street",
+            "description": "Une rue dont l'ancien panneau est désormais au musée.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 83,
+            "max": 83,
+            "title": "Chapter Avenue",
+            "description": "Grande avenue aux lampadaires à gaz dysfonctionnant régulièrement.",
+            "effect": "Éclairage intermittent (instabilité lumineuse)."
+        },
+        {
+            "min": 84,
+            "max": 84,
+            "title": "Victory Boulevard",
+            "description": "Boulevard avec de nombreux commerces fermés mais abritant le plus beau théâtre.",
+            "effect": "Lieu de sortie culturelle nocturne."
+        },
+        {
+            "min": 85,
+            "max": 85,
+            "title": "Grove Street",
+            "description": "Rue habitée par des immigrés polonais.",
+            "effect": "Communauté soudée et spécifique."
+        },
+        {
+            "min": 86,
+            "max": 86,
+            "title": "Marina Way",
+            "description": "Rue du port abritant les maisons des dockers.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 87,
+            "max": 87,
+            "title": "Beachmount Street",
+            "description": "Rue avec plusieurs bâtisses menaçant de s'effondrer.",
+            "effect": "Danger structurel (risque d'éboulement)."
+        },
+        {
+            "min": 88,
+            "max": 88,
+            "title": "Sunset Promenade",
+            "description": "Rue bordant plusieurs parcs, bien éclairée.",
+            "effect": "Sensation de sécurité nocturne."
+        },
+        {
+            "min": 89,
+            "max": 89,
+            "title": "Aaron Street",
+            "description": "Petite rue du centre-ville très fleurie.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 90,
+            "max": 90,
+            "title": "Bishop Street",
+            "description": "La rue où se trouve la caserne de pompiers.",
+            "effect": "Réaction rapide des services de secours dans cette zone."
+        },
+        {
+            "min": 91,
+            "max": 91,
+            "title": "Park Boulevard",
+            "description": "Boulevard longeant un grand parc apprécié.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 92,
+            "max": 92,
+            "title": "Michael Street",
+            "description": "Rue encaissée entre deux rangées d'immeubles imposants.",
+            "effect": "Effet tunnel ; visibilité du ciel restreinte."
+        },
+        {
+            "min": 93,
+            "max": 93,
+            "title": "Sherman Avenue",
+            "description": "Avenue nommée d'après un ancien maire controversé.",
+            "effect": "Tensions politiques locales."
+        },
+        {
+            "min": 94,
+            "max": 94,
+            "title": "Harmony Park",
+            "description": "Place constituée d'un grand parc boisé abritant des espèces rares.",
+            "effect": "Zone de cachette idéale pour de petits objets ou personnes."
+        },
+        {
+            "min": 95,
+            "max": 95,
+            "title": "Duval Boulevard",
+            "description": "Boulevard sur les hauteurs avec une belle vue.",
+            "effect": "Observation facilitée des environs."
+        },
+        {
+            "min": 96,
+            "max": 96,
+            "title": "San Antonio Street",
+            "description": "Rue piétonne avec un grand escalier.",
+            "effect": "Accès impossible aux véhicules motorisés."
+        },
+        {
+            "min": 97,
+            "max": 97,
+            "title": "Normand Way",
+            "description": "Passage étroit considéré comme un coupe-gorge.",
+            "effect": "Proximité d'un poste de police (sécurité paradoxale)."
+        },
+        {
+            "min": 98,
+            "max": 98,
+            "title": "Middle Road",
+            "description": "Rue centrale abritant de nombreux sièges d'entreprises.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 99,
+            "max": 99,
+            "title": "Dogwood Boulevard",
+            "description": "Boulevard bordé de statues commémoratives.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 100,
+            "max": 100,
+            "title": "Madison Way",
+            "description": "Passage boisé piéton.",
+            "effect": "Ancien passage à chevaux ; interdit aux véhicules."
+        }
+    ]
+}

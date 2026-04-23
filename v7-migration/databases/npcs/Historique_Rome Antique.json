@@ -1,0 +1,49 @@
+{
+    "firstNames": [
+        "Marcus", "Titus", "Gaius", "Livia", "Julia", "Lucius", "Cornelia", "Quintus", "Aurelia", "Decimus",
+        "Septimus", "Octavia", "Tiberius", "Flavia", "Cassius", "Antonia", "Publius", "Drusilla", "Servius", "Claudia",
+        "Agrippa", "Lucilla", "Hadrianus", "Faustina", "Manius", "Sabina", "Aulus", "Valeria", "Caius", "Domitia",
+        "Vibius", "Priscilla", "Spurius", "Atia", "Tullus", "Pompeia", "Cossus", "Terentia", "Appius", "Fabia",
+        "Nero", "Tullia", "Trajanus", "Marcella", "Gnaeus", "Vipsania", "Paullus", "Fulvia", "Proculus", "Junia"
+    ],
+    "lastNames": [
+        "Julius", "Cornelius", "Claudius", "Fabius", "Junius", "Aurelius", "Valerius", "Antonius", "Tullius", "Flavius",
+        "Cassius", "Domitius", "Licinius", "Pompeius", "Scipio", "Gracchus", "Metellus", "Sulla", "Crassus", "Cicero",
+        "Agrippa", "Vipsanius", "Aemilius", "Sempronius", "Quinctius", "Postumius", "Lucretius", "Horatius", "Mucius", "Curtius",
+        "Livius", "Plinius", "Seneca", "Tacitus", "Ovidius", "Vergilius", "Catullus", "Petronius", "Suetonius", "Hadrianus",
+        "Trajanus", "Vespasianus", "Titus", "Domitianus", "Nerva", "Antoninus", "Commodus", "Severus", "Caracalla", "Geta"
+    ],
+    "jobs": [
+        "Centurion", "Sénateur", "Gladiateur", "Légionnaire", "Vestale", "Marchand de vin", "Esclave domestique", "Aurige",
+        "Philosophe stoïcien", "Préteur", "Augure", "Forgeron d'armes", "Boulanger", "Tisseur de tuniques", "Architecte",
+        "Poète", "Avocat", "Banquier", "Lutteur", "Danseuse", "Chirurgien militaire", "Porteur d'eau", "Vigile nocturne",
+        "Gouverneur", "Percepteur d'impôts", "Pêcheur", "Vigneron", "Tailleur de pierre", "Scribe", "Mime",
+        "Aubergiste", "Parfumeur", "Teinturier", "Cordonnier", "Orfèvre", "Joaillier", "Prêtre de Jupiter",
+        "Gardien de prison", "Barbier", "Cuisinier", "Héraut", "Interprète", "Bibliothécaire", "Ménestrel",
+        "Cartographe", "Éclaireur", "Ingénieur de siège", "Fossoyeur", "Capitaine de galère", "Marchand d'huile"
+    ],
+    "traits": [
+        "Stoïque", "Discipliné", "Superstitieux", "Éloquent", "Fier", "Ambitieux", "Sévère", "Vindicatif", "Cynique", "Pieux",
+        "Parle avec autorité", "Invoque les dieux", "Craint les mauvais présages", "A un rire sonore", "A un regard fier",
+        "Obsédé par l'honneur", "Respectueux des lois", "Méfiant envers les barbares", "Obsédé par son lignage", "Parle latin pur",
+        "A une mémoire parfaite", "A une démarche noble", "A une voix puissante", "A un air inspiré", "A un regard dur",
+        "A un humour sec", "A un accent provincial", "A un air fatigué", "A un air déterminé", "A un air froid",
+        "Aime les jeux du cirque", "Déteste la corruption", "A une cicatrice de combat", "A une toge toujours propre",
+        "A un regard fuyant", "A une voix cassée", "A un sourire charmeur", "A un air innocent", "A un air rusé"
+    ],
+    "looks": [
+        "Toge de laine", "Armure de segmentata", "Casque à crinière", "Sandales de cuir (Caligae)", "Tunique courte",
+        "Stola en soie", "Fibule de bronze", "Bague sigillaire", "Couronne civique", "Glaive au côté", "Bouclier (Scutum)",
+        "Amphore de vin", "Tablette de cire", "Stylet", "Lanterne à huile", "Masque de théâtre", "Cape rouge",
+        "Bijoux en or", "Collier d'ambre", "Bracelet de serpent", "Tunique tachée", "Vêtements en lambeaux",
+        "Manteau de fourrure", "Bourse de sesterces", "Sceptre d'augure", "Plume et parchemin", "Miroir de bronze",
+        "Flacon de parfum", "Coffret de bois", "Bâton de marche", "Sandales usées", "Peau basanée", "Barbe courte"
+    ],
+    "secrets": [
+        "Est un chrétien caché", "A conspiré contre un sénateur", "A volé une offrande au temple", "Est un ancien esclave affranchi",
+        "A survécu à une bataille perdue", "Connaît un passage secret sous le Colisée", "A une dette de jeu envers la mafia locale",
+        "Est un espion d'une province révoltée", "A empoisonné son rival", "Possède un testament falsifié", "A vu un meurtre au forum",
+        "A trahi son capitaine", "Est un prince barbare en otage", "A une liaison interdite avec une vestale",
+        "A caché un trésor sous sa villa", "Connaît une prophétie sur l'Empereur", "A volé l'aigle de sa légion"
+    ]
+}

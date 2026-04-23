@@ -1,0 +1,48 @@
+{
+    "name": "Attaques de Scorpionides",
+    "dice": "1d6",
+    "entries": [
+        {
+            "min": 1,
+            "max": 1,
+            "title": "RETRAITE",
+            "description": "Le Scorpionide n'est pas stupide et ne se bat pas sans raison.",
+            "effect": "Cette fois-ci, il a décidé de fuir le combat aussi vite que possible."
+        },
+        {
+            "min": 2,
+            "max": 2,
+            "title": "CLOUER L'ADVERSAIRE",
+            "description": "Le Scorpionide se sert de ses deux puissantes pinces pour clouer sa cible sur place.",
+            "effect": "Lancez dix dés de base pour l'attaque, avec des Dégâts de 1. Si l'attaque réussit, la cible est jetée à terre, lâche les objets qu'elle tient en main et doit immédiatement effectuer un test de Panique."
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "PRISE DE PINCES",
+            "description": "La créature tente de saisir sa victime dans ses énormes pinces, frémissant d'impatience de la frapper avec sa queue.",
+            "effect": "Lancez huit dés de base pour l'attaque, avec des Dégâts de 1. Si l'attaque réussit, la victime est saisie (cf. page 93) et doit faire un test opposé de COMBAT RAPPROCHÉ contre huit dés de base pour se libérer. Si le Scorpionide parvient à maintenir sa prise, il effectue automatiquement un COUP DE QUEUE contre sa victime lors de sa prochaine initiative. Si cette attaque est portée sous l'eau, le Scorpionide entraîne sa victime dans les profondeurs, à une zone de distance du reste du groupe, lui infligeant également les effets de noyade (page 110)."
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "COUP DE PINCES",
+            "description": "Le Scorpionide balance ses pinces pour frapper sa cible.",
+            "effect": "Lancez huit dés de base, pour des Dégâts de 1. Si l'attaque réussit, le Scorpionide projette sa victime dans la zone adjacente et lui inflige immédiatement une blessure critique (même si elle n'est pas Brisée). La victime est jetée à terre et lâche tout ce qu'elle tenait en main."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "COUP DE QUEUE",
+            "description": "Le Scorpionide projette son terrible dard dans le but d'occire sa proie.",
+            "effect": "Il attaque avec dix dés de base, pour des Dégâts de 1. S'il inflige le moindre dégât, il injecte à sa victime un venin mortel considéré comme une maladie d'une Virulence de 9 (cf. page 109)."
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "ATTAQUE PARALYSANTE",
+            "description": "Le Scorpionide souhaite s'échapper, mais il lui faut pour ce faire neutraliser ses assaillants.",
+            "effect": "Il frappe les jambes de sa victime à l'aide de ses immenses pinces, lançant huit dés de base pour des Dégâts de 2. S'il inflige le moindre dégât, la victime subit immédiatement la blessure critique n° 35, qu'elle soit Brisée ou non."
+        }
+    ]
+}

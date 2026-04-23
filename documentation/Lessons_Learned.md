@@ -24,6 +24,11 @@ Ce document consigne les défis techniques, les erreurs rencontrées et les solu
 - **Solution** : Refonte du service `mcp_bridge.ts` pour utiliser `process.env.USERPROFILE` et `path.join`. Le script Python `run_mcp.py` a également été rendu portable.
 - **Leçon** : Toujours utiliser des chemins relatifs ou basés sur les dossiers système standards (`AppData`, `UserProfile`) pour les services externes.
 
+### 5. Pont Agnostique (Agnostic Bridge v3) (2026-04-23)
+- **Défi** : Préparer la migration vers Tauri tout en conservant une version stable sous Electron, sans avoir à maintenir deux codes frontends différents.
+- **Solution** : Création d'un **AppBridgeAdapter**. Au lieu d'appeler `window.appBridge` directement, le code React utilise un service unifié qui détecte l'environnement (`isTauri` ou `isElectron`) et route les appels vers le moteur approprié.
+- **Leçon** : Toujours abstraire les appels au système derrière une interface unifiée. Cela permet de décommissionner un moteur (ex: Electron) ultérieurement sans aucun impact sur l'UI.
+
 ---
 
 ## 🏗️ Architecture, Build & Typage
@@ -90,4 +95,4 @@ Ce document consigne les défis techniques, les erreurs rencontrées et les solu
 
 ---
 
-*Dernière mise à jour : 22 Avril 2026 - GM-OS v6.5.0 - Consolidation & Stabilisation UI.*
+*Dernière mise à jour : 23 Avril 2026 - GM-OS v7 (Migration Tauri) - Phase 1 : Abstraction Bridge.*

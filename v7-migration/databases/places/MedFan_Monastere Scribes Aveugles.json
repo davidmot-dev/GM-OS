@@ -1,0 +1,53 @@
+{
+  "name": [
+    "Monastère des Encres Muettes",
+    "Monastère du Voile d’Ivoire",
+    "Monastère des Doigts‑Scribes",
+    "Monastère du Manuscrit Vivant",
+    "Monastère des Cloîtres Obscurs",
+    "Monastère du Chant des Plumes",
+    "Monastère des Tablettes d’Argile",
+    "Monastère du Scriptorium Sourd",
+    "Monastère des Reliures Sacrées",
+    "Monastère du Souffle des Pages"
+  ],
+
+  "description": [
+    "Un monastère où les scribes aveugles écrivent en silence avec une encre qui ne se révèle qu’à la lune.",
+    "Un cloître drapé de voiles d’ivoire où les moines se déplacent en suivant des fils tendus.",
+    "Un scriptorium où les scribes lisent les textes en caressant les lettres gravées.",
+    "Un monastère abritant un manuscrit vivant qui change de contenu chaque nuit.",
+    "Un ensemble de cloîtres obscurs où aucune lumière n’est tolérée.",
+    "Un monastère où les plumes chantent lorsqu’elles touchent le parchemin.",
+    "Un scriptorium où les textes sont gravés sur des tablettes d’argile encore tièdes.",
+    "Un monastère où aucun son ne résonne, comme si les murs absorbaient tout bruit.",
+    "Un atelier où les reliures sont tressées avec des fibres sacrées.",
+    "Un monastère où les pages tournent seules lorsqu’un visiteur approche."
+  ],
+
+  "ambiance": [
+    "Une obscurité sacrée.",
+    "Une douceur tactile.",
+    "Un silence absolu.",
+    "Une mutation scripturale.",
+    "Une pénombre totale.",
+    "Une mélodie discrète.",
+    "Une chaleur argileuse.",
+    "Une absorption sonore.",
+    "Une sacralité artisanale.",
+    "Une respiration littéraire."
+  ],
+
+  "secret": [
+    "L’encre muette révèle des prophéties effacées.",
+    "Les voiles d’ivoire vibrent en présence de magie.",
+    "Un scribe reconnaît les visiteurs sans les toucher.",
+    "Le manuscrit vivant montre parfois un futur possible.",
+    "Les cloîtres obscurs abritent une silhouette immobile.",
+    "Une plume chante un nom oublié.",
+    "Une tablette d’argile se réécrit seule la nuit.",
+    "Le scriptorium sourd contient un écho impossible.",
+    "Une reliure sacrée renferme un fragment d’âme.",
+    "Les pages soufflent un avertissement à certains visiteurs."
+  ]
+}

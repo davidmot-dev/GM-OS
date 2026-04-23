@@ -1,0 +1,61 @@
+{
+    "firstNames": [
+        "Amadou","Amina","Kwame","Zuri","Moussa","Fatou","Kofi","Asha","Didier","Mirembe",
+        "Samba","Nia","Tendai","Lindiwe","Yao","Saran","Boubacar","Imani","Thabo","Makena",
+        "Ousmane","Aïcha","Chinedu","Ngozi","Juma","Halima","Kagiso","Naledi","Issa","Malaika",
+        "Femi","Ada","Sipho","Zanele","Abdou","Rokia","Tariq","Samira","Lamine","Safiya",
+        "Koffi","Awa","Tewodros","Selam","Hassan","Muna","Gideon","Wanjiku","Sefu","Abeni"
+    ],
+    "lastNames": [
+        "Diop","Traoré","Mensah","Okafor","Abebe","Diallo","Ndlovu","Kouyaté","Kamara","Mwangi",
+        "Sow","Konaté","Adebayo","Chukwu","Tesfaye","Mabaso","Keita","Ouedraogo","Mutiso","Moyo",
+        "Ba","Cissé","Osei","Nkrumah","Gebre","Zulu","Sarr","Bationo","Odinga","Mugabe",
+        "Fall","Barry","Agyeman","Onyango","Bekele","Dlamini","Sylla","Sanogo","Kagwe","Mandela",
+        "Gueye","Fofana","Boateng","Nwosu","Haile","Khosa","Sagna","Ouattara","Makori","Maseko"
+    ],
+    "jobs": [
+        "Enseignant", "Infirmière", "Ingénieur civil", "Conducteur de taxi", "Vendeuse de marché", "Agriculteur",
+        "Éleveuse", "Étudiant", "Médecin", "Journaliste", "Photographe", "Développeur mobile", "Technicien solaire",
+        "Artisan", "Menuisier", "Coiffeuse", "Chauffeur de bus", "Agent administratif", "Commerçant",
+        "Pêcheur", "Guide touristique", "Musicien", "Danseuse", "Chef cuisinier", "Serveur",
+        "Agent de sécurité", "Employé de banque", "Entrepreneur", "Ingénieur télécom", "Technicien réseau",
+        "Ouvrier du bâtiment", "Plombier", "Électricien", "Restauratrice", "Bibliothécaire", "Coach sportif",
+        "Employé de supermarché", "Vendeur ambulant", "Agent municipal", "Professeur d’université", "Chercheuse",
+        "Chauffeur de moto‑taxi", "Agronome", "Technicien agricole", "Employé de station‑service", "Factrice",
+        "Responsable RH", "Chef de projet", "Animateur radio"
+    ],
+    "traits": [
+        "Sociable", "Réservé", "Ambitieux", "Calme", "Stressé", "Rêveur", "Pragmatique", "Traditionnel", "Moderne", "Curieux",
+        "Parle doucement", "Parle vite", "Rit fort", "Rit discrètement", "A une voix douce", "A une voix grave",
+        "A un accent francophone", "A un accent anglophone", "A un accent swahili", "A un accent wolof",
+        "A un regard perçant", "A un regard doux", "A un regard inquiet", "A un regard déterminé", "A un humour subtil",
+        "A un humour sec", "A une mémoire parfaite", "A une mémoire défaillante", "A une obsession pour la famille",
+        "A une obsession pour le travail", "A une obsession pour la musique", "A une obsession pour le football",
+        "A un air fatigué", "A un air inspiré", "A un air concentré", "A un air absent", "A un air sympathique",
+        "A un air mystérieux", "A un air radieux", "A un air ombrageux", "A un air bienveillant", "A un air fier",
+        "A un air prudent", "A un air mélancolique", "A un air calme", "A un air nerveux", "A un air énergique"
+    ],
+    "looks": [
+        "Chemise légère", "Pagne coloré", "T‑shirt simple", "Jean et sandales", "Robe longue", "Boubou moderne",
+        "Veste légère", "Pantalon de bureau", "Chaussures de ville", "Sandales en cuir", "Robe d’été", "Pagne traditionnel",
+        "Casquette", "Pantalon cargo", "Chaussures usées", "Veste en jean", "T‑shirt graphique", "Pantalon ample",
+        "Chaussures fines", "Robe simple", "Veste élégante", "Chemise blanche", "Pantalon clair", "Chaussures de sport",
+        "Manteau léger", "Écharpe colorée", "Bonnet", "Veste technique", "Jogging", "Chaussures simples",
+        "Sac en bandoulière", "Veste sombre", "Pantalon large", "Pull en coton", "Robe noire", "Chaussures vernies",
+        "Veste de pluie", "Pantalon sombre", "Gants simples", "T‑shirt uni", "Pantalon traditionnel", "Sandales tressées",
+        "Veste de sport", "Pantalon technique", "Robe colorée", "Chaussures de travail", "Veste de randonnée", "Pantalon usé"
+    ],
+    "secrets": [
+        "A caché un échec scolaire", "A un passé de militant", "A un frère disparu", "A un secret sur un collègue",
+        "A un passé de sportif", "A un secret sur une compétition", "A un passé de musicien", "A un secret sur un concert",
+        "A un passé de dettes", "A un secret sur un prêt", "A un passé de voyageur", "A un secret sur un pays",
+        "A un passé de bénévole", "A un secret sur une association", "A un passé de harcèlement scolaire", "A un secret sur un professeur",
+        "A un passé de triche", "A un secret sur un examen", "A un passé de fugue", "A un secret sur une disparition",
+        "A un passé de relation toxique", "A un secret sur un ex", "A un passé de burn‑out", "A un secret sur un licenciement",
+        "A un passé de blogueur", "A un secret sur un article", "A un passé de gamer", "A un secret sur un pseudo",
+        "A un passé de voisin conflictuel", "A un secret sur un voisin", "A un passé de voyage clandestin", "A un secret sur un bus",
+        "A un passé de squatteur", "A un secret sur un appartement", "A un passé de fuite familiale", "A un secret sur un parent",
+        "A un passé de travail illégal", "A un secret sur un employeur", "A un passé de conflit familial", "A un secret sur un héritage",
+        "A un passé de disparition volontaire", "A un secret sur un retour", "A un passé de mensonge", "A un secret sur une identité"
+    ]
+}

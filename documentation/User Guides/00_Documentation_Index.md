@@ -22,6 +22,7 @@ Bienvenue dans le centre de documentation de **GM-OS v6**. Ce guide centralise t
 - [**Persistance Media Hub (Asset Lock)**](./walkthroughs/2026-03-24_Media_Persistence.md)
 - [**Intégration Export Obsidian**](./walkthroughs/Obsidian_Export_Integration.md)
 - [**System Forge IA (v5.1/v6 Evolution)**](./walkthroughs/System_Forge_IA_5.1.md)
+- [**Nettoyage Root & Initialisation Tauri (v7)**](../walkthroughs/2026-04-23-root-cleanup-tauri-init.md)
 
 ---
 
@@ -61,6 +62,7 @@ Bienvenue dans le centre de documentation de **GM-OS v6**. Ce guide centralise t
 - [**NPC Live Generator (Architecture IA)**](../technical/NPC_Live_Generator_Technical_Doc.md)
 - [**Combat Projection (Système de Visibilité)**](../technical/Combat_Projection_Technical_Doc.md)
 - [**Dice Projection (Architecture & Sync)**](../technical/Dice_Projection_Technical_Doc.md)
+- [**Migration v7 & Décommissionnement Electron**](../Technical%20Docs/Migration_V7_Decommissioning_Electron.md)
 
 ---
 

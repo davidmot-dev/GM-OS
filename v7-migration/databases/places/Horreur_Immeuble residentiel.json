@@ -1,0 +1,53 @@
+{
+  "name": [
+    "Immeuble du 47 Rue Blanche",
+    "Immeuble des Escaliers Fendus",
+    "Immeuble du Couloir Gris",
+    "Immeuble des Boîtes Aux Lettres Muettes",
+    "Immeuble du Palier 5",
+    "Immeuble des Volets Rouillés",
+    "Immeuble du Local Technique",
+    "Immeuble des Fenêtres Opaques",
+    "Immeuble du Sous‑Sol 2",
+    "Immeuble des Portes Identiques"
+  ],
+
+  "description": [
+    "Un immeuble ancien dont la façade s’effrite lentement, révélant des briques humides.",
+    "Un immeuble où les escaliers présentent des fissures profondes et inquiétantes.",
+    "Un immeuble dont le couloir principal est peint d’un gris terne et sale.",
+    "Un immeuble où aucune boîte aux lettres ne semble avoir été ouverte depuis longtemps.",
+    "Un immeuble où le palier du cinquième étage est anormalement froid.",
+    "Un immeuble dont les volets rouillés grincent même sans vent.",
+    "Un immeuble où le local technique est verrouillé par plusieurs cadenas.",
+    "Un immeuble dont certaines fenêtres sont opaques de l’intérieur.",
+    "Un immeuble où le niveau -2 du sous‑sol n’apparaît sur aucun plan officiel.",
+    "Un immeuble où toutes les portes d’appartement sont identiques au millimètre près."
+  ],
+
+  "ambiance": [
+    "Une décrépitude lourde et oppressante.",
+    "Une fragilité structurelle inquiétante.",
+    "Une monotonie anxiogène.",
+    "Une absence totale de vie apparente.",
+    "Un froid anormal et persistant.",
+    "Une agitation métallique discrète.",
+    "Une tension électrique latente.",
+    "Une surveillance silencieuse.",
+    "Une profondeur souterraine menaçante.",
+    "Une uniformité dérangeante."
+  ],
+
+  "secret": [
+    "Une lumière s’allume parfois au dernier étage, pourtant muré.",
+    "Les fissures des escaliers semblent changer de forme.",
+    "Le couloir paraît plus long certains soirs.",
+    "Une lettre apparaît parfois dans une boîte pourtant vide.",
+    "Le palier 5 résonne d’un bruit de pas lointain.",
+    "Un volet s’ouvre légèrement avant de se refermer seul.",
+    "Quelque chose gratte derrière la porte du local technique.",
+    "Une silhouette apparaît derrière une fenêtre opaque.",
+    "Le sous‑sol 2 mène à un couloir qui n’existe pas sur les plans.",
+    "Une porte identique aux autres mène à une pièce inconnue."
+  ]
+}

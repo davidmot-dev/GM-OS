@@ -1,0 +1,53 @@
+{
+  "name": [
+    "Vaisseau‑Génération du Sillage Perdu",
+    "Arche Errante des Mille Cycles",
+    "Vaisseau du Corridor Oublié",
+    "Arche‑Monde du Chant Lointain",
+    "Vaisseau des Dynasties Dérivantes",
+    "Arche du Noyau Éteint",
+    "Vaisseau‑Monde du Halo Pâle",
+    "Arche des Secteurs Fossiles",
+    "Vaisseau du Long Exode",
+    "Arche‑Génération du Silence Éternel"
+  ],
+
+  "description": [
+    "Un vaisseau-génération ayant perdu les routes spatiales depuis des siècles.",
+    "Une arche errante où mille cycles ont façonné une société entièrement nouvelle.",
+    "Un vaisseau dérivant dans un corridor oublié, hors de toute carte stellaire.",
+    "Une arche-monde où un chant lointain résonne dans les couloirs.",
+    "Un vaisseau où des dynasties dérivantes se succèdent depuis des générations.",
+    "Une arche dont le noyau énergétique s’est éteint, laissant une dérive lente.",
+    "Un vaisseau‑monde baigné dans un halo pâle provenant d’un réacteur mourant.",
+    "Une arche où certains secteurs sont devenus des fossiles technologiques.",
+    "Un vaisseau poursuivant un exode dont plus personne ne connaît l’origine.",
+    "Une arche‑génération où le silence règne dans les zones abandonnées."
+  ],
+
+  "ambiance": [
+    "Une dérive lente.",
+    "Une mémoire fragmentée.",
+    "Une technologie fossile.",
+    "Un isolement total.",
+    "Une lueur mourante.",
+    "Une tradition mutée.",
+    "Un silence ancestral.",
+    "Une société close.",
+    "Une errance infinie.",
+    "Une paix inquiétante."
+  ],
+
+  "secret": [
+    "Le sillage perdu contient un message enregistré il y a des siècles.",
+    "Les mille cycles cachent une génération qui n’a jamais été répertoriée.",
+    "Le corridor oublié mène à une zone hors du temps.",
+    "Le chant lointain provient d’un module scellé.",
+    "Une dynastie dérivante possède une carte stellaire interdite.",
+    "Le noyau éteint pulse faiblement en présence d’un visiteur.",
+    "Le halo pâle révèle des silhouettes dans la brume énergétique.",
+    "Un secteur fossilisé contient une IA encore consciente.",
+    "Le long exode n’était pas censé durer plus de dix ans.",
+    "Le silence éternel cache un survivant qui n’a jamais vieilli."
+  ]
+}

@@ -69,6 +69,11 @@ Ce guide définit les règles obligatoires pour la refonte de GM-OS vers une arc
 - **Règle Impérative :** Avant de commencer tout nouveau développement ou refonte, l'agent doit impérativement lire l'intégralité de la documentation technique existante liée au module concerné (ex: `documentation/Technical Docs/`).
 - **Prise en Compte :** Toutes les remarques, contraintes architecturales et leçons apprises (`Lessons_Learned.md`) documentées doivent être prises en compte et respectées scrupuleusement dans la nouvelle implémentation.
 
-## 9. Initiative
+## 9. Migration vers GM-OS v7 (Tauri) - Règle de Prudence Maximale
 
-- **Règle Impérative :** Si l'agent ne trouve pas de solution, il doit me poser des questions pour soit continuer à investiguer, soit brainstormer avec moi pour préciser les besoins  
+- **Règle d'Or :** Toute modification effectuée dans le cadre de la migration vers Tauri ne doit **JAMAIS** détériorer ou casser la version GM-OS 6.5 tournant sous Electron.
+- **Isolation :** Le développement v7 doit se faire prioritairement dans le dossier `v7-migration/`.
+- **Agnosticisme :** Les nouveaux services ou refontes de ponts doivent supporter les deux environnements (Electron et Tauri) tant que le décommissionnement final n'est pas acté.
+- **Tests :** Chaque changement structurel doit être testé sous Electron avant d'être validé pour Tauri.
+
+## 10. Initiative

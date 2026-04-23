@@ -1,0 +1,62 @@
+{
+    "firstNames": [
+        "Magnus","Elvira","Silas","Ophelia","Gideon","Mira","Rufus","Seraphine","Tobias","Luna",
+        "Barnaby","Esmeralda","Viktor","Zora","Cassian","Nerissa","Harlan","Vespera","Jonas","Morgana",
+        "Felix","Dahlia","Raven","Isolde","Thorne","Marion","Elias","Nyx","Corvin","Astra",
+        "Rex","Sable","Ivy","Dorian","Selene","Rook","Vexa","Talia","Marlow","Eira",
+        "Juno","Veyra","Kael","Soren","Lyra","Talon","Nim","Aeris","Riven","Kora"
+    ],
+    "lastNames": [
+        "Hollowcircus","Grimwheel","Nighttent","Ravenshow","Ashenring","Marrowfair","Darkcarousel","Bloodveil","Ironmask","Stormtent",
+        "Shadowring","Grimfair","Nightveil","Ashencircus","Ravenmask","Blacktent","Hollowveil","Stormring","Bloodtent","Ironfair",
+        "Darkring","Nightmask","Ashenveil","Grimtent","Ravenring","Stormveil","Bloodring","Ironveil","Shadowtent","Hollowring",
+        "Blackveil","Nightfair","Ashenring","Grimveil","Ravenshade","Stormmask","Bloodfair","Ironring","Darkveil","Hollowmask",
+        "Shadowfair","Nighttent","Ashenmask","Grimring","Ravenveil","Stormtent","Bloodveil","Ironmask","Darktent","Hollowveil"
+    ],
+    "jobs": [
+        "Monsieur Loyal", "Femme à barbe", "Homme fort", "Contorsionniste", "Funambule", "Dompteur de fauves", "Dresseur de serpents",
+        "Cracheur de feu", "Avaleur de sabres", "Magicien", "Illusionniste", "Hypnotiseur", "Voyante", "Cartomancienne",
+        "Clown triste", "Clown terrifiant", "Marionnettiste", "Ventriloque", "Acrobate", "Équilibriste", "Jongleur",
+        "Musicien ambulant", "Chanteuse de cabaret", "Homme élastique", "Femme tronc", "Homme tatoué", "Homme‑animal",
+        "Dresseur de corbeaux", "Dompteur d’insectes", "Maître des lanternes", "Gardien du chapiteau", "Monteur de tentes",
+        "Chasseur de curiosités", "Collectionneur d’anomalies", "Taxidermiste", "Fabricant de masques", "Maquilleur",
+        "Costumier", "Dresseur de chiens", "Dompteur de rats", "Éclaireur nocturne", "Chasseur de monstres",
+        "Gardien de ménagerie", "Dresseur de créatures étranges", "Maître des illusions", "Chasseur de reliques",
+        "Garde du convoi", "Messager du cirque", "Réparateur de manèges", "Dresseur de chevaux"
+    ],
+    "traits": [
+        "Regard étrange", "Rire nerveux", "Voix cassée", "Voix grave", "Voix douce", "Parle peu", "Parle trop", "Parle en énigmes",
+        "Tics nerveux", "Somnambule", "Superstitieux", "Sombre", "Taciturne", "Râleur", "Bavard", "Rieur",
+        "A un rire tonitruant", "A un rire discret", "A une démarche légère", "A une démarche lourde", "A un accent marqué",
+        "A un regard perçant", "A un regard vide", "A un regard fou", "A un regard triste", "A un humour noir",
+        "A un humour étrange", "A une mémoire parfaite", "A une mémoire défaillante", "A une obsession pour les masques",
+        "A une obsession pour les animaux", "A une obsession pour les illusions", "A une obsession pour les lanternes",
+        "A un air menaçant", "A un air innocent", "A un air fatigué", "A un air déterminé", "A un air absent",
+        "A un air inspiré", "A un air mystérieux", "A un air radieux", "A un air ombrageux", "A un air bienveillant",
+        "A un air fier", "A un air prudent", "A un air mélancolique", "A un air envoûtant", "A un air curieux"
+    ],
+    "looks": [
+        "Maquillage craquelé", "Masque en cuir", "Chapeau haut‑de‑forme", "Canne sculptée", "Cape en velours", "Gants en dentelle",
+        "Costume rayé", "Robe de scène", "Bottes vernies", "Lanterne en cuivre", "Tatouages étranges", "Veste élimée",
+        "Pantalon bouffant", "Chapeau cabossé", "Cape en lambeaux", "Gants troués", "Chaussures usées", "Veste sombre",
+        "Pantalon rayé", "Chapeau décoré", "Cape brodée", "Robe colorée", "Costume de clown", "Masque de clown",
+        "Bottes renforcées", "Gants de scène", "Veste brillante", "Pantalon serré", "Chapeau large", "Cape épaisse",
+        "Robe noire", "Bijoux anciens", "Cape de velours", "Chapeau de cérémonie", "Veste en cuir", "Pantalon sombre",
+        "Chaussures fines", "Gants élégants", "Cape de voyage", "Chapeau de voyage", "Veste en laine", "Pantalon usé",
+        "Chaussures boueuses", "Cape simple", "Chapeau simple", "Gants simples", "Costume usé", "Robe usée"
+    ],
+    "secrets": [
+        "A fui un autre cirque", "A un passé criminel", "A un frère disparu", "A un secret sur un numéro interdit",
+        "A un passé de voleur", "A un secret sur un masque", "A un passé de magicien raté", "A un secret sur une illusion",
+        "A un passé de dresseur", "A un secret sur une créature", "A un passé de funambule", "A un secret sur une chute",
+        "A un passé de clown triste", "A un secret sur un rire", "A un passé de marionnettiste", "A un secret sur une marionnette",
+        "A un passé de ventriloque", "A un secret sur une voix", "A un passé de dompteur", "A un secret sur un animal",
+        "A un passé de collectionneur", "A un secret on un artefact", "A un passé de voyageur", "A un secret sur une route",
+        "A un passé de musicien", "A un secret sur une chanson", "A un passé de danseuse", "A un secret sur un prince",
+        "A un passé de magicien", "A un secret sur un sort", "A un passé de guérisseur", "A un secret sur une maladie",
+        "A un passé de capitaine de convoi", "A un secret sur une cargaison", "A un passé de survivant", "A un secret sur une crypte",
+        "A un passé de conspirateur", "A un secret sur un complot", "A un passé de montreur de bêtes", "A un secret sur une bête",
+        "A un passé de vagabond", "A un secret sur une ville", "A un passé de garde", "A un secret sur un chapiteau",
+        "A un passé de chasseur de monstres", "A un secret sur un monstre", "A un passé de médium", "A un secret sur un esprit"
+    ]
+}

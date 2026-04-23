@@ -1,0 +1,90 @@
+{
+    "name": "Obstacles de Poursuite à Pied",
+    "dice": "1d12",
+    "entries": [
+        {
+            "min": 1,
+            "max": 1,
+            "title": "Impasse",
+            "description": "Une impasse se profile droit devant.",
+            "effect": "Si la proie a choisi la manœuvre Traque/Fuite, Dissimulation ou Barrage, celle-ci échoue automatiquement."
+        },
+        {
+            "min": 2,
+            "max": 2,
+            "title": "Passage piéton",
+            "description": "Le feu du passage piéton passe du vert au rouge et le trafic redémarre.",
+            "effect": "Avantage à la manœuvre Dissimulation ; désavantage aux manœuvres Traque/Fuite et Tir statique."
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "Vitrines de devanture",
+            "description": "La vitrine d'une devanture bloque le passage.",
+            "effect": "Pour les manœuvres Fuite, Dissimulation ou Barrage, la proie doit réussir un jet de FORCE (sans action) pour enfoncer la vitrine. En cas d'échec, manœuvre annulée et elle subit D3 points de dégâts."
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "Métrocab",
+            "description": "Un métrocab s'avance et bloque le passage.",
+            "effect": "Désavantage aux manœuvres Traque/Fuite et Tir statique ; avantage à la manœuvre Raccourci."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "Parapluies lumineux",
+            "description": "Des parapluies lumineux masquent la proie.",
+            "effect": "Proie : avantage sur Dissimulation. Poursuivant : doit réussir un jet d'OBSERVATION (sans action) sous peine d'échec automatique de sa manœuvre du Round. Un échec sur un Tir statique touche un passant."
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "Procession de moines",
+            "description": "Une procession de moines en robes orange bloque le passage.",
+            "effect": "La proie doit réussir un jet de MANIPULATION (sans action). Succès : avantage sur Dissimulation. Échec : la manœuvre échoue automatiquement."
+        },
+        {
+            "min": 7,
+            "max": 7,
+            "title": "Policiers du LAPD",
+            "description": "Deux policiers dégainent leurs armes pour mettre fin à la poursuite.",
+            "effect": "Avantage aux manœuvres Traque/Fuite, Dissimulation et Tir statique. Quiconque effectue un Tir statique subit les tirs des policiers. Un Blade Runner peut annuler cet effet par un jet de CONTACTS (sans action)."
+        },
+        {
+            "min": 8,
+            "max": 8,
+            "title": "Vieillard importun",
+            "description": "Un vieillard attrape le poursuivant pour réclamer de l'argent.",
+            "effect": "Le poursuivant doit réussir un jet de CONTACTS (pour payer) ou de FORCE [CONDUITE] (pour repousser). Échec : ratage automatique de la manœuvre du Round."
+        },
+        {
+            "min": 9,
+            "max": 9,
+            "title": "Rue jonchée d'ordures",
+            "description": "La rue est jonchée d'ordures et de décombres rendant le sol glissant.",
+            "effect": "Désavantage aux manœuvres Traque/Fuite ; avantage à la manœuvre Barrage."
+        },
+        {
+            "min": 10,
+            "max": 10,
+            "title": "Espace découvert",
+            "description": "Les adversaires se retrouvent soudain dans la foule qui s'éclaircit.",
+            "effect": "Avantage à la manœuvre Tir statique ; désavantage à la manœuvre Dissimulation."
+        },
+        {
+            "min": 11,
+            "max": 11,
+            "title": "Voyous violents",
+            "description": "Le passage est bloqué par D6 voyous aux intentions violentes.",
+            "effect": "La proie doit réussir un jet de CONTACTS (sans action). Échec : les voyous l'agressent (combat rapproché) et sa manœuvre échoue. Succès : ils attaquent le poursuivant à la place."
+        },
+        {
+            "min": 12,
+            "max": 12,
+            "title": "Manifestation suprémaciste",
+            "description": "Des suprémacistes humains bloquent le passage avec des pancartes.",
+            "effect": "Désavantage aux manœuvres Fuite et Dissimulation. Ils indiquent la bonne direction au poursuivant : avantage sur Traque et Raccourci."
+        }
+    ]
+}

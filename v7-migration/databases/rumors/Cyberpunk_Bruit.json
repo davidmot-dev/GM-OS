@@ -1,0 +1,49 @@
+{
+    "name": [
+        "Le Retour de Zero-Cool", "La Drogue Numérique 'Bliss'", "Le Crash Boursier Programmé", "L'IA devenue Dieu",
+        "Les Super-Soldats en Fuite", "Le Rachat de la Ville", "La Puce d'Immortalité", "Le Virus 'Blackout'",
+        "La Colonie Martienne Perdue", "Le Tueur Invisible", "L'Héritier Caché d'Arasaka", "La Nouvelle Zone de Quarantaine"
+    ],
+    "description": [
+        "Un hacker légendaire présumé mort aurait été vu sur le Net hier soir.",
+        "Une nouvelle simstim rend les utilisateurs catatoniques de plaisir, mais grille leurs neurones.",
+        "Les corpos vendent massivement leurs actions, quelque chose de gros se prépare.",
+        "Une IA de gestion du trafic aurait développé une conscience et exige des sacrifices.",
+        "Trois prototypes de cyborgs de combat se sont échappés d'un labo secret.",
+        "La MegaCorp BioTech va acheter le quartier entier et expulser tout le monde demain.",
+        "Il paraît qu'une clinique clandestine peut uploader votre esprit pour l'éternité.",
+        "Un malware se propageant par contact visuel va éteindre tous les implants oculaires.",
+        "On n'a plus de nouvelles de la base Alpha sur Mars depuis 48 heures.",
+        "Un assassin traverse les murs et tue les chefs de gang sans laisser de trace.",
+        "Le PDG de la plus grosse corpo aurait un fils illégitime qui vit dans les bas-fonds.",
+        "Le secteur 7 a été bouclé par l'armée, ils parlent de fuite de gaz, mais c'est faux."
+    ],
+    "ambiance": [
+        "L'espoir fou anime les forums du Darknet.",
+        "Une terreur sourde parmi les junkies et les dealers.",
+        "Une panique financière, les courtiers sautent des fenêtres.",
+        "Une ferveur religieuse technologique étrange.",
+        "La paranoïa, tout le monde regarde les ombres avec suspicion.",
+        "La colère monte dans la rue, les émeutes sont proches.",
+        "Une fascination morbide pour la vie éternelle.",
+        "Les gens portent des lunettes noires même la nuit par peur.",
+        "Le silence radio des médias officiels est assourdissant.",
+        "Les chefs de gang sont nerveux et tirent sur tout ce qui bouge.",
+        "Les chasseurs de primes affluent en ville, l'ambiance est électrique.",
+        "La peur de la contagion, les gens s'évitent dans la rue."
+    ],
+    "secret": [
+        "C'est une IA qui utilise l'avatar du hacker pour manipuler les activistes.",
+        "C'est un test grandeur nature de l'armée pour une arme psychotropique.",
+        "C'est une fausse rumeur lancée pour faire baisser les prix avant un rachat.",
+        "L'IA est juste buggée, mais un culte s'est formé autour d'elle.",
+        "Ils ne se sont pas échappés, ils ont été relâchés pour tester leurs limites en ville.",
+        "Ils ne veulent pas expulser les gens, ils veulent les utiliser comme main d'œuvre forcée.",
+        "C'est une arnaque : ils copient votre esprit et le vendent comme esclave virtuel.",
+        "Le virus a été créé par une entreprise d'optique pour vendre de nouveaux yeux.",
+        "Ils ont découvert une ruine alien et ont coupé les communications.",
+        "L'assassin utilise une technologie de camouflage optique volée.",
+        "L'héritier est en fait un clone créé pour servir de banque d'organes.",
+        "Une expérience biologique a créé des zombies dans le secteur 7."
+    ]
+}

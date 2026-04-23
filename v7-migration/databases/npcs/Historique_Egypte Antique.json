@@ -1,0 +1,50 @@
+{
+    "firstNames": [
+        "Amenhotep", "Nefertari", "Thoutmôsis", "Cléopâtre", "Ramsès", "Isis", "Séthi", "Hatchepsout", "Anubis", "Bastet",
+        "Khéops", "Néfertiti", "Akhenaton", "Tiye", "Horemheb", "Méritamon", "Toutânkhamon", "Sékmet", "Osiris", "Horus",
+        "Sennedjem", "Baketamon", "Paser", "Maya", "Iset", "Kha", "Mérit", "Nakht", "Tiyi", "Sennefer",
+        "Ahmosé", "Nebetah", "Mout", "Khonsou", "Tueris", "Sobek", "Ptah", "Thot", "Rê", "Atoum",
+        "Kéops", "Mykérinos", "Khéphren", "Djoser", "Imhotep", "Pépi", "Ounas", "Téti", "Snéfrou", "Khéty"
+    ],
+    "lastNames": [
+        "du Nil", "de Thèbes", "de Memphis", "d'Alexandrie", "d'Abydos", "de Gizeh", "de Karnak", "de Louxor", "d'Assouan", "de Philae",
+        "le Scribe", "le Prêtre", "le Batelier", "le Tisseur", "le Tailleur de pierre", "le Paysan", "le Guerrier", "le Vizir", "le Vizir", "le Gardien",
+        "fils de Rê", "fille d'Isis", "serviteur d'Anubis", "protégé de Thot", "aimé de Bastet", "fils du Nil", "gardien du Pharaon",
+        "marcheur du désert", "chercheur d'or", "tisseur de lin", "architecte des pyramides", "scribe de la vérité", "prêtre de l'ombre",
+        "batelier du crépuscule", "guerrier du lion", "voyageur des oasis", "maître des onguents", "chasseur de crocodiles",
+        "pêcheur de lotus", "sculpteur de dieux", "peintre de tombes", "expert en momification", "gardien des archives",
+        "messager du palais", "vendeur de papyrus", "marchand d'encens", "fabricant de amulettes", "astronome royal"
+    ],
+    "jobs": [
+        "Scribe", "Prêtre de l'embaumement", "Architecte royal", "Paysan du Nil", "Garde du Pharaon", "Marchand d'encens",
+        "Tisseur de lin", "Pêcheur", "Ouvrier des pyramides", "Chasseur d'hippopotames", "Batelier", "Danseuse de temple",
+        "Musicien de harpe", "Médecin (Sounou)", "Apothicaire", "Orfèvre", "Peintre de tombes", "Sculpteur de bas-reliefs",
+        "Gardien d'archives", "Astrologue", "Navigateur", "Esclave de carrière", "Gouverneur de nome (Nomarque)",
+        "Vizir", "Héraut royal", "Dresseur de faucons", "Pilleur de tombes", "Marchand de bijoux", "Fabricant de papyrus",
+        "Collecteur d'impôts", "Soldat charriot", "Archer de Koush", "Éclaireur du désert", "Gardien d'oasis",
+        "Expert en onguents", "Parfumeur", "Vigneron", "Boulanger", "Cordonnier", "Potier", "Fabricant d'amulettes",
+        "Interprète", "Scribe des comptes", "Garde de la vallée", "Explorateur de Pount", "Mineur de turquoise"
+    ],
+    "traits": [
+        "Fataliste", "Pieux", "Hospitalier", "Calme", "Obsédé par l'au-delà", "Respectueux du Pharaon", "Superstitieux", "Sage",
+        "Parle en métaphores", "Invoque les dieux du Nil", "Craint la colère de Sékmet", "A un rire doux", "A un regard profond",
+        "Aime les rituels", "Respectueux des morts", "Méfiant envers les Hyksôs", "Obsédé par son Ka", "Parle avec sagesse",
+        "A une mémoire parfaite", "A une démarche légère", "A une voix chantante", "A un air serein", "A un regard perçant",
+        "A un humour subtil", "A une obsession pour les étoiles", "A une obsession pour les herbes", "A un air fatigué par le soleil",
+        "A un regard fou", "A un air déterminé", "A un air absent", "A un air inquiet", "A un air froid", "A un air rusé"
+    ],
+    "looks": [
+        "Pagne de lin blanc", "Perruque noire", "Collier Ousekh", "Maillage de khôl", "Sandales de papyrus", "Sceptre Héqa",
+        "Amulette Ankh", "Peau basanée", "Tunique transparente", "Bagues de scarabée", "Bracelet d'or", "Éventail de plumes",
+        "Papyrus à la main", "Palette de scribe", "Jarre de bière", "Panier de dattes", "Miroir de cuivre poli",
+        "Poignard en bronze", "Masque mortuaire (en main)", "Flacon d'huile parfumée", "Canne de papyrus", "Ceinture brodée",
+        "Tatouage protecteur", "Cape légère", "Chapeau de paille", "Bourse de grains", "Lanterne à huile", "Sandales usées"
+    ],
+    "secrets": [
+        "Connaît l'entrée cachée d'une tombe royale", "A volé un bijou dans un sarcophage", "Est un espion pour le vizir",
+        "A vu un rituel interdit", "Est un descendant d'une dynastie déchue", "A saboté la construction d'un temple",
+        "Connaît le secret de la fabrication d'un poison rare", "A une liaison avec un membre de la famille royale",
+        "A découvert une fraude dans les impôts", "Est maudit par un prêtre d'Amon", "A un passé de pilleur repenti",
+        "A trouvé une carte menant au pays de Pount", "A volé une statue sacrée", "Possède un papyrus interdit"
+    ]
+}

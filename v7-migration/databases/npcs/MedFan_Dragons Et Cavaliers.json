@@ -1,0 +1,62 @@
+{
+    "firstNames": [
+        "Kaelis","Rhydan","Seraphine","Tharos","Elowen","Vaelor","Nyssa","Garruk","Astra","Varyn",
+        "Eira","Sable","Riven","Mirella","Talon","Lyra","Gideon","Syrin","Mara","Orin",
+        "Vaelis","Thalia","Fenric","Ravena","Torin","Nyx","Aldric","Soren","Vexa","Lunara",
+        "Rook","Eldra","Korrin","Veyra","Draven","Selene","Corvin","Aeris","Zarek","Maelis",
+        "Thorne","Isolde","Ravyn","Lucian","Vesper","Nerys","Dorian","Astra","Riven","Kora"
+    ],
+    "lastNames": [
+        "Dragonhelm","Stormscale","Flamecrest","Ironwing","Skybreaker","Ashenflight","Stormclaw","Nightwing","Firecrest","Windrider",
+        "Dragonsong","Stormborn","Flameborn","Ironcrest","Skyshard","Ashenhelm","Stormforge","Nightcrest","Firehelm","Windcrest",
+        "Dragonspire","Stormcrest","Flameshard","Ironborn","Skyhelm","Ashenborn","Stormline","Nightforge","Fireborn","Windhelm",
+        "Dragoncrest","Stormhelm","Flameforge","Ironshard","Skyborn","Ashencrest","Stormborn","Nighthelm","Fireforge","Windborn",
+        "Dragonfall","Stormwing","Flamewing","Ironwing","Skyforge","Ashenwing","Stormflight","Nightflight","Fireflight","Windflight"
+    ],
+    "jobs": [
+        "Cavalier de dragon", "Éleveur de dragons", "Maître des œufs", "Gardien des nids", "Forgeron draconique", "Archiviste des lignées",
+        "Mage du souffle", "Chasseur de wyvernes", "Éclaireur des cimes", "Gardien des montagnes", "Dresseur de drakes",
+        "Guérisseur d’écailles", "Maître des runes", "Chasseur de griffons", "Explorateur des cieux", "Capitaine ailé",
+        "Messager draconique", "Garde du sanctuaire", "Chasseur de dragons sauvages", "Maître des harnais", "Fabricant de selles",
+        "Chasseur de tempêtes", "Garde des falaises", "Éleveur de dragons marins", "Chasseur de serpents ailés", "Maître des vents",
+        "Garde du ciel", "Explorateur de ruines draconiques", "Chasseur de bêtes célestes", "Maître des flammes",
+        "Garde des ponts aériens", "Chasseur de dragons noirs", "Maître des écailles", "Garde des grottes sacrées",
+        "Chasseur de dragons rouges", "Maître des serres", "Garde des tours", "Chasseur de dragons blancs", "Maître des souffles",
+        "Garde des crêtes", "Chasseur de dragons bleus", "Maître des ailes", "Garde des pics", "Chasseur de dragons anciens",
+        "Maître des chants draconiques", "Garde des archives", "Chasseur de dragons fantômes", "Maître des pactes"
+    ],
+    "traits": [
+        "Courageux", "Fier", "Loyal", "Rêveur", "Sage", "Impulsif", "Taciturne", "Bavard", "Sombre", "Éloquent",
+        "Regard perçant", "Regard doux", "Regard inquiet", "Regard fier", "Voix grave", "Voix douce", "Rire discret",
+        "Rire tonitruant", "Tics nerveux", "Somnambule", "Superstitieux", "Sceptique", "Généreux", "Avaricieux",
+        "A une mémoire parfaite", "A une mémoire défaillante", "A une obsession pour les dragons", "A une obsession pour les cieux",
+        "A une obsession pour les runes", "A une obsession pour les flammes", "A un air fatigué", "A un air inspiré",
+        "A un air déterminé", "A un air absent", "A un air noble", "A un air mystérieux", "A un air radieux",
+        "A un air ombrageux", "A un air bienveillant", "A un air fier", "A un air prudent", "A un air mélancolique",
+        "A un air envoûtant", "A un air calme", "A un air tourmenté", "A un air stoïque", "A un air chevaleresque"
+    ],
+    "looks": [
+        "Armure d’écailles", "Cape en peau de dragon", "Gants renforcés", "Bottes de cavalier", "Casque ailé", "Harnais draconique",
+        "Épée courbe", "Lance de ciel", "Bouclier décoré", "Tunique brodée", "Cape de vent", "Gants en cuir",
+        "Bottes usées", "Casque cabossé", "Cape en lambeaux", "Tunique sombre", "Robe de mage", "Cape de cérémonie",
+        "Heaume brillant", "Bouclier neuf", "Épée neuve", "Cape épaisse", "Bottes lourdes", "Tunique en lin",
+        "Heaume simple", "Bouclier simple", "Épée simple", "Cape légère", "Tunique de voyage", "Gants articulés",
+        "Bottes métalliques", "Casque de vol", "Gants de vol", "Veste en cuir draconique", "Pantalon renforcé",
+        "Bottes de combat", "Cape brodée", "Casque décoré", "Armure en composite", "Bottes fines", "Gants élégants",
+        "Cape de voyage", "Chapeau de cavalier", "Veste sombre", "Pantalon clair", "Chaussures fines", "Gants de cérémonie"
+    ],
+    "secrets": [
+        "A pactisé avec un dragon ancien", "A perdu un dragon", "A un œuf caché", "A un frère disparu", "A un secret sur un vol interdit",
+        "A un passé de cavalier déchu", "A un secret sur une prophétie", "A un passé de mage", "A un secret sur une rune",
+        "A un passé de chasseur de dragons", "A un secret sur une bête ancienne", "A un passé de noble", "A un secret sur une trahison",
+        "A un passé de prisonnier", "A un secret sur une montagne sacrée", "A un passé de pèlerin", "A un secret sur une relique",
+        "A un passé de forgeron", "A un secret sur une arme draconique", "A un passé de barde", "A un secret sur une chanson",
+        "A un passé de voyageur", "A un secret sur une île céleste", "A un passé de capitaine", "A un secret sur une bataille",
+        "A un passé de survivant", "A un secret sur une crypte draconique", "A un passé de scribe", "A un secret sur un manuscrit",
+        "A un passé de mage du vent", "A un secret sur une tempête", "A un passé de chasseur de monstres", "A un secret sur un monstre",
+        "A un passé de garde", "A un secret sur un château aérien", "A un passé de cavalier noir", "A un secret sur une malédiction",
+        "A un passé de maître d’armes", "A un secret sur une épée légendaire", "A un passé de druide", "A un secret sur un rituel",
+        "A un passé de collectionneur", "A un secret sur un artefact", "A un passé de conspirateur", "A un secret sur un complot",
+        "A un passé de moine", "A un secret sur un dragon fantôme", "A un passé de vagabond", "A un secret sur une cité perdue"
+    ]
+}

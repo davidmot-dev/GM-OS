@@ -1,0 +1,61 @@
+{
+    "firstNames": [
+        "Varek","Lilith","Damon","Selene","Karn","Vespera","Raze","Nyxia","Torin","Mirella",
+        "Zarek","Astra","Riven","Sable","Nox","Veyra","Draven","Isolde","Corvin","Aeris",
+        "Thorne","Ravyn","Lucian","Nerys","Dorian","Maelis","Kora","Voss","Alyx","Nim",
+        "Kaelis","Rhydan","Seraphine","Tharos","Elowen","Vaelor","Nyssa","Garruk","Astra","Varyn",
+        "Eira","Syrin","Mara","Orin","Vaelis","Thalia","Fenric","Ravena","Torin","Lunara"
+    ],
+    "lastNames": [
+        "Darkhelm","Nightfang","Bloodspire","Shadowcrest","Ironclaw","Stormveil","Ashenmark","Voidline","Grimcrest","Blackspire",
+        "Nighthelm","Bloodveil","Shadowborn","Ironveil","Stormborn","Ashencrest","Voidborn","Grimhelm","Blackveil","Nightmark",
+        "Bloodborn","Shadowmark","Ironborn","Stormmark","Ashenborn","Voidmark","Grimmark","Blackmark","Nightforge","Bloodforge",
+        "Shadowforge","Ironforge","Stormforge","Ashenforge","Voidforge","Grimforge","Blackforge","Nightwind","Bloodwind","Shadowwind",
+        "Ironwind","Stormwind","Ashenwind","Voidwind","Grimwind","Blackwind","Nightfall","Bloodfall","Shadowfall","Ironfall"
+    ],
+    "jobs": [
+        "Scientifique renégat", "Chef de gang", "Hacker criminel", "Ancien militaire", "Terroriste technologique",
+        "Mutant instable", "Inventeur fou", "PDG corrompu", "Assassin professionnel", "Maître illusionniste",
+        "Pyromane", "Maître du chaos", "Mercenaire", "Espion double", "Chimiste clandestin", "Bio‑ingénieur déviant",
+        "Maître des poisons", "Stratège criminel", "Voleur d’élite", "Saboteur", "Nécromancien moderne",
+        "Maître hypnotiseur", "Tueur à gages", "Chef de secte", "Trafiquant d’artefacts", "Ingénieur en armes",
+        "Maître du chantage", "Cyber‑terroriste", "Maître des ombres", "Général renégat", "Chasseur de héros",
+        "Maître du feu", "Maître du froid", "Maître de l’électricité", "Maître des illusions", "Maître des machines",
+        "Maître des esprits", "Maître des toxines", "Maître des métamorphoses", "Maître du son", "Maître du métal",
+        "Maître des tempêtes", "Maître des ténèbres", "Maître des dimensions", "Maître des parasites", "Maître des drones",
+        "Maître des virus", "Maître des anomalies"
+    ],
+    "traits": [
+        "Cruel", "Manipulateur", "Calculateur", "Sombre", "Charismatique", "Instable", "Froid", "Impulsif", "Rancunier", "Ambitieux",
+        "Parle lentement", "Parle avec menace", "Rit nerveusement", "Rit froidement", "A une voix grave", "A une voix sifflante",
+        "A un regard perçant", "A un regard vide", "A un regard fou", "A un regard glacial", "A un humour noir",
+        "A un humour cruel", "A une mémoire parfaite", "A une mémoire sélective", "A une obsession pour le pouvoir",
+        "A une obsession pour la destruction", "A une obsession pour un héros", "A une obsession pour la science",
+        "A un air fatigué", "A un air inspiré", "A un air concentré", "A un air absent", "A un air menaçant",
+        "A un air mystérieux", "A un air radieux", "A un air ombrageux", "A un air dominateur", "A un air fier",
+        "A un air prudent", "A un air mélancolique", "A un air calme", "A un air nerveux", "A un air sadique",
+        "A un air stoïque", "A un air déterminé", "A un air terrifiant", "A un air théâtral", "A un air glacial"
+    ],
+    "looks": [
+        "Cape sombre", "Masque intégral", "Armure noire", "Gants métalliques", "Bottes blindées", "Casque effrayant",
+        "Manteau long", "Visière rouge", "Gants articulés", "Bottes de combat", "Armure fissurée", "Cape en lambeaux",
+        "Masque brisé", "Veste sombre", "Pantalon renforcé", "Chaussures lourdes", "Gants renforcés", "Cape épaisse",
+        "Casque décoré", "Armure composite", "Bottes usées", "Gants troués", "Veste élimée", "Pantalon usé",
+        "Chaussures usées", "Cape de voyage", "Casque de sécurité", "Gants de combat", "Bottes de pilote", "Veste technique",
+        "Pantalon sombre", "Gants en polymère", "Casque holo‑tactique", "Armure modulaire", "Bottes chromées", "Gants chromés",
+        "Veste sombre", "Pantalon clair", "Chaussures fines", "Gants élégants", "Cape de cérémonie", "Masque partiel",
+        "Armure tactique", "Bottes furtives", "Casque intégral", "Cape noire", "Armure lourde", "Gants noirs"
+    ],
+    "secrets": [
+        "A trahi un mentor", "A un passé d’expérience ratée", "A un frère disparu", "A un secret sur un héros",
+        "A un passé de cobaye", "A un secret sur une organisation", "A un passé de fugitif", "A un secret sur une arme",
+        "A un passé de scientifique", "A un secret sur un sérum", "A un passé de voleur", "A un secret sur un artefact",
+        "A un passé de pilote", "A un secret sur un crash", "A un passé de hacker", "A un secret sur un réseau",
+        "A un passé de célébrité", "A un secret sur un scandale", "A un passé de sportif", "A un secret sur une blessure",
+        "A un passé de journaliste", "A un secret sur un article", "A un passé de garde du corps", "A un secret sur un client",
+        "A un passé de survivant", "A un secret sur une catastrophe", "A un passé de prisonnier", "A un secret sur une évasion",
+        "A un passé de conspirateur", "A un secret sur un complot", "A un passé de chercheur", "A un secret sur une mutation",
+        "A un passé de vagabond", "A un secret sur une ville", "A un passé de médium", "A un secret sur une vision",
+        "A un passé de soldat d’élite", "A un secret sur une mission", "A un passé de mutant", "A un secret sur une transformation"
+    ]
+}

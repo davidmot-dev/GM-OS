@@ -1,0 +1,53 @@
+{
+  "name": [
+    "Niveau‑BA Secteur 9",
+    "Niveau‑BA des Câbles Pendants",
+    "Niveau‑BA du Marché Humide",
+    "Niveau‑BA des Ventilateurs Géants",
+    "Niveau‑BA du Couloir Fumigène",
+    "Niveau‑BA des Drones Errants",
+    "Niveau‑BA du Canal Pollué",
+    "Niveau‑BA des Escaliers Infinis",
+    "Niveau‑BA du Carrefour Obscur",
+    "Niveau‑BA des Écrans Parasites"
+  ],
+
+  "description": [
+    "Un secteur enfoui sous la ville, éclairé par des néons défaillants et saturé de vapeur.",
+    "Un niveau où des câbles massifs pendent du plafond comme des racines métalliques.",
+    "Un marché humide où l’air est chargé d’odeurs chimiques et de nourriture synthétique.",
+    "Un secteur dominé par d’immenses ventilateurs qui brassent un air toxique.",
+    "Un couloir où la fumée industrielle forme un brouillard permanent.",
+    "Un niveau où des drones cassés errent en boucle, incapables de remonter.",
+    "Un canal d’eau noire traversant la sous‑ville, bordé de déchets luminescents.",
+    "Un escalier interminable reliant plusieurs sous‑niveaux oubliés.",
+    "Un carrefour plongé dans l’obscurité, où les panneaux lumineux ne fonctionnent plus.",
+    "Un secteur où les écrans muraux affichent des parasites colorés en continu."
+  ],
+
+  "ambiance": [
+    "Une suffocation industrielle.",
+    "Une lourdeur électrique.",
+    "Une moiteur toxique.",
+    "Un vacarme mécanique constant.",
+    "Une opacité étouffante.",
+    "Une errance technologique.",
+    "Une stagnation polluée.",
+    "Une verticalité écrasante.",
+    "Une obscurité totale.",
+    "Une saturation visuelle."
+  ],
+
+  "secret": [
+    "Un ascenseur caché permettrait de remonter vers un niveau interdit.",
+    "Certains câbles transmettent encore des données cryptées.",
+    "Le marché humide vend un aliment interdit par les corporations.",
+    "Un ventilateur s’arrête parfois, révélant un passage derrière les pales.",
+    "La fumée forme parfois des silhouettes humaines.",
+    "Un drone errant semble suivre les visiteurs.",
+    "Le canal pollué mène à un ancien laboratoire submergé.",
+    "L’escalier infini change de direction selon l’heure.",
+    "Le carrefour obscur abrite un relais clandestin.",
+    "Les écrans parasites affichent brièvement un message codé."
+  ]
+}

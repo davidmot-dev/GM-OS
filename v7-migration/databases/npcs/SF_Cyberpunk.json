@@ -1,0 +1,45 @@
+{
+    "firstNames": [
+        "Kael", "Vira", "Jax", "Sloane", "Nyx", "Caleb", "Zane", "Echo", "Ryla", "Dorn", "Mira", "Tyrell", "Nova", "Cipher", "Vex",
+        "Lira", "Kade", "Syn", "Rexel", "Nara", "Volt", "Hex", "Taryn", "Shade", "Kora", "Nox", "Riven", "Astra", "Krynn", "Valk",
+        "Sera", "Drayk", "Lunex", "Pyra", "Kryo", "Zenith", "Rok", "Vesper", "Nyra", "Talon", "Sable", "Kryss", "Aero", "Vanta", "Rook",
+        "Jyn", "Kairo", "Vexa", "Solyn", "Raze"
+    ],
+    "lastNames": [
+        "Sterling", "V-02", "Blackwood", "Chrome", "Hollow", "Reeve", "Vance", "Mercer", "Stark", "Orion", "Kovacs", "Synth",
+        "Neon", "Graves", "Flux", "Shard", "Vector", "Nyberg", "Cipherline", "Razor", "Dray", "Pulse", "Kryos", "Ironfall",
+        "Locke", "Straylight", "Vortex", "Gearson", "Nightfall", "Helix", "Stormbyte", "Coldframe", "Ashford", "Steelborn",
+        "Glass", "Hardline", "Zero", "Frostwire", "Hardspark", "Chromeveil", "Darkpulse", "Gearshift", "Hollowbyte", "Neonfall",
+        "Rift", "Blackchrome", "Vox", "Grimline", "Ironshard"
+    ],
+    "jobs": [
+        "Mercenaire", "Hacker", "Fixer", "Médecin de rue", "Corpo", "Dealer", "Mécano", "Barman", "Espion", "Vigile", "Netrunner", "Charcudoc",
+        "Contrebandier", "Techno-chaman", "Pilote de drone", "Chasseur de primes", "Ingénieur cybernétique", "Livreur sous stéroïdes", "Broker de données", "Artiste VR",
+        "Dompteur de bots", "Architecte réseau", "Saboteur industriel", "Technomancien", "Ripperdoc clandestin", "Archiviste numérique", "Chauffeur augmentée", "Gardien de coffre quantique",
+        "Fabricant d’implants", "Chanteur synthwave", "Démolisseur urbain", "Consultant corpo", "Chasseur de glitchs", "Opérateur de mecha", "Pilleur de serveurs", "Drone jockey",
+        "Moddeur de personnalités", "Gardien de zone rouge", "Ingénieur en illusions AR", "Collecteur de dettes", "Falsificateur biométrique", "Technicien de maintenance cyber",
+        "Porte-flingue corpo", "Chirurgien neuronal", "Analyste de flux", "Dresseur de nanites", "Pilote de taxi volant", "Archiviste mémoire"
+    ],
+    "traits": [
+        "Paranoïaque", "Très poli", "Parle trop vite", "Cynique", "Optimiste", "Froid", "Séducteur", "Bégaye", "Mâche un chewing-gum", "Obsédé par la techno",
+        "Regard fuyant", "Toujours fatigué", "Rit nerveusement", "Voix métallique", "Hyperactif", "Collectionne les gadgets", "Parle en argot corpo", "Fixe les gens trop longtemps",
+        "Tape du pied en rythme", "Respire bruyamment", "Toujours en retard", "Sourire figé", "Regarde constamment son interface", "Tics nerveux", "Parle en phrases courtes",
+        "A des trous de mémoire", "Sursaute facilement", "Regarde derrière lui souvent", "Murmure pour lui-même", "Aime dramatiser", "Raconte des anecdotes inutiles",
+        "A une voix trop douce", "A une voix trop forte", "Ne cligne presque jamais des yeux", "Fait claquer sa langue", "A une posture étrange", "Bouge les mains en parlant",
+        "Regarde les écrans plus que les gens", "A un rire gênant", "A une respiration sifflante", "A un ton monotone", "A un regard intense",
+        "A une démarche rapide", "A une démarche lente", "A une obsession pour l’ordre", "A une obsession pour le chaos", "A un humour douteux", "A une mémoire sélective"
+    ],
+    "looks": [
+        "Bras cybernétique", "Yeux néons", "Veste en cuir usée", "Tatouages lumineux", "Cheveux roses", "Masque respiratoire", "Costume impeccable", "Cicatrices", "Implants apparents",
+        "Jambes augmentées", "Visage partiellement chromé", "Casque AR fissuré", "Manteau long blindé", "Dreadlocks synthétiques", "Peau irisée", "Gants tactiles", "Lunettes holo",
+        "Épaule blindée", "Main mécanique", "Oreille cybernétique", "Visage tatoué", "Implants sous-cutanés", "Veste néon", "Bottes renforcées", "Pantalon blindé",
+        "Lentilles holographiques", "Câbles visibles", "Masque intégral", "Visage reconstruit", "Peau synthétique", "Manteau à LED", "Gants renforcés", "Bandeau lumineux",
+        "Casque audio intégré", "Épine dorsale cybernétique", "Plaques de métal sur le torse", "Cheveux luminescents", "Visage masqué", "Tatouages animés",
+        "Bottes magnétiques", "Veste blindée", "Implants respiratoires", "Lunettes opaques", "Épaulières chromées", "Mâchoire augmentée", "Doigts articulés",
+        "Peau mate métallique"
+    ],
+    "secrets": [
+        "Dette de jeu énorme", "Espion pour une corpo", "Recherché par la police", "A volé une puce de données", "Malade en phase terminale", "Double identité", "A tué son ancien patron",
+        "Protège une IA illégale", "Ancien cobaye de labo", "A perdu la mémoire", "Infiltré dans un gang", "Cache un prototype d'arme", "Travaille pour le gouvernement"
+    ]
+}

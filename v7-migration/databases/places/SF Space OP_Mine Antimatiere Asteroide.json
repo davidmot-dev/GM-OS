@@ -1,0 +1,53 @@
+{
+  "name": [
+    "Mine d’Antimatière du Noyau Inversé",
+    "Complexe Minier du Fragment Zéro",
+    "Mine du Cœur Annihilant",
+    "Extraction du Puits Antiparticule",
+    "Mine du Champ Résonant",
+    "Complexe du Noyau Instable",
+    "Mine des Veines Antimassiques",
+    "Extraction du Sillage Inversif",
+    "Mine du Cratère Vibrionnaire",
+    "Complexe du Vide Chargé"
+  ],
+
+  "description": [
+    "Une mine creusée dans un astéroïde dont le noyau inversé génère de l’antimatière brute.",
+    "Un complexe minier bâti autour d’un fragment zéro, source d’énergie instable.",
+    "Une mine où le cœur annihilant pulse comme un organe dangereux.",
+    "Une extraction située au bord d’un puits antiparticule en perpétuelle expansion.",
+    "Une mine où un champ résonant déforme les outils et les voix.",
+    "Un complexe construit autour d’un noyau instable prêt à s’effondrer.",
+    "Une mine exploitant des veines antimassiques scintillant dans l’obscurité.",
+    "Une extraction suivant le sillage inversif laissé par une ancienne collision.",
+    "Une mine installée dans un cratère vibrionnaire émettant des pulsations étranges.",
+    "Un complexe minier où le vide chargé perturbe les instruments."
+  ],
+
+  "ambiance": [
+    "Une instabilité dangereuse.",
+    "Un grondement inversé.",
+    "Une tension énergétique.",
+    "Un vertige antiparticule.",
+    "Une résonance déformante.",
+    "Une menace d’effondrement.",
+    "Une lumière antimassique.",
+    "Un sillage inversif.",
+    "Une vibration anormale.",
+    "Un vide chargé."
+  ],
+
+  "secret": [
+    "Le noyau inversé pulse selon un rythme non humain.",
+    "Le fragment zéro projette des visions dans l’obscurité.",
+    "Le cœur annihilant réagit aux émotions.",
+    "Le puits antiparticule murmure des mots déformés.",
+    "Le champ résonant révèle un message caché.",
+    "Le noyau instable semble retenir quelque chose.",
+    "Une veine antimassique change de couleur selon le visiteur.",
+    "Le sillage inversif mène à une salle impossible.",
+    "Le cratère vibrionnaire pulse comme un cœur vivant.",
+    "Le vide chargé ouvre brièvement une brèche lumineuse."
+  ]
+}
