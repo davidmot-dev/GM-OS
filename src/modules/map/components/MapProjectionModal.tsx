@@ -40,30 +40,25 @@ const MapProjectionModal: React.FC = () => {
     const handleProjectToMonitor = (displayId: string) => {
         const bridge = window.appBridge;
         if (bridge?.image?.launchDisplay && mapUrl) {
-            // Stop Hub projection (Exclusivity)
-            clearProjectedState();
-
-            // Manually sync "projected" state for the monitor to consume via storage events
-            // We set projectionTarget to 'monitor' so Hub doesn't show it
+            // We consolidate the state update in ONE call to avoid multiple broadcasts/race conditions
+            // We set projectionTarget to 'monitor' so Hub doesn't show it, while physical displays do
             useMapStore.setState({
                 projectionTarget: 'monitor',
                 projectedMapUrl: mapUrl,
                 projectedIsVideo: isVideo,
                 projectedFogDataUrl: fogDataUrl,
-                projectedTokens: tokens,
-                projectedPings: pings,
-                projectedMagicEffects: magicEffects,
+                projectedTokens: [...tokens],
+                projectedPings: [...pings],
+                projectedMagicEffects: [...magicEffects],
                 projectedWeatherType: weatherType,
                 projectedWeatherIntensity: weatherIntensity,
                 projectedMapWidth: mapWidth,
-
                 projectedMapHeight: mapHeight,
                 projectedIsGridEnabled: isGridEnabled,
                 projectedGridSize: gridSize,
                 projectedGridColor: gridColor,
                 projectedGridOpacity: gridOpacity
             });
-
 
             // Signal tactical map mode to the projector window
             bridge.image.launchDisplay(['__tactical_map__'], displayId);

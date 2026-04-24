@@ -26,7 +26,15 @@ Ce document trace la trajectoire du projet, des jalons franchis aux futures inno
 - **[x] Indicateur Nexus-Ready** : Badge de portabilité dans la bibliothèque de campagnes.
 - **[x] Conflict Resolver** : Gestion interactive des doublons d'ID (Remplacer / Cloner / Annuler).
 
+## 🛠️ Stabilisation Temps Réel (V5.5 — Avril 2026)
+
+- **[x] Robustesse Cross-Window Sync** : Modèle "Authoritative Master Relay" éliminant les conflits d'état entre MJ et Moniteurs.
+- **[x] Protocole Handshake (`hub:ready`)** : Initialisation atomique des fenêtres de projection évitant le blackout au démarrage.
+- **[x] Synchronisation Environnementale** : Parité immédiate du climat (Météo/Temps/Magie) sur tous les écrans dès le chargement.
+- **[x] Correction Snapback & Ping** : Résolution des boucles de relay saturant l'IPC.
+
 ## 📅 Prochaines Étapes (Roadmap v6)
+
 
 ### Q2 2026 : Interaction Sociale & Échange
 
@@ -47,5 +55,6 @@ Ce document trace la trajectoire du projet, des jalons franchis aux futures inno
 
 ---
 
-*Dernière mise à jour : 3 Avril 2026*
-*Statut : Nexus-OS Phase 1 complétée. Portabilité totale validée.*
+*Dernière mise à jour : 24 Avril 2026*
+*Statut : GM-OS v5.5 (Stabilisation Temps Réel) complétée.*
+

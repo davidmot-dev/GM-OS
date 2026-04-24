@@ -26,13 +26,15 @@ Ce répertoire est la source unique de vérité pour toute la documentation tech
 *   **[Session OS Guide](./User%20Guides/Session_OS_User_Guide.md)** : Gestion des campagnes et chronologies.
 *   *Voir aussi : [Index des Guides Utilisateur](./User%20Guides/)*
 
-## 🚀 Planification & Suivi
-*   **[Dernier Jalon : Stabilisation UI (22/04/2026)](./Planning/2026-04-22-ui-stabilization-milestone.md)**
+## 🚀 Planification & Migration v7
+*   **[Migration Tauri (v7)](./Migration/)** : Plans, blueprints et statut de la transition vers Tauri.
+*   **[Dernier Jalon : Stabilisation Projection & IPC (23/04/2026)](./Migration/Migration_Checklist_and_Sequence.md)**
 *   **[Sanity Check Backlog](./Planning/Sanity_Check_Backlog.md)** : État de santé des modules.
 *   **[Roadmap & Améliorations](./Planning/amélioration.md)**
 *   *Voir aussi : [Archives de Planification](./Planning/)*
 
 ## 📝 Historique des Walkthroughs
+*   **[Stabilisation Projection & IPC (2026-04-23)](./Walkthroughs/2026-04-23-tauri-ipc-and-projection-stabilization.md)**
 *   **[Stabilisation UI & Obsidian (2026-04-22)](./Walkthroughs/2026-04-22-ui-obsidian-stabilization.md)**
 *   **[Partage de Règles (2026-04-22)](./Walkthroughs/2026-04-22-rule-sharing-implementation.md)**
 *   *Voir aussi : [Tous les Walkthroughs](./Walkthroughs/)*

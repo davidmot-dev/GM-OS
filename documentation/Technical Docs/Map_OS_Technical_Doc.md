@@ -33,18 +33,23 @@ Sur les écrans joueurs, le calque de brouillard est opaque (`opacity-100`). Pui
 ### 2. Masquage MJ (GM View)
 Sur l'interface MJ, le même calque est rendu avec une opacité réduite (`opacity-80`). Cela permet au MJ de garder une vue d'ensemble sur les pions tout en voyant distinctement les zones masquées pour ses joueurs.
 
-## 🔄 Synchronisation et Projection
+## 🔄 Synchronisation et Projection (v5.5 Robustesse)
 
-Les données de map sont synchronisées via `useMapStore.ts`. Le "Projection Engine" projette :
-- L'URL de la carte et son type (Vidéo/Image).
-- L'URL Data du brouillard (image PNG encodée en base64 générée par le `FogEngine`).
-- La liste des pions et des effets actifs.
+Les données de map sont synchronisées via `useMapStore.ts` et diffusées par le `CrossWindowEventService.ts` via BroadcastChannel.
 
-L'actualisation du brouillard est déclenchée par les outils de dessin du MJ (`MapControls.tsx`) qui modifient le canvas de travail, lequel est ensuite sérialisé et diffusé.
+### 1. Authoritative Master Relay
+Le système applique un modèle de **Maître-Esclave** strict pour éviter les conflits d'état :
+- **Master (MJ)** : Seule source de vérité. Il reçoit les deltas des esclaves (ex: mouvement de pion, ping), met à jour son store local, puis diffuse l'état complet via `broadcastFullState()`.
+- **Slaves (Hub/Moniteur)** : Ils ne diffusent jamais d'état complet. Ils émettent des deltas et écoutent le flux du Master. Toute tentative de synchronisation complète par un esclave est bloquée par une garde URL (`isSlaveWindow`).
 
-- Lors du `setMap(url)`, le store cherche une entrée correspondante.
-- Si aucune donnée n'existe, le système initialise un brouillard noir complet par défaut (via `fillBlack`).
-- Cela garantit que l'exploration n'est jamais perdue lors d'un changement de scène tactique et qu'aucune révélation accidentelle ne se produit sur une nouvelle carte.
+### 2. Handshake d'Initialisation (`hub:ready`)
+Pour éviter le problème de "fenêtre noire" au démarrage (où l'esclave rate le broadcast initial du Master), un protocole de poignée de main est utilisé :
+1. L'esclave s'ouvre et émet un signal `hub:ready`.
+2. Le Master intercepte ce signal et déclenche immédiatement un `broadcastFullState()`.
+3. L'esclave reçoit toutes les métadonnées (URL carte, Brouillard, Tokens, Météo) et s'initialise de manière atomique.
+
+### 3. Throttling et Performance
+La diffusion du Master est "throttlée" (déclenchée avec un délai de 50ms) pour grouper les mises à jour rapides (drag de tokens) et minimiser la charge CPU sur le canal de communication.
 
 ## 📦 Composants Clés
 - **`PlayerMapCanvas.tsx`** : Coordonne l'empilement correct pour le hub joueur.

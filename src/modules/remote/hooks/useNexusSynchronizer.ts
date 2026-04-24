@@ -14,13 +14,25 @@ import { useDiceStore } from '../../../stores/useDiceStore';
 import { useMapStore } from '../../map/useMapStore';
 import { getDifferentialPayload } from '../../../utils/syncUtils';
 import { resolveToSendableUrl } from '../../../utils/mediaResolver';
+import { crossWindowSync } from '../../../services/CrossWindowEventService';
 
 export const useNexusSynchronizer = (isMainPC: boolean) => {
     const lastSyncRef = useRef(0);
     const lastBroadcastRef = useRef<Record<string, unknown>>({});
+    const lastMapFastSyncRef = useRef(0);
 
     const syncFast = useCallback((segmentName: string) => {
         if (!isMainPC) return;
+        // Avoid re-broadcasting updates that are already being handled by CrossWindowSync
+        if (crossWindowSync.isSyncing()) return;
+
+        // Throttle map fast sync to avoid flooding the network (e.g. 100ms = 10fps)
+        if (segmentName === 'map') {
+            const now = Date.now();
+            if (now - lastMapFastSyncRef.current < 100) return;
+            lastMapFastSyncRef.current = now;
+        }
+        
         try {
             const payload: Record<string, unknown> = {};
             if (segmentName === 'dice') {
@@ -45,9 +57,20 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
             } else if (segmentName === 'map') {
                 const s = useMapStore.getState();
                 payload.map = {
-                    projectionTarget: s.projectionTarget, projectedMapUrl: s.projectedMapUrl,
-                    projectedTokens: s.projectedTokens, projectedPings: s.projectedPings,
-                    projectedFogDataUrl: s.projectedFogDataUrl
+                    projectionTarget: s.projectionTarget,
+                    projectedMapUrl: s.projectedMapUrl,
+                    projectedIsVideo: s.projectedIsVideo,
+                    projectedTokens: s.projectedTokens,
+                    projectedPings: s.projectedPings,
+                    projectedFogDataUrl: s.projectedFogDataUrl,
+                    projectedMapWidth: s.projectedMapWidth,
+                    projectedMapHeight: s.projectedMapHeight,
+                    projectedIsGridEnabled: s.projectedIsGridEnabled,
+                    projectedGridSize: s.projectedGridSize,
+                    projectedGridColor: s.projectedGridColor,
+                    projectedGridOpacity: s.projectedGridOpacity,
+                    projectedIsMapMuted: s.projectedIsMapMuted,
+                    projectedMapVolume: s.projectedMapVolume
                 };
             }
 
@@ -66,8 +89,8 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
         if (!isMainPC) return;
         
         // Skip sync if the system is performing an atomic operation (Nexus import)
-        if (useSessionOSStore.getState().isSystemSyncing) {
-            console.log('[NexusSync] Sync skipped: system is syncing.');
+        if (useSessionOSStore.getState().isSystemSyncing || crossWindowSync.isSyncing()) {
+            console.log('[NexusSync] Sync skipped: system or cross-window sync in progress.');
             return;
         }
 
@@ -191,7 +214,22 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                 clock: { timestamp: clockStore.timestamp, tensions: clockStore.tensions, timerRemaining: clockStore.timerRemaining, timerIsRunning: clockStore.timerIsRunning },
                 universalPads,
                 dice: { lastRoll: diceStore.lastRoll, isDiceProjected: diceStore.isDiceProjected, projectionTrigger: diceStore.projectionTrigger },
-                map: { projectionTarget: mapStore.projectionTarget, projectedMapUrl: mapStore.projectedMapUrl, projectedTokens: mapStore.projectedTokens, projectedPings: mapStore.projectedPings },
+                map: { 
+                    projectionTarget: mapStore.projectionTarget, 
+                    projectedMapUrl: mapStore.projectedMapUrl, 
+                    projectedIsVideo: mapStore.projectedIsVideo,
+                    projectedTokens: mapStore.projectedTokens, 
+                    projectedPings: mapStore.projectedPings,
+                    projectedFogDataUrl: mapStore.projectedFogDataUrl,
+                    projectedMapWidth: mapStore.projectedMapWidth,
+                    projectedMapHeight: mapStore.projectedMapHeight,
+                    projectedIsGridEnabled: mapStore.projectedIsGridEnabled,
+                    projectedGridSize: mapStore.projectedGridSize,
+                    projectedGridColor: mapStore.projectedGridColor,
+                    projectedGridOpacity: mapStore.projectedGridOpacity,
+                    projectedIsMapMuted: mapStore.projectedIsMapMuted,
+                    projectedMapVolume: mapStore.projectedMapVolume
+                },
                 // ── Session Data ──────────────────────────────────────────────────
                 session: {
                     sessions,

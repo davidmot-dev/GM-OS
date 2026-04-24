@@ -13,16 +13,23 @@ interface PlayerMapCanvasProps {
     onMapClick?: (x: number, y: number) => void;
 }
 
-const PlayerMapCanvas: React.FC<PlayerMapCanvasProps> = ({ onMapClick }) => {
-    const mapStore = useMapStore();
-    const { 
-        projectedMapUrl, projectedIsVideo, projectedFogDataUrl,
-        projectedMapWidth, projectedMapHeight,
-        projectedIsGridEnabled, projectedGridSize, projectedGridColor, projectedGridOpacity,
-        projectedTokens,
-        projectedIsMapMuted, projectedMapVolume, mapOutputDeviceId,
-        viewResetCounter
-    } = mapStore;
+const PlayerMapCanvas: React.FC<PlayerMapCanvasProps> = React.memo(({ onMapClick }) => {
+    const projectedMapUrl = useMapStore(s => s.projectedMapUrl);
+    const projectedIsVideo = useMapStore(s => s.projectedIsVideo);
+    const projectedFogDataUrl = useMapStore(s => s.projectedFogDataUrl);
+    const projectedMapWidth = useMapStore(s => s.projectedMapWidth);
+    const projectedMapHeight = useMapStore(s => s.projectedMapHeight);
+    const projectedIsGridEnabled = useMapStore(s => s.projectedIsGridEnabled);
+    const projectedGridSize = useMapStore(s => s.projectedGridSize);
+    const projectedGridColor = useMapStore(s => s.projectedGridColor);
+    const projectedGridOpacity = useMapStore(s => s.projectedGridOpacity);
+    const projectedTokens = useMapStore(s => s.projectedTokens);
+    const projectedIsMapMuted = useMapStore(s => s.projectedIsMapMuted);
+    const projectedMapVolume = useMapStore(s => s.projectedMapVolume);
+    const mapOutputDeviceId = useMapStore(s => s.mapOutputDeviceId);
+    const viewResetCounter = useMapStore(s => s.viewResetCounter);
+    const projectedWeatherType = useMapStore(s => s.projectedWeatherType);
+    const layerVisibility = useMapStore(s => s.layerVisibility);
 
     // Use projected state for the hub
     const mapUrl = projectedMapUrl;
@@ -98,18 +105,6 @@ const PlayerMapCanvas: React.FC<PlayerMapCanvasProps> = ({ onMapClick }) => {
             return () => clearTimeout(timer);
         }
     }, [viewResetCounter, fitToScreen]);
-
-    // Add storage listener for cross-window sync
-    useEffect(() => {
-        const handleStorageChange = (e: StorageEvent) => {
-            if (e.key === 'gmos-map-storage') {
-                useMapStore.persist.rehydrate();
-            }
-        };
-
-        window.addEventListener('storage', handleStorageChange);
-        return () => window.removeEventListener('storage', handleStorageChange);
-    }, []);
 
     // Sync Fog Canvas
     useEffect(() => {
@@ -272,17 +267,17 @@ const PlayerMapCanvas: React.FC<PlayerMapCanvasProps> = ({ onMapClick }) => {
                 {/* 6. Pings Layer (Above Fog so they remain visible) */}
                 <MapPingLayer isProjectedView={true} />
 
-                {mapStore.projectedWeatherType !== 'none' && mapStore.layerVisibility.weather && (
+                {projectedWeatherType !== 'none' && layerVisibility.weather && (
                     <WeatherLayer isProjectedView={true} />
                 )}
                 
-                {mapStore.layerVisibility.ambiance && <AmbianceLayer isProjectedView={true} />}
+                {layerVisibility.ambiance && <AmbianceLayer isProjectedView={true} />}
             </div>
             
             {/* Vignette effect */}
             <div className="absolute inset-0 pointer-events-none z-50 shadow-[inset_0_0_150px_rgba(0,0,0,0.8)] opacity-50"></div>
         </div>
     );
-};
+});
 
 export default PlayerMapCanvas;

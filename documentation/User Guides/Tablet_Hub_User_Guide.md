@@ -14,10 +14,11 @@ Il existe deux façons de connecter une tablette au GM-OS via le protocole **Nex
     - Lors de la première connexion, vous devrez choisir votre personnage.
     - **Sécurité** : Si un autre joueur utilise déjà cette fiche, le Hub bloquera la connexion ("Signature biométrique déjà active") pour éviter les conflits d'édition.
 
-### ⚡ Performance & Fluidité (v6.3)
+### ⚡ Performance & Fluidité (v7.0 Tauri v2)
 Le Hub a été optimisé pour garantir une expérience à **60 FPS**, même sur du matériel ancien :
 - **Optimisation GPU** : Les effets visuels lourds (flou, lueurs) sont désormais gérés par le processeur graphique.
-- **Micro-Sync** : Les mises à jour de données sont compressées (Delta Sync) pour réduire le lag réseau sur WiFi instable.
+- **Micro-Sync (IPC/Tauri)** : Sous Tauri v2, la synchronisation avec le poste MJ utilise un canal haute vitesse (IPC avec argument spreading) garantissant une réactivité instantanée pour les projections d'images et de personnages.
+- **Multi-Usage** : Le Hub peut être utilisé soit à distance (via WiFi/Navigateur), soit comme une fenêtre Windows native sur votre second moniteur (Player Hub).
 
 
 ## 🛠️ Fonctionnalités du Hub

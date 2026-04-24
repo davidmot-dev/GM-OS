@@ -29,6 +29,7 @@ import { getDifferentialPayload } from './utils/syncUtils';
 import { useDisplayDetection } from './hooks/useDisplayDetection';
 import { resolveToSendableUrl } from './utils/mediaResolver';
 import { useNexusSynchronizer } from './modules/remote/hooks/useNexusSynchronizer';
+import { crossWindowSync } from './services/CrossWindowEventService';
 
 interface RemoteAction {
   type: string;
@@ -136,6 +137,16 @@ function App() {
       BootstrapService.bootstrap();
     }
   }, [isMainPC, isHydrated, isSystemReady]);
+
+  // --- CROSS-WINDOW SYNC (BroadcastChannel) ---
+  useEffect(() => {
+    if (isHydrated) {
+      crossWindowSync.init(isMainPC);
+      if (isHub || isTablet || isProjector) {
+        crossWindowSync.notifyReady();
+      }
+    }
+  }, [isHydrated, isMainPC, isHub, isTablet, isProjector]);
 
   // --- MESSAGING BRIDGE (GM SIDE) ---
   useEffect(() => {
@@ -354,6 +365,14 @@ function App() {
     }
     if (type === 'whiteboard:redo') {
       useWhiteboardStore.getState().redo();
+    }
+
+    if (type === 'map:ping' || type === 'remote:map:ping') {
+      const { x, y, color } = payload as { x: number; y: number; color?: string };
+      console.log(`[App] Remote Map Ping: (${x}, ${y})`);
+      useMapStore.getState().addPing(x, y, color || '#06b6d4');
+      // No need for handleSync(true) here as addPing handles its own sync if needed,
+      // and we want to avoid flooding for high-frequency pings.
     }
 
     // --- UNIVERSAL PADS TRIGGER ---

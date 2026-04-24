@@ -268,8 +268,7 @@ export const useMapStore = create<MapState>()(
 
             updateProjectedToken: (id: string, updates: Partial<MapToken>) => {
                 set(state => ({
-                    projectedTokens: state.projectedTokens.map(t => t.id === id ? { ...t, ...updates } : t),
-                    tokens: state.tokens.map(t => t.id === id ? { ...t, ...updates } : t)
+                    projectedTokens: state.projectedTokens.map(t => t.id === id ? { ...t, ...updates } : t)
                 }));
             },
 
@@ -287,6 +286,7 @@ export const useMapStore = create<MapState>()(
                 const id = Math.random().toString(36).substring(2, 9);
                 const ping = { id, x, y, color, createdAt: Date.now() };
                 set(state => ({ pings: [...state.pings, ping], projectedPings: [...state.projectedPings, ping] }));
+                if (get().projectionTarget) get().syncToPlayers();
                 setTimeout(() => get().removePing(id), 3000);
             },
 
@@ -369,11 +369,23 @@ export const useMapStore = create<MapState>()(
             resetView: () => set(state => ({ viewResetCounter: state.viewResetCounter + 1 })),
 
             syncToPlayers: () => {
-                set(state => ({
-                    projectionTarget: 'hub',
-                    projectedMapUrl: state.mapUrl,
-                    projectedIsVideo: state.isVideo,
-                    projectedFogDataUrl: state.fogDataUrl,
+                const state = get();
+                
+                // CRITICAL FIX: Slaves (Hub/Projector/Tablet) should NEVER run syncToPlayers.
+                // It would destructively overwrite their projected state with stale local state.
+                // We check BOTH 'window' (used by App.tsx routing) and legacy 'mode' params.
+                const searchParams = new URLSearchParams(window.location.search);
+                const windowParam = searchParams.get('window');
+                const modeParam = searchParams.get('mode');
+                const isSlaveWindow = 
+                    windowParam === 'hub' || windowParam === 'projector' || windowParam === 'tablet' ||
+                    modeParam === 'hub' || modeParam === 'projector' || modeParam === 'tablet';
+                if (isSlaveWindow) {
+                    return;
+                }
+                
+                const updates: Partial<MapState> = {
+                    projectionTarget: state.projectionTarget || 'hub',
                     projectedTokens: [...state.tokens],
                     projectedPings: [...state.pings],
                     projectedMagicEffects: [...state.magicEffects],
@@ -389,7 +401,18 @@ export const useMapStore = create<MapState>()(
                     projectedIsMapMuted: state.isMapMuted,
                     projectedMapVolume: state.mapVolume,
                     projectedDangerZones: [...state.dangerZones],
-                }));
+                };
+
+                if (state.mapUrl) {
+                    updates.projectedMapUrl = state.mapUrl;
+                    updates.projectedIsVideo = state.isVideo;
+                }
+                
+                if (state.fogDataUrl) {
+                    updates.projectedFogDataUrl = state.fogDataUrl;
+                }
+
+                set(updates);
             },
 
             clearProjectedState: () => set({
@@ -560,23 +583,8 @@ export const useMapStore = create<MapState>()(
                 isMapMuted: state.isMapMuted,
                 mapVolume: state.mapVolume,
                 mapOutputDeviceId: state.mapOutputDeviceId,
-                projectedMapUrl: state.projectedMapUrl,
-                projectedIsVideo: state.projectedIsVideo,
-                projectedFogDataUrl: state.projectedFogDataUrl,
-                projectedTokens: state.projectedTokens,
-                projectedWeatherType: state.projectedWeatherType,
-                projectedWeatherIntensity: state.projectedWeatherIntensity,
-                projectedTimeOfDay: state.projectedTimeOfDay,
-                projectedMapWidth: state.projectedMapWidth,
-                projectedMapHeight: state.projectedMapHeight,
-                projectedIsGridEnabled: state.projectedIsGridEnabled,
-                projectedGridSize: state.projectedGridSize,
-                projectedGridColor: state.projectedGridColor,
-                projectedGridOpacity: state.projectedGridOpacity,
-                projectedMagicEffects: state.projectedMagicEffects,
-                projectedDangerZones: state.projectedDangerZones,
-                projectedIsMapMuted: state.projectedIsMapMuted,
-                projectedMapVolume: state.projectedMapVolume
+                // Projections are NOT persisted to avoid massive performance drops during real-time movement
+                // They are re-synced automatically via CrossWindowEventService upon window load
             })
         }
     )

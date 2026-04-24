@@ -4,8 +4,9 @@ import { useMapUIStore } from '../useMapUIStore';
 import type { MapToken } from '../types';
 import { useCombatStore, type StatusEffect } from '../../combat/useCombatStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
-import { Shield, Trash2, Eye, EyeOff } from 'lucide-react';
+import { Shield, Trash2, Eye, EyeOff, Lock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { crossWindowSync } from '../../../services/CrossWindowEventService';
 
 interface MapTokenNodeProps {
     token: MapToken;
@@ -39,10 +40,15 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
 
     const [isDragging, setIsDragging] = useState(false);
 
-    const isInteractable = isProjectedView || currentTool === 'move_token';
+    const isLockedByOther = crossWindowSync.isTokenLocked(token.id);
+    const isInteractable = (isProjectedView || currentTool === 'move_token') && !isLockedByOther;
 
     const handlePointerDown = (e: React.PointerEvent) => {
         if (!isInteractable || e.button !== 0) return;
+        
+        // Try to take control
+        if (!crossWindowSync.requestLock(token.id)) return;
+
         // Empêche la propagation au canvas de Fog of War en-dessous SEULEMENT si on veut bouger le pion
         e.stopPropagation();
         
@@ -68,15 +74,19 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
         const dy = e.movementY / effectiveZoom;
 
         const moveFn = isProjectedView ? updateProjectedToken : updateToken;
-        moveFn(token.id, { 
+        const newPos = { 
             x: token.x + dx, 
             y: token.y + dy 
-        });
+        };
+        
+        moveFn(token.id, newPos);
     };
 
     const handlePointerUp = (e: React.PointerEvent) => {
         if (!isDragging) return;
         e.stopPropagation();
+
+        crossWindowSync.releaseLock(token.id);
 
         setIsDragging(false);
         setIsDraggingToken(false);
@@ -101,7 +111,7 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
     return (
         <div
             className={`absolute rounded-full shadow-lg border-2 border-app-bg bg-app-surface flex items-center justify-center transition-all group ${isInteractable ? 'cursor-grab hover:ring-4 hover:z-40 active:cursor-grabbing' : 'cursor-default'
-                } ring-2 ${ringColor} ${isDragging ? 'z-50 ring-4' : 'z-30'} ${isSelected ? 'ring-sky-500 shadow-[0_0_20px_rgba(14,165,233,0.5)] z-40' : ''} ${displayInvisible ? (isProjectedView ? 'hidden' : 'opacity-40 grayscale-[0.5]') : ''}`}
+                } ring-2 ${ringColor} ${isDragging ? 'z-50 ring-4' : 'z-30'} ${isSelected ? 'ring-sky-500 shadow-[0_0_20px_rgba(14,165,233,0.5)] z-40' : ''} ${displayInvisible ? (isProjectedView ? 'hidden' : 'opacity-40 grayscale-[0.5]') : ''} ${isLockedByOther ? 'opacity-70 saturate-50' : ''}`}
             style={{
                 left: token.x,
                 top: token.y,
@@ -122,9 +132,16 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
                 // La suppression par clic droit doit TOUJOURS fonctionner pour le MJ
                 e.preventDefault();
                 e.stopPropagation();
-                removeToken(token.id);
+                if (!isLockedByOther) removeToken(token.id);
             }}
         >
+            {/* Lock Indicator */}
+            {isLockedByOther && (
+                <div className="absolute inset-0 flex items-center justify-center z-50 bg-red-900/20 rounded-full animate-pulse">
+                    <Lock size={20 * token.size} className="text-red-500 drop-shadow-lg" />
+                </div>
+            )}
+
             {/* Trash Button on Hover */}
             {isInteractable && (
                 <div className="absolute -top-2 -right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-50">

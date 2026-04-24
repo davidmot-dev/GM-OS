@@ -52,21 +52,10 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
                 // pour éviter les problèmes de lenteur ou de limites de taille d'URL dans Chromium
                 if (sourceIdOrUrl.startsWith('data:')) {
                     try {
-                        const parts = sourceIdOrUrl.split(',');
-                        if (parts.length < 2) throw new Error("Format data URI invalide");
-                        
-                        const byteString = atob(parts[1]);
-                        const mimeString = parts[0].split(':')[1].split(';')[0];
-                        console.log(`[useMediaUrl] Data URI detected. Mime: ${mimeString}, Size: ${byteString.length} bytes`);
-
-                        const ab = new ArrayBuffer(byteString.length);
-                        const ia = new Uint8Array(ab);
-                        for (let i = 0; i < byteString.length; i++) {
-                            ia[i] = byteString.charCodeAt(i);
-                        }
-                        const blob = new Blob([ab], {type: mimeString});
+                        const response = await fetch(sourceIdOrUrl);
+                        const blob = await response.blob();
                         objectUrl = URL.createObjectURL(blob);
-                        console.log(`[useMediaUrl] Created Blob URL: ${objectUrl}`);
+                        console.log(`[useMediaUrl] Created Blob URL from Data URI: ${objectUrl}`);
                         if (isMounted) setResolvedUrl(objectUrl);
                     } catch (e) {
                         console.warn("[useMediaUrl] Erreur conversion data URI en Blob, usage direct:", e);

@@ -56,7 +56,7 @@ Chaque module doit être validé selon les critères suivants :
 | **Ambient-OS** | P2 | ✅ Corrigé | Layering & Presets. |
 | **Sound-OS** | P2 | ✅ Corrigé | SFX collision & trigger. |
 | **Voice-OS** | P2 | ✅ Corrigé | v6.3.2 : AudioWorklet stabilization & Clipping protection. |
-| **Image-OS** | P2 | ✅ Corrigé | v6.3.2 : IPC-First Protocol & Fix React Keys (Performance). |
+| **Image-OS** | P2 | ✅ Corrigé | v7.0.0 : Stabilisation IPC Tauri v2 & Blackout natif (Fermeture fenêtre). |
 | **Light-OS** | P2 | ✅ Corrigé | v6.3.4 : Fix Race Condition, Double Call & Sync Bootstrap. |
 
 ### 5. Services & Tools
@@ -74,7 +74,7 @@ Chaque module doit être validé selon les critères suivants :
 | Module | Priorité | Statut | Points d'Attention |
 | :--- | :---: | :--- | :--- |
 | **Player Hub** | P1 | ✅ Corrigé | Unification v6.3.2 : Dénucléarisation mode Théâtre & Déduplication. |
-| **Tablet Hub** | P1 | ✅ Corrigé | Sync unifiée PNJ/Images & Signal Vocal (HubFooters). |
+| **Tablet Hub** | P1 | ✅ Corrigé | v7.0.0 : Restauration synchronisation IPC via spread arguments. |
 
 ---
 

@@ -44,10 +44,16 @@ Ce document centralise la vision et les chantiers de GM-OS. Depuis Avril 2026, l
 
 ### 🗺️ Map-OS Evolution
 - [ ] **Dynamic Token Auras** : Système d'auras visuelles pour la portée des sorts et les zones de danger.
+- [x] **Agnostic Bridge Class** : Découplage total des moteurs Electron et Tauri via une couche de traduction dynamique.
+- [x] **Multimedia Native Support** : Support complet du protocole `asset://` pour le streaming fluide des médias haute résolution.
+- [x] **IPC Stabilization** : Normalisation du transport d'arguments multiples et synchronisation robuste du Player Hub.
+- [x] **Projection Lifecycle** : Gestion intelligente de l'ouverture/fermeture des fenêtres de projection (Blackout natif).
 
 ---
 
 ## 📅 Historique Récent
+- **v7.0.0-beta** (23 Avril 2026) : Stabilisation complète de la projection et des communications IPC. Le Player Hub est 100% fonctionnel sous Tauri.
+- **v7.0.0-alpha** (23 Avril 2026) : Migration majeure vers Tauri. Pont agnostique et multimédia natif opérationnels.
 - **v6.3.2** (16 Avril 2026) : Unification Hub et nettoyage du mode Théâtre. Correction des fuites WebSocket.
 - **v6.3.1** (14 Avril 2026) : Migration Player Hub vers useHubSync et ajout des effets visuels Premium (Scanlines, Grain).
 - **v6.3.0** (11 Avril 2026) : Augmentation de version mineure, synchronisation globale de la documentation et correction de l'encodage des locales.

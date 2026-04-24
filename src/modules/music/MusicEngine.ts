@@ -249,6 +249,7 @@ export class MusicEngine {
     public deckB: MusicDeck;
 
     private crossfaderValue: number = 0.5;
+    private useRescueRoute: boolean = true; // HACK Tauri: Direct routing if MediaStream is blocked
 
     constructor() {
         this.context = new AudioContext(); // Native default for stability
@@ -261,7 +262,16 @@ export class MusicEngine {
         this.crossfaderGainB = this.context.createGain();
 
         this.globalSyncGain = this.context.createGain();
+        
+        // Routage standard (vers Stream)
         this.globalSyncGain.connect(this.destination);
+
+        // ROUTE DE SECOURS (vers Sortie Physique)
+        // Indispensable si le MediaStream ne sort pas de son via l'élément <audio> dans WebView2
+        if (this.useRescueRoute) {
+            console.log("[MusicEngine] Rescue Route active: Connecting globalSyncGain to context.destination");
+            this.globalSyncGain.connect(this.context.destination);
+        }
 
         this.masterGain.connect(this.duckingGain);
         this.duckingGain.connect(this.globalSyncGain);
@@ -403,11 +413,22 @@ export class MusicEngine {
 
     /**
      * Désigne le périphérique de sortie.
-     * Note: Actuellement géré par l'AudioRouter global pour le switch physique.
      * @param deviceId ID du périphérique.
      */
     public async setOutputDevice(deviceId: string) {
-        console.log(`[MusicEngine] Output device updated in store: ${deviceId}. AudioRouter will handle the physical switch.`);
+        console.log(`[MusicEngine] Attempting to set output device to: ${deviceId}`);
+        
+        if ('setSinkId' in this.context) {
+            try {
+                // @ts-expect-error setSinkId exists in modern browsers
+                await this.context.setSinkId(deviceId === 'default' ? '' : deviceId);
+                console.log(`[MusicEngine] Context Output device successfully changed to ${deviceId}`);
+            } catch (error) {
+                console.error('[MusicEngine] Failed to set audio output device', error);
+            }
+        } else {
+            console.warn('[MusicEngine] AudioContext.setSinkId not supported.');
+        }
     }
 }
 

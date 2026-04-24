@@ -115,16 +115,6 @@ const MapCanvas: React.FC = () => {
         mapStore.triggerFogCommand(null);
     }, [mapStore.fogCommand, mapStore]);
 
-    // Cross-window Sync
-    useEffect(() => {
-        const handleStorageChange = (e: StorageEvent) => {
-            if (e.key === 'gmos-map-storage') {
-                useMapStore.persist.rehydrate();
-            }
-        };
-        window.addEventListener('storage', handleStorageChange);
-        return () => window.removeEventListener('storage', handleStorageChange);
-    }, []);
 
     // Grid Rendering
     useEffect(() => {

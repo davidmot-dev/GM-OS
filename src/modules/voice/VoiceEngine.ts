@@ -33,6 +33,8 @@ export class VoiceEngine {
 
     private isInitialized = false;
     private animationFrame: number | null = null;
+    private lastSyncTime: number = 0;
+    private lastSyncLevel: number = 0;
 
     private constructor() {}
 
@@ -345,17 +347,25 @@ export class VoiceEngine {
                 
                 // Sync with Player Hub if active
                 if (window.appBridge?.image?.syncHubData) {
-                    if (useVoiceStore.getState().isSyncNPC) {
-                        window.appBridge.image.syncHubData('voice-level', currentLevel.toFixed(3));
-                    } else {
-                        // Ensure we send 0 to stop any ongoing animation
-                        window.appBridge.image.syncHubData('voice-level', '0');
+                    const now = Date.now();
+                    // Throttle IPC to ~20fps (50ms) to avoid saturating the bridge
+                    // But ALWAYS send 0 immediately
+                    if (currentLevel === 0 || !this.lastSyncTime || now - this.lastSyncTime > 50) {
+                        if (useVoiceStore.getState().isSyncNPC) {
+                            window.appBridge.image.syncHubData('voice-level', currentLevel.toFixed(3));
+                        } else if (currentLevel === 0 || (this.lastSyncLevel && this.lastSyncLevel > 0)) {
+                            // Ensure we send 0 to stop any ongoing animation
+                            window.appBridge.image.syncHubData('voice-level', '0');
+                        }
+                        this.lastSyncTime = now;
+                        this.lastSyncLevel = currentLevel;
                     }
                 }
             } else {
                 useVoiceStore.getState().setInputLevel(0);
                 if (window.appBridge?.image?.syncHubData) {
                     window.appBridge.image.syncHubData('voice-level', '0');
+                    this.lastSyncLevel = 0;
                 }
             }
             this.animationFrame = requestAnimationFrame(update);

@@ -71,7 +71,10 @@ L'outil **Ping** permet de désigner un point précis sur la carte. Un cercle co
 ### Projection vers les Joueurs
 - Cliquez sur **Projeter** pour choisir la destination (Player Hub ou Écran secondaire).
 - La vue projetée est **"Clean"** : elle ne contient ni les menus, ni les zones masquées par le brouillard de guerre du MJ, ni les outils de dessin.
+- **Synchronisation Robuste (v5.5)** : Toutes les interactions (Pings, déplacements de pions, changements de météo ou d'heure) sont répercutées instantanément sur tous les écrans connectés. 
+- **Auto-Initialisation** : Toute nouvelle fenêtre de projection (ex: branchement d'un moniteur en cours de jeu) se synchronise automatiquement sur l'état actuel du MJ dès son ouverture.
 - Utilisez **Recadrer** pour recentrer votre vue et celle des joueurs sur le centre de la carte.
+
 
 ## ☢️ Zones de Danger (Éditeur Obsidian Nexus)
 

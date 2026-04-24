@@ -25,45 +25,38 @@ import { HubProjectionCard } from './hub/HubProjectionCard';
 import { HubDiceDisplay } from './hub/HubDiceDisplay';
 import { HubCombatTracker } from './hub/HubCombatTracker';
 
-const PlayerHub: React.FC = () => {
+const PlayerHub: React.FC = React.memo(() => {
     // 1. Unified Synchronization Hook (Bridge Isolation)
+    const hubSync = useHubSync();
     const {
-        liveImagePath,
-        liveEntity,
-        showDice,
-        resolvedFavorites,
-        projections,
-        timestamp,
-        mode,
-        theme,
-        tensions,
-        isClockProjected,
-        combatants,
-        currentTurnIdx,
-        round,
-        isCombatProjected,
-        activeCampaignWallpaper,
-        voiceLevel
-    } = useHubSync();
+        liveImagePath, liveEntity, showDice, resolvedFavorites,
+        isClockProjected, timestamp, mode, theme, tensions,
+        combatants, currentTurnIdx, round, isCombatProjected,
+        activeCampaignWallpaper, voiceLevel
+    } = hubSync;
 
-    // 2. Secondary Local States & Stores
-    const { mapUrl, projectionTarget } = useMapStore();
-    const { backgroundMode, projectionTarget: whiteboardTarget } = useWhiteboardStore();
-    const { lastRoll, enable3D } = useDiceStore();
-    const activeHubId = projections['hub'];
+    // 2. Secondary Local States & Stores - Selective selectors
+    const projectionTarget = useMapStore(s => s.projectionTarget);
+    const projectedMapUrl = useMapStore(s => s.projectedMapUrl);
+    const whiteboardTarget = useWhiteboardStore(s => s.projectionTarget);
+    const backgroundMode = useWhiteboardStore(s => s.backgroundMode);
+    const lastRoll = useDiceStore(s => s.lastRoll);
+    const enable3D = useDiceStore(s => s.enable3D);
+    const activeHubId = hubSync.projections['hub'];
 
     // 3. Asset Resolution
     const backgroundPath = liveImagePath !== undefined ? liveImagePath : (activeHubId || activeCampaignWallpaper);
     const resolvedBackground = useMediaUrl(backgroundPath || undefined);
     
     // 4. Feature Activators
-    const isMapActive = !!(mapUrl && projectionTarget === 'hub');
+    const isMapActive = !!(projectedMapUrl && projectionTarget === 'hub');
     const isWhiteboardActive = whiteboardTarget === 'hub';
     const hasCombatants = isCombatProjected && combatants.length > 0;
 
-    // 5. Initial Persist Rehydration (Safety)
+    // 5. Initial Persist Rehydration & Storage Sync (Cross-process)
     useEffect(() => {
         const rehydrateAll = async () => {
+            console.log('[PlayerHub] Rehydrating stores for session start...');
             await Promise.all([
                 useClockStore.persist.rehydrate(),
                 useCombatStore.persist.rehydrate(),
@@ -86,6 +79,7 @@ const PlayerHub: React.FC = () => {
                 {isMapActive ? (
                     <PlayerMapCanvas 
                         onMapClick={(x, y) => {
+                            window.dispatchEvent(new CustomEvent('map:ping', { detail: { x, y, color: '#06b6d4' } }));
                             useMapStore.getState().addPing(x, y, '#06b6d4');
                         }}
                     />
@@ -213,6 +207,6 @@ const PlayerHub: React.FC = () => {
             </div>
         </div>
     );
-};
+});
 
 export default PlayerHub;

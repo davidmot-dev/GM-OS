@@ -8,6 +8,9 @@ import { useDiceStore } from '../../../stores/useDiceStore';
 import { useClientStore } from '../../../stores/useClientStore';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useSyncStore } from '../../../stores/useSyncStore';
+import { useMapStore } from '../../map/useMapStore';
+import { useMapUIStore } from '../../map/useMapUIStore';
+import { useWhiteboardStore } from '../../whiteboard/useWhiteboardStore';
 import { type Entity, type AtlasMap } from '../store/types';
 import type { ProjectedEntity } from '../../image/types';
 
@@ -89,6 +92,34 @@ export const useHubSync = () => {
         if (vLevel !== undefined) setVoiceLevel(vLevel);
         if (notes?.public !== undefined) setSessionSummary(notes.public);
         if (dice) useDiceStore.setState(prev => ({ ...prev, ...dice }));
+        
+        if (payload.map) {
+            const ui = useMapUIStore.getState();
+            if (ui.isDraggingToken && ui.selectedTokenId && payload.map.projectedTokens) {
+                const currentTokens = useMapStore.getState().projectedTokens;
+                const incomingTokens = payload.map.projectedTokens;
+                
+                const mergedTokens = incomingTokens.map((t: any) => {
+                    if (t.id === ui.selectedTokenId) {
+                        const localToken = currentTokens.find(lt => lt.id === t.id);
+                        return localToken ? { ...t, x: localToken.x, y: localToken.y } : t;
+                    }
+                    return t;
+                });
+
+                useMapStore.setState(prev => ({ 
+                    ...prev, 
+                    ...payload.map, 
+                    projectedTokens: mergedTokens 
+                }));
+            } else {
+                useMapStore.setState(prev => ({ ...prev, ...payload.map }));
+            }
+        }
+
+        if (payload.whiteboard) {
+            useWhiteboardStore.setState(prev => ({ ...prev, ...payload.whiteboard }));
+        }
 
         if (session) {
             const activeSession = (session.sessions || []).find((s: any) => s.status === 'active');
@@ -375,16 +406,33 @@ export const useHubSync = () => {
             }
         };
 
+        const handleMapPing = (e: Event) => {
+            const customEvent = e as CustomEvent;
+            
+            // 1. WebSocket broadcast
+            if (socketRef.current?.readyState === WebSocket.OPEN) {
+                socketRef.current.send(JSON.stringify({
+                    type: 'map:ping',
+                    payload: customEvent.detail
+                }));
+            }
+
+            // 2. Local BroadcastChannel is handled automatically by CrossWindowEventService 
+            // listening to store changes (projectedPings). We don't need a custom event.
+        };
+
         window.addEventListener('session:send-message', handleSendMessage);
         window.addEventListener('session:update-character-narrative', handleUpdateNarrative);
         window.addEventListener('session:request-item-transfer', handleRequestTransfer);
         window.addEventListener('session:remove-inventory-item', handleRemoveItem);
+        window.addEventListener('map:ping', handleMapPing);
 
         return () => {
             window.removeEventListener('session:send-message', handleSendMessage);
             window.removeEventListener('session:update-character-narrative', handleUpdateNarrative);
             window.removeEventListener('session:request-item-transfer', handleRequestTransfer);
             window.removeEventListener('session:remove-inventory-item', handleRemoveItem);
+            window.removeEventListener('map:ping', handleMapPing);
             if (window.appBridge?.off) {
                 window.appBridge.off('image:sync-hub-data', handleIpcUpdate);
                 window.appBridge.off('map:ping', handleIpcUpdate);

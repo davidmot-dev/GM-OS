@@ -2,18 +2,31 @@
 
 Le **Tablet Hub** est un module "second-screen" pour GM-OS v5. Il fonctionne comme une instance web légère de l'application, synchronisée en temps réel avec le processus principal (Electron/Vite) via WebSocket.
 
-## 🏗️ Architecture "Bridge-less"
+## 🏗️ Architecture "Hybrid Bridge" (v7 Tauri)
 
-Contrairement au reste de l'application (Renderer), le Hub peut s'exécuter dans un navigateur distant (tablette, smartphone). Il ne peut donc pas accéder à l'objet `window.appBridge` natif d'Electron.
+Le Hub peut désormais s'exécuter dans deux contextes distincts :
 
-### Stratégies de Substitution
+1.  **Mode Local (Player Hub Window)** : Exécuté comme une fenêtre native Tauri sur le même PC que le MJ. Il accède à l'objet `window.appBridge` et utilise l'**IPC haute vitesse** (Tauri `emit`/`listen`).
+2.  **Mode Distant (Tablet/Smartphone)** : Exécuté dans un navigateur externe via le protocole **Nexus**. Il ne peut pas accéder au bridge et repose exclusivement sur **WebSocket**.
 
-1.  **WebSocket (Differential Sync)** : Toute l'activité de l'état global (Stores Zustand) est capturée par `App.tsx` (le "Maître") et diffusée via un serveur WebSocket local (Port 3001). Le système n'envoie que les *deltas* (segments de store modifiés) via `getDifferentialPayload`.
-2.  **Local Asset Middleware (HTTP Proxy)** : Les images ne sont plus envoyées en Base64. Le MJ PC cache les blobs dans un dossier temporaire et le Hub les récupère via des URLs HTTP directes (`http://[IP]:3001/temp/m-xxx`).
-3.  **AppBridge v2 (Standardisation)** : Utilisation d'interfaces TypeScript strictes pour sécuriser les échanges entre le Main Process et le Renderer, facilitant une future migration vers Tauri v2.
-4.  **Client Identity & Persistence** : Chaque terminal génère un `deviceId` persistant (UUID). Les joueurs s'authentifient via un **Lobby Onboarding** pour choisir leur pseudonyme et leur rôle.
+### Stratégies de Synchronisation
+
+1.  **IPC (Array Spreading)** : Sous Tauri v2, les données sont envoyées via `AppBridge.send`. Le récepteur (Player Hub) déballe les arguments pour mettre à jour ses hooks `useHubSync` instantanément.
+2.  **WebSocket (Differential Sync)** : Pour les clients distants, le MJ PC continue de diffuser les deltas via un serveur WebSocket local (Port 3001).
+3.  **Local Asset Middleware (Tauri asset://)** : Sur le Player Hub local, les images utilisent le protocole `asset://`. Pour le Hub distant, elles transitent par le proxy HTTP local.
+
+---
 
 ## 🔄 Protocole de Synchronisation
+
+```mermaid
+graph TD
+    A[App.tsx - Master] -- IPC: send --> B[AppBridge]
+    B -- Tauri emit: image:sync-hub-data --> C[Player Hub Window]
+    B -- WebSocket: 3001 --> D[Remote Tablet Client]
+    C -- useHubSync hook --> E[Local Store Update]
+    D -- Socket Listener --> F[Remote Store Update]
+```
 
 Le Hub utilise un modèle de synchronisation "One-Way" (Maître vers Esclave) :
 

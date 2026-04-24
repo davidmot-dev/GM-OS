@@ -43,8 +43,8 @@ Pour ne pas perdre de temps à chercher une image en plein combat :
 
 La gestion visuelle est sensible (spoilers). Image OS propose une synchronisation parfaite du blackout :
 
-- **Target Blackout** : Éteint l'image sur l'écran cible sélectionné. Si vous projetez sur un moniteur, le Player Hub (en mode miroir) s'effacera également pour éviter les fuites d'infos.
-- **Global Blackout (🔴 ALL)** : Coupe instantanément TOUTES les projections sur TOUS les écrans. Indispensable pour masquer une carte secrète ou finir une scène sur un écran noir dramatique.
+- **Target Blackout** : Éteint l'image sur l'écran cible sélectionné. Sur un **Moniteur**, la fenêtre se ferme complètement pour libérer votre bureau. Sur le **Player Hub**, l'image s'efface simplement pour rester prête à la prochaine diffusion.
+- **Global Blackout (🔴 ALL)** : Coupe instantanément TOUTES les projections sur TOUS les écrans et ferme toutes les fenêtres de projection secondaires. Indispensable pour masquer une carte secrète ou finir une scène sur un écran noir dramatique.
 
 ---
 

@@ -24,6 +24,44 @@ Ce document consigne les défis techniques, les erreurs rencontrées et les solu
 - **Solution** : Refonte du service `mcp_bridge.ts` pour utiliser `process.env.USERPROFILE` et `path.join`. Le script Python `run_mcp.py` a également été rendu portable.
 - **Leçon** : Toujours utiliser des chemins relatifs ou basés sur les dossiers système standards (`AppData`, `UserProfile`) pour les services externes.
 
+### 5. Pont Agnostique (Agnostic Bridge v3) (2026-04-23)
+- **Défi** : Préparer la migration vers Tauri tout en conservant une version stable sous Electron, sans avoir à maintenir deux codes frontends différents.
+- **Solution** : Création d'un **AppBridgeAdapter**. Au lieu d'appeler `window.appBridge` directement, le code React utilise un service unifié qui détecte l'environnement (`isTauri` ou `isElectron`) et route les appels vers le moteur approprié.
+- **Leçon** : Toujours abstraire les appels au système derrière une interface unifiée. Cela permet de décommissionner un moteur (ex: Electron) ultérieurement sans aucun impact sur l'UI.
+
+### 6. Protocole de Médias Natifs (Tauri asset://) (2026-04-23)
+- **Défi** : Le chargement de fichiers volumineux (musiques 1h+, vidéos 4K) via des data URIs ou des Blobs consommait trop de mémoire vive.
+- **Solution** : Utilisation du protocole `asset://` (Tauri v2) via `convertFileSrc`. Ce protocole permet au Webview de lire directement les fichiers sur le disque avec les performances d'un serveur local optimisé.
+- **Leçon** : Ne pas chercher à "encapsuler" les fichiers dans JavaScript. Utiliser les protocoles natifs de la plateforme pour laisser le système d'exploitation gérer le streaming et le cache.
+
+### 7. Stockage Sécurisé (Rust Keyring)
+- **Défi** : Stocker des clés API sensibles dans `localStorage` est risqué. Electron utilisait `safeStorage`, mais Tauri nécessite une approche différente.
+- **Solution** : Abstraction via `AppBridge.security`. Sous Tauri, les secrets sont envoyés au backend Rust qui utilise la crate `keyring` (ou un stockage chiffré sur disque) au lieu de les exposer au frontend.
+
+### 8. Propagation d'Arguments IPC (Array Spreading) (2026-04-23)
+- **Défi** : Contrairement à Electron, `emit` de Tauri v2 n'accepte qu'un seul argument `payload`. Cela cassait les écouteurs React qui attendaient des arguments séparés (ex: `type`, `data`).
+- **Solution** : Encapsulation systématique des arguments dans un tableau lors de l'envoi (`send`) et utilisation de l'opérateur spread (`...`) dans l'écouteur du Bridge pour "déballer" les données.
+- **Leçon** : Ne jamais supposer que le transporteur d'événements préserve la structure des arguments. Toujours normaliser le format de transport.
+
+### 9. Cycle de Vie des Fenêtres de Projection (2026-04-23)
+- **Défi** : Un "Blackout" (coupure de projection) laissait des fenêtres noires vides ouvertes dans la barre des tâches, créant une pollution visuelle et consommant des ressources.
+- **Solution** : Distinction entre Hub (Persistant) et Moniteur (Volatil). La commande blackout déclenche désormais un `window.close()` sur les moniteurs mais un simple nettoyage CSS/DOM sur les Hubs.
+- **Leçon** : Le comportement "Blackout" doit être contextuel à la cible de projection pour respecter l'ergonomie système.
+
+### 10. Résolution d'URLs pour Projecteurs (2026-04-23)
+- **Défi** : Les projecteurs affichaient des icônes d'images brisées car les chemins de fichiers envoyés via IPC n'étaient pas résolus par `convertFileSrc` côté récepteur.
+- **Solution** : Normalisation de la résolution d'URL au plus tôt dans la chaîne de transmission. Le récepteur traite désormais chaque chemin reçu comme une source potentiellement locale nécessitant une conversion de protocole.
+
+### 11. Silence Audio sous WebView2 (Autoplay Policy) (2026-04-23)
+- **Défi** : Au lancement sous Tauri (Windows WebView2), les moteurs audio (`AudioContext`) restaient dans l'état `suspended`, même si l'utilisateur avait interagi avec l'application.
+- **Solution** : **Éveil Audio Global**. Ajout d'un déclencheur dans `App.tsx` qui appelle `resume()` sur tous les moteurs audio (`SoundEngine`, `MusicEngine`, `VoiceEngine`) dès la première interaction clavier ou souris détectée. Mise en place d'une "Route de Secours" (`Rescue Route`) dans le moteur de musique pour connecter directement les nœuds à `context.destination` si le `MediaStream` est bloqué par le navigateur.
+- **Leçon** : Ne pas se fier à l'initialisation automatique des contextes audio. Toujours prévoir un mécanisme de "réveil" explicite déclenché par une action utilisateur réelle.
+
+### 12. Saturation IPC par les Niveaux de Voix (Throttling) (2026-04-23)
+- **Défi** : L'envoi du niveau de voix à 60 fps via l'IPC saturait le pont entre le MJ et les Hubs, créant des saccades dans l'interface et des retards dans les autres commandes (ex: changement d'image).
+- **Solution** : **Throttling Intelligent**. Limitation de la synchronisation IPC à ~20 fps dans `VoiceEngine.ts`, tout en garantissant un envoi immédiat du niveau "0" dès que la parole s'arrête pour éviter que l'avatar ne reste "bloqué" en position ouverte.
+- **Leçon** : Les données haute fréquence (VU-mètres, positions curseur) ne doivent jamais être transmises au taux de rafraîchissement de l'écran via l'IPC. Toujours appliquer un filtre de fréquence (throttle/debounce) adapté à la perception humaine (15-25 fps).
+
 ---
 
 ## 🏗️ Architecture, Build & Typage
@@ -90,4 +128,23 @@ Ce document consigne les défis techniques, les erreurs rencontrées et les solu
 
 ---
 
-*Dernière mise à jour : 22 Avril 2026 - GM-OS v6.5.0 - Consolidation & Stabilisation UI.*
+### 13. Synchronisation au Boot (BroadcastChannel vs Window Load) (2026-04-24)
+- **Défi** : Le Moniteur s'ouvrait sur un écran noir car il ratait le message BroadcastChannel initial envoyé par le MJ (le chargement de la fenêtre est plus lent que la diffusion).
+- **Solution** : Implémentation d'un **Handshake de Bienvenue** (`hub:ready`). Le projecteur émet un signal dès qu'il est prêt, et le MJ répond par un `broadcastFullState()` complet.
+- **Leçon** : Ne jamais supposer qu'une fenêtre "esclave" a reçu l'état initial. Toujours prévoir un mécanisme de demande d'état (`pull`) au démarrage.
+
+### 14. Guardes de Synchronisation & Paramètres URL (2026-04-24)
+- **Défi** : Un clic sur le Moniteur (Ping) écrasait la carte par un écran noir sur toutes les fenêtres.
+- **Cause** : La fonction `syncToPlayers()` du store possédait une garde vérifiant `?mode=hub`. Or, le Moniteur utilisait `?window=projector`. La garde ne s'activait pas, et le Moniteur (esclave) tentait de synchroniser son état vide vers les autres, écrasant la carte réelle.
+- **Solution** : Normalisation des gardes pour vérifier tous les types de fenêtres esclaves (`hub`, `projector`, `tablet`) dans tous les paramètres URL possibles (`mode` et `window`).
+- **Leçon** : La détection du rôle d'une fenêtre (Master vs Slave) doit être extrêmement robuste pour éviter qu'un esclave ne devienne "Source de Vérité" par erreur.
+
+### 15. Boucles de Relay & "Snapback" de Token (2026-04-24)
+- **Défi** : Lors du déplacement d'un pion depuis un Hub, le pion revenait brutalement à sa position initiale après 50ms.
+- **Cause** : Le Master recevait la nouvelle position, l'appliquait, puis **relayait immédiatement le payload brut** reçu aux autres fenêtres. Ce payload contenait souvent des données partielles ou des références temporelles que le Master interprétait mal, déclenchant un rebroadcast de sa propre position (périmée) vers l'esclave.
+- **Solution** : **Authoritative Relay Only**. Le Master ne relaie plus jamais le payload brut d'un esclave. Il applique l'update localement, puis déclenche son propre broadcast complet et cohérent (`broadcastFullState`).
+- **Leçon** : Le Master doit agir comme un filtre. Tout ce qui sort du Master vers les esclaves doit provenir de son propre store (source de vérité) et non être un simple rebond de messages tiers.
+
+---
+
+*Dernière mise à jour : 24 Avril 2026 - GM-OS v7 (Migration Tauri) - Phase 5 : Stabilisation Temps Réel & Cross-Window Sync.*
