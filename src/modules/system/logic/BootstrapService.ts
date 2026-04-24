@@ -5,6 +5,7 @@ import { useLightStore } from '../../light/useLightStore';
 import { useSessionStore } from '../../../store/useSessionStore';
 import { useImageStore } from '../../image/useImageStore';
 import { useMapStore } from '../../map/useMapStore';
+import { useHardwareStore } from '../../../stores/useHardwareStore';
 import { sessionBackupManager } from '../../session/logic/SessionBackupManager';
 
 /**
@@ -14,15 +15,19 @@ import { sessionBackupManager } from '../../session/logic/SessionBackupManager';
  */
 export class BootstrapService {
     private static isInitialized = false;
+    private static isInitializing = false;
 
-    static async bootstrap(): Promise<void> {
-        if (this.isInitialized) return;
+    static async bootstrap(isMain: boolean = true): Promise<void> {
+        if (this.isInitialized || this.isInitializing) return;
+        this.isInitializing = true;
         
-        console.log('[Bootstrap] ⚙️ Initialisation du système...');
+        console.log(`[Bootstrap] ⚙️ Initialisation du système (${isMain ? 'MASTER' : 'SECONDARY'})...`);
         
-        // Nettoyage des projections résiduelles de la session précédente (évite l'ouverture automatique au démarrage)
-        useImageStore.getState().clearActiveProjections();
-        useMapStore.getState().resetProjectionState();
+        if (isMain) {
+            // Nettoyage des projections résiduelles de la session précédente
+            useImageStore.getState().clearActiveProjections();
+            useMapStore.getState().resetProjectionState();
+        }
 
         try {
             // 1. Initialisation de la base de données Media (IndexedDB)
@@ -39,8 +44,17 @@ export class BootstrapService {
             ]);
 
             // 3. Démarrage des services de fond
-            console.log('[Bootstrap] 📡 Démarrage des services de fond (Spatial Triggers)...');
-            spatialTriggerService.startWatching();
+            if (isMain) {
+                console.log('[Bootstrap] 📡 Démarrage des services de fond (Spatial Triggers)...');
+                spatialTriggerService.startWatching();
+            }
+
+            // 4. Scan du matériel (Audio & Moniteurs)
+            console.log('[Bootstrap] 🔌 Scan du matériel...');
+            await Promise.all([
+                useHardwareStore.getState().fetchAudioDevices(),
+                useImageStore.getState().fetchDisplays()
+            ]);
 
             // 4. Désactivation du cycle de sauvegarde automatique (Évite les timeouts sur sessions lourdes)
             // sessionBackupManager.start();

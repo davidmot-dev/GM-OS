@@ -98,10 +98,16 @@ function App() {
   const [showSplash, setShowSplash] = useState(true);
 
   const searchParams = new URLSearchParams(window.location.search);
-  const isProjector = searchParams.get('window') === 'projector';
-  const isHub = searchParams.get('window') === 'hub';
-  const isTablet = searchParams.get('window') === 'tablet';
-  const isRemote = searchParams.get('window') === 'remote';
+  const windowTag = searchParams.get('window') || '';
+  const isProjector = windowTag.startsWith('projector');
+  const isHub = windowTag.startsWith('hub');
+  const isTablet = windowTag.startsWith('tablet');
+  const isRemote = windowTag.startsWith('remote');
+
+  const isProjectorView = isProjector;
+  const isHubView = isHub;
+  const isTabletView = isTablet;
+  const isRemoteView = isRemote;
 
   // Workspace Sync v3: Modularized via useNexusSynchronizer
   const isMainPC = !isProjector && !isHub && !isTablet && !isRemote;
@@ -111,14 +117,33 @@ function App() {
   // Nexus Sync Engine Integration
   const { handleSync } = useNexusSynchronizer(isMainPC);
 
-  // Le système est "prêt" si hydraté et (si Main PC) si le bootstrap est fini
-  const isAppReady = isHydrated && (isMainPC ? isSystemReady : true);
+  // Le système est "prêt" si hydraté et si le bootstrap est fini (toutes fenêtres)
+  const isAppReady = isHydrated && isSystemReady;
 
   useDisplayDetection(isMainPC);
   
   // --- AUTO-CONNECT HUE BRIDGES (GM SEULEMENT) ---
   useHueAutoConnect(isMainPC);
   
+  useEffect(() => {
+    const resumeAudio = () => {
+      if (window.appBridge?.audio?.resumeContexts) {
+        window.appBridge.audio.resumeContexts();
+      }
+      // We only need to trigger this once per session/window
+      document.removeEventListener('click', resumeAudio);
+      document.removeEventListener('keydown', resumeAudio);
+    };
+
+    document.addEventListener('click', resumeAudio);
+    document.addEventListener('keydown', resumeAudio);
+
+    return () => {
+      document.removeEventListener('click', resumeAudio);
+      document.removeEventListener('keydown', resumeAudio);
+    };
+  }, []);
+
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
@@ -130,12 +155,12 @@ function App() {
     }
   }, [isMainPC, isHydrated, syncAIKeys, syncHueKeys]);
 
-  // --- BOOTSTRAP DU SYSTÈME (GM SEULEMENT) ---
+  // --- BOOTSTRAP DU SYSTÈME (TOUTES FENÊTRES) ---
   useEffect(() => {
-    if (isMainPC && isHydrated && !isSystemReady) {
-      BootstrapService.bootstrap();
+    if (isHydrated && !isSystemReady) {
+      BootstrapService.bootstrap(isMainPC);
     }
-  }, [isMainPC, isHydrated, isSystemReady]);
+  }, [isHydrated, isSystemReady, isMainPC]);
 
   // --- MESSAGING BRIDGE (GM SIDE) ---
   useEffect(() => {
@@ -154,6 +179,39 @@ function App() {
     window.addEventListener('session:send-message', handleSendMessage);
     return () => window.removeEventListener('session:send-message', handleSendMessage);
   }, [isMainPC]);
+
+  // --- HUB READY LISTENER (GM SIDE) ---
+  // Quand un Hub démarre, il envoie hub:ready via BroadcastChannel ET AppBridge.
+  // Le MJ répond avec forceFullSync (diffusion via BroadcastChannel).
+  useEffect(() => {
+    if (!isMainPC) return;
+
+    const triggerFullSync = () => {
+      console.log('[App] Hub ready signal received — triggering forceFullSync');
+      import('./modules/map/logic/MapService').then(({ MapService }) => {
+        MapService.forceFullSync();
+      });
+      useImageStore.getState().broadcastSync();
+    };
+
+    // Canal principal : BroadcastChannel (garanti cross-window Chromium/WebView2)
+    const hubSignalChannel = new BroadcastChannel('gmos-hub-signals');
+    hubSignalChannel.addEventListener('message', (e: MessageEvent) => {
+      if (e.data?.type === 'hub:ready') triggerFullSync();
+    });
+
+    // Fallback AppBridge (Tauri emit / Electron IPC)
+    let removeHubReady: (() => void) | undefined;
+    if (window.appBridge?.on) {
+      removeHubReady = window.appBridge.on('hub:ready', triggerFullSync);
+    }
+
+    return () => {
+      hubSignalChannel.close();
+      if (typeof removeHubReady === 'function') removeHubReady();
+    };
+  }, [isMainPC]);
+
 
   const handleAction = useCallback((data: RemoteAction) => {
     const { type, payload } = data;
@@ -473,11 +531,6 @@ function App() {
     }
   };
 
-  const pathname = window.location.pathname.toLowerCase();
-  const isProjectorView = searchParams.get('window') === 'projector' || pathname.includes('/projector');
-  const isHubView = searchParams.get('window') === 'hub' || pathname.includes('/player-hub');
-  const isTabletView = searchParams.get('window') === 'tablet' || pathname.includes('/tablet-hub');
-  const isRemoteView = searchParams.get('window') === 'remote' || pathname.includes('/remote');
 
   if (!isAppReady) {
     return <div className="h-screen w-screen bg-black flex items-center justify-center">

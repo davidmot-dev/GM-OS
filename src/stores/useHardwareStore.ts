@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { DisplayInfo } from '../modules/image/types';
+import { AppBridge } from '../bridge/AppBridge';
 
 export interface AudioDeviceInfo {
     deviceId: string;
@@ -35,25 +36,21 @@ export const useHardwareStore = create<HardwareState>()(
 
             fetchAudioDevices: async () => {
                 try {
-                    // Try to catch devices
-                    const devices = await navigator.mediaDevices.enumerateDevices();
-                    const outputs = devices
-                        .filter(d => d.kind === 'audiooutput')
-                        .map(d => ({
-                            deviceId: d.deviceId,
-                            label: d.label || (d.deviceId === 'default' ? 'Système par défaut' : `Sortie ${d.deviceId.slice(0, 4)}`),
-                            kind: 'audiooutput' as const
-                        }));
-                    set({ audioDevices: outputs });
+                    const devices = await AppBridge.audio.getDevices();
+                    set({ audioDevices: devices.map(d => ({
+                        deviceId: d.id,
+                        label: d.label,
+                        kind: 'audiooutput' as const
+                    })) });
                 } catch (error) {
                     console.error('[HardwareStore] Failed to fetch audio devices:', error);
                 }
             },
 
             fetchDisplays: async () => {
-                if (window.appBridge?.image?.getDisplays) {
+                if (AppBridge.image.hasSupport) {
                     try {
-                        const displays = await window.appBridge.image.getDisplays();
+                        const displays = await AppBridge.image.getDisplays();
                         set({ displays });
                     } catch (error) {
                         console.error('[HardwareStore] Failed to fetch displays:', error);

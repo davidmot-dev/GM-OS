@@ -172,11 +172,11 @@ export const PlayerDrawingCanvas: React.FC = () => {
         const rect = canvas.getBoundingClientRect();
         let clientX, clientY;
         if ('touches' in e) {
-            clientX = e.touches[0].clientX;
-            clientY = e.touches[0].clientY;
+            clientX = (e as React.TouchEvent).touches[0].clientX;
+            clientY = (e as React.TouchEvent).touches[0].clientY;
         } else {
-            clientX = e.clientX;
-            clientY = e.clientY;
+            clientX = (e as React.MouseEvent).clientX;
+            clientY = (e as React.MouseEvent).clientY;
         }
         // Normalized coordinates (0 to 1)
         return { 

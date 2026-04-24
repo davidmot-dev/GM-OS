@@ -8,12 +8,12 @@ interface MapPingLayerProps {
 
 const MapPingLayer: React.FC<MapPingLayerProps> = ({ isProjectedView }) => {
     const { pings, projectedPings } = useMapStore();
-    const activePings = isProjectedView ? projectedPings : pings;
+    const activePings = isProjectedView ? (projectedPings || []) : (pings || []);
 
     if (!activePings || activePings.length === 0) return null;
 
     return (
-        <div className="absolute inset-0 pointer-events-none z-40 overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none z-[40] overflow-hidden">
             {activePings.map(ping => (
                 <PingVisual key={ping.id} ping={ping} />
             ))}
@@ -33,11 +33,9 @@ const PingVisual: React.FC<{ ping: MapPing }> = ({ ping }) => {
         >
             {/* Outer expanding ring */}
             <div 
-                className="absolute inset-0 border-4 rounded-full animate-ping-expand"
+                className="absolute inset-0 border-4 rounded-full animate-ping"
                 style={{ 
                     borderColor: ping.color, 
-                    animationDuration: '1.5s',
-                    animationIterationCount: 2 
                 }} 
             />
             {/* Inner pulsating core */}

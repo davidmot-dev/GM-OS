@@ -11,7 +11,6 @@ interface ClientState {
     playerName: string;
     lastError: string | null;
     
-    // Actions
     setPseudo: (pseudo: string) => void;
     setPlayerName: (name: string) => void;
     setCharacterId: (id: string | null) => void;
@@ -22,7 +21,6 @@ interface ClientState {
     resetIdentity: () => void;
 }
 
-// Generate a simple UUID if crypto.randomUUID is not available (fallback)
 const generateUUID = () => {
     if (typeof crypto !== 'undefined' && crypto.randomUUID) {
         return crypto.randomUUID();
@@ -61,7 +59,7 @@ export const useClientStore = create<ClientState>()(
             }),
         }),
         {
-            name: 'gm-os-client-id', // Unique name for localStorage
+            name: 'gm-os-client-id',
         }
     )
 );

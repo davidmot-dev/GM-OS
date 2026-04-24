@@ -34,10 +34,3 @@ export interface ProjectedEntity {
     type?: string;
     fields?: Record<string, string>;
 }
-
-export interface ImageBridge {
-    getDisplays: () => Promise<DisplayInfo[]>;
-    syncHubData: (type: 'image' | 'entity' | 'voice-level', data: string) => void;
-    launchDisplay: (paths: string[], target: ProjectionTarget) => void;
-    closeAllDisplays: () => void;
-}

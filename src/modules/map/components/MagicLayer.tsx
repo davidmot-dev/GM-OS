@@ -15,28 +15,28 @@ const MagicLayer: React.FC<MagicLayerProps> = ({ isProjectedView = false }) => {
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
-        canvas.width = mapWidth;
-        canvas.height = mapHeight;
-    }, [mapWidth, mapHeight, effects.length]); // Added effects.length to ensure resize on first effect
+        canvas.width = mapWidth || 1920;
+        canvas.height = mapHeight || 1080;
+    }, [mapWidth, mapHeight, effects?.length]);
 
     useEffect(() => {
         const canvas = canvasRef.current;
-        if (!canvas || effects.length === 0) return;
+        if (!canvas || !effects || effects.length === 0) return;
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
         let animationFrameId: number;
+        const currentWidth = canvas.width;
+        const currentHeight = canvas.height;
 
         const render = (time: number) => {
-            ctx.clearRect(0, 0, mapWidth, mapHeight);
-
-            if (!Array.isArray(effects)) return;
+            ctx.clearRect(0, 0, currentWidth, currentHeight);
 
             effects.forEach(effect => {
                 ctx.save();
                 ctx.translate(effect.x, effect.y);
                 ctx.rotate((effect.rotation * Math.PI) / 180);
-                ctx.globalAlpha = effect.opacity;
+                ctx.globalAlpha = effect.opacity ?? 1;
 
                 drawEffect(ctx, effect, time);
 
@@ -60,7 +60,6 @@ const MagicLayer: React.FC<MagicLayerProps> = ({ isProjectedView = false }) => {
                 ctx.arc(0, 0, effect.width, -Math.PI/6, Math.PI/6);
                 ctx.lineTo(0, 0);
                 ctx.closePath();
-
             } else if (effect.type === 'line') {
                 ctx.rect(0, -20, effect.width, 40);
             }
@@ -78,7 +77,6 @@ const MagicLayer: React.FC<MagicLayerProps> = ({ isProjectedView = false }) => {
                 case 'darkness': drawDarkness(ctx, effect, t); break;
                 case 'poison': drawPoison(ctx, effect, t); break;
             }
-
             
             ctx.restore();
 
@@ -109,7 +107,6 @@ const MagicLayer: React.FC<MagicLayerProps> = ({ isProjectedView = false }) => {
         };
 
         const drawIce = (ctx: CanvasRenderingContext2D, effect: MagicEffect) => {
-
             ctx.fillStyle = 'rgba(200, 240, 255, 0.3)';
             ctx.fill();
             
@@ -224,7 +221,6 @@ const MagicLayer: React.FC<MagicLayerProps> = ({ isProjectedView = false }) => {
             }
         };
 
-
         animationFrameId = requestAnimationFrame(render);
         return () => cancelAnimationFrame(animationFrameId);
     }, [effects, mapWidth, mapHeight]);
@@ -233,7 +229,7 @@ const MagicLayer: React.FC<MagicLayerProps> = ({ isProjectedView = false }) => {
     return (
         <canvas
             ref={canvasRef}
-            className="absolute inset-0 w-full h-full pointer-events-none z-17"
+            className="absolute inset-0 w-full h-full pointer-events-none z-[17]"
             style={{ mixBlendMode: 'normal' }}
         />
     );

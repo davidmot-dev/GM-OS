@@ -96,7 +96,7 @@ const EDGE_MATERIAL = new THREE.LineBasicMaterial({
     color: 0xffffff, 
     transparent: true, 
     opacity: 0.4,
-    linewidth: 2 // Note: webgl linewidth is limited to 1 in most browsers, but we keep it for consistency
+    // linewidth: 2 // webgl linewidth is limited to 1 in most browsers
 });
 
 const PlayerDiceBox3D: React.FC<DiceBox3DProps> = ({ active, lastRoll }) => {
@@ -109,17 +109,11 @@ const PlayerDiceBox3D: React.FC<DiceBox3DProps> = ({ active, lastRoll }) => {
         clock: THREE.Clock;
     } | null>(null);
 
-    const [isRendering, setIsRendering] = useState(false);
-
     // ------------------------------------------------------------------
     // SCENE INITIALIZATION
     // ------------------------------------------------------------------
     useEffect(() => {
-        console.log("🎲 [Dice3D] Initializing Scene...");
-        if (!containerRef.current) {
-            console.error("🎲 [Dice3D] No container ref!");
-            return;
-        }
+        if (!containerRef.current) return;
 
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -137,7 +131,6 @@ const PlayerDiceBox3D: React.FC<DiceBox3DProps> = ({ active, lastRoll }) => {
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.setClearColor(0x000000, 0);
         
-        // Explicit Canvas Styling
         renderer.domElement.style.position = 'absolute';
         renderer.domElement.style.top = '0';
         renderer.domElement.style.left = '0';
@@ -145,12 +138,9 @@ const PlayerDiceBox3D: React.FC<DiceBox3DProps> = ({ active, lastRoll }) => {
         renderer.domElement.style.height = '100%';
         renderer.domElement.style.pointerEvents = 'none';
         
-        containerRef.current.innerHTML = ''; // Clear any existing
+        containerRef.current.innerHTML = ''; 
         containerRef.current.appendChild(renderer.domElement);
 
-        console.log("🎲 [Dice3D] Renderer initialized and appended to DOM");
-
-        // Lights
         const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
         scene.add(ambientLight);
 
@@ -179,14 +169,8 @@ const PlayerDiceBox3D: React.FC<DiceBox3DProps> = ({ active, lastRoll }) => {
         return () => {
             window.removeEventListener('resize', handleResize);
             renderer.dispose();
-            
-            // Clean up static resources
-            Object.values(DICE_GEOMETRIES).forEach(g => g.dispose());
-            Object.values(DICE_EDGES).forEach(g => g.dispose());
-            EDGE_MATERIAL.dispose();
-
             if (containerRef.current) {
-                containerRef.current.removeChild(renderer.domElement);
+                containerRef.current.innerHTML = '';
             }
         };
     }, []);
@@ -205,28 +189,23 @@ const PlayerDiceBox3D: React.FC<DiceBox3DProps> = ({ active, lastRoll }) => {
             const delta = clock.getDelta();
 
             dice.forEach((die: any) => {
-                // Simplified physics
                 if (die.velocity.y > -20) {
-                    die.velocity.y -= 30 * delta; // Gravity
+                    die.velocity.y -= 30 * delta; 
                 }
 
                 die.position.add(die.velocity.clone().multiplyScalar(delta));
 
-                // Bounce ground
                 if (die.position.y < 0) {
                     die.position.y = 0;
-                    die.velocity.y *= -0.5; // Bounce damping
-                    die.angularVelocity.multiplyScalar(0.7); // Friction
+                    die.velocity.y *= -0.5; 
+                    die.angularVelocity.multiplyScalar(0.7); 
                 }
 
-                // Spin
                 die.rotation.x += die.angularVelocity.x * delta;
                 die.rotation.y += die.angularVelocity.y * delta;
                 die.rotation.z += die.angularVelocity.z * delta;
 
-                // Stop check
                 if (Math.abs(die.velocity.y) < 0.1 && die.position.y <= 0.1) {
-                    // Smoothly rotate to show result face
                     const targetRotation = die.targetRotation;
                     if (targetRotation) {
                         die.rotation.x = THREE.MathUtils.lerp(die.rotation.x, targetRotation.x, 0.1);
@@ -255,19 +234,16 @@ const PlayerDiceBox3D: React.FC<DiceBox3DProps> = ({ active, lastRoll }) => {
 
         const { scene, dice } = sceneRef.current;
         
-        // Clean previous dice
         dice.forEach(d => scene.remove(d));
         dice.length = 0;
 
         const rollCount = lastRoll.rolls.length;
         const spacing = 3;
 
-        console.log("🎲 [Dice3D] Spawning dice group", lastRoll.id, "count:", rollCount);
         lastRoll.rolls.forEach((r, i) => {
             const sides = r.sides || 20;
             const geometry = DICE_GEOMETRIES[sides] || DICE_GEOMETRIES[20];
             
-            // Premium Crystal Material
             const material = new THREE.MeshPhysicalMaterial({
                 color: r.isCritMax ? 0x10b981 : (r.isCritMin ? 0xf43f5e : (r.source === 'gear' ? 0xfacc15 : 0x06b6d4)),
                 metalness: 0.2,
@@ -277,16 +253,14 @@ const PlayerDiceBox3D: React.FC<DiceBox3DProps> = ({ active, lastRoll }) => {
                 ior: 1.45,
                 emissive: r.isExploded ? 0xffffff : 0x000000,
                 emissiveIntensity: r.isExploded ? 1.0 : 0.2,
-                side: THREE.DoubleSide // Safety for visibility
+                side: THREE.DoubleSide 
             });
 
             const mesh = new THREE.Mesh(geometry, material) as any;
             
-            // Initial position (higher, drop faster)
             const x = (i - (rollCount - 1) / 2) * spacing;
             mesh.position.set(x, 12 + Math.random() * 3, (Math.random() - 0.5) * 5);
             
-            // Random initial velocities
             mesh.velocity = new THREE.Vector3((Math.random() - 0.5) * 8, -15 - Math.random() * 10, (Math.random() - 0.5) * 8);
             mesh.angularVelocity = new THREE.Vector3(
                 (Math.random() - 0.5) * 40,
@@ -302,7 +276,6 @@ const PlayerDiceBox3D: React.FC<DiceBox3DProps> = ({ active, lastRoll }) => {
 
             scene.add(mesh);
             
-            // --- ADD SHARP EDGES ---
             const edges = DICE_EDGES[sides] || DICE_EDGES[20];
             const edgeLines = new THREE.LineSegments(edges, EDGE_MATERIAL);
             mesh.add(edgeLines);
@@ -310,7 +283,7 @@ const PlayerDiceBox3D: React.FC<DiceBox3DProps> = ({ active, lastRoll }) => {
             dice.push(mesh);
         });
 
-    }, [active, lastRoll?.id]); // Added 'active' to dependencies to catch transitions
+    }, [active, lastRoll?.id]);
 
     return (
         <div 

@@ -1,4 +1,5 @@
 import { useMediaStore } from '../../stores/useMediaStore';
+import { AppBridge } from '../../bridge/AppBridge';
 
 export class SoundEngine {
     private static instance: SoundEngine;
@@ -27,12 +28,20 @@ export class SoundEngine {
         this.setupGlobalSync();
 
         // Resume context if suspended (browser autoplay policy)
+        console.log(`[SoundEngine] AudioContext state: ${this.context.state}`);
+        
         if (this.context.state === 'suspended') {
-            const resumeListener = () => {
-                this.context.resume();
-                document.removeEventListener('click', resumeListener);
+            const resumeListener = async () => {
+                console.log('[SoundEngine] Attempting to resume AudioContext via user interaction...');
+                await this.context.resume();
+                console.log(`[SoundEngine] New AudioContext state: ${this.context.state}`);
+                if (this.context.state === 'running') {
+                    document.removeEventListener('click', resumeListener);
+                    document.removeEventListener('keydown', resumeListener);
+                }
             };
             document.addEventListener('click', resumeListener);
+            document.addEventListener('keydown', resumeListener);
         }
     }
 
@@ -77,13 +86,10 @@ export class SoundEngine {
      * @returns URL formatée.
      */
     public formatUrl(filePath: string): string {
-        if (filePath.startsWith('http') || filePath.startsWith('data:') || filePath.startsWith('file://')) {
+        if (filePath.startsWith('http') || filePath.startsWith('data:') || filePath.startsWith('blob:')) {
             return filePath;
         }
-        if (window.appBridge?.utils?.formatFileUrl) {
-            return window.appBridge.utils.formatFileUrl(filePath);
-        }
-        return filePath;
+        return AppBridge.utils.formatFileUrl(filePath);
     }
 
     /**

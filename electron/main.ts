@@ -727,7 +727,6 @@ app.whenReady().then(async () => {
     });
 
     createWindow();
-    startRemoteServer();
 
     // --- Display Management ---
     screen.on('display-added', () => {

@@ -212,7 +212,7 @@ export const useClockStore = create<ClockState>()(
                 tensions: [
                     ...state.tensions,
                     {
-                        id: crypto.randomUUID(),
+                        id: (Math.random() * 1000000).toString(),
                         name,
                         totalSegments,
                         filledSegments: 0
@@ -245,7 +245,7 @@ export const useClockStore = create<ClockState>()(
             setActiveCalendar: (id) => set({ activeCalendarId: id }),
 
             fetchCalendars: async () => {
-                const bridge = (window as unknown as { appBridge?: { clock?: { listCalendars: () => Promise<string[]> } } }).appBridge?.clock;
+                const bridge = (window as any).appBridge?.clock;
                 if (!bridge) return;
                 try {
                     const catalogs = await bridge.listCalendars();
@@ -256,7 +256,7 @@ export const useClockStore = create<ClockState>()(
             },
 
             selectCalendar: async (id) => {
-                const bridge = (window as unknown as { appBridge?: { clock?: { loadCalendar: (id: string) => Promise<FantasyCalendar> } } }).appBridge?.clock;
+                const bridge = (window as any).appBridge?.clock;
                 if (!bridge) return;
                 try {
                     const calendar = await bridge.loadCalendar(id);

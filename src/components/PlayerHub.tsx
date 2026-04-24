@@ -8,9 +8,8 @@ import { useFavoriteStore } from '../modules/favorite/useFavoriteStore';
 import { useMapStore } from '../modules/map/useMapStore';
 import { useWhiteboardStore } from '../modules/whiteboard/useWhiteboardStore';
 import { useImageStore } from '../modules/image/useImageStore';
-import { useDiceStore } from '../stores/useDiceStore';
+import { useDiceStore } from '../store/useDiceStore';
 import { useSessionOSStore } from '../modules/session/useSessionOSStore';
-import { VoiceReactiveAvatar } from './hub/VoiceReactiveAvatar';
 
 // Components
 import PlayerMapCanvas from '../modules/map/components/PlayerMapCanvas';
@@ -25,45 +24,38 @@ import { HubProjectionCard } from './hub/HubProjectionCard';
 import { HubDiceDisplay } from './hub/HubDiceDisplay';
 import { HubCombatTracker } from './hub/HubCombatTracker';
 
-const PlayerHub: React.FC = () => {
+const PlayerHub: React.FC = React.memo(() => {
     // 1. Unified Synchronization Hook (Bridge Isolation)
+    const hubSync = useHubSync();
     const {
-        liveImagePath,
-        liveEntity,
-        showDice,
-        resolvedFavorites,
-        projections,
-        timestamp,
-        mode,
-        theme,
-        tensions,
-        isClockProjected,
-        combatants,
-        currentTurnIdx,
-        round,
-        isCombatProjected,
-        activeCampaignWallpaper,
-        voiceLevel
-    } = useHubSync();
+        liveImagePath, liveEntity, showDice, resolvedFavorites,
+        isClockProjected, timestamp, mode, theme, tensions,
+        combatants, currentTurnIdx, round, isCombatProjected,
+        activeCampaignWallpaper, voiceLevel
+    } = hubSync;
 
-    // 2. Secondary Local States & Stores
-    const { mapUrl, projectionTarget } = useMapStore();
-    const { backgroundMode, projectionTarget: whiteboardTarget } = useWhiteboardStore();
-    const { lastRoll, enable3D } = useDiceStore();
-    const activeHubId = projections['hub'];
+    // 2. Secondary Local States & Stores - Selective selectors
+    const projectionTarget = useMapStore(s => s.projectionTarget);
+    const projectedMapUrl = useMapStore(s => s.projectedMapUrl);
+    const whiteboardTarget = useWhiteboardStore(s => s.projectionTarget);
+    const backgroundMode = useWhiteboardStore(s => s.backgroundMode);
+    const lastRoll = useDiceStore(s => s.lastRoll);
+    const enable3D = useDiceStore(s => s.enable3D);
+    const activeHubId = hubSync.projections?.['hub'];
 
     // 3. Asset Resolution
     const backgroundPath = liveImagePath !== undefined ? liveImagePath : (activeHubId || activeCampaignWallpaper);
     const resolvedBackground = useMediaUrl(backgroundPath || undefined);
     
     // 4. Feature Activators
-    const isMapActive = !!(mapUrl && projectionTarget === 'hub');
+    const isMapActive = !!(projectedMapUrl && projectionTarget === 'hub');
     const isWhiteboardActive = whiteboardTarget === 'hub';
     const hasCombatants = isCombatProjected && combatants.length > 0;
 
-    // 5. Initial Persist Rehydration (Safety)
+    // 5. Initial Persist Rehydration & Storage Sync (Cross-process)
     useEffect(() => {
         const rehydrateAll = async () => {
+            console.log('[PlayerHub] Rehydrating stores for session start...');
             await Promise.all([
                 useClockStore.persist.rehydrate(),
                 useCombatStore.persist.rehydrate(),
@@ -79,13 +71,14 @@ const PlayerHub: React.FC = () => {
     }, []);
 
     return (
-        <div className="bg-app-bg text-app-text font-cinematic selection:bg-accent/30 w-full h-screen overflow-hidden flex flex-col relative select-none cursor-default">
+        <div className="bg-slate-950 text-slate-100 selection:bg-cyan-500/30 w-full h-screen overflow-hidden flex flex-col relative select-none cursor-default">
             
             {/* LAYER 0: MAP / BACKGROUND */}
             <div className="fixed inset-0 z-0">
                 {isMapActive ? (
                     <PlayerMapCanvas 
                         onMapClick={(x, y) => {
+                            window.dispatchEvent(new CustomEvent('map:ping', { detail: { x, y, color: '#06b6d4' } }));
                             useMapStore.getState().addPing(x, y, '#06b6d4');
                         }}
                     />
@@ -105,13 +98,13 @@ const PlayerHub: React.FC = () => {
                         />
                     </AnimatePresence>
                 )}
-                {!resolvedBackground && !isMapActive && <div className="absolute inset-0 bg-app-bg" />}
+                {!resolvedBackground && !isMapActive && <div className="absolute inset-0 bg-slate-950" />}
             </div>
 
             {/* LAYER 30: WHITEBOARD */}
             <div className={`fixed inset-0 z-30 pointer-events-none transition-colors duration-500 ${
                 isWhiteboardActive && backgroundMode === 'light' ? 'bg-white' : 
-                isWhiteboardActive && backgroundMode === 'dark' ? 'bg-app-bg' : 'bg-transparent'
+                isWhiteboardActive && backgroundMode === 'dark' ? 'bg-slate-950' : 'bg-transparent'
             }`}>
                 <PlayerDrawingCanvas />
             </div>
@@ -173,7 +166,7 @@ const PlayerHub: React.FC = () => {
                 {/* Status Bar Indicator */}
                 <div className="absolute bottom-12 left-1/2 -translate-x-1/2 pointer-events-none">
                     {resolvedFavorites.length > 0 && (
-                        <p className="text-[10px] font-black uppercase tracking-[0.5em] text-accent/40 animate-pulse">Knowledge Base Synchronized</p>
+                        <p className="text-[10px] font-black uppercase tracking-[0.5em] text-cyan-500/40 animate-pulse">Knowledge Base Synchronized</p>
                     )}
                 </div>
             </div>
@@ -204,15 +197,14 @@ const PlayerHub: React.FC = () => {
             {/* Global Voice Reactive Signal (Subtle bottom bar) */}
             <div className="fixed bottom-0 left-0 right-0 h-1 z-[200] overflow-hidden pointer-events-none opacity-20">
                  <div 
-                    className="h-full bg-accent transition-all duration-75"
+                    className="h-full bg-cyan-500 transition-all duration-75"
                     style={{ 
                         width: `${Math.min(100, voiceLevel * 100)}%`,
-                        boxShadow: `0 0 ${voiceLevel * 40}px var(--color-accent)` 
                     }}
                  />
             </div>
         </div>
     );
-};
+});
 
 export default PlayerHub;

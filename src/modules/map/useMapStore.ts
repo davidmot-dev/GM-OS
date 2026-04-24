@@ -6,6 +6,7 @@ import type {
 } from './types';
 import { useJournalStore } from '../journal/useJournalStore';
 import { fogDB } from '../../utils/indexedDB';
+import { MapService } from './logic/MapService';
 
 interface MapState {
     mapUrl: string | null;
@@ -224,7 +225,7 @@ export const useMapStore = create<MapState>()(
                         content: narrativeDescription || `Le MJ a chargé la carte "${mapName}".`
                     });
                 }
-                if (get().projectionTarget) get().syncToPlayers();
+                if (get().projectionTarget) get().syncToPlayers(true);
             },
 
             setFogDataUrl: async (fogDataUrl: string | null) => {
@@ -234,7 +235,7 @@ export const useMapStore = create<MapState>()(
                 const updatedRegistry = { ...get().fogRegistry };
                 if (fogDataUrl) {
                     updatedRegistry[mapUrl] = fogDataUrl;
-                    // Persist to IndexedDB
+                    // Persist to IndexedDB (fog est stocké localement, PAS envoyé via IPC)
                     await fogDB.setItem(mapUrl, fogDataUrl);
                 } else {
                     delete updatedRegistry[mapUrl];
@@ -242,7 +243,8 @@ export const useMapStore = create<MapState>()(
                 }
 
                 set({ fogDataUrl, fogRegistry: updatedRegistry });
-                if (get().projectionTarget) get().syncToPlayers();
+                // 🛡️ Force heavy sync pour propager le fog (seul cas où on envoie fogDataUrl via IPC)
+                if (get().projectionTarget) get().syncToPlayers(true);
             },
 
             addToken: (token: Omit<MapToken, 'id'>) => {
@@ -314,7 +316,7 @@ export const useMapStore = create<MapState>()(
             fogCommand: null,
             triggerFogCommand: (command: 'reveal_all' | 'hide_all' | null) => {
                 set({ fogCommand: command });
-                if (get().projectionTarget) get().syncToPlayers();
+                if (get().projectionTarget) get().syncToPlayers(true);
             },
 
             setMapMuted: (isMapMuted: boolean) => {
@@ -368,7 +370,7 @@ export const useMapStore = create<MapState>()(
 
             resetView: () => set(state => ({ viewResetCounter: state.viewResetCounter + 1 })),
 
-            syncToPlayers: () => {
+            syncToPlayers: (forceHeavy = false) => {
                 set(state => ({
                     projectionTarget: 'hub',
                     projectedMapUrl: state.mapUrl,
@@ -390,27 +392,39 @@ export const useMapStore = create<MapState>()(
                     projectedMapVolume: state.mapVolume,
                     projectedDangerZones: [...state.dangerZones],
                 }));
+                MapService.syncMapToPlayers(forceHeavy);
             },
 
-            clearProjectedState: () => set({
-                projectionTarget: null,
-                projectedMapUrl: null,
-                projectedIsVideo: false,
-                projectedFogDataUrl: null,
-                projectedPings: [],
-                projectedDangerZones: [],
-            }),
+            clearProjectedState: () => {
+                // 🛡️ IMPORTANT : Lire la cible AVANT le reset du store.
+                // MapService.clearProjection() lit le store pour savoir où envoyer le signal.
+                // Si on reset d'abord, projectionTarget vaut null et le signal IPC ne part jamais.
+                const target = get().projectionTarget;
+                set({
+                    projectionTarget: null,
+                    projectedMapUrl: null,
+                    projectedIsVideo: false,
+                    projectedFogDataUrl: null,
+                    projectedPings: [],
+                    projectedDangerZones: [],
+                });
+                MapService.clearProjection(target);
+            },
 
-            resetProjectionState: () => set({
-                projectionTarget: null,
-                projectedMapUrl: null,
-                projectedIsVideo: false,
-                projectedFogDataUrl: null,
-                projectedTokens: [],
-                projectedPings: [],
-                projectedMagicEffects: [],
-                projectedDangerZones: [],
-            }),
+            resetProjectionState: () => {
+                const target = get().projectionTarget;
+                set({
+                    projectionTarget: null,
+                    projectedMapUrl: null,
+                    projectedIsVideo: false,
+                    projectedFogDataUrl: null,
+                    projectedTokens: [],
+                    projectedPings: [],
+                    projectedMagicEffects: [],
+                    projectedDangerZones: [],
+                });
+                MapService.clearProjection(target);
+            },
 
             addDangerZone: (zone: Omit<DangerZone, 'id' | 'activeTokenIds'>) => {
                 const id = Math.random().toString(36).substring(2, 9);
@@ -530,13 +544,37 @@ export const useMapStore = create<MapState>()(
         }),
         {
             name: 'gmos-map-storage',
-            version: 1,
+            version: 2, // 💥 Bumpé : suppression de l'état projeté du cache local
+            migrate: (persistedState: unknown, fromVersion: number) => {
+                // v1 → v2 : épuration de l'état projeté stale
+                if (fromVersion < 2) {
+                    const s = persistedState as Record<string, unknown>;
+                    delete s.projectedMapUrl;
+                    delete s.projectedIsVideo;
+                    delete s.projectedFogDataUrl; // ← LA SOURCE DU BUG
+                    delete s.projectedTokens;
+                    delete s.projectedWeatherType;
+                    delete s.projectedWeatherIntensity;
+                    delete s.projectedTimeOfDay;
+                    delete s.projectedMapWidth;
+                    delete s.projectedMapHeight;
+                    delete s.projectedIsGridEnabled;
+                    delete s.projectedGridSize;
+                    delete s.projectedGridColor;
+                    delete s.projectedGridOpacity;
+                    delete s.projectedMagicEffects;
+                    delete s.projectedDangerZones;
+                    delete s.projectedIsMapMuted;
+                    delete s.projectedMapVolume;
+                }
+                return persistedState;
+            },
             partialize: (state) => ({
+                // ✅ État MJ : persisté (normal)
                 mapUrl: state.mapUrl,
                 mapName: state.mapName,
                 isVideo: state.isVideo,
-                // fogDataUrl: Removed from persistence (Stored in IndexedDB)
-                // fogRegistry: Removed from persistence
+                // fogDataUrl: Retiré de la persistence (Stocké dans IndexedDB)
                 layerVisibility: state.layerVisibility,
                 tokens: state.tokens,
                 weatherType: state.weatherType,
@@ -560,23 +598,10 @@ export const useMapStore = create<MapState>()(
                 isMapMuted: state.isMapMuted,
                 mapVolume: state.mapVolume,
                 mapOutputDeviceId: state.mapOutputDeviceId,
-                projectedMapUrl: state.projectedMapUrl,
-                projectedIsVideo: state.projectedIsVideo,
-                projectedFogDataUrl: state.projectedFogDataUrl,
-                projectedTokens: state.projectedTokens,
-                projectedWeatherType: state.projectedWeatherType,
-                projectedWeatherIntensity: state.projectedWeatherIntensity,
-                projectedTimeOfDay: state.projectedTimeOfDay,
-                projectedMapWidth: state.projectedMapWidth,
-                projectedMapHeight: state.projectedMapHeight,
-                projectedIsGridEnabled: state.projectedIsGridEnabled,
-                projectedGridSize: state.projectedGridSize,
-                projectedGridColor: state.projectedGridColor,
-                projectedGridOpacity: state.projectedGridOpacity,
-                projectedMagicEffects: state.projectedMagicEffects,
-                projectedDangerZones: state.projectedDangerZones,
-                projectedIsMapMuted: state.projectedIsMapMuted,
-                projectedMapVolume: state.projectedMapVolume
+                // ❌ État PROJETÉ : jamais persisté.
+                // Il doit TOUJOURS venir d'un sync IPC frais depuis le MJ.
+                // Persister cet état causait l'affichage de brouillard/jetons périmés
+                // au redémarrage du Hub, même si le MJ avait arrêté la projection.
             })
         }
     )

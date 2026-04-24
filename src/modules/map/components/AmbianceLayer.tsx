@@ -1,3 +1,4 @@
+import React from 'react';
 import { motion } from 'framer-motion';
 import { useMapStore } from '../useMapStore';
 import type { TimeOfDay } from '../types';

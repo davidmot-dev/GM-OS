@@ -16,7 +16,7 @@ const DangerZoneLayer: React.FC<DangerZoneLayerProps> = ({ isProjectedView }) =>
 
     return (
         <svg 
-            className="absolute inset-0 w-full h-full pointer-events-none z-25"
+            className="absolute inset-0 w-full h-full pointer-events-none z-[18]"
             style={{ overflow: 'visible' }}
         >
             <defs>
@@ -74,11 +74,11 @@ const DangerZoneLayer: React.FC<DangerZoneLayerProps> = ({ isProjectedView }) =>
                         {zone.type === 'cone' && (
                             <path
                                 d={`M ${zone.x} ${zone.y} 
-                                   L ${zone.x + (zone.radius || zone.width) * Math.cos((zone.rotation - 30) * Math.PI / 180)} 
-                                     ${zone.y + (zone.radius || zone.width) * Math.sin((zone.rotation - 30) * Math.PI / 180)}
-                                   A ${zone.radius || zone.width} ${zone.radius || zone.width} 0 0 1 
-                                     ${zone.x + (zone.radius || zone.width) * Math.cos((zone.rotation + 30) * Math.PI / 180)} 
-                                     ${zone.y + (zone.radius || zone.width) * Math.sin((zone.rotation + 30) * Math.PI / 180)}
+                                   L ${zone.x + (zone.radius || zone.width || 100) * Math.cos((zone.rotation - 30) * Math.PI / 180)} 
+                                     ${zone.y + (zone.radius || zone.width || 100) * Math.sin((zone.rotation - 30) * Math.PI / 180)}
+                                   A ${zone.radius || zone.width || 100} ${zone.radius || zone.width || 100} 0 0 1 
+                                     ${zone.x + (zone.radius || zone.width || 100) * Math.cos((zone.rotation + 30) * Math.PI / 180)} 
+                                     ${zone.y + (zone.radius || zone.width || 100) * Math.sin((zone.rotation + 30) * Math.PI / 180)}
                                    Z`}
                                 fill={isDT ? "url(#pattern-difficult)" : zone.color}
                                 fillOpacity={fillOpacity}

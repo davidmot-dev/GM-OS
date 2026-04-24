@@ -1,9 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { JournalState, JournalEvent, Journal } from './types';
-import { v4 as uuidv4 } from 'uuid';
-import { format } from 'date-fns';
-import i18next from 'i18next';
 
 const formatDuration = (ms: number): string => {
   const seconds = Math.floor((ms / 1000) % 60);
@@ -11,6 +8,8 @@ const formatDuration = (ms: number): string => {
   const hours = Math.floor(ms / (1000 * 60 * 60));
   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 };
+
+const generateId = () => Math.random().toString(36).substring(2, 11);
 
 export const useJournalStore = create<JournalState>()(
   persist(
@@ -20,10 +19,10 @@ export const useJournalStore = create<JournalState>()(
       isRecording: false,
 
       startJournal: (campaignName, sessionName, startSnapshot) => {
-        const id = uuidv4();
+        const id = generateId();
         const now = Date.now();
-        const actualSessionName = sessionName || i18next.t('modules:journal.dashboard.new_session');
-        const title = `${campaignName} - ${format(now, 'dd/MM HH:mm')} (${actualSessionName})`;
+        const actualSessionName = sessionName || 'Nouvelle Session';
+        const title = `${campaignName} - ${actualSessionName}`;
 
         const newJournal: Journal = {
           id,
@@ -38,37 +37,11 @@ export const useJournalStore = create<JournalState>()(
           isRecording: true,
         }));
 
-        // Initial SYSTEM events
-        get().setActiveJournal(id); // Ensure we're targeting the new one
-        
         get().addEvent({
           type: 'SYSTEM',
-          title: i18next.t('modules:journal.events.session_start'),
-          content: i18next.t('modules:journal.events.session_start_content', { 
-            name: actualSessionName, 
-            date: format(now, 'dd/MM/yyyy à HH:mm:ss') 
-          })
+          title: 'Début de session',
+          content: `Session "${actualSessionName}" démarrée.`
         });
-
-        if (startSnapshot) {
-          if (startSnapshot.presentPlayers && startSnapshot.presentPlayers.length > 0) {
-            get().addEvent({
-              type: 'SYSTEM',
-              title: i18next.t('modules:journal.events.players_present'),
-              content: i18next.t('modules:journal.events.players_present_content', { 
-                players: startSnapshot.presentPlayers.map(p => `- ${p}`).join('\n')
-              })
-            });
-          }
-
-          if (startSnapshot.publicSummary) {
-            get().addEvent({
-              type: 'NOTE',
-              title: i18next.t('modules:journal.events.synopsis'),
-              content: startSnapshot.publicSummary
-            });
-          }
-        }
       },
 
       stopJournal: (snapshot) => {
@@ -82,86 +55,11 @@ export const useJournalStore = create<JournalState>()(
         const durationMs = now - journal.startTimestamp;
         const durationStr = formatDuration(durationMs);
 
-        // Add termination events before stopping recording
         get().addEvent({
           type: 'SYSTEM',
-          title: i18next.t('modules:journal.events.session_end'),
-          content: i18next.t('modules:journal.events.session_end_content', { 
-            date: format(now, 'dd/MM/yyyy à HH:mm:ss') 
-          })
+          title: 'Fin de session',
+          content: 'Session terminée.'
         });
-
-        get().addEvent({
-          type: 'SYSTEM',
-          title: i18next.t('modules:journal.events.session_duration'),
-          content: i18next.t('modules:journal.events.session_duration_content', { duration: durationStr })
-        });
-
-        // Process Snapshot Data
-        if (snapshot) {
-          if (snapshot.notes) {
-            get().addEvent({
-              type: 'NOTE',
-              title: i18next.t('modules:journal.events.end_session_notes'),
-              content: snapshot.notes
-            });
-          }
-
-          if (snapshot.presentPCs && snapshot.presentPCs.length > 0) {
-            const pcContent = snapshot.presentPCs
-              .map(pc => `- **${pc.name}**: ${pc.hp}/${pc.maxHp} HP (${pc.state})`)
-              .join('\n');
-            get().addEvent({
-              type: 'SYSTEM',
-              title: i18next.t('modules:journal.events.pc_status'),
-              content: i18next.t('modules:journal.events.pc_status_content', { pcContent })
-            });
-          }
-
-          if (snapshot.sessionEntities && snapshot.sessionEntities.length > 0) {
-            const npcContent = snapshot.sessionEntities
-              .map(npc => `- **${npc.name}**: ${npc.hp}/${npc.maxHp} HP (${npc.status})`)
-              .join('\n');
-            get().addEvent({
-              type: 'SYSTEM',
-              title: i18next.t('modules:journal.events.npc_status'),
-              content: i18next.t('modules:journal.events.npc_status_content', { npcContent })
-            });
-          }
-
-          if (snapshot.pendingChecklist && snapshot.pendingChecklist.length > 0) {
-            const checklistContent = snapshot.pendingChecklist
-              .map(item => `- [ ] ${item}`)
-              .join('\n');
-            get().addEvent({
-              type: 'SYSTEM',
-              title: i18next.t('modules:journal.events.checklist_remaining'),
-              content: i18next.t('modules:journal.events.checklist_remaining_content', { 
-                checklist: checklistContent 
-              })
-            });
-          }
-
-          if (snapshot.clocks && snapshot.clocks.length > 0) {
-            const clockContent = snapshot.clocks
-              .map(c => `- **${c.name}**: ${c.filled}/${c.total} segments`)
-              .join('\n');
-            get().addEvent({
-              type: 'SYSTEM',
-              title: i18next.t('modules:journal.events.clock_status'),
-              content: i18next.t('modules:journal.events.clock_status_content', { clockContent })
-            });
-          }
-
-          if (snapshot.whiteboardSnapshot) {
-            get().addEvent({
-              type: 'SYSTEM',
-              title: i18next.t('modules:journal.events.whiteboard_save'),
-              content: i18next.t('modules:journal.events.whiteboard_save_content'),
-              metadata: { whiteboardPaths: snapshot.whiteboardSnapshot }
-            });
-          }
-        }
 
         set((state) => ({
           isRecording: false,
@@ -179,13 +77,11 @@ export const useJournalStore = create<JournalState>()(
       },
 
       addEvent: (eventData) => set((state) => {
-        if (!state.activeJournalId || (!state.isRecording && eventData.type !== 'NOTE' && eventData.type !== 'SYSTEM')) {
-          return state;
-        }
+        if (!state.activeJournalId) return state;
 
         const newEvent: JournalEvent = {
           ...eventData,
-          id: uuidv4(),
+          id: generateId(),
           timestamp: Date.now(),
         };
 
@@ -227,71 +123,13 @@ export const useJournalStore = create<JournalState>()(
       })),
 
       generateAISummary: async (journalId) => {
-        const journal = get().journals.find(j => j.id === journalId);
-        if (!journal || journal.events.length === 0) return;
-
-        try {
-          const { aiService } = await import('../ai/AIService');
-          const summary = await aiService.summarizeSession(journal.events);
-
-          get().addEvent({
-            type: 'SYSTEM',
-            title: i18next.t('modules:journal.events.ai_summary'),
-            content: summary
-          });
-        } catch (err) {
-          console.error("[JournalStore] AI Summary failed:", err);
-          get().addEvent({
-            type: 'SYSTEM',
-            title: i18next.t('modules:journal.events.ai_summary_failed'),
-            content: i18next.t('modules:journal.events.ai_summary_error')
-          });
-        }
+        // Mocked for now
+        console.log("AI Summary requested for journal:", journalId);
       },
 
       syncToNotebook: async (journalId) => {
-        const journal = get().journals.find(j => j.id === journalId);
-        if (!journal) return;
-
-        // Find the AI summary event
-        const summaryEvent = journal.events.find(e => e.title === i18next.t('modules:journal.events.ai_summary'));
-        if (!summaryEvent) {
-          throw new Error(i18next.t('modules:journal.messages.no_ai_summary'));
-        }
-
-        // Get notebook URL from SessionOS
-        try {
-          const { useSessionOSStore } = await import('../session/useSessionOSStore');
-          const { campaigns, activeCampaignId } = useSessionOSStore.getState();
-          const campaign = campaigns.find(c => c.id === activeCampaignId);
-
-          if (!campaign?.notebookUrl) {
-            throw new Error(i18next.t('modules:journal.messages.no_notebook'));
-          }
-
-          // Extract ID from URL: https://notebooklm.google.com/notebook/ID
-          const notebookIdMatch = campaign.notebookUrl.match(/notebook\/([a-zA-Z0-9-]+)/);
-          const notebookId = notebookIdMatch ? notebookIdMatch[1] : null;
-
-          if (!notebookId) {
-            throw new Error(i18next.t('modules:journal.messages.invalid_notebook_url'));
-          }
-
-          // Call MCP tool (this would typically be handled by a service or directly if in a supported environment)
-          // Since we are in the frontend, we'd need a bridge or a direct call if the MCP is exposed.
-          // For now, we simulate the call via bridge or notify the user if we can't do it directly.
-          console.log(`[JournalStore] Syncing to Notebook: ${notebookId}`);
-          
-          if (window.appBridge?.notebooklm?.addText) {
-            await window.appBridge.notebooklm.addText(notebookId, summaryEvent.content, `Résumé Session: ${journal.title}`);
-          } else {
-            throw new Error(i18next.t('modules:journal.messages.notebook_not_available'));
-          }
-
-        } catch (err: any) {
-          console.error("[JournalStore] Sync failed:", err);
-          throw err;
-        }
+        // Mocked for now
+        console.log("Notebook sync requested for journal:", journalId);
       },
 
       updateJournalNote: (journalId, note) => set((state) => ({
@@ -299,7 +137,7 @@ export const useJournalStore = create<JournalState>()(
       })),
 
       addJournal: (name) => {
-        const id = uuidv4();
+        const id = generateId();
         const newJournal: Journal = {
           id,
           title: name,
@@ -315,7 +153,7 @@ export const useJournalStore = create<JournalState>()(
       clearJournal: () => set({ journals: [], activeJournalId: null, isRecording: false }),
     }),
     {
-      name: 'journal-os-storage-v2', // Versioned storage to avoid conflicts with previous schema
+      name: 'journal-os-storage-v2',
     }
   )
 );

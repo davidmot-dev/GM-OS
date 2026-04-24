@@ -29,15 +29,15 @@ const WeatherLayer: React.FC<WeatherLayerProps> = ({ isProjectedView = false }) 
         const canvas = canvasRef.current;
         if (!canvas) return;
 
-        canvas.width = mapWidth;
-        canvas.height = mapHeight;
+        canvas.width = mapWidth || 1920;
+        canvas.height = mapHeight || 1080;
         
         // Reset particles on type change
         particles.current = [];
     }, [mapWidth, mapHeight, weatherType]);
 
     useEffect(() => {
-        if (weatherType === 'none') return;
+        if (!weatherType || weatherType === 'none') return;
 
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -45,13 +45,15 @@ const WeatherLayer: React.FC<WeatherLayerProps> = ({ isProjectedView = false }) 
         if (!ctx) return;
 
         let animationFrameId: number;
+        const currentWidth = canvas.width;
+        const currentHeight = canvas.height;
 
         const createParticle = (type: WeatherType): Particle => {
             switch (type) {
                 case 'rain':
                     return {
-                        x: Math.random() * mapWidth,
-                        y: Math.random() * mapHeight - mapHeight,
+                        x: Math.random() * currentWidth,
+                        y: Math.random() * currentHeight - currentHeight,
                         vx: (Math.random() - 0.5) * 2,
                         vy: 15 + Math.random() * 10,
                         size: 1 + Math.random() * 2,
@@ -60,8 +62,8 @@ const WeatherLayer: React.FC<WeatherLayerProps> = ({ isProjectedView = false }) 
                     };
                 case 'snow':
                     return {
-                        x: Math.random() * mapWidth,
-                        y: Math.random() * mapHeight - mapHeight,
+                        x: Math.random() * currentWidth,
+                        y: Math.random() * currentHeight - currentHeight,
                         vx: (Math.random() - 0.5) * 2,
                         vy: 2 + Math.random() * 3,
                         size: 2 + Math.random() * 4,
@@ -70,8 +72,8 @@ const WeatherLayer: React.FC<WeatherLayerProps> = ({ isProjectedView = false }) 
                     };
                 case 'smoke':
                     return {
-                        x: Math.random() * mapWidth,
-                        y: mapHeight + 50,
+                        x: Math.random() * currentWidth,
+                        y: currentHeight + 50,
                         vx: (Math.random() - 0.5) * 1,
                         vy: -(1 + Math.random() * 2),
                         size: 20 + Math.random() * 40,
@@ -84,10 +86,11 @@ const WeatherLayer: React.FC<WeatherLayerProps> = ({ isProjectedView = false }) 
         };
 
         const updateAndDraw = () => {
-            ctx.clearRect(0, 0, mapWidth, mapHeight);
+            ctx.clearRect(0, 0, currentWidth, currentHeight);
 
             // Add new particles based on intensity
-            const particleCount = weatherType === 'smoke' ? 2 : Math.floor(20 * weatherIntensity);
+            const intensity = weatherIntensity ?? 1;
+            const particleCount = weatherType === 'smoke' ? 2 : Math.floor(20 * intensity);
             for (let i = 0; i < particleCount; i++) {
                 if (particles.current.length < 1000) {
                     particles.current.push(createParticle(weatherType));
@@ -122,7 +125,7 @@ const WeatherLayer: React.FC<WeatherLayerProps> = ({ isProjectedView = false }) 
 
                 // Bounds check
                 if (weatherType === 'smoke') return p.life > 0;
-                return p.y < mapHeight && p.x >= 0 && p.x <= mapWidth;
+                return p.y < currentHeight && p.x >= 0 && p.x <= currentWidth;
             });
 
             animationFrameId = requestAnimationFrame(updateAndDraw);
@@ -132,12 +135,12 @@ const WeatherLayer: React.FC<WeatherLayerProps> = ({ isProjectedView = false }) 
         return () => cancelAnimationFrame(animationFrameId);
     }, [weatherType, weatherIntensity, mapWidth, mapHeight]);
 
-    if (weatherType === 'none') return null;
+    if (!weatherType || weatherType === 'none') return null;
 
     return (
         <canvas
             ref={canvasRef}
-            className="absolute inset-0 w-full h-full pointer-events-none z-25"
+            className="absolute inset-0 w-full h-full pointer-events-none z-[26]"
             style={{ mixBlendMode: weatherType === 'smoke' ? 'screen' : 'normal' }}
         />
     );

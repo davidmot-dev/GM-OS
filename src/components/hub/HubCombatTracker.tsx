@@ -1,6 +1,6 @@
 import React from 'react';
 import { ResolvedImage } from '../ResolvedImage';
-import type { Combatant } from '../../modules/combat/useCombatStore';
+import type { Combatant } from '../../modules/combat/types';
 
 interface HubCombatTrackerProps {
     combatants: Combatant[];

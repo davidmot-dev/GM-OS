@@ -1,75 +1,53 @@
-/**
- * Session-OS Store — Shared Types (Backward-Compatible Re-exports)
- *
- * ⚠️ Ce fichier est maintenu pour la compatibilité descendante.
- * Les types ont été migrés vers des fichiers granulaires dans `src/types/`.
- *
- * Migration path :
- * - Entity, HealthSystem, DamageImpact  → src/types/entity.types.ts
- * - Player, PlayerCharacter, Inventory  → src/types/player.types.ts
- * - Campaign, LayoutConfig, CurrentView → src/types/campaign.types.ts
- * - GameSession, SessionMessage...      → src/types/session.types.ts
- * - AtlasMap, WikiEntry, Clue...        → src/types/chronicle.types.ts
- * - DeckManifest, DeckSessionState      → src/types/deck.types.ts
- *
- * @module session/store/types
- * @deprecated Importer directement depuis `src/types/*.types.ts`
- */
+export type HealthSystem = 'hp' | 'wounds' | 'clocks' | 'custom';
 
-// ─────────────────────────────────────────────
-// Re-exports depuis les fichiers granulaires
-// ─────────────────────────────────────────────
+export interface Entity {
+    id: string;
+    name: string;
+    type: string;
+    avatar?: string;
+    imageUrl?: string;
+    portraitUrl?: string;
+    hp: number;
+    hpMax: number;
+    status: 'alive' | 'dead' | 'unconscious' | 'dying';
+    roleplayingNotes?: string;
+    gmSecretInfo?: string;
+}
 
-export type {
-    DamageImpact,
-    PersistenceBadge,
-    HealthSystem,
-    EntityRelation,
-    Entity,
-} from '../../../types/entity.types';
+export interface PlayerCharacter extends Entity {
+    level?: number;
+    class?: string;
+    race?: string;
+}
 
-export type {
-    InventoryItem,
-    TransferRequest,
-    LootHistoryEntry,
-    PlayerCharacter,
-    Player,
-} from '../../../types/player.types';
+export interface Player {
+    id: string;
+    name: string;
+    characters: PlayerCharacter[];
+}
 
-export type {
-    LayoutConfig,
-    CurrentView,
-    Campaign,
-} from '../../../types/campaign.types';
+export interface Campaign {
+    id: string;
+    name: string;
+    activeSessionId?: string;
+    notebookUrl?: string;
+}
 
-export type {
-    SessionChecklistItem,
-    SessionModuleSnapshot,
-    GameSession,
-    RemoteNotification,
-    HubNotification,
-    SessionMessage,
-} from '../../../types/session.types';
+export interface GameSession {
+    id: string;
+    campaignId: string;
+    name: string;
+    date: number;
+}
 
-export type {
-    AtlasEntityCategory,
-    AtlasLinkedEntity,
-    AtlasMap,
-    TimelineEvent,
-    WikiEntry,
-    Clue,
-} from '../../../types/chronicle.types';
-
-export type {
-    CardFormat,
-    CardOrientation,
-    DeckManifest,
-    DeckSessionState,
-} from '../../../types/deck.types';
-
-// ─────────────────────────────────────────────
-// Re-exports tiers (drivers, sheet templates)
-// ─────────────────────────────────────────────
-
-export type { SheetTemplate } from '../../../data/defaultSheetTemplates';
-export type { GameDriver } from '../../../types/drivers';
+export interface SessionOSState {
+    campaigns: Campaign[];
+    activeCampaignId: string | null;
+    players: Player[];
+    entities: Entity[];
+    
+    // Actions
+    updateCharacterHP: (playerId: string, charId: string, hp: number) => void;
+    updateEntityHP: (entityId: string, hp: number) => void;
+    updateEntity: (entityId: string, updates: Partial<Entity>) => void;
+}

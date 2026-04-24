@@ -26,7 +26,11 @@ const PlayerMapCanvas: React.FC<PlayerMapCanvasProps> = ({ onMapClick }) => {
 
     // Use projected state for the hub
     const mapUrl = projectedMapUrl;
-    const isVideo = projectedIsVideo || projectedMapUrl?.endsWith('.mp4') || projectedMapUrl?.endsWith('.webm');
+    const isVideo = projectedIsVideo 
+        || projectedMapUrl?.endsWith('.mp4') 
+        || projectedMapUrl?.endsWith('.webm')
+        || projectedMapUrl?.startsWith('data:video/'); // DataURL video reçue via IPC
+
     const fogDataUrl = projectedFogDataUrl;
     const mapWidth = projectedMapWidth;
     const mapHeight = projectedMapHeight;
@@ -99,43 +103,41 @@ const PlayerMapCanvas: React.FC<PlayerMapCanvasProps> = ({ onMapClick }) => {
         }
     }, [viewResetCounter, fitToScreen]);
 
-    // Add storage listener for cross-window sync
-    useEffect(() => {
-        const handleStorageChange = (e: StorageEvent) => {
-            if (e.key === 'gmos-map-storage') {
-                useMapStore.persist.rehydrate();
-            }
-        };
-
-        window.addEventListener('storage', handleStorageChange);
-        return () => window.removeEventListener('storage', handleStorageChange);
-    }, []);
+    // Storage listener removed: In v7 we use IPC instead of localStorage sync to avoid OOM loops.
 
     // Sync Fog Canvas
     useEffect(() => {
+        if (!fogCanvasRef.current) return;
         const canvas = fogCanvasRef.current;
-        if (!canvas) return;
-
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
+        canvas.width = effectiveWidth;
+        canvas.height = effectiveHeight;
+
         if (!fogDataUrl) {
-            // Fill completely black if no fog data is provided
-            canvas.width = effectiveWidth;
-            canvas.height = effectiveHeight;
-            ctx.fillStyle = 'black';
-            ctx.fillRect(0, 0, effectiveWidth, effectiveHeight);
+            // 🛡️ Pas de brouillard → canvas transparent (jamais noir !)
+            // Un canvas vide (clearRect) est transparent et laisse voir la carte.
+            ctx.clearRect(0, 0, effectiveWidth, effectiveHeight);
             return;
         }
-
+        
         const img = new Image();
         img.onload = () => {
-            canvas.width = effectiveWidth;
-            canvas.height = effectiveHeight;
-            ctx.clearRect(0, 0, effectiveWidth, effectiveHeight);
-            ctx.drawImage(img, 0, 0, effectiveWidth, effectiveHeight);
+            const ctx2 = canvas.getContext('2d');
+            if (ctx2) {
+                ctx2.clearRect(0, 0, effectiveWidth, effectiveHeight);
+                ctx2.drawImage(img, 0, 0, effectiveWidth, effectiveHeight);
+            }
+            img.onload = null;
+            img.src = '';
         };
         img.src = fogDataUrl;
+
+        return () => {
+            img.onload = null;
+            img.src = '';
+        };
     }, [fogDataUrl, effectiveWidth, effectiveHeight]);
 
     // Grid Rendering
@@ -221,10 +223,17 @@ const PlayerMapCanvas: React.FC<PlayerMapCanvasProps> = ({ onMapClick }) => {
                         src={resolvedMapUrl} 
                         autoPlay 
                         loop 
-                        muted={projectedIsMapMuted} 
+                        muted={projectedIsMapMuted !== false}
+                        playsInline
                         onLoadedMetadata={(e) => {
                             const video = e.currentTarget;
                             setVideoDimensions({ w: video.videoWidth, h: video.videoHeight });
+                            // Forcer le play après chargement des métadonnées
+                            video.play().catch(() => {
+                                // Autoplay bloqué → forcer muted et réessayer
+                                video.muted = true;
+                                video.play().catch(console.error);
+                            });
                         }}
                         className="absolute inset-0 w-full h-full object-contain z-10 pointer-events-none" 
                     />
@@ -263,11 +272,13 @@ const PlayerMapCanvas: React.FC<PlayerMapCanvasProps> = ({ onMapClick }) => {
                 {/* 4b. Danger Zones Layer (Under Fog) */}
                 <DangerZoneLayer isProjectedView={true} />
 
-                {/* 5. Fog Layer (Masking everything below) */}
-                <canvas
-                    ref={fogCanvasRef}
-                    className="absolute inset-0 w-full h-full z-20 opacity-100 pointer-events-none"
-                />
+                {/* 5. Fog Layer (Masking everything below) — rendu UNIQUEMENT si fog projeté */}
+                {fogDataUrl && (
+                    <canvas
+                        ref={fogCanvasRef}
+                        className="absolute inset-0 w-full h-full z-20 opacity-100 pointer-events-none"
+                    />
+                )}
 
                 {/* 6. Pings Layer (Above Fog so they remain visible) */}
                 <MapPingLayer isProjectedView={true} />

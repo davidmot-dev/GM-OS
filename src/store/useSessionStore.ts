@@ -114,7 +114,9 @@ export const useSessionStore = create<SessionState>()(
             setDisplayCount: (displayCount) => set({ displayCount }),
             setLanguage: (language) => {
                 set({ language });
-                i18n.changeLanguage(language);
+                if (i18n.changeLanguage) {
+                    i18n.changeLanguage(language);
+                }
                 localStorage.setItem('gmos-language', language);
             },
             setSystemReady: (isSystemReady) => set({ isSystemReady }),

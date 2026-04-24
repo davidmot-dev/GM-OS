@@ -8,6 +8,7 @@ import { useDiceStore } from '../../../stores/useDiceStore';
 import { useClientStore } from '../../../stores/useClientStore';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useSyncStore } from '../../../stores/useSyncStore';
+import { useMapStore } from '../../map/useMapStore';
 import { type Entity, type AtlasMap } from '../store/types';
 import type { ProjectedEntity } from '../../image/types';
 
@@ -138,6 +139,16 @@ export const useHubSync = () => {
 
     // WebSocket Connection Logic
     useEffect(() => {
+        // 🛡️ SÉCURITÉ : Si on a un bridge natif (Tauri/Electron), on n'a pas besoin de WebSocket pour le local.
+        // On ne le garde que pour les vrais accès distants (Tablettes/Phones).
+        const isNative = (window as any).appBridge && ((window as any).appBridge.isTauri || (window as any).appBridge.isElectron);
+        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+        // Si on est en local et qu'on a le bridge, on considère qu'on est "connecté" via le pont.
+        if (window.appBridge && isLocalhost) {
+            setStatus('connected');
+        }
+
         if (!host) return;
 
         let socket: WebSocket | null = null;
@@ -147,43 +158,56 @@ export const useHubSync = () => {
         const startConnection = () => {
             if (!isActive) return;
 
+            // Ne pas tenter de WebSocket si on est en natif et sur localhost, sauf si on force le mode remote
+            if (isNative && isLocalhost) {
+                console.log('[useHubSync] Local Native context detected, skipping WebSocket.');
+                return;
+            }
+
             const socketUrl = `ws://${host}:${port}`;
-            console.log('[useHubSync] Connecting to:', socketUrl);
-            socket = new WebSocket(socketUrl);
-            socketRef.current = socket;
+            console.log('[useHubSync] Attempting WebSocket connection to:', socketUrl);
+            
+            try {
+                socket = new WebSocket(socketUrl);
+                socketRef.current = socket;
 
-            socket.onopen = () => {
-                if (!isActive) {
-                    socket?.close();
-                    return;
-                }
-                console.log('[useHubSync] Connected to Nexus Bridge');
-                setStatus('connected');
-                setClientStatus('active');
-                socket?.send(JSON.stringify({ 
-                    type: 'remote:register',
-                    payload: { deviceId, pseudo, playerName, characterId, role: 'hub' }
-                }));
-                socket?.send(JSON.stringify({ type: 'remote:request-sync' }));
-            };
+                socket.onopen = () => {
+                    if (!isActive) {
+                        socket?.close();
+                        return;
+                    }
+                    console.log('[useHubSync] Connected to Nexus Bridge');
+                    setStatus('connected');
+                    setClientStatus('active');
+                    socket?.send(JSON.stringify({ 
+                        type: 'remote:register',
+                        payload: { deviceId, pseudo, playerName, characterId, role: 'hub' }
+                    }));
+                    socket?.send(JSON.stringify({ type: 'remote:request-sync' }));
+                };
 
-            socket.onclose = () => {
-                if (!isActive) return;
-                console.log('[useHubSync] WebSocket Disconnected');
-                setStatus('error');
-                setClientStatus('disconnected');
-                
-                // Reconnect after 5s
-                reconnectTimer = setTimeout(() => {
-                    startConnection();
-                }, 5000);
-            };
+                socket.onclose = () => {
+                    if (!isActive) return;
+                    console.log('[useHubSync] WebSocket Disconnected');
+                    // On ne passe en "error" que si on n'a pas de bridge de secours
+                    if (!window.appBridge) {
+                        setStatus('error');
+                    }
+                    setClientStatus('disconnected');
+                    
+                    // Reconnect after 5s
+                    reconnectTimer = setTimeout(() => {
+                        startConnection();
+                    }, 5000);
+                };
 
-            socket.onerror = () => {
-                setStatus('error');
-            };
+                socket.onerror = () => {
+                    if (!window.appBridge) {
+                        setStatus('error');
+                    }
+                };
 
-            socket.onmessage = (event) => {
+                socket.onmessage = (event) => {
                 if (!isActive) return;
                 try {
                     const data = JSON.parse(event.data);
@@ -253,11 +277,45 @@ export const useHubSync = () => {
                     if (data.type === 'session:display-rule' && data.payload) {
                         setSharedRule(data.payload);
                     }
+
+                    if (data.type === 'map:sync-hub') {
+                        const payload = data.payload;
+                        if (!payload) {
+                            useMapStore.getState().resetProjectionState();
+                        } else {
+                            useMapStore.setState(prev => {
+                                const updates: any = {
+                                    projectionTarget: 'hub',
+                                    projectedMapUrl: payload.mapUrl,
+                                    projectedIsVideo: payload.isVideo,
+                                    projectedTokens: payload.tokens || [],
+                                    projectedWeatherType: payload.weatherType,
+                                    projectedWeatherIntensity: payload.weatherIntensity,
+                                    projectedTimeOfDay: payload.timeOfDay,
+                                    projectedMapWidth: payload.mapWidth,
+                                    projectedMapHeight: payload.mapHeight,
+                                    projectedIsGridEnabled: payload.isGridEnabled,
+                                    projectedGridSize: payload.gridSize,
+                                    projectedGridColor: payload.gridColor,
+                                    projectedGridOpacity: payload.gridOpacity,
+                                    projectedMagicEffects: payload.magicEffects || [],
+                                    projectedDangerZones: payload.dangerZones || []
+                                };
+                                if (payload.fogDataUrl !== undefined) {
+                                    updates.projectedFogDataUrl = payload.fogDataUrl;
+                                }
+                                return { ...prev, ...updates };
+                            });
+                        }
+                    }
                 } catch (err) {
                     console.error('[useHubSync] Sync parsing error:', err);
                 }
             };
-        };
+        } catch (e) {
+            console.warn('[useHubSync] WebSocket initialization failed:', e);
+        }
+    };
 
         startConnection();
 
@@ -275,18 +333,17 @@ export const useHubSync = () => {
     // IPC Bridges (Electron)
     useEffect(() => {
         const handleIpcUpdate = (_event: unknown, ...args: unknown[]) => {
-            const [type, data] = args as [string, string];
-            if (type === 'image') setLiveImagePath(data || null);
+            const [type, data] = args as [string, unknown];
+            if (type === 'image') setLiveImagePath((data as string) || null);
             else if (type === 'entity') {
-                const entity = data ? JSON.parse(data) : null;
-                // Neutralisation des entités "fantômes"
+                const entity = data ? JSON.parse(data as string) : null;
                 if (entity && (entity.name === 'TEST' || entity.id?.startsWith('mock-') || !entity.id)) {
                     setLiveEntity(null);
                 } else {
                     setLiveEntity(entity);
                 }
             }
-            else if (type === 'voice-level') setVoiceLevel(parseFloat(data) || 0);
+            else if (type === 'voice-level') setVoiceLevel(parseFloat(data as string) || 0);
             else if (type === 'map-ping') {
                 const ping = typeof data === 'string' ? JSON.parse(data) : data;
                 setMapPings(prev => [...prev.slice(-10), { ...ping, timestamp: Date.now() }]);
@@ -294,13 +351,46 @@ export const useHubSync = () => {
             else if (type === 'session:display-rule') {
                 setSharedRule(data as any);
             }
+            else if (type === 'map:sync-hub' || type === 'map:sync-projector') {
+                const payload = typeof data === 'string' ? JSON.parse(data) : data as any;
+                if (!payload) {
+                    useMapStore.getState().resetProjectionState();
+                } else {
+                    useMapStore.setState(prev => {
+                        const updates: Partial<typeof prev> = {
+                            projectionTarget: (payload.target || 'hub') as typeof prev.projectionTarget,
+                        };
+
+                        // Only update fields that are present in the payload
+                        // 🛡️ mapUrl est l'ID brut (m-xxx), jamais une DataURL.
+                        // useMediaUrl dans PlayerMapCanvas le résout localement.
+                        if (payload.mapUrl !== undefined) updates.projectedMapUrl = payload.mapUrl;
+                        if (payload.isVideo !== undefined) updates.projectedIsVideo = payload.isVideo;
+                        if (payload.fogDataUrl !== undefined) updates.projectedFogDataUrl = payload.fogDataUrl;
+                        if (payload.tokens !== undefined) updates.projectedTokens = payload.tokens;
+                        if (payload.weatherType !== undefined) updates.projectedWeatherType = payload.weatherType;
+                        if (payload.weatherIntensity !== undefined) updates.projectedWeatherIntensity = payload.weatherIntensity;
+                        if (payload.timeOfDay !== undefined) updates.projectedTimeOfDay = payload.timeOfDay;
+                        if (payload.mapWidth !== undefined) updates.projectedMapWidth = payload.mapWidth;
+                        if (payload.mapHeight !== undefined) updates.projectedMapHeight = payload.mapHeight;
+                        if (payload.isGridEnabled !== undefined) updates.projectedIsGridEnabled = payload.isGridEnabled;
+                        if (payload.gridSize !== undefined) updates.projectedGridSize = payload.gridSize;
+                        if (payload.gridColor !== undefined) updates.projectedGridColor = payload.gridColor;
+                        if (payload.gridOpacity !== undefined) updates.projectedGridOpacity = payload.gridOpacity;
+                        if (payload.magicEffects !== undefined) updates.projectedMagicEffects = payload.magicEffects;
+                        if (payload.dangerZones !== undefined) updates.projectedDangerZones = payload.dangerZones;
+
+                        return { ...prev, ...updates };
+                    });
+                }
+            }
         };
 
-        const handleBroadcastSync = (_e: any, payload: any) => {
+        const handleBroadcastSync = (_e: unknown, payload: unknown) => {
             console.log('[useHubSync] Sync received via BRIDGE (IPC)');
             
             // Gestion du Panic Button / Reset Global
-            if (payload?.type === 'FULL_RESET') {
+            if ((payload as any)?.type === 'FULL_RESET') {
                 setLiveImagePath(null);
                 setLiveEntity(null);
                 return;
@@ -311,11 +401,99 @@ export const useHubSync = () => {
 
         if (window.appBridge?.on) {
             window.appBridge.on('image:sync-hub-data', handleIpcUpdate);
-            window.appBridge.on('map:ping', (_e: any, data: any) => handleIpcUpdate(null, 'map-ping', data));
-            
-            // Bridge V6 : Ecoute de la diffusion globale (Alternative au WebSocket)
+            window.appBridge.on('map:ping', (_e: unknown, data: unknown) => handleIpcUpdate(null, 'map-ping', data));
+            // Les listeners map:sync-hub via AppBridge sont conservés comme FALLBACK
+            // Le mécanisme principal est maintenant BroadcastChannel (voir ci-dessous)
+            window.appBridge.on('map:sync-hub', (_e: unknown, data: unknown) => handleIpcUpdate(null, 'map:sync-hub', data));
+            window.appBridge.on('map:sync-projector', (_e: unknown, data: unknown) => handleIpcUpdate(null, 'map:sync-projector', data));
             window.appBridge.on('remote:broadcast-sync', handleBroadcastSync);
         }
+
+        // ─── BroadcastChannel MAP SYNC (mécanisme principal) ──────────────────
+        // BroadcastChannel est GARANTI cross-window dans Chromium/WebView2 (même origine).
+        // Contrairement à Tauri emit, il ne dépend pas du routage IPC cross-WebviewWindow.
+        const mapBroadcastChannel = new BroadcastChannel('gmos-map-sync');
+
+        const handleMapBroadcast = async (event: MessageEvent) => {
+            const msg = event.data as Record<string, unknown>;
+            if (!msg || typeof msg !== 'object') return;
+
+            console.log('[useHubSync] BroadcastChannel map message received:', msg.type);
+
+            if (msg.type === 'map:clear') {
+                useMapStore.getState().resetProjectionState();
+                return;
+            }
+
+            if (msg.type === 'map:sync') {
+                // Résoudre le m-xxx → DataURL depuis l'IndexedDB partagée
+                // AVANT de mettre à jour le store (évite un flash noir)
+                let resolvedMapUrl: string | null | undefined = undefined;
+
+                if (msg.mapId !== undefined) {
+                    const rawId = msg.mapId as string | null;
+                    if (rawId === null) {
+                        resolvedMapUrl = null;
+                    } else if (rawId.startsWith('m-')) {
+                        // Résolution IndexedDB locale (IndexedDB partagée entre fenêtres Tauri same-origin)
+                        const dataUrl = await resolveMediaToDataUrl(rawId);
+                        resolvedMapUrl = dataUrl ?? null;
+                        console.log(`[useHubSync] m-xxx resolved: ${rawId} → ${resolvedMapUrl ? `DataURL (${Math.round((resolvedMapUrl.length)/1024)}KB)` : 'null'}`);
+                    } else {
+                        // Déjà une URL résolue (http, data:, blob:, chemin absolu)
+                        resolvedMapUrl = rawId;
+                    }
+                }
+
+                useMapStore.setState(prev => {
+                    const updates: Partial<typeof prev> = {
+                        projectionTarget: ((msg.target as string) || 'hub') as typeof prev.projectionTarget,
+                    };
+
+                    if (resolvedMapUrl !== undefined) updates.projectedMapUrl = resolvedMapUrl;
+                    if (msg.isVideo !== undefined) updates.projectedIsVideo = msg.isVideo as boolean;
+                    if (msg.fogDataUrl !== undefined) updates.projectedFogDataUrl = msg.fogDataUrl as string | null;
+                    if (msg.tokens !== undefined) updates.projectedTokens = msg.tokens as typeof prev.projectedTokens;
+                    if (msg.weatherType !== undefined) updates.projectedWeatherType = msg.weatherType as typeof prev.projectedWeatherType;
+                    if (msg.weatherIntensity !== undefined) updates.projectedWeatherIntensity = msg.weatherIntensity as number;
+                    if (msg.timeOfDay !== undefined) updates.projectedTimeOfDay = msg.timeOfDay as typeof prev.projectedTimeOfDay;
+                    if (msg.mapWidth !== undefined) updates.projectedMapWidth = msg.mapWidth as number;
+                    if (msg.mapHeight !== undefined) updates.projectedMapHeight = msg.mapHeight as number;
+                    if (msg.isGridEnabled !== undefined) updates.projectedIsGridEnabled = msg.isGridEnabled as boolean;
+                    if (msg.gridSize !== undefined) updates.projectedGridSize = msg.gridSize as number;
+                    if (msg.gridColor !== undefined) updates.projectedGridColor = msg.gridColor as string;
+                    if (msg.gridOpacity !== undefined) updates.projectedGridOpacity = msg.gridOpacity as number;
+                    if (msg.magicEffects !== undefined) updates.projectedMagicEffects = msg.magicEffects as typeof prev.projectedMagicEffects;
+                    if (msg.dangerZones !== undefined) updates.projectedDangerZones = msg.dangerZones as typeof prev.projectedDangerZones;
+                    if (msg.isMapMuted !== undefined) updates.projectedIsMapMuted = msg.isMapMuted as boolean;
+                    if (msg.mapVolume !== undefined) updates.projectedMapVolume = msg.mapVolume as number;
+
+                    return { ...prev, ...updates };
+                });
+            }
+        };
+
+        mapBroadcastChannel.addEventListener('message', handleMapBroadcast);
+
+        // 🧹 BOOT : Vider l'état projeté stale (session précédente)
+        useMapStore.getState().resetProjectionState();
+
+        // 📡 Signaler au MJ qu'on est prêt via BroadcastChannel ET AppBridge (double sécurité)
+        const sendReady = () => {
+            const readyBc = new BroadcastChannel('gmos-hub-signals');
+            readyBc.postMessage({ type: 'hub:ready', window: 'hub' });
+            readyBc.close();
+            // Fallback AppBridge
+            window.appBridge?.ipc?.send('hub:ready', { window: 'hub' });
+        };
+        setTimeout(sendReady, 800);
+        setTimeout(sendReady, 2500);
+
+        return () => {
+            mapBroadcastChannel.removeEventListener('message', handleMapBroadcast);
+            mapBroadcastChannel.close();
+        };
+
 
         const handleSendMessage = (e: Event) => {
             const customEvent = e as CustomEvent;

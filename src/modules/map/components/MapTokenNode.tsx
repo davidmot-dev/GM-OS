@@ -4,7 +4,7 @@ import { useMapUIStore } from '../useMapUIStore';
 import type { MapToken } from '../types';
 import { useCombatStore, type StatusEffect } from '../../combat/useCombatStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
-import { Shield, Trash2, Eye, EyeOff } from 'lucide-react';
+import { Shield, Trash2, Eye, EyeOff, Lock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 interface MapTokenNodeProps {
@@ -39,10 +39,13 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
 
     const [isDragging, setIsDragging] = useState(false);
 
-    const isInteractable = isProjectedView || currentTool === 'move_token';
+    // TODO: Implement locking logic in v7 if needed for multi-user interactions
+    const isLockedByOther = false; 
+    const isInteractable = (isProjectedView || currentTool === 'move_token') && !isLockedByOther;
 
     const handlePointerDown = (e: React.PointerEvent) => {
         if (!isInteractable || e.button !== 0) return;
+        
         // Empêche la propagation au canvas de Fog of War en-dessous SEULEMENT si on veut bouger le pion
         e.stopPropagation();
         
@@ -68,10 +71,12 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
         const dy = e.movementY / effectiveZoom;
 
         const moveFn = isProjectedView ? updateProjectedToken : updateToken;
-        moveFn(token.id, { 
+        const newPos = { 
             x: token.x + dx, 
             y: token.y + dy 
-        });
+        };
+        
+        moveFn(token.id, newPos);
     };
 
     const handlePointerUp = (e: React.PointerEvent) => {
@@ -101,12 +106,12 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
     return (
         <div
             className={`absolute rounded-full shadow-lg border-2 border-app-bg bg-app-surface flex items-center justify-center transition-all group ${isInteractable ? 'cursor-grab hover:ring-4 hover:z-40 active:cursor-grabbing' : 'cursor-default'
-                } ring-2 ${ringColor} ${isDragging ? 'z-50 ring-4' : 'z-30'} ${isSelected ? 'ring-sky-500 shadow-[0_0_20px_rgba(14,165,233,0.5)] z-40' : ''} ${displayInvisible ? (isProjectedView ? 'hidden' : 'opacity-40 grayscale-[0.5]') : ''}`}
+                } ring-2 ${ringColor} ${isDragging ? 'z-50 ring-4' : 'z-30'} ${isSelected ? 'ring-sky-500 shadow-[0_0_20px_rgba(14,165,233,0.5)] z-40' : ''} ${displayInvisible ? (isProjectedView ? 'hidden' : 'opacity-40 grayscale-[0.5]') : ''} ${isLockedByOther ? 'opacity-70 saturate-50' : ''}`}
             style={{
                 left: token.x,
                 top: token.y,
-                width: 48 * token.size,
-                height: 48 * token.size,
+                width: 48 * (token.size || 1),
+                height: 48 * (token.size || 1),
                 transform: 'translate(-50%, -50%)',
                 pointerEvents: 'auto',
                 touchAction: 'none'
@@ -122,11 +127,18 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
                 // La suppression par clic droit doit TOUJOURS fonctionner pour le MJ
                 e.preventDefault();
                 e.stopPropagation();
-                removeToken(token.id);
+                if (!isLockedByOther) removeToken(token.id);
             }}
         >
+            {/* Lock Indicator */}
+            {isLockedByOther && (
+                <div className="absolute inset-0 flex items-center justify-center z-50 bg-red-900/20 rounded-full animate-pulse">
+                    <Lock size={20 * (token.size || 1)} className="text-red-500 drop-shadow-lg" />
+                </div>
+            )}
+
             {/* Trash Button on Hover */}
-            {isInteractable && (
+            {isInteractable && !isProjectedView && (
                 <div className="absolute -top-2 -right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-50">
                     <button
                         onClick={(e) => {
@@ -155,7 +167,7 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
             {avatarToUse && resolvedAvatar ? (
                 <img src={resolvedAvatar} alt="avatar" className="w-full h-full object-cover rounded-full pointer-events-none" />
             ) : (
-                <Shield size={24 * token.size} className={combatant?.isPlayer ? 'text-gm-violet' : 'text-gm-crimson'} />
+                <Shield size={24 * (token.size || 1)} className={combatant?.isPlayer ? 'text-gm-violet' : 'text-gm-crimson'} />
             )}
 
             {/* Status indicators */}

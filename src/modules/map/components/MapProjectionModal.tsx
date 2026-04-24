@@ -5,6 +5,7 @@ import { useImageStore } from '../../image/useImageStore';
 import { useMapStore } from '../useMapStore';
 import { useModalStore } from '../../../stores/useModalStore';
 import { useHardwareStore } from '../../../stores/useHardwareStore';
+import { MapService } from '../logic/MapService';
 
 const MapProjectionModal: React.FC = () => {
     const { t } = useTranslation(['modules', 'common']);
@@ -41,12 +42,11 @@ const MapProjectionModal: React.FC = () => {
         const bridge = window.appBridge;
         if (bridge?.image?.launchDisplay && mapUrl) {
             // Stop Hub projection (Exclusivity)
-            clearProjectedState();
+            // clearProjectedState(); // Non, on veut peut-être garder l'état mais changer la cible
 
             // Manually sync "projected" state for the monitor to consume via storage events
-            // We set projectionTarget to 'monitor' so Hub doesn't show it
             useMapStore.setState({
-                projectionTarget: 'monitor',
+                projectionTarget: displayId,
                 projectedMapUrl: mapUrl,
                 projectedIsVideo: isVideo,
                 projectedFogDataUrl: fogDataUrl,
@@ -56,7 +56,6 @@ const MapProjectionModal: React.FC = () => {
                 projectedWeatherType: weatherType,
                 projectedWeatherIntensity: weatherIntensity,
                 projectedMapWidth: mapWidth,
-
                 projectedMapHeight: mapHeight,
                 projectedIsGridEnabled: isGridEnabled,
                 projectedGridSize: gridSize,
@@ -64,9 +63,9 @@ const MapProjectionModal: React.FC = () => {
                 projectedGridOpacity: gridOpacity
             });
 
-
             // Signal tactical map mode to the projector window
-            bridge.image.launchDisplay(['__tactical_map__'], displayId);
+            // On envoie une URL vide ou spéciale pour que ProjectorView sache qu'il doit utiliser le Canvas
+            MapService.syncMapToPlayers();
         }
         closeModal();
     };
