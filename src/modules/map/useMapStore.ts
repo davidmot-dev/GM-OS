@@ -6,7 +6,7 @@ import type {
 } from './types';
 import { useJournalStore } from '../journal/useJournalStore';
 import { fogDB } from '../../utils/indexedDB';
-import { MapService } from './logic/MapService';
+// import { MapService } from './logic/MapService'; // 🚫 Broken cycle
 
 interface MapState {
     mapUrl: string | null;
@@ -392,7 +392,7 @@ export const useMapStore = create<MapState>()(
                     projectedMapVolume: state.mapVolume,
                     projectedDangerZones: [...state.dangerZones],
                 }));
-                MapService.syncMapToPlayers(forceHeavy);
+                import('./logic/MapService').then(({ MapService }) => MapService.syncMapToPlayers(forceHeavy));
             },
 
             clearProjectedState: () => {
@@ -408,7 +408,7 @@ export const useMapStore = create<MapState>()(
                     projectedPings: [],
                     projectedDangerZones: [],
                 });
-                MapService.clearProjection(target);
+                import('./logic/MapService').then(({ MapService }) => MapService.clearProjection(target));
             },
 
             resetProjectionState: () => {
@@ -423,7 +423,7 @@ export const useMapStore = create<MapState>()(
                     projectedMagicEffects: [],
                     projectedDangerZones: [],
                 });
-                MapService.clearProjection(target);
+                import('./logic/MapService').then(({ MapService }) => MapService.clearProjection(target));
             },
 
             addDangerZone: (zone: Omit<DangerZone, 'id' | 'activeTokenIds'>) => {

@@ -1,4 +1,5 @@
-import { STATUS_CONFLICT_MAP, type Combatant } from '../../combat/useCombatStore';
+import { type Combatant } from '../../combat/useCombatStore';
+import { STATUS_CONFLICT_MAP } from '../../combat/logic/CombatRules';
 import type { TacticalConfig } from '../../../types/drivers';
 
 export interface GridPoint {

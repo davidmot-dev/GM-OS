@@ -5,10 +5,20 @@ import { SessionOSState } from './types';
 export const useSessionOSStore = create<SessionOSState>()(
     persist(
         (set, get) => ({
-            campaigns: [],
             activeCampaignId: null,
+            campaigns: [],
             players: [],
             entities: [],
+            customGameDrivers: [],
+            currentView: 'cockpit',
+            messages: [],
+            sessions: [],
+            clues: [],
+            atlasMaps: [],
+            customSheetTemplates: [],
+            activeCampaignWallpaper: null,
+            connectedCharacters: {},
+            isSystemSyncing: false,
 
             updateCharacterHP: (playerId, charId, hp) => {
                 set((state) => ({
@@ -29,7 +39,34 @@ export const useSessionOSStore = create<SessionOSState>()(
                 set((state) => ({
                     entities: state.entities.map(e => e.id === entityId ? { ...e, ...updates } : e)
                 }));
-            }
+            },
+
+            updateCampaign: (id, updates) => {
+                set((state) => ({
+                    campaigns: state.campaigns.map(c => c.id === id ? { ...c, ...updates } : c)
+                }));
+            },
+
+            setCurrentView: (view) => set({ currentView: view }),
+
+            getActiveDriver: () => {
+                const { activeCampaignId, campaigns, customGameDrivers } = get();
+                const campaign = campaigns.find((c) => c.id === activeCampaignId);
+                if (!campaign) return null;
+                return (
+                    customGameDrivers.find((d) => d.id === campaign.system) ??
+                    null
+                );
+            },
+
+            updateCharacterNarrative: () => {},
+            addSessionMessage: () => {},
+            requestItemTransfer: () => {},
+            approveItemTransfer: () => {},
+            rejectItemTransfer: () => {},
+            removeInventoryItem: () => {},
+            setCharacterLocks: () => {},
+            saveMessageToJournal: () => {},
         }),
         {
             name: 'gm-os-session-storage',

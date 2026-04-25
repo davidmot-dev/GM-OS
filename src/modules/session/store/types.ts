@@ -45,9 +45,30 @@ export interface SessionOSState {
     activeCampaignId: string | null;
     players: Player[];
     entities: Entity[];
+    customGameDrivers: any[]; // Updated to any[] for now to avoid deep type issues
+    currentView: string;
+    messages: any[];
+    sessions: any[];
+    clues: any[];
+    atlasMaps: any[];
+    customSheetTemplates: any[];
+    activeCampaignWallpaper: string | null;
+    connectedCharacters: Record<string, string>;
+    isSystemSyncing: boolean;
     
     // Actions
     updateCharacterHP: (playerId: string, charId: string, hp: number) => void;
     updateEntityHP: (entityId: string, hp: number) => void;
     updateEntity: (entityId: string, updates: Partial<Entity>) => void;
+    updateCampaign: (id: string, updates: Partial<Campaign>) => void;
+    setCurrentView: (view: string) => void;
+    getActiveDriver: () => any;
+    updateCharacterNarrative: (...args: any[]) => void;
+    addSessionMessage: (...args: any[]) => void;
+    requestItemTransfer: (...args: any[]) => void;
+    approveItemTransfer: (...args: any[]) => void;
+    rejectItemTransfer: (...args: any[]) => void;
+    removeInventoryItem: (...args: any[]) => void;
+    setCharacterLocks: (...args: any[]) => void;
+    saveMessageToJournal: (...args: any[]) => void;
 }
