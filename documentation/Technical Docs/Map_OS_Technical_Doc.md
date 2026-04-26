@@ -51,7 +51,13 @@ Pour éviter le problème de "fenêtre noire" au démarrage (où l'esclave rate 
 ### 3. Throttling et Performance
 La diffusion du Master est "throttlée" (déclenchée avec un délai de 50ms) pour grouper les mises à jour rapides (drag de tokens) et minimiser la charge CPU sur le canal de communication.
 
+### 4. Stabilité du Chargement & Dynamic Imports (v7.0.0)
+Pour résoudre les problèmes de **dépendances circulaires** fréquents dans les architectures de stores interconnectés (ex: `useMapStore` utilisant `MapService` qui lui-même utilise le store), Map-OS utilise désormais des imports dynamiques au sein des actions.
+- Cela évite les deadlocks du résolveur Vite au démarrage.
+- Le module `MapDashboard.tsx` est chargé en `lazy()` pour garantir que le shell de l'application est prêt avant l'initialisation du moteur de carte lourd.
+
 ## 📦 Composants Clés
+- **`MapDashboard.tsx`** : Point d'entrée lazy-loaded.
 - **`PlayerMapCanvas.tsx`** : Coordonne l'empilement correct pour le hub joueur.
 - **`MapCanvas.tsx`** : Interface de contrôle et de rendu pour le MJ.
 - **`FogEngine.ts`** : Logique bas-niveau de manipulation du canvas de brouillard.

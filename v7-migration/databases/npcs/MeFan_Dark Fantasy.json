@@ -1,0 +1,62 @@
+{
+    "firstNames": [
+        "Eldric", "Morrigan", "Kael", "Seraphine", "Dorian", "Nyssa", "Garruk", "Elowen", "Varek", "Lilith", "Thorne", "Isolde",
+        "Ravyn", "Lucian", "Maelis", "Draven", "Selene", "Corvin", "Astra", "Varyn", "Eira", "Sable", "Riven", "Mirella",
+        "Kaelis", "Rowan", "Vesper", "Nerys", "Talon", "Lyra", "Gideon", "Syrin", "Mara", "Orin", "Vaelis", "Thalia",
+        "Fenric", "Ravena", "Torin", "Nyx", "Aldric", "Soren", "Vexa", "Lunara", "Rook", "Eldra", "Korrin", "Veyra"
+    ],
+    "lastNames": [
+        "Blackthorn", "Grimvale", "Nightbloom", "Ravenshade", "Ashenford", "Hollowgrave", "Darkmoor", "Bloodcrest", "Ironvale", "Stormhollow",
+        "Shadowhelm", "Grimspire", "Nightfall", "Ashenridge", "Ravenmoor", "Blackspire", "Hollowthorn", "Stormgrave", "Bloodthorn", "Ironhollow",
+        "Darkridge", "Nighthelm", "Ashenmoor", "Grimthorn", "Ravencrest", "Stormthorn", "Bloodhelm", "Ironthorn", "Shadowcrest", "Hollowvale",
+        "Blackhollow", "Nightthorn", "Ashencrest", "Grimvale", "Ravenshade", "Stormhelm", "Bloodmoor", "Ironcrest", "Darkthorn", "Hollowhelm",
+        "Shadowvale", "Nightmoor", "Ashenhelm", "Grimcrest", "Ravenhelm", "Stormvale", "Bloodridge", "Ironvale", "Darkmoor", "Hollowthorn"
+    ],
+    "jobs": [
+        "Chasseur de monstres", "Nécromancien", "Chevalier déchu", "Sorcière errante", "Prêtre corrompu", "Écorcheur", "Garde des cryptes",
+        "Chasseur de sorcières", "Alchimiste noir", "Éclaireur nocturne", "Garde du sanctuaire", "Exorciste", "Dompteur de goules",
+        "Archiviste occulte", "Guerrier maudit", "Moine sanglant", "Pilleur de tombes", "Chasseur de démons", "Forgeron runique",
+        "Garde des catacombes", "Chasseur de spectres", "Érudit du vide", "Voyant aveugle", "Chasseur de bêtes", "Garde du bûcher",
+        "Tisseur de malédictions", "Chasseur de reliques", "Garde du temple noir", "Dresseur de corbeaux", "Chasseur de vampires",
+        "Garde du roi mort", "Écorcheur de bêtes", "Chasseur de fantômes", "Garde des ruines", "Érudit des ombres", "Moine du sang",
+        "Chasseur de dragons noirs", "Garde des marais", "Chasseur de goules", "Éclaireur des ténèbres", "Garde des portes",
+        "Chasseur de revenants", "Érudit des runes", "Garde des cryptes anciennes", "Chasseur de bêtes infernales",
+        "Garde du cercle noir", "Chasseur de sorciers", "Érudit du sang", "Garde des ombres"
+    ],
+    "traits": [
+        "Regard hanté", "Voix grave", "Voix cassée", "Rire nerveux", "Rire sombre", "Parle peu", "Parle lentement", "Regard perçant",
+        "Regard vide", "Cicatrices visibles", "Tics nerveux", "Somnambule", "Superstitieux", "Sombre", "Taciturne", "Rancunier",
+        "Obsédé par la mort", "Obsédé par les ombres", "Obsédé par les runes", "Obsédé par le sang", "A une mémoire parfaite",
+        "A une mémoire défaillante", "A un humour noir", "A un humour cruel", "A une démarche lourde", "A une démarche silencieuse",
+        "A un accent marqué", "A un souffle court", "A une voix douce", "A une voix métallique", "A un regard fou",
+        "A un regard triste", "A un regard dur", "A une obsession pour les monstres", "A une obsession pour les livres",
+        "A une obsession pour les armes", "A une obsession pour les secrets", "A un rire discret", "A un rire tonitruant",
+        "A une peau pâle", "A une peau marquée", "A une voix chuchotée", "A une voix profonde", "A un air menaçant",
+        "A un air fatigué", "A un air déterminé", "A un air absent", "A un air inquiet", "A un air froid"
+    ],
+    "looks": [
+        "Cape noire", "Armure sombre", "Épée runique", "Bouclier cabossé", "Cicatrice profonde", "Tatouages occultes", "Masque de fer",
+        "Gants en cuir", "Bottes lourdes", "Cape en lambeaux", "Armure de mailles noires", "Hache lourde", "Lanterne sombre",
+        "Tunique sombre", "Cape de plumes", "Armure d’os", "Gants renforcés", "Bottes usées", "Masque de corbeau", "Épée brisée",
+        "Cape épaisse", "Armure en cuir", "Bouclier décoré", "Hache double", "Cape en peau de bête", "Bottes renforcées",
+        "Gants de fer", "Armure cabossée", "Cape de voyage", "Épée longue", "Casque sombre", "Bouclier usé", "Hache usée",
+        "Cape en peau de loup", "Bottes de voyage", "Tunique claire", "Casque brillant", "Bouclier neuf", "Hache neuve",
+        "Cape épaisse", "Bottes lourdes", "Tunique en lin", "Casque simple", "Bouclier simple", "Hache simple",
+        "Cape légère", "Tunique de voyage", "Armure sombre", "Gants articulés", "Bottes métalliques"
+    ],
+    "secrets": [
+        "A pactisé avec un démon", "A tué un proche", "A un passé de nécromancien", "A un frère disparu", "A un tatouage interdit",
+        "A un lien avec un culte", "A un secret sur un roi mort", "A un passé de sorcier", "A un secret sur une prophétie",
+        "A un passé de chevalier déchu", "A un secret sur une arme maudite", "A un passé de moine", "A un secret sur un rituel interdit",
+        "A un passé de chasseur de monstres", "A un secret sur une bête ancienne", "A un passé de vagabond", "A un secret sur une ville morte",
+        "A un passé de noble", "A un secret sur un trésor maudit", "A un passé de prisonnier", "A un secret sur un clan ennemi",
+        "A un passé de guérisseur", "A un secret sur une maladie", "A un passé de mage noir", "A un secret sur un grimoire",
+        "A un passé de skald", "A un secret sur une chanson interdite", "A un passé de mercenaire", "A un secret sur une bataille perdue",
+        "A un passé de garde", "A un secret sur un roi fou", "A un passé de pèlerin", "A un secret sur une montagne sacrée",
+        "A un passé de forgeron", "A un secret sur une épée légendaire", "A un passé de chasseur de sorcières",
+        "A un secret sur une sorcière", "A un passé de survivant", "A un secret sur une malédiction", "A un passé de moine du sang",
+        "A un secret sur un démon", "A un passé de mage blanc", "A un secret sur une relique", "A un passé de vagabond des ruines",
+        "A un secret sur une crypte", "A un passé de chasseur de spectres", "A un secret sur un fantôme", "A un passé de garde des cryptes",
+        "A un secret sur une ombre vivante", "A un passé de chevalier noir"
+    ]
+}

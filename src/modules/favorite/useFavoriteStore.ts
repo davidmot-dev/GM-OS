@@ -235,3 +235,7 @@ export const useFavoriteStore = create<FavoriteState>()(
         }
     )
 );
+
+if (typeof window !== 'undefined') {
+    (window as any).useFavoriteStore = useFavoriteStore;
+}

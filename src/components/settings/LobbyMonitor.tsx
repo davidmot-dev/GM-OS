@@ -112,10 +112,31 @@ const LobbyMonitor: React.FC = () => {
                 )}
             </div>
             
-            <div className="bg-slate-950/50 p-3 border-t border-white/5 text-center shrink-0">
-                <p className="text-[9px] text-slate-500 italic">
-                    {t('remote.lobby.reconnect_note')}
-                </p>
+            <div className="bg-slate-950/50 p-3 border-t border-white/5 shrink-0">
+                <div className="flex items-center justify-between gap-3 mb-2">
+                    <p className="text-[9px] text-slate-500 italic flex-1">
+                        {t('remote.lobby.reconnect_note')}
+                    </p>
+                    <button
+                        onClick={() => {
+                            if (window.appBridge?.send) {
+                                window.appBridge.send('remote:eject-all');
+                                // Immediate feedback: clear local state
+                                setClients([]);
+                                // Reset character locks in session store
+                                try {
+                                    const sSession = (window as any).useSessionOSStore;
+                                    if (sSession) sSession.getState().setCharacterLocks({});
+                                } catch { /* non-critical */ }
+                            }
+                        }}
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/30 border border-rose-500/30 text-rose-400 hover:text-rose-300 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 whitespace-nowrap"
+                        title={t('remote.lobby.eject_all_tooltip')}
+                    >
+                        <XCircle size={12} />
+                        {t('remote.lobby.eject_all')}
+                    </button>
+                </div>
             </div>
         </div>
     );

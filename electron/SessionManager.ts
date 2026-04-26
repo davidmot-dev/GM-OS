@@ -104,6 +104,14 @@ export class SessionManager {
             }
         }
     }
+
+    public clearAll() {
+        for (const [deviceId] of this.ghostTimeouts.entries()) {
+            clearTimeout(this.ghostTimeouts.get(deviceId)!);
+        }
+        this.ghostTimeouts.clear();
+        this.sessions.clear();
+    }
 }
 
 export const sessionManager = new SessionManager();

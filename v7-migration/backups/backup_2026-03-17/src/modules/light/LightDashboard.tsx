@@ -1,0 +1,43 @@
+import React, { useEffect } from 'react';
+import { Sidebar } from './components/Sidebar';
+import { TopControls } from './components/TopControls';
+import { SceneGrid } from './components/SceneGrid';
+import { BulbFooter } from './components/BulbFooter';
+import { useLightStore } from './useLightStore';
+
+const LightDashboard: React.FC = () => {
+    const { status } = useLightStore();
+
+    // Setup polling for mock lights state if in mock mode to simulate things
+    useEffect(() => {
+        if (status === 'mock') {
+            const mockLights = {
+                "1": { id: "1", name: "Main Chandelier", type: "Color", state: { on: true, bri: 254, xy: [0.4, 0.4] as [number, number], effect: 'none' } },
+                "2": { id: "2", name: "Corner Lamp L", type: "Color", state: { on: false, bri: 100, xy: [0.1, 0.2] as [number, number], effect: 'none' } },
+                "3": { id: "3", name: "Bookcase Accent", type: "Color", state: { on: true, bri: 200, xy: [0.2, 0.6] as [number, number], effect: 'none' } },
+                "4": { id: "4", name: "Desk Backlight", type: "Color", state: { on: true, bri: 254, xy: [0.6, 0.3] as [number, number], effect: 'none' } }
+            };
+            useLightStore.getState().setLights(mockLights);
+        } else if (status === 'disconnected') {
+            useLightStore.getState().setLights({});
+        }
+    }, [status]);
+
+
+    return (
+        <div className="grid grid-cols-12 h-full bg-app-bg text-app-text font-sans overflow-hidden">
+            <Sidebar />
+
+            <main className="col-span-9 flex flex-col overflow-hidden relative">
+                {/* Background glow base */}
+                <div className="absolute inset-0 bg-gradient-to-br from-app-surface/50 via-app-bg to-app-bg opacity-50 pointer-events-none" />
+
+                <TopControls />
+                <SceneGrid />
+                <BulbFooter />
+            </main>
+        </div>
+    );
+};
+
+export default LightDashboard;

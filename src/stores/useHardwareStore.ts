@@ -34,8 +34,11 @@ export const useHardwareStore = create<HardwareState>()(
             displayAliases: {},
 
             fetchAudioDevices: async () => {
+                if (!navigator.mediaDevices) {
+                    console.warn('[HardwareStore] navigator.mediaDevices is undefined. Insecure context or restricted browser.');
+                    return;
+                }
                 try {
-                    // Try to catch devices
                     const devices = await navigator.mediaDevices.enumerateDevices();
                     const outputs = devices
                         .filter(d => d.kind === 'audiooutput')

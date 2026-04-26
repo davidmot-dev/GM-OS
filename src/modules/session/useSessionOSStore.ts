@@ -72,5 +72,5 @@ export type {
 import { useSessionOSStore } from './store/index';
 
 if (typeof window !== 'undefined') {
-    (window as unknown as Record<string, unknown>).useSessionOSStore = useSessionOSStore;
+    (window as any).useSessionOSStore = useSessionOSStore;
 }

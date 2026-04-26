@@ -1,0 +1,53 @@
+{
+  "name": [
+    "Anneau‑Cité d’Hélios Prime",
+    "Anneau de la Couronne Orbitale",
+    "Anneau‑Ville du Méridien Fixe",
+    "Anneau des Quartiers Suspendus",
+    "Anneau‑Cité du Halo Bleu",
+    "Anneau de la Ligne Synchrone",
+    "Anneau‑Métropole des Secteurs Circulaires",
+    "Anneau du Corridor Équatorial",
+    "Anneau‑Cité des Docks Centrifuges",
+    "Anneau du Grand Périmètre"
+  ],
+
+  "description": [
+    "Une cité‑anneau gigantesque maintenant une orbite parfaitement synchrone autour d’une planète océan.",
+    "Un anneau orbital formant une couronne lumineuse visible depuis la surface.",
+    "Une ville circulaire où chaque quartier reste éternellement face au même horizon.",
+    "Un anneau où les quartiers suspendus donnent directement sur le vide spatial.",
+    "Une cité‑anneau baignée dans une lueur bleutée provenant de la planète en dessous.",
+    "Un anneau stabilisé par une ligne synchrone d’émetteurs gravitationnels.",
+    "Une métropole circulaire divisée en secteurs parfaitement réguliers.",
+    "Un anneau longeant l’équateur orbital d’une planète tempête.",
+    "Une cité‑anneau dotée de docks centrifuges pour accueillir les vaisseaux.",
+    "Un anneau colossal formant le plus grand périmètre habité de la région."
+  ],
+
+  "ambiance": [
+    "Une rotation constante.",
+    "Une stabilité artificielle.",
+    "Un horizon fixe.",
+    "Une verticalité vertigineuse.",
+    "Une lueur planétaire.",
+    "Une tension gravitationnelle.",
+    "Une régularité parfaite.",
+    "Un vent ionisé.",
+    "Une activité portuaire circulaire.",
+    "Une immensité géométrique."
+  ],
+
+  "secret": [
+    "Un secteur de l’anneau reste parfaitement immobile, sans raison connue.",
+    "La couronne orbitale émet un signal ancien.",
+    "Le méridien fixe contient une salle qui ne tourne pas.",
+    "Un quartier suspendu disparaît brièvement des radars.",
+    "Le halo bleu révèle des silhouettes dans la lumière.",
+    "La ligne synchrone vibre selon un rythme non humain.",
+    "Un secteur circulaire tourne légèrement plus vite que les autres.",
+    "Le corridor équatorial mène à une zone non cartographiée.",
+    "Un dock centrifuge accueille un vaisseau fantôme.",
+    "Le grand périmètre cache un module scellé depuis des siècles."
+  ]
+}

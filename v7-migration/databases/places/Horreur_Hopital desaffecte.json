@@ -1,0 +1,53 @@
+{
+  "name": [
+    "Hôpital Saint‑Brune",
+    "Hôpital du Couloir 9",
+    "Hôpital des Verrières Brisées",
+    "Hôpital du Pavillon Nord",
+    "Hôpital des Archives Médicales",
+    "Hôpital du Sous‑Sol 3",
+    "Hôpital des Urgences Silencieuses",
+    "Hôpital du Bloc Oublié",
+    "Hôpital des Lits Vides",
+    "Hôpital du Scanner Éteint"
+  ],
+
+  "description": [
+    "Un ancien hôpital psychiatrique dont les murs sont couverts de graffitis et de dossiers éparpillés.",
+    "Un hôpital où le couloir numéro 9 semble plus long qu’il ne devrait l’être.",
+    "Un hôpital dont les verrières brisées projettent des ombres déformées sur les murs.",
+    "Un pavillon isolé, fermé depuis un incendie jamais élucidé.",
+    "Un hôpital où les archives médicales ont été abandonnées en plein tri.",
+    "Un sous‑sol labyrinthique rempli de matériel médical rouillé.",
+    "Une salle d’urgences figée comme si le personnel était parti en pleine action.",
+    "Un bloc opératoire oublié, encore équipé de lampes et d’instruments.",
+    "Une aile entière remplie de lits vides alignés parfaitement.",
+    "Une salle de scanner où la machine semble intacte malgré l’abandon."
+  ],
+
+  "ambiance": [
+    "Une oppression clinique et glaciale.",
+    "Une distorsion spatiale subtile.",
+    "Une lumière brisée et inquiétante.",
+    "Une solitude brûlée et traumatique.",
+    "Une poussière lourde de secrets.",
+    "Une claustrophobie métallique.",
+    "Une immobilité anormale.",
+    "Une tension chirurgicale.",
+    "Une froideur impersonnelle.",
+    "Une attente silencieuse."
+  ],
+
+  "secret": [
+    "Des dossiers continuent d’apparaître sur un bureau pourtant vide.",
+    "Le couloir 9 semble parfois se prolonger indéfiniment.",
+    "Les ombres des verrières bougent sans source lumineuse.",
+    "Une odeur de fumée apparaît certains soirs.",
+    "Un dossier médical manque systématiquement, quel que soit le rangement.",
+    "Un chariot se déplace de quelques centimètres chaque nuit.",
+    "Un bip d’électrocardiogramme retentit parfois dans le silence.",
+    "Une lampe du bloc opératoire s’allume seule.",
+    "Un lit semble avoir été récemment occupé.",
+    "Le scanner émet un léger bourdonnement sans alimentation."
+  ]
+}

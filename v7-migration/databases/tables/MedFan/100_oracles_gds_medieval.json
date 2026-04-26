@@ -1,0 +1,706 @@
+{
+    "name": "100 Oracles - Guide de Survie Médiéval",
+    "dice": "1d100",
+    "entries": [
+        {
+            "min": 1,
+            "max": 1,
+            "title": "Nuits sombres",
+            "description": "De sombres nuits t'attendent. Quand la lune ferme l'œil et que les étoiles deviennent noires, allume les feux.",
+            "effect": "Avertissement sur un danger nocturne imminent."
+        },
+        {
+            "min": 2,
+            "max": 2,
+            "title": "Les diables",
+            "description": "Les diables se languissent de toi. Méfie-toi de l'homme sombre et de la jeune fille pâle, ils ne sont pas ce qu'ils semblent.",
+            "effect": "Indice sur la véritable nature de deux PNJ suspects."
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "Péchés passés",
+            "description": "Tu n'es plus ce que tu étais autrefois, mais les péchés de ton passé risquent de remonter à la surface.",
+            "effect": "Répercussions narratives liées à l'historique du personnage."
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "Baisers et fleurs",
+            "description": "N'accepte pas de fleurs blanches offertes par une fille, n'accepte pas de baisers de lèvres étrangères.",
+            "effect": "Avertissement contre un empoisonnement ou une malédiction par contact."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "Voix des morts",
+            "description": "Ne parle pas des morts. Une voix comme la tienne porte loin et ils pourraient venir voir qui les convoque.",
+            "effect": "Risque d'apparition spectrale en cas de non-respect du silence."
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "Gratitude des puissants",
+            "description": "Méfie-toi de la gratitude des puissants. Ils offrent des cadeaux d'une main, et enchaînent de l'autre.",
+            "effect": "Indice sur un pacte politique piégé."
+        },
+        {
+            "min": 7,
+            "max": 7,
+            "title": "Mots mielleux",
+            "description": "L'acier ne protège pas des mots mielleux. Méfie-toi du poison distillé par les beaux parleurs.",
+            "effect": "Désavantage aux tests de Psychologie contre les manipulateurs."
+        },
+        {
+            "min": 8,
+            "max": 8,
+            "title": "Mauvaise fortune céleste",
+            "description": "Les étoiles tourbillonnent autour de toi. Fais attention quand tu dors sous la voûte étoilée, les astres nocturnes apporteront la mauvaise fortune.",
+            "effect": "Malus de chance temporaire après une nuit à la belle étoile."
+        },
+        {
+            "min": 9,
+            "max": 9,
+            "title": "Appel du sang",
+            "description": "Le sang appelle le sang. Ceux qui pourchassent dans l'ombre peuvent sentir l'odeur du sang versé, et plus tu en verses, plus ils se hâtent.",
+            "effect": "Attire des prédateurs ou des ennemis lors de combats sanglants."
+        },
+        {
+            "min": 10,
+            "max": 10,
+            "title": "Le jasmin et la rose",
+            "description": "Le jasmin et la rose jalonnent ton destin. Quand tu les trouveras tissés ensemble, suis le signe pour trouver ton chemin.",
+            "effect": "Indice visuel pour une piste à suivre."
+        },
+        {
+            "min": 11,
+            "max": 11,
+            "title": "L'homme d'argent",
+            "description": "Prends garde à l'homme d'argent. Refuse la pièce qu'il te tendra, et il t'offrira peut-être une récompense plus précieuse.",
+            "effect": "Opportunité de gain supérieur en refusant une offre immédiate."
+        },
+        {
+            "min": 12,
+            "max": 12,
+            "title": "Le midi",
+            "description": "Tourne ton regard vers le midi, car c'est là que se trouveront les réponses à tes questions.",
+            "effect": "Indication de direction géographique (Sud)."
+        },
+        {
+            "min": 13,
+            "max": 13,
+            "title": "Terre sacrée",
+            "description": "Ne porte pas l'épée sur une terre sacrée. Demande la permission avant de fouler le sol béni, ou tu pourrais rejoindre les morts.",
+            "effect": "Risque de provoquer la colère divine ou spectrale."
+        },
+        {
+            "min": 14,
+            "max": 14,
+            "title": "La porte rouge",
+            "description": "Ne passe pas le seuil de la maison à la porte rouge. Tu n'y trouveras que douleur et chagrin.",
+            "effect": "Mise en garde contre un lieu maudit spécifique."
+        },
+        {
+            "min": 15,
+            "max": 15,
+            "title": "Paix royale",
+            "description": "La paix du roi tient aux apparences. Quelque chose d'insidieux couve en dessous. Quand cette chose rugira, tu sauras que cette terre n'a jamais été sûre.",
+            "effect": "Révélation imminente d'un complot ou d'une menace souterraine."
+        },
+        {
+            "min": 16,
+            "max": 16,
+            "title": "Ténèbres forestières",
+            "description": "Les ténèbres menacent cette forêt. Ce n'est que lorsque tu perceras le voile de la nuit que tu découvriras la nature du mal.",
+            "effect": "Nécessite une exploration nocturne pour résoudre l'intrigue."
+        },
+        {
+            "min": 17,
+            "max": 17,
+            "title": "Porte de l'aube",
+            "description": "Quand le jour et la nuit se tiennent côte à côte, ils forment une porte. Fais attention à l'aube et au crépuscule.",
+            "effect": "Moment spécifique pour activer un portail ou un passage."
+        },
+        {
+            "min": 18,
+            "max": 18,
+            "title": "Bonimenteurs",
+            "description": "Les ennemis sont légion. Ne fais pas confiance aux bonimenteurs, fie-toi à ceux qui le prouvent par leurs actes.",
+            "effect": "Conseil de méfiance envers les promesses verbales."
+        },
+        {
+            "min": 19,
+            "max": 19,
+            "title": "Secret paternel",
+            "description": "Ton père n'est pas celui que tu crois. Cherche la vérité, et tu trouveras la source de ton pouvoir et de ta malédiction.",
+            "effect": "Quête personnelle liée à l'ascendance."
+        },
+        {
+            "min": 20,
+            "max": 20,
+            "title": "Lieu sacré corrompu",
+            "description": "Le mal a pris racine dans ce lieu sacré. Creuse sous sa façade bénie pour en trouver la source.",
+            "effect": "Indice sur la corruption d'un temple ou d'une église."
+        },
+        {
+            "min": 21,
+            "max": 21,
+            "title": "Sombre récolte",
+            "description": "Le sang n'engendre pas la paix. Pour arrêter le cycle, trouve ceux qui profitent de cette récolte et fais-leur goûter le fruit amer.",
+            "effect": "Désignation de la cible réelle pour mettre fin à un conflit."
+        },
+        {
+            "min": 22,
+            "max": 22,
+            "title": "Prix de la richesse",
+            "description": "Un grand trésor gît, enfoui sous un sombre rocher. Mais toute richesse a un prix.",
+            "effect": "Localisation d'un trésor avec contrepartie dramatique."
+        },
+        {
+            "min": 23,
+            "max": 23,
+            "title": "Prétendant au trône",
+            "description": "Un prétendant a des vues sur le trône. Il enfantera un fléau pour se prétendre l'unique remède.",
+            "effect": "Dévoilement d'une stratégie de manipulation politique par la terreur."
+        },
+        {
+            "min": 24,
+            "max": 24,
+            "title": "La fausse sorcière",
+            "description": "La ville accuse la sorcière. Innocente. Le coupable se dissimule dans les eaux sombres.",
+            "effect": "Indice pour innocenter un PNJ et trouver le vrai monstre."
+        },
+        {
+            "min": 25,
+            "max": 25,
+            "title": "Épée et Mots",
+            "description": "Les réputations se bâtissent par l'épée, mais les royaumes s'érigent par les mots. Apprends quand garder ta lame au fourreau.",
+            "effect": "Bonus en Diplomatie pour avoir privilégié le dialogue."
+        },
+        {
+            "min": 26,
+            "max": 26,
+            "title": "Charbons ardents",
+            "description": "Il suffit d'une étincelle pour embraser l'amadou. Méfie-toi de ceux avec qui tu partages tes projets brûlants.",
+            "effect": "Risque de trahison par des complices."
+        },
+        {
+            "min": 27,
+            "max": 27,
+            "title": "Vérité et Peur",
+            "description": "La peur obscurcit la vérité. Refuse de détourner le regard pour obtenir la victoire.",
+            "effect": "Immunité temporaire à la peur lors d'une confrontation décisive."
+        },
+        {
+            "min": 28,
+            "max": 28,
+            "title": "Oreilles indiscrètes",
+            "description": "Les secrets sont éphémères. Il y a des oreilles partout, ne prononce pas de mots importants à la légère.",
+            "effect": "Fuite d'informations si les PJ parlent dans un lieu public."
+        },
+        {
+            "min": 29,
+            "max": 29,
+            "title": "L'arbre aux gibets",
+            "description": "Prends garde à l'arbre aux gibets. L'abri qu'il offre peut coûter cher à la nouvelle lune.",
+            "effect": "Danger mortel en cas de repos sous un arbre spécifique."
+        },
+        {
+            "min": 30,
+            "max": 30,
+            "title": "Murmures des profondeurs",
+            "description": "Il n'y a aucun joyau dans les profondeurs. Si tu traques les murmures, ferme tes oreilles.",
+            "effect": "Mise en garde contre une sirène ou une entité hypnotique souterraine."
+        },
+        {
+            "min": 31,
+            "max": 31,
+            "title": "Oubliettes maudites",
+            "description": "Les richesses gisent dans les oubliettes, mais une corruption s'enracinera en toi si tu ne lèves pas la malédiction.",
+            "effect": "Malédiction liée au butin d'un donjon."
+        },
+        {
+            "min": 32,
+            "max": 32,
+            "title": "Politesse féerique",
+            "description": "Sois tendre et aimable dans le bois aux fées, et ta politesse te sera rendue au centuple.",
+            "effect": "Bonus de faveur auprès des fées pour un bon comportement."
+        },
+        {
+            "min": 33,
+            "max": 33,
+            "title": "Marais des mortes-ondes",
+            "description": "Suis les traces des hommes dans le marais et tu les rejoindras sous l'eau. Suis plutôt ceux qui rampent sur le ventre.",
+            "effect": "Méthode de navigation sécurisée pour traverser un marais."
+        },
+        {
+            "min": 34,
+            "max": 34,
+            "title": "Avertissement de la chouette",
+            "description": "Quand la chouette t'adresse un avertissement, écoute-le. Elle n'avertit pas deux fois.",
+            "effect": "Chance unique d'éviter une embuscade."
+        },
+        {
+            "min": 35,
+            "max": 35,
+            "title": "Conseils du passereau",
+            "description": "Guette le passereau, et sois attentif aux conseils qu'il donne dans tes rêves.",
+            "effect": "Révélation d'un secret par un rêve prémonitoire."
+        },
+        {
+            "min": 36,
+            "max": 36,
+            "title": "Secret du chevalier noir",
+            "description": "Le chevalier noir dissimule un secret. Suis le soleil couchant jusqu'au chêne millénaire.",
+            "effect": "Point de rendez-vous pour une révélation majeure."
+        },
+        {
+            "min": 37,
+            "max": 37,
+            "title": "Équipement de fortune",
+            "description": "Munis-toi d'une outre de vin, d'un couteau d'argent et d'une bague en or. Tu sauras pourquoi le moment venu.",
+            "effect": "Objets nécessaires pour résoudre une rencontre future."
+        },
+        {
+            "min": 38,
+            "max": 38,
+            "title": "Vœu de la fontaine",
+            "description": "À l'étoile rouge, fais un vœu à voix haute et laisse une pièce pure dans la fontaine sans être vu.",
+            "effect": "Possibilité d'obtenir un bonus de Destin."
+        },
+        {
+            "min": 39,
+            "max": 39,
+            "title": "Jeûne du solstice",
+            "description": "Ne mange rien le jour du solstice. Méfie-toi de ceux qui tentent tes lèvres par le vin ou les sucreries.",
+            "effect": "Test de Volonté pour éviter une tentation maléfique."
+        },
+        {
+            "min": 40,
+            "max": 40,
+            "title": "La pelle fidèle",
+            "description": "Enterre tous ceux qui meurent de ta main, et ils ne viendront jamais te hanter.",
+            "effect": "Prévention contre le retour de spectres vengeurs."
+        },
+        {
+            "min": 41,
+            "max": 41,
+            "title": "Dés du jour saint",
+            "description": "Ne lance jamais de dés un jour saint. La chance t'abandonnerait.",
+            "effect": "Échec critique automatique sur les jeux de hasard ce jour-là."
+        },
+        {
+            "min": 42,
+            "max": 42,
+            "title": "Dame de la source",
+            "description": "Une malédiction pèse sur toi. Rends sa larme à la dame de la source pour la changer en bénédiction.",
+            "effect": "Quête de levée de malédiction."
+        },
+        {
+            "min": 43,
+            "max": 43,
+            "title": "Sommeil maritime",
+            "description": "Ne dors jamais face à la mer. Le fracas des vagues veut que tu sommeilles profondément pour une sombre raison.",
+            "effect": "Risque d'enlèvement ou de noyade pendant le sommeil."
+        },
+        {
+            "min": 44,
+            "max": 44,
+            "title": "La vierge du croissant",
+            "description": "Ne parle pas à la vierge croisée sous le croissant de lune. Garde tes lèvres closes jusqu'à l'aube.",
+            "effect": "Test de Volonté ; briser le silence entraîne un malus."
+        },
+        {
+            "min": 45,
+            "max": 45,
+            "title": "Nuit des moissons",
+            "description": "Ne dis jamais ton vrai nom à un étranger pendant la fête des moissons. Il n'est peut-être pas ce qu'il prétend.",
+            "effect": "Vol d'identité ou malédiction liée au nom."
+        },
+        {
+            "min": 46,
+            "max": 46,
+            "title": "Salut à la mort",
+            "description": "Ne salue jamais la mort. Elle rend les faveurs qu'elle reçoit.",
+            "effect": "Avertissement contre une témérité excessive."
+        },
+        {
+            "min": 47,
+            "max": 47,
+            "title": "Marché hâtif",
+            "description": "Ne propose pas de marché que tu ne pourrais honorer. Les paroles hâtives entraînent des regrets.",
+            "effect": "Conséquence sociale ou magique en cas de promesse rompue."
+        },
+        {
+            "min": 48,
+            "max": 48,
+            "title": "Nœud coulant",
+            "description": "Un nœud coulant te guette. Pour te libérer, offre tes services à la verte, reconnaissable à ses roses.",
+            "effect": "Indice sur une alliée capable d'éviter une exécution ou un piège."
+        },
+        {
+            "min": 49,
+            "max": 49,
+            "title": "Tombeau du sorcier",
+            "description": "Ne t'en prends pas au tombeau d'un sorcier. La mort est rarement une barrière.",
+            "effect": "Alerte sur la présence de pièges magiques ou d'un mort-vivant puissant."
+        },
+        {
+            "min": 50,
+            "max": 50,
+            "title": "Gardien des chutes",
+            "description": "Un trésor se cache sous les eaux des chutes, mais il n'est pas sans gardien.",
+            "effect": "Localisation d'un trésor défendu par une créature aquatique."
+        },
+        {
+            "min": 51,
+            "max": 51,
+            "title": "Clé des cachots",
+            "description": "La clé de la chute du baron se trouve dans ses cachots.",
+            "effect": "Objectif de mission pour renverser un tyran."
+        },
+        {
+            "min": 52,
+            "max": 52,
+            "title": "Flamme du cœur",
+            "description": "Le cœur est comme une flamme. Laissé sans contrôle, il détruit. Ignoré, il s'éteint. Nourris ce feu.",
+            "effect": "Conseil sur la gestion des passions ou de la magie de feu."
+        },
+        {
+            "min": 53,
+            "max": 53,
+            "title": "Destin en main",
+            "description": "Tu tiens ton destin entre tes mains. Garde-le précieusement.",
+            "effect": "Inspiration : gagnez un point de chance."
+        },
+        {
+            "min": 54,
+            "max": 54,
+            "title": "Bonté envers les oiseaux",
+            "description": "Sois bon avec les oiseaux, ils te le rendront quand tu en auras besoin.",
+            "effect": "Aide animale future suite à un acte de charité."
+        },
+        {
+            "min": 55,
+            "max": 55,
+            "title": "Au-delà des soies",
+            "description": "Regarde au-delà de l'or et les soies pour voir les hommes tels qu'ils sont.",
+            "effect": "Avantage aux tests de Perception/Psychologie contre les nobles."
+        },
+        {
+            "min": 56,
+            "max": 56,
+            "title": "Arbres jumeaux",
+            "description": "Ne passe pas le porche formé d'arbres jumeaux et ne dérange pas les cercles de sorcières.",
+            "effect": "Mise en garde contre un territoire féerique dangereux."
+        },
+        {
+            "min": 57,
+            "max": 57,
+            "title": "Reine des tempêtes",
+            "description": "Lance une pièce d'argent par-dessus bord au premier coucher de soleil. La reine des tempêtes te guidera.",
+            "effect": "Navigation facilitée et absence de tempêtes pendant le voyage."
+        },
+        {
+            "min": 58,
+            "max": 58,
+            "title": "Prières souterraines",
+            "description": "Ne prie pas les Dieux du ciel au plus profond de la terre. De mauvaises oreilles pourraient t'entendre.",
+            "effect": "Risque d'attirer des entités souterraines hostiles par la prière."
+        },
+        {
+            "min": 59,
+            "max": 59,
+            "title": "Clochette d'argent",
+            "description": "Attache une clochette d'argent à ton poignet pour te réveiller des cauchemars.",
+            "effect": "Protection contre les attaques oniriques ou le sommeil magique."
+        },
+        {
+            "min": 60,
+            "max": 60,
+            "title": "Réalité des cavernes",
+            "description": "Tes sens te joueront des tours dans les cavernes. Ne considère comme réel que ce que tu touches.",
+            "effect": "Conseil pour dissiper les illusions souterraines."
+        },
+        {
+            "min": 61,
+            "max": 61,
+            "title": "Le garçon en pleurs",
+            "description": "Refuse de prendre la main du garçon en pleurs qui veut rentrer chez lui. Marche simplement à ses côtés.",
+            "effect": "Test de discernement pour éviter un piège mortel."
+        },
+        {
+            "min": 62,
+            "max": 62,
+            "title": "Majeur nu",
+            "description": "Ne porte jamais d'anneau au majeur de ta main droite pour garder la chance.",
+            "effect": "Bonus permanent de +1 à la Chance si respecté."
+        },
+        {
+            "min": 63,
+            "max": 63,
+            "title": "Hospitalité des neiges",
+            "description": "Ne chasse personne de ton feu par temps de neige, même tes ennemis.",
+            "effect": "Répercussion sur la réputation et l'accueil futur."
+        },
+        {
+            "min": 64,
+            "max": 64,
+            "title": "Sacrifice sans lune",
+            "description": "Ne fais aucun sacrifice la nuit sans lune, cela alimente le mal des collines.",
+            "effect": "Risque de renforcer les créatures locales par des actes rituels."
+        },
+        {
+            "min": 65,
+            "max": 65,
+            "title": "Dons de la forêt",
+            "description": "Ne prends que ce qui est offert dans les bois. La forêt se venge de qui abuse de ses bienfaits.",
+            "effect": "Sanction environnementale en cas de surexploitation."
+        },
+        {
+            "min": 66,
+            "max": 66,
+            "title": "Clés dispersées",
+            "description": "Ne porte jamais tes clés sur un seul anneau. La perte serait totale et le vol indétectable.",
+            "effect": "Conseil de sécurité pratique."
+        },
+        {
+            "min": 67,
+            "max": 67,
+            "title": "La corde",
+            "description": "Garde toujours une corde sur toi. Elle te sauvera au moment inattendu.",
+            "effect": "Utilisation providentielle d'un objet utilitaire."
+        },
+        {
+            "min": 68,
+            "max": 68,
+            "title": "Richesses discrètes",
+            "description": "N'exhibe pas tes richesses, porte-les discrètement pour éviter l'envie.",
+            "effect": "Réduction du risque de vol à la tire ou d'agression."
+        },
+        {
+            "min": 69,
+            "max": 69,
+            "title": "Fleurs coupées",
+            "description": "Ne coupe point de fleurs pour en faire présent, le prix pourrait être trop élevé.",
+            "effect": "Risque d'offenser une dryade ou une entité de la nature."
+        },
+        {
+            "min": 70,
+            "max": 70,
+            "title": "Poisson sombre",
+            "description": "Si tu pêches un poisson sombre dans un étang clair, relâche-le sous peine de voir venir le mal.",
+            "effect": "Malédiction immédiate en cas de consommation du poisson."
+        },
+        {
+            "min": 71,
+            "max": 71,
+            "title": "Dunes nocturnes",
+            "description": "Ne t'aventure pas dans les dunes la nuit. Des choses pires que les mirages sont attirées par le sang.",
+            "effect": "Rencontre aléatoire dangereuse garantie la nuit dans le désert."
+        },
+        {
+            "min": 72,
+            "max": 72,
+            "title": "Loup piégé",
+            "description": "Libère le loup pris dans un piège malgré ses morsures, tu t'en feras un ami loyal.",
+            "effect": "Acquisition d'un compagnon animal."
+        },
+        {
+            "min": 73,
+            "max": 73,
+            "title": "Argent des pauvres",
+            "description": "N'accepte pas d'argent de ceux qui ne peuvent pas s'en passer. Les bénéfices viendront autrement.",
+            "effect": "Gain de Karma ou de faveurs sociales."
+        },
+        {
+            "min": 74,
+            "max": 74,
+            "title": "Respect du renard",
+            "description": "Ne maltraite jamais un renard. Un peu de viande est un prix mince pour leurs services.",
+            "effect": "Le renard peut servir de guide ou d'espion."
+        },
+        {
+            "min": 75,
+            "max": 75,
+            "title": "Guerre et Cendres",
+            "description": "La guerre est comme le feu. Sache quand laisser les flammes s'éteindre avant d'être réduit en cendres.",
+            "effect": "Conseil sur la résolution pacifique des conflits."
+        },
+        {
+            "min": 76,
+            "max": 76,
+            "title": "Chien de colère",
+            "description": "La colère est un chien de chasse. Entraîne-la bien ou elle te conduira à ta perte.",
+            "effect": "Modificateur sur les capacités de Berserk ou de combat."
+        },
+        {
+            "min": 77,
+            "max": 77,
+            "title": "Anneau de fer",
+            "description": "Porte un anneau de fer à ta main d'arme. Si le contact du fer coûte à un étranger, méfie-toi.",
+            "effect": "Moyen de détection pour les créatures sensibles au fer (fées, changeformes)."
+        },
+        {
+            "min": 78,
+            "max": 78,
+            "title": "Diseur de songes",
+            "description": "Ne conte tes rêves qu'à un diseur de songes le jour où tu le croiseras.",
+            "effect": "Quête pour trouver un interprète de rêves."
+        },
+        {
+            "min": 79,
+            "max": 79,
+            "title": "Justice et Cruauté",
+            "description": "Ne réponds pas à la cruauté par la cruauté. Elle corrompt et ne peut être vaincue que par la justice.",
+            "effect": "Gain d'alignement Loyal/Bon."
+        },
+        {
+            "min": 80,
+            "max": 80,
+            "title": "Repos de la sorcière",
+            "description": "Dépose le corps d'une sorcière tuée sous une voûte de pierre dans un lieu saint pour la garder au repos.",
+            "effect": "Empêche la résurrection ou le retour spectral d'un boss."
+        },
+        {
+            "min": 81,
+            "max": 81,
+            "title": "Eaux calmes",
+            "description": "Ne te baigne jamais dans des eaux calmes, elles dissimulent ce qui se tapit dans les profondeurs.",
+            "effect": "Danger de noyade ou d'attaque par un monstre aquatique."
+        },
+        {
+            "min": 82,
+            "max": 82,
+            "title": "L'or et l'acier",
+            "description": "Dors l'or à l'abri et l'acier à portée de main.",
+            "effect": "Bonus de vigilance lors des campements."
+        },
+        {
+            "min": 83,
+            "max": 83,
+            "title": "Curiosité prudente",
+            "description": "Un regard inquisiteur peut voir de mauvaises choses. Suis ta curiosité avec prudence.",
+            "effect": "Avertissement contre les pièges de détection."
+        },
+        {
+            "min": 84,
+            "max": 84,
+            "title": "Le parfum du malheur",
+            "description": "Ne portez pas de parfum, cela ne vous apportera que du malheur.",
+            "effect": "Malus social ou détection facilitée par les monstres."
+        },
+        {
+            "min": 85,
+            "max": 85,
+            "title": "Chien de chasse",
+            "description": "Faites toujours confiance à un chien de chasse, il peut révéler une vérité cachée.",
+            "effect": "Bonus de détection si un chien est présent."
+        },
+        {
+            "min": 86,
+            "max": 86,
+            "title": "La flèche du chêne",
+            "description": "Suivez le vol d'une flèche trouvée dans un chêne pour trouver l'archer.",
+            "effect": "Piste menant à un PNJ important."
+        },
+        {
+            "min": 87,
+            "max": 87,
+            "title": "Intentions mortelles",
+            "description": "Les meilleures intentions peuvent être aussi mortelles que les mauvaises.",
+            "effect": "Indice sur un PNJ allié dont les actions vont causer un désastre."
+        },
+        {
+            "min": 88,
+            "max": 88,
+            "title": "Cris des collines",
+            "description": "La bonté peut faire retrouver le chemin du sommeil aux enfants abandonnés des noires collines.",
+            "effect": "Quête de paix pour des esprits d'enfants."
+        },
+        {
+            "min": 89,
+            "max": 89,
+            "title": "Oreilles et Passion",
+            "description": "Écoute avec tes oreilles plutôt qu'avec ton cœur pour percevoir le poignard avant qu'il ne te frappe.",
+            "effect": "Bonus en Perception lors des scènes sociales tendues."
+        },
+        {
+            "min": 90,
+            "max": 90,
+            "title": "Oreille des corbeaux",
+            "description": "Prête l'oreille aux corbeaux, ils entendent tout et partagent parfois leurs secrets.",
+            "effect": "Possibilité d'obtenir des informations via des animaux."
+        },
+        {
+            "min": 91,
+            "max": 91,
+            "title": "Chair et Sortilèges",
+            "description": "L'acier ne peut vaincre les sortilèges, mais les sorciers sont faits de chair et d'os.",
+            "effect": "Conseil de combat : visez le lanceur de sorts au corps à corps."
+        },
+        {
+            "min": 92,
+            "max": 92,
+            "title": "Celui sans ombre",
+            "description": "Scrute les ombres. Celui qui n'a pas d'ombre n'apporte rien de bon malgré ses sourires.",
+            "effect": "Moyen de repérer une entité démoniaque ou un vampire."
+        },
+        {
+            "min": 93,
+            "max": 93,
+            "title": "Monnaie de gentillesse",
+            "description": "La gentillesse est une monnaie à distribuer, elle reviendra au centuple.",
+            "effect": "Bonus de réputation globale."
+        },
+        {
+            "min": 94,
+            "max": 94,
+            "title": "Fantômes du cœur",
+            "description": "Tu ne peux pas fuir éternellement tes propres fantômes, ils te précéderont partout.",
+            "effect": "Rencontre avec une manifestation de la culpabilité du PJ."
+        },
+        {
+            "min": 95,
+            "max": 95,
+            "title": "Cible de la foudre",
+            "description": "La foudre frappe ceux qui se sont élevés le plus haut.",
+            "effect": "Avertissement contre l'orgueil ou une position exposée."
+        },
+        {
+            "min": 96,
+            "max": 96,
+            "title": "Dieux mesquins",
+            "description": "Les dieux sont mesquins, évite d'avoir recours à eux pour te préserver de leurs caprices.",
+            "effect": "Malus potentiel en cas de prière excessive."
+        },
+        {
+            "min": 97,
+            "max": 97,
+            "title": "Terre qui gronde",
+            "description": "Quand la terre gronde, cherche ton salut dans le ciel. Cherche ensuite les fissures révélées.",
+            "effect": "Indices post-séisme sur des entrées de donjons."
+        },
+        {
+            "min": 98,
+            "max": 98,
+            "title": "Source du mal",
+            "description": "Trouve la source du mal et stoppe-la avant qu'elle ne se répande. Anges et démons agissent peu seuls.",
+            "effect": "Mission principale de campagne."
+        },
+        {
+            "min": 99,
+            "max": 99,
+            "title": "Trophées des morts",
+            "description": "Ne t'approprie pas les trophées des morts sous peine de connaître un funeste destin devant les mauvaises personnes.",
+            "effect": "Risque d'agression par des héritiers ou des cultistes en portant un objet volé."
+        },
+        {
+            "min": 100,
+            "max": 100,
+            "title": "Âme en peine",
+            "description": "Ni l'or ni le pouvoir n'apaisent une âme en peine. Les regrets s'accumulent et sont difficiles à dissiper.",
+            "effect": "Leçon finale : l'objectif n'est pas la richesse, mais la paix intérieure."
+        }
+    ]
+}

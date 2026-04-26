@@ -67,6 +67,10 @@ export class VoiceEngine {
 
             const { currentEffects } = useVoiceStore.getState();
 
+            if (!navigator.mediaDevices) {
+                throw new Error('navigator.mediaDevices is undefined. Insecure context or restricted browser.');
+            }
+
             // Apple Google Meet-style constraints for voice clarity
             this.stream = await navigator.mediaDevices.getUserMedia({ 
                 audio: {
@@ -254,6 +258,10 @@ export class VoiceEngine {
      * Met à jour la liste dans le store global.
      */
     public async refreshAvailableDevices() {
+        if (!navigator.mediaDevices) {
+            console.warn('[VoiceEngine] navigator.mediaDevices is undefined.');
+            return;
+        }
         try {
             const devices = await navigator.mediaDevices.enumerateDevices();
             const outputs = devices.filter(device => device.kind === 'audiooutput');

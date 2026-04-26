@@ -1,0 +1,356 @@
+{
+    "name": "50 Brigands - Guide de Survie Médiéval",
+    "dice": "1d50",
+    "entries": [
+        {
+            "min": 1,
+            "max": 1,
+            "title": "Krasslin le Broyeur",
+            "description": "Un homme gigantesque, chauve, avec un visage vérolé et un ventre bedonnant. Il manie une hache nommée le « couperet du diable ».",
+            "effect": "La rumeur prétend qu'il déshabille ses victimes avant de les jeter dans sa marmite à ragoût."
+        },
+        {
+            "min": 2,
+            "max": 2,
+            "title": "Ferrenne la Jeune",
+            "description": "Grande et athlétique, elle est toujours entourée d'enfants qui semblent inoffensifs.",
+            "effect": "Les enfants portent tous une lame cachée et sont entraînés à s'en servir sur ordre."
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "Caulder le Normand",
+            "description": "Ancien sergent de milice à la barbe grise et aux poings arthritiques. Il dirige une troupe de révoltés.",
+            "effect": "Offre une place aux soldats en difficulté prêts à accomplir des besognes musclées."
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "William Brin-de-paille",
+            "description": "Maraudeur nocturne insaisissable. On ne distingue de lui que des yeux brillants et une touffe de cheveux blonds dans la brume.",
+            "effect": "Spécialiste des vols par temps brumeux ; dérobe nourriture, soie ou or sans distinction."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "Cherwyn",
+            "description": "Vieille brigande aux cheveux gris rebelles, inséparable de son arbalète à crosse de cerisier.",
+            "effect": "Ses ordres sont suivis aveuglément sous peine de finir dans la ligne de mire de « maman »."
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "Sil « l'Araignée » Oudin",
+            "description": "Brigand spécialisé dans l'attaque de caravanes. Son armure porte un symbole d'araignée.",
+            "effect": "Expert en poisons provoquant des hallucinations et des toxines débilitantes."
+        },
+        {
+            "min": 7,
+            "max": 7,
+            "title": "Malgrim la Masse",
+            "description": "Brute à la peau pâle et aux muscles saillants, privilégiant la force brute à la stratégie.",
+            "effect": "Manie une masse énorme pour faire des exemples sur ceux qui lui résistent."
+        },
+        {
+            "min": 8,
+            "max": 8,
+            "title": "Marie « ma Rouge » Mayen",
+            "description": "Petite pilleuse rousse complexée par sa taille, vouant une haine féroce aux gens de grande taille.",
+            "effect": "Réserve un traitement de faveur violent aux cibles les plus grandes."
+        },
+        {
+            "min": 9,
+            "max": 9,
+            "title": "Jeremiah",
+            "description": "Vétéran de la pègre ayant survécu à deux pendaisons. Il a une voix rauque et une cicatrice impressionnante au cou.",
+            "effect": "Loyal en toute circonstance, il ne peut plus garder la tête droite."
+        },
+        {
+            "min": 10,
+            "max": 10,
+            "title": "Brecken Langue noire",
+            "description": "Ingénieur de siège trapu et chauve, dont les dents sont noircies par le tabac.",
+            "effect": "Expert en pièges complexes tendus contre les caravanes marchandes en sites isolés."
+        },
+        {
+            "min": 11,
+            "max": 11,
+            "title": "Molly",
+            "description": "Petite femme souriante que l'on prend facilement pour une enfant.",
+            "effect": "Utilise une poupée dissimulant un poignard pour appâter les marchands dans des embuscades."
+        },
+        {
+            "min": 12,
+            "max": 12,
+            "title": "Robin Brinderant",
+            "description": "Adolescent maussade dirigeant une bande de mendiants et d'orphelins fugueurs.",
+            "effect": "Utilise les enfants comme diversion pendant que les aînés amassent le butin."
+        },
+        {
+            "min": 13,
+            "max": 13,
+            "title": "Le Dépeceur",
+            "description": "Individu masqué de cuir noir portant un collier d'oreilles humaines et une ceinture de couteaux de boucher.",
+            "effect": "La légende prétend qu'il vide ses victimes pour un pacte avec un dieu sombre à chaque lune."
+        },
+        {
+            "min": 14,
+            "max": 14,
+            "title": "Eve, la fille du diable",
+            "description": "Femme aux yeux vairons précédée d'une réputation de sorcière.",
+            "effect": "Rançonne les villages après avoir marqué les maisons et empoisonné les puits."
+        },
+        {
+            "min": 15,
+            "max": 15,
+            "title": "« Baron » Vigo Braxton",
+            "description": "Baron déchu aux yeux féroces, pillant les voyageurs depuis une forteresse envahie par la végétation.",
+            "effect": "Possède un vaste pavillon de chasse caché pour entretenir sa bande entre deux forfaits."
+        },
+        {
+            "min": 16,
+            "max": 16,
+            "title": "Horace",
+            "description": "Jeune homme aux boucles blondes à la gestuelle maîtrisée, mais hésitant lors du combat.",
+            "effect": "L'incertitude dans son regard rend ses intentions difficiles à décrypter."
+        },
+        {
+            "min": 17,
+            "max": 17,
+            "title": "Darla Cracleur",
+            "description": "Palefrenière malicieuse qui déteste la violence.",
+            "effect": "S'assure que les montures des brigands soient les plus rapides lors des poursuites du guet."
+        },
+        {
+            "min": 18,
+            "max": 18,
+            "title": "Tackr",
+            "description": "Chasseur sauvage et archer taciturne vivant en marge de la civilisation.",
+            "effect": "Considère le banditisme comme une forme de chasse ; main sûre et œil vif à l'arc."
+        },
+        {
+            "min": 19,
+            "max": 19,
+            "title": "Damian le Fou",
+            "description": "Ancien bouffon défiguré par un noble, devenu chef d'une troupe d'acrobates criminels.",
+            "effect": "Spécialiste des interventions sanglantes lors des carnavals et festivités."
+        },
+        {
+            "min": 20,
+            "max": 20,
+            "title": "Angus « Minuit » Ballatac",
+            "description": "Saint homme à la peau sombre invoquant des dieux anciens affamés pour sa bande.",
+            "effect": "Pratique des cérémonies nocturnes incluant des sacrifices pour obtenir des bénédictions."
+        },
+        {
+            "min": 21,
+            "max": 21,
+            "title": "Ben Trois-ours",
+            "description": "Vieux montreur d'animaux itinérant dont les furets et belettes sont entraînés au vol.",
+            "effect": "Ses animaux s'introduisent dans les maisons pour voler l'or pendant son spectacle."
+        },
+        {
+            "min": 22,
+            "max": 22,
+            "title": "Darinda Œil mort",
+            "description": "Tireuse d'élite borgne maniant une arbalète aux carreaux barbelés.",
+            "effect": "Neutralise ses cibles d'un seul tir sans jamais donner de coup de semonce."
+        },
+        {
+            "min": 23,
+            "max": 23,
+            "title": "Galien",
+            "description": "Lieutenant du clan Marmant, agissant sous couvert d'une autorité légitime factice.",
+            "effect": "Saisit les biens de quiconque ne porte pas l'insigne payant du clan."
+        },
+        {
+            "min": 24,
+            "max": 24,
+            "title": "Gabrielle Rare-épine",
+            "description": "Femme vêtue de noir revendiquant les bois comme son royaume personnel.",
+            "effect": "Exige un droit de passage élevé, surtout si les voyageurs transportent du gibier."
+        },
+        {
+            "min": 25,
+            "max": 25,
+            "title": "Wendy, la fille du Freux",
+            "description": "Femme aux tempes rasées, maniant des hachettes d'acier avec une précision mortelle.",
+            "effect": "Commandante en second réfléchie, pressentie pour diriger la bande des Enfants du Freux."
+        },
+        {
+            "min": 26,
+            "max": 26,
+            "title": "Vigo le Soufflet",
+            "description": "Sergent imposant maniant un long fouet de cuir et une voix de commandement terrifiante.",
+            "effect": "Préfère achever lui-même ses hommes blessés plutôt que de les abandonner."
+        },
+        {
+            "min": 27,
+            "max": 27,
+            "title": "Sage",
+            "description": "Rebouteuse exilée habitée par la rancœur envers les autorités locales.",
+            "effect": "Offre des soins et un abri secret à la bande des Pies rouges."
+        },
+        {
+            "min": 28,
+            "max": 28,
+            "title": "Priscilla Predagan",
+            "description": "Coupe-gorge athlétique aux mains couvertes de cicatrices.",
+            "effect": "Dirige la bande des Pies rouges avec sa compagne Sage."
+        },
+        {
+            "min": 29,
+            "max": 29,
+            "title": "Dragan l'Embaumé",
+            "description": "Ancien pilleur de tombes reconverti dans le meurtre et le trafic de cadavres.",
+            "effect": "Bénéficie d'une protection occulte obscure lui permettant de braver la mort."
+        },
+        {
+            "min": 30,
+            "max": 30,
+            "title": "Frère Héllouin",
+            "description": "Prêcheur itinérant mielleux semant la discorde dans les communautés isolées.",
+            "effect": "Appauvrit les villages en échange d'absolutions factices avant de fuir."
+        },
+        {
+            "min": 31,
+            "max": 31,
+            "title": "Gedwyn l'Édenté",
+            "description": "Vétéran musclé et borgne, portant un ceinturon d'armes imposant.",
+            "effect": "Extrêmement dangereux malgré son âge si on l'offense sur son audition."
+        },
+        {
+            "min": 32,
+            "max": 32,
+            "title": "Constance",
+            "description": "Femme à l'apparence volontairement quelconque pour infiltrer les caravanes.",
+            "effect": "Sabote les chariots de l'intérieur pour permettre l'attaque de sa bande."
+        },
+        {
+            "min": 33,
+            "max": 33,
+            "title": "Harald Johanson",
+            "description": "Individu lunatique ayant perdu une partie de sa langue lors d'un vol raté.",
+            "effect": "Parle peu mais frappe vite avec son poignard à la moindre remarque."
+        },
+        {
+            "min": 34,
+            "max": 34,
+            "title": "Darren le Vif",
+            "description": "Petit homme au sourire de serpent, expert en archerie.",
+            "effect": "Défie les captifs de s'enfuir avant de leur loger un trait dans le genou."
+        },
+        {
+            "min": 35,
+            "max": 35,
+            "title": "Brienne Katzer",
+            "description": "Détrousseuse courtoise qui s'excuse de voler par nécessité.",
+            "effect": "Traite correctement les victimes polies, mais devient impitoyable avec les autres."
+        },
+        {
+            "min": 36,
+            "max": 36,
+            "title": "La Dent",
+            "description": "Gamin des rues agressif enveloppé de chiffons sales.",
+            "effect": "Possède des canines acérées utilisées comme des poignards lors des agressions."
+        },
+        {
+            "min": 37,
+            "max": 37,
+            "title": "« Capitaine » Diane Wetter",
+            "description": "Commandante impitoyable évaluant la valeur marchande des gens d'un coup d'œil.",
+            "effect": "Vend les voyageurs capturés comme esclaves après avoir pillé leurs biens."
+        },
+        {
+            "min": 38,
+            "max": 38,
+            "title": "Renley Crâne dur",
+            "description": "Bucheron colossal capable de broyer les cervicales d'un homme à mains nues.",
+            "effect": "Possède une patience limitée et une force capable de porter des coffres massifs."
+        },
+        {
+            "min": 39,
+            "max": 39,
+            "title": "Sylviane, la Dame du tertre",
+            "description": "Mystérieuse occupante d'un tumulus antique dans les hautes plaines.",
+            "effect": "L'esprit d'un ancien roi du nord lui octroierait des pouvoirs surnaturels."
+        },
+        {
+            "min": 40,
+            "max": 40,
+            "title": "Maron la Croche",
+            "description": "Individu filiforme doté d'un crochet d'acier fixé à l'avant-bras droit.",
+            "effect": "Se bat avec une férocité sauvage pour compenser son membre atrophié."
+        },
+        {
+            "min": 41,
+            "max": 41,
+            "title": "Tomill « Nuit »",
+            "description": "Homme débauché aux paumes marquées de symboles blasphématoires.",
+            "effect": "Invoque des dieux innommables par des signes impurs pour effrayer ses ennemis."
+        },
+        {
+            "min": 42,
+            "max": 42,
+            "title": "Mariounde",
+            "description": "Femme aux yeux décolorés, experte dans l'art de la diversion tavernière.",
+            "effect": "Appâte les sentinelles et sème le chaos pour faciliter le pillage par ses complices."
+        },
+        {
+            "min": 43,
+            "max": 43,
+            "title": "Rasheen Redsash",
+            "description": "Belle cheffe d'une troupe de danseurs de rue.",
+            "effect": "Détrousse les spectateurs fascinés par ses performances de danse."
+        },
+        {
+            "min": 44,
+            "max": 44,
+            "title": "Karack Chien errant",
+            "description": "Guerrier barbare à la crinière sauvage dirigeant une meute de pilleurs.",
+            "effect": "Se bat avec une férocité bestiale, utilisant ses dents comme une arme."
+        },
+        {
+            "min": 45,
+            "max": 45,
+            "title": "Darren",
+            "description": "Adolescent charmeur jouant de la flûte de roseau dans les arbres.",
+            "effect": "Ses mélodies sont des signaux codés pour prévenir la bande de l'approche du guet."
+        },
+        {
+            "min": 46,
+            "max": 46,
+            "title": "Le Héron",
+            "description": "Archer d'élite frappant sans prévenir avant de s'évaporer dans la nature.",
+            "effect": "Laisse derrière lui ses compagnons capturés sans jamais laisser de trace de sa fuite."
+        },
+        {
+            "min": 47,
+            "max": 47,
+            "title": "Jacques Bon père",
+            "description": "Prédicateur en haillons dirigeant une congrégation d'illuminés.",
+            "effect": "Ses fidèles cachent des maillets sous leurs robes pour punir ceux qui refusent l'aumône."
+        },
+        {
+            "min": 48,
+            "max": 48,
+            "title": "Rory",
+            "description": "Homme soigné vendant des écharpes chamarrées sur la Grand-Route.",
+            "effect": "L'écharpe sert de sauf-conduit temporaire contre les attaques de brigands locaux."
+        },
+        {
+            "min": 49,
+            "max": 49,
+            "title": "Henrietta Tempête",
+            "description": "Combattante maniant un marteau lourd au milieu des incendies.",
+            "effect": "Brise les dernières résistances en chargeant à travers la fumée."
+        },
+        {
+            "min": 50,
+            "max": 50,
+            "title": "Le Heaume d'effroi",
+            "description": "Cavalier en armure d'acier poli dont le visage reste totalement invisible.",
+            "effect": "Sa voix grave résonne dans son armure que certains prétendent vide ou hantée."
+        }
+    ]
+}

@@ -1,0 +1,53 @@
+{
+  "name": [
+    "Tour des Arcanes Brisées",
+    "Tour du Spire Fendu",
+    "Tour des Étages Errants",
+    "Tour du Cristal Fracturé",
+    "Tour des Escaliers Inversés",
+    "Tour du Cœur Arcanique",
+    "Tour des Fenêtres Muettes",
+    "Tour du Parchemin Déchiré",
+    "Tour des Ombres Déviées",
+    "Tour du Nexus Fissuré"
+  ],
+
+  "description": [
+    "Une tour dont la structure semble brisée en plusieurs segments suspendus.",
+    "Un spire fendu en deux, maintenu par une magie instable.",
+    "Une tour où les étages changent de place selon l’heure.",
+    "Une tour dominée par un cristal fracturé diffusant une lumière étrange.",
+    "Une tour où les escaliers montent parfois vers le bas.",
+    "Une tour abritant un cœur arcanique pulsant comme un organe vivant.",
+    "Une tour dont les fenêtres ne montrent jamais le même paysage.",
+    "Une tour où les parchemins se déchirent puis se reforment seuls.",
+    "Une tour où les ombres se déplacent indépendamment de la lumière.",
+    "Une tour fissurée par un nexus magique instable."
+  ],
+
+  "ambiance": [
+    "Une instabilité permanente.",
+    "Une magie fissurée.",
+    "Un espace déformé.",
+    "Une lumière brisée.",
+    "Une inversion déroutante.",
+    "Une pulsation arcanique.",
+    "Une illusion mouvante.",
+    "Une fragmentation scripturale.",
+    "Une distorsion ombragée.",
+    "Une tension dimensionnelle."
+  ],
+
+  "secret": [
+    "Un segment suspendu contient une pièce qui n’existe sur aucun plan.",
+    "Le spire fendu murmure un nom lorsqu’on le touche.",
+    "Un étage errant revient toujours vers un visiteur précis.",
+    "Le cristal fracturé montre un souvenir qui n’est pas le vôtre.",
+    "Un escalier inversé mène à un lieu extérieur à la tour.",
+    "Le cœur arcanique réagit aux émotions.",
+    "Une fenêtre muette ouvre brièvement sur un autre monde.",
+    "Un parchemin déchiré révèle un avertissement oublié.",
+    "Une ombre déviée pointe vers un passage secret.",
+    "Le nexus fissuré pulse plus fort en présence de magie interdite."
+  ]
+}

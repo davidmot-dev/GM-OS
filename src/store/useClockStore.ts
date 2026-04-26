@@ -399,3 +399,7 @@ export const useClockStore = create<ClockState>()(
         }
     )
 );
+
+if (typeof window !== 'undefined') {
+    (window as any).useClockStore = useClockStore;
+}

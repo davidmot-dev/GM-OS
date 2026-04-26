@@ -1,0 +1,615 @@
+{
+    "name": "100 Messages ou Notes - GdS-Cth-Investigateur",
+    "dice": "1d100",
+    "entries": [
+        {
+            "min": 1,
+            "max": 1,
+            "title": "Consignes de dépôt",
+            "description": "Fixez le paquet sous le siège du banc qui est face au bar. Marquez le coin d'un trait de craie blanche.",
+            "effect": "Indice pour une livraison occulte."
+        },
+        {
+            "min": 2,
+            "max": 2,
+            "title": "Prime de shérif",
+            "description": "Un groupe de voyous harcèle les voyageurs à l'est. Récompense pour leur chef vivant.",
+            "effect": "Accroche pour une quête de chasse aux primes."
+        },
+        {
+            "min": 3,
+            "max": 4,
+            "title": "Échecs et remords",
+            "description": "Lettre d'un raté qui a laissé mourir sa cible, ou récit d'un explorateur coincé par la trahison.",
+            "effect": "Perte de SAN (0/1) pour l'empathie envers le destin tragique."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "Voie de l'illumination",
+            "description": "Invitation d'un mentor à rejoindre une cause dans les égouts après étude de tomes.",
+            "effect": "Piste menant à une réunion de culte souterraine."
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "Ordres du Maître",
+            "description": "Note de Fiorella Fanucci ordonnant l'assaut du QG ennemi et le sacrifice d'un enfant.",
+            "effect": "Preuve directe des activités d'un culte violent."
+        },
+        {
+            "min": 7,
+            "max": 7,
+            "title": "Tâche d'aspirant",
+            "description": "Ordre d'éliminer un scientifique fou dans une grotte à flanc de falaise pour prouver sa valeur.",
+            "effect": "Mission d'assassinat ou sauvetage du scientifique."
+        },
+        {
+            "min": 8,
+            "max": 10,
+            "title": "Messages brefs",
+            "description": "Notes concernant une équipe en chemin, un rendez-vous à minuit ou la vengeance d'un orphelin de la mafia.",
+            "effect": "Éléments d'ambiance et rumeurs urbaines."
+        },
+        {
+            "min": 11,
+            "max": 11,
+            "title": "Escorte de chercheurs",
+            "description": "Rapport du Sergent Brown sur l'incompétence et la paranoïa des chercheurs escortés.",
+            "effect": "Informations sur une expédition archéologique en cours."
+        },
+        {
+            "min": 12,
+            "max": 12,
+            "title": "Sauf-conduit divin",
+            "description": "Note affirmant que le porteur agit selon la volonté d'une entité supérieure (le Maître).",
+            "effect": "Objet pouvant servir de sauf-conduit auprès de certains cultistes."
+        },
+        {
+            "min": 13,
+            "max": 13,
+            "title": "Lettre de Davis",
+            "description": "Message d'un garde s'ennuyant à son poste en attendant la livraison des approvisionnements.",
+            "effect": "Informations sur la routine d'un site surveillé."
+        },
+        {
+            "min": 14,
+            "max": 14,
+            "title": "Méfiance (Miller)",
+            "description": "Simple avertissement : 'Méfie-toi de Miller. Je pense qu'elle cache quelque chose.'",
+            "effect": "Modificateur de -10% aux tests de Psychologie contre Miller."
+        },
+        {
+            "min": 15,
+            "max": 15,
+            "title": "Le navire aux voiles noires",
+            "description": "Avertissement sur un navire maudit dont l'approche provoque des disparitions.",
+            "effect": "Rumeur maritime ; test de SAN (0/1) si le navire est aperçu."
+        },
+        {
+            "min": 16,
+            "max": 16,
+            "title": "Alignement prophétique",
+            "description": "Annonce que les constellations sont alignées pour le triomphe final de la confrérie.",
+            "effect": "Alerte sur l'imminence d'un rituel majeur."
+        },
+        {
+            "min": 17,
+            "max": 17,
+            "title": "Mariage traditionnel",
+            "description": "Lettre d'Eka cherchant l'aîné Wahyuni pour une cérémonie de mariage oubliée.",
+            "effect": "Piste vers un érudit en traditions anciennes."
+        },
+        {
+            "min": 18,
+            "max": 18,
+            "title": "Décret d'exécution",
+            "description": "Condamnation à mort officielle d'Edward Wilson pour crimes odieux.",
+            "effect": "Information judiciaire locale."
+        },
+        {
+            "min": 19,
+            "max": 20,
+            "title": "Leçon et Ravitaillement",
+            "description": "Ordre de punir des curieux à l'hôtel ou appel désespéré du Capitaine Martinez pour des munitions.",
+            "effect": "Danger immédiat pour les investigateurs ou piste de mercenariat."
+        },
+        {
+            "min": 21,
+            "max": 21,
+            "title": "Trahison de Cross",
+            "description": "Ordre de traquer le traître Cross et de ramener l'argent volé ainsi que ses doigts.",
+            "effect": "Preuve de la brutalité d'une organisation criminelle."
+        },
+        {
+            "min": 22,
+            "max": 22,
+            "title": "Appel du destin",
+            "description": "Invitation pressante à rejoindre deux sœurs dans une cabane pour débloquer un grand pouvoir.",
+            "effect": "Tentative de recrutement par un petit groupe occulte."
+        },
+        {
+            "min": 23,
+            "max": 23,
+            "title": "Inquiétude de Ryan",
+            "description": "Ryan supplie Alicia de quitter un lieu maudit qui semble affecter sa santé mentale.",
+            "effect": "Indice sur la dangerosité psychique d'une zone."
+        },
+        {
+            "min": 24,
+            "max": 24,
+            "title": "Expédition de Miles",
+            "description": "Miles espère ramener un spécimen (mort ou vif) de la bête qu'il traque dans la jungle.",
+            "effect": "Rumeur sur l'existence d'une créature non-identifiée."
+        },
+        {
+            "min": 25,
+            "max": 25,
+            "title": "Menace à Feckle",
+            "description": "Avertissement froid à Feckle suite au non-respect d'un accord financier ou occulte.",
+            "effect": "Témoignage d'un chantage en cours."
+        },
+        {
+            "min": 26,
+            "max": 26,
+            "title": "Le Chemin",
+            "description": "Message fanatique : 'Suis le Chemin et tu seras Sauvé. Prépare-toi.'",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 27,
+            "max": 27,
+            "title": "Rapport du Sergent D.",
+            "description": "Confirmation que les forces sont cachées et prêtes à frapper sur ordre.",
+            "effect": "Alerte sur une embuscade imminente."
+        },
+        {
+            "min": 28,
+            "max": 28,
+            "title": "Refus de la Conseillère Grant",
+            "description": "Refus de fournir des ressources supplémentaires à un projet jugé non prioritaire.",
+            "effect": "Indice sur les difficultés financières d'un groupe occulte ou scientifique."
+        },
+        {
+            "min": 29,
+            "max": 29,
+            "title": "Itinéraire du parc",
+            "description": "Instructions précises traversant le parc vers une maison délabrée au sud-est.",
+            "effect": "Bonus de +20% en Orientation pour trouver la planque."
+        },
+        {
+            "min": 30,
+            "max": 30,
+            "title": "Liste des suspects",
+            "description": "Identification de Joyce Keith, Wanda Phelps et Randolph Bates comme conspirateurs potentiels.",
+            "effect": "Liste de PNJ suspects pour les investigateurs."
+        },
+        {
+            "min": 31,
+            "max": 31,
+            "title": "Ordres de Talley",
+            "description": "Capture d'un individu à l'entrée nord et élimination des témoins. Destination : les égouts.",
+            "effect": "Preuve d'un enlèvement planifié."
+        },
+        {
+            "min": 32,
+            "max": 33,
+            "title": "Surveillance et Échec",
+            "description": "Rapport de surveillance du port par Goodwin ou mécontentement suite à l'échec de Maria lors d'un interrogatoire.",
+            "effect": "Indice sur les méthodes de surveillance et de torture du culte."
+        },
+        {
+            "min": 34,
+            "max": 34,
+            "title": "Vol de découvertes",
+            "description": "Une femme crie son indignation suite au vol de dix ans de travaux par un culte misogyne.",
+            "effect": "Piste vers une érudite bafouée prête à trahir son culte."
+        },
+        {
+            "min": 35,
+            "max": 35,
+            "title": "Le caveau des esprits",
+            "description": "Refus catégorique d'ouvrir un caveau malgré son contenu essentiel, par peur des esprits.",
+            "effect": "Indice sur un lieu hanté contenant des objets de pouvoir."
+        },
+        {
+            "min": 36,
+            "max": 36,
+            "title": "Héritage de Martial",
+            "description": "Dernier message du dernier membre d'un ordre, léguant sa lame à un homme d'honneur.",
+            "effect": "Possibilité de trouver une arme ancienne (Lame de Martial)."
+        },
+        {
+            "min": 37,
+            "max": 37,
+            "title": "Folie héréditaire",
+            "description": "Confessions d'un jeune homme sombrant dans la folie familiale et envisageant l'automutilation.",
+            "effect": "Perte de SAN (1/1D3) pour le lecteur."
+        },
+        {
+            "min": 38,
+            "max": 38,
+            "title": "Le trésor dévorant",
+            "description": "Avertissement d'un mourant dont le corps est détruit par les forces invoquées pour un trésor.",
+            "effect": "Mise en garde contre un artefact maudit."
+        },
+        {
+            "min": 39,
+            "max": 39,
+            "title": "Héritage de Bianco",
+            "description": "Bianco lègue sa flamme noire et son complexe de cavernes sous le cimetière nord à son héritier.",
+            "effect": "Localisation d'un sanctuaire du Seigneur des Ténèbres."
+        },
+        {
+            "min": 40,
+            "max": 40,
+            "title": "Offre de Lord Stanton",
+            "description": "Un collectionneur propose une forte somme pour la récupération d'un artefact dangereux.",
+            "effect": "Proposition de mission lucrative."
+        },
+        {
+            "min": 41,
+            "max": 41,
+            "title": "Secret de jeunesse",
+            "description": "Un vieillard avoue un meurtre accidentel passé et demande qu'on récupère le corps hanté.",
+            "effect": "Quête de rédemption et d'exorcisme."
+        },
+        {
+            "min": 42,
+            "max": 42,
+            "title": "Plaintes de Watts",
+            "description": "Plaintes contre les décoctions nauséabondes de Bridges qui imprègnent toute la maison.",
+            "effect": "Indice sur des expériences alchimiques domestiques."
+        },
+        {
+            "min": 43,
+            "max": 43,
+            "title": "Chantage anonyme",
+            "description": "Note griffonnée exigeant de l'argent dans l'arbre creux près de la fontaine sous peine de révélation.",
+            "effect": "Opportunité d'intercepter une transaction de chantage."
+        },
+        {
+            "min": 44,
+            "max": 44,
+            "title": "La chose dans l'ombre",
+            "description": "Supplication d'une personne suivie par quelque chose de terrifiant, surtout dans l'obscurité.",
+            "effect": "Perte de SAN (0/1) ; indice sur une entité traqueuse."
+        },
+        {
+            "min": 45,
+            "max": 45,
+            "title": "Lieux d'observation",
+            "description": "Liste de sites d'apparition : phare, Oakridge, Maplewood. Instruction : observer le ciel à la pleine lune.",
+            "effect": "Calendrier d'événements astronomiques/occultes."
+        },
+        {
+            "min": 46,
+            "max": 46,
+            "title": "Dispersion des pièces",
+            "description": "Instruction de placer les parties d'un objet chez divers antiquaires (McGee, Walker, Nicholson).",
+            "effect": "Indice sur la localisation d'un artefact fragmenté."
+        },
+        {
+            "min": 47,
+            "max": 48,
+            "title": "Avatar et Georgia",
+            "description": "Récit d'un disciple de l'Avatar ou avertissement sur les manipulations risquées de machines par Georgia.",
+            "effect": "Informations sur les dangers technologiques et fanatiques."
+        },
+        {
+            "min": 49,
+            "max": 49,
+            "title": "Note de Jeffrey",
+            "description": "Jeffrey attend Lara et s'inquiète de son retard de plusieurs semaines.",
+            "effect": "Indice sur une disparition possible."
+        },
+        {
+            "min": 50,
+            "max": 50,
+            "title": "Fête de quartier",
+            "description": "Invitation banale à une fête de quartier avec concert de jazz et loterie.",
+            "effect": "Lieu de rassemblement social et de collecte de rumeurs."
+        },
+        {
+            "min": 51,
+            "max": 51,
+            "title": "Rachat de parts",
+            "description": "Monsieur Clampton confirme le rachat des parts d'une équipe sous quatre jours.",
+            "effect": "Information sur une transaction financière suspecte."
+        },
+        {
+            "min": 52,
+            "max": 52,
+            "title": "Avertissement à Andrea",
+            "description": "Conseil d'ami sur les risques encourus pour le recel d'alcool.",
+            "effect": "Indice sur un trafic d'alcool local."
+        },
+        {
+            "min": 53,
+            "max": 53,
+            "title": "La plante de Weber",
+            "description": "Weber s'intéresse à une plante inconnue aux propriétés chimiques révolutionnaires.",
+            "effect": "Indice sur la découverte d'une flore anormale."
+        },
+        {
+            "min": 54,
+            "max": 54,
+            "title": "Douleur cérébrale",
+            "description": "Note délirante d'une personne cherchant un couteau pour 'faire sortir' quelque chose de son cerveau.",
+            "effect": "Test de SAN (1/1D4) ; alerte sur un individu dangereux."
+        },
+        {
+            "min": 55,
+            "max": 55,
+            "title": "Mission du frère",
+            "description": "Un frère demande à sa sœur de rester à l'abri pendant qu'il termine une tâche essentielle pour la famille.",
+            "effect": "Indice sur des activités familiales occultes."
+        },
+        {
+            "min": 56,
+            "max": 57,
+            "title": "Prière et Amour",
+            "description": "Lamentations d'un dévot dont la divinité ne répond plus ou lettre d'amour passionnée d'un certain S.",
+            "effect": "Éléments narratifs d'ambiance."
+        },
+        {
+            "min": 58,
+            "max": 58,
+            "title": "Interception Howell",
+            "description": "Ordre d'intercepter une cargaison plus importante que prévu en dehors de la baie.",
+            "effect": "Alerte sur une attaque de convoi maritime."
+        },
+        {
+            "min": 59,
+            "max": 60,
+            "title": "Ruines et Novice",
+            "description": "Découverte de ruines minières étranges ou réprimande du novice Waters pour une lettre perdue.",
+            "effect": "Localisation de ruines souterraines ou opportunité de trouver un message perdu."
+        },
+        {
+            "min": 61,
+            "max": 62,
+            "title": "Nuit et Boue",
+            "description": "Poème à la Nuit Infinie ou menace absurde d'un supérieur exigeant que l'on nettoie la boue.",
+            "effect": "Ambiance sectaire décalée."
+        },
+        {
+            "min": 63,
+            "max": 63,
+            "title": "Le coffre sous la jetée",
+            "description": "Indication que le produit est dans un coffre étanche attaché à une ancre sous la jetée.",
+            "effect": "Localisation d'une cache immergée (nécessite test de Plongée)."
+        },
+        {
+            "min": 64,
+            "max": 64,
+            "title": "Transformation",
+            "description": "Dernier message d'une équipe infectée par des crocs, se transformant en abominations.",
+            "effect": "Test de SAN (1/1D6) ; alerte sur des créatures contagieuses."
+        },
+        {
+            "min": 65,
+            "max": 65,
+            "title": "Mythes de Felicia",
+            "description": "Felicia Hutchinson confirme la réalité des bêtes et demande à poursuivre l'enquête.",
+            "effect": "Validation de l'existence de créatures de cauchemar."
+        },
+        {
+            "min": 66,
+            "max": 66,
+            "title": "Mission de L.",
+            "description": "Ordre de sécuriser les niveaux inférieurs et de détruire les preuves sous cinq jours.",
+            "effect": "Indice sur une opération de nettoyage imminente."
+        },
+        {
+            "min": 67,
+            "max": 67,
+            "title": "Liste occulte",
+            "description": "Liste de fournitures : papier cartonné, encres de couleurs, plumes et sable sec.",
+            "effect": "Liste de matériel pour la rédaction de grimoires."
+        },
+        {
+            "min": 68,
+            "max": 68,
+            "title": "Lieu de fouille",
+            "description": "Itinéraire précis vers une statue dans une cour pour creuser à un endroit spécifique.",
+            "effect": "Localisation d'un trésor ou d'un secret enterré."
+        },
+        {
+            "min": 69,
+            "max": 69,
+            "title": "Prix du progrès",
+            "description": "Simple mantra : 'Le progrès exige des sacrifices. Le sacrifice est tout.'",
+            "effect": "Ambiance fanatique."
+        },
+        {
+            "min": 70,
+            "max": 70,
+            "title": "Menace au rat",
+            "description": "Menace violente d'énucléation contre un espion surnommé 'Face de rat'.",
+            "effect": "Indice sur la paranoïa d'un suspect."
+        },
+        {
+            "min": 71,
+            "max": 71,
+            "title": "Le loquet piégé",
+            "description": "Instructions pour ouvrir un coffret sans perdre une main : loquet caché et trou du nœud.",
+            "effect": "Réussite automatique d'un test de Crochetage pour ce coffret spécifique."
+        },
+        {
+            "min": 72,
+            "max": 73,
+            "title": "Roue et Allergies",
+            "description": "Combinaison d'une serrure à roue ou plainte de Landon contre les fleurs allergisantes de Clara.",
+            "effect": "Code de coffre-fort ou élément d'ambiance domestique."
+        },
+        {
+            "min": 74,
+            "max": 74,
+            "title": "Détournement de Jimmie",
+            "description": "Jimmie explique à sa famille comment il vole son employeur pour quitter leur taudis.",
+            "effect": "Piste pour un chantage ou une arrestation."
+        },
+        {
+            "min": 75,
+            "max": 75,
+            "title": "La maison des ombres",
+            "description": "Observation de nombreuses personnes entrant dans une maison sans jamais en ressortir.",
+            "effect": "Indice sur un lieu de disparition ou de culte."
+        },
+        {
+            "min": 76,
+            "max": 76,
+            "title": "Dans les murs",
+            "description": "Témoignage de bruits de gargouillis et de torsions dans les murs uniquement la nuit.",
+            "effect": "Indice sur une présence vermiforme ou spectrale."
+        },
+        {
+            "min": 77,
+            "max": 77,
+            "title": "Mot de passe Narmatoté",
+            "description": "Instruction pour récupérer cinq fioles. Mot de passe : 'Narmatoté'.",
+            "effect": "Clé verbale pour une transaction illégale."
+        },
+        {
+            "min": 78,
+            "max": 78,
+            "title": "Vengeance d'Otto Marshall",
+            "description": "Otto menace de se venger de ceux qui l'ont fait emprisonner grâce à une sortie secrète.",
+            "effect": "Menace immédiate d'un criminel évadé."
+        },
+        {
+            "min": 79,
+            "max": 80,
+            "title": "Masques de chair",
+            "description": "Délire sur des masques de chair cachant la vraie nature des gens ou emploi du temps de T.",
+            "effect": "Perte de SAN (0/1) ou informations de traque sur le PNJ T."
+        },
+        {
+            "min": 81,
+            "max": 81,
+            "title": "Avances de Frieda",
+            "description": "Lettre de séduction d'un homme mûr vantant son expérience malgré son âge.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 82,
+            "max": 82,
+            "title": "Succès de l'Expérience 32",
+            "description": "L'hybride se développe trop vite pour le laboratoire. Utilisation sur le terrain prévue bientôt.",
+            "effect": "Alerte sur la présence d'un monstre artificiel dans la région."
+        },
+        {
+            "min": 83,
+            "max": 83,
+            "title": "Avis sur le vol",
+            "description": "Note officielle interdisant le vol sous peine de licenciement immédiat.",
+            "effect": "Aucun effet mécanique."
+        },
+        {
+            "min": 84,
+            "max": 84,
+            "title": "Rapport Lawrence Conrad",
+            "description": "L'enquêteur est perplexe devant un meurtre sans mobile financier, suspectant un culte.",
+            "effect": "Confirmation de l'implication de sectes dans des crimes locaux."
+        },
+        {
+            "min": 85,
+            "max": 85,
+            "title": "Perte d'identité",
+            "description": "Une personne oublie son propre nom et supplie le lecteur de fuir immédiatement.",
+            "effect": "Indice sur un effet de zone altérant la mémoire."
+        },
+        {
+            "min": 86,
+            "max": 86,
+            "title": "La brique à l'épée",
+            "description": "Instruction de chercher un symbole d'épée dans un bâtiment marqué d'un T pour trouver un coffret.",
+            "effect": "Localisation d'une cache secrète dans un mur."
+        },
+        {
+            "min": 87,
+            "max": 89,
+            "title": "Livraison et Horreur",
+            "description": "Transaction de minuit risquée, délire de génie incompris ou récit d'un massacre dans un village abandonné.",
+            "effect": "Perte de SAN (1/1D4) ; alerte sur des zones de danger de mort."
+        },
+        {
+            "min": 90,
+            "max": 90,
+            "title": "Sommation de paiement",
+            "description": "Dernier avertissement concernant une dette avec une augmentation de 10%.",
+            "effect": "Piste sur les dettes d'un PNJ important."
+        },
+        {
+            "min": 91,
+            "max": 91,
+            "title": "Le secret de Ramsey",
+            "description": "Projet d'effraction chez Ramsey pour démasquer sa vraie nature.",
+            "effect": "Piste menant à la découverte d'un secret compromettant."
+        },
+        {
+            "min": 92,
+            "max": 92,
+            "title": "Refus d'O'Brien",
+            "description": "Refus d'investir dans une région considérée comme un 'gouffre financier' parsemé de ruines.",
+            "effect": "Information historique sur le déclin économique local."
+        },
+        {
+            "min": 93,
+            "max": 93,
+            "title": "Blizzard maudit",
+            "description": "Récit d'un groupe piégé dans une ville maudite par le froid, envisageant le cannibalisme.",
+            "effect": "Test de SAN (1/1D4) ; ambiance de survie désespérée."
+        },
+        {
+            "min": 94,
+            "max": 94,
+            "title": "Menace d'Arthur Clemons",
+            "description": "Clemons annonce la fin imminente d'une société et le châtiment de ceux qui lui restent fidèles.",
+            "effect": "Indice sur une prise de pouvoir hostile par une organisation."
+        },
+        {
+            "min": 95,
+            "max": 95,
+            "title": "Refus Wilkerson",
+            "description": "Refus de financement pour déchiffrer des inscriptions cunéiformes trouvées dans le Pacifique.",
+            "effect": "Indice sur l'existence d'inscriptions anachroniques."
+        },
+        {
+            "min": 96,
+            "max": 96,
+            "title": "Recrutement au Dock 17",
+            "description": "Invitation pour un voleur talentueux à rejoindre une structure plus organisée à minuit.",
+            "effect": "Piste vers une guilde de voleurs ou un syndicat du crime."
+        },
+        {
+            "min": 97,
+            "max": 97,
+            "title": "Menace sur Hopper",
+            "description": "Menace glaçante contre Hopper et sa petite fille suite à un retard de paiement.",
+            "effect": "Quête potentielle de protection de témoin."
+        },
+        {
+            "min": 98,
+            "max": 98,
+            "title": "L'appel de Laura Meyers",
+            "description": "Appel à l'aide suite à des problèmes imprévus après la capture des investigateurs.",
+            "effect": "Localisation d'une planque ennemie en crise."
+        },
+        {
+            "min": 99,
+            "max": 99,
+            "title": "Le manoir rentable",
+            "description": "Un investisseur se moque des rumeurs de hantise, préférant l'espace de stockage massif du manoir.",
+            "effect": "Indice sur un lieu suspect utilisé comme entrepôt occulte."
+        },
+        {
+            "min": 100,
+            "max": 100,
+            "title": "Vengeance de Higgins",
+            "description": "Ordre d'éliminer le coupable ayant volé la relique sous peine de mort.",
+            "effect": "Menace directe contre le possesseur actuel d'une relique."
+        }
+    ]
+}

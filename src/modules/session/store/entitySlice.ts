@@ -10,7 +10,7 @@
 import type { StateCreator } from 'zustand';
 import i18next from 'i18next';
 import { gmToast } from '../../../stores/useToastStore';
-import { useJournalStore } from '../../journal/useJournalStore';
+// import { useJournalStore } from '../../journal/useJournalStore'; // Broken by circular dependency
 import { HealthInterpreter } from '../logic/HealthInterpreter';
 import type {
     Entity,
@@ -551,16 +551,18 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
             
             get().updateEntityHealth(targetId, updatedHealth);
             get().updateEntityHP(targetId, newHp);
-
-            useJournalStore.getState().addEvent({
-                type: 'COMBAT',
-                title: i18next.t('modules:session.events.impact_title', { name: entity.name }),
-                content: i18next.t('modules:session.events.impact_content', { 
-                    hp: newHp, 
-                    max: entity.maxHp, 
-                    state: updatedHealth.state 
-                }),
-            });
+            
+            if (typeof window !== 'undefined' && (window as any).useJournalStore) {
+                (window as any).useJournalStore.getState().addEvent({
+                    type: 'COMBAT',
+                    title: i18next.t('modules:session.events.impact_title', { name: entity.name }),
+                    content: i18next.t('modules:session.events.impact_content', { 
+                        hp: newHp, 
+                        max: entity.maxHp, 
+                        state: updatedHealth.state 
+                    }),
+                });
+            }
         } else {
             const player = players.find((p) =>
                 p.characters.some((c) => c.id === targetId)
@@ -575,15 +577,17 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
             get().updateCharacterHealth(player.id, targetId, updatedHealth);
             get().updateCharacterHP(player.id, targetId, newHp);
 
-            useJournalStore.getState().addEvent({
-                type: 'COMBAT',
-                title: i18next.t('modules:session.events.impact_title', { name: character.name }),
-                content: i18next.t('modules:session.events.impact_content', { 
-                    hp: newHp, 
-                    max: character.maxHp, 
-                    state: updatedHealth.state 
-                }),
-            });
+            if (typeof window !== 'undefined' && (window as any).useJournalStore) {
+                (window as any).useJournalStore.getState().addEvent({
+                    type: 'COMBAT',
+                    title: i18next.t('modules:session.events.impact_title', { name: character.name }),
+                    content: i18next.t('modules:session.events.impact_content', { 
+                        hp: newHp, 
+                        max: character.maxHp, 
+                        state: updatedHealth.state 
+                    }),
+                });
+            }
         }
     },
 

@@ -298,7 +298,9 @@
       "clear_tooltip": "Clear disconnected",
       "refresh_tooltip": "Refresh",
       "no_devices": "No devices connected",
-      "reconnect_note": "Tablets reconnect automatically if signal is lost."
+      "reconnect_note": "Tablets reconnect automatically if signal is lost.",
+      "eject_all": "Eject All",
+      "eject_all_tooltip": "Disconnect all devices and reset character locks"
     }
   }
 }

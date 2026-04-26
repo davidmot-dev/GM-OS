@@ -10,9 +10,10 @@ Il existe deux façons de connecter une tablette au GM-OS via le protocole **Nex
     - Ouvrez les **Paramètres OS** sur votre instance principale.
     - Allez dans l'onglet **Télécommande**.
     - Scannez le QR-Code de la section **Nexus Link** avec votre tablette.
-2.  **Signature Biométrique** :
+2. **Signature Biométrique** :
     - Lors de la première connexion, vous devrez choisir votre personnage.
-    - **Sécurité** : Si un autre joueur utilise déjà cette fiche, le Hub bloquera la connexion ("Signature biométrique déjà active") pour éviter les conflits d'édition.
+    - **Sécurité (Locking)** : Si un autre joueur utilise déjà cette fiche, le Hub bloquera la connexion ("Accès Refusé : personnage déjà connecté") pour éviter les conflits d'édition.
+    - **Réinitialisation** : Si vous êtes bloqué par erreur, demandez au MJ de "Réinitialiser les connexions" depuis ses paramètres.
 
 ### ⚡ Performance & Fluidité (v7.0 Tauri v2)
 Le Hub a été optimisé pour garantir une expérience à **60 FPS**, même sur du matériel ancien :
@@ -58,6 +59,12 @@ Le Tablet Hub affiche les éléments clés de votre session en temps réel :
 - **Reconnaissance Visuelle** : Accédez à l'onglet **Trombinoscope** pour voir tous les personnages (PNJs, Alliés, Monstres) que le MJ a marqué comme "Visibles pour les joueurs".
 - **Fiche Détail** : Cliquez sur un portrait pour l'afficher en grand. C'est l'outil idéal pour se souvenir d'un visage ou consulter les informations publiques d'un interlocuteur important.
 - **Mise à jour en direct** : Dès que le MJ coche la case "Public" sur un PNJ, celui-ci apparaît instantanément sur toutes les tablettes connectées.
+
+### 9. Administration des Terminaux (Pour le MJ)
+- **Lobby des Terminaux** : Visualisez en temps réel qui est connecté, avec quel personnage, et la qualité de leur signal.
+- **Gestion des Déconnexions** : Supprimez les anciens terminaux ("Vider les déconnectés") pour garder une liste propre.
+- **Éjecter Tout** : En cas de bug de synchronisation ou de changement de session, utilisez ce bouton pour déconnecter tout le monde et libérer tous les personnages.
+- **Diagnostic** : Vérifiez l'état du serveur (Port 3001) et votre adresse IP locale.
 
 ## 💡 Conseils d'Utilisation
 

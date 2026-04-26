@@ -1,13 +1,10 @@
 import type { ProjectionTarget } from '../types';
-import { resolveToSendableUrl } from '../../../utils/mediaResolver';
 import { useImageStore } from '../useImageStore';
+
+const imageChannel = new BroadcastChannel('gmos-image-sync');
 
 /**
  * ImageService - Gère la logique métier de projection d'images.
- * 
- * 🛡️ FIABILISATION v6 :
- * - DISTINCTION LOCALE/DISTANTE : On n'envoie plus d'URLs temporaires (Blobs) au Bridge local.
- * - RÉSOLUTION LÉGÈRE : Seul le Hub (Tablette) reçoit une URL préparée (Proxy/Base64).
  */
 export class ImageService {
     /**
@@ -16,28 +13,22 @@ export class ImageService {
     static async projectMedia(mediaPath: string, target: ProjectionTarget): Promise<string | null> {
         try {
             console.log(`[ImageService] Projecting ${mediaPath} to ${target}...`);
-            const bridge = window.appBridge;
-            console.log(`[ImageService] Bridge status:`, !!bridge, !!bridge?.image?.launchDisplay, !!bridge?.image?.syncHubData);
+            const bridge = (window as any).appBridge;
             
-            // 🛡️ CAS LOCAL (Monitor / Player / Monitor2/3/4)
             if (target !== 'hub') {
-                console.log(`[ImageService] Sending Local Projection via launchDisplay`);
                 bridge?.image?.launchDisplay([mediaPath], target);
-                
                 useImageStore.getState().setProjection(target, mediaPath);
-                return mediaPath;
+            } else {
+                // Hub sync
+                bridge?.image?.syncHubData?.('image', mediaPath);
+                useImageStore.getState().setProjection(target, mediaPath);
             }
 
-            // 📡 CAS DISTANT (Hub / Tablette)
-            // La tablette ne peut pas lire IndexedDB localement, on doit lui envoyer une URL résolue.
-            const resolvedPath = await resolveToSendableUrl(mediaPath);
-            if (resolvedPath) {
-                window.appBridge?.image?.syncHubData('image', resolvedPath);
-                useImageStore.getState().setProjection(target, mediaPath);
-                return resolvedPath;
-            }
+            // 📡 Émission BroadcastChannel pour une synchro immédiate (Tauri/Webview)
+            imageChannel.postMessage({ type: 'image:sync', target, mediaPath });
 
-            return null;
+            return mediaPath;
+
         } catch (error) {
             console.error('[ImageService] Error projecting media:', error);
             return null;
@@ -47,25 +38,27 @@ export class ImageService {
     /**
      * Projette une entité (PNJ/PJ) via son portrait.
      */
-    static async projectEntity(mediaId: string, name: string): Promise<void> {
+    static async projectEntity(entity: any, target: ProjectionTarget): Promise<string | null> {
         try {
-            console.log(`[ImageService] Projecting Entity: ${name} (${mediaId})...`);
-            
-            const store = useImageStore.getState();
-            const target = store.projectionTarget;
+            const avatar = entity?.portraitUrl || entity?.imageUrl || entity?.avatar;
+            if (!avatar) return null;
 
-            if (target !== 'hub') {
-                window.appBridge?.image?.launchDisplay([mediaId], target);
-                store.setProjection(target, mediaId);
+            const bridge = (window as any).appBridge;
+            if (target === 'hub') {
+                bridge?.image?.syncHubData?.('entity', JSON.stringify(entity));
             } else {
-                const resolved = await resolveToSendableUrl(mediaId);
-                if (resolved) {
-                    window.appBridge?.image?.syncHubData('image', resolved);
-                    store.setProjection(target, mediaId);
-                }
+                bridge?.image?.launchDisplay?.([avatar], target);
             }
+            
+            useImageStore.getState().setProjection(target, avatar);
+
+            // 📡 Émission BroadcastChannel
+            imageChannel.postMessage({ type: 'entity:sync', target, entity: JSON.stringify(entity) });
+
+            return avatar;
         } catch (error) {
             console.error('[ImageService] Error projecting entity:', error);
+            return null;
         }
     }
 
@@ -76,16 +69,18 @@ export class ImageService {
         const store = useImageStore.getState();
         const target = targetId || store.projectionTarget;
         
-        console.log(`[ImageService] Blackout for ${target}...`);
-        
+        const bridge = (window as any).appBridge;
         if (target === 'hub') {
-            window.appBridge?.image?.syncHubData('image', '');
+            bridge?.image?.syncHubData?.('image', '');
+            bridge?.image?.syncHubData?.('entity', '');
         } else {
-            // Pour les écrans, on ferme réellement la fenêtre
-            window.appBridge?.window?.close(`projector-${target}`);
+            bridge?.image?.launchDisplay?.([], target);
         }
         
         store.setProjection(target, null);
+
+        // 📡 Émission BroadcastChannel
+        imageChannel.postMessage({ type: 'image:clear', target });
     }
 
     /**

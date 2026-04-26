@@ -1,0 +1,61 @@
+{
+    "firstNames": [
+        "Luca","Sofia","Marco","Elena","Javier","Clara","Jonas","Anna","Mateo","Ingrid",
+        "Niels","Giulia","Pablo","Sara","Leon","Marta","Tommaso","Beatriz","Felix","Nina",
+        "Andreas","Chiara","Hugo","Teresa","Milan","Alicia","Ruben","Liv","Bastian","Noemi",
+        "Sven","Irene","Alessio","Paula","Victor","Greta","Dario","Laura","Kai","Mireia",
+        "Oskar","Camila","Rafael","Silje","Matteo","Eva","Bruno","Anouk","Henrik","Lara"
+    ],
+    "lastNames": [
+        "Rossi","Garcia","Müller","Silva","Schmidt","Romano","Fernandez","Weber","Costa","Fischer",
+        "Ricci","Lopez","Schneider","Pereira","Wagner","Conti","Gomez","Becker","Sousa","Hoffmann",
+        "Marino","Santos","Keller","Alonso","Moretti","Vega","Schäfer","Martins","Huber","Navarro",
+        "Greco","Torres","Bauer","Castro","Fontana","Ortega","Kraus","Pinto","Schuster","Cabrera",
+        "De Luca","Herrera","Brandt","Mendes","König","Serrano","Ferreira","Schreiber","Aguilar","Falk"
+    ],
+    "jobs": [
+        "Professeur", "Infirmière", "Ingénieur logiciel", "Serveur", "Étudiante", "Architecte", "Chauffeur de bus",
+        "Employé de bureau", "Médecin", "Journaliste", "Photographe", "Développeur web", "Technicien réseau",
+        "Ouvrier du bâtiment", "Plombier", "Électricien", "Coiffeuse", "Commerçant", "Agent immobilier",
+        "Musicien", "Danseuse", "Chef cuisinier", "Serveuse", "Employé municipal", "Livreur",
+        "Banquier", "Comptable", "Professeur d’université", "Chercheuse", "Guide touristique", "Agent de sécurité",
+        "Employé de supermarché", "Vendeur en boutique", "Restauratrice", "Bibliothécaire", "Coach sportif",
+        "Chauffeur de taxi", "Employé de gare", "Technicien audiovisuel", "Agriculteur", "Éleveuse",
+        "Factrice", "Responsable RH", "Chef de projet", "Designer UX", "Étudiant en droit", "Entrepreneur",
+        "Agent administratif", "Animateur culturel"
+    ],
+    "traits": [
+        "Sociable", "Réservé", "Ambitieux", "Calme", "Stressé", "Rêveur", "Pragmatique", "Curieux", "Optimiste", "Sceptique",
+        "Parle vite", "Parle doucement", "Rit fort", "Rit discrètement", "A une voix douce", "A une voix grave",
+        "A un accent italien", "A un accent espagnol", "A un accent allemand", "A un accent portugais",
+        "A un regard perçant", "A un regard doux", "A un regard inquiet", "A un regard déterminé", "A un humour subtil",
+        "A un humour sec", "A une mémoire parfaite", "A une mémoire défaillante", "A une obsession pour le travail",
+        "A une obsession pour la cuisine", "A une obsession pour le sport", "A une obsession pour les voyages",
+        "A un air fatigué", "A un air inspiré", "A un air concentré", "A un air absent", "A un air sympathique",
+        "A un air mystérieux", "A un air radieux", "A un air ombrageux", "A un air bienveillant", "A un air fier",
+        "A un air prudent", "A un air mélancolique", "A un air calme", "A un air nerveux", "A un air énergique"
+    ],
+    "looks": [
+        "Jean et baskets", "Chemise repassée", "Robe d’été", "Veste élégante", "Pantalon de bureau", "Pull en laine",
+        "Manteau long", "Écharpe en laine", "Veste en cuir", "Pantalon clair", "Chaussures de ville", "Sandales",
+        "T‑shirt simple", "Veste en jean", "Pantalon ample", "Robe noire", "Lunettes rondes", "Casquette",
+        "Pantalon sombre", "Chaussures fines", "Veste sombre", "Chemise blanche", "Pantalon cargo", "Chaussures usées",
+        "Parka", "Bonnet", "T‑shirt graphique", "Veste technique", "Jogging", "Chaussures de sport",
+        "Sac en bandoulière", "Veste de pluie", "Pantalon large", "Pull en coton", "Robe simple", "Chaussures vernies",
+        "Veste de randonnée", "Pantalon technique", "Gants simples", "T‑shirt uni", "Pantalon de costume", "Chaussures fines",
+        "Veste de sport", "Pantalon usé", "Robe colorée", "Chaussures de travail", "Manteau épais", "Veste légère"
+    ],
+    "secrets": [
+        "A caché un échec scolaire", "A un passé de militant", "A un frère disparu", "A un secret sur un collègue",
+        "A un passé de sportif", "A un secret sur une compétition", "A un passé de musicien", "A un secret sur un concert",
+        "A un passé de dettes", "A un secret on un prêt", "A un passé de voyageur", "A un secret sur un pays",
+        "A un passé de bénévole", "A un secret sur une association", "A un passé de harcèlement scolaire", "A un secret sur un professeur",
+        "A un passé de triche", "A un secret sur un examen", "A un passé de fugue", "A un secret sur une disparition",
+        "A un passé de relation toxique", "A un secret sur un ex", "A un passé de burn‑out", "A un secret sur un licenciement",
+        "A un passé de blogueur", "A un secret sur un article", "A un passé de gamer", "A un secret sur un pseudo",
+        "A un passé de voisin conflictuel", "A un secret sur un voisin", "A un passé de voyage clandestin", "A un secret sur un train",
+        "A un passé de squatteur", "A un secret sur un appartement", "A un passé de fuite familiale", "A un secret sur un parent",
+        "A un passé de travail illégal", "A un secret sur un employeur", "A un passé de conflit familial", "A un secret sur un héritage",
+        "A un passé de disparition volontaire", "A un secret sur un retour", "A un passé de mensonge", "A un secret sur une identité"
+    ]
+}

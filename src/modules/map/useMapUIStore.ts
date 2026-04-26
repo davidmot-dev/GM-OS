@@ -92,3 +92,7 @@ export const useMapUIStore = create<MapUIState>()(
         }
     )
 );
+
+if (typeof window !== 'undefined') {
+    (window as any).useMapUIStore = useMapUIStore;
+}

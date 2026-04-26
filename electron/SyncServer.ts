@@ -213,6 +213,20 @@ export class SyncServer {
             this.updateGMClients();
         });
 
+        ipcMain.on('remote:eject-all', () => {
+            console.log('[Nexus Sync] ⚠️ EJECT ALL — Force disconnecting all clients');
+            if (this.wss) {
+                this.wss.clients.forEach((client: ExtendedWebSocket) => {
+                    try {
+                        client.send(JSON.stringify({ type: 'remote:ejected', payload: { reason: 'GM initiated full reset' } }));
+                        client.close(1000, 'Ejected by GM');
+                    } catch { /* ignore errors on already-closing sockets */ }
+                });
+            }
+            sessionManager.clearAll();
+            this.updateGMClients();
+        });
+
         ipcMain.handle('remote:cache-media', async (_event, buffer: ArrayBuffer, id: string) => {
             try {
                 if (!this.tempMediaDir) return false;

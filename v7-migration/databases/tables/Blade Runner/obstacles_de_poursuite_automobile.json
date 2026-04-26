@@ -1,0 +1,90 @@
+{
+    "name": "Obstacles de Poursuite Automobile",
+    "dice": "1d12",
+    "entries": [
+        {
+            "min": 1,
+            "max": 1,
+            "title": "Impasse",
+            "description": "Vous vous retrouvez devant une impasse.",
+            "effect": "Si la proie a choisi la manœuvre Traque/Fuite, Dissimulation ou Barrage, celle-ci échoue automatiquement."
+        },
+        {
+            "min": 2,
+            "max": 2,
+            "title": "Publicité holographique",
+            "description": "Une immense publicité holographique pour un compagnon numérique apparaît devant les véhicules et leur bouche la vue.",
+            "effect": "Chaque conducteur doit faire un jet d'OBSERVATION pour rester dans la course. En cas d'échec, sa manœuvre du Round échoue automatiquement."
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "Averse soudaine",
+            "description": "Une averse soudaine réduit la visibilité et rend la chaussée glissante.",
+            "effect": "Désavantage aux manœuvres Traque/Fuite, mais avantage à la manœuvre Dissimulation."
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "Métrocab",
+            "description": "Un métrocab s'avance et bloque le passage.",
+            "effect": "Avantage à la manœuvre Barrage, mais désavantage aux manœuvres Traque/Fuite. Si un participant rate une manœuvre Traque/Fuite, son véhicule subit D3 points de dégâts."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "Feu rouge et foule",
+            "description": "Dès que le feu passe au rouge au niveau d'un passage piéton, une foule traverse la rue.",
+            "effect": "Avantage à la manœuvre Raccourci, mais désavantage aux manœuvres Traque/Fuite et Tir statique. Si un participant rate une manœuvre Traque/Fuite ou Tir statique, il provoque des dégâts collatéraux."
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "Spinner du LAPD",
+            "description": "Un spinner du LAPD (modèle de patrouille standard) se joint à la fête dans un hurlement de sirènes.",
+            "effect": "Désavantage aux manœuvres Traque/Fuite, Dissimulation et Tir statique. Un personnage qui effectue la manœuvre Tir statique devient la cible des tirs des policiers. Un Blade Runner peut rappeler les policiers à l'ordre (jet de CONTACTS) pour annuler ces effets."
+        },
+        {
+            "min": 7,
+            "max": 7,
+            "title": "Grande route fluide",
+            "description": "Les véhicules arrivent sur une grande route à plusieurs voies, le trafic s'éclaircit l'espace de quelques instants.",
+            "effect": "Avantage aux manœuvres Traque/Fuite et Tir statique, mais désavantage aux manœuvres Dissimulation et Barrage."
+        },
+        {
+            "min": 8,
+            "max": 8,
+            "title": "Gamins des rues",
+            "description": "D6 gamins des rues se jettent sur le véhicule de la proie pour en arracher des pièces.",
+            "effect": "La proie doit faire un jet de CONTACTS pour les chasser. En cas d'échec, elle rate sa manœuvre du Round et son véhicule subit 1 point de dégâts. Si elle réussit, les enfants s'en prennent au poursuivant à la place."
+        },
+        {
+            "min": 9,
+            "max": 9,
+            "title": "Zone de travaux",
+            "description": "Vous arrivez sur une zone de travaux.",
+            "effect": "Avantage aux manœuvres Dissimulation, Barrage et Raccourci, mais désavantage aux manœuvres Traque/Fuite et Tir statique. Une manœuvre de Traque/Fuite ratée inflige D3 points de dégâts au véhicule."
+        },
+        {
+            "min": 10,
+            "max": 10,
+            "title": "Barrière de cyclistes",
+            "description": "Une dizaine de cyclistes se fraient un chemin dans les rues, formant une barrière de ferraille bruyante.",
+            "effect": "Avantage à la manœuvre Barrage, mais désavantage aux manœuvres Traque/Fuite et Tir statique. Si un participant rate une manœuvre Traque/Fuite ou Tir statique, il provoque des dégâts collatéraux."
+        },
+        {
+            "min": 11,
+            "max": 11,
+            "title": "Camion autonome",
+            "description": "Un énorme camion autonome bloque le passage.",
+            "effect": "Avantage à la manœuvre Raccourci, mais désavantage à la manœuvre Traque/Fuite. Une manœuvre de Traque/Fuite ratée inflige D6 points de dégâts au véhicule."
+        },
+        {
+            "min": 12,
+            "max": 12,
+            "title": "Ruelle étroite",
+            "description": "Les participants s'engagent dans une ruelle étroite.",
+            "effect": "Il faut effectuer un jet de CONDUITE séparé avant de résoudre la moindre manœuvre. En cas d'échec, le véhicule est Démoli. Le conducteur peut choisir de traverser la ruelle prudemment à allure réduite (pas de jet, mais manœuvre annulée)."
+        }
+    ]
+}

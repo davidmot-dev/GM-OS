@@ -1,0 +1,48 @@
+{
+    "name": "Attaques de Rôdeur, d'Éclaireur et de Drone",
+    "dice": "1d6",
+    "entries": [
+        {
+            "min": 1,
+            "max": 1,
+            "title": "REGARD HYPNOTIQUE",
+            "description": "Bien qu'apparemment dépourvu d'yeux, le Xénomorphe scrute les tréfonds de l'âme de sa victime. Celle-ci se retrouve hypnotisée par la redoutable beauté du monstre. Stupéfiée par ce produit étrange de la nature, des mains de Dieu ou de celles du diable...",
+            "effect": "Le NIVEAU DE STRESS augmente de 1 et la victime doit immédiatement faire un test de Panique."
+        },
+        {
+            "min": 2,
+            "max": 2,
+            "title": "JOUER AVEC LA PROIE",
+            "description": "Le Xéno attaque, mais pas pour tuer. La cible est jetée à terre et lâche tout ce qu'elle tenait en main, mais sans subir de dégâts. Le Xénomorphe se tient au-dessus d'elle, la défiant de s'enfuir pour que le jeu se poursuive.",
+            "effect": "La cible est jetée à terre et lâche ses objets. Le NIVEAU DE STRESS augmente de 1 et elle doit immédiatement faire un test de Panique."
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "ENLÈVEMENT",
+            "description": "Le monstre bondit dans les airs et saisit sa victime. S'il réussit, il traîne sa proie dans une zone voisine et la lâche.",
+            "effect": "Attaque avec 10 dés de base, Dégâts 1. Si réussi, la victime est traînée en zone voisine, se retrouve à terre, lâche ses objets et doit faire un test de Panique."
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "PRÊT À TUER",
+            "description": "Le Xénomorphe saisit sa victime et sa mâchoire interne s'apprête à frapper. À moins que la victime ne se libère, le Xénomorphe utilise MORSURE À LA TÊTE contre elle à sa prochaine initiative.",
+            "effect": "Attaque avec 10 dés de base. Si réussi, victime saisie (p.93). Test de COMBAT RAPPROCHÉ opposé contre 10 dés pour se libérer. Victime et alliés en zone font un test de Panique. Si non libérée : Morsure à la tête au prochain tour."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "UN PRISONNIER POUR LA RUCHE",
+            "description": "Le Xénomorphe attaque avec sa queue venimeuse, lançant dix dés de base pour des Dégâts de 1. Si l'attaque inflige le moindre dégât, le Xéno se retient afin de n'infliger que 1 point de dégâts en tout, et le venin paralysant fait effet.",
+            "effect": "Attaque 10 dés, Dégâts 1. Si dégâts : venin paralysant. Test d'ENDURANCE : le nombre de succès est le nombre de Rounds avant l'évanouissement (durée : un Quart). Adrénaline (test de SOINS MÉDICAUX + médikit) annule l'effet."
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "MORSURE À LA TÊTE",
+            "description": "Le Xénomorphe ouvre grand ses mâchoires externes, et ses mâchoires internes apparaissent, claquant d'impatience, avant de jaillir.",
+            "effect": "Attaque avec 9 dés de base, Dégâts 2. Si dégâts : inflige automatiquement la blessure critique n°64 (mort immédiate). Option MJ : la victime peut être conservée pour l'ovomorphose."
+        }
+    ]
+}

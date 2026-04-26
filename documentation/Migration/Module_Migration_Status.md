@@ -31,8 +31,9 @@ Ce document assure le suivi granulaire pour **chaque sous-composant** du systèm
 | Sous-Module | Composants Clés | Interface Bridge | Impl. Rust | Statut |
 | :--- | :--- | :---: | :---: | :--- |
 | **Dice-OS** | Three.js Engine, Physics, Sync | ✅ | ✅ | 🟢 Stabilisé (v7) |
-| **Map OS v2** | Ambiance System, Fog of War, Layers | ✅ | ✅ | 🟢 Terminé (Bridge & Sync) |
+| **Map OS v2** | Ambiance System, Fog of War, Layers | ✅ | ✅ | 🟢 Terminé (Sync Simplifiée BC) |
 | **Combat OS** | Initiative, Tracker, Player Sync | ❌ | ❌ | 🌑 À faire |
+| **Tablet Hub** | Interface dédiée joueurs / projection | ✅ | ✅ | 🟢 Terminé (Sync Simplifiée BC) |
 | **Tactical AI** | Taxonomy, Enemy Behaviors | ❌ | ❌ | 🌑 À faire |
 | **Filesystem** | Lecture/Écriture agnostique | ✅ | ✅ | 🟢 Terminé (Bridge) |
 | **App Lifecycle** | Quit, Restart, Version | ✅ | ✅ | 🟢 Terminé (Bridge) |

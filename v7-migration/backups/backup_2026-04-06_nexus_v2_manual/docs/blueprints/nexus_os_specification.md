@@ -1,0 +1,237 @@
+# Blueprint : Nexus-OS — Système de Packaging & Portabilité Totale
+
+Ce document définit la spécification technique exhaustive pour le module **Nexus-OS**, responsable de l'archivage, de l'exportation et de la restauration complète (données + médias) des campagnes et des systèmes de jeu.
+
+---
+
+## 📋 1. Vision & Objectifs
+
+Nexus-OS permet de transformer une entité complexe (Campagne ou Driver) en un paquet autonome (`.gmos`), garantissant que le MJ peut déplacer son travail d'un ordinateur à un autre sans perdre aucune image, relation ou configuration.
+
+### Les 3 Piliers :
+
+1. **Harvesting (Moissonnage)** : Capture physique de tous les fichiers binaires liés (Media Hub IDs `m-xxx` + chemins absolus).
+2. **Relocation (Relocalisation)** : Transformation des références locales en chemins relatifs dans l'archive, et remappage inverse à l'import.
+3. **Context-Aware (Conscience du Contexte)** : Intelligence de liaison pour ne rien oublier.
+4. **Fragmented Bundles (Bundles Fragmentés)** : Capacité à exporter des sous-entités (Drivers/Systèmes) indépendamment d'une campagne.
+
+---
+
+## 🏗️ 2. Architecture du Système
+
+### A. Le Bundle `.gmos` (Structure de l'Archive)
+
+L'archive est un dossier compressé (Format ZIP) avec la structure suivante :
+
+```text
+archive_campagne.gmos / .gmos-driver
+├── manifest.json            # Métadonnées, version, bundleType (campaign|driver), assetMap
+├── state.json               # Extraction (CampaignState ou DriverState)
+└── assets/                  # Dossier racine des médias moissonnés (optionnel pour les drivers)
+```
+
+### B. Fichiers Clés
+
+| Fichier | Rôle |
+| :--- | :--- |
+| `src/modules/system/archive/NexusService.ts` | Orchestrateur renderer — scraping, harvest, streaming IPC |
+| `src/modules/system/archive/nexus.types.ts` | Types TypeScript partagés |
+| `src/modules/system/archive/NexusHUD.tsx` | Interface de progression (Glassmorphism) |
+| `electron/nexus_bridge.ts` | Main process — ZIP, checksums, cache assets |
+| `electron/preload.ts` | Exposition du pont IPC au renderer (`window.appBridge.nexus`) |
+| `src/types/window.d.ts` | Typage TypeScript des méthodes IPC |
+
+---
+
+## 🗺️ 3. Cartographie des Dépendances d'Actifs
+
+### Médias collectés par `collectAssetPaths()` :
+
+- **Campaign-OS** : `wallpaperUrl`
+- **NPC/PC-OS** : `entity.avatar`, `playerCharacter.portraitUrl`, `playerCharacter.tokenUrl`
+- **Map-OS** : `atlasMap.fileUrl` (Auto-détection Image vs Vidéo)
+- **Wiki-OS** : `wikiEntry.imageUrls[]`
+- **Clue-OS** : `clue.mediaUrl`
+- **Deck-OS** : `deckManifest.folderPath` (Copie récursive)
+- **Sound-OS** : `soundPad.filePath` (fichiers audio locaux des atmosphères)
+- **Music-OS** : `musicPad.url` (uniquement les pads de type `'local'`)
+
+### Règles de filtrage :
+
+| Type | Inclus ? |
+| :--- | :--- |
+| `m-xxx` (Media Hub IndexedDB) | ✅ Résolu via `getMediaBlob()` → base64 |
+| `C:\Users\...` (chemin absolu) | ✅ Copie directe par le main process |
+| `https://...` (URL distante) | 🔄 **Optionnel** : Propose une localisation interactive (téléchargement) |
+| `blob:...` (URL temporaire) | ❌ Invalide après redémarrage, ignoré |
+
+---
+
+## 🔄 4. Processus de Relocalisation (Relinker)
+
+| Phase | Action Technique |
+| :--- | :--- |
+| **EXPORT** | `collectAssetPaths()` → `splitAssetRefs()` → `resolveMediaHubAssets()` (IDB→base64) → Streaming IPC → ZIP |
+| **IMPORT** | Extraction ZIP → Écriture MediaHub (`storeMediaBlob`) → `buildAssetMap()` → `remapPaths()` → `injectState()` → Restauration stores audio |
+
+### Protocole Streaming IPC (évite les limites de taille)
+
+Le transfert des assets Media Hub utilise un pattern streaming pour éviter les limites de sérialisation du `contextBridge` Electron :
+
+1. `nexus.clearAssets()` — vide le cache main process
+2. `nexus.registerAsset(id, dataUrl)` × N — un asset à la fois
+3. `nexus.exportBundle(...)` — le bridge lit depuis `pendingAssetCache` (Map mémoire)
+4. `pendingAssetCache.clear()` — nettoyage post-ZIP automatique
+
+> ⚠️ **Critique** : Ne jamais passer `inlineAssets` comme paramètre direct de `exportBundle`. La limite de sérialisation du `contextBridge` Electron tronque silencieusement les objets dépassant ~50 Mo.
+
+---
+
+## ⚡ 5. Processus d'Export (Phases)
+
+| # | Phase | % HUD | Description |
+| :--- | :--- | :--- | :--- |
+| 1 | `scraping` | 10% | Extraction de l'état via `scrapeCampaignData()` |
+| 1b | `remote_check` | 20% | **Nexus v2** : Scan des URLs distantes (`scanForRemoteUrls`) |
+| 1c | `remote_check` | 20-35% | **Interaction** : Choix MJ (Localiser/Ignorer) + Téléchargement |
+| 2 | `harvesting` | 35-50% | `collectAssetPaths()` + résolution des `m-xxx` IDs |
+| 2b | `packaging` | 55-70% | Streaming des blobs vers le cache IPC (`registerAsset`) |
+| 3 | `packaging` | 75% | Appel `exportBundle` → ZIP via archiver (streaming) |
+| 4 | `done` | 100% | Toast succès + rapport des actifs localisés/échoués |
+
+---
+
+## 📥 6. Processus d'Import (Phases)
+
+| # | Phase | % HUD | Description |
+| :--- | :--- | :--- | :--- |
+| 1 | `extracting` | 10% | Lecture ZIP → manifest + state |
+| 2 | `remapping` | 20-50% | Écriture assets dans MediaHub IndexedDB (`storeMediaBlob`) |
+| 3 | `remapping` | 50-75% | `detectConflicts()` → `ConflictResolver UI` → `applyResolution()` |
+| 4 | `remapping` | 80% | `remapPaths()` sur l'état → mise à jour des IDs |
+| 5 | `injecting` | 85% | `injectState()` dans tous les stores Zustand |
+| 6 | `injecting` | 90% | Restauration `useSoundStore.atmospheres` + fusion `useMusicStore.playlists` |
+| 7 | `done` | 100% | Toast succès |
+
+---
+
+## 🛰️ 7. Nexus v2 : Localisation Interactive
+
+Pour garantir une portabilité totale, Nexus-OS v2 introduit le **Remote Check**.
+
+### A. InteractionResolver
+
+Le `NexusService` utilise un mécanisme de promesse suspendue pour attendre une action de l'utilisateur dans l'UI sans bloquer le thread principal :
+
+1. Détection d'actifs distants (`http://`, `https://`).
+2. Émission d'un état `interactionRequired` vers le `NexusHUD`.
+3. Suspension de l'export via une `Promise` stockée dans `interactionResolver`.
+4. Résolution de la promesse via `resolveInteraction(choice)`.
+
+### B. Gestion d'Erreurs Robuste
+
+Si un téléchargement échoue (Erreur 404, Time-out) :
+
+- L'URL est conservée en mode "distant" dans l'archive.
+- Une alerte visuelle `⚠️` est émise dans les logs.
+- L'export continue pour garantir le reste du contenu.
+
+---
+
+## 🎭 7. Conflict Resolver
+
+Lorsqu'une campagne importée a le même ID qu'une campagne existante, 3 stratégies sont disponibles :
+
+| Stratégie | Comportement |
+| :--- | :--- |
+| `replace` | Écrase la campagne existante (comportement par défaut silencieux) |
+| `clone` | Régénère tous les UUIDs → nouvelle campagne indépendante |
+| `cancel` | Annule l'import, aucune modification |
+
+---
+
+## 🎵 8. Portabilité Audio (Niveau 5)
+
+- **Sound Board** : Les `Atmosphere[]` (groupes de pads sonores) sont capturées dans `state.json.atmospheres`.
+- **Music Playlists** : Les `Playlist[]` locales sont capturées dans `state.json.playlists`.
+- **Fichiers audio locaux** : `.mp3`, `.wav`, `.ogg`, `.flac` → routés dans `assets/audio/`.
+- **À l'import** : `useSoundStore.setState({ atmospheres })` et fusion par ID dans `useMusicStore`.
+
+---
+
+## 🧪 9. Protocole de Test & Fiabilité
+
+Nexus-OS utilise une suite de tests Vitest exhaustive pour garantir la non-régression.
+
+### T1 : Intégrité de Référence
+
+- **Scénario** : Relations circulaires entre PNJs et appartenance multiple.
+- **Vérification** : UUID cohérents après un cycle complet export/import.
+
+### T2 : Moissonnage Global (Harvesting)
+
+- **Scénario** : Campagne avec >50 médias mixant Media Hub et chemins locaux.
+- **Vérification** : `manifest.assetMap.length` correspond au compte attendu + structure ZIP respectée.
+
+### T3 : Test d'Intégration "Round-Trip" (Nouveauté v6)
+
+Ce test simule le cycle de vie complet d'une campagne :
+
+1. **Scrape** : Extraction de l'état vivant des stores Zustand.
+2. **Transport** : Simulation du remappage des chemins (`assets/` -> chemins système cibles).
+3. **Inject** : Injection forcée dans les stores via `injectState()`.
+4. **Audit** : Comparaison de l'état final avec l'état initial (Deep Equality).
+
+### T4 : Sécurité & Validation Polymorphe
+- **Schéma Adaptatif** : Le validateur (`validateManifest`) ajuste ses exigences selon `bundleType`.
+    - **Campaign** : Requiert `campaignId` et `campaignName`.
+    - **Driver** : Requiert `driverId` et `driverName`.
+- Protection contre le **Path Traversal** : Rejet des `relativePath` contenant `../`, `..\\` ou des racines absolues.
+
+### 🛠️ Stratégie de Mocking (Environnement Headless)
+
+Pour permettre l'exécution des tests system hors de l'application réelle :
+
+- **AudioContext Mock** : Simulation globale de l'API Web Audio pour éviter le crash des `MusicEngine` et `SoundEngine` lors de l'import des stores.
+- **Store Mocking** : Utilisation de `vi.mock` pour intercepter `getState`/`setState` des stores Zustand sans déclencher d'effets secondaires UI.
+
+---
+
+| Preload | `electron/preload.ts` |
+| :--- | :--- |
+| Types globaux | `src/types/window.d.ts` |
+
+---
+
+## 📡 10. Nexus-Link : Synchronisation Temps Réel
+
+Le module Nexus gère également la communication bidirectionnelle entre le Cockpit MJ et les périphériques mobiles via WebSocket.
+
+### A. Protocole `broadcastUIAction`
+
+- **Rôle** : Permet au processus principal (Electron) d'émettre des ordres visuels vers tous les Remote MJ connectés sans passer par le store global persistant.
+- **Canal** : `remote:broadcast-ui-action` (IPC) → WebSocket Server → Clients.
+
+### B. Diffusion Réactive (Reactive Broadcasting)
+
+Pour garantir une parité totale entre les actions locales (boutons GM) et les actions distantes :
+
+1.  Les composants (locaux ou distants) modifient le store standard (ex: `useDiceStore.lastRoll`).
+2.  Un abonnement global (`useEffect`) dans `App.tsx` détecte le changement d'état.
+3.  L'action est automatiquement diffusée via `broadcastUIAction`.
+
+> 💡 **Avantage** : Cette architecture assure que n'importe quelle source de lancer (clic sur dé, raccourci clavier, ou bouton mobile) génère un feedback visuel synchronisé sur tous les écrans MJ.
+
+### C. Theater Mode (Projection Immersive)
+
+Le Tablet/Player Hub implémente un mode d'affichage dit "Theater Mode" pour les événements critiques (lancers de dés).
+
+- **Priorité d'Affichage** : Overlay plein écran avec `z-[100]`, utilisant `framer-motion` (`AnimatePresence`) pour des transitions fluides.
+- **Design System** : Utilise des variables CSS dynamiques (`--app-accent-rgb`) pour générer des halos lumineux thématiques (`drop-shadow`, `box-shadow`) sans re-render massif.
+- **Réactivité** : Disparition automatique après 5 secondes pour minimiser l'obstruction visuelle.
+
+---
+
+### ✒️ Signature & Statut
+
+*Statut : **Transition v6 amorcée** — Portabilité totale, Tests d'intégration automatisés et Standard "Zero Inline Style" validés.*

@@ -1,0 +1,53 @@
+{
+  "name": [
+    "Bureau du Dernier Étage",
+    "Open Space des Écrans Veilleurs",
+    "Salle de Réunion 12B",
+    "Bureau du Couloir Silencieux",
+    "Plateau des Néons Blancs",
+    "Bureau du Badge Invalide",
+    "Salle Serveurs - Niveau 1",
+    "Bureau des Chaises Alignées",
+    "Open Space du Vent Climatisé",
+    "Bureau du Rideau Fermé"
+  ],
+
+  "description": [
+    "Un bureau perché au dernier étage, éclairé par une seule lampe de secours.",
+    "Un open space où les écrans d’ordinateur s’allument brièvement sans raison.",
+    "Une salle de réunion vitrée où les chaises semblent toujours déplacées.",
+    "Un bureau situé au bout d’un couloir où aucun son ne résonne.",
+    "Un plateau entièrement éclairé par des néons blancs agressifs.",
+    "Un bureau dont la porte refuse de s’ouvrir avec un badge pourtant valide.",
+    "Une salle serveurs où l’air est glacial et les machines vibrent en continu.",
+    "Un bureau où toutes les chaises sont parfaitement alignées chaque matin.",
+    "Un open space où la climatisation souffle même lorsqu’elle est coupée.",
+    "Un bureau dont le rideau reste toujours fermé, même en journée."
+  ],
+
+  "ambiance": [
+    "Une solitude verticale et oppressante.",
+    "Une vigilance électronique silencieuse.",
+    "Une tension immobile et froide.",
+    "Une absence totale d’écho.",
+    "Une lumière clinique et agressive.",
+    "Une résistance invisible.",
+    "Une vibration mécanique constante.",
+    "Une discipline dérangeante.",
+    "Un souffle artificiel inquiétant.",
+    "Une obscurité volontaire."
+  ],
+
+  "secret": [
+    "La lampe du dernier étage s’éteint toujours à 3h12.",
+    "Un écran affiche parfois un bureau vide… qui n’existe pas.",
+    "Une chaise change de place entre deux passages.",
+    "Le couloir semble plus long la nuit.",
+    "Un néon clignote en suivant un rythme précis.",
+    "Le lecteur de badge reconnaît un nom inconnu.",
+    "Une machine serveur émet un son ressemblant à un murmure.",
+    "Une chaise se tourne légèrement vers la porte.",
+    "La clim souffle un air plus froid quand quelqu’un passe.",
+    "Le rideau cache une vitre donnant sur un mur… qui n’est pas celui du bâtiment."
+  ]
+}

@@ -1,0 +1,62 @@
+{
+    "firstNames": [
+        "Frank", "Evelyn", "Ray", "Marlene", "Jack", "Vera", "Samuel", "Irene", "Louis", "Clara", "Harold", "Sylvia",
+        "Norman", "Doris", "Walter", "Mae", "Leon", "Agnes", "Victor", "Lana", "George", "Rita", "Clyde", "Nina",
+        "Howard", "Faye", "Arthur", "Gloria", "Eddie", "Jean", "Hank", "Dolores", "Martin", "Hazel", "Benny", "Lucille",
+        "Stan", "Martha", "Alfred", "June", "Ralph", "Edna", "Charlie", "Vivian", "Roy", "Esther", "Gus", "Helena"
+    ],
+    "lastNames": [
+        "Harrington", "Cole", "Marlow", "Bishop", "Hawkins", "Doyle", "Sullivan", "Mercer", "Hargrove", "Fletcher",
+        "Whitman", "Carver", "Davenport", "Hollister", "Granger", "Blackwell", "Pritchard", "Langley", "Crowe", "Baxter",
+        "Holloway", "Thompson", "Ridgeway", "Calhoun", "Drake", "Underwood", "Vaughn", "Kensington", "Holliday", "Prescott",
+        "Nash", "Templeton", "Wheeler", "Goodwin", "Sawyer", "Ellison", "Harding", "Quincy", "Rutherford", "Bennett",
+        "Hawthorne", "Carson", "Lockwood", "Sinclair", "Briar", "Montgomery", "Dalton", "Wickham", "Graves", "Hollings"
+    ],
+    "jobs": [
+        "Détective privé", "Inspecteur", "Journaliste", "Photographe", "Avocat", "Médecin légiste", "Serveuse de bar",
+        "Barman", "Chanteuse de cabaret", "Gangster", "Femme fatale", "Informateur", "Politicien véreux", "Juge",
+        "Gardien de nuit", "Chauffeur de taxi", "Propriétaire de bar", "Usurier", "Flic corrompu", "Archiviste",
+        "Employé de morgue", "Standardiste", "Secrétaire", "Banquier", "Comptable", "Vendeur ambulant", "Boxeur",
+        "Chauffeur de camion", "Garde du corps", "Porte-flingue", "Cambrioleur", "Falsificateur", "Enquêteur privé",
+        "Patron de club", "Chasseur de primes", "Écrivain raté", "Acteur déchu", "Musicien de jazz", "Dompteur de chiens",
+        "Vagabond", "Mendiant", "Propriétaire d’hôtel", "Concierge", "Réparateur de radios", "Marchand d’armes",
+        "Femme de ménage", "Garde d’immeuble", "Employé de bureau", "Trafiquant"
+    ],
+    "traits": [
+        "Fumeur invétéré", "Boit trop", "Parle peu", "Parle trop", "Regard fatigué", "Regard dur", "Regard fuyant",
+        "Voix rauque", "Voix douce", "Toujours nerveux", "Toujours calme", "Cynique", "Désabusé", "Méfiant", "Rancunier",
+        "Généreux malgré lui", "Trop curieux", "Trop prudent", "Trop franc", "Toujours en retard", "Toujours en avance",
+        "A un rire nerveux", "A un rire grave", "A une démarche lourde", "A une démarche légère", "A un accent marqué",
+        "A une mémoire parfaite", "A une mémoire défaillante", "A un humour noir", "A un humour sec", "A un tic nerveux",
+        "A une voix cassée", "A un regard perçant", "A un regard vide", "A une obsession pour la vérité",
+        "A une obsession pour l’argent", "A une obsession pour la justice", "A une obsession pour les secrets",
+        "Aime la pluie", "Déteste la pluie", "Aime le whisky", "Déteste le whisky", "Aime les chiens", "Déteste les chiens",
+        "Aime le jazz", "Déteste le jazz", "Aime les bars", "Déteste les bars", "Aime les nuits longues"
+    ],
+    "looks": [
+        "Imperméable froissé", "Chapeau fedora", "Costume sombre", "Cravate desserrée", "Chaussures usées", "Cigarette au bec",
+        "Manteau long", "Gants en cuir", "Chemise tachée", "Pantalon froissé", "Barbe de trois jours", "Lunettes rondes",
+        "Chapeau mouillé", "Manteau trempé", "Écharpe sombre", "Costume trois pièces", "Chapeau incliné", "Regard sombre",
+        "Bottes en cuir", "Veste élimée", "Gants troués", "Chemise blanche impeccable", "Cravate noire", "Pantalon sombre",
+        "Chapeau poussiéreux", "Manteau épais", "Chaussures brillantes", "Veste en laine", "Gants élégants", "Chapeau large",
+        "Manteau en tweed", "Chemise sombre", "Pantalon rayé", "Chaussures vernies", "Veste sombre", "Chapeau décoré",
+        "Gants noirs", "Manteau à col relevé", "Chapeau en feutre", "Veste à poches", "Pantalon usé", "Chaussures boueuses",
+        "Chapeau cabossé", "Manteau trop grand", "Gants de cuir", "Veste sombre", "Pantalon serré", "Cravate rouge"
+    ],
+    "secrets": [
+        "A couvert un meurtre", "A trahi un ami", "A un dossier compromettant", "A un passé criminel", "A un amour interdit",
+        "A un frère disparu", "A un casier caché", "A un lien avec la mafia", "A un secret sur un politicien",
+        "A un passé de flic", "A un passé de gangster", "A un passé de soldat", "A un secret sur un braquage",
+        "A un passé de boxeur", "A un secret sur une disparition", "A un passé de journaliste", "A un secret sur un incendie",
+        "A un passé de détective", "A un secret sur une femme fatale", "A un passé de chauffeur", "A un secret sur un juge",
+        "A un passé de musicien", "A un secret sur un club", "A un passé de cambrioleur", "A un secret sur un coffre",
+        "A un passé de trafiquant", "A un secret sur un meurtre non résolu", "A un passé de vagabond",
+        "A un secret sur une ruelle", "A un passé de garde du corps", "A un secret sur un témoin",
+        "A un passé de banquier", "A un secret sur une dette", "A un passé de politicien", "A un secret sur un scandale",
+        "A un passé de concierge", "A un secret sur un hôtel", "A un passé de serveur", "A un secret sur un bar",
+        "A un passé de chauffeur de taxi", "A un secret sur un client", "A un passé de boxeur clandestin",
+        "A un secret sur un combat truqué", "A un passé de détective raté", "A un secret sur un dossier brûlé",
+        "A un passé de soldat décoré", "A un secret sur une guerre", "A un passé de journaliste d’investigation",
+        "A un secret sur un article censuré"
+    ]
+}

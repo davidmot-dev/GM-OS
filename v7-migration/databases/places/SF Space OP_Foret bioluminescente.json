@@ -1,0 +1,53 @@
+{
+  "name": [
+    "Forêt des Lueurs Symbiotiques",
+    "Sylve Vivante du Cœur‑Monde",
+    "Forêt des Arbres‑Veilleurs",
+    "Sylve du Chant Lumineux",
+    "Forêt des Racines Pulsantes",
+    "Sylve des Spores Pensantes",
+    "Forêt du Souffle Émeraude",
+    "Sylve des Lianes Réactives",
+    "Forêt des Cristaux Organiques",
+    "Sylve du Rêve Bioluminescent"
+  ],
+
+  "description": [
+    "Une forêt où chaque plante émet une lueur symbiotique en réponse aux visiteurs.",
+    "Une sylve vivante connectée au cœur‑monde, pulsant comme un organisme unique.",
+    "Une forêt où les arbres‑veilleurs tournent lentement leurs couronnes lumineuses.",
+    "Une sylve où les chants lumineux des plantes forment des motifs ondulants.",
+    "Une forêt où les racines pulsantes transmettent des signaux à travers le sol.",
+    "Une sylve où les spores pensantes flottent comme des lanternes conscientes.",
+    "Une forêt baignée dans un souffle émeraude provenant de fissures organiques.",
+    "Une sylve où les lianes réactives se déplacent pour guider ou bloquer le passage.",
+    "Une forêt où des cristaux organiques poussent comme des fruits lumineux.",
+    "Une sylve où la bioluminescence forme des rêves projetés dans l’air."
+  ],
+
+  "ambiance": [
+    "Une lumière vivante.",
+    "Une respiration végétale.",
+    "Une symbiose diffuse.",
+    "Un chant lumineux.",
+    "Une pulsation organique.",
+    "Une pensée flottante.",
+    "Un souffle émeraude.",
+    "Une guidance végétale.",
+    "Une cristallisation organique.",
+    "Un rêve éveillé."
+  ],
+
+  "secret": [
+    "Les lueurs symbiotiques reproduisent les émotions des visiteurs.",
+    "Le cœur‑monde répond par une pulsation lorsqu’on prononce un certain mot.",
+    "Un arbre‑veilleur ouvre un passage lorsqu’on le touche.",
+    "Le chant lumineux révèle une carte cachée.",
+    "Les racines pulsantes transmettent un message ancien.",
+    "Une spore pensante suit un visiteur précis.",
+    "Le souffle émeraude contient une voix très faible.",
+    "Une liane réactive protège un artefact enfoui.",
+    "Un cristal organique renferme un souvenir non humain.",
+    "Le rêve bioluminescent montre un futur possible."
+  ]
+}

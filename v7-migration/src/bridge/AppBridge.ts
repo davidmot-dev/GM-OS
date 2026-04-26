@@ -594,6 +594,237 @@ class AppBridgeAdapter {
     /**
      * IPC Module (Alias)
      */
+    /**
+     * Remote & Sync
+     */
+    public remote = {
+        get hasSupport() { return true; },
+        getConnectionInfo: async () => {
+            if (isTauri) {
+                return await this.invokeTauri<{ ip: string; port: number }>('get_connection_info') || { ip: '127.0.0.1', port: 8080 };
+            }
+            if (this.bridge?.remote?.getConnectionInfo) {
+                return await this.bridge.remote.getConnectionInfo();
+            }
+            return { ip: '127.0.0.1', port: 8080 };
+        },
+        sendSync: (payload: any) => this.emit('remote:broadcast-sync', payload),
+        broadcastUIAction: (action: any) => this.emit('remote:broadcast-ui-action', action),
+        broadcastToTablets: (type: string, payload: unknown) => this.emit('remote:broadcast-to-tablets', { type, payload }),
+        getDisplays: async () => await this.image.getDisplays(),
+        openProjectionWindow: async (displayId: string, url: string) => await this.image.launchDisplay([url], displayId),
+        onAction: (callback: (data: any) => void) => {
+            return this.on('remote:action', (event: any, data?: any) => {
+                const actualData = data !== undefined ? data : (event && event.payload ? event.payload : event);
+                callback(actualData);
+            });
+        },
+        removeActions: () => {
+            console.warn("[AppBridge] remote.removeActions called (v7: use cleanup from onAction)");
+        },
+        cacheMedia: async (id: string, buffer: ArrayBuffer) => {
+            if (isTauri) {
+                return await this.invokeTauri<boolean>('cache_media', { id, buffer: Array.from(new Uint8Array(buffer)) }) || false;
+            }
+            if (this.bridge?.remote?.cacheMedia) {
+                return await this.bridge.remote.cacheMedia(buffer, id);
+            }
+            return false;
+        }
+    };
+
+    /**
+     * NPC - Gestion des Figurines & Databases
+     */
+    public npc = {
+        get hasSupport() { return !!this.bridge?.npc || isTauri; },
+        listDatabases: async (category: string): Promise<string[]> => {
+            if (isTauri) return await this.invokeTauri<string[]>('npc_list_databases', { category }) || [];
+            if (this.bridge?.npc?.listDatabases) return await this.bridge.npc.listDatabases(category);
+            return [];
+        },
+        loadDatabase: async (category: string, name: string): Promise<Record<string, string[]>> => {
+            if (isTauri) return await this.invokeTauri<Record<string, string[]>>('npc_load_database', { category, name }) || {};
+            if (this.bridge?.npc?.loadDatabase) return await this.bridge.npc.loadDatabase(category, name);
+            return {};
+        },
+        selectAvatar: async (): Promise<string | null> => {
+            if (isTauri) return await this.invokeTauri<string | null>('npc_select_avatar');
+            if (this.bridge?.npc?.selectAvatar) return await this.bridge.npc.selectAvatar();
+            return null;
+        },
+        saveAvatar: async (buffer: ArrayBuffer, fileName: string): Promise<string | null> => {
+            if (isTauri) return await this.invokeTauri<string | null>('npc_save_avatar', { buffer: Array.from(new Uint8Array(buffer)), fileName });
+            if (this.bridge?.npc?.saveAvatar) return await this.bridge.npc.saveAvatar(buffer, fileName);
+            return null;
+        }
+    };
+
+    /**
+     * Tables - Générateurs aléatoires
+     */
+    public tables = {
+        get hasSupport() { return !!this.bridge?.tables || isTauri; },
+        listUniverses: async () => {
+            if (isTauri) return await this.invokeTauri<string[]>('tables_list_universes') || [];
+            if (this.bridge?.tables?.listUniverses) return await this.bridge.tables.listUniverses();
+            return [];
+        },
+        listTables: async (universe: string) => {
+            if (isTauri) return await this.invokeTauri<string[]>('tables_list_tables', { universe }) || [];
+            if (this.bridge?.tables?.listTables) return await this.bridge.tables.listTables(universe);
+            return [];
+        },
+        loadTable: async (universe: string, tableName: string) => {
+            if (isTauri) return await this.invokeTauri<any>('tables_load_table', { universe, tableName });
+            if (this.bridge?.tables?.loadTable) return await this.bridge.tables.loadTable(universe, tableName);
+            return null;
+        }
+    };
+
+    /**
+     * Git & Backup
+     */
+    public git = {
+        get hasSupport() { return !!this.bridge?.git || isTauri; },
+        getStatus: async () => {
+            if (isTauri) return await this.invokeTauri<any>('git_get_status') || { available: false };
+            if (this.bridge?.git?.getStatus) return await this.bridge.git.getStatus();
+            return { available: false };
+        },
+        setupBranch: async (branch: string) => {
+            if (isTauri) return await this.invokeTauri<any>('git_setup_branch', { branch });
+            if (this.bridge?.git?.setupBranch) return await this.bridge.git.setupBranch(branch);
+            return { success: false };
+        },
+        syncData: async (directory: string, branch: string, message: string) => {
+            if (isTauri) return await this.invokeTauri<any>('git_sync_data', { directory, branch, message });
+            if (this.bridge?.git?.syncData) return await this.bridge.git.syncData(directory, branch, message);
+            return { success: false };
+        },
+        saveData: async (data: any) => {
+            if (isTauri) return await this.invokeTauri<any>('git_save_data', { data });
+            if (this.bridge?.git?.saveData) return await this.bridge.git.saveData(data);
+            return { success: false };
+        }
+    };
+
+    /**
+     * Web & External
+     */
+    public web = {
+        openExternal: (url: string) => {
+            if (isTauri) { this.invokeTauri('open_external', { url }); return; }
+            if (this.bridge?.web?.openExternal) this.bridge.web.openExternal(url);
+        },
+        saveList: async (data: unknown) => {
+            if (isTauri) return await this.invokeTauri<boolean>('web_save_list', { data }) || false;
+            if (this.bridge?.web?.saveList) return await this.bridge.web.saveList(data);
+            return false;
+        },
+        loadList: async () => {
+            if (isTauri) return await this.invokeTauri<unknown>('web_load_list');
+            if (this.bridge?.web?.loadList) return await this.bridge.web.loadList();
+            return null;
+        }
+    };
+
+    /**
+     * Obsidian Bridge
+     */
+    public obsidian = {
+        get hasSupport() { return !!this.bridge?.obsidian || isTauri; },
+        listNotes: async (vaultPath?: string) => {
+            if (isTauri) return await this.invokeTauri<any[]>('obsidian_list_notes', { vaultPath }) || [];
+            if (this.bridge?.obsidian?.listNotes) return await this.bridge.obsidian.listNotes(vaultPath);
+            return [];
+        },
+        readNote: async (relativePath: string, vaultPath?: string) => {
+            if (isTauri) return await this.invokeTauri<string | null>('obsidian_read_note', { relativePath, vaultPath });
+            if (this.bridge?.obsidian?.readNote) return await this.bridge.obsidian.readNote(relativePath, vaultPath);
+            return null;
+        },
+        writeNote: async (relativePath: string, content: string, vaultPath?: string) => {
+            if (isTauri) return await this.invokeTauri<boolean>('obsidian_write_note', { relativePath, content, vaultPath }) || false;
+            if (this.bridge?.obsidian?.writeNote) return await this.bridge.obsidian.writeNote(relativePath, content, vaultPath);
+            return false;
+        },
+        ensureDirectory: async (relativePath: string, vaultPath?: string) => {
+            if (isTauri) return await this.invokeTauri<boolean>('obsidian_ensure_directory', { relativePath, vaultPath }) || false;
+            if (this.bridge?.obsidian?.ensureDirectory) return await this.bridge.obsidian.ensureDirectory(relativePath, vaultPath);
+            return false;
+        },
+        selectVault: async () => {
+            if (isTauri) return await this.invokeTauri<string | null>('obsidian_select_vault');
+            if (this.bridge?.obsidian?.selectVault) return await this.bridge.obsidian.selectVault();
+            return null;
+        }
+    };
+
+    /**
+     * MCP Bridge
+     */
+    public mcp = {
+        get hasSupport() { return !!this.bridge?.mcp || isTauri; },
+        listTools: async (serverName: string) => {
+            if (isTauri) return await this.invokeTauri<any[]>('mcp_list_tools', { serverName }) || [];
+            if (this.bridge?.mcp?.listTools) return await this.bridge.mcp.listTools(serverName);
+            return [];
+        },
+        callTool: async (serverName: string, toolName: string, args: Record<string, unknown>) => {
+            if (isTauri) return await this.invokeTauri<any>('mcp_call_tool', { serverName, toolName, args });
+            if (this.bridge?.mcp?.callTool) return await this.bridge.mcp.callTool(serverName, toolName, args);
+            return { content: "" };
+        },
+        reauthenticate: async () => {
+            if (isTauri) return await this.invokeTauri<any>('mcp_reauthenticate') || { success: false };
+            if (this.bridge?.mcp?.reauthenticate) return await this.bridge.mcp.reauthenticate();
+            return { success: false, message: "Non supporté" };
+        },
+        restart: async () => {
+            if (isTauri) return await this.invokeTauri<any>('mcp_restart') || { success: false };
+            if (this.bridge?.mcp?.restart) return await this.bridge.mcp.restart();
+            return { success: false, message: "Non supporté" };
+        }
+    };
+
+    /**
+     * Nexus-OS : Système de packaging & portabilité
+     */
+    public nexus = {
+        get hasSupport() { return !!this.bridge?.nexus || isTauri; },
+        registerAsset: async (mediaHubId: string, dataUrl: string) => {
+            if (isTauri) return await this.invokeTauri<any>('nexus_register_asset', { mediaHubId, dataUrl }) || { ok: false };
+            if (this.bridge?.nexus?.registerAsset) return await this.bridge.nexus.registerAsset(mediaHubId, dataUrl);
+            return { ok: false };
+        },
+        clearAssets: async () => {
+            if (isTauri) return await this.invokeTauri<any>('nexus_clear_assets') || { ok: false };
+            if (this.bridge?.nexus?.clearAssets) return await this.bridge.nexus.clearAssets();
+            return { ok: false };
+        },
+        exportBundle: async (campaignId: string, outputPath: string, stateJson: string, manifestJson: string, assetRefs: string[]) => {
+            if (isTauri) return await this.invokeTauri<any>('nexus_export_bundle', { campaignId, outputPath, stateJson, manifestJson, assetRefs });
+            if (this.bridge?.nexus?.exportBundle) return await this.bridge.nexus.exportBundle(campaignId, outputPath, stateJson, manifestJson, assetRefs);
+            return { ok: false, error: 'Non supporté' };
+        },
+        importBundle: async (filePath: string) => {
+            if (isTauri) return await this.invokeTauri<any>('nexus_import_bundle', { filePath });
+            if (this.bridge?.nexus?.importBundle) return await this.bridge.nexus.importBundle(filePath);
+            return null;
+        },
+        selectExportPath: async (bundleType?: 'campaign' | 'driver') => {
+            if (isTauri) return await this.invokeTauri<string | null>('nexus_select_export_path', { bundleType });
+            if (this.bridge?.nexus?.selectExportPath) return await this.bridge.nexus.selectExportPath(bundleType);
+            return null;
+        },
+        selectImportFile: async () => {
+            if (isTauri) return await this.invokeTauri<string | null>('nexus_select_import_file');
+            if (this.bridge?.nexus?.selectImportFile) return await this.bridge.nexus.selectImportFile();
+            return null;
+        }
+    };
+
     public ipc = {
         on: (channel: string, callback: (...args: any[]) => void) => this.on(channel, callback),
         emit: (channel: string, payload?: any) => this.emit(channel, payload),

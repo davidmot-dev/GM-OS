@@ -1,0 +1,139 @@
+import React from 'react';
+import { Volume2, VolumeX, Mic, Zap, Power } from 'lucide-react';
+import { useAudioMasterStore } from '../../stores/useAudioMasterStore';
+import { useSessionStore } from '../../store/useSessionStore';
+import { useToastStore } from '../../stores/useToastStore';
+import { useTranslation } from 'react-i18next';
+import { useFavoriteStore } from '../../modules/favorite/useFavoriteStore';
+
+const MasterAudioController: React.FC = () => {
+    const { t } = useTranslation(['common', 'modules']);
+    const { 
+        masterVolume, 
+        setMasterVolume, 
+        isFocusMode, 
+        toggleFocusMode 
+    } = useAudioMasterStore();
+    const { theme } = useSessionStore();
+
+    const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setMasterVolume(parseFloat(e.target.value));
+    };
+
+    const handleStopAll = async () => {
+        interface GMWindow extends Window {
+            soundEngine?: { stopAll: () => void };
+            musicEngine?: { stopAll: () => void };
+            ambientEngine?: { fadeOutAll: (d: number) => void };
+            useImageStore?: { getState: () => { blackoutAll: () => void } };
+            hueEngine?: { extinguishAll: () => Promise<void> };
+        }
+        const win = window as unknown as GMWindow;
+        try {
+            // 1. All Audio Modules via window to avoid circular dependencies
+            if (win.soundEngine) win.soundEngine.stopAll();
+            if (win.musicEngine) win.musicEngine.stopAll();
+            if (win.ambientEngine) win.ambientEngine.fadeOutAll(1.0); // Quick 1s fade
+
+            // 2. Projections & Displays
+            if (win.useImageStore) win.useImageStore.getState().blackoutAll();
+
+            // 3. Lighting (Hue)
+            if (win.hueEngine) {
+                await win.hueEngine.extinguishAll();
+            }
+
+            // 4. Favorites & Projections (Full Hub Sync cleanup)
+            useFavoriteStore.getState().clearAllHubProjections();
+
+            useToastStore.getState().showToast(t('modules:session.toasts.stop_all_success'), 'success');
+        } catch (error) {
+            console.error('[PanicButton] Failed to stop everything:', error);
+            useToastStore.getState().showToast(t('modules:session.toasts.stop_all_error'), 'error');
+        }
+    };
+
+    return (
+        <div className={`flex items-center gap-6 px-6 py-2 border shadow-2xl group transition-all duration-300 ${
+            theme === 'medieval' 
+                ? 'bg-app-surface/90 border-app-border/60 rounded-lg' 
+                : 'bg-app-surface/40 backdrop-blur-xl border-app-border/30 rounded-2xl hover:border-accent/40'
+        }`}>
+            {/* Master Volume Slider */}
+            <div className={`flex items-center gap-3 min-w-[180px] p-2 ${
+                theme === 'medieval' ? 'bg-black/20 rounded border border-app-border/30' : ''
+            }`}>
+                <button 
+                    onClick={() => setMasterVolume(masterVolume === 0 ? 1 : 0)}
+                    className={`transition-colors ${theme === 'medieval' ? 'text-accent' : 'text-app-text/60 hover:text-accent'}`}
+                >
+                    {masterVolume === 0 ? <VolumeX size={18} /> : <Volume2 size={18} />}
+                </button>
+                <input 
+                    type="range" 
+                    min="0" 
+                    max="1" 
+                    step="0.01" 
+                    value={masterVolume} 
+                    onChange={handleVolumeChange}
+                    aria-label={t('audio')}
+                    className={`w-full h-1.5 appearance-none cursor-pointer accent-accent ${
+                        theme === 'medieval' ? 'bg-app-bg' : 'bg-app-bg/50 rounded-lg'
+                    }`}
+                />
+                
+                <span className="text-[10px] font-mono text-app-text/40 w-8 text-right">
+                    {Math.round(masterVolume * 100)}%
+                </span>
+            </div>
+
+            {/* Focus Chat Button */}
+            <button
+                onClick={toggleFocusMode}
+                className={`flex items-center gap-2.5 px-4 py-2 border transition-all duration-500 relative overflow-hidden group/btn ${
+                    theme === 'medieval' ? 'rounded-md' : 'rounded-xl'
+                } ${
+                    isFocusMode 
+                    ? 'bg-accent/20 border-accent text-accent shadow-glow-accent' 
+                    : 'bg-app-bg/50 border-app-border/50 text-app-text/40 hover:text-app-text/80 hover:border-app-text/30'
+                }`}
+            >
+                {isFocusMode && (
+                    <div className="absolute inset-0 bg-accent/10 animate-pulse" />
+                )}
+                
+                <div className="relative z-10 flex items-center gap-2">
+                    {isFocusMode ? (
+                        <Zap size={16} className="animate-bounce" />
+                    ) : (
+                        <Mic size={16} className="group-hover/btn:scale-110 transition-transform" />
+                    )}
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">
+                        {isFocusMode ? 'Focus ACTIVE' : 'Focus Chat'}
+                    </span>
+                </div>
+
+                {/* Micro-animation indicator */}
+                <div className={`w-1 h-1 rounded-full absolute right-2 top-2 ${isFocusMode ? 'bg-accent animate-ping' : 'bg-app-text/10'}`} />
+            </button>
+
+            {/* Panic Button / Stop All */}
+            <button
+                onClick={handleStopAll}
+                className={`flex items-center gap-2 px-4 py-2 border transition-all duration-300 group/panic ${
+                    theme === 'medieval' 
+                    ? 'rounded-md bg-red-900/20 border-red-900/40 text-red-400 hover:bg-red-900/40' 
+                    : 'rounded-xl bg-red-500/10 border-red-500/20 text-red-500 hover:bg-red-500/20 hover:border-red-500/40 hover:shadow-glow-red/20'
+                }`}
+                title={t('common:actions.stop_all')}
+            >
+                <Power size={16} className="group-hover/panic:scale-110 transition-transform" />
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] hidden sm:inline">
+                    Stop All
+                </span>
+            </button>
+        </div>
+    );
+};
+
+export default MasterAudioController;

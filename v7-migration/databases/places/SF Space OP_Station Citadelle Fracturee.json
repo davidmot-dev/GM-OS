@@ -1,0 +1,53 @@
+{
+  "name": [
+    "Citadelle Orbitale des Anneaux Brisés",
+    "Station‑Forteresse du Bastion Sigma",
+    "Citadelle du Rempart Orbital",
+    "Station des Docks Déchirés",
+    "Citadelle du Spire Éventré",
+    "Station‑Citadelle des Couloirs Fendus",
+    "Citadelle du Halo Fracturé",
+    "Station du Noyau Vacillant",
+    "Citadelle des Modules Errants",
+    "Station du Rempart Silencieux"
+  ],
+
+  "description": [
+    "Une citadelle orbitale dont les anneaux extérieurs dérivent lentement, maintenus par des champs instables.",
+    "Une station‑forteresse militaire partiellement détruite lors d’un siège spatial.",
+    "Une citadelle orbitale servant autrefois de rempart stratégique autour d’une planète clé.",
+    "Une station dont les docks ont été arrachés, laissant flotter des débris pressurisés.",
+    "Une citadelle dominée par un spire éventré, ouvert sur le vide.",
+    "Une station où les couloirs fendus laissent apparaître les étoiles.",
+    "Une citadelle entourée d’un halo fracturé de modules brisés.",
+    "Une station dont le noyau énergétique vacille dangereusement.",
+    "Une citadelle où des modules errants gravitent encore autour de la structure principale.",
+    "Une station silencieuse où seules quelques sections restent habitées."
+  ],
+
+  "ambiance": [
+    "Une gravité instable.",
+    "Un silence spatial.",
+    "Une tension électrique.",
+    "Un vide omniprésent.",
+    "Une brèche béante.",
+    "Une dérive lente.",
+    "Une énergie résiduelle.",
+    "Une fragilité structurelle.",
+    "Un isolement total.",
+    "Une survie précaire."
+  ],
+
+  "secret": [
+    "Un anneau brisé tourne selon un rythme impossible.",
+    "Le bastion Sigma contient un message crypté jamais déchiffré.",
+    "Le rempart orbital cache une salle encore pressurisée.",
+    "Un dock déchiré diffuse un signal faible mais régulier.",
+    "Le spire éventré renferme un laboratoire intact.",
+    "Un couloir fendu laisse entendre des voix sans source.",
+    "Le halo fracturé s’aligne parfois en formation parfaite.",
+    "Le noyau vacillant pulse comme un cœur vivant.",
+    "Un module errant revient toujours vers la station.",
+    "Le rempart silencieux abrite un survivant inconnu."
+  ]
+}

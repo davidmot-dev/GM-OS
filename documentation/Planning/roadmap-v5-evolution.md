@@ -28,10 +28,19 @@ Ce document trace la trajectoire du projet, des jalons franchis aux futures inno
 
 ## 🛠️ Stabilisation Temps Réel (V5.5 — Avril 2026)
 
-- **[x] Robustesse Cross-Window Sync** : Modèle "Authoritative Master Relay" éliminant les conflits d'état entre MJ et Moniteurs.
-- **[x] Protocole Handshake (`hub:ready`)** : Initialisation atomique des fenêtres de projection évitant le blackout au démarrage.
+### ✅ V5.5 : Stabilisation Temps Réel & Préparation V7 (Terminé)
+- [x] **Authoritative Master Relay** : Suppression des boucles de relay esclaves (Snapback fix).
+- [x] **Handshake `hub:ready`** : Initialisation atomique des projections.
+- [x] **Universal Window Guard** : Détection robuste Master/Slave via URL Params.
+- [x] **Documentation Migration** : Guide de simplification pour le passage sous Tauri.
 - **[x] Synchronisation Environnementale** : Parité immédiate du climat (Météo/Temps/Magie) sur tous les écrans dès le chargement.
 - **[x] Correction Snapback & Ping** : Résolution des boucles de relay saturant l'IPC.
+
+## 🛠️ Maintenance & Identité (V5.6 — Avril 2026)
+
+- **[x] Verrouillage de Personnage Robuste** : Correction du mismatch de clé `characterLocks` et gestion des collisions serveur (`remote:error`).
+- **[x] Enregistrement Réactif** : Re-validation immédiate du WebSocket lors du changement de personnage dans le Lobby.
+- **[x] Eject-All & Global Reset** : Bouton de réinitialisation complète des terminaux avec notification d'éjection et reset du store client.
 
 ## 📅 Prochaines Étapes (Roadmap v6)
 
@@ -55,6 +64,6 @@ Ce document trace la trajectoire du projet, des jalons franchis aux futures inno
 
 ---
 
-*Dernière mise à jour : 24 Avril 2026*
-*Statut : GM-OS v5.5 (Stabilisation Temps Réel) complétée.*
+*Dernière mise à jour : 26 Avril 2026*
+*Statut : GM-OS v5.6 (Maintenance & Identité) complétée.*
 

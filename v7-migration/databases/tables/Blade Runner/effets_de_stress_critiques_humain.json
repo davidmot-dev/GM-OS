@@ -1,0 +1,48 @@
+{
+    "name": "Effets de Stress Critiques - Humain",
+    "dice": "1d6",
+    "entries": [
+        {
+            "min": 1,
+            "max": 1,
+            "title": "VIVRE DANS LA PEUR",
+            "description": "Vous êtes paralysé par la peur ou l'indécision.",
+            "effect": "Vous ne pouvez plus vous forcer à faire quoi que ce soit, à tel point que votre inaction vous met en danger de mort."
+        },
+        {
+            "min": 2,
+            "max": 2,
+            "title": "DOMMAGE QU'ELLE DOIVE MOURIR",
+            "description": "Vous sombrez dans le désespoir, ce qui se traduit dans le comportement de votre personnage (adaptez-vous à la situation).",
+            "effect": "Pendant que vous êtes déprimé, vous pouvez aller vous mettre en sécurité, mais vous ne pouvez pas effectuer d'action nécessitant un jet de compétence."
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "PAS LE CHOIX, MON VIEUX",
+            "description": "Vous baissez les bras face aux obstacles qui se dressent sur votre route.",
+            "effect": "Lors d'un combat ou d'un conflit, vous abdiquez. Dans d'autres situations, vous abandonnez (cf. résultat 2 de la table)."
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "DITES-LUI QUE JE MANGE",
+            "description": "Vous passez vos nerfs sur un personnage amical ou neutre à proximité, qui peut tout à fait être un PJ.",
+            "effect": "Vous êtes susceptible d'en venir aux poings. Prenez l'effet en compte dans votre interprétation du personnage."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "DEUX FOIS PLUS DE RAISONS DE LE QUITTER",
+            "description": "Vous n'en pouvez plus, vous quittez la scène pour rentrer chez vous, vous saouler, vous envoyer en l'air ou errer dans les rues.",
+            "effect": "Vous ne pouvez pas bosser activement sur l'affaire ou effectuer de jets de compétence."
+        },
+        {
+            "min": 6,
+            "max": 99,
+            "title": "SECOUEE ? MOI AUSSI",
+            "description": "Vous êtes méchamment secoué. Votre cerveau fonctionne à peu près correctement.",
+            "effect": "Tous vos jets de compétence souffrent d'un désavantage et vous ne pouvez pas forcer de jet."
+        }
+    ]
+}

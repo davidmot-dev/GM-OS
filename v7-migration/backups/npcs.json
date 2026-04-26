@@ -1,0 +1,25 @@
+{
+  "savedEntities": [
+    {
+      "id": "ID-60932",
+      "category": "npcs",
+      "name": "Selene",
+      "gmNotes": "",
+      "fields": {
+        "firstNames": "Selene",
+        "lastNames": "Chromaline",
+        "jobs": "Chasseur de robots renégats",
+        "traits": "A un accent synthétique",
+        "looks": "Bottes magnétiques",
+        "secrets": "A un secret sur une panne"
+      },
+      "timestamp": 1773873359782,
+      "avatar": "file:///C:/Projet_David/GM-OS-v5/public/assets/avatars/npc/ai_gen_1773873395401.jpg"
+    }
+  ],
+  "config": {
+    "category": "events",
+    "universe": "MedFan_Incident",
+    "aiEnabled": true
+  }
+}

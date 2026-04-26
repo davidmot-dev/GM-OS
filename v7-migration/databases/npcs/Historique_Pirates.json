@@ -1,0 +1,62 @@
+{
+    "firstNames": [
+        "Bartholomew", "Anne", "Edward", "Mary", "Charles", "Grace", "Henry", "Isla", "Samuel", "Nora", "Jack", "Eliza",
+        "Thomas", "Maribel", "Rufus", "Selena", "Gideon", "Rosa", "Silas", "Pearl", "Jonas", "Dahlia", "Hector", "Mina",
+        "Barnaby", "Lucinda", "Ronan", "Tessa", "Elias", "Coraline", "Viktor", "Sable", "Magnus", "Ivy", "Dorian", "Marina",
+        "Rex", "Ophelia", "Talon", "Seraphine", "Clyde", "Arielle", "Finn", "Calypso", "Ryder", "Yara", "Bram", "Luna"
+    ],
+    "lastNames": [
+        "Blackwater", "Stormsail", "Redhook", "Ironbeard", "Crowe", "Marlin", "Saltwind", "Darkshore", "Grimwave", "Hawkblood",
+        "Silvercrest", "Stormbreaker", "Nighttide", "Ravenwake", "Deepcurrent", "Ironshore", "Saltborn", "Wavecrest", "Blackreef", "Stormhelm",
+        "Redshore", "Darkwake", "Seaborn", "Ironwake", "Saltcrest", "Stormborn", "Nightreef", "Wavebreaker", "Blackwake", "Deepshore",
+        "Ravensail", "Stormcrest", "Saltbreaker", "Ironcrest", "Nightshore", "Waveborn", "Redcrest", "Darkshore", "Seawind", "Stormtide",
+        "Ironwave", "Saltshore", "Blacktide", "Nighthelm", "Wavehelm", "Stormreef", "Redhelm", "Seabreaker", "Ironborn", "Salthelm"
+    ],
+    "jobs": [
+        "Capitaine pirate", "Second de bord", "Canonnier", "Charpentier naval", "Navigateur", "Maître d’équipage", "Cuisinier du navire",
+        "Chanteur de bord", "Quartier-maître", "Sabreur", "Tireur d’élite", "Cartographe", "Chasseur de trésors", "Espion maritime",
+        "Contrebandier", "Marchand d’épices", "Pilleur de navires", "Dompteur de perroquets", "Gardien de cale", "Médecin de bord",
+        "Harponneur", "Pêcheur", "Éclaireur côtier", "Garde du port", "Chasseur de monstres marins", "Explorateur d’îles",
+        "Maître voilier", "Timonier", "Garde du trésor", "Fossoyeur de plage", "Chasseur de primes", "Messager maritime",
+        "Fabricant de cordages", "Tanneur de peaux marines", "Dresseur de singes", "Garde du gouvernail", "Saboteur",
+        "Maître des voiles", "Pilleur de caravelles", "Chasseur de tempêtes", "Éleveur de tortues géantes", "Garde du capitaine",
+        "Chasseur de perles", "Explorateur de récifs", "Réparateur de coques", "Garde du pavillon", "Chasseur de sirènes",
+        "Collecteur de cartes anciennes", "Garde des canons"
+    ],
+    "traits": [
+        "Bagarreur", "Râleur", "Superstitieux", "Courageux", "Téméraire", "Méfiant", "Rieur", "Bavard", "Taciturne", "Sombre",
+        "Toujours ivre", "Toujours affamé", "Toujours fatigué", "Parle fort", "Parle vite", "Parle en argot marin", "A un rire tonitruant",
+        "A un rire nerveux", "A une voix grave", "A une voix rauque", "A une voix douce", "A un accent marqué", "A une démarche lourde",
+        "A une démarche légère", "A un regard dur", "A un regard fou", "A un regard perçant", "A un regard absent", "A un humour noir",
+        "A un humour étrange", "A une obsession pour l’or", "A une obsession pour les cartes", "A une obsession pour les armes",
+        "A une obsession pour les chants marins", "A une mémoire parfaite", "A une mémoire défaillante", "A un tic nerveux",
+        "A une cicatrice visible", "A une moustache imposante", "A une barbe hirsute", "A une voix cassée", "A un sourire charmeur",
+        "A un air menaçant", "A un air innocent", "A un air fatigué", "A un air déterminé", "Aime les tempêtes", "Déteste les tempêtes"
+    ],
+    "looks": [
+        "Chapeau tricorne", "Bandana rouge", "Chemise ouverte", "Pantalon en toile", "Bottes en cuir usées", "Sabre à la ceinture",
+        "Pistolet à silex", "Boucle d’oreille en or", "Tatouage de kraken", "Œil bandé", "Manteau long", "Gants en cuir",
+        "Ceinture à boucles", "Bottes renforcées", "Chemise tachée", "Pantalon rayé", "Chapeau noir", "Chapeau décoré",
+        "Veste en cuir", "Cape sombre", "Gilet brodé", "Bottes boueuses", "Chemise blanche", "Pantalon sombre", "Gants troués",
+        "Chapeau cabossé", "Manteau épais", "Chaussures vernies", "Veste en laine", "Gants élégants", "Chapeau large",
+        "Manteau en toile", "Chemise sombre", "Pantalon usé", "Chaussures boueuses", "Veste sombre", "Chapeau décoré",
+        "Gants noirs", "Manteau à col relevé", "Chapeau en feutre", "Veste à poches", "Pantalon serré", "Ceinture large",
+        "Bottes de marin", "Veste en peau", "Chapeau de capitaine", "Gants renforcés", "Manteau brodé", "Sabre courbé"
+    ],
+    "secrets": [
+        "A enterré un trésor", "A trahi son capitaine", "A un passé de noble", "A un frère disparu", "A un tatouage codé",
+        "A un coffre scellé", "A un ennemi juré", "A un passé de marchand", "A un secret sur une île maudite",
+        "A un passé de corsaire", "A un secret sur un navire fantôme", "A un passé de contrebandier", "A un secret sur une tempête",
+        "A un passé de soldat", "A un secret sur un gouverneur", "A un passé de pêcheur", "A un secret sur un monstre marin",
+        "A un passé de chasseur de trésors", "A un secret sur une carte ancienne", "A un passé de prisonnier",
+        "A un secret sur une mutinerie", "A un passé de capitaine", "A un secret sur un trésor maudit", "A un passé de voleur",
+        "A un secret sur une sirène", "A un passé de navigateur", "A un secret sur une épave", "A un passé de pirate repenti",
+        "A un secret sur un pacte", "A un passé de mercenaire", "A un secret sur un sabre légendaire", "A un passé de mousse",
+        "A un secret sur un coffre vide", "A un passé de garde du port", "A un secret sur un navire disparu",
+        "A un passé de chasseur de perles", "A un secret sur une île interdite", "A un passé de marin",
+        "A un secret sur un trésor englouti", "A un passé de fugitif", "A un secret sur un capitaine fou",
+        "A un passé de charpentier naval", "A un secret sur un chant maudit", "A un passé de navigateur céleste",
+        "A un secret sur une boussole magique", "A un passé de sabreur", "A un secret sur un équipage disparu",
+        "A un passé de survivant solitaire", "A un secret sur une bouteille à la mer"
+    ]
+}

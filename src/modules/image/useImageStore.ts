@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { ImageMedia, ProjectionTarget, DisplayInfo, ImageFolder, ProjectedEntity } from './types';
-import { useJournalStore } from '../journal/useJournalStore';
+// import { useJournalStore } from '../journal/useJournalStore'; // Broken by circular dependency
 import { gmToast } from '../../stores/useToastStore';
 import i18n from '../../i18n';
-import { ImageService } from './logic/ImageService';
+// import { ImageService } from './logic/ImageService'; // Broken by circular dependency
 
 /**
  * Représente l'état global du Image-OS.
@@ -88,7 +88,11 @@ export const useImageStore = create<ImageState>()(
                                 console.log(`[useImageStore] Auto-Syncing projector ${targetId} with ${currentMediaPath}`);
                                 // On cherche par chemin (path) car currentMediaPath contient m-127..., pas l'UUID
                                 const media = get().mediaList.find(m => m.path === currentMediaPath);
-                                if (media) ImageService.projectMedia(media.path, targetId as any);
+                                if (media) {
+                                    import('./logic/ImageService').then(({ ImageService }) => {
+                                        ImageService.projectMedia(media.path, targetId as any);
+                                    });
+                                }
                             }
                         }
                     });
@@ -133,10 +137,11 @@ export const useImageStore = create<ImageState>()(
                 // 1. Envoyer les ordres IPC
                 // 2. Mettre à jour le store global via setProjection(target, path)
                 console.log(`[useImageStore] Proj. ${media.path} -> ${target}`);
+                const { ImageService } = await import('./logic/ImageService');
                 const success = await ImageService.projectMedia(media.path, target as any);
                 
                 if (success) {
-                    useJournalStore.getState().addEvent({
+                    (window as any).useJournalStore.getState().addEvent({
                         type: 'SYSTEM',
                         content: `Projection de ${media.name} sur ${target}`,
                         severity: 'info'
@@ -154,8 +159,10 @@ export const useImageStore = create<ImageState>()(
                 }
 
                 set((state) => ({ projections: { ...state.projections, [target]: url } }));
-                ImageService.projectMedia(url, target as any).catch(() => {
-                    set((state) => ({ projections: { ...state.projections, [target]: null } }));
+                import('./logic/ImageService').then(({ ImageService }) => {
+                    ImageService.projectMedia(url, target as any).catch(() => {
+                        set((state) => ({ projections: { ...state.projections, [target]: null } }));
+                    });
                 });
             },
 
@@ -172,17 +179,19 @@ export const useImageStore = create<ImageState>()(
                     set((s) => ({ projections: { ...s.projections, [target]: entity.id } }));
                 }
 
-                ImageService.projectEntity(entity, target as any).then(avatar => {
-                    if (!avatar && entity !== null) {
-                        get().blackout();
-                        gmToast(i18n.t('modules:image.notifications.projectionFailed'));
-                    } else if (entity) {
-                        useJournalStore.getState().addEvent({
-                            type: 'NPC',
-                            title: i18n.t('modules:image.events.entityProjected.title'),
-                            content: i18n.t('modules:image.events.entityProjected.content', { name: entity.name, subtitle: entity.subtitle || '...' })
-                        });
-                    }
+                import('./logic/ImageService').then(({ ImageService }) => {
+                    ImageService.projectEntity(entity as any, target as any).then((avatar: any) => {
+                        if (!avatar && entity !== null) {
+                            get().blackout();
+                            gmToast(i18n.t('modules:image.notifications.projectionFailed'));
+                        } else if (entity) {
+                            (window as any).useJournalStore.getState().addEvent({
+                                type: 'NPC',
+                                title: i18n.t('modules:image.events.entityProjected.title'),
+                                content: i18n.t('modules:image.events.entityProjected.content', { name: entity.name, subtitle: entity.subtitle || '...' })
+                            });
+                        }
+                    });
                 });
             },
 
@@ -214,18 +223,24 @@ export const useImageStore = create<ImageState>()(
             blackout: () => {
                 const target = get().projectionTarget as string;
                 set((s) => ({ projections: { ...s.projections, [target]: null }, projectedEntity: target === 'hub' ? null : s.projectedEntity }));
-                ImageService.blackout(target as any);
+                import('./logic/ImageService').then(({ ImageService }) => {
+                    ImageService.blackout(target as any);
+                });
             },
 
             blackoutAll: () => {
                 const targets = Object.keys(get().projections);
                 set({ projections: {}, projectedEntity: null });
-                ImageService.blackoutAll(targets);
+                import('./logic/ImageService').then(({ ImageService }) => {
+                    ImageService.blackoutAll(targets);
+                });
             },
 
             blackoutAllHub: () => {
                 set({ projectedEntity: null });
-                ImageService.blackout('hub');
+                import('./logic/ImageService').then(({ ImageService }) => {
+                    ImageService.blackout('hub');
+                });
             },
 
             clearAll: () => { if (confirm(i18n.t('modules:image.dashboard.resetConfirm'))) set({ mediaList: [] }); },
@@ -239,7 +254,11 @@ export const useImageStore = create<ImageState>()(
                     Object.entries(snapshot.projections).forEach(([target, id]) => {
                         if (id) {
                             const media = get().mediaList.find(m => m.id === id);
-                            if (media) ImageService.projectMedia(media.path, target as any);
+                            if (media) {
+                                import('./logic/ImageService').then(({ ImageService }) => {
+                                    ImageService.projectMedia(media.path, target as any);
+                                });
+                            }
                         }
                     });
                 }

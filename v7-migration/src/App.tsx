@@ -191,6 +191,7 @@ function App() {
       import('./modules/map/logic/MapService').then(({ MapService }) => {
         MapService.forceFullSync();
       });
+      useImageStore.getState().broadcastSync();
     };
 
     // Canal principal : BroadcastChannel (garanti cross-window Chromium/WebView2)

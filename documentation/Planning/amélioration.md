@@ -52,6 +52,7 @@ Ce document centralise la vision et les chantiers de GM-OS. Depuis Avril 2026, l
 ---
 
 ## 📅 Historique Récent
+- **v7.0.1** (26 Avril 2026) : Patch "Maintenance & Identité". Correction du verrouillage PJ et implémentation du protocole d'éjection globale.
 - **v7.0.0-beta** (23 Avril 2026) : Stabilisation complète de la projection et des communications IPC. Le Player Hub est 100% fonctionnel sous Tauri.
 - **v7.0.0-alpha** (23 Avril 2026) : Migration majeure vers Tauri. Pont agnostique et multimédia natif opérationnels.
 - **v6.3.2** (16 Avril 2026) : Unification Hub et nettoyage du mode Théâtre. Correction des fuites WebSocket.
@@ -64,7 +65,7 @@ Ce document centralise la vision et les chantiers de GM-OS. Depuis Avril 2026, l
 ---
 
 > [!TIP]
-> **Priorité actuelle** : Stabilisation des nouveaux hooks et déploiement du système de calcul de fiches.
+> **Priorité actuelle** : Finalisation de la parité V7 (Tauri) et robustesse des connexions Nexus.
 
 > [!IMPORTANT]
-> Version Actuelle : **6.3.2** (Avril 2026)
+> Version Actuelle : **7.0.1** (Avril 2026)

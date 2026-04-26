@@ -21,7 +21,7 @@ Chaque module doit être validé selon les critères suivants :
 
 | Module | Priorité | Statut | Points d'Attention |
 | :--- | :---: | :--- | :--- |
-| **System** (`src/modules/system`) | P0 | ✅ Corrigé | Bootstrapping & Initialisation centralisée. |
+| **System** (`src/modules/system`) | P0 | ✅ Corrigé | v7.0.0 : Boot-Parity Bridge (Tauri/Electron). |
 | Session | `src/modules/session` | P0 | ✅ Corrigé | Refonte du store (SessionManager, SnapshotService). |
 | **Remote** (`src/modules/remote`) | P1 | ✅ Corrigé | Refonte Nexus P1 : Modularisation `SyncServer` & Rôles. |
 | **Security** (Electron / Store) | **P0** | ✅ Corrigé | Migration API Keys vers `safeStorage`. |
@@ -40,7 +40,7 @@ Chaque module doit être validé selon les critères suivants :
 
 | Module | Priorité | Statut | Points d'Attention |
 | :--- | :---: | :--- | :--- |
-| **Map-OS** (`src/modules/map`) | **P0** | ✅ Corrigé | **ID-based mapping** & performance Fog. |
+| **Map-OS** (`src/modules/map`) | **P0** | ✅ Corrigé | v7.0.0 : Fix Dépendance Circulaire & Lazy Loading. |
 | **Combat-OS** | P1 | ✅ Corrigé | Refonte Dropdowns (Stitch), Découplage Logique & Tests. |
 | **Dice-OS** | P2 | ✅ Corrigé | Moteur 3D (Three.js), Logique D100 & Esthétique Crystal. |
 | **NPC-OS** | P1 | ✅ **Corrigé** | Synchronisation Gallery OK. |

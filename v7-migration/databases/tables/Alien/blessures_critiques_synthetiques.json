@@ -1,0 +1,48 @@
+{
+    "name": "Blessures Critiques chez les Êtres Synthétiques",
+    "dice": "1d6",
+    "entries": [
+        {
+            "min": 1,
+            "max": 1,
+            "title": "Rupture de la pompe à fluide",
+            "description": "Un composant hydraulique vital est endommagé.",
+            "effect": "L'androïde perd sa prochaine action lente."
+        },
+        {
+            "min": 2,
+            "max": 2,
+            "title": "Servos de la jambe détruits",
+            "description": "Les circuits de motricité inférieure sont grillés ou sectionnés.",
+            "effect": "Les deux jambes sont paralysées. L'androïde doit rester à terre et ne peut que ramper."
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "Servos du bras détruits",
+            "description": "La connexion avec l'un des membres supérieurs est perdue.",
+            "effect": "Un des bras est paralysé. L'androïde ne peut utiliser que des équipements à une main."
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "Dislocation de la tête",
+            "description": "Le cou artificiel est fracturé, la tête se retrouvant dans un angle étrange.",
+            "effect": "Toutes ses actions rapides deviennent des actions lentes."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "Grave rupture du châssis",
+            "description": "La structure interne est compromise et les fluides se déversent.",
+            "effect": "L'androïde est complètement immobilisé."
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "Arrêt du système",
+            "description": "L'androïde est réduit en pièces ou écrasé. Les systèmes principaux sont gravement endommagés.",
+            "effect": "Un test de COMTECH est désormais nécessaire pour communiquer avec lui."
+        }
+    ]
+}

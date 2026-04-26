@@ -9,6 +9,9 @@ Le Hub peut désormais s'exécuter dans deux contextes distincts :
 1.  **Mode Local (Player Hub Window)** : Exécuté comme une fenêtre native Tauri sur le même PC que le MJ. Il accède à l'objet `window.appBridge` et utilise l'**IPC haute vitesse** (Tauri `emit`/`listen`).
 2.  **Mode Distant (Tablet/Smartphone)** : Exécuté dans un navigateur externe via le protocole **Nexus**. Il ne peut pas accéder au bridge et repose exclusivement sur **WebSocket**.
 
+### Protocole de Résilience (Nexus v6.1)
+Le Hub utilise un **Enregistrement Réactif**. Contrairement aux versions précédentes, l'identité (Pseudo, Personnage) est transmise dès la sélection dans le Lobby via un message `remote:register`. Si l'identité change, une re-validation immédiate est effectuée pour garantir l'unicité de la session.
+
 ### Stratégies de Synchronisation
 
 1.  **IPC (Array Spreading)** : Sous Tauri v2, les données sont envoyées via `AppBridge.send`. Le récepteur (Player Hub) déballe les arguments pour mettre à jour ses hooks `useHubSync` instantanément.
@@ -48,9 +51,9 @@ Le Hub utilise un modèle de synchronisation "One-Way" (Maître vers Esclave) :
 
 La v5.1 introduit le `SessionManager.ts` (Main Process) pour gérer la persistance des connexions :
 
-- **Ghost State (Fantôme)** : Si une tablette perd le Wi-Fi, elle n'est pas immédiatement déconnectée. Elle passe en état "fantôme" pendant 2 minutes, permettant une reconnexion transparente.
 - **Session Takeover** : Un joueur peut reprendre sa session sur un autre appareil (nécessite l'approbation du MJ via le Lobby).
-- **Lobby Monitor** : Interface intégrée au MJ pour visualiser les terminaux connectés et leur état de santé.
+- **Lobby Monitor** : Interface intégrée au MJ pour visualiser les terminaux connectés, leur état de santé, et gérer les verrous de personnages.
+- **Protocole d'Éjection (Force Reset)** : Le MJ peut envoyer un signal `remote:eject-all` qui ordonne à tous les clients de vider leur `localStorage` (`resetIdentity`) et ferme physiquement les sockets.
 
 ## 📦 Structure du Composant `TabletHub.tsx`
 

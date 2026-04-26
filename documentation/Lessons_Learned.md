@@ -147,4 +147,31 @@ Ce document consigne les défis techniques, les erreurs rencontrées et les solu
 
 ---
 
-*Dernière mise à jour : 24 Avril 2026 - GM-OS v7 (Migration Tauri) - Phase 5 : Stabilisation Temps Réel & Cross-Window Sync.*
+### 16. Dépendances Circulaires & Vite Resolver (2026-04-24)
+- **Défi** : L'application refusait de charger le module `MapDashboard.tsx` avec une erreur `ERR_CONNECTION_REFUSED` dans la console de développement, sans erreur explicite dans les logs Vite.
+- **Cause** : Dépendance circulaire entre `useMapStore.ts` (importait `MapService`) et `MapService.ts` (importait `useMapStore`). En mode développement, le résolveur de modules de Vite peut entrer en deadlock ou échouer silencieusement à servir les fichiers impactés par un cycle complexe, surtout lorsqu'ils sont chargés via `lazy`.
+- **Solution** : Utilisation d'**imports dynamiques (`import()`)** à l'intérieur des fonctions d'action du store pour retarder le chargement du service. Cela brise le cycle au niveau du top-level import.
+- **Leçon** : Éviter absolument les imports circulaires au niveau global. Si un store doit appeler un service qui lui-même manipule le store, utiliser des imports dynamiques ou un système d'événements/listeners découplés.
+
+### 17. Découplage des Stores pour le Hub (Migration V7)
+Pour éviter les dépendances circulaires qui bloquent le build Vite (ex: Session -> Journal -> Session), les hooks de synchronisation (comme `useHubSync`) ne doivent plus importer les stores statiquement. Ils doivent utiliser un **Global Window Bridge** (`window.useXStore`) pour accéder aux stores dynamiquement. Cela garantit une architecture "Bridge-Agnostic" compatible Tauri/Electron.
+
+### 18. Enregistrement Réactif pour le Verrouillage des Personnages (2026-04-25)
+- **Défi** : Le Tablet Hub ne détectait plus le verrouillage des personnages, permettant à deux joueurs de sélectionner le même profil.
+- **Cause** : L'enregistrement initial au WebSocket ne contenait pas le `characterId` (puisque le joueur n'avait pas encore choisi). Une fois le personnage sélectionné, le store `useClientStore` était mis à jour, mais le WebSocket restait sur l'ancienne session de communication "anonyme".
+- **Solution** : Ajout d'un `useEffect` réactif dans `useHubSync.ts` qui renvoie un message `remote:register` dès que l'identité (pseudo, characterId) change.
+- **Leçon** : L'identité d'un client WebSocket peut évoluer au cours d'une session (onboarding). Tout changement d'état d'identification doit déclencher une re-validation immédiate auprès du serveur MJ pour mettre à jour les verrous globaux.
+
+---
+
+### 19. Réinitialisation Complète & Éjection des Clients (2026-04-26)
+- **Défi** : En cas de désynchronisation majeure ou de changement de joueurs en cours de partie, il était difficile de "nettoyer" les verrous de personnages sans redémarrer le serveur.
+- **Solution** : Implémentation d'un **Protocole d'Éjection Bidirectionnel**. 
+    1. Le MJ envoie un signal `remote:eject-all` via IPC. 
+    2. Le serveur ferme physiquement toutes les sockets après avoir notifié les clients. 
+    3. Les clients (Hubs) reçoivent `remote:ejected`, appellent `resetIdentity()` pour effacer leur état local (Onboarding) et affichent un message informatif.
+- **Leçon** : Le serveur ne doit pas se contenter de "supprimer" les sessions de sa mémoire ; il doit activement notifier les clients pour qu'ils nettoient leur propre `localStorage` (via `resetIdentity`), évitant ainsi des reconnexions automatiques immédiates avec des données périmées.
+
+---
+
+*Dernière mise à jour : 26 Avril 2026 - GM-OS v6/v7 - Ajout de la fonction Éjection & Reset Global.*

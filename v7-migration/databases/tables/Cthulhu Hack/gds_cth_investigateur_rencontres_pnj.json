@@ -1,0 +1,706 @@
+{
+    "name": "100 Personnes à rencontrer en ville - GdS-Cth-Investigateur",
+    "dice": "1d100",
+    "entries": [
+        {
+            "min": 1,
+            "max": 1,
+            "title": "Harold Blackwood (Antiquaire)",
+            "description": "Un homme d'une quarantaine d'années aux cheveux grisonnants et lunettes rondes. Il possède un ancien Écrit interdit mentionnant des rituels oubliés et cherche des acheteurs.",
+            "effect": "Possibilité d'acquérir un ouvrage occulte interdit."
+        },
+        {
+            "min": 2,
+            "max": 2,
+            "title": "Martha Whitmore (Bibliothécaire)",
+            "description": "Petite femme aux cheveux noir de jais, toujours bien apprêtée. Elle détient un livre confié par un étranger, écrit dans une langue inconnue qu'elle ne peut déchiffrer.",
+            "effect": "Accès à un manuscrit indéchiffrable nécessitant un test de Linguistique ou d'Occultisme."
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "Giovanni Marconi (Maçon)",
+            "description": "Musclé et bronzé, il a remarqué la disparition de collègues après la rénovation d'un manoir.",
+            "effect": "Source de rumeurs sur des disparitions liées à des chantiers de rénovation."
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "Clara Donovan (Journaliste)",
+            "description": "Jeune femme énergique de vingt ans avec un carnet et un dictaphone. Elle enquête sur des disparitions liées à des créatures ophidiennes.",
+            "effect": "Partage d'informations sur des créatures serpentiformes contre aide à l'enquête."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "Amarah Singh (Joaillier)",
+            "description": "Mince, portant plusieurs bagues de sa confection. Il cherche à se débarrasser d'une gemme maudite récemment achetée.",
+            "effect": "Possibilité de récupérer un objet (gemme) maudit."
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "Sophie Morrow (Actrice)",
+            "description": "Femme âgée vêtue de manière flamboyante avec une perruque blonde. Elle est harcelée par un admirateur utilisant des forces occultes.",
+            "effect": "Quête consistant à protéger Sophie contre une menace occulte."
+        },
+        {
+            "min": 7,
+            "max": 7,
+            "title": "Henry Cobb (Employé de librairie)",
+            "description": "Jeune homme corpulent passionné par l'occultisme et les glyphes anciens.",
+            "effect": "Aide technique pour l'identification de glyphes."
+        },
+        {
+            "min": 8,
+            "max": 8,
+            "title": "Mary Lock (Professeure d'histoire)",
+            "description": "Porte des lunettes à écailles et un chignon. Elle cherche à traduire des documents en ancien français trouvés à l'université.",
+            "effect": "Fournit des documents historiques nécessitant une traduction."
+        },
+        {
+            "min": 9,
+            "max": 9,
+            "title": "Thomas « Tommy » O'Connor (Policier)",
+            "description": "Petit, musclé, avec une cicatrice sur la joue. Il enquête sur des meurtres rituels et accepte de partager des infos contre vos découvertes.",
+            "effect": "Allié au sein de la police en échange de secrets."
+        },
+        {
+            "min": 10,
+            "max": 10,
+            "title": "Yara al-Mansouri (Calligraphe)",
+            "description": "Femme à la peau fripée avec la main gauche bandée. Elle a été blessée par un client car elle avait trop « enjolivé » un glyphe.",
+            "effect": "Experte en reproduction de glyphes, bien qu'imprécise par esthétisme."
+        },
+        {
+            "min": 11,
+            "max": 11,
+            "title": "Daniel « Danny » Carter (Chauffeur de taxi)",
+            "description": "Conduit une Ford T nommée Mirabella.",
+            "effect": "Transport rapide et connaissance de raccourcis urbains."
+        },
+        {
+            "min": 12,
+            "max": 12,
+            "title": "Rebecca Hargrove (Serveuse)",
+            "description": "Souriante, elle a trouvé une amulette dans la poche d'un client et l'a offerte à son amie sans savoir que c'est un artefact dangereux.",
+            "effect": "Piste menant à la récupération d'un artefact dangereux possédé par un civil."
+        },
+        {
+            "min": 13,
+            "max": 13,
+            "title": "Fatima al-Rashid (Traductrice)",
+            "description": "Femme d'une cinquantaine d'années perdant la vue. Elle étudie des textes sur des créatures surnaturelles.",
+            "effect": "Expertise en textes anciens tant qu'elle peut encore lire."
+        },
+        {
+            "min": 14,
+            "max": 14,
+            "title": "Anastasia Petrovna (Danseuse)",
+            "description": "Élancée avec un visage poupin. Elle descend d'une lignée de sorciers et fait des recherches sur ses ancêtres.",
+            "effect": "Lien potentiel avec une lignée de sorcellerie."
+        },
+        {
+            "min": 15,
+            "max": 15,
+            "title": "Georgio Gonzalez (Banquier)",
+            "description": "Cheveux poivre et sel gominés. Expert en détection d'anomalies bancaires.",
+            "effect": "Analyse de comptes financiers pour détecter des transactions suspectes."
+        },
+        {
+            "min": 16,
+            "max": 16,
+            "title": "Alicia Wittgenstein (Couturière)",
+            "description": "Cheveux de feu bouclés. Elle a reçu une commande étrange de trente robes jaunes avec un symbole curieux.",
+            "effect": "Indice sur les activités d'un culte (robes jaunes)."
+        },
+        {
+            "min": 17,
+            "max": 17,
+            "title": "Liam O'Reilly (Couvreur)",
+            "description": "Solide et agile aux yeux verts. Il sort du coma après une chute de toit et veut révéler tout ce qu'il a vu.",
+            "effect": "Témoignage oculaire sur des événements vus depuis les hauteurs."
+        },
+        {
+            "min": 18,
+            "max": 18,
+            "title": "Ingrid Bjørnsen (Infirmière)",
+            "description": "Physique de garçon manqué et voix rauque. Elle accepte de falsifier des perfusions pour un ami.",
+            "effect": "Possibilité d'empoisonnement ou de sédation discrète à l'hôpital."
+        },
+        {
+            "min": 19,
+            "max": 19,
+            "title": "Samuel « Sam » Watson (Manutentionnaire)",
+            "description": "Travaille sur les docks et a vu des va-et-vient inhabituels.",
+            "effect": "Informations sur le trafic portuaire suspect contre argent."
+        },
+        {
+            "min": 20,
+            "max": 20,
+            "title": "Eleanor Rosen (Herboriste)",
+            "description": "Voix stridente, fournit des ingrédients rares et illégaux à des clients suspects.",
+            "effect": "Accès à des composants alchimiques ou drogues rares."
+        },
+        {
+            "min": 21,
+            "max": 21,
+            "title": "Hiroshi Murata (Restaurateur d'art)",
+            "description": "Il répare des artefacts d'origine inconnue.",
+            "effect": "Identification et réparation d'objets anciens ou occultes."
+        },
+        {
+            "min": 22,
+            "max": 22,
+            "title": "Jonathan Harker (Médecin légiste)",
+            "description": "Barbe hirsute, il a trouvé des marques inhabituelles sur des cadavres.",
+            "effect": "Informations médicales sur des causes de décès non naturelles."
+        },
+        {
+            "min": 23,
+            "max": 23,
+            "title": "Victor Challoix (Ingénieur mécanique)",
+            "description": "Porte une salopette et d'épaisses lunettes. Répare quasiment tout, peu importe l'origine.",
+            "effect": "Réparation de matériel complexe ou étrange."
+        },
+        {
+            "min": 24,
+            "max": 24,
+            "title": "Franklin Feldman (Avocat)",
+            "description": "Maigre comme un clou, défend des chefs de culte accusés de crimes rituels.",
+            "effect": "Intermédiaire légal avec des membres de cultes emprisonnés."
+        },
+        {
+            "min": 25,
+            "max": 25,
+            "title": "Albert « Al » Peterson (Barman)",
+            "description": "Robuste avec une moustache, maladroit avec les cocktails. Un client alcoolique lui révèle des secrets sur une société secrète.",
+            "effect": "Source de rumeurs sur les sociétés secrètes locales."
+        },
+        {
+            "min": 26,
+            "max": 26,
+            "title": "Liliane Brivaud (Flûtiste)",
+            "description": "Adepte de tenues sophistiquées, elle a composé une mélodie qui semble attirer les entités.",
+            "effect": "Risque d'apparition d'entités lors d'une performance."
+        },
+        {
+            "min": 27,
+            "max": 27,
+            "title": "Evelyn Grant (Artiste peintre)",
+            "description": "Mince aux cheveux noirs tachés de peinture. Ses toiles cauchemardesques semblent prédire l'avenir.",
+            "effect": "Prémonition visuelle sur des événements futurs."
+        },
+        {
+            "min": 28,
+            "max": 28,
+            "title": "Zhang Wei (Marin)",
+            "description": "Visage marqué par le soleil, il possède une carte ancienne menant à un temple sous-marin.",
+            "effect": "Point de départ pour une expédition maritime."
+        },
+        {
+            "min": 29,
+            "max": 29,
+            "title": "Nora Blake (Photographe)",
+            "description": "Propose différents décors peints en arrière-plan pour les clichés.",
+            "effect": "Développement de preuves photographiques."
+        },
+        {
+            "min": 30,
+            "max": 30,
+            "title": "Mike Shepard (Boucher)",
+            "description": "Trapu avec moustache, il garde dans sa chambre froide un animal inconnu qu'il doit débiter sans poser de questions.",
+            "effect": "Observation d'une créature non-identifiée (perte de SAN possible)."
+        },
+        {
+            "min": 31,
+            "max": 31,
+            "title": "Dmitri Ivanov (Romancier)",
+            "description": "Tête pâle, sensible au soleil. Son dernier livre parle d'une quête vers les tréfonds de la Terre pour un remède.",
+            "effect": "Informations narratives sur des lieux souterrains mythiques."
+        },
+        {
+            "min": 32,
+            "max": 32,
+            "title": "Jeremy Owans (Marchand)",
+            "description": "Vend de l'artisanat local, possède un masque rituel aux pouvoirs étranges.",
+            "effect": "Accès à un objet de pouvoir (masque)."
+        },
+        {
+            "min": 33,
+            "max": 33,
+            "title": "Maria Kostopoulos (Enseignante)",
+            "description": "Tenues et lunettes rouges. Elle s'inquiète de l'influence d'une personne suspecte sur ses élèves.",
+            "effect": "Piste sur un recruteur de culte visant les jeunes."
+        },
+        {
+            "min": 34,
+            "max": 34,
+            "title": "Saúl Fernandez (Pompier)",
+            "description": "A remarqué une hausse des incendies inexpliqués dans un quartier spécifique.",
+            "effect": "Informations sur des incendies criminels ou surnaturels."
+        },
+        {
+            "min": 35,
+            "max": 35,
+            "title": "Aisha el-Tayeb (Musicienne)",
+            "description": "Vêtements traditionnels colorés. Ses instruments plongent certaines personnes en transe.",
+            "effect": "Déclenchement d'un état de transe hypnotique."
+        },
+        {
+            "min": 36,
+            "max": 36,
+            "title": "Clarence Bell (Forgeron)",
+            "description": "Massif, peu soigneux. Il a vu passer des métaux étranges (verdâtre magnétique, bleu dérangeant).",
+            "effect": "Analyse de métaux rares ou extraterrestres."
+        },
+        {
+            "min": 37,
+            "max": 37,
+            "title": "Naomi Cohen (Juge)",
+            "description": "Grande, porte des habits masculins au travail. Elle a des preuves prouvant la culpabilité d'un homme qu'elle a acquitté.",
+            "effect": "Accès à des dossiers judiciaires compromettants."
+        },
+        {
+            "min": 38,
+            "max": 38,
+            "title": "John Jackson (Guide touristique)",
+            "description": "Petit, mince et bavard. Il a trouvé des pierres très anciennes lors d'une excursion.",
+            "effect": "Connaissance de lieux archéologiques cachés."
+        },
+        {
+            "min": 39,
+            "max": 39,
+            "title": "Helena Rushin (Photographe de guerre)",
+            "description": "Physique athlétique. Elle a vu des êtres se repaître de cadavres de soldats lors de sa dernière mission.",
+            "effect": "Témoignage sur des goules ou charognards surnaturels (perte de SAN)."
+        },
+        {
+            "min": 40,
+            "max": 40,
+            "title": "Pablo Byrd (Infirmier)",
+            "description": "Visage peu harmonieux, expert en drogues et substances récréatives.",
+            "effect": "Fourniture de substances chimiques ou médicinales."
+        },
+        {
+            "min": 41,
+            "max": 41,
+            "title": "Eleanor Green (Détective privée)",
+            "description": "Trench-coat gris, enquête sur des disparitions liées à un objet rituel.",
+            "effect": "Collaboration sur une enquête de disparition."
+        },
+        {
+            "min": 42,
+            "max": 42,
+            "title": "Margaret Fields (Analyste médicale)",
+            "description": "Petite femme blonde. Elle lie plusieurs malades à un syndrome inconnu qui modifie leur peau et leur raison.",
+            "effect": "Alerte sur une épidémie de mutation ou de folie."
+        },
+        {
+            "min": 43,
+            "max": 43,
+            "title": "Michael O'Hara (Astrologue)",
+            "description": "Cheveux blancs, robe à symboles. Expert en conjonctions astrologiques rares.",
+            "effect": "Prédictions basées sur les étoiles pour anticiper des rituels."
+        },
+        {
+            "min": 44,
+            "max": 44,
+            "title": "Jack Malone (Gardien de phare)",
+            "description": "Veste en laine épaisse. Entend des chants mystérieux et voit des lumières au large.",
+            "effect": "Point d'observation sur des activités côtières anormales."
+        },
+        {
+            "min": 45,
+            "max": 45,
+            "title": "Marie Dubois (Acrobate)",
+            "description": "A vu une créature humanoïde à sabots sentant l'humus dans un bois.",
+            "effect": "Témoignage sur une rencontre avec un satyre ou une entité sylvestre."
+        },
+        {
+            "min": 46,
+            "max": 46,
+            "title": "Conor O'Leary (Chef cuisinier)",
+            "description": "Irlandais roux, utilise des ingrédients exotiques du quartier chinois.",
+            "effect": "Accès à des poisons ou antidotes via des ingrédients rares."
+        },
+        {
+            "min": 47,
+            "max": 47,
+            "title": "Zofia Nowak (Botaniste)",
+            "description": "Polonaise, connaissances encyclopédiques sur les plantes.",
+            "effect": "Identification de flore inhabituelle."
+        },
+        {
+            "min": 48,
+            "max": 48,
+            "title": "Hank Robinson (Facteur)",
+            "description": "Gentil et simple, connaît tous les habitants et rumeurs de la ville.",
+            "effect": "Informations locales sur n'importe quelle adresse."
+        },
+        {
+            "min": 49,
+            "max": 49,
+            "title": "Wei Chen (Pilote d'avion)",
+            "description": "A repéré des symboles au sol visibles uniquement depuis le ciel.",
+            "effect": "Reconnaissance aérienne de géoglyphes occultes."
+        },
+        {
+            "min": 50,
+            "max": 50,
+            "title": "Emily Watson (Modiste)",
+            "description": "Porte uniquement du blanc, utilise des matériaux inhabituels pour ses chapeaux.",
+            "effect": "Accès à des tissus ou matériaux rares."
+        },
+        {
+            "min": 51,
+            "max": 51,
+            "title": "Patrick Gurney (Pêcheur)",
+            "description": "Visage rongé par le sel. Il cache un « Celui des Profondeurs » dans son entrepôt pour lui faire sculpter du métal.",
+            "effect": "Rencontre dangereuse avec un hybride ou un profond (perte de SAN)."
+        },
+        {
+            "min": 52,
+            "max": 52,
+            "title": "Lilly Bishop (Pâtissière)",
+            "description": "Âgée, travaille seule. Elle a reçu une commande curieuse de gâteau à base d'algues.",
+            "effect": "Indice sur les goûts culinaires d'un culte marin."
+        },
+        {
+            "min": 53,
+            "max": 53,
+            "title": "Carlos Vega (Barbier)",
+            "description": "Émigré de Madrid, ses clients se confient facilement à lui.",
+            "effect": "Source de secrets confiés par les notables de la ville."
+        },
+        {
+            "min": 54,
+            "max": 54,
+            "title": "Ming Li (Horloger)",
+            "description": "Grand et obèse, passionné par les nouvelles découvertes.",
+            "effect": "Expertise technique sur des mécanismes complexes."
+        },
+        {
+            "min": 55,
+            "max": 55,
+            "title": "Georgia Clark (Boulangère)",
+            "description": "Visage banal, douée pour la confection de pâte à pain.",
+            "effect": "Lieu de rencontre discret."
+        },
+        {
+            "min": 56,
+            "max": 56,
+            "title": "Irena Walczak (Organiste)",
+            "description": "Polonaise, elle joue des partitions curieuses qui lui donnent un sentiment de toute-puissance.",
+            "effect": "Performance musicale pouvant déclencher des effets surnaturels."
+        },
+        {
+            "min": 57,
+            "max": 57,
+            "title": "Eddie Reynolds (Garçon de courses)",
+            "description": "Livre des colis dans des endroits malfamés.",
+            "effect": "Connaissance des bas-fonds et lieux de livraison de cultes."
+        },
+        {
+            "min": 58,
+            "max": 58,
+            "title": "Amelia Collins (Gouvernante)",
+            "description": "Confidente de ses employeurs grâce à sa grande empathie.",
+            "effect": "Secrets de familles aisées."
+        },
+        {
+            "min": 59,
+            "max": 59,
+            "title": "Seamus O'Donnell (Journalier)",
+            "description": "A trouvé un médaillon d'un métal inconnu sur un chantier.",
+            "effect": "Possession d'un artefact métallique mineur."
+        },
+        {
+            "min": 60,
+            "max": 60,
+            "title": "Anna Martinez (Fleuriste)",
+            "description": "Odorat développé, bien qu'allergique au pollen.",
+            "effect": "Détection d'odeurs inhabituelles (soufre, décomposition)."
+        },
+        {
+            "min": 61,
+            "max": 61,
+            "title": "Eugene White (Linguiste)",
+            "description": "Flegmatique, connaît des alphabets peu conventionnels.",
+            "effect": "Traduction de textes blasphématoires ou primitifs."
+        },
+        {
+            "min": 62,
+            "max": 62,
+            "title": "Mary Klein (Conductrice de train)",
+            "description": "A vécu des incidents étranges au cours de ses voyages.",
+            "effect": "Informations sur des lieux maudits le long des voies ferrées."
+        },
+        {
+            "min": 63,
+            "max": 63,
+            "title": "Martha Svenson (Archéologue)",
+            "description": "A vu des choses lors d'expéditions qu'elle aimerait oublier.",
+            "effect": "Conseils sur les dangers des ruines anciennes."
+        },
+        {
+            "min": 64,
+            "max": 64,
+            "title": "Louis Miller (Ingénieur civil)",
+            "description": "Crée des plans avec passages ou pièces secrètes pour des clients privés.",
+            "effect": "Accès aux plans de demeures suspectes incluant des caches."
+        },
+        {
+            "min": 65,
+            "max": 65,
+            "title": "Yuki Tanaka (Conservateur de musée)",
+            "description": "Vient de découvrir une collection d'objets non répertoriée dans le stockage.",
+            "effect": "Accès à des artefacts oubliés et non exposés."
+        },
+        {
+            "min": 66,
+            "max": 66,
+            "title": "Isabella Anderson (Fermière)",
+            "description": "A trouvé des galeries souterraines sous son exploitation.",
+            "effect": "Entrée vers un réseau souterrain."
+        },
+        {
+            "min": 67,
+            "max": 67,
+            "title": "Leo Faris (Chimiste)",
+            "description": "Expert en théories sur la polymérisation.",
+            "effect": "Analyse de substances visqueuses ou organiques inconnues."
+        },
+        {
+            "min": 68,
+            "max": 68,
+            "title": "Maximilian Loveluck (Antiquaire)",
+            "description": "Connaissance encyclopédique des techniques de fabrication depuis l'antiquité.",
+            "effect": "Datation et authentification d'antiquités."
+        },
+        {
+            "min": 69,
+            "max": 69,
+            "title": "Helen Blackbird (Actrice de cinéma)",
+            "description": "Figurante dans Metropolis, voix forte.",
+            "effect": "Contact dans le milieu du divertissement."
+        },
+        {
+            "min": 70,
+            "max": 70,
+            "title": "Paul Smith (Maréchal-ferrant)",
+            "description": "Né sans jambe droite, s'inquiète de l'essor de l'automobile.",
+            "effect": "Soin des montures."
+        },
+        {
+            "min": 71,
+            "max": 71,
+            "title": "Claire Ross (Tisserande)",
+            "description": "Tient un commerce sur l'avenue principale.",
+            "effect": "Informations sur les textiles."
+        },
+        {
+            "min": 72,
+            "max": 72,
+            "title": "Henry Thompson (Bijoutier)",
+            "description": "Depuis l'acquisition d'une pierre précieuse en or, il attire des clients au physique étrange.",
+            "effect": "Observation de profonds ou hybrides sous couverture humaine."
+        },
+        {
+            "min": 73,
+            "max": 73,
+            "title": "Jack Johnson (Conducteur de tramway)",
+            "description": "Convoie le soir des personnes aisées vers des quartiers malfamés.",
+            "effect": "Localisation d'un lieu de réunion secret de la haute société."
+        },
+        {
+            "min": 74,
+            "max": 74,
+            "title": "Doris Green (Hôtesse d'accueil)",
+            "description": "Bonne mémoire des noms et visages, cerne rapidement les gens.",
+            "effect": "Informations sur les clients et visiteurs de l'hôtel."
+        },
+        {
+            "min": 75,
+            "max": 75,
+            "title": "Robert Carter (Projectionniste)",
+            "description": "Voit dans les films des scènes qui ne devraient pas exister (et qu'il est seul à voir).",
+            "effect": "Visions subliminales transmises par la pellicule."
+        },
+        {
+            "min": 76,
+            "max": 76,
+            "title": "Anita Delgado (Jardinière)",
+            "description": "Entend des discussions secrètes en s'occupant des bosquets des grandes maisons.",
+            "effect": "Source d'indiscrétions politiques ou sectaires."
+        },
+        {
+            "min": 77,
+            "max": 77,
+            "title": "George Hill (Cartographe)",
+            "description": "Vend de fausses cartes de lieux prétendument visités pour éponger ses dettes de jeu.",
+            "effect": "Risque d'obtenir des informations erronées ou piégées."
+        },
+        {
+            "min": 78,
+            "max": 78,
+            "title": "Nancy Davis (Concierge)",
+            "description": "Consigne tout ce qu'elle voit et entend sur les résidents dans un carnet précieux.",
+            "effect": "Détient des dossiers complets sur les habitudes des suspects locaux."
+        },
+        {
+            "min": 79,
+            "max": 79,
+            "title": "Tom Morgan (Réparateur de phonographes)",
+            "description": "Oreille absolue, répare les phonographes avec un talent exceptionnel.",
+            "effect": "Analyse audio de cylindres de cire ou enregistrements suspects."
+        },
+        {
+            "min": 80,
+            "max": 80,
+            "title": "Emilio King (Boxeur)",
+            "description": "Rapide et violent, accepte des boulots pour intimider ou casser des jambes.",
+            "effect": "Bras armé pour des missions musclées."
+        },
+        {
+            "min": 81,
+            "max": 81,
+            "title": "John Bennett (Télégraphiste)",
+            "description": "Passionné par les codes (César, Vigenère) et les énigmes.",
+            "effect": "Décryptage de messages codés."
+        },
+        {
+            "min": 82,
+            "max": 82,
+            "title": "Alice Parker (Fabricante de jouets)",
+            "description": "Dit avoir de « la magie dans les mains ».",
+            "effect": "Confection d'objets en bois dissimulant des mécanismes."
+        },
+        {
+            "min": 83,
+            "max": 83,
+            "title": "Earl Robinson (Gardien d'orphelinat)",
+            "description": "Une petite fille de l'orphelinat fait des cauchemars récurrents dont la direction ne se soucie pas.",
+            "effect": "Enquête sur l'origine onirique d'une menace contre les enfants."
+        },
+        {
+            "min": 84,
+            "max": 84,
+            "title": "Betty Wilson (Pianiste)",
+            "description": "Capable de jouer des partitions très variées.",
+            "effect": "Performance musicale."
+        },
+        {
+            "min": 85,
+            "max": 85,
+            "title": "James Rogers (Plombier)",
+            "description": "Intervient dans des bâtiments insalubres.",
+            "effect": "Accès aux sous-sols et tuyauteries de la ville."
+        },
+        {
+            "min": 86,
+            "max": 86,
+            "title": "Juan Brien (Cordonnier)",
+            "description": "Caractère difficile, regard bovin.",
+            "effect": "Réparation de chaussures."
+        },
+        {
+            "min": 87,
+            "max": 87,
+            "title": "Max Whitaker (Pigiste)",
+            "description": "Arriviste aux nombreuses sources dans la police et le crime.",
+            "effect": "Tuyaux sur les arrestations ou activités criminelles."
+        },
+        {
+            "min": 88,
+            "max": 88,
+            "title": "Jack Callahan (Vendeur de journaux)",
+            "description": "Voix forte, utilise des titres sensationnalistes.",
+            "effect": "Diffusion ou collecte rapide de nouvelles urbaines."
+        },
+        {
+            "min": 89,
+            "max": 89,
+            "title": "Patrick Hamilton (Potier)",
+            "description": "Ancien banquier reconverti après un chagrin d'amour.",
+            "effect": "Compétence manuelle et expertise bancaire passée."
+        },
+        {
+            "min": 90,
+            "max": 90,
+            "title": "Robert Mitchell (Cloutier)",
+            "description": "Prêt à tout pour survivre face à l'industrie.",
+            "effect": "Recrue potentielle pour des tâches désespérées."
+        },
+        {
+            "min": 91,
+            "max": 91,
+            "title": "Miranda Vidal (Cartière)",
+            "description": "Fabrique des cartes à jouer et réalise des doubles de jeux de tarot pour la divination.",
+            "effect": "Accès à des outils de divination (tarot)."
+        },
+        {
+            "min": 92,
+            "max": 92,
+            "title": "Marina Foster (Coutelière)",
+            "description": "Expertise pour la police sur les types de blessures par arme blanche.",
+            "effect": "Analyse médico-légale de plaies par lame."
+        },
+        {
+            "min": 93,
+            "max": 93,
+            "title": "Louis Allen (Menuisier)",
+            "description": "Estime les mesures à vue d'œil avec précision.",
+            "effect": "Conception de rangements ou caches indétectables."
+        },
+        {
+            "min": 94,
+            "max": 94,
+            "title": "Mildred Jenkins (Secrétaire)",
+            "description": "Un peu trop indiscrète, rigoureuse sur les rendez-vous.",
+            "effect": "Accès indirect à l'agenda d'un notable."
+        },
+        {
+            "min": 95,
+            "max": 95,
+            "title": "Oscar Cook (Peintre en bâtiment)",
+            "description": "A repeint des bâtiments marqués d'un glyphe identique et inconnu.",
+            "effect": "Liste des maisons marquées par un culte."
+        },
+        {
+            "min": 96,
+            "max": 96,
+            "title": "Alice Barnes (Candidate maire)",
+            "description": "A passé son enfance dans une secte et craint que cela ne resurgisse.",
+            "effect": "Informations internes sur le fonctionnement d'une secte."
+        },
+        {
+            "min": 97,
+            "max": 97,
+            "title": "Bruce Wright (Gardien de prison)",
+            "description": "Pessimiste et corrompu, accepte les pots-de-vin.",
+            "effect": "Passage de messages ou objets en prison."
+        },
+        {
+            "min": 98,
+            "max": 98,
+            "title": "Rebecca Butler (Romancière)",
+            "description": "Prend des notes dans les bars, cherche l'inspiration.",
+            "effect": "Observatrice discrète de la vie nocturne."
+        },
+        {
+            "min": 99,
+            "max": 99,
+            "title": "Arthur Woods (Gardien de musée)",
+            "description": "Très peureux, sursaute au moindre bruit.",
+            "effect": "Maillon faible de la sécurité d'un musée."
+        },
+        {
+            "min": 100,
+            "max": 100,
+            "title": "Mabel Marsh (Parfumeuse)",
+            "description": "Sourde de naissance, capable de sentir des fragrances subtiles.",
+            "effect": "Analyse chimique par l'odorat."
+        }
+    ]
+}

@@ -65,3 +65,7 @@ export const useClientStore = create<ClientState>()(
         }
     )
 );
+
+if (typeof window !== 'undefined') {
+    (window as any).useClientStore = useClientStore;
+}

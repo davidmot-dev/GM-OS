@@ -298,7 +298,9 @@
       "clear_tooltip": "Vider les déconnectés",
       "refresh_tooltip": "Rafraîchir",
       "no_devices": "Aucun appareil connecté",
-      "reconnect_note": "Les tablettes se reconnectent automatiquement en cas de perte de signal."
+      "reconnect_note": "Les tablettes se reconnectent automatiquement en cas de perte de signal.",
+      "eject_all": "Éjecter Tout",
+      "eject_all_tooltip": "Déconnecter tous les appareils et réinitialiser les verrous de personnages"
     }
   }
 }

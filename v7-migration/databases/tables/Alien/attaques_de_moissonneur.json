@@ -1,0 +1,48 @@
+{
+    "name": "Attaques de Moissonneur",
+    "dice": "1d6",
+    "entries": [
+        {
+            "min": 1,
+            "max": 1,
+            "title": "BALAYAGE SONAR",
+            "description": "Le Moissonneur scrute les environs en émettant une brève pulsation sonar.",
+            "effect": "Ajoutez 1 au prochain résultat obtenu sur cette table (maximum 6). Tous les PJ jusqu'à portée LONGUE sont affectés par ce cri haut perché et leur NIVEAU DE STRESS augmente de 1."
+        },
+        {
+            "min": 2,
+            "max": 2,
+            "title": "PULSATION SONAR",
+            "description": "Le Moissonneur emploie son sonar comme une arme.",
+            "effect": "Quiconque se trouve à portée COURTE subit la rafale ultrasonique et doit réussir un test d'ENDURANCE (aucune action requise) pour éviter d'être sonné et de perdre sa prochaine action. Ceux qui ne sont pas sonnés doivent effectuer un test de Panique."
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "CHARGE",
+            "description": "Acculé, le Moissonneur se rue vers le personnage qui représente la plus grande menace à ses yeux. Il se jette comme un fou sur sa proie sans se soucier de ceux qui se trouvent sur son chemin, chargeant en direction de la prochaine zone.",
+            "effect": "Tous ceux qui se trouvent sur sa trajectoire doivent réussir un test de MOBILITÉ (aucune action requise) pour s'écarter à temps. Quiconque échoue subit une attaque portée avec dix dés de base et des Dégâts de 1 avant d'être jeté à terre."
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "DÉBANDADE",
+            "description": "Le Moissonneur s'affole comme un cheval sauvage et frappe tous azimuts, paniqué.",
+            "effect": "Toutes les cibles situées à portée COURTE subissent une attaque écrasante portée avec six dés de base et des Dégâts de 2. Ceux qui sont touchés sont jetés à terre."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "GRIFFES DE FOUISSEUR",
+            "description": "Les griffes de la bête sont presque aussi redoutables que sa gueule.",
+            "effect": "Elle bondit sur une malheureuse victime et lui porte une attaque avec dix dés de base et des Dégâts de 2."
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "PULVÉRISATION",
+            "description": "La victime est happée par l'effroyable broyeuse qui tient lieu de gueule à la créature. En cas d'échec, elle meurt hachée menu, et ses cris d'agonie hanteront tous ses amis jusqu'au jour de leur mort.",
+            "effect": "La victime a droit à un ultime test de COMBAT RAPPROCHÉ contre huit dés de base (aucune action requise) pour échapper à ce sort abominable. En cas d'échec, la victime meurt. Tous les témoins voient leur NIVEAU DE STRESS augmenter de 1 et doivent effectuer un test de Panique."
+        }
+    ]
+}

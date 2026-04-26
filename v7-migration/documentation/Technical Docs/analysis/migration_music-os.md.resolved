@@ -1,0 +1,96 @@
+# Documentation Musicale : Migration vers le Streaming & Crossfade (GM-OS v5)
+
+Ce document détaille l'architecture "industrielle" implémentée dans Music OS pour gérer les fichiers audio longs de manière robuste et économe en ressources.
+
+---
+
+## 1. Architecture Hybride (Streaming + Web Audio)
+
+L'approche traditionnelle `decodeAudioData` (stockage intégral en RAM) a été abandonnée pour Music OS au profit d'un système de streaming hybride.
+
+### Le Concept
+On utilise deux éléments HTML5 `<audio>` invisibles qui servent de "moteurs de lecture" (L'un pour le Deck A, l'autre pour le Deck B). Ces éléments sont ensuite injectés dans le graphe Web Audio.
+
+### Code de Branchement (Noyau)
+```javascript
+// 1. Création du lecteur HTML5
+this.audioA = new Audio();
+this.audioA.crossOrigin = "anonymous";
+this.audioA.preload = "auto";
+
+// 2. Branchement dans Web Audio
+// deck.audioNode devient le point d'entrée du flux dans le mixeur
+deck.audioNode = ctx.createMediaElementSource(this.audioA);
+deck.gain = ctx.createGain();
+
+deck.audioNode.connect(deck.gain);
+deck.gain.connect(this.masterGain);
+```
+
+**Avantages :**
+*   **RAM** : < 1 Mo par musique (contre ~50-100 Mo en buffer).
+*   **Vitesse** : Pas de décodage, lecture immédiate.
+
+---
+
+## 2. Logique du Crossfade (Mixage)
+
+Le crossfader ne se contente pas de changer l'UI, il pilote deux `GainNodes` en opposition.
+
+### Courbe de Gain (Interpolation)
+Pour éviter les clics audibles, on utilise les méthodes de rampe native de la Web Audio API.
+
+```javascript
+// Calcul des ratios (0.0 à 1.0)
+const gainA_Multi = 1 - (this.crossfadeValue / 100);
+const gainB_Multi = this.crossfadeValue / 100;
+
+// Application fluide (Anti-clic)
+// setTargetAtTime est plus naturel que linearRamp pour des changements manuels continus
+this.deckA.gain.gain.setTargetAtTime(this.deckA.volume * gainA_Multi, now, 0.02);
+this.deckB.gain.gain.setTargetAtTime(this.deckB.volume * gainB_Multi, now, 0.02);
+```
+
+### Le "Fade To" Automatique
+Lors d'une transition automatique, on combine une rampe Web Audio et une animation `requestAnimationFrame` pour le slider :
+1.  **Audio** : `linearRampToValueAtTime(target, now + duration)`.
+2.  **Visuel** : Interpolation de la valeur `crossfadeValue` sur chaque frame pour que le curseur "suive" le son.
+
+---
+
+## 3. Stabilisation & "Gotchas" (Conseils pour v5)
+
+Lors de l'implémentation sur Windows/Electron, trois points cruciaux ont été identifiés pour éviter les coupures :
+
+### A. Intégration au DOM
+Le moteur Chromium (base d'Electron) réduit la priorité des éléments audio "orphelins".
+> [!IMPORTANT]
+> Toujours attacher les éléments `new Audio()` au `document.body` (même cachés avec `display: none`) pour garantir qu'ils conservent leur priorité CPU/Réseau.
+
+### B. Configuration de l'AudioContext
+Forcer une latence ou un sample rate spécifique (ex: 48kHz) peut créer des micro-coupures si le matériel de l'utilisateur ne suit pas.
+> [!TIP]
+> Pour GM-OS v5, laissez l'`AudioContext` en réglages par défaut : `new AudioContext()`. Le driver natif choisira la configuration la plus stable pour la machine.
+
+### C. Libération des Handles
+Lorsqu'une musique est arrêtée, vider le `src` est essentiel.
+```javascript
+audioElement.pause();
+audioElement.src = ""; // Très important pour libérer le fichier sur le disque
+```
+
+---
+
+## 4. Structure de Données Recommandée (v5)
+
+Pour les "Pads", ne stockez plus les données binaires. Utilisez une structure légère :
+```json
+{
+  "id": "track_01",
+  "name": "Ambiance Caverne",
+  "path": "C:/Jeux/Musique/caverne.mp3",
+  "type": "local",
+  "loop": true
+}
+```
+Ceci permet de sauvegarder des playlists entières dans un JSON très léger et de les charger instantanément.

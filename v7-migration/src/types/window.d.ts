@@ -1,0 +1,293 @@
+import { SessionOSState } from '../modules/session/useSessionOSStore';
+import { MusicState } from '../modules/music/useMusicStore';
+import { CombatState } from '../modules/combat/useCombatStore';
+import { LightState } from '../modules/light/useLightStore';
+import { MapState } from '../modules/map/useMapStore';
+import { ImageState } from '../modules/image/useImageStore';
+import { SoundState } from '../modules/sound/useSoundStore';
+import { AmbientState } from '../modules/ambient/useAmbientStore';
+import { StoryboardState } from '../modules/storyboard/useStoryboardStore';
+import { ToastState } from '../stores/useToastStore';
+import { FavoriteState } from '../modules/favorite/useFavoriteStore';
+import { JournalState } from '../modules/journal/useJournalStore';
+import { ObsidianState } from '../modules/session/useObsidianStore';
+import { TacticalAIState } from '../modules/tactical-ai/useTacticalAIStore';
+import { TaxonomyState } from '../modules/tactical-ai/useTaxonomyStore';
+import { VoiceState } from '../modules/voice/useVoiceStore';
+import { ClockState } from '../store/useClockStore';
+import { ImageBridge } from '../modules/image/types';
+import { WebState } from '../modules/web/useWebStore';
+
+declare global {
+    export interface DisplayInfo {
+        id: string;
+        bounds: {
+            x: number;
+            y: number;
+            width: number;
+            height: number;
+        };
+        label: string;
+    }
+
+    export interface AIDocument {
+        name: string;
+        path: string;
+        type: 'file' | 'directory';
+        children?: AIDocument[];
+        extension?: string;
+    }
+
+    export interface AIProxyResponse {
+        ok: boolean;
+        status?: number;
+        statusText?: string;
+        data: unknown;
+    }
+
+    export interface MCPTool {
+        name: string;
+        description: string;
+        inputSchema: {
+            type: "object";
+            properties: Record<string, unknown>;
+            required?: string[];
+        };
+    }
+
+    export interface MCPCallResult {
+        content: string;
+    }
+
+    export interface RemoteAction {
+        type: string;
+        payload?: unknown; // payload can be anything depending on the type
+    }
+
+    export interface NoteEntry {
+        name: string;
+        path: string;
+        type: 'file' | 'directory';
+        children?: NoteEntry[];
+    }
+
+    export interface ClientContext {
+        deviceId: string;
+        pseudo: string;
+        role: 'combat' | 'narrative' | 'player' | 'remote';
+        status: 'active' | 'ghost' | 'disconnected';
+        lastSeen: number;
+    }
+
+    export interface SyncPayload {
+        clock?: Partial<ClockState>;
+        combat?: Partial<CombatState>;
+        music?: Partial<MusicState>;
+        sound?: Partial<SoundState>;
+        ambient?: Partial<AmbientState>;
+        whiteboard?: unknown;
+        image?: Partial<ImageState>;
+        light?: Partial<LightState>;
+        storyboard?: Partial<StoryboardState>;
+        session?: Partial<SessionOSState>;
+        voiceLevel?: number;
+        clients?: ClientContext[]; // The list of active clients for the MJ to see
+    }
+
+    interface AppBridge {
+        image?: ImageBridge;
+        session?: {
+            launchHubWindow: (tag?: string) => void;
+            saveSession: (data: Record<string, unknown>) => Promise<boolean>;
+            loadSession: () => Promise<Record<string, unknown> | null>;
+        };
+        git?: {
+          getStatus: () => Promise<{ available: boolean; isRepo: boolean; branch: string; exists: boolean }>;
+          setupBranch: (branch: string) => Promise<{ success: boolean; branch: string }>;
+          syncData: (directory: string, branch: string, message: string) => Promise<{ success: boolean; timestamp: string; error?: string }>;
+          saveData: (data: any) => Promise<{ success: boolean; error?: string }>;
+        };
+        openFile?: (path: string) => void;
+        openExternal?: (url: string) => void;
+        utils?: {
+            formatFileUrl: (path: string) => string;
+        };
+        web?: {
+            openExternal: (url: string) => void;
+            saveList: (data: unknown) => Promise<boolean>;
+            loadList: () => Promise<unknown>;
+        };
+        on: (channel: string, callback: (event: any, ...args: any[]) => void) => void;
+        off: (channel: string, callback: (event: any, ...args: any[]) => void) => void;
+        send: (channel: string, ...args: any[]) => void;
+        remote: {
+            getConnectionInfo?: () => Promise<{ ip: string; port: number }>;
+            sendSync?: (payload: SyncPayload) => void;
+            broadcastUIAction?: (action: any) => void;
+            broadcastToTablets: (type: string, payload: unknown) => void;
+            getDisplays: () => Promise<DisplayInfo[]>;
+            openProjectionWindow: (displayId: string, url: string) => void;
+            onAction: (callback: (data: RemoteAction) => void) => () => void;
+            cacheMedia: (id: string, buffer: ArrayBuffer) => Promise<boolean>;
+            removeActions: () => void;
+        };
+        highlightMapToken?: (name: string) => void;
+        app?: {
+            quit: () => void;
+            onDisplayChanged: (callback: (count: number) => void) => () => void;
+        };
+        logger?: {
+            info: (message: string, ...args: any[]) => void;
+            warn: (message: string, ...args: any[]) => void;
+            error: (message: string, ...args: any[]) => void;
+            debug: (message: string, ...args: any[]) => void;
+        };
+        security?: {
+            getSecret: (id: string) => Promise<string | null>;
+            saveSecret: (id: string, value: string) => Promise<boolean>;
+            deleteSecret: (id: string) => Promise<boolean>;
+        };
+        ai?: {
+            listDocs: () => Promise<AIDocument[]>;
+            readDoc: (filePath: string) => Promise<string | null>;
+            writeDoc: (filePath: string, content: string) => Promise<boolean>;
+            extractPdf: (filePath: string) => Promise<string>;
+            proxyRequest: (url: string, method: string, headers: Record<string, string>, body: unknown) => Promise<AIProxyResponse>;
+            searchContext: (systemId: string, campaignName: string) => Promise<string>;
+            reindex: (customPath?: string) => Promise<boolean>;
+            ollamaChat: (model: string, messages: { role: string; content: string }[]) => Promise<string>;
+            ollamaStatus: () => Promise<boolean>;
+            ollamaListModels: () => Promise<string[]>;
+            ollamaPull: (model: string) => Promise<boolean>;
+            ollamaGenerateImage: (model: string, prompt: string) => Promise<string>;
+        };
+        sound?: {
+            loadAudios: () => Promise<string[]>;
+        };
+        tactical?: {
+            listSounds: () => Promise<string[]>;
+        };
+        light?: {
+            request: (url: string, method: string, body?: unknown) => Promise<any>;
+        };
+        mcp?: {
+            listTools: (serverName: string) => Promise<MCPTool[]>;
+            callTool: (serverName: string, toolName: string, args: Record<string, unknown>) => Promise<MCPCallResult>;
+            reauthenticate: () => Promise<{ success: boolean; message: string }>;
+            restart: () => Promise<{ success: boolean; message: string }>;
+        };
+        obsidian?: {
+            listNotes: (vaultPath?: string) => Promise<NoteEntry[]>;
+            readNote: (relativePath: string, vaultPath?: string) => Promise<string | null>;
+            writeNote: (relativePath: string, content: string, vaultPath?: string) => Promise<boolean>;
+            ensureDirectory: (relativePath: string, vaultPath?: string) => Promise<boolean>;
+            selectVault: () => Promise<string | null>;
+        };
+        /**
+         * Nexus-OS : Système de packaging & portabilité (.gmos)
+         * Implémenté dans le main process Electron.
+         */
+        nexus?: {
+            /**
+             * Streame un seul asset Media Hub vers le cache du main process.
+             * À appeler pour chaque asset AVANT exportBundle.
+             */
+            registerAsset: (mediaHubId: string, dataUrl: string) => Promise<{ ok: boolean; error?: string }>;
+            /** Vide le cache d'assets du main process. */
+            clearAssets: () => Promise<{ ok: boolean }>;
+            /**
+             * Exporte une campagne dans un bundle .gmos.
+             * Les Media Hub assets sont transférés via registerAsset avant cet appel.
+             */
+            exportBundle: (
+                campaignId: string,
+                outputPath: string,
+                stateJson: string,
+                manifestJson: string,
+                assetRefs: string[]
+            ) => Promise<import('../modules/system/archive/nexus.types').NexusExportResult>;
+            /**
+             * Importe un bundle .gmos et retourne son contenu brut.
+             * @param filePath - Chemin du fichier .gmos à importer
+             */
+            importBundle: (filePath: string) => Promise<import('../modules/system/archive/nexus.types').NexusImportRaw>;
+            /** Ouvre un sélecteur de fichier pour choisir le chemin d'export. */
+            selectExportPath: (bundleType?: 'campaign' | 'driver') => Promise<string | null>;
+            /** Ouvre un sélecteur de fichier pour choisir un bundle .gmos à importer. */
+            selectImportFile: () => Promise<string | null>;
+        };
+        npc?: {
+            listDatabases: (category: string) => Promise<string[]>;
+            loadDatabase: (category: string, name: string) => Promise<Record<string, string[]>>;
+            selectAvatar: () => Promise<string | null>;
+            saveAvatar: (buffer: ArrayBuffer, fileName: string) => Promise<string | null>;
+        };
+        logger?: {
+            info: (message: string, ...args: any[]) => void;
+            warn: (message: string, ...args: any[]) => void;
+            error: (message: string, ...args: any[]) => void;
+            debug: (message: string, ...args: any[]) => void;
+        };
+    }
+
+    interface Window {
+        appBridge?: AppBridge;
+        useMusicStore: { getState: () => MusicState & { applySnapshot?: (s: unknown) => void }; setState: (s: Partial<MusicState>) => void; subscribe: (cb: (s: MusicState) => void) => () => void };
+        useLightStore: { getState: () => LightState & { applySnapshot?: (s: unknown) => void }; setState: (s: Partial<LightState>) => void; subscribe: (cb: (s: LightState) => void) => () => void };
+        useMapStore: { getState: () => MapState & { applySnapshot?: (s: unknown) => void }; setState: (s: Partial<MapState>) => void; subscribe: (cb: (s: MapState) => void) => () => void };
+        useImageStore: { getState: () => ImageState & { applySnapshot?: (s: unknown) => void }; setState: (s: Partial<ImageState>) => void; subscribe: (cb: (s: ImageState) => void) => () => void };
+        useSoundStore: { getState: () => SoundState & { applySnapshot?: (s: unknown) => void }; setState: (s: Partial<SoundState>) => void; subscribe: (cb: (s: SoundState) => void) => () => void };
+        useAmbientStore: { getState: () => AmbientState & { applySnapshot?: (s: unknown) => void }; setState: (s: Partial<AmbientState>) => void; subscribe: (cb: (s: AmbientState) => void) => () => void };
+        useStoryboardStore: { getState: () => StoryboardState & { applySnapshot?: (s: unknown) => void }; setState: (s: Partial<StoryboardState>) => void; subscribe: (cb: (s: StoryboardState) => void) => () => void };
+        useToastStore: { getState: () => ToastState & { applySnapshot?: (s: unknown) => void }; setState: (s: Partial<ToastState>) => void; subscribe: (cb: (s: ToastState) => void) => () => void };
+        useSessionOSStore: { getState: () => SessionOSState & { applySnapshot?: (s: unknown) => void }; setState: (s: Partial<SessionOSState>) => void; subscribe: (cb: (s: SessionOSState) => void) => () => void };
+        useCombatStore: { getState: () => CombatState & { applySnapshot?: (s: unknown) => void }; setState: (s: Partial<CombatState>) => void; subscribe: (cb: (s: CombatState) => void) => () => void };
+        useClockStore: { getState: () => ClockState; setState: (s: Partial<ClockState>) => void; subscribe: (cb: (s: ClockState) => void) => () => void };
+        useFavoriteStore: { getState: () => FavoriteState; setState: (s: Partial<FavoriteState>) => void; subscribe: (cb: (s: FavoriteState) => void) => () => void };
+        useJournalStore: { getState: () => JournalState; setState: (s: Partial<JournalState>) => void; subscribe: (cb: (s: JournalState) => void) => () => void };
+        useObsidianStore: { getState: () => ObsidianState; setState: (s: Partial<ObsidianState>) => void; subscribe: (cb: (s: ObsidianState) => void) => () => void };
+        useTacticalAIStore: { getState: () => TacticalAIState; setState: (s: Partial<TacticalAIState>) => void; subscribe: (cb: (s: TacticalAIState) => void) => () => void };
+        useTaxonomyStore: { getState: () => TaxonomyState; setState: (s: Partial<TaxonomyState>) => void; subscribe: (cb: (s: TaxonomyState) => void) => () => void };
+        useVoiceStore: { getState: () => VoiceState; setState: (s: Partial<VoiceState>) => void; subscribe: (cb: (s: VoiceState) => void) => () => void };
+        useWebStore: { getState: () => WebState; setState: (s: Partial<WebState>) => void; subscribe: (cb: (s: WebState) => void) => () => void };
+        
+        hueEngine?: { 
+            applyScene: (id: string | null, isAutomatic?: boolean) => Promise<void>; 
+            revertToManualScene: () => Promise<void>;
+            extinguishAll: () => Promise<void>;
+            triggerFlash: (hex: string, duration?: number, intensity?: number) => Promise<void>;
+            applyTacticalState: (hex: string, name: string, intensity?: number) => Promise<void>;
+            clearTacticalState: () => Promise<void>;
+        };
+        soundEngine?: { 
+            loadAudio: (id: string, path: string) => Promise<void>;
+            play: (id: string, volume?: number, onEnded?: () => void) => void;
+            stop: (id: string) => void;
+            stopAll: () => void;
+            setVolume: (id: string, volume: number) => void;
+            setMasterVolume: (volume: number) => void;
+        };
+        musicEngine?: {
+            setMasterVolume: (v: number) => void;
+            setCrossfader: (v: number) => void;
+            performAutoFade: (target: 'A' | 'B', durationMs: number) => void;
+            resume: () => Promise<void>;
+            deckA: any;
+            deckB: any;
+        };
+        voiceEngine?: {
+            initialize: () => Promise<void>;
+            stop: () => void;
+            refreshAvailableDevices: () => Promise<void>;
+            updateOutputDevice: (id: string) => Promise<void>;
+        };
+        diceEngine?: {
+            roll: (sides: number) => number;
+            rollFormula: (formula: string) => any;
+            rollFromConfig: (config: any, options?: any) => any;
+        };
+        highlightMapToken?: (name: string) => void;
+    }
+}
+
+export {};

@@ -198,3 +198,7 @@ export const useWhiteboardStore = create<WhiteboardState>()(
         }
     )
 );
+
+if (typeof window !== 'undefined') {
+    (window as any).useWhiteboardStore = useWhiteboardStore;
+}

@@ -319,3 +319,7 @@ export const useJournalStore = create<JournalState>()(
     }
   )
 );
+
+if (typeof window !== 'undefined') {
+  (window as any).useJournalStore = useJournalStore;
+}

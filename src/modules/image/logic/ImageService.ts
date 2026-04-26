@@ -1,6 +1,5 @@
 import type { ProjectionTarget } from '../types';
 import { resolveToSendableUrl } from '../../../utils/mediaResolver';
-import { useImageStore } from '../useImageStore';
 
 /**
  * ImageService - Gère la logique métier de projection d'images.
@@ -24,7 +23,7 @@ export class ImageService {
                 console.log(`[ImageService] Sending Local Projection via launchDisplay`);
                 bridge?.image?.launchDisplay([mediaPath], target);
                 
-                useImageStore.getState().setProjection(target, mediaPath);
+                (window as any).useImageStore.getState().setProjection(target, mediaPath);
                 return mediaPath;
             }
 
@@ -33,7 +32,7 @@ export class ImageService {
             const resolvedPath = await resolveToSendableUrl(mediaPath);
             if (resolvedPath) {
                 window.appBridge?.image?.syncHubData('image', resolvedPath);
-                useImageStore.getState().setProjection(target, mediaPath);
+                (window as any).useImageStore.getState().setProjection(target, mediaPath);
                 return resolvedPath;
             }
 
@@ -51,7 +50,7 @@ export class ImageService {
         try {
             console.log(`[ImageService] Projecting Entity: ${name} (${mediaId})...`);
             
-            const store = useImageStore.getState();
+            const store = (window as any).useImageStore.getState();
             const target = store.projectionTarget;
 
             if (target !== 'hub') {
@@ -73,7 +72,7 @@ export class ImageService {
      * Efface la projection.
      */
     static async blackout(targetId?: string): Promise<void> {
-        const store = useImageStore.getState();
+        const store = (window as any).useImageStore.getState();
         const target = targetId || store.projectionTarget;
         
         console.log(`[ImageService] Blackout for ${target}...`);
