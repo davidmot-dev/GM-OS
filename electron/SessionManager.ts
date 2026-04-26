@@ -36,14 +36,10 @@ export class SessionManager {
             }
         }
 
-        // Clear any existing ghost timeout
-        if (this.ghostTimeouts.has(deviceId)) {
-            clearTimeout(this.ghostTimeouts.get(deviceId)!);
-            this.ghostTimeouts.delete(deviceId);
-        }
-
         const existingSession = this.sessions.get(deviceId);
         
+        // If we have an existing session for this device, we can reuse it
+        // and just update the character/pseudo if provided.
         const context: ClientContext = {
             deviceId,
             pseudo: pseudo || (existingSession?.pseudo) || 'Anonyme',

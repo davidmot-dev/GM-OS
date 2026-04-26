@@ -16,8 +16,9 @@ Ce document centralise la vision et les chantiers de GM-OS. Depuis Avril 2026, l
 - [x] **HUD Multilingue** : Support complet du français/anglais sur Nexus-OS et Session-OS.
 
 ### 📦 Nexus-OS v2 (Système de Paquets)
-- [x] **Nexus Bridge v2** : Découplage de l'UI de maintenance et des services de téléchargement.
-- [x] **Sync Assets Distants** : Scan et rapatriement automatique des ressources web vers le stockage local.
+- [x] **Nexus Stabilization** : Restauration du verrouillage des personnages et gestion des erreurs de collision.
+- [x] **Maintenance MJ** : Ajout du bouton "Tout Éjecter" dans les paramètres Remote.
+- [x] **Session Resumption** : Gestion de la reconnexion sur le même appareil via `deviceId` persistant et multi-socket tracking.
 - [x] **Manifest Validation v2** : Support des bundles polymorphes (Campaigns, Drivers, Atlas).
 
 ### 📓 Session-OS Modularisation

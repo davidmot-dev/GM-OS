@@ -7,7 +7,7 @@ import { useMediaUrl } from '../../hooks/useMediaUrl';
 type OnboardingStep = 'SCANNING' | 'SELECTION' | 'SYNCING';
 
 const LobbyOnboarding: React.FC = memo(() => {
-    const { deviceId, setPseudo, setPlayerName, setCharacterId, completeOnboarding, resetIdentity, lastError, setLastError } = useClientStore();
+    const { deviceId, setPseudo, setPlayerName, setCharacterId, completeOnboarding, logout, lastError, setLastError } = useClientStore();
     const { sessions, activeCampaignId, campaigns, activeCampaignWallpaper, activeCampaignName } = useSessionOSStore();
     const players = useSessionOSStore(state => state.players);
     const characterLocks = useSessionOSStore(state => state.connectedCharacters);
@@ -321,7 +321,7 @@ const LobbyOnboarding: React.FC = memo(() => {
             {/* Top Bar for Reset/Logout */}
             <div className="absolute top-8 left-8 z-50">
                 <button 
-                    onClick={resetIdentity}
+                    onClick={logout}
                     className="flex items-center gap-2 px-4 py-2 bg-app-surface border border-app-border/20 rounded-full text-[10px] font-black text-app-text/40 uppercase tracking-widest hover:text-rose-500 hover:border-rose-500/30 transition-all group"
                 >
                     <div className="w-1.5 h-1.5 rounded-full bg-rose-500/40 group-hover:bg-rose-500 group-hover:animate-pulse" />

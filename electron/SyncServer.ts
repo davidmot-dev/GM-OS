@@ -17,6 +17,7 @@ export class SyncServer {
     private port: number;
     private mainWindow: BrowserWindow;
     private tempMediaDir: string;
+    private deviceSocketMap = new Map<string, Set<WebSocket>>();
 
     constructor(mainWindow: BrowserWindow, port: number, tempMediaDir: string) {
         this.mainWindow = mainWindow;
@@ -131,8 +132,16 @@ export class SyncServer {
 
         ws.on('close', () => {
             if (ws.deviceId) {
-                console.log(`[Nexus Sync] Client disconnected: ${ws.deviceId}`);
-                sessionManager.ghostClient(ws.deviceId);
+                console.log(`[Nexus Sync] Socket closed for device: ${ws.deviceId}`);
+                const deviceSockets = this.deviceSocketMap.get(ws.deviceId);
+                if (deviceSockets) {
+                    deviceSockets.delete(ws);
+                    if (deviceSockets.size === 0) {
+                        console.log(`[Nexus Sync] Last socket closed for device ${ws.deviceId}, entering ghost mode`);
+                        sessionManager.ghostClient(ws.deviceId);
+                        this.deviceSocketMap.delete(ws.deviceId);
+                    }
+                }
                 this.updateGMClients();
             }
         });
@@ -143,6 +152,12 @@ export class SyncServer {
         const actualDeviceId = deviceId || `remote-${Math.random().toString(36).substring(2, 9)}`;
         ws.deviceId = actualDeviceId;
         ws.role = role || 'player';
+
+        // Track socket for this device
+        if (!this.deviceSocketMap.has(actualDeviceId)) {
+            this.deviceSocketMap.set(actualDeviceId, new Set());
+        }
+        this.deviceSocketMap.get(actualDeviceId)!.add(ws);
 
         try {
             sessionManager.registerClient(actualDeviceId, pseudo || 'Unknown', role || 'remote', playerName, characterId);

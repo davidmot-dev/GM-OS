@@ -20,6 +20,7 @@ interface ClientState {
     completeOnboarding: () => void;
     setLastError: (error: string | null) => void;
     resetIdentity: () => void;
+    logout: () => void;
 }
 
 // Generate a simple UUID if crypto.randomUUID is not available (fallback)
@@ -53,6 +54,15 @@ export const useClientStore = create<ClientState>()(
                 deviceId: generateUUID(),
                 pseudo: '',
                 role: 'player',
+                status: 'disconnected',
+                isOnboarded: false,
+                characterId: null,
+                playerName: '',
+                lastError: null
+            }),
+            logout: () => set({
+                // Keep deviceId!
+                pseudo: '',
                 status: 'disconnected',
                 isOnboarded: false,
                 characterId: null,

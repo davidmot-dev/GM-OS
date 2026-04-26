@@ -36,7 +36,12 @@ Ce document trace la trajectoire du projet, des jalons franchis aux futures inno
 - **[x] Synchronisation Environnementale** : Parité immédiate du climat (Météo/Temps/Magie) sur tous les écrans dès le chargement.
 - **[x] Correction Snapback & Ping** : Résolution des boucles de relay saturant l'IPC.
 
-## 🛠️ Maintenance & Identité (V5.6 — Avril 2026)
+### [v7.0.2] - Session Resumption & Multi-Socket Stability (2026-04-26)
+- **Feature**: Session Resumption via `deviceId`. Permet à un joueur de reprendre son personnage après une déconnexion accidentelle s'il utilise le même appareil.
+- **Fix**: Multi-Socket Tracking. Le serveur ne passe plus une session en "ghost" si au moins un onglet/connexion reste actif pour l'appareil.
+- **UX**: Nouveau bouton "Quitter la session" (logout) qui préserve l'identité matérielle tout en libérant le personnage.
+
+### [v7.0.1] - Maintenance & Eject All (2026-04-26)
 
 - **[x] Verrouillage de Personnage Robuste** : Correction du mismatch de clé `characterLocks` et gestion des collisions serveur (`remote:error`).
 - **[x] Enregistrement Réactif** : Re-validation immédiate du WebSocket lors du changement de personnage dans le Lobby.
