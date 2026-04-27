@@ -31,24 +31,38 @@ const generateUUID = () => {
     return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 };
 
-// Initial check for deviceId to avoid flash of new ID before hydration
-const getInitialDeviceId = () => {
-    if (typeof window !== 'undefined') {
-        try {
-            const saved = localStorage.getItem('gm-os-client-id');
-            if (saved) {
-                const parsed = JSON.parse(saved);
-                if (parsed.state?.deviceId) return parsed.state.deviceId;
+// Super-stable ID: Check a dedicated key first, then the store key, then generate.
+// This prevents ID loss even if the main store persistence fails or is cleared.
+const getStableDeviceId = () => {
+    if (typeof window === 'undefined') return 'server-side';
+    
+    // 1. Check dedicated hardware-like key
+    const dedicated = localStorage.getItem('gmos-tablet-uuid');
+    if (dedicated) return dedicated;
+    
+    // 2. Check legacy store key (migration fallback)
+    try {
+        const legacy = localStorage.getItem('gm-os-client-id');
+        if (legacy) {
+            const parsed = JSON.parse(legacy);
+            const id = parsed.state?.deviceId || parsed.deviceId;
+            if (id) {
+                localStorage.setItem('gmos-tablet-uuid', id);
+                return id;
             }
-        } catch (e) {}
-    }
-    return generateUUID();
+        }
+    } catch (e) {}
+    
+    // 3. Generate and persist new stable ID
+    const newId = generateUUID();
+    localStorage.setItem('gmos-tablet-uuid', newId);
+    return newId;
 };
 
 export const useClientStore = create<ClientState>()(
     persist(
         (set) => ({
-            deviceId: getInitialDeviceId(),
+            deviceId: getStableDeviceId(),
             pseudo: '',
             role: 'player',
             status: 'disconnected',
@@ -64,16 +78,19 @@ export const useClientStore = create<ClientState>()(
             setStatus: (status) => set({ status }),
             completeOnboarding: () => set({ isOnboarded: true }),
             setLastError: (lastError) => set({ lastError }),
-            resetIdentity: () => set({
-                deviceId: generateUUID(),
-                pseudo: '',
-                role: 'player',
-                status: 'disconnected',
-                isOnboarded: false,
-                characterId: null,
-                playerName: '',
-                lastError: null
-            }),
+            resetIdentity: () => {
+                const stableId = getStableDeviceId(); // Keep existing if possible
+                set({
+                    deviceId: stableId,
+                    pseudo: '',
+                    role: 'player',
+                    status: 'disconnected',
+                    isOnboarded: false,
+                    characterId: null,
+                    playerName: '',
+                    lastError: null
+                });
+            },
             logout: () => set({
                 // Keep deviceId!
                 pseudo: '',

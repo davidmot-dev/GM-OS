@@ -36,6 +36,10 @@ Ce document trace la trajectoire du projet, des jalons franchis aux futures inno
 - **[x] Synchronisation Environnementale** : Parité immédiate du climat (Météo/Temps/Magie) sur tous les écrans dès le chargement.
 - **[x] Correction Snapback & Ping** : Résolution des boucles de relay saturant l'IPC.
 
+### [v7.0.4] - Super-Stable Identity & UI Debug (2026-04-27)
+- **Fix**: Découplage du `deviceId` du store principal. Utilisation d'une clé `localStorage` matérielle dédiée (`gmos-tablet-uuid`) pour une stabilité totale.
+- **UI**: Affichage du `Device ID` dans le footer du Hub pour faciliter le diagnostic.
+
 ### [v7.0.3] - Robust Resumption & IP Fallback (2026-04-27)
 - **Fix**: Stabilisation de l'initialisation du `deviceId` (lecture immédiate du localStorage) pour éviter les changements d'ID au refresh.
 - **Feature**: Session Recovery par IP. Si le `deviceId` est perdu mais que l'IP match une session "ghost", le serveur autorise le takeover du personnage.

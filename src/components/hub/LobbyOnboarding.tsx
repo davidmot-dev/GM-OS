@@ -412,8 +412,9 @@ const LobbyOnboarding: React.FC = memo(() => {
                 )}
             </div>
             
-            <div className="mt-auto pb-8 text-app-text/20 font-bold text-[10px] uppercase tracking-[0.2em]">
-                GM-OS V5 • Tablet HUB Client • nexus_bridge_initialized
+            <div className="mt-auto pb-8 text-app-text/20 font-bold text-[10px] uppercase tracking-[0.2em] flex flex-col items-center gap-1">
+                <div>GM-OS V5 • Tablet HUB Client • nexus_bridge_initialized</div>
+                <div className="opacity-50 font-mono">Device ID: {deviceId?.substring(0, 12)}...</div>
             </div>
         </div>
     );
