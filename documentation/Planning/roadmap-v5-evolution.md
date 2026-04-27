@@ -60,10 +60,10 @@ Ce document trace la trajectoire du projet, des jalons franchis aux futures inno
 
 ### Q2 2026 : Interaction Sociale & Échange
 
-- **[ ] Échanges d'objets** : Permettre aux joueurs de se donner des objets via le Hub (nécessite validation MJ).
-- **[ ] Notes Privées PJ** : Ajout d'une zone de prise de notes dans le Hub avec persistance côté serveur MJ.
+- **[x] Échanges d'objets** : Permettre aux joueurs de se donner des objets via le Hub (nécessite validation MJ).
+- **[x] Notes Privées PJ** : Ajout d'une zone de prise de notes dans le Hub avec persistance côté serveur MJ.
 - **[ ] Gestion de l'Encombrement** : Intégration optionnelle du poids et de la charge (selon le driver de jeu).
-- **[ ] Nexus-OS v2 — Driver Export** : Exporter les GameDrivers (systèmes de règles) comme bundles autonomes.
+- **[x] Nexus-OS v2 — Driver Export** : Exporter les GameDrivers (systèmes de règles) comme bundles autonomes.
 
 ### Q3 2026 : Immersion Tactique & Combat-OS
 
@@ -72,8 +72,8 @@ Ce document trace la trajectoire du projet, des jalons franchis aux futures inno
 
 ### Q4 2026 : Écosystème & Intelligence Narrative
 
-- **[ ] AI NPC Dialogue Prep** : Génération de répliques et de traits de caractère à la volée via l'Oracle.
-- **[ ] Timeline Interactive** : Visualisation chronologique des événements de campagne depuis le Wiki.
+- **[x] AI NPC Dialogue Prep** : Génération de répliques et de traits de caractère à la volée via l'Oracle.
+- **[x] Timeline Interactive** : Visualisation chronologique des événements de campagne depuis le Wiki.
 
 ---
 
