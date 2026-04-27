@@ -18,7 +18,7 @@ Ce document centralise la vision et les chantiers de GM-OS. Depuis Avril 2026, l
 ### 📦 Nexus-OS v2 (Système de Paquets)
 - [x] **Nexus Stabilization** : Restauration du verrouillage des personnages et gestion des erreurs de collision.
 - [x] **Maintenance MJ** : Ajout du bouton "Tout Éjecter" dans les paramètres Remote.
-- [x] **Session Resumption** : Gestion de la reconnexion via `deviceId` persistant, multi-socket tracking et fallback par IP.
+- [x] **Session Resumption & Identity** : Gestion de la reconnexion via `deviceId` super-stable (LocalStorage dédié), multi-socket tracking et fallback par IP. (Fix définitif de l'identité matériel).
 - [x] **Manifest Validation v2** : Support des bundles polymorphes (Campaigns, Drivers, Atlas).
 
 ### 📓 Session-OS Modularisation

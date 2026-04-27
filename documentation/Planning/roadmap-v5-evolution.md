@@ -77,6 +77,6 @@ Ce document trace la trajectoire du projet, des jalons franchis aux futures inno
 
 ---
 
-*Dernière mise à jour : 26 Avril 2026*
-*Statut : GM-OS v5.6 (Maintenance & Identité) complétée.*
+*Dernière mise à jour : 27 Avril 2026*
+*Statut : GM-OS v5.7 (Stabilité Identité & IP) complétée.*
 
