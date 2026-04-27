@@ -31,10 +31,24 @@ const generateUUID = () => {
     return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 };
 
+// Initial check for deviceId to avoid flash of new ID before hydration
+const getInitialDeviceId = () => {
+    if (typeof window !== 'undefined') {
+        try {
+            const saved = localStorage.getItem('gm-os-client-id');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                if (parsed.state?.deviceId) return parsed.state.deviceId;
+            }
+        } catch (e) {}
+    }
+    return generateUUID();
+};
+
 export const useClientStore = create<ClientState>()(
     persist(
         (set) => ({
-            deviceId: generateUUID(),
+            deviceId: getInitialDeviceId(),
             pseudo: '',
             role: 'player',
             status: 'disconnected',

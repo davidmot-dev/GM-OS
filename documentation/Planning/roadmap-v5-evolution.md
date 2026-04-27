@@ -36,6 +36,10 @@ Ce document trace la trajectoire du projet, des jalons franchis aux futures inno
 - **[x] Synchronisation Environnementale** : Parité immédiate du climat (Météo/Temps/Magie) sur tous les écrans dès le chargement.
 - **[x] Correction Snapback & Ping** : Résolution des boucles de relay saturant l'IPC.
 
+### [v7.0.3] - Robust Resumption & IP Fallback (2026-04-27)
+- **Fix**: Stabilisation de l'initialisation du `deviceId` (lecture immédiate du localStorage) pour éviter les changements d'ID au refresh.
+- **Feature**: Session Recovery par IP. Si le `deviceId` est perdu mais que l'IP match une session "ghost", le serveur autorise le takeover du personnage.
+
 ### [v7.0.2] - Session Resumption & Multi-Socket Stability (2026-04-26)
 - **Feature**: Session Resumption via `deviceId`. Permet à un joueur de reprendre son personnage après une déconnexion accidentelle s'il utilise le même appareil.
 - **Fix**: Multi-Socket Tracking. Le serveur ne passe plus une session en "ghost" si au moins un onglet/connexion reste actif pour l'appareil.

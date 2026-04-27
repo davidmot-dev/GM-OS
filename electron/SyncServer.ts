@@ -9,6 +9,7 @@ interface ExtendedWebSocket extends WebSocket {
     isAlive?: boolean;
     deviceId?: string;
     role?: 'gm' | 'player' | 'remote' | 'hub';
+    remoteAddress?: string;
 }
 
 export class SyncServer {
@@ -107,7 +108,9 @@ export class SyncServer {
     }
 
     private handleConnection(ws: ExtendedWebSocket) {
-        console.log('[Nexus Sync] New device connected');
+        const remoteAddress = (ws as any)._socket?.remoteAddress;
+        ws.remoteAddress = remoteAddress;
+        console.log(`[Nexus Sync] New device connected from ${remoteAddress}`);
         
         // Request initial full sync from GM
         if (this.mainWindow && !this.mainWindow.isDestroyed()) {
@@ -160,7 +163,7 @@ export class SyncServer {
         this.deviceSocketMap.get(actualDeviceId)!.add(ws);
 
         try {
-            sessionManager.registerClient(actualDeviceId, pseudo || 'Unknown', role || 'remote', playerName, characterId);
+            sessionManager.registerClient(actualDeviceId, pseudo || 'Unknown', role || 'remote', playerName, characterId, ws.remoteAddress);
             this.updateGMClients();
             
             // Confirm registration and send role back

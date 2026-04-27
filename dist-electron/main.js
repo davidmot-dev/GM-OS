@@ -49661,15 +49661,24 @@ class SessionManager {
     this.GHOST_DURATION = 2 * 60 * 1e3;
   }
   // 2 minutes
-  registerClient(deviceId, pseudo, role, playerName, characterId) {
+  registerClient(deviceId, pseudo, role, playerName, characterId, ip) {
     if (characterId) {
       const collision = Array.from(this.sessions.values()).find(
         (c) => c.characterId === characterId && c.deviceId !== deviceId && (c.status === "active" || c.status === "ghost")
       );
       if (collision) {
-        console.warn(`[SessionManager] Character Collision: ${characterId} already taken by ${collision.deviceId}`);
-        throw new Error("character_taken");
+        if (collision.status === "ghost" && collision.ip === ip) {
+          console.log(`[SessionManager] IP-based Recovery: Taking over ghost session for ${characterId} from ${collision.deviceId} to ${deviceId}`);
+          this.disconnectClient(collision.deviceId);
+        } else {
+          console.warn(`[SessionManager] Character Collision: ${characterId} already taken by ${collision.deviceId} (IP: ${collision.ip} vs ${ip})`);
+          throw new Error("character_taken");
+        }
       }
+    }
+    if (this.ghostTimeouts.has(deviceId)) {
+      clearTimeout(this.ghostTimeouts.get(deviceId));
+      this.ghostTimeouts.delete(deviceId);
     }
     const existingSession = this.sessions.get(deviceId);
     const context = {
@@ -49679,7 +49688,8 @@ class SessionManager {
       characterId: characterId || existingSession?.characterId,
       role,
       status: "active",
-      lastSeen: Date.now()
+      lastSeen: Date.now(),
+      ip: ip || existingSession?.ip
     };
     this.sessions.set(deviceId, context);
     return context;
@@ -50004,7 +50014,9 @@ class SyncServer {
     res.end();
   }
   handleConnection(ws) {
-    console.log("[Nexus Sync] New device connected");
+    const remoteAddress = ws._socket?.remoteAddress;
+    ws.remoteAddress = remoteAddress;
+    console.log(`[Nexus Sync] New device connected from ${remoteAddress}`);
     if (this.mainWindow && !this.mainWindow.isDestroyed()) {
       this.mainWindow.webContents.send("remote:request-sync");
     }
@@ -50048,7 +50060,7 @@ class SyncServer {
     }
     this.deviceSocketMap.get(actualDeviceId).add(ws);
     try {
-      sessionManager.registerClient(actualDeviceId, pseudo || "Unknown", role || "remote", playerName, characterId);
+      sessionManager.registerClient(actualDeviceId, pseudo || "Unknown", role || "remote", playerName, characterId, ws.remoteAddress);
       this.updateGMClients();
       ws.send(JSON.stringify({ type: "remote:registered", payload: { deviceId: actualDeviceId, role: ws.role } }));
     } catch (err) {
