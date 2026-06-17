@@ -12,7 +12,7 @@
 import type { StateCreator } from 'zustand';
 import i18next from 'i18next';
 import { gmToast } from '../../../stores/useToastStore';
-import type { GameSession, TransferRequest } from './types';
+import type { GameSession, TransferRequest, SessionFeedback } from './types';
 import { sanitizeSession } from '../logic/sanitization';
 
 // ─────────────────────────────────────────────
@@ -64,6 +64,10 @@ export interface SessionSliceActions {
     requestItemTransfer: (fromCharId: string, toCharId: string, item: import('./types').InventoryItem) => void;
     approveItemTransfer: (requestId: string) => void;
     rejectItemTransfer: (requestId: string) => void;
+
+    // Session Feedback
+    submitSessionFeedback: (sessionId: string, feedback: SessionFeedback) => void;
+    remoteSubmitSessionFeedback: (sessionId: string, feedback: SessionFeedback) => void;
 }
 
 export type SessionSlice = SessionSliceState & SessionSliceActions;
@@ -293,5 +297,34 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
             )
         }));
         gmToast(i18next.t('modules:session.toasts.transfer_rejected'), "info");
+    },
+
+    submitSessionFeedback: (sessionId, feedback) =>
+        set((state) => ({
+            sessions: state.sessions.map((s) => {
+                if (s.id !== sessionId) return s;
+                const currentFeedbacks = s.feedbacks || [];
+                const filtered = currentFeedbacks.filter(f => f.characterId !== feedback.characterId);
+                return {
+                    ...s,
+                    feedbacks: [...filtered, feedback]
+                };
+            })
+        })),
+
+    remoteSubmitSessionFeedback: (sessionId, feedback) => {
+        get().submitSessionFeedback(sessionId, feedback);
+        if (typeof window !== 'undefined') {
+            if (window.appBridge?.remote?.broadcastToTablets) {
+                window.appBridge.remote.broadcastToTablets(
+                    'session:submit-feedback',
+                    { sessionId, feedback }
+                );
+            } else {
+                window.dispatchEvent(new CustomEvent('session:submit-feedback', {
+                    detail: { sessionId, feedback }
+                }));
+            }
+        }
     },
 });

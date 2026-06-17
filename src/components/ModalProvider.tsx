@@ -3,7 +3,7 @@ import { useModalStore } from '../stores/useModalStore';
 import { useTranslation } from 'react-i18next';
 import { 
     AlertCircle, HelpCircle, Edit3, UserPlus, ShieldPlus, BookOpen, Users, Play, Cast, 
-    History as LucideHistory, X, Lightbulb, Zap, Settings2, Sparkles, Package
+    History as LucideHistory, X, Lightbulb, Zap, Settings2, Sparkles, Package, MessageSquare
 } from 'lucide-react';
 import type { Campaign, WikiEntry, TimelineEvent, SessionModuleSnapshot } from '../modules/session/useSessionOSStore';
 import { AddPlayerForm } from '../modules/session/components/AddPlayerForm';
@@ -21,6 +21,7 @@ import MapProjectionModal from '../modules/map/components/MapProjectionModal';
 import WhiteboardProjectionModal from '../modules/whiteboard/components/WhiteboardProjectionModal';
 import SessionNotesModal from '../modules/session/components/SessionNotesModal';
 import SessionSummaryModal from '../modules/session/components/SessionSummaryModal';
+import SessionFeedbackModal from '../modules/session/components/SessionFeedbackModal';
 import SnapshotVisualizerModal from '../modules/session/components/SnapshotVisualizerModal';
 import DamageCalculator from '../modules/combat/components/DamageCalculator';
 import DangerZonePresetEditor from '../modules/map/components/DangerZonePresetEditor';
@@ -152,7 +153,7 @@ const ModalProvider: React.FC = () => {
                     <div className={`bg-slate-900 border border-slate-800/50 overflow-hidden shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] animate-in zoom-in-95 duration-300 flex flex-col ${
                         customVariant === 'campaign-add' || customVariant === 'campaign-edit'
                             ? 'w-full h-full rounded-none'
-                            : customVariant === 'global-settings' || customVariant === 'favorite-dossier' || customVariant === 'npc-detail' || customVariant === 'session-summary' || customVariant === 'session-notes' || customVariant === 'danger-preset-editor' || customVariant === 'loot-os'
+                            : customVariant === 'global-settings' || customVariant === 'favorite-dossier' || customVariant === 'npc-detail' || customVariant === 'session-summary' || customVariant === 'session-notes' || customVariant === 'session-feedback' || customVariant === 'danger-preset-editor' || customVariant === 'loot-os'
                                 ? 'max-w-6xl w-full h-[90vh] rounded-[2rem]' 
                                 : 'max-w-2xl w-full max-h-[90vh] rounded-[2rem]'
                     }`}>
@@ -176,6 +177,7 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'light-scene-select' && <Lightbulb size={18} />}
                                         {customVariant === 'session-notes' && <Edit3 size={18} />}
                                         {customVariant === 'session-summary' && <BookOpen size={18} />}
+                                        {customVariant === 'session-feedback' && <MessageSquare size={18} />}
                                         {customVariant === 'snapshot-viewer' && <Cast size={18} />}
                                         {customVariant === 'damage-calc' && <Zap size={18} />}
                                         {customVariant === 'danger-preset-editor' && <Settings2 size={18} />}
@@ -198,6 +200,7 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'light-scene-select' && t('common:modals.light_scene_select')}
                                         {customVariant === 'session-notes' && t('common:modals.session_notes')}
                                         {customVariant === 'session-summary' && t('common:modals.session_summary')}
+                                        {customVariant === 'session-feedback' && t('common:modals.session_feedback')}
                                         {customVariant === 'snapshot-viewer' && t('common:modals.snapshot_viewer')}
                                         {customVariant === 'damage-calc' && t('common:modals.damage_calc')}
                                         {customVariant === 'danger-preset-editor' && t('common:modals.danger_preset_editor')}
@@ -232,6 +235,7 @@ const ModalProvider: React.FC = () => {
                             {customVariant === 'whiteboard-projection-select' && <WhiteboardProjectionModal />}
                             {customVariant === 'session-notes' && <SessionNotesModal />}
                             {customVariant === 'session-summary' && <SessionSummaryModal />}
+                            {customVariant === 'session-feedback' && <SessionFeedbackModal />}
                             {customVariant === 'snapshot-viewer' && (
                                 <SnapshotVisualizerModal 
                                     isOpen={true} 

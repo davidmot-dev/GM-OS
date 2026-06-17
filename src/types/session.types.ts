@@ -71,6 +71,16 @@ export interface SessionModuleSnapshot {
     };
 }
 
+export interface SessionFeedback {
+    characterId: string;
+    characterName: string;
+    funRating: number;      // 1 to 5 stars
+    storyRating: number;    // 1 to 5 stars
+    combatRating: number;   // 1 to 5 stars
+    notes: string;          // Comments/Notes written by the player
+    timestamp: number;
+}
+
 // ─────────────────────────────────────────────
 // Game Session
 // ─────────────────────────────────────────────
@@ -90,6 +100,7 @@ export interface GameSession {
     filePath?: string;
     sessionNotes?: string;
     moduleSnapshot?: SessionModuleSnapshot;
+    feedbacks?: SessionFeedback[];
 }
 
 // ─────────────────────────────────────────────

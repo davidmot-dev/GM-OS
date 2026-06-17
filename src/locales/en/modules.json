@@ -1191,6 +1191,27 @@
       "open_http_link": "Open HTTP Link",
       "access_file": "Access File"
     },
+    "notes": {
+      "quick_input": "Quick Input Area",
+      "placeholder": "Start taking notes here... Major events, memorable quotes, player actions...",
+      "auto_save": "Auto Save",
+      "close_hint": "Close this window to save"
+    },
+    "feedback": {
+      "title": "Session Feedback",
+      "fun": "Gameplay Fun",
+      "story": "Story / Scenario",
+      "combat": "Action / Combat",
+      "comments": "Remarks & Notes for the GM",
+      "comments_placeholder": "What did you think of the session? Any theories or wishes for the next game?",
+      "submit": "Submit to GM",
+      "submitted": "Feedback submitted! Thank you.",
+      "edit": "Edit my feedback",
+      "no_feedback": "No feedback received yet.",
+      "average": "Average Ratings",
+      "aggregate": "Global Overview",
+      "details": "Player Details"
+    },
     "prep": {
       "no_active_campaign": "No Active Campaign",
       "select_campaign": "SELECT A CAMPAIGN",

@@ -293,6 +293,11 @@ function App() {
       useSessionOSStore.getState().updateCharacterNarrative(playerId, characterId, updates);
     }
 
+    if (type === 'session:submit-feedback' || type === 'remote:session:submit-feedback') {
+      const { sessionId, feedback } = payload as { sessionId: string; feedback: any };
+      useSessionOSStore.getState().submitSessionFeedback(sessionId, feedback);
+    }
+
     if (type === 'session:send-message' || type === 'session:receive-message') {
       console.log(`[App] Receiving message action (${type}):`, payload.id);
       useSessionOSStore.getState().addSessionMessage(payload as import('./modules/session/store/types').SessionMessage);

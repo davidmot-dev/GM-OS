@@ -97,7 +97,8 @@
     "damage_calc": "Damage Calculator",
     "danger_preset_editor": "Danger Presets Management",
     "narrative_oracle": "Oracle's Vision",
-    "loot_os": "Loot-OS: Loot Management"
+    "loot_os": "Loot-OS: Loot Management",
+    "session_feedback": "Session Feedbacks"
   },
   "save": "Save",
   "delete": "Delete",

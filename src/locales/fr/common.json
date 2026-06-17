@@ -97,7 +97,8 @@
     "damage_calc": "Calculateur de Dégâts",
     "danger_preset_editor": "Gestion des Presets de Danger",
     "narrative_oracle": "Vision de l'Oracle",
-    "loot_os": "Loot-OS : Gestion du Butin"
+    "loot_os": "Loot-OS : Gestion du Butin",
+    "session_feedback": "Feedbacks de Session"
   },
   "save": "Sauvegarder",
   "delete": "Supprimer",

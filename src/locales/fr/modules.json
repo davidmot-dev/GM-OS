@@ -1226,6 +1226,21 @@
       "auto_save": "Sauvegarde Automatique",
       "close_hint": "Fermez cette fenêtre pour sauvegarder"
     },
+    "feedback": {
+      "title": "Feedback de Session",
+      "fun": "Plaisir de Jeu",
+      "story": "Histoire / Scénario",
+      "combat": "Action / Combat",
+      "comments": "Remarques & Notes pour le MJ",
+      "comments_placeholder": "Qu'avez-vous pensé de la session ? Des théories, des envies pour la suite ?",
+      "submit": "Transmettre au MJ",
+      "submitted": "Feedback envoyé ! Merci.",
+      "edit": "Modifier mon feedback",
+      "no_feedback": "Aucun feedback reçu pour le moment.",
+      "average": "Moyenne des notes",
+      "aggregate": "Aperçu Global",
+      "details": "Détails des Joueurs"
+    },
     "prep": {
       "no_active_campaign": "Aucune Campagne Active",
       "select_campaign": "SÉLECTIONNER UNE CAMPAGNE",

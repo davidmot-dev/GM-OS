@@ -49,6 +49,7 @@ export type {
     RemoteNotification,
     HubNotification,
     SessionMessage,
+    SessionFeedback,
 } from '../../../types/session.types';
 
 export type {

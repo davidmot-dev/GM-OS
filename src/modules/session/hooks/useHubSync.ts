@@ -347,14 +347,21 @@ export const useHubSync = () => {
             socketRef.current?.send(JSON.stringify({ type: 'session:remove-inventory-item', payload: detail }));
         };
 
+        const handleSubmitFeedback = (e: Event) => {
+            const detail = (e as CustomEvent).detail;
+            socketRef.current?.send(JSON.stringify({ type: 'session:submit-feedback', payload: detail }));
+        };
+
         window.addEventListener('session:send-message', handleSendMessage);
         window.addEventListener('session:request-item-transfer', handleRequestTransfer);
         window.addEventListener('session:remove-inventory-item', handleRemoveItem);
+        window.addEventListener('session:submit-feedback', handleSubmitFeedback);
 
         return () => {
             window.removeEventListener('session:send-message', handleSendMessage);
             window.removeEventListener('session:request-item-transfer', handleRequestTransfer);
             window.removeEventListener('session:remove-inventory-item', handleRemoveItem);
+            window.removeEventListener('session:submit-feedback', handleSubmitFeedback);
             if (window.appBridge?.off) {
                 window.appBridge.off('image:sync-hub-data', handleIpcUpdate);
                 window.appBridge.off('map:ping', handleIpcUpdate);

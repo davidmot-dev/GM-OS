@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useSessionStore } from '../../../store/useSessionStore';
 import { useModalStore } from '../../../stores/useModalStore';
-import { BookOpen, LayoutDashboard, Swords, Users, Users2, Map as MapIcon, Archive, PlusCircle, Library, FileText, ExternalLink, File, StickyNote, Play, RefreshCw, Eye, Hammer, Zap, Layers } from 'lucide-react';
+import { BookOpen, LayoutDashboard, Swords, Users, Users2, Map as MapIcon, Archive, PlusCircle, Library, FileText, ExternalLink, File, StickyNote, Play, RefreshCw, Eye, Hammer, Zap, Layers, MessageSquare } from 'lucide-react';
 import SessionChecklist from './SessionChecklist';
 import TradeRequestPanel from './TradeRequestPanel';
 
@@ -191,6 +191,14 @@ const CampaignCockpit: React.FC = () => {
                         >
                             <StickyNote size={20} className="text-accent/60 group-hover:text-accent transition-colors" />
                             <span className="text-sm font-bold uppercase tracking-tighter">{t('modules:session.cockpit.session_notes')}</span>
+                        </button>
+
+                        <button
+                            onClick={() => showCustom('session-feedback', { sessionId: activeSession.id })}
+                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all text-app-text/60 hover:bg-accent/10 hover:text-accent"
+                        >
+                            <MessageSquare size={20} className="text-accent/60 group-hover:text-accent transition-colors" />
+                            <span className="text-sm font-bold uppercase tracking-tighter">{t('modules:session.feedback.title')}</span>
                         </button>
 
                         {activeSession.moduleSnapshot && (

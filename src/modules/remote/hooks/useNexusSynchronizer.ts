@@ -269,6 +269,13 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                 // Sanitization for Player Role
                 if (playerDiff.notes) playerDiff.notes.private = '•••••';
                 
+                if (playerDiff.session?.sessions) {
+                    playerDiff.session.sessions = playerDiff.session.sessions.map((s: any) => {
+                        const { feedbacks, ...rest } = s;
+                        return rest;
+                    });
+                }
+
                 if (playerDiff.session?.entities) {
                     playerDiff.session.entities = playerDiff.session.entities.map((e: any) => ({
                         ...e,

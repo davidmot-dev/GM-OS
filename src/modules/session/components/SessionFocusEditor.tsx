@@ -15,7 +15,8 @@ import {
     Save,
     Link,
     File,
-    StickyNote
+    StickyNote,
+    Star
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { ResolvedImage } from '../../../components/ResolvedImage';
@@ -231,6 +232,97 @@ const SessionFocusEditor: React.FC = () => {
                             </div>
                             <div className="glass-bento rounded-[2.5rem] border border-white/5 p-8 shadow-xl">
                                 <SessionChecklist sessionId={session.id} />
+                            </div>
+                        </motion.div>
+
+                        {/* Feedbacks Section */}
+                        <motion.div variants={itemVariants} className="flex flex-col gap-4">
+                            <div className="flex items-center gap-3 text-accent group/title">
+                                <MessageSquare size={20} className="group-hover/title:rotate-12 transition-transform" />
+                                <h3 className="text-sm font-black uppercase tracking-[0.3em]">{t('modules:session.feedback.title')}</h3>
+                            </div>
+                            
+                            <div className="glass-bento rounded-[2.5rem] border border-white/5 p-8 shadow-2xl flex flex-col gap-6">
+                                {(!session.feedbacks || session.feedbacks.length === 0) ? (
+                                    <div className="py-8 text-center border-2 border-dashed border-white/5 rounded-3xl opacity-40">
+                                        <p className="text-xs text-app-text/50 font-black uppercase tracking-widest">{t('modules:session.feedback.no_feedback')}</p>
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-col gap-4">
+                                        {/* Averages */}
+                                        {(() => {
+                                            const fbs = session.feedbacks || [];
+                                            const total = fbs.length;
+                                            const funAvg = Number((fbs.reduce((sum, f) => sum + f.funRating, 0) / total).toFixed(1));
+                                            const storyAvg = Number((fbs.reduce((sum, f) => sum + f.storyRating, 0) / total).toFixed(1));
+                                            const combatAvg = Number((fbs.reduce((sum, f) => sum + f.combatRating, 0) / total).toFixed(1));
+
+                                            const renderStarsShort = (rating: number) => (
+                                                <div className="flex gap-0.5">
+                                                    {Array.from({ length: 5 }).map((_, idx) => (
+                                                        <Star key={idx} size={12} className={idx < Math.round(rating) ? 'text-amber-400 fill-amber-400' : 'text-slate-700'} />
+                                                    ))}
+                                                </div>
+                                            );
+
+                                            return (
+                                                <div className="grid grid-cols-3 gap-4 bg-black/20 p-5 rounded-2xl border border-white/5 mb-2">
+                                                    <div className="flex flex-col gap-1 items-center text-center">
+                                                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{t('modules:session.feedback.fun')}</span>
+                                                        <span className="font-mono text-accent text-sm font-black">{funAvg} / 5</span>
+                                                        {renderStarsShort(funAvg)}
+                                                    </div>
+                                                    <div className="flex flex-col gap-1 items-center text-center">
+                                                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{t('modules:session.feedback.story')}</span>
+                                                        <span className="font-mono text-accent text-sm font-black">{storyAvg} / 5</span>
+                                                        {renderStarsShort(storyAvg)}
+                                                    </div>
+                                                    <div className="flex flex-col gap-1 items-center text-center">
+                                                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{t('modules:session.feedback.combat')}</span>
+                                                        <span className="font-mono text-accent text-sm font-black">{combatAvg} / 5</span>
+                                                        {renderStarsShort(combatAvg)}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })()}
+
+                                        {/* Individual list */}
+                                        <div className="flex flex-col gap-3 mt-2 max-h-[360px] overflow-y-auto pr-1 custom-scrollbar">
+                                            {session.feedbacks.map((f) => {
+                                                const char = storePlayers
+                                                    .flatMap(p => p.characters)
+                                                    .find(c => c.id === f.characterId);
+                                                
+                                                return (
+                                                    <div key={f.characterId} className="bg-black/10 border border-white/5 rounded-2xl p-4 flex flex-col gap-3">
+                                                        <div className="flex items-center justify-between">
+                                                            <div className="flex items-center gap-2.5">
+                                                                <div className="w-8 h-8 rounded-full border border-white/10 overflow-hidden bg-slate-950/40">
+                                                                    {char?.portraitUrl ? (
+                                                                        <ResolvedImage src={char.portraitUrl} alt={f.characterName} className="w-full h-full object-cover" />
+                                                                    ) : (
+                                                                        <div className="w-full h-full flex items-center justify-center text-[10px] font-bold text-slate-400">
+                                                                            {f.characterName.substring(0, 2).toUpperCase()}
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                                <span className="font-bold text-xs text-slate-200">{f.characterName}</span>
+                                                            </div>
+                                                            <span className="text-[9px] text-slate-500 font-mono">
+                                                                {new Date(f.timestamp).toLocaleDateString()}
+                                                            </span>
+                                                        </div>
+                                                        {f.notes && (
+                                                            <p className="text-xs text-slate-300 bg-black/20 rounded-xl p-3 border border-white/5 whitespace-pre-wrap leading-relaxed">
+                                                                {f.notes}
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </motion.div>
                     </div>
