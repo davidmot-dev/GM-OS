@@ -11,7 +11,7 @@ import { Logger } from '../../../utils/logger';
 
 class SessionBackupManager {
     private static instance: SessionBackupManager;
-    private timer: NodeJS.Timeout | null = null;
+    private timer: ReturnType<typeof setInterval> | null = null;
     private readonly INTERVAL_MS = 15 * 60 * 1000; // 15 minutes
     private readonly IS_AUTO_BACKUP_ENABLED = false; // Désactivé à la demande de l'utilisateur
 

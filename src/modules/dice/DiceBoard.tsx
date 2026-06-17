@@ -677,6 +677,11 @@ const DiceBoard: React.FC = () => {
                             }`}>
                                 {history[0].totalDisplay}
                             </div>
+                            {history[0].fateRank !== undefined && (
+                                <div className="text-xs text-accent font-bold uppercase tracking-wider mb-2 z-10">
+                                    {getFateRankLabel(history[0].fateRank, t)}
+                                </div>
+                            )}
                             {history[0].tagSuccess !== undefined && (
                                 <div className={`px-4 py-1 mb-2 rounded-full text-xs font-bold uppercase tracking-widest z-10 shadow-lg ${history[0].tagSuccess ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/50' : 'bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/50'}`}>
                                     {history[0].tagSuccess ? t('dice.status.success') : t('dice.status.failure')}
@@ -686,11 +691,6 @@ const DiceBoard: React.FC = () => {
                                 {history[0].rolls.map((r, i) => (
                                     <span key={i} className={`w-10 h-10 flex flex-col items-center justify-center rounded-lg text-xs font-black shadow-inner relative group ${getDieCssClass(r)}`}>
                                         {r.displayStr ? r.displayStr : r.val}
-                                        {r.fateRank !== undefined && (
-                                            <span className="absolute -top-1 -right-1 px-1 bg-accent text-[8px] rounded text-white shadow-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                                                {getFateRankLabel(r.fateRank, t)}
-                                            </span>
-                                        )}
                                         {r.source === 'gear' && <span className="absolute bottom-0 right-1 text-[8px] opacity-40 font-bold uppercase">G</span>}
                                         {r.source === 'base' && <span className="absolute bottom-0 right-1 text-[8px] opacity-40 font-bold uppercase">B</span>}
                                     </span>

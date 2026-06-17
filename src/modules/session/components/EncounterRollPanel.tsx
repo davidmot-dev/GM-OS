@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { useSessionOSStore } from '../useSessionOSStore';
+import { useSessionOSStore, type Entity } from '../useSessionOSStore';
 import { useCombatStore } from '../../combat/useCombatStore';
 import { useSessionStore } from '../../../store/useSessionStore';
 import { Swords, ChevronRight, Zap } from 'lucide-react';
+import type { EncounterTemplate } from '../../../types/drivers';
 
 interface EncounterRollPanelProps {
     onClose?: () => void;
@@ -37,7 +38,7 @@ export const EncounterRollPanel: React.FC<EncounterRollPanelProps> = ({ onClose 
             // 1. Add all spawned entities to Combat OS
             if (spawnedEntities && spawnedEntities.length > 0) {
                 const combatStore = useCombatStore.getState();
-                spawnedEntities.forEach(entity => {
+                spawnedEntities.forEach((entity: Entity) => {
                     combatStore.addCombatant({
                         name: entity.name,
                         init: 0,
@@ -78,7 +79,7 @@ export const EncounterRollPanel: React.FC<EncounterRollPanelProps> = ({ onClose 
             {/* List */}
             <div className="flex-1 overflow-y-auto p-6 space-y-3 custom-scrollbar">
                 <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4 block px-1">Templates Disponibles</p>
-                {templates.map((template) => (
+                {templates.map((template: EncounterTemplate) => (
                     <button
                         key={template.id}
                         onClick={() => setSelectedTemplateId(template.id)}

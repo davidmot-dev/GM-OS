@@ -49,7 +49,6 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
         allDrivers,
         gems,
         campaignMaps,
-        clues,
         isEdit,
         hasUnsavedChanges,
         

@@ -1,7 +1,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { TacticalService } from './TacticalService';
-import type { MapToken } from './useMapStore';
+import type { MapToken } from './types';
 
 describe('TacticalService', () => {
     const service = TacticalService.getInstance();

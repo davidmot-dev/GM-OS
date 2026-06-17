@@ -1,5 +1,5 @@
 import React from 'react';
-import { Save, FolderOpen, Layers, FileText, Trash2, Lock, BookOpen, Eye, Heart, Sparkles, Package, Tablet, PenTool, Plus, Send, Check, X } from 'lucide-react';
+import { Save, FolderOpen, Layers, FileText, Trash2, Lock, BookOpen, Eye, Heart, Sparkles, Package, Tablet, PenTool, Plus, Check, X } from 'lucide-react';
 import { useImageStore } from '../../image/useImageStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
@@ -11,6 +11,8 @@ import {
 import { useCharacterEditor } from '../hooks/useCharacterEditor';
 import { useSheetCalculator } from '../hooks/useSheetCalculator';
 import { Calculator } from 'lucide-react';
+import type { SheetField } from '../../../data/defaultSheetTemplates';
+import type { PlayerCharacter } from '../store/types';
 
 // --- Sub-components ---
 const FieldFormula: React.FC<{

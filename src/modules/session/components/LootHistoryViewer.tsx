@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSessionOSStore } from '../useSessionOSStore';
-import { History, Trash2, ArrowRight, User } from 'lucide-react';
+import { History, ArrowRight } from 'lucide-react';
 import { CharacterPortrait } from './LootPoolViewer';
 
 const LootHistoryViewer: React.FC = () => {

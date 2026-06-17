@@ -28,7 +28,7 @@ export class RAGService {
    * Scans the docs directory and returns relevant content based on active session.
    * Leverages the dynamic backend RAG Engine.
    */
-  public async getRelevantContext(options: { systemOnly?: boolean; systemName?: string } = {}): Promise<string> {
+  public async getRelevantContext(options: { systemOnly?: boolean; systemName?: string; limit?: number } = {}): Promise<string> {
     const osStore = useSessionOSStore.getState();
     const obsidianStore = useObsidianStore.getState();
     
@@ -39,7 +39,7 @@ export class RAGService {
     }
 
     if (options.systemOnly && options.systemName) {
-      return this.getContextForSpecificSystem(options.systemName, (options as any).limit);
+      return this.getContextForSpecificSystem(options.systemName, options.limit);
     }
 
     const activeCampaign = osStore.campaigns.find(c => c.id === osStore.activeCampaignId);
@@ -64,6 +64,7 @@ export class RAGService {
     }
   }
 
+/*
   private async getContextFromExplicitPaths(systemPath?: string, campaignPath?: string): Promise<string> {
     if (!window.appBridge?.ai?.listDocs) return "";
     const docs = await window.appBridge.ai.listDocs() as DocEntry[];
@@ -132,6 +133,7 @@ export class RAGService {
 
     return totalContext;
   }
+*/
 
   private async readFolderRecursive(entry: DocEntry): Promise<string> {
     let content = '';

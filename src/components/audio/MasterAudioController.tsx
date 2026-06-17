@@ -21,7 +21,7 @@ const MasterAudioController: React.FC = () => {
     };
 
     const handleStopAll = async () => {
-        interface GMWindow extends Window {
+        interface GMWindow {
             soundEngine?: { stopAll: () => void };
             musicEngine?: { stopAll: () => void };
             ambientEngine?: { fadeOutAll: (d: number) => void };

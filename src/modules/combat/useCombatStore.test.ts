@@ -17,6 +17,7 @@ describe('Smart Dispel Logic', () => {
             hp: 10,
             hpMax: 10,
             isPlayer: false,
+            faction: 'enemy',
             statuses: []
         });
         
@@ -36,7 +37,7 @@ describe('Smart Dispel Logic', () => {
 
     it('should handle multiple conflicts', () => {
         const store = useCombatStore.getState();
-        store.addCombatant({ name: 'Test', init: 10, hp: 5, hpMax: 5, isPlayer: false, statuses: [] });
+        store.addCombatant({ name: 'Test', init: 10, hp: 5, hpMax: 5, isPlayer: false, faction: 'enemy', statuses: [] });
         const id = useCombatStore.getState().combatants[0].id;
         
         store.addStatus(id, { name: 'Mouillé', duration: 0, icon: '💧' });

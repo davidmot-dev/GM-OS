@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
-import { useSessionStore } from '../../../store/useSessionStore';
+
 import { useSoundStore } from '../../sound/useSoundStore';
 import { useStoryboardStore } from '../../storyboard/useStoryboardStore';
 import { useCombatStore } from '../../combat/useCombatStore';
@@ -9,7 +9,7 @@ import { useWhiteboardStore } from '../../whiteboard/useWhiteboardStore';
 import { useClockStore } from '../../../store/useClockStore';
 import { useMusicStore } from '../../music/useMusicStore';
 import { useImageStore } from '../../image/useImageStore';
-import { useAmbientStore } from '../../ambient/useAmbientStore';
+
 import { useDiceStore } from '../../../stores/useDiceStore';
 import { useMapStore } from '../../map/useMapStore';
 import { getDifferentialPayload } from '../../../utils/syncUtils';
@@ -74,7 +74,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                 };
             }
 
-            if (Object.keys(payload).length > 0) {
+            if (Object.keys(payload).length > 0 && window.appBridge) {
                 window.appBridge.send('remote:broadcast-sync', payload, 'remote');
                 window.appBridge.send('remote:broadcast-sync', payload, 'gm');
                 window.appBridge.send('remote:broadcast-sync', payload, 'player');
@@ -106,7 +106,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
             const favoriteStore = useFavoriteStore.getState();
             const musicStore = useMusicStore.getState();
             const imageStore = useImageStore.getState();
-            const ambientStore = useAmbientStore.getState();
+
             const clockStore = useClockStore.getState();
             const whiteboardStore = useWhiteboardStore.getState();
             const diceStore = useDiceStore.getState();
@@ -190,7 +190,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                 ? await resolveToSendableUrl(rawWallpaper)
                 : null;
 
-            if (resolvedWallpaper) {
+            if (resolvedWallpaper && rawWallpaper) {
                 console.log(`[NexusSync] Wallpaper resolved: ${rawWallpaper.substring(0, 30)}... -> ${resolvedWallpaper.substring(0, 50)}...`);
             }
 
@@ -259,7 +259,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
 
             const diffPayload = force ? fullState : getDifferentialPayload(fullState, lastBroadcastRef.current);
             
-            if (Object.keys(diffPayload).length > 0) {
+            if (Object.keys(diffPayload).length > 0 && window.appBridge) {
                 // Roles: remote/gm see everything. player sees sanitized.
                 window.appBridge.send('remote:broadcast-sync', diffPayload, 'remote');
                 window.appBridge.send('remote:broadcast-sync', diffPayload, 'gm');

@@ -34,7 +34,7 @@ export const useOracleContext = () => {
         const combatContext = inCombat ? {
             round: combatStore.round,
             turn: combatStore.combatants[combatStore.currentTurnIdx]?.name || 'Inconnu',
-            units: combatStore.combatants.map(c => `- ${c.name}: HP ${c.hp}/${c.maxHp}, Initiatives: ${c.initiative}, Status: ${c.statuses.join(', ') || 'Normal'}`)
+            units: combatStore.combatants.map(c => `- ${c.name}: HP ${c.hp}/${c.hpMax}, Initiatives: ${c.init}, Status: ${c.statuses.map(s => s.name).join(', ') || 'Normal'}`)
         } : null;
 
         // 4. Environnement / Carte

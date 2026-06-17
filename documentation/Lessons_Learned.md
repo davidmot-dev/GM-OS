@@ -178,5 +178,26 @@ Pour éviter les dépendances circulaires qui bloquent le build Vite (ex: Sessio
 - **Leçon** : Le serveur ne doit pas se contenter de "supprimer" les sessions de sa mémoire ; il doit activement notifier les clients pour qu'ils nettoient leur propre `localStorage` (via `resetIdentity`), évitant ainsi des reconnexions automatiques immédiates avec des données périmées.
 
 ---
+### 20. Stabilisation des Mocks Globaux dans Vitest (2026-06-17)
+- **Défi** : Durant l'exécution des tests de synchronisation à distance (`useRemoteSync.test.ts`), le test entrait dans des boucles de reconnexion inattendues et échouait sur les assertions de temporisation (backoff) avec 3 appels au lieu de 2.
+- **Cause** : Le mock du store client (`useClientStore`) retournait une nouvelle référence d'objet ainsi qu'une nouvelle fonction `vi.fn()` à chaque appel du hook dans les tests. En conséquence, les dépendances de la fonction de reconnexion (`connect`) changeaient à chaque cycle de rendu, provoquant le nettoyage récurrent de l'effet (`useEffect`) et déclenchant des appels de connexion supplémentaires hors des timers prévus.
+- **Solution** : Stabiliser le mock en renvoyant une instance statique unique pour le store mocké (`const mockClientStore = { deviceId, pseudo, setStatus: mockSetStatus }`) à chaque appel de `useClientStore()`.
+- **Leçon** : Toujours veiller à ce que les mocks de stores Zustand ou autres hooks d'état globaux utilisés dans les tests renvoient des références stables pour leurs propriétés et actions, afin d'éviter d'invalider les hooks de cycle de vie et de créer des effets de bord asynchrones.
 
-*Dernière mise à jour : 26 Avril 2026 - GM-OS v6/v7 - Ajout de la fonction Éjection & Reset Global.*
+---
+### 21. Résolution de l'import dynamique asynchrone (Vitest EnvironmentTeardownError) (2026-06-17)
+- **Défi** : Plusieurs tests unitaires audio (ex: `AmbientEngine.test.ts`) échouaient lors du démontage de l'environnement de test jsdom de Vitest avec des erreurs de type `EnvironmentTeardownError: Cannot load '/node_modules/zustand/esm/middleware.mjs' ... after the environment was torn down`.
+- **Cause** : Le constructeur de la classe testée (`AmbientEngine`) importait dynamiquement des stores Zustand (`useAudioMasterStore`, `useVoiceStore`) via `await import(...)`. Ces importations asynchrones n'étaient pas résolues au moment où Vitest fermait l'environnement de test, ce qui provoquait une levée d'exception par le chargeur de modules.
+- **Solution** : Déclarer explicitement des mocks pour ces stores importés via `vi.mock(...)` en tête du fichier de test. Cela force Vitest à charger et mettre en cache ces modules de manière synchrone avant le lancement des tests.
+- **Leçon** : Pré-mocker systématiquement toute dépendance importée de manière asynchrone (dynamic imports) dans le code de production instancié durant les tests (comme des Singletons) afin d'éviter des fuites de chargement asynchrone après la clôture de l'environnement JSDOM.
+
+---
+### 22. Résolution des Timeouts avec IndexedDB / idb dans Vitest (2026-06-17)
+- **Défi** : Les tests unitaires de carte et de brouillard (`MapFogRegistry.test.ts`) se figeaient et tombaient systématiquement en timeout après 5000ms.
+- **Cause** : Un mock partiel et inerte de l'API globale `indexedDB` retournait des requêtes sans jamais appeler leurs fonctions de retour asynchrones (`onsuccess`), bloquant ainsi indéfiniment la résolution des promesses du wrapper IndexedDB (`fogDB.getItem`).
+- **Solution** : Mocker directement à plus haut niveau le module de service `src/utils/indexedDB` (FogDB) avec une implémentation in-memory simple et synchrone utilisant une structure `Map`.
+- **Leçon** : Pour tester des modules reposant sur du stockage IndexedDB, il est préférable de mocker le service d'accès aux données lui-même avec un dictionnaire en mémoire plutôt que de stubber les couches bas niveau `indexedDB` du navigateur, pour garantir la rapidité et la robustesse des tests.
+
+---
+
+*Dernière mise à jour : 17 Juin 2026 - GM-OS v6.5.0 - Stabilisation complète de la suite de tests et de la persistance IndexedDB.*

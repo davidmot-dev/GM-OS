@@ -47,7 +47,7 @@ const LootGeneratorPanel: React.FC = () => {
         const statusMsg = useFullContext 
             ? t('modules:loot.generator.toasts.ai_analyzing') 
             : t('modules:loot.generator.toasts.ai_consulting');
-        const toastId = gmToast(statusMsg, "loading");
+        gmToast(statusMsg, "loading");
 
         try {
             const contextInstructions = useFullContext 

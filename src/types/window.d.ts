@@ -152,14 +152,17 @@ declare global {
             readDoc: (filePath: string) => Promise<string | null>;
             writeDoc: (filePath: string, content: string) => Promise<boolean>;
             extractPdf: (filePath: string) => Promise<string>;
+            extractPDF: (filePath: string) => Promise<string>;
             proxyRequest: (url: string, method: string, headers: Record<string, string>, body: unknown) => Promise<AIProxyResponse>;
             searchContext: (systemId: string, campaignName: string) => Promise<string>;
             reindex: (customPath?: string) => Promise<boolean>;
-            ollamaChat: (model: string, messages: { role: string; content: string }[]) => Promise<string>;
-            ollamaStatus: () => Promise<boolean>;
-            ollamaListModels: () => Promise<string[]>;
-            ollamaPull: (model: string) => Promise<boolean>;
-            ollamaGenerateImage: (model: string, prompt: string) => Promise<string>;
+            ollamaChat: (model: string, messages: { role: string; content: string }[], endpoint?: string) => Promise<string>;
+            ollamaChatStream: (model: string, messages: { role: string; content: string }[], endpoint?: string) => Promise<unknown>;
+            ollamaStatus: (endpoint?: string) => Promise<boolean>;
+            ollamaListModels: (endpoint?: string) => Promise<string[]>;
+            ollamaPull: (model: string, endpoint?: string) => Promise<boolean>;
+            ollamaGenerateImage: (model: string, prompt: string, endpoint?: string) => Promise<string>;
+            onStreamToken: (callback: (token: string) => void) => () => void;
         };
         sound?: {
             loadAudios: () => Promise<string[]>;
@@ -175,6 +178,7 @@ declare global {
             callTool: (serverName: string, toolName: string, args: Record<string, unknown>) => Promise<MCPCallResult>;
             reauthenticate: () => Promise<{ success: boolean; message: string }>;
             restart: () => Promise<{ success: boolean; message: string }>;
+            checkStatus?: (serverName: string) => Promise<boolean>;
         };
         obsidian?: {
             listNotes: (vaultPath?: string) => Promise<NoteEntry[]>;

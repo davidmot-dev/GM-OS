@@ -161,15 +161,15 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                         <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-app-text/30 font-display">{t('image.detail.matrixTags')}</h4>
                     </div>
                     <div className="bg-app-surface/40 border border-app-border/10 rounded-[2rem] p-6 space-y-6">
-                        <div className="flex flex-wrap gap-2">
-                            {media.tags.map(t => (
-                                <span key={t} className="inline-flex items-center gap-2 bg-accent/5 text-accent border border-accent/20 px-3 py-1.5 rounded-xl text-[10px] font-black tracking-widest uppercase">
-                                    #{t}
+                         <div className="flex flex-wrap gap-2">
+                            {media.tags.map(tagItem => (
+                                <span key={tagItem} className="inline-flex items-center gap-2 bg-accent/5 text-accent border border-accent/20 px-3 py-1.5 rounded-xl text-[10px] font-black tracking-widest uppercase">
+                                    #{tagItem}
                                     <button 
-                                        onClick={() => updateMediaTags(media.id, media.tags.filter(tag => tag !== t))}
+                                        onClick={() => updateMediaTags(media.id, media.tags.filter(tag => tag !== tagItem))}
                                         className="hover:text-red-400 opacity-40 hover:opacity-100 transition-all"
-                                        title={t('image.detail.actions.removeTag', { tag: t })}
-                                        aria-label={t('image.detail.actions.removeTag', { tag: t })}
+                                        title={t('image.detail.actions.removeTag', { tag: tagItem })}
+                                        aria-label={t('image.detail.actions.removeTag', { tag: tagItem })}
                                     >
                                         <X size={12} />
                                     </button>

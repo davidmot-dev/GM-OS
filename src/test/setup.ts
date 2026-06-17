@@ -84,3 +84,35 @@ vi.stubGlobal('appBridge', {
         debug: vi.fn(),
     }
 });
+
+// Mock IndexedDB and idb library globally
+const mockDatabase = {
+    transaction: vi.fn(() => ({
+        objectStore: vi.fn(() => ({
+            getAll: vi.fn().mockResolvedValue([]),
+            get: vi.fn().mockResolvedValue(undefined),
+            put: vi.fn().mockResolvedValue(undefined),
+            delete: vi.fn().mockResolvedValue(undefined),
+            clear: vi.fn().mockResolvedValue(undefined),
+        })),
+        done: Promise.resolve(),
+    })),
+    close: vi.fn(),
+};
+
+vi.mock('idb', () => ({
+    openDB: vi.fn().mockResolvedValue(mockDatabase),
+}));
+
+// Mock the IndexedDBService (fogDB) to prevent hang on openDB/indexedDB operations
+vi.mock('../utils/indexedDB', () => {
+    const memory = new Map<string, string>();
+    return {
+        fogDB: {
+            getItem: vi.fn().mockImplementation(async (key: string) => memory.get(key) || null),
+            setItem: vi.fn().mockImplementation(async (key: string, value: string) => { memory.set(key, value); }),
+            removeItem: vi.fn().mockImplementation(async (key: string) => { memory.delete(key); }),
+        }
+    };
+});
+

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNPCStore } from '../useNPCStore';
-import { Save, Sword, FileText, Share2, User, MapPin, Package, Zap, Quote, Star, Eye, Sparkles, Skull, Database, Plus } from 'lucide-react';
+import { Save, Sword, FileText, Share2, User, MapPin, Package, Zap, Quote, Star, Eye, Sparkles, Skull, Database } from 'lucide-react';
 import { useCombatStore } from '../../combat/useCombatStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useMapStore } from '../../map/useMapStore';

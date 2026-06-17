@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useSessionStore } from '../../../store/useSessionStore';
 import { useSessionOSStore, type LayoutConfig } from '../useSessionOSStore';
 import { useTacticalAIStore } from '../../tactical-ai/useTacticalAIStore';
+import { gmToast } from '../../../stores/useToastStore';
 
 /**
  * Hook responsable de la synchronisation du layout (module actif, panels, thèmes)

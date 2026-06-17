@@ -1,28 +1,43 @@
 import { useSessionOSStore } from '../useSessionOSStore';
-import type { PlayerCharacter } from '../useSessionOSStore';
 import { gmAlert, gmConfirm } from '../../../stores/useModalStore';
 import { Plus, Settings2, MoreVertical } from 'lucide-react';
 
 const TeamTracker: React.FC = () => {
-    const { party, healParty } = useSessionOSStore();
+    const { players, activeCampaignId, updateCharacterHP } = useSessionOSStore();
+
+    // Reconstruct the active campaign characters
+    const party = players.flatMap(player => 
+        player.characters
+            .filter(c => c.campaignId === activeCampaignId)
+            .map(c => ({
+                ...c,
+                playerId: player.id // keep track of the player ID to update HP
+            }))
+    );
+
+    const healParty = () => {
+        party.forEach(char => {
+            updateCharacterHP(char.playerId, char.id, char.maxHp);
+        });
+    };
 
     // Calculate overall party health
-    const totalHp = party.reduce((sum: number, p: PlayerCharacter) => sum + p.hp, 0);
-    const totalMaxHp = party.reduce((sum: number, p: PlayerCharacter) => sum + p.hpMax, 0);
+    const totalHp = party.reduce((sum: number, p) => sum + p.hp, 0);
+    const totalMaxHp = party.reduce((sum: number, p) => sum + p.maxHp, 0);
     const healthPercent = totalMaxHp > 0 ? (totalHp / totalMaxHp) * 100 : 0;
 
     return (
         <div className="bg-app-surface/60 rounded-xl border border-app-border/40 p-4 flex items-center justify-between shadow-lg">
             <div className="flex items-center gap-6 w-full lg:w-auto overflow-x-auto custom-scrollbar no-scrollbar">
                 <div className="flex -space-x-3 shrink-0">
-                    {party.map((player: PlayerCharacter) => {
-                        const healthRatio = player.hp / player.hpMax;
+                    {party.map((char) => {
+                        const healthRatio = char.hp / char.maxHp;
                         let ringColor = 'border-emerald-500';
                         if (healthRatio < 0.3) ringColor = 'border-red-500';
                         else if (healthRatio < 0.6) ringColor = 'border-yellow-500';
 
                         return (
-                            <div key={player.id} className="w-10 h-10 rounded-full border-2 border-app-bg bg-app-surface relative group cursor-help transition-transform hover:-translate-y-1 hover:z-10 bg-cover bg-center" style={{ backgroundImage: `url(${player.avatar})` }} title={`${player.name} (${player.hp}/${player.hpMax})`}>
+                            <div key={char.id} className="w-10 h-10 rounded-full border-2 border-app-bg bg-app-surface relative group cursor-help transition-transform hover:-translate-y-1 hover:z-10 bg-cover bg-center" style={{ backgroundImage: `url(${char.portraitUrl})` }} title={`${char.name} (${char.hp}/${char.maxHp})`}>
                                 <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border border-app-bg bg-app-bg shadow-inner flex items-center justify-center`}>
                                     <div className={`w-full h-full rounded-full border-2 ${ringColor}`} />
                                 </div>
@@ -70,3 +85,4 @@ const TeamTracker: React.FC = () => {
 };
 
 export default TeamTracker;
+

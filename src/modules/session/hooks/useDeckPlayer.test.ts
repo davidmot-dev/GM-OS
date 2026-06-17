@@ -109,7 +109,7 @@ describe('useDeckPlayer', () => {
         const { result } = renderHook(() => useDeckPlayer());
         act(() => { result.current.handleFlip(); });
         expect(mockImageStoreState.projectEntity).toHaveBeenCalledWith(expect.objectContaining({
-            name: '▪▪▪ Carte Cachée ▪▪▪'
+            name: 'modules:session.deck_module.player.projection.hidden_name'
         }));
     });
 });

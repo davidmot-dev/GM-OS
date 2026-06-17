@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense, lazy, useCallback } from 'react';
+import { useState, useEffect, Suspense, lazy, useCallback } from 'react';
 import { useSessionStore } from './store/useSessionStore';
 import Shell from './components/Shell';
 import { useModalStore } from './stores/useModalStore';
@@ -12,9 +12,7 @@ import { useStoryboardStore } from './modules/storyboard/useStoryboardStore';
 import { useMapStore } from './modules/map/useMapStore';
 import { useCombatStore } from './modules/combat/useCombatStore';
 import { useSessionOSStore } from './modules/session/useSessionOSStore';
-import { useFavoriteStore } from './modules/favorite/useFavoriteStore';
 import { useWhiteboardStore, type Point, type DrawingPath, type WhiteboardTool } from './modules/whiteboard/useWhiteboardStore';
-import { useClockStore } from './store/useClockStore';
 import { useMusicStore } from './modules/music/useMusicStore';
 import { useImageStore } from './modules/image/useImageStore';
 import { useAmbientStore } from './modules/ambient/useAmbientStore';
@@ -25,9 +23,7 @@ import { BootstrapService } from './modules/system/logic/BootstrapService';
 import { useHydration } from './hooks/useHydration';
 import { useHueAutoConnect } from './modules/light/hooks/useHueAutoConnect';
 import { DiceEngine } from './modules/dice/DiceEngine';
-import { getDifferentialPayload } from './utils/syncUtils';
 import { useDisplayDetection } from './hooks/useDisplayDetection';
-import { resolveToSendableUrl } from './utils/mediaResolver';
 import { useNexusSynchronizer } from './modules/remote/hooks/useNexusSynchronizer';
 import { crossWindowSync } from './services/CrossWindowEventService';
 
@@ -79,15 +75,6 @@ const PlaceholderModule = ({ name }: { name: string }) => (
     <h2 className="text-3xl font-bold tracking-tight">Module {name}</h2>
   </div>
 );
-
-interface UniversalPad {
-  id: string;
-  type: 'music' | 'sound' | 'image' | 'ambient';
-  label: string;
-  color: string;
-  imageUrl?: string;
-  sublabel?: string;
-}
 
 function App() {
   const { activeModule, theme } = useSessionStore();

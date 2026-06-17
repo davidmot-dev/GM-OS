@@ -4,13 +4,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { Package, User, Trash2, Gift } from 'lucide-react';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
-import type { PlayerCharacter } from '../store/types';
-
 /**
  * Petit composant pour gérer la résolution de l'URL du portrait (Media-OS)
  */
 export const CharacterPortrait: React.FC<{ character?: { portraitUrl: string; name?: string }; size?: number }> = ({ character, size = 16 }) => {
-    const resolvedUrl = useMediaUrl(character.portraitUrl);
+    const resolvedUrl = useMediaUrl(character?.portraitUrl);
     
     return (
         <div 

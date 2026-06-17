@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ForgeService, type ForgeContextItem } from './ForgeService';
-import { AIService } from '../ai/AIService';
+
 
 const mockGenerateJSON = vi.fn();
 
@@ -46,13 +46,15 @@ describe('ForgeService', () => {
       expect(mockGenerateJSON).toHaveBeenCalledWith(
         expect.stringContaining('CONTENU DU DOCUMENT [Rules] :\n\nBase Rules'),
         expect.any(String),
-        expect.any(Array)
+        expect.any(Array),
+        expect.any(Object)
       );
       
       expect(mockGenerateJSON).toHaveBeenCalledWith(
         expect.stringContaining('CONTENU DU DOCUMENT [Lore] :\n\nWorld Lore'),
         expect.any(String),
-        expect.any(Array)
+        expect.any(Array),
+        expect.any(Object)
       );
     });
 

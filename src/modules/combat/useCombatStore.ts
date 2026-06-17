@@ -1,15 +1,13 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { DiceEngine } from '../dice/DiceEngine';
 import { gmToast } from '../../stores/useToastStore';
 import { useJournalStore } from '../journal/useJournalStore';
-import type { HealthSystem, Player, Entity, PlayerCharacter, SessionOSState } from '../session/useSessionOSStore';
+import type { Player, Entity, PlayerCharacter, SessionOSState } from '../session/useSessionOSStore';
 import { 
     type Combatant, 
     type StatusEffect 
 } from './types';
 import { 
-    STATUS_CONFLICT_MAP, 
     calculateDamageImpact, 
     filterConflictingStatuses, 
     generateEffectId, 
@@ -78,6 +76,8 @@ interface CombatState {
     // Sync
     /** Synchronise les PV actuels des combattants vers Session-OS (Persistance) */
     syncCombatantHPToSession: () => void;
+    /** Synchronise un combattant spécifique vers Session-OS */
+    syncCombatantToSession: (id: string) => void;
     /** Propage les états critiques (mort, etc.) vers Session-OS */
     propagateStatusToSession: () => void;
     /** Envoie l'état actuel du combat vers les écrans distants via le Bridge */
@@ -346,7 +346,6 @@ export const useCombatStore = create<CombatState>()(
 
             addStatus: (combatantId, status) => {
                 set((state) => {
-                    const conflicts = STATUS_CONFLICT_MAP[status.name] || [];
                     return {
                         combatants: state.combatants.map(c => {
                             if (c.id === combatantId) {
@@ -442,7 +441,6 @@ export const useCombatStore = create<CombatState>()(
 
             applyDamage: (amount, type, targetIds) => {
                 set((state) => {
-                    const isHeal = amount < 0;
                     const newCombatants = state.combatants.map(c => {
                         if (!targetIds.includes(c.id)) return c;
                         

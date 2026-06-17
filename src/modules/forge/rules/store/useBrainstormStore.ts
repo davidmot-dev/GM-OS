@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { BrainstormState, BrainstormStep, BrainstormCandidate, BrainstormCard } from '../types';
+import type { BrainstormState } from '../types';
 
 /**
  * Brainstorm Store
@@ -43,7 +43,7 @@ export const useBrainstormStore = create<BrainstormState>((set) => ({
     isProcessing: false 
   }),
 
-  startForging: (candidateId) => set({ 
+  startForging: (_candidateId) => set({ 
     isProcessing: true, 
     step: 'forging',
     error: null 

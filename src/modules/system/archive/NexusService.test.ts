@@ -865,15 +865,22 @@ describe('INTEGRATION : Round-Trip complet (Scrape -> Import)', () => {
         // On cherche l'appel qui met à jour les entities
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const entitiesUpdateCall = setStateSpy.mock.calls.find((call: any) => {
-            const nextState = (call[0] as (s: any) => any)({ entities: [], campaigns: [], players: [] });
-            return nextState.entities !== undefined;
+            const arg = call[0];
+            const nextState = typeof arg === 'function'
+                ? (arg as any)({ entities: [], campaigns: [], players: [] })
+                : arg;
+            return nextState && nextState.entities !== undefined;
         });
 
         expect(entitiesUpdateCall).toBeDefined();
         if (entitiesUpdateCall) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const nextState = (entitiesUpdateCall[0] as (s: any) => any)({ entities: [], campaigns: [], players: [] });
-            expect(nextState.entities[0].avatar).toBe(assetMap['m-avatar-001']);
+            const arg = entitiesUpdateCall[0];
+            const nextState = typeof arg === 'function'
+                ? (arg as any)({ entities: [], campaigns: [], players: [] })
+                : arg;
+            const remappedEntity = nextState.entities.find((e: any) => e.id === 'e-001');
+            expect(remappedEntity).toBeDefined();
+            expect(remappedEntity.avatar).toBe(assetMap['m-avatar-001']);
         }
     });
 

@@ -52,11 +52,23 @@ export async function resolveToSendableUrl(src: string | undefined): Promise<str
         }
         return ''; // Échec de résolution IndexedDB -> Pas d'image
     }
-    
     // Uniquement pour les vrais chemins de fichiers (contenant des séparateurs de dossiers)
     const isPath = src.includes('/') || src.includes('\\');
-    if (isPath && window.appBridge?.utils?.formatFileUrl) {
-        return window.appBridge.utils.formatFileUrl(src);
+    if (isPath) {
+        if (window.appBridge?.remote?.getConnectionInfo) {
+            try {
+                const conn = await window.appBridge.remote.getConnectionInfo();
+                if (conn && conn.ip && conn.ip !== '127.0.0.1' && conn.ip !== 'localhost' && conn.port) {
+                    const normalized = src.replace(/\\/g, '/');
+                    return `http://${conn.ip}:${conn.port}/media/${encodeURIComponent(normalized)}`;
+                }
+            } catch (e) {
+                console.error('[MediaResolver] Error getting connection info:', e);
+            }
+        }
+        if (window.appBridge?.utils?.formatFileUrl) {
+            return window.appBridge.utils.formatFileUrl(src);
+        }
     }
     
     return src;

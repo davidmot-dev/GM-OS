@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useMemo, memo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useTranslation } from 'react-i18next';
 import { 
-    Search, Filter, BookOpen, Brain, History, Scroll, 
-    ArrowLeft, Zap, Sparkles, FileText, X, ChevronRight,
+    Search, BookOpen, Brain, History, Scroll, 
+    Zap, Sparkles, FileText, X, ChevronRight,
     SearchX, Loader2, Plus, Globe, Edit2, Hammer, CheckCircle2, Layers
 } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
-import { ragService } from '../../ai/RAGService';
+
 import type { DocEntry } from '../../ai/RAGService';
 import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 import { gmToast } from '../../../stores/useToastStore';
@@ -50,66 +50,66 @@ export const RuleWorkshopViewer: React.FC = () => {
     const [editPath, setEditPath] = useState<string | null>(null);
 
     // Initial load of documents
-    useEffect(() => {
-        const loadDocs = async () => {
-            if (!window.appBridge?.ai?.listDocs) {
-                console.error("Bridge listDocs not available");
-                setLoading(false);
-                return;
-            }
+    const loadDocs = React.useCallback(async () => {
+        if (!window.appBridge?.ai?.listDocs) {
+            console.error("Bridge listDocs not available");
+            setLoading(false);
+            return;
+        }
 
-            setLoading(true);
-            try {
-                const docs = await window.appBridge.ai.listDocs();
-                
-                // Helper to normalize path separators for comparison
-                const normalizePath = (p: string) => p.replace(/\\/g, '/').toLowerCase().trim().replace(/^\/+|\/+$/g, '');
+        setLoading(true);
+        try {
+            const docs = await window.appBridge.ai.listDocs();
+            
+            // Helper to normalize path separators for comparison
+            const normalizePath = (p: string) => p.replace(/\\/g, '/').toLowerCase().trim().replace(/^\/+|\/+$/g, '');
 
-                const findTargetDir = (items: DocEntry[], targetPath: string): DocEntry[] => {
-                    const normalizedSearch = normalizePath(targetPath);
-                    if (!normalizedSearch || normalizedSearch === '.' || normalizedSearch === './') return items;
+            const findTargetDir = (items: DocEntry[], targetPath: string): DocEntry[] => {
+                const normalizedSearch = normalizePath(targetPath);
+                if (!normalizedSearch || normalizedSearch === '.' || normalizedSearch === './') return items;
 
-                    // 1. Exact path match
-                    for (const item of items) {
-                        if (item.type === 'directory') {
-                            const normalizedItemPath = normalizePath(item.path);
-                            if (normalizedItemPath === normalizedSearch) {
-                                console.log(`[RuleWorkshop] Exact directory match found: ${item.path}`);
-                                return item.children || [];
-                            }
+                // 1. Exact path match
+                for (const item of items) {
+                    if (item.type === 'directory') {
+                        const normalizedItemPath = normalizePath(item.path);
+                        if (normalizedItemPath === normalizedSearch) {
+                            console.log(`[RuleWorkshop] Exact directory match found: ${item.path}`);
+                            return item.children || [];
                         }
                     }
+                }
 
-                    // 2. Segment-by-segment recursive search
-                    const segments = normalizedSearch.split('/').filter(s => s.length > 0);
-                    const findRecursive = (entries: DocEntry[], searchSegments: string[]): DocEntry[] => {
-                        if (searchSegments.length === 0) return entries;
-                        
-                        const [current, ...remaining] = searchSegments;
-                        const match = entries.find(e => e.name.toLowerCase() === current && e.type === 'directory');
-                        
-                        if (match) {
-                            if (remaining.length === 0) return match.children || [];
-                            return findRecursive(match.children || [], remaining);
-                        }
-                        return [];
-                    };
-
-                    return findRecursive(items, segments);
+                // 2. Segment-by-segment recursive search
+                const segments = normalizedSearch.split('/').filter(s => s.length > 0);
+                const findRecursive = (entries: DocEntry[], searchSegments: string[]): DocEntry[] => {
+                    if (searchSegments.length === 0) return entries;
+                    
+                    const [current, ...remaining] = searchSegments;
+                    const match = entries.find(e => e.name.toLowerCase() === current && e.type === 'directory');
+                    
+                    if (match) {
+                        if (remaining.length === 0) return match.children || [];
+                        return findRecursive(match.children || [], remaining);
+                    }
+                    return [];
                 };
 
-                const rulesDocs = findTargetDir(docs, baseDir);
-                console.log(`[RuleWorkshop] Path resolution for "${baseDir}": found ${rulesDocs.length} items.`);
-                setAllDocs(rulesDocs);
-            } catch (err) {
-                console.error("Error loading rule documents:", err);
-            } finally {
-                setLoading(false);
-            }
-        };
+                return findRecursive(items, segments);
+            };
 
+            const rulesDocs = findTargetDir(docs, baseDir);
+            console.log(`[RuleWorkshop] Path resolution for "${baseDir}": found ${rulesDocs.length} items.`);
+            setAllDocs(rulesDocs);
+        } catch (err) {
+            console.error("Error loading rule documents:", err);
+        } finally {
+            setLoading(false);
+        }
+    }, [baseDir]);
+
+    useEffect(() => {
         loadDocs();
-    }, [ragPath, isEditing]); // Trigger on path change or when closing editor
+    }, [loadDocs, isEditing]); // Trigger on path change or when closing editor
 
     // Parse files to extract metadata (mocking extraction since we don't have frontmatter parsing yet)
     // In a real app, we'd read the first few lines to get the title/category
@@ -341,7 +341,7 @@ export const RuleWorkshopViewer: React.FC = () => {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                        {filteredDocs.map((doc, idx) => (
+                        {filteredDocs.map((doc) => (
                             <div 
                                 key={doc.path}
                                 onClick={() => handleReadCard(doc)}

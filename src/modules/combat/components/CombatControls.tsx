@@ -5,7 +5,7 @@ import { gmConfirm, gmPrompt } from '../../../stores/useModalStore';
 import { 
     UserPlus, RefreshCw, Dices, Save, Play, Skull, 
     ArrowDown01, ArrowUp10, Sparkles, Zap, Activity,
-    MonitorPlay, MonitorOff, Sword, Shield
+    MonitorPlay, MonitorOff
 } from 'lucide-react';
 import { gmCustom } from '../../../stores/useModalStore';
 import { Select } from '../../../components/common/Select';

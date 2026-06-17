@@ -40,7 +40,9 @@ export type CurrentView =
     | 'deck-library'
     | 'deck-player'
     | 'rulebook'
+    | 'rule-workshop'
     | 'campaign-form';
+
 
 // ─────────────────────────────────────────────
 // Campaign

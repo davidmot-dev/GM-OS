@@ -854,7 +854,7 @@ export class NexusService {
         // Validation des entrées d'assets (protection path traversal)
         const assetMap = m['assetMap'] as AssetEntry[] | undefined;
         if (assetMap) {
-            assetMap.forEach((entry, idx) => {
+            assetMap.forEach((entry) => {
                 if (this.isDangerousPath(entry.relativePath)) {
                     errors.push(i18next.t('modules:system.nexus.messages.malicious_path', { path: entry.relativePath }));
                 }
@@ -1362,7 +1362,7 @@ export class NexusService {
                 // Si stratégie 'replace' et qu'un ID de campagne est présent, on nettoie les anciennes références média
                 // pour éviter de saturer le Media Hub avec des imports orphelins.
                 if (resolution.strategy === 'replace' && manifest.campaignId) {
-                    await mediaStore.removeCampaignReference(manifest.campaignId);
+                    await useMediaStore.getState().removeCampaignReference(manifest.campaignId);
                 }
             }
 

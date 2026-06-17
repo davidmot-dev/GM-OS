@@ -4,7 +4,15 @@ import { Settings } from 'lucide-react';
 import { gmAlert } from '../../../stores/useModalStore';
 
 const CampaignWidget: React.FC = () => {
-    const { campaignName, sessionNumber, sessionMax } = useSessionOSStore();
+    const { campaigns, activeCampaignId, sessions } = useSessionOSStore();
+    const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
+    const activeSession = activeCampaign ? sessions.find(s => s.id === activeCampaign.activeSessionId && s.status === 'active') : null;
+    const sessionCount = sessions.filter(s => s.campaignId === activeCampaignId).length;
+
+    const campaignName = activeCampaign?.name || 'Aucune campagne';
+    const sessionNumber = activeSession?.number || 0;
+    const sessionMax = sessionCount || 1;
+
     const progress = (sessionNumber / sessionMax) * 100;
 
     return (

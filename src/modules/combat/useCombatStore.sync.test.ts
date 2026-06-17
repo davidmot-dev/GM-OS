@@ -80,6 +80,7 @@ describe('Combat-OS to Session-OS Alignment', () => {
             hp: 10,
             hpMax: 10,
             isPlayer: false,
+            faction: 'neutral',
             sourceEntityId: 'npc-3',
             statuses: []
         });

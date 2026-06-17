@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "vitest",
     "gemini": "gemini",
-    "gemini:doc": "gemini --context documentation/"
+    "gemini:doc": "gemini --context documentation/",
+    "validate": "powershell -ExecutionPolicy Bypass -File ./scripts/validate.ps1"
   },
   "main": "dist-electron/main.js",
   "dependencies": {

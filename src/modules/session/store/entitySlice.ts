@@ -111,8 +111,8 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
     addEntity: (entity) => {
         const defaultAvatar = 'https://api.dicebear.com/9.x/adventurer-neutral/svg?seed=NPC&backgroundColor=b6e3f4';
         const newEntity: Entity = { 
-            avatar: defaultAvatar,
             ...entity, 
+            avatar: entity.avatar || defaultAvatar,
             id: `e-${Date.now()}` 
         };
         set((state) => ({ entities: [...state.entities, newEntity] }));
@@ -238,8 +238,8 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
         const id = `pc-${crypto.randomUUID()}`;
         const defaultPortrait = `https://api.dicebear.com/9.x/adventurer/svg?seed=${encodeURIComponent(character.name)}&backgroundColor=b6e3f4`;
         const newChar: PlayerCharacter = { 
-            portraitUrl: defaultPortrait,
             ...character, 
+            portraitUrl: character.portraitUrl || defaultPortrait,
             id 
         };
         set((state) => ({

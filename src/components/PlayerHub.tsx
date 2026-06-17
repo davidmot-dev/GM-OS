@@ -10,7 +10,7 @@ import { useWhiteboardStore } from '../modules/whiteboard/useWhiteboardStore';
 import { useImageStore } from '../modules/image/useImageStore';
 import { useDiceStore } from '../stores/useDiceStore';
 import { useSessionOSStore } from '../modules/session/useSessionOSStore';
-import { VoiceReactiveAvatar } from './hub/VoiceReactiveAvatar';
+
 
 // Components
 import PlayerMapCanvas from '../modules/map/components/PlayerMapCanvas';

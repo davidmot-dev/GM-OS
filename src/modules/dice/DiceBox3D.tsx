@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { useDiceStore, type RollRecord } from '../../stores/useDiceStore';
+import { type RollRecord } from '../../stores/useDiceStore';
 
 interface DiceBox3DProps {
     active: boolean;
@@ -109,7 +109,7 @@ const PlayerDiceBox3D: React.FC<DiceBox3DProps> = ({ active, lastRoll }) => {
         clock: THREE.Clock;
     } | null>(null);
 
-    const [isRendering, setIsRendering] = useState(false);
+
 
     // ------------------------------------------------------------------
     // SCENE INITIALIZATION

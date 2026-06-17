@@ -8,7 +8,7 @@ import {
     Upload, EyeOff, Eye, Paintbrush, Square, Circle,
     Cast, Maximize, Users, MousePointer2, PlusCircle, Trash2, MapPin, FolderOpen,
     SkipBack, SkipForward, Swords, CloudRain, CloudSnow, Cloud, Sparkles, Triangle,
-    ShieldAlert, Zap, GripHorizontal, Settings2, Volume2, VolumeX, ChevronDown, Check,
+    ShieldAlert, Zap, GripHorizontal, Volume2, VolumeX, ChevronDown, Check,
     Link, Mountain, Sunrise, Sun, Cloudy, Sunset, Moon, Brain
 } from 'lucide-react';
 import { ResolvedImage } from '../../../components/ResolvedImage';
@@ -101,13 +101,11 @@ const MapControls: React.FC = () => {
         dangerShape, setDangerShape,
         auraOverride, setAuraOverride,
         difficultTerrainOverride, setDifficultTerrainOverride,
-        movementCostOverride, setMovementCostOverride,
-        setNarrativePrompt,
-        toggleNarrativeMode,
-        isNarrativeOpen
+        movementCostOverride, setMovementCostOverride
     } = uiStore;
 
-    const { isAnalyzing, requestTacticalAnalysis } = useTacticalAIStore();
+    const { status: tacticalStatus, requestTacticalAnalysis } = useTacticalAIStore();
+    const isAnalyzing = tacticalStatus === 'analyzing';
 
     const { getDisplayLabel } = useHardwareStore();
 
@@ -413,7 +411,7 @@ const MapControls: React.FC = () => {
                         <h3 className="text-xs text-slate-400 uppercase tracking-wider font-bold">{t('map.sidebar.danger.title', { defaultValue: 'Zones de Danger' })}</h3>
                         <div className="flex gap-2">
                             <button
-                                onClick={() => gmCustom('map-danger-preset-editor')}
+                                onClick={() => gmCustom('danger-preset-editor')}
                                 className="text-[9px] font-black uppercase tracking-widest text-accent hover:text-white transition-colors"
                             >
                                 {t('map.sidebar.danger.managePresets')}

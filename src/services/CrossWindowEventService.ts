@@ -191,8 +191,6 @@ class CrossWindowEventService {
         return this.isApplyingRemoteUpdate;
     }
 
-    private isApplyingRemoteUpdate = false;
-
     private setupSubscribers() {
         // Subscribe to store changes and broadcast them
         let prevState = useMapStore.getState();

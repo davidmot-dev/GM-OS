@@ -36,21 +36,20 @@ import { useHubSync } from '../modules/session/hooks/useHubSync';
 import PlayerPrivateNotes from '../modules/session/components/PlayerPrivateNotes';
 import { type Clue, type Entity, type AtlasMap } from '../modules/session/store/types';
 import { type FavoriteEntity } from '../modules/favorite/useFavoriteStore';
+import { type Combatant, type StatusEffect } from '../modules/combat/types';
+import { type TensionClock } from '../store/useClockStore';
 import { useDiceStore } from '../stores/useDiceStore';
 import { useSessionOSStore } from '../modules/session/useSessionOSStore';
 import { useClientStore } from '../stores/useClientStore';
 import { usePerformanceControl } from '../hooks/usePerformanceControl';
 import { usePerformanceStore } from '../stores/usePerformanceStore';
-import { VoiceReactiveAvatar } from './hub/VoiceReactiveAvatar';
 import type { DieResult } from '../modules/dice/DiceEngine';
-import { useTranslation } from 'react-i18next';
 
 const TabletHub: React.FC = () => {
     const {
         status,
         liveImagePath,
         liveEntity,
-        voiceLevel,
         sessionSummary,
         showDice,
         resolvedFavorites,
@@ -95,7 +94,7 @@ const TabletHub: React.FC = () => {
     const [activeToast, setActiveToast] = useState<{ fromName: string; channel: string } | null>(null);
 
     const activeHubId = projections['hub'];
-    const activeSession = sessions.find(s => s.status === 'active');
+    const activeSession = sessions.find((s: { status: string }) => s.status === 'active');
     const messages = useSessionOSStore((state) => state.messages);
     const players = useSessionOSStore((state) => state.players);
 
@@ -108,19 +107,19 @@ const TabletHub: React.FC = () => {
         ).length;
     }, [messages, lastReadMessageTime, characterId]);
  
-    const playerWithChar = useMemo(() => players.find(p => p.characters.some(c => c.id === characterId)), [players, characterId]);
-    const characterName = playerWithChar?.characters.find(c => c.id === characterId)?.name || 'Joueur';
+    const playerWithChar = useMemo(() => players.find((p: { characters: { id: string }[] }) => p.characters.some((c: { id: string }) => c.id === characterId)), [players, characterId]);
+    const characterName = playerWithChar?.characters.find((c: { id: string }) => c.id === characterId)?.name || 'Joueur';
     const playerId = playerWithChar?.id;
  
-    const visibleCombatants = useMemo(() => combatants.filter(c => 
-        c.isPlayer || !c.statuses?.some(s => ['invisible', 'invisibilité', 'caché', 'hidden'].includes(s.name.toLowerCase()))
+    const visibleCombatants = useMemo(() => combatants.filter((c: Combatant) => 
+        c.isPlayer || !c.statuses?.some((s: StatusEffect) => ['invisible', 'invisibilité', 'caché', 'hidden'].includes(s.name.toLowerCase()))
     ), [combatants]);
  
-    const activeCombatant = useMemo(() => visibleCombatants.find((_, idx) => idx === currentTurnIdx) || null, [visibleCombatants, currentTurnIdx]);
+    const activeCombatant = useMemo(() => visibleCombatants.find((_: unknown, idx: number) => idx === currentTurnIdx) || null, [visibleCombatants, currentTurnIdx]);
     const hasCombatants = isCombatProjected && visibleCombatants.length > 0;
  
     const upcomingCombatants = useMemo(() => visibleCombatants.length > 1 
-        ? visibleCombatants.filter(c => c.id !== activeCombatant?.id)
+        ? visibleCombatants.filter((c: Combatant) => c.id !== activeCombatant?.id)
         : [], [visibleCombatants, activeCombatant]);
  
     const inventoryItems = useMemo(() => resolvedFavorites.filter(f => f.type === 'item'), [resolvedFavorites]);
@@ -252,7 +251,7 @@ const TabletHub: React.FC = () => {
 
                     {isClockProjected && tensions.length > 0 && (
                         <div className="grid grid-cols-2 gap-4 w-full h-fit overflow-y-auto max-h-[220px] pr-2 custom-scrollbar">
-                            {tensions.map(clock => (
+                            {tensions.map((clock: TensionClock) => (
                                 <div key={clock.id} className={`flex items-center gap-3 bg-app-surface/60 border border-app-border/40 rounded-2xl p-3 shadow-xl ${performance.blurClass}`}>
                                     <NarrativeClock clock={clock} theme={theme} size={48} />
                                     <div className="flex flex-col flex-1 overflow-hidden">
@@ -416,7 +415,7 @@ const TabletHub: React.FC = () => {
                                 </div>
                             </div>
                         </div>
-                        {upcomingCombatants.slice(0, 5).map((c) => (
+                        {upcomingCombatants.slice(0, 5).map((c: Combatant) => (
                             <div key={c.id} className="flex items-center gap-3 p-3 rounded-2xl bg-app-surface/20 border border-app-border/10 opacity-60">
                                 <ResolvedImage className="size-8 rounded-full border border-app-border/10" src={c.avatar} alt={c.name} />
                                 <p className="text-app-text/90 text-xs font-medium truncate">{c.name}</p>

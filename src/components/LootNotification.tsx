@@ -8,7 +8,7 @@ interface LootNotificationProps {
     isVisible: boolean;
 }
 
-const rarityColors = {
+const rarityColors: Record<string, string> = {
     common: 'from-slate-500/20 to-slate-600/20 border-slate-500/50 text-slate-300',
     uncommon: 'from-emerald-500/20 to-emerald-600/20 border-emerald-500/50 text-emerald-300',
     rare: 'from-blue-500/20 to-blue-600/20 border-blue-500/50 text-blue-300',
@@ -17,7 +17,7 @@ const rarityColors = {
     artifact: 'from-red-500/20 to-red-600/20 border-red-500/50 text-red-300',
 };
 
-const rarityGlow = {
+const rarityGlow: Record<string, string> = {
     common: 'shadow-slate-500/10',
     uncommon: 'shadow-emerald-500/20',
     rare: 'shadow-blue-500/20',

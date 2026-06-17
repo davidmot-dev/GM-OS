@@ -14,7 +14,7 @@ import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { gmToast } from '../../../stores/useToastStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { aiService } from '../../ai/AIService';
-import { MessageSquare, Copy, CheckCircle } from 'lucide-react';
+import { MessageSquare, Copy } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 export const FavoriteFullDossier: React.FC = () => {
@@ -170,6 +170,7 @@ export const FavoriteFullDossier: React.FC = () => {
                                     hpMax: 10,
                                     init: Math.floor(Math.random() * 20) + 1,
                                     isPlayer: false,
+                                    faction: 'enemy',
                                     avatar: formData.tokenUrl || entity.tokenUrl || formData.imageUrl || entity.imageUrl,
                                     statuses: []
                                 });

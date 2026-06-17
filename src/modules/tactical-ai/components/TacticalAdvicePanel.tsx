@@ -123,7 +123,7 @@ export const TacticalAdvicePanel: React.FC = () => {
                                     ${advice.priority >= 4 ? 'text-red-400 bg-red-400/20' : 'text-accent bg-accent/20'}`}>
                                     {advice.type === 'macro-rout' || advice.type === 'macro-flank' ? <AlertTriangle size={20} /> : 
                                      advice.type === 'position' ? <MapPin size={20} /> :
-                                     advice.type === 'magic' || advice.type === 'spell' ? <Sparkles size={20} /> :
+                                     advice.type === 'magic' ? <Sparkles size={20} /> :
                                      <ShieldCheck size={20} />}
                                 </div>
                                 <div className="space-y-1.5 pt-0.5">

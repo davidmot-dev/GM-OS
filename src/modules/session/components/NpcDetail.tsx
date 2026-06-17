@@ -36,7 +36,7 @@ const FieldGauge: React.FC<{
     value: number;
     onChange: (val: number) => void;
     t: (key: string) => string;
-}> = ({ field, value, onChange, t }) => (
+}> = ({ field, value, onChange }) => (
     <div className="group space-y-2">
         <div className="flex justify-between items-center">
             <label className="text-[11px] font-black uppercase tracking-wider text-app-text/60">{field.label}</label>
@@ -221,7 +221,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
     const { addToken } = useMapStore();
     const currentId = embeddedId || selectedEntityId;
     const selectedNpc = entities.find(e => e.id === currentId);
-    const currentTemplate = customSheetTemplates.find(t => t.id === selectedNpc?.sheetTemplateId);
+    const currentTemplate = customSheetTemplates.find(t => t.id === selectedNpc?.templateId);
     const { evaluateFormula } = useSheetCalculator(selectedNpc || null, currentTemplate || null);
     useVoiceAutomation();
 

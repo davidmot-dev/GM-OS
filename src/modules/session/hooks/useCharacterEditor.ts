@@ -31,7 +31,8 @@ export function useCharacterEditor() {
         const out: Record<string, string | number | boolean> = {};
         for (const section of template.sections) {
             for (const field of section.fields) {
-                out[field.id] = character.sheetData?.[field.id] ?? field.defaultValue;
+                const val = character.sheetData?.[field.id];
+                out[field.id] = (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') ? val : field.defaultValue;
             }
         }
         return out;

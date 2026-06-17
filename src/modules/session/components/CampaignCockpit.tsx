@@ -18,11 +18,11 @@ const CampaignCockpit: React.FC = () => {
         currentView, 
         updateSession, 
         applySystemSnapshot,
-        decks,
-        setTemplateDashboardTab
+        decks
     } = useSessionOSStore();
     const { setActiveModule } = useSessionStore();
-    const { showCustom, showConfirm } = useModalStore();
+    const { showCustom, showConfirm, customVariant, type: modalType } = useModalStore();
+    const isLootOSOpen = modalType === 'custom' && customVariant === 'loot-os';
 
     const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
     const campaignSystem = activeCampaign?.system || 'generic';
@@ -129,10 +129,10 @@ const CampaignCockpit: React.FC = () => {
                 <button
                     onClick={() => showCustom('loot-os')}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${
-                        currentView === 'loot-os' ? 'bg-accent/10 text-accent border border-accent/20' : 'text-app-text/60 hover:bg-white/5 hover:text-app-text'
+                        isLootOSOpen ? 'bg-accent/10 text-accent border border-accent/20' : 'text-app-text/60 hover:bg-white/5 hover:text-app-text'
                     }`}
                 >
-                    <Archive size={20} className={currentView === 'loot-os' ? 'text-accent scale-110 shadow-glow-accent' : 'group-hover:scale-110 transition-transform'} />
+                    <Archive size={20} className={isLootOSOpen ? 'text-accent scale-110 shadow-glow-accent' : 'group-hover:scale-110 transition-transform'} />
                     <span className={`text-sm tracking-tight ${theme === 'medieval' ? 'font-display' : 'font-bold'}`}>
                         {t('modules:session.cockpit.view_loot_os')}
                     </span>

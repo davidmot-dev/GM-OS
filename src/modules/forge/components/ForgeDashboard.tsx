@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDebugStore } from '../../../stores/useDebugStore';
 import { Hammer, FileUp, Globe, X, Rocket, Zap, Sparkles, ChevronRight, Shield } from 'lucide-react';
-import { forgeService, type ForgeContextItem, type ForgeSystemResult } from '../ForgeService';
+import { forgeService } from '../ForgeService';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { gmConfirm } from '../../../stores/useModalStore';
@@ -35,7 +34,6 @@ interface ForgeDashboardProps {
 
 const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
   const { t } = useTranslation(['modules']);
-  const { activeProvider } = useAIStore();
   const { saveGameDriver, addSheetTemplate, customGameDrivers, activeCampaignId, campaigns, updateCampaign } = useSessionOSStore();
   const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
   
@@ -51,7 +49,6 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
   // Logs & UI Local State
   const [logs, setLogs] = useState<string[]>([]);
   const logEndRef = useRef<HTMLDivElement>(null);
-  const startTimeRef = useRef<number>(Date.now());
   
   // NotebookLM Integration State
   const [isNotebookModalOpen, setIsNotebookModalOpen] = useState(false);
@@ -95,12 +92,12 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
           content = await base64Promise;
         }
 
-        setContextItems(prev => [...prev, {
+        forgeStore.addContextItem({
           name: f.name,
           type: isPdf ? 'pdf' : isMarkdown ? 'text' : 'image',
           content,
           mimeType: f.type
-        }]);
+        });
         addLog(`LOADED: ${f.name}`);
       }
     }
@@ -259,7 +256,7 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
   };
 
   const removeContextItem = (index: number) => {
-    setContextItems(prev => prev.filter((_, i) => i !== index));
+    forgeStore.removeContextItem(index);
     addLog("ITEM DISCARDED FROM CONTEXT.");
   };
 
@@ -516,7 +513,7 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                     <div className="flex-1 min-w-0 text-app-text">
                       <p className="text-xs font-bold truncate">{item.name}</p>
                     </div>
-                    <button onClick={() => forgeStore.removeContextItem(idx)} className="opacity-0 group-hover:opacity-100 p-1.5 hover:bg-red-500/20 hover:text-red-400 rounded-lg transition-all"><X className="w-4 h-4" /></button>
+                    <button onClick={() => removeContextItem(idx)} className="opacity-0 group-hover:opacity-100 p-1.5 hover:bg-red-500/20 hover:text-red-400 rounded-lg transition-all"><X className="w-4 h-4" /></button>
                   </div>
                 </div>
               )) : notebookSources.map(s => (

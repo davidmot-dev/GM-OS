@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSessionOSStore } from '../useSessionOSStore';
 import { 
     Sparkles, Brain, Save, ArrowLeft, PenTool, Music, Beaker, User,
     BookOpen, Dice5, Zap, Map, Archive, Plus, Trash2, type LucideIcon, Eye 
@@ -12,6 +13,7 @@ import { useRuleEngine } from '../hooks/useRuleEngine';
 
 export const RuleEngineEditor: React.FC = () => {
     const { t } = useTranslation(['settings', 'modules']);
+    const { setEditingTemplateId, setCurrentView } = useSessionOSStore();
     const {
         driver,
         activeSection,

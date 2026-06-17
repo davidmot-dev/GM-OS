@@ -19,8 +19,7 @@ const ImageDashboard: React.FC = () => {
         mediaList, projectionTarget, setProjectionTarget,
         projectSequence, navigateSequence, blackout, blackoutAll, addMedia, displays, fetchDisplays,
         folders, activeFolderId, setActiveFolderId, addFolder, removeFolder,
-        currentView, setCurrentView, reset,
-        projections
+        currentView, setCurrentView, reset
     } = useImageStore();
     const { t } = useTranslation(['modules', 'common']);
     const { getDisplayLabel } = useHardwareStore();

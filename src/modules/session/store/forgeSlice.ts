@@ -131,22 +131,19 @@ export const createForgeSlice: StateCreator<ForgeSlice, [], [], ForgeSlice> = (s
                   emoji: '🎮',
                   templateId: templateId,
                   dice: {
-                      defaultMode: 'standard',
+                      engine: 'standard',
                       defaultDice: '1d20',
                       logic: 'sum',
-                      poolRules: {
-                          threshold: 6,
-                          explode: false
-                      }
+                      successThreshold: 6
                   },
                   combat: {
-                      defaultFormat: 'standard'
+                      statsToTrack: [],
+                      initiativeFormula: 'dex',
+                      initiativeSort: 'desc',
+                      defaultHealthType: 'hp'
                   },
-                  genre: '',
-                  systemPrompt: '',
-                  aiInstructions: {},
-                  modules: {}
-              } as GameDriver;
+                  aiInstructions: '',
+              };
 
         saveGameDriver(newDriver);
         return newDriver;

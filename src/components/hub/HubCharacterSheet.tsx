@@ -162,7 +162,7 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                                                 <span className="text-[9px] font-black text-app-text/30 uppercase tracking-widest">{field.label}</span>
                                                 {field.type === 'gauge' ? (
                                                     <div className="space-y-2 mt-1">
-                                                        <span className="text-lg font-black text-app-text font-mono">{value}</span>
+                                                        <span className="text-lg font-black text-app-text font-mono">{String(value)}</span>
                                                         <div className="h-1 bg-app-bg/40 rounded-full overflow-hidden">
                                                             <div className="h-full bg-accent" style={{ '--gauge-width': `${(Number(value) / 100) * 100}%`, width: 'var(--gauge-width)' } as React.CSSProperties} />
                                                         </div>
@@ -172,7 +172,7 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                                                         {value ? 'OUI' : 'NON'}
                                                     </span>
                                                 ) : (
-                                                    <span className="text-sm font-black text-app-text block mt-1 truncate">{value}</span>
+                                                    <span className="text-sm font-black text-app-text block mt-1 truncate">{String(value)}</span>
                                                 )}
                                             </div>
                                         );

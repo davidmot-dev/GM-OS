@@ -32,6 +32,12 @@ export const HubDiceDisplay: React.FC<HubDiceDisplayProps> = ({ showDice, lastRo
                     {lastRoll.totalDisplay}
                 </div>
 
+                {lastRoll.fateRank !== undefined && (
+                    <div className="text-sm text-accent font-black uppercase tracking-widest -mt-4 drop-shadow-md">
+                        {getFateRankLabel(lastRoll.fateRank, t)}
+                    </div>
+                )}
+
                 <div className="flex flex-wrap gap-4 justify-center mt-4">
                     {(lastRoll.rolls as DieResult[]).map((r, i) => (
                         <div 
@@ -39,11 +45,6 @@ export const HubDiceDisplay: React.FC<HubDiceDisplayProps> = ({ showDice, lastRo
                             className={`size-16 flex flex-col items-center justify-center rounded-2xl text-2xl font-black border transition-all relative group ${getDieCssClass(r)}`}
                         >
                             {r.displayStr || r.val}
-                            {r.fateRank !== undefined && (
-                                <span className="absolute -top-2 -right-2 px-2 py-0.5 bg-accent text-[10px] rounded-lg text-white shadow-xl font-black uppercase">
-                                    {getFateRankLabel(r.fateRank, t)}
-                                </span>
-                            )}
                         </div>
                     ))}
                 </div>

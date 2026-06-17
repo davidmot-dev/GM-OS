@@ -3,7 +3,7 @@ import { useSessionOSStore } from '../session/useSessionOSStore';
 import { useJournalStore } from '../journal/useJournalStore';
 import { useMediaStore } from '../../stores/useMediaStore';
 import { ragService } from './RAGService';
-import type { AIResponse } from './types';
+import type { AIResponse, AIProvider } from './types';
 import type { JournalEvent } from '../journal/types';
 import i18n from '../../i18n';
 
@@ -78,12 +78,12 @@ export class AIService {
   }
 
   private async executeRequest(
-    activeProvider: string,
+    activeProvider: AIProvider,
     prompt: string,
     systemPrompt: string,
-    gemId: string,
-    ragOptions: any,
-    lite?: boolean
+    _gemId: string,
+    _ragOptions: any,
+    _lite?: boolean
   ): Promise<AIResponse> {
     const { configs } = useAIStore.getState();
     const config = configs[activeProvider];
@@ -703,10 +703,10 @@ export class AIService {
    * Prépare le prompt système complet en fonction du contexte.
    */
   public async prepareSystemPrompt(
-    prompt: string,
+    _prompt: string,
     customContext?: string,
     gemId: string = 'sage',
-    ragOptions: { systemOnly?: boolean; systemName?: string } = {},
+    ragOptions: { systemOnly?: boolean; systemName?: string; limit?: number } = {},
     lite?: boolean
   ): Promise<string> {
     const aiStore = useAIStore.getState();
@@ -964,7 +964,7 @@ ${fullContext}`;
     
     // 2. Fix unquoted keys or keys with single quotes
     // Matches keys that are either unquoted (alphanumeric/underscore) or single-quoted
-    s = s.replace(/([{,]\s*)(['"])?([a-zA-Z0-9_]+)(['"])?\s*:/g, (match, prefix, q1, key, q2) => {
+    s = s.replace(/([{,]\s*)(['"])?([a-zA-Z0-9_]+)(['"])?\s*:/g, (_match, prefix, _q1, key, _q2) => {
       return `${prefix}"${key}":`;
     });
 

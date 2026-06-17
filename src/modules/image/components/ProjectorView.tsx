@@ -37,26 +37,27 @@ const ProjectorView: React.FC = () => {
     useEffect(() => {
         initDB();
 
-        if (window.appBridge?.on) {
-            // Nettoyage des anciens écouteurs pour éviter les fuites
-            const removeUpdate = window.appBridge.on('image:update-display', (_event: unknown, paths: string[]) => {
-                setIpcCount(c => c + 1);
-                const data = paths && paths.length > 0 ? paths[0] : 'EMPTY';
-                updateImageSource(data === 'EMPTY' ? null : data);
-            });
+        const handleUpdateDisplay = (_event: unknown, paths: string[]) => {
+            setIpcCount(c => c + 1);
+            const data = paths && paths.length > 0 ? paths[0] : 'EMPTY';
+            updateImageSource(data === 'EMPTY' ? null : data);
+        };
 
-            // 📡 Écoute du canal GLOBAL (Broadcast)
-            const removeSync = window.appBridge.on('image:sync-hub-data', (_event: unknown, ...args: unknown[]) => {
-                const [type, data] = args as [string, string];
-                if (type === 'image') {
-                    setIpcCount(c => c + 1);
-                    updateImageSource(data || null);
-                }
-            });
+        const handleSyncHubData = (_event: unknown, ...args: unknown[]) => {
+            const [type, data] = args as [string, string];
+            if (type === 'image') {
+                setIpcCount(c => c + 1);
+                updateImageSource(data || null);
+            }
+        };
+
+        if (window.appBridge?.on) {
+            window.appBridge.on('image:update-display', handleUpdateDisplay);
+            window.appBridge.on('image:sync-hub-data', handleSyncHubData);
             
             return () => {
-                if (typeof removeUpdate === 'function') removeUpdate();
-                if (typeof removeSync === 'function') removeSync();
+                window.appBridge?.off?.('image:update-display', handleUpdateDisplay);
+                window.appBridge?.off?.('image:sync-hub-data', handleSyncHubData);
             };
         }
     }, [initDB, targetId, updateImageSource]);

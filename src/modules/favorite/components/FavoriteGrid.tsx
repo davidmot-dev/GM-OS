@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFavoriteStore } from '../useFavoriteStore';
-import type { FavoriteEntity } from '../useFavoriteStore';
 import { FavoriteCard } from './FavoriteCard';
 
 export const FavoriteGrid: React.FC = () => {

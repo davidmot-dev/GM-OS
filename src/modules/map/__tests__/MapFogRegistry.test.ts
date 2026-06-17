@@ -23,23 +23,24 @@ describe('MapFogRegistry', () => {
                 tokens: true,
                 magic: true,
                 danger: true,
-                weather: true
+                weather: true,
+                ambiance: true
             }
         });
     });
 
-    it('should save fog to registry when setFogDataUrl is called', () => {
+    it('should save fog to registry when setFogDataUrl is called', async () => {
         const store = useMapStore.getState();
-        store.setMap('map-1', false, 'Map One');
+        await store.setMap('map-1', false, 'Map One');
         
-        store.setFogDataUrl('data:image/png;base64,fog1');
+        await store.setFogDataUrl('data:image/png;base64,fog1');
         
         const state = useMapStore.getState();
         expect(state.fogRegistry['map-1']).toBe('data:image/png;base64,fog1');
         expect(state.fogDataUrl).toBe('data:image/png;base64,fog1');
     });
 
-    it('should load fog from registry when switching back to a map', () => {
+    it('should load fog from registry when switching back to a map', async () => {
         const store = useMapStore.getState();
         
         // Setup registry
@@ -51,22 +52,22 @@ describe('MapFogRegistry', () => {
         });
 
         // Load map 1
-        store.setMap('map-1', false, 'Map One');
+        await store.setMap('map-1', false, 'Map One');
         expect(useMapStore.getState().fogDataUrl).toBe('data:image/png;base64,fog1');
 
         // Switch to map 2
-        store.setMap('map-2', false, 'Map Two');
+        await store.setMap('map-2', false, 'Map Two');
         expect(useMapStore.getState().fogDataUrl).toBe('data:image/png;base64,fog2');
     });
 
-    it('should reset fog to null if map is not in registry', () => {
+    it('should reset fog to null if map is not in registry', async () => {
         const store = useMapStore.getState();
         
-        store.setMap('map-1', false, 'Map One');
-        store.setFogDataUrl('data:image/png;base64,fog1');
+        await store.setMap('map-1', false, 'Map One');
+        await store.setFogDataUrl('data:image/png;base64,fog1');
         
         // Switch to unknown map
-        store.setMap('map-new', false, 'New Map');
+        await store.setMap('map-new', false, 'New Map');
         expect(useMapStore.getState().fogDataUrl).toBe(null);
     });
 

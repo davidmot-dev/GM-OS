@@ -130,15 +130,17 @@ export class SessionManager {
     /**
      * Atomic navigation helpers
      */
-    static navigateToAtlasMap(set: any, get: any, id: string) {
+    static navigateToAtlasMap(set: any, get: any, id: string | null) {
         set({ selectedAtlasMapId: id, currentView: 'world-atlas' });
-        const map = (get() as SessionOSStore).atlasMaps.find(m => m.id === id);
-        if (map) {
-            useJournalStore.getState().addEvent({
-                type: 'LOCATION',
-                title: `📍 Navigation: ${map.name}`,
-                content: map.narrativeDescription || `Le groupe se déplace vers ${map.name}.`,
-            });
+        if (id) {
+            const map = (get() as SessionOSStore).atlasMaps.find(m => m.id === id);
+            if (map) {
+                useJournalStore.getState().addEvent({
+                    type: 'LOCATION',
+                    title: `📍 Navigation: ${map.name}`,
+                    content: map.narrativeDescription || `Le groupe se déplace vers ${map.name}.`,
+                });
+            }
         }
     }
 }

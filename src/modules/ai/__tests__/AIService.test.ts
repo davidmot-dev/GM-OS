@@ -28,7 +28,7 @@ vi.mock('../RAGService', () => ({
 // Mock appBridge
 const mockProxyRequest = vi.fn();
 
-Object.defineProperty(global, 'window', {
+Object.defineProperty(globalThis, 'window', {
   value: {
     appBridge: {
       ai: {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, BookOpen, X, Copy, Check } from 'lucide-react';
+import { BookOpen, Copy, Check } from 'lucide-react';
 import { useNarrativeGenerator } from '../hooks/useNarrativeGenerator';
 import { useModalStore } from '../../../stores/useModalStore';
 import { gmToast } from '../../../stores/useToastStore';

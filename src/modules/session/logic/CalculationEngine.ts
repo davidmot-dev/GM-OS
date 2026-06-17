@@ -42,7 +42,7 @@ export class CalculationEngine {
 
         // 2. Variables: @Strength -> Strength
         const variables: string[] = [];
-        prepared = prepared.replace(/@([a-zA-Z0-9_]+)/g, (match, varName) => {
+        prepared = prepared.replace(/@([a-zA-Z0-9_]+)/g, (_, varName) => {
             variables.push(varName);
             return varName;
         });

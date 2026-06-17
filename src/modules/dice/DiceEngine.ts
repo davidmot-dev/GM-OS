@@ -7,6 +7,7 @@ export interface DieResult {
     displayStr?: string;
     isDropped?: boolean; // For advantage/disadvantage
     source?: 'base' | 'gear' | 'digit'; // For YZE or Digits
+    cssClass?: string;
 }
 
 export interface RollResult {

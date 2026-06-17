@@ -1,4 +1,4 @@
-import { useEffect, RefObject } from 'react';
+import { useEffect, type RefObject } from 'react';
 
 /**
  * Hook qui déclenche une action lorsqu'on clique en dehors de l'élément référencé.

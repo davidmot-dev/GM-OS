@@ -44,7 +44,6 @@ export const useHubSync = () => {
     const [sessionSummary, setSessionSummary] = useState<string>('');
     const [showDice, setShowDice] = useState(false);
     const [sharedRule, setSharedRule] = useState<any | null>(null);
-    const [mapPings, setMapPings] = useState<any[]>([]);
     const [latency, setLatency] = useState<number | null>(null);
 
     const [resolvedFavorites, setResolvedFavorites] = useState<any[]>([]);
@@ -66,9 +65,6 @@ export const useHubSync = () => {
     const useClientStore = getStore('useClientStore');
     const useDiceStore = getStore('useDiceStore');
     const useSyncStore = getStore('useSyncStore');
-    const useMapStore = getStore('useMapStore');
-    const useMapUIStore = getStore('useMapUIStore');
-    const useWhiteboardStore = getStore('useWhiteboardStore');
 
     // 🛡️ Individual Selectors (Stable)
     const projections = useImageStore ? useImageStore((s: any) => s.projections) : EMPTY_OBJ;
@@ -87,7 +83,6 @@ export const useHubSync = () => {
     const isCombatProjected = useCombatStore ? useCombatStore((s: any) => s.isCombatProjected) : false;
 
     const entities = useSessionOSStore ? useSessionOSStore((s: any) => s.entities) : EMPTY_ARR;
-    const players = useSessionOSStore ? useSessionOSStore((s: any) => s.players) : EMPTY_ARR;
     const activeCampaignId = useSessionOSStore ? useSessionOSStore((s: any) => s.activeCampaignId) : null;
     const activeCampaignName = useSessionOSStore ? useSessionOSStore((s: any) => s.activeCampaignName) : '';
     const activeCampaignWallpaper = useSessionOSStore ? useSessionOSStore((s: any) => s.activeCampaignWallpaper) : null;
@@ -313,8 +308,7 @@ export const useHubSync = () => {
                 if (sSync) sSync.getState().setVoiceLevel(parseFloat(data) || 0);
             }
             else if (type === 'map-ping') {
-                const ping = typeof data === 'string' ? JSON.parse(data) : data;
-                setMapPings(prev => [...prev.slice(-10), { ...ping, timestamp: Date.now() }]);
+                // Handled via map-os canvas
             }
             else if (type === 'session:display-rule') setSharedRule(data as any);
         };
@@ -447,7 +441,6 @@ export const useHubSync = () => {
         playerName,
         sharedRule,
         setSharedRule,
-        setMapPings,
         latency
     };
 };

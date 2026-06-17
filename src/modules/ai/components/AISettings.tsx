@@ -388,11 +388,11 @@ const AISettings: React.FC = () => {
                       onClick={async () => {
                         setIsLoadingModels(prev => ({ ...prev, [p.id]: true }));
                         try {
-                          let models = [];
+                          let models: string[] = [];
                           if (p.id === 'gemini') {
                              models = await aiService.listModels(configs.gemini.apiKey);
                           } else {
-                             models = await window.appBridge?.ai?.ollamaListModels?.(configs[p.id].endpoint);
+                             models = (await window.appBridge?.ai?.ollamaListModels?.(configs[p.id].endpoint)) || [];
                           }
                           setDiscoveredModels(prev => ({ ...prev, [p.id]: models }));
                         } finally {

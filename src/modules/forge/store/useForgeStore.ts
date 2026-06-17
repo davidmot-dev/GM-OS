@@ -1,6 +1,4 @@
 import { create } from 'zustand';
-import type { GameDriver } from '../../../types/drivers';
-import type { SheetTemplate } from '../../../data/defaultSheetTemplates';
 import type { ForgeContextItem, ForgeSystemResult } from '../ForgeService';
 
 interface ForgeState {

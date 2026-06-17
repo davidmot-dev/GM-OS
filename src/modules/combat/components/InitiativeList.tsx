@@ -19,7 +19,7 @@ import {
 } from '@dnd-kit/sortable';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { CSS } from '@dnd-kit/utilities';
-import { Sword, Zap } from 'lucide-react';
+import { Zap } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 interface SortableCombatCardProps {

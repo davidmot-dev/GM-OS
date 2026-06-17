@@ -72,4 +72,5 @@ export interface Entity {
     relations?: EntityRelation[];
     faction?: string;
     isVisibleByPlayers?: boolean;
+    isEncounterInstance?: boolean;
 }

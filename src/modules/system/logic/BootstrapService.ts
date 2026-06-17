@@ -5,7 +5,6 @@ import { useLightStore } from '../../light/useLightStore';
 import { useSessionStore } from '../../../store/useSessionStore';
 import { useImageStore } from '../../image/useImageStore';
 import { useMapStore } from '../../map/useMapStore';
-import { sessionBackupManager } from '../../session/logic/SessionBackupManager';
 
 /**
  * Service centralisé pour orchestrer le démarrage de GM-OS.

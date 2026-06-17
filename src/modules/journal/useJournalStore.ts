@@ -277,13 +277,16 @@ export const useJournalStore = create<JournalState>()(
             throw new Error(i18next.t('modules:journal.messages.invalid_notebook_url'));
           }
 
-          // Call MCP tool (this would typically be handled by a service or directly if in a supported environment)
-          // Since we are in the frontend, we'd need a bridge or a direct call if the MCP is exposed.
-          // For now, we simulate the call via bridge or notify the user if we can't do it directly.
           console.log(`[JournalStore] Syncing to Notebook: ${notebookId}`);
           
-          if (window.appBridge?.notebooklm?.addText) {
-            await window.appBridge.notebooklm.addText(notebookId, summaryEvent.content, `Résumé Session: ${journal.title}`);
+          if (window.appBridge?.mcp?.callTool) {
+            await window.appBridge.mcp.callTool('notebooklm-mcp-server', 'notebook_add_text', {
+              request: {
+                notebook_id: notebookId,
+                text: summaryEvent.content,
+                title: `Résumé Session: ${journal.title}`
+              }
+            });
           } else {
             throw new Error(i18next.t('modules:journal.messages.notebook_not_available'));
           }

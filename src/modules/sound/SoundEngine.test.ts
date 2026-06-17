@@ -5,6 +5,8 @@ import { SoundEngine } from './SoundEngine';
 vi.mock('../../stores/useMediaStore', () => ({
     useMediaStore: {
         getState: vi.fn(() => ({
+            isInitialized: true,
+            initDB: vi.fn().mockResolvedValue(undefined),
             getMediaBlob: vi.fn().mockResolvedValue(new Blob(['test-audio'], { type: 'audio/mpeg' })),
         })),
     },
@@ -23,8 +25,8 @@ describe('SoundEngine', () => {
     it('should initialize with an AudioContext and master gain', () => {
         expect(engine.context).toBeDefined();
         expect(engine.masterGain).toBeDefined();
-        // createGain should have been called once for the master gain in the constructor
-        expect(engine.context.createGain).toHaveBeenCalledTimes(1);
+        // createGain should have been called twice (once for master gain, once for globalSync gain) in the constructor
+        expect(engine.context.createGain).toHaveBeenCalledTimes(2);
     });
 
     it('should format URLs correctly', () => {
@@ -43,15 +45,15 @@ describe('SoundEngine', () => {
         // First load a fake buffer
         await engine.loadAudio('pad-1', 'm-123');
         
-        // At this point, createGain was called once (for master)
+        // At this point, createGain was called twice (for master + globalSync)
         engine.play('pad-1', 0.8);
         
-        // Now createGain should have been called twice (master + pad)
-        expect(engine.context.createGain).toHaveBeenCalledTimes(2);
+        // Now createGain should have been called three times (master + globalSync + pad)
+        expect(engine.context.createGain).toHaveBeenCalledTimes(3);
         expect(engine.context.createBufferSource).toHaveBeenCalledTimes(1);
         
         const sourceMock = vi.mocked(engine.context.createBufferSource).mock.results[0].value;
-        const gainMock = vi.mocked(engine.context.createGain).mock.results[1].value; // First call was master, second is pad
+        const gainMock = vi.mocked(engine.context.createGain).mock.results[2].value; // First two calls were constructor, third is pad
         
         expect(sourceMock.start).toHaveBeenCalledWith(0);
         expect(gainMock.gain.value).toBe(0.8);

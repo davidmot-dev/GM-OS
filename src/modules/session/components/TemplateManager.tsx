@@ -16,6 +16,7 @@ const getFieldTypeLabels = (t: any): Record<SheetFieldType, string> => ({
     select: t('modules:session.template_manager.field_types.select'),
     textarea: t('modules:session.template_manager.field_types.textarea'),
     rating: t('modules:session.template_manager.field_types.rating'),
+    formula: t('modules:session.template_manager.field_types.formula', { defaultValue: 'Formule' }),
 });
 
 // Sub-component to handle options input without immediate splitting/joining issues
@@ -64,6 +65,8 @@ const SectionEditor: React.FC<{
 }> = ({ section, onUpdate, onDelete }) => {
     const { t } = useTranslation(['modules']);
     const fieldTypeLabels = getFieldTypeLabels(t);
+    const { showConfirm } = useModalStore();
+    const [isOpen, setIsOpen] = useState(true);
 
     const updateField = (index: number, updates: Partial<SheetField>) => {
         const newFields = [...section.fields];
@@ -379,16 +382,16 @@ const TemplateManager: React.FC = () => {
                     <h3 className="text-[10px] font-black uppercase tracking-widest text-app-text/40">{t('modules:session.template_manager.manager.sidebar_title')}</h3>
                 </div>
                 <div className="flex-1 overflow-y-auto p-3 space-y-1">
-                    {allTemplates.map(t => (
+                    {allTemplates.map(templateItem => (
                         <button
-                            key={t.id}
-                            onClick={() => setSelectedId(t.id)}
-                            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all ${selectedId === t.id ? 'bg-accent/10 border border-accent/30 text-accent' : 'text-app-text/40 hover:bg-app-bg/50 hover:text-white border border-transparent'}`}
+                            key={templateItem.id}
+                            onClick={() => setSelectedId(templateItem.id)}
+                            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all ${selectedId === templateItem.id ? 'bg-accent/10 border border-accent/30 text-accent' : 'text-app-text/40 hover:bg-app-bg/50 hover:text-white border border-transparent'}`}
                         >
-                            <span className="text-lg">{t.emoji}</span>
+                            <span className="text-lg">{templateItem.emoji}</span>
                             <div className="min-w-0">
-                                <p className="text-xs font-bold truncate">{t.name}</p>
-                                {t.isBuiltin && <p className="text-[9px] text-slate-600 uppercase tracking-widest">{t('modules:session.template_manager.manager.builtin_tag')}</p>}
+                                <p className="text-xs font-bold truncate">{templateItem.name}</p>
+                                {templateItem.isBuiltin && <p className="text-[9px] text-slate-600 uppercase tracking-widest">{t('modules:session.template_manager.manager.builtin_tag')}</p>}
                             </div>
                         </button>
                     ))}

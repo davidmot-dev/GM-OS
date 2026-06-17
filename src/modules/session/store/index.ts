@@ -38,9 +38,10 @@ import type {
     AtlasMap,
     WikiEntry,
     Clue,
-    EntityRelation,
     SessionModuleSnapshot,
 } from './types';
+import { resolveSheetTemplate } from '../logic/templateResolver';
+import { EncounterGenerator } from '../logic/EncounterGenerator';
 
 import { SessionManager } from '../logic/SessionManager';
 import { SnapshotService } from '../logic/SnapshotService';
@@ -51,6 +52,7 @@ import { PersistenceService, syncStorageAcrossWindows } from '../logic/Persisten
 // ─────────────────────────────────────────────
 
 interface CrossDomainActions {
+    lastBackupAt: string | null;
     // Actions déléguées au SessionManager ou SnapshotService
     launchSession: (sessionId: string) => void;
     saveSystemSnapshot: (sessionId: string) => void;
@@ -73,7 +75,7 @@ interface CrossDomainActions {
     };
 
     // Navigation
-    navigateToAtlasMap: (id: string) => void;
+    navigateToAtlasMap: (id: string | null) => void;
     navigateToNpcDetail: (id: string) => void;
     navigateToPlayerDetail: (playerId: string, characterId: string) => void;
 
@@ -91,6 +93,7 @@ interface CrossDomainActions {
     addChronicle: (data: any) => void;
     exportActiveCampaignToObsidian: () => Promise<void>;
     reconcileTemplates: () => void;
+    generateEncounter: (templateId: string) => Entity[];
 }
 
 // ─────────────────────────────────────────────
@@ -235,6 +238,20 @@ export const useSessionOSStore = create<SessionOSStore>()(
             generatePlayerPortrait: async (playerId, characterId, instructions) => handleGeneratePlayerPortrait(set, get, playerId, characterId, instructions),
             addChronicle: (payload) => handleAddChronicle(set, get, payload),
             exportActiveCampaignToObsidian: () => handleExportActiveCampaignToObsidian(get),
+            generateEncounter: (templateId) => {
+                const driver = get().getActiveDriver();
+                const template = driver?.encounterTemplates?.find(t => t.id === templateId);
+                if (!template) return [];
+
+                const prototypes = get().entities.filter(e => !e.isEncounterInstance);
+                const spawned = EncounterGenerator.generateFromTemplate(template, prototypes);
+
+                spawned.forEach(entity => {
+                    get().addEntity(entity);
+                });
+
+                return spawned;
+            },
 
             // ── Session Operations ─────────────────────────
 
@@ -247,7 +264,6 @@ export const useSessionOSStore = create<SessionOSStore>()(
              */
             reconcileTemplates: () => {
                 const { players, campaigns, customSheetTemplates } = get();
-                const { resolveSheetTemplate } = require('../logic/templateResolver');
                 const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
                 
                 let hasChanges = false;
@@ -291,4 +307,6 @@ export const useSessionOSStore = create<SessionOSStore>()(
 );
 
 // ── Cross-Window Sync ───────────────────────────
-syncStorageAcrossWindows(() => useSessionOSStore.persist.rehydrate());
+syncStorageAcrossWindows(async () => {
+    await useSessionOSStore.persist.rehydrate();
+});

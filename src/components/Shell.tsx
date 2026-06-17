@@ -42,7 +42,7 @@ import { useTacticalAIStore } from '../modules/tactical-ai/useTacticalAIStore';
 import { useTacticalOrchestrator } from '../modules/tactical-ai/hooks/useTacticalOrchestrator';
 import { useHardwareBridge } from '../modules/tactical-ai/hooks/useHardwareBridge';
 import { useAudioTactical } from '../modules/tactical-ai/hooks/useAudioTactical';
-import { useHueAutoConnect } from '../modules/light/hooks/useHueAutoConnect';
+
 import { useLayoutManager } from '../modules/session/hooks/useLayoutManager';
 import { useSessionOSStore } from '../modules/session/useSessionOSStore';
 import { gmToast } from '../stores/useToastStore';

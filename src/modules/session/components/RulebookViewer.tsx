@@ -3,10 +3,10 @@ import ReactMarkdown from 'react-markdown';
 import { useTranslation } from 'react-i18next';
 import { 
     Sparkles, ArrowLeft, Dice5, Zap, Map, Archive, BookOpen, 
-    Hammer, CheckCircle2, Info, ChevronRight, Globe
+    Hammer, Info, ChevronRight, Globe
 } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
-import type { GameDriver } from '../../../types/drivers';
+
 import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 
 import { RuleWorkshopViewer } from './RuleWorkshopViewer';

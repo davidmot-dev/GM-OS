@@ -75,7 +75,7 @@ describe('useOracleContext', () => {
 
         vi.mocked(useCombatStore).mockReturnValue({
             combatants: [
-                { name: 'Goblin', hp: 5, maxHp: 10, initiative: 15, statuses: [] }
+                { name: 'Goblin', hp: 5, hpMax: 10, init: 15, statuses: [] }
             ],
             round: 2,
             currentTurnIdx: 0

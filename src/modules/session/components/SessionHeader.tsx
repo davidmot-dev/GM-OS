@@ -22,9 +22,7 @@ const SessionHeader: React.FC<SessionHeaderProps> = ({
     const { t } = useTranslation();
     const { 
         currentView, 
-        setCurrentView, 
-        setWikiTab,
-        setTemplateDashboardTab 
+        setCurrentView 
     } = useSessionOSStore();
     const { theme } = useSessionStore();
 

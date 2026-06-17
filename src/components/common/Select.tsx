@@ -1,4 +1,4 @@
-import React, { useState, useRef, ReactNode } from 'react';
+import React, { useState, useRef, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, Check } from 'lucide-react';
 import { useClickOutside } from '../../hooks/useClickOutside';

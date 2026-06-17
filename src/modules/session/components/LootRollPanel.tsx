@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { Dice6, Gift, ChevronRight } from 'lucide-react';
+import { LootGenerator } from '../logic/LootGenerator';
 
 interface LootRollPanelProps {
     playerId: string;
@@ -11,7 +12,7 @@ interface LootRollPanelProps {
 
 export const LootRollPanel: React.FC<LootRollPanelProps> = ({ playerId, characterId, onClose }) => {
     const { t } = useTranslation(['modules']);
-    const { getActiveDriver, generateLoot, players } = useSessionOSStore();
+    const { getActiveDriver, addInventoryItem, players } = useSessionOSStore();
     const [selectedTableId, setSelectedTableId] = useState<string | null>(null);
     const [isRolling, setIsRolling] = useState(false);
     const [rollCount, setRollCount] = useState<number>(1);
@@ -35,13 +36,24 @@ export const LootRollPanel: React.FC<LootRollPanelProps> = ({ playerId, characte
         // Simuler le délai de lancer
         setTimeout(() => {
             const count = Math.max(1, Math.min(10, rollCount)); // Limite à 10 pour éviter le spam
-            for (let i = 0; i < count; i++) {
-                generateLoot(playerId, characterId, selectedTableId);
+            const table = driver.lootTables?.find(t => t.id === selectedTableId);
+            if (table) {
+                try {
+                    for (let i = 0; i < count; i++) {
+                        const rolledItems = LootGenerator.generateFromTable(table, driver.lootTables || []);
+                        rolledItems.forEach(item => {
+                            addInventoryItem(playerId, characterId, item);
+                        });
+                    }
+                } catch (e) {
+                    console.error("Loot roll error:", e);
+                }
             }
             setIsRolling(false);
             if (onClose) onClose();
         }, 1000);
     };
+
 
     return (
         <div className="flex flex-col h-full bg-slate-900/40 backdrop-blur-md rounded-xl border border-white/10 overflow-hidden shadow-2xl">

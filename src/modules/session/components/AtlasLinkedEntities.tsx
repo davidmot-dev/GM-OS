@@ -4,8 +4,7 @@ import { useSessionOSStore } from '../useSessionOSStore';
 import type { AtlasLinkedEntity, AtlasEntityCategory } from '../useSessionOSStore';
 import { useFavoriteStore } from '../../favorite/useFavoriteStore';
 import { Users, MapPin, Package, Zap, Plus, X, Bookmark, Star } from 'lucide-react';
-import { gmPrompt } from '../../../stores/useModalStore';
-import { ResolvedAsset } from '../../../components/ResolvedAsset';
+import { gmPrompt, gmCustom } from '../../../stores/useModalStore';
 
 const CATEGORY_META: Record<AtlasEntityCategory, { labelKey: string; icon: React.ReactNode; color: string; favType: string }> = {
     npc: { labelKey: 'modules:session.world_atlas.linked_entities.categories.npc', icon: <Users size={14} className="text-blue-400" />, color: 'bg-blue-500/10 border-blue-500/20 text-blue-300', favType: 'npc' },

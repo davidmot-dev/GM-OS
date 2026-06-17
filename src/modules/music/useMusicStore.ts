@@ -349,9 +349,7 @@ export const useMusicStore = create<MusicState>()(
                         get().addLog(`Ouverture lien externe : ${pad.label}`);
                         get().stopAll(); // Trigger fade-out of current music
 
-                        // @ts-expect-error global
                         if (window.appBridge?.web?.openExternal) {
-                            // @ts-expect-error global
                             window.appBridge.web.openExternal(pad.url);
                         } else {
                             window.open(pad.url, '_blank');

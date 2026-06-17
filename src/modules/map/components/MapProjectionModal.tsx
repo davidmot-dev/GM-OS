@@ -10,7 +10,7 @@ const MapProjectionModal: React.FC = () => {
     const { t } = useTranslation(['modules', 'common']);
     const { displays, fetchDisplays } = useImageStore();
     const { 
-        mapUrl, syncToPlayers, clearProjectedState, isVideo, fogDataUrl, tokens, pings, magicEffects,
+        mapUrl, syncToPlayers, isVideo, fogDataUrl, tokens, pings, magicEffects,
         weatherType, weatherIntensity,
         mapWidth, mapHeight, isGridEnabled, gridSize, gridColor, gridOpacity 
     } = useMapStore();

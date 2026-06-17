@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Package, Shield, Bookmark, User } from 'lucide-react';
+import { X, Package, Shield, User } from 'lucide-react';
 import { ResolvedImage } from '../ResolvedImage';
 import type { FavoriteEntity } from '../../modules/favorite/useFavoriteStore';
 

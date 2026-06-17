@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useCombatStore, type Combatant } from '../useCombatStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useModalStore } from '../../../stores/useModalStore';
-import { gmToast } from '../../../stores/useToastStore';
 import { useDiceStore } from '../../../stores/useDiceStore';
 import { Zap, HeartPulse, CheckCircle2, AlertTriangle, ShieldAlert, Shield, RotateCcw, Target as TargetIcon, Dices } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -171,7 +170,6 @@ const DamageCalculator: React.FC = () => {
                             const isSelected = selectedIds.includes(c.id);
                             const preview = calculatePreview(c);
                             const hasResistance = c.resistances?.includes(type);
-                            const hasVulnerability = c.vulnerabilities?.includes(type);
                             const hasImmunity = c.immunities?.includes(type);
                             const healthSys = getHealthSystem(c);
 

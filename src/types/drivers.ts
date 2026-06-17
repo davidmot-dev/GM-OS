@@ -96,10 +96,23 @@ export interface GameDriver {
     // Linked assets
     templateId: string; // The ID of the primary SheetTemplate used by this system
     lootTables?: LootTable[]; // Optional tables for item/treasure generation
+    encounterTemplates?: EncounterTemplate[]; // Optional templates for combat encounters
     defaultNotebookUrl?: string; // Default NotebookLM for this system
     
     // Metadata for AI
     aiInstructions: string; // Specialized instructions for the Oracle/Sage to understand rules
     aiPersonas?: Record<string, string>; // gemId -> instructions override
     ragPath?: string; // Optional custom path for RAG rules storage (e.g. "systems/my-system/rules")
+}
+
+export interface EncounterEntity {
+    templateId: string;
+    count: string | number;
+    role?: 'normal' | 'elite' | 'boss';
+}
+
+export interface EncounterTemplate {
+    id: string;
+    name: string;
+    entities: EncounterEntity[];
 }

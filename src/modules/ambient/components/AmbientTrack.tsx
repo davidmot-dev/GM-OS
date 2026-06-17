@@ -13,7 +13,7 @@ interface AmbientTrackProps {
 
 const TrackVisualizer: React.FC<{ index: number; color: string; isPlaying: boolean }> = ({ index, color, isPlaying }) => {
     const [data, setData] = useState(new Uint8Array(16).fill(0));
-    const rafRef = useRef<number>();
+    const rafRef = useRef<number | undefined>(undefined);
 
     useEffect(() => {
         if (!isPlaying) {
