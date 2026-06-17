@@ -200,4 +200,13 @@ Pour éviter les dépendances circulaires qui bloquent le build Vite (ex: Sessio
 
 ---
 
-*Dernière mise à jour : 17 Juin 2026 - GM-OS v6.5.0 - Stabilisation complète de la suite de tests et de la persistance IndexedDB.*
+### 23. Architecture de Feedback de Session Confidentiel & Résilient (2026-06-17)
+- **Défi** : Permettre aux joueurs de soumettre des évaluations (Fun, Histoire, Combat) et des remarques privées au MJ, sans que les autres joueurs puissent y accéder via le flux de synchronisation global, tout en préservant l'état de soumission côté client en cas de rafraîchissement.
+- **Solution** :
+  1. **Asymétrie Réseau** : Les feedbacks sont expédiés via WebSocket vers le MJ, enregistrés dans son store global, mais purgés (`feedbacks: undefined`) dans la fonction `useNexusSynchronizer.ts` avant que l'état ne soit re-diffusé aux autres tablettes.
+  2. **Vérification Locale Décentralisée** : Le Tablet Hub stocke son état de soumission et ses brouillons directement dans le `localStorage` de l'appareil (clé unique `feedback:${campaignId}:${sessionId}:${characterId}`). Cela évite d'exposer les données des autres joueurs tout en conservant l'état d'envoi.
+- **Leçon** : Pour les flux de données strictement confidentiels (PJ → MJ uniquement), combiner une désérialisation asymétrique côté serveur (assainissement des paquets de retour) et une persistance locale décentralisée (`localStorage`) pour offrir une expérience utilisateur fluide et sécurisée.
+
+---
+
+*Dernière mise à jour : 17 Juin 2026 - GM-OS v6.5.0 - Stabilisation complète de la suite de tests, de la persistance IndexedDB et intégration des feedbacks de session.*
