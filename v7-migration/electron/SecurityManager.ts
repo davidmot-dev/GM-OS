@@ -44,11 +44,18 @@ export class SecurityManager {
             }
 
             if (safeStorage.isEncryptionAvailable()) {
-                const decryptedData = safeStorage.decryptString(encryptedData);
-                this.secrets = JSON.parse(decryptedData);
+                try {
+                    const decryptedData = safeStorage.decryptString(encryptedData);
+                    this.secrets = JSON.parse(decryptedData);
+                } catch (decErr) {
+                    // Try fallback if decryption fails (might have been saved as base64)
+                    const decoded = Buffer.from(encryptedData.toString('utf-8'), 'base64').toString('utf-8');
+                    this.secrets = JSON.parse(decoded);
+                }
             } else {
-                console.error('[SecurityManager] Encryption not available on this system.');
-                // Fallback (unsafe) if absolutely necessary, but preferred failure for P0
+                console.warn('[SecurityManager] Encryption not available on this system. Using Base64 fallback.');
+                const decoded = Buffer.from(encryptedData.toString('utf-8'), 'base64').toString('utf-8');
+                this.secrets = JSON.parse(decoded);
             }
         } catch (error) {
             console.error('[SecurityManager] Failed to load or decrypt secrets:', error);
@@ -61,10 +68,14 @@ export class SecurityManager {
      */
     private saveSecrets() {
         try {
+            const dataString = JSON.stringify(this.secrets);
             if (safeStorage.isEncryptionAvailable()) {
-                const dataString = JSON.stringify(this.secrets);
                 const encryptedBuffer = safeStorage.encryptString(dataString);
                 fs.writeFileSync(this.secretsPath, encryptedBuffer);
+            } else {
+                console.warn('[SecurityManager] Encryption not available. Saving via Base64 fallback.');
+                const fallbackBuffer = Buffer.from(dataString, 'utf-8').toString('base64');
+                fs.writeFileSync(this.secretsPath, fallbackBuffer);
             }
         } catch (error) {
             console.error('[SecurityManager] Failed to encrypt or save secrets:', error);

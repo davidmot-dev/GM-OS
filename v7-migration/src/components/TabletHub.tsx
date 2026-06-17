@@ -72,10 +72,11 @@ const TabletHub: React.FC = () => {
         characterId,
         transferRequests,
         sharedRule,
-        setSharedRule
+        setSharedRule,
+        latency
     } = useHubSync();
 
-    const { resetIdentity } = useClientStore();
+    const { deviceId, resetIdentity } = useClientStore();
     const performance = usePerformanceControl();
     const { setLowGraphics } = usePerformanceStore();
 
@@ -88,6 +89,8 @@ const TabletHub: React.FC = () => {
     const [selectedAtlasMap, setSelectedAtlasMap] = useState<AtlasMap | null>(null);
     const [selectedItem, setSelectedItem] = useState<FavoriteEntity | null>(null);
     const [lastReadMessageTime, setLastReadMessageTime] = useState(() => Date.now());
+    const [selectedRecipientId, setSelectedRecipientId] = useState<string>('GM');
+    const [activeToast, setActiveToast] = useState<{ fromName: string; channel: string } | null>(null);
 
     const activeHubId = projections['hub'];
     const activeSession = sessions.find(s => s.status === 'active');
@@ -95,13 +98,13 @@ const TabletHub: React.FC = () => {
     const players = useSessionOSStore((state) => state.players);
 
     // Derived State - Memoized for performance
-    const unreadCount = useMemo(() => messages.filter(m => 
-        m.timestamp > lastReadMessageTime && 
-        (
-            (m.fromId === 'GM' && (m.toId === characterId || m.toId === 'all' || !m.toId)) || 
-            (m.fromId === characterId && m.toId === 'GM')
-        )
-    ).length, [messages, lastReadMessageTime, characterId]);
+    const unreadCount = useMemo(() => {
+        return messages.filter(m => 
+            m.timestamp > lastReadMessageTime && 
+            m.fromId !== characterId && 
+            (m.toId === characterId || m.toId === 'all' || !m.toId)
+        ).length;
+    }, [messages, lastReadMessageTime, characterId]);
  
     const playerWithChar = useMemo(() => players.find(p => p.characters.some(c => c.id === characterId)), [players, characterId]);
     const characterName = playerWithChar?.characters.find(c => c.id === characterId)?.name || 'Joueur';
@@ -133,6 +136,31 @@ const TabletHub: React.FC = () => {
     const resolvedCampaignWallpaper = useMediaUrl(activeCampaignWallpaper || undefined);
 
     useEffect(() => {
+        if (messages.length === 0) return;
+        const lastMsg = messages[messages.length - 1];
+        
+        // Only notify for incoming messages
+        if (lastMsg.fromId === characterId) return;
+        
+        // Only notify if relevant to me
+        const isForMe = lastMsg.toId === characterId || lastMsg.toId === 'all' || !lastMsg.toId;
+        if (!isForMe) return;
+
+        // Check if we are currently looking at the right queue
+        const msgQueue = lastMsg.toId === 'all' ? 'all' : (lastMsg.fromId === 'GM' ? 'GM' : lastMsg.fromId);
+        const isRightQueue = isMessengerOpen && selectedRecipientId === msgQueue;
+
+        if (!isRightQueue) {
+            const channelName = lastMsg.toId === 'all' ? 'Canal Général' : (lastMsg.fromId === 'GM' ? 'Maître du Jeu' : 'Canal Privé');
+            setActiveToast({ fromName: lastMsg.fromName, channel: channelName });
+            
+            // Auto-clear toast
+            const timer = setTimeout(() => setActiveToast(null), 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [messages, characterId, isMessengerOpen, selectedRecipientId]);
+
+    useEffect(() => {
         if (activeCampaignWallpaper) {
             console.log(`[TabletHub] Background wallpaper:`, {
                 id: activeCampaignWallpaper,
@@ -162,11 +190,11 @@ const TabletHub: React.FC = () => {
                 >
                     {performance.isLowGraphics ? 'Mode Performance' : 'Mode Qualité'}
                 </button>
-                <div className={`p-1.5 rounded-full backdrop-blur-md border ${
+                <div className={`p-1.5 rounded-full backdrop-blur-md border transition-colors ${
                     status === 'connected' 
-                        ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' 
+                        ? (latency !== null && latency < 100 ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-[0_0_10px_rgba(52,211,153,0.2)]' : 'bg-amber-500/10 text-amber-400 border-amber-500/20')
                         : 'bg-rose-500/10 text-rose-400 border-rose-500/20 animate-pulse'
-                }`} title={status === 'connected' ? 'Synchronisé' : 'Déconnecté du MJ'}>
+                }`} title={status === 'connected' ? `Synchronisé (${latency}ms)` : 'Déconnecté du MJ'}>
                     {status === 'connected' ? <Wifi size={14} /> : <WifiOff size={14} />}
                 </div>
             </div>
@@ -397,7 +425,7 @@ const TabletHub: React.FC = () => {
             )}
 
             {/* Overlays & Modals */}
-            {(!isOnboarded || !activeSession) && <LobbyOnboarding />}
+            {(!isOnboarded || !activeSession) && <LobbyOnboarding latency={latency} />}
             {characterId && (
                 <>
                     {isInventoryOpen && <HubCharacterSheet onClose={() => setIsInventoryOpen(false)} />}
@@ -413,9 +441,39 @@ const TabletHub: React.FC = () => {
                             </motion.div>
                         )}
                     </AnimatePresence>
-                    <HubMessenger isOpen={isMessengerOpen} onClose={() => setIsMessengerOpen(false)} characterId={characterId} characterName={characterName} />
+                    <HubMessenger 
+                        isOpen={isMessengerOpen} 
+                        onClose={() => setIsMessengerOpen(false)} 
+                        characterId={characterId} 
+                        characterName={characterName} 
+                        selectedRecipientId={selectedRecipientId}
+                        onRecipientChange={(id) => {
+                            setSelectedRecipientId(id);
+                            setLastReadMessageTime(Date.now());
+                        }}
+                    />
                 </>
             )}
+            
+            <AnimatePresence>
+                {activeToast && (
+                    <MessageToast 
+                        fromName={activeToast.fromName} 
+                        channel={activeToast.channel} 
+                        onClick={() => {
+                            setIsMessengerOpen(true);
+                            setLastReadMessageTime(Date.now());
+                            setActiveToast(null);
+                        }}
+                    />
+                )}
+            </AnimatePresence>
+
+            <div className="fixed bottom-2 left-4 z-[100] opacity-20 hover:opacity-100 transition-opacity flex items-center gap-2">
+                <span className="text-[8px] font-black text-app-text/60 uppercase tracking-widest">Device ID</span>
+                <span className="text-[8px] font-mono text-accent">{deviceId}</span>
+            </div>
+
             <HubNotificationCenter />
             <HubClueViewer clue={selectedClue} onClose={() => setSelectedClue(null)} />
             <HubNpcViewer npc={selectedNpc} onClose={() => setSelectedNpc(null)} />
@@ -424,12 +482,15 @@ const TabletHub: React.FC = () => {
             <HubRuleViewer rule={sharedRule} onClose={() => setSharedRule(null)} />
 
             {/* Dice Animation Overlay */}
-            <AnimatePresence>
+            <AnimatePresence onExitComplete={() => {}}>
                 {showDice && (
                         <motion.div 
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
+                        onAnimationStart={() => {
+                            if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
+                        }}
                         className={`fixed inset-0 z-[120] flex items-center justify-center p-12 bg-app-surface/40 pointer-events-none ${performance.blurClass}`}
                     >
                         <DiceResultDisplay />
@@ -512,6 +573,30 @@ const DiceResultDisplay: React.FC = () => {
                     {lastRoll.tagSuccess ? 'Réussite' : 'Échec'}
                 </motion.div>
             )}
+        </motion.div>
+    );
+};
+
+const MessageToast: React.FC<{ fromName: string; channel: string; onClick: () => void }> = ({ fromName, channel, onClick }) => {
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 50, x: '-50%', scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, x: '-50%', scale: 1 }}
+            exit={{ opacity: 0, y: 20, x: '-50%', scale: 0.9 }}
+            onClick={onClick}
+            className="fixed bottom-24 left-1/2 z-[200] cursor-pointer"
+        >
+            <div className="bg-indigo-600/90 backdrop-blur-xl border border-white/20 px-6 py-3 rounded-2xl shadow-[0_20px_50px_rgba(79,70,229,0.4)] flex items-center gap-4 hover:brightness-110 transition-all active:scale-95 group">
+                <div className="p-2 bg-white/20 rounded-lg group-hover:scale-110 transition-transform">
+                    <MessageSquare size={18} className="text-white" />
+                </div>
+                <div className="flex flex-col">
+                    <span className="text-[10px] font-black text-white/60 uppercase tracking-widest leading-none mb-1">Nouveau Message</span>
+                    <p className="text-sm font-bold text-white leading-tight">
+                        {fromName} <span className="opacity-60 font-medium ml-1">({channel})</span>
+                    </p>
+                </div>
+            </div>
         </motion.div>
     );
 };

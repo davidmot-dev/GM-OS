@@ -2399,7 +2399,7 @@
         "neural_overrides": "Surcharge Neuronale",
         "neural_overrides_subtitle": "Directives prioritaires pour les Gems IA",
         "auto_generate": "Auto-Génération",
-        "gem_prompt_placeholder": "Consignes personnalisées pour {{name}}..."
+        "ai_placeholder": "Consignes personnalisées pour {{name}}..."
       }
     },
     "snapshots": {

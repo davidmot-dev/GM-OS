@@ -66,6 +66,17 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, onRoll,
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
+    const haptic = (pattern: number | number[] = 50) => {
+        if (typeof navigator !== 'undefined' && navigator.vibrate) {
+            navigator.vibrate(pattern);
+        }
+    };
+
+    const handleRollClick = (params: Parameters<typeof onRoll>[0]) => {
+        haptic([40, 20, 40]);
+        onRoll(params);
+    };
+
     const diceTypes = [4, 6, 8, 10, 12, 20, 100];
 
     const handleSystemRoll = () => {
@@ -128,7 +139,7 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, onRoll,
                             className="flex-1 bg-white/5 border border-white/10 p-4 rounded-2xl text-xl font-black text-accent outline-none focus:border-accent/50 transition-all placeholder:text-slate-700"
                         />
                         <button 
-                            onClick={() => onRoll({
+                            onClick={() => handleRollClick({
                                 sides: 0,
                                 count: 1,
                                 modifier: 0,
@@ -155,7 +166,10 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, onRoll,
                             </span>
                             <div className="flex items-center justify-between">
                                 <button 
-                                    onClick={() => setDiceCount(Math.max(1, diceCount - 1))} 
+                                    onClick={() => {
+                                        haptic(10);
+                                        setDiceCount(Math.max(1, diceCount - 1));
+                                    }} 
                                     title="Diminuer la quantité"
                                     aria-label="Diminuer la quantité"
                                     className="w-10 h-10 rounded-xl flex items-center justify-center bg-white/5 active:scale-90 transition-all font-black text-white hover:bg-white/10"
@@ -164,7 +178,10 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, onRoll,
                                 </button>
                                 <span className="text-xl font-black text-accent">{diceCount}</span>
                                 <button 
-                                    onClick={() => setDiceCount(Math.min(99, diceCount + 1))} 
+                                    onClick={() => {
+                                        haptic(10);
+                                        setDiceCount(Math.min(99, diceCount + 1));
+                                    }} 
                                     title="Augmenter la quantité"
                                     aria-label="Augmenter la quantité"
                                     className="w-10 h-10 rounded-xl flex items-center justify-center bg-white/5 active:scale-90 transition-all font-black text-white hover:bg-white/10"
@@ -298,7 +315,7 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, onRoll,
             {diceMode === 'rolemaster' ? (
                 <div className="flex flex-col gap-4">
                     <button
-                        onClick={() => onRoll({ 
+                        onClick={() => handleRollClick({ 
                             sides: 100, 
                             count: 1, 
                             modifier: diceModifier, 
@@ -334,7 +351,7 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, onRoll,
                     {diceTypes.map(d => (
                         <button
                             key={d}
-                            onClick={() => onRoll({ 
+                            onClick={() => handleRollClick({ 
                                 sides: d, 
                                 count: diceCount, 
                                 modifier: diceModifier, 

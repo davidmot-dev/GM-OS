@@ -5123,13 +5123,14 @@ async function callMcp(method, params) {
   const id = requestId++;
   logToDebugFile(`[Bridge] Preparing request ${id} for method: ${method}`);
   return new Promise((resolve, reject2) => {
+    const timeoutDuration = 45 * 60 * 1e3;
     const timeout2 = setTimeout(() => {
-      const timeoutMsg = `MCP Request ${id} (${method}) timed out after 60s`;
+      const timeoutMsg = `MCP Request ${id} (${method}) timed out after 45m`;
       logToDebugFile(`!!! TIMEOUT: ${timeoutMsg}`);
       console.error(`[MCP Bridge] ${timeoutMsg}`);
       pendingRequests.delete(id);
       reject2(new Error(timeoutMsg));
-    }, 6e4);
+    }, timeoutDuration);
     pendingRequests.set(id, { resolve, reject: reject2, method, timeout: timeout2 });
     const request = JSON.stringify({
       jsonrpc: "2.0",
@@ -49593,10 +49594,17 @@ class SecurityManager {
         return;
       }
       if (safeStorage.isEncryptionAvailable()) {
-        const decryptedData = safeStorage.decryptString(encryptedData);
-        this.secrets = JSON.parse(decryptedData);
+        try {
+          const decryptedData = safeStorage.decryptString(encryptedData);
+          this.secrets = JSON.parse(decryptedData);
+        } catch (decErr) {
+          const decoded = Buffer.from(encryptedData.toString("utf-8"), "base64").toString("utf-8");
+          this.secrets = JSON.parse(decoded);
+        }
       } else {
-        console.error("[SecurityManager] Encryption not available on this system.");
+        console.warn("[SecurityManager] Encryption not available on this system. Using Base64 fallback.");
+        const decoded = Buffer.from(encryptedData.toString("utf-8"), "base64").toString("utf-8");
+        this.secrets = JSON.parse(decoded);
       }
     } catch (error2) {
       console.error("[SecurityManager] Failed to load or decrypt secrets:", error2);
@@ -49608,10 +49616,14 @@ class SecurityManager {
    */
   saveSecrets() {
     try {
+      const dataString = JSON.stringify(this.secrets);
       if (safeStorage.isEncryptionAvailable()) {
-        const dataString = JSON.stringify(this.secrets);
         const encryptedBuffer = safeStorage.encryptString(dataString);
         fs.writeFileSync(this.secretsPath, encryptedBuffer);
+      } else {
+        console.warn("[SecurityManager] Encryption not available. Saving via Base64 fallback.");
+        const fallbackBuffer = Buffer.from(dataString, "utf-8").toString("base64");
+        fs.writeFileSync(this.secretsPath, fallbackBuffer);
       }
     } catch (error2) {
       console.error("[SecurityManager] Failed to encrypt or save secrets:", error2);
@@ -50025,8 +50037,8 @@ class SyncServer {
         const data = JSON.parse(message);
         if (data.type === "remote:register") {
           this.handleRegister(ws, data.payload);
-        } else if (data.type === "remote:hello") {
-          console.log("[Nexus Sync] Handshake received");
+        } else if (data.type === "remote:ping") {
+          ws.send(JSON.stringify({ type: "remote:pong", payload: data.payload }));
         } else {
           this.forwardToGM(ws, data);
         }

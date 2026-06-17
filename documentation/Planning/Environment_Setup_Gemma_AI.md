@@ -27,9 +27,9 @@ Une fois Ollama installé, ouvrez GM-OS :
 
 1.  Allez dans **AI Settings** (icône engrenage dans le panneau IA).
 2.  Dans la section **Ollama Configuration**, vérifiez que le statut est `Connected`.
-3.  Cliquez sur le bouton **"PULL GEMMA 4 (26B)"**. 
-    - *Note : Le téléchargement fait environ 16 Go. Assurez-vous d'avoir suffisamment d'espace disque.*
-4.  Une fois le téléchargement terminé, sélectionnez `gemma4:26b` dans la liste des modèles.
+3.  Cliquez sur le bouton **"Télécharger Gemma 4 (12B)"** ou **"Télécharger Gemma 4 (26B MoE)"** selon vos ressources système.
+    - *Note : Gemma 4 (12B) nécessite moins d'espace et de VRAM, tandis que le modèle 26B (environ 16 Go) demande une configuration plus robuste.*
+4.  Une fois le téléchargement terminé, sélectionnez `gemma4:12b` ou `gemma4:26b` dans la liste des modèles.
 
 ## 🔱 Utilisation de Gemma 4
 
@@ -49,8 +49,8 @@ Dans la **System Forge** ou la **Chronicle Forge**, un badge apparaît dans le h
 
 - **Multimodalité** : Gemma 4 est un modèle purement textuel. Si vous déposez un PDF ou une image dans la Forge, GM-OS utilisera automatiquement **Gemini** ou **NotebookLM** pour l'extraction initiale avant de confier la structuration narrative à Gemma 4.
 - **Hardware Recommandé** : 
-    - **Minimum** : GPU avec 8 Go de VRAM.
-    - **Recommandé** : GPU avec 12-16 Go de VRAM pour une fluidité optimale.
+    - **Pour Gemma 4 (12B)** : GPU avec 8 Go de VRAM minimum.
+    - **Pour Gemma 4 (26B MoE)** : GPU avec 12-16 Go de VRAM pour une fluidité optimale.
 
 ## 🩺 Dépannage (Troubleshooting)
 

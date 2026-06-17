@@ -9,10 +9,10 @@ export const getFateRankLabel = (rank: number, t: TFunction) => {
 };
 
 export const getDieCssClass = (r: any) => {
-    if (r.isExploded) return 'bg-accent/30 text-accent-dark dark:text-accent-light border border-accent/50';
+    if (r.isExploded) return 'bg-amber-500/30 text-amber-700 dark:text-amber-300 border border-amber-400/50';
     if (r.isCritMax) return 'bg-emerald-500/30 text-emerald-700 dark:text-emerald-100 border border-emerald-400/50';
     if (r.isCritMin) return 'bg-rose-500/30 text-rose-700 dark:text-rose-100 border border-rose-400/50';
-    if (r.source === 'gear') return 'bg-app-surface border border-app-border text-app-text/40 italic';
+    if (r.source === 'gear') return 'bg-cyan-500/20 text-cyan-700 dark:text-cyan-400 border border-cyan-500/30';
     if (r.source === 'base') return 'bg-yellow-500/20 text-yellow-700 dark:text-yellow-400 border border-yellow-500/30';
-    return 'bg-app-bg/40 border-app-border/20 text-app-text/40';
+    return 'bg-app-surface/40 border-app-border/20 text-app-text/40';
 };

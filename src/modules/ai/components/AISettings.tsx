@@ -431,8 +431,10 @@ const AISettings: React.FC = () => {
                           ] : []),
                           ...(p.id === 'ollama' || p.id === 'ollama_cloud' ? [
                             { value: 'phi3', label: 'Phi-3 (Mini)' },
+                            { value: 'llama3.2:3b', label: 'Llama 3.2 (3b)' },
                             { value: 'llama3', label: 'Llama 3' },
                             { value: 'mistral', label: 'Mistral' },
+                            { value: 'gemma4:12b', label: 'Gemma 4 (12B)' },
                             { value: 'gemma', label: 'Gemma' }
                           ] : []),
                           ...(p.id === 'custom' ? [
@@ -453,25 +455,50 @@ const AISettings: React.FC = () => {
               </div>
             </div>
 
-            {p.id === 'ollama' && !discoveredModels.ollama.includes('gemma4:26b') && (
-              <button
-                onClick={async () => {
-                  try {
-                    gmToast(t('ai.actions.pull_gemma_start'));
-                    await window.appBridge?.ai?.ollamaPull?.('gemma4:26b', configs.ollama.endpoint);
-                    gmToast(t('ai.actions.pull_gemma_success'), "success");
-                    const models = await window.appBridge?.ai?.ollamaListModels?.(configs.ollama.endpoint);
-                    if (models) setDiscoveredModels(prev => ({ ...prev, ollama: models }));
-                   } catch (error) {
-                    console.error("Gemma 4 Pull error:", error);
-                    gmToast(t('ai.actions.pull_gemma_error'), "error");
-                  }
-                }}
-                className="mt-4 w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-accent/20 border border-accent/40 text-[10px] font-black uppercase tracking-widest text-accent hover:bg-accent hover:text-white transition-all shadow-lg shadow-accent/10"
-              >
-                <Cpu size={14} className="animate-pulse" />
-                {t('ai.actions.pull_gemma')}
-              </button>
+            {p.id === 'ollama' && (
+              <div className="flex flex-col gap-2 mt-4 w-full">
+                {!discoveredModels.ollama.includes('gemma4:12b') && (
+                  <button
+                    onClick={async () => {
+                      try {
+                        gmToast(t('ai.actions.pull_gemma_12b_start'));
+                        await window.appBridge?.ai?.ollamaPull?.('gemma4:12b', configs.ollama.endpoint);
+                        gmToast(t('ai.actions.pull_gemma_12b_success'), "success");
+                        const models = await window.appBridge?.ai?.ollamaListModels?.(configs.ollama.endpoint);
+                        if (models) setDiscoveredModels(prev => ({ ...prev, ollama: models }));
+                      } catch (error) {
+                        console.error("Gemma 4 12B Pull error:", error);
+                        gmToast(t('ai.actions.pull_gemma_12b_error'), "error");
+                      }
+                    }}
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-accent/20 border border-accent/40 text-[10px] font-black uppercase tracking-widest text-accent hover:bg-accent hover:text-white transition-all shadow-lg shadow-accent/10"
+                  >
+                    <Cpu size={14} className="animate-pulse" />
+                    {t('ai.actions.pull_gemma_12b')}
+                  </button>
+                )}
+
+                {!discoveredModels.ollama.includes('gemma4:26b') && (
+                  <button
+                    onClick={async () => {
+                      try {
+                        gmToast(t('ai.actions.pull_gemma_start'));
+                        await window.appBridge?.ai?.ollamaPull?.('gemma4:26b', configs.ollama.endpoint);
+                        gmToast(t('ai.actions.pull_gemma_success'), "success");
+                        const models = await window.appBridge?.ai?.ollamaListModels?.(configs.ollama.endpoint);
+                        if (models) setDiscoveredModels(prev => ({ ...prev, ollama: models }));
+                      } catch (error) {
+                        console.error("Gemma 4 Pull error:", error);
+                        gmToast(t('ai.actions.pull_gemma_error'), "error");
+                      }
+                    }}
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-accent/20 border border-accent/40 text-[10px] font-black uppercase tracking-widest text-accent hover:bg-accent hover:text-white transition-all shadow-lg shadow-accent/10"
+                  >
+                    <Cpu size={14} className="animate-pulse" />
+                    {t('ai.actions.pull_gemma')}
+                  </button>
+                )}
+              </div>
             )}
 
             {configs[p.id]?.apiKey && (

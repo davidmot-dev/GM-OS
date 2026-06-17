@@ -502,7 +502,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                                         <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${hasOverride ? 'bg-violet-600 text-white shadow-glow-violet/20' : 'bg-app-bg text-app-text/20'}`}>
                                                             <Sparkles size={16} />
                                                         </div>
-                                                        <span className="text-[10px] font-black uppercase tracking-widest text-app-text/60">{t(gem.name)}</span>
+                                                        <span className="text-[10px] font-black uppercase tracking-widest text-app-text/60">{t(gem.name, { defaultValue: gem.id })}</span>
                                                     </div>
                                                     <textarea 
                                                         value={aiPersonas[gem.id] || ''}

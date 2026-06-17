@@ -39,6 +39,15 @@ const LobbyMonitor: React.FC = () => {
         return <Tablet size={14} />;
     };
 
+    const formatRelativeTime = (timestamp: number) => {
+        const seconds = Math.floor((Date.now() - timestamp) / 1000);
+        if (seconds < 5) return t('remote.lobby.just_now');
+        if (seconds < 60) return `${seconds}s`;
+        const mins = Math.floor(seconds / 60);
+        if (mins < 60) return `${mins}m`;
+        return `${Math.floor(mins / 60)}h`;
+    };
+
     return (
         <div className="bg-slate-900/50 border border-white/10 rounded-2xl overflow-hidden flex flex-col">
             <div className="bg-white/5 px-4 py-3 border-b border-white/10 flex items-center justify-between shrink-0">
@@ -100,7 +109,7 @@ const LobbyMonitor: React.FC = () => {
                                         )}
                                     </p>
                                     <p className="text-[9px] font-medium text-slate-500 uppercase mt-1">
-                                        {client.role} • {client.deviceId.substring(0, 8)}...
+                                        {client.role} • {client.deviceId.substring(0, 8)}... • {formatRelativeTime(client.lastSeen)}
                                     </p>
                                 </div>
                             </div>

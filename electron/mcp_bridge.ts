@@ -187,13 +187,14 @@ async function callMcp(method: string, params: Record<string, unknown>) {
     logToDebugFile(`[Bridge] Preparing request ${id} for method: ${method}`);
     
     return new Promise((resolve, reject) => {
+        const timeoutDuration = 45 * 60 * 1000; // 45 minutes (aligned with AI Forge timeout)
         const timeout = setTimeout(() => {
-            const timeoutMsg = `MCP Request ${id} (${method}) timed out after 60s`;
+            const timeoutMsg = `MCP Request ${id} (${method}) timed out after 45m`;
             logToDebugFile(`!!! TIMEOUT: ${timeoutMsg}`);
             console.error(`[MCP Bridge] ${timeoutMsg}`);
             pendingRequests.delete(id);
             reject(new Error(timeoutMsg));
-        }, 60000);
+        }, timeoutDuration);
 
         pendingRequests.set(id, { resolve, reject, method, timeout });
         

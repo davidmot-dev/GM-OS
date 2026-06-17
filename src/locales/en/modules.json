@@ -2364,7 +2364,7 @@
         "neural_overrides": "Neural Overrides",
         "neural_overrides_subtitle": "Priority directives for AI Gems",
         "auto_generate": "Auto-Generation",
-        "gem_prompt_placeholder": "Custom instructions for {{name}}..."
+        "ai_placeholder": "Custom instructions for {{name}}..."
       }
     },
     "snapshots": {

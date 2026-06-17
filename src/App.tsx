@@ -306,8 +306,8 @@ function App() {
       useSessionOSStore.getState().updateCharacterNarrative(playerId, characterId, updates);
     }
 
-    if (type === 'session:send-message') {
-      console.log('[App] Receiving player message from remote:', payload.id);
+    if (type === 'session:send-message' || type === 'session:receive-message') {
+      console.log(`[App] Receiving message action (${type}):`, payload.id);
       useSessionOSStore.getState().addSessionMessage(payload as import('./modules/session/store/types').SessionMessage);
     }
 

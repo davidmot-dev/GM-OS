@@ -6,14 +6,22 @@ import { useMediaUrl } from '../../hooks/useMediaUrl';
 
 type OnboardingStep = 'SCANNING' | 'SELECTION' | 'SYNCING';
 
-const LobbyOnboarding: React.FC = memo(() => {
+interface LobbyOnboardingProps {
+    latency?: number | null;
+}
+
+const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLatency }) => {
     const { deviceId, setPseudo, setPlayerName, setCharacterId, completeOnboarding, logout, lastError, setLastError } = useClientStore();
     const { sessions, activeCampaignId, campaigns, activeCampaignWallpaper, activeCampaignName } = useSessionOSStore();
     const players = useSessionOSStore(state => state.players);
     const characterLocks = useSessionOSStore(state => state.connectedCharacters);
     
+    // Prioritize prop latency (passed from TabletHub)
+    const latency = propLatency ?? null;
+    
     const [step, setStep] = useState<OnboardingStep>('SCANNING');
     const [selectedCharId, setSelectedCharId] = useState<string | null>(null);
+    const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
     const resolvedWallpaper = useMediaUrl(activeCampaignWallpaper || undefined);
     
     useEffect(() => {
@@ -129,8 +137,15 @@ const LobbyOnboarding: React.FC = memo(() => {
         }
     }, [activeSession, step]);
 
+    const haptic = (pattern: number | number[] = 50) => {
+        if (typeof navigator !== 'undefined' && navigator.vibrate) {
+            navigator.vibrate(pattern);
+        }
+    };
+
     const handleSelectCharacter = (char: { id: string; name: string; playerName: string }) => {
         console.log('[Lobby] Character selected, locking immediately:', char.id);
+        haptic([40, 30, 40]);
         
         setLastError(null); // Clear any previous error
         setSelectedCharId(char.id);
@@ -149,6 +164,18 @@ const LobbyOnboarding: React.FC = memo(() => {
                 completeOnboarding();
             }
         }, 2500);
+    };
+
+    const getLatencyColor = (ms: number | null) => {
+        if (ms === null) return 'text-slate-500';
+        if (ms < 50) return 'text-emerald-400';
+        if (ms < 150) return 'text-amber-400';
+        return 'text-rose-400';
+    };
+
+    const getLatencyLabel = (ms: number | null) => {
+        if (ms === null) return '--';
+        return `${ms}ms`;
     };
 
     // DEBUG PANEL - Visible only in dev or via triple click (mocked here as always for debug)
@@ -320,13 +347,40 @@ const LobbyOnboarding: React.FC = memo(() => {
 
             {/* Top Bar for Reset/Logout */}
             <div className="absolute top-8 left-8 z-50">
-                <button 
-                    onClick={logout}
-                    className="flex items-center gap-2 px-4 py-2 bg-app-surface border border-app-border/20 rounded-full text-[10px] font-black text-app-text/40 uppercase tracking-widest hover:text-rose-500 hover:border-rose-500/30 transition-all group"
-                >
-                    <div className="w-1.5 h-1.5 rounded-full bg-rose-500/40 group-hover:bg-rose-500 group-hover:animate-pulse" />
-                    Quitter la session
-                </button>
+                {!showLogoutConfirm ? (
+                    <button 
+                        onClick={() => {
+                            haptic(10);
+                            setShowLogoutConfirm(true);
+                        }}
+                        className="flex items-center gap-2 px-4 py-2 bg-app-surface border border-app-border/20 rounded-full text-[10px] font-black text-app-text/40 uppercase tracking-widest hover:text-rose-500 hover:border-rose-500/30 transition-all group"
+                    >
+                        <div className="w-1.5 h-1.5 rounded-full bg-rose-500/40 group-hover:bg-rose-500 group-hover:animate-pulse" />
+                        Quitter la session
+                    </button>
+                ) : (
+                    <div className="flex items-center gap-2 p-1 bg-rose-600 rounded-full animate-in zoom-in duration-300">
+                        <span className="px-4 text-[9px] font-black text-white uppercase tracking-tighter">Vraiment ?</span>
+                        <button 
+                            onClick={() => {
+                                haptic(10);
+                                setShowLogoutConfirm(false);
+                            }}
+                            className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-full text-[10px] font-black uppercase"
+                        >
+                            Non
+                        </button>
+                        <button 
+                            onClick={() => {
+                                haptic([10, 50, 10]);
+                                logout();
+                            }}
+                            className="px-4 py-2 bg-white text-rose-600 hover:bg-rose-50 rounded-full text-[10px] font-black uppercase"
+                        >
+                            Oui, quitter
+                        </button>
+                    </div>
+                )}
             </div>
 
             <div className="w-full max-w-5xl mt-12 mb-12 relative z-10">
@@ -350,12 +404,16 @@ const LobbyOnboarding: React.FC = memo(() => {
 
                 {presentPcs.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {presentPcs.map((char) => (
-                            <button
-                                key={char.id}
-                                onClick={() => handleSelectCharacter(char)}
-                                className="group relative flex flex-col bg-app-surface/50 border border-app-border/10 rounded-[2.5rem] overflow-hidden hover:border-accent/50 hover:bg-app-surface transition-all duration-500 hover:shadow-[0_0_50px_-12px_var(--app-accent)] active:scale-95"
-                            >
+                         {presentPcs.map((char) => (
+                             <button
+                                 key={char.id}
+                                 onClick={() => handleSelectCharacter(char)}
+                                 className={`group relative flex flex-col bg-app-surface/50 border border-app-border/10 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:shadow-[0_0_50px_-12px_var(--app-accent)] active:scale-95 ${
+                                     selectedCharId === char.id 
+                                         ? 'ring-4 ring-accent ring-offset-4 ring-offset-app-bg scale-105 border-accent' 
+                                         : 'hover:border-accent/50 hover:bg-app-surface'
+                                 }`}
+                             >
                                 {/* Character Backdrop Effect */}
                                 <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                                 
@@ -412,10 +470,28 @@ const LobbyOnboarding: React.FC = memo(() => {
                 )}
             </div>
             
-            <div className="mt-auto pb-8 text-app-text/20 font-bold text-[10px] uppercase tracking-[0.2em] flex flex-col items-center gap-1">
-                <div>GM-OS V5 • Tablet HUB Client • nexus_bridge_initialized</div>
+             <div className="mt-auto pb-8 text-app-text/20 font-bold text-[10px] uppercase tracking-[0.2em] flex flex-col items-center gap-1 relative z-10">
+                <div className="flex items-center gap-4 mb-2">
+                    <div className="flex items-center gap-1.5">
+                        <div className={`w-1 h-1 rounded-full bg-current ${getLatencyColor(latency || null)}`} />
+                        <span className={getLatencyColor(latency || null)}>{getLatencyLabel(latency || null)}</span>
+                    </div>
+                    <div className="w-px h-2 bg-white/10" />
+                    <div>GM-OS V7.0.4 • nexus_bridge_active</div>
+                </div>
                 <div className="opacity-50 font-mono">Device ID: {deviceId?.substring(0, 12)}...</div>
             </div>
+
+            <style>{`
+                @keyframes ring-pulse {
+                    0% { box-shadow: 0 0 0 0 rgba(var(--app-accent-rgb), 0.4); }
+                    70% { box-shadow: 0 0 0 15px rgba(var(--app-accent-rgb), 0); }
+                    100% { box-shadow: 0 0 0 0 rgba(var(--app-accent-rgb), 0); }
+                }
+                .ring-pulse {
+                    animation: ring-pulse 2s infinite;
+                }
+            `}</style>
         </div>
     );
 });

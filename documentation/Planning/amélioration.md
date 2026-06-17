@@ -24,6 +24,8 @@ Ce document centralise la vision et les chantiers de GM-OS. Depuis Avril 2026, l
 ### 📓 Session-OS Modularisation
 - [x] **Extraction des Hooks** : Logique métier migrée vers `useSessionNPCs`, `useSessionClues`, `useSessionNotes`.
 - [x] **Player Private Notes** : Système de synchronisation bi-directionnelle tablette/MJ pour les notes de personnages.
+- [x] **Messaging Hub Upgrade (v5.7)** : Isolation des canaux de discussion (Broadcast vs Privé) et implémentation des notifications "Toast" sur le Tablet Hub.
+- [x] **UI Polish (v5.8)** : Agrandissement des notes privées et synchronisation visuelle des dés YZE sur le Tablet Hub.
 
 ### 🎲 Dice-OS v2 (Rendu 3D High-Fi)
 - [x] **Intégration DiceBox3D** : Nouveau moteur Three.js haute fidélité avec support des d10 géométriquement précis.

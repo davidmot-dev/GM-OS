@@ -132,9 +132,12 @@ export const useGemStore = create<GemState>()(
           if (dg) {
             // We consider it a default string if it doesn't contain a dot (translation key marker)
             // or if it matches exactly one of the known default strings (FR or EN)
+            // CRITICAL: We also check if the casing is wrong or if the namespace is missing
             const isKey = g.name.includes('.');
-            if (!isKey) {
-              // Migration: update to keys to support multi-language
+            const isCorrectKey = g.name === dg.name;
+            
+            if (!isKey || !isCorrectKey) {
+              // Migration: update to keys to support multi-language and fix corrupted keys
               newGems[idx] = { 
                 ...g, 
                 name: dg.name, 

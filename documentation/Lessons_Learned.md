@@ -18,6 +18,11 @@ Ce document consigne les défis techniques, les erreurs rencontrées et les solu
 ### 3. IPC Race Condition
 - **Défi** : L'ordre de projection envoyé via IPC arrivait parfois avant que la fenêtre React cible ne soit initialisée.
 - **Solution** : **Verrou IPC Définitif** (`ipcCount`). Le projecteur ignore les données de son store local dès qu'il reçoit son premier signal direct, garantissant que la volonté du MJ prime sur l'état persistant.
++
++### 4. Isolation des Flux de Messagerie (UI Filtering)
++- **Défi** : Mélanger les messages globaux (Broadcasting) et privés dans une même interface crée une pollution visuelle et rompt la confidentialité.
++- **Solution** : Implémentation d'un filtrage strict par `toId` dans `HubMessenger.tsx`. Le canal "Tous les Joueurs" est désormais le seul à accepter les messages sans destinataire précis ou marqués `all`.
++- **Leçon** : Toujours coupler l'isolation des canaux à un système de notifications ("Toasts") pour éviter que l'utilisateur ne manque des informations importantes situées dans un onglet non-actif.
 
 ### 4. Portabilité des Chemins (MCP & Python) (2026-04-22)
 - **Défi** : Le bridge MCP utilisait des chemins codés en dur (`C:\Users\david...`), empêchant l'application de fonctionner sur une autre machine après compilation.

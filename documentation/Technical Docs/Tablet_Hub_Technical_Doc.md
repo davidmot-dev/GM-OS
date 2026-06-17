@@ -75,6 +75,20 @@ graph TD
 - **Trombinoscope** : Galerie interactive filtrant les entités reçues via WebSocket.
 - **Détails PNJ** : Vue modale immersive.
 - **Footer Réactif** : Indicateur de volume sonore (`voiceLevel`) intégré pour un feedback vocal en temps réel.
+- **Messaging Hub & Notifications (v5.7)** : 
+    - **Isolation des Canaux** : Filtrage strict des messages basés sur `toId`. Le canal "Tous les Joueurs" (`all`) est isolé des dialogues privés (PJ <-> MJ ou PJ <-> PJ).
+    - **Notification Toast** : Système d'alerte global (`activeToast`) géré par le parent `TabletHub.tsx`. Lorsqu'un message arrive sur un canal inactif, un toast `framer-motion` est déclenché.
+    - **Auto-Read & Navigation** : Cliquer sur une notification met à jour le `selectedRecipientId` et déclenche un reset du timer `lastReadMessageTime` pour synchroniser le badge d'inbox.
+
+### 2.4 Système de Dés & Projection
+- **Synchronisation Visuelle (v7.0.6)** : Utilisation systématique de `getDieCssClass` (issu de `DiceUIUtils.ts`) pour garantir une parité parfaite avec le MJ.
+- **Support Year Zero Engine (YZE)** : Différenciation immédiate des dés de **Base** (B) et d'**Équipement** (G) via des couleurs (Jaune vs Cyan) et des labels incrustés.
+- **Feedback Haptique** : Déclenchement de `navigator.vibrate` lors de la réception d'un résultat de dé pour renforcer l'immersion sur mobile.
+
+### 2.5 Notes Privées PJ (v7.0.6)
+- **Interface Étendue** : Dimensionnement `max-w-xl` pour maximiser l'espace utile sur tablette.
+- **Saisie Confortable** : Zone de texte (`textarea`) avec hauteur fixe de 640px pour permettre une prise de notes complexe sans défilement constant de la page parente.
+- **Persistance** : Synchronisation bi-directionnelle avec le store MJ via le hook `remoteUpdateCharacterNarrative`.
 
 ## 🧪 Tests Automatisés
 

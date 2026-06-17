@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useBrainstormStore } from '../store/useBrainstormStore';
 import { forgeService } from '../../ForgeService';
 import { useSessionOSStore } from '../../../session/useSessionOSStore';
-import { X, Zap, Sparkles, Rocket, ChevronLeft, Shield, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { X, Zap, Sparkles, Rocket, ChevronLeft, Shield, AlertTriangle, CheckCircle2, BookOpen } from 'lucide-react';
 import { DEFAULT_GAME_DRIVERS } from '../../../../data/defaultGameDrivers';
 import DiscoveryUI from './DiscoveryUI';
 import type { BrainstormCandidate } from '../types';

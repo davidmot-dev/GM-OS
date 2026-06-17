@@ -57,7 +57,7 @@ export class AIService {
     lite?: boolean
   ): Promise<AIResponse> {
     const { activeProvider } = useAIStore.getState();
-    const TIMEOUT_MS = 1800000; // 30 minutes
+    const TIMEOUT_MS = 2700000; // 45 minutes
     const systemPrompt = await this.prepareSystemPrompt(prompt, customContext, gemId, ragOptions, lite);
 
     console.groupCollapsed(`[AIService] Full Prompt Details (${prompt.length + systemPrompt.length} chars)`);
@@ -72,7 +72,7 @@ export class AIService {
     return Promise.race([
       this.executeRequest(activeProvider, prompt, systemPrompt, gemId, ragOptions, lite),
       new Promise<AIResponse>((_, reject) => 
-        setTimeout(() => reject(new Error(`TIMEOUT: ${activeProvider} n'a pas répondu après 30min.`)), TIMEOUT_MS)
+        setTimeout(() => reject(new Error(`TIMEOUT: ${activeProvider} n'a pas répondu après 45min.`)), TIMEOUT_MS)
       )
     ]);
   }
@@ -818,7 +818,7 @@ ${fullContext}`;
       
       if (!window.appBridge?.ai?.proxyRequest) throw new Error("Bridge AI non disponible.");
 
-      const TIMEOUT_MS = 600000; // 10 minutes
+      const TIMEOUT_MS = 2700000; // 45 minutes
       
       const payload: any = {
         contents: [{ parts: [{ text: prompt }] }],
@@ -858,7 +858,7 @@ ${fullContext}`;
           response = await Promise.race([
             window.appBridge.ai.proxyRequest(url, 'POST', { 'Content-Type': 'application/json' }, payload),
             new Promise((_, reject) => 
-              setTimeout(() => reject(new Error("TIMEOUT: Gemini n'a pas répondu après 10min.")), TIMEOUT_MS)
+              setTimeout(() => reject(new Error("TIMEOUT: Gemini n'a pas répondu après 45min.")), TIMEOUT_MS)
             )
           ]) as any;
 

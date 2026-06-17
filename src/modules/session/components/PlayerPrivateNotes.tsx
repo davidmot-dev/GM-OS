@@ -106,7 +106,7 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
                         value={localNotes}
                         onChange={handleChange}
                         placeholder="Notez ici vos théories, secrets et rappels personnels... Ces notes ne sont visibles que par vous (et sauvegardées chez le MJ)."
-                        className="w-full h-48 bg-slate-950/50 border border-white/5 rounded-lg p-3 text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/20 transition-all resize-none text-sm leading-relaxed scrollbar-thin scrollbar-thumb-white/10"
+                        className="w-full h-[640px] bg-slate-950/50 border border-white/5 rounded-lg p-4 text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/20 transition-all resize-none text-sm leading-relaxed scrollbar-thin scrollbar-thumb-white/10"
                     />
                     
                     <div className="flex justify-between items-center text-[10px] text-slate-500 italic">

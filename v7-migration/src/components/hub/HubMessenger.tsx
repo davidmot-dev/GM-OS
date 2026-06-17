@@ -8,11 +8,12 @@ interface HubMessengerProps {
     onClose: () => void;
     characterId: string;
     characterName: string;
+    selectedRecipientId: string;
+    onRecipientChange: (id: string) => void;
 }
 
-export const HubMessenger: React.FC<HubMessengerProps> = memo(({ isOpen, onClose, characterId, characterName }) => {
+export const HubMessenger: React.FC<HubMessengerProps> = memo(({ isOpen, onClose, characterId, characterName, selectedRecipientId, onRecipientChange }) => {
     const [inputValue, setInputValue] = useState('');
-    const [selectedRecipientId, setSelectedRecipientId] = useState<string>('GM');
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     
     const messages = useSessionOSStore((state) => state.messages);
@@ -47,19 +48,15 @@ export const HubMessenger: React.FC<HubMessengerProps> = memo(({ isOpen, onClose
 
     // Filter messages for the current conversation
     const chatMessages = messages.filter(m => {
-        // Broadcasts are always visible
-        if (m.toId === 'all' || !m.toId) return true;
-
-        if (selectedRecipientId === 'GM') {
-            // Conv with GM: me to GM or GM to me
-            return (m.fromId === characterId && m.toId === 'GM') || 
-                   (m.fromId === 'GM' && m.toId === characterId);
-        } else {
-            // Conv with specific player: me to them or them to me
-            // (GM still sees all, but here we filter for the tablet UI)
-            return (m.fromId === characterId && m.toId === selectedRecipientId) || 
-                   (m.fromId === selectedRecipientId && m.toId === characterId);
+        // 1. General Channel ('all') - Show only broadcasts
+        if (selectedRecipientId === 'all') {
+            return m.toId === 'all' || !m.toId;
         }
+
+        // 2. Private Channel (Specific Player or GM) - Show only direct dialogue
+        // This naturally excludes broadcasts (toId === 'all')
+        return (m.fromId === characterId && m.toId === selectedRecipientId) || 
+               (m.fromId === selectedRecipientId && m.toId === characterId);
     });
 
     useEffect(() => {
@@ -161,7 +158,7 @@ export const HubMessenger: React.FC<HubMessengerProps> = memo(({ isOpen, onClose
                                         <button
                                             key={char.id}
                                             onClick={() => {
-                                                setSelectedRecipientId(char.id);
+                                                onRecipientChange(char.id);
                                                 setIsDropdownOpen(false);
                                             }}
                                             className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-app-text/5 transition-colors border-l-2 text-sm ${

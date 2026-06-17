@@ -59,7 +59,16 @@ Le Tablet Hub affiche les éléments clés de votre session en temps réel :
 - **Reconnaissance Visuelle** : Accédez à l'onglet **Trombinoscope** pour voir tous les personnages (PNJs, Alliés, Monstres) que le MJ a marqué comme "Visibles pour les joueurs".
 - **Fiche Détail** : Cliquez sur un portrait pour l'afficher en grand. C'est l'outil idéal pour se souvenir d'un visage ou consulter les informations publiques d'un interlocuteur important.
 - **Mise à jour en direct** : Dès que le MJ coche la case "Public" sur un PNJ, celui-ci apparaît instantanément sur toutes les tablettes connectées.
-
++
++### 10. Messagerie & Notifications Intelligentes (v5.7)
++- **Canaux de Discussion** : La messagerie est divisée en trois zones pour plus de clarté :
++    - **Canal Général** : Pour parler à tout le groupe ou recevoir les annonces du MJ.
++    - **Maître du Jeu** : Pour vos échanges privés avec le MJ.
++    - **Canaux Privés** : Pour discuter discrètement avec un autre joueur.
++- **Isolation Totale** : Fini les messages mélangés ! Les annonces globales du MJ ne polluent plus vos conversations privées.
++- **Alertes Toasts** : Si un message arrive alors que vous consultez un autre canal (ou que la messagerie est fermée), une petite notification discrète apparaît en bas de l'écran. 
++- **Navigation Rapide** : Cliquez sur une notification pour sauter directement dans la bonne conversation.
++
 ### 9. Administration des Terminaux (Pour le MJ)
 - **Lobby des Terminaux** : Visualisez en temps réel qui est connecté, avec quel personnage, et la qualité de leur signal.
 - **Gestion des Déconnexions** : Supprimez les anciens terminaux ("Vider les déconnectés") pour garder une liste propre.

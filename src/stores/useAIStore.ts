@@ -77,46 +77,45 @@ export const useAIStore = create<AIState>()(
 
       syncWithKeychain: async () => {
         const security = window.appBridge?.security;
-        if (!security) {
-          console.warn('[AI Store] 🛡️ API Security non disponible (Bridge absent)');
-          return;
-        }
+        if (!security) return;
 
-        console.log('[AI Store] 🔐 Synchronisation avec le trousseau...');
-        const currentConfigs = { ...get().configs };
+        console.log('[AI Store] 🔐 Début de synchronisation avec le trousseau...');
         let hasChanges = false;
-
-        const providers = Object.keys(currentConfigs) as AIProvider[];
         
-        for (const provider of providers) {
+        for (const provider of ['gemini', 'openai', 'anthropic', 'custom'] as AIProvider[]) {
           const secretId = `ai-key-${provider}`;
-          
           try {
             // 1. Récupération : On charge la clé depuis le trousseau natif
             const securedKey = await security.getSecret(secretId);
             
             if (securedKey && typeof securedKey === 'string' && securedKey.length > 5) {
               console.log(`[AI Store] ✅ Clé récupérée avec succès pour "${provider}" (${securedKey.length} chars)`);
-              currentConfigs[provider] = {
-                ...currentConfigs[provider],
-                apiKey: securedKey
-              };
+              set((state) => ({
+                configs: {
+                  ...state.configs,
+                  [provider]: {
+                    ...state.configs[provider],
+                    apiKey: securedKey
+                  }
+                }
+              }));
               hasChanges = true;
             } else {
-              console.log(`[AI Store] ℹ️ Aucune clé trouvée dans le trousseau pour "${provider}"`);
-              // 2. Migration : Si une clé traîne encore en clair en mémoire vive (venant du localStorage legacy)
-              if (currentConfigs[provider].apiKey) {
-                console.log(`[AI Store] 💾 Migration de la clé "${provider}" vers le Keychain.`);
-                await security.saveSecret(secretId, currentConfigs[provider].apiKey!);
+              // 2. Migration : Si on a une clé en mémoire mais pas dans le trousseau, on la sauvegarde
+              const state = get();
+              const existingKey = state.configs[provider]?.apiKey;
+              if (existingKey && existingKey.length > 5) {
+                console.log(`[AI Store] 💾 Migration : Sauvegarde de la clé "${provider}" vers le trousseau...`);
+                await security.saveSecret(secretId, existingKey);
               }
             }
           } catch (err) {
-            console.error(`[AI Store] ❌ Erreur Keychain pour "${provider}":`, err);
+            console.error(`[AI Store] ❌ Erreur critique Keychain pour "${provider}":`, err);
           }
         }
 
         if (hasChanges) {
-          set({ configs: currentConfigs });
+          console.log('[AI Store] 🔐 Synchronisation terminée. État mis à jour.');
         }
       }
     }),

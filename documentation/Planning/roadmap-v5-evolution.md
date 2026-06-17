@@ -36,6 +36,19 @@ Ce document trace la trajectoire du projet, des jalons franchis aux futures inno
 - **[x] Synchronisation Environnementale** : Parité immédiate du climat (Météo/Temps/Magie) sur tous les écrans dès le chargement.
 - **[x] Correction Snapback & Ping** : Résolution des boucles de relay saturant l'IPC.
 
+### [v7.0.5] - Messaging Hub Upgrade (2026-04-27)
+- **Feature**: Isolation des Canaux (Broadcast vs Privé). Correction de la logique de filtrage pour que les annonces globales du MJ n'interfèrent plus dans les discussions privées entre joueurs.
+- **UX**: Notifications "Toast" Intelligentes. Apparition d'une alerte temporaire en bas de l'écran lors de la réception d'un message dans un canal inactif.
+- **UX**: Quick-Jump Notification. Cliquer sur l'alerte ouvre directement la messagerie sur le bon canal et marque le message comme lu.
+- **Fix**: Logiciel d'Unread Count globalisé. Le badge rouge sur l'icône de message compte désormais tous les messages entrants pertinents.
+
+### [v7.0.6] - Tablet Hub UI & Comfort Polish (2026-04-27)
+- **UX**: Agrandissement majeur de la fenêtre des Notes Privées (Largeur XL et Hauteur étendue à 640px) pour un meilleur confort de rédaction.
+- **UI**: Parité visuelle complète des dés avec Dice-OS. Intégration des couleurs spécifiques YZE (Jaune pour Base, Cyan pour Gear) et des labels de source (B/G) sur la tablette.
+- **Tech**: Mutualisation des utilitaires de style de dés via `DiceUIUtils.ts` pour garantir la cohérence multi-écrans.
+- **AI**: Ajout du support pour le modèle **Llama 3.2 (3b)** dans les configurations Ollama (Local & Cloud).
+- **AI**: Augmentation globale du timeout (Gemini et Ollama) à 45 minutes pour la génération lourde (Forge).
+
 ### [v7.0.4] - Super-Stable Identity & UI Debug (2026-04-27)
 - **Fix**: Découplage du `deviceId` du store principal. Utilisation d'une clé `localStorage` matérielle dédiée (`gmos-tablet-uuid`) pour une stabilité totale.
 - **UI**: Affichage du `Device ID` dans le footer du Hub pour faciliter le diagnostic.
@@ -77,6 +90,6 @@ Ce document trace la trajectoire du projet, des jalons franchis aux futures inno
 
 ---
 
-*Dernière mise à jour : 27 Avril 2026*
+*Dernière mise à jour : 30 Avril 2026*
 *Statut : GM-OS v5.7 (Stabilité Identité & IP) complétée.*
 

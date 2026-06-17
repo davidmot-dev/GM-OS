@@ -123,8 +123,8 @@ export class SyncServer {
                 
                 if (data.type === 'remote:register') {
                     this.handleRegister(ws, data.payload);
-                } else if (data.type === 'remote:hello') {
-                    console.log('[Nexus Sync] Handshake received');
+                } else if (data.type === 'remote:ping') {
+                    ws.send(JSON.stringify({ type: 'remote:pong', payload: data.payload }));
                 } else {
                     this.forwardToGM(ws, data);
                 }

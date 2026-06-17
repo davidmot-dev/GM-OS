@@ -285,9 +285,9 @@ const ChronicleForge: React.FC = () => {
 
     addChronicle({
       campaign: {
-        name: result.campaign.name || t('modules:session.chronicle_forge_module.untitled'),
-        description: result.campaign.description || '',
-        synopsis: result.campaign.synopsis || '',
+        name: result.campaign?.name || t('modules:session.chronicle_forge_module.untitled'),
+        description: result.campaign?.description || '',
+        synopsis: result.campaign?.synopsis || '',
         system: selectedDriverId,
         activeLocationIds: [],
       },
@@ -533,12 +533,12 @@ const ChronicleForge: React.FC = () => {
               <div className="flex-1 overflow-y-auto p-8 scrollbar-thin scrollbar-thumb-white/5">
                 {activePreviewTab === 'campaign' && (
                   <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
-                    <h3 className="text-3xl font-bold text-app-text font-display uppercase tracking-tight">{result.campaign.name}</h3>
-                    <p className="text-xl text-accent/80 italic font-display">{result.campaign.description}</p>
+                    <h3 className="text-3xl font-bold text-app-text font-display uppercase tracking-tight">{result.campaign?.name || t('modules:session.chronicle_forge_module.untitled')}</h3>
+                    <p className="text-xl text-accent/80 italic font-display">{result.campaign?.description || ''}</p>
                     <div className="prose prose-invert max-w-none">
                       <div className="bg-app-surface/60 p-6 rounded-2xl border border-app-border/10">
                         <h4 className="text-[10px] font-black uppercase text-app-text/40 mb-4 tracking-widest font-display">{t('modules:session.chronicle_forge_module.synopsis_title')}</h4>
-                        <p className="text-app-text/80 leading-relaxed text-lg font-sans">{result.campaign.synopsis}</p>
+                        <p className="text-app-text/80 leading-relaxed text-lg font-sans">{result.campaign?.synopsis || ''}</p>
                       </div>
                     </div>
                   </div>
@@ -546,7 +546,7 @@ const ChronicleForge: React.FC = () => {
 
                 {activePreviewTab === 'entities' && (
                   <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-right-4">
-                    {result.entities.map((ent, idx) => (
+                    {(result.entities || []).map((ent, idx) => (
                       <div key={idx} className="bg-app-text/5 rounded-2xl p-5 border border-app-border/10 hover:border-accent/30 transition-all">
                         <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center gap-3">
@@ -577,7 +577,7 @@ const ChronicleForge: React.FC = () => {
 
                 {activePreviewTab === 'locations' && (
                   <div className="space-y-4 animate-in fade-in slide-in-from-right-4">
-                    {result.locations.map((loc, idx) => (
+                    {(result.locations || []).map((loc, idx) => (
                       <div key={idx} className="bg-app-text/5 rounded-2xl p-6 border border-app-border/10 hover:border-accent/30 transition-all flex gap-6">
                         <div className="w-48 h-32 rounded-xl bg-app-surface/60 flex items-center justify-center border border-app-border/10 overflow-hidden">
                            <MapPin className="w-12 h-12 text-app-text/10" />
@@ -600,7 +600,7 @@ const ChronicleForge: React.FC = () => {
 
                 {activePreviewTab === 'lore' && (
                   <div className="columns-2 gap-4 animate-in fade-in slide-in-from-right-4">
-                    {result.lore.map((l, idx) => (
+                    {(result.lore || []).map((l, idx) => (
                       <div key={idx} className="break-inside-avoid bg-app-text/5 rounded-2xl p-5 border border-app-border/10 mb-4 hover:border-accent/30 transition-all group">
                         <div className="flex items-center gap-2 mb-3">
                            <span className={`w-2 h-2 rounded-full ${l.category === 'clue' ? 'bg-amber-400' : 'bg-accent'}`} />

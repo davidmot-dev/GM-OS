@@ -45,6 +45,7 @@ export const useHubSync = () => {
     const [showDice, setShowDice] = useState(false);
     const [sharedRule, setSharedRule] = useState<any | null>(null);
     const [mapPings, setMapPings] = useState<any[]>([]);
+    const [latency, setLatency] = useState<number | null>(null);
 
     const [resolvedFavorites, setResolvedFavorites] = useState<any[]>([]);
     const [resolvedNpcs, setResolvedNpcs] = useState<any[]>([]);
@@ -254,6 +255,15 @@ export const useHubSync = () => {
                         if (type === 'image') setLiveImagePath(payload || null);
                         if (type === 'entity') setLiveEntity(payload ? JSON.parse(payload) : null);
                     }
+                    if (data.type === 'session:receive-message' && data.payload) {
+                        const sSession = getStore('useSessionOSStore');
+                        if (sSession) sSession.getState().addSessionMessage(data.payload);
+                    }
+                    if (data.type === 'remote:pong') {
+                        const now = Date.now();
+                        const sentAt = data.payload?.sentAt || now;
+                        setLatency(now - sentAt);
+                    }
                     if (data.type === 'session:display-rule' && data.payload) setSharedRule(data.payload);
                 } catch (err) { console.error('[useHubSync] Sync error:', err); }
             };
@@ -266,6 +276,20 @@ export const useHubSync = () => {
             socketRef.current = null;
         };
     }, [host, applySyncPayload]);
+
+    // 🛰️ Latency / Ping Monitoring
+    useEffect(() => {
+        if (status !== 'connected') return;
+        const interval = setInterval(() => {
+            if (socketRef.current?.readyState === WebSocket.OPEN) {
+                socketRef.current.send(JSON.stringify({ 
+                    type: 'remote:ping', 
+                    payload: { sentAt: Date.now() } 
+                }));
+            }
+        }, 15000); // Every 15 seconds
+        return () => clearInterval(interval);
+    }, [status]);
 
     // Reactive Registration (Triggers when character selection or identity changes)
     useEffect(() => {
@@ -423,7 +447,7 @@ export const useHubSync = () => {
         playerName,
         sharedRule,
         setSharedRule,
-        mapPings,
-        setMapPings
+        setMapPings,
+        latency
     };
 };
