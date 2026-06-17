@@ -69,6 +69,13 @@ class CrossWindowEventService {
                             this.broadcastFullState();
                         }, 50);
                         break;
+                    case 'whiteboard':
+                        this.applyRemoteUpdate('whiteboard', payload);
+                        if (this.relayTimer) clearTimeout(this.relayTimer);
+                        this.relayTimer = setTimeout(() => {
+                            this.broadcastFullState();
+                        }, 50);
+                        break;
                 }
             } else {
                 // Slaves handle state updates
