@@ -10,7 +10,7 @@ export const PlayerDrawingCanvas: React.FC = () => {
         paths, 
         laserPointer, 
         projectionTarget, 
-        addPath, 
+        finishDrawing,
         removePath, 
         setLaserPointer, 
         currentColor, 
@@ -124,21 +124,30 @@ export const PlayerDrawingCanvas: React.FC = () => {
         }
     }, [paths, laserPointer, isActive, isDrawing, currentPoints, currentColor, currentWidth, currentTool, activePath, activeDrawerId, instanceId, drawPath]);
 
+    // Ref stable pour accéder à redraw sans créer de dépendance d'effet
+    const redrawRef = useRef(redraw);
+    redrawRef.current = redraw;
+
+    // RESIZE: Ne s'exécute qu'au montage — utilise ResizeObserver
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
-        const resizeCanvas = () => {
-            const parent = canvas.parentElement;
-            if (parent) {
-                canvas.width = parent.clientWidth;
-                canvas.height = parent.clientHeight;
-                redraw();
-            }
-        };
+        const parent = canvas.parentElement;
+        if (!parent) return;
 
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+        const observer = new ResizeObserver((entries) => {
+            const entry = entries[0];
+            if (!entry) return;
+            const { width, height } = entry.contentRect;
+            const w = Math.round(width);
+            const h = Math.round(height);
+            if (canvas.width !== w || canvas.height !== h) {
+                canvas.width = w;
+                canvas.height = h;
+            }
+            redrawRef.current();
+        });
 
         const context = canvas.getContext('2d');
         if (context) {
@@ -147,24 +156,14 @@ export const PlayerDrawingCanvas: React.FC = () => {
             contextRef.current = context;
         }
 
-        return () => window.removeEventListener('resize', resizeCanvas);
-    }, [redraw]);
+        observer.observe(parent);
+        return () => observer.disconnect();
+    }, []); // ← Mount-only!
 
-    // Redraw whenever paths or pointer change
+    // REDRAW: S'exécute quand les données changent, sans toucher aux dimensions du canvas
     useEffect(() => {
         redraw();
     }, [paths, laserPointer, redraw]);
-
-    // REAL-TIME SYNC: Rehydrate store on storage events (cross-window)
-    useEffect(() => {
-        const handleStorageChange = (e: StorageEvent) => {
-            if (e.key === 'gm-os-whiteboard-storage-v1') {
-                useWhiteboardStore.persist.rehydrate();
-            }
-        };
-        window.addEventListener('storage', handleStorageChange);
-        return () => window.removeEventListener('storage', handleStorageChange);
-    }, []);
 
     const getCoordinates = (e: React.MouseEvent | React.TouchEvent): Point => {
         const canvas = canvasRef.current;
@@ -229,7 +228,6 @@ export const PlayerDrawingCanvas: React.FC = () => {
     const stopDrawing = () => {
         if (!isDrawing) return;
         setIsDrawing(false);
-        setActivePath(null, null);
 
         if (currentPoints.length >= 2) {
             const id = Math.random().toString(36).substr(2, 9);
@@ -241,13 +239,17 @@ export const PlayerDrawingCanvas: React.FC = () => {
                 tool: currentTool,
                 isTemporary: currentTool === 'laser'
             };
-            addPath(newPath);
+            // Atomic: ajoute le path ET nettoie activePath en une seule mutation
+            finishDrawing(newPath);
 
             if (currentTool === 'laser') {
                 setTimeout(() => {
                     removePath(id);
                 }, 2000);
             }
+        } else {
+            // Pas assez de points pour un tracé valide — juste nettoyer l'état actif
+            setActivePath(null, null);
         }
         setCurrentPoints([]);
     };

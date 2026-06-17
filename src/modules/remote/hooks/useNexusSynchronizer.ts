@@ -65,6 +65,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                     activePath: s.activePath, 
                     laserPointer: s.laserPointer, 
                     activeDrawerId: s.activeDrawerId, 
+                    backgroundMode: s.backgroundMode,
                     pathsCount: s.paths.length, 
                     version: s.version
                 };

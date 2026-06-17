@@ -73,6 +73,12 @@ interface WhiteboardState {
     setActivePath: (path: DrawingPath | null, drawerId: string | null) => void;
     /** Ajoute définitivement un tracé au tableau et à l'historique */
     addPath: (path: DrawingPath) => void;
+    /**
+     * Termine atomiquement un dessin en ajoutant le tracé aux paths
+     * ET en nettoyant activePath/activeDrawerId en une seule mutation Zustand.
+     * Cela évite les race conditions de synchronisation.
+     */
+    finishDrawing: (path: DrawingPath) => void;
     /** Supprime un tracé spécifique */
     removePath: (id: string) => void;
     /** Efface tout le contenu du tableau */
@@ -133,6 +139,25 @@ export const useWhiteboardStore = create<WhiteboardState>()(
                 };
             }),
 
+            finishDrawing: (path) => set((state) => {
+                const newPaths = [...state.paths, path];
+
+                if (path.isTemporary) {
+                    setTimeout(() => {
+                        useWhiteboardStore.getState().removePath(path.id);
+                    }, 2000);
+                }
+
+                return {
+                    paths: newPaths,
+                    activePath: null,
+                    activeDrawerId: null,
+                    undoStack: path.isTemporary ? state.undoStack : [...state.undoStack, state.paths],
+                    redoStack: [],
+                    version: state.version + 1,
+                };
+            }),
+
             removePath: (id) => set((state) => ({
                 paths: state.paths.filter(p => p.id !== id),
                 version: state.version + 1
@@ -184,16 +209,16 @@ export const useWhiteboardStore = create<WhiteboardState>()(
         {
             name: 'gm-os-whiteboard-storage-v1',
             partialize: (state) => ({
-                paths: state.paths.filter(p => !p.isTemporary), // Don't persist laser pointer
+                paths: state.paths.filter(p => !p.isTemporary),
                 currentColor: state.currentColor,
                 currentWidth: state.currentWidth,
                 currentTool: state.currentTool,
                 projectionTarget: state.projectionTarget,
-                laserPointer: state.laserPointer,
-                activePath: state.activePath,
-                activeDrawerId: state.activeDrawerId,
-                backgroundMode: state.backgroundMode,
-                version: state.version
+                backgroundMode: state.backgroundMode
+                // NOTE: activePath, activeDrawerId, laserPointer et version sont
+                // des données volatiles temps réel gérées par BroadcastChannel/IPC.
+                // Les persister causerait des écritures localStorage haute fréquence
+                // et des rehydratations parasites.
             })
         }
     )

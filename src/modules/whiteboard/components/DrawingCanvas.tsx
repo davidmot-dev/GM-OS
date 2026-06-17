@@ -15,7 +15,7 @@ export const DrawingCanvas = forwardRef<DrawingCanvasRef>((_, ref) => {
         currentTool, 
         currentColor, 
         currentWidth, 
-        addPath, 
+        finishDrawing,
         setLaserPointer, 
         laserPointer,
         setActivePath,
@@ -149,21 +149,14 @@ export const DrawingCanvas = forwardRef<DrawingCanvasRef>((_, ref) => {
         }
     }));
 
+    // Ref stable pour accéder à redraw sans créer de dépendance d'effet
+    const redrawRef = useRef(redraw);
+    redrawRef.current = redraw;
+
+    // RESIZE: Ne s'exécute qu'au montage — utilise ResizeObserver pour détecter les vrais changements de taille
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
-
-        const resizeCanvas = () => {
-            const parent = canvas.parentElement;
-            if (parent) {
-                canvas.width = parent.clientWidth;
-                canvas.height = parent.clientHeight;
-                redraw();
-            }
-        };
-
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
 
         const context = canvas.getContext('2d');
         if (context) {
@@ -172,24 +165,30 @@ export const DrawingCanvas = forwardRef<DrawingCanvasRef>((_, ref) => {
             contextRef.current = context;
         }
 
-        return () => window.removeEventListener('resize', resizeCanvas);
-    }, [redraw]);
+        const parent = canvas.parentElement;
+        if (!parent) return;
 
-    // Redraw all paths whenever paths change
+        const observer = new ResizeObserver((entries) => {
+            const entry = entries[0];
+            if (!entry) return;
+            const { width, height } = entry.contentRect;
+            const w = Math.round(width);
+            const h = Math.round(height);
+            if (canvas.width !== w || canvas.height !== h) {
+                canvas.width = w;
+                canvas.height = h;
+            }
+            redrawRef.current();
+        });
+
+        observer.observe(parent);
+        return () => observer.disconnect();
+    }, []); // ← Mount-only!
+
+    // REDRAW: S'exécute quand les données changent, sans toucher aux dimensions du canvas
     useEffect(() => {
         redraw();
     }, [redraw]);
-
-    // SYNC: Listen for storage events (from other windows/players)
-    useEffect(() => {
-        const handleStorage = (e: StorageEvent) => {
-            if (e.key === 'gm-os-whiteboard-storage-v1') {
-                useWhiteboardStore.persist.rehydrate();
-            }
-        };
-        window.addEventListener('storage', handleStorage);
-        return () => window.removeEventListener('storage', handleStorage);
-    }, []);
 
     const roundCoord = (val: number) => Math.round(val * 10000) / 10000;
 
@@ -246,7 +245,6 @@ export const DrawingCanvas = forwardRef<DrawingCanvasRef>((_, ref) => {
     const stopDrawing = () => {
         if (!isDrawing) return;
         setIsDrawing(false);
-        setActivePath(null, null); // Clear real-time trace
 
         if (currentPoints.length >= 2) {
             const id = Math.random().toString(36).substr(2, 9);
@@ -258,8 +256,11 @@ export const DrawingCanvas = forwardRef<DrawingCanvasRef>((_, ref) => {
                 tool: currentTool,
                 isTemporary: currentTool === 'laser'
             };
-            addPath(newPath);
-            
+            // Atomic: ajoute le path ET nettoie activePath en une seule mutation
+            finishDrawing(newPath);
+        } else {
+            // Pas assez de points pour un tracé valide — juste nettoyer l'état actif
+            setActivePath(null, null);
         }
         setCurrentPoints([]);
     };

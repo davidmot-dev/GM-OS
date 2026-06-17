@@ -233,4 +233,23 @@ Pour éviter les dépendances circulaires qui bloquent le build Vite (ex: Sessio
 
 ---
 
-*Dernière mise à jour : 17 Juin 2026 - GM-OS v6.5.0 - Stabilisation complète de la suite de tests, de la persistance IndexedDB, intégration des feedbacks de session et correction des latences et synchronisations de Combat-OS & Whiteboard-OS.*
+### 26. Anti-Pattern Canvas : Couplage Resize/Redraw et Mutations Non-Atomiques (2026-06-17)
+- **Défi** : Les traits du Whiteboard-OS clignotaient et disparaissaient, **même sans projection réseau**, lors du dessin sur le canvas du MJ.
+- **Causes** :
+  1. **Destruction du canvas à chaque frame** : L'effet `useEffect` de redimensionnement dépendait de `[redraw]`, un `useCallback` avec 11 dépendances volatiles (`paths`, `isDrawing`, `currentPoints`, `activePath`...). À chaque mouvement de souris, `canvas.width = parent.clientWidth` était appelé — même si la taille n'avait pas changé — ce qui **efface tout le contenu du canvas** et réinitialise le contexte 2D, forçant un redraw complet du GPU à ~60fps.
+  2. **Race condition de synchronisation** : `stopDrawing()` appelait deux mutations Zustand séparées (`setActivePath(null)` puis `addPath(newPath)`), générant deux broadcasts réseau. Le premier envoyait `activePath: null` avec l'ancienne liste `paths`, causant un flash de disparition sur le Player Hub.
+  3. **Données volatiles dans `localStorage`** : `activePath`, `activeDrawerId`, `laserPointer` étaient inclus dans le `partialize` de `zustand/persist`, causant des écritures localStorage haute fréquence pendant le dessin.
+  4. **Rehydratation parasite** : Les listeners `storage` events appelant `persist.rehydrate()` écrasaient l'état en mémoire avec des versions périmées du localStorage.
+- **Solutions** :
+  1. **ResizeObserver monté une seule fois** : Remplacement de l'effet `[redraw]` par un `ResizeObserver` avec dépendance `[]` (mount-only), utilisant une `ref` stable (`redrawRef`) pour accéder à la dernière version de `redraw` sans recréer l'observateur. Le canvas n'est redimensionné que si la taille a réellement changé (`canvas.width !== w`).
+  2. **Mutation atomique `finishDrawing()`** : Fusion de `setActivePath(null)` + `addPath(path)` en une seule action Zustand, garantissant un seul trigger de subscriber et un seul message de sync contenant l'état final correct.
+  3. **Nettoyage de `partialize`** : Retrait de toutes les données volatiles temps réel du persist.
+  4. **Suppression de `persist.rehydrate()`** : La synchronisation temps réel via BroadcastChannel/IPC est suffisante.
+- **Leçons** :
+  - Ne jamais coupler un effet de redimensionnement (`canvas.width = ...`) aux données de dessin via les dépendances d'effet React — utiliser un `ResizeObserver` isolé.
+  - Les mutations Zustand de fin d'action interactive (stop drawing, drop token) doivent être **atomiques** : une seule `set()` contenant à la fois l'état finalisé et le nettoyage de l'état transitoire.
+  - Ne pas persister dans `localStorage` les données qui changent à chaque frame (coordonnées, tracés actifs, pointeur laser).
+
+---
+
+*Dernière mise à jour : 17 Juin 2026 - GM-OS v6.5.0 - Fix v2 du Whiteboard-OS : correction du couplage resize/redraw destructif, mutations atomiques finishDrawing, nettoyage de la persistance localStorage.*
