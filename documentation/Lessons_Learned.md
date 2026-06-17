@@ -209,4 +209,14 @@ Pour éviter les dépendances circulaires qui bloquent le build Vite (ex: Sessio
 
 ---
 
-*Dernière mise à jour : 17 Juin 2026 - GM-OS v6.5.0 - Stabilisation complète de la suite de tests, de la persistance IndexedDB et intégration des feedbacks de session.*
+### 24. Synchronisation Locale Réseau & Sécurité de Combat-OS (2026-06-17)
+- **Défi** : Le module Combat-OS ne se synchronisait pas en temps réel avec le Player Hub local dans l'application Electron en production (chargement `file://` sans WebSocket), et les changements de tour fuitaient des informations secrètes (notes MJ et infos secrètes) à tous les joueurs connectés.
+- **Solution** :
+  1. **BroadcastChannel & Clock/Combat** : Ajout de souscriptions explicites pour `useCombatStore` et `useClockStore` dans `CrossWindowEventService.ts` pour diffuser les mises à jour localement sur le même PC.
+  2. **Relais IPC Local** : Ajout d'un écouteur IPC `remote:broadcast-sync` dans `main.ts` pour relayer les états de synchronisation globaux aux fenêtres locales de projection et de Hub.
+  3. **Sécurisation de l'état** : Suppression du raccourci non sécurisé `syncFast('combat')` dans `useNexusSynchronizer.ts` au profit d'appels systématiques à `handleSync()`, garantissant l'anonymisation des notes MJ et la résolution des URLs d'avatars à chaque mise à jour.
+- **Leçon** : Ne jamais bypasser les filtres d'assainissement de données (sanitizers) sous prétexte de vouloir optimiser les performances ("fast-paths") pour des modules non-critiques en fréquence.
+
+---
+
+*Dernière mise à jour : 17 Juin 2026 - GM-OS v6.5.0 - Stabilisation complète de la suite de tests, de la persistance IndexedDB, intégration des feedbacks de session et correction de la synchronisation de Combat-OS.*

@@ -321,6 +321,31 @@ class CrossWindowEventService {
                 });
             }
         });
+
+        useCombatStore.subscribe((state) => {
+            if (this.isApplyingRemoteUpdate) return;
+            this.broadcast('combat', {
+                combatants: state.combatants,
+                currentTurnIdx: state.currentTurnIdx,
+                round: state.round,
+                isCombatProjected: state.isCombatProjected
+            });
+        });
+
+        useClockStore.subscribe((state) => {
+            if (this.isApplyingRemoteUpdate) return;
+            this.broadcast('clock', {
+                timestamp: state.timestamp,
+                mode: state.mode,
+                theme: state.theme,
+                tensions: state.tensions,
+                timerRemaining: state.timerRemaining,
+                timerIsRunning: state.timerIsRunning,
+                timerLabel: state.timerLabel,
+                timerDuration: state.timerDuration,
+                isClockProjected: state.isClockProjected
+            });
+        });
     }
 
     /**

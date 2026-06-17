@@ -208,7 +208,12 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
             const fullState = {
                 sounds, moments: storyboardStore.moments.filter(m => String(m.campaignId) === String(currentCampaignId)).map(m => ({ id: m.id, name: m.name })),
                 masterVolume: soundStore.masterVolume,
-                combat: { combatants: resolvedCombatants, currentTurnIdx: combatStore.currentTurnIdx, round: combatStore.round },
+                combat: { 
+                    combatants: resolvedCombatants, 
+                    currentTurnIdx: combatStore.currentTurnIdx, 
+                    round: combatStore.round,
+                    isCombatProjected: combatStore.isCombatProjected
+                },
                 notes,
                 whiteboard: { paths: whiteboardStore.paths, activePath: whiteboardStore.activePath, laserPointer: whiteboardStore.laserPointer, backgroundMode: whiteboardStore.backgroundMode },
                 clock: { timestamp: clockStore.timestamp, tensions: clockStore.tensions, timerRemaining: clockStore.timerRemaining, timerIsRunning: clockStore.timerIsRunning },
@@ -312,7 +317,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
             useMusicStore.subscribe(() => handleSync()),
             useSoundStore.subscribe(() => handleSync()),
             useImageStore.subscribe(() => handleSync()),
-            useCombatStore.subscribe((s, prev) => (s.combatants !== prev.combatants) ? handleSync() : syncFast('combat')),
+            useCombatStore.subscribe(() => handleSync()),
             useDiceStore.subscribe(() => syncFast('dice')),
             useMapStore.subscribe((s, prev) => (s.projectedMapUrl !== prev.projectedMapUrl) ? handleSync() : syncFast('map')),
             useSessionOSStore.subscribe(() => handleSync())

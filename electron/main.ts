@@ -391,6 +391,17 @@ ipcMain.on('image:sync-hub-data', (_event, type: string, imagePath: string) => {
     }
 });
 
+ipcMain.on('remote:broadcast-sync', (_event, data) => {
+    if (hubWindow && !hubWindow.isDestroyed()) {
+        hubWindow.webContents.send('remote:broadcast-sync', data);
+    }
+    for (const [, projWin] of projectorWindows) {
+        if (!projWin.isDestroyed()) {
+            projWin.webContents.send('remote:broadcast-sync', data);
+        }
+    }
+});
+
 ipcMain.on('session:launch-hub-window', (_event, mode = 'hub') => {
     console.log(`[Main] session:launch-hub-window received (mode: ${mode})`);
     if (hubWindow && !hubWindow.isDestroyed()) {

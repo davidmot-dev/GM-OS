@@ -1,10 +1,10 @@
-import aE, { ipcMain as Re, dialog as zt, app as Vt, safeStorage as Pn, net as wr, protocol as rw, shell as lE, screen as Gt, BrowserWindow as Oi } from "electron";
+import aE, { ipcMain as Re, dialog as Vt, app as Zt, safeStorage as Pn, net as wr, protocol as rw, shell as lE, screen as Gt, BrowserWindow as Oi } from "electron";
 import ve from "node:path";
 import nw, { fileURLToPath as uE } from "node:url";
 import * as iw from "fs";
 import Lt from "fs";
 import fE from "constants";
-import Qt from "stream";
+import er from "stream";
 import It from "util";
 import cE from "assert";
 import * as Ni from "path";
@@ -271,7 +271,7 @@ var bs, id;
 function TE() {
   if (id) return bs;
   id = 1;
-  var t = Qt.Stream;
+  var t = er.Stream;
   bs = e;
   function e(r) {
     return {
@@ -3654,7 +3654,7 @@ try {
 } catch (t) {
   console.error("Failed to initialize debug log:", t);
 }
-let or = null, mv = 1;
+let ar = null, mv = 1;
 const Or = /* @__PURE__ */ new Map();
 let Ir = "", Dr = null, mr = null, Nr = !1;
 async function Sv() {
@@ -3681,7 +3681,7 @@ async function Sv() {
     })(), mr);
 }
 async function Ew() {
-  return or && or.connected ? or : Dr || (Dr = (async () => {
+  return ar && ar.connected ? ar : Dr || (Dr = (async () => {
     Nr = !1, mr = null, We(`Spawning NotebookLM MCP Server with wrapper: ${oc}`);
     const t = lw(Sw, [oc, "server", "--debug"], {
       stdio: ["pipe", "pipe", "pipe"],
@@ -3724,8 +3724,8 @@ async function Ew() {
       const r = e.toString().trim();
       r && (We(`stderr: ${r}`), r.toLowerCase().includes("error") && console.error(`[MCP Server] ${r}`));
     }), t.on("exit", (e, r) => {
-      We(`Server exited (code: ${e}, signal: ${r})`), Nr = !1, or = null, Dr = null, Or.forEach((a) => a.reject(new Error(`MCP Server exited with code ${e}`))), Or.clear();
-    }), or = t, t;
+      We(`Server exited (code: ${e}, signal: ${r})`), Nr = !1, ar = null, Dr = null, Or.forEach((a) => a.reject(new Error(`MCP Server exited with code ${e}`))), Or.clear();
+    }), ar = t, t;
   })(), Dr);
 }
 async function ac(t, e) {
@@ -3797,7 +3797,7 @@ function Ev() {
     } catch (t) {
       throw We(`[Auth] Error: ${t}`), t;
     }
-  }), Re.handle("mcp:restart", async () => (We("[System] Restarting MCP Server..."), or && (or.kill(), or = null), Dr = null, Nr = !1, mr = null, { success: !0, message: "Serveur MCP redémarré avec succès." }));
+  }), Re.handle("mcp:restart", async () => (We("[System] Restarting MCP Server..."), ar && (ar.kill(), ar = null), Dr = null, Nr = !1, mr = null, { success: !0, message: "Serveur MCP redémarré avec succès." }));
 }
 const Fn = "C:\\Users\\david\\OneDrive\\Obsidian Vault";
 function vv() {
@@ -3861,7 +3861,7 @@ function vv() {
       return console.error("[Obsidian Bridge] Error creating directory:", n), !1;
     }
   }), Re.handle("obsidian:select-vault", async (t) => {
-    const { filePaths: e } = await zt.showOpenDialog({
+    const { filePaths: e } = await Vt.showOpenDialog({
       title: "Sélectionner le coffre Obsidian",
       properties: ["openDirectory", "createDirectory"]
     });
@@ -5201,7 +5201,7 @@ function kw(...t) {
     return r(null, ...t);
   };
 }
-function er(t, e) {
+function tr(t, e) {
   return (r, a, o, n) => {
     var i = !1, l;
     const s = Ne(o);
@@ -5219,15 +5219,15 @@ function er(t, e) {
   };
 }
 function t0(t, e, r) {
-  return er((a) => a, (a, o) => o)(xt, t, e, r);
+  return tr((a) => a, (a, o) => o)(xt, t, e, r);
 }
 var ci = Oe(t0, 3);
 function r0(t, e, r, a) {
-  return er((o) => o, (o, n) => n)(Pt(e), t, r, a);
+  return tr((o) => o, (o, n) => n)(Pt(e), t, r, a);
 }
 var di = Oe(r0, 4);
 function n0(t, e, r) {
-  return er((a) => a, (a, o) => o)(Pt(1), t, e, r);
+  return tr((a) => a, (a, o) => o)(Pt(1), t, e, r);
 }
 var hi = Oe(n0, 3);
 function Fw(t) {
@@ -5284,15 +5284,15 @@ function vc(t) {
   };
 }
 function l0(t, e, r) {
-  return er((a) => !a, (a) => !a)(xt, t, e, r);
+  return tr((a) => !a, (a) => !a)(xt, t, e, r);
 }
 var gi = Oe(l0, 3);
 function u0(t, e, r, a) {
-  return er((o) => !o, (o) => !o)(Pt(e), t, r, a);
+  return tr((o) => !o, (o) => !o)(Pt(e), t, r, a);
 }
 var yi = Oe(u0, 4);
 function f0(t, e, r) {
-  return er((a) => !a, (a) => !a)(Nt, t, e, r);
+  return tr((a) => !a, (a) => !a)(Nt, t, e, r);
 }
 var bi = Oe(f0, 3);
 function c0(t, e, r, a) {
@@ -5593,15 +5593,15 @@ function om(t, e) {
   return Rc(Nt, t, e);
 }
 function T0(t, e, r) {
-  return er(Boolean, (a) => a)(xt, t, e, r);
+  return tr(Boolean, (a) => a)(xt, t, e, r);
 }
 var Ri = Oe(T0, 3);
 function x0(t, e, r, a) {
-  return er(Boolean, (o) => o)(Pt(e), t, r, a);
+  return tr(Boolean, (o) => o)(Pt(e), t, r, a);
 }
 var Ai = Oe(x0, 4);
 function I0(t, e, r) {
-  return er(Boolean, (a) => a)(Nt, t, e, r);
+  return tr(Boolean, (a) => a)(Nt, t, e, r);
 }
 var Ti = Oe(I0, 3);
 function D0(t, e, r) {
@@ -5972,7 +5972,7 @@ function j0() {
 }
 var Oo, Ah;
 function ym() {
-  return Ah || (Ah = 1, Oo = Qt), Oo;
+  return Ah || (Ah = 1, Oo = er), Oo;
 }
 var qn = { exports: {} }, Th;
 function Hi() {
@@ -6006,71 +6006,71 @@ function Hi() {
     };
   })(qn, qn.exports)), qn.exports;
 }
-var st = {}, xh;
+var ot = {}, xh;
 function mn() {
-  if (xh) return st;
+  if (xh) return ot;
   xh = 1;
   function t(A) {
     return Array.isArray ? Array.isArray(A) : I(A) === "[object Array]";
   }
-  st.isArray = t;
+  ot.isArray = t;
   function e(A) {
     return typeof A == "boolean";
   }
-  st.isBoolean = e;
+  ot.isBoolean = e;
   function r(A) {
     return A === null;
   }
-  st.isNull = r;
+  ot.isNull = r;
   function a(A) {
     return A == null;
   }
-  st.isNullOrUndefined = a;
+  ot.isNullOrUndefined = a;
   function o(A) {
     return typeof A == "number";
   }
-  st.isNumber = o;
+  ot.isNumber = o;
   function n(A) {
     return typeof A == "string";
   }
-  st.isString = n;
+  ot.isString = n;
   function i(A) {
     return typeof A == "symbol";
   }
-  st.isSymbol = i;
+  ot.isSymbol = i;
   function l(A) {
     return A === void 0;
   }
-  st.isUndefined = l;
+  ot.isUndefined = l;
   function s(A) {
     return I(A) === "[object RegExp]";
   }
-  st.isRegExp = s;
+  ot.isRegExp = s;
   function f(A) {
     return typeof A == "object" && A !== null;
   }
-  st.isObject = f;
+  ot.isObject = f;
   function d(A) {
     return I(A) === "[object Date]";
   }
-  st.isDate = d;
+  ot.isDate = d;
   function y(A) {
     return I(A) === "[object Error]" || A instanceof Error;
   }
-  st.isError = y;
+  ot.isError = y;
   function R(A) {
     return typeof A == "function";
   }
-  st.isFunction = R;
+  ot.isFunction = R;
   function w(A) {
     return A === null || typeof A == "boolean" || typeof A == "number" || typeof A == "string" || typeof A == "symbol" || // ES6 symbol
     typeof A > "u";
   }
-  st.isPrimitive = w, st.isBuffer = Fe.Buffer.isBuffer;
+  ot.isPrimitive = w, ot.isBuffer = Fe.Buffer.isBuffer;
   function I(A) {
     return Object.prototype.toString.call(A);
   }
-  return st;
+  return ot;
 }
 var Bn = { exports: {} }, Un = { exports: {} }, Ih;
 function $0() {
@@ -6981,7 +6981,7 @@ function B0() {
 var Wh;
 function U0() {
   return Wh || (Wh = 1, (function(t, e) {
-    var r = Qt;
+    var r = er;
     process.env.READABLE_STREAM === "disable" && r ? (t.exports = r, e = t.exports = r.Readable, e.Readable = r.Readable, e.Writable = r.Writable, e.Duplex = r.Duplex, e.Transform = r.Transform, e.PassThrough = r.PassThrough, e.Stream = r) : (e = t.exports = wm(), e.Stream = r || e, e.Readable = e, e.Writable = _m(), e.Duplex = Mr(), e.Transform = mm(), e.PassThrough = B0());
   })($n, $n.exports)), $n.exports;
 }
@@ -8261,9 +8261,9 @@ function Mm(t, e) {
 }
 function Bp(t) {
   function e() {
-    Zt.call(this);
+    Yt.call(this);
   }
-  e.prototype = Object.create(Zt.prototype, {
+  e.prototype = Object.create(Yt.prototype, {
     constructor: {
       value: e,
       configurable: !0,
@@ -8274,8 +8274,8 @@ function Bp(t) {
     Mm(e.prototype, t[r]);
   return e;
 }
-function Zt() {
-  if (this instanceof Zt) {
+function Yt() {
+  if (this instanceof Yt) {
     Cm.set(this, /* @__PURE__ */ new Map());
     return;
   }
@@ -8289,7 +8289,7 @@ function Zt() {
   }
   throw new TypeError("Cannot call a class as a function");
 }
-Zt.prototype = {
+Yt.prototype = {
   /**
    * Add a given listener to this event target.
    * @param {string} eventName The event name to add.
@@ -8374,13 +8374,13 @@ Zt.prototype = {
     return $p(o, null), RR(o, 0), AR(o, null), !o.defaultPrevented;
   }
 };
-Object.defineProperty(Zt.prototype, "constructor", {
-  value: Zt,
+Object.defineProperty(Yt.prototype, "constructor", {
+  value: Yt,
   configurable: !0,
   writable: !0
 });
-typeof window < "u" && typeof window.EventTarget < "u" && Object.setPrototypeOf(Zt.prototype, window.EventTarget.prototype);
-class Rn extends Zt {
+typeof window < "u" && typeof window.EventTarget < "u" && Object.setPrototypeOf(Yt.prototype, window.EventTarget.prototype);
+class Rn extends Yt {
   /**
    * AbortSignal cannot be constructed directly.
    */
@@ -8400,7 +8400,7 @@ class Rn extends Zt {
 Mm(Rn.prototype, "abort");
 function xR() {
   const t = Object.create(Rn.prototype);
-  return Zt.call(t), xi.set(t, !1), t;
+  return Yt.call(t), xi.set(t, !1), t;
 }
 function IR(t) {
   xi.get(t) === !1 && (xi.set(t, !0), t.dispatchEvent({ type: "abort" }));
@@ -8453,13 +8453,13 @@ const DR = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   AbortController: Ii,
   AbortSignal: Rn,
   default: Ii
-}, Symbol.toStringTag, { value: "Module" })), Qe = /* @__PURE__ */ fw(DR);
+}, Symbol.toStringTag, { value: "Module" })), et = /* @__PURE__ */ fw(DR);
 var Gp;
 function pt() {
   return Gp || (Gp = 1, (function(t) {
     const e = Fe, { format: r, inspect: a } = Om(), {
       codes: { ERR_INVALID_ARG_TYPE: o }
-    } = ut(), { kResistStopPropagation: n, AggregateError: i, SymbolDispose: l } = ze(), s = globalThis.AbortSignal || Qe.AbortSignal, f = globalThis.AbortController || Qe.AbortController, d = Object.getPrototypeOf(async function() {
+    } = ut(), { kResistStopPropagation: n, AggregateError: i, SymbolDispose: l } = ze(), s = globalThis.AbortSignal || et.AbortSignal, f = globalThis.AbortController || et.AbortController, d = Object.getPrototypeOf(async function() {
     }).constructor, y = globalThis.Blob || e.Blob, R = typeof y < "u" ? function(u) {
       return u instanceof y;
     } : function(u) {
@@ -8767,7 +8767,7 @@ function je() {
   return zp || (zp = 1, ja = Tt.process), ja;
 }
 var $a, Vp;
-function tr() {
+function rr() {
   if (Vp) return $a;
   Vp = 1;
   const { SymbolAsyncIterator: t, SymbolIterator: e, SymbolFor: r } = ze(), a = r("nodejs.stream.destroyed"), o = r("nodejs.stream.errored"), n = r("nodejs.stream.readable"), i = r("nodejs.stream.writable"), l = r("nodejs.stream.disturbed"), s = r("nodejs.webstream.isClosedPromise"), f = r("nodejs.webstream.controllerErrorFunction");
@@ -8931,7 +8931,7 @@ function hr() {
     isNodeStream: U,
     willEmitClose: x,
     kIsClosedPromise: D
-  } = tr();
+  } = rr();
   let F;
   function T(M) {
     return M.setHeader && typeof M.abort == "function";
@@ -9046,7 +9046,7 @@ function $r() {
     aggregateTwoErrors: e,
     codes: { ERR_MULTIPLE_CALLBACK: r },
     AbortError: a
-  } = ut(), { Symbol: o } = ze(), { kIsDestroyed: n, isDestroyed: i, isFinished: l, isServerRequest: s } = tr(), f = o("kDestroy"), d = o("kConstruct");
+  } = ut(), { Symbol: o } = ze(), { kIsDestroyed: n, isDestroyed: i, isFinished: l, isServerRequest: s } = rr(), f = o("kDestroy"), d = o("kConstruct");
   function y(x, D, F) {
     x && (x.stack, D && !D.errored && (D.errored = x), F && !F.errored && (F.errored = x));
   }
@@ -9186,7 +9186,7 @@ function Nc() {
 var Ba = { exports: {} }, Jp;
 function Yi() {
   return Jp || (Jp = 1, (function(t) {
-    const { SymbolDispose: e } = ze(), { AbortError: r, codes: a } = ut(), { isNodeStream: o, isWebStream: n, kControllerErrorFunction: i } = tr(), l = hr(), { ERR_INVALID_ARG_TYPE: s } = a;
+    const { SymbolDispose: e } = ze(), { AbortError: r, codes: a } = ut(), { isNodeStream: o, isWebStream: n, kControllerErrorFunction: i } = rr(), l = hr(), { ERR_INVALID_ARG_TYPE: s } = a;
     let f;
     const d = (y, R) => {
       if (typeof y != "object" || !("aborted" in y))
@@ -9711,11 +9711,11 @@ function Xi() {
     dataEmitted: H(O)
   });
   function te(h, S, ie) {
-    typeof ie != "boolean" && (ie = S instanceof Yt()), this.state = X | m | ae | ce, h && h.objectMode && (this.state |= $), ie && h && h.readableObjectMode && (this.state |= $), this.highWaterMark = h ? W(this, h, "readableHighWaterMark", ie) : k(!1), this.buffer = new C(), this.length = 0, this.pipes = [], this.flowing = null, this[se] = null, h && h.emitClose === !1 && (this.state &= ~X), h && h.autoDestroy === !1 && (this.state &= ~m), this.errored = null, this.defaultEncoding = h && h.defaultEncoding || "utf8", this.awaitDrainWriters = null, this.decoder = null, this.encoding = null, h && h.encoding && (this.decoder = new ne(h.encoding), this.encoding = h.encoding);
+    typeof ie != "boolean" && (ie = S instanceof Kt()), this.state = X | m | ae | ce, h && h.objectMode && (this.state |= $), ie && h && h.readableObjectMode && (this.state |= $), this.highWaterMark = h ? W(this, h, "readableHighWaterMark", ie) : k(!1), this.buffer = new C(), this.length = 0, this.pipes = [], this.flowing = null, this[se] = null, h && h.emitClose === !1 && (this.state &= ~X), h && h.autoDestroy === !1 && (this.state &= ~m), this.errored = null, this.defaultEncoding = h && h.defaultEncoding || "utf8", this.awaitDrainWriters = null, this.decoder = null, this.encoding = null, h && h.encoding && (this.decoder = new ne(h.encoding), this.encoding = h.encoding);
   }
   function z(h) {
     if (!(this instanceof z)) return new z(h);
-    const S = this instanceof Yt();
+    const S = this instanceof Kt();
     this._readableState = new te(h, this, S), h && (typeof h.read == "function" && (this._read = h.read), typeof h.destroy == "function" && (this._destroy = h.destroy), typeof h.construct == "function" && (this._construct = h.construct), h.signal && !S && g(h.signal, this)), I.call(this, h), N.construct(this, () => {
       this._readableState.needReadable && me(this, this._readableState);
     });
@@ -9785,9 +9785,9 @@ function Xi() {
     b("read", h), h === void 0 ? h = NaN : r(h) || (h = o(h, 10));
     const S = this._readableState, ie = h;
     if (h > S.highWaterMark && (S.highWaterMark = we(h)), h !== 0 && (S.state &= ~P), h === 0 && S.needReadable && ((S.highWaterMark !== 0 ? S.length >= S.highWaterMark : S.length > 0) || S.ended))
-      return b("read: emitReadable", S.length, S.ended), S.length === 0 && S.ended ? et(this) : Ae(this), null;
+      return b("read: emitReadable", S.length, S.ended), S.length === 0 && S.ended ? tt(this) : Ae(this), null;
     if (h = be(h, S), h === 0 && S.ended)
-      return S.length === 0 && et(this), null;
+      return S.length === 0 && tt(this), null;
     let oe = (S.state & Y) !== 0;
     if (b("need readable", oe), (S.length === 0 || S.length - h < S.highWaterMark) && (oe = !0, b("length less than watermark", oe)), S.ended || S.reading || S.destroyed || S.errored || !S.constructed)
       oe = !1, b("reading, ended or constructing", oe);
@@ -9801,7 +9801,7 @@ function Xi() {
       S.state &= ~ce, S.reading || (h = be(ie, S));
     }
     let fe;
-    return h > 0 ? fe = mt(h, S) : fe = null, fe === null ? (S.needReadable = S.length <= S.highWaterMark, h = 0) : (S.length -= h, S.multiAwaitDrain ? S.awaitDrainWriters.clear() : S.awaitDrainWriters = null), S.length === 0 && (S.ended || (S.needReadable = !0), ie !== h && S.ended && et(this)), fe !== null && !S.errorEmitted && !S.closeEmitted && (S.dataEmitted = !0, this.emit("data", fe)), fe;
+    return h > 0 ? fe = mt(h, S) : fe = null, fe === null ? (S.needReadable = S.length <= S.highWaterMark, h = 0) : (S.length -= h, S.multiAwaitDrain ? S.awaitDrainWriters.clear() : S.awaitDrainWriters = null), S.length === 0 && (S.ended || (S.needReadable = !0), ie !== h && S.ended && tt(this)), fe !== null && !S.errorEmitted && !S.closeEmitted && (S.dataEmitted = !0, this.emit("data", fe)), fe;
   };
   function _e(h, S) {
     if (b("onEofChunk"), !S.ended) {
@@ -9846,7 +9846,7 @@ function Xi() {
     }
     let Pe, lt = !1;
     function Mt() {
-      b("cleanup"), h.removeListener("close", nt), h.removeListener("finish", it), Pe && h.removeListener("drain", Pe), h.removeListener("error", rt), h.removeListener("unpipe", Te), ie.removeListener("end", Et), ie.removeListener("end", $e), ie.removeListener("data", Rt), lt = !0, Pe && oe.awaitDrainWriters && (!h._writableState || h._writableState.needDrain) && Pe();
+      b("cleanup"), h.removeListener("close", it), h.removeListener("finish", st), Pe && h.removeListener("drain", Pe), h.removeListener("error", nt), h.removeListener("unpipe", Te), ie.removeListener("end", Et), ie.removeListener("end", $e), ie.removeListener("data", Rt), lt = !0, Pe && oe.awaitDrainWriters && (!h._writableState || h._writableState.needDrain) && Pe();
     }
     function vt() {
       lt || (oe.pipes.length === 1 && oe.pipes[0] === h ? (b("false write response, pause", 0), oe.awaitDrainWriters = h, oe.multiAwaitDrain = !1) : oe.pipes.length > 1 && oe.pipes.includes(h) && (b("false write response, pause", oe.awaitDrainWriters.size), oe.awaitDrainWriters.add(h)), ie.pause()), Pe || (Pe = Je(ie, h), h.on("drain", Pe));
@@ -9857,21 +9857,21 @@ function Xi() {
       const De = h.write(Ce);
       b("dest.write", De), De === !1 && vt();
     }
-    function rt(Ce) {
-      if (b("onerror", Ce), $e(), h.removeListener("error", rt), h.listenerCount("error") === 0) {
+    function nt(Ce) {
+      if (b("onerror", Ce), $e(), h.removeListener("error", nt), h.listenerCount("error") === 0) {
         const De = h._writableState || h._readableState;
         De && !De.errorEmitted ? v(h, Ce) : h.emit("error", Ce);
       }
     }
-    A(h, "error", rt);
-    function nt() {
-      h.removeListener("finish", it), $e();
-    }
-    h.once("close", nt);
+    A(h, "error", nt);
     function it() {
-      b("onfinish"), h.removeListener("close", nt), $e();
+      h.removeListener("finish", st), $e();
     }
-    h.once("finish", it);
+    h.once("close", it);
+    function st() {
+      b("onfinish"), h.removeListener("close", it), $e();
+    }
+    h.once("finish", st);
     function $e() {
       b("unpipe"), ie.unpipe(h);
     }
@@ -10125,7 +10125,7 @@ function Xi() {
     let ie;
     return S.objectMode ? ie = S.buffer.shift() : !h || h >= S.length ? (S.decoder ? ie = S.buffer.join("") : S.buffer.length === 1 ? ie = S.buffer.first() : ie = S.buffer.concat(S.length), S.buffer.clear()) : ie = S.buffer.consume(h, S.decoder), ie;
   }
-  function et(h) {
+  function tt(h) {
     const S = h._readableState;
     b("endReadable", S.endEmitted), S.endEmitted || (S.ended = !0, t.nextTick(qt, S, h));
   }
@@ -10147,9 +10147,9 @@ function Xi() {
   z.from = function(h, S) {
     return M(z, h, S);
   };
-  let tt;
+  let rt;
   function St() {
-    return tt === void 0 && (tt = {}), tt;
+    return rt === void 0 && (rt = {}), rt;
   }
   return z.fromWeb = function(h, S) {
     return St().newStreamReadableFromReadableStream(h, S);
@@ -10198,7 +10198,7 @@ function Lc() {
   }
   const F = s("kOnFinished");
   function T(m, c, E) {
-    typeof E != "boolean" && (E = c instanceof Yt()), this.objectMode = !!(m && m.objectMode), E && (this.objectMode = this.objectMode || !!(m && m.writableObjectMode)), this.highWaterMark = m ? A(this, m, "writableHighWaterMark", E) : u(!1), this.finalCalled = !1, this.needDrain = !1, this.ending = !1, this.ended = !1, this.finished = !1, this.destroyed = !1;
+    typeof E != "boolean" && (E = c instanceof Kt()), this.objectMode = !!(m && m.objectMode), E && (this.objectMode = this.objectMode || !!(m && m.writableObjectMode)), this.highWaterMark = m ? A(this, m, "writableHighWaterMark", E) : u(!1), this.finalCalled = !1, this.needDrain = !1, this.ending = !1, this.ended = !1, this.finished = !1, this.destroyed = !1;
     const j = !!(m && m.decodeStrings === !1);
     this.decodeStrings = !j, this.defaultEncoding = m && m.defaultEncoding || "utf8", this.length = 0, this.writing = !1, this.corked = 0, this.sync = !0, this.bufferProcessing = !1, this.onwrite = v.bind(void 0, c), this.writecb = null, this.writelen = 0, this.afterWriteTickInfo = null, J(this), this.pendingcb = 0, this.constructed = !0, this.prefinished = !1, this.errorEmitted = !1, this.emitClose = !m || m.emitClose !== !1, this.autoDestroy = !m || m.autoDestroy !== !1, this.errored = null, this.closed = !1, this.closeEmitted = !1, this[F] = [];
   }
@@ -10214,7 +10214,7 @@ function Lc() {
     }
   });
   function re(m) {
-    const c = this instanceof Yt();
+    const c = this instanceof Kt();
     if (!c && !a(re, this)) return new re(m);
     this._writableState = new T(m, this, c), m && (typeof m.write == "function" && (this._write = m.write), typeof m.writev == "function" && (this._writev = m.writev), typeof m.destroy == "function" && (this._destroy = m.destroy), typeof m.final == "function" && (this._final = m.final), typeof m.construct == "function" && (this._construct = m.construct), m.signal && I(m.signal, this)), y.call(this, m), w.construct(this, () => {
       const E = this._writableState;
@@ -10539,14 +10539,14 @@ function LR() {
     isDuplexNodeStream: s,
     isReadableStream: f,
     isWritableStream: d
-  } = tr(), y = hr(), {
+  } = rr(), y = hr(), {
     AbortError: R,
     codes: { ERR_INVALID_ARG_TYPE: w, ERR_INVALID_RETURN_VALUE: I }
-  } = ut(), { destroyer: A } = $r(), u = Yt(), g = Xi(), p = Lc(), { createDeferredPromise: b } = pt(), C = Fm(), N = globalThis.Blob || e.Blob, W = typeof N < "u" ? function(T) {
+  } = ut(), { destroyer: A } = $r(), u = Kt(), g = Xi(), p = Lc(), { createDeferredPromise: b } = pt(), C = Fm(), N = globalThis.Blob || e.Blob, W = typeof N < "u" ? function(T) {
     return T instanceof N;
   } : function(T) {
     return !1;
-  }, k = globalThis.AbortController || Qe.AbortController, { FunctionPrototypeCall: L } = ze();
+  }, k = globalThis.AbortController || et.AbortController, { FunctionPrototypeCall: L } = ze();
   class U extends u {
     constructor(T) {
       super(T), T?.readable === !1 && (this._readableState.readable = !1, this._readableState.ended = !0, this._readableState.endEmitted = !0), T?.writable === !1 && (this._writableState.writable = !1, this._writableState.ending = !0, this._writableState.ended = !0, this._writableState.finished = !0);
@@ -10768,7 +10768,7 @@ function LR() {
   return Ya;
 }
 var Ka, og;
-function Yt() {
+function Kt() {
   if (og) return Ka;
   og = 1;
   const {
@@ -10858,7 +10858,7 @@ function jm() {
   ag = 1;
   const { ObjectSetPrototypeOf: t, Symbol: e } = ze();
   Ja = i;
-  const { ERR_METHOD_NOT_IMPLEMENTED: r } = ut().codes, a = Yt(), { getHighWaterMark: o } = Ki();
+  const { ERR_METHOD_NOT_IMPLEMENTED: r } = ut().codes, a = Kt(), { getHighWaterMark: o } = Ki();
   t(i.prototype, a.prototype), t(i, a);
   const n = e("kCallback");
   function i(f) {
@@ -10927,7 +10927,7 @@ var Qa, ug;
 function Pc() {
   if (ug) return Qa;
   ug = 1;
-  const t = je(), { ArrayIsArray: e, Promise: r, SymbolAsyncIterator: a, SymbolDispose: o } = ze(), n = hr(), { once: i } = pt(), l = $r(), s = Yt(), {
+  const t = je(), { ArrayIsArray: e, Promise: r, SymbolAsyncIterator: a, SymbolDispose: o } = ze(), n = hr(), { once: i } = pt(), l = $r(), s = Kt(), {
     aggregateTwoErrors: f,
     codes: {
       ERR_INVALID_ARG_TYPE: d,
@@ -10946,7 +10946,7 @@ function Pc() {
     isWebStream: k,
     isReadableStream: L,
     isReadableFinished: U
-  } = tr(), x = globalThis.AbortController || Qe.AbortController;
+  } = rr(), x = globalThis.AbortController || et.AbortController;
   let D, F, T;
   function J(B, le, ae) {
     let ce = !1;
@@ -11211,7 +11211,7 @@ var el, fg;
 function Wm() {
   if (fg) return el;
   fg = 1;
-  const { pipeline: t } = Pc(), e = Yt(), { destroyer: r } = $r(), {
+  const { pipeline: t } = Pc(), e = Kt(), { destroyer: r } = $r(), {
     isNodeStream: a,
     isReadable: o,
     isWritable: n,
@@ -11219,7 +11219,7 @@ function Wm() {
     isTransformStream: l,
     isWritableStream: s,
     isReadableStream: f
-  } = tr(), {
+  } = rr(), {
     AbortError: d,
     codes: { ERR_INVALID_ARG_VALUE: y, ERR_MISSING_ARGS: R }
   } = ut(), w = hr();
@@ -11337,10 +11337,10 @@ var cg;
 function PR() {
   if (cg) return Gn;
   cg = 1;
-  const t = globalThis.AbortController || Qe.AbortController, {
+  const t = globalThis.AbortController || et.AbortController, {
     codes: { ERR_INVALID_ARG_VALUE: e, ERR_INVALID_ARG_TYPE: r, ERR_MISSING_ARGS: a, ERR_OUT_OF_RANGE: o },
     AbortError: n
-  } = ut(), { validateAbortSignal: i, validateInteger: l, validateObject: s } = An(), f = ze().Symbol("kWeak"), d = ze().Symbol("kResistStopPropagation"), { finished: y } = hr(), R = Wm(), { addAbortSignalNoValidate: w } = Yi(), { isWritable: I, isNodeStream: A } = tr(), { deprecate: u } = pt(), {
+  } = ut(), { validateAbortSignal: i, validateInteger: l, validateObject: s } = An(), f = ze().Symbol("kWeak"), d = ze().Symbol("kResistStopPropagation"), { finished: y } = hr(), R = Wm(), { addAbortSignalNoValidate: w } = Yi(), { isWritable: I, isNodeStream: A } = rr(), { deprecate: u } = pt(), {
     ArrayPrototypePush: g,
     Boolean: p,
     MathFloor: b,
@@ -11593,7 +11593,7 @@ var tl, dg;
 function qm() {
   if (dg) return tl;
   dg = 1;
-  const { ArrayPrototypePop: t, Promise: e } = ze(), { isIterable: r, isNodeStream: a, isWebStream: o } = tr(), { pipelineImpl: n } = Pc(), { finished: i } = hr();
+  const { ArrayPrototypePop: t, Promise: e } = ze(), { isIterable: r, isNodeStream: a, isWebStream: o } = rr(), { pipelineImpl: n } = Pc(), { finished: i } = hr();
   Bm();
   function l(...s) {
     return new e((f, d) => {
@@ -11628,7 +11628,7 @@ function Bm() {
     promisify: { custom: o }
   } = pt(), { streamReturningOperators: n, promiseReturningOperators: i } = PR(), {
     codes: { ERR_ILLEGAL_CONSTRUCTOR: l }
-  } = ut(), s = Wm(), { setDefaultHighWaterMark: f, getDefaultHighWaterMark: d } = Ki(), { pipeline: y } = Pc(), { destroyer: R } = $r(), w = hr(), I = qm(), A = tr(), u = La.exports = Nc().Stream;
+  } = ut(), s = Wm(), { setDefaultHighWaterMark: f, getDefaultHighWaterMark: d } = Ki(), { pipeline: y } = Pc(), { destroyer: R } = $r(), w = hr(), I = qm(), A = rr(), u = La.exports = Nc().Stream;
   u.isDestroyed = A.isDestroyed, u.isDisturbed = A.isDisturbed, u.isErrored = A.isErrored, u.isReadable = A.isReadable, u.isWritable = A.isWritable, u.Readable = Xi();
   for (const p of r(n)) {
     let C = function(...N) {
@@ -11672,7 +11672,7 @@ function Bm() {
       writable: !0
     });
   }
-  u.Writable = Lc(), u.Duplex = Yt(), u.Transform = jm(), u.PassThrough = $m(), u.pipeline = y;
+  u.Writable = Lc(), u.Duplex = Kt(), u.Transform = jm(), u.PassThrough = $m(), u.pipeline = y;
   const { addAbortSignal: g } = Yi();
   return u.addAbortSignal = g, u.finished = w, u.destroy = R, u.compose = s, u.setDefaultHighWaterMark = f, u.getDefaultHighWaterMark = d, e(u, "promises", {
     __proto__: null,
@@ -11703,7 +11703,7 @@ ni.exports;
 var pg;
 function CR() {
   return pg || (pg = 1, (function(t) {
-    const e = Qt;
+    const e = er;
     if (e && process.env.READABLE_STREAM === "disable") {
       const r = e.promises;
       t.exports._uint8ArrayToBuffer = e._uint8ArrayToBuffer, t.exports._isUint8Array = e._isUint8Array, t.exports.isDisturbed = e.isDisturbed, t.exports.isErrored = e.isErrored, t.exports.isReadable = e.isReadable, t.exports.Readable = e.Readable, t.exports.Writable = e.Writable, t.exports.Duplex = e.Duplex, t.exports.Transform = e.Transform, t.exports.PassThrough = e.PassThrough, t.exports.addAbortSignal = e.addAbortSignal, t.exports.finished = e.finished, t.exports.destroy = e.destroy, t.exports.pipeline = e.pipeline, t.exports.compose = e.compose, Object.defineProperty(e, "promises", {
@@ -17177,7 +17177,7 @@ function Tn() {
   if (Py) return xo.exports;
   Py = 1;
   var t = Rr(), e = Ue, r = F0(), a = H0(), o = Sm(), n = wR();
-  Qt.Stream;
+  er.Stream;
   var i = CR().PassThrough, l = xo.exports = {};
   return l.file = DA(), l.collectStream = function(s, f) {
     var d = [], y = 0;
@@ -17644,7 +17644,7 @@ function gt() {
   return jy || (jy = 1, (function(t) {
     const e = Fe, { format: r, inspect: a } = Xm(), {
       codes: { ERR_INVALID_ARG_TYPE: o }
-    } = ft(), { kResistStopPropagation: n, AggregateError: i, SymbolDispose: l } = Ve(), s = globalThis.AbortSignal || Qe.AbortSignal, f = globalThis.AbortController || Qe.AbortController, d = Object.getPrototypeOf(async function() {
+    } = ft(), { kResistStopPropagation: n, AggregateError: i, SymbolDispose: l } = Ve(), s = globalThis.AbortSignal || et.AbortSignal, f = globalThis.AbortController || et.AbortController, d = Object.getPrototypeOf(async function() {
     }).constructor, y = globalThis.Blob || e.Blob, R = typeof y < "u" ? function(u) {
       return u instanceof y;
     } : function(u) {
@@ -17948,7 +17948,7 @@ function xn() {
   }, au;
 }
 var Zn = { exports: {} }, lu, Wy;
-function rr() {
+function nr() {
   if (Wy) return lu;
   Wy = 1;
   const { SymbolAsyncIterator: t, SymbolIterator: e, SymbolFor: r } = Ve(), a = r("nodejs.stream.destroyed"), o = r("nodejs.stream.errored"), n = r("nodejs.stream.readable"), i = r("nodejs.stream.writable"), l = r("nodejs.stream.disturbed"), s = r("nodejs.webstream.isClosedPromise"), f = r("nodejs.webstream.controllerErrorFunction");
@@ -18112,7 +18112,7 @@ function pr() {
     isNodeStream: U,
     willEmitClose: x,
     kIsClosedPromise: D
-  } = rr();
+  } = nr();
   let F;
   function T(M) {
     return M.setHeader && typeof M.abort == "function";
@@ -18227,7 +18227,7 @@ function Wr() {
     aggregateTwoErrors: e,
     codes: { ERR_MULTIPLE_CALLBACK: r },
     AbortError: a
-  } = ft(), { Symbol: o } = Ve(), { kIsDestroyed: n, isDestroyed: i, isFinished: l, isServerRequest: s } = rr(), f = o("kDestroy"), d = o("kConstruct");
+  } = ft(), { Symbol: o } = Ve(), { kIsDestroyed: n, isDestroyed: i, isFinished: l, isServerRequest: s } = nr(), f = o("kDestroy"), d = o("kConstruct");
   function y(x, D, F) {
     x && (x.stack, D && !D.errored && (D.errored = x), F && !F.errored && (F.errored = x));
   }
@@ -18367,7 +18367,7 @@ function Mc() {
 var cu = { exports: {} }, Gy;
 function rs() {
   return Gy || (Gy = 1, (function(t) {
-    const { SymbolDispose: e } = Ve(), { AbortError: r, codes: a } = ft(), { isNodeStream: o, isWebStream: n, kControllerErrorFunction: i } = rr(), l = pr(), { ERR_INVALID_ARG_TYPE: s } = a;
+    const { SymbolDispose: e } = Ve(), { AbortError: r, codes: a } = ft(), { isNodeStream: o, isWebStream: n, kControllerErrorFunction: i } = nr(), l = pr(), { ERR_INVALID_ARG_TYPE: s } = a;
     let f;
     const d = (y, R) => {
       if (typeof y != "object" || !("aborted" in y))
@@ -18701,11 +18701,11 @@ function is() {
     dataEmitted: H(O)
   });
   function te(h, S, ie) {
-    typeof ie != "boolean" && (ie = S instanceof Kt()), this.state = X | m | ae | ce, h && h.objectMode && (this.state |= $), ie && h && h.readableObjectMode && (this.state |= $), this.highWaterMark = h ? W(this, h, "readableHighWaterMark", ie) : k(!1), this.buffer = new C(), this.length = 0, this.pipes = [], this.flowing = null, this[se] = null, h && h.emitClose === !1 && (this.state &= ~X), h && h.autoDestroy === !1 && (this.state &= ~m), this.errored = null, this.defaultEncoding = h && h.defaultEncoding || "utf8", this.awaitDrainWriters = null, this.decoder = null, this.encoding = null, h && h.encoding && (this.decoder = new ne(h.encoding), this.encoding = h.encoding);
+    typeof ie != "boolean" && (ie = S instanceof Jt()), this.state = X | m | ae | ce, h && h.objectMode && (this.state |= $), ie && h && h.readableObjectMode && (this.state |= $), this.highWaterMark = h ? W(this, h, "readableHighWaterMark", ie) : k(!1), this.buffer = new C(), this.length = 0, this.pipes = [], this.flowing = null, this[se] = null, h && h.emitClose === !1 && (this.state &= ~X), h && h.autoDestroy === !1 && (this.state &= ~m), this.errored = null, this.defaultEncoding = h && h.defaultEncoding || "utf8", this.awaitDrainWriters = null, this.decoder = null, this.encoding = null, h && h.encoding && (this.decoder = new ne(h.encoding), this.encoding = h.encoding);
   }
   function z(h) {
     if (!(this instanceof z)) return new z(h);
-    const S = this instanceof Kt();
+    const S = this instanceof Jt();
     this._readableState = new te(h, this, S), h && (typeof h.read == "function" && (this._read = h.read), typeof h.destroy == "function" && (this._destroy = h.destroy), typeof h.construct == "function" && (this._construct = h.construct), h.signal && !S && g(h.signal, this)), I.call(this, h), N.construct(this, () => {
       this._readableState.needReadable && me(this, this._readableState);
     });
@@ -18775,9 +18775,9 @@ function is() {
     b("read", h), h === void 0 ? h = NaN : r(h) || (h = o(h, 10));
     const S = this._readableState, ie = h;
     if (h > S.highWaterMark && (S.highWaterMark = we(h)), h !== 0 && (S.state &= ~P), h === 0 && S.needReadable && ((S.highWaterMark !== 0 ? S.length >= S.highWaterMark : S.length > 0) || S.ended))
-      return b("read: emitReadable", S.length, S.ended), S.length === 0 && S.ended ? et(this) : Ae(this), null;
+      return b("read: emitReadable", S.length, S.ended), S.length === 0 && S.ended ? tt(this) : Ae(this), null;
     if (h = be(h, S), h === 0 && S.ended)
-      return S.length === 0 && et(this), null;
+      return S.length === 0 && tt(this), null;
     let oe = (S.state & Y) !== 0;
     if (b("need readable", oe), (S.length === 0 || S.length - h < S.highWaterMark) && (oe = !0, b("length less than watermark", oe)), S.ended || S.reading || S.destroyed || S.errored || !S.constructed)
       oe = !1, b("reading, ended or constructing", oe);
@@ -18791,7 +18791,7 @@ function is() {
       S.state &= ~ce, S.reading || (h = be(ie, S));
     }
     let fe;
-    return h > 0 ? fe = mt(h, S) : fe = null, fe === null ? (S.needReadable = S.length <= S.highWaterMark, h = 0) : (S.length -= h, S.multiAwaitDrain ? S.awaitDrainWriters.clear() : S.awaitDrainWriters = null), S.length === 0 && (S.ended || (S.needReadable = !0), ie !== h && S.ended && et(this)), fe !== null && !S.errorEmitted && !S.closeEmitted && (S.dataEmitted = !0, this.emit("data", fe)), fe;
+    return h > 0 ? fe = mt(h, S) : fe = null, fe === null ? (S.needReadable = S.length <= S.highWaterMark, h = 0) : (S.length -= h, S.multiAwaitDrain ? S.awaitDrainWriters.clear() : S.awaitDrainWriters = null), S.length === 0 && (S.ended || (S.needReadable = !0), ie !== h && S.ended && tt(this)), fe !== null && !S.errorEmitted && !S.closeEmitted && (S.dataEmitted = !0, this.emit("data", fe)), fe;
   };
   function _e(h, S) {
     if (b("onEofChunk"), !S.ended) {
@@ -18836,7 +18836,7 @@ function is() {
     }
     let Pe, lt = !1;
     function Mt() {
-      b("cleanup"), h.removeListener("close", nt), h.removeListener("finish", it), Pe && h.removeListener("drain", Pe), h.removeListener("error", rt), h.removeListener("unpipe", Te), ie.removeListener("end", Et), ie.removeListener("end", $e), ie.removeListener("data", Rt), lt = !0, Pe && oe.awaitDrainWriters && (!h._writableState || h._writableState.needDrain) && Pe();
+      b("cleanup"), h.removeListener("close", it), h.removeListener("finish", st), Pe && h.removeListener("drain", Pe), h.removeListener("error", nt), h.removeListener("unpipe", Te), ie.removeListener("end", Et), ie.removeListener("end", $e), ie.removeListener("data", Rt), lt = !0, Pe && oe.awaitDrainWriters && (!h._writableState || h._writableState.needDrain) && Pe();
     }
     function vt() {
       lt || (oe.pipes.length === 1 && oe.pipes[0] === h ? (b("false write response, pause", 0), oe.awaitDrainWriters = h, oe.multiAwaitDrain = !1) : oe.pipes.length > 1 && oe.pipes.includes(h) && (b("false write response, pause", oe.awaitDrainWriters.size), oe.awaitDrainWriters.add(h)), ie.pause()), Pe || (Pe = Je(ie, h), h.on("drain", Pe));
@@ -18847,21 +18847,21 @@ function is() {
       const De = h.write(Ce);
       b("dest.write", De), De === !1 && vt();
     }
-    function rt(Ce) {
-      if (b("onerror", Ce), $e(), h.removeListener("error", rt), h.listenerCount("error") === 0) {
+    function nt(Ce) {
+      if (b("onerror", Ce), $e(), h.removeListener("error", nt), h.listenerCount("error") === 0) {
         const De = h._writableState || h._readableState;
         De && !De.errorEmitted ? v(h, Ce) : h.emit("error", Ce);
       }
     }
-    A(h, "error", rt);
-    function nt() {
-      h.removeListener("finish", it), $e();
-    }
-    h.once("close", nt);
+    A(h, "error", nt);
     function it() {
-      b("onfinish"), h.removeListener("close", nt), $e();
+      h.removeListener("finish", st), $e();
     }
-    h.once("finish", it);
+    h.once("close", it);
+    function st() {
+      b("onfinish"), h.removeListener("close", it), $e();
+    }
+    h.once("finish", st);
     function $e() {
       b("unpipe"), ie.unpipe(h);
     }
@@ -19115,7 +19115,7 @@ function is() {
     let ie;
     return S.objectMode ? ie = S.buffer.shift() : !h || h >= S.length ? (S.decoder ? ie = S.buffer.join("") : S.buffer.length === 1 ? ie = S.buffer.first() : ie = S.buffer.concat(S.length), S.buffer.clear()) : ie = S.buffer.consume(h, S.decoder), ie;
   }
-  function et(h) {
+  function tt(h) {
     const S = h._readableState;
     b("endReadable", S.endEmitted), S.endEmitted || (S.ended = !0, t.nextTick(qt, S, h));
   }
@@ -19137,9 +19137,9 @@ function is() {
   z.from = function(h, S) {
     return M(z, h, S);
   };
-  let tt;
+  let rt;
   function St() {
-    return tt === void 0 && (tt = {}), tt;
+    return rt === void 0 && (rt = {}), rt;
   }
   return z.fromWeb = function(h, S) {
     return St().newStreamReadableFromReadableStream(h, S);
@@ -19188,7 +19188,7 @@ function kc() {
   }
   const F = s("kOnFinished");
   function T(m, c, E) {
-    typeof E != "boolean" && (E = c instanceof Kt()), this.objectMode = !!(m && m.objectMode), E && (this.objectMode = this.objectMode || !!(m && m.writableObjectMode)), this.highWaterMark = m ? A(this, m, "writableHighWaterMark", E) : u(!1), this.finalCalled = !1, this.needDrain = !1, this.ending = !1, this.ended = !1, this.finished = !1, this.destroyed = !1;
+    typeof E != "boolean" && (E = c instanceof Jt()), this.objectMode = !!(m && m.objectMode), E && (this.objectMode = this.objectMode || !!(m && m.writableObjectMode)), this.highWaterMark = m ? A(this, m, "writableHighWaterMark", E) : u(!1), this.finalCalled = !1, this.needDrain = !1, this.ending = !1, this.ended = !1, this.finished = !1, this.destroyed = !1;
     const j = !!(m && m.decodeStrings === !1);
     this.decodeStrings = !j, this.defaultEncoding = m && m.defaultEncoding || "utf8", this.length = 0, this.writing = !1, this.corked = 0, this.sync = !0, this.bufferProcessing = !1, this.onwrite = v.bind(void 0, c), this.writecb = null, this.writelen = 0, this.afterWriteTickInfo = null, J(this), this.pendingcb = 0, this.constructed = !0, this.prefinished = !1, this.errorEmitted = !1, this.emitClose = !m || m.emitClose !== !1, this.autoDestroy = !m || m.autoDestroy !== !1, this.errored = null, this.closed = !1, this.closeEmitted = !1, this[F] = [];
   }
@@ -19204,7 +19204,7 @@ function kc() {
     }
   });
   function re(m) {
-    const c = this instanceof Kt();
+    const c = this instanceof Jt();
     if (!c && !a(re, this)) return new re(m);
     this._writableState = new T(m, this, c), m && (typeof m.write == "function" && (this._write = m.write), typeof m.writev == "function" && (this._writev = m.writev), typeof m.destroy == "function" && (this._destroy = m.destroy), typeof m.final == "function" && (this._final = m.final), typeof m.construct == "function" && (this._construct = m.construct), m.signal && I(m.signal, this)), y.call(this, m), w.construct(this, () => {
       const E = this._writableState;
@@ -19529,14 +19529,14 @@ function LA() {
     isDuplexNodeStream: s,
     isReadableStream: f,
     isWritableStream: d
-  } = rr(), y = pr(), {
+  } = nr(), y = pr(), {
     AbortError: R,
     codes: { ERR_INVALID_ARG_TYPE: w, ERR_INVALID_RETURN_VALUE: I }
-  } = ft(), { destroyer: A } = Wr(), u = Kt(), g = is(), p = kc(), { createDeferredPromise: b } = gt(), C = Qm(), N = globalThis.Blob || e.Blob, W = typeof N < "u" ? function(T) {
+  } = ft(), { destroyer: A } = Wr(), u = Jt(), g = is(), p = kc(), { createDeferredPromise: b } = gt(), C = Qm(), N = globalThis.Blob || e.Blob, W = typeof N < "u" ? function(T) {
     return T instanceof N;
   } : function(T) {
     return !1;
-  }, k = globalThis.AbortController || Qe.AbortController, { FunctionPrototypeCall: L } = Ve();
+  }, k = globalThis.AbortController || et.AbortController, { FunctionPrototypeCall: L } = Ve();
   class U extends u {
     constructor(T) {
       super(T), T?.readable === !1 && (this._readableState.readable = !1, this._readableState.ended = !0, this._readableState.endEmitted = !0), T?.writable === !1 && (this._writableState.writable = !1, this._writableState.ending = !0, this._writableState.ended = !0, this._writableState.finished = !0);
@@ -19758,7 +19758,7 @@ function LA() {
   return bu;
 }
 var _u, Jy;
-function Kt() {
+function Jt() {
   if (Jy) return _u;
   Jy = 1;
   const {
@@ -19848,7 +19848,7 @@ function eS() {
   Xy = 1;
   const { ObjectSetPrototypeOf: t, Symbol: e } = Ve();
   wu = i;
-  const { ERR_METHOD_NOT_IMPLEMENTED: r } = ft().codes, a = Kt(), { getHighWaterMark: o } = ns();
+  const { ERR_METHOD_NOT_IMPLEMENTED: r } = ft().codes, a = Jt(), { getHighWaterMark: o } = ns();
   t(i.prototype, a.prototype), t(i, a);
   const n = e("kCallback");
   function i(f) {
@@ -19917,7 +19917,7 @@ var Su, eb;
 function Fc() {
   if (eb) return Su;
   eb = 1;
-  const t = je(), { ArrayIsArray: e, Promise: r, SymbolAsyncIterator: a, SymbolDispose: o } = Ve(), n = pr(), { once: i } = gt(), l = Wr(), s = Kt(), {
+  const t = je(), { ArrayIsArray: e, Promise: r, SymbolAsyncIterator: a, SymbolDispose: o } = Ve(), n = pr(), { once: i } = gt(), l = Wr(), s = Jt(), {
     aggregateTwoErrors: f,
     codes: {
       ERR_INVALID_ARG_TYPE: d,
@@ -19936,7 +19936,7 @@ function Fc() {
     isWebStream: k,
     isReadableStream: L,
     isReadableFinished: U
-  } = rr(), x = globalThis.AbortController || Qe.AbortController;
+  } = nr(), x = globalThis.AbortController || et.AbortController;
   let D, F, T;
   function J(B, le, ae) {
     let ce = !1;
@@ -20201,7 +20201,7 @@ var Eu, tb;
 function rS() {
   if (tb) return Eu;
   tb = 1;
-  const { pipeline: t } = Fc(), e = Kt(), { destroyer: r } = Wr(), {
+  const { pipeline: t } = Fc(), e = Jt(), { destroyer: r } = Wr(), {
     isNodeStream: a,
     isReadable: o,
     isWritable: n,
@@ -20209,7 +20209,7 @@ function rS() {
     isTransformStream: l,
     isWritableStream: s,
     isReadableStream: f
-  } = rr(), {
+  } = nr(), {
     AbortError: d,
     codes: { ERR_INVALID_ARG_VALUE: y, ERR_MISSING_ARGS: R }
   } = ft(), w = pr();
@@ -20327,10 +20327,10 @@ var rb;
 function PA() {
   if (rb) return Vn;
   rb = 1;
-  const t = globalThis.AbortController || Qe.AbortController, {
+  const t = globalThis.AbortController || et.AbortController, {
     codes: { ERR_INVALID_ARG_VALUE: e, ERR_INVALID_ARG_TYPE: r, ERR_MISSING_ARGS: a, ERR_OUT_OF_RANGE: o },
     AbortError: n
-  } = ft(), { validateAbortSignal: i, validateInteger: l, validateObject: s } = xn(), f = Ve().Symbol("kWeak"), d = Ve().Symbol("kResistStopPropagation"), { finished: y } = pr(), R = rS(), { addAbortSignalNoValidate: w } = rs(), { isWritable: I, isNodeStream: A } = rr(), { deprecate: u } = gt(), {
+  } = ft(), { validateAbortSignal: i, validateInteger: l, validateObject: s } = xn(), f = Ve().Symbol("kWeak"), d = Ve().Symbol("kResistStopPropagation"), { finished: y } = pr(), R = rS(), { addAbortSignalNoValidate: w } = rs(), { isWritable: I, isNodeStream: A } = nr(), { deprecate: u } = gt(), {
     ArrayPrototypePush: g,
     Boolean: p,
     MathFloor: b,
@@ -20583,7 +20583,7 @@ var vu, nb;
 function nS() {
   if (nb) return vu;
   nb = 1;
-  const { ArrayPrototypePop: t, Promise: e } = Ve(), { isIterable: r, isNodeStream: a, isWebStream: o } = rr(), { pipelineImpl: n } = Fc(), { finished: i } = pr();
+  const { ArrayPrototypePop: t, Promise: e } = Ve(), { isIterable: r, isNodeStream: a, isWebStream: o } = nr(), { pipelineImpl: n } = Fc(), { finished: i } = pr();
   iS();
   function l(...s) {
     return new e((f, d) => {
@@ -20618,7 +20618,7 @@ function iS() {
     promisify: { custom: o }
   } = gt(), { streamReturningOperators: n, promiseReturningOperators: i } = PA(), {
     codes: { ERR_ILLEGAL_CONSTRUCTOR: l }
-  } = ft(), s = rS(), { setDefaultHighWaterMark: f, getDefaultHighWaterMark: d } = ns(), { pipeline: y } = Fc(), { destroyer: R } = Wr(), w = pr(), I = nS(), A = rr(), u = ru.exports = Mc().Stream;
+  } = ft(), s = rS(), { setDefaultHighWaterMark: f, getDefaultHighWaterMark: d } = ns(), { pipeline: y } = Fc(), { destroyer: R } = Wr(), w = pr(), I = nS(), A = nr(), u = ru.exports = Mc().Stream;
   u.isDestroyed = A.isDestroyed, u.isDisturbed = A.isDisturbed, u.isErrored = A.isErrored, u.isReadable = A.isReadable, u.isWritable = A.isWritable, u.Readable = is();
   for (const p of r(n)) {
     let C = function(...N) {
@@ -20662,7 +20662,7 @@ function iS() {
       writable: !0
     });
   }
-  u.Writable = kc(), u.Duplex = Kt(), u.Transform = eS(), u.PassThrough = tS(), u.pipeline = y;
+  u.Writable = kc(), u.Duplex = Jt(), u.Transform = eS(), u.PassThrough = tS(), u.pipeline = y;
   const { addAbortSignal: g } = rs();
   return u.addAbortSignal = g, u.finished = w, u.destroy = R, u.compose = s, u.setDefaultHighWaterMark = f, u.getDefaultHighWaterMark = d, e(u, "promises", {
     __proto__: null,
@@ -20693,7 +20693,7 @@ oi.exports;
 var sb;
 function sS() {
   return sb || (sb = 1, (function(t) {
-    const e = Qt;
+    const e = er;
     if (e && process.env.READABLE_STREAM === "disable") {
       const r = e.promises;
       t.exports._uint8ArrayToBuffer = e._uint8ArrayToBuffer, t.exports._isUint8Array = e._isUint8Array, t.exports.isDisturbed = e.isDisturbed, t.exports.isErrored = e.isErrored, t.exports.isReadable = e.isReadable, t.exports.Readable = e.Readable, t.exports.Writable = e.Writable, t.exports.Duplex = e.Duplex, t.exports.Transform = e.Transform, t.exports.PassThrough = e.PassThrough, t.exports.addAbortSignal = e.addAbortSignal, t.exports.finished = e.finished, t.exports.destroy = e.destroy, t.exports.pipeline = e.pipeline, t.exports.compose = e.compose, Object.defineProperty(e, "promises", {
@@ -21659,7 +21659,7 @@ function yt() {
   return bb || (bb = 1, (function(t) {
     const e = Fe, { format: r, inspect: a } = fS(), {
       codes: { ERR_INVALID_ARG_TYPE: o }
-    } = ct(), { kResistStopPropagation: n, AggregateError: i, SymbolDispose: l } = Ze(), s = globalThis.AbortSignal || Qe.AbortSignal, f = globalThis.AbortController || Qe.AbortController, d = Object.getPrototypeOf(async function() {
+    } = ct(), { kResistStopPropagation: n, AggregateError: i, SymbolDispose: l } = Ze(), s = globalThis.AbortSignal || et.AbortSignal, f = globalThis.AbortController || et.AbortController, d = Object.getPrototypeOf(async function() {
     }).constructor, y = globalThis.Blob || e.Blob, R = typeof y < "u" ? function(u) {
       return u instanceof y;
     } : function(u) {
@@ -21963,7 +21963,7 @@ function In() {
   }, $u;
 }
 var Kn = { exports: {} }, Wu, wb;
-function nr() {
+function ir() {
   if (wb) return Wu;
   wb = 1;
   const { SymbolAsyncIterator: t, SymbolIterator: e, SymbolFor: r } = Ze(), a = r("nodejs.stream.destroyed"), o = r("nodejs.stream.errored"), n = r("nodejs.stream.readable"), i = r("nodejs.stream.writable"), l = r("nodejs.stream.disturbed"), s = r("nodejs.webstream.isClosedPromise"), f = r("nodejs.webstream.controllerErrorFunction");
@@ -22127,7 +22127,7 @@ function gr() {
     isNodeStream: U,
     willEmitClose: x,
     kIsClosedPromise: D
-  } = nr();
+  } = ir();
   let F;
   function T(M) {
     return M.setHeader && typeof M.abort == "function";
@@ -22242,7 +22242,7 @@ function qr() {
     aggregateTwoErrors: e,
     codes: { ERR_MULTIPLE_CALLBACK: r },
     AbortError: a
-  } = ct(), { Symbol: o } = Ze(), { kIsDestroyed: n, isDestroyed: i, isFinished: l, isServerRequest: s } = nr(), f = o("kDestroy"), d = o("kConstruct");
+  } = ct(), { Symbol: o } = Ze(), { kIsDestroyed: n, isDestroyed: i, isFinished: l, isServerRequest: s } = ir(), f = o("kDestroy"), d = o("kConstruct");
   function y(x, D, F) {
     x && (x.stack, D && !D.errored && (D.errored = x), F && !F.errored && (F.errored = x));
   }
@@ -22382,7 +22382,7 @@ function Wc() {
 var Uu = { exports: {} }, vb;
 function ss() {
   return vb || (vb = 1, (function(t) {
-    const { SymbolDispose: e } = Ze(), { AbortError: r, codes: a } = ct(), { isNodeStream: o, isWebStream: n, kControllerErrorFunction: i } = nr(), l = gr(), { ERR_INVALID_ARG_TYPE: s } = a;
+    const { SymbolDispose: e } = Ze(), { AbortError: r, codes: a } = ct(), { isNodeStream: o, isWebStream: n, kControllerErrorFunction: i } = ir(), l = gr(), { ERR_INVALID_ARG_TYPE: s } = a;
     let f;
     const d = (y, R) => {
       if (typeof y != "object" || !("aborted" in y))
@@ -22716,11 +22716,11 @@ function as() {
     dataEmitted: H(O)
   });
   function te(h, S, ie) {
-    typeof ie != "boolean" && (ie = S instanceof Jt()), this.state = X | m | ae | ce, h && h.objectMode && (this.state |= $), ie && h && h.readableObjectMode && (this.state |= $), this.highWaterMark = h ? W(this, h, "readableHighWaterMark", ie) : k(!1), this.buffer = new C(), this.length = 0, this.pipes = [], this.flowing = null, this[se] = null, h && h.emitClose === !1 && (this.state &= ~X), h && h.autoDestroy === !1 && (this.state &= ~m), this.errored = null, this.defaultEncoding = h && h.defaultEncoding || "utf8", this.awaitDrainWriters = null, this.decoder = null, this.encoding = null, h && h.encoding && (this.decoder = new ne(h.encoding), this.encoding = h.encoding);
+    typeof ie != "boolean" && (ie = S instanceof Xt()), this.state = X | m | ae | ce, h && h.objectMode && (this.state |= $), ie && h && h.readableObjectMode && (this.state |= $), this.highWaterMark = h ? W(this, h, "readableHighWaterMark", ie) : k(!1), this.buffer = new C(), this.length = 0, this.pipes = [], this.flowing = null, this[se] = null, h && h.emitClose === !1 && (this.state &= ~X), h && h.autoDestroy === !1 && (this.state &= ~m), this.errored = null, this.defaultEncoding = h && h.defaultEncoding || "utf8", this.awaitDrainWriters = null, this.decoder = null, this.encoding = null, h && h.encoding && (this.decoder = new ne(h.encoding), this.encoding = h.encoding);
   }
   function z(h) {
     if (!(this instanceof z)) return new z(h);
-    const S = this instanceof Jt();
+    const S = this instanceof Xt();
     this._readableState = new te(h, this, S), h && (typeof h.read == "function" && (this._read = h.read), typeof h.destroy == "function" && (this._destroy = h.destroy), typeof h.construct == "function" && (this._construct = h.construct), h.signal && !S && g(h.signal, this)), I.call(this, h), N.construct(this, () => {
       this._readableState.needReadable && me(this, this._readableState);
     });
@@ -22790,9 +22790,9 @@ function as() {
     b("read", h), h === void 0 ? h = NaN : r(h) || (h = o(h, 10));
     const S = this._readableState, ie = h;
     if (h > S.highWaterMark && (S.highWaterMark = we(h)), h !== 0 && (S.state &= ~P), h === 0 && S.needReadable && ((S.highWaterMark !== 0 ? S.length >= S.highWaterMark : S.length > 0) || S.ended))
-      return b("read: emitReadable", S.length, S.ended), S.length === 0 && S.ended ? et(this) : Ae(this), null;
+      return b("read: emitReadable", S.length, S.ended), S.length === 0 && S.ended ? tt(this) : Ae(this), null;
     if (h = be(h, S), h === 0 && S.ended)
-      return S.length === 0 && et(this), null;
+      return S.length === 0 && tt(this), null;
     let oe = (S.state & Y) !== 0;
     if (b("need readable", oe), (S.length === 0 || S.length - h < S.highWaterMark) && (oe = !0, b("length less than watermark", oe)), S.ended || S.reading || S.destroyed || S.errored || !S.constructed)
       oe = !1, b("reading, ended or constructing", oe);
@@ -22806,7 +22806,7 @@ function as() {
       S.state &= ~ce, S.reading || (h = be(ie, S));
     }
     let fe;
-    return h > 0 ? fe = mt(h, S) : fe = null, fe === null ? (S.needReadable = S.length <= S.highWaterMark, h = 0) : (S.length -= h, S.multiAwaitDrain ? S.awaitDrainWriters.clear() : S.awaitDrainWriters = null), S.length === 0 && (S.ended || (S.needReadable = !0), ie !== h && S.ended && et(this)), fe !== null && !S.errorEmitted && !S.closeEmitted && (S.dataEmitted = !0, this.emit("data", fe)), fe;
+    return h > 0 ? fe = mt(h, S) : fe = null, fe === null ? (S.needReadable = S.length <= S.highWaterMark, h = 0) : (S.length -= h, S.multiAwaitDrain ? S.awaitDrainWriters.clear() : S.awaitDrainWriters = null), S.length === 0 && (S.ended || (S.needReadable = !0), ie !== h && S.ended && tt(this)), fe !== null && !S.errorEmitted && !S.closeEmitted && (S.dataEmitted = !0, this.emit("data", fe)), fe;
   };
   function _e(h, S) {
     if (b("onEofChunk"), !S.ended) {
@@ -22851,7 +22851,7 @@ function as() {
     }
     let Pe, lt = !1;
     function Mt() {
-      b("cleanup"), h.removeListener("close", nt), h.removeListener("finish", it), Pe && h.removeListener("drain", Pe), h.removeListener("error", rt), h.removeListener("unpipe", Te), ie.removeListener("end", Et), ie.removeListener("end", $e), ie.removeListener("data", Rt), lt = !0, Pe && oe.awaitDrainWriters && (!h._writableState || h._writableState.needDrain) && Pe();
+      b("cleanup"), h.removeListener("close", it), h.removeListener("finish", st), Pe && h.removeListener("drain", Pe), h.removeListener("error", nt), h.removeListener("unpipe", Te), ie.removeListener("end", Et), ie.removeListener("end", $e), ie.removeListener("data", Rt), lt = !0, Pe && oe.awaitDrainWriters && (!h._writableState || h._writableState.needDrain) && Pe();
     }
     function vt() {
       lt || (oe.pipes.length === 1 && oe.pipes[0] === h ? (b("false write response, pause", 0), oe.awaitDrainWriters = h, oe.multiAwaitDrain = !1) : oe.pipes.length > 1 && oe.pipes.includes(h) && (b("false write response, pause", oe.awaitDrainWriters.size), oe.awaitDrainWriters.add(h)), ie.pause()), Pe || (Pe = Je(ie, h), h.on("drain", Pe));
@@ -22862,21 +22862,21 @@ function as() {
       const De = h.write(Ce);
       b("dest.write", De), De === !1 && vt();
     }
-    function rt(Ce) {
-      if (b("onerror", Ce), $e(), h.removeListener("error", rt), h.listenerCount("error") === 0) {
+    function nt(Ce) {
+      if (b("onerror", Ce), $e(), h.removeListener("error", nt), h.listenerCount("error") === 0) {
         const De = h._writableState || h._readableState;
         De && !De.errorEmitted ? v(h, Ce) : h.emit("error", Ce);
       }
     }
-    A(h, "error", rt);
-    function nt() {
-      h.removeListener("finish", it), $e();
-    }
-    h.once("close", nt);
+    A(h, "error", nt);
     function it() {
-      b("onfinish"), h.removeListener("close", nt), $e();
+      h.removeListener("finish", st), $e();
     }
-    h.once("finish", it);
+    h.once("close", it);
+    function st() {
+      b("onfinish"), h.removeListener("close", it), $e();
+    }
+    h.once("finish", st);
     function $e() {
       b("unpipe"), ie.unpipe(h);
     }
@@ -23130,7 +23130,7 @@ function as() {
     let ie;
     return S.objectMode ? ie = S.buffer.shift() : !h || h >= S.length ? (S.decoder ? ie = S.buffer.join("") : S.buffer.length === 1 ? ie = S.buffer.first() : ie = S.buffer.concat(S.length), S.buffer.clear()) : ie = S.buffer.consume(h, S.decoder), ie;
   }
-  function et(h) {
+  function tt(h) {
     const S = h._readableState;
     b("endReadable", S.endEmitted), S.endEmitted || (S.ended = !0, t.nextTick(qt, S, h));
   }
@@ -23152,9 +23152,9 @@ function as() {
   z.from = function(h, S) {
     return M(z, h, S);
   };
-  let tt;
+  let rt;
   function St() {
-    return tt === void 0 && (tt = {}), tt;
+    return rt === void 0 && (rt = {}), rt;
   }
   return z.fromWeb = function(h, S) {
     return St().newStreamReadableFromReadableStream(h, S);
@@ -23203,7 +23203,7 @@ function qc() {
   }
   const F = s("kOnFinished");
   function T(m, c, E) {
-    typeof E != "boolean" && (E = c instanceof Jt()), this.objectMode = !!(m && m.objectMode), E && (this.objectMode = this.objectMode || !!(m && m.writableObjectMode)), this.highWaterMark = m ? A(this, m, "writableHighWaterMark", E) : u(!1), this.finalCalled = !1, this.needDrain = !1, this.ending = !1, this.ended = !1, this.finished = !1, this.destroyed = !1;
+    typeof E != "boolean" && (E = c instanceof Xt()), this.objectMode = !!(m && m.objectMode), E && (this.objectMode = this.objectMode || !!(m && m.writableObjectMode)), this.highWaterMark = m ? A(this, m, "writableHighWaterMark", E) : u(!1), this.finalCalled = !1, this.needDrain = !1, this.ending = !1, this.ended = !1, this.finished = !1, this.destroyed = !1;
     const j = !!(m && m.decodeStrings === !1);
     this.decodeStrings = !j, this.defaultEncoding = m && m.defaultEncoding || "utf8", this.length = 0, this.writing = !1, this.corked = 0, this.sync = !0, this.bufferProcessing = !1, this.onwrite = v.bind(void 0, c), this.writecb = null, this.writelen = 0, this.afterWriteTickInfo = null, J(this), this.pendingcb = 0, this.constructed = !0, this.prefinished = !1, this.errorEmitted = !1, this.emitClose = !m || m.emitClose !== !1, this.autoDestroy = !m || m.autoDestroy !== !1, this.errored = null, this.closed = !1, this.closeEmitted = !1, this[F] = [];
   }
@@ -23219,7 +23219,7 @@ function qc() {
     }
   });
   function re(m) {
-    const c = this instanceof Jt();
+    const c = this instanceof Xt();
     if (!c && !a(re, this)) return new re(m);
     this._writableState = new T(m, this, c), m && (typeof m.write == "function" && (this._write = m.write), typeof m.writev == "function" && (this._writev = m.writev), typeof m.destroy == "function" && (this._destroy = m.destroy), typeof m.final == "function" && (this._final = m.final), typeof m.construct == "function" && (this._construct = m.construct), m.signal && I(m.signal, this)), y.call(this, m), w.construct(this, () => {
       const E = this._writableState;
@@ -23544,14 +23544,14 @@ function FA() {
     isDuplexNodeStream: s,
     isReadableStream: f,
     isWritableStream: d
-  } = nr(), y = gr(), {
+  } = ir(), y = gr(), {
     AbortError: R,
     codes: { ERR_INVALID_ARG_TYPE: w, ERR_INVALID_RETURN_VALUE: I }
-  } = ct(), { destroyer: A } = qr(), u = Jt(), g = as(), p = qc(), { createDeferredPromise: b } = yt(), C = cS(), N = globalThis.Blob || e.Blob, W = typeof N < "u" ? function(T) {
+  } = ct(), { destroyer: A } = qr(), u = Xt(), g = as(), p = qc(), { createDeferredPromise: b } = yt(), C = cS(), N = globalThis.Blob || e.Blob, W = typeof N < "u" ? function(T) {
     return T instanceof N;
   } : function(T) {
     return !1;
-  }, k = globalThis.AbortController || Qe.AbortController, { FunctionPrototypeCall: L } = Ze();
+  }, k = globalThis.AbortController || et.AbortController, { FunctionPrototypeCall: L } = Ze();
   class U extends u {
     constructor(T) {
       super(T), T?.readable === !1 && (this._readableState.readable = !1, this._readableState.ended = !0, this._readableState.endEmitted = !0), T?.writable === !1 && (this._writableState.writable = !1, this._writableState.ending = !0, this._writableState.ended = !0, this._writableState.finished = !0);
@@ -23773,7 +23773,7 @@ function FA() {
   return Yu;
 }
 var Ku, Ob;
-function Jt() {
+function Xt() {
   if (Ob) return Ku;
   Ob = 1;
   const {
@@ -23863,7 +23863,7 @@ function dS() {
   Nb = 1;
   const { ObjectSetPrototypeOf: t, Symbol: e } = Ze();
   Ju = i;
-  const { ERR_METHOD_NOT_IMPLEMENTED: r } = ct().codes, a = Jt(), { getHighWaterMark: o } = os();
+  const { ERR_METHOD_NOT_IMPLEMENTED: r } = ct().codes, a = Xt(), { getHighWaterMark: o } = os();
   t(i.prototype, a.prototype), t(i, a);
   const n = e("kCallback");
   function i(f) {
@@ -23932,7 +23932,7 @@ var Qu, Pb;
 function Bc() {
   if (Pb) return Qu;
   Pb = 1;
-  const t = je(), { ArrayIsArray: e, Promise: r, SymbolAsyncIterator: a, SymbolDispose: o } = Ze(), n = gr(), { once: i } = yt(), l = qr(), s = Jt(), {
+  const t = je(), { ArrayIsArray: e, Promise: r, SymbolAsyncIterator: a, SymbolDispose: o } = Ze(), n = gr(), { once: i } = yt(), l = qr(), s = Xt(), {
     aggregateTwoErrors: f,
     codes: {
       ERR_INVALID_ARG_TYPE: d,
@@ -23951,7 +23951,7 @@ function Bc() {
     isWebStream: k,
     isReadableStream: L,
     isReadableFinished: U
-  } = nr(), x = globalThis.AbortController || Qe.AbortController;
+  } = ir(), x = globalThis.AbortController || et.AbortController;
   let D, F, T;
   function J(B, le, ae) {
     let ce = !1;
@@ -24216,7 +24216,7 @@ var ef, Cb;
 function pS() {
   if (Cb) return ef;
   Cb = 1;
-  const { pipeline: t } = Bc(), e = Jt(), { destroyer: r } = qr(), {
+  const { pipeline: t } = Bc(), e = Xt(), { destroyer: r } = qr(), {
     isNodeStream: a,
     isReadable: o,
     isWritable: n,
@@ -24224,7 +24224,7 @@ function pS() {
     isTransformStream: l,
     isWritableStream: s,
     isReadableStream: f
-  } = nr(), {
+  } = ir(), {
     AbortError: d,
     codes: { ERR_INVALID_ARG_VALUE: y, ERR_MISSING_ARGS: R }
   } = ct(), w = gr();
@@ -24342,10 +24342,10 @@ var Mb;
 function jA() {
   if (Mb) return Yn;
   Mb = 1;
-  const t = globalThis.AbortController || Qe.AbortController, {
+  const t = globalThis.AbortController || et.AbortController, {
     codes: { ERR_INVALID_ARG_VALUE: e, ERR_INVALID_ARG_TYPE: r, ERR_MISSING_ARGS: a, ERR_OUT_OF_RANGE: o },
     AbortError: n
-  } = ct(), { validateAbortSignal: i, validateInteger: l, validateObject: s } = In(), f = Ze().Symbol("kWeak"), d = Ze().Symbol("kResistStopPropagation"), { finished: y } = gr(), R = pS(), { addAbortSignalNoValidate: w } = ss(), { isWritable: I, isNodeStream: A } = nr(), { deprecate: u } = yt(), {
+  } = ct(), { validateAbortSignal: i, validateInteger: l, validateObject: s } = In(), f = Ze().Symbol("kWeak"), d = Ze().Symbol("kResistStopPropagation"), { finished: y } = gr(), R = pS(), { addAbortSignalNoValidate: w } = ss(), { isWritable: I, isNodeStream: A } = ir(), { deprecate: u } = yt(), {
     ArrayPrototypePush: g,
     Boolean: p,
     MathFloor: b,
@@ -24598,7 +24598,7 @@ var tf, kb;
 function gS() {
   if (kb) return tf;
   kb = 1;
-  const { ArrayPrototypePop: t, Promise: e } = Ze(), { isIterable: r, isNodeStream: a, isWebStream: o } = nr(), { pipelineImpl: n } = Bc(), { finished: i } = gr();
+  const { ArrayPrototypePop: t, Promise: e } = Ze(), { isIterable: r, isNodeStream: a, isWebStream: o } = ir(), { pipelineImpl: n } = Bc(), { finished: i } = gr();
   yS();
   function l(...s) {
     return new e((f, d) => {
@@ -24633,7 +24633,7 @@ function yS() {
     promisify: { custom: o }
   } = yt(), { streamReturningOperators: n, promiseReturningOperators: i } = jA(), {
     codes: { ERR_ILLEGAL_CONSTRUCTOR: l }
-  } = ct(), s = pS(), { setDefaultHighWaterMark: f, getDefaultHighWaterMark: d } = os(), { pipeline: y } = Bc(), { destroyer: R } = qr(), w = gr(), I = gS(), A = nr(), u = Cu.exports = Wc().Stream;
+  } = ct(), s = pS(), { setDefaultHighWaterMark: f, getDefaultHighWaterMark: d } = os(), { pipeline: y } = Bc(), { destroyer: R } = qr(), w = gr(), I = gS(), A = ir(), u = Cu.exports = Wc().Stream;
   u.isDestroyed = A.isDestroyed, u.isDisturbed = A.isDisturbed, u.isErrored = A.isErrored, u.isReadable = A.isReadable, u.isWritable = A.isWritable, u.Readable = as();
   for (const p of r(n)) {
     let C = function(...N) {
@@ -24677,7 +24677,7 @@ function yS() {
       writable: !0
     });
   }
-  u.Writable = qc(), u.Duplex = Jt(), u.Transform = dS(), u.PassThrough = hS(), u.pipeline = y;
+  u.Writable = qc(), u.Duplex = Xt(), u.Transform = dS(), u.PassThrough = hS(), u.pipeline = y;
   const { addAbortSignal: g } = ss();
   return u.addAbortSignal = g, u.finished = w, u.destroy = R, u.compose = s, u.setDefaultHighWaterMark = f, u.getDefaultHighWaterMark = d, e(u, "promises", {
     __proto__: null,
@@ -24708,7 +24708,7 @@ ai.exports;
 var jb;
 function bS() {
   return jb || (jb = 1, (function(t) {
-    const e = Qt;
+    const e = er;
     if (e && process.env.READABLE_STREAM === "disable") {
       const r = e.promises;
       t.exports._uint8ArrayToBuffer = e._uint8ArrayToBuffer, t.exports._isUint8Array = e._isUint8Array, t.exports.isDisturbed = e.isDisturbed, t.exports.isErrored = e.isErrored, t.exports.isReadable = e.isReadable, t.exports.Readable = e.Readable, t.exports.Writable = e.Writable, t.exports.Duplex = e.Duplex, t.exports.Transform = e.Transform, t.exports.PassThrough = e.PassThrough, t.exports.addAbortSignal = e.addAbortSignal, t.exports.finished = e.finished, t.exports.destroy = e.destroy, t.exports.pipeline = e.pipeline, t.exports.compose = e.compose, Object.defineProperty(e, "promises", {
@@ -24734,7 +24734,7 @@ function bS() {
 var rf = { exports: {} }, $b;
 function _S() {
   if ($b) return rf.exports;
-  $b = 1, Qt.Stream;
+  $b = 1, er.Stream;
   var t = bS().PassThrough, e = uS(), r = rf.exports = {};
   return r.normalizeInputSource = function(a) {
     if (a === null)
@@ -25226,7 +25226,7 @@ function bt() {
   return Hb || (Hb = 1, (function(t) {
     const e = Fe, { format: r, inspect: a } = mS(), {
       codes: { ERR_INVALID_ARG_TYPE: o }
-    } = dt(), { kResistStopPropagation: n, AggregateError: i, SymbolDispose: l } = Ye(), s = globalThis.AbortSignal || Qe.AbortSignal, f = globalThis.AbortController || Qe.AbortController, d = Object.getPrototypeOf(async function() {
+    } = dt(), { kResistStopPropagation: n, AggregateError: i, SymbolDispose: l } = Ye(), s = globalThis.AbortSignal || et.AbortSignal, f = globalThis.AbortController || et.AbortController, d = Object.getPrototypeOf(async function() {
     }).constructor, y = globalThis.Blob || e.Blob, R = typeof y < "u" ? function(u) {
       return u instanceof y;
     } : function(u) {
@@ -25530,7 +25530,7 @@ function Dn() {
   }, cf;
 }
 var Xn = { exports: {} }, df, Vb;
-function ir() {
+function sr() {
   if (Vb) return df;
   Vb = 1;
   const { SymbolAsyncIterator: t, SymbolIterator: e, SymbolFor: r } = Ye(), a = r("nodejs.stream.destroyed"), o = r("nodejs.stream.errored"), n = r("nodejs.stream.readable"), i = r("nodejs.stream.writable"), l = r("nodejs.stream.disturbed"), s = r("nodejs.webstream.isClosedPromise"), f = r("nodejs.webstream.controllerErrorFunction");
@@ -25694,7 +25694,7 @@ function yr() {
     isNodeStream: U,
     willEmitClose: x,
     kIsClosedPromise: D
-  } = ir();
+  } = sr();
   let F;
   function T(M) {
     return M.setHeader && typeof M.abort == "function";
@@ -25809,7 +25809,7 @@ function Br() {
     aggregateTwoErrors: e,
     codes: { ERR_MULTIPLE_CALLBACK: r },
     AbortError: a
-  } = dt(), { Symbol: o } = Ye(), { kIsDestroyed: n, isDestroyed: i, isFinished: l, isServerRequest: s } = ir(), f = o("kDestroy"), d = o("kConstruct");
+  } = dt(), { Symbol: o } = Ye(), { kIsDestroyed: n, isDestroyed: i, isFinished: l, isServerRequest: s } = sr(), f = o("kDestroy"), d = o("kConstruct");
   function y(x, D, F) {
     x && (x.stack, D && !D.errored && (D.errored = x), F && !F.errored && (F.errored = x));
   }
@@ -25949,7 +25949,7 @@ function Gc() {
 var gf = { exports: {} }, Jb;
 function ls() {
   return Jb || (Jb = 1, (function(t) {
-    const { SymbolDispose: e } = Ye(), { AbortError: r, codes: a } = dt(), { isNodeStream: o, isWebStream: n, kControllerErrorFunction: i } = ir(), l = yr(), { ERR_INVALID_ARG_TYPE: s } = a;
+    const { SymbolDispose: e } = Ye(), { AbortError: r, codes: a } = dt(), { isNodeStream: o, isWebStream: n, kControllerErrorFunction: i } = sr(), l = yr(), { ERR_INVALID_ARG_TYPE: s } = a;
     let f;
     const d = (y, R) => {
       if (typeof y != "object" || !("aborted" in y))
@@ -26283,11 +26283,11 @@ function fs() {
     dataEmitted: H(O)
   });
   function te(h, S, ie) {
-    typeof ie != "boolean" && (ie = S instanceof Xt()), this.state = X | m | ae | ce, h && h.objectMode && (this.state |= $), ie && h && h.readableObjectMode && (this.state |= $), this.highWaterMark = h ? W(this, h, "readableHighWaterMark", ie) : k(!1), this.buffer = new C(), this.length = 0, this.pipes = [], this.flowing = null, this[se] = null, h && h.emitClose === !1 && (this.state &= ~X), h && h.autoDestroy === !1 && (this.state &= ~m), this.errored = null, this.defaultEncoding = h && h.defaultEncoding || "utf8", this.awaitDrainWriters = null, this.decoder = null, this.encoding = null, h && h.encoding && (this.decoder = new ne(h.encoding), this.encoding = h.encoding);
+    typeof ie != "boolean" && (ie = S instanceof Qt()), this.state = X | m | ae | ce, h && h.objectMode && (this.state |= $), ie && h && h.readableObjectMode && (this.state |= $), this.highWaterMark = h ? W(this, h, "readableHighWaterMark", ie) : k(!1), this.buffer = new C(), this.length = 0, this.pipes = [], this.flowing = null, this[se] = null, h && h.emitClose === !1 && (this.state &= ~X), h && h.autoDestroy === !1 && (this.state &= ~m), this.errored = null, this.defaultEncoding = h && h.defaultEncoding || "utf8", this.awaitDrainWriters = null, this.decoder = null, this.encoding = null, h && h.encoding && (this.decoder = new ne(h.encoding), this.encoding = h.encoding);
   }
   function z(h) {
     if (!(this instanceof z)) return new z(h);
-    const S = this instanceof Xt();
+    const S = this instanceof Qt();
     this._readableState = new te(h, this, S), h && (typeof h.read == "function" && (this._read = h.read), typeof h.destroy == "function" && (this._destroy = h.destroy), typeof h.construct == "function" && (this._construct = h.construct), h.signal && !S && g(h.signal, this)), I.call(this, h), N.construct(this, () => {
       this._readableState.needReadable && me(this, this._readableState);
     });
@@ -26357,9 +26357,9 @@ function fs() {
     b("read", h), h === void 0 ? h = NaN : r(h) || (h = o(h, 10));
     const S = this._readableState, ie = h;
     if (h > S.highWaterMark && (S.highWaterMark = we(h)), h !== 0 && (S.state &= ~P), h === 0 && S.needReadable && ((S.highWaterMark !== 0 ? S.length >= S.highWaterMark : S.length > 0) || S.ended))
-      return b("read: emitReadable", S.length, S.ended), S.length === 0 && S.ended ? et(this) : Ae(this), null;
+      return b("read: emitReadable", S.length, S.ended), S.length === 0 && S.ended ? tt(this) : Ae(this), null;
     if (h = be(h, S), h === 0 && S.ended)
-      return S.length === 0 && et(this), null;
+      return S.length === 0 && tt(this), null;
     let oe = (S.state & Y) !== 0;
     if (b("need readable", oe), (S.length === 0 || S.length - h < S.highWaterMark) && (oe = !0, b("length less than watermark", oe)), S.ended || S.reading || S.destroyed || S.errored || !S.constructed)
       oe = !1, b("reading, ended or constructing", oe);
@@ -26373,7 +26373,7 @@ function fs() {
       S.state &= ~ce, S.reading || (h = be(ie, S));
     }
     let fe;
-    return h > 0 ? fe = mt(h, S) : fe = null, fe === null ? (S.needReadable = S.length <= S.highWaterMark, h = 0) : (S.length -= h, S.multiAwaitDrain ? S.awaitDrainWriters.clear() : S.awaitDrainWriters = null), S.length === 0 && (S.ended || (S.needReadable = !0), ie !== h && S.ended && et(this)), fe !== null && !S.errorEmitted && !S.closeEmitted && (S.dataEmitted = !0, this.emit("data", fe)), fe;
+    return h > 0 ? fe = mt(h, S) : fe = null, fe === null ? (S.needReadable = S.length <= S.highWaterMark, h = 0) : (S.length -= h, S.multiAwaitDrain ? S.awaitDrainWriters.clear() : S.awaitDrainWriters = null), S.length === 0 && (S.ended || (S.needReadable = !0), ie !== h && S.ended && tt(this)), fe !== null && !S.errorEmitted && !S.closeEmitted && (S.dataEmitted = !0, this.emit("data", fe)), fe;
   };
   function _e(h, S) {
     if (b("onEofChunk"), !S.ended) {
@@ -26418,7 +26418,7 @@ function fs() {
     }
     let Pe, lt = !1;
     function Mt() {
-      b("cleanup"), h.removeListener("close", nt), h.removeListener("finish", it), Pe && h.removeListener("drain", Pe), h.removeListener("error", rt), h.removeListener("unpipe", Te), ie.removeListener("end", Et), ie.removeListener("end", $e), ie.removeListener("data", Rt), lt = !0, Pe && oe.awaitDrainWriters && (!h._writableState || h._writableState.needDrain) && Pe();
+      b("cleanup"), h.removeListener("close", it), h.removeListener("finish", st), Pe && h.removeListener("drain", Pe), h.removeListener("error", nt), h.removeListener("unpipe", Te), ie.removeListener("end", Et), ie.removeListener("end", $e), ie.removeListener("data", Rt), lt = !0, Pe && oe.awaitDrainWriters && (!h._writableState || h._writableState.needDrain) && Pe();
     }
     function vt() {
       lt || (oe.pipes.length === 1 && oe.pipes[0] === h ? (b("false write response, pause", 0), oe.awaitDrainWriters = h, oe.multiAwaitDrain = !1) : oe.pipes.length > 1 && oe.pipes.includes(h) && (b("false write response, pause", oe.awaitDrainWriters.size), oe.awaitDrainWriters.add(h)), ie.pause()), Pe || (Pe = Je(ie, h), h.on("drain", Pe));
@@ -26429,21 +26429,21 @@ function fs() {
       const De = h.write(Ce);
       b("dest.write", De), De === !1 && vt();
     }
-    function rt(Ce) {
-      if (b("onerror", Ce), $e(), h.removeListener("error", rt), h.listenerCount("error") === 0) {
+    function nt(Ce) {
+      if (b("onerror", Ce), $e(), h.removeListener("error", nt), h.listenerCount("error") === 0) {
         const De = h._writableState || h._readableState;
         De && !De.errorEmitted ? v(h, Ce) : h.emit("error", Ce);
       }
     }
-    A(h, "error", rt);
-    function nt() {
-      h.removeListener("finish", it), $e();
-    }
-    h.once("close", nt);
+    A(h, "error", nt);
     function it() {
-      b("onfinish"), h.removeListener("close", nt), $e();
+      h.removeListener("finish", st), $e();
     }
-    h.once("finish", it);
+    h.once("close", it);
+    function st() {
+      b("onfinish"), h.removeListener("close", it), $e();
+    }
+    h.once("finish", st);
     function $e() {
       b("unpipe"), ie.unpipe(h);
     }
@@ -26697,7 +26697,7 @@ function fs() {
     let ie;
     return S.objectMode ? ie = S.buffer.shift() : !h || h >= S.length ? (S.decoder ? ie = S.buffer.join("") : S.buffer.length === 1 ? ie = S.buffer.first() : ie = S.buffer.concat(S.length), S.buffer.clear()) : ie = S.buffer.consume(h, S.decoder), ie;
   }
-  function et(h) {
+  function tt(h) {
     const S = h._readableState;
     b("endReadable", S.endEmitted), S.endEmitted || (S.ended = !0, t.nextTick(qt, S, h));
   }
@@ -26719,9 +26719,9 @@ function fs() {
   z.from = function(h, S) {
     return M(z, h, S);
   };
-  let tt;
+  let rt;
   function St() {
-    return tt === void 0 && (tt = {}), tt;
+    return rt === void 0 && (rt = {}), rt;
   }
   return z.fromWeb = function(h, S) {
     return St().newStreamReadableFromReadableStream(h, S);
@@ -26770,7 +26770,7 @@ function Hc() {
   }
   const F = s("kOnFinished");
   function T(m, c, E) {
-    typeof E != "boolean" && (E = c instanceof Xt()), this.objectMode = !!(m && m.objectMode), E && (this.objectMode = this.objectMode || !!(m && m.writableObjectMode)), this.highWaterMark = m ? A(this, m, "writableHighWaterMark", E) : u(!1), this.finalCalled = !1, this.needDrain = !1, this.ending = !1, this.ended = !1, this.finished = !1, this.destroyed = !1;
+    typeof E != "boolean" && (E = c instanceof Qt()), this.objectMode = !!(m && m.objectMode), E && (this.objectMode = this.objectMode || !!(m && m.writableObjectMode)), this.highWaterMark = m ? A(this, m, "writableHighWaterMark", E) : u(!1), this.finalCalled = !1, this.needDrain = !1, this.ending = !1, this.ended = !1, this.finished = !1, this.destroyed = !1;
     const j = !!(m && m.decodeStrings === !1);
     this.decodeStrings = !j, this.defaultEncoding = m && m.defaultEncoding || "utf8", this.length = 0, this.writing = !1, this.corked = 0, this.sync = !0, this.bufferProcessing = !1, this.onwrite = v.bind(void 0, c), this.writecb = null, this.writelen = 0, this.afterWriteTickInfo = null, J(this), this.pendingcb = 0, this.constructed = !0, this.prefinished = !1, this.errorEmitted = !1, this.emitClose = !m || m.emitClose !== !1, this.autoDestroy = !m || m.autoDestroy !== !1, this.errored = null, this.closed = !1, this.closeEmitted = !1, this[F] = [];
   }
@@ -26786,7 +26786,7 @@ function Hc() {
     }
   });
   function re(m) {
-    const c = this instanceof Xt();
+    const c = this instanceof Qt();
     if (!c && !a(re, this)) return new re(m);
     this._writableState = new T(m, this, c), m && (typeof m.write == "function" && (this._write = m.write), typeof m.writev == "function" && (this._writev = m.writev), typeof m.destroy == "function" && (this._destroy = m.destroy), typeof m.final == "function" && (this._final = m.final), typeof m.construct == "function" && (this._construct = m.construct), m.signal && I(m.signal, this)), y.call(this, m), w.construct(this, () => {
       const E = this._writableState;
@@ -27111,14 +27111,14 @@ function WA() {
     isDuplexNodeStream: s,
     isReadableStream: f,
     isWritableStream: d
-  } = ir(), y = yr(), {
+  } = sr(), y = yr(), {
     AbortError: R,
     codes: { ERR_INVALID_ARG_TYPE: w, ERR_INVALID_RETURN_VALUE: I }
-  } = dt(), { destroyer: A } = Br(), u = Xt(), g = fs(), p = Hc(), { createDeferredPromise: b } = bt(), C = SS(), N = globalThis.Blob || e.Blob, W = typeof N < "u" ? function(T) {
+  } = dt(), { destroyer: A } = Br(), u = Qt(), g = fs(), p = Hc(), { createDeferredPromise: b } = bt(), C = SS(), N = globalThis.Blob || e.Blob, W = typeof N < "u" ? function(T) {
     return T instanceof N;
   } : function(T) {
     return !1;
-  }, k = globalThis.AbortController || Qe.AbortController, { FunctionPrototypeCall: L } = Ye();
+  }, k = globalThis.AbortController || et.AbortController, { FunctionPrototypeCall: L } = Ye();
   class U extends u {
     constructor(T) {
       super(T), T?.readable === !1 && (this._readableState.readable = !1, this._readableState.ended = !0, this._readableState.endEmitted = !0), T?.writable === !1 && (this._writableState.writable = !1, this._writableState.ending = !0, this._writableState.ended = !0, this._writableState.finished = !0);
@@ -27340,7 +27340,7 @@ function WA() {
   return Sf;
 }
 var Ef, i_;
-function Xt() {
+function Qt() {
   if (i_) return Ef;
   i_ = 1;
   const {
@@ -27430,7 +27430,7 @@ function ES() {
   s_ = 1;
   const { ObjectSetPrototypeOf: t, Symbol: e } = Ye();
   vf = i;
-  const { ERR_METHOD_NOT_IMPLEMENTED: r } = dt().codes, a = Xt(), { getHighWaterMark: o } = us();
+  const { ERR_METHOD_NOT_IMPLEMENTED: r } = dt().codes, a = Qt(), { getHighWaterMark: o } = us();
   t(i.prototype, a.prototype), t(i, a);
   const n = e("kCallback");
   function i(f) {
@@ -27499,7 +27499,7 @@ var Af, a_;
 function zc() {
   if (a_) return Af;
   a_ = 1;
-  const t = je(), { ArrayIsArray: e, Promise: r, SymbolAsyncIterator: a, SymbolDispose: o } = Ye(), n = yr(), { once: i } = bt(), l = Br(), s = Xt(), {
+  const t = je(), { ArrayIsArray: e, Promise: r, SymbolAsyncIterator: a, SymbolDispose: o } = Ye(), n = yr(), { once: i } = bt(), l = Br(), s = Qt(), {
     aggregateTwoErrors: f,
     codes: {
       ERR_INVALID_ARG_TYPE: d,
@@ -27518,7 +27518,7 @@ function zc() {
     isWebStream: k,
     isReadableStream: L,
     isReadableFinished: U
-  } = ir(), x = globalThis.AbortController || Qe.AbortController;
+  } = sr(), x = globalThis.AbortController || et.AbortController;
   let D, F, T;
   function J(B, le, ae) {
     let ce = !1;
@@ -27783,7 +27783,7 @@ var Tf, l_;
 function RS() {
   if (l_) return Tf;
   l_ = 1;
-  const { pipeline: t } = zc(), e = Xt(), { destroyer: r } = Br(), {
+  const { pipeline: t } = zc(), e = Qt(), { destroyer: r } = Br(), {
     isNodeStream: a,
     isReadable: o,
     isWritable: n,
@@ -27791,7 +27791,7 @@ function RS() {
     isTransformStream: l,
     isWritableStream: s,
     isReadableStream: f
-  } = ir(), {
+  } = sr(), {
     AbortError: d,
     codes: { ERR_INVALID_ARG_VALUE: y, ERR_MISSING_ARGS: R }
   } = dt(), w = yr();
@@ -27909,10 +27909,10 @@ var u_;
 function qA() {
   if (u_) return Jn;
   u_ = 1;
-  const t = globalThis.AbortController || Qe.AbortController, {
+  const t = globalThis.AbortController || et.AbortController, {
     codes: { ERR_INVALID_ARG_VALUE: e, ERR_INVALID_ARG_TYPE: r, ERR_MISSING_ARGS: a, ERR_OUT_OF_RANGE: o },
     AbortError: n
-  } = dt(), { validateAbortSignal: i, validateInteger: l, validateObject: s } = Dn(), f = Ye().Symbol("kWeak"), d = Ye().Symbol("kResistStopPropagation"), { finished: y } = yr(), R = RS(), { addAbortSignalNoValidate: w } = ls(), { isWritable: I, isNodeStream: A } = ir(), { deprecate: u } = bt(), {
+  } = dt(), { validateAbortSignal: i, validateInteger: l, validateObject: s } = Dn(), f = Ye().Symbol("kWeak"), d = Ye().Symbol("kResistStopPropagation"), { finished: y } = yr(), R = RS(), { addAbortSignalNoValidate: w } = ls(), { isWritable: I, isNodeStream: A } = sr(), { deprecate: u } = bt(), {
     ArrayPrototypePush: g,
     Boolean: p,
     MathFloor: b,
@@ -28165,7 +28165,7 @@ var xf, f_;
 function AS() {
   if (f_) return xf;
   f_ = 1;
-  const { ArrayPrototypePop: t, Promise: e } = Ye(), { isIterable: r, isNodeStream: a, isWebStream: o } = ir(), { pipelineImpl: n } = zc(), { finished: i } = yr();
+  const { ArrayPrototypePop: t, Promise: e } = Ye(), { isIterable: r, isNodeStream: a, isWebStream: o } = sr(), { pipelineImpl: n } = zc(), { finished: i } = yr();
   TS();
   function l(...s) {
     return new e((f, d) => {
@@ -28200,7 +28200,7 @@ function TS() {
     promisify: { custom: o }
   } = bt(), { streamReturningOperators: n, promiseReturningOperators: i } = qA(), {
     codes: { ERR_ILLEGAL_CONSTRUCTOR: l }
-  } = dt(), s = RS(), { setDefaultHighWaterMark: f, getDefaultHighWaterMark: d } = us(), { pipeline: y } = zc(), { destroyer: R } = Br(), w = yr(), I = AS(), A = ir(), u = of.exports = Gc().Stream;
+  } = dt(), s = RS(), { setDefaultHighWaterMark: f, getDefaultHighWaterMark: d } = us(), { pipeline: y } = zc(), { destroyer: R } = Br(), w = yr(), I = AS(), A = sr(), u = of.exports = Gc().Stream;
   u.isDestroyed = A.isDestroyed, u.isDisturbed = A.isDisturbed, u.isErrored = A.isErrored, u.isReadable = A.isReadable, u.isWritable = A.isWritable, u.Readable = fs();
   for (const p of r(n)) {
     let C = function(...N) {
@@ -28244,7 +28244,7 @@ function TS() {
       writable: !0
     });
   }
-  u.Writable = Hc(), u.Duplex = Xt(), u.Transform = ES(), u.PassThrough = vS(), u.pipeline = y;
+  u.Writable = Hc(), u.Duplex = Qt(), u.Transform = ES(), u.PassThrough = vS(), u.pipeline = y;
   const { addAbortSignal: g } = ls();
   return u.addAbortSignal = g, u.finished = w, u.destroy = R, u.compose = s, u.setDefaultHighWaterMark = f, u.getDefaultHighWaterMark = d, e(u, "promises", {
     __proto__: null,
@@ -28275,7 +28275,7 @@ li.exports;
 var d_;
 function BA() {
   return d_ || (d_ = 1, (function(t) {
-    const e = Qt;
+    const e = er;
     if (e && process.env.READABLE_STREAM === "disable") {
       const r = e.promises;
       t.exports._uint8ArrayToBuffer = e._uint8ArrayToBuffer, t.exports._isUint8Array = e._isUint8Array, t.exports.isDisturbed = e.isDisturbed, t.exports.isErrored = e.isErrored, t.exports.isReadable = e.isReadable, t.exports.Readable = e.Readable, t.exports.Writable = e.Writable, t.exports.Duplex = e.Duplex, t.exports.Transform = e.Transform, t.exports.PassThrough = e.PassThrough, t.exports.addAbortSignal = e.addAbortSignal, t.exports.finished = e.finished, t.exports.destroy = e.destroy, t.exports.pipeline = e.pipeline, t.exports.compose = e.compose, Object.defineProperty(e, "promises", {
@@ -28935,7 +28935,7 @@ var Wf, D_;
 function IS() {
   if (D_) return Wf;
   D_ = 1;
-  const { EventEmitter: t } = ZA(), e = new Error("Stream was destroyed"), r = new Error("Premature close"), a = xS(), o = XA(), n = typeof queueMicrotask > "u" ? (ye) => Tt.process.nextTick(ye) : queueMicrotask, i = (1 << 29) - 1, l = 1, s = 2, f = 4, d = 8, y = i ^ l, R = i ^ s, w = 16, I = 32, A = 64, u = 128, g = 256, p = 512, b = 1024, C = 2048, N = 4096, W = 8192, k = 16384, L = 32768, U = 65536, x = 131072, D = g | p, F = w | U, T = A | w, J = N | u, re = g | x, se = i ^ w, ne = i ^ A, M = i ^ (A | U), Q = i ^ U, v = i ^ g, $ = i ^ (u | W), ee = i ^ b, B = i ^ D, le = i ^ L, ae = i ^ I, ce = i ^ x, Y = i ^ re, P = 1 << 18, q = 2 << 18, V = 4 << 18, Z = 8 << 18, X = 16 << 18, m = 32 << 18, c = 64 << 18, E = 128 << 18, j = 256 << 18, G = 512 << 18, K = 1024 << 18, O = i ^ (P | j), H = i ^ V, te = i ^ (P | G), z = i ^ X, de = i ^ Z, pe = i ^ E, he = i ^ q, we = i ^ K, be = w | P, _e = i ^ be, Ae = k | m, xe = f | d | s, me = xe | l, Ge = xe | Ae, Je = H & ne, Xe = E | L, jt = Xe & _e, Ct = me | jt, $t = me | b | k, ht = me | k | u, wt = me | b | u, Wt = me | N | u | W, mt = me | w | b | k | U | x, et = xe | b | k, qt = I | me | L | A, Bt = L | l, tt = me | G | m, St = Z | X, h = Z | P, S = Z | X | me | P, ie = me | P | Z | K, oe = V | P, fe = P | j, Ee = me | G | h | m, Te = X | xe | G | m, Et = q | me | E | V, Pe = G | m | xe, lt = Symbol.asyncIterator || /* @__PURE__ */ Symbol("asyncIterator");
+  const { EventEmitter: t } = ZA(), e = new Error("Stream was destroyed"), r = new Error("Premature close"), a = xS(), o = XA(), n = typeof queueMicrotask > "u" ? (ye) => Tt.process.nextTick(ye) : queueMicrotask, i = (1 << 29) - 1, l = 1, s = 2, f = 4, d = 8, y = i ^ l, R = i ^ s, w = 16, I = 32, A = 64, u = 128, g = 256, p = 512, b = 1024, C = 2048, N = 4096, W = 8192, k = 16384, L = 32768, U = 65536, x = 131072, D = g | p, F = w | U, T = A | w, J = N | u, re = g | x, se = i ^ w, ne = i ^ A, M = i ^ (A | U), Q = i ^ U, v = i ^ g, $ = i ^ (u | W), ee = i ^ b, B = i ^ D, le = i ^ L, ae = i ^ I, ce = i ^ x, Y = i ^ re, P = 1 << 18, q = 2 << 18, V = 4 << 18, Z = 8 << 18, X = 16 << 18, m = 32 << 18, c = 64 << 18, E = 128 << 18, j = 256 << 18, G = 512 << 18, K = 1024 << 18, O = i ^ (P | j), H = i ^ V, te = i ^ (P | G), z = i ^ X, de = i ^ Z, pe = i ^ E, he = i ^ q, we = i ^ K, be = w | P, _e = i ^ be, Ae = k | m, xe = f | d | s, me = xe | l, Ge = xe | Ae, Je = H & ne, Xe = E | L, jt = Xe & _e, Ct = me | jt, $t = me | b | k, ht = me | k | u, wt = me | b | u, Wt = me | N | u | W, mt = me | w | b | k | U | x, tt = xe | b | k, qt = I | me | L | A, Bt = L | l, rt = me | G | m, St = Z | X, h = Z | P, S = Z | X | me | P, ie = me | P | Z | K, oe = V | P, fe = P | j, Ee = me | G | h | m, Te = X | xe | G | m, Et = q | me | E | V, Pe = G | m | xe, lt = Symbol.asyncIterator || /* @__PURE__ */ Symbol("asyncIterator");
   class Mt {
     constructor(ue, { highWaterMark: ge = 16384, map: Ie = null, mapWritable: Le, byteLength: He, byteLengthWritable: qe } = {}) {
       this.stream = ue, this.queue = new a(), this.highWaterMark = ge, this.buffered = 0, this.error = null, this.pipeline = null, this.drains = null, this.byteLength = qe || He || ed, this.map = Le || Ie, this.afterWrite = Ce.bind(this), this.afterUpdateNextTick = BS.bind(this);
@@ -28978,7 +28978,7 @@ function IS() {
     updateNonPrimary() {
       const ue = this.stream;
       if ((ue._duplexState & Ee) === G) {
-        ue._duplexState = ue._duplexState | P, ue._final(it.bind(this));
+        ue._duplexState = ue._duplexState | P, ue._final(st.bind(this));
         return;
       }
       if ((ue._duplexState & xe) === f) {
@@ -29009,13 +29009,13 @@ function IS() {
     }
     pipe(ue, ge) {
       if (this.pipeTo !== null) throw new Error("Can only pipe to one destination");
-      if (typeof ge != "function" && (ge = null), this.stream._duplexState |= p, this.pipeTo = ue, this.pipeline = new rt(this.stream, ue, ge), ge && this.stream.on("error", td), Gr(ue))
+      if (typeof ge != "function" && (ge = null), this.stream._duplexState |= p, this.pipeTo = ue, this.pipeline = new nt(this.stream, ue, ge), ge && this.stream.on("error", td), Gr(ue))
         ue._writableState.pipeline = this.pipeline, ge && ue.on("error", td), ue.on("finish", this.pipeline.finished.bind(this.pipeline));
       else {
         const Ie = this.pipeline.done.bind(this.pipeline, ue), Le = this.pipeline.done.bind(this.pipeline, ue, null);
         ue.on("error", Ie), ue.on("close", Le), ue.on("finish", this.pipeline.finished.bind(this.pipeline));
       }
-      ue.on("drain", nt.bind(this)), this.stream.emit("piping", ue), ue.emit("pipe", this.stream);
+      ue.on("drain", it.bind(this)), this.stream.emit("piping", ue), ue.emit("pipe", this.stream);
     }
     push(ue) {
       const ge = this.stream;
@@ -29085,7 +29085,7 @@ function IS() {
       this.data = null, this.afterTransform = GS.bind(ue), this.afterFinal = null;
     }
   }
-  class rt {
+  class nt {
     constructor(ue, ge, Ie) {
       this.from = ue, this.to = ge, this.afterPipe = Ie, this.error = null, this.pipeToFinished = !1;
     }
@@ -29104,10 +29104,10 @@ function IS() {
       this.afterPipe !== null && this.afterPipe(this.error), this.to = this.from = this.afterPipe = null;
     }
   }
-  function nt() {
+  function it() {
     this.stream._duplexState |= p, this.updateCallback();
   }
-  function it(ye) {
+  function st(ye) {
     const ue = this.stream;
     ye && ue.destroy(ye), (ue._duplexState & xe) === 0 && (ue._duplexState |= m, ue.emit("finish")), (ue._duplexState & Ge) === Ae && (ue._duplexState |= f), ue._duplexState &= te, (ue._duplexState & q) === 0 ? this.update() : this.updateNextTick();
   }
@@ -29139,7 +29139,7 @@ function IS() {
   }
   function Yc(ye) {
     const ue = this.stream;
-    ye && ue.destroy(ye), (ue._duplexState & f) === 0 && ((ue._duplexState & $t) === 0 && (ue._duplexState |= A), (ue._duplexState & tt) === 0 && (ue._duplexState |= V), ue.emit("open")), ue._duplexState &= _e, ue._writableState !== null && ue._writableState.updateCallback(), ue._readableState !== null && ue._readableState.updateCallback();
+    ye && ue.destroy(ye), (ue._duplexState & f) === 0 && ((ue._duplexState & $t) === 0 && (ue._duplexState |= A), (ue._duplexState & rt) === 0 && (ue._duplexState |= V), ue.emit("open")), ue._duplexState &= _e, ue._writableState !== null && ue._writableState.updateCallback(), ue._readableState !== null && ue._readableState.updateCallback();
   }
   function GS(ye, ue) {
     ue != null && this.push(ue), this._writableState.afterWrite(ye);
@@ -29241,7 +29241,7 @@ function IS() {
       });
     }
     static isBackpressured(ue) {
-      return (ue._duplexState & et) !== 0 || ue._readableState.buffered >= ue._readableState.highWaterMark;
+      return (ue._duplexState & tt) !== 0 || ue._readableState.buffered >= ue._readableState.highWaterMark;
     }
     static isPaused(ue) {
       return (ue._duplexState & g) === 0;
@@ -29258,8 +29258,8 @@ function IS() {
         next() {
           return new Promise(function(Me, kt) {
             Ie = Me, Le = kt;
-            const sr = ue.read();
-            sr !== null ? xr(sr) : (ue._duplexState & d) !== 0 && xr(null);
+            const or = ue.read();
+            or !== null ? xr(or) : (ue._duplexState & d) !== 0 && xr(null);
           });
         },
         return() {
@@ -29279,10 +29279,10 @@ function IS() {
         Le !== null && (ge ? Le(ge) : Me === null && (ue._duplexState & k) === 0 ? Le(e) : Ie({ value: Me, done: Me === null }), Le = Ie = null);
       }
       function Hr(Me) {
-        return ue.destroy(Me), new Promise((kt, sr) => {
+        return ue.destroy(Me), new Promise((kt, or) => {
           if (ue._duplexState & d) return kt({ value: void 0, done: !0 });
           ue.once("close", function() {
-            Me ? sr(Me) : kt({ value: void 0, done: !0 });
+            Me ? or(Me) : kt({ value: void 0, done: !0 });
           });
         });
       }
@@ -29400,17 +29400,17 @@ function IS() {
     if (Ie) {
       let Me = !1;
       const kt = Gr(He) || !!(He._writableState && He._writableState.autoDestroy);
-      He.on("error", (sr) => {
-        qe === null && (qe = sr);
+      He.on("error", (or) => {
+        qe === null && (qe = or);
       }), He.on("finish", () => {
         Me = !0, kt || Ie(qe);
       }), kt && He.on("close", () => Ie(qe || (Me ? null : r)));
     }
     return He;
-    function xr(Me, kt, sr, ps) {
+    function xr(Me, kt, or, ps) {
       Me.on("error", ps), Me.on("close", oE);
       function oE() {
-        if (Me._readableState && !Me._readableState.ended || sr && Me._writableState && !Me._writableState.ended) return ps(r);
+        if (Me._readableState && !Me._readableState.ended || or && Me._writableState && !Me._writableState.ended) return ps(r);
       }
     }
     function Hr(Me) {
@@ -32619,7 +32619,7 @@ function OT() {
     "nexus:export-bundle",
     async (t, e, r, a, o, n) => xT(e, r, a, o, n)
   ), Re.handle("nexus:import-bundle", async (t, e) => DT(e)), Re.handle("nexus:select-export-path", async (t, e) => {
-    const r = e === "driver" ? CS : PS, a = e === "driver" ? `driver_gmos_${Date.now()}${r}` : `campagne_gmos_${Date.now()}${r}`, o = e === "driver" ? "GM-OS Driver" : "GM-OS Bundle", n = r.replace(".", ""), { filePath: i } = await zt.showSaveDialog({
+    const r = e === "driver" ? CS : PS, a = e === "driver" ? `driver_gmos_${Date.now()}${r}` : `campagne_gmos_${Date.now()}${r}`, o = e === "driver" ? "GM-OS Driver" : "GM-OS Bundle", n = r.replace(".", ""), { filePath: i } = await Vt.showSaveDialog({
       title: e === "driver" ? "Exporter le GameDriver GM-OS" : "Exporter la Campagne GM-OS",
       defaultPath: a,
       filters: [
@@ -32628,7 +32628,7 @@ function OT() {
     });
     return i ?? null;
   }), Re.handle("nexus:select-import-file", async () => {
-    const { filePaths: t } = await zt.showOpenDialog({
+    const { filePaths: t } = await Vt.showOpenDialog({
       title: "Importer une Archive GM-OS (.gmos / .gmos-driver)",
       filters: [
         { name: "GM-OS Archive", extensions: ["gmos", "gmos-driver"] }
@@ -32640,7 +32640,7 @@ function OT() {
 }
 class NT {
   constructor() {
-    this.secrets = {}, this.secretsPath = ve.join(Vt.getPath("userData"), "vault", "secrets.enc"), this.ensureStoreExists(), this.loadSecrets();
+    this.secrets = {}, this.secretsPath = ve.join(Zt.getPath("userData"), "vault", "secrets.enc"), this.ensureStoreExists(), this.loadSecrets();
   }
   /**
    * Garantit que le dossier du coffre-fort existe.
@@ -32783,7 +32783,7 @@ class PT {
     this.ghostTimeouts.clear(), this.sessions.clear();
   }
 }
-const ar = new PT();
+const lr = new PT();
 class Zc {
   constructor() {
     this.baseUrl = "http://127.0.0.1:11434";
@@ -33008,7 +33008,7 @@ class CT {
       if (e.deviceId) {
         console.log(`[Nexus Sync] Socket closed for device: ${e.deviceId}`);
         const a = this.deviceSocketMap.get(e.deviceId);
-        a && (a.delete(e), a.size === 0 && (console.log(`[Nexus Sync] Last socket closed for device ${e.deviceId}, entering ghost mode`), ar.ghostClient(e.deviceId), this.deviceSocketMap.delete(e.deviceId))), this.updateGMClients();
+        a && (a.delete(e), a.size === 0 && (console.log(`[Nexus Sync] Last socket closed for device ${e.deviceId}, entering ghost mode`), lr.ghostClient(e.deviceId), this.deviceSocketMap.delete(e.deviceId))), this.updateGMClients();
       }
     });
   }
@@ -33016,7 +33016,7 @@ class CT {
     const { deviceId: a, pseudo: o, role: n, playerName: i, characterId: l } = r || {}, s = a || `remote-${Math.random().toString(36).substring(2, 9)}`;
     e.deviceId = s, e.role = n || "player", this.deviceSocketMap.has(s) || this.deviceSocketMap.set(s, /* @__PURE__ */ new Set()), this.deviceSocketMap.get(s).add(e);
     try {
-      ar.registerClient(s, o || "Unknown", n || "remote", i, l, e.remoteAddress), this.updateGMClients(), e.send(JSON.stringify({ type: "remote:registered", payload: { deviceId: s, role: e.role } }));
+      lr.registerClient(s, o || "Unknown", n || "remote", i, l, e.remoteAddress), this.updateGMClients(), e.send(JSON.stringify({ type: "remote:registered", payload: { deviceId: s, role: e.role } }));
     } catch (f) {
       f.message === "character_taken" && e.send(JSON.stringify({
         type: "remote:error",
@@ -33040,7 +33040,7 @@ class CT {
     });
   }
   updateGMClients() {
-    this.mainWindow && !this.mainWindow.isDestroyed() && this.mainWindow.webContents.send("remote:sync-clients", ar.getAllClients());
+    this.mainWindow && !this.mainWindow.isDestroyed() && this.mainWindow.webContents.send("remote:sync-clients", lr.getAllClients());
   }
   registerIpcHandlers() {
     Re.on("remote:broadcast-sync", (e, r, a) => {
@@ -33050,14 +33050,14 @@ class CT {
     }), Re.on("remote:request-client-sync", () => {
       this.updateGMClients();
     }), Re.on("remote:clear-disconnected", () => {
-      ar.clearDisconnected(), this.updateGMClients();
+      lr.clearDisconnected(), this.updateGMClients();
     }), Re.on("remote:eject-all", () => {
       console.log("[Nexus Sync] ⚠️ EJECT ALL — Force disconnecting all clients"), this.wss && this.wss.clients.forEach((e) => {
         try {
           e.send(JSON.stringify({ type: "remote:ejected", payload: { reason: "GM initiated full reset" } })), e.close(1e3, "Ejected by GM");
         } catch {
         }
-      }), ar.clearAll(), this.updateGMClients();
+      }), lr.clearAll(), this.updateGMClients();
     }), Re.handle("remote:cache-media", async (e, r, a) => {
       try {
         if (!this.tempMediaDir) return !1;
@@ -33075,7 +33075,7 @@ class CT {
 }
 const MT = ow(import.meta.url), { WebSocketServer: x1 } = MT("ws");
 aw.platform() === "win32" && dE.setDefaultResultOrder("ipv4first");
-Vt.name = "gm-os-v5";
+Zt.name = "gm-os-v5";
 Ht.transports.file.level = "info";
 Ht.transports.console.level = "debug";
 Ht.initialize();
@@ -33104,11 +33104,11 @@ Zc.registerHandlers();
 rw.registerSchemesAsPrivileged([
   { scheme: "gmos", privileges: { standard: !0, secure: !0, supportFetchAPI: !0, bypassCSP: !0, stream: !0 } }
 ]);
-Vt.commandLine.appendSwitch("ignore-certificate-errors");
+Zt.commandLine.appendSwitch("ignore-certificate-errors");
 const vr = process.env.VITE_DEV_SERVER_URL, I1 = Ln, cs = ve.join(process.env.APP_ROOT, "dist");
 process.env.VITE_PUBLIC = vr ? ve.join(process.env.APP_ROOT, "public") : cs;
 let At, tw = null;
-const jS = 3001, dc = ve.join(Vt.getPath("userData"), "temp-media");
+const jS = 3001, dc = ve.join(Zt.getPath("userData"), "temp-media");
 function $S() {
   At = new Oi({
     width: 1200,
@@ -33129,7 +33129,7 @@ function $S() {
 const Di = ve.join(process.env.APP_ROOT || "", "sessions");
 Re.handle("save-session", async (t, e) => {
   await Se.ensureDir(Di);
-  const { filePath: r } = await zt.showSaveDialog({
+  const { filePath: r } = await Vt.showSaveDialog({
     title: "Sauvegarder la Session GM-OS",
     defaultPath: ve.join(Di, "gmos-session.json"),
     filters: [{ name: "GM-OS Session", extensions: ["json"] }]
@@ -33138,7 +33138,7 @@ Re.handle("save-session", async (t, e) => {
 });
 Re.handle("load-session", async () => {
   await Se.ensureDir(Di);
-  const { filePaths: t } = await zt.showOpenDialog({
+  const { filePaths: t } = await Vt.showOpenDialog({
     title: "Charger une Session GM-OS",
     defaultPath: Di,
     filters: [{ name: "GM-OS Session", extensions: ["json"] }],
@@ -33178,15 +33178,15 @@ Re.on("web:open-external", (t, e) => {
   lE.openExternal(e);
 });
 Re.handle("web:save-list", async (t, e) => {
-  const { filePath: r } = await zt.showSaveDialog({
+  const { filePath: r } = await Vt.showSaveDialog({
     title: "Exporter les marque-pages",
-    defaultPath: ve.join(Vt.getPath("documents") || "", "web-os-bookmarks.json"),
+    defaultPath: ve.join(Zt.getPath("documents") || "", "web-os-bookmarks.json"),
     filters: [{ name: "JSON", extensions: ["json"] }]
   });
   return r ? (await Se.writeJson(r, e, { spaces: 2 }), !0) : !1;
 });
 Re.handle("web:load-list", async () => {
-  const { filePaths: t } = await zt.showOpenDialog({
+  const { filePaths: t } = await Vt.showOpenDialog({
     title: "Importer des marque-pages",
     filters: [{ name: "JSON", extensions: ["json"] }],
     properties: ["openFile"]
@@ -33194,7 +33194,7 @@ Re.handle("web:load-list", async () => {
   return t && t.length > 0 ? await Se.readJson(t[0]) : null;
 });
 Re.handle("sound:load-audios", async () => {
-  const { filePaths: t } = await zt.showOpenDialog({
+  const { filePaths: t } = await Vt.showOpenDialog({
     title: "Sélectionner des effets sonores",
     filters: [{ name: "Audio", extensions: ["mp3", "wav", "ogg"] }],
     properties: ["openFile", "multiSelections"]
@@ -33256,16 +33256,16 @@ Re.handle("light:request", async (t, e, r, a) => new Promise((o, n) => {
     console.error(`[Light OS] Request setup failed for ${e}:`, i), n(i);
   }
 }));
-const lr = /* @__PURE__ */ new Map(), WS = /* @__PURE__ */ new Map();
-let ot = null;
+const zt = /* @__PURE__ */ new Map(), WS = /* @__PURE__ */ new Map();
+let Qe = null;
 Re.handle("image:get-displays", () => Gt.getAllDisplays().map((e, r) => ({
   id: e.id.toString(),
   bounds: e.bounds,
   label: `Moniteur ${r + 1}`
 })));
 Re.on("image:sync-hub-data", (t, e, r) => {
-  ot && !ot.isDestroyed() && ot.webContents.send("image:sync-hub-data", e, r);
-  for (const [, a] of lr)
+  Qe && !Qe.isDestroyed() && Qe.webContents.send("image:sync-hub-data", e, r);
+  for (const [, a] of zt)
     a.isDestroyed() || a.webContents.send("image:sync-hub-data", e, r);
   if (At && !At.isDestroyed()) {
     const a = {
@@ -33275,14 +33275,19 @@ Re.on("image:sync-hub-data", (t, e, r) => {
     Re.emit("remote:broadcast-ui-action", null, a);
   }
 });
+Re.on("remote:broadcast-sync", (t, e) => {
+  Qe && !Qe.isDestroyed() && Qe.webContents.send("remote:broadcast-sync", e);
+  for (const [, r] of zt)
+    r.isDestroyed() || r.webContents.send("remote:broadcast-sync", e);
+});
 Re.on("session:launch-hub-window", (t, e = "hub") => {
-  if (console.log(`[Main] session:launch-hub-window received (mode: ${e})`), ot && !ot.isDestroyed()) {
-    console.log("[Main] Hub window already exists, restoring and focusing..."), ot.isMinimized() && ot.restore(), ot.show(), ot.focus();
+  if (console.log(`[Main] session:launch-hub-window received (mode: ${e})`), Qe && !Qe.isDestroyed()) {
+    console.log("[Main] Hub window already exists, restoring and focusing..."), Qe.isMinimized() && Qe.restore(), Qe.show(), Qe.focus();
     return;
   }
   console.log(`[Main] Creating new ${e} window...`);
   const r = Gt.getAllDisplays(), a = r.length > 1 ? r[1] : r[0];
-  ot = new Oi({
+  Qe = new Oi({
     x: a.bounds.x + 50,
     y: a.bounds.y + 50,
     width: e === "tablet" ? 1024 : 1280,
@@ -33295,13 +33300,13 @@ Re.on("session:launch-hub-window", (t, e = "hub") => {
       webSecurity: !0
     },
     backgroundColor: "#000000"
-  }), vr ? ot.loadURL(`${vr}?window=${e}`) : ot.loadFile(ve.join(cs, "index.html"), { query: { window: e } }), ot.on("closed", () => {
-    console.log(`[Main] ${e} window closed`), ot = null;
+  }), vr ? Qe.loadURL(`${vr}?window=${e}`) : Qe.loadFile(ve.join(cs, "index.html"), { query: { window: e } }), Qe.on("closed", () => {
+    console.log(`[Main] ${e} window closed`), Qe = null;
   });
 });
 Re.on("image:launch-display", (t, e, r) => {
   if (console.log(`[Image OS] Launch Display -> Target: ${r}, Paths:`, e), WS.set(r, e), r === "hub") {
-    ot && !ot.isDestroyed() && ot.webContents.send("image:update-display", e);
+    Qe && !Qe.isDestroyed() && Qe.webContents.send("image:update-display", e);
     return;
   }
   const o = Gt.getAllDisplays().find((i) => i.id.toString() === r);
@@ -33310,11 +33315,11 @@ Re.on("image:launch-display", (t, e, r) => {
     return;
   }
   if (e && e.length === 0) {
-    const i = lr.get(r);
-    i && !i.isDestroyed() && i.close(), lr.delete(r);
+    const i = zt.get(r);
+    i && !i.isDestroyed() && i.close(), zt.delete(r);
     return;
   }
-  let n = lr.get(r);
+  let n = zt.get(r);
   !n || n.isDestroyed() ? (n = new Oi({
     x: o.bounds.x,
     y: o.bounds.y,
@@ -33327,8 +33332,8 @@ Re.on("image:launch-display", (t, e, r) => {
       webSecurity: !0
     },
     backgroundColor: "#000000"
-  }), lr.set(r, n), n.on("closed", () => {
-    lr.delete(r);
+  }), zt.set(r, n), n.on("closed", () => {
+    zt.delete(r);
   }), vr ? n.loadURL(`${vr}?window=projector&displayId=${r}`) : n.loadFile(ve.join(cs, "index.html"), { query: { window: "projector", displayId: r } }), n.webContents.on("did-finish-load", () => {
     n?.webContents.send("image:update-display", e);
   })) : n.webContents.send("image:update-display", e);
@@ -33339,9 +33344,9 @@ Re.on("image:request-current-display", (t, e) => {
 });
 Re.on("image:close-all-displays", () => {
   console.log("[Image OS] Close All Displays");
-  for (const [, t] of lr)
+  for (const [, t] of zt)
     t.isDestroyed() || t.close();
-  lr.clear();
+  zt.clear();
 });
 function FT() {
   const t = aw.networkInterfaces();
@@ -33360,10 +33365,10 @@ Re.handle("remote:get-connection-info", () => ({
   port: jS
 }));
 Re.on("remote:request-client-sync", (t) => {
-  t.reply("remote:sync-clients", ar.getAllClients());
+  t.reply("remote:sync-clients", lr.getAllClients());
 });
 Re.on("remote:clear-disconnected", (t) => {
-  console.log("[Remote] MJ requested clearing of non-active clients"), ar.clearDisconnected(), t.reply("remote:sync-clients", ar.getAllClients());
+  console.log("[Remote] MJ requested clearing of non-active clients"), lr.clearDisconnected(), t.reply("remote:sync-clients", lr.getAllClients());
 });
 Re.handle("ai:proxy-request", async (t, e, r, a, o) => new Promise((n, i) => {
   try {
@@ -33404,7 +33409,7 @@ Re.handle("ai:proxy-request", async (t, e, r, a, o) => new Promise((n, i) => {
   }
 }));
 Re.handle("npc:select-avatar", async () => {
-  const { filePaths: t } = await zt.showOpenDialog({
+  const { filePaths: t } = await Vt.showOpenDialog({
     title: "Sélectionner un Avatar",
     filters: [{ name: "Images", extensions: ["jpg", "png", "gif", "webp", "jpeg"] }],
     properties: ["openFile"]
@@ -33422,13 +33427,13 @@ Re.handle("npc:save-avatar", async (t, e, r) => {
     return console.error("[Main] Error saving avatar:", a), null;
   }
 });
-Vt.on("window-all-closed", () => {
-  process.platform !== "darwin" && (Vt.quit(), At = null);
+Zt.on("window-all-closed", () => {
+  process.platform !== "darwin" && (Zt.quit(), At = null);
 });
-Vt.on("activate", () => {
+Zt.on("activate", () => {
   Oi.getAllWindows().length === 0 && $S();
 });
-Vt.whenReady().then(async () => {
+Zt.whenReady().then(async () => {
   try {
     await Se.pathExists(dc) && (await Se.emptyDir(dc), console.log("[Main] Temp media directory cleared"));
   } catch (t) {
