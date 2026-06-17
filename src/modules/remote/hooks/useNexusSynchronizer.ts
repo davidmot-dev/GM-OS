@@ -20,6 +20,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
     const lastSyncRef = useRef(0);
     const lastBroadcastRef = useRef<Record<string, unknown>>({});
     const lastMapFastSyncRef = useRef(0);
+    const lastWhiteboardFastSyncRef = useRef(0);
 
     const syncFast = useCallback((segmentName: string) => {
         if (!isMainPC) return;
@@ -31,6 +32,15 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
             const now = Date.now();
             if (now - lastMapFastSyncRef.current < 100) return;
             lastMapFastSyncRef.current = now;
+        }
+
+        // Throttle whiteboard fast sync during drawing to 50ms (20fps), but bypass on end (activePath: null)
+        if (segmentName === 'whiteboard') {
+            const s = useWhiteboardStore.getState();
+            const now = Date.now();
+            const isDrawingEnd = s.activePath === null;
+            if (!isDrawingEnd && (now - lastWhiteboardFastSyncRef.current < 50)) return;
+            lastWhiteboardFastSyncRef.current = now;
         }
         
         try {
@@ -51,8 +61,12 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
             } else if (segmentName === 'whiteboard') {
                 const s = useWhiteboardStore.getState();
                 payload.whiteboard = { 
-                    activePath: s.activePath, laserPointer: s.laserPointer, 
-                    activeDrawerId: s.activeDrawerId, pathsCount: s.paths.length, version: s.version
+                    paths: s.paths,
+                    activePath: s.activePath, 
+                    laserPointer: s.laserPointer, 
+                    activeDrawerId: s.activeDrawerId, 
+                    pathsCount: s.paths.length, 
+                    version: s.version
                 };
             } else if (segmentName === 'map') {
                 const s = useMapStore.getState();
@@ -312,7 +326,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
         if (!isMainPC) return;
 
         const unsubs = [
-            useWhiteboardStore.subscribe((s, prev) => s.paths.length !== prev.paths.length ? handleSync() : syncFast('whiteboard')),
+            useWhiteboardStore.subscribe(() => syncFast('whiteboard')),
             useClockStore.subscribe(() => syncFast('clock')),
             useMusicStore.subscribe(() => handleSync()),
             useSoundStore.subscribe(() => handleSync()),

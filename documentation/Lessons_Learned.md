@@ -219,4 +219,18 @@ Pour éviter les dépendances circulaires qui bloquent le build Vite (ex: Sessio
 
 ---
 
-*Dernière mise à jour : 17 Juin 2026 - GM-OS v6.5.0 - Stabilisation complète de la suite de tests, de la persistance IndexedDB, intégration des feedbacks de session et correction de la synchronisation de Combat-OS.*
+### 25. Synchronisation Haute Fréquence & Disparition de Tracés (Whiteboard-OS) (2026-06-17)
+- **Défi** : Lors du dessin sur le tableau blanc, les traits disparaissaient temporairement ou subissaient une forte latence sur le Player Hub au moment où le MJ relâchait la souris/le doigt.
+- **Cause** :
+  1. **Absence de chemins terminés dans le canal rapide** : La liste des chemins définitifs (`paths`) n'était diffusée que via `handleSync()`, qui subit une limitation (throttle) à 500ms et effectue des résolutions de médias lourdes.
+  2. **Envoi immédiat de la fin de tracé** : Dès que le dessin s'arrêtait, l'état `activePath` passait à `null` et était diffusé immédiatement via le canal rapide (`syncFast`), effaçant le tracé temporaire sur le Player Hub avant que le message lourd contenant la liste `paths` mise à jour ne soit reçu, provoquant un clignotement/disparition.
+  3. **Saturation réseau** : L'envoi des coordonnées à chaque mouvement de souris (60+ fps) saturait les canaux WebSockets et BroadcastChannel.
+- **Solution** :
+  1. **Throttling Réseau Intelligent** : Limitation de `syncFast('whiteboard')` à 50ms (20fps) pendant le dessin, mais court-circuit (bypass) du throttle dès que `activePath === null` pour propager l'état final instantanément.
+  2. **Ajout des tracés dans le canal rapide** : Intégration de la propriété `paths` directement dans le payload rapide du Whiteboard, évitant d'attendre la synchronisation générale de 500ms pour restituer le tracé final.
+  3. **Mise à jour BroadcastChannel** : Ajout de la propriété `paths` dans les messages `whiteboard` du canal BroadcastChannel local pour une mise à jour instantanée en multi-fenêtres sur le même PC.
+- **Leçon** : Toujours coupler la fin d'une action haute fréquence (comme le relâchement d'un tracé ou d'un drag) à un envoi immédiat qui inclut à la fois l'état finalisé de la ressource et le nettoyage de l'état temporaire, pour éviter les désynchronisations visuelles transitoires.
+
+---
+
+*Dernière mise à jour : 17 Juin 2026 - GM-OS v6.5.0 - Stabilisation complète de la suite de tests, de la persistance IndexedDB, intégration des feedbacks de session et correction des latences et synchronisations de Combat-OS & Whiteboard-OS.*

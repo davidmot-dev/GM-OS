@@ -310,16 +310,18 @@ class CrossWindowEventService {
         useWhiteboardStore.subscribe((state) => {
             if (this.isApplyingRemoteUpdate) return;
             const now = Date.now();
-            if (now - lastWhiteboardBroadcast > WB_THROTTLE) {
-                lastWhiteboardBroadcast = now;
-                this.broadcast('whiteboard', {
-                    activePath: state.activePath,
-                    laserPointer: state.laserPointer,
-                    activeDrawerId: state.activeDrawerId,
-                    version: state.version,
-                    projectionTarget: state.projectionTarget
-                });
-            }
+            const isDrawingEnd = state.activePath === null;
+            if (!isDrawingEnd && (now - lastWhiteboardBroadcast < WB_THROTTLE)) return;
+
+            lastWhiteboardBroadcast = now;
+            this.broadcast('whiteboard', {
+                paths: state.paths,
+                activePath: state.activePath,
+                laserPointer: state.laserPointer,
+                activeDrawerId: state.activeDrawerId,
+                version: state.version,
+                projectionTarget: state.projectionTarget
+            });
         });
 
         useCombatStore.subscribe((state) => {
@@ -382,6 +384,7 @@ class CrossWindowEventService {
 
         const wb = useWhiteboardStore.getState();
         this.broadcast('whiteboard', {
+            paths: wb.paths,
             activePath: wb.activePath,
             laserPointer: wb.laserPointer,
             activeDrawerId: wb.activeDrawerId,
