@@ -28,13 +28,13 @@ export const HubTrombinoscope: React.FC<HubTrombinoscopeProps> = React.memo(({ n
             </div>
 
             <div className="flex-1 overflow-y-auto custom-scrollbar-minimal pr-4 pb-32">
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 place-items-start">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-6 place-items-start">
                     {npcs.map((npc, idx) => (
                         <button 
                             key={npc.id}
                             onClick={() => onSelectNpc(npc)}
                             type="button"
-                            className={`group relative flex flex-col gap-4 p-4 rounded-[2.5rem] bg-app-surface/40 border border-app-border/10 hover:bg-app-surface/80 hover:border-accent/30 transition-all duration-500 cursor-pointer animate-in fade-in zoom-in duration-500 delay-${Math.min(idx * 50, 500)} w-full`}
+                            className={`group relative flex flex-col gap-2 md:gap-4 p-3 md:p-4 rounded-[1.5rem] md:rounded-[2.5rem] bg-app-surface/40 border border-app-border/10 hover:bg-app-surface/80 hover:border-accent/30 transition-all duration-500 cursor-pointer animate-in fade-in zoom-in duration-500 delay-${Math.min(idx * 50, 500)} w-full`}
                         >
                             <div className="relative aspect-[3/4] w-full rounded-[2rem] overflow-hidden bg-app-bg shadow-xl">
                                 <div className="absolute inset-0 bg-gradient-to-t from-app-bg/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-10" />

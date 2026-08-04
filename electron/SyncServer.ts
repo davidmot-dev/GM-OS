@@ -102,6 +102,32 @@ export class SyncServer {
             }
             return;
         }
+        // Serve static Web App (PWA) assets from dist folder
+        const appRoot = process.env.APP_ROOT || process.cwd();
+        const distPath = path.join(appRoot, 'dist');
+        
+        let requestPath = req.url.split('?')[0];
+        if (requestPath === '/') requestPath = '/index.html';
+        
+        let filePath = path.join(distPath, requestPath);
+        
+        if (fs.existsSync(filePath) && fs.lstatSync(filePath).isFile()) {
+            const ext = path.extname(filePath).toLowerCase();
+            const mimeTypes: Record<string, string> = {
+                '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css',
+                '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml',
+                '.json': 'application/json', '.ico': 'image/x-icon', '.mjs': 'text/javascript',
+                '.webmanifest': 'application/manifest+json'
+            };
+            res.writeHead(200, { 'Content-Type': mimeTypes[ext] || 'application/octet-stream' });
+            fs.createReadStream(filePath).pipe(res);
+            return;
+        } else if (fs.existsSync(path.join(distPath, 'index.html'))) {
+            // SPA Fallback (React Router)
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            fs.createReadStream(path.join(distPath, 'index.html')).pipe(res);
+            return;
+        }
 
         res.writeHead(404);
         res.end();

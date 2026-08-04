@@ -49965,11 +49965,11 @@ class SyncServer {
     if (!req.url) return;
     if (req.url.startsWith("/media/")) {
       const encodedPath = req.url.substring(7);
-      const filePath = decodeURIComponent(encodedPath);
-      console.log(`[SyncServer] Requesting media: ${filePath}`);
-      if (fs.existsSync(filePath) && fs.lstatSync(filePath).isFile()) {
-        console.log(`[SyncServer] Serving media file: ${filePath}`);
-        const ext = path$1.extname(filePath).toLowerCase();
+      const filePath2 = decodeURIComponent(encodedPath);
+      console.log(`[SyncServer] Requesting media: ${filePath2}`);
+      if (fs.existsSync(filePath2) && fs.lstatSync(filePath2).isFile()) {
+        console.log(`[SyncServer] Serving media file: ${filePath2}`);
+        const ext = path$1.extname(filePath2).toLowerCase();
         const mimeTypes = {
           ".png": "image/png",
           ".jpg": "image/jpeg",
@@ -49984,9 +49984,9 @@ class SyncServer {
           "Content-Type": mimeTypes[ext] || "application/octet-stream",
           "Access-Control-Allow-Origin": "*"
         });
-        fs.createReadStream(filePath).pipe(res);
+        fs.createReadStream(filePath2).pipe(res);
       } else {
-        console.warn(`[SyncServer] Media file not found: ${filePath}`);
+        console.warn(`[SyncServer] Media file not found: ${filePath2}`);
         res.writeHead(404);
         res.end("Media not found");
       }
@@ -49994,11 +49994,11 @@ class SyncServer {
     }
     if (req.url.startsWith("/temp/")) {
       const fileName = req.url.substring(6);
-      const filePath = path$1.join(this.tempMediaDir, fileName);
-      console.log(`[SyncServer] Requesting temp asset: ${fileName} -> ${filePath}`);
-      if (fs.existsSync(filePath)) {
+      const filePath2 = path$1.join(this.tempMediaDir, fileName);
+      console.log(`[SyncServer] Requesting temp asset: ${fileName} -> ${filePath2}`);
+      if (fs.existsSync(filePath2)) {
         console.log(`[SyncServer] Serving temp asset: ${fileName}`);
-        const ext = path$1.extname(filePath).toLowerCase();
+        const ext = path$1.extname(filePath2).toLowerCase();
         const mimeTypes = {
           ".png": "image/png",
           ".jpg": "image/jpeg",
@@ -50014,12 +50014,39 @@ class SyncServer {
           // Default to webp if no ext (historical)
           "Access-Control-Allow-Origin": "*"
         });
-        fs.createReadStream(filePath).pipe(res);
+        fs.createReadStream(filePath2).pipe(res);
       } else {
         console.warn(`[SyncServer] Temp asset not found: ${fileName}`);
         res.writeHead(404);
         res.end("Temp Media not found");
       }
+      return;
+    }
+    const appRoot = process.env.APP_ROOT || process.cwd();
+    const distPath = path$1.join(appRoot, "dist");
+    let requestPath = req.url.split("?")[0];
+    if (requestPath === "/") requestPath = "/index.html";
+    let filePath = path$1.join(distPath, requestPath);
+    if (fs.existsSync(filePath) && fs.lstatSync(filePath).isFile()) {
+      const ext = path$1.extname(filePath).toLowerCase();
+      const mimeTypes = {
+        ".html": "text/html",
+        ".js": "text/javascript",
+        ".css": "text/css",
+        ".png": "image/png",
+        ".jpg": "image/jpeg",
+        ".svg": "image/svg+xml",
+        ".json": "application/json",
+        ".ico": "image/x-icon",
+        ".mjs": "text/javascript",
+        ".webmanifest": "application/manifest+json"
+      };
+      res.writeHead(200, { "Content-Type": mimeTypes[ext] || "application/octet-stream" });
+      fs.createReadStream(filePath).pipe(res);
+      return;
+    } else if (fs.existsSync(path$1.join(distPath, "index.html"))) {
+      res.writeHead(200, { "Content-Type": "text/html" });
+      fs.createReadStream(path$1.join(distPath, "index.html")).pipe(res);
       return;
     }
     res.writeHead(404);
@@ -50583,9 +50610,10 @@ function getLocalIP() {
   return "localhost";
 }
 ipcMain.handle("remote:get-connection-info", () => {
+  const devPort = VITE_DEV_SERVER_URL ? new URL(VITE_DEV_SERVER_URL).port : null;
   return {
     ip: getLocalIP(),
-    port: REMOTE_PORT
+    port: devPort ? parseInt(devPort, 10) : REMOTE_PORT
   };
 });
 ipcMain.on("remote:request-client-sync", (event) => {

@@ -549,9 +549,12 @@ function getLocalIP() {
 }
 
 ipcMain.handle('remote:get-connection-info', () => {
+    // En développement, on retourne le port de Vite (5173) pour avoir le Hot-Reloading
+    // En production, on retourne le port du SyncServer (3001) qui sert le dossier dist/
+    const devPort = VITE_DEV_SERVER_URL ? new URL(VITE_DEV_SERVER_URL).port : null;
     return {
         ip: getLocalIP(),
-        port: REMOTE_PORT
+        port: devPort ? parseInt(devPort, 10) : REMOTE_PORT
     };
 });
 

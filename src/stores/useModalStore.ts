@@ -15,6 +15,7 @@ interface ModalState {
     cancelLabel?: string;
     customVariant?: CustomModalVariant;
     isMediaHubOpen: boolean;
+    isNetworkModalOpen: boolean;
 
     showAlert: (message: string, onConfirm?: () => void, confirmLabel?: string) => void;
     showConfirm: (message: string, onConfirm: () => void, onCancel?: () => void, confirmLabel?: string, cancelLabel?: string) => void;
@@ -22,6 +23,8 @@ interface ModalState {
     showCustom: (variant: CustomModalVariant, data?: unknown) => void;
     openMediaHub: () => void;
     closeMediaHub: () => void;
+    openNetworkModal: () => void;
+    closeNetworkModal: () => void;
     closeModal: () => void;
 }
 
@@ -30,6 +33,7 @@ export const useModalStore = create<ModalState>((set) => ({
     type: null,
     message: '',
     isMediaHubOpen: false,
+    isNetworkModalOpen: false,
 
     showAlert: (message, onConfirm, confirmLabel) => set({
         type: 'alert',
@@ -64,6 +68,9 @@ export const useModalStore = create<ModalState>((set) => ({
 
     openMediaHub: () => set({ isMediaHubOpen: true }),
     closeMediaHub: () => set({ isMediaHubOpen: false }),
+
+    openNetworkModal: () => set({ isNetworkModalOpen: true }),
+    closeNetworkModal: () => set({ isNetworkModalOpen: false }),
 
     closeModal: () => set({
         type: null,

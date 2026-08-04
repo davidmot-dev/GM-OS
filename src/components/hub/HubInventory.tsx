@@ -82,7 +82,7 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                         </h3>
                         
                         {structuredItems.length > 0 ? (
-                            <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-4">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10 gap-3 md:gap-4">
                                 {structuredItems.map((item) => {
                                     const isPending = (transferRequests || []).some(r => r.item.id === item.id && r.status === 'pending');
                                     return (
@@ -147,7 +147,7 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                                 <div className="w-1 h-4 bg-app-text/20 rounded-full" />
                                 Objets Scannés (Atlas)
                             </h3>
-                            <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-4">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10 gap-3 md:gap-4">
                                 {items.map((item) => (
                                     <button 
                                         key={item.id}

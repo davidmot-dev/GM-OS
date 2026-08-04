@@ -14,6 +14,17 @@ const applyTheme = (theme: string) => document.documentElement.setAttribute('dat
 applyTheme(useSessionStore.getState().theme);
 useSessionStore.subscribe((state) => applyTheme(state.theme));
 
+// Enregistrement de la PWA (uniquement pour le Tablet Hub / Navigateur, pas pour Electron)
+if (!window.appBridge && 'serviceWorker' in navigator) {
+  // @ts-ignore : virtual module from vite-plugin-pwa
+  import('virtual:pwa-register').then(({ registerSW }) => {
+    registerSW({ immediate: true });
+    console.log('[PWA] Service Worker registered for Tablet Hub');
+  }).catch((err) => {
+    console.error('[PWA] Service Worker registration failed', err);
+  });
+}
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />

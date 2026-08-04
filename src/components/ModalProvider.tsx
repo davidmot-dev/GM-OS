@@ -28,12 +28,13 @@ import DangerZonePresetEditor from '../modules/map/components/DangerZonePresetEd
 import NarrativeModal from '../modules/map/components/NarrativeModal';
 // Secondary imports consolidated above
 import LootOS from '../modules/session/components/LootOS';
+import { NetworkQRCodeModal } from './NetworkQRCodeModal';
 
 const ModalProvider: React.FC = () => {
     const { 
         type, message, onConfirm, onCancel, onPromptConfirm, 
         defaultValue, confirmLabel, cancelLabel, customVariant, 
-        isMediaHubOpen, closeModal, closeMediaHub 
+        isMediaHubOpen, isNetworkModalOpen, closeModal, closeMediaHub 
     } = useModalStore();
 
     const { t } = useTranslation(['common']);
@@ -45,7 +46,7 @@ const ModalProvider: React.FC = () => {
         }
     }, [type, defaultValue]);
 
-    if (!type && !isMediaHubOpen) return null;
+    if (!type && !isMediaHubOpen && !isNetworkModalOpen) return null;
 
     return (
         <>
@@ -264,6 +265,8 @@ const ModalProvider: React.FC = () => {
                     }} 
                 />
             )}
+
+            <NetworkQRCodeModal />
         </>
     );
 };

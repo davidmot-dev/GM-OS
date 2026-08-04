@@ -11,7 +11,9 @@ import {
     LogOut,
     Users,
     Globe,
-    Package
+    Package,
+    Swords,
+    ChevronRight
 } from 'lucide-react';
 import { useMediaUrl } from '../hooks/useMediaUrl';
 import { ResolvedImage } from './ResolvedImage';
@@ -85,6 +87,7 @@ const TabletHub: React.FC = () => {
     const [isInventoryOpen, setIsInventoryOpen] = useState(false);
     const [isNotesOpen, setIsNotesOpen] = useState(false);
     const [isMessengerOpen, setIsMessengerOpen] = useState(false);
+    const [isCombatOverlayOpen, setIsCombatOverlayOpen] = useState(false);
     const [selectedClue, setSelectedClue] = useState<Clue | null>(null);
     const [selectedNpc, setSelectedNpc] = useState<Entity | null>(null);
     const [selectedAtlasMap, setSelectedAtlasMap] = useState<AtlasMap | null>(null);
@@ -201,14 +204,12 @@ const TabletHub: React.FC = () => {
             </div>
 
             {/* Campaign Header */}
-            {activeCampaignName && (
-                <div className="fixed top-6 left-8 z-50 animate-in fade-in slide-in-from-left duration-1000">
-                    <div className="flex flex-col">
-                        <span className="text-[10px] font-black text-accent/60 uppercase tracking-[0.4em] mb-1">Opération en cours</span>
-                        <h1 className="text-3xl font-black text-app-text uppercase tracking-tightest drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
-                            {activeCampaignName}
-                        </h1>
-                    </div>
+            {activeCampaignName && currentTab === 'live' && (
+                <div className="fixed top-12 md:top-6 left-4 md:left-8 z-40 animate-in fade-in slide-in-from-left duration-1000 pointer-events-none flex flex-col">
+                    <span className="hidden md:block text-[10px] font-black text-accent/60 uppercase tracking-[0.4em] mb-1">Opération en cours</span>
+                    <h1 className="text-xl md:text-3xl font-black text-app-text uppercase tracking-tightest drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] opacity-50 md:opacity-100">
+                        {activeCampaignName}
+                    </h1>
                 </div>
             )}
 
@@ -267,10 +268,10 @@ const TabletHub: React.FC = () => {
                 </div>
 
                 {/* Centered Content Area */}
-                <div className={`flex-1 flex items-center justify-center transition-all duration-1000 ${hasCombatants ? 'pr-0 md:pr-72' : ''} md:pl-32 pointer-events-none overflow-hidden`}>
+                <div className={`flex-1 flex items-center justify-center transition-all duration-1000 pt-16 md:pt-0 ${hasCombatants ? 'pr-0 md:pr-72' : ''} md:pl-32 pointer-events-none overflow-hidden`}>
                     {currentTab === 'live' && (resolvedFavorites.length > 0 || liveEntity || (liveImagePath && liveImagePath !== activeCampaignWallpaper)) && (
                         <div className="w-full h-full flex items-center justify-center overflow-hidden pointer-events-auto">
-                            <div className="w-full max-h-full overflow-y-auto custom-scrollbar p-4 md:p-8 flex flex-col items-center justify-center">
+                            <div className="w-full max-h-full overflow-y-auto custom-scrollbar p-2 md:p-8 flex flex-col items-center justify-center">
                                 {(() => {
                                     // 1. Filter favorites to avoid duplication with liveEntity
                                     const filteredFavorites = resolvedFavorites.filter(fav => 
@@ -339,8 +340,8 @@ const TabletHub: React.FC = () => {
             )}
 
             {/* Bottom Navigation */}
-            <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] pointer-events-auto" aria-label="Navigation Hub">
-                <div className={`bg-app-surface/80 border border-app-border/40 p-1.5 rounded-full shadow-2xl flex items-center gap-1 ${performance.heavyBlurClass}`}>
+            <nav className="fixed bottom-2 md:bottom-6 left-1/2 -translate-x-1/2 z-[100] pointer-events-auto w-full max-w-full px-2 overflow-x-auto custom-scrollbar-minimal pb-2 md:pb-0" aria-label="Navigation Hub">
+                <div className={`bg-app-surface/90 md:bg-app-surface/80 border border-app-border/40 p-1 md:p-1.5 rounded-full shadow-2xl flex items-center gap-1 w-max mx-auto ${performance.heavyBlurClass}`}>
                     {(
                         [
                             { id: 'live', icon: Monitor, label: 'Direct', color: undefined },
@@ -353,39 +354,43 @@ const TabletHub: React.FC = () => {
                         <button 
                             key={tab.id}
                             onClick={() => setCurrentTab(tab.id)}
-                            className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
+                            className={`flex items-center gap-2 p-3 md:px-6 md:py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
                                 currentTab === tab.id 
                                     ? `bg-${tab.color || 'accent'}${tab.color ? '-600 text-white' : ' text-app-bg'}` 
                                     : 'text-app-text/40 hover:text-app-text'
                             }`}
+                            title={tab.label}
                         >
-                            <tab.icon size={14} />
-                            {tab.label}
+                            <tab.icon className="w-5 h-5 md:w-3.5 md:h-3.5" />
+                            <span className="hidden md:inline">{tab.label}</span>
                         </button>
                     ))}
-                    <div className="w-[1px] h-4 bg-app-border/40 mx-1" />
+                    <div className="w-[1px] h-4 bg-app-border/40 mx-1 md:mx-2" />
                     <button 
                         onClick={() => setIsInventoryOpen(!isInventoryOpen)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${isInventoryOpen ? 'bg-indigo-600 text-white' : 'text-app-text/40 hover:text-app-text'}`}
+                        className={`flex items-center gap-2 p-3 md:px-4 md:py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${isInventoryOpen ? 'bg-indigo-600 text-white' : 'text-app-text/40 hover:text-app-text'}`}
+                        title="Fiche Personnage"
                     >
-                        <User size={14} />
-                        Fiche
+                        <User className="w-5 h-5 md:w-3.5 md:h-3.5" />
+                        <span className="hidden md:inline">Fiche</span>
                     </button>
                     <button 
                         onClick={() => setIsNotesOpen(!isNotesOpen)}
-                        className={`relative flex items-center gap-2 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${isNotesOpen ? 'bg-indigo-600 text-white shadow-glow-indigo/40' : 'text-app-text/40 hover:text-app-text'}`}
+                        className={`relative flex items-center gap-2 p-3 md:px-4 md:py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${isNotesOpen ? 'bg-indigo-600 text-white shadow-glow-indigo/40' : 'text-app-text/40 hover:text-app-text'}`}
+                        title="Notes Personnelles"
                     >
-                        <BookOpen size={14} />
-                        Notes
+                        <BookOpen className="w-5 h-5 md:w-3.5 md:h-3.5" />
+                        <span className="hidden md:inline">Notes</span>
                     </button>
                     <button 
                         onClick={toggleMessenger}
-                        className={`relative flex items-center gap-2 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${isMessengerOpen ? 'bg-indigo-600 text-white shadow-glow-indigo/40' : 'text-app-text/40 hover:text-app-text'}`}
+                        className={`relative flex items-center gap-2 p-3 md:px-4 md:py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${isMessengerOpen ? 'bg-indigo-600 text-white shadow-glow-indigo/40' : 'text-app-text/40 hover:text-app-text'}`}
+                        title="Messages"
                     >
-                        <MessageSquare size={14} />
-                        Messages
+                        <MessageSquare className="w-5 h-5 md:w-3.5 md:h-3.5" />
+                        <span className="hidden md:inline">Messages</span>
                         {unreadCount > 0 && !isMessengerOpen && (
-                            <span className="absolute -top-1 -right-1 flex h-4 w-4">
+                            <span className="absolute top-0 right-0 md:-top-1 md:-right-1 flex h-4 w-4">
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-4 w-4 bg-rose-500 text-[9px] items-center justify-center font-bold text-white">{unreadCount}</span>
                             </span>
@@ -393,18 +398,35 @@ const TabletHub: React.FC = () => {
                     </button>
                     <button 
                         onClick={() => window.confirm('Quitter la session ?') && resetIdentity()}
-                        className="flex items-center gap-2 px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-all"
+                        className="flex items-center gap-2 p-3 md:px-6 md:py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-all ml-1 md:ml-0"
+                        title="Quitter"
                     >
-                        <LogOut size={14} />
-                        Quitter
+                        <LogOut className="w-5 h-5 md:w-3.5 md:h-3.5" />
+                        <span className="hidden md:inline">Quitter</span>
                     </button>
                 </div>
             </nav>
 
             {/* Combat Overlay */}
             {hasCombatants && activeCombatant && (
-                <aside className={`fixed right-4 top-4 w-80 h-[calc(100vh-2rem)] z-50 bg-app-surface/60 border border-app-border/40 flex flex-col gap-4 p-6 rounded-[2rem] shadow-2xl animate-in slide-in-from-right pointer-events-auto ${performance.heavyBlurClass}`}>
-                    <h2 className="text-app-text text-lg font-bold tracking-tight border-b border-app-border/40 pb-3">Initiative</h2>
+                <>
+                    {/* Mobile Toggle Button */}
+                    <button
+                        onClick={() => setIsCombatOverlayOpen(!isCombatOverlayOpen)}
+                        className={`fixed md:hidden top-4 left-1/2 -translate-x-1/2 z-[110] px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest flex items-center gap-2 shadow-2xl transition-all ${isCombatOverlayOpen ? 'bg-rose-600 text-white' : 'bg-app-surface/90 border border-rose-500/30 text-rose-400'}`}
+                    >
+                        <Swords size={16} />
+                        {isCombatOverlayOpen ? 'Fermer' : 'Initiative'}
+                    </button>
+
+                    {/* Combat Sidebar */}
+                    <aside className={`fixed right-0 md:right-4 top-0 md:top-4 w-full md:w-80 h-screen md:h-[calc(100vh-2rem)] z-50 bg-app-surface/95 md:bg-app-surface/60 border-l md:border border-app-border/40 flex flex-col gap-4 p-6 md:rounded-[2rem] shadow-2xl transition-transform duration-300 pointer-events-auto ${performance.heavyBlurClass} ${isCombatOverlayOpen ? 'translate-x-0' : 'translate-x-full md:translate-x-0'}`}>
+                        <div className="flex items-center justify-between border-b border-app-border/40 pb-3 mt-12 md:mt-0">
+                            <h2 className="text-app-text text-lg font-bold tracking-tight">Initiative</h2>
+                            <button className="md:hidden p-2 rounded-full text-app-text/40 hover:bg-white/5" onClick={() => setIsCombatOverlayOpen(false)}>
+                                <ChevronRight size={20} />
+                            </button>
+                        </div>
                     <div className="flex flex-col gap-2 overflow-y-auto custom-scrollbar pr-2">
                         <div className="flex flex-col gap-3 p-3 rounded-2xl bg-rose-500/10 border border-rose-500/30 shadow-glow-crimson">
                             <div className="flex items-center gap-3">
@@ -423,6 +445,7 @@ const TabletHub: React.FC = () => {
                         ))}
                     </div>
                 </aside>
+                </>
             )}
 
             {/* Overlays & Modals */}

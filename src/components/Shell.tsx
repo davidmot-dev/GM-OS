@@ -12,6 +12,7 @@ import {
     Image as ImageIcon,
     Terminal,
     Dices,
+    Wifi,
     Mic2,
     Map as MapIcon,
     Table,
@@ -454,6 +455,14 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                                     : (theme === 'medieval' ? t('modules:tactical.seal_broken') : t('modules:tactical.cortex_disabled'))}
                              </span>
                         </div>
+                        <button 
+                            onClick={() => useModalStore.getState().openNetworkModal()}
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 hover:text-indigo-300 border border-indigo-500/20 transition-all shadow-glow-indigo/20 group"
+                            title="Ouvrir le code de connexion PWA"
+                        >
+                            <Wifi size={14} className="group-hover:scale-110 transition-transform" />
+                            <span className="text-[10px] font-bold uppercase tracking-widest hidden md:inline">Connecter Joueurs</span>
+                        </button>
                         <div className="flex items-center gap-2">
                             <div className={`w-2 h-2 rounded-full bg-accent ${tacticalSettings.isEnabled ? 'animate-pulse' : 'animate-ping'}`} />
                              <span className={`text-[10px] font-mono text-app-text/40 uppercase tracking-widest ${theme === 'medieval' ? 'font-display' : ''}`}>

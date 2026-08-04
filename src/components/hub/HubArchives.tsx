@@ -28,7 +28,7 @@ export const HubArchives: React.FC<HubArchivesProps> = memo(({ clues, activeCamp
             </div>
 
             <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 pb-24">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                     {revealedClues.map((clue, idx) => (
                         <button 
                             key={clue.id} 
