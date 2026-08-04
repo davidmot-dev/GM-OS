@@ -1,9 +1,15 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+import pkg from './package.json'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  // Source unique de verite pour la version affichee : package.json (serie 7.x, Tauri).
+  // Evite la derive entre les differents ecrans.
+  define: {
+    __APP_VERSION__: JSON.stringify(pkg.version),
+  },
   plugins: [
     react(),
     tailwindcss(),
