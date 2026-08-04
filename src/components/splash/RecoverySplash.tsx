@@ -34,7 +34,7 @@ const RecoverySplash: React.FC = () => {
 
                 <div className="text-center space-y-4">
                     <h1 className="text-5xl md:text-7xl font-black tracking-[0.2em] font-elite uppercase border-2 border-amber p-4 bg-amber/5 animate-glitch-skew">
-                        GM-OS v6.5.0
+                        GM-OS v{__APP_VERSION__}
                     </h1>
                     <div className="flex items-center justify-center space-x-2">
                         <span className="inline-block w-2 h-2 bg-red-600 animate-pulse"></span>
@@ -81,7 +81,7 @@ const RecoverySplash: React.FC = () => {
             </div>
 
             <div className="fixed top-8 left-8 text-[10px] text-amber/40 font-mono tracking-widest uppercase [writing-mode:vertical-lr] rotate-180">
-                Waste-Land Comm-Unit v6.5.0
+                Waste-Land Comm-Unit v{__APP_VERSION__}
             </div>
 
             <style>{`

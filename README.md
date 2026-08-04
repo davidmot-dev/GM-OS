@@ -1,6 +1,10 @@
-# 🌌 GM-OS v6.3.0 : The Ultimate Game Master Toolkit
+# 🌌 GM-OS : The Ultimate Game Master Toolkit
 
-GM-OS v6.3.0 est une plateforme de gestion de sessions de Jeu de Rôle (JdR) de nouvelle génération, conçue pour offrir aux Maîtres de Jeu (MJ) une immersion totale et un contrôle sans précédent sur l'ambiance, le combat et la narration via une architecture modulaire et performante.
+GM-OS est une plateforme de gestion de sessions de Jeu de Rôle (JdR) de nouvelle génération, conçue pour offrir aux Maîtres de Jeu (MJ) une immersion totale et un contrôle sans précédent sur l'ambiance, le combat et la narration via une architecture modulaire et performante.
+
+> **Version** : cette branche est la série **6.x (Electron)**. Le numéro exact vit dans
+> `package.json` — voir la **[convention de versionnage](./documentation/VERSIONING.md)**
+> pour la répartition 6.x Electron / 7.x Tauri.
 
 ## 🚀 Fonctionnalités Clés (v6 Evolution)
 

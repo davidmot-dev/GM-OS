@@ -470,7 +470,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                              </span>
                         </div>
                         <div className={`px-3 py-1.5 rounded-lg bg-app-bg border border-app-border text-[9px] text-app-text/40 shadow-xl ${theme === 'medieval' ? 'font-display' : 'font-mono'}`}>
-                            GM-OS_v6.5.0
+                            GM-OS_v{__APP_VERSION__}
                         </div>
                     </div>
                 </header>

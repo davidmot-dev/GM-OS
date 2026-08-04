@@ -1,4 +1,11 @@
-# 🚀 GM-OS v6 : Roadmap & Stratégie (v6.3.0)
+# 🚀 GM-OS (Electron, série 6.x) : Roadmap & Stratégie
+
+> [!WARNING]
+> **Numérotation** : ce document couvre la branche **Electron (6.x)**. Les jalons ci-dessous
+> notés « v7.0.1 » à « v7.0.6 » décrivent malgré leur nom du travail **Electron**, antérieur
+> à la convention de versionnage — lire ces numéros comme des jalons 6.5.x.
+> La série 7.x désigne exclusivement la branche Tauri `GM-OS_v7_P2P`.
+> Détail : **[Convention de versionnage](../VERSIONING.md)**.
 
 Ce document centralise la vision et les chantiers de GM-OS. Depuis Avril 2026, le projet est entré dans sa phase **v6 (Refonte Architecturale & I18n)**.
 
@@ -71,4 +78,6 @@ Ce document centralise la vision et les chantiers de GM-OS. Depuis Avril 2026, l
 > **Priorité actuelle** : Finalisation de la parité V7 (Tauri) et robustesse des connexions Nexus.
 
 > [!IMPORTANT]
-> Version Actuelle : **7.0.1** (Avril 2026)
+> Version courante : voir `package.json` de la branche (source unique de vérité).
+> La mention « 7.0.1 » qui figurait ici désignait en réalité un jalon Electron 6.5.x —
+> voir la **[Convention de versionnage](../VERSIONING.md)**.

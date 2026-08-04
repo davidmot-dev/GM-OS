@@ -477,7 +477,7 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
                         <span className={getLatencyColor(latency || null)}>{getLatencyLabel(latency || null)}</span>
                     </div>
                     <div className="w-px h-2 bg-white/10" />
-                    <div>GM-OS V7.0.4 • nexus_bridge_active</div>
+                    <div>GM-OS v{__APP_VERSION__} • nexus_bridge_active</div>
                 </div>
                 <div className="opacity-50 font-mono">Device ID: {deviceId?.substring(0, 12)}...</div>
             </div>

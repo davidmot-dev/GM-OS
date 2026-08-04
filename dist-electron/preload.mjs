@@ -1,153 +1,150 @@
-import { contextBridge, ipcRenderer, webUtils } from "electron";
-contextBridge.exposeInMainWorld("appBridge", {
-  on(...args) {
-    const [channel, listener] = args;
-    return ipcRenderer.on(channel, (event, ...args2) => listener(event, ...args2));
+import { contextBridge as i, ipcRenderer as a, webUtils as l } from "electron";
+i.exposeInMainWorld("appBridge", {
+  on(...e) {
+    const [o, n] = e;
+    return a.on(o, (t, ...s) => n(t, ...s));
   },
-  off(...args) {
-    const [channel, ...omit] = args;
-    return ipcRenderer.off(channel, ...omit);
+  off(...e) {
+    const [o, ...n] = e;
+    return a.off(o, ...n);
   },
-  send(...args) {
-    const [channel, ...omit] = args;
-    return ipcRenderer.send(channel, ...omit);
+  send(...e) {
+    const [o, ...n] = e;
+    return a.send(o, ...n);
   },
-  invoke(...args) {
-    const [channel, ...omit] = args;
-    return ipcRenderer.invoke(channel, ...omit);
+  invoke(...e) {
+    const [o, ...n] = e;
+    return a.invoke(o, ...n);
   },
-  getPathForFile(file) {
-    return webUtils.getPathForFile(file);
+  getPathForFile(e) {
+    return l.getPathForFile(e);
   },
   app: {
-    quit: () => ipcRenderer.send("app:quit"),
-    onDisplayChanged: (callback) => {
-      const listener = (_event, count) => callback(count);
-      ipcRenderer.on("app:display-changed", listener);
-      return () => ipcRenderer.off("app:display-changed", listener);
+    quit: () => a.send("app:quit"),
+    onDisplayChanged: (e) => {
+      const o = (n, t) => e(t);
+      return a.on("app:display-changed", o), () => a.off("app:display-changed", o);
     }
   },
   debug: {
-    openConsole: () => ipcRenderer.send("debug:open-console")
+    openConsole: () => a.send("debug:open-console")
   },
   session: {
-    launchHubWindow: (mode) => ipcRenderer.send("session:launch-hub-window", mode),
-    saveSession: (data) => ipcRenderer.invoke("save-session", data),
-    loadSession: () => ipcRenderer.invoke("load-session")
+    launchHubWindow: (e) => a.send("session:launch-hub-window", e),
+    saveSession: (e) => a.invoke("save-session", e),
+    loadSession: () => a.invoke("load-session")
   },
   npc: {
-    listDatabases: (category) => ipcRenderer.invoke("npc:list-databases", category),
-    loadDatabase: (category, name) => ipcRenderer.invoke("npc:load-database", category, name),
-    selectAvatar: () => ipcRenderer.invoke("npc:select-avatar"),
-    saveAvatar: (buffer, fileName) => ipcRenderer.invoke("npc:save-avatar", buffer, fileName)
+    listDatabases: (e) => a.invoke("npc:list-databases", e),
+    loadDatabase: (e, o) => a.invoke("npc:load-database", e, o),
+    selectAvatar: () => a.invoke("npc:select-avatar"),
+    saveAvatar: (e, o) => a.invoke("npc:save-avatar", e, o)
   },
   tables: {
-    listUniverses: () => ipcRenderer.invoke("tables:list-universes"),
-    listTables: (universe) => ipcRenderer.invoke("tables:list-tables", universe),
-    loadTable: (universe, tableName) => ipcRenderer.invoke("tables:load-table", universe, tableName)
+    listUniverses: () => a.invoke("tables:list-universes"),
+    listTables: (e) => a.invoke("tables:list-tables", e),
+    loadTable: (e, o) => a.invoke("tables:load-table", e, o)
   },
   web: {
-    openExternal: (url) => ipcRenderer.send("web:open-external", url),
-    saveList: (data) => ipcRenderer.invoke("web:save-list", data),
-    loadList: () => ipcRenderer.invoke("web:load-list")
+    openExternal: (e) => a.send("web:open-external", e),
+    saveList: (e) => a.invoke("web:save-list", e),
+    loadList: () => a.invoke("web:load-list")
   },
   image: {
-    getDisplays: () => ipcRenderer.invoke("image:get-displays"),
-    syncHubData: (type, data) => ipcRenderer.send("image:sync-hub-data", type, data),
-    launchDisplay: (paths, target) => ipcRenderer.send("image:launch-display", paths, target),
-    closeAllDisplays: () => ipcRenderer.send("image:close-all-displays")
+    getDisplays: () => a.invoke("image:get-displays"),
+    syncHubData: (e, o) => a.send("image:sync-hub-data", e, o),
+    launchDisplay: (e, o) => a.send("image:launch-display", e, o),
+    closeAllDisplays: () => a.send("image:close-all-displays")
   },
   sound: {
-    loadAudios: () => ipcRenderer.invoke("sound:load-audios")
+    loadAudios: () => a.invoke("sound:load-audios")
   },
   tactical: {
-    listSounds: () => ipcRenderer.invoke("tactical:list-sounds")
+    listSounds: () => a.invoke("tactical:list-sounds")
   },
   light: {
-    request: (url, method, body) => ipcRenderer.invoke("light:request", url, method, body)
+    request: (e, o, n) => a.invoke("light:request", e, o, n)
   },
   clock: {
-    listCalendars: () => ipcRenderer.invoke("clock:list-calendars"),
-    loadCalendar: (id) => ipcRenderer.invoke("clock:load-calendar", id)
+    listCalendars: () => a.invoke("clock:list-calendars"),
+    loadCalendar: (e) => a.invoke("clock:load-calendar", e)
   },
   utils: {
-    formatFileUrl: (path) => {
-      if (!path) return "";
-      if (path.includes("://") || path.startsWith("data:")) return path;
-      const normalized = path.replace(/\\/g, "/");
-      return `file:///${encodeURI(normalized).replace(/#/g, "%23").replace(/\?/g, "%3F")}`;
+    formatFileUrl: (e) => {
+      if (!e) return "";
+      if (e.includes("://") || e.startsWith("data:")) return e;
+      const o = e.replace(/\\/g, "/");
+      return `file:///${encodeURI(o).replace(/#/g, "%23").replace(/\?/g, "%3F")}`;
     }
   },
   ai: {
-    listDocs: () => ipcRenderer.invoke("ai:list-docs"),
-    readDoc: (filePath) => ipcRenderer.invoke("ai:read-doc", filePath),
-    writeDoc: (filePath, content) => ipcRenderer.invoke("ai:write-doc", filePath, content),
-    extractPDF: (filePath) => ipcRenderer.invoke("ai:extract-pdf", filePath),
-    proxyRequest: (url, method, headers, body) => ipcRenderer.invoke("ai:proxy-request", url, method, headers, body),
-    searchContext: (systemId, campaignName) => ipcRenderer.invoke("ai:search-context", systemId, campaignName),
-    reindex: (customPath) => ipcRenderer.invoke("ai:reindex", customPath),
+    listDocs: () => a.invoke("ai:list-docs"),
+    readDoc: (e) => a.invoke("ai:read-doc", e),
+    writeDoc: (e, o) => a.invoke("ai:write-doc", e, o),
+    extractPDF: (e) => a.invoke("ai:extract-pdf", e),
+    proxyRequest: (e, o, n, t) => a.invoke("ai:proxy-request", e, o, n, t),
+    searchContext: (e, o) => a.invoke("ai:search-context", e, o),
+    reindex: (e) => a.invoke("ai:reindex", e),
     // Ollama Local AI
-    ollamaChat: (model, messages, endpoint) => ipcRenderer.invoke("ai:ollama-chat", model, messages, endpoint),
-    ollamaChatStream: (model, messages, endpoint) => ipcRenderer.invoke("ai:ollama-chat-stream", model, messages, endpoint),
-    ollamaStatus: (endpoint) => ipcRenderer.invoke("ai:ollama-status", endpoint),
-    ollamaListModels: (endpoint) => ipcRenderer.invoke("ai:ollama-list-models", endpoint),
-    ollamaPull: (model, endpoint) => ipcRenderer.invoke("ai:ollama-pull", model, endpoint),
-    ollamaGenerateImage: (model, prompt, endpoint) => ipcRenderer.invoke("ai:ollama-generate-image", model, prompt, endpoint),
-    onStreamToken: (callback) => {
-      const listener = (_event, token) => callback(token);
-      ipcRenderer.on("ai:ollama-stream-token", listener);
-      return () => ipcRenderer.off("ai:ollama-stream-token", listener);
+    ollamaChat: (e, o, n) => a.invoke("ai:ollama-chat", e, o, n),
+    ollamaChatStream: (e, o, n) => a.invoke("ai:ollama-chat-stream", e, o, n),
+    ollamaStatus: (e) => a.invoke("ai:ollama-status", e),
+    ollamaListModels: (e) => a.invoke("ai:ollama-list-models", e),
+    ollamaPull: (e, o) => a.invoke("ai:ollama-pull", e, o),
+    ollamaGenerateImage: (e, o, n) => a.invoke("ai:ollama-generate-image", e, o, n),
+    onStreamToken: (e) => {
+      const o = (n, t) => e(t);
+      return a.on("ai:ollama-stream-token", o), () => a.off("ai:ollama-stream-token", o);
     }
   },
   mcp: {
-    listTools: (serverName) => ipcRenderer.invoke("mcp:list-tools", serverName),
-    callTool: (serverName, toolName, args) => ipcRenderer.invoke("mcp:call-tool", serverName, toolName, args),
-    reauthenticate: () => ipcRenderer.invoke("mcp:reauthenticate"),
-    restart: () => ipcRenderer.invoke("mcp:restart")
+    listTools: (e) => a.invoke("mcp:list-tools", e),
+    callTool: (e, o, n) => a.invoke("mcp:call-tool", e, o, n),
+    reauthenticate: () => a.invoke("mcp:reauthenticate"),
+    restart: () => a.invoke("mcp:restart")
   },
   obsidian: {
-    listNotes: (vaultPath) => ipcRenderer.invoke("obsidian:list-notes", vaultPath),
-    readNote: (relativePath, vaultPath) => ipcRenderer.invoke("obsidian:read-note", relativePath, vaultPath),
-    writeNote: (relativePath, content, vaultPath) => ipcRenderer.invoke("obsidian:write-note", relativePath, content, vaultPath),
-    ensureDirectory: (relativePath, vaultPath) => ipcRenderer.invoke("obsidian:ensure-directory", relativePath, vaultPath),
-    selectVault: () => ipcRenderer.invoke("obsidian:select-vault")
+    listNotes: (e) => a.invoke("obsidian:list-notes", e),
+    readNote: (e, o) => a.invoke("obsidian:read-note", e, o),
+    writeNote: (e, o, n) => a.invoke("obsidian:write-note", e, o, n),
+    ensureDirectory: (e, o) => a.invoke("obsidian:ensure-directory", e, o),
+    selectVault: () => a.invoke("obsidian:select-vault")
   },
   remote: {
-    getConnectionInfo: () => ipcRenderer.invoke("remote:get-connection-info"),
-    onAction: (callback) => {
-      const listener = (_event, data) => callback(data);
-      ipcRenderer.on("remote:action", listener);
-      return () => ipcRenderer.off("remote:action", listener);
+    getConnectionInfo: () => a.invoke("remote:get-connection-info"),
+    onAction: (e) => {
+      const o = (n, t) => e(t);
+      return a.on("remote:action", o), () => a.off("remote:action", o);
     },
-    removeActions: () => ipcRenderer.removeAllListeners("remote:action"),
-    sendSync: (data) => ipcRenderer.send("remote:broadcast-sync", data),
-    broadcastUIAction: (action) => ipcRenderer.send("remote:broadcast-ui-action", action),
-    cacheMedia: (buffer, id) => ipcRenderer.invoke("remote:cache-media", buffer, id)
+    removeActions: () => a.removeAllListeners("remote:action"),
+    sendSync: (e) => a.send("remote:broadcast-sync", e),
+    broadcastUIAction: (e) => a.send("remote:broadcast-ui-action", e),
+    cacheMedia: (e, o) => a.invoke("remote:cache-media", e, o)
   },
   logger: {
-    info: (message, ...args) => ipcRenderer.send("log:message", "info", message, ...args),
-    warn: (message, ...args) => ipcRenderer.send("log:message", "warn", message, ...args),
-    error: (message, ...args) => ipcRenderer.send("log:message", "error", message, ...args),
-    debug: (message, ...args) => ipcRenderer.send("log:message", "debug", message, ...args)
+    info: (e, ...o) => a.send("log:message", "info", e, ...o),
+    warn: (e, ...o) => a.send("log:message", "warn", e, ...o),
+    error: (e, ...o) => a.send("log:message", "error", e, ...o),
+    debug: (e, ...o) => a.send("log:message", "debug", e, ...o)
   },
   security: {
-    getSecret: (id) => ipcRenderer.invoke("security:get-secret", id),
-    saveSecret: (id, value) => ipcRenderer.invoke("security:set-secret", id, value),
-    deleteSecret: (id) => ipcRenderer.invoke("security:delete-secret", id)
+    getSecret: (e) => a.invoke("security:get-secret", e),
+    saveSecret: (e, o) => a.invoke("security:set-secret", e, o),
+    deleteSecret: (e) => a.invoke("security:delete-secret", e)
   },
   git: {
-    getStatus: () => ipcRenderer.invoke("git:status"),
-    setupBranch: (branchName) => ipcRenderer.invoke("git:setup-branch", branchName),
-    syncData: (targetDir, branchName, message) => ipcRenderer.invoke("git:sync", targetDir, branchName, message),
-    saveData: (data) => ipcRenderer.invoke("backup:save-data", data)
+    getStatus: () => a.invoke("git:status"),
+    setupBranch: (e) => a.invoke("git:setup-branch", e),
+    syncData: (e, o, n) => a.invoke("git:sync", e, o, n),
+    saveData: (e) => a.invoke("backup:save-data", e)
   },
   nexus: {
-    selectExportPath: (bundleType) => ipcRenderer.invoke("nexus:select-export-path", bundleType),
-    selectImportFile: () => ipcRenderer.invoke("nexus:select-import-file"),
+    selectExportPath: (e) => a.invoke("nexus:select-export-path", e),
+    selectImportFile: () => a.invoke("nexus:select-import-file"),
     // Streaming d'un seul asset vers le main process (évite la limite de taille IPC)
-    registerAsset: (mediaHubId, dataUrl) => ipcRenderer.invoke("nexus:register-asset", mediaHubId, dataUrl),
-    clearAssets: () => ipcRenderer.invoke("nexus:clear-assets"),
-    exportBundle: (contextId, outputPath, stateJson, manifestJson, assetRefs) => ipcRenderer.invoke("nexus:export-bundle", contextId, outputPath, stateJson, manifestJson, assetRefs),
-    importBundle: (filePath) => ipcRenderer.invoke("nexus:import-bundle", filePath)
+    registerAsset: (e, o) => a.invoke("nexus:register-asset", e, o),
+    clearAssets: () => a.invoke("nexus:clear-assets"),
+    exportBundle: (e, o, n, t, s) => a.invoke("nexus:export-bundle", e, o, n, t, s),
+    importBundle: (e) => a.invoke("nexus:import-bundle", e)
   }
 });

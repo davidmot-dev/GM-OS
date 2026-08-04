@@ -1,4 +1,10 @@
-# 🗺️ Roadmap : Évolution GM-OS v5
+# 🗺️ Roadmap : Évolution GM-OS (Electron, série 6.x)
+
+> [!WARNING]
+> **Numérotation** : les jalons notés « v7.0.1 » à « v7.0.6 » ci-dessous décrivent du travail
+> **Electron**, antérieur à la convention de versionnage — les lire comme des jalons 6.5.x.
+> La série 7.x est réservée à la branche Tauri `GM-OS_v7_P2P`.
+> Détail : **[Convention de versionnage](../VERSIONING.md)**.
 
 Ce document trace la trajectoire du projet, des jalons franchis aux futures innovations planifiées par la BMAD Team.
 

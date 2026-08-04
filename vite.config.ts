@@ -4,9 +4,15 @@ import react from '@vitejs/plugin-react'
 import electron from 'vite-plugin-electron'
 import renderer from 'vite-plugin-electron-renderer'
 import { VitePWA } from 'vite-plugin-pwa'
+import pkg from './package.json'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  // Source unique de verite pour la version affichee : package.json.
+  // Evite la derive entre les differents ecrans (Shell, splash, lobby tablette).
+  define: {
+    __APP_VERSION__: JSON.stringify(pkg.version),
+  },
   server: {
     host: '0.0.0.0',
     port: 5173,
