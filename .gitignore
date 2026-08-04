@@ -52,8 +52,13 @@ dist-electron/
 release/
 src-tauri/target/
 src-tauri/bin/
-v7-migration/src-tauri/target/
-v7-migration/node_modules/
-v7-migration/dist/
 *.bak
 crash.log
+
+# Copies redondantes retirees du suivi git (2026-08-05)
+# - v7-migration/ : miroir du code Electron, superflu depuis que le travail
+#   Tauri vit sur la branche GM-OS_v7_P2P (worktree C:/Projet_David/GM-OS-v7)
+# - backups/ : remplace par les tags et branches git
+# Contenu toujours recuperable via l'historique : git show 84fa2e6:v7-migration/...
+v7-migration/
+backups/

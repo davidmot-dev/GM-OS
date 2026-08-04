@@ -1,8 +1,0 @@
-{
-    "firstNames": ["Prénom 1", "Prénom 2"],
-    "lastNames": ["Nom 1", "Nom 2", ""],
-    "jobs": ["Métier ou Rôle 1", "Métier 2"],
-    "traits": ["Amical mais paranoïaque", "Froid et calculateur"],
-    "looks": ["Cicatrice sur l'œil droit", "Porte des vêtements déchirés"],
-    "secrets": ["Travaille pour l'ennemi", "A une dette énorme"]
-}
