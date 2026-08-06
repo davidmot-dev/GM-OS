@@ -53,8 +53,31 @@ class AudioContextMock {
         connect: vi.fn(),
         disconnect: vi.fn(),
     }));
+    createMediaStreamDestination = vi.fn(() => ({
+        stream: { id: 'mock-stream', getAudioTracks: () => [] },
+        connect: vi.fn(),
+        disconnect: vi.fn(),
+    }));
+    createMediaElementSource = vi.fn(() => ({
+        connect: vi.fn(),
+        disconnect: vi.fn(),
+    }));
+    createStereoPanner = vi.fn(() => ({
+        pan: { value: 0, setValueAtTime: vi.fn() },
+        connect: vi.fn(),
+        disconnect: vi.fn(),
+    }));
+    createBiquadFilter = vi.fn(() => ({
+        type: 'lowpass',
+        frequency: { value: 350, setValueAtTime: vi.fn(), linearRampToValueAtTime: vi.fn() },
+        Q: { value: 1, setValueAtTime: vi.fn() },
+        connect: vi.fn(),
+        disconnect: vi.fn(),
+    }));
     decodeAudioData = vi.fn().mockResolvedValue({});
     resume = vi.fn().mockResolvedValue(undefined);
+    suspend = vi.fn().mockResolvedValue(undefined);
+    close = vi.fn().mockResolvedValue(undefined);
     destination = {};
 }
 
@@ -86,7 +109,17 @@ vi.stubGlobal('appBridge', {
 });
 
 // Mock IndexedDB and idb library globally
+// Les raccourcis get/put/delete/clear existent sur IDBPDatabase et sont utilisés
+// directement (idbStorage) : sans eux, toute lecture d'état echouerait en test.
+const mockKeyval = new Map<string, unknown>();
 const mockDatabase = {
+    objectStoreNames: { contains: () => true },
+    createObjectStore: vi.fn(),
+    get: vi.fn(async (_store: string, key: string) => mockKeyval.get(key)),
+    getAll: vi.fn(async () => []),
+    put: vi.fn(async (_store: string, value: unknown, key: string) => { mockKeyval.set(key, value); }),
+    delete: vi.fn(async (_store: string, key: string) => { mockKeyval.delete(key); }),
+    clear: vi.fn(async () => { mockKeyval.clear(); }),
     transaction: vi.fn(() => ({
         objectStore: vi.fn(() => ({
             getAll: vi.fn().mockResolvedValue([]),

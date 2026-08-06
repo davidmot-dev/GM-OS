@@ -7,25 +7,20 @@ import ErrorBoundary from './components/common/ErrorBoundary';
 import LoadingOverlay from './components/common/LoadingOverlay';
 
 // --- STORES (Safe for Web) ---
-import { useSoundStore } from './modules/sound/useSoundStore';
-import { useStoryboardStore } from './modules/storyboard/useStoryboardStore';
+// Les stores propres au traitement des actions distantes sont désormais
+// importés par les handlers, dans modules/remote/actions.
 import { useMapStore } from './modules/map/useMapStore';
 import { useCombatStore } from './modules/combat/useCombatStore';
 import { useSessionOSStore } from './modules/session/useSessionOSStore';
-import { useWhiteboardStore, type Point, type DrawingPath, type WhiteboardTool } from './modules/whiteboard/useWhiteboardStore';
-import { useMusicStore } from './modules/music/useMusicStore';
-import { useImageStore } from './modules/image/useImageStore';
-import { useAmbientStore } from './modules/ambient/useAmbientStore';
-import { useDiceStore } from './stores/useDiceStore';
 import { useAIStore } from './stores/useAIStore';
 import { useLightStore } from './modules/light/useLightStore';
 import { BootstrapService } from './modules/system/logic/BootstrapService';
 import { useHydration } from './hooks/useHydration';
 import { useHueAutoConnect } from './modules/light/hooks/useHueAutoConnect';
-import { DiceEngine } from './modules/dice/DiceEngine';
 import { useDisplayDetection } from './hooks/useDisplayDetection';
 import { useNexusSynchronizer } from './modules/remote/hooks/useNexusSynchronizer';
 import { crossWindowSync } from './services/CrossWindowEventService';
+import { dispatchRemoteAction } from './modules/remote/actions';
 
 interface RemoteAction {
   type: string;
@@ -154,273 +149,9 @@ function App() {
   }, [isMainPC]);
 
   const handleAction = useCallback((data: RemoteAction) => {
-    const { type, payload } = data;
-    
-    console.log(`[App] [RemoteAction] type: ${type}`, payload);
-
-    // --- DICE ACTIONS ---
-    if (type === 'dice:roll' || type === 'remote:dice:roll') {
-      const p = payload as { 
-        sides?: number, 
-        die?: number, 
-        count?: number, 
-        modifier?: number, 
-        mode?: string, 
-        target?: number, 
-        title?: string, 
-        formula?: string,
-        gearCount?: number, 
-        useSystem?: boolean 
-      };
-      const sides = p.sides || p.die || 20;
-      const count = p.count || 1;
-      const modifier = p.modifier || 0;
-      const mode = p.mode || 'standard';
-      const target = p.target || 10;
-      
-      console.log(`[App] Global Dice Roll: ${count}d${sides} (${mode})`);
-      
-      const activeDriver = sessionOSStore.getActiveDriver();
-      let result;
-      let finalTitle = p.title || `${count}d${sides}`;
-
-      // 1. Priorité au Mode Système si explicitement demandé
-      if (p.useSystem && activeDriver) {
-        result = DiceEngine.rollFromConfig(activeDriver.dice, {
-          modifier,
-          baseCount: count,
-          gearCount: p.gearCount || 0,
-          targetOverwrite: target
-        });
-        finalTitle = p.title || `Système (${activeDriver.name})`;
-      } else {
-        // 2. Fallback sur la logique manuelle étendue
-        switch (mode) {
-          case 'standard': 
-            result = DiceEngine.rollStandard(sides, count, modifier); 
-            break;
-          case 'exploding': 
-            result = DiceEngine.rollStandard(sides, count, modifier, true); 
-            break;
-          case 'threshold': 
-            result = DiceEngine.rollThreshold(sides, count, modifier, target); 
-            break;
-          case 'pool': 
-            result = DiceEngine.rollPool(sides, count, modifier, target); 
-            break;
-          case 'pool_explode': 
-            result = DiceEngine.rollPool(sides, count, modifier, target, true); 
-            break;
-          case 'advantage': 
-            result = DiceEngine.rollAdvantage(sides, modifier, true, target); 
-            break;
-          case 'disadvantage': 
-            result = DiceEngine.rollAdvantage(sides, modifier, false, target); 
-            break;
-          case 'yze': 
-            result = DiceEngine.rollYZE(count, p.target || p.gearCount || 0); 
-            break;
-          case 'fate': 
-            result = DiceEngine.rollFate(count, modifier); 
-            break;
-          case 'rolemaster': 
-            result = DiceEngine.rollRolemaster(modifier); 
-            break;
-          case 'formula':
-            result = DiceEngine.rollFormula(p.formula || p.title || '1d20'); 
-            break;
-          default: 
-            result = DiceEngine.rollStandard(sides, count, modifier);
-        }
-      }
-
-      const record = {
-        ...result,
-        id: Math.random().toString(36).substring(7),
-        timestamp: new Date(),
-        title: finalTitle
-      };
-
-      const diceStore = useDiceStore.getState();
-      diceStore.setLastRoll(record);
-
-      if (diceStore.isDiceProjected) {
-        diceStore.triggerDiceProjection();
-      }
-    }
-    
-    if (type === 'dice:clear' || type === 'remote:dice:clear' || type === 'remote:dice:clear-dice') {
-      console.log('[App] Global Clear Dice action');
-      useDiceStore.getState().clearHistory();
-    }
-
-    // --- SYNC ACTIONS ---
-    if (type === 'remote:request-sync') {
-      console.log('[App] Forced sync request from tablet');
-      handleSync(true); // Force full sync broadcast
-    }
-
-    // --- SOUND ACTIONS ---
-    if (type === 'sound:trigger' || type === 'remote:sound:trigger') {
-        const soundId = (payload as { id?: string }).id || (payload as { padId?: string }).padId || '';
-        console.log(`[App] Remote Trigger Sound (+Lights): ${soundId}`, payload);
-        if (soundId) {
-            import('./modules/sound/SoundController').then(({ soundController }) => {
-                soundController.togglePad(soundId);
-            });
-        }
-    }
-    if (type === 'sound:volume' || type === 'remote:sound:volume') {
-        useSoundStore.getState().setMasterVolume((payload as { volume: number }).volume);
-    }
-    if (type === 'sound:stop-all' || type === 'remote:sound:stop-all') {
-        useSoundStore.getState().stopAllPads();
-    }
-    
-    // --- COMBAT ACTIONS ---
-    if (type === 'combat:update-hp' || type === 'remote:combat:hp') {
-      const { id, delta } = payload as { id: string; delta: number };
-      const c = useCombatStore.getState().combatants.find(c => c.id === id);
-      if (c) useCombatStore.getState().updateCombatant(id, { hp: Math.min(c.hpMax, Math.max(0, c.hp + delta)) });
-    }
-    if (type === 'combat:next-turn' || type === 'remote:combat:next') {
-      useCombatStore.getState().nextTurn();
-    }
-
-    // --- SESSION ACTIONS ---
-    if (type === 'session:update-character-narrative' || type === 'remote:session:update-character-narrative') {
-      const { playerId, characterId, updates } = payload as { playerId: string; characterId: string; updates: any };
-      useSessionOSStore.getState().updateCharacterNarrative(playerId, characterId, updates);
-    }
-
-    if (type === 'session:submit-feedback' || type === 'remote:session:submit-feedback') {
-      const { sessionId, feedback } = payload as { sessionId: string; feedback: any };
-      useSessionOSStore.getState().submitSessionFeedback(sessionId, feedback);
-    }
-
-    if (type === 'session:send-message' || type === 'session:receive-message') {
-      console.log(`[App] Receiving message action (${type}):`, payload.id);
-      useSessionOSStore.getState().addSessionMessage(payload as import('./modules/session/store/types').SessionMessage);
-    }
-
-    if (type === 'session:request-item-transfer' || type === 'remote:session:request-item-transfer') {
-      const { fromCharId, toCharId, item } = payload as { fromCharId: string; toCharId: string; item: any };
-      console.log(`[App] Receiving transfer request: ${item.name} from ${fromCharId} to ${toCharId}`);
-      useSessionOSStore.getState().requestItemTransfer(fromCharId, toCharId, item);
-    }
-
-    if (type === 'session:approve-item-transfer' || type === 'remote:session:approve-item-transfer') {
-      const { requestId } = payload as { requestId: string };
-      useSessionOSStore.getState().approveItemTransfer(requestId);
-    }
-
-    if (type === 'session:reject-item-transfer' || type === 'remote:session:reject-item-transfer') {
-      const { requestId } = payload as { requestId: string };
-      useSessionOSStore.getState().rejectItemTransfer(requestId);
-    }
-
-    if (type === 'session:remove-inventory-item' || type === 'remote:session:remove-inventory-item') {
-      const { playerId, characterId, itemId } = payload as { playerId: string; characterId: string; itemId: string };
-      useSessionOSStore.getState().removeInventoryItem(playerId, characterId, itemId);
-    }
-
-    if (type === 'storyboard:trigger' || type === 'remote:story:trigger') {
-      const storyboard = useStoryboardStore.getState();
-      const moments = storyboard.moments.filter(m => m.campaignId === activeCampaignId);
-      const m = moments[(payload as { index: number }).index];
-      if (m) storyboard.triggerMoment(m.id);
-    }
-
-    if (type === 'whiteboard:set-laser-pointer') {
-      useWhiteboardStore.getState().setLaserPointer(payload as unknown as Point);
-    }
-    if (type === 'whiteboard:set-active-path') {
-      useWhiteboardStore.getState().setActivePath((payload as { path: DrawingPath }).path, (payload as { drawerId: string }).drawerId);
-    }
-    if (type === 'whiteboard:draw' || type === 'whiteboard:add-path') {
-      useWhiteboardStore.getState().addPath(payload as unknown as DrawingPath);
-    }
-    if (type === 'whiteboard:set-tool') {
-      useWhiteboardStore.getState().setTool(payload as WhiteboardTool);
-    }
-    if (type === 'whiteboard:set-color') {
-      useWhiteboardStore.getState().setColor(payload as string);
-    }
-    if (type === 'whiteboard:set-width') {
-      useWhiteboardStore.getState().setWidth(payload as number);
-    }
-    if (type === 'whiteboard:clear') {
-      useWhiteboardStore.getState().clearBoard();
-    }
-    if (type === 'whiteboard:undo') {
-      useWhiteboardStore.getState().undo();
-    }
-    if (type === 'whiteboard:redo') {
-      useWhiteboardStore.getState().redo();
-    }
-
-    if (type === 'map:ping' || type === 'remote:map:ping') {
-      const { x, y, color } = payload as { x: number; y: number; color?: string };
-      console.log(`[App] Remote Map Ping: (${x}, ${y})`);
-      useMapStore.getState().addPing(x, y, color || '#06b6d4');
-      // No need for handleSync(true) here as addPing handles its own sync if needed,
-      // and we want to avoid flooding for high-frequency pings.
-    }
-
-    // --- UNIVERSAL PADS TRIGGER ---
-    if (type === 'remote:pad:trigger' || type === 'universal:trigger') {
-      const { id } = payload as { id: string };
-      console.log(`[App] [Remote:Pad:Trigger] id: ${id}`);
-
-      // 1. Check Music
-      const musicStore = useMusicStore.getState();
-      const musicPad = musicStore.playlists.flatMap(p => p.pads).find(p => p.id === id);
-      if (musicPad) {
-        console.log(`[App] Triggering Music Pad: ${musicPad.label}`);
-        musicStore.playPad(musicPad);
-        handleSync(true);
-        return;
-      }
-
-      // 2. Check Sound (SFX)
-      const soundStore = useSoundStore.getState();
-      const activeAtmos = soundStore.atmospheres.find(a => a.id === soundStore.activeAtmosphereId) || soundStore.atmospheres[0];
-      if (activeAtmos && activeAtmos.pads[id]) {
-          console.log(`[App] Triggering Sound Pad: ${id}`);
-          import('./modules/sound/SoundController').then(({ soundController }) => {
-              soundController.togglePad(id);
-          });
-          handleSync(true);
-          return;
-      }
-
-      // 3. Check Image
-      const imageStore = useImageStore.getState();
-      const image = imageStore.mediaList.find(m => m.id === id);
-      if (image) {
-        console.log(`[App] Triggering Image Pad (Projection): ${image.name}`);
-        imageStore.projectSolo(image);
-        handleSync(true);
-        return;
-      }
-
-      // 4. Check Ambient
-      const ambientStore = useAmbientStore.getState();
-      const ambientPreset = ambientStore.presets.find(p => p.id === id);
-      if (ambientPreset) {
-        console.log(`[App] Triggering Ambient Preset: ${ambientPreset.name}`);
-        ambientStore.loadTheme(ambientPreset.universe, ambientPreset.name);
-        handleSync(true);
-        return;
-      }
-    }
-
-    // Trigger an immediate sync after any remote action, EXCEPT high-frequency ones
-    const highFreqActions = ['whiteboard:set-active-path', 'whiteboard:set-laser-pointer'];
-    if (!highFreqActions.includes(type)) {
-      handleSync(true);
-    }
+    dispatchRemoteAction(data, { activeCampaignId, sync: handleSync });
   }, [activeCampaignId, handleSync]);
+
 
   // Handle Remote Sync and Actions (Only on Main PC Window)
   useEffect(() => {

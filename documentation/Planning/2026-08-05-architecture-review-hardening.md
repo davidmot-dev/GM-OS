@@ -13,7 +13,7 @@
 | 4 | `ignore-certificate-errors` global | Élevée | ✅ Fait |
 | 5 | Store session en localStorage (plafond ~5-10 Mo) | Élevée | ✅ Fait |
 | 6 | Segment de sync `session` monolithique + médias en base64 | Moyenne | ⬜ À faire |
-| 7 | `handleAction` — ~270 lignes de `if` en série | Moyenne | ⬜ À faire |
+| 7 | `handleAction` — ~270 lignes de `if` en série | Moyenne | ✅ Fait |
 | 8 | Couche de synchronisation non testée | Moyenne | ⬜ À faire |
 
 ---
@@ -222,10 +222,43 @@ Le segment `session` part d'un bloc, et les médias voyagent en base64 **dans le
 Chaque petite modification retransmet donc tout. À découper en segments, et à remplacer
 les médias embarqués par des références.
 
-## 7. `handleAction` — 270 lignes de `if` ⬜
+## 7. `handleAction` — 270 lignes de `if` ✅
 
-Dans `App.tsx`, `handleAction` est une série d'environ 270 lignes de `if` successifs.
-À extraire en registre d'actions (table `type` → handler).
+**Le problème.** `handleAction` occupait les lignes 156 à 423 d'`App.tsx` en une suite de
+`if` indépendants. Au-delà de la lisibilité, la liste de ce que l'application accepte
+d'exécuter **sur ordre du réseau** n'était énoncée nulle part : il fallait la déduire en
+lisant 270 lignes.
+
+**Fait.** Registre `modules/remote/actions/`, un fichier par domaine — `diceActions`,
+`audioActions`, `combatActions`, `sessionActions`, `whiteboardActions`, `sceneActions` —
+regroupés dans `index.ts`. `App.tsx` passe de **482 à 235 lignes**, et huit imports de
+stores devenus inutiles disparaissent : ils appartiennent aux handlers.
+
+`dispatchRemoteAction` ignore et signale tout type absent du registre — c'est la liste
+explicite promise au point 3. La recherche passe par `hasOwnProperty` : un accès direct
+aurait laissé un client envoyer `type: "constructor"` et atteindre le prototype. Un handler
+qui échoue est absorbé, sans emporter la boucle de réception.
+
+**Équivalences vérifiées avant découpage.** Aucun type n'était traité par deux `if`
+distincts, donc un handler unique par type est fidèle. Le cas des pads universels
+paraissait devoir conserver son `return` anticipé : en réalité la branche synchronisait
+puis sortait, et la sortie sautait la synchronisation finale — un seul envoi dans les deux
+cas, exactement comme sans le `return`.
+
+**Un écart assumé.** `remote:request-sync` déclenchait deux diffusions complètes, une dans
+sa branche et une à la fin. Il n'en déclenche plus qu'une. La diffusion étant idempotente,
+la seule différence est le trafic économisé.
+
+**Corrigé au passage.** Le mock d'`AudioContext` de `src/test/setup.ts` ne couvrait pas
+`createMediaStreamDestination`, ce qui faisait échouer tout test important `MusicEngine`
+même indirectement. Le mock `idb` global n'exposait pas non plus les raccourcis
+`get`/`put`/`delete`, utilisés directement par `idbStorage`.
+
+**Reste ouvert : l'autorisation.** Le registre borne *ce qui* est exécutable, pas *par
+qui*. `forwardToGM` relaie toujours vers le renderer les actions de n'importe quel client
+connecté, appairé ou non : une tablette non appairée peut donc déclencher
+`whiteboard:clear` ou `combat:next-turn`. C'est une question d'autorisation par rôle,
+distincte du typage, et elle n'est pas traitée.
 
 ## 8. Couche de synchronisation non testée ⬜
 
