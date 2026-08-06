@@ -4,14 +4,34 @@ import { withTimeout } from './promiseUtils';
 const mediaCache = new Map<string, string>();
 
 /**
- * Médias déjà déposés dans le cache disque du poste MJ pour cette session.
+ * Médias déjà déposés dans le cache disque du poste MJ.
  *
- * Le dossier temp-media est vidé au démarrage de l'application, et ce module
- * vit dans le même processus : les deux durées de vie coïncident.
+ * Cette mémoire ne vaut que pour un contenu donné de `temp-media`, que le
+ * process principal vide à chaque démarrage. Les deux durées de vie ne
+ * coïncident pas forcément — croire le contraire fait publier des références
+ * vers des fichiers effacés, qui répondent 404 sur les tablettes.
+ * `mediaEpoch` sert de témoin : quand il change, on repart de zéro.
  */
 const publishedToServer = new Set<string>();
+let knownMediaEpoch: string | null = null;
 
-interface ConnectionInfo { ip: string; port: number; mediaPort?: number }
+interface ConnectionInfo { ip: string; port: number; mediaPort?: number; mediaEpoch?: string }
+
+/** Oublie ce qu'on croyait déposé si le cache disque a été vidé entre-temps. */
+function syncMediaEpoch(conn: ConnectionInfo) {
+    const epoch = conn.mediaEpoch ?? null;
+    if (epoch === knownMediaEpoch) return;
+
+    if (knownMediaEpoch !== null) {
+        console.log('[MediaResolver] Cache disque du MJ renouvelé, redépôt des médias.');
+        publishedToServer.clear();
+        // Les URL mémorisées pointent vers des fichiers qui n'existent plus.
+        for (const [key, value] of mediaCache) {
+            if (value.includes('/temp/')) mediaCache.delete(key);
+        }
+    }
+    knownMediaEpoch = epoch;
+}
 
 /** Base des URL de médias : toujours le port du SyncServer, jamais celui de Vite. */
 function mediaOrigin(conn: ConnectionInfo): string {
@@ -24,6 +44,7 @@ async function getLanConnection(): Promise<ConnectionInfo | null> {
     try {
         const conn = await window.appBridge.remote.getConnectionInfo();
         if (!conn?.ip || !conn.port) return null;
+        syncMediaEpoch(conn);
         if (conn.ip === '127.0.0.1' || conn.ip === 'localhost') return null;
         return conn;
     } catch (e) {
@@ -77,8 +98,13 @@ export async function resolveToSendableUrl(src: string | undefined): Promise<str
     const isMediaId = src.startsWith('m-') || /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i.test(src);
     
     if (isMediaId) {
+        // Avant de consulter le cache : si le poste MJ a vidé son dossier
+        // temporaire depuis, les URL mémorisées pointent vers du vide. C'est
+        // exactement le cas qu'un cache consulté trop tôt laisserait passer.
+        const conn = await getLanConnection();
+
         if (mediaCache.has(src)) return mediaCache.get(src)!;
-        
+
         console.log(`[MediaResolver] Resolving potential MediaID: ${src}`);
 
         try {
@@ -95,7 +121,6 @@ export async function resolveToSendableUrl(src: string | undefined): Promise<str
             // Voie préférée : déposer l'octet une fois et n'envoyer qu'une
             // référence. On ne retombe sur le base64 que sans réseau local
             // utilisable — poste isolé, ou pont applicatif absent.
-            const conn = await getLanConnection();
             if (conn) {
                 const url = await publishToServer(src, blob, conn);
                 if (url) {

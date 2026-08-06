@@ -166,6 +166,29 @@ describe('mediaResolver — médias par référence', () => {
         expect(await resolveToSendableUrl(id)).toBe(`http://192.168.0.211:3001/temp/${id}`);
     });
 
+    it('redépose les médias quand le cache disque du MJ a été vidé', async () => {
+        // Le dossier temp-media est vidé au démarrage du process principal.
+        // Sans ce contrôle, le renderer continue de publier des références vers
+        // des fichiers effacés, qui répondent 404 sur les tablettes.
+        const getConnectionInfo = vi.fn().mockResolvedValue({
+            ip: '192.168.0.211', port: 3001, mediaPort: 3001, mediaEpoch: 'epoque-1',
+        });
+        vi.stubGlobal('window', { appBridge: { remote: { getConnectionInfo, cacheMedia } } });
+
+        const id = freshId();
+        await resolveToSendableUrl(id);
+        await resolveToSendableUrl(id);
+        expect(cacheMedia).toHaveBeenCalledTimes(1);
+
+        getConnectionInfo.mockResolvedValue({
+            ip: '192.168.0.211', port: 3001, mediaPort: 3001, mediaEpoch: 'epoque-2',
+        });
+
+        const url = await resolveToSendableUrl(id);
+        expect(cacheMedia).toHaveBeenCalledTimes(2);
+        expect(url).toBe(`http://192.168.0.211:3001/temp/${id}`);
+    });
+
     it('retourne une chaîne vide si le média est introuvable en base', async () => {
         idb.get.mockResolvedValue(undefined);
 

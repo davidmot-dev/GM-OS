@@ -7,6 +7,7 @@ import { sessionManager } from './SessionManager';
 import { mediaAccess } from './MediaAccess';
 import { pairingManager } from './PairingManager';
 import { evaluateAction } from './actionPolicy';
+import { auditDenied } from './auditLog';
 
 export type ClientRole = 'gm' | 'remote' | 'player' | 'hub';
 
@@ -261,7 +262,7 @@ export class SyncServer {
         // gmSecretInfo). Le rôle étant déclaré par le client, seul le secret
         // d'appairage permet de l'accorder.
         if (PRIVILEGED_ROLES.includes(claimedRole) && !pairingManager.verify(token)) {
-            console.warn(`[Nexus Sync] Rôle '${claimedRole}' refusé à ${ws.remoteAddress} : appairage absent ou invalide`);
+            auditDenied(`Rôle '${claimedRole}' refusé à ${ws.remoteAddress} (appareil '${actualDeviceId}') : appairage absent ou invalide`);
             claimedRole = 'player';
             ws.send(JSON.stringify({
                 type: 'remote:error',
@@ -313,8 +314,8 @@ export class SyncServer {
         const verdict = evaluateAction(data?.type, data?.payload, ws.role, client?.characterId);
 
         if (!verdict.allowed) {
-            console.warn(
-                `[Nexus Sync] Action '${data?.type}' refusée (${verdict.reason}) — ` +
+            auditDenied(
+                `Action '${data?.type}' refusée (${verdict.reason}) — ` +
                 `rôle '${ws.role}', appareil '${ws.deviceId}', adresse ${ws.remoteAddress} : ${verdict.detail}`
             );
             return false;

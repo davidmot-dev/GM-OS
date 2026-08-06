@@ -2,6 +2,7 @@ import { app, ipcMain } from 'electron';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import fs from 'fs-extra';
+import { auditNotice } from './auditLog';
 
 /**
  * Secret d'appairage du poste MJ.
@@ -53,7 +54,7 @@ class PairingManager {
             // Secret en mémoire uniquement : l'appairage vaudra pour cette session.
             console.error('[Pairing] Écriture de pairing.json impossible:', err);
         }
-        console.log('[Pairing] Nouveau secret d\'appairage généré');
+        auditNotice('Nouveau secret d\'appairage généré : tous les appareils doivent re-scanner le QR code');
         return this.secret;
     }
 

@@ -46,7 +46,6 @@ describe('evaluateAction — refus par rôle', () => {
         'storyboard:trigger',
         'remote:sound:stop-all',
         'dice:roll',
-        'remote:request-sync',
     ];
 
     it('refuse à un joueur toute action hors de sa liste', () => {
@@ -78,8 +77,16 @@ describe('evaluateAction — actions permises aux joueurs', () => {
         expect(evaluateAction('session:submit-feedback', { sessionId: 's1', feedback: {} }, 'hub', CHAR).allowed).toBe(true);
     });
 
+    it('autorise la demande de resynchronisation', () => {
+        // Envoyée par le Tablet Hub à chaque connexion : la refuser laissait la
+        // tablette sans moyen de réclamer un état frais.
+        expect(evaluateAction('remote:request-sync', {}, 'hub', CHAR).allowed).toBe(true);
+        expect(evaluateAction('remote:request-sync', undefined, 'hub', undefined).allowed).toBe(true);
+    });
+
     it('couvre exactement la liste déclarée', () => {
         expect([...PLAYER_ALLOWED_ACTIONS].sort()).toEqual([
+            'remote:request-sync',
             'session:remove-inventory-item',
             'session:request-item-transfer',
             'session:send-message',

@@ -1,6 +1,7 @@
 import { app } from 'electron';
 import path from 'node:path';
 import fs from 'fs-extra';
+import { auditDenied } from './auditLog';
 
 /**
  * Registre des racines depuis lesquelles le SyncServer accepte de servir des fichiers.
@@ -119,7 +120,7 @@ class MediaAccessRegistry {
         }
 
         if (!this.isUnder(this.normalize(real), [...this.baseRoots, ...this.userRoots])) {
-            console.warn(`[MediaAccess] Accès refusé (hors racines autorisées): ${real}`);
+            auditDenied(`Accès fichier refusé, hors racines autorisées : ${real}`);
             return null;
         }
         return real;

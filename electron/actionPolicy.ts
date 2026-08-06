@@ -25,6 +25,10 @@ export const PLAYER_ALLOWED_ACTIONS: ReadonlySet<string> = new Set([
     'session:request-item-transfer',
     'session:remove-inventory-item',
     'session:submit-feedback',
+    // Envoyée par le Tablet Hub juste après son enregistrement (useHubSync).
+    // Elle ne demande que la rediffusion d'un état auquel le client a déjà
+    // droit, caviardé selon son rôle : aucun gain de privilège.
+    'remote:request-sync',
 ]);
 
 /** Rôles qui peuvent tout déclencher — ceux qui ont présenté le secret d'appairage. */

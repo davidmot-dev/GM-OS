@@ -418,9 +418,30 @@ ayant réclamé `gm` sans token se voit refuser les actions correspondantes.
 **Validation en conditions réelles (2026-08-06).** Contre l'application en fonctionnement,
 avec un client tablette simulé : le rôle `hub` est accordé, une connexion réclamant `gm`
 sans token est rétrogradée en `player` et reçoit un `remote:error` de code
-`pairing_required`. Les refus d'action eux-mêmes sont écrits sur la sortie standard du
-process principal — donc dans le terminal `npm run dev`, pas dans `main.log`, qu'electron-log
-n'alimente qu'à partir des appels `log.*`.
+`pairing_required`.
+
+**Les refus n'étaient consignés nulle part.** Ils sortaient en `console.warn`, et rien ne
+collecte la sortie standard du process principal : ni le terminal de développement, ni
+`main.log`, qu'electron-log n'alimente qu'à partir des appels `log.*` — et le seul appelant
+était le pont relayant les logs du renderer, muet depuis le 3 mai. Un refus sans trace ne
+vaut rien : le lendemain d'une partie, impossible de savoir si quelqu'un a tenté quelque
+chose. `electron/auditLog.ts` écrit désormais ces événements dans le fichier.
+
+**Ce que le journal a immédiatement révélé.** Dès sa mise en service, une régression sur la
+tablette réelle de David : `remote:request-sync` était refusée. Le Tablet Hub l'envoie juste
+après son enregistrement (`useHubSync`), mais mon relevé initial l'avait manquée — je
+cherchais `socketRef.current?.send` et celle-ci s'écrit `socket?.send`. L'action est
+désormais autorisée : elle ne demande que la rediffusion d'un état auquel le client a déjà
+droit, caviardé selon son rôle.
+
+La leçon vaut au-delà du correctif : une liste blanche établie par relevé d'expressions
+régulières a des angles morts, et c'est la journalisation qui les révèle — pas la relecture.
+
+**Risque connexe, non traité.** `remote:request-sync` déclenche `handleSync(true)`, qui
+contourne l'étranglement de 500 ms. Un client hostile peut donc forcer des diffusions
+complètes en rafale — 7,6 Mo chacune tant que le point 6 n'est pas terminé. Une limitation
+de débit par appareil serait à envisager ; l'urgence baissera d'elle-même quand le payload
+sera réduit.
 
 **Angle mort connu, assumé.** Les fenêtres locales — Player Hub, projecteur — n'empruntent
 pas la WebSocket mais le `BroadcastChannel` de `CrossWindowEventService` : elles échappent

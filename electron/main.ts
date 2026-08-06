@@ -113,6 +113,11 @@ let syncServer: SyncServer | null = null;
 const REMOTE_PORT = 3001;
 const TEMP_MEDIA_DIR = path.join(app.getPath('userData'), 'temp-media');
 
+// Marque le contenu courant de temp-media. Le dossier étant vidé au démarrage,
+// une nouvelle valeur signale au renderer que ce qu'il croyait déposé n'existe
+// plus. Voir remote:get-connection-info.
+const MEDIA_EPOCH = `${Date.now()}`;
+
 // Périmètre des fichiers que le SyncServer accepte d'exposer sur le réseau local.
 mediaAccess.init(APP_ROOT, TEMP_MEDIA_DIR);
 
@@ -576,7 +581,12 @@ ipcMain.handle('remote:get-connection-info', () => {
         // Port du proxy média : toujours celui du SyncServer, jamais celui de
         // Vite, qui ne sert ni /media/ ni /temp/ et répond son index.html à leur
         // place — une image qui arrive en text/html ne s'affiche pas.
-        mediaPort: REMOTE_PORT
+        mediaPort: REMOTE_PORT,
+        // Identifie le contenu courant de temp-media, vidé à chaque démarrage.
+        // Le renderer mémorise les médias qu'il y a déposés ; si cette valeur
+        // change, sa mémoire ne vaut plus rien et il doit redéposer, sans quoi
+        // il publie des références vers des fichiers effacés.
+        mediaEpoch: MEDIA_EPOCH
     };
 });
 
