@@ -53,7 +53,7 @@ vi.mock('../modules/whiteboard/useWhiteboardStore', () => ({ useWhiteboardStore:
 vi.mock('../store/useClockStore', () => ({ useClockStore: stores.clock }));
 vi.mock('../modules/combat/useCombatStore', () => ({ useCombatStore: stores.combat }));
 
-const { crossWindowSync } = await import('./CrossWindowEventService');
+const { crossWindowSync, stripProjectionTarget } = await import('./CrossWindowEventService');
 
 /** Le canal créé par le singleton à l'import. */
 const channel = () => channels[0] as FakeBroadcastChannel;
@@ -71,6 +71,11 @@ function receive(type: string, payload: any, senderId = 'autre-fenetre') {
 }
 
 beforeEach(() => {
+    // Rôle explicite à chaque test. Une fenêtre secondaire n'émet pas tant
+    // qu'elle n'a pas reçu l'état partagé (voir « garde de démarrage » plus bas) ;
+    // les tests de protocole ci-dessous portent sur l'émission, pas sur cette
+    // garde, et doivent donc partir d'une instance maître.
+    crossWindowSync.init(true);
     channel().posted.length = 0;
     stores.map.setState({});
     stores.mapUI.setState({});
@@ -78,6 +83,35 @@ beforeEach(() => {
 
 afterEach(() => {
     vi.useRealTimers();
+});
+
+describe('stripProjectionTarget', () => {
+    it('retire la cible de projection', () => {
+        expect(stripProjectionTarget({ paths: [], projectionTarget: null }))
+            .toEqual({ paths: [] });
+    });
+
+    it('ne modifie pas le payload d\'origine', () => {
+        // Le payload reçu peut être partagé avec d'autres destinataires.
+        const original = { paths: [], projectionTarget: 'hub' };
+        stripProjectionTarget(original);
+        expect(original.projectionTarget).toBe('hub');
+    });
+
+    it('laisse intact un payload qui n\'en porte pas', () => {
+        const payload = { paths: [] };
+        expect(stripProjectionTarget(payload)).toBe(payload);
+    });
+
+    it('tolère l\'absence de payload', () => {
+        expect(stripProjectionTarget(undefined)).toBeUndefined();
+        expect(stripProjectionTarget(null)).toBeNull();
+        expect(stripProjectionTarget('texte')).toBe('texte');
+    });
+
+    it('retire même une cible valide — la décision appartient au MJ', () => {
+        expect(stripProjectionTarget({ projectionTarget: 'monitor' })).toEqual({});
+    });
 });
 
 describe('broadcast', () => {

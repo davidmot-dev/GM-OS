@@ -5,6 +5,25 @@ import { useClockStore } from '../store/useClockStore';
 import { useCombatStore } from '../modules/combat/useCombatStore';
 import { WindowTransport, type WindowMessage } from './windowTransport';
 
+/** Types qu'une fenêtre secondaire peut émettre avant d'avoir reçu l'état partagé. */
+const GATE_EXEMPT_TYPES = new Set(['map:lock', 'map:unlock', 'hub:ready']);
+
+/**
+ * Retire la cible de projection d'un payload reçu d'une fenêtre secondaire.
+ *
+ * Exporté pour être testé directement : c'est une garde de correction, et une
+ * garde qu'on ne peut pas exercer se retire toute seule au fil du temps.
+ */
+export function stripProjectionTarget(payload: any): any {
+    if (!payload || typeof payload !== 'object') return payload;
+    if (!('projectionTarget' in payload)) return payload;
+
+    // Copie : le payload reçu peut être partagé avec d'autres destinataires.
+    const copy = { ...payload };
+    delete copy.projectionTarget;
+    return copy;
+}
+
 /**
  * Service de synchronisation entre les fenêtres locales (MJ, Player Hub, projecteur).
  *
@@ -21,6 +40,20 @@ class CrossWindowEventService {
     private tokenLocks: Map<string, { ownerId: string, timestamp: number }> = new Map();
     private throttleTimer: ReturnType<typeof setTimeout> | null = null;
     private relayTimer: ReturnType<typeof setTimeout> | null = null;
+    /**
+     * Une fenêtre secondaire a-t-elle déjà reçu l'état partagé ?
+     *
+     * Avant cela, son store ne contient que sa valeur initiale ou ce que sa
+     * réhydratation lui a rendu — un tableau vide, une projection à `null`. Or
+     * toute écriture dans le store déclenche une diffusion, et le maître adopte
+     * ce qu'une fenêtre secondaire lui envoie. Une fenêtre qui s'ouvre effaçait
+     * donc l'état de celle qui faisait autorité.
+     *
+     * Tant que ce drapeau est faux, la fenêtre écoute sans émettre. `notifyReady`
+     * n'est pas concerné — c'est justement ce qui déclenche la réponse du maître,
+     * donc il n'y a pas d'inter-blocage possible.
+     */
+    private hasReceivedSharedState: boolean = false;
 
     constructor() {
         this.transport = new WindowTransport('gmos-cross-window-sync', (message) => this.handleMessage(message));
@@ -76,7 +109,19 @@ class CrossWindowEventService {
                     }, 50);
                     break;
                 case 'whiteboard':
-                    this.applyRemoteUpdate('whiteboard', payload);
+                    // La cible de projection appartient au MJ : elle est décidée
+                    // dans WhiteboardProjectionModal, qui ne vit que dans cette
+                    // fenêtre. Une fenêtre secondaire n'en est jamais la source
+                    // légitime, mais elle en diffuse une copie dans chacune de ses
+                    // mises à jour — et sa valeur au démarrage est `null`, avant
+                    // toute synchronisation.
+                    //
+                    // L'adopter éteignait la projection : le maître prenait le
+                    // `null` du hub, puis le rediffusait à tout le monde. La panne
+                    // n'apparaissait que selon l'ordre d'arrivée des messages, ce
+                    // qui l'a rendue invisible jusqu'à ce que le passage du flux
+                    // par le process principal change cet ordre.
+                    this.applyRemoteUpdate('whiteboard', stripProjectionTarget(payload));
                     if (this.relayTimer) clearTimeout(this.relayTimer);
                     this.relayTimer = setTimeout(() => {
                         this.broadcastFullState();
@@ -126,6 +171,7 @@ class CrossWindowEventService {
     }
 
     private applyRemoteUpdate(type: string, payload: any) {
+        this.hasReceivedSharedState = true;
         this.isApplyingRemoteUpdate = true;
         try {
             switch (type) {
@@ -366,6 +412,15 @@ class CrossWindowEventService {
      * Broadcast an event to other windows.
      */
     public broadcast(type: string, payload: any) {
+        // Une fenêtre secondaire qui n'a pas encore reçu l'état partagé n'a rien
+        // à dire : ce qu'elle diffuserait viendrait de sa valeur initiale ou de
+        // sa réhydratation, et écraserait la fenêtre qui fait autorité.
+        //
+        // Les verrous en sont exemptés : ils ne portent pas d'état partagé, donc
+        // ne peuvent rien écraser, et les retenir laisserait un jeton saisissable
+        // deux fois pendant les premières secondes d'une fenêtre.
+        if (!this.isMainInstance && !this.hasReceivedSharedState && !GATE_EXEMPT_TYPES.has(type)) return;
+
         this.transport.publish({ type, payload, senderId: this.instanceId });
     }
 
