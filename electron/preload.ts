@@ -130,6 +130,18 @@ contextBridge.exposeInMainWorld('appBridge', {
         broadcastUIAction: (action: unknown) => ipcRenderer.send('remote:broadcast-ui-action', action),
         cacheMedia: (buffer: ArrayBuffer, id: string) => ipcRenderer.invoke('remote:cache-media', buffer, id),
     },
+    relay: {
+        // Relais entre fenêtres locales par le process principal.
+        // Le message est une chaîne DÉJÀ sérialisée : la sérialisation d'Electron
+        // coûte proportionnellement au nombre de nœuds d'objet traversés, et le
+        // relais refuse tout ce qui n'est pas une chaîne. Voir electron/WindowRelay.ts.
+        publish: (message: string) => ipcRenderer.send('relay:publish', message),
+        onMessage: (callback: (message: string) => void) => {
+            const listener = (_event: Electron.IpcRendererEvent, message: string) => callback(message);
+            ipcRenderer.on('relay:message', listener);
+            return () => ipcRenderer.off('relay:message', listener);
+        },
+    },
     pairing: {
         // Secret partagé permettant à un appareil de réclamer un rôle privilégié.
         getSecret: (): Promise<string> => ipcRenderer.invoke('pairing:get-secret'),

@@ -135,6 +135,13 @@ declare global {
             cacheMedia: (buffer: ArrayBuffer, id: string) => Promise<boolean>;
             removeActions: () => void;
         };
+        relay?: {
+            // Relais entre fenêtres locales par le process principal.
+            // Le message est une chaîne DÉJÀ sérialisée — le relais refuse les
+            // objets. Voir electron/WindowRelay.ts pour la raison mesurée.
+            publish: (message: string) => void;
+            onMessage: (callback: (message: string) => void) => () => void;
+        };
         pairing?: {
             getSecret: () => Promise<string>;
             rotate: () => Promise<string>;

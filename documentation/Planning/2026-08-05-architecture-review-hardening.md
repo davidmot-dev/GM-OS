@@ -663,8 +663,54 @@ charge applicative concurrente. Il compare deux transports toutes choses égales
 ailleurs — ce qui est exactement la question posée — mais il ne prédit pas la latence
 ressentie en partie.
 
-### Étape 2 — à faire
+### Étape 2 — le relais, et le premier flux basculé 🟡
 
-Écrire le relais dans le process principal et y basculer les fenêtres locales, en
-commençant par un seul flux. `CrossWindowEventService` disparaît en fin de parcours, pas au
-début.
+**Le relais.** `electron/WindowRelay.ts`, branché dans `app.whenReady()`. Il diffuse un
+message à toutes les fenêtres **sauf celle qui l'a émis** — c'est là que la suppression
+d'écho devient gratuite plutôt que reconstruite dans chaque renderer.
+
+- La liste des fenêtres est **relue à chaque message** plutôt que tenue dans un registre :
+  le Player Hub et le projecteur vont et viennent, et un registre se désynchroniserait.
+- Une fenêtre fermée entre la vérification et l'envoi ne prive pas les autres du message.
+- **Le relais refuse tout ce qui n'est pas une chaîne.** Sérialiser à la place de
+  l'appelant aurait masqué la régression de performance que l'étape 1 vient de mesurer ;
+  la contrainte est donc inscrite dans le code, pas seulement dans ce document.
+
+**L'aiguillage.** `src/services/windowTransport.ts` porte les deux chemins et choisit par
+type de message. `CrossWindowEventService` ne connaît plus le transport : sa logique
+— verrous, maître/esclave, rediffusion d'état complet — est inchangée, seul son canal
+d'émission et de réception a bougé.
+
+Hors Electron — tablette en PWA, navigateur de développement — le relais n'existe pas et
+tout retombe sur le `BroadcastChannel`.
+
+**Le premier flux : `clock`.** Choisi pour être le plus simple : diffusion pure, sans le
+traitement maître/esclave que `map` et `whiteboard` reçoivent dans `handleMessage`, et à
+fréquence basse — une régression y serait visible sans être gênante en partie.
+
+**Condition d'entrée vérifiée avant de le basculer.** Le `BroadcastChannel` utilise le
+clone structuré, qui préserve `Map`, `Set`, `Date` et les clés valant explicitement
+`undefined` ; `JSON` ne préserve rien de cela. Le payload de `clock` a été relu champ par
+champ : tous requis, tous primitifs ou tableaux d'objets plats. L'aller-retour JSON ne
+change donc rien. `RELAYED_TYPES` porte cette exigence en commentaire, et un test échoue
+délibérément à chaque ajout dans la liste — pour que la vérification soit refaite plutôt
+que supposée.
+
+25 tests : `WindowRelay.test.ts` (10) pour le relais, `windowTransport.test.ts` (15) pour
+l'aiguillage. Les 10 tests de `CrossWindowEventService` posés au point 8 passent inchangés,
+ce qui est le résultat recherché : la bascule ne devait rien changer au comportement.
+
+**Suite complète au vert** (432 tests), type-check et build Electron compris.
+
+**Ce qui reste à vérifier.** Le comportement entre deux vraies fenêtres de l'application —
+tests et build ne le prouvent pas. À exercer avant de basculer un deuxième flux.
+
+### Étape 3 — à faire
+
+Basculer les flux restants un par un — `combat`, puis les verrous de jetons, puis `map` et
+`whiteboard`, les deux plus enchevêtrés. `CrossWindowEventService` disparaît en fin de
+parcours, pas au début.
+
+Le tableau blanc devra être traité **avec** son problème de payload : il rediffuse tout le
+tableau toutes les 50 ms, ce qui est un défaut indépendant du transport mais que la bascule
+serait l'occasion de corriger.

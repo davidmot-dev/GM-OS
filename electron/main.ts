@@ -48,6 +48,7 @@ import { SyncServer } from './SyncServer'
 import { mediaAccess } from './MediaAccess'
 import { registerPairingHandlers } from './PairingManager'
 import { shouldRejectUnauthorized } from './netTrust'
+import { installWindowRelay } from './WindowRelay'
 // import { GitBackupService } from './GitBackupService'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -776,6 +777,17 @@ app.whenReady().then(async () => {
             return new Response(`Erreur interne du protocole gmos: ${errMsg}`, { status: 500 });
         }
     });
+
+    // Relais entre fenêtres locales, hébergé par le process principal.
+    // La liste des fenêtres est relue à chaque message : le Player Hub et le
+    // projecteur vont et viennent.
+    installWindowRelay(ipcMain, () =>
+        BrowserWindow.getAllWindows().map(w => ({
+            id: w.webContents.id,
+            isDestroyed: () => w.isDestroyed() || w.webContents.isDestroyed(),
+            send: (channel: string, message: string) => w.webContents.send(channel, message),
+        }))
+    );
 
     // createWindow() démarre déjà le SyncServer (voir syncServer.start()).
     createWindow();

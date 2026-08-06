@@ -3,14 +3,18 @@ import { useMapUIStore } from '../modules/map/useMapUIStore';
 import { useWhiteboardStore } from '../modules/whiteboard/useWhiteboardStore';
 import { useClockStore } from '../store/useClockStore';
 import { useCombatStore } from '../modules/combat/useCombatStore';
+import { WindowTransport, type WindowMessage } from './windowTransport';
 
 /**
- * Service facilitating cross-window synchronization using BroadcastChannel.
- * This provides a secondary, ultra-reliable transport for local multi-window setups (e.g. GM + Player Hub on same PC),
- * bypassing potential IPC bottlenecks in Tauri/Electron.
+ * Service de synchronisation entre les fenêtres locales (MJ, Player Hub, projecteur).
+ *
+ * Le transport lui-même est délégué à `WindowTransport`, qui aiguille chaque type
+ * de message soit vers le `BroadcastChannel` historique, soit vers le relais du
+ * process principal. La bascule se fait flux par flux ; la liste des flux déjà
+ * passés vit dans `RELAYED_TYPES`.
  */
 class CrossWindowEventService {
-    private channel: BroadcastChannel;
+    private transport: WindowTransport;
     private isMainInstance: boolean = false;
     private instanceId: string = Math.random().toString(36).substring(2, 9);
     private isApplyingRemoteUpdate: boolean = false;
@@ -19,8 +23,7 @@ class CrossWindowEventService {
     private relayTimer: ReturnType<typeof setTimeout> | null = null;
 
     constructor() {
-        this.channel = new BroadcastChannel('gmos-cross-window-sync');
-        this.setupListener();
+        this.transport = new WindowTransport('gmos-cross-window-sync', (message) => this.handleMessage(message));
     }
 
     /**
@@ -35,53 +38,55 @@ class CrossWindowEventService {
         this.setupSubscribers();
     }
 
-    private setupListener() {
-        this.channel.onmessage = (event) => {
-            const { type, payload, senderId } = event.data;
+    private handleMessage(message: WindowMessage) {
+        const { type, senderId } = message;
+        const payload = message.payload as any;
 
-            // Ignore messages from ourselves
-            if (senderId === this.instanceId) return;
+        // Ignore messages from ourselves.
+        // Le relais du process principal ne renvoie déjà rien à l'émetteur ;
+        // ce filtre reste nécessaire au BroadcastChannel, qui, lui, ne fait
+        // aucune distinction.
+        if (senderId === this.instanceId) return;
 
-            // Handle locks (Always)
-            if (type === 'map:lock') {
-                this.tokenLocks.set(payload.tokenId, { ownerId: senderId, timestamp: Date.now() });
-                return;
-            } else if (type === 'map:unlock') {
-                this.tokenLocks.delete(payload.tokenId);
-                return;
-            }
+        // Handle locks (Always)
+        if (type === 'map:lock') {
+            this.tokenLocks.set(payload.tokenId, { ownerId: senderId, timestamp: Date.now() });
+            return;
+        } else if (type === 'map:unlock') {
+            this.tokenLocks.delete(payload.tokenId);
+            return;
+        }
 
-            if (this.isMainInstance) {
-                // Main instance handles client-initiated events
-                switch (type) {
-                    case 'hub:ready':
+        if (this.isMainInstance) {
+            // Main instance handles client-initiated events
+            switch (type) {
+                case 'hub:ready':
+                    this.broadcastFullState();
+                    break;
+                case 'map':
+                    // Apply the slave's update to Master store
+                    this.applyRemoteUpdate('map', payload);
+                    // CRITICAL: Never relay raw slave payload to other slaves.
+                    // The payload may have stale projectionTarget, partial data, or
+                    // other slave-specific state that would corrupt other windows.
+                    // Instead, debounce a full-state broadcast from Master (source of truth).
+                    if (this.relayTimer) clearTimeout(this.relayTimer);
+                    this.relayTimer = setTimeout(() => {
                         this.broadcastFullState();
-                        break;
-                    case 'map':
-                        // Apply the slave's update to Master store
-                        this.applyRemoteUpdate('map', payload);
-                        // CRITICAL: Never relay raw slave payload to other slaves.
-                        // The payload may have stale projectionTarget, partial data, or
-                        // other slave-specific state that would corrupt other windows.
-                        // Instead, debounce a full-state broadcast from Master (source of truth).
-                        if (this.relayTimer) clearTimeout(this.relayTimer);
-                        this.relayTimer = setTimeout(() => {
-                            this.broadcastFullState();
-                        }, 50);
-                        break;
-                    case 'whiteboard':
-                        this.applyRemoteUpdate('whiteboard', payload);
-                        if (this.relayTimer) clearTimeout(this.relayTimer);
-                        this.relayTimer = setTimeout(() => {
-                            this.broadcastFullState();
-                        }, 50);
-                        break;
-                }
-            } else {
-                // Slaves handle state updates
-                this.applyRemoteUpdate(type, payload);
+                    }, 50);
+                    break;
+                case 'whiteboard':
+                    this.applyRemoteUpdate('whiteboard', payload);
+                    if (this.relayTimer) clearTimeout(this.relayTimer);
+                    this.relayTimer = setTimeout(() => {
+                        this.broadcastFullState();
+                    }, 50);
+                    break;
             }
-        };
+        } else {
+            // Slaves handle state updates
+            this.applyRemoteUpdate(type, payload);
+        }
     }
 
     /**
@@ -361,7 +366,7 @@ class CrossWindowEventService {
      * Broadcast an event to other windows.
      */
     public broadcast(type: string, payload: any) {
-        this.channel.postMessage({ type, payload, senderId: this.instanceId });
+        this.transport.publish({ type, payload, senderId: this.instanceId });
     }
 
     private broadcastFullState() {
@@ -405,7 +410,7 @@ class CrossWindowEventService {
      */
     public notifyReady() {
         if (this.isMainInstance) return;
-        this.channel.postMessage({ type: 'hub:ready', senderId: this.instanceId });
+        this.transport.publish({ type: 'hub:ready', senderId: this.instanceId });
     }
 }
 
