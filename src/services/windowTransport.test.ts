@@ -37,10 +37,9 @@ describe('windowTransport', () => {
             // délibéré, vérifié contre l'aller-retour JSON (voir le commentaire
             // de RELAYED_TYPES). Ce test échouera à la prochaine bascule — c'est
             // le rappel de refaire cette vérification.
-            expect([...RELAYED_TYPES]).toEqual(['clock', 'combat', 'map', 'map:lock', 'map:unlock']);
-            // `whiteboard` en est volontairement absent — voir le commentaire de
-            // RELAYED_TYPES : bascule annulée le 2026-08-06, cause non établie.
-            expect(RELAYED_TYPES.has('whiteboard')).toBe(false);
+            expect([...RELAYED_TYPES]).toEqual([
+                'clock', 'combat', 'map', 'map:lock', 'map:unlock', 'whiteboard',
+            ]);
         });
     });
 
@@ -167,20 +166,26 @@ describe('windowTransport', () => {
             listener.close();
         });
 
-        it('laisse le tableau blanc sur le BroadcastChannel', () => {
-            // Bascule annulée le 2026-08-06 : le tableau blanc cessait de
-            // fonctionner sur le Player Hub. Ce test verrouille le retour en
-            // arrière tant que la cause n'est pas établie.
+        it('envoie le tableau blanc par le process principal', () => {
+            // C'est le flux que l'étape 1 avait mesuré à +19 ms sous sa forme
+            // objet ; la pré-sérialisation du relais annule cet écart.
             const relay = installFakeRelay();
             transport = new WindowTransport('canal-test-tableau', (m) => received.push(m));
 
             transport.publish({
                 type: 'whiteboard',
-                payload: { paths: [], activePath: null, version: 3 },
+                payload: {
+                    paths: [{ id: 'p1', color: '#fff', width: 4, tool: 'brush', points: [{ x: 1, y: 2 }] }],
+                    activePath: null,
+                    version: 3,
+                },
                 senderId: 'abc',
             });
 
-            expect(relay.published).toHaveLength(0);
+            expect(relay.published).toHaveLength(1);
+            const sent = JSON.parse(relay.published[0]);
+            expect(sent.payload.paths[0].points[0]).toEqual({ x: 1, y: 2 });
+            expect(sent.payload.activePath).toBeNull();
         });
 
         it('retombe sur le BroadcastChannel quand le relais n\'existe pas', () => {

@@ -856,10 +856,50 @@ Trois pistes écartées avec certitude :
 - C'est le seul flux dont l'étranglement (50 ms) **abandonne** la mise à jour au lieu de la
   reprogrammer : la carte a un `setTimeout` de rattrapage, pas lui.
 
-**Méthode retenue pour la suite** : reproduire en test plutôt que déduire. Un harnais à deux
-instances de `CrossWindowEventService` reliées par un faux relais, l'une en maître et l'autre
-en esclave *émetteur*, reproduit cette topologie de façon déterministe et sans mobiliser une
-session de jeu. L'analyse statique a montré ses limites ici.
+**Cause trouvée par reproduction, et rebasculé le 2026-08-06.**
+
+Le harnais — `CrossWindowEventService.relay.test.ts` — monte deux fenêtres, chacune avec son
+**propre graphe de modules** donc ses propres stores Zustand, reliées par le vrai
+`relayToOthers` du process principal. Il a fallu deux passes : la première version ne
+reproduisait rien, parce qu'elle n'appelait jamais `notifyReady()` et n'attendait pas les
+50 ms du `relayTimer`. Ces deux angles morts couvraient précisément le chemin en cause.
+
+**Le mécanisme.** Le maître **adopte en bloc** le payload d'une fenêtre secondaire,
+`projectionTarget` compris. Quand le Player Hub s'ouvre, sa réhydratation déclenche une
+diffusion de son propre état — projection à `null`, tableau vide — que le maître adopte, puis
+rediffuse à tout le monde. La projection s'éteignait elle-même.
+
+**Ce que la bascule avait réellement fait.** Rien créé. Le chemin existait déjà sur le
+`BroadcastChannel` ; elle a seulement inversé l'ordre d'arrivée, `hub:ready` restant sur le
+canal rapide pendant que l'état passait par l'IPC. C'est ce qui a rendu visible un défaut
+resté invisible des mois durant. La leçon rejoint celle du point 9 : ce sont les changements
+d'ordonnancement qui révèlent les dépendances implicites, pas la relecture.
+
+**Deux gardes, pour deux problèmes distincts :**
+
+- **La cible de projection appartient au MJ.** Elle est décidée dans
+  `WhiteboardProjectionModal`, qui ne vit que dans sa fenêtre. Une fenêtre secondaire n'en est
+  jamais la source légitime — elle en diffuse pourtant une copie à chaque mise à jour.
+- **Une fenêtre secondaire n'émet rien avant d'avoir reçu l'état partagé.** Avant cela, elle
+  ne connaît que sa valeur initiale ou sa réhydratation. Les verrous en sont exemptés : ils ne
+  portent pas d'état partagé, et les retenir laisserait un jeton saisissable deux fois pendant
+  les premières secondes d'une fenêtre.
+
+Les deux gardes valent au-delà du tableau blanc : `map` était exposé au même écrasement.
+
+**Vérifié dans les deux sens** — le harnais échoue sans les gardes, passe avec. Un test qui
+passe dans les deux cas ne prouverait rien.
+
+**Piège du harnais, corrigé.** Les services d'un test précédent restent vivants, et le
+`relayTimer` de 50 ms du maître se déclenchait pendant le test suivant en y publiant l'état
+d'avant. Une génération rend les anciens ponts inertes. La persistance a dû être neutralisée
+pour la même raison : les deux graphes partagent le `localStorage` de jsdom, donc la même clé.
+
+Suite complète au vert (464), build compris.
+
+**À exercer en conditions réelles** : dessiner, projeter vers le Player Hub, effacer, annuler
+— et surtout **ouvrir le Player Hub alors que le tableau est déjà projeté**, qui est le cas
+exact que les gardes corrigent.
 
 ### Étape 6 bis — volume du payload, après validation
 

@@ -48,13 +48,17 @@ export interface WindowMessage {
  *   dérivent de `tokens` et `dangerZones`, eux persistés ; `projectedFogDataUrl`
  *   est `string | null` ; `MapPing` et `MagicEffect` n'ont que des primitives.
  *   Aucun `Date`, `Map` ni `Set` dans `modules/map/types.ts`.
- * **`whiteboard` en est volontairement absent.** Il y a été ajouté le 2026-08-06
- * puis retiré le jour même : le tableau blanc cessait de fonctionner sur le
- * Player Hub. La compatibilité JSON n'est pas en cause — `paths` est dans le
- * `partialize` de `useWhiteboardStore` — et le transport non plus, `map`
- * empruntant le même chemin sans problème. La cause reste à établir ; le flux
- * reste sur le `BroadcastChannel` en attendant, plutôt que de laisser une
- * fonction cassée en place le temps du diagnostic.
+ * - `whiteboard` : `paths` est dans le `partialize` de `useWhiteboardStore`. Les
+ *   champs volatils qu'il exclut sont soit du même type (`activePath` est un
+ *   `DrawingPath`, comme les éléments de `paths`), soit des primitives.
+ *
+ *   Ce flux a été basculé, annulé, puis rebasculé le 2026-08-06. La panne — le
+ *   tableau blanc cessait de fonctionner sur le Player Hub — ne venait pas du
+ *   transport mais d'une fenêtre secondaire qui écrasait l'état du MJ au
+ *   démarrage. La bascule n'avait fait qu'inverser l'ordre d'arrivée des
+ *   messages et rendre visible un défaut plus ancien. Corrigé dans
+ *   `CrossWindowEventService` par deux gardes, et reproduit en test dans
+ *   `CrossWindowEventService.relay.test.ts`.
  */
 export const RELAYED_TYPES: ReadonlySet<string> = new Set([
     'clock',
@@ -62,6 +66,7 @@ export const RELAYED_TYPES: ReadonlySet<string> = new Set([
     'map',
     'map:lock',
     'map:unlock',
+    'whiteboard',
 ]);
 
 /** Le relais du process principal est-il joignable depuis cette fenêtre ? */
