@@ -778,8 +778,8 @@ Suite complète au vert (446).
 suivant. C'était déjà le cas avec le `BroadcastChannel` — la bascule ne l'aggrave pas, mais
 ne le corrige pas non plus.
 
-**À exercer en conditions réelles**, comme les flux précédents : fermer le Player Hub en
-plein déplacement d'un jeton et vérifier qu'il redevient saisissable immédiatement.
+**Validé en conditions réelles le 2026-08-06** : Player Hub fermé en plein déplacement d'un
+jeton, qui redevient saisissable immédiatement.
 
 ### Étape 5 — bascule de `map` 🟡
 
@@ -811,8 +811,8 @@ avec `JSON.parse`, pour la même raison.
 
 Suite complète au vert (448), build compris.
 
-**À exercer en conditions réelles** : déplacer un jeton depuis la fenêtre MJ et vérifier que
-le Player Hub et le projecteur suivent, brouillard et pings compris.
+**Validé en conditions réelles le 2026-08-06** : jeton déplacé depuis la fenêtre MJ, suivi
+par le Player Hub et le projecteur.
 
 ### Étape 6 — bascule du tableau blanc 🟡
 
