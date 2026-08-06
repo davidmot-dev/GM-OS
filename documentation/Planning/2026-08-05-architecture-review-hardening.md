@@ -663,7 +663,7 @@ charge applicative concurrente. Il compare deux transports toutes choses égales
 ailleurs — ce qui est exactement la question posée — mais il ne prédit pas la latence
 ressentie en partie.
 
-### Étape 2 — le relais, et le premier flux basculé 🟡
+### Étape 2 — le relais, et le premier flux basculé ✅
 
 **Le relais.** `electron/WindowRelay.ts`, branché dans `app.whenReady()`. Il diffuse un
 message à toutes les fenêtres **sauf celle qui l'a émis** — c'est là que la suppression
@@ -734,7 +734,7 @@ recherché à l'étape 2 : basculer un flux doit être une ligne, pas un chantie
 
 **À exercer en conditions réelles**, comme `clock`.
 
-### Étape 4 — verrous de jetons 🟡
+### Étape 4 — verrous de jetons ✅
 
 **La contrainte qui a cadré la solution.** `requestLock` est appelé **synchronement** dans
 `handlePointerDown`, et son résultat conditionne le `stopPropagation()` juste après. Après
@@ -781,7 +781,7 @@ ne le corrige pas non plus.
 **Validé en conditions réelles le 2026-08-06** : Player Hub fermé en plein déplacement d'un
 jeton, qui redevient saisissable immédiatement.
 
-### Étape 5 — bascule de `map` 🟡
+### Étape 5 — bascule de `map` ✅
 
 C'est le flux le plus sollicité — 30 fps pendant un glisser-déposer — et celui dont l'étape 1
 avait mesuré qu'il ne posait pas de problème : +0,2 à +0,4 ms d'aller-retour contre un budget
@@ -814,7 +814,7 @@ Suite complète au vert (448), build compris.
 **Validé en conditions réelles le 2026-08-06** : jeton déplacé depuis la fenêtre MJ, suivi
 par le Player Hub et le projecteur.
 
-### Étape 6 — bascule du tableau blanc 🟡
+### Étape 6 — bascule du tableau blanc ✅
 
 C'est le flux qui avait justifié toute la mesure de l'étape 1 : le seul réellement pénalisé
 par le saut IPC, à **+19 ms** d'aller-retour sous sa forme objet — 106 Ko répartis en 4 882
@@ -897,11 +897,10 @@ pour la même raison : les deux graphes partagent le `localStorage` de jsdom, do
 
 Suite complète au vert (464), build compris.
 
-**À exercer en conditions réelles** : dessiner, projeter vers le Player Hub, effacer, annuler
-— et surtout **ouvrir le Player Hub alors que le tableau est déjà projeté**, qui est le cas
-exact que les gardes corrigent.
+**Validé en conditions réelles le 2026-08-07**, y compris le cas exact que les gardes
+corrigent : ouvrir le Player Hub alors que le tableau est déjà projeté.
 
-### Étape 6 bis — volume du payload 🟡
+### Étape 6 bis — volume du payload ✅
 
 Le tableau blanc rediffusait **tout** le tableau à chaque mise à jour, soit 2 Mo/s à 40
 tracés. C'est un défaut indépendant du transport.
@@ -946,15 +945,15 @@ resynchronisation, dont le destinataire n'a précisément rien à fusionner.
 deux sens** : la sonde qui envoie `paths` inconditionnellement fait tomber le test d'omission,
 celle qui note l'envoi sans regarder la retenue fait tomber le test de la garde.
 
-**À exercer en conditions réelles** : dessiner, passer au laser et le promener sur le tableau,
-effacer, annuler — et vérifier que le Player Hub suit dans chaque cas.
+**Validé en conditions réelles le 2026-08-07** : dessin, laser promené sur le tableau,
+effacement et annulation, le Player Hub suivant dans chaque cas.
 
 **Reste, plus petit.** Quand une fenêtre secondaire dessine, le maître reprogramme un
 `broadcastFullState()` 50 ms après le dernier message reçu, lequel renvoie les tracés
 entiers — et aussi tout le payload carte. La temporisation est glissante, donc elle ne se
 déclenche qu'en fin de rafale, mais ce chemin-là n'est pas couvert par l'étape.
 
-### Étape 7 — bascule de `hub:ready` 🟡
+### Étape 7 — bascule de `hub:ready` ✅
 
 `hub:ready`, dernier type encore sur le `BroadcastChannel`. Il ne porte pas de payload, mais
 il déclenche `broadcastFullState()` côté maître — c'est le chemin de synchronisation initiale
@@ -990,11 +989,74 @@ distinct fait naturellement en production.
 
 Suite complète au vert (465), type-check et build compris.
 
-**À exercer en conditions réelles** : ouvrir le Player Hub et le projecteur alors que la carte
-et le tableau sont déjà projetés — c'est ce que `hub:ready` sert à rattraper.
+**Validé en conditions réelles le 2026-08-07** : Player Hub et projecteur ouverts alors que la
+carte et le tableau étaient déjà projetés — c'est ce que `hub:ready` sert à rattraper.
 
 **Nuance sur la disparition annoncée du `BroadcastChannel`.** Il ne peut pas disparaître tout
 à fait : `WindowTransport` s'en sert de repli hors Electron, où aucun process principal
 n'existe. Sur tablette en PWA il n'y a de toute façon qu'une fenêtre, donc rien à
 synchroniser — mais le code doit rester exécutable. Ce qui disparaît, c'est son usage dans
 l'application de bureau, et avec lui le second chemin à tester.
+
+---
+
+## Bilan du chantier — 2026-08-07
+
+Le transport est unifié : tous les flux entre fenêtres locales — `clock`, `combat`, `map`,
+les deux types de verrous, `whiteboard`, `hub:ready` — passent par `electron/WindowRelay.ts`.
+Le `BroadcastChannel` ne subsiste que comme repli hors Electron. Validé en conditions réelles,
+sauf `combat` (étape 3), qui n'a jamais été exercé pour lui-même.
+
+Le périmètre annonçait quatre bénéfices. Deux sont encaissés, deux ne le sont pas — et le
+dire vaut mieux que laisser croire le chantier clos.
+
+**Encaissé — un seul chemin à tester.** Sur le poste MJ, plus aucun flux applicatif
+n'emprunte le `BroadcastChannel`. La classe de défauts liée à deux canaux de vitesses
+différentes est fermée par construction depuis l'étape 7, et c'est elle qui avait produit la
+panne de l'étape 6.
+
+**Encaissé, partiellement et volontairement — les verrous de jetons.** Le process principal
+tient le registre et libère à la fermeture d'une fenêtre, ce qu'aucun renderer ne peut faire.
+L'octroi reste local et optimiste, pour la raison écrite à l'étape 4 : `requestLock` est
+synchrone par nécessité. C'est un partage assumé, pas un reste à faire.
+
+**Non encaissé — l'autorisation du point 9 ne s'applique toujours pas aux fenêtres locales.**
+`installWindowRelay` diffuse sans consulter `electron/actionPolicy.ts`. L'angle mort noté au
+point 9 est donc toujours ouvert : le chantier l'a rendu *adressable* — il y a désormais un
+point de passage unique où poser le contrôle — il ne l'a pas refermé. C'est le premier reste
+à faire, et le moins coûteux.
+
+**Non encaissé — la suppression d'écho n'a pas été simplifiée.** Le périmètre annonçait que
+le relais éliminerait « quatre des sept mécanismes ». Le relevé après coup ne le confirme
+pas : un seul l'est réellement, le filtrage par `senderId`, et seulement sur les flux relayés
+— on le garde pour le repli hors Electron. Les autres survivent parce qu'ils ne traitaient
+pas le problème qu'on croyait :
+
+- `isApplyingRemoteUpdate` garde la boucle **interne** à une fenêtre — appliquer une mise à
+  jour réveille l'abonné du store, qui rediffuserait. Que le relais épargne l'émetteur n'y
+  change rien.
+- Le `relayTimer` et la règle « ne jamais relayer le payload brut d'un esclave » sont une
+  décision maître/esclave, pas une suppression d'écho.
+- Les quatre étranglements temporels traitent le volume, pas l'écho.
+- Le `lastSeen` d'`idbStorage`, `isSystemSyncing` et les consultations croisées
+  d'`isSyncing()` appartiennent à la persistance et à la synchronisation réseau, que le
+  chantier n'a pas touchées.
+
+Le chantier a par ailleurs **ajouté** deux gardes à l'étape 6 — `hasReceivedSharedState` et
+`stripProjectionTarget`. Elles corrigent un défaut antérieur au transport, mais le compte net
+va dans l'autre sens que celui annoncé.
+
+La prévision était optimiste parce qu'elle confondait deux échos : celui qui traverse les
+fenêtres, que le relais supprime, et celui qui reboucle à l'intérieur d'une fenêtre, qu'il ne
+voit même pas. C'est le second que la plupart de ces mécanismes traitent.
+
+### Restes à faire, par ordre d'intérêt
+
+1. **Appliquer `actionPolicy` au relais** — referme l'angle mort du point 9.
+2. **Exercer `combat` en conditions réelles** — seul flux basculé jamais vérifié pour lui-même.
+3. **La rediffusion complète du maître** — 50 ms après le dernier message d'une fenêtre
+   secondaire, il renvoie tracés et payload carte entiers. Temporisation glissante, donc en
+   fin de rafale seulement, mais l'étape 6 bis ne couvre pas ce chemin.
+4. **`isTokenLocked` n'est pas réactif** (étape 5) — antérieur au chantier, inchangé par lui.
+5. **Limiter le débit de `remote:request-sync`** (point 9) — l'urgence a baissé avec le
+   payload passé à 305 Ko, elle n'a pas disparu.
