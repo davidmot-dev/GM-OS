@@ -11,7 +11,12 @@ const mediaCache = new Map<string, string>();
  */
 const publishedToServer = new Set<string>();
 
-interface ConnectionInfo { ip: string; port: number }
+interface ConnectionInfo { ip: string; port: number; mediaPort?: number }
+
+/** Base des URL de médias : toujours le port du SyncServer, jamais celui de Vite. */
+function mediaOrigin(conn: ConnectionInfo): string {
+    return `http://${conn.ip}:${conn.mediaPort ?? conn.port}`;
+}
 
 /** Adresse du poste MJ sur le réseau local, ou null s'il n'y en a pas. */
 async function getLanConnection(): Promise<ConnectionInfo | null> {
@@ -51,7 +56,7 @@ async function publishToServer(id: string, blob: Blob, conn: ConnectionInfo): Pr
         }
     }
 
-    return `http://${conn.ip}:${conn.port}/temp/${encodeURIComponent(id)}`;
+    return `${mediaOrigin(conn)}/temp/${encodeURIComponent(id)}`;
 }
 
 /**
@@ -122,7 +127,7 @@ export async function resolveToSendableUrl(src: string | undefined): Promise<str
         const conn = await getLanConnection();
         if (conn) {
             const normalized = src.replace(/\\/g, '/');
-            return `http://${conn.ip}:${conn.port}/media/${encodeURIComponent(normalized)}`;
+            return `${mediaOrigin(conn)}/media/${encodeURIComponent(normalized)}`;
         }
         if (window.appBridge?.utils?.formatFileUrl) {
             return window.appBridge.utils.formatFileUrl(src);

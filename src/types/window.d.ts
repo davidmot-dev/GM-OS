@@ -121,7 +121,9 @@ declare global {
         off: (channel: string, callback: (event: any, ...args: any[]) => void) => void;
         send: (channel: string, ...args: any[]) => void;
         remote: {
-            getConnectionInfo?: () => Promise<{ ip: string; port: number }>;
+            // `port` sert à charger l'app sur la tablette (Vite en dev) ;
+            // `mediaPort` est celui du proxy média, toujours le SyncServer.
+            getConnectionInfo?: () => Promise<{ ip: string; port: number; mediaPort?: number }>;
             sendSync?: (payload: SyncPayload) => void;
             broadcastUIAction?: (action: any) => void;
             broadcastToTablets: (type: string, payload: unknown) => void;

@@ -259,9 +259,40 @@ transmet qu'une URL. Un `Set` évite de redéposer le même média — les deux 
 coïncident, `temp-media` étant vidé au démarrage. Repli sur le base64 sans réseau local
 exploitable (poste isolé, pont applicatif absent) ou si le dépôt échoue.
 
-**Réserve.** Les 11 tests du résolveur couvrent la logique, pas le rendu réel. Le passage
-du base64 à la référence décide si les images s'affichent sur les tablettes : à vérifier
-avec un vrai appareil connecté avant de considérer le point clos.
+### 6c. Validation en conditions réelles, et régression corrigée
+
+Vérifié le 2026-08-06 contre l'application en fonctionnement, avec un client tablette
+simulé (`fake-tablet.mjs`) empruntant les mêmes chemins qu'un vrai Tablet Hub — WebSocket,
+`remote:register`, actions, récupération HTTP des médias — et confirmé en parallèle par
+David sur un appareil réel.
+
+**Régression trouvée et corrigée.** Le seul média passé par référence, l'ambiance visuelle
+de campagne, ne s'affichait pas. `remote:get-connection-info` renvoie le port de **Vite**
+(5173) en développement, ce qui est correct pour charger le PWA mais faux pour les médias :
+le proxy est sur le port du SyncServer (3001). Vite répondait 200 avec son `index.html`,
+soit 1 249 octets de HTML à la place d'une image.
+
+La réponse ajoute un `mediaPort` distinct de `port`, toujours celui du SyncServer. Le
+chemin `/media/` avait le même défaut latent, invisible parce qu'inexercé en développement.
+
+**Découverte majeure : le point 6b ne couvre qu'un média sur cinquante.** Le payload mesuré
+pèse **7,6 Mo**, dont 7,3 Mo de base64 que la conversion en références ne touche pas :
+
+| Champ | Poids | Nombre |
+|---|---|---|
+| `session.atlasMaps[].fileUrl` | 4 911 Ko | 23 |
+| `session.entities[].avatar` | 1 403 Ko | 21 |
+| `session.favorites[].imageUrl` | 938 Ko | 1 |
+| `session.players[].characters[].portraitUrl` | 61 Ko | 4 |
+
+Ces médias sont stockés **directement en `data:` dans l'état de campagne**, pas sous forme
+d'identifiants `m-`. `resolveToSendableUrl` les renvoie tels quels par sa garde d'entrée, et
+la publication par référence ne s'applique jamais. Un seul champ — l'ambiance — était un
+identifiant `m-`.
+
+**Suite à donner.** Publier aussi les `data:` par référence, sous un identifiant dérivé de
+leur contenu. C'est ce qui ferait réellement passer le payload de 7,6 Mo à quelques dizaines
+de kilo-octets, et c'est la seule partie du point 6 qui reste à faire.
 
 ## 7. `handleAction` — 270 lignes de `if` ✅
 

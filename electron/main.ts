@@ -571,7 +571,12 @@ ipcMain.handle('remote:get-connection-info', () => {
     const devPort = VITE_DEV_SERVER_URL ? new URL(VITE_DEV_SERVER_URL).port : null;
     return {
         ip: getLocalIP(),
-        port: devPort ? parseInt(devPort, 10) : REMOTE_PORT
+        // Port pour charger l'application sur la tablette.
+        port: devPort ? parseInt(devPort, 10) : REMOTE_PORT,
+        // Port du proxy média : toujours celui du SyncServer, jamais celui de
+        // Vite, qui ne sert ni /media/ ni /temp/ et répond son index.html à leur
+        // place — une image qui arrive en text/html ne s'affiche pas.
+        mediaPort: REMOTE_PORT
     };
 });
 

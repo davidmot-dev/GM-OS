@@ -132,6 +132,40 @@ describe('mediaResolver — médias par référence', () => {
         expect(cacheMedia).not.toHaveBeenCalled();
     });
 
+    it('sert les médias sur le port du proxy, pas sur celui de l\'application', async () => {
+        // En développement, getConnectionInfo renvoie le port de Vite (5173)
+        // pour charger le PWA. Vite ne sert ni /temp/ ni /media/ : il répond son
+        // index.html, et une image arrivant en text/html ne s'affiche pas.
+        vi.stubGlobal('window', {
+            appBridge: {
+                remote: {
+                    getConnectionInfo: vi.fn().mockResolvedValue({ ip: '192.168.0.211', port: 5173, mediaPort: 3001 }),
+                    cacheMedia,
+                },
+            },
+        });
+
+        const id = freshId();
+        expect(await resolveToSendableUrl(id)).toBe(`http://192.168.0.211:3001/temp/${id}`);
+        expect(await resolveToSendableUrl('C:/medias/carte.png')).toBe(
+            'http://192.168.0.211:3001/media/C%3A%2Fmedias%2Fcarte.png'
+        );
+    });
+
+    it('retombe sur le port applicatif si mediaPort est absent', async () => {
+        vi.stubGlobal('window', {
+            appBridge: {
+                remote: {
+                    getConnectionInfo: vi.fn().mockResolvedValue({ ip: '192.168.0.211', port: 3001 }),
+                    cacheMedia,
+                },
+            },
+        });
+
+        const id = freshId();
+        expect(await resolveToSendableUrl(id)).toBe(`http://192.168.0.211:3001/temp/${id}`);
+    });
+
     it('retourne une chaîne vide si le média est introuvable en base', async () => {
         idb.get.mockResolvedValue(undefined);
 
