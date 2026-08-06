@@ -386,10 +386,69 @@ ayant réclamé `gm` sans token se voit refuser les actions correspondantes.
 
 ---
 
-## Question de fond, à trancher un jour
+## Question de fond — tranchée le 2026-08-06
 
-Faire du **process principal Electron le seul propriétaire de l'état partagé**. Cela
-supprimerait `CrossWindowEventService` et unifierait le transport, au prix d'une
-refonte de la couche de synchronisation. C'est la réponse structurelle aux points 6 et 8 —
-et elle placerait naturellement le contrôle d'autorisation du point 9 au seul endroit qui
-connaît l'identité réelle des clients.
+La question posée par la revue était : faire du **process principal Electron le seul
+propriétaire de l'état partagé**.
+
+**Décision : non — on unifie le transport, l'état reste dans le renderer MJ.**
+
+### Ce qui a motivé la décision
+
+David a identifié son besoin comme la **robustesse en partie** : les bugs de cohérence
+pendant une séance, pas une capacité nouvelle. Déplacer l'état ne sert pas cet objectif et
+coûterait une réécriture de tous les stores, sur un logiciel utilisé en vrai.
+
+### Le coût réel de l'architecture actuelle, mesuré
+
+44 commits mentionnent la synchronisation, dont une vingtaine de correctifs. Le tableau
+blanc a été recorrigé au moins quatre fois, la résolution des médias vers les tablettes
+cinq fois de suite, plus le combat, le Player Hub et un `cross-window-sync-stabilization`
+dédié. Ce sous-système ne converge pas.
+
+**Sept mécanismes distincts de suppression d'écho ou d'étranglement** coexistent :
+`isApplyingRemoteUpdate` et son `isSyncing()` public ; le filtrage par `senderId` ; le
+`relayTimer` et sa règle « ne jamais relayer le payload brut d'un esclave » ; le `lastSeen`
+d'`idbStorage` ; le drapeau `isSystemSyncing` ; les consultations croisées de
+`crossWindowSync.isSyncing()` ; et quatre étranglements temporels (33, 50, 100, 500 ms).
+
+Aucun n'est du mauvais code. Chacun existe **parce qu'aucun pair ne fait autorité**.
+
+Symptôme parlant : `lastBroadcastRef`, qui porte l'état différentiel des tablettes, est un
+`useRef`. Recharger la fenêtre MJ le perd, et les tablettes reçoivent alors un état partiel
+sans que rien ne le signale.
+
+### Le constat qui rend le chantier cohérent
+
+Au fil des neuf points, le process principal est **déjà devenu l'autorité** — identité
+(`PairingManager`), autorisation (`actionPolicy`), accès aux fichiers (`MediaAccess`),
+confiance TLS (`netTrust`). Toujours pour la même raison : c'est le seul endroit qui sait
+quelque chose que les clients ne peuvent pas falsifier. Unifier le transport prolonge ce
+mouvement sans le pousser jusqu'à l'état.
+
+### Périmètre retenu
+
+Le process principal devient le **seul relais**. Les fenêtres locales passent par lui comme
+les tablettes. `CrossWindowEventService` disparaît. Bénéfices attendus :
+
+- un seul chemin à tester au lieu de deux ;
+- l'autorisation du point 9 s'applique partout — aujourd'hui les fenêtres locales la
+  contournent entièrement ;
+- la suppression d'écho devient triviale : le relais ne renvoie rien à l'émetteur, ce qui
+  élimine quatre des sept mécanismes ;
+- les verrous de jetons deviennent un état du process principal, donc autoritaire.
+
+**Non-objectif explicite :** l'état reste dans le renderer MJ, qui reste maître. Les
+tablettes restent des clients distants — ce sont des PWA, sans process principal — donc le
+fan-out réseau et la réconciliation après reconnexion ne sont pas concernés.
+
+### Risque identifié, à lever en premier
+
+Passer par le process principal ajoute un saut IPC. Indolore sur la plupart des flux, mais
+le glisser-déposer de jetons tourne à 30 fps et les tracés du tableau blanc à 20 — ce sont
+les deux flux les plus sensibles à la latence, et aussi les plus souvent recorrigés.
+Aujourd'hui ils vont de renderer à renderer, sans intermédiaire.
+
+**Le chantier doit donc commencer par une mesure sur ces deux flux, pas par une
+réécriture.** Si la latence passe, on unifie tout ; sinon on saura qu'il leur faut un
+régime particulier, et ce sera décidé sur des chiffres.
