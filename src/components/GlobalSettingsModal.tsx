@@ -16,6 +16,7 @@ import { Trash2, RefreshCw } from 'lucide-react';
 import LobbyMonitor from './settings/LobbyMonitor';
 import { useObsidianStore } from '../modules/session/useObsidianStore';
 import { QRCodeSVG } from 'qrcode.react';
+import { measureLocalStorageUsage, formatBytes, type StorageUsage } from '../modules/session/logic/storageDiagnostics';
 
 /* GitHub Sync Section Removed at user request */
 
@@ -30,6 +31,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
     const [activeTab, setActiveTab] = useState<TabID>('system');
     const [connectionInfo, setConnectionInfo] = useState<{ip: string, port: number} | null>(null);
     const [pairingSecret, setPairingSecret] = useState<string>('');
+    const [storageUsage, setStorageUsage] = useState<StorageUsage | null>(null);
     const { theme, setTheme, themeColor, setThemeColor, language, setLanguage } = useSessionStore();
     const { 
         audioDevices, fetchAudioDevices, audioAliases, setAudioAlias,
@@ -69,6 +71,15 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
     // jamais affiché en clair ni transmis à un service externe.
     React.useEffect(() => {
         window.appBridge?.pairing?.getSecret().then(setPairingSecret).catch(console.error);
+    }, []);
+
+    // Mesure à l'ouverture des réglages : l'état a pu grossir depuis le démarrage.
+    React.useEffect(() => {
+        try {
+            setStorageUsage(measureLocalStorageUsage());
+        } catch (err) {
+            console.warn('[Settings] Mesure du stockage impossible:', err);
+        }
     }, []);
 
     const port = connectionInfo?.port || 3001;
@@ -470,6 +481,31 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                             {isCleaning ? <RefreshCw size={18} className="animate-spin" /> : <Trash2 size={18} />}
                                             {isCleaning ? t('settings:maintenance.cleaning') : t('settings:maintenance.cleanup_button')}
                                         </button>
+                                    </div>
+
+                                    {/* Occupation du stockage local */}
+                                    <div className="p-6 rounded-2xl bg-app-surface/20 border border-app-border/10">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex-1">
+                                                <h4 className="text-app-text font-bold text-sm mb-1">{t('settings:maintenance.storage_usage_title')}</h4>
+                                                <p className="text-xs text-app-text/40 max-w-md">{t('settings:maintenance.storage_usage_desc')}</p>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className={`text-2xl font-black tabular-nums ${storageUsage?.isNearQuota ? 'text-rose-400' : 'text-app-text'}`}>
+                                                    {storageUsage ? formatBytes(storageUsage.totalBytes) : '—'}
+                                                </p>
+                                                {storageUsage && (
+                                                    <p className="text-[9px] font-bold uppercase tracking-widest text-app-text/40 mt-1">
+                                                        {t('settings:maintenance.storage_usage_session', { size: formatBytes(storageUsage.sessionBytes) })}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </div>
+                                        {storageUsage?.isNearQuota && (
+                                            <p className="text-[10px] text-rose-400 font-black uppercase mt-3">
+                                                {t('settings:maintenance.storage_usage_warning')}
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
                             </section>

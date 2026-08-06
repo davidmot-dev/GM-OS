@@ -60,7 +60,11 @@
     "media_cleanup_desc": "Supprime les fichiers orphelins pour libérer de l'espace.",
     "media_cleanup_last": "Dernier : {{count}} items ({{size}} Mo libérés)",
     "cleanup_button": "NETTOYER",
-    "cleaning": "NETTOYAGE..."
+    "cleaning": "NETTOYAGE...",
+    "storage_usage_title": "Occupation du stockage local",
+    "storage_usage_desc": "Taille de l'état persisté dans le navigateur. Au dépassement du quota, les sauvegardes échouent silencieusement.",
+    "storage_usage_session": "dont session : {{size}}",
+    "storage_usage_warning": "⚠️ Proche du quota — pensez à archiver d'anciennes campagnes."
   },
   "danger": {
     "factory_reset_title": "Réinitialisation d'Usine",

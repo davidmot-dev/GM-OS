@@ -296,13 +296,10 @@ export const useSessionOSStore = create<SessionOSStore>()(
                 if (hasChanges) set({ players: newPlayers, campaigns: newCampaigns });
             },
         }),
-        {
-            ...PersistenceService,
-            onRehydrateStorage: () => () => {
-                // state.sanitizeAllSessions() removed to prevent infinite sync loops
-                // Sanitization is handled during session addition or explicitly via SessionManager if needed.
-            }
-        }
+        // Ne pas redéfinir onRehydrateStorage ici : la clé écraserait celle du
+        // spread, et le nettoyage post-réhydratation de PersistenceService
+        // (URLs blob périmées, reconcileTemplates) ne s'exécuterait jamais.
+        PersistenceService
     )
 );
 

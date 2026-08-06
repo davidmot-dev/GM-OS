@@ -11,7 +11,7 @@
 | 2 | Lecture de fichiers arbitraire depuis le LAN via le proxy média | Critique | ✅ Fait — `90f8445` |
 | 3 | Aucune authentification WebSocket | Critique | ✅ Fait |
 | 4 | `ignore-certificate-errors` global | Élevée | ✅ Fait |
-| 5 | Store session en localStorage (plafond ~5-10 Mo) | Élevée | ⬜ À faire |
+| 5 | Store session en localStorage (plafond ~5-10 Mo) | Élevée | ✅ Fait — à valider en conditions réelles |
 | 6 | Segment de sync `session` monolithique + médias en base64 | Moyenne | ⬜ À faire |
 | 7 | `handleAction` — ~270 lignes de `if` en série | Moyenne | ⬜ À faire |
 | 8 | Couche de synchronisation non testée | Moyenne | ⬜ À faire |
@@ -159,11 +159,62 @@ IndexedDB), des chemins locaux convertis en `gmos://`, du `blob:`/`data:`, ou le
 téléchargements d'assets Nexus visent des hôtes publics à certificat valide, et Ollama est
 en HTTP sur la boucle locale.
 
-## 5. Store session en localStorage ⬜
+## 5. Store session en localStorage ✅
 
-L'état de session est persisté dans `localStorage`, dont le plafond tourne autour de
-5-10 Mo. Un contournement de `QuotaExceededError` est déjà en place, ce qui est le
-symptôme que la limite est atteinte en usage réel. À migrer sur IndexedDB.
+**Le problème, au-delà du plafond.** `PersistenceService` ne passait pas de `storage` au
+`persist` de Zustand, qui retombe donc sur `localStorage`. Or la liste `partialize` en mode
+Electron contient toute la base de campagne — campagnes, sessions, entités, joueurs,
+cartes, événements de chronologie, entrées de wiki, indices, gabarits, decks — sérialisée
+en **une seule chaîne JSON**. Trois conséquences, dont une seule était identifiée :
+
+- **L'écriture est intégrale.** Zustand réécrit la clé entière à chaque `set()`. Modifier
+  les PV d'un PNJ re-sérialise l'intégralité de la base. Le coût dépend de ce qu'on
+  possède, pas de ce qu'on change.
+- **L'écriture est synchrone.** `localStorage.setItem` bloque le thread d'interface.
+- **Le dépassement est brutal.** `setItem` lève, la sauvegarde échoue, sans dégradation
+  progressive ni signal visible — en pleine partie.
+
+Le contournement déjà en place (persistance réduite à six champs hors Electron) n'était pas
+une optimisation mais un aveu : le quota avait déjà été crevé côté tablette. Le poste MJ
+gardait tout et restait exposé.
+
+**Fait, en trois temps.**
+
+1. **Bug corrigé.** `store/index.ts` faisait `{ ...PersistenceService, onRehydrateStorage:
+   ... }`. La clé définie après écrasait celle du spread : le `onRehydrateStorage` de
+   `PersistenceService` ne s'exécutait **jamais**. Ni le nettoyage des URLs `blob:`
+   périmées, ni la remise à zéro de `selectedDeckId`, ni `reconcileTemplates()`. Trois
+   comportements écrits, commentés, et sans effet. L'override est supprimé ; la raison
+   d'origine (ne pas appeler `sanitizeAllSessions`, qui bouclait) est notée à sa place.
+2. **Mesure.** `storageDiagnostics.ts` mesure l'occupation par clé, journalise au démarrage
+   et alerte à 4 Mio — seuil prudent, le quota réel dépendant de la build Chromium. Le
+   chiffre est affiché dans Réglages → Système. La falaise silencieuse devient un signal.
+3. **Migration.** `idbStorage.ts` fournit un `StateStorage` sur IndexedDB, branché via
+   `createJSONStorage`. Les données déjà présentes dans localStorage sont reprises au
+   premier accès, et la copie n'est effacée qu'**après relecture vérifiée** depuis
+   IndexedDB — perdre une base de campagne pour libérer du quota serait un échange perdant.
+
+**Le couplage avec la couche de sync.** La synchronisation entre fenêtres reposait sur
+`window.addEventListener('storage')`. Cet événement est une propriété de localStorage :
+IndexedDB n'a pas d'équivalent. Migrer sans plus aurait cassé ce transport en silence.
+`idbStorage` émet donc lui-même une notification sur un `BroadcastChannel` à chaque
+écriture, et `syncStorageAcrossWindows` s'y abonne.
+
+Il fallait aussi répliquer une propriété non écrite de localStorage : réécrire une valeur
+identique ne déclenchait pas d'événement `storage`. Sans cette garde, une fenêtre qui se
+réhydrate réécrit aussitôt la même valeur, notifie les autres, et le cycle repart sans fin.
+`idbStorage` mémorise donc la dernière valeur vue — en lecture comme en écriture — et
+n'écrit ni ne notifie quand rien n'a changé.
+
+**Second piège désamorcé.** `useSessionOSStore` n'était pas dans le gate de `useHydration`.
+Inoffensif avec un localStorage synchrone, où le store est déjà peuplé à l'évaluation du
+module ; fatal avec IndexedDB, où l'app se serait déclarée prête avec une base vide. Il y
+est désormais.
+
+**Réserve.** Les 22 tests couvrent la logique de stockage et de reprise, mais la migration
+n'a **pas** été exercée sur une vraie base de campagne. Sauvegarder avant le premier
+lancement, et vérifier au démarrage la ligne `[IdbStorage] … migré vers IndexedDB` ainsi
+que la présence des campagnes.
 
 ## 6. Segment de sync `session` monolithique ⬜
 

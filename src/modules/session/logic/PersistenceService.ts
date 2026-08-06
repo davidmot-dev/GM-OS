@@ -1,12 +1,20 @@
-import type { PersistOptions } from 'zustand/middleware';
+import { createJSONStorage, type PersistOptions } from 'zustand/middleware';
 import type { SessionOSStore } from '../store/index';
+import { idbStateStorage, onPersistedStateChanged } from './idbStorage';
+
+export const SESSION_STORE_KEY = 'gmos-v5-session-os-storage';
 
 /**
  * PersistenceService handles Zustand persistence configuration.
  */
 export const PersistenceService: PersistOptions<SessionOSStore> = {
-    name: 'gmos-v5-session-os-storage',
+    name: SESSION_STORE_KEY,
     version: 10,
+
+    // IndexedDB plutôt que localStorage : pas de plafond à quelques mégaoctets,
+    // pas d'écriture synchrone qui bloque l'interface. La reprise des données
+    // déjà présentes dans localStorage est gérée par idbStateStorage.
+    storage: createJSONStorage(() => idbStateStorage),
     
     migrate: (persistedState: unknown, version: number) => {
         console.log(`[Store Migration] Migrating from version ${version} to 10`);
@@ -14,6 +22,9 @@ export const PersistenceService: PersistOptions<SessionOSStore> = {
         return persistedState as SessionOSStore;
     },
 
+    // NOTE: on n'appelle volontairement pas sanitizeAllSessions() ici — cela
+    // provoquait des boucles de synchronisation sans fin. L'assainissement des
+    // sessions se fait à l'ajout, ou explicitement via SessionManager.
     onRehydrateStorage: () => (state) => {
         if (state) {
             // Sanitize stale blob URLs
@@ -71,18 +82,19 @@ export const PersistenceService: PersistOptions<SessionOSStore> = {
  * Global synchronization helper for multiple windows.
  */
 export const syncStorageAcrossWindows = (rehydrate: () => Promise<void>) => {
-    if (typeof window !== 'undefined') {
-        window.addEventListener('storage', (event) => {
-            if (event.key === 'gmos-v5-session-os-storage') {
-                // Prevent rehydration if the current window is currently performing an atomic sync (like Nexus import)
-                // This prevents race conditions where storage updates itself while being re-populated.
-                const store = (window as any).useSessionOSStore?.getState();
-                if (store?.isSystemSyncing) {
-                    console.log('[PersistenceService] Storage update ignored: system is syncing.');
-                    return;
-                }
-                rehydrate();
-            }
-        });
-    }
+    if (typeof window === 'undefined') return;
+
+    // IndexedDB n'émet pas d'événement `storage` : c'est idbStateStorage qui
+    // notifie les autres fenêtres, sur un BroadcastChannel, à chaque écriture
+    // réellement différente.
+    onPersistedStateChanged(SESSION_STORE_KEY, () => {
+        // Prevent rehydration if the current window is currently performing an atomic sync (like Nexus import)
+        // This prevents race conditions where storage updates itself while being re-populated.
+        const store = (window as any).useSessionOSStore?.getState();
+        if (store?.isSystemSyncing) {
+            console.log('[PersistenceService] Storage update ignored: system is syncing.');
+            return;
+        }
+        rehydrate();
+    });
 };

@@ -60,7 +60,11 @@
     "media_cleanup_desc": "Remove orphan files to free up space.",
     "media_cleanup_last": "Last: {{count}} items ({{size}} MB freed)",
     "cleanup_button": "CLEANUP",
-    "cleaning": "CLEANING..."
+    "cleaning": "CLEANING...",
+    "storage_usage_title": "Local storage usage",
+    "storage_usage_desc": "Size of the state persisted in the browser. Once the quota is exceeded, saves fail silently.",
+    "storage_usage_session": "session: {{size}}",
+    "storage_usage_warning": "⚠️ Close to the quota — consider archiving old campaigns."
   },
   "danger": {
     "factory_reset_title": "Factory Reset",
