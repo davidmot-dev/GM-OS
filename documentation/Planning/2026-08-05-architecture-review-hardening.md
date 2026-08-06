@@ -11,7 +11,7 @@
 | 2 | Lecture de fichiers arbitraire depuis le LAN via le proxy média | Critique | ✅ Fait — `90f8445` |
 | 3 | Aucune authentification WebSocket | Critique | ✅ Fait |
 | 4 | `ignore-certificate-errors` global | Élevée | ✅ Fait |
-| 5 | Store session en localStorage (plafond ~5-10 Mo) | Élevée | ✅ Fait — à valider en conditions réelles |
+| 5 | Store session en localStorage (plafond ~5-10 Mo) | Élevée | ✅ Fait |
 | 6 | Segment de sync `session` monolithique + médias en base64 | Moyenne | ⬜ À faire |
 | 7 | `handleAction` — ~270 lignes de `if` en série | Moyenne | ⬜ À faire |
 | 8 | Couche de synchronisation non testée | Moyenne | ⬜ À faire |
@@ -211,10 +211,10 @@ Inoffensif avec un localStorage synchrone, où le store est déjà peuplé à l'
 module ; fatal avec IndexedDB, où l'app se serait déclarée prête avec une base vide. Il y
 est désormais.
 
-**Réserve.** Les 22 tests couvrent la logique de stockage et de reprise, mais la migration
-n'a **pas** été exercée sur une vraie base de campagne. Sauvegarder avant le premier
-lancement, et vérifier au démarrage la ligne `[IdbStorage] … migré vers IndexedDB` ainsi
-que la présence des campagnes.
+**Validation.** Au-delà des 22 tests, la migration a été exercée le 2026-08-06 sur la base
+de campagne réelle de David, après sauvegarde de `%APPDATA%\gm-os-v5` : reprise depuis
+localStorage et campagnes intactes. C'était la seule partie que les tests ne pouvaient pas
+couvrir.
 
 ## 6. Segment de sync `session` monolithique ⬜
 
