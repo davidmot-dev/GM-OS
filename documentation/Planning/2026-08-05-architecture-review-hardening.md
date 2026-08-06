@@ -12,9 +12,9 @@
 | 3 | Aucune authentification WebSocket | Critique | ✅ Fait |
 | 4 | `ignore-certificate-errors` global | Élevée | ✅ Fait |
 | 5 | Store session en localStorage (plafond ~5-10 Mo) | Élevée | ✅ Fait |
-| 6 | Segment de sync `session` monolithique + médias en base64 | Moyenne | ⬜ À faire |
+| 6 | Segment de sync `session` monolithique + médias en base64 | Moyenne | ✅ Fait — à valider avec une tablette |
 | 7 | `handleAction` — ~270 lignes de `if` en série | Moyenne | ✅ Fait |
-| 8 | Couche de synchronisation non testée | Moyenne | ⬜ À faire |
+| 8 | Couche de synchronisation non testée | Moyenne | ✅ Fait |
 | 9 | Aucune autorisation par rôle sur les actions reçues | Élevée | ⬜ À faire |
 
 > Le point 9 ne vient pas de la revue initiale : il a été identifié en traitant les points
@@ -220,11 +220,48 @@ de campagne réelle de David, après sauvegarde de `%APPDATA%\gm-os-v5` : repris
 localStorage et campagnes intactes. C'était la seule partie que les tests ne pouvaient pas
 couvrir.
 
-## 6. Segment de sync `session` monolithique ⬜
+## 6. Segment de sync `session` monolithique ✅
 
-Le segment `session` part d'un bloc, et les médias voyagent en base64 **dans le payload**.
-Chaque petite modification retransmet donc tout. À découper en segments, et à remplacer
-les médias embarqués par des références.
+Traité avec le point 8, dont les tests ont servi de filet.
+
+### 6a. Granularité du diff
+
+`getDifferentialPayload` comparait au premier niveau seulement, et `session` agrège treize
+champs — sessions, campagnes, joueurs, entités, lieux, indices, gabarits, favoris.
+Renommer un personnage retransmettait donc tout le reste, médias résolus compris.
+
+**Ce qui a rendu le correctif simple.** Le destinataire applique déjà ces champs
+individuellement : `applySyncPayload` teste chacun (`if (session.sessions !== undefined)`).
+Un segment `session` partiel était donc déjà correct côté réception — il n'était simplement
+jamais produit. `getDifferentialPayload` accepte désormais `deepSegments`, et descend d'un
+niveau pour les segments listés.
+
+Deux cas retombent volontairement sur le segment entier : quand l'état précédent n'est pas
+un objet simple, et quand la seule différence est un champ **disparu** — le diff fin ne
+sait pas exprimer une suppression, et mieux vaut tout renvoyer que laisser le destinataire
+sur une valeur périmée.
+
+`useRemoteSync` fusionne maintenant `session` au lieu de le remplacer, comme il le faisait
+déjà pour `combat`, `notes` et `whiteboard`.
+
+### 6b. Médias par référence
+
+`resolveToSendableUrl` transformait tout identifiant `m-` en **base64 dans le payload**.
+Un avatar de 200 Ko en pèse 267 une fois encodé, et repartait à chaque diffusion.
+
+L'infrastructure pour faire mieux existait déjà — l'IPC `remote:cache-media` et la route
+HTTP `/temp/` — mais **n'avait jamais eu de client**. Pire, la déclaration de type de
+`cacheMedia` dans `window.d.ts` inversait ses deux arguments par rapport à `preload.ts` :
+le premier appelant à s'y fier aurait envoyé l'identifiant comme tampon. Corrigé.
+
+Le résolveur dépose désormais l'octet une fois dans le cache disque du poste MJ et ne
+transmet qu'une URL. Un `Set` évite de redéposer le même média — les deux durées de vie
+coïncident, `temp-media` étant vidé au démarrage. Repli sur le base64 sans réseau local
+exploitable (poste isolé, pont applicatif absent) ou si le dépôt échoue.
+
+**Réserve.** Les 11 tests du résolveur couvrent la logique, pas le rendu réel. Le passage
+du base64 à la référence décide si les images s'affichent sur les tablettes : à vérifier
+avec un vrai appareil connecté avant de considérer le point clos.
 
 ## 7. `handleAction` — 270 lignes de `if` ✅
 
@@ -264,16 +301,30 @@ connecté, appairé ou non : une tablette non appairée peut donc déclencher
 `whiteboard:clear` ou `combat:next-turn`. C'est une question d'autorisation par rôle,
 distincte du typage : elle fait l'objet du **point 9**.
 
-## 8. Couche de synchronisation non testée ⬜
+## 8. Couche de synchronisation non testée ✅
 
 Des transports multiples coexistent entre des pairs dont aucun ne fait autorité :
 `BroadcastChannel` via `CrossWindowEventService` pour les fenêtres locales, WebSocket via
 `SyncServer` pour les tablettes, et depuis le point 5 un second `BroadcastChannel` pour
-notifier les écritures de persistance. Aucun test ne couvre cet ensemble, alors que c'est
-là que se logent les bugs de cohérence les plus coûteux en partie.
+notifier les écritures de persistance.
 
 *(La description initiale mentionnait l'événement `storage` comme troisième transport. Il a
 disparu au point 5, avec le passage à IndexedDB.)*
+
+**Fait.** 27 tests posés avant de toucher au point 6, pour servir de filet :
+
+- `syncUtils` (24) — la fonction qui décide *ce qui part sur le réseau*. Y compris ses
+  limites assumées, écrites noir sur blanc : la disparition d'un segment n'est pas
+  signalée, et le diff partage les références de l'état courant plutôt que de le copier.
+- `CrossWindowEventService` (10) — protocole des verrous de jetons, expiration à cinq
+  secondes d'un verrou étranger périmé, filtrage de ses propres messages, et garde
+  anti-boucle `isSyncing` vérifiée *pendant* l'application d'une mise à jour distante.
+
+**Bug trouvé par les tests.** `isDeepEqual` ne distinguait pas un tableau d'un objet :
+`Object.keys(['x'])` vaut `['0']`, exactement comme `Object.keys({ 0: 'x' })`. Un champ
+passant de `{}` à `[]` — ou l'inverse — était donc vu comme inchangé et **n'était jamais
+diffusé**. Une garde `Array.isArray` a été ajoutée. La correction ne peut que faire
+émettre davantage, jamais moins : le sens sûr.
 
 ## 9. Aucune autorisation par rôle sur les actions reçues ⬜
 

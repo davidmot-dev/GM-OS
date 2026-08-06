@@ -128,7 +128,9 @@ declare global {
             getDisplays: () => Promise<DisplayInfo[]>;
             openProjectionWindow: (displayId: string, url: string) => void;
             onAction: (callback: (data: RemoteAction) => void) => () => void;
-            cacheMedia: (id: string, buffer: ArrayBuffer) => Promise<boolean>;
+            // Ordre des arguments aligné sur preload.ts : (buffer, id).
+            // La déclaration les inversait, sans conséquence jusqu'ici faute d'appelant.
+            cacheMedia: (buffer: ArrayBuffer, id: string) => Promise<boolean>;
             removeActions: () => void;
         };
         pairing?: {

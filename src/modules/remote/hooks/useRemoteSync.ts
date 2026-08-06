@@ -102,7 +102,10 @@ export const useRemoteSync = () => {
                         // Deep merge for specific complex objects if needed
                         combat: data.payload.combat ? { ...prev.combat, ...data.payload.combat } : prev.combat,
                         notes: data.payload.notes ? { ...prev.notes, ...data.payload.notes } : prev.notes,
-                        whiteboard: data.payload.whiteboard ? { ...prev.whiteboard, ...data.payload.whiteboard } : prev.whiteboard
+                        whiteboard: data.payload.whiteboard ? { ...prev.whiteboard, ...data.payload.whiteboard } : prev.whiteboard,
+                        // `session` arrive partiel depuis que le diff descend d'un
+                        // niveau : l'écraser perdrait les champs inchangés.
+                        session: data.payload.session ? { ...prev.session, ...data.payload.session } : prev.session
                     }));
                 } 
                 // Legacy Sync Segments

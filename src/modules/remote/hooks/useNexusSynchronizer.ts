@@ -277,7 +277,14 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                 });
             }
 
-            const diffPayload = force ? fullState : getDifferentialPayload(fullState, lastBroadcastRef.current);
+            // `session` agrège campagnes, entités, lieux, indices et favoris —
+            // les médias résolus compris. Comparé d'un bloc, renommer un
+            // personnage retransmettait tout le reste ; comparé champ par champ,
+            // seul ce qui bouge repart. Les destinataires appliquent déjà ces
+            // champs individuellement (voir applySyncPayload).
+            const diffPayload = force
+                ? fullState
+                : getDifferentialPayload(fullState, lastBroadcastRef.current, { deepSegments: ['session'] });
             
             if (Object.keys(diffPayload).length > 0 && window.appBridge) {
                 // Roles: remote/gm see everything. player sees sanitized.
