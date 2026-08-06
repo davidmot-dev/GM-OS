@@ -781,12 +781,46 @@ ne le corrige pas non plus.
 **À exercer en conditions réelles**, comme les flux précédents : fermer le Player Hub en
 plein déplacement d'un jeton et vérifier qu'il redevient saisissable immédiatement.
 
-### Étape 5 — à faire
+### Étape 5 — bascule de `map` 🟡
 
-`map` et `whiteboard`, les deux plus enchevêtrés — les seuls à avoir un traitement
-maître/esclave et un `relayTimer` dans `handleMessage`. `CrossWindowEventService` disparaît
-ensuite.
+C'est le flux le plus sollicité — 30 fps pendant un glisser-déposer — et celui dont l'étape 1
+avait mesuré qu'il ne posait pas de problème : +0,2 à +0,4 ms d'aller-retour contre un budget
+de 33 ms.
 
-Le tableau blanc devra être traité **avec** son problème de payload : il rediffuse tout le
-tableau toutes les 50 ms, ce qui est un défaut indépendant du transport mais que la bascule
-serait l'occasion de corriger.
+**Le critère du `partialize` ne s'appliquait pas ici.** Les champs `projected*` sont
+explicitement exclus de la persistance de `useMapStore` — « Projections are NOT persisted to
+avoid massive performance drops during real-time movement ». La garantie acquise pour `clock`
+et `combat` tombait donc, et il a fallu revenir à la vérification champ par champ :
+
+- `projectedTokens` et `projectedDangerZones` dérivent de `tokens` et `dangerZones`,
+  eux persistés — la garantie leur est transitive.
+- `projectedFogDataUrl` est `string | null`. Le `null` compte : effacer le brouillard se
+  transmet en envoyant `null`, et `null` survit à JSON là où `undefined` disparaîtrait.
+  Un test le fixe.
+- `MapPing` et `MagicEffect` n'ont que des primitives, et aucun `Date`, `Map` ni `Set`
+  n'apparaît dans `modules/map/types.ts`.
+
+Ce que cela dit du critère : il est commode quand il s'applique, mais ce n'est pas une
+dispense générale. Un store peut très bien exclure de sa persistance exactement les champs
+qu'il diffuse — c'est le cas ici, et pour une bonne raison.
+
+**Le traitement maître/esclave est inchangé.** `applyRemoteUpdate` mute le payload reçu
+(fusion protectrice pendant un glisser local, report des positions vers `tokens` côté
+maître). C'était sûr avec le clone structuré, qui livre un objet neuf ; ça l'est tout autant
+avec `JSON.parse`, pour la même raison.
+
+Suite complète au vert (448), build compris.
+
+**À exercer en conditions réelles** : déplacer un jeton depuis la fenêtre MJ et vérifier que
+le Player Hub et le projecteur suivent, brouillard et pings compris.
+
+### Étape 6 — à faire
+
+Le tableau blanc, dernier flux. Il devra être traité **avec** son problème de payload : il
+rediffuse tout le tableau toutes les 50 ms, soit 2 Mo/s à 40 tracés. C'est un défaut
+indépendant du transport — mais c'est aussi le seul flux dont l'étape 1 a mesuré qu'il
+souffrait vraiment du saut IPC sous sa forme actuelle, et la pré-sérialisation JSON du relais
+suffit à annuler l'écart. Le corriger reste souhaitable pour le trafic lui-même.
+
+Restent ensuite `hub:ready`, puis la suppression de `CrossWindowEventService` et du
+`BroadcastChannel`.

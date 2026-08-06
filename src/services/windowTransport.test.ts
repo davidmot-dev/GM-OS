@@ -37,7 +37,7 @@ describe('windowTransport', () => {
             // délibéré, vérifié contre l'aller-retour JSON (voir le commentaire
             // de RELAYED_TYPES). Ce test échouera à la prochaine bascule — c'est
             // le rappel de refaire cette vérification.
-            expect([...RELAYED_TYPES]).toEqual(['clock', 'combat', 'map:lock', 'map:unlock']);
+            expect([...RELAYED_TYPES]).toEqual(['clock', 'combat', 'map', 'map:lock', 'map:unlock']);
         });
     });
 
@@ -88,6 +88,43 @@ describe('windowTransport', () => {
 
             expect(relay.published).toHaveLength(1);
             expect(JSON.parse(relay.published[0]).payload.round).toBe(2);
+        });
+
+        it('envoie le flux carte par le process principal, brouillard compris', () => {
+            // Le brouillard est le plus gros payload de ce flux, mais c'est une
+            // seule longue chaîne : la mesure du 2026-08-06 l'a montré quasi
+            // gratuit à relayer, contrairement aux graphes d'objets.
+            const relay = installFakeRelay();
+            transport = new WindowTransport('canal-test-carte', (m) => received.push(m));
+
+            transport.publish({
+                type: 'map',
+                payload: {
+                    projectionTarget: 'hub',
+                    projectedTokens: [{ id: 'tok-1', x: 10, y: 20, size: 1 }],
+                    projectedFogDataUrl: 'data:image/png;base64,AAAA',
+                    projectedPings: [],
+                },
+                senderId: 'abc',
+            });
+
+            expect(relay.published).toHaveLength(1);
+            const sent = JSON.parse(relay.published[0]);
+            expect(sent.payload.projectedTokens[0].x).toBe(10);
+            expect(sent.payload.projectedFogDataUrl).toBe('data:image/png;base64,AAAA');
+        });
+
+        it('préserve un null du flux carte, que JSON distingue d\'un absent', () => {
+            // projectedFogDataUrl est `string | null` : effacer le brouillard
+            // se transmet en envoyant null, et null survit à JSON — undefined non.
+            const relay = installFakeRelay();
+            transport = new WindowTransport('canal-test-carte-null', (m) => received.push(m));
+
+            transport.publish({ type: 'map', payload: { projectedFogDataUrl: null }, senderId: 'abc' });
+
+            const sent = JSON.parse(relay.published[0]);
+            expect(sent.payload).toHaveProperty('projectedFogDataUrl');
+            expect(sent.payload.projectedFogDataUrl).toBeNull();
         });
 
         it('envoie les verrous de jetons par le process principal', () => {

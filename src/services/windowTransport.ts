@@ -41,10 +41,18 @@ export interface WindowMessage {
  * - `map:lock` / `map:unlock` : le payload est `{ tokenId: string }`. Ce ne sont
  *   pas des flux d'état — ils ne viennent d'aucun store — mais un seul champ
  *   textuel ne pose évidemment pas de question de compatibilité.
+ * - `map` : **le critère du `partialize` ne s'applique pas ici.** Les champs
+ *   `projected*` sont explicitement exclus de la persistance de `useMapStore`
+ *   (« Projections are NOT persisted to avoid massive performance drops »). Ils
+ *   ont donc été vérifiés un par un : `projectedTokens` et `projectedDangerZones`
+ *   dérivent de `tokens` et `dangerZones`, eux persistés ; `projectedFogDataUrl`
+ *   est `string | null` ; `MapPing` et `MagicEffect` n'ont que des primitives.
+ *   Aucun `Date`, `Map` ni `Set` dans `modules/map/types.ts`.
  */
 export const RELAYED_TYPES: ReadonlySet<string> = new Set([
     'clock',
     'combat',
+    'map',
     'map:lock',
     'map:unlock',
 ]);
