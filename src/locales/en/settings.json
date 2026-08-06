@@ -64,23 +64,23 @@
     "storage_usage_title": "Local storage usage",
     "storage_usage_desc": "Size of the state persisted in the browser. Once the quota is exceeded, saves fail silently.",
     "storage_usage_session": "session: {{size}}",
-    "storage_usage_warning": "⚠️ Close to the quota — consider archiving old campaigns.",
-    "inlined_media": {
-      "title": "Media embedded in campaigns",
-      "description": "Some images are stored inside the record itself instead of the media library. Moving them out lightens saves and tablet broadcasts.",
-      "scan_button": "Analyse",
-      "scan_failed": "Analysis failed, see console.",
-      "none": "No embedded media: everything is already in the media library.",
-      "found": "{{count}} embedded media, {{size}} recoverable.",
-      "backup_hint": "Back up %APPDATA%\\gm-os-v5 before running the migration.",
-      "confirm": "Move these images into the media library and replace the matching fields?\n\nOnly each record's image field changes. Back up before continuing.",
-      "migrate_button": "Migrate media",
-      "migrating": "Migrating… {{done}}/{{total}}",
-      "migrate_failed": "Migration failed, see console.",
-      "done": "{{count}} media moved, {{size}} recovered.",
-      "report": "{{count}} media moved into the library, {{size}} recovered.",
-      "kept": "{{count}} left untouched as a precaution:"
-    }
+    "storage_usage_warning": "⚠️ Close to the quota — consider archiving old campaigns."
+  },
+  "inlined_media": {
+    "title": "Media embedded in campaigns",
+    "description": "Some images are stored inside the record itself instead of the media library. Moving them out lightens saves and tablet broadcasts.",
+    "scan_button": "Analyse",
+    "scan_failed": "Analysis failed, see console.",
+    "none": "No embedded media: everything is already in the media library.",
+    "found": "{{count}} embedded media, {{size}} recoverable.",
+    "backup_hint": "Back up %APPDATA%\\gm-os-v5 before running the migration.",
+    "confirm": "Move these images into the media library and replace the matching fields?\n\nOnly each record's image field changes. Back up before continuing.",
+    "migrate_button": "Migrate media",
+    "migrating": "Migrating… {{done}}/{{total}}",
+    "migrate_failed": "Migration failed, see console.",
+    "done": "{{count}} media moved, {{size}} recovered.",
+    "report": "{{count}} media moved into the library, {{size}} recovered.",
+    "kept": "{{count}} left untouched as a precaution:"
   },
   "danger": {
     "factory_reset_title": "Factory Reset",
