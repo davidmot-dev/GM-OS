@@ -814,13 +814,48 @@ Suite complète au vert (448), build compris.
 **À exercer en conditions réelles** : déplacer un jeton depuis la fenêtre MJ et vérifier que
 le Player Hub et le projecteur suivent, brouillard et pings compris.
 
-### Étape 6 — à faire
+### Étape 6 — bascule du tableau blanc 🟡
 
-Le tableau blanc, dernier flux. Il devra être traité **avec** son problème de payload : il
-rediffuse tout le tableau toutes les 50 ms, soit 2 Mo/s à 40 tracés. C'est un défaut
-indépendant du transport — mais c'est aussi le seul flux dont l'étape 1 a mesuré qu'il
-souffrait vraiment du saut IPC sous sa forme actuelle, et la pré-sérialisation JSON du relais
-suffit à annuler l'écart. Le corriger reste souhaitable pour le trafic lui-même.
+C'est le flux qui avait justifié toute la mesure de l'étape 1 : le seul réellement pénalisé
+par le saut IPC, à **+19 ms** d'aller-retour sous sa forme objet — 106 Ko répartis en 4 882
+nœuds. C'est exactement l'écart que la pré-sérialisation du relais annule : 4,1 ms contre
+5,0 pour le `BroadcastChannel`. Le flux qui menaçait le chantier en sort plus rapide qu'avant.
 
-Restent ensuite `hub:ready`, puis la suppression de `CrossWindowEventService` et du
-`BroadcastChannel`.
+`paths` étant dans le `partialize` de `useWhiteboardStore`, la sûreté JSON est acquise par le
+critère. Les champs volatils qu'il exclut sont soit du même type — `activePath` est un
+`DrawingPath`, comme les éléments de `paths` — soit des primitives.
+
+Suite complète au vert (449), build compris.
+
+**À exercer en conditions réelles** : dessiner, projeter vers le Player Hub, effacer,
+annuler.
+
+### Étape 6 bis — volume du payload, après validation
+
+Le tableau blanc rediffuse **tout** le tableau toutes les 50 ms pendant qu'on dessine, soit
+2 Mo/s à 40 tracés. C'est un défaut indépendant du transport.
+
+**Le correctif est prêt et tient en peu de chose.** Pendant qu'un tracé est en cours
+(`activePath !== null`), omettre `paths` du payload : le destinataire fusionne déjà
+(`setState(prev => ({ ...prev, ...payload }))`) et conserve donc son tableau — le même
+mécanisme qui avait rendu le point 6a simple. `finishDrawing` remettant `activePath` à
+`null`, le payload complet repart en fin de tracé. Un changement de `paths` survenu pendant
+le tracé — effacement automatique du laser au bout de deux secondes, annulation — se rattrape
+au tracé suivant. Trafic estimé pendant le dessin : environ 50 Ko/s au lieu de 2 Mo/s.
+
+**Décision (David) : après validation du transport, pas en même temps.** Le tableau blanc est
+le flux le plus souvent recorrigé du projet — au moins quatre fois d'après le relevé des 44
+commits de synchronisation. Empiler deux changements dessus avant d'en avoir validé un seul
+priverait du moyen de savoir lequel accuser.
+
+### Étape 7 — à faire
+
+`hub:ready`, dernier type encore sur le `BroadcastChannel`. Il ne porte pas de payload, mais
+il déclenche `broadcastFullState()` côté maître — c'est le chemin de synchronisation initiale
+quand le Player Hub s'ouvre, donc pas un cas anodin malgré sa forme.
+
+**Nuance sur la disparition annoncée du `BroadcastChannel`.** Il ne peut pas disparaître tout
+à fait : `WindowTransport` s'en sert de repli hors Electron, où aucun process principal
+n'existe. Sur tablette en PWA il n'y a de toute façon qu'une fenêtre, donc rien à
+synchroniser — mais le code doit rester exécutable. Ce qui disparaît, c'est son usage dans
+l'application de bureau, et avec lui le second chemin à tester.
