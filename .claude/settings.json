@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "PowerShell(npm run build 2>&1)"
+      "PowerShell(npm run build 2>&1)",
+      "PowerShell(git add documentation/Planning/2026-08-05-architecture-review-hardening.md)",
+      "PowerShell(git add .claude/settings.json)",
+      "PowerShell(git push origin feature/tablet-hub-pwa 2>&1)"
     ]
   }
 }
