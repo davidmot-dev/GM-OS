@@ -12,10 +12,10 @@
 | 3 | Aucune authentification WebSocket | Critique | ✅ Fait |
 | 4 | `ignore-certificate-errors` global | Élevée | ✅ Fait |
 | 5 | Store session en localStorage (plafond ~5-10 Mo) | Élevée | ✅ Fait |
-| 6 | Segment de sync `session` monolithique + médias en base64 | Moyenne | ✅ Fait — à valider avec une tablette |
+| 6 | Segment de sync `session` monolithique + médias en base64 | Moyenne | ⚠️ Partiel — voir 6c |
 | 7 | `handleAction` — ~270 lignes de `if` en série | Moyenne | ✅ Fait |
 | 8 | Couche de synchronisation non testée | Moyenne | ✅ Fait |
-| 9 | Aucune autorisation par rôle sur les actions reçues | Élevée | ✅ Fait |
+| 9 | Aucune autorisation par rôle sur les actions reçues | Élevée | ✅ Fait — validé en conditions réelles |
 
 > Le point 9 ne vient pas de la revue initiale : il a été identifié en traitant les points
 > 3 et 7, qui l'ont chacun approché sans le couvrir.
@@ -414,6 +414,19 @@ même chantier** plutôt que reporté.
 26 tests : `actionPolicy.test.ts` pour la politique, plus six cas dans
 `SyncServer.register.test.ts` qui vérifient le câblage réel, dont le fait qu'un client
 ayant réclamé `gm` sans token se voit refuser les actions correspondantes.
+
+**Validation en conditions réelles (2026-08-06).** Contre l'application en fonctionnement,
+avec un client tablette simulé : le rôle `hub` est accordé, une connexion réclamant `gm`
+sans token est rétrogradée en `player` et reçoit un `remote:error` de code
+`pairing_required`. Les refus d'action eux-mêmes sont écrits sur la sortie standard du
+process principal — donc dans le terminal `npm run dev`, pas dans `main.log`, qu'electron-log
+n'alimente qu'à partir des appels `log.*`.
+
+**Angle mort connu, assumé.** Les fenêtres locales — Player Hub, projecteur — n'empruntent
+pas la WebSocket mais le `BroadcastChannel` de `CrossWindowEventService` : elles échappent
+donc entièrement à ce contrôle. Le risque est moindre (ces fenêtres tournent sur la machine
+du MJ, hors de portée du réseau), et la fermeture de cet angle mort est un bénéfice attendu
+du chantier d'unification du transport, où elle est déjà notée.
 
 ---
 
