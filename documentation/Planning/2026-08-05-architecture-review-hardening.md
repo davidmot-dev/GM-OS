@@ -734,14 +734,58 @@ recherché à l'étape 2 : basculer un flux doit être une ligne, pas un chantie
 
 **À exercer en conditions réelles**, comme `clock`.
 
-### Étape 4 — à faire
+### Étape 4 — verrous de jetons 🟡
 
-Les verrous de jetons, puis `map` et `whiteboard`, les deux plus enchevêtrés.
-`CrossWindowEventService` disparaît en fin de parcours, pas au début.
+**La contrainte qui a cadré la solution.** `requestLock` est appelé **synchronement** dans
+`handlePointerDown`, et son résultat conditionne le `stopPropagation()` juste après. Après
+un aller-retour IPC, l'événement aurait déjà atteint le canvas de brouillard en dessous : un
+verrou pleinement autoritaire ne peut donc pas remplacer l'appel tel quel.
 
-Les verrous méritent plus qu'une bascule de transport : le process principal étant le seul
-point qui voit toutes les fenêtres, ils peuvent y devenir un état **autoritaire** au lieu
-d'être répliqués dans chaque renderer avec une expiration à cinq secondes.
+`ipcRenderer.sendSync` aurait préservé la signature synchrone, et à moins d'une milliseconde
+le blocage serait passé inaperçu — sauf que ce process principal fait de l'indexation RAG et
+des appels Ollama. Un gel du renderer en plein glisser-déposer serait pire que le défaut
+corrigé. Écarté.
+
+**Décision (David).** Relais **plus** libération à la fermeture, plutôt qu'un arbitrage
+complet de l'octroi. Le partage retenu :
+
+- **L'octroi reste local et optimiste**, inchangé, là où l'événement DOM l'exige. Le risque
+  qu'il laisse ouvert — deux fenêtres saisissant le même jeton au même instant — demande
+  deux mains, ce qui n'arrive pas avec un seul MJ.
+- **La libération à la fermeture passe au process principal**, seul point qui voit une
+  fenêtre disparaître. C'est la seule partie du problème qui exige réellement une vue
+  globale : un renderer ne peut pas distinguer une fenêtre fermée d'une fenêtre lente.
+
+**Fait.** `electron/TokenLockRegistry.ts` observe le flux relayé — il ne le filtre pas — et
+retient quelle fenêtre détient quel jeton. À la fermeture d'une fenêtre, le process principal
+diffuse lui-même le déverrouillage de ce qu'elle détenait.
+
+Le message de nettoyage reproduit **exactement** l'enveloppe qu'aurait émise le détenteur,
+`senderId` compris. C'était le piège : les renderers filtrent les messages portant leur
+propre `senderId`, et emprunter celui de la fenêtre fermée garantit que le déverrouillage
+atteint tout le monde, puisqu'il n'appartient plus à personne.
+
+L'expiration de cinq secondes reste en place côté renderer, en filet.
+
+Auparavant, un Player Hub fermé en plein glisser-déposer immobilisait le jeton pendant cinq
+secondes. La libération est désormais immédiate et exacte.
+
+15 tests (`TokenLockRegistry.test.ts` et l'aiguillage des deux types de verrous).
+Suite complète au vert (446).
+
+**Limite connue, inchangée.** `isTokenLocked` est lu pendant le rendu de `MapTokenNode` sans
+être réactif : un verrou qui change n'entraîne pas de re-rendu, l'état est constaté au rendu
+suivant. C'était déjà le cas avec le `BroadcastChannel` — la bascule ne l'aggrave pas, mais
+ne le corrige pas non plus.
+
+**À exercer en conditions réelles**, comme les flux précédents : fermer le Player Hub en
+plein déplacement d'un jeton et vérifier qu'il redevient saisissable immédiatement.
+
+### Étape 5 — à faire
+
+`map` et `whiteboard`, les deux plus enchevêtrés — les seuls à avoir un traitement
+maître/esclave et un `relayTimer` dans `handleMessage`. `CrossWindowEventService` disparaît
+ensuite.
 
 Le tableau blanc devra être traité **avec** son problème de payload : il rediffuse tout le
 tableau toutes les 50 ms, ce qui est un défaut indépendant du transport mais que la bascule

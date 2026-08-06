@@ -48,7 +48,8 @@ import { SyncServer } from './SyncServer'
 import { mediaAccess } from './MediaAccess'
 import { registerPairingHandlers } from './PairingManager'
 import { shouldRejectUnauthorized } from './netTrust'
-import { installWindowRelay } from './WindowRelay'
+import { installWindowRelay, relayToOthers, RELAY_PUBLISH_CHANNEL, type RelayTarget } from './WindowRelay'
+import { TokenLockRegistry, buildUnlockMessage } from './TokenLockRegistry'
 // import { GitBackupService } from './GitBackupService'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -781,13 +782,36 @@ app.whenReady().then(async () => {
     // Relais entre fenêtres locales, hébergé par le process principal.
     // La liste des fenêtres est relue à chaque message : le Player Hub et le
     // projecteur vont et viennent.
-    installWindowRelay(ipcMain, () =>
+    const listRelayTargets = (): RelayTarget[] =>
         BrowserWindow.getAllWindows().map(w => ({
             id: w.webContents.id,
             isDestroyed: () => w.isDestroyed() || w.webContents.isDestroyed(),
             send: (channel: string, message: string) => w.webContents.send(channel, message),
-        }))
-    );
+        }));
+
+    installWindowRelay(ipcMain, listRelayTargets);
+
+    // Le registre observe le flux relayé pour savoir quelle fenêtre détient quel
+    // jeton. Il n'arbitre pas l'octroi — voir electron/TokenLockRegistry.ts.
+    const tokenLocks = new TokenLockRegistry();
+    ipcMain.on(RELAY_PUBLISH_CHANNEL, (event, message) => {
+        tokenLocks.observe(event.sender.id, message);
+    });
+
+    // Une fenêtre fermée en plein glisser-déposer immobilisait le jeton jusqu'à
+    // l'expiration de cinq secondes. Le process principal est le seul point qui
+    // voit la fenêtre disparaître : il libère à sa place.
+    app.on('browser-window-created', (_event, window) => {
+        const windowId = window.webContents.id;
+
+        window.once('closed', () => {
+            for (const lock of tokenLocks.releaseForWindow(windowId)) {
+                // -1 ne correspond à aucune fenêtre : le message part donc à
+                // toutes, y compris à celles qui auraient survécu à l'émetteur.
+                relayToOthers(listRelayTargets(), -1, buildUnlockMessage(lock));
+            }
+        });
+    });
 
     // createWindow() démarre déjà le SyncServer (voir syncServer.start()).
     createWindow();

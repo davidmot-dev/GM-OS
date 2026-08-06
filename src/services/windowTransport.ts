@@ -38,8 +38,16 @@ export interface WindowMessage {
  * - `clock` : persisté (`useClockStore`).
  * - `combat` : le `partialize` de `useCombatStore` est exactement les quatre
  *   champs diffusés.
+ * - `map:lock` / `map:unlock` : le payload est `{ tokenId: string }`. Ce ne sont
+ *   pas des flux d'état — ils ne viennent d'aucun store — mais un seul champ
+ *   textuel ne pose évidemment pas de question de compatibilité.
  */
-export const RELAYED_TYPES: ReadonlySet<string> = new Set(['clock', 'combat']);
+export const RELAYED_TYPES: ReadonlySet<string> = new Set([
+    'clock',
+    'combat',
+    'map:lock',
+    'map:unlock',
+]);
 
 /** Le relais du process principal est-il joignable depuis cette fenêtre ? */
 export function isRelayAvailable(): boolean {

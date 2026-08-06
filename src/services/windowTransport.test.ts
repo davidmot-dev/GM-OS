@@ -37,7 +37,7 @@ describe('windowTransport', () => {
             // délibéré, vérifié contre l'aller-retour JSON (voir le commentaire
             // de RELAYED_TYPES). Ce test échouera à la prochaine bascule — c'est
             // le rappel de refaire cette vérification.
-            expect([...RELAYED_TYPES]).toEqual(['clock', 'combat']);
+            expect([...RELAYED_TYPES]).toEqual(['clock', 'combat', 'map:lock', 'map:unlock']);
         });
     });
 
@@ -88,6 +88,18 @@ describe('windowTransport', () => {
 
             expect(relay.published).toHaveLength(1);
             expect(JSON.parse(relay.published[0]).payload.round).toBe(2);
+        });
+
+        it('envoie les verrous de jetons par le process principal', () => {
+            // C'est ce passage qui permet au registre du main d'observer qui
+            // détient quoi, et donc de libérer à la fermeture d'une fenêtre.
+            const relay = installFakeRelay();
+            transport = new WindowTransport('canal-test-verrous', (m) => received.push(m));
+
+            transport.publish({ type: 'map:lock', payload: { tokenId: 'jeton-1' }, senderId: 'abc' });
+            transport.publish({ type: 'map:unlock', payload: { tokenId: 'jeton-1' }, senderId: 'abc' });
+
+            expect(relay.published.map(m => JSON.parse(m).type)).toEqual(['map:lock', 'map:unlock']);
         });
 
         it('sérialise avant d\'émettre, jamais un objet', () => {
