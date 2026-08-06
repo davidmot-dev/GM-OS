@@ -47,6 +47,7 @@ import { OllamaService } from './OllamaService'
 import { SyncServer } from './SyncServer'
 import { mediaAccess } from './MediaAccess'
 import { registerPairingHandlers } from './PairingManager'
+import { shouldRejectUnauthorized } from './netTrust'
 // import { GitBackupService } from './GitBackupService'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -91,8 +92,12 @@ protocol.registerSchemesAsPrivileged([
     { scheme: 'gmos', privileges: { standard: true, secure: true, supportFetchAPI: true, bypassCSP: true, stream: true } }
 ]);
 
-// Ignore certificate errors for local HTTPS requests (like Philips Hue Bridge)
-app.commandLine.appendSwitch('ignore-certificate-errors')
+// NOTE: `ignore-certificate-errors` a été retiré ici. Il avait été posé pour le pont
+// Philips Hue, mais Hue ne passe jamais par la pile réseau de Chromium dans l'app :
+// HueEngine privilégie l'IPC `light:request`, qui fait un https.request côté Node.
+// Le switch désactivait donc TLS pour tout le rendu sans servir son objectif.
+// La tolérance aux certificats auto-signés est désormais accordée hôte par hôte,
+// aux seules adresses privées — voir netTrust.ts.
 
 // const gitBackupService = new GitBackupService(process.env.APP_ROOT);
 
@@ -325,7 +330,10 @@ ipcMain.handle('light:request', async (_event, url: string, method: string, body
 
             const options: https.RequestOptions = {
                 method,
-                rejectUnauthorized: false,
+                // Le pont Hue s'annonce avec un certificat auto-signé, mais ce
+                // handler accepte n'importe quelle URL venant du rendu : la
+                // tolérance ne vaut que pour le réseau local.
+                rejectUnauthorized: shouldRejectUnauthorized(parsedUrl),
                 timeout: 5000 // 5 seconds timeout
             };
 
@@ -589,7 +597,10 @@ ipcMain.handle('ai:proxy-request', async (_event, url: string, method: string, h
             const options: https.RequestOptions = {
                 method,
                 headers,
-                rejectUnauthorized: false,
+                // Ces en-têtes portent les clés d'API : un hôte public doit
+                // présenter un certificat valide, sans exception. Seul un
+                // endpoint d'inférence du réseau local peut être auto-signé.
+                rejectUnauthorized: shouldRejectUnauthorized(parsedUrl),
                 timeout: 300000 // 300 seconds (5 minutes) for heavy AI analysis (PDFs, etc.)
             };
 

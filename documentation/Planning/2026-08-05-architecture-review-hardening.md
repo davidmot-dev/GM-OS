@@ -10,7 +10,7 @@
 | 1 | `startRemoteServer()` fantôme + `electron/` hors du type-check | Bloquant | ✅ Fait — `90f8445` |
 | 2 | Lecture de fichiers arbitraire depuis le LAN via le proxy média | Critique | ✅ Fait — `90f8445` |
 | 3 | Aucune authentification WebSocket | Critique | ✅ Fait |
-| 4 | `ignore-certificate-errors` global | Élevée | ⬜ À faire |
+| 4 | `ignore-certificate-errors` global | Élevée | ✅ Fait |
 | 5 | Store session en localStorage (plafond ~5-10 Mo) | Élevée | ⬜ À faire |
 | 6 | Segment de sync `session` monolithique + médias en base64 | Moyenne | ⬜ À faire |
 | 7 | `handleAction` — ~270 lignes de `if` en série | Moyenne | ⬜ À faire |
@@ -117,14 +117,47 @@ type d'action envoyé par **n'importe quel** client connecté, y compris non app
 une surface de commande distincte de la fuite de données : elle se referme avec le
 registre d'actions du point 7, où la liste des types recevables devient explicite.
 
-## 4. `ignore-certificate-errors` global ⬜
+## 4. Validation TLS désactivée ✅
 
-`app.commandLine.appendSwitch('ignore-certificate-errors')` a été posé pour dialoguer avec
-le pont Philips Hue (certificat auto-signé). Ce switch est **global au process** : il
-désactive la validation TLS pour toute l'application, y compris les appels aux API
-externes qui transportent des clés.
+**Correction de la prémisse.** La revue affirmait que le switch Chromium désactivait aussi
+TLS pour les appels d'API portant des clés. C'est faux mécaniquement, et ça déplace la
+cible : Chromium et le module `https` de Node sont deux piles distinctes. Les appels IA
+partent tous par `window.appBridge.ai.proxyRequest` → `ai:proxy-request`, donc **par Node**,
+qui posait son propre `rejectUnauthorized: false`. C'était **cette ligne** qui exposait les
+clés, pas le switch.
 
-À remplacer par une exception ciblée sur l'hôte du pont Hue.
+**Le switch était redondant.** Il avait été posé pour le pont Philips Hue, dont le
+certificat est effectivement auto-signé. Mais dans l'app, Hue ne touche jamais la pile
+réseau de Chromium : les trois points d'appel de `HueEngine` (`discoverBridge`, `pair`,
+`request`) privilégient l'IPC `light:request`, qui fait un `https.request` côté Node. Les
+`fetch()` de repli ne s'exécutent que si `window.appBridge` est absent — le PWA sur
+tablette, un autre process, hors de portée du switch. Et `preload.ts` expose
+`light.request` systématiquement. Le fait qu'il ait fallu ajouter `rejectUnauthorized:
+false` à la main dans `light:request` le confirme : le switch ne couvrait pas ce cas.
+
+**Décision.** David n'a pas pu confirmer s'il utilisait un endpoint IA local en HTTPS
+auto-signé. L'inspection du store persistant a tranché : `ollama` pointe sur
+`http://127.0.0.1:11434`, et un endpoint est configuré sur une adresse LAN privée
+(`192.168.0.21`). D'où la règle retenue — validation stricte partout, tolérance accordée
+hôte par hôte aux seules **adresses privées**.
+
+**Fait.**
+
+- `electron/netTrust.ts` : `isPrivateHost()` couvre boucle locale, RFC 1918, lien-local,
+  ULA IPv6, IPv4 encapsulée et suffixes `.local` / `.home.arpa`. Le parsing IPv4 est
+  strict, pour qu'un domaine du type `192.168.0.21.evil.com` ne récupère pas la tolérance.
+- `ai:proxy-request` et `light:request` calculent `rejectUnauthorized` par URL. Les clés
+  d'API partant vers Internet sont donc désormais protégées.
+- `app.commandLine.appendSwitch('ignore-certificate-errors')` supprimé.
+- 24 tests dans `electron/netTrust.test.ts`.
+
+**Impact vérifié : nul sur Music-OS et Sound-OS.** `MusicEngine` lit des IDs `m-` (blob
+IndexedDB), des chemins locaux convertis en `gmos://`, du `blob:`/`data:`, ou le proxy LAN
+`http://<ip>:3001`. `SoundEngine` fait de même via `formatUrl()`. Aucun des deux ne parle
+à un hôte au certificat invalide. Ailleurs : Web-OS ouvre ses liens via
+`shell.openExternal` (navigateur système), les polices Google, le client Gradio et les
+téléchargements d'assets Nexus visent des hôtes publics à certificat valide, et Ollama est
+en HTTP sur la boucle locale.
 
 ## 5. Store session en localStorage ⬜
 
