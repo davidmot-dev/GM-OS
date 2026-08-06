@@ -64,7 +64,23 @@
     "storage_usage_title": "Occupation du stockage local",
     "storage_usage_desc": "Taille de l'état persisté dans le navigateur. Au dépassement du quota, les sauvegardes échouent silencieusement.",
     "storage_usage_session": "dont session : {{size}}",
-    "storage_usage_warning": "⚠️ Proche du quota — pensez à archiver d'anciennes campagnes."
+    "storage_usage_warning": "⚠️ Proche du quota — pensez à archiver d'anciennes campagnes.",
+    "inlined_media": {
+      "title": "Médias intégrés aux campagnes",
+      "description": "Certaines images sont stockées dans la fiche elle-même au lieu d'être rangées dans la médiathèque. Les reprendre allège les sauvegardes et les envois vers les tablettes.",
+      "scan_button": "Analyser",
+      "scan_failed": "Analyse impossible, voir la console.",
+      "none": "Aucun média intégré : tout est déjà rangé dans la médiathèque.",
+      "found": "{{count}} média(s) intégré(s), soit {{size}} récupérables.",
+      "backup_hint": "Sauvegardez %APPDATA%\\gm-os-v5 avant de lancer la reprise.",
+      "confirm": "Ranger ces images dans la médiathèque et remplacer les champs correspondants ?\n\nSeul le champ image de chaque fiche est modifié. Sauvegardez avant de continuer.",
+      "migrate_button": "Reprendre les médias",
+      "migrating": "Reprise… {{done}}/{{total}}",
+      "migrate_failed": "Reprise impossible, voir la console.",
+      "done": "{{count}} média(s) rangé(s), {{size}} récupérés.",
+      "report": "{{count}} média(s) rangé(s) dans la médiathèque, {{size}} récupérés.",
+      "kept": "{{count}} conservé(s) en l'état par précaution :"
+    }
   },
   "danger": {
     "factory_reset_title": "Réinitialisation d'Usine",

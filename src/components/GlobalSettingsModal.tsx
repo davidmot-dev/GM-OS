@@ -17,6 +17,7 @@ import LobbyMonitor from './settings/LobbyMonitor';
 import { useObsidianStore } from '../modules/session/useObsidianStore';
 import { QRCodeSVG } from 'qrcode.react';
 import { measureLocalStorageUsage, formatBytes, type StorageUsage } from '../modules/session/logic/storageDiagnostics';
+import { InlinedMediaPanel } from './settings/InlinedMediaPanel';
 
 /* GitHub Sync Section Removed at user request */
 
@@ -482,6 +483,8 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                             {isCleaning ? t('settings:maintenance.cleaning') : t('settings:maintenance.cleanup_button')}
                                         </button>
                                     </div>
+
+                                    <InlinedMediaPanel />
 
                                     {/* Occupation du stockage local */}
                                     <div className="p-6 rounded-2xl bg-app-surface/20 border border-app-border/10">
