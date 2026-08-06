@@ -1052,6 +1052,9 @@ voit même pas. C'est le second que la plupart de ces mécanismes traitent.
 
 ### Restes à faire, par ordre d'intérêt
 
+> Repris en plan d'action détaillé, écrit pour être repris à froid :
+> `documentation/Planning/2026-08-07-restes-unification-transport.md`.
+
 1. **Appliquer `actionPolicy` au relais** — referme l'angle mort du point 9.
 2. **Exercer `combat` en conditions réelles** — seul flux basculé jamais vérifié pour lui-même.
 3. **La rediffusion complète du maître** — 50 ms après le dernier message d'une fenêtre
