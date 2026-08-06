@@ -575,3 +575,96 @@ Aujourd'hui ils vont de renderer à renderer, sans intermédiaire.
 **Le chantier doit donc commencer par une mesure sur ces deux flux, pas par une
 réécriture.** Si la latence passe, on unifie tout ; sinon on saura qu'il leur faut un
 régime particulier, et ce sera décidé sur des chiffres.
+
+---
+
+## Chantier — unification du transport
+
+### Étape 1 — mesure du saut IPC ✅ (2026-08-06)
+
+**Le banc.** `scripts/ipc-bench/`, harnais autonome hors application : deux fenêtres de
+même origine, `webPreferences` identiques à celles d'`electron/main.ts`, et un aller-retour
+mesuré tantôt par `BroadcastChannel`, tantôt par `renderer → main → renderer`. Les deux
+transports **alternent à chaque itération** plutôt que d'être mesurés à la suite : ils
+subissent ainsi les mêmes conditions machine au même instant. Payloads calqués sur ce que
+`CrossWindowEventService` diffuse réellement.
+
+Les deux fenêtres tournent bien dans des **process de rendu distincts** — la comparaison
+est donc honnête, `BroadcastChannel` n'est pas avantagé par un raccourci intra-process.
+
+**Relevé, à la cadence réelle de chaque flux.** Aller-retour complet, p50 en millisecondes ;
+le sens unique vaut environ la moitié.
+
+| Flux | Taille | BroadcastChannel | Via le main | Écart |
+|---|---|---|---|---|
+| Jetons — 8 sur la carte | 1,5 Ko | 1,00 | 1,20 | +0,20 |
+| Jetons — 30 sur la carte | 5,8 Ko | 1,20 | 1,60 | +0,40 |
+| Tableau blanc — 6 tracés | 8,0 Ko | 1,40 | 3,00 | +1,60 |
+| Tableau blanc — 40 tracés | 106,3 Ko | 4,70 | **23,70** | **+19,00** |
+| Brouillard de guerre | 200,1 Ko | 2,80 | 3,30 | +0,50 |
+
+**Le glisser-déposer de jetons est hors de cause.** +0,2 à +0,4 ms d'aller-retour contre un
+budget de 33 ms par image : deux ordres de grandeur d'écart. Le risque identifié au moment
+de cadrer le chantier ne se matérialise pas sur ce flux.
+
+**Mais une anomalie contredisait la lecture naïve.** Le brouillard de 200 Ko passe en 3,3 ms
+et le tableau blanc de 106 Ko en 23,7. Le coût ne suit donc pas les octets — sinon le plus
+gros payload serait le plus lent, et c'est l'inverse.
+
+### Étape 1 bis — ce qui coûte vraiment, et le correctif
+
+Seconde passe, à taille en octets comparable et forme variable :
+
+| Forme | Octets | Nœuds d'objet | BroadcastChannel | Via le main |
+|---|---|---|---|---|
+| Tableau blanc, points `{x, y}` | 106 Ko | 4 882 | 5,00 | **23,70** |
+| Mêmes tracés, coordonnées à plat | 59 Ko | 82 | 2,90 | 7,40 |
+| Une seule longue chaîne | 106 Ko | 1 | 2,00 | 2,10 |
+
+**Le coût suit le nombre de nœuds d'objet, pas la taille.** À 106 Ko constants, passer de
+4 882 nœuds à 1 fait tomber le surcoût de +19 ms à +0,1 ms. La sérialisation d'Electron est
+nettement plus lente que le clone structuré de Blink **sur les graphes d'objets** ; sur une
+chaîne, les deux se valent.
+
+**Le correctif tient en une ligne : pré-sérialiser.** Même payload, transmis en chaîne JSON,
+coût de `stringify` et de `parse` compté des deux côtés :
+
+| Variante | p50 |
+|---|---|
+| BroadcastChannel, objet — *transport actuel* | 5,00 |
+| Via le main, objet | 23,70 |
+| Via le main, **JSON** | **4,10** |
+
+L'écart ne se réduit pas : il s'inverse. Passer par le process principal en pré-sérialisant
+est **plus rapide que le transport actuel**, sur le flux même qui devait être le point de
+blocage. La raison est simple — le clone structuré paie le graphe d'objets deux fois, une
+fois à l'émission et une fois à la réception, là où `JSON.stringify` produit une chaîne que
+les deux piles traitent comme un bloc opaque.
+
+### Conclusion
+
+**Le risque est levé. L'unification peut se faire sans régression de latence**, à une
+condition inscrite dès maintenant dans le périmètre : **le relais du process principal
+transporte des chaînes, pas des objets.**
+
+Ce n'est pas une contrainte gênante — c'est déjà ce que fait le `SyncServer` pour les
+tablettes, qui envoie du JSON sur la WebSocket. Unifier le transport unifie donc aussi
+l'encodage, au lieu de faire coexister deux formes.
+
+**Trouvaille annexe, indépendante du transport.** Le tableau blanc rediffuse **tout** le
+tableau — `paths: state.paths` — toutes les 50 ms pendant qu'on dessine, pas seulement le
+tracé en cours. À 40 tracés cela fait 106 Ko vingt fois par seconde, soit 2 Mo/s, quel que
+soit le transport. Le passage aux coordonnées à plat mesuré ci-dessus divise déjà les octets
+par deux et les nœuds par soixante ; n'envoyer que le tracé actif diviserait bien davantage.
+C'est un chantier distinct, à traiter pour lui-même.
+
+**Limite assumée de la mesure.** Le banc mesure un écho synthétique, sans rendu React ni
+charge applicative concurrente. Il compare deux transports toutes choses égales par
+ailleurs — ce qui est exactement la question posée — mais il ne prédit pas la latence
+ressentie en partie.
+
+### Étape 2 — à faire
+
+Écrire le relais dans le process principal et y basculer les fenêtres locales, en
+commençant par un seul flux. `CrossWindowEventService` disparaît en fin de parcours, pas au
+début.

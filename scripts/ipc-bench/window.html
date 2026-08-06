@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>Banc IPC</title>
+    <style>
+        body { background:#0b0b0f; color:#e5e7eb; font:13px/1.5 Consolas, monospace; padding:16px; }
+        h1 { font-size:14px; color:#a78bfa; margin:0 0 8px; }
+        pre { white-space:pre-wrap; margin:0; }
+    </style>
+</head>
+<body>
+    <h1 id="title">Banc IPC</h1>
+    <pre id="out"></pre>
+    <script>
+    const role = new URLSearchParams(location.search).get('role');
+    document.getElementById('title').textContent = 'Banc IPC — fenetre ' + role.toUpperCase() + ' (pid ' + window.bench.pid + ')';
+    const out = document.getElementById('out');
+    const show = (s) => { out.textContent += s + '\n'; };
+
+    const bc = new BroadcastChannel('gmos-ipc-bench');
+
+    // ---------------------------------------------------------------- fenetre B
+    // Simple echo : renvoie le message par le meme transport qu'il est arrive.
+    if (role === 'b') {
+        bc.onmessage = (ev) => {
+            const msg = ev.data;
+            if (!msg || msg.to !== 'b') return;
+            // La fenetre A demande le pid, pour savoir si les deux fenetres
+            // partagent un meme process de rendu (auquel cas BroadcastChannel
+            // est intra-process, donc structurellement avantage).
+            if (msg.kind === 'hello?') {
+                bc.postMessage({ to: 'a', kind: 'hello', pid: window.bench.pid });
+                return;
+            }
+            bc.postMessage({ ...msg, to: 'a' });
+        };
+        window.bench.onRelay((msg) => {
+            if (msg && msg.to === 'b') window.bench.send({ ...msg, to: 'a' });
+        });
+        window.bench.ready();
+        show('Fenetre echo prete.');
+    }
+
+    // ---------------------------------------------------------------- fenetre A
+    if (role === 'a') {
+        let pending = null;
+        let pidB = null;
+
+        bc.onmessage = (ev) => {
+            const msg = ev.data;
+            if (!msg || msg.to !== 'a') return;
+            if (msg.kind === 'hello') { pidB = msg.pid; return; }
+            if (pending) { const p = pending; pending = null; p(); }
+        };
+        window.bench.onRelay((msg) => {
+            if (!msg || msg.to !== 'a') return;
+            if (pending) { const p = pending; pending = null; p(); }
+        });
+
+        // --- Payloads calques sur ce que CrossWindowEventService diffuse reellement.
+
+        // useMapStore -> payload.projectedTokens : le tableau complet des jetons.
+        const tokens = (n) => ({
+            projectionTarget: 'hub',
+            projectedTokens: Array.from({ length: n }, (_, i) => ({
+                id: 'tok-' + i,
+                name: 'Personnage ' + i,
+                avatar: 'm-9f3c1a2b4d5e6f708192a3b4c5d6e7f8',
+                x: 128.4 + i * 3.7,
+                y: 240.9 + i * 5.1,
+                size: 1,
+                isVisible: true,
+                linkedCombatantId: 'cmb-' + i,
+                linkedSessionPlayerId: 'ply-' + i,
+            })),
+        });
+
+        // useWhiteboardStore -> paths : TOUT le tableau, a chaque diffusion.
+        const board = (strokes, pts) => ({
+            version: 42,
+            projectionTarget: 'hub',
+            activeDrawerId: 'gm',
+            laserPointer: null,
+            activePath: null,
+            paths: Array.from({ length: strokes }, (_, s) => ({
+                id: 'path-' + s,
+                color: '#e11d48',
+                width: 4,
+                tool: 'brush',
+                points: Array.from({ length: pts }, (_, i) => ({
+                    x: Math.round(((i * 7.3 + s * 31) % 1920) * 100) / 100,
+                    y: Math.round(((i * 3.1 + s * 17) % 1080) * 100) / 100,
+                })),
+            })),
+        });
+
+        // projectedFogDataUrl : un PNG en data: URL, le plus gros payload du flux carte.
+        const fog = (kb) => ({
+            projectionTarget: 'hub',
+            projectedFogDataUrl: 'data:image/png;base64,' + 'iVBORw0KGgoAAAANSUhEUg'.repeat(Math.round(kb * 1024 / 22)),
+        });
+
+        const CASES = [
+            { name: 'jetons — 8 sur la carte', payload: tokens(8) },
+            { name: 'jetons — 30 sur la carte', payload: tokens(30) },
+            { name: 'tableau blanc — 6 traces', payload: board(6, 60) },
+            { name: 'tableau blanc — 40 traces', payload: board(40, 120) },
+            { name: 'brouillard de guerre', payload: fog(200) },
+        ];
+
+        const MODES = [
+            { name: 'rafale (aucun delai)', gap: 0, iters: 250 },
+            { name: 'cadence 30 fps (33 ms)', gap: 33, iters: 200 },
+        ];
+
+        const WARMUP = 30;
+
+        const sleep = (ms) => new Promise((r) => (ms > 0 ? setTimeout(r, ms) : setTimeout(r, 0)));
+
+        function roundTrip(transport, payload, seq) {
+            return new Promise((resolve) => {
+                const msg = { to: 'b', seq, transport, payload };
+                let t0;
+                pending = () => resolve(performance.now() - t0);
+                t0 = performance.now();
+                if (transport === 'bc') bc.postMessage(msg);
+                else window.bench.send(msg);
+            });
+        }
+
+        function stats(a) {
+            const s = [...a].sort((x, y) => x - y);
+            const q = (p) => s[Math.min(s.length - 1, Math.floor(p * s.length))];
+            return {
+                n: s.length,
+                mean: s.reduce((t, v) => t + v, 0) / s.length,
+                p50: q(0.5), p90: q(0.9), p99: q(0.99), max: s[s.length - 1],
+            };
+        }
+
+        async function runCase(payload, gap, iters) {
+            const res = { bc: [], ipc: [] };
+            // Alternance a chaque iteration : les deux transports subissent
+            // exactement les memes conditions machine au meme instant.
+            for (let i = 0; i < iters; i++) {
+                for (const t of ['bc', 'ipc']) {
+                    const dt = await roundTrip(t, payload, i);
+                    if (i >= WARMUP) res[t].push(dt);
+                    if (gap > 0) await sleep(gap);
+                }
+            }
+            return { bc: stats(res.bc), ipc: stats(res.ipc) };
+        }
+
+        const f = (v) => v.toFixed(3);
+
+        async function main() {
+            const results = [];
+            for (const mode of MODES) {
+                for (const c of CASES) {
+                    const bytes = JSON.stringify(c.payload).length;
+                    window.bench.log('  ... ' + mode.name + ' / ' + c.name + ' (' + Math.round(bytes / 1024 * 10) / 10 + ' Ko)');
+                    show(mode.name + ' / ' + c.name);
+                    const r = await runCase(c.payload, mode.gap, mode.iters);
+                    results.push({ mode: mode.name, gap: mode.gap, case: c.name, bytes, ...r });
+                }
+            }
+
+            const sameProcess = pidB === window.bench.pid;
+            let text = '';
+            text += 'BANC — surcout du saut IPC (aller-retour entre deux fenetres)\n';
+            text += 'Electron ' + (navigator.userAgent.match(/Electron\/([\d.]+)/) || [])[1] + '  ·  ';
+            text += 'fenetre A pid ' + window.bench.pid + ', fenetre B pid ' + pidB + ' — ';
+            text += sameProcess ? 'MEME process de rendu\n' : 'process de rendu DISTINCTS\n';
+            text += 'Valeurs en millisecondes, aller-retour complet (2 sauts). Sens unique ~ moitie.\n';
+
+            let lastMode = null;
+            for (const r of results) {
+                if (r.mode !== lastMode) {
+                    lastMode = r.mode;
+                    text += '\n### ' + r.mode + '\n';
+                    text += 'cas'.padEnd(30) + 'taille'.padStart(9) + '  ' + 'transport'.padEnd(11)
+                        + 'p50'.padStart(8) + 'p90'.padStart(8) + 'p99'.padStart(8) + 'max'.padStart(9) + '\n';
+                }
+                const kb = (r.bytes / 1024).toFixed(1) + ' Ko';
+                text += r.case.padEnd(30) + kb.padStart(9) + '  ' + 'BroadcastChannel'.slice(0, 11).padEnd(11)
+                    + f(r.bc.p50).padStart(8) + f(r.bc.p90).padStart(8) + f(r.bc.p99).padStart(8) + f(r.bc.max).padStart(9) + '\n';
+                text += ''.padEnd(30) + ''.padStart(9) + '  ' + 'via main'.padEnd(11)
+                    + f(r.ipc.p50).padStart(8) + f(r.ipc.p90).padStart(8) + f(r.ipc.p99).padStart(8) + f(r.ipc.max).padStart(9) + '\n';
+                text += ''.padEnd(30) + ''.padStart(9) + '  ' + 'ecart p50'.padEnd(11)
+                    + ('+' + f(r.ipc.p50 - r.bc.p50)).padStart(8) + ('+' + f(r.ipc.p90 - r.bc.p90)).padStart(8)
+                    + ('+' + f(r.ipc.p99 - r.bc.p99)).padStart(8) + ('+' + f(r.ipc.max - r.bc.max)).padStart(9) + '\n';
+            }
+
+            window.bench.report({ sameProcess, pidA: window.bench.pid, pidB, results, text });
+        }
+
+        window.bench.onStart(async () => {
+            show('Depart.');
+            bc.postMessage({ to: 'b', kind: 'hello?' });
+            await sleep(200);
+            main();
+        });
+        window.bench.ready();
+    }
+    </script>
+</body>
+</html>

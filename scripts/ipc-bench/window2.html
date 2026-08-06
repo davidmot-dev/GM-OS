@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>Banc IPC — phase 2</title>
+    <style>
+        body { background:#0b0b0f; color:#e5e7eb; font:13px/1.5 Consolas, monospace; padding:16px; }
+        h1 { font-size:14px; color:#a78bfa; margin:0 0 8px; }
+        pre { white-space:pre-wrap; margin:0; }
+    </style>
+</head>
+<body>
+    <h1 id="title">Banc IPC — phase 2</h1>
+    <pre id="out"></pre>
+    <script>
+    // Phase 2 — le cout du saut IPC suit-il les octets ou le nombre d'objets ?
+    // Et une pre-serialisation en JSON annule-t-elle l'ecart ?
+    const role = new URLSearchParams(location.search).get('role');
+    document.getElementById('title').textContent = 'Phase 2 — fenetre ' + role.toUpperCase();
+    const out = document.getElementById('out');
+    const show = (s) => { out.textContent += s + '\n'; };
+
+    const bc = new BroadcastChannel('gmos-ipc-bench-2');
+
+    // La fenetre receptrice fait ce qu'elle ferait pour de vrai : elle
+    // deserialise (parse en mode json) avant de renvoyer.
+    function echo(msg, sendFn) {
+        if (msg.enc === 'json') {
+            const obj = JSON.parse(msg.payload);
+            sendFn({ ...msg, to: 'a', payload: JSON.stringify(obj) });
+        } else {
+            sendFn({ ...msg, to: 'a' });
+        }
+    }
+
+    if (role === 'b') {
+        bc.onmessage = (ev) => {
+            const msg = ev.data;
+            if (!msg || msg.to !== 'b') return;
+            echo(msg, (m) => bc.postMessage(m));
+        };
+        window.bench.onRelay((msg) => {
+            if (!msg || msg.to !== 'b') return;
+            echo(msg, (m) => window.bench.send(m));
+        });
+        window.bench.ready();
+        show('Fenetre echo prete.');
+    }
+
+    if (role === 'a') {
+        let pending = null;
+        const settle = (msg) => {
+            if (!pending) return;
+            const p = pending; pending = null;
+            // Cout de reception cote emetteur, inclus dans la mesure.
+            if (msg.enc === 'json') JSON.parse(msg.payload);
+            p();
+        };
+        bc.onmessage = (ev) => { const m = ev.data; if (m && m.to === 'a') settle(m); };
+        window.bench.onRelay((m) => { if (m && m.to === 'a') settle(m); });
+
+        // --- Trois formes, taille en octets volontairement comparable.
+
+        // 1. Le tableau blanc tel qu'il est aujourd'hui : 4 800 objets {x, y}.
+        const boardObjects = {
+            version: 42, projectionTarget: 'hub', activeDrawerId: 'gm', activePath: null, laserPointer: null,
+            paths: Array.from({ length: 40 }, (_, s) => ({
+                id: 'path-' + s, color: '#e11d48', width: 4, tool: 'brush',
+                points: Array.from({ length: 120 }, (_, i) => ({
+                    x: Math.round(((i * 7.3 + s * 31) % 1920) * 100) / 100,
+                    y: Math.round(((i * 3.1 + s * 17) % 1080) * 100) / 100,
+                })),
+            })),
+        };
+
+        // 2. Les memes traces, coordonnees a plat : 40 tableaux de nombres.
+        const boardFlat = {
+            version: 42, projectionTarget: 'hub', activeDrawerId: 'gm', activePath: null, laserPointer: null,
+            paths: Array.from({ length: 40 }, (_, s) => {
+                const xy = [];
+                for (let i = 0; i < 120; i++) {
+                    xy.push(Math.round(((i * 7.3 + s * 31) % 1920) * 100) / 100);
+                    xy.push(Math.round(((i * 3.1 + s * 17) % 1080) * 100) / 100);
+                }
+                return { id: 'path-' + s, color: '#e11d48', width: 4, tool: 'brush', xy };
+            }),
+        };
+
+        // 3. Une seule longue chaine, comme projectedFogDataUrl.
+        const target = JSON.stringify(boardObjects).length;
+        const oneString = { projectionTarget: 'hub', projectedFogDataUrl: 'x'.repeat(target - 60) };
+
+        const countNodes = (v) => {
+            if (v === null || typeof v !== 'object') return 0;
+            let n = 1;
+            for (const k in v) n += countNodes(v[k]);
+            return n;
+        };
+
+        const CASES = [
+            { name: 'tableau blanc — points {x,y}', payload: boardObjects },
+            { name: 'tableau blanc — coords a plat', payload: boardFlat },
+            { name: 'une seule longue chaine', payload: oneString },
+        ];
+
+        const VARIANTS = [
+            { key: 'bc-raw', label: 'BC objet', transport: 'bc', enc: 'raw' },
+            { key: 'ipc-raw', label: 'main objet', transport: 'ipc', enc: 'raw' },
+            { key: 'bc-json', label: 'BC json', transport: 'bc', enc: 'json' },
+            { key: 'ipc-json', label: 'main json', transport: 'ipc', enc: 'json' },
+        ];
+
+        const MODES = [
+            { name: 'rafale (aucun delai)', gap: 0, iters: 150 },
+            { name: 'cadence 20 fps (50 ms)', gap: 50, iters: 120 },
+        ];
+
+        const WARMUP = 20;
+        const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+        function roundTrip(v, payload, seq) {
+            return new Promise((resolve) => {
+                let t0;
+                pending = () => resolve(performance.now() - t0);
+                t0 = performance.now();
+                // La serialisation fait partie du cout de la variante json.
+                const body = v.enc === 'json' ? JSON.stringify(payload) : payload;
+                const msg = { to: 'b', seq, enc: v.enc, payload: body };
+                if (v.transport === 'bc') bc.postMessage(msg);
+                else window.bench.send(msg);
+            });
+        }
+
+        function stats(a) {
+            const s = [...a].sort((x, y) => x - y);
+            const q = (p) => s[Math.min(s.length - 1, Math.floor(p * s.length))];
+            return { n: s.length, mean: s.reduce((t, v) => t + v, 0) / s.length, p50: q(0.5), p90: q(0.9), p99: q(0.99), max: s[s.length - 1] };
+        }
+
+        const f = (v) => v.toFixed(2);
+
+        async function main() {
+            const results = [];
+            for (const mode of MODES) {
+                for (const c of CASES) {
+                    const bytes = JSON.stringify(c.payload).length;
+                    const nodes = countNodes(c.payload);
+                    window.bench.log('  ... ' + mode.name + ' / ' + c.name);
+                    show(mode.name + ' / ' + c.name);
+                    const acc = {}; VARIANTS.forEach((v) => (acc[v.key] = []));
+                    for (let i = 0; i < mode.iters; i++) {
+                        for (const v of VARIANTS) {
+                            const dt = await roundTrip(v, c.payload, i);
+                            if (i >= WARMUP) acc[v.key].push(dt);
+                            if (mode.gap > 0) await sleep(mode.gap);
+                        }
+                    }
+                    const row = { mode: mode.name, case: c.name, bytes, nodes };
+                    VARIANTS.forEach((v) => (row[v.key] = stats(acc[v.key])));
+                    results.push(row);
+                }
+            }
+
+            let text = 'BANC PHASE 2 — le cout suit-il les octets ou le nombre d\'objets ?\n';
+            text += 'Aller-retour complet entre deux fenetres, en millisecondes.\n';
+            let lastMode = null;
+            for (const r of results) {
+                if (r.mode !== lastMode) {
+                    lastMode = r.mode;
+                    text += '\n### ' + r.mode + '\n';
+                }
+                text += '\n' + r.case + '  —  ' + (r.bytes / 1024).toFixed(1) + ' Ko, ' + r.nodes + ' noeuds d\'objet\n';
+                text += '  ' + 'variante'.padEnd(14) + 'p50'.padStart(8) + 'p90'.padStart(8) + 'p99'.padStart(8) + 'max'.padStart(8) + '\n';
+                for (const v of VARIANTS) {
+                    const s = r[v.key];
+                    text += '  ' + v.label.padEnd(14) + f(s.p50).padStart(8) + f(s.p90).padStart(8) + f(s.p99).padStart(8) + f(s.max).padStart(8) + '\n';
+                }
+            }
+            window.bench.report({ results, text });
+        }
+
+        window.bench.onStart(async () => { show('Depart.'); await sleep(200); main(); });
+        window.bench.ready();
+    }
+    </script>
+</body>
+</html>
