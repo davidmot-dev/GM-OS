@@ -21,6 +21,7 @@ import { useDisplayDetection } from './hooks/useDisplayDetection';
 import { useNexusSynchronizer } from './modules/remote/hooks/useNexusSynchronizer';
 import { crossWindowSync } from './services/CrossWindowEventService';
 import { dispatchRemoteAction } from './modules/remote/actions';
+import { isMainWindow } from './utils/windowRole';
 
 interface RemoteAction {
   type: string;
@@ -84,10 +85,11 @@ function App() {
   const isProjector = searchParams.get('window') === 'projector';
   const isHub = searchParams.get('window') === 'hub';
   const isTablet = searchParams.get('window') === 'tablet';
-  const isRemote = searchParams.get('window') === 'remote';
 
   // Workspace Sync v3: Modularized via useNexusSynchronizer
-  const isMainPC = !isProjector && !isHub && !isTablet && !isRemote;
+  // Même définition que celle qui gouverne la persistance (utils/windowRole) :
+  // la fenêtre MJ est la seule à posséder les données de campagne.
+  const isMainPC = isMainWindow();
   const isHydrated = useHydration();
   const isSystemReady = useSessionStore(state => state.isSystemReady);
   

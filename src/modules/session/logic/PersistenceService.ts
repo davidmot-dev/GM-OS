@@ -1,6 +1,7 @@
 import { createJSONStorage, type PersistOptions } from 'zustand/middleware';
 import type { SessionOSStore } from '../store/index';
 import { idbStateStorage, onPersistedStateChanged } from './idbStorage';
+import { isMainWindow } from '../../../utils/windowRole';
 
 export const SESSION_STORE_KEY = 'gmos-v5-session-os-storage';
 
@@ -43,10 +44,20 @@ export const PersistenceService: PersistOptions<SessionOSStore> = {
     },
 
     partialize: (state) => {
-        const isElectron = typeof window !== 'undefined' && !!(window as any).appBridge;
-        
-        // Optimization for Tablet/Hub: Persist only the bare minimum to avoid QuotaExceededError
-        if (!isElectron) {
+        // On teste le rôle de la fenêtre, pas la présence d'Electron.
+        //
+        // Le Player Hub et le projecteur tournent dans Electron, sur la même
+        // origine que la fenêtre MJ, donc sur la même base IndexedDB. Avec
+        // l'ancien test ils persistaient l'état complet — c'est-à-dire les
+        // données de campagne telles qu'ils venaient de les recevoir par
+        // synchronisation, médias déjà résolus. Les identifiants de médiathèque
+        // étaient ainsi remplacés par des base64 ou des URL absolues dans la
+        // campagne elle-même, et la fenêtre MJ récupérait la version dégradée à
+        // la réhydratation suivante.
+        //
+        // Ces fenêtres continuent de lire la base partagée et de recevoir la
+        // synchronisation ; elles cessent seulement d'y réécrire.
+        if (!isMainWindow()) {
             return {
                 activeCampaignId: state.activeCampaignId,
                 currentView: state.currentView,
@@ -57,7 +68,7 @@ export const PersistenceService: PersistOptions<SessionOSStore> = {
             } as SessionOSStore;
         }
 
-        // Master (Electron): Persist full state for offline usage
+        // Fenêtre MJ : seule propriétaire des données de campagne.
         return {
             campaigns: state.campaigns,
             sessions: state.sessions,

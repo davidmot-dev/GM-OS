@@ -290,9 +290,47 @@ d'identifiants `m-`. `resolveToSendableUrl` les renvoie tels quels par sa garde 
 la publication par référence ne s'applique jamais. Un seul champ — l'ambiance — était un
 identifiant `m-`.
 
-**Suite à donner.** Publier aussi les `data:` par référence, sous un identifiant dérivé de
-leur contenu. C'est ce qui ferait réellement passer le payload de 7,6 Mo à quelques dizaines
-de kilo-octets, et c'est la seule partie du point 6 qui reste à faire.
+### 6d. La cause probable des base64 : une boucle de réécriture
+
+En cherchant pourquoi un lieu de l'atlas portait une URL `/temp/` morte, un mécanisme bien
+plus large est apparu — et il explique vraisemblablement les 7,3 Mo eux-mêmes.
+
+**La boucle, tracée dans le code :**
+
+1. La fenêtre MJ diffuse le payload avec les médias **résolus** (base64 ou URL absolues).
+2. Le Player Hub — fenêtre Electron sur la machine du MJ, donc **même origine, même base
+   IndexedDB** — reçoit ce payload et écrit `atlasMaps`, `entities`, `players`, `clues`
+   dans `useSessionOSStore` (`useHubSync.applySyncPayload`).
+3. `partialize` décidait de persister l'état **complet** dès que `window.appBridge`
+   existait. Le Player Hub étant dans Electron, il réécrivait donc les données de campagne
+   sous leur forme résolue.
+4. La fenêtre MJ se réhydrate et récupère la version dégradée : les identifiants de
+   médiathèque ont été remplacés par des base64, définitivement.
+
+Le test répondait à la mauvaise question : « suis-je dans Electron ? » au lieu de « suis-je
+propriétaire des données de campagne ? ».
+
+**Fait.** `utils/windowRole.ts` définit le rôle de la fenêtre en un seul endroit, partagé
+par `App.tsx` — dont la définition dupliquée disparaît — et par `PersistenceService`. Seule
+la fenêtre MJ persiste les données de campagne ; le Player Hub, le projecteur et la
+télécommande continuent de **lire** la base partagée et de recevoir la synchronisation, ils
+cessent seulement d'y réécrire.
+
+**Portée du correctif.** Il arrête la dégradation pour la suite ; il ne répare pas les
+médias déjà convertis. David a corrigé le lieu concerné à la main en le reliant à la
+médiathèque, ce qui a confirmé le diagnostic.
+
+**Non prouvé.** Que les base64 existants viennent bien de cette boucle plutôt que d'imports
+d'origine. Le chemin de code est sans ambiguïté, l'historique des données ne l'est pas.
+
+**Suite à donner.** Deux pistes, désormais distinctes :
+
+- Publier aussi les `data:` par référence, sous un identifiant dérivé de leur contenu.
+- Ou reprendre les base64 déjà présents pour les ranger dans la médiathèque et rétablir des
+  identifiants `m-` — ce qui traite la cause plutôt que le symptôme, mais réécrit les
+  données.
+
+L'une ou l'autre ferait passer le payload de 7,6 Mo à quelques dizaines de kilo-octets.
 
 ## 7. `handleAction` — 270 lignes de `if` ✅
 
