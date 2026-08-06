@@ -45,6 +45,7 @@ import { registerSecurityHandlers } from './SecurityManager'
 import { sessionManager } from './SessionManager'
 import { OllamaService } from './OllamaService'
 import { SyncServer } from './SyncServer'
+import { mediaAccess } from './MediaAccess'
 // import { GitBackupService } from './GitBackupService'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -103,6 +104,9 @@ let win: BrowserWindow | null
 let syncServer: SyncServer | null = null;
 const REMOTE_PORT = 3001;
 const TEMP_MEDIA_DIR = path.join(app.getPath('userData'), 'temp-media');
+
+// Périmètre des fichiers que le SyncServer accepte d'exposer sur le réseau local.
+mediaAccess.init(APP_ROOT, TEMP_MEDIA_DIR);
 
 function createWindow() {
     win = new BrowserWindow({
@@ -280,6 +284,8 @@ ipcMain.handle('sound:load-audios', async () => {
         filters: [{ name: 'Audio', extensions: ['mp3', 'wav', 'ogg'] }],
         properties: ['openFile', 'multiSelections']
     });
+    // Le MJ a choisi ces fichiers : leur dossier devient servable aux tablettes.
+    mediaAccess.allowFiles(filePaths);
     return filePaths;
 });
 
@@ -660,6 +666,8 @@ ipcMain.handle('npc:select-avatar', async () => {
 
     if (filePaths && filePaths.length > 0 && typeof filePaths[0] === 'string') {
         const rawPath = filePaths[0];
+        // Le MJ a choisi ce fichier : son dossier devient servable aux tablettes.
+        mediaAccess.allowFile(rawPath);
         const normalized = rawPath.replace(/\\/g, '/');
         // If it's in public/assets/avatars/npc, use gmos path, else return raw for save-avatar to handle
         return normalized;
@@ -740,8 +748,8 @@ app.whenReady().then(async () => {
         }
     });
 
+    // createWindow() démarre déjà le SyncServer (voir syncServer.start()).
     createWindow();
-    startRemoteServer();
 
     // --- Display Management ---
     screen.on('display-added', () => {

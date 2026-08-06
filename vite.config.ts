@@ -79,9 +79,28 @@ export default defineConfig({
     }),
   ],
   test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: ['./src/test/setup.ts'],
-    include: ['src/**/*.{test,spec}.{ts,tsx}'],
+    projects: [
+      {
+        // Renderer : jsdom + plugins Vite du projet (react, electron-renderer, PWA).
+        extends: true,
+        test: {
+          name: 'renderer',
+          globals: true,
+          environment: 'jsdom',
+          setupFiles: ['./src/test/setup.ts'],
+          include: ['src/**/*.{test,spec}.{ts,tsx}'],
+        },
+      },
+      {
+        // Process principal : environnement node pur, sans vite-plugin-electron-renderer
+        // (ses shims de modules natifs cassent en ESM hors Electron).
+        test: {
+          name: 'electron',
+          globals: true,
+          environment: 'node',
+          include: ['electron/**/*.{test,spec}.ts'],
+        },
+      },
+    ],
   },
 })

@@ -71,10 +71,12 @@ export class RAGEngine {
                 if (!existing || existing.mtime !== mtime) {
                     const content = await this.readFileContent(filePath);
                     if (content) {
+                        const ext = path.extname(filePath).toLowerCase();
                         this.index.set(relativePath, {
                             mtime,
                             content,
-                            path: relativePath
+                            path: relativePath,
+                            type: ext === '.pdf' ? 'pdf' : ext === '.md' ? 'markdown' : 'text'
                         });
                         updatedCount++;
                     }

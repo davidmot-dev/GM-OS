@@ -4,6 +4,17 @@ import { WebSocketServer, WebSocket } from 'ws';
 import path from 'node:path';
 import fs from 'fs-extra';
 import { sessionManager } from './SessionManager';
+import { mediaAccess } from './MediaAccess';
+
+/** Types de fichiers que le proxy média accepte de servir. */
+const MEDIA_MIME_TYPES: Record<string, string> = {
+    '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
+    '.gif': 'image/gif', '.webp': 'image/webp', '.svg': 'image/svg+xml',
+    '.avif': 'image/avif', '.bmp': 'image/bmp',
+    '.mp3': 'audio/mpeg', '.wav': 'audio/wav', '.ogg': 'audio/ogg',
+    '.m4a': 'audio/mp4', '.flac': 'audio/flac',
+    '.mp4': 'video/mp4', '.webm': 'video/webm',
+};
 
 interface ExtendedWebSocket extends WebSocket {
     isAlive?: boolean;
@@ -45,54 +56,91 @@ export class SyncServer {
         }
     }
 
+    /**
+     * Décode un segment d'URL en chemin. Retourne null si l'encodage est invalide
+     * (`decodeURIComponent` lève sur un `%` isolé) — un client qui envoie ça ne
+     * cherche pas un fichier.
+     */
+    private decodePath(raw: string): string | null {
+        try {
+            return decodeURIComponent(raw);
+        } catch {
+            return null;
+        }
+    }
+
     private handleHttpRequest(req: http.IncomingMessage, res: http.ServerResponse) {
         if (!req.url) return;
 
+        // Le serveur écoute sur 0.0.0.0 : tout chemin venant d'un client est hostile
+        // par défaut. On coupe la query string avant décodage, sinon `?x=..` passe.
+        const urlPath = req.url.split('?')[0];
+
         // Support serving local files via /media/path-to-file
-        if (req.url.startsWith('/media/')) {
-            const encodedPath = req.url.substring(7);
-            const filePath = decodeURIComponent(encodedPath);
-            console.log(`[SyncServer] Requesting media: ${filePath}`);
-            
-            if (fs.existsSync(filePath) && fs.lstatSync(filePath).isFile()) {
-                console.log(`[SyncServer] Serving media file: ${filePath}`);
-                const ext = path.extname(filePath).toLowerCase();
-                const mimeTypes: Record<string, string> = {
-                    '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
-                    '.gif': 'image/gif', '.webp': 'image/webp', '.svg': 'image/svg+xml',
-                    '.mp3': 'audio/mpeg', '.wav': 'audio/wav'
-                };
-                res.writeHead(200, { 
-                    'Content-Type': mimeTypes[ext] || 'application/octet-stream',
-                    'Access-Control-Allow-Origin': '*' 
-                });
-                fs.createReadStream(filePath).pipe(res);
-            } else {
-                console.warn(`[SyncServer] Media file not found: ${filePath}`);
+        if (urlPath.startsWith('/media/')) {
+            const requestedPath = this.decodePath(urlPath.substring(7));
+            if (requestedPath === null) {
+                res.writeHead(400);
+                res.end('Bad request');
+                return;
+            }
+
+            const appRoot = process.env.APP_ROOT || process.cwd();
+            const filePath = mediaAccess.resolveAllowed(requestedPath, appRoot);
+
+            if (!filePath) {
+                // Un 404 plutôt qu'un 403 : inutile de confirmer au réseau
+                // qu'un chemin existe mais est hors périmètre.
+                console.warn(`[SyncServer] Media refusé ou introuvable: ${requestedPath}`);
                 res.writeHead(404);
                 res.end('Media not found');
+                return;
             }
+
+            const ext = path.extname(filePath).toLowerCase();
+            const mimeType = MEDIA_MIME_TYPES[ext];
+            if (!mimeType || !fs.lstatSync(filePath).isFile()) {
+                console.warn(`[SyncServer] Media refusé (type non servi): ${filePath}`);
+                res.writeHead(404);
+                res.end('Media not found');
+                return;
+            }
+
+            console.log(`[SyncServer] Serving media file: ${filePath}`);
+            res.writeHead(200, {
+                'Content-Type': mimeType,
+                'Access-Control-Allow-Origin': '*'
+            });
+            fs.createReadStream(filePath).pipe(res);
             return;
         }
 
-        // Support serving temp media files
-        if (req.url.startsWith('/temp/')) {
-            const fileName = req.url.substring(6);
-            const filePath = path.join(this.tempMediaDir, fileName);
-            console.log(`[SyncServer] Requesting temp asset: ${fileName} -> ${filePath}`);
-            
-            if (fs.existsSync(filePath)) {
+        // Support serving temp media files (cache local, noms plats type "m-123")
+        if (urlPath.startsWith('/temp/')) {
+            const fileName = this.decodePath(urlPath.substring(6));
+            if (fileName === null) {
+                res.writeHead(400);
+                res.end('Bad request');
+                return;
+            }
+
+            // Confiné au dossier temp : pas de sous-dossier, pas de traversée.
+            const filePath = path.resolve(this.tempMediaDir, fileName);
+            const rel = path.relative(this.tempMediaDir, filePath);
+            if (rel === '' || rel.startsWith('..') || path.isAbsolute(rel) || rel.includes(path.sep)) {
+                console.warn(`[SyncServer] Temp asset refusé (hors dossier temp): ${fileName}`);
+                res.writeHead(404);
+                res.end('Temp Media not found');
+                return;
+            }
+
+            if (fs.existsSync(filePath) && fs.lstatSync(filePath).isFile()) {
                 console.log(`[SyncServer] Serving temp asset: ${fileName}`);
                 const ext = path.extname(filePath).toLowerCase();
-                const mimeTypes: Record<string, string> = {
-                    '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
-                    '.gif': 'image/gif', '.webp': 'image/webp', '.svg': 'image/svg+xml',
-                    '.mp3': 'audio/mpeg', '.wav': 'audio/wav'
-                };
-                
-                res.writeHead(200, { 
-                    'Content-Type': mimeTypes[ext] || 'image/webp', // Default to webp if no ext (historical)
-                    'Access-Control-Allow-Origin': '*' 
+                res.writeHead(200, {
+                    // Les assets mis en cache par remote:cache-media n'ont pas d'extension.
+                    'Content-Type': MEDIA_MIME_TYPES[ext] || 'image/webp',
+                    'Access-Control-Allow-Origin': '*'
                 });
                 fs.createReadStream(filePath).pipe(res);
             } else {
@@ -104,13 +152,26 @@ export class SyncServer {
         }
         // Serve static Web App (PWA) assets from dist folder
         const appRoot = process.env.APP_ROOT || process.cwd();
-        const distPath = path.join(appRoot, 'dist');
-        
-        let requestPath = req.url.split('?')[0];
-        if (requestPath === '/') requestPath = '/index.html';
-        
-        let filePath = path.join(distPath, requestPath);
-        
+        const distPath = path.resolve(appRoot, 'dist');
+
+        const decoded = this.decodePath(urlPath);
+        if (decoded === null) {
+            res.writeHead(400);
+            res.end('Bad request');
+            return;
+        }
+        const requestPath = decoded === '/' || decoded === '' ? '/index.html' : decoded;
+
+        // `path.join` seul laisserait passer "/../electron/main.ts" : on vérifie
+        // que le résultat reste bien sous dist/.
+        const filePath = path.resolve(distPath, '.' + path.posix.normalize('/' + requestPath.replace(/\\/g, '/')));
+        const relToDist = path.relative(distPath, filePath);
+        if (relToDist.startsWith('..') || path.isAbsolute(relToDist)) {
+            res.writeHead(404);
+            res.end();
+            return;
+        }
+
         if (fs.existsSync(filePath) && fs.lstatSync(filePath).isFile()) {
             const ext = path.extname(filePath).toLowerCase();
             const mimeTypes: Record<string, string> = {
