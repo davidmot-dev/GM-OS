@@ -827,8 +827,39 @@ critère. Les champs volatils qu'il exclut sont soit du même type — `activePa
 
 Suite complète au vert (449), build compris.
 
-**À exercer en conditions réelles** : dessiner, projeter vers le Player Hub, effacer,
-annuler.
+**Annulée le 2026-08-06 (`79610ac`).** Le tableau blanc cessait de fonctionner sur le Player
+Hub. Retour à l'ancien transport pour rendre la fonction avant d'avoir compris — laisser une
+fonction cassée en place le temps du diagnostic serait le mauvais ordre. Un test verrouille
+le retour en arrière, pour qu'une rebascule soit un geste délibéré.
+
+**La causalité est établie, la cause non.** Le revert ne portait que sur `whiteboard` ;
+`map` est resté sur le relais et le tableau blanc remarche. C'est donc bien cette bascule-là,
+et pas celle de la carte.
+
+Trois pistes écartées avec certitude :
+
+- **Pas la compatibilité JSON.** `paths` est dans le `partialize` de `useWhiteboardStore`,
+  donc déjà soumis à l'aller-retour à chaque sauvegarde.
+- **Pas le relais.** `map` emprunte le même chemin et a été validé en conditions réelles.
+- **Pas un second consommateur.** Personne n'écoute `gmos-cross-window-sync` en dehors de
+  `WindowTransport`.
+
+**Ce qui distingue ce flux des autres**, et où chercher :
+
+- C'est le seul flux basculé dont le Player Hub est aussi **émetteur** — `PlayerDrawingCanvas`
+  publie via `setActivePath` et `setLaserPointer`. Pour tous les autres, le hub ne fait que
+  recevoir. La topologie « la même fenêtre émet et reçoit » n'avait donc jamais été exercée
+  sur le relais.
+- Le payload transporte `projectionTarget`, et le destinataire le **fusionne**. Une fenêtre
+  qui réémet sa propre vue peut donc écraser la cible de projection d'une autre — un chemin
+  d'auto-extinction qui existe déjà, mais que la bascule a pu réveiller.
+- C'est le seul flux dont l'étranglement (50 ms) **abandonne** la mise à jour au lieu de la
+  reprogrammer : la carte a un `setTimeout` de rattrapage, pas lui.
+
+**Méthode retenue pour la suite** : reproduire en test plutôt que déduire. Un harnais à deux
+instances de `CrossWindowEventService` reliées par un faux relais, l'une en maître et l'autre
+en esclave *émetteur*, reproduit cette topologie de façon déterministe et sans mobiliser une
+session de jeu. L'analyse statique a montré ses limites ici.
 
 ### Étape 6 bis — volume du payload, après validation
 
