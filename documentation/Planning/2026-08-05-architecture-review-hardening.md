@@ -15,6 +15,10 @@
 | 6 | Segment de sync `session` monolithique + médias en base64 | Moyenne | ⬜ À faire |
 | 7 | `handleAction` — ~270 lignes de `if` en série | Moyenne | ✅ Fait |
 | 8 | Couche de synchronisation non testée | Moyenne | ⬜ À faire |
+| 9 | Aucune autorisation par rôle sur les actions reçues | Élevée | ⬜ À faire |
+
+> Le point 9 ne vient pas de la revue initiale : il a été identifié en traitant les points
+> 3 et 7, qui l'ont chacun approché sans le couvrir.
 
 ---
 
@@ -258,13 +262,66 @@ même indirectement. Le mock `idb` global n'exposait pas non plus les raccourcis
 qui*. `forwardToGM` relaie toujours vers le renderer les actions de n'importe quel client
 connecté, appairé ou non : une tablette non appairée peut donc déclencher
 `whiteboard:clear` ou `combat:next-turn`. C'est une question d'autorisation par rôle,
-distincte du typage, et elle n'est pas traitée.
+distincte du typage : elle fait l'objet du **point 9**.
 
 ## 8. Couche de synchronisation non testée ⬜
 
-Trois transports coexistent — `BroadcastChannel`, WebSocket, et l'événement `storage` —
-entre des pairs dont aucun ne fait autorité. Aucun test ne couvre cet ensemble, alors que
-c'est là que se logent les bugs de cohérence les plus coûteux en partie.
+Des transports multiples coexistent entre des pairs dont aucun ne fait autorité :
+`BroadcastChannel` via `CrossWindowEventService` pour les fenêtres locales, WebSocket via
+`SyncServer` pour les tablettes, et depuis le point 5 un second `BroadcastChannel` pour
+notifier les écritures de persistance. Aucun test ne couvre cet ensemble, alors que c'est
+là que se logent les bugs de cohérence les plus coûteux en partie.
+
+*(La description initiale mentionnait l'événement `storage` comme troisième transport. Il a
+disparu au point 5, avec le passage à IndexedDB.)*
+
+## 9. Aucune autorisation par rôle sur les actions reçues ⬜
+
+**Origine.** Point identifié en traitant les points 3 et 7, qui l'ont chacun approché sans
+le couvrir. Le point 3 a authentifié *l'accès aux données* — qui a le droit de **recevoir**
+le flux non caviardé. Le point 7 a borné *le vocabulaire* — quels types d'actions
+l'application accepte d'**exécuter**. Il manque le croisement des deux : qui a le droit de
+déclencher quoi.
+
+**Le problème.** `SyncServer.forwardToGM` relaie vers le renderer du MJ toute action
+envoyée par tout client connecté, sans regarder son rôle. Un appareil non appairé, donc
+rétrogradé en `player`, peut aujourd'hui émettre `whiteboard:clear`, `combat:next-turn` ou
+`remote:sound:stop-all`. Le registre du point 7 les reconnaît comme des types valides et
+les exécute : rien dans la chaîne ne demande si l'émetteur avait le droit.
+
+Le préjudice n'est pas une fuite de données mais une prise de contrôle : effacer le tableau
+en pleine scène, faire avancer l'initiative, couper l'ambiance sonore.
+
+**Piste.** Attacher à chaque entrée du registre le rôle minimal requis, et faire porter la
+vérification par le process principal — c'est lui qui connaît le rôle réel de la socket,
+établi par `PairingManager`. Le renderer, lui, ne voit qu'un message.
+
+Trois familles se dessinent :
+
+- **Actions de joueur** — ce qu'un participant fait pour son propre personnage :
+  `session:update-character-narrative`, `session:submit-feedback`,
+  `session:request-item-transfer`, `session:send-message`, `map:ping`.
+- **Actions de table** — partagées mais sans conséquence irréversible : le dessin
+  collaboratif du tableau blanc, par exemple.
+- **Actions de MJ** — réservées aux rôles privilégiés : `combat:next-turn`,
+  `whiteboard:clear`, `remote:pad:trigger`, `storyboard:trigger`, le contrôle du son,
+  l'approbation des transferts d'objets.
+
+**Points à trancher avant de coder.**
+
+1. Le classement ci-dessus n'est qu'une proposition ; la répartition dépend de la façon
+   dont David mène ses parties. Les joueurs dessinent-ils sur le tableau ? Lancent-ils des
+   dés qui s'affichent chez tout le monde ?
+2. Une action refusée doit-elle être ignorée en silence, ou signalée à l'émetteur — au
+   risque de renseigner un intrus sur ce qui existe ?
+3. Le contrôle doit-il aussi vérifier que l'émetteur agit **sur son propre personnage** ?
+   Un joueur légitime peut aujourd'hui envoyer `session:remove-inventory-item` avec le
+   `characterId` d'un autre. C'est un cran plus fin que le rôle, et sans doute un
+   sous-chantier distinct.
+
+**Dépendance.** À traiter de préférence après le point 8 : modifier le routage des actions
+sans filet de test sur la couche de synchronisation serait exactement le genre de
+changement qui casse une partie sans prévenir.
 
 ---
 
@@ -272,4 +329,6 @@ c'est là que se logent les bugs de cohérence les plus coûteux en partie.
 
 Faire du **process principal Electron le seul propriétaire de l'état partagé**. Cela
 supprimerait `CrossWindowEventService` et unifierait le transport, au prix d'une
-refonte de la couche de synchronisation. C'est la réponse structurelle aux points 6 et 8.
+refonte de la couche de synchronisation. C'est la réponse structurelle aux points 6 et 8 —
+et elle placerait naturellement le contrôle d'autorisation du point 9 au seul endroit qui
+connaît l'identité réelle des clients.
