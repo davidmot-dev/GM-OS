@@ -37,7 +37,9 @@ describe('windowTransport', () => {
             // délibéré, vérifié contre l'aller-retour JSON (voir le commentaire
             // de RELAYED_TYPES). Ce test échouera à la prochaine bascule — c'est
             // le rappel de refaire cette vérification.
-            expect([...RELAYED_TYPES]).toEqual(['clock', 'combat', 'map', 'map:lock', 'map:unlock']);
+            expect([...RELAYED_TYPES]).toEqual([
+                'clock', 'combat', 'map', 'map:lock', 'map:unlock', 'whiteboard',
+            ]);
         });
     });
 
@@ -151,16 +153,40 @@ describe('windowTransport', () => {
         });
 
         it('laisse les flux non bascules sur le BroadcastChannel', () => {
+            // `hub:ready` est le dernier type encore sur l'ancien chemin.
             const relay = installFakeRelay();
             const listener = new BroadcastChannel('canal-test-3');
             const seen: WindowMessage[] = [];
             listener.onmessage = (e) => seen.push(e.data);
 
             transport = new WindowTransport('canal-test-3', (m) => received.push(m));
-            transport.publish({ type: 'whiteboard', payload: { paths: [] }, senderId: 'abc' });
+            transport.publish({ type: 'hub:ready', senderId: 'abc' });
 
             expect(relay.published).toHaveLength(0);
             listener.close();
+        });
+
+        it('envoie le tableau blanc par le process principal', () => {
+            // C'est le flux que l'etape 1 avait mesure a +19 ms sous sa forme
+            // objet ; la pre-serialisation du relais annule cet ecart.
+            const relay = installFakeRelay();
+            transport = new WindowTransport('canal-test-tableau', (m) => received.push(m));
+
+            transport.publish({
+                type: 'whiteboard',
+                payload: {
+                    paths: [{ id: 'p1', color: '#fff', width: 4, tool: 'brush', points: [{ x: 1, y: 2 }] }],
+                    activePath: null,
+                    laserPointer: null,
+                    version: 3,
+                },
+                senderId: 'abc',
+            });
+
+            expect(relay.published).toHaveLength(1);
+            const sent = JSON.parse(relay.published[0]);
+            expect(sent.payload.paths[0].points[0]).toEqual({ x: 1, y: 2 });
+            expect(sent.payload.activePath).toBeNull();
         });
 
         it('retombe sur le BroadcastChannel quand le relais n\'existe pas', () => {

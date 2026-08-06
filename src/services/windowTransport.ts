@@ -48,6 +48,9 @@ export interface WindowMessage {
  *   dérivent de `tokens` et `dangerZones`, eux persistés ; `projectedFogDataUrl`
  *   est `string | null` ; `MapPing` et `MagicEffect` n'ont que des primitives.
  *   Aucun `Date`, `Map` ni `Set` dans `modules/map/types.ts`.
+ * - `whiteboard` : `paths` est dans le `partialize` de `useWhiteboardStore`. Les
+ *   champs volatils qu'il exclut sont soit du même type (`activePath` est un
+ *   `DrawingPath`, comme les éléments de `paths`), soit des primitives.
  */
 export const RELAYED_TYPES: ReadonlySet<string> = new Set([
     'clock',
@@ -55,6 +58,7 @@ export const RELAYED_TYPES: ReadonlySet<string> = new Set([
     'map',
     'map:lock',
     'map:unlock',
+    'whiteboard',
 ]);
 
 /** Le relais du process principal est-il joignable depuis cette fenêtre ? */
