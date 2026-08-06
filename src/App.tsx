@@ -122,7 +122,7 @@ function App() {
     }
   }, [isMainPC, isHydrated, isSystemReady]);
 
-  // --- CROSS-WINDOW SYNC (BroadcastChannel) ---
+  // --- CROSS-WINDOW SYNC (relais du process principal ; BroadcastChannel hors Electron) ---
   useEffect(() => {
     if (isHydrated) {
       crossWindowSync.init(isMainPC);

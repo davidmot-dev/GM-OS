@@ -38,7 +38,7 @@ describe('windowTransport', () => {
             // de RELAYED_TYPES). Ce test échouera à la prochaine bascule — c'est
             // le rappel de refaire cette vérification.
             expect([...RELAYED_TYPES]).toEqual([
-                'clock', 'combat', 'map', 'map:lock', 'map:unlock', 'whiteboard',
+                'clock', 'combat', 'hub:ready', 'map', 'map:lock', 'map:unlock', 'whiteboard',
             ]);
         });
     });
@@ -152,15 +152,31 @@ describe('windowTransport', () => {
             expect(typeof relay.published[0]).toBe('string');
         });
 
-        it('laisse les flux non bascules sur le BroadcastChannel', () => {
-            // `hub:ready` est le dernier type encore sur l'ancien chemin.
+        it('envoie hub:ready par le process principal, sans payload', () => {
+            // Dernier type passé de l'autre côté. L'enjeu n'est pas la
+            // performance — l'enveloppe est vide — mais l'ordre d'arrivée : tant
+            // que ce signal doublait par le canal rapide l'état qu'il déclenche,
+            // le maître pouvait répondre avant que le demandeur soit à jour.
+            const relay = installFakeRelay();
+            transport = new WindowTransport('canal-test-annonce', (m) => received.push(m));
+
+            transport.publish({ type: 'hub:ready', senderId: 'abc' });
+
+            expect(relay.published).toHaveLength(1);
+            expect(JSON.parse(relay.published[0])).toEqual({ type: 'hub:ready', senderId: 'abc' });
+        });
+
+        it('laisse un type inconnu sur le BroadcastChannel', () => {
+            // Plus aucun type de l'application n'emprunte l'ancien chemin dans
+            // l'app de bureau : ce test garde l'aiguillage lui-même, pour qu'un
+            // type ajouté sans passer par RELAYED_TYPES continue d'être livré.
             const relay = installFakeRelay();
             const listener = new BroadcastChannel('canal-test-3');
             const seen: WindowMessage[] = [];
             listener.onmessage = (e) => seen.push(e.data);
 
             transport = new WindowTransport('canal-test-3', (m) => received.push(m));
-            transport.publish({ type: 'hub:ready', senderId: 'abc' });
+            transport.publish({ type: 'type:jamais-bascule', senderId: 'abc' });
 
             expect(relay.published).toHaveLength(0);
             listener.close();
@@ -188,12 +204,23 @@ describe('windowTransport', () => {
             expect(sent.payload.activePath).toBeNull();
         });
 
-        it('retombe sur le BroadcastChannel quand le relais n\'existe pas', () => {
+        it('retombe sur le BroadcastChannel quand le relais n\'existe pas', async () => {
             // Cas de la tablette en PWA et du navigateur de développement :
-            // aucun process principal, tout doit continuer de fonctionner.
-            transport = new WindowTransport('canal-test-4', (m) => received.push(m));
+            // aucun process principal, tout doit continuer de fonctionner. La
+            // tablette émet `hub:ready` comme les autres fenêtres secondaires,
+            // et c'est justement un type relayé — l'absence de relais doit donc
+            // le ramener sur l'ancien chemin, pas le faire disparaître.
+            const listener = new BroadcastChannel('canal-test-4');
+            const seen: WindowMessage[] = [];
+            listener.onmessage = (e) => seen.push(e.data);
 
-            expect(() => transport.publish({ type: 'clock', payload: {}, senderId: 'abc' })).not.toThrow();
+            transport = new WindowTransport('canal-test-4', (m) => received.push(m));
+            transport.publish({ type: 'hub:ready', senderId: 'abc' });
+
+            // Le BroadcastChannel ne livre pas dans le tour de boucle courant.
+            await new Promise(resolve => setTimeout(resolve, 50));
+            expect(seen).toEqual([{ type: 'hub:ready', senderId: 'abc' }]);
+            listener.close();
         });
     });
 

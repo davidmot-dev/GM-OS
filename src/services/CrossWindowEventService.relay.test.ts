@@ -15,9 +15,13 @@ import { relayToOthers, type RelayTarget } from '../../electron/WindowRelay';
  * principal — même exclusion de l'émetteur qu'en production — et reste
  * asynchrone, comme l'IPC.
  *
- * **Ce que le harnais force.** `whiteboard` a été retiré de `RELAYED_TYPES` par
- * le revert. Le harnais le réintroduit localement, sans toucher au code de
- * production : c'est la configuration qui cassait qu'on veut reproduire.
+ * **Pourquoi le transport est tout de même sous-classé.** Les deux graphes de
+ * modules partagent le `window` de jsdom, donc le même `window.appBridge`. Le
+ * vrai `WindowTransport` relit ce pont à chaque `publish` : après le chargement
+ * de la seconde fenêtre, la première publierait sous l'identité de la seconde et
+ * le relais ne l'exclurait plus. La sous-classe fige le pont au chargement, ce
+ * qu'un process de rendu distinct fait naturellement en production. Elle ne
+ * change ni l'aiguillage ni l'encodage.
  */
 
 /**
@@ -113,12 +117,11 @@ describe('relais — deux fenêtres, tableau blanc', () => {
 
         vi.doMock('./windowTransport', async (importOriginal) => {
             const actual = await importOriginal<typeof import('./windowTransport')>();
-            const forced = new Set([...actual.RELAYED_TYPES, 'whiteboard']);
             const capturedRelay = (window as any).appBridge?.relay;
 
             class HarnessTransport extends actual.WindowTransport {
                 publish(message: import('./windowTransport').WindowMessage) {
-                    if (capturedRelay && forced.has(message.type)) {
+                    if (capturedRelay && actual.RELAYED_TYPES.has(message.type)) {
                         capturedRelay.publish(JSON.stringify(message));
                         return;
                     }
@@ -207,8 +210,10 @@ describe('relais — deux fenêtres, tableau blanc', () => {
     });
 
     it('le hub s\'annonce : le maître lui envoie l\'état complet', async () => {
-        // Chemin de synchronisation initiale, jamais exerce jusqu'ici : le hub
-        // publie `hub:ready`, le maître répond par broadcastFullState().
+        // Chemin de synchronisation initiale : le hub publie `hub:ready`, le
+        // maître répond par broadcastFullState(). Depuis la bascule de ce type,
+        // l'annonce et la réponse empruntent le même canal — c'est la propriété
+        // recherchée : l'annonce ne peut plus doubler l'état qu'elle déclenche.
         wbGm.getState().addPath({
             id: 'deja-la', points: [{ x: 0.1, y: 0.1 }, { x: 0.2, y: 0.2 }],
             color: '#fff', width: 4, tool: 'brush',

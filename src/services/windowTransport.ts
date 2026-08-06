@@ -1,16 +1,21 @@
 /**
  * Choix du transport pour la synchronisation entre fenêtres locales.
  *
- * Deux chemins coexistent pendant la bascule (chantier « unification du
- * transport », voir `documentation/Planning/2026-08-05-architecture-review-hardening.md`) :
+ * Deux chemins coexistent (chantier « unification du transport », voir
+ * `documentation/Planning/2026-08-05-architecture-review-hardening.md`) :
  *
- * - le `BroadcastChannel` historique, de renderer à renderer ;
- * - le relais du process principal (`electron/WindowRelay.ts`), qui deviendra
- *   le seul chemin.
+ * - le relais du process principal (`electron/WindowRelay.ts`), qui porte
+ *   désormais **tous** les flux de l'application de bureau ;
+ * - le `BroadcastChannel` historique, de renderer à renderer.
  *
- * La bascule se fait **flux par flux** plutôt qu'en une fois : `RELAYED_TYPES`
- * énumère ce qui est déjà passé de l'autre côté. Tant qu'un type n'y figure pas,
- * il emprunte l'ancien chemin, inchangé.
+ * La bascule s'est faite **flux par flux** plutôt qu'en une fois : `RELAYED_TYPES`
+ * énumère ce qui est passé de l'autre côté. Tant qu'un type n'y figure pas, il
+ * emprunte l'ancien chemin, inchangé.
+ *
+ * **Le `BroadcastChannel` ne disparaît pas pour autant** : il reste le repli hors
+ * Electron — tablette en PWA, navigateur de développement — où aucun process
+ * principal n'existe. Ce qui disparaît, c'est son usage sur le poste MJ, et avec
+ * lui le second chemin à tester.
  */
 
 /** Enveloppe commune aux deux transports. */
@@ -59,10 +64,19 @@ export interface WindowMessage {
  *   messages et rendre visible un défaut plus ancien. Corrigé dans
  *   `CrossWindowEventService` par deux gardes, et reproduit en test dans
  *   `CrossWindowEventService.relay.test.ts`.
+ * - `hub:ready` : **sans payload** — l'enveloppe se réduit à `{ type, senderId }`,
+ *   deux chaînes. La question de compatibilité ne se pose pas.
+ *
+ *   Le bénéfice n'est pas la performance mais l'**ordre d'arrivée**. Tant que ce
+ *   signal restait sur le `BroadcastChannel` pendant que l'état passait par
+ *   l'IPC, les deux canaux se doublaient : c'est cette inversion qui avait rendu
+ *   visible la panne du tableau blanc. Tous les flux étant maintenant sur le
+ *   même chemin, `hub:ready` ne peut plus dépasser l'état qu'il déclenche.
  */
 export const RELAYED_TYPES: ReadonlySet<string> = new Set([
     'clock',
     'combat',
+    'hub:ready',
     'map',
     'map:lock',
     'map:unlock',

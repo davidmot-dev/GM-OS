@@ -919,11 +919,44 @@ le flux le plus souvent recorrigé du projet — au moins quatre fois d'après l
 commits de synchronisation. Empiler deux changements dessus avant d'en avoir validé un seul
 priverait du moyen de savoir lequel accuser.
 
-### Étape 7 — à faire
+### Étape 7 — bascule de `hub:ready` 🟡
 
 `hub:ready`, dernier type encore sur le `BroadcastChannel`. Il ne porte pas de payload, mais
 il déclenche `broadcastFullState()` côté maître — c'est le chemin de synchronisation initiale
 quand le Player Hub s'ouvre, donc pas un cas anodin malgré sa forme.
+
+**La question de compatibilité JSON ne se pose pas** : l'enveloppe se réduit à
+`{ type, senderId }`, deux chaînes. Ni le critère du `partialize` ni la relecture champ par
+champ n'avaient à s'appliquer.
+
+**Le vrai bénéfice est l'ordre d'arrivée, pas la performance.** Tant que ce signal restait
+sur le `BroadcastChannel` pendant que l'état passait par l'IPC, les deux canaux se
+doublaient — et c'est exactement cette inversion qui avait rendu visible la panne du tableau
+blanc de l'étape 6. Tous les flux étant désormais sur le même chemin, l'annonce ne peut plus
+dépasser l'état qu'elle déclenche. La bascule ferme donc la classe de défauts que l'étape 6
+avait dû diagnostiquer, au lieu de simplement finir une liste.
+
+**Ce que les tests sont devenus.** Aucun type de l'application n'emprunte plus l'ancien
+chemin sur le poste MJ : le test qui vérifiait le repli s'exerçait sur `hub:ready`, il porte
+maintenant sur un type inconnu — l'aiguillage reste gardé, sans dépendre d'un flux qui n'existe
+plus de ce côté. Le test du cas hors Electron a été renforcé au passage : il constatait qu'une
+publication ne levait pas, il vérifie désormais que le message **arrive** sur le
+`BroadcastChannel`. C'est le cas de la tablette en PWA, qui émet `hub:ready` comme les autres
+fenêtres secondaires.
+
+**Commentaire du harnais corrigé.** `CrossWindowEventService.relay.test.ts` annonçait forcer
+`whiteboard` dans `RELAYED_TYPES` — vrai pendant le revert, faux depuis la rebascule. Sa
+sous-classe de transport reste néanmoins nécessaire, pour une autre raison : les deux graphes
+de modules partagent le `window` de jsdom, donc le même `window.appBridge`. Le vrai
+`WindowTransport` relit ce pont à chaque publication, si bien qu'après le chargement de la
+seconde fenêtre la première publierait sous l'identité de la seconde — et le relais ne
+l'exclurait plus. La sous-classe fige le pont au chargement, ce qu'un process de rendu
+distinct fait naturellement en production.
+
+Suite complète au vert (465), type-check et build compris.
+
+**À exercer en conditions réelles** : ouvrir le Player Hub et le projecteur alors que la carte
+et le tableau sont déjà projetés — c'est ce que `hub:ready` sert à rattraper.
 
 **Nuance sur la disparition annoncée du `BroadcastChannel`.** Il ne peut pas disparaître tout
 à fait : `WindowTransport` s'en sert de repli hors Electron, où aucun process principal
