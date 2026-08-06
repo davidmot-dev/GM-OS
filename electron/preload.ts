@@ -130,6 +130,11 @@ contextBridge.exposeInMainWorld('appBridge', {
         broadcastUIAction: (action: unknown) => ipcRenderer.send('remote:broadcast-ui-action', action),
         cacheMedia: (buffer: ArrayBuffer, id: string) => ipcRenderer.invoke('remote:cache-media', buffer, id),
     },
+    pairing: {
+        // Secret partagé permettant à un appareil de réclamer un rôle privilégié.
+        getSecret: (): Promise<string> => ipcRenderer.invoke('pairing:get-secret'),
+        rotate: (): Promise<string> => ipcRenderer.invoke('pairing:rotate'),
+    },
     logger: {
         info: (message: string, ...args: unknown[]) => ipcRenderer.send('log:message', 'info', message, ...args),
         warn: (message: string, ...args: unknown[]) => ipcRenderer.send('log:message', 'warn', message, ...args),

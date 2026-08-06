@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useClientStore } from '../../../stores/useClientStore';
 import { type RemoteSyncData, type RemoteActionType } from '../types/remote.types';
 import { type RollResult as BaseRollResult } from '../../dice/DiceEngine';
+import { capturePairingTokenFromUrl, getPairingToken } from '../pairingToken';
 
 export interface RollRecord extends BaseRollResult {
     id: string;
@@ -30,8 +31,13 @@ const INITIAL_SYNC_DATA: RemoteSyncData = {
 const BACKOFF_INITIAL = 1000;
 const BACKOFF_MAX = 30000;
 
+// Au chargement du module : le token arrive dans le fragment du QR d'appairage,
+// il faut le capturer avant que la première connexion ne s'ouvre.
+capturePairingTokenFromUrl();
+
 export const useRemoteSync = () => {
     const [status, setStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
+    const [isPaired, setIsPaired] = useState<boolean>(() => !!getPairingToken());
     const [syncData, setSyncData] = useState<RemoteSyncData>(INITIAL_SYNC_DATA);
     const [lastDiceResult, setLastDiceResult] = useState<RollRecord | null>(null);
     const resultTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -64,9 +70,11 @@ export const useRemoteSync = () => {
             setClientStatus('active');
             backoffRef.current = BACKOFF_INITIAL; // Reset backoff on success
 
-            socket.send(JSON.stringify({ 
-                type: 'remote:register', 
-                payload: { deviceId, pseudo, role: 'remote' } 
+            // Le rôle 'remote' est privilégié (flux MJ non caviardé) : sans token
+            // valide, le serveur rétrograde la connexion en simple joueur.
+            socket.send(JSON.stringify({
+                type: 'remote:register',
+                payload: { deviceId, pseudo, role: 'remote', token: getPairingToken() }
             }));
         };
 
@@ -115,11 +123,21 @@ export const useRemoteSync = () => {
                         setLastDiceResult(null);
                     }, 15000);
                 }
+                // Le serveur confirme le rôle réellement accordé, qui peut être
+                // inférieur à celui demandé si l'appairage n'a pas été validé.
+                else if (data.type === 'remote:registered') {
+                    setIsPaired(data.payload?.role === 'remote');
+                }
                 // Handle Remote Errors (e.g. Character Collision)
                 else if (data.type === 'remote:error') {
                     console.error('[Remote Error]', data.payload);
-                    setStatus('error');
-                    // Notification logic could be added here
+                    if (data.payload?.code === 'pairing_required') {
+                        // La socket est bien ouverte : on est connecté, mais en
+                        // mode joueur. Ce n'est pas une erreur de connexion.
+                        setIsPaired(false);
+                    } else {
+                        setStatus('error');
+                    }
                 }
             } catch (err) {
                 console.error('[Remote] Failed to parse message:', err);
@@ -162,6 +180,7 @@ export const useRemoteSync = () => {
 
     return {
         status,
+        isPaired,
         syncData,
         lastDiceResult,
         clearDiceResult,

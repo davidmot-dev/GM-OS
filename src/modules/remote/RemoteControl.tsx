@@ -8,7 +8,8 @@ import {
     BookOpen, 
     Film,
     WifiOff,
-    Smartphone
+    Smartphone,
+    ShieldAlert
 } from 'lucide-react';
 import { useRemoteSync } from './hooks/useRemoteSync';
 import { type RemoteActionType } from './types/remote.types';
@@ -22,7 +23,7 @@ import RemoteDiceResultOverlay from './components/RemoteDiceResultOverlay';
 import RemoteWhiteboardView from './components/RemoteWhiteboardView';
 
 const RemoteControl: React.FC = () => {
-    const { status, syncData, lastDiceResult, clearDiceResult, sendAction } = useRemoteSync();
+    const { status, isPaired, syncData, lastDiceResult, clearDiceResult, sendAction } = useRemoteSync();
     const [activeTab, setActiveTab] = useState<'pads' | 'dice' | 'sound' | 'combat' | 'whiteboard' | 'notes' | 'story'>('pads');
     const [isAventureMode] = useState(() => typeof window !== 'undefined' ? window.location.search.includes('mode=adventure') : false);
 
@@ -128,6 +129,17 @@ const RemoteControl: React.FC = () => {
                 <div className="bg-rose-600 px-4 py-2 flex items-center justify-center gap-2 animate-in slide-in-from-top duration-300">
                     <WifiOff size={14} className="text-white" />
                     <span className="text-[10px] font-black uppercase tracking-widest text-white">Reconnection...</span>
+                </div>
+            )}
+
+            {/* Connecté mais non appairé : le serveur ne transmet que le flux joueur,
+                donc ni les notes privées ni les secrets de PNJ. */}
+            {status === 'connected' && !isPaired && (
+                <div className="bg-amber-600 px-4 py-2 flex items-center justify-center gap-2 animate-in slide-in-from-top duration-300">
+                    <ShieldAlert size={14} className="text-white" />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-white text-center">
+                        Appareil non appairé — scannez le QR code des réglages MJ
+                    </span>
                 </div>
             )}
 

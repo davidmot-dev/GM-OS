@@ -9,7 +9,7 @@
 |---|-------|---------|------|
 | 1 | `startRemoteServer()` fantôme + `electron/` hors du type-check | Bloquant | ✅ Fait — `90f8445` |
 | 2 | Lecture de fichiers arbitraire depuis le LAN via le proxy média | Critique | ✅ Fait — `90f8445` |
-| 3 | Aucune authentification WebSocket | Critique | ⬜ À faire |
+| 3 | Aucune authentification WebSocket | Critique | ✅ Fait |
 | 4 | `ignore-certificate-errors` global | Élevée | ⬜ À faire |
 | 5 | Store session en localStorage (plafond ~5-10 Mo) | Élevée | ⬜ À faire |
 | 6 | Segment de sync `session` monolithique + médias en base64 | Moyenne | ⬜ À faire |
@@ -68,14 +68,54 @@ re-sélectionné via un dialogue renverra un 404 aux tablettes. Le log
 `electron` node) : `vite-plugin-electron-renderer` shimme les modules natifs et cassait
 tout test du process principal.
 
-## 3. Aucune authentification WebSocket ⬜
+## 3. Aucune authentification WebSocket ✅
 
-N'importe quel client du réseau local peut ouvrir une WebSocket, envoyer
-`remote:register` avec `role: 'gm'` et recevoir le flux non sanitisé — c'est-à-dire les
-secrets du MJ. Rien ne valide l'identité de l'émetteur.
+**Le problème.** `handleRegister` prenait le `role` directement dans le payload du client.
+Or `useNexusSynchronizer` diffuse le `diffPayload` **brut** aux rôles `remote` et `gm`, et
+une copie caviardée (`notes.private`, `gmSecretInfo`, `roleplayingNotes`, feedbacks) aux
+rôles `player` et `hub`. N'importe quelle machine du réseau ouvrait donc une WebSocket sur
+le 3001, envoyait `{type:'remote:register', payload:{role:'gm'}}`, et recevait les secrets
+du MJ en clair.
 
-Chantier lié : l'appairage réseau du Tablet Hub par QR code, resté en cours sur le commit
-wip `84fa2e6`. C'est le token de ce QR qu'il faut valider à la connexion.
+Le QR code existant n'encodait qu'une URL : il n'y avait aucun token à valider. Il a fallu
+créer le mécanisme, pas seulement le brancher.
+
+**Décisions (David).** Token exigé des seuls rôles privilégiés — les tablettes joueurs
+restent libres et reçoivent le flux caviardé, donc zéro friction en partie. Secret
+**persistant**, révocable à la demande.
+
+**Fait.**
+
+- `electron/PairingManager.ts` : secret de 32 octets persisté dans `pairing.json`
+  (userData), régénéré si le fichier est absent ou corrompu. `verify()` compare en temps
+  constant sur des empreintes SHA-256 — un `===` fuirait la longueur du préfixe correct,
+  ce qui suffit à reconstruire le secret octet par octet.
+- `SyncServer` : les rôles sont normalisés contre une liste blanche (tout rôle inconnu
+  retombe sur `player`), et `gm`/`remote` exigent un token valide. En cas d'échec, la
+  connexion est **rétrogradée en `player`** — elle reste fonctionnelle mais ne reçoit que
+  le flux caviardé — et un `remote:error` de code `pairing_required` est renvoyé. Le rôle
+  refusé n'est jamais mémorisé dans le registre de session.
+- Le secret est encodé dans le QR de la télécommande MJ sous forme de **fragment**
+  (`#token=…`), jamais de query string : un fragment n'est pas transmis au serveur, donc
+  il ne finit ni dans les logs d'accès ni dans un `Referer`. Côté client, il est capturé
+  au chargement, rangé en localStorage, et retiré de la barre d'adresse.
+- Bouton « Révoquer les appairages » dans les réglages : régénère le secret et force
+  chaque appareil à re-scanner.
+- La télécommande affiche un bandeau ambre « appareil non appairé » quand elle est
+  connectée mais rétrogradée.
+- 21 tests (`PairingManager.test.ts`, `SyncServer.register.test.ts`).
+
+**Corrigé au passage.** Le QR de la télécommande était généré par `api.qrserver.com`,
+un service **externe** : l'URL — et donc le secret qu'on venait d'y mettre — serait partie
+chez un tiers, en plus de lui révéler l'IP locale du poste MJ. Les deux QR des réglages
+passent désormais par le rendu local `QRCodeSVG`, déjà utilisé par `NetworkQRCodeModal`.
+Leur URL pointait par ailleurs sur le port `5173` codé en dur (le serveur de dev), donc
+elle ne menait nulle part en production ; elle utilise maintenant le port réel.
+
+**Reste ouvert, même famille.** `forwardToGM` relaie vers le renderer MJ **n'importe quel**
+type d'action envoyé par **n'importe quel** client connecté, y compris non appairé. C'est
+une surface de commande distincte de la fuite de données : elle se referme avec le
+registre d'actions du point 7, où la liste des types recevables devient explicite.
 
 ## 4. `ignore-certificate-errors` global ⬜
 

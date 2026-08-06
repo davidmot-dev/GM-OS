@@ -5,6 +5,15 @@ import path from 'node:path';
 import fs from 'fs-extra';
 import { sessionManager } from './SessionManager';
 import { mediaAccess } from './MediaAccess';
+import { pairingManager } from './PairingManager';
+
+export type ClientRole = 'gm' | 'remote' | 'player' | 'hub';
+
+/** Rôles acceptés sur le fil ; tout le reste retombe sur 'player'. */
+const ALLOWED_ROLES: ClientRole[] = ['gm', 'remote', 'player', 'hub'];
+
+/** Rôles qui reçoivent le flux non caviardé — voir useNexusSynchronizer. */
+const PRIVILEGED_ROLES: ClientRole[] = ['gm', 'remote'];
 
 /** Types de fichiers que le proxy média accepte de servir. */
 const MEDIA_MIME_TYPES: Record<string, string> = {
@@ -19,7 +28,7 @@ const MEDIA_MIME_TYPES: Record<string, string> = {
 interface ExtendedWebSocket extends WebSocket {
     isAlive?: boolean;
     deviceId?: string;
-    role?: 'gm' | 'player' | 'remote' | 'hub';
+    role?: ClientRole;
     remoteAddress?: string;
 }
 
@@ -238,10 +247,32 @@ export class SyncServer {
     }
 
     private handleRegister(ws: ExtendedWebSocket, payload: any) {
-        const { deviceId, pseudo, role, playerName, characterId } = payload || {};
-        const actualDeviceId = deviceId || `remote-${Math.random().toString(36).substring(2, 9)}`;
+        const { deviceId, pseudo, role, playerName, characterId, token } = payload || {};
+        const actualDeviceId = typeof deviceId === 'string' && deviceId
+            ? deviceId
+            : `remote-${Math.random().toString(36).substring(2, 9)}`;
+
+        // Un rôle non reconnu ne doit pas se retrouver tel quel dans le routage des
+        // broadcasts : on retombe sur le rôle le moins privilégié.
+        let claimedRole: ClientRole = ALLOWED_ROLES.includes(role) ? role : 'player';
+
+        // Les rôles privilégiés reçoivent le flux non caviardé (notes privées,
+        // gmSecretInfo). Le rôle étant déclaré par le client, seul le secret
+        // d'appairage permet de l'accorder.
+        if (PRIVILEGED_ROLES.includes(claimedRole) && !pairingManager.verify(token)) {
+            console.warn(`[Nexus Sync] Rôle '${claimedRole}' refusé à ${ws.remoteAddress} : appairage absent ou invalide`);
+            claimedRole = 'player';
+            ws.send(JSON.stringify({
+                type: 'remote:error',
+                payload: {
+                    code: 'pairing_required',
+                    message: 'Appareil non appairé : accès en mode joueur. Scannez le QR code d\'appairage du poste MJ.'
+                }
+            }));
+        }
+
         ws.deviceId = actualDeviceId;
-        ws.role = role || 'player';
+        ws.role = claimedRole;
 
         // Track socket for this device
         if (!this.deviceSocketMap.has(actualDeviceId)) {
@@ -250,7 +281,9 @@ export class SyncServer {
         this.deviceSocketMap.get(actualDeviceId)!.add(ws);
 
         try {
-            sessionManager.registerClient(actualDeviceId, pseudo || 'Unknown', role || 'remote', playerName, characterId, ws.remoteAddress);
+            // claimedRole, pas le rôle brut du payload : le registre de session ne
+            // doit jamais mémoriser un privilège qui vient d'être refusé.
+            sessionManager.registerClient(actualDeviceId, pseudo || 'Unknown', claimedRole, playerName, characterId, ws.remoteAddress);
             this.updateGMClients();
             
             // Confirm registration and send role back

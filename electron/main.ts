@@ -46,6 +46,7 @@ import { sessionManager } from './SessionManager'
 import { OllamaService } from './OllamaService'
 import { SyncServer } from './SyncServer'
 import { mediaAccess } from './MediaAccess'
+import { registerPairingHandlers } from './PairingManager'
 // import { GitBackupService } from './GitBackupService'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -82,6 +83,8 @@ registerNexusHandlers();
 registerSecurityHandlers();
 // Register Ollama Local AI Service
 OllamaService.registerHandlers();
+// Register pairing secret handlers (QR d'appairage des rôles privilégiés)
+registerPairingHandlers();
 
 // Register gmos protocol as privileged
 protocol.registerSchemesAsPrivileged([

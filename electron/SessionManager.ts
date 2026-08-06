@@ -10,7 +10,7 @@ export interface ClientContext {
     pseudo: string;
     playerName?: string;
     characterId?: string;
-    role: 'combat' | 'narrative' | 'player' | 'remote' | 'hub';
+    role: 'combat' | 'narrative' | 'player' | 'remote' | 'hub' | 'gm';
     status: 'active' | 'ghost' | 'disconnected';
     lastSeen: number;
     ip?: string;

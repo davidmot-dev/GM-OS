@@ -15,6 +15,7 @@ import { Trash2, RefreshCw } from 'lucide-react';
 // import { useBackupSync } from '../hooks/useBackupSync';
 import LobbyMonitor from './settings/LobbyMonitor';
 import { useObsidianStore } from '../modules/session/useObsidianStore';
+import { QRCodeSVG } from 'qrcode.react';
 
 /* GitHub Sync Section Removed at user request */
 
@@ -28,6 +29,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
     const { t, i18n } = useTranslation(['settings', 'common']);
     const [activeTab, setActiveTab] = useState<TabID>('system');
     const [connectionInfo, setConnectionInfo] = useState<{ip: string, port: number} | null>(null);
+    const [pairingSecret, setPairingSecret] = useState<string>('');
     const { theme, setTheme, themeColor, setThemeColor, language, setLanguage } = useSessionStore();
     const { 
         audioDevices, fetchAudioDevices, audioAliases, setAudioAlias,
@@ -63,12 +65,28 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
         updateInfo();
     }, [fetchAudioDevices, fetchDisplays]);
 
-    const remoteUrl = connectionInfo?.ip ? `http://${connectionInfo.ip}:5173/?window=remote` : '';
-    const tabletUrl = connectionInfo?.ip ? `http://${connectionInfo.ip}:5173/?window=tablet` : '';
-    
-    // Use a direct qrcode API that is very reliable
-    const qrCodeUrl = remoteUrl ? `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(remoteUrl)}` : '';
-    const tabletQrCodeUrl = tabletUrl ? `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(tabletUrl)}` : '';
+    // Secret d'appairage : il n'est encodé que dans le QR de la télécommande MJ,
+    // jamais affiché en clair ni transmis à un service externe.
+    React.useEffect(() => {
+        window.appBridge?.pairing?.getSecret().then(setPairingSecret).catch(console.error);
+    }, []);
+
+    const port = connectionInfo?.port || 3001;
+    const remoteUrl = connectionInfo?.ip ? `http://${connectionInfo.ip}:${port}/?window=remote` : '';
+    const tabletUrl = connectionInfo?.ip ? `http://${connectionInfo.ip}:${port}/?window=tablet` : '';
+
+    // Le secret voyage dans le fragment : il n'est pas envoyé au serveur avec la
+    // requête HTTP, donc il ne traîne ni dans les logs d'accès ni dans un Referer.
+    const remotePairingUrl = remoteUrl && pairingSecret
+        ? `${remoteUrl}#token=${encodeURIComponent(pairingSecret)}`
+        : remoteUrl;
+
+    const handleRevokePairings = async () => {
+        if (!window.appBridge?.pairing?.rotate) return;
+        const fresh = await window.appBridge.pairing.rotate();
+        setPairingSecret(fresh);
+        gmToast(t('settings:remote.pairings_revoked'), 'success');
+    };
 
     return (
         <div className="flex flex-col h-full bg-app-bg text-app-text/80">
@@ -557,11 +575,14 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
 
                                     <div className="flex flex-col items-center gap-4 border-t border-white/5 pt-6">
                                         <div className="relative p-2 bg-white rounded-[1.5rem] shadow-2xl group transition-transform hover:scale-105">
-                                            {qrCodeUrl ? (
-                                                <img 
-                                                    src={qrCodeUrl} 
-                                                    alt="Remote QR Code" 
-                                                    className="w-40 h-40 mix-blend-multiply" 
+                                            {remotePairingUrl ? (
+                                                <QRCodeSVG
+                                                    value={remotePairingUrl}
+                                                    size={160}
+                                                    bgColor="#ffffff"
+                                                    fgColor="#000000"
+                                                    level="Q"
+                                                    className="w-40 h-40"
                                                 />
                                             ) : (
                                                 <div className="w-40 h-40 flex flex-col items-center justify-center gap-2">
@@ -570,9 +591,18 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                             )}
                                             <div className="absolute inset-0 border-2 border-accent/20 rounded-[1.5rem] pointer-events-none" />
                                         </div>
+                                        {/* On affiche l'URL sans le fragment : le secret ne doit pas
+                                            se retrouver sur un partage d'écran ou une capture. */}
                                         <p className="text-[9px] font-bold text-app-text/30 uppercase tracking-widest italic select-all cursor-help">{remoteUrl || t('settings:remote.waiting_url')}</p>
+                                        <button
+                                            onClick={handleRevokePairings}
+                                            className="text-[9px] font-bold uppercase tracking-widest text-rose-400/70 hover:text-rose-400 transition-colors"
+                                            title={t('settings:remote.revoke_pairings_tooltip')}
+                                        >
+                                            {t('settings:remote.revoke_pairings')}
+                                        </button>
                                     </div>
-                                    
+
                                     <div className="p-4 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between">
                                         <span className="text-[9px] font-bold text-app-text/30 uppercase tracking-widest">{t('settings:remote.direct_connection')}</span>
                                         <div className="flex items-center gap-2">
@@ -596,11 +626,14 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
 
                                     <div className="flex flex-col items-center gap-4 border-t border-white/5 pt-6">
                                         <div className="relative p-2 bg-white rounded-[1.5rem] shadow-2xl group transition-transform hover:scale-105">
-                                            {tabletQrCodeUrl ? (
-                                                <img 
-                                                    src={tabletQrCodeUrl} 
-                                                    alt="Tablet Hub QR Code" 
-                                                    className="w-40 h-40 mix-blend-multiply" 
+                                            {tabletUrl ? (
+                                                <QRCodeSVG
+                                                    value={tabletUrl}
+                                                    size={160}
+                                                    bgColor="#ffffff"
+                                                    fgColor="#000000"
+                                                    level="Q"
+                                                    className="w-40 h-40"
                                                 />
                                             ) : (
                                                 <div className="w-40 h-40 flex flex-col items-center justify-center gap-2">

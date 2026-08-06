@@ -131,6 +131,10 @@ declare global {
             cacheMedia: (id: string, buffer: ArrayBuffer) => Promise<boolean>;
             removeActions: () => void;
         };
+        pairing?: {
+            getSecret: () => Promise<string>;
+            rotate: () => Promise<string>;
+        };
         highlightMapToken?: (name: string) => void;
         app?: {
             quit: () => void;
