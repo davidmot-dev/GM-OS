@@ -6,6 +6,7 @@ import fs from 'fs-extra';
 import { sessionManager } from './SessionManager';
 import { mediaAccess } from './MediaAccess';
 import { pairingManager } from './PairingManager';
+import { evaluateAction } from './actionPolicy';
 
 export type ClientRole = 'gm' | 'remote' | 'player' | 'hub';
 
@@ -301,7 +302,31 @@ export class SyncServer {
         }
     }
 
+    /**
+     * Vérifie qu'un client a le droit de déclencher cette action.
+     *
+     * Un refus est jeté en silence côté émetteur — inutile de lui apprendre ce
+     * qui existe — mais journalisé côté MJ avec de quoi identifier l'appareil.
+     */
+    private isActionAuthorized(ws: ExtendedWebSocket, data: any): boolean {
+        const client = ws.deviceId ? sessionManager.getClient(ws.deviceId) : undefined;
+        const verdict = evaluateAction(data?.type, data?.payload, ws.role, client?.characterId);
+
+        if (!verdict.allowed) {
+            console.warn(
+                `[Nexus Sync] Action '${data?.type}' refusée (${verdict.reason}) — ` +
+                `rôle '${ws.role}', appareil '${ws.deviceId}', adresse ${ws.remoteAddress} : ${verdict.detail}`
+            );
+            return false;
+        }
+        return true;
+    }
+
     private forwardToGM(ws: ExtendedWebSocket, data: any) {
+        // Contrôle avant tout effet : la branche P2P ci-dessous rediffuse aux
+        // autres clients sans repasser par le renderer.
+        if (!this.isActionAuthorized(ws, data)) return;
+
         // P2P Logic: If it's a message for others, broadcast it directly
         if (data.type === 'session:send-message' && data.payload?.toId !== 'GM') {
             this.broadcastAction({ ...data, type: 'session:receive-message' }, ws);

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
+import { describe, it, expect, beforeAll, beforeEach, afterAll, vi } from 'vitest';
 import fs from 'fs-extra';
 
 const dirs = vi.hoisted(() => {
@@ -130,6 +130,85 @@ describe('handleRegister — rôles non privilégiés', () => {
         register(ws, { role: 'hub' });
 
         expect(ws.deviceId).toMatch(/^remote-/);
+    });
+});
+
+describe('forwardToGM — autorisation', () => {
+    /** forwardToGM est privée : c'est le passage obligé des actions clientes. */
+    const forward = (ws: FakeSocket, data: unknown) => {
+        (server as unknown as { forwardToGM: (ws: unknown, d: unknown) => void }).forwardToGM(ws, data);
+    };
+
+    /** Actions effectivement transmises au renderer MJ. */
+    const forwarded = () =>
+        (fakeWindow.webContents.send as any).mock.calls.filter(([channel]: any[]) => channel === 'remote:action');
+
+    beforeEach(() => {
+        (fakeWindow.webContents.send as any).mockClear();
+    });
+
+    it('transmet une action de joueur sur son propre personnage', () => {
+        const ws = makeSocket();
+        register(ws, { deviceId: 'tablette-alice', role: 'hub', characterId: 'perso-alice' });
+        (fakeWindow.webContents.send as any).mockClear();
+
+        forward(ws, { type: 'session:remove-inventory-item', payload: { characterId: 'perso-alice', itemId: 'i1' } });
+
+        expect(forwarded()).toHaveLength(1);
+    });
+
+    it('bloque une action réservée aux rôles appairés', () => {
+        const ws = makeSocket();
+        register(ws, { deviceId: 'tablette-pirate', role: 'hub' });
+        (fakeWindow.webContents.send as any).mockClear();
+
+        forward(ws, { type: 'whiteboard:clear', payload: {} });
+        forward(ws, { type: 'combat:next-turn', payload: {} });
+
+        expect(forwarded()).toHaveLength(0);
+    });
+
+    it('bloque une action visant le personnage d\'un autre', () => {
+        const ws = makeSocket();
+        register(ws, { deviceId: 'tablette-bob', role: 'hub', characterId: 'perso-bob' });
+        (fakeWindow.webContents.send as any).mockClear();
+
+        forward(ws, { type: 'session:remove-inventory-item', payload: { characterId: 'perso-alice', itemId: 'i1' } });
+
+        expect(forwarded()).toHaveLength(0);
+    });
+
+    it('ne rediffuse pas non plus un message usurpé aux autres clients', () => {
+        // La branche P2P court-circuite le renderer : le contrôle doit la précéder.
+        const ws = makeSocket();
+        register(ws, { deviceId: 'tablette-carl', role: 'hub', characterId: 'perso-carl' });
+        ws.send.mockClear();
+
+        forward(ws, { type: 'session:send-message', payload: { fromId: 'perso-alice', toId: 'perso-bob' } });
+
+        expect(forwarded()).toHaveLength(0);
+    });
+
+    it('transmet tout pour un rôle appairé', () => {
+        const ws = makeSocket();
+        register(ws, { deviceId: 'mj-remote', role: 'remote', token: pairingManager.getSecret() });
+        (fakeWindow.webContents.send as any).mockClear();
+
+        forward(ws, { type: 'whiteboard:clear', payload: {} });
+        forward(ws, { type: 'session:remove-inventory-item', payload: { characterId: 'perso-de-nimporte-qui' } });
+
+        expect(forwarded()).toHaveLength(2);
+    });
+
+    it('bloque un client qui a réclamé gm sans token', () => {
+        // Le rôle a été rétrogradé à l'enregistrement : l'autorisation suit.
+        const ws = makeSocket();
+        register(ws, { deviceId: 'faux-mj', role: 'gm' });
+        (fakeWindow.webContents.send as any).mockClear();
+
+        forward(ws, { type: 'combat:next-turn', payload: {} });
+
+        expect(forwarded()).toHaveLength(0);
     });
 });
 

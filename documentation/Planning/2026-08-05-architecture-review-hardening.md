@@ -15,7 +15,7 @@
 | 6 | Segment de sync `session` monolithique + médias en base64 | Moyenne | ✅ Fait — à valider avec une tablette |
 | 7 | `handleAction` — ~270 lignes de `if` en série | Moyenne | ✅ Fait |
 | 8 | Couche de synchronisation non testée | Moyenne | ✅ Fait |
-| 9 | Aucune autorisation par rôle sur les actions reçues | Élevée | ⬜ À faire |
+| 9 | Aucune autorisation par rôle sur les actions reçues | Élevée | ✅ Fait |
 
 > Le point 9 ne vient pas de la revue initiale : il a été identifié en traitant les points
 > 3 et 7, qui l'ont chacun approché sans le couvrir.
@@ -299,7 +299,7 @@ même indirectement. Le mock `idb` global n'exposait pas non plus les raccourcis
 qui*. `forwardToGM` relaie toujours vers le renderer les actions de n'importe quel client
 connecté, appairé ou non : une tablette non appairée peut donc déclencher
 `whiteboard:clear` ou `combat:next-turn`. C'est une question d'autorisation par rôle,
-distincte du typage : elle fait l'objet du **point 9**.
+distincte du typage : elle a été traitée au **point 9**.
 
 ## 8. Couche de synchronisation non testée ✅
 
@@ -343,36 +343,46 @@ les exécute : rien dans la chaîne ne demande si l'émetteur avait le droit.
 Le préjudice n'est pas une fuite de données mais une prise de contrôle : effacer le tableau
 en pleine scène, faire avancer l'initiative, couper l'ambiance sonore.
 
-**Piste.** Attacher à chaque entrée du registre le rôle minimal requis, et faire porter la
-vérification par le process principal — c'est lui qui connaît le rôle réel de la socket,
-établi par `PairingManager`. Le renderer, lui, ne voit qu'un message.
+**Le classement n'était pas un choix de goût.** Le document proposait initialement trois
+familles à arbitrer selon la façon de mener les parties. Le relevé de ce que chaque client
+émet réellement a rendu l'arbitrage inutile — la frontière était déjà tracée par l'usage :
 
-Trois familles se dessinent :
+- Les tablettes (`hub`) émettent **exactement quatre types**, tous dans `useHubSync` :
+  `session:send-message`, `session:request-item-transfer`, `session:remove-inventory-item`,
+  `session:submit-feedback`.
+- Tout le reste — dés, son, combat, storyboard, pads, tableau blanc — vient de la
+  télécommande MJ, déjà appairée depuis le point 3.
+- `map:ping` ne transite pas par le réseau : il vient de `PlayerHub` par
+  `window.dispatchEvent`, donc d'une fenêtre locale.
 
-- **Actions de joueur** — ce qu'un participant fait pour son propre personnage :
-  `session:update-character-narrative`, `session:submit-feedback`,
-  `session:request-item-transfer`, `session:send-message`, `map:ping`.
-- **Actions de table** — partagées mais sans conséquence irréversible : le dessin
-  collaboratif du tableau blanc, par exemple.
-- **Actions de MJ** — réservées aux rôles privilégiés : `combat:next-turn`,
-  `whiteboard:clear`, `remote:pad:trigger`, `storyboard:trigger`, le contrôle du son,
-  l'approbation des transferts d'objets.
+Un refus par défaut ne coûtait donc rien : aucun client légitime n'émet hors de son
+périmètre.
 
-**Points à trancher avant de coder.**
+**Décisions (David).** Périmètre strict limité aux quatre actions constatées. Refus ignoré
+en silence côté émetteur mais journalisé côté MJ. Contrôle d'appartenance traité **dans le
+même chantier** plutôt que reporté.
 
-1. Le classement ci-dessus n'est qu'une proposition ; la répartition dépend de la façon
-   dont David mène ses parties. Les joueurs dessinent-ils sur le tableau ? Lancent-ils des
-   dés qui s'affichent chez tout le monde ?
-2. Une action refusée doit-elle être ignorée en silence, ou signalée à l'émetteur — au
-   risque de renseigner un intrus sur ce qui existe ?
-3. Le contrôle doit-il aussi vérifier que l'émetteur agit **sur son propre personnage** ?
-   Un joueur légitime peut aujourd'hui envoyer `session:remove-inventory-item` avec le
-   `characterId` d'un autre. C'est un cran plus fin que le rôle, et sans doute un
-   sous-chantier distinct.
+**Fait.** `electron/actionPolicy.ts`, appliqué par `SyncServer.forwardToGM` :
 
-**Dépendance.** À traiter de préférence après le point 8 : modifier le routage des actions
-sans filet de test sur la couche de synchronisation serait exactement le genre de
-changement qui casse une partie sans prévenir.
+- Les rôles appairés (`gm`, `remote`) passent sans restriction.
+- Les autres sont limités à `PLAYER_ALLOWED_ACTIONS`, refus par défaut pour le reste.
+- **Appartenance** : pour les actions qui désignent un personnage, le champ concerné doit
+  correspondre à celui du client dans le registre de session —
+  `session:remove-inventory-item` → `characterId`, `session:request-item-transfer` →
+  `fromCharId`, `session:send-message` → `fromId`. Un joueur ne peut donc plus vider
+  l'inventaire d'un autre ni parler en son nom. Seul l'émetteur est contrôlé : être
+  destinataire d'un transfert reste légitime.
+- Un refus est journalisé avec le rôle, l'appareil et l'adresse ; l'émetteur n'apprend rien.
+- Le contrôle précède **toute** la logique de `forwardToGM`, y compris la branche P2P qui
+  rediffuse aux autres clients sans repasser par le renderer. C'était le piège : contrôler
+  après aurait laissé passer les messages usurpés.
+- Deux garde-fous de compatibilité : un champ d'appartenance absent, vide ou non textuel
+  laisse passer — pour qu'une évolution du payload ne casse pas une action légitime — et
+  `'GM'` est traité comme un interlocuteur, pas comme un personnage usurpé.
+
+26 tests : `actionPolicy.test.ts` pour la politique, plus six cas dans
+`SyncServer.register.test.ts` qui vérifient le câblage réel, dont le fait qu'un client
+ayant réclamé `gm` sans token se voit refuser les actions correspondantes.
 
 ---
 

@@ -1,0 +1,166 @@
+import { describe, it, expect } from 'vitest';
+import { evaluateAction, isPrivilegedRole, PLAYER_ALLOWED_ACTIONS } from './actionPolicy';
+
+const CHAR = 'perso-alice';
+
+describe('isPrivilegedRole', () => {
+    it('reconnaît les rôles appairés', () => {
+        expect(isPrivilegedRole('gm')).toBe(true);
+        expect(isPrivilegedRole('remote')).toBe(true);
+    });
+
+    it('rejette les rôles non privilégiés et les valeurs absentes', () => {
+        expect(isPrivilegedRole('player')).toBe(false);
+        expect(isPrivilegedRole('hub')).toBe(false);
+        expect(isPrivilegedRole(undefined)).toBe(false);
+        expect(isPrivilegedRole('')).toBe(false);
+    });
+});
+
+describe('evaluateAction — rôles privilégiés', () => {
+    it('laisse tout passer pour gm et remote', () => {
+        for (const role of ['gm', 'remote'] as const) {
+            expect(evaluateAction('whiteboard:clear', {}, role, undefined).allowed).toBe(true);
+            expect(evaluateAction('combat:next-turn', {}, role, undefined).allowed).toBe(true);
+            expect(evaluateAction('remote:pad:trigger', { id: 'x' }, role, undefined).allowed).toBe(true);
+        }
+    });
+
+    it('autorise le MJ à agir sur le personnage d\'autrui', () => {
+        const verdict = evaluateAction(
+            'session:remove-inventory-item',
+            { characterId: 'perso-bob', itemId: 'i1' },
+            'remote',
+            CHAR
+        );
+        expect(verdict.allowed).toBe(true);
+    });
+});
+
+describe('evaluateAction — refus par rôle', () => {
+    const forbidden = [
+        'whiteboard:clear',
+        'combat:next-turn',
+        'combat:update-hp',
+        'remote:pad:trigger',
+        'storyboard:trigger',
+        'remote:sound:stop-all',
+        'dice:roll',
+        'remote:request-sync',
+    ];
+
+    it('refuse à un joueur toute action hors de sa liste', () => {
+        for (const type of forbidden) {
+            const verdict = evaluateAction(type, {}, 'hub', CHAR);
+            expect(verdict.allowed).toBe(false);
+            expect(verdict.reason).toBe('role');
+        }
+    });
+
+    it('refuse aussi au rôle player', () => {
+        expect(evaluateAction('whiteboard:clear', {}, 'player', CHAR).allowed).toBe(false);
+    });
+
+    it('refuse quand le rôle est absent', () => {
+        expect(evaluateAction('combat:next-turn', {}, undefined, CHAR).allowed).toBe(false);
+    });
+
+    it('refuse un type inconnu', () => {
+        expect(evaluateAction('quelque:chose', {}, 'hub', CHAR).allowed).toBe(false);
+    });
+});
+
+describe('evaluateAction — actions permises aux joueurs', () => {
+    it('autorise les quatre actions du Tablet Hub sur son propre personnage', () => {
+        expect(evaluateAction('session:send-message', { fromId: CHAR, toId: 'GM' }, 'hub', CHAR).allowed).toBe(true);
+        expect(evaluateAction('session:request-item-transfer', { fromCharId: CHAR, toCharId: 'perso-bob' }, 'hub', CHAR).allowed).toBe(true);
+        expect(evaluateAction('session:remove-inventory-item', { characterId: CHAR, itemId: 'i1' }, 'hub', CHAR).allowed).toBe(true);
+        expect(evaluateAction('session:submit-feedback', { sessionId: 's1', feedback: {} }, 'hub', CHAR).allowed).toBe(true);
+    });
+
+    it('couvre exactement la liste déclarée', () => {
+        expect([...PLAYER_ALLOWED_ACTIONS].sort()).toEqual([
+            'session:remove-inventory-item',
+            'session:request-item-transfer',
+            'session:send-message',
+            'session:submit-feedback',
+        ]);
+    });
+});
+
+describe('evaluateAction — appartenance du personnage', () => {
+    it('refuse de vider l\'inventaire d\'un autre', () => {
+        const verdict = evaluateAction(
+            'session:remove-inventory-item',
+            { characterId: 'perso-bob', itemId: 'i1' },
+            'hub',
+            CHAR
+        );
+        expect(verdict.allowed).toBe(false);
+        expect(verdict.reason).toBe('ownership');
+    });
+
+    it('refuse de donner un objet au nom d\'un autre', () => {
+        const verdict = evaluateAction(
+            'session:request-item-transfer',
+            { fromCharId: 'perso-bob', toCharId: CHAR },
+            'hub',
+            CHAR
+        );
+        expect(verdict.allowed).toBe(false);
+        expect(verdict.reason).toBe('ownership');
+    });
+
+    it('refuse de parler au nom d\'un autre', () => {
+        const verdict = evaluateAction(
+            'session:send-message',
+            { fromId: 'perso-bob', toId: 'GM', content: 'je trahis le groupe' },
+            'hub',
+            CHAR
+        );
+        expect(verdict.allowed).toBe(false);
+        expect(verdict.reason).toBe('ownership');
+    });
+
+    it('autorise à recevoir un objet d\'un autre', () => {
+        // Seul l'émetteur est contrôlé : être destinataire est légitime.
+        const verdict = evaluateAction(
+            'session:request-item-transfer',
+            { fromCharId: CHAR, toCharId: 'perso-bob' },
+            'hub',
+            CHAR
+        );
+        expect(verdict.allowed).toBe(true);
+    });
+
+    it('refuse un client sans personnage qui vise un personnage', () => {
+        const verdict = evaluateAction(
+            'session:remove-inventory-item',
+            { characterId: 'perso-bob' },
+            'hub',
+            undefined
+        );
+        expect(verdict.allowed).toBe(false);
+        expect(verdict.reason).toBe('ownership');
+    });
+
+    it('laisse passer quand le champ contrôlé est absent ou vide', () => {
+        // Le payload peut évoluer : on ne casse pas une action faute de champ.
+        expect(evaluateAction('session:remove-inventory-item', {}, 'hub', CHAR).allowed).toBe(true);
+        expect(evaluateAction('session:remove-inventory-item', { characterId: '' }, 'hub', CHAR).allowed).toBe(true);
+        expect(evaluateAction('session:remove-inventory-item', null, 'hub', CHAR).allowed).toBe(true);
+    });
+
+    it('laisse passer un champ non textuel', () => {
+        expect(evaluateAction('session:remove-inventory-item', { characterId: 42 }, 'hub', CHAR).allowed).toBe(true);
+    });
+
+    it('traite GM comme un interlocuteur, pas comme un personnage usurpé', () => {
+        expect(evaluateAction('session:send-message', { fromId: 'GM', toId: CHAR }, 'hub', CHAR).allowed).toBe(true);
+    });
+
+    it('ne contrôle pas l\'appartenance sur le retour de session', () => {
+        // submit-feedback ne désigne pas de personnage.
+        expect(evaluateAction('session:submit-feedback', { sessionId: 's1' }, 'hub', CHAR).allowed).toBe(true);
+    });
+});
