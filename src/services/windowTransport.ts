@@ -29,10 +29,17 @@ export interface WindowMessage {
  * `JSON` ne préserve rien de tout cela. Un flux qui transporterait l'un de ces
  * types doit être adapté avant d'être ajouté ici, pas ajouté puis débogué.
  *
- * `clock` a été vérifié : tous les champs de son payload sont requis et de types
- * primitifs ou tableaux d'objets plats.
+ * **Comment le vérifier sans relire chaque champ :** un store persisté par
+ * Zustand `persist` passe par `createJSONStorage`, donc son état subit déjà
+ * l'aller-retour JSON à chaque sauvegarde. Si le payload diffusé est inclus dans
+ * le `partialize` du store, sa compatibilité est acquise — une valeur qui n'y
+ * survivrait pas serait déjà corrompue en persistance.
+ *
+ * - `clock` : persisté (`useClockStore`).
+ * - `combat` : le `partialize` de `useCombatStore` est exactement les quatre
+ *   champs diffusés.
  */
-export const RELAYED_TYPES: ReadonlySet<string> = new Set(['clock']);
+export const RELAYED_TYPES: ReadonlySet<string> = new Set(['clock', 'combat']);
 
 /** Le relais du process principal est-il joignable depuis cette fenêtre ? */
 export function isRelayAvailable(): boolean {

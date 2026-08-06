@@ -37,7 +37,7 @@ describe('windowTransport', () => {
             // délibéré, vérifié contre l'aller-retour JSON (voir le commentaire
             // de RELAYED_TYPES). Ce test échouera à la prochaine bascule — c'est
             // le rappel de refaire cette vérification.
-            expect([...RELAYED_TYPES]).toEqual(['clock']);
+            expect([...RELAYED_TYPES]).toEqual(['clock', 'combat']);
         });
     });
 
@@ -74,6 +74,20 @@ describe('windowTransport', () => {
             expect(JSON.parse(relay.published[0])).toEqual({
                 type: 'clock', payload: { timestamp: 42 }, senderId: 'abc',
             });
+        });
+
+        it('envoie combat par le process principal', () => {
+            const relay = installFakeRelay();
+            transport = new WindowTransport('canal-test-combat', (m) => received.push(m));
+
+            transport.publish({
+                type: 'combat',
+                payload: { combatants: [{ id: 'c1', statuses: [] }], round: 2, currentTurnIdx: 0, isCombatProjected: true },
+                senderId: 'abc',
+            });
+
+            expect(relay.published).toHaveLength(1);
+            expect(JSON.parse(relay.published[0]).payload.round).toBe(2);
         });
 
         it('sérialise avant d\'émettre, jamais un objet', () => {

@@ -702,14 +702,46 @@ ce qui est le résultat recherché : la bascule ne devait rien changer au compor
 
 **Suite complète au vert** (432 tests), type-check et build Electron compris.
 
-**Ce qui reste à vérifier.** Le comportement entre deux vraies fenêtres de l'application —
-tests et build ne le prouvent pas. À exercer avant de basculer un deuxième flux.
+**Validé en conditions réelles le 2026-08-06** par David, entre les vraies fenêtres de
+l'application. C'était la seule partie que ni les tests ni le build ne pouvaient couvrir.
 
-### Étape 3 — à faire
+### Un meilleur critère de bascule, trouvé en préparant le flux suivant
 
-Basculer les flux restants un par un — `combat`, puis les verrous de jetons, puis `map` et
-`whiteboard`, les deux plus enchevêtrés. `CrossWindowEventService` disparaît en fin de
-parcours, pas au début.
+Relire un payload champ par champ pour s'assurer qu'il survit à un aller-retour JSON — ce
+qui avait été fait pour `clock` — est laborieux et faillible : `HealthSystem.data` est typé
+`Record<string, unknown>`, et aucune lecture de type ne dit ce qu'il contient à l'exécution.
+
+Il existe une garantie plus forte. **Un store déjà persisté en JSON est par construction
+JSON-compatible.** Zustand `persist` passe par `createJSONStorage`, donc tout état persisté
+subit déjà l'aller-retour à chaque sauvegarde et à chaque réhydratation. Une valeur qui n'y
+survivrait pas serait déjà corrompue aujourd'hui, indépendamment du transport.
+
+Le critère devient donc vérifiable d'un coup d'œil : **le payload diffusé est-il inclus dans
+le `partialize` du store ?** Si oui, la bascule est sûre.
+
+- `clock` : persisté. La relecture champ par champ concluait déjà, mais n'était pas
+  nécessaire.
+- `combat` : le `partialize` est **exactement** les quatre champs diffusés — `combatants`,
+  `round`, `currentTurnIdx`, `isCombatProjected`.
+
+### Étape 3 — bascule de `combat` 🟡
+
+Même profil que `clock` : diffusion pure, sans le traitement maître/esclave que `map` et
+`whiteboard` reçoivent dans `handleMessage`. Sûreté JSON acquise par le critère ci-dessus.
+
+Aucun code de transport n'a changé — seul le contenu de `RELAYED_TYPES`. C'est le résultat
+recherché à l'étape 2 : basculer un flux doit être une ligne, pas un chantier.
+
+**À exercer en conditions réelles**, comme `clock`.
+
+### Étape 4 — à faire
+
+Les verrous de jetons, puis `map` et `whiteboard`, les deux plus enchevêtrés.
+`CrossWindowEventService` disparaît en fin de parcours, pas au début.
+
+Les verrous méritent plus qu'une bascule de transport : le process principal étant le seul
+point qui voit toutes les fenêtres, ils peuvent y devenir un état **autoritaire** au lieu
+d'être répliqués dans chaque renderer avec une expiration à cinq secondes.
 
 Le tableau blanc devra être traité **avec** son problème de payload : il rediffuse tout le
 tableau toutes les 50 ms, ce qui est un défaut indépendant du transport mais que la bascule
