@@ -12,7 +12,7 @@
 | 3 | Aucune authentification WebSocket | Critique | ✅ Fait |
 | 4 | `ignore-certificate-errors` global | Élevée | ✅ Fait |
 | 5 | Store session en localStorage (plafond ~5-10 Mo) | Élevée | ✅ Fait |
-| 6 | Segment de sync `session` monolithique + médias en base64 | Moyenne | ⚠️ Partiel — voir 6c |
+| 6 | Segment de sync `session` monolithique + médias en base64 | Moyenne | ✅ Fait — 7 620 Ko → 305 Ko |
 | 7 | `handleAction` — ~270 lignes de `if` en série | Moyenne | ✅ Fait |
 | 8 | Couche de synchronisation non testée | Moyenne | ✅ Fait |
 | 9 | Aucune autorisation par rôle sur les actions reçues | Élevée | ✅ Fait — validé en conditions réelles |
@@ -323,14 +323,34 @@ médiathèque, ce qui a confirmé le diagnostic.
 **Non prouvé.** Que les base64 existants viennent bien de cette boucle plutôt que d'imports
 d'origine. Le chemin de code est sans ambiguïté, l'historique des données ne l'est pas.
 
-**Suite à donner.** Deux pistes, désormais distinctes :
+### 6e. Reprise des médias inline — fait et mesuré
 
-- Publier aussi les `data:` par référence, sous un identifiant dérivé de leur contenu.
-- Ou reprendre les base64 déjà présents pour les ranger dans la médiathèque et rétablir des
-  identifiants `m-` — ce qui traite la cause plutôt que le symptôme, mais réécrit les
-  données.
+Des deux pistes possibles — publier les `data:` par référence à l'envoi, ou les ranger dans
+la médiathèque — c'est la seconde qui a été retenue : elle traite la cause plutôt que le
+symptôme, et rend la première inutile.
 
-L'une ou l'autre ferait passer le payload de 7,6 Mo à quelques dizaines de kilo-octets.
+`modules/system/logic/InlinedMediaMigration.ts`, piloté depuis Réglages → Système, en deux
+temps assumés : une analyse qui n'écrit rien et détaille ce qui serait repris, puis la
+migration. Chaque image est écrite en médiathèque, **relue, comparée en taille**, et le
+champ n'est remplacé qu'ensuite — une image qu'on ne saurait pas relire reste en base64.
+Le décodage des `data:` est manuel plutôt que via `fetch`, pour qu'un base64 corrompu lève
+au lieu de produire un blob vide, ce qui serait une perte silencieuse.
+
+**Résultat mesuré le 2026-08-06**, sur la base de campagne réelle, sauvegarde faite à froid
+au préalable. Les deux mesures viennent de chemins indépendants — l'analyse lit l'état
+persisté, le harnais intercepte le trafic — et concordent au média près.
+
+| | Avant | Après |
+|---|---|---|
+| Payload de synchronisation | 7 620 Ko | **305 Ko** |
+| Blocs base64 | 49 | **0** |
+| Références servies | 2 | **51** |
+
+Facteur 25. Les 305 Ko restants sont le texte des campagnes : c'est le plancher.
+Les images ne transitent plus qu'une fois par appareil, puis sont mises en cache par le
+navigateur de la tablette.
+
+Vérifié côté tablette réelle : les images s'affichent.
 
 ## 7. `handleAction` — 270 lignes de `if` ✅
 
