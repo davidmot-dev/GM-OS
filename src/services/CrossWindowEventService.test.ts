@@ -195,6 +195,90 @@ describe('filtrage des messages', () => {
     });
 });
 
+describe('flux du tableau blanc — volume du payload', () => {
+    /**
+     * Abonné réel du store, récupéré depuis le `subscribe` substitué.
+     * `init()` en réenregistre un à chaque test ; le dernier est celui de
+     * l'instance dans son état courant.
+     */
+    const subscriber = () => stores.whiteboard.subscribe.mock.calls.at(-1)![0] as (s: any) => void;
+
+    /** État de tableau blanc minimal, hors tracé en cours pour éviter l'étranglement. */
+    const wbState = (paths: any[], extra: Record<string, unknown> = {}) => ({
+        paths,
+        activePath: null,
+        laserPointer: null,
+        activeDrawerId: null,
+        version: 1,
+        projectionTarget: 'hub',
+        ...extra,
+    });
+
+    const lastWhiteboard = () => channel().posted.filter(m => m.type === 'whiteboard').at(-1);
+
+    beforeEach(() => {
+        // Le service est un singleton partagé par tout le fichier, et les tests
+        // précédents ont pu lever sa garde de démarrage. On repart d'un état
+        // connu, sinon l'ordre d'exécution déciderait du résultat.
+        (crossWindowSync as any).hasReceivedSharedState = false;
+        (crossWindowSync as any).lastBroadcastPaths = null;
+    });
+
+    it('envoie les tracés au premier passage', () => {
+        const paths = [{ id: 'p1' }];
+        subscriber()(wbState(paths));
+
+        expect(lastWhiteboard().payload.paths).toBe(paths);
+    });
+
+    it('les omet tant qu\'ils n\'ont pas changé', () => {
+        // Le cas courant : c'est `activePath` ou `laserPointer` qui bouge, pas
+        // les tracés. Les renvoyer coûtait 106 Ko par mise à jour.
+        const paths = [{ id: 'p1' }];
+        subscriber()(wbState(paths));
+        subscriber()(wbState(paths, { laserPointer: { x: 0.5, y: 0.5 } }));
+
+        const sent = lastWhiteboard().payload;
+        expect(sent).not.toHaveProperty('paths');
+        expect(sent.laserPointer).toEqual({ x: 0.5, y: 0.5 });
+    });
+
+    it('les renvoie dès que le tableau change', () => {
+        const paths = [{ id: 'p1' }];
+        subscriber()(wbState(paths));
+        const suivants = [{ id: 'p1' }, { id: 'p2' }];
+        subscriber()(wbState(suivants));
+
+        expect(lastWhiteboard().payload.paths).toBe(suivants);
+    });
+
+    it('renvoie aussi un tableau vidé — la référence change', () => {
+        // Effacer le tableau produit un nouveau tableau vide. Sans cela, un
+        // effacement serait le seul changement jamais transmis.
+        subscriber()(wbState([{ id: 'p1' }]));
+        subscriber()(wbState([]));
+
+        expect(lastWhiteboard().payload.paths).toEqual([]);
+    });
+
+    it('ne considère pas comme envoyés des tracés retenus par la garde de démarrage', () => {
+        // Une fenêtre secondaire n'émet rien avant d'avoir reçu l'état partagé.
+        // Si elle notait quand même ce qu'elle « a envoyé », les tracés
+        // manqueraient définitivement une fois la garde levée.
+        crossWindowSync.init(false);
+        channel().posted.length = 0;
+
+        const paths = [{ id: 'p1' }];
+        subscriber()(wbState(paths));
+        expect(channel().posted).toHaveLength(0);
+
+        receive('clock', { timerRemaining: 1 }); // lève la garde
+        subscriber()(wbState(paths));
+
+        expect(lastWhiteboard().payload.paths).toBe(paths);
+    });
+});
+
 describe('garde anti-boucle', () => {
     it('signale une synchronisation en cours pendant l\'application', () => {
         crossWindowSync.init(false);

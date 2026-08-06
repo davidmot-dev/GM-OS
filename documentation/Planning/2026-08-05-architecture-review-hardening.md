@@ -901,23 +901,58 @@ Suite complète au vert (464), build compris.
 — et surtout **ouvrir le Player Hub alors que le tableau est déjà projeté**, qui est le cas
 exact que les gardes corrigent.
 
-### Étape 6 bis — volume du payload, après validation
+### Étape 6 bis — volume du payload 🟡
 
-Le tableau blanc rediffuse **tout** le tableau toutes les 50 ms pendant qu'on dessine, soit
-2 Mo/s à 40 tracés. C'est un défaut indépendant du transport.
-
-**Le correctif est prêt et tient en peu de chose.** Pendant qu'un tracé est en cours
-(`activePath !== null`), omettre `paths` du payload : le destinataire fusionne déjà
-(`setState(prev => ({ ...prev, ...payload }))`) et conserve donc son tableau — le même
-mécanisme qui avait rendu le point 6a simple. `finishDrawing` remettant `activePath` à
-`null`, le payload complet repart en fin de tracé. Un changement de `paths` survenu pendant
-le tracé — effacement automatique du laser au bout de deux secondes, annulation — se rattrape
-au tracé suivant. Trafic estimé pendant le dessin : environ 50 Ko/s au lieu de 2 Mo/s.
+Le tableau blanc rediffusait **tout** le tableau à chaque mise à jour, soit 2 Mo/s à 40
+tracés. C'est un défaut indépendant du transport.
 
 **Décision (David) : après validation du transport, pas en même temps.** Le tableau blanc est
 le flux le plus souvent recorrigé du projet — au moins quatre fois d'après le relevé des 44
 commits de synchronisation. Empiler deux changements dessus avant d'en avoir validé un seul
-priverait du moyen de savoir lequel accuser.
+priverait du moyen de savoir lequel accuser. Transport validé en réel, l'étape a été ouverte
+le 2026-08-07.
+
+**Le critère prévu au plan était trop étroit.** Il consistait à omettre `paths` pendant qu'un
+tracé est en cours (`activePath !== null`). En relisant le canevas avant d'écrire le
+correctif, un chemin bien pire est apparu — et ce critère ne l'aurait pas couvert :
+
+- L'outil laser appelle `setLaserPointer` à **chaque `mousemove`**, bouton relâché compris.
+- `activePath` vaut alors `null`, donc `isDrawingEnd` est vrai, donc **l'étranglement de
+  50 ms ne s'applique pas** : la condition qui le déclenche est `!isDrawingEnd`.
+- Le tableau entier repartait donc à la cadence de la souris, pas à 20 Hz.
+
+**Le critère retenu est exact plutôt qu'approché : n'envoyer `paths` que s'il a changé.** La
+comparaison est par référence, ce que Zustand rend fiable — toute mutation de `paths` produit
+un nouveau tableau, une mise à jour qui n'y touche pas conserve le même. C'est déjà la
+technique du flux carte pour ses champs lourds. Omettre est sûr parce que le destinataire
+fusionne (`{ ...prev, ...payload }`) : sans `paths`, il garde le sien — le même mécanisme qui
+avait rendu le point 6a simple.
+
+Ce critère couvre le laser, et il fait disparaître la réserve du plan initial : un changement
+de `paths` survenu pendant un tracé — effacement automatique du laser au bout de deux
+secondes, annulation — n'attend plus le tracé suivant, il part à la mise à jour qui vient.
+
+**Le piège, et pourquoi `broadcast` retourne désormais un booléen.** Tenir une trace de ce
+qu'on a envoyé n'est juste que si l'envoi a bien eu lieu. Or la garde de démarrage de l'étape 6
+retient les messages d'une fenêtre secondaire tant qu'elle n'a pas reçu l'état partagé : noter
+ces tracés comme envoyés les aurait fait **manquer définitivement** une fois la garde levée.
+`broadcast` signale donc sa retenue, et la trace n'est mise à jour qu'après une diffusion
+réelle. Un test le fixe, et échoue avec la version naïve.
+
+`broadcastFullState()` continue d'envoyer les tracés sans condition : c'est le chemin de
+resynchronisation, dont le destinataire n'a précisément rien à fusionner.
+
+5 tests ajoutés. Suite complète au vert (470), type-check et build compris. **Vérifié dans les
+deux sens** : la sonde qui envoie `paths` inconditionnellement fait tomber le test d'omission,
+celle qui note l'envoi sans regarder la retenue fait tomber le test de la garde.
+
+**À exercer en conditions réelles** : dessiner, passer au laser et le promener sur le tableau,
+effacer, annuler — et vérifier que le Player Hub suit dans chaque cas.
+
+**Reste, plus petit.** Quand une fenêtre secondaire dessine, le maître reprogramme un
+`broadcastFullState()` 50 ms après le dernier message reçu, lequel renvoie les tracés
+entiers — et aussi tout le payload carte. La temporisation est glissante, donc elle ne se
+déclenche qu'en fin de rafale, mais ce chemin-là n'est pas couvert par l'étape.
 
 ### Étape 7 — bascule de `hub:ready` 🟡
 

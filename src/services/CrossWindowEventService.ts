@@ -1,6 +1,6 @@
 import { useMapStore } from '../modules/map/useMapStore';
 import { useMapUIStore } from '../modules/map/useMapUIStore';
-import { useWhiteboardStore } from '../modules/whiteboard/useWhiteboardStore';
+import { useWhiteboardStore, type DrawingPath } from '../modules/whiteboard/useWhiteboardStore';
 import { useClockStore } from '../store/useClockStore';
 import { useCombatStore } from '../modules/combat/useCombatStore';
 import { WindowTransport, type WindowMessage } from './windowTransport';
@@ -54,6 +54,28 @@ class CrossWindowEventService {
      * donc il n'y a pas d'inter-blocage possible.
      */
     private hasReceivedSharedState: boolean = false;
+    /**
+     * Dernière valeur de `paths` réellement partie sur le réseau.
+     *
+     * Le tableau blanc rediffusait l'intégralité de ses tracés à chaque mise à
+     * jour — 106 Ko à quarante tracés, vingt fois par seconde pendant qu'on
+     * dessine, et à la cadence de la souris avec l'outil laser, que
+     * l'étranglement ne freine pas. Or `paths` ne change presque jamais dans ces
+     * mises à jour-là : ce qui bouge est `activePath` ou `laserPointer`.
+     *
+     * La comparaison est par **référence**, ce que Zustand rend fiable : toute
+     * mutation de `paths` produit un nouveau tableau, et une mise à jour qui n'y
+     * touche pas conserve le même. C'est la technique déjà employée par le flux
+     * carte pour ses champs lourds.
+     *
+     * Omettre le champ est sûr parce que le destinataire **fusionne**
+     * (`{ ...prev, ...payload }`) : sans `paths`, il garde le sien.
+     *
+     * Le sens de l'erreur est sûr : on peut renvoyer des tracés déjà connus,
+     * jamais en omettre qui manqueraient. D'où la mise à jour **après** la
+     * diffusion, et seulement si elle a eu lieu.
+     */
+    private lastBroadcastPaths: DrawingPath[] | null = null;
 
     constructor() {
         this.transport = new WindowTransport('gmos-cross-window-sync', (message) => this.handleMessage(message));
@@ -372,14 +394,22 @@ class CrossWindowEventService {
             if (!isDrawingEnd && (now - lastWhiteboardBroadcast < WB_THROTTLE)) return;
 
             lastWhiteboardBroadcast = now;
-            this.broadcast('whiteboard', {
-                paths: state.paths,
+
+            const payload: Record<string, unknown> = {
                 activePath: state.activePath,
                 laserPointer: state.laserPointer,
                 activeDrawerId: state.activeDrawerId,
                 version: state.version,
                 projectionTarget: state.projectionTarget
-            });
+            };
+
+            // Les tracés ne repartent que s'ils ont changé. Voir lastBroadcastPaths.
+            const pathsChanged = state.paths !== this.lastBroadcastPaths;
+            if (pathsChanged) payload.paths = state.paths;
+
+            if (this.broadcast('whiteboard', payload) && pathsChanged) {
+                this.lastBroadcastPaths = state.paths;
+            }
         });
 
         useCombatStore.subscribe((state) => {
@@ -410,8 +440,12 @@ class CrossWindowEventService {
 
     /**
      * Broadcast an event to other windows.
+     *
+     * @returns `false` si la garde de démarrage a retenu le message. L'appelant
+     * qui tient une trace de ce qu'il a déjà envoyé — le flux du tableau blanc —
+     * doit le savoir : sinon il croirait avoir diffusé des tracés restés sur place.
      */
-    public broadcast(type: string, payload: any) {
+    public broadcast(type: string, payload: any): boolean {
         // Une fenêtre secondaire qui n'a pas encore reçu l'état partagé n'a rien
         // à dire : ce qu'elle diffuserait viendrait de sa valeur initiale ou de
         // sa réhydratation, et écraserait la fenêtre qui fait autorité.
@@ -419,9 +453,10 @@ class CrossWindowEventService {
         // Les verrous en sont exemptés : ils ne portent pas d'état partagé, donc
         // ne peuvent rien écraser, et les retenir laisserait un jeton saisissable
         // deux fois pendant les premières secondes d'une fenêtre.
-        if (!this.isMainInstance && !this.hasReceivedSharedState && !GATE_EXEMPT_TYPES.has(type)) return;
+        if (!this.isMainInstance && !this.hasReceivedSharedState && !GATE_EXEMPT_TYPES.has(type)) return false;
 
         this.transport.publish({ type, payload, senderId: this.instanceId });
+        return true;
     }
 
     private broadcastFullState() {
@@ -449,15 +484,21 @@ class CrossWindowEventService {
             projectedDangerZones: map.projectedDangerZones
         });
 
+        // Les tracés partent toujours ici, sans la retenue de l'abonné : c'est
+        // le chemin de resynchronisation, et son destinataire est justement une
+        // fenêtre qui n'a rien à fusionner. En prendre note évite au passage un
+        // renvoi redondant à la prochaine mise à jour.
         const wb = useWhiteboardStore.getState();
-        this.broadcast('whiteboard', {
+        if (this.broadcast('whiteboard', {
             paths: wb.paths,
             activePath: wb.activePath,
             laserPointer: wb.laserPointer,
             activeDrawerId: wb.activeDrawerId,
             version: wb.version,
             projectionTarget: wb.projectionTarget
-        });
+        })) {
+            this.lastBroadcastPaths = wb.paths;
+        }
     }
 
     /**
