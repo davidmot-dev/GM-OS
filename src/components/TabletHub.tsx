@@ -184,9 +184,19 @@ const TabletHub: React.FC = () => {
             
             {/* Status & Connection */}
             <div className={`fixed top-4 right-4 z-50 flex items-center gap-2`}>
-                <button 
-                    onClick={() => setLowGraphics(!performance.isLowGraphics)}
+                {/* Sur un appareil géré automatiquement, le réglage est en lecture
+                    seule : la détection réimposerait aussitôt son choix, et un
+                    bouton qui revient tout seul vaut moins qu'un simple témoin. */}
+                <button
+                    onClick={performance.isManagedAutomatically ? undefined : () => setLowGraphics(!performance.isLowGraphics)}
+                    disabled={performance.isManagedAutomatically}
+                    aria-disabled={performance.isManagedAutomatically}
+                    title={performance.isManagedAutomatically
+                        ? 'Mode défini automatiquement pour cet appareil'
+                        : 'Basculer entre qualité visuelle et fluidité'}
                     className={`p-1.5 px-3 rounded-full backdrop-blur-md border text-[9px] font-black uppercase tracking-widest transition-all ${
+                        performance.isManagedAutomatically ? 'cursor-default' : ''
+                    } ${
                         performance.isLowGraphics
                             ? 'bg-amber-500/20 text-amber-400 border-amber-500/30'
                             : 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30'
