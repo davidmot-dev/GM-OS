@@ -55,6 +55,10 @@ src-tauri/bin/
 *.bak
 crash.log
 
+# dist-electron/ etait deja ignore ci-dessus, mais ses deux fichiers restaient
+# suivis (un .gitignore n'affecte pas ce que git suit deja) : retires du suivi
+# le 2026-08-06. Ils sont regeneres par `npm run dev` et `npm run build`.
+
 # Copies redondantes retirees du suivi git (2026-08-05)
 # - v7-migration/ : miroir du code Electron, superflu depuis que le travail
 #   Tauri vit sur la branche GM-OS_v7_P2P (worktree C:/Projet_David/GM-OS-v7)
