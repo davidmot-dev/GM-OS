@@ -81,7 +81,7 @@ const TabletHub: React.FC = () => {
 
     const { resetIdentity } = useClientStore();
     const performance = usePerformanceControl();
-    const { setLowGraphicsByUser } = usePerformanceStore();
+    const { setLowGraphics } = usePerformanceStore();
 
     const [currentTab, setCurrentTab] = useState<'live' | 'archives' | 'trombinoscope' | 'atlas' | 'inventory'>('live');
     const [isInventoryOpen, setIsInventoryOpen] = useState(false);
@@ -185,7 +185,7 @@ const TabletHub: React.FC = () => {
             {/* Status & Connection */}
             <div className={`fixed top-4 right-4 z-50 flex items-center gap-2`}>
                 <button 
-                    onClick={() => setLowGraphicsByUser(!performance.isLowGraphics)}
+                    onClick={() => setLowGraphics(!performance.isLowGraphics)}
                     className={`p-1.5 px-3 rounded-full backdrop-blur-md border text-[9px] font-black uppercase tracking-widest transition-all ${
                         performance.isLowGraphics
                             ? 'bg-amber-500/20 text-amber-400 border-amber-500/30'
