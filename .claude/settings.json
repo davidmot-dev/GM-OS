@@ -39,7 +39,11 @@
       "PowerShell($nlm = \"C:\\\\Users\\\\david\\\\AppData\\\\Local\\\\Python\\\\pythoncore-3.14-64\\\\Scripts\\\\nlm.exe\"; & $nlm notebook list 2>&1 | Select-Object -First 30)",
       "PowerShell($nlm = \"C:\\\\Users\\\\david\\\\AppData\\\\Local\\\\Python\\\\pythoncore-3.14-64\\\\Scripts\\\\nlm.exe\"; Write-Output \"=== setup : ce qu'il configure ===\"; & $nlm setup --help 2>&1 | Select-Object -First 25; Write-Output \"\"; Write-Output \"=== serveur MCP : point d'entree ===\"; & \"C:\\\\Users\\\\david\\\\AppData\\\\Local\\\\Python\\\\pythoncore-3.14-64\\\\Scripts\\\\notebooklm-mcp.exe\" --help 2>&1 | Select-Object -First 20)",
       "PowerShell(git add src/modules/forge/components/ChronicleForge.tsx)",
-      "PowerShell(git add src/modules/forge/components/ForgeDashboard.tsx src/modules/session/useObsidianStore.ts)"
+      "PowerShell(git add src/modules/forge/components/ForgeDashboard.tsx src/modules/session/useObsidianStore.ts)",
+      "PowerShell(git add electron/mcp_bridge.ts)",
+      "PowerShell(git add documentation/Planning/2026-08-07-restes-unification-transport.md)",
+      "PowerShell(git status -sb | Select-Object -First 2; Write-Output \"=== en attente ===\"; \\(git log --oneline origin/feature/tablet-hub-pwa..HEAD | Measure-Object -Line\\).Lines)",
+      "PowerShell(git status -sb | Select-Object -First 2; Write-Output \"=== en attente ===\"; \\(git log --oneline origin/feature/tablet-hub-pwa..HEAD | Measure-Object -Line\\).Lines; Write-Output \"=== dernier commit distant ===\"; git log --oneline -1 origin/feature/tablet-hub-pwa)"
     ]
   }
 }
