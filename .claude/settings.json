@@ -4,7 +4,21 @@
       "PowerShell(npm run build 2>&1)",
       "PowerShell(git add documentation/Planning/2026-08-05-architecture-review-hardening.md)",
       "PowerShell(git add .claude/settings.json)",
-      "PowerShell(git push origin feature/tablet-hub-pwa 2>&1)"
+      "PowerShell(git push origin feature/tablet-hub-pwa 2>&1)",
+      "PowerShell(git add documentation/Planning)",
+      "PowerShell(npx vitest run src/modules/session/logic/PersistenceService.test.ts src/modules/session/logic/idbStorage.test.ts 2>&1)",
+      "PowerShell(npx vitest run src/modules/session/logic/PersistenceService.test.ts 2>&1)",
+      "PowerShell(npx vitest run src/modules/session 2>&1)",
+      "PowerShell(npx tsc --noEmit -p tsconfig.json 2>&1)",
+      "PowerShell(git add documentation/Planning/2026-08-07-perte-campagnes-persistance.md)",
+      "PowerShell(npx vitest run src/services 2>&1)",
+      "PowerShell(npx vitest run electron/relayPolicy.test.ts electron/WindowRelay.test.ts 2>&1)",
+      "PowerShell(npx vitest run src/components/__tests__/PlayerHub.combat.test.tsx 2>&1)",
+      "PowerShell(git add src/components/PlayerHub.tsx src/components/__tests__/PlayerHub.combat.test.tsx)",
+      "PowerShell(npx vitest run src/services/projectionExclusivity.test.ts 2>&1)",
+      "PowerShell(npx vitest run src/components/hub/HubCombatTracker.test.tsx 2>&1)",
+      "PowerShell(git add src/components/hub/HubCombatTracker.tsx src/components/hub/HubCombatTracker.test.tsx)",
+      "PowerShell(npx vitest run src/modules/map/useMapStore.syncToPlayers.test.ts 2>&1)"
     ]
   }
 }
