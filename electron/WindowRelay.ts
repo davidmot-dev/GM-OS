@@ -24,6 +24,8 @@
  * un détail d'implémentation.
  */
 
+import { evaluateRelay, type RelayRole } from './relayPolicy';
+
 export const RELAY_PUBLISH_CHANNEL = 'relay:publish';
 export const RELAY_MESSAGE_CHANNEL = 'relay:message';
 
@@ -32,15 +34,24 @@ export interface RelayTarget {
     /** Identifiant du `webContents`, comparé à celui de l'émetteur. */
     id: number;
     isDestroyed(): boolean;
-    send(channel: string, message: string): void;
+    send(channel: string, message: string, senderRole: RelayRole): void;
 }
 
 /**
  * Diffuse un message à toutes les fenêtres sauf celle qui l'a émis.
  *
+ * Le rôle de l'émetteur accompagne le message, en argument séparé plutôt que
+ * dans la charge : il est ainsi établi par le process principal, hors de portée
+ * de l'émetteur, et n'oblige personne à ouvrir le JSON pour le lire.
+ *
  * @returns le nombre de fenêtres effectivement servies.
  */
-export function relayToOthers(targets: RelayTarget[], senderId: number, message: string): number {
+export function relayToOthers(
+    targets: RelayTarget[],
+    senderId: number,
+    message: string,
+    senderRole: RelayRole = 'gm',
+): number {
     let delivered = 0;
 
     for (const target of targets) {
@@ -53,7 +64,7 @@ export function relayToOthers(targets: RelayTarget[], senderId: number, message:
         if (target.isDestroyed()) continue;
 
         try {
-            target.send(RELAY_MESSAGE_CHANNEL, message);
+            target.send(RELAY_MESSAGE_CHANNEL, message, senderRole);
             delivered += 1;
         } catch {
             // Fenêtre détruite entre le test et l'envoi : sans conséquence.
@@ -65,7 +76,18 @@ export function relayToOthers(targets: RelayTarget[], senderId: number, message:
 
 /** Ce que le relais attend d'`ipcMain`, réduit à ce qu'il utilise. */
 export interface RelayIpc {
-    on(channel: string, listener: (event: { sender: { id: number } }, message: unknown) => void): unknown;
+    on(
+        channel: string,
+        listener: (event: { sender: { id: number } }, type: unknown, message: unknown) => void,
+    ): unknown;
+}
+
+/** De quoi le relais a besoin pour arbitrer, fourni par `electron/main.ts`. */
+export interface RelayPolicyHooks {
+    /** Rôle de la fenêtre émettrice, déduit de son `webContents.id`. */
+    resolveRole(senderId: number): RelayRole;
+    /** Refus journalisé. Voir `electron/auditLog.ts`. */
+    onDenied?(role: RelayRole, type: string, detail: string): void;
 }
 
 /**
@@ -74,14 +96,32 @@ export interface RelayIpc {
  * `listTargets` est réévalué à chaque message plutôt que capturé une fois : les
  * fenêtres du Player Hub et du projecteur vont et viennent, et un registre tenu
  * à la main se désynchroniserait.
+ *
+ * Le type voyage en argument séparé du corps sérialisé : la politique peut
+ * ainsi arbitrer sans ouvrir le JSON, ce qui coûterait sur le flux le plus
+ * chaud exactement ce que le passage à la chaîne avait fait gagner.
  */
-export function installWindowRelay(ipc: RelayIpc, listTargets: () => RelayTarget[]): void {
-    ipc.on(RELAY_PUBLISH_CHANNEL, (event, message) => {
+export function installWindowRelay(
+    ipc: RelayIpc,
+    listTargets: () => RelayTarget[],
+    policy: RelayPolicyHooks,
+): void {
+    ipc.on(RELAY_PUBLISH_CHANNEL, (event, type, message) => {
         // Le contrat est une chaîne. Un renderer qui enverrait un objet
         // contournerait la raison d'être du relais — on refuse plutôt que de
         // sérialiser à sa place, qui masquerait la régression de performance.
-        if (typeof message !== 'string') return;
+        if (typeof message !== 'string' || typeof type !== 'string') return;
 
-        relayToOthers(listTargets(), event.sender.id, message);
+        // Le contrôle précède TOUTE la logique de diffusion. Contrôler après
+        // aurait laissé passer les messages usurpés : c'était le piège du
+        // point 9.
+        const role = policy.resolveRole(event.sender.id);
+        const verdict = evaluateRelay(role, type);
+        if (!verdict.allowed) {
+            policy.onDenied?.(role, type, verdict.detail ?? '');
+            return;
+        }
+
+        relayToOthers(listTargets(), event.sender.id, message, role);
     });
 }

@@ -4,13 +4,18 @@ import { WindowTransport, parseRelayMessage, RELAYED_TYPES, isRelayAvailable, ty
 /** Pont Electron factice : enregistre ce qui est publié, permet d'injecter des messages. */
 function installFakeRelay() {
     const published: string[] = [];
-    let listener: ((message: string) => void) | null = null;
+    /** Le type annoncé à côté du corps, sur lequel le process principal arbitre. */
+    const publishedTypes: string[] = [];
+    let listener: ((message: string, senderRole?: string) => void) | null = null;
     const detach = vi.fn(() => { listener = null; });
 
     (window as any).appBridge = {
         relay: {
-            publish: (message: string) => published.push(message),
-            onMessage: (callback: (message: string) => void) => {
+            publish: (type: string, message: string) => {
+                publishedTypes.push(type);
+                published.push(message);
+            },
+            onMessage: (callback: (message: string, senderRole?: string) => void) => {
                 listener = callback;
                 return detach;
             },
@@ -19,8 +24,9 @@ function installFakeRelay() {
 
     return {
         published,
+        publishedTypes,
         detach,
-        deliver: (raw: string) => listener?.(raw),
+        deliver: (raw: string, senderRole?: string) => listener?.(raw, senderRole),
         get attached() { return listener !== null; },
     };
 }

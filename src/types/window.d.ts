@@ -139,8 +139,10 @@ declare global {
             // Relais entre fenêtres locales par le process principal.
             // Le message est une chaîne DÉJÀ sérialisée — le relais refuse les
             // objets. Voir electron/WindowRelay.ts pour la raison mesurée.
-            publish: (message: string) => void;
-            onMessage: (callback: (message: string) => void) => () => void;
+            publish: (type: string, message: string) => void;
+            // `senderRole` est estampillé par le process principal : il dit d'où
+            // vient réellement le message, indépendamment de ce qu'il contient.
+            onMessage: (callback: (message: string, senderRole: string) => void) => () => void;
         };
         pairing?: {
             getSecret: () => Promise<string>;

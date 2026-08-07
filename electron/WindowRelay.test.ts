@@ -75,23 +75,30 @@ describe('relayToOthers', () => {
 });
 
 describe('installWindowRelay', () => {
+    type Listener = (event: { sender: { id: number } }, type: unknown, message: unknown) => void;
+
     /** ipcMain factice : retient le listener pour pouvoir le déclencher. */
     function fakeIpc() {
-        const handlers = new Map<string, (event: { sender: { id: number } }, message: unknown) => void>();
+        const handlers = new Map<string, Listener>();
         return {
-            on: (channel: string, listener: (event: { sender: { id: number } }, message: unknown) => void) => {
+            on: (channel: string, listener: Listener) => {
                 handlers.set(channel, listener);
             },
-            emit: (channel: string, senderId: number, message: unknown) => {
-                handlers.get(channel)?.({ sender: { id: senderId } }, message);
+            // `type` par défaut : ces cas-ci portent sur le transport, pas sur la
+            // politique de rôle — voir electron/relayPolicy.test.ts.
+            emit: (channel: string, senderId: number, message: unknown, type: unknown = 'clock') => {
+                handlers.get(channel)?.({ sender: { id: senderId } }, type, message);
             },
             has: (channel: string) => handlers.has(channel),
         };
     }
 
+    /** Toutes les fenêtres sont MJ : la politique laisse tout passer. */
+    const gmPolicy = { resolveRole: () => 'gm' as const };
+
     it('écoute le canal de publication', () => {
         const ipc = fakeIpc();
-        installWindowRelay(ipc, () => []);
+        installWindowRelay(ipc, () => [], gmPolicy);
         expect(ipc.has(RELAY_PUBLISH_CHANNEL)).toBe(true);
     });
 
@@ -99,7 +106,7 @@ describe('installWindowRelay', () => {
         const ipc = fakeIpc();
         const a = fakeWindow(1);
         const b = fakeWindow(2);
-        installWindowRelay(ipc, () => [a, b]);
+        installWindowRelay(ipc, () => [a, b], gmPolicy);
 
         ipc.emit(RELAY_PUBLISH_CHANNEL, 1, 'salut');
 
@@ -113,7 +120,7 @@ describe('installWindowRelay', () => {
         // mesure du 2026-08-06 a justement mise en évidence.
         const ipc = fakeIpc();
         const b = fakeWindow(2);
-        installWindowRelay(ipc, () => [b]);
+        installWindowRelay(ipc, () => [b], gmPolicy);
 
         ipc.emit(RELAY_PUBLISH_CHANNEL, 1, { type: 'clock' });
         ipc.emit(RELAY_PUBLISH_CHANNEL, 1, 42);
@@ -132,7 +139,7 @@ describe('installWindowRelay', () => {
         const windows: RelayTarget[] = [a];
         const listTargets = vi.fn(() => windows);
 
-        installWindowRelay(ipc, listTargets);
+        installWindowRelay(ipc, listTargets, gmPolicy);
 
         ipc.emit(RELAY_PUBLISH_CHANNEL, 1, 'avant');
         expect(late.received).toHaveLength(0);

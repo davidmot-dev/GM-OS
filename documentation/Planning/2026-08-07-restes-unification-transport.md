@@ -28,6 +28,10 @@ Deux règles acquises, à ne pas redécouvrir :
 
 ## 1. Le contrôle de rôle au niveau du relais
 
+> **Clos le 2026-08-07.** `electron/relayPolicy.ts`, branché dans `installWindowRelay`, refus
+> journalisés via `auditLog`. Ce qui suit décrit le problème tel qu'il se posait ; la section
+> « Ce qui a été fait » à la fin dit ce qui a été retenu et ce qui a été écarté.
+
 **Le seul vrai reste de fond.** Referme l'angle mort ouvert au point 9 de la revue.
 
 ### Le problème
@@ -104,6 +108,9 @@ s'éteint. C'est le scénario exact que les gardes actuelles corrigent.
 
 ## 2. Exercer `combat` en conditions réelles
 
+> **Clos le 2026-08-07.** Exercé en réel par David : le Player Hub et le projecteur suivent
+> l'initiative. Rien à corriger.
+
 **À faire par David, pas par moi. Environ trente secondes.**
 
 C'est le seul flux basculé que personne n'a jamais vérifié pour lui-même. Sa bascule est
@@ -166,7 +173,52 @@ Ne compte que sur un réseau où tous les appareils ne sont pas connus.
 
 ## Ordre recommandé
 
-1. **Le point 2** — il ne coûte que du temps de David, et un échec rebattrait les cartes.
-2. **Le point 1** — le seul vrai reste de fond.
+1. ~~**Le point 2**~~ — clos le 2026-08-07.
+2. ~~**Le point 1**~~ — clos le 2026-08-07.
 3. Les points 3, 4 et 5 sont des veilles. Ils ne se déclenchent que sur symptôme constaté, ou
    sur un changement d'usage (le 5 : jouer sur un réseau non maîtrisé).
+
+---
+
+## Ce qui a été fait au point 1
+
+**La portée retenue : le type du message, pas ses champs.** Le plan demandait « quel rôle a le
+droit d'émettre quel type de message, **et quels champs** ». Les deux moitiés n'ont pas le même
+prix, et ce n'était pas anticipé :
+
+- Contrôler le **type** est gratuit. Il voyage désormais en argument IPC séparé, à côté du corps
+  sérialisé — le process principal arbitre sans ouvrir le JSON.
+- Contrôler un **champ** obligerait le relais à `JSON.parse` puis re-sérialiser chaque message,
+  sur le flux le plus chaud de l'application. C'est exactement ce que la mesure du 2026-08-06 a
+  chiffré à +19 ms, et que le passage à la chaîne avait fait gagner.
+
+Le contrôle par champ reste donc dans le renderer. **Mais il ne repose plus sur une
+hypothèse :** le relais estampille le rôle de l'émetteur en argument séparé, et
+`stripProjectionTarget` s'appuie sur ce rôle — que l'émetteur ne peut pas forger, puisqu'il vient
+du process principal. Hors Electron il n'y a personne pour l'attester : l'absence de rôle est
+traitée comme le cas le moins fiable, pas comme un blanc-seing.
+
+**Les deux gardes du renderer sont conservées.** C'était la question laissée ouverte ; la
+contrainte de performance la tranche. `hasReceivedSharedState` n'a par ailleurs pas d'équivalent
+côté relais : le process principal ne sait pas si une fenêtre a reçu l'état partagé.
+
+**Le message de nettoyage à `senderId: -1` n'a demandé aucun cas particulier.** Il appelle
+`relayToOthers` directement, sans passer par le gestionnaire IPC : il échappe donc
+structurellement à la politique. Le piège signalé plus haut n'en était pas un.
+
+**Le projecteur garde `map` et `whiteboard`**, faute de les avoir observés à l'émission. Les lui
+retirer sur une simple lecture du code risquerait d'éteindre une projection en pleine partie.
+Les refus étant journalisés, c'est l'usage qui dira s'il faut resserrer — comme au point 9, où
+c'est la journalisation, et non la relecture, qui avait révélé la régression `remote:request-sync`.
+
+**Ce que ça ferme concrètement :** `clock` et `combat` sont désormais hors de portée d'une
+fenêtre secondaire, et tout type non énoncé est refusé par défaut, y compris ceux qui n'existent
+pas encore.
+
+**Tests :** `electron/relayPolicy.test.ts` — la politique seule, puis câblée dans
+`installWindowRelay`. Le harnais à deux fenêtres de `CrossWindowEventService.relay.test.ts` passe
+désormais par le **vrai** `installWindowRelay` au lieu de `relayToOthers` seul : la politique y
+est exercée dans son câblage réel, fenêtre 1 en MJ et fenêtre 2 en Hub.
+
+**Reste à valider en réel** (le scénario que les gardes actuelles corrigent) : ouvrir le Player
+Hub alors que le tableau **et** la carte sont déjà projetés, et vérifier que rien ne s'éteint.

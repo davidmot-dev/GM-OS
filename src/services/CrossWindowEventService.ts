@@ -3,7 +3,7 @@ import { useMapUIStore } from '../modules/map/useMapUIStore';
 import { useWhiteboardStore, type DrawingPath } from '../modules/whiteboard/useWhiteboardStore';
 import { useClockStore } from '../store/useClockStore';
 import { useCombatStore } from '../modules/combat/useCombatStore';
-import { WindowTransport, type WindowMessage } from './windowTransport';
+import { WindowTransport, type WindowMessage, type SenderRole } from './windowTransport';
 
 /** Types qu'une fenêtre secondaire peut émettre avant d'avoir reçu l'état partagé. */
 const GATE_EXEMPT_TYPES = new Set(['map:lock', 'map:unlock', 'hub:ready']);
@@ -78,7 +78,10 @@ class CrossWindowEventService {
     private lastBroadcastPaths: DrawingPath[] | null = null;
 
     constructor() {
-        this.transport = new WindowTransport('gmos-cross-window-sync', (message) => this.handleMessage(message));
+        this.transport = new WindowTransport(
+            'gmos-cross-window-sync',
+            (message, senderRole) => this.handleMessage(message, senderRole),
+        );
     }
 
     /**
@@ -93,7 +96,7 @@ class CrossWindowEventService {
         this.setupSubscribers();
     }
 
-    private handleMessage(message: WindowMessage) {
+    private handleMessage(message: WindowMessage, senderRole?: SenderRole) {
         const { type, senderId } = message;
         const payload = message.payload as any;
 
@@ -143,7 +146,15 @@ class CrossWindowEventService {
                     // n'apparaissait que selon l'ordre d'arrivée des messages, ce
                     // qui l'a rendue invisible jusqu'à ce que le passage du flux
                     // par le process principal change cet ordre.
-                    this.applyRemoteUpdate('whiteboard', stripProjectionTarget(payload));
+                    //
+                    // Le rôle vient du relais, pas du message : l'émetteur ne peut
+                    // pas se déclarer MJ pour échapper au retrait. Hors Electron il
+                    // n'y a personne pour l'attester — l'absence de rôle est donc
+                    // traitée comme le cas le moins fiable.
+                    this.applyRemoteUpdate(
+                        'whiteboard',
+                        senderRole === 'gm' ? payload : stripProjectionTarget(payload),
+                    );
                     if (this.relayTimer) clearTimeout(this.relayTimer);
                     this.relayTimer = setTimeout(() => {
                         this.broadcastFullState();

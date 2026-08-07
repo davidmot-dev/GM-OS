@@ -135,9 +135,17 @@ contextBridge.exposeInMainWorld('appBridge', {
         // Le message est une chaîne DÉJÀ sérialisée : la sérialisation d'Electron
         // coûte proportionnellement au nombre de nœuds d'objet traversés, et le
         // relais refuse tout ce qui n'est pas une chaîne. Voir electron/WindowRelay.ts.
-        publish: (message: string) => ipcRenderer.send('relay:publish', message),
-        onMessage: (callback: (message: string) => void) => {
-            const listener = (_event: Electron.IpcRendererEvent, message: string) => callback(message);
+        // Le type voyage à côté du corps : le process principal arbitre par type
+        // sans avoir à ouvrir le JSON. Voir electron/relayPolicy.ts.
+        publish: (type: string, message: string) => ipcRenderer.send('relay:publish', type, message),
+        onMessage: (callback: (message: string, senderRole: string) => void) => {
+            // `senderRole` est établi par le process principal, pas par
+            // l'émetteur : c'est ce qui le rend digne de confiance côté MJ.
+            const listener = (
+                _event: Electron.IpcRendererEvent,
+                message: string,
+                senderRole: string,
+            ) => callback(message, senderRole);
             ipcRenderer.on('relay:message', listener);
             return () => ipcRenderer.off('relay:message', listener);
         },

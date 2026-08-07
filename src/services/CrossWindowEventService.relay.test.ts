@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { relayToOthers, type RelayTarget } from '../../electron/WindowRelay';
+import { installWindowRelay, type RelayTarget } from '../../electron/WindowRelay';
+import type { RelayRole } from '../../electron/relayPolicy';
 
 /**
  * Harnais à deux fenêtres, pour reproduire la panne du tableau blanc sur le
@@ -41,37 +42,57 @@ vi.stubGlobal('localStorage', {
     length: 0,
 });
 
-/** Relais partagé : route les messages entre les fenêtres enregistrées. */
-function createRelayHub() {
-    const subscribers = new Map<number, Set<(message: string) => void>>();
+/**
+ * Relais partagé : route les messages entre les fenêtres enregistrées.
+ *
+ * La publication passe par le **vrai** `installWindowRelay`, branché sur un
+ * `ipcMain` factice — donc par la politique de rôle, comme en production. Un
+ * message refusé n'atteint personne, et le refus est consultable dans `denials`.
+ */
+function createRelayHub(roleOf: (windowId: number) => RelayRole = () => 'gm') {
+    const subscribers = new Map<number, Set<(message: string, senderRole?: string) => void>>();
     // Les services d'un test précédent restent vivants — rien ne les arrête — et
     // le `relayTimer` de 50 ms du maître se déclenche pendant le test suivant,
     // publiant l'état d'avant dans les nouvelles fenêtres. Une génération rend
     // les anciens ponts inertes.
     let generation = 0;
 
+    const denials: Array<{ role: RelayRole; type: string; detail: string }> = [];
+
     const targets = (): RelayTarget[] =>
         [...subscribers.keys()].map(id => ({
             id,
             isDestroyed: () => false,
-            send: (_channel: string, message: string) => {
+            send: (_channel: string, message: string, senderRole: RelayRole) => {
                 // L'IPC est asynchrone : livrer de façon synchrone créerait une
                 // réentrance qui n'existe pas en production.
-                queueMicrotask(() => subscribers.get(id)?.forEach(cb => cb(message)));
+                queueMicrotask(() => subscribers.get(id)?.forEach(cb => cb(message, senderRole)));
             },
         }));
 
+    let handler: ((event: { sender: { id: number } }, type: unknown, message: unknown) => void) | null = null;
+
+    installWindowRelay(
+        { on: (_channel: string, listener: typeof handler) => { handler = listener; } },
+        targets,
+        {
+            resolveRole: roleOf,
+            onDenied: (role, type, detail) => denials.push({ role, type, detail }),
+        },
+    );
+
     return {
+        denials,
         bridgeFor(windowId: number) {
             const myGeneration = generation;
             if (!subscribers.has(windowId)) subscribers.set(windowId, new Set());
             return {
                 relay: {
-                    publish: (message: string) => {
+                    publish: (type: string, message: string) => {
                         if (myGeneration !== generation) return;
-                        relayToOthers(targets(), windowId, message);
+                        handler?.({ sender: { id: windowId } }, type, message);
                     },
-                    onMessage: (cb: (message: string) => void) => {
+                    onMessage: (cb: (message: string, senderRole?: string) => void) => {
                         const set = subscribers.get(windowId)!;
                         set.add(cb);
                         return () => set.delete(cb);
@@ -82,6 +103,7 @@ function createRelayHub() {
         reset() {
             generation += 1;
             subscribers.clear();
+            denials.length = 0;
         },
     };
 }
@@ -103,7 +125,9 @@ const settleWithRelayTimer = async () => {
 };
 
 describe('relais — deux fenêtres, tableau blanc', () => {
-    const hub = createRelayHub();
+    // La fenêtre 1 est le MJ, la fenêtre 2 le Player Hub : la politique de rôle
+    // s'applique donc ici comme en production.
+    const hub = createRelayHub((id) => (id === 1 ? 'gm' : 'hub'));
 
     let gm: any;
     let hubWin: any;
@@ -122,7 +146,7 @@ describe('relais — deux fenêtres, tableau blanc', () => {
             class HarnessTransport extends actual.WindowTransport {
                 publish(message: import('./windowTransport').WindowMessage) {
                     if (capturedRelay && actual.RELAYED_TYPES.has(message.type)) {
-                        capturedRelay.publish(JSON.stringify(message));
+                        capturedRelay.publish(message.type, JSON.stringify(message));
                         return;
                     }
                     super.publish(message);

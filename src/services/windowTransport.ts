@@ -94,12 +94,24 @@ export function isRelayAvailable(): boolean {
  * Hors Electron — tablette en PWA, navigateur de développement — le relais
  * n'existe pas et tout retombe sur le `BroadcastChannel`.
  */
+/**
+ * Rôle de la fenêtre émettrice, tel que le process principal l'a établi.
+ *
+ * `undefined` sur le `BroadcastChannel` : hors Electron, il n'y a personne
+ * au-dessus des fenêtres pour l'attester. Le destinataire doit donc traiter
+ * l'absence de rôle comme le cas le moins fiable, pas comme un blanc-seing.
+ */
+export type SenderRole = 'gm' | 'hub' | 'projector' | 'unknown';
+
 export class WindowTransport {
     private channel: BroadcastChannel;
     private detachRelay: (() => void) | null = null;
-    private onMessage: (message: WindowMessage) => void;
+    private onMessage: (message: WindowMessage, senderRole?: SenderRole) => void;
 
-    constructor(channelName: string, onMessage: (message: WindowMessage) => void) {
+    constructor(
+        channelName: string,
+        onMessage: (message: WindowMessage, senderRole?: SenderRole) => void,
+    ) {
         this.onMessage = onMessage;
         this.channel = new BroadcastChannel(channelName);
         this.channel.onmessage = (event: MessageEvent) => {
@@ -109,9 +121,9 @@ export class WindowTransport {
 
         const relay = typeof window !== 'undefined' ? window.appBridge?.relay : undefined;
         if (relay) {
-            this.detachRelay = relay.onMessage((raw) => {
+            this.detachRelay = relay.onMessage((raw, senderRole) => {
                 const message = parseRelayMessage(raw);
-                if (message) this.onMessage(message);
+                if (message) this.onMessage(message, senderRole as SenderRole);
             });
         }
     }
@@ -130,7 +142,7 @@ export class WindowTransport {
             // Sérialisé ici, et pas par le process principal : c'est la
             // condition de performance mesurée le 2026-08-06. Voir
             // electron/WindowRelay.ts.
-            relay.publish(JSON.stringify(message));
+            relay.publish(message.type, JSON.stringify(message));
             return;
         }
 

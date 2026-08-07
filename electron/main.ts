@@ -49,6 +49,8 @@ import { mediaAccess } from './MediaAccess'
 import { registerPairingHandlers } from './PairingManager'
 import { shouldRejectUnauthorized } from './netTrust'
 import { installWindowRelay, relayToOthers, RELAY_PUBLISH_CHANNEL, type RelayTarget } from './WindowRelay'
+import { type RelayRole } from './relayPolicy'
+import { auditDenied } from './auditLog'
 import { TokenLockRegistry, buildUnlockMessage } from './TokenLockRegistry'
 // import { GitBackupService } from './GitBackupService'
 
@@ -786,15 +788,41 @@ app.whenReady().then(async () => {
         BrowserWindow.getAllWindows().map(w => ({
             id: w.webContents.id,
             isDestroyed: () => w.isDestroyed() || w.webContents.isDestroyed(),
-            send: (channel: string, message: string) => w.webContents.send(channel, message),
+            send: (channel: string, message: string, senderRole: RelayRole) =>
+                w.webContents.send(channel, message, senderRole),
         }));
 
-    installWindowRelay(ipcMain, listRelayTargets);
+    /**
+     * Rôle d'une fenêtre, déduit de son `webContents.id`.
+     *
+     * Le process principal est le seul point qui tienne les trois références —
+     * `win`, `hubWindow`, `projectorWindows` —, donc le seul à pouvoir établir
+     * un rôle que l'émetteur ne choisit pas lui-même.
+     *
+     * Le Player Hub et la tablette partagent `hubWindow` : ils obéissent aux
+     * mêmes règles, celles d'une fenêtre secondaire.
+     */
+    const resolveRelayRole = (senderId: number): RelayRole => {
+        if (win && !win.isDestroyed() && win.webContents.id === senderId) return 'gm';
+        if (hubWindow && !hubWindow.isDestroyed() && hubWindow.webContents.id === senderId) return 'hub';
+
+        for (const [, projWin] of projectorWindows) {
+            if (!projWin.isDestroyed() && projWin.webContents.id === senderId) return 'projector';
+        }
+
+        return 'unknown';
+    };
+
+    installWindowRelay(ipcMain, listRelayTargets, {
+        resolveRole: resolveRelayRole,
+        onDenied: (role, type, detail) =>
+            auditDenied(`Message '${type}' refusé au relais — fenêtre '${role}' : ${detail}`),
+    });
 
     // Le registre observe le flux relayé pour savoir quelle fenêtre détient quel
     // jeton. Il n'arbitre pas l'octroi — voir electron/TokenLockRegistry.ts.
     const tokenLocks = new TokenLockRegistry();
-    ipcMain.on(RELAY_PUBLISH_CHANNEL, (event, message) => {
+    ipcMain.on(RELAY_PUBLISH_CHANNEL, (event, _type, message) => {
         tokenLocks.observe(event.sender.id, message);
     });
 
