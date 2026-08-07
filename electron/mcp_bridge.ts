@@ -8,10 +8,8 @@ import * as path from 'path';
  */
 
 const USER_HOME = process.env.USERPROFILE || process.env.HOME || '';
-const ANTIGRAVITY_DIR = path.join(USER_HOME, '.antigravity', 'notebooklm-mcp');
 
 const DEBUG_LOG_PATH = path.join(USER_HOME, 'mcp_bridge_debug.log');
-const CONFIG_PATH = path.join(ANTIGRAVITY_DIR, 'notebooklm-config.json');
 
 /**
  * Serveur MCP : `notebooklm-mcp-cli`, qui vise Gemini Notebook.
@@ -150,10 +148,11 @@ async function ensureMcpServer(): Promise<ChildProcess> {
 
         const proc = spawn(PYTHON_EXE, ['-m', MCP_SERVER_MODULE, '--transport', 'stdio'], {
             stdio: ['pipe', 'pipe', 'pipe'],
+            // Le client Gemini Notebook ne lit pas NOTEBOOKLM_CONFIG : sa
+            // configuration et ses profils vivent dans ~/.notebooklm-mcp-cli.
             env: {
                 ...process.env,
-                PYTHONUNBUFFERED: '1',
-                NOTEBOOKLM_CONFIG: CONFIG_PATH
+                PYTHONUNBUFFERED: '1'
             }
         });
 
