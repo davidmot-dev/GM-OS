@@ -56,29 +56,47 @@ supplémentaire, pour un bénéfice cosmétique. La perte assumée : le Hub ne m
 Tests : `PersistenceService.test.ts`. Vérifié qu'ils **échouent** sans le correctif — le test
 « l'état du MJ survit à l'ouverture d'une fenêtre secondaire » reproduit la perte à l'identique.
 
-## Ce qui a été récupéré, ce qui ne l'a pas été
+## La récupération — intégrale, par les clichés instantanés
 
-**Non récupérable localement.** Chrome externalise les valeurs IndexedDB volumineuses dans des
-fichiers blob séparés (marqueur `application/vnd.blink-idb-value-wrapper` présent dans le
-journal). L'état réel (≈305 Ko) était donc **hors journal**, remplacé par les mocks écrits en
-ligne (≈6 Ko), et son fichier externe supprimé — le répertoire blob de la base 3 est vide. Le
-nom « Anges de Feu » n'apparaît nulle part dans IndexedDB.
+**Restaurée le 2026-08-07.** Un cliché instantané de Windows du **2026-08-06 19:11** contenait
+l'état intact. Les trois campagnes sont revenues :
 
-**Intact :** la médiathèque — 260 Mo de blobs, tous les médias toujours étiquetés
-`campaignIds: ["c-1774865486579"]`.
+| Campagne | Identifiant |
+| --- | --- |
+| Anges de Feu | `c-1774865486579` |
+| Agents de Dune | `c-1777811222934` |
+| A la claire fontaine | `c-1777814571323` |
 
-**Source de restauration :** `Téléchargements/campagne_gmos_1775504594227.gmos`, export Nexus
-complet de « Anges de Feu » du **2026-04-06 19:43** — `state.json` (124 Ko) et 61 fichiers
-d'assets. C'est le plus récent export existant ; aucun postérieur sur le disque.
+Avec 245 entrées de wiki, 50 entités, 47 cartes d'atlas, 8 sessions, 7 joueurs, 3 decks,
+8 modèles de fiche et 8 pilotes de jeu — bien au-delà de l'export Nexus du 6 avril, qui ne
+contenait que « Anges de Feu ».
 
-**Sauvegarde de l'état sinistré** avant toute manipulation :
-`%USERPROFILE%\Desktop\gm-os-v5-backup-20260807` (seul `DIPS`, base interne de Chromium, n'a pas
-été copié).
+**Seul écart :** ce qui a changé entre le 2026-08-06 19:11 et la restauration est perdu. Cette
+plage ne couvre que les essais de transport, pas du travail de campagne.
 
-**Piste non épuisée, à tenter en priorité :** les clichés instantanés de Windows, seuls à même
-de restituer les quatre derniers mois. Depuis une invite **administrateur** :
-`vssadmin list shadows`, puis clic droit sur `%APPDATA%\gm-os-v5\IndexedDB` →
-*Versions précédentes*. À faire avant d'écrire davantage sur le disque.
+Chemin suivi, à reproduire tel quel en cas de récidive :
+
+1. **Copier, ne pas restaurer.** Dans *Versions précédentes* : `Ouvrir`, puis copie du dossier
+   vers un emplacement neuf. Le bouton `Restaurer` écrit en place et détruit le point de
+   comparaison.
+2. **Vérifier avant de basculer.** L'état vit dans un fichier blob externalisé — ici
+   `IndexedDB\http_localhost_5173.indexeddb.blob\3\00\90`, 13,9 Mo : en-tête de sérialisation
+   Blink, puis du JSON **en UTF-16**. Le répertoire de la base 3 était *vide* dans l'état
+   sinistré ; c'est le signe le plus net de la perte.
+3. **Application fermée**, renommer l'`IndexedDB` en place plutôt que le supprimer, puis copier.
+
+**Conservé :**
+
+- `%USERPROFILE%\Desktop\gm-os-v5-backup-20260807` — l'état sinistré complet (seul `DIPS`, base
+  interne de Chromium, n'a pas pu être copié).
+- `…\gm-os-v5-backup-20260807\etat-session-recupere-20260806-1644.json` — l'état récupéré en
+  JSON lisible (7 Mo), indépendant de tout format IndexedDB.
+- `%APPDATA%\gm-os-v5\IndexedDB.avant-restauration-20260807` — le dossier écarté.
+- `Téléchargements/campagne_gmos_1775504594227.gmos` — export Nexus du 2026-04-06, dernier
+  recours.
+
+**La médiathèque n'avait pas été touchée** : les 260 Mo de blobs et leurs métadonnées étaient
+intacts tout du long.
 
 ## Méthode d'enquête, à ne pas redécouvrir
 
