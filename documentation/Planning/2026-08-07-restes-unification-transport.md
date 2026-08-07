@@ -166,6 +166,18 @@ du projet, ce n'est pas celui sur lequel improviser.
 
 ## 4. `isTokenLocked` n'est pas réactif
 
+> **Clos le 2026-08-07** (`9fe4b0d`). Le service expose un abonnement, et
+> `src/modules/map/hooks/useTokenLock.ts` s'y branche par `useSyncExternalStore`.
+>
+> Ce que la fiche ne disait pas et qui compte : **l'expiration change la valeur sans qu'aucun
+> message n'arrive**. Un verrou meurt au bout de cinq secondes, en silence. Le service programme
+> donc le réveil correspondant — c'est le cas que le test couvre en priorité, et il échoue si on
+> retire cette programmation.
+>
+> À noter aussi : seul l'**affichage** était en cause. `requestLock` refusait déjà le glissement,
+> donc rien n'était saisissable à tort ; c'est le curseur et l'apparence qui invitaient à saisir
+> un jeton qui ne répondait plus.
+
 **Veille, pas chantier.**
 
 `isTokenLocked` est lu pendant le rendu de `MapTokenNode` sans être réactif : un verrou qui
@@ -178,6 +190,15 @@ aggravé ni corrigé.
 ---
 
 ## 5. Limiter le débit de `remote:request-sync`
+
+> **Clos le 2026-08-07** (`9fe4b0d`). Plancher d'une seconde entre deux synchronisations
+> **forcées**, dans `useNexusSynchronizer`. Il **reporte** au lieu de refuser : les demandes
+> d'une même rafale se fondent en une seule, et aucune n'est perdue.
+>
+> Le débit n'était pas borné alors que le déclencheur vient du réseau : `SyncServer` émet une
+> demande à chaque connexion de socket, et une tablette peut en envoyer sur simple message. Sans
+> plancher, dix demandes produisaient dix synchronisations complètes, résolution des médias
+> comprise — ce n'est pas le poids du payload qui coûtait, mais le travail de le construire.
 
 **Veille, pas chantier.**
 
@@ -195,8 +216,10 @@ Ne compte que sur un réseau où tous les appareils ne sont pas connus.
 2. ~~**Le point 1**~~ — clos le 2026-08-07.
 3. ~~**Le point 3**~~ — clos le 2026-08-07, après que le journal d'audit du point 1 eut montré
    les rafales d'écho du Hub.
-4. Restent les points 4 et 5, deux veilles. Ils ne se déclenchent que sur symptôme constaté, ou
-   sur un changement d'usage (le 5 : jouer sur un réseau non maîtrisé).
+4. ~~**Les points 4 et 5**~~ — clos le 2026-08-07.
+
+**Les cinq points sont clos.** Ce document n'a plus de suite ; il reste comme récit de ce que
+chacun a réellement révélé, souvent autre chose que ce qu'il annonçait.
 
 ---
 
