@@ -76,7 +76,12 @@
       "Bash(netstat -ano)",
       "Bash(powershell -NoProfile -Command \"Stop-Process -Id 61636 -Force\")",
       "Bash(curl -s -m 5 http://127.0.0.1:11434/api/version)",
-      "Bash(curl -s -m 3 http://127.0.0.1:11500/api/version)"
+      "Bash(curl -s -m 3 http://127.0.0.1:11500/api/version)",
+      "Bash(node -e \"console.log\\('electron:', require\\('./package.json'\\).devDependencies.electron || require\\('./package.json'\\).dependencies.electron\\)\")",
+      "Bash(env -u ELECTRON_RUN_AS_NODE \"c:/Projet_David/GM-OS-v5/node_modules/electron/dist/electron.exe\" . \"c:/Projet_David/GM-OS-v5/docs/systems/alien/AL-Fiche-de-personnage_pf.pdf\" \"personnage\")",
+      "Bash(grep -viE \"warn|devtools|^$\")",
+      "Bash(powershell -NoProfile -Command 'Get-Process electron -ErrorAction SilentlyContinue | Where-Object { $_.Path -like '\\\\''*GM-OS-v5*'\\\\'' } | Select-Object Id,StartTime | Format-Table')",
+      "PowerShell(Set-Location \"c:\\\\Projet_David\\\\GM-OS-v5\"; try { [System.IO.Directory]::Delete\\(\"c:\\\\Projet_David\\\\GM-OS-v5\\\\.tmp-pdftest\", $true\\); Write-Output \"supprime\" } catch { Write-Output \"verrouille : $\\($_.Exception.Message\\)\" }; Test-Path \".tmp-pdftest\")"
     ]
   }
 }
