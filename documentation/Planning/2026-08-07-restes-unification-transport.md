@@ -128,6 +128,24 @@ devant tout le reste** — y compris le point 1.
 
 ## 3. La rediffusion complète du MJ quand une fenêtre secondaire dessine
 
+> **Clos le 2026-08-07** (`94fea7f`), et ce n'était pas le problème annoncé.
+>
+> En instrumentant, on a découvert que le commentaire du code — *« Never relay raw slave
+> payload to other slaves »* — était **faux** : le relais livrait à toutes les fenêtres sauf
+> l'émetteur, donc le projecteur adoptait le payload brut du Player Hub, cible de projection
+> comprise. **Le bug de l'étape 6 était resté vivant côté projecteur**, et la rediffusion
+> complète le masquait en réparant 50 ms plus tard. Alléger sans fermer d'abord ce trou aurait
+> rallumé la panne — c'est exactement ce que la prudence de ce document laissait pressentir.
+>
+> Fait dans cet ordre : `relayAudience` (dans `electron/relayPolicy.ts`) n'adresse plus l'état
+> d'une fenêtre secondaire qu'au MJ, les verrous restant ouverts à tous ; puis la rediffusion se
+> scinde par flux — complète pour `hub:ready`, carte seule, tableau seul. Un joueur qui dessine
+> ne fait donc plus repartir `projectedFogDataUrl`, un PNG en base64 de 290 à 421 Ko. Un
+> minuteur par flux, sinon le plus bavard fait taire l'autre.
+>
+> Validé en réel par David. Leçon transposable : **un commentaire qui énonce une garantie n'est
+> pas une garantie.** Celui-ci décrivait fidèlement une intention que rien n'appliquait.
+
 **À faire seulement sur symptôme constaté.**
 
 Quand le Player Hub dessine, la fenêtre MJ reprogramme un `broadcastFullState()` 50 ms après le
@@ -175,7 +193,9 @@ Ne compte que sur un réseau où tous les appareils ne sont pas connus.
 
 1. ~~**Le point 2**~~ — clos le 2026-08-07.
 2. ~~**Le point 1**~~ — clos le 2026-08-07.
-3. Les points 3, 4 et 5 sont des veilles. Ils ne se déclenchent que sur symptôme constaté, ou
+3. ~~**Le point 3**~~ — clos le 2026-08-07, après que le journal d'audit du point 1 eut montré
+   les rafales d'écho du Hub.
+4. Restent les points 4 et 5, deux veilles. Ils ne se déclenchent que sur symptôme constaté, ou
    sur un changement d'usage (le 5 : jouer sur un réseau non maîtrisé).
 
 ---
