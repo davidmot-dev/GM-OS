@@ -53,40 +53,37 @@ export const HubCombatTracker: React.FC<HubCombatTrackerProps> = ({
                             <div className="ml-auto text-rose-500 material-symbols-outlined">double_arrow</div>
                         </div>
 
-                        {/* Health Indicators */}
-                        <div className="flex flex-wrap gap-2 pt-2 border-t border-rose-500/20">
-                            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-app-bg/60 border border-rose-500/40">
-                                <div className="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.6)] animate-pulse" />
-                                <span className="text-xs font-black text-rose-100 tracking-normal">{activeCombatant.hp} / {activeCombatant.hpMax} HP</span>
+                        {/* Health Indicators.
+                            Les points de vie ne sont pas affichés : le Hub est
+                            l'écran partagé de la table, et le compte exact des PV
+                            d'un adversaire renseigne les joueurs sur ce que le MJ
+                            n'a pas choisi de leur dire. */}
+                        {activeCombatant.healthSystem && (
+                            <div className="flex flex-wrap gap-2 pt-2 border-t border-rose-500/20">
+                                {activeCombatant.healthSystem.type === 'wounds' && (
+                                    <div className="px-2 py-0.5 rounded-full bg-orange-500/20 border border-orange-500/40">
+                                        <span className="text-[10px] font-black text-orange-400 uppercase tracking-tighter">
+                                            {String(activeCombatant.healthSystem.data.currentLevel || '')}
+                                        </span>
+                                    </div>
+                                )}
+                                {activeCombatant.healthSystem.type === 'clock' && (
+                                    <div className="px-2 py-0.5 rounded-full bg-blue-500/20 border border-blue-500/40">
+                                        <span className="text-[10px] font-black text-blue-400 uppercase tracking-tighter">
+                                            Clock {Number(activeCombatant.healthSystem.data.segments || 0)}/{Number(activeCombatant.healthSystem.data.maxSegments || 0)}
+                                        </span>
+                                    </div>
+                                )}
+                                {activeCombatant.healthSystem.type === 'boxes' && (
+                                    <div className="flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-orange-500/20 border border-orange-500/40">
+                                        <span className="text-[10px] font-black text-orange-400 uppercase tracking-tighter mr-1">Stress</span>
+                                        {(activeCombatant.healthSystem.data.boxes as Array<{ filled: boolean }> || []).map((b, bi) => (
+                                            <div key={bi} className={`w-1.5 h-1.5 rounded-xs border ${b.filled ? 'bg-orange-500 border-orange-400' : 'border-orange-500/30'}`} />
+                                        ))}
+                                    </div>
+                                )}
                             </div>
-                            
-                            {activeCombatant.healthSystem && (
-                                <>
-                                    {activeCombatant.healthSystem.type === 'wounds' && (
-                                        <div className="px-2 py-0.5 rounded-full bg-orange-500/20 border border-orange-500/40">
-                                            <span className="text-[10px] font-black text-orange-400 uppercase tracking-tighter">
-                                                {String(activeCombatant.healthSystem.data.currentLevel || '')}
-                                            </span>
-                                        </div>
-                                    )}
-                                    {activeCombatant.healthSystem.type === 'clock' && (
-                                        <div className="px-2 py-0.5 rounded-full bg-blue-500/20 border border-blue-500/40">
-                                            <span className="text-[10px] font-black text-blue-400 uppercase tracking-tighter">
-                                                Clock {Number(activeCombatant.healthSystem.data.segments || 0)}/{Number(activeCombatant.healthSystem.data.maxSegments || 0)}
-                                            </span>
-                                        </div>
-                                    )}
-                                    {activeCombatant.healthSystem.type === 'boxes' && (
-                                        <div className="flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-orange-500/20 border border-orange-500/40">
-                                            <span className="text-[10px] font-black text-orange-400 uppercase tracking-tighter mr-1">Stress</span>
-                                            {(activeCombatant.healthSystem.data.boxes as Array<{ filled: boolean }> || []).map((b, bi) => (
-                                                <div key={bi} className={`w-1.5 h-1.5 rounded-xs border ${b.filled ? 'bg-orange-500 border-orange-400' : 'border-orange-500/30'}`} />
-                                            ))}
-                                        </div>
-                                    )}
-                                </>
-                            )}
-                        </div>
+                        )}
                     </div>
                 )}
 
@@ -100,16 +97,8 @@ export const HubCombatTracker: React.FC<HubCombatTrackerProps> = ({
                                 <p className="text-app-text/40 text-[10px] uppercase tracking-tighter">{idx === 0 ? 'Suivant' : 'À venir'}</p>
                             </div>
 
-                            {/* Mini HP Bar for upcoming */}
-                            <div className="ml-auto flex flex-col items-end gap-1">
-                                    <span className="text-[9px] font-bold text-app-text/60 tracking-tighter">{combatant.hp} HP</span>
-                                    <div className="w-12 h-1 bg-app-text/10 rounded-full overflow-hidden">
-                                        <div 
-                                        className={`h-full transition-all ${combatant.hp / combatant.hpMax < 0.3 ? 'bg-rose-500' : 'bg-emerald-500'}`} 
-                                        style={{ width: `${Math.min(100, (combatant.hp / combatant.hpMax) * 100)}%` }} 
-                                        />
-                                    </div>
-                            </div>
+                            {/* Pas de barre de vie ici non plus : une barre dit la
+                                même chose qu'un nombre, en moins précis. */}
                         </div>
                         
                         {/* Mini health system tags if present */}
