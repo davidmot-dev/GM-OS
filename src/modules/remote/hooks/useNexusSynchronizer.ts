@@ -16,8 +16,19 @@ import { getDifferentialPayload } from '../../../utils/syncUtils';
 import { resolveToSendableUrl } from '../../../utils/mediaResolver';
 import { crossWindowSync } from '../../../services/CrossWindowEventService';
 
+/**
+ * Intervalle minimal entre deux synchronisations **forcées**.
+ *
+ * Assez court pour qu'un appareil qui se connecte ne le remarque pas, assez
+ * long pour qu'une tablette qui se reconnecte en boucle ne déclenche pas autant
+ * de synchronisations complètes.
+ */
+const FORCED_SYNC_FLOOR_MS = 1000;
+
 export const useNexusSynchronizer = (isMainPC: boolean) => {
     const lastSyncRef = useRef(0);
+    /** Dernière synchronisation **forcée**, pour en borner la cadence. */
+    const lastForcedSyncRef = useRef(0);
     /** Rafale en cours : la dernière valeur part à l'expiration du frein. */
     const trailingSyncRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     /** Toujours la version courante de `handleSync`, pour que le report s'y réfère. */
@@ -122,6 +133,28 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
         }
 
         const now = Date.now();
+
+        // Une demande forcée court-circuite le frein, et c'est voulu : un
+        // appareil qui se connecte doit recevoir l'état sans attendre. Mais rien
+        // n'en bornait la cadence, et `remote:request-sync` est déclenché par le
+        // réseau — à chaque connexion de socket (SyncServer), et sur simple
+        // message d'une tablette. Une tablette qui se reconnecte en boucle
+        // relançait donc autant de synchronisations complètes, résolution des
+        // médias comprise.
+        //
+        // Le plancher ne refuse pas la demande : il la reporte, et les demandes
+        // d'une même rafale se fondent en une seule.
+        if (force && now - lastForcedSyncRef.current < FORCED_SYNC_FLOOR_MS) {
+            const reste = FORCED_SYNC_FLOOR_MS - (now - lastForcedSyncRef.current);
+            if (trailingSyncRef.current) clearTimeout(trailingSyncRef.current);
+            trailingSyncRef.current = setTimeout(() => {
+                trailingSyncRef.current = null;
+                handleSyncRef.current?.(true);
+            }, reste);
+            return;
+        }
+        if (force) lastForcedSyncRef.current = now;
+
         if (!force && now - lastSyncRef.current < 500) {
             // Report plutôt qu'abandon. Un `return` sec perdait définitivement la
             // dernière valeur d'une rafale : l'état diffusé restait celui d'avant,

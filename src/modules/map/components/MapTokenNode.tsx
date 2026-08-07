@@ -7,6 +7,7 @@ import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { Shield, Trash2, Eye, EyeOff, Lock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { crossWindowSync } from '../../../services/CrossWindowEventService';
+import { useTokenLock } from '../hooks/useTokenLock';
 
 interface MapTokenNodeProps {
     token: MapToken;
@@ -40,7 +41,7 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
 
     const [isDragging, setIsDragging] = useState(false);
 
-    const isLockedByOther = crossWindowSync.isTokenLocked(token.id);
+    const isLockedByOther = useTokenLock(token.id);
     const isInteractable = (isProjectedView || currentTool === 'move_token') && !isLockedByOther;
 
     const handlePointerDown = (e: React.PointerEvent) => {

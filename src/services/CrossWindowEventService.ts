@@ -8,6 +8,9 @@ import { WindowTransport, type WindowMessage, type SenderRole } from './windowTr
 /** Types qu'une fenêtre secondaire peut émettre avant d'avoir reçu l'état partagé. */
 const GATE_EXEMPT_TYPES = new Set(['map:lock', 'map:unlock', 'hub:ready']);
 
+/** Durée de vie d'un verrou de jeton : une fenêtre disparue ne le retient pas. */
+const LOCK_TTL_MS = 5000;
+
 /**
  * Retire la cible de projection d'un payload reçu d'une fenêtre secondaire.
  *
@@ -38,6 +41,9 @@ class CrossWindowEventService {
     private instanceId: string = Math.random().toString(36).substring(2, 9);
     private isApplyingRemoteUpdate: boolean = false;
     private tokenLocks: Map<string, { ownerId: string, timestamp: number }> = new Map();
+    private lockListeners = new Set<() => void>();
+    private locksVersion = 0;
+    private lockExpiryTimer: ReturnType<typeof setTimeout> | null = null;
     private throttleTimer: ReturnType<typeof setTimeout> | null = null;
     /**
      * Un minuteur par flux, et non un seul partagé.
@@ -117,9 +123,11 @@ class CrossWindowEventService {
         // Handle locks (Always)
         if (type === 'map:lock') {
             this.tokenLocks.set(payload.tokenId, { ownerId: senderId, timestamp: Date.now() });
+            this.notifyLocksChanged();
             return;
         } else if (type === 'map:unlock') {
             this.tokenLocks.delete(payload.tokenId);
+            this.notifyLocksChanged();
             return;
         }
 
@@ -196,6 +204,7 @@ class CrossWindowEventService {
         
         // Take lock
         this.tokenLocks.set(tokenId, { ownerId: this.instanceId, timestamp: Date.now() });
+        this.notifyLocksChanged();
         this.broadcast('map:lock', { tokenId });
         return true;
     }
@@ -205,6 +214,7 @@ class CrossWindowEventService {
      */
     public releaseLock(tokenId: string) {
         this.tokenLocks.delete(tokenId);
+        this.notifyLocksChanged();
         this.broadcast('map:unlock', { tokenId });
     }
 
@@ -213,7 +223,51 @@ class CrossWindowEventService {
      */
     public isTokenLocked(tokenId: string): boolean {
         const lock = this.tokenLocks.get(tokenId);
-        return !!(lock && lock.ownerId !== this.instanceId && (Date.now() - lock.timestamp < 5000));
+        return !!(lock && lock.ownerId !== this.instanceId && (Date.now() - lock.timestamp < LOCK_TTL_MS));
+    }
+
+    /**
+     * S'abonner aux changements de verrous.
+     *
+     * `isTokenLocked` était lu pendant le rendu sans que rien n'y soit abonné :
+     * un verrou pris ou relâché ailleurs ne provoquait aucun re-rendu, et le
+     * jeton restait affiché comme saisissable jusqu'au rendu suivant, quelle
+     * qu'en soit la cause. La protection elle-même tenait — `requestLock`
+     * refuse —, mais l'écran mentait.
+     *
+     * L'expiration compte autant que les messages : un verrou meurt au bout de
+     * cinq secondes sans que personne n'émette quoi que ce soit. `notifyLocksChanged`
+     * programme donc aussi le réveil correspondant.
+     */
+    public subscribeLocks(listener: () => void): () => void {
+        this.lockListeners.add(listener);
+        return () => { this.lockListeners.delete(listener); };
+    }
+
+    /** Compteur de version des verrous, pour `useSyncExternalStore`. */
+    public getLocksVersion(): number {
+        return this.locksVersion;
+    }
+
+    private notifyLocksChanged() {
+        this.locksVersion += 1;
+        this.lockListeners.forEach(listener => listener());
+
+        // Le prochain changement peut n'être qu'une expiration, que personne
+        // n'annoncera. On se réveille juste après la plus proche.
+        if (this.lockExpiryTimer) clearTimeout(this.lockExpiryTimer);
+
+        const now = Date.now();
+        const deadlines = [...this.tokenLocks.values()]
+            .map(lock => lock.timestamp + LOCK_TTL_MS - now)
+            .filter(delay => delay > 0);
+
+        if (deadlines.length === 0) return;
+
+        this.lockExpiryTimer = setTimeout(
+            () => this.notifyLocksChanged(),
+            Math.min(...deadlines) + 50,
+        );
     }
 
     private applyRemoteUpdate(type: string, payload: any) {
