@@ -127,6 +127,13 @@ Deux défauts s'y ajoutent :
   « attaquer ou se déplacer ? », alors que `TacticalNarrativeService.getSituationalReport` lui a déjà
   préparé un rapport de situation précis. Seules les règles de combat du système actif sont pertinentes.
 
+> **Périmètre.** Ce document ne traite que les défauts de **performance** du Cortex, corrigés par
+> l'axe C. Ses défauts de **fiabilité** — config tactique du système ignorée, effondrement silencieux
+> quand l'acteur n'a pas de jeton, faction devinée — sont d'une autre nature et font l'objet d'un plan
+> distinct : `documentation/Planning/2026-08-07-fiabilite-cortex-combat.md`. **Les deux se lisent
+> ensemble** : accélérer un module dont les entrées sont fausses ne ferait que produire des conseils
+> faux plus vite.
+
 ### 3.4 Troncature silencieuse
 
 - `ForgeService.ts:42` — `MAX_TEXT_CHARS = 100000`, soit ~28 000 tokens.
@@ -247,13 +254,27 @@ Chaque étape doit être reprenable, pas tout ou rien.
 
 ### Axe F — L'Oracle bibliothécaire · *~6 h · chantier de fond*
 
-Trois étages, du moins coûteux au plus coûteux :
+Quatre étages, du moins coûteux au plus coûteux :
 
 1. **Recherche dans les fiches** (`docs/systems/*/rules/*.md`). Aucun modèle invoqué.
 2. **À défaut, la référence dans le livre** : « Rêves de Dragons, p. 142, section Ivresse ». Ouverture
    du PDF **en secours ou sur demande explicite du MJ** — jamais dans le chemin critique.
-3. **Journal des lacunes** : toute question note ce que la recherche a atteint (fiche / index seul /
-   rien). Les deux dernières catégories **sont la file de travail de la Forge**.
+3. **À défaut, un jugement de table** (*ruling*) — décision de David : une proposition **en deux lignes**,
+   annoncée comme n'étant pas la règle officielle. Quatre exigences, chacune pour une raison :
+   - **Deux lignes maximum.** La longueur est le signal : une réponse courte se lit comme une
+     proposition, une réponse longue se lit comme une autorité.
+   - **L'étiquette avant le contenu**, jamais après — « Pas de règle officielle trouvée, proposition : … ».
+     Placée après, elle arrive quand le MJ a déjà adopté la réponse.
+   - **Aucune citation, aucun numéro de page.** Un ruling qui cite a l'apparence d'une règle ;
+     l'absence de source *est* l'information.
+   - **Versé directement au journal des lacunes.** Un ruling est par définition une fiche manquante —
+     c'est même le signal le plus fiable dont on dispose.
+
+   Effet secondaire heureux : deux lignes font ~60 tokens, soit ~10 s de rédaction. **L'étage le plus
+   incertain est aussi le plus rapide**, ce qui est le bon ordre.
+4. **Journal des lacunes** : toute question note ce que la recherche a atteint (fiche / index seul /
+   ruling / rien). Les trois dernières catégories **sont la file de travail de la Forge**, et le
+   canevas (axe J) en borne le périmètre : une question hors canevas n'est pas une fiche manquante.
 
 **Ce que ça change :** l'Oracle cesse d'être un agent conversationnel avec du RAG pour devenir un
 **bibliothécaire** — il trouve, il cite, et il sait dire « je n'ai pas, mais c'est là ». La valeur de
@@ -376,6 +397,47 @@ leur budget (§ 5).
 progression visible, la reprise après échec et la fin des troncatures. Le gain de temps brut vient des
 axes A, B et E.
 
+### Axe J — Le canevas de système · *~4 h · à faire avant l'axe E, qu'il alimente*
+
+> Répond à la question laissée ouverte : *qui décide du découpage en sujets ?* Décision de David :
+> **ni le MJ seul, ni NotebookLM — un canevas partagé, avec des règles minimales.**
+
+Point de départ : **un système ne couvre pas toutes les règles d'un jeu.** GM-OS n'a pas besoin de
+connaître Rêves de Dragons, il a besoin d'en connaître **la part qu'il exploite**. Et cette part est
+déterminable en lisant ce que le code consomme.
+
+**Périmètre — ce que GM-OS lit réellement d'un système :**
+
+| Sujet du canevas | Consommé par |
+|---|---|
+| Dé et logique de résolution, seuils, critiques | `driver.dice`, table de dés |
+| Formule d'initiative | `driver.combat.initiativeFormula` |
+| Stats à suivre, type de santé | `driver.combat.statsToTrack`, `defaultHealthType` |
+| **Portées et distances** | `driver.tactical.ranges`, Cortex, table de dés |
+| États et conditions | `Combatant.statuses` |
+| Dégâts, guérison, récupération | combat |
+| Oppositions, assistance, jets de groupe | Oracle |
+| Ton et directives MJ | `driver.aiInstructions` |
+
+**Hors périmètre, à exclure explicitement dans chaque prompt :** création de personnage, progression et
+expérience, listes d'équipement et prix, historique de l'univers, règles de campagne longue. **Ce sont
+les chapitres les plus volumineux des livres** — les exclure d'entrée retire l'essentiel du bruit avant
+même de distiller.
+
+**Structure :** une liste de sujets partagée par tous les systèmes, plus un **état de couverture** par
+système — fiche / index seul / absent / hors périmètre.
+
+**Trois bénéfices :**
+
+- **La couverture devient mesurable.** « Alien : 3 sujets sur 12 » vaut mieux que « il manque des trucs ».
+- **Le journal des lacunes est borné.** Une question hors canevas n'est pas une fiche manquante, c'est
+  hors périmètre — sans quoi le journal se remplit de bruit.
+- **Le canevas engendre les prompts.** Un sujet = un prompt de base, ses exclusions déjà rédigées.
+
+**Flux complet** : canevas → prompts vers NotebookLM → sources distillées (écrites dans le carnet *et*
+dans `docs/`) → **forge du système ou de la campagne sur ces sources-là**, jamais sur les livres bruts.
+La Forge cesse d'avaler un livre pour lire une douzaine de synthèses ciblées.
+
 ---
 
 ## 5. Chiffrage
@@ -423,14 +485,18 @@ restants sont de réduire encore son contexte ou de fusionner ses deux appels en
 | 2 | **B — RAG** | ~3 h | Meilleur rapport gain/effort, corrige la **qualité**, profite aux 20 modules |
 | 3 | **C — ordre du prompt + Cortex** | ~2 h | Débloque le seul usage encore hors budget après A et B |
 | 4 | **D — voie Ollama** | ~2 h | Petit, sans risque, met fin aux troncatures muettes et borne les durées |
-| 5 | **E — inversion NotebookLM** | ~4 h | Déplace le poids des Forges hors de la machine |
-| 6 | **G — index des livres** | ~5 h | Prérequis de l'étage 2 de l'axe F |
-| 7 | **F — Oracle bibliothécaire** | ~6 h | Le chantier de fond ; s'appuie sur G |
-| 8 | **H — sélecteur de moteur** | ~4 h | Après B et E, pour que l'estimation affichée soit juste |
-| 9 | **I — découpage des Forges** | ~4 h | Le plus structurant, le moins urgent |
+| 5 | **J — canevas de système** | ~4 h | Borne le périmètre et engendre les prompts : conditionne E, F et G |
+| 6 | **E — inversion NotebookLM** | ~4 h | Déplace le poids des Forges hors de la machine ; consomme les prompts de J |
+| 7 | **G — index des livres** | ~5 h | Prérequis de l'étage 2 de l'axe F |
+| 8 | **F — Oracle bibliothécaire** | ~6 h | Le chantier de fond ; s'appuie sur G et J |
+| 9 | **H — sélecteur de moteur** | ~4 h | Après B et E, pour que l'estimation affichée soit juste |
+| 10 | **I — découpage des Forges** | ~4 h | Le plus structurant, le moins urgent |
 
-**Total : ~30 h.** Les trois premiers axes — **5 h 15** — ramènent les trois usages dans leur budget.
+**Total : ~34 h.** Les trois premiers axes — **5 h 15** — ramènent les trois usages dans leur budget.
 Tout le reste sert la justesse, la traçabilité et le confort, plus la vitesse.
+
+**L'axe J est le pivot du second bloc** : sans lui, E distille au jugé, F ne sait pas borner son journal
+et G ne sait pas quoi indexer en priorité.
 
 ---
 
@@ -484,13 +550,27 @@ Le recadrage sur le budget réel a disqualifié plusieurs pistes envisagées en 
 
 ---
 
-## 9. Reste à défricher
+## 9. Questions tranchées et renvois
 
-- **Comportement quand les trois étages de l'axe F échouent** : silence honnête, ou génération libre
-  clairement signalée comme improvisation ? Le second est tentant, mais c'est ainsi que naissent les
-  règles inventées qu'on applique à table sans s'en apercevoir. *Non tranché.*
-- **Qui décide du découpage en sujets** des Forges : le MJ à la main, NotebookLM en pré-vol, ou une
-  convention par système inscrite dans le driver ? *Non tranché.*
-- **Le Cortex mérite peut-être une étude à part.** Il n'a été examiné qu'en fin de séance ; son budget
-  est le plus tendu, son conseil est le seul qui se **périme**, et la fusion de ses deux appels en un
-  seul n'a pas été évaluée.
+Les trois questions laissées ouvertes en fin de séance ont été arbitrées par David.
+
+**1. Que faire quand les étages de l'axe F échouent ?** → **Un jugement de table en deux lignes,
+annoncé comme n'étant pas la règle officielle.** Intégré à l'axe F comme étage 3, avec ses quatre
+garde-fous. Le silence pur a été écarté : à table, une proposition explicitement étiquetée vaut mieux
+que rien, tant qu'elle ne peut pas être confondue avec une règle.
+
+**2. Qui décide du découpage en sujets ?** → **Ni le MJ seul, ni NotebookLM : un canevas partagé avec
+des règles minimales**, fondé sur le constat qu'un système ne couvre pas toutes les règles d'un jeu.
+Devenu l'axe J, pivot du second bloc de travaux.
+
+**3. Le Cortex mérite-t-il une étude à part ?** → **Oui, et pour une autre raison que prévu.** Son
+problème n'est qu'accessoirement la vitesse : **ses entrées sont peu fiables et il ne le signale
+jamais**. Config tactique du système ignorée, effondrement silencieux sans jeton lié, faction devinée.
+Traité dans un plan distinct :
+
+> **`documentation/Planning/2026-08-07-fiabilite-cortex-combat.md`**
+
+**Ce que ce plan-ci conserve du Cortex** : uniquement ses défauts de performance — contexte RAG envoyé
+en double, préfixe non réutilisable, contexte trop large (axe C). **Tout ce qui touche à la fiabilité de
+ses entrées relève de l'autre document.** Les deux se lisent ensemble : corriger la vitesse d'un module
+dont les entrées sont fausses ne ferait que produire des conseils faux plus vite.
