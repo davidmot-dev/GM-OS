@@ -5,6 +5,7 @@ import { useImageStore } from '../../image/useImageStore';
 import { useMapStore } from '../useMapStore';
 import { useModalStore } from '../../../stores/useModalStore';
 import { useHardwareStore } from '../../../stores/useHardwareStore';
+import { claimProjection } from '../../../services/projectionExclusivity';
 
 const MapProjectionModal: React.FC = () => {
     const { t } = useTranslation(['modules', 'common']);
@@ -26,6 +27,10 @@ const MapProjectionModal: React.FC = () => {
     }, [fetchDisplays]);
 
     const handleProjectToHub = () => {
+        // La carte et le tableau ne cohabitent pas. Libérer avant de projeter :
+        // l'ordre inverse diffuserait un état où les deux sont actifs.
+        claimProjection('map');
+
         // Sync everything to Player Hub
         syncToPlayers();
         
@@ -40,6 +45,8 @@ const MapProjectionModal: React.FC = () => {
     const handleProjectToMonitor = (displayId: string) => {
         const bridge = window.appBridge;
         if (bridge?.image?.launchDisplay && mapUrl) {
+            claimProjection('map');
+
             // We consolidate the state update in ONE call to avoid multiple broadcasts/race conditions
             // We set projectionTarget to 'monitor' so Hub doesn't show it, while physical displays do
             useMapStore.setState({

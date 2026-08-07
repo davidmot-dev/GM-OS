@@ -5,6 +5,7 @@ import { useWhiteboardStore } from '../useWhiteboardStore';
 import { useModalStore } from '../../../stores/useModalStore';
 import { useHardwareStore } from '../../../stores/useHardwareStore';
 import { useTranslation } from 'react-i18next';
+import { claimProjection } from '../../../services/projectionExclusivity';
 
 const WhiteboardProjectionModal: React.FC = () => {
     const { displays, fetchDisplays } = useImageStore();
@@ -20,11 +21,16 @@ const WhiteboardProjectionModal: React.FC = () => {
     }, [fetchDisplays]);
 
     const handleProjectToHub = () => {
+        // La carte et le tableau ne cohabitent pas : c'est ici que manquait la
+        // règle. Fermer les écrans physiques ne coupait que le tableau lui-même,
+        // et laissait la carte projetée dessous.
+        claimProjection('whiteboard');
+
         // Exclusivity: stop monitor projection if any
         if (window.appBridge?.image?.closeAllDisplays) {
             window.appBridge.image.closeAllDisplays();
         }
-        
+
         useWhiteboardStore.setState({ projectionTarget: 'hub' });
         closeModal();
     };
@@ -32,6 +38,8 @@ const WhiteboardProjectionModal: React.FC = () => {
     const handleProjectToMonitor = (displayId: string) => {
         const bridge = window.appBridge;
         if (bridge?.image?.launchDisplay) {
+            claimProjection('whiteboard');
+
             // Stop Hub projection (Exclusivity)
             clearProjectedState();
 
