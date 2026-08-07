@@ -280,12 +280,14 @@ export const useJournalStore = create<JournalState>()(
           console.log(`[JournalStore] Syncing to Notebook: ${notebookId}`);
           
           if (window.appBridge?.mcp?.callTool) {
-            await window.appBridge.mcp.callTool('notebooklm-mcp-server', 'notebook_add_text', {
-              request: {
-                notebook_id: notebookId,
-                text: summaryEvent.content,
-                title: `Résumé Session: ${journal.title}`
-              }
+            // `source_add` remplace `notebook_add_text` depuis la bascule vers
+            // le client Gemini Notebook, et prend ses arguments à plat plutôt
+            // qu'enveloppés dans `request`.
+            await window.appBridge.mcp.callTool('notebooklm-mcp-server', 'source_add', {
+              notebook_id: notebookId,
+              source_type: 'text',
+              text: summaryEvent.content,
+              title: `Résumé Session: ${journal.title}`
             });
           } else {
             throw new Error(i18next.t('modules:journal.messages.notebook_not_available'));

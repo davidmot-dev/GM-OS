@@ -11,9 +11,60 @@ const USER_HOME = process.env.USERPROFILE || process.env.HOME || '';
 const ANTIGRAVITY_DIR = path.join(USER_HOME, '.antigravity', 'notebooklm-mcp');
 
 const DEBUG_LOG_PATH = path.join(USER_HOME, 'mcp_bridge_debug.log');
-const PYTHON_EXE = 'python'; // Utilise le python du PATH par défaut
-const WRAPPER_SCRIPT = path.join(ANTIGRAVITY_DIR, 'run_mcp.py');
 const CONFIG_PATH = path.join(ANTIGRAVITY_DIR, 'notebooklm-config.json');
+
+/**
+ * Serveur MCP : `notebooklm-mcp-cli`, qui vise Gemini Notebook.
+ *
+ * Le paquet précédent, `notebooklm-mcp`, était figé sur `notebooklm.google.com`
+ * — domaine que Google a quitté en migrant NotebookLM vers Gemini Notebook, sur
+ * `notebook.google.com`. Son test de connexion cherchait l'ancien domaine dans
+ * l'URL courante, condition devenue impossible à satisfaire : l'authentification
+ * expirait indéfiniment, quel que soit le nombre de reconnexions. Sa dernière
+ * version publiée datait de septembre 2025 ; aucun correctif n'était à attendre.
+ *
+ * Les noms d'outils sont identiques d'un paquet à l'autre — `notebook_list`,
+ * `notebook_query`, `chat_configure`, `refresh_auth` — à une exception près,
+ * `notebook_add_text`, devenu `source_add`.
+ */
+
+/**
+ * Interpréteur Python hébergeant le serveur.
+ *
+ * `python` seul ne convient pas sur Windows : le PATH le résout couramment vers
+ * le relais du Microsoft Store (`WindowsApps\python.exe`), qui n'est pas
+ * l'installation où le paquet a été déposé — le serveur resterait introuvable
+ * sans le moindre message clair.
+ *
+ * Ordre : la variable d'environnement, puis les installations officielles
+ * trouvées sous `%LOCALAPPDATA%\Python`, puis le PATH en dernier recours.
+ */
+function resolvePythonExe(): string {
+    if (process.env.GMOS_PYTHON) return process.env.GMOS_PYTHON;
+
+    const localAppData = process.env.LOCALAPPDATA;
+    if (localAppData) {
+        const pythonRoot = path.join(localAppData, 'Python');
+        try {
+            for (const entry of fs.readdirSync(pythonRoot)) {
+                const candidate = path.join(pythonRoot, entry, 'python.exe');
+                if (fs.existsSync(candidate)) return candidate;
+            }
+        } catch {
+            // Répertoire absent : on retombe sur le PATH.
+        }
+    }
+
+    return 'python';
+}
+
+const PYTHON_EXE = resolvePythonExe();
+
+/** Serveur MCP, lancé comme module pour ne dépendre d'aucun chemin de script. */
+const MCP_SERVER_MODULE = 'notebooklm_tools.mcp.server';
+
+/** CLI du même paquet, qui porte la ré-authentification. */
+const MCP_CLI_MODULE = 'notebooklm_tools.cli.main';
 
 function logToDebugFile(msg: string) {
     try {
@@ -95,12 +146,12 @@ async function ensureMcpServer(): Promise<ChildProcess> {
     serverSpawnPromise = (async () => {
         isInitialized = false;
         initializationPromise = null;
-        logToDebugFile(`Spawning NotebookLM MCP Server with wrapper: ${WRAPPER_SCRIPT}`);
-        
-        const proc = spawn(PYTHON_EXE, [WRAPPER_SCRIPT, 'server', '--debug'], {
+        logToDebugFile(`Spawning Gemini Notebook MCP Server: ${PYTHON_EXE} -m ${MCP_SERVER_MODULE}`);
+
+        const proc = spawn(PYTHON_EXE, ['-m', MCP_SERVER_MODULE, '--transport', 'stdio'], {
             stdio: ['pipe', 'pipe', 'pipe'],
-            env: { 
-                ...process.env, 
+            env: {
+                ...process.env,
                 PYTHONUNBUFFERED: '1',
                 NOTEBOOKLM_CONFIG: CONFIG_PATH
             }
@@ -281,21 +332,68 @@ export function registerMcpHandlers() {
         }
     });
 
+    /**
+     * Ré-authentification : `nlm login` ouvre une fenêtre Chrome et attend que
+     * l'utilisateur se connecte à son compte Google.
+     *
+     * On ne bloque pas jusqu'au bout — la connexion peut prendre plusieurs
+     * minutes — mais on ne prétend plus au succès sur la seule création du
+     * processus. L'ancienne version lançait le CLI en `detached` avec
+     * `stdio: 'ignore'` et renvoyait toujours « lancée » : quand le processus
+     * mourait aussitôt, rien ne le signalait, ni à l'écran ni dans le journal.
+     * Un échec instantané est le symptôme le plus probable, et le seul qu'on
+     * puisse détecter sans attendre l'utilisateur.
+     */
     ipcMain.handle('mcp:reauthenticate', async () => {
-        logToDebugFile(`[Auth] Triggering re-authentication CLI...`);
-        try {
-            const authProcess = spawn(PYTHON_EXE, [WRAPPER_SCRIPT, 'auth_cli'], { 
-                shell: false,
-                detached: true,
-                stdio: 'ignore'
+        logToDebugFile(`[Auth] Triggering re-authentication: ${PYTHON_EXE} -m ${MCP_CLI_MODULE} login`);
+
+        return await new Promise((resolve, reject) => {
+            let authProcess: ChildProcess;
+            try {
+                authProcess = spawn(PYTHON_EXE, ['-m', MCP_CLI_MODULE, 'login'], {
+                    shell: false,
+                    stdio: ['ignore', 'pipe', 'pipe'],
+                });
+            } catch (error) {
+                logToDebugFile(`[Auth] Spawn failed: ${error}`);
+                reject(error);
+                return;
+            }
+
+            let output = '';
+            const collect = (data: Buffer) => {
+                output += data.toString();
+                logToDebugFile(`[Auth] ${data.toString().trimEnd()}`);
+            };
+            authProcess.stdout?.on('data', collect);
+            authProcess.stderr?.on('data', collect);
+
+            // Le CLI meurt-il avant même d'avoir ouvert le navigateur ?
+            const earlyExit = setTimeout(() => {
+                authProcess.removeAllListeners('exit');
+                authProcess.unref();
+                resolve({
+                    success: true,
+                    message: "Connectez-vous à votre compte Google dans la fenêtre Chrome qui vient de s'ouvrir.",
+                });
+            }, 3000);
+
+            authProcess.on('exit', (code) => {
+                clearTimeout(earlyExit);
+                const detail = output.trim().split('\n').slice(-3).join(' ').slice(0, 300);
+                logToDebugFile(`[Auth] CLI exited early with code ${code}: ${detail}`);
+                resolve({
+                    success: false,
+                    message: `L'authentification a échoué immédiatement (code ${code}). ${detail}`,
+                });
             });
-            authProcess.unref();
-            logToDebugFile(`[Auth] Auth CLI process spawned via wrapper.`);
-            return { success: true, message: "Authentification lancée." };
-        } catch (error) {
-            logToDebugFile(`[Auth] Error: ${error}`);
-            throw error;
-        }
+
+            authProcess.on('error', (error) => {
+                clearTimeout(earlyExit);
+                logToDebugFile(`[Auth] CLI error: ${error}`);
+                resolve({ success: false, message: `Lancement impossible : ${error.message}` });
+            });
+        });
     });
 
     ipcMain.handle('mcp:restart', async () => {
