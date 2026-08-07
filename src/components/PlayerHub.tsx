@@ -173,11 +173,19 @@ const PlayerHub: React.FC = React.memo(() => {
             </div>
 
             {/* LAYER 50: COMBAT SIDEBAR */}
-            <HubCombatTracker 
-                combatants={combatants} 
-                currentTurnIdx={currentTurnIdx} 
-                round={round} 
-            />
+            {/* Le suivi de combat obéit à la bascule de projection du MJ, comme
+                sur la tablette (TabletHub, même condition). Rendu sans garde, il
+                restait affiché quelle que soit la valeur d'`isCombatProjected` :
+                le bouton de projection du combat semblait sans effet sur le Hub
+                alors qu'il fonctionnait sur la tablette. `hasCombatants` ne
+                servait ici qu'à une classe de mise en page. */}
+            {hasCombatants && (
+                <HubCombatTracker
+                    combatants={combatants}
+                    currentTurnIdx={currentTurnIdx}
+                    round={round}
+                />
+            )}
 
             {/* LAYER 60: DICE 3D (Behind results) */}
             <div className="fixed inset-0 z-[60] pointer-events-none">
