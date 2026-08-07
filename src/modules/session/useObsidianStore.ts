@@ -91,9 +91,11 @@ export const useObsidianStore = create<ObsidianState>()(
 
                     const noteTitle = activeNotePath.split('\\').pop()?.replace('.md', '') || 'Note Obsidian';
                     
-                    // Call the notebook_add_text tool to inject the note content
-                    await window.appBridge.mcp.callTool('notebooklm-mcp-server', 'notebook_add_text', {
+                    // `source_add` remplace `notebook_add_text` depuis la bascule
+                    // vers le client Gemini Notebook, et demande le type de source.
+                    await window.appBridge.mcp.callTool('notebooklm-mcp-server', 'source_add', {
                         notebook_id: notebookId,
+                        source_type: 'text',
                         text: activeNoteContent,
                         title: `[Obsidian] ${noteTitle}`
                     });

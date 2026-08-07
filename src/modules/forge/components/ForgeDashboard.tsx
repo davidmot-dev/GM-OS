@@ -141,8 +141,19 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
     setIsLoadingNotebooks(true);
     addLog(t('modules:session.forge_module.notebook.browsing', { id: notebookId }));
     try {
-      const result = await forgeService.callMcpTool<{ notebook?: unknown, content?: unknown }>('notebooklm-mcp-server', 'notebook_get', { notebook_id: notebookId });
-      
+      const result = await forgeService.callMcpTool<{ notebook?: unknown, sources?: unknown, content?: unknown }>('notebooklm-mcp-server', 'notebook_get', { notebook_id: notebookId });
+
+      // Le client Gemini Notebook renvoie les sources **à côté** du carnet et
+      // non dedans : `{ notebook: {...}, sources: [...] }`. Lire `.sources` sur
+      // le seul objet `notebook` donnait une liste vide, sans erreur.
+      const siblingSources = Array.isArray(result.sources)
+        ? (result.sources as Array<{ id?: string; title?: string; source_type?: string }>).map(s => ({
+            id: s.id || 'unknown',
+            title: s.title || 'Untitled Source',
+            source_type: s.source_type || 'archive',
+          }))
+        : null;
+
       let notebookData = result.notebook || result.content;
       if (typeof notebookData === 'string') {
         try {
@@ -173,9 +184,10 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
         addLog(t('modules:session.forge_module.notebook.sources_extracted', { count: mappedSources.length }));
       } else if (notebookData && typeof notebookData === 'object') {
         const data = notebookData as Notebook & { sources?: NotebookSource[] };
-        setSelectedNotebook(data);
-        setNotebookSources(data.sources || []);
-        addLog(t('modules:session.forge_module.notebook.sources_extracted', { count: data.sources?.length || 0 }));
+        const sources = siblingSources ?? data.sources ?? [];
+        setSelectedNotebook({ ...data, sources });
+        setNotebookSources(sources);
+        addLog(t('modules:session.forge_module.notebook.sources_extracted', { count: sources.length }));
       } else {
         throw new Error("Notebook data not found in response");
       }
