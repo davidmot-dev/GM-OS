@@ -18,6 +18,10 @@ import { crossWindowSync } from '../../../services/CrossWindowEventService';
 
 export const useNexusSynchronizer = (isMainPC: boolean) => {
     const lastSyncRef = useRef(0);
+    /** Rafale en cours : la dernière valeur part à l'expiration du frein. */
+    const trailingSyncRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    /** Toujours la version courante de `handleSync`, pour que le report s'y réfère. */
+    const handleSyncRef = useRef<((force?: boolean) => void) | null>(null);
     const lastBroadcastRef = useRef<Record<string, unknown>>({});
     const lastMapFastSyncRef = useRef(0);
     const lastWhiteboardFastSyncRef = useRef(0);
@@ -57,7 +61,15 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                 };
             } else if (segmentName === 'combat') {
                 const s = useCombatStore.getState();
-                payload.combat = { combatants: s.combatants, currentTurnIdx: s.currentTurnIdx, round: s.round };
+                // `isCombatProjected` fait partie du segment, comme `isClockProjected`
+                // pour l'horloge : sans lui, un destinataire qui ne recevrait que ce
+                // segment garderait indéfiniment son ancien état de projection.
+                payload.combat = {
+                    combatants: s.combatants,
+                    currentTurnIdx: s.currentTurnIdx,
+                    round: s.round,
+                    isCombatProjected: s.isCombatProjected,
+                };
             } else if (segmentName === 'whiteboard') {
                 const s = useWhiteboardStore.getState();
                 payload.whiteboard = { 
@@ -110,7 +122,28 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
         }
 
         const now = Date.now();
-        if (!force && now - lastSyncRef.current < 500) return; // Increased from 100ms to 500ms
+        if (!force && now - lastSyncRef.current < 500) {
+            // Report plutôt qu'abandon. Un `return` sec perdait définitivement la
+            // dernière valeur d'une rafale : l'état diffusé restait celui d'avant,
+            // sans que rien ne le rattrape.
+            //
+            // C'est la seule voie qu'emprunte le combat — `useCombatStore` est
+            // abonné à `handleSync`, quand l'horloge, le tableau et la carte
+            // passent par `syncFast`, qui ne freine ni l'horloge ni les dés. D'où
+            // une bascule de projection qui s'appliquait pour ces trois-là et pas
+            // pour le combat.
+            if (trailingSyncRef.current) clearTimeout(trailingSyncRef.current);
+            trailingSyncRef.current = setTimeout(() => {
+                trailingSyncRef.current = null;
+                handleSyncRef.current?.(true);
+            }, 500 - (now - lastSyncRef.current));
+            return;
+        }
+
+        if (trailingSyncRef.current) {
+            clearTimeout(trailingSyncRef.current);
+            trailingSyncRef.current = null;
+        }
         lastSyncRef.current = now;
 
         try {
@@ -329,6 +362,10 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
         }
     }, [isMainPC]);
 
+    // Le report du frein passe par cette référence : `handleSync` ne peut pas
+    // s'appeler lui-même depuis son propre `useCallback`.
+    handleSyncRef.current = handleSync;
+
     // Subscriptions logic
     useEffect(() => {
         if (!isMainPC) return;
@@ -347,7 +384,13 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
 
         handleSync(true); // Initial sync
 
-        return () => unsubs.forEach(u => u());
+        return () => {
+            unsubs.forEach(u => u());
+            if (trailingSyncRef.current) {
+                clearTimeout(trailingSyncRef.current);
+                trailingSyncRef.current = null;
+            }
+        };
     }, [isMainPC, handleSync, syncFast]);
 
     return { handleSync, syncFast };
