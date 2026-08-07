@@ -21,11 +21,18 @@ describe('relayPolicy — la politique seule', () => {
         expect(evaluateRelay(role, type).allowed).toBe(true);
     });
 
+    it.each(['hub', 'projector'] as const)(
+        "la fenêtre '%s' peut émettre 'combat' : elle en renvoie l'écho",
+        (role) => {
+            // Observé en conditions réelles le 2026-08-07 : 92 refus en une minute,
+            // par rafales. Voir le commentaire de ROLE_ALLOWED.
+            expect(evaluateRelay(role, 'combat').allowed).toBe(true);
+        },
+    );
+
     it.each([
         ['hub', 'clock'],
-        ['hub', 'combat'],
         ['projector', 'clock'],
-        ['projector', 'combat'],
     ] as const)("la fenêtre '%s' ne peut pas émettre '%s' — flux du MJ", (role, type) => {
         const verdict = evaluateRelay(role, type);
         expect(verdict.allowed).toBe(false);
@@ -89,11 +96,11 @@ describe('relayPolicy — câblée dans le relais', () => {
     it("un message refusé n'atteint personne", () => {
         const { gm, hub, publish, onDenied } = setup();
 
-        publish(2, 'combat', '{"type":"combat"}');
+        publish(2, 'clock', '{"type":"clock"}');
 
         expect(gm.received).toHaveLength(0);
         expect(hub.received).toHaveLength(0);
-        expect(onDenied).toHaveBeenCalledWith('hub', 'combat', expect.stringContaining('combat'));
+        expect(onDenied).toHaveBeenCalledWith('hub', 'clock', expect.stringContaining('clock'));
     });
 
     it('le MJ reste libre de tout émettre', () => {

@@ -48,11 +48,33 @@ export type RelayRole = 'gm' | 'hub' | 'projector' | 'unknown';
  * relecture, qui avait révélé la régression `remote:request-sync` au point 9.
  */
 const ROLE_ALLOWED: Record<Exclude<RelayRole, 'gm'>, ReadonlySet<string>> = {
-    hub: new Set(['hub:ready', 'map', 'map:lock', 'map:unlock', 'whiteboard']),
-    projector: new Set(['hub:ready', 'map', 'map:lock', 'map:unlock', 'whiteboard']),
+    hub: new Set(['combat', 'hub:ready', 'map', 'map:lock', 'map:unlock', 'whiteboard']),
+    projector: new Set(['combat', 'hub:ready', 'map', 'map:lock', 'map:unlock', 'whiteboard']),
     // Une fenêtre qu'on ne sait pas rattacher n'émet rien.
     unknown: new Set<string>(),
 };
+
+/**
+ * Pourquoi `combat` figure dans ces listes alors que le flux vient du MJ.
+ *
+ * La première version l'en excluait, sur lecture du code : `HubCombatTracker`
+ * ne fait que lire, aucune vue secondaire n'appelle d'action de combat. L'usage
+ * a démenti immédiatement — 92 refus en une minute d'essai le 2026-08-07, par
+ * rafales de cinq à dix en quelques millisecondes.
+ *
+ * Ce ne sont pas des gestes : ce sont des échos. Une fenêtre secondaire applique
+ * le `combat` du MJ, sa souscription de store repart, et elle republie. Le garde
+ * `isApplyingRemoteUpdate` ne couvre que le temps synchrone de l'application.
+ *
+ * Le refus ne protégeait donc presque rien : la branche MJ de `handleMessage`
+ * n'a **aucun cas `combat`**, ces messages y étaient déjà jetés en silence. Il ne
+ * fermait que le chemin fenêtre secondaire → projecteur, et au prix de rendre le
+ * journal d'audit illisible.
+ *
+ * Le vrai correctif est en amont, dans l'écho lui-même — c'est le point 3 du plan
+ * des restes, à traiter sur symptôme. La politique n'est pas l'endroit pour
+ * rattraper un flux trop bavard.
+ */
 
 export interface RelayVerdict {
     allowed: boolean;
