@@ -31,8 +31,9 @@ const MapProjectionModal: React.FC = () => {
         // l'ordre inverse diffuserait un état où les deux sont actifs.
         claimProjection('map');
 
-        // Sync everything to Player Hub
-        syncToPlayers();
+        // Sync everything to Player Hub. `start` : c'est ici, et seulement ici,
+        // qu'un geste du MJ démarre la projection de la carte.
+        syncToPlayers({ start: true });
         
         // Ensure physical displays are closed when projecting to Hub (Exclusivity)
         if (window.appBridge?.image?.closeAllDisplays) {

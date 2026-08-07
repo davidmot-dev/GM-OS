@@ -114,7 +114,13 @@ interface MapState {
     projectedMapVolume: number;
 
     projectionTarget: 'hub' | 'monitor' | null;
-    syncToPlayers: () => void;
+    /**
+     * Rafraîchit l'instantané projeté de la carte.
+     *
+     * `start: true` **démarre** la projection si aucune n'est active — réservé au
+     * geste explicite du MJ, dans `MapProjectionModal`.
+     */
+    syncToPlayers: (options?: { start?: boolean }) => void;
     clearProjectedState: () => void;
     resetProjectionState: () => void;
 
@@ -368,7 +374,7 @@ export const useMapStore = create<MapState>()(
 
             resetView: () => set(state => ({ viewResetCounter: state.viewResetCounter + 1 })),
 
-            syncToPlayers: () => {
+            syncToPlayers: (options?: { start?: boolean }) => {
                 const state = get();
                 
                 // CRITICAL FIX: Slaves (Hub/Projector/Tablet) should NEVER run syncToPlayers.
@@ -383,7 +389,19 @@ export const useMapStore = create<MapState>()(
                 if (isSlaveWindow) {
                     return;
                 }
-                
+
+                // Rafraîchir ce qui n'est pas projeté n'a pas de sens, et le
+                // `|| 'hub'` ci-dessous transformait ce rafraîchissement en
+                // démarrage de projection.
+                //
+                // Les appels internes du store se gardaient déjà tous par
+                // `if (get().projectionTarget)`. `App.tsx` avait oublié cette
+                // garde en resynchronisant la carte à chaque changement de la
+                // liste des combattants — et comme `nextTurn` reconstruit ce
+                // tableau, « Tour Suivant » projetait la carte. La règle vit
+                // désormais ici, où on ne peut plus l'oublier.
+                if (!options?.start && state.projectionTarget === null) return;
+
                 const updates: Partial<MapState> = {
                     projectionTarget: state.projectionTarget || 'hub',
                     projectedTokens: [...state.tokens],
