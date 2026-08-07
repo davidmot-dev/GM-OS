@@ -252,4 +252,136 @@ Pour éviter les dépendances circulaires qui bloquent le build Vite (ex: Sessio
 
 ---
 
-*Dernière mise à jour : 17 Juin 2026 - GM-OS v6.5.0 - Fix v2 du Whiteboard-OS : correction du couplage resize/redraw destructif, mutations atomiques finishDrawing, nettoyage de la persistance localStorage.*
+## 🔐 Persistance & Perte de Données (2026-08-07)
+
+### 1. Une charge partielle sous la même clé détruit l'état complet
+- **Défi** : Toutes les campagnes ont disparu, remplacées par les données de démonstration.
+- **Cause** : `PersistenceService.partialize` faisait persister aux fenêtres **secondaires** une charge réduite à six champs de sélection, **sans `campaigns`**, sous la même clé IndexedDB et dans la même origine que l'état complet du MJ.
+- **Pourquoi ça ne se voyait pas** : le dégât ne se matérialise qu'au **démarrage à froid suivant**. Le store s'initialise sur les mocks, lit une charge sans `campaigns`, et la fusion superficielle de Zustand laisse les mocks en place — que le MJ persiste alors par-dessus les vraies données. Sur le moment, la fenêtre MJ garde tout en mémoire : rien ne paraît.
+- **Solution** : l'interdiction d'écriture est posée **au seul point qui écrit** (`gmOnlyStateStorage`), pas dans `partialize`. `getItem` reste ouvert à toutes les fenêtres.
+- **Leçons** :
+  - **Une charge réduite reste une charge.** Garder la branche « partialize secondaire » comme filet de sécurité, c'est conserver l'arme.
+  - Plusieurs fenêtres sur la même origine partagent la même base. Toute écriture concurrente sous une clé unique est un écrasement en puissance — `useCombatStore` (`gmos-combat-storage`) est dans la même configuration.
+  - Un bug de persistance à effet différé ne se détecte pas à l'usage. Il faut un test qui simule le cycle complet : écriture secondaire, puis démarrage à froid.
+
+### 2. Récupération : les clichés Windows avant l'archéologie
+- **Défi** : Après la perte, déterminer ce qui restait récupérable.
+- **Erreur commise** : avoir conclu « non récupérable localement » après une longue analyse des fichiers leveldb, **avant** d'avoir pensé aux clichés instantanés. Un cliché de la veille contenait tout.
+- **Leçons de méthode** (dans cet ordre) :
+  1. **Sauvegarder l'état sinistré** avant tout diagnostic, application fermée.
+  2. **Tenter les clichés instantanés** (`vssadmin list shadows`, *Versions précédentes*) — la piste la moins coûteuse et la plus complète.
+  3. **Copier, ne pas restaurer.** Le bouton `Restaurer` écrit en place et détruit le point de comparaison. `Ouvrir` puis copie vers un dossier neuf, vérification, et seulement ensuite bascule.
+- **Pièges d'analyse leveldb, vérifiés** :
+  - Les fichiers `.ldb` sont **compressés en snappy** : l'absence de résultat au `grep` n'y prouve rien. Seul le `.log`, non compressé, est lisible en octets bruts.
+  - Le journal est **append-only** : l'ordre des offsets est l'ordre du temps. C'est ce qui permet de dater une bascule.
+  - Chrome stocke les valeurs de `localStorage` en **UTF-16** dès qu'elles contiennent un accent — une recherche en octets bruts passe à côté des données en français.
+  - Les valeurs IndexedDB volumineuses sont **externalisées en fichiers blob** (marqueur `application/vnd.blink-idb-value-wrapper`). Ne pas conclure à l'absence d'une donnée sur la seule lecture du journal. Un répertoire de blobs vide est au contraire le signe le plus net d'une perte.
+
+---
+
+## 🔀 Transport entre Fenêtres Locales (2026-08-07)
+
+### 1. Un commentaire qui énonce une garantie n'en est pas une
+- **Défi** : `CrossWindowEventService` portait depuis toujours : *« Never relay raw slave payload to other slaves. »*
+- **Réalité** : le relais livrait à **toutes** les fenêtres sauf l'émetteur. Le projecteur recevait donc le payload brut du Player Hub et l'adoptait, cible de projection comprise.
+- **Conséquence** : le bug de l'étape 6 (projection qui s'éteint toute seule) était resté vivant côté projecteur, **masqué** par la rediffusion complète du MJ qui réparait 50 ms plus tard.
+- **Solution** : `relayAudience` (`electron/relayPolicy.ts`) n'adresse plus l'état d'une fenêtre secondaire qu'au MJ, qui l'assainit et réémet la version faisant autorité. Les verrous de jetons restent ouverts à tous — ils ne portent aucun état partagé.
+- **Leçons** :
+  - Deux bugs majeurs de cette session étaient exactement ce motif : un commentaire décrivant fidèlement une intention que **rien n'appliquait** (`partialize` et le relais). Devant une garantie énoncée en commentaire, chercher le code qui l'applique.
+  - Une rustine qui répare en différé **cache** le défaut qu'elle compense. Avant d'alléger une réparation, vérifier ce qu'elle répare — sinon on rallume la panne.
+
+### 2. Contrôler par type est gratuit, par champ ne l'est pas
+- **Défi** : Appliquer une politique de rôle au relais, qui transporte une chaîne déjà sérialisée.
+- **Solution** : le **type** voyage en argument IPC séparé — le process principal arbitre sans ouvrir le JSON. Le contrôle par **champ** resterait dans le renderer (`stripProjectionTarget`), mais s'appuie désormais sur le rôle **estampillé par le relais**, que l'émetteur ne peut pas forger.
+- **Leçon** : contrôler un champ imposerait `JSON.parse` + re-sérialisation sur le flux le plus chaud, soit les +19 ms que le passage à la chaîne avait fait gagner. Déplacer un contrôle a un coût de transport : le mesurer avant de le déplacer.
+
+### 3. Refus par défaut, mais liste établie sur l'observé
+- **Défi** : La première liste d'autorisations, bâtie sur lecture du code, excluait `combat` des flux d'une fenêtre secondaire.
+- **Réalité** : 92 refus en une minute d'essai. Ce n'étaient pas des gestes mais des **échos** — une fenêtre secondaire applique l'état du MJ, sa souscription de store repart, et elle republie. `isApplyingRemoteUpdate` ne couvre que le temps synchrone de l'application.
+- **Leçon** : c'est la **journalisation** qui a corrigé la liste en une minute, pas la relecture. Toute politique de refus par défaut doit journaliser ses refus dès le premier jour.
+
+### 4. Un minuteur partagé fait taire le flux le moins bavard
+- **Défi** : Une rafale de dessin annulait la rediffusion de carte en attente, et réciproquement.
+- **Solution** : un minuteur **par flux**.
+- **Leçon** : un débounce partagé entre deux sources indépendantes n'est pas un débounce, c'est une famine.
+
+### 5. `isTokenLocked` : l'expiration change la valeur sans message
+- **Défi** : Rendre réactif un état qui vit hors de React.
+- **Solution** : abonnement dans le service + `useTokenLock` par `useSyncExternalStore`.
+- **Leçon** : le cas non trivial n'est pas le message, c'est le **temps**. Un verrou meurt au bout de cinq secondes sans que personne n'émette rien : il faut programmer le réveil correspondant. À noter que seul l'**affichage** était en cause — `requestLock` protégeait déjà.
+
+---
+
+## 🔁 Freins & Cadences (2026-08-07)
+
+### 1. Un frein qui abandonne perd la dernière valeur
+- **Défi** : La bascule de projection du combat ne s'appliquait jamais, alors que l'horloge, le tableau et la carte fonctionnaient.
+- **Cause** : `handleSync` faisait un `return` sec sur tout appel survenant moins de 500 ms après le précédent — sans report ni reprise. Le combat est le **seul** flux dont la bascule emprunte cette voie ; les autres passent par `syncFast`, qui ne freine ni l'horloge ni les dés.
+- **Solution** : le frein **reporte** au lieu d'abandonner (trailing edge).
+- **Leçon** : un throttle sans bord de fuite perd silencieusement le dernier état d'une rafale — c'est-à-dire précisément celui qui compte.
+
+### 2. Confondre « rafraîchir » et « démarrer »
+- **Défi** : « Tour Suivant » en combat projetait la carte.
+- **Cause** : `syncToPlayers` faisait `projectionTarget: state.projectionTarget || 'hub'` sans condition, donc tout rafraîchissement **allumait** la projection. `App.tsx` resynchronise la carte à chaque changement de la liste des combattants, et `nextTurn` reconstruit ce tableau.
+- **Indice révélateur** : les **26 appels internes** du store se gardaient déjà tous par `if (get().projectionTarget)`. Le contrat voulu était donc bien « rafraîchir » ; un seul appelant avait oublié la garde.
+- **Solution** : la règle vit dans `syncToPlayers`, et le démarrage devient explicite (`{ start: true }`).
+- **Leçon** : quand tous les appelants sauf un répètent la même garde, la garde est au mauvais endroit. Ne pas en ajouter une de plus — la déplacer.
+
+### 3. Borner ce qui est déclenché par le réseau
+- **Défi** : `remote:request-sync` déclenchait une synchronisation complète non freinée, à chaque connexion de socket et sur simple message d'une tablette.
+- **Solution** : plancher d'une seconde entre synchronisations forcées, qui **reporte** au lieu de refuser.
+- **Leçon** : le coût n'était pas le poids du payload (305 Ko) mais le **travail de le construire** — résolution de tous les médias. Mesurer le coût de production, pas seulement celui de transmission.
+
+---
+
+## 🖥️ Rendu & Fuites d'Information (2026-08-07)
+
+### 1. Une garde d'affichage absente ne se voit pas
+- **Défi** : Le bouton de projection du combat semblait sans effet sur le Player Hub, alors qu'il fonctionnait sur la tablette.
+- **Cause** : `HubCombatTracker` était rendu **sans garde** dans `PlayerHub` ; `hasCombatants` n'y servait qu'à une classe de mise en page. La tablette, elle, conditionne bien son rendu.
+- **Ce qui a désigné la cause** : l'**écart entre deux vues** affichant le même état depuis la même source. Ni le store, ni le transport, ni la synchronisation n'étaient en cause.
+- **Leçon** : devant « ça marche ici mais pas là », comparer les deux rendus **avant** de remonter la chaîne de données. J'ai perdu du temps sur trois hypothèses de transport.
+
+### 2. Les jumeaux `ChronicleForge` / `ForgeDashboard`
+- **Défi** : Corrigé la sélection de carnet dans un panneau, annoncé le problème réglé — l'utilisateur employait l'autre.
+- **Leçon** : ces deux composants portent le **même titre traduit** et une logique quasi identique. Tout changement touchant la Forge doit chercher les deux. Plus généralement : après un correctif dans un composant, chercher les autres appelants du même outil **avant** d'annoncer que c'est réglé.
+
+### 3. Le Hub est un écran partagé
+- **Décision** : le suivi de combat du Hub n'affiche plus les points de vie — ni le compte exact, ni la barre miniature, qui dit la même chose en moins précis.
+- **Conservé** : les jauges des systèmes de santé alternatifs (blessures, horloge, stress). Une horloge de progression est souvent publique à la table et n'est pas un compte de PV.
+- **Leçon** : une fuite d'information de ce genre ne se voit pas en relisant le code — elle se constate en partie, trop tard. D'où un test qui vérifie l'**absence** de PV dans le rendu.
+
+---
+
+## 🤖 MCP & Dépendances Externes (2026-08-07)
+
+### 1. Deux pannes empilées : vérifier l'environnement avant le code
+- **Panne 1** : `SessionNotCreatedException` — ChromeDriver attendait Chrome 151, le navigateur exécutait 150. Une mise à jour **téléchargée attendait un redémarrage complet** de Chrome ; le pilote, lui, se cale sur la version *installée*.
+- **Leçon** : devant un `SessionNotCreatedException`, vérifier `chrome://settings/help` **avant** toute autre chose. Ça se reproduira à chaque version majeure laissée ouverte plusieurs jours.
+- **Panne 2, masquée par la première** : Google a migré NotebookLM vers **Gemini Notebook** sur `notebook.google.com`. Le paquet `notebooklm-mcp` était figé sur l'ancien domaine — son test de connexion cherchait `notebooklm.google.com` dans l'URL courante, condition devenue **impossible à satisfaire**. L'authentification expirait indéfiniment, quel que soit le nombre de reconnexions.
+- **Leçon** : quand une ré-authentification répétée ne change rien, ce n'est pas la session qui est en cause mais le **test** de la session.
+
+### 2. Un échec silencieux coûte des heures
+- **Défi** : Le bouton de ré-authentification lançait un processus qui attendait une action humaine — mais en `detached` avec `stdio: 'ignore'`, et renvoyait toujours `{ success: true }`.
+- **Conséquence** : le message « Please log in » n'a jamais atteint un écran. La panne a tenu des mois, et deux allers-retours de diagnostic.
+- **Solution** : le pont capture désormais la sortie et détecte une mort précoce du processus.
+- **Leçon** : ne jamais renvoyer un succès sur la seule création d'un processus. Au minimum, détecter l'échec instantané et journaliser la sortie.
+
+### 3. Les noms d'outils survivent, la forme des réponses change
+- **Défi** : Après migration vers `notebooklm-mcp-cli`, les carnets s'affichaient mais **jamais leurs sources**, sans la moindre erreur.
+- **Cause** : le nouveau client renvoie `{ notebook: {...}, sources: [...] }` — les sources **à côté** du carnet, non dedans. Le code lisait `.sources` sur le seul objet `notebook`.
+- **Leçon** : c'est le pire cas de migration — rien ne casse bruyamment, la liste est simplement vide. Après un changement de dépendance, vérifier la **forme** des réponses de chaque outil réellement utilisé, pas seulement les noms.
+
+### 4. Sur Windows, `python` du PATH n'est pas l'interpréteur des paquets
+- **Défi** : `PYTHON_EXE = 'python'` résolvait vers `WindowsApps\python.exe`, le relais du Microsoft Store, où rien n'est installé.
+- **Solution** : résolution explicite dans `mcp_bridge.ts` (variable `GMOS_PYTHON`, puis installations sous `%LOCALAPPDATA%\Python`, puis PATH).
+- **Leçon** : sur Windows, ne jamais se fier à `python` nu pour lancer un service dont les dépendances sont installées ailleurs.
+
+### 5. Le process principal ne se recharge pas à chaud
+- **Défi** : Après modification du protocole IPC, tous les flux sont tombés d'un coup — deux signalements de bugs inexistants.
+- **Cause** : Vite recharge le **renderer**, jamais le process principal. Le renderer envoyait la nouvelle signature, le main lisait l'ancienne.
+- **Leçon** : toute modification de `electron/` exige un **redémarrage complet** de l'application. Signature d'un décalage de version : plusieurs flux indépendants tombent **simultanément** — c'est une panne de transport, pas quatre bugs.
+
+---
+
+*Dernière mise à jour : 7 Août 2026 - GM-OS v6.5.0 - Session de durcissement : récupération des campagnes, unification du transport (points 1 à 5 clos), migration MCP vers Gemini Notebook.*
