@@ -129,8 +129,20 @@ const ChronicleForge: React.FC = () => {
   const handleNotebookSelect = async (notebookId: string) => {
     setIsLoadingNotebooks(true);
     try {
-      const mcpResult = await callMcpToolWithRetry<{ notebook?: unknown, content?: unknown }>('notebooklm-mcp-server', 'notebook_get', { notebook_id: notebookId });
-      
+      const mcpResult = await callMcpToolWithRetry<{ notebook?: unknown, sources?: unknown, content?: unknown }>('notebooklm-mcp-server', 'notebook_get', { notebook_id: notebookId });
+
+      // Le client Gemini Notebook renvoie les sources **à côté** du carnet et
+      // non dedans : `{ notebook: {...}, sources: [...] }`. Lire `.sources` sur
+      // le seul objet `notebook` donnait une liste vide, sans erreur — le carnet
+      // s'affichait, ses sources jamais.
+      const siblingSources = Array.isArray(mcpResult.sources)
+        ? (mcpResult.sources as Array<{ id?: string; title?: string; source_type?: string }>).map(s => ({
+            id: s.id || 'unknown',
+            title: s.title || 'Untitled Source',
+            source_type: s.source_type || 'archive',
+          }))
+        : null;
+
       let notebookData = mcpResult.notebook || mcpResult.content;
       if (typeof notebookData === 'string') {
         try {
@@ -160,8 +172,9 @@ const ChronicleForge: React.FC = () => {
         setNotebookSources(mappedSources);
       } else if (notebookData && typeof notebookData === 'object') {
         const data = notebookData as Notebook & { sources?: NotebookSource[] };
-        setSelectedNotebook(data);
-        setNotebookSources(data.sources || []);
+        const sources = siblingSources ?? data.sources ?? [];
+        setSelectedNotebook({ ...data, sources });
+        setNotebookSources(sources);
       }
     } catch (err) {
       console.error(err);
