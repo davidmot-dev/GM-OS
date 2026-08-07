@@ -39,7 +39,15 @@ class CrossWindowEventService {
     private isApplyingRemoteUpdate: boolean = false;
     private tokenLocks: Map<string, { ownerId: string, timestamp: number }> = new Map();
     private throttleTimer: ReturnType<typeof setTimeout> | null = null;
-    private relayTimer: ReturnType<typeof setTimeout> | null = null;
+    /**
+     * Un minuteur par flux, et non un seul partagé.
+     *
+     * Avec un minuteur unique, une rafale de dessin annulait la rediffusion de
+     * la carte en attente, et réciproquement : le flux le plus bavard faisait
+     * taire l'autre.
+     */
+    private mapRelayTimer: ReturnType<typeof setTimeout> | null = null;
+    private whiteboardRelayTimer: ReturnType<typeof setTimeout> | null = null;
     /**
      * Une fenêtre secondaire a-t-elle déjà reçu l'état partagé ?
      *
@@ -124,13 +132,14 @@ class CrossWindowEventService {
                 case 'map':
                     // Apply the slave's update to Master store
                     this.applyRemoteUpdate('map', payload);
-                    // CRITICAL: Never relay raw slave payload to other slaves.
-                    // The payload may have stale projectionTarget, partial data, or
-                    // other slave-specific state that would corrupt other windows.
-                    // Instead, debounce a full-state broadcast from Master (source of truth).
-                    if (this.relayTimer) clearTimeout(this.relayTimer);
-                    this.relayTimer = setTimeout(() => {
-                        this.broadcastFullState();
+                    // Le payload brut d'une fenêtre secondaire n'atteint plus les
+                    // autres : le relais ne le livre qu'au MJ (voir
+                    // electron/relayPolicy.ts, `relayAudience`). C'est donc à lui
+                    // de rediffuser la version qui fait autorité — et seulement
+                    // le flux concerné.
+                    if (this.mapRelayTimer) clearTimeout(this.mapRelayTimer);
+                    this.mapRelayTimer = setTimeout(() => {
+                        this.broadcastMapState();
                     }, 50);
                     break;
                 case 'whiteboard':
@@ -155,9 +164,13 @@ class CrossWindowEventService {
                         'whiteboard',
                         senderRole === 'gm' ? payload : stripProjectionTarget(payload),
                     );
-                    if (this.relayTimer) clearTimeout(this.relayTimer);
-                    this.relayTimer = setTimeout(() => {
-                        this.broadcastFullState();
+                    // Seul le tableau a changé. Rediffuser la carte au passage
+                    // renvoyait `projectedFogDataUrl` — un PNG en base64 de
+                    // plusieurs centaines de kilooctets — à chaque rafale de
+                    // dessin d'un joueur.
+                    if (this.whiteboardRelayTimer) clearTimeout(this.whiteboardRelayTimer);
+                    this.whiteboardRelayTimer = setTimeout(() => {
+                        this.broadcastWhiteboardState();
                     }, 50);
                     break;
             }
@@ -470,8 +483,22 @@ class CrossWindowEventService {
         return true;
     }
 
+    /**
+     * Tout l'état partagé. Réservé à l'arrivée d'une fenêtre — `hub:ready` —,
+     * qui n'a rien et doit tout recevoir.
+     *
+     * Ne pas l'employer pour réagir à une mise à jour : le payload carte
+     * embarque `projectedFogDataUrl`, un PNG en base64 de plusieurs centaines de
+     * kilooctets. Le renvoyer parce qu'un joueur a tracé un trait, c'est le
+     * cachet d'aspirine dont l'étape 6 bis avait déjà retiré la moitié.
+     */
     private broadcastFullState() {
-        // Send everything needed for initial sync
+        this.broadcastMapState();
+        this.broadcastWhiteboardState();
+    }
+
+    /** L'état de la carte tel que le MJ le fait autorité. */
+    private broadcastMapState() {
         const map = useMapStore.getState();
         this.broadcast('map', {
             projectionTarget: map.projectionTarget,
@@ -494,11 +521,17 @@ class CrossWindowEventService {
             projectedMagicEffects: map.projectedMagicEffects,
             projectedDangerZones: map.projectedDangerZones
         });
+    }
 
-        // Les tracés partent toujours ici, sans la retenue de l'abonné : c'est
-        // le chemin de resynchronisation, et son destinataire est justement une
-        // fenêtre qui n'a rien à fusionner. En prendre note évite au passage un
-        // renvoi redondant à la prochaine mise à jour.
+    /**
+     * L'état du tableau tel que le MJ le fait autorité.
+     *
+     * Les tracés partent sans la retenue de l'abonné : c'est le chemin de
+     * resynchronisation, et son destinataire est justement une fenêtre qui n'a
+     * rien à fusionner. En prendre note évite au passage un renvoi redondant à
+     * la prochaine mise à jour.
+     */
+    private broadcastWhiteboardState() {
         const wb = useWhiteboardStore.getState();
         if (this.broadcast('whiteboard', {
             paths: wb.paths,

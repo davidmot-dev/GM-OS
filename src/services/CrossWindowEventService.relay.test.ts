@@ -58,12 +58,18 @@ function createRelayHub(roleOf: (windowId: number) => RelayRole = () => 'gm') {
     let generation = 0;
 
     const denials: Array<{ role: RelayRole; type: string; detail: string }> = [];
+    /** Ce qui a réellement été livré, et à qui. */
+    const delivered: Array<{ to: number; type: string }> = [];
 
     const targets = (): RelayTarget[] =>
         [...subscribers.keys()].map(id => ({
             id,
+            role: roleOf(id),
             isDestroyed: () => false,
             send: (_channel: string, message: string, senderRole: RelayRole) => {
+                try {
+                    delivered.push({ to: id, type: JSON.parse(message).type });
+                } catch { /* message illisible : hors sujet ici */ }
                 // L'IPC est asynchrone : livrer de façon synchrone créerait une
                 // réentrance qui n'existe pas en production.
                 queueMicrotask(() => subscribers.get(id)?.forEach(cb => cb(message, senderRole)));
@@ -83,6 +89,7 @@ function createRelayHub(roleOf: (windowId: number) => RelayRole = () => 'gm') {
 
     return {
         denials,
+        delivered,
         bridgeFor(windowId: number) {
             const myGeneration = generation;
             if (!subscribers.has(windowId)) subscribers.set(windowId, new Set());
@@ -104,6 +111,7 @@ function createRelayHub(roleOf: (windowId: number) => RelayRole = () => 'gm') {
             generation += 1;
             subscribers.clear();
             denials.length = 0;
+            delivered.length = 0;
         },
     };
 }
@@ -216,6 +224,27 @@ describe('relais — deux fenêtres, tableau blanc', () => {
         expect(wbGm.getState().activePath?.id).toBe('active');
         expect(wbHub.getState().projectionTarget).toBe('hub');
         expect(wbGm.getState().projectionTarget).toBe('hub');
+    });
+
+    it("le dessin d'un joueur ne fait plus repartir la carte", async () => {
+        // La rediffusion du MJ renvoyait tout l'état, carte comprise — dont
+        // `projectedFogDataUrl`, un PNG en base64 de plusieurs centaines de
+        // kilooctets — parce qu'un joueur avait tracé un trait.
+        wbGm.setState({ projectionTarget: 'hub' });
+        await settleWithRelayTimer();
+        hub.delivered.length = 0;
+
+        for (const n of [1, 2, 3]) {
+            wbHub.getState().setActivePath({
+                id: `trait-${n}`, points: [{ x: n / 10, y: n / 10 }],
+                color: '#f00', width: 2, tool: 'brush',
+            }, 'dessinateur-hub');
+        }
+        await settleWithRelayTimer();
+
+        const types = hub.delivered.map(d => d.type);
+        expect(types).toContain('whiteboard');
+        expect(types).not.toContain('map');
     });
 
     it('le hub termine son tracé : les deux fenêtres convergent', async () => {

@@ -51,10 +51,11 @@ describe('relayPolicy — la politique seule', () => {
 });
 
 /** Cible factice qui note ce qu'elle a reçu. */
-function fakeTarget(id: number) {
+function fakeTarget(id: number, role: RelayRole) {
     const received: Array<{ message: string; senderRole: string }> = [];
     const target: RelayTarget = {
         id,
+        role,
         isDestroyed: () => false,
         send: (_channel, message, senderRole) => { received.push({ message, senderRole }); },
     };
@@ -76,13 +77,17 @@ describe('relayPolicy — câblée dans le relais', () => {
     const roleOf = (id: number): RelayRole => (id === 1 ? 'gm' : id === 2 ? 'hub' : 'projector');
 
     function setup() {
-        const gm = fakeTarget(1);
-        const hub = fakeTarget(2);
+        const gm = fakeTarget(1, 'gm');
+        const hub = fakeTarget(2, 'hub');
+        const projecteur = fakeTarget(3, 'projector');
         const onDenied = vi.fn();
         const { ipc, publish } = fakeIpc();
 
-        installWindowRelay(ipc, () => [gm.target, hub.target], { resolveRole: roleOf, onDenied });
-        return { gm, hub, publish, onDenied };
+        installWindowRelay(ipc, () => [gm.target, hub.target, projecteur.target], {
+            resolveRole: roleOf,
+            onDenied,
+        });
+        return { gm, hub, projecteur, publish, onDenied };
     }
 
     it('un message légitime du hub atteint le MJ, estampillé de son rôle', () => {
@@ -110,6 +115,40 @@ describe('relayPolicy — câblée dans le relais', () => {
 
         expect(hub.received).toEqual([{ message: '{"type":"combat"}', senderRole: 'gm' }]);
     });
+
+    it("l'état d'une fenêtre secondaire n'atteint pas les autres fenêtres secondaires", () => {
+        // Le projecteur adoptait le payload brut du Hub, cible de projection
+        // comprise — le bug de l'étape 6, que la rediffusion du MJ masquait.
+        const { gm, projecteur, publish } = setup();
+
+        publish(2, 'whiteboard', '{"type":"whiteboard"}');
+
+        expect(gm.received).toHaveLength(1);
+        expect(projecteur.received).toHaveLength(0);
+    });
+
+    it('le MJ, lui, atteint bien toutes les fenêtres', () => {
+        const { hub, projecteur, publish } = setup();
+
+        publish(1, 'whiteboard', '{"type":"whiteboard"}');
+
+        expect(hub.received).toHaveLength(1);
+        expect(projecteur.received).toHaveLength(1);
+    });
+
+    it.each(['map:lock', 'map:unlock'])(
+        "'%s' d'une fenêtre secondaire va à tout le monde",
+        (type) => {
+            // Les verrous ne portent aucun état partagé : les retenir laisserait
+            // un jeton saisissable deux fois.
+            const { gm, projecteur, publish } = setup();
+
+            publish(2, type, `{"type":"${type}"}`);
+
+            expect(gm.received).toHaveLength(1);
+            expect(projecteur.received).toHaveLength(1);
+        },
+    );
 
     it('un émetteur inconnu du registre est refusé', () => {
         const { gm, publish, onDenied } = setup();

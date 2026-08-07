@@ -24,7 +24,7 @@
  * un détail d'implémentation.
  */
 
-import { evaluateRelay, type RelayRole } from './relayPolicy';
+import { evaluateRelay, relayAudience, type RelayRole } from './relayPolicy';
 
 export const RELAY_PUBLISH_CHANNEL = 'relay:publish';
 export const RELAY_MESSAGE_CHANNEL = 'relay:message';
@@ -33,6 +33,8 @@ export const RELAY_MESSAGE_CHANNEL = 'relay:message';
 export interface RelayTarget {
     /** Identifiant du `webContents`, comparé à celui de l'émetteur. */
     id: number;
+    /** Rôle de la fenêtre destinataire, pour l'aiguillage par audience. */
+    role: RelayRole;
     isDestroyed(): boolean;
     send(channel: string, message: string, senderRole: RelayRole): void;
 }
@@ -122,6 +124,13 @@ export function installWindowRelay(
             return;
         }
 
-        relayToOthers(listTargets(), event.sender.id, message, role);
+        // L'état d'une fenêtre secondaire ne va qu'au MJ, qui l'assainit et
+        // réémet la version faisant autorité. Voir `relayAudience`.
+        const targets = listTargets();
+        const audience = relayAudience(role, type) === 'gm-only'
+            ? targets.filter(target => target.role === 'gm')
+            : targets;
+
+        relayToOthers(audience, event.sender.id, message, role);
     });
 }

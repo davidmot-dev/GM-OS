@@ -6,12 +6,16 @@ import {
     RELAY_PUBLISH_CHANNEL,
     type RelayTarget,
 } from './WindowRelay';
+import type { RelayRole } from './relayPolicy';
 
 /** Fenêtre factice : enregistre ce qu'elle reçoit. */
-function fakeWindow(id: number, options: { destroyed?: boolean; throws?: boolean } = {}) {
+function fakeWindow(id: number, options: { destroyed?: boolean; throws?: boolean; role?: RelayRole } = {}) {
     const received: { channel: string; message: string }[] = [];
     const target: RelayTarget & { received: typeof received } = {
         id,
+        // Ces cas portent sur le transport, pas sur l'aiguillage par audience :
+        // des destinataires MJ laissent passer tout ce qui est émis.
+        role: options.role ?? 'gm',
         received,
         isDestroyed: () => options.destroyed === true,
         send: (channel, message) => {

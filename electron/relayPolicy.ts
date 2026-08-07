@@ -76,6 +76,36 @@ const ROLE_ALLOWED: Record<Exclude<RelayRole, 'gm'>, ReadonlySet<string>> = {
  * rattraper un flux trop bavard.
  */
 
+/**
+ * Types qu'une fenêtre secondaire adresse à tout le monde, et non au seul MJ.
+ *
+ * Les verrous de jetons ne portent aucun état partagé : ils ne peuvent rien
+ * écraser, et les retenir laisserait un jeton saisissable deux fois pendant les
+ * premières secondes d'une fenêtre.
+ */
+const BROADCAST_FROM_ANY: ReadonlySet<string> = new Set(['map:lock', 'map:unlock']);
+
+/**
+ * À qui livrer un message, selon le rôle de son émetteur.
+ *
+ * `CrossWindowEventService` porte depuis toujours ce commentaire : *« Never
+ * relay raw slave payload to other slaves. The payload may have stale
+ * projectionTarget, partial data, or other slave-specific state that would
+ * corrupt other windows. »* L'intention était juste, mais rien ne l'appliquait :
+ * le relais livrait à toutes les fenêtres sauf l'émetteur, donc le projecteur
+ * recevait bel et bien le payload brut du Player Hub et l'adoptait — cible de
+ * projection comprise. C'est le bug de l'étape 6, resté vivant côté projecteur,
+ * que la rediffusion complète du MJ masquait en réparant 50 ms plus tard.
+ *
+ * L'état d'une fenêtre secondaire ne va donc plus qu'au MJ, qui l'assainit et
+ * réémet la version qui fait autorité. Le MJ, lui, s'adresse à tous.
+ */
+export function relayAudience(role: RelayRole, type: string): 'all' | 'gm-only' {
+    if (role === 'gm') return 'all';
+    if (BROADCAST_FROM_ANY.has(type)) return 'all';
+    return 'gm-only';
+}
+
 export interface RelayVerdict {
     allowed: boolean;
     /** Détail journalisable côté MJ ; jamais renvoyé à l'émetteur. */

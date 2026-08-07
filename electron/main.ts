@@ -784,14 +784,6 @@ app.whenReady().then(async () => {
     // Relais entre fenêtres locales, hébergé par le process principal.
     // La liste des fenêtres est relue à chaque message : le Player Hub et le
     // projecteur vont et viennent.
-    const listRelayTargets = (): RelayTarget[] =>
-        BrowserWindow.getAllWindows().map(w => ({
-            id: w.webContents.id,
-            isDestroyed: () => w.isDestroyed() || w.webContents.isDestroyed(),
-            send: (channel: string, message: string, senderRole: RelayRole) =>
-                w.webContents.send(channel, message, senderRole),
-        }));
-
     /**
      * Rôle d'une fenêtre, déduit de son `webContents.id`.
      *
@@ -802,16 +794,25 @@ app.whenReady().then(async () => {
      * Le Player Hub et la tablette partagent `hubWindow` : ils obéissent aux
      * mêmes règles, celles d'une fenêtre secondaire.
      */
-    const resolveRelayRole = (senderId: number): RelayRole => {
-        if (win && !win.isDestroyed() && win.webContents.id === senderId) return 'gm';
-        if (hubWindow && !hubWindow.isDestroyed() && hubWindow.webContents.id === senderId) return 'hub';
+    const resolveRelayRole = (windowId: number): RelayRole => {
+        if (win && !win.isDestroyed() && win.webContents.id === windowId) return 'gm';
+        if (hubWindow && !hubWindow.isDestroyed() && hubWindow.webContents.id === windowId) return 'hub';
 
         for (const [, projWin] of projectorWindows) {
-            if (!projWin.isDestroyed() && projWin.webContents.id === senderId) return 'projector';
+            if (!projWin.isDestroyed() && projWin.webContents.id === windowId) return 'projector';
         }
 
         return 'unknown';
     };
+
+    const listRelayTargets = (): RelayTarget[] =>
+        BrowserWindow.getAllWindows().map(w => ({
+            id: w.webContents.id,
+            role: resolveRelayRole(w.webContents.id),
+            isDestroyed: () => w.isDestroyed() || w.webContents.isDestroyed(),
+            send: (channel: string, message: string, senderRole: RelayRole) =>
+                w.webContents.send(channel, message, senderRole),
+        }));
 
     installWindowRelay(ipcMain, listRelayTargets, {
         resolveRole: resolveRelayRole,
