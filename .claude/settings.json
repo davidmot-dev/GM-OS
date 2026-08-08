@@ -89,7 +89,10 @@
       "Bash(sed 's/11434/11500/' cpuload.ps1)",
       "Bash(powershell -NoProfile -ExecutionPolicy Bypass -File cpuload_igpu.ps1)",
       "Bash(curl -s http://127.0.0.1:11434/api/generate -d '{\"model\":\"gemma4:12b\",\"prompt\":\"warmup\",\"stream\":false,\"options\":{\"num_predict\":1},\"keep_alive\":\"10m\"}' -m 600 -o /dev/null)",
-      "Bash(powershell -NoProfile -ExecutionPolicy Bypass -File cpuload.ps1)"
+      "Bash(powershell -NoProfile -ExecutionPolicy Bypass -File cpuload.ps1)",
+      "Bash(grep -oh '\\\\\\\\.' *.md)",
+      "Bash(node -e ' *)",
+      "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('.claude/settings.json','utf-8'\\)\\); console.log\\('settings.json: JSON valide'\\)\")"
     ]
   }
 }
