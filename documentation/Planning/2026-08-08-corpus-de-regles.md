@@ -2,7 +2,7 @@
 
 **Date :** 2026-08-08
 **Branche :** `feature/tablet-hub-pwa`
-**Statut :** conception — aucun code écrit · gabarits de prompts en cours de validation
+**Statut :** conception — aucun code écrit · gabarits validés sur deux systèmes · test de socle clos
 **Documents jumeaux :** `2026-08-07-acceleration-ia.md` (intégrations IA) ·
 `2026-08-07-fiabilite-cortex-combat.md` (fiabilité du Cortex) ·
 `2026-08-08-trame-narrative-cycle-seance.md` (trame narrative)
@@ -111,6 +111,48 @@ déclenché par le MJ sur un personnage donné.
 > le voie ; le joueur clique « Perception » sur sa fiche sans recomposer sa formule. Le jet secret est
 > de loin le moins cher. **Non tranché.**
 
+### 1.7 Les personas par système sont écrites, affichées — et jamais lues
+
+**Signalé par David le 2026-08-08 comme un usage IA oublié des trois plans : la génération des personas
+par système.** L'examen montre que le manque est plus grave qu'un simple usage absent — **la chaîne qui
+appliquerait ces personas est morte sur deux de ses quatre étages.**
+
+`AIService.prepareSystemPrompt` (`src/modules/ai/AIService.ts:739-755`) résout la persona en quatre
+temps, chacun écrasant le précédent :
+
+1. `gem.systemOverrides[systemId]`, sinon `gem.baseInstructions` (des clés i18n) ;
+2. écrasé par `docs/systems/<id>/gems.json`, lu par `readDoc` ;
+3. écrasé par `sheetTemplate.aiPersonas[gemId]`, le gabarit étant cherché par `t.id === systemId`.
+
+**Et c'est tout.** `driver.aiPersonas` et `driver.aiInstructions` **ne sont lus nulle part** — vérifié
+par recherche exhaustive dans `AIService.ts`, qui ne mentionne que `sheetTemplate.aiPersonas`.
+
+Or les deux champs sont bel et bien :
+
+- **écrits par la Forge** — `ForgeService.ts:161` demande explicitement au modèle de *« rédiger des
+  aiInstructions courtes mais précises pour qu'un autre assistant puisse simuler ce MJ »* ;
+- **éditables** dans `RuleEngineEditor.tsx:412` et `:457`, et dans `SheetTemplateEditor.tsx:412` ;
+- **affichés** dans `RulebookViewer.tsx:310` et `:315`, et dans `TemplateDashboard.tsx:389` ;
+- **signalés** par `OraclePanel.tsx:242`, qui affiche un indicateur `hasDriverOverride` quand le pilote
+  porte une persona.
+
+**C'est l'instance la plus pure du « je n'ai pas la main » trouvée jusqu'ici.** David écrit des
+directives destinées à l'IA, dans l'éditeur de règles ; l'interface confirme leur existence et va
+jusqu'à afficher un badge indiquant que le pilote surcharge la persona ; et l'IA ne les voit jamais.
+La Forge les produit, ce qui leur donne une apparence d'autorité supplémentaire.
+
+**En pratique, aucune persona par système n'est active.** Aucun `gems.json` n'existe sur disque
+(recherche dans tout `docs/`) ; un seul gabarit de fiche est intégré (`generic`) et la recherche se fait
+par `t.id === systemId`, donc elle échoue sauf gabarit personnalisé nommé exactement comme le système ;
+et seuls les `systemOverrides` de `dnd-5e` sont fournis par défaut. **Alien, Blade Runner, Dune, NOC et
+Rêves de Dragons partagent donc tous la même persona générique**, quel que soit le ton déclaré.
+
+> **Corollaire pour le corpus.** Le sujet 13 — *ton, registre et ambiance* — est exactement la matière
+> première d'une persona. La fiche Blade Runner décrit son registre néo-noir, celle d'Alien le sien. La
+> génération de personas est donc un **consommateur naturel du corpus**, à condition de réparer d'abord
+> la chaîne d'application : générer des personas dans un champ que personne ne lit ne ferait
+> qu'ajouter de la décoration.
+
 ---
 
 ## 2. Le modèle retenu : corpus copiés à la forge
@@ -175,6 +217,31 @@ de la structure**, idéalement engendrée en partie à partir d'elle.
 > veut supprimer. Il doit donc être **explicitement marqué « non appliqué »** et visible comme tel dans
 > l'éditeur, pour qu'on voie d'un coup d'œil ce que GM-OS fait respecter et ce qu'il se contente de
 > réciter.
+
+### 2.4 bis Arbitrage du 2026-08-08 : génération système par système, pas de copie automatique
+
+**Décision de David, après l'essai croisé Alien / Blade Runner :** *« je pense que je vais générer
+système par système même s'il y a des similitudes. L'idée n'est pas de ne plus rien faire et de tout
+automatiser, si on fait cela on va perdre la granularité. »*
+
+**Le test lui donne raison, et c'est ce qui a changé l'arbitrage.** Copier un socle YZE dans Blade
+Runner y aurait importé les modificateurs numériques de portée d'Alien (Blade Runner joue en
+avantage/désavantage), sa réserve de d6 (Blade Runner lance deux dés gradués), et sa formule de Santé
+(Blade Runner en a une autre). Trois erreurs sur les trois sujets les plus structurants. **La
+granularité perdue par la copie coûte plus cher que le temps qu'elle fait gagner.**
+
+Conséquence sur le modèle du § 2 : **le rôle du socle rétrécit, et ce n'est pas un échec du dispositif
+mais son résultat.** Ce qui subsiste :
+
+- **Le socle reste utile comme amorce** pour un système sans carnet ni livre exploitable — c'est la
+  réponse au `DEFAULT_GAME_DRIVERS` vide (§ 1.3), qui fait aujourd'hui démarrer tout jeu en D&D.
+- **Le socle reste utile comme constat**, sujet par sujet : savoir que les portées d'Alien et de Blade
+  Runner sont identiques au mètre près est une information de conception, pas un mécanisme.
+- **Mais l'harmonisation réelle vient du canevas, pas du socle.** C'est la liste des treize sujets qui
+  rend les systèmes comparables et qui dit à GM-OS où regarder. Elle donne la comparabilité **sans
+  imposer le contenu** — exactement ce que David veut préserver.
+
+**Le canevas est donc la pièce partagée du dispositif ; le corpus reste propre à chaque jeu.**
 
 ### 2.5 Convergence : le canevas de l'axe H est le schéma du corpus
 
@@ -358,21 +425,20 @@ Règles de rédaction :
 **Ne pas industrialiser.** Neuf systèmes × treize sujets font plus de cent requêtes. Valider les gabarits
 sur **un seul** système d'abord.
 
-Ordre : **Blade Runner** (fait le 2026-08-08, cf. § 4.6), puis **Alien**. Deux jeux du même moteur.
+**Protocole exécuté et clos le 2026-08-08.** Blade Runner puis Alien, deux jeux du même moteur, générés
+puis comparés sujet par sujet — la comparaison faite par nous, et non demandée au carnet. **Résultat au
+§ 4.7.**
 
-**Le test de socle ne s'obtient pas en demandant une étiquette au carnet — corrigé au § 4.6.** Il
-consiste à générer les deux systèmes, puis à **comparer nous-mêmes les fiches sujet par sujet** :
+Ce qu'il en reste pour les systèmes suivants :
 
-- Si la mécanique décrite est la même de part et d'autre → le sujet appartient au socle YZE.
-- Si elle diffère → elle appartient à l'univers, quoi qu'en dise la marque du livre.
+- **La clé de comparaison doit être canonique.** Treize slugs et treize noms de sujets fixés, identiques
+  d'un système à l'autre. Le carnet recopie sinon la ligne descriptive du prompt dans le champ `sujet`,
+  ce qui casse la seule chose sur laquelle repose la comparaison.
+- **Ne pas industrialiser** : treize sujets par système, plus les hors-catégories. Générer un système à
+  la fois, et le normaliser avant de passer au suivant.
 
-Indice déjà acquis, à confirmer : Blade Runner résout par **un dé d'attribut plus un dé de compétence,
-de D6 à D12, réussite à 6 ou plus**. Si Alien revient avec une réserve de d6 et des dés de stress, alors
-**« YZE » n'est pas une chose unique** sur le sujet le plus central, ce qui était la réserve formulée
-pendant la discussion (de même, le 2d20 de Dune n'est pas celui de Conan).
-
-Destination des fiches : `docs/systems/<id>/rules/<slug>.md`, en cohérence avec l'existant. Rappel :
-`docs/` est le corpus indexé par le RAG — **n'y déposer aucune documentation technique.**
+Destination des fiches : `docs/systems/<id>/rules/<slug>.md`. Rappel : `docs/` est le corpus indexé par
+le RAG — **n'y déposer aucune documentation technique.**
 
 ### 4.5 Capturer les citations maintenant
 
@@ -479,6 +545,60 @@ La dépendance à l'axe B (§ 2.3) n'est plus une projection : elle est mesurabl
 
 ---
 
+### 4.7 Résultat du test de socle — Alien contre Blade Runner, 2026-08-08
+
+Dix-huit fiches Alien produites avec les gabarits version 2. **Le format tient** : métadonnées
+survivantes, pages citées en ligne tout au long du texte, symboles nommés en toutes lettres, aucun
+échappement. La consigne anti-redondance fonctionne — la section « Non couvert » d'Alien renvoie
+explicitement vers les autres sujets au lieu de recopier leur contenu.
+
+**Un défaut nouveau, visant la clé de voûte.** Le carnet a recopié la ligne descriptive du prompt dans
+le champ `sujet` : `États et conditions (comment on les subit, comment on en sort)`, `Jauges et
+ressources INDIVIDUELLES, tenues sur la fiche d'un personnage`. Les slugs divergeaient aussi entre les
+deux systèmes pour un même sujet. Or **la comparaison sujet par sujet est le test lui-même** : sans clé
+stable, il n'a pas lieu. Les deux corpus sont désormais normalisés sur treize slugs et treize noms
+canoniques, avec un champ `hors_canevas` pour les fiches nées de la soupape.
+
+**Le verdict : « YZE » n'est pas une chose unique, mais le socle existe — sujet par sujet.**
+
+| Sujet | Alien | Blade Runner | Verdict |
+|---|---|---|---|
+| Distances et portées | Contact / Courte (même zone) / Moyenne (zone adjacente, 25 m) / Longue (4 zones, 100 m) / Extrême (1 km) | Au contact / Courte (même zone) / Moyenne (zone adjacente, 25 m) / Longue (4 zones, 100 m) / Extrême (1 km) | **SOCLE, au mètre près** |
+| — leurs modificateurs | −3 / 0 / −1 / −2 / −3 | avantage / désavantage | univers |
+| Initiative | 10 cartes 1-10, plus bas d'abord, round 5-10 s | cartes 1-10, plus bas d'abord, round 5-10 s | **SOCLE** |
+| — l'économie d'actions | 1 lente + 1 rapide, ou 2 rapides | 1 action + 1 mouvement | univers |
+| Santé | à 0 → Brisé ; dégâts ordinaires non létaux ; mort par critique + test de Trépas (Endurance) | à 0 → Brisé ; dégâts ordinaires non létaux ; mort par critique + sauvegarde (Endurance) | **SOCLE (structure)** |
+| — les formules | Santé = Force (2-5) ; table D66 de 36 blessures | (dé Vigueur + dé Agilité)/4, +2 Réplicant ; deux tables de 12 | univers |
+| Résolution des jets | réserve de **D6** (Attribut + Compétence) + dés de stress ; 6 = réussite, 1 = panique | exactement **2 dés**, tailles **D6 → D12** ; 6 ou plus = réussite | **AUCUN SOCLE** |
+| Monnaie de table | aucune | aucune | SOCLE (négatif) |
+
+Sur le sujet le plus central, les deux jeux n'ont en commun que la convention « six est une réussite »
+et le motif « forcer le jet ». Une réserve dont le **nombre** de dés varie contre deux dés dont la
+**taille** varie : deux moteurs différents sous un même nom commercial. Et pourtant les portées sont
+identiques valeur pour valeur, et l'initiative aussi.
+
+**Conséquence architecturale : le socle ne se définit pas par système, mais sujet par sujet — et
+parfois champ par champ.** L'exemple est directement exploitable : `TacticalRangeThreshold` porte
+`{ label, maxUnits, modifier }` ; les deux premiers champs sont du socle YZE pur, le troisième est de
+l'univers.
+
+**Et c'est la copie qui encaisse cela sans effort.** Un héritage vivant aurait exigé des règles de
+précédence champ par champ — précisément ce que la copie supprime. Le test ne valide pas seulement
+l'idée de socle : il valide le choix de la copie, plus fortement que la discussion ne l'avait fait.
+Il conduit aussi à l'arbitrage du § 2.4 bis — génération système par système, sans copie automatique.
+
+**Détail révélateur : le stress d'Alien est *dans* le moteur de dés** (il ajoute des dés à la réserve et
+porte le symbole de panique), alors que celui de Blade Runner est une jauge à côté. Même nom, place
+structurelle différente — un cas de plus où l'étiquette trompe et où seule la mécanique décide.
+
+**Couverture croisée :** onze sujets sur treize présents des deux côtés. Manquent *poursuites* et
+*monnaie de table* côté Alien — la seconde est déjà répondue dans `jauges-individuelles` (« sans
+ressource collective partagée »), une fiche courte suffira — et *jauges individuelles* côté Blade
+Runner. Alien a par ailleurs produit six fiches hors canevas : stress et panique, mode discret,
+physiologie des synthétiques, affrontement des xénomorphes, combat spatial, forcer le test.
+
+---
+
 ## 5. Articulation avec les plans existants
 
 | Plan | Relation |
@@ -489,6 +609,7 @@ La dépendance à l'axe B (§ 2.3) n'est plus une projection : elle est mesurabl
 | Axe M — Oracle bibliothécaire | Bénéficie des `sources:` capturées (§ 4.5) |
 | Axe O — boucle de revue | S'applique aux fiches produites : relecture à la première utilisation, mention visible tant qu'une fiche n'est pas relue |
 | Fiabilité du Cortex | `driver.tactical` non transmis (`TacticalNarrativeService.ts:74`) est un cas de la même maladie : le cadre déclare, le moteur ignore |
+| **Personas par système** | **Usage IA absent des trois plans, signalé par David (§ 1.7).** Consommateur naturel du sujet 13 du corpus, mais la chaîne d'application est morte : `driver.aiPersonas` et `driver.aiInstructions` ne sont lus nulle part |
 
 ---
 
@@ -508,5 +629,22 @@ La dépendance à l'axe B (§ 2.3) n'est plus une projection : elle est mesurabl
 
 ## 7. Statut
 
-**Prochaine étape en cours :** David génère les fichiers MD via les deux gabarits, puis on les compare
-pour juger si les prompts sont assez précis. Les corrections des gabarits reviendront dans ce document.
+**Acquis au 2026-08-08 :**
+
+- Gabarits **version 2**, validés sur deux systèmes (§ 4.2, § 4.3).
+- Corpus **Blade Runner** (17 fiches) et **Alien** (18 fiches), normalisés sur une clé canonique.
+- **Test de socle exécuté et clos** (§ 4.7) : le socle existe sujet par sujet, pas par système.
+- **Arbitrage de David** : génération système par système, sans copie automatique (§ 2.4 bis).
+
+**Prochaines étapes, dans l'ordre :**
+
+1. Compléter les deux corpus — *poursuites* et *monnaie de table* côté Alien, *jauges individuelles*
+   côté Blade Runner.
+2. Poursuivre système par système : Dune (test du 2d20, qui vérifiera si le constat se reproduit sur un
+   autre moteur), puis NOC, Rêves de Dragons, CoC7, Cthulhu Hack, Nephilim, D&D 5e.
+3. **Écrire le schéma du corpus** — la face structurée de chacun des treize sujets. C'est le premier
+   livrable de code, et les corpus générés en sont désormais la matière de référence.
+
+**Ne pas oublier :** la génération de personas par système (§ 1.7) exige de **réparer d'abord la chaîne
+d'application**. Générer dans un champ que personne ne lit ne produirait que de la décoration
+supplémentaire — soit exactement le défaut que toute cette refonte cherche à supprimer.
