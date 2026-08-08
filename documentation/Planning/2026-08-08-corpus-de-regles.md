@@ -244,6 +244,8 @@ structurée se remplisse sans retranscription — c'est là que la dérive texte
 
 ### 4.2 Gabarit 1 — inventaire (une fois par système)
 
+*Version 2, corrigée après l'essai Blade Runner (§ 4.6).*
+
 ```
 Tu analyses UNIQUEMENT les sources de ce carnet. Ne complète jamais avec des
 connaissances extérieures.
@@ -264,12 +266,15 @@ mécanique en une à deux phrases maximum :
 11. Environnement et dangers (froid, vide, chute, feu, privation…)
 12. Ton, registre et ambiance recherchés
 
-Réponds sous forme de tableau : Sujet | Traité (oui/partiellement/non) |
-Mécanique en une phrase | Origine (SOCLE ou UNIVERS) | Sources.
+Réponds par un TABLEAU MARKDOWN (avec des barres verticales), colonnes :
+Sujet | Traité (oui/partiellement/non) | Mécanique | Pages.
 
-« Origine » : SOCLE si la mécanique appartient au système générique dont ce jeu
-dérive et se retrouverait à l'identique dans un autre jeu du même moteur ;
-UNIVERS si elle est propre à ce jeu.
+La colonne « Mécanique » doit contenir les éléments CONCRETS : dés employés et
+leur taille, seuils chiffrés, nombre de niveaux d'une échelle. « On lance des
+dés et on compare à un seuil » est une réponse inutile.
+
+La colonne « Pages » donne les numéros de page du livre. N'utilise jamais les
+numéros de référence internes du carnet : ils ne veulent rien dire hors d'ici.
 
 Si un sujet n'est pas couvert par les sources, écris « non couvert par les
 sources » — n'invente rien, ne comble pas par analogie avec d'autres jeux.
@@ -278,11 +283,16 @@ Ajoute ensuite une section « Hors catégories » listant les mécaniques CENTRA
 de ce jeu qui n'entrent dans aucun des 12 sujets. Uniquement les mécaniques
 centrales.
 
+Écris tous les symboles en toutes lettres. Si le livre utilise une icône (par
+exemple pour marquer une réussite), nomme-la au lieu de la reproduire.
+
 N'aborde PAS : création de personnage, progression, équipement et matériel,
 historique et background, bestiaire, scénarios inclus.
 ```
 
 ### 4.3 Gabarit 2 — fiche détaillée (à rejouer par sujet)
+
+*Version 2, corrigée après l'essai Blade Runner (§ 4.6).*
 
 ```
 Tu rédiges une fiche de règle sur le sujet : « {SUJET} ».
@@ -290,14 +300,15 @@ Tu rédiges une fiche de règle sur le sujet : « {SUJET} ».
 Appuie-toi UNIQUEMENT sur les sources de ce carnet. Si elles ne suffisent pas,
 dis-le explicitement plutôt que de compléter.
 
-Format de sortie : Markdown, 3 000 à 5 000 caractères, structuré ainsi —
+Format de sortie : Markdown, 3 000 à 5 000 caractères, structuré exactement
+selon les six sections ci-dessous. N'emploie aucune ligne de tirets « --- » et
+aucun bloc de métadonnées en en-tête : commence directement par la section
+« Métadonnées ».
 
----
-sujet: {SUJET}
-origine: SOCLE | UNIVERS
-couverture: complète | partielle | absente
-sources: [titres exacts des sources utilisées, avec pages si disponibles]
----
+## Métadonnées
+- sujet : {SUJET}
+- couverture : complète | partielle | absente
+- sources : titres exacts des sources utilisées, avec numéros de page
 
 ## Règle
 L'énoncé de la règle telle que le livre la pose.
@@ -317,8 +328,20 @@ Ce que le livre précise sur les situations ambiguës.
 Ce que le sujet devrait contenir mais que les sources ne disent pas.
 Écris « rien » si tout est couvert.
 
-Cite tes sources dans le corps du texte. Ne reformule pas en langage générique
-de jeu de rôle : garde le vocabulaire exact du jeu.
+Règles de rédaction :
+
+- Si les sources ne couvrent pas du tout ce sujet, rédige quand même la fiche
+  avec « couverture : absente » et explique en une phrase ce que tu as cherché.
+  Ne renvoie jamais une réponse vide.
+- Cite tes sources par NUMÉRO DE PAGE dans le corps du texte, par exemple
+  « (p. 72) ». N'utilise jamais les numéros de référence internes du carnet.
+- Écris tous les symboles en toutes lettres. Si le livre utilise une icône
+  (par exemple pour marquer une réussite), nomme-la au lieu de la reproduire.
+- N'échappe pas la ponctuation : écris « 1. » et « + », jamais « 1\. » ni « \+ ».
+- Reste dans ton sujet. Si une règle appartient à un autre sujet de la liste,
+  mentionne-la en une phrase et renvoie vers lui au lieu de la détailler.
+- Ne reformule pas en langage générique de jeu de rôle : garde le vocabulaire
+  exact du jeu.
 ```
 
 ### 4.4 Protocole de validation
@@ -326,15 +349,18 @@ de jeu de rôle : garde le vocabulaire exact du jeu.
 **Ne pas industrialiser.** Neuf systèmes × douze sujets font plus de cent requêtes. Valider les gabarits
 sur **un seul** système d'abord.
 
-Ordre recommandé : **Alien**, puis **Blade Runner**. Deux jeux du même moteur — la cohérence de
-l'étiquette SOCLE/UNIVERS entre les deux carnets se vérifie immédiatement.
+Ordre : **Blade Runner** (fait le 2026-08-08, cf. § 4.6), puis **Alien**. Deux jeux du même moteur.
 
-- Si les deux carnets classent les mêmes mécaniques du même côté → le corpus générique YZE est
-  constitué, et le modèle tient.
-- Si non → **« YZE » n'est pas une chose unique**, ce qui était la réserve formulée pendant la
-  discussion (le Year Zero d'Alien, en réserves de d6 avec dés de stress, diffère de celui de Blade
-  Runner, en dés d'attribut et de compétence de tailles variables ; le 2d20 de Dune n'est pas celui de
-  Conan). **Ce test tranche la question au lieu d'en débattre.**
+**Le test de socle ne s'obtient pas en demandant une étiquette au carnet — corrigé au § 4.6.** Il
+consiste à générer les deux systèmes, puis à **comparer nous-mêmes les fiches sujet par sujet** :
+
+- Si la mécanique décrite est la même de part et d'autre → le sujet appartient au socle YZE.
+- Si elle diffère → elle appartient à l'univers, quoi qu'en dise la marque du livre.
+
+Indice déjà acquis, à confirmer : Blade Runner résout par **un dé d'attribut plus un dé de compétence,
+de D6 à D12, réussite à 6 ou plus**. Si Alien revient avec une réserve de d6 et des dés de stress, alors
+**« YZE » n'est pas une chose unique** sur le sujet le plus central, ce qui était la réserve formulée
+pendant la discussion (de même, le 2d20 de Dune n'est pas celui de Conan).
 
 Destination des fiches : `docs/systems/<id>/rules/<slug>.md`, en cohérence avec l'existant. Rappel :
 `docs/` est le corpus indexé par le RAG — **n'y déposer aucune documentation technique.**
@@ -345,6 +371,79 @@ Les citations `[1]`, `[2]` des fiches déjà forgées **sont mortes** : `forgeCa
 table de correspondance NotebookLM. Le bloc `sources:` en frontmatter coûte zéro à la génération et
 permettra de **vérifier au lieu de croire**. C'est aussi ce qui rendrait l'étage 2 de l'Oracle
 bibliothécaire (axe M) quasi gratuit sur les sujets déjà couverts.
+
+---
+
+### 4.6 Retour d'expérience — essai Blade Runner du 2026-08-08
+
+Douze fichiers produits avec les gabarits version 1, dans
+`docs/systems/blade-runner/rules/`. **Fond excellent, forme cassée.**
+
+**Ce qui a fonctionné, et qu'il ne faut pas dégrader en corrigeant :**
+
+- **L'interdiction d'inventer a tenu.** C'était le point le plus risqué. « Monnaie de table → non
+  couvert par les sources » ; « Environnement → partiellement, le froid, le vide et la privation ne sont
+  pas couverts ». Le modèle a refusé de combler.
+- **Les sources sont réelles et vérifiables** : `BRN-01_LivreDeRegles.pdf p. 54-57, p. 198, p. 204`, sur
+  les onze fiches. L'exigence du § 4.5 est satisfaite d'emblée.
+- **La section Valeurs est exploitable** sans retranscription : formule de Santé
+  `(dé de Vigueur + dé d'Agilité) / 4` arrondi au supérieur, `+2` pour un Réplicant, seuil Brisé à `0`,
+  taux de récupération par Quart, deux tables de critiques à 12 niveaux.
+- **La soupape « Hors catégories » a produit le meilleur contenu du lot** — Humains vs Réplicants sur le
+  forçage, TRPT, Voight-Kampff, Ancrages narratifs, Quarts et Pauses, double progression
+  Promotion/Humanité. Elle a **redécouvert indépendamment les quatre sujets déjà fichés à la main** par
+  David en avril. Le canevas ne rate pas ce qu'il juge important.
+
+**Les six défauts corrigés dans la version 2 des gabarits :**
+
+1. **Le frontmatter YAML est détruit sur les onze fiches.** Les `---` ont disparu et les quatre champs
+   se sont concaténés en un seul titre de niveau 2 :
+   `## sujet: Santé et blessuresorigine: SOCLEcouverture: complètesources: …`. **Illisible par
+   machine**, alors que toute l'architecture repose sur `couverture`. Cause : `---` est un séparateur
+   horizontal en Markdown, le carnet l'a traité comme tel. **Leçon : le YAML n'est pas demandable à
+   NotebookLM.** On demande une section, on fabrique le frontmatter localement.
+2. **Le symbole de réussite a été perdu — 49 occurrences sur 9 fichiers**, laissant `réussite ()`. Perte
+   silencieuse et systématique. Les symboles doivent être demandés en toutes lettres.
+3. **Renvois numériques nus** (`14-17`, `29-31`) pointant les fragments internes du carnet, sans
+   signification hors session — alors que les pages étaient disponibles. C'est la citation morte qui
+   revient par une autre porte.
+4. **Le gabarit 1 a rendu du CSV**, pas un tableau Markdown, et sa colonne Sources ne contient que des
+   index.
+5. **Redondance interne** : les blessures critiques sont traitées à fond dans trois fiches (santé,
+   dégâts, réussites critiques). Une question sur les critiques ramène trois fois la même chose. D'où la
+   consigne de renvoyer plutôt que de recopier.
+6. **Un sujet non couvert n'a produit aucun fichier.** L'absence n'est donc pas consignée et la
+   couverture n'est pas mesurable. D'où la consigne de produire la fiche même vide.
+
+S'ajoutent les échappements d'export (`1\.`, `\+`, `0\)`) et des noms de fichiers repris des titres
+inventés par le carnet, avec espaces, accents et apostrophes.
+
+**Et le vrai résultat du test : l'étiquette SOCLE/UNIVERS ne fonctionne pas, et le gabarit en est
+responsable.**
+
+Preuve directe : **« États et conditions » est étiqueté `SOCLE` dans l'inventaire et `UNIVERS` dans sa
+propre fiche.** Même sujet, même carnet, deux réponses opposées. L'étiquette n'est pas une donnée, c'est
+une opinion reformée à chaque requête.
+
+La raison est structurelle : **le carnet ne contient que Blade Runner.** Lui demander si une mécanique
+se retrouverait à l'identique dans un autre jeu du même moteur, c'est lui demander de raisonner sur des
+sources qu'il n'a pas. Il a répondu par reconnaissance de marque — le livre dit « Year Zero Engine »,
+donc SOCLE — et non par comparaison. Sa propre justification le trahit :
+*« SOCLE (Calculs spécifiques mais principes d'incapacité et de critiques génériques) »*.
+
+**Correction : `origine` sort du travail du carnet.** Chaque fiche décrit sa mécanique ; la comparaison
+entre systèmes est faite par nous (§ 4.4). L'étiquette prétendait court-circuiter le test et ne faisait
+que le masquer. Dans les fiches réparées, la valeur produite est conservée sous
+`origine_supposee`, pour mémoire et sans autorité.
+
+**Acquis de conception au passage.** Sur la monnaie de table, la réponse est un vrai résultat :
+*« toutes les jauges — Stress, Promotion, Humanité, Chinyen — sont purement individuelles »*. Blade
+Runner n'a donc pas besoin de réserve partagée, seulement de ressources par personnage, ce que
+`CombatStatMapping.isResource` sait déjà porter.
+
+**Chiffre à retenir.** Seize fichiers, environ 100 Ko, dans le seul dossier de Blade Runner. Avec le
+filtre RAG cassé, tout cela part dans le contexte de **chaque** question, quel que soit le système joué.
+La dépendance à l'axe B (§ 2.3) n'est plus une projection : elle est mesurable sur un seul système.
 
 ---
 
