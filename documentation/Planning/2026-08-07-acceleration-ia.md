@@ -1,43 +1,95 @@
-# Accélération et fiabilisation des intégrations IA
+# Intégrations IA — préparation et partie
 
-**Date :** 2026-08-07
+**Date :** 2026-08-07, consolidé le 2026-08-08
 **Branche :** `feature/tablet-hub-pwa`
-**Statut :** plan validé pour arbitrage — aucun code applicatif écrit
-**Révision :** réécriture complète après séance de conception. La première version visait la vitesse
-seule ; celle-ci part du **budget de temps réel de chaque usage**, ce qui change l'ordre des travaux.
+**Statut :** plan de conception — aucun code applicatif écrit
+**Document jumeau :** `2026-08-07-fiabilite-cortex-combat.md` (fiabilité des entrées du Cortex)
+
+**Historique des cadrages.** Première version : optimiser la vitesse de l'IA. Deuxième : partir du
+budget de temps réel de chaque usage. **Celle-ci** part de la partition que David a formulée —
+*« il y a une partie de l'application qui sert à la préparation, et une partie destinée à l'aide en
+partie ; les temps de réponse n'ont pas le même impact dans l'un ou l'autre contexte »*. C'est le bon
+cadre, et il réordonne tout le reste.
 
 ---
 
-## 1. Résumé exécutif
+## 1. Le cadre : deux moments, pas trois modules
 
-Trois usages de l'IA coexistent dans GM-OS et **n'ont pas du tout le même budget de temps**. Les
-traiter ensemble était l'erreur d'analyse initiale.
+Les deux premières versions attachaient les budgets aux **modules** (Forge, Oracle, Cortex). C'était
+faux : plusieurs modules servent dans les deux moments. Préparer une galerie de PNJ le samedi matin et
+improviser un tavernier en pleine partie, c'est le même code et deux exigences opposées.
 
-| Usage | Référence réelle | Budget | État mesuré |
+**Le budget appartient au moment, pas au module.**
+
+| | **Préparation** | **En partie** |
+|---|---|---|
+| Ce qui compte | la qualité, la profondeur | la latence, la prévisibilité |
+| Tolérance | minutes, si non bloquant | dizaines de secondes |
+| Contexte | complet | allégé par défaut |
+| Fournisseur | cloud autorisé, au choix | local |
+| Image | diffusion locale acceptable | cloud uniquement |
+| Délai d'abandon | large, **mais il en faut un** | strict, avec dégradation |
+| Exécution | **file d'attente, non bloquante** | synchrone et bornée |
+
+**Deux conséquences que les versions précédentes avaient manquées :**
+
+**En préparation, le défaut n'est pas la durée mais le blocage.** Quinze minutes ne coûtent rien si l'on
+peut préparer ses images pendant ce temps. Ce qui coûte, c'est la fenêtre modale qui immobilise. La file
+d'attente en tâche de fond réglerait le problème de la Forge **sans rien accélérer** — c'était classé en
+confort, c'est en réalité le cœur du sujet côté préparation.
+
+**En partie, il vaut mieux dégrader qu'attendre.** Une réponse allégée en 60 s bat une réponse complète
+en 6 min. Cela suppose que chaque appel sache produire une version réduite de lui-même — ce que
+l'option `lite` permet déjà, et que presque personne n'utilise.
+
+### 1.1 Les budgets, conséquences du moment
+
+| Usage | Moment | Référence | Budget |
 |---|---|---|---|
-| **Forge** | préparation hors séance | minutes, en tâche de fond | ~25 min, bloquant |
-| **Oracle** | feuilleter un livre physique | **1 à 2 min** | ~19 min |
-| **Cortex** | conseil sur le tour en cours | **30 à 60 s** | ~2 appels, dont un au contexte doublé |
+| Forge (système, chronique, règles) | préparation | — | minutes, en tâche de fond |
+| Médiathèque, images, personas, templates | préparation | — | minutes, en tâche de fond |
+| Oracle | partie | feuilleter un livre papier | **1 à 2 min** |
+| Cortex | partie | le tour en cours | **30 à 60 s** |
+| PNJ à la volée, butin, voix, narration | partie | l'attention des joueurs | **< 1 min** |
 
-Le budget de l'Oracle vient d'un constat de David : chercher une règle dans un livre papier prend
-déjà une à deux minutes. Une réponse en 90 secondes n'est donc pas un échec. **Ce recadrage disqualifie
-plusieurs optimisations envisagées** (§ 7) et concentre l'effort sur trois corrections.
+Le budget de l'Oracle vient d'un constat de David : chercher une règle dans un livre prend déjà une à
+deux minutes, donc une réponse en 90 s n'est pas un échec. Le Cortex est plus serré, non parce qu'il est
+plus lent, mais parce que **son conseil se périme** : un avis tactique arrivé après que le joueur a agi
+ne vaut rien, alors qu'une réponse de règle reste valable.
 
-Le Cortex est le cas le plus tendu, non parce qu'il est plus lent, mais parce que **son conseil se
-périme** : un avis tactique qui arrive après que le joueur a agi ne vaut rien. La réponse de l'Oracle,
-elle, reste valable.
+### 1.2 Le signal de mode existe déjà et n'est pas consulté
 
-**Trois causes expliquent l'essentiel de l'écart**, et deux sont des défauts qui dégradent aussi la
-qualité :
+`Campaign.activeSessionId` combiné à `status === 'active'` dit si une partie est en cours. Posé par
+`SessionManager.ts:57-60`, clos depuis le cockpit (`CampaignCockpit.tsx:167-177`, bouton vert pulsant
+avec confirmation). Lu par cinq composants d'interface — **jamais par `AIService`**. Aucune notion de
+mode n'existe côté IA : ni `inSession`, ni `prepMode`.
 
-| # | Cause | Nature | Effet |
-|---|---|---|---|
-| 1 | Le RAG envoie ~72 000 tokens sans tri ni plafond | **Bug** | ÷ 18 sur tous les appels |
-| 2 | L'iGPU Intel Arc est détecté puis jeté par Ollama | Réglage | × 4,7 sur le prefill |
-| 3 | Le bloc volatil précède le bloc stable dans le prompt | **Bug** | interdit toute réutilisation du cache |
+Ce signal a les quatre propriétés qu'on demande à un mode :
 
-Conséquence la plus grave : avec `OLLAMA_CONTEXT_LENGTH = 16384`, **77 % du contexte assemblé est jeté
-en silence**. Une part de ce qui passe pour de la lenteur est en réalité une perte de données.
+| Propriété | Vérifiée |
+|---|---|
+| **Visible** | bouton vert pulsant dans le cockpit, impossible à manquer |
+| **Explicite dans les deux sens** | démarrage et clôture par le MJ |
+| **Unique globalement** | `SessionManager` rétrograde toute autre session active |
+| **Déjà correctement gardé** | tous les lecteurs testent `&& s.status === 'active'` |
+
+**Pourquoi « visible et contrôlé » est décisif.** Un mode implicite produirait la pire expérience
+possible — *« pourquoi c'est lent aujourd'hui ? »*, sans rien pour l'expliquer. Un mode déclaré par le
+MJ produit *« ah oui, ma session est ouverte »*. C'est cette visibilité qui autorise à lui faire porter
+des décisions réelles ; sans elle, ce serait de l'action à distance.
+
+**Corollaire : ne pas chercher à être malin.** D'autres signaux existent — combat en cours, Hub ouvert,
+tablette connectée. Les mélanger serait une erreur : **toute la valeur du signal vient de ce qu'il est
+déclaré, pas inféré.** Un mode mi-déclaré mi-deviné redevient imprévisible, donc indigne de confiance.
+**Un seul signal, celui que le MJ contrôle.**
+
+**Deux précautions :**
+
+- **Le lire globalement, pas par campagne.** Les lecteurs actuels testent
+  `activeCampaign.activeSessionId`. Or une seule session est active globalement : changer de campagne
+  ferait passer l'indicateur à `null` et **éteindrait le mode sans que rien ne soit terminé**, débloquant
+  silencieusement le cloud et le contexte complet.
+- **Le mode donne des défauts, jamais un verrou** (§ 4.7).
 
 ---
 
@@ -49,20 +101,44 @@ en silence**. Une part de ce qui passe pour de la lenteur est en réalité une p
 **Modèle :** `gemma4:12b` (Q4_K_M, 11,9 B)
 
 Méthode : second serveur Ollama sur le port 11500 avec `OLLAMA_IGPU_ENABLE=1`, pour comparer sans
-toucher au serveur de l'application. Même modèle, même `num_ctx`, même prompt.
+toucher au serveur de l'application.
 
 | Mesure | CPU seul | iGPU activé | Rapport |
 |---|---|---|---|
 | Décodage `gemma4:12b` | 5,5 tok/s | 6,1 tok/s | × 1,1 |
 | Prefill `gemma4:12b` (10 953 tokens) | 15,3 tok/s | **71,9 tok/s** | **× 4,7** |
+| **Charge CPU pendant l'inférence** (moyenne, modèle chaud) | **81 %** | **25 %** | **− 56 points** |
+| Charge CPU en pointe | 88 % | 52 % | — |
+| Génération complète de 120 tokens | ~19 s | ~11 s | × 1,7 |
 | Décodage `llama3.2:3b` | 15,2 tok/s | non mesuré | × 2,8 vs 12b |
 | Chargement du modèle | 0,9 s (cache chaud) | 36,7 s (à froid) | — |
 
-**Interprétation.** Le décodage est limité par la bande passante mémoire, que l'iGPU partage avec le
-CPU : l'activer n'y change presque rien. Le prefill est limité par le calcul : l'iGPU y est presque
-cinq fois plus rapide. **L'iGPU ne fait pas écrire plus vite, il fait lire beaucoup plus vite.**
+**Interprétation en trois temps.**
 
-Volume réellement assemblé par le RAG, simulation sur le corpus `docs/` :
+**Sur le débit brut.** Le décodage est limité par la bande passante mémoire, que l'iGPU partage avec le
+CPU : l'activer n'y change presque rien (× 1,1). Le prefill est limité par le calcul : l'iGPU y est
+presque cinq fois plus rapide. **L'iGPU ne fait pas écrire plus vite, il fait lire beaucoup plus vite.**
+
+**× 1,1 est un plancher, pas le gain réel.** C'est le rapport en décodage pur. Toute génération réelle
+mélange prefill et décodage, donc se situe **entre × 1,1 et × 4,7**, et penche d'autant plus vers le haut
+que le contexte est long. Mesuré sur une génération complète à prompt court : × 1,7. Pour l'Oracle, dont
+le contexte pèse des milliers de tokens, on s'approche du × 4,7.
+
+**Et surtout — ce que le débit ne dit pas.** Remarque de David : le CPU gère aussi l'affichage et
+l'application, l'iGPU ne ferait que l'IA. Mesure faite, **il a raison, et l'effet dépasse le gain de
+débit** : l'inférence CPU consomme **81 % de la machine en moyenne, pendant toute la génération**.
+Sur un prefill de 18 minutes, c'est dix-huit minutes à 81 % — pendant lesquelles le rendu React, la
+synchronisation WebSocket vers la tablette, le tableau blanc et les fenêtres Hub et projecteur se
+disputent ce qui reste. L'offload ramène cette charge à 25 %.
+
+> **Réserve honnête.** L'Arc 140T pilote aussi l'affichage. Y déporter l'inférence la met en concurrence
+> avec le compositeur de Chromium, alors que GM-OS emploie des effets coûteux (flous, halos, animations)
+> sur trois fenêtres. Le compromis n'est donc pas « gratuit » : l'inférence CPU affame le JavaScript et
+> le rendu, l'inférence iGPU dispute le compositing. **Le premier me paraît nettement pire** — le travail
+> de GM-OS est surtout piloté par l'état, et un flou sur un panneau immobile n'est pas recomposé à chaque
+> image. Mais **cela s'observe en séance réelle, pas au banc** (§ 8).
+
+Volume assemblé par le RAG, simulation sur `docs/` :
 
 ```
 fichiers indexés        : 49
@@ -72,8 +148,14 @@ plafond num_ctx 16384   : 77 % jeté silencieusement
 ```
 
 > **Réserve à lever avant de figer le chiffrage.** Si le RAG a été repointé sur le coffre Obsidian
-> (`RAGService.ts:36-39`), le volume diffère de cette simulation. Le défaut de structure est identique
-> dans les deux cas. À vérifier en relevant la taille réelle du contexte dans la console.
+> (`RAGService.ts:36-39`), le volume diffère. Le défaut de structure est identique dans les deux cas.
+
+**Autres vérifications par test réel :**
+
+- Ollama 0.32.6 **supporte les sorties structurées natives par schéma JSON**. Concluant.
+- `webContents.findInPage()` **fonctionne sur le lecteur PDF interne** (Electron 34.5.8 / Chrome 132),
+  renvoie `matches` et `activeMatchOrdinal`, après ~3 s d'initialisation du greffon. `#page=N` fonctionne.
+  Le fragment `#search=` charge sans erreur **mais rien ne prouve qu'il soit honoré** — ne pas s'en servir.
 
 ---
 
@@ -88,15 +170,17 @@ const score = (lowerPath.includes(sys) ? 2 : 0) + (lowerPath.includes(camp) ? 2 
 return results.slice(0, 15).join('\n\n---\n\n'); // Limit to top 15 matches for token safety
 ```
 
-1. `lowerPath.includes('systems')` fait matcher **tout fichier sous `docs/systems/`**, quel que soit le
-   système actif. Comme tout le corpus y vit, le filtre laisse passer 48 fichiers sur 49.
+1. `lowerPath.includes('systems')` fait matcher **tout fichier sous `docs/systems/`**. Comme tout le
+   corpus y vit, 48 fichiers sur 49 passent.
 2. **Le `score` est calculé puis jamais utilisé.** Aucun tri avant le `slice(0, 15)` : les 15 fichiers
-   retenus le sont dans l'ordre d'itération de l'index, donc arbitrairement.
-3. **Aucun plafond global.** Chaque fichier est plafonné à 50 000 caractères, mais 15 × 50 000 = 750 000
-   caractères possibles. Le commentaire annonce une garantie que le code n'assure pas.
+   retenus le sont dans l'ordre d'itération, donc arbitrairement.
+3. **Aucun plafond global.** 15 × 50 000 caractères possibles. Le commentaire annonce une garantie que
+   le code n'assure pas.
 
-> Même schéma que le point 3 du chantier transport : *un commentaire qui énonce une garantie n'est pas
-> une garantie.* Troisième occurrence dans ce dépôt.
+> Troisième occurrence dans ce dépôt de la même leçon : *un commentaire qui énonce une garantie n'est
+> pas une garantie.*
+
+**Portée du correctif : vingt modules consomment `AIService`.** Réparer le RAG les sert tous.
 
 ### 3.2 L'ordre du prompt interdit la réutilisation du cache — `AIService.ts:722-726`
 
@@ -105,75 +189,137 @@ return results.slice(0, 15).join('\n\n---\n\n'); // Limit to top 15 matches for 
 ```
 
 Ollama réutilise le KV-cache tant que le **début** du prompt est identique. Le bloc volatil (PV, round,
-tour en cours) est placé **avant** le bloc massif et stable : dès qu'un PJ perd un point de vie, tout le
-cache du RAG est invalidé et le prefill refait intégralement.
+tour) précède le bloc massif et stable : dès qu'un PJ perd un point de vie, tout le cache du RAG est
+invalidé. **Inverser ferait payer le prefill des règles une fois par séance au lieu d'une fois par
+question.**
 
-**Inverser ces deux blocs ferait payer le prefill des règles une fois par séance au lieu d'une fois par
-question.** Correction de quelques lignes, à valider au banc.
+### 3.3 Rien n'est annulable, et un seul créneau existe
 
-### 3.3 Le Cortex envoie son contexte en double — `useTacticalAIStore.ts:89-114`
+**Aucun `AbortController`, aucun `signal`, aucun verrou de concurrence dans toute la chaîne IA.**
 
-Le Cortex lance deux appels. Le second construit son prompt système complet ligne 103 (RAG inclus),
-puis le transmet à `generateJSON`, qui le repasse en `customContext` à `prepareSystemPrompt` — lequel
-**y concatène à nouveau le contexte RAG** (`AIService.ts:726`). Le corpus part donc **deux fois dans le
-même appel**.
+- Le délai de 45 min (`AIService.ts:60` et `:821`) est un `Promise.race` : il rejette la promesse **mais
+  la génération continue côté Ollama**.
+- `OLLAMA_NUM_PARALLEL: 1` : cette génération **occupe l'unique créneau**.
+- Fermer la fenêtre n'y change rien.
 
-Deux défauts s'y ajoutent :
+**Conséquence : une Forge lancée par erreur en séance bloque l'Oracle et le Cortex pour toute sa durée
+réelle, quoi que fasse le MJ.** C'est le défaut le plus structurant du lot — il rend inopérant tout
+plafond de temps, et il conditionne la pause de séance (§ 4.7).
 
-- Le commentaire ligne 112 annonce une « exécution parallèle pour réduire considérablement le temps de
-  réponse ». Le serveur est en `OLLAMA_NUM_PARALLEL: 1` : **les deux appels font la queue.** La
-  parallélisation n'existe que face à un fournisseur cloud.
-- Le Cortex ne passe **aucune `ragOptions`**, donc il charge tout le lore de campagne pour répondre à
-  « attaquer ou se déplacer ? », alors que `TacticalNarrativeService.getSituationalReport` lui a déjà
-  préparé un rapport de situation précis. Seules les règles de combat du système actif sont pertinentes.
-
-> **Périmètre.** Ce document ne traite que les défauts de **performance** du Cortex, corrigés par
-> l'axe C. Ses défauts de **fiabilité** — config tactique du système ignorée, effondrement silencieux
-> quand l'acteur n'a pas de jeton, faction devinée — sont d'une autre nature et font l'objet d'un plan
-> distinct : `documentation/Planning/2026-08-07-fiabilite-cortex-combat.md`. **Les deux se lisent
-> ensemble** : accélérer un module dont les entrées sont fausses ne ferait que produire des conseils
-> faux plus vite.
+Incohérence annexe : le MCP est plafonné à 10 min (`ForgeService.ts:341`), le modèle à 45.
 
 ### 3.4 Troncature silencieuse
 
-- `ForgeService.ts:42` — `MAX_TEXT_CHARS = 100000`, soit ~28 000 tokens.
-- RAG — jusqu'à ~72 000 tokens.
-- Serveur Ollama — `num_ctx = 16384`.
+`ForgeService.ts:42` — `MAX_TEXT_CHARS = 100000` (~28 000 tokens). RAG — jusqu'à ~72 000 tokens. Serveur
+— `num_ctx = 16384`. Ollama tronque sans rien signaler.
 
-Ollama tronque sans rien signaler. **Augmenter `num_ctx` n'est pas la solution** : à 15,3 tok/s, un
-contexte de 16 384 tokens coûte déjà 17,8 min de prefill. Il faut **envoyer moins**, pas pouvoir
-envoyer plus.
+**Augmenter `num_ctx` n'est pas la solution** : à 15,3 tok/s, 16 384 tokens coûtent déjà 17,8 min de
+prefill. Il faut **envoyer moins**, pas pouvoir envoyer plus.
 
-### 3.5 Défauts secondaires
+### 3.5 Le Cortex envoie son contexte en double — `useTacticalAIStore.ts:89-114`
+
+Le second appel construit son prompt système complet (ligne 103, RAG inclus), puis le transmet à
+`generateJSON`, qui le repasse en `customContext` à `prepareSystemPrompt` — lequel **y concatène à
+nouveau le RAG** (`AIService.ts:726`).
+
+- Le commentaire ligne 112 annonce une « exécution parallèle » : sous `NUM_PARALLEL=1`, **les deux
+  appels font la queue**.
+- Aucune `ragOptions` n'est passée : le Cortex charge **tout le lore de campagne** pour répondre à
+  « attaquer ou se déplacer ? », alors que `TacticalNarrativeService` lui a déjà préparé un rapport
+  de situation précis.
+
+> **Périmètre.** Ce document ne traite que la **performance** du Cortex. Ses défauts de **fiabilité** —
+> config tactique du système ignorée, faction devinée, lien jeton fragile — relèvent du document jumeau.
+> **Accélérer un module dont les entrées sont fausses ne ferait que produire des conseils faux plus vite.**
+
+### 3.6 Les usages en partie qui font un travail de préparation
+
+Inventaire des vingt consommateurs d'`AIService`, côté partie :
+
+| Module | Appel | Problème |
+|---|---|---|
+| **PNJ à la volée** | `useNPCStore.ts:150` puis `:167` | **deux appels texte portant chacun le RAG complet**, sans `lite` ni `ragOptions` — pour inventer un tavernier sans rapport avec le corpus de règles |
+| **Portraits, cartes, PJ** | `useNPCStore.ts:231`, `crossDomainHelpers.ts:93,115,138` | voir ci-dessous |
+| Carte de combat | `CombatCard.ts:135` | RAG complet |
+| Narration de carte | `useNarrativeGenerator.ts:66` | RAG complet |
+| Profils de voix | `useVoiceStore.ts:263` | RAG complet |
+| Générateur de butin | `LootGeneratorPanel.tsx:62` | **fait déjà bien** — voir § 3.8 |
+
+### 3.7 La génération d'image en partie choisit l'option la plus lente, sans délai d'abandon
+
+`AIService.ts:324-338` : si le fournisseur actif est Ollama — le cas de David — la génération tente
+**d'abord un modèle de diffusion local**, basculant sur `x/flux2-klein:latest` si le modèle courant est
+un modèle texte. Ce modèle est installé (5,7 Go). Sur une machine mesurée à `size_vram: 0`, c'est de la
+diffusion sur CPU.
+
+**Et il n'existe aucun délai d'abandon** : ni dans `OllamaService.generateImage`, ni dans
+`AIService.generateImage` — le plafond de 45 min ne couvre que `generateText`. Un portrait demandé à
+table peut donc bloquer indéfiniment **avant même d'atteindre les replis cloud**, qui répondraient en
+quelques secondes.
+
+**C'est le correctif au meilleur rapport gain/effort du document** : quelques lignes contre un blocage
+potentiellement illimité en pleine partie.
+
+### 3.8 Ce qui fonctionne déjà, et qu'il faut généraliser plutôt que réinventer
+
+`LootGeneratorPanel.tsx:16,62` expose un basculement `useFullContext`, **par défaut en mode allégé**,
+transmis en `{ lite: !useFullContext }`. C'est le seul endroit où le choix de contexte est conscient et
+offert au MJ. **C'est le motif à généraliser.**
+
+De même, `RAGEngine.ts:249-270` (`writeDoc`) déclenche `updateIndex()` après écriture : une fiche forgée
+est immédiatement visible de l'Oracle. Et `:255` confine délibérément les écritures à `docs/`.
+
+### 3.9 Défauts secondaires
 
 | Constat | Emplacement | Effet |
 |---|---|---|
-| `ChronicleService` n'active pas le mode `lite` | `ChronicleService.ts:53` | empile RAG + contexte de session |
+| `ChronicleService` n'active pas `lite` | `ChronicleService.ts:53` | empile RAG + contexte de session |
 | Aucun `format` ni `options` transmis à Ollama | `OllamaService.ts:37-43` | pas de contrôle de `num_ctx`/`num_predict` ; JSON extrait au regex, chaque échec coûte une génération complète |
 | `keep_alive` à 5 min | serveur | rechargement à froid (37 s sur iGPU) |
 | `OLLAMA_FLASH_ATTENTION=false` | serveur | KV-cache plus lourd sur les longs contextes |
+| `.jsonl` non indexés | `RAGEngine.ts:142` | 600 Ko déjà chunkés avec métadonnées, ignorés |
 
-**Vérifié :** Ollama 0.32.6 supporte les **sorties structurées natives par schéma JSON**. Test
-concluant. Cela permettrait de supprimer `extractStructuredJSON` et `sanitizeJSON`
-(`AIService.ts:927-977`) pour la voie Ollama.
+### 3.10 État du corpus
 
-**À noter :** vingt modules consomment `AIService` (voix, PNJ, butin, narration de carte, dossiers,
-cartes de combat…). **La correction du RAG les sert tous**, pas seulement les trois traités ici.
+**Trois générations d'approche coexistent.**
+
+| Génération | Exemple | Taille |
+|---|---|---|
+| 1 — décharges brutes | `_source_extracted.txt`, `Dune.txt` | 0,9 à 1,8 Mo |
+| 2 — extractions thématiques | `combat_and_panic.md`, `core_mechanics.md` | 20 à 120 Ko |
+| 3 — **fiches par sujet** | `rules/jet-ethylisme.md` | 5 à 6 Ko |
+
+**La génération 3 est la bonne forme, et elle existe déjà** — produite par l'Atelier de règles
+(`BrainstormOverlay.tsx:66-99`). Elle ne couvre que 3 systèmes sur 9 :
+
+| blade-runner | noc | rêves de dragons | alien, coc7, cthulhu hack, dnd-5e, dune, nephilim |
+|---|---|---|---|
+| 4 fiches | 4 | 7 | **0** |
+
+**Redondance :** le livre Alien existe en **quatre copies recouvrantes** (~4,9 Mo), Cthulhu Hack en trois
+(~1,5 Mo). Quatre copies, c'est trois chances sur quatre de servir le même passage et d'en manquer un
+autre. **Dédupliquer avant d'optimiser la récupération.**
+
+### 3.11 Les deux chaînes NotebookLM font l'inverse l'une de l'autre
+
+**Chaîne A — l'Atelier de règles (fonctionne).** `notebook_query` fait distiller le document **chez
+Google** ; la fiche de 5 Ko revient et part dans `docs/systems/<id>/rules/`. Le livre ne transite jamais
+par Ollama.
+
+**Chaîne B — Forges Système et Chronique (coince).** `ForgeDashboard.tsx:212` appelle
+**`source_get_content`**, qui renvoie le **texte brut intégral**, lequel part dans les 100 000 caractères
+de `forgeSystem` puis se fait tronquer. **NotebookLM n'y est qu'un presse-papier** : on confie la
+digestion au composant qui en est le moins capable.
 
 ---
 
 ## 4. Axes de travail
 
-### Axe A — Activer l'iGPU · *0 ligne de code · ~15 min*
+### Bloc I — Le socle *(débloque les budgets)*
 
-Ollama détecte l'Arc 140T puis l'écarte :
+#### Axe A — Activer l'iGPU · *0 ligne de code · ~15 min*
 
-```
-dropping integrated GPU; to enable, set OLLAMA_IGPU_ENABLE=1
-   library=Vulkan  name="Intel(R) Arc(TM) 140T GPU (16GB)"
-```
-
-Variables d'environnement système, puis redémarrage du service :
+Ollama détecte l'Arc 140T puis l'écarte : `dropping integrated GPU; to enable, set OLLAMA_IGPU_ENABLE=1`.
 
 ```
 OLLAMA_IGPU_ENABLE     = 1
@@ -181,139 +327,184 @@ OLLAMA_FLASH_ATTENTION = 1
 OLLAMA_KEEP_ALIVE      = 30m
 ```
 
-**Gain : × 4,7 sur le prefill.** Contre le budget de l'Oracle, cet axe est **porteur** : sans lui, même
-le RAG réparé laisse l'Oracle à ~5 min, hors budget (§ 5).
+**Porteur, pas confortable** : sans lui, même le RAG réparé laisse l'Oracle à ~5 min, hors budget (§ 5).
 
-**Risques :** ~8,4 Gio de mémoire partagée mobilisés ; chargement à froid de 1 s à 37 s, d'où
-`keep_alive=30m`. Réversible en retirant la variable.
-**À valider :** stabilité du pilote Vulkan Intel sur une séance complète, pas seulement sur un banc.
+**Deux bénéfices, pas un.** Le prefill × 4,7, et surtout **la charge CPU qui tombe de 81 % à 25 %**
+pendant toute l'inférence (§ 2). Le second ne se voit dans aucune mesure de débit, mais c'est lui qui
+détermine si l'application reste utilisable pendant qu'elle réfléchit — donc si l'on peut préparer une
+image ou consulter l'Atlas pendant qu'une Forge tourne. **Il conditionne la file d'attente non bloquante
+du § 1**, qui n'aurait aucun intérêt si le reste de l'application était inutilisable pendant ce temps.
 
-### Axe B — Réparer le RAG · *~3 h · le plus gros gain*
+**Risques :** ~8,4 Gio de mémoire partagée ; chargement à froid de 1 s à 37 s, d'où `keep_alive` ; et la
+concurrence avec le compositeur d'affichage (§ 2). Réversible en retirant la variable.
+**À éprouver sur une séance complète**, pas seulement au banc — en observant la fluidité de l'interface,
+pas seulement la stabilité du pilote.
 
-1. Supprimer les clauses fourre-tout `lowerPath.includes('systems')` / `('campaigns')`.
+#### Axe B — Réparer le RAG · *~3 h · le plus gros gain*
+
+1. Supprimer les clauses fourre-tout `includes('systems')` / `('campaigns')`.
 2. **Utiliser le `score` déjà calculé** pour trier avant de découper.
-3. Introduire un **plafond global en tokens** (cible 4 000), non plus un nombre de fichiers.
-4. **Journaliser ce qui est écarté** — la troncature ne doit plus être silencieuse.
-5. Test de non-régression : contexte sous le plafond, et fichier du système actif toujours présent.
+3. **Plafond global en tokens** (cible 4 000), non plus un nombre de fichiers.
+4. **Journaliser ce qui est écarté.**
+5. Indexer les `.jsonl` (`RAGEngine.ts:142`), déjà chunkés avec métadonnées.
+6. Test de non-régression : contexte sous le plafond, fichier du système actif toujours présent.
 
-**Gain : ÷ 18 sur le contexte.** Corrige aussi une perte de **qualité** — l'Oracle cesse de répondre à
-partir de documents tirés au hasard. Profite aux vingt modules consommateurs.
+**÷ 18 sur le contexte**, et correction d'un défaut de **qualité** — l'Oracle cesse de répondre à partir
+de documents tirés au hasard. Profite aux vingt consommateurs.
 
-### Axe C — Ordre du prompt et contexte du Cortex · *~2 h*
+#### Axe C — Ordre du prompt et contexte du Cortex · *~2 h*
 
-1. **Inverser les blocs** dans `prepareSystemPrompt` : `[persona + RAG]` puis `[contexte vivant]` puis
-   `[question]`, pour rendre le préfixe stable et réutilisable.
-2. **Supprimer la double inclusion du RAG** dans le Cortex (§ 3.3) : soit le Cortex cesse d'appeler
-   `prepareSystemPrompt` lui-même, soit `generateJSON` cesse de le rappeler.
-3. **Restreindre le contexte du Cortex** aux règles de combat du système actif (`systemOnly`), le lore
-   de campagne n'ayant aucune valeur pour un conseil de placement.
-4. Corriger le commentaire mensonger ligne 112, ou rendre la parallélisation réelle en la réservant aux
-   fournisseurs qui la supportent.
+1. **Inverser les blocs** : `[persona + RAG]` → `[contexte vivant]` → `[question]`.
+2. **Supprimer la double inclusion du RAG** dans le Cortex (§ 3.5).
+3. **Restreindre le contexte du Cortex** aux règles de combat du système actif.
+4. Corriger le commentaire mensonger ligne 112.
 
-**Gain :** l'essentiel du bénéfice de l'axe A sur les questions successives, et le Cortex ramené dans
-son budget.
+### Bloc II — Maîtrise de l'exécution
 
-### Axe D — Assainir la voie Ollama · *~2 h*
+#### Axe D — Annulation, verrou, plafonds · *~4 h · conditionne le reste*
 
-1. Étendre le pont `ollamaChat` / `ollamaChatStream` pour transmettre `format` et `options`
-   (`num_ctx`, `num_predict`, `temperature`, `keep_alive`). Touche `preload.ts:95-96`,
-   `window.d.ts:176-177`, `OllamaService.ts`.
-2. Passer le **schéma JSON natif** pour les générations structurées ; retirer la voie regex pour Ollama.
+**C'est l'axe qui rend les autres possibles.** Sans annulation, aucun plafond n'est réel (§ 3.3).
+
+1. **`AbortController` transmis par le pont jusqu'au `net.fetch`** d'`OllamaService`, pour les appels
+   texte **et image**.
+2. **Délai d'abandon sur la génération d'image**, aujourd'hui totalement absent (§ 3.7) — à traiter en
+   premier dans cet axe.
+3. **Verrou de concurrence visible.** Savoir qu'une opération tourne vaut mieux que l'empêcher :
+   *« Forge en cours — l'Oracle attendra ~12 min »* est actionnable ; un bouton grisé ne l'est pas.
+4. **Plafonds par moment** : large en préparation, ~5 min en partie, **avec dégradation plutôt
+   qu'échec**. Aligner le plafond MCP (10 min) et le plafond modèle (45 min), aujourd'hui incohérents.
+5. **Borner la durée** : plafonner `num_predict` et afficher une estimation plutôt qu'une animation
+   indéterminée. *Le prévisible vaut mieux que le rapide : 90 s systématiques valent mieux que 30 s le
+   plus souvent et 8 min parfois.*
+
+#### Axe E — Assainir la voie Ollama · *~2 h*
+
+1. Étendre `ollamaChat` / `ollamaChatStream` pour transmettre `format` et `options` (`num_ctx`,
+   `num_predict`, `temperature`, `keep_alive`). Touche `preload.ts:95-96`, `window.d.ts:176-177`,
+   `OllamaService.ts`.
+2. Passer le **schéma JSON natif** ; retirer `extractStructuredJSON` et `sanitizeJSON` pour Ollama.
 3. Corriger `ChronicleService.ts:53` : activer `lite`.
-4. **Borner la durée** : plafonner `num_predict` pour que le temps de réponse soit prévisible, et
-   afficher une estimation plutôt qu'une animation indéterminée. *Le prévisible vaut mieux que le
-   rapide : 90 s systématiques valent mieux que 30 s le plus souvent et 8 min parfois.*
-5. Plafonner `MAX_TEXT_CHARS` sur le `num_ctx` réel, et **avertir dans l'UI** quand un document est écarté.
+4. Plafonner `MAX_TEXT_CHARS` sur le `num_ctx` réel, et **avertir dans l'UI** quand un document est écarté.
 
-### Axe E — Inverser la chaîne NotebookLM des Forges · *~4 h*
+#### Axe F — Brancher le mode · *~3 h*
 
-Deux chaînes coexistent aujourd'hui, et elles font l'inverse l'une de l'autre.
+1. `AIService` lit l'état de session **globalement** (§ 1.2) et en dérive ses défauts : contexte,
+   fournisseur, moteur d'image, plafond.
+2. **Généraliser le motif du générateur de butin** (§ 3.8) : le choix de contexte visible et
+   surchargeable, pas caché.
+3. **Corriger les appels en partie qui portent le RAG complet** : `useNPCStore.ts:150,167`,
+   `CombatCard.ts:135`, `useNarrativeGenerator.ts:66`, `useVoiceStore.ts:263`.
+4. **Jamais de diffusion locale en partie** — cloud direct pour les images (§ 3.7).
+5. **Afficher le mode là où il agit**, pas seulement dans le cockpit : si la Forge se comporte
+   différemment parce qu'une session est ouverte, c'est la Forge qui doit le dire, avec le moyen de
+   passer outre. Sinon on recrée l'action à distance qu'on cherche à éviter.
 
-**Chaîne A — l'Atelier de règles (fonctionne).** `notebook_query` fait distiller le document **chez
-Google**, la fiche de 5 Ko revient et part dans `docs/systems/<id>/rules/`. Le livre ne transite jamais
-par Ollama. C'est ce circuit qui a produit les fiches propres de Rêves de Dragons, NOC et Blade Runner.
+#### Axe G — Pause de séance · *~2 h*
 
-**Chaîne B — Forges Système et Chronique (coince).** `ForgeDashboard.tsx:212` appelle
-**`source_get_content`**, qui renvoie le **texte brut intégral**. Celui-ci part dans les 100 000
-caractères de `forgeSystem`, puis se fait tronquer à 16 384 tokens. **NotebookLM n'y est qu'un
-presse-papier** : on confie la digestion au composant qui en est le moins capable.
+Un bouton « pause » avec chronomètre. La pause **lève les plafonds de partie** et autorise le travail
+long ; la reprise **récupère l'IA**.
 
-**Travail :** remplacer `source_get_content` par `notebook_query`, avec un gabarit de questions par type
-de forge (dés / combat / fiche / ambiance, ou synopsis / PNJ / lieux / lore). Chaque requête rend 3 à
-5 Ko ; Ollama ne fait plus que mettre en forme ~15 Ko en JSON.
+- **Implémentation : un `pausedAt?: number` sur la session, pas un quatrième statut.** Les statuts sont
+  `'planned' | 'active' | 'done'` et **cinq composants testent `status === 'active'`** — un statut
+  `paused` les ferait tous considérer la session comme absente, alors que le Hub reste affiché et la
+  projection en cours. Un champ séparé laisse les cinq lecteurs intacts.
+- **À la reprise : finir la passe en cours, abandonner la file, prévenir.** Couper net à la onzième
+  minute sur douze serait punitif et dissuaderait de rien lancer. Cela suppose le découpage en passes
+  (axe K) — **c'est la seconde raison d'être de cet axe**, et ce qui le fait remonter dans l'ordre.
+- **Plafonner par le temps de pause restant** plutôt que par une constante : *« pause de 15 min : cette
+  Forge en demande 4, on y va »*.
+- Le chronomètre **vaut le coup indépendamment de l'IA** — savoir que la pause dure depuis 18 minutes
+  est utile en soi. Et il ferme le risque d'oubli, comme l'indicateur de session ouverte.
+
+### Bloc III — Déplacer le travail
+
+#### Axe H — Les canevas · *~5 h · conditionne I, L et M*
+
+> Répond à la question *qui décide du découpage en sujets ?* Décision de David : **ni le MJ seul, ni
+> NotebookLM — un canevas partagé, avec des règles minimales.**
+
+Point de départ : **un système ne couvre pas toutes les règles d'un jeu.** GM-OS n'a pas besoin de
+connaître Rêves de Dragons, mais **la part qu'il exploite** — déterminable en lisant ce que le code
+consomme.
+
+**Deux canevas, pas un** — les deux Forges n'ont ni le même but ni les mêmes exclusions :
+
+| | Canevas **Système** | Canevas **Scénario / Campagne** |
+|---|---|---|
+| Sujets | dés et résolution, initiative, stats suivies, portées, états, dégâts, oppositions, ton | synopsis et enjeux, factions, PNJ majeurs et relations, lieux, indices et rumeurs, accroches, actes |
+| Exclusions | création de personnage, progression, équipement, historique de l'univers | **les règles**, qui relèvent de l'autre canevas |
+| Alimente | `ForgeDashboard` → `forgeSystem` | `ChronicleForge` → `forgeChronicle` |
+
+Les exclusions comptent autant que les sujets : **ce sont les chapitres les plus volumineux des livres**,
+et les écarter d'entrée retire l'essentiel du bruit avant même de distiller.
+
+**Structure :** par canevas, une liste de sujets partagée, plus un **état de couverture** par système ou
+campagne — fiche / index seul / absent / hors périmètre.
+
+**Trois bénéfices :** la couverture devient mesurable (« Alien : 3 sujets sur 12 ») ; le journal des
+lacunes est **borné** (une question hors canevas n'est pas une fiche manquante) ; et **le canevas
+engendre les prompts**, exclusions comprises.
+
+#### Axe I — Inverser la chaîne NotebookLM · *~4 h*
+
+Remplacer `source_get_content` par `notebook_query`, avec les gabarits de questions issus des canevas
+(axe H). Chaque requête rend 3 à 5 Ko ; Ollama ne fait plus que mettre en forme ~15 Ko en JSON.
 
 **Sources dérivées.** `source_add` permet de réécrire chaque synthèse **dans le carnet** comme nouvelle
-source, filtrable ensuite par `source_ids`. Le carnet se construit en couches : livres bruts en bas,
-synthèses au-dessus. **Écriture double** — la synthèse part aussi dans `docs/` via `writeDoc`, pour que
-le savoir distillé n'ait pas Google pour unique domicile. `writeDoc` déclenche déjà `updateIndex()`.
+source, filtrable par `source_ids`. Le carnet se construit en couches : livres bruts en bas, synthèses
+au-dessus. **Écriture double** — la synthèse part aussi dans `docs/` via `writeDoc`, pour que le savoir
+distillé n'ait pas Google pour unique domicile.
 
-**Réserves :** `notebook_query` pilote un vrai navigateur (dizaines de secondes par requête, faillible,
-exige le réseau et un compte Google) ; les réponses sont non déterministes ; **la forme des réponses est
-instable** — `notebook_get` rend `sources` *à côté* de `notebook`, piège déjà rencontré le 2026-08-07.
-Chaque étape doit être reprenable, pas tout ou rien.
+**Usage de nettoyage :** mettre les quatre copies d'Alien dans un même carnet et demander **une**
+synthèse consolidée par sujet. NotebookLM sait réconcilier des sources redondantes — c'est le moyen de
+convertir la génération 1 en génération 3 pour les deux systèmes qui restent sales (§ 3.10).
 
-### Axe F — L'Oracle bibliothécaire · *~6 h · chantier de fond*
+**Réserves :** `notebook_query` pilote un vrai navigateur (dizaines de secondes, faillible, exige réseau
+et compte Google) ; réponses non déterministes ; **forme des réponses instable** — `notebook_get` rend
+`sources` *à côté* de `notebook`, piège rencontré le 2026-08-07. Chaque étape doit être reprenable.
 
-Quatre étages, du moins coûteux au plus coûteux :
+#### Axe J — Sélecteur de moteur par Forge · *~4 h*
 
-1. **Recherche dans les fiches** (`docs/systems/*/rules/*.md`). Aucun modèle invoqué.
-2. **À défaut, la référence dans le livre** : « Rêves de Dragons, p. 142, section Ivresse ». Ouverture
-   du PDF **en secours ou sur demande explicite du MJ** — jamais dans le chemin critique.
-3. **À défaut, un jugement de table** (*ruling*) — décision de David : une proposition **en deux lignes**,
-   annoncée comme n'étant pas la règle officielle. Quatre exigences, chacune pour une raison :
-   - **Deux lignes maximum.** La longueur est le signal : une réponse courte se lit comme une
-     proposition, une réponse longue se lit comme une autorité.
-   - **L'étiquette avant le contenu**, jamais après — « Pas de règle officielle trouvée, proposition : … ».
-     Placée après, elle arrive quand le MJ a déjà adopté la réponse.
-   - **Aucune citation, aucun numéro de page.** Un ruling qui cite a l'apparence d'une règle ;
-     l'absence de source *est* l'information.
-   - **Versé directement au journal des lacunes.** Un ruling est par définition une fiche manquante —
-     c'est même le signal le plus fiable dont on dispose.
+Arbitrage de David : **cloud accepté pour les Forges, choix explicite à chaque lancement**, jamais de
+bascule automatique.
 
-   Effet secondaire heureux : deux lignes font ~60 tokens, soit ~10 s de rédaction. **L'étage le plus
-   incertain est aussi le plus rapide**, ce qui est le bon ordre.
-4. **Journal des lacunes** : toute question note ce que la recherche a atteint (fiche / index seul /
-   ruling / rien). Les trois dernières catégories **sont la file de travail de la Forge**, et le
-   canevas (axe J) en borne le périmètre : une question hors canevas n'est pas une fiche manquante.
+1. `provider?: AIProvider` sur `generateJSON` / `generateText`, court-circuitant `activeProvider`
+   **sans le modifier globalement**.
+2. Le badge moteur de `ChronicleForge.tsx:366-369` devient un sélecteur, avec estimation de durée.
+3. **Idem dans `ForgeDashboard.tsx`** — voir la mise en garde du § 8 sur la plomberie partagée.
+4. Mémoriser le dernier choix par Forge, mais **toujours l'afficher**.
 
-**Ce que ça change :** l'Oracle cesse d'être un agent conversationnel avec du RAG pour devenir un
-**bibliothécaire** — il trouve, il cite, et il sait dire « je n'ai pas, mais c'est là ». La valeur de
-l'étage 1 n'est pas la milliseconde, c'est **la traçabilité** : la réponse vient d'une fiche validée,
-pas d'un modèle qui improvise.
+**L'Oracle et le Cortex n'en ont pas besoin** : après les axes A à C, le local tient leur budget (§ 5).
 
-**Le journal des lacunes est la meilleure idée du lot** : aujourd'hui les sujets à forger sont choisis à
-l'intuition ; là, **l'usage réel en séance les désigne**. Deux points de conception : pas de pouces
-haut/bas (friction à table, jamais cliqués — le journal se remplit sans intervention), et **regrouper
-avant de forger**, sinon dix questions sur l'ivresse produisent dix fiches au lieu d'une.
+#### Axe K — Découper les Forges · *~4 h · remonté*
 
-**Transparence obligatoire :** afficher *quelle* fiche a répondu. L'étage 1 peut matcher la mauvaise.
+- **`forgeSystem`** : passe 1 → `driver` ; passe 2 → `template`, *en lui fournissant les `statsToTrack`
+  de la passe 1*. La cohérence des identifiants, aujourd'hui demandée en prose
+  (`ForgeService.ts:89-97`), devient **structurelle**. *Une contrainte qu'on peut faire respecter par
+  construction ne devrait jamais être une consigne au modèle.*
+- **`forgeChronicle`** : une passe par section, en chaîne.
+- Barre de progression réelle, **reprise à la passe échouée**.
 
-**Couverture actuelle — 15 fiches sur 9 systèmes :**
+**Pourquoi il remonte :** classé en dernier tant qu'il n'apportait que le confort. **La pause de séance
+(axe G) lui donne une seconde raison d'exister** — sans passes, « couper à la reprise » ne peut signifier
+que « tout jeter ». Il conditionne aussi la file d'attente non bloquante du § 1.
 
-| blade-runner | noc | rêves de dragons | alien, coc7, cthulhu hack, dnd-5e, dune, nephilim |
-|---|---|---|---|
-| 4 | 4 | 7 | **0** |
+### Bloc IV — Le savoir
 
-L'Oracle vivra donc longtemps à l'étage 2. Ce n'est pas un défaut, c'est le régime nominal d'un système
-qui apprend — mais l'étage 2 doit être bon.
+#### Axe L — Index des livres · *~5 h*
 
-### Axe G — Index des livres · *~5 h*
+**Deux couches, deux producteurs — et aucun numéro de page ne vient jamais d'un modèle.** Les LLM sont
+notoirement mauvais avec les pages, et la page imprimée « 142 » est rarement la 142ᵉ page du PDF. Une
+référence fausse à table est **pire que pas de référence**.
 
-**Deux couches, deux producteurs — et aucun numéro de page ne vient jamais d'un modèle.**
+1. **Couche mécanique, locale, déterministe.** `pdf-parse` est déjà en dépendance (`RAGEngine.ts:9`) et
+   rend le texte page par page : pages exactes, offset, recherche plein texte. **C'est la méthode qui a
+   produit le `.jsonl` de Cthulhu Hack** (210 chunks avec `page_start`, `source_pdf`).
+2. **Couche thématique, NotebookLM.** Répond à « où parle-t-on de l'ivresse ? », ce qu'aucun sommaire ne
+   couvre.
+3. **Croisement** : le sujet vient de NotebookLM, **la page sort du PDF**.
 
-Les LLM sont notoirement mauvais avec les numéros de page, et la page imprimée « 142 » est rarement la
-142ᵉ page du PDF. Une référence fausse à table est **pire que pas de référence**.
-
-1. **Couche mécanique, locale, déterministe.** `pdf-parse` est déjà en dépendance
-   (`RAGEngine.ts:9`) et rend le texte page par page. Donne les pages exactes, l'offset entre pagination
-   imprimée et pagination PDF, et une recherche plein texte. **C'est la méthode qui a produit le
-   `.jsonl` de Cthulhu Hack** — 210 chunks avec `page_start`, `page_end`, `source_pdf`.
-2. **Couche thématique, NotebookLM.** Sa valeur n'est pas le sommaire, que le PDF contient déjà, mais
-   de répondre à « où parle-t-on de l'ivresse ? » — ce qu'aucune table des matières ne couvre.
-3. **Croisement** : le sujet vient de NotebookLM, on le cherche dans l'index mécanique, **la page sort
-   du PDF**.
-
-**Format du fichier d'index**, dans `docs/systems/<id>/index/<livre>.md` :
+**Format**, dans `docs/systems/<id>/index/<livre>.md` :
 
 ```markdown
 ---
@@ -322,7 +513,6 @@ title: Rêves de Dragons — Livre de base
 file: \\NAS\JDR\Reves de Dragons\RdD-Livre-de-base.pdf
 pages: 320
 pageOffset: 4          # page imprimée 1 = page PDF 5
-generatedAt: 2026-08-07
 ---
 
 | Sujet | Page PDF | Page imprimée | Mots-clés |
@@ -330,131 +520,97 @@ generatedAt: 2026-08-07
 | Jet d'éthylisme | 146 | 142 | ivresse, alcool, endurance |
 ```
 
-Lisible par le MJ, indexé par le RAG comme simple texte, analysable pour le saut de page.
-
-**Chemins des livres.** À stocker au niveau **système** (livres de règles, plusieurs par système) et
-**campagne** (scénarios). Le motif existe déjà : `Campaign` porte `ragPath`, `notebookUrl`,
-`systemPath`, `campaignPath`, `obsidianPath` (`campaign.types.ts:62-68`) ; `GameDriver` a `ragPath` et
-`defaultNotebookUrl`. **Une liste, pas un chemin unique** — dès qu'il y a un supplément, « p. 142 » est
-ambigu. **En UNC (`\\NAS\...`), pas en lettre de lecteur** : une lettre mappée dépend de la session
-Windows et disparaît sur la tablette.
+**Chemins des livres** — les PDF sont sur un disque réseau. À stocker au niveau **système** (règles) et
+**campagne** (scénarios) ; le motif existe déjà (`campaign.types.ts:62-68`). **Une liste, pas un chemin
+unique** — dès qu'il y a un supplément, « p. 142 » est ambigu. **En UNC (`\\NAS\...`), pas en lettre de
+lecteur** : une lettre mappée dépend de la session Windows et disparaît sur la tablette.
 
 **Contraintes réseau :**
 
 - **L'index reste toujours local dans `docs/`.** Seule l'ouverture du PDF exige le réseau. Dégradation
   utile : « Rêves de Dragons, p. 142 — disque non joignable ».
 - **Jamais d'indexation à la volée.** Opération explicite, hors séance.
-- **La sécurité est à concevoir, pas à contourner.** `RAGEngine.ts:255` confine délibérément les
-  écritures à `docs/` ; lire un PDF ailleurs demande un second chemin, explicitement autorisé, en
-  lecture seule.
-
-**Stratégie de déploiement :** un index coûte *une* requête NotebookLM par livre, bien moins que forger
-trente fiches. **Indexer tous les systèmes d'abord, forger les fiches ensuite, au fil des lacunes.**
-
-**Ouverture du PDF — vérifié par test réel** (Electron 34.5.8 / Chrome 132, sur un PDF du corpus) :
-
-- `webContents.findInPage("terme")` **fonctionne sur le lecteur PDF interne** — renvoie `matches` et
-  `activeMatchOrdinal`. Le greffon met ~3 s à s'initialiser : attendre `did-finish-load` puis réessayer.
-- `#page=N` fonctionne.
-- Le fragment `#search=` charge sans erreur, **mais rien ne prouve qu'il soit honoré** — un fragment
-  inconnu est ignoré en silence. Ne pas s'appuyer dessus.
+- **La sécurité est à concevoir, pas à contourner.** `RAGEngine.ts:255` confine les écritures à `docs/` ;
+  lire un PDF ailleurs demande un second chemin, explicitement autorisé, en lecture seule.
 - Sur un chemin UNC, l'URL devient `file://///NAS/...` — cinq barres obliques.
 
-**Bénéfice inattendu du test : `matches` est un signal de vérification.** Si l'index annonce la page 146
-et que `findInPage` renvoie `matches = 0`, quelque chose cloche — offset erroné, extraction ratée,
-mauvais livre. **Le moteur du lecteur devient un contrôleur de l'index plutôt qu'un concurrent**, et ça
-se journalise comme les lacunes. Vu la fragilité des numéros de page, c'est le filet qui manquait.
+**Ouverture du PDF : `findInPage`, pas `#search=`** (§ 2). **Et `matches` est un signal de vérification :**
+si l'index annonce la page 146 et que `findInPage` renvoie `matches = 0`, quelque chose cloche — offset
+erroné, extraction ratée, mauvais livre. **Le moteur du lecteur devient un contrôleur de l'index plutôt
+qu'un concurrent**, et cela se journalise comme les lacunes.
 
-### Axe H — Sélecteur de moteur par Forge · *~4 h*
+**Stratégie :** un index coûte *une* requête NotebookLM par livre, bien moins que forger trente fiches.
+**Indexer tous les systèmes d'abord, forger les fiches ensuite, au fil des lacunes.**
 
-Arbitrage retenu par David : **cloud accepté pour les Forges, mais choix explicite à chaque
-lancement** — jamais de bascule automatique.
+#### Axe M — L'Oracle bibliothécaire · *~6 h · chantier de fond*
 
-1. Ajouter `provider?: AIProvider` à `generateJSON` / `generateText`, court-circuitant
-   `useAIStore.activeProvider` **sans le modifier globalement**.
-2. Transformer le badge moteur de `ChronicleForge.tsx:366-369` (aujourd'hui en lecture seule) en
-   sélecteur, avec estimation de durée par option.
-3. **Faire de même dans `ForgeDashboard.tsx`.** ⚠️ Les deux Forges sont des **fonctionnalités
-   distinctes** (système / campagne), mais elles partagent ~180 lignes de plomberie NotebookLM
-   dupliquée : `handleOpenNotebookLM`, `handleNotebookSelect`, `handleSourceImport`, `handleFileUpload`.
-   Toute modification de l'acquisition de sources doit être portée dans les deux — ou, mieux,
-   **extraire d'abord un sélecteur de sources partagé** (voir § 8).
-4. Mémoriser le dernier choix par type de Forge, mais **toujours l'afficher**.
-5. Clés i18n `fr` et `en`.
+Quatre étages, du moins coûteux au plus coûteux :
 
-**Note :** l'Oracle et le Cortex n'ont pas besoin de ce sélecteur — après les axes A à C, le local tient
-leur budget (§ 5).
+1. **Recherche dans les fiches** (`docs/systems/*/rules/*.md`). Aucun modèle invoqué.
+2. **À défaut, la référence dans le livre** : « Rêves de Dragons, p. 142, section Ivresse ». Ouverture du
+   PDF **en secours ou sur demande explicite du MJ** — jamais dans le chemin critique.
+3. **À défaut, un jugement de table** (*ruling*) — décision de David : une proposition **en deux
+   lignes**, annoncée comme n'étant pas la règle officielle. Quatre exigences :
+   - **Deux lignes maximum.** La longueur est le signal : une réponse courte se lit comme une
+     proposition, une longue comme une autorité.
+   - **L'étiquette avant le contenu**, jamais après — placée après, elle arrive quand le MJ a déjà
+     adopté la réponse.
+   - **Aucune citation, aucun numéro de page.** Un ruling qui cite a l'apparence d'une règle ;
+     l'absence de source *est* l'information.
+   - **Versé au journal des lacunes.** Un ruling est par définition une fiche manquante.
 
-### Axe I — Découper les Forges · *~4 h · en dernier*
+   Deux lignes font ~60 tokens, soit ~10 s : **l'étage le plus incertain est aussi le plus rapide**.
+4. **Journal des lacunes** : chaque question note ce que la recherche a atteint (fiche / index / ruling /
+   rien). Les trois dernières catégories **sont la file de travail de la Forge**, bornée par les canevas.
 
-- **`forgeSystem`** : passe 1 → `driver` ; passe 2 → `template`, *en lui fournissant les `statsToTrack`
-  de la passe 1*. La cohérence des identifiants, aujourd'hui demandée au modèle en prose
-  (`ForgeService.ts:89-97`, « RÈGLES DE COHÉRENCE CRITIQUES »), devient **structurelle**. *Une
-  contrainte qu'on peut faire respecter par construction ne devrait jamais être une consigne au modèle.*
-- **`forgeChronicle`** : une passe par section, en chaîne (les entités ont besoin du synopsis, le lore
-  des entités).
-- Barre de progression réelle, **reprise à la passe échouée** plutôt que tout refaire.
+**Ce que ça change :** l'Oracle devient un **bibliothécaire** — il trouve, il cite, et il sait dire « je
+n'ai pas, mais c'est là ». La valeur de l'étage 1 n'est pas la milliseconde, c'est **la traçabilité**.
 
-**Honnêteté sur le gain :** le découpage ne réduit pas beaucoup le temps *total* en local. Il apporte la
-progression visible, la reprise après échec et la fin des troncatures. Le gain de temps brut vient des
-axes A, B et E.
+**Le journal des lacunes est la meilleure idée du lot** : les sujets à forger cessent d'être choisis à
+l'intuition, **l'usage réel en séance les désigne**. Deux points de conception : **pas de pouces
+haut/bas** (friction à table, jamais cliqués — le journal se remplit sans intervention, et une question
+reformulée dans la minute est un signal gratuit) ; et **regrouper avant de forger**, sinon dix questions
+sur l'ivresse produisent dix fiches au lieu d'une.
 
-### Axe J — Le canevas de système · *~4 h · à faire avant l'axe E, qu'il alimente*
+**Transparence obligatoire :** afficher *quelle* fiche a répondu. L'étage 1 peut matcher la mauvaise.
 
-> Répond à la question laissée ouverte : *qui décide du découpage en sujets ?* Décision de David :
-> **ni le MJ seul, ni NotebookLM — un canevas partagé, avec des règles minimales.**
+**Couverture actuelle : 15 fiches, 3 systèmes sur 9** (§ 3.10). L'Oracle vivra donc longtemps à
+l'étage 2 — c'est le régime nominal d'un système qui apprend, mais l'étage 2 doit être bon.
 
-Point de départ : **un système ne couvre pas toutes les règles d'un jeu.** GM-OS n'a pas besoin de
-connaître Rêves de Dragons, il a besoin d'en connaître **la part qu'il exploite**. Et cette part est
-déterminable en lisant ce que le code consomme.
+### Bloc V — L'interface
 
-**Périmètre — ce que GM-OS lit réellement d'un système :**
+#### Axe N — Deux régimes d'interface · *~6 h*
 
-| Sujet du canevas | Consommé par |
-|---|---|
-| Dé et logique de résolution, seuils, critiques | `driver.dice`, table de dés |
-| Formule d'initiative | `driver.combat.initiativeFormula` |
-| Stats à suivre, type de santé | `driver.combat.statsToTrack`, `defaultHealthType` |
-| **Portées et distances** | `driver.tactical.ranges`, Cortex, table de dés |
-| États et conditions | `Combatant.statuses` |
-| Dégâts, guérison, récupération | combat |
-| Oppositions, assistance, jets de groupe | Oracle |
-| Ton et directives MJ | `driver.aiInstructions` |
+La partition existe **déjà de fait** dans `CurrentView` (`campaign.types.ts:23-44`), et David l'a même
+déjà appliquée à un module : `session-prep` / `session-focus`.
 
-**Hors périmètre, à exclure explicitement dans chaque prompt :** création de personnage, progression et
-expérience, listes d'équipement et prix, historique de l'univers, règles de campagne longue. **Ce sont
-les chapitres les plus volumineux des livres** — les exclure d'entrée retire l'essentiel du bruit avant
-même de distiller.
+| Préparation | En partie | Les deux |
+|---|---|---|
+| `forge`, `rule-workshop`, `template-editor`, `driver-editor`, `templates`, `library`, `campaign-editor`, `session-prep`, `storyboard`, `deck-library` | `session-focus`, `deck-player`, `rulebook` | `npc-gallery`, `world-atlas`, `social-graph`, `timeline-wiki`, `players`, `cockpit` |
 
-**Deux canevas, pas un** — les deux Forges n'ont pas le même but, donc pas les mêmes sujets ni les mêmes
-exclusions :
+**Trois temps de coût croissant :**
 
-| | Canevas **Système** | Canevas **Scénario / Campagne** |
-| --- | --- | --- |
-| Sujets | dés et résolution, initiative, stats suivies, portées, états, dégâts, oppositions, ton | synopsis et enjeux, factions, PNJ majeurs et relations, lieux, indices et rumeurs, accroches, rythme et actes |
-| Exclusions | création de personnage, progression, équipement, historique de l'univers | les règles du système, qui relèvent de l'autre canevas |
-| Alimente | `ForgeDashboard` → `forgeSystem` | `ChronicleForge` → `forgeChronicle` |
+1. **Classer les vues** par affinité — quelques lignes, sert immédiatement la navigation et les
+   avertissements.
+2. **Dédoubler `LayoutConfig`** par mode. Il porte déjà `activeModule`, `isAIPanelOpen`,
+   `isTacticalPanelOpen`, et il est **persisté par campagne** : deux dispositions livrent l'essentiel du
+   bénéfice pour très peu de code. On retrouve son atelier tel qu'on l'a laissé le samedi matin, et sa
+   table telle qu'on l'a laissée le samedi soir.
+3. **Deux vues seulement là où c'est justifié** — combat, carte, PNJ, Oracle, journal. Pas 24 modules.
 
-**Structure :** pour chaque canevas, une liste de sujets partagée par tous les systèmes, plus un **état
-de couverture** par système ou campagne — fiche / index seul / absent / hors périmètre.
+**Ce qui change vraiment entre les deux modes** n'est pas la liste des boutons : la **densité** (à table
+on regarde de loin, parfois debout, souvent en parlant), les **valeurs par défaut** (en préparation on
+veut choisir, en séance on veut que ce soit déjà choisi), et **ce qui est à portée de main** (aucune
+action destructive ni monopolisante près de ce qu'on touche en partie).
 
-**Trois bénéfices :**
-
-- **La couverture devient mesurable.** « Alien : 3 sujets sur 12 » vaut mieux que « il manque des trucs ».
-- **Le journal des lacunes est borné.** Une question hors canevas n'est pas une fiche manquante, c'est
-  hors périmètre — sans quoi le journal se remplit de bruit.
-- **Le canevas engendre les prompts.** Un sujet = un prompt de base, ses exclusions déjà rédigées.
-
-**Flux complet** : canevas → prompts vers NotebookLM → sources distillées (écrites dans le carnet *et*
-dans `docs/`) → **forge du système ou de la campagne sur ces sources-là**, jamais sur les livres bruts.
-La Forge cesse d'avaler un livre pour lire une douzaine de synthèses ciblées.
+> ⚠️ **Garde-fou impératif : toute vue dédoublée partage ses composants, jamais son implémentation.**
+> Sans quoi on refabrique en série la duplication de plomberie des deux Forges (§ 8).
 
 ---
 
 ## 5. Chiffrage
 
-**Oracle** — réponse de 200 à 400 tokens, soit 35 à 65 s de rédaction incompressibles. Tout se joue
-donc sur le prefill.
+**Oracle** — réponse de 200 à 400 tokens, soit 35 à 65 s de rédaction incompressibles.
 
 | Configuration | Prefill | Rédaction | Total | Budget 1-2 min |
 |---|---|---|---|---|
@@ -463,142 +619,145 @@ donc sur le prefill.
 | + Axe A (iGPU) | 56 s | ~50 s | **~1,8 min** | ✓ |
 | + Axe C, questions suivantes | ~7 s | ~50 s | **~1 min** | ✓✓ |
 
-**Deux conclusions.** L'axe A est **porteur, pas confortable** : sans lui, même le RAG réparé laisse
-l'Oracle hors budget. Et **le local suffit** — pas de cloud nécessaire pour l'Oracle ni le Cortex.
+**L'axe A est porteur, pas confortable**, et **le local suffit** — pas de cloud pour l'Oracle ni le Cortex.
 
-**Cortex** — deux appels séquentiels (`NUM_PARALLEL=1`), dont un au contexte doublé.
+**Cortex** — deux appels séquentiels, dont un au contexte doublé.
 
 | Configuration | Total | Budget 30-60 s |
 |---|---|---|
 | Aujourd'hui | ~36 min | ❌ |
 | Axes A + B | ~4 min | ❌ |
-| + Axe C (double RAG supprimé, préfixe réutilisé, contexte restreint aux règles de combat) | **~1 min** | ~ |
+| + Axe C | **~1 min** | ~ |
 
-Le Cortex reste le point le plus tendu. Si la minute s'avère trop longue en séance, les leviers
-restants sont de réduire encore son contexte ou de fusionner ses deux appels en un.
+Reste le point le plus tendu. Levier non évalué : **fusionner ses deux appels en un seul** (document
+jumeau).
 
 **Forge complète :**
 
 | Configuration | Durée |
 |---|---|
 | Aujourd'hui (CPU) | ~24 à 30 min |
-| + Axes A et D | ~9 à 15 min |
-| + Axe E (NotebookLM distille) | **~2 à 5 min**, sans troncature |
-| Gemini Flash (Axe H) | **~30 s** |
+| + Axes A et E | ~9 à 15 min |
+| + Axe I (NotebookLM distille) | **~2 à 5 min**, sans troncature |
+| Gemini Flash (axe J) | **~30 s** |
+
+**Convergence notable :** à 25 minutes, une Forge ne rentre dans aucune pause honnête. À 2-5 minutes,
+elle rentre confortablement dans une pause de quinze. **L'axe I ne fait pas qu'accélérer la Forge : il la
+rend compatible avec le mode pause de l'axe G.**
 
 ---
 
 ## 6. Ordre recommandé
 
-| Ordre | Axe | Effort | Pourquoi ici |
+| # | Axe | Effort | Pourquoi ici |
 |---|---|---|---|
-| 1 | **A — iGPU** | 15 min | Aucun code, réversible, et porteur : sans lui l'Oracle reste hors budget |
-| 2 | **B — RAG** | ~3 h | Meilleur rapport gain/effort, corrige la **qualité**, profite aux 20 modules |
-| 3 | **C — ordre du prompt + Cortex** | ~2 h | Débloque le seul usage encore hors budget après A et B |
-| 4 | **D — voie Ollama** | ~2 h | Petit, sans risque, met fin aux troncatures muettes et borne les durées |
-| 5 | **J — canevas de système** | ~4 h | Borne le périmètre et engendre les prompts : conditionne E, F et G |
-| 6 | **E — inversion NotebookLM** | ~4 h | Déplace le poids des Forges hors de la machine ; consomme les prompts de J |
-| 7 | **G — index des livres** | ~5 h | Prérequis de l'étage 2 de l'axe F |
-| 8 | **F — Oracle bibliothécaire** | ~6 h | Le chantier de fond ; s'appuie sur G et J |
-| 9 | **H — sélecteur de moteur** | ~4 h | Après B et E, pour que l'estimation affichée soit juste |
-| 10 | **I — découpage des Forges** | ~4 h | Le plus structurant, le moins urgent |
+| 1 | **A — iGPU** | 15 min | Aucun code, réversible, porteur |
+| 2 | **D.2 — délai d'abandon sur les images** | ~30 min | Meilleur rapport gain/effort : quelques lignes contre un blocage illimité en partie |
+| 3 | **B — RAG** | ~3 h | Meilleur gain global, corrige la **qualité**, sert 20 modules |
+| 4 | **C — ordre du prompt + Cortex** | ~2 h | Débloque le dernier usage hors budget |
+| 5 | **D — annulation, verrou, plafonds** | ~3,5 h | Conditionne les plafonds et la pause |
+| 6 | **E — voie Ollama** | ~2 h | Petit, sans risque, fin des troncatures muettes |
+| 7 | **F — brancher le mode** | ~3 h | Rend la partition opérante |
+| 8 | **H — canevas** | ~5 h | Borne le périmètre, engendre les prompts : conditionne I, L, M |
+| 9 | **I — inversion NotebookLM** | ~4 h | Déplace le poids hors de la machine ; rend la Forge compatible avec la pause |
+| 10 | **K — découpage des Forges** | ~4 h | Prérequis de la reprise après pause et de la file non bloquante |
+| 11 | **G — pause de séance** | ~2 h | S'appuie sur D et K |
+| 12 | **L — index des livres** | ~5 h | Prérequis de l'étage 2 de M |
+| 13 | **M — Oracle bibliothécaire** | ~6 h | Chantier de fond ; s'appuie sur L et H |
+| 14 | **J — sélecteur de moteur** | ~4 h | Après B et I, pour que l'estimation affichée soit juste |
+| 15 | **N — régimes d'interface** | ~6 h | Le plus visible, le moins urgent |
 
-**Total : ~34 h.** Les trois premiers axes — **5 h 15** — ramènent les trois usages dans leur budget.
-Tout le reste sert la justesse, la traçabilité et le confort, plus la vitesse.
-
-**L'axe J est le pivot du second bloc** : sans lui, E distille au jugé, F ne sait pas borner son journal
-et G ne sait pas quoi indexer en priorité.
+**Total : ~50 h.** Les quatre premières lignes — **moins de 6 h** — ramènent les trois usages dans leur
+budget et suppriment le pire blocage en partie. Tout le reste sert la justesse, la traçabilité et le
+confort, plus la vitesse.
 
 ---
 
 ## 7. Écarté, et pourquoi
 
-Le recadrage sur le budget réel a disqualifié plusieurs pistes envisagées en séance :
-
-- **Router les questions simples sur `llama3.2:3b`.** Le gain de vitesse ne rachète pas la perte de
-  qualité dès lors que 60 s sont acceptables.
-- **Récupération en deux appels** (index des sujets, puis contenu ciblé). Complexité mal payée : elle
-  visait à réduire un contexte que l'axe B ramène déjà à 4 000 tokens.
-- **Embeddings vectoriels** (`nomic-embed-text`). Amélioreraient la *pertinence*, pas la vitesse. À
-  reconsidérer si le RAG réparé sélectionne mal — pas avant.
-- **Augmenter `num_ctx`.** Rendrait la lenteur pire, pas meilleure (§ 3.4).
-- **Quantification plus agressive de `gemma4:12b`.** Coûte de la qualité, alors que le vrai gaspillage
-  est ailleurs.
-- **NotebookLM comme générateur de JSON.** Selenium, lent, non déterministe, sans garantie de format.
-  Sa place est en **distillateur** (axes E et G).
-- **Obsidian comme accélérateur.** Ne fait aucune inférence. Sa seule contribution possible est de
-  fournir un corpus mieux structuré au RAG.
+- **Router les questions simples sur `llama3.2:3b`.** Le gain ne rachète pas la perte de qualité dès lors
+  que 60 s sont acceptables.
+- **Récupération en deux appels** (index des sujets puis contenu). Complexité mal payée : visait à
+  réduire un contexte que l'axe B ramène déjà à 4 000 tokens.
+- **Embeddings vectoriels.** Amélioreraient la *pertinence*, pas la vitesse. À reconsidérer si le RAG
+  réparé sélectionne mal — pas avant.
+- **Augmenter `num_ctx`.** Rendrait la lenteur pire (§ 3.4).
+- **Quantification plus agressive.** Coûte de la qualité, alors que le gaspillage est ailleurs.
+- **NotebookLM comme générateur de JSON.** Selenium, lent, non déterministe. Sa place est en
+  **distillateur** (axes I et L).
+- **Obsidian comme accélérateur.** Ne fait aucune inférence.
 - **La recherche du lecteur PDF comme mécanisme principal.** Exige le PDF ouvert et le réseau, cherche
   dans un seul document sans classement, et ne sait pas dire « ce sujet n'existe nulle part » — donc
-  n'alimente pas le journal des lacunes. Conservée en **second temps**, pour le surlignage et la
-  vérification (axe G).
+  n'alimente pas le journal. Conservée en second temps, pour le surlignage et la vérification.
+- **Corroborer le mode par d'autres signaux** (combat en cours, Hub ouvert, tablette connectée). Toute la
+  valeur du signal vient de ce qu'il est **déclaré** ; y mêler de l'inféré le rendrait imprévisible.
+- **Bloquer des actions pendant une session.** Écarté au profit d'avertir + rendre annulable, pour deux
+  raisons : bloquer réduit la probabilité de l'accident sans en supprimer la conséquence (§ 3.3) ; et
+  **un garde-fou qui interdit ne doit jamais être le seul chemin de sortie de l'erreur qu'il protège** —
+  bloquer le changement de campagne rendrait irrécupérable une session démarrée sur la mauvaise. À table,
+  une interface qui refuse est pire qu'une interface qui prévient. Seul le **destructif** justifie un
+  blocage, indépendamment de la session.
 - **Changer de machine.** Les axes A à C ramènent tout dans les budgets sans dépense.
 
 ---
 
 ## 8. Points de vigilance
 
-- **Lever la réserve du § 2.2** avant de figer le chiffrage de l'axe B : relever la taille réelle du
-  contexte selon que le RAG pointe sur `docs/` ou sur le coffre Obsidian.
-- **L'axe A n'a été validé que sur un banc de quelques minutes.** Éprouver la stabilité du pilote
-  Vulkan Intel sur une séance complète avant d'en faire le réglage par défaut.
-- **Les deux Forges ne sont pas des doublons — rectification du 2026-08-08.** Une version antérieure de
-  ce document les décrivait comme « des jumeaux quasi identiques », et en tirait la mauvaise conclusion
-  (les fusionner). Ce sont **deux fonctionnalités légitimement distinctes** :
+- **Lever la réserve du § 2** avant de figer le chiffrage de l'axe B.
+- **L'axe A n'a été validé qu'au banc.** Éprouver le pilote Vulkan Intel sur une séance complète, en
+  observant **deux choses distinctes** : sa stabilité dans la durée, et la **fluidité de l'interface**
+  pendant une inférence — puisque l'iGPU pilote aussi l'affichage (§ 2). Si le compositing en souffre,
+  la contrepartie reste de garder l'inférence sur CPU en limitant son nombre de threads, ce qui
+  échangerait du débit contre de la réactivité.
+- **Les deux Forges ne sont pas des doublons — rectification du 2026-08-08.** Une version antérieure les
+  décrivait comme « des jumeaux quasi identiques » et en tirait la mauvaise conclusion (les fusionner).
+  Ce sont **deux fonctionnalités légitimement distinctes** :
 
   | | `ForgeDashboard` | `ChronicleForge` |
-  | --- | --- | --- |
+  |---|---|---|
   | Service | `forgeService.forgeSystem` | `chronicleForgeService.forgeChronicle` |
   | Sortie | `driver` + `template` | `campaign` + `entities` + `locations` + `lore` |
   | Prompt de base | `getSystemForgePrompt` | `getChroniclePrompt` |
 
-  Les prompts sont **déjà correctement séparés**. Ce qui est dupliqué, c'est la **plomberie
-  d'acquisition de sources NotebookLM** — quatre gestionnaires, ~180 lignes par fichier, soit ~25 % de
-  chacun. **Correction recommandée : extraire un sélecteur de sources partagé (`useNotebookSources` ou
-  un composant `<NotebookSourcePicker>`), et surtout pas fusionner les Forges.** C'est là que vivait le
-  bug de la migration Gemini Notebook du 2026-08-07 : une préoccupation partagée corrigée dans un seul
-  de ses deux exemplaires.
+  Les prompts sont **déjà correctement séparés**. Ce qui est dupliqué, c'est la **plomberie d'acquisition
+  de sources NotebookLM** — `handleOpenNotebookLM`, `handleNotebookSelect`, `handleSourceImport`,
+  `handleFileUpload`, soit ~180 lignes par fichier (~25 % de chacun). **Correction recommandée :
+  extraire un sélecteur de sources partagé, et surtout pas fusionner.** C'est là que vivait le bug de la
+  migration Gemini Notebook du 2026-08-07 : une préoccupation partagée corrigée dans un seul de ses deux
+  exemplaires.
 
   *Leçon de méthode : deux fichiers de taille voisine qui se ressemblent à la lecture ne sont pas
   forcément des doublons. Comparer ce qu'ils appellent et ce qu'ils produisent avant de conclure.*
-- **Les citations `[1]`, `[2]` des fiches existantes sont mortes** : `forgeCard` n'a pas conservé la
-  table de correspondance NotebookLM. À capturer en frontmatter lors des prochaines forges — l'étage 2
-  deviendrait alors gratuit même pour les sujets couverts, et le MJ pourrait vérifier au lieu de croire.
-- **Les `.jsonl` ne sont pas indexés** (`RAGEngine.ts:142` : `.md`, `.txt`, `.pdf` seulement), alors
-  qu'ils sont déjà chunkés avec métadonnées. 600 Ko de données idéales ignorées.
-- **Le corpus contient trois générations d'approche.** Le livre Alien existe en **quatre copies
-  recouvrantes** (~4,9 Mo), Cthulhu Hack en trois (~1,5 Mo). Dédupliquer avant d'optimiser la
-  récupération : quatre copies, c'est trois chances sur quatre de servir le même passage et d'en manquer
-  un autre.
-- `docs/` est le corpus indexé par le RAG : **n'y déposer aucune documentation technique**. Ce document
-  vit donc dans `documentation/Planning/`.
-- Piège d'environnement relevé pendant l'étude : le harnais définit `ELECTRON_RUN_AS_NODE=1`, ce qui
-  fait démarrer Electron en simple Node. Pour lancer une vraie fenêtre :
+
+- **Les citations `[1]`, `[2]` des fiches existantes sont mortes** : `forgeCard` n'a pas conservé la table
+  de correspondance NotebookLM. À capturer en frontmatter lors des prochaines forges — l'étage 2
+  deviendrait gratuit même pour les sujets couverts, et le MJ pourrait vérifier au lieu de croire.
+- **Dédupliquer le corpus avant d'optimiser la récupération** (§ 3.10).
+- `docs/` est le corpus indexé par le RAG : **n'y déposer aucune documentation technique.**
+- Piège d'environnement : le harnais définit `ELECTRON_RUN_AS_NODE=1`, ce qui fait démarrer Electron en
+  simple Node. Pour lancer une vraie fenêtre :
   `env -u ELECTRON_RUN_AS_NODE node_modules/electron/dist/electron.exe <dossier>`.
 
 ---
 
-## 9. Questions tranchées et renvois
+## 9. Questions tranchées
 
-Les trois questions laissées ouvertes en fin de séance ont été arbitrées par David.
+| Question | Arbitrage | Où |
+|---|---|---|
+| Que faire quand l'Oracle ne trouve rien ? | **Jugement de table en deux lignes**, annoncé comme non officiel | axe M, étage 3 |
+| Qui décide du découpage en sujets ? | **Un canevas partagé**, en deux versions | axe H |
+| Le Cortex mérite-t-il une étude à part ? | **Oui** — sa fiabilité, pas sa vitesse | document jumeau |
+| Faut-il bloquer des actions en session ? | **Non — avertir et rendre annulable** | § 7, axe D |
+| Faut-il des interfaces distinctes par mode ? | **Pas deux implémentations : deux compositions** | axe N |
+| Plafond court ou pause déclarée ? | **Les deux, ce sont des couches** | axe D et axe G |
 
-**1. Que faire quand les étages de l'axe F échouent ?** → **Un jugement de table en deux lignes,
-annoncé comme n'étant pas la règle officielle.** Intégré à l'axe F comme étage 3, avec ses quatre
-garde-fous. Le silence pur a été écarté : à table, une proposition explicitement étiquetée vaut mieux
-que rien, tant qu'elle ne peut pas être confondue avec une règle.
+---
 
-**2. Qui décide du découpage en sujets ?** → **Ni le MJ seul, ni NotebookLM : un canevas partagé avec
-des règles minimales**, fondé sur le constat qu'un système ne couvre pas toutes les règles d'un jeu.
-Devenu l'axe J, pivot du second bloc de travaux.
+## 10. Reste à défricher
 
-**3. Le Cortex mérite-t-il une étude à part ?** → **Oui, et pour une autre raison que prévu.** Son
-problème n'est qu'accessoirement la vitesse : **ses entrées sont peu fiables et il ne le signale
-jamais**. Config tactique du système ignorée, effondrement silencieux sans jeton lié, faction devinée.
-Traité dans un plan distinct :
-
-> **`documentation/Planning/2026-08-07-fiabilite-cortex-combat.md`**
-
-**Ce que ce plan-ci conserve du Cortex** : uniquement ses défauts de performance — contexte RAG envoyé
-en double, préfixe non réutilisable, contexte trop large (axe C). **Tout ce qui touche à la fiabilité de
-ses entrées relève de l'autre document.** Les deux se lisent ensemble : corriger la vitesse d'un module
-dont les entrées sont fausses ne ferait que produire des conseils faux plus vite.
+- **Fusionner les deux appels du Cortex en un seul** — non évalué, peut-être son vrai levier de
+  performance. Traité dans le document jumeau.
+- **Comportement quand les entrées du Cortex ne sont pas fiables** : refuser de conseiller, ou restreindre
+  explicitement le propos au non-spatial ? Document jumeau.
+- **Un mode « hors carte » assumé** pour le Cortex : beaucoup de combats se jouent sans carte, et il y est
+  aujourd'hui dégradé par accident plutôt que conçu pour.
