@@ -374,9 +374,11 @@ lancement** — jamais de bascule automatique.
    `useAIStore.activeProvider` **sans le modifier globalement**.
 2. Transformer le badge moteur de `ChronicleForge.tsx:366-369` (aujourd'hui en lecture seule) en
    sélecteur, avec estimation de durée par option.
-3. **Faire de même dans `ForgeDashboard.tsx`.** ⚠️ Ces deux composants sont des jumeaux quasi identiques
-   portant le même titre traduit : corriger l'un sans l'autre ne se voit pas. Piège déjà rencontré lors
-   de la migration MCP du 2026-08-07.
+3. **Faire de même dans `ForgeDashboard.tsx`.** ⚠️ Les deux Forges sont des **fonctionnalités
+   distinctes** (système / campagne), mais elles partagent ~180 lignes de plomberie NotebookLM
+   dupliquée : `handleOpenNotebookLM`, `handleNotebookSelect`, `handleSourceImport`, `handleFileUpload`.
+   Toute modification de l'acquisition de sources doit être portée dans les deux — ou, mieux,
+   **extraire d'abord un sélecteur de sources partagé** (voir § 8).
 4. Mémoriser le dernier choix par type de Forge, mais **toujours l'afficher**.
 5. Clés i18n `fr` et `en`.
 
@@ -424,8 +426,17 @@ expérience, listes d'équipement et prix, historique de l'univers, règles de c
 les chapitres les plus volumineux des livres** — les exclure d'entrée retire l'essentiel du bruit avant
 même de distiller.
 
-**Structure :** une liste de sujets partagée par tous les systèmes, plus un **état de couverture** par
-système — fiche / index seul / absent / hors périmètre.
+**Deux canevas, pas un** — les deux Forges n'ont pas le même but, donc pas les mêmes sujets ni les mêmes
+exclusions :
+
+| | Canevas **Système** | Canevas **Scénario / Campagne** |
+| --- | --- | --- |
+| Sujets | dés et résolution, initiative, stats suivies, portées, états, dégâts, oppositions, ton | synopsis et enjeux, factions, PNJ majeurs et relations, lieux, indices et rumeurs, accroches, rythme et actes |
+| Exclusions | création de personnage, progression, équipement, historique de l'univers | les règles du système, qui relèvent de l'autre canevas |
+| Alimente | `ForgeDashboard` → `forgeSystem` | `ChronicleForge` → `forgeChronicle` |
+
+**Structure :** pour chaque canevas, une liste de sujets partagée par tous les systèmes, plus un **état
+de couverture** par système ou campagne — fiche / index seul / absent / hors périmètre.
 
 **Trois bénéfices :**
 
@@ -531,8 +542,25 @@ Le recadrage sur le budget réel a disqualifié plusieurs pistes envisagées en 
   contexte selon que le RAG pointe sur `docs/` ou sur le coffre Obsidian.
 - **L'axe A n'a été validé que sur un banc de quelques minutes.** Éprouver la stabilité du pilote
   Vulkan Intel sur une séance complète avant d'en faire le réglage par défaut.
-- `ChronicleForge.tsx` et `ForgeDashboard.tsx` sont des **jumeaux** : toute modification de l'un doit
-  être portée sur l'autre.
+- **Les deux Forges ne sont pas des doublons — rectification du 2026-08-08.** Une version antérieure de
+  ce document les décrivait comme « des jumeaux quasi identiques », et en tirait la mauvaise conclusion
+  (les fusionner). Ce sont **deux fonctionnalités légitimement distinctes** :
+
+  | | `ForgeDashboard` | `ChronicleForge` |
+  | --- | --- | --- |
+  | Service | `forgeService.forgeSystem` | `chronicleForgeService.forgeChronicle` |
+  | Sortie | `driver` + `template` | `campaign` + `entities` + `locations` + `lore` |
+  | Prompt de base | `getSystemForgePrompt` | `getChroniclePrompt` |
+
+  Les prompts sont **déjà correctement séparés**. Ce qui est dupliqué, c'est la **plomberie
+  d'acquisition de sources NotebookLM** — quatre gestionnaires, ~180 lignes par fichier, soit ~25 % de
+  chacun. **Correction recommandée : extraire un sélecteur de sources partagé (`useNotebookSources` ou
+  un composant `<NotebookSourcePicker>`), et surtout pas fusionner les Forges.** C'est là que vivait le
+  bug de la migration Gemini Notebook du 2026-08-07 : une préoccupation partagée corrigée dans un seul
+  de ses deux exemplaires.
+
+  *Leçon de méthode : deux fichiers de taille voisine qui se ressemblent à la lecture ne sont pas
+  forcément des doublons. Comparer ce qu'ils appellent et ce qu'ils produisent avant de conclure.*
 - **Les citations `[1]`, `[2]` des fiches existantes sont mortes** : `forgeCard` n'a pas conservé la
   table de correspondance NotebookLM. À capturer en frontmatter lors des prochaines forges — l'étage 2
   deviendrait alors gratuit même pour les sujets couverts, et le MJ pourrait vérifier au lieu de croire.
