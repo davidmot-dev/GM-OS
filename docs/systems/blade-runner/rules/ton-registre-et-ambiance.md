@@ -1,5 +1,5 @@
 ---
-sujet: Ton, registre et ambiance recherchés
+sujet: Ton, registre et ambiance
 systeme: blade-runner
 couverture: complète
 origine_supposee: UNIVERS   # avis NotebookLM, non fiable (cf. plan corpus 4.6)
@@ -8,7 +8,7 @@ genere_par: notebooklm
 relu: false
 ---
 
-# Ton, registre et ambiance recherchés
+# Ton, registre et ambiance
 
 ## Règle
 

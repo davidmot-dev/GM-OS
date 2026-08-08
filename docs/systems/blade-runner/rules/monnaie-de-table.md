@@ -1,5 +1,5 @@
 ---
-sujet: Monnaie de table ou ressource partagée
+sujet: Monnaie de table
 systeme: blade-runner
 couverture: absente
 sources: BRN-01_LivreDeRegles.pdf
@@ -7,7 +7,7 @@ genere_par: notebooklm
 relu: false
 ---
 
-# Monnaie de table ou ressource partagée
+# Monnaie de table
 
 ## Règle
 

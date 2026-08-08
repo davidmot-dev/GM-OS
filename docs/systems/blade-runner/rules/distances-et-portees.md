@@ -1,5 +1,5 @@
 ---
-sujet: Distances et portées en combat
+sujet: Distances et portées
 systeme: blade-runner
 couverture: complète
 origine_supposee: SOCLE   # avis NotebookLM, non fiable (cf. plan corpus 4.6)
@@ -8,7 +8,7 @@ genere_par: notebooklm
 relu: false
 ---
 
-# Distances et portées en combat
+# Distances et portées
 
 ## Règle
 
