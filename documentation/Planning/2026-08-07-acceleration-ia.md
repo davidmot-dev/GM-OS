@@ -51,6 +51,7 @@ l'option `lite` permet déjà, et que presque personne n'utilise.
 | Oracle | partie | feuilleter un livre papier | **1 à 2 min** |
 | Cortex | partie | le tour en cours | **30 à 60 s** |
 | PNJ à la volée, butin, voix, narration | partie | l'attention des joueurs | **< 1 min** |
+| Curation, chronique, traitement des lacunes | **après-partie** | — | aucune contrainte |
 
 Le budget de l'Oracle vient d'un constat de David : chercher une règle dans un livre prend déjà une à
 deux minutes, donc une réponse en 90 s n'est pas un échec. Le Cortex est plus serré, non parce qu'il est
@@ -90,6 +91,34 @@ déclaré, pas inféré.** Un mode mi-déclaré mi-deviné redevient imprévisib
   ferait passer l'indicateur à `null` et **éteindrait le mode sans que rien ne soit terminé**, débloquant
   silencieusement le cloud et le contexte complet.
 - **Le mode donne des défauts, jamais un verrou** (§ 4.7).
+
+### 1.3 Un troisième moment : l'après-partie
+
+La partition en deux moments en oubliait un, **déjà à moitié implémenté** :
+`useJournalStore.ts:234-235` résume la séance, `:286` la pousse dans NotebookLM via `source_add`, et
+`ObsidianExportService` exporte la campagne.
+
+C'est le moment où **la boucle se referme** : le journal des lacunes devient la file de la Forge, la
+séance devient chronique, la chronique devient source. Ce document décrivait le journal des lacunes sans
+jamais dire *quand* il est traité — la réponse est ici. Sans pression de temps, mais c'est le seul moment
+où la mémoire est encore fraîche.
+
+**Deux décisions de David y ont été prises** — résumer en deux étapes plutôt qu'en une, et structurer la
+séance en actes et scènes — mais elles relèvent d'un modèle de données narratif plutôt que des
+intégrations IA. Elles ont donc leur propre document :
+
+> **`documentation/Planning/2026-08-08-trame-narrative-cycle-seance.md`**
+
+**Ce qu'il faut en retenir ici :** la trame donne à l'Oracle et au Cortex un contexte **de la bonne
+taille et de la bonne forme** — *« scène en cours : l'embuscade de l'entrepôt, les PJ cherchent le
+manifeste »* remplace avantageusement les dix derniers événements bruts de `getLiveSessionContext`, pour
+quelques dizaines de tokens. C'était la pièce manquante du Cortex, que l'axe C se contentait de couper
+du lore.
+
+**Et un bug y a été trouvé :** `AIService.summarizeSession` ne gère que Gemini et retourne sinon la
+chaîne littérale `"Résumé non disponible pour ce fournisseur d'IA."` — le garde ligne 246 laisse passer
+Ollama. **Les résumés de séance n'ont donc jamais fonctionné sur le fournisseur par défaut de David**, et
+cette phrase a pu être poussée telle quelle dans NotebookLM. À vérifier sur les données enregistrées.
 
 ---
 
@@ -577,6 +606,48 @@ sur l'ivresse produisent dix fiches au lieu d'une.
 **Couverture actuelle : 15 fiches, 3 systèmes sur 9** (§ 3.10). L'Oracle vivra donc longtemps à
 l'étage 2 — c'est le régime nominal d'un système qui apprend, mais l'étage 2 doit être bon.
 
+#### Axe O — La boucle de revue · *~5 h · maillon porteur*
+
+**Définition : l'étape entre « l'IA a produit quelque chose » et « le système le tient pour vrai ».**
+
+Où les sorties IA deviennent durables aujourd'hui :
+
+| Producteur | Écrit | Revue avant écriture ? |
+|---|---|---|
+| **Atelier de règles** | une fiche `.md` dans `docs/`, **indexée et citée par l'Oracle** | **aucune** |
+| Forge Système | driver + template | oui — `handleForgeSave` |
+| Forge Chronique | campagne, entités, lieux, lore | oui — `handleCommit` |
+| Après-partie | résumé → journal + NotebookLM | aucune |
+
+**L'asymétrie saute aux yeux : les artefacts qui portent le plus d'autorité sont ceux qui en ont le
+moins.** `BrainstormOverlay.tsx:93` écrit la fiche **avant** de la montrer — l'affichage à l'étape
+`completed` arrive après l'écriture. La refuser demanderait de supprimer le fichier à la main.
+
+Or tout l'axe M repose sur cette phrase : *« la réponse vient d'une fiche que tu as validée, pas d'un
+modèle qui improvise »*. **Aujourd'hui ce mot, « validée », est une fiction.**
+
+**Pourquoi c'est porteur :**
+
+> **Le journal des lacunes attrape ce qui manque. Rien n'attrape ce qui est faux.**
+
+Une fiche erronée produit une recherche *réussie*, une citation confiante, et **aucun signal**. Pire :
+la citation renforce la confiance. L'erreur ne se corrige jamais, elle se consolide — et elle se propage,
+puisque les fiches nourrissent aussi les Forges suivantes.
+
+**Contenu :**
+
+1. **Un état avant publication.** La fiche existe en brouillon ; elle n'est indexée qu'une fois promue.
+   Cela seul supprime l'écriture aveugle.
+2. **Un signalement depuis la réponse** — le symétrique du journal des lacunes. « Cette fiche est
+   fausse » alimente la même file de forge.
+3. **Une provenance visible** — *générée / relue / corrigée à la main*, affichée quand l'Oracle cite.
+   « Fiche générée, non relue » est une information honnête, pas un aveu.
+4. **La survie des corrections.** Une fiche corrigée ne doit pas être écrasée en silence par une
+   reforge ultérieure — sinon le MJ cesse de corriger. **S'applique aussi à la trame narrative**
+   (document jumeau, § 6.4).
+
+Les points 1 et 2 sont ceux qui comptent ; le reste est du confort.
+
 ### Bloc V — L'interface
 
 #### Axe N — Deux régimes d'interface · *~6 h*
@@ -663,11 +734,12 @@ rend compatible avec le mode pause de l'axe G.**
 | 10 | **K — découpage des Forges** | ~4 h | Prérequis de la reprise après pause et de la file non bloquante |
 | 11 | **G — pause de séance** | ~2 h | S'appuie sur D et K |
 | 12 | **L — index des livres** | ~5 h | Prérequis de l'étage 2 de M |
-| 13 | **M — Oracle bibliothécaire** | ~6 h | Chantier de fond ; s'appuie sur L et H |
-| 14 | **J — sélecteur de moteur** | ~4 h | Après B et I, pour que l'estimation affichée soit juste |
-| 15 | **N — régimes d'interface** | ~6 h | Le plus visible, le moins urgent |
+| 13 | **O — boucle de revue** | ~5 h | Doit précéder M : sans elle, « fiche validée » est une fiction |
+| 14 | **M — Oracle bibliothécaire** | ~6 h | Chantier de fond ; s'appuie sur L, H et O |
+| 15 | **J — sélecteur de moteur** | ~4 h | Après B et I, pour que l'estimation affichée soit juste |
+| 16 | **N — régimes d'interface** | ~6 h | Le plus visible, le moins urgent |
 
-**Total : ~50 h.** Les quatre premières lignes — **moins de 6 h** — ramènent les trois usages dans leur
+**Total : ~55 h.** Les quatre premières lignes — **moins de 6 h** — ramènent les trois usages dans leur
 budget et suppriment le pire blocage en partie. Tout le reste sert la justesse, la traçabilité et le
 confort, plus la vitesse.
 
@@ -750,6 +822,10 @@ confort, plus la vitesse.
 | Faut-il bloquer des actions en session ? | **Non — avertir et rendre annulable** | § 7, axe D |
 | Faut-il des interfaces distinctes par mode ? | **Pas deux implémentations : deux compositions** | axe N |
 | Plafond court ou pause déclarée ? | **Les deux, ce sont des couches** | axe D et axe G |
+| Comment résumer une séance ? | **En deux étapes : curer, puis résumer** | document trame, § 4.1 |
+| Où vit la structure narrative ? | **Campagne → Actes → Scènes**, pas d'objet scénario | document trame, § 2 |
+| La Forge doit-elle générer la trame ? | **Oui, en proposition entièrement modifiable** | document trame, § 6 |
+| Les décès dans le résumé de combat ? | **Non — événements narratifs autonomes** | document trame, § 5.3 |
 
 ---
 
