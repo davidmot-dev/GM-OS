@@ -49,7 +49,7 @@ comme résumé, puis potentiellement poussée dans NotebookLM comme source
 David — *« dans une séance, on est censé savoir dans quel acte on se trouve, et a priori quelles scènes
 seront jouées »*.
 
-```
+```text
 Campagne ──> Actes ──> Scènes
                           ▲
 Séance ───────────────────┘   (traverse des scènes ; n'en est pas le parent)
@@ -58,7 +58,7 @@ Séance ───────────────────┘   (traverse
 Trois relations, sans hiérarchie forcée :
 
 | Relation | Nature |
-|---|---|
+| --- | --- |
 | Séance → acte | la séance se déroule dans un acte, avec des scènes **anticipées** |
 | Séance → scènes traversées | un **parcours**, pas un ordre |
 | Événement de journal → scène | la scène **active au moment de l'émission** |
@@ -102,7 +102,7 @@ Si déclarer « on est maintenant dans la scène X » coûte plus d'un clic, ce 
 pourrira en une séance. Deux marquages s'obtiennent **d'actions déjà accomplies** :
 
 | Action déjà faite | Effet |
-|---|---|
+| --- | --- |
 | Déclencher un moment de storyboard lié à une scène | marque la scène |
 | **Démarrer un combat** sans scène active | **crée une scène improvisée** |
 
@@ -126,7 +126,7 @@ moitié implémenté (`useJournalStore.ts:234-235` résume, `:286` pousse vers N
 `ObsidianExportService` exporte) : **l'après-partie**.
 
 | Moment | Pression de temps | Ce qui s'y joue |
-|---|---|---|
+| --- | --- | --- |
 | Préparation | aucune, si non bloquant | la trame, le monde, les ambiances |
 | Partie | forte | le parcours réel, la capture |
 | **Après-partie** | **aucune** | la curation, la chronique, la file de forge |
@@ -166,7 +166,40 @@ Deux étapes suffisent. L'envoi vers NotebookLM et Obsidian est une *action*, pa
 revanche le **journal des lacunes** habite le même moment mais reste un flux distinct : ce sont des
 questions, pas des événements.
 
-### 4.2 Distinguer la trace du récit
+### 4.2 Trois défauts propres au journal
+
+Distincts du bug du § 1.2, et trouvés en examinant la chaîne complète `generateAISummary` →
+`syncToNotebook`.
+
+**Le résumé est stocké comme un événement du journal** (`useJournalStore.ts:237-241`), typé `SYSTEM`.
+Deux conséquences :
+
+- `SYSTEM` est classé **trace** et non **récit** par le filtre du § 4.2 : le résumé serait donc écarté
+  de lui-même.
+- Surtout, `summarizeSession` prend `journal.events` en entrée. **Régénérer le résumé lui réinjecte le
+  résumé précédent** — contamination récursive, qui s'aggrave à chaque régénération.
+
+**Un résumé est un artefact dérivé du journal, pas un événement dedans.** Sa place est sur la séance
+(`GameSession.publicSummary` existe déjà), pas dans le flux d'événements.
+
+**La recherche du résumé se fait par titre traduit.** `syncToNotebook` fait
+`e.title === i18next.t('modules:journal.events.ai_summary')` (`:257`). Générer le résumé en français
+puis basculer l'interface en anglais casse le lien, et l'envoi échoue sur « pas de résumé ». **Même
+famille de fragilité que l'appariement jeton ↔ combattant du Cortex** : une relation structurelle portée
+par une chaîne d'affichage.
+
+**Et le bug du § 1.2 emprunte le chemin nominal.** `summarizeSession` **retourne** sa chaîne d'excuse au
+lieu de lever une erreur : `generateAISummary` la traite donc comme un succès, l'enregistre comme
+résumé, et `syncToNotebook` accepterait de la pousser dans NotebookLM. Rien, à aucune étape, ne signale
+l'échec.
+
+> **Ce que le journal n'a pas besoin d'avoir.** Le plan IA définit une boucle de revue (axe O) pour les
+> artefacts que l'IA rend durables. **Le journal n'en relève pas** : sa revue est la curation en deux
+> étapes du § 4.1, et l'envoi vers NotebookLM est déjà une action séparée et explicite. La différence
+> tient à qui consomme l'artefact — une fiche de règle est citée des mois plus tard, à froid, par
+> l'Oracle ; un résumé de séance est relu immédiatement, par son auteur, en connaissance de cause.
+
+### 4.3 Distinguer la trace du récit
 
 Le journal sert deux usages qui ne veulent pas la même granularité :
 
@@ -196,7 +229,7 @@ pourra reconstituer après coup ce que lui seul voyait.
 Trois points d'émission, un de chaque nature :
 
 | Site | Événement | Nature |
-|---|---|---|
+| --- | --- | --- |
 | `clearCombatants` (~196) | « Combat : Résumé de fin » — rounds, participants, pertes, survivants | résumé, mais **tableau de score** |
 | `rollInitiative` (~263) | « Combat : Initiative » | trace mécanique |
 | `propagateStatusToSession` (~431) | « Décès : X » (typé `NPC`) | **vraie substance narrative** |
@@ -319,7 +352,7 @@ elle dit où la préparation a tenu et où les joueurs sont sortis du script.
 ## 8. Ordre de travail suggéré
 
 | # | Étape | Pourquoi ici |
-|---|---|---|
+| --- | --- | --- |
 | 1 | **Corriger `summarizeSession`** hors Gemini | bug actif, données déjà polluées (§ 1.2) |
 | 2 | **Rendre l'événement de décès universel et automatique** | prérequis de § 5.3, sinon les morts disparaissent |
 | 3 | Modèle actes / scènes + rattachement automatique des événements | le socle |

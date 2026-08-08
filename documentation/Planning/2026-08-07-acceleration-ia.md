@@ -376,7 +376,10 @@ pas seulement la stabilité du pilote.
 3. **Plafond global en tokens** (cible 4 000), non plus un nombre de fichiers.
 4. **Journaliser ce qui est écarté.**
 5. Indexer les `.jsonl` (`RAGEngine.ts:142`), déjà chunkés avec métadonnées.
-6. Test de non-régression : contexte sous le plafond, fichier du système actif toujours présent.
+6. **Ajouter un mécanisme d'exclusion** — `getAllFiles` (`RAGEngine.ts:130-148`) n'en a **aucun** et
+   prend tout `.md`/`.txt`/`.pdf` récursivement. Nécessaire pour sortir de l'index les décharges brutes
+   du § 3.10 (quatre copies d'Alien, trois de Cthulhu Hack) sans les supprimer.
+7. Test de non-régression : contexte sous le plafond, fichier du système actif toujours présent.
 
 **÷ 18 sur le contexte**, et correction d'un défaut de **qualité** — l'Oracle cesse de répondre à partir
 de documents tirés au hasard. Profite aux vingt consommateurs.
@@ -612,12 +615,26 @@ l'étage 2 — c'est le régime nominal d'un système qui apprend, mais l'étage
 
 Où les sorties IA deviennent durables aujourd'hui :
 
-| Producteur | Écrit | Revue avant écriture ? |
-|---|---|---|
-| **Atelier de règles** | une fiche `.md` dans `docs/`, **indexée et citée par l'Oracle** | **aucune** |
-| Forge Système | driver + template | oui — `handleForgeSave` |
-| Forge Chronique | campagne, entités, lieux, lore | oui — `handleCommit` |
-| Après-partie | résumé → journal + NotebookLM | aucune |
+| Producteur | Écrit | Revue avant écriture ? | Relève de cet axe ? |
+|---|---|---|---|
+| **Atelier de règles** | une fiche `.md` dans `docs/`, **indexée et citée par l'Oracle** | **aucune** | **oui — c'est le cas central** |
+| Forge Système | driver + template | oui — `handleForgeSave` | partiellement (§ gros artefacts) |
+| Forge Chronique | campagne, entités, lieux, lore | oui — `handleCommit` | partiellement |
+| Après-partie | résumé → journal + NotebookLM | l'envoi est déjà une action séparée | **non — voir ci-dessous** |
+
+> **Le journal de séance n'a pas besoin de ce dispositif.** Sa revue existe déjà : c'est la curation en
+> deux étapes du document trame (§ 4.1). Le MJ revoit scène par scène — c'est la revue de l'*entrée* —
+> puis le résumé est court et il vient d'en écrire la matière. **La différence tient à qui consomme
+> l'artefact** : une fiche de règle est citée des mois plus tard, à froid, par l'Oracle, d'où le besoin
+> d'une provenance persistante ; un résumé de séance est relu immédiatement, par son auteur, en
+> connaissance de cause. Y ajouter un état « relu » serait une cérémonie de plus pour rien.
+>
+> Le journal a en revanche **trois défauts propres**, traités dans le document trame :
+> le résumé est stocké **comme un événement du journal** (donc typé `SYSTEM`, donc écarté par le filtre
+> trace/récit — et surtout **réinjecté dans la génération suivante**, puisque `summarizeSession` prend
+> `journal.events`) ; `syncToNotebook` **retrouve le résumé par son titre traduit**, donc un changement
+> de langue casse le lien ; et `summarizeSession` **retourne** sa chaîne d'excuse au lieu de lever, si
+> bien que la panne emprunte le chemin nominal jusqu'à NotebookLM.
 
 **L'asymétrie saute aux yeux : les artefacts qui portent le plus d'autorité sont ceux qui en ont le
 moins.** `BrainstormOverlay.tsx:93` écrit la fiche **avant** de la montrer — l'affichage à l'étape
@@ -634,19 +651,53 @@ Une fiche erronée produit une recherche *réussie*, une citation confiante, et 
 la citation renforce la confiance. L'erreur ne se corrige jamais, elle se consolide — et elle se propage,
 puisque les fiches nourrissent aussi les Forges suivantes.
 
-**Contenu :**
+**La question qui commande tout : quand relit-on ?**
 
-1. **Un état avant publication.** La fiche existe en brouillon ; elle n'est indexée qu'une fois promue.
-   Cela seul supprime l'écriture aveugle.
-2. **Un signalement depuis la réponse** — le symétrique du journal des lacunes. « Cette fiche est
-   fausse » alimente la même file de forge.
-3. **Une provenance visible** — *générée / relue / corrigée à la main*, affichée quand l'Oracle cite.
-   « Fiche générée, non relue » est une information honnête, pas un aveu.
-4. **La survie des corrections.** Une fiche corrigée ne doit pas être écrasée en silence par une
-   reforge ultérieure — sinon le MJ cesse de corriger. **S'applique aussi à la trame narrative**
-   (document jumeau, § 6.4).
+Forger une fiche prend une minute ; **la relire vraiment en prend trois à cinq**. Dix fiches forgées
+créent donc trois quarts d'heure de lecture, qui ne seront pas faits. Toute conception qui ignore ce
+calcul produit un rituel non tenu.
 
-Les points 1 et 2 sont ceux qui comptent ; le reste est du confort.
+**Arbitrage de David : relecture à la première utilisation.** La fiche vient de répondre à une question,
+le MJ a la question sous les yeux — le seul contexte qui permette de juger. L'Oracle affiche déjà quelle
+fiche a répondu (exigence de transparence de l'axe M) ; le geste se greffe là, sans écran nouveau. On ne
+relit jamais ce qui ne sert pas, et on juge au moment où l'on peut juger.
+
+> **Conséquence : le « brouillon avant publication » est abandonné.** Une version antérieure de cet axe
+> proposait un état non indexé promu après relecture. **Cela contredit la relecture à l'usage** : une
+> fiche doit être utilisable pour être jugée. La bonne forme est plus simple — **indexée dès sa
+> création, marquée, relue à l'usage.**
+>
+> (Un mécanisme d'exclusion du RAG reste nécessaire par ailleurs — `getAllFiles` d'`RAGEngine.ts:130-148`
+> n'en a **aucun** — mais pour sortir de l'index les décharges brutes du § 3.10, pas pour la revue.)
+
+**Contenu retenu :**
+
+1. **La fiche est indexée dès sa création**, marquée *générée, non relue*.
+2. **L'Oracle l'indique par une mention discrète mais toujours visible** à côté du nom de la source —
+   arbitrage de David. Honnête sans être alarmiste, et présente à chaque citation, donc les fiches qui
+   reviennent souvent finissent par être validées d'elles-mêmes.
+3. **Un signalement depuis la réponse** — le symétrique du journal des lacunes, et le mécanisme central
+   de cet axe. **Il ne supprime jamais rien** : à table, un clic malheureux ne peut pas coûter une bonne
+   fiche, et le MJ n'a pas le temps de bricoler. Il marque comme suspect, l'Oracle continue de citer
+   **en le disant**, et la fiche entre dans la file de forge. La correction est une action
+   d'après-partie.
+4. **La provenance se déduit, elle ne se déclare pas.** Trois états — *générée / relue / corrigée* — dont
+   le troisième n'est jamais demandé : si le contenu diffère de l'empreinte enregistrée à la génération,
+   c'est que le MJ a édité.
+5. **La même empreinte protège de l'écrasement.** À la reforge d'un sujet déjà couvert, empreinte
+   différente = contenu retouché, donc **montrer un écart au lieu d'écraser**. Sans quoi le MJ cesse de
+   corriger. **S'applique aussi à la trame narrative** (document jumeau, § 6.4).
+
+**Ce que cet axe ne couvre pas, et il faut le dire.** Une fiche de 5 Ko se relit ; un
+`ChronicleForgeResult` complet — entités, lieux, lore — représente des heures. **Les gros artefacts ne
+se relisent pas**, ils s'adoptent progressivement à l'usage, ce que la trame permet déjà puisque le MJ
+retravaille la séance à venir. Prétendre le contraire fabriquerait un rituel de plus.
+
+> ⚠️ **Le vrai danger n'est pas l'absence de revue, c'est la revue de complaisance.** Si relire devient
+> une corvée, le MJ cliquera « relu » sans lire, et **un drapeau accordé machinalement est pire que pas
+> de drapeau** : il fabrique la confiance fausse que le dispositif devait empêcher. D'où deux règles
+> fermes — **jamais de bouton « tout marquer comme relu »**, et un « générée, jamais relue » assumé vaut
+> mieux qu'une cérémonie non tenue.
 
 ### Bloc V — L'interface
 
@@ -826,6 +877,8 @@ confort, plus la vitesse.
 | Où vit la structure narrative ? | **Campagne → Actes → Scènes**, pas d'objet scénario | document trame, § 2 |
 | La Forge doit-elle générer la trame ? | **Oui, en proposition entièrement modifiable** | document trame, § 6 |
 | Les décès dans le résumé de combat ? | **Non — événements narratifs autonomes** | document trame, § 5.3 |
+| Quand relire une fiche forgée ? | **À la première utilisation**, pas après la forge | axe O |
+| Comment l'Oracle signale une fiche non relue ? | **Mention discrète, toujours visible** | axe O |
 
 ---
 
