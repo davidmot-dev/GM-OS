@@ -597,6 +597,64 @@ ressource collective partagée »), une fiche courte suffira — et *jauges indi
 Runner. Alien a par ailleurs produit six fiches hors canevas : stress et panique, mode discret,
 physiologie des synthétiques, affrontement des xénomorphes, combat spatial, forcer le test.
 
+### 4.8 Personas : gabarits, essai Alien, et le corpus noyé
+
+**Le seul étage vivant de la chaîne est `docs/systems/<id>/gems.json`** (§ 1.7), lu par `readDoc` et
+**non indexé par le RAG**, qui ne prend que `.md`, `.txt` et `.pdf` (`RAGEngine.ts:142`). Il ne demande
+**aucune modification de code**. Trois contraintes le façonnent :
+
+- `gems.json` **remplace** l'instruction de base (`personaInstructions = systemGems[gemId]`), sans
+  concaténation : chaque persona doit être autosuffisante.
+- Le bloc générique — alias, « réponds en français », « cite le document source » — est **déjà ajouté
+  après** : le répéter serait du prefill payé à chaque appel.
+- La persona est en tête de **chaque** prompt système. Courte et stable, elle se met en cache une fois ;
+  longue, elle se paie à chaque question. **Une persona porte une voix, jamais des règles** — le RAG
+  fournit déjà les règles, et une persona qui les affirme finira par les contredire.
+
+**Deux gabarits, en deux temps** : une *fiche de voix* (vocabulaire de la table, registre, ce que le jeu
+veut faire ressentir, interdits), puis les *huit personas en JSON* enchaînées dans le même fil.
+
+**Essai Alien du 2026-08-08.** Deux versions produites.
+
+- **v1** : bon vocabulaire (Maman, Weyland-Yutani, la Frontière, USCMC, le Voile Extérieur), longueurs
+  566-607 caractères — la contrainte a tenu. Mais **deux défauts**. (1) *Une affirmation de règle, et
+  fausse* : le Stratège énonçait « la mort est toujours instantanée et inéluctable », que
+  `sante-et-blessures.md`, tirée du même livre, contredit — mort instantanée sur 63-66 au D66
+  seulement, sinon test de Trépas, et les androïdes ne meurent jamais. **La dérive persona/corpus
+  démontrée au premier essai.** (2) *Confusion de destinataire* : les interdits du meneur transplantés
+  sur l'assistant, le Scribe se voyant interdire de « planifier la fin d'une séance » alors qu'il résume
+  des séances passées.
+- **v2**, régénérée après correction du gabarit : interdits recentrés sur le rôle de l'assistant
+  (« Interdiction absolue dans ton rôle de Scribe : ne réécris jamais les notes pour embellir… »),
+  plus aucune affirmation de règle, et 506-533 caractères. **Les deux défauts sont levés.**
+
+Correctifs intégrés au gabarit : l'interdit porte sur ce que **l'assistant** ne doit pas faire dans son
+rôle, transposé et non recopié ; et aucun fait de règle, **même en passant, même sous forme d'ambiance**.
+
+**Piège d'emplacement, rencontré deux fois.** Le fichier avait été rangé dans
+`docs/systems/alien/personas/` : `AIService` lit littéralement `systems/<id>/gems.json`, donc il n'était
+**jamais lu, sans le moindre message**. Un test verrouille désormais le contrat de bout en bout —
+`electron/systemPersonas.test.ts` : résolution de `docsPath`, lisibilité par `readDoc`, validité du
+JSON, clés correspondant à des gemmes connues, longueur plafonnée, **et détection d'un fichier de
+personas égaré dans un sous-dossier**. Huit tests, verts.
+
+**Volumétrie relevée en chemin, et elle change les priorités.** `docs/` contient **37,8 Mo
+indexables**. Le seul dossier d'Alien pèse **5,8 Mo sur 34 fichiers**, dont **le livre quatre fois** —
+`_source_extracted.txt` (1,74 Mo), `full_book_by_pdf_page.md` (1,72 Mo), `Alien_le_jeu_de_rôle.txt`
+(0,87 Mo), `alien_rag_base_partial.md` (0,31 Mo) — plus des découpages thématiques qui en sont encore
+des extraits. Ailleurs, un PDF de campagne de **28,9 Mo** est lui aussi indexé.
+
+**Les dix-huit fiches soignées d'Alien pèsent 0,09 Mo, soit 1,5 % du corpus de leur propre système.**
+Elles concourent contre quatre copies brutes du même livre, avec un filtre qui laisse passer 48 fichiers
+sur 49 et une troncature à 16 384 tokens qui tranche au hasard.
+
+> **Conséquence sur l'ordre des travaux.** Générer les corpus des sept systèmes restants améliorera la
+> qualité de ce qui *pourrait* être cité, mais tant que les décharges brutes restent indexées, l'Oracle
+> n'ira pas les chercher. **Le prochain travail utile n'est plus de la génération, c'est le
+> cloisonnement et l'exclusion — l'axe B.** L'arbitrage du 2026-08-08 l'avait anticipé (« le mécanisme
+> d'exclusion reste nécessaire, pour sortir de l'index les décharges brutes ») ; on a désormais les
+> chiffres, et ils sont plus mauvais que prévu.
+
 ---
 
 ## 5. Articulation avec les plans existants
