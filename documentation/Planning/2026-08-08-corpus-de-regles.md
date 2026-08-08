@@ -203,7 +203,8 @@ Sujets dérivés de ce que GM-OS exploite réellement. Deux d'entre eux — pour
 | Santé et blessures | `defaultHealthType` + échelle | 5 moteurs réels, **3 déclarables**, échelles en dur |
 | Dégâts et types | `damageTypes`, tags `res_`/`vul_`/`imm_` | ✓ |
 | États et conditions | — | ❌ **codés en dur** (`CombatRules.ts:30`) |
-| Monnaie de table | — | ❌ **inexistant** |
+| Monnaie de table (partagée) | — | ❌ **inexistant** |
+| Jauges et ressources individuelles | `statsToTrack.isResource`, `ui_config.gauges` | ⚠️ **décoratives** : ni bornes, ni seuils, ni effets |
 | Distances et portées | `tactical.ranges` (5 seuils + modificateurs) | ✓ mais **non transmis au Cortex** |
 | Poursuites | — | ❌ inexistant |
 | Environnement et dangers | — | ❌ inexistant |
@@ -260,11 +261,13 @@ mécanique en une à deux phrases maximum :
 5. Santé et blessures (échelle utilisée, incapacité, mort)
 6. Dégâts et types de dégâts
 7. États et conditions (comment on les subit, comment on en sort)
-8. Monnaie de table ou ressource partagée (élan, menace, stress, jetons…)
-9. Distances et portées en combat
-10. Poursuites
-11. Environnement et dangers (froid, vide, chute, feu, privation…)
-12. Ton, registre et ambiance recherchés
+8. Monnaie de table ou ressource PARTAGÉE par toute la table (élan, menace, jetons…)
+9. Jauges et ressources INDIVIDUELLES, tenues sur la fiche d'un personnage
+   (stress, santé mentale, points de magie, fatigue, monnaie, réputation…)
+10. Distances et portées en combat
+11. Poursuites
+12. Environnement et dangers (froid, vide, chute, feu, privation…)
+13. Ton, registre et ambiance recherchés
 
 Réponds par un TABLEAU MARKDOWN (avec des barres verticales), colonnes :
 Sujet | Traité (oui/partiellement/non) | Mécanique | Pages.
@@ -280,7 +283,7 @@ Si un sujet n'est pas couvert par les sources, écris « non couvert par les
 sources » — n'invente rien, ne comble pas par analogie avec d'autres jeux.
 
 Ajoute ensuite une section « Hors catégories » listant les mécaniques CENTRALES
-de ce jeu qui n'entrent dans aucun des 12 sujets. Uniquement les mécaniques
+de ce jeu qui n'entrent dans aucun des 13 sujets. Uniquement les mécaniques
 centrales.
 
 Écris tous les symboles en toutes lettres. Si le livre utilise une icône (par
@@ -340,13 +343,19 @@ Règles de rédaction :
 - N'échappe pas la ponctuation : écris « 1. » et « + », jamais « 1\. » ni « \+ ».
 - Reste dans ton sujet. Si une règle appartient à un autre sujet de la liste,
   mentionne-la en une phrase et renvoie vers lui au lieu de la détailler.
+- Si le sujet porte sur des jauges ou des ressources, traite CHAQUE jauge
+  séparément et donne pour chacune : ce qu'elle mesure, sa valeur de départ,
+  ses bornes minimale et maximale, si elle monte ou descend quand la situation
+  empire, ce qui la fait bouger dans chaque sens, CE QUI SE PRODUIT À CHAQUE
+  SEUIL, et si elle se dépense (on la consomme volontairement) ou si elle
+  s'accumule (elle subit les événements).
 - Ne reformule pas en langage générique de jeu de rôle : garde le vocabulaire
   exact du jeu.
 ```
 
 ### 4.4 Protocole de validation
 
-**Ne pas industrialiser.** Neuf systèmes × douze sujets font plus de cent requêtes. Valider les gabarits
+**Ne pas industrialiser.** Neuf systèmes × treize sujets font plus de cent requêtes. Valider les gabarits
 sur **un seul** système d'abord.
 
 Ordre : **Blade Runner** (fait le 2026-08-08, cf. § 4.6), puis **Alien**. Deux jeux du même moteur.
@@ -435,6 +444,29 @@ donc SOCLE — et non par comparaison. Sa propre justification le trahit :
 entre systèmes est faite par nous (§ 4.4). L'étiquette prétendait court-circuiter le test et ne faisait
 que le masquer. Dans les fiches réparées, la valeur produite est conservée sous
 `origine_supposee`, pour mémoire et sans autorité.
+
+**Un treizième sujet manquait au canevas — les jauges individuelles.** Signalé par David en relisant les
+fiches, et l'essai Blade Runner en apporte la preuve : **« Stress » apparaît dans 12 des 17 fichiers et
+n'a aucune fiche à lui.** C'est pourtant une mécanique centrale du jeu — elle pilote le forçage des
+jets, l'état Brisé mental, le TRPT et le coût du Souvenir Clé. Faute de sujet d'accueil, elle s'est
+éparpillée en mentions incidentes sans jamais être définie. **Un sujet sans domicile se répand partout :
+c'est le défaut de redondance (n° 5) sous une autre forme.**
+
+Le sujet 8 devient donc explicitement *partagée par la table*, et le nouveau sujet 9 recueille les
+jauges *individuelles*. Sans cette paire, la bonne réponse du carnet — « toutes les jauges sont
+individuelles » — faisait disparaître les quatre jauges au lieu de les orienter.
+
+**Une jauge n'est pas une chose unique**, et le gabarit doit forcer la distinction. Blade Runner en a
+quatre, de trois natures différentes : le **Stress** s'accumule sous la pression et déclenche des
+effets de seuil ; le **Chinyen** se dépense comme une monnaie ; l'**Humanité** et la **Promotion**
+s'acquièrent puis se dépensent, l'une comme expérience, l'autre comme statut. D'où l'exigence ajoutée au
+gabarit 2 : bornes, sens, ce qui la fait bouger dans chaque sens, **effets de seuil**, et dépensée
+contre accumulée.
+
+Côté code, `GaugeConfig` (`src/types/drivers.ts:49`) ne porte que `fieldId`, `label`, `color` et
+`style` : **une jauge y est purement décorative.** `CombatStatMapping.isResource` la marque comme
+ressource mais n'en décrit pas le comportement. C'est donc une case du tableau du § 3 à moitié vide, et
+non pleine comme je l'avais d'abord classée.
 
 **Acquis de conception au passage.** Sur la monnaie de table, la réponse est un vrai résultat :
 *« toutes les jauges — Stress, Promotion, Humanité, Chinyen — sont purement individuelles »*. Blade

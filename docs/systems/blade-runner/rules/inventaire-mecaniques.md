@@ -9,7 +9,7 @@ relu: false
 
 # Inventaire des mécaniques — Blade Runner RPG
 
-Couverture des douze sujets du canevas par les sources du carnet.
+Couverture des treize sujets du canevas par les sources du carnet.
 
 | # | Sujet | Traité | Mécanique |
 |---|---|---|---|
@@ -21,14 +21,15 @@ Couverture des douze sujets du canevas par les sources du carnet.
 | 6 | Dégâts et types de dégâts | oui | Dégâts de base de l'arme, augmentés de 1 par réussite supplémentaire ; blessures critiques de type Percutant ou Perforant. |
 | 7 | États et conditions | partiellement | Brisé physique (Santé à 0) et Brisé mental (Sang-froid à 0), récupérables par repos ou soutien direct. Aucune autre condition de survie. |
 | 8 | Monnaie de table ou ressource partagée | **non** | Non couvert par les sources. Toutes les jauges (Stress, Promotion, Humanité, Chinyen) sont **individuelles**, gérées sur la fiche de chaque joueur. |
-| 9 | Distances et portées en combat | oui | Cinq catégories abstraites : Au contact, Courte (même zone), Moyenne, Longue, Extrême. |
-| 10 | Poursuites | oui | Rounds où les participants choisissent secrètement une manœuvre (Traque, Fuite, Raccourci…) confrontée à un obstacle environnemental tiré au hasard. |
-| 11 | Environnement et dangers | partiellement | Chutes, explosions, feu et noyade sont détaillés. Le froid, le vide et la privation ne sont **pas** couverts. |
-| 12 | Ton, registre et ambiance | oui | Néo-noir dystopique et mélancolique : tragédie humaine, quête d'identité, choix moraux impossibles, fragilité de l'empathie. |
+| 9 | Jauges et ressources individuelles | *à générer* | Quatre jauges : Stress (accumulée, effets de seuil), Chinyen (dépensée), Humanité (acquise puis dépensée en expérience), Promotion (acquise puis dépensée en réquisitions). **Sujet ajouté au canevas après cet inventaire — la fiche reste à produire.** |
+| 10 | Distances et portées en combat | oui | Cinq catégories abstraites : Au contact, Courte (même zone), Moyenne, Longue, Extrême. |
+| 11 | Poursuites | oui | Rounds où les participants choisissent secrètement une manœuvre (Traque, Fuite, Raccourci…) confrontée à un obstacle environnemental tiré au hasard. |
+| 12 | Environnement et dangers | partiellement | Chutes, explosions, feu et noyade sont détaillés. Le froid, le vide et la privation ne sont **pas** couverts. |
+| 13 | Ton, registre et ambiance | oui | Néo-noir dystopique et mélancolique : tragédie humaine, quête d'identité, choix moraux impossibles, fragilité de l'empathie. |
 
 ## Hors catégories
 
-Mécaniques centrales du jeu qui n'entrent dans aucun des douze sujets.
+Mécaniques centrales du jeu qui n'entrent dans aucun des treize sujets.
 
 - **Différence Humains / Réplicants sur le forçage.** Les humains ne forcent un jet qu'une fois et
   subissent des dégâts physiques sur un échec en attribut physique. Les Réplicants peuvent forcer
