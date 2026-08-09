@@ -4,6 +4,7 @@ systeme: dune
 couverture: complète
 hors_canevas: false
 sources: "Dune : Aventures dans l’Imperium, livre de base (p. 23, 119, 253, 353, 665, 842, 843, 848, 884, 886, 889, 905, 906, 920, 921, 951, 952, 955, 960, 972, 973, 1028, 1045, 1058, 1067, 1085, 1089, 1587, 1645)"
+pages_fiables: false
 genere_par: notebooklm
 relu: false
 ---

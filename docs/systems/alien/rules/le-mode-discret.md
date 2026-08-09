@@ -4,6 +4,7 @@ systeme: alien
 couverture: complète
 hors_canevas: true
 sources: ALIEN, le jeu de rôle (p. 67, 83, 85, 86, 134, 139)
+pages_fiables: false
 genere_par: notebooklm
 relu: false
 ---

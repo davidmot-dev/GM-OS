@@ -4,6 +4,7 @@ systeme: alien
 couverture: complète
 hors_canevas: false
 sources: ALIEN, le jeu de rôle (p. 6, p. 19, p. 20, p. 83, p. 104, p. 120, p. 128, p. 193, p. 206, p. 207, p. 208, p. 209, p. 211, p. 212, p. 213)
+pages_fiables: false
 genere_par: notebooklm
 relu: false
 ---

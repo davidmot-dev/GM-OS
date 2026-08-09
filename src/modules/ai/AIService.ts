@@ -765,8 +765,12 @@ ${i18n.language === 'fr'
       ? 'Réponds impérativement en français, de manière concise et immersive.' 
       : 'You must answer in English, in a concise and immersive way.'}
 ${i18n.language === 'fr'
-      ? 'Si possible, cite le document source pour les points de règle.'
-      : 'If possible, cite the source document for rule points.'}
+      // La pagination du corpus vient de NotebookLM et ne renvoie pas au livre :
+      // neuf fiches Dune citaient des pages au-delà de la dernière page de
+      // l'ouvrage. Une citation fausse coûte plus qu'une citation absente — le MJ
+      // ouvre le livre en pleine partie et ne trouve rien. On cite donc la fiche.
+      ? 'Cite la fiche source (son chemin) pour les points de règle. N\'invente jamais de numéro de page et ne recopie pas ceux des fiches : leur pagination n\'est pas fiable.'
+      : 'Cite the source document (its path) for rule points. Never invent page numbers, and do not repeat those found in the documents: their pagination is unreliable.'}
 
 CONTEXTE RÉCUPÉRÉ (RAG + SESSION) :
 ${fullContext}`;

@@ -4,6 +4,7 @@ systeme: dune
 couverture: partielle
 hors_canevas: false
 sources: "2D20 System Reference Document (2d20SRD, Chapitre 3) ; Dune : Aventures dans l’Imperium (p. 12-13, 141, 162)"
+pages_fiables: false
 genere_par: notebooklm
 relu: false
 ---

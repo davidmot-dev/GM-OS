@@ -3,6 +3,7 @@ sujet: Inventaire des mécaniques
 systeme: dune
 couverture: complète
 sources: "Dune : Aventures dans l’Imperium (livre de base)"
+pages_fiables: false
 genere_par: notebooklm
 relu: false
 ---

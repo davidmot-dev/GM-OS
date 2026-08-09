@@ -4,6 +4,7 @@ systeme: dune
 couverture: complète
 hors_canevas: false
 sources: "Dune : Aventures dans l’Imperium, pages 145, 148, 149, 151, 153, 154 ; Kit de démarrage : Le signe du ver, pages 5, 6, 7, 8."
+pages_fiables: false
 genere_par: notebooklm
 relu: false
 ---

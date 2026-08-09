@@ -4,6 +4,7 @@ systeme: dune
 couverture: partielle
 hors_canevas: false
 sources: "Dune : Aventures dans l’Imperium (p. 23, 119, 143, 148, 153, 158, 167-168, 170, 218)"
+pages_fiables: false
 genere_par: notebooklm
 relu: false
 ---

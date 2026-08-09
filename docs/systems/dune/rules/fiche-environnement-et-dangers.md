@@ -4,6 +4,7 @@ systeme: dune
 couverture: complète
 hors_canevas: false
 sources: "Dune : Aventures dans l’Imperium (p. 23, 24, 124, 136, 143, 145, 153, 421, 424, 426, 430, 432, 434, 435, 459, 1102, 1103, 1125, 1128, 1628, 1630) ; 2D20 System Reference Document (2d20SRD, Chapitres 1 et 3)"
+pages_fiables: false
 genere_par: notebooklm
 relu: false
 ---

@@ -4,6 +4,7 @@ systeme: blade-runner
 couverture: complète
 origine_supposee: SOCLE   # avis NotebookLM, non fiable (cf. plan corpus 4.6)
 sources: BRN-01_LivreDeRegles.pdf p. 64, p. 65, p. 66-67, p. 68-69, p. 70, p. 77, p. 80, p. 81
+pages_fiables: false
 genere_par: notebooklm
 relu: false
 ---

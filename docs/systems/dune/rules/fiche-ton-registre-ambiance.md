@@ -4,6 +4,7 @@ systeme: dune
 couverture: complète
 hors_canevas: false
 sources: "Dune_Aventures_dans_l'Imperium_BQ.pdf (p. 23, 30, 56, 64-65, 69, 71-75, 117-119, 183, 324, 420-423, 459, 480-482, 493-494, 822-827, 831, 861, 1052, 1101, 1115, 1154-1162, 1197-1200, 1223, 1231, 1239-1243, 1247-1249, 1267-1268)"
+pages_fiables: false
 genere_par: notebooklm
 relu: false
 ---

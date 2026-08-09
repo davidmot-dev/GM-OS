@@ -4,6 +4,7 @@ systeme: dune
 couverture: complète
 hors_canevas: false
 sources: "Dune : Aventures dans l’Imperium (p. 102, 105, 142, 145-149, 154, 155) ; Le Signe du Ver (p. 220, 221, 234-238, 241, 243, 247)"
+pages_fiables: false
 genere_par: notebooklm
 relu: false
 ---
