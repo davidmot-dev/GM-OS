@@ -167,14 +167,23 @@ C'est exactement la ligne de partage du § 1.
 
 ### 5.1 Ce que contiennent réellement les index extraits, au 2026-08-10
 
-Relevé sur les trois fichiers produits par David. **Les trois ne contiennent pas le même objet, et aucun
-n'a le même format d'extraction** — à savoir avant de bâtir un résolveur dessus.
+Relevé sur les trois fichiers produits par David, **après correction d'un premier relevé erroné**. Le
+parseur initial ne gérait ni les cellules à deux colonnes ni les titres espacés lettre à lettre : il
+lisait zéro entrée chez Blade Runner et s'arrêtait à la première moitié des fichiers, d'où la conclusion
+fausse que chaque fichier ne contenait qu'un seul objet.
 
-| Fichier | Objet | Format | Entrées lues |
+**En réalité, deux fichiers sur trois contiennent déjà les deux objets** — table des matières en
+première moitié, index alphabétique en seconde :
+
+| Fichier | Table des matières | Index alphabétique | Format d'extraction |
 |---|---|---|---|
-| `ALIEN_Index.md` | **table des matières** | `\|TITRE<br>PAGE\|` en cellule | 97 (p. 9–370) |
-| `Blade Runner_Index.md` | **table des matières** | `\|**TITRE**\|**PAGE**\|` + titres espacés lettre à lettre | 0 (format non couvert) |
-| `Dune_Index.md` | **index alphabétique** | `Terme.......PAGE` à points de conduite | 122 (p. 10–237) |
+| `ALIEN_Index.md` | ✓ 140 entrées | ✓ 80 entrées | `\|TITRE<br>PAGE\|` en cellule |
+| `Blade Runner_Index.md` | ✓ 35 entrées | ✓ 28 entrées | `\|**TITRE**\|**PAGE**\|`, titres espacés lettre à lettre |
+| `Dune_Index.md` | ✗ **absente** | ✓ 122 entrées | `Terme.......PAGE` à points de conduite |
+
+**Une seule production manque donc : la table des matières de Dune** — et c'est précisément le système
+dont les fiches citent le plus de pages fantaisistes. Pour Alien et Blade Runner, la séparation en deux
+fichiers est un découpage mécanique, sans nouvelle extraction.
 
 **Les deux objets ne servent pas à la même chose, et il faut les deux :**
 
@@ -183,9 +192,11 @@ n'a le même format d'extraction** — à savoir avant de bâtir un résolveur d
   (axe M) pour tout ce qu'aucune fiche ne couvre — et il porte sur le livre entier, pas sur les
   13 sujets.
 
-**Recommandation de production** : extraire les deux objets par livre, dans deux fichiers distincts
-(`<livre>_TOC.md` et `<livre>_Index.md`), plutôt qu'un fichier unique dont le contenu varie d'un livre
-à l'autre.
+**Recommandation de production, pour les livres à venir** : extraire les deux objets dans deux fichiers
+distincts, `<livre>_TOC.md` et `<livre>_Index.md`. Quand un livre n'a pas d'index alphabétique — c'est
+fréquent sur les jeux courts — la table des matières seule suffit : elle porte la résolution des fiches,
+qui est l'usage prioritaire. L'inverse n'est pas vrai : **un index alphabétique sans table des matières
+ne résout rien**, puisque les fiches citent des titres de section.
 
 ### 5.2 La chaîne de résolution
 
