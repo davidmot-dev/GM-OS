@@ -1,8 +1,11 @@
-# Décharge brute du livre Dune : 1,3 Mo pour un dossier qui n'en fait que 1,3.
+# Dune a désormais un corpus complet (17 fiches, les 13 sujets du canevas
+# couverts) et les deux décharges brutes ont été supprimées. Il ne reste donc
+# rien à exclure ici.
 #
-# Dune n'a pas encore de corpus (§ 7 du plan des règles — c'est le prochain
-# système, choisi pour éprouver le 2d20). En attendant, `Dune_Aventures_dans
-# _l_Imperium_BQ.md` reste indexé : 4 Ko de synthèse valent mieux que
-# 50 000 caractères tranchés au milieu d'un chapitre.
-
-Dune.txt
+# L'index du livre vit dans `index/` et non dans `rules/` : ce n'est pas une
+# fiche mais une table de correspondance terme → page. Il reste indexé, à son
+# rang de document de système.
+#
+# Rappel de portée : un `.ragignore` ne retire un fichier que de l'index de
+# l'Oracle. `ai:list-docs`, `ai:read-doc` et `ai:extract-pdf` lisent le disque
+# directement — les Forges et le lecteur de documents voient toujours tout.

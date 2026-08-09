@@ -2,6 +2,7 @@ import { ipcMain } from 'electron';
 import path from 'node:path';
 import fs from 'fs-extra';
 import { createRequire } from 'node:module';
+import log from 'electron-log';
 import { RAGIGNORE_FILENAME, isIgnored, parseRagIgnore, type IgnoreScope } from './ragIgnore';
 import {
     MAX_CONTEXT_TOKENS,
@@ -26,6 +27,18 @@ interface IndexedFile extends SelectableFile {
 
 /** Extensions retenues à l'indexation. Les `.jsonl` sont déjà découpés et annotés. */
 const EXTENSIONS_INDEXEES = ['.md', '.txt', '.pdf', '.jsonl'];
+
+/**
+ * Écrit dans `main.log` via electron-log, avec repli console si le module est
+ * indisponible (tests, environnement dégradé) — même motif qu'`auditLog.ts`.
+ */
+function ecrire(level: 'info' | 'warn', message: string) {
+    try {
+        log[level]('[RAG]', message);
+    } catch {
+        console[level](`[RAG] ${message}`);
+    }
+}
 
 /**
  * Lit `sujet:` et le premier titre d'un document markdown.
@@ -168,22 +181,31 @@ export class RAGEngine {
      * Sans cela, un document absent du prompt est indiscernable d'un document
      * absent du disque — c'est ce silence qui a laissé vivre des mois un filtre
      * qui laissait passer les 83 fichiers sans jamais atteindre une seule fiche.
+     *
+     * **Passe par `electron-log`, jamais par `console`** : rien ne collecte la
+     * sortie standard du process principal, ni au terminal de développement ni
+     * dans `main.log`, qu'electron-log n'alimente qu'à partir des appels `log.*`.
+     * Le piège est déjà documenté dans `auditLog.ts` — et je suis tombé dedans
+     * en écrivant ce journal la première fois.
      */
     private journaliser(req: RagRequest, s: RagSelection) {
         const plafond = req.maxTokens ?? MAX_CONTEXT_TOKENS;
         const horsPerimetre = s.ecartes.filter(e => e.raison === 'hors-perimetre').length;
         const budget = s.ecartes.filter(e => e.raison === 'budget').length;
 
-        console.log(
-            `[RAG] ${req.systemId} / ${req.campaignName}${req.query ? ` — « ${req.query.slice(0, 60)} »` : ' — sans question'} : `
+        const lignes = [
+            `${req.systemId} / ${req.campaignName}`
+            + `${req.query ? ` — « ${req.query.slice(0, 60)} »` : ' — sans question'} : `
             + `${s.retenus.length} retenu(s), ~${s.totalTokens} tok / ${plafond}`,
-        );
-        for (const r of s.retenus) {
-            console.log(`[RAG]   ✓ ${r.provenance.padEnd(9)} ${String(r.score).padStart(3)}  ${r.path}  (~${r.tokens} tok${r.tronque ? ', tronqué' : ''})`);
-        }
-        if (budget > 0) console.log(`[RAG]   … ${budget} candidat(s) écarté(s) faute de budget`);
-        if (horsPerimetre > 0) console.log(`[RAG]   · ${horsPerimetre} document(s) hors périmètre`);
-        for (const a of s.avertissements) console.warn(`[RAG]   ⚠ ${a}`);
+            ...s.retenus.map(r =>
+                `  ✓ ${r.provenance.padEnd(9)} ${String(r.score).padStart(3)}  ${r.path}`
+                + `  (~${r.tokens} tok${r.tronque ? ', tronqué' : ''})`),
+            ...(budget > 0 ? [`  … ${budget} candidat(s) écarté(s) faute de budget`] : []),
+            ...(horsPerimetre > 0 ? [`  · ${horsPerimetre} document(s) hors périmètre`] : []),
+        ];
+
+        for (const ligne of lignes) ecrire('info', ligne);
+        for (const a of s.avertissements) ecrire('warn', `  ⚠ ${a}`);
     }
 
     /**

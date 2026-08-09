@@ -1,0 +1,11 @@
+# Exclusions valables pour tout l'index de l'Oracle.
+#
+# Rappel de portée : ce fichier ne retire rien de l'application. `ai:list-docs`,
+# `ai:read-doc` et `ai:extract-pdf` lisent le disque directement — les Forges et
+# le lecteur de documents voient toujours tout.
+
+# Les README décrivent un dossier, pas un jeu. Celui d'Alien liste une
+# arborescence (`raw/`, `aliens/`, `scenario_hope/`) qui n'existe plus, et ceux
+# des campagnes expliquent où coller un chemin de configuration : servis comme
+# lore à l'Oracle, ils déplacent du vrai contenu hors du budget.
+README.md
