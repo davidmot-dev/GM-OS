@@ -84,7 +84,29 @@ Pour chaque fiche produite :
 Le script de la séance est en annexe (`scratchpad`, non versionné) ; sa logique tient en trente lignes
 et a vocation à passer dans la Forge (§ 6).
 
-### Étape 4 — Vérification
+### Étape 4 — Les personas (deux requêtes enchaînées, une fois par système)
+
+Prompts A et B en annexe (§ 8). **Enchaînés dans la même conversation** : B s'appuie sur la fiche de
+voix que A vient de produire.
+
+- A → une **fiche de voix** : vocabulaire de la table, registre, émotion visée, interdits. Enregistrée
+  dans `docs/systems/<id>/personas/`.
+- B → les **huit personas en JSON**, enregistrées dans **`docs/systems/<id>/gems.json`** — littéralement
+  ce chemin. `AIService` lit `systems/<id>/gems.json` ; un fichier rangé dans `personas/` n'est jamais
+  lu, **sans le moindre message d'erreur**. Le piège s'est produit deux fois ;
+  `electron/systemPersonas.test.ts` verrouille désormais le contrat de bout en bout.
+
+Trois contraintes façonnent ces prompts, et elles ne sont pas cosmétiques :
+
+- `gems.json` **remplace** l'instruction de base, sans concaténation : chaque persona est autosuffisante.
+- Le bloc générique — alias, « réponds en français », consigne de citation — est **ajouté après**. Le
+  répéter serait du prefill payé à chaque question.
+- **Une persona porte une voix, jamais des règles.** Le RAG fournit déjà les règles ; une persona qui les
+  affirme finira par les contredire. Démontré au premier essai : le Stratège d'Alien v1 énonçait « la
+  mort est toujours instantanée et inéluctable », que `sante-et-blessures.md`, tirée du même livre,
+  contredit.
+
+### Étape 5 — Vérification
 
 - **Tous les fichiers de `rules/` portent un `sujet:`** — verrouillé par `electron/ragSelection.test.ts`.
   Sans frontmatter, une fiche soignée pèse autant qu'une décharge au classement du RAG.
@@ -186,8 +208,14 @@ structurellement la séquence de David. Ce qui manque n'est pas de la plomberie 
      revue avant écriture       → l'humain valide (axe O)
      ai:write-doc               → docs/systems/<id>/rules/<slug>.md
      source_add (optionnel)     → la fiche retourne dans le carnet
-5. contrôles                    → sujet présent, doublons, pagination
+5. notebook_query(prompt A)     → fiche de voix
+   notebook_query(prompt B)     → les huit personas, même conversation
+   ai:write-doc                 → docs/systems/<id>/gems.json
+6. contrôles                    → sujet présent, doublons, pagination, clés des gemmes
 ```
+
+**L'étape 5 est la plus facile à automatiser et la plus vite rentable** : deux requêtes, un chemin de
+sortie fixe, et un contrat déjà testé (`systemPersonas.test.ts`). Elle ne dépend d'aucune des autres.
 
 **Réserves à tenir en tête.** Le plafond MCP est à 10 minutes et une génération complète fait une
 vingtaine de requêtes : il faut de l'annulation et une reprise sur échec partiel (axe D), sinon un
@@ -205,3 +233,237 @@ n'activer qu'en connaissance de cause, ou sur un carnet distinct.
 - `pages_fiables: false` sur les 46 fiches citant des pages ; consigne de citation de l'Oracle corrigée.
 - **Non fait** : la résolution titre → page contre l'index (§ 5), et le passage des gabarits v2 dans la
   Forge (§ 6). Ce sont les deux prochains travaux de ce chantier.
+
+---
+
+## 8. Les gabarits, en toutes lettres
+
+Quatre prompts : deux pour le corpus de règles, deux pour les personas. **Les prompts A et B sont ceux
+de David, transcrits tels qu'il les emploie** — ils ont produit les personas d'Alien et de Dune. Les
+gabarits 1 et 2 viennent du plan de conception (§ 4.2 et § 4.3).
+
+**Version 3, 2026-08-09.** Seul changement depuis la v2, et il porte sur trois lignes : **on ne demande
+plus de numéros de page, on demande des titres de section** (§ 5). Le carnet rapporte fidèlement un
+titre parce qu'il est dans le texte ; il fabrique les pages. La ligne d'origine est conservée en
+commentaire sous chaque prompt concerné, pour que le changement reste traçable.
+
+### Gabarit 1 — inventaire (une requête, une fois par système)
+
+```text
+Tu analyses UNIQUEMENT les sources de ce carnet. Ne complète jamais avec des
+connaissances extérieures.
+
+Pour chacun des sujets ci-dessous, indique si ce jeu le traite, et résume sa
+mécanique en une à deux phrases maximum :
+
+1. Résolution des jets (dés utilisés, lecture du résultat, réussite/échec)
+2. Degrés de réussite et critiques
+3. Jets opposés, aide et coopération
+4. Initiative et déroulement du tour
+5. Santé et blessures (échelle utilisée, incapacité, mort)
+6. Dégâts et types de dégâts
+7. États et conditions (comment on les subit, comment on en sort)
+8. Monnaie de table ou ressource PARTAGÉE par toute la table (élan, menace, jetons…)
+9. Jauges et ressources INDIVIDUELLES, tenues sur la fiche d'un personnage
+   (stress, santé mentale, points de magie, fatigue, monnaie, réputation…)
+10. Distances et portées en combat
+11. Poursuites
+12. Environnement et dangers (froid, vide, chute, feu, privation…)
+13. Ton, registre et ambiance recherchés
+
+Réponds par un TABLEAU MARKDOWN (avec des barres verticales), colonnes :
+Sujet | Traité (oui/partiellement/non) | Mécanique | Sections.
+
+La colonne « Mécanique » doit contenir les éléments CONCRETS : dés employés et
+leur taille, seuils chiffrés, nombre de niveaux d'une échelle. « On lance des
+dés et on compare à un seuil » est une réponse inutile.
+
+La colonne « Sections » donne les TITRES EXACTS des chapitres ou sections du
+livre où se trouve la règle, tels qu'ils y sont écrits. N'indique aucun numéro
+de page et aucun numéro de référence interne du carnet.
+
+Si un sujet n'est pas couvert par les sources, écris « non couvert par les
+sources » — n'invente rien, ne comble pas par analogie avec d'autres jeux.
+
+Ajoute ensuite une section « Hors catégories » listant les mécaniques CENTRALES
+de ce jeu qui n'entrent dans aucun des 13 sujets. Uniquement les mécaniques
+centrales.
+
+Écris tous les symboles en toutes lettres. Si le livre utilise une icône (par
+exemple pour marquer une réussite), nomme-la au lieu de la reproduire.
+
+N'aborde PAS : création de personnage, progression, équipement et matériel,
+historique et background, bestiaire, scénarios inclus.
+```
+
+> *v2 disait* : « colonnes … | Pages. » et « La colonne « Pages » donne les numéros de page du livre.
+> N'utilise jamais les numéros de référence internes du carnet. »
+
+### Gabarit 2 — fiche détaillée (à rejouer par sujet)
+
+```text
+Tu rédiges une fiche de règle sur le sujet : « {SUJET} ».
+
+Appuie-toi UNIQUEMENT sur les sources de ce carnet. Si elles ne suffisent pas,
+dis-le explicitement plutôt que de compléter.
+
+Format de sortie : Markdown, 3 000 à 5 000 caractères, structuré exactement
+selon les six sections ci-dessous. N'emploie aucune ligne de tirets « --- » et
+aucun bloc de métadonnées en en-tête : commence directement par la section
+« Métadonnées ».
+
+## Métadonnées
+- sujet : {SUJET}
+- couverture : complète | partielle | absente
+- sources : titre exact de chaque source utilisée
+- sections : titres exacts des chapitres ou sections dont la règle est tirée
+
+## Règle
+L'énoncé de la règle telle que le livre la pose.
+
+## Valeurs
+Toutes les valeurs chiffrées en clair, sous forme de liste : seuils, échelles
+ordonnées, durées, modificateurs, nombres de dés. Une échelle se donne dans
+l'ordre, du meilleur état au pire.
+
+## À la table
+Comment cela se joue concrètement, tour par tour si pertinent.
+
+## Cas limites
+Ce que le livre précise sur les situations ambiguës.
+
+## Non couvert
+Ce que le sujet devrait contenir mais que les sources ne disent pas.
+Écris « rien » si tout est couvert.
+
+Règles de rédaction :
+
+- Si les sources ne couvrent pas du tout ce sujet, rédige quand même la fiche
+  avec « couverture : absente » et explique en une phrase ce que tu as cherché.
+  Ne renvoie jamais une réponse vide.
+- Cite tes sources par TITRE DE SECTION dans le corps du texte, par exemple
+  « (section « Forcer le test ») ». N'indique JAMAIS de numéro de page, ni de
+  numéro de référence interne du carnet : les uns comme les autres sont faux
+  une fois sortis d'ici.
+- Écris tous les symboles en toutes lettres. Si le livre utilise une icône
+  (par exemple pour marquer une réussite), nomme-la au lieu de la reproduire.
+- N'échappe pas la ponctuation : écris « 1. » et « + », jamais « 1\. » ni « \+ ».
+- Reste dans ton sujet. Si une règle appartient à un autre sujet de la liste,
+  mentionne-la en une phrase et renvoie vers lui au lieu de la détailler.
+- Si le sujet porte sur des jauges ou des ressources, traite CHAQUE jauge
+  séparément et donne pour chacune : ce qu'elle mesure, sa valeur de départ,
+  ses bornes minimale et maximale, si elle monte ou descend quand la situation
+  empire, ce qui la fait bouger dans chaque sens, CE QUI SE PRODUIT À CHAQUE
+  SEUIL, et si elle se dépense (on la consomme volontairement) ou si elle
+  s'accumule (elle subit les événements).
+- Ne reformule pas en langage générique de jeu de rôle : garde le vocabulaire
+  exact du jeu.
+```
+
+> *v2 disait* : « - sources : titres exacts des sources utilisées, avec numéros de page » et « Cite tes
+> sources par NUMÉRO DE PAGE dans le corps du texte, par exemple « (p. 72) ». »
+
+### Prompt A — la fiche de voix (une fois par système)
+
+```text
+Tu analyses UNIQUEMENT les sources de ce carnet. N'invente rien.
+
+Je cherche à décrire la VOIX de ce jeu, pas ses règles. Ignore complètement les
+mécaniques chiffrées.
+
+Génère un Markdown que tu sauveras dans le studio, avec ces sections :
+
+## Vocabulaire de la table
+- Comment le livre nomme le meneur de jeu (terme exact).
+- Comment il nomme les joueurs et leurs personnages.
+- Les dix à vingt termes propres au jeu qu'un meneur emploie à voix haute,
+  avec en une ligne ce que chacun désigne. Mélange termes de mécanique et
+  termes d'univers.
+- Les termes génériques de jeu de rôle que ce jeu REMPLACE par les siens.
+
+## Registre
+Le ton du livre lui-même : son rythme, son niveau de langue, ce qu'il montre et
+ce qu'il tait. Cite deux ou trois formulations caractéristiques du texte.
+
+## Ce que le jeu veut faire ressentir
+En trois phrases : l'émotion visée à la table, et par quels moyens le livre dit
+qu'on l'obtient.
+
+## Interdits
+Ce qu'un meneur de ce jeu ne fait jamais — de ton, de posture ou de traitement
+des personnages. Uniquement ce que les sources affirment ou impliquent
+clairement.
+
+## Non couvert
+Ce que tu n'as pas trouvé dans les sources. Écris « rien » si tout est couvert.
+
+Cite tes sources par titre de section, jamais par numéro de page. Écris les
+symboles en toutes lettres. N'échappe pas la ponctuation. N'emploie aucune
+ligne de tirets « --- ».
+```
+
+> *La version de David disait* : « Cite tes sources par numéro de page. » Seule ligne modifiée, pour la
+> raison du § 5. Tout le reste est son texte.
+
+### Prompt B — les huit personas (à enchaîner dans la même conversation)
+
+```text
+À partir de la fiche de voix que tu viens de produire et des sources du carnet,
+rédige HUIT personas d'assistant IA spécialisées pour ce jeu.
+
+Chaque persona sera placée en tête du prompt d'un assistant. Elle doit donc :
+
+- être AUTOSUFFISANTE : énoncer le rôle de l'assistant ET la voix du jeu, car
+  elle remplace intégralement l'instruction générique ;
+- faire entre 400 et 700 caractères. Pas davantage : elle est envoyée à chaque
+  question, sa longueur se paie à chaque fois ;
+- porter du VOCABULAIRE et de la POSTURE, jamais des règles chiffrées. Aucun
+  seuil, aucune formule, aucune table : les règles sont fournies séparément à
+  l'assistant, et une persona qui les répète finira par les contredire ;
+- employer le terme exact par lequel ce jeu désigne le meneur de jeu ;
+- inclure une interdiction concrète, tirée de la section « Interdits ».
+- L'interdit doit porter sur ce que L'ASSISTANT ne doit pas faire dans son rôle
+  précis, et non sur ce que le livre interdit au meneur de jeu. Inspire-t'en,
+  mais transpose : un assistant qui résume des séances passées ne peut pas se
+  voir interdire d'en planifier la fin.
+- N'énonce AUCUNE règle chiffrée ni aucun fait de règle, même en passant, même
+  sous forme d'ambiance ("la mort est toujours instantanée"). Les règles sont
+  fournies séparément et une persona qui les affirme finira par les contredire.
+
+Ne dis pas « réponds en français » ni « cite tes sources » : ces consignes sont
+déjà ajoutées ailleurs.
+
+Les huit rôles :
+- sage : les règles, les statistiques, la mécanique. Précis et technique.
+- scribe : consigner l'histoire, résumer les séances, organiser les notes.
+- oracle : improvisation narrative, ambiance, rebondissements dramatiques.
+- bard : enrichir l'univers, lore, détails et textes d'ambiance.
+- alchemist : génération technique d'objets et de caractéristiques de PNJ.
+- actor : interpréter les PNJ — voix, tics de langage, motivations, dialogues.
+- cartographer : décrire les lieux, les paysages, l'architecture.
+- strategist : analyser une situation de combat et suggérer des manœuvres.
+
+Réponds UNIQUEMENT par un objet JSON valide, sans commentaire ni bloc de code
+autour, exactement de cette forme :
+
+{
+  "sage": "…",
+  "scribe": "…",
+  "oracle": "…",
+  "bard": "…",
+  "alchemist": "…",
+  "actor": "…",
+  "cartographer": "…",
+  "strategist": "…"
+}
+
+Génère le fichier JSON dans le studio sous le nom "gems.json"
+```
+
+> Texte de David, non modifié. Les deux clauses les plus chèrement acquises sont les deux dernières
+> puces : **transposer l'interdit sur le rôle de l'assistant**, et **aucun fait de règle même en
+> passant**. Elles corrigent les deux défauts du premier essai Alien.
+
+**Les huit clés ne sont pas négociables** : `AIService` indexe par `gemId`, et une clé inconnue est du
+travail perdu. Elles sont définies dans `src/stores/useGemStore.ts` — Sage, Scribe, Oracle, Barde,
+Alchimiste, Acteur, Cartographe, Stratège.

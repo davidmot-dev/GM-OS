@@ -614,6 +614,12 @@ physiologie des synthétiques, affrontement des xénomorphes, combat spatial, fo
 **Deux gabarits, en deux temps** : une *fiche de voix* (vocabulaire de la table, registre, ce que le jeu
 veut faire ressentir, interdits), puis les *huit personas en JSON* enchaînées dans le même fil.
 
+> **Leur texte est consigné depuis le 2026-08-09** — prompts A et B du § 8 de
+> `2026-08-09-procedure-corpus-notebooklm.md`. Il ne l'était pas jusque-là : ce paragraphe les décrivait
+> sans les donner, alors qu'ils avaient produit les personas d'Alien puis de Dune. **Un gabarit décrit
+> mais non transcrit n'est pas reproductible** — c'est le même défaut que le corpus cherche à corriger,
+> appliqué à notre propre méthode.
+
 **Essai Alien du 2026-08-08.** Deux versions produites.
 
 - **v1** : bon vocabulaire (Maman, Weyland-Yutani, la Frontière, USCMC, le Voile Extérieur), longueurs
