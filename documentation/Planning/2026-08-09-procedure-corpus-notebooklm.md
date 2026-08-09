@@ -165,6 +165,56 @@ localement** contre `index/`. Déterministe, vérifiable, et l'index sert du mê
 
 C'est exactement la ligne de partage du § 1.
 
+### 5.1 Ce que contiennent réellement les index extraits, au 2026-08-10
+
+Relevé sur les trois fichiers produits par David. **Les trois ne contiennent pas le même objet, et aucun
+n'a le même format d'extraction** — à savoir avant de bâtir un résolveur dessus.
+
+| Fichier | Objet | Format | Entrées lues |
+|---|---|---|---|
+| `ALIEN_Index.md` | **table des matières** | `\|TITRE<br>PAGE\|` en cellule | 97 (p. 9–370) |
+| `Blade Runner_Index.md` | **table des matières** | `\|**TITRE**\|**PAGE**\|` + titres espacés lettre à lettre | 0 (format non couvert) |
+| `Dune_Index.md` | **index alphabétique** | `Terme.......PAGE` à points de conduite | 122 (p. 10–237) |
+
+**Les deux objets ne servent pas à la même chose, et il faut les deux :**
+
+- La **table des matières** résout `sections:` → page. C'est le résolveur du gabarit v3.
+- L'**index alphabétique** résout un *terme* → pages. C'est lui qui alimentera l'Oracle bibliothécaire
+  (axe M) pour tout ce qu'aucune fiche ne couvre — et il porte sur le livre entier, pas sur les
+  13 sujets.
+
+**Recommandation de production** : extraire les deux objets par livre, dans deux fichiers distincts
+(`<livre>_TOC.md` et `<livre>_Index.md`), plutôt qu'un fichier unique dont le contenu varie d'un livre
+à l'autre.
+
+### 5.2 La chaîne de résolution
+
+```text
+index/<Livre>_TOC.md · index/<Livre>_Index.md      (bruts, extraits du PDF)
+        ↓  normalisation, une fois par livre
+index/<livre>.index.json { toc: [{titre, page}], termes: [{terme, pages[]}] }
+        ↓  résolution
+fiche.sections[]  ──confrontation──>  pages vérifiées
+                                  └─> sections introuvables = journal de revue
+```
+
+**La confrontation a deux issues, et la seconde vaut autant que la première.** Un titre trouvé donne une
+page *vérifiée* — ce que NotebookLM ne savait pas produire. Un titre introuvable donne un *soupçon* :
+soit le carnet a inventé le titre, soit la table est incomplète. **Rien d'autre, aujourd'hui, n'attrape
+l'invention** — c'est le trou de l'axe O, partiellement comblé pour zéro coût de génération.
+
+### 5.3 Trois obstacles au rapprochement, mesurés
+
+1. **Ligatures perdues à l'extraction.** `confit` pour « conflit », `Diffculté` pour « Difficulté » : le
+   `fi`/`fl` saute. Le défaut frappe les termes les plus structurants, donc **le rapprochement doit être
+   tolérant, jamais une égalité de chaînes**.
+2. **Titres espacés lettre à lettre** chez Blade Runner :
+   `E T TO M B E N T L E S A N G E S E N F E U 0 0 7`. L'extracteur a éclaté les titres d'affichage ;
+   à recoller avant tout rapprochement.
+3. **Une entrée de table des matières donne la page où la section *commence***, pas celle du détail
+   cité. Une référence résolue dit « section « Forcer le test », p. 60 » — exactement ce qu'il faut pour
+   retrouver la règle dans le livre, mais **ne pas prétendre davantage**.
+
 ---
 
 ## 6. Ce que la Forge peut automatiser
@@ -231,8 +281,11 @@ n'activer qu'en connaissance de cause, ou sur un carnet distinct.
 - Index de livre extraits pour **alien, blade-runner, dune**, rangés dans `index/`.
 - Personas par système : **alien et dune**.
 - `pages_fiables: false` sur les 46 fiches citant des pages ; consigne de citation de l'Oracle corrigée.
-- **Non fait** : la résolution titre → page contre l'index (§ 5), et le passage des gabarits v2 dans la
-  Forge (§ 6). Ce sont les deux prochains travaux de ce chantier.
+- **Non fait** : la résolution titre → page contre l'index (§ 5.2), et le passage des gabarits v3 dans
+  la Forge (§ 6). Ce sont les deux prochains travaux de ce chantier.
+- **Prérequis à la résolution**, relevé le 2026-08-10 : les index extraits sont hétérogènes (§ 5.1).
+  Avant d'écrire le résolveur, il faut une extraction uniforme — table des matières *et* index
+  alphabétique, dans deux fichiers séparés, pour chaque livre.
 
 ---
 
@@ -241,6 +294,11 @@ n'activer qu'en connaissance de cause, ou sur un carnet distinct.
 Quatre prompts : deux pour le corpus de règles, deux pour les personas. **Les prompts A et B sont ceux
 de David, transcrits tels qu'il les emploie** — ils ont produit les personas d'Alien et de Dune. Les
 gabarits 1 et 2 viennent du plan de conception (§ 4.2 et § 4.3).
+
+**Les quatre demandent l'enregistrement dans le studio du carnet.** C'est l'archive : le carnet garde la
+trace de ce qu'il a produit, indépendamment de ce qui atterrit dans `docs/`. Utile quand une fiche est
+régénérée et qu'on veut comparer les deux versions — et c'est la seule mémoire du carnet, qui ne
+conserve pas les conversations.
 
 **Version 3, 2026-08-09.** Seul changement depuis la v2, et il porte sur trois lignes : **on ne demande
 plus de numéros de page, on demande des titres de section** (§ 5). Le carnet rapporte fidèlement un
@@ -252,6 +310,8 @@ commentaire sous chaque prompt concerné, pour que le changement reste traçable
 ```text
 Tu analyses UNIQUEMENT les sources de ce carnet. Ne complète jamais avec des
 connaissances extérieures.
+
+Génère un Markdown que tu sauveras dans le studio.
 
 Pour chacun des sujets ci-dessous, indique si ce jeu le traite, et résume sa
 mécanique en une à deux phrases maximum :
@@ -306,6 +366,8 @@ Tu rédiges une fiche de règle sur le sujet : « {SUJET} ».
 
 Appuie-toi UNIQUEMENT sur les sources de ce carnet. Si elles ne suffisent pas,
 dis-le explicitement plutôt que de compléter.
+
+Génère un Markdown que tu sauveras dans le studio, nommé d'après le sujet.
 
 Format de sortie : Markdown, 3 000 à 5 000 caractères, structuré exactement
 selon les six sections ci-dessous. N'emploie aucune ligne de tirets « --- » et
