@@ -1,0 +1,13 @@
+# Trois copies du même livre, pour 1,5 Mo, sans aucune fiche de corpus en face.
+#
+# On garde `cthulhu_hack_rules_rag.jsonl` : il est déjà découpé en passages
+# annotés, donc exploitable tel quel, là où les trois autres sont des blocs
+# monolithiques que la troncature couperait au hasard.
+#
+# Ce dossier reste à traiter au corpus (§ 7 du plan des règles). L'exclusion
+# ne remplace pas les fiches, elle empêche seulement les décharges d'occuper
+# le budget à leur place.
+
+cthulhu_hack.txt
+cthulhu_hack_clean.md
+cthulhu_hack_clean.txt

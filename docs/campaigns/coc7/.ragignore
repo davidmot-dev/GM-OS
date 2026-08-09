@@ -1,0 +1,10 @@
+# Le PDF du scénario pèse 28,9 Mo — les trois quarts de tout `docs/`.
+#
+# `aux_portes_horreur_rag.md` (2,6 Ko), posé à côté, en est la version
+# exploitable et reste indexée. Le PDF, lui, ne servait qu'à faire tourner
+# pdf-parse à chaque indexation pour livrer 50 000 caractères tranchés.
+#
+# Il reste ouvrable dans le lecteur de documents : l'exclusion ne vaut que
+# pour l'index de l'Oracle.
+
+Aux Portes de L'Horreur/Aux Portes de L'Horreur.pdf

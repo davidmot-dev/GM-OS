@@ -26,7 +26,12 @@ describe('RAGService', () => {
     // Default mock setup
     (useSessionOSStore.getState as any).mockReturnValue({
       campaigns: [
-        { id: 'camp-1', name: 'Cyberpunk Red', system: 'cyberpunk-red' }
+        {
+          id: 'camp-1',
+          name: 'Cyberpunk Red',
+          system: 'cyberpunk-red',
+          campaignPath: 'campaigns/night-city',
+        }
       ],
       activeCampaignId: 'camp-1',
       customSheetTemplates: []
@@ -52,9 +57,23 @@ describe('RAGService', () => {
 
   it('should call searchContext with correct system and campaign name', async () => {
     await service.getRelevantContext();
-    // In our mock, systemId -> cyberpunk-red matches template name "Cyberpunk Red" or stays raw
-    // For simplicity in this test, we check what it sends
-    expect((window as any).appBridge.ai.searchContext).toHaveBeenCalledWith('cyberpunk-red', 'Cyberpunk Red');
+    // L'identifiant nomme le dossier `docs/systems/<id>`, pas le nom affiché.
+    expect((window as any).appBridge.ai.searchContext).toHaveBeenCalledWith(
+      'cyberpunk-red',
+      'Cyberpunk Red',
+      expect.objectContaining({ campaignPath: 'campaigns/night-city' }),
+    );
+  });
+
+  it('transmet la question au moteur', async () => {
+    // Sans elle, le moteur ne peut trier que par système : c'est le défaut
+    // que `prepareSystemPrompt(_prompt, …)` rendait invisible.
+    await service.getRelevantContext({ query: 'combien de dés pour un jet ?' });
+    expect((window as any).appBridge.ai.searchContext).toHaveBeenCalledWith(
+      'cyberpunk-red',
+      'Cyberpunk Red',
+      expect.objectContaining({ query: 'combien de dés pour un jet ?' }),
+    );
   });
 
   it('should return empty string if bridge is missing', async () => {

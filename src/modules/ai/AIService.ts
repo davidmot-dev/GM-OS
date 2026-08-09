@@ -703,7 +703,7 @@ export class AIService {
    * Prépare le prompt système complet en fonction du contexte.
    */
   public async prepareSystemPrompt(
-    _prompt: string,
+    prompt: string,
     customContext?: string,
     gemId: string = 'sage',
     ragOptions: { systemOnly?: boolean; systemName?: string; limit?: number } = {},
@@ -711,11 +711,13 @@ export class AIService {
   ): Promise<string> {
     const aiStore = useAIStore.getState();
     const isLite = lite !== undefined ? lite : aiStore.liteContext;
-    
-    // Si mode lite forcé, on limite drastiquement le RAG ou on le shunte
-    const ragContext = isLite 
+
+    // La question sert à trier le corpus par sujet. Elle arrivait déjà jusqu'ici
+    // sous le nom `_prompt` et n'allait pas plus loin : le moteur ne pouvait
+    // sélectionner que par système, jamais par ce qui était demandé.
+    const ragContext = isLite
       ? (ragOptions.systemOnly ? await ragService.getRelevantContext({ ...ragOptions, limit: 1 }) : "")
-      : await ragService.getRelevantContext(ragOptions);
+      : await ragService.getRelevantContext({ ...ragOptions, query: prompt });
 
     const liveContext = this.getLiveSessionContext(isLite);
     

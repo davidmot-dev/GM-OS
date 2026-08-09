@@ -171,7 +171,23 @@ declare global {
             extractPdf: (filePath: string) => Promise<string>;
             extractPDF: (filePath: string) => Promise<string>;
             proxyRequest: (url: string, method: string, headers: Record<string, string>, body: unknown) => Promise<AIProxyResponse>;
-            searchContext: (systemId: string, campaignName: string) => Promise<string>;
+            /**
+             * Contexte RAG pour la question en cours.
+             * `query` est ce qui permet de trier par sujet plutôt que par ordre
+             * alphabétique ; `systemPath`/`campaignPath` sont les chemins déclarés
+             * sur la fiche de campagne, qui priment sur la déduction par nom.
+             */
+            searchContext: (
+                systemId: string,
+                campaignName: string,
+                options?: {
+                    query?: string;
+                    systemName?: string;
+                    systemPath?: string;
+                    campaignPath?: string;
+                    maxTokens?: number;
+                },
+            ) => Promise<string>;
             reindex: (customPath?: string) => Promise<boolean>;
             ollamaChat: (model: string, messages: { role: string; content: string }[], endpoint?: string) => Promise<string>;
             ollamaChatStream: (model: string, messages: { role: string; content: string }[], endpoint?: string) => Promise<unknown>;

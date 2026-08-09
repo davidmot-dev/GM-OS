@@ -27,11 +27,14 @@ export class RAGService {
   /**
    * Scans the docs directory and returns relevant content based on active session.
    * Leverages the dynamic backend RAG Engine.
+   *
+   * `query` est la question posée. Sans elle, le moteur ne peut trier que par
+   * système, et le choix des fiches à l'intérieur d'un corpus reste arbitraire.
    */
-  public async getRelevantContext(options: { systemOnly?: boolean; systemName?: string; limit?: number } = {}): Promise<string> {
+  public async getRelevantContext(options: { systemOnly?: boolean; systemName?: string; limit?: number; query?: string } = {}): Promise<string> {
     const osStore = useSessionOSStore.getState();
     const obsidianStore = useObsidianStore.getState();
-    
+
     // 1. Align RAG Path with Obsidian Vault if available
     if (obsidianStore.vaultPath && window.appBridge?.ai?.reindex) {
         // We trigger a background reindex if the path changed handled by RAGEngine.ts logic
@@ -43,10 +46,12 @@ export class RAGService {
     }
 
     const activeCampaign = osStore.campaigns.find(c => c.id === osStore.activeCampaignId);
-    
-    const rawSystemId = activeCampaign?.system || 'unknown';
+
+    // L'identifiant nomme le dossier (`docs/systems/alien`), le nom affiché non.
+    // On envoie les deux : le moteur essaie l'identifiant d'abord.
+    const systemId = activeCampaign?.system || 'unknown';
     const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...osStore.customSheetTemplates];
-    const systemId = allTemplates.find(t => t.id === rawSystemId)?.name || rawSystemId;
+    const systemName = allTemplates.find(t => t.id === systemId)?.name;
     const campaignName = activeCampaign?.name || 'unknown';
 
     if (!window.appBridge?.ai?.searchContext) {
@@ -55,8 +60,15 @@ export class RAGService {
     }
 
     try {
-        console.log(`[RAG Service] Targeted Search -> System: ${systemId}, Campaign: ${campaignName}`);
-        const context = await window.appBridge.ai.searchContext(systemId, campaignName);
+        const context = await window.appBridge.ai.searchContext(systemId, campaignName, {
+            query: options.query,
+            systemName,
+            // « Chemin des Règles » et « Chemin des Notes » de la fiche de campagne.
+            // Ils étaient saisissables et enregistrés depuis toujours, mais leur
+            // unique lecteur était resté en commentaire : rien ne les lisait.
+            systemPath: activeCampaign?.systemPath,
+            campaignPath: activeCampaign?.campaignPath,
+        });
         return context || "";
     } catch (error) {
         console.error("[RAG Service] Search error:", error);
@@ -64,76 +76,12 @@ export class RAGService {
     }
   }
 
-/*
-  private async getContextFromExplicitPaths(systemPath?: string, campaignPath?: string): Promise<string> {
-    if (!window.appBridge?.ai?.listDocs) return "";
-    const docs = await window.appBridge.ai.listDocs() as DocEntry[];
-    let totalContext = "";
-
-    const findAndRead = async (targetPath: string) => {
-      // Normalize path (split by / or \ and trim)
-      const parts = targetPath.trim().split(/[/\\]/).filter(p => p.length > 0).map(p => p.toLowerCase());
-      if (parts.length === 0) return "";
-
-      console.log(`[RAG Service] Searching for path segments:`, parts);
-
-      // Recursive finder that follows the path
-      const findNestedEntry = (entries: DocEntry[], segments: string[]): DocEntry | null => {
-        if (segments.length === 0) return null;
-        
-        const [current, ...remaining] = segments;
-        const match = entries.find(e => e.name.toLowerCase() === current);
-        
-        if (match) {
-          if (remaining.length === 0) return match;
-          if (match.children) return findNestedEntry(match.children, remaining);
-        }
-        return null;
-      };
-
-      let foundEntry = findNestedEntry(docs, parts);
-
-      // Fallback: If not found by full path, try searching for the leaf name anywhere in the tree
-      // (This helps if the user forgot a parent folder like 'systems/' or 'campaigns/')
-      if (!foundEntry && parts.length > 0) {
-        const leaf = parts[parts.length - 1];
-        console.warn(`[RAG Service] Path not found directly: ${targetPath}. Trying to find leaf: ${leaf}`);
-        
-        const findByLeaf = (entries: DocEntry[]): DocEntry | null => {
-          for (const entry of entries) {
-            if (entry.name.toLowerCase() === leaf) return entry;
-            if (entry.children) {
-              const b = findByLeaf(entry.children);
-              if (b) return b;
-            }
-          }
-          return null;
-        };
-        foundEntry = findByLeaf(docs);
-      }
-
-      if (foundEntry) {
-        console.log(`[RAG Service] Found entry for RAG: ${foundEntry.name} (${foundEntry.type})`);
-        return await this.readFolderRecursive(foundEntry);
-      } else {
-        console.error(`[RAG Service] Target RAG path not found: ${targetPath}`);
-      }
-      return "";
-    };
-
-    if (systemPath) {
-      const systemContext = await findAndRead(systemPath);
-      if (systemContext) totalContext += `### SYSTÈME: ${systemPath}\n${systemContext}\n\n`;
-    }
-
-    if (campaignPath) {
-      const campaignContext = await findAndRead(campaignPath);
-      if (campaignContext) totalContext += `### CAMPAGNE: ${campaignPath}\n${campaignContext}\n\n`;
-    }
-
-    return totalContext;
-  }
-*/
+  // `getContextFromExplicitPaths` vivait ici, en commentaire : c'était l'unique
+  // lecteur de `campaign.systemPath` / `campaign.campaignPath`. Les deux champs
+  // sont saisissables dans la fiche de campagne (« Chemin des Règles », « Chemin
+  // des Notes ») et enregistrés, mais désactivés côté lecture — un cas de plus
+  // du cadre qui déclare et du moteur qui ignore. Ils sont désormais transmis
+  // au moteur par `getRelevantContext`, qui les traite comme périmètre prioritaire.
 
   private async readFolderRecursive(entry: DocEntry): Promise<string> {
     let content = '';

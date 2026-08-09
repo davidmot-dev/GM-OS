@@ -690,12 +690,39 @@ sur 49 et une troncature à 16 384 tokens qui tranche au hasard.
 **Acquis au 2026-08-08 :**
 
 - Gabarits **version 2**, validés sur deux systèmes (§ 4.2, § 4.3).
-- Corpus **Blade Runner** (17 fiches) et **Alien** (18 fiches), normalisés sur une clé canonique.
+- Corpus **Blade Runner** (17 fichiers) et **Alien** (18 fichiers) dans `rules/`.
+
+> **Correction du 2026-08-09, mesurée en branchant le moteur sur le frontmatter.** Ces comptes sont des
+> comptes de *fichiers*, pas de fiches normalisées. Le décompte réel de ce qui porte un frontmatter
+> `sujet:` — donc de ce que le moteur reconnaît comme fiche et fait passer devant les décharges :
+>
+> | Système | Fichiers dans `rules/` | Fiches normalisées |
+> |---|---|---|
+> | alien | 18 | **17** |
+> | blade-runner | 17 | **13** |
+> | noc | 4 | **0** |
+> | reves de dragons | 7 | **0** |
+>
+> Les manquants sont des artefacts v1 : pas de frontmatter, et des index internes NotebookLM (`[1]`,
+> `[1-3]`) à la place des numéros de page — les deux défauts du § 4.6, restés en place. Côté Alien il
+> s'agit du seul `guide-synthese-regles-alien.md`, qui n'est pas une fiche du canevas mais un digest.
+> **NOC et Rêves de Dragons n'ont aucune fiche exploitable** : leurs onze fichiers sont des v1 entières.
+> Le moteur les traite en documents de système ordinaires, donc ils sont utilisés mais ne priment pas.
+> **À reprendre : les 4 de Blade Runner et les 11 de NOC / Rêves de Dragons.**
 - **Test de socle exécuté et clos** (§ 4.7) : le socle existe sujet par sujet, pas par système.
 - **Arbitrage de David** : génération système par système, sans copie automatique (§ 2.4 bis).
 
+**Fait le 2026-08-09 : l'axe B est réalisé** (bilan complet dans
+`2026-08-07-acceleration-ia.md`, sous « Axe B »). Le cloisonnement par système, l'exclusion par
+`.ragignore` et la sélection par sujet sont en place ; le contexte passe de ~93 000 à ~4 000 tokens et
+la première source citée est désormais une fiche du corpus. **La condition posée au § 4.8 est levée :
+générer de nouveaux corpus sert de nouveau à quelque chose.**
+
 **Prochaines étapes, dans l'ordre :**
 
+0. **Normaliser les 15 fiches v1** relevées dans le tableau ci-dessus (4 Blade Runner, 4 NOC, 7 Rêves
+   de Dragons). Sans frontmatter `sujet:`, le moteur ne les distingue pas d'un extrait brut : c'est le
+   travail le moins cher et le plus immédiatement rentable du chantier.
 1. Compléter les deux corpus — *poursuites* et *monnaie de table* côté Alien, *jauges individuelles*
    côté Blade Runner.
 2. Poursuivre système par système : Dune (test du 2d20, qui vérifiera si le constat se reproduit sur un

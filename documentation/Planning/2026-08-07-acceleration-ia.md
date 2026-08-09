@@ -384,6 +384,68 @@ pas seulement la stabilité du pilote.
 **÷ 18 sur le contexte**, et correction d'un défaut de **qualité** — l'Oracle cesse de répondre à partir
 de documents tirés au hasard. Profite aux vingt consommateurs.
 
+##### ✅ Réalisé le 2026-08-09
+
+**Ce que le filtre envoyait vraiment, simulé sur le `docs/` réel avant correction** : 11 des 15 fichiers
+venaient des campagnes — dont *Trinité Fatale* (CoC), *Aux Portes de l'Horreur* (PDF CoC), la *Vallée du
+Vent Glacé* (D&D) — les 4 autres étaient des décharges brutes d'Alien tranchées à 50 000 caractères, et
+**aucune des fiches du corpus n'y figurait**. Soit ~93 000 tokens pour un `num_ctx` de 16 384. Les deux
+clauses fourre-tout laissant passer les 83 fichiers, **la sélection était identique pour toutes les
+campagnes** : en séance Dune, l'Oracle recevait des décharges Alien et zéro Dune. Ce n'était pas un
+mauvais tri, c'était l'absence de tri — `.slice(0, 15)` sur l'ordre alphabétique du disque.
+
+**Point 8, ajouté en cours de route et c'est le plus rentable : la question sert enfin à choisir.**
+`prepareSystemPrompt(_prompt, …)` recevait la question de l'utilisateur et la jetait — le souligné le
+disait. Le moteur ne pouvait donc sélectionner que par système, jamais par sujet. La question descend
+maintenant jusqu'à `selectContext`, où le champ `sujet:` du frontmatter la reçoit. **Le rapprochement du
+titre pèse quatre fois le rapprochement du corps** : le sujet dit de quoi un document *traite*, le corps
+seulement ce qu'il *mentionne*.
+
+**Deuxième chaîne morte réparée au passage.** `campaign.systemPath` et `campaign.campaignPath` sont
+saisissables dans la fiche de campagne (« Chemin des Règles », « Chemin des Notes ») et enregistrés
+depuis toujours ; leur unique lecteur, `getContextFromExplicitPaths`, **était resté en commentaire**.
+Encore un cas de « le cadre déclare, le moteur ignore ». Ils sont désormais le périmètre prioritaire,
+et priment sur la déduction par nom de dossier — nécessaire, puisque les dossiers de `docs/campaigns/`
+ne portent pas les noms des campagnes de David (« Agents de Dune » contre `Agents_of_Dune.md`).
+
+Réalisation :
+
+- **Périmètre dur** : système actif, campagne active, ou `docs/commun/`. Le reste est écarté, pas
+  déclassé. Le rapprochement se fait sur un slug avec frontière de segment, jamais par `includes` libre.
+- **Rangs** : fiche du corpus (100) > document de campagne (60) > autre document du système (40) >
+  fonds commun (30). L'écart entre deux rangs excède le bonus de pertinence maximal, donc **la question
+  départage à rang égal sans jamais renverser les rangs**.
+- **Budget de 4 000 tokens**, en-têtes et séparateurs compris, avec plafond de 1 200 par fichier **pour
+  les seules décharges**. Une fiche passe **entière ou pas du tout** : la tronquer couperait une règle en
+  deux, et la place revient à la suivante.
+- **`.ragignore`** par dossier, modèle gitignore (`!` réintègre, `/` final vise les dossiers, dernière
+  règle applicable gagnante). **Il ne retire que de l'index de l'Oracle** : `ai:list-docs`, `ai:read-doc`
+  et `ai:extract-pdf` lisent le disque directement, donc les Forges gardent les livres bruts en entier.
+  Posés sur `systems/alien` (4 copies du livre), `systems/cthulhu hack` (3 copies), `systems/dune`
+  (1 décharge) et `campaigns/coc7` (le PDF de 28,9 Mo).
+- `.jsonl` indexés ; l'index purge les entrées disparues, sans quoi un `.ragignore` n'aurait pris effet
+  qu'au redémarrage suivant.
+- **Journal de ce qui est écarté**, avec la raison, et **avertissement quand une campagne n'a aucun
+  document rattaché** — sinon l'absence resterait indiscernable d'une absence de fichier, ce qui est
+  exactement ce qui a laissé ce filtre vivre des mois.
+
+**Mesuré après (`docs/` réel, hors PDF).** Question « un xénomorphe me charge, combien de dés je lance
+pour tirer ? » → `regles-affrontement-xenomorphes.md`, `combat-spatial.md`, puis le bestiaire tronqué,
+3 998 tokens. « Mon personnage tombe à zéro en santé ? » → `sante-et-blessures.md` en tête.
+Blade Runner, « comment fonctionne l'initiative ? » → `initiative-et-tour.md` en tête. **Le premier
+document retenu est le bon dans les trois cas, et c'est toujours une fiche.** De ~93 000 à ~4 000 tokens,
+soit **÷ 23** — davantage que les ÷ 18 prévus, parce que le plan n'avait pas anticipé le tri par sujet.
+
+Tests : `electron/ragIgnore.test.ts` (12) et `electron/ragSelection.test.ts` (30, dont une passe de
+non-régression sur le corpus réel). **Trois défauts trouvés par ces tests, pas par la relecture** : la
+marque de troncature était posée *après* le découpage et faisait dépasser le plafond ; les en-têtes
+`[Source: …]` n'étaient pas comptés dans le budget ; et une règle `raw/` n'excluait pas les fichiers
+sous `raw/`, ce que la marche du disque masquait en élaguant le dossier en amont.
+
+**Reste à faire ici** : `docs/commun/` est reconnu mais n'existe pas encore sur disque ; le plafond de
+4 000 tokens ne laisse passer que **deux fiches entières** (elles pèsent 5 800 caractères en moyenne),
+à réévaluer une fois l'axe A en place.
+
 #### Axe C — Ordre du prompt et contexte du Cortex · *~2 h*
 
 1. **Inverser les blocs** : `[persona + RAG]` → `[contexte vivant]` → `[question]`.

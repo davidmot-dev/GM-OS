@@ -1,0 +1,18 @@
+# Décharges brutes du livre de règles ALIEN.
+#
+# Le même livre est présent quatre fois sous des formes différentes, pour
+# 4,7 Mo. Les dix-huit fiches du corpus (rules/) pèsent 0,09 Mo, soit 1,5 %
+# du dossier : sans exclusion, elles ne pèsent rien dans la sélection.
+#
+# PORTÉE : ces fichiers sortent de l'index de l'Oracle, pas de l'application.
+# Les Forges et le lecteur de documents passent par listDocs / readDoc, qui
+# lisent le disque directement — la matière brute reste disponible pour
+# fabriquer de nouvelles fiches.
+
+_source_extracted.txt
+full_book_by_pdf_page.md
+Alien_le_jeu_de_rôle.txt
+alien_rag_base_partial.md
+
+# Fiche de personnage vierge : un formulaire, aucun contenu de règle.
+AL-Fiche-de-personnage_pf.pdf
