@@ -421,8 +421,9 @@ Réalisation :
 - **`.ragignore`** par dossier, modèle gitignore (`!` réintègre, `/` final vise les dossiers, dernière
   règle applicable gagnante). **Il ne retire que de l'index de l'Oracle** : `ai:list-docs`, `ai:read-doc`
   et `ai:extract-pdf` lisent le disque directement, donc les Forges gardent les livres bruts en entier.
-  Posés sur `systems/alien` (4 copies du livre), `systems/cthulhu hack` (3 copies), `systems/dune`
-  (1 décharge) et `campaigns/coc7` (le PDF de 28,9 Mo).
+  Posés sur `systems/alien` (4 copies du livre), `systems/cthulhu hack` (3 copies) et `systems/dune`
+  (1 décharge). Un quatrième visait le PDF de 28,9 Mo de `campaigns/coc7` ; il est devenu sans objet
+  le jour même, le dossier ayant été supprimé au nettoyage des campagnes fantômes (plus bas).
 - `.jsonl` indexés ; l'index purge les entrées disparues, sans quoi un `.ragignore` n'aurait pris effet
   qu'au redémarrage suivant.
 - **Journal de ce qui est écarté**, avec la raison, et **avertissement quand une campagne n'a aucun
@@ -445,6 +446,24 @@ sous `raw/`, ce que la marche du disque masquait en élaguant le dossier en amon
 **Reste à faire ici** : `docs/commun/` est reconnu mais n'existe pas encore sur disque ; le plafond de
 4 000 tokens ne laisse passer que **deux fiches entières** (elles pèsent 5 800 caractères en moyenne),
 à réévaluer une fois l'axe A en place.
+
+##### Nettoyage des campagnes fantômes, 2026-08-09
+
+Le cloisonnement a rendu visible ce que le filtre fourre-tout masquait : **un seul des sept dossiers de
+`docs/campaigns/` correspondait à une campagne réelle** (`dune/Agents_of_Dune.md` → « Agents de Dune »).
+Deux étaient des échantillons de démonstration livrés avec l'application — « Le Mystère du Phare
+d'Arkham » et « La Vallée du Vent Glacé », même gabarit, lore public générique — et quatre du matériel
+de scénario sans campagne : *Last Day of Hope*, *Trinité Fatale*, *Aux Portes de l'Horreur* (PDF de
+28,9 Mo), *Cthulhu Hack Scenarios*. **Les six sont supprimés sur arbitrage de David**, et restent
+récupérables : tous étaient suivis par git.
+
+**Le miroir du problème comptait autant** : « Anges de Feu » et « A la claire fontaine » n'avaient
+**aucun** document sur disque — ce n'était pas seulement un problème de dossiers orphelins. Leurs
+dossiers existent désormais, avec le chemin exact à coller dans « Chemin des Notes ».
+
+**Reste à faire côté application**, pour les trois campagnes : renseigner « Chemin des Notes » avec
+`campaigns/anges-de-feu`, `campaigns/a-la-claire-fontaine` et `campaigns/dune`. Tant que ce n'est pas
+fait, l'Oracle continue de signaler « aucun document rattaché » — ce qui est exact.
 
 #### Axe C — Ordre du prompt et contexte du Cortex · *~2 h*
 
