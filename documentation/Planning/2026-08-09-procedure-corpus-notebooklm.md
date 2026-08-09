@@ -181,9 +181,36 @@ première moitié, index alphabétique en seconde :
 | `Blade Runner_Index.md` | ✓ 35 entrées | ✓ 28 entrées | `\|**TITRE**\|**PAGE**\|`, titres espacés lettre à lettre |
 | `Dune_Index.md` | ✗ **absente** | ✓ 122 entrées | `Terme.......PAGE` à points de conduite |
 
-**Une seule production manque donc : la table des matières de Dune** — et c'est précisément le système
-dont les fiches citent le plus de pages fantaisistes. Pour Alien et Blade Runner, la séparation en deux
-fichiers est un découpage mécanique, sans nouvelle extraction.
+**La table des matières de Dune manquait** — précisément le système dont les fiches citent le plus de
+pages fantaisistes. Pour Alien et Blade Runner, la séparation en deux fichiers est un découpage
+mécanique, sans nouvelle extraction.
+
+#### Les mêmes documents en `.docx`, et pourquoi le verdict s'inverse d'un livre à l'autre
+
+David a fourni le 2026-08-10 les mêmes index en `.docx`. Un `.docx` est une archive zip et `adm-zip`
+est déjà présent : la lecture de `word/document.xml` ne coûte aucune dépendance. Rendement mesuré :
+
+| Livre | Paires titre/page depuis le `.docx` | Depuis le `.md` | Retenu |
+|---|---|---|---|
+| **Dune** | **614** | 122 | **le `.docx`** |
+| Alien | 0 | 220 | le `.md` |
+| Blade Runner | 0 | 63 | le `.md` |
+
+**Le `.docx` de Dune est la table des matières manquante**, et son extraction est propre
+(« Aperçu du livre de base » 4, « Périodes de jeu » 10, « Agir » 166). Le trou est comblé.
+
+**Pour Alien et Blade Runner, le `.docx` ne donne rien** : leurs PDF rendent la table des matières en
+blocs graphiques. La conversion en Markdown les a capturés en cellules ; **la conversion en Word les a
+atomisés lettre par lettre** — les premiers paragraphes d'Alien sont littéralement `L`, `E`, `J`, `E`,
+`U`, et les 582 numéros de page se retrouvent dissociés de leurs titres. Récupérable par position, sans
+doute, mais sans intérêt puisque leurs `.md` livrent déjà 220 et 63 paires.
+
+**Leçon générale : le meilleur format dépend du livre, pas du type de fichier.** Produire les deux
+conversions quand c'est possible, et choisir au rendement mesuré plutôt qu'au principe.
+
+Aucun de ces fichiers n'entre dans l'index de l'Oracle : `.docx` n'est pas dans `EXTENSIONS_INDEXEES`,
+et les `.md` d'index restent des documents de système ordinaires. Ils vivent tous dans
+`docs/systems/<id>/index/`.
 
 **Les deux objets ne servent pas à la même chose, et il faut les deux :**
 
