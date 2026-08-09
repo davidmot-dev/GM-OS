@@ -1,3 +1,14 @@
+---
+sujet: Résolution des jets
+systeme: noc
+couverture: partielle
+hors_canevas: false
+sources: non capturées (fiche v1 — références internes NotebookLM, pages à retrouver)
+genere_par: notebooklm-v1
+a_regenerer: true
+relu: false
+---
+
 # Fiche de Règle : Lancement et résolution des Dés de Destin
 **Catégorie :** Règle
 

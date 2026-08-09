@@ -1,3 +1,15 @@
+---
+sujet: Monnaie de table
+systeme: noc
+couverture: partielle
+hors_canevas: false
+sources: non capturées (fiche v1 — références internes NotebookLM, pages à retrouver)
+genere_par: notebooklm-v1
+a_regenerer: true
+relu: false
+doublon_de: jauge-fiel-menace.md
+---
+
 # Fiche de Règle : Réduction de la jauge de Fiel et de la Menace
 
 ## 1. Principes Fondamentaux

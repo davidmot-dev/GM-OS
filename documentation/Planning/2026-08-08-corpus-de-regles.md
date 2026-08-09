@@ -706,9 +706,43 @@ sur 49 et une troncature à 16 384 tokens qui tranche au hasard.
 > Les manquants sont des artefacts v1 : pas de frontmatter, et des index internes NotebookLM (`[1]`,
 > `[1-3]`) à la place des numéros de page — les deux défauts du § 4.6, restés en place. Côté Alien il
 > s'agit du seul `guide-synthese-regles-alien.md`, qui n'est pas une fiche du canevas mais un digest.
-> **NOC et Rêves de Dragons n'ont aucune fiche exploitable** : leurs onze fichiers sont des v1 entières.
-> Le moteur les traite en documents de système ordinaires, donc ils sont utilisés mais ne priment pas.
-> **À reprendre : les 4 de Blade Runner et les 11 de NOC / Rêves de Dragons.**
+> **NOC et Rêves de Dragons n'avaient aucune fiche exploitable** : leurs onze fichiers étaient des v1
+> entières, traitées en documents de système ordinaires — utilisées, mais jamais prioritaires.
+
+**Les 15 sont normalisées le 2026-08-09.** Frontmatter ajouté, **contenu inchangé** : aucune page n'a
+été inventée, `sources: non capturées` le dit, et `genere_par: notebooklm-v1` + `a_regenerer: true`
+rendent la file de reprise interrogeable d'un `grep`. Classement retenu :
+
+| Fichier | Sujet | Canevas |
+|---|---|---|
+| blade-runner/dualite-promotion-humanite | Jauges et ressources individuelles | oui, *partielle* |
+| blade-runner/gestion-quarts-pauses | La gestion du temps (Quarts et Pauses) | hors canevas |
+| blade-runner/mecanique-forcer-un-jet | Forcer le test (« Forcer le jet ») | hors canevas, **clé partagée avec Alien** |
+| blade-runner/souvenir-cle | Le Souvenir Clé | hors canevas |
+| noc/provoquer-le-destin *+ mecanique-lancement-des-destin* | Résolution des jets | oui, *partielle* |
+| noc/jauge-fiel-menace *+ diminution-fiel-menace* | Monnaie de table | oui, *partielle* |
+| rdd/jet-endurance-sonne | États et conditions | oui, *partielle* |
+| rdd/gestion-fatigue | Jauges et ressources individuelles | oui, *partielle* |
+| rdd/taches-collaboratives | Jets opposés, aide et coopération | oui, *partielle* |
+| rdd/bareme-points-de-tache | Les points de tâche (actions dans la durée) | hors canevas |
+| rdd/jet-ethylisme *+ degres-malus* | Éthylisme (jet, degrés et malus) | hors canevas |
+| rdd/memoire-globale-archetype | L'Archétype (mémoire globale des vies antérieures) | hors canevas |
+
+**Trois paires de doublons trouvées en classant** — `provoquer-le-destin` / `mecanique-lancement-des-destin`,
+`jauge-fiel-menace` / `diminution-fiel-menace`, `jet-ethylisme` / `degres-malus`. Chaque paire couvre le
+même sujet avec un recouvrement massif ; le second de chaque paire porte `doublon_de:`. **À fusionner
+lors de la régénération**, pas avant : les deux versions se complètent par endroits.
+
+**Vérifié après coup, sur le corpus réel** : « comment on provoque le destin ? » → `provoquer-le-destin.md`,
+« la jauge de fiel est pleine ? » → `diminution-fiel-menace.md`, « mon personnage prend un choc, il est
+sonné ? » → `jet-endurance-sonne.md`, « je veux forcer mon jet, quel risque pour un réplicant ? » →
+`mecanique-forcer-un-jet.md`. **Le premier résultat est le bon dans les six questions testées.**
+Un test verrouille désormais la règle (`ragSelection.test.ts`) : tout `.md` d'un dossier `rules/` doit
+porter un `sujet:`, à une exemption près et documentée.
+
+**Reste, et ce n'est plus de la métadonnée** : régénérer ces 15 fiches avec les gabarits v2 pour obtenir
+les numéros de page et la structure en six sections. La couverture réelle reste maigre — **NOC ne couvre
+que 2 des 13 sujets, Rêves de Dragons 3**.
 - **Test de socle exécuté et clos** (§ 4.7) : le socle existe sujet par sujet, pas par système.
 - **Arbitrage de David** : génération système par système, sans copie automatique (§ 2.4 bis).
 
@@ -720,9 +754,8 @@ générer de nouveaux corpus sert de nouveau à quelque chose.**
 
 **Prochaines étapes, dans l'ordre :**
 
-0. **Normaliser les 15 fiches v1** relevées dans le tableau ci-dessus (4 Blade Runner, 4 NOC, 7 Rêves
-   de Dragons). Sans frontmatter `sujet:`, le moteur ne les distingue pas d'un extrait brut : c'est le
-   travail le moins cher et le plus immédiatement rentable du chantier.
+0. ~~Normaliser les 15 fiches v1~~ — **fait le 2026-08-09** (§ correction ci-dessus). Les quatre
+   systèmes pourvus de fiches les voient désormais primer sur leurs extraits bruts.
 1. Compléter les deux corpus — *poursuites* et *monnaie de table* côté Alien, *jauges individuelles*
    côté Blade Runner.
 2. Poursuivre système par système : Dune (test du 2d20, qui vérifiera si le constat se reproduit sur un

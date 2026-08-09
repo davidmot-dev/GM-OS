@@ -1,3 +1,14 @@
+---
+sujet: Les points de tâche (actions dans la durée)
+systeme: reves-de-dragons
+couverture: complète
+hors_canevas: true
+sources: non capturées (fiche v1 — références internes NotebookLM, pages à retrouver)
+genere_par: notebooklm-v1
+a_regenerer: true
+relu: false
+---
+
 # Fiche de Règle : Les Points de Tâche
 *Catégorie : Règle*
 

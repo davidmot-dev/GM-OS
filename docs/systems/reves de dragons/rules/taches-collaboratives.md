@@ -1,3 +1,14 @@
+---
+sujet: Jets opposés, aide et coopération
+systeme: reves-de-dragons
+couverture: partielle
+hors_canevas: false
+sources: non capturées (fiche v1 — références internes NotebookLM, pages à retrouver)
+genere_par: notebooklm-v1
+a_regenerer: true
+relu: false
+---
+
 # 🛠️ Fiche de Règle : Mutualisation des Tâches (Actions Communes)
 
 **Catégorie :** Règle de Système (Gestion du Temps et de l'Effort)

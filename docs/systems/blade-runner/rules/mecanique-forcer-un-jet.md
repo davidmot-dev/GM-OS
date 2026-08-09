@@ -1,3 +1,14 @@
+---
+sujet: Forcer le test (« Forcer le jet »)
+systeme: blade-runner
+couverture: complète
+hors_canevas: true
+sources: non capturées (fiche v1 — références internes NotebookLM, pages à retrouver)
+genere_par: notebooklm-v1
+a_regenerer: true
+relu: false
+---
+
 # 🎲 Fiche de Règle : Forcer un Jet selon sa Nature (Humains vs Réplicants)
 
 ## 📌 Principe de Base

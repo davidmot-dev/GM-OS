@@ -1,3 +1,15 @@
+---
+sujet: Éthylisme (jet, degrés et malus)
+systeme: reves-de-dragons
+couverture: complète
+hors_canevas: true
+sources: non capturées (fiche v1 — références internes NotebookLM, pages à retrouver)
+genere_par: notebooklm-v1
+a_regenerer: true
+relu: false
+doublon_de: jet-ethylisme.md
+---
+
 # 📜 Fiche de Règle : Degrés d'Éthylisme et Malus
 
 Cette fiche résume la gestion de la consommation d'alcool, ses effets sur le personnage (malus, fatigue, perte d'endurance), ainsi que les mécaniques de récupération. 

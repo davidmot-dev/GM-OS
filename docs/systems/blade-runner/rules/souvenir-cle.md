@@ -1,3 +1,14 @@
+---
+sujet: Le Souvenir Clé
+systeme: blade-runner
+couverture: complète
+hors_canevas: true
+sources: non capturées (fiche v1 — références internes NotebookLM, pages à retrouver)
+genere_par: notebooklm-v1
+a_regenerer: true
+relu: false
+---
+
 # 🧠 Fiche MJ : Utilisation du Souvenir Clé
 
 **Catégorie :** Memory (Mémoire)

@@ -1,3 +1,14 @@
+---
+sujet: États et conditions
+systeme: reves-de-dragons
+couverture: partielle
+hors_canevas: false
+sources: non capturées (fiche v1 — références internes NotebookLM, pages à retrouver)
+genere_par: notebooklm-v1
+a_regenerer: true
+relu: false
+---
+
 # Fiche de Règle : Choc, Jet d'Endurance et État Sonné
 
 ## 1. Déclencheur : Le Choc et la Perte d'Endurance

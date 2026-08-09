@@ -1,3 +1,14 @@
+---
+sujet: Jauges et ressources individuelles
+systeme: reves-de-dragons
+couverture: partielle
+hors_canevas: false
+sources: non capturées (fiche v1 — références internes NotebookLM, pages à retrouver)
+genere_par: notebooklm-v1
+a_regenerer: true
+relu: false
+---
+
 # Fiche Règle : Gestion de la Fatigue et de l'Endurance
 
 Dans *Rêve de Dragon*, l'Endurance et la Fatigue sont deux jauges intimement liées qui traduisent l'état physique, la résistance et l'épuisement d'un Voyageur. 

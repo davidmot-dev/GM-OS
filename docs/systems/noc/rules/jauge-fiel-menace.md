@@ -1,3 +1,14 @@
+---
+sujet: Monnaie de table
+systeme: noc
+couverture: partielle
+hors_canevas: false
+sources: non capturées (fiche v1 — références internes NotebookLM, pages à retrouver)
+genere_par: notebooklm-v1
+a_regenerer: true
+relu: false
+---
+
 # Fiche de Règle : Jauge de Fiel et Niveau de Menace
 
 Cette fiche détaille le fonctionnement de la **Jauge de Fiel** et du **Niveau de Menace**, deux mécaniques centrales du système *Nocturne* qui traduisent l'emballement des événements, la tension dramatique, et les foudres de l'Artefact ou du système totalitaire s'abattant sur les Héros [1-3].

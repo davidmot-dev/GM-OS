@@ -1,3 +1,15 @@
+---
+sujet: Résolution des jets
+systeme: noc
+couverture: partielle
+hors_canevas: false
+sources: non capturées (fiche v1 — références internes NotebookLM, pages à retrouver)
+genere_par: notebooklm-v1
+a_regenerer: true
+relu: false
+doublon_de: mecanique-lancement-des-destin.md
+---
+
 # 🎲 Fiche de Règle : Provoquer le Destin
 
 **Catégorie :** Mécanique de résolution des actions (Système Nocturne)

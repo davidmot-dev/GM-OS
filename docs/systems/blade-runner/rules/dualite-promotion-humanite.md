@@ -1,3 +1,14 @@
+---
+sujet: Jauges et ressources individuelles
+systeme: blade-runner
+couverture: partielle
+hors_canevas: false
+sources: non capturées (fiche v1 — références internes NotebookLM, pages à retrouver)
+genere_par: notebooklm-v1
+a_regenerer: true
+relu: false
+---
+
 # FICHE DE RÈGLE : DUALITÉ PROMOTION ET HUMANITÉ
 
 **Catégorie :** Règle / Évolution des Personnages

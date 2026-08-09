@@ -1,3 +1,14 @@
+---
+sujet: La gestion du temps (Quarts et Pauses)
+systeme: blade-runner
+couverture: complète
+hors_canevas: true
+sources: non capturées (fiche v1 — références internes NotebookLM, pages à retrouver)
+genere_par: notebooklm-v1
+a_regenerer: true
+relu: false
+---
+
 # ⏱️ FICHE DE RÈGLE : Gestion du Temps (Quarts et Pauses)
 
 **Catégorie :** Règle

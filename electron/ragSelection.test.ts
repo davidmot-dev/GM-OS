@@ -289,6 +289,41 @@ describe('corpus réel', () => {
             .toEqual(['systems/alien/rules/guide-synthese-regles-alien.md']);
     });
 
+    it('toute fiche de rules/ porte un sujet, sauf les exemptions documentées', () => {
+        /**
+         * Le frontmatter `sujet:` n'est pas décoratif : c'est lui qui fait passer
+         * une fiche devant les extraits bruts du même système. Sans lui, une fiche
+         * soignée pèse autant qu'une décharge — c'est ce qui laissait onze fiches
+         * de NOC et de Rêves de Dragons invisibles au classement.
+         *
+         * Exemption unique et volontaire : le guide de synthèse d'Alien est un
+         * digest de 14 Ko couvrant tous les sujets à la fois. Lui donner un sujet
+         * le ferait concourir avec les fiches et avaler le budget à lui seul.
+         */
+        const EXEMPTIONS = ['systems/alien/rules/guide-synthese-regles-alien.md'];
+
+        const sansSujet = index
+            .filter(f => /^systems\/[^/]+\/rules\/.+\.md$/.test(f.path) && !f.sujet)
+            .map(f => f.path)
+            .sort();
+
+        expect(sansSujet).toEqual(EXEMPTIONS);
+    });
+
+    it('chaque système pourvu de fiches en a au moins une exploitable', () => {
+        const parSysteme = new Map<string, number>();
+        for (const f of index) {
+            const m = /^systems\/([^/]+)\/rules\//.exec(f.path);
+            if (!m) continue;
+            parSysteme.set(m[1], (parSysteme.get(m[1]) ?? 0) + (f.sujet ? 1 : 0));
+        }
+
+        expect(parSysteme.size).toBeGreaterThan(0);
+        for (const [systeme, fiches] of parSysteme) {
+            expect(fiches, `« ${systeme} » n'a aucune fiche portant un sujet`).toBeGreaterThan(0);
+        }
+    });
+
     it.each(['alien', 'blade-runner', 'noc', 'reves de dragons'])(
         '« %s » : le contexte tient sous le plafond et ne contient que ce système',
         (systemId) => {
