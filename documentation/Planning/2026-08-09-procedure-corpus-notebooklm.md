@@ -241,6 +241,32 @@ page *vérifiée* — ce que NotebookLM ne savait pas produire. Un titre introuv
 soit le carnet a inventé le titre, soit la table est incomplète. **Rien d'autre, aujourd'hui, n'attrape
 l'invention** — c'est le trou de l'axe O, partiellement comblé pour zéro coût de génération.
 
+### 5.2 bis Le résolveur, écrit le 2026-08-10
+
+`electron/bookIndex.ts`, sans dépendance à `electron` donc testé en environnement node
+(`bookIndex.test.ts`, 33 tests). Il fait quatre choses :
+
+- **Charge** les index d'un système depuis `docs/systems/<id>/index/`, `.md` comme `.docx` — un `.docx`
+  est un zip, `adm-zip` est déjà une dépendance déclarée. Les trois formats d'extraction sont acceptés,
+  et un fichier qui ne rend aucune entrée est ignoré plutôt que de faire échouer le chargement.
+- **Normalise** en une clé sans accents, sans casse et **sans aucun espace**. Supprimer les espaces règle
+  d'un coup les titres éclatés lettre à lettre : `E T TO M B E N T L E S` et `ET TOMBENT LES` donnent la
+  même clé.
+- **Rapproche avec tolérance**, un caractère d'écart par tranche de sept. C'est ce qui rattrape les
+  ligatures perdues : l'index dit « Zones de confit », la fiche dira « Zones de conflit ».
+- **Contrôle la vraisemblance des pages** (`pagesInvraisemblables`) — et celui-là **sert dès aujourd'hui**,
+  sans attendre les `sections:`.
+
+Chargement réel : alien 220 entrées (p. 9–370), blade-runner 63 (p. 20–206), dune 736 dont la table des
+matières du `.docx` (p. 1–328).
+
+> **Ce que le résolveur ne peut pas encore faire, et pourquoi.** Confronté aux fiches actuelles, il ne
+> résout presque rien : leurs `sujet:` sont les **treize sujets du canevas**, pas des titres de chapitre.
+> « Dégâts et types de dégâts » n'existe dans aucun livre — le livre dit « Blessures critiques ». C'était
+> prévisible et ce n'est pas un défaut du résolveur : **son entrée n'existe pas encore**. Elle arrivera
+> avec les fiches régénérées en v3, qui citent des titres de section. Les deux correspondances trouvées
+> sur les cinquante-deux fiches sont des coïncidences.
+
 ### 5.3 Trois obstacles au rapprochement, mesurés
 
 1. **Ligatures perdues à l'extraction.** `confit` pour « conflit », `Diffculté` pour « Difficulté » : le
@@ -319,11 +345,10 @@ n'activer qu'en connaissance de cause, ou sur un carnet distinct.
 - Index de livre extraits pour **alien, blade-runner, dune**, rangés dans `index/`.
 - Personas par système : **alien et dune**.
 - `pages_fiables: false` sur les 46 fiches citant des pages ; consigne de citation de l'Oracle corrigée.
-- **Non fait** : la résolution titre → page contre l'index (§ 5.2), et le passage des gabarits v3 dans
-  la Forge (§ 6). Ce sont les deux prochains travaux de ce chantier.
-- **Prérequis à la résolution**, relevé le 2026-08-10 : les index extraits sont hétérogènes (§ 5.1).
-  Avant d'écrire le résolveur, il faut une extraction uniforme — table des matières *et* index
-  alphabétique, dans deux fichiers séparés, pour chaque livre.
+- **Résolveur écrit le 2026-08-10** (`electron/bookIndex.ts`, § 5.2 bis). Le contrôle de vraisemblance
+  des pages est utilisable immédiatement ; la résolution titre → page attend des fiches v3.
+- **Non fait** : le passage des gabarits v3 dans la Forge (§ 6), et la régénération des fiches avec
+  `sections:` — sans quoi le résolveur reste sans entrée. **C'est désormais le chemin critique.**
 
 ---
 
