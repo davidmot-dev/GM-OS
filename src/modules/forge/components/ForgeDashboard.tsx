@@ -11,6 +11,7 @@ import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 import ChronicleForge from './ChronicleForge';
 import { useAIStore } from '../../../stores/useAIStore';
 import { useBrainstormStore } from '../rules/store/useBrainstormStore';
+import { resoudreCorpus, corpusChoisi } from '../../../../electron/corpusSysteme';
 import { useForgeStore } from '../store/useForgeStore';
 
 interface NotebookSource {
@@ -33,12 +34,13 @@ interface ForgeDashboardProps {
 
 const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
   const { t } = useTranslation(['modules']);
-  const { saveGameDriver, addSheetTemplate, customGameDrivers, activeCampaignId, campaigns, updateCampaign } = useSessionOSStore();
+  const { saveGameDriver, addSheetTemplate, customGameDrivers, activeCampaignId, campaigns } = useSessionOSStore();
   const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
   
   // ... tabs state etc ...
 
   const allDrivers = [...DEFAULT_GAME_DRIVERS, ...customGameDrivers];
+
   const [activeTab, setActiveTab] = useState<'structure' | 'rules'>('structure');
 
   // Stores
@@ -54,6 +56,34 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
   const [notebooks, setNotebooks] = useState<Notebook[]>([]);
   const [selectedNotebook, setSelectedNotebook] = useState<Notebook | null>(null);
   const [notebookSources, setNotebookSources] = useState<NotebookSource[]>([]);
+
+  /**
+   * Les dossiers de corpus, et celui qui est vise.
+   *
+   * Le menu ci-dessous designe un DOSSIER de `docs/systems/`, pas un pilote :
+   * c est ce que lisent la selection RAG, le resolveur d index et les personas.
+   * La campagne active ne fournit qu une valeur par defaut, et rien n est ecrit
+   * dans ses donnees.
+   */
+  const [dossiersSystemes, setDossiersSystemes] = useState<string[]>([]);
+  useEffect(() => {
+    window.appBridge?.ai?.listSystems?.().then(setDossiersSystemes).catch(() => setDossiersSystemes([]));
+  }, []);
+
+  /** Le corpus visé : celui qu'on a choisi, sinon celui que la campagne désigne. */
+  const pilote = allDrivers.find(d => d.id === activeCampaign?.system);
+  const corpusVise = brainstormStore.corpusCible
+    ? corpusChoisi(brainstormStore.corpusCible, dossiersSystemes)
+    : (activeCampaign?.system
+        ? resoudreCorpus({
+            systemId: activeCampaign.system,
+            systemName: pilote?.name,
+            systemPath: activeCampaign.systemPath,
+            corpusId: pilote?.corpusId,
+            ragPath: pilote?.ragPath,
+            dossiersConnus: dossiersSystemes,
+          })
+        : null);
   const [isLoadingNotebooks, setIsLoadingNotebooks] = useState(false);
   const [importingSources, setImportingSources] = useState<Set<string>>(new Set());
 
@@ -428,22 +458,34 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
             <>
               {/* Rules Atelier Settings */}
               <div className="bg-purple-500/10 rounded-2xl border border-purple-500/20 p-5 flex flex-col gap-4 animate-in slide-in-from-left-4">
+                {/*
+                  Ce menu choisit le CORPUS a documenter, pas le pilote de la
+                  campagne. Sa version precedente appelait `updateCampaign` :
+                  choisir « Dune » ici reassignait le pilote de la campagne
+                  active — une campagne Blade Runner se retrouvait avec celui de
+                  Dune — pendant que son « Chemin des Regles » continuait de
+                  l emporter sur la resolution. On croyait forger Dune, on
+                  forgeait Blade Runner en abimant une campagne au passage.
+
+                  L atelier avait ete decouple ; ce point d entree-ci ne l etait
+                  pas. Documenter un corpus reste une operation de bibliotheque.
+                */}
                 <h2 className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-purple-400 font-display">
-                   <Shield size={14} /> {t('session.campaign_form.identity.system_label') || 'Système de Jeu'}
+                   <Shield size={14} /> {t('modules:session.forge_module.atelier.corpus_label')}
                 </h2>
-                
+
                 <div className="relative group">
-                  <select 
-                    value={activeCampaign?.system || ''} 
-                    onChange={(e) => {
-                      if (activeCampaignId) updateCampaign(activeCampaignId, { system: e.target.value });
-                    }}
+                  <select
+                    value={corpusVise?.id || ''}
+                    onChange={(e) => brainstormStore.setCorpusCible(e.target.value || null)}
                     className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-xs font-bold text-white/80 focus:outline-none focus:border-purple-500/50 appearance-none cursor-pointer transition-all hover:bg-white/10"
                   >
-                    <option value="" disabled className="bg-app-bg text-white/40">-- Choisir un Système --</option>
-                    {allDrivers.map(d => (
-                      <option key={d.id} value={d.id} className="bg-app-bg text-white">
-                        {d.emoji} {d.name}
+                    <option value="" disabled className="bg-app-bg text-white/40">
+                      {t('modules:session.forge_module.atelier.corpus_choose')}
+                    </option>
+                    {dossiersSystemes.map(dossier => (
+                      <option key={dossier} value={dossier} className="bg-app-bg text-white font-mono">
+                        {dossier}
                       </option>
                     ))}
                   </select>
@@ -478,7 +520,6 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
               </div>
             </>
           )}
-
 
           {/* Context Bin (Common to both tabs) */}
           <div className="flex-1 bg-app-surface/40 rounded-2xl border border-app-border/10 p-5 flex flex-col min-h-[400px]">
