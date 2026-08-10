@@ -21,20 +21,51 @@ import type { BrainstormState } from '../types';
  */
 let carnetOccupe = false;
 
-/** Rend `false` si une requête est déjà en vol. À appeler avant tout `await`. */
-export function reserverLeCarnet(): boolean {
-  if (carnetOccupe) return false;
+/**
+ * Numéro de la requête en cours.
+ *
+ * **Ce qu'il résout : l'abandon.** On ne peut pas annuler un appel MCP — le
+ * serveur continue de travailler et finira par répondre. Ce qu'on peut faire,
+ * c'est **cesser d'attendre** : on incrémente la génération, la réponse tardive
+ * arrive sur une génération périmée et se jette au lieu d'écraser l'écran.
+ *
+ * Il protège aussi le verrou. Sans lui, la requête abandonnée libérerait en
+ * retombant le verrou tenu par la requête *suivante*, et deux appels
+ * partiraient de front — précisément ce que le verrou existe pour empêcher.
+ */
+let generation = 0;
+
+/** Rend le numéro de génération, ou `null` si une requête est déjà en vol. */
+export function reserverLeCarnet(): number | null {
+  if (carnetOccupe) return null;
   carnetOccupe = true;
-  return true;
+  return generation;
 }
 
-export function libererLeCarnet(): void {
+/** Ne libère que si la génération correspond : une requête périmée ne libère rien. */
+export function libererLeCarnet(gen: number): void {
+  if (gen === generation) carnetOccupe = false;
+}
+
+/**
+ * Cesse d'attendre la requête en cours et rouvre le carnet.
+ *
+ * **On ne prétend pas l'avoir arrêtée** : le serveur poursuit son travail et
+ * répondra dans le vide. C'est la moitié honnête de ce qui est faisable
+ * aujourd'hui ; l'annulation réelle demande de reprendre le pont.
+ */
+export function abandonnerLaRequete(): void {
+  generation += 1;
   carnetOccupe = false;
 }
 
-/** Pour les tests : remet le verrou à zéro sans passer par une requête. */
 export function carnetEstOccupe(): boolean {
   return carnetOccupe;
+}
+
+/** La génération courante, pour savoir si une réponse est encore attendue. */
+export function generationCourante(): number {
+  return generation;
 }
 
 /**

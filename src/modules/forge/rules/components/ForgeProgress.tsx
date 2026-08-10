@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Zap, Radio, BookOpen, FileText } from 'lucide-react';
+import { Zap, Radio, BookOpen, FileText, XCircle } from 'lucide-react';
 import { useBrainstormStore } from '../store/useBrainstormStore';
 import {
   ajouterAuJournal,
@@ -26,6 +26,8 @@ import {
 interface ForgeProgressProps {
   titre: string;
   sousTitre: string;
+  /** Cesse d'attendre. Ne prétend pas arrêter le serveur — il continue. */
+  onAbandon?: () => void;
   /** Repère au-delà duquel l'attente devient anormale, en secondes. */
   seuilInquietude?: number;
 }
@@ -36,6 +38,7 @@ const PLAFOND_SECONDES = 600;
 export const ForgeProgress: React.FC<ForgeProgressProps> = ({
   titre,
   sousTitre,
+  onAbandon,
   seuilInquietude = 180,
 }) => {
   /**
@@ -113,6 +116,15 @@ export const ForgeProgress: React.FC<ForgeProgressProps> = ({
           </p>
         )}
       </div>
+
+      {onAbandon && (
+        <button
+          onClick={onAbandon}
+          className="flex items-center gap-2 px-6 py-3 rounded-2xl border border-white/10 text-white/40 hover:text-red-400 hover:border-red-500/30 text-[10px] font-black uppercase tracking-widest transition-all"
+        >
+          <XCircle size={14} /> Cesser d'attendre
+        </button>
+      )}
 
       {(notebookTitre || sourcesRetenues.length > 0) && (
         <div className="w-full max-w-2xl bg-white/5 border border-white/5 rounded-[2rem] px-6 py-4 text-left space-y-2">

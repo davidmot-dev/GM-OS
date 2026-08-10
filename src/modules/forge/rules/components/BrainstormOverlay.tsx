@@ -1,6 +1,12 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useBrainstormStore, reserverLeCarnet, libererLeCarnet } from '../store/useBrainstormStore';
+import {
+  useBrainstormStore,
+  reserverLeCarnet,
+  libererLeCarnet,
+  abandonnerLaRequete,
+  generationCourante,
+} from '../store/useBrainstormStore';
 import { forgeService } from '../../ForgeService';
 import { useSessionOSStore } from '../../../session/useSessionOSStore';
 import { X, Zap, Sparkles, ChevronLeft, Shield, BookOpen, AlertTriangle, Users, Save, FolderTree } from 'lucide-react';
@@ -100,7 +106,9 @@ export const BrainstormOverlay: React.FC = () => {
     : '';
 
   const handleDiscover = useCallback(async () => {
-    if (!brainstormStore.notebookId || !reserverLeCarnet()) return;
+    if (!brainstormStore.notebookId) return;
+    const gen = reserverLeCarnet();
+    if (gen === null) return;
     brainstormStore.setProcessing(true);
     try {
       const discovered = await forgeService.discoverCandidates(
@@ -111,6 +119,7 @@ export const BrainstormOverlay: React.FC = () => {
       // La « forge libre » du tableau de bord s'ajoute au canevas, elle ne le
       // remplace pas : demander au carnet de choisir ses sujets est exactement
       // ce qui faisait dériver la taxonomie d'un jeu à l'autre.
+      if (gen !== generationCourante()) return;   // abandonnée entre-temps
       const libre = brainstormStore.customSubject.trim();
       brainstormStore.setCandidates(
         libre
@@ -118,9 +127,10 @@ export const BrainstormOverlay: React.FC = () => {
           : discovered
       );
     } catch (err: unknown) {
+      if (gen !== generationCourante()) return;
       brainstormStore.setError(messageErreur(err, t('session.forge_module.atelier.error_title')));
     } finally {
-      libererLeCarnet();
+      libererLeCarnet(gen);
     }
   }, [brainstormStore.notebookId, brainstormStore.selectedSourceIds, t, brainstormStore.setProcessing, brainstormStore.setCandidates, brainstormStore.setError]);
 
@@ -130,13 +140,28 @@ export const BrainstormOverlay: React.FC = () => {
     }
   }, [brainstormStore.step, brainstormStore.candidates.length, brainstormStore.isProcessing, brainstormStore.error, handleDiscover]);
 
+  /**
+   * Cesse d'attendre la requête en cours.
+   *
+   * **Ne prétend pas l'arrêter** : le serveur poursuit et répondra dans le vide.
+   * Le « X » de fermeture ne faisait que remettre l'affichage à zéro, en
+   * laissant le verrou tenu — relancer une forge ne faisait alors rien, sans le
+   * moindre message, jusqu'à ce que la requête retombe.
+   */
+  const handleAbandon = () => {
+    abandonnerLaRequete();
+    brainstormStore.setProcessing(false);
+    brainstormStore.setStep('discovery');
+  };
+
   /** Rédige la fiche. **N'écrit rien** : la revue vient ensuite. */
   const handleForge = async (candidate: BrainstormCandidate) => {
     if (!brainstormStore.notebookId || !corpus) {
         brainstormStore.setError(t('session.forge_module.atelier.error_no_corpus'));
         return;
     }
-    if (!reserverLeCarnet()) return;
+    const gen = reserverLeCarnet();
+    if (gen === null) return;
     brainstormStore.startForging();
     try {
       const card = await forgeService.forgeCard(
@@ -147,11 +172,13 @@ export const BrainstormOverlay: React.FC = () => {
         corpus.id,
         brainstormStore.selectedSourceIds
       );
+      if (gen !== generationCourante()) return;   // abandonnée entre-temps
       brainstormStore.reviewCard(card);
     } catch (err: unknown) {
+      if (gen !== generationCourante()) return;
       brainstormStore.setError(messageErreur(err, t('session.forge_module.atelier.error_title')));
     } finally {
-      libererLeCarnet();
+      libererLeCarnet(gen);
     }
   };
 
@@ -184,18 +211,21 @@ export const BrainstormOverlay: React.FC = () => {
       brainstormStore.setError(t('session.forge_module.atelier.error_no_corpus'));
       return;
     }
-    if (!reserverLeCarnet()) return;
+    const gen = reserverLeCarnet();
+    if (gen === null) return;
     brainstormStore.startPersonas();
     try {
       const resultat = await forgeService.forgePersonas(
         brainstormStore.notebookId,
         brainstormStore.selectedSourceIds
       );
+      if (gen !== generationCourante()) return;   // abandonnée entre-temps
       brainstormStore.setPersonas(resultat);
     } catch (err: unknown) {
+      if (gen !== generationCourante()) return;
       brainstormStore.setError(messageErreur(err, t('session.forge_module.atelier.error_title')));
     } finally {
-      libererLeCarnet();
+      libererLeCarnet(gen);
     }
   };
 
@@ -272,8 +302,8 @@ export const BrainstormOverlay: React.FC = () => {
             </div>
           </div>
           
-          <button 
-            onClick={brainstormStore.reset}
+          <button
+            onClick={() => { abandonnerLaRequete(); brainstormStore.reset(); }}
             className="p-3 hover:bg-white/5 rounded-full text-white/20 hover:text-white transition-all"
           >
             <X size={28} />
@@ -477,7 +507,7 @@ export const BrainstormOverlay: React.FC = () => {
 
           {brainstormStore.step === 'discovery' && (
             <>
-              <DiscoveryUI onSelect={handleForge} />
+              <DiscoveryUI onSelect={handleForge} onAbandon={handleAbandon} />
               {!brainstormStore.isProcessing && brainstormStore.candidates.length > 0 && (
                 <div className="max-w-4xl mx-auto px-6 pb-6 flex justify-center">
                   <button
@@ -493,6 +523,7 @@ export const BrainstormOverlay: React.FC = () => {
 
           {(brainstormStore.step === 'forging' || (brainstormStore.step === 'personas' && brainstormStore.isProcessing)) && (
             <ForgeProgress
+              onAbandon={handleAbandon}
               titre={t('session.forge_module.atelier.forging_title')}
               sousTitre={brainstormStore.step === 'personas'
                 ? t('session.forge_module.atelier.personas_processing')

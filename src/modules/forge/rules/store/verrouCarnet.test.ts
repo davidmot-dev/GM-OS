@@ -1,46 +1,71 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { reserverLeCarnet, libererLeCarnet, carnetEstOccupe } from './useBrainstormStore';
+import {
+  reserverLeCarnet,
+  libererLeCarnet,
+  abandonnerLaRequete,
+  carnetEstOccupe,
+} from './useBrainstormStore';
 
 /**
- * Le verrou du carnet, mesuré avant d'être écrit.
+ * Le verrou du carnet, mesure avant d etre ecrit.
  *
- * Le 2026-08-10, en surveillant une forge réelle : trois inventaires identiques
- * partis dans la même milliseconde, quatre requêtes sur six jamais revenues.
- * `BrainstormOverlay` était monté deux fois — par `App.tsx` et par
- * `ForgeDashboard` — donc aucun garde-fou porté par le composant ne pouvait les
- * départager. D'où un verrou de **module**, partagé quelle que soit la forme de
- * l'arbre.
+ * Le 2026-08-10, en surveillant une forge reelle : trois inventaires identiques
+ * partis dans la meme milliseconde, quatre requetes sur six jamais revenues.
+ * `BrainstormOverlay` etait monte deux fois — par `App.tsx` et par
+ * `ForgeDashboard` — donc aucun garde-fou porte par le composant ne pouvait les
+ * departager. D ou un verrou de **module**, partage quelle que soit la forme de
+ * l arbre.
  */
 describe('verrou du carnet', () => {
-  beforeEach(() => libererLeCarnet());
+  beforeEach(() => abandonnerLaRequete());
 
-  it('accorde la première réservation', () => {
-    expect(reserverLeCarnet()).toBe(true);
+  it('accorde la premiere reservation', () => {
+    expect(reserverLeCarnet()).not.toBeNull();
     expect(carnetEstOccupe()).toBe(true);
   });
 
-  it('refuse la seconde tant que la première n\'a pas rendu la main', () => {
-    expect(reserverLeCarnet()).toBe(true);
-    expect(reserverLeCarnet()).toBe(false);
-    expect(reserverLeCarnet()).toBe(false);
+  it('refuse la seconde tant que la premiere n a pas rendu la main', () => {
+    expect(reserverLeCarnet()).not.toBeNull();
+    expect(reserverLeCarnet()).toBeNull();
+    expect(reserverLeCarnet()).toBeNull();
   });
 
-  it('rouvre après libération', () => {
-    reserverLeCarnet();
-    libererLeCarnet();
-    expect(reserverLeCarnet()).toBe(true);
+  it('rouvre apres liberation', () => {
+    const gen = reserverLeCarnet()!;
+    libererLeCarnet(gen);
+    expect(reserverLeCarnet()).not.toBeNull();
   });
 
-  it('tient face à des appels simultanés dans le même tick', () => {
-    // C'est exactement le cas mesuré : deux instances, même milliseconde.
+  it('tient face a des appels simultanes dans le meme tick', () => {
+    // C est exactement le cas mesure : deux instances, meme milliseconde.
     const accordees = [reserverLeCarnet(), reserverLeCarnet(), reserverLeCarnet()];
-    expect(accordees.filter(Boolean)).toHaveLength(1);
+    expect(accordees.filter(g => g !== null)).toHaveLength(1);
   });
 
-  it('supporte une libération sans réservation', () => {
-    // Un `finally` peut s'exécuter sur un chemin qui n'a rien réservé.
-    libererLeCarnet();
+  it('rouvre le carnet des l abandon, sans attendre le serveur', () => {
+    // On ne peut pas arreter la requete : on cesse de l attendre.
+    reserverLeCarnet();
+    abandonnerLaRequete();
     expect(carnetEstOccupe()).toBe(false);
-    expect(reserverLeCarnet()).toBe(true);
+    expect(reserverLeCarnet()).not.toBeNull();
+  });
+
+  it('une requete abandonnee ne libere pas le verrou de sa remplacante', () => {
+    /**
+     * Le piege du rattrapage : la requete abandonnee finit par retomber, et son
+     * `finally` s execute. Sans la generation, elle libererait le verrou tenu
+     * par la requete SUIVANTE — et deux appels partiraient de front, ce que le
+     * verrou existe precisement pour empecher.
+     */
+    const perimee = reserverLeCarnet()!;
+    abandonnerLaRequete();
+    const courante = reserverLeCarnet()!;
+    expect(courante).not.toBe(perimee);
+
+    libererLeCarnet(perimee);
+    expect(carnetEstOccupe()).toBe(true);
+
+    libererLeCarnet(courante);
+    expect(carnetEstOccupe()).toBe(false);
   });
 });

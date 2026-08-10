@@ -23,11 +23,13 @@ function etat(candidate: BrainstormCandidate): 'non' | 'inconnu' | 'traite' {
 }
 
 interface DiscoveryUIProps {
+  /** Cesse d'attendre l'inventaire en cours. */
+  onAbandon?: () => void;
   /** Forge la fiche du sujet retenu. La liste ne décide pas, elle propose. */
   onSelect: (candidate: BrainstormCandidate) => void;
 }
 
-const DiscoveryUI: React.FC<DiscoveryUIProps> = ({ onSelect }) => {
+const DiscoveryUI: React.FC<DiscoveryUIProps> = ({ onSelect, onAbandon }) => {
   const { t } = useTranslation(['modules']);
   const { candidates, isProcessing, startDiscovery, savedCandidateIds } = useBrainstormStore();
 
@@ -39,6 +41,7 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({ onSelect }) => {
   if (isProcessing) {
     return (
       <ForgeProgress
+        onAbandon={onAbandon}
         titre={t('session.forge_module.atelier.discovery_processing')}
         sousTitre={t('session.forge_module.atelier.discovery_processing_sub')}
       />
