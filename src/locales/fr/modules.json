@@ -1431,7 +1431,9 @@
         "corpus_will_create": "Ce dossier n'existe pas encore : il sera créé à l'enregistrement de la première fiche.",
         "save_inventory": "Enregistrer la synthèse",
         "forged_count": "{{forgees}} fiches forgées sur {{total}}",
-        "draft_pending": "Brouillon en attente de revue"
+        "draft_pending": "Brouillon en attente de revue",
+        "btn_forge_next": "Forger une autre fiche",
+        "remaining": "{{restant}} sujets restants"
       },
       "notebook": {
         "title": "Navigateur NotebookLM",

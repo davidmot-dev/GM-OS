@@ -1402,7 +1402,9 @@
         "corpus_will_create": "This folder does not exist yet: it will be created when the first sheet is saved.",
         "save_inventory": "Save synthesis",
         "forged_count": "{{forgees}} of {{total}} sheets forged",
-        "draft_pending": "Draft awaiting review"
+        "draft_pending": "Draft awaiting review",
+        "btn_forge_next": "Forge another sheet",
+        "remaining": "{{restant}} subjects left"
       },
       "notebook": {
         "title": "NotebookLM Browser",

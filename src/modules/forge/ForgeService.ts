@@ -24,6 +24,12 @@ import { extrairePersonas, controlerPersonas, type Personas } from './rules/pers
  */
 const MOTIFS_AUTH: readonly RegExp[] = [
   /\bunauthoriz/i,
+  // « UNAUTHENTICATED » — le refus réel de Google, relevé le 2026-08-10 avec son
+  // code d'erreur 16. La frontière de mot échoue sur UN·AUTHENTICATED, donc
+  // `\bauthenticat` ne le voit pas : seul le mot « login » de sa phrase de
+  // conseil le rattrapait, et une reformulation aurait cassé la reconnexion sans
+  // que rien ne le signale.
+  /\bunauthenticated\b/i,
   /\bnon autoris/i,
   /\bauthenticat/i,      // authentication, authenticate
   /\bauthentificat/i,    // authentification (français)

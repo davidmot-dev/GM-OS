@@ -130,6 +130,10 @@ export const BrainstormOverlay: React.FC = () => {
   // Au chargement, et après chaque écriture : l'écran suit le disque.
   useEffect(() => { void releverLeDisque(); }, [releverLeDisque, brainstormStore.step]);
 
+  /** Sujets de l'inventaire qui n'ont pas encore de fiche sur le disque. */
+  const restantAForger = brainstormStore.candidates
+    .filter(c => !fichesPubliees.includes(c.id)).length;
+
   const cheminDeLaFiche = brainstormStore.activeCard && corpus
     ? `${cheminDesFiches(corpus)}/${brainstormStore.activeCard.slug}.md`
     : '';
@@ -798,19 +802,48 @@ export const BrainstormOverlay: React.FC = () => {
                  </div>
                </div>
 
-               <div className="flex justify-end gap-6 pt-8">
-                 <button onClick={() => brainstormStore.setStep('discovery')} className="px-10 py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl font-black uppercase tracking-widest transition-all">{t('session.forge_module.atelier.btn_back')}</button>
+               {/*
+                 Les trois actions n'ont pas le meme poids, et l'ecran disait le
+                 contraire : « Terminer » etait le bouton le plus voyant alors
+                 qu'il ferme tout. Sur dix-sept sujets, continuer est la regle et
+                 terminer l'exception — se tromper de bouton coutait la serie en
+                 cours. La suite domine donc, les deux sorties s'effacent.
+               */}
+               <div className="flex items-center justify-between gap-6 pt-8">
+                 <div className="flex gap-3">
+                   <button
+                     onClick={() => brainstormStore.reset()}
+                     className="px-6 py-3 text-white/30 hover:text-white/60 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
+                   >
+                     {t('session.forge_module.atelier.btn_finish')}
+                   </button>
+                   <button
+                     onClick={() => {
+                       brainstormStore.reset();
+                       setCurrentView('rule-workshop');
+                     }}
+                     className="px-6 py-3 text-accent/50 hover:text-accent rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2"
+                   >
+                     <BookOpen size={14} />
+                     {t('modules:session.header.grimoire_label')}
+                   </button>
+                 </div>
+
                  <button
-                   onClick={() => {
-                     brainstormStore.reset();
-                     setCurrentView('rule-workshop');
-                   }}
-                   className="px-12 py-4 bg-accent/20 border border-accent/40 text-accent hover:bg-accent hover:text-white rounded-2xl font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
+                   onClick={() => brainstormStore.setStep('discovery')}
+                   className="px-14 py-5 bg-purple-600 hover:bg-purple-500 text-white rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-purple-900/30 transition-all hover:scale-105 active:scale-95 flex items-center gap-3 text-base"
+                   autoFocus
                  >
-                   <BookOpen size={18} />
-                   {t('modules:session.header.grimoire_label')}
+                   <Zap size={20} />
+                   <span className="flex flex-col items-start leading-tight">
+                     {t('session.forge_module.atelier.btn_forge_next')}
+                     {restantAForger > 0 && (
+                       <span className="text-[10px] font-bold text-white/50 normal-case tracking-normal">
+                         {t('session.forge_module.atelier.remaining', { restant: restantAForger })}
+                       </span>
+                     )}
+                   </span>
                  </button>
-                 <button onClick={() => brainstormStore.reset()} className="px-12 py-4 bg-purple-600 hover:bg-purple-500 text-white rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-purple-900/20 transition-all hover:scale-105 active:scale-95">{t('session.forge_module.atelier.btn_finish')}</button>
                </div>
             </div>
           )}
