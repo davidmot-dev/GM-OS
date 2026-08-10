@@ -3,6 +3,19 @@ import { useAIStore } from '../../stores/useAIStore';
 import type { GameDriver } from '../../types/drivers';
 import type { SheetTemplate } from '../../data/defaultSheetTemplates';
 import type { BrainstormCandidate, BrainstormCard } from './rules/types';
+import { gabaritInventaire, gabaritFiche, promptVoix, promptPersonas } from './rules/gabarits';
+import { lireInventaire } from './rules/inventaire';
+import { convertirFiche } from './rules/conversion';
+import { slugFiche } from './rules/canevas';
+import { extrairePersonas, controlerPersonas, type Personas } from './rules/personas';
+
+export interface ForgePersonasResult {
+  /** La fiche de voix (prompt A), archivée dans `personas/` pour la relecture. */
+  voix: string;
+  /** Les huit gemmes (prompt B), destinées à `systems/<id>/gems.json`. */
+  personas: Personas;
+  avertissements: string[];
+}
 
 export interface ForgeContextItem {
   id?: string;
@@ -269,55 +282,97 @@ export class ForgeService {
     throw new Error("Aucun contenu fourni pour l'analyse.");
   }
 
-  /**
-   * Scans NotebookLM to discover rule/scenario candidates.
-   */
-  public async discoverCandidates(notebookId: string, sourceIds?: string[], subject?: string): Promise<BrainstormCandidate[]> {
-    const subjectContext = subject ? ` concernant spécifiquement : "${subject}"` : "";
-    const prompt = `Analyses les sources de ce notebook et listes 5 à 8 éléments de règles, décisions de MJ ou éléments de scénario intéressants à formaliser${subjectContext}.
-    Réponds EXCLUSIVEMENT sous forme d'un tableau JSON d'objets avec les champs : id (slug), title, category ('rule'|'decision'|'memory'|'scenario'), summary, tags (array).`;
-    
-    const result = await this.callMcpTool<{content: string}>('notebooklm-mcp-server', 'notebook_query', {
+  /** Une requête au carnet, filtrée sur les sources retenues. */
+  private async interrogerCarnet(notebookId: string, query: string, sourceIds?: string[]): Promise<string> {
+    const result = await this.callMcpTool<{ content: string }>('notebooklm-mcp-server', 'notebook_query', {
       notebook_id: notebookId,
-      query: prompt,
+      query,
       source_ids: sourceIds
     });
 
     if (!result?.content) throw new Error("Réponse vide de NotebookLM");
-    
-    try {
-      const jsonStr = result.content.match(/\[[\s\S]*\]/)?.[0] || result.content;
-      return JSON.parse(jsonStr);
-    } catch (e) {
-      console.error("Failed to parse candidates JSON", result.content);
-      throw new Error("Format JSON invalide reçu de NotebookLM");
-    }
+    return result.content;
   }
 
   /**
-   * Forges a complete card for a specific candidate.
+   * Étape 1 — l'inventaire des treize sujets du canevas (gabarit 1).
+   *
+   * **La liste des sujets est fournie, jamais demandée.** La v0 demandait
+   * « 5 à 8 éléments intéressants à formaliser » : c'est exactement le « et
+   * autres » qui fait dériver la taxonomie d'un jeu à l'autre, et sans taxonomie
+   * commune deux systèmes ne se comparent plus.
+   *
+   * Rend toujours les treize sujets, plus les mécaniques hors catégories que le
+   * carnet signale. Un sujet que le carnet a omis reste dans la liste : c'est
+   * son absence qu'il faut voir.
+   */
+  public async discoverCandidates(notebookId: string, sourceIds?: string[]): Promise<BrainstormCandidate[]> {
+    const contenu = await this.interrogerCarnet(notebookId, gabaritInventaire(), sourceIds);
+    return lireInventaire(contenu).map(entree => ({
+      id: slugFiche(entree.sujet),
+      title: entree.sujet,
+      category: 'rule' as const,
+      summary: entree.lu
+        ? entree.mecanique || 'Le carnet n\'a pas résumé la mécanique.'
+        : "Le carnet n'a rien rendu sur ce sujet — à interroger pour lever le doute.",
+      tags: [
+        entree.traite,
+        ...(entree.horsCanevas ? ['hors canevas'] : []),
+        ...entree.sections.slice(0, 3),
+      ],
+    }));
+  }
+
+  /**
+   * Étape 2 — une fiche par sujet (gabarit 2), convertie localement.
+   *
+   * La v0 demandait « du Markdown riche, structuré » : ni les six sections, ni
+   * l'interdiction d'inventer, ni les valeurs en clair. Sans l'interdiction, un
+   * sujet non couvert produit du générique plausible — c'est la ligne la plus
+   * rentable du gabarit.
+   *
+   * La conversion en frontmatter se fait **ici et pas dans le carnet** : on lui
+   * a demandé du YAML, il a pris les `---` pour un séparateur.
    */
   public async forgeCard(notebookId: string, candidate: BrainstormCandidate, systemId: string, sourceIds?: string[]): Promise<BrainstormCard> {
-    const prompt = `Formalises une fiche complète pour l'élément suivant : "${candidate.title}" (Catégorie: ${candidate.category}).
-    Le contenu doit être en Markdown riche, structuré, et prêt à être utilisé par un MJ. 
-    Inclus des exemples concrets si possible. 
-    Si c'est une règle, précise les jets de dés. 
-    Réponds EXCLUSIVEMENT avec le contenu Markdown de la fiche.`;
-    
-    const result = await this.callMcpTool<{content: string}>('notebooklm-mcp-server', 'notebook_query', {
-      notebook_id: notebookId,
-      query: prompt,
-      source_ids: sourceIds // Pass source filters
-    });
-
-    if (!result?.content) throw new Error("Réponse vide de NotebookLM");
+    const contenu = await this.interrogerCarnet(notebookId, gabaritFiche(candidate.title), sourceIds);
+    const fiche = convertirFiche(contenu, { systeme: systemId, sujetDemande: candidate.title });
 
     return {
       ...candidate,
-      content: result.content,
+      id: fiche.slug,
+      title: fiche.sujet || candidate.title,
+      content: fiche.markdown,
       systemId,
-      forgedAt: Date.now()
+      forgedAt: Date.now(),
+      slug: fiche.slug,
+      sections: fiche.sections,
+      avertissements: fiche.avertissements
     };
+  }
+
+  /**
+   * Étape 5 — la fiche de voix puis les huit personas (prompts A et B).
+   *
+   * **Les deux requêtes s'enchaînent dans la même conversation** : B s'appuie
+   * sur la fiche de voix que A vient de produire. Le carnet ne garde pas les
+   * conversations, donc rien ne rattrape un enchaînement rompu — d'où le
+   * séquencement strict, sans parallélisation.
+   *
+   * N'écrit rien : le chemin d'écriture ({@link CHEMIN_PERSONAS}) appartient à
+   * l'appelant, qui montre d'abord et enregistre ensuite.
+   */
+  public async forgePersonas(notebookId: string, sourceIds?: string[]): Promise<ForgePersonasResult> {
+    const voix = await this.interrogerCarnet(notebookId, promptVoix(), sourceIds);
+    const brut = await this.interrogerCarnet(notebookId, promptPersonas(), sourceIds);
+    const { personas, ignorees } = extrairePersonas(brut);
+
+    const avertissements = controlerPersonas(personas);
+    if (ignorees.length > 0) {
+      avertissements.push(`Clés rendues en trop, qu'AIService n'ira jamais lire : ${ignorees.join(', ')}.`);
+    }
+
+    return { voix: voix.trim(), personas, avertissements };
   }
 
   /**

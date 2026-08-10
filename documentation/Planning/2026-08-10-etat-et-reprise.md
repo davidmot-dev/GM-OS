@@ -8,29 +8,33 @@ Branche `feature/tablet-hub-pwa`, tout poussé jusqu'à `e59e61e`. 619 tests ver
 
 ## 1. Par quoi reprendre — le chemin critique
 
-**Passer les gabarits v3 dans la Forge, puis régénérer les fiches avec `sections:`.**
+> **Mise à jour du 2026-08-10, après-midi.** Les cinq points ci-dessous sont **faits**. Le chemin
+> critique est maintenant **de faire tourner la Forge sur un système réel et de régénérer les fiches** :
+> l'outillage existe, aucune fiche v3 n'a encore été produite, et le résolveur reste donc sans entrée.
+> Commencer par **Dune** — c'est le système le mieux pourvu (index `.docx` de 736 entrées) et celui dont
+> les fiches v1 citent le plus de pages fantaisistes.
 
-Tout le reste attend ça. Le résolveur titre → page est écrit et testé, mais **son entrée n'existe pas** :
-les fiches actuelles portent les treize sujets du canevas, pas des titres de chapitre. Tant que les
-fiches ne citent pas de sections, la citation reste invérifiable.
+Le résolveur titre → page est écrit et testé, mais **son entrée n'existe pas** : les fiches actuelles
+portent les treize sujets du canevas, pas des titres de chapitre. Tant que les fiches ne citent pas de
+sections, la citation reste invérifiable.
 
-Le travail se découpe ainsi, du moins cher au plus cher :
+Le travail se découpait ainsi, du moins cher au plus cher — tout est en place :
 
-1. **La passe personas dans la Forge** — la plus rentable. Deux requêtes (prompts A et B), un chemin de
-   sortie fixe (`docs/systems/<id>/gems.json`), un contrat déjà verrouillé par un test. Ne dépend de rien.
-2. **Remplacer les deux prompts v0 de `ForgeService`** par les gabarits v3. `discoverCandidates`
-   (`ForgeService.ts:275`) demande encore « 5 à 8 éléments intéressants » — exactement le « et autres »
-   que le plan rejette. `forgeCard` (`:300`) demande « du Markdown riche », sans les six sections ni
-   l'interdiction d'inventer. **C'est le seul vrai travail** : la boucle inventaire → fiche existe déjà.
-3. **L'étape locale** : conversion des `## Métadonnées` en frontmatter, clé canonique, slug de fichier.
-   La logique tient en trente lignes, elle a tourné cette nuit en script jetable.
-4. **Piloter la boucle par le canevas** au lieu de laisser le carnet choisir ses sujets.
-5. **Inverser `BrainstormOverlay.tsx:93`**, qui écrit la fiche avant de la montrer.
+1. ✅ **La passe personas dans la Forge** — `forgePersonas`, prompts A et B enchaînés, écriture dans
+   `docs/systems/<id>/gems.json` après relecture des huit personas.
+2. ✅ **Les deux prompts v0 de `ForgeService` remplacés** par les gabarits v3
+   (`src/modules/forge/rules/gabarits.ts`).
+3. ✅ **L'étape locale** — `conversion.ts` : frontmatter, clé canonique, slug, avertissements.
+4. ✅ **La boucle pilotée par le canevas** — `inventaire.ts` rend toujours les treize sujets, y compris
+   ceux que le carnet a omis.
+5. ✅ **La fiche se montre avant d'être écrite** — étape `review` dans `BrainstormOverlay`.
 
-Deux réserves à ne pas oublier en implémentant : le plafond MCP est à 10 minutes pour une vingtaine de
-requêtes — sans annulation ni reprise partielle, un échec à la quinzième fiche perd tout. Et renvoyer la
-fiche dans le carnet par `source_add` crée une boucle : le carnet citerait ensuite ses propres
-productions comme sources.
+Deux réserves qui **tiennent toujours** : le plafond MCP est à 10 minutes pour une vingtaine de
+requêtes — sans annulation ni reprise partielle (axe D), un échec à la quinzième fiche perd le reste de
+la volée. La revue avant écriture atténue la casse, puisque chaque fiche validée part sur le disque au
+fur et à mesure. Et renvoyer la fiche dans le carnet par `source_add` crée une boucle : le carnet
+citerait ensuite ses propres productions comme sources — non implémenté, et à ne pas implémenter sans
+carnet distinct.
 
 **Rien n'est demandé à David côté production** : les index sont complets pour les trois livres.
 

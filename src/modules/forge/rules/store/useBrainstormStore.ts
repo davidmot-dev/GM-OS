@@ -3,18 +3,24 @@ import type { BrainstormState } from '../types';
 
 /**
  * Brainstorm Store
- * Gère le cycle de vie de la découverte et de la forge des règles.
+ * Gère le cycle de vie de l'inventaire, de la forge des fiches et de la
+ * passe personas.
+ *
+ * **La forge et l'écriture sont deux états distincts** (`review` puis `saved`) :
+ * rien ne part sur le disque sans passer devant un humain.
  */
 export const useBrainstormStore = create<BrainstormState>((set) => ({
   step: 'idle',
   candidates: [],
   activeCard: null,
+  personas: null,
   isProcessing: false,
   error: null,
   notebookId: null,
   selectedSourceIds: [],
   customSubject: '',
   forgedCandidateIds: [],
+  savedCandidateIds: [],
 
   setNotebook: (id) => set({ notebookId: id }),
   setSources: (ids) => set({ selectedSourceIds: ids }),
@@ -22,53 +28,72 @@ export const useBrainstormStore = create<BrainstormState>((set) => ({
   setStep: (step) => set({ step }),
   setProcessing: (isProcessing) => set({ isProcessing }),
 
-  startDiscovery: () => set({ 
-    step: 'discovery', 
+  startDiscovery: () => set({
+    step: 'discovery',
     error: null,
     candidates: [],
     activeCard: null,
-    forgedCandidateIds: [] 
+    personas: null,
   }),
 
-  setSubject: (subject) => set({
-    customSubject: subject,
-    step: 'listing', 
-    isProcessing: false,
-    error: null,
-    candidates: []
+  setCandidates: (candidates) => set({
+    candidates,
+    isProcessing: false
   }),
 
-  setCandidates: (candidates) => set({ 
-    candidates, 
-    isProcessing: false 
-  }),
-
-  startForging: (_candidateId) => set({ 
-    isProcessing: true, 
+  startForging: () => set({
+    isProcessing: true,
     step: 'forging',
-    error: null 
+    activeCard: null,
+    error: null
   }),
 
-  completeForge: (card) => set((state) => ({ 
-    activeCard: card, 
+  // La fiche existe, elle n'est pas écrite. C'est ici que la relecture a lieu.
+  reviewCard: (card) => set((state) => ({
+    activeCard: card,
     isProcessing: false,
-    step: 'completed',
-    forgedCandidateIds: [...state.forgedCandidateIds, card.id]
+    step: 'review',
+    forgedCandidateIds: state.forgedCandidateIds.includes(card.id)
+      ? state.forgedCandidateIds
+      : [...state.forgedCandidateIds, card.id]
   })),
 
-  setError: (error) => set({ 
-    error, 
-    isProcessing: false 
+  markSaved: (candidateId) => set((state) => ({
+    step: 'saved',
+    isProcessing: false,
+    savedCandidateIds: state.savedCandidateIds.includes(candidateId)
+      ? state.savedCandidateIds
+      : [...state.savedCandidateIds, candidateId]
+  })),
+
+  startPersonas: () => set({
+    step: 'personas',
+    isProcessing: true,
+    error: null,
+    personas: null
   }),
 
-  reset: () => set({ 
-    step: 'idle', 
-    candidates: [], 
-    activeCard: null, 
+  setPersonas: (personas) => set({
+    personas,
+    step: 'personas',
+    isProcessing: false
+  }),
+
+  setError: (error) => set({
+    error,
+    isProcessing: false
+  }),
+
+  reset: () => set({
+    step: 'idle',
+    candidates: [],
+    activeCard: null,
+    personas: null,
     error: null,
     isProcessing: false,
     selectedSourceIds: [],
     customSubject: '',
-    forgedCandidateIds: []
+    forgedCandidateIds: [],
+    savedCandidateIds: []
   })
 }));

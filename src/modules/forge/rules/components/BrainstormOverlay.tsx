@@ -3,53 +3,74 @@ import { useTranslation } from 'react-i18next';
 import { useBrainstormStore } from '../store/useBrainstormStore';
 import { forgeService } from '../../ForgeService';
 import { useSessionOSStore } from '../../../session/useSessionOSStore';
-import { X, Zap, Sparkles, Rocket, ChevronLeft, Shield, CheckCircle2, BookOpen } from 'lucide-react';
+import { X, Zap, Sparkles, ChevronLeft, Shield, BookOpen, AlertTriangle, Users, Save } from 'lucide-react';
 import { DEFAULT_GAME_DRIVERS } from '../../../../data/defaultGameDrivers';
 import DiscoveryUI from './DiscoveryUI';
+import { CHEMIN_PERSONAS } from '../personas';
+import { slugFiche } from '../canevas';
 import type { BrainstormCandidate } from '../types';
 
 /**
  * BrainstormOverlay
  * Interface premium pour l'Atelier de Règles.
- * Gère la découverte de sujets et la forge de fiches markdown.
+ *
+ * **La boucle est pilotée par le canevas, pas par le carnet.** L'inventaire rend
+ * les treize sujets ; le carnet ne choisit plus ce qu'il juge « intéressant à
+ * formaliser », faute de quoi la taxonomie dérive d'un jeu à l'autre.
+ *
+ * **Et la fiche se montre avant d'être écrite.** Une fiche posée dans `rules/`
+ * est aussitôt lue par le RAG et citée en séance : c'est l'artefact qui porte le
+ * plus d'autorité, il ne peut pas être celui qui reçoit le moins de revue.
  */
 export const BrainstormOverlay: React.FC = () => {
   const { t } = useTranslation(['modules', 'common']);
   const brainstormStore = useBrainstormStore();
   const { activeCampaignId, campaigns, updateCampaign, customGameDrivers, setCurrentView } = useSessionOSStore();
-  
+
   const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
   const allDrivers = [...DEFAULT_GAME_DRIVERS, ...customGameDrivers];
+
+  const messageErreur = (err: unknown, defaut: string): string =>
+    err instanceof Error && err.message ? err.message : defaut;
+
+  /**
+   * Dossier des fiches : celui du driver s'il en déclare un, sinon le chemin
+   * standard du système.
+   */
+  const dossierDesFiches = (systemId: string): string => {
+    const driver = allDrivers.find(d => d.id === systemId);
+    let baseDir = driver?.ragPath?.trim().replace(/\\/g, '/') || `systems/${systemId}/rules`;
+    if (baseDir.startsWith('/')) baseDir = baseDir.substring(1);
+    if (baseDir.endsWith('/')) baseDir = baseDir.slice(0, -1);
+    return baseDir;
+  };
+
+  const cheminDeLaFiche = brainstormStore.activeCard && activeCampaign?.system
+    ? `${dossierDesFiches(activeCampaign.system)}/${brainstormStore.activeCard.slug}.md`
+    : '';
 
   const handleDiscover = useCallback(async () => {
     if (!brainstormStore.notebookId) return;
     brainstormStore.setProcessing(true);
-    brainstormStore.startDiscovery(); 
     try {
       const discovered = await forgeService.discoverCandidates(
-        brainstormStore.notebookId, 
+        brainstormStore.notebookId,
         brainstormStore.selectedSourceIds
       );
-      brainstormStore.setCandidates(discovered);
-    } catch (err: any) {
-      brainstormStore.setError(err.message || t('session.forge_module.atelier.discovery_processing_error'));
-    }
-  }, [brainstormStore.notebookId, brainstormStore.selectedSourceIds, t, brainstormStore.startDiscovery, brainstormStore.setCandidates, brainstormStore.setError]);
 
-  const handleSubjectForge = useCallback(async (subject: string) => {
-    if (!brainstormStore.notebookId) return;
-    brainstormStore.setProcessing(true);
-    try {
-      const candidates = await forgeService.discoverCandidates(
-        brainstormStore.notebookId,
-        brainstormStore.selectedSourceIds,
-        subject
+      // La « forge libre » du tableau de bord s'ajoute au canevas, elle ne le
+      // remplace pas : demander au carnet de choisir ses sujets est exactement
+      // ce qui faisait dériver la taxonomie d'un jeu à l'autre.
+      const libre = brainstormStore.customSubject.trim();
+      brainstormStore.setCandidates(
+        libre
+          ? [{ id: slugFiche(libre), title: libre, category: 'rule' as const, summary: '', tags: ['hors canevas'] }, ...discovered]
+          : discovered
       );
-      brainstormStore.setCandidates(candidates);
-    } catch (err: any) {
-      brainstormStore.setError(err.message || t('session.forge_module.atelier.discovery_processing_error'));
+    } catch (err: unknown) {
+      brainstormStore.setError(messageErreur(err, t('session.forge_module.atelier.error_title')));
     }
-  }, [brainstormStore.notebookId, brainstormStore.selectedSourceIds, t]);
+  }, [brainstormStore.notebookId, brainstormStore.selectedSourceIds, t, brainstormStore.setProcessing, brainstormStore.setCandidates, brainstormStore.setError]);
 
   useEffect(() => {
     if (brainstormStore.step === 'discovery' && brainstormStore.candidates.length === 0 && !brainstormStore.isProcessing && !brainstormStore.error) {
@@ -57,48 +78,88 @@ export const BrainstormOverlay: React.FC = () => {
     }
   }, [brainstormStore.step, brainstormStore.candidates.length, brainstormStore.isProcessing, brainstormStore.error, handleDiscover]);
 
-  useEffect(() => {
-    if (brainstormStore.step === 'listing' && brainstormStore.candidates.length === 0 && brainstormStore.customSubject && !brainstormStore.isProcessing && !brainstormStore.error) {
-      handleSubjectForge(brainstormStore.customSubject);
-    }
-  }, [brainstormStore.step, brainstormStore.candidates.length, brainstormStore.customSubject, brainstormStore.isProcessing, brainstormStore.error, handleSubjectForge]);
-
+  /** Rédige la fiche. **N'écrit rien** : la revue vient ensuite. */
   const handleForge = async (candidate: BrainstormCandidate) => {
     if (!brainstormStore.notebookId || !activeCampaign?.system) {
         brainstormStore.setError(t('session.forge_module.atelier.error_no_system'));
         return;
     }
-    brainstormStore.startForging(candidate.id);
+    brainstormStore.startForging();
     try {
       const card = await forgeService.forgeCard(
-        brainstormStore.notebookId, 
-        candidate, 
+        brainstormStore.notebookId,
+        candidate,
         activeCampaign.system,
         brainstormStore.selectedSourceIds
       );
-      
-      const systemId = activeCampaign.system;
-      const driver = allDrivers.find(d => d.id === systemId);
-      
-      // Resolve base directory from driver or fallback to standard system path
-      let baseDir = driver?.ragPath?.trim().replace(/\\/g, '/') || `systems/${systemId}/rules`;
-      
-      // Security/Cleanup: Remove leading/trailing slashes
-      if (baseDir.startsWith('/')) baseDir = baseDir.substring(1);
-      if (baseDir.endsWith('/')) baseDir = baseDir.slice(0, -1);
+      brainstormStore.reviewCard(card);
+    } catch (err: unknown) {
+      brainstormStore.setError(messageErreur(err, t('session.forge_module.atelier.error_title')));
+    }
+  };
 
-      const fileName = `${baseDir}/${card.id}.md`;
-      console.log(`[Forge] Saving document to: ${fileName} (Driver Path: ${driver?.ragPath || 'default'})`);
-      
-      const saveSuccess = await window.appBridge?.ai?.writeDoc(fileName, card.content);
-      
-      if (saveSuccess) {
-        brainstormStore.completeForge(card);
-      } else {
-        throw new Error(t('session.forge_module.atelier.error_write'));
-      }
-    } catch (err: any) {
-      brainstormStore.setError(err.message || t('session.forge_module.atelier.error_title'));
+  /** Écrit la fiche relue. C'est le seul endroit qui touche au disque. */
+  const handleSaveCard = async () => {
+    const card = brainstormStore.activeCard;
+    if (!card || !cheminDeLaFiche) return;
+    brainstormStore.setProcessing(true);
+    try {
+      console.log(`[Forge] Saving document to: ${cheminDeLaFiche}`);
+      const saveSuccess = await window.appBridge?.ai?.writeDoc(cheminDeLaFiche, card.content);
+      if (!saveSuccess) throw new Error(t('session.forge_module.atelier.error_write'));
+      brainstormStore.markSaved(card.id);
+    } catch (err: unknown) {
+      brainstormStore.setError(messageErreur(err, t('session.forge_module.atelier.error_write')));
+    }
+  };
+
+  /**
+   * La passe personas : prompt A puis prompt B, dans la même conversation.
+   * Deux requêtes, un chemin de sortie fixe — c'est l'étape la plus vite
+   * rentable, et elle ne dépend d'aucune autre.
+   */
+  const handlePersonas = async () => {
+    if (!brainstormStore.notebookId) {
+      brainstormStore.setError(t('session.forge_module.atelier.error_no_notebook'));
+      return;
+    }
+    if (!activeCampaign?.system) {
+      brainstormStore.setError(t('session.forge_module.atelier.error_no_system'));
+      return;
+    }
+    brainstormStore.startPersonas();
+    try {
+      const resultat = await forgeService.forgePersonas(
+        brainstormStore.notebookId,
+        brainstormStore.selectedSourceIds
+      );
+      brainstormStore.setPersonas(resultat);
+    } catch (err: unknown) {
+      brainstormStore.setError(messageErreur(err, t('session.forge_module.atelier.error_title')));
+    }
+  };
+
+  /**
+   * Écrit `systems/<id>/gems.json` — **ce chemin et pas un autre**. `AIService`
+   * n'en lit aucun autre, et un fichier rangé ailleurs est perdu en silence.
+   */
+  const handleSavePersonas = async () => {
+    const resultat = brainstormStore.personas;
+    const systemId = activeCampaign?.system;
+    if (!resultat || !systemId) return;
+    brainstormStore.setProcessing(true);
+    try {
+      const ecrit = await window.appBridge?.ai?.writeDoc(
+        CHEMIN_PERSONAS(systemId),
+        JSON.stringify(resultat.personas, null, 2)
+      );
+      if (!ecrit) throw new Error(t('session.forge_module.atelier.error_write'));
+      // La fiche de voix est l'archive de ce qui a produit les personas : elle
+      // n'est lue par personne, mais sans elle on ne sait plus d'où elles sortent.
+      await window.appBridge?.ai?.writeDoc(`systems/${systemId}/personas/fiche-de-voix.md`, resultat.voix);
+      brainstormStore.markSaved('personas');
+    } catch (err: unknown) {
+      brainstormStore.setError(messageErreur(err, t('session.forge_module.atelier.error_write')));
     }
   };
 
@@ -249,57 +310,23 @@ export const BrainstormOverlay: React.FC = () => {
             </div>
           )}
 
-          {brainstormStore.step === 'discovery' && <DiscoveryUI />}
-
-          {brainstormStore.step === 'listing' && !brainstormStore.isProcessing && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="flex items-center justify-between mb-8">
-                <button 
-                  onClick={() => brainstormStore.startDiscovery()}
-                  className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-purple-400 hover:text-white transition-colors"
-                >
-                  <ChevronLeft size={16} /> {t('session.forge_module.atelier.back_to_subjects')}
-                </button>
-                <div className="text-right">
-                  <p className="text-[10px] text-white/20 uppercase font-black tracking-widest">{t('session.forge_module.atelier.current_subject')}</p>
-                  <p className="text-xl font-bold font-display text-white">{brainstormStore.customSubject}</p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-6">
-                {brainstormStore.candidates.map((candidate, idx) => (
-                  <div 
-                    key={idx}
-                    onClick={() => handleForge(candidate)}
-                    className="group bg-white/5 border border-white/5 p-8 rounded-[2.5rem] hover:border-purple-500/50 hover:bg-purple-500/5 transition-all cursor-pointer flex flex-col gap-4 relative overflow-hidden"
+          {brainstormStore.step === 'discovery' && (
+            <>
+              <DiscoveryUI onSelect={handleForge} />
+              {!brainstormStore.isProcessing && brainstormStore.candidates.length > 0 && (
+                <div className="max-w-4xl mx-auto px-6 pb-6 flex justify-center">
+                  <button
+                    onClick={handlePersonas}
+                    className="flex items-center gap-3 px-8 py-3 bg-white/5 hover:bg-purple-600/20 border border-white/5 hover:border-purple-500/40 text-white/60 hover:text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all"
                   >
-                    <div className="flex items-center justify-between">
-                      <span className="px-3 py-1 bg-white/5 rounded-lg text-[9px] font-black uppercase tracking-widest text-white/40 border border-white/5">
-                        {candidate.category}
-                      </span>
-                      <Rocket size={16} className="text-white/10 group-hover:text-purple-400 transition-colors" />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-xl font-bold font-display text-white group-hover:text-purple-400 transition-colors flex items-center gap-2">
-                        {candidate.title}
-                        {brainstormStore.forgedCandidateIds.includes(candidate.id) && (
-                          <CheckCircle2 size={16} className="text-emerald-400" />
-                        )}
-                      </h3>
-                    </div>
-                    <p className="text-sm text-white/40 leading-relaxed line-clamp-3">{candidate.summary}</p>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {candidate.tags.map(tag => (
-                        <span key={tag} className="text-[9px] font-bold text-purple-400/60">#{tag}</span>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+                    <Users size={16} /> {t('session.forge_module.atelier.personas_button')}
+                  </button>
+                </div>
+              )}
+            </>
           )}
 
-          {brainstormStore.step === 'forging' && (
+          {(brainstormStore.step === 'forging' || (brainstormStore.step === 'personas' && brainstormStore.isProcessing)) && (
             <div className="h-full flex flex-col items-center justify-center p-20 space-y-8 text-center animate-in zoom-in-95">
                <div className="w-32 h-32 relative">
                  <div className="absolute inset-0 bg-purple-600/30 blur-3xl animate-pulse" />
@@ -309,40 +336,148 @@ export const BrainstormOverlay: React.FC = () => {
                </div>
                <div>
                  <h3 className="text-2xl font-black uppercase tracking-widest text-white font-display mb-2">{t('session.forge_module.atelier.forging_title')}</h3>
-                 <p className="text-white/40 text-sm uppercase tracking-widest">{t('session.forge_module.atelier.forging_subtitle')}</p>
+                 <p className="text-white/40 text-sm uppercase tracking-widest">
+                   {brainstormStore.step === 'personas'
+                     ? t('session.forge_module.atelier.personas_processing')
+                     : t('session.forge_module.atelier.forging_subtitle')}
+                 </p>
                </div>
             </div>
           )}
 
-          {brainstormStore.step === 'completed' && brainstormStore.activeCard && (
+          {brainstormStore.step === 'review' && brainstormStore.activeCard && (
             <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
-               <div className="p-8 bg-emerald-500/10 border border-emerald-500/20 rounded-[3rem] flex items-center gap-8">
-                 <div className="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center shadow-glow-emerald/30">
-                   <Zap size={32} className="text-white" />
-                 </div>
-                 <div>
-                   <h3 className="text-2xl font-black uppercase text-emerald-400 font-display tracking-tight">{t('session.forge_module.atelier.success_title')}</h3>
-                   <p className="text-sm text-emerald-400/40 uppercase font-black tracking-widest mt-1">{t('session.forge_module.atelier.success_subtitle')}</p>
+               <div className="flex items-center justify-between">
+                 <button
+                   onClick={() => brainstormStore.setStep('discovery')}
+                   className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-purple-400 hover:text-white transition-colors"
+                 >
+                   <ChevronLeft size={16} /> {t('session.forge_module.atelier.back_to_subjects')}
+                 </button>
+                 <div className="text-right">
+                   <p className="text-[10px] text-white/20 uppercase font-black tracking-widest">{t('session.forge_module.atelier.review_title')}</p>
+                   <p className="text-xs text-amber-400/60 font-bold">{t('session.forge_module.atelier.review_subtitle')}</p>
                  </div>
                </div>
+
+               {brainstormStore.activeCard.avertissements.length > 0 && (
+                 <div className="p-8 bg-amber-500/10 border border-amber-500/20 rounded-[3rem]">
+                   <div className="flex items-center gap-4 mb-4">
+                     <AlertTriangle size={20} className="text-amber-400" />
+                     <h4 className="text-sm font-black uppercase tracking-widest text-amber-400 font-display">
+                       {t('session.forge_module.atelier.review_warnings')}
+                     </h4>
+                   </div>
+                   <ul className="space-y-2 text-sm text-amber-200/60 leading-relaxed list-disc pl-6">
+                     {brainstormStore.activeCard.avertissements.map((avis, idx) => <li key={idx}>{avis}</li>)}
+                   </ul>
+                 </div>
+               )}
 
                <div className="bg-black/40 border border-white/5 rounded-[3rem] p-12 relative">
                  <div className="absolute top-8 right-12 text-[10px] font-black uppercase tracking-widest text-white/10">Markdown Construct</div>
                  <div className="prose prose-invert max-w-none">
-                   <h1 className="text-4xl font-black uppercase tracking-tighter text-white font-display mb-8">{brainstormStore.activeCard.title}</h1>
-                   <div className="text-white/60 leading-relaxed font-sans text-lg whitespace-pre-wrap">
+                   <h1 className="text-4xl font-black uppercase tracking-tighter text-white font-display mb-4">{brainstormStore.activeCard.title}</h1>
+                   <p className="text-[10px] font-black uppercase tracking-widest text-white/20 mb-8">
+                     {t('session.forge_module.atelier.review_path')} <span className="text-purple-400/60">{cheminDeLaFiche}</span>
+                   </p>
+                   <div className="text-white/60 leading-relaxed font-sans text-base whitespace-pre-wrap">
                      {brainstormStore.activeCard.content}
                    </div>
                  </div>
                </div>
 
                <div className="flex justify-end gap-6 pt-8">
-                 <button onClick={() => brainstormStore.setStep('listing')} className="px-10 py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl font-black uppercase tracking-widest transition-all">{t('session.forge_module.atelier.btn_back')}</button>
-                 <button 
+                 <button onClick={() => brainstormStore.setStep('discovery')} className="px-10 py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl font-black uppercase tracking-widest transition-all">{t('session.forge_module.atelier.btn_discard')}</button>
+                 <button
+                   onClick={handleSaveCard}
+                   disabled={brainstormStore.isProcessing}
+                   className="px-12 py-4 bg-purple-600 hover:bg-purple-500 disabled:opacity-40 text-white rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-purple-900/20 transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
+                 >
+                   <Save size={18} /> {t('session.forge_module.atelier.btn_save_card')}
+                 </button>
+               </div>
+            </div>
+          )}
+
+          {brainstormStore.step === 'personas' && brainstormStore.personas && !brainstormStore.isProcessing && (
+            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
+               <div className="flex items-center justify-between">
+                 <button
+                   onClick={() => brainstormStore.setStep('discovery')}
+                   className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-purple-400 hover:text-white transition-colors"
+                 >
+                   <ChevronLeft size={16} /> {t('session.forge_module.atelier.back_to_subjects')}
+                 </button>
+                 <div className="text-right">
+                   <p className="text-[10px] text-white/20 uppercase font-black tracking-widest">{t('session.forge_module.atelier.personas_title')}</p>
+                   <p className="text-xs text-amber-400/60 font-bold">{t('session.forge_module.atelier.review_subtitle')}</p>
+                 </div>
+               </div>
+
+               {brainstormStore.personas.avertissements.length > 0 && (
+                 <div className="p-8 bg-amber-500/10 border border-amber-500/20 rounded-[3rem]">
+                   <div className="flex items-center gap-4 mb-4">
+                     <AlertTriangle size={20} className="text-amber-400" />
+                     <h4 className="text-sm font-black uppercase tracking-widest text-amber-400 font-display">
+                       {t('session.forge_module.atelier.review_warnings')}
+                     </h4>
+                   </div>
+                   <ul className="space-y-2 text-sm text-amber-200/60 leading-relaxed list-disc pl-6">
+                     {brainstormStore.personas.avertissements.map((avis, idx) => <li key={idx}>{avis}</li>)}
+                   </ul>
+                 </div>
+               )}
+
+               <p className="text-[10px] font-black uppercase tracking-widest text-white/20">
+                 {t('session.forge_module.atelier.personas_path')}{' '}
+                 <span className="text-purple-400/60">{activeCampaign?.system ? CHEMIN_PERSONAS(activeCampaign.system) : ''}</span>
+               </p>
+
+               <div className="grid grid-cols-2 gap-4">
+                 {Object.entries(brainstormStore.personas.personas).map(([clef, texte]) => (
+                   <div key={clef} className="bg-black/40 border border-white/5 rounded-[2rem] p-6 space-y-3">
+                     <div className="flex items-center justify-between">
+                       <h4 className="text-sm font-black uppercase tracking-widest text-purple-400 font-display">{clef}</h4>
+                       <span className="text-[10px] font-bold text-white/20">{texte.length}</span>
+                     </div>
+                     <p className="text-sm text-white/50 leading-relaxed">{texte}</p>
+                   </div>
+                 ))}
+               </div>
+
+               <div className="flex justify-end gap-6 pt-8">
+                 <button onClick={() => brainstormStore.setStep('discovery')} className="px-10 py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl font-black uppercase tracking-widest transition-all">{t('session.forge_module.atelier.btn_discard')}</button>
+                 <button
+                   onClick={handleSavePersonas}
+                   disabled={brainstormStore.isProcessing}
+                   className="px-12 py-4 bg-purple-600 hover:bg-purple-500 disabled:opacity-40 text-white rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-purple-900/20 transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
+                 >
+                   <Save size={18} /> {t('session.forge_module.atelier.btn_save_personas')}
+                 </button>
+               </div>
+            </div>
+          )}
+
+          {brainstormStore.step === 'saved' && (
+            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
+               <div className="p-8 bg-emerald-500/10 border border-emerald-500/20 rounded-[3rem] flex items-center gap-8">
+                 <div className="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center shadow-glow-emerald/30">
+                   <Zap size={32} className="text-white" />
+                 </div>
+                 <div>
+                   <h3 className="text-2xl font-black uppercase text-emerald-400 font-display tracking-tight">{t('session.forge_module.atelier.saved_title')}</h3>
+                   <p className="text-sm text-emerald-400/40 uppercase font-black tracking-widest mt-1">{t('session.forge_module.atelier.saved_subtitle')}</p>
+                 </div>
+               </div>
+
+               <div className="flex justify-end gap-6 pt-8">
+                 <button onClick={() => brainstormStore.setStep('discovery')} className="px-10 py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl font-black uppercase tracking-widest transition-all">{t('session.forge_module.atelier.btn_back')}</button>
+                 <button
                    onClick={() => {
                      brainstormStore.reset();
                      setCurrentView('rule-workshop');
-                   }} 
+                   }}
                    className="px-12 py-4 bg-accent/20 border border-accent/40 text-accent hover:bg-accent hover:text-white rounded-2xl font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
                  >
                    <BookOpen size={18} />

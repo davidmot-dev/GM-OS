@@ -296,19 +296,43 @@ et éprouvées en réel.
 
 **Mieux : la boucle existe déjà.** `ForgeService.discoverCandidates` (inventaire) puis `forgeCard`
 (une fiche par élément), toutes deux via `notebook_query` avec filtrage `source_ids`, sont
-structurellement la séquence de David. Ce qui manque n'est pas de la plomberie :
+structurellement la séquence de David. Ce qui manquait n'était pas de la plomberie — et a été fait le
+**2026-08-10** :
 
-1. **Les prompts sont restés en v0.** `discoverCandidates` demande « 5 à 8 éléments intéressants à
-   formaliser » — c'est précisément le « et autres » que le § 4.1 rejette : la liste doit être *fournie*.
-   `forgeCard` demande « du Markdown riche, structuré », sans les six sections, sans l'interdiction
-   d'inventer, sans l'exigence de valeurs en clair. **Remplacer ces deux prompts par les gabarits v2
-   est le seul vrai travail.**
-2. **L'étape locale n'existe pas** : conversion des métadonnées en frontmatter, clé canonique, slug de
-   fichier, `pages_fiables`.
-3. **La boucle n'est pas pilotée par le canevas** : il faut itérer sur les treize sujets plus les
-   « hors catégories » de l'inventaire, au lieu de laisser le carnet choisir.
-4. **`BrainstormOverlay.tsx:93` écrit la fiche avant de la montrer.** À inverser : les artefacts qui
-   portent le plus d'autorité sont ceux qui ont le moins de revue (axe O).
+1. ~~**Les prompts sont restés en v0.**~~ **Fait.** Les quatre gabarits vivent dans
+   `src/modules/forge/rules/gabarits.ts`, transcrits depuis le § 8 de ce document, et la liste des
+   treize sujets est engendrée depuis `canevas.ts` — un seul endroit la porte.
+2. ~~**L'étape locale n'existe pas.**~~ **Fait.** `conversion.ts` : `## Métadonnées` → frontmatter,
+   clé canonique, slug, et les avertissements de relecture.
+3. ~~**La boucle n'est pas pilotée par le canevas.**~~ **Fait.** `inventaire.ts` rend *toujours* les
+   treize sujets, plus les hors catégories — un sujet omis par le carnet reste dans la liste, marqué
+   « sans réponse ».
+4. ~~**`BrainstormOverlay.tsx:93` écrit la fiche avant de la montrer.**~~ **Inversé.** L'étape `review`
+   s'intercale : la fiche s'affiche avec ses avertissements et son chemin de destination, et rien
+   n'atteint le disque avant que l'humain n'ait cliqué (axe O).
+
+### Ce que la Forge sait faire depuis le 2026-08-10
+
+| Module | Rôle | Tests |
+|---|---|---|
+| `rules/canevas.ts` | Les treize clés canoniques, le rabattage d'un libellé, le slug | `canevas.test.ts` |
+| `rules/gabarits.ts` | Les quatre prompts v3, en toutes lettres | — |
+| `rules/inventaire.ts` | Le tableau du gabarit 1 → treize sujets complétés | `inventaire.test.ts` |
+| `rules/conversion.ts` | Métadonnées → frontmatter, avec avertissements | `conversion.test.ts` |
+| `rules/personas.ts` | Les huit gemmes, le chemin, les contrôles de contenu | `personas.test.ts` |
+
+**Le rabattage sur la clé canonique ne force jamais.** Un libellé qui ne recouvre pas les deux tiers
+des mots signifiants d'un sujet reste *hors canevas* : une fiche rangée sous un mauvais sujet est pire
+qu'une fiche hors canevas, puisqu'elle fausse la comparaison entre jeux au lieu de s'en abstenir.
+
+**`pages_fiables` n'est plus écrit systématiquement.** Une fiche v3 ne cite aucune page ; y écrire
+`false` laisserait croire qu'il en existe. Le champ n'apparaît que si le carnet a rendu des pages
+malgré la consigne — et dans ce cas la conversion le signale à la relecture.
+
+**Ce qui reste ouvert** : l'annulation et la reprise sur échec partiel (axe D). Le plafond MCP est à
+dix minutes ; une génération complète fait une vingtaine de requêtes, et rien ne rattrape aujourd'hui
+un échec à la quinzième fiche. La revue avant écriture atténue le risque — chaque fiche validée est
+sur le disque — mais ne le supprime pas.
 
 ### Séquence cible
 
@@ -347,8 +371,10 @@ n'activer qu'en connaissance de cause, ou sur un carnet distinct.
 - `pages_fiables: false` sur les 46 fiches citant des pages ; consigne de citation de l'Oracle corrigée.
 - **Résolveur écrit le 2026-08-10** (`electron/bookIndex.ts`, § 5.2 bis). Le contrôle de vraisemblance
   des pages est utilisable immédiatement ; la résolution titre → page attend des fiches v3.
-- **Non fait** : le passage des gabarits v3 dans la Forge (§ 6), et la régénération des fiches avec
-  `sections:` — sans quoi le résolveur reste sans entrée. **C'est désormais le chemin critique.**
+- ~~**Non fait** : le passage des gabarits v3 dans la Forge (§ 6)~~ — **fait le 2026-08-10**, avec la
+  conversion locale, le pilotage par le canevas, la revue avant écriture et la passe personas.
+- **Non fait** : la **régénération des fiches** avec `sections:`. La Forge sait produire des fiches v3,
+  aucune n'a encore été produite — le résolveur reste donc sans entrée. **C'est le chemin critique.**
 
 ---
 
