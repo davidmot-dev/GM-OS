@@ -156,10 +156,16 @@ export const BrainstormOverlay: React.FC = () => {
     // La « forge libre » du tableau de bord s'ajoute au canevas, elle ne le
     // remplace pas : demander au carnet de choisir ses sujets est exactement ce
     // qui faisait dériver la taxonomie d'un jeu à l'autre.
+    //
+    // Et elle ne se dédouble pas : taper « Poursuites » ne doit pas créer une
+    // seconde ligne pour un sujet que l'inventaire porte déjà.
     const libre = brainstormStore.customSubject.trim();
+    const slugLibre = libre ? slugFiche(libre) : '';
+    const inedit = slugLibre && !candidats.some(c => c.id === slugLibre);
+
     brainstormStore.setCandidates(
-      libre
-        ? [{ id: slugFiche(libre), title: libre, category: 'rule' as const, summary: '', tags: ['hors canevas'] }, ...candidats]
+      inedit
+        ? [{ id: slugLibre, title: libre, category: 'rule' as const, summary: '', tags: ['hors canevas'] }, ...candidats]
         : candidats,
       inventaire,
     );
@@ -204,6 +210,21 @@ export const BrainstormOverlay: React.FC = () => {
       libererLeCarnet(gen);
     }
   }, [brainstormStore.notebookId, brainstormStore.selectedSourceIds, t, brainstormStore.setProcessing, brainstormStore.setCandidates, brainstormStore.setError]);
+
+  /**
+   * Le sujet libre se répercute sans repayer l'inventaire.
+   *
+   * Il n'était injecté qu'à la construction de la liste : le taper alors que
+   * l'inventaire était déjà affiché ne faisait rien, et rafraîchir coûtait
+   * soixante-douze secondes de requête au carnet pour retrouver le même tableau.
+   * Or le tableau est en mémoire — `inventaireBrut` — et la liste s'en
+   * reconstruit sans rien demander à personne.
+   */
+  useEffect(() => {
+    if (brainstormStore.step !== 'discovery') return;
+    if (!brainstormStore.inventaireBrut) return;
+    construireCandidats(brainstormStore.inventaireBrut);
+  }, [brainstormStore.customSubject, brainstormStore.inventaireBrut, brainstormStore.step, construireCandidats]);
 
   useEffect(() => {
     if (brainstormStore.step === 'discovery' && brainstormStore.candidates.length === 0 && !brainstormStore.isProcessing && !brainstormStore.error) {

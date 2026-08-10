@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { lireInventaire, couverture } from './inventaire';
-import { CANEVAS } from './canevas';
+import { CANEVAS, slugFiche } from './canevas';
 
 /** Un inventaire tronqué, comme le gabarit 1 le fait rendre. */
 const INVENTAIRE = `| Sujet | Traité | Mécanique | Sections |
@@ -116,6 +116,24 @@ describe('lireInventaire', () => {
 
     expect(entrees).toHaveLength(13);
     expect(entrees.every(e => !e.lu)).toBe(true);
+  });
+});
+
+describe('sujet libre et doublons', () => {
+  it('un sujet libre qui recouvre le canevas porte le meme slug', () => {
+    /**
+     * L atelier ajoute le sujet libre en tete de liste, sauf s il fait doublon.
+     * La comparaison se fait sur le slug : « Poursuites » tape a la main donne
+     * `poursuites`, exactement l identifiant du sujet du canevas — la liste ne
+     * doit donc pas afficher deux fois le meme sujet.
+     */
+    const duCanevas = lireInventaire(INVENTAIRE).find(e => e.sujet === 'Poursuites')!;
+    expect(slugFiche(duCanevas.sujet)).toBe(slugFiche('Poursuites'));
+    expect(slugFiche('poursuites ')).toBe(slugFiche('Poursuites'));
+  });
+
+  it('un sujet libre inedit garde son propre slug', () => {
+    expect(slugFiche('Les manoeuvres des Mentat')).toBe('les-manoeuvres-des-mentat');
   });
 });
 
