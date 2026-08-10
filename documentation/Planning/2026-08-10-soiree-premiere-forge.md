@@ -9,24 +9,42 @@ build réel vérifié.
 
 ---
 
-## 1. Par quoi reprendre
+## 1. Par quoi reprendre — **sortir la Forge de Session OS**
 
-**Forger les treize fiches de Dune, une par une**, et mesurer ce qui reste incertain.
+> **Le corpus Dune est complet.** 17 fichiers, les 12 sujets du canevas que le livre traite —
+> *Poursuites* n'est pas couvert, l'inventaire l'a établi — plus 4 mécaniques hors canevas, plus les
+> 8 personas. **69 des 89 sections citées se résolvent en pages vérifiées (78 %).**
 
-Tout l'outillage est en place et éprouvé en réel. Ce qui manque, ce sont les fiches — et une seule
-mesure décisive n'a pas encore été prise : **est-ce que le gabarit scindé passe ?** La scission est
-écrite et testée, elle n'a pas encore tourné de bout en bout.
+**Le chantier décidé le 2026-08-10 : faire de la Forge un module à part, hors de Session OS.**
 
-Ensuite, dans l'ordre :
+Trois raisons, la première étant démontrée plutôt qu'argumentée :
 
-1. **Régénérer les fiches** de Dune, puis d'Alien et de Blade Runner.
-2. **Brancher le résolveur** `electron/bookIndex.ts` — il n'a toujours aucun appelant, et les fiches v3
-   lui donneront enfin son entrée : des `sections:` à confronter à l'index du livre.
-3. **Structure Système** : `corpusId` à la création d'un pilote, et création des répertoires
-   (`rules/`, `index/`, `personas/`). Aujourd'hui la Forge crée un pilote avec un identifiant
-   horodaté et rien autour. C'est le flux que David a décrit : *forger un système, puis l'atelier*.
-4. **Rendre son pilote Blade Runner à « Anges de Feu »**, si ce n'est pas déjà fait — la campagne a
-   hérité du pilote de Dune pendant les essais.
+1. **Ce n'est pas une opération de séance.** On documente un système de jeu, pas une partie. Le
+   corpus Dune sert toutes les campagnes Dune. Le couplage à la campagne active est précisément ce
+   qui a fait réaffecter le pilote d'une campagne Blade Runner pour enrichir Dune, et qu'il a fallu
+   défaire (`52b3f71`).
+2. **Le travail est long et se reprend** — dix-sept fiches à deux ou trois minutes, sur plusieurs
+   séances, avec brouillons et avancement lu sur le disque. C'est un atelier, pas une action de table.
+3. **Les frontières sont déjà tracées.** `corpusSysteme.ts` répond seul à « où vit ce corpus », et
+   plus rien dans l'atelier ne dépend de la campagne. Le module existe en substance ; il est
+   simplement rangé sous Session OS.
+
+**Ce qu'il reste à faire, dans l'ordre :**
+
+1. **Le module lui-même** : un point d'entrée propre, au lieu d'un survol du tableau de bord de
+   session.
+2. **Structure Système crée le corpus** : `corpusId` dérivé du nom, et création de
+   `rules/`, `index/`, `personas/`. Aujourd'hui la Forge crée un pilote avec un identifiant horodaté
+   et rien autour — *et l'inverse existe aussi* : Alien a un corpus complet et **aucun pilote**, donc
+   il n'apparaît dans aucun sélecteur de système.
+3. **Brancher le résolveur** `electron/bookIndex.ts` : il n'a toujours aucun appelant en production.
+   L'afficher **dans la revue**, avant publication, ferait de la vérification une étape du flux au
+   lieu d'une sonde lancée à la main.
+4. **Reforger Alien et Blade Runner** avec les gabarits v3.
+5. **Le sujet libre** n'est injecté qu'à la construction de la liste : le taper après coup ne fait
+   rien, et rafraîchir coûte 72 secondes de requête. Correction simple — recalculer sans requête —
+   **en attente du feu vert de David**.
+6. **Rendre son pilote Blade Runner à « Anges de Feu »** si ce n'est pas déjà fait.
 
 ---
 
@@ -42,6 +60,7 @@ Toutes relevées sur `~/mcp_bridge_debug.log` pendant des forges réelles du car
 | Fiche, gabarit entier | 1 | 5 min 56 s | ✗ dépassement serveur |
 | Fiche, **moitié 1** (règle, valeurs) | 1 | **82 s** | ✓ 2 398 car. |
 | Fiche, **moitié 2** (table, cas limites) | 1 | **89 s** | ✓ 2 439 car. |
+| Fiche, moitiés (moyenne sur 7 requêtes) | 1 | **60 s** | ✓ ~2 min par fiche |
 
 **Le serveur NotebookLM coupe autour de six minutes**, avec
 `{"status":"error","error":"Query failed: The read operation timed out"}`. Ce n'est pas notre plafond
