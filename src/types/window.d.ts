@@ -176,6 +176,12 @@ declare global {
             listDir?: (relativePath: string) => Promise<string[]>;
             /** Supprime un document. Réservé aux brouillons de la Forge. */
             deleteDoc?: (relativePath: string) => Promise<boolean>;
+            /**
+             * Crée les dossiers d'un corpus et rend ceux qui l'ont réellement
+             * été — un dossier déjà présent n'y figure pas. C'est ce qui permet
+             * de distinguer un corpus neuf d'un corpus rejoint.
+             */
+            createCorpus?: (dossiers: string[]) => Promise<string[]>;
             readDoc: (filePath: string) => Promise<string | null>;
             writeDoc: (filePath: string, content: string) => Promise<boolean>;
             extractPdf: (filePath: string) => Promise<string>;

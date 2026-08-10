@@ -4,9 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { 
     Search, BookOpen, Brain, History, Scroll, 
     Zap, Sparkles, FileText, X, ChevronRight,
-    SearchX, Loader2, Plus, Globe, Edit2, Hammer, CheckCircle2, Layers
+    SearchX, Loader2, Plus, Globe, Edit2, Hammer, CheckCircle2, Layers, RefreshCw
 } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
+import { useBrainstormStore } from '../../forge/rules/store/useBrainstormStore';
 
 import type { DocEntry } from '../../ai/RAGService';
 import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
@@ -131,9 +132,23 @@ export const RuleWorkshopViewer: React.FC = () => {
         }
     }, [ragPath, corpus.raison]);
 
+    /**
+     * Nombre de fiches écrites par l'atelier depuis son ouverture.
+     *
+     * **Pourquoi le grimoire regarde la Forge.** L'atelier est un survol rendu
+     * au niveau de l'application : on peut y publier une fiche pendant que le
+     * grimoire reste monté dessous, avec sa liste chargée au montage et jamais
+     * relue. La fiche partait bien sur le disque et n'apparaissait nulle part —
+     * un succès invisible, ce qui se signale encore moins bien qu'une panne.
+     *
+     * Ce compteur monte à chaque écriture et retombe à la fin d'une série : les
+     * deux sont des moments où le disque a changé, donc où il faut le relire.
+     */
+    const fichesEcrites = useBrainstormStore(s => s.savedCandidateIds.length);
+
     useEffect(() => {
         loadDocs();
-    }, [loadDocs, isEditing]); // Trigger on path change or when closing editor
+    }, [loadDocs, isEditing, fichesEcrites]); // chemin, fermeture de l'éditeur, publication
 
     // Parse files to extract metadata (mocking extraction since we don't have frontmatter parsing yet)
     // In a real app, we'd read the first few lines to get the title/category
@@ -341,7 +356,23 @@ export const RuleWorkshopViewer: React.FC = () => {
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <button 
+                    {/*
+                        Relire le disque à la demande.
+                        Le grimoire chargeait sa liste au montage et ne la
+                        relisait plus : une fiche forgée pendant qu'il était
+                        ouvert n'apparaissait jamais, et rien ne disait qu'elle
+                        existait pourtant. Depuis que la Forge est un module à
+                        part, le cas est devenu courant — on forge ailleurs,
+                        pendant que le grimoire regarde une liste périmée.
+                    */}
+                    <button
+                        onClick={() => { void loadDocs(); }}
+                        title={t('modules:session.forge_module.workshop_viewer.refresh')}
+                        className="p-3 bg-app-bg/40 border border-white/5 rounded-2xl text-app-text/40 hover:text-accent hover:border-accent/30 transition-all"
+                    >
+                        <RefreshCw size={16} />
+                    </button>
+                    <button
                         onClick={handleCreateNew}
                         className="px-6 py-3 bg-accent text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-glow-accent/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
                     >

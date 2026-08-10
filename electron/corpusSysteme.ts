@@ -249,6 +249,77 @@ export function cheminDeLIndex(corpus: Corpus): string {
  *
  * Un choix explicite ne se contredit avec rien : ni `contradiction`, ni doute.
  */
+/**
+ * Le corpus qu'un **système neuf** doit déclarer, d'après son seul nom.
+ *
+ * **Le défaut qu'il corrige.** La Forge Système fabrique ses pilotes avec
+ * `custom-${Date.now()}` et ne leur donnait rien d'autre : ni `corpusId`, ni
+ * dossier. Un pilote nommé « Dune : Aventures dans l'Imperium » naissait donc
+ * sans savoir où vit son corpus, et c'est ce trou que `resoudreCorpus` passe son
+ * temps à reboucher par déduction, à chaque lecture et à chaque écriture.
+ *
+ * **Il rejoint un corpus existant plutôt que d'en créer un jumeau.** Le slug du
+ * nom complet est `dune-aventures-dans-l-imperium` ; le dossier réel est `dune`.
+ * Créer le premier à côté du second aurait donné deux corpus pour un jeu, dont
+ * un vide — et l'Oracle aurait continué de citer l'autre. On passe donc par le
+ * même ordre d'autorité que la lecture : une réponse, un seul endroit.
+ *
+ * `aCreer` dit lequel des deux cas s'est produit, et c'est ce qu'il faut montrer
+ * avant d'écrire.
+ */
+export function corpusPourNouveauSysteme(nom: string, dossiersConnus: readonly string[] = []): Corpus {
+    return resoudreCorpus({ systemId: slug(nom), systemName: nom, dossiersConnus });
+}
+
+/**
+ * Les dossiers qu'un corpus doit posséder pour être utilisable.
+ *
+ * Trois artefacts, trois destinations, et **aucun n'est facultatif** : sans
+ * `rules/` la Forge écrit dans le vide, sans `index/` le résolveur de pages n'a
+ * rien à charger et les citations redeviennent invérifiables, sans `personas/`
+ * la passe de voix n'a pas de sortie. Les créer vides coûte trois `mkdir` et
+ * rend le corpus lisible d'un coup d'œil ; les laisser manquer se paie en
+ * `catch {}` silencieux, ce qui est exactement ce qui a rendu les personas de
+ * Dune inertes depuis leur création.
+ */
+export function sousDossiersDuCorpus(corpus: Corpus): string[] {
+    return [cheminDesFiches(corpus), cheminDeLIndex(corpus), `${corpus.racine}/personas`];
+}
+
+/** Ce qu'il faut savoir d'un pilote pour lui demander où vit son corpus. */
+export interface SystemeDeclare {
+    systemId: string;
+    systemName?: string;
+    corpusId?: string;
+    ragPath?: string;
+}
+
+/**
+ * Les corpus présents sur le disque qu'**aucun système ne réclame**.
+ *
+ * **L'autre moitié du défaut.** La Forge Système créait un pilote sans corpus ;
+ * l'inverse existait aussi, et il était plus silencieux encore. Alien a un
+ * corpus complet — fiches, index, personas, huit gemmes — et **aucun pilote**.
+ * Il n'apparaît donc dans aucun sélecteur de système : le travail est là, sur le
+ * disque, et l'application se comporte comme s'il n'existait pas.
+ *
+ * Rien ne le signalait, parce qu'il n'y a rien à signaler du point de vue du
+ * code : on ne remarque pas l'absence de ce qu'on n'a jamais listé. D'où cette
+ * fonction, qui pose la question dans l'autre sens — non plus « où est le corpus
+ * de ce système ? » mais « quel système réclame ce corpus ? ».
+ *
+ * Ordre du disque conservé : c'est celui du listage, donc alphabétique.
+ */
+export function corpusOrphelins(
+    dossiersConnus: readonly string[],
+    systemes: readonly SystemeDeclare[],
+): string[] {
+    const reclames = new Set(
+        systemes.map(s => resoudreCorpus({ ...s, dossiersConnus }).id),
+    );
+    return dossiersConnus.filter(d => !reclames.has(normaliseChemin(d)));
+}
+
 export function corpusChoisi(dossier: string, dossiersConnus: readonly string[] = []): Corpus {
     const id = normaliseChemin(dossier);
     return {

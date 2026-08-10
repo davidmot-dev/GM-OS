@@ -11,7 +11,7 @@ import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 import ChronicleForge from './ChronicleForge';
 import { useAIStore } from '../../../stores/useAIStore';
 import { useBrainstormStore } from '../rules/store/useBrainstormStore';
-import { corpusChoisi } from '../../../../electron/corpusSysteme';
+import { corpusChoisi, corpusPourNouveauSysteme, sousDossiersDuCorpus } from '../../../../electron/corpusSysteme';
 import { useForgeStore } from '../store/useForgeStore';
 
 interface NotebookSource {
@@ -331,11 +331,29 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
     }
   };
 
-  const handleForgeSave = () => {
+  /**
+   * Enregistre le pilote forgé — **et son corpus avec lui**.
+   *
+   * **Le défaut corrigé le 2026-08-10.** La Forge créait un pilote portant
+   * `custom-${Date.now()}` et rien autour : aucun `corpusId`, aucun dossier. Un
+   * pilote nommé « Dune : Aventures dans l'Imperium » naissait donc sans savoir
+   * où vit son corpus, et c'est ce trou que `resoudreCorpus` rebouchait par
+   * déduction à chaque lecture et à chaque écriture — jusqu'au jour où la
+   * déduction échouait en silence, laissant les personas de Dune inertes.
+   *
+   * Deux gestes, donc, et le second n'est pas cosmétique : un corpus complet
+   * mais vide **dit ce qu'il attend** ; un corpus absent ne dit rien.
+   */
+  const handleForgeSave = async () => {
     if (!forgeStore.analysisResult || !forgeStore.analysisResult.driver.name || !forgeStore.analysisResult.template.name) return;
 
     const driverId = `custom-${Date.now()}`;
     const templateId = `custom-template-${Date.now()}`;
+    const nom = forgeStore.analysisResult.driver.name;
+
+    // Le corpus se décide ici, par le même ordre d'autorité que la lecture : un
+    // nom qui désigne un dossier réel le rejoint, sinon on en crée un.
+    const corpus = corpusPourNouveauSysteme(nom, dossiersSystemes);
 
     const driver: GameDriver = {
       ...forgeStore.analysisResult.driver as GameDriver,
@@ -343,9 +361,10 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
       templateId,
       author: 'User',
       version: '1.0.0',
-      name: forgeStore.analysisResult.driver.name
+      name: nom,
+      corpusId: corpus.id,
     };
-    
+
     const template: SheetTemplate = {
       ...forgeStore.analysisResult.template as SheetTemplate,
       id: templateId,
@@ -355,7 +374,22 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
 
     saveGameDriver(driver);
     addSheetTemplate(template);
-    
+
+    // La création est annoncée par ce qu'elle a réellement fait, pas par ce
+    // qu'elle a tenté : rejoindre un corpus existant et en créer un neuf sont
+    // deux situations qu'il ne faut pas confondre.
+    const creerCorpus = window.appBridge?.ai?.createCorpus;
+    const crees = creerCorpus
+      ? await creerCorpus(sousDossiersDuCorpus(corpus)).catch(() => null)
+      : null;
+    if (crees === null) {
+      addLog(t('modules:session.forge_module.corpus_unavailable', { racine: corpus.racine }));
+    } else if (crees.length > 0) {
+      addLog(t('modules:session.forge_module.corpus_created', { racine: corpus.racine, nombre: crees.length }));
+    } else {
+      addLog(t('modules:session.forge_module.corpus_joined', { racine: corpus.racine }));
+    }
+
     addLog(t('modules:session.forge_module.sync_success'));
     forgeStore.reset();
   };

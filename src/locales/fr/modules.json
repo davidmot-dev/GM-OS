@@ -1479,8 +1479,12 @@
         "save_success": "Règle sauvegardée avec succès.",
         "save_error": "Erreur lors de la sauvegarde.",
         "critical_save_error": "Une erreur critique est survenue lors de la sauvegarde.",
-        "dynamic_render": "Rendu Dynamique"
-      }
+        "dynamic_render": "Rendu Dynamique",
+        "refresh": "Relire le disque"
+      },
+      "corpus_created": "CORPUS CRÉÉ : {{racine}} ({{nombre}} dossiers)",
+      "corpus_joined": "CORPUS REJOINT : {{racine}} — les fiches existantes y restent",
+      "corpus_unavailable": "CORPUS NON CRÉÉ : {{racine}} — le pont est indisponible, à créer à la main"
     },
     "chronicle_forge_module": {
       "title": "FORGE DE CHRONIQUE",
@@ -2014,6 +2018,13 @@
       "cta": {
         "title": "Envie d'optimiser ?",
         "description": "Le System Forge peut extraire la logique de règles complexes directement depuis vos PDF pour automatiser Dice-OS."
+      },
+      "orphans": {
+        "title": "Corpus sans pilote",
+        "description": "Ces dossiers de docs/systems/ contiennent un corpus, mais aucun système ne les réclame : ils n'apparaissent donc dans aucun sélecteur. Leur donner un pilote les rend visibles partout.",
+        "adopt": "Créer le pilote",
+        "adopted": "Pilote créé pour {{nom}} — reste à décrire ses règles.",
+        "driver_description": "Pilote créé pour le corpus « {{dossier}} ». Les règles restent à décrire."
       }
     },
     "template_manager": {

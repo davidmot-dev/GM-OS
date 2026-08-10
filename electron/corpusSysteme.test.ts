@@ -8,6 +8,9 @@ import {
     slug,
     memeIdentite,
     normaliseChemin,
+    corpusPourNouveauSysteme,
+    sousDossiersDuCorpus,
+    corpusOrphelins,
 } from './corpusSysteme';
 
 /** Les dossiers réellement présents sous `docs/systems/` au 2026-08-10. */
@@ -207,5 +210,127 @@ describe('chemins dérivés', () => {
 
     it('vise le chemin exact que lit AIService', () => {
         expect(cheminDesPersonas(corpus)).toBe(`systems/${corpus.id}/gems.json`);
+    });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Le corpus d'un système neuf
+// ─────────────────────────────────────────────────────────────────────────────
+
+describe('corpus d\'un système neuf', () => {
+    /**
+     * Ce que ces tests protègent : **la Forge Système cesse de créer des pilotes
+     * sans corpus**. Elle fabriquait `custom-${Date.now()}` et rien autour ; la
+     * résolution passait sa vie à reboucher ce trou par déduction, et le jour où
+     * la déduction échouait — un `catch {}` sur un chemin inexistant — personne
+     * n'en savait rien.
+     */
+
+    it('rejoint le corpus existant que le nom désigne, au lieu d\'en créer un jumeau', () => {
+        // Le slug du nom complet serait `dune-aventures-dans-l-imperium` : un
+        // dossier neuf, vide, à côté du corpus réel qui contient les 17 fiches.
+        const corpus = corpusPourNouveauSysteme("Dune : Aventures dans l'Imperium", DOSSIERS);
+
+        expect(corpus.id).toBe('dune');
+        expect(corpus.racine).toBe('systems/dune');
+        expect(corpus.aCreer, 'un corpus rejoint n\'est pas un corpus à créer').toBe(false);
+    });
+
+    it('crée un dossier pour un jeu qu\'on documente en premier', () => {
+        const corpus = corpusPourNouveauSysteme('Vaesen', DOSSIERS);
+
+        expect(corpus.id).toBe('vaesen');
+        expect(corpus.aCreer).toBe(true);
+    });
+
+    it('ne rapproche pas deux jeux par un préfixe qui n\'en est pas un', () => {
+        // « Alienor » n'est pas « Alien » : sans cette frontière, un jeu neuf
+        // hériterait du corpus d'un autre, et le premier document écrit
+        // contaminerait un corpus déjà vérifié.
+        const corpus = corpusPourNouveauSysteme('Alienor et les Cathares', DOSSIERS);
+
+        expect(corpus.id).not.toBe('alien');
+        expect(corpus.aCreer).toBe(true);
+    });
+
+    it('sans inventaire, ne prétend pas savoir si le dossier existe', () => {
+        /**
+         * `ai:list-systems` vit dans le processus principal : sur une
+         * application rechargée à chaud, la poignée manque et la liste est vide.
+         * Annoncer « dossier neuf » sur cette base serait un mensonge — et
+         * `aCreer` déclenche la création. On préfère ne rien affirmer.
+         */
+        const corpus = corpusPourNouveauSysteme("Dune : Aventures dans l'Imperium", []);
+
+        expect(corpus.aCreer).toBe(false);
+    });
+
+    it('donne les trois dossiers qu\'un corpus doit posséder', () => {
+        const corpus = corpusPourNouveauSysteme('Vaesen', DOSSIERS);
+
+        expect(sousDossiersDuCorpus(corpus)).toEqual([
+            'systems/vaesen/rules',
+            'systems/vaesen/index',
+            'systems/vaesen/personas',
+        ]);
+    });
+
+    it('les dossiers créés sont exactement ceux que la lecture ira chercher', () => {
+        // C'est le seul contrat qui compte : créer ailleurs que là où on lit
+        // est indétectable par construction — ça marche jusqu'au jour où ça
+        // écrit à côté.
+        const corpus = corpusPourNouveauSysteme('Vaesen', DOSSIERS);
+        const crees = sousDossiersDuCorpus(corpus);
+
+        expect(crees).toContain(cheminDesFiches(corpus));
+        expect(crees).toContain(cheminDeLIndex(corpus));
+        // `gems.json` est un fichier, pas un dossier : il vit dans la racine et
+        // c'est `personas/` qui reçoit la fiche de voix.
+        expect(cheminDesPersonas(corpus)).toBe('systems/vaesen/gems.json');
+    });
+});
+
+describe('corpus orphelins', () => {
+    /**
+     * L'autre moitié du défaut, et la plus silencieuse. Alien a un corpus
+     * complet — 17 fichiers, index, huit personas — et aucun pilote : il
+     * n'apparaît donc dans aucun sélecteur de système. On ne remarque pas
+     * l'absence de ce qu'on n'a jamais listé.
+     */
+
+    it('trouve le corpus qu\'aucun système ne réclame', () => {
+        const systemes = [
+            { systemId: 'custom-1', systemName: "Dune : Aventures dans l'Imperium" },
+            { systemId: 'custom-2', systemName: 'Blade Runner' },
+        ];
+        expect(corpusOrphelins(['alien', 'blade-runner', 'dune'], systemes)).toEqual(['alien']);
+    });
+
+    it('reconnaît un corpus réclamé par déclaration autant que par nom', () => {
+        // `corpusId` est le chemin voulu ; le nom affiché n'est qu'un repli. Les
+        // deux doivent compter, sinon un pilote bien configuré passerait pour
+        // absent et on proposerait de créer son doublon.
+        const systemes = [
+            { systemId: 'custom-1', systemName: 'Un nom qui ne dit rien', corpusId: 'alien' },
+            { systemId: 'custom-2', systemName: 'Blade Runner' },
+        ];
+        expect(corpusOrphelins(['alien', 'blade-runner'], systemes)).toEqual([]);
+    });
+
+    it('rend tout le disque quand aucun système n\'est déclaré', () => {
+        expect(corpusOrphelins(['alien', 'dune'], [])).toEqual(['alien', 'dune']);
+    });
+
+    it('ne rend rien quand le disque est vide ou illisible', () => {
+        // Sans inventaire, il n'y a pas d'orphelin : il n'y a pas d'information.
+        expect(corpusOrphelins([], [{ systemId: 'custom-1', systemName: 'Dune' }])).toEqual([]);
+    });
+
+    it('ne compte pas un pilote sans corpus comme réclamant un dossier réel', () => {
+        // Un pilote `custom-<horodatage>` sans nom reconnaissable retombe sur
+        // `systems/custom-…`, qui n'est pas un dossier du disque : il ne doit
+        // donc dédouaner aucun corpus.
+        const systemes = [{ systemId: 'custom-1754832910445', systemName: 'Mon Jeu Maison' }];
+        expect(corpusOrphelins(['alien', 'dune'], systemes)).toEqual(['alien', 'dune']);
     });
 });

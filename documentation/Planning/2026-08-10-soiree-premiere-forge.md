@@ -32,10 +32,7 @@ Trois raisons, la première étant démontrée plutôt qu'argumentée :
 **Ce qu'il reste à faire, dans l'ordre :**
 
 1. ~~**Le module lui-même**~~ — **fait.** Voir le § 1 bis.
-2. **Structure Système crée le corpus** : `corpusId` dérivé du nom, et création de
-   `rules/`, `index/`, `personas/`. Aujourd'hui la Forge crée un pilote avec un identifiant horodaté
-   et rien autour — *et l'inverse existe aussi* : Alien a un corpus complet et **aucun pilote**, donc
-   il n'apparaît dans aucun sélecteur de système.
+2. ~~**Structure Système crée le corpus**~~ — **fait.** Voir le § 1 ter.
 3. **Brancher le résolveur** `electron/bookIndex.ts` : il n'a toujours aucun appelant en production.
    L'afficher **dans la revue**, avant publication, ferait de la vérification une étape du flux au
    lieu d'une sonde lancée à la main.
@@ -79,6 +76,48 @@ la campagne ouverte : en séance, c'est bien la campagne qui décide quel livre 
 demande « quel livre pour cette partie ? », l'autre « quel livre je documente ? ». L'avertissement de
 contradiction disparaît donc de l'atelier (un choix explicite ne se contredit avec rien) et reste
 côté lecture, où la déduction subsiste.
+
+---
+
+## 1 ter. Le corpus et son pilote — un défaut, deux visages
+
+Le même trou, vu des deux côtés, et il se referme d'un seul geste.
+
+**Côté Forge Système : un pilote sans corpus.** Elle fabriquait `custom-${Date.now()}` et rien
+d'autre — pas de `corpusId`, pas de dossier. Un pilote nommé « Dune : Aventures dans l'Imperium »
+naissait sans savoir où vit son corpus, et `resoudreCorpus` passait son temps à reboucher ce trou par
+déduction, à chaque lecture et à chaque écriture. Le jour où la déduction échouait, elle échouait en
+silence : c'est ce qui a laissé les personas de Dune inertes depuis leur création.
+
+Désormais le pilote **déclare** son `corpusId`, et ses dossiers sont créés avec lui —
+`rules/`, `index/`, `personas/`, par `ai:create-corpus`. Deux points de méthode :
+
+- **Il rejoint un corpus existant plutôt que d'en créer un jumeau.** Le slug du nom complet est
+  `dune-aventures-dans-l-imperium` ; le dossier réel est `dune`. `corpusPourNouveauSysteme` passe par
+  le même ordre d'autorité que la lecture — une réponse, un seul endroit — et le journal dit lequel
+  des deux cas s'est produit : *corpus créé* ou *corpus rejoint*. Ce ne sont pas les mêmes nouvelles.
+- **Les dossiers créés sont ceux que la lecture ira chercher**, parce qu'ils viennent de
+  `sousDossiersDuCorpus`. Créer ailleurs que là où l'on lit est indétectable par construction.
+
+**Côté bibliothèque : un corpus sans pilote, et c'était le plus silencieux.** Alien a un corpus
+complet — fiches, index, huit personas — et aucun pilote : il n'apparaissait dans aucun sélecteur.
+Rien ne le signalait, parce qu'il n'y a rien à signaler du point de vue du code : *on ne remarque pas
+l'absence de ce qu'on n'a jamais listé.* `corpusOrphelins` pose donc la question dans l'autre sens —
+non plus « où est le corpus de ce système ? » mais « quel système réclame ce corpus ? » — et
+l'onglet *Pilotes* les affiche avec un bouton pour leur en créer un.
+
+Le pilote ainsi créé est **minimal et honnête** : il déclare `corpusId`, ce qui suffit à faire
+apparaître le système partout, et laisse dés, combat et instructions vides. Inventer des valeurs
+plausibles serait pire que de ne rien mettre — elles s'appliqueraient en séance sans que personne ne
+les ait choisies. Son identifiant est dérivé du dossier (`corpus-alien`), non horodaté : adopter deux
+fois le même corpus met à jour le pilote au lieu d'en créer un jumeau.
+
+**Au passage, un troisième silence du même genre : le Grimoire ne relisait jamais sa liste.** Il la
+chargeait au montage, et l'atelier étant un survol rendu au niveau de l'application, on pouvait y
+publier une fiche pendant qu'il restait monté dessous avec une liste périmée. La fiche partait bien
+sur le disque et n'apparaissait nulle part — *un succès invisible, ce qui se signale encore moins
+bien qu'une panne*. Relevé par David sur sa fiche « Manœuvres des Mentats ». Il relit maintenant à
+chaque publication, et un bouton permet de le forcer.
 
 ---
 

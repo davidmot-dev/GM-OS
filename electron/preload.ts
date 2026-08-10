@@ -89,6 +89,8 @@ contextBridge.exposeInMainWorld('appBridge', {
         listDir: (relativePath: string): Promise<string[]> => ipcRenderer.invoke('ai:list-dir', relativePath),
         /** Supprime un document — les brouillons de la Forge, une fois publies. */
         deleteDoc: (relativePath: string): Promise<boolean> => ipcRenderer.invoke('ai:delete-doc', relativePath),
+        /** Cree les dossiers d'un corpus. Rend ceux qui ont reellement ete crees. */
+        createCorpus: (dossiers: string[]): Promise<string[]> => ipcRenderer.invoke('ai:create-corpus', dossiers),
         readDoc: (filePath: string) => ipcRenderer.invoke('ai:read-doc', filePath),
         writeDoc: (filePath: string, content: string) => ipcRenderer.invoke('ai:write-doc', filePath, content),
         extractPDF: (filePath: string) => ipcRenderer.invoke('ai:extract-pdf', filePath),

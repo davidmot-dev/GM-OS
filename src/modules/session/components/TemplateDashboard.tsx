@@ -3,7 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useSessionStore } from '../../../store/useSessionStore';
 import { DEFAULT_SHEET_TEMPLATES, type SheetTemplate } from '../../../data/defaultSheetTemplates';
-import { Search, Hammer, Trash2, Copy, FileText, Sparkles, CheckCircle2, ChevronRight, Pencil, DownloadCloud, Upload, Eye } from 'lucide-react';
+import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
+import { corpusOrphelins } from '../../../../electron/corpusSysteme';
+import { Search, Hammer, Trash2, Copy, FileText, Sparkles, CheckCircle2, ChevronRight, Pencil, DownloadCloud, Upload, Eye, FolderTree } from 'lucide-react';
 import { gmToast } from '../../../stores/useToastStore';
 import { useModalStore } from '../../../stores/useModalStore';
 import type { GameDriver } from '../../../types/drivers';
@@ -21,6 +23,7 @@ const TemplateDashboard: React.FC = () => {
         addSheetTemplate,
         customGameDrivers,
         deleteGameDriver,
+        saveGameDriver,
         setEditingTemplateId,
         setEditingDriverId,
         templateDashboardTab,
@@ -32,6 +35,68 @@ const TemplateDashboard: React.FC = () => {
     // La Forge est un module, plus une vue de Session OS.
     const setActiveModule = useSessionStore(s => s.setActiveModule);
     const ouvrirLaForge = () => setActiveModule('forge');
+
+    /**
+     * Les corpus posés sur le disque que personne ne réclame.
+     *
+     * **Le défaut, vu de ce côté-ci.** Alien a un corpus complet — fiches,
+     * index, huit personas — et aucun pilote. Il n'apparaît donc dans aucun
+     * sélecteur de système : le travail est là, et l'application se comporte
+     * comme s'il n'existait pas. Rien ne le signalait, parce qu'on ne remarque
+     * pas l'absence de ce qu'on n'a jamais listé.
+     *
+     * C'est le pendant exact du pilote sans corpus que la Forge fabriquait, et
+     * les deux se corrigent au même endroit : ici, on montre l'orphelin et on
+     * propose de lui donner un pilote.
+     */
+    const [dossiersSystemes, setDossiersSystemes] = React.useState<string[]>([]);
+    React.useEffect(() => {
+        window.appBridge?.ai?.listSystems?.().then(setDossiersSystemes).catch(() => setDossiersSystemes([]));
+    }, []);
+
+    const orphelins = React.useMemo(
+        () => corpusOrphelins(
+            dossiersSystemes,
+            [...DEFAULT_GAME_DRIVERS, ...customGameDrivers].map(d => ({
+                systemId: d.id,
+                systemName: d.name,
+                corpusId: d.corpusId,
+                ragPath: d.ragPath,
+            })),
+        ),
+        [dossiersSystemes, customGameDrivers],
+    );
+
+    /**
+     * Donne un pilote à un corpus orphelin.
+     *
+     * Le pilote est **minimal et honnête** : il déclare `corpusId`, ce qui suffit
+     * à faire apparaître le système partout et à ce que lecture et écriture
+     * tombent au bon endroit. Il ne prétend pas connaître les règles du jeu —
+     * dés, combat, instructions restent à la charge de la Forge ou de l'éditeur.
+     * Inventer des valeurs plausibles ici serait pire que de les laisser vides :
+     * elles s'appliqueraient en séance sans que personne ne les ait choisies.
+     */
+    const adopterLeCorpus = (dossier: string) => {
+        const nom = dossier.replace(/[-_]+/g, ' ').replace(/\b\p{Ll}/gu, c => c.toUpperCase());
+        saveGameDriver({
+            // Identifiant dérivé du dossier, non horodaté : adopter deux fois le
+            // même corpus met à jour le pilote au lieu d'en créer un jumeau.
+            // C'est aussi ce qui rend le geste rejouable sans conséquence.
+            id: `corpus-${dossier}`,
+            name: nom,
+            author: 'User',
+            version: '1.0.0',
+            description: t('modules:session.template_dashboard.orphans.driver_description', { dossier }),
+            emoji: '📚',
+            templateId: DEFAULT_SHEET_TEMPLATES[0]?.id ?? '',
+            corpusId: dossier,
+            dice: { engine: 'standard', defaultDice: '1d20', logic: 'sum', successThreshold: 6 },
+            combat: { statsToTrack: [], initiativeFormula: 'dex', initiativeSort: 'desc', defaultHealthType: 'hp' },
+            aiInstructions: '',
+        });
+        gmToast(t('modules:session.template_dashboard.orphans.adopted', { nom }));
+    };
 
     const { showConfirm } = useModalStore();
     const [searchQuery, setSearchQuery] = useState('');
@@ -209,7 +274,44 @@ const TemplateDashboard: React.FC = () => {
 
                 {/* Grid of Items */}
                 <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
-                    {activeTab === 'drivers' && customGameDrivers.length === 0 ? (
+                    {/*
+                        Les corpus sans pilote, annoncés avant la liste.
+                        Un corpus complet qui n'apparaît nulle part est du travail
+                        perdu de vue, pas une anomalie technique : il faut le voir
+                        à l'endroit où l'on gère les systèmes, et pouvoir y
+                        remédier d'un geste.
+                    */}
+                    {activeTab === 'drivers' && orphelins.length > 0 && (
+                        <div className="mb-8 rounded-2xl border border-amber-500/20 bg-amber-500/5 p-6">
+                            <div className="flex items-start gap-3 mb-4">
+                                <FolderTree size={18} className="text-amber-400 mt-0.5 shrink-0" />
+                                <div>
+                                    <h3 className="text-sm font-black text-amber-300 uppercase tracking-tight">
+                                        {t('modules:session.template_dashboard.orphans.title')}
+                                    </h3>
+                                    <p className="text-xs text-amber-200/50 leading-relaxed mt-1">
+                                        {t('modules:session.template_dashboard.orphans.description')}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex flex-wrap gap-3">
+                                {orphelins.map(dossier => (
+                                    <button
+                                        key={dossier}
+                                        onClick={() => adopterLeCorpus(dossier)}
+                                        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-app-bg border border-amber-500/30 hover:border-amber-400 text-amber-200 hover:text-amber-100 transition-all text-xs font-bold"
+                                    >
+                                        <span className="font-mono">{dossier}</span>
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-amber-400/60">
+                                            {t('modules:session.template_dashboard.orphans.adopt')}
+                                        </span>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {activeTab === 'drivers' && customGameDrivers.length === 0 && orphelins.length === 0 ? (
                         <div className="h-full flex flex-col items-center justify-center opacity-20 text-center space-y-4">
                             <Hammer size={64} className="animate-pulse" />
                             <p className="text-xl font-black uppercase tracking-widest">{t('modules:session.template_dashboard.status.no_drivers_found')}</p>

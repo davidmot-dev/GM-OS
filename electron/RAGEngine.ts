@@ -366,6 +366,39 @@ export function registerRagHandlers() {
     });
 
     /**
+     * Crée les dossiers d'un corpus de système.
+     *
+     * **Le défaut qu'il corrige.** La Forge Système créait un pilote et rien
+     * autour : pas de `rules/` où écrire les fiches, pas d'`index/` d'où charger
+     * la pagination du livre, pas de `personas/`. Chacun de ces manques se
+     * traduisait par un silence — un `catch {}` sur un chemin inexistant, un
+     * résolveur sans entrée — et non par une erreur. Un corpus complet mais vide
+     * dit ce qu'il attend ; un corpus absent ne dit rien.
+     *
+     * Les chemins viennent de `sousDossiersDuCorpus` : créer ailleurs que là où
+     * la lecture va chercher serait indétectable par construction.
+     *
+     * Rend la liste de ce qui a **réellement** été créé — un dossier déjà là
+     * n'en fait pas partie. C'est ce qui permet à l'écran de distinguer « corpus
+     * neuf » de « corpus rejoint », deux situations qu'il ne faut pas confondre.
+     */
+    ipcMain.handle('ai:create-corpus', async (_event, dossiers: string[]) => {
+        const root = RAGEngine.getInstance()['docsPath'];
+        const crees: string[] = [];
+        for (const relatif of dossiers) {
+            const complet = path.join(root, relatif);
+            if (!complet.startsWith(root)) {
+                console.error(`[RAG Engine] Security Violation: refus de créer hors de docs: ${complet}`);
+                continue;
+            }
+            if (await fs.pathExists(complet)) continue;
+            await fs.ensureDir(complet);
+            crees.push(relatif);
+        }
+        return crees;
+    });
+
+    /**
      * Supprime un document. Réservé aux brouillons de la Forge.
      *
      * Un brouillon publié dans `rules/` n'a plus de raison d'être : conservé, le

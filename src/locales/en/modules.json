@@ -1450,8 +1450,12 @@
         "save_success": "Rule saved successfully.",
         "save_error": "Error while saving.",
         "critical_save_error": "A critical error occurred while saving.",
-        "dynamic_render": "Dynamic Render"
-      }
+        "dynamic_render": "Dynamic Render",
+        "refresh": "Reload from disk"
+      },
+      "corpus_created": "CORPUS CREATED: {{racine}} ({{nombre}} folders)",
+      "corpus_joined": "JOINED CORPUS: {{racine}} — existing cards are left in place",
+      "corpus_unavailable": "CORPUS NOT CREATED: {{racine}} — bridge unavailable, create it by hand"
     },
     "chronicle_forge_module": {
       "title": "CHRONICLE FORGE",
@@ -1985,6 +1989,13 @@
       "cta": {
         "title": "Want to optimize?",
         "description": "The System Forge can extract the logic of complex rules directly from your PDFs to automate Dice-OS."
+      },
+      "orphans": {
+        "title": "Corpus without a driver",
+        "description": "These docs/systems/ folders hold a corpus that no system claims, so they show up in no selector. Giving them a driver makes them visible everywhere.",
+        "adopt": "Create the driver",
+        "adopted": "Driver created for {{nom}} — its rules still need describing.",
+        "driver_description": "Driver created for the “{{dossier}}” corpus. Rules still to be described."
       }
     },
     "template_manager": {
