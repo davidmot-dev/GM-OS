@@ -97,6 +97,9 @@ describe('ForgeService', () => {
       expect(estErreurAuth({ isError: true, content: [{ text: 'Erreur 401' }] })).toBe(true);
       expect(estErreurAuth({ isError: true, content: [{ text: "Échec de l'authentification" }] })).toBe(true);
       expect(estErreurAuth({ isError: true, content: [{ text: 'La session a expiré' }] })).toBe(true);
+      // Le refus reel de Google, releve le 2026-08-10 : la frontiere de mot
+      // echoue sur UN-AUTHENTICATED, il lui faut donc son propre motif.
+      expect(estErreurAuth(new Error('Google rejected the query (error code 16: UNAUTHENTICATED).'))).toBe(true);
     });
 
     it('n\'invente pas une erreur d\'authentification sur un autre échec', () => {
