@@ -104,25 +104,63 @@ historique et background, bestiaire, scénarios inclus.`;
 }
 
 /**
- * Gabarit 2 — fiche détaillée. À rejouer par sujet, treize fois au minimum.
+ * Gabarit 2, scindé en deux moitiés.
+ *
+ * **Pourquoi la scission.** Mesuré le 2026-08-10 : le gabarit entier dépasse le
+ * délai de lecture du serveur NotebookLM — 356 secondes, puis « Query failed:
+ * The read operation timed out ». L'inventaire, deux fois plus léger, revient en
+ * 72 secondes. Ce n'est pas le nombre de sources qui coince mais le volume
+ * demandé : trois à cinq mille caractères, six sections, une clause détaillée
+ * par jauge.
+ *
+ * **Pourquoi la moitié et pas l'abrègement.** Raccourcir la fiche aurait coûté
+ * du détail — or c'est le détail qui fait la valeur d'une fiche en séance, et
+ * David l'a tranché en ces termes. Deux requêtes coûtent du temps, jamais de la
+ * qualité.
+ *
+ * **La coupure passe où le sujet change de nature.** La première moitié dit ce
+ * que le livre pose — la règle et ses valeurs, la partie vérifiable ; la seconde
+ * dit comment ça se joue et ce qui manque — la partie de jugement. Couper là
+ * garde chaque requête cohérente, et chaque moitié reste lisible seule si
+ * l'autre échoue.
  *
  * **Une seule requête pour toutes les fiches donne des paragraphes, pas des
- * fiches.** C'est la première correction apportée à la proposition initiale, et
- * elle tient toujours.
+ * fiches.** Cette leçon-ci tient toujours : on scinde une fiche, on ne groupe
+ * jamais plusieurs sujets.
  */
-export function gabaritFiche(sujet: string, options?: OptionsGabarit): string {
-  return `Tu rédiges une fiche de règle sur le sujet : « ${sujet} ».
+
+/** Les consignes de rédaction, communes aux deux moitiés. */
+const REGLES_COMMUNES = `- Cite tes sources par TITRE DE SECTION dans le corps du texte, par exemple
+  « (section « Forcer le test ») ». N'indique JAMAIS de numéro de page, ni de
+  numéro de référence interne du carnet : les uns comme les autres sont faux
+  une fois sortis d'ici.
+- Écris tous les symboles en toutes lettres. Si le livre utilise une icône
+  (par exemple pour marquer une réussite), nomme-la au lieu de la reproduire.
+- N'échappe pas la ponctuation : écris « 1. » et « + », jamais « 1\\. » ni « \\+ ».
+- Reste dans ton sujet. Si une règle appartient à un autre sujet de la liste,
+  mentionne-la en une phrase et renvoie vers lui au lieu de la détailler.
+- Ne reformule pas en langage générique de jeu de rôle : garde le vocabulaire
+  exact du jeu.`;
+
+/**
+ * Première moitié : ce que le livre pose.
+ *
+ * Porte les métadonnées, parce que c'est d'elles que dépend le classement de la
+ * fiche — et qu'une moitié orpheline doit rester rangeable.
+ */
+export function gabaritFicheRegle(sujet: string, options?: OptionsGabarit): string {
+  return `Tu rédiges la PREMIÈRE MOITIÉ d'une fiche de règle sur le sujet :
+« ${sujet} ».
 
 Appuie-toi UNIQUEMENT sur les sources de ce carnet. Si elles ne suffisent pas,
 dis-le explicitement plutôt que de compléter.
 
-${consigneStudio(options, "Génère un Markdown que tu sauveras dans le studio, nommé d'après le sujet.")}Réponds DIRECTEMENT par la fiche, dans ta réponse elle-même. Ne dépose rien
-ailleurs et ne réponds pas par un compte rendu : ta réponse est le livrable.
+${consigneStudio(options, "Génère un Markdown que tu sauveras dans le studio, nommé d'après le sujet.")}Réponds DIRECTEMENT par ces trois sections, dans ta réponse elle-même. Ne dépose
+rien ailleurs et ne réponds pas par un compte rendu : ta réponse est le livrable.
 
-Format de sortie : Markdown, 3 000 à 5 000 caractères, structuré exactement
-selon les six sections ci-dessous. N'emploie aucune ligne de tirets « --- » et
-aucun bloc de métadonnées en en-tête : commence directement par la section
-« Métadonnées ».
+Format : Markdown, 1 500 à 2 500 caractères, exactement les trois sections
+ci-dessous et rien d'autre. N'emploie aucune ligne de tirets « --- » et aucun
+bloc de métadonnées en en-tête : commence directement par « ## Métadonnées ».
 
 ## Métadonnées
 - sujet : ${sujet}
@@ -138,6 +176,44 @@ Toutes les valeurs chiffrées en clair, sous forme de liste : seuils, échelles
 ordonnées, durées, modificateurs, nombres de dés. Une échelle se donne dans
 l'ordre, du meilleur état au pire.
 
+Règles de rédaction :
+
+- Si les sources ne couvrent pas du tout ce sujet, rédige quand même ces
+  sections avec « couverture : absente » et explique en une phrase ce que tu as
+  cherché. Ne renvoie jamais une réponse vide.
+- Si le sujet porte sur des jauges ou des ressources, traite CHAQUE jauge
+  séparément et donne pour chacune : ce qu'elle mesure, sa valeur de départ,
+  ses bornes minimale et maximale, si elle monte ou descend quand la situation
+  empire, ce qui la fait bouger dans chaque sens, CE QUI SE PRODUIT À CHAQUE
+  SEUIL, et si elle se dépense (on la consomme volontairement) ou si elle
+  s'accumule (elle subit les événements).
+${REGLES_COMMUNES}
+- N'écris PAS les sections « À la table », « Cas limites » ni « Non couvert » :
+  elles font l'objet d'une seconde demande.`;
+}
+
+/**
+ * Seconde moitié : comment ça se joue, et ce qui manque.
+ *
+ * Le sujet est rappelé en toutes lettres : rien ne garantit que le carnet garde
+ * le fil d'une requête à l'autre, et une seconde moitié qui parlerait d'autre
+ * chose que la première serait pire qu'une moitié absente.
+ */
+export function gabaritFichePratique(sujet: string, options?: OptionsGabarit): string {
+  return `Tu rédiges la SECONDE MOITIÉ d'une fiche de règle sur le sujet :
+« ${sujet} ». La première moitié — la règle et ses valeurs chiffrées — a déjà
+été rédigée : ne la répète pas.
+
+Appuie-toi UNIQUEMENT sur les sources de ce carnet. Si elles ne suffisent pas,
+dis-le explicitement plutôt que de compléter.
+
+${consigneStudio(options, "Génère un Markdown que tu sauveras dans le studio, nommé d'après le sujet.")}Réponds DIRECTEMENT par ces trois sections, dans ta réponse elle-même. Ne dépose
+rien ailleurs et ne réponds pas par un compte rendu : ta réponse est le livrable.
+
+Format : Markdown, 1 500 à 2 500 caractères, exactement les trois sections
+ci-dessous et rien d'autre. N'emploie aucune ligne de tirets « --- ». Commence
+directement par « ## À la table ».
+
 ## À la table
 Comment cela se joue concrètement, tour par tour si pertinent.
 
@@ -150,26 +226,10 @@ Ce que le sujet devrait contenir mais que les sources ne disent pas.
 
 Règles de rédaction :
 
-- Si les sources ne couvrent pas du tout ce sujet, rédige quand même la fiche
-  avec « couverture : absente » et explique en une phrase ce que tu as cherché.
-  Ne renvoie jamais une réponse vide.
-- Cite tes sources par TITRE DE SECTION dans le corps du texte, par exemple
-  « (section « Forcer le test ») ». N'indique JAMAIS de numéro de page, ni de
-  numéro de référence interne du carnet : les uns comme les autres sont faux
-  une fois sortis d'ici.
-- Écris tous les symboles en toutes lettres. Si le livre utilise une icône
-  (par exemple pour marquer une réussite), nomme-la au lieu de la reproduire.
-- N'échappe pas la ponctuation : écris « 1. » et « + », jamais « 1\\. » ni « \\+ ».
-- Reste dans ton sujet. Si une règle appartient à un autre sujet de la liste,
-  mentionne-la en une phrase et renvoie vers lui au lieu de la détailler.
-- Si le sujet porte sur des jauges ou des ressources, traite CHAQUE jauge
-  séparément et donne pour chacune : ce qu'elle mesure, sa valeur de départ,
-  ses bornes minimale et maximale, si elle monte ou descend quand la situation
-  empire, ce qui la fait bouger dans chaque sens, CE QUI SE PRODUIT À CHAQUE
-  SEUIL, et si elle se dépense (on la consomme volontairement) ou si elle
-  s'accumule (elle subit les événements).
-- Ne reformule pas en langage générique de jeu de rôle : garde le vocabulaire
-  exact du jeu.`;
+- Si les sources ne couvrent pas ce sujet, écris-le dans « Non couvert » et
+  garde les deux autres sections courtes. Ne renvoie jamais une réponse vide.
+- Ne réécris ni la règle ni les valeurs chiffrées : elles sont déjà posées.
+${REGLES_COMMUNES}`;
 }
 
 /**

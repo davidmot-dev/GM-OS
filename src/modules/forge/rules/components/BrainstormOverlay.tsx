@@ -231,14 +231,33 @@ export const BrainstormOverlay: React.FC = () => {
     const gen = reserverLeCarnet();
     if (gen === null) return;
     brainstormStore.startForging();
+
+    const cheminBrouillon = `${cheminDesBrouillons(corpus)}/${slugFiche(candidate.title)}.md`;
     try {
+      /**
+       * Une moitié déjà obtenue ne se repaie pas.
+       *
+       * Le brouillon partiel porte la première moitié — règle et valeurs — d'une
+       * fiche dont la seconde requête a échoué. Le gabarit entier dépassait le
+       * délai du serveur à 356 secondes ; scinder ne sert à rien si l'on rejoue
+       * quand même les deux moitiés.
+       */
+      const partiel = await window.appBridge?.ai?.readDoc?.(cheminBrouillon);
+      const moitieDeja = partiel && !/^##\s*À la table/m.test(partiel) ? partiel : undefined;
+
       const card = await forgeService.forgeCard(
         brainstormStore.notebookId,
         candidate,
         // Le frontmatter `systeme:` porte le nom du dossier de corpus : c'est
         // lui que le moteur de selection et le resolveur d'index emploient.
         corpus.id,
-        brainstormStore.selectedSourceIds
+        brainstormStore.selectedSourceIds,
+        {
+          moitieDeja,
+          // La première moitié part sur le disque AVANT la seconde requête :
+          // c'est ce qui rend la scission utile plutôt que seulement plus lente.
+          surMoitie: (regle) => { void window.appBridge?.ai?.writeDoc?.(cheminBrouillon, regle); },
+        },
       );
       if (gen !== generationCourante()) return;   // abandonnée entre-temps
 
@@ -250,6 +269,11 @@ export const BrainstormOverlay: React.FC = () => {
         `${cheminDesBrouillons(corpus)}/${card.slug}.md`,
         card.content,
       );
+      // Le slug définitif vient du sujet canonique : si la première moitié avait
+      // été rangée sous un autre nom, son brouillon partiel resterait orphelin.
+      if (`${cheminDesBrouillons(corpus)}/${card.slug}.md` !== cheminBrouillon) {
+        await window.appBridge?.ai?.deleteDoc?.(cheminBrouillon);
+      }
       brainstormStore.reviewCard(card);
     } catch (err: unknown) {
       if (gen !== generationCourante()) return;

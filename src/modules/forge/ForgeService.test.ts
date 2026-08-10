@@ -218,6 +218,15 @@ describe('ForgeService', () => {
 ## Règle
 L'élan se dépense.`;
 
+      const SECONDE_MOITIE = `## À la table
+On dépense l'élan avant le jet.
+
+## Cas limites
+L'élan se perd en fin de scène.
+
+## Non couvert
+rien`;
+
       const candidat = {
         id: 'monnaie-de-table',
         title: 'Monnaie de table',
@@ -226,18 +235,93 @@ L'élan se dépense.`;
         tags: [],
       };
 
-      it('pose le gabarit de fiche, avec ses six sections et ses interdits', async () => {
+      it('scinde la fiche en deux requetes, la seconde apres la premiere', async () => {
+        /**
+         * Le gabarit entier depassait le delai de lecture du serveur : 356
+         * secondes, puis « Query failed: The read operation timed out ».
+         * L inventaire, deux fois plus leger, revenait en 72 secondes.
+         */
+        callTool
+          .mockResolvedValueOnce({ content: FICHE })
+          .mockResolvedValueOnce({ content: SECONDE_MOITIE });
+
+        await forgeService.forgeCard('nb-1', candidat, 'dune');
+
+        expect(callTool).toHaveBeenCalledTimes(2);
+        expect(requete(0)).toContain('PREMIÈRE MOITIÉ');
+        expect(requete(0)).toContain('## Valeurs');
+        expect(requete(0)).not.toContain('## Cas limites');
+        expect(requete(1)).toContain('SECONDE MOITIÉ');
+        expect(requete(1)).toContain('## Cas limites');
+        expect(requete(1)).not.toContain('## Métadonnées');
+      });
+
+      it('rappelle le sujet dans la seconde moitie', async () => {
+        // Rien ne garantit que le carnet garde le fil d une requete a l autre :
+        // une seconde moitie qui parlerait d autre chose serait pire qu absente.
+        callTool
+          .mockResolvedValueOnce({ content: FICHE })
+          .mockResolvedValueOnce({ content: SECONDE_MOITIE });
+        await forgeService.forgeCard('nb-1', candidat, 'dune');
+        expect(requete(1)).toContain('Monnaie de table');
+      });
+
+      it('assemble les six sections en une seule fiche', async () => {
+        callTool
+          .mockResolvedValueOnce({ content: FICHE })
+          .mockResolvedValueOnce({ content: SECONDE_MOITIE });
+
+        const card = await forgeService.forgeCard('nb-1', candidat, 'dune');
+
+        expect(card.content).toContain('## Règle');
+        expect(card.content).toContain('## À la table');
+        expect(card.content).toContain('## Non couvert');
+      });
+
+      it('remet la premiere moitie avant de lancer la seconde', async () => {
+        /**
+         * C est ce qui rend la scission utile plutot que seulement plus lente :
+         * une moitie acquise ne doit pas dependre du sort de l autre.
+         */
+        const vues: string[] = [];
+        callTool
+          .mockResolvedValueOnce({ content: FICHE })
+          .mockImplementationOnce(async () => {
+            expect(vues).toHaveLength(1);      // deja remise, avant cet appel
+            return { content: SECONDE_MOITIE };
+          });
+
+        await forgeService.forgeCard('nb-1', candidat, 'dune', undefined, {
+          surMoitie: regle => vues.push(regle),
+        });
+
+        expect(vues[0]).toContain('## Règle');
+      });
+
+      it('ne repaie pas une premiere moitie deja obtenue', async () => {
+        callTool.mockResolvedValueOnce({ content: SECONDE_MOITIE });
+
+        const card = await forgeService.forgeCard('nb-1', candidat, 'dune', undefined, {
+          moitieDeja: FICHE,
+        });
+
+        expect(callTool).toHaveBeenCalledTimes(1);
+        expect(requete(0)).toContain('SECONDE MOITIÉ');
+        expect(card.content).toContain('## Règle');
+        expect(card.content).toContain('## À la table');
+      });
+
+      it('pose le gabarit de fiche, avec ses interdits sur les deux moitiés', async () => {
         callTool.mockResolvedValue({ content: FICHE });
         await forgeService.forgeCard('nb-1', candidat, 'dune');
 
-        const prompt = requete();
-        expect(prompt).toContain('« Monnaie de table »');
-        expect(prompt).toContain('## Cas limites');
-        expect(prompt).toContain('## Non couvert');
-        expect(prompt).toContain("N'indique JAMAIS de numéro de page");
+        // Les interdits valent sur les deux moitiés : ils sont communs.
+        expect(requete(0)).toContain('« Monnaie de table »');
+        expect(requete(0)).toContain("N'indique JAMAIS de numéro de page");
         // Sans elle, un sujet non couvert produit du générique plausible.
-        expect(prompt).toContain('couverture : absente');
-        expect(prompt).not.toContain('Markdown riche');
+        expect(requete(0)).toContain('couverture : absente');
+        expect(requete(0)).not.toContain('Markdown riche');
+        expect(requete(1)).toContain("N'indique JAMAIS de numéro de page");
       });
 
       it('rend une fiche convertie, frontmatter compris', async () => {

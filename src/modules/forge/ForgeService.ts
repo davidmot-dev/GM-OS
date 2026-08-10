@@ -3,7 +3,7 @@ import { useAIStore } from '../../stores/useAIStore';
 import type { GameDriver } from '../../types/drivers';
 import type { SheetTemplate } from '../../data/defaultSheetTemplates';
 import type { BrainstormCandidate, BrainstormCard } from './rules/types';
-import { gabaritInventaire, gabaritFiche, promptVoix, promptPersonas } from './rules/gabarits';
+import { gabaritInventaire, gabaritFicheRegle, gabaritFichePratique, promptVoix, promptPersonas } from './rules/gabarits';
 import { lireInventaire } from './rules/inventaire';
 import { convertirFiche } from './rules/conversion';
 import { slugFiche } from './rules/canevas';
@@ -59,6 +59,18 @@ export function estErreurAuth(candidat: unknown): boolean {
   // Le contrat MCP : un outil en échec rend `isError: true`.
   if ((candidat as { isError?: unknown }).isError !== true) return false;
   return texteEvoqueAuth(JSON.stringify(candidat));
+}
+
+export interface OptionsForgeFiche {
+  /**
+   * Première moitié déjà obtenue, tirée d'un brouillon partiel.
+   *
+   * Elle évite de repayer une requête aboutie : c'est tout l'intérêt d'écrire le
+   * brouillon avant la seconde demande.
+   */
+  moitieDeja?: string;
+  /** Appelé dès que la première moitié est là, avant la seconde requête. */
+  surMoitie?: (regle: string) => void;
 }
 
 export interface InventaireForge {
@@ -405,8 +417,28 @@ export class ForgeService {
    * La conversion en frontmatter se fait **ici et pas dans le carnet** : on lui
    * a demandé du YAML, il a pris les `---` pour un séparateur.
    */
-  public async forgeCard(notebookId: string, candidate: BrainstormCandidate, systemId: string, sourceIds?: string[]): Promise<BrainstormCard> {
-    const contenu = await this.interrogerCarnet(notebookId, gabaritFiche(candidate.title), sourceIds);
+  public async forgeCard(
+    notebookId: string,
+    candidate: BrainstormCandidate,
+    systemId: string,
+    sourceIds?: string[],
+    options?: OptionsForgeFiche,
+  ): Promise<BrainstormCard> {
+    // Première moitié : la règle et ses valeurs. Elle porte les métadonnées, donc
+    // elle suffit à classer la fiche même si la seconde échoue.
+    const regle = options?.moitieDeja
+      ?? await this.interrogerCarnet(notebookId, gabaritFicheRegle(candidate.title), sourceIds);
+
+    // On la remet à l'appelant AVANT la seconde requête : une moitié acquise ne
+    // doit pas dépendre du sort de l'autre. Le gabarit entier dépassait le délai
+    // du serveur à 356 secondes — c'est précisément ce qu'on évite en scindant.
+    options?.surMoitie?.(regle);
+
+    const pratique = await this.interrogerCarnet(notebookId, gabaritFichePratique(candidate.title), sourceIds);
+
+    const contenu = `${regle.trim()}
+
+${pratique.trim()}`;
     const fiche = convertirFiche(contenu, { systeme: systemId, sujetDemande: candidate.title });
 
     return {
