@@ -29,7 +29,92 @@ export interface SheetTemplate {
     aiPersonas?: Record<string, string>; // gemId -> instructions
 }
 
+/**
+ * Fiche de « Dune : Aventures dans l'Imperium » — **la fiche de référence**.
+ *
+ * **Pourquoi elle est livrée dans le code.** Jusqu'au 2026-08-10, le seul
+ * gabarit fourni s'appelait « Generic » et ses champs `stat1`, `stat2`,
+ * `info1`. Il n'existait donc aucun exemple de fiche juste : impossible de
+ * juger ce que la Forge Système rendait, faute d'avoir jamais vu à quoi
+ * ressemble un résultat correct.
+ *
+ * **Chaque valeur vient du corpus vérifié**, jamais d'une supposition :
+ * `docs/systems/dune/rules/l-equation-statistique-duale-*.md` pour les bornes
+ * des compétences et des principes, `jauges-et-ressources-individuelles.md`
+ * pour la Détermination. Les fiches elles-mêmes citent leurs sections, et
+ * `bookIndex` les résout en pages du livre.
+ *
+ * **Ce que Dune n'a pas, et qui ne doit surtout pas être ajouté** : aucun point
+ * de vie. « Il n'existe aucune jauge numérique de santé ou de fatigue sur la
+ * feuille de personnage » — les blessures sont des traits négatifs et des
+ * tâches étendues. Une fiche Dune avec des PV serait une fiche fausse.
+ */
+const DUNE_TEMPLATE: SheetTemplate = {
+    id: 'dune',
+    name: "Dune : Aventures dans l'Imperium",
+    emoji: '🏜️',
+    isBuiltin: true,
+    sections: [
+        {
+            id: 'competences',
+            // « La compétence répond à ce que fait le personnage. » Bornes 4 à 8.
+            label: 'Compétences',
+            fields: [
+                { id: 'analyse', label: 'Analyse', type: 'number', defaultValue: 4, max: 8 },
+                { id: 'combat', label: 'Combat', type: 'number', defaultValue: 4, max: 8 },
+                { id: 'discipline', label: 'Discipline', type: 'number', defaultValue: 4, max: 8 },
+                { id: 'mobilite', label: 'Mobilité', type: 'number', defaultValue: 4, max: 8 },
+                { id: 'rhetorique', label: 'Rhétorique', type: 'number', defaultValue: 4, max: 8 },
+            ],
+        },
+        {
+            id: 'principes',
+            // « Le principe répond à pourquoi il agit. » Mêmes bornes : le seuil
+            // d'un test est la somme d'une compétence et d'un principe, soit 8 à 16.
+            label: 'Principes',
+            fields: [
+                { id: 'devoir', label: 'Devoir', type: 'number', defaultValue: 4, max: 8 },
+                { id: 'domination', label: 'Domination', type: 'number', defaultValue: 4, max: 8 },
+                { id: 'foi', label: 'Foi', type: 'number', defaultValue: 4, max: 8 },
+                { id: 'justice', label: 'Justice', type: 'number', defaultValue: 4, max: 8 },
+                { id: 'verite', label: 'Vérité', type: 'number', defaultValue: 4, max: 8 },
+            ],
+        },
+        {
+            id: 'ressources',
+            label: 'Ressources',
+            fields: [
+                // Départ 1, bornes 0 à 3. À zéro, aucune relance ni réussite
+                // automatique ; à trois, les gains sont perdus.
+                { id: 'determination', label: 'Détermination', type: 'gauge', defaultValue: 1, max: 3 },
+                { id: 'progression', label: 'Points de progression', type: 'number', defaultValue: 0 },
+            ],
+        },
+        {
+            id: 'identite',
+            label: 'Identité',
+            fields: [
+                { id: 'maison', label: 'Maison', type: 'text', defaultValue: '' },
+                { id: 'archetype', label: 'Archétype', type: 'text', defaultValue: '' },
+                { id: 'ambition', label: 'Ambition', type: 'textarea', defaultValue: '' },
+            ],
+        },
+        {
+            id: 'traits',
+            // Les traits portent aussi les blessures : « survivre à la défaite »
+            // applique un trait personnel négatif. Pas de jauge, du texte.
+            label: 'Traits, talents et atouts',
+            fields: [
+                { id: 'traits', label: 'Traits', type: 'textarea', defaultValue: '' },
+                { id: 'talents', label: 'Talents', type: 'textarea', defaultValue: '' },
+                { id: 'atouts', label: 'Atouts', type: 'textarea', defaultValue: '' },
+            ],
+        },
+    ],
+};
+
 export const DEFAULT_SHEET_TEMPLATES: SheetTemplate[] = [
+    DUNE_TEMPLATE,
     {
         id: 'generic',
         name: 'Generic',
