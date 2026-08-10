@@ -1389,7 +1389,8 @@
         "corpus_reason_identifiant": "system identifier",
         "corpus_reason_nom-affiche": "matched by system name",
         "corpus_reason_defaut": "no existing folder matches",
-        "corpus_new_folder": "This folder does not exist yet: sheets would land away from the index and personas. Set \"Rules Path\" on the campaign if this is not intended."
+        "corpus_new_folder": "This folder does not exist yet: sheets would land away from the index and personas. Set \"Rules Path\" on the campaign if this is not intended.",
+        "corpus_no_inventory": "Folder inventory unavailable: the app has not been restarted since the update. The folder shown above may be wrong — restart before saving."
       },
       "notebook": {
         "title": "NotebookLM Browser",

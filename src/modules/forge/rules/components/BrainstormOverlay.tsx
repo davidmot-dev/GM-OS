@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useCallback, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useBrainstormStore } from '../store/useBrainstormStore';
 import { forgeService } from '../../ForgeService';
@@ -35,6 +35,24 @@ export const BrainstormOverlay: React.FC = () => {
   const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
   const allDrivers = [...DEFAULT_GAME_DRIVERS, ...customGameDrivers];
 
+  /**
+   * Une requête au carnet à la fois.
+   *
+   * **Relevé en réel le 2026-08-10 : trois inventaires identiques sont partis
+   * dans la même milliseconde, et sur six requêtes lancées, quatre ne sont
+   * jamais revenues.** Le carnet ne tient pas plusieurs conversations de front.
+   *
+   * Le garde-fou est un `ref` et non un état, parce qu'un état ne protège de
+   * rien ici : il n'est visible qu'au rendu suivant, quand les requêtes
+   * concurrentes sont déjà parties. Un `ref` se pose de façon synchrone, avant
+   * le premier `await`.
+   *
+   * Il vaut aussi pour la passe personas, dont les deux prompts doivent
+   * s'enchaîner **dans la même conversation** : une requête intercalée romprait
+   * le fil dont le prompt B dépend.
+   */
+  const requeteEnCours = useRef(false);
+
   const messageErreur = (err: unknown, defaut: string): string =>
     err instanceof Error && err.message ? err.message : defaut;
 
@@ -46,8 +64,25 @@ export const BrainstormOverlay: React.FC = () => {
    * retombe sur l'identifiant du pilote, qui est un horodatage.
    */
   const [dossiersSystemes, setDossiersSystemes] = useState<string[]>([]);
+  /**
+   * Un inventaire vide et un inventaire indisponible ne se ressemblent pas.
+   *
+   * `ai:list-systems` vit dans le processus principal : sur une application
+   * rechargée à chaud sans redémarrage, la poignée est absente. La liste serait
+   * alors vide, la résolution retomberait sur l'identifiant du pilote — un
+   * horodatage — et `aCreer` resterait faux faute d'inventaire pour en juger.
+   * Le bandeau annoncerait donc un mauvais dossier **sans avertir**. On distingue
+   * explicitement les deux cas plutôt que de laisser ce silence.
+   */
+  const [inventaireDisponible, setInventaireDisponible] = useState(true);
   useEffect(() => {
-    window.appBridge?.ai?.listSystems?.().then(setDossiersSystemes).catch(() => setDossiersSystemes([]));
+    if (!window.appBridge?.ai?.listSystems) {
+      setInventaireDisponible(false);
+      return;
+    }
+    window.appBridge.ai.listSystems()
+      .then(dossiers => { setDossiersSystemes(dossiers); setInventaireDisponible(true); })
+      .catch(() => setInventaireDisponible(false));
   }, []);
 
   /**
@@ -71,7 +106,8 @@ export const BrainstormOverlay: React.FC = () => {
     : '';
 
   const handleDiscover = useCallback(async () => {
-    if (!brainstormStore.notebookId) return;
+    if (!brainstormStore.notebookId || requeteEnCours.current) return;
+    requeteEnCours.current = true;
     brainstormStore.setProcessing(true);
     try {
       const discovered = await forgeService.discoverCandidates(
@@ -90,6 +126,8 @@ export const BrainstormOverlay: React.FC = () => {
       );
     } catch (err: unknown) {
       brainstormStore.setError(messageErreur(err, t('session.forge_module.atelier.error_title')));
+    } finally {
+      requeteEnCours.current = false;
     }
   }, [brainstormStore.notebookId, brainstormStore.selectedSourceIds, t, brainstormStore.setProcessing, brainstormStore.setCandidates, brainstormStore.setError]);
 
@@ -105,6 +143,8 @@ export const BrainstormOverlay: React.FC = () => {
         brainstormStore.setError(t('session.forge_module.atelier.error_no_system'));
         return;
     }
+    if (requeteEnCours.current) return;
+    requeteEnCours.current = true;
     brainstormStore.startForging();
     try {
       const card = await forgeService.forgeCard(
@@ -116,6 +156,8 @@ export const BrainstormOverlay: React.FC = () => {
       brainstormStore.reviewCard(card);
     } catch (err: unknown) {
       brainstormStore.setError(messageErreur(err, t('session.forge_module.atelier.error_title')));
+    } finally {
+      requeteEnCours.current = false;
     }
   };
 
@@ -148,6 +190,8 @@ export const BrainstormOverlay: React.FC = () => {
       brainstormStore.setError(t('session.forge_module.atelier.error_no_system'));
       return;
     }
+    if (requeteEnCours.current) return;
+    requeteEnCours.current = true;
     brainstormStore.startPersonas();
     try {
       const resultat = await forgeService.forgePersonas(
@@ -157,6 +201,8 @@ export const BrainstormOverlay: React.FC = () => {
       brainstormStore.setPersonas(resultat);
     } catch (err: unknown) {
       brainstormStore.setError(messageErreur(err, t('session.forge_module.atelier.error_title')));
+    } finally {
+      requeteEnCours.current = false;
     }
   };
 
@@ -339,11 +385,11 @@ export const BrainstormOverlay: React.FC = () => {
           */}
           {corpus && (
             <div className={`mb-6 px-6 py-4 rounded-2xl border flex items-start gap-4 ${
-              corpus.aCreer
+              corpus.aCreer || !inventaireDisponible
                 ? 'bg-amber-500/10 border-amber-500/20'
                 : 'bg-white/5 border-white/5'
             }`}>
-              <FolderTree size={16} className={corpus.aCreer ? 'text-amber-400 mt-0.5' : 'text-purple-400/60 mt-0.5'} />
+              <FolderTree size={16} className={corpus.aCreer || !inventaireDisponible ? 'text-amber-400 mt-0.5' : 'text-purple-400/60 mt-0.5'} />
               <div className="min-w-0">
                 <p className="text-[10px] font-black uppercase tracking-widest text-white/20">
                   {t('session.forge_module.atelier.corpus_target')}
@@ -357,6 +403,11 @@ export const BrainstormOverlay: React.FC = () => {
                 {corpus.aCreer && (
                   <p className="text-xs text-amber-200/60 leading-relaxed mt-2">
                     {t('session.forge_module.atelier.corpus_new_folder')}
+                  </p>
+                )}
+                {!inventaireDisponible && (
+                  <p className="text-xs text-amber-200/60 leading-relaxed mt-2">
+                    {t('session.forge_module.atelier.corpus_no_inventory')}
                   </p>
                 )}
               </div>
