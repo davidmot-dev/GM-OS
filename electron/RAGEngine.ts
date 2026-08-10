@@ -347,6 +347,34 @@ export function registerRagHandlers() {
         return entrees.filter(e => e.isDirectory()).map(e => e.name);
     });
 
+    /**
+     * Supprime un document. Réservé aux brouillons de la Forge.
+     *
+     * Un brouillon publié dans `rules/` n'a plus de raison d'être : conservé, le
+     * dossier redeviendrait une décharge, et deux versions de la même fiche
+     * cohabiteraient — le défaut qu'on vient de corriger pour le corpus v1.
+     *
+     * Le garde-fou est le chemin : hors de `docs/`, on refuse. Comme pour
+     * l'écriture, c'est la seule barrière, et elle doit tenir seule.
+     */
+    ipcMain.handle('ai:delete-doc', async (_event, relativePath: string) => {
+        const root = RAGEngine.getInstance()['docsPath'];
+        const fullPath = path.join(root, relativePath);
+        if (!fullPath.startsWith(root)) {
+            console.error(`[RAG Engine] Security Violation: refus de supprimer hors de docs: ${fullPath}`);
+            return false;
+        }
+        try {
+            if (!await fs.pathExists(fullPath)) return true;   // déjà absent : rien à faire
+            await fs.remove(fullPath);
+            RAGEngine.getInstance().updateIndex();
+            return true;
+        } catch (error) {
+            console.error('[RAG Engine] Error deleting doc:', error);
+            return false;
+        }
+    });
+
     ipcMain.handle('ai:extract-pdf', async (_event, relativePath: string) => {
         const root = RAGEngine.getInstance()['docsPath'];
         const fullPath = path.join(root, relativePath);

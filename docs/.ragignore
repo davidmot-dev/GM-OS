@@ -9,3 +9,13 @@
 # des campagnes expliquent où coller un chemin de configuration : servis comme
 # lore à l'Oracle, ils déplacent du vrai contenu hors du budget.
 README.md
+
+# Brouillons de la Forge : une fiche revenue du carnet, pas encore relue.
+#
+# Elle s'ecrit des le retour pour qu'une generation d'une a deux minutes ne soit
+# jamais perdue — mais elle n'a franchi aucune revue. La citer en seance
+# reviendrait a donner autorite a ce qui n'en a pas encore : c'est precisement
+# le defaut que la revue avant ecriture existe pour empecher.
+#
+# Le dossier est vide en temps normal : un brouillon publie est supprime.
+drafts/

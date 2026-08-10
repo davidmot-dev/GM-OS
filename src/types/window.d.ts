@@ -172,6 +172,8 @@ declare global {
             listDocs: () => Promise<AIDocument[]>;
             /** Dossiers presents sous docs/systems/. */
             listSystems?: () => Promise<string[]>;
+            /** Supprime un document. Réservé aux brouillons de la Forge. */
+            deleteDoc?: (relativePath: string) => Promise<boolean>;
             readDoc: (filePath: string) => Promise<string | null>;
             writeDoc: (filePath: string, content: string) => Promise<boolean>;
             extractPdf: (filePath: string) => Promise<string>;

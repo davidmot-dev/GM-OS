@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
     resoudreCorpus,
     cheminDesFiches,
+    cheminDesBrouillons,
     cheminDesPersonas,
     cheminDeLIndex,
     slug,
@@ -186,6 +187,13 @@ describe('resoudreCorpus', () => {
 describe('chemins dérivés', () => {
     const corpus = resoudreCorpus({
         systemId: 'custom-1', systemName: "Dune : Aventures dans l'Imperium", dossiersConnus: DOSSIERS,
+    });
+
+    it('range le brouillon sous la même racine, à part des fiches', () => {
+        // Un brouillon n'est pas une fiche : il n'a franchi aucune revue, et il
+        // est exclu de l'index de l'Oracle par le `.ragignore` de `docs/`.
+        expect(cheminDesBrouillons(corpus)).toBe('systems/dune/drafts');
+        expect(cheminDesBrouillons(corpus)).not.toBe(cheminDesFiches(corpus));
     });
 
     it('range les trois artefacts sous la même racine', () => {

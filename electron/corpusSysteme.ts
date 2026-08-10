@@ -214,6 +214,23 @@ export function cheminDesPersonas(corpus: Corpus): string {
     return `${corpus.racine}/gems.json`;
 }
 
+/**
+ * Dossier des brouillons — une fiche revenue du carnet, pas encore relue.
+ *
+ * **Pourquoi il existe.** Une fiche coûte une à deux minutes de génération, et
+ * elle était perdue si l'atelier se fermait pendant la revue. Le brouillon
+ * s'écrit dès le retour du carnet, sans revue — un brouillon n'engage rien — et
+ * la revue devient une *publication* vers `rules/`, à froid, plus tard.
+ *
+ * **Exclu de l'index de l'Oracle** par le `.ragignore` de `docs/` : une fiche
+ * non relue ne doit pas être citée en séance. Et **supprimé à la publication** :
+ * conservé, ce dossier redeviendrait une décharge, avec deux versions de chaque
+ * fiche — exactement le défaut corrigé ce matin sur le corpus v1.
+ */
+export function cheminDesBrouillons(corpus: Corpus): string {
+    return `${corpus.racine}/drafts`;
+}
+
 /** Dossier des index de livre, d'où `bookIndex.chargerIndex` charge. */
 export function cheminDeLIndex(corpus: Corpus): string {
     return `${corpus.racine}/index`;

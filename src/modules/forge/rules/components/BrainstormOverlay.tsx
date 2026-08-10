@@ -17,6 +17,7 @@ import {
   resoudreCorpus,
   corpusChoisi,
   cheminDesFiches,
+  cheminDesBrouillons,
   cheminDesPersonas,
 } from '../../../../../electron/corpusSysteme';
 import { slugFiche } from '../canevas';
@@ -240,6 +241,15 @@ export const BrainstormOverlay: React.FC = () => {
         brainstormStore.selectedSourceIds
       );
       if (gen !== generationCourante()) return;   // abandonnée entre-temps
+
+      // Le brouillon part sur le disque AVANT la revue. Une fiche coûte une à
+      // deux minutes de génération : la perdre parce qu'on ferme la fenêtre est
+      // un gâchis que rien ne justifie. Un brouillon n'engage rien — il est
+      // hors de l'index de l'Oracle — et la revue devient une publication.
+      await window.appBridge?.ai?.writeDoc?.(
+        `${cheminDesBrouillons(corpus)}/${card.slug}.md`,
+        card.content,
+      );
       brainstormStore.reviewCard(card);
     } catch (err: unknown) {
       if (gen !== generationCourante()) return;
@@ -258,6 +268,13 @@ export const BrainstormOverlay: React.FC = () => {
       console.log(`[Forge] Saving document to: ${cheminDeLaFiche}`);
       const saveSuccess = await window.appBridge?.ai?.writeDoc(cheminDeLaFiche, card.content);
       if (!saveSuccess) throw new Error(t('session.forge_module.atelier.error_write'));
+
+      // Publiée, la fiche remplace son brouillon. Le garder ferait cohabiter
+      // deux versions du même sujet — le défaut corrigé ce matin sur le corpus
+      // v1, qu'il serait absurde de recréer ici.
+      if (corpus) {
+        await window.appBridge?.ai?.deleteDoc?.(`${cheminDesBrouillons(corpus)}/${card.slug}.md`);
+      }
       brainstormStore.markSaved(card.id);
     } catch (err: unknown) {
       brainstormStore.setError(messageErreur(err, t('session.forge_module.atelier.error_write')));

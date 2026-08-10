@@ -87,6 +87,31 @@ describe('isIgnored', () => {
     });
 });
 
+describe('brouillons de la Forge', () => {
+    /**
+     * Une fiche revenue du carnet s'écrit dans `drafts/` avant toute revue, pour
+     * qu'une génération d'une à deux minutes ne soit jamais perdue. Elle n'a
+     * donc franchi aucun contrôle : la citer en séance donnerait autorité à ce
+     * qui n'en a pas encore, exactement ce que la revue avant écriture empêche.
+     */
+    const portees = () => [{
+        base: '',
+        rules: parseRagIgnore(
+            fs.readFileSync(path.join(__dirname, '..', 'docs', '.ragignore'), 'utf-8'),
+        ),
+    }];
+
+    it('exclut les brouillons de tous les systèmes', () => {
+        expect(isIgnored('systems/dune/drafts', portees(), true)).not.toBeNull();
+        expect(isIgnored('systems/dune/drafts/poursuites.md', portees(), false)).not.toBeNull();
+        expect(isIgnored('systems/alien/drafts/sante-et-blessures.md', portees(), false)).not.toBeNull();
+    });
+
+    it('laisse passer les fiches publiées', () => {
+        expect(isIgnored('systems/dune/rules/poursuites.md', portees(), false)).toBeNull();
+    });
+});
+
 describe('archive du corpus v1 de Dune', () => {
     /**
      * Le corpus v1 est archivé dans `rules-v1/` en attendant sa régénération.
