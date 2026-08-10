@@ -114,12 +114,46 @@ function motsSignifiants(valeur: string): string[] {
     .filter(m => m.length > 0 && !MOTS_VIDES.has(m));
 }
 
-/** Recouvrement du sujet du canevas par le libellé, entre 0 et 1. */
+/**
+ * Recouvrement du sujet du canevas par le libellé, entre 0 et 1.
+ *
+ * **Les mots de la clé sont dédoublonnés, et ce n'est pas un détail.** « Dégâts
+ * et types de dégâts » porte deux fois le mot « dégâts » : sans dédoublonnage,
+ * ce mot **votait deux fois**, et n'importe quel libellé le contenant atteignait
+ * mécaniquement les deux tiers exigés.
+ *
+ * Constaté en réel le 2026-08-10 sur Blade Runner : « Différence mécanique
+ * Humains vs Réplicants (Jets forcés & Dégâts/Stress) » était rabattu sur
+ * « Dégâts et types de dégâts » — un seul mot commun sur neuf. La fiche
+ * changeait de sujet, de slug, et **écrasait la vraie fiche Dégâts**. David l'a
+ * reforgée sept fois sans jamais la voir aboutir.
+ */
 function recouvrement(clef: string, libelle: string): number {
-  const attendus = motsSignifiants(clef);
+  const attendus = [...new Set(motsSignifiants(clef))];
   if (attendus.length === 0) return 0;
   const proposes = new Set(motsSignifiants(libelle));
   return attendus.filter(m => proposes.has(m)).length / attendus.length;
+}
+
+/**
+ * Part du libellé que la clé explique, entre 0 et 1.
+ *
+ * **Le second garde-fou, et le plus général.** Le recouvrement ne regarde que
+ * dans un sens : il demande si la clé se retrouve dans le libellé, jamais si le
+ * libellé ressemble à la clé. Un titre long qui contient par hasard les mots
+ * d'une clé courte passait donc entièrement dans cette clé — un sujet de neuf
+ * mots absorbé par un sujet de deux.
+ *
+ * Le seuil est volontairement bas : « Monnaie de table ou ressource partagée »
+ * n'est expliqué qu'à moitié par « Monnaie de table », et c'est pourtant bien le
+ * même sujet. On écarte ce qui ne se recoupe qu'accessoirement, pas ce qui est
+ * simplement plus précis.
+ */
+function reciprocite(clef: string, libelle: string): number {
+  const proposes = [...new Set(motsSignifiants(libelle))];
+  if (proposes.length === 0) return 0;
+  const attendus = new Set(motsSignifiants(clef));
+  return proposes.filter(m => attendus.has(m)).length / proposes.length;
 }
 
 /**
@@ -128,6 +162,15 @@ function recouvrement(clef: string, libelle: string): number {
  * rien à voir avec lui.
  */
 const SEUIL_RECOUVREMENT = 2 / 3;
+
+/**
+ * Un tiers du libellé, au minimum, doit relever de la clé.
+ *
+ * Bas à dessein : un libellé plus précis que la clé reste le même sujet. Il ne
+ * sert qu'à écarter l'absorption d'un titre long par une clé courte — un mot
+ * commun sur neuf n'est pas un rapprochement, c'est une coïncidence.
+ */
+const SEUIL_RECIPROCITE = 1 / 3;
 
 /**
  * Ramène le libellé rendu par le carnet à la clé canonique du canevas.
@@ -164,10 +207,16 @@ export function clefCanonique(libelle: string): string | null {
 
   // 3. Recouvrement — rattrape les reformulations (« Ambiance et ton visés »).
   //    Un ex æquo est une ambiguïté : on préfère le hors-canevas au mauvais rang.
+  //
+  //    Le rapprochement se juge **dans les deux sens**. La clé doit se retrouver
+  //    dans le libellé, et le libellé doit relever de la clé : un titre de neuf
+  //    mots qui n'en partage qu'un avec une clé de deux n'est pas ce sujet-là,
+  //    quelle que soit la part de la clé qu'il couvre.
   let meilleur: string | null = null;
   let meilleurScore = 0;
   let exAequo = false;
   for (const sujet of CANEVAS) {
+    if (reciprocite(sujet.clef, libelle) < SEUIL_RECIPROCITE) continue;
     const score = recouvrement(sujet.clef, libelle);
     if (score > meilleurScore) {
       meilleurScore = score;

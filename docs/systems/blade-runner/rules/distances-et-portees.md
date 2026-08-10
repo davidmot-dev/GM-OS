@@ -2,62 +2,58 @@
 sujet: Distances et portées
 systeme: blade-runner
 couverture: complète
-origine_supposee: SOCLE   # avis NotebookLM, non fiable (cf. plan corpus 4.6)
-sources: BRN-01_LivreDeRegles.pdf p. 64, p. 65, p. 66-67, p. 68-69, p. 70, p. 77, p. 80, p. 81
-pages_fiables: false
+hors_canevas: false
+sources: "BRN-01_LivreDeRegles.pdf"
+sections: "« ZONES ET PORTÉE » ; « BORDURES ET LIGNE DE VUE » ; « CATÉGORIES DE PORTÉES » ; « COMBAT À DISTANCE » ; « MOUVEMENT » ; « POURSUITES »"
 genere_par: notebooklm
+gabarit: v3
 relu: false
 ---
 
 # Distances et portées
 
 ## Règle
-
-Dans *Blade Runner : Le Jeu de Rôle*, la gestion des distances ne s'effectue pas avec des mesures métriques précises sur une grille tactique, mais par un système abstrait de **Zones** et de **Portées** 1-3. Le champ de bataille (représenté sur un plan ou décrit oralement) est découpé en zones distinctes 2.  
-Les distances entre les différents combattants ou objets sont classées selon **cinq catégories de portées abstraites** : *Au contact*, *Courte*, *Moyenne*, *Longue* et *Extrême* 1, 3. Les bordures séparant les zones adjacentes peuvent être dégagées ou bloquées, ce qui influence directement les mouvements et la ligne de vue des personnages 4. En combat, chaque personnage dispose à son tour de **1 Mouvement** et de **1 Action** 5. Le mouvement permet de traverser les zones ou de modifier sa portée par rapport à un adversaire 6.
+Pour résoudre les affrontements, le terrain est divisé en zones (section « ZONES ET PORTÉE »). Les bordures délimitant ces zones peuvent être dégagées ou bloquées, ce qui influence le mouvement et la ligne de vue (section « BORDURES ET LIGNE DE VUE »). 
+Pour estimer l'éloignement entre personnages, le livre pose cinq catégories de portées abstraites (section « CATÉGORIES DE PORTÉES »). Ces portées déterminent l'admissibilité des mouvements et l'efficacité des attaques (section « COMBAT À DISTANCE »). 
+En combat, le mouvement permet de franchir une zone ou d'engager une cible (section « MOUVEMENT »). Lors d'une course-poursuite, les zones sont mises de côté au profit d'un déplacement s'appuyant directement sur les catégories de portées (section « POURSUITES »).
 
 ## Valeurs
-
-* **Échelle des Portées (de la plus proche/interactive à la plus éloignée)** :  
-* **Au contact** : Juste à côté du personnage (portée obligatoire pour le combat rapproché) 3, 7.  
-* **Courte** : Quelques mètres plus loin, mais située dans la **même zone** que le personnage 3.  
-* **Moyenne** : Située dans une **zone adjacente**, à une distance de **25 mètres maximum** 3.  
-* **Longue** : Située à environ **100 mètres** du personnage (équivalent à une distance de **quatre zones**) 3.  
-* **Extrême** : Située à une distance d'environ **1 kilomètre** 3.  
-* **Échelle de taille des Zones** : De **quelques pas** (dans les environnements encombrés et étroits) jusqu'à **environ 25 mètres** de long (dans les espaces dégagés) 2.  
-* **Économie et modificateurs de déplacement** :  
-* *Mouvement gratuit* : Déplacement d'**une zone** vers une zone adjacente, ou passage de la portée *Courte* à la portée *Au contact* au sein de la même zone 6.  
-* *Action de course* : Consomme **1 Action**. Nécessite d'être debout et de réussir un jet de *Mobilité*. Chaque réussite permet d'effectuer **1 mouvement supplémentaire** 8.  
-* *Ramper* : Se déplacer en étant couché consomme **1 Action** 9.  
-* **Modificateurs de combat liés aux portées** :  
-* *Tir avec ennemi Au contact* : Effectuer une attaque à distance alors qu'un ennemi actif debout est *Au contact* applique un **Désavantage** au jet d'attaque si la portée minimale de l'arme n'est pas *Au contact* 10.  
-* *Tir sur d'autres cibles* : Si un ennemi actif et conscient est *Au contact* du tireur, celui-ci subit un **Désavantage** s'il tente de cibler un autre adversaire plus éloigné 11.  
-* *Arme hors de portée* : Viser une cible plus proche que la portée minimale de l'arme ou un cran au-delà de sa portée maximale applique un **Désavantage** au jet d' *Armes à feu* 12.  
-* *Embuscade Au contact* : Tenter une embuscade au corps à corps ou à distance à portée *Au contact* applique un **Désavantage** au jet de *Discrétion* préalable 13.  
-* *Embuscade à distance* : Tenter une embuscade à portée *Longue* ou au-delà octroie un **Avantage** au jet de *Discrétion* 13.
+* Échelle ordonnée des catégories de portées (de la plus proche à la plus lointaine) (section « CATÉGORIES DE PORTÉES ») :
+  * Au contact : juste à côté du personnage.
+  * Courte : quelques mètres plus loin, dans la même zone.
+  * Moyenne : à vingt-cinq mètres maximum, dans une zone adjacente.
+  * Longue : à environ cent mètres, soit quatre zones.
+  * Extrême : à environ un kilomètre.
+* Échelle des dimensions de zone (section « ZONES ET PORTÉE ») :
+  * Longueur maximale d'une zone dégagée : environ vingt-cinq mètres.
+  * Longueur minimale : quelques pas dans les milieux encombrés.
+* Échelle des déplacements par Round (section « MOUVEMENT ») :
+  * Déplacement standard : une zone (permet de passer en zone adjacente ou de portée Courte à Au contact).
+  * Action de course : nécessite un jet de Mobilité. Chaque symbole de l'œil obtenu accorde un mouvement supplémentaire.
+  * Action de ramper : une zone de déplacement en étant couché.
+* Modificateurs de portée en combat (section « COMBAT À DISTANCE ») :
+  * Distance inférieure à la portée minimale de l'arme : un désavantage sur le jet d'attaque.
+  * Distance située un cran au-delà de la portée maximale : un désavantage sur le jet d'attaque.
+  * Ennemi actif debout au contact : un désavantage sur les attaques à distance visant d'autres cibles.
+* Poursuites (section « POURSUITES ») :
+  * Portée initiale maximale lors d'une poursuite : portée Longue.
+  * Seuil de fin de poursuite : dépasser la portée Extrême.
 
 ## À la table
+En combat, le terrain se divise en zones (section « ZONES ET PORTÉE »). Durant son tour, franchir une bordure dégagée vers une zone adjacente correspond à la portée Moyenne (section « ACTIONS ET MOUVEMENTS », section « CATÉGORIES DE PORTÉES »). Se déplacer dans la même zone permet de passer de la portée Courte à la portée Au contact (section « ACTIONS ET MOUVEMENTS »).
 
-La gestion des portées et des zones s'applique concrètement tour par tour lors des affrontements :
+Pour tirer avec un blaster PK-D, on évalue la distance en catégories de portées (section « COMBAT À DISTANCE »). Viser hors des portées minimale et maximale de l'arme applique un désavantage au jet d'Armes à feu (section « COMBAT À DISTANCE »).
 
-* **Visualisation** : Le Blade Meneur présente le plan du lieu divisé en zones délimitées 2. Si aucun plan n'est disponible, l'affrontement est résolu mentalement dans le « théâtre de l'esprit » 14.  
-* **Calcul de la portée initiale** : Au début du combat, la distance entre les personnages est établie en catégories de portée (ex : les PJ et le suspect commencent dans la même ruelle, donc à portée *Courte*) 3, 15.  
-* **Phase de Mouvement** : Pendant son tour, le personnage debout peut utiliser son mouvement gratuit pour changer de zone ou s'approcher d'une cible située dans sa zone pour passer à portée *Au contact* 6, 16.  
-* **Résolution de l'Action** :  
-* Si le personnage est parvenu à portée **Au contact**, il peut utiliser son action pour attaquer au corps à corps (jet en opposition de *Corps à corps*) 7, 17, 18.  
-* S'il choisit de rester à distance (portée **Courte** ou plus), il peut utiliser son action pour tirer (jet simple d' *Armes à feu*) à condition d'avoir une ligne de vue dégagée sur la zone de sa cible 4, 12, 17.  
-* **Changement de tour** : Une fois le mouvement et l'action résolus, le tour du personnage prend fin 5.
+En poursuite, les zones sont ignorées (section « POURSUITES »). La distance est suivie directement en crans de portée (section « COMMENCER UNE POURSUITE »). À chaque Round, après la révélation de l'obstacle, les belligérants choisissent secrètement leur manœuvre (section « RÉSOLUTION »). La manœuvre Traque/Fuite exige un jet de Mobilité ou de Conduite : chaque symbole de l'œil obtenu fait varie la distance d'un cran (section « MANŒUVRES DE POURSUITE »).
 
 ## Cas limites
-
-* **Sortir du plan** : Si un combattant décide de fuir et sort des limites physiques du plan de combat, la carte tactique est abandonnée et une **poursuite** s'engage immédiatement 14, 19. Les distances sont alors mesurées uniquement en portées abstraites et non plus en zones 19.  
-* **Zones encombrées** : Entrer dans une zone ayant le trait *Encombrée* requiert un jet immédiat de *Mobilité* (sans coût d'action). En cas d'échec, le personnage subit l'état couché dans la zone 8, 20.  
-* **Zones sombres ou obscurcies** : Les attaques à distance ciblant une zone *Sombre* subissent un **Désavantage** et les projectiles ne peuvent pas la traverser pour atteindre une zone située derrière 20.  
-* **Zones exiguës** : Dans une zone *Exiguë*, l'action *Courir* est interdite. Les personnages sont obligés de ramper (ce qui consomme leur action) et il est interdit de tirer sur une cible située derrière un autre personnage 9, 20.  
-* **Attaques gratuites de désengagement** : Tenter de s'éloigner (mouvement) d'un ennemi actif debout situé à portée *Au contact* nécessite de réussir un jet de *Mobilité*. En cas d'échec, l'adversaire effectue immédiatement une attaque gratuite de combat rapproché avant que le mouvement du personnage ne soit résolu 8, 21.  
-* **Combat à bord d'un Spinner (Altitude)** : Pour les véhicules volants, l'altitude est mesurée verticalement en zones. Lors de son mouvement, le pilote d'un Spinner doit obligatoirement choisir de se déplacer soit à la verticale (changement d'altitude), soit à l'horizontale (changement de zone terrestre) 22.
+Règles des cas particuliers :
+- Bordures bloquées : Elles coupent la ligne de vue et le mouvement (section « BORDURES ET LIGNE DE VUE »). Enfoncer une porte verrouillée exige un jet de Force réussi sans consommer d'action (section « ACTIONS ET MOUVEMENTS »).
+- Désengagement : S'éloigner d'un ennemi actif debout Au contact exige un jet de Mobilité. En cas d'échec, la cible subit une attaque rapprochée gratuite avant de bouger (section « ACTIONS ET MOUVEMENTS », section « ATTAQUES GRATUITES »).
+- Tir Au contact : Cibler un autre adversaire alors qu'un ennemi actif debout est Au contact applique un désavantage (section « COMBAT À DISTANCE »).
+- Zones exiguës : Courir y est interdit, ramper est obligatoire et cibler un ennemi masqué par autrui y est impossible (section « TRAITS DES ZONES »).
+- Zones encombrées : Y pénétrer exige un jet de Mobilité sous peine de tomber Couché (section « TRAITS DES ZONES »).
+- Passagers en véhicule : Ils tirent avec désavantage en poursuite, sauf si le conducteur effectue un Tir statique (section « TIRER DEPUIS UN VÉHICULE »).
 
 ## Non couvert
-
-Les sources de ce carnet ne précisent pas comment calculer précisément les lignes de vue et les portées diagonales ou obliques lorsqu'on combine le déplacement horizontal entre des zones terrestres et le déplacement vertical (l'altitude en zones d'un Spinner) 22. Le livre n'indique pas si un tireur au sol ciblant un Spinner situé à 3 zones d'altitude et à 2 zones horizontales calcule sa portée finale par addition, Pythagore, ou s'il doit simplement appliquer la valeur de distance la plus élevée.  
-📊 *Je peux générer une feuille de référence rapide des modificateurs de combat si vous souhaitez l'avoir sous les yeux pour vos prochaines scènes d'action.*  
+Bien que l'altitude d'un spinner se mesure en zones verticales (section « ALTITUDE »), les sources n'expliquent pas comment combiner cette hauteur avec la distance horizontale pour évaluer la catégorie de portée réelle (de Courte à Extrême) d'un tir dirigé depuis les airs vers une cible au sol.

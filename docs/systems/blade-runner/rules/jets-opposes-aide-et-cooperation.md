@@ -2,59 +2,51 @@
 sujet: Jets opposés, aide et coopération
 systeme: blade-runner
 couverture: complète
-origine_supposee: SOCLE   # avis NotebookLM, non fiable (cf. plan corpus 4.6)
-sources: BRN-01_LivreDeRegles.pdf p. 56-57, p. 59, p. 65-66
-pages_fiables: false
+hors_canevas: false
+sources: "BRN-01_LivreDeRegles.pdf"
+sections: "« JETS EN OPPOSITION » ; « SOUTIEN » ; « JETS DE GROUPE » ; « DISCRÉTION DE GROUPE » ; « OBSERVATION DE GROUPE »"
 genere_par: notebooklm
+gabarit: v3
 relu: false
 ---
 
 # Jets opposés, aide et coopération
 
 ## Règle
+Le système de Blade Runner : Le Jeu de Rôle propose des règles précises lorsque deux partis s'affrontent directement ou s'entraident pour surmonter des épreuves (section « JETS EN OPPOSITION », section « SOUTIEN »).
 
-Le système de résolution de *Blade Runner : Le Jeu de Rôle* intègre des mécaniques spécifiques lorsque deux entités s'affrontent directement, qu'un personnage bénéficie de l'assistance d'un allié, ou qu'un défi doit être surmonté collectivement par le groupe de Blade Runners.  
-**Les Jets en Opposition :**Lorsqu'un personnage tente une action dont l'issue dépend de la résistance active d'un adversaire (comme un combat rapproché, une tentative de persuasion ou une infiltration), un simple succès ne suffit pas 1. Les deux partis effectuent un jet de dés. Pour remporter le duel, l'acteur (le personnage initiant l'action) doit obtenir strictement plus de réussites que son opposant 1. Chaque réussite obtenue par le défenseur annule une réussite de l'attaquant 1. Seul l'acteur a le droit de forcer son jet 1. Les Personnages Non Joueurs (PNJ) ne forcent quant à eux leurs jets que dans de rares situations cruciales impliquant des figures majeures de l'intrigue 2.  
-**Le Soutien (Aide) :**Un personnage peut recevoir l'aide d'un allié (PJ ou PNJ) pour accomplir une tâche difficile 3. Contrairement aux règles d'Avantage classiques qui doublent le dé le plus faible du joueur, le soutien apporte un dé de base supplémentaire directement lié au niveau de compétence de l'assistant 3. Pour apporter son soutien, l'allié doit être physiquement présent, capable d'agir et déclarer son aide avant le lancer 3. En situation de combat, apporter son soutien consomme l'action du Round de l'assistant 4.  
-**Les Jets de Groupe :**Face à un défi qui implique l'ensemble du groupe (en dehors du combat), les joueurs n'effectuent pas de lancers individuels séparés 5. Ils désignent le personnage possédant les meilleures chances de réussite pour effectuer un jet unique 5. Les autres membres du groupe peuvent lui apporter leur soutien s'ils le souhaitent 5. Si ce jet unique échoue, l'échec est collectif et s'applique à tous 5.
+Pour les jets en opposition, l'acteur de l'action s'oppose à la réaction d'un adversaire en lançant ses dés de base (section « JETS EN OPPOSITION »). Pour l'emporter, l'acteur doit obtenir plus de réussites, signalées par le symbole de l'œil, que son opposant (section « JETS EN OPPOSITION »). Chaque symbole de l'œil du défenseur annule un symbole de l'œil de l'attaquant (section « JETS EN OPPOSITION »). Seul l'acteur a le droit de forcer son jet, et il prend cette décision après avoir pris connaissance du lancer de l'opposant (section « JETS EN OPPOSITION »).
+
+Pour s'entraider, un personnage peut apporter son soutien à un allié (section « SOUTIEN »). L'allié doit déclarer son aide avant le lancer de dés et justifier d'une explication logique (section « SOUTIEN »). Il doit être présent et capable d'agir (section « SOUTIEN »). En combat, apporter son soutien consomme l'action du Round de l'assistant, qui ne peut pas aider s'il a déjà joué (section « SOUTIEN »). Au lieu d'accorder un avantage classique, le soutien ajoute au lancer un dé de base dépendant de la compétence de l'allié (section « SOUTIEN »).
+
+Pour relever collectivement un défi, les personnages effectuent un jet de groupe unique (section « JETS DE GROUPE »). Ils désignent le membre ayant les meilleures chances de réussite, et l'échec éventuel s'applique à tous (section « JETS DE GROUPE »). Pour la discrétion de groupe, seul l'enquêteur ayant la compétence la plus basse lance les dés (section « DISCRÉTION DE GROUPE »). Pour l'observation de groupe, un unique joueur lance les dés pour tout le groupe (section « OBSERVATION DE GROUPE »).
 
 ## Valeurs
-
-* **Seuil de victoire (Jet en opposition)** : Nombre de réussites de l'acteur nettes après déduction supérieure à **0** (Acteur  \> Opposant ) 1.  
-* **Modificateur de dé de soutien** : Ajout d'un unique **dé de base** au pool de l'acteur 3.  
-* **Échelle de valeur du dé de soutien** (selon le niveau de compétence de l'allié) 3, 6 :  
-* Compétence Niveau A : **D12**  
-* Compétence Niveau B : **D10**  
-* Compétence Niveau C : **D8**  
-* Compétence Niveau D : **D6**  
-* *Note* : Si l'allié est profane dans la compétence requise (Niveau D), il apporte tout de même un dé D6 3, 6.  
-* **Coût d'action en combat (Soutien)** : **1 Action** par Round (nécessite de retourner sa carte d'initiative face cachée) 4.
+* Seuil de victoire d'un jet en opposition : nombre de symbole de l'œil net de l'acteur supérieur à zéro (section « JETS EN OPPOSITION »).
+* Coût de l'aide en combat : dépense de l'action du Round et retournement de la carte d'initiative (section « SOUTIEN »).
+* Échelle de taille du dé de base additionnel apporté par le soutien de l'allié, selon son niveau de compétence (du meilleur au pire) (section « SOUTIEN ») :
+  * Niveau A : dé à douze faces
+  * Niveau B : dé à dix faces
+  * Niveau C : dé à huit faces
+  * Niveau D : dé à six faces
+* Limite mécanique d'aide : une seule action d'aide par Round, impossible si le tour du Round de l'assistant est déjà passé (section « SOUTIEN »).
+* Limites des lancers collectifs : un unique personnage désigné ou imposé lance les dés pour l'ensemble du groupe (section « JETS DE GROUPE », section « DISCRÉTION DE GROUPE », section « OBSERVATION DE GROUPE »).
 
 ## À la table
+Un jet en opposition se déroule ainsi : l'opposant effectue son lancer de dés de base en premier, puis l'acteur jette ses propres dés (section « JETS EN OPPOSITION ») [1]. Après avoir vu le résultat de l'opposant, l'acteur choisit d'y faire face en forçant éventuellement son jet (section « JETS EN OPPOSITION ») [1]. L'opposant ne peut pas forcer (section « JETS EN OPPOSITION ») [1]. Chaque symbole de l'œil de l'opposant annule un symbole de l'œil de l'acteur ; s'il reste au moins un symbole de l'œil net, l'action réussit (section « JETS EN OPPOSITION ») [1].
 
-**Déroulement d'un Jet en Opposition :**
+Pour apporter du soutien, l'allié déclare son aide avant le lancer de dés (section « SOUTIEN ») [2]. L'acteur ajoute alors un troisième dé de base à son jet correspondant au niveau de compétence de l'allié (section « SOUTIEN ») [2].
 
-1. **Annonce des intentions** : L'acteur déclare son action (ex. : intimider un suspect avec *Manipulation*) et l'opposant déclare sa défense (*Psychologie*) 1.  
-2. **Lancers simultanés** : Les deux participants lancent leurs dés de base respectifs (Attribut + Compétence) 1, 7.  
-3. **Comparaison brute** : Les deux camps comptent leurs réussites 1.  
-4. **Décision de forcer** : L'acteur prend connaissance du résultat de son adversaire. S'il le souhaite (et s'il n'est pas passif), il peut décider de forcer son propre jet en relançant ses dés admissibles, tout en assumant le risque d'obtenir des symboles  (dégâts ou stress) 1, 8. L'adversaire ne peut pas forcer son jet en réaction 1.  
-5. **Résolution finale** : On soustrait les  de l'adversaire de ceux de l'acteur 1. Si le solde d'yeux de l'acteur est d'au moins 1, l'action réussit 1.
-
-**Déroulement du Soutien (Aide) :**
-
-1. **Déclaration** : Avant que l'acteur principal ne lance ses dés, l'assistant annonce comment son personnage intervient physiquement pour l'aider 3.  
-2. **Consommation de l'action** : En combat, l'assistant retourne immédiatement sa carte d'initiative face cachée (il ne pourra plus effectuer d'action à ce Round, et ne peut pas aider s'il a déjà joué son tour) 4.  
-3. **Constitution du pool** : L'acteur prend ses deux dés de base habituels (Attribut + Compétence) et y ajoute le dé correspondant strictement à la valeur de la *Compétence* de l'assistant (sans inclure l'Attribut de ce dernier) 3.  
-4. **Résolution** : L'acteur effectue le lancer avec ce pool de trois dés et résout l'action normalement 3, 9.
+Pour un défi de groupe, les joueurs désignent l'enquêteur le plus qualifié pour effectuer le jet unique (section « JETS DE GROUPE ») [3]. Les autres membres peuvent lui apporter leur soutien (section « JETS DE GROUPE ») [3]. Si le jet échoue, l'échec s'applique collectivement à tous (section « JETS DE GROUPE ») [3].
 
 ## Cas limites
-
-* **Égalité lors d'un jet en opposition** : Si les deux participants obtiennent le même nombre de réussites, l'action se solde par une égalité 10. Pour l'acteur, cela équivaut généralement à un échec 10. En combat rapproché ou dans des cas spécifiques, l'égalité entraîne des conséquences particulières ou nécessite de refaire immédiatement le jet en opposition pour départager les partis 10.  
-* **Cibles passives** : Lorsqu'un PJ est la cible passive d'un jet en opposition (par exemple, un opposant tente de se faufiler en utilisant sa *Discrétion* contre l' *Observation* du PJ), le Blade Meneur peut décider de lancer les dés secrètement à la place du joueur afin de préserver le mystère 10.  
-* **Limites d'aide en combat** : Un personnage ne peut pas apporter son soutien à un allié s'il a déjà accompli son tour d'action durant le Round en cours 4.  
-* **Discrétion de groupe** : Lors d'un déplacement furtif collectif, les joueurs ne lancent pas tous les dés. Seul le Blade Runner ayant le niveau de compétence en *Discrétion* le plus bas effectue le jet, et son résultat s'applique instantanément à l'ensemble du groupe 11.  
-* **Observation de groupe** : À l'inverse, pour fouiller ou guetter collectivement, les joueurs désignent un unique personnage pour effectuer le jet d' *Observation*, et le résultat s'applique au groupe 12.
+Le livre de règles précise plusieurs situations particulières :
+- Égalité : Le jet se solde par un statu quo équivalant à un échec pour l'acteur (section « ÉGALITÉ ») [4]. En combat rapproché, ou s'il faut les départager, les belligérants doivent immédiatement refaire le jet en opposition (section « ÉGALITÉ ») [4].
+- Soutien en combat : L'aide consomme l'action du Round de l'assistant (qui retourne sa carte d'initiative) et est impossible si son tour est déjà passé (section « SOUTIEN ») [5].
+- Interrogatoire : Le jet oppose la Manipulation de l'enquêteur à l'Endurance de la cible, et non sa Psychologie (section « INTERROGATOIRE ») [6]. Retenir le suspect captif confère un avantage à l'enquêteur (section « RAPPORT DE FORCE ») [7, 8].
+- Discrétion collective : Seul l'enquêteur ayant le niveau de compétence le plus bas en Discrétion effectue le lancer pour le groupe (section « DISCRÉTION DE GROUPE ») [9].
+- Observation collective : Un unique joueur désigné effectue le lancer pour le groupe entier (section « OBSERVATION DE GROUPE ») [7].
+- Cible passive : Le Blade Meneur peut lancer secrètement les dés d'un PJ passif pour préserver l'incertitude (section « JETS EN OPPOSITION ») [4].
 
 ## Non couvert
-
-Les sources n'explicitent pas s'il existe une limite physique ou numérique au nombre d'alliés pouvant soutenir simultanément un même jet de dés en dehors du combat (les règles emploient alternativement le singulier "l'allié" et le pluriel "les autres PJ", mais décrivent l'apport d'un unique dé de soutien basé sur "son" niveau de compétence) 3.  
+Le livre de règles ne précise pas s'il est possible pour plusieurs alliés d'apporter simultanément leur soutien à un unique jet d'un acteur en dehors du combat (les règles emploient le singulier "l'allié" mais font aussi référence aux "autres PJ", sans préciser si l'apport de dés de compétence est cumulatif ou limité à un seul dé de base) [2].

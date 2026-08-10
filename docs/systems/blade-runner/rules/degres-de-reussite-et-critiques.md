@@ -2,67 +2,51 @@
 sujet: Degrés de réussite et critiques
 systeme: blade-runner
 couverture: complète
-origine_supposee: SOCLE   # avis NotebookLM, non fiable (cf. plan corpus 4.6)
-sources: BRN-01_LivreDeRegles.pdf p. 54-55, p. 58-59, p. 68-71, p. 71-74, p. 77-78, p. 80-81
-pages_fiables: false
+hors_canevas: false
+sources: "BRN-01_LivreDeRegles.pdf"
+sections: "« RÉUSSITE » ; « RÉUSSITE CRITIQUE » ; « RÉUSSITES MULTIPLES » ; « TOUCHES CRITIQUES » ; « CRITIQUES AGGRAVÉS » ; « DÉS DE CRITIQUE »"
 genere_par: notebooklm
+gabarit: v3
 relu: false
 ---
 
 # Degrés de réussite et critiques
 
 ## Règle
-
-La mécanique de résolution du jeu repose sur l'obtention de « réussites » lors du lancer des deux dés de base (l'un pour l'Attribut, l'autre pour la Compétence) 1. Une réussite est obtenue dès qu'un dé affiche un résultat de 6 ou plus 2, 3. Le nombre de réussites détermine directement le degré de réussite de l'action 2.  
-Une **réussite critique** se produit lorsqu'un joueur accumule deux réussites ou plus sur l'ensemble de ses dés de base 4. En dehors des situations de combat, la réussite critique permet d'atteindre l'objectif fixé tout en bénéficiant d'un bonus supplémentaire narratif ou technique choisi par le joueur et validé par le Blade Meneur 4.  
-En situation de combat, une réussite critique se traduit par une **touche critique** 5, 6. Elle inflige des dégâts accrus à la cible et déclenche immédiatement une **blessure critique** 4-6. Si le nombre de réussites dépasse largement le seuil nécessaire, l'attaquant bénéficie d'un **critique aggravé**, lui offrant un contrôle accru sur la gravité de la blessure infligée à l'adversaire 7.
+Lors d’un jet de compétence, le nombre de symboles de l’œil obtenus détermine la qualité de la réussite (section « RÉUSSITE »). Une réussite simple est acquise dès qu’un dé affiche six ou plus (section « RÉUSSITE »). Un résultat de dix ou plus sur un seul dé compte comme deux réussites (section « RÉUSSITE »).
+Obtenir au moins deux symboles de l’œil déclenche une réussite critique (section « RÉUSSITE CRITIQUE »). Hors combat, cela offre un bonus narratif ou technique au choix du joueur (section « RÉUSSITE CRITIQUE »). 
+En combat, une réussite critique provoque une touche critique (section « TOUCHES CRITIQUES »). Celle-ci inflige des dégâts accrus et une blessure critique immédiate (section « TOUCHES CRITIQUES »). Chaque réussite supplémentaire au-delà du seuil requis pour toucher augmente les dégâts de un point (section « RÉUSSITES MULTIPLES ») et permet d’utiliser la règle des critiques aggravés pour choisir la blessure (section « CRITIQUES AGGRAVÉS »).
 
 ## Valeurs
-
-* **Seuil de réussite standard** : Un résultat de **6 ou plus** sur l'un des dés de base 2, 3.  
-* **Double réussite** : Un résultat de **10 ou plus** (possible uniquement sur un dé de type D10 ou D12) compte immédiatement pour **deux réussites** 2, 3.  
-* **Seuil de réussite critique** : Obtention de **2 réussites ou plus** sur le jet global 4.  
-* **Seuil de touche critique en combat** :  
-* *Combat à distance* : Obtention d'au moins **2 réussites** sur le jet d'attaque 6.  
-* *Combat rapproché* : Obtention d'au moins **2 réussites de plus** que le défenseur lors du jet en opposition 5.  
-* **Dégâts supplémentaires** : Chaque réussite supplémentaire au-delà de la première (ou au-delà du seuil de réussite de l'opposition) augmente les dégâts infligés de **1 point** 5, 6, 8, 9.  
-* **Critique aggravé** : Pour chaque réussite obtenue au-delà du nombre requis pour déclencher la touche critique, l'attaquant lance **1 dé de critique supplémentaire** du même type et choisit le résultat qu'il préfère 7.  
-* **Dé de critique des armes** :  
-* *Armes à distance / Armes de mêlée tranchantes* : Déterminé par la valeur de "Dé de critique" de l'arme (ex: D12 pour un Blaster PK-D .44 Special, D10 pour un fusil d'assaut Ender) 10-12.  
-* *Armes de mêlée percutantes* : Égal au type de dé de **Vigueur** de l'attaquant (ex: D10 si la Vigueur est au niveau B) 13.  
-* **Dés de critique des dangers environnementaux** :  
-* *Chute* : Le dé de critique correspond à la hauteur de la chute en mètres arrondie au supérieur (ex: chute de 7 mètres \= D8 de critique), jusqu'à un maximum de D12 14.  
-* *Explosions* : Le dé de critique dépend directement de la Puissance de l'explosion (Puissance A \= D12, B \= D10, C \= D8, D \= D6) 15.  
-* *Feu et Noyade* : Pas de jet de blessure critique classique ; la victime subit des jets de sauvegarde contre la mort à chaque Round lorsqu'elle est Brisée 16, 17.
+* Seuil de réussite simple : obtenir au moins un symbole de l’œil (résultat de six ou plus sur un dé de base) (section « RÉUSSITE »).
+* Seuil de double réussite sur un dé : résultat de dix ou plus (uniquement sur dé à dix ou douze faces) (section « RÉUSSITE »).
+* Seuil de réussite critique hors combat : au moins deux symboles de l’œil (section « RÉUSSITE CRITIQUE »).
+* Seuil de touche critique (combat à distance) : au moins deux symboles de l’œil sur le jet d’attaque (section « TOUCHES CRITIQUES »).
+* Seuil de touche critique (combat rapproché) : au moins deux symboles de l’œil de plus que le défenseur (section « TOUCHES CRITIQUES »).
+* Dégâts additionnels : + un point par symbole de l’œil excédentaire (section « RÉUSSITES MULTIPLES »).
+* Échelle de bonus de réussite critique hors combat (section « RÉUSSITE CRITIQUE ») :
+  * Agir plus rapidement.
+  * Agir discrètement.
+  * Aider un autre personnage.
+  * Faire forte impression.
+  * Découvrir un élément inattendu.
+* Critique aggravé : un dé de critique supplémentaire lancé par symbole de l’œil excédentaire (section « CRITIQUES AGGRAVÉS »).
+* Dé de critique des armes de mêlée percutantes : égal au dé de Vigueur de l’attaquant (de dé à six faces à dé à douze faces) (section « DÉS DE CRITIQUE »).
 
 ## À la table
+Concrètement, lorsqu'un joueur lance les dés pour résoudre une action difficile hors combat, obtenir au moins deux symboles de l'œil valide une réussite critique (section « RÉUSSITE CRITIQUE »). Le joueur choisit alors un bonus parmi cinq options (comme agir plus rapidement ou faire forte impression) pour agrémenter sa description, avec l'accord du Blade Meneur (section « RÉUSSITE CRITIQUE »).
 
-Lorsqu'un lancer de dés est requis, le joueur et le Blade Meneur procèdent ainsi :
-
-* Le joueur lance ses deux dés de base et compte les réussites 1, 3. Un dé affichant 6 à 9 donne une réussite 2, 3. Un dé affichant 10 ou plus en donne deux 2, 3.  
-* Si le jet ne donne qu'une seule réussite, l'action est réussie normalement 2, 3.  
-* Si le jet donne deux réussites ou plus :  
-* **En dehors du combat** : Le joueur réussit son action avec brio 2. Il choisit un bonus parmi les options suivantes (ou selon les spécificités du Dossier) 4 :  
-* *Agir plus rapidement* 8.  
-* *Agir discrètement* 8.  
-* *Aider un autre personnage* 8.  
-* *Faire forte impression* 8.  
-* *Découvrir un élément inattendu* 8.  
-* **En combat rapproché** : Si l'attaquant obtient au moins deux réussites de plus que son adversaire, il lui inflige les dégâts de son arme (+1 par réussite supplémentaire) et déclenche une blessure critique 5, 18. Il lance le dé de critique de son arme 7.  
-* **En combat à distance** : Si le joueur obtient deux réussites, il touche sa cible, augmente les dégâts de 1 point, et lui inflige une blessure critique 6.  
-* Si le joueur bénéficie d'un **critique aggravé** (grâce à des réussites supplémentaires) 7 :  
-* Il identifie le dé de critique de l'arme 7.  
-* Il lance autant de dés de critique que requis par les réussites excédentaires 7.  
-* Il consulte la table des blessures critiques appropriée (Percutant ou Perforant) et applique le résultat du dé de son choix pour déterminer l'effet de la blessure (ex : dents cassées, poumon perforé, ou mort instantanée) 7, 19, 20.
+En combat, les réussites multiples s'articulent ainsi tour par tour :
+1. L'attaquant fait son jet. S'il obtient au moins deux symboles de l'œil (ou deux de plus que le défenseur en combat rapproché), il inflige une touche critique (section « TOUCHES CRITIQUES »).
+2. Les dégâts de base de l'arme sont augmentés de un point par symbole de l'œil excédentaire au-delà du premier (section « RÉUSSITES MULTIPLES »).
+3. En cas de critique aggravé, l'attaquant lance un dé de critique supplémentaire par symbole de l'œil excédentaire et sélectionne le résultat de son choix sur la table des blessures Percutantes ou Perforantes (section « CRITIQUES AGGRAVÉS »).
 
 ## Cas limites
-
-* **Réussites multiples hors combat** : Obtenir trois réussites ou plus n'a aucune influence mécanique en dehors des affrontements, sauf si le Dossier joué mentionne un effet spécifique 8. Le Blade Meneur applique une résolution purement narrative 4, 8.  
-* **Opposition et annulation** : Dans un jet en opposition (comme le combat rapproché), chaque réussite obtenue par le défenseur annule une réussite de l'attaquant 18, 21. Les touches critiques et les dégâts supplémentaires ne sont calculés qu'à partir des réussites nettes restant après cette annulation 5.  
-* **Annulation par la protection** : Si la cible porte une armure ou un gilet pare-balles, elle effectue un jet de Protection 22. Si les réussites du jet de Protection réduisent les dégâts de l'attaque à 0, la protection annule également la blessure critique qui aurait dû être infligée 22.  
-* **Blessures critiques sans touche critique** : Un personnage qui subit des dégâts alors que sa Santé est déjà à 0 (état Brisé) subit automatiquement une blessure critique à chaque nouvelle attaque, même si l'attaquant n'a pas obtenu de réussite critique 23.  
-* **Dégâts critiques sur les véhicules** : Lorsqu'un véhicule subit une touche critique lors d'une attaque de combat rapproché, le Blade Meneur lance systématiquement un simple D6 sur la table des dégâts critiques des véhicules, sans prendre en compte la Vigueur de l'attaquant 24.
+Le livre de règles précise plusieurs situations particulières :
+- Dégâts nuls : Si la protection de la cible réduit les dégâts d'une touche critique à zéro, la blessure critique associée est annulée (section « PROTECTION »).
+- Cibles Brisées : Toucher un personnage déjà Brisé par les dégâts (Santé à zéro) lui inflige automatiquement une blessure critique, même sans réussite critique de l'attaquant (section « BRISÉ PAR LES DÉGÂTS »).
+- Dangers : Les chutes et explosions provoquent des blessures critiques basées sur la hauteur ou la Puissance (section « CHUTE », section « EXPLOSIONS »). Le feu et la noyade n'utilisent pas les tables de critiques mais imposent des sauvegardes contre la mort round par round (section « FEU », section « NOYADE »).
+- Véhicules : Une touche critique au corps à corps sur un véhicule résout un simple dé à six faces sur la table des dégâts critiques des véhicules, ignorant la Vigueur de l'attaquant (section « DÉGÂTS CRITIQUES DES VÉHICULES »).
 
 ## Non couvert
-
-Rien. Les sources de ce carnet définissent de façon exhaustive l'ensemble des seuils, des modificateurs, des effets des réussites critiques et des blessures critiques (percutantes et perforantes), ainsi que les interactions spécifiques avec les protections et les dangers de l'environnement.  
+Rien.

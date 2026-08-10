@@ -2,63 +2,55 @@
 sujet: Ton, registre et ambiance
 systeme: blade-runner
 couverture: complète
-origine_supposee: UNIVERS   # avis NotebookLM, non fiable (cf. plan corpus 4.6)
-sources: BRN-01_LivreDeRegles.pdf p. 9, p. 18-21, p. 23, p. 55, p. 75, p. 212-213, p. 215-218
-pages_fiables: false
+hors_canevas: false
+sources: "BRN-01_LivreDeRegles.pdf"
+sections: "« THÈMES CLÉS » ; « JOUER À BLADE RUNNER » ; « SÉCURITÉ ÉMOTIONNELLE » ; « POSER L’AMBIANCE » ; « JOUER SCÈNE APRÈS SCÈNE » ; « CE N’EST PAS AU SUJET DE L’AFFAIRE » ; « ANATOMIE D’UN DOSSIER » ; « AUCUNE IMPASSE »"
 genere_par: notebooklm
+gabarit: v3
 relu: false
 ---
 
 # Ton, registre et ambiance
 
 ## Règle
+Le jeu de rôle Blade Runner propose un univers néo-noir de contrastes (section « JOUER À BLADE RUNNER »). L'essence du jeu réside dans la confrontation des personnages joueurs à des dilemmes moraux et personnels exigeants (section « CE N’EST PAS AU SUJET DE L’AFFAIRE »). Le moteur narratif repose sur le dilemme moral : un conflit interne désespéré pour préserver son empathie, son humanité et son code moral face à un monde insensible et corrompu (section « DILEMME MORAL »).
 
-Le jeu de rôle *Blade Runner* est défini comme un **merveilleux univers néo-noir** 1. L'ambiance générale est dictée par des récits de conflits et de contrastes profonds qui explorent **la force de l'empathie, les poisons de la peur et les fardeaux de l'humanité** en des temps inhumains 1.  
-Le jeu s'éloigne de l'héroïsme classique : il s'agit d'une **tragédie humaine inspirante** où le but n'est pas de surmonter l'impossible, mais d'accepter que la victoire puisse vous échapper et de **tenir bon dans l'adversité** 2. Le moteur narratif repose sur le **dilemme moral**, décrivant un voyage émotionnel dichotomique pavé d'ombres et de lumières, où les personnages doivent prendre des décisions impossibles et en assumer les conséquences 3.  
-Chaque scène ou Dossier du Blade Meneur s'articule autour de cinq thèmes clés fondamentaux :
-
-1. **Action et Science-Fiction** : Poursuites haletantes, spinners volant à toute allure et fusillades sous les néons 4.  
-2. **La Tragédie Humaine** : Études sur l'intimité des personnages et leurs réactions face aux défis 5.  
-3. **Machinations Industrielles** : Luttes de pouvoir, espionnage et trahisons entre mégacorporations, politiciens et barons du crime 6.  
-4. **La Quête de l'Âme** : Moments de répit jalonné d'intenses réflexions personnelles et de remise en question de son identité 7.  
-5. **Le Dilemme Moral** : Préservation de son code moral face à la corruption d'un monde insensible 3.
-
-En raison de la noirceur, de la violence et de l'anxiété de ces thématiques, la **sécurité émotionnelle** des joueurs est une priorité absolue 8, 9.
+Le Blade Meneur orchestre la partie comme un réalisateur de film, alternant des phases d'action et des moments de répit propices à la quête de l'âme (section « JOUER SCÈNE APRÈS SCÈNE », section « LA QUÊTE DE L’ÂME »). Pour matérialiser l'ambiance oppressive à la table, il s'appuie sur des éléments physiques et sensoriels précis (section « POSER L’AMBIANCE »). En raison de la nature sombre et violente des thématiques, l'utilisation d'outils de sécurité émotionnelle est indispensable pour garantir un espace sûr (section « SÉCURITÉ ÉMOTIONNELLE »).
 
 ## Valeurs
-
-* **Échelle des facteurs de stress** (mesurant l'intensité psychologique d'une scène, de la plus faible à la pire) :  
-* **Facteur 1** : Être la cible de menaces violentes, voir un allié subir une blessure critique mortelle, découvrir une nouvelle angoissante sur soi ou le monde, ou faire face à un élément de son Souvenir Clé 10.  
-* **Facteur 2** : Assister à la mort d'un personnage allié, subir un interrogatoire ou découvrir quelque chose de grave sur le monde ou soi 10.  
-* **Facteur 3** : Assister à un massacre, se faire torturer ou découvrir un fait modifiant radicalement son identité ou sa vision du monde 11.  
-* **Jauges d'état du personnage** (exprimant la dualité et la fragilité des Blade Runners) :  
-* **Santé (Physique)** : Menant à l'état *Brisé par les dégâts* à **0** 12.  
-* **Sang-froid (Mental)** : Menant à l'état *Brisé par le stress* à **0** 13.  
-* **Division sociale verticale** (représentant la fracture du monde physique et moral) :  
-* **Au-dessus du centième étage** : Les penthouses, l'opulence, le pouvoir, l'éducation et la technologie invisible 14-16.  
-* **Sous le centième étage (niveau de la rue)** : Les taudis, les réfugiés, le Kipple, la survie et la technologie analogique brute 14, 17-19.  
-* **Rythme et économie de jeu** :  
-* **Downtime (Pause)** : Requise obligatoirement après **3 Quarts** d'enquête consécutifs pour éviter le stress accumulé 20, 21.
+* Échelle des outils de sécurité émotionnelle (par ordre d'usage) (section « SÉCURITÉ ÉMOTIONNELLE ») :
+  1. Discussions préparatoires sur les lignes et les voiles (avant).
+  2. Cartes de sécurité émotionnelle (pendant).
+  3. Débriefings d’après-partie (après).
+* Échelle d'immersion de l'ambiance sensorielle (section « POSER L’AMBIANCE ») :
+  1. Éclairage tamisé (basse luminosité, ombres, projecteurs et néons).
+  2. Musique d'ambiance et bandes originales.
+  3. Aides de jeu physiques et tableau de preuves.
+  4. Accessoires, vêtements et répliques.
+* Structure chiffrée d'un Dossier (section « ANATOMIE D’UN DOSSIER », section « AUCUNE IMPASSE ») :
+  * Thèmes clés obligatoires : 5 (action, tragédie humaine, machinations industrielles, quête de l’âme, dilemme moral).
+  * PNJ principaux requis : 3 à 6 par Dossier.
+  * Lieux d'investigation : 10 à 15 par Dossier.
+  * Options de destination simultanées : 3 options.
+  * Pistes d'accès vers un nouveau lieu : 2 façons différentes.
+  * Événements du compte à rebours : 5 événements.
+  * Pauses de décompression : 2 à 4 pauses.
 
 ## À la table
+L'ambiance et le ton se gèrent de manière **cinématographique** :
 
-Le Blade Meneur doit orchestrer la partie comme un **réalisateur de film** 22 :
-
-* **Découpage dynamique** : Jouer scène après scène, couper court dès que l'essentiel d'une interaction ou d'une recherche est obtenu, sans s'attarder sur les temps morts 22.  
-* **Pacing (Pacing)** : **Jouer lentement** 23. Il ne faut pas presser les joueurs, mais les laisser s'imprégner du « pays des merveilles néon-noir » 23. Le Blade Meneur doit savoir ménager des temps de silence pour poser l'ambiance 23.  
-* **Mise en scène sensorielle** :  
-* *L'éclairage* : Baisser la luminosité de la pièce. Utiliser des spots focalisés sur les aides de jeu (plans, photos) tandis que la table reste plongée dans la pénombre ou sous une lumière néon 24.  
-* *La musique* : Diffuser des morceaux d'ambiance et les bandes originales de la franchise (comme Vangelis) 25.  
-* *Les accessoires* : Disposer physiquement les fiches d’indices, cartes et photos pour simuler un véritable tableau de preuves sur la table 25.  
-* **Protocoles de sécurité émotionnelle** : Avant la partie, convenir des **lignes et des voiles** (sujets exclus ou traités hors caméra) 9. Pendant le jeu, utiliser des **cartes de sécurité émotionnelle** pour signaler un inconfort 9. En fin de partie, mener systématiquement un **débriefing** 9.
+* **Découpage** : Le Blade Meneur agit comme un **réalisateur** (section « JOUER SCÈNE APRÈS SCÈNE ») [1]. Il coupe la scène dès que l'action s'essouffle ou qu'un lieu n'a plus d'indice (section « INFORMER LES JOUEURS ») [2].
+* **Séparation** : Pour accentuer l'ambiance noire, les joueurs séparent souvent leurs personnages (section « SÉPARER LE GROUPE ») [3]. Il passe de l'un à l'autre, coupant au **moment de tension** (section « SÉPARER LE GROUPE ») [3, 4]. Les absents utilisent leur AIC pour **commenter à distance** (section « UTILISER L’AIC ») [4].
+* **Rythme** : Le Blade Meneur instaure un **rythme lent** pour laisser l'ambiance s'installer (section « LAISSEZ LES JOUEURS DONNER LE RYTHME ») [5].
+* **Sécurité** : La table s'accorde avant sur les **lignes et voiles**, utilise des cartes de sécurité pendant, et débriefe après (section « SÉCURITÉ ÉMOTIONNELLE ») [6].
 
 ## Cas limites
+Le livre précise plusieurs cas particuliers pour guider le Blade Meneur :
 
-* **Séparer le groupe** : Contrairement aux autres jeux de rôle, *Blade Runner* encourage activement les personnages à enquêter séparément pour couvrir plus de terrain face au compte à rebours du Dossier 26. Le Blade Meneur doit gérer cela en faisant des allers-retours rapides entre les joueurs en cours de scène, tandis que les absents peuvent interagir en tant que spectateurs ou via l'unité AIC de leur personnage 27-29.  
-* **Joueur contre Joueur (PVP)** : Les dilemmes moraux peuvent pousser les Blade Runners à des conclusions divergentes 30. Si les joutes verbales et les confrontations éthiques sont vivement encouragées pour le registre dramatique, les joueurs doivent éviter de franchir le point de non-retour en en venant aux mains (combat physique), car les agents sont censés travailler en équipe 31. Si cela se produit, un ou plusieurs personnages devront être définitivement écartés et remplacés 31.  
-* **L'art de l'échec** : Un jet raté ne doit jamais bloquer l'histoire ou constituer une impasse narrative 32. L'échec doit pousser l'intrigue vers l'avant, quitte à ce que les personnages perdent du temps, prennent plus de risques ou dépensent des chinyens 32.  
-* **La mort comme apothéose** : Le système de combat est mortel 33. Si un personnage meurt, cela ne doit pas être vécu comme un échec, mais comme une **apothéose dramatique** (le sacrifice ultime pour la justice ou son code moral) 34.
+* **Bloqués** : Trouver des indices ne doit **jamais bloquer** le récit (section « AUCUNE IMPASSE ») [7]. L'UDR doit garantir **deux accès différents** vers tout nouveau lieu (section « AUCUNE IMPASSE ») [7]. En dernier recours, Holden intervient, ce qui coûte du temps et un **point de Promotion** (section « AUCUNE IMPASSE ») [7].
+* **Rétention** : Les Blade Runners doivent téléverser leurs indices (section « TRANSMETTRE LES PREUVES ») [8]. Cacher des preuves pour protéger quelqu'un viole les ordres mais rapporte un **point d'Humanité** (section « TRANSMETTRE LES PREUVES ») [8, 9].
+* **Morts** : Le combat est mortel. Si un Blade Runner décède, le joueur crée son **successeur** que Holden présente rapidement, sauf en confrontation finale (section « PERSONNAGES DE REMPLACEMENT ») [10].
+* **Appels** : Sauf de rares exceptions, un Blade Runner ne peut **jamais appeler** une autre mégapole ou colonie (section « AUCUN APPEL LONGUE DISTANCE ») [11].
 
 ## Non couvert
-
-Bien que le livre de règles mentionne et encourage l'usage d'outils de sécurité émotionnelle, il n'en fournit pas de modèle clé en main ni de règles d'application mathématiques, renvoyant explicitement le Blade Meneur à des recherches sur « Internet » pour approfondir ces protocoles 35.  
+Le livre présente les outils de sécurité (section « SÉCURITÉ ÉMOTIONNELLE ») [6] mais n'explique pas comment réagir à l'usage d'une carte de sécurité pendant la partie, renvoyant à des **recherches sur Internet** (section « SÉCURITÉ ÉMOTIONNELLE ») [12]. De plus, aucun mécanisme n'est fourni si un Blade Runner est **surpris à mentir** ou retenir des preuves par ses supérieurs (section « TRANSMETTRE LES PREUVES ») [8].

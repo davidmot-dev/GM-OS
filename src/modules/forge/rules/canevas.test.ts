@@ -45,6 +45,23 @@ describe('clefCanonique', () => {
   it('rend null plutôt que de forcer un rattachement douteux', () => {
     // Une fiche rangée sous un mauvais sujet fausse la comparaison entre jeux ;
     // hors canevas, elle s'en abstient seulement.
+    /**
+     * **Le defaut du 2026-08-10, releve sur Blade Runner.** « Differences
+     * mecaniques Humains vs Replicants (Jets forces & Degats/Stress) » etait
+     * rabattu sur « Degats et types de degats » — un mot commun sur neuf.
+     *
+     * Deux causes cumulees. La cle « Degats et types de degats » porte DEUX fois
+     * le mot « degats », qui votait donc deux fois et suffisait a lui seul a
+     * atteindre les deux tiers. Et le rapprochement ne se jugeait que dans un
+     * sens : personne ne demandait si le libelle relevait de la cle.
+     *
+     * Le cout n'etait pas cosmetique : la fiche changeait de sujet, de slug, et
+     * ECRASAIT la vraie fiche « Degats ». David l'a reforgee sept fois sans
+     * jamais la voir aboutir.
+     */
+    expect(clefCanonique('Différence mécanique Humains vs Réplicants (Jets forcés & Dégâts/Stress)')).toBeNull();
+    expect(clefCanonique('Structure temporelle par Quarts et Pauses')).toBeNull();
+    expect(clefCanonique("Les Ancrages Narratifs (Souvenirs Clés & Relations Clés)")).toBeNull();
     expect(clefCanonique('Santé mentale')).toBeNull();
     expect(clefCanonique('Les Cinq Arènes de Conflit Unifiées')).toBeNull();
     expect(clefCanonique('Le Souvenir Clé')).toBeNull();
