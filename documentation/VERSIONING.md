@@ -10,21 +10,34 @@ propre série de versions. Les deux séries sont indépendantes : elles ne se ra
 | Série | Pile | Branche git | État | Worktree | Point d'entrée |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **6.x** | **Electron** | `feature/tablet-hub-pwa` | **active** | `C:/Projet_David/GM-OS-v5` | `dist-electron/main.js` |
-| **7.x** | **Tauri** | `GM-OS_v7_P2P` | **en pause** (voir ci-dessous) | `C:/Projet_David/GM-OS-v7` | `src-tauri/` (Rust) |
+| **7.x** | **Tauri** | ~~`GM-OS_v7_P2P`~~ → tag `archive/v7-tauri-migration` | **abandonnée** (voir ci-dessous) | — | `src-tauri/` (Rust) |
 
-### La 7.x est en pause depuis le 2026-08-10
+### La branche 7.x a été supprimée le 2026-08-10
 
 Décision de David, dans ses mots : *« je referais une migration plus tard quand l'application sur
-Electron sera finie, si la migration vers Tauri m'apporte quelque chose »*.
+Electron sera finie, si la migration vers Tauri m'apporte quelque chose »*, puis *« on peut même
+supprimer la 7.x car la dette technique ne va que s'accentuer avec le temps »*.
 
-**Conséquence pratique : ne pas chercher à rattraper l'écart.** Au 2026-08-10, `GM-OS_v7_P2P` porte
-9 commits en propre et accuse 131 commits de retard sur la 6.x — et l'écart se creusera. C'est sans
-importance, puisque la migration sera **refaite** et non reprise : ces 9 commits valent comme trace
-d'un premier essai (gestion des fenêtres, modules modernisés, règles d'exclusion Tauri), pas comme
-base à faire converger.
+Le raisonnement tient : **une branche qu'on refera de zéro n'a aucune valeur de convergence.** Au
+moment de la suppression, elle portait 9 commits en propre et 131 commits de retard sur la 6.x, et
+l'écart n'aurait fait que croître.
 
-La branche est donc **conservée sans être maintenue**. Ne pas la fusionner dans la 6.x : elle
-importerait du code orienté Tauri dans une application Electron, pour rien.
+**Rien n'est perdu.** Les 96 commits de la migration restent atteignables par le tag annoté
+`archive/v7-tauri-migration` (pointe `e24a79e`) — abstraction du pont, multimédia, gestion des
+fenêtres et multi-écran, permissions Tauri v2. Pour les consulter :
+
+```sh
+git log archive/v7-tauri-migration          # l'historique
+git switch -c v7-reprise archive/v7-tauri-migration   # repartir de là, si jamais
+```
+
+Un tag ne réclame aucune maintenance et n'encombre pas la liste des branches : c'est ce qui le
+distingue d'une branche « conservée au cas où », laquelle repose la question de sa fusion à chaque
+fois qu'on la voit.
+
+**Le worktree `C:/Projet_David/GM-OS-v7` est désenregistré de git.** Son dossier peut subsister sur
+le disque si un processus en tenait un fichier au moment du retrait : il est alors supprimable à la
+main, sans conséquence.
 
 ### Ce que `main` est vraiment
 
