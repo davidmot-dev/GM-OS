@@ -65,6 +65,44 @@ describe('extraction des entrées', () => {
             .toEqual([{ titre: 'Aperçu du livre de base', page: 4 }]);
     });
 
+    it('lit une page mise en gras par le convertisseur', () => {
+        /**
+         * Relevé le 2026-08-10 sur `Blade Runner_Index.md` : le convertisseur
+         * met les pages en gras, et la règle ne tolérait le gras qu'autour du
+         * titre. Quarante-six entrées tombaient dans le vide — sans que rien ne
+         * le signale, un index pauvre et un index mal lu s'affichant pareil.
+         */
+        expect(extraireEntrees(['**Agripper**<br>**068**'])).toEqual([{ titre: 'Agripper', page: 68 }]);
+    });
+
+    it('apparie une colonne de titres avec la colonne de pages qui la suit', () => {
+        /**
+         * La forme que prend un index imprimé sur plusieurs colonnes une fois
+         * converti en Markdown : les titres d'une colonne tombent dans une
+         * cellule, leurs pages dans la cellule voisine, chacun à son rang.
+         * Ligne réelle du fichier Blade Runner — 281 paires que les règles
+         * ligne à ligne ne voyaient pas.
+         */
+        const ligne = '|**Cafés connectés**<br>**Catégories de portées**|**206**<br>**064**<br>|';
+        expect(extraireEntrees([ligne])).toEqual([
+            { titre: 'Cafés connectés', page: 206 },
+            { titre: 'Catégories de portées', page: 64 },
+        ]);
+    });
+
+    it('refuse d\'apparier deux colonnes qui ne s\'alignent pas', () => {
+        // Une entrée d'index fausse est pire qu'une entrée absente : elle donne
+        // une page à un titre qui n'est pas là. Sans alignement, on se tait.
+        expect(extraireEntrees(['|**Un titre**<br>**Un autre**|**042**|'])).toEqual([]);
+    });
+
+    it('ne rend pas deux fois la même paire quand deux règles la voient', () => {
+        // Les règles se recouvrent volontairement — chacune rattrape ce que les
+        // autres laissent. Le doublon est un artefact de cette redondance, pas
+        // une information de l'index.
+        expect(extraireEntrees(['|**SOUVENIR CLÉ**|**030**|'])).toEqual([{ titre: 'SOUVENIR CLÉ', page: 30 }]);
+    });
+
     it('rejette ce qui n\'est pas une page', () => {
         // Une « page » à quatre chiffres est un index de carnet, pas une page.
         expect(extraireEntrees(['Résolution des jets.........1587'])).toEqual([]);
@@ -185,6 +223,39 @@ describe('index réels', () => {
         const r = creerResolveur(chargerIndex(DOCS, 'alien'));
         const res = r.resoudre('Règles de conduite du Bene Gesserit sur Arrakis');
         expect(res.statut).toBe('introuvable');
+    });
+
+    it('chaque livre rend un index exploitable, pas seulement Dune', () => {
+        /**
+         * **Le rendement se protège par un plancher, sinon sa perte est
+         * invisible.** Le 2026-08-10, Blade Runner rendait 63 titres uniques
+         * contre 539 pour Dune, et la conclusion qui s'imposait était « son
+         * index est pauvre ». Il ne l'était pas : deux formes du convertisseur
+         * n'étaient pas lues — pages en gras, colonnes appariées. Un index mal
+         * lu et un index pauvre s'affichent exactement pareil, et c'est la
+         * fiche qui prend le blâme au moment de la revue.
+         *
+         * Les seuils sont sous les valeurs relevées après correction
+         * (539 / 298 / 357) : ils attrapent un effondrement, pas une variation.
+         */
+        const plancher: Record<string, number> = { dune: 450, 'blade-runner': 250, alien: 300 };
+        for (const systeme of SYSTEMES) {
+            const taille = creerResolveur(chargerIndex(DOCS, systeme)).taille;
+            expect(taille, `${systeme} : ${taille} titres uniques`).toBeGreaterThan(plancher[systeme]);
+        }
+    });
+
+    it('Blade Runner sépare son sommaire de son index alphabétique', () => {
+        /**
+         * Convention retenue avec David : `<Livre>_TOC.md` pour le sommaire,
+         * `<Livre>_Index.md` pour l'index alphabétique. **Il faut les deux** —
+         * l'alphabétique donne des résolutions que le sommaire ne donne pas, et
+         * inversement. Les garder dans un seul fichier ne perdait aucune
+         * entrée, mais rendait impossible de dire lequel des deux manquait.
+         */
+        const sources = chargerIndex(DOCS, 'blade-runner').sources;
+        expect(sources.some(s => s.endsWith('_TOC.md'))).toBe(true);
+        expect(sources.some(s => s.endsWith('_Index.md'))).toBe(true);
     });
 
     it('Dune atteste une pagination qui s\'arrête bien avant les pages citées', () => {

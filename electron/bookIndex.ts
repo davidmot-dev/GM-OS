@@ -112,28 +112,83 @@ export function paragraphesDocx(cheminOuXml: string, estXml = false): string[] {
     return out.filter(Boolean);
 }
 
+/** Fragments d'une cellule, séparés par `<br>`, débarrassés du gras. */
+function fragments(cellule: string): string[] {
+    return cellule.split('<br>').map(f => f.replace(/\*+/g, '').trim()).filter(Boolean);
+}
+
+const estUnTitre = (f: string) => /[a-zA-ZÀ-ÿ]{3}/.test(f) && !/^\d/.test(f);
+const estUnePage = (f: string) => /^\d{1,3}$/.test(f);
+
+/**
+ * Apparie une colonne de titres avec la colonne de pages qui la suit.
+ *
+ * **La forme que prend un index de livre passé par une conversion Markdown.**
+ * Un index imprimé est composé sur plusieurs colonnes ; le convertisseur en fait
+ * une table où les titres d'une colonne tombent dans une cellule et leurs pages
+ * dans la cellule voisine, chacun à son rang :
+ *
+ * ```
+ * |**Cafés connectés**<br>**Catégories de portées**|**206**<br>**064**|
+ * ```
+ *
+ * Relevé le 2026-08-10 sur `Blade Runner_Index.md` : **281 paires** que les
+ * règles ligne à ligne ne voyaient pas, l'index n'en rendant que 63 sur 344.
+ *
+ * L'égalité des longueurs est le garde-fou. Deux colonnes qui ne s'alignent pas
+ * ne sont pas une colonne de titres et sa colonne de pages : on préfère ne rien
+ * rendre plutôt que d'apparier au hasard — une entrée d'index fausse est pire
+ * qu'une entrée absente, puisqu'elle donne une page à un titre qui n'est pas là.
+ */
+function apparierColonnes(ligne: string, pousser: (t: string, p: string) => void): void {
+    if (!ligne.startsWith('|')) return;
+    const cellules = ligne.split('|').slice(1, -1);
+
+    for (let i = 0; i < cellules.length - 1; i++) {
+        const titres = fragments(cellules[i]);
+        const pages = fragments(cellules[i + 1]);
+        if (titres.length === 0 || titres.length !== pages.length) continue;
+        if (!titres.every(estUnTitre) || !pages.every(estUnePage)) continue;
+        for (let k = 0; k < titres.length; k++) pousser(titres[k], pages[k]);
+    }
+}
+
 /**
  * Extrait les paires titre → page d'un texte d'index.
  *
- * Trois formes rencontrées sur les trois livres, aucune commune :
- * cellule `|TITRE<br>PAGE|` (Alien), table à deux colonnes
- * `|**TITRE**|**PAGE**|` (Blade Runner), points de conduite
- * `Titre.......PAGE` (Dune). On les accepte toutes.
+ * Quatre formes rencontrées sur les trois livres, aucune commune : cellule
+ * `|TITRE<br>PAGE|` (Alien), colonnes appariées (Blade Runner), table à deux
+ * colonnes `|**TITRE**|**PAGE**|`, points de conduite `Titre.......PAGE` (Dune).
+ * On les accepte toutes : c'est le convertisseur qui décide, pas nous.
  */
 export function extraireEntrees(lignes: readonly string[]): EntreeIndex[] {
     const entrees: EntreeIndex[] = [];
+    /**
+     * Les quatre règles se recouvrent, et c'est voulu — chacune rattrape ce que
+     * les autres laissent. `|**SOUVENIR CLÉ**|**030**|` satisfait aussi bien la
+     * table à deux colonnes que l'appariement de colonnes. On dédoublonne donc
+     * ici plutôt que de rendre les règles exclusives : les rendre exclusives
+     * reviendrait à choisir laquelle a raison, et aucune n'a raison partout.
+     */
+    const vues = new Set<string>();
 
     const pousser = (titre: string, page: string) => {
         const t = titre.replace(/[.\s…*]+$/, '').replace(/^[.\s…*]+/, '').trim();
         const p = Number(page);
         // Une page à quatre chiffres n'est pas une page : c'est un index de carnet.
-        if (t.length >= 3 && /[a-zA-ZÀ-ÿ]{3}/.test(t) && p > 0 && p < 1000) {
-            entrees.push({ titre: t, page: p });
-        }
+        if (t.length < 3 || !/[a-zA-ZÀ-ÿ]{3}/.test(t) || p <= 0 || p >= 1000) return;
+        const empreinte = `${clef(t)}|${p}`;
+        if (vues.has(empreinte)) return;
+        vues.add(empreinte);
+        entrees.push({ titre: t, page: p });
     };
 
     for (const ligne of lignes) {
-        for (const m of ligne.matchAll(/([^|<>\r\n]{3,80}?)\s*<br>\s*(\d{1,3})\b/g)) pousser(m[1], m[2]);
+        // Le gras est facultatif AUTOUR DE LA PAGE : sans cette tolérance, un
+        // index dont le convertisseur met les pages en gras — `<br>**217**` —
+        // ne rendait rien du tout par cette règle. 46 entrées sur Blade Runner.
+        for (const m of ligne.matchAll(/([^|<>\r\n]{3,80}?)\s*<br>\s*\*{0,2}(\d{1,3})\*{0,2}(?![\d*])/g)) pousser(m[1], m[2]);
+        apparierColonnes(ligne, pousser);
         for (const m of ligne.matchAll(/\|\s*\*{0,2}([^|*]{3,80}?)\*{0,2}\s*\|\s*\*{0,2}(\d{1,3})\*{0,2}\s*\|/g)) pousser(m[1], m[2]);
         for (const m of ligne.matchAll(/([A-Za-zÀ-ÿ][^|<>]{2,80}?)[.\s…]{3,}(\d{1,3})\b/g)) pousser(m[1], m[2]);
     }

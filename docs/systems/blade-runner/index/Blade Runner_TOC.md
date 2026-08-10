@@ -1,0 +1,114 @@
+C H A P I T R E **01** 
+
+C H A P I T R E C H A P I T R E **02 03** 
+
+### E T TO M B E N T L E S A N G E S E N F E U 0 0 7 
+
+**DES LARMES DANS LA PLUIE 009 L’ÉVEIL DES MÉGACORPOS ET LA CHUTE DES PLANÈTES 010 LOS ANGELES EN 2037 016 UNE VIE DE BLADE RUNNER 018 THÈMES CLÉS 019 JOUER À BLADE RUNNER 020** 
+
+V OT R E B L A D E R U N N E R 0 2 5 
+
+|**LES FONDAMENTAUX**|**027**|
+|---|---|
+|**SOUVENIR CLÉ**|**030**|
+|**RELATION CLÉ**|**032**|
+|**VOTRE ÉQUIPEMENT**|**034**|
+|**TOUCHES FINALES**|**035**|
+|**PROMOTION ET HUMANITÉ**|**036**|
+|**ANALYSTE**|**039**|
+|**CITYSPEAKER**|**041**|
+|**COMMANDO**|**043**|
+|**FIXER**|**045**|
+|**INSPECTEUR**|**046**|
+|**LIAISON**|**048**|
+|**MAGOUILLEUR**|**051**|
+
+
+
+|C O M P É T E N C E S<br>|
+|---|
+|E T S P É C I A L I T É S<br>0 5 3|
+|**LANCER LES DÉS**<br>**054**|
+|**COMPÉTENCES**<br>**058**|
+|**SPÉCIALITÉS**<br>**060**|
+
+
+
+David Mot 
+
+C H A P I T R E **04** 
+
+C H A P I T R E **05** 
+
+C H A P I T R E **06** 
+
+|C O M BAT||L E C O N T E||
+|---|---|---|---|
+|E T P O U R S U I T E S|0 6 3|D E D E U X C I T É S|0 8 9|
+|**ZONES ET PORTÉE**|**064**|**UNE VILLE DIVISÉE PIÉGÉE**||
+|**ROUNDS ET INITIATIVE**|**065**|**DANS LE TEMPS**|**093**|
+|**ACTIONS ET MOUVEMENTS**|**066**|**LE GRAND FOSSÉ**|**094**|
+|**COMBAT RAPPROCHÉ**|**068**|**VIE URBAINE**|**095**|
+|**COMBAT À DISTANCE**|**069**|**DESCENDRE EN VILLE**|**105**|
+|**DÉGÂTS**|**070**|**SECTEUR 5**|**108**|
+|**STRESS ET SANG-FROID**|**074**|**SECTEUR 4**|**112**|
+|**AUTRES DANGERS**|**077**|**SECTEUR 9**|**116**|
+|**VÉHICULES AU COMBAT**|**078**|**SECTEUR 1**|**118**|
+|**POURSUITES**|**081**|**SECTEUR 2**<br>**SECTEUR 12**|**120**<br>**121**|
+|||**AU-DELÀ DU CENTRE-VILLE**|**124**|
+
+
+
+|L E P O U V O I R|
+|---|
+|E N P L AC E<br>1 2 9|
+|**AGENCES**|
+|**GOUVERNEMENTALES**<br>**132**|
+|**134**<br>**GROUPES DE PRESSION**|
+|**135**<br>**LES MÉDIAS**|
+|**136**<br>**ENTREPRISES CRIMINELLES**|
+|**138**<br>**WALLACE CORPORATION**|
+|**142**<br>**RÉPLICANTS**|
+|**146**<br>**LA VIE DES RÉPLICANTS**|
+
+
+
+David Mot 
+
+C H A P I T R E **07** 
+
+C H A P I T R E C H A P I T R E **08 09** 
+
+|B O S S E R||L E S O U T I L S<br>||
+|---|---|---|---|
+|S U R L ’ A F FA I R E|1 5 1|D U M É T I E R|1 7 3|
+|**L’UNITÉ DE DÉTECTION**<br>||**ÉQUIPEMENT DE L’UDR**|**174**|
+|**DES RÉPLICANTS**|**152**|**ARMURERIE DE L’UDR**|**178**|
+|**LE NOUVEL ORDRE**|**153**|**BLASTER PK-D 5223**|**180**|
+|**LE SIÈGE DE L’UDR**|**155**|**PK-D FKM890**|**182**|
+|**DIVISIONS DE L’UDR**|**158**|**RENSEIGNEMENT**||
+|**UTILISER LES RESSOURCES**||**ET TECHNOLOGIE**|**187**|
+|**DU LAPD**|**162**|**RENFORTS SYNTHÉTIQUES**|**192**|
+|**MOBILISER SES RELATIONS**<br>|**164**|**SPINNER DETECTIVE SPECIAL**|**196**|
+|**BÂTIR SA RÉPUTATION**|**166**|**MOTO SPINNER**|**202**|
+|**PROCÉDURE STANDARD**|**168**|**TRANSPORTS PUBLICS**|**203**|
+|**ÉTUDIEZ CETTE SCÈNE**<br>**DE CRIME !**|**170**|**BIENS ET SERVICES**<br>**SÉANCE DE SHOPPING**|**203**<br>**205**|
+
+
+
+|M E N E R|
+|---|
+|B L A D E R U N N E R<br>2 1 1|
+|**THÈMES CLÉS**<br>**212**|
+|**212**<br>**JOUER SCÈNE APRÈS SCÈNE**|
+|**213**<br>**POSER L’AMBIANCE**|
+|**213**<br>**ANATOMIE D’UN DOSSIER**|
+|**215**<br>**JOUER LES ENQUÊTES**|
+|**218**<br>**PAUSE**|
+|**220**<br>**PROMOTION ET HUMANITÉ**|
+|**PERSONNAGES NON JOUEURS 221**|
+|**GÉNÉRATEUR DE DOSSIER**<br>**222**|
+
+
+
+David Mot
