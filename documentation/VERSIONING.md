@@ -7,10 +7,32 @@
 Le projet vit sur **deux branches parallèles**, chacune avec sa propre pile technique et sa
 propre série de versions. Les deux séries sont indépendantes : elles ne se rattrapent jamais.
 
-| Série | Pile | Branche git | Worktree | Point d'entrée |
-| :--- | :--- | :--- | :--- | :--- |
-| **6.x** | **Electron** | `feature/tablet-hub-pwa` (→ `main`) | `C:/Projet_David/GM-OS-v5` | `dist-electron/main.js` |
-| **7.x** | **Tauri** | `GM-OS_v7_P2P` | `C:/Projet_David/GM-OS-v7` | `src-tauri/` (Rust) |
+| Série | Pile | Branche git | État | Worktree | Point d'entrée |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **6.x** | **Electron** | `feature/tablet-hub-pwa` | **active** | `C:/Projet_David/GM-OS-v5` | `dist-electron/main.js` |
+| **7.x** | **Tauri** | `GM-OS_v7_P2P` | **en pause** (voir ci-dessous) | `C:/Projet_David/GM-OS-v7` | `src-tauri/` (Rust) |
+
+### La 7.x est en pause depuis le 2026-08-10
+
+Décision de David, dans ses mots : *« je referais une migration plus tard quand l'application sur
+Electron sera finie, si la migration vers Tauri m'apporte quelque chose »*.
+
+**Conséquence pratique : ne pas chercher à rattraper l'écart.** Au 2026-08-10, `GM-OS_v7_P2P` porte
+9 commits en propre et accuse 131 commits de retard sur la 6.x — et l'écart se creusera. C'est sans
+importance, puisque la migration sera **refaite** et non reprise : ces 9 commits valent comme trace
+d'un premier essai (gestion des fenêtres, modules modernisés, règles d'exclusion Tauri), pas comme
+base à faire converger.
+
+La branche est donc **conservée sans être maintenue**. Ne pas la fusionner dans la 6.x : elle
+importerait du code orienté Tauri dans une application Electron, pour rien.
+
+### Ce que `main` est vraiment
+
+`main` n'est **pas** la branche de publication de la 6.x, malgré ce qu'une lecture rapide de son nom
+suggère. C'est une cible de sauvegardes automatiques : au 2026-08-10, **160 de ses 172 commits
+d'écart** s'intitulent « Automated GM-OS Backup », et son dernier commit date du 2026-03-25.
+
+Y fusionner la 6.x n'aurait donc pas de sens. La branche de travail *est* la branche de référence.
 
 Vérification rapide de la branche sur laquelle on se trouve :
 
