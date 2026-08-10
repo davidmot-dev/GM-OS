@@ -33,13 +33,17 @@ Trois raisons, la première étant démontrée plutôt qu'argumentée :
 
 1. ~~**Le module lui-même**~~ — **fait.** Voir le § 1 bis.
 2. ~~**Structure Système crée le corpus**~~ — **fait.** Voir le § 1 ter.
-3. **Brancher le résolveur** `electron/bookIndex.ts` : il n'a toujours aucun appelant en production.
-   L'afficher **dans la revue**, avant publication, ferait de la vérification une étape du flux au
-   lieu d'une sonde lancée à la main.
-4. **Reforger Alien et Blade Runner** avec les gabarits v3.
+3. ~~**Brancher le résolveur**~~ — **fait** (`9c0fa96`) : la revue confronte les sections citées à
+   l'index avant publication. *Une vérification qu'il faut lancer à la main n'est pas une
+   vérification, c'est une intention.*
+4. **Reforger Alien et Blade Runner** avec les gabarits v3. Blade Runner : 19 fiches v3, en cours.
+   Alien : pas commencé.
 5. ~~**Le sujet libre**~~ — **fait** (`fd9aaa0`) : la liste se recalcule à la frappe, sans requête, et
    ne se dédouble plus, la comparaison se faisant sur le slug.
-6. **Rendre son pilote Blade Runner à « Anges de Feu »** si ce n'est pas déjà fait.
+6. ~~**Rendre son pilote Blade Runner à « Anges de Feu »**~~ — **fait par David le 2026-08-10.**
+
+**Le plan est donc clos, sauf la reforge d'Alien.** La suite est le chantier ouvert en discussion le
+même soir : les quatre murs du modèle de pilote (§ 1 quater).
 
 ---
 
@@ -118,6 +122,48 @@ publier une fiche pendant qu'il restait monté dessous avec une liste périmée.
 sur le disque et n'apparaissait nulle part — *un succès invisible, ce qui se signale encore moins
 bien qu'une panne*. Relevé par David sur sa fiche « Manœuvres des Mentats ». Il relit maintenant à
 chaque publication, et un bouton permet de le forcer.
+
+---
+
+## 1 quater. Le chantier suivant — les quatre murs du pilote
+
+Ouvert en discussion le soir même, à partir d'une phrase de David : **« je n'ai jamais réussi à
+savoir comment utiliser correctement les informations de la forge système. »** Ce n'était pas lui.
+`DEFAULT_GAME_DRIVERS` était un **tableau vide** et le seul gabarit de fiche s'appelait « Generic »
+avec des champs `stat1`, `stat2`, `info1` : l'application ne livrait aucun exemple de système
+correct, donc rien à quoi comparer ce que la Forge rendait.
+
+**Le partage retenu, proposé par David et validé** : la Forge Système pose les *briques de base* —
+type de jet, fiche, initiative, ce que le code exécute — et l'Atelier documente les *règles
+précises*, ce qu'un humain lit à la table. L'axe est le bon, avec deux réserves inscrites ici pour ne
+pas les reperdre :
+
+1. **Dériver, ne pas produire en parallèle.** L'inventaire de l'Atelier répond déjà aux briques de
+   base, ancré et vérifié. Deux productions indépendantes des mêmes faits divergeront, et
+   l'application lancera 3d6 pendant que la fiche dira 2d20 — sans que rien ne compare jamais les
+   deux.
+2. **Le pilote a besoin de son propre canevas**, fermé, et ne contenant **que ce que l'application
+   consomme**. `aiInstructions` n'atteint aucun modèle (vérifié dans `AIService`), `critRange` n'a
+   aucun lecteur. Une forge qui remplit des champs morts est invérifiable.
+
+**Le système Dune de référence** (`src/data/defaultGameDrivers.ts`, `defaultSheetTemplates.ts`) est
+né de là : chaque valeur tirée du corpus vérifié, et **aucun point de vie** — « il n'existe aucune
+jauge numérique de santé sur la feuille de personnage ». Écrire ce pilote a servi d'épreuve au
+modèle, qui cède sur quatre points, tenus par des tests **écrits pour échouer** quand le modèle
+saura les exprimer (`src/data/duneReference.test.ts`) :
+
+| | Ce que dit le livre | Ce que le modèle offre |
+|---|---|---|
+| **1** | Pas de points de vie ; vaincre est une tâche étendue | `Combatant.hp`/`hpMax` obligatoires |
+| **2** | L'initiative alterne entre les camps | une formule par combattant |
+| **3** | ~~Seuil = compétence + principe (8 à 16)~~ | **abattu** — `DescripteurDeJet` (`36ab617`) |
+| **4** | Impulsion 0-6 partagée, Menace au meneur | aucune ressource de table |
+
+**Et ne pas reconstruire.** `DiceEngine` (521 lignes, testé) et `CombatRules` savent déjà faire
+l'essentiel ; ce qui manquait était le **fil** entre la fiche, le pilote et les dés. Reconstruire
+reviendrait à jeter du code éprouvé pour le réécrire moins bien. La ligne à tenir : l'outil suit
+l'état et calcule ce qui est mécanique — **il n'arbitre pas**. Encoder les règles de chaque jeu est
+le piège où meurent les projets de ce genre.
 
 ---
 
