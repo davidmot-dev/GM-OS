@@ -14,6 +14,17 @@
  * dans le texte : le carnet le rapporte fidèlement, et `electron/bookIndex.ts`
  * le résout en page localement, contre l'index du livre.
  *
+ * **L'enregistrement dans le studio est retiré de la version employée par la
+ * Forge.** Mesuré le 2026-08-10 : la consigne « Génère un Markdown que tu
+ * sauveras dans le studio » fait déposer le livrable dans le studio du carnet,
+ * et ne renvoyer dans la réponse qu'un compte rendu en prose — zéro ligne de
+ * tableau, donc zéro fiche exploitable. À la main, David ouvrait le fichier du
+ * studio ; à travers MCP, la réponse est tout ce qu'on reçoit.
+ *
+ * L'archive reste précieuse — c'est la seule mémoire du carnet, qui ne conserve
+ * pas les conversations — d'où l'option {@link OptionsGabarit.studio}, à
+ * n'activer que pour un usage manuel.
+ *
  * **Trois lignes de ces gabarits valent plus que tout le reste** : l'interdiction
  * d'inventer, l'obligation de rendre une fiche même sur un sujet non couvert, et
  * les symboles en toutes lettres. Sans la première, un sujet absent produit du
@@ -23,6 +34,24 @@
  */
 
 import { CANEVAS } from './canevas';
+
+export interface OptionsGabarit {
+  /**
+   * Demander l'enregistrement dans le studio du carnet.
+   *
+   * **Faux par défaut, et ce défaut compte** : la consigne détourne le livrable
+   * vers le studio et ne laisse qu'un résumé dans la réponse. Ne l'activer que
+   * pour un prompt destiné à être copié à la main.
+   */
+  studio?: boolean;
+}
+
+/** La ligne d'archive, ajoutée seulement pour un usage manuel. */
+function consigneStudio(options: OptionsGabarit | undefined, texte: string): string {
+  return options?.studio ? `${texte}
+
+` : '';
+}
 
 /** Les treize sujets numérotés, tels qu'ils sont posés au carnet. */
 function listeDesSujets(): string {
@@ -36,11 +65,13 @@ function listeDesSujets(): string {
  * requêtes du gabarit 2. Sur Dune, il a révélé que *Poursuites* n'est pas couvert
  * par le livre de base — ce qu'aucune fiche prise seule n'aurait dit.
  */
-export function gabaritInventaire(): string {
+export function gabaritInventaire(options?: OptionsGabarit): string {
   return `Tu analyses UNIQUEMENT les sources de ce carnet. Ne complète jamais avec des
 connaissances extérieures.
 
-Génère un Markdown que tu sauveras dans le studio.
+${consigneStudio(options, 'Génère un Markdown que tu sauveras dans le studio.')}Réponds DIRECTEMENT par le tableau demandé, dans ta réponse elle-même. Ne
+dépose rien ailleurs et ne réponds pas par un compte rendu de ce que tu aurais
+produit : ta réponse est le livrable.
 
 Pour chacun des sujets ci-dessous, indique si ce jeu le traite, et résume sa
 mécanique en une à deux phrases maximum :
@@ -79,13 +110,14 @@ historique et background, bestiaire, scénarios inclus.`;
  * fiches.** C'est la première correction apportée à la proposition initiale, et
  * elle tient toujours.
  */
-export function gabaritFiche(sujet: string): string {
+export function gabaritFiche(sujet: string, options?: OptionsGabarit): string {
   return `Tu rédiges une fiche de règle sur le sujet : « ${sujet} ».
 
 Appuie-toi UNIQUEMENT sur les sources de ce carnet. Si elles ne suffisent pas,
 dis-le explicitement plutôt que de compléter.
 
-Génère un Markdown que tu sauveras dans le studio, nommé d'après le sujet.
+${consigneStudio(options, "Génère un Markdown que tu sauveras dans le studio, nommé d'après le sujet.")}Réponds DIRECTEMENT par la fiche, dans ta réponse elle-même. Ne dépose rien
+ailleurs et ne réponds pas par un compte rendu : ta réponse est le livrable.
 
 Format de sortie : Markdown, 3 000 à 5 000 caractères, structuré exactement
 selon les six sections ci-dessous. N'emploie aucune ligne de tirets « --- » et
@@ -146,13 +178,14 @@ Règles de rédaction :
  * Elle décrit la VOIX du jeu, pas ses règles. Le prompt B s'appuie dessus : les
  * deux s'enchaînent **dans la même conversation**.
  */
-export function promptVoix(): string {
+export function promptVoix(options?: OptionsGabarit): string {
   return `Tu analyses UNIQUEMENT les sources de ce carnet. N'invente rien.
 
 Je cherche à décrire la VOIX de ce jeu, pas ses règles. Ignore complètement les
 mécaniques chiffrées.
 
-Génère un Markdown que tu sauveras dans le studio, avec ces sections :
+${consigneStudio(options, 'Génère un Markdown que tu sauveras dans le studio.')}Réponds DIRECTEMENT par le document, dans ta réponse elle-même, avec ces
+sections :
 
 ## Vocabulaire de la table
 - Comment le livre nomme le meneur de jeu (terme exact).
@@ -196,7 +229,7 @@ ligne de tirets « --- ».`;
  * clé inconnue est du travail perdu. Elles sont définies dans
  * `src/stores/useGemStore.ts` et verrouillées par `electron/systemPersonas.test.ts`.
  */
-export function promptPersonas(): string {
+export function promptPersonas(options?: OptionsGabarit): string {
   return `À partir de la fiche de voix que tu viens de produire et des sources du carnet,
 rédige HUIT personas d'assistant IA spécialisées pour ce jeu.
 
@@ -246,5 +279,6 @@ autour, exactement de cette forme :
   "strategist": "…"
 }
 
-Génère le fichier JSON dans le studio sous le nom "gems.json"`;
+Ta réponse doit être cet objet JSON et rien d'autre : ne le dépose pas
+ailleurs, ne le commente pas, ne le résume pas.${options?.studio ? `\nEnregistre-le également dans le studio sous le nom "gems.json".` : ''}`;
 }

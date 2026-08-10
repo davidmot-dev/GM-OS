@@ -372,7 +372,11 @@ export class ForgeService {
         ? entree.mecanique || 'Le carnet n\'a pas résumé la mécanique.'
         : "Le carnet n'a rien rendu sur ce sujet — à interroger pour lever le doute.",
       tags: [
-        entree.traite,
+        // Un sujet dont le carnet n'a rien dit n'est pas « partiellement
+        // traité » : c'est une absence de réponse, et elle doit se voir. Sans
+        // cette distinction, l'inventaire annoncait « 13 sujets sur 13 traites »
+        // sur une reponse qui n'en couvrait aucun.
+        entree.lu ? entree.traite : 'sans reponse',
         ...(entree.horsCanevas ? ['hors canevas'] : []),
         ...entree.sections.slice(0, 3),
       ],

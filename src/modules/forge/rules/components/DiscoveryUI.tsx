@@ -18,7 +18,9 @@ import type { BrainstormCandidate } from '../types';
 function etat(candidate: BrainstormCandidate): 'non' | 'inconnu' | 'traite' {
   const marque = candidate.tags[0];
   if (marque === 'non') return 'non';
-  if (!marque) return 'inconnu';
+  // « sans reponse » n'est pas « traite » : c'est le carnet qui s'est tu, et le
+  // compteur de couverture ne doit surtout pas les additionner.
+  if (!marque || marque === 'sans reponse') return 'inconnu';
   return 'traite';
 }
 

@@ -178,6 +178,19 @@ describe('ForgeService', () => {
         });
       });
 
+      it('distingue un sujet omis d\'un sujet traité', async () => {
+        /**
+         * Sans cette distinction, l'inventaire annonçait « 13 sujets sur 13
+         * traités » sur une réponse qui n'en couvrait aucun — l'absence rendue
+         * invisible, exactement ce que le canevas existe pour empêcher.
+         */
+        callTool.mockResolvedValue({ content: INVENTAIRE });
+        const candidats = await forgeService.discoverCandidates('nb-1');
+
+        expect(candidats.find(c => c.id === 'resolution-des-jets')!.tags[0]).toBe('oui');
+        expect(candidats.find(c => c.id === 'poursuites')!.tags[0]).toBe('sans reponse');
+      });
+
       it('rend les treize sujets même quand le carnet en omet', async () => {
         callTool.mockResolvedValue({ content: INVENTAIRE });
         const candidats = await forgeService.discoverCandidates('nb-1');
