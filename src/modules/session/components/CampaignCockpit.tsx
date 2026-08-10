@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useSessionStore } from '../../../store/useSessionStore';
 import { useModalStore } from '../../../stores/useModalStore';
-import { BookOpen, LayoutDashboard, Swords, Users, Users2, Map as MapIcon, Archive, PlusCircle, Library, FileText, ExternalLink, File, StickyNote, Play, RefreshCw, Eye, Hammer, Zap, Layers, MessageSquare } from 'lucide-react';
+import { BookOpen, LayoutDashboard, Swords, Users, Users2, Map as MapIcon, Archive, PlusCircle, Library, FileText, ExternalLink, File, StickyNote, Play, RefreshCw, Eye, Zap, Layers, MessageSquare } from 'lucide-react';
 import SessionChecklist from './SessionChecklist';
 import TradeRequestPanel from './TradeRequestPanel';
 
@@ -145,16 +145,11 @@ const CampaignCockpit: React.FC = () => {
                     <span className="text-sm font-medium">{t('modules:session.cockpit.view_session_prep')}</span>
                 </button>
                 {/*
-                    La Forge est un module, plus une vue : le raccourci quitte
-                    donc Session OS au lieu d'y changer de page.
+                    Le raccourci « Forge Système » vivait ici. La Forge est un
+                    module à part : on la rejoint par la barre latérale, comme
+                    tout module. Le cockpit ne liste que les vues de la campagne
+                    ouverte, et documenter un livre n'en est pas une.
                 */}
-                <button
-                    onClick={() => setActiveModule('forge')}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all text-app-text/80 hover:bg-app-bg hover:text-app-text"
-                >
-                    <Hammer size={20} className="text-app-text/60" />
-                    <span className="text-sm font-medium">{t('modules:session.cockpit.view_system_forge')}</span>
-                </button>
                 <button
                     onClick={() => setCurrentView(hasLinkedDeck ? 'deck-player' : 'deck-library')}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all nav-item-glow ${
