@@ -1419,7 +1419,8 @@
         "corpus_reason_nom-affiche": "rapproché par le nom du système",
         "corpus_reason_defaut": "aucun dossier existant ne correspond",
         "corpus_new_folder": "Ce dossier n'existe pas encore : les fiches partiraient à côté de l'index et des personas. Renseignez « Chemin des Règles » sur la campagne si ce n'est pas voulu.",
-        "corpus_no_inventory": "Inventaire des dossiers indisponible : l'application n'a pas été relancée depuis la mise à jour. Le dossier annoncé ci-dessus peut être faux — relancez avant d'enregistrer."
+        "corpus_no_inventory": "Inventaire des dossiers indisponible : l'application n'a pas été relancée depuis la mise à jour. Le dossier annoncé ci-dessus peut être faux — relancez avant d'enregistrer.",
+        "corpus_contradiction": "Le système s'appelle « {{systeme}} », mais le corpus visé est « {{vise}} ». Le dossier « {{suggere}} » existe et correspond au nom. Vérifiez « Chemin des Règles » sur la fiche de campagne avant d'enregistrer."
       },
       "notebook": {
         "title": "Navigateur NotebookLM",

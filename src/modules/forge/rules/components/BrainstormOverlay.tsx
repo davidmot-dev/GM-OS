@@ -364,11 +364,11 @@ export const BrainstormOverlay: React.FC = () => {
           */}
           {corpus && (
             <div className={`mb-6 px-6 py-4 rounded-2xl border flex items-start gap-4 ${
-              corpus.aCreer || !inventaireDisponible
+              corpus.aCreer || corpus.contradiction || !inventaireDisponible
                 ? 'bg-amber-500/10 border-amber-500/20'
                 : 'bg-white/5 border-white/5'
             }`}>
-              <FolderTree size={16} className={corpus.aCreer || !inventaireDisponible ? 'text-amber-400 mt-0.5' : 'text-purple-400/60 mt-0.5'} />
+              <FolderTree size={16} className={corpus.aCreer || corpus.contradiction || !inventaireDisponible ? 'text-amber-400 mt-0.5' : 'text-purple-400/60 mt-0.5'} />
               <div className="min-w-0">
                 <p className="text-[10px] font-black uppercase tracking-widest text-white/20">
                   {t('session.forge_module.atelier.corpus_target')}
@@ -382,6 +382,15 @@ export const BrainstormOverlay: React.FC = () => {
                 {corpus.aCreer && (
                   <p className="text-xs text-amber-200/60 leading-relaxed mt-2">
                     {t('session.forge_module.atelier.corpus_new_folder')}
+                  </p>
+                )}
+                {corpus.contradiction && (
+                  <p className="text-xs text-amber-200/60 leading-relaxed mt-2">
+                    {t('session.forge_module.atelier.corpus_contradiction', {
+                      systeme: allDrivers.find(d => d.id === activeCampaign?.system)?.name ?? activeCampaign?.system,
+                      vise: corpus.id,
+                      suggere: corpus.contradiction,
+                    })}
                   </p>
                 )}
                 {!inventaireDisponible && (

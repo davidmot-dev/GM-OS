@@ -339,7 +339,11 @@ export class ForgeService {
     const result = await this.callMcpTool<{ content: string }>('notebooklm-mcp-server', 'notebook_query', {
       notebook_id: notebookId,
       query,
-      source_ids: sourceIds
+      // Une liste vide n'est pas « pas de filtre » : selon le serveur, elle peut
+      // se lire « ne retiens aucune source ». On omet la clé plutôt que de
+      // laisser l'ambiguïté décider — c'est le carnet entier qui est visé quand
+      // l'utilisateur n'a rien coché.
+      ...(sourceIds && sourceIds.length > 0 ? { source_ids: sourceIds } : {})
     });
 
     if (!result?.content) throw new Error("Réponse vide de NotebookLM");

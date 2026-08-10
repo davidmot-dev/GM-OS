@@ -52,6 +52,44 @@ describe('resoudreCorpus', () => {
         expect(corpus.aCreer).toBe(false);
     });
 
+    it('signale la contradiction entre chemin declare et nom du systeme', () => {
+        /**
+         * Le cas reel du 2026-08-10 : « Chemin des Regles » a `systems/blade-runner`
+         * sur une campagne dont le pilote s'appelle « Dune : Aventures dans
+         * l'Imperium ». Le declare l'emporte — il est explicite — mais treize
+         * fiches Dune partiraient dans le corpus d'un autre jeu sans un mot.
+         */
+        const corpus = resoudreCorpus({
+            systemId: 'custom-1',
+            systemName: "Dune : Aventures dans l'Imperium",
+            systemPath: 'systems/blade-runner',
+            dossiersConnus: DOSSIERS,
+        });
+        expect(corpus.racine).toBe('systems/blade-runner');
+        expect(corpus.contradiction).toBe('dune');
+    });
+
+    it('ne crie pas a la contradiction quand tout concorde', () => {
+        const corpus = resoudreCorpus({
+            systemId: 'custom-1',
+            systemName: "Dune : Aventures dans l'Imperium",
+            systemPath: 'systems/dune',
+            dossiersConnus: DOSSIERS,
+        });
+        expect(corpus.contradiction).toBeUndefined();
+    });
+
+    it('se tait quand le nom ne designe aucun dossier reel', () => {
+        // Un systeme inedit n'a rien a contredire.
+        const corpus = resoudreCorpus({
+            systemId: 'custom-1',
+            systemName: 'Mon Jeu Maison',
+            systemPath: 'systems/maison',
+            dossiersConnus: DOSSIERS,
+        });
+        expect(corpus.contradiction).toBeUndefined();
+    });
+
     it('retient ensuite le corpus déclaré par le pilote', () => {
         const corpus = resoudreCorpus({
             systemId: 'custom-1', corpusId: 'dune', dossiersConnus: DOSSIERS,

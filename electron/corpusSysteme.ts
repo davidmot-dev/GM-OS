@@ -87,6 +87,17 @@ export interface Corpus {
     raison: RaisonCorpus;
     /** Vrai quand le dossier n'existe pas encore parmi ceux connus. */
     aCreer: boolean;
+    /**
+     * Dossier que le **nom du système** désignait, quand il diffère de la racine
+     * retenue.
+     *
+     * Relevé en réel le 2026-08-10 : une campagne dont le pilote s'appelle
+     * « Dune : Aventures dans l'Imperium » portait `systems/blade-runner` en
+     * « Chemin des Règles ». Le chemin déclaré l'emporte — c'est la règle, il est
+     * explicite — mais une contradiction pareille ne doit pas se lire entre les
+     * lignes : elle enverrait treize fiches Dune dans le corpus d'un autre jeu.
+     */
+    contradiction?: string;
 }
 
 export interface DemandeCorpus {
@@ -133,9 +144,23 @@ export function resoudreCorpus(demande: DemandeCorpus): Corpus {
     const connus = demande.dossiersConnus ?? [];
     const existe = (id: string) => connus.some(d => normaliseChemin(d) === normaliseChemin(id));
 
+    /** Dossier réel que le nom affiché désigne, s'il en désigne un. */
+    const parNomAffiche = (): string | null => {
+        const nom = slug(demande.systemName ?? '');
+        if (!nom) return null;
+        const trouve = connus.find(d => memeIdentite(slug(d), nom));
+        return trouve ? normaliseChemin(trouve) : null;
+    };
+
     const rendre = (racine: string, raison: RaisonCorpus): Corpus => {
         const id = dernierSegment(racine);
-        return { racine, id, raison, aCreer: connus.length > 0 && !existe(id) };
+        const corpus: Corpus = { racine, id, raison, aCreer: connus.length > 0 && !existe(id) };
+
+        // Le nom du système désignait-il un autre dossier réel ? On ne change
+        // rien — le déclaré reste souverain — mais on le dit.
+        const suggere = parNomAffiche();
+        if (suggere && suggere !== normaliseChemin(id)) corpus.contradiction = suggere;
+        return corpus;
     };
 
     // 1. Le chemin déclaré sur la campagne. Explicite, donc souverain — c'est
@@ -164,11 +189,8 @@ export function resoudreCorpus(demande: DemandeCorpus): Corpus {
 
     // 5. Le nom affiché, rapproché des dossiers réels. C'est ce repli qui
     //    sauvait la lecture ; il sauve désormais l'écriture de la même façon.
-    const parNom = slug(demande.systemName ?? '');
-    if (parNom) {
-        const trouve = connus.find(d => memeIdentite(slug(d), parNom));
-        if (trouve) return rendre(`${DOSSIER_SYSTEMES}/${normaliseChemin(trouve)}`, 'nom-affiche');
-    }
+    const trouve = parNomAffiche();
+    if (trouve) return rendre(`${DOSSIER_SYSTEMES}/${trouve}`, 'nom-affiche');
 
     // 6. Rien ne correspond. On écrira sous l'identifiant, et `aCreer` le dira.
     return rendre(`${DOSSIER_SYSTEMES}/${parId || slug(demande.systemName ?? '') || 'inconnu'}`, 'defaut');
