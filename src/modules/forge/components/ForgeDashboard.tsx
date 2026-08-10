@@ -12,7 +12,6 @@ import ChronicleForge from './ChronicleForge';
 import { useAIStore } from '../../../stores/useAIStore';
 import { useBrainstormStore } from '../rules/store/useBrainstormStore';
 import { useForgeStore } from '../store/useForgeStore';
-import BrainstormOverlay from '../rules/components/BrainstormOverlay';
 
 interface NotebookSource {
   id: string;
@@ -647,8 +646,14 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                <Sparkles size={64} className="text-purple-400/20 animate-pulse" />
                <h3 className="text-2xl font-bold font-display uppercase text-purple-400">{t('modules:session.forge_module.atelier.brainstorm_title')}</h3>
                <p className="text-app-text/40 max-w-md mx-auto">{t('modules:session.forge_module.atelier.brainstorm_desc')}</p>
-               
-               {brainstormStore.step !== 'idle' && <BrainstormOverlay />}
+
+               {/*
+                 L'atelier est monte une seule fois, globalement, par App.tsx.
+                 Le monter aussi ici en creait une SECONDE instance : deux effets
+                 identiques partaient de front vers le carnet, qui n'en honorait
+                 qu'une partie. Il est en `fixed inset-0`, il n'a aucun besoin de
+                 vivre dans cet arbre.
+               */}
             </div>
           )}
         </div>
