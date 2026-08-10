@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useCallback, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   useBrainstormStore,
@@ -107,10 +107,19 @@ export const BrainstormOverlay: React.FC = () => {
    * suffi : un défaut hérité d'ailleurs reste un choix que personne n'a fait, et
    * la forge est repartie sur Blade Runner alors que Dune était visé. Le corpus
    * se **désigne** donc, ici, et la Forge s'en souvient d'une séance à l'autre.
+   *
+   * **Et il est mémoïsé, ce qui n'est pas un détail de performance.**
+   * `corpusChoisi` construit un objet neuf à chaque appel. Recalculé à chaque
+   * rendu, il changeait d'identité à chaque rendu — donc `releverLeDisque` aussi,
+   * donc l'effet qui en dépend repartait, écrivait un tableau neuf dans l'état,
+   * provoquait un rendu, et ainsi de suite : « Maximum update depth exceeded »,
+   * relevé en pleine forge le 2026-08-10. Les dépendances réelles sont le
+   * dossier choisi et l'inventaire des dossiers, tous deux stables.
    */
-  const corpus = brainstormStore.corpusCible
-    ? corpusChoisi(brainstormStore.corpusCible, dossiersSystemes)
-    : null;
+  const corpus = useMemo(
+    () => (brainstormStore.corpusCible ? corpusChoisi(brainstormStore.corpusCible, dossiersSystemes) : null),
+    [brainstormStore.corpusCible, dossiersSystemes],
+  );
 
   /**
    * Ce qui est déjà forgé, lu sur le disque et non en mémoire de session.
