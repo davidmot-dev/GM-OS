@@ -9,6 +9,9 @@ import {
     FieldCheckbox, FieldSelect, FieldTextarea, FieldRating 
 } from './fields/SheetFields';
 import { useCharacterEditor } from '../hooks/useCharacterEditor';
+import PanneauDeJet from './fields/PanneauDeJet';
+import { useSessionOSStore } from '../useSessionOSStore';
+import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 import { useSheetCalculator } from '../hooks/useSheetCalculator';
 import { Calculator } from 'lucide-react';
 import type { SheetField } from '../../../data/defaultSheetTemplates';
@@ -36,6 +39,21 @@ const FieldFormula: React.FC<{
 
 const CharacterSheetEditor: React.FC = () => {
     const editor = useCharacterEditor();
+
+    /**
+     * Le pilote de la campagne du personnage, pour savoir comment on lance.
+     *
+     * Le panneau de jet n'apparaît que si ce pilote **décrit ses jets**. Un
+     * système sans descripteur garde sa fiche telle quelle : mieux vaut pas de
+     * bouton qu'un bouton qui lancerait n'importe quoi.
+     */
+    const { campaigns, activeCampaignId, customGameDrivers } = useSessionOSStore();
+    const piloteDeLaFiche = React.useMemo(() => {
+        const campagne = campaigns.find(c => c.id === activeCampaignId);
+        if (!campagne?.system) return null;
+        return [...DEFAULT_GAME_DRIVERS, ...customGameDrivers].find(d => d.id === campagne.system) ?? null;
+    }, [campaigns, activeCampaignId, customGameDrivers]);
+
     const { evaluateFormula } = useSheetCalculator(editor.character as PlayerCharacter | null, editor.template, editor.localData);
     const [isAddingItem, setIsAddingItem] = React.useState(false);
     const [newItemName, setNewItemName] = React.useState('');
@@ -243,6 +261,22 @@ const CharacterSheetEditor: React.FC = () => {
 
                     {/* Right Col: Sheet Sections */}
                     <div className="col-span-9 space-y-6">
+                        {/*
+                            Lancer depuis la fiche, à côté des valeurs qui font
+                            le seuil. Chez Dune il vaut une compétence plus un
+                            principe : personne ne pouvait faire ce calcul à la
+                            place du joueur, et il fallait tout reporter à la
+                            main dans Dice OS.
+                        */}
+                        {piloteDeLaFiche?.jet && (
+                            <PanneauDeJet
+                                descripteur={piloteDeLaFiche.jet}
+                                dice={piloteDeLaFiche.dice}
+                                template={template}
+                                valeurs={editor.localData}
+                            />
+                        )}
+
                         {template.sections.map(section => {
                             const gauges = gaugeFields(section);
                             const others = otherFields(section);
