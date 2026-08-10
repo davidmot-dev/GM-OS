@@ -198,8 +198,15 @@ describe('contrôle de vraisemblance des pages', () => {
     });
 
     it('trouve les fiches Dune contaminées sur le corpus réel', () => {
+        /**
+         * Le corpus v1 de Dune est archivé dans `rules-v1/` depuis le
+         * 2026-08-10, hors de l'index de l'Oracle, en attendant sa régénération
+         * en v3 (voir `docs/systems/dune/.ragignore`). Les fiches ont déménagé,
+         * le contrôle les suit : c'est **sur elles** qu'il a été calibré, et ce
+         * sont elles que la régénération devra faire disparaître.
+         */
         const dune = chargerIndex(DOCS, 'dune');
-        const dir = path.join(DOCS, 'systems', 'dune', 'rules');
+        const dir = path.join(DOCS, 'systems', 'dune', 'rules-v1');
         const atteintes = fs.readdirSync(dir)
             .filter(n => n.endsWith('.md'))
             .filter(n => pagesInvraisemblables(fs.readFileSync(path.join(dir, n), 'utf8'), dune).length > 0);

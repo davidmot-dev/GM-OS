@@ -112,7 +112,18 @@ contextBridge.exposeInMainWorld('appBridge', {
         callTool: (serverName: string, toolName: string, args: Record<string, unknown>) => 
             ipcRenderer.invoke('mcp:call-tool', serverName, toolName, args),
         reauthenticate: () => ipcRenderer.invoke('mcp:reauthenticate'),
-        restart: () => ipcRenderer.invoke('mcp:restart')
+        restart: () => ipcRenderer.invoke('mcp:restart'),
+        /**
+         * Journal d'activité du pont : requête partie, réponse reçue et sa durée,
+         * lignes du serveur quand il en émet. C'est la seule visibilité possible
+         * pendant un appel — `callTool` est un aller-retour sans rien entre les
+         * deux, et une génération peut attendre plusieurs minutes.
+         */
+        onActivity: (callback: (evenement: unknown) => void) => {
+            const listener = (_event: Electron.IpcRendererEvent, evenement: unknown) => callback(evenement);
+            ipcRenderer.on('mcp:activity', listener);
+            return () => ipcRenderer.off('mcp:activity', listener);
+        }
     },
     obsidian: {
         listNotes: (vaultPath?: string) => ipcRenderer.invoke('obsidian:list-notes', vaultPath),

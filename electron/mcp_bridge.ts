@@ -1,4 +1,12 @@
-import { ipcMain, app } from 'electron';
+import { ipcMain, BrowserWindow } from 'electron';
+import {
+    ligneServeur,
+    evenementRequete,
+    evenementReponse,
+    evenementServeur,
+    evenementErreur,
+    type EvenementMcp,
+} from './mcpActivity';
 import { spawn, ChildProcess } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -64,6 +72,28 @@ const MCP_SERVER_MODULE = 'notebooklm_tools.mcp.server';
 /** CLI du même paquet, qui porte la ré-authentification. */
 const MCP_CLI_MODULE = 'notebooklm_tools.cli.main';
 
+/**
+ * Diffuse un événement d'activité à toutes les fenêtres.
+ *
+ * `registerMcpHandlers()` s'exécute au chargement du module, **avant** que la
+ * fenêtre principale n'existe : on ne peut pas lui passer une référence à la
+ * construction. La diffusion résout le problème sans introduire de dépendance
+ * d'ordre de démarrage, et le coût est nul — il n'y a qu'une poignée de
+ * fenêtres, dont les vidéoprojections qui ignorent simplement le canal.
+ *
+ * Ne doit jamais faire échouer un appel MCP : le journal est un confort, la
+ * requête est le travail.
+ */
+function emettreActivite(evenement: EvenementMcp) {
+    try {
+        for (const fenetre of BrowserWindow.getAllWindows()) {
+            if (!fenetre.isDestroyed()) fenetre.webContents.send('mcp:activity', evenement);
+        }
+    } catch {
+        // Une fenêtre en cours de destruction ne doit pas casser une génération.
+    }
+}
+
 function logToDebugFile(msg: string) {
     try {
         const timestamp = new Date().toISOString();
@@ -84,7 +114,7 @@ try {
 
 let mcpProcess: ChildProcess | null = null;
 let requestId = 1;
-const pendingRequests = new Map<number, { resolve: (val: unknown) => void; reject: (err: unknown) => void; method: string; timeout: NodeJS.Timeout }>();
+const pendingRequests = new Map<number, { resolve: (val: unknown) => void; reject: (err: unknown) => void; method: string; timeout: NodeJS.Timeout; debut: number }>();
 let stdoutBuffer = '';
 // Singleton promise for spawning the server
 let serverSpawnPromise: Promise<ChildProcess> | null = null;
@@ -178,9 +208,20 @@ async function ensureMcpServer(): Promise<ChildProcess> {
                                 if (response.error) {
                                     const errorDetails = JSON.stringify(response.error);
                                     logToDebugFile(`!!! ERROR for ID ${response.id}: ${errorDetails}`);
+                                    emettreActivite(evenementErreur(
+                                        response.error.message || 'Erreur sans message',
+                                        response.id,
+                                    ));
                                     pending.reject(new Error(`${response.error.message || 'Unknown error'} (Data: ${errorDetails})`));
                                 } else {
                                     logToDebugFile(`[Bridge] Resolving ID ${response.id} with ${JSON.stringify(response.result).substring(0, 100)}...`);
+                                    // La couche fiable du journal : ce que le pont sait de
+                                    // lui-même, indépendamment de ce que le serveur raconte.
+                                    emettreActivite(evenementReponse(
+                                        response.id,
+                                        Date.now() - pending.debut,
+                                        JSON.stringify(response.result ?? '').length,
+                                    ));
                                     pending.resolve(response.result);
                                 }
                                 pendingRequests.delete(response.id);
@@ -189,6 +230,11 @@ async function ensureMcpServer(): Promise<ChildProcess> {
                             }
                         } else if (response.method === 'notifications/message') {
                             logToDebugFile(`[Server Notification] ${response.params?.message}`);
+                            // Ce canal etait recu et jete depuis toujours : le serveur
+                            // parlait, personne n'ecoutait. Rien ne garantit qu'il emette
+                            // quoi que ce soit, d'ou la couche fiable au-dessus.
+                            const dit = ligneServeur(String(response.params?.message ?? ''));
+                            if (dit) emettreActivite(evenementServeur(dit));
                         }
                     } catch (e) {
                         logToDebugFile(`[Bridge] JSON Parse Error or Handling Error: ${e}`);
@@ -205,6 +251,13 @@ async function ensureMcpServer(): Promise<ChildProcess> {
                 logToDebugFile(`stderr: ${msg}`);
                 if (msg.toLowerCase().includes('error')) {
                     console.error(`[MCP Server] ${msg}`);
+                }
+                // Un serveur Python journalise sur stderr bien plus souvent qu'il
+                // n'émet des notifications MCP : c'est la source vivante la plus
+                // probable. `ligneServeur` en retire le préambule et le bruit.
+                for (const brut of msg.split(/\r?\n/)) {
+                    const dit = ligneServeur(brut);
+                    if (dit) emettreActivite(evenementServeur(dit));
                 }
             }
         });
@@ -243,10 +296,15 @@ async function callMcp(method: string, params: Record<string, unknown>) {
             logToDebugFile(`!!! TIMEOUT: ${timeoutMsg}`);
             console.error(`[MCP Bridge] ${timeoutMsg}`);
             pendingRequests.delete(id);
+            emettreActivite(evenementErreur(timeoutMsg, id));
             reject(new Error(timeoutMsg));
         }, timeoutDuration);
 
-        pendingRequests.set(id, { resolve, reject, method, timeout });
+        pendingRequests.set(id, { resolve, reject, method, timeout, debut: Date.now() });
+        emettreActivite(evenementRequete(
+            method === 'tools/call' ? String(params.name ?? method) : method,
+            id,
+        ));
         
         const request = JSON.stringify({
             jsonrpc: '2.0',

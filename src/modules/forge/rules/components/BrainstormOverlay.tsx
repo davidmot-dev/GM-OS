@@ -6,6 +6,7 @@ import { useSessionOSStore } from '../../../session/useSessionOSStore';
 import { X, Zap, Sparkles, ChevronLeft, Shield, BookOpen, AlertTriangle, Users, Save } from 'lucide-react';
 import { DEFAULT_GAME_DRIVERS } from '../../../../data/defaultGameDrivers';
 import DiscoveryUI from './DiscoveryUI';
+import ForgeProgress from './ForgeProgress';
 import { CHEMIN_PERSONAS } from '../personas';
 import { slugFiche } from '../canevas';
 import type { BrainstormCandidate } from '../types';
@@ -327,22 +328,12 @@ export const BrainstormOverlay: React.FC = () => {
           )}
 
           {(brainstormStore.step === 'forging' || (brainstormStore.step === 'personas' && brainstormStore.isProcessing)) && (
-            <div className="h-full flex flex-col items-center justify-center p-20 space-y-8 text-center animate-in zoom-in-95">
-               <div className="w-32 h-32 relative">
-                 <div className="absolute inset-0 bg-purple-600/30 blur-3xl animate-pulse" />
-                 <div className="relative w-full h-full rounded-full border-4 border-dashed border-purple-500/50 flex items-center justify-center animate-spin-slow">
-                   <Zap size={48} className="text-purple-400" />
-                 </div>
-               </div>
-               <div>
-                 <h3 className="text-2xl font-black uppercase tracking-widest text-white font-display mb-2">{t('session.forge_module.atelier.forging_title')}</h3>
-                 <p className="text-white/40 text-sm uppercase tracking-widest">
-                   {brainstormStore.step === 'personas'
-                     ? t('session.forge_module.atelier.personas_processing')
-                     : t('session.forge_module.atelier.forging_subtitle')}
-                 </p>
-               </div>
-            </div>
+            <ForgeProgress
+              titre={t('session.forge_module.atelier.forging_title')}
+              sousTitre={brainstormStore.step === 'personas'
+                ? t('session.forge_module.atelier.personas_processing')
+                : t('session.forge_module.atelier.forging_subtitle')}
+            />
           )}
 
           {brainstormStore.step === 'review' && brainstormStore.activeCard && (

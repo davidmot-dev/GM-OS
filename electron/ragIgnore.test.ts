@@ -1,4 +1,6 @@
 import { describe, it, expect } from 'vitest';
+import path from 'node:path';
+import fs from 'node:fs';
 import { isIgnored, parseRagIgnore, type IgnoreScope } from './ragIgnore';
 
 /**
@@ -82,5 +84,44 @@ describe('isIgnored', () => {
     it('est insensible à la casse, comme le système de fichiers', () => {
         const casse = [scope('systems/alien', 'Alien_Le_Jeu.txt')];
         expect(isIgnored('systems/alien/alien_le_jeu.txt', casse)).not.toBeNull();
+    });
+});
+
+describe('archive du corpus v1 de Dune', () => {
+    /**
+     * Le corpus v1 est archivé dans `rules-v1/` en attendant sa régénération.
+     * Il ne peut pas rester dans l'index : la v1 nomme `fiche-poursuites.md`
+     * là où la v3 nomme `poursuites.md`, donc **aucune fiche v1 ne sera
+     * écrasée** — les deux versions se retrouveraient côte à côte, et l'Oracle
+     * aurait deux fiches par sujet en concurrence, l'ancienne citant des pages
+     * qui n'existent pas dans le livre.
+     *
+     * Ce test lit le `.ragignore` réel. Sans lui, une réécriture du fichier
+     * ferait rentrer l'archive dans l'index **sans le moindre message** : c'est
+     * exactement le mode de défaillance que ce module est censé prévenir.
+     */
+    const DUNE = 'systems/dune';
+    const portees = () => [{
+        base: DUNE,
+        rules: parseRagIgnore(
+            fs.readFileSync(path.join(__dirname, '..', 'docs', DUNE, '.ragignore'), 'utf-8'),
+        ),
+    }];
+
+    it('exclut le dossier d\'archive et ce qu\'il contient', () => {
+        expect(isIgnored(`${DUNE}/rules-v1`, portees(), true)).not.toBeNull();
+        expect(isIgnored(`${DUNE}/rules-v1/fiche-poursuites.md`, portees(), false)).not.toBeNull();
+    });
+
+    it('laisse passer les fiches v3 à venir et l\'index du livre', () => {
+        // Une exclusion trop large se paierait par un corpus régénéré invisible.
+        expect(isIgnored(`${DUNE}/rules/poursuites.md`, portees(), false)).toBeNull();
+        expect(isIgnored(`${DUNE}/index/Dune_Index.md`, portees(), false)).toBeNull();
+    });
+
+    it('l\'archive est bien là où le .ragignore la croit', () => {
+        const archive = path.join(__dirname, '..', 'docs', DUNE, 'rules-v1');
+        expect(fs.existsSync(archive)).toBe(true);
+        expect(fs.readdirSync(archive).filter(n => n.endsWith('.md')).length).toBe(18);
     });
 });

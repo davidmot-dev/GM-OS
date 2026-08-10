@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Sparkles, Zap, ChevronRight, RefreshCw, CheckCircle2, MinusCircle, HelpCircle } from 'lucide-react';
 import { useBrainstormStore } from '../store/useBrainstormStore';
+import ForgeProgress from './ForgeProgress';
 import type { BrainstormCandidate } from '../types';
 
 /**
@@ -33,18 +34,14 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({ onSelect }) => {
   const duCanevas = candidates.filter(c => !c.tags.includes('hors canevas'));
   const traites = duCanevas.filter(c => etat(c) === 'traite').length;
 
+  // L'inventaire est une requête au carnet comme les autres : elle mérite le
+  // même compteur, pour la même raison.
   if (isProcessing) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 space-y-8 animate-in fade-in">
-        <div className="relative">
-          <div className="w-24 h-24 rounded-full border-4 border-purple-500/20 border-t-purple-500 animate-spin" />
-          <Sparkles className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-purple-400 animate-pulse" size={32} />
-        </div>
-        <div className="text-center">
-          <h3 className="text-xl font-black uppercase tracking-widest text-purple-400 mb-2 font-display">{t('session.forge_module.atelier.discovery_processing')}</h3>
-          <p className="text-app-text/40 text-xs uppercase tracking-widest animate-pulse">{t('session.forge_module.atelier.discovery_processing_sub')}</p>
-        </div>
-      </div>
+      <ForgeProgress
+        titre={t('session.forge_module.atelier.discovery_processing')}
+        sousTitre={t('session.forge_module.atelier.discovery_processing_sub')}
+      />
     );
   }
 

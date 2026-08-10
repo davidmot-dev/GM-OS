@@ -17,6 +17,10 @@ import { VoiceState } from '../modules/voice/useVoiceStore';
 import { ClockState } from '../store/useClockStore';
 import { ImageBridge } from '../modules/image/types';
 import { WebState } from '../modules/web/useWebStore';
+// Import de type seul, à travers la frontière des projets TypeScript :
+// `mcpActivity` est volontairement sans dépendance à `electron` ni à `node`,
+// et c'est le contrat du canal `mcp:activity` qu'on veut partager, pas du code.
+import type { EvenementMcp } from '../../electron/mcpActivity';
 
 declare global {
     export interface DisplayInfo {
@@ -212,6 +216,8 @@ declare global {
             reauthenticate: () => Promise<{ success: boolean; message: string }>;
             restart: () => Promise<{ success: boolean; message: string }>;
             checkStatus?: (serverName: string) => Promise<boolean>;
+            /** S'abonne au journal d'activité du pont. Rend la fonction de désabonnement. */
+            onActivity?: (callback: (evenement: EvenementMcp) => void) => () => void;
         };
         obsidian?: {
             listNotes: (vaultPath?: string) => Promise<NoteEntry[]>;

@@ -1,0 +1,120 @@
+import React, { useEffect, useRef, useState } from 'react';
+import { Zap, Radio } from 'lucide-react';
+import {
+  ajouterAuJournal,
+  formatDuree,
+  type EvenementMcp,
+} from '../../../../../electron/mcpActivity';
+
+/**
+ * L'écran d'attente de la Forge, avec ce qu'il faut pour ne pas douter.
+ *
+ * **Le problème qu'il résout.** Un appel MCP est un aller-retour : NotebookLM
+ * rend sa réponse d'un bloc, à la fin. Il n'existe aucun moyen de montrer la
+ * fiche s'écrire. Ce qui manquait n'était pas la fiche en train de naître, mais
+ * la réponse à « est-ce que ça avance ou est-ce que c'est mort ? » — et le
+ * compteur y répond à lui seul.
+ *
+ * **Deux sources, inégalement sûres.** Le compteur et les événements de requête
+ * viennent du pont, qui sait toujours ce qu'il a envoyé et reçu. Les lignes du
+ * serveur sont un bonus : rien ne garantit que le serveur NotebookLM en émette.
+ * D'où l'ordre d'affichage — le compteur d'abord, le journal ensuite, et le
+ * journal peut rester vide sans que l'écran cesse d'informer.
+ */
+
+interface ForgeProgressProps {
+  titre: string;
+  sousTitre: string;
+  /** Repère au-delà duquel l'attente devient anormale, en secondes. */
+  seuilInquietude?: number;
+}
+
+/** `ForgeService` coupe à dix minutes : au-delà, la requête est perdue. */
+const PLAFOND_SECONDES = 600;
+
+export const ForgeProgress: React.FC<ForgeProgressProps> = ({
+  titre,
+  sousTitre,
+  seuilInquietude = 180,
+}) => {
+  const [ecoule, setEcoule] = useState(0);
+  const [journal, setJournal] = useState<EvenementMcp[]>([]);
+  const finDuJournal = useRef<HTMLDivElement>(null);
+
+  // Le compteur : la seule information garantie disponible.
+  useEffect(() => {
+    const debut = Date.now();
+    const minuterie = setInterval(() => setEcoule(Date.now() - debut), 1000);
+    return () => clearInterval(minuterie);
+  }, []);
+
+  // Le journal : présent si le pont l'expose, absent sans conséquence sinon.
+  useEffect(() => {
+    const desabonner = window.appBridge?.mcp?.onActivity?.((evenement) => {
+      setJournal((precedent) => ajouterAuJournal(precedent, evenement));
+    });
+    return desabonner;
+  }, []);
+
+  useEffect(() => {
+    finDuJournal.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  }, [journal.length]);
+
+  const secondes = Math.round(ecoule / 1000);
+  const inquietant = secondes >= seuilInquietude;
+  const critique = secondes >= PLAFOND_SECONDES - 60;
+
+  const couleur = (niveau: EvenementMcp['niveau']) => {
+    if (niveau === 'erreur') return 'text-red-400';
+    if (niveau === 'reponse') return 'text-emerald-400';
+    if (niveau === 'requete') return 'text-purple-400';
+    return 'text-white/40';
+  };
+
+  return (
+    <div className="h-full flex flex-col items-center justify-center p-12 space-y-8 text-center animate-in zoom-in-95">
+      <div className="w-32 h-32 relative">
+        <div className="absolute inset-0 bg-purple-600/30 blur-3xl animate-pulse" />
+        <div className="relative w-full h-full rounded-full border-4 border-dashed border-purple-500/50 flex items-center justify-center animate-spin-slow">
+          <Zap size={48} className="text-purple-400" />
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-2xl font-black uppercase tracking-widest text-white font-display mb-2">{titre}</h3>
+        <p className="text-white/40 text-sm uppercase tracking-widest">{sousTitre}</p>
+      </div>
+
+      <div className="flex flex-col items-center gap-2">
+        <p className={`text-4xl font-black font-display tabular-nums transition-colors ${
+          critique ? 'text-red-400' : inquietant ? 'text-amber-400' : 'text-white/60'
+        }`}>
+          {formatDuree(ecoule)}
+        </p>
+        {critique && (
+          <p className="text-[10px] font-black uppercase tracking-widest text-red-400/60">
+            La requête sera abandonnée à {formatDuree(PLAFOND_SECONDES * 1000)}
+          </p>
+        )}
+      </div>
+
+      {journal.length > 0 && (
+        <div className="w-full max-w-2xl bg-black/40 border border-white/5 rounded-[2rem] p-6 text-left">
+          <div className="flex items-center gap-2 mb-4 text-[10px] font-black uppercase tracking-widest text-white/20">
+            <Radio size={12} className="text-purple-400/60" /> Journal du pont
+          </div>
+          <div className="max-h-48 overflow-y-auto custom-scrollbar space-y-1 font-mono text-xs">
+            {journal.map((evenement, idx) => (
+              <p key={idx} className={`leading-relaxed ${couleur(evenement.niveau)}`}>
+                {evenement.message}
+              </p>
+            ))}
+            <div ref={finDuJournal} />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ForgeProgress;

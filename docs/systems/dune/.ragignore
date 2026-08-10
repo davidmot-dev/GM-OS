@@ -1,11 +1,24 @@
-# Dune a désormais un corpus complet (17 fiches, les 13 sujets du canevas
-# couverts) et les deux décharges brutes ont été supprimées. Il ne reste donc
-# rien à exclure ici.
+# Le corpus v1 de Dune, archivé le 2026-08-10 avant la régénération en v3.
 #
-# L'index du livre vit dans `index/` et non dans `rules/` : ce n'est pas une
-# fiche mais une table de correspondance terme → page. Il reste indexé, à son
-# rang de document de système.
+# POURQUOI L'ARCHIVE PLUTÔT QUE LA SUPPRESSION. Les fiches v1 nomment
+# `fiche-poursuites.md` là où la v3 nomme `poursuites.md` : laissées dans
+# `rules/`, les dix-huit seraient restées côte à côte avec leurs remplaçantes —
+# aucune n'aurait été écrasée — et l'Oracle aurait eu deux fiches par sujet en
+# concurrence, l'ancienne avec ses pages fantaisistes et la nouvelle. Ce n'est
+# pas un doublon inoffensif : neuf des dix-huit citent des pages au-delà de la
+# dernière page du livre.
+#
+# Elles ne sont pas supprimées pour autant. Trois paires portent `doublon_de:`
+# avec la consigne de fusionner *à* la régénération et pas avant — les deux
+# versions se complètent souvent — et il faut pouvoir comparer une v3 à la v1
+# qu'elle remplace.
 #
 # Rappel de portée : un `.ragignore` ne retire un fichier que de l'index de
 # l'Oracle. `ai:list-docs`, `ai:read-doc` et `ai:extract-pdf` lisent le disque
 # directement — les Forges et le lecteur de documents voient toujours tout.
+# L'archive reste donc consultable, elle ne concourt simplement plus.
+rules-v1/
+
+# L'index du livre vit dans `index/` et non dans `rules/` : ce n'est pas une
+# fiche mais une table de correspondance terme → page. Il reste indexé, à son
+# rang de document de système.
