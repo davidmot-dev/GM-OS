@@ -74,6 +74,8 @@ export interface BrainstormState {
   setNotebook: (id: string) => void;
   setCorpusCible: (dossier: string | null) => void;
   setSources: (ids: string[]) => void;
+  /** Retire de la sélection les sources absentes du carnet ouvert. */
+  elaguerSources: (idsDuCarnet: string[]) => void;
   setCustomSubject: (subject: string) => void;
   setStep: (step: BrainstormStep) => void;
   setProcessing: (isProcessing: boolean) => void;

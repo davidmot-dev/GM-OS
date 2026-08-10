@@ -62,6 +62,26 @@ export const useBrainstormStore = create<BrainstormState>((set) => ({
   setNotebook: (id) => set({ notebookId: id }),
   setCorpusCible: (corpusCible) => set({ corpusCible }),
   setSources: (ids) => set({ selectedSourceIds: ids }),
+
+  /**
+   * Ne garde que les sources qui appartiennent au carnet ouvert.
+   *
+   * **Relevé le 2026-08-10.** Changer de carnet ne vidait pas la sélection : les
+   * identifiants du carnet précédent restaient et partaient comme filtre vers
+   * le nouveau. Et l'écart était invisible — la corbeille de contexte n'affiche
+   * que les sources du carnet courant, donc une sélection étrangère s'y montre
+   * comme « aucune source », pendant que la requête filtre dessus.
+   *
+   * On élague plutôt qu'on ne vide : revenir sur un carnet déjà visité conserve
+   * ce qu'on y avait coché.
+   */
+  elaguerSources: (idsDuCarnet) => set((state) => {
+    const valides = new Set(idsDuCarnet);
+    const retenues = state.selectedSourceIds.filter(id => valides.has(id));
+    return retenues.length === state.selectedSourceIds.length
+      ? {}
+      : { selectedSourceIds: retenues };
+  }),
   setCustomSubject: (subject) => set({ customSubject: subject }),
   setStep: (step) => set({ step }),
   setProcessing: (isProcessing) => set({ isProcessing }),

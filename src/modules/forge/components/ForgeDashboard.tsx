@@ -180,12 +180,14 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
 
         setSelectedNotebook(mappedNotebook);
         setNotebookSources(mappedSources);
+        brainstormStore.elaguerSources(mappedSources.map(s => s.id));
         addLog(t('modules:session.forge_module.notebook.sources_extracted', { count: mappedSources.length }));
       } else if (notebookData && typeof notebookData === 'object') {
         const data = notebookData as Notebook & { sources?: NotebookSource[] };
         const sources = siblingSources ?? data.sources ?? [];
         setSelectedNotebook({ ...data, sources });
         setNotebookSources(sources);
+        brainstormStore.elaguerSources(sources.map(s => s.id));
         addLog(t('modules:session.forge_module.notebook.sources_extracted', { count: sources.length }));
       } else {
         throw new Error("Notebook data not found in response");
