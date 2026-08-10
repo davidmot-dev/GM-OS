@@ -147,11 +147,28 @@ describe('index réels', () => {
         }
     });
 
-    it('Dune tire sa table des matières du .docx', () => {
-        // C'est la seule des trois où le .docx bat le .md, et de loin.
+    it('Dune tire sa table des matières d\'un fichier dédié', () => {
+        /**
+         * Le `.docx` fut d'abord la seule source du sommaire de Dune — la
+         * conversion Markdown d'origine n'en donnait rien. David a depuis
+         * produit un `Dune_TOC.md` qui rend les mêmes 614 paires **en mieux** :
+         * il décode les entités HTML que Word laissait brutes (« Artillerie
+         * &amp;… ») et ne perd pas d'initiale (« ener une partIe »).
+         *
+         * Le `.docx` est donc sorti de `index/` vers `index/_sources/`, où le
+         * chargeur ne le lit plus : il n'apportait que 614 doublons. Ce qui doit
+         * tenir n'est pas la provenance mais le **rendement**.
+         */
         const livre = chargerIndex(DOCS, 'dune');
-        expect(livre.sources.some(s => s.endsWith('.docx'))).toBe(true);
         expect(livre.entrees.length).toBeGreaterThan(400);
+        expect(livre.sources.some(s => s.endsWith('_TOC.md'))).toBe(true);
+    });
+
+    it('ignore les sources brutes rangées en sous-dossier', () => {
+        // `index/_sources/` garde les documents d'origine sans les charger deux
+        // fois : un sous-dossier n'a pas d'extension, le chargeur passe.
+        const livre = chargerIndex(DOCS, 'dune');
+        expect(livre.sources.some(s => s.endsWith('.docx'))).toBe(false);
     });
 
     it.each(SYSTEMES)('« %s » : le résolveur retrouve ses propres entrées', (systeme) => {
