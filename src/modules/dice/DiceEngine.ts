@@ -167,30 +167,69 @@ export class DiceEngine {
      * @param exploding Si true, chaque succès critique (face max) ajoute un dé supplémentaire.
      * @returns Objet RollResult avec décompte des succès et échecs.
      */
-    static rollPool(faces: number, count: number, modifier: number, target: number, exploding: boolean = false): RollResult {
+    /**
+     * Options du comptage d'une réserve.
+     *
+     * **Pourquoi `sens` existe.** `rollPool` comptait les dés **au-dessus** du
+     * seuil, ce qui décrit les réserves à la Vampire ou Year Zero. Toute la
+     * famille 2d20 de Modiphius — Dune, Star Trek Adventures, Conan — compte
+     * l'inverse : chaque dé **inférieur ou égal** au seuil est une réussite.
+     * Mesuré le 2026-08-10 sur 4 000 dés au seuil 12 : le moteur comptait 1 859
+     * réussites, exactement celles qu'il fallait rejeter.
+     *
+     * **Et `doubleSous`.** Dans cette même famille, un dé assez bas vaut deux
+     * réussites : le 1 naturel toujours, et tout dé sous la compétence seule
+     * quand le personnage a la spécialisation. Le comptage des « fléaux » —
+     * soustraire les 1 — n'a alors aucun sens : il retirait des réussites
+     * critiques.
+     */
+    static rollPool(
+        faces: number,
+        count: number,
+        modifier: number,
+        target: number,
+        exploding: boolean = false,
+        options?: { sens?: 'over' | 'under'; doubleSous?: number },
+    ): RollResult {
         const rolls: RollResult['rolls'] = [];
+        const sens = options?.sens ?? 'over';
+        const doubleSous = options?.doubleSous;
         let successes = 0;
         let ones = 0;
 
+        /** Ce que rapporte un dé : 0, 1, ou 2 quand il tombe assez bas. */
+        const valeurDuDe = (val: number): number => {
+            const reussit = sens === 'under' ? val <= target : val >= target;
+            if (!reussit) return 0;
+            return doubleSous !== undefined && val <= doubleSous ? 2 : 1;
+        };
+
+        const compter = (val: number, exploded: boolean) => {
+            const gain = valeurDuDe(val);
+            successes += gain;
+            // En comptage « sous », un 1 est la meilleure valeur possible : le
+            // retenir comme fléau retirerait la réussite critique qu'il vient
+            // d'accorder.
+            const isCritFail = sens === 'over' && val === 1;
+            if (isCritFail) ones++;
+            rolls.push({
+                val,
+                sides: faces,
+                isCritMax: gain > 0,
+                isCritMin: isCritFail,
+                isExploded: exploded,
+            });
+        };
+
         for (let i = 0; i < count; i++) {
             const val = this.roll(faces);
-            const isCritFail = val === 1;
-            const isCritMax = val >= target;
-            if (isCritFail) ones++;
-            if (isCritMax) successes++;
-
-            rolls.push({ val, sides: faces, isCritMax, isCritMin: isCritFail, isExploded: false });
+            compter(val, false);
 
             if (exploding && val === faces) {
                 let keepExploding = true;
                 while (keepExploding) {
                     const extraVal = this.roll(faces);
-                    const isExtraFail = extraVal === 1;
-                    const isExtraMax = extraVal >= target;
-                    if (isExtraFail) ones++;
-                    if (isExtraMax) successes++;
-
-                    rolls.push({ val: extraVal, sides: faces, isCritMax: isExtraMax, isCritMin: isExtraFail, isExploded: true });
+                    compter(extraVal, true);
                     if (extraVal !== faces) keepExploding = false;
                 }
             }
@@ -458,7 +497,7 @@ export class DiceEngine {
      * @param options Options dynamiques (modificateur, nombre de dés, seuil forcé).
      * @returns Objet RollResult final.
      */
-    static rollFromConfig(config: { defaultDice: string; logic: string; successThreshold?: number; engine?: string }, options?: { modifier?: number; baseCount?: number; gearCount?: number; targetOverwrite?: number }): RollResult {
+    static rollFromConfig(config: { defaultDice: string; logic: string; successThreshold?: number; engine?: string }, options?: { modifier?: number; baseCount?: number; gearCount?: number; targetOverwrite?: number; doubleSous?: number }): RollResult {
         // If an engine is specified, prioritize it
         if (config.engine === 'year-zero' || config.engine === 'yze') {
             const count = options?.baseCount ?? (parseInt(config.defaultDice) || 6);
@@ -472,7 +511,23 @@ export class DiceEngine {
         }
 
         if (config.engine === '2d20') {
-            return this.rollPool(20, 2, options?.modifier ?? 0, (options?.targetOverwrite ?? config.successThreshold) || 12, false);
+            /**
+             * La famille 2d20 compte **sous** le seuil, jamais au-dessus, et le
+             * 1 naturel vaut deux réussites. C'est la définition du système, pas
+             * un réglage : un 2d20 qui compte au-dessus décrit un autre jeu.
+             *
+             * `baseCount` porte la réserve réellement achetée — de 2 à 5 dés
+             * chez Dune — et `doubleSous` la valeur sous laquelle un dé compte
+             * double, qui monte à la compétence seule avec la spécialisation.
+             */
+            return this.rollPool(
+                20,
+                options?.baseCount ?? 2,
+                options?.modifier ?? 0,
+                (options?.targetOverwrite ?? config.successThreshold) || 12,
+                false,
+                { sens: 'under', doubleSous: options?.doubleSous ?? 1 },
+            );
         }
 
         const dicePart = config.defaultDice.match(/(\d+)d(\d+|f|F)/i);

@@ -102,6 +102,18 @@ export interface GameDriver {
     // Metadata for AI
     aiInstructions: string; // Specialized instructions for the Oracle/Sage to understand rules
     aiPersonas?: Record<string, string>; // gemId -> instructions override
+    /**
+     * De quoi un jet se compose, en termes de champs de la fiche.
+     *
+     * **Ce qu'il rend possible** : lancer depuis la fiche de personnage avec le
+     * bon seuil. `dice.successThreshold` est un nombre fixe ; chez Dune le seuil
+     * vaut une compétence plus un principe, choisis test par test, de 8 à 16. On
+     * y inscrivait le minimum, et tout jet sous-estimait le personnage.
+     *
+     * Facultatif : un système à seuil constant n'en a pas besoin, et les pilotes
+     * antérieurs continuent de fonctionner sans.
+     */
+    jet?: import('../modules/dice/DescripteurDeJet').DescripteurDeJet;
     ragPath?: string; // Hérité : visait le dossier des fiches. Préférer `corpusId`.
     /**
      * Dossier de corpus sous `docs/systems/` — `dune`, `blade-runner`.

@@ -87,6 +87,27 @@ const DUNE: GameDriver = {
     },
 
     /**
+     * Le descripteur qui abat le mur n° 3.
+     *
+     * Le seuil ne vaut plus 8 par défaut : il se compose d'**une compétence et
+     * d'un principe** retenus sur la fiche, de 8 à 16. Le joueur choisit ce que
+     * fait son personnage et pourquoi il agit, et le jet en découle.
+     */
+    jet: {
+        seuil: [
+            { id: 'competence', label: 'Compétence', sectionId: 'competences' },
+            { id: 'principe', label: 'Principe', sectionId: 'principes' },
+        ],
+        // « Réserve de dés : de deux à cinq dés. » Les trois dés supplémentaires
+        // s'achètent 1, 2 puis 3 points d'Impulsion ou de Menace.
+        reserve: { base: 2, max: 5, faces: 20 },
+        sens: 'sous-ou-egal',
+        critique: 1,        // « Réussite critique standard : un naturel, valant deux réussites. »
+        complication: 20,   // « Complication standard : résultat de vingt naturel. »
+        difficulte: { min: 0, max: 5, defaut: 1 },
+    },
+
+    /**
      * Mur n° 1 : **aucune stat n'est marquée `isMainHP`**, parce que Dune n'a pas
      * de points de vie. On suit la Détermination, seule ressource individuelle
      * chiffrée du jeu.

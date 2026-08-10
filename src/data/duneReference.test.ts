@@ -150,12 +150,28 @@ describe('ce que le modèle ne sait PAS exprimer', () => {
         expect(dune.combat, 'un mode d\'initiative rendrait la formule inutile').not.toHaveProperty('initiativeMode');
     });
 
-    it('mur 3 — le seuil dynamique est réduit à son minimum', () => {
-        // Le seuil réel est compétence + principe (8 à 16), choisi test par test.
-        // 8 est le plancher : lancer avec cette valeur sous-estime toujours le
-        // personnage. Il manque un descripteur disant de quels champs il se compose.
-        expect(dune.dice.successThreshold).toBe(8);
-        expect(dune.dice, 'un descripteur de jet rendrait ce nombre fixe inutile').not.toHaveProperty('seuilCompose');
+    it('mur 3 — ABATTU le 2026-08-10 : le seuil se compose depuis la fiche', () => {
+        /**
+         * Le premier des quatre murs à tomber. Le seuil réel vaut compétence +
+         * principe (8 à 16), choisi test par test ; `successThreshold: 8` reste
+         * dans `dice` comme plancher pour les appelants qui ignorent le
+         * descripteur, mais ce n'est plus lui qui décide.
+         *
+         * Voir `src/modules/dice/DescripteurDeJet.ts`.
+         */
+        expect(dune.jet, 'le descripteur de jet est ce qui abat ce mur').toBeDefined();
+        expect(dune.jet!.seuil.map(c => c.id)).toEqual(['competence', 'principe']);
+        expect(dune.jet!.sens, 'la famille 2d20 compte sous le seuil').toBe('sous-ou-egal');
+        expect(dune.jet!.reserve).toEqual({ base: 2, max: 5, faces: 20 });
+    });
+
+    it('les sections du descripteur existent dans la fiche', () => {
+        // Même chaîne d'identifiants que les jauges : une section absente donne
+        // un seuil à zéro, en silence.
+        const sections = new Set(fiche.sections.map(s => s.id));
+        for (const composante of dune.jet!.seuil) {
+            expect(sections.has(composante.sectionId), `section « ${composante.sectionId} » absente`).toBe(true);
+        }
     });
 
     it('mur 4 — les ressources de table n\'ont nulle part où être déclarées', () => {
