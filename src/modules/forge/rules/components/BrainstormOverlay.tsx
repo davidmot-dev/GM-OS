@@ -20,6 +20,7 @@ import {
   cheminDesPersonas,
 } from '../../../../../electron/corpusSysteme';
 import { slugFiche } from '../canevas';
+import { ficheInventaire } from '../inventaire';
 import { slug } from '../../../../../electron/corpusSysteme';
 import type { BrainstormCandidate } from '../types';
 
@@ -111,7 +112,7 @@ export const BrainstormOverlay: React.FC = () => {
     if (gen === null) return;
     brainstormStore.setProcessing(true);
     try {
-      const discovered = await forgeService.discoverCandidates(
+      const { candidats, inventaire } = await forgeService.discoverCandidates(
         brainstormStore.notebookId,
         brainstormStore.selectedSourceIds
       );
@@ -123,8 +124,9 @@ export const BrainstormOverlay: React.FC = () => {
       const libre = brainstormStore.customSubject.trim();
       brainstormStore.setCandidates(
         libre
-          ? [{ id: slugFiche(libre), title: libre, category: 'rule' as const, summary: '', tags: ['hors canevas'] }, ...discovered]
-          : discovered
+          ? [{ id: slugFiche(libre), title: libre, category: 'rule' as const, summary: '', tags: ['hors canevas'] }, ...candidats]
+          : candidats,
+        inventaire
       );
     } catch (err: unknown) {
       if (gen !== generationCourante()) return;
@@ -152,6 +154,32 @@ export const BrainstormOverlay: React.FC = () => {
     abandonnerLaRequete();
     brainstormStore.setProcessing(false);
     brainstormStore.setStep('discovery');
+  };
+
+  /**
+   * Passe la synthèse de l'inventaire en revue, comme une fiche.
+   *
+   * Elle n'a coûté aucune requête de plus : c'est la réponse du gabarit 1, qu'on
+   * jetait après en avoir extrait la liste des sujets. La procédure la prescrit
+   * comme fiche du corpus depuis l'origine — c'est elle qui donne à l'Oracle la
+   * vue d'ensemble, là où chaque fiche donne un sujet.
+   */
+  const handleRevoirInventaire = () => {
+    const brut = brainstormStore.inventaireBrut;
+    if (!brut || !corpus) return;
+    brainstormStore.reviewCard({
+      id: 'inventaire-des-mecaniques',
+      title: 'Inventaire des mécaniques',
+      category: 'rule',
+      summary: '',
+      tags: [],
+      content: ficheInventaire(brut, corpus.id),
+      systemId: corpus.id,
+      forgedAt: Date.now(),
+      slug: 'inventaire-des-mecaniques',
+      sections: [],
+      avertissements: [],
+    });
   };
 
   /** Rédige la fiche. **N'écrit rien** : la revue vient ensuite. */
@@ -507,7 +535,11 @@ export const BrainstormOverlay: React.FC = () => {
 
           {brainstormStore.step === 'discovery' && (
             <>
-              <DiscoveryUI onSelect={handleForge} onAbandon={handleAbandon} />
+              <DiscoveryUI
+                onSelect={handleForge}
+                onAbandon={handleAbandon}
+                onEnregistrerInventaire={brainstormStore.inventaireBrut ? handleRevoirInventaire : undefined}
+              />
               {!brainstormStore.isProcessing && brainstormStore.candidates.length > 0 && (
                 <div className="max-w-4xl mx-auto px-6 pb-6 flex justify-center">
                   <button

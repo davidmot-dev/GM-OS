@@ -79,6 +79,7 @@ export function generationCourante(): number {
 export const useBrainstormStore = create<BrainstormState>((set) => ({
   step: 'idle',
   candidates: [],
+  inventaireBrut: null,
   activeCard: null,
   personas: null,
   isProcessing: false,
@@ -124,12 +125,14 @@ export const useBrainstormStore = create<BrainstormState>((set) => ({
     step: 'discovery',
     error: null,
     candidates: [],
+    inventaireBrut: null,
     activeCard: null,
     personas: null,
   }),
 
-  setCandidates: (candidates) => set({
+  setCandidates: (candidates, inventaireBrut) => set({
     candidates,
+    ...(inventaireBrut === undefined ? {} : { inventaireBrut }),
     isProcessing: false
   }),
 
@@ -179,6 +182,7 @@ export const useBrainstormStore = create<BrainstormState>((set) => ({
   reset: () => set({
     step: 'idle',
     candidates: [],
+    inventaireBrut: null,
     activeCard: null,
     personas: null,
     error: null,

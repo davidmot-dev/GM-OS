@@ -61,6 +61,12 @@ export function estErreurAuth(candidat: unknown): boolean {
   return texteEvoqueAuth(JSON.stringify(candidat));
 }
 
+export interface InventaireForge {
+  candidats: BrainstormCandidate[];
+  /** Le markdown rendu par le carnet — la synthèse du système. */
+  inventaire: string;
+}
+
 export interface ForgePersonasResult {
   /** La fiche de voix (prompt A), archivée dans `personas/` pour la relecture. */
   voix: string;
@@ -362,9 +368,9 @@ export class ForgeService {
    * carnet signale. Un sujet que le carnet a omis reste dans la liste : c'est
    * son absence qu'il faut voir.
    */
-  public async discoverCandidates(notebookId: string, sourceIds?: string[]): Promise<BrainstormCandidate[]> {
+  public async discoverCandidates(notebookId: string, sourceIds?: string[]): Promise<InventaireForge> {
     const contenu = await this.interrogerCarnet(notebookId, gabaritInventaire(), sourceIds);
-    return lireInventaire(contenu).map(entree => ({
+    const candidats = lireInventaire(contenu).map(entree => ({
       id: slugFiche(entree.sujet),
       title: entree.sujet,
       category: 'rule' as const,
@@ -381,6 +387,11 @@ export class ForgeService {
         ...entree.sections.slice(0, 3),
       ],
     }));
+
+    // Le markdown brut repart avec la liste : c'est la synthèse du système, un
+    // livrable a part entiere que la procedure prescrit d'enregistrer. On le
+    // jetait jusqu'ici pour n'en garder que les titres de sujets.
+    return { candidats, inventaire: contenu };
   }
 
   /**

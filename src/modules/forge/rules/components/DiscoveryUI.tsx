@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Sparkles, Zap, ChevronRight, RefreshCw, CheckCircle2, MinusCircle, HelpCircle } from 'lucide-react';
+import { Sparkles, Zap, ChevronRight, RefreshCw, CheckCircle2, MinusCircle, HelpCircle, Save } from 'lucide-react';
 import { useBrainstormStore } from '../store/useBrainstormStore';
 import ForgeProgress from './ForgeProgress';
 import type { BrainstormCandidate } from '../types';
@@ -27,11 +27,13 @@ function etat(candidate: BrainstormCandidate): 'non' | 'inconnu' | 'traite' {
 interface DiscoveryUIProps {
   /** Cesse d'attendre l'inventaire en cours. */
   onAbandon?: () => void;
+  /** Passe la synthèse en revue pour l'enregistrer comme fiche du corpus. */
+  onEnregistrerInventaire?: () => void;
   /** Forge la fiche du sujet retenu. La liste ne décide pas, elle propose. */
   onSelect: (candidate: BrainstormCandidate) => void;
 }
 
-const DiscoveryUI: React.FC<DiscoveryUIProps> = ({ onSelect, onAbandon }) => {
+const DiscoveryUI: React.FC<DiscoveryUIProps> = ({ onSelect, onAbandon, onEnregistrerInventaire }) => {
   const { t } = useTranslation(['modules']);
   const { candidates, isProcessing, startDiscovery, savedCandidateIds } = useBrainstormStore();
 
@@ -68,6 +70,14 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({ onSelect, onAbandon }) => {
             <p className="text-[10px] font-black uppercase tracking-widest text-purple-400/60">
               {t('session.forge_module.atelier.coverage', { traites, total: duCanevas.length })}
             </p>
+          )}
+          {onEnregistrerInventaire && (
+            <button
+              onClick={onEnregistrerInventaire}
+              className="flex items-center gap-2 px-5 py-2.5 bg-white/5 hover:bg-purple-600/20 border border-white/5 hover:border-purple-500/40 text-white/60 hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
+            >
+              <Save size={14} /> {t('session.forge_module.atelier.save_inventory')}
+            </button>
           )}
           <button
             onClick={() => startDiscovery()}

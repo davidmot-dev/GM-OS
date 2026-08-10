@@ -185,15 +185,23 @@ describe('ForgeService', () => {
          * invisible, exactement ce que le canevas existe pour empêcher.
          */
         callTool.mockResolvedValue({ content: INVENTAIRE });
-        const candidats = await forgeService.discoverCandidates('nb-1');
+        const { candidats } = await forgeService.discoverCandidates('nb-1');
 
         expect(candidats.find(c => c.id === 'resolution-des-jets')!.tags[0]).toBe('oui');
         expect(candidats.find(c => c.id === 'poursuites')!.tags[0]).toBe('sans reponse');
       });
 
+      it('rend aussi la synthèse brute, au lieu de la jeter', async () => {
+        // Dix mille caractères de synthèse partaient à la poubelle : la
+        // procédure prescrit de l'enregistrer comme fiche du corpus.
+        callTool.mockResolvedValue({ content: INVENTAIRE });
+        const { inventaire } = await forgeService.discoverCandidates('nb-1');
+        expect(inventaire).toBe(INVENTAIRE);
+      });
+
       it('rend les treize sujets même quand le carnet en omet', async () => {
         callTool.mockResolvedValue({ content: INVENTAIRE });
-        const candidats = await forgeService.discoverCandidates('nb-1');
+        const { candidats } = await forgeService.discoverCandidates('nb-1');
 
         expect(candidats).toHaveLength(13);
         expect(candidats.map(c => c.id)).toContain('poursuites');

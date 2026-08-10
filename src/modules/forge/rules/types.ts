@@ -50,6 +50,8 @@ export interface PersonasEnRevue {
 export interface BrainstormState {
   step: BrainstormStep;
   candidates: BrainstormCandidate[];
+  /** La synthèse rendue par l'inventaire, en attente d'enregistrement. */
+  inventaireBrut: string | null;
   activeCard: BrainstormCard | null;
   personas: PersonasEnRevue | null;
   isProcessing: boolean;
@@ -87,7 +89,7 @@ export interface BrainstormState {
   setCustomSubject: (subject: string) => void;
   setStep: (step: BrainstormStep) => void;
   setProcessing: (isProcessing: boolean) => void;
-  setCandidates: (candidates: BrainstormCandidate[]) => void;
+  setCandidates: (candidates: BrainstormCandidate[], inventaireBrut?: string) => void;
   startDiscovery: () => void;
   startForging: () => void;
   reviewCard: (card: BrainstormCard) => void;

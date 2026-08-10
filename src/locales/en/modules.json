@@ -1399,7 +1399,8 @@
         "error_no_corpus": "No corpus selected: the Forge would not know where to write.",
         "corpus_new_placeholder": "New corpus (e.g. hurlements)",
         "corpus_new_button": "Create",
-        "corpus_will_create": "This folder does not exist yet: it will be created when the first sheet is saved."
+        "corpus_will_create": "This folder does not exist yet: it will be created when the first sheet is saved.",
+        "save_inventory": "Save synthesis"
       },
       "notebook": {
         "title": "NotebookLM Browser",

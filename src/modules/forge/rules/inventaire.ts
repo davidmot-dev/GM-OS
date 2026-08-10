@@ -157,3 +157,46 @@ export function couverture(entrees: readonly EntreeInventaire[]): { traites: num
     total: CANEVAS.length,
   };
 }
+
+/**
+ * L'inventaire converti en fiche du corpus.
+ *
+ * **Pourquoi il s'enregistre.** La procédure le prescrit depuis l'origine —
+ * « Enregistré en `docs/systems/<id>/rules/` avec `sujet: Inventaire des
+ * mécaniques` » — et le corpus produit à la main le contient déjà :
+ * `systeme-2d20-dune-synthese.md` chez Dune, le guide de synthèse chez Alien.
+ * La Forge, elle, s'en servait pour en extraire la liste des sujets et jetait le
+ * reste. Dix mille caractères de synthèse à la poubelle à chaque passage.
+ *
+ * **Sa valeur est différente de celle des treize autres.** Chaque fiche répond
+ * sur un sujet ; celle-ci donne la vue d'ensemble, et c'est elle qui permet de
+ * répondre « ce jeu ne gère pas les poursuites » au lieu de ne rien trouver.
+ *
+ * **Réserve, à surveiller.** C'est un digest qui couvre tous les sujets à la
+ * fois : au classement du RAG il concourt avec les fiches et peut avaler le
+ * budget à lui seul. Le guide d'Alien est pour cette raison privé de `sujet:` et
+ * exempté par `ragSelection.test.ts`. On lui laisse ici son sujet, comme le fait
+ * Dune — mais son effet sur la sélection est à mesurer.
+ */
+export function ficheInventaire(brut: string, systeme: string): string {
+  const entrees = lireInventaire(brut);
+  const { traites, total } = couverture(entrees);
+  const hors = entrees.filter(e => e.horsCanevas).length;
+
+  const corps = brut.replace(/\r\n/g, '\n').trim();
+  const entete = [
+    'sujet: Inventaire des mécaniques',
+    `systeme: ${systeme}`,
+    `couverture: ${traites === total ? 'complète' : traites === 0 ? 'absente' : 'partielle'}`,
+    'hors_canevas: false',
+    `sujets_traites: ${traites} sur ${total}`,
+    `hors_categories: ${hors}`,
+    'genere_par: notebooklm',
+    'gabarit: v3',
+    'relu: false',
+  ];
+
+  const aUnTitre = /^\s*#\s+\S/.test(corps.split('\n')[0] ?? '');
+  const titre = aUnTitre ? '' : '# Inventaire des mécaniques\n\n';
+  return `---\n${entete.join('\n')}\n---\n\n${titre}${corps}\n`;
+}
