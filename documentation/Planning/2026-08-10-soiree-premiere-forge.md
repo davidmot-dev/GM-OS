@@ -1,0 +1,194 @@
+# La première forge réelle — séance du 2026-08-10, après-midi et soirée
+
+Écrit pour être lu à froid. Suite de `2026-08-10-etat-et-reprise.md`, dont le chemin critique était
+« faire tourner la Forge sur un système réel ». C'est fait, et **la première fiche v3 du corpus est
+sur le disque**.
+
+Branche `feature/tablet-hub-pwa`, tout poussé jusqu'à `63344bb`. 748 tests verts, typecheck propre,
+build réel vérifié.
+
+---
+
+## 1. Par quoi reprendre
+
+**Forger les treize fiches de Dune, une par une**, et mesurer ce qui reste incertain.
+
+Tout l'outillage est en place et éprouvé en réel. Ce qui manque, ce sont les fiches — et une seule
+mesure décisive n'a pas encore été prise : **est-ce que le gabarit scindé passe ?** La scission est
+écrite et testée, elle n'a pas encore tourné de bout en bout.
+
+Ensuite, dans l'ordre :
+
+1. **Régénérer les fiches** de Dune, puis d'Alien et de Blade Runner.
+2. **Brancher le résolveur** `electron/bookIndex.ts` — il n'a toujours aucun appelant, et les fiches v3
+   lui donneront enfin son entrée : des `sections:` à confronter à l'index du livre.
+3. **Structure Système** : `corpusId` à la création d'un pilote, et création des répertoires
+   (`rules/`, `index/`, `personas/`). Aujourd'hui la Forge crée un pilote avec un identifiant
+   horodaté et rien autour. C'est le flux que David a décrit : *forger un système, puis l'atelier*.
+4. **Rendre son pilote Blade Runner à « Anges de Feu »**, si ce n'est pas déjà fait — la campagne a
+   hérité du pilote de Dune pendant les essais.
+
+---
+
+## 2. Les mesures réelles, qui n'existaient pas avant cette séance
+
+Toutes relevées sur `~/mcp_bridge_debug.log` pendant des forges réelles du carnet Dune.
+
+| Requête | Sources | Durée | Issue |
+|---|---|---|---|
+| Inventaire | 12 | 5 min 31 s | ✗ dépassement serveur |
+| Inventaire | 1 | 2 min 08 s | ✓ |
+| Inventaire | 1 | **72 s** | ✓ |
+| Fiche, gabarit entier | 1 | 5 min 56 s | ✗ dépassement serveur |
+| Fiche, **moitié 1** (règle, valeurs) | 1 | **82 s** | ✓ 2 398 car. |
+| Fiche, **moitié 2** (table, cas limites) | 1 | **89 s** | ✓ 2 439 car. |
+
+**Le serveur NotebookLM coupe autour de six minutes**, avec
+`{"status":"error","error":"Query failed: The read operation timed out"}`. Ce n'est pas notre plafond
+de dix minutes : celui-là n'a jamais été atteint.
+
+Deux leviers mesurés : **filtrer les sources** (douze → une : de l'échec à 72 secondes) et **alléger la
+demande** (le gabarit de fiche fait le double de l'inventaire).
+
+**La divergence 10 min / 45 min entre `ForgeService` et `mcp_bridge` est donc sans conséquence
+pratique** — on n'y touche pas.
+
+---
+
+## 3. Neuf défauts trouvés, dont sept en regardant tourner
+
+C'est le fait marquant de la séance : **aucun n'aurait été trouvé sans le journal et le compteur.** La
+demande initiale de David — « je n'ai aucune vue sur ce qui est fait » — valait mieux que la forge
+elle-même.
+
+Tous partagent la même forme : **quelque chose échoue ou dévie sans le dire.**
+
+| Défaut | Comment il se taisait | Commit |
+|---|---|---|
+| « Feyd-Rautha » pris pour une session expirée | `includes('auth')` sur un appel **réussi** | `d4a80b0` |
+| Trois requêtes simultanées | atelier monté deux fois (`App.tsx` **et** `ForgeDashboard`) | `478c020` |
+| Personas de Dune jamais lues | `catch {}` sur un chemin inexistant | `7676354` |
+| Corpus déduit de la campagne | il fallait réaffecter un pilote pour dire « je documente Dune » | `52b3f71` |
+| Sources d'un autre carnet | affichées comme « aucune » pendant qu'elles filtraient | `a15705e` |
+| Le studio détournait le livrable | la réponse n'était qu'un compte rendu | `63a8960` |
+| « 13 sujets sur 13 traités » sur zéro | le drapeau `lu` perdu à la correspondance | `63a8960` |
+| Hors catégories en liste numérotée | le parseur n'acceptait que les puces | `489b4d1` |
+| Sections entre accents graves | ni le découpage ni le nettoyage ne les connaissaient | `489b4d1` |
+
+**Le plus instructif est « Feyd-Rautha ».** `isAuthError` cherchait la sous-chaîne `auth` dans le
+résultat, y compris quand l'appel avait réussi — et les sources Dune contiennent quatorze occurrences
+du motif (« Feyd-R**auth**a », « d'**auth**entiques experts »). Chaque lecture de source déclenchait
+une reconnexion inutile, un rejeu, puis `MCP_AUTH_EXPIRED` sur un appel parfaitement abouti. La
+correction structurelle vaut d'être retenue : **un succès n'est jamais une erreur d'authentification,
+quoi qu'il contienne.** On n'inspecte le texte que d'une chose déjà en échec.
+
+---
+
+## 4. Ce que le carnet fait vraiment, et qui n'était pas écrit
+
+Quatre comportements observés, tous coûteux, aucun documenté avant cette séance.
+
+**Il détourne le livrable vers le studio.** La consigne « Génère un Markdown que tu sauveras dans le
+studio » — présentée comme un acquis au § 8 de la procédure — fait déposer le document dans le studio
+et ne renvoyer qu'un compte rendu en prose. À la main, David ouvrait le fichier ; à travers MCP, la
+réponse est tout ce qu'on reçoit. **Les quatre gabarits exigent désormais que la réponse soit le
+livrable**, l'archive restant accessible par l'option `studio` pour un prompt copié à la main.
+
+**Il nomme ses documents comme il veut** : `analyse-regles-dune`, `synthese-complete-systeme-2d20-dune`,
+`synthese-systeme-dune-sections`, `analyse-mecanique-dune-officiel` — quatre familles de noms pour la
+même demande. Même en voulant récupérer une synthèse depuis le studio, on ne saurait pas laquelle
+chercher. Le dépôt au studio était une impasse dans les deux sens.
+
+**Il rend ses listes hors catégories en numéroté** (`1. **Nom** : …`) et **ses titres de section entre
+accents graves** (`` `Tests de compétence` ``). Les deux échappaient au parseur.
+
+**Il cite des pages malgré l'interdiction explicite du gabarit v3**, et produit des répétitions
+parasites (« allant de de de quatre à de de de de huit »). Rien à corriger de notre côté ; la
+conversion signale les pages fiche par fiche.
+
+---
+
+## 5. Ce que la Forge sait faire maintenant
+
+**L'écriture résout comme la lecture.** `electron/corpusSysteme.ts` répond seul à « où vit ce
+corpus ? », par ordre d'autorité : chemin déclaré sur la campagne, `corpusId` du pilote, `ragPath`
+hérité, identifiant, nom affiché, défaut. Les trois artefacts en dérivent — `rules/`, `gems.json`,
+`index/` — parce que deux d'entre eux n'ont aucun moyen d'être redirigés ailleurs. `ragSelection`
+importe de ce module ses règles d'identité au lieu d'en garder une copie.
+
+**On documente un corpus, pas une campagne.** L'atelier porte sa propre cible, choisie dans la liste
+des dossiers réels, et n'écrit rien dans la campagne. Un corpus inédit peut être nommé à la main. La
+campagne active ne fournit plus qu'une valeur par défaut.
+
+**Rien ne se perd.** La fiche part en brouillon dans `<corpus>/drafts/` dès son retour du carnet,
+avant toute revue — `drafts/` est exclu de l'index de l'Oracle par le `.ragignore` de `docs/`, et le
+brouillon est supprimé à la publication. Le gabarit de fiche est scindé en deux moitiés, et **la
+première est écrite avant que la seconde ne parte** : un brouillon partiel se reconnaît à l'absence de
+`## À la table`, et seule la moitié manquante est redemandée.
+
+**L'inventaire se reprend depuis le disque.** Il est enregistré comme fiche du corpus
+(`inventaire-des-mecaniques.md`, `sujet: Inventaire des mécaniques`), et l'atelier le relit à
+l'ouverture au lieu de repayer 72 secondes. Treize fiches, c'est une demi-heure : personne ne fait ça
+d'une traite.
+
+**On voit ce qui se passe.** Compteur de durée, journal du pont (`mcp:activity`), nom du carnet et des
+sources interrogées, bandeau du corpus visé, bouton « cesser d'attendre ». Le verrou du carnet est un
+verrou de **module** avec génération, pour qu'une requête abandonnée ne libère pas le verrou de sa
+remplaçante.
+
+---
+
+## 5 bis. Le résolveur a enfin une entrée — et il fonctionne
+
+Confronté à la première fiche v3 (`resolution-des-jets.md`), contre l'index Dune :
+
+```
+exact         p. 145   Tests de compétence
+exact         p. 148   Procédure des tests de compétence
+introuvable   —        Dés
+approche      p. 145   Difficulté        (via « Diffculté »)
+exact         p. 149   Améliorer vos chances
+exact         p. 154   Marge de complication
+
+résolus : 5 / 6        pages invraisemblables : aucune
+```
+
+**Ce sont les premières pages vérifiées du projet.** À comparer aux fiches v1 qui citaient jusqu'à la
+page 1279 pour un livre qui s'arrête à 328.
+
+« Difficulté » retrouvé via « Diffculté » : la ligature `fi` perdue à l'extraction, obstacle n° 1 du
+relevé de la veille — la tolérance d'un caractère par tranche de sept a fait exactement son office.
+« Dés » reste introuvable, et c'est honnête : trois caractères ne se rapprochent pas sans risque.
+
+**Ce qui reste à faire du résolveur** : il n'a toujours aucun appelant en production. La sonde ci-dessus
+était temporaire. Le brancher — sur la revue, pour afficher les pages résolues avant publication — est
+le point 2 du § 1.
+
+---
+
+## 6. État du corpus Dune
+
+| Emplacement | Contenu |
+|---|---|
+| `rules/` | **`inventaire-des-mecaniques.md`** (9,9 Ko, `sujets_traites: 12 sur 13`, `hors_categories: 4`) et **`resolution-des-jets.md`** (5,2 Ko, six sections, 5 pages vérifiées) |
+| `drafts/` | vide — le brouillon est supprimé à la publication |
+| `rules-v1/` | les 18 fiches v1, archivées, exclues du RAG, conservées pour la fusion des doublons |
+| `index/` | `.docx` (736 entrées) + `.md` (122) |
+| `gems.json` | les personas — **actives depuis `7676354`**, elles n'avaient jamais été lues |
+
+---
+
+## 7. Trois choses à ne pas redécouvrir
+
+- **Un garde-fou qui rattrape n'est pas un garde-fou qui évite.** Le bandeau de corpus a bel et bien
+  empêché treize fiches Dune de partir dans `systems/blade-runner/`. Mais il n'a empêché ni la
+  confusion ni le dommage collatéral — une campagne Blade Runner s'est retrouvée avec le pilote de
+  Dune, parce que c'était le seul moyen d'exprimer « je veux enrichir le corpus Dune ». C'est la
+  conception qui rendait l'erreur facile, pas l'utilisateur qui manquait d'attention.
+- **Le journal de débogage du pont est la meilleure source de vérité.** `~/mcp_bridge_debug.log`
+  contient les requêtes et les réponses intégrales. Sept des neuf défauts en sortent. Attention à sa
+  taille : une réponse de `source_get_content` fait 2,7 Mo sur une seule ligne — ne jamais le lire en
+  entier, toujours extraire.
+- **Vérifier sur la charge réelle, pas sur un exemple écrit soi-même.** Le correctif « Feyd-Rautha » a
+  été confronté à la réponse de 2,67 Mo qui l'avait déclenché : l'ancienne heuristique rend `true`, la
+  nouvelle `false`. Un exemple fabriqué n'aurait rien prouvé.
