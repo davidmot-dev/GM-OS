@@ -5,8 +5,10 @@
  * `docs/systems/<id>/gems.json` — littéralement ce chemin. `AIService` appelle
  * `readDoc('systems/<id>/gems.json')` ; un fichier rangé dans un sous-dossier
  * `personas/` n'est jamais lu, **sans le moindre message d'erreur**. Le piège
- * s'est produit deux fois. {@link CHEMIN_PERSONAS} et
- * `electron/systemPersonas.test.ts` en tiennent désormais le contrat.
+ * s'est produit deux fois. `electron/corpusSysteme.cheminDesPersonas` est
+ * désormais le seul à calculer ce chemin — deux fonctions répondant à la même
+ * question finissent par ne plus répondre pareil — et
+ * `electron/systemPersonas.test.ts` en tient le contrat côté disque.
  *
  * **Le piège des clés.** `AIService` indexe par `gemId` : une clé inconnue est
  * du travail perdu, silencieusement. On rejette plutôt que d'écrire à côté.
@@ -29,10 +31,6 @@ export type ClefGemme = (typeof CLEFS_GEMMES)[number];
 
 export type Personas = Record<ClefGemme, string>;
 
-/** Le chemin de `writeDoc`, relatif à `docs/`. Ni ailleurs, ni renommé. */
-export function CHEMIN_PERSONAS(systemeId: string): string {
-  return `systems/${systemeId}/gems.json`;
-}
 
 /**
  * Plafond de longueur d'une persona.

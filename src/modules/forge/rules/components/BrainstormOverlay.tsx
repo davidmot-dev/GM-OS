@@ -1,13 +1,17 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useBrainstormStore } from '../store/useBrainstormStore';
 import { forgeService } from '../../ForgeService';
 import { useSessionOSStore } from '../../../session/useSessionOSStore';
-import { X, Zap, Sparkles, ChevronLeft, Shield, BookOpen, AlertTriangle, Users, Save } from 'lucide-react';
+import { X, Zap, Sparkles, ChevronLeft, Shield, BookOpen, AlertTriangle, Users, Save, FolderTree } from 'lucide-react';
 import { DEFAULT_GAME_DRIVERS } from '../../../../data/defaultGameDrivers';
 import DiscoveryUI from './DiscoveryUI';
 import ForgeProgress from './ForgeProgress';
-import { CHEMIN_PERSONAS } from '../personas';
+import {
+  resoudreCorpus,
+  cheminDesFiches,
+  cheminDesPersonas,
+} from '../../../../../electron/corpusSysteme';
 import { slugFiche } from '../canevas';
 import type { BrainstormCandidate } from '../types';
 
@@ -35,19 +39,35 @@ export const BrainstormOverlay: React.FC = () => {
     err instanceof Error && err.message ? err.message : defaut;
 
   /**
-   * Dossier des fiches : celui du driver s'il en déclare un, sinon le chemin
-   * standard du système.
+   * Dossiers réellement présents sous `docs/systems/`.
+   *
+   * Sans cet inventaire, le rapprochement par nom affiché est impossible — on ne
+   * reconnaît pas un dossier dont on ignore l'existence — et la résolution
+   * retombe sur l'identifiant du pilote, qui est un horodatage.
    */
-  const dossierDesFiches = (systemId: string): string => {
-    const driver = allDrivers.find(d => d.id === systemId);
-    let baseDir = driver?.ragPath?.trim().replace(/\\/g, '/') || `systems/${systemId}/rules`;
-    if (baseDir.startsWith('/')) baseDir = baseDir.substring(1);
-    if (baseDir.endsWith('/')) baseDir = baseDir.slice(0, -1);
-    return baseDir;
-  };
+  const [dossiersSystemes, setDossiersSystemes] = useState<string[]>([]);
+  useEffect(() => {
+    window.appBridge?.ai?.listSystems?.().then(setDossiersSystemes).catch(() => setDossiersSystemes([]));
+  }, []);
 
-  const cheminDeLaFiche = brainstormStore.activeCard && activeCampaign?.system
-    ? `${dossierDesFiches(activeCampaign.system)}/${brainstormStore.activeCard.slug}.md`
+  /**
+   * Où vit le corpus de ce système. Une seule question, une seule réponse — et
+   * la même que celle du moteur de sélection, ce qui est tout l'enjeu : une
+   * écriture qui ne résout pas comme la lecture écrit à côté sans le dire.
+   */
+  const corpus = activeCampaign?.system
+    ? resoudreCorpus({
+        systemId: activeCampaign.system,
+        systemName: allDrivers.find(d => d.id === activeCampaign.system)?.name,
+        systemPath: activeCampaign.systemPath,
+        corpusId: allDrivers.find(d => d.id === activeCampaign.system)?.corpusId,
+        ragPath: allDrivers.find(d => d.id === activeCampaign.system)?.ragPath,
+        dossiersConnus: dossiersSystemes,
+      })
+    : null;
+
+  const cheminDeLaFiche = brainstormStore.activeCard && corpus
+    ? `${cheminDesFiches(corpus)}/${brainstormStore.activeCard.slug}.md`
     : '';
 
   const handleDiscover = useCallback(async () => {
@@ -146,18 +166,17 @@ export const BrainstormOverlay: React.FC = () => {
    */
   const handleSavePersonas = async () => {
     const resultat = brainstormStore.personas;
-    const systemId = activeCampaign?.system;
-    if (!resultat || !systemId) return;
+    if (!resultat || !corpus) return;
     brainstormStore.setProcessing(true);
     try {
       const ecrit = await window.appBridge?.ai?.writeDoc(
-        CHEMIN_PERSONAS(systemId),
+        cheminDesPersonas(corpus),
         JSON.stringify(resultat.personas, null, 2)
       );
       if (!ecrit) throw new Error(t('session.forge_module.atelier.error_write'));
       // La fiche de voix est l'archive de ce qui a produit les personas : elle
       // n'est lue par personne, mais sans elle on ne sait plus d'où elles sortent.
-      await window.appBridge?.ai?.writeDoc(`systems/${systemId}/personas/fiche-de-voix.md`, resultat.voix);
+      await window.appBridge?.ai?.writeDoc(`${corpus.racine}/personas/fiche-de-voix.md`, resultat.voix);
       brainstormStore.markSaved('personas');
     } catch (err: unknown) {
       brainstormStore.setError(messageErreur(err, t('session.forge_module.atelier.error_write')));
@@ -311,6 +330,39 @@ export const BrainstormOverlay: React.FC = () => {
             </div>
           )}
 
+          {/*
+            Le corpus visé, annoncé avant d'écrire quoi que ce soit.
+            Un dossier neuf n'est pas une erreur en soi — un système inédit en
+            crée forcément un — mais c'en est une quand l'index et les personas
+            vivent ailleurs, et c'est exactement ce qui s'est produit sans que
+            rien ne le dise pendant des semaines.
+          */}
+          {corpus && (
+            <div className={`mb-6 px-6 py-4 rounded-2xl border flex items-start gap-4 ${
+              corpus.aCreer
+                ? 'bg-amber-500/10 border-amber-500/20'
+                : 'bg-white/5 border-white/5'
+            }`}>
+              <FolderTree size={16} className={corpus.aCreer ? 'text-amber-400 mt-0.5' : 'text-purple-400/60 mt-0.5'} />
+              <div className="min-w-0">
+                <p className="text-[10px] font-black uppercase tracking-widest text-white/20">
+                  {t('session.forge_module.atelier.corpus_target')}
+                  <span className="ml-2 text-white/40 normal-case tracking-normal font-normal">
+                    ({t(`session.forge_module.atelier.corpus_reason_${corpus.raison}`)})
+                  </span>
+                </p>
+                <p className={`text-sm font-mono ${corpus.aCreer ? 'text-amber-400' : 'text-purple-400/80'}`}>
+                  {corpus.racine}
+                </p>
+                {corpus.aCreer && (
+                  <p className="text-xs text-amber-200/60 leading-relaxed mt-2">
+                    {t('session.forge_module.atelier.corpus_new_folder')}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+
           {brainstormStore.step === 'discovery' && (
             <>
               <DiscoveryUI onSelect={handleForge} />
@@ -422,7 +474,7 @@ export const BrainstormOverlay: React.FC = () => {
 
                <p className="text-[10px] font-black uppercase tracking-widest text-white/20">
                  {t('session.forge_module.atelier.personas_path')}{' '}
-                 <span className="text-purple-400/60">{activeCampaign?.system ? CHEMIN_PERSONAS(activeCampaign.system) : ''}</span>
+                 <span className="text-purple-400/60">{corpus ? cheminDesPersonas(corpus) : ''}</span>
                </p>
 
                <div className="grid grid-cols-2 gap-4">

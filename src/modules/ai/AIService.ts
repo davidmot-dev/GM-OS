@@ -6,6 +6,7 @@ import { ragService } from './RAGService';
 import type { AIResponse, AIProvider } from './types';
 import type { JournalEvent } from '../journal/types';
 import i18n from '../../i18n';
+import { resoudreCorpus, cheminDesPersonas } from '../../../electron/corpusSysteme';
 
 interface GeminiResponse {
   candidates?: {
@@ -732,6 +733,10 @@ ${customContext ? `${customContext}\n\n${ragContext}` : ragContext}`;
     
     const activeCampaign = useSessionOSStore.getState().campaigns.find(c => c.id === useSessionOSStore.getState().activeCampaignId);
     const systemId = activeCampaign?.system?.toLowerCase() || 'generic';
+    // Accès défensif : la persona est un enrichissement du prompt, jamais une
+    // condition de la génération. Un store incomplet ne doit pas faire échouer
+    // une requête au modèle.
+    const driver = useSessionOSStore.getState().customGameDrivers?.find(d => d.id === activeCampaign?.system);
 
     const translateOrDefault = (key: string, def: string) => {
       const t = i18n.t(key);
@@ -740,8 +745,27 @@ ${customContext ? `${customContext}\n\n${ragContext}` : ragContext}`;
 
     let personaInstructions = translateOrDefault(gem.systemOverrides?.[systemId] || gem.baseInstructions, "Tu es un assistant IA expert.");
 
+    /**
+     * Les personas par système, résolues **comme la Forge les écrit**.
+     *
+     * Auparavant ce bloc lisait `systems/${systemId}/gems.json` en dur. Or la
+     * Forge fabrique les identifiants de pilote avec `custom-${Date.now()}` :
+     * pour une campagne Dune, il demandait `systems/custom-1754…/gems.json`, qui
+     * n'existe pas, pendant que `docs/systems/dune/gems.json` attendait. Le
+     * `catch` avalait le vide et l'Oracle retombait sur la persona générique —
+     * les personas de Dune n'ont jamais servi, et rien ne l'a jamais dit.
+     */
     try {
-      const systemGemsRaw = await window.appBridge?.ai?.readDoc?.(`systems/${systemId}/gems.json`);
+      const dossiersConnus = (await window.appBridge?.ai?.listSystems?.()) ?? [];
+      const corpus = resoudreCorpus({
+        systemId,
+        systemName: driver?.name,
+        systemPath: activeCampaign?.systemPath,
+        corpusId: driver?.corpusId,
+        ragPath: driver?.ragPath,
+        dossiersConnus,
+      });
+      const systemGemsRaw = await window.appBridge?.ai?.readDoc?.(cheminDesPersonas(corpus));
       if (systemGemsRaw) {
         const systemGems = JSON.parse(systemGemsRaw);
         if (systemGems[gemId]) personaInstructions = systemGems[gemId];

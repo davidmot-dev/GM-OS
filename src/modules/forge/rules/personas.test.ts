@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
   CLEFS_GEMMES,
-  CHEMIN_PERSONAS,
   extrairePersonas,
   controlerPersonas,
   type Personas,
@@ -13,12 +12,6 @@ function huitPersonas(surcharge: Record<string, string> = {}): Record<string, st
   return { ...base, ...surcharge };
 }
 
-describe('CHEMIN_PERSONAS', () => {
-  it('vise le seul chemin que readDoc résout', () => {
-    // Un fichier rangé ailleurs n'est jamais lu, sans le moindre message.
-    expect(CHEMIN_PERSONAS('dune')).toBe('systems/dune/gems.json');
-  });
-});
 
 describe('extrairePersonas', () => {
   it('lit les huit gemmes d\'un JSON nu', () => {

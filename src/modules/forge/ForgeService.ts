@@ -359,7 +359,7 @@ export class ForgeService {
    * conversations, donc rien ne rattrape un enchaînement rompu — d'où le
    * séquencement strict, sans parallélisation.
    *
-   * N'écrit rien : le chemin d'écriture ({@link CHEMIN_PERSONAS}) appartient à
+   * N'écrit rien : le chemin d'écriture (`corpusSysteme.cheminDesPersonas`) appartient à
    * l'appelant, qui montre d'abord et enregistre ensuite.
    */
   public async forgePersonas(notebookId: string, sourceIds?: string[]): Promise<ForgePersonasResult> {

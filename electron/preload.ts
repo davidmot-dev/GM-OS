@@ -83,6 +83,8 @@ contextBridge.exposeInMainWorld('appBridge', {
     },
     ai: {
         listDocs: () => ipcRenderer.invoke('ai:list-docs'),
+        /** Dossiers sous docs/systems/, pour resoudre le corpus d'un systeme. */
+        listSystems: (): Promise<string[]> => ipcRenderer.invoke('ai:list-systems'),
         readDoc: (filePath: string) => ipcRenderer.invoke('ai:read-doc', filePath),
         writeDoc: (filePath: string, content: string) => ipcRenderer.invoke('ai:write-doc', filePath, content),
         extractPDF: (filePath: string) => ipcRenderer.invoke('ai:extract-pdf', filePath),

@@ -25,6 +25,16 @@
  *    50 000 caractères avale le budget à elle seule.
  */
 
+/**
+ * Les regles d'identite des systemes vivent dans `corpusSysteme` : c'est la
+ * meme question — quel dossier appartient a quel systeme — et la lecture et
+ * l'ecriture doivent y repondre pareil. Deux copies divergeraient, et une
+ * divergence entre lecture et ecriture est indetectable par construction.
+ */
+import { slug, memeIdentite, normaliseChemin } from './corpusSysteme';
+
+export { slug };
+
 /** Plafond global du bloc RAG. */
 export const MAX_CONTEXT_TOKENS = 4000;
 
@@ -116,36 +126,6 @@ export interface RagSelection {
     totalTokens: number;
     /** Anomalies de configuration à faire remonter — un silence en cacherait une. */
     avertissements: string[];
-}
-
-/** Minuscules, sans accents, non-alphanumériques réduits à des tirets. */
-export function slug(value: string): string {
-    return value
-        .normalize('NFD')
-        // Marques combinantes séparées par NFD. `\p{Mn}` garde la source en
-        // ASCII pur — un intervalle de diacritiques littéraux ne survit pas
-        // toujours à un aller-retour d'encodage sous Windows.
-        .replace(/\p{Mn}/gu, '')
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
-}
-
-/**
- * Deux identifiants désignent-ils la même chose ?
- *
- * Égalité de slug, ou préfixe suivi d'une frontière — `dnd` retrouve `dnd-5e`,
- * « Cthulhu Hack » retrouve le dossier `cthulhu hack`. Pas de `includes` libre :
- * c'est lui qui faisait passer n'importe quoi dans l'ancienne version.
- */
-function memeIdentite(a: string, b: string): boolean {
-    if (!a || !b) return false;
-    if (a === b) return true;
-    return a.startsWith(`${b}-`) || b.startsWith(`${a}-`);
-}
-
-function normaliseChemin(value: string): string {
-    return value.trim().replace(/\\/g, '/').replace(/^\/+|\/+$/g, '').toLowerCase();
 }
 
 function sousChemin(relPath: string, base: string): boolean {

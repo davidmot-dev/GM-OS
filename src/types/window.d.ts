@@ -170,6 +170,8 @@ declare global {
         };
         ai?: {
             listDocs: () => Promise<AIDocument[]>;
+            /** Dossiers presents sous docs/systems/. */
+            listSystems?: () => Promise<string[]>;
             readDoc: (filePath: string) => Promise<string | null>;
             writeDoc: (filePath: string, content: string) => Promise<boolean>;
             extractPdf: (filePath: string) => Promise<string>;

@@ -102,7 +102,20 @@ export interface GameDriver {
     // Metadata for AI
     aiInstructions: string; // Specialized instructions for the Oracle/Sage to understand rules
     aiPersonas?: Record<string, string>; // gemId -> instructions override
-    ragPath?: string; // Optional custom path for RAG rules storage (e.g. "systems/my-system/rules")
+    ragPath?: string; // Hérité : visait le dossier des fiches. Préférer `corpusId`.
+    /**
+     * Dossier de corpus sous `docs/systems/` — `dune`, `blade-runner`.
+     *
+     * **Pourquoi ce champ existe.** L'identifiant d'un pilote est fabriqué par
+     * la Forge avec `custom-${Date.now()}` : il ne dit rien du jeu. Or trois
+     * artefacts doivent se ranger sous le même dossier — les fiches, les
+     * personas et l'index du livre — et deux d'entre eux n'ont aucun moyen
+     * d'être redirigés ailleurs. Sans ce champ, un pilote nommé « Dune » mais
+     * identifié `custom-1754…` écrit son corpus à côté du sien.
+     *
+     * Absent, `resoudreCorpus` retombe sur le nom affiché puis l'identifiant.
+     */
+    corpusId?: string;
 }
 
 export interface EncounterEntity {

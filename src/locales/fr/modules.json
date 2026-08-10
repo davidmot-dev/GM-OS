@@ -1410,7 +1410,15 @@
         "personas_voice": "Fiche de voix",
         "personas_path": "Seront écrites dans",
         "btn_save_personas": "Enregistrer les personas",
-        "error_no_notebook": "Aucun carnet sélectionné."
+        "error_no_notebook": "Aucun carnet sélectionné.",
+        "corpus_target": "Corpus visé",
+        "corpus_reason_chemin-de-campagne": "chemin déclaré sur la campagne",
+        "corpus_reason_corpus-declare": "corpus déclaré par le système",
+        "corpus_reason_chemin-rag-herite": "ancien chemin RAG du système",
+        "corpus_reason_identifiant": "identifiant du système",
+        "corpus_reason_nom-affiche": "rapproché par le nom du système",
+        "corpus_reason_defaut": "aucun dossier existant ne correspond",
+        "corpus_new_folder": "Ce dossier n'existe pas encore : les fiches partiraient à côté de l'index et des personas. Renseignez « Chemin des Règles » sur la campagne si ce n'est pas voulu."
       },
       "notebook": {
         "title": "Navigateur NotebookLM",
@@ -1488,8 +1496,6 @@
       "untitled": "Sans titre"
     },
     "workspace": {
-      "no_active_session": "Aucune Session Active",
-      "no_active_session_desc": "Lancez une session pour accéder à l'espace de travail.",
       "no_active_session": "Aucune Session Active",
       "no_active_session_desc": "Sélectionnez ou créez une session dans le module Prep pour démarrer le workspace.",
       "group": "Groupe",
@@ -1872,7 +1878,6 @@
         }
       }
     },
-
     "campaign_details": {
       "sections": {
         "overview": "Aperçu",
@@ -2156,7 +2161,6 @@
           "longue": "Portée longue",
           "extreme": "Portée extrême"
         },
-
         "grid_placeholder": "Unités...",
         "no_config": "Pas de configuration tactique",
         "ai_toggle": "Optimisation Tactique"
@@ -2177,7 +2181,6 @@
         "sync_error": "Échec de la résonance",
         "instructions_label": "Protocoles Système (Prompt Global)"
       },
-
       "loot": {
         "title": "Tables de Butin",
         "subtitle": "Générateur de Trésors",
@@ -2505,9 +2508,6 @@
       "no_campaign": "Aucune campagne",
       "link_tooltip": "Lier à une campagne",
       "status_label": "Santé",
-      "total_suffix": "{{count}} au total",
-      "no_characters": "Ce joueur n'a pas encore de personnages",
-      "select_hint": "Sélectionnez un joueur dans le roster",
       "detail_hint": "Sélectionnez un personnage pour afficher sa fiche",
       "back_to_list": "Retour",
       "name_placeholder": "Nom du personnage",

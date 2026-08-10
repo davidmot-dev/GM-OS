@@ -1192,9 +1192,9 @@
       "access_file": "Access File"
     },
     "notes": {
-      "quick_input": "Quick Input Area",
+      "quick_input": "Quick Entry Space",
       "placeholder": "Start taking notes here... Major events, memorable quotes, player actions...",
-      "auto_save": "Auto Save",
+      "auto_save": "Auto-Save",
       "close_hint": "Close this window to save"
     },
     "feedback": {
@@ -1381,7 +1381,15 @@
         "personas_voice": "Voice sheet",
         "personas_path": "Will be written to",
         "btn_save_personas": "Save personas",
-        "error_no_notebook": "No notebook selected."
+        "error_no_notebook": "No notebook selected.",
+        "corpus_target": "Target corpus",
+        "corpus_reason_chemin-de-campagne": "path declared on the campaign",
+        "corpus_reason_corpus-declare": "corpus declared by the system",
+        "corpus_reason_chemin-rag-herite": "legacy RAG path of the system",
+        "corpus_reason_identifiant": "system identifier",
+        "corpus_reason_nom-affiche": "matched by system name",
+        "corpus_reason_defaut": "no existing folder matches",
+        "corpus_new_folder": "This folder does not exist yet: sheets would land away from the index and personas. Set \"Rules Path\" on the campaign if this is not intended."
       },
       "notebook": {
         "title": "NotebookLM Browser",
@@ -1459,8 +1467,6 @@
       "untitled": "Untitled"
     },
     "workspace": {
-      "no_active_session": "No Active Session",
-      "no_active_session_desc": "Launch a session to access the workspace.",
       "no_active_session": "No Active Session",
       "no_active_session_desc": "Select or create a session in the Prep module to start the workspace.",
       "group": "Group",
@@ -1843,7 +1849,6 @@
         }
       }
     },
-
     "campaign_details": {
       "sections": {
         "overview": "Overview",
@@ -2127,7 +2132,6 @@
           "longue": "Long Range",
           "extreme": "Extreme Range"
         },
-
         "grid_placeholder": "Units...",
         "no_config": "No tactical configuration",
         "ai_toggle": "Tactical Optimization"
@@ -2148,7 +2152,6 @@
         "sync_error": "Resonance failed",
         "instructions_label": "System Protocols (Global Prompt)"
       },
-
       "loot": {
         "title": "Loot Tables",
         "subtitle": "Treasure Generator",
@@ -2476,9 +2479,6 @@
       "no_campaign": "No campaign",
       "link_tooltip": "Link to a campaign",
       "status_label": "Health",
-      "total_suffix": "{{count}} total",
-      "no_characters": "This player has no characters yet",
-      "select_hint": "Select a player in the roster",
       "detail_hint": "Select a character to view their sheet",
       "back_to_list": "Back",
       "name_placeholder": "Character Name",
@@ -2567,12 +2567,6 @@
           "card_name_fallback": "Card #{{idx}}"
         }
       }
-    },
-    "notes": {
-      "quick_input": "Quick Entry Space",
-      "placeholder": "Start taking notes here... Major events, memorable quotes, player actions...",
-      "auto_save": "Auto-Save",
-      "close_hint": "Close this window to save"
     }
   },
   "storyboard": {

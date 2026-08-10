@@ -330,6 +330,23 @@ export function registerRagHandlers() {
         return fs.readFile(fullPath, 'utf-8');
     });
 
+    /**
+     * Les dossiers présents sous `docs/systems/`.
+     *
+     * Sans cet inventaire, `resoudreCorpus` ne peut pas rapprocher un pilote de
+     * son dossier par le nom affiché : on ne reconnaît pas un dossier qu'on ne
+     * sait pas exister. C'est ce rapprochement qui fait tomber les fiches, les
+     * personas et l'index d'un même système au même endroit, alors que la Forge
+     * fabrique les identifiants de pilote avec un horodatage.
+     */
+    ipcMain.handle('ai:list-systems', async () => {
+        const root = RAGEngine.getInstance()['docsPath'];
+        const dossier = path.join(root, 'systems');
+        if (!await fs.pathExists(dossier)) return [];
+        const entrees = await fs.readdir(dossier, { withFileTypes: true });
+        return entrees.filter(e => e.isDirectory()).map(e => e.name);
+    });
+
     ipcMain.handle('ai:extract-pdf', async (_event, relativePath: string) => {
         const root = RAGEngine.getInstance()['docsPath'];
         const fullPath = path.join(root, relativePath);
