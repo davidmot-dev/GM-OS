@@ -139,8 +139,15 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({
                   : <Zap className="text-purple-400" size={24} />}
               </div>
               <div className="flex-1 min-w-0">
-                <h4 className="text-lg font-black text-app-text mb-1 truncate font-display group-hover:text-purple-400 transition-colors flex items-center gap-2">
-                  {candidate.title}
+                {/*
+                  Le titre tronque, les marques non. `truncate` et `flex` sur le
+                  meme element se contredisent : le texte long deborde et pousse
+                  la coche hors de la zone visible — une fiche bien enregistree
+                  s affichait alors comme restant a faire, uniquement parce que
+                  son sujet etait long.
+                */}
+                <h4 className="text-lg font-black text-app-text mb-1 font-display group-hover:text-purple-400 transition-colors flex items-center gap-2 min-w-0">
+                  <span className="truncate">{candidate.title}</span>
                   {enregistre && <CheckCircle2 size={14} className="text-emerald-400 shrink-0" />}
                   {enBrouillon && (
                     <FileClock
