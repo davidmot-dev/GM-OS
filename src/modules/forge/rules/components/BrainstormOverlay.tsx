@@ -9,6 +9,7 @@ import DiscoveryUI from './DiscoveryUI';
 import ForgeProgress from './ForgeProgress';
 import {
   resoudreCorpus,
+  corpusChoisi,
   cheminDesFiches,
   cheminDesPersonas,
 } from '../../../../../electron/corpusSysteme';
@@ -30,7 +31,7 @@ import type { BrainstormCandidate } from '../types';
 export const BrainstormOverlay: React.FC = () => {
   const { t } = useTranslation(['modules', 'common']);
   const brainstormStore = useBrainstormStore();
-  const { activeCampaignId, campaigns, updateCampaign, customGameDrivers, setCurrentView } = useSessionOSStore();
+  const { activeCampaignId, campaigns, customGameDrivers, setCurrentView } = useSessionOSStore();
 
   const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
   const allDrivers = [...DEFAULT_GAME_DRIVERS, ...customGameDrivers];
@@ -68,11 +69,15 @@ export const BrainstormOverlay: React.FC = () => {
   }, []);
 
   /**
-   * Où vit le corpus de ce système. Une seule question, une seule réponse — et
-   * la même que celle du moteur de sélection, ce qui est tout l'enjeu : une
-   * écriture qui ne résout pas comme la lecture écrit à côté sans le dire.
+   * Le corpus documenté : celui qu'on a choisi, sinon celui de la campagne.
+   *
+   * **Documenter un corpus est une opération de bibliothèque, pas une opération
+   * de campagne.** Le corpus de Dune est le même pour toutes les campagnes Dune.
+   * Le déduire de la campagne active obligeait qui voulait l'enrichir à
+   * réaffecter d'abord le pilote d'une campagne — et à en abîmer une au passage.
+   * La campagne ne sert donc plus que de valeur par défaut.
    */
-  const corpus = activeCampaign?.system
+  const corpusParDefaut = activeCampaign?.system
     ? resoudreCorpus({
         systemId: activeCampaign.system,
         systemName: allDrivers.find(d => d.id === activeCampaign.system)?.name,
@@ -82,6 +87,10 @@ export const BrainstormOverlay: React.FC = () => {
         dossiersConnus: dossiersSystemes,
       })
     : null;
+
+  const corpus = brainstormStore.corpusCible
+    ? corpusChoisi(brainstormStore.corpusCible, dossiersSystemes)
+    : corpusParDefaut;
 
   const cheminDeLaFiche = brainstormStore.activeCard && corpus
     ? `${cheminDesFiches(corpus)}/${brainstormStore.activeCard.slug}.md`
@@ -120,8 +129,8 @@ export const BrainstormOverlay: React.FC = () => {
 
   /** Rédige la fiche. **N'écrit rien** : la revue vient ensuite. */
   const handleForge = async (candidate: BrainstormCandidate) => {
-    if (!brainstormStore.notebookId || !activeCampaign?.system) {
-        brainstormStore.setError(t('session.forge_module.atelier.error_no_system'));
+    if (!brainstormStore.notebookId || !corpus) {
+        brainstormStore.setError(t('session.forge_module.atelier.error_no_corpus'));
         return;
     }
     if (!reserverLeCarnet()) return;
@@ -130,7 +139,9 @@ export const BrainstormOverlay: React.FC = () => {
       const card = await forgeService.forgeCard(
         brainstormStore.notebookId,
         candidate,
-        activeCampaign.system,
+        // Le frontmatter `systeme:` porte le nom du dossier de corpus : c'est
+        // lui que le moteur de selection et le resolveur d'index emploient.
+        corpus.id,
         brainstormStore.selectedSourceIds
       );
       brainstormStore.reviewCard(card);
@@ -166,8 +177,8 @@ export const BrainstormOverlay: React.FC = () => {
       brainstormStore.setError(t('session.forge_module.atelier.error_no_notebook'));
       return;
     }
-    if (!activeCampaign?.system) {
-      brainstormStore.setError(t('session.forge_module.atelier.error_no_system'));
+    if (!corpus) {
+      brainstormStore.setError(t('session.forge_module.atelier.error_no_corpus'));
       return;
     }
     if (!reserverLeCarnet()) return;
@@ -234,17 +245,25 @@ export const BrainstormOverlay: React.FC = () => {
 
             <div className="h-8 w-px bg-white/5 mx-2" />
 
+            {/*
+              Ce bouton choisit le corpus a documenter. Il ne touche PAS a la
+              campagne : sa version precedente reecrivait `campaign.system`, si
+              bien que vouloir enrichir le corpus de Dune obligeait a reaffecter
+              le pilote d une campagne Blade Runner — ce qui est arrive.
+            */}
             <div className="flex flex-col">
-              <span className="text-[10px] font-black text-white/20 uppercase tracking-widest mb-0.5">{t('session.campaign_form.identity.system_label')}</span>
-              <button 
-                onClick={() => brainstormStore.setError('SELECT_SYSTEM')}
+              <span className="text-[10px] font-black text-white/20 uppercase tracking-widest mb-0.5">
+                {t('session.forge_module.atelier.corpus_label')}
+              </span>
+              <button
+                onClick={() => brainstormStore.setError('SELECT_CORPUS')}
                 className="flex items-center gap-2 text-xs font-bold text-purple-400 hover:text-white transition-all group"
               >
-                <Shield size={12} className={activeCampaign?.system ? 'text-purple-400' : 'text-red-500'} />
-                {activeCampaign?.system ? (
-                  <span>{allDrivers.find(d => d.id === activeCampaign.system)?.name || activeCampaign.system}</span>
+                <Shield size={12} className={corpus ? 'text-purple-400' : 'text-red-500'} />
+                {corpus ? (
+                  <span className="font-mono">{corpus.id}</span>
                 ) : (
-                  <span className="text-red-500 italic">Non associé</span>
+                  <span className="text-red-500 italic">{t('session.forge_module.atelier.corpus_none')}</span>
                 )}
               </button>
             </div>
@@ -261,14 +280,14 @@ export const BrainstormOverlay: React.FC = () => {
         {/* Main Content Area */}
         <div className="flex-1 overflow-y-auto custom-scrollbar relative z-10 p-8">
           
-          { (brainstormStore.error || !activeCampaign?.system) && (
+          { (brainstormStore.error || !corpus) && (
             <div className={`mb-8 p-8 border rounded-[3rem] animate-in slide-in-from-top-4 shadow-xl transition-all duration-500 ${
-              brainstormStore.error === 'SELECT_SYSTEM' || (!activeCampaign?.system && !brainstormStore.error)
-                ? 'bg-purple-600/10 border-purple-500/20 shadow-purple-900/10' 
+              brainstormStore.error === 'SELECT_CORPUS' || (!corpus && !brainstormStore.error)
+                ? 'bg-purple-600/10 border-purple-500/20 shadow-purple-900/10'
                 : 'bg-[#ff4d4d]/10 border-[#ff4d4d]/20 shadow-red-900/10'
             }`}>
-              
-              {brainstormStore.error && brainstormStore.error !== 'SELECT_SYSTEM' && (
+
+              {brainstormStore.error && brainstormStore.error !== 'SELECT_CORPUS' && (
                 <div className="flex items-start gap-6 mb-6">
                   <div className="p-4 bg-red-500 rounded-2xl shadow-glow-red/30">
                     <Shield size={24} className="text-white" />
@@ -280,69 +299,73 @@ export const BrainstormOverlay: React.FC = () => {
                 </div>
               )}
 
-              { (brainstormStore.error === 'SELECT_SYSTEM' || !activeCampaign?.system) && (
+              { (brainstormStore.error === 'SELECT_CORPUS' || !corpus) && (
                 <div className="space-y-4 mb-2">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                       <div className="p-2 bg-purple-600 rounded-lg">
-                        <Shield size={16} className="text-white" />
+                        <FolderTree size={16} className="text-white" />
                       </div>
-                      <h4 className="text-lg font-black uppercase tracking-tight text-white font-display">
-                        {activeCampaign?.system ? 'Changer de Système' : 'Associer un Système'}
-                      </h4>
+                      <div>
+                        <h4 className="text-lg font-black uppercase tracking-tight text-white font-display">
+                          {t('session.forge_module.atelier.corpus_choose')}
+                        </h4>
+                        <p className="text-xs text-white/30 mt-0.5">
+                          {t('session.forge_module.atelier.corpus_choose_hint')}
+                        </p>
+                      </div>
                     </div>
-                    {brainstormStore.error === 'SELECT_SYSTEM' && (
-                      <button 
+                    {brainstormStore.error === 'SELECT_CORPUS' && (
+                      <button
                         onClick={() => brainstormStore.setError(null)}
                         className="text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-white transition-colors"
                       >
-                        Annuler
+                        {t('common:actions.cancel')}
                       </button>
                     )}
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
-                    {allDrivers.map(driver => {
-                      const isSelected = activeCampaign?.system === driver.id;
+                  {/*
+                    On liste les DOSSIERS de corpus, pas les pilotes. C'est ce
+                    qu'on documente, et c'est ce que lisent le moteur de
+                    selection, le resolveur d index et les personas. Choisir ici
+                    n ecrit rien dans la campagne.
+                  */}
+                  <div className="grid grid-cols-3 gap-3 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
+                    {dossiersSystemes.map(dossier => {
+                      const isSelected = corpus?.id === dossier;
                       return (
                         <button
-                          key={driver.id}
+                          key={dossier}
                           onClick={() => {
-                            if (activeCampaign) {
-                              updateCampaign(activeCampaign.id, { system: driver.id });
-                              brainstormStore.setError(null);
-                            }
+                            brainstormStore.setCorpusCible(dossier);
+                            brainstormStore.setError(null);
                           }}
-                          className={`flex items-center gap-4 p-4 rounded-2xl border transition-all text-left group relative overflow-hidden ${
-                            isSelected 
-                              ? 'bg-purple-600/20 border-purple-500 shadow-lg shadow-purple-900/20' 
+                          className={`flex items-center gap-3 p-4 rounded-2xl border transition-all text-left group relative overflow-hidden ${
+                            isSelected
+                              ? 'bg-purple-600/20 border-purple-500 shadow-lg shadow-purple-900/20'
                               : 'bg-white/5 border-white/5 hover:bg-white/10 hover:border-purple-500/30'
                           }`}
                         >
-                          <span className="text-2xl relative z-10">{driver.emoji || '🎲'}</span>
-                          <div className="min-w-0 flex-1 relative z-10">
-                            <p className={`text-xs font-black uppercase tracking-widest truncate transition-colors ${
-                              isSelected ? 'text-white' : 'text-white/60 group-hover:text-white'
-                            }`}>
-                              {driver.name}
-                            </p>
-                            <p className="text-[9px] text-white/20 font-bold uppercase tracking-widest mt-0.5">
-                              {driver.id}
-                            </p>
-                          </div>
-                          {isSelected && (
-                            <div className="absolute top-0 right-0 p-2">
-                              <Zap size={10} className="text-purple-400" />
-                            </div>
-                          )}
+                          <FolderTree size={16} className={isSelected ? 'text-purple-400' : 'text-white/20'} />
+                          <p className={`text-xs font-mono truncate transition-colors ${
+                            isSelected ? 'text-white' : 'text-white/60 group-hover:text-white'
+                          }`}>
+                            {dossier}
+                          </p>
                         </button>
                       );
                     })}
+                    {dossiersSystemes.length === 0 && (
+                      <p className="col-span-3 text-xs text-white/30 italic py-6 text-center">
+                        {t('session.forge_module.atelier.corpus_no_inventory')}
+                      </p>
+                    )}
                   </div>
                 </div>
               )}
 
-              {brainstormStore.error && brainstormStore.error !== 'SELECT_SYSTEM' && (
+              {brainstormStore.error && brainstormStore.error !== 'SELECT_CORPUS' && (
                 <div className="mt-6 pt-6 border-t border-white/5 flex gap-4">
                   <button 
                     onClick={() => brainstormStore.reset()} 

@@ -77,7 +77,9 @@ export type RaisonCorpus =
     /** Rapproché par le nom affiché — le repli qui sauvait déjà la lecture. */
     | 'nom-affiche'
     /** Rien ne correspond : le dossier sera créé sous l'identifiant. */
-    | 'defaut';
+    | 'defaut'
+    /** Choisi à la main dans l'atelier — aucune déduction, aucune ambiguïté. */
+    | 'choisi';
 
 export interface Corpus {
     /** Racine relative à `docs/` — par exemple `systems/dune`. */
@@ -215,4 +217,27 @@ export function cheminDesPersonas(corpus: Corpus): string {
 /** Dossier des index de livre, d'où `bookIndex.chargerIndex` charge. */
 export function cheminDeLIndex(corpus: Corpus): string {
     return `${corpus.racine}/index`;
+}
+
+/**
+ * Corpus choisi explicitement, sans aucune déduction.
+ *
+ * **Pourquoi ce chemin existe.** Documenter un corpus est une opération de
+ * bibliothèque, pas une opération de campagne : le corpus de Dune est le même
+ * pour toutes les campagnes Dune, présentes et à venir. Le déduire de la
+ * campagne active obligeait qui voulait écrire dans un corpus à réaffecter
+ * d'abord une campagne — et à en abîmer une au passage. Constaté le 2026-08-10 :
+ * une campagne Blade Runner s'est retrouvée avec le pilote de Dune parce que
+ * c'était le seul moyen de dire « je veux enrichir le corpus Dune ».
+ *
+ * Un choix explicite ne se contredit avec rien : ni `contradiction`, ni doute.
+ */
+export function corpusChoisi(dossier: string, dossiersConnus: readonly string[] = []): Corpus {
+    const id = normaliseChemin(dossier);
+    return {
+        racine: `${DOSSIER_SYSTEMES}/${id}`,
+        id,
+        raison: 'choisi',
+        aCreer: dossiersConnus.length > 0 && !dossiersConnus.some(d => normaliseChemin(d) === id),
+    };
 }

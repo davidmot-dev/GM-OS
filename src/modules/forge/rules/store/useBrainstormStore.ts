@@ -53,12 +53,14 @@ export const useBrainstormStore = create<BrainstormState>((set) => ({
   isProcessing: false,
   error: null,
   notebookId: null,
+  corpusCible: null,
   selectedSourceIds: [],
   customSubject: '',
   forgedCandidateIds: [],
   savedCandidateIds: [],
 
   setNotebook: (id) => set({ notebookId: id }),
+  setCorpusCible: (corpusCible) => set({ corpusCible }),
   setSources: (ids) => set({ selectedSourceIds: ids }),
   setCustomSubject: (subject) => set({ customSubject: subject }),
   setStep: (step) => set({ step }),
@@ -130,6 +132,7 @@ export const useBrainstormStore = create<BrainstormState>((set) => ({
     selectedSourceIds: [],
     customSubject: '',
     forgedCandidateIds: [],
-    savedCandidateIds: []
+    savedCandidateIds: [],
+    corpusCible: null
   })
 }));

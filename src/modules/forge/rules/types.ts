@@ -55,6 +55,14 @@ export interface BrainstormState {
   isProcessing: boolean;
   error: string | null;
   notebookId: string | null;
+  /**
+   * Corpus que l'on documente, choisi a la main.
+   *
+   * `null` = on suit celui de la campagne active. Des qu'il est renseigne, il
+   * l'emporte : documenter un corpus est une operation de bibliotheque, pas une
+   * operation de campagne.
+   */
+  corpusCible: string | null;
   selectedSourceIds: string[];
   customSubject: string;
   /** Sujets dont une fiche a été rédigée, écrite ou non. */
@@ -64,6 +72,7 @@ export interface BrainstormState {
 
   // Actions
   setNotebook: (id: string) => void;
+  setCorpusCible: (dossier: string | null) => void;
   setSources: (ids: string[]) => void;
   setCustomSubject: (subject: string) => void;
   setStep: (step: BrainstormStep) => void;
