@@ -179,6 +179,19 @@ export const useBrainstormStore = create<BrainstormState>((set) => ({
     isProcessing: false
   }),
 
+  /**
+   * Ferme la série en cours, **sans défaire la configuration**.
+   *
+   * Le carnet ouvert, son catalogue de sources, la sélection et le corpus visé
+   * ne sont pas des états de série : ce sont les réglages du travail. Les
+   * effacer obligeait à tout re-désigner à chaque fermeture — et créait un écart
+   * silencieux, `notebookSources` étant un état local de `ForgeDashboard` qui,
+   * lui, survivait : re-cocher une source restaurait son identifiant sans son
+   * titre, et l'écran affichait un UUID brut à la place du nom du fichier.
+   *
+   * Ce qui disparaît est ce qui appartient à la série : l'étape, les candidats,
+   * la fiche en revue, les personas, l'erreur.
+   */
   reset: () => set({
     step: 'idle',
     candidates: [],
@@ -187,12 +200,7 @@ export const useBrainstormStore = create<BrainstormState>((set) => ({
     personas: null,
     error: null,
     isProcessing: false,
-    selectedSourceIds: [],
-    customSubject: '',
     forgedCandidateIds: [],
-    savedCandidateIds: [],
-    corpusCible: null,
-    notebookTitre: null,
-    sourcesDuCarnet: []
+    savedCandidateIds: []
   })
 }));

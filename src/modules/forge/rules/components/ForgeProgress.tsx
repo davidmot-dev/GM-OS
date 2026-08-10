@@ -52,9 +52,12 @@ export const ForgeProgress: React.FC<ForgeProgressProps> = ({
    * partait sans que rien ne l'affiche.
    */
   const { notebookTitre, sourcesDuCarnet, selectedSourceIds } = useBrainstormStore();
+  // Un identifiant brut ne renseigne personne : quand le titre manque, on le dit
+  // plutôt que d'afficher un UUID de trente-six caractères.
   const sourcesRetenues = selectedSourceIds
-    .map(id => sourcesDuCarnet.find(s => s.id === id)?.titre ?? id)
-    .filter(Boolean);
+    .map(id => sourcesDuCarnet.find(s => s.id === id)?.titre)
+    .filter((titre): titre is string => Boolean(titre));
+  const sourcesSansNom = selectedSourceIds.length - sourcesRetenues.length;
 
   const [ecoule, setEcoule] = useState(0);
   const [journal, setJournal] = useState<EvenementMcp[]>([]);
@@ -137,9 +140,14 @@ export const ForgeProgress: React.FC<ForgeProgressProps> = ({
           <p className="flex items-start gap-3 text-xs text-white/40">
             <FileText size={14} className="text-purple-400/40 shrink-0 mt-0.5" />
             <span>
-              {sourcesRetenues.length > 0
-                ? sourcesRetenues.join(' · ')
-                : `${sourcesDuCarnet.length} source${sourcesDuCarnet.length > 1 ? 's' : ''} — carnet entier`}
+              {selectedSourceIds.length === 0
+                ? `${sourcesDuCarnet.length} source${sourcesDuCarnet.length > 1 ? 's' : ''} — carnet entier`
+                : [
+                    ...sourcesRetenues,
+                    ...(sourcesSansNom > 0
+                      ? [`${sourcesSansNom} source${sourcesSansNom > 1 ? 's' : ''} au titre inconnu`]
+                      : []),
+                  ].join(' · ')}
             </span>
           </p>
         </div>
