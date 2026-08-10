@@ -14,6 +14,18 @@ const INVENTAIRE = `| Sujet | Traité | Mécanique | Sections |
 - **Les Cinq Arènes de Conflit** : Duel, Escarmouche, Espionnage, Guerre, Intrigue.
 - **Les Maisons** : la maison du groupe est un personnage à part entière.`;
 
+/** La forme réellement rendue par le carnet Dune le 2026-08-10 : une liste numérotée. */
+const HORS_NUMEROTES = `| Sujet | Traité | Mécanique | Sections |
+|---|---|---|---|
+| Résolution des jets | oui | 2d20. | Agir |
+
+## Hors catégories
+
+Cette section recense les mécaniques centrales du livre de base :
+
+1. **L'Équation Statistique Duale (Compétence plus Principe)** : Une compétence et un principe moral forment le seuil.
+2. **Le Double Prisme d'Intervention** : Modes Agent et Architecte.`;
+
 describe('lireInventaire', () => {
   it('rend toujours les treize sujets, dans l\'ordre du canevas', () => {
     const entrees = lireInventaire(INVENTAIRE).filter(e => !e.horsCanevas);
@@ -58,6 +70,29 @@ describe('lireInventaire', () => {
 
     expect(hors.map(e => e.sujet)).toEqual(['Les Cinq Arènes de Conflit', 'Les Maisons']);
     expect(hors[0].mecanique).toContain('Duel');
+  });
+
+  it('accepte une liste numérotée — la forme que Dune a réellement rendue', () => {
+    /**
+     * Relevé le 2026-08-10 sur la première forge aboutie : le carnet rend ses
+     * hors catégories en « 1. **Nom** : … ». Le parseur n'acceptait que les
+     * puces, et les quatre mécaniques centrales de Dune tombaient dans le vide
+     * — sans que rien ne le signale, l'inventaire se contentant d'afficher les
+     * treize sujets du canevas.
+     */
+    const hors = lireInventaire(HORS_NUMEROTES).filter(e => e.horsCanevas);
+
+    expect(hors).toHaveLength(2);
+    expect(hors[0].sujet).toBe("L'Équation Statistique Duale (Compétence plus Principe)");
+    expect(hors[0].mecanique).toContain('seuil');
+    expect(hors[1].sujet).toBe("Le Double Prisme d'Intervention");
+  });
+
+  it('ne prend pas la phrase d\'introduction pour une mécanique', () => {
+    // « Cette section recense les mécaniques centrales du livre de base : »
+    // ressemble à une entrée si l'on ne se méfie pas.
+    const hors = lireInventaire(HORS_NUMEROTES).filter(e => e.horsCanevas);
+    expect(hors.map(e => e.sujet)).not.toContain('Cette section recense les mécaniques centrales du livre de base');
   });
 
   it('accepte un second tableau pour les hors catégories', () => {

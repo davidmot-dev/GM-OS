@@ -118,12 +118,14 @@ function lireMetadonnees(lignes: string[]): Map<string, string> {
  * Le séparateur de sortie est le point-virgule, parce que c'est celui que lit
  * `electron/bookIndex.sectionsCitees`. En entrée le carnet emploie aussi la
  * virgule — mais un titre en contient parfois une, donc on ne coupe sur virgule
- * que devant une majuscule ou un guillemet ouvrant.
+ * que devant une majuscule, un guillemet ouvrant ou un accent grave. Ce dernier
+ * n'est pas théorique : le carnet Dune a rendu ses sections en
+ * `` `Tests de compétence`, `Procédure des tests` ``.
  */
 export function decouperSections(valeur: string): string[] {
   return valeur
-    .split(/\s*[;·]\s*|\s*,\s(?=[A-ZÀ-Ý«])/)
-    .map(s => s.replace(/^[«"'*\s]+|[»"'*\s.]+$/g, '').trim())
+    .split(/\s*[;·]\s*|\s*,\s*(?=[`«"']|[A-ZÀ-Ý])/)
+    .map(s => s.replace(/^[`«"'*\s]+|[`»"'*\s.]+$/g, '').trim())
     .filter(Boolean);
 }
 

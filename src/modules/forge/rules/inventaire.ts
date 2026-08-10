@@ -50,11 +50,19 @@ function lireTraitement(valeur: string): Traitement {
   return 'partiellement';
 }
 
+/**
+ * Découpe une liste de titres de section.
+ *
+ * **Les accents graves comptent.** Le carnet Dune a rendu ses sections en
+ * `` `Tests de compétence`, `Procédure des tests` `` : sans les prendre en
+ * charge, la liste entière restait un seul titre, accents graves compris, et le
+ * résolveur n'avait rien à rapprocher de l'index.
+ */
 function decouperSections(valeur: string): string[] {
   if (!valeur || /^(—|-|n\/a|aucune?)$/i.test(valeur.trim())) return [];
   return valeur
-    .split(/\s*[;·]\s*|\s*,\s(?=[A-ZÀ-Ý«])/)
-    .map(s => s.replace(/^[«"'*\s]+|[»"'*\s.]+$/g, '').trim())
+    .split(/\s*[;·]\s*|\s*,\s*(?=[`«"']|[A-ZÀ-Ý])/)
+    .map(s => s.replace(/^[`«"'*\s]+|[`»"'*\s.]+$/g, '').trim())
     .filter(Boolean);
 }
 
@@ -120,7 +128,10 @@ export function lireInventaire(markdown: string): EntreeInventaire[] {
 
     if (!apresHorsCategories) continue;
 
-    const puce = /^\s*[-*•]\s*(?:\*\*)?\s*([^:*]{2,80}?)\s*(?:\*\*)?\s*[:—-]\s*(.+)$/.exec(ligne);
+    // Puces ET listes numérotées : le carnet a rendu les hors catégories de Dune
+    // sous la forme « 1. **L'Équation Statistique Duale** : … », et les quatre
+    // mécaniques centrales du jeu tombaient dans le vide faute d'accepter `1.`.
+    const puce = /^\s*(?:[-*•]|\d+[.)])\s*(?:\*\*)?\s*([^:*]{2,80}?)\s*(?:\*\*)?\s*[:—-]\s*(.+)$/.exec(ligne);
     if (puce) {
       horsCanevas.push({
         sujet: cellule(puce[1]),

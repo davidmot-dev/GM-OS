@@ -169,6 +169,11 @@ describe('decouperSections', () => {
     expect(decouperSections('Forcer le test, Niveau de Stress')).toEqual(['Forcer le test', 'Niveau de Stress']);
   });
 
+  it('coupe des titres entre accents graves — la forme rendue par Dune', () => {
+    expect(decouperSections('`Tests de compétence`, `Procédure des tests`'))
+      .toEqual(['Tests de compétence', 'Procédure des tests']);
+  });
+
   it('rend une liste vide sur une valeur absente', () => {
     expect(decouperSections('')).toEqual([]);
   });
