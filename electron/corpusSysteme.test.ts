@@ -11,6 +11,7 @@ import {
     corpusPourNouveauSysteme,
     sousDossiersDuCorpus,
     corpusOrphelins,
+    deplierLigatures,
 } from './corpusSysteme';
 
 /** Les dossiers réellement présents sous `docs/systems/` au 2026-08-10. */
@@ -332,5 +333,39 @@ describe('corpus orphelins', () => {
         // donc dédouaner aucun corpus.
         const systemes = [{ systemId: 'custom-1754832910445', systemName: 'Mon Jeu Maison' }];
         expect(corpusOrphelins(['alien', 'dune'], systemes)).toEqual(['alien', 'dune']);
+    });
+});
+
+describe('ligatures', () => {
+    /**
+     * Relevé en réel le 2026-08-10 : la fiche « Manœuvres des Mentats » du
+     * corpus Dune s'est écrite dans `man-uvres-des-mentats.md`. `NFD` sépare les
+     * accents de leur lettre, mais `œ` n'est pas une lettre accentuée — c'est un
+     * caractère à part entière, que NFD laisse intact et que le filtre
+     * `[^a-z0-9]` supprime ensuite purement et simplement.
+     *
+     * Le nom d'un fichier n'a pas à être beau, mais il doit être **retrouvable** :
+     * c'est lui que l'atelier compare pour savoir si une fiche existe déjà.
+     */
+    it('déplie « œ » au lieu de l\'effacer', () => {
+        expect(slug('Manœuvres des Mentats')).toBe('manoeuvres-des-mentats');
+        expect(deplierLigatures('Cœur')).toBe('Coeur');
+    });
+
+    it('déplie « æ » et « ß »', () => {
+        expect(slug('Ex æquo')).toBe('ex-aequo');
+        expect(deplierLigatures('Straße')).toBe('Strasse');
+    });
+
+    it('déplie les ligatures typographiques des PDF', () => {
+        // « ﬁ » et « ﬂ » viennent des extractions PDF et cassent la comparaison
+        // de titres autant que le « œ » cassait les noms de fichier.
+        expect(deplierLigatures('conﬂit')).toBe('conflit');
+        expect(deplierLigatures('difﬁculté')).toBe('difficulté');
+    });
+
+    it('ne touche pas à ce qui n\'est pas une ligature', () => {
+        expect(slug("Dune : Aventures dans l'Imperium")).toBe('dune-aventures-dans-l-imperium');
+        expect(deplierLigatures('Blade Runner')).toBe('Blade Runner');
     });
 });

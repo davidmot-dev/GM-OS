@@ -25,14 +25,41 @@ interface RuleCard {
     tags: string[];
 }
 
-export const RuleWorkshopViewer: React.FC = () => {
+interface RuleWorkshopViewerProps {
+    /**
+     * Système à consulter, quand l'écran hôte en propose le choix.
+     *
+     * **Le défaut corrigé le 2026-08-10.** Le grimoire porte un sélecteur de
+     * système en haut à droite, et il ne pilotait que les panneaux de
+     * « Référence Système » : l'atelier, lui, continuait d'afficher le corpus de
+     * la campagne ouverte. On choisissait Dune, on lisait Blade Runner — sans un
+     * mot, puisque les deux corpus ont des fiches aux noms voisins.
+     *
+     * Absent, on retombe sur la campagne active : c'est le bon défaut pour une
+     * consultation en séance.
+     */
+    driverId?: string;
+}
+
+export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId }) => {
     const { t } = useTranslation(['modules', 'common']);
     const { activeCampaignId, campaigns, customGameDrivers } = useSessionOSStore();
-    
+
     const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
-    const systemId = activeCampaign?.system || 'generic';
     const allDrivers = [...DEFAULT_GAME_DRIVERS, ...customGameDrivers];
+
+    const systemId = driverId || activeCampaign?.system || 'generic';
     const driver = allDrivers.find(d => d.id === systemId);
+
+    /**
+     * Le « Chemin des Règles » de la campagne ne vaut que pour SON système.
+     *
+     * Il est souverain dans l'ordre d'autorité — déclaré à la main, il l'emporte
+     * sur tout. Appliqué à un autre système que celui de la campagne, il
+     * épinglerait donc le grimoire sur le corpus de la campagne quel que soit le
+     * système choisi : le sélecteur changerait le titre et rien d'autre.
+     */
+    const cheminDeCampagne = systemId === activeCampaign?.system ? activeCampaign?.systemPath : undefined;
 
     /**
      * Où vit le corpus — la même question que se posent la Forge, la sélection
@@ -53,7 +80,7 @@ export const RuleWorkshopViewer: React.FC = () => {
     const corpus = resoudreCorpus({
         systemId,
         systemName: driver?.name,
-        systemPath: activeCampaign?.systemPath,
+        systemPath: cheminDeCampagne,
         corpusId: driver?.corpusId,
         ragPath: driver?.ragPath,
         dossiersConnus: dossiersSystemes,

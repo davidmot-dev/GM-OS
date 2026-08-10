@@ -160,7 +160,9 @@ export const RulebookViewer: React.FC = () => {
                 {/* Content Viewer */}
                 <div className="flex-1 overflow-hidden flex flex-col bg-[radial-gradient(circle_at_top_right,rgba(var(--app-accent-rgb),0.03),transparent_50%)]">
                     {activeSection === 'workshop' ? (
-                        <RuleWorkshopViewer />
+                        // Le sélecteur du bandeau pilote l'atelier autant que la
+                        // référence. Sans cela il ne changeait que le titre.
+                        <RuleWorkshopViewer driverId={driver.id} />
                     ) : (
                         <div className="flex-1 overflow-y-auto custom-scrollbar">
                              <div className="max-w-4xl mx-auto py-16 px-12 space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-700">

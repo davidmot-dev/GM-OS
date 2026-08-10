@@ -32,9 +32,32 @@
 /** Dossier racine des systèmes, relatif à `docs/`. */
 export const DOSSIER_SYSTEMES = 'systems';
 
+/**
+ * Déplie les ligatures que la décomposition Unicode ne défait pas.
+ *
+ * **Le défaut qu'elle corrige.** `NFD` sépare les accents de leur lettre, mais
+ * `œ` n'est pas une lettre accentuée : c'est un caractère à part entière, que
+ * NFD laisse intact et que le filtre `[^a-z0-9]` supprime ensuite purement et
+ * simplement. « Manœuvres des Mentats » donnait donc le fichier
+ * `man-uvres-des-mentats.md` — relevé en réel le 2026-08-10 sur le corpus Dune.
+ *
+ * Le nom d'un fichier n'a pas à être beau, mais il doit être **retrouvable** :
+ * c'est lui que l'atelier compare pour savoir si une fiche existe déjà.
+ */
+export function deplierLigatures(value: string): string {
+    return value
+        .replace(/œ/g, 'oe').replace(/Œ/g, 'OE')
+        .replace(/æ/g, 'ae').replace(/Æ/g, 'AE')
+        .replace(/ß/g, 'ss')
+        // Ligatures typographiques des PDF : « fi », « fl », « ffi »…
+        .normalize('NFKC')
+        .replace(/ﬀ/g, 'ff').replace(/ﬁ/g, 'fi').replace(/ﬂ/g, 'fl')
+        .replace(/ﬃ/g, 'ffi').replace(/ﬄ/g, 'ffl');
+}
+
 /** Minuscules, sans accents, non-alphanumériques réduits à des tirets. */
 export function slug(value: string): string {
-    return value
+    return deplierLigatures(value)
         .normalize('NFD')
         // Marques combinantes séparées par NFD. `\p{Mn}` garde la source en
         // ASCII pur — un intervalle de diacritiques littéraux ne survit pas

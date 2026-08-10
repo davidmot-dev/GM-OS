@@ -15,6 +15,8 @@
  * le rabattage de {@link clefCanonique}.
  */
 
+import { deplierLigatures } from '../../../../electron/corpusSysteme';
+
 export interface SujetCanevas {
   /** Clé de comparaison entre systèmes. Identique au caractère près. */
   clef: string;
@@ -89,7 +91,7 @@ export const CLEFS_CANEVAS: readonly string[] = CANEVAS.map(s => s.clef);
  * suites de mots et le découpage en mots porte le rapprochement.
  */
 export function normaliser(valeur: string): string {
-  return valeur
+  return deplierLigatures(valeur)
     .normalize('NFD')
     .replace(/\p{Mn}/gu, '')
     .toLowerCase()
