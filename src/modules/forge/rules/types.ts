@@ -55,6 +55,10 @@ export interface BrainstormState {
   isProcessing: boolean;
   error: string | null;
   notebookId: string | null;
+  /** Titre du carnet ouvert — pour le dire au lieu d'afficher un identifiant. */
+  notebookTitre: string | null;
+  /** Catalogue des sources du carnet ouvert : identifiant et titre. */
+  sourcesDuCarnet: { id: string; titre: string }[];
   /**
    * Corpus que l'on documente, choisi a la main.
    *
@@ -71,11 +75,15 @@ export interface BrainstormState {
   savedCandidateIds: string[];
 
   // Actions
-  setNotebook: (id: string) => void;
+  setNotebook: (id: string, titre?: string) => void;
   setCorpusCible: (dossier: string | null) => void;
   setSources: (ids: string[]) => void;
-  /** Retire de la sélection les sources absentes du carnet ouvert. */
-  elaguerSources: (idsDuCarnet: string[]) => void;
+  /**
+   * Enregistre le catalogue des sources du carnet ouvert **et** élague la
+   * sélection en conséquence. Les deux ensemble : séparés, ils finiraient par
+   * diverger, et c'est cette divergence qui envoyait un filtre invisible.
+   */
+  setSourcesDuCarnet: (sources: { id: string; titre: string }[]) => void;
   setCustomSubject: (subject: string) => void;
   setStep: (step: BrainstormStep) => void;
   setProcessing: (isProcessing: boolean) => void;

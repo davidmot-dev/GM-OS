@@ -1396,7 +1396,10 @@
         "corpus_none": "No corpus",
         "corpus_choose": "Which corpus are you documenting?",
         "corpus_choose_hint": "This choice does not modify the active campaign.",
-        "error_no_corpus": "No corpus selected: the Forge would not know where to write."
+        "error_no_corpus": "No corpus selected: the Forge would not know where to write.",
+        "corpus_new_placeholder": "New corpus (e.g. hurlements)",
+        "corpus_new_button": "Create",
+        "corpus_will_create": "This folder does not exist yet: it will be created when the first sheet is saved."
       },
       "notebook": {
         "title": "NotebookLM Browser",

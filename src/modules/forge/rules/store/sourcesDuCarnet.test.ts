@@ -10,14 +10,15 @@ import { useBrainstormStore } from './useBrainstormStore';
  * que les sources du carnet courant : une sélection étrangère s'y montre comme
  * « aucune source sélectionnée » pendant que la requête filtre dessus.
  */
-describe('elaguerSources', () => {
+describe('setSourcesDuCarnet', () => {
   beforeEach(() => useBrainstormStore.getState().reset());
 
   const selection = () => useBrainstormStore.getState().selectedSourceIds;
+  const catalogue = (ids: string[]) => ids.map(id => ({ id, titre: `Source ${id}` }));
 
   it('retire les sources qui n\'appartiennent pas au carnet ouvert', () => {
     useBrainstormStore.getState().setSources(['blade-1', 'blade-2']);
-    useBrainstormStore.getState().elaguerSources(['dune-1', 'dune-2', 'dune-3']);
+    useBrainstormStore.getState().setSourcesDuCarnet(catalogue(['dune-1', 'dune-2', 'dune-3']));
     expect(selection()).toEqual([]);
   });
 
@@ -25,21 +26,28 @@ describe('elaguerSources', () => {
     // On élague, on ne vide pas : revenir sur un carnet déjà visité doit
     // retrouver sa sélection.
     useBrainstormStore.getState().setSources(['dune-1', 'blade-9', 'dune-3']);
-    useBrainstormStore.getState().elaguerSources(['dune-1', 'dune-2', 'dune-3']);
+    useBrainstormStore.getState().setSourcesDuCarnet(catalogue(['dune-1', 'dune-2', 'dune-3']));
     expect(selection()).toEqual(['dune-1', 'dune-3']);
   });
 
   it('ne touche à rien quand tout est valide', () => {
     useBrainstormStore.getState().setSources(['dune-1']);
     const avant = selection();
-    useBrainstormStore.getState().elaguerSources(['dune-1', 'dune-2']);
+    useBrainstormStore.getState().setSourcesDuCarnet(catalogue(['dune-1', 'dune-2']));
     // Identité préservée : pas de rendu inutile.
     expect(selection()).toBe(avant);
   });
 
+  it('retient le catalogue du carnet, pour pouvoir nommer les sources', () => {
+    useBrainstormStore.getState().setSourcesDuCarnet(catalogue(['dune-1']));
+    expect(useBrainstormStore.getState().sourcesDuCarnet).toEqual([
+      { id: 'dune-1', titre: 'Source dune-1' },
+    ]);
+  });
+
   it('vide la sélection face à un carnet sans source', () => {
     useBrainstormStore.getState().setSources(['dune-1']);
-    useBrainstormStore.getState().elaguerSources([]);
+    useBrainstormStore.getState().setSourcesDuCarnet([]);
     expect(selection()).toEqual([]);
   });
 });

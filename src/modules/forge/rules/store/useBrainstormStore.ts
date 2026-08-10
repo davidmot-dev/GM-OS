@@ -53,18 +53,20 @@ export const useBrainstormStore = create<BrainstormState>((set) => ({
   isProcessing: false,
   error: null,
   notebookId: null,
+  notebookTitre: null,
+  sourcesDuCarnet: [],
   corpusCible: null,
   selectedSourceIds: [],
   customSubject: '',
   forgedCandidateIds: [],
   savedCandidateIds: [],
 
-  setNotebook: (id) => set({ notebookId: id }),
+  setNotebook: (id, titre) => set({ notebookId: id, notebookTitre: titre ?? null }),
   setCorpusCible: (corpusCible) => set({ corpusCible }),
   setSources: (ids) => set({ selectedSourceIds: ids }),
 
   /**
-   * Ne garde que les sources qui appartiennent au carnet ouvert.
+   * Le catalogue du carnet ouvert, et l'élagage de la sélection avec lui.
    *
    * **Relevé le 2026-08-10.** Changer de carnet ne vidait pas la sélection : les
    * identifiants du carnet précédent restaient et partaient comme filtre vers
@@ -75,12 +77,13 @@ export const useBrainstormStore = create<BrainstormState>((set) => ({
    * On élague plutôt qu'on ne vide : revenir sur un carnet déjà visité conserve
    * ce qu'on y avait coché.
    */
-  elaguerSources: (idsDuCarnet) => set((state) => {
-    const valides = new Set(idsDuCarnet);
+  setSourcesDuCarnet: (sources) => set((state) => {
+    const valides = new Set(sources.map(s => s.id));
     const retenues = state.selectedSourceIds.filter(id => valides.has(id));
-    return retenues.length === state.selectedSourceIds.length
-      ? {}
-      : { selectedSourceIds: retenues };
+    return {
+      sourcesDuCarnet: sources,
+      ...(retenues.length === state.selectedSourceIds.length ? {} : { selectedSourceIds: retenues }),
+    };
   }),
   setCustomSubject: (subject) => set({ customSubject: subject }),
   setStep: (step) => set({ step }),
@@ -153,6 +156,8 @@ export const useBrainstormStore = create<BrainstormState>((set) => ({
     customSubject: '',
     forgedCandidateIds: [],
     savedCandidateIds: [],
-    corpusCible: null
+    corpusCible: null,
+    notebookTitre: null,
+    sourcesDuCarnet: []
   })
 }));

@@ -1425,7 +1425,10 @@
         "corpus_none": "Aucun corpus",
         "corpus_choose": "Quel corpus documenter ?",
         "corpus_choose_hint": "Le choix ne modifie pas la campagne active.",
-        "error_no_corpus": "Aucun corpus choisi : la Forge ne saurait pas où écrire."
+        "error_no_corpus": "Aucun corpus choisi : la Forge ne saurait pas où écrire.",
+        "corpus_new_placeholder": "Nouveau corpus (ex. : hurlements)",
+        "corpus_new_button": "Créer",
+        "corpus_will_create": "Ce dossier n'existe pas encore : il sera créé à l'enregistrement de la première fiche."
       },
       "notebook": {
         "title": "Navigateur NotebookLM",

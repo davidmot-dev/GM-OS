@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Zap, Radio } from 'lucide-react';
+import { Zap, Radio, BookOpen, FileText } from 'lucide-react';
+import { useBrainstormStore } from '../store/useBrainstormStore';
 import {
   ajouterAuJournal,
   formatDuree,
@@ -37,6 +38,21 @@ export const ForgeProgress: React.FC<ForgeProgressProps> = ({
   sousTitre,
   seuilInquietude = 180,
 }) => {
+  /**
+   * Le contexte de la requête, nommé plutôt qu'identifié.
+   *
+   * Le pont ne connaît que des identifiants — il dit l'étendue (« carnet
+   * entier », « 3 sources filtrées »), pas les noms. Le carnet et le titre des
+   * sources vivent ici. Les deux ensemble répondent à « qu'est-ce qui est
+   * exactement en train d'être interrogé ? », question qui a manqué toute la
+   * soirée du 2026-08-10 : une sélection de sources héritée d'un autre carnet
+   * partait sans que rien ne l'affiche.
+   */
+  const { notebookTitre, sourcesDuCarnet, selectedSourceIds } = useBrainstormStore();
+  const sourcesRetenues = selectedSourceIds
+    .map(id => sourcesDuCarnet.find(s => s.id === id)?.titre ?? id)
+    .filter(Boolean);
+
   const [ecoule, setEcoule] = useState(0);
   const [journal, setJournal] = useState<EvenementMcp[]>([]);
   const finDuJournal = useRef<HTMLDivElement>(null);
@@ -97,6 +113,25 @@ export const ForgeProgress: React.FC<ForgeProgressProps> = ({
           </p>
         )}
       </div>
+
+      {(notebookTitre || sourcesRetenues.length > 0) && (
+        <div className="w-full max-w-2xl bg-white/5 border border-white/5 rounded-[2rem] px-6 py-4 text-left space-y-2">
+          {notebookTitre && (
+            <p className="flex items-center gap-3 text-xs text-white/60">
+              <BookOpen size={14} className="text-purple-400/60 shrink-0" />
+              <span className="font-bold">{notebookTitre}</span>
+            </p>
+          )}
+          <p className="flex items-start gap-3 text-xs text-white/40">
+            <FileText size={14} className="text-purple-400/40 shrink-0 mt-0.5" />
+            <span>
+              {sourcesRetenues.length > 0
+                ? sourcesRetenues.join(' · ')
+                : `${sourcesDuCarnet.length} source${sourcesDuCarnet.length > 1 ? 's' : ''} — carnet entier`}
+            </span>
+          </p>
+        </div>
+      )}
 
       {journal.length > 0 && (
         <div className="w-full max-w-2xl bg-black/40 border border-white/5 rounded-[2rem] p-6 text-left">

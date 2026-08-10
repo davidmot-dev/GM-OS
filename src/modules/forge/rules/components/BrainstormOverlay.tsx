@@ -14,6 +14,7 @@ import {
   cheminDesPersonas,
 } from '../../../../../electron/corpusSysteme';
 import { slugFiche } from '../canevas';
+import { slug } from '../../../../../electron/corpusSysteme';
 import type { BrainstormCandidate } from '../types';
 
 /**
@@ -58,6 +59,8 @@ export const BrainstormOverlay: React.FC = () => {
    * explicitement les deux cas plutôt que de laisser ce silence.
    */
   const [inventaireDisponible, setInventaireDisponible] = useState(true);
+  /** Nom d'un corpus qui n'existe pas encore — un jeu qu'on documente en premier. */
+  const [nouveauCorpus, setNouveauCorpus] = useState('');
   useEffect(() => {
     if (!window.appBridge?.ai?.listSystems) {
       setInventaireDisponible(false);
@@ -362,6 +365,46 @@ export const BrainstormOverlay: React.FC = () => {
                       </p>
                     )}
                   </div>
+
+                  {/*
+                    Un systeme documente pour la premiere fois n'a pas encore de
+                    dossier : la liste ci-dessus ne peut pas le proposer. Sans
+                    cette entree, l'atelier serait ferme aux jeux nouveaux —
+                    c'est-a-dire a ceux qui en ont le plus besoin.
+                  */}
+                  <div className="pt-4 mt-2 border-t border-white/5 flex items-center gap-3">
+                    <input
+                      value={nouveauCorpus}
+                      onChange={e => setNouveauCorpus(e.target.value)}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter' && slug(nouveauCorpus)) {
+                          brainstormStore.setCorpusCible(slug(nouveauCorpus));
+                          brainstormStore.setError(null);
+                        }
+                      }}
+                      placeholder={t('session.forge_module.atelier.corpus_new_placeholder')}
+                      className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-white/80 font-mono focus:outline-none focus:border-purple-500/50 placeholder:text-white/20"
+                    />
+                    <button
+                      disabled={!slug(nouveauCorpus)}
+                      onClick={() => {
+                        brainstormStore.setCorpusCible(slug(nouveauCorpus));
+                        brainstormStore.setError(null);
+                      }}
+                      className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                        slug(nouveauCorpus)
+                          ? 'bg-purple-600 text-white hover:bg-purple-500'
+                          : 'bg-white/5 text-white/10 cursor-not-allowed'
+                      }`}
+                    >
+                      {t('session.forge_module.atelier.corpus_new_button')}
+                    </button>
+                  </div>
+                  {slug(nouveauCorpus) && (
+                    <p className="text-[10px] text-white/30 font-mono">
+                      systems/{slug(nouveauCorpus)}
+                    </p>
+                  )}
                 </div>
               )}
 
@@ -404,7 +447,14 @@ export const BrainstormOverlay: React.FC = () => {
                 </p>
                 {corpus.aCreer && (
                   <p className="text-xs text-amber-200/60 leading-relaxed mt-2">
-                    {t('session.forge_module.atelier.corpus_new_folder')}
+                    {/*
+                      Choisi a la main, un dossier neuf est voulu — on l'annonce.
+                      Deduit, il signale que les fiches partiraient loin de
+                      l'index et des personas : c'est un avertissement.
+                    */}
+                    {corpus.raison === 'choisi'
+                      ? t('session.forge_module.atelier.corpus_will_create')
+                      : t('session.forge_module.atelier.corpus_new_folder')}
                   </p>
                 )}
                 {corpus.contradiction && (

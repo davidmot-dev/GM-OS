@@ -180,14 +180,14 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
 
         setSelectedNotebook(mappedNotebook);
         setNotebookSources(mappedSources);
-        brainstormStore.elaguerSources(mappedSources.map(s => s.id));
+        brainstormStore.setSourcesDuCarnet(mappedSources.map(s => ({ id: s.id, titre: s.title })));
         addLog(t('modules:session.forge_module.notebook.sources_extracted', { count: mappedSources.length }));
       } else if (notebookData && typeof notebookData === 'object') {
         const data = notebookData as Notebook & { sources?: NotebookSource[] };
         const sources = siblingSources ?? data.sources ?? [];
         setSelectedNotebook({ ...data, sources });
         setNotebookSources(sources);
-        brainstormStore.elaguerSources(sources.map(s => s.id));
+        brainstormStore.setSourcesDuCarnet(sources.map(s => ({ id: s.id, titre: s.title })));
         addLog(t('modules:session.forge_module.notebook.sources_extracted', { count: sources.length }));
       } else {
         throw new Error("Notebook data not found in response");
@@ -466,7 +466,7 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                 <button
                   disabled={!selectedNotebook}
                   onClick={() => {
-                    brainstormStore.setNotebook(selectedNotebook?.id || '');
+                    brainstormStore.setNotebook(selectedNotebook?.id || '', selectedNotebook?.title);
                     brainstormStore.startDiscovery();
                   }}
                   className={`w-full py-3 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transition-all ${

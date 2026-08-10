@@ -106,8 +106,40 @@ export function formatTaille(caracteres: number): string {
     return `${groupe} caractères`;
 }
 
-export function evenementRequete(outil: string, requete: number): EvenementMcp {
-    return { horodatage: Date.now(), niveau: 'requete', message: `Requête envoyée : ${outil}`, requete };
+/**
+ * Décrit les arguments d'un appel d'outil, sans les recopier.
+ *
+ * Le pont ne connaît que des identifiants — le nom du carnet et celui des
+ * sources vivent côté interface. Ce qu'il peut dire en propre, c'est **l'étendue
+ * de la requête** : carnet entier, ou filtré sur tant de sources. C'est
+ * précisément ce qui a manqué pour comprendre le dépassement du 2026-08-10.
+ */
+export function detailArguments(args: Record<string, unknown> | undefined): string {
+    if (!args) return '';
+    const morceaux: string[] = [];
+
+    const sources = args.source_ids;
+    if (Array.isArray(sources) && sources.length > 0) {
+        morceaux.push(`${sources.length} source${sources.length > 1 ? 's' : ''} filtrée${sources.length > 1 ? 's' : ''}`);
+    } else if ('notebook_id' in args) {
+        morceaux.push('carnet entier');
+    }
+
+    if (typeof args.query === 'string') {
+        morceaux.push(`${args.query.length} caractères de consigne`);
+    }
+
+    return morceaux.join(', ');
+}
+
+export function evenementRequete(outil: string, requete: number, detail = ''): EvenementMcp {
+    const suffixe = detail ? ` — ${detail}` : '';
+    return {
+        horodatage: Date.now(),
+        niveau: 'requete',
+        message: `Requête envoyée : ${outil}${suffixe}`,
+        requete,
+    };
 }
 
 export function evenementReponse(requete: number, ms: number, caracteres: number): EvenementMcp {

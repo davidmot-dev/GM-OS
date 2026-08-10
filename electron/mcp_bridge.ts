@@ -1,6 +1,7 @@
 import { ipcMain, BrowserWindow } from 'electron';
 import {
     ligneServeur,
+    detailArguments,
     evenementRequete,
     evenementReponse,
     evenementServeur,
@@ -304,6 +305,7 @@ async function callMcp(method: string, params: Record<string, unknown>) {
         emettreActivite(evenementRequete(
             method === 'tools/call' ? String(params.name ?? method) : method,
             id,
+            detailArguments(params.arguments as Record<string, unknown> | undefined),
         ));
         
         const request = JSON.stringify({
