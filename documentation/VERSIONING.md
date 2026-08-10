@@ -4,8 +4,9 @@
 
 ## La règle
 
-Le projet vit sur **deux branches parallèles**, chacune avec sa propre pile technique et sa
-propre série de versions. Les deux séries sont indépendantes : elles ne se rattrapent jamais.
+Le projet a vécu sur **deux branches parallèles**, chacune avec sa propre pile technique et sa
+propre série de versions — les deux séries étant indépendantes, elles ne se rattrapaient jamais.
+**Depuis le 2026-08-10, une seule subsiste** : la 7.x Tauri est abandonnée et archivée par un tag.
 
 | Série | Pile | Branche git | État | Worktree | Point d'entrée |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -50,8 +51,8 @@ Y fusionner la 6.x n'aurait donc pas de sens. La branche de travail *est* la bra
 Vérification rapide de la branche sur laquelle on se trouve :
 
 ```sh
-git branch --show-current       # feature/tablet-hub-pwa  ou  GM-OS_v7_P2P
-grep '"version"' package.json   # 6.x                     ou  7.x
+git branch --show-current       # feature/tablet-hub-pwa — la seule branche active
+grep '"version"' package.json   # 6.x
 ```
 
 ## Source unique de vérité
