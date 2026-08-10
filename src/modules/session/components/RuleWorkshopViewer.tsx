@@ -10,6 +10,7 @@ import { useSessionOSStore } from '../useSessionOSStore';
 
 import type { DocEntry } from '../../ai/RAGService';
 import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
+import { resoudreCorpus, cheminDesFiches } from '../../../../electron/corpusSysteme';
 import { gmToast } from '../../../stores/useToastStore';
 import { obsidianExportService } from '../ObsidianExportService';
 
@@ -31,9 +32,32 @@ export const RuleWorkshopViewer: React.FC = () => {
     const systemId = activeCampaign?.system || 'generic';
     const allDrivers = [...DEFAULT_GAME_DRIVERS, ...customGameDrivers];
     const driver = allDrivers.find(d => d.id === systemId);
-    let baseDir = driver?.ragPath?.trim().replace(/\\/g, '/') || `systems/${systemId}/rules`;
-    // Remove leading and trailing slashes for consistency
-    const ragPath = baseDir.replace(/^\/+|\/+$/g, '');
+
+    /**
+     * Où vit le corpus — la même question que se posent la Forge, la sélection
+     * RAG et les personas, donc la même réponse.
+     *
+     * **Ce bloc cherchait `systems/<identifiant du pilote>/rules`.** Or la Forge
+     * fabrique les identifiants avec `custom-${Date.now()}` : le grimoire visait
+     * `systems/custom-1754…/rules`, qui n'existe pour aucun jeu. Il annonçait donc
+     * « 0 fiches disponibles » quel que soit le système et quel que soit le nombre
+     * de fiches réellement sur le disque — et personne ne pouvait le deviner,
+     * puisqu'un dossier vide et un dossier introuvable s'affichent pareil.
+     */
+    const [dossiersSystemes, setDossiersSystemes] = useState<string[]>([]);
+    useEffect(() => {
+        window.appBridge?.ai?.listSystems?.().then(setDossiersSystemes).catch(() => setDossiersSystemes([]));
+    }, []);
+
+    const corpus = resoudreCorpus({
+        systemId,
+        systemName: driver?.name,
+        systemPath: activeCampaign?.systemPath,
+        corpusId: driver?.corpusId,
+        ragPath: driver?.ragPath,
+        dossiersConnus: dossiersSystemes,
+    });
+    const ragPath = cheminDesFiches(corpus);
 
     const [allDocs, setAllDocs] = useState<DocEntry[]>([]);
     const [loading, setLoading] = useState(true);
@@ -97,15 +121,15 @@ export const RuleWorkshopViewer: React.FC = () => {
                 return findRecursive(items, segments);
             };
 
-            const rulesDocs = findTargetDir(docs, baseDir);
-            console.log(`[RuleWorkshop] Path resolution for "${baseDir}": found ${rulesDocs.length} items.`);
+            const rulesDocs = findTargetDir(docs, ragPath);
+            console.log(`[RuleWorkshop] Path resolution for "${ragPath}" (${corpus.raison}): found ${rulesDocs.length} items.`);
             setAllDocs(rulesDocs);
         } catch (err) {
             console.error("Error loading rule documents:", err);
         } finally {
             setLoading(false);
         }
-    }, [baseDir]);
+    }, [ragPath, corpus.raison]);
 
     useEffect(() => {
         loadDocs();
