@@ -1429,7 +1429,9 @@
         "corpus_new_placeholder": "Nouveau corpus (ex. : hurlements)",
         "corpus_new_button": "Créer",
         "corpus_will_create": "Ce dossier n'existe pas encore : il sera créé à l'enregistrement de la première fiche.",
-        "save_inventory": "Enregistrer la synthèse"
+        "save_inventory": "Enregistrer la synthèse",
+        "forged_count": "{{forgees}} fiches forgées sur {{total}}",
+        "draft_pending": "Brouillon en attente de revue"
       },
       "notebook": {
         "title": "Navigateur NotebookLM",

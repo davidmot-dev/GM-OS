@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Sparkles, Zap, ChevronRight, RefreshCw, CheckCircle2, MinusCircle, HelpCircle, Save } from 'lucide-react';
+import { Sparkles, Zap, ChevronRight, RefreshCw, CheckCircle2, MinusCircle, HelpCircle, Save, FileClock } from 'lucide-react';
 import { useBrainstormStore } from '../store/useBrainstormStore';
 import ForgeProgress from './ForgeProgress';
 import type { BrainstormCandidate } from '../types';
@@ -25,6 +25,10 @@ function etat(candidate: BrainstormCandidate): 'non' | 'inconnu' | 'traite' {
 }
 
 interface DiscoveryUIProps {
+  /** Slugs des fiches présentes dans `rules/` — la vérité durable. */
+  fichesPubliees?: string[];
+  /** Slugs des brouillons en attente de revue, complets ou partiels. */
+  brouillonsEnAttente?: string[];
   /** Cesse d'attendre l'inventaire en cours. */
   onAbandon?: () => void;
   /** Passe la synthèse en revue pour l'enregistrer comme fiche du corpus. */
@@ -35,9 +39,16 @@ interface DiscoveryUIProps {
   onSelect: (candidate: BrainstormCandidate) => void;
 }
 
-const DiscoveryUI: React.FC<DiscoveryUIProps> = ({ onSelect, onAbandon, onEnregistrerInventaire, onRelancer }) => {
+const DiscoveryUI: React.FC<DiscoveryUIProps> = ({
+  onSelect,
+  onAbandon,
+  onEnregistrerInventaire,
+  onRelancer,
+  fichesPubliees = [],
+  brouillonsEnAttente = [],
+}) => {
   const { t } = useTranslation(['modules']);
-  const { candidates, isProcessing, startDiscovery, savedCandidateIds } = useBrainstormStore();
+  const { candidates, isProcessing, startDiscovery } = useBrainstormStore();
 
   const duCanevas = candidates.filter(c => !c.tags.includes('hors canevas'));
   const traites = duCanevas.filter(c => etat(c) === 'traite').length;
@@ -69,9 +80,23 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({ onSelect, onAbandon, onEnregi
 
         <div className="flex items-center gap-4">
           {candidates.length > 0 && (
-            <p className="text-[10px] font-black uppercase tracking-widest text-purple-400/60">
-              {t('session.forge_module.atelier.coverage', { traites, total: duCanevas.length })}
-            </p>
+            <div className="text-right">
+              <p className="text-[10px] font-black uppercase tracking-widest text-purple-400/60">
+                {t('session.forge_module.atelier.coverage', { traites, total: duCanevas.length })}
+              </p>
+              {/*
+                L'avancement de la serie, lu sur le disque. C'est la reponse a
+                « ou en suis-je ? » quand on reprend treize fiches en plusieurs
+                seances — et elle survit a la fermeture, contrairement a la
+                memoire de session qui la portait avant.
+              */}
+              <p className="text-[10px] font-black uppercase tracking-widest text-emerald-400/60 mt-0.5">
+                {t('session.forge_module.atelier.forged_count', {
+                  forgees: candidates.filter(c => fichesPubliees.includes(c.id)).length,
+                  total: candidates.length,
+                })}
+              </p>
+            </div>
           )}
           {onEnregistrerInventaire && (
             <button
@@ -95,7 +120,10 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({ onSelect, onAbandon, onEnregi
         {candidates.map((candidate, idx) => {
           const statut = etat(candidate);
           const horsCanevas = candidate.tags.includes('hors canevas');
-          const enregistre = savedCandidateIds.includes(candidate.id);
+          // On compare des slugs de fichier, pas des identifiants de session :
+          // c'est le nom sous lequel la fiche a réellement été écrite.
+          const enregistre = fichesPubliees.includes(candidate.id);
+          const enBrouillon = !enregistre && brouillonsEnAttente.includes(candidate.id);
 
           return (
             <button
@@ -114,6 +142,13 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({ onSelect, onAbandon, onEnregi
                 <h4 className="text-lg font-black text-app-text mb-1 truncate font-display group-hover:text-purple-400 transition-colors flex items-center gap-2">
                   {candidate.title}
                   {enregistre && <CheckCircle2 size={14} className="text-emerald-400 shrink-0" />}
+                  {enBrouillon && (
+                    <FileClock
+                      size={14}
+                      className="text-amber-400 shrink-0"
+                      aria-label={t('session.forge_module.atelier.draft_pending')}
+                    />
+                  )}
                 </h4>
                 <p className="text-[10px] text-app-text/40 uppercase tracking-widest font-bold">
                   {statut === 'non' ? t('session.forge_module.atelier.not_covered')

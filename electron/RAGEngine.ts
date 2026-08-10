@@ -339,6 +339,24 @@ export function registerRagHandlers() {
      * personas et l'index d'un même système au même endroit, alors que la Forge
      * fabrique les identifiants de pilote avec un horodatage.
      */
+    /**
+     * Les fichiers d'un dossier de `docs/`, sans récursion.
+     *
+     * Sert à l'atelier pour savoir ce qui est **déjà forgé** : une fiche existe
+     * dans `rules/` ou elle n'existe pas, et c'est la seule vérité durable. La
+     * coche de la liste des sujets venait d'une mémoire de session, vidée dès
+     * qu'on terminait — on avait donc forgé une fiche, elle était bien sur le
+     * disque, et l'écran l'affichait comme restant à faire.
+     */
+    ipcMain.handle('ai:list-dir', async (_event, relativePath: string) => {
+        const root = RAGEngine.getInstance()['docsPath'];
+        const dossier = path.join(root, relativePath);
+        if (!dossier.startsWith(root)) return [];
+        if (!await fs.pathExists(dossier)) return [];
+        const entrees = await fs.readdir(dossier, { withFileTypes: true });
+        return entrees.filter(e => e.isFile()).map(e => e.name);
+    });
+
     ipcMain.handle('ai:list-systems', async () => {
         const root = RAGEngine.getInstance()['docsPath'];
         const dossier = path.join(root, 'systems');

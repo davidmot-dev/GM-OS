@@ -103,6 +103,33 @@ export const BrainstormOverlay: React.FC = () => {
     ? corpusChoisi(brainstormStore.corpusCible, dossiersSystemes)
     : corpusParDefaut;
 
+  /**
+   * Ce qui est déjà forgé, lu sur le disque et non en mémoire de session.
+   *
+   * **Une fiche existe dans `rules/` ou elle n'existe pas.** La coche de la
+   * liste des sujets venait de `savedCandidateIds`, vidé dès qu'on terminait :
+   * on avait forgé une fiche, elle était bien enregistrée, et l'écran
+   * l'affichait comme restant à faire. Le disque, lui, survit à la fermeture —
+   * c'est ce qui rend la série de treize reprenable d'une séance à l'autre.
+   */
+  const [fichesPubliees, setFichesPubliees] = useState<string[]>([]);
+  const [brouillonsEnAttente, setBrouillonsEnAttente] = useState<string[]>([]);
+
+  const releverLeDisque = useCallback(async () => {
+    if (!corpus || !window.appBridge?.ai?.listDir) return;
+    const nomsEnSlugs = (noms: string[]) =>
+      noms.filter(n => n.endsWith('.md')).map(n => n.replace(/\.md$/, ''));
+    const [publiees, brouillons] = await Promise.all([
+      window.appBridge.ai.listDir(cheminDesFiches(corpus)).catch(() => []),
+      window.appBridge.ai.listDir(cheminDesBrouillons(corpus)).catch(() => []),
+    ]);
+    setFichesPubliees(nomsEnSlugs(publiees));
+    setBrouillonsEnAttente(nomsEnSlugs(brouillons));
+  }, [corpus]);
+
+  // Au chargement, et après chaque écriture : l'écran suit le disque.
+  useEffect(() => { void releverLeDisque(); }, [releverLeDisque, brainstormStore.step]);
+
   const cheminDeLaFiche = brainstormStore.activeCard && corpus
     ? `${cheminDesFiches(corpus)}/${brainstormStore.activeCard.slug}.md`
     : '';
@@ -616,6 +643,8 @@ export const BrainstormOverlay: React.FC = () => {
           {brainstormStore.step === 'discovery' && (
             <>
               <DiscoveryUI
+                fichesPubliees={fichesPubliees}
+                brouillonsEnAttente={brouillonsEnAttente}
                 onSelect={handleForge}
                 onAbandon={handleAbandon}
                 onEnregistrerInventaire={brainstormStore.inventaireBrut ? handleRevoirInventaire : undefined}

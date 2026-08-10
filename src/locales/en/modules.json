@@ -1400,7 +1400,9 @@
         "corpus_new_placeholder": "New corpus (e.g. hurlements)",
         "corpus_new_button": "Create",
         "corpus_will_create": "This folder does not exist yet: it will be created when the first sheet is saved.",
-        "save_inventory": "Save synthesis"
+        "save_inventory": "Save synthesis",
+        "forged_count": "{{forgees}} of {{total}} sheets forged",
+        "draft_pending": "Draft awaiting review"
       },
       "notebook": {
         "title": "NotebookLM Browser",

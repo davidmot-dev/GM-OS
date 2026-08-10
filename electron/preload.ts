@@ -85,6 +85,8 @@ contextBridge.exposeInMainWorld('appBridge', {
         listDocs: () => ipcRenderer.invoke('ai:list-docs'),
         /** Dossiers sous docs/systems/, pour resoudre le corpus d'un systeme. */
         listSystems: (): Promise<string[]> => ipcRenderer.invoke('ai:list-systems'),
+        /** Fichiers d'un dossier de docs/, sans recursion. */
+        listDir: (relativePath: string): Promise<string[]> => ipcRenderer.invoke('ai:list-dir', relativePath),
         /** Supprime un document — les brouillons de la Forge, une fois publies. */
         deleteDoc: (relativePath: string): Promise<boolean> => ipcRenderer.invoke('ai:delete-doc', relativePath),
         readDoc: (filePath: string) => ipcRenderer.invoke('ai:read-doc', filePath),
