@@ -66,3 +66,9 @@ crash.log
 # Contenu toujours recuperable via l'historique : git show 84fa2e6:v7-migration/...
 v7-migration/
 backups/
+
+# Brouillons de la Forge : une fiche revenue du carnet, pas encore relue.
+# Etat de travail, supprime a la publication et exclu de l index de l Oracle.
+# Le versionner mettrait au depot du contenu qui n a franchi aucune revue —
+# exactement ce que l etape de revue existe pour empecher.
+docs/systems/*/drafts/
