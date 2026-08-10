@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { ForgeService, type ForgeContextItem } from './ForgeService';
+import { ForgeService, estErreurAuth, type ForgeContextItem } from './ForgeService';
 
 
 const mockGenerateJSON = vi.fn();
@@ -70,6 +70,51 @@ describe('ForgeService', () => {
       await expect(forgeService.forgeSystem(items)).rejects.toThrow(
         "Gemma 4 ne supporte pas l'analyse visuelle de multiples fichiers"
       );
+    });
+  });
+
+  /**
+   * Relevé sur le journal du pont le 2026-08-10, en réel : la lecture d'une
+   * source Dune réussissait, était prise pour une expiration de session,
+   * déclenchait une reconnexion de quatre secondes, un `healthcheck` inexistant
+   * sur ce serveur, un rejeu, puis échouait en `MCP_AUTH_EXPIRED`.
+   */
+  describe('estErreurAuth', () => {
+    it('ne prend pas Feyd-Rautha pour une session expirée', () => {
+      const reponse = {
+        content: [{ type: 'text', text: "Feyd-Rautha était des leurs. D'authentiques experts." }],
+      };
+      expect(estErreurAuth(reponse)).toBe(false);
+    });
+
+    it('ne voit pas d\'erreur dans un appel qui a réussi, quel qu\'en soit le texte', () => {
+      // La correction structurelle : sans `isError`, le texte n'est pas inspecté.
+      expect(estErreurAuth({ content: [{ text: 'Unauthorized 401 credentials expired' }] })).toBe(false);
+    });
+
+    it('reconnaît un échec d\'authentification annoncé comme tel', () => {
+      expect(estErreurAuth({ isError: true, content: [{ text: 'Authentication required' }] })).toBe(true);
+      expect(estErreurAuth({ isError: true, content: [{ text: 'Erreur 401' }] })).toBe(true);
+      expect(estErreurAuth({ isError: true, content: [{ text: "Échec de l'authentification" }] })).toBe(true);
+      expect(estErreurAuth({ isError: true, content: [{ text: 'La session a expiré' }] })).toBe(true);
+    });
+
+    it('n\'invente pas une erreur d\'authentification sur un autre échec', () => {
+      expect(estErreurAuth({ isError: true, content: [{ text: "Unknown tool: 'healthcheck'" }] })).toBe(false);
+      expect(estErreurAuth({ isError: true, content: [{ text: 'Notebook introuvable' }] })).toBe(false);
+    });
+
+    it('lit le message d\'une exception', () => {
+      expect(estErreurAuth(new Error('MCP_AUTH_EXPIRED: please login again'))).toBe(true);
+      expect(estErreurAuth(new Error('ECONNRESET'))).toBe(false);
+      // « auteur » a fait partie des faux positifs relevés.
+      expect(estErreurAuth(new Error("Le champ auteur est absent"))).toBe(false);
+    });
+
+    it('ignore le vide sans se plaindre', () => {
+      expect(estErreurAuth(null)).toBe(false);
+      expect(estErreurAuth(undefined)).toBe(false);
+      expect(estErreurAuth(0)).toBe(false);
     });
   });
 

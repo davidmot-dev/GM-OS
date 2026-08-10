@@ -9,6 +9,58 @@ import { convertirFiche } from './rules/conversion';
 import { slugFiche } from './rules/canevas';
 import { extrairePersonas, controlerPersonas, type Personas } from './rules/personas';
 
+/**
+ * Motifs d'un échec d'authentification réel.
+ *
+ * **Jamais `auth` nu.** La version précédente cherchait cette sous-chaîne dans
+ * le résultat, y compris quand l'appel avait réussi. Or « Feyd-R**auth**a » la
+ * contient, comme « **auth**entique » et « **aut**eur » — quatorze occurrences
+ * dans une seule source Dune. Chaque lecture de source déclenchait donc une
+ * reconnexion inutile, puis un rejeu, puis `MCP_AUTH_EXPIRED` sur un appel qui
+ * avait parfaitement fonctionné.
+ *
+ * Toutes les frontières `\b` sont là pour ça : elles refusent une sous-chaîne
+ * prise au milieu d'un mot.
+ */
+const MOTIFS_AUTH: readonly RegExp[] = [
+  /\bunauthoriz/i,
+  /\bnon autoris/i,
+  /\bauthenticat/i,      // authentication, authenticate
+  /\bauthentificat/i,    // authentification (français)
+  /\bre-?auth/i,
+  /\bcredentials?\b/i,
+  /\blogin\b/i,
+  /\b(session|token|jeton|cookie)s?\b[^.]{0,40}\bexpir/i,
+  /\bexpir[a-zé]*\b[^.]{0,40}\b(session|token|jeton|identifiants?)\b/i,
+  /\b401\b/,
+  /\b403\b/,
+  /veuillez vous reconnecter/i,
+];
+
+function texteEvoqueAuth(texte: string): boolean {
+  return MOTIFS_AUTH.some(motif => motif.test(texte));
+}
+
+/**
+ * Cet appel a-t-il échoué faute d'authentification ?
+ *
+ * **Un succès n'est jamais une erreur d'authentification, quoi qu'il contienne.**
+ * C'est la correction structurelle : on n'inspecte le texte que d'une chose déjà
+ * en échec — une exception, ou un résultat MCP portant `isError: true`. Sans ce
+ * garde-fou, `\b401\b` suffirait à faire passer une citation de la page 401 pour
+ * une session expirée.
+ */
+export function estErreurAuth(candidat: unknown): boolean {
+  if (!candidat) return false;
+  if (candidat instanceof Error) return texteEvoqueAuth(candidat.message);
+  if (typeof candidat === 'string') return texteEvoqueAuth(candidat);
+  if (typeof candidat !== 'object') return false;
+
+  // Le contrat MCP : un outil en échec rend `isError: true`.
+  if ((candidat as { isError?: unknown }).isError !== true) return false;
+  return texteEvoqueAuth(JSON.stringify(candidat));
+}
+
 export interface ForgePersonasResult {
   /** La fiche de voix (prompt A), archivée dans `personas/` pour la relecture. */
   voix: string;
@@ -387,11 +439,7 @@ export class ForgeService {
     
     const mcpBridge = bridge.mcp;
 
-    const isAuthError = (err: any): boolean => {
-      if (!err) return false;
-      const str = (err?.message || (typeof err === 'string' ? err : JSON.stringify(err))).toLowerCase();
-      return str.includes('auth') || str.includes('login') || str.includes('expired') || str.includes('credentials');
-    };
+    const isAuthError = estErreurAuth;
 
     const TIMEOUT_MS = 600000; // 10 minutes
 
