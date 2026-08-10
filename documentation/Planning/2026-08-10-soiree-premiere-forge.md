@@ -31,8 +31,7 @@ Trois raisons, la première étant démontrée plutôt qu'argumentée :
 
 **Ce qu'il reste à faire, dans l'ordre :**
 
-1. **Le module lui-même** : un point d'entrée propre, au lieu d'un survol du tableau de bord de
-   session.
+1. ~~**Le module lui-même**~~ — **fait.** Voir le § 1 bis.
 2. **Structure Système crée le corpus** : `corpusId` dérivé du nom, et création de
    `rules/`, `index/`, `personas/`. Aujourd'hui la Forge crée un pilote avec un identifiant horodaté
    et rien autour — *et l'inverse existe aussi* : Alien a un corpus complet et **aucun pilote**, donc
@@ -41,10 +40,45 @@ Trois raisons, la première étant démontrée plutôt qu'argumentée :
    L'afficher **dans la revue**, avant publication, ferait de la vérification une étape du flux au
    lieu d'une sonde lancée à la main.
 4. **Reforger Alien et Blade Runner** avec les gabarits v3.
-5. **Le sujet libre** n'est injecté qu'à la construction de la liste : le taper après coup ne fait
-   rien, et rafraîchir coûte 72 secondes de requête. Correction simple — recalculer sans requête —
-   **en attente du feu vert de David**.
+5. ~~**Le sujet libre**~~ — **fait** (`fd9aaa0`) : la liste se recalcule à la frappe, sans requête, et
+   ne se dédouble plus, la comparaison se faisant sur le slug.
 6. **Rendre son pilote Blade Runner à « Anges de Feu »** si ce n'est pas déjà fait.
+
+---
+
+## 1 bis. La Forge est un module — ce qui a réellement changé
+
+**Le point d'entrée.** `src/modules/forge/ForgeOS.tsx`, atteint par la barre latérale, sous Journal.
+Il porte son propre en-tête et la bascule des deux ateliers — *Structure Système* / *Atelier de
+Règles* — qui vivait dans l'en-tête de Session OS. `ForgeDashboard` est inchangé dans son fond :
+c'est son hébergement qui change.
+
+**La vue `'forge'` de Session OS n'existe plus.** Les deux raccourcis qui y menaient — le cockpit de
+campagne et la bibliothèque de modèles — changent maintenant de module. `currentView` étant persisté,
+une disposition enregistrée avant ce déplacement désignerait encore une vue disparue :
+`SessionDashboard` la réaiguille vers le module et repose la vue sur le cockpit.
+
+**Ce qui compte le plus : le corpus n'a plus de valeur par défaut.** Il en tirait une de la campagne
+active. Nous l'avions déjà rétrogradée en simple défaut le matin même, et **cela n'a pas suffi** :
+David a choisi Dune et la forge est repartie sur Blade Runner. *Un défaut hérité d'ailleurs reste un
+choix que personne n'a fait.* Le corpus se désigne donc, dans l'atelier, et nulle part ailleurs.
+
+Deux conséquences à ne pas défaire :
+
+- **Le bouton de lancement exige le corpus autant que le carnet.** Sans ce garde-fou, l'atelier
+  partait sans savoir où écrire et ne le découvrait qu'à l'enregistrement — une fiche et deux minutes
+  plus tard.
+- **Le corpus est persisté** (`gmos-forge-corpus`, `partialize` sur ce seul champ). Sans défaut *et*
+  sans mémoire, il faudrait le re-désigner à chaque ouverture : une friction qui pousse à cliquer
+  vite, c'est-à-dire exactement ce qui a causé le défaut. Rien d'autre n'est persisté — l'avancement
+  se relit sur le disque, où il est vrai. `corpusPersiste.test.ts` tient ce contrat.
+
+**Ce qui reste dans Session OS, et c'est voulu.** Le Grimoire (`RuleWorkshopViewer`) lit le corpus de
+la campagne ouverte : en séance, c'est bien la campagne qui décide quel livre citer. Lecture et
+écriture passent par le même `corpusSysteme.ts`, mais elles ne posent pas la même question — l'une
+demande « quel livre pour cette partie ? », l'autre « quel livre je documente ? ». L'avertissement de
+contradiction disparaît donc de l'atelier (un choix explicite ne se contredit avec rien) et reste
+côté lecture, où la déduction subsiste.
 
 ---
 

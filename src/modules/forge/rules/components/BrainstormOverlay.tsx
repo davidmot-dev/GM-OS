@@ -9,12 +9,11 @@ import {
 } from '../store/useBrainstormStore';
 import { forgeService } from '../../ForgeService';
 import { useSessionOSStore } from '../../../session/useSessionOSStore';
+import { useSessionStore } from '../../../../store/useSessionStore';
 import { X, Zap, Sparkles, ChevronLeft, Shield, BookOpen, AlertTriangle, Users, Save, FolderTree } from 'lucide-react';
-import { DEFAULT_GAME_DRIVERS } from '../../../../data/defaultGameDrivers';
 import DiscoveryUI from './DiscoveryUI';
 import ForgeProgress from './ForgeProgress';
 import {
-  resoudreCorpus,
   corpusChoisi,
   cheminDesFiches,
   cheminDesBrouillons,
@@ -40,10 +39,11 @@ import type { BrainstormCandidate } from '../types';
 export const BrainstormOverlay: React.FC = () => {
   const { t } = useTranslation(['modules', 'common']);
   const brainstormStore = useBrainstormStore();
-  const { activeCampaignId, campaigns, customGameDrivers, setCurrentView } = useSessionOSStore();
-
-  const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
-  const allDrivers = [...DEFAULT_GAME_DRIVERS, ...customGameDrivers];
+  // Rien de la campagne ouverte n'entre ici : l'atelier documente un livre.
+  // La seule chose qu'on demande à Session OS est le chemin du retour au
+  // Grimoire, qui lui y est resté.
+  const setCurrentView = useSessionOSStore(s => s.setCurrentView);
+  const setActiveModule = useSessionStore(s => s.setActiveModule);
 
   const messageErreur = (err: unknown, defaut: string): string =>
     err instanceof Error && err.message ? err.message : defaut;
@@ -80,28 +80,21 @@ export const BrainstormOverlay: React.FC = () => {
   }, []);
 
   /**
-   * Le corpus documenté : celui qu'on a choisi, sinon celui de la campagne.
+   * Le corpus documenté : celui qu'on a choisi, et rien d'autre.
    *
    * **Documenter un corpus est une opération de bibliothèque, pas une opération
    * de campagne.** Le corpus de Dune est le même pour toutes les campagnes Dune.
    * Le déduire de la campagne active obligeait qui voulait l'enrichir à
    * réaffecter d'abord le pilote d'une campagne — et à en abîmer une au passage.
-   * La campagne ne sert donc plus que de valeur par défaut.
+   *
+   * Il a d'abord été rétrogradé en simple valeur par défaut, et cela n'a pas
+   * suffi : un défaut hérité d'ailleurs reste un choix que personne n'a fait, et
+   * la forge est repartie sur Blade Runner alors que Dune était visé. Le corpus
+   * se **désigne** donc, ici, et la Forge s'en souvient d'une séance à l'autre.
    */
-  const corpusParDefaut = activeCampaign?.system
-    ? resoudreCorpus({
-        systemId: activeCampaign.system,
-        systemName: allDrivers.find(d => d.id === activeCampaign.system)?.name,
-        systemPath: activeCampaign.systemPath,
-        corpusId: allDrivers.find(d => d.id === activeCampaign.system)?.corpusId,
-        ragPath: allDrivers.find(d => d.id === activeCampaign.system)?.ragPath,
-        dossiersConnus: dossiersSystemes,
-      })
-    : null;
-
   const corpus = brainstormStore.corpusCible
     ? corpusChoisi(brainstormStore.corpusCible, dossiersSystemes)
-    : corpusParDefaut;
+    : null;
 
   /**
    * Ce qui est déjà forgé, lu sur le disque et non en mémoire de session.
@@ -620,11 +613,11 @@ export const BrainstormOverlay: React.FC = () => {
           */}
           {corpus && (
             <div className={`mb-6 px-6 py-4 rounded-2xl border flex items-start gap-4 ${
-              corpus.aCreer || corpus.contradiction || !inventaireDisponible
+              corpus.aCreer || !inventaireDisponible
                 ? 'bg-amber-500/10 border-amber-500/20'
                 : 'bg-white/5 border-white/5'
             }`}>
-              <FolderTree size={16} className={corpus.aCreer || corpus.contradiction || !inventaireDisponible ? 'text-amber-400 mt-0.5' : 'text-purple-400/60 mt-0.5'} />
+              <FolderTree size={16} className={corpus.aCreer || !inventaireDisponible ? 'text-amber-400 mt-0.5' : 'text-purple-400/60 mt-0.5'} />
               <div className="min-w-0">
                 <p className="text-[10px] font-black uppercase tracking-widest text-white/20">
                   {t('session.forge_module.atelier.corpus_target')}
@@ -647,15 +640,14 @@ export const BrainstormOverlay: React.FC = () => {
                       : t('session.forge_module.atelier.corpus_new_folder')}
                   </p>
                 )}
-                {corpus.contradiction && (
-                  <p className="text-xs text-amber-200/60 leading-relaxed mt-2">
-                    {t('session.forge_module.atelier.corpus_contradiction', {
-                      systeme: allDrivers.find(d => d.id === activeCampaign?.system)?.name ?? activeCampaign?.system,
-                      vise: corpus.id,
-                      suggere: corpus.contradiction,
-                    })}
-                  </p>
-                )}
+                {/*
+                  L'avertissement de contradiction vivait ici : il disait qu'un
+                  chemin déclaré désignait un autre dossier que le nom du
+                  système. Il n'a plus de sujet — un corpus choisi à la main ne
+                  se contredit avec rien, et c'est désormais le seul chemin.
+                  `resoudreCorpus` continue de la produire côté lecture, où la
+                  campagne décide encore.
+                */}
                 {!inventaireDisponible && (
                   <p className="text-xs text-amber-200/60 leading-relaxed mt-2">
                     {t('session.forge_module.atelier.corpus_no_inventory')}
@@ -838,10 +830,17 @@ export const BrainstormOverlay: React.FC = () => {
                    >
                      {t('session.forge_module.atelier.btn_finish')}
                    </button>
+                   {/*
+                     Le Grimoire est resté dans Session OS : depuis le module
+                     Forge, y aller demande de changer de module *et* de vue.
+                     Poser la vue sans le module laissait l'écran sur la Forge,
+                     le Grimoire ouvert derrière, invisible.
+                   */}
                    <button
                      onClick={() => {
                        brainstormStore.reset();
                        setCurrentView('rule-workshop');
+                       setActiveModule('dashboard');
                      }}
                      className="px-6 py-3 text-accent/50 hover:text-accent rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2"
                    >

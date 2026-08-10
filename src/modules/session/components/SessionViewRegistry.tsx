@@ -11,7 +11,6 @@ import NpcManagement from './NpcManagement';
 import SessionPrep from './SessionPrep';
 import SessionFocusEditor from './SessionFocusEditor';
 import TimelineWikiDashboard from './TimelineWikiDashboard';
-import ForgeDashboard from '../../forge/components/ForgeDashboard';
 import TemplateDashboard from './TemplateDashboard';
 import SheetTemplateEditor from './SheetTemplateEditor';
 import RuleEngineEditor from './RuleEngineEditor';
@@ -25,11 +24,7 @@ import { RuleWorkshopViewer } from './RuleWorkshopViewer';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { Sparkles } from 'lucide-react';
 
-interface SessionViewRegistryProps {
-    forgeMode: 'system' | 'chronicle';
-}
-
-const SessionViewRegistry: React.FC<SessionViewRegistryProps> = ({ forgeMode }) => {
+const SessionViewRegistry: React.FC = () => {
     const { t } = useTranslation(['modules', 'common']);
     const { currentView, setCurrentView } = useSessionOSStore();
 
@@ -53,8 +48,17 @@ const SessionViewRegistry: React.FC<SessionViewRegistryProps> = ({ forgeMode }) 
                 return <SessionPrep />;
             case 'session-focus':
                 return <SessionFocusEditor />;
+            /*
+                'forge' n'est plus une vue de Session OS : c'est un module à
+                part, atteint par la barre latérale. Un état persisté qui la
+                désigne encore est réaiguillé par `SessionDashboard` — mais le
+                réaiguillage est un effet, donc un rendu a lieu avant lui. On
+                rend le vide le temps de cette image plutôt que « vue en
+                construction », qui aurait annoncé une panne là où il n'y en a
+                pas.
+            */
             case 'forge':
-                return <div className="p-8 h-full overflow-hidden"><ForgeDashboard mode={forgeMode} /></div>;
+                return null;
             case 'social-graph':
                 return <SocialGraph />;
             case 'templates':

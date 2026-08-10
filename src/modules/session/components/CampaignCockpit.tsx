@@ -144,11 +144,15 @@ const CampaignCockpit: React.FC = () => {
                     <PlusCircle size={20} className={currentView === 'session-prep' ? 'text-accent' : 'text-app-text/60'} />
                     <span className="text-sm font-medium">{t('modules:session.cockpit.view_session_prep')}</span>
                 </button>
+                {/*
+                    La Forge est un module, plus une vue : le raccourci quitte
+                    donc Session OS au lieu d'y changer de page.
+                */}
                 <button
-                    onClick={() => setCurrentView('forge')}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${currentView === 'forge' ? 'bg-accent/10 text-accent' : 'text-app-text/80 hover:bg-app-bg hover:text-app-text'}`}
+                    onClick={() => setActiveModule('forge')}
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all text-app-text/80 hover:bg-app-bg hover:text-app-text"
                 >
-                    <Hammer size={20} className={currentView === 'forge' ? 'text-accent' : 'text-app-text/60'} />
+                    <Hammer size={20} className="text-app-text/60" />
                     <span className="text-sm font-medium">{t('modules:session.cockpit.view_system_forge')}</span>
                 </button>
                 <button

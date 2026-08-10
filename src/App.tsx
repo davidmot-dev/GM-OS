@@ -31,6 +31,7 @@ interface RemoteAction {
 // --- LAZY COMPONENTS (Critical for Remote Stability) ---
 const RemoteControl = lazy(() => import('./modules/remote/RemoteControl'));
 const SessionDashboard = lazy(() => import('./modules/session/SessionDashboard'));
+const ForgeOS = lazy(() => import('./modules/forge/ForgeOS'));
 const DiceBoard = lazy(() => import('./modules/dice/DiceBoard'));
 const MusicDashboard = lazy(() => import('./modules/music/MusicDashboard'));
 const CombatDashboard = lazy(() => import('./modules/combat/CombatDashboard'));
@@ -213,6 +214,7 @@ function App() {
       case 'voice': return <ErrorBoundary moduleName="Voice OS"><VoiceDashboard /></ErrorBoundary>;
       case 'obsidian': return <ErrorBoundary moduleName="Obsidian Panel"><ObsidianPanel /></ErrorBoundary>;
       case 'journal': return <ErrorBoundary moduleName="Journal OS"><JournalDashboard /></ErrorBoundary>;
+      case 'forge': return <ErrorBoundary moduleName="Forge OS"><ForgeOS /></ErrorBoundary>;
       default: return <PlaceholderModule name={activeModule} />;
     }
   };

@@ -5,6 +5,7 @@ import OraclePanel from './components/OraclePanel';
 import SessionSnapshotModal from './components/SessionSnapshotModal';
 import RemoteNotificationCenter from './components/RemoteNotificationCenter';
 import { useSessionOSStore } from './useSessionOSStore';
+import { useSessionStore } from '../../store/useSessionStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../data/defaultSheetTemplates';
 import { DEFAULT_GAME_DRIVERS } from '../../data/defaultGameDrivers';
 
@@ -13,17 +14,34 @@ import { DEFAULT_GAME_DRIVERS } from '../../data/defaultGameDrivers';
  * Architecture modulaire (Phase 8) utilisant le Registry Pattern pour les vues.
  */
 const SessionDashboard: React.FC = () => {
-    const { 
-        activeCampaignId, 
-        campaigns, 
+    const {
+        activeCampaignId,
+        campaigns,
         customSheetTemplates,
         customGameDrivers,
-        isHeaderHidden
+        isHeaderHidden,
+        currentView,
+        setCurrentView
     } = useSessionOSStore();
+    const setActiveModule = useSessionStore(s => s.setActiveModule);
 
     const [isOracleOpen, setIsOracleOpen] = useState(false);
     const [isSnapshotModalOpen, setIsSnapshotModalOpen] = useState(false);
-    const [forgeMode, setForgeMode] = useState<'system' | 'chronicle'>('system');
+
+    /**
+     * La Forge a quitté Session OS pour son propre module.
+     *
+     * `currentView` est persisté : une disposition enregistrée avant ce
+     * déplacement désigne encore `'forge'`, et sans ce réaiguillage elle
+     * ouvrirait une vue qui n'existe plus. On y envoie donc au module, et on
+     * repose la vue de session sur le cockpit — pour qu'un retour ici ne
+     * rebondisse pas indéfiniment vers la Forge.
+     */
+    React.useEffect(() => {
+        if (currentView !== 'forge') return;
+        setCurrentView('cockpit');
+        setActiveModule('forge');
+    }, [currentView, setCurrentView, setActiveModule]);
 
     // Résolution contextuelle réactive (Phase 8 Logic)
     const { activeCampaign, activeDriver, activeTemplate } = React.useMemo(() => {
@@ -41,17 +59,15 @@ const SessionDashboard: React.FC = () => {
         <div className={`flex-1 ${isHeaderHidden ? 'h-screen' : 'h-[calc(100vh-64px)]'} overflow-hidden flex flex-col bg-app-bg text-app-text font-display transition-all duration-500`}>
             {/* Header modulaire (Navigation & Utilitaires) */}
             {!isHeaderHidden && (
-                <SessionHeader 
+                <SessionHeader
                     isOracleOpen={isOracleOpen}
                     setIsOracleOpen={setIsOracleOpen}
                     setIsSnapshotModalOpen={setIsSnapshotModalOpen}
-                    forgeMode={forgeMode}
-                    setForgeMode={setForgeMode}
                 />
             )}
 
             {/* Registre de Vues (Contenu principal dynamique) */}
-            <SessionViewRegistry forgeMode={forgeMode} />
+            <SessionViewRegistry />
 
             {/* Overlays & Panneaux persistants */}
             <OraclePanel 

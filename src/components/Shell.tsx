@@ -28,7 +28,8 @@ import {
     Download,
     Brain,
     Sparkles,
-    BookOpen
+    BookOpen,
+    Hammer
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSessionStore, THEME_PALETTES } from '../store/useSessionStore';
@@ -214,6 +215,17 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         label={t('modules:names.journal')}
                         active={activeModule === 'journal'}
                         onClick={() => setActiveModule('journal')}
+                    />
+                    {/*
+                        La Forge est un module de plein droit, pas une vue de
+                        Session OS : on y documente un système de jeu, pas une
+                        partie. Elle est donc atteignable sans campagne ouverte.
+                    */}
+                    <NavItem
+                        icon={<Hammer size={20} />}
+                        label={t('modules:names.forge')}
+                        active={activeModule === 'forge'}
+                        onClick={() => setActiveModule('forge')}
                     />
 
                     <div className="my-3 mx-2 h-px bg-app-border/20" />

@@ -4,7 +4,7 @@ import i18n from '../i18n';
 import { DEFAULT_LANGUAGE } from '../config/languages';
 
 export type ThemeID = 'cyberpunk' | 'medieval' | 'modern' | 'claire';
-export type ModuleID = 'dashboard' | 'music' | 'sound' | 'ambient' | 'combat' | 'npc' | 'clock' | 'light' | 'image' | 'map' | 'table' | 'web' | 'voice' | 'favorite' | 'debug' | 'dice' | 'whiteboard' | 'obsidian' | 'journal';
+export type ModuleID = 'dashboard' | 'music' | 'sound' | 'ambient' | 'combat' | 'npc' | 'clock' | 'light' | 'image' | 'map' | 'table' | 'web' | 'voice' | 'favorite' | 'debug' | 'dice' | 'whiteboard' | 'obsidian' | 'journal' | 'forge';
 
 interface ThemePalette {
     accent: string;

@@ -11,7 +11,7 @@ import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 import ChronicleForge from './ChronicleForge';
 import { useAIStore } from '../../../stores/useAIStore';
 import { useBrainstormStore } from '../rules/store/useBrainstormStore';
-import { resoudreCorpus, corpusChoisi } from '../../../../electron/corpusSysteme';
+import { corpusChoisi } from '../../../../electron/corpusSysteme';
 import { useForgeStore } from '../store/useForgeStore';
 
 interface NotebookSource {
@@ -34,9 +34,14 @@ interface ForgeDashboardProps {
 
 const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
   const { t } = useTranslation(['modules']);
-  const { saveGameDriver, addSheetTemplate, customGameDrivers, activeCampaignId, campaigns } = useSessionOSStore();
-  const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
-  
+  /*
+    La campagne active n'entre plus ici. Les pilotes et les modèles de fiche
+    sont un catalogue global — ils vivent dans le store de session mais ne
+    dépendent d'aucune campagne —, et c'est tout ce dont la Forge a besoin.
+  */
+  const { saveGameDriver, addSheetTemplate, customGameDrivers } = useSessionOSStore();
+
+
   // ... tabs state etc ...
 
   const allDrivers = [...DEFAULT_GAME_DRIVERS, ...customGameDrivers];
@@ -70,20 +75,17 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
     window.appBridge?.ai?.listSystems?.().then(setDossiersSystemes).catch(() => setDossiersSystemes([]));
   }, []);
 
-  /** Le corpus visé : celui qu'on a choisi, sinon celui que la campagne désigne. */
-  const pilote = allDrivers.find(d => d.id === activeCampaign?.system);
+  /**
+   * Le corpus visé : celui qu'on a choisi, et rien d'autre.
+   *
+   * La campagne active en fournissait la valeur par défaut. Un défaut hérité
+   * d'ailleurs reste un choix que personne n'a fait : le 2026-08-10, il a
+   * envoyé une forge Dune vers `systems/blade-runner`. La Forge est un module,
+   * elle n'a pas de campagne — le corpus se désigne ci-dessous.
+   */
   const corpusVise = brainstormStore.corpusCible
     ? corpusChoisi(brainstormStore.corpusCible, dossiersSystemes)
-    : (activeCampaign?.system
-        ? resoudreCorpus({
-            systemId: activeCampaign.system,
-            systemName: pilote?.name,
-            systemPath: activeCampaign.systemPath,
-            corpusId: pilote?.corpusId,
-            ragPath: pilote?.ragPath,
-            dossiersConnus: dossiersSystemes,
-          })
-        : null);
+    : null;
   const [isLoadingNotebooks, setIsLoadingNotebooks] = useState(false);
   const [importingSources, setImportingSources] = useState<Set<string>>(new Set());
 
@@ -363,7 +365,7 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
   }
 
   return (
-    <div className="h-full overflow-y-auto p-8 pt-20 flex flex-col gap-8 animate-in fade-in duration-500 custom-scrollbar bg-app-bg text-app-text font-sans">
+    <div className="h-full overflow-y-auto p-8 pt-6 flex flex-col gap-8 animate-in fade-in duration-500 custom-scrollbar bg-app-bg text-app-text font-sans">
       {/* Header Section */}
       {/* Navigation Tabs */}
       <div className="flex gap-4 p-1 bg-app-surface/40 rounded-2xl border border-app-border/10 w-fit self-center">
@@ -505,18 +507,30 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                   placeholder={t('modules:session.forge_module.atelier.custom_subject_placeholder')} 
                   className="w-full bg-white/5 text-xs text-app-text/80 focus:outline-none placeholder:text-white/10 font-sans border border-white/10 rounded-xl p-4 focus:border-purple-500/50 transition-all min-h-[120px] resize-none" 
                 />
+                {/*
+                  Deux conditions, pas une. Le corpus n'a plus de valeur par
+                  défaut : sans lui, l'atelier partirait sans savoir où écrire,
+                  et ne le découvrirait qu'au moment d'enregistrer — une fiche
+                  et deux minutes plus tard. On le bloque ici, et on dit
+                  laquelle des deux manque.
+                */}
                 <button
-                  disabled={!selectedNotebook}
+                  disabled={!selectedNotebook || !corpusVise}
                   onClick={() => {
                     brainstormStore.setNotebook(selectedNotebook?.id || '', selectedNotebook?.title);
                     brainstormStore.startDiscovery();
                   }}
                   className={`w-full py-3 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transition-all ${
-                    !selectedNotebook ? 'bg-white/5 text-white/10 cursor-not-allowed' : 'bg-purple-600 text-white shadow-glow-purple/30 hover:scale-105 active:scale-95'
+                    !selectedNotebook || !corpusVise ? 'bg-white/5 text-white/10 cursor-not-allowed' : 'bg-purple-600 text-white shadow-glow-purple/30 hover:scale-105 active:scale-95'
                   }`}
                 >
                   {t('modules:session.forge_module.atelier.analyze_button')}
                 </button>
+                {!corpusVise && (
+                  <p className="text-[10px] text-amber-300/60 leading-relaxed">
+                    {t('modules:session.forge_module.atelier.corpus_required')}
+                  </p>
+                )}
               </div>
             </>
           )}

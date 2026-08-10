@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import type { BrainstormState } from '../types';
 
 /**
@@ -76,7 +77,7 @@ export function generationCourante(): number {
  * **La forge et l'écriture sont deux états distincts** (`review` puis `saved`) :
  * rien ne part sur le disque sans passer devant un humain.
  */
-export const useBrainstormStore = create<BrainstormState>((set) => ({
+export const useBrainstormStore = create<BrainstormState>()(persist((set) => ({
   step: 'idle',
   candidates: [],
   inventaireBrut: null,
@@ -203,4 +204,19 @@ export const useBrainstormStore = create<BrainstormState>((set) => ({
     forgedCandidateIds: [],
     savedCandidateIds: []
   })
+}), {
+  name: 'gmos-forge-corpus',
+  /**
+   * **Le corpus visé, et lui seul.**
+   *
+   * Il tenait sa valeur par défaut de la campagne active ; il n'en a plus, et
+   * sans mémoire il faudrait le re-désigner à chaque ouverture — une friction
+   * qui pousse à cliquer vite, exactement ce qui a fait forger dans le mauvais
+   * dossier. La Forge se souvient donc du livre qu'elle documente.
+   *
+   * Rien d'autre ne se persiste : ni l'étape, ni les candidats, ni la fiche en
+   * revue. Une série reprise depuis le disque est vraie ; une série restaurée de
+   * mémoire prétendrait connaître un état que le disque seul atteste.
+   */
+  partialize: (state) => ({ corpusCible: state.corpusCible }),
 }));

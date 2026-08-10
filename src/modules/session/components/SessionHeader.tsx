@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Users, Sparkles, Hammer, BookOpen } from 'lucide-react';
+import { Users, Sparkles, BookOpen } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useSessionStore } from '../../../store/useSessionStore';
 
@@ -8,16 +8,12 @@ interface SessionHeaderProps {
     isOracleOpen: boolean;
     setIsOracleOpen: (open: boolean) => void;
     setIsSnapshotModalOpen: (open: boolean) => void;
-    forgeMode: 'system' | 'chronicle';
-    setForgeMode: (mode: 'system' | 'chronicle') => void;
 }
 
 const SessionHeader: React.FC<SessionHeaderProps> = ({
     isOracleOpen,
     setIsOracleOpen,
-    setIsSnapshotModalOpen,
-    forgeMode,
-    setForgeMode
+    setIsSnapshotModalOpen
 }) => {
     const { t } = useTranslation();
     const { 
@@ -30,7 +26,6 @@ const SessionHeader: React.FC<SessionHeaderProps> = ({
         switch (currentView) {
             case 'cockpit': return t('modules:session.header.master_cockpit');
             case 'timeline-wiki': return t('modules:session.header.chronicles');
-            case 'forge': return t('modules:session.header.forge');
             case 'templates': return t('modules:session.header.sheet_library');
             case 'template-editor': return t('modules:session.header.template_editor');
             case 'social-graph': return t('modules:session.header.social_nexus');
@@ -66,33 +61,10 @@ const SessionHeader: React.FC<SessionHeaderProps> = ({
                 </div>
             </div>
 
-            {/* Forge Tab Switcher */}
-            {currentView === 'forge' && (
-                <div className={`flex p-1 bg-app-surface/50 border border-app-border/50 shadow-lg ${
-                    theme === 'medieval' ? 'rounded-md' : 'rounded-xl'
-                }`}>
-                    <button
-                        onClick={() => setForgeMode('system')}
-                        className={`px-6 py-1.5 transition-all flex items-center gap-2 ${
-                            theme === 'medieval' ? 'rounded-sm text-[11px] font-display tracking-widest' : 'rounded-lg text-[10px] font-black uppercase tracking-widest'
-                        } ${
-                            forgeMode === 'system' ? 'bg-accent text-white shadow-glow-accent' : 'text-app-text/60'
-                        }`}
-                    >
-                        <Hammer size={12} /> {t('modules:session.header.forge')}
-                    </button>
-                    <button
-                        onClick={() => setForgeMode('chronicle')}
-                        className={`px-6 py-1.5 transition-all flex items-center gap-2 ${
-                            theme === 'medieval' ? 'rounded-sm text-[11px] font-display tracking-widest' : 'rounded-lg text-[10px] font-black uppercase tracking-widest'
-                        } ${
-                            forgeMode === 'chronicle' ? 'bg-fuchsia-600/80 text-white shadow-glow-fuchsia/40' : 'text-app-text/60'
-                        }`}
-                    >
-                        <Sparkles size={12} /> {t('modules:session.header.chronicle_forge')}
-                    </button>
-                </div>
-            )}
+            {/*
+                La bascule des deux ateliers de la Forge vivait ici. Elle a suivi
+                la Forge dans son module : voir `src/modules/forge/ForgeOS.tsx`.
+            */}
 
             <div className="flex gap-3">
                 {currentView !== 'cockpit' && (

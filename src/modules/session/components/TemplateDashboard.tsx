@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
+import { useSessionStore } from '../../../store/useSessionStore';
 import { DEFAULT_SHEET_TEMPLATES, type SheetTemplate } from '../../../data/defaultSheetTemplates';
 import { Search, Hammer, Trash2, Copy, FileText, Sparkles, CheckCircle2, ChevronRight, Pencil, DownloadCloud, Upload, Eye } from 'lucide-react';
 import { gmToast } from '../../../stores/useToastStore';
@@ -27,7 +28,11 @@ const TemplateDashboard: React.FC = () => {
         activeCampaignId,
         campaigns
     } = useSessionOSStore();
-    
+
+    // La Forge est un module, plus une vue de Session OS.
+    const setActiveModule = useSessionStore(s => s.setActiveModule);
+    const ouvrirLaForge = () => setActiveModule('forge');
+
     const { showConfirm } = useModalStore();
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -165,7 +170,7 @@ const TemplateDashboard: React.FC = () => {
                                 </button>
                             )}
                             <button 
-                                onClick={() => setCurrentView('forge')}
+                                onClick={ouvrirLaForge}
                                 className="flex items-center gap-2 bg-accent hover:bg-accent/90 text-app-bg font-black px-6 py-3 rounded-xl text-xs tracking-[0.15em] transition-all shadow-glow-accent/20 hover:scale-105 active:scale-95 group"
                             >
                                 <Hammer size={18} className="group-hover:rotate-12 transition-transform" />
@@ -443,7 +448,7 @@ const TemplateDashboard: React.FC = () => {
                         {t('modules:session.template_dashboard.cta.description')}
                     </p>
                     <button 
-                         onClick={() => setCurrentView('forge')}
+                         onClick={ouvrirLaForge}
                          className="w-full bg-app-bg border border-accent/40 hover:border-accent text-accent font-black py-4 rounded-xl text-[10px] tracking-[0.2em] transition-all hover:bg-accent hover:text-app-bg shadow-lg shadow-accent/5 group"
                     >
                         {t('modules:session.template_dashboard.actions.open_forge')} <ChevronRight size={14} className="inline ml-1 group-hover:translate-x-1 transition-transform" />

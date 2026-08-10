@@ -62,11 +62,16 @@ export interface BrainstormState {
   /** Catalogue des sources du carnet ouvert : identifiant et titre. */
   sourcesDuCarnet: { id: string; titre: string }[];
   /**
-   * Corpus que l'on documente, choisi a la main.
+   * Corpus que l'on documente — le dossier de `docs/systems/`.
    *
-   * `null` = on suit celui de la campagne active. Des qu'il est renseigne, il
-   * l'emporte : documenter un corpus est une operation de bibliotheque, pas une
-   * operation de campagne.
+   * **Il n'a plus de valeur par défaut.** Il en avait une, tirée de la campagne
+   * active, et c'est ce qui a fait forger dans Blade Runner alors que Dune était
+   * visé. Documenter un corpus est une opération de bibliothèque : la campagne
+   * ouverte ne dit rien du livre qu'on documente. `null` signifie donc
+   * « personne ne l'a encore choisi », et rien ne part tant qu'il l'est.
+   *
+   * Il est persisté par le module (voir `useBrainstormStore`) : la Forge se
+   * souvient du livre qu'elle documente d'une séance à l'autre.
    */
   corpusCible: string | null;
   selectedSourceIds: string[];

@@ -51,7 +51,7 @@ export const SessionOSModuleSchema = z.object({
 
 // --- Global Structure ---
 export const ThemeIDSchema = z.enum(['cyberpunk', 'medieval', 'modern', 'claire']);
-export const ModuleIDSchema = z.enum(['dashboard', 'music', 'sound', 'ambient', 'combat', 'npc', 'clock', 'light', 'image', 'map', 'table', 'web', 'voice', 'favorite', 'debug', 'dice', 'whiteboard', 'obsidian', 'journal']);
+export const ModuleIDSchema = z.enum(['dashboard', 'music', 'sound', 'ambient', 'combat', 'npc', 'clock', 'light', 'image', 'map', 'table', 'web', 'voice', 'favorite', 'debug', 'dice', 'whiteboard', 'obsidian', 'journal', 'forge']);
 
 export const GlobalSettingsSchema = z.object({
     theme: ThemeIDSchema.default('cyberpunk'),
