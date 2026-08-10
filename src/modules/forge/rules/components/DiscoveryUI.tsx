@@ -29,11 +29,13 @@ interface DiscoveryUIProps {
   onAbandon?: () => void;
   /** Passe la synthèse en revue pour l'enregistrer comme fiche du corpus. */
   onEnregistrerInventaire?: () => void;
+  /** Redemande l'inventaire au carnet — coûteux, donc explicite. */
+  onRelancer?: () => void;
   /** Forge la fiche du sujet retenu. La liste ne décide pas, elle propose. */
   onSelect: (candidate: BrainstormCandidate) => void;
 }
 
-const DiscoveryUI: React.FC<DiscoveryUIProps> = ({ onSelect, onAbandon, onEnregistrerInventaire }) => {
+const DiscoveryUI: React.FC<DiscoveryUIProps> = ({ onSelect, onAbandon, onEnregistrerInventaire, onRelancer }) => {
   const { t } = useTranslation(['modules']);
   const { candidates, isProcessing, startDiscovery, savedCandidateIds } = useBrainstormStore();
 
@@ -80,7 +82,7 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({ onSelect, onAbandon, onEnregi
             </button>
           )}
           <button
-            onClick={() => startDiscovery()}
+            onClick={() => (onRelancer ? onRelancer() : startDiscovery())}
             className="p-3 hover:bg-white/5 rounded-xl text-app-text/40 hover:text-purple-400 transition-all group"
             title={t('common:actions.refresh')}
           >

@@ -20,7 +20,7 @@ import {
   cheminDesPersonas,
 } from '../../../../../electron/corpusSysteme';
 import { slugFiche } from '../canevas';
-import { ficheInventaire } from '../inventaire';
+import { ficheInventaire, lireInventaire } from '../inventaire';
 import { slug } from '../../../../../electron/corpusSysteme';
 import type { BrainstormCandidate } from '../types';
 
@@ -106,28 +106,65 @@ export const BrainstormOverlay: React.FC = () => {
     ? `${cheminDesFiches(corpus)}/${brainstormStore.activeCard.slug}.md`
     : '';
 
+  /** Les candidats tirés d'un inventaire, quelle qu'en soit la provenance. */
+  const construireCandidats = useCallback((inventaire: string) => {
+    const candidats = lireInventaire(inventaire).map(entree => ({
+      id: slugFiche(entree.sujet),
+      title: entree.sujet,
+      category: 'rule' as const,
+      summary: entree.lu
+        ? entree.mecanique || "Le carnet n'a pas résumé la mécanique."
+        : "Le carnet n'a rien rendu sur ce sujet — à interroger pour lever le doute.",
+      tags: [
+        entree.lu ? entree.traite : 'sans reponse',
+        ...(entree.horsCanevas ? ['hors canevas'] : []),
+        ...entree.sections.slice(0, 3),
+      ],
+    }));
+    // La « forge libre » du tableau de bord s'ajoute au canevas, elle ne le
+    // remplace pas : demander au carnet de choisir ses sujets est exactement ce
+    // qui faisait dériver la taxonomie d'un jeu à l'autre.
+    const libre = brainstormStore.customSubject.trim();
+    brainstormStore.setCandidates(
+      libre
+        ? [{ id: slugFiche(libre), title: libre, category: 'rule' as const, summary: '', tags: ['hors canevas'] }, ...candidats]
+        : candidats,
+      inventaire,
+    );
+  }, [brainstormStore.customSubject, brainstormStore.setCandidates]);
+
+  /**
+   * Reprend l'inventaire déjà enregistré, sans rien demander au carnet.
+   *
+   * **Treize fiches, c'est une demi-heure : personne ne fait ça d'une traite.**
+   * L'inventaire coûte soixante-douze secondes et disparaissait dès qu'on
+   * fermait l'atelier — il fallait le repayer pour reprendre la série. Il est
+   * sur le disque, sous forme de fiche : autant le relire.
+   *
+   * Le frontmatter n'appartient pas à la réponse du carnet : on le retire pour
+   * que le tableau soit lu exactement comme il l'a été la première fois.
+   */
+  const reprendreInventaire = useCallback(async (): Promise<boolean> => {
+    if (!corpus) return false;
+    const chemin = `${cheminDesFiches(corpus)}/inventaire-des-mecaniques.md`;
+    const enregistre = await window.appBridge?.ai?.readDoc?.(chemin);
+    if (!enregistre) return false;
+    construireCandidats(enregistre.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '').trim());
+    return true;
+  }, [corpus, construireCandidats]);
+
   const handleDiscover = useCallback(async () => {
     if (!brainstormStore.notebookId) return;
     const gen = reserverLeCarnet();
     if (gen === null) return;
     brainstormStore.setProcessing(true);
     try {
-      const { candidats, inventaire } = await forgeService.discoverCandidates(
+      const { inventaire } = await forgeService.discoverCandidates(
         brainstormStore.notebookId,
         brainstormStore.selectedSourceIds
       );
-
-      // La « forge libre » du tableau de bord s'ajoute au canevas, elle ne le
-      // remplace pas : demander au carnet de choisir ses sujets est exactement
-      // ce qui faisait dériver la taxonomie d'un jeu à l'autre.
       if (gen !== generationCourante()) return;   // abandonnée entre-temps
-      const libre = brainstormStore.customSubject.trim();
-      brainstormStore.setCandidates(
-        libre
-          ? [{ id: slugFiche(libre), title: libre, category: 'rule' as const, summary: '', tags: ['hors canevas'] }, ...candidats]
-          : candidats,
-        inventaire
-      );
+      construireCandidats(inventaire);
     } catch (err: unknown) {
       if (gen !== generationCourante()) return;
       brainstormStore.setError(messageErreur(err, t('session.forge_module.atelier.error_title')));
@@ -138,9 +175,11 @@ export const BrainstormOverlay: React.FC = () => {
 
   useEffect(() => {
     if (brainstormStore.step === 'discovery' && brainstormStore.candidates.length === 0 && !brainstormStore.isProcessing && !brainstormStore.error) {
-      handleDiscover();
+      // Le disque d'abord : une requête au carnet ne se paie que si rien n'a
+      // encore été enregistré pour ce corpus.
+      reprendreInventaire().then(repris => { if (!repris) handleDiscover(); });
     }
-  }, [brainstormStore.step, brainstormStore.candidates.length, brainstormStore.isProcessing, brainstormStore.error, handleDiscover]);
+  }, [brainstormStore.step, brainstormStore.candidates.length, brainstormStore.isProcessing, brainstormStore.error, handleDiscover, reprendreInventaire]);
 
   /**
    * Cesse d'attendre la requête en cours.
