@@ -1391,7 +1391,7 @@
         "corpus_reason_defaut": "no existing folder matches",
         "corpus_new_folder": "This folder does not exist yet: sheets would land away from the index and personas. Set \"Rules Path\" on the campaign if this is not intended.",
         "corpus_no_inventory": "Folder inventory unavailable: the app has not been restarted since the update. The folder shown above may be wrong — restart before saving.",
-        "corpus_contradiction": "The system is named \"{{systeme}}\" but the target corpus is \"{{vise}}\". A folder \"{{suggere}}\" exists and matches the name. Check \"Rules Path\" on the campaign before saving."
+        "corpus_contradiction": "The system attached to this campaign is named \"{{systeme}}\" but the target corpus is \"{{vise}}\". A folder \"{{suggere}}\" exists and matches the name. Either the wrong campaign is active, or its system and \"Rules Path\" disagree — check before saving."
       },
       "notebook": {
         "title": "NotebookLM Browser",
