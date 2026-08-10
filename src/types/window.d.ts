@@ -182,6 +182,26 @@ declare global {
              * de distinguer un corpus neuf d'un corpus rejoint.
              */
             createCorpus?: (dossiers: string[]) => Promise<string[]>;
+            /**
+             * Résout les sections citées par une fiche en pages du livre.
+             *
+             * `indexDisponible: false` distingue « pas d'index pour ce système »
+             * de « aucune section résolue » : le premier n'accuse pas la fiche.
+             */
+            resolveSections?: (systeme: string, contenuFiche: string) => Promise<{
+                indexDisponible: boolean;
+                sources: string[];
+                resolutions: {
+                    demande: string;
+                    statut: 'exact' | 'approche' | 'introuvable';
+                    page?: number;
+                    entree?: string;
+                    score: number;
+                }[];
+                /** Pages citées au-delà de la pagination attestée par l'index. */
+                pagesDouteuses: number[];
+                plage: { min: number; max: number } | null;
+            }>;
             readDoc: (filePath: string) => Promise<string | null>;
             writeDoc: (filePath: string, content: string) => Promise<boolean>;
             extractPdf: (filePath: string) => Promise<string>;

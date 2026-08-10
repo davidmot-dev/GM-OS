@@ -1435,7 +1435,14 @@
         "forged_count": "{{forgees}} fiches forgées sur {{total}}",
         "draft_pending": "Brouillon en attente de revue",
         "btn_forge_next": "Forger une autre fiche",
-        "remaining": "{{restant}} sujets restants"
+        "remaining": "{{restant}} sujets restants",
+        "sections_title": "Sections citées, vérifiées contre l'index du livre",
+        "sections_checking": "Vérification…",
+        "sections_no_index": "Aucun index chargé pour « {{corpus}} » : les citations de cette fiche ne peuvent pas être vérifiées. Déposez le sommaire et l'index alphabétique du livre dans index/ pour que ce contrôle serve.",
+        "sections_score": "{{resolues}} sur {{total}} se retrouvent dans l'index ({{sources}}).",
+        "sections_unresolved": "introuvable",
+        "sections_unresolved_hint": "Une section introuvable n'accuse pas la fiche à elle seule : l'index peut être incomplet, ou le titre inventé. À vous de trancher avant de publier.",
+        "sections_impossible_pages": "Pages citées au-delà du livre : {{pages}}. L'index n'atteste que jusqu'à la page {{max}}."
       },
       "notebook": {
         "title": "Navigateur NotebookLM",

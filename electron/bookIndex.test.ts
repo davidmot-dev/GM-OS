@@ -10,6 +10,7 @@ import {
     pagesInvraisemblables,
     plageDePages,
     sectionsCitees,
+    verifierLesCitations,
 } from './bookIndex';
 
 /**
@@ -230,5 +231,74 @@ describe('contrôle de vraisemblance des pages', () => {
 
         // Neuf fiches relevées le 2026-08-09. Le contrôle doit continuer de les voir.
         expect(atteintes.length).toBeGreaterThanOrEqual(9);
+    });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// La vérification telle que la revue la présente
+// ─────────────────────────────────────────────────────────────────────────────
+
+describe('verifierLesCitations', () => {
+    /**
+     * Ce que ces tests protègent : **la vérification est une étape du flux**.
+     *
+     * Le résolveur existait depuis le 2026-08-09 et n'avait aucun appelant en
+     * production. Une vérification qu'il faut lancer à la main n'est pas une
+     * vérification, c'est une intention : elle tourne maintenant dans la revue,
+     * avant que la fiche n'entre dans `rules/` et ne devienne citable.
+     */
+
+    it('distingue « pas d\'index » de « aucune section résolue »', () => {
+        /**
+         * La distinction qui compte. Sans elle, un corpus sans index et une
+         * fiche aux titres inventés rendent le même verdict — et l'écran accuse
+         * la fiche d'un manque qui n'est pas le sien. Une mesure impossible
+         * n'est pas une mesure mauvaise.
+         */
+        const sansIndex = { systeme: 'x', sources: [], entrees: [] };
+        const v = verifierLesCitations(sansIndex, '---\nsections: « Forcer le test »\n---\n');
+
+        expect(v.indexDisponible).toBe(false);
+        expect(v.resolutions).toEqual([]);
+        expect(v.plage).toBeNull();
+    });
+
+    it('résout les sections d\'une fiche réelle contre l\'index réel', () => {
+        // Vérifié sur la charge, jamais sur un exemple écrit pour l'occasion :
+        // c'est la règle tirée du correctif « Feyd-Rautha ».
+        const fiche = fs.readFileSync(
+            path.join(DOCS, 'systems', 'dune', 'rules', 'resolution-des-jets.md'),
+            'utf8',
+        );
+        const v = verifierLesCitations(chargerIndex(DOCS, 'dune'), fiche);
+
+        expect(v.indexDisponible).toBe(true);
+        expect(v.sources.length).toBeGreaterThan(0);
+        expect(v.resolutions.length, 'la fiche ne cite aucune section').toBeGreaterThan(0);
+        expect(v.resolutions.some(r => r.statut !== 'introuvable')).toBe(true);
+        expect(v.plage!.max).toBeLessThan(400);
+    });
+
+    it('remonte les pages citées au-delà du livre', () => {
+        const contaminee = '---\nsections: « Agir »\n---\n\nLa règle dit ceci (p. 1279).';
+        const v = verifierLesCitations(chargerIndex(DOCS, 'dune'), contaminee);
+
+        expect(v.pagesDouteuses).toContain(1279);
+    });
+
+    it('ne signale rien quand la fiche ne cite aucune page en clair', () => {
+        // Les gabarits v3 interdisent les pages : le cas normal est le silence.
+        const fiche = '---\nsections: « Agir »\n---\n\nLe texte ne cite aucune page.';
+        expect(verifierLesCitations(chargerIndex(DOCS, 'dune'), fiche).pagesDouteuses).toEqual([]);
+    });
+
+    it('rend une vérification exploitable pour Blade Runner et Alien aussi', () => {
+        // Les trois corpus ont un index : le contrôle doit valoir pour les trois,
+        // sinon il n'aiderait que là où le travail est déjà fait.
+        for (const systeme of ['blade-runner', 'alien']) {
+            const v = verifierLesCitations(chargerIndex(DOCS, systeme), '---\nsections: « X »\n---\n');
+            expect(v.indexDisponible, `${systeme} sans index`).toBe(true);
+            expect(v.plage, `${systeme} sans pagination`).not.toBeNull();
+        }
     });
 });

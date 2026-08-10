@@ -11,6 +11,7 @@ import {
     type RagRequest,
     type RagSelection,
 } from './ragSelection';
+import { chargerIndex, verifierLesCitations } from './bookIndex';
 
 const require = createRequire(import.meta.url);
 let pdf: any;
@@ -396,6 +397,27 @@ export function registerRagHandlers() {
             crees.push(relatif);
         }
         return crees;
+    });
+
+    /**
+     * Résout les sections citées par une fiche en pages du livre.
+     *
+     * **Pourquoi la vérification doit être une étape du flux.** Les pages
+     * rendues par NotebookLM sont fausses : neuf fiches Dune sur dix-sept
+     * citaient au-delà de la dernière page du livre, dont une page 1279 pour un
+     * ouvrage qui s'arrête à 328. Les gabarits v3 demandent donc des **titres de
+     * section**, vérifiables contre l'index réel — mais un résolveur qu'il faut
+     * lancer à la main n'est pas une vérification, c'est une intention. Il
+     * tourne ici, dans la revue, avant que la fiche n'entre dans `rules/` et ne
+     * devienne cityable par l'Oracle.
+     *
+     * Un index absent n'est pas une fiche fautive : on rend `indexDisponible:
+     * false` plutôt que « zéro section résolue », qui aurait accusé la fiche
+     * d'un manque qui n'est pas le sien.
+     */
+    ipcMain.handle('ai:resolve-sections', async (_event, systeme: string, contenuFiche: string) => {
+        const root = RAGEngine.getInstance()['docsPath'];
+        return verifierLesCitations(chargerIndex(root, systeme), contenuFiche);
     });
 
     /**

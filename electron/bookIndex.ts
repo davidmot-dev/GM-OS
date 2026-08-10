@@ -274,3 +274,47 @@ export function sectionsCitees(contenuFiche: string): string[] {
         .map(s => s.replace(/^[«"']\s*|\s*[»"']$/g, '').trim())
         .filter(Boolean);
 }
+
+/** Ce que la revue a besoin de savoir pour juger les citations d'une fiche. */
+export interface Verification {
+    /**
+     * Un index a-t-il pu être chargé pour ce corpus ?
+     *
+     * **La distinction qui compte.** Sans ce drapeau, un corpus sans index et
+     * une fiche aux titres inventés rendraient tous deux « zéro section
+     * résolue » — et l'écran accuserait la fiche d'un manque qui n'est pas le
+     * sien. Une mesure impossible n'est pas une mesure mauvaise.
+     */
+    indexDisponible: boolean;
+    /** Fichiers d'index ayant contribué, pour que le verdict soit traçable. */
+    sources: string[];
+    resolutions: Resolution[];
+    /** Pages citées au-delà de la pagination attestée. */
+    pagesDouteuses: number[];
+    plage: { min: number; max: number } | null;
+}
+
+/**
+ * Confronte les citations d'une fiche à l'index du livre.
+ *
+ * Rassemble les trois contrôles que la revue doit présenter ensemble : les
+ * titres de section résolus en pages, les pages citées en clair qui dépassent le
+ * livre, et la pagination attestée qui sert de référence aux deux.
+ *
+ * **Ne juge pas, informe.** Une section introuvable peut venir d'un index
+ * incomplet autant que d'un titre inventé — trancher demande de connaître le
+ * livre, ce qu'aucun de ces contrôles ne fait.
+ */
+export function verifierLesCitations(livre: IndexLivre, contenuFiche: string): Verification {
+    if (livre.entrees.length === 0) {
+        return { indexDisponible: false, sources: [], resolutions: [], pagesDouteuses: [], plage: null };
+    }
+    const resolveur = creerResolveur(livre);
+    return {
+        indexDisponible: true,
+        sources: livre.sources,
+        resolutions: sectionsCitees(contenuFiche).map(s => resolveur.resoudre(s)),
+        pagesDouteuses: pagesInvraisemblables(contenuFiche, livre),
+        plage: plageDePages(livre),
+    };
+}

@@ -91,6 +91,9 @@ contextBridge.exposeInMainWorld('appBridge', {
         deleteDoc: (relativePath: string): Promise<boolean> => ipcRenderer.invoke('ai:delete-doc', relativePath),
         /** Cree les dossiers d'un corpus. Rend ceux qui ont reellement ete crees. */
         createCorpus: (dossiers: string[]): Promise<string[]> => ipcRenderer.invoke('ai:create-corpus', dossiers),
+        /** Resout les sections citees par une fiche en pages de l'index du livre. */
+        resolveSections: (systeme: string, contenuFiche: string) =>
+            ipcRenderer.invoke('ai:resolve-sections', systeme, contenuFiche),
         readDoc: (filePath: string) => ipcRenderer.invoke('ai:read-doc', filePath),
         writeDoc: (filePath: string, content: string) => ipcRenderer.invoke('ai:write-doc', filePath, content),
         extractPDF: (filePath: string) => ipcRenderer.invoke('ai:extract-pdf', filePath),

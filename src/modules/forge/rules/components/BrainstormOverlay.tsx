@@ -24,6 +24,22 @@ import { ficheInventaire, lireInventaire } from '../inventaire';
 import { slug } from '../../../../../electron/corpusSysteme';
 import type { BrainstormCandidate } from '../types';
 
+/** Ce que rend `ai:resolve-sections` — cf. `verifierLesCitations` dans `electron/bookIndex.ts`. */
+interface ResolutionDesSections {
+  /** Faux quand aucun index n'a pu être chargé : la fiche n'y est pour rien. */
+  indexDisponible: boolean;
+  sources: string[];
+  resolutions: {
+    demande: string;
+    statut: 'exact' | 'approche' | 'introuvable';
+    page?: number;
+    entree?: string;
+    score: number;
+  }[];
+  pagesDouteuses: number[];
+  plage: { min: number; max: number } | null;
+}
+
 /**
  * BrainstormOverlay
  * Interface premium pour l'Atelier de Règles.
@@ -130,6 +146,41 @@ export const BrainstormOverlay: React.FC = () => {
   const cheminDeLaFiche = brainstormStore.activeCard && corpus
     ? `${cheminDesFiches(corpus)}/${brainstormStore.activeCard.slug}.md`
     : '';
+
+  /**
+   * Les sections citées, résolues en pages du livre — **pendant la revue**.
+   *
+   * **Pourquoi ici et pas ailleurs.** Les pages rendues par le carnet sont
+   * fausses : neuf fiches Dune sur dix-sept citaient au-delà de la dernière page
+   * du livre, dont une page 1279 pour un ouvrage qui s'arrête à 328. Les
+   * gabarits v3 demandent donc des titres de section, vérifiables contre l'index
+   * réel — mais le résolveur n'avait aucun appelant en production. *Une
+   * vérification qu'il faut lancer à la main n'est pas une vérification, c'est
+   * une intention.*
+   *
+   * La revue est le seul moment où elle vaut : après, la fiche est dans `rules/`
+   * et l'Oracle la cite. Elle ne bloque pas la publication — une section
+   * introuvable peut être un index incomplet autant qu'un titre inventé, et
+   * c'est un humain qui tranche. Elle donne de quoi trancher.
+   */
+  const [resolution, setResolution] = useState<ResolutionDesSections | null>(null);
+  const [resolutionEnCours, setResolutionEnCours] = useState(false);
+
+  useEffect(() => {
+    const carte = brainstormStore.activeCard;
+    const resoudre = window.appBridge?.ai?.resolveSections;
+    if (brainstormStore.step !== 'review' || !carte || !corpus || !resoudre) {
+      setResolution(null);
+      return;
+    }
+    let abandonne = false;
+    setResolutionEnCours(true);
+    resoudre(corpus.id, carte.content)
+      .then(r => { if (!abandonne) setResolution(r); })
+      .catch(() => { if (!abandonne) setResolution(null); })
+      .finally(() => { if (!abandonne) setResolutionEnCours(false); });
+    return () => { abandonne = true; };
+  }, [brainstormStore.step, brainstormStore.activeCard, corpus]);
 
   /** Les candidats tirés d'un inventaire, quelle qu'en soit la provenance. */
   const construireCandidats = useCallback((inventaire: string) => {
@@ -715,6 +766,94 @@ export const BrainstormOverlay: React.FC = () => {
                    <ul className="space-y-2 text-sm text-amber-200/60 leading-relaxed list-disc pl-6">
                      {brainstormStore.activeCard.avertissements.map((avis, idx) => <li key={idx}>{avis}</li>)}
                    </ul>
+                 </div>
+               )}
+
+               {/*
+                 Les sections citées, confrontées à l'index du livre.
+                 C'est ce qui sépare une citation vérifiable d'une citation
+                 plausible — et c'est le dernier moment où cela se regarde :
+                 après, la fiche est dans `rules/` et l'Oracle la cite.
+               */}
+               {(resolutionEnCours || resolution) && (
+                 <div className="p-8 bg-white/2 border border-white/5 rounded-[3rem]">
+                   <div className="flex items-center gap-4 mb-5">
+                     <BookOpen size={18} className="text-purple-400/60" />
+                     <h4 className="text-sm font-black uppercase tracking-widest text-white/40 font-display">
+                       {t('session.forge_module.atelier.sections_title')}
+                     </h4>
+                     {resolutionEnCours && (
+                       <span className="text-[10px] font-black uppercase tracking-widest text-white/20 animate-pulse">
+                         {t('session.forge_module.atelier.sections_checking')}
+                       </span>
+                     )}
+                   </div>
+
+                   {resolution && !resolution.indexDisponible && (
+                     // Pas d'index n'est pas une fiche fautive : on ne compte
+                     // pas « zéro section résolue », ce serait l'en accuser.
+                     <p className="text-xs text-white/30 leading-relaxed">
+                       {t('session.forge_module.atelier.sections_no_index', { corpus: corpus?.id ?? '' })}
+                     </p>
+                   )}
+
+                   {resolution?.indexDisponible && (() => {
+                     const resolues = resolution.resolutions.filter(r => r.statut !== 'introuvable');
+                     const perdues = resolution.resolutions.filter(r => r.statut === 'introuvable');
+                     return (
+                       <div className="space-y-4">
+                         <p className="text-xs text-white/40 leading-relaxed">
+                           {t('session.forge_module.atelier.sections_score', {
+                             resolues: resolues.length,
+                             total: resolution.resolutions.length,
+                             sources: resolution.sources.join(', '),
+                           })}
+                         </p>
+
+                         <div className="flex flex-wrap gap-2">
+                           {resolution.resolutions.map((r, idx) => (
+                             <span
+                               key={`${r.demande}-${idx}`}
+                               title={r.entree && r.entree !== r.demande ? r.entree : undefined}
+                               className={`px-3 py-1.5 rounded-lg text-[11px] font-bold border ${
+                                 r.statut === 'exact'
+                                   ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300/80'
+                                   : r.statut === 'approche'
+                                     ? 'bg-amber-500/10 border-amber-500/20 text-amber-200/80'
+                                     : 'bg-red-500/10 border-red-500/20 text-red-300/70'
+                               }`}
+                             >
+                               {r.demande}
+                               <span className="ml-2 font-mono opacity-60">
+                                 {r.page ? `p. ${r.page}` : t('session.forge_module.atelier.sections_unresolved')}
+                               </span>
+                             </span>
+                           ))}
+                         </div>
+
+                         {perdues.length > 0 && (
+                           // Ni accusation ni blanc-seing : une section introuvable
+                           // peut venir d'un index incomplet autant que d'un titre
+                           // inventé. C'est un humain qui tranche.
+                           <p className="text-xs text-red-300/50 leading-relaxed">
+                             {t('session.forge_module.atelier.sections_unresolved_hint')}
+                           </p>
+                         )}
+
+                         {resolution.pagesDouteuses.length > 0 && (
+                           <div className="flex items-start gap-3 pt-2">
+                             <AlertTriangle size={14} className="text-red-400 mt-0.5 shrink-0" />
+                             <p className="text-xs text-red-300/60 leading-relaxed">
+                               {t('session.forge_module.atelier.sections_impossible_pages', {
+                                 pages: resolution.pagesDouteuses.join(', '),
+                                 max: resolution.plage?.max ?? '?',
+                               })}
+                             </p>
+                           </div>
+                         )}
+                       </div>
+                     );
+                   })()}
                  </div>
                )}
 
