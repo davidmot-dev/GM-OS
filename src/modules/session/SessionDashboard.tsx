@@ -4,6 +4,7 @@ import SessionViewRegistry from './components/SessionViewRegistry';
 import OraclePanel from './components/OraclePanel';
 import SessionSnapshotModal from './components/SessionSnapshotModal';
 import RemoteNotificationCenter from './components/RemoteNotificationCenter';
+import PanneauDesRessources from '../table/PanneauDesRessources';
 import { useSessionOSStore } from './useSessionOSStore';
 import { useSessionStore } from '../../store/useSessionStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../data/defaultSheetTemplates';
@@ -63,6 +64,22 @@ const SessionDashboard: React.FC = () => {
                     isOracleOpen={isOracleOpen}
                     setIsOracleOpen={setIsOracleOpen}
                     setIsSnapshotModalOpen={setIsSnapshotModalOpen}
+                />
+            )}
+
+            {/*
+                Les réserves de la table — l'Impulsion des joueurs, la Menace du
+                meneur. Bande permanente parce qu'elles changent à presque
+                chaque test : une réserve qu'il faut aller chercher n'est pas
+                tenue à jour, et une réserve fausse se lit comme une information.
+
+                Elle n'apparaît que si le pilote en déclare. Un système sans
+                monnaie de table garde son écran tel quel.
+            */}
+            {activeCampaignId && (activeDriver?.ressourcesDeTable?.length ?? 0) > 0 && (
+                <PanneauDesRessources
+                    campaignId={activeCampaignId}
+                    ressources={activeDriver!.ressourcesDeTable!}
                 />
             )}
 

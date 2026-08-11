@@ -51,12 +51,12 @@ import type { GameDriver } from '../types/drivers';
  *    avec ce seuil sous-estime systématiquement le personnage. Il manque un
  *    descripteur de jet disant *de quels champs* le seuil se compose.
  *
- * **4. Les ressources de table n'existent pas dans le modèle.** L'Impulsion est
- *    une réserve **commune aux joueurs**, bornée de 0 à 6, qui perd un point en
- *    fin de scène ; la Menace est celle du meneur, sans maximum
- *    (`monnaie-de-table.md`). Ce sont les ressources les plus manipulées d'une
- *    partie de Dune, et le pilote n'a nulle part où les déclarer — tout ce qu'il
- *    connaît sont des champs de fiche, donc individuels.
+ * **4. ABATTU le 2026-08-11.** Les ressources de table se déclarent —
+ *    `ressourcesDeTable`, plus bas. L'Impulsion est une réserve commune aux
+ *    joueurs, la Menace appartient au meneur, et ce qu'on ne peut pas payer en
+ *    Impulsion passe en Menace. Il reste un résidu, signalé sur la Menace : sa
+ *    valeur de départ dépend du type de Maison **et du nombre de joueurs**, ce
+ *    que `depart` ne sait pas dire.
  */
 const DUNE: GameDriver = {
     id: 'dune',
@@ -99,8 +99,9 @@ const DUNE: GameDriver = {
             { id: 'principe', label: 'Principe', sectionId: 'principes' },
         ],
         // « Réserve de dés : de deux à cinq dés. » Les trois dés supplémentaires
-        // s'achètent 1, 2 puis 3 points d'Impulsion ou de Menace.
-        reserve: { base: 2, max: 5, faces: 20 },
+        // s'achètent 1, 2 puis 3 points d'Impulsion — et de Menace quand
+        // l'Impulsion manque, ce que `reportSurEpuisement` porte plus bas.
+        reserve: { base: 2, max: 5, faces: 20, cout: [1, 2, 3], ressource: 'impulsion' },
         sens: 'sous-ou-egal',
         critique: 1,        // « Réussite critique standard : un naturel, valant deux réussites. »
         complication: 20,   // « Complication standard : résultat de vingt naturel. »
@@ -121,6 +122,45 @@ const DUNE: GameDriver = {
         initiativeSort: 'desc',
         defaultHealthType: 'clocks',
     },
+
+    /**
+     * Ce qui abat le mur n° 4 — les deux monnaies de la table.
+     *
+     * Toutes les valeurs viennent de `monnaie-de-table.md`, fiche v3 résolue
+     * contre l'index. Ce ne sont pas des champs de fiche : les mettre sur la
+     * feuille de personnage aurait donné six Impulsions à six joueurs, et fait
+     * de la Menace la propriété d'un personnage.
+     */
+    ressourcesDeTable: [
+        {
+            id: 'impulsion',
+            label: 'Impulsion',
+            proprietaire: 'joueurs',
+            depart: 0,          // « Début : zéro point. »
+            min: 0,
+            max: 6,             // « Bornes : de zéro à six. À six points, tout gain est perdu. »
+            erosionFinDeScene: 1, // « Érosion automatique de moins un point en fin de scène. »
+            // « À zéro, l'achat de d20 coûte de la Menace » : le manque ne bloque
+            // pas la dépense, il alimente la réserve du meneur.
+            reportSurEpuisement: 'menace',
+            description: "Réserve commune aux joueurs. Chaque réussite excédentaire l'alimente ; elle paie les dés supplémentaires, les informations et les traits.",
+        },
+        {
+            id: 'menace',
+            label: 'Menace',
+            proprietaire: 'meneur',
+            /**
+             * **Le résidu du mur n° 4.** « De zéro à trois points **par joueur**
+             * selon la Maison. » La valeur de départ dépend donc d'un choix de
+             * campagne et du nombre de joueurs — `depart` est un nombre, il ne
+             * sait dire ni l'un ni l'autre. Zéro est le plancher honnête : le
+             * meneur pose sa réserve au début de la chronique.
+             */
+            depart: 0,
+            min: 0,             // « Bornes : minimale de zéro, sans maximum. »
+            description: "Réserve du meneur. Elle monte quand les joueurs prennent des risques, et se dépense pour compliquer, hausser une difficulté ou déclencher un danger.",
+        },
+    ],
 
     ui_config: {
         gauges: [

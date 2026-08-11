@@ -39,8 +39,17 @@ export interface DescripteurDeJet {
      * et un principe. Chez un jeu à compétence seule : une seule composante.
      */
     seuil: ComposanteDeJet[];
-    /** Réserve de dés : combien on en lance de base, jusqu'à combien, et à combien de faces. */
-    reserve: { base: number; max: number; faces: number };
+    /**
+     * Réserve de dés : combien on en lance de base, jusqu'à combien, et à
+     * combien de faces.
+     *
+     * `cout` donne le prix de chaque dé supplémentaire, dans l'ordre — chez
+     * Dune, un, deux puis trois points. Le prix n'est pas constant, donc un
+     * seul nombre n'aurait pas suffi. `ressource` désigne la réserve de table
+     * qui paie ; sans elle, les dés sont gratuits et le panneau ne demande
+     * rien.
+     */
+    reserve: { base: number; max: number; faces: number; cout?: number[]; ressource?: string };
     /** Chaque dé est-il une réussite en dessous ou au-dessus du seuil ? */
     sens: SensDuJet;
     /** Un dé à cette valeur ou en deçà compte double. Chez Dune, le 1 naturel. */
@@ -72,6 +81,16 @@ export interface JetPrepare {
     /** Le détail du seuil, pour l'afficher : `[{ label: 'Combat', valeur: 6 }, …]`. */
     composantes: { label: string; champ: string; valeur: number }[];
     nombreDeDes: number;
+    /** Dés effectivement achetés, plafond appliqué. */
+    desAchetes: number;
+    /**
+     * Ce que ces dés coûtent, et sur quelle réserve de table.
+     *
+     * Le coût est **annoncé, jamais prélevé ici** : cette fonction est pure et
+     * ne connaît pas l'état de la table. C'est l'appelant qui dépense, et
+     * seulement s'il lance.
+     */
+    cout: { total: number; ressource?: string };
     faces: number;
     sens: SensDuJet;
     doubleSous: number;
@@ -136,6 +155,12 @@ export function preparerLeJet(
         avertissements.push(`Réserve plafonnée à ${descripteur.reserve.max} dés.`);
     }
 
+    // Le prix croît dé après dé : on additionne les échelons réellement
+    // franchis, pas le nombre de dés fois un prix moyen.
+    const desAchetes = nombreDeDes - descripteur.reserve.base;
+    const echelons = descripteur.reserve.cout ?? [];
+    const total = echelons.slice(0, Math.max(0, desAchetes)).reduce((s, c) => s + c, 0);
+
     const difficulteDemandee = choix.difficulte ?? descripteur.difficulte.defaut;
     const difficulte = Math.min(
         descripteur.difficulte.max,
@@ -151,6 +176,8 @@ export function preparerLeJet(
         seuil,
         composantes,
         nombreDeDes,
+        desAchetes: Math.max(0, desAchetes),
+        cout: { total, ressource: descripteur.reserve.ressource },
         faces: descripteur.reserve.faces,
         sens: descripteur.sens,
         // La spécialisation élargit le critique ; sans elle, le critique ordinaire.

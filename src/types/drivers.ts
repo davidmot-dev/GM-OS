@@ -114,6 +114,19 @@ export interface GameDriver {
      * antérieurs continuent de fonctionner sans.
      */
     jet?: import('../modules/dice/DescripteurDeJet').DescripteurDeJet;
+    /**
+     * Les réserves qui appartiennent à la table, pas aux personnages.
+     *
+     * **Ce qu'elles rendent possible** : déclarer l'Impulsion — commune aux
+     * joueurs, bornée de 0 à 6, érodée en fin de scène — et la Menace, celle du
+     * meneur, sans plafond. Ce sont les ressources les plus manipulées d'une
+     * partie de Dune, et le pilote ne connaissait que des champs de fiche, donc
+     * individuels : six joueurs auraient eu six Impulsions.
+     *
+     * Facultatif. Un système qui n'en a pas n'en déclare pas, et rien ne
+     * s'affiche — plutôt qu'un bandeau vide qui suggérerait un oubli.
+     */
+    ressourcesDeTable?: import('../modules/table/RessourcesDeTable').RessourceDeTable[];
     ragPath?: string; // Hérité : visait le dossier des fiches. Préférer `corpusId`.
     /**
      * Dossier de corpus sous `docs/systems/` — `dune`, `blade-runner`.

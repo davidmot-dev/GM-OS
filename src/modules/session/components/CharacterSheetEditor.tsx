@@ -274,6 +274,8 @@ const CharacterSheetEditor: React.FC = () => {
                                 dice={piloteDeLaFiche.dice}
                                 template={template}
                                 valeurs={editor.localData}
+                                campaignId={activeCampaignId ?? undefined}
+                                ressourcesDeTable={piloteDeLaFiche.ressourcesDeTable}
                             />
                         )}
 

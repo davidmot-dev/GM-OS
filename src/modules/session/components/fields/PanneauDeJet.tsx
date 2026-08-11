@@ -1,7 +1,9 @@
 import React, { useMemo, useState } from 'react';
-import { Dices, AlertTriangle, Plus, Minus } from 'lucide-react';
+import { Dices, AlertTriangle, Plus, Minus, Coins } from 'lucide-react';
 import { DiceEngine, type RollResult } from '../../../dice/DiceEngine';
 import { preparerLeJet, verdict, type DescripteurDeJet } from '../../../dice/DescripteurDeJet';
+import { ventilerLaDepense, type RessourceDeTable } from '../../../table/RessourcesDeTable';
+import { useRessourcesDeTableStore } from '../../../table/useRessourcesDeTableStore';
 import type { SheetTemplate } from '../../../../data/defaultSheetTemplates';
 import type { DiceConfig } from '../../../../types/drivers';
 
@@ -26,15 +28,30 @@ interface PanneauDeJetProps {
     template: SheetTemplate;
     /** Valeurs courantes de la fiche, telles que l'éditeur les tient. */
     valeurs: Record<string, unknown>;
+    /**
+     * De quoi faire payer les dés et créditer l'excédent.
+     *
+     * Les deux facultatifs et solidaires : un système sans monnaie de table
+     * garde le panneau tel quel, les dés y sont simplement gratuits.
+     */
+    campaignId?: string;
+    ressourcesDeTable?: RessourceDeTable[];
 }
 
-const PanneauDeJet: React.FC<PanneauDeJetProps> = ({ descripteur, dice, template, valeurs }) => {
+const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
+    descripteur, dice, template, valeurs, campaignId, ressourcesDeTable,
+}) => {
     /** Champ retenu pour chaque composante — `{ competence: 'combat' }`. */
     const [choix, setChoix] = useState<Record<string, string>>({});
     const [desAchetes, setDesAchetes] = useState(0);
     const [difficulte, setDifficulte] = useState(descripteur.difficulte.defaut);
     const [resultat, setResultat] = useState<RollResult | null>(null);
     const [seuilDuLancer, setSeuilDuLancer] = useState(0);
+    /** Ce que le dernier lancer a fait aux réserves de la table. */
+    const [mouvements, setMouvements] = useState<string[]>([]);
+
+    const { etatDe, depenser, gagner } = useRessourcesDeTableStore();
+    const monnaie = campaignId && ressourcesDeTable?.length ? { campaignId, ressourcesDeTable } : null;
 
     /** Les champs proposés pour une composante : ceux de sa section. */
     const champsDe = (sectionId: string) =>
@@ -48,13 +65,56 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({ descripteur, dice, template
     /** Rien ne part tant que chaque composante n'a pas son champ. */
     const pret = descripteur.seuil.every(c => choix[c.id]) && jet.avertissements.length === 0;
 
+    /**
+     * D'où sortiront les points, **avant** de lancer.
+     *
+     * Chez Dune, les dés qu'on ne peut pas payer en Impulsion se paient en
+     * Menace : la dépense alimente la réserve du meneur. Ce n'est jamais une
+     * surprise acceptable — donc on l'annonce, et le joueur décide ensuite.
+     */
+    const ventilation = useMemo(() => {
+        if (!monnaie || !jet.cout.ressource || jet.cout.total === 0) return null;
+        const etat = etatDe(monnaie.campaignId, monnaie.ressourcesDeTable);
+        return ventilerLaDepense(monnaie.ressourcesDeTable, etat, jet.cout.ressource, jet.cout.total);
+    }, [monnaie, jet.cout.ressource, jet.cout.total, etatDe]);
+
+    const nomDe = (id?: string) =>
+        ressourcesDeTable?.find(r => r.id === id)?.label ?? id ?? '';
+
     const lancer = () => {
+        const dits: string[] = [];
+
+        // Le coût se prélève au moment où l'on s'engage, pas pendant qu'on
+        // tourne les boutons : régler avant de lancer ferait payer les
+        // hésitations.
+        if (monnaie && jet.cout.ressource && jet.cout.total > 0) {
+            dits.push(...depenser(monnaie.campaignId, monnaie.ressourcesDeTable, jet.cout.ressource, jet.cout.total).avertissements);
+        }
+
         const res = DiceEngine.rollFromConfig(
             { ...dice, successThreshold: jet.seuil },
             { baseCount: jet.nombreDeDes, doubleSous: jet.doubleSous },
         );
         setSeuilDuLancer(jet.seuil);
         setResultat(res);
+
+        /**
+         * « Après la résolution d'un test réussi, chaque réussite excédentaire
+         * génère un point d'Impulsion ajouté à la réserve du groupe. »
+         *
+         * Le crédit est automatique parce que la règle l'est — `verdict` rend
+         * un excédent nul sur un échec, ce qui couvre « aucune Impulsion ne
+         * peut être générée si le test échoue ». Le plafond, lui, se dit :
+         * gagner trois points et n'en voir arriver qu'un doit s'expliquer.
+         */
+        if (monnaie && jet.cout.ressource) {
+            const excedent = verdict(res.successes ?? 0, jet.difficulte).excedent;
+            if (excedent > 0) {
+                dits.push(...gagner(monnaie.campaignId, monnaie.ressourcesDeTable, jet.cout.ressource, excedent).avertissements);
+            }
+        }
+
+        setMouvements(dits);
     };
 
     const reussites = resultat?.successes ?? 0;
@@ -118,6 +178,29 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({ descripteur, dice, template
                         className="p-1 rounded-md bg-app-bg/60 border border-app-border/40 hover:border-accent/40 transition-colors"
                     ><Plus size={12} /></button>
                 </div>
+
+                {/*
+                    Le prix des dés achetés, ventilé. « 3 — 2 d'Impulsion,
+                    1 de Menace » : ce qui part chez le meneur se voit avant
+                    le lancer, pas après.
+                */}
+                {ventilation && (
+                    <span
+                        className="flex items-center gap-1.5 text-[10px] font-bold text-amber-300/80"
+                        title="Coût des dés supplémentaires"
+                    >
+                        <Coins size={11} />
+                        {ventilation.surLaReserve > 0 && (
+                            <span>{ventilation.surLaReserve} {nomDe(jet.cout.ressource)}</span>
+                        )}
+                        {ventilation.reporte > 0 && (
+                            <span className="text-red-300/80">
+                                {ventilation.surLaReserve > 0 && '+ '}
+                                {ventilation.reporte} {nomDe(ventilation.ressourceDeReport)}
+                            </span>
+                        )}
+                    </span>
+                )}
 
                 <label className="flex items-center gap-2">
                     <span className="text-[9px] font-black uppercase tracking-widest text-app-text/40">Difficulté</span>
@@ -193,9 +276,12 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({ descripteur, dice, template
                         <span className="text-app-text/50 font-mono">
                             {reussites} réussite{reussites > 1 ? 's' : ''} / difficulté {difficulte}
                         </span>
-                        {/* L'excédent est ce qui alimente la monnaie de table. */}
+                        {/* L'excédent alimente la monnaie de table — et depuis
+                            le mur n° 4, il y est réellement versé. */}
                         {v.excedent > 0 && (
-                            <span className="text-amber-300/80 font-mono">+{v.excedent} excédent</span>
+                            <span className="text-amber-300/80 font-mono">
+                                +{v.excedent}{monnaie && jet.cout.ressource ? ` ${nomDe(jet.cout.ressource)}` : ' excédent'}
+                            </span>
                         )}
                         {complications > 0 && (
                             <span className="text-red-300/80 font-mono">
@@ -204,6 +290,22 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({ descripteur, dice, template
                         )}
                         <span className="ml-auto text-app-text/25 font-mono text-[10px]">sous {seuilDuLancer}</span>
                     </div>
+
+                    {/*
+                        Ce que le lancer a fait aux réserves de la table : un
+                        report en Menace, un gain refusé par le plafond. Une
+                        réserve qui bouge sans le dire est exactement le genre
+                        de silence qu'on traque.
+                    */}
+                    {mouvements.length > 0 && (
+                        <ul className="space-y-1 pt-1 border-t border-app-border/20">
+                            {mouvements.map((m, i) => (
+                                <li key={i} className="flex items-start gap-2 text-[11px] text-amber-300/70">
+                                    <Coins size={11} className="mt-0.5 shrink-0" /> {m}
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                 </div>
             )}
         </div>

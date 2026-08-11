@@ -162,7 +162,9 @@ describe('ce que le modèle ne sait PAS exprimer', () => {
         expect(dune.jet, 'le descripteur de jet est ce qui abat ce mur').toBeDefined();
         expect(dune.jet!.seuil.map(c => c.id)).toEqual(['competence', 'principe']);
         expect(dune.jet!.sens, 'la famille 2d20 compte sous le seuil').toBe('sous-ou-egal');
-        expect(dune.jet!.reserve).toEqual({ base: 2, max: 5, faces: 20 });
+        // Le prix des dés est venu s'ajouter avec le mur 4 ; ce qui compte ici
+        // reste la réserve elle-même.
+        expect(dune.jet!.reserve).toMatchObject({ base: 2, max: 5, faces: 20 });
     });
 
     it('les sections du descripteur existent dans la fiche', () => {
@@ -174,12 +176,55 @@ describe('ce que le modèle ne sait PAS exprimer', () => {
         }
     });
 
-    it('mur 4 — les ressources de table n\'ont nulle part où être déclarées', () => {
-        // Impulsion : commune aux joueurs, 0 à 6, -1 en fin de scène.
-        // Menace : celle du meneur, sans maximum. Ce sont les ressources les plus
-        // manipulées du jeu, et le pilote ne connaît que des champs de fiche.
-        expect(dune, 'des ressources de table rendraient ce constat caduc').not.toHaveProperty('ressourcesDeTable');
+    it('mur 4 — ABATTU le 2026-08-11 : les ressources de table se déclarent', () => {
+        /**
+         * Le deuxième mur à tomber. Impulsion et Menace ne sont ni des champs de
+         * fiche ni des statistiques de combattant : ce sont des réserves de
+         * table, et le pilote sait maintenant le dire.
+         *
+         * Voir `src/modules/table/RessourcesDeTable.ts`.
+         */
+        const reserves = dune.ressourcesDeTable ?? [];
+        expect(reserves.map(r => r.id)).toEqual(['impulsion', 'menace']);
+
+        const impulsion = reserves.find(r => r.id === 'impulsion')!;
+        expect(impulsion.proprietaire, 'l\'Impulsion est commune aux joueurs').toBe('joueurs');
+        expect(impulsion.max, '« bornes : de zéro à six »').toBe(6);
+        expect(impulsion.erosionFinDeScene, '« érosion de moins un point en fin de scène »').toBe(1);
+        expect(impulsion.reportSurEpuisement, '« à zéro, l\'achat de d20 coûte de la Menace »').toBe('menace');
+
+        const menace = reserves.find(r => r.id === 'menace')!;
+        expect(menace.proprietaire, 'la Menace est celle du meneur').toBe('meneur');
+        expect(menace.max, 'la Menace n\'a pas de maximum — l\'absence est la donnée').toBeUndefined();
+
+        // Ce qui reste vrai, et qui l'était déjà : ces réserves n'ont rien à
+        // faire sur une fiche. Six joueurs auraient eu six Impulsions.
         expect(idsDeChamps.has('impulsion'), 'l\'Impulsion n\'est pas individuelle : elle ne doit pas être sur la fiche').toBe(false);
         expect(idsDeChamps.has('menace'), 'la Menace appartient au meneur, pas au personnage').toBe(false);
+    });
+
+    it('le résidu du mur 4 — la Menace de départ dépend du nombre de joueurs', () => {
+        /**
+         * **Ce test-ci constate encore une limite.** « Menace initiale par
+         * joueur : de zéro (Maison naissante) à trois points (Grande Maison). »
+         * La valeur de départ est donc un produit — un choix de campagne fois un
+         * effectif — et `depart` est un nombre.
+         *
+         * Zéro est le plancher honnête : le meneur pose sa réserve lui-même. Ce
+         * test échouera le jour où le modèle saura exprimer une valeur dérivée.
+         */
+        const menace = (dune.ressourcesDeTable ?? []).find(r => r.id === 'menace')!;
+        expect(menace.depart, 'un départ calculé rendrait ce constat caduc').toBe(0);
+    });
+
+    it('les dés achetés ont un prix, et il est payé par une réserve de table', () => {
+        // « Achat de d20 par test (maximum trois) : un, deux et trois points. »
+        // Le prix croît : un seul nombre n'aurait pas suffi.
+        expect(dune.jet!.reserve.cout).toEqual([1, 2, 3]);
+        expect(dune.jet!.reserve.ressource).toBe('impulsion');
+        expect(
+            (dune.ressourcesDeTable ?? []).some(r => r.id === dune.jet!.reserve.ressource),
+            'la réserve qui paie les dés doit exister',
+        ).toBe(true);
     });
 });
