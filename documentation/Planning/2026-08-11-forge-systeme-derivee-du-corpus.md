@@ -4,7 +4,53 @@
 ouvrait le chantier des quatre murs. **Les quatre murs sont abattus** ; ce document traite de ce
 qu'ils rendent possible, et de ce qu'ils rendent nécessaire.
 
-Branche `feature/tablet-hub-pwa`. 890 tests verts, `tsc -b` propre, build vérifié.
+Branche `feature/tablet-hub-pwa`. **921 tests verts**, `tsc -b` propre, build vérifié
+(état au 2026-08-12, commit `c727b9b`).
+
+---
+
+## PAR QUOI REPRENDRE
+
+> **Le point exact où s'arrête le travail : `forgeSystemDepuisCorpus` existe, est testé, et
+> personne ne l'appelle.** Le service sait dériver un pilote des fiches d'un corpus, groupe de
+> champs par groupe de champs. L'interface, elle, appelle encore l'ancien `forgeSystem`, qui lit le
+> livre. **Prochain geste : brancher l'écran.**
+
+**Ce qu'il faut faire, concrètement.**
+
+1. Lire les fiches du corpus désigné. Tout existe déjà :
+   `cheminDesFiches(corpus)` (`electron/corpusSysteme.ts`), puis
+   `window.appBridge.ai.listDir(...)` et `readDoc(...)` — c'est exactement ce que fait
+   `BrainstormOverlay.tsx` pour l'atelier, et ce que `RuleWorkshopViewer.tsx` fait pour le Grimoire.
+2. En tirer des `FicheDuCorpus` : le `sujet:` du frontmatter, et le contenu.
+3. Appeler `forgeSystemDepuisCorpus(fiches, { onProgres })` et afficher l'avancement — huit groupes
+   à ~2 min 30 font un quart d'heure, et `ForgeProgress` sait déjà tenir un écran d'attente.
+4. Montrer les `echecs` : ils nomment les groupes qu'aucune fiche ne couvrait. **C'est le journal
+   des lacunes du pilote**, et il ne doit pas se perdre.
+
+**Avancement des axes.**
+
+| Axe | État |
+|---|---|
+| 0 — mesurer | **fait** (2026-08-11) |
+| 0 bis — iGPU | **fait** (2026-08-12) |
+| 1 — canevas du pilote | **fait** (`1677785`) |
+| 2 — dériver du corpus | **fait côté service** (`c727b9b`) — *l'écran manque* |
+| 3 — NotebookLM pour les lacunes | non commencé, et **ne se justifie qu'après avoir vu ce que le corpus ne couvre pas** |
+| 4 — le pilote se vérifie | non commencé |
+
+**Ce qui attend derrière, et qui n'est pas dans ce plan.**
+
+- **Les trois inventaires sont périmés** depuis l'ajout du quatorzième sujet : Dune, Alien et Blade
+  Runner ne connaissent que treize sujets. Relance à 72 s chacun, et cela corrigera au passage les
+  en-têtes `sujets_traites: 0 sur 13` faux d'Alien et de Blade Runner.
+- **Alien n'a toujours aucun pilote.** C'est le cas d'essai de ce chantier — corpus propre, rien à
+  écraser. Recommandation inchangée : le forger *après* l'axe 4, pour qu'il naisse vérifié.
+- **Trois sujets d'Alien n'ont aucune fiche v3** : Stress et Panique (le cœur du jeu), Forcer le
+  test, le Mode Discret. Ils vivent encore sur des fiches v1.
+- **Trois fiches v1 d'Alien** subsistent dans `rules/` sans doublon exact — `combat-spatial.md`,
+  `physiologie-des-synthetiques.md`, `regles-affrontement-xenomorphes.md`. Leurs cousines v3
+  couvrent un angle plus étroit ; les archiver demande un jugement sur la couverture.
 
 ---
 
