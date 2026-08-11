@@ -276,15 +276,74 @@ describe('corpus réel', () => {
         }
     });
 
-    it('garde les fiches d\'Alien et ne compte pas le guide v1 parmi elles', () => {
-        const rules = index.filter(f => f.path.startsWith('systems/alien/rules/'));
-        const fiches = rules.filter(f => f.sujet);
+    it('deux fiches ne peuvent pas revendiquer le même sujet', () => {
+        /**
+         * **Ce test remplace un compte figé, et voici pourquoi.**
+         *
+         * Il affirmait « 18 fichiers, 17 fiches » pour Alien. Un corpus se
+         * reforge : le nombre a bougé dès la première soirée de travail, et un
+         * test qui échoue *parce qu'on avance* n'apprend rien — on prend
+         * l'habitude de le recaler sans le lire, ce qui est pire que de ne pas
+         * l'avoir.
+         *
+         * Ce qui mérite d'être tenu n'est pas le nombre mais l'unicité. Une
+         * reforge produit des fiches v3 aux slugs neufs à côté des v1 qu'elles
+         * remplacent : `initiative-et-tour.md` et
+         * `initiative-et-deroulement-du-tour.md` portent alors le même `sujet`,
+         * et l'Oracle reçoit **les deux** — dont la v1, qui cite des pages
+         * fabriquées. Rien ne le signale : deux fiches valides, un classement
+         * qui les retient toutes les deux, une réponse confiante.
+         *
+         * *Le journal des lacunes attrape ce qui manque ; rien n'attrape ce qui
+         * est en double.* Ceci s'en charge.
+         */
+        const parSujet = new Map<string, string[]>();
+        for (const f of index) {
+            if (!f.sujet) continue;
+            const m = /^systems\/([^/]+)\/rules\//.exec(f.path);
+            if (!m) continue;
+            const cle = `${m[1]} :: ${f.sujet.replace(/^["']|["']$/g, '').toLowerCase()}`;
+            parSujet.set(cle, [...(parSujet.get(cle) ?? []), f.path]);
+        }
 
-        // 18 fichiers dans `rules/`, mais 17 fiches : `guide-synthese-regles-alien.md`
-        // est un artefact v1, sans frontmatter et citant des index internes
-        // NotebookLM au lieu des pages. Le plan comptait 18 — il comptait le guide.
-        expect(rules.length).toBe(18);
-        expect(fiches.length).toBe(17);
+        /**
+         * **Trois exemptions, datées du 2026-08-11, et d'une autre nature.**
+         *
+         * Ici les deux moitiés sont des v1 : NOC et Rêves de Dragons n'ont
+         * jamais été reforgés, donc aucune ne remplace l'autre et en archiver
+         * une perdrait du contenu qui n'existe nulle part ailleurs.
+         *
+         * Ce sont des fiches bel et bien distinctes — la jauge de Fiel et sa
+         * diminution, la mécanique de lancement et « provoquer le destin » —
+         * rabattues sur le même sujet de canevas par le bug du mot répété
+         * corrigé par `bafd65b` : « Dégâts et types de dégâts » portant deux
+         * fois « dégâts », un libellé pouvait gagner sur un mot commun sur neuf.
+         * Le correctif ne répare pas les fichiers déjà écrits.
+         *
+         * Elles disparaîtront à la reforge de ces deux systèmes. En attendant,
+         * les nommer une par une vaut mieux que de désarmer le test : tout
+         * doublon **nouveau** échoue encore.
+         */
+        const EXEMPTIONS_V1_JUMELLES = [
+            'noc :: monnaie de table',
+            'noc :: résolution des jets',
+            'reves de dragons :: éthylisme (jet, degrés et malus)',
+        ];
+
+        const doublons = [...parSujet.entries()]
+            .filter(([, chemins]) => chemins.length > 1)
+            .filter(([cle]) => !EXEMPTIONS_V1_JUMELLES.includes(cle))
+            .map(([cle, chemins]) => `${cle} → ${chemins.join(' + ')}`);
+
+        expect(doublons, 'des fiches font doublon : la v1 et sa remplaçante v3 coexistent').toEqual([]);
+    });
+
+    it('le guide de synthèse d\'Alien reste le seul fichier sans sujet', () => {
+        // `guide-synthese-regles-alien.md` est un artefact v1 sans frontmatter,
+        // citant des index internes NotebookLM au lieu des pages. Il n'est pas
+        // compté comme fiche, et c'est délibéré — voir l'exemption plus bas.
+        const rules = index.filter(f => f.path.startsWith('systems/alien/rules/'));
+        expect(rules.length, 'Alien devrait avoir des fiches').toBeGreaterThan(0);
         expect(rules.filter(f => !f.sujet).map(f => f.path))
             .toEqual(['systems/alien/rules/guide-synthese-regles-alien.md']);
     });

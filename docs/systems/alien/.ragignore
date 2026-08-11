@@ -1,8 +1,8 @@
 # Décharges brutes du livre de règles ALIEN.
 #
 # Le même livre est présent quatre fois sous des formes différentes, pour
-# 4,7 Mo. Les dix-huit fiches du corpus (rules/) pèsent 0,09 Mo, soit 1,5 %
-# du dossier : sans exclusion, elles ne pèsent rien dans la sélection.
+# 4,7 Mo. Les fiches du corpus (rules/) pèsent une fraction de pour-cent du
+# dossier : sans exclusion, elles ne pèsent rien dans la sélection.
 #
 # PORTÉE : ces fichiers sortent de l'index de l'Oracle, pas de l'application.
 # Les Forges et le lecteur de documents passent par listDocs / readDoc, qui
@@ -16,3 +16,22 @@ alien_rag_base_partial.md
 
 # Fiche de personnage vierge : un formulaire, aucun contenu de règle.
 AL-Fiche-de-personnage_pf.pdf
+
+# Le corpus v1 supplanté, archivé le 2026-08-11 après la reforge en v3.
+#
+# Les fiches v3 portent des slugs neufs : `initiative-et-deroulement-du-tour.md`
+# là où la v1 disait `initiative-et-tour.md`. Rien n'était donc écrasé, et les
+# deux versions du même sujet restaient côte à côte dans l'index — l'Oracle en
+# recevait deux, dont la v1, qui déclare elle-même `pages_fiables: false` et
+# cite des pages jusqu'à 593.
+#
+# Un doublon de ce genre ne se signale pas : deux fiches valides, un classement
+# qui retient les deux, une réponse confiante. C'est le test « deux fiches ne
+# peuvent pas revendiquer le même sujet » d'`electron/ragSelection.test.ts` qui
+# les a trouvées.
+#
+# Conservées et non supprimées : il faut pouvoir comparer une v3 à la v1 qu'elle
+# remplace, et les deux se complètent souvent. Un `.ragignore` ne retire un
+# fichier que de l'index de l'Oracle — les Forges et le lecteur de documents
+# lisent le disque et voient toujours l'archive.
+rules-v1/
