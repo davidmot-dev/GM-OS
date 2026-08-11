@@ -12,6 +12,7 @@ import { Select } from '../../../components/common/Select';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useTranslation } from 'react-i18next';
 import { HealthInterpreter } from '../../session/logic/HealthInterpreter';
+import PanneauDAlternance from './PanneauDAlternance';
 
 const CombatControls: React.FC = () => {
     const {
@@ -38,6 +39,16 @@ const CombatControls: React.FC = () => {
 
     const activeDriver = getActiveDriver();
     const [diceMax, setDiceMax] = useState<number>(20);
+
+    /**
+     * L'ordre d'action alterne-t-il entre les camps ?
+     *
+     * Si oui, tout le bloc d'initiative change de nature : rien ne se tire,
+     * rien ne se trie, et c'est le meneur qui désigne.
+     */
+    const alternance = activeDriver?.combat.initiative?.mode === 'alternance'
+        ? activeDriver.combat.initiative
+        : null;
 
     const handleAddCombatant = () => {
         gmPrompt(`${t('combat.card.rename_prompt', { name: '' })}`, t('combat.controls.add_combatant'), (name) => {
@@ -243,6 +254,20 @@ const CombatControls: React.FC = () => {
                     </div>
                 </div>
 
+                {/*
+                    Quand le système alterne entre les camps, il n'y a rien à
+                    lancer et rien à trier. Laisser le jet de secours en dessous
+                    reviendrait à proposer une initiative au d20 à un jeu qui
+                    n'en a pas — c'est le pis-aller qu'on vient de retirer.
+                */}
+                {alternance ? (
+                    <PanneauDAlternance
+                        descripteur={alternance}
+                        campaignId={activeCampaignId ?? undefined}
+                        ressourcesDeTable={activeDriver?.ressourcesDeTable}
+                    />
+                ) : (
+                <>
                 {activeDriver?.combat.initiativeFormula && (
                     <button
                         onClick={handleAutoInitiative}
@@ -287,6 +312,8 @@ const CombatControls: React.FC = () => {
                         <span>{t('modules:combat.controls.auto_init.standard')}</span>
                     </button>
                 </div>
+                </>
+                )}
             </div>
 
             {/* List Management */}

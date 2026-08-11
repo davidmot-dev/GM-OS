@@ -37,13 +37,11 @@ import type { GameDriver } from '../types/drivers';
  *    `statsToTrack` ne déclare donc **aucun `isMainHP`**, ce qui est vrai pour
  *    Dune et inattendu pour le reste de l'application.
  *
- * **2. L'initiative n'est pas une valeur par combattant.** « L'initiative alterne
- *    de manière binaire entre les camps » : le meneur désigne qui ouvre, puis
- *    chaque camp passe la main ou paie deux points d'Impulsion pour la conserver
- *    (`initiative-et-deroulement-du-tour.md`). Le modèle n'offre qu'une
- *    `initiativeFormula` évaluée par personnage. La formule ci-dessous est donc
- *    **un pis-aller assumé** : elle range les combattants par Mobilité, ce que
- *    le livre ne demande nulle part. Il manque un *mode* d'initiative.
+ * **2. ABATTU le 2026-08-11.** L'initiative n'est pas une valeur par combattant :
+ *    « elle alterne de manière binaire entre les camps ». `combat.initiative`
+ *    porte désormais le mode, le prix de la rétention et le plafond
+ *    d'activations consécutives ; `initiativeFormula` est vide, parce que le
+ *    livre ne classe personne. Voir `src/modules/combat/logic/OrdreDuTour.ts`.
  *
  * **3. Le seuil de réussite est dynamique.** Il vaut **compétence + principe**,
  *    choisis test par test — de 8 à 16. `DiceConfig.successThreshold` est un
@@ -117,9 +115,27 @@ const DUNE: GameDriver = {
         statsToTrack: [
             { fieldId: 'determination', label: 'Détermination', isMainHP: false, isResource: true },
         ],
-        // Mur n° 2 : pis-aller. Le livre ne classe pas les combattants.
-        initiativeFormula: 'mobilite',
-        initiativeSort: 'desc',
+        /**
+         * **Vide, et c'est la bonne valeur.** Elle portait `mobilite`, un
+         * pis-aller : le livre ne classe jamais les combattants. Maintenant que
+         * `initiative` sait dire l'alternance, garder une formule laisserait
+         * traîner un tri que rien ne justifie — et le bouton « Jet Système »
+         * l'aurait relancé.
+         */
+        initiativeFormula: '',
+        /** Ce qui abat le mur n° 2. Valeurs de `initiative-et-deroulement-du-tour.md`. */
+        initiative: {
+            mode: 'alternance',
+            // « Deux points d'Impulsion dépensés par les joueurs, ou deux points
+            // de Menace ajoutés à la réserve du meneur » — le report de la
+            // réserve traite le « ou » tout seul.
+            coutDeRetention: { montant: 2, ressource: 'impulsion' },
+            coutDOuverture: { montant: 2, ressource: 'impulsion' },
+            // « Deux tours consécutifs au maximum, l'action de Conserver
+            // l'initiative ne pouvant être répétée tant qu'au moins un ennemi
+            // n'a pas agi. »
+            activationsConsecutivesMax: 2,
+        },
         defaultHealthType: 'clocks',
     },
 

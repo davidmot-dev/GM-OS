@@ -86,6 +86,19 @@ export interface GameDriver {
         initiativeFormula: string; // e.g. "dex", "dex + int", "1d10"
         initiativeSort?: 'asc' | 'desc'; // Default: 'desc'
         initiativeCards?: number; // If set, use a unique card pool 1-N
+        /**
+         * Comment l'ordre d'action se décide, quand ce n'est pas un classement.
+         *
+         * **Ce qu'il rend possible** : dire qu'un jeu n'ordonne pas ses
+         * combattants. Chez Dune le meneur désigne qui ouvre, puis les
+         * activations alternent entre les camps ; le tour se garde en payant. Une
+         * formule évaluée par personnage ne pouvait rien exprimer de tout cela,
+         * et trier par Mobilité était une invention.
+         *
+         * Absent, l'ordre reste celui de `initiativeFormula` — c'est le cas de
+         * tous les pilotes antérieurs, et ils continuent de fonctionner.
+         */
+        initiative?: import('../modules/combat/logic/OrdreDuTour').DescripteurDInitiative;
         damageTypes?: string[]; // e.g. ["Feu", "Froid", "Physique", "Psychique"]
         defaultHealthType?: 'hp' | 'clocks' | 'anatomy';
     };

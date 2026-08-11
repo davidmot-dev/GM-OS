@@ -142,12 +142,33 @@ describe('ce que le modèle ne sait PAS exprimer', () => {
         expect(dune.combat.statsToTrack.every(s => !s.isMainHP)).toBe(true);
     });
 
-    it('mur 2 — l\'initiative par alternance de camps est réduite à une formule', () => {
-        // « L'initiative alterne de manière binaire entre les camps. » Le livre
-        // ne classe jamais les combattants ; trier par Mobilité est une invention
-        // de notre part, assumée faute de mode d'initiative dans le modèle.
-        expect(dune.combat.initiativeFormula).toBe('mobilite');
-        expect(dune.combat, 'un mode d\'initiative rendrait la formule inutile').not.toHaveProperty('initiativeMode');
+    it('mur 2 — ABATTU le 2026-08-11 : l\'initiative alterne entre les camps', () => {
+        /**
+         * « L'initiative alterne de manière binaire entre les camps. » Le livre
+         * ne classe jamais les combattants — trier par Mobilité était une
+         * invention de notre part, assumée faute de mieux.
+         *
+         * Voir `src/modules/combat/logic/OrdreDuTour.ts`.
+         */
+        expect(dune.combat.initiative?.mode).toBe('alternance');
+        expect(
+            dune.combat.initiativeFormula,
+            'une formule résiduelle relancerait le tri que le livre ne demande pas',
+        ).toBe('');
+    });
+
+    it('conserver la main coûte deux points, sur une réserve qui existe', () => {
+        // « Deux points d'Impulsion dépensés par les joueurs, ou deux points de
+        // Menace ajoutés à la réserve du meneur. » Le « ou » est traité par le
+        // report de la réserve, pas par deux coûts concurrents.
+        const initiative = dune.combat.initiative!;
+        expect(initiative.coutDeRetention).toEqual({ montant: 2, ressource: 'impulsion' });
+        expect(initiative.coutDOuverture).toEqual({ montant: 2, ressource: 'impulsion' });
+        expect(initiative.activationsConsecutivesMax, '« deux tours consécutifs au maximum »').toBe(2);
+        expect(
+            (dune.ressourcesDeTable ?? []).some(r => r.id === initiative.coutDeRetention!.ressource),
+            'la réserve qui paie la rétention doit exister',
+        ).toBe(true);
     });
 
     it('mur 3 — ABATTU le 2026-08-10 : le seuil se compose depuis la fiche', () => {

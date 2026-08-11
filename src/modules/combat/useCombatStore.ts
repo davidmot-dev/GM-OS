@@ -62,6 +62,15 @@ interface CombatState {
     nextTurn: () => void;
     /** Revient au tour précédent */
     prevTurn: () => void;
+    /**
+     * Désigne directement le combattant actif.
+     *
+     * Ce que `nextTurn` ne sait pas faire : il avance d'un cran dans une liste
+     * triée. Quand l'ordre d'action n'est pas un classement — l'alternance de
+     * Dune, où le camp actif choisit son intervenant — c'est le seul geste qui
+     * ait un sens.
+     */
+    setCurrentTurnTo: (combatantId: string) => void;
     /** Réinitialise les rounds et les initiatives sans vider la liste */
     resetCombat: () => void;
 
@@ -310,6 +319,28 @@ export const useCombatStore = create<CombatState>()(
                     
                     const newState = { currentTurnIdx: nextIdx, round: nextRound, combatants: newCombatants };
                     return newState;
+                });
+                get().broadcastSync();
+            },
+
+            setCurrentTurnTo: (combatantId) => {
+                set((state) => {
+                    const idx = state.combatants.findIndex(c => c.id === combatantId);
+                    if (idx < 0) return state;
+                    // Même traitement des durées que `nextTurn` : un effet doit
+                    // décroître parce qu'un tour commence, pas parce qu'on a
+                    // cliqué sur un bouton plutôt qu'un autre.
+                    const newCombatants = state.combatants.map((c, i) =>
+                        i === idx ? { ...c, statuses: processStatusDurations(c.statuses) } : c
+                    );
+                    const actif = newCombatants[idx];
+                    if (actif && typeof window !== 'undefined') {
+                        const bridge = (window as any).appBridge;
+                        if (bridge && bridge.highlightMapToken) {
+                            bridge.highlightMapToken(actif.name);
+                        }
+                    }
+                    return { currentTurnIdx: idx, combatants: newCombatants };
                 });
                 get().broadcastSync();
             },
