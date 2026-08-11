@@ -3,57 +3,60 @@ sujet: États et conditions
 systeme: alien
 couverture: complète
 hors_canevas: false
-sources: ALIEN, le jeu de rôle (p. 30, 34, 104, 106, 107, 111, 134, 139, 140, 329)
-pages_fiables: false
+sources: "ALIEN, le jeu de rôle"
+sections: "« ÉTATS » ; « DÉSHYDRATÉ » ; « ÉPUISÉ » ; « AFFAMÉ » ; « GELÉ »"
 genere_par: notebooklm
+gabarit: v3
 relu: false
 ---
 
 # États et conditions
+
 ## Règle
-Le monde d'ALIEN est impitoyable et réserve bien des souffrances physiques aux personnages. En plus des blessures directes, un personnage peut subir quatre états préjudiciables : Déshydraté, Épuisé, Affamé et Gelé (p. 106). Ces états se matérialisent sous forme de cases à cocher sur la fiche de personnage et affectent sa capacité à survivre et à récupérer (p. 106). 
+Un personnage peut subir quatre états : **Affamé**, **Déshydraté**, **Épuisé** et **Gelé** (section « États »). Ces conditions bloquent la récupération et infligent des dégâts périodiques (section « États »).
 
-Ces états sont liés à deux ressources de Réserve individuelles, suivies sur la fiche de personnage (p. 34, 134) :
+Être **Déshydraté** survient après une journée sans boire (section « Déshydraté »). Cet état bloque toute récupération et inflige du stress et des dégâts à chaque Quart (section « Déshydraté »). L'état **Affamé** survient après une journée sans nourriture, exigeant un test d'Endurance quotidien sous peine de blessure (section « Affamé »).
 
-La Réserve d'Eau :
-- Ce qu'elle mesure : La quantité d'eau disponible (p. 134).
-- Valeur de départ : Déterminée par l'équipement (p. 131).
-- Bornes : Elle varie de zéro à six (p. 134).
-- Dynamique : Elle descend d'un point pour chaque symbole de panique (un un) lors d'un test (p. 134) et remonte lorsque le personnage boit (p. 139).
-- Seuils : À zéro, le personnage subit l'état Déshydraté (p. 134).
-- Type : Stock se dépensant périodiquement (p. 139).
-
-La Réserve de Nourriture :
-- Ce qu'elle mesure : Les rations alimentaires portées (p. 134).
-- Valeur de départ : Déterminée par l'équipement (p. 131).
-- Bornes : Elle varie de zéro à six (p. 134).
-- Dynamique : Elle descend d'un point pour chaque symbole de panique (un un) lors d'un test (p. 134) et remonte lorsque le personnage mange (p. 139).
-- Seuils : À zéro, le personnage subit l'état Affamé (p. 134).
-- Type : Stock se dépensant périodiquement (p. 140).
+L'état **Épuisé** résulte d'un manque de sommeil (section « Épuisé »). L'état **Gelé** frappe un personnage exposé au froid, lui imposant des tests d'Endurance réguliers (section « Gelé »).
 
 ## Valeurs
-- Déshydraté : un jour sans boire (p. 106). Bloque la récupération de Santé et de stress. Inflige un point de dégât et plus un de stress à chaque début de Quart (p. 106).
-- Affamé : un jour sans manger (p. 106). Bloque la récupération de Santé et de stress. Test d'Endurance quotidien requis sous peine de subir un point de dégât et plus un de stress (p. 106).
-- Épuisé : un jour sans dormir au moins un Quart complet (p. 106). Bloque l'élimination du stress. Test d'Endurance quotidien requis avec un modificateur négatif égal au nombre de jours sans sommeil sous peine de s'effondrer pour dormir un Quart (p. 106).
-- Gelé : exposition au froid intense sans vêtement protecteur (p. 107). Bloque la récupération de Santé et de stress. Test d'Endurance requis selon le froid (un par jour à plus de 0°C, un par Quart à moins de 0°C, ou un par Tour dans le vide). Chaque échec inflige un point de dégât et plus un de stress (p. 107).
-- Guérison : un Quart pour dissiper l'état Déshydraté ou Affamé après absorption (p. 106, 107) ; un Quart de sommeil pour l'état Épuisé (p. 107) ; immédiat pour l'état Gelé dès que le personnage se réchauffe (p. 107).
+- **Déshydraté** (section « Déshydraté ») :
+  - Déclenchement : un jour sans boire. Bloque la Santé et le stress.
+  - Effets : perte de un point de Santé et Niveau de Stress plus un par Quart.
+  - Seuil critique : si Brisé, test de Trépas par Quart. Soins médicaux inefficaces, boire est obligatoire.
+  - Récupération : fin des effets un Quart après avoir bu.
+- **Épuisé** (section « Épuisé ») :
+  - Déclenchement : un jour sans dormir au moins un Quart. Bloque le stress.
+  - Effets : test d'Endurance quotidien avec modificateur négatif égal aux jours sans sommeil. Échec = s'effondre et dort un Quart.
+  - Récupération : fin de l'état après avoir dormi au moins un Quart.
+- **Affamé** (section « Affamé ») :
+  - Déclenchement : un jour sans s'alimenter correctement. Bloque la Santé et le stress.
+  - Effets : test d'Endurance quotidien. Échec = perte de un point de Santé et Niveau de Stress plus un.
+  - Seuil critique : si Brisé, test de Trépas quotidien. Soins inefficaces, manger est requis.
+  - Récupération : fin des effets un Quart après avoir mangé.
+- **Gelé** (section « Gelé ») :
+  - Déclenchement : froid sans protection. Bloque la Santé et le stress.
+  - Tests d'Endurance (échec = un dégât et Niveau de Stress plus un) :
+    1. Plus de zéro degré Celsius : une fois par jour.
+    2. Inférieur à zéro degré Celsius : une fois par Quart.
+    3. Dans le vide de l'espace : une fois par Tour.
+  - Seuil critique : si Brisé, test de Trépas au prochain test d'Endurance.
+  - Récupération : fin des tests dès que le personnage est au chaud.
 
 ## À la table
-1. Maman signale lorsque les conditions se dégradent (p. 134) et impose des tests de Réserve d'Eau et de Nourriture (p. 134, 139).
-2. Le joueur lance autant de dés de stress que sa Réserve (p. 134). Chaque symbole de panique (un un) réduit la Réserve d'un point (p. 134).
-3. Si une Réserve tombe à zéro, ou si le personnage manque de sommeil ou s'expose au froid, le joueur coche l'état sur sa fiche (p. 106, 107).
-4. Tant que l'état est actif, le joueur applique les interdictions de récupération (p. 106, 107).
-5. Pour en sortir, le personnage consomme la ressource manquante. Dès que l'action est résolue (manger, boire ou dormir), la case est décochée (p. 106, 107).
+1. Exposition : Maman déclare qu'un personnage subit un état par privation (section « États »). Le joueur coche la case sur sa fiche (section « États »).
+2. Épuisé ou Affamé : Le joueur fait un test d'Endurance quotidien (section « Épuisé » et section « Affamé »). L'échec d'épuisement force à s'effondrer pour dormir un Quart (section « Épuisé »). L'échec d'affamé inflige un dégât et plus un en stress (section « Affamé »).
+3. Déshydraté : Sans jet, le personnage subit automatiquement un dégât et plus un en stress à chaque Quart (section « Déshydraté »).
+4. Gelé : Le joueur fait un test d'Endurance régulier selon le froid, de une fois par jour à une fois par Tour dans le vide (section « Gelé »). L'échec inflige un dégât et plus un en stress (section « Gelé »).
+5. Récupération : Manger, boire, dormir ou se réchauffer dissipe les effets en un Quart ou immédiatement (section « Déshydraté », section « Affamé », section « Épuisé » et section « Gelé »).
 
 ## Cas limites
-- Personnage Brisé et Déshydraté : s'il est Brisé et Déshydraté, il doit effectuer un test de Trépas à chaque début de Quart (p. 106). Les Soins Médicaux sont inefficaces, seule la réhydratation immédiate le sauve (p. 106).
-- Personnage Brisé et Affamé : s'il est Brisé et Affamé, il effectue un test de Trépas quotidien (p. 106). Les Soins Médicaux sont inefficaces sans alimentation (p. 106).
-- Personnage Brisé et Gelé : s'il est Brisé et Gelé, il effectue un test de Trépas lors de son prochain test d'Endurance face au froid (p. 107).
-- Cas des Synthétiques (Androïdes) : sans besoins biologiques, ils sont immunisés contre la faim, la soif, la fatigue et le froid (p. 29, 111). Ils ne subissent jamais ces états (p. 111).
-- Blocage de la récupération de stress : les états Affamé et Gelé bloquent spécifiquement la possibilité de soulager le stress en lieu sûr (p. 104, 329).
+- Brisé par privation : Un personnage Brisé et Déshydraté ou Affamé fait un test de Trépas périodique (section « Déshydraté » et section « Affamé »). Les Soins médicaux sont inutiles ; seul l'apport d'eau ou de nourriture annule le trépas (section « Déshydraté » et section « Affamé »).
+- Brisé par le froid : Un personnage Brisé et Gelé fait un test de Trépas au prochain test d'Endurance (section « Gelé »).
+- Blocage du repos : Affamé, Déshydraté et Gelé bloquent la récupération de Santé et de stress (section « Déshydraté », section « Affamé » et section « Gelé »). Épuisé bloque le soulagement du stress (section « Épuisé »). Le repos et l'usage de l'objet fétiche sont impossibles (section « Soulager le stress »).
+- Synthétiques : Les androïdes ignorent les consommables et le froid, échappant ainsi à ces états (section « Êtres synthétiques »).
 
 ## Non couvert
-- Le livre ne détaille pas les conséquences d'un épuisement prolongé sur les facultés intellectuelles (compétences basées sur l'Esprit ou l'Empathie), seule l'Endurance physique étant affectée.
-- Les règles n'indiquent pas si un personnage peut cumuler plusieurs états identiques à des degrés divers, le système fonctionnant de manière binaire.
-- Il n'y a pas de précision sur l'impact de la privation sur le moral ou les tests de Panique, hormis l'augmentation mécanique du Niveau de Stress.
-- Les sources ne précisent pas comment les animaux subissent ces privations environnementales à l'échelle individuelle.
+- Cumul d'états : Les sources ne disent pas si cumuler les états d'inanition et de soif applique des dégâts cumulatifs à chaque période, ni s'il faut résoudre plusieurs tests de Trépas différents si le personnage est Brisé.
+- Traitement automatique : L'interaction des états avec l'usage d'un AutoDoc ou d'un Pauling sans intervention d'un allié n'est pas détaillée (section « Articles médicaux »).
+- Simulation par les synthétiques : La possibilité pour un androïde de simuler la fatigue pour protéger sa couverture n'est pas mentionnée (section « Êtres synthétiques »).

@@ -3,43 +3,47 @@ sujet: Ton, registre et ambiance
 systeme: alien
 couverture: complète
 hors_canevas: false
-sources: ALIEN, le jeu de rôle (p. 6, p. 19, p. 20, p. 83, p. 104, p. 120, p. 128, p. 193, p. 206, p. 207, p. 208, p. 209, p. 211, p. 212, p. 213)
-pages_fiables: false
+sources: "ALIEN, le jeu de rôle"
+sections: "« THÈMES ESSENTIELS » ; « PRINCIPES DE JEU » ; « THÈMES » ; « LE STRESS ET L'HORREUR » ; « LES TROIS ÉTAPES DE LA PEUR » ; « RÉTROFUTURISME »"
 genere_par: notebooklm
+gabarit: v3
 relu: false
 ---
 
 # Ton, registre et ambiance
+
 ## Règle
-Le jeu de rôle ALIEN fait vivre une expérience d'horreur et d'action dans l'immensité obscure et glacée de l'espace (p. 6, p. 20). Son registre oscille entre la claustrophobie, la brutalité des combats de science-fiction, et l'émerveillement face aux mystères antiques du cosmos (p. 20, p. 208, p. 209). L'ambiance repose sur un futur rude et industriel de type « col bleu », où l'humanité est assujettie à l'avidité des grandes compagnies et se révèle tout à fait remplaçable (p. 6, p. 651).
+Le jeu retranscrit l'horreur et l'action dans l'immensité obscure et glacée de l'espace (section « Thèmes essentiels »). Il repose sur trois thèmes fondamentaux : l'horreur spatiale, axée sur la survie et l'avidité des compagnies ; la science-fiction d'action, axée sur de violents affrontements ; et l'émerveillement face aux mystères de l'univers (section « Thèmes »).
 
-Trois thèmes essentiels guident cette atmosphère (p. 208) :
-1. L'horreur spatiale : Un mélange de ténèbres et de tension fondé sur la survie et la peur de voir son propre corps violé et parasité par l'inconnu (p. 20, p. 56).
-2. La science-fiction d'action : Des affrontements trépidants et sanglants à l'échelle tactique ou spatiale (p. 20, p. 209).
-3. L'émerveillement : La confrontation de l'humanité avec des vestiges extraterrestres colossaux qui la renvoient à son insignifiance (p. 20, p. 209).
+Maman doit installer cette atmosphère par huit principes de jeu essentiels (section « Principes de jeu ») : broder à partir des films, limiter les ressources, rester dans l'ombre, faire monter la pression, provoquer d'horribles morts, dévoiler un univers immense, laisser respirer les joueurs, et fournir de quoi remplir leurs objectifs personnels (section « Principes de jeu »).
 
-Maman (le de meneur de jeu) dispose de huit principes de jeu pour structurer cette ambiance : broder à partir des films, limiter leurs ressources, rester dans l'ombre, faire monter la pression, laisser respirer les joueurs, leur fournir de quoi remplir leurs objectifs, provoquer d'horribles morts et dévoiler tout un univers (p. 206, p. 207).
+L'ambiance s'appuie également sur le rétrofuturisme, caractérisé par une technologie analogique et vétuste évoquant les années mille neuf cent soixante-dix (section « Rétrofuturisme »). La peur s'installe en dissimulant la menace à travers trois étapes ordonnées : l'angoisse, la terreur et l'horreur (section « Les trois étapes de la peur »).
+
+Les mécanismes de tension physique (Niveau de Stress et Panique) appartiennent à un autre sujet et sont traités séparément (renvoi vers le sujet « Stress et Panique »).
 
 ## Valeurs
-- L'échelle ordonnée des trois étapes de la peur : l'Angoisse (pressentiment d'une menace invisible), la Terreur (certitude d'une confrontation imminente) et l'Horreur (confrontation physique directe) (p. 211, p. 212, p. 213).
-- Échelle temporelle de l'action : le Round (cinq à dix secondes) pour l'Horreur et le combat, le Tour (cinq à dix minutes) pour la Terreur et la discrétion, le Quart (cinq à dix heures) pour la récupération et l'Angoisse (p. 83).
-- Limite maximale individuelle de points de Récit en Mode Cinéma : trois points (p. 193).
-- Les huit principes de Maman : huit préceptes actifs de narration (p. 206, p. 207).
-- Les trois thèmes fondamentaux : trois piliers de registre (p. 208).
-- Plafond d'attributs de départ des humains : de deux à quatre, ou cinq pour l'attribut-clef (p. 117).
-- Bonus d'attributs des synthétiques : plus trois répartis sur deux attributs, permettant d'atteindre un maximum de de huit, ce qui élimine leur stress et altère l'ambiance humaine (p. 117, p. 120).
+- Division thématique : trois thèmes essentiels ordonnés de l'ambiance la plus sombre à la plus grandiose : l'horreur spatiale, la science-fiction d'action, l'émerveillement (section « Thèmes »).
+- Échelle de la peur : trois étapes ordonnées de la plus diffuse à la plus directe :
+  1. L'angoisse : sentiment d'une menace invisible et inconnue (section « L'angoisse »).
+  2. La terreur : certitude d'un danger imminent et impuissance (section « Terreur »).
+  3. L'horreur : révélation physique de la menace et début des combats (section « Horreur »).
+- Échelle du style de vie (section « Dépenses quotidiennes ») : Luxe (deux mille dollars par semaine), Normal (trois cents dollars par semaine), Élémentaire (cent dollars par semaine), Minimum (vingt-cinq dollars par semaine).
+- Principes de Maman : huit principes de direction de jeu (section « Principes de jeu »).
 
 ## À la table
-La gestion de l'ambiance se joue concrètement en suivant les trois étapes de la peur :
-1. Étape de l'Angoisse : Pendant l'exploration découpée en Tours, Maman sème des indices subtils d'une menace invisible (bruits dans les cloisons ou traces de sang) (p. 212, p. 267). Les joueurs gèrent leurs maigres consommables (p. 34).
-2. Étape de la Terreur : Dès qu'une menace se rapproche activement, le temps se resserre. Le détecteur de mouvement commence à émettre ses signaux sonores, faisant monter le Niveau de Stress de un point à chaque test forcé (p. 61, p. 86).
-3. Étape de l'Horreur : La créature se dévoile. Maman interrompt le Mode Discret et demande de tirer l'initiative (p. 87, p. 274). Les joueurs lancent leurs dés de base et leurs dés de stress. Obtenir un symbole de panique sur un dé de stress déclenche immédiatement un test de Panique, pouvant paralyser ou faire fuir le personnage (p. 61, p. 104).
+1. Maman pose l’ambiance en décrivant un univers de science-fiction de classe ouvrière, vétuste et analogique (section « Les ravages de l'avidité » et section « Rétrofuturisme »).
+2. Elle débute par l’angoisse en distillant des indices subtils d’une menace invisible, comme des bruits de conduits ou des traces de sang (section « L’angoisse »).
+3. Maman fait monter la pression vers la terreur en privant les personnages joueurs de leurs ressources, par exemple en coupant l’électricité ou en provoquant des pannes (section « Le stress et l’horreur »).
+4. La révélation physique du danger marque le passage à l’horreur. L’initiative est tirée et les règles de combat prennent le relais (section « Horreur »).
+5. Pour intensifier le suspense, Maman peut diviser l’équipe en gérant les conversations et les limites de leurs communicateurs personnels (section « Diviser l’équipe »).
+6. En Mode Cinéma, les joueurs reçoivent des objectifs secrets et transmettent des notes à Maman (section « Objectifs, secrets et joueur contre joueur »). Si un personnage joueur agit contre le groupe, la table bascule en joueur contre joueur (section « Objectifs, secrets et joueur contre joueur »).
 
 ## Cas limites
-- Joueur contre joueur : Si les objectifs secrets des personnages divergent trop en Mode Cinéma, le conflit peut atteindre un point de non-retour (p. 128). Maman déclare alors la phase de « joueur contre joueur ». Si un personnage se révèle être un traître, il est transformé en personnage non joueur dès que ses actions contre le groupe sont exposées (p. 128).
-- Connaître l'inconnaissable : Les joueurs peuvent connaître les films, mais leurs personnages l'ignorent. Maman doit altérer le comportement ou les caractéristiques des créatures pour détruire les certitudes des joueurs et préserver la peur de l'inconnu (p. 207).
-- La rationalité artificielle des synthétiques : Les androïdes ne ressentent pas le stress et n'effectuent aucun test de Panique (p. 120). Leur présence à la table amène un registre clinique et rationnel qui contraste fortement avec la terreur biologique des humains (p. 120).
+- Alternance dramatique : Maman doit appliquer le principe de laisser respirer les joueurs pour qu’ils baissent leur garde avant de réintroduire un nouveau danger (section « Laissez-les respirer »).
+- Traître survivant : Lors d’un conflit joueur contre joueur, si le traître survit à la scène, il devient un personnage non joueur géré par Maman, et son joueur reçoit un autre personnage s'il en reste de disponibles (section « Joueur contre joueur »).
+- Thématiques : L'horreur spatiale s'oppose parfois à l'émerveillement. Maman doit doser l'atmosphère selon le style de sa partie (section « Thèmes »).
+- Les mécanismes de tension (Niveau de Stress et tests de Panique) appartiennent au sujet « Stress et Panique » et ne sont pas détaillés ici.
 
 ## Non couvert
-- Le jeu ne propose aucune jauge de santé mentale ou de folie glissante, limitant la psychose à des effets de panique immédiats ou à de rares traumatismes mentaux permanents évalués par un test d'Empathie fixe en fin de partie (p. 104, p. 329).
-- Il n'existe pas de règles écrites ou de mécanismes de sécurité émotionnelle (comme la carte X ou le système des lignes et des voiles) intégrés dans les sources pour baliser la violence physique ou le parasitisme corporel (p. 6, p. 56).
+- La limite de sécurité émotionnelle des joueurs face aux trois étapes de la peur (section « Les trois étapes de la peur »).
+- Le dosage exact ou l'équilibre du ton lorsque l'on mélange l'horreur, la science-fiction d'action et d'émerveillement au sein d'une même session (section « Thèmes »).

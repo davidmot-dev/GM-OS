@@ -3,53 +3,51 @@ sujet: Degrés de réussite et critiques
 systeme: alien
 couverture: complète
 hors_canevas: false
-sources: ALIEN, le jeu de rôle (pages 30, 58, 61, 64, 92, 95, 98, 99, 100, 104, 111, 112)
-pages_fiables: false
+sources: "ALIEN, le jeu de rôle"
+sections: "« SIGNIFIE « RÉUSSITE » ; « BRISÉ » ; « BLESSURES CRITIQUES » ; « LA MORT » ; « LES XÉNOMORPHES » ; « ÊTRES SYNTHÉTIQUES »"
 genere_par: notebooklm
+gabarit: v3
 relu: false
 ---
 
 # Degrés de réussite et critiques
-## Règle
-Dans ALIEN, le jeu de rôle, la résolution des actions repose sur l'obtention d'au moins un symbole Réussite (un six) lors d'un jet (p. 58). Les degrés de réussite dépendent du nombre de symboles Réussite obtenus au-delà du premier (p. 58). Chaque symbole Réussite supplémentaire représente un succès excédentaire que le joueur dépense pour déclencher des effets spéciaux appelés « actions d'éclat », propres à chaque compétence (p. 58).
 
-Il n'y a pas de réussite critique automatique (comme un double six). En revanche, le système gère les extrêmes de manière asymétrique : l'équivalent d'une complication critique est déclenché par l'apparition d'au moins un symbole de Panique (un un) sur les dés de stress, ce qui interdit de forcer le test et impose un test de Panique immédiat (p. 61, 104). Pour les dégâts, le terme « critique » désigne les « Blessures Critiques », des traumatismes graves et potentiellement mortels subis lorsqu'un personnage voit sa Santé chuter à zéro et se retrouve Brisé (p. 30, 98, 99).
+## Règle
+Lors d'un test, l'obtention d'au moins un symbole de réussite (un six) valide l'action (section « Signifie « Réussite » »). Les symboles de réussite supplémentaires (les six surnuméraires) représentent les degrés de réussite et s'utilisent pour acheter des actions d'éclat spécifiques à la compétence (section « Signifie « Réussite » »).
+
+Si la Santé d'un personnage tombe à zéro, il subit l'état Brisé (section « Brisé »). Il s'effondre, ne peut plus effectuer d'actions ou de tests (sauf ramper ou grogner) et subit immédiatement un jet de dé de soixante-six sur la table des blessures critiques (section « Brisé » et section « Blessures critiques »). 
+
+Si la blessure tirée est fatale, le personnage meurt à l'expiration d'un délai si son test de Trépas (test d'Endurance pur, non forçable et sans dés de stress) échoue (section « La mort »). Certaines blessures causent une mort instantanée (section « La mort »).
+
+Les synthétiques et les xénomorphes suivent des critiques asymétriques : à zéro Santé, ils lancent un dé à six faces sur leur propre table d'avaries ou de critiques spécifiques (section « Êtres synthétiques » et section « Règles générales concernant les Xénomorphes »).
 
 ## Valeurs
-Les valeurs chiffrées des degrés de réussite et blessures critiques s'organisent ainsi :
-
-Seuils et modificateurs :
-* Seuil de réussite : un unique symbole Réussite (un six) sur l'ensemble des dés lancés (p. 58).
-* Actions d'éclat : chaque symbole Réussite supplémentaire (six) permet de choisir un effet spécifique (p. 58).
-* Test opposé : chaque symbole Réussite (six) du défenseur élimine une réussite de l'attaquant (p. 64).
-
-Échelle des Blessures Critiques (jet de D66, ordonnée de la moins grave à la mort instantanée, p. 100-101) :
-* Blessures non fatales (exemples) : 11 (Essoufflé), 14 (Cheville foulée, Mobilité -deux), 33 (Côtes cassées, Mobilité et Combat rapproché -deux), 56 (Colonne vertébrale fracturée, paralysie).
-* Blessures fatales avec limites de temps (échelle de durée décroissante) :
-  - Limite de un Jour : 44 (Poumon perforé; Endurance et Mobilité -deux), 51 (Rein écrasé).
-  - Limite de un Quart : 45 (Hémorragie interne), 46 (Intestins percés), 54 (Bras sectionné, permanent), 55 (Jambe sectionnée).
-  - Limite de un Tour (pénalité de -un aux Soins) : 52 (Artère du bras ouverte), 53 (Artère de la jambe ouverte).
-  - Limite de un Round : 61 (Jugulaire ouverte, pénalité de -un aux Soins; Endurance -un), 62 (Aorte ouverte, pénalité de -deux aux Soins; Endurance -deux).
-* Mort instantanée (sans test de Trépas, p. 101) : résultats 63 à 66 (63 Éventré, 64 Crâne écrasé, 65 Cœur perforé, 66 Cœur empalé).
+- Seuil de réussite minimal : un seul symbole de réussite (un six) (section « Signifie « Réussite » »).
+- Seuil de déclenchement des blessures critiques : zéro point de Santé (section « Brisé »).
+- Jet de blessure critique humaine : un jet de dé de soixante-six (section « Blessures critiques »).
+- Échelle des blessures critiques humaines : quarante-six blessures ordonnées de onze (moins grave, essoufflé) à soixante-six (mort instantanée) (table « Blessures critiques »).
+- Délais des blessures fatales avant test de Trépas : un Round, un Tour, un Quart ou un jour (table « Blessures critiques »).
+- Temps de guérison des blessures : de un à trois dés à six faces en jours, ou permanent (table « Blessures critiques »).
+- Jet critique asymétrique (synthétiques et xénomorphes) : un jet de dé à six faces sur une table à six lignes (section « Êtres synthétiques » et section « Règles générales concernant les Xénomorphes »).
 
 ## À la table
-La gestion des réussites multiples et des blessures critiques s'articule ainsi en cours de partie :
-
-1. Jet de dés : Le joueur lance sa réserve (p. 58). S'il obtient plusieurs six, il applique le succès de base, puis choisit des actions d'éclat avec ses réussites supplémentaires (p. 58). En Combat rapproché, chaque symbole de réussite supplémentaire ajoute plus un point de dégât au coup porté (p. 92).
-2. Exemple de combat : Un attaquant obtient trois réussites sur un test de Combat rapproché. La première valide l'attaque et inflige les Dégâts de l'arme (p. 92, 98). Les deux autres permettent d'ajouter plus un point de dégât et de mettre l'adversaire à terre (p. 92).
-3. L'état Brisé : Si la Santé d'un personnage tombe à zéro, il est Brisé (p. 98). Son joueur jette immédiatement deux dés à six faces pour obtenir un résultat de D66 (un dé pour les dizaines, l'autre pour les unités) et applique la Blessure Critique correspondante (p. 99, 100).
-4. Sauvetage : Pour une blessure fatale (ex : "Artère de la jambe ouverte", limite un Tour) (p. 101), le personnage meurt à l'échéance s'il rate son test de Trépas (jet d'Endurance sans dés de stress et impossible à forcer) (p. 99). Un allié doit lui prodiguer des Soins médicaux (action lente) pour le sauver à temps (p. 99).
+1. Le joueur lance sa réserve de dés. Un symbole de réussite (un six) valide l’action (section « Signifie « Réussite » »).
+2. Chaque symbole de réussite supplémentaire (six surnuméraire) sert de degré de réussite et peut être dépensé pour activer des actions d’éclat propres à la compétence (section « Signifie « Réussite » »).
+3. Si la Santé d’un personnage tombe à zéro, il devient Brisé. Le joueur effectue alors un jet de dé de soixante-six sur la table des blessures critiques (section « Brisé » et section « Blessures critiques »).
+4. Maman applique directement les effets de la blessure. Si celle-ci est fatale, un compte à rebours s’enclenche selon la limite de temps indiquée (section « La mort »).
+5. Pour sauver le blessé, un allié doit lui prodiguer des premiers secours en réussissant un test de la compétence Soins médicaux (section « Sauver votre vie »).
+6. Si la limite expire sans premiers secours réussis, le joueur doit tenter un test de Trépas en lançant ses dés d’Endurance, sans pouvoir forcer son jet ni ajouter de dés de stress (section « La mort »). Un échec entraîne le décès (section « La mort »).
 
 ## Cas limites
-Le manuel précise plusieurs situations ambiguës :
-
-* Attaques sur un personnage déjà Brisé : Sa Santé ne descend pas en dessous de zéro (p. 98). En revanche, chaque nouvelle attaque lui infligeant des dégâts lui fait subir immédiatement une nouvelle blessure critique (p. 98).
-* Décès des PNJ : Maman peut décider qu'un personnage non joueur insignifiant meurt automatiquement dès qu'il est Brisé, sans lancer de dés sur la table (p. 99).
-* Cas des Xénomorphes : Lorsqu'ils tombent à zéro en Santé, ils ne sont pas Brisés. Maman jette un dé sur une table de blessures critiques spécifique (Indemne, Blessé, Réflexe désespéré, Dernier souffle, En pièces) (p. 112).
-* Cas des Synthétiques (Androïdes) : S'ils sont Brisés, ils subissent des blessures spécifiques lancées sur une table à un dé (p. 111). Ils ne meurent pas et ne font pas de test de Trépas (p. 111).
-* Annulation par la Panique : Si un test obtient des réussites mais déclenche un test de Panique (résultat de dix ou plus), l'action initiale est annulée et remplacée par l'action de panique obligatoire (p. 104).
+- Nouveau coup à zéro de Santé : Un personnage déjà Brisé qui subit une nouvelle attaque n’encaisse pas de dégâts supplémentaires mais reçoit instantanément une nouvelle blessure critique à chaque impact (section « Brisé »).
+- Trépas immédiat : Les résultats de soixante-trois à soixante-six sur la table des blessures critiques provoquent une mort instantanée, éliminant tout test de Trépas (section « Mort instantanée »).
+- Synthétiques : À zéro de Santé, ils ne sont pas Brisés et subissent un jet de dé à six faces sur leur propre table d’avaries (section « Dégâts »). Ils ne font pas de test de Trépas et ne meurent pas (section « Mort »).
+- Xénomorphes : À zéro de Santé, ils ne sont pas Brisés et subissent un jet de dé à six faces sur leur table de blessures critiques spécifique (section « Santé »).
+- PNJ ordinaires : Maman peut décider qu’un personnage non joueur secondaire meurt sur-le-champ à zéro Santé, sans jeter de blessures critiques (section « PNJ Brisés »).
+- Coup de grâce : Tuer de sang-froid une victime Brisée nécessite de rater un test d’Empathie pure et inflige plus un en Niveau de Stress, sauf pour les personnages dotés du talent Impitoyable (section « Coup de grâce »).
+- Tests opposés : Chaque symbole de réussite obtenu par le défenseur élimine un symbole de réussite de l’attaquant. Seuls les six excédentaires non annulés comptent comme degrés de réussite utilisables pour les actions d’éclat (section « Tests opposés »).
 
 ## Non couvert
-* Le livre de base d'ALIEN ne propose pas d'actions d'éclat génériques applicables à un test de caractéristique pur (sans compétence) (p. 64-71).
-* Il n'existe pas de mécanique de "réussite critique" universelle hors combat sans dépenser de réussites excédentaires (p. 58).
-* Le manuel ne détaille pas comment gérer l'accumulation de plusieurs blessures critiques fatales ayant des limites de temps différentes (p. 99).
+- Le cumul ou la superposition des pénalités si un personnage endure plusieurs blessures critiques affectant la même compétence (section « Blessures critiques »).
+- L’utilisation des réussites excédentaires (actions d’éclat) par les personnages non joueurs (section « PNJ et compétences »).
+- La possibilité d’utiliser un appareil médical automatisé comme le médipod Pauling pour stabiliser un personnage ayant échoué à son test de Trépas (section « Médipod Pauling »).

@@ -3,45 +3,55 @@ sujet: Santé et blessures
 systeme: alien
 couverture: complète
 hors_canevas: false
-sources: ALIEN, le jeu de rôle (p. 30, 98, 99, 100, 101, 111, 112, 228)
-pages_fiables: false
+sources: "ALIEN, le jeu de rôle"
+sections: "« CARRIÈRE » ; « SANTÉ » ; « DÉGÂTS » ; « BRISÉ » ; « SE REMETTRE » ; « BLESSURES CRITIQUES » ; « LA MORT » ; « GUÉRISON » ; « ROBUSTE » ; « DEUXIÈME SOUFFLE » ; « SOINS MÉDICAUX »"
 genere_par: notebooklm
+gabarit: v3
 relu: false
 ---
 
 # Santé et blessures
+
 ## Règle
-La jauge de Santé mesure l'endurance physique d'un personnage (p. 30). Les dégâts la réduisent directement, mais tant qu'il reste de la Santé, ces pertes ne représentent que de la fatigue ou des ecchymoses (p. 99). Si elle atteint zéro, le personnage est Brisé, s'effondre et subit une blessure critique qui peut s'avérer fatale à plus ou moins long terme (p. 98, 99).
+La résistance physique d'un personnage joueur est représentée par ses points de Santé (section « Santé »). Lorsqu'il subit des attaques, des chutes ou d'autres périls, sa Santé diminue (section « Santé »). Si sa Santé tombe à zéro, il subit l’état Brisé (section « Brisé »). Il s'effondre, ne peut plus agir ni faire de test de compétence, et subit immédiatement une blessure critique en lançant deux dés à six faces sur la table des blessures critiques (section « Brisé » et section « Blessures critiques »). Si la blessure est fatale, un délai s'enclenche avant de devoir effectuer un test de Trépas (test d'Endurance pur, non forçable et sans dés de stress) pour éviter la mort (section « La mort »).
+
+Jauge de Santé :
+- Mesure : la fatigue, les ecchymoses et les dégâts physiques qu'un personnage peut encaisser avant d'être Brisé (section « Blessures critiques »).
+- Valeur de départ : égale à la valeur d'attribut de FORCE (section « Santé de départ »).
+- Bornes : minimale de zéro, maximale égale à la FORCE, pouvant monter jusqu’à la FORCE plus deux avec le talent Robuste (section « Brisé » et section « Robuste »).
+- Sens : descend quand la situation empire (section « Santé de départ »).
+- Mouvements vers le bas : diminue à chaque point de dégât subi lors d'attaques ou de périls environnementaux (section « Santé de départ »).
+- Mouvements vers le haut : remonte par les premiers secours d’un allié via un test réussi de Soins médicaux, redonnant des points égaux aux symboles de réussite obtenus (section « Les premiers soins »). Hors état Brisé, elle remonte de un point par Tour de repos (section « Récupération »). Le talent Deuxième souffle permet à un personnage Brisé de récupérer un point de Santé par symbole de réussite obtenu sur un test d’Endurance (section « Deuxième souffle »).
+- Seuil à un ou plus : le personnage subit de la fatigue ou des ecchymoses sans gravité (section « Blessures critiques »).
+- Seuil à zéro : le personnage devient Brisé, s’effondre, ne peut plus agir ni faire de test, et subit immédiatement une blessure critique (section « Brisé »).
+- Type : elle s’accumule et subit les événements.
 
 ## Valeurs
-La jauge de Santé est la ressource physique individuelle clé du personnage :
-- Ce qu'elle mesure : La fatigue et l'encaissement physique du personnage avant de subir des lésions graves (p. 99).
-- Valeur de départ : Égale à la valeur finale de l'attribut Force du personnage (p. 30).
-- Bornes minimale et maximale : Minimum de zéro (p. 98). Maximum habituel de quatre (Force maximale de départ), s'élevant à cinq si l'attribut-clef de carrière est la Force (p. 30), et jusqu'à sept avec le talent Robuste (p. 79, 98).
-- Sens de variation : Elle descend lorsque la situation empire (lors de blessures) (p. 98).
-- Ce qui la fait bouger : Elle diminue avec les dégâts (chutes, feux, explosions, maladies, froid, radiations) (p. 98, 106-110). Elle augmente d'un point par Tour de repos complet hors de danger (p. 98), par des Soins médicaux d'un tiers (guérison égale aux réussites obtenues) (p. 98, 228) ou par l'usage du talent Deuxième souffle (p. 78).
-- Ce qui se produit à chaque seuil : Au-dessus de zéro, le personnage agit sans malus (p. 99). À zéro, le personnage est Brisé : il s'effondre, ne peut plus effectuer d'action lente ou rapide (sauf ramper ou grogner) ni aucun test de compétence, et doit subir un jet de blessure critique immédiat (p. 98, 99).
-- Dépense ou accumulation : Elle s'accumule passivement en subissant les dégâts et ne se dépense pas volontairement.
-
-Autres valeurs chiffrées :
-- Jet de blessure critique : jet de dé de soixante-six sur une table de trente-six blessures possibles (p. 99, 100).
-- Seuil de mort instantanée : résultats de soixante-trois à soixante-six sur la table des blessures critiques (p. 99, 100).
-- Test de Trépas : test d'Endurance sans dés de stress et impossible à forcer, effectué à chaque intervalle de temps (round, tour, quart ou jour) selon la blessure fatale subie (p. 99).
+- Seuil de Santé minimale : zéro point (section « Brisé »).
+- Modificateur du talent Robuste : plus deux en Santé maximale (section « Robuste »).
+- Récupération par le repos : plus un point de Santé par Tour de repos complet (section « Récupération »).
+- Jet de blessure critique : un jet de dé de soixante-six (section « Blessures critiques »).
+- Échelle de blessures critiques : quarante-six blessures allant de onze (moins grave, essoufflé) à soixante-six (mort instantanée) (table « Blessures critiques »).
+- Délais des blessures fatales avant test de Trépas : un Round, un Tour, un Quart ou un jour (table « Blessures critiques »).
+- Modificateurs au test de Soins médicaux : de plus deux à moins deux selon la blessure critique (table « Blessures critiques »).
+- Temps de convalescence : de un à trois dés à six faces en jours, ou permanent (table « Blessures critiques »).
 
 ## À la table
-La résolution des blessures se joue ainsi :
-1. Le personnage subit des dégâts lors d'un affrontement ou d'un danger environnemental (p. 98).
-2. Sa Santé est réduite d'autant de points. S'il tombe à zéro, il est immédiatement Brisé (p. 98).
-3. Le joueur effectue immédiatement un jet de dé de soixante-six et consulte la table des blessures critiques (p. 99).
-4. Si le résultat indique une mort instantanée (soixante-trois à soixante-six), le personnage meurt sur-le-champ (p. 99).
-5. Si la blessure est fatale mais assortie d'une limite de temps, le joueur effectue un test d'Endurance (sans stress et impossible à forcer) à chaque fois que la durée indiquée expire. Un échec entraîne la mort (p. 99).
-6. Un allié peut consacrer une action lente au combat pour administrer des premiers secours avec la compétence Soins médicaux (p. 98, 228). S'il réussit, le personnage se relève et récupère des points de Santé égaux au nombre de réussites (six) obtenues (p. 98).
+1. Le personnage joueur subit des dégâts physiques et les soustrait de sa Santé actuelle (section « Santé »).
+2. Si sa Santé atteint zéro, il devient Brisé : il s’effondre, lâche ses objets et ne peut plus faire de tests de compétence (section « Brisé »).
+3. Le joueur lance immédiatement deux dés à six faces pour déterminer sa blessure critique (section « Blessures critiques »).
+4. Si la blessure est fatale, une limite de temps s’enclenche (section « La mort »). Un allié peut le sauver en réussissant un test de Soins médicaux avant l’échéance du délai (section « Sauver votre vie »).
+5. Sans secours à temps, le joueur effectue un test de Trépas en lançant ses dés d’Endurance pure, sans stress et sans pouvoir forcer son jet (section « La mort »). L’échec entraîne la mort (section « La mort »).
 
 ## Cas limites
-- Nouvelles attaques sur un personnage Brisé : Toute attaque infligeant des dégâts supplémentaires à un personnage déjà Brisé lui impose de subir immédiatement une nouvelle blessure critique en lançant à nouveau sur la table (p. 98).
-- Mourir de sang-froid : Un ennemi Brisé et sans défense peut subir un coup de grâce pour être exécuté. L'attaquant doit obligatoirement rater un test d'Empathie pur (sans dés de stress), et son Niveau de Stress augmente de un (p. 99). Les personnages dotés du talent Impitoyable peuvent l'exécuter sans test (p. 79, 99).
-- Les êtres synthétiques (androïdes) : Lorsqu'un androïde est Brisé, il subit une blessure critique spécifique lancée sur une table de un dé à six faces (p. 111). Ils ne meurent jamais et ne font pas de test de Trépas (p. 111). En cas d'arrêt du système, ils peuvent être réactivés avec un test de Comtech (p. 111).
-- Les Xénomorphes : Ces créatures ne sont pas Brisées à zéro points de Santé. Elles subissent à la place un jet sur une table de blessures critiques spécifique à un dé à six faces (p. 112).
+- Attaques sur un Brisé : À zéro Santé, le personnage ne perd pas de points de vie supplémentaires, mais chaque nouvelle attaque reçue lui inflige directement une nouvelle blessure critique (section « Brisé »).
+- Décès instantané : Les lignes soixante-trois à soixante-six de la table provoquent une mort immédiate sans test de Trépas possible (section « Mort instantanée »).
+- Réanimation autonome : Un Brisé récupère un point de Santé après un Tour de repos et peut se relever (section « Par vous-même »). S’il subit une blessure fatale, il peut tenter de se soigner lui-même avec un malus de moins deux à son test de Soins médicaux (section « Sauver votre vie »).
+- Deuxième souffle : Ce talent permet de se relever sans aide via un test d’Endurance, mais ne guérit pas les blessures critiques (section « Deuxième souffle »).
+- Non-humains : Les synthétiques et les xénomorphes à zéro Santé ne sont pas Brisés et subissent des avaries ou des critiques sur des tables spécifiques (section « Êtres synthétiques » et section « Les Xénomorphes »).
+- Personnages non joueurs : Maman peut décréter qu’un personnage non joueur secondaire meurt directement à zéro Santé sans jeter de blessure critique (section « PNJ Brisés »).
 
 ## Non couvert
-Les sources ne précisent pas comment se gère la ligne de vue ou l'encombrement pour déplacer un personnage Brisé ou inconscient afin de le mettre à l'abri, ni si un personnage souffrant d'une colonne vertébrale fracturée et paralysé sous le cou peut toujours utiliser des commandes vocales ou des implants cybernétiques pour interagir avec l'intelligence artificielle du vaisseau.
+- Le cumul des délais de Trépas si un personnage subit plusieurs blessures critiques fatales simultanées (section « Sauver votre vie »).
+- Les conséquences des blessures physiques sur les tests purement mentaux ou intellectuels (section « Blessures critiques »).
+- L’activation autonome d’appareils comme l'AutoDoc par un blessé Brisé et privé d'alliés (section « Articles médicaux »).
