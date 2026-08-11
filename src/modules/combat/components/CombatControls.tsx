@@ -53,12 +53,20 @@ const CombatControls: React.FC = () => {
     const handleAddCombatant = () => {
         gmPrompt(`${t('combat.card.rename_prompt', { name: '' })}`, t('combat.controls.add_combatant'), (name) => {
             if (name.trim()) {
+                /**
+                 * **Pas de PV pour un système qui n'en a pas.** Ces dix points
+                 * de vie étaient donnés à tout le monde, y compris aux jeux qui
+                 * ne comptent pas comme ça — et une jauge inventée se lit
+                 * comme une jauge vraie.
+                 */
+                const modeleDeSante = activeDriver?.combat?.defaultHealthType || 'hp';
+                const pointsDeVie = modeleDeSante === 'hp' ? { hp: 10, hpMax: 10 } : {};
+
                 addCombatant({
                     name: name.trim(),
                     init: 0,
-                    hp: 10,
-                    hpMax: 10,
-                    healthSystem: HealthInterpreter.createDefault(activeDriver?.combat?.defaultHealthType || 'hp'),
+                    ...pointsDeVie,
+                    healthSystem: HealthInterpreter.createDefault(modeleDeSante),
                     sheetData: (activeDriver?.ui_config?.gauges || []).reduce((acc: any, g: any) => {
                         acc[g.fieldId] = 0;
                         return acc;

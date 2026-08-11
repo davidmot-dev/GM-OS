@@ -1,5 +1,6 @@
 import { DiceEngine } from '../../dice/DiceEngine';
 import type { Combatant, StatusEffect } from '../types';
+import { pointsDeVieApres } from './SanteDuCombattant';
 
 /**
  * Mappe les conflits entre effets d'état.
@@ -67,8 +68,9 @@ export function calculateDamageImpact(params: {
         }
     }
 
-    // 2. Calcul du nouveau HP
-    const newHp = Math.min(target.hpMax, Math.max(0, target.hp - finalAmount));
+    // 2. Calcul du nouveau HP — `undefined` quand le système n'a pas de jauge,
+    //    parce qu'inventer un nombre reviendrait à lui donner des PV.
+    const newHp = pointsDeVieApres(target, -finalAmount) ?? undefined;
 
     // 3. Détermination du status automatique
     let statusToAdd: Omit<StatusEffect, 'id'> | null = null;

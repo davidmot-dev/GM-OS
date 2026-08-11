@@ -420,15 +420,19 @@ export const useCombatStore = create<CombatState>()(
                 const sessionStore = (window as unknown as { useSessionOSStore?: { getState: () => SessionOSState } }).useSessionOSStore?.getState();
                 if (!sessionStore) return;
 
-                // 1. Sync HP
+                // 1. Sync HP — seulement s'il y a des PV à synchroniser. Sans
+                //    jauge, écrire un 0 dans la fiche inventerait une blessure.
+                const pv = combatant.hp;
                 if (combatant.isPlayer && combatant.sourcePlayerId) {
-                    sessionStore.players.forEach((p: Player) => {
-                        const char = p.characters.find((char: PlayerCharacter) => char.id === combatant.sourcePlayerId);
-                        if (char) sessionStore.updateCharacterHP(p.id, char.id, combatant.hp);
-                    });
+                    if (typeof pv === 'number') {
+                        sessionStore.players.forEach((p: Player) => {
+                            const char = p.characters.find((char: PlayerCharacter) => char.id === combatant.sourcePlayerId);
+                            if (char) sessionStore.updateCharacterHP(p.id, char.id, pv);
+                        });
+                    }
                 } else if (!combatant.isPlayer && combatant.sourceEntityId) {
-                    if (typeof sessionStore.updateEntityHP === 'function') {
-                        sessionStore.updateEntityHP(combatant.sourceEntityId, combatant.hp);
+                    if (typeof pv === 'number' && typeof sessionStore.updateEntityHP === 'function') {
+                        sessionStore.updateEntityHP(combatant.sourceEntityId, pv);
                     }
                     
                     // 2. Sync Narrative & Status

@@ -23,8 +23,21 @@ export interface Combatant {
     name: string;
     /** Valeur d'initiative pour l'ordre de passage */
     init: number;
-    hp: number;
-    hpMax: number;
+    /**
+     * Points de vie — **facultatifs, parce que tous les jeux n'en ont pas.**
+     *
+     * Chez Dune, « il n'existe aucune jauge numérique de santé ou de fatigue sur
+     * la feuille de personnage » : vaincre un personnage est une tâche étendue.
+     * Tant que ces champs étaient obligatoires, un tel combattant naissait avec
+     * des PV inventés — et un 0 ressemble à un mourant quand il ne veut dire que
+     * « ce jeu ne compte pas comme ça ».
+     *
+     * L'autorité est `healthSystem` quand il est présent. `hp` reste pour les
+     * systèmes qui en ont, et son absence est une information : elle se lit
+     * « pas de jauge », jamais « jauge à zéro ».
+     */
+    hp?: number;
+    hpMax?: number;
     /** Indique si le combattant est un PJ */
     isPlayer: boolean;
     /** Faction pour l'affichage et l'IA (Ami, Ennemi, Neutre) */

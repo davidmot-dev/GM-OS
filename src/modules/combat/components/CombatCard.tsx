@@ -6,6 +6,7 @@ import { Select } from '../../../components/common/Select';
 import { gmPrompt, gmCustom } from '../../../stores/useModalStore';
 import { useSessionOSStore, type Entity } from '../../session/useSessionOSStore';
 import { HealthManager } from '../../session/components/health/HealthManager';
+import { estHorsDeCombat } from '../logic/SanteDuCombattant';
 import { useTacticalAIStore } from '../../tactical-ai/useTacticalAIStore';
 import { aiService } from '../../ai/AIService';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
@@ -87,7 +88,9 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
         setInitiative(combatant.id, val);
     };
 
-    const isDead = combatant.hp <= 0;
+    // L'état calculé fait autorité ; sans jauge ni système de santé, personne
+    // n'est déclaré mort faute d'information.
+    const isDead = estHorsDeCombat(combatant);
 
     // Note: factionColors logic is available for future data-driven styling if needed 
 

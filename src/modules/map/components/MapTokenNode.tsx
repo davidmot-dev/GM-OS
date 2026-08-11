@@ -3,6 +3,7 @@ import { useMapStore } from '../useMapStore';
 import { useMapUIStore } from '../useMapUIStore';
 import type { MapToken } from '../types';
 import { useCombatStore, type StatusEffect } from '../../combat/useCombatStore';
+import { fractionDeVie, estHorsDeCombat } from '../../combat/logic/SanteDuCombattant';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { Shield, Trash2, Eye, EyeOff, Lock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -95,12 +96,16 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
         target.releasePointerCapture(e.pointerId);
     };
 
-    // Calcul de l'aura de santé (similaire à CombatCard)
+    // Calcul de l'aura de santé (similaire à CombatCard).
+    // Sans jauge, le jeton garde son anneau neutre : une couleur de santé
+    // impliquerait une santé mesurée, et il n'y en a pas.
     let ringColor = 'ring-gray-600';
     if (combatant) {
-        if (combatant.hp <= 0) ringColor = 'ring-gray-500 opacity-50 grayscale';
-        else if (combatant.hp <= combatant.hpMax * 0.25) ringColor = 'ring-red-500';
-        else if (combatant.hp <= combatant.hpMax * 0.5) ringColor = 'ring-yellow-400';
+        const part = fractionDeVie(combatant);
+        if (estHorsDeCombat(combatant)) ringColor = 'ring-gray-500 opacity-50 grayscale';
+        else if (part === null) ringColor = 'ring-gray-600';
+        else if (part <= 0.25) ringColor = 'ring-red-500';
+        else if (part <= 0.5) ringColor = 'ring-yellow-400';
         else ringColor = 'ring-green-400';
     }
 

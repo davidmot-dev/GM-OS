@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Music, Pause, Play, Volume2, EyeOff, HeartCrack, CheckCircle, Skull, Zap, Layers } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useCombatStore } from '../../combat/useCombatStore';
+import { fractionDeVie } from '../../combat/logic/SanteDuCombattant';
 import { useMusicStore } from '../../music/useMusicStore';
 import { CockpitMessenger } from './CockpitMessenger';
 
@@ -51,7 +52,11 @@ const ModuleSnapshots: React.FC = () => {
                         <div className="bg-app-bg/40 rounded-xl border border-app-border/40 p-3 space-y-3">
                             {combatants.slice(0, 5).map((c, idx) => {
                                 const isCurrentTurn = idx === currentTurnIdx;
-                                const hpPct = Math.max(0, Math.min(100, (c.hp / c.hpMax) * 100));
+                                // `null` quand le système n'a pas de jauge : on
+                                // n'affiche alors aucune barre, plutôt qu'une
+                                // barre vide qui se lirait « à l'agonie ».
+                                const part = fractionDeVie(c);
+                                const hpPct = part === null ? null : part * 100;
                                 
                                 return (
                                     <div 
@@ -69,12 +74,14 @@ const ModuleSnapshots: React.FC = () => {
                                             <p className={`text-[10px] font-bold truncate ${isCurrentTurn ? 'text-white' : 'text-app-text/40'}`}>
                                                 {c.name}
                                             </p>
-                                            <div className="w-full bg-app-bg h-1 rounded-full mt-1 overflow-hidden">
-                                                <div 
-                                                    className={`h-full transition-all duration-500 ${hpPct > 50 ? 'bg-emerald-500' : hpPct > 25 ? 'bg-amber-500' : 'bg-red-500'}`}
-                                                    style={{ width: `${hpPct}%` }}
-                                                ></div>
-                                            </div>
+                                            {hpPct !== null && (
+                                                <div className="w-full bg-app-bg h-1 rounded-full mt-1 overflow-hidden">
+                                                    <div
+                                                        className={`h-full transition-all duration-500 ${hpPct > 50 ? 'bg-emerald-500' : hpPct > 25 ? 'bg-amber-500' : 'bg-red-500'}`}
+                                                        style={{ width: `${hpPct}%` }}
+                                                    ></div>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 );

@@ -1,4 +1,5 @@
 import { STATUS_CONFLICT_MAP, type Combatant } from '../../combat/useCombatStore';
+import { aUneJaugeDeVie } from '../../combat/logic/SanteDuCombattant';
 import type { TacticalConfig } from '../../../types/drivers';
 
 export interface GridPoint {
@@ -158,9 +159,14 @@ export class GridEngine {
       let totalMaxHp = 0;
       let totalCurrentHp = 0;
 
+      // Seuls les combattants qui ont une jauge entrent dans le calcul. Un
+      // système sans points de vie ne rend pas la déroute nulle — il la rend
+      // **non mesurable**, et le repli ci-dessous répond « pas de déroute »
+      // plutôt que d'inventer un pourcentage.
       factionCombatants.forEach(c => {
-          totalMaxHp += c.hpMax;
-          totalCurrentHp += c.hp;
+          if (!aUneJaugeDeVie(c)) return;
+          totalMaxHp += c.hpMax!;
+          totalCurrentHp += c.hp!;
       });
 
       if (totalMaxHp === 0) return { isRouting: false, currentPercent: 100 };

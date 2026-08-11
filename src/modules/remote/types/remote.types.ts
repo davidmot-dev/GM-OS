@@ -22,8 +22,14 @@ export type { HealthSystem };
 export interface RemoteCombatant {
     id: string;
     name: string;
-    hp: number;
-    hpMax: number;
+    /**
+     * Facultatifs comme sur le combattant du MJ, et pour la même raison : tous
+     * les jeux ne comptent pas la santé en points. Les déclarer obligatoires ici
+     * pendant qu'ils sont facultatifs là-bas recréerait exactement l'écart que
+     * ce fichier vient de refermer.
+     */
+    hp?: number;
+    hpMax?: number;
     init: number;
     isPlayer: boolean;
     healthSystem?: HealthSystem;

@@ -3,6 +3,7 @@ import { useCombatStore, type Combatant } from '../useCombatStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useModalStore } from '../../../stores/useModalStore';
 import { useDiceStore } from '../../../stores/useDiceStore';
+import { fractionDeVie } from '../logic/SanteDuCombattant';
 import { Zap, HeartPulse, CheckCircle2, AlertTriangle, ShieldAlert, Shield, RotateCcw, Target as TargetIcon, Dices } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -196,16 +197,24 @@ const DamageCalculator: React.FC = () => {
                                                 {c.name}
                                             </span>
                                             <div className="flex gap-2 items-center">
+                                                {/* Sans jauge, on ne dessine pas une barre vide : on dit
+                                                    qu'il n'y en a pas. Un 0/0 se lirait « mourant ». */}
                                                 {(!healthSys || healthSys.type === 'hp') ? (
+                                                    fractionDeVie(c) === null ? (
+                                                        <span className="text-[9px] font-mono text-slate-600 font-bold uppercase tracking-widest">
+                                                            sans jauge
+                                                        </span>
+                                                    ) : (
                                                     <>
                                                         <div className="flex bg-black/40 h-1 w-24 rounded-full overflow-hidden">
-                                                            <div 
-                                                                className={`h-full transition-all duration-500 ${c.hp / c.hpMax < 0.3 ? 'bg-gm-crimson' : 'bg-emerald-500'}`}
-                                                                style={{ width: `${(c.hp / c.hpMax) * 100}%` }}
+                                                            <div
+                                                                className={`h-full transition-all duration-500 ${fractionDeVie(c)! < 0.3 ? 'bg-gm-crimson' : 'bg-emerald-500'}`}
+                                                                style={{ width: `${fractionDeVie(c)! * 100}%` }}
                                                             />
                                                         </div>
                                                         <span className="text-[9px] font-mono text-slate-500 font-bold">{c.hp}/{c.hpMax} PV</span>
                                                     </>
+                                                    )
                                                 ) : (
                                                     <div className="flex items-center gap-2">
                                                         <div className={`px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-tighter border ${
