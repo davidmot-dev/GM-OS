@@ -30,7 +30,7 @@ describe('lireInventaire', () => {
   it('rend toujours les treize sujets, dans l\'ordre du canevas', () => {
     const entrees = lireInventaire(INVENTAIRE).filter(e => !e.horsCanevas);
 
-    expect(entrees).toHaveLength(13);
+    expect(entrees).toHaveLength(CANEVAS.length);
     expect(entrees.map(e => e.sujet)).toEqual(CANEVAS.map(s => s.clef));
   });
 
@@ -111,10 +111,10 @@ describe('lireInventaire', () => {
     expect(lireInventaire(INVENTAIRE).some(e => e.sujet === 'Sujet')).toBe(false);
   });
 
-  it('rend les treize sujets même sur une réponse informe', () => {
+  it('rend tous les sujets même sur une réponse informe', () => {
     const entrees = lireInventaire('Je ne sais pas répondre à cette demande.');
 
-    expect(entrees).toHaveLength(13);
+    expect(entrees).toHaveLength(CANEVAS.length);
     expect(entrees.every(e => !e.lu)).toBe(true);
   });
 });
@@ -139,7 +139,7 @@ describe('sujet libre et doublons', () => {
 
 describe('couverture', () => {
   it('compte les sujets traités au moins partiellement', () => {
-    expect(couverture(lireInventaire(INVENTAIRE))).toEqual({ traites: 3, total: 13 });
+    expect(couverture(lireInventaire(INVENTAIRE))).toEqual({ traites: 3, total: CANEVAS.length });
   });
 });
 

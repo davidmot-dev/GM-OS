@@ -3,8 +3,8 @@ import { CANEVAS, CLEFS_CANEVAS, clefCanonique, normaliser, slugFiche } from './
 
 describe('canevas', () => {
   it('porte les treize sujets, sans doublon de clé', () => {
-    expect(CANEVAS).toHaveLength(13);
-    expect(new Set(CLEFS_CANEVAS).size).toBe(13);
+    expect(CANEVAS).toHaveLength(14);
+    expect(new Set(CLEFS_CANEVAS).size).toBe(14);
   });
 
   it('chaque énoncé contient sa clé — le carnet doit pouvoir la reprendre', () => {

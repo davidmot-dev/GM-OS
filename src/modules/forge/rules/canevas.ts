@@ -79,6 +79,33 @@ export const CANEVAS: readonly SujetCanevas[] = [
     clef: 'Ton, registre et ambiance',
     enonce: 'Ton, registre et ambiance recherchés',
   },
+  {
+    /**
+     * **Le quatorzième sujet, ajouté le 2026-08-11.**
+     *
+     * Les treize premiers sont des mécaniques de résolution ; aucun ne dit ce
+     * que porte une fiche. Or la Forge Système produit `driver` **et**
+     * `template`, et le second n'avait aucune source dans le corpus.
+     *
+     * Dune s'en est tiré par accident : ses cinq Compétences et cinq Principes
+     * sont apparus dans une fiche *hors canevas* que le carnet a proposée de
+     * lui-même. Alien n'a pas eu cette chance — ses trois hors catégories
+     * parlent de vaisseaux, de synthétiques et de xénomorphes. Dériver son
+     * pilote du corpus aurait donné une fiche vide, ou pire, inventée.
+     *
+     * **La distinction qui rend ce sujet acceptable** : on demande ce que porte
+     * une fiche *finie*, pas comment on la remplit. L'achat de points, les
+     * archétypes et les historiques restent exclus — ce sont les chapitres les
+     * plus volumineux des livres, et c'est pour eux que l'exclusion existe.
+     * Un inventaire, pas une procédure.
+     */
+    clef: 'Composition de la fiche de personnage',
+    enonce:
+      'Composition de la FICHE DE PERSONNAGE : liste des caractéristiques,\n' +
+      '   compétences et attributs CHIFFRÉS qu\'elle porte, leurs noms exacts et\n' +
+      '   leurs bornes (valeur de départ, minimum, maximum).\n' +
+      '   PAS la procédure de création, PAS la progression, PAS l\'équipement.',
+  },
 ] as const;
 
 /** Les treize clés seules, pour piloter la boucle de génération. */

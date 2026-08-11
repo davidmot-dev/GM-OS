@@ -93,14 +93,19 @@ Si un sujet n'est pas couvert par les sources, écris « non couvert par les
 sources » — n'invente rien, ne comble pas par analogie avec d'autres jeux.
 
 Ajoute ensuite une section « Hors catégories » listant les mécaniques CENTRALES
-de ce jeu qui n'entrent dans aucun des 13 sujets. Uniquement les mécaniques
-centrales.
+de ce jeu qui n'entrent dans aucun des ${CANEVAS.length} sujets. Uniquement les
+mécaniques centrales.
 
 Écris tous les symboles en toutes lettres. Si le livre utilise une icône (par
 exemple pour marquer une réussite), nomme-la au lieu de la reproduire.
 
-N'aborde PAS : création de personnage, progression, équipement et matériel,
-historique et background, bestiaire, scénarios inclus.`;
+N'aborde PAS : la PROCÉDURE de création de personnage, la progression,
+l'équipement et le matériel, l'historique et le background, le bestiaire, les
+scénarios inclus.
+
+Le sujet « Composition de la fiche de personnage » fait exception à la première
+de ces exclusions, et à elle seule : on veut la LISTE de ce qu'une fiche finie
+porte comme valeurs chiffrées, jamais la manière de les choisir.`;
 }
 
 /**

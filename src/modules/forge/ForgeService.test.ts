@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ForgeService, estErreurAuth, type ForgeContextItem } from './ForgeService';
+import { CANEVAS } from './rules/canevas';
 
 
 const mockGenerateJSON = vi.fn();
@@ -202,11 +203,14 @@ describe('ForgeService', () => {
         expect(inventaire).toBe(INVENTAIRE);
       });
 
-      it('rend les treize sujets même quand le carnet en omet', async () => {
+      it('rend tous les sujets du canevas même quand le carnet en omet', async () => {
         callTool.mockResolvedValue({ content: INVENTAIRE });
         const { candidats } = await forgeService.discoverCandidates('nb-1');
 
-        expect(candidats).toHaveLength(13);
+        // Compté depuis le canevas, pas figé : il en a gagné un quatorzième le
+        // 2026-08-11, et un test qui gèle ce nombre échoue à chaque évolution
+        // du périmètre plutôt qu'à chaque régression.
+        expect(candidats).toHaveLength(CANEVAS.length);
         expect(candidats.map(c => c.id)).toContain('poursuites');
       });
     });
