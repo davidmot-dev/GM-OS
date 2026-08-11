@@ -106,6 +106,18 @@ export interface GameDriver {
          * pilote ne pouvait pas les déclarer, et rien ne le disait.
          */
         defaultHealthType?: import('./entity.types').HealthSystemType;
+        /**
+         * Vaincre comme tâche étendue, quand le jeu n'a pas de jauge.
+         *
+         * Chez Dune, le seuil de défaite **vaut la compétence défensive de la
+         * cible**, de quatre à huit : il se lit sur la fiche, pas dans le
+         * pilote. `defaultHealthType: 'clocks'` disait déjà « une horloge », mais
+         * `createDefault` en donnait six segments à tout le monde — un
+         * duelliste médiocre et un maître tombaient au même rythme.
+         *
+         * Facultatif : un système à jauge fixe n'en déclare pas.
+         */
+        tacheDeDefaite?: import('../modules/combat/logic/TacheDeDefaite').TacheDeDefaite;
     };
 
     // UI Customization

@@ -134,11 +134,30 @@ describe('ce que le modèle ne sait PAS exprimer', () => {
      * des choix délibérés.
      */
 
-    it('mur 1 — la santé de Dune n\'a pas de représentation', () => {
-        // Vaincre un personnage est une tâche étendue dont le seuil vaut sa
-        // compétence défensive (4 à 8). Ni `defaultHealthType` ni `statsToTrack`
-        // ne peuvent dire ça ; `Combatant` impose par ailleurs `hp`/`hpMax`.
-        expect(dune.combat.defaultHealthType).toBe('clocks');   // le moins faux des trois
+    it('mur 1 — ABATTU le 2026-08-11 : vaincre est une tâche étendue', () => {
+        /**
+         * Le dernier des quatre. Il est tombé en trois temps : `applyDamage`
+         * branché sur `HealthInterpreter`, `hp`/`hpMax` rendus facultatifs, et
+         * enfin le seuil de défaite lu **sur la fiche** — « égal à la valeur de
+         * la compétence défensive de la cible, de quatre à huit ».
+         *
+         * Voir `src/modules/combat/logic/TacheDeDefaite.ts`.
+         */
+        const tache = dune.combat.tacheDeDefaite;
+        expect(tache, 'une tâche de défaite rendrait ce constat caduc').toBeDefined();
+        expect(tache!.seuil).toEqual({ min: 4, max: 8 });
+        expect(tache!.progressionDeBase, '« deux points de progression »').toBe(2);
+        expect(tache!.qualiteMax, '« qualité de l\'atout, de zéro à quatre »').toBe(4);
+
+        // Le seuil se lit dans une section réelle de la fiche — même chaîne
+        // d'identifiants que le descripteur de jet, et même silence si elle
+        // manque : une section absente donnerait un seuil au minimum.
+        const sections = new Set(fiche.sections.map(s => s.id));
+        expect(sections.has(tache!.sectionDuSeuil), `section « ${tache!.sectionDuSeuil} » absente`).toBe(true);
+        expect(idsDeChamps.has(tache!.champParDefaut!), 'le champ par défaut doit exister').toBe(true);
+
+        // Ce qui restait vrai et le reste : aucune jauge de vie principale.
+        expect(dune.combat.defaultHealthType).toBe('clocks');
         expect(dune.combat.statsToTrack.every(s => !s.isMainHP)).toBe(true);
     });
 

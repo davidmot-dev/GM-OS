@@ -15,6 +15,38 @@ import {
     resolveInitiativeFormula
 } from './logic/CombatRules';
 import { HealthInterpreter } from '../session/logic/HealthInterpreter';
+import { horlogeDeDefaite } from './logic/TacheDeDefaite';
+import type { HealthSystem } from '../../types/entity.types';
+
+/**
+ * L'horloge de défaite d'un nouveau combattant, quand le système en veut une.
+ *
+ * **Pourquoi ici plutôt qu'aux appelants.** Huit écrans ajoutent des
+ * combattants — la grille des personnages, la galerie de PNJ, les favoris, le
+ * panneau de rencontre — et un seul d'entre eux connaît le pilote actif. Poser
+ * la question à cet endroit unique évite d'instruire les sept autres, et surtout
+ * évite qu'on en oublie un : un combattant sans horloge encaisse des coups qui
+ * ne comptent nulle part.
+ *
+ * Le pilote est lu par le global que `useSessionOSStore` installe — un import
+ * direct fermerait un cycle entre les deux stores. C'est le même accès que la
+ * synchronisation vers Session OS emploie déjà, et l'absence du global est
+ * traitée comme un cas normal : sans pilote, pas d'horloge.
+ */
+function santeSelonLeSysteme(sheetData?: Record<string, unknown>): HealthSystem | undefined {
+    if (!sheetData) return undefined;
+    try {
+        const session = (window as unknown as {
+            useSessionOSStore?: { getState: () => { getActiveDriver?: () => { combat?: { tacheDeDefaite?: Parameters<typeof horlogeDeDefaite>[0] } } | undefined } };
+        }).useSessionOSStore?.getState();
+        const tache = session?.getActiveDriver?.()?.combat?.tacheDeDefaite;
+        if (!tache) return undefined;
+        return horlogeDeDefaite(tache, sheetData).sante;
+    } catch {
+        // Un combat ne s'interrompt pas parce qu'un pilote est mal renseigné.
+        return undefined;
+    }
+}
 
 // Re-export pour compatibilité descendante
 export type { Combatant, StatusEffect };
@@ -157,10 +189,13 @@ export const useCombatStore = create<CombatState>()(
 
             addCombatant: (combatant) => {
                 set((state) => ({
-                    combatants: [...state.combatants, { 
-                        ...combatant, 
+                    combatants: [...state.combatants, {
+                        ...combatant,
                         id: generateEffectId(),
-                        faction: combatant.faction || (combatant.isPlayer ? 'player' : 'enemy')
+                        faction: combatant.faction || (combatant.isPlayer ? 'player' : 'enemy'),
+                        // Huit écrans ajoutent des combattants ; un seul connaît
+                        // le pilote. Compléter ici évite d'en instruire huit.
+                        healthSystem: combatant.healthSystem ?? santeSelonLeSysteme(combatant.sheetData),
                     }]
                 }));
                 get().broadcastSync();

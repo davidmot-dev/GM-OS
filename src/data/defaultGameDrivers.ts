@@ -137,6 +137,22 @@ const DUNE: GameDriver = {
             activationsConsecutivesMax: 2,
         },
         defaultHealthType: 'clocks',
+        /**
+         * Ce qui achève le mur n° 1. « L'attrition corporelle est gérée à
+         * travers une tâche étendue de défaite », dont le seuil vaut la
+         * compétence défensive de la cible — donc un champ de sa fiche, et non
+         * un nombre du système. Valeurs de `sante-et-blessures.md`.
+         */
+        tacheDeDefaite: {
+            sectionDuSeuil: 'competences',
+            // Le champ le plus souvent défensif ; le meneur en retient un autre
+            // quand la joute n'est pas physique.
+            champParDefaut: 'combat',
+            seuil: { min: 4, max: 8 },  // « de quatre (rudimentaire) à huit (maîtrise absolue) »
+            progressionDeBase: 2,       // « deux points de progression vers la défaite »
+            qualiteMax: 4,              // « qualité de l'atout, de zéro à quatre »
+            label: 'Défaite',
+        },
     },
 
     /**
