@@ -380,3 +380,73 @@ rien`;
     });
   });
 });
+
+/**
+ * **Le canevas du pilote — ce que la Forge Système a le droit de demander.**
+ *
+ * Le défaut que ces tests attrapent n'est pas une absence, c'est un mensonge :
+ * l'exemple de sortie du prompt codait en dur `"fieldId": "hp"`,
+ * `"isMainHP": true`, `"initiativeFormula": "dex"` et `"defaultHealthType":
+ * "hp"`. C'était le SEUL modèle que l'IA avait sous les yeux, et il enseignait
+ * que tout jeu a des points de vie et une Dextérité.
+ *
+ * Un étalon faux est pire qu'un étalon absent — celui-ci, le modèle le copie.
+ */
+describe('canevas du pilote', () => {
+  const forge = ForgeService.getInstance();
+
+  /** Le prompt réellement envoyé, pour une forge quelconque. */
+  const promptDeForge = async () => {
+    mockGenerateJSON.mockClear();
+    const { useAIStore } = await import('../../stores/useAIStore');
+    (useAIStore.getState as any).mockReturnValue({ activeProvider: 'gemini' });
+    await forge.forgeSystem([{ name: 'Livre', type: 'text', content: 'Des règles.' }]);
+    return mockGenerateJSON.mock.calls[0][0] as string;
+  };
+
+  it('n\'enseigne plus que tout jeu a des points de vie', async () => {
+    const p = await promptDeForge();
+    expect(p, "l'exemple ne doit marquer aucune jauge de vie principale").not.toContain('"isMainHP": true');
+    expect(p).not.toContain('"defaultHealthType": "hp"');
+    expect(p).not.toContain('"initiativeFormula": "dex"');
+  });
+
+  it('dit explicitement que tous les jeux n\'ont pas de PV ni d\'ordre d\'initiative', async () => {
+    const p = await promptDeForge();
+    expect(p).toContain('AUCUNE jauge de points de vie');
+    expect(p).toContain("n'ordonnent PAS leurs combattants");
+    expect(p).toContain('réserves partagées par toute la table');
+  });
+
+  it('demande les quatre champs que les murs ont ajoutés', async () => {
+    const p = await promptDeForge();
+    for (const champ of ['"jet"', '"ressourcesDeTable"', '"initiative"', '"tacheDeDefaite"']) {
+      expect(p, `le pilote ne saurait pas déclarer ${champ}`).toContain(champ);
+    }
+  });
+
+  it('ne demande plus les champs morts', async () => {
+    /**
+     * `aiInstructions` n'atteint aucun modèle — vérifié le 2026-08-10, l'invite
+     * se construit depuis la gemme, le `gems.json` du corpus et les
+     * `aiPersonas` du gabarit. `critRange` n'a aucun lecteur. Une forge qui
+     * remplit des champs morts est invérifiable.
+     */
+    const p = await promptDeForge();
+    expect(p).not.toContain('aiInstructions');
+    expect(p).not.toContain('critRange');
+  });
+
+  it('interdit d\'inventer avant toute autre consigne', async () => {
+    const p = await promptDeForge();
+    expect(p).toContain("N'INVENTE RIEN");
+    expect(p).toContain('OMETS le champ');
+    // Un champ inventé s'applique en séance sans que personne ne l'ait choisi.
+    expect(p).toContain("jamais par analogie");
+  });
+
+  it('exige que la réserve qui paie les dés existe', async () => {
+    const p = await promptDeForge();
+    expect(p).toContain('DOIT exister dans "driver.ressourcesDeTable"');
+  });
+});

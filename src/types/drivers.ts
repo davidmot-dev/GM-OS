@@ -130,7 +130,19 @@ export interface GameDriver {
     defaultNotebookUrl?: string; // Default NotebookLM for this system
     
     // Metadata for AI
-    aiInstructions: string; // Specialized instructions for the Oracle/Sage to understand rules
+    /**
+     * **Champ mort, rendu facultatif le 2026-08-11.**
+     *
+     * Vérifié dans `AIService` : l'invite se construit depuis les instructions
+     * de la gemme, le `gems.json` du corpus et les `aiPersonas` du gabarit.
+     * `driver.aiInstructions` n'y entre jamais. L'exiger obligeait la Forge à le
+     * remplir, et *une forge qui remplit des champs morts est invérifiable* —
+     * on ne peut ni juger la valeur produite, ni constater qu'elle ne sert pas.
+     *
+     * Conservé plutôt que supprimé : des pilotes enregistrés le portent, et le
+     * retirer du type les rendrait invalides sans rien réparer.
+     */
+    aiInstructions?: string;
     aiPersonas?: Record<string, string>; // gemId -> instructions override
     /**
      * De quoi un jet se compose, en termes de champs de la fiche.

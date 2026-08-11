@@ -175,47 +175,101 @@ export class ForgeService {
       ${userInstructions ? `CONSIGNES UTILISATEUR PRIORITAIRES : "${userInstructions}"` : ''}
 
       Tu dois produire un JSON unique contenant deux objets : "driver" et "template".
+
+      RÈGLE PREMIÈRE, AVANT TOUTES LES AUTRES :
+      N'INVENTE RIEN. Si les documents ne disent pas comment fonctionne une
+      mécanique, OMETS le champ correspondant. Un champ absent se corrige ; un
+      champ inventé s'applique en séance sans que personne ne l'ait choisi, et
+      rien ne le signale. Ne comble jamais par analogie avec un autre jeu.
+
+      CE QUE TOUS LES JEUX N'ONT PAS :
+      - Beaucoup de jeux n'ont AUCUNE jauge de points de vie. Dans ce cas,
+        n'invente pas de champ "hp", ne marque aucune stat "isMainHP", et
+        décris la manière dont le jeu résout la mise hors de combat.
+      - Beaucoup de jeux n'ordonnent PAS leurs combattants. Si l'initiative
+        alterne entre camps ou se tire par cartes, ne fabrique pas de formule.
+      - Certains jeux ont des réserves partagées par toute la table (élan,
+        menace, jetons). Elles ne sont PAS des champs de fiche.
+
       RÈGLES DE COHÉRENCE CRITIQUES :
       1. Les IDs des stats dans "driver.combat.statsToTrack" DOIVENT correspondre exactement aux IDs des champs dans "template.sections[].fields[]".
-      2. La formule d'initiative dans "driver.combat.initiativeFormula" doit utiliser des IDs de champs définis dans le template.
-      3. Le "dice.logic" doit être choisi parmi : 'sum', 'highest', 'lowest', 'count-success', 'd100-low', 'd100-high'.
-      4. Génère un "ui_config" cohérent avec l'ambiance :
+      2. Idem pour "ui_config.gauges[].fieldId", pour "jet.seuil[].sectionId" (qui vise une SECTION du template) et pour "combat.tacheDeDefaite.sectionDuSeuil".
+      3. Une formule d'initiative, si tu en produis une, ne doit utiliser que des IDs de champs définis dans le template.
+      4. Le "dice.logic" doit être choisi parmi : 'sum', 'highest', 'lowest', 'count-success', 'd100-low', 'd100-high'.
+      5. Si "jet.reserve.ressource" est renseigné, la réserve nommée DOIT exister dans "driver.ressourcesDeTable".
+      6. Génère un "ui_config" cohérent avec l'ambiance :
          - Style 'bar' pour du médieval-fantastique classique.
          - Style 'neon' pour du Cyberpunk / SF.
          - Style 'segmented' pour du rétro, horreur ou systèmes à "boxes".
          - Choisis des couleurs (hex ou classes Tailwind "bg-...") adaptées (ex: vert néon pour Cyberpunk, or pour Fantasy, rouge sang pour Horreur).
 
-      FORMAT DE SORTIE ATTENDU :
+      EXEMPLE DE SORTIE — c'est un système RÉEL, sans aucun point de vie.
+      Il montre la FORME attendue, pas les valeurs à recopier : ton système aura
+      d'autres champs, d'autres réserves, et peut-être bien des points de vie.
       {
         "driver": {
-          "name": "Nom du Système",
-          "description": "...",
-          "emoji": "🎲",
-          "dice": { "defaultDice": "1d20", "logic": "sum", "engine": "standard" },
+          "name": "Dune : Aventures dans l'Imperium",
+          "description": "Système 2d20. Le seuil d'un test est la somme d'une compétence et d'un principe ; chaque dé sous ce seuil est une réussite.",
+          "emoji": "🏜️",
+          "dice": { "defaultDice": "2d20", "logic": "count-success", "engine": "2d20" },
+          "jet": {
+            "seuil": [
+              { "id": "competence", "label": "Compétence", "sectionId": "competences" },
+              { "id": "principe", "label": "Principe", "sectionId": "principes" }
+            ],
+            "reserve": { "base": 2, "max": 5, "faces": 20, "cout": [1, 2, 3], "ressource": "impulsion" },
+            "sens": "sous-ou-egal",
+            "critique": 1,
+            "complication": 20,
+            "difficulte": { "min": 0, "max": 5, "defaut": 1 }
+          },
+          "ressourcesDeTable": [
+            { "id": "impulsion", "label": "Impulsion", "proprietaire": "joueurs", "depart": 0, "min": 0, "max": 6, "erosionFinDeScene": 1, "reportSurEpuisement": "menace" },
+            { "id": "menace", "label": "Menace", "proprietaire": "meneur", "depart": 0, "min": 0 }
+          ],
           "combat": {
-            "statsToTrack": [ { "fieldId": "hp", "label": "PV", "isMainHP": true, "isResource": false } ],
-            "initiativeFormula": "dex",
-            "defaultHealthType": "hp"
+            "statsToTrack": [ { "fieldId": "determination", "label": "Détermination", "isMainHP": false, "isResource": true } ],
+            "initiativeFormula": "",
+            "initiative": {
+              "mode": "alternance",
+              "coutDeRetention": { "montant": 2, "ressource": "impulsion" },
+              "coutDOuverture": { "montant": 2, "ressource": "impulsion" },
+              "activationsConsecutivesMax": 2
+            },
+            "defaultHealthType": "clocks",
+            "tacheDeDefaite": {
+              "sectionDuSeuil": "competences",
+              "champParDefaut": "combat",
+              "seuil": { "min": 4, "max": 8 },
+              "progressionDeBase": 2,
+              "qualiteMax": 4,
+              "label": "Défaite"
+            }
           },
           "ui_config": {
-            "gauges": [
-              { "fieldId": "hp", "label": "PV", "color": "bg-emerald-500", "style": "bar" }
-            ],
+            "gauges": [ { "fieldId": "determination", "label": "Détermination", "color": "#d97706", "style": "segmented" } ],
             "initiativeStyle": "list",
-            "themeColor": "#10b981"
-          },
-          "aiInstructions": "Directives pour le MJ IA..."
+            "themeColor": "#d97706"
+          }
         },
         "template": {
           "name": "Fiche de Personnage",
           "emoji": "📜",
           "sections": [
             {
-              "id": "stats",
-              "label": "Statistiques",
+              "id": "competences",
+              "label": "Compétences",
               "fields": [
-                { "id": "hp", "label": "Points de Vie", "type": "number", "defaultValue": 10 },
-                { "id": "dex", "label": "Dextérité", "type": "number", "defaultValue": 10 }
+                { "id": "combat", "label": "Combat", "type": "number", "defaultValue": 4, "max": 8 },
+                { "id": "mobilite", "label": "Mobilité", "type": "number", "defaultValue": 4, "max": 8 }
+              ]
+            },
+            {
+              "id": "principes",
+              "label": "Principes",
+              "fields": [
+                { "id": "devoir", "label": "Devoir", "type": "number", "defaultValue": 4, "max": 8 },
+                { "id": "justice", "label": "Justice", "type": "number", "defaultValue": 4, "max": 8 }
               ]
             }
           ]
