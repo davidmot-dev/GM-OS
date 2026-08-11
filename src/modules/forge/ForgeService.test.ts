@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ForgeService, estErreurAuth, type ForgeContextItem } from './ForgeService';
 import { CANEVAS } from './rules/canevas';
+import { GROUPES } from './rules/GroupesDeChamps';
 
 
 const mockGenerateJSON = vi.fn();
@@ -448,5 +449,95 @@ describe('canevas du pilote', () => {
   it('exige que la réserve qui paie les dés existe', async () => {
     const p = await promptDeForge();
     expect(p).toContain('DOIT exister dans "driver.ressourcesDeTable"');
+  });
+});
+
+/**
+ * **La forge dérivée du corpus.** Ce que ces tests verrouillent : un groupe qui
+ * échoue n'emporte pas les autres, et un groupe sans fiche ne part pas du tout.
+ */
+describe('forgeSystemDepuisCorpus', () => {
+  const forge = ForgeService.getInstance();
+
+  const fiches = [
+    { sujet: 'Résolution des jets', contenu: 'Chaque dé sous le seuil est une réussite.' },
+    { sujet: 'Degrés de réussite et critiques', contenu: 'Le 1 naturel vaut double.' },
+    { sujet: 'Initiative et déroulement du tour', contenu: "L'initiative alterne entre camps." },
+  ];
+  const groupeJet = GROUPES.find(g => g.id === 'jet')!;
+  const groupeInit = GROUPES.find(g => g.id === 'initiative')!;
+  const groupePortees = GROUPES.find(g => g.id === 'portees')!;
+
+  it('un appel par groupe, et les fragments se rejoignent', async () => {
+    mockGenerateJSON.mockReset();
+    mockGenerateJSON
+      .mockResolvedValueOnce({ driver: { dice: { defaultDice: '2d20' } } })
+      .mockResolvedValueOnce({ driver: { combat: { initiativeFormula: '' } } });
+
+    const { resultat, echecs } = await forge.forgeSystemDepuisCorpus(fiches, {
+      groupes: [groupeJet, groupeInit],
+    });
+
+    expect(mockGenerateJSON).toHaveBeenCalledTimes(2);
+    expect(resultat.driver).toMatchObject({
+      dice: { defaultDice: '2d20' },
+      combat: { initiativeFormula: '' },
+    });
+    expect(echecs).toEqual([]);
+  });
+
+  it('n\'appelle pas le modèle pour un groupe sans fiche', async () => {
+    /**
+     * L'appel coûterait des minutes pour que le modèle comble un vide — ce qui
+     * est exactement l'inverse du but. Mieux vaut le dire comme une lacune.
+     */
+    mockGenerateJSON.mockReset();
+
+    const { resultat, echecs } = await forge.forgeSystemDepuisCorpus(fiches, {
+      groupes: [groupePortees],
+    });
+
+    expect(mockGenerateJSON).not.toHaveBeenCalled();
+    expect(resultat).toEqual({});
+    expect(echecs).toEqual([{ groupe: 'portees', raison: 'aucune fiche du corpus ne couvre ce sujet' }]);
+  });
+
+  it('un groupe qui echoue n\'emporte pas les autres', async () => {
+    // Une forge dure des minutes : perdre le travail acquis parce qu'un
+    // fragment est bancal serait le pire des comportements.
+    mockGenerateJSON.mockReset();
+    mockGenerateJSON
+      .mockRejectedValueOnce(new Error('JSON illisible'))
+      .mockResolvedValueOnce({ driver: { combat: { initiativeFormula: '' } } });
+
+    const { resultat, echecs } = await forge.forgeSystemDepuisCorpus(fiches, {
+      groupes: [groupeJet, groupeInit],
+    });
+
+    expect(resultat.driver!.combat).toMatchObject({ initiativeFormula: '' });
+    expect(echecs).toEqual([{ groupe: 'jet', raison: 'JSON illisible' }]);
+  });
+
+  it('un objet vide est signalé comme une lacune, pas comme un succès', async () => {
+    mockGenerateJSON.mockReset();
+    mockGenerateJSON.mockResolvedValueOnce({});
+
+    const { echecs } = await forge.forgeSystemDepuisCorpus(fiches, { groupes: [groupeJet] });
+    expect(echecs).toEqual([{ groupe: 'jet', raison: 'le modèle a rendu un objet vide' }]);
+  });
+
+  it('rend compte de l\'avancement, groupe par groupe', async () => {
+    // Une forge de huit groupes dure un quart d'heure : sans compteur, on ne
+    // sait pas si elle avance ou si elle est morte.
+    mockGenerateJSON.mockReset();
+    mockGenerateJSON.mockResolvedValue({ driver: { name: 'X' } });
+    const vus: string[] = [];
+
+    await forge.forgeSystemDepuisCorpus(fiches, {
+      groupes: [groupeJet, groupeInit],
+      onProgres: (g, rang, total) => vus.push(`${rang}/${total} ${g.id}`),
+    });
+
+    expect(vus).toEqual(['1/2 jet', '2/2 initiative']);
   });
 });

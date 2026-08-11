@@ -11,6 +11,34 @@ export interface OllamaChatResponse {
     done: boolean;
 }
 
+/**
+ * Ce qu'on impose à Ollama, plutôt que de le subir.
+ *
+ * **Le défaut que cela corrige.** Aucune requête n'envoyait de bloc `options` :
+ * ni `num_ctx`, ni `num_predict`, ni `temperature`. Le budget d'invite dépendait
+ * donc d'un `OLLAMA_CONTEXT_LENGTH` réglé dans l'application Ollama —
+ * **invisible depuis le dépôt, et différent sur une autre machine.** Mesuré le
+ * 2026-08-12 sur celle de David : contexte annoncé 16 384, tokens réellement
+ * traités 8 195, pour une invite de 55 800. Ce qui dépasse est jeté en silence.
+ *
+ * `num_predict` était tout aussi absent, donc la génération n'avait aucune
+ * borne. À 7,7 tok/s de décodage, un emballement se paie en dizaines de
+ * minutes.
+ */
+export const OPTIONS_PAR_DEFAUT = {
+    /**
+     * Fenêtre demandée. Ne la fixe pas au maximum de l'architecture : le cache
+     * clé-valeur est alloué en conséquence, et il partage la mémoire de l'iGPU
+     * avec le modèle.
+     */
+    num_ctx: 16384,
+    /**
+     * Plafond de génération. Un fragment de pilote fait quelques centaines de
+     * tokens ; deux mille laissent de la marge sans permettre la fuite.
+     */
+    num_predict: 2048,
+} as const;
+
 export class OllamaService {
     private baseUrl = 'http://127.0.0.1:11434';
 
@@ -31,7 +59,12 @@ export class OllamaService {
     /**
      * Envoie une requête de chat au modèle local (Bloquant)
      */
-    async chat(model: string, messages: { role: string; content: string }[], endpoint?: string): Promise<string> {
+    async chat(
+        model: string,
+        messages: { role: string; content: string }[],
+        endpoint?: string,
+        options?: Partial<typeof OPTIONS_PAR_DEFAUT>,
+    ): Promise<string> {
         const url = (endpoint || this.baseUrl).replace(/\/$/, '');
         try {
             const response = await net.fetch(`${url}/api/chat`, {
@@ -39,7 +72,10 @@ export class OllamaService {
                 body: JSON.stringify({
                     model: model,
                     messages: messages,
-                    stream: false, 
+                    stream: false,
+                    // Les limites voyagent avec la requête : elles cessent ainsi
+                    // de dépendre du réglage local d'une machine.
+                    options: { ...OPTIONS_PAR_DEFAUT, ...options },
                 }),
                 headers: { 'Content-Type': 'application/json' }
             });

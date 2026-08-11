@@ -6,6 +6,15 @@ import type { BrainstormCandidate, BrainstormCard } from './rules/types';
 import { gabaritInventaire, gabaritFicheRegle, gabaritFichePratique, promptVoix, promptPersonas } from './rules/gabarits';
 import { lireInventaire } from './rules/inventaire';
 import { convertirFiche } from './rules/conversion';
+import {
+  GROUPES,
+  fichesDuGroupe,
+  promptDuGroupe,
+  fusionnerFragments,
+  type FicheDuCorpus,
+  type FragmentDePilote,
+  type GroupeDeChamps,
+} from './rules/GroupesDeChamps';
 import { slugFiche } from './rules/canevas';
 import { extrairePersonas, controlerPersonas, type Personas } from './rules/personas';
 
@@ -163,6 +172,64 @@ export class ForgeService {
     const result = await aiService.generateJSON<ForgeSystemResult>(fullPrompt, systemPrompt, attachments, { lite: true });
     console.error(`[ForgeService] ${activeProvider} responded!`);
     return result;
+  }
+
+  /**
+   * Forge un pilote **depuis les fiches du corpus**, un groupe de champs à la fois.
+   *
+   * **Ce que cela remplace.** `forgeSystem` consolide jusqu'à 100 000 caractères
+   * de livre et les envoie en un seul appel. Mesuré le 2026-08-12 : le budget
+   * d'invite réel est d'environ 8 000 tokens, soit ~23 000 caractères — **77 %
+   * étaient jetés en silence**, exactement comme le RAG avant sa réparation.
+   *
+   * Ici chaque groupe reçoit les deux ou trois fiches qui le concernent, soit
+   * ~3 800 tokens : la moitié du budget. Et comme le décodage tourne à
+   * 7,7 tok/s, six petites réponses coûtent moins qu'une grosse.
+   *
+   * **Un groupe qui échoue n'emporte pas les autres.** Une forge dure des
+   * minutes ; perdre six groupes parce que le septième a rendu un JSON bancal
+   * serait le pire des comportements. Les échecs sont collectés et rendus avec
+   * le résultat partiel.
+   */
+  public async forgeSystemDepuisCorpus(
+    fiches: FicheDuCorpus[],
+    options: { groupes?: readonly GroupeDeChamps[]; onProgres?: (groupe: GroupeDeChamps, rang: number, total: number) => void } = {},
+  ): Promise<{ resultat: FragmentDePilote; echecs: { groupe: string; raison: string }[] }> {
+    const groupes = options.groupes ?? GROUPES;
+    const aiService = AIService.getInstance();
+    const fragments: FragmentDePilote[] = [];
+    const echecs: { groupe: string; raison: string }[] = [];
+
+    const systemPrompt =
+      "Tu es l'ingénieur en chef de la Forge GM-OS. Tu rends EXCLUSIVEMENT un objet " +
+      'JSON compact et valide, sans texte avant ni après. Si les fiches ne permettent ' +
+      'pas de répondre, rends un objet vide {}.';
+
+    for (const [rang, groupe] of groupes.entries()) {
+      options.onProgres?.(groupe, rang + 1, groupes.length);
+
+      // Un groupe sans fiche ne part pas : l'appel coûterait des minutes pour
+      // que le modèle comble un vide, ce qui est précisément l'inverse du but.
+      if (fichesDuGroupe(groupe, fiches).length === 0) {
+        echecs.push({ groupe: groupe.id, raison: 'aucune fiche du corpus ne couvre ce sujet' });
+        continue;
+      }
+
+      try {
+        const fragment = await aiService.generateJSON<FragmentDePilote>(
+          promptDuGroupe(groupe, fiches),
+          systemPrompt,
+          [],
+          { lite: true },
+        );
+        if (fragment && Object.keys(fragment).length > 0) fragments.push(fragment);
+        else echecs.push({ groupe: groupe.id, raison: 'le modèle a rendu un objet vide' });
+      } catch (erreur) {
+        echecs.push({ groupe: groupe.id, raison: erreur instanceof Error ? erreur.message : String(erreur) });
+      }
+    }
+
+    return { resultat: fusionnerFragments(fragments), echecs };
   }
 
   private getSystemForgePrompt(userInstructions?: string, targetName?: string): string {
