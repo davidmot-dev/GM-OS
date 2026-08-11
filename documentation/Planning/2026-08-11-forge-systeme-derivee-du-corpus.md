@@ -128,9 +128,50 @@ cinquante secondes. C'est lui qui décide si la Forge dérivée est utilisable.
    prefill de 8 195 tokens en prend neuf. Passer par `http` brut avec
    `setTimeout(0)`.
 
-*Non mesuré, et qui compte pour la suite :* le débit de décodage réel, et le
-fait que l'application n'envoie **pas non plus de `num_predict`** — la génération
-est donc non bornée.
+### Axe 0 bis — l'iGPU activé — **fait le 2026-08-12**
+
+`OLLAMA_IGPU_ENABLE=1` posé en variable d'environnement utilisateur, Ollama
+redémarré. Le journal passe de `dropping integrated GPU` à
+`inference compute … type=iGPU total="17.9 GiB"`, puis
+**`offloaded 49/49 layers to GPU`** — le modèle entier, 7 Go de tampon Vulkan.
+
+Mesure **à charge identique** (même sonde salée, 2 000 marqueurs, 8 195 tokens
+traités dans les deux cas) :
+
+| | CPU | iGPU | gain |
+|---|---|---|---|
+| Prefill | 15,2 tok/s | **84,8 tok/s** | **× 5,6** |
+| Décodage | 5,5 tok/s * | **7,7 tok/s** | × 1,4 |
+| Durée totale de la sonde | 550,7 s | **131,5 s** | × 4,2 |
+
+\* baseline CPU du 2026-08-07, non remesurée ce soir.
+
+Le gain de prefill dépasse le × 4,7 que le plan IA prévoyait. **Mais le décodage
+devient le facteur dominant** : à 7,7 tok/s, chaque centaine de tokens de JSON
+coûte treize secondes.
+
+**Ce que coûte désormais un appel par groupe de champs** — ~3 800 tokens d'entrée,
+~800 tokens de JSON en sortie :
+
+- prefill 45 s + décodage 104 s ≈ **2 min 30 par groupe**, soit ~15 minutes pour six ;
+- contre ~6 min 30 par groupe sur CPU, soit ~40 minutes.
+
+Trois conséquences pour l'axe 2, qui n'étaient pas visibles avant la mesure :
+
+1. **Demander un JSON compact**, sans prose ni indentation : chaque token de
+   sortie se paie treize centièmes de seconde.
+2. **Le découpage par groupe vaut pour la sortie autant que pour l'entrée** — six
+   petites réponses coûtent moins qu'une grosse, à contenu égal, parce qu'aucune
+   ne dérape.
+3. **`OllamaService` doit envoyer `num_ctx` explicitement.** Le budget dépend
+   aujourd'hui d'un réglage de l'application Ollama (`OLLAMA_CONTEXT_LENGTH`),
+   invisible depuis le dépôt et différent sur une autre machine.
+
+*Non mesuré, et qui compte encore :* l'application n'envoie **pas de
+`num_predict`** — la génération est non bornée, et à 7,7 tok/s un emballement se
+paie cher. Réserve du plan IA à vérifier en séance : l'Arc pilote aussi
+l'affichage, donc l'offload échange de la contention CPU contre de la contention
+de composition.
 
 #### Le raisonnement d'origine
 
