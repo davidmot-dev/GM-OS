@@ -89,7 +89,50 @@ hérité du parseur corrigé en `86a65ae`.
 
 ## 2. Les axes, dans l'ordre
 
-### Axe 0 — Mesurer avant de toucher
+### Axe 0 — Mesurer avant de toucher — **fait le 2026-08-11**
+
+**Résultats, sur `gemma4:12b`, machine de David.**
+
+| Mesure | Valeur |
+|---|---|
+| `num_ctx` déclaré par le Modelfile | **aucun** (seulement temperature, top_k, top_p) |
+| Contexte alloué, annoncé par `/api/ps` | 16 384 |
+| **Tokens réellement traités, prompt de ~55 800 tokens** | **8 195** |
+| Prefill | **15,2 tok/s** (537 s pour 8 195 tokens) |
+| Modèle en VRAM | **0 Go** sur 9,2 Go — iGPU inutilisé |
+| Tokenisation du français | **2,92 caractères par token**, pas 4 |
+
+**Le budget d'invite réel est donc d'environ 8 000 tokens, soit ~23 000
+caractères** — la moitié de ce que `/api/ps` annonce. Contre `MAX_TEXT_CHARS =
+100 000`, cela fait **77 % de l'invite jetés en silence**. Le défaut du RAG à
+l'identique.
+
+**Et la conclusion qui va plus loin que prévu :** envoyer tout le corpus ne
+marche pas mieux que d'envoyer le livre (Dune : 100 837 caractères, 77 % jetés).
+Seul le découpage par groupe de champs tient — deux fiches ≈ 11 000 caractères
+≈ 3 800 tokens, soit la moitié du budget. **L'axe 2 n'est donc pas seulement
+plus juste, il est la seule façon de tenir dans le contexte.**
+
+Mais 3 800 tokens à 15,2 tok/s font **quatre minutes de prefill par groupe**, et
+six groupes font vingt-cinq minutes. **L'iGPU cesse d'être un confort** : le plan
+IA du 2026-08-07 mesurait × 4,7 sur le prefill, ce qui ramènerait un groupe à
+cinquante secondes. C'est lui qui décide si la Forge dérivée est utilisable.
+
+**Deux pièges de mesure rencontrés, à ne pas refaire.**
+
+1. La première sonde a rendu **7 722 tok/s de prefill** — impossible. Une
+   tentative précédente avait envoyé le *même* prompt : Ollama a répondu depuis
+   son cache de préfixe. **Saler le prompt à chaque exécution**, sinon on mesure
+   le cache.
+2. `fetch` est inutilisable : undici coupe les en-têtes à cinq minutes, et un
+   prefill de 8 195 tokens en prend neuf. Passer par `http` brut avec
+   `setTimeout(0)`.
+
+*Non mesuré, et qui compte pour la suite :* le débit de décodage réel, et le
+fait que l'application n'envoie **pas non plus de `num_predict`** — la génération
+est donc non bornée.
+
+#### Le raisonnement d'origine
 
 `electron/OllamaService.ts` n'envoie **aucun bloc `options`** dans sa requête : ni `num_ctx`, ni
 `num_predict`, ni `temperature`. Le contexte effectif est donc celui du Modelfile, ou le défaut
