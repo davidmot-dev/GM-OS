@@ -66,12 +66,34 @@ function decouperSections(valeur: string): string[] {
     .filter(Boolean);
 }
 
-/** Les cellules d'une ligne de tableau markdown, barres extérieures ôtées. */
+/**
+ * Les cellules d'une ligne de tableau markdown, barres extérieures ôtées.
+ *
+ * **Les barres extérieures sont facultatives, et le carnet s'en sert.** On
+ * exigeait que la ligne commence par `|` ; NotebookLM a rendu les inventaires
+ * d'Alien et de Blade Runner sans elles —
+ * `**1. Résolution des jets** | **oui** | …` — pendant qu'il rendait celui de
+ * Dune en liste numérotée. Les treize sujets du canevas étaient donc ignorés,
+ * et l'atelier affichait « le carnet n'a rien rendu sur ce sujet » pour des
+ * lignes qui portaient un paragraphe de mécanique et un « oui » franc.
+ *
+ * Encore le même défaut de fond : *le carnet rend la même demande sous des
+ * formes différentes, et le parseur n'en connaissait qu'une.* Déjà vu sur les
+ * hors catégories en liste numérotée (`489b4d1`) et sur les titres de section
+ * entre accents graves.
+ *
+ * Sans barres extérieures, on exige **trois cellules** : une phrase de prose
+ * contenant une seule barre ne doit pas devenir une ligne de tableau.
+ */
 function cellulesDeLigne(ligne: string): string[] | null {
   const nu = ligne.trim();
-  if (!nu.startsWith('|')) return null;
-  if (/^\|[\s|:-]+\|?$/.test(nu)) return null; // ligne de séparation
-  return nu.replace(/^\|/, '').replace(/\|$/, '').split('|').map(cellule);
+  if (!nu.includes('|')) return null;
+  if (/^\|?[\s|:-]+\|?$/.test(nu)) return null; // ligne de séparation, bordée ou non
+
+  const bordee = nu.startsWith('|');
+  const cellules = nu.replace(/^\|/, '').replace(/\|$/, '').split('|').map(cellule);
+  if (!bordee && cellules.length < 3) return null;
+  return cellules;
 }
 
 function estEnteteTableau(cellules: string[]): boolean {

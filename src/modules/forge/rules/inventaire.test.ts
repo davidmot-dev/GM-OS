@@ -142,3 +142,62 @@ describe('couverture', () => {
     expect(couverture(lireInventaire(INVENTAIRE))).toEqual({ traites: 3, total: 13 });
   });
 });
+
+/**
+ * **La forme réellement rendue par le carnet pour Alien et Blade Runner**, le
+ * 2026-08-11 : un tableau **sans barres extérieures**, gras compris. C'est du
+ * markdown valide, et le parseur l'ignorait entièrement — les treize sujets du
+ * canevas ressortaient « sans réponse » alors que onze portaient un « oui » et
+ * un paragraphe de mécanique.
+ *
+ * Le texte ci-dessous est copié de `docs/systems/alien/rules/`, pas réécrit :
+ * un exemple qu'on fabrique soi-même ne prouve rien sur ce que le carnet rend.
+ */
+const SANS_BARRES_EXTERIEURES = `Sujet | Traité (oui/partiellement/non) | Mécanique | Sections
+--- | --- | --- | ---
+**1. Résolution des jets** | **oui** | Le joueur lance une réserve de **dés à six faces** égale à son Attribut plus sa Compétence. | **JETER LES DÉS**, **SIGNIFIE « RÉUSSITE »**
+**11. Poursuites** | **non** | non couvert par les sources | non couvert par les sources
+
+## Hors catégories
+
+*   **La Vélocité d'approche en combat spatial** : Système gérant le rapprochement des vaisseaux.`;
+
+describe('lireInventaire — tableau sans barres extérieures', () => {
+  it('lit les lignes que le carnet rend sans barre de début', () => {
+    const jets = lireInventaire(SANS_BARRES_EXTERIEURES).find(e => e.sujet === 'Résolution des jets')!;
+
+    expect(jets.lu, 'la ligne était ignorée, donc le sujet passait pour sans réponse').toBe(true);
+    expect(jets.traite).toBe('oui');
+    expect(jets.mecanique).toContain('dés à six faces');
+    expect(jets.sections).toContain('JETER LES DÉS');
+  });
+
+  it('reconnaît toujours un sujet non couvert', () => {
+    const p = lireInventaire(SANS_BARRES_EXTERIEURES).find(e => e.sujet === 'Poursuites')!;
+    expect(p.lu).toBe(true);
+    expect(p.traite).toBe('non');
+  });
+
+  it('ne prend pas l\'en-tête ni le trait de séparation pour des sujets', () => {
+    const hors = lireInventaire(SANS_BARRES_EXTERIEURES).filter(e => e.horsCanevas);
+    expect(hors.map(e => e.sujet)).toEqual(["La Vélocité d'approche en combat spatial"]);
+  });
+
+  it('une phrase de prose contenant une barre n\'est pas une ligne de tableau', () => {
+    /**
+     * La contrepartie d'accepter les tableaux sans bordure : il faut au moins
+     * trois cellules. Sinon une phrase ordinaire deviendrait un sujet, et
+     * l'atelier proposerait de forger une fiche sur un bout de paragraphe.
+     */
+    const prose = `Sujet | Traité | Mécanique | Sections
+--- | --- | --- | ---
+**1. Résolution des jets** | **oui** | 2d20. | Agir
+
+## Hors catégories
+
+*   **Le Stress** : la jauge monte quand on échoue | et redescend au repos.`;
+
+    const hors = lireInventaire(prose).filter(e => e.horsCanevas);
+    expect(hors.map(e => e.sujet)).toEqual(['Le Stress']);
+  });
+});
