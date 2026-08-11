@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { HubCombatTracker } from './HubCombatTracker';
+import { HealthInterpreter } from '../../modules/session/logic/HealthInterpreter';
 
 /**
  * Le Hub est l'écran partagé de la table : il ne montre pas les points de vie.
@@ -79,15 +80,48 @@ describe('HubCombatTracker — les points de vie ne sortent pas', () => {
         expect(screen.getByLabelText('Combat Tracker')).toBeTruthy();
     });
 
-    it('garde les jauges des systèmes de santé alternatifs', () => {
+    /**
+     * **Les jauges sont construites par le producteur réel, jamais à la main.**
+     *
+     * Ce test affirmait `{ type: 'clock', data: { segments, maxSegments } }` —
+     * une forme que l'application ne produit **nulle part**. Il passait au vert
+     * contre un exemple écrit ici même, pendant que le MJ envoyait
+     * `{ type: 'clocks', data: { filled, segments } }` et que la tablette
+     * n'affichait rien, pour aucun système, depuis toujours.
+     *
+     * Passer par `HealthInterpreter` retire la possibilité de se tromper : si le
+     * producteur change de forme, ces tests tombent, ce qui est exactement leur
+     * office.
+     */
+    const sante = (type: Parameters<typeof HealthInterpreter.createDefault>[0], degats: number) =>
+        HealthInterpreter.calculateNextState(HealthInterpreter.createDefault(type), { value: degats });
+
+    it('affiche l\'horloge que le MJ produit vraiment', () => {
         // Une horloge de progression est souvent publique à la table : elle
         // n'est pas un compte de PV et reste affichée.
-        const texte = texteRendu([
-            combattant({
-                healthSystem: { type: 'clock', data: { segments: 2, maxSegments: 6 } },
-            }),
-        ]);
+        const texte = texteRendu([combattant({ healthSystem: sante('clocks', 2) })]);
+        expect(texte).toContain('Horloge 2/6');
+    });
 
-        expect(texte).toContain('Clock 2/6');
+    it('affiche le palier de blessure, qui est un index et non un libellé', () => {
+        const texte = texteRendu([combattant({ healthSystem: sante('wounds', 2) })]);
+        expect(texte).toContain('Blesse');
+    });
+
+    it('aucun modèle produit par le MJ ne doit rester muet', () => {
+        /**
+         * Le défaut de fond, en une phrase : un `type` que l'écran ne reconnaît
+         * pas ne rend aucune branche, **sans erreur et sans trace**. Ce test
+         * balaie donc les modèles que la tablette prétend afficher et exige
+         * qu'ils produisent quelque chose.
+         *
+         * `hp` et `anatomy` en sont exclus à dessein : le Hub ne montre pas les
+         * points de vie, et l'anatomie n'y a jamais eu de rendu.
+         */
+        for (const type of ['clocks', 'wounds', 'boxes'] as const) {
+            const avant = texteRendu([combattant({ name: 'Témoin' })]);
+            const apres = texteRendu([combattant({ name: 'Témoin', healthSystem: sante(type, 2) })]);
+            expect(apres.length, `le modèle « ${type} » n'affiche rien`).toBeGreaterThan(avant.length);
+        }
     });
 });

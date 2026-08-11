@@ -100,7 +100,12 @@ export interface GameDriver {
          */
         initiative?: import('../modules/combat/logic/OrdreDuTour').DescripteurDInitiative;
         damageTypes?: string[]; // e.g. ["Feu", "Froid", "Physique", "Psychique"]
-        defaultHealthType?: 'hp' | 'clocks' | 'anatomy';
+        /**
+         * Les cinq modèles, pas trois. `HealthInterpreter` gère `wounds` et
+         * `boxes` depuis toujours et `HealthManager` les propose — mais un
+         * pilote ne pouvait pas les déclarer, et rien ne le disait.
+         */
+        defaultHealthType?: import('./entity.types').HealthSystemType;
     };
 
     // UI Customization

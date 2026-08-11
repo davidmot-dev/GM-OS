@@ -1,6 +1,7 @@
 import React from 'react';
 import { ChevronRight, Shield } from 'lucide-react';
 import { type RemoteCombatant } from '../types/remote.types';
+import { woundLabel } from '../../session/logic/HealthInterpreter';
 
 interface RemoteCombatTrackerProps {
     combat: {
@@ -76,26 +77,33 @@ const RemoteCombatTracker: React.FC<RemoteCombatTrackerProps> = ({
 
                             {c.healthSystem && (
                                 <div className="mt-3 pt-3 border-t border-white/5 flex flex-wrap gap-2 items-center">
+                                    {/*
+                                        Les formes lues sont celles que le MJ
+                                        écrit. L'état de gravité vient du champ
+                                        `state`, calculé par `HealthInterpreter`,
+                                        au lieu d'être redevine à partir d'un
+                                        libellé que personne ne garantissait.
+                                    */}
                                     {c.healthSystem.type === 'wounds' && (
                                         <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full border ${
-                                            c.healthSystem.data.currentLevel === 'SAIN' ? 'border-emerald-500/30 text-emerald-400' :
-                                            c.healthSystem.data.currentLevel === 'FATAL' ? 'bg-rose-600 text-white animate-pulse' :
+                                            c.healthSystem.state === 'healthy' ? 'border-emerald-500/30 text-emerald-400' :
+                                            c.healthSystem.state === 'dead' ? 'bg-rose-600 text-white animate-pulse' :
                                             'border-amber-500 text-amber-400'
                                         }`}>
-                                            {c.healthSystem.data.currentLevel}
+                                            {woundLabel(c.healthSystem) || 'Sain'}
                                         </span>
                                     )}
-                                    {c.healthSystem.type === 'clock' && (
+                                    {c.healthSystem.type === 'clocks' && (
                                         <div className="flex items-center gap-1.5 bg-white/5 px-2 py-0.5 rounded-full border border-white/10">
                                             <div className="w-2 h-2 rounded-full bg-blue-500 shadow-glow-blue" />
                                             <span className="text-[10px] font-bold text-blue-400">
-                                                {c.healthSystem.data.segments} / {c.healthSystem.data.maxSegments}
+                                                {Number(c.healthSystem.data.filled ?? 0)} / {Number(c.healthSystem.data.segments ?? 0)}
                                             </span>
                                         </div>
                                     )}
                                     {c.healthSystem.type === 'boxes' && (
                                         <div className="flex gap-1">
-                                            {c.healthSystem.data.boxes.map((b, bi) => (
+                                            {((c.healthSystem.data.boxes as { filled: boolean }[]) ?? []).map((b, bi) => (
                                                 <div 
                                                     key={bi} 
                                                     className={`w-2 h-2 rounded-sm border ${b.filled ? 'bg-orange-500 border-orange-400 shadow-glow-amber/20' : 'border-white/20'}`} 
@@ -106,7 +114,8 @@ const RemoteCombatTracker: React.FC<RemoteCombatTrackerProps> = ({
                                     {c.healthSystem.type === 'anatomy' && (
                                         <div className="flex items-center gap-1 text-[10px] text-rose-400 font-bold uppercase">
                                             <Shield size={10} /> 
-                                            {Object.values(c.healthSystem.data.parts).filter(p => (p as any).status !== 'healthy').length} Blessures
+                                            {Object.values((c.healthSystem.data.parts as Record<string, { status: string }>) ?? {})
+                                                .filter(p => p.status !== 'healthy').length} Blessures
                                         </div>
                                     )}
                                 </div>

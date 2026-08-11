@@ -26,8 +26,19 @@ export interface PersistenceBadge {
     location?: string;
 }
 
+/**
+ * Les cinq façons dont un jeu compte les dégâts.
+ *
+ * **Pourquoi une union et non `string`.** `HealthInterpreter` en connaît cinq et
+ * `HealthManager` les propose toutes, mais `defaultHealthType` n'en déclarait que
+ * trois : un pilote ne pouvait pas dire « blessures » ni « cases », et rien ne
+ * le signalait. Un type ouvert laisse aussi passer les noms voisins — c'est
+ * `'clock'` au singulier, écrit côté tablette, qui n'a jamais rien affiché.
+ */
+export type HealthSystemType = 'hp' | 'clocks' | 'anatomy' | 'wounds' | 'boxes';
+
 export interface HealthSystem {
-    type: string;
+    type: HealthSystemType;
     data: Record<string, unknown>;
     state: 'healthy' | 'scratched' | 'wounded' | 'critical' | 'dead';
     badges: PersistenceBadge[];

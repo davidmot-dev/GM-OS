@@ -12,8 +12,9 @@ import {
     filterConflictingStatuses, 
     generateEffectId, 
     processStatusDurations, 
-    resolveInitiativeFormula 
+    resolveInitiativeFormula
 } from './logic/CombatRules';
+import { HealthInterpreter } from '../session/logic/HealthInterpreter';
 
 // Re-export pour compatibilité descendante
 export type { Combatant, StatusEffect };
@@ -474,17 +475,40 @@ export const useCombatStore = create<CombatState>()(
                 set((state) => {
                     const newCombatants = state.combatants.map(c => {
                         if (!targetIds.includes(c.id)) return c;
-                        
+
                         // Calcul pur des conséquences (Moteur de règles)
-                        const { newHp, statusToAdd } = calculateDamageImpact({ amount, type, target: c });
-                        
+                        const { finalAmount, newHp, statusToAdd } = calculateDamageImpact({ amount, type, target: c });
+
                         let newStatuses = [...c.statuses];
                         if (statusToAdd) {
                             const filtered = filterConflictingStatuses(newStatuses, statusToAdd.name);
                             newStatuses = [...filtered, { ...statusToAdd, id: generateEffectId() }];
                         }
-                        
-                        return { ...c, hp: newHp, statuses: newStatuses };
+
+                        /**
+                         * **Le système de santé suit enfin les dégâts.**
+                         *
+                         * `HealthInterpreter` sait remplir une horloge, cocher une
+                         * case, descendre un palier de blessure — cinq modèles,
+                         * purs et testés. Rien ne l'appelait ici : on n'écrivait
+                         * que `hp`, si bien qu'un combattant à horloges encaissait
+                         * des coups sans que son horloge ne bouge. Le modèle
+                         * existait, il n'était pas branché.
+                         *
+                         * Les résistances ont déjà été appliquées ci-dessus, par
+                         * les listes du combattant. On ne transmet donc pas le
+                         * `type` : `processResistances` les rejouerait depuis les
+                         * étiquettes de la fiche de santé, et un coup de feu
+                         * résisté serait divisé deux fois.
+                         */
+                        const healthSystem = c.healthSystem
+                            ? HealthInterpreter.calculateNextState(c.healthSystem, {
+                                value: Math.abs(finalAmount),
+                                isRecovery: finalAmount < 0,
+                            })
+                            : c.healthSystem;
+
+                        return { ...c, hp: newHp, healthSystem, statuses: newStatuses };
                     });
                     return { combatants: newCombatants };
                 });

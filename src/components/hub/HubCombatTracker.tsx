@@ -1,6 +1,7 @@
 import React from 'react';
 import { ResolvedImage } from '../ResolvedImage';
 import type { Combatant } from '../../modules/combat/useCombatStore';
+import { woundLabel as palierDeBlessure } from '../../modules/session/logic/HealthInterpreter';
 
 interface HubCombatTrackerProps {
     combatants: Combatant[];
@@ -60,17 +61,22 @@ export const HubCombatTracker: React.FC<HubCombatTrackerProps> = ({
                             n'a pas choisi de leur dire. */}
                         {activeCombatant.healthSystem && (
                             <div className="flex flex-wrap gap-2 pt-2 border-t border-rose-500/20">
+                                {/* Les formes lues ici sont celles que
+                                    `HealthInterpreter` écrit, et pas d'autres :
+                                    « blessures » est un index dans une liste de
+                                    paliers, « horloges » un compte de segments
+                                    remplis. */}
                                 {activeCombatant.healthSystem.type === 'wounds' && (
                                     <div className="px-2 py-0.5 rounded-full bg-orange-500/20 border border-orange-500/40">
                                         <span className="text-[10px] font-black text-orange-400 uppercase tracking-tighter">
-                                            {String(activeCombatant.healthSystem.data.currentLevel || '')}
+                                            {palierDeBlessure(activeCombatant.healthSystem)}
                                         </span>
                                     </div>
                                 )}
-                                {activeCombatant.healthSystem.type === 'clock' && (
+                                {activeCombatant.healthSystem.type === 'clocks' && (
                                     <div className="px-2 py-0.5 rounded-full bg-blue-500/20 border border-blue-500/40">
                                         <span className="text-[10px] font-black text-blue-400 uppercase tracking-tighter">
-                                            Clock {Number(activeCombatant.healthSystem.data.segments || 0)}/{Number(activeCombatant.healthSystem.data.maxSegments || 0)}
+                                            Horloge {Number(activeCombatant.healthSystem.data.filled || 0)}/{Number(activeCombatant.healthSystem.data.segments || 0)}
                                         </span>
                                     </div>
                                 )}
@@ -106,12 +112,12 @@ export const HubCombatTracker: React.FC<HubCombatTrackerProps> = ({
                             <div className="flex flex-wrap gap-1 mt-1">
                                 {combatant.healthSystem.type === 'wounds' && (
                                     <span className="text-[8px] font-black text-amber-500/80 uppercase px-1.5 rounded bg-amber-500/10 border border-amber-500/20">
-                                        {String(combatant.healthSystem.data.currentLevel || '')}
+                                        {palierDeBlessure(combatant.healthSystem)}
                                     </span>
                                 )}
-                                {combatant.healthSystem.type === 'clock' && (
+                                {combatant.healthSystem.type === 'clocks' && (
                                     <span className="text-[8px] font-black text-blue-400 uppercase px-1.5 rounded bg-blue-500/10 border border-blue-500/20">
-                                        {Number(combatant.healthSystem.data.segments || 0)}/{Number(combatant.healthSystem.data.maxSegments || 0)}
+                                        {Number(combatant.healthSystem.data.filled || 0)}/{Number(combatant.healthSystem.data.segments || 0)}
                                     </span>
                                 )}
                             </div>

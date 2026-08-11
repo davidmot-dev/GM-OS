@@ -1,6 +1,24 @@
 import type { HealthSystem, DamageImpact } from '../useSessionOSStore';
 
 /**
+ * Le palier de blessure courant, tel qu'on l'affiche.
+ *
+ * **Pourquoi cette fonction existe.** Les écrans de la tablette lisaient un
+ * `data.currentLevel` que rien n'écrit : le modèle « blessures » est une liste
+ * de paliers et un index, pas un libellé. Chacun rendait donc une chaîne vide,
+ * sans erreur. Lire le modèle à un seul endroit est ce qui empêche la prochaine
+ * divergence.
+ *
+ * `currentIndex` vaut -1 quand le personnage est indemne — d'où la chaîne vide,
+ * qui est la bonne réponse et non un échec.
+ */
+export function woundLabel(health: HealthSystem): string {
+    const levels = (health.data.levels as string[]) ?? [];
+    const index = (health.data.currentIndex as number) ?? -1;
+    return levels[index] ?? '';
+}
+
+/**
  * HealthInterpreter
  * HealthInterpreter
  * Pure logic for calculating health state transitions.

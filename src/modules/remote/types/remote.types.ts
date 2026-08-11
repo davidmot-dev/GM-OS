@@ -1,14 +1,24 @@
 import { type DrawingPath, type Point, type WhiteboardTool } from '../../whiteboard/useWhiteboardStore';
 export type { DrawingPath, Point, WhiteboardTool };
 
-export type HealthLevel = 'SAIN' | 'BLESSÉ' | 'MORTEL' | 'FATAL';
+import type { HealthSystem } from '../../../types/entity.types';
+export type { HealthSystem };
 
-export type HealthSystemData = 
-    { type: 'wounds', data: { currentLevel: HealthLevel } } |
-    { type: 'clock', data: { segments: number, maxSegments: number } } |
-    { type: 'boxes', data: { boxes: { filled: boolean }[] } } |
-    { type: 'anatomy', data: { parts: Record<string, { status: string }> } };
-
+/**
+ * **Un seul type de santé, celui que le MJ produit.**
+ *
+ * Il y en avait deux. Celui-ci déclarait `'clock'` au singulier avec
+ * `{ segments, maxSegments }`, quand `HealthInterpreter` produit `'clocks'` avec
+ * `{ filled, segments }` ; et `'wounds'` portait un `currentLevel` textuel là où
+ * le MJ écrit `{ levels, currentIndex }`. Deux des trois modèles affichés sur la
+ * tablette ne pouvaient donc rien montrer — **sans erreur, sans trace**, parce
+ * qu'un `type` qui ne correspond à rien ne rend simplement aucune branche.
+ *
+ * Le remède est structurel et vaut au-delà d'ici : *une asymétrie entre celui
+ * qui écrit et celui qui lit est indétectable par construction tant qu'ils ne
+ * partagent pas le type.* C'est déjà la règle de `corpusSysteme.ts` pour les
+ * corpus ; c'en est l'application au transport.
+ */
 export interface RemoteCombatant {
     id: string;
     name: string;
@@ -16,7 +26,7 @@ export interface RemoteCombatant {
     hpMax: number;
     init: number;
     isPlayer: boolean;
-    healthSystem?: HealthSystemData;
+    healthSystem?: HealthSystem;
 }
 
 export interface RemoteSound {
