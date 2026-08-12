@@ -1,5 +1,5 @@
 import type { GameDriver, DiceRollLogic } from '../../../types/drivers';
-import type { SheetTemplate } from '../../../data/defaultSheetTemplates';
+import type { SheetTemplate, SheetFieldType } from '../../../data/defaultSheetTemplates';
 
 /**
  * Le pilote se vérifie — axe 4 du plan du 2026-08-11.
@@ -35,6 +35,11 @@ export interface ConstatDuPilote {
 
 const LOGIQUES_CONNUES: readonly DiceRollLogic[] = [
     'sum', 'highest', 'lowest', 'count-success', 'd100-low', 'd100-high',
+];
+
+/** Les types que `SheetField` accepte — `src/data/defaultSheetTemplates.ts`. */
+const TYPES_DE_CHAMP: readonly SheetFieldType[] = [
+    'number', 'text', 'checkbox', 'gauge', 'select', 'textarea', 'rating', 'formula',
 ];
 
 /**
@@ -81,6 +86,20 @@ export function controlerLePilote(
     for (const section of sections) {
         if ((section.fields ?? []).length === 0) {
             avertir(`template.sections[${section.id}]`, 'Section sans aucun champ.');
+        }
+        for (const champ of section.fields ?? []) {
+            /*
+              Relevé le 2026-08-12 : le modèle a rendu `type: "string"`, qui
+              n'existe pas. Le rendu d'un type inconnu retombe sur le cas par
+              défaut du composant de fiche — un champ qui ne se saisit pas,
+              ou qui se saisit mal, sans que rien ne l'annonce.
+            */
+            if (!TYPES_DE_CHAMP.includes(champ.type)) {
+                erreur(
+                    `template.sections[${section.id}].fields[${champ.id}].type`,
+                    `« ${champ.type} » n'est pas un type de champ connu (${TYPES_DE_CHAMP.join(', ')}).`,
+                );
+            }
         }
     }
 

@@ -153,6 +153,17 @@ describe('ce qui manque est signalé sans être refusé', () => {
     });
 });
 
+describe('un type de champ que la fiche ne sait pas rendre', () => {
+    it('« string » n\'existe pas, et le composant de fiche retomberait sur son cas par défaut', () => {
+        // Relevé en réel le 2026-08-12 sur le gabarit dérivé de Dune.
+        const constats = controlerLePilote({}, {
+            sections: [{ id: 'identite', label: 'Identité', fields: [{ id: 'role', label: 'Rôle', type: 'string' }] }],
+        } as unknown as Partial<SheetTemplate>);
+        expect(constats).toHaveLength(1);
+        expect(constats[0].ou).toBe('template.sections[identite].fields[role].type');
+    });
+});
+
 describe('champsInvoques', () => {
     it('retire la notation de dés et dédoublonne', () => {
         expect(champsInvoques('2d6 + dex + dex + int')).toEqual(['dex', 'int']);

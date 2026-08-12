@@ -11,6 +11,7 @@ import {
   fichesDuGroupe,
   promptDuGroupe,
   fusionnerFragments,
+  vocabulaireAcquis,
   type FicheDuCorpus,
   type FragmentDePilote,
   type GroupeDeChamps,
@@ -239,8 +240,18 @@ export class ForgeService {
       }
 
       try {
+        /*
+          **Le vocabulaire acquis voyage avec l'invite.** Cinq groupes désignent
+          des sections, des champs ou des réserves que seuls `fiche` et
+          `ressources` inventent ; forgés dans l'ignorance les uns des autres,
+          ils ne pouvaient que fabriquer un identifiant plausible. Sur la
+          première dérivation de Dune, *aucune* référence croisée n'a abouti.
+
+          On le recalcule à chaque tour plutôt qu'une fois : un groupe peut
+          échouer, et le vocabulaire doit refléter ce qui existe vraiment.
+        */
         const fragment = await aiService.generateJSON<FragmentDePilote>(
-          promptDuGroupe(groupe, fiches),
+          promptDuGroupe(groupe, fiches, vocabulaireAcquis(fusionnerFragments(fragments))),
           systemPrompt,
           [],
           { lite: true },
