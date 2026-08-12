@@ -1014,8 +1014,35 @@ ${fullContext}`;
         const sanitized = this.sanitizeJSON(jsonStr);
         return JSON.parse(sanitized) as T;
       } catch (secondError) {
-        console.error("[AIService] Erreur de parsing du JSON extrait:", jsonStr.substring(0, 500));
-        throw parseError; // Throw the original error for better context
+        /*
+          **Troisième tentative : les guillemets échappés qui font structure.**
+
+          Relevé le 2026-08-12 sur la fiche de personnage d'Alien. Le modèle
+          part bien, puis bascule en cours de route :
+
+              {"id":"stress","label":"Niveau de Stress"},{"id\":\"recit\",...
+
+          Et c'est le piège : `"id\":\"recit\"` est du JSON **grammaticalement
+          valide** — une seule chaîne au contenu bizarre. La grammaire de
+          `format: 'json'` ne peut donc pas l'arrêter, et le modèle a rempli
+          2 048 tokens d'une chaîne unique avant d'être coupé.
+
+          La réparation est une **hypothèse validée par le parseur** : on
+          dé-échappe, et on ne retient le résultat que s'il se parse. Si non,
+          l'erreur d'origine repart intacte. Une réparation qui ne peut pas se
+          tromper vaut mieux qu'un groupe perdu au bout de deux minutes.
+        */
+        try {
+          const desechappe = this.sanitizeJSON(jsonStr.replace(/\\"/g, '"'));
+          const repare = JSON.parse(desechappe) as T;
+          console.warn(
+            "[AIService] JSON réparé : le modèle échappait ses guillemets en pleine structure.",
+          );
+          return repare;
+        } catch {
+          console.error("[AIService] Erreur de parsing du JSON extrait:", jsonStr.substring(0, 500));
+          throw parseError; // Throw the original error for better context
+        }
       }
     }
   }
