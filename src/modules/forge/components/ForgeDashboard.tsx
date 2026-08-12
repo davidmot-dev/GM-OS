@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Hammer, FileUp, Globe, X, Rocket, Zap, Sparkles, ChevronRight, Shield, Layers, AlertTriangle, Terminal } from 'lucide-react';
 import { forgeService } from '../ForgeService';
 import ForgeProgress from '../rules/components/ForgeProgress';
+import RevueDuPilote from './RevueDuPilote';
 import { lireFichesDuCorpus } from '../rules/lectureDuCorpus';
 import { GROUPES } from '../rules/GroupesDeChamps';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
@@ -944,39 +945,28 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                 <h3 className="text-3xl font-black uppercase tracking-tighter font-display">{t('modules:session.forge_module.atelier.adn_built')}</h3>
                 <div className="h-1 w-20 bg-accent rounded-full" />
 
-                <div className="grid grid-cols-2 gap-8">
-                  <div className="bg-app-text/5 p-6 rounded-2xl border border-app-border/10 space-y-4">
-                    <p className="text-[10px] uppercase font-bold text-accent tracking-widest">{t('modules:session.forge_module.atelier.configuration')}</p>
-                    <p className="text-xl font-bold font-display">
-                      {forgeStore.analysisResult.driver.name || forgeStore.targetSystemName || '—'}
-                    </p>
-                    <p className="text-xs opacity-60">{forgeStore.analysisResult.driver.dice?.defaultDice} engine</p>
-                    {/* Un pilote sans nom n'est pas enregistrable : on dit
-                        laquelle des deux sources manque, plutôt que de laisser
-                        un bouton ne rien faire. */}
-                    {!forgeStore.analysisResult.driver.name && (
-                      <p className="text-[10px] text-amber-300/70 leading-relaxed">
-                        {t('modules:session.forge_module.corpus_forge.unnamed')}
-                      </p>
-                    )}
-                  </div>
-                  <div className="bg-emerald-500/5 p-6 rounded-2xl border border-emerald-500/10 space-y-4">
-                    <p className="text-[10px] uppercase font-bold text-emerald-400 tracking-widest">{t('modules:session.forge_module.atelier.mechanics')}</p>
-                    <ul className="space-y-2">
-                      {forgeStore.analysisResult.driver.combat?.statsToTrack?.map((s, i) => (
-                        <li key={i} className="text-xs font-bold flex items-center gap-2"><Zap size={12} /> {s.label}</li>
-                      ))}
-                    </ul>
-                    {/* Les sections de la fiche ne s'inventent pas : leur
-                        absence se dit, parce que c'est elle qui fera afficher
-                        une jauge à zéro en pleine séance. */}
-                    {!forgeStore.analysisResult.template.sections?.length && (
-                      <p className="text-[10px] text-amber-300/70 leading-relaxed">
-                        {t('modules:session.forge_module.corpus_forge.no_sections')}
-                      </p>
-                    )}
-                  </div>
-                </div>
+                {/*
+                  La revue complète, et pas un résumé.
+
+                  Ce panneau montrait quatre valeurs — un nom, un moteur de dés,
+                  deux libellés — pour un pilote qui en compte une quarantaine,
+                  avec un bouton ENREGISTRER juste en dessous. Les identifiants
+                  qui cassent en silence n'y figuraient pas. *La fiche se montre
+                  avant d'être écrite* vaut ici comme à l'Atelier.
+                */}
+                <RevueDuPilote
+                  driver={forgeStore.analysisResult.driver}
+                  template={forgeStore.analysisResult.template}
+                />
+
+                {/* Un pilote sans nom n'est pas enregistrable : on dit laquelle
+                    des deux sources manque, plutôt que de laisser un bouton ne
+                    rien faire. */}
+                {!forgeStore.analysisResult.driver.name && (
+                  <p className="text-xs text-amber-300/70 leading-relaxed">
+                    {t('modules:session.forge_module.corpus_forge.unnamed')}
+                  </p>
+                )}
 
                 <div className="p-8 bg-accent rounded-2xl flex items-center justify-between">
                   <div>
