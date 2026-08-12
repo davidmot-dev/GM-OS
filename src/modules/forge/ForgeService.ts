@@ -10,11 +10,14 @@ import {
   GROUPES,
   fichesDuGroupe,
   promptDuGroupe,
+  promptDesSections,
+  promptDesChamps,
   fusionnerFragments,
   vocabulaireAcquis,
   type FicheDuCorpus,
   type FragmentDePilote,
   type GroupeDeChamps,
+  type SectionAnnoncee,
 } from './rules/GroupesDeChamps';
 import { slugFiche } from './rules/canevas';
 import { extrairePersonas, controlerPersonas, type Personas } from './rules/personas';
@@ -243,6 +246,21 @@ export class ForgeService {
 
       try {
         /*
+          **La fiche de personnage se forge en deux temps.** C'est la plus
+          grosse sortie de la dérivation, et au-delà de quelques centaines de
+          tokens le modèle déraille — il échappe ses guillemets, ce qui reste du
+          JSON valide et passe donc sous la grammaire. Les deux passes
+          partagent leur en-tête au caractère près : le cache de préfixe
+          d'Ollama fait que seule la première paie le prefill des fiches.
+        */
+        if (groupe.id === 'fiche') {
+          const fragment = await this.forgerLaFiche(fiches, options.corpus);
+          if (fragment.template?.sections?.length) fragments.push(fragment);
+          else echecs.push({ groupe: groupe.id, raison: 'aucune section n\'a pu être établie' });
+          continue;
+        }
+
+        /*
           **Le vocabulaire acquis voyage avec l'invite.** Cinq groupes désignent
           des sections, des champs ou des réserves que seuls `fiche` et
           `ressources` inventent ; forgés dans l'ignorance les uns des autres,
@@ -269,6 +287,59 @@ export class ForgeService {
     }
 
     return { resultat: fusionnerFragments(fragments), echecs, interrompue };
+  }
+
+  /**
+   * La fiche de personnage, une section à la fois.
+   *
+   * **Une section qui échoue n'emporte pas les autres**, exactement comme un
+   * groupe qui échoue n'emporte pas la dérivation : une fiche à trois sections
+   * sur quatre se corrige, une fiche perdue se repaie en minutes.
+   */
+  private async forgerLaFiche(
+    fiches: FicheDuCorpus[],
+    corpus?: string,
+  ): Promise<FragmentDePilote> {
+    const aiService = AIService.getInstance();
+    const systemPrompt =
+      "Tu es l'ingénieur en chef de la Forge GM-OS. Tu rends EXCLUSIVEMENT un objet " +
+      'JSON compact et valide, sans texte avant ni après.';
+
+    const annonce = await aiService.generateJSON<FragmentDePilote>(
+      promptDesSections(fiches, { corpus }),
+      systemPrompt,
+      [],
+      { lite: true },
+    );
+
+    const sections = (annonce.template?.sections ?? []) as SectionAnnoncee[];
+    if (sections.length === 0) return {};
+
+    const remplies: SheetTemplate['sections'] = [];
+    for (const section of sections) {
+      if (!section?.id || !section?.label) continue;
+      try {
+        const champs = await aiService.generateJSON<{ fields?: SheetTemplate['sections'][number]['fields'] }>(
+          promptDesChamps(fiches, section, { corpus }),
+          systemPrompt,
+          [],
+          { lite: true },
+        );
+        remplies.push({ id: section.id, label: section.label, fields: champs.fields ?? [] });
+      } catch (erreur) {
+        // La section reste, vide : le contrôle la signalera comme telle, ce qui
+        // est plus utile que de la faire disparaître sans un mot.
+        console.error(`[ForgeService] Section « ${section.label} » sans champs :`, erreur);
+        remplies.push({ id: section.id, label: section.label, fields: [] });
+      }
+    }
+
+    return {
+      template: {
+        ...annonce.template,
+        sections: remplies,
+      },
+    };
   }
 
   private getSystemForgePrompt(userInstructions?: string, targetName?: string): string {
