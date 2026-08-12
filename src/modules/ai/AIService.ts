@@ -112,6 +112,25 @@ export class AIService {
           const model = config.modelId || 'phi3';
           const endpoint = config.endpoint;
           if (!window.appBridge?.ai?.ollamaChat) throw new Error("Bridge Ollama non disponible.");
+
+          /*
+            **Où se perd la contrainte JSON — vu depuis le seul endroit qu'on
+            sache lire.**
+
+            Le 2026-08-12, une réponse contenait du texte APRÈS son JSON, ce qui
+            prouve que `format: 'json'` n'avait pas été appliqué. Trois processus
+            relaient l'option, et le journal du processus principal n'arrive pas
+            jusqu'aux DevTools : la question restait sans réponse.
+
+            Deux renseignements dans une ligne, tous deux lisibles ici :
+            ce que le renderer DEMANDE, et le nombre de paramètres que le pont
+            accepte. Un pont resté à trois paramètres est un préchargement
+            périmé — et il jetterait l'option sans un mot.
+          */
+          console.log(
+            `[AIService] ollamaChat json=${attendJson} — le pont accepte ` +
+            `${window.appBridge.ai.ollamaChat.length} paramètres (4 attendus).`,
+          );
           
           // Note: The current ollamaChat bridge might not support API Keys yet.
           // If needed, we'll have to upgrade the bridge or use proxyRequest for OpenAI-compatible Ollama Cloud providers.
