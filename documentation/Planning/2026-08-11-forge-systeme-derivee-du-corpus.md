@@ -17,11 +17,10 @@ Branche `feature/tablet-hub-pwa`. **962 tests verts**, `tsc -b` propre, build v�
 
 **Le geste suivant, et pourquoi celui-là.**
 
-1. **Forger la fiche du quatorzième sujet, sur Dune d'abord.** Vérifié sur les trois corpus le
-   2026-08-12 : *aucun* ne possède de fiche « Composition de la fiche de personnage ». Le groupe
-   `fiche` ne reçoit donc que « Jauges et ressources individuelles », et le `template` dérivé
-   n'aurait que des jauges — ni compétences, ni caractéristiques. **C'est la seule lacune qui rende
-   le résultat inexploitable**, les sept autres groupes étant tous nourris.
+1. ~~Forger la fiche du quatorzième sujet.~~ **Fait par David le 2026-08-12 au soir, pendant la
+   séance** : les trois corpus ont leur « Composition de la fiche de personnage », plus un
+   « Poursuites » pour Dune (`couverture: absente` — le livre de base ne les traite pas, et c'est
+   une réponse, pas un échec). **Les huit groupes sont donc nourris sur les trois corpus.**
 2. **Dériver Dune, et ne pas l'enregistrer.** Dune est le seul corpus qui ait un pilote de
    référence *vérifié à la main* : c'est donc le seul dont la dérivation puisse être **comparée**
    au lieu d'être crue. L'enregistrement crée un pilote neuf (`custom-<horodatage>`), il n'écrase
@@ -52,11 +51,15 @@ Mesuré le 2026-08-12 sur les fiches du dépôt, par `corpusDerivable.test.ts` :
 | ressources | 1 | 1 | 1 | ~1 800 tokens |
 | jauges | 1 | 1 | 1 | ~2 150 tokens |
 | portees | 1 | 1 | 1 | ~1 650 tokens |
-| fiche | **0 propre** | **0 propre** | **0 propre** | *retombe sur la fiche des jauges* |
+| fiche | 2 | 2 | 2 | **~3 950 tokens** |
+
+*Remesuré après les fiches du soir : la ligne `fiche` valait « 0 propre » quelques heures plus tôt
+et retombait sur la fiche des jauges.*
 
 **Le pari de l'axe 2 tient sur charge réelle** : le groupe le plus lourd fait moins de la moitié du
-budget de 8 000 tokens. Un test le verrouille pour tous les corpus du dépôt, parce qu'une fiche
-reforgée plus longue ramènerait la troncature silencieuse sans que rien ne le dise.
+budget de 8 000 tokens — et ce budget est lui-même la moitié du plafond réel de 16 384. Un test le
+verrouille pour tous les corpus du dépôt, parce qu'une fiche reforgée plus longue ramènerait la
+troncature silencieuse sans que rien ne le dise.
 
 **Et neuf à quatorze fiches par corpus n'entrent dans aucun groupe** — celles hors canevas (les
 Mentats, les Arènes de Conflit, le Test de Voight), plus « Jets opposés », « États et conditions »,
@@ -66,10 +69,11 @@ jeu, et l'Oracle continue de les lire par le RAG.
 
 **Ce qui attend derrière, et qui n'est pas dans ce plan.**
 
-- **Les trois inventaires sont périmés** depuis l'ajout du quatorzième sujet : Dune, Alien et Blade
-  Runner ne connaissent que treize sujets. Relance à 72 s chacun, et cela corrigera au passage les
-  en-têtes `sujets_traites: 0 sur 13` faux d'Alien et de Blade Runner. **C'est le préalable du
-  point 1 ci-dessus** : sans inventaire à jour, le sujet 14 n'apparaît pas dans la liste à forger.
+- **Les trois inventaires restent périmés**, même si les fiches du sujet 14 existent maintenant :
+  `inventaire-des-mecaniques.md` ne connaît toujours que treize sujets pour les trois jeux, et les
+  en-têtes `sujets_traites: 0 sur 13` d'Alien et de Blade Runner sont toujours faux. Ce n'est plus
+  un préalable à la dérivation — les fiches sont là — mais la liste des sujets de l'Atelier
+  continuera d'afficher une couverture fausse tant qu'ils n'auront pas été relancés (72 s chacun).
 - **Alien n'a toujours aucun pilote.** Corpus propre, rien à écraser. Recommandation revue : le
   forger après avoir *comparé* la dérivation de Dune à sa référence — un corpus sans étalon ne dit
   pas si la chaîne fonctionne, il dit seulement qu'elle a produit quelque chose.
@@ -179,6 +183,35 @@ hérité du parseur corrigé en `86a65ae`.
 caractères** — la moitié de ce que `/api/ps` annonce. Contre `MAX_TEXT_CHARS =
 100 000`, cela fait **77 % de l'invite jetés en silence**. Le défaut du RAG à
 l'identique.
+
+> **Correction du 2026-08-12 au soir — le mécanisme, et il change le diagnostic.**
+> Les 8 195 tokens ne sont pas « la moitié du contexte utilisable » : c'est un
+> **plafond fixe**, celui de la troncature de llama.cpp. Le serveur garde `n_keep`
+> tokens de tête puis la dernière moitié du contexte, soit
+> `4 + (16384 − 4) / 2 = 8 194` — à un token près, le BOS. Vérifié trois fois, sur
+> des invites de 33 500 et 55 800 tokens : **le même 8 195 dans les deux cas**, donc
+> une perte fixe et non proportionnelle.
+>
+> Trois conséquences, dans l'ordre d'importance.
+>
+> 1. **Le contexte utile est bien de 16 384 tokens tant qu'on reste dessous.** Le
+>    budget n'est pas coupé en deux ; il s'effondre en deux **dès qu'on dépasse**.
+>    Rien à changer à l'axe 2 — le groupe le plus lourd fait 3 900 tokens — mais la
+>    marge est double de ce qu'on croyait.
+> 2. **C'est la FIN de l'invite qui survit.** Sonde à deux marqueurs, un à chaque
+>    bout : le modèle a nommé celui de la fin, jamais celui du début. L'ancienne
+>    forge ne voyait donc pas « 23 % du livre » au hasard — elle voyait **les
+>    8 000 derniers tokens**, et rien d'autre.
+> 3. **`forgeSystem` ne devait ses instructions qu'à l'ordre de son gabarit.** Il
+>    écrit `${texte}\n\nINSTRUCTIONS FINALES : ${prompt}` : les consignes sont en
+>    queue, donc elles ont survécu. Placées en tête — ce que fait la moitié des
+>    gabarits — elles auraient été **intégralement jetées, sans un mot**, et la
+>    forge aurait tourné sans consigne pendant des mois.
+>
+> `OLLAMA_CONTEXT_LENGTH:16384`, `OLLAMA_NUM_PARALLEL:1`, `n_ctx_slot = 16384`
+> relevés dans `%LOCALAPPDATA%\Ollama\server.log`, qui porte aussi un champ
+> `truncated = N` par requête — **la source à consulter en premier** la prochaine
+> fois qu'une invite semble ignorée.
 
 **Et la conclusion qui va plus loin que prévu :** envoyer tout le corpus ne
 marche pas mieux que d'envoyer le livre (Dune : 100 837 caractères, 77 % jetés).

@@ -6,12 +6,15 @@ import { sujetDeLaFiche, corpsDeLaFiche } from './lectureDuCorpus';
  * Ce que ces tests protègent : **la Forge dérivée tient dans le contexte du
  * modèle, sur les fiches réelles du dépôt**.
  *
- * Mesuré le 2026-08-12 sur `gemma4:12b` : le contexte annoncé par Ollama est de
- * 16 384 tokens, mais le nombre de tokens **réellement traités** plafonne à
- * 8 195. Au-delà, l'invite est tronquée en silence — pas d'erreur, pas
- * d'avertissement, juste un modèle qui répond sur ce qu'il n'a pas lu. C'est le
- * défaut qui vidait déjà le RAG, et c'est celui qui condamnait `forgeSystem` et
- * ses 100 000 caractères de livre.
+ * Mesuré le 2026-08-12 sur `gemma4:12b`, contexte de 16 384 tokens. **Dépasser
+ * ce plafond ne coûte pas le dépassement : il coûte la moitié de tout.**
+ * llama.cpp garde `n_keep` tokens de tête puis la dernière moitié du contexte,
+ * soit `4 + (16384 - 4) / 2 = 8 194`. Vérifié sur des invites de 33 500 et de
+ * 55 800 tokens : **8 195 tokens traités dans les deux cas**, et c'est la FIN de
+ * l'invite qui survit — sonde à deux marqueurs, seul celui de la queue est
+ * revenu. Pas d'erreur, pas d'avertissement, juste un modèle qui répond sur ce
+ * qu'il n'a pas lu. C'est le défaut qui vidait déjà le RAG, et c'est celui qui
+ * condamnait `forgeSystem` et ses 100 000 caractères de livre.
  *
  * Le découpage par groupe de champs n'est donc pas une élégance : c'est la
  * seule façon de tenir. On le vérifie **sur les fiches du disque**, pas sur un
@@ -30,11 +33,17 @@ const BRUTS = import.meta.glob('../../../../docs/systems/*/rules/*.md', {
 }) as Record<string, string>;
 
 /**
- * Le budget d'invite, en caractères.
+ * Le budget d'invite qu'on s'accorde, en caractères.
  *
  * 8 000 tokens à **2,92 caractères par token** — la tokenisation mesurée du
  * français, pas les 4 caractères usuels de l'anglais. Un dixième est gardé en
  * réserve : la réponse partage le contexte avec l'invite.
+ *
+ * **C'est la moitié du plafond réel de 16 384, et c'est délibéré.** Le
+ * dépassement ne se dégrade pas, il tombe d'un coup à 8 194 tokens ; on ne
+ * s'approche donc pas du bord, on reste à un facteur deux de lui. Ce budget-ci
+ * est aussi celui qui vaudrait si `OLLAMA_NUM_PARALLEL` passait à 2 — le
+ * contexte se diviserait alors entre les deux emplacements.
  */
 const BUDGET_CARACTERES = 8000 * 2.92 * 0.9;
 
