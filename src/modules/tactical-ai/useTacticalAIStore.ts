@@ -106,7 +106,16 @@ export const useTacticalAIStore = create<TacticalAIState>()(
                'oracle'
              );
 
-             return aiService.generateJSON<any[]>(advicePrompt, fullSystemPrompt);
+             /*
+               `sansPersona` : le contexte est DÉJÀ dans `fullSystemPrompt`,
+               que ce bloc vient de préparer lui-même. Sans cela `generateJSON`
+               rappelait `prepareSystemPrompt` et reconcaténait persona, RAG et
+               contexte de séance **une seconde fois** — défaut relevé au plan
+               IA du 2026-08-07 et jamais traité depuis. Le Cortex vise 30 à 60
+               secondes, parce que son conseil se périme ; il payait le double
+               de prefill pour un contexte qu'il envoyait en double.
+             */
+             return aiService.generateJSON<any[]>(advicePrompt, fullSystemPrompt, undefined, { sansPersona: true });
           })();
 
           // Exécution parallèle pour réduire considérablement le temps de réponse
