@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { corpsDeChat, OPTIONS_PAR_DEFAUT } from './OllamaService';
+import { corpsDeChat, OPTIONS_PAR_DEFAUT, OPTIONS_JSON } from './OllamaService';
 
 /**
  * Ce que ces tests protègent : **la requête dit ce qu'elle attend**.
@@ -45,6 +45,27 @@ describe('le corps de la requête Ollama', () => {
     expect(corpsDeChat('gemma4:12b', messages)).not.toHaveProperty('format');
   });
 
+  it('décode gloutonnement quand il extrait, et pas quand il rédige', () => {
+    /**
+     * La contradiction levée le 2026-08-12 : le Modelfile de `gemma4:12b`
+     * déclare `temperature 1` et `top_k 64`. On demandait donc au modèle de
+     * **n'inventer rien** tout en l'échantillonnant comme s'il écrivait de la
+     * fiction. La fiche de personnage d'Alien s'est interrompue au milieu d'un
+     * tableau — un seul mauvais tirage sur quatre cents tokens suffit.
+     *
+     * La prose de l'Oracle, elle, garde sa température : ce n'est pas une
+     * extraction.
+     */
+    expect(corpsDeChat('gemma4:12b', messages, { json: true }).options)
+      .toMatchObject({ temperature: 0, top_k: 1 });
+    expect(corpsDeChat('gemma4:12b', messages).options).not.toHaveProperty('temperature');
+  });
+
+  it('laisse l\'appelant reprendre la main sur le décodage', () => {
+    expect((corpsDeChat('gemma4:12b', messages, { json: true, temperature: 0.4 }).options as Record<string, unknown>).temperature)
+      .toBe(0.4);
+  });
+
   it('emporte ses limites, plutôt que de subir celles de la machine', () => {
     /**
      * Sans ce bloc, le budget dépendait d'un `OLLAMA_CONTEXT_LENGTH` réglé dans
@@ -56,7 +77,7 @@ describe('le corps de la requête Ollama', () => {
 
   it('laisse l\'appelant relever un plafond sans perdre les autres', () => {
     const corps = corpsDeChat('gemma4:12b', messages, { json: true, num_predict: 4096 });
-    expect(corps.options).toEqual({ num_ctx: OPTIONS_PAR_DEFAUT.num_ctx, num_predict: 4096 });
+    expect(corps.options).toEqual({ num_ctx: OPTIONS_PAR_DEFAUT.num_ctx, num_predict: 4096, ...OPTIONS_JSON });
     // `json` pilote `format`, il n'a rien à faire dans les options du modèle.
     expect(corps.options).not.toHaveProperty('json');
   });

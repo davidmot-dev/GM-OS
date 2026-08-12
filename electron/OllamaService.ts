@@ -23,6 +23,9 @@ export interface OllamaChatResponse {
 
 /** Ce que l'appelant attend de la génération. */
 export interface OptionsDeChat {
+    /** Décodage : `0` rend l'extraction déterministe. */
+    temperature?: number;
+    top_k?: number;
     /**
      * Demande une sortie JSON.
      *
@@ -68,8 +71,9 @@ export function corpsDeChat(
         // Omis quand le modèle refuse le champ — cf. la reprise dans `chat`.
         ...(avecThink ? { think: false } : {}),
         // Les limites voyagent avec la requête : elles cessent ainsi de
-        // dépendre du réglage local d'une machine.
-        options: { ...OPTIONS_PAR_DEFAUT, ...limites },
+        // dépendre du réglage local d'une machine — et le décodage glouton
+        // avec elles, quand c'est une extraction qu'on demande.
+        options: { ...OPTIONS_PAR_DEFAUT, ...(json ? OPTIONS_JSON : {}), ...limites },
     };
 }
 
@@ -99,6 +103,28 @@ export const OPTIONS_PAR_DEFAUT = {
      * tokens ; deux mille laissent de la marge sans permettre la fuite.
      */
     num_predict: 2048,
+} as const;
+
+/**
+ * Ce qu'on impose **en plus** quand on attend du JSON.
+ *
+ * **La contradiction que cela lève.** Le Modelfile de `gemma4:12b` déclare
+ * `temperature 1`, `top_k 64`, `top_p 0.95` — chaque token est tiré au hasard
+ * parmi les soixante-quatre plus probables. On demandait donc au modèle de
+ * *n'inventer rien* tout en l'échantillonnant comme s'il écrivait de la
+ * fiction.
+ *
+ * Sur les 467 tokens de la fiche Dune, cela passait. Sur celle d'Alien, plus
+ * longue, un seul mauvais tirage a suffi : le tableau s'est interrompu au
+ * milieu, JSON invalide, et le message d'erreur accusait le parseur.
+ *
+ * Le décodage glouton n'est pas un réglage de prudence, c'est **le bon
+ * réglage pour une extraction** : on veut la valeur la plus probable au vu des
+ * fiches, pas une variation. La prose de l'Oracle, elle, garde sa température.
+ */
+export const OPTIONS_JSON = {
+    temperature: 0,
+    top_k: 1,
 } as const;
 
 export class OllamaService {
@@ -183,6 +209,23 @@ export class OllamaService {
                 throw new Error(
                     `Réponse vide de « ${model} »` +
                     `${data.done_reason ? ` (done_reason: ${data.done_reason})` : ''}.`,
+                );
+            }
+
+            /*
+              Une réponse coupée n'est pas une réponse — et surtout pas en JSON.
+
+              `done_reason: 'length'` dit que `num_predict` est tombé au milieu
+              de la génération. Rendre ce fragment laissait l'appelant échouer
+              plus loin sur un « Expected ',' or ']' » qui désigne le parseur au
+              lieu du plafond. On ne le signale que pour le JSON : une prose
+              écourtée reste lisible, un objet tronqué ne vaut rien.
+            */
+            if (options?.json && data.done_reason === 'length') {
+                const plafond = options.num_predict ?? OPTIONS_PAR_DEFAUT.num_predict;
+                throw new Error(
+                    `La réponse de « ${model} » a été coupée à ${plafond} tokens (num_predict) : ` +
+                    'le JSON est forcément incomplet. Relever le plafond, ou demander moins à la fois.',
                 );
             }
 
