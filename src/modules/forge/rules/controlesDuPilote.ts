@@ -1,5 +1,7 @@
 import type { GameDriver, DiceRollLogic } from '../../../types/drivers';
 import type { SheetTemplate, SheetFieldType } from '../../../data/defaultSheetTemplates';
+import type { SensDuJet } from '../../dice/DescripteurDeJet';
+import { GROUPES } from './GroupesDeChamps';
 
 /**
  * Le pilote se vérifie — axe 4 du plan du 2026-08-11.
@@ -41,6 +43,12 @@ const LOGIQUES_CONNUES: readonly DiceRollLogic[] = [
 const TYPES_DE_CHAMP: readonly SheetFieldType[] = [
     'number', 'text', 'checkbox', 'gauge', 'select', 'textarea', 'rating', 'formula',
 ];
+
+/** Les deux sens que `preparerLeJet` sait lire. */
+const SENS_CONNUS: readonly SensDuJet[] = ['sous-ou-egal', 'superieur-ou-egal'];
+
+/** Tout ce que les exemples de l'invite montrent — donc tout ce qui peut en être recopié. */
+const TEXTE_DES_EXEMPLES = GROUPES.map(g => g.exemple).join(' ');
 
 /**
  * Les identifiants qu'une formule d'initiative invoque.
@@ -123,7 +131,57 @@ export function controlerLePilote(
         }
     });
 
+    // ---- Ce qui a été recopié de l'exemple ----------------------------------
+    /*
+      **L'exemple est le seul modèle que le modèle ait sous les yeux, et il le
+      copie.** Dérivée d'Alien le 2026-08-12, la Forge a rendu « Dune :
+      Aventures dans l'Imperium » et `#d97706` — l'exemple d'identité au
+      caractère près, sur un corpus qui ne mentionne Dune nulle part. Le
+      décodage glouton y est pour beaucoup : la continuation la plus probable
+      d'un champ `name`, c'est le nom qu'on vient de montrer.
+
+      L'exemple d'identité a été rendu muet depuis. Ce contrôle veille sur tous
+      les autres, dont les valeurs restent concrètes à dessein.
+
+      **Le nom et la description seulement, et pas la couleur.** La première
+      version surveillait aussi `themeColor` — et condamnait aussitôt l'étalon,
+      dont le `#d97706` figure légitimement dans l'exemple des jauges, puisque
+      c'est de lui qu'il a été tiré. Sept caractères hexadécimaux se
+      rencontrent ; une phrase entière, non. On ne surveille que ce qui ne peut
+      pas coïncider par hasard.
+    */
+    const emprunts: [string, string | undefined][] = [
+        ['name', driver.name],
+        ['description', driver.description],
+    ];
+    for (const [ou, valeur] of emprunts) {
+        if (valeur && valeur.length > 8 && TEXTE_DES_EXEMPLES.includes(valeur)) {
+            erreur(ou, `« ${valeur} » est recopié mot pour mot d'un exemple de l'invite : ` +
+                'cette valeur ne vient pas des fiches.');
+        }
+    }
+
     // ---- Le jet -------------------------------------------------------------
+    if (driver.jet?.sens && !SENS_CONNUS.includes(driver.jet.sens)) {
+        erreur(
+            'jet.sens',
+            `« ${driver.jet.sens} » n'est pas un sens de comparaison : le moteur ne saurait pas ` +
+            'si un dé sous le seuil est une réussite ou un échec.',
+        );
+    }
+
+    if (driver.dice?.defaultDice && /^0+d/i.test(driver.dice.defaultDice)) {
+        erreur('dice.defaultDice', `« ${driver.dice.defaultDice} » ne lance aucun dé.`);
+    }
+
+    if (driver.jet?.reserve && driver.jet.reserve.max < 1) {
+        avertir(
+            'jet.reserve',
+            `Réserve de ${driver.jet.reserve.base} à ${driver.jet.reserve.max} dés : le panneau de ` +
+            'jet n\'aurait rien à lancer.',
+        );
+    }
+
     if (driver.dice?.logic && !LOGIQUES_CONNUES.includes(driver.dice.logic)) {
         erreur(
             'dice.logic',

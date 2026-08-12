@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { champsInvoques, controlerLePilote } from './controlesDuPilote';
+import { GROUPES } from './GroupesDeChamps';
 import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import type { GameDriver } from '../../../types/drivers';
@@ -150,6 +151,73 @@ describe('ce qui manque est signalé sans être refusé', () => {
 
     it('un jeu sans réserve, sans tâche de défaite et sans initiative reste valide', () => {
         expect(controlerLePilote({ combat: { statsToTrack: [], initiativeFormula: '' } }, fiche)).toEqual([]);
+    });
+});
+
+describe('ce qui vient de l\'exemple et non des fiches', () => {
+    it('un nom recopié mot pour mot d\'un exemple de l\'invite', () => {
+        /**
+         * Charge réelle du 2026-08-12 : dérivée du corpus **d'Alien**, la Forge
+         * a rendu « Dune : Aventures dans l'Imperium » et `#d97706` — l'exemple
+         * d'identité au caractère près, sur un corpus qui ne mentionne Dune
+         * nulle part. Le décodage glouton, adopté le même jour, y est pour
+         * beaucoup : la continuation la plus probable d'un champ `name`, c'est
+         * le nom qu'on vient de montrer.
+         */
+        const exemple = GROUPES.find(g => g.id === 'fiche')!.exemple;
+        const nomEmprunte = /"name":"([^"]+)"/.exec(exemple)![1];
+
+        const constats = controlerLePilote({ name: nomEmprunte } as Partial<GameDriver>, fiche);
+        expect(constats.map(c => c.ou)).toEqual(['name']);
+        expect(constats[0].message).toContain('ne vient pas des fiches');
+    });
+
+    it('mais une couleur identique à celle d\'un exemple ne condamne rien', () => {
+        /**
+         * La première version de ce contrôle surveillait aussi `themeColor` —
+         * et condamnait aussitôt l'étalon, dont le `#d97706` figure
+         * légitimement dans l'exemple des jauges puisque c'est de lui qu'il a
+         * été tiré. **C'est le test de l'étalon qui l'a attrapé.** Sept
+         * caractères hexadécimaux se rencontrent ; une phrase entière, non.
+         */
+        expect(controlerLePilote({ ui_config: { gauges: [], themeColor: '#d97706' } }, fiche))
+            .toEqual([]);
+    });
+
+    it('l\'exemple d\'identité ne porte plus aucune valeur copiable', () => {
+        // C'est le seul groupe où l'exemple est une *réponse plausible* : un
+        // nom de jeu se recopie, un `2d20` se heurte aux fiches.
+        const identite = GROUPES.find(g => g.id === 'identite')!;
+        expect(identite.exemple).not.toMatch(/Dune|Modiphius|#d97706/);
+        expect(identite.exemple).toContain('<');
+    });
+});
+
+describe('un jet que le moteur ne saurait pas résoudre', () => {
+    it('un sens de comparaison inconnu', () => {
+        const constats = controlerLePilote(
+            { jet: { seuil: [], sens: 'none' } } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+        expect(constats.map(c => c.ou)).toEqual(['jet.sens']);
+    });
+
+    it('un jet par défaut qui ne lance aucun dé', () => {
+        const constats = controlerLePilote(
+            { dice: { defaultDice: '0d6', logic: 'count-success' } } as Partial<GameDriver>,
+            fiche,
+        );
+        expect(constats.map(c => c.ou)).toEqual(['dice.defaultDice']);
+    });
+
+    it('une réserve vide est signalée sans être refusée', () => {
+        const constats = controlerLePilote(
+            { jet: { seuil: [], reserve: { base: 0, max: 0, faces: 6 } } } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+        expect(constats).toEqual([
+            expect.objectContaining({ gravite: 'avertissement', ou: 'jet.reserve' }),
+        ]);
     });
 });
 

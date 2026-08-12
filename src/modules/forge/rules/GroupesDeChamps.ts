@@ -96,7 +96,25 @@ export const GROUPES: readonly GroupeDeChamps[] = [
         label: 'Identité et ambiance',
         sujets: ['Ton, registre et ambiance'],
         cible: '"driver" avec seulement name, description, emoji et ui_config.themeColor',
-        exemple: '{"driver":{"name":"Dune : Aventures dans l\'Imperium","description":"Système 2d20 de Modiphius.","emoji":"🏜️","ui_config":{"themeColor":"#d97706"}}}',
+        /**
+         * **Le seul exemple à valeurs muettes, et il l'est par nécessité.**
+         *
+         * Il portait le nom, la description et la couleur de Dune. Dérivée
+         * d'Alien le 2026-08-12, la Forge a rendu « Dune : Aventures dans
+         * l'Imperium », « Système 2d20 de Modiphius » et `#d97706` — l'exemple
+         * recopié au caractère près, sur un corpus qui ne mentionne Dune nulle
+         * part.
+         *
+         * Le décodage glouton, adopté le même jour pour fiabiliser le JSON, y
+         * est pour beaucoup : la continuation la plus probable d'un champ
+         * `name`, c'est le nom qu'on vient de montrer. Ailleurs le risque est
+         * moindre — un `2d20` ou une `impulsion` se heurtent aux fiches, qui
+         * disent autre chose. **Ici, l'exemple est une réponse plausible.**
+         *
+         * Les crochets sont donc là pour être remplis, et ne ressemblent à
+         * aucun jeu réel.
+         */
+        exemple: '{"driver":{"name":"<le titre exact du jeu, tel que les fiches le nomment>","description":"<une phrase sur son système et son ton>","emoji":"<un emoji>","ui_config":{"themeColor":"<#rrggbb assorti à l\'ambiance>"}}}',
     },
     {
         id: 'jet',
@@ -265,8 +283,17 @@ export function promptDuGroupe(
         'aucune stat "isMainHP". Si l\'initiative n\'ordonne pas les combattants, ne',
         'fabrique pas de formule.',
         '',
-        'FORME ATTENDUE (la forme seulement, pas les valeurs — ce jeu-ci est différent) :',
+        // L'avertissement est répété AVANT et APRÈS l'exemple. Dérivée d'Alien
+        // le 2026-08-12, la Forge a rendu le nom, la description et la couleur
+        // de Dune : l'exemple recopié au caractère près. Ce qu'on montre, un
+        // modèle le prend pour ce qu'on attend.
+        "FORME ATTENDUE. Les valeurs ci-dessous viennent d'un AUTRE jeu et sont là pour montrer",
+        'la structure. Ne recopie aucune d\'entre elles : ni un nom, ni une description, ni une',
+        'couleur, ni un identifiant. Tout doit venir des fiches ci-dessus.',
         groupe.exemple,
+        '',
+        'Rappel : les valeurs de l\'exemple ne sont pas des réponses. Un champ dont les fiches ne',
+        'disent rien s\'OMET.',
         '',
         'Réponds par le JSON seul, sans indentation, sans commentaire, sans texte autour.',
     ].join('\n');
