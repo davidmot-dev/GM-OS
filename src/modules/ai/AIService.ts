@@ -1004,6 +1004,28 @@ ${fullContext}`;
     }
     
     const jsonStr = jsonMatch[0];
+
+    /*
+      **Du texte après le JSON est un diagnostic, pas un détail.**
+
+      La grammaire de `format: 'json'` arrête la génération à l'accolade
+      fermante : il ne PEUT rien y avoir après. Une réponse qui se poursuit
+      prouve donc que la contrainte n'a pas été appliquée — et comme le
+      décodage glouton voyage dans le même bloc d'options, il ne l'a pas été
+      non plus. Relevé le 2026-08-12 : « …}]}}_Note: The prompt instructions
+      were to… », et un JSON aux guillemets échappés juste avant.
+
+      On le dit ici, au moment où l'on tient la preuve, plutôt que de laisser
+      chercher trois processus plus loin.
+    */
+    const apres = cleaned.slice(cleaned.indexOf(jsonStr) + jsonStr.length).trim();
+    if (apres) {
+      console.warn(
+        "[AIService] La réponse continue APRÈS le JSON — la contrainte `format: 'json'` n'a pas " +
+        `été appliquée à cet appel. Suite ignorée : « ${apres.slice(0, 120)} »`,
+      );
+    }
+
     try {
       // First attempt: direct parse
       return JSON.parse(jsonStr) as T;

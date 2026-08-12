@@ -155,9 +155,24 @@ export class OllamaService {
     ): Promise<string> {
         const url = (endpoint || this.baseUrl).replace(/\/$/, '');
         try {
+            /*
+              **Ce qui part est écrit, une ligne par appel.**
+
+              Le 2026-08-12, une sortie a contenu du texte APRÈS son JSON — ce
+              qui est impossible sous la grammaire de `format: 'json'`, et
+              prouve donc qu'elle n'avait pas été appliquée. Impossible de
+              savoir depuis le renderer si l'option avait fait le voyage :
+              trois processus la relaient, et aucun ne disait ce qu'il envoyait.
+            */
+            const corps = corpsDeChat(model, messages, options, true);
+            console.log(
+                `[Ollama] ${model} — format=${corps.format ?? 'aucun'}, think=${corps.think}, ` +
+                `options=${JSON.stringify(corps.options)}`,
+            );
+
             const envoyer = async (avecThink: boolean) => net.fetch(`${url}/api/chat`, {
                 method: 'POST',
-                body: JSON.stringify(corpsDeChat(model, messages, options, avecThink)),
+                body: JSON.stringify(avecThink ? corps : corpsDeChat(model, messages, options, false)),
                 headers: { 'Content-Type': 'application/json' }
             });
 
