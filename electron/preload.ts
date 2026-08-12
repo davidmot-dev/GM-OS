@@ -110,7 +110,7 @@ contextBridge.exposeInMainWorld('appBridge', {
             model: string,
             messages: { role: string; content: string }[],
             endpoint?: string,
-            options?: { json?: boolean; num_ctx?: number; num_predict?: number },
+            options?: { json?: boolean; schema?: Record<string, unknown>; num_ctx?: number; num_predict?: number },
         ) => ipcRenderer.invoke('ai:ollama-chat', model, messages, endpoint, options),
         ollamaChatStream: (model: string, messages: { role: string; content: string }[], endpoint?: string) => ipcRenderer.invoke('ai:ollama-chat-stream', model, messages, endpoint),
         ollamaStatus: (endpoint?: string) => ipcRenderer.invoke('ai:ollama-status', endpoint),

@@ -88,6 +88,15 @@ export class AIService {
      * demande délibérément le contexte vivant.
      */
     sansPersona: boolean = false,
+    /**
+     * La **forme exacte** imposée au décodeur, quand on la connaît.
+     *
+     * `format: 'json'` ne garantit que la syntaxe, et le 2026-08-12 a montré
+     * trois fois que c'est une garantie faible : `{"id\":\"agilite\"` est une
+     * chaîne parfaitement légale, un commentaire logé dans une chaîne aussi.
+     * Un schéma, lui, interdit la clé de trop et la prose **par construction**.
+     */
+    schema?: Record<string, unknown>,
   ): Promise<AIResponse> {
     const { activeProvider } = useAIStore.getState();
     const TIMEOUT_MS = 2700000; // 45 minutes
@@ -105,7 +114,7 @@ export class AIService {
     console.log(`[AIService] Sending ${activeProvider} request (${prompt.length + systemPrompt.length} chars)...`);
 
     return Promise.race([
-      this.executeRequest(activeProvider, prompt, systemPrompt, gemId, ragOptions, lite, attendJson),
+      this.executeRequest(activeProvider, prompt, systemPrompt, gemId, ragOptions, lite, attendJson, schema),
       new Promise<AIResponse>((_, reject) => 
         setTimeout(() => reject(new Error(`TIMEOUT: ${activeProvider} n'a pas répondu après 45min.`)), TIMEOUT_MS)
       )
@@ -120,6 +129,7 @@ export class AIService {
     _ragOptions: any,
     _lite?: boolean,
     attendJson: boolean = false,
+    schema?: Record<string, unknown>,
   ): Promise<AIResponse> {
     const { configs } = useAIStore.getState();
     const config = configs[activeProvider];
@@ -161,7 +171,7 @@ export class AIService {
           // If needed, we'll have to upgrade the bridge or use proxyRequest for OpenAI-compatible Ollama Cloud providers.
           const text = await window.appBridge.ai.ollamaChat(model, [
             { role: 'user', content: `${systemPrompt}\n\n--- TA MISSION ---\n${prompt}` }
-          ], endpoint, attendJson ? { json: true } : undefined);
+          ], endpoint, attendJson ? { json: true, ...(schema ? { schema } : {}) } : undefined);
 
           return { text, metadata: { provider: activeProvider, model, endpoint } };
         }
@@ -868,7 +878,7 @@ ${fullContext}`;
      * — une tâche structurée n'a que faire d'une voix de meneur, et celle de la
      * campagne active n'a rien à faire dans la dérivation d'un autre jeu.
      */
-    options: { lite?: boolean; sansPersona?: boolean } = {}
+    options: { lite?: boolean; sansPersona?: boolean; schema?: Record<string, unknown> } = {}
   ): Promise<T> {
     const { activeProvider, configs } = useAIStore.getState();
     const config = configs[activeProvider];
@@ -997,7 +1007,7 @@ ${fullContext}`;
     Ta réponse doit commencer par { ou [ et se terminer par } ou ].`;
 
     const response = await this.generateText(
-      prompt, enhancedSystemPrompt, 'sage', {}, options.lite, true, options.sansPersona,
+      prompt, enhancedSystemPrompt, 'sage', {}, options.lite, true, options.sansPersona, options.schema,
     );
     console.log(`[AIService] Raw JSON response from ${activeProvider} (first 200 chars):`, response.text.substring(0, 200));
     

@@ -55,10 +55,26 @@ export interface OptionsDeChat {
      *
      * Pose `format: 'json'` : llama.cpp contraint alors le décodage par une
      * grammaire, et la sortie **ne peut plus** être autre chose que du JSON
-     * syntaxiquement valide. Ce n'est pas une consigne au modèle, c'est une
-     * limite du décodeur — elle tient même quand la consigne est ignorée.
+     * syntaxiquement valide.
+     *
+     * **Mais « syntaxiquement valide » est une garantie faible**, et le
+     * 2026-08-12 l'a montré trois fois : `{"id\":\"agilite\"` est une chaîne
+     * parfaitement légale, un commentaire en anglais logé dans une chaîne
+     * aussi. Le décodeur ne voyait rien à redire. Pour une forme connue, c'est
+     * `schema` qu'il faut.
      */
     json?: boolean;
+    /**
+     * Un schéma JSON, qui remplace `format: 'json'` par la **forme exacte**
+     * attendue.
+     *
+     * Ollama le transmet à llama.cpp, qui en dérive une grammaire : le modèle
+     * ne peut alors produire ni clé de trop, ni valeur d'un autre type, ni
+     * prose — non parce qu'on le lui a demandé, mais parce que **le décodeur
+     * ne lui laisse pas d'autre chemin**. Toute la classe d'échecs de la
+     * soirée disparaît par construction.
+     */
+    schema?: Record<string, unknown>;
     num_ctx?: number;
     num_predict?: number;
 }
@@ -86,18 +102,20 @@ export function corpsDeChat(
     options: OptionsDeChat = {},
     avecThink = true,
 ): Record<string, unknown> {
-    const { json, ...limites } = options;
+    const { json, schema, ...limites } = options;
     return {
         model,
         messages,
         stream: false,
-        ...(json ? { format: 'json' } : {}),
+        // Le schéma l'emporte : il dit la forme, là où `'json'` ne dit que la
+        // syntaxe.
+        ...(schema ? { format: schema } : json ? { format: 'json' } : {}),
         // Omis quand le modèle refuse le champ — cf. la reprise dans `chat`.
         ...(avecThink ? { think: false } : {}),
         // Les limites voyagent avec la requête : elles cessent ainsi de
         // dépendre du réglage local d'une machine — et le décodage glouton
         // avec elles, quand c'est une extraction qu'on demande.
-        options: { ...OPTIONS_PAR_DEFAUT, ...(json ? OPTIONS_JSON : {}), ...limites },
+        options: { ...OPTIONS_PAR_DEFAUT, ...(json || schema ? OPTIONS_JSON : {}), ...limites },
     };
 }
 
@@ -150,23 +168,23 @@ export const OPTIONS_JSON = {
     temperature: 0,
     top_k: 1,
     /**
-     * **La pénalité de répétition, désarmée — et c'est elle qui cassait tout.**
+     * La pénalité de répétition, désarmée — **par principe, et non par preuve.**
      *
      * Ollama applique `repeat_penalty: 1.1` par défaut : les tokens récemment
      * employés voient leur probabilité rabaissée. C'est utile en prose, où l'on
-     * ne veut pas d'une phrase qui se mord la queue. **C'est un poison pour une
-     * structure**, qui répète `"id"`, `"label"` et des guillemets à chaque
-     * élément.
+     * ne veut pas d'une phrase qui se mord la queue ; c'est douteux pour une
+     * structure, qui répète `"id"` et `"label"` à chaque élément.
      *
-     * Observé sur la liste des sections d'Alien, le 2026-08-12 : les quatre
-     * premiers éléments sont impeccables, puis la pénalité accumulée pousse le
-     * modèle hors du bon token — `{"id\":\"jauges_stress\"`, puis `{":null,`.
-     * Et avec `temperature: 0` et `top_k: 1`, il n'a aucun moyen de se
-     * rattraper : le mauvais choix devient déterministe. Les deux réglages se
-     * combinaient en un piège.
+     * **L'hypothèse qui a motivé ce réglage a été réfutée le 2026-08-12.**
+     * J'avais lu dans une sortie cassée la signature d'une pénalité qui
+     * s'accumule — « les quatre premiers éléments sont parfaits, puis ça
+     * dégénère ». Mesuré ensuite sur les vraies fiches d'Alien, même invite :
+     * pénalité par défaut → 447 tokens, JSON valide ; pénalité désarmée → 488
+     * tokens, JSON valide. **Aucune différence.**
      *
-     * `repeat_last_n: 0` coupe la fenêtre sur laquelle la pénalité se calcule,
-     * pour que rien ne subsiste de ce mécanisme.
+     * On le garde parce que pénaliser la répétition d'une structure répétitive
+     * reste faux dans son principe. Que personne ne croie pour autant que cela
+     * a résolu quoi que ce soit.
      */
     repeat_penalty: 1,
     repeat_last_n: 0,
@@ -290,7 +308,7 @@ export class OllamaService {
               lieu du plafond. On ne le signale que pour le JSON : une prose
               écourtée reste lisible, un objet tronqué ne vaut rien.
             */
-            if (options?.json && data.done_reason === 'length') {
+            if ((options?.json || options?.schema) && data.done_reason === 'length') {
                 const plafond = options.num_predict ?? OPTIONS_PAR_DEFAUT.num_predict;
                 throw new Error(
                     `La réponse de « ${model} » a été coupée à ${plafond} tokens (num_predict) : ` +

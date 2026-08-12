@@ -253,6 +253,31 @@ export function controlerLePilote(
     }
 
     // ---- L'ordre d'action ---------------------------------------------------
+    /*
+      Relevé sur Alien le 2026-08-12 :
+
+          "initiative": "ordre croissant des numéros", "initiativeSort": "croissant"
+
+      Le premier doit être un **objet** — `OrdreDuTour` y lit un mode, un prix
+      de rétention, un plafond d'activations —, et le second n'accepte que deux
+      valeurs. Une phrase à la place d'un descripteur ne fait pas planter
+      l'écran de combat : elle le fait retomber sur son comportement par
+      défaut, sans rien dire. Alien tire des cartes numérotées, et le pilote a
+      un `initiativeCards` pour ça.
+    */
+    if (driver.combat?.initiative !== undefined && typeof driver.combat.initiative !== 'object') {
+        erreur(
+            'combat.initiative',
+            `« ${String(driver.combat.initiative)} » est une phrase, pas un descripteur d'ordre ` +
+            "d'action. Un jeu qui tire des cartes numérotées se décrit par `initiativeCards`.",
+        );
+    }
+
+    const tri = driver.combat?.initiativeSort;
+    if (tri !== undefined && tri !== 'asc' && tri !== 'desc') {
+        erreur('combat.initiativeSort', `« ${String(tri)} » n'est ni « asc » ni « desc ».`);
+    }
+
     const formule = driver.combat?.initiativeFormula ?? '';
     for (const champ of champsInvoques(formule)) {
         if (!tousLesChamps.has(champ)) {

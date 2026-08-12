@@ -48,6 +48,14 @@ export interface GroupeDeChamps {
      * yeux — c'est-à-dire les titres de chapitre du livre.
      */
     dependDuVocabulaire?: boolean;
+    /**
+     * La **forme exacte** imposée au décodeur, quand on la connaît.
+     *
+     * Une consigne se contourne, un schéma non : Ollama le transmet à
+     * llama.cpp, qui en dérive une grammaire. Le modèle ne peut alors produire
+     * ni clé de trop, ni valeur d'un autre type, ni prose.
+     */
+    schema?: Record<string, unknown>;
     /** Ce que le modèle doit rendre, décrit en une phrase. */
     cible: string;
     /**
@@ -59,6 +67,71 @@ export interface GroupeDeChamps {
      */
     exemple: string;
 }
+
+/**
+ * La forme exacte d'un gabarit de fiche, imposée au décodeur.
+ *
+ * **Ce que quatre échecs ont fini par apprendre.** La fiche de personnage est
+ * la seule sortie que `gemma4:12b` n'arrivait pas à rendre : guillemets
+ * échappés, fragments orphelins, commentaires en anglais. On a cru à une
+ * sortie trop longue, puis à la température, puis à la pénalité de répétition
+ * — trois hypothèses, trois réfutations.
+ *
+ * La vraie raison, montrée par une sonde le 2026-08-12 : **c'était du contenu
+ * qui débordait**. Sommé de ne rendre que des sections sans champs, le modèle
+ * a fourré les champs dans la chaîne `label`, avec leurs guillemets échappés.
+ * Il ne dégénérait pas, il cherchait une place.
+ *
+ * Un schéma la lui donne, et lui interdit tout le reste — non parce qu'on le
+ * lui demande, mais parce que le décodeur ne lui laisse pas d'autre chemin.
+ * Mesuré sur la même invite : 465 tokens, `done_reason: stop`, JSON complet et
+ * valide, là où l'invite libre cassait à la position 1 027.
+ */
+const CHAMP_DE_FICHE = {
+    type: 'object',
+    properties: {
+        id: { type: 'string' },
+        label: { type: 'string' },
+        type: {
+            type: 'string',
+            enum: ['number', 'text', 'checkbox', 'gauge', 'select', 'textarea', 'rating'],
+        },
+        defaultValue: { type: ['number', 'string', 'boolean'] },
+        max: { type: 'number' },
+    },
+    required: ['id', 'label', 'type'],
+    additionalProperties: false,
+} as const;
+
+export const SCHEMA_DU_GABARIT = {
+    type: 'object',
+    properties: {
+        template: {
+            type: 'object',
+            properties: {
+                name: { type: 'string' },
+                emoji: { type: 'string' },
+                sections: {
+                    type: 'array',
+                    items: {
+                        type: 'object',
+                        properties: {
+                            id: { type: 'string' },
+                            label: { type: 'string' },
+                            fields: { type: 'array', items: CHAMP_DE_FICHE },
+                        },
+                        required: ['id', 'label', 'fields'],
+                        additionalProperties: false,
+                    },
+                },
+            },
+            required: ['name', 'sections'],
+            additionalProperties: false,
+        },
+    },
+    required: ['template'],
+    additionalProperties: false,
+} as const;
 
 /**
  * Les huit groupes, **dans l'ordre de leurs dépendances**.
@@ -77,6 +150,7 @@ export const GROUPES: readonly GroupeDeChamps[] = [
         id: 'fiche',
         label: 'Fiche de personnage',
         sujets: ['Composition de la fiche de personnage', 'Jauges et ressources individuelles'],
+        schema: SCHEMA_DU_GABARIT as unknown as Record<string, unknown>,
         cible:
             '"template" avec name, emoji et sections. Chaque champ porte un "type" pris parmi ' +
             'number, text, checkbox, gauge, select, textarea, rating. **Prévois une section pour ' +
@@ -338,94 +412,6 @@ export function promptDuGroupe(
         'disent rien s\'OMET.',
         '',
         'Réponds par le JSON seul, sans indentation, sans commentaire, sans texte autour.',
-    ].join('\n');
-}
-
-/**
- * La fiche de personnage se forge **en deux temps**, et c'est le seul groupe
- * qui le demande.
- *
- * **Pourquoi.** C'est la plus grosse sortie de la dérivation — quatre sections
- * et leurs champs —, et au-delà de quelques centaines de tokens `gemma4:12b`
- * déraille : il se met à échapper ses guillemets (`{"id\":\"agilite\"`), ce qui
- * reste du JSON *grammaticalement valide* et passe donc sous la grammaire de
- * `format: 'json'`. Constaté sur Alien le 2026-08-12, à température 0 — le
- * décodage glouton n'y change rien.
- *
- * La leçon était déjà écrite au plan, et à l'Atelier avant lui : *le découpage
- * vaut pour la sortie autant que pour l'entrée, parce qu'aucune petite réponse
- * ne dérape*. Scinder le gabarit de fiche avait déjà fait passer l'Atelier de
- * l'échec à soixante secondes par moitié.
- *
- * **Et cela ne coûte presque rien**, parce que les deux invites partagent leur
- * en-tête au caractère près : Ollama garde le préfixe en cache, donc seul le
- * premier appel paie le prefill des fiches. Mesuré le 2026-08-12 : 64 s pour le
- * premier, 24 s pour le suivant sur le même préfixe.
- */
-
-/** Une section annoncée par la première passe, avant qu'on ne lui demande ses champs. */
-export interface SectionAnnoncee {
-    id: string;
-    label: string;
-}
-
-/** Première passe : la liste des sections, sans un seul champ. */
-export function promptDesSections(fiches: FicheDuCorpus[], contexte: ContexteDuGroupe = {}): string {
-    return enteteDeLaFiche(fiches, contexte) + [
-        'TÂCHE : rends un JSON compact contenant "template" avec name, emoji et sections —',
-        'mais **uniquement l\'identifiant et le libellé de chaque section**, sans aucun champ.',
-        'Une section par regroupement que la fiche porte réellement (caractéristiques,',
-        'compétences, jauges, équipement…).',
-        '',
-        'FORME ATTENDUE, valeurs d\'un autre jeu, à ne recopier sous aucun prétexte :',
-        '{"template":{"name":"Fiche de Personnage","emoji":"📜","sections":[{"id":"competences","label":"Compétences"},{"id":"jauges","label":"Jauges"}]}}',
-        '',
-        'Réponds par le JSON seul, sans indentation, sans commentaire, sans texte autour.',
-    ].join('\n');
-}
-
-/** Seconde passe : les champs d'**une** section, et d'elle seule. */
-export function promptDesChamps(
-    fiches: FicheDuCorpus[],
-    section: SectionAnnoncee,
-    contexte: ContexteDuGroupe = {},
-): string {
-    return enteteDeLaFiche(fiches, contexte) + [
-        `TÂCHE : rends un JSON compact contenant les champs de la SEULE section « ${section.label} ».`,
-        'Énumère-les **un par un, avec leur nom exact** tel que les fiches le donnent — jamais un',
-        'champ générique qui les résumerait tous. Chaque champ porte un "type" pris parmi number,',
-        'text, checkbox, gauge, select, textarea, rating, et ses bornes quand les fiches les disent.',
-        '',
-        'Si les fiches ne nomment pas le contenu de cette section, rends une liste vide : une',
-        'absence se corrige, un champ inventé s\'applique en séance sans que personne ne l\'ait choisi.',
-        '',
-        'FORME ATTENDUE, valeurs d\'un autre jeu :',
-        '{"fields":[{"id":"combat","label":"Combat","type":"number","defaultValue":4,"max":8}]}',
-        '',
-        'Réponds par le JSON seul, sans indentation, sans commentaire, sans texte autour.',
-    ].join('\n');
-}
-
-/**
- * L'en-tête commun aux deux passes — **identique au caractère près**.
- *
- * C'est lui qui fait tenir le cache de préfixe d'Ollama : la seconde invite et
- * les suivantes ne repaient pas le prefill des fiches. Toute divergence, même
- * un espace, coûterait quarante secondes par section.
- */
-function enteteDeLaFiche(fiches: FicheDuCorpus[], contexte: ContexteDuGroupe): string {
-    const groupe = GROUPES.find(g => g.id === 'fiche')!;
-    const retenues = fichesDuGroupe(groupe, fiches);
-    const corps = retenues.map(f => `### ${f.sujet}\n${f.contenu}`).join('\n\n');
-
-    return [
-        `Voici les fiches de règles vérifiées d'un jeu de rôle, pour le sujet « ${groupe.label} ».`,
-        '',
-        corps || '(aucune fiche disponible sur ce sujet)',
-        '',
-        ...(contexte.corpus ? [`Le dossier de corpus de ce jeu s'appelle « ${contexte.corpus} ».`, ''] : []),
-        "N'INVENTE RIEN. Si les fiches ne disent pas ce que porte la fiche de personnage, OMETS.",
-        '',
     ].join('\n');
 }
 

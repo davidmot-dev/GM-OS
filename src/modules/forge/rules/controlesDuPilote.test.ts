@@ -255,6 +255,27 @@ describe('un jet que le moteur ne saurait pas résoudre', () => {
     });
 });
 
+describe('un ordre d\'action que le moteur ne saurait pas lire', () => {
+    it('une phrase à la place d\'un descripteur', () => {
+        // Relevé sur Alien : `"initiative": "ordre croissant des numéros"`.
+        // `OrdreDuTour` y lit un mode, un prix de rétention, un plafond — une
+        // phrase le fait retomber sur son défaut, sans rien dire.
+        const constats = controlerLePilote(
+            { combat: { statsToTrack: [], initiativeFormula: '', initiative: 'ordre croissant' } } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+        expect(constats.map(c => c.ou)).toEqual(['combat.initiative']);
+    });
+
+    it('un tri qui n\'est ni « asc » ni « desc »', () => {
+        const constats = controlerLePilote(
+            { combat: { statsToTrack: [], initiativeFormula: '', initiativeSort: 'croissant' } } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+        expect(constats.map(c => c.ou)).toEqual(['combat.initiativeSort']);
+    });
+});
+
 describe('un type de champ que la fiche ne sait pas rendre', () => {
     it('« string » n\'existe pas, et le composant de fiche retomberait sur son cas par défaut', () => {
         // Relevé en réel le 2026-08-12 sur le gabarit dérivé de Dune.
