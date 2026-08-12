@@ -45,6 +45,22 @@ describe('le corps de la requête Ollama', () => {
     expect(corpsDeChat('gemma4:12b', messages)).not.toHaveProperty('format');
   });
 
+  it('ne penalise pas la repetition quand la sortie est une structure', () => {
+    /**
+     * Ollama applique `repeat_penalty: 1.1` par défaut. C'est utile en prose,
+     * c'est un poison pour un tableau JSON, qui répète `"id"` et `"label"` à
+     * chaque élément.
+     *
+     * Observé sur la liste des sections d'Alien le 2026-08-12 : quatre éléments
+     * impeccables, puis `{"id\":\"jauges_stress\"` et `{":null,`. Avec
+     * `temperature: 0` et `top_k: 1`, le mauvais token devient déterministe —
+     * les deux réglages se combinaient en piège.
+     */
+    expect(corpsDeChat('gemma4:12b', messages, { json: true }).options)
+      .toMatchObject({ repeat_penalty: 1, repeat_last_n: 0 });
+    expect(corpsDeChat('gemma4:12b', messages).options).not.toHaveProperty('repeat_penalty');
+  });
+
   it('décode gloutonnement quand il extrait, et pas quand il rédige', () => {
     /**
      * La contradiction levée le 2026-08-12 : le Modelfile de `gemma4:12b`

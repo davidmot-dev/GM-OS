@@ -1073,8 +1073,8 @@ ${fullContext}`;
     const apres = cleaned.slice(cleaned.indexOf(jsonStr) + jsonStr.length).trim();
     if (apres) {
       console.warn(
-        "[AIService] La réponse continue APRÈS le JSON — la contrainte `format: 'json'` n'a pas " +
-        `été appliquée à cet appel. Suite ignorée : « ${apres.slice(0, 120)} »`,
+        '[AIService] La réponse continue APRÈS le JSON, et le modèle a donc voulu commenter son ' +
+        `travail. Suite ignorée : « ${apres.slice(0, 120)} »`,
       );
     }
 

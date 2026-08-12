@@ -149,6 +149,27 @@ export const OPTIONS_PAR_DEFAUT = {
 export const OPTIONS_JSON = {
     temperature: 0,
     top_k: 1,
+    /**
+     * **La pénalité de répétition, désarmée — et c'est elle qui cassait tout.**
+     *
+     * Ollama applique `repeat_penalty: 1.1` par défaut : les tokens récemment
+     * employés voient leur probabilité rabaissée. C'est utile en prose, où l'on
+     * ne veut pas d'une phrase qui se mord la queue. **C'est un poison pour une
+     * structure**, qui répète `"id"`, `"label"` et des guillemets à chaque
+     * élément.
+     *
+     * Observé sur la liste des sections d'Alien, le 2026-08-12 : les quatre
+     * premiers éléments sont impeccables, puis la pénalité accumulée pousse le
+     * modèle hors du bon token — `{"id\":\"jauges_stress\"`, puis `{":null,`.
+     * Et avec `temperature: 0` et `top_k: 1`, il n'a aucun moyen de se
+     * rattraper : le mauvais choix devient déterministe. Les deux réglages se
+     * combinaient en un piège.
+     *
+     * `repeat_last_n: 0` coupe la fenêtre sur laquelle la pénalité se calcule,
+     * pour que rien ne subsiste de ce mécanisme.
+     */
+    repeat_penalty: 1,
+    repeat_last_n: 0,
 } as const;
 
 export class OllamaService {
