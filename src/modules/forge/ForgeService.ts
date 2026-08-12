@@ -173,7 +173,7 @@ export class ForgeService {
     Pas de texte avant, pas d'explications après. Si tu ne peux pas générer le système, renvoie un objet vide {}.`;
 
     console.error(`[ForgeService] Sending request to ${activeProvider} (LITE MODE: ON)...`);
-    const result = await aiService.generateJSON<ForgeSystemResult>(fullPrompt, systemPrompt, attachments, { lite: true });
+    const result = await aiService.generateJSON<ForgeSystemResult>(fullPrompt, systemPrompt, attachments, { lite: true, sansPersona: true });
     console.error(`[ForgeService] ${activeProvider} responded!`);
     return result;
   }
@@ -277,7 +277,7 @@ export class ForgeService {
           }),
           systemPrompt,
           [],
-          { lite: true },
+          { lite: true, sansPersona: true },
         );
         if (fragment && Object.keys(fragment).length > 0) fragments.push(fragment);
         else echecs.push({ groupe: groupe.id, raison: 'le modèle a rendu un objet vide' });
@@ -309,7 +309,7 @@ export class ForgeService {
       promptDesSections(fiches, { corpus }),
       systemPrompt,
       [],
-      { lite: true },
+      { lite: true, sansPersona: true },
     );
 
     const sections = (annonce.template?.sections ?? []) as SectionAnnoncee[];
@@ -323,7 +323,7 @@ export class ForgeService {
           promptDesChamps(fiches, section, { corpus }),
           systemPrompt,
           [],
-          { lite: true },
+          { lite: true, sansPersona: true },
         );
         remplies.push({ id: section.id, label: section.label, fields: champs.fields ?? [] });
       } catch (erreur) {
@@ -569,7 +569,7 @@ export class ForgeService {
     if (rawText) {
       const fullPrompt = `CONTENU DU DOCUMENT À ANALYSER :\n\n${rawText}\n\nREQUÊTE : ${prompt}`;
       console.error(`[ForgeService] Analyzing text with ${activeProvider} (LITE MODE)...`);
-      return aiService.generateJSON(fullPrompt, "Tu es un expert en ingénierie de données JdR pour GM-OS. Réponds UNIQUEMENT en JSON pur.", [], { lite: true });
+      return aiService.generateJSON(fullPrompt, "Tu es un expert en ingénierie de données JdR pour GM-OS. Réponds UNIQUEMENT en JSON pur.", [], { lite: true, sansPersona: true });
     }
 
     // 2. CAS DOCUMENT DIRECT (PDF/IMAGE)
@@ -583,7 +583,7 @@ export class ForgeService {
       return aiService.generateJSON(prompt, "Tu es un expert en analyse de documents JdR. Extrais les données structurées UNIQUEMENT en JSON.", [{
         data: fileBase64,
         mimeType: mimeType
-      }], { lite: true });
+      }], { lite: true, sansPersona: true });
     }
 
     throw new Error("Aucun contenu fourni pour l'analyse.");

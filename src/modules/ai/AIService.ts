@@ -65,10 +65,35 @@ export class AIService {
      * s'ignore, une grammaire non.
      */
     attendJson: boolean = false,
+    /**
+     * N'enrobe pas l'invite — ni persona, ni contexte de session, ni RAG.
+     *
+     * **Ce que cela corrige, trouvé le 2026-08-12 en lisant enfin ce qui
+     * partait.** `prepareSystemPrompt` ajoute à *tout* appel les instructions
+     * de la gemme Sage, résolues depuis le corpus de la **campagne active**,
+     * plus les personnages et PNJ de la séance en cours. La Forge construisait
+     * donc une invite de 7 500 caractères, soignée et close, qui arrivait à
+     * 13 577 — et le modèle, sommé d'incarner le Sage d'une autre campagne
+     * pendant qu'on lui demandait d'extraire des données, commentait son
+     * travail : « 100% accurate extraction from the source: ». Sous grammaire
+     * JSON, ce commentaire n'avait qu'un endroit où aller — **dans une
+     * chaîne** —, d'où les guillemets échappés qu'on poursuivait depuis trois
+     * correctifs.
+     *
+     * C'est le même défaut que le corpus hérité de la campagne, corrigé le
+     * 2026-08-10 : *un contexte hérité d'ailleurs reste un choix que personne
+     * n'a fait.*
+     *
+     * Explicite, et jamais déduit de `attendJson` : le générateur de butin
+     * demande délibérément le contexte vivant.
+     */
+    sansPersona: boolean = false,
   ): Promise<AIResponse> {
     const { activeProvider } = useAIStore.getState();
     const TIMEOUT_MS = 2700000; // 45 minutes
-    const systemPrompt = await this.prepareSystemPrompt(prompt, customContext, gemId, ragOptions, lite);
+    const systemPrompt = sansPersona
+      ? (customContext ?? '')
+      : await this.prepareSystemPrompt(prompt, customContext, gemId, ragOptions, lite);
 
     console.groupCollapsed(`[AIService] Full Prompt Details (${prompt.length + systemPrompt.length} chars)`);
     console.log("--- SYSTEM PROMPT ---");
@@ -837,7 +862,13 @@ ${fullContext}`;
     prompt: string, 
     systemPrompt: string, 
     attachments?: { data: string, mimeType: string }[],
-    options: { lite?: boolean } = {}
+    /**
+     * `sansPersona` : l'invite part telle qu'elle a été écrite, sans persona,
+     * sans contexte de séance et sans RAG. À demander pour toute **extraction**
+     * — une tâche structurée n'a que faire d'une voix de meneur, et celle de la
+     * campagne active n'a rien à faire dans la dérivation d'un autre jeu.
+     */
+    options: { lite?: boolean; sansPersona?: boolean } = {}
   ): Promise<T> {
     const { activeProvider, configs } = useAIStore.getState();
     const config = configs[activeProvider];
@@ -965,7 +996,9 @@ ${fullContext}`;
     Ne fournis aucune explication, aucun commentaire ni aucun bloc de code Markdown autour du JSON.
     Ta réponse doit commencer par { ou [ et se terminer par } ou ].`;
 
-    const response = await this.generateText(prompt, enhancedSystemPrompt, 'sage', {}, options.lite, true);
+    const response = await this.generateText(
+      prompt, enhancedSystemPrompt, 'sage', {}, options.lite, true, options.sansPersona,
+    );
     console.log(`[AIService] Raw JSON response from ${activeProvider} (first 200 chars):`, response.text.substring(0, 200));
     
     try {
