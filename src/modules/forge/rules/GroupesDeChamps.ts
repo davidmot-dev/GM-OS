@@ -130,11 +130,15 @@ export const GROUPES: readonly GroupeDeChamps[] = [
          */
         cible:
             '"driver" avec seulement dice et jet. "dice.logic" vaut EXACTEMENT l\'une de ces valeurs : ' +
-            'sum, highest, lowest, count-success, d100-low, d100-high. "jet.sens" vaut EXACTEMENT ' +
-            '"sous-ou-egal" (chaque dé sous le seuil est une réussite) ou "superieur-ou-egal" ' +
-            '(chaque dé au-dessus en est une). "jet.reserve" décrit le nombre de dés lancés : ' +
-            'si le jeu constitue une réserve à partir de la fiche plutôt qu\'un seuil, laisse ' +
-            '"seuil" vide et renseigne "reserve"',
+            'sum, highest, lowest, count-success, d100-low, d100-high. ' +
+            'POUR "jet.sens", LIS BIEN LES FICHES : mets "superieur-ou-egal" si le jeu compte les dés ' +
+            'qui ATTEIGNENT OU DÉPASSENT une valeur (« chaque six est une réussite »), et ' +
+            '"sous-ou-egal" s\'il compte ceux qui restent SOUS un seuil lu sur la fiche ' +
+            '(« chaque dé sous la compétence est une réussite »). Les deux se ressemblent et ' +
+            's\'inversent : un jet résolu à l\'envers ne se voit jamais en séance. ' +
+            '"jet.reserve" décrit le nombre de dés lancés, en NOMBRES et jamais en formule : ' +
+            'si le jeu constitue sa réserve à partir de la fiche plutôt qu\'un seuil, laisse ' +
+            '"seuil" vide et donne dans "reserve" le minimum et le maximum de dés qu\'on peut lancer',
         exemple: '{"driver":{"dice":{"defaultDice":"2d20","logic":"count-success","engine":"2d20"},"jet":{"seuil":[{"id":"competence","label":"Compétence","sectionId":"competences"},{"id":"principe","label":"Principe","sectionId":"principes"}],"reserve":{"base":2,"max":5,"faces":20,"cout":[1,2,3],"ressource":"impulsion"},"sens":"sous-ou-egal","critique":1,"complication":20,"difficulte":{"min":0,"max":5,"defaut":1}}}}',
     },
     {

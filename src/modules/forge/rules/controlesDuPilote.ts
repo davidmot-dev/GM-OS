@@ -170,6 +170,31 @@ export function controlerLePilote(
         );
     }
 
+    /*
+      **« Sous un seuil » sans seuil n'a pas de sens — et l'inversion est le
+      défaut le plus silencieux qui soit.**
+
+      Dérivé d'Alien le 2026-08-12, le pilote portait `sens: 'sous-ou-egal'`
+      avec un `seuil` vide, alors que la fiche dit « réussir exige d'obtenir au
+      moins un six ». Tous les jets se seraient résolus à l'envers, sans qu'un
+      seul écran ne s'en aperçoive — exactement le défaut du moteur 2d20 relevé
+      le 2026-08-10, qui rendait « précisément les réussites qu'il fallait
+      rejeter ».
+
+      On ne sait pas lire les règles à la place du meneur ; on sait en revanche
+      qu'un « sous-ou-egal » suppose une valeur à comparer, et qu'un jeu à
+      réserve de dés n'en a pas.
+    */
+    if (driver.jet && driver.jet.sens === 'sous-ou-egal' && (driver.jet.seuil ?? []).length === 0) {
+        erreur(
+            'jet.sens',
+            '« sous-ou-egal » compte les dés qui restent SOUS un seuil, mais aucun seuil n\'est ' +
+            'composé depuis la fiche. Si le jeu compte les dés qui atteignent une valeur — « chaque ' +
+            'six est une réussite » —, c\'est « superieur-ou-egal », et l\'inverse ne se verrait ' +
+            'jamais en séance.',
+        );
+    }
+
     if (driver.dice?.defaultDice && /^0+d/i.test(driver.dice.defaultDice)) {
         erreur('dice.defaultDice', `« ${driver.dice.defaultDice} » ne lance aucun dé.`);
     }
@@ -201,6 +226,24 @@ export function controlerLePilote(
     });
 
     const reserve = driver.jet?.reserve;
+    /*
+      Une réserve se compte en nombres, jamais en formule.
+
+      Relevé sur Alien le 2026-08-12 : `base: "attribut+comp_level"`. Le modèle
+      voulait dire « la réserve vaut attribut plus compétence » — ce que le
+      descripteur ne sait pas exprimer —, et l'a écrit là où le panneau de jet
+      attend un entier. Il n'aurait rien lancé.
+    */
+    for (const borne of ['base', 'max', 'faces'] as const) {
+        const valeur = reserve?.[borne] as unknown;
+        if (reserve && valeur !== undefined && typeof valeur !== 'number') {
+            erreur(
+                `jet.reserve.${borne}`,
+                `« ${String(valeur)} » n'est pas un nombre. La réserve se compte en dés ; une ` +
+                'composition tirée de la fiche ne peut pas y être écrite en toutes lettres.',
+            );
+        }
+    }
     if (reserve?.ressource && !ressources.has(reserve.ressource)) {
         erreur(
             'jet.reserve.ressource',
@@ -229,7 +272,17 @@ export function controlerLePilote(
                 `« ${tache.sectionDuSeuil} » n'est pas une section de la fiche : le seuil de défaite ` +
                 'retomberait sur son minimum pour tout le monde.',
             );
-        } else if (tache.champParDefaut && !champsParSection.get(tache.sectionDuSeuil)?.has(tache.champParDefaut)) {
+        }
+        // Un seuil de 0 à 0 met tout le monde hors de combat au premier coup.
+        if (tache.seuil && tache.seuil.max < 1) {
+            avertir(
+                'combat.tacheDeDefaite.seuil',
+                `Seuil de défaite de ${tache.seuil.min} à ${tache.seuil.max} : toute attaque ` +
+                'réussie mettrait sa cible hors de combat.',
+            );
+        }
+        if (tache.champParDefaut && idsDeSections.has(tache.sectionDuSeuil)
+            && !champsParSection.get(tache.sectionDuSeuil)?.has(tache.champParDefaut)) {
             erreur(
                 'combat.tacheDeDefaite.champParDefaut',
                 `« ${tache.champParDefaut} » n'appartient pas à la section « ${tache.sectionDuSeuil} ».`,

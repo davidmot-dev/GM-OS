@@ -210,6 +210,40 @@ describe('un jet que le moteur ne saurait pas résoudre', () => {
         expect(constats.map(c => c.ou)).toEqual(['dice.defaultDice']);
     });
 
+    it('« sous un seuil » sans aucun seuil : le jet serait résolu à l\'envers', () => {
+        /**
+         * Charge réelle du 2026-08-12, sur Alien. La fiche dit « réussir exige
+         * d'obtenir **au moins un six** » ; le pilote a rendu
+         * `sens: 'sous-ou-egal'` avec un `seuil` vide. Tous les jets se
+         * seraient résolus à l'envers **sans qu'un seul écran ne s'en
+         * aperçoive** — le défaut du moteur 2d20 du 2026-08-10, qui rendait
+         * précisément les réussites qu'il fallait rejeter.
+         */
+        const constats = controlerLePilote(
+            { jet: { seuil: [], sens: 'sous-ou-egal' } } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+        expect(constats.map(c => c.ou)).toEqual(['jet.sens']);
+        expect(constats[0].message).toContain('superieur-ou-egal');
+    });
+
+    it('mais « sous un seuil » avec un seuil composé ne dit rien — c\'est Dune', () => {
+        expect(controlerLePilote(
+            { jet: { seuil: [{ id: 'c', label: 'C', sectionId: 'competences' }], sens: 'sous-ou-egal' } } as unknown as Partial<GameDriver>,
+            fiche,
+        )).toEqual([]);
+    });
+
+    it('une réserve écrite en formule plutôt qu\'en dés', () => {
+        // Relevé sur Alien : `base: "attribut+comp_level"`. Le panneau de jet
+        // n'aurait rien lancé.
+        const constats = controlerLePilote(
+            { jet: { seuil: [{ id: 'c', label: 'C', sectionId: 'competences' }], reserve: { base: 'attribut+comp_level', max: 6, faces: 6 } } } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+        expect(constats.map(c => c.ou)).toEqual(['jet.reserve.base']);
+    });
+
     it('une réserve vide est signalée sans être refusée', () => {
         const constats = controlerLePilote(
             { jet: { seuil: [], reserve: { base: 0, max: 0, faces: 6 } } } as unknown as Partial<GameDriver>,
