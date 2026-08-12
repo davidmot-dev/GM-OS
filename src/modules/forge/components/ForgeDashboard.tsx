@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Hammer, FileUp, Globe, X, Rocket, Zap, Sparkles, ChevronRight, Shield } from 'lucide-react';
+import { Hammer, FileUp, Globe, X, Rocket, Zap, Sparkles, ChevronRight, Shield, Layers, AlertTriangle, Terminal } from 'lucide-react';
 import { forgeService } from '../ForgeService';
+import ForgeProgress from '../rules/components/ForgeProgress';
+import { lireFichesDuCorpus } from '../rules/lectureDuCorpus';
+import { GROUPES } from '../rules/GroupesDeChamps';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { gmConfirm } from '../../../stores/useModalStore';
@@ -12,7 +15,7 @@ import ChronicleForge from './ChronicleForge';
 import { useAIStore } from '../../../stores/useAIStore';
 import { useBrainstormStore } from '../rules/store/useBrainstormStore';
 import { corpusChoisi, corpusPourNouveauSysteme, sousDossiersDuCorpus } from '../../../../electron/corpusSysteme';
-import { useForgeStore } from '../store/useForgeStore';
+import { useForgeStore, type LacuneDuPilote } from '../store/useForgeStore';
 
 interface NotebookSource {
   id: string;
@@ -31,6 +34,40 @@ interface Notebook {
 interface ForgeDashboardProps {
   mode?: 'system' | 'chronicle';
 }
+
+/**
+ * Ce que le corpus ne couvre pas — **et qui ne doit pas se perdre**.
+ *
+ * Chaque ligne nomme un groupe de champs qu'aucune fiche n'a rempli. C'est la
+ * seule sortie qui dise où le corpus est muet, et elle vaut surtout *après*
+ * l'enregistrement : elle liste les fiches que l'Atelier doit produire avant
+ * qu'une seconde dérivation vaille la peine. D'où sa survie à `reset()`.
+ */
+const JournalDesLacunes: React.FC<{ lacunes: LacuneDuPilote[] }> = ({ lacunes }) => {
+  const { t } = useTranslation(['modules']);
+  if (lacunes.length === 0) return null;
+
+  return (
+    <div className="bg-amber-500/5 border border-amber-500/20 rounded-2xl p-6 space-y-3">
+      <h4 className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-amber-400 font-display">
+        <AlertTriangle size={14} /> {t('modules:session.forge_module.corpus_forge.gaps_title')}
+      </h4>
+      <ul className="space-y-2">
+        {lacunes.map((lacune, i) => (
+          <li key={`${lacune.groupe}-${i}`} className="text-xs text-app-text/70">
+            <span className="font-bold">
+              {GROUPES.find(g => g.id === lacune.groupe)?.label ?? lacune.groupe}
+            </span>
+            <span className="opacity-60"> — {lacune.raison}</span>
+          </li>
+        ))}
+      </ul>
+      <p className="text-[10px] text-app-text/40 leading-relaxed">
+        {t('modules:session.forge_module.corpus_forge.gaps_hint')}
+      </p>
+    </div>
+  );
+};
 
 const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
   const { t } = useTranslation(['modules']);
@@ -55,6 +92,15 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
   // Logs & UI Local State
   const [logs, setLogs] = useState<string[]>([]);
   const logEndRef = useRef<HTMLDivElement>(null);
+
+  /**
+   * Ce que la dernière lecture du corpus a trouvé.
+   *
+   * Le dossier lu s'affiche pendant l'attente parce qu'un dossier vide et un
+   * mauvais dossier se ressemblent — et qu'une forge partie vers le mauvais
+   * corpus a déjà coûté une soirée le 2026-08-10.
+   */
+  const [lectureDuCorpus, setLectureDuCorpus] = useState<{ chemin: string; nombre: number } | null>(null);
   
   // NotebookLM Integration State
   const [isNotebookModalOpen, setIsNotebookModalOpen] = useState(false);
@@ -91,12 +137,16 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
 
   useEffect(() => {
     if (logEndRef.current) {
-      logEndRef.current.scrollIntoView({ behavior: 'smooth' });
+      // `nearest` : on suit le journal dans son cadre, sans emporter la page
+      // entière à chaque ligne — une dérivation en écrit une vingtaine.
+      logEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }, [logs]);
 
+  // Quarante lignes : une dérivation en écrit une par groupe, une par lacune et
+  // une par fichier écarté. À dix, elle effaçait ses propres lacunes.
   const addLog = (msg: string) => {
-    setLogs(prev => [...prev.slice(-10), `> ${msg}`]);
+    setLogs(prev => [...prev.slice(-40), `> ${msg}`]);
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -332,6 +382,75 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
   };
 
   /**
+   * La Forge dérivée : le pilote sort des **fiches du corpus**, pas du livre.
+   *
+   * **Ce que cette voie remplace.** `startAnalysis` consolide jusqu'à 100 000
+   * caractères de livre et les envoie d'un seul appel. Mesuré le 2026-08-12 :
+   * le budget d'invite réel est d'environ 8 000 tokens — 77 % étaient jetés en
+   * silence. Ici chaque groupe de champs reçoit les deux ou trois fiches qui le
+   * concernent, et chaque valeur du pilote devient traçable jusqu'à une page
+   * vérifiée.
+   *
+   * Comptez un quart d'heure pour huit groupes : d'où le compteur, d'où
+   * l'abandon, et d'où le journal — quinze minutes sans nouvelle ne se
+   * distinguent pas d'une panne.
+   */
+  const forgerDepuisLeCorpus = async () => {
+    if (!corpusVise || forgeStore.isProcessing) return;
+
+    const cle = (suffixe: string) => `modules:session.forge_module.corpus_forge.${suffixe}`;
+    forgeStore.startAnalysis('corpus');
+    setLogs([]);
+    setLectureDuCorpus(null);
+
+    try {
+      const { chemin, fiches, ignorees } = await lireFichesDuCorpus(corpusVise);
+      addLog(t(cle('reading'), { chemin }));
+      setLectureDuCorpus({ chemin, nombre: fiches.length });
+
+      // Un fichier écarté est dit, pas avalé : un corpus qu'on croit lu et qui
+      // ne l'est qu'à moitié est le genre de trou qui se découvre trop tard.
+      for (const ignoree of ignorees) {
+        addLog(t(cle('ignored'), { fichier: ignoree.fichier, raison: ignoree.raison }));
+      }
+
+      if (fiches.length === 0) {
+        const message = t(cle('empty'), { chemin });
+        addLog(message);
+        forgeStore.setError(message);
+        gmToast(message, 'warning');
+        return;
+      }
+      addLog(t(cle('read_count'), { nombre: fiches.length }));
+
+      const { resultat, echecs, interrompue } = await forgeService.forgeSystemDepuisCorpus(fiches, {
+        onProgres: (groupe, rang, total) =>
+          forgeStore.setProgression({ label: groupe.label, rang, total }),
+        // L'état est relu à chaque groupe : la valeur capturée à la fermeture
+        // serait celle du premier rendu, et le bouton n'arrêterait rien.
+        abandonne: () => useForgeStore.getState().arretDemande,
+      });
+
+      forgeStore.completeAnalysis(
+        { driver: resultat.driver ?? {}, template: resultat.template ?? {} },
+        echecs,
+      );
+      if (interrompue) addLog(t(cle('aborted')));
+      addLog(t(cle('done'), { remplis: GROUPES.length - echecs.length, lacunes: echecs.length }));
+      for (const echec of echecs) {
+        const groupe = GROUPES.find(g => g.id === echec.groupe);
+        addLog(`${(groupe?.label ?? echec.groupe).toUpperCase()} : ${echec.raison}`);
+      }
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'DÉRIVATION IMPOSSIBLE.';
+      addLog(`ERROR: ${message}`);
+      forgeStore.setError(message);
+      gmToast(message, 'error');
+      console.error(err);
+    }
+  };
+
+  /**
    * Enregistre le pilote forgé — **et son corpus avec lui**.
    *
    * **Le défaut corrigé le 2026-08-10.** La Forge créait un pilote portant
@@ -345,15 +464,40 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
    * mais vide **dit ce qu'il attend** ; un corpus absent ne dit rien.
    */
   const handleForgeSave = async () => {
-    if (!forgeStore.analysisResult || !forgeStore.analysisResult.driver.name || !forgeStore.analysisResult.template.name) return;
+    if (!forgeStore.analysisResult) return;
+
+    /*
+      Le nom peut manquer, et le refus doit alors s'expliquer.
+      La version précédente sortait en silence quand `driver.name` ou
+      `template.name` était vide : le bouton ne faisait rien, sans un mot. Or un
+      pilote dérivé du corpus perd son nom dès que le groupe « Identité » n'a
+      rien rendu — c'est un cas courant, pas une anomalie. La destination
+      renseignée à gauche en tient lieu ; à défaut, on dit pourquoi on s'arrête.
+    */
+    const nom = forgeStore.analysisResult.driver.name || forgeStore.targetSystemName.trim();
+    if (!nom) {
+      const message = t('modules:session.forge_module.corpus_forge.cannot_save');
+      addLog(message);
+      gmToast(message, 'warning');
+      return;
+    }
 
     const driverId = `custom-${Date.now()}`;
     const templateId = `custom-template-${Date.now()}`;
-    const nom = forgeStore.analysisResult.driver.name;
 
-    // Le corpus se décide ici, par le même ordre d'autorité que la lecture : un
-    // nom qui désigne un dossier réel le rejoint, sinon on en crée un.
-    const corpus = corpusPourNouveauSysteme(nom, dossiersSystemes);
+    /*
+      Le corpus se décide ici, par le même ordre d'autorité que la lecture : un
+      nom qui désigne un dossier réel le rejoint, sinon on en crée un.
+
+      **Sauf quand le pilote vient d'un corpus désigné** : il est alors rattaché
+      à celui-là, sans repasser par le nom. Un pilote dérivé de
+      `systems/alien` et nommé « Alien : le Jeu de Rôle » se serait vu créer un
+      `systems/alien-le-jeu-de-role` voisin et vide, pendant que ses fiches
+      seraient restées dans le premier.
+    */
+    const corpus = forgeStore.source === 'corpus' && corpusVise
+      ? corpusVise
+      : corpusPourNouveauSysteme(nom, dossiersSystemes);
 
     const driver: GameDriver = {
       ...forgeStore.analysisResult.driver as GameDriver,
@@ -369,7 +513,11 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
       ...forgeStore.analysisResult.template as SheetTemplate,
       id: templateId,
       isBuiltin: false,
-      name: forgeStore.analysisResult.template.name
+      // Le nom du modèle est un libellé, pas une règle : le déduire ne fait
+      // courir aucun risque, alors qu'un modèle sans nom est illisible dans les
+      // menus. Ses SECTIONS, elles, ne s'inventent pas — leur absence est dite
+      // à l'écran plutôt que comblée.
+      name: forgeStore.analysisResult.template.name || `Fiche — ${nom}`,
     };
 
     saveGameDriver(driver);
@@ -475,6 +623,60 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                     )}
                   </div>
                 </div>
+              </div>
+
+              {/*
+                La Forge dérivée du corpus.
+
+                Elle est au-dessus du bac à contexte, et ce n'est pas un hasard
+                d'agencement : c'est désormais la voie normale. Le pilote se
+                projette des fiches déjà vérifiées ; déposer le livre reste
+                possible en dessous, pour un jeu qu'aucun atelier n'a documenté.
+              */}
+              <div className="bg-purple-500/10 rounded-2xl border border-purple-500/20 p-5 flex flex-col gap-3 hover:border-purple-500/40 transition-all">
+                <h2 className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-purple-400 font-display">
+                  <Layers size={14} /> {t('modules:session.forge_module.corpus_forge.label')}
+                </h2>
+                <p className="text-[10px] text-app-text/40 leading-relaxed">
+                  {t('modules:session.forge_module.corpus_forge.hint')}
+                </p>
+
+                <div className="relative group">
+                  <select
+                    value={corpusVise?.id || ''}
+                    onChange={(e) => brainstormStore.setCorpusCible(e.target.value || null)}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-xs font-bold text-white/80 focus:outline-none focus:border-purple-500/50 appearance-none cursor-pointer transition-all hover:bg-white/10"
+                  >
+                    <option value="" disabled className="bg-app-bg text-white/40">
+                      {t('modules:session.forge_module.corpus_forge.choose')}
+                    </option>
+                    {dossiersSystemes.map(dossier => (
+                      <option key={dossier} value={dossier} className="bg-app-bg text-white font-mono">
+                        {dossier}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/20 group-hover:text-purple-400 transition-colors">
+                    <ChevronRight size={14} className="rotate-90" />
+                  </div>
+                </div>
+
+                <button
+                  onClick={forgerDepuisLeCorpus}
+                  disabled={!corpusVise || forgeStore.isProcessing}
+                  className={`w-full py-3 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transition-all ${
+                    !corpusVise || forgeStore.isProcessing
+                      ? 'bg-white/5 text-white/10 cursor-not-allowed'
+                      : 'bg-purple-600 text-white shadow-glow-purple/30 hover:scale-105 active:scale-95'
+                  }`}
+                >
+                  {t('modules:session.forge_module.corpus_forge.button')}
+                </button>
+                {!corpusVise && (
+                  <p className="text-[10px] text-amber-300/60 leading-relaxed">
+                    {t('modules:session.forge_module.corpus_forge.required')}
+                  </p>
+                )}
               </div>
 
               {/* User Instructions Extension */}
@@ -669,8 +871,17 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                   )}
                 </button>
                 
-                {forgeStore.isProcessing && (
-                  <button 
+                {/*
+                  Cet abandon-ci ne vaut que pour la forge par documents : il
+                  rend la main sans rien arrêter, ce qui est acceptable pour un
+                  appel unique qu'on cesse d'attendre. Le laisser paraître
+                  pendant une dérivation serait un mensonge — l'écran
+                  redeviendrait inerte pendant que huit groupes continueraient
+                  de tourner, puis le résultat surgirait de nulle part. La
+                  dérivation a son propre abandon, qui arrête la boucle.
+                */}
+                {forgeStore.isProcessing && forgeStore.source !== 'corpus' && (
+                  <button
                     onClick={() => {
                       forgeStore.stopAnalysis();
                       addLog("TRANSMUTATION ABORTED MANUALLY.");
@@ -690,16 +901,64 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
         <div className="col-span-8 bg-app-surface/40 rounded-2xl border border-app-border/10 flex flex-col overflow-hidden shadow-2xl min-h-[600px] text-app-text relative">
           
           {activeTab === 'structure' ? (
-            forgeStore.analysisResult ? (
+            /*
+              Trois états, dans l'ordre où ils comptent : ce qui tourne, ce qui
+              est sorti, ce qu'on attend. La dérivation a son propre écran
+              d'attente — un quart d'heure sans nouvelle ne se distingue pas
+              d'une panne.
+            */
+            forgeStore.isProcessing && forgeStore.source === 'corpus' ? (
+              <ForgeProgress
+                titre={t('modules:session.forge_module.corpus_forge.progress_title')}
+                sousTitre={
+                  forgeStore.progression
+                    ? t('modules:session.forge_module.corpus_forge.progress_group', {
+                        rang: forgeStore.progression.rang,
+                        total: forgeStore.progression.total,
+                        groupe: forgeStore.progression.label,
+                      })
+                    : t('modules:session.forge_module.corpus_forge.reading', {
+                        chemin: lectureDuCorpus?.chemin ?? corpusVise?.racine ?? '',
+                      })
+                }
+                contexte={{
+                  entete: lectureDuCorpus?.chemin ?? corpusVise?.racine ?? '',
+                  detail: t('modules:session.forge_module.corpus_forge.progress_detail', {
+                    nombre: lectureDuCorpus?.nombre ?? 0,
+                    chemin: lectureDuCorpus?.chemin ?? corpusVise?.racine ?? '',
+                  }),
+                }}
+                /* Aucun serveur MCP dans la boucle, donc aucune coupure à dix
+                   minutes à annoncer ; et un quart d'heure est ici la normale,
+                   pas l'anomalie. */
+                plafondSecondes={0}
+                seuilInquietude={1200}
+                onAbandon={forgeStore.arretDemande ? undefined : () => {
+                  forgeStore.demanderArret();
+                  addLog(t('modules:session.forge_module.corpus_forge.abort'));
+                }}
+                libelleAbandon={t('modules:session.forge_module.corpus_forge.abort')}
+              />
+            ) : forgeStore.analysisResult ? (
               <div className="flex-1 p-8 overflow-y-auto space-y-8 custom-scrollbar">
                 <h3 className="text-3xl font-black uppercase tracking-tighter font-display">{t('modules:session.forge_module.atelier.adn_built')}</h3>
                 <div className="h-1 w-20 bg-accent rounded-full" />
-                
+
                 <div className="grid grid-cols-2 gap-8">
                   <div className="bg-app-text/5 p-6 rounded-2xl border border-app-border/10 space-y-4">
                     <p className="text-[10px] uppercase font-bold text-accent tracking-widest">{t('modules:session.forge_module.atelier.configuration')}</p>
-                    <p className="text-xl font-bold font-display">{forgeStore.analysisResult.driver.name}</p>
+                    <p className="text-xl font-bold font-display">
+                      {forgeStore.analysisResult.driver.name || forgeStore.targetSystemName || '—'}
+                    </p>
                     <p className="text-xs opacity-60">{forgeStore.analysisResult.driver.dice?.defaultDice} engine</p>
+                    {/* Un pilote sans nom n'est pas enregistrable : on dit
+                        laquelle des deux sources manque, plutôt que de laisser
+                        un bouton ne rien faire. */}
+                    {!forgeStore.analysisResult.driver.name && (
+                      <p className="text-[10px] text-amber-300/70 leading-relaxed">
+                        {t('modules:session.forge_module.corpus_forge.unnamed')}
+                      </p>
+                    )}
                   </div>
                   <div className="bg-emerald-500/5 p-6 rounded-2xl border border-emerald-500/10 space-y-4">
                     <p className="text-[10px] uppercase font-bold text-emerald-400 tracking-widest">{t('modules:session.forge_module.atelier.mechanics')}</p>
@@ -708,6 +967,14 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                         <li key={i} className="text-xs font-bold flex items-center gap-2"><Zap size={12} /> {s.label}</li>
                       ))}
                     </ul>
+                    {/* Les sections de la fiche ne s'inventent pas : leur
+                        absence se dit, parce que c'est elle qui fera afficher
+                        une jauge à zéro en pleine séance. */}
+                    {!forgeStore.analysisResult.template.sections?.length && (
+                      <p className="text-[10px] text-amber-300/70 leading-relaxed">
+                        {t('modules:session.forge_module.corpus_forge.no_sections')}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -716,19 +983,25 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                     <p className="text-white font-black text-xl">{t('modules:session.forge_module.atelier.ready_title')}</p>
                     <p className="text-white/60 text-xs">{t('modules:session.forge_module.atelier.ready_desc')}</p>
                   </div>
-                  <button 
+                  <button
                     onClick={handleForgeSave}
                     className="px-8 py-4 bg-white text-accent rounded-xl font-black uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all"
                   >
                     {t('modules:session.forge_module.atelier.btn_save')}
                   </button>
                 </div>
+
+                <JournalDesLacunes lacunes={forgeStore.lacunes} />
               </div>
             ) : (
-              <div className="flex-1 flex flex-col items-center justify-center text-center p-12 space-y-6">
+              <div className="flex-1 flex flex-col items-center justify-center text-center p-12 space-y-6 overflow-y-auto custom-scrollbar">
                  <Rocket size={64} className="text-accent/20 animate-bounce" />
                  <h3 className="text-2xl font-bold font-display uppercase">{t('modules:session.forge_module.atelier.waiting_transmutation')}</h3>
                  <p className="text-app-text/40 max-w-md mx-auto">{t('modules:session.forge_module.atelier.transmutation_waiting_desc')}</p>
+                 {/* Le journal des lacunes survit à l'enregistrement : c'est là
+                     qu'il sert, puisqu'il dit ce que l'Atelier doit documenter
+                     avant de reforger. */}
+                 <div className="w-full max-w-2xl text-left"><JournalDesLacunes lacunes={forgeStore.lacunes} /></div>
               </div>
             )
           ) : (
@@ -745,6 +1018,29 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                  qu'une partie. Il est en `fixed inset-0`, il n'a aucun besoin de
                  vivre dans cet arbre.
                */}
+            </div>
+          )}
+
+          {/*
+            Le journal, enfin affiché.
+
+            `addLog` existait depuis toujours, `logs` était tenu à jour, et
+            **rien ne le rendait** : la création d'un corpus, son échec faute de
+            pont, les erreurs de forge et les fichiers écartés partaient dans un
+            état que personne ne lisait. Un message qu'on n'affiche pas est un
+            message qu'on n'a pas écrit.
+          */}
+          {logs.length > 0 && (
+            <div className="shrink-0 border-t border-app-border/10 bg-black/40 px-6 py-4">
+              <div className="flex items-center gap-2 mb-2 text-[10px] font-black uppercase tracking-widest text-app-text/20">
+                <Terminal size={12} className="text-accent/60" /> Journal de la Forge
+              </div>
+              <div className="max-h-32 overflow-y-auto custom-scrollbar space-y-1 font-mono text-[11px] text-app-text/50">
+                {logs.map((ligne, idx) => (
+                  <p key={idx} className="leading-relaxed break-words">{ligne}</p>
+                ))}
+                <div ref={logEndRef} />
+              </div>
             </div>
           )}
         </div>

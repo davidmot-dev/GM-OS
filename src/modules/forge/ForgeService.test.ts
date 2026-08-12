@@ -540,4 +540,28 @@ describe('forgeSystemDepuisCorpus', () => {
 
     expect(vus).toEqual(['1/2 jet', '2/2 initiative']);
   });
+
+  it('s\'arrête entre deux groupes quand on abandonne, et rend l\'acquis', async () => {
+    /**
+     * Un bouton qui cesserait d'afficher sans rien arrêter mentirait sur un
+     * quart d'heure d'attente. Ce qui est déjà forgé n'est pas perdu pour
+     * autant, et les groupes non traités partent au journal des lacunes.
+     */
+    mockGenerateJSON.mockReset();
+    mockGenerateJSON.mockResolvedValue({ driver: { dice: { defaultDice: '2d20' } } });
+    let stop = false;
+
+    const { resultat, echecs, interrompue } = await forge.forgeSystemDepuisCorpus(fiches, {
+      groupes: [groupeJet, groupeInit],
+      onProgres: () => { stop = true; },
+      abandonne: () => stop,
+    });
+
+    expect(mockGenerateJSON).toHaveBeenCalledTimes(1);
+    expect(resultat.driver).toMatchObject({ dice: { defaultDice: '2d20' } });
+    expect(interrompue).toBe(true);
+    expect(echecs).toEqual([
+      { groupe: 'initiative', raison: 'dérivation interrompue avant ce groupe' },
+    ]);
+  });
 });

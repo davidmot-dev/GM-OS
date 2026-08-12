@@ -28,18 +28,40 @@ interface ForgeProgressProps {
   sousTitre: string;
   /** Cesse d'attendre. Ne prétend pas arrêter le serveur — il continue. */
   onAbandon?: () => void;
+  /** Libellé du bouton d'abandon, quand « cesser d'attendre » serait un mensonge. */
+  libelleAbandon?: string;
   /** Repère au-delà duquel l'attente devient anormale, en secondes. */
   seuilInquietude?: number;
+  /**
+   * Plafond au-delà duquel la requête est perdue. `0` quand il n'y en a pas.
+   *
+   * Le défaut est celui de `ForgeService.callMcpTool`. Une dérivation depuis le
+   * corpus n'interroge aucun serveur MCP et dure un quart d'heure : lui
+   * annoncer un abandon à dix minutes serait faux, et un compteur qui vire au
+   * rouge sans raison finit par n'être plus lu.
+   */
+  plafondSecondes?: number;
+  /**
+   * Ce qui est interrogé, quand ce n'est pas le carnet.
+   *
+   * Le bandeau par défaut nomme le carnet NotebookLM et ses sources. Une forge
+   * dérivée du corpus ne lui parle pas : afficher ses sources laisserait croire
+   * qu'elles sont dans la boucle.
+   */
+  contexte?: { entete: string; detail: string };
 }
 
 /** `ForgeService` coupe à dix minutes : au-delà, la requête est perdue. */
-const PLAFOND_SECONDES = 600;
+const PLAFOND_PAR_DEFAUT = 600;
 
 export const ForgeProgress: React.FC<ForgeProgressProps> = ({
   titre,
   sousTitre,
   onAbandon,
+  libelleAbandon,
   seuilInquietude = 180,
+  plafondSecondes = PLAFOND_PAR_DEFAUT,
+  contexte,
 }) => {
   /**
    * Le contexte de la requête, nommé plutôt qu'identifié.
@@ -84,7 +106,7 @@ export const ForgeProgress: React.FC<ForgeProgressProps> = ({
 
   const secondes = Math.round(ecoule / 1000);
   const inquietant = secondes >= seuilInquietude;
-  const critique = secondes >= PLAFOND_SECONDES - 60;
+  const critique = plafondSecondes > 0 && secondes >= plafondSecondes - 60;
 
   const couleur = (niveau: EvenementMcp['niveau']) => {
     if (niveau === 'erreur') return 'text-red-400';
@@ -115,7 +137,7 @@ export const ForgeProgress: React.FC<ForgeProgressProps> = ({
         </p>
         {critique && (
           <p className="text-[10px] font-black uppercase tracking-widest text-red-400/60">
-            La requête sera abandonnée à {formatDuree(PLAFOND_SECONDES * 1000)}
+            La requête sera abandonnée à {formatDuree(plafondSecondes * 1000)}
           </p>
         )}
       </div>
@@ -125,11 +147,24 @@ export const ForgeProgress: React.FC<ForgeProgressProps> = ({
           onClick={onAbandon}
           className="flex items-center gap-2 px-6 py-3 rounded-2xl border border-white/10 text-white/40 hover:text-red-400 hover:border-red-500/30 text-[10px] font-black uppercase tracking-widest transition-all"
         >
-          <XCircle size={14} /> Cesser d'attendre
+          <XCircle size={14} /> {libelleAbandon ?? "Cesser d'attendre"}
         </button>
       )}
 
-      {(notebookTitre || sourcesRetenues.length > 0) && (
+      {contexte && (
+        <div className="w-full max-w-2xl bg-white/5 border border-white/5 rounded-[2rem] px-6 py-4 text-left space-y-2">
+          <p className="flex items-center gap-3 text-xs text-white/60">
+            <BookOpen size={14} className="text-purple-400/60 shrink-0" />
+            <span className="font-bold">{contexte.entete}</span>
+          </p>
+          <p className="flex items-start gap-3 text-xs text-white/40">
+            <FileText size={14} className="text-purple-400/40 shrink-0 mt-0.5" />
+            <span>{contexte.detail}</span>
+          </p>
+        </div>
+      )}
+
+      {!contexte && (notebookTitre || sourcesRetenues.length > 0) && (
         <div className="w-full max-w-2xl bg-white/5 border border-white/5 rounded-[2rem] px-6 py-4 text-left space-y-2">
           {notebookTitre && (
             <p className="flex items-center gap-3 text-xs text-white/60">

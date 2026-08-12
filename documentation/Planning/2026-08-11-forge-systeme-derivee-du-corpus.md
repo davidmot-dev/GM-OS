@@ -4,29 +4,29 @@
 ouvrait le chantier des quatre murs. **Les quatre murs sont abattus** ; ce document traite de ce
 qu'ils rendent possible, et de ce qu'ils rendent nécessaire.
 
-Branche `feature/tablet-hub-pwa`. **921 tests verts**, `tsc -b` propre, build vérifié
-(état au 2026-08-12, commit `c727b9b`).
+Branche `feature/tablet-hub-pwa`. **962 tests verts**, `tsc -b` propre, build vérifié
+(état au 2026-08-12, écran de dérivation branché).
 
 ---
 
 ## PAR QUOI REPRENDRE
 
-> **Le point exact où s'arrête le travail : `forgeSystemDepuisCorpus` existe, est testé, et
-> personne ne l'appelle.** Le service sait dériver un pilote des fiches d'un corpus, groupe de
-> champs par groupe de champs. L'interface, elle, appelle encore l'ancien `forgeSystem`, qui lit le
-> livre. **Prochain geste : brancher l'écran.**
+> **La chaîne est complète et jamais lancée en réel.** L'écran lit les fiches, dérive le pilote
+> groupe par groupe, affiche l'avancement et le journal des lacunes. Ce qui manque n'est plus du
+> code : c'est **une exécution sur charge réelle**, et une fiche qui n'existe nulle part.
 
-**Ce qu'il faut faire, concrètement.**
+**Le geste suivant, et pourquoi celui-là.**
 
-1. Lire les fiches du corpus désigné. Tout existe déjà :
-   `cheminDesFiches(corpus)` (`electron/corpusSysteme.ts`), puis
-   `window.appBridge.ai.listDir(...)` et `readDoc(...)` — c'est exactement ce que fait
-   `BrainstormOverlay.tsx` pour l'atelier, et ce que `RuleWorkshopViewer.tsx` fait pour le Grimoire.
-2. En tirer des `FicheDuCorpus` : le `sujet:` du frontmatter, et le contenu.
-3. Appeler `forgeSystemDepuisCorpus(fiches, { onProgres })` et afficher l'avancement — huit groupes
-   à ~2 min 30 font un quart d'heure, et `ForgeProgress` sait déjà tenir un écran d'attente.
-4. Montrer les `echecs` : ils nomment les groupes qu'aucune fiche ne couvrait. **C'est le journal
-   des lacunes du pilote**, et il ne doit pas se perdre.
+1. **Forger la fiche du quatorzième sujet, sur Dune d'abord.** Vérifié sur les trois corpus le
+   2026-08-12 : *aucun* ne possède de fiche « Composition de la fiche de personnage ». Le groupe
+   `fiche` ne reçoit donc que « Jauges et ressources individuelles », et le `template` dérivé
+   n'aurait que des jauges — ni compétences, ni caractéristiques. **C'est la seule lacune qui rende
+   le résultat inexploitable**, les sept autres groupes étant tous nourris.
+2. **Dériver Dune, et ne pas l'enregistrer.** Dune est le seul corpus qui ait un pilote de
+   référence *vérifié à la main* : c'est donc le seul dont la dérivation puisse être **comparée**
+   au lieu d'être crue. L'enregistrement crée un pilote neuf (`custom-<horodatage>`), il n'écrase
+   rien — mais l'intérêt est à l'écran, avant.
+3. **Alien ensuite**, quand la comparaison sur Dune aura dit ce que la chaîne vaut.
 
 **Avancement des axes.**
 
@@ -35,17 +35,44 @@ Branche `feature/tablet-hub-pwa`. **921 tests verts**, `tsc -b` propre, build v�
 | 0 — mesurer | **fait** (2026-08-11) |
 | 0 bis — iGPU | **fait** (2026-08-12) |
 | 1 — canevas du pilote | **fait** (`1677785`) |
-| 2 — dériver du corpus | **fait côté service** (`c727b9b`) — *l'écran manque* |
+| 2 — dériver du corpus | **fait, service et écran** (2026-08-12) — *jamais lancé en réel* |
 | 3 — NotebookLM pour les lacunes | non commencé, et **ne se justifie qu'après avoir vu ce que le corpus ne couvre pas** |
 | 4 — le pilote se vérifie | non commencé |
+
+### Ce que les corpus réels donnent, groupe par groupe
+
+Mesuré le 2026-08-12 sur les fiches du dépôt, par `corpusDerivable.test.ts` :
+
+| Groupe | Dune | Alien | Blade Runner | Invite la plus lourde |
+|---|---|---|---|---|
+| identite | 1 fiche | 1 | 1 | ~1 600 tokens |
+| jet | 2 | 2 | 2 | ~3 450 tokens |
+| initiative | 1 | 1 | 1 | ~1 750 tokens |
+| defaite | 2 | 2 | 2 | **~3 900 tokens** |
+| ressources | 1 | 1 | 1 | ~1 800 tokens |
+| jauges | 1 | 1 | 1 | ~2 150 tokens |
+| portees | 1 | 1 | 1 | ~1 650 tokens |
+| fiche | **0 propre** | **0 propre** | **0 propre** | *retombe sur la fiche des jauges* |
+
+**Le pari de l'axe 2 tient sur charge réelle** : le groupe le plus lourd fait moins de la moitié du
+budget de 8 000 tokens. Un test le verrouille pour tous les corpus du dépôt, parce qu'une fiche
+reforgée plus longue ramènerait la troncature silencieuse sans que rien ne le dise.
+
+**Et neuf à quatorze fiches par corpus n'entrent dans aucun groupe** — celles hors canevas (les
+Mentats, les Arènes de Conflit, le Test de Voight), plus « Jets opposés », « États et conditions »,
+« Environnement et dangers », « Poursuites » et l'inventaire. Ce n'est pas une perte : ces
+mécaniques n'ont pas de champ dans le pilote. C'est la mesure de ce que le pilote *ne dit pas* du
+jeu, et l'Oracle continue de les lire par le RAG.
 
 **Ce qui attend derrière, et qui n'est pas dans ce plan.**
 
 - **Les trois inventaires sont périmés** depuis l'ajout du quatorzième sujet : Dune, Alien et Blade
   Runner ne connaissent que treize sujets. Relance à 72 s chacun, et cela corrigera au passage les
-  en-têtes `sujets_traites: 0 sur 13` faux d'Alien et de Blade Runner.
-- **Alien n'a toujours aucun pilote.** C'est le cas d'essai de ce chantier — corpus propre, rien à
-  écraser. Recommandation inchangée : le forger *après* l'axe 4, pour qu'il naisse vérifié.
+  en-têtes `sujets_traites: 0 sur 13` faux d'Alien et de Blade Runner. **C'est le préalable du
+  point 1 ci-dessus** : sans inventaire à jour, le sujet 14 n'apparaît pas dans la liste à forger.
+- **Alien n'a toujours aucun pilote.** Corpus propre, rien à écraser. Recommandation revue : le
+  forger après avoir *comparé* la dérivation de Dune à sa référence — un corpus sans étalon ne dit
+  pas si la chaîne fonctionne, il dit seulement qu'elle a produit quelque chose.
 - **Trois sujets d'Alien n'ont aucune fiche v3** : Stress et Panique (le cœur du jeu), Forcer le
   test, le Mode Discret. Ils vivent encore sur des fiches v1.
 - **Trois fiches v1 d'Alien** subsistent dans `rules/` sans doublon exact — `combat-spatial.md`,
@@ -251,13 +278,38 @@ Fermé, ne contenant **que ce que l'application consomme**.
 
 *Une forge qui remplit des champs morts est invérifiable.*
 
-### Axe 2 — Dériver du corpus
+### Axe 2 — Dériver du corpus — **fait le 2026-08-12**
 
 La Forge Système lit les fiches v3 du corpus désigné, pas le livre. **Un appel par groupe de champs**
 plutôt qu'un appel géant : c'est la scission qui a fait passer les fiches de l'échec à 60 secondes
 par moitié, et il n'y a aucune raison que la leçon ne vaille pas ici.
 
 Le `template` sort du sujet 14 ; le `driver` sort des six autres correspondances du tableau du § 1.
+
+**Ce que l'écran fait maintenant.** Un corpus se désigne dans l'onglet Structure, au-dessus du bac à
+contexte — la dérivation est devenue la voie normale, déposer un livre reste possible en dessous.
+`lireFichesDuCorpus` lit `rules/`, rend les fiches et **nomme ce qu'elle a écarté** ; la dérivation
+affiche le groupe en cours sur huit ; le journal des lacunes s'affiche avec le résultat et
+**survit à l'enregistrement**, puisque c'est après coup qu'il sert.
+
+**Trois défauts trouvés en branchant, qui n'étaient pas au plan.**
+
+1. **Le journal de la Forge n'était affiché nulle part.** `addLog` écrivait depuis toujours dans un
+   état que rien ne rendait : la création d'un corpus, son échec faute de pont, les erreurs de forge
+   — tout partait dans le vide. *Un message qu'on n'affiche pas est un message qu'on n'a pas écrit.*
+2. **Le bouton d'enregistrement refusait en silence** quand le pilote n'avait pas de nom. Or un
+   pilote dérivé perd son nom dès que le groupe « Identité » ne rend rien : le cas est courant, pas
+   exceptionnel. La destination saisie à gauche en tient désormais lieu, et à défaut le refus
+   s'explique.
+3. **Le corpus d'enregistrement était re-déduit du nom du pilote.** Une dérivation de
+   `systems/alien` nommée « Alien : le Jeu de Rôle » se serait vu créer un `systems/alien-le-jeu-de-role`
+   voisin et vide, pendant que ses fiches seraient restées dans le premier. Un pilote dérivé d'un
+   corpus désigné reste attaché à celui-là.
+
+**L'abandon arrête vraiment la boucle**, entre deux groupes — deux minutes trente d'attente au pire,
+et l'acquis est rendu. L'ancien bouton « arrêter la forge », qui rendait la main sans rien arrêter,
+est masqué pendant une dérivation : sur un quart d'heure, il aurait laissé l'écran redevenir inerte
+pendant que huit groupes continuaient de tourner.
 
 ### Axe 3 — NotebookLM pour ce qui manque seulement
 

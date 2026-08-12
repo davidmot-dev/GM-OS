@@ -190,15 +190,27 @@ export class ForgeService {
    * minutes ; perdre six groupes parce que le septième a rendu un JSON bancal
    * serait le pire des comportements. Les échecs sont collectés et rendus avec
    * le résultat partiel.
+   *
+   * **L'abandon est réel, et il se prend entre deux groupes.** Un bouton qui
+   * cesserait d'afficher sans rien arrêter mentirait sur un quart d'heure
+   * d'attente ; il n'y a en revanche aucun moyen d'interrompre une génération
+   * déjà partie, donc la coupure attend la fin du groupe en cours — deux
+   * minutes trente au pire — et ce qui est acquis est rendu.
    */
   public async forgeSystemDepuisCorpus(
     fiches: FicheDuCorpus[],
-    options: { groupes?: readonly GroupeDeChamps[]; onProgres?: (groupe: GroupeDeChamps, rang: number, total: number) => void } = {},
-  ): Promise<{ resultat: FragmentDePilote; echecs: { groupe: string; raison: string }[] }> {
+    options: {
+      groupes?: readonly GroupeDeChamps[];
+      onProgres?: (groupe: GroupeDeChamps, rang: number, total: number) => void;
+      /** Consulté avant chaque groupe. Vrai : on s'arrête et on rend l'acquis. */
+      abandonne?: () => boolean;
+    } = {},
+  ): Promise<{ resultat: FragmentDePilote; echecs: { groupe: string; raison: string }[]; interrompue: boolean }> {
     const groupes = options.groupes ?? GROUPES;
     const aiService = AIService.getInstance();
     const fragments: FragmentDePilote[] = [];
     const echecs: { groupe: string; raison: string }[] = [];
+    let interrompue = false;
 
     const systemPrompt =
       "Tu es l'ingénieur en chef de la Forge GM-OS. Tu rends EXCLUSIVEMENT un objet " +
@@ -206,6 +218,17 @@ export class ForgeService {
       'pas de répondre, rends un objet vide {}.';
 
     for (const [rang, groupe] of groupes.entries()) {
+      if (options.abandonne?.()) {
+        interrompue = true;
+        // Les groupes non traités sont des lacunes comme les autres : le
+        // journal doit dire qu'ils manquent, pas laisser croire qu'ils sont
+        // couverts.
+        for (const restant of groupes.slice(rang)) {
+          echecs.push({ groupe: restant.id, raison: 'dérivation interrompue avant ce groupe' });
+        }
+        break;
+      }
+
       options.onProgres?.(groupe, rang + 1, groupes.length);
 
       // Un groupe sans fiche ne part pas : l'appel coûterait des minutes pour
@@ -229,7 +252,7 @@ export class ForgeService {
       }
     }
 
-    return { resultat: fusionnerFragments(fragments), echecs };
+    return { resultat: fusionnerFragments(fragments), echecs, interrompue };
   }
 
   private getSystemForgePrompt(userInstructions?: string, targetName?: string): string {

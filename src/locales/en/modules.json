@@ -1323,6 +1323,28 @@
         "structure": "System Structure",
         "rules": "Rules Atelier"
       },
+      "corpus_forge": {
+        "label": "Derive from corpus",
+        "hint": "The driver is derived from the Atelier's verified sheets, one field group at a time. Expect about fifteen minutes.",
+        "choose": "Which corpus should be derived?",
+        "button": "Derive the driver",
+        "required": "Pick a corpus first: its sheets are what fill the driver.",
+        "reading": "READING SHEETS: {{chemin}}",
+        "read_count": "{{nombre}} sheets read",
+        "ignored": "SKIPPED: {{fichier}} — {{raison}}",
+        "empty": "No sheet in {{chemin}}: this corpus has not been documented by the Rules Atelier yet.",
+        "progress_title": "Deriving the driver",
+        "progress_group": "Group {{rang}} of {{total}} — {{groupe}}",
+        "progress_detail": "{{nombre}} verified sheets, read from {{chemin}}",
+        "abort": "Stop after the current group",
+        "aborted": "DERIVATION STOPPED ON REQUEST.",
+        "done": "DRIVER DERIVED: {{remplis}} groups filled, {{lacunes}} gaps.",
+        "gaps_title": "What the corpus does not cover",
+        "gaps_hint": "Each line names a field group no sheet could fill. This is the driver's gap log: document them in the Rules Atelier before forging again.",
+        "unnamed": "The driver has no name: the \"Identity and mood\" group returned nothing. Fill in the destination on the left, it will stand in.",
+        "no_sections": "The character sheet has no section: the driver's gauges and thresholds will point at fields that do not exist.",
+        "cannot_save": "Nothing to save without a name: fill in the destination on the left."
+      },
       "atelier": {
         "discovery_title": "Detected Subjects",
         "discovery_subtitle": "Click on a subject to forge its rules",

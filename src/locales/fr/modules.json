@@ -1352,6 +1352,28 @@
         "structure": "Structure Système",
         "rules": "Atelier de Règles"
       },
+      "corpus_forge": {
+        "label": "Dériver du corpus",
+        "hint": "Le pilote se dérive des fiches vérifiées de l'Atelier, un groupe de champs à la fois. Comptez un quart d'heure.",
+        "choose": "Quel corpus dériver ?",
+        "button": "Dériver le pilote",
+        "required": "Choisissez d'abord un corpus : ce sont ses fiches qui remplissent le pilote.",
+        "reading": "LECTURE DES FICHES : {{chemin}}",
+        "read_count": "{{nombre}} fiches lues",
+        "ignored": "IGNORÉ : {{fichier}} — {{raison}}",
+        "empty": "Aucune fiche dans {{chemin}} : ce corpus n'a pas encore été documenté par l'Atelier de Règles.",
+        "progress_title": "Dérivation du pilote",
+        "progress_group": "Groupe {{rang}} sur {{total}} — {{groupe}}",
+        "progress_detail": "{{nombre}} fiches vérifiées, lues dans {{chemin}}",
+        "abort": "Cesser après le groupe en cours",
+        "aborted": "DÉRIVATION INTERROMPUE À LA DEMANDE.",
+        "done": "PILOTE DÉRIVÉ : {{remplis}} groupes remplis, {{lacunes}} lacunes.",
+        "gaps_title": "Ce que le corpus ne couvre pas",
+        "gaps_hint": "Chaque ligne nomme un groupe de champs qu'aucune fiche n'a rempli. C'est le journal des lacunes du pilote : à documenter dans l'Atelier de Règles avant de reforger.",
+        "unnamed": "Le pilote n'a pas de nom : le groupe « Identité et ambiance » n'a rien rendu. Renseignez la destination ci-contre, elle en tiendra lieu.",
+        "no_sections": "La fiche de personnage n'a aucune section : les jauges et les seuils du pilote pointeront vers des champs qui n'existent pas.",
+        "cannot_save": "Rien à enregistrer sans nom : renseignez la destination ci-contre."
+      },
       "atelier": {
         "discovery_title": "Sujets Détectés",
         "discovery_subtitle": "Cliquez sur un sujet pour forger ses règles",
