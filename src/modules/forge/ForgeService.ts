@@ -205,6 +205,8 @@ export class ForgeService {
       onProgres?: (groupe: GroupeDeChamps, rang: number, total: number) => void;
       /** Consulté avant chaque groupe. Vrai : on s'arrête et on rend l'acquis. */
       abandonne?: () => boolean;
+      /** Dossier de corpus visé — la seule source du nom du jeu. */
+      corpus?: string;
     } = {},
   ): Promise<{ resultat: FragmentDePilote; echecs: { groupe: string; raison: string }[]; interrompue: boolean }> {
     const groupes = options.groupes ?? GROUPES;
@@ -251,7 +253,10 @@ export class ForgeService {
           échouer, et le vocabulaire doit refléter ce qui existe vraiment.
         */
         const fragment = await aiService.generateJSON<FragmentDePilote>(
-          promptDuGroupe(groupe, fiches, vocabulaireAcquis(fusionnerFragments(fragments))),
+          promptDuGroupe(groupe, fiches, {
+            vocabulaire: vocabulaireAcquis(fusionnerFragments(fragments)),
+            corpus: options.corpus,
+          }),
           systemPrompt,
           [],
           { lite: true },

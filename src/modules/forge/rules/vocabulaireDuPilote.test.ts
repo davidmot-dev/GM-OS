@@ -96,17 +96,50 @@ describe('le bloc de vocabulaire', () => {
 describe('l\'invite d\'un groupe', () => {
   it('porte le vocabulaire quand le groupe en dépend', () => {
     const jet = GROUPES.find(g => g.id === 'jet')!;
-    expect(promptDuGroupe(jet, fiches, acquis)).toContain('IDENTIFIANTS DISPONIBLES');
+    expect(promptDuGroupe(jet, fiches, { vocabulaire: acquis })).toContain('IDENTIFIANTS DISPONIBLES');
   });
 
   it('ne le porte pas quand le groupe n\'y touche pas', () => {
     // Cent cinquante tokens de contrainte inutile dans un budget qui compte.
     const portees = GROUPES.find(g => g.id === 'portees')!;
-    expect(promptDuGroupe(portees, fiches, acquis)).not.toContain('IDENTIFIANTS DISPONIBLES');
+    expect(promptDuGroupe(portees, fiches, { vocabulaire: acquis })).not.toContain('IDENTIFIANTS DISPONIBLES');
   });
 
   it('reste utilisable sans vocabulaire du tout', () => {
     const jet = GROUPES.find(g => g.id === 'jet')!;
     expect(promptDuGroupe(jet, fiches)).toContain('TÂCHE');
+  });
+
+  it('ancre le nom du jeu sur le dossier du corpus — la seule source qu\'il ait', () => {
+    /**
+     * **Aucune fiche ne dit comment le jeu s'appelle.** Elles décrivent des
+     * mécaniques, et le frontmatter qui porte `systeme: alien` est retiré avant
+     * l'envoi. Dérivée d'Alien le 2026-08-12, la Forge a donc nommé le pilote
+     * « Identité et ambiance » — le titre de notre propre sujet, faute d'autre
+     * chose à recopier.
+     */
+    const identite = GROUPES.find(g => g.id === 'identite')!;
+    const invite = promptDuGroupe(identite, fiches, { corpus: 'alien' });
+    expect(invite).toContain('« alien »');
+    expect(invite).toContain("Jamais le");
+  });
+
+  it('n\'ancre que le groupe qui nomme le jeu', () => {
+    const jet = GROUPES.find(g => g.id === 'jet')!;
+    expect(promptDuGroupe(jet, fiches, { corpus: 'alien' })).not.toContain('ANCRAGE');
+  });
+});
+
+describe('les valeurs que le moteur impose', () => {
+  it('le groupe du jet énumère les logiques et les deux sens', () => {
+    /**
+     * Dérivée d'Alien, la Forge a rendu `sens: "sup_ou_egal"` — faux d'un
+     * caractère. Le moteur n'accepte que deux valeurs, et le modèle ne pouvait
+     * pas les deviner : on ne les lui avait jamais dites.
+     */
+    const jet = GROUPES.find(g => g.id === 'jet')!;
+    expect(jet.cible).toContain('count-success');
+    expect(jet.cible).toContain('"sous-ou-egal"');
+    expect(jet.cible).toContain('"superieur-ou-egal"');
   });
 });

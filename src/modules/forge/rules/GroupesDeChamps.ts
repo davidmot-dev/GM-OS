@@ -121,7 +121,20 @@ export const GROUPES: readonly GroupeDeChamps[] = [
         label: 'Dés et composition du jet',
         sujets: ['Résolution des jets', 'Degrés de réussite et critiques'],
         dependDuVocabulaire: true,
-        cible: '"driver" avec seulement dice et jet',
+        /**
+         * **Les énumérations sont dites, parce qu'elles ne se devinent pas.**
+         * Dérivée d'Alien, la Forge a rendu `sens: "sup_ou_egal"` et
+         * `logic: "count-success"` — la seconde juste par chance, la première
+         * fausse d'un caractère. Le moteur n'accepte que deux sens et six
+         * logiques ; le modèle ne pouvait pas les inventer.
+         */
+        cible:
+            '"driver" avec seulement dice et jet. "dice.logic" vaut EXACTEMENT l\'une de ces valeurs : ' +
+            'sum, highest, lowest, count-success, d100-low, d100-high. "jet.sens" vaut EXACTEMENT ' +
+            '"sous-ou-egal" (chaque dé sous le seuil est une réussite) ou "superieur-ou-egal" ' +
+            '(chaque dé au-dessus en est une). "jet.reserve" décrit le nombre de dés lancés : ' +
+            'si le jeu constitue une réserve à partir de la fiche plutôt qu\'un seuil, laisse ' +
+            '"seuil" vide et renseigne "reserve"',
         exemple: '{"driver":{"dice":{"defaultDice":"2d20","logic":"count-success","engine":"2d20"},"jet":{"seuil":[{"id":"competence","label":"Compétence","sectionId":"competences"},{"id":"principe","label":"Principe","sectionId":"principes"}],"reserve":{"base":2,"max":5,"faces":20,"cout":[1,2,3],"ressource":"impulsion"},"sens":"sous-ou-egal","critique":1,"complication":20,"difficulte":{"min":0,"max":5,"defaut":1}}}}',
     },
     {
@@ -256,11 +269,26 @@ export function fichesDuGroupe(groupe: GroupeDeChamps, fiches: FicheDuCorpus[]):
  * centièmes de seconde ; demander du JSON indenté et commenté se paierait en
  * minutes.
  */
+export interface ContexteDuGroupe {
+    vocabulaire?: VocabulaireDuPilote;
+    /**
+     * Le dossier de corpus visé — `alien`, `dune`.
+     *
+     * **Sans lui, le nom du jeu n'a aucune source.** Les fiches décrivent des
+     * mécaniques ; aucune ne dit comment le jeu s'appelle, et le frontmatter
+     * qui le porte (`systeme: alien`) est retiré avant l'envoi. Dérivée d'Alien
+     * le 2026-08-12, la Forge a donc nommé le pilote « Identité et ambiance » —
+     * le titre de notre propre sujet, faute d'autre chose à recopier.
+     */
+    corpus?: string;
+}
+
 export function promptDuGroupe(
     groupe: GroupeDeChamps,
     fiches: FicheDuCorpus[],
-    vocabulaire?: VocabulaireDuPilote,
+    contexte: ContexteDuGroupe = {},
 ): string {
+    const { vocabulaire, corpus } = contexte;
     const retenues = fichesDuGroupe(groupe, fiches);
     const corps = retenues.map(f => `### ${f.sujet}\n${f.contenu}`).join('\n\n');
 
@@ -271,6 +299,16 @@ export function promptDuGroupe(
         '',
         `TÂCHE : rends un JSON compact contenant ${groupe.cible}. Rien d'autre.`,
         '',
+        // L'ancrage ne sert qu'au groupe qui nomme le jeu, et il lui est
+        // indispensable : aucune fiche ne dit comment le jeu s'appelle.
+        ...(groupe.id === 'identite' && corpus
+            ? [
+                `ANCRAGE : ces fiches documentent le jeu dont le dossier de corpus s'appelle « ${corpus} ».`,
+                'Le "name" est le titre complet de CE jeu, tel qu\'un joueur le nommerait. Jamais le',
+                "titre d'un sujet de règles, jamais le nom du dossier recopié tel quel.",
+                '',
+            ]
+            : []),
         // Le vocabulaire vient juste après la tâche, et avant les interdits :
         // c'est la contrainte la plus dure, elle ne doit pas se noyer.
         ...(groupe.dependDuVocabulaire && vocabulaire ? [blocDuVocabulaire(vocabulaire), ''] : []),

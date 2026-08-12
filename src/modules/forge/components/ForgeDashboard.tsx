@@ -430,6 +430,8 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
         // L'état est relu à chaque groupe : la valeur capturée à la fermeture
         // serait celle du premier rendu, et le bouton n'arrêterait rien.
         abandonne: () => useForgeStore.getState().arretDemande,
+        // Aucune fiche ne dit comment le jeu s'appelle : le dossier, si.
+        corpus: corpusVise.id,
       });
 
       forgeStore.completeAnalysis(
