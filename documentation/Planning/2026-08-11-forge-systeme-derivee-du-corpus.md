@@ -11,9 +11,29 @@ Branche `feature/tablet-hub-pwa`. **962 tests verts**, `tsc -b` propre, build v�
 
 ## PAR QUOI REPRENDRE
 
-> **La chaîne est complète et jamais lancée en réel.** L'écran lit les fiches, dérive le pilote
-> groupe par groupe, affiche l'avancement et le journal des lacunes. Ce qui manque n'est plus du
-> code : c'est **une exécution sur charge réelle**, et une fiche qui n'existe nulle part.
+> **La chaîne tourne de bout en bout, et son résultat attend son jugement.** L'écran lit les
+> fiches, dérive le pilote groupe par groupe, montre ce qu'il a produit *identifiants compris* et
+> nomme ce qui ne se raccorde à rien. Ce qui manque n'est plus du code : c'est **la confrontation
+> du pilote dérivé de Dune à sa référence vérifiée à la main**.
+>
+> **Première dérivation réussie, le 2026-08-12 au soir — et ce qu'elle a coûté avant d'aboutir.**
+>
+> La première tentative a échoué sur les huit groupes, quarante-six minutes durant, sur
+> « Impossible de parser la réponse en JSON ». **La réponse n'était pas mal formée, elle était
+> vide** : `gemma4:12b` raisonne avant de répondre, Ollama range cette réflexion dans
+> `message.thinking` — un champ que le type ne déclarait même pas — et le plafond
+> `num_predict: 2048` tombait *pendant* le raisonnement. Mesuré sur un groupe réel : 349 s et
+> 2 048 tokens pour zéro caractère de réponse, contre 64 s et 116 tokens avec `think: false`.
+> Corrigé en `9296349`, avec `format: 'json'` par-dessus — une consigne s'ignore, une grammaire non.
+>
+> La seconde dérivation a rendu **huit groupes remplis, zéro lacune, en six minutes** : nom et
+> moteur de dés exacts, vingt fiches lues, 19 600 tokens d'entrée pour ~1 000 de sortie.
+>
+> **Deux constats de qualité, à trancher.** (1) `statsToTrack` a gagné « Points de progression »,
+> que la référence n'a pas — or les points de progression appartiennent à une *tâche étendue*, pas
+> à la fiche d'un personnage. (2) Sur la sonde d'un groupe, `sectionId` valait « Les compétences »,
+> **le titre de la section du livre**, là où le pilote attend l'identifiant d'une section de la
+> fiche. Les deux relèvent de la même cause structurelle, ci-dessous.
 
 **Le geste suivant, et pourquoi celui-là.**
 
@@ -27,6 +47,24 @@ Branche `feature/tablet-hub-pwa`. **962 tests verts**, `tsc -b` propre, build v�
    rien — mais l'intérêt est à l'écran, avant.
 3. **Alien ensuite**, quand la comparaison sur Dune aura dit ce que la chaîne vaut.
 
+### La question ouverte : les groupes ne se parlent pas
+
+**Un groupe ne peut pas viser un identifiant qu'un autre n'a pas encore inventé.** `jet.seuil[].sectionId`,
+`combat.tacheDeDefaite.sectionDuSeuil`, `statsToTrack[].fieldId` et `ui_config.gauges[].fieldId`
+désignent tous des sections ou des champs que **seul le groupe `fiche` produit** — et les huit
+groupes sont forgés indépendamment, chacun ignorant ce que les autres ont rendu.
+
+Le modèle fait alors ce qu'il peut : il recopie un titre de section du livre, ou il invente un
+identifiant plausible. Les contrôles de l'axe 4 le voient, mais après coup.
+
+**Le remède, à décider :** forger le groupe `fiche` **en premier**, puis injecter son vocabulaire —
+la liste des `sectionId` et des `fieldId` réellement créés — dans l'invite des cinq groupes qui en
+dépendent. `GROUPES` est déjà un tableau ordonné, et `promptDuGroupe` reçoit déjà tout ce qu'il
+faut ; c'est une dépendance à déclarer, pas une architecture à refaire.
+
+*À mesurer avant de coder : combien d'identifiants ne se raccordent pas sur une dérivation réelle.
+Si la réponse est « deux sur trente », le remède coûte plus cher que le mal.*
+
 **Avancement des axes.**
 
 | Axe | État |
@@ -35,8 +73,8 @@ Branche `feature/tablet-hub-pwa`. **962 tests verts**, `tsc -b` propre, build v�
 | 0 bis — iGPU | **fait** (2026-08-12) |
 | 1 — canevas du pilote | **fait** (`1677785`) |
 | 2 — dériver du corpus | **fait, service et écran** (2026-08-12) — *jamais lancé en réel* |
-| 3 — NotebookLM pour les lacunes | non commencé, et **ne se justifie qu'après avoir vu ce que le corpus ne couvre pas** |
-| 4 — le pilote se vérifie | non commencé |
+| 3 — NotebookLM pour les lacunes | **sans objet pour l'instant** : la dérivation Dune du 2026-08-12 a rendu *0 lacune* sur huit groupes |
+| 4 — le pilote se vérifie | **fait** (2026-08-12) — contrôles + revue complète à l'écran |
 
 ### Ce que les corpus réels donnent, groupe par groupe
 
@@ -357,7 +395,19 @@ l'inverse l'une de l'autre*. Elle vaut ici plus qu'ailleurs, puisqu'une réponse
 **Cet axe ne se justifie qu'une fois qu'on sait ce que le corpus ne couvre pas** — donc après
 l'axe 2, jamais avant.
 
-### Axe 4 — Le pilote se vérifie
+### Axe 4 — Le pilote se vérifie — **fait le 2026-08-12**
+
+`src/modules/forge/rules/controlesDuPilote.ts`, montré par `RevueDuPilote.tsx` au moment de la
+revue. **Le test qui les calibre : le pilote Dune de référence ne produit aucun constat.** S'il en
+produisait, ce seraient les contrôles qu'il faudrait corriger — c'est l'étalon, pas le suspect.
+
+Déclenché par ce qu'on a vu sur la première dérivation réussie : **l'écran de revue montrait quatre
+valeurs** — un nom, un moteur de dés, deux libellés — pour un pilote qui en compte une quarantaine,
+avec un bouton ENREGISTRER juste en dessous. Les identifiants qui cassent en silence n'y figuraient
+pas. *La fiche se montre avant d'être écrite* vaut ici comme à l'Atelier.
+
+Les contrôles **ne refusent rien** : un identifiant introuvable peut venir d'une fiche incomplète
+autant que d'une invention du modèle. Ils nomment, un humain tranche.
 
 Les tests des quatre murs existent déjà, mais seulement pour Dune (`src/data/duneReference.test.ts`).
 Les généraliser en contrôles applicables à **tout pilote forgé** :
