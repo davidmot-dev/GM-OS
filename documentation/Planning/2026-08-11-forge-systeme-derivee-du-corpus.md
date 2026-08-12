@@ -11,10 +11,15 @@ Branche `feature/tablet-hub-pwa`. **962 tests verts**, `tsc -b` propre, build v�
 
 ## PAR QUOI REPRENDRE
 
-> **La chaîne tourne de bout en bout, et son résultat attend son jugement.** L'écran lit les
-> fiches, dérive le pilote groupe par groupe, montre ce qu'il a produit *identifiants compris* et
-> nomme ce qui ne se raccorde à rien. Ce qui manque n'est plus du code : c'est **la confrontation
-> du pilote dérivé de Dune à sa référence vérifiée à la main**.
+> **La chaîne est validée : le pilote dérivé de Dune reproduit sa référence.** Confrontation faite
+> le 2026-08-12 au soir, sur les valeurs visibles — dés `2d20` / `count-success` / moteur `2d20`,
+> sens sous-ou-égal, critique 1, complication 20, difficulté 0 à 5 par défaut 1, seuil
+> `competence ∈ competences` + `principe ∈ principes`, réserve de 2 à 5 dés à 20 faces au coût
+> 1-2-3 payés en `impulsion`, thème `#d97706`. **Identique au pilote écrit et vérifié à la main**,
+> et **zéro constat** aux contrôles de l'axe 4.
+>
+> **Le geste suivant est donc Alien** — corpus propre, aucun pilote, et une chaîne dont on sait
+> maintenant ce qu'elle vaut.
 >
 > **Première dérivation réussie, le 2026-08-12 au soir — et ce qu'elle a coûté avant d'aboutir.**
 >
@@ -41,11 +46,13 @@ Branche `feature/tablet-hub-pwa`. **962 tests verts**, `tsc -b` propre, build v�
    séance** : les trois corpus ont leur « Composition de la fiche de personnage », plus un
    « Poursuites » pour Dune (`couverture: absente` — le livre de base ne les traite pas, et c'est
    une réponse, pas un échec). **Les huit groupes sont donc nourris sur les trois corpus.**
-2. **Dériver Dune, et ne pas l'enregistrer.** Dune est le seul corpus qui ait un pilote de
-   référence *vérifié à la main* : c'est donc le seul dont la dérivation puisse être **comparée**
-   au lieu d'être crue. L'enregistrement crée un pilote neuf (`custom-<horodatage>`), il n'écrase
-   rien — mais l'intérêt est à l'écran, avant.
-3. **Alien ensuite**, quand la comparaison sur Dune aura dit ce que la chaîne vaut.
+2. ~~Dériver Dune et le comparer à sa référence.~~ **Fait le 2026-08-12, et concluant** — il a
+   fallu trois tentatives, dont deux ont servi à réparer la chaîne (le modèle qui raisonnait sans
+   répondre, puis les groupes qui s'ignoraient). La troisième reproduit la référence.
+3. **Alien maintenant.** Corpus propre, aucun pilote, et une chaîne dont on sait ce qu'elle vaut.
+   Ce qu'il faudra regarder de près, faute de référence à confronter : *le Stress et la Panique*
+   sont le cœur du jeu et **n'ont aucune fiche v3** — le pilote ne pourra donc pas les porter, et
+   c'est le journal des lacunes qui devra le dire.
 
 ### La question ouverte : les groupes ne se parlent pas
 
