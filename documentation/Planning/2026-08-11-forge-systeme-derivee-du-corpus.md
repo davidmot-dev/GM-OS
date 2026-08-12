@@ -4,22 +4,40 @@
 ouvrait le chantier des quatre murs. **Les quatre murs sont abattus** ; ce document traite de ce
 qu'ils rendent possible, et de ce qu'ils rendent nécessaire.
 
-Branche `feature/tablet-hub-pwa`. **962 tests verts**, `tsc -b` propre, build vérifié
-(état au 2026-08-12, écran de dérivation branché).
+Branche `feature/tablet-hub-pwa`. **1 015 tests verts**, `tsc -b` propre, build vérifié
+(état au 2026-08-13 minuit, commit `93afc6a` — vingt et un commits depuis `e9ad985`).
 
 ---
 
 ## PAR QUOI REPRENDRE
 
-> **La chaîne est validée : le pilote dérivé de Dune reproduit sa référence.** Confrontation faite
+> ## LE GESTE EXACT, AU MATIN DU 2026-08-13
+>
+> **Quitter l'application entièrement — le processus, pas la fenêtre — la relancer, et redériver
+> Alien.** Le dernier correctif (`93afc6a`, un schéma JSON imposé au décodeur) vit dans
+> `electron/`, et un `Ctrl+R` ne le charge jamais. Il est commité, testé et bâti, mais **il n'a
+> jamais tourné dans l'application** : c'est la seule chose qui manque pour savoir.
+>
+> Puis lire `~/ollama_debug.log`, qui écrit maintenant chaque requête et sa réponse en face à face.
+> Il dit `format=`, `options=` et ce qui revient — et c'est lui qui a fini par trancher hier soir
+> quand ni le terminal ni la console ne suffisaient.
+>
+> Si la fiche de personnage passe, **Alien a son premier pilote** et il n'y a plus qu'à
+> l'enregistrer. Ce qui restera à trancher est écrit au § « Ce qui attend » ci-dessous.
+>
+> ---
+>
+> **La chaîne est validée sur Dune : le pilote dérivé reproduit sa référence.** Confrontation faite
 > le 2026-08-12 au soir, sur les valeurs visibles — dés `2d20` / `count-success` / moteur `2d20`,
 > sens sous-ou-égal, critique 1, complication 20, difficulté 0 à 5 par défaut 1, seuil
 > `competence ∈ competences` + `principe ∈ principes`, réserve de 2 à 5 dés à 20 faces au coût
 > 1-2-3 payés en `impulsion`, thème `#d97706`. **Identique au pilote écrit et vérifié à la main**,
 > et **zéro constat** aux contrôles de l'axe 4.
 >
-> **Le geste suivant est donc Alien** — corpus propre, aucun pilote, et une chaîne dont on sait
-> maintenant ce qu'elle vaut.
+> **Sur Alien, tout sort juste sauf la fiche de personnage** : identité, dés
+> (`sens: superieur-ou-egal` — « chaque six est une réussite », l'inversion évitée), réserve en
+> nombres, jauges, portées, types de dégâts (*sang acide*, *asphyxie*, *vide*). Seul le gabarit
+> cassait, et c'est ce que le schéma corrige.
 >
 > **Première dérivation réussie, le 2026-08-12 au soir — et ce qu'elle a coûté avant d'aboutir.**
 >
@@ -112,7 +130,49 @@ Mentats, les Arènes de Conflit, le Test de Voight), plus « Jets opposés », �
 mécaniques n'ont pas de champ dans le pilote. C'est la mesure de ce que le pilote *ne dit pas* du
 jeu, et l'Oracle continue de les lire par le RAG.
 
+### Ce que la soirée du 2026-08-12 a appris sur le modèle
+
+Quatre échecs de suite sur la fiche de personnage d'Alien, **trois hypothèses réfutées** avant la
+bonne. Les trois fausses valent d'être écrites, pour qu'on ne les reprenne pas :
+
+1. *« La sortie est trop longue »* — faux : la première passe échouait sur deux cents caractères.
+2. *« C'est la température »* — vrai en partie (le décodage glouton reste le bon réglage pour une
+   extraction), mais elle n'expliquait pas l'échec : à température 0, il cassait encore.
+3. *« C'est la pénalité de répétition »* — **mesuré et réfuté** : pénalité par défaut, JSON valide ;
+   pénalité désarmée, JSON valide. Le réglage est conservé par principe, pas comme un correctif.
+
+**La vraie raison : du contenu qui déborde.** Sommé de ne rendre que des sections *sans* champs, le
+modèle a fourré les champs dans la chaîne `label`, guillemets échappés compris. Les
+`{"id\":\"agilite\"`, le `_Note:` en anglais et la chaîne unique de 7 495 caractères étaient tous
+la même chose. *Il ne dégénérait pas, il cherchait une place.*
+
+Et la découverte qui vaut au-delà de la Forge : **`prepareSystemPrompt` enrobait chaque extraction
+des instructions de la gemme Sage** — résolues depuis le corpus de la *campagne active* — plus les
+personnages de la séance. On dérivait Alien pendant que le modèle recevait l'ordre d'incarner le
+Sage d'un autre jeu, et 7 500 caractères d'invite en devenaient 13 577. `sansPersona` le coupe pour
+les six appels de la Forge, et pour le Cortex qui envoyait son contexte en double depuis le
+2026-08-07.
+
+**Deux instruments à ne pas perdre.** `~/ollama_debug.log` écrit chaque requête et sa réponse ; il
+a tranché ce que ni le terminal ni la console ne savaient dire. Et les sondes de
+`scratchpad/sonde_alien.py` mesurent une variante à la fois sur la charge réelle — c'est ainsi que
+les trois hypothèses sont tombées.
+
 **Ce qui attend derrière, et qui n'est pas dans ce plan.**
+
+- **Le cinquième mur : `DescripteurDeJet` ne sait pas dire Alien.** Il décrit un seuil composé de
+  champs de la fiche, sous lequel on lance ; Alien constitue une **réserve** (attribut + compétence)
+  et compte les six. Ce qui vient de la fiche n'est pas le seuil mais la *taille de la réserve*.
+  Décision de conception, non engagée.
+- **L'ordre d'action d'Alien se tire aux cartes.** Le modèle a rendu `initiative: "ordre croissant
+  des numéros"` — une phrase là où le pilote attend un descripteur ; un contrôle l'attrape
+  désormais, et `combat.initiativeCards` existe pour ce cas.
+- **La monnaie de table d'Alien est vide, et c'est probablement juste** — le jeu n'a pas de réserve
+  partagée. Mais le journal ne distingue pas « le jeu n'en a pas » de « le modèle a échoué », et il
+  le devrait.
+- **Le pilote dérivé meurt avec un rechargement de page** : `useForgeStore` n'est pas persisté. Un
+  quart d'heure de dérivation ne devrait pas tenir à un `Ctrl+R` — l'Atelier écrit ses brouillons
+  sur le disque avant toute revue, la Forge non.
 
 - **Les trois inventaires restent périmés**, même si les fiches du sujet 14 existent maintenant :
   `inventaire-des-mecaniques.md` ne connaît toujours que treize sujets pour les trois jeux, et les
