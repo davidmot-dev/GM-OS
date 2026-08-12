@@ -1,5 +1,29 @@
 // Utilisation du net.fetch d'Electron pour éviter les bugs réseau de Node.js sur Windows
 import { net, ipcMain } from 'electron';
+import fs from 'node:fs';
+import path from 'node:path';
+
+/**
+ * Le journal du processus principal, **sur le disque**.
+ *
+ * `console.log` d'ici ne sort que dans le terminal du serveur de développement.
+ * Ni les DevTools ni personne d'autre ne le voient — et le 2026-08-12, c'est ce
+ * qui a rendu indécidable pendant deux heures la question « la contrainte JSON
+ * part-elle vraiment ? ». Un fichier se relit après coup, par n'importe qui.
+ *
+ * Même emplacement et même forme que `~/mcp_bridge_debug.log`, dont la valeur
+ * est établie depuis le 2026-08-10 : c'est lui qui a permis de restaurer deux
+ * fiches perdues et de trouver dix défauts sur douze.
+ */
+const JOURNAL = path.join(process.env.USERPROFILE || process.env.HOME || '', 'ollama_debug.log');
+
+function journaliser(message: string): void {
+    try {
+        fs.appendFileSync(JOURNAL, `[${new Date().toISOString()}] ${message}\n`);
+    } catch {
+        // Un journal qui échoue ne doit jamais emporter la requête qu'il décrit.
+    }
+}
 
 export interface OllamaChatResponse {
     model: string;
@@ -165,10 +189,11 @@ export class OllamaService {
               trois processus la relaient, et aucun ne disait ce qu'il envoyait.
             */
             const corps = corpsDeChat(model, messages, options, true);
-            console.log(
+            const ligne =
                 `[Ollama] ${model} — format=${corps.format ?? 'aucun'}, think=${corps.think}, ` +
-                `options=${JSON.stringify(corps.options)}`,
-            );
+                `options=${JSON.stringify(corps.options)}, recu=${JSON.stringify(options ?? null)}`;
+            console.log(ligne);
+            journaliser(ligne);
 
             const envoyer = async (avecThink: boolean) => net.fetch(`${url}/api/chat`, {
                 method: 'POST',
@@ -202,6 +227,14 @@ export class OllamaService {
 
             const data = await response.json() as OllamaChatResponse;
             const contenu = data.message?.content ?? '';
+
+            // Ce qui revient, aussi : sans la réponse en face de la requête, le
+            // journal ne dit que la moitié de l'histoire.
+            journaliser(
+                `[Ollama] ← ${data.done_reason ?? '?'} — ${contenu.length} car., ` +
+                `${(data.message?.thinking ?? '').length} car. de réflexion. Fin : ` +
+                `« ${contenu.slice(-160).replace(/\s+/g, ' ')} »`,
+            );
 
             /*
               Une réponse vide se dit, et se dit avec sa cause.
