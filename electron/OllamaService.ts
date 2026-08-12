@@ -7,8 +7,70 @@ export interface OllamaChatResponse {
     message: {
         role: string;
         content: string;
+        /**
+         * La réflexion d'un modèle à raisonnement, qu'Ollama range **à part**.
+         *
+         * Ce champ n'était pas déclaré, donc jamais regardé — et c'est ce qui a
+         * rendu le défaut du 2026-08-12 illisible : `content` arrivait vide, et
+         * l'application accusait le parsing JSON.
+         */
+        thinking?: string;
     };
     done: boolean;
+    /** `stop` quand le modèle a fini, `length` quand `num_predict` l'a coupé. */
+    done_reason?: string;
+}
+
+/** Ce que l'appelant attend de la génération. */
+export interface OptionsDeChat {
+    /**
+     * Demande une sortie JSON.
+     *
+     * Pose `format: 'json'` : llama.cpp contraint alors le décodage par une
+     * grammaire, et la sortie **ne peut plus** être autre chose que du JSON
+     * syntaxiquement valide. Ce n'est pas une consigne au modèle, c'est une
+     * limite du décodeur — elle tient même quand la consigne est ignorée.
+     */
+    json?: boolean;
+    num_ctx?: number;
+    num_predict?: number;
+}
+
+/**
+ * Le corps de la requête `/api/chat`, isolé pour être vérifiable.
+ *
+ * **`think: false` est le cœur de la correction du 2026-08-12.** `gemma4:12b`
+ * raisonne avant de répondre ; Ollama range cette réflexion dans
+ * `message.thinking` et ne remplit `message.content` qu'ensuite. Mesuré sur la
+ * charge réelle d'un groupe de la Forge :
+ *
+ * | | durée | tokens sortis | `done_reason` | `content` |
+ * |---|---|---|---|---|
+ * | sans `think` | **349 s** | 2048 | **`length`** | **vide** |
+ * | `think: false` | 64 s | 116 | `stop` | JSON valide |
+ *
+ * Le raisonnement consommait donc **tout** le budget de génération avant
+ * d'écrire un seul caractère de réponse. Huit groupes, quarante-six minutes,
+ * et huit erreurs qui accusaient le parsing JSON.
+ */
+export function corpsDeChat(
+    model: string,
+    messages: { role: string; content: string }[],
+    options: OptionsDeChat = {},
+    avecThink = true,
+): Record<string, unknown> {
+    const { json, ...limites } = options;
+    return {
+        model,
+        messages,
+        stream: false,
+        ...(json ? { format: 'json' } : {}),
+        // Omis quand le modèle refuse le champ — cf. la reprise dans `chat`.
+        ...(avecThink ? { think: false } : {}),
+        // Les limites voyagent avec la requête : elles cessent ainsi de
+        // dépendre du réglage local d'une machine.
+        options: { ...OPTIONS_PAR_DEFAUT, ...limites },
+    };
 }
 
 /**
@@ -63,22 +125,34 @@ export class OllamaService {
         model: string,
         messages: { role: string; content: string }[],
         endpoint?: string,
-        options?: Partial<typeof OPTIONS_PAR_DEFAUT>,
+        options?: OptionsDeChat,
     ): Promise<string> {
         const url = (endpoint || this.baseUrl).replace(/\/$/, '');
         try {
-            const response = await net.fetch(`${url}/api/chat`, {
+            const envoyer = async (avecThink: boolean) => net.fetch(`${url}/api/chat`, {
                 method: 'POST',
-                body: JSON.stringify({
-                    model: model,
-                    messages: messages,
-                    stream: false,
-                    // Les limites voyagent avec la requête : elles cessent ainsi
-                    // de dépendre du réglage local d'une machine.
-                    options: { ...OPTIONS_PAR_DEFAUT, ...options },
-                }),
+                body: JSON.stringify(corpsDeChat(model, messages, options, avecThink)),
                 headers: { 'Content-Type': 'application/json' }
             });
+
+            let response = await envoyer(true);
+
+            /*
+              Tous les modèles n'acceptent pas `think`. Plutôt que de tenir une
+              liste de ceux qui raisonnent — qui serait fausse à la prochaine
+              installation —, on essaie, et on refait sans si le serveur le
+              refuse. Le refus est nommé dans le journal : un repli silencieux
+              rendrait le prochain diagnostic impossible.
+            */
+            if (!response.ok) {
+                const refus = await response.text().catch(() => '');
+                if (/think/i.test(refus)) {
+                    console.warn(`[Ollama] « ${model} » refuse le champ « think » ; reprise sans lui.`);
+                    response = await envoyer(false);
+                } else {
+                    throw new Error(`Ollama error (${response.status}): ${refus || response.statusText}`);
+                }
+            }
 
             if (!response.ok) {
                 const errorText = await response.text().catch(() => response.statusText);
@@ -86,7 +160,33 @@ export class OllamaService {
             }
 
             const data = await response.json() as OllamaChatResponse;
-            return data.message.content;
+            const contenu = data.message?.content ?? '';
+
+            /*
+              Une réponse vide se dit, et se dit avec sa cause.
+
+              Deux causes distinctes, qu'il ne faut pas confondre : le modèle a
+              tout dépensé en réflexion (`thinking` rempli), ou il a été coupé
+              par `num_predict` (`done_reason: 'length'`). Rendre la chaîne vide
+              telle quelle laissait le renderer conclure « JSON illisible » —
+              huit fois de suite, et en accusant le mauvais coupable.
+            */
+            if (!contenu.trim()) {
+                const pensee = data.message?.thinking ?? '';
+                if (pensee.trim()) {
+                    throw new Error(
+                        `Le modèle « ${model} » a raisonné ${pensee.length} caractères sans rien répondre` +
+                        `${data.done_reason === 'length' ? ' (coupé par num_predict)' : ''}. ` +
+                        `Sa réflexion a consommé le budget de génération.`,
+                    );
+                }
+                throw new Error(
+                    `Réponse vide de « ${model} »` +
+                    `${data.done_reason ? ` (done_reason: ${data.done_reason})` : ''}.`,
+                );
+            }
+
+            return contenu;
         } catch (error: unknown) {
             const err = error as Error & { code?: string; cause?: unknown };
             if (err.code === 'ECONNREFUSED' || err.message?.includes('fetch failed')) {
@@ -223,8 +323,14 @@ export class OllamaService {
             return await service.checkStatus(endpoint);
         });
 
-        ipcMain.handle('ai:ollama-chat', async (_event, model: string, messages: { role: string; content: string }[], endpoint?: string) => {
-            return await service.chat(model, messages, endpoint);
+        ipcMain.handle('ai:ollama-chat', async (
+            _event,
+            model: string,
+            messages: { role: string; content: string }[],
+            endpoint?: string,
+            options?: OptionsDeChat,
+        ) => {
+            return await service.chat(model, messages, endpoint, options);
         });
 
         ipcMain.handle('ai:ollama-generate-image', async (_event, model: string, prompt: string, endpoint?: string) => {

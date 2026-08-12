@@ -225,7 +225,17 @@ declare global {
                 },
             ) => Promise<string>;
             reindex: (customPath?: string) => Promise<boolean>;
-            ollamaChat: (model: string, messages: { role: string; content: string }[], endpoint?: string) => Promise<string>;
+            /**
+             * `options.json` pose `format: 'json'` côté Ollama — le décodage
+             * est alors contraint par une grammaire, et la sortie ne peut plus
+             * être autre chose que du JSON valide.
+             */
+            ollamaChat: (
+                model: string,
+                messages: { role: string; content: string }[],
+                endpoint?: string,
+                options?: { json?: boolean; num_ctx?: number; num_predict?: number },
+            ) => Promise<string>;
             ollamaChatStream: (model: string, messages: { role: string; content: string }[], endpoint?: string) => Promise<unknown>;
             ollamaStatus: (endpoint?: string) => Promise<boolean>;
             ollamaListModels: (endpoint?: string) => Promise<string[]>;

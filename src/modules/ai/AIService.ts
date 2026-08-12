@@ -51,11 +51,20 @@ export class AIService {
    * @returns Objet AIResponse contenant le texte et les métadonnées de génération.
    */
   public async generateText(
-    prompt: string, 
-    customContext?: string, 
+    prompt: string,
+    customContext?: string,
     gemId: string = 'sage',
     ragOptions: { systemOnly?: boolean; systemName?: string } = {},
-    lite?: boolean
+    lite?: boolean,
+    /**
+     * Vrai quand l'appelant attend du JSON.
+     *
+     * **L'information existait et n'allait nulle part.** `generateJSON` ajoutait
+     * une consigne au prompt et espérait ; Ollama, lui, sait *contraindre* sa
+     * sortie (`format: 'json'`) — mais rien ne le lui disait. Une consigne
+     * s'ignore, une grammaire non.
+     */
+    attendJson: boolean = false,
   ): Promise<AIResponse> {
     const { activeProvider } = useAIStore.getState();
     const TIMEOUT_MS = 2700000; // 45 minutes
@@ -71,7 +80,7 @@ export class AIService {
     console.log(`[AIService] Sending ${activeProvider} request (${prompt.length + systemPrompt.length} chars)...`);
 
     return Promise.race([
-      this.executeRequest(activeProvider, prompt, systemPrompt, gemId, ragOptions, lite),
+      this.executeRequest(activeProvider, prompt, systemPrompt, gemId, ragOptions, lite, attendJson),
       new Promise<AIResponse>((_, reject) => 
         setTimeout(() => reject(new Error(`TIMEOUT: ${activeProvider} n'a pas répondu après 45min.`)), TIMEOUT_MS)
       )
@@ -84,7 +93,8 @@ export class AIService {
     systemPrompt: string,
     _gemId: string,
     _ragOptions: any,
-    _lite?: boolean
+    _lite?: boolean,
+    attendJson: boolean = false,
   ): Promise<AIResponse> {
     const { configs } = useAIStore.getState();
     const config = configs[activeProvider];
@@ -107,8 +117,8 @@ export class AIService {
           // If needed, we'll have to upgrade the bridge or use proxyRequest for OpenAI-compatible Ollama Cloud providers.
           const text = await window.appBridge.ai.ollamaChat(model, [
             { role: 'user', content: `${systemPrompt}\n\n--- TA MISSION ---\n${prompt}` }
-          ], endpoint);
-          
+          ], endpoint, attendJson ? { json: true } : undefined);
+
           return { text, metadata: { provider: activeProvider, model, endpoint } };
         }
 
@@ -936,7 +946,7 @@ ${fullContext}`;
     Ne fournis aucune explication, aucun commentaire ni aucun bloc de code Markdown autour du JSON.
     Ta réponse doit commencer par { ou [ et se terminer par } ou ].`;
 
-    const response = await this.generateText(prompt, enhancedSystemPrompt, 'sage', {}, options.lite);
+    const response = await this.generateText(prompt, enhancedSystemPrompt, 'sage', {}, options.lite, true);
     console.log(`[AIService] Raw JSON response from ${activeProvider} (first 200 chars):`, response.text.substring(0, 200));
     
     try {
@@ -946,7 +956,15 @@ ${fullContext}`;
       try {
         return JSON.parse(response.text) as T;
       } catch {
-        throw new Error("Impossible de parser la réponse en JSON.");
+        /*
+          **La cause remonte, elle n'est plus remplacée.** Ce catch rendait
+          « Impossible de parser la réponse en JSON » quoi qu'il arrive — y
+          compris quand le modèle n'avait **rien** renvoyé. La Forge dérivée a
+          affiché ce message huit fois de suite le 2026-08-12 en accusant le
+          parsing, alors que la réponse était vide : le diagnostic était à
+          l'écran, et il désignait le mauvais coupable.
+        */
+        throw err instanceof Error ? err : new Error("Impossible de parser la réponse en JSON.");
       }
     }
   }
@@ -955,6 +973,25 @@ ${fullContext}`;
    * Extrait un bloc JSON d'une chaîne de texte potentiellement polluée.
    */
   private extractStructuredJSON<T>(input: string): T {
+    /*
+      Une réponse vide n'est pas un problème d'extraction, et le dire comme tel
+      envoie chercher au mauvais endroit.
+
+      Cas réel du 2026-08-12 : `gemma4:12b` raisonne avant de répondre. Ollama
+      range cette réflexion dans `message.thinking` et laisse `message.content`
+      vide tant qu'elle dure ; le plafond `num_predict` tombe pendant le
+      raisonnement, et l'application reçoit une chaîne vide. Elle annonçait
+      alors « le modèle a peut-être renvoyé du texte conversationnel » — il n'y
+      avait aucun texte.
+    */
+    if (!input || !input.trim()) {
+      throw new Error(
+        "Le modèle n'a renvoyé aucun texte. S'il raisonne avant de répondre, sa réflexion " +
+        "a pu consommer tout le budget de génération (`num_predict`) : demander `think: false`, " +
+        "ou relever le plafond.",
+      );
+    }
+
     // Nettoyage des balises markdown si présentes
     const cleaned = input.replace(/```json/g, '').replace(/```/g, '').trim();
     

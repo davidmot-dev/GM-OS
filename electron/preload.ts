@@ -106,7 +106,12 @@ contextBridge.exposeInMainWorld('appBridge', {
         ) => ipcRenderer.invoke('ai:search-context', systemId, campaignName, options),
         reindex: (customPath?: string) => ipcRenderer.invoke('ai:reindex', customPath),
         // Ollama Local AI
-        ollamaChat: (model: string, messages: { role: string; content: string }[], endpoint?: string) => ipcRenderer.invoke('ai:ollama-chat', model, messages, endpoint),
+        ollamaChat: (
+            model: string,
+            messages: { role: string; content: string }[],
+            endpoint?: string,
+            options?: { json?: boolean; num_ctx?: number; num_predict?: number },
+        ) => ipcRenderer.invoke('ai:ollama-chat', model, messages, endpoint, options),
         ollamaChatStream: (model: string, messages: { role: string; content: string }[], endpoint?: string) => ipcRenderer.invoke('ai:ollama-chat-stream', model, messages, endpoint),
         ollamaStatus: (endpoint?: string) => ipcRenderer.invoke('ai:ollama-status', endpoint),
         ollamaListModels: (endpoint?: string) => ipcRenderer.invoke('ai:ollama-list-models', endpoint),
