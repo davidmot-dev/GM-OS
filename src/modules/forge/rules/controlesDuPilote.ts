@@ -1,4 +1,5 @@
 import type { GameDriver, DiceRollLogic } from '../../../types/drivers';
+import type { HealthSystemType } from '../../../types/entity.types';
 import type { SheetTemplate, SheetFieldType } from '../../../data/defaultSheetTemplates';
 import type { SensDuJet } from '../../dice/DescripteurDeJet';
 import { GROUPES } from './GroupesDeChamps';
@@ -46,6 +47,23 @@ const TYPES_DE_CHAMP: readonly SheetFieldType[] = [
 
 /** Les deux sens que `preparerLeJet` sait lire. */
 const SENS_CONNUS: readonly SensDuJet[] = ['sous-ou-egal', 'superieur-ou-egal'];
+
+/**
+ * Les cinq modèles que `HealthInterpreter` sait interpréter — `entity.types.ts`.
+ *
+ * **Relevé sur la dérivation d'Alien du 2026-08-13 :** `defaultHealthType`
+ * valait « Santé », le titre de la section de la fiche. Aucun des cinq. Le
+ * modèle n'inventait pas : il recopiait le seul mot qu'il avait sous les yeux
+ * pour dire « la santé », faute de connaître l'énumération.
+ *
+ * Une valeur hors énumération ne fait rien planter — c'est bien le problème.
+ * `HealthInterpreter` retombe sur son cas par défaut, et la mise hors de combat
+ * se joue alors sur un modèle que personne n'a choisi.
+ */
+const MODELES_DE_SANTE: readonly HealthSystemType[] = ['hp', 'clocks', 'anatomy', 'wounds', 'boxes'];
+
+/** Les cinq bandes de portée, de la plus proche à la plus lointaine. */
+const ORDRE_DES_PORTEES = ['contact', 'courte', 'moyenne', 'longue', 'extreme'] as const;
 
 /** Tout ce que les exemples de l'invite montrent — donc tout ce qui peut en être recopié. */
 const TEXTE_DES_EXEMPLES = GROUPES.map(g => g.exemple).join(' ');
@@ -289,6 +307,17 @@ export function controlerLePilote(
     }
 
     // ---- La mise hors de combat --------------------------------------------
+    const modele = driver.combat?.defaultHealthType as string | undefined;
+    if (modele !== undefined && !MODELES_DE_SANTE.includes(modele as HealthSystemType)) {
+        erreur(
+            'combat.defaultHealthType',
+            `« ${modele} » n'est pas un modèle de santé connu (${MODELES_DE_SANTE.join(', ')}). ` +
+            "Le nom que la fiche donne à sa section de santé n'en est pas un : c'est la façon dont " +
+            'les dégâts se comptent qu\'il faut nommer ici — des points, une horloge, des cases, ' +
+            'des blessures, une anatomie.',
+        );
+    }
+
     const tache = driver.combat?.tacheDeDefaite;
     if (tache) {
         if (!idsDeSections.has(tache.sectionDuSeuil)) {
@@ -311,6 +340,66 @@ export function controlerLePilote(
             erreur(
                 'combat.tacheDeDefaite.champParDefaut',
                 `« ${tache.champParDefaut} » n'appartient pas à la section « ${tache.sectionDuSeuil} ».`,
+            );
+        }
+    }
+
+    // ---- Les portées --------------------------------------------------------
+    /*
+      **Ce qu'on contrôle, et surtout ce qu'on ne contrôle pas.**
+
+      Le signe du modificateur n'est pas arbitrable : Dune fait *monter* une
+      difficulté avec la distance (0 → 4), Alien fait *descendre* un bonus de
+      tir (0 → −3). Les deux sont justes, et l'outil suit l'état, il n'arbitre
+      pas. On ne surveille donc ni le sens, ni les valeurs.
+
+      **Mais une progression ne se retourne pas en chemin.** Relevé sur la
+      dérivation d'Alien du 2026-08-13 : `contact −3, courte 0, moyenne −1,
+      longue −2, extreme −3`. Les libellés étaient décalés d'un rang — « dans la
+      même zone » était rangé sous `courte`, « zone adjacente » sous `moyenne` —
+      et `contact` avait hérité du −3 d'`extreme`. Un personnage au contact
+      aurait tiré avec la pénalité maximale, et rien ne l'aurait dit.
+
+      Le zigzag est la signature de ce décalage, et il se voit sans connaître le
+      jeu : la difficulté ne peut pas empirer, s'améliorer, puis empirer encore
+      en s'éloignant d'un pas à chaque fois.
+    */
+    const portees = driver.tactical?.ranges;
+    if (portees) {
+        const bandes = ORDRE_DES_PORTEES
+            .map(nom => ({ nom, bande: portees[nom] }))
+            .filter((b): b is { nom: typeof ORDRE_DES_PORTEES[number]; bande: NonNullable<typeof b.bande> } => !!b.bande);
+
+        for (let i = 1; i < bandes.length; i++) {
+            const avant = bandes[i - 1];
+            const apres = bandes[i];
+            if (typeof avant.bande.maxUnits === 'number' && typeof apres.bande.maxUnits === 'number'
+                && apres.bande.maxUnits < avant.bande.maxUnits) {
+                erreur(
+                    `tactical.ranges.${apres.nom}.maxUnits`,
+                    `« ${apres.nom} » couvre ${apres.bande.maxUnits} unités quand « ${avant.nom} », ` +
+                    `plus proche, en couvre ${avant.bande.maxUnits} : une bande plus lointaine ne ` +
+                    'peut pas porter moins loin.',
+                );
+            }
+        }
+
+        const modificateurs = bandes
+            .map(b => b.bande.modifier)
+            .filter((m): m is number => typeof m === 'number');
+        let monte = false;
+        let descend = false;
+        for (let i = 1; i < modificateurs.length; i++) {
+            if (modificateurs[i] > modificateurs[i - 1]) monte = true;
+            if (modificateurs[i] < modificateurs[i - 1]) descend = true;
+        }
+        if (monte && descend) {
+            erreur(
+                'tactical.ranges',
+                `Les modificateurs ne progressent pas dans un seul sens (${modificateurs.join(', ')}) : ` +
+                "ils s'aggravent puis s'allègent en s'éloignant. C'est la signature d'un décalage " +
+                "d'un rang entre les bandes — vérifiez que le libellé de chaque portée décrit bien " +
+                'la distance sous laquelle il est rangé.',
             );
         }
     }

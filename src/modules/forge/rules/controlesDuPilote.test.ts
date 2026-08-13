@@ -287,6 +287,75 @@ describe('un type de champ que la fiche ne sait pas rendre', () => {
     });
 });
 
+describe('un modèle de santé hors énumération', () => {
+    it('« Santé » est le nom d\'une section de fiche, pas une façon de compter les dégâts', () => {
+        /**
+         * Relevé en réel sur la dérivation d'Alien du 2026-08-13.
+         * `HealthInterpreter` n'interprète que cinq modèles ; une valeur hors
+         * énumération ne plante pas, elle retombe sur le cas par défaut — et la
+         * mise hors de combat se joue sur un modèle que personne n'a choisi.
+         */
+        const constats = controlerLePilote(
+            { combat: { statsToTrack: [], initiativeFormula: '', defaultHealthType: 'Santé' } } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+        expect(constats.map(c => c.ou)).toEqual(['combat.defaultHealthType']);
+        expect(constats[0].message).toContain('hp, clocks, anatomy, wounds, boxes');
+    });
+
+    it('les cinq modèles connus passent', () => {
+        for (const modele of ['hp', 'clocks', 'anatomy', 'wounds', 'boxes']) {
+            const constats = controlerLePilote(
+                { combat: { statsToTrack: [], initiativeFormula: '', defaultHealthType: modele } } as unknown as Partial<GameDriver>,
+                fiche,
+            );
+            expect(constats).toEqual([]);
+        }
+    });
+});
+
+describe('des portées décalées d\'un rang', () => {
+    /** Les cinq bandes, écrites en un mot : `[maxUnits, modifier]` par portée. */
+    const portees = (valeurs: [number, number][]) => ({
+        tactical: {
+            useTacticalAI: false,
+            ranges: Object.fromEntries(
+                ['contact', 'courte', 'moyenne', 'longue', 'extreme'].map((nom, i) => [
+                    nom, { label: nom, maxUnits: valeurs[i][0], modifier: valeurs[i][1] },
+                ]),
+            ),
+        },
+    }) as unknown as Partial<GameDriver>;
+
+    it('un modificateur qui s\'aggrave, s\'allège, puis s\'aggrave encore', () => {
+        /**
+         * La charge réelle du 2026-08-13 : `contact −3, courte 0, moyenne −1,
+         * longue −2, extreme −3`. Les libellés étaient décalés d'un rang et
+         * `contact` avait hérité du −3 d'`extreme` — un personnage au contact
+         * aurait tiré avec la pénalité maximale.
+         */
+        const constats = controlerLePilote(
+            portees([[1, -3], [2, 0], [3, -1], [4, -2], [8, -3]]),
+            fiche,
+        );
+        expect(constats.map(c => c.ou)).toEqual(['tactical.ranges']);
+        expect(constats[0].message).toContain('-3, 0, -1, -2, -3');
+    });
+
+    it('une pénalité qui ne fait que descendre est légitime — le signe n\'est pas arbitré', () => {
+        // Alien correctement ordonné : le tir devient plus dur en s'éloignant.
+        expect(controlerLePilote(portees([[1, 0], [2, -1], [3, -2], [4, -3], [8, -4]]), fiche)).toEqual([]);
+    });
+
+    it('une bande plus lointaine qui porte moins loin', () => {
+        const constats = controlerLePilote(
+            portees([[1, 0], [5, 1], [3, 2], [7, 3], [9, 4]]),
+            fiche,
+        );
+        expect(constats.map(c => c.ou)).toEqual(['tactical.ranges.moyenne.maxUnits']);
+    });
+});
+
 describe('champsInvoques', () => {
     it('retire la notation de dés et dédoublonne', () => {
         expect(champsInvoques('2d6 + dex + dex + int')).toEqual(['dex', 'int']);
