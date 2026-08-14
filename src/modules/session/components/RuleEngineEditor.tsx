@@ -250,6 +250,38 @@ export const RuleEngineEditor: React.FC = () => {
                                             </div>
                                         </div>
 
+                                        {/*
+                                          **La santé de départ, amendable à la main.**
+
+                                          Le champ est né le 2026-08-15, après que
+                                          le pilote d'Alien a été forgé : sans cet
+                                          encart, il aurait fallu redériver un
+                                          quart d'heure pour une seule valeur, et
+                                          repasser par le renommage et le
+                                          nettoyage des anciens pilotes.
+
+                                          C'est vrai de tout champ neuf : un pilote
+                                          déjà enregistré ne se reforge pas pour
+                                          suivre le code, il s'amende.
+                                        */}
+                                        <div>
+                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400/60 mb-3 block px-1">
+                                                Santé de départ — lue sur la fiche
+                                            </label>
+                                            <input
+                                                type="text"
+                                                value={combat.santeDeDepart || ''}
+                                                onChange={e => handleUpdate({ combat: { ...combat, santeDeDepart: e.target.value } })}
+                                                className="w-full bg-app-bg/40 px-5 py-4 rounded-2xl border border-app-border/10 font-mono text-base text-indigo-400 focus:border-indigo-500/40 outline-none shadow-inner"
+                                                placeholder="ex. force — ou (force + agilite) / 2 + 1"
+                                            />
+                                            <p className="text-[9px] text-app-text/30 font-bold uppercase tracking-widest mt-3 px-2 leading-relaxed">
+                                                Formule sur des identifiants de champs de la fiche. Vide : chaque écran
+                                                garde les points de vie qu'il fournit. Un nombre seul n'a pas sa place
+                                                ici — il vaudrait pour tout le monde.
+                                            </p>
+                                        </div>
+
                                         <div>
                                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400/60 mb-4 block px-1">{t('modules:session.rule_engine_editor.combat.sort_order_label')}</label>
                                             <div className="flex p-1 bg-app-bg/40 rounded-2xl border border-app-border/10 overflow-hidden">
