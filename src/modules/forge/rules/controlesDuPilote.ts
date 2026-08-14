@@ -416,7 +416,43 @@ export function controlerLePilote(
 
     const tache = driver.combat?.tacheDeDefaite;
     if (tache) {
-        if (!idsDeSections.has(tache.sectionDuSeuil)) {
+        /*
+          **La tâche de défaite l'emporte en séance, quoi que dise le modèle de
+          santé.** `santeSelonLeSysteme` la consulte dès qu'un combattant a une
+          fiche et rend alors `horlogeDeDefaite`, c'est-à-dire une horloge —
+          `type: 'clocks'` en dur. Un pilote qui déclare `hp` *et* une tâche ne
+          fait donc pas ce qu'il annonce : la jauge de la fiche n'est jamais
+          lue, et personne ne le dit.
+
+          Relevé sur Alien le 2026-08-14 : `defaultHealthType: "hp"` avec
+          `tacheDeDefaite: {seuil:{min:0,max:0}}`, un objet croupion sans
+          section ni progression. Chaque personnage serait entré en combat avec
+          une horloge à **zéro segment**.
+
+          La tâche est le mécanisme des jeux qui n'ont PAS de points de vie —
+          Dune remplace sa jauge par une tâche étendue, et déclare `clocks` en
+          conséquence. Un jeu qui compte des points de vie l'omet.
+        */
+        const modeleDeSante = driver.combat?.defaultHealthType;
+        if (modeleDeSante && modeleDeSante !== 'clocks') {
+            erreur(
+                'combat.tacheDeDefaite',
+                `Le pilote déclare le modèle de santé « ${modeleDeSante} » mais porte aussi une ` +
+                "tâche de défaite, qui impose une horloge dès qu'un combattant a une fiche. C'est " +
+                "la tâche qui l'emportera, et la jauge de la fiche ne sera jamais lue. La tâche de " +
+                "défaite est le mécanisme des jeux SANS points de vie : un jeu qui en compte " +
+                "l'omet entièrement.",
+            );
+        }
+
+        if (!tache.sectionDuSeuil) {
+            erreur(
+                'combat.tacheDeDefaite.sectionDuSeuil',
+                "La tâche de défaite ne dit pas dans quelle section lire son seuil : il retomberait " +
+                'sur son minimum pour tout le monde. Un objet incomplet est plus dangereux ' +
+                "qu'absent — si le jeu n'a pas de tâche étendue de défaite, il faut l'omettre.",
+            );
+        } else if (!idsDeSections.has(tache.sectionDuSeuil)) {
             erreur(
                 'combat.tacheDeDefaite.sectionDuSeuil',
                 `« ${tache.sectionDuSeuil} » n'est pas une section de la fiche : le seuil de défaite ` +

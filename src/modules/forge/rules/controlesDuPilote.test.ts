@@ -384,6 +384,48 @@ describe('un modèle de santé hors énumération', () => {
     });
 });
 
+describe('la tâche de défaite, qui l\'emporte sur ce que le pilote annonce', () => {
+    /**
+     * Relevé sur Alien le 2026-08-14 : `defaultHealthType: "hp"` accompagné de
+     * `tacheDeDefaite: {seuil:{min:0,max:0}}` — un objet croupion, sans section
+     * ni progression.
+     *
+     * Ce que ça faisait : `santeSelonLeSysteme` consulte la tâche **dès qu'un
+     * combattant a une fiche** et rend `horlogeDeDefaite`, qui écrit
+     * `type: 'clocks'` en dur avec `segments = seuil`. Chaque personnage serait
+     * entré en combat avec une horloge à **zéro segment**, pendant que sa jauge
+     * `sante` n'était jamais lue et que le pilote affichait « hp ».
+     */
+    const avecTache = (extra: Record<string, unknown>) => ({
+        combat: {
+            tacheDeDefaite: { sectionDuSeuil: 'competences', seuil: { min: 4, max: 8 }, progressionDeBase: 2, qualiteMax: 4 },
+            ...extra,
+        },
+    }) as unknown as Partial<GameDriver>;
+
+    it('« hp » et une tâche de défaite se contredisent', () => {
+        const constats = controlerLePilote(avecTache({ defaultHealthType: 'hp' }), fiche);
+        expect(constats.map(c => c.ou)).toEqual(['combat.tacheDeDefaite']);
+        expect(constats[0].message).toContain('SANS points de vie');
+    });
+
+    it('« clocks » et une tâche de défaite vont ensemble — c\'est Dune', () => {
+        expect(controlerLePilote(avecTache({ defaultHealthType: 'clocks' }), fiche)).toEqual([]);
+    });
+
+    it('une tâche sans section où lire son seuil est pire qu\'absente', () => {
+        const constats = controlerLePilote(
+            { combat: { tacheDeDefaite: { seuil: { min: 0, max: 0 } } } } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+        expect(constats.map(c => c.ou)).toEqual([
+            'combat.tacheDeDefaite.sectionDuSeuil',
+            'combat.tacheDeDefaite.seuil',
+        ]);
+        expect(constats[0].message).toContain("l'omettre");
+    });
+});
+
 describe('les portées, et ce qu\'on renonce à y contrôler', () => {
     /** Les cinq bandes, écrites en un mot : `[maxUnits, modifier]` par portée. */
     const portees = (valeurs: [number, number][]) => ({

@@ -323,9 +323,14 @@ export const GROUPES: readonly GroupeDeChamps[] = [
             '(une horloge à segments), anatomy (des zones du corps), wounds (des blessures ' +
             'nommées), boxes (des cases à cocher). Ce n\'est JAMAIS le nom que la fiche donne à sa ' +
             'section ou à son champ de santé. ' +
-            '"tacheDeDefaite.seuil" donne le minimum et le maximum que peut atteindre la valeur ' +
-            'lue sur la fiche — jamais {"min":0,"max":0}, qui mettrait tout le monde hors de ' +
-            'combat au premier coup reçu',
+            '**"combat.tacheDeDefaite" NE CONCERNE QUE LES JEUX SANS POINTS DE VIE** — ceux qui ' +
+            'remplacent la jauge de santé par une tâche étendue dont le seuil se lit sur la fiche ' +
+            'de la cible. Si le jeu compte des points de santé, des cases ou des blessures, ' +
+            'OMETS "tacheDeDefaite" ENTIÈREMENT : un objet à moitié rempli est pire qu\'absent, ' +
+            'car il impose une horloge et la jauge de la fiche n\'est alors jamais lue. Si tu la ' +
+            'donnes, elle porte "sectionDuSeuil" (une section de la fiche), "seuil" avec les ' +
+            'bornes que peut atteindre la valeur lue — jamais {"min":0,"max":0} —, ' +
+            '"progressionDeBase" et "qualiteMax"',
         exemple: '{"driver":{"combat":{"defaultHealthType":"clocks","tacheDeDefaite":{"sectionDuSeuil":"competences","champParDefaut":"combat","seuil":{"min":4,"max":8},"progressionDeBase":2,"qualiteMax":4,"label":"Défaite"}}}}',
     },
     {
