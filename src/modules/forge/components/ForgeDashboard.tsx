@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Hammer, FileUp, Globe, X, Rocket, Zap, Sparkles, ChevronRight, Shield, Layers, AlertTriangle, Terminal } from 'lucide-react';
+import { Hammer, FileUp, Globe, X, Rocket, Zap, Sparkles, ChevronRight, Shield, Layers, AlertTriangle, Terminal, Users } from 'lucide-react';
 import { forgeService } from '../ForgeService';
 import ForgeProgress from '../rules/components/ForgeProgress';
 import RevueDuPilote from './RevueDuPilote';
+import PanneauDesPersonas from '../corpus/PanneauDesPersonas';
 import { lireFichesDuCorpus } from '../rules/lectureDuCorpus';
 import { GROUPES } from '../rules/GroupesDeChamps';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
@@ -466,6 +467,23 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
    * Deux gestes, donc, et le second n'est pas cosmétique : un corpus complet
    * mais vide **dit ce qu'il attend** ; un corpus absent ne dit rien.
    */
+  /**
+   * Le corpus auquel un pilote **sera** rattaché, calculé au même endroit que
+   * l'enregistrement le fera.
+   *
+   * **Pourquoi extraite plutôt que recopiée.** La revue montre désormais ce
+   * rattachement avant qu'on enregistre, et un affichage qui recalculerait la
+   * destination de son côté finirait par annoncer autre chose que ce qui est
+   * écrit. L'écart serait invisible : les deux chemins seraient plausibles.
+   * C'est la règle déjà tenue par `electron/corpusSysteme.ts`, où l'écriture
+   * résout comme la lecture pour exactement cette raison.
+   */
+  const corpusDeDestination = (nomDuPilote?: string) => {
+    const nom = nomDuPilote || forgeStore.targetSystemName.trim();
+    if (forgeStore.source === 'corpus' && corpusVise) return corpusVise;
+    return nom ? corpusPourNouveauSysteme(nom, dossiersSystemes) : null;
+  };
+
   const handleForgeSave = async () => {
     if (!forgeStore.analysisResult) return;
 
@@ -498,9 +516,8 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
       `systems/alien-le-jeu-de-role` voisin et vide, pendant que ses fiches
       seraient restées dans le premier.
     */
-    const corpus = forgeStore.source === 'corpus' && corpusVise
-      ? corpusVise
-      : corpusPourNouveauSysteme(nom, dossiersSystemes);
+    const corpus = corpusDeDestination(forgeStore.analysisResult.driver.name)
+      ?? corpusPourNouveauSysteme(nom, dossiersSystemes);
 
     const driver: GameDriver = {
       ...forgeStore.analysisResult.driver as GameDriver,
@@ -681,6 +698,32 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                   </p>
                 )}
               </div>
+
+              {/*
+                **Les personas du corpus, ici et nulle part ailleurs pour les
+                écrire.** `ForgeOS` pose la règle : on documente un corpus dans
+                ce module, jamais depuis une campagne — c'est ce qui a évité
+                qu'on réaffecte le pilote d'une campagne Blade Runner pour
+                enrichir Dune. L'éditeur du moteur de règles les montre aussi,
+                mais en lecture seule, avec un renvoi ici.
+
+                Repliées par défaut : on vient dans cet écran pour forger, et
+                huit zones de texte ouvertes repousseraient le reste hors de vue.
+              */}
+              {corpusVise && (
+                <details className="bg-app-surface/40 rounded-2xl border border-app-border/10 p-5 group">
+                  <summary className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-accent font-display cursor-pointer list-none">
+                    <Users size={14} /> Personas du corpus
+                    <ChevronRight size={12} className="ml-auto transition-transform group-open:rotate-90" />
+                  </summary>
+                  <div className="mt-5">
+                    <PanneauDesPersonas
+                      pilote={{ id: corpusVise.id, corpusId: corpusVise.id }}
+                      compact
+                    />
+                  </div>
+                </details>
+              )}
 
               {/* User Instructions Extension */}
               <div className="bg-app-surface/40 rounded-2xl border border-app-border/10 p-5 flex flex-col gap-3 hover:border-accent/30 transition-all">
@@ -959,6 +1002,7 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                 <RevueDuPilote
                   driver={forgeStore.analysisResult.driver}
                   template={forgeStore.analysisResult.template}
+                  corpusId={corpusDeDestination(forgeStore.analysisResult.driver.name)?.id}
                 />
 
                 {/* Un pilote sans nom n'est pas enregistrable : on dit laquelle

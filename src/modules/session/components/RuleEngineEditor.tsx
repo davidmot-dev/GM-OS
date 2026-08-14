@@ -10,6 +10,8 @@ import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { gmToast } from '../../../stores/useToastStore';
 import { Loader2 } from 'lucide-react';
 import { useRuleEngine } from '../hooks/useRuleEngine';
+import LienAuCorpus from '../../forge/corpus/LienAuCorpus';
+import PanneauDesPersonas from '../../forge/corpus/PanneauDesPersonas';
 
 export const RuleEngineEditor: React.FC = () => {
     const { t } = useTranslation(['settings', 'modules']);
@@ -445,11 +447,48 @@ export const RuleEngineEditor: React.FC = () => {
                                         </div>
                                     </div>
 
+                                    {/*
+                                      **Le corpus, puis ce qu'il contient déjà.**
+                                      David, le 2026-08-14 : « il n'a pas récupéré
+                                      les personas ». Il regardait cet écran, qui
+                                      montrait huit zones de texte vides — parce
+                                      qu'il n'affiche que l'override du pilote —
+                                      pendant que les huit personas du corpus
+                                      existaient et servaient à chaque réponse de
+                                      l'Oracle. Un écran qui tait ce qui marche
+                                      fait refaire le travail déjà fait.
+                                    */}
+                                    <LienAuCorpus pilote={driver} />
+
+                                    <PanneauDesPersonas
+                                        pilote={driver}
+                                        lectureSeule
+                                        noteLectureSeule={
+                                            <p className="text-[11px] text-app-text/40 leading-relaxed">
+                                                Ces personas appartiennent au corpus, pas à ce pilote :
+                                                toutes les campagnes qui l'emploient les partagent. Elles se
+                                                modifient dans la Forge, qui est le seul écran à écrire dans{' '}
+                                                <code className="font-mono">docs/</code> — ici, on n'ajoute
+                                                qu'un override propre à ce pilote, ci-dessous.
+                                            </p>
+                                        }
+                                    />
+
                                     <div className="space-y-6">
                                         <h3 className="text-xs font-black uppercase tracking-[0.3em] text-app-text/40 flex items-center gap-4 px-2">
                                             {t('modules:session.rule_engine_editor.ai.personas_title')}
                                             <div className="h-px bg-app-border/10 flex-1" />
                                         </h3>
+                                        {/*
+                                          Le mot « override » est écrit, parce que
+                                          ces huit champs vides ne veulent pas dire
+                                          « rien n'est défini » : ils veulent dire
+                                          « rien n'écrase le corpus ».
+                                        */}
+                                        <p className="text-[11px] text-app-text/40 leading-relaxed px-2 -mt-2">
+                                            Laissez vide pour employer la persona du corpus ci-dessus. Ce qui
+                                            est écrit ici ne vaut que pour ce pilote et l'emporte sur elle.
+                                        </p>
                                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                             {gems.map((gem: { id: string; name: string; icon: string }) => {
                                                 const iconMap: Record<string, LucideIcon> = { BookOpen, PenTool, Music, Beaker, Map, User, Sparkles, Brain };

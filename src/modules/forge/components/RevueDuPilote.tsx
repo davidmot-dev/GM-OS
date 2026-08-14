@@ -3,6 +3,7 @@ import { AlertTriangle, CheckCircle2, XCircle } from 'lucide-react';
 import type { GameDriver } from '../../../types/drivers';
 import type { SheetTemplate } from '../../../data/defaultSheetTemplates';
 import { controlerLePilote, type ConstatDuPilote } from '../rules/controlesDuPilote';
+import LienAuCorpus from '../corpus/LienAuCorpus';
 
 /**
  * Le pilote dérivé, montré **avant** d'être enregistré.
@@ -95,7 +96,15 @@ const JournalDesConstats: React.FC<{ constats: ConstatDuPilote[] }> = ({ constat
 export const RevueDuPilote: React.FC<{
   driver: Partial<GameDriver>;
   template: Partial<SheetTemplate>;
-}> = ({ driver, template }) => {
+  /**
+   * Le corpus auquel ce pilote **sera** rattaché à l'enregistrement.
+   *
+   * Il ne se lit pas encore sur `driver.corpusId` : celui-ci n'est écrit qu'au
+   * moment d'enregistrer. Or c'est précisément avant d'enregistrer qu'il faut
+   * pouvoir le corriger — après, il faut supprimer le pilote et recommencer.
+   */
+  corpusId?: string;
+}> = ({ driver, template, corpusId }) => {
   const constats = controlerLePilote(driver, template);
   const sections = template.sections ?? [];
   const idsDeSections = new Set(sections.map(s => s.id));
@@ -108,6 +117,18 @@ export const RevueDuPilote: React.FC<{
   return (
     <div className="space-y-6">
       <JournalDesConstats constats={constats} />
+
+      {/*
+        **Le corpus, avant le reste.** Un pilote rattaché au mauvais dossier
+        produit exactement les mêmes écrans qu'un pilote juste : les fiches
+        lues, les personas de l'Oracle et l'index RAG changent tous, et rien
+        n'en dit rien. C'est ici qu'on peut encore le corriger sans supprimer
+        le pilote et recommencer.
+      */}
+      <LienAuCorpus
+        pilote={{ id: driver.id, name: driver.name, corpusId: corpusId ?? driver.corpusId, ragPath: driver.ragPath }}
+        titre="Corpus auquel ce pilote sera rattaché"
+      />
 
       <div className="grid grid-cols-2 gap-6">
         <Bloc titre="Identité">

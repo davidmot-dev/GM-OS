@@ -5,6 +5,7 @@ import { useSessionStore } from '../../../store/useSessionStore';
 import { DEFAULT_SHEET_TEMPLATES, type SheetTemplate } from '../../../data/defaultSheetTemplates';
 import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 import { corpusOrphelins } from '../../../../electron/corpusSysteme';
+import LienAuCorpus from '../../forge/corpus/LienAuCorpus';
 import { Search, Hammer, Trash2, Copy, FileText, Sparkles, CheckCircle2, ChevronRight, Pencil, DownloadCloud, Upload, Eye, FolderTree } from 'lucide-react';
 import { gmToast } from '../../../stores/useToastStore';
 import { useModalStore } from '../../../stores/useModalStore';
@@ -470,6 +471,16 @@ const TemplateDashboard: React.FC = () => {
                                 ))
                             ) : (
                                 <div className="space-y-6">
+                                    {/*
+                                      **À quel corpus ce pilote est rattaché.**
+                                      C'est `corpusId` qui décide des fiches que
+                                      l'Oracle lit et des personas qu'il emploie,
+                                      et il n'apparaissait sur aucun écran : un
+                                      pilote branché sur le mauvais dossier
+                                      produit exactement la même fiche que le bon.
+                                    */}
+                                    <LienAuCorpus pilote={selectedItem as GameDriver} />
+
                                     <div className="p-6 rounded-2xl bg-black/40 border border-app-border/20 space-y-4">
                                         <div className="flex items-center gap-3 text-accent border-b border-white/5 pb-3">
                                             <Sparkles size={16} />
