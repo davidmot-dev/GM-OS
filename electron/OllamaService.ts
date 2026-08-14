@@ -272,7 +272,16 @@ export class OllamaService {
             journaliser(
                 `[Ollama] ← ${data.done_reason ?? '?'} — ${contenu.length} car., ` +
                 `${(data.message?.thinking ?? '').length} car. de réflexion. Fin : ` +
-                `« ${contenu.slice(-160).replace(/\s+/g, ' ')} »`,
+                /*
+                  1 200 plutôt que 160. Le 2026-08-14, la fin d'un gabarit de
+                  fiche tenait tout entière dans ce qui était coupé : on y
+                  voyait `"relations":{…}` posé à côté du tableau `sections`,
+                  mais pas assez de contexte pour en être sûr sans compter les
+                  accolades à la main — et le diagnostic a failli partir sur une
+                  fausse piste. Le journal existe pour trancher ; un extrait
+                  trop court le rend équivoque, ce qui est le contraire du but.
+                */
+                `« ${contenu.slice(-1200).replace(/\s+/g, ' ')} »`,
             );
 
             /*

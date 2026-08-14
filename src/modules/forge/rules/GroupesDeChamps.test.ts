@@ -4,6 +4,7 @@ import {
     fichesDuGroupe,
     promptDuGroupe,
     fusionnerFragments,
+    recupererSectionsEgarees,
     type FicheDuCorpus,
 } from './GroupesDeChamps';
 import { CANEVAS } from './canevas';
@@ -127,6 +128,70 @@ describe('l\'invite d\'un groupe', () => {
             const tokens = promptDuGroupe(groupe, gros).length / 2.92;
             expect(tokens, `groupe « ${groupe.id} » : ${Math.round(tokens)} tokens`).toBeLessThan(8000);
         }
+    });
+});
+
+describe('les sections posées à côté du tableau', () => {
+    /**
+     * Charge réelle du 2026-08-14, sur Alien. Le modèle a rendu 1 993
+     * caractères et sept sections ; le pilote en a reçu **une**. Les six autres
+     * suivaient le tableau comme propriétés frères — `"relations":{"label":
+     * "Relations","fields":[…]}` relevé mot pour mot dans `~/ollama_debug.log`.
+     *
+     * Personne ne l'a dit : l'écran annonçait « 7 groupes remplis » pendant que
+     * la fiche tombait à deux champs, et les cinq groupes suivants, privés du
+     * vocabulaire qu'elle devait leur donner, ont désigné les jauges par leur
+     * libellé — `"fieldId":"Réserves de consommables"` — faute d'identifiant à
+     * viser.
+     */
+    it('remet dans le tableau ce qui a été posé à côté', () => {
+        const { template, recuperees } = recupererSectionsEgarees({
+            name: 'Fiche de Personnage',
+            emoji: '📜',
+            sections: [{ id: 'identite', label: 'Identité', fields: [{ id: 'nom', label: 'Nom', type: 'text' }] }],
+            relations: { label: 'Relations', fields: [{ id: 'camarade', label: 'Camarade', type: 'text' }] },
+            competences: { id: 'competences', label: 'Compétences', fields: [{ id: 'mobilite', label: 'Mobilité', type: 'number' }] },
+        } as never);
+
+        expect(template.sections!.map(s => s.id)).toEqual(['identite', 'relations', 'competences']);
+        expect(recuperees).toEqual(['relations', 'competences']);
+        // La clé sert d'identifiant quand la section a omis de le répéter.
+        expect(template.sections![1].label).toBe('Relations');
+        expect(template.sections![1].fields).toHaveLength(1);
+    });
+
+    it('ne touche ni au nom, ni à l\'emoji, ni à une fiche déjà bien formée', () => {
+        const bienFormee = {
+            name: 'Fiche', emoji: '📜',
+            sections: [{ id: 'a', label: 'A', fields: [] }],
+        };
+        const { template, recuperees } = recupererSectionsEgarees(bienFormee as never);
+        expect(template).toEqual(bienFormee);
+        expect(recuperees).toEqual([]);
+    });
+
+    it('laisse où elle est une clé inconnue qui n\'est pas une section', () => {
+        // Sans `fields`, rien ne dit que c'est une section : la promouvoir
+        // fabriquerait une section vide que les contrôles signaleraient ensuite
+        // comme un défaut du corpus. On ne devine pas.
+        const { template, recuperees } = recupererSectionsEgarees({
+            sections: [], notes: 'un commentaire du modèle', version: 2,
+        } as never);
+        expect(recuperees).toEqual([]);
+        expect(template.sections).toEqual([]);
+        expect((template as Record<string, unknown>).notes).toBe('un commentaire du modèle');
+    });
+
+    it('la fusion en profite, donc le vocabulaire aussi', () => {
+        const r = fusionnerFragments([
+            {
+                template: {
+                    sections: [{ id: 'identite', label: 'Identité', fields: [] }],
+                    jauges: { label: 'Jauges', fields: [{ id: 'stress', label: 'Stress', type: 'gauge' }] },
+                } as never,
+            },
+        ]);
+        expect(r.template!.sections!.map(s => s.id)).toEqual(['identite', 'jauges']);
     });
 });
 

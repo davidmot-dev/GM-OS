@@ -151,12 +151,41 @@ export const GROUPES: readonly GroupeDeChamps[] = [
         label: 'Fiche de personnage',
         sujets: ['Composition de la fiche de personnage', 'Jauges et ressources individuelles'],
         schema: SCHEMA_DU_GABARIT as unknown as Record<string, unknown>,
+        /**
+         * **L'exhaustivité se demande, et elle se montre.**
+         *
+         * Dérivée d'Alien le 2026-08-13, la Forge a rendu sept sections dont
+         * « Attributs » et « Compétences » — **vides l'une comme l'autre**. Les
+         * six jauges, elles, étaient toutes là. L'écart s'explique par ce que
+         * l'invite disait : la cible réclamait nommément les jauges et se
+         * taisait sur le reste, pendant que l'exemple montrait des sections à
+         * **un seul champ**. Le modèle a fait ce qu'on lui montrait.
+         *
+         * Une fiche sans ses caractéristiques chiffrées n'est pas une fiche
+         * incomplète, c'est une fiche inutilisable : `jet.seuil`,
+         * `statsToTrack` et les jauges désignent tous des champs qu'elle est
+         * seule à créer, et le vocabulaire injecté dans les cinq groupes
+         * suivants est celui qu'elle a produit. Ce qu'elle omet, personne ne
+         * le rattrape.
+         *
+         * L'exemple montre donc trois champs frères dans une même section. Le
+         * risque de recopie servile — celui qui a valu son exemple muet au
+         * groupe `identite` — est ici plus faible : un `combat` ou une
+         * `determination` se heurtent aux fiches, qui nomment autre chose.
+         */
         cible:
             '"template" avec name, emoji et sections. Chaque champ porte un "type" pris parmi ' +
-            'number, text, checkbox, gauge, select, textarea, rating. **Prévois une section pour ' +
-            'les jauges individuelles** (stress, détermination, santé mentale…) si le jeu en a : ' +
-            'elles se suivent en combat et doivent exister comme champs de la fiche',
-        exemple: '{"template":{"name":"Fiche de Personnage","emoji":"📜","sections":[{"id":"competences","label":"Compétences","fields":[{"id":"combat","label":"Combat","type":"number","defaultValue":4,"max":8}]},{"id":"jauges","label":"Jauges","fields":[{"id":"determination","label":"Détermination","type":"gauge","defaultValue":0,"max":5}]}]}}',
+            'number, text, checkbox, gauge, select, textarea, rating. ' +
+            '**"sections" EST UN TABLEAU JSON, et TOUTES les sections y sont**, de la première à ' +
+            'la dernière : [{"id":…},{"id":…},{"id":…}]. N\'écris JAMAIS une section comme une ' +
+            'propriété posée à côté du tableau. ' +
+            '**ÉNUMÈRE TOUS LES ATTRIBUTS ET TOUTES LES COMPÉTENCES que les fiches nomment**, un ' +
+            'champ chacun, sans en omettre ni en résumer : si les fiches en citent douze, la ' +
+            'section en porte douze. Une section vide ne sert à rien. ' +
+            '**ET une section pour les jauges individuelles** (stress, santé, air, eau…) si le jeu ' +
+            'en a : elles se suivent en combat et doivent exister comme champs de la fiche. Les ' +
+            'attributs, les compétences ET les jauges — les trois, pas l\'un au prix de l\'autre',
+        exemple: '{"template":{"name":"Fiche de Personnage","emoji":"📜","sections":[{"id":"competences","label":"Compétences","fields":[{"id":"combat","label":"Combat","type":"number","defaultValue":4,"max":8},{"id":"discipline","label":"Discipline","type":"number","defaultValue":4,"max":8},{"id":"comprehension","label":"Compréhension","type":"number","defaultValue":4,"max":8}]},{"id":"jauges","label":"Jauges","fields":[{"id":"determination","label":"Détermination","type":"gauge","defaultValue":0,"max":5}]}]}}',
     },
     {
         id: 'ressources',
@@ -201,10 +230,30 @@ export const GROUPES: readonly GroupeDeChamps[] = [
          * `logic: "count-success"` — la seconde juste par chance, la première
          * fausse d'un caractère. Le moteur n'accepte que deux sens et six
          * logiques ; le modèle ne pouvait pas les inventer.
+         *
+         * **`dice.engine` manquait à l'appel, et il était le seul.** Relevé sur
+         * la dérivation d'Alien du 2026-08-13 : `logic` et `sens` avaient leur
+         * énumération écrite ici — parce qu'on s'était fait avoir sur les deux
+         * —, `engine` avait douze valeurs possibles et pas une ligne. Il
+         * n'existait que dans l'exemple, où il vaut `2d20`. Le modèle avait le
+         * choix entre recopier `2d20` sur un jeu qui lance des d6, ou omettre.
+         * Il a omis, et c'est la chance qui a tranché.
+         *
+         * Ce que coûte l'omission : `DiceBoard` et `RemoteDicePad` lisent ce
+         * champ pour choisir leur mode, et retombent tous deux sur `standard`.
+         * `DiceEngine.rollYZE` — qui compte les six et distingue les dés
+         * d'équipement — existe et n'aurait jamais été appelé. Une table
+         * lançant des dés génériques toute une séance, sans un mot.
          */
         cible:
             '"driver" avec seulement dice et jet. "dice.logic" vaut EXACTEMENT l\'une de ces valeurs : ' +
             'sum, highest, lowest, count-success, d100-low, d100-high. ' +
+            '"dice.engine" NOMME LA FAMILLE DU MOTEUR et vaut EXACTEMENT l\'une de ces valeurs : ' +
+            'standard, formula, pool, pool_explode, threshold, advantage, disadvantage, exploding, ' +
+            'fate, rolemaster, yze, 2d20. Les fiches nomment souvent le moteur en toutes lettres ' +
+            '(« Year Zero Engine » donne yze, « système 2d20 » donne 2d20) ; à défaut, choisis ' +
+            'd\'après la mécanique décrite, et n\'écris "2d20" que si le jeu lance vraiment des dés ' +
+            'à vingt faces. C\'est ce champ qui bascule le pupitre de dés dans le bon mode. ' +
             'POUR "jet.sens", LIS BIEN LES FICHES : mets "superieur-ou-egal" si le jeu compte les dés ' +
             'qui ATTEIGNENT OU DÉPASSENT une valeur (« chaque six est une réussite »), et ' +
             '"sous-ou-egal" s\'il compte ceux qui restent SOUS un seuil lu sur la fiche ' +
@@ -220,7 +269,29 @@ export const GROUPES: readonly GroupeDeChamps[] = [
         label: 'Ordre d\'action',
         sujets: ['Initiative et déroulement du tour'],
         dependDuVocabulaire: true,
-        cible: '"driver" avec seulement combat.initiative, combat.initiativeFormula et combat.initiativeSort',
+        /**
+         * **Deux dérivations d'Alien, 92 caractères identiques au caractère
+         * près** — les 13 et 14 août, `{"combat":{"initiative":"",
+         * "initiativeFormula":"","initiativeSort":"croissant"}}`. Rien n'avait
+         * changé dans cette cible entre les deux, et le modèle n'a rien changé
+         * non plus. C'est la démonstration la plus nette qu'on ait du fait que
+         * le levier est l'invite : les groupes corrigés le même jour, eux, ont
+         * cessé de se tromper.
+         *
+         * `initiativeSort` n'accepte que `asc` et `desc`, et rien ne le disait.
+         * `initiative` doit être un objet ou être absent : une chaîne vide
+         * n'est ni l'un ni l'autre, et fait retomber l'écran de combat sur son
+         * comportement par défaut sans rien annoncer.
+         */
+        cible:
+            '"driver" avec seulement combat.initiative, combat.initiativeFormula et ' +
+            'combat.initiativeSort. "combat.initiativeSort" vaut EXACTEMENT "asc" ou "desc" — ' +
+            'jamais un mot français, jamais autre chose. "combat.initiative" est un OBJET ou ' +
+            'ALORS TU L\'OMETS ENTIÈREMENT : ne mets jamais une chaîne de caractères, même vide, ' +
+            'et n\'y écris jamais une phrase qui décrit la règle. Si le jeu tire des cartes ' +
+            'numérotées, omets "initiative" et donne le nombre de cartes dans ' +
+            '"combat.initiativeCards". Si l\'ordre ne se calcule pas depuis la fiche, laisse ' +
+            '"initiativeFormula" à ""',
         exemple: '{"driver":{"combat":{"initiativeFormula":"","initiative":{"mode":"alternance","coutDeRetention":{"montant":2,"ressource":"impulsion"},"coutDOuverture":{"montant":2,"ressource":"impulsion"},"activationsConsecutivesMax":2}}}}',
     },
     {
@@ -228,7 +299,33 @@ export const GROUPES: readonly GroupeDeChamps[] = [
         label: 'Santé et mise hors de combat',
         sujets: ['Santé et blessures', 'Dégâts et types de dégâts'],
         dependDuVocabulaire: true,
-        cible: '"driver" avec seulement combat.defaultHealthType, combat.tacheDeDefaite et combat.damageTypes',
+        /**
+         * **Le troisième champ à énumération manquante, et le dernier.**
+         * `defaultHealthType` a valu « Santé » le 13 août puis « sante » le 14 :
+         * à chaque fois le nom que la fiche donne à sa section ou à son champ,
+         * jamais une façon de compter les dégâts. Le modèle ne pouvait pas
+         * inventer une liste de cinq mots qu'on ne lui montrait nulle part —
+         * comme `dice.engine` et `initiativeSort` avant lui, tous deux réglés
+         * du jour où l'énumération a été écrite ici.
+         *
+         * Une valeur hors énumération ne plante pas : `HealthInterpreter`
+         * retombe sur son cas par défaut, et la mise hors de combat se joue sur
+         * un modèle que personne n'a choisi.
+         *
+         * **Le seuil, ensuite.** Rendu `{min:0,max:0}` le 14 août : toute
+         * attaque réussie aurait mis sa cible hors de combat. Ces deux bornes
+         * encadrent une valeur *lue sur la fiche*, elles ne la remplacent pas.
+         */
+        cible:
+            '"driver" avec seulement combat.defaultHealthType, combat.tacheDeDefaite et ' +
+            'combat.damageTypes. "combat.defaultHealthType" DIT COMMENT LES DÉGÂTS SE COMPTENT et ' +
+            'vaut EXACTEMENT l\'une de ces cinq valeurs : hp (des points qu\'on retranche), clocks ' +
+            '(une horloge à segments), anatomy (des zones du corps), wounds (des blessures ' +
+            'nommées), boxes (des cases à cocher). Ce n\'est JAMAIS le nom que la fiche donne à sa ' +
+            'section ou à son champ de santé. ' +
+            '"tacheDeDefaite.seuil" donne le minimum et le maximum que peut atteindre la valeur ' +
+            'lue sur la fiche — jamais {"min":0,"max":0}, qui mettrait tout le monde hors de ' +
+            'combat au premier coup reçu',
         exemple: '{"driver":{"combat":{"defaultHealthType":"clocks","tacheDeDefaite":{"sectionDuSeuil":"competences","champParDefaut":"combat","seuil":{"min":4,"max":8},"progressionDeBase":2,"qualiteMax":4,"label":"Défaite"}}}}',
     },
     {
@@ -243,7 +340,29 @@ export const GROUPES: readonly GroupeDeChamps[] = [
         id: 'portees',
         label: 'Distances et portées',
         sujets: ['Distances et portées'],
-        cible: '"driver" avec seulement tactical',
+        /**
+         * **Ce qu'on dit ici, et ce qu'on s'interdit de dire.**
+         *
+         * Une première version de cette cible exigeait que `modifier` progresse
+         * « dans un seul sens ». **C'était une règle inventée, et elle était
+         * fausse.** Alien applique −3 au Contact, 0 à Courte, puis −1, −2, −3 :
+         * tirer sur une cible collée à soi est difficile, tirer à un kilomètre
+         * aussi. La courbe en U est la règle du livre, écrite noir sur blanc
+         * dans la fiche des portées.
+         *
+         * Deux dérivations ont été accusées d'un décalage d'un rang qu'elles
+         * n'avaient pas : elles recopiaient fidèlement leur source. Demander la
+         * monotonie aurait poussé le modèle à **falsifier le jeu pour satisfaire
+         * l'outil** — l'inverse exact de la règle du projet. On ne cadre donc
+         * que l'ordre des clés, qui lui est bien un invariant du format.
+         */
+        cible:
+            '"driver" avec seulement tactical. Les cinq bandes de "tactical.ranges" sont ' +
+            'ORDONNÉES DE LA PLUS PROCHE À LA PLUS LOINTAINE : contact, courte, moyenne, longue, ' +
+            'extreme. Le libellé de chacune doit décrire la distance sous laquelle elle est ' +
+            'rangée — « au corps à corps » va sous "contact", jamais sous "courte". "maxUnits" ' +
+            'grandit d\'une bande à la suivante. Les modificateurs, eux, sont ceux que les fiches ' +
+            'donnent : recopie-les tels quels, même s\'ils ne vont pas dans un seul sens',
         exemple: '{"driver":{"tactical":{"ranges":{"contact":{"label":"Même zone","maxUnits":1,"modifier":0},"courte":{"label":"Zone adjacente","maxUnits":2,"modifier":1},"moyenne":{"label":"Zone éloignée","maxUnits":3,"modifier":2},"longue":{"label":"Hors de portée","maxUnits":4,"modifier":3},"extreme":{"label":"Hors de portée","maxUnits":5,"modifier":4}},"useTacticalAI":false}}}',
     },
 ] as const;
@@ -421,6 +540,64 @@ export interface FragmentDePilote {
     template?: Partial<SheetTemplate>;
 }
 
+/** Les clés de `template` qui ne sont pas des sections. Tout le reste en est une. */
+const CLES_DU_GABARIT = new Set(['id', 'name', 'emoji', 'sections', 'isBuiltin']);
+
+/**
+ * Les sections que le modèle a posées **à côté** de `sections`, remises dedans.
+ *
+ * **Relevé sur la dérivation d'Alien du 2026-08-14, et la perte était totale.**
+ * Le modèle a rendu 1 993 caractères et sept sections ; le pilote en a reçu
+ * **une**. `sections` contenait un tableau à une entrée, puis les six autres
+ * suivaient comme propriétés frères — `"relations":{"label":"Relations",
+ * "fields":[…]}` en toutes lettres. Rien ne l'a signalé : l'écran a annoncé
+ * « 7 groupes remplis » pendant que la fiche tombait à deux champs, et les cinq
+ * groupes suivants, privés du vocabulaire qu'elle aurait dû leur donner, ont
+ * désigné des jauges par leur libellé faute d'identifiant à viser.
+ *
+ * **C'est le même geste que le 2026-08-12, où le modèle fourrait les champs
+ * dans la chaîne `label`** : sommé de produire plus que la forme ne semblait
+ * offrir, *il ne dégénère pas, il cherche une place*. Et c'est la quatrième
+ * fois qu'on rencontre la règle générale — le modèle rend la même chose sous
+ * une forme qu'on n'attendait pas, après les hors-catégories numérotées, les
+ * accents graves et les tableaux sans barres extérieures.
+ *
+ * On répare plutôt qu'on ne refuse : le contenu est **là**, entier et exact,
+ * et le jeter pour un accolade mal placée coûterait un quart d'heure de forge.
+ * Une section reconnue porte un `fields` — c'est ce qui la distingue d'un
+ * `name` ou d'un `emoji`, et une clé inconnue sans `fields` est laissée où elle
+ * est plutôt que promue en section vide.
+ */
+export function recupererSectionsEgarees(
+    template: Partial<SheetTemplate>,
+): { template: Partial<SheetTemplate>; recuperees: string[] } {
+    const egarees: SheetTemplate['sections'] = [];
+    const propre: Record<string, unknown> = {};
+
+    for (const [clef, valeur] of Object.entries(template)) {
+        const ressembleAUneSection = !CLES_DU_GABARIT.has(clef)
+            && !!valeur && typeof valeur === 'object' && !Array.isArray(valeur)
+            && Array.isArray((valeur as { fields?: unknown }).fields);
+
+        if (!ressembleAUneSection) {
+            propre[clef] = valeur;
+            continue;
+        }
+        // La clé porte l'identifiant quand la section a omis de le répéter.
+        const section = valeur as unknown as SheetTemplate['sections'][number];
+        egarees.push({ ...section, id: section.id || clef });
+    }
+
+    const recuperees = egarees.map(s => s.id);
+    return {
+        template: {
+            ...(propre as Partial<SheetTemplate>),
+            sections: [...(template.sections ?? []), ...egarees],
+        },
+        recuperees,
+    };
+}
+
 /**
  * Assemble les fragments en un pilote et une fiche.
  *
@@ -446,10 +623,14 @@ export function fusionnerFragments(fragments: FragmentDePilote[]): FragmentDePil
             }
         }
         if (fragment.template) {
+            // Remises dans `sections` avant toute fusion : c'est ce tableau que
+            // `vocabulaireAcquis` lit pour nourrir les cinq groupes suivants, et
+            // une section restée à côté ne leur aurait rien appris.
+            const { template: recu } = recupererSectionsEgarees(fragment.template);
             template = {
                 ...template,
-                ...fragment.template,
-                sections: [...(template?.sections ?? []), ...(fragment.template.sections ?? [])],
+                ...recu,
+                sections: [...(template?.sections ?? []), ...(recu.sections ?? [])],
             };
         }
     }
