@@ -2,6 +2,7 @@ import { createJSONStorage, type PersistOptions, type StateStorage } from 'zusta
 import type { SessionOSStore } from '../store/index';
 import { idbStateStorage, onPersistedStateChanged } from './idbStorage';
 import { isMainWindow } from '../../../utils/windowRole';
+import { reparerLiensDeGabarit } from '../store/liensDeGabarit';
 
 export const SESSION_STORE_KEY = 'gmos-v5-session-os-storage';
 
@@ -68,6 +69,36 @@ export const PersistenceService: PersistOptions<SessionOSStore> = {
             
             // Clear volatile state
             state.selectedDeckId = null;
+
+            /*
+              **Les pilotes qui désignent un modèle de fiche inexistant.**
+
+              Jusqu'au 2026-08-14, la Forge posait dans `driver.templateId` un
+              `custom-template-<horodatage>` qu'elle fabriquait elle-même, puis
+              laissait `addSheetTemplate` imposer son propre `tpl-<horodatage>` :
+              le pilote pointait vers un identifiant qui n'a jamais existé, et
+              son vrai modèle restait sans propriétaire. Le pilote « Within » en
+              portait la trace.
+
+              La cause est corrigée à la source. Ceci répare les bases déjà
+              écrites — un correctif qui laisse les données abîmées ne corrige
+              que la moitié du problème —, et seulement là où le rattachement est
+              certain : `reparerLiensDeGabarit` s'abstient dès qu'il y a deux
+              candidats. Un lien cassé se voit ; une mauvaise fiche se joue.
+            */
+            const { drivers, reparations } = reparerLiensDeGabarit(
+                state.customGameDrivers ?? [],
+                state.customSheetTemplates ?? [],
+            );
+            if (reparations.length > 0) {
+                state.customGameDrivers = drivers;
+                for (const r of reparations) {
+                    console.warn(
+                        `[Persistence] « ${r.driverName} » visait le modèle de fiche ` +
+                        `${r.ancienTemplateId}, qui n'existe pas. Rattaché à ${r.nouveauTemplateId}.`,
+                    );
+                }
+            }
 
             // Reconcile templates
             if (typeof state.reconcileTemplates === 'function') {

@@ -27,8 +27,25 @@ export interface ForgeSliceState {
 // ─────────────────────────────────────────────
 
 export interface ForgeSliceActions {
-    // Sheet Templates
-    addSheetTemplate: (template: Omit<SheetTemplate, 'id' | 'isBuiltin'>) => void;
+    /**
+     * Ajoute un modèle de fiche et **rend l'identifiant qu'il lui a donné**.
+     *
+     * **Pourquoi ce retour existe, relevé le 2026-08-14 en relisant l'état
+     * persisté.** Cette action impose son propre `tpl-${Date.now()}` — c'est
+     * voulu, la duplication d'un modèle en dépend. Mais la Forge fabriquait de
+     * son côté un `custom-template-${Date.now()}`, le posait dans
+     * `driver.templateId`, puis appelait cette action : le pilote gardait donc
+     * une référence vers un identifiant **qui n'a jamais existé**.
+     *
+     * Le pilote « Within » en porte la trace, et son vrai modèle traînait sans
+     * propriétaire. Ce que ça coûte : `AddEntityForm` donne `driver.templateId`
+     * à chaque nouveau personnage et `CombatCard` cherche ensuite le modèle par
+     * cet identifiant. Introuvable — donc **pas de fiche**, sans une erreur.
+     *
+     * Rendre l'identifiant attribué coûte un mot et supprime la classe entière
+     * du défaut : l'appelant ne peut plus supposer, il sait.
+     */
+    addSheetTemplate: (template: Omit<SheetTemplate, 'id' | 'isBuiltin'>) => string;
     updateSheetTemplate: (id: string, updates: Partial<SheetTemplate>) => void;
     deleteSheetTemplate: (id: string) => void;
 
@@ -56,12 +73,10 @@ export const createForgeSlice: StateCreator<ForgeSlice, [], [], ForgeSlice> = (s
 
     // Sheet Template Actions
     addSheetTemplate: (template) => {
-        const newTemplate: SheetTemplate = {
-            ...template,
-            id: `tpl-${Date.now()}`,
-            isBuiltin: false,
-        };
+        const id = `tpl-${Date.now()}`;
+        const newTemplate: SheetTemplate = { ...template, id, isBuiltin: false };
         set((state) => ({ customSheetTemplates: [...state.customSheetTemplates, newTemplate] }));
+        return id;
     },
 
     updateSheetTemplate: (id, updates) =>

@@ -504,7 +504,6 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
     }
 
     const driverId = `custom-${Date.now()}`;
-    const templateId = `custom-template-${Date.now()}`;
 
     /*
       Le corpus se décide ici, par le même ordre d'autorité que la lecture : un
@@ -519,6 +518,35 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
     const corpus = corpusDeDestination(forgeStore.analysisResult.driver.name)
       ?? corpusPourNouveauSysteme(nom, dossiersSystemes);
 
+    const template: SheetTemplate = {
+      ...forgeStore.analysisResult.template as SheetTemplate,
+      isBuiltin: false,
+      // Le nom du modèle est un libellé, pas une règle : le déduire ne fait
+      // courir aucun risque, alors qu'un modèle sans nom est illisible dans les
+      // menus. Ses SECTIONS, elles, ne s'inventent pas — leur absence est dite
+      // à l'écran plutôt que comblée.
+      name: forgeStore.analysisResult.template.name || `Fiche — ${nom}`,
+    };
+
+    /*
+      **Le modèle d'abord, et le pilote reçoit l'identifiant qu'on lui a donné.**
+
+      L'ordre inverse a produit un défaut visible dans l'état persisté au
+      2026-08-14 : on fabriquait ici un `custom-template-<horodatage>`, on le
+      posait dans `driver.templateId`, puis `addSheetTemplate` imposait son
+      propre `tpl-<horodatage>` — c'est son droit, la duplication d'un modèle en
+      dépend. Le pilote gardait donc une référence vers un identifiant qui n'a
+      jamais existé. Le pilote « Within » en porte encore la trace.
+
+      Ce que ça coûtait : `AddEntityForm` donne `driver.templateId` à chaque
+      nouveau personnage, et `CombatCard` cherche ensuite le modèle par cet
+      identifiant. Introuvable — donc pas de fiche, sans une erreur ni un champ
+      en rouge. Le défaut habituel.
+
+      On ne suppose plus l'identifiant, on le reçoit.
+    */
+    const templateId = addSheetTemplate(template);
+
     const driver: GameDriver = {
       ...forgeStore.analysisResult.driver as GameDriver,
       id: driverId,
@@ -529,19 +557,7 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
       corpusId: corpus.id,
     };
 
-    const template: SheetTemplate = {
-      ...forgeStore.analysisResult.template as SheetTemplate,
-      id: templateId,
-      isBuiltin: false,
-      // Le nom du modèle est un libellé, pas une règle : le déduire ne fait
-      // courir aucun risque, alors qu'un modèle sans nom est illisible dans les
-      // menus. Ses SECTIONS, elles, ne s'inventent pas — leur absence est dite
-      // à l'écran plutôt que comblée.
-      name: forgeStore.analysisResult.template.name || `Fiche — ${nom}`,
-    };
-
     saveGameDriver(driver);
-    addSheetTemplate(template);
 
     // La création est annoncée par ce qu'elle a réellement fait, pas par ce
     // qu'elle a tenté : rejoindre un corpus existant et en créer un neuf sont
