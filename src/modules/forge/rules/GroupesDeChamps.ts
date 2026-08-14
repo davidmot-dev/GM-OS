@@ -317,8 +317,14 @@ export const GROUPES: readonly GroupeDeChamps[] = [
          * encadrent une valeur *lue sur la fiche*, elles ne la remplacent pas.
          */
         cible:
-            '"driver" avec seulement combat.defaultHealthType, combat.tacheDeDefaite et ' +
-            'combat.damageTypes. "combat.defaultHealthType" DIT COMMENT LES DÉGÂTS SE COMPTENT et ' +
+            '"driver" avec seulement combat.defaultHealthType, combat.santeDeDepart, ' +
+            'combat.tacheDeDefaite et combat.damageTypes. ' +
+            '"combat.santeDeDepart" dit OÙ LIRE LA SANTÉ DE DÉPART SUR LA FICHE, sous forme de ' +
+            'formule portant des identifiants de champs — « force », ou « (force + agilite) / 2 ». ' +
+            'Ne le donne QUE si les fiches disent que la santé de départ se calcule depuis des ' +
+            'caractéristiques du personnage. Si le jeu fixe le même nombre pour tous, ou n\'a pas ' +
+            'de points de santé, OMETS-LE. N\'y écris jamais un nombre seul. ' +
+            '"combat.defaultHealthType" DIT COMMENT LES DÉGÂTS SE COMPTENT et ' +
             'vaut EXACTEMENT l\'une de ces cinq valeurs : hp (des points qu\'on retranche), clocks ' +
             '(une horloge à segments), anatomy (des zones du corps), wounds (des blessures ' +
             'nommées), boxes (des cases à cocher). Ce n\'est JAMAIS le nom que la fiche donne à sa ' +

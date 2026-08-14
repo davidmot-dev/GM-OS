@@ -107,6 +107,29 @@ export interface GameDriver {
          */
         defaultHealthType?: import('./entity.types').HealthSystemType;
         /**
+         * Où lire la santé de départ **sur la fiche**, en formule.
+         *
+         * **Le défaut qu'il corrige, relevé le 2026-08-14.** Les points de vie
+         * naissaient à `10` en dur, à sept endroits. Chez Alien la Santé vaut
+         * la **Force** du personnage — deux à cinq — et tous les combattants
+         * entraient avec dix. C'est mot pour mot le défaut que `65bbd84` a
+         * réglé pour les horloges, où `createDefault('clocks')` donnait six
+         * segments à tout le monde : *une valeur qui dépend du personnage ne
+         * peut pas vivre dans le pilote.*
+         *
+         * **Une formule et non un champ unique**, parce qu'un champ suffirait à
+         * Alien mais pas à sa famille : le SRD Year Zero Engine compose « la
+         * moyenne des scores de Force et d'Agilité, arrondie à l'entier
+         * supérieur, plus un ». Même forme que `initiativeFormula`, et les
+         * mêmes contrôles la vérifient.
+         *
+         * Exemples : `force` (Alien), `(force + agilite) / 2 + 1` (SRD YZE).
+         *
+         * Facultatif : sans lui, chaque écran garde les points de vie qu'il
+         * fournissait. On ne fait pas payer une nouveauté à l'existant.
+         */
+        santeDeDepart?: string;
+        /**
          * Vaincre comme tâche étendue, quand le jeu n'a pas de jauge.
          *
          * Chez Dune, le seuil de défaite **vaut la compétence défensive de la

@@ -3,7 +3,7 @@ import { useCombatStore, type Combatant } from '../useCombatStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useModalStore } from '../../../stores/useModalStore';
 import { useDiceStore } from '../../../stores/useDiceStore';
-import { fractionDeVie } from '../logic/SanteDuCombattant';
+import { fractionDeVie, decrireLaSante } from '../logic/SanteDuCombattant';
 import { Zap, HeartPulse, CheckCircle2, AlertTriangle, ShieldAlert, Shield, RotateCcw, Target as TargetIcon, Dices } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -212,7 +212,7 @@ const DamageCalculator: React.FC = () => {
                                                                 style={{ width: `${fractionDeVie(c)! * 100}%` }}
                                                             />
                                                         </div>
-                                                        <span className="text-[9px] font-mono text-slate-500 font-bold">{c.hp}/{c.hpMax} PV</span>
+                                                        <span className="text-[9px] font-mono text-slate-500 font-bold">{decrireLaSante(c) ?? "—"}</span>
                                                     </>
                                                     )
                                                 ) : (

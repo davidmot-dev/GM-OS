@@ -13,6 +13,7 @@ import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useTranslation } from 'react-i18next';
 import { HealthInterpreter } from '../../session/logic/HealthInterpreter';
 import PanneauDAlternance from './PanneauDAlternance';
+import { decrireLaSante } from '../logic/SanteDuCombattant';
 
 const CombatControls: React.FC = () => {
     const {
@@ -193,7 +194,7 @@ const CombatControls: React.FC = () => {
             content += t('combat.report.players_section');
             players.forEach(c => {
                 const statusStr = c.statuses.length > 0 ? ` [${c.statuses.map(s => t(`combat.status.presets.${s.name.toLowerCase().replace(/\s/g, '_')}`, { defaultValue: s.name })).join(', ')}]` : '';
-                content += t('combat.report.entry', { name: c.name, hp: c.hp, hpMax: c.hpMax, statuses: statusStr });
+                content += t('combat.report.entry', { name: c.name, sante: decrireLaSante(c) ?? '—', statuses: statusStr });
             });
         }
 
@@ -201,7 +202,7 @@ const CombatControls: React.FC = () => {
             content += t('combat.report.enemies_section');
             enemies.forEach(c => {
                 const statusStr = c.statuses.length > 0 ? ` [${c.statuses.map(s => t(`combat.status.presets.${s.name.toLowerCase().replace(/\s/g, '_')}`, { defaultValue: s.name })).join(', ')}]` : '';
-                content += t('combat.report.entry', { name: c.name, hp: c.hp, hpMax: c.hpMax, statuses: statusStr });
+                content += t('combat.report.entry', { name: c.name, sante: decrireLaSante(c) ?? '—', statuses: statusStr });
             });
         }
 

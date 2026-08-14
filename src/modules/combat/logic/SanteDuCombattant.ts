@@ -96,6 +96,125 @@ export function decrireLaSante(c: PorteurDeSante): string | null {
     return null;
 }
 
+/**
+ * La santé de départ, **lue sur la fiche** plutôt que fixée à dix.
+ *
+ * **Ce que ça corrige, relevé le 2026-08-14.** `CombatControls` écrivait
+ * `{ hp: 10, hpMax: 10 }` dès que le modèle valait `hp`, et `CharacterGrid`
+ * reprenait `character.hp` — vide chez Alien. Or la Santé d'Alien **vaut la
+ * Force du personnage**, de deux à cinq, et le SRD Year Zero Engine énonce le
+ * principe général : *« la moyenne des scores de Force et d'Agilité, arrondie à
+ * l'entier supérieur, plus un »*.
+ *
+ * C'est mot pour mot le défaut que `65bbd84` a réglé pour les horloges :
+ * `createDefault('clocks')` donnait six segments à tout le monde, « un
+ * duelliste médiocre et un maître tombaient au même rythme ». La règle posée
+ * alors vaut ici — *une valeur qui dépend du personnage ne peut pas vivre dans
+ * le pilote*, elle se lit sur la fiche.
+ *
+ * **Une formule, et non un champ unique.** Un seul champ suffirait à Alien mais
+ * pas à sa famille, qui compose deux attributs. On réutilise donc le chemin de
+ * `combat.initiativeFormula`, éprouvé et déjà contrôlé par `champsInvoques` —
+ * plutôt que d'inventer un second langage.
+ *
+ * **Arrondi au supérieur**, parce que c'est ce que dit le SRD et qu'un demi
+ * point de vie n'existe nulle part. **Jamais en dessous de un** : une formule
+ * qui rendrait zéro ferait naître un personnage déjà hors de combat, ce qui est
+ * une valeur fausse plutôt qu'une absence.
+ *
+ * Rend `null` quand la formule manque ou ne donne rien d'exploitable — auquel
+ * cas l'appelant garde son comportement actuel. *On ne fait pas payer une
+ * nouveauté à l'existant.*
+ */
+export function santeDeDepart(
+    formule: string | undefined,
+    lire: (champ: string) => number | undefined,
+): number | null {
+    if (!formule?.trim()) return null;
+
+    // Les identifiants sont remplacés du plus long au plus court : sans cela,
+    // « force » remplacerait le début de « force_mentale ».
+    const champs = (formule.match(/[a-zA-ZÀ-ÿ_][a-zA-ZÀ-ÿ0-9_]*/g) ?? [])
+        .filter((m, i, tous) => tous.indexOf(m) === i)
+        .sort((a, b) => b.length - a.length);
+
+    let expression = formule;
+    for (const champ of champs) {
+        const valeur = lire(champ);
+        expression = expression.split(champ).join(String(valeur ?? 0));
+    }
+
+    // Ce qui reste doit être de l'arithmétique et rien d'autre : un identifiant
+    // non résolu, une lettre oubliée, et on renonce plutôt que de deviner.
+    if (!/^[\d\s+\-*/().]+$/.test(expression)) return null;
+
+    try {
+        const valeur = evaluerArithmetique(expression);
+        if (valeur === null || !Number.isFinite(valeur)) return null;
+        return Math.max(1, Math.ceil(valeur));
+    } catch {
+        return null;
+    }
+}
+
+/**
+ * Évalue une expression **strictement arithmétique**, sans `eval`.
+ *
+ * Rien d'ici ne vient de l'utilisateur au sens strict — la formule vient du
+ * pilote — mais un pilote est forgé par un modèle de langage, et un modèle
+ * écrit ce qu'il veut. On n'exécute pas ce qu'il produit : on le calcule.
+ */
+function evaluerArithmetique(expression: string): number | null {
+    const jetons = expression.match(/\d+\.?\d*|[+\-*/()]/g);
+    if (!jetons) return null;
+
+    let i = 0;
+    const suivant = () => jetons[i];
+    const avaler = () => jetons[i++];
+
+    const facteur = (): number | null => {
+        if (suivant() === '(') {
+            avaler();
+            const v = somme();
+            // Une parenthèse non fermée n'est pas une formule : `((force`
+            // rendait la valeur de `force` comme si de rien n'était. On refuse
+            // plutôt que de deviner ce que l'auteur voulait écrire.
+            if (suivant() !== ')') return null;
+            avaler();
+            return v;
+        }
+        if (suivant() === '-') { avaler(); const v = facteur(); return v === null ? null : -v; }
+        const j = avaler();
+        const n = Number(j);
+        return Number.isNaN(n) ? null : n;
+    };
+
+    const produit = (): number | null => {
+        let v = facteur();
+        while (v !== null && (suivant() === '*' || suivant() === '/')) {
+            const op = avaler();
+            const d = facteur();
+            if (d === null) return null;
+            v = op === '*' ? v * d : (d === 0 ? null : v / d);
+        }
+        return v;
+    };
+
+    const somme = (): number | null => {
+        let v = produit();
+        while (v !== null && (suivant() === '+' || suivant() === '-')) {
+            const op = avaler();
+            const d = produit();
+            if (d === null) return null;
+            v = op === '+' ? v + d : v - d;
+        }
+        return v;
+    };
+
+    const resultat = somme();
+    return i === jetons.length ? resultat : null;
+}
+
 /** Ce combattant a-t-il une jauge de points de vie ? */
 export function aUneJaugeDeVie(c: Combatant): boolean {
     return typeof c.hp === 'number' && typeof c.hpMax === 'number' && c.hpMax > 0;

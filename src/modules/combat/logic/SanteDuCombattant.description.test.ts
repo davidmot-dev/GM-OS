@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { decrireLaSante } from './SanteDuCombattant';
+import { decrireLaSante, santeDeDepart } from './SanteDuCombattant';
 
 /**
  * Ce que ces tests protègent : **l'invite envoyée à l'IA ne doit rien affirmer
@@ -87,5 +87,60 @@ describe('se taire quand il n\'y a rien à dire', () => {
     it('un état inconnu se rend tel quel plutôt que d\'être traduit au hasard', () => {
         expect(decrireLaSante({ healthSystem: { type: 'hp', data: {}, state: 'stase' } }))
             .toBe('stase');
+    });
+});
+
+describe('la santé de départ, lue sur la fiche', () => {
+    /**
+     * **Le défaut : sept endroits écrivaient dix.** Chez Alien la Santé vaut la
+     * Force du personnage — deux à cinq — et tous les combattants entraient
+     * avec dix points de vie. Même défaut que `createDefault('clocks')`, qui
+     * donnait six segments à tout le monde : *une valeur qui dépend du
+     * personnage ne peut pas vivre dans le pilote.*
+     */
+    const fiche = (v: Record<string, number>) => (champ: string) => v[champ.toLowerCase()];
+
+    it('un attribut seul — c\'est Alien', () => {
+        expect(santeDeDepart('force', fiche({ force: 4 }))).toBe(4);
+    });
+
+    it('une composition de deux attributs — c\'est le SRD Year Zero Engine', () => {
+        // « la moyenne des scores de Force et d'Agilité, arrondie à l'entier
+        // supérieur, plus un ». Un champ unique n'aurait pas su l'exprimer.
+        expect(santeDeDepart('(force + agilite) / 2 + 1', fiche({ force: 4, agilite: 3 }))).toBe(5);
+    });
+
+    it('arrondit au supérieur : un demi point de vie n\'existe nulle part', () => {
+        expect(santeDeDepart('force / 2', fiche({ force: 5 }))).toBe(3);
+    });
+
+    it('jamais en dessous de un — un personnage ne naît pas hors de combat', () => {
+        expect(santeDeDepart('force - 10', fiche({ force: 2 }))).toBe(1);
+        expect(santeDeDepart('force', fiche({ force: 0 }))).toBe(1);
+    });
+
+    it('sans formule, on ne fait rien — l\'existant garde son comportement', () => {
+        expect(santeDeDepart(undefined, fiche({ force: 4 }))).toBeNull();
+        expect(santeDeDepart('', fiche({ force: 4 }))).toBeNull();
+        expect(santeDeDepart('   ', fiche({ force: 4 }))).toBeNull();
+    });
+
+    it('un champ absent de la fiche vaut zéro, et le minimum s\'applique', () => {
+        // Le contrôle du pilote signale ce cas à la revue ; ici on ne casse pas.
+        expect(santeDeDepart('vigueur', fiche({ force: 4 }))).toBe(1);
+    });
+
+    it('n\'exécute rien : ce qui n\'est pas de l\'arithmétique est refusé', () => {
+        /**
+         * La formule vient du pilote, donc d'un modèle de langage, qui écrit ce
+         * qu'il veut. On la calcule, on ne l'évalue pas.
+         */
+        expect(santeDeDepart('force);alert(1', fiche({ force: 4 }))).toBeNull();
+        expect(santeDeDepart('((force', fiche({ force: 4 }))).toBeNull();
+        expect(santeDeDepart('force /', fiche({ force: 4 }))).toBeNull();
+    });
+
+    it('une division par zéro renonce plutôt que de rendre l\'infini', () => {
+        expect(santeDeDepart('force / agilite', fiche({ force: 4, agilite: 0 }))).toBeNull();
     });
 });

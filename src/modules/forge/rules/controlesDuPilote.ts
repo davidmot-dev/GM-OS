@@ -402,6 +402,24 @@ export function controlerLePilote(
         }
     }
 
+    /*
+      **La santé de départ se lit sur la fiche, donc elle peut la manquer.**
+      Une formule qui invoque un champ inexistant vaut zéro à l'évaluation, et
+      chaque personnage naîtrait avec le minimum — un mourant à la création,
+      sans qu'aucun écran ne le signale. Même contrôle que pour l'initiative,
+      et pour la même raison.
+    */
+    const formuleDeSante = driver.combat?.santeDeDepart ?? '';
+    for (const champ of champsInvoques(formuleDeSante)) {
+        if (!tousLesChamps.has(champ)) {
+            erreur(
+                'combat.santeDeDepart',
+                `La santé de départ « ${formuleDeSante} » invoque « ${champ} », qui n'est un champ ` +
+                "d'aucune section de la fiche : chaque personnage naîtrait au minimum.",
+            );
+        }
+    }
+
     // ---- La mise hors de combat --------------------------------------------
     const modele = driver.combat?.defaultHealthType as string | undefined;
     if (modele !== undefined && !MODELES_DE_SANTE.includes(modele as HealthSystemType)) {

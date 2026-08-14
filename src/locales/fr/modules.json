@@ -234,7 +234,7 @@
       "participants": "#### Participants :\n",
       "players_section": "\n**Alliés & Joueurs :**\n",
       "enemies_section": "\n**Ennemis :**\n",
-      "entry": "- **{{name}}** : {{hp}}/{{hpMax}} PV{{statuses}}\n",
+      "entry": "- **{{name}}** : {{sante}}{{statuses}}\n",
       "title": "Combat - Round {{round}}"
     },
     "initiative": {

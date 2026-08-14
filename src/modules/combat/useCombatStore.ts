@@ -16,6 +16,7 @@ import {
 } from './logic/CombatRules';
 import { HealthInterpreter } from '../session/logic/HealthInterpreter';
 import { horlogeDeDefaite } from './logic/TacheDeDefaite';
+import { santeDeDepart } from './logic/SanteDuCombattant';
 import type { HealthSystem } from '../../types/entity.types';
 
 /**
@@ -46,6 +47,75 @@ function santeSelonLeSysteme(sheetData?: Record<string, unknown>): HealthSystem 
         // Un combat ne s'interrompt pas parce qu'un pilote est mal renseigné.
         return undefined;
     }
+}
+
+/** Le pilote actif, lu par le global — un import direct fermerait un cycle. */
+function piloteActif(): { combat?: { santeDeDepart?: string } } | undefined {
+    try {
+        return (window as unknown as {
+            useSessionOSStore?: { getState: () => { getActiveDriver?: () => { combat?: { santeDeDepart?: string } } | undefined } };
+        }).useSessionOSStore?.getState()?.getActiveDriver?.() ?? undefined;
+    } catch {
+        return undefined;
+    }
+}
+
+/**
+ * La fiche d'un combattant, retrouvée depuis sa source.
+ *
+ * Plusieurs écrans n'envoient que `sourcePlayerId` ou `sourceEntityId` — c'est
+ * suffisant pour eux, et il serait absurde de leur demander de connaître le
+ * pilote. Sans cette résolution, tout ce qui se lit **sur la fiche** (le seuil
+ * de la tâche de défaite, la santé de départ) n'avait rien à lire.
+ */
+function ficheDuCombattant(c: { sourcePlayerId?: string; sourceEntityId?: string }): Combatant['sheetData'] {
+    try {
+        const session = (window as unknown as {
+            useSessionOSStore?: { getState: () => {
+                players?: { characters?: { id: string; sheetData?: Combatant['sheetData'] }[] }[];
+                entities?: { id: string; sheetData?: Combatant['sheetData'] }[];
+            } };
+        }).useSessionOSStore?.getState();
+        if (!session) return undefined;
+
+        if (c.sourcePlayerId) {
+            const perso = (session.players ?? [])
+                .flatMap(p => p.characters ?? [])
+                .find(p => p.id === c.sourcePlayerId);
+            if (perso?.sheetData) return perso.sheetData;
+        }
+        if (c.sourceEntityId) {
+            return (session.entities ?? []).find(e => e.id === c.sourceEntityId)?.sheetData;
+        }
+        return undefined;
+    } catch {
+        // Un combat ne s'interrompt pas parce qu'une fiche est introuvable.
+        return undefined;
+    }
+}
+
+/**
+ * Les points de vie de départ, quand le pilote dit où les lire.
+ *
+ * **N'écrase jamais une valeur déjà fournie** : un combattant qu'on ajoute avec
+ * ses points de vie courants les garde, sinon rejoindre un combat en cours
+ * remettrait tout le monde à neuf. La formule ne sert qu'à **naître**.
+ */
+function pointsDeVieDeDepart(
+    c: { hp?: number; hpMax?: number },
+    fiche: Combatant['sheetData'],
+): { hp?: number; hpMax?: number } {
+    if (typeof c.hp === 'number' && typeof c.hpMax === 'number') return {};
+    if (!fiche) return {};
+
+    const formule = piloteActif()?.combat?.santeDeDepart;
+    const depart = santeDeDepart(formule, champ => {
+        const entree = Object.entries(fiche).find(([k]) => k.toLowerCase() === champ.toLowerCase());
+        const valeur = entree ? Number(entree[1]) : NaN;
+        return Number.isFinite(valeur) ? valeur : undefined;
+    });
+
+    return depart === null ? {} : { hp: c.hp ?? depart, hpMax: c.hpMax ?? depart };
 }
 
 // Re-export pour compatibilité descendante
@@ -188,14 +258,32 @@ export const useCombatStore = create<CombatState>()(
             },
 
             addCombatant: (combatant) => {
+                /*
+                  **La fiche du combattant, retrouvée si l'écran ne l'a pas
+                  passée.** Huit écrans ajoutent des combattants ; un seul
+                  connaît le pilote, et plusieurs ne transmettent que
+                  `sourcePlayerId`. `CharacterGrid` est dans ce cas : il envoie
+                  `hp` et `maxHp` sans `sheetData`, si bien que la tâche de
+                  défaite de Dune — qui lit le seuil **sur la fiche** — n'avait
+                  rien à lire pour un personnage joueur.
+
+                  On complète ici plutôt que d'instruire huit appelants : c'est
+                  la règle déjà tenue pour `healthSystem`.
+                */
+                const fiche = combatant.sheetData ?? ficheDuCombattant(combatant);
+
                 set((state) => ({
                     combatants: [...state.combatants, {
                         ...combatant,
                         id: generateEffectId(),
                         faction: combatant.faction || (combatant.isPlayer ? 'player' : 'enemy'),
-                        // Huit écrans ajoutent des combattants ; un seul connaît
-                        // le pilote. Compléter ici évite d'en instruire huit.
-                        healthSystem: combatant.healthSystem ?? santeSelonLeSysteme(combatant.sheetData),
+                        sheetData: fiche,
+                        healthSystem: combatant.healthSystem ?? santeSelonLeSysteme(fiche),
+                        // La santé de départ vient de la fiche quand le pilote
+                        // dit où la lire. Sans formule, ou sans fiche, on garde
+                        // ce que l'appelant a fourni : *on ne fait pas payer une
+                        // nouveauté à l'existant.*
+                        ...pointsDeVieDeDepart(combatant, fiche),
                     }]
                 }));
                 get().broadcastSync();
