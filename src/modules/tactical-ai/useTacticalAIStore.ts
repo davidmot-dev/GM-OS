@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { useSessionOSStore } from '../session/useSessionOSStore';
 import type { TacticalAIState } from './types';
 
 export const useTacticalAIStore = create<TacticalAIState>()(
@@ -79,7 +80,11 @@ export const useTacticalAIStore = create<TacticalAIState>()(
               mapState.tokens,
               mapState.dangerZones,
               mapState.gridSize,
-              macroContext
+              macroContext,
+              // Les portées du jeu, et non celles par défaut de `GridEngine` :
+              // sans elles, le rapport envoyé à l'IA classe les distances selon
+              // un autre jeu. Les deux autres appelants les passaient déjà.
+              useSessionOSStore.getState().getActiveDriver?.()?.tactical,
           );
 
           // 1. PHASE NARRATION (Streaming)

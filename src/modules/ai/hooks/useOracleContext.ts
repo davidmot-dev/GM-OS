@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useCombatStore } from '../../combat/useCombatStore';
 import { useMapStore } from '../../map/useMapStore';
+import { decrireLaSante } from '../../combat/logic/SanteDuCombattant';
 import { useGemStore } from '../../../stores/useGemStore';
 
 /**
@@ -23,7 +24,19 @@ export const useOracleContext = () => {
         // 1. Personnages Joueurs
         const party = osStore.players.flatMap(p => p.characters)
             .filter(c => c.campaignId === activeCampaignId)
-            .map(c => `- ${c.name} (${c.classRace}): HP ${c.hp}/${c.maxHp}${c.description ? ` - ${c.description}` : ''}`);
+            /*
+              **Ce jeu n'a peut-être pas de points de vie.** Cette ligne écrivait
+              `HP ${c.hp}/${c.maxHp}` sans consulter le modèle de santé : sur
+              Alien, l'Oracle recevait « HP undefined/undefined » pour chaque
+              personnage et raisonnait dessus. `decrireLaSante` rend `null`
+              quand il n'y a rien à dire, et on se tait alors — *une valeur
+              fausse dans une invite est une affirmation, pas un silence*.
+            */
+            .map(c => {
+                const sante = decrireLaSante(c);
+                return `- ${c.name} (${c.classRace})${sante ? `: ${sante}` : ''}`
+                    + (c.description ? ` - ${c.description}` : '');
+            });
 
         // 2. Entités & PNJs (Avec Secrets MJ)
         const npcs = osStore.entities.filter(e => e.campaignId === activeCampaignId && e.status === 'alive')
@@ -34,7 +47,18 @@ export const useOracleContext = () => {
         const combatContext = inCombat ? {
             round: combatStore.round,
             turn: combatStore.combatants[combatStore.currentTurnIdx]?.name || 'Inconnu',
-            units: combatStore.combatants.map(c => `- ${c.name}: HP ${c.hp}/${c.hpMax}, Initiatives: ${c.init}, Status: ${c.statuses.map(s => s.name).join(', ') || 'Normal'}`)
+            /*
+              Même règle pour les combattants, plus l'initiative : Alien tire des
+              cartes numérotées, `init` n'y veut rien dire. On ne l'écrit que
+              lorsqu'elle porte une valeur.
+            */
+            units: combatStore.combatants.map(c => {
+                const sante = decrireLaSante(c);
+                return `- ${c.name}`
+                    + (sante ? `: ${sante}` : '')
+                    + (typeof c.init === 'number' ? `, initiative ${c.init}` : '')
+                    + `, état : ${c.statuses.map(s => s.name).join(', ') || 'normal'}`;
+            })
         } : null;
 
         // 4. Environnement / Carte

@@ -7,6 +7,7 @@ import type { AIResponse, AIProvider } from './types';
 import type { JournalEvent } from '../journal/types';
 import i18n from '../../i18n';
 import { resoudreCorpus, cheminDesPersonas } from '../../../electron/corpusSysteme';
+import { decrireLaSante } from '../combat/logic/SanteDuCombattant';
 
 interface GeminiResponse {
   candidates?: {
@@ -1170,7 +1171,14 @@ ${fullContext}`;
       // 1. Personnages Joueurs (Vitals & Info)
       const party = osStore.players.flatMap(p => p.characters)
         .filter(c => c.campaignId === activeCampaignId)
-        .map(c => `- ${c.name} (${c.classRace}): HP ${c.hp}/${c.maxHp}${c.description && !lite ? ` - ${c.description}` : ''}`);
+        // Le second chemin de contexte, avec le même défaut que
+        // `useOracleContext` : il annonçait des points de vie à un jeu qui n'en
+        // a pas. `decrireLaSante` se tait quand il n'y a rien à dire.
+        .map(c => {
+          const sante = decrireLaSante(c);
+          return `- ${c.name} (${c.classRace})${sante ? `: ${sante}` : ''}`
+            + (c.description && !lite ? ` - ${c.description}` : '');
+        });
 
       // 2. PNJs / Entités actives (Limit in lite mode)
       let entitiesBase = osStore.entities.filter(e => e.campaignId === activeCampaignId && e.status === 'alive');

@@ -87,6 +87,45 @@ describe('useOracleContext', () => {
         const { result } = renderHook(() => useOracleContext());
 
         expect(result.current.snapshot).toContain('Round: 2');
-        expect(result.current.snapshot).toContain('Goblin: HP 5/10');
+        // Le format a changé le 2026-08-15 : « HP 5/10 » supposait que tout jeu
+        // compte la santé en points. Sur Alien, la même ligne écrivait
+        // « HP undefined/undefined » et l'Oracle raisonnait dessus.
+        expect(result.current.snapshot).toContain('Goblin: 5/10 PV');
+        expect(result.current.snapshot).toContain('initiative 15');
+    });
+
+    it('un combattant sans points de vie n\'en fait pas annoncer', () => {
+        /**
+         * **Le défaut exact, sur la charge d'Alien.** Ce jeu n'a ni points de
+         * vie ni initiative chiffrée — il tire des cartes. L'ancienne ligne
+         * envoyait « HP undefined/undefined, Initiatives: undefined » à chaque
+         * réponse du Sage.
+         *
+         * *Une valeur fausse dans une invite est une affirmation, pas un
+         * silence.* On n'écrit que ce qu'on sait.
+         */
+        vi.mocked(useSessionOSStore).mockReturnValue({
+            activeCampaignId: 'c1',
+            campaigns: [{ id: 'c1', name: 'Hadley' }],
+            players: [],
+            entities: [],
+            clues: []
+        } as any);
+
+        vi.mocked(useCombatStore).mockReturnValue({
+            combatants: [{ name: 'Xénomorphe', statuses: [] }],
+            round: 1,
+            currentTurnIdx: 0
+        } as any);
+
+        vi.mocked(useMapStore).mockReturnValue({ mapUrl: null, tokens: [] } as any);
+        vi.mocked(useGemStore).mockReturnValue({ activeGemId: null, gems: [] } as any);
+
+        const { result } = renderHook(() => useOracleContext());
+
+        expect(result.current.snapshot).toContain('Xénomorphe');
+        expect(result.current.snapshot).not.toContain('undefined');
+        expect(result.current.snapshot).not.toContain('PV');
+        expect(result.current.snapshot).not.toContain('initiative');
     });
 });

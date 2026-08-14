@@ -1,6 +1,8 @@
 import { GridEngine, type GridPoint } from './GridEngine';
 import type { Combatant } from '../../combat/useCombatStore';
 import type { MapToken, DangerZone } from '../../map/types';
+import type { TacticalConfig } from '../../../types/drivers';
+import { decrireLaSante } from '../../combat/logic/SanteDuCombattant';
 
 export interface TacticalContext {
     actor: Combatant;
@@ -32,9 +34,27 @@ export class TacticalNarrativeService {
         allTokens: MapToken[],
         dangerZones: DangerZone[],
         gridSize: number = 50,
-        macroContext?: string
+        macroContext?: string,
+        /**
+         * Les portées du pilote — **et sans elles, on décrit un autre jeu**.
+         *
+         * `GridEngine.getRangeInfo` accepte cette configuration depuis
+         * toujours ; deux appelants sur trois la passaient. Celui-ci, qui est
+         * précisément **celui qui décrit la scène à l'IA**, l'omettait : il
+         * classait les distances avec les bandes par défaut pendant que le
+         * pilote en déclarait d'autres.
+         *
+         * Le piège qui l'a caché si longtemps : les valeurs par défaut de
+         * `GridEngine` sont `contact −3, courte 0, moyenne −1, longue −2,
+         * extreme −3` — **exactement celles d'Alien**. Le manque était donc
+         * invisible sur le seul jeu où on le cherchait. Il ne se serait vu que
+         * sur Dune, dont les portées montent de 0 à 4.
+         */
+        tacticalConfig?: TacticalConfig,
     ): string {
-        const context = this.buildContext(actor, allCombatants, allTokens, dangerZones, gridSize, macroContext);
+        const context = this.buildContext(
+            actor, allCombatants, allTokens, dangerZones, gridSize, macroContext, tacticalConfig,
+        );
         return this.formatNarrativePrompt(context);
     }
 
@@ -47,7 +67,8 @@ export class TacticalNarrativeService {
         allTokens: MapToken[],
         dangerZones: DangerZone[],
         gridSize: number,
-        macroContext?: string
+        macroContext?: string,
+        tacticalConfig?: TacticalConfig,
     ): TacticalContext {
         const actorToken = allTokens.find(t => 
             t.linkedCombatantId === actor.id || 
@@ -71,7 +92,7 @@ export class TacticalNarrativeService {
 
                 const distancePx = GridEngine.calculateDistance(actorPoint, { x: token.x, y: token.y });
                 const distanceUnits = GridEngine.pxToUnits(distancePx, gridSize);
-                const rangeInfo = GridEngine.getRangeInfo(distanceUnits);
+                const rangeInfo = GridEngine.getRangeInfo(distanceUnits, tacticalConfig);
 
                 if (c.faction === actor.faction) {
                     allies.push({ combatant: c, token, distance: distanceUnits });
@@ -144,7 +165,11 @@ export class TacticalNarrativeService {
         const { actor, actorToken, enemies, allies, isFlanked, flankedBy, nearbyDangerZones, factionStatus, macroContext } = ctx;
 
         let prompt = `## ANALYSE TACTIQUE MICRO : ${actor.name}\n`;
-        prompt += `- Santé : ${actor.hp}/${actor.hpMax} PV. Faction : ${actor.faction}.\n`;
+        // Quatrième écrit à annoncer des points de vie sans regarder le modèle
+        // de santé — trouvé le 2026-08-15 en corrigeant les portées, alors que
+        // la cartographie de la veille ne l'avait pas relevé.
+        const santeActeur = decrireLaSante(actor);
+        prompt += `- Santé : ${santeActeur ?? 'non chiffrée par ce système'}. Faction : ${actor.faction}.\n`;
         
         if (actor.statuses.length > 0) {
             prompt += `- États actifs : ${actor.statuses.map(s => s.name).join(', ')}.\n`;
@@ -162,7 +187,9 @@ export class TacticalNarrativeService {
             if (enemies.length > 0) {
                 prompt += `- Proximité Ennemi :\n`;
                 enemies.sort((a, b) => a.distance - b.distance).forEach(e => {
-                    prompt += `  * ${e.combatant.name} à ${e.distance} cases [Portée ${e.rangeCategory}]. Santé: ${e.combatant.hp}/${e.combatant.hpMax} PV.\n`;
+                    const santeEnnemi = decrireLaSante(e.combatant);
+                    prompt += `  * ${e.combatant.name} à ${e.distance} cases [Portée ${e.rangeCategory}]`
+                        + (santeEnnemi ? `. Santé : ${santeEnnemi}` : '') + '.\n';
                 });
             } else {
                 prompt += `- Aucun ennemi sur carte.\n`;

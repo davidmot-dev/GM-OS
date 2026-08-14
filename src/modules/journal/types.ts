@@ -53,10 +53,18 @@ export interface Journal {
  */
 export interface SessionSnapshot {
   notes?: string;
-  /** État des PJs présents */
-  presentPCs?: Array<{ name: string; hp: number; maxHp: number; state: string }>;
-  /** État des PNJs et monstres en combat */
-  sessionEntities?: Array<{ name: string; hp: number; maxHp: number; status: string }>;
+  /**
+   * État des PJs présents.
+   *
+   * **`hp` et `maxHp` sont facultatifs depuis le 2026-08-14** : tous les jeux
+   * ne comptent pas la santé en points, et le compte rendu écrivait `12/20 HP`
+   * pour des personnages qui n'en ont pas — sur Alien, `undefined/undefined`.
+   * Facultatifs plutôt que remplacés, pour que les séances déjà archivées
+   * restent lisibles telles quelles.
+   */
+  presentPCs?: Array<{ name: string; hp?: number; maxHp?: number; state: string }>;
+  /** État des PNJs et monstres en combat. Même règle sur les points de vie. */
+  sessionEntities?: Array<{ name: string; hp?: number; maxHp?: number; status: string }>;
   /** Éléments de la checklist non cochés */
   pendingChecklist?: string[];
   /** État des jauges de tension (Clock-OS) */

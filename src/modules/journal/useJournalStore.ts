@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { decrireLaSante } from '../combat/logic/SanteDuCombattant';
 import type { JournalState, JournalEvent, Journal } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import { format } from 'date-fns';
@@ -109,7 +110,12 @@ export const useJournalStore = create<JournalState>()(
 
           if (snapshot.presentPCs && snapshot.presentPCs.length > 0) {
             const pcContent = snapshot.presentPCs
-              .map(pc => `- **${pc.name}**: ${pc.hp}/${pc.maxHp} HP (${pc.state})`)
+              // Le compte rendu n'annonce des points de vie que si le jeu en a.
+              // Il écrivait « undefined/undefined HP » sur un jeu sans jauge.
+              .map(pc => {
+                const vie = decrireLaSante(pc);
+                return `- **${pc.name}**${vie ? ` : ${vie}` : ''} (${pc.state})`;
+              })
               .join('\n');
             get().addEvent({
               type: 'SYSTEM',
@@ -120,7 +126,10 @@ export const useJournalStore = create<JournalState>()(
 
           if (snapshot.sessionEntities && snapshot.sessionEntities.length > 0) {
             const npcContent = snapshot.sessionEntities
-              .map(npc => `- **${npc.name}**: ${npc.hp}/${npc.maxHp} HP (${npc.status})`)
+              .map(npc => {
+                const vie = decrireLaSante(npc);
+                return `- **${npc.name}**${vie ? ` : ${vie}` : ''} (${npc.status})`;
+              })
               .join('\n');
             get().addEvent({
               type: 'SYSTEM',

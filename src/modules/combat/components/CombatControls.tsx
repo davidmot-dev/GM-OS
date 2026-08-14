@@ -79,6 +79,25 @@ const CombatControls: React.FC = () => {
         });
     };
 
+    /**
+     * Le pilote sait-il tirer l'initiative — **par une formule OU par cartes** ?
+     *
+     * **Le défaut que cette variable supprime, relevé le 2026-08-14.** Les deux
+     * conditions — celle qui lance le jet et celle qui affiche le bouton — ne
+     * testaient que `initiativeFormula`. Or **un jeu qui tire des cartes n'a pas
+     * de formule** : Alien porte `initiativeFormula: ''` et dix cartes
+     * numérotées. `initiativeCards` était pourtant passé au moteur, qui sait le
+     * distribuer depuis toujours, et le libellé du bouton savait déjà dire
+     * « cartes » — seule la porte d'entrée refusait tout le monde.
+     *
+     * *Un champ qu'aucun chemin ne peut atteindre est un champ mort qui a l'air
+     * vivant.* Une seule variable pour les deux usages, pour qu'ils ne puissent
+     * plus diverger.
+     */
+    const initiativeDuSysteme = !!activeDriver?.combat.initiativeFormula
+        || (typeof activeDriver?.combat.initiativeCards === 'number'
+            && activeDriver.combat.initiativeCards > 0);
+
     const handleAutoInitiative = () => {
         console.log("[CombatControls] Clicking Jet Système", { 
             formula: activeDriver?.combat.initiativeFormula,
@@ -86,11 +105,11 @@ const CombatControls: React.FC = () => {
             cards: activeDriver?.combat.initiativeCards 
         });
         
-        if (activeDriver?.combat.initiativeFormula) {
-            rollAutoInitiative({ 
-                formula: activeDriver.combat.initiativeFormula,
-                sortOrder: activeDriver.combat.initiativeSort || 'desc',
-                cards: activeDriver.combat.initiativeCards,
+        if (initiativeDuSysteme) {
+            rollAutoInitiative({
+                formula: activeDriver!.combat.initiativeFormula,
+                sortOrder: activeDriver!.combat.initiativeSort || 'desc',
+                cards: activeDriver!.combat.initiativeCards,
                 resolver: (stat, combatant) => {
                     const sessionStore = useSessionOSStore.getState();
                     const getStatValue = (data: Record<string, unknown>, statName: string) => {
@@ -276,7 +295,7 @@ const CombatControls: React.FC = () => {
                     />
                 ) : (
                 <>
-                {activeDriver?.combat.initiativeFormula && (
+                {initiativeDuSysteme && (
                     <button
                         onClick={handleAutoInitiative}
                         className="group relative overflow-hidden flex flex-col items-center justify-center py-4 px-6 bg-gradient-to-br from-indigo-600 to-violet-700 hover:from-indigo-500 hover:to-violet-600 text-white rounded-xl border border-indigo-400/30 shadow-lg shadow-indigo-900/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
