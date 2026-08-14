@@ -105,6 +105,54 @@ function estTitreHorsCategories(ligne: string): boolean {
 }
 
 /**
+ * Les nombres tels que le carnet numérote ses listes — **en toutes lettres**.
+ *
+ * **Relevé sur la charge réelle du 2026-08-14, le SRD Year Zero Engine.** Le
+ * carnet a rendu son tableau ainsi :
+ *
+ *     | **un. Résolution des jets** (dés utilisés, …) | oui | … | … |
+ *     | **cinq. Santé et blessures** (échelle, incapacité, mort) | oui | … | … |
+ *
+ * On ne retirait que les numéros **en chiffres**. « un. Résolution des jets »
+ * n'était donc reconnu par aucune clé du canevas : six sujets sur quatorze sont
+ * partis en « hors canevas » avec leur vraie réponse, pendant que les mêmes
+ * sujets s'affichaient au canevas en « le carnet n'a rien rendu ». L'écran
+ * comptait 23 candidats pour 14 sujets, et David a vu des mélanges.
+ *
+ * *Quatrième forme du même défaut de fond : le carnet rend la même demande sous
+ * des formes différentes, et le parseur n'en connaissait qu'une.* Après les
+ * hors-catégories en liste numérotée, les titres entre accents graves et les
+ * tableaux sans barres extérieures.
+ */
+const NOMBRES_ECRITS = 'une?|deux|trois|quatre|cinq|six|sept|huit|neuf|dix|onze|douze|treize|quatorze|quinze';
+
+/** Le libellé nu : gras retiré, numérotation retirée, quelle qu'en soit la forme. */
+function retirerNumerotation(libelle: string): string {
+  return libelle
+    .replace(/^\*+\s*/, '')
+    .replace(new RegExp(`^(?:\\d+|${NOMBRES_ECRITS})\\s*[.)]\\s*`, 'i'), '')
+    .replace(/^\*+\s*/, '')
+    .trim();
+}
+
+/**
+ * La ligne « Sections : … » qui suit une mécanique hors catégories.
+ *
+ * Le carnet la pose **sur sa propre ligne**, sous l'entrée qu'elle complète :
+ *
+ *     un. **La mécanique de poussée** : C'est la dynamique de prise de risque…
+ *     * Sections : « Pousser un jet », « Le coût de la poussée », « Une seule fois »
+ *
+ * Lue comme une puce ordinaire, elle devenait une mécanique nommée « Sections »
+ * — trois cartes de ce nom sur l'écran du 2026-08-14. Elle appartient à
+ * l'entrée précédente, et c'est là qu'on la range.
+ */
+function sectionsDeSuite(ligne: string): string | null {
+  const trouve = /^\s*[-*•]?\s*Sections?\s*:\s*(.+)$/i.exec(ligne);
+  return trouve ? trouve[1] : null;
+}
+
+/**
  * Lit les treize sujets du canevas, puis les mécaniques hors catégories.
  *
  * Les entrées hors catégories sont acceptées sous les deux formes que le carnet
@@ -131,7 +179,7 @@ export function lireInventaire(markdown: string): EntreeInventaire[] {
       if (!libelle) continue;
 
       const entree: EntreeInventaire = {
-        sujet: libelle.replace(/^\d+[.)]\s*/, ''),
+        sujet: retirerNumerotation(libelle),
         horsCanevas: true,
         traite: lireTraitement(cellules[1] ?? ''),
         mecanique: cellules[2] ?? '',
@@ -150,10 +198,27 @@ export function lireInventaire(markdown: string): EntreeInventaire[] {
 
     if (!apresHorsCategories) continue;
 
-    // Puces ET listes numérotées : le carnet a rendu les hors catégories de Dune
-    // sous la forme « 1. **L'Équation Statistique Duale** : … », et les quatre
-    // mécaniques centrales du jeu tombaient dans le vide faute d'accepter `1.`.
-    const puce = /^\s*(?:[-*•]|\d+[.)])\s*(?:\*\*)?\s*([^:*]{2,80}?)\s*(?:\*\*)?\s*[:—-]\s*(.+)$/.exec(ligne);
+    /*
+      « Sections : … » complète l'entrée précédente au lieu d'en créer une.
+      Lue comme une puce, elle devenait une mécanique nommée « Sections » —
+      relevé trois fois sur le SRD YZE du 2026-08-14.
+    */
+    const sections = sectionsDeSuite(ligne);
+    if (sections) {
+      const derniere = horsCanevas[horsCanevas.length - 1];
+      if (derniere) derniere.sections = decouperSections(sections);
+      continue;
+    }
+
+    // Puces, listes numérotées **et numéros écrits en toutes lettres** : le
+    // carnet a rendu les hors catégories de Dune sous la forme « 1. **L'Équation
+    // Statistique Duale** : … » et celles du SRD YZE sous « un. **La mécanique
+    // de poussée** : … ». Sans les deux formes, les mécaniques centrales d'un
+    // jeu tombent dans le vide — quatre pour Dune, trois pour le SRD.
+    const puce = new RegExp(
+      `^\\s*(?:[-*•]|\\d+[.)]|(?:${NOMBRES_ECRITS})[.)])\\s*(?:\\*\\*)?\\s*([^:*]{2,80}?)\\s*(?:\\*\\*)?\\s*[:—-]\\s*(.+)$`,
+      'i',
+    ).exec(ligne);
     if (puce) {
       horsCanevas.push({
         sujet: cellule(puce[1]),

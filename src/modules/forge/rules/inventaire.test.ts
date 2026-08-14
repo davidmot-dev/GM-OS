@@ -201,3 +201,77 @@ describe('lireInventaire — tableau sans barres extérieures', () => {
     expect(hors.map(e => e.sujet)).toEqual(['Le Stress']);
   });
 });
+
+describe('lireInventaire — numérotation en toutes lettres (SRD Year Zero Engine)', () => {
+    /**
+     * **Charge réelle du 2026-08-14**, relevée dans `~/mcp_bridge_debug.log` sur
+     * le SRD YZE. Le carnet numérote en toutes lettres et met le libellé en
+     * gras, et il pose les sections des hors-catégories sur leur propre ligne.
+     *
+     * Ce que ça donnait avant correction, compté sur l'écran de David :
+     * **23 candidats pour 14 sujets** — six sujets rendus deux fois (une entrée
+     * vide au canevas, une entrée « hors canevas » portant la vraie réponse) et
+     * trois mécaniques transformées en cartes nommées « Sections », pendant que
+     * la poussée, la magie et les véhicules disparaissaient.
+     *
+     * *Quatrième forme du même défaut : le carnet rend la même demande sous une
+     * forme qu'on n'attendait pas.*
+     */
+    const reel = [
+        '| Sujet | Traité (oui/partiellement/non) | Mécanique | Sections |',
+        '|---|---|---|---|',
+        '| **un. Résolution des jets** (dés utilisés, lecture du résultat) | oui | Pools de dés à six faces. | « Lancer les dés », « L’art de l’échec » |',
+        '| **cinq. Santé et blessures** (échelle utilisée, incapacité, mort) | oui | Jauges de Santé et de Résolution. | « Santé et Résolution », « La mort » |',
+        '| **huit. Monnaie de table ou ressource PARTAGÉE** (élan, menace…) | non | Le sujet n\'est pas couvert par les sources. | non couvert par les sources |',
+        '',
+        '## Hors catégories',
+        '',
+        'un. **La mécanique de poussée (Pousser un jet)** : Le joueur relance tous les dés sans Écueil.',
+        '* Sections : « Pousser un jet », « Le coût de la poussée », « Une seule fois »',
+        '',
+        'deux. **La magie et l\'incantation de sorts** : Les sorts réussissent toujours mais coûtent des PV.',
+        '* Sections : « Magie », « Apprendre la magie », « Sorts »',
+    ].join('\n');
+
+    it('les sujets numérotés en toutes lettres rejoignent le canevas', () => {
+        const entrees = lireInventaire(reel);
+        const jets = entrees.find(e => e.sujet === 'Résolution des jets');
+        expect(jets?.lu).toBe(true);
+        expect(jets?.horsCanevas).toBe(false);
+        expect(jets?.mecanique).toContain('Pools de dés');
+        expect(entrees.find(e => e.sujet === 'Santé et blessures')?.lu).toBe(true);
+    });
+
+    it('aucun sujet du canevas ne se dédouble en « hors canevas »', () => {
+        // Le défaut exact : la même mécanique comptée deux fois, une fois vide
+        // au canevas et une fois hors canevas.
+        const hors = lireInventaire(reel).filter(e => e.horsCanevas).map(e => e.sujet);
+        expect(hors).not.toContain('un. Résolution des jets');
+        expect(hors.some(s => /Résolution des jets/i.test(s))).toBe(false);
+    });
+
+    it('« non couvert » reste une réponse, pas une absence de réponse', () => {
+        const monnaie = lireInventaire(reel).find(e => e.sujet === 'Monnaie de table');
+        expect(monnaie?.lu).toBe(true);
+        expect(monnaie?.traite).toBe('non');
+    });
+
+    it('les mécaniques hors canevas sont lues, numéro en lettres compris', () => {
+        const hors = lireInventaire(reel).filter(e => e.horsCanevas);
+        expect(hors.map(e => e.sujet)).toEqual([
+            'La mécanique de poussée (Pousser un jet)',
+            'La magie et l\'incantation de sorts',
+        ]);
+    });
+
+    it('« Sections : … » complète l\'entrée précédente au lieu d\'en créer une', () => {
+        const hors = lireInventaire(reel).filter(e => e.horsCanevas);
+        expect(hors.map(e => e.sujet)).not.toContain('Sections');
+        expect(hors[0].sections).toEqual(['Pousser un jet', 'Le coût de la poussée', 'Une seule fois']);
+    });
+
+    it('le compte total est celui du canevas, plus les vraies hors-catégories', () => {
+        // 14 sujets du canevas + 2 mécaniques. Avant correction : 23 pour 14.
+        expect(lireInventaire(reel)).toHaveLength(16);
+    });
+});
