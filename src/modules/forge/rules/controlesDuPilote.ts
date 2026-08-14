@@ -1,4 +1,4 @@
-import type { GameDriver, DiceRollLogic } from '../../../types/drivers';
+import type { GameDriver, DiceRollLogic, DiceConfig } from '../../../types/drivers';
 import type { HealthSystemType } from '../../../types/entity.types';
 import type { SheetTemplate, SheetFieldType } from '../../../data/defaultSheetTemplates';
 import type { SensDuJet } from '../../dice/DescripteurDeJet';
@@ -61,6 +61,46 @@ const SENS_CONNUS: readonly SensDuJet[] = ['sous-ou-egal', 'superieur-ou-egal'];
  * se joue alors sur un modèle que personne n'a choisi.
  */
 const MODELES_DE_SANTE: readonly HealthSystemType[] = ['hp', 'clocks', 'anatomy', 'wounds', 'boxes'];
+
+/** Les douze familles de moteur que `DiceBoard` et `RemoteDicePad` savent choisir. */
+type MoteurDeDes = NonNullable<DiceConfig['engine']>;
+const MOTEURS_CONNUS: readonly MoteurDeDes[] = [
+    'standard', 'formula', 'pool', 'pool_explode', 'threshold', 'advantage',
+    'disadvantage', 'exploding', 'fate', 'rolemaster', 'yze', '2d20',
+];
+
+/**
+ * Les seules familles dont le nom dit déjà les faces qu'elles lancent.
+ *
+ * Les autres — `pool`, `threshold`, `exploding`… — décrivent une façon de
+ * compter, pas un dé : rien à confronter, donc rien à contrôler.
+ */
+const FACES_DU_MOTEUR: Readonly<Record<string, number>> = { '2d20': 20, yze: 6, 'year-zero': 6 };
+
+/**
+ * Deux noms que le type ne déclare pas et que les trois lecteurs acceptent
+ * pourtant — `DiceEngine`, `DiceBoard` et `RemoteDicePad` reconnaissent tous
+ * `year-zero` à côté de `yze`, et `d100` à côté de `rolemaster`.
+ *
+ * On les tolère parce qu'ils **marchent** : condamner une valeur qui bascule
+ * réellement le pupitre dans le bon mode serait un faux positif, et le message
+ * inviterait à « corriger » un pilote qui n'a rien.
+ */
+const ALIAS_DE_MOTEUR: readonly string[] = ['year-zero', 'd100'];
+
+/**
+ * Les faces que ce pilote lance réellement, si elles se lisent quelque part.
+ *
+ * La réserve fait foi quand elle en déclare, sinon la notation de `defaultDice`.
+ * Rend `undefined` plutôt que de deviner : un contrôle qui invente sa mesure
+ * crie sur des pilotes justes, et un contrôle qui crie à tort finit ignoré.
+ */
+function facesLancees(driver: Partial<GameDriver>): number | undefined {
+    const deLaReserve = driver.jet?.reserve?.faces;
+    if (typeof deLaReserve === 'number') return deLaReserve;
+    const notation = driver.dice?.defaultDice?.match(/d(\d+)/i);
+    return notation ? Number(notation[1]) : undefined;
+}
 
 /** Les cinq bandes de portée, de la plus proche à la plus lointaine. */
 const ORDRE_DES_PORTEES = ['contact', 'courte', 'moyenne', 'longue', 'extreme'] as const;
@@ -217,6 +257,62 @@ export function controlerLePilote(
         erreur('dice.defaultDice', `« ${driver.dice.defaultDice} » ne lance aucun dé.`);
     }
 
+    /*
+      **Le moteur de dés, et les deux façons de le manquer.**
+
+      `DiceBoard` et `RemoteDicePad` lisent `dice.engine` pour choisir leur
+      mode, et retombent sur `standard` quand il ne dit rien. La dérivation
+      d'Alien du 2026-08-13 l'a laissé vide : `DiceEngine.rollYZE`, qui compte
+      les six et distingue les dés d'équipement, n'aurait jamais été appelé, et
+      la table aurait lancé des dés génériques toute une séance sans un mot.
+
+      L'autre façon est pire, et l'exemple de l'invite la rend probable : y
+      recopier le `2d20` de Dune sur un jeu qui lance des d6. Un moteur faux ne
+      se signale pas davantage qu'un moteur absent — mais lui, on peut le
+      confondre, parce que la famille du moteur dit les faces qu'elle lance.
+    */
+    const moteur = driver.dice?.engine as string | undefined;
+    if (moteur !== undefined && !MOTEURS_CONNUS.includes(moteur as MoteurDeDes)
+        && !ALIAS_DE_MOTEUR.includes(moteur)) {
+        erreur(
+            'dice.engine',
+            `« ${moteur} » n'est pas un moteur connu (${MOTEURS_CONNUS.join(', ')}). ` +
+            'Le pupitre de dés retombera sur son mode standard.',
+        );
+    } else if (moteur === undefined && driver.jet?.reserve) {
+        /*
+          **On n'avertit que là où l'absence est forcément un manque.**
+
+          `standard` est le défaut, et pour un jeu qui lance un d20 contre une
+          difficulté, il est juste : un pilote sans `engine` n'est pas un
+          pilote fautif. Mais **un jeu qui compose une réserve n'est jamais
+          standard** — c'est précisément ce que `standard` ne sait pas faire.
+          Le déclencheur est donc la réserve, pas l'absence toute seule.
+
+          La première version avertissait dès que `dice` existait, et deux
+          contrôles justes se sont mis à crier sur des pilotes d'essai qui ne
+          demandaient rien. Un contrôle qui crie à tort finit ignoré, et
+          emporte les vrais avec lui.
+        */
+        avertir(
+            'dice.engine',
+            'Le jet compose une réserve de dés, mais aucune famille de moteur n\'est nommée : le ' +
+            'pupitre de dés et la tablette retomberont sur leur mode standard, qui ne sait pas ' +
+            'lancer de réserve. Un jeu à réserve de d6 dont on compte les six se dit « yze ».',
+        );
+    }
+
+    const facesAttendues = moteur ? FACES_DU_MOTEUR[moteur] : undefined;
+    const facesObservees = facesLancees(driver);
+    if (facesAttendues !== undefined && facesObservees !== undefined
+        && facesObservees !== facesAttendues) {
+        erreur(
+            'dice.engine',
+            `Le moteur « ${moteur} » lance des dés à ${facesAttendues} faces, mais le jet en ` +
+            `compose à ${facesObservees}. L'un des deux est recopié de l'exemple.`,
+        );
+    }
+
     if (driver.jet?.reserve && driver.jet.reserve.max < 1) {
         avertir(
             'jet.reserve',
@@ -353,16 +449,22 @@ export function controlerLePilote(
       tir (0 → −3). Les deux sont justes, et l'outil suit l'état, il n'arbitre
       pas. On ne surveille donc ni le sens, ni les valeurs.
 
-      **Mais une progression ne se retourne pas en chemin.** Relevé sur la
-      dérivation d'Alien du 2026-08-13 : `contact −3, courte 0, moyenne −1,
-      longue −2, extreme −3`. Les libellés étaient décalés d'un rang — « dans la
-      même zone » était rangé sous `courte`, « zone adjacente » sous `moyenne` —
-      et `contact` avait hérité du −3 d'`extreme`. Un personnage au contact
-      aurait tiré avec la pénalité maximale, et rien ne l'aurait dit.
+      **Et pas davantage la monotonie — c'est une erreur qu'on a faite.** Un
+      contrôle posé le 2026-08-13 criait au « zigzag » sur `contact −3,
+      courte 0, moyenne −1, longue −2, extreme −3`, en y voyant la signature
+      d'un décalage d'un rang entre les bandes. Deux dérivations d'Alien ont été
+      accusées ainsi. **Elles avaient raison toutes les deux** : la fiche des
+      portées écrit exactement ces cinq valeurs, et le livre les justifie —
+      tirer sur une cible collée à soi est difficile, tirer à un kilomètre
+      aussi. La courbe en U est une forme de règle parfaitement ordinaire.
 
-      Le zigzag est la signature de ce décalage, et il se voit sans connaître le
-      jeu : la difficulté ne peut pas empirer, s'améliorer, puis empirer encore
-      en s'éloignant d'un pas à chaque fois.
+      Le contrôle a donc été retiré. Il condamnait un pilote juste, et la
+      consigne jumelle ajoutée à l'invite aurait poussé le modèle à falsifier le
+      jeu pour satisfaire l'outil. *Un contrôle qui crie à tort ne coûte pas
+      seulement sa propre crédibilité : ici, il commandait de casser la règle.*
+
+      Reste ce qui est vraiment invariant : une bande plus lointaine ne peut pas
+      porter moins loin qu'une plus proche. Celui-là ne dépend d'aucun jeu.
     */
     const portees = driver.tactical?.ranges;
     if (portees) {
@@ -384,24 +486,6 @@ export function controlerLePilote(
             }
         }
 
-        const modificateurs = bandes
-            .map(b => b.bande.modifier)
-            .filter((m): m is number => typeof m === 'number');
-        let monte = false;
-        let descend = false;
-        for (let i = 1; i < modificateurs.length; i++) {
-            if (modificateurs[i] > modificateurs[i - 1]) monte = true;
-            if (modificateurs[i] < modificateurs[i - 1]) descend = true;
-        }
-        if (monte && descend) {
-            erreur(
-                'tactical.ranges',
-                `Les modificateurs ne progressent pas dans un seul sens (${modificateurs.join(', ')}) : ` +
-                "ils s'aggravent puis s'allègent en s'éloignant. C'est la signature d'un décalage " +
-                "d'un rang entre les bandes — vérifiez que le libellé de chaque portée décrit bien " +
-                'la distance sous laquelle il est rangé.',
-            );
-        }
     }
 
     // ---- Les réserves de table ---------------------------------------------

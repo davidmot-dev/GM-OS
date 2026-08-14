@@ -65,7 +65,7 @@ describe('ce qui ne se raccorde à rien est nommé', () => {
 
     it('une réserve qui paie les dés sans exister', () => {
         const constats = controlerLePilote(
-            { jet: { seuil: [], reserve: { base: 2, max: 5, faces: 20, ressource: 'impulsion' } } } as unknown as Partial<GameDriver>,
+            { dice: { engine: '2d20' }, jet: { seuil: [], reserve: { base: 2, max: 5, faces: 20, ressource: 'impulsion' } } } as unknown as Partial<GameDriver>,
             fiche,
         );
         expect(constats.map(c => c.ou)).toEqual(['jet.reserve.ressource']);
@@ -193,6 +193,76 @@ describe('ce qui vient de l\'exemple et non des fiches', () => {
     });
 });
 
+describe('la famille du moteur de dés', () => {
+    /**
+     * Relevé sur la dérivation d'Alien du 2026-08-13 : `dice.engine` **absent**.
+     *
+     * Ce que ça coûtait : `DiceBoard` et `RemoteDicePad` lisent ce champ pour
+     * choisir leur mode et retombent tous deux sur `standard`. `rollYZE` — qui
+     * compte les six et distingue les dés d'équipement — n'aurait jamais été
+     * appelé, et la table aurait lancé des dés génériques toute la séance.
+     *
+     * La cause était dans l'invite : `logic` et `sens` avaient leur énumération
+     * écrite, `engine` avait douze valeurs et pas une ligne. Il n'existait que
+     * dans l'exemple, où il vaut `2d20`.
+     */
+    const reserveDeD6 = { base: 1, max: 10, faces: 6 };
+
+    it('une réserve de dés sans moteur nommé : le pupitre retombe sur standard', () => {
+        const constats = controlerLePilote(
+            { jet: { reserve: reserveDeD6 } } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+        expect(constats.map(c => c.ou)).toEqual(['dice.engine']);
+        expect(constats[0].gravite).toBe('avertissement');
+        expect(constats[0].message).toContain('yze');
+    });
+
+    it('mais un jeu sans réserve ne dit rien : « standard » lui va', () => {
+        expect(controlerLePilote(
+            { dice: { defaultDice: '1d20', logic: 'sum' } } as Partial<GameDriver>,
+            fiche,
+        )).toEqual([]);
+    });
+
+    it('le nom du moteur en toutes lettres n\'est pas une valeur', () => {
+        // La recopie qu'on attendait le plus : les fiches disent « Year Zero
+        // Engine », et rien n'apprenait au modèle que le champ veut un code.
+        const constats = controlerLePilote(
+            { dice: { defaultDice: '10d6', logic: 'count-success', engine: 'Year Zero Engine' } } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+        expect(constats.map(c => c.ou)).toEqual(['dice.engine']);
+        expect(constats[0].gravite).toBe('erreur');
+    });
+
+    it('« year-zero » passe, parce que les trois lecteurs l\'acceptent', () => {
+        expect(controlerLePilote(
+            { dice: { defaultDice: '10d6', logic: 'count-success', engine: 'year-zero' } } as unknown as Partial<GameDriver>,
+            fiche,
+        )).toEqual([]);
+    });
+
+    it('un moteur qui ne lance pas les dés du jeu est recopié de l\'exemple', () => {
+        // Le désastre évité de justesse : `2d20` posé sur un jeu à d6. Le
+        // modèle avait le choix entre recopier l'exemple et omettre ; il a
+        // omis, et c'est la chance qui a tranché.
+        const constats = controlerLePilote(
+            { dice: { defaultDice: '2d20', logic: 'count-success', engine: '2d20' }, jet: { reserve: reserveDeD6 } } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+        expect(constats.map(c => c.ou)).toEqual(['dice.engine']);
+        expect(constats[0].message).toContain('20 faces');
+    });
+
+    it('« yze » sur une réserve de d6 ne dit rien — c\'est Alien', () => {
+        expect(controlerLePilote(
+            { dice: { defaultDice: '10d6', logic: 'count-success', engine: 'yze' }, jet: { reserve: reserveDeD6 } } as unknown as Partial<GameDriver>,
+            fiche,
+        )).toEqual([]);
+    });
+});
+
 describe('un jet que le moteur ne saurait pas résoudre', () => {
     it('un sens de comparaison inconnu', () => {
         const constats = controlerLePilote(
@@ -238,7 +308,7 @@ describe('un jet que le moteur ne saurait pas résoudre', () => {
         // Relevé sur Alien : `base: "attribut+comp_level"`. Le panneau de jet
         // n'aurait rien lancé.
         const constats = controlerLePilote(
-            { jet: { seuil: [{ id: 'c', label: 'C', sectionId: 'competences' }], reserve: { base: 'attribut+comp_level', max: 6, faces: 6 } } } as unknown as Partial<GameDriver>,
+            { dice: { engine: 'yze' }, jet: { seuil: [{ id: 'c', label: 'C', sectionId: 'competences' }], reserve: { base: 'attribut+comp_level', max: 6, faces: 6 } } } as unknown as Partial<GameDriver>,
             fiche,
         );
         expect(constats.map(c => c.ou)).toEqual(['jet.reserve.base']);
@@ -246,7 +316,7 @@ describe('un jet que le moteur ne saurait pas résoudre', () => {
 
     it('une réserve vide est signalée sans être refusée', () => {
         const constats = controlerLePilote(
-            { jet: { seuil: [], reserve: { base: 0, max: 0, faces: 6 } } } as unknown as Partial<GameDriver>,
+            { dice: { engine: 'yze' }, jet: { seuil: [], reserve: { base: 0, max: 0, faces: 6 } } } as unknown as Partial<GameDriver>,
             fiche,
         );
         expect(constats).toEqual([
@@ -314,7 +384,7 @@ describe('un modèle de santé hors énumération', () => {
     });
 });
 
-describe('des portées décalées d\'un rang', () => {
+describe('les portées, et ce qu\'on renonce à y contrôler', () => {
     /** Les cinq bandes, écrites en un mot : `[maxUnits, modifier]` par portée. */
     const portees = (valeurs: [number, number][]) => ({
         tactical: {
@@ -327,19 +397,25 @@ describe('des portées décalées d\'un rang', () => {
         },
     }) as unknown as Partial<GameDriver>;
 
-    it('un modificateur qui s\'aggrave, s\'allège, puis s\'aggrave encore', () => {
+    it('une courbe en U ne dit RIEN : c\'est la règle d\'Alien, pas un décalage', () => {
         /**
-         * La charge réelle du 2026-08-13 : `contact −3, courte 0, moyenne −1,
-         * longue −2, extreme −3`. Les libellés étaient décalés d'un rang et
-         * `contact` avait hérité du −3 d'`extreme` — un personnage au contact
-         * aurait tiré avec la pénalité maximale.
+         * **Le contrôle que ce test remplace était faux, et deux dérivations
+         * l'ont payé.** Posé le 2026-08-13, il voyait dans `contact −3,
+         * courte 0, moyenne −1, longue −2, extreme −3` la signature d'un
+         * décalage d'un rang, et accusait `contact` d'avoir hérité du −3
+         * d'`extreme`.
+         *
+         * La fiche des portées d'Alien écrit exactement ces cinq valeurs, et le
+         * livre les justifie : tirer sur une cible collée à soi est difficile,
+         * tirer à un kilomètre aussi. **Les deux pilotes avaient raison ; c'est
+         * le contrôle qui avait tort.**
+         *
+         * Ce test tient la place du contrôle retiré pour qu'il ne revienne pas.
+         * L'outil suit l'état, il n'arbitre pas — et la consigne jumelle qui
+         * était partie dans l'invite commandait au modèle de casser la règle du
+         * jeu pour satisfaire l'outil.
          */
-        const constats = controlerLePilote(
-            portees([[1, -3], [2, 0], [3, -1], [4, -2], [8, -3]]),
-            fiche,
-        );
-        expect(constats.map(c => c.ou)).toEqual(['tactical.ranges']);
-        expect(constats[0].message).toContain('-3, 0, -1, -2, -3');
+        expect(controlerLePilote(portees([[1, -3], [2, 0], [3, -1], [4, -2], [8, -3]]), fiche)).toEqual([]);
     });
 
     it('une pénalité qui ne fait que descendre est légitime — le signe n\'est pas arbitré', () => {
