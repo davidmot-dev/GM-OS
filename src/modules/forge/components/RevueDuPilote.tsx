@@ -174,7 +174,7 @@ export const RevueDuPilote: React.FC<{
               {jet.reserve.base} à {jet.reserve.max} dés à {jet.reserve.faces} faces
               {jet.reserve.cout?.length ? `, coût ${jet.reserve.cout.join(' puis ')}` : ''}
               {jet.reserve.ressource && (
-                <> — payés en <Id valeur={jet.reserve.ressource} resolu={(driver.ressourcesDeTable ?? []).some(r => r.id === jet.reserve.ressource)} /></>
+                <> — payés en <Id valeur={jet.reserve.ressource} resolu={(driver.ressourcesDeTable ?? []).some(r => r.id === jet.reserve?.ressource)} /></>
               )}
             </Ligne>
           )}

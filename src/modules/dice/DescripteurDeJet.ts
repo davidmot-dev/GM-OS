@@ -33,12 +33,30 @@ export interface ComposanteDeJet {
 
 export type SensDuJet = 'sous-ou-egal' | 'superieur-ou-egal';
 
+/**
+ * **Aucun champ de ce descripteur n'est garanti à l'exécution.**
+ *
+ * C'est la leçon du 2026-08-15, apprise deux fois de suite en ouvrant une fiche
+ * d'Alien : `difficulte` manquait, puis `seuil`. Un pilote est **forgé par un
+ * modèle de langage** à partir de fiches de règles — le type dit ce qu'on
+ * espère, jamais ce qu'on reçoit. Et c'est même la règle du projet : *si les
+ * fiches ne disent pas comment fonctionne une mécanique, OMETS le champ.*
+ *
+ * Tout lecteur doit donc se protéger, y compris de ce que le type déclare
+ * obligatoire. Les valeurs de repli sont choisies pour **ne rien inventer** :
+ * une réserve absente ne lance rien et le dit, plutôt que de fabriquer des dés
+ * que le jeu n'a pas.
+ */
 export interface DescripteurDeJet {
     /**
      * Composantes additionnées pour former le seuil. Chez Dune : une compétence
      * et un principe. Chez un jeu à compétence seule : une seule composante.
+     *
+     * **Facultatif** : un jeu à réserve — Alien, où chaque six est une réussite
+     * — ne compose aucun seuil depuis la fiche. Son absence faisait planter
+     * `PanneauDeJet` (« descripteur.seuil is not iterable »).
      */
-    seuil: ComposanteDeJet[];
+    seuil?: ComposanteDeJet[];
     /**
      * Réserve de dés : combien on en lance de base, jusqu'à combien, et à
      * combien de faces.
@@ -49,7 +67,7 @@ export interface DescripteurDeJet {
      * qui paie ; sans elle, les dés sont gratuits et le panneau ne demande
      * rien.
      */
-    reserve: { base: number; max: number; faces: number; cout?: number[]; ressource?: string };
+    reserve?: { base: number; max: number; faces: number; cout?: number[]; ressource?: string };
     /** Chaque dé est-il une réussite en dessous ou au-dessus du seuil ? */
     sens: SensDuJet;
     /** Un dé à cette valeur ou en deçà compte double. Chez Dune, le 1 naturel. */
@@ -142,7 +160,12 @@ export function preparerLeJet(
     const composantes: JetPrepare['composantes'] = [];
     let seuil = 0;
 
-    for (const composante of descripteur.seuil) {
+    /*
+      Un jeu à réserve ne compose aucun seuil depuis la fiche : la boucle ne
+      tourne simplement pas, et le seuil reste à zéro. C'est le cas d'Alien, où
+      chaque six est une réussite quelle que soit la valeur du personnage.
+    */
+    for (const composante of descripteur.seuil ?? []) {
         const champ = choix.champs[composante.id];
         if (!champ) {
             avertissements.push(`${composante.label} : aucun champ retenu.`);
@@ -159,18 +182,30 @@ export function preparerLeJet(
         composantes.push({ label: composante.label, champ, valeur });
     }
 
+    /*
+      **Sans réserve déclarée, on ne fabrique pas de dés.** Un pilote peut
+      l'omettre — il vient d'un modèle de langage —, et inventer « un d6 » pour
+      que l'écran fonctionne donnerait un jet qui a l'air d'un jet. On rend zéro
+      dé et on le dit : le panneau montrera qu'il n'a rien à lancer, ce que le
+      contrôle du pilote signale déjà à la revue.
+    */
+    const reserve = descripteur.reserve;
+    if (!reserve) {
+        avertissements.push('Le pilote ne décrit aucune réserve de dés : rien à lancer.');
+    }
+
     // Les dés achetés ne franchissent pas le plafond du système : chez Dune,
     // cinq dés au total, quoi qu'on dépense.
-    const demandes = descripteur.reserve.base + Math.max(0, choix.desSupplementaires ?? 0);
-    const nombreDeDes = Math.min(demandes, descripteur.reserve.max);
-    if (demandes > descripteur.reserve.max) {
-        avertissements.push(`Réserve plafonnée à ${descripteur.reserve.max} dés.`);
+    const demandes = (reserve?.base ?? 0) + Math.max(0, choix.desSupplementaires ?? 0);
+    const nombreDeDes = Math.min(demandes, reserve?.max ?? 0);
+    if (reserve && demandes > reserve.max) {
+        avertissements.push(`Réserve plafonnée à ${reserve.max} dés.`);
     }
 
     // Le prix croît dé après dé : on additionne les échelons réellement
     // franchis, pas le nombre de dés fois un prix moyen.
-    const desAchetes = nombreDeDes - descripteur.reserve.base;
-    const echelons = descripteur.reserve.cout ?? [];
+    const desAchetes = nombreDeDes - (reserve?.base ?? 0);
+    const echelons = reserve?.cout ?? [];
     const total = echelons.slice(0, Math.max(0, desAchetes)).reduce((s, c) => s + c, 0);
 
     /*
@@ -193,8 +228,8 @@ export function preparerLeJet(
         composantes,
         nombreDeDes,
         desAchetes: Math.max(0, desAchetes),
-        cout: { total, ressource: descripteur.reserve.ressource },
-        faces: descripteur.reserve.faces,
+        cout: { total, ressource: reserve?.ressource },
+        faces: reserve?.faces ?? 0,
         sens: descripteur.sens,
         // La spécialisation élargit le critique ; sans elle, le critique ordinaire.
         doubleSous: Math.max(choix.critiqueEtendu ?? 0, descripteur.critique ?? 0),

@@ -234,9 +234,60 @@ describe('de la fiche aux dés, bout en bout', () => {
         const fiche = DEFAULT_SHEET_TEMPLATES.find(t => t.id === dune.templateId)!;
         const sections = new Set(fiche.sections.map(s => s.id));
 
-        for (const composante of jetDune.seuil) {
+        for (const composante of jetDune.seuil ?? []) {
             expect(sections.has(composante.sectionId), `section « ${composante.sectionId} » absente de la fiche`).toBe(true);
         }
+    });
+});
+
+describe('le descripteur réel d\'Alien, tel que la Forge le produit', () => {
+    /**
+     * **Deux plantages successifs le 2026-08-15, à l'ouverture d'une fiche.**
+     * D'abord `difficulte` manquant, puis `seuil`. Chaque fois, j'ai corrigé le
+     * champ signalé au lieu de confronter le descripteur **entier** au pilote
+     * réel — ce qui a fait perdre un aller-retour à David.
+     *
+     * D'où ce test : le descripteur d'Alien tel qu'il est **réellement
+     * enregistré**, sans seuil ni difficulté, avec sa seule réserve. Il n'a
+     * jamais existé dans la suite parce qu'aucun pilote de test n'omettait ces
+     * champs — la limite d'une suite écrite à partir des cas qu'on connaît.
+     *
+     * *Un pilote est forgé par un modèle de langage : le type dit ce qu'on
+     * espère, jamais ce qu'on reçoit.*
+     */
+    const alien: DescripteurDeJet = {
+        reserve: { base: 1, max: 10, faces: 6 },
+        sens: 'superieur-ou-egal',
+    };
+
+    it('se prépare sans seuil ni difficulté', () => {
+        const jet = preparerLeJet(alien, FICHE, { champs: {} });
+
+        expect(jet.seuil, 'rien à composer depuis la fiche').toBe(0);
+        expect(jet.composantes).toEqual([]);
+        expect(jet.difficulte).toBe(0);
+        expect(jet.nombreDeDes, 'un dé de base, comme le pilote le déclare').toBe(1);
+        expect(jet.faces).toBe(6);
+        expect(jet.avertissements).toEqual([]);
+    });
+
+    it('les dés supplémentaires restent plafonnés à la réserve', () => {
+        expect(preparerLeJet(alien, FICHE, { champs: {}, desSupplementaires: 20 }).nombreDeDes).toBe(10);
+    });
+
+    it('un descripteur réduit au strict minimum ne fait rien exploser', () => {
+        /**
+         * Le pire cas : un modèle qui n'aurait rendu que le sens. On ne
+         * **fabrique pas** de dés pour sauver l'écran — un jet inventé a l'air
+         * d'un jet — mais on le dit, et rien ne plante.
+         */
+        const presqueVide = { sens: 'superieur-ou-egal' } as DescripteurDeJet;
+        const jet = preparerLeJet(presqueVide, FICHE, { champs: {} });
+
+        expect(jet.nombreDeDes).toBe(0);
+        expect(jet.faces).toBe(0);
+        expect(jet.cout).toEqual({ total: 0, ressource: undefined });
+        expect(jet.avertissements.some(a => a.includes('réserve'))).toBe(true);
     });
 });
 
@@ -245,6 +296,6 @@ describe('un système sans descripteur continue de fonctionner', () => {
         // Les pilotes antérieurs n'en ont pas ; ils ne doivent pas se casser.
         const sansJet: DescripteurDeJet | undefined = undefined;
         expect(sansJet).toBeUndefined();
-        expect(DEFAULT_GAME_DRIVERS.every(d => d.jet === undefined || d.jet.seuil.length > 0)).toBe(true);
+        expect(DEFAULT_GAME_DRIVERS.every(d => d.jet === undefined || (d.jet.seuil ?? []).length > 0)).toBe(true);
     });
 });

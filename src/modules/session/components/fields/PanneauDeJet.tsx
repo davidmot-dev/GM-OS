@@ -65,7 +65,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     );
 
     /** Rien ne part tant que chaque composante n'a pas son champ. */
-    const pret = descripteur.seuil.every(c => choix[c.id]) && jet.avertissements.length === 0;
+    // Un jeu sans composante de seuil est prêt d'emblée : il n'y a rien à
+    // choisir sur la fiche avant de lancer.
+    const pret = (descripteur.seuil ?? []).every(c => choix[c.id]) && jet.avertissements.length === 0;
 
     /**
      * D'où sortiront les points, **avant** de lancer.
@@ -133,7 +135,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
 
             {/* Les composantes du seuil : un menu par composante. */}
             <div className="grid grid-cols-2 gap-3">
-                {descripteur.seuil.map(composante => (
+                {(descripteur.seuil ?? []).map(composante => (
                     <label key={composante.id} className="flex flex-col gap-1">
                         <span className="text-[9px] font-black uppercase tracking-widest text-app-text/40">
                             {composante.label}
@@ -176,7 +178,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     ><Minus size={12} /></button>
                     <span className="font-mono text-sm font-black w-6 text-center">{jet.nombreDeDes}</span>
                     <button
-                        onClick={() => setDesAchetes(d => Math.min(descripteur.reserve.max - descripteur.reserve.base, d + 1))}
+                        onClick={() => setDesAchetes(d => Math.min((descripteur.reserve?.max ?? 0) - (descripteur.reserve?.base ?? 0), d + 1))}
                         className="p-1 rounded-md bg-app-bg/60 border border-app-border/40 hover:border-accent/40 transition-colors"
                     ><Plus size={12} /></button>
                 </div>

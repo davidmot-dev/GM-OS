@@ -200,7 +200,7 @@ describe('ce que le modèle ne sait PAS exprimer', () => {
          * Voir `src/modules/dice/DescripteurDeJet.ts`.
          */
         expect(dune.jet, 'le descripteur de jet est ce qui abat ce mur').toBeDefined();
-        expect(dune.jet!.seuil.map(c => c.id)).toEqual(['competence', 'principe']);
+        expect(dune.jet!.seuil!.map(c => c.id)).toEqual(['competence', 'principe']);
         expect(dune.jet!.sens, 'la famille 2d20 compte sous le seuil').toBe('sous-ou-egal');
         // Le prix des dés est venu s'ajouter avec le mur 4 ; ce qui compte ici
         // reste la réserve elle-même.
@@ -211,7 +211,7 @@ describe('ce que le modèle ne sait PAS exprimer', () => {
         // Même chaîne d'identifiants que les jauges : une section absente donne
         // un seuil à zéro, en silence.
         const sections = new Set(fiche.sections.map(s => s.id));
-        for (const composante of dune.jet!.seuil) {
+        for (const composante of dune.jet!.seuil ?? []) {
             expect(sections.has(composante.sectionId), `section « ${composante.sectionId} » absente`).toBe(true);
         }
     });
@@ -260,10 +260,10 @@ describe('ce que le modèle ne sait PAS exprimer', () => {
     it('les dés achetés ont un prix, et il est payé par une réserve de table', () => {
         // « Achat de d20 par test (maximum trois) : un, deux et trois points. »
         // Le prix croît : un seul nombre n'aurait pas suffi.
-        expect(dune.jet!.reserve.cout).toEqual([1, 2, 3]);
-        expect(dune.jet!.reserve.ressource).toBe('impulsion');
+        expect(dune.jet!.reserve!.cout).toEqual([1, 2, 3]);
+        expect(dune.jet!.reserve!.ressource).toBe('impulsion');
         expect(
-            (dune.ressourcesDeTable ?? []).some(r => r.id === dune.jet!.reserve.ressource),
+            (dune.ressourcesDeTable ?? []).some(r => r.id === dune.jet!.reserve!.ressource),
             'la réserve qui paie les dés doit exister',
         ).toBe(true);
     });
