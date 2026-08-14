@@ -483,6 +483,20 @@ export interface ContexteDuGroupe {
      * le titre de notre propre sujet, faute d'autre chose à recopier.
      */
     corpus?: string;
+    /**
+     * Ces fiches viennent-elles de la **famille** plutôt que du jeu ?
+     *
+     * **Il faut le dire au modèle, et c'est tout l'enjeu du comblement.** Un
+     * SRD décrit le socle commun — Year Zero Engine, 2d20 — dont plusieurs jeux
+     * héritent en le modifiant. Servi sans avertissement, il se lit exactement
+     * comme le livre du jeu : le modèle décrirait le socle en croyant décrire
+     * Alien, et rendrait des valeurs plausibles et fausses.
+     *
+     * *Un manque se voit à la revue ; une valeur générique prise pour celle du
+     * jeu se joue en séance.* D'où l'avertissement, et la consigne d'omettre
+     * plutôt que de supposer que le jeu suit son socle.
+     */
+    venuDeLaFamille?: boolean;
 }
 
 export function promptDuGroupe(
@@ -490,12 +504,16 @@ export function promptDuGroupe(
     fiches: FicheDuCorpus[],
     contexte: ContexteDuGroupe = {},
 ): string {
-    const { vocabulaire, corpus } = contexte;
+    const { vocabulaire, corpus, venuDeLaFamille } = contexte;
     const retenues = fichesDuGroupe(groupe, fiches);
     const corps = retenues.map(f => `### ${f.sujet}\n${f.contenu}`).join('\n\n');
 
     return [
-        `Voici les fiches de règles vérifiées d'un jeu de rôle, pour le sujet « ${groupe.label} ».`,
+        venuDeLaFamille
+            ? `Voici les fiches du SOCLE DE RÈGLES COMMUN dont ce jeu hérite, pour le sujet « ${groupe.label} ». `
+              + "Le corpus du jeu lui-même ne dit RIEN sur ce sujet : ces fiches décrivent la famille de "
+              + 'systèmes, pas ce jeu précisément.'
+            : `Voici les fiches de règles vérifiées d'un jeu de rôle, pour le sujet « ${groupe.label} ».`,
         '',
         corps || '(aucune fiche disponible sur ce sujet)',
         '',
@@ -519,6 +537,19 @@ export function promptDuGroupe(
         'séance sans que personne ne l\'ait choisi, et rien ne le signale. Ne comble',
         'jamais par analogie avec un autre jeu.',
         '',
+        // Le socle décrit ce que plusieurs jeux ont en commun, et chacun le
+        // modifie : Alien change le stress et la panique de YZE. Ne retenir que
+        // ce qui vaut pour toute la famille est la seule façon de ne pas prêter
+        // au jeu une règle qu'il a justement remplacée.
+        ...(venuDeLaFamille
+            ? [
+                "PRUDENCE PARTICULIÈRE : ces fiches décrivent le SOCLE, et chaque jeu le modifie.",
+                'Ne retiens que ce qui vaut pour toute la famille et que ce jeu ne peut pas avoir',
+                "remplacé. Au moindre doute, OMETS : une valeur générique prise pour celle du jeu",
+                "s'applique en séance sans que personne ne l'ait choisie.",
+                '',
+            ]
+            : []),
         'Si le jeu n\'a pas de points de vie, n\'invente pas de champ "hp" et ne marque',
         'aucune stat "isMainHP". Si l\'initiative n\'ordonne pas les combattants, ne',
         'fabrique pas de formule.',

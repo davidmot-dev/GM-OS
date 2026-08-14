@@ -19,6 +19,7 @@ import { useAIStore } from '../../../stores/useAIStore';
 import { useBrainstormStore } from '../rules/store/useBrainstormStore';
 import { corpusChoisi, corpusPourNouveauSysteme, sousDossiersDuCorpus } from '../../../../electron/corpusSysteme';
 import { useForgeStore, type LacuneDuPilote } from '../store/useForgeStore';
+import { lireNature } from '../rules/familleDuCorpus';
 
 interface NotebookSource {
   id: string;
@@ -135,6 +136,39 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
   const corpusVise = brainstormStore.corpusCible
     ? corpusChoisi(brainstormStore.corpusCible, dossiersSystemes)
     : null;
+
+  /**
+   * Les corpus qui se déclarent **famille**, et celui qu'on a désigné.
+   *
+   * **Pourquoi une déclaration et non une convention de nom.** Le préfixe
+   * `srd-` du dossier aurait suffi aujourd'hui, mais il ferait dépendre le
+   * comportement d'un nom que personne ne s'est engagé à tenir. Un corpus dit
+   * ce qu'il est dans son `corpus.json` ; son absence en fait un jeu, ce qui
+   * laisse les neuf corpus existants intacts — *on ne fait pas payer une
+   * nouveauté à l'existant.*
+   *
+   * **Et la famille se DÉSIGNE, elle ne se devine pas.** On aurait pu la
+   * déduire du `dice.engine` du pilote, mais ce champ naît au milieu de la
+   * dérivation, après le groupe qui en aurait besoin. Surtout, c'est la règle
+   * du corpus : *un défaut hérité d'ailleurs reste un choix que personne n'a
+   * fait* — le 2026-08-10, il a envoyé une forge Dune vers Blade Runner.
+   */
+  const [famillesConnues, setFamillesConnues] = useState<string[]>([]);
+  useEffect(() => {
+    let annule = false;
+    (async () => {
+      const trouvees: string[] = [];
+      for (const dossier of dossiersSystemes) {
+        const brut = await window.appBridge?.ai?.readDoc?.(`systems/${dossier}/corpus.json`).catch(() => null);
+        if (lireNature(brut)?.nature === 'famille') trouvees.push(dossier);
+      }
+      if (!annule) setFamillesConnues(trouvees);
+    })();
+    return () => { annule = true; };
+  }, [dossiersSystemes]);
+
+  const [familleCible, setFamilleCible] = useState<string | null>(null);
+  const familleVisee = familleCible ? corpusChoisi(familleCible, dossiersSystemes) : null;
   const [isLoadingNotebooks, setIsLoadingNotebooks] = useState(false);
   const [importingSources, setImportingSources] = useState<Set<string>>(new Set());
 
@@ -426,7 +460,29 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
       }
       addLog(t(cle('read_count'), { nombre: fiches.length }));
 
-      const { resultat, echecs, interrompue } = await forgeService.forgeSystemDepuisCorpus(fiches, {
+      /*
+        **Le socle commun, s'il y en a un.** Un SRD porte ce qu'un livre de jeu
+        suppose connu — la mécanique de poussée de YZE, absente du corpus
+        d'Alien en v3. Il ne sert qu'aux groupes que le jeu ne couvre pas : le
+        jeu l'emporte toujours, sans quoi on forgerait un pilote générique et
+        faux, pire qu'un pilote incomplet.
+
+        Un échec de lecture n'arrête pas la dérivation : la famille est un
+        supplément, pas une dépendance.
+      */
+      let fichesDeLaFamille: typeof fiches = [];
+      if (familleVisee) {
+        const lue = await lireFichesDuCorpus(familleVisee).catch(() => null);
+        fichesDeLaFamille = lue?.fiches ?? [];
+        addLog(
+          fichesDeLaFamille.length > 0
+            ? `SOCLE COMMUN : ${familleVisee.id}, ${fichesDeLaFamille.length} fiches lues.`
+            : `SOCLE COMMUN : ${familleVisee.id} n'a rendu aucune fiche.`,
+        );
+      }
+
+      const { resultat, echecs, comblements, interrompue } = await forgeService.forgeSystemDepuisCorpus(fiches, {
+        fichesDeLaFamille,
         onProgres: (groupe, rang, total) =>
           forgeStore.setProgression({ label: groupe.label, rang, total }),
         // L'état est relu à chaque groupe : la valeur capturée à la fermeture
@@ -442,6 +498,20 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
       );
       if (interrompue) addLog(t(cle('aborted')));
       addLog(t(cle('done'), { remplis: GROUPES.length - echecs.length, lacunes: echecs.length }));
+
+      /*
+        **Un comblement se dit.** Il n'est ni un échec ni un succès ordinaire :
+        le champ a été rempli, mais depuis le socle commun et non depuis le
+        livre du jeu. C'est exactement ce qu'un humain doit relire — le socle
+        décrit ce que plusieurs jeux ont en commun, et chacun le modifie.
+      */
+      for (const comble of comblements) {
+        const groupe = GROUPES.find(g => g.id === comble.groupe);
+        addLog(
+          `COMBLÉ PAR LE SOCLE : ${groupe?.label ?? comble.groupe} — le corpus du jeu ne dit rien ` +
+          'sur ce sujet, ces valeurs viennent de la famille et sont à vérifier.',
+        );
+      }
       for (const echec of echecs) {
         const groupe = GROUPES.find(g => g.id === echec.groupe);
         addLog(`${(groupe?.label ?? echec.groupe).toUpperCase()} : ${echec.raison}`);
@@ -697,6 +767,34 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                     <ChevronRight size={14} className="rotate-90" />
                   </div>
                 </div>
+
+                {/*
+                  **Le socle commun, facultatif et désigné.** Il n'apparaît que
+                  si un corpus se déclare famille : sans SRD, l'écran est
+                  exactement celui d'avant. C'est la contrainte que David a
+                  posée — « je n'ai pas de SRD pour tous les systèmes ».
+                */}
+                {famillesConnues.length > 0 && (
+                  <div className="flex flex-col gap-2">
+                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">
+                      Socle commun (facultatif)
+                    </label>
+                    <select
+                      value={familleCible ?? ''}
+                      onChange={(e) => setFamilleCible(e.target.value || null)}
+                      className="w-full bg-white/5 border border-white/10 rounded-xl p-2.5 text-[11px] font-bold text-white/70 focus:outline-none focus:border-purple-500/50 appearance-none cursor-pointer transition-all hover:bg-white/10"
+                    >
+                      <option value="" className="bg-app-bg text-white/40">Aucun — ce jeu seul</option>
+                      {famillesConnues.map(f => (
+                        <option key={f} value={f} className="bg-app-bg text-white font-mono">{f}</option>
+                      ))}
+                    </select>
+                    <p className="text-[9px] text-white/25 leading-relaxed">
+                      Sert uniquement aux sujets que le corpus du jeu ne couvre pas. Le jeu
+                      l'emporte toujours, et chaque comblement est signalé.
+                    </p>
+                  </div>
+                )}
 
                 <button
                   onClick={forgerDepuisLeCorpus}

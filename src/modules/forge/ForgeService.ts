@@ -8,7 +8,6 @@ import { lireInventaire } from './rules/inventaire';
 import { convertirFiche } from './rules/conversion';
 import {
   GROUPES,
-  fichesDuGroupe,
   promptDuGroupe,
   fusionnerFragments,
   vocabulaireAcquis,
@@ -16,6 +15,7 @@ import {
   type FragmentDePilote,
   type GroupeDeChamps,
 } from './rules/GroupesDeChamps';
+import { sourceDuGroupe } from './rules/familleDuCorpus';
 import { slugFiche } from './rules/canevas';
 import { extrairePersonas, controlerPersonas, type Personas } from './rules/personas';
 
@@ -207,12 +207,29 @@ export class ForgeService {
       abandonne?: () => boolean;
       /** Dossier de corpus visé — la seule source du nom du jeu. */
       corpus?: string;
+      /**
+       * Les fiches du **socle commun** — le SRD de la famille, s'il y en a un.
+       *
+       * Elles ne servent qu'aux groupes dont le corpus du jeu ne dit **rien**.
+       * Le jeu l'emporte toujours : Alien modifie YZE, et une famille qui
+       * prendrait le dessus rendrait un pilote générique et faux — pire qu'un
+       * pilote incomplet, puisqu'un manque se voit à la revue et qu'une valeur
+       * plausible se joue en séance.
+       */
+      fichesDeLaFamille?: FicheDuCorpus[];
     } = {},
-  ): Promise<{ resultat: FragmentDePilote; echecs: { groupe: string; raison: string }[]; interrompue: boolean }> {
+  ): Promise<{
+    resultat: FragmentDePilote;
+    echecs: { groupe: string; raison: string }[];
+    /** Les groupes que le corpus du jeu ne couvrait pas et que la famille a nourris. */
+    comblements: { groupe: string }[];
+    interrompue: boolean;
+  }> {
     const groupes = options.groupes ?? GROUPES;
     const aiService = AIService.getInstance();
     const fragments: FragmentDePilote[] = [];
     const echecs: { groupe: string; raison: string }[] = [];
+    const comblements: { groupe: string }[] = [];
     let interrompue = false;
 
     const systemPrompt =
@@ -234,12 +251,27 @@ export class ForgeService {
 
       options.onProgres?.(groupe, rang + 1, groupes.length);
 
-      // Un groupe sans fiche ne part pas : l'appel coûterait des minutes pour
-      // que le modèle comble un vide, ce qui est précisément l'inverse du but.
-      if (fichesDuGroupe(groupe, fiches).length === 0) {
+      /*
+        **Le jeu d'abord, la famille seulement s'il ne dit rien.**
+
+        Un groupe sans aucune fiche ne part pas : l'appel coûterait des minutes
+        pour que le modèle comble un vide, ce qui est précisément l'inverse du
+        but. Mais le corpus du jeu n'est pas la seule source depuis qu'un socle
+        commun peut être désigné — le SRD Year Zero Engine porte la mécanique de
+        poussée, que le corpus d'Alien n'a qu'en v1 hors canevas.
+
+        `sourceDuGroupe` ne mélange jamais les deux : additionner les fiches
+        ferait cohabiter la description générique et celle du jeu dans une même
+        invite, et le modèle trancherait au hasard.
+      */
+      const source = sourceDuGroupe(groupe, fiches, options.fichesDeLaFamille ?? []);
+      if (source.fiches.length === 0) {
         echecs.push({ groupe: groupe.id, raison: 'aucune fiche du corpus ne couvre ce sujet' });
         continue;
       }
+      // Un comblement n'est pas un échec, mais il n'est pas non plus un succès
+      // ordinaire : il se dit, pour qu'un humain juge si le socle vaut ici.
+      if (source.venuDeLaFamille) comblements.push({ groupe: groupe.id });
 
       try {
         /*
@@ -253,9 +285,13 @@ export class ForgeService {
           échouer, et le vocabulaire doit refléter ce qui existe vraiment.
         */
         const fragment = await aiService.generateJSON<FragmentDePilote>(
-          promptDuGroupe(groupe, fiches, {
+          // On passe les fiches que `sourceDuGroupe` a retenues, jamais le
+          // corpus entier : c'est ce choix-là qui garantit qu'on n'envoie pas
+          // le socle et le jeu dans la même invite.
+          promptDuGroupe(groupe, source.fiches, {
             vocabulaire: vocabulaireAcquis(fusionnerFragments(fragments)),
             corpus: options.corpus,
+            venuDeLaFamille: source.venuDeLaFamille,
           }),
           systemPrompt,
           [],
@@ -268,7 +304,7 @@ export class ForgeService {
       }
     }
 
-    return { resultat: fusionnerFragments(fragments), echecs, interrompue };
+    return { resultat: fusionnerFragments(fragments), echecs, comblements, interrompue };
   }
 
   private getSystemForgePrompt(userInstructions?: string, targetName?: string): string {
