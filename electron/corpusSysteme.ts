@@ -254,6 +254,29 @@ export function cheminDesBrouillons(corpus: Corpus): string {
     return `${corpus.racine}/drafts`;
 }
 
+/**
+ * Dossier des fiches **supplantées par une reforge**.
+ *
+ * **Pourquoi il existe.** Une reforge produit un slug neuf —
+ * `initiative-et-deroulement-du-tour.md` là où l'ancienne s'appelait
+ * `initiative-et-tour.md` — donc rien n'est écrasé et les deux versions du même
+ * sujet restaient côte à côte dans `rules/`. L'Oracle recevait les deux, dont
+ * celle que la reforge venait de remplacer. Huit doublons trouvés dans quatre
+ * systèmes le 2026-08-11 ; trois subsistaient encore le 2026-08-14.
+ *
+ * **On archive plutôt qu'on ne supprime** : comparer une fiche à celle qu'elle
+ * remplace a déjà servi sur Alien et Blade Runner, et une reforge ratée doit
+ * pouvoir se rattraper.
+ *
+ * Le nom réutilise `rules-v1/`, qui portait déjà les v1 archivées à la main sur
+ * trois corpus — un second dossier d'archive aurait divisé le même geste en
+ * deux endroits. Il est **exclu de l'index par le `.ragignore` racine**, et non
+ * corpus par corpus : au 2026-08-14, six corpus sur dix n'en avaient aucun.
+ */
+export function cheminDesArchives(corpus: Corpus): string {
+    return `${corpus.racine}/rules-v1`;
+}
+
 /** Dossier des index de livre, d'où `bookIndex.chargerIndex` charge. */
 export function cheminDeLIndex(corpus: Corpus): string {
     return `${corpus.racine}/index`;

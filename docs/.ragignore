@@ -19,3 +19,17 @@ README.md
 #
 # Le dossier est vide en temps normal : un brouillon publie est supprime.
 drafts/
+
+# Fiches supplantees par une reforge, gardees pour comparaison.
+#
+# Une reforge produit un slug neuf — « initiative-et-deroulement-du-tour.md »
+# la ou l'ancienne s'appelait « initiative-et-tour.md » — donc rien n'est
+# ecrase et les deux versions restaient en concurrence dans l'index. L'Oracle
+# recevait les deux, dont celle que la reforge venait de remplacer.
+#
+# La publication archive desormais l'ancienne ici. Exclusion posee a la RACINE
+# et non corpus par corpus : au 2026-08-14, six des dix corpus n'avaient aucun
+# « .ragignore », et NOC comme Reves de Dragons portaient justement des
+# doublons. Archiver chez eux n'aurait rien retire de l'index — le doublon
+# serait reste, mais cache, ce qui est pire.
+rules-v1/

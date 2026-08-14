@@ -10,15 +10,18 @@ import {
 import { forgeService } from '../../ForgeService';
 import { useSessionOSStore } from '../../../session/useSessionOSStore';
 import { useSessionStore } from '../../../../store/useSessionStore';
-import { X, Zap, Sparkles, ChevronLeft, Shield, BookOpen, AlertTriangle, Users, Save, FolderTree } from 'lucide-react';
+import { X, Zap, Sparkles, ChevronLeft, Shield, BookOpen, AlertTriangle, Users, Save, FolderTree, RotateCcw } from 'lucide-react';
+import { gmConfirm } from '../../../../stores/useModalStore';
 import DiscoveryUI from './DiscoveryUI';
 import ForgeProgress from './ForgeProgress';
 import {
   corpusChoisi,
   cheminDesFiches,
   cheminDesBrouillons,
+  cheminDesArchives,
   cheminDesPersonas,
 } from '../../../../../electron/corpusSysteme';
+import { fichesSupplantees, sujetDuFrontmatter } from '../fichesSupplantees';
 import { slugFiche } from '../canevas';
 import { ficheInventaire, lireInventaire } from '../inventaire';
 import { slug } from '../../../../../electron/corpusSysteme';
@@ -388,6 +391,54 @@ export const BrainstormOverlay: React.FC = () => {
     }
   };
 
+  /**
+   * Écarte les fiches que celle qu'on vient de publier remplace.
+   *
+   * **Le reliquat de la reforge, relevé par David le 2026-08-14.** Reforger un
+   * sujet produit un **slug neuf** — `initiative-et-deroulement-du-tour.md` là
+   * où l'ancienne s'appelait `initiative-et-tour.md` — donc rien n'est écrasé
+   * et les deux versions restent dans `rules/`. L'Oracle recevait les deux,
+   * dont celle que la reforge venait précisément de remplacer.
+   *
+   * **Archivé, jamais supprimé** : comparer une fiche à celle qu'elle remplace
+   * a déjà servi, et une reforge ratée doit pouvoir se rattraper. `rules-v1/`
+   * est hors de l'index de l'Oracle par le `.ragignore` racine.
+   *
+   * **Un échec ici n'annule pas la publication.** La fiche neuve est déjà sur
+   * le disque et c'est l'essentiel ; un reliquat non déplacé se rattrape, une
+   * publication perdue se repaie deux minutes au carnet. On le dit dans le
+   * journal plutôt que de faire échouer le geste.
+   */
+  const archiverLesSupplantees = async (sujet: string, nomPublie: string) => {
+    if (!corpus) return;
+    const pont = window.appBridge?.ai;
+    if (!pont?.listDir || !pont.readDoc || !pont.writeDoc || !pont.deleteDoc) return;
+
+    try {
+      const dossier = cheminDesFiches(corpus);
+      const noms = (await pont.listDir(dossier).catch(() => [] as string[]))
+        .filter(nom => nom.endsWith('.md'));
+
+      const presentes = await Promise.all(noms.map(async nom => ({
+        nom,
+        sujet: sujetDuFrontmatter((await pont.readDoc(`${dossier}/${nom}`).catch(() => '')) ?? ''),
+      })));
+
+      for (const nom of fichesSupplantees(sujet, nomPublie, presentes)) {
+        const contenu = await pont.readDoc(`${dossier}/${nom}`).catch(() => null);
+        // Sans avoir relu son contenu, on ne déplace rien : un archivage qui
+        // écrit du vide détruirait la fiche au lieu de la mettre de côté.
+        if (!contenu) continue;
+        const ecrit = await pont.writeDoc(`${cheminDesArchives(corpus)}/${nom}`, contenu);
+        if (!ecrit) continue;
+        await pont.deleteDoc(`${dossier}/${nom}`);
+        console.warn(`[Forge] « ${nom} » portait déjà le sujet « ${sujet} » : archivé dans rules-v1/.`);
+      }
+    } catch (err) {
+      console.warn('[Forge] Archivage des fiches supplantées impossible :', err);
+    }
+  };
+
   /** Écrit la fiche relue. C'est le seul endroit qui touche au disque. */
   const handleSaveCard = async () => {
     const card = brainstormStore.activeCard;
@@ -403,6 +454,7 @@ export const BrainstormOverlay: React.FC = () => {
       // v1, qu'il serait absurde de recréer ici.
       if (corpus) {
         await window.appBridge?.ai?.deleteDoc?.(`${cheminDesBrouillons(corpus)}/${card.slug}.md`);
+        await archiverLesSupplantees(card.title, `${card.slug}.md`);
       }
       brainstormStore.markSaved(card.id);
     } catch (err: unknown) {
@@ -515,12 +567,67 @@ export const BrainstormOverlay: React.FC = () => {
             </div>
           </div>
           
-          <button
-            onClick={() => { abandonnerLaRequete(); brainstormStore.reset(); }}
-            className="p-3 hover:bg-white/5 rounded-full text-white/20 hover:text-white transition-all"
-          >
-            <X size={28} />
-          </button>
+          {/*
+            **Recommencer, dit en toutes lettres.**
+
+            La croix ci-contre réinitialisait déjà la série — elle appelle
+            `reset()` depuis toujours — mais rien ne le disait : elle a l'air
+            d'un simple « fermer ». Les trois autres retours en arrière vivent
+            dans des écrans de revue, donc inatteignables depuis un inventaire
+            ou une erreur. David, le 2026-08-14, cherchant à repartir de zéro :
+            « je ne vois pas le bouton ».
+
+            Il n'apparaît que s'il y a quelque chose à jeter : un bouton qui ne
+            fait rien est pire qu'un bouton absent, on finit par ne plus le
+            voir. Et il ne ferme pas l'atelier — recommencer et sortir sont
+            deux gestes, les confondre est justement ce qui rendait le premier
+            invisible.
+          */}
+          <div className="flex items-center gap-2">
+            {/*
+              On regarde ce qu'il y a **à jeter**, pas l'étape déclarée. Le
+              store initialise `step` à « idle », une valeur que son propre type
+              n'admet pas — s'y fier ferait dépendre un bouton d'un écart que
+              personne n'a voulu.
+            */}
+            {(brainstormStore.candidates.length > 0
+              || !!brainstormStore.activeCard
+              || !!brainstormStore.inventaireBrut
+              || brainstormStore.isProcessing) && (
+              <button
+                onClick={() => {
+                  /*
+                    Un inventaire coûte soixante-douze secondes et une série de
+                    fiches une demi-heure. On confirme quand il y a quelque
+                    chose à perdre, et seulement là — une confirmation
+                    systématique s'apprend par cœur et se clique sans lire.
+                  */
+                  const aPerdre = brainstormStore.candidates.length > 0 || !!brainstormStore.activeCard;
+                  const recommencer = () => { abandonnerLaRequete(); brainstormStore.reset(); };
+                  if (!aPerdre) return recommencer();
+                  gmConfirm(
+                    "Recommencer efface l'inventaire et les fiches en cours de revue. Les fiches " +
+                    'déjà publiées dans le corpus restent sur le disque.',
+                    recommencer,
+                    undefined,
+                    'RECOMMENCER',
+                    'ANNULER',
+                  );
+                }}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/10 text-[10px] font-black uppercase tracking-widest text-white/50 hover:text-white hover:border-white/30 hover:bg-white/5 transition-all"
+              >
+                <RotateCcw size={14} /> Recommencer
+              </button>
+            )}
+
+            <button
+              onClick={() => { abandonnerLaRequete(); brainstormStore.reset(); }}
+              title="Fermer l'atelier"
+              className="p-3 hover:bg-white/5 rounded-full text-white/20 hover:text-white transition-all"
+            >
+              <X size={28} />
+            </button>
+          </div>
         </div>
 
         {/* Main Content Area */}
