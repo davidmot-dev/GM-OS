@@ -141,7 +141,25 @@ export function santeDeDepart(
     let expression = formule;
     for (const champ of champs) {
         const valeur = lire(champ);
-        expression = expression.split(champ).join(String(valeur ?? 0));
+        /*
+          **Un champ qu'on ne sait pas lire ne vaut pas zéro.**
+
+          Relevé le 2026-08-15 sur les fiches réelles de David : plusieurs
+          personnages portent `force: "D (D6)"` — la notation des **dés
+          échelonnés**, la seconde variante de Year Zero Engine, où un attribut
+          est une taille de dé et non un nombre. `Number("D (D6)")` vaut NaN.
+
+          La version précédente y substituait zéro, et `Math.max(1, …)` rendait
+          alors **un point de vie** : un personnage naissant à l'agonie, à
+          partir d'une valeur qu'on n'avait tout simplement pas su lire. On
+          renonce, et l'écran garde ce qu'il fournissait — *l'absence n'est pas
+          un zéro*, et un champ illisible est une absence.
+
+          Le contrôle du pilote signale déjà, à la revue, une formule qui vise
+          un champ inexistant. Ici on refuse en séance.
+        */
+        if (valeur === undefined) return null;
+        expression = expression.split(champ).join(String(valeur));
     }
 
     // Ce qui reste doit être de l'arithmétique et rien d'autre : un identifiant

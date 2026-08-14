@@ -125,9 +125,26 @@ describe('la santé de départ, lue sur la fiche', () => {
         expect(santeDeDepart('   ', fiche({ force: 4 }))).toBeNull();
     });
 
-    it('un champ absent de la fiche vaut zéro, et le minimum s\'applique', () => {
-        // Le contrôle du pilote signale ce cas à la revue ; ici on ne casse pas.
-        expect(santeDeDepart('vigueur', fiche({ force: 4 }))).toBe(1);
+    it('un champ absent de la fiche ne vaut pas zéro : on renonce', () => {
+        // Le contrôle du pilote signale ce cas à la revue. En séance, on rend
+        // `null` et l'écran garde ce qu'il fournissait, plutôt que de faire
+        // naître un personnage à un point de vie.
+        expect(santeDeDepart('vigueur', fiche({ force: 4 }))).toBeNull();
+    });
+
+    it('un attribut en dés échelonnés est illisible, pas nul', () => {
+        /**
+         * **Charge réelle du 2026-08-15**, relevée dans l'état persisté de
+         * David : quatre de ses cinq personnages portent `force: "D (D6)"` — la
+         * notation de la seconde variante de Year Zero Engine, où un attribut
+         * est une **taille de dé** et non un nombre.
+         *
+         * Substituer zéro les aurait fait naître avec un point de vie, à partir
+         * d'une valeur qu'on n'avait pas su lire. *L'absence n'est pas un zéro,
+         * et un champ illisible est une absence.*
+         */
+        const echelonnee = (champ: string) => (champ === 'force' ? undefined : 0);
+        expect(santeDeDepart('force', echelonnee)).toBeNull();
     });
 
     it('n\'exécute rien : ce qui n\'est pas de l\'arithmétique est refusé', () => {
