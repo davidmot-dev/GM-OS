@@ -54,7 +54,43 @@ de vie** — est adoptée par sept modules : `CombatCard`, `DamageCalculator`, `
 
 ---
 
-## 2. Ce qui ignore le pilote
+## 1 bis. CE DOCUMENT EST CLOS — les cinq manques sont traités (2026-08-15)
+
+Le § 2 ci-dessous décrit l'**état d'avant**. Il est conservé parce qu'il dit
+*comment chaque défaut se présentait*, ce qu'un correctif ne raconte plus.
+
+| Manque | Traité par | Ce qui a changé |
+|---|---|---|
+| 2.1 — l'IA recevait `HP undefined/undefined` | `9366a4e` | `decrireLaSante` rejoint `SanteDuCombattant` : elle sait dire points, horloge, cases, blessure nommée, et **rend `null` quand il n'y a rien à dire** |
+| 2.2 — dix points de vie en dur | `0f23291` | `combat.santeDeDepart`, une formule lue sur la fiche — `force` chez Alien, `(force + agilite) / 2 + 1` chez YZE |
+| 2.3 — l'initiative par cartes inatteignable | `9366a4e` | une seule variable pour la condition du jet et celle du bouton |
+| 2.4 — les portées décrites à l'aveugle | `9366a4e` | `TacticalNarrativeService` reçoit `tactical` du pilote |
+| 2.5 — la tablette | *inchangé* | frontière assumée, pas un défaut |
+
+**Trois leçons de méthode, et la première est la plus embarrassante.**
+
+**Cette cartographie était incomplète.** Elle a raté `TacticalNarrativeService`,
+qui annonçait des points de vie à deux endroits, puis le **rapport de combat
+archivé dans la timeline** et le **calculateur de dégâts**. Trois écrits sur
+sept manquaient. La raison est simple : chercher par motif ne trouve que ce qui
+ressemble au motif qu'on a en tête. La passe finale a donc balayé `hp`, `hpMax`
+et `maxHp` dans tout `src/`, sans échantillon.
+
+**Le piège des portées explique qu'on ne les ait jamais vues.** Les valeurs par
+défaut de `GridEngine` sont `contact −3, courte 0, moyenne −1, longue −2,
+extreme −3` — **exactement celles d'Alien**. Le manque était rigoureusement
+invisible sur le seul jeu où on le cherchait ; il ne se serait montré que sur
+Dune, dont les portées montent de 0 à 4.
+
+**Un défaut voisin, réparé au passage, durait depuis les quatre murs.**
+`addCombatant` complétait `healthSystem` depuis `sheetData`, mais
+`CharacterGrid` n'envoie que `sourcePlayerId` : la tâche de défaite de Dune, qui
+lit son seuil **sur la fiche**, n'avait rien à lire pour un personnage joueur.
+La fiche est désormais retrouvée à cet endroit unique.
+
+---
+
+## 2. Ce qui ignorait le pilote — état au 2026-08-14
 
 Classé par ce que ça coûte en séance, du plus visible au plus discret.
 
@@ -188,18 +224,29 @@ puisque Dune a besoin de la première.
 
 ---
 
-## 4. Ce qui reste à trancher
+## 4. Ce qui restait à trancher — tranché le 2026-08-15
 
-- **Faut-il un champ pour la santé de départ, ou une convention ?** Alien lit la Force ; Dune n'a
-  pas de jauge du tout. Un `sante.champDeDepart` dans le pilote suivrait le modèle de
-  `tacheDeDefaite.sectionDuSeuil`, déjà éprouvé.
-- **`ac` n'est pas un concept du pilote.** Il traîne dans `ChronicleForge` et les fiches de
-  favoris. À supprimer ou à déclarer — mais pas à laisser à dix.
-- **Le type du journal impose `hp`/`maxHp`.** Le corriger touche la sérialisation des séances déjà
-  écrites ; il faut décider si l'ancien format doit rester lisible.
-- **Le contexte de l'IA doit-il décrire la santé en toutes lettres** (« Santé 3/4 », « Brisé »)
-  **ou par une fraction** ? La première est plus juste, la seconde plus courte — et l'invite est
-  déjà le poste le plus coûteux de la chaîne.
+- **Un champ pour la santé de départ ?** Oui, et **une formule** plutôt qu'un
+  champ unique : un seul champ suffisait à Alien mais pas à sa famille, le SRD
+  composant deux attributs. Même forme que `initiativeFormula`, mêmes contrôles.
+- **`ac` n'est pas un concept du pilote.** Toujours vrai, toujours à trancher —
+  il traîne dans `ChronicleForge` et les fiches de favoris.
+- **Le type du journal imposait `hp`/`maxHp`.** Rendus facultatifs plutôt que
+  remplacés : les séances déjà archivées restent lisibles telles quelles.
+- **Comment décrire la santé à l'IA ?** En toutes lettres, et **en se taisant
+  quand on ne sait pas** : `decrireLaSante` rend `null`, et l'appelant n'écrit
+  rien. *Une valeur fausse dans une invite est une affirmation, pas un silence.*
+
+## 4 bis. Ce qui reste ouvert au 2026-08-15
+
+- **`ac` — la classe d'armure — n'est un champ d'aucun pilote.** Elle traîne à dix dans
+  `ChronicleForge` et les fiches de favoris. Ce n'est pas une valeur mal choisie, c'est un
+  **concept étranger** : à supprimer ou à déclarer, pas à corriger.
+- **Le cinquième mur** (§ 3) : la taille de la réserve d'Alien devrait venir de la fiche —
+  Force + Combat rapproché — et non d'un curseur à un dé.
+- **La tablette** ne reçoit ni les réserves de table ni l'ordre d'action. Frontière assumée.
+- **Le socle commun ne comble rien sur Alien**, dont le corpus est complet : il servira au
+  prochain jeu, quand trois fiches sur quatorze existeront et qu'on voudra déjà un pilote.
 
 ---
 
