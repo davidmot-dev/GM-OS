@@ -6,6 +6,7 @@ hors_canevas: false
 sources: "ALIEN, le jeu de rôle"
 sections: "« JETER LES DÉS » ; « SIGNIFIE « RÉUSSITE » ; « L'ART DE L'ÉCHEC » ; « FORCER LE TEST » ; « NIVEAU DE STRESS »"
 genere_par: notebooklm
+complete_a_la_main: "le nom du moteur — la fiche décrivait la mécanique du Year Zero Engine sans jamais le nommer, et le pilote a un champ dice.engine qui l'attend"
 gabarit: v3
 relu: false
 ---
@@ -13,6 +14,8 @@ relu: false
 # Résolution des jets
 
 ## Règle
+Le moteur de résolution est le **Year Zero Engine**, adapté aux thèmes d'ALIEN (section « Introduction ») : une réserve de dés à six faces dont on compte les six.
+
 Pour agir, on lance des dés de base égaux à son attribut plus sa compétence (section « Signifie « Réussite » »), ou ses seuls dés d'attribut (section « Tests sans compétence »). S'y ajoute un nombre de dés de stress égal au Niveau de Stress actuel (section « Niveau de Stress »).
 
 Réussir exige d'obtenir au moins un six (section « Signifie « Réussite » »). Les six supplémentaires déclenchent des actions d'éclat (section « Signifie « Réussite » »). Sans six, le jet échoue (section « L’art de l’échec »). Le joueur peut forcer le test en relançant les dés n'ayant pas obtenu de six (section « Forcer le test »), ce qui augmente immédiatement le Niveau de Stress de un point (section « Niveau de Stress »). Tout un (symbole de panique) obtenu sur un dé de stress interdit de forcer et déclenche un test de Panique (section « Panique »).

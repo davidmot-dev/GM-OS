@@ -6,6 +6,7 @@ hors_canevas: false
 sources: "ALIEN, le jeu de rôle"
 sections: "« CARRIÈRE » ; « ATTRIBUTS » ; « COMPÉTENCES » ; « TALENTS » ; « STRESS » ; « SANTÉ » ; « ÉLÉMENTS PERSONNELS » ; « VOTRE ÉQUIPEMENT » ; « EXPÉRIENCE » ; « POINTS DE RÉCIT »"
 genere_par: notebooklm
+complete_a_la_main: "les 4 attributs et les 12 compétences, nommément — le carnet ne les avait pas énumérés malgré l'énoncé du sujet 14 ; relevés page 58 du livre (section « Jeter les dés »)"
 gabarit: v3
 relu: false
 ---
@@ -21,6 +22,12 @@ Les jauges :
 - Consommables (Air, Eau, Nourriture, Énergie) : Mesurent les ressources de survie (section « Consommables »). Départ selon l'équipement, borne de zéro. Elles descendent lors d'un test de Réserve raté (un symbole de panique obtenu) (section « Réserve ») et remontent par réapprovisionnement. À zéro, elles déclenchent la suffocation, déshydratation, faim ou l'arrêt d'appareil (section « Réserve »). Jauges consommées.
 
 ## Valeurs
+- Les quatre Attributs, nommément : Force, Agilité, Esprit, Empathie (section « Jeter les dés »).
+- Les douze Compétences, nommément, rattachées trois par trois à leur attribut (section « Jeter les dés ») :
+  - Force : Machines lourdes, Endurance, Combat rapproché.
+  - Agilité : Mobilité, Combat à distance, Pilotage.
+  - Esprit : Observation, Comtech, Survie.
+  - Empathie : Commandement, Manipulation, Soins médicaux.
 - Échelle d'Attributs : deux à quatre, de cinq pour l'attribut-clef, et huit pour un androïde (section « Attributs de départ » et section « Androïdes »).
 - Échelle de Compétences : de zéro à :cinq (section « Compétences »).
 - Points de création : quatorze d'attributs, dix de compétences (section « Attributs de départ » et section « Niveaux de compétence de départ »).
