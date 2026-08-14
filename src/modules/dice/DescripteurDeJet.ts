@@ -56,8 +56,20 @@ export interface DescripteurDeJet {
     critique?: number;
     /** Un dé à cette valeur ou au-delà déclenche une complication. Chez Dune, le 20. */
     complication?: number;
-    /** Bornes de la difficulté que le meneur fixe, et sa valeur usuelle. */
-    difficulte: { min: number; max: number; defaut: number };
+    /**
+     * Bornes de la difficulté que le meneur fixe, et sa valeur usuelle.
+     *
+     * **Facultative depuis le 2026-08-15, et elle aurait dû l'être d'emblée.**
+     * Tous les jeux ne fixent pas un nombre de réussites à atteindre : Alien
+     * compte les six et réussir n'en demande **qu'un**. Son pilote n'a donc pas
+     * de `difficulte` — le modèle l'a omise à juste titre —, et
+     * `PanneauDeJet` plantait à l'ouverture de la fiche :
+     * *« Cannot read properties of undefined (reading 'defaut') »*.
+     *
+     * L'obligation venait de Dune, où la difficulté va de 0 à 5. Encore un
+     * champ tenu pour universel parce qu'un seul jeu s'en servait.
+     */
+    difficulte?: { min: number; max: number; defaut: number };
 }
 
 /** Ce que le joueur a retenu sur sa fiche pour ce jet précis. */
@@ -161,15 +173,19 @@ export function preparerLeJet(
     const echelons = descripteur.reserve.cout ?? [];
     const total = echelons.slice(0, Math.max(0, desAchetes)).reduce((s, c) => s + c, 0);
 
-    const difficulteDemandee = choix.difficulte ?? descripteur.difficulte.defaut;
-    const difficulte = Math.min(
-        descripteur.difficulte.max,
-        Math.max(descripteur.difficulte.min, difficulteDemandee),
-    );
-    if (difficulte !== difficulteDemandee) {
-        avertissements.push(
-            `Difficulté ramenée entre ${descripteur.difficulte.min} et ${descripteur.difficulte.max}.`,
-        );
+    /*
+      Sans bornes déclarées, il n'y a rien à borner : la difficulté vaut ce que
+      le meneur demande, et zéro à défaut. Un jeu qui compte les réussites sans
+      seuil — Alien, où un seul six suffit — n'a pas à se voir imposer celui de
+      Dune.
+    */
+    const bornes = descripteur.difficulte;
+    const difficulteDemandee = choix.difficulte ?? bornes?.defaut ?? 0;
+    const difficulte = bornes
+        ? Math.min(bornes.max, Math.max(bornes.min, difficulteDemandee))
+        : difficulteDemandee;
+    if (bornes && difficulte !== difficulteDemandee) {
+        avertissements.push(`Difficulté ramenée entre ${bornes.min} et ${bornes.max}.`);
     }
 
     return {

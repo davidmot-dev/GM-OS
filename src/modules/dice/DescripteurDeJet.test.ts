@@ -105,6 +105,34 @@ describe('difficulté', () => {
         expect(verdict(4, 2)).toEqual({ reussi: true, excedent: 2 });
         expect(verdict(1, 2)).toEqual({ reussi: false, excedent: 0 });
     });
+
+    it('un jeu sans difficulté déclarée ne s\'en voit pas imposer une', () => {
+        /**
+         * **Le plantage du 2026-08-15, à l'ouverture d'une fiche d'Alien** :
+         * *« Cannot read properties of undefined (reading 'defaut') »*.
+         *
+         * `difficulte` était obligatoire dans le type parce que Dune en a une,
+         * de 0 à 5. Mais **Alien compte les six et réussir n'en demande qu'un**
+         * — son pilote n'en déclare donc aucune, à juste titre. Encore un champ
+         * tenu pour universel parce qu'un seul jeu s'en servait.
+         *
+         * Sans bornes, il n'y a rien à borner : la difficulté vaut ce que le
+         * meneur demande, et zéro à défaut. Aucun avertissement, puisque rien
+         * n'a été ramené.
+         */
+        const alien: DescripteurDeJet = {
+            seuil: [],
+            reserve: { base: 1, max: 10, faces: 6 },
+            sens: 'superieur-ou-egal',
+        };
+
+        const parDefaut = preparerLeJet(alien, FICHE, { champs: {} });
+        expect(parDefaut.difficulte).toBe(0);
+        expect(parDefaut.avertissements.some(a => a.includes('Difficulté'))).toBe(false);
+
+        // Le meneur reste libre d'en demander une : elle n'est simplement pas bornée.
+        expect(preparerLeJet(alien, FICHE, { champs: {}, difficulte: 3 }).difficulte).toBe(3);
+    });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────

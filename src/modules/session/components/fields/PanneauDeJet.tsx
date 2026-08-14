@@ -44,7 +44,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     /** Champ retenu pour chaque composante — `{ competence: 'combat' }`. */
     const [choix, setChoix] = useState<Record<string, string>>({});
     const [desAchetes, setDesAchetes] = useState(0);
-    const [difficulte, setDifficulte] = useState(descripteur.difficulte.defaut);
+    // Un jeu sans difficulté déclarée n'en affiche pas, et part de zéro : chez
+    // Alien, un seul six suffit — il n'y a pas de seuil à atteindre.
+    const [difficulte, setDifficulte] = useState(descripteur.difficulte?.defaut ?? 0);
     const [resultat, setResultat] = useState<RollResult | null>(null);
     const [seuilDuLancer, setSeuilDuLancer] = useState(0);
     /** Ce que le dernier lancer a fait aux réserves de la table. */
@@ -202,17 +204,21 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     </span>
                 )}
 
-                <label className="flex items-center gap-2">
-                    <span className="text-[9px] font-black uppercase tracking-widest text-app-text/40">Difficulté</span>
-                    <input
-                        type="number"
-                        min={descripteur.difficulte.min}
-                        max={descripteur.difficulte.max}
-                        value={difficulte}
-                        onChange={e => setDifficulte(Number(e.target.value))}
-                        className="w-14 bg-app-bg/60 border border-app-border/40 rounded-lg px-2 py-1 text-xs font-mono font-bold focus:outline-none focus:border-accent/50"
-                    />
-                </label>
+                {/* Pas de champ pour ce que le jeu ne fixe pas : un sélecteur de
+                    difficulté sur un jeu qui n'en a pas invite à en inventer une. */}
+                {descripteur.difficulte && (
+                    <label className="flex items-center gap-2">
+                        <span className="text-[9px] font-black uppercase tracking-widest text-app-text/40">Difficulté</span>
+                        <input
+                            type="number"
+                            min={descripteur.difficulte.min}
+                            max={descripteur.difficulte.max}
+                            value={difficulte}
+                            onChange={e => setDifficulte(Number(e.target.value))}
+                            className="w-14 bg-app-bg/60 border border-app-border/40 rounded-lg px-2 py-1 text-xs font-mono font-bold focus:outline-none focus:border-accent/50"
+                        />
+                    </label>
+                )}
 
                 <button
                     onClick={lancer}
