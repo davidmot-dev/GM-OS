@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Hammer, FileUp, Globe, X, Rocket, Zap, Sparkles, ChevronRight, Shield, Layers, AlertTriangle, Terminal, Users } from 'lucide-react';
+import { Hammer, FileUp, Globe, X, Rocket, Zap, Sparkles, ChevronRight, Shield, Layers, AlertTriangle, Terminal, Users, FolderTree } from 'lucide-react';
 import { forgeService } from '../ForgeService';
 import ForgeProgress from '../rules/components/ForgeProgress';
 import RevueDuPilote from './RevueDuPilote';
 import PanneauDesPersonas from '../corpus/PanneauDesPersonas';
+import PanneauDesFiches from '../corpus/PanneauDesFiches';
 import { lireFichesDuCorpus } from '../rules/lectureDuCorpus';
 import { GROUPES } from '../rules/GroupesDeChamps';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
@@ -737,6 +738,26 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
                       pilote={{ id: corpusVise.id, corpusId: corpusVise.id }}
                       compact
                     />
+                  </div>
+                </details>
+              )}
+
+              {/*
+                **Le nettoyage à la main, à côté de ce qui le rend nécessaire.**
+                L'archivage automatique ne couvre que ce que la Forge publie
+                elle-même ; un corpus se répare aussi après une reforge ratée ou
+                un import. Et surtout, cet écran est le seul à montrer les
+                doublons de sujet — ce que le test d'unicité trouvait depuis le
+                2026-08-11 sans que rien ne le rende visible dans l'application.
+              */}
+              {corpusVise && (
+                <details className="bg-app-surface/40 rounded-2xl border border-app-border/10 p-5 group">
+                  <summary className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-accent font-display cursor-pointer list-none">
+                    <FolderTree size={14} /> Fiches du corpus
+                    <ChevronRight size={12} className="ml-auto transition-transform group-open:rotate-90" />
+                  </summary>
+                  <div className="mt-5">
+                    <PanneauDesFiches corpusId={corpusVise.id} />
                   </div>
                 </details>
               )}
