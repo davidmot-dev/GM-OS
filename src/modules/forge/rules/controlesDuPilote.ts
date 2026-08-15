@@ -1,7 +1,7 @@
 import type { GameDriver, DiceRollLogic, DiceConfig } from '../../../types/drivers';
 import type { HealthSystemType } from '../../../types/entity.types';
-import type { SheetTemplate, SheetFieldType } from '../../../data/defaultSheetTemplates';
-import type { SensDuJet } from '../../dice/DescripteurDeJet';
+import type { SheetTemplate, SheetSection, SheetFieldType } from '../../../data/defaultSheetTemplates';
+import { sectionDeLaComposante, type SensDuJet } from '../../dice/DescripteurDeJet';
 import { GROUPES } from './GroupesDeChamps';
 
 /**
@@ -329,14 +329,36 @@ export function controlerLePilote(
         );
     }
 
+    /*
+      **Ce contrôle avait raison et n'avait jamais été lancé sur le bon couple.**
+
+      Relevé le 2026-08-15 sur l'état réel de David : son pilote Dune vise les
+      sections `competences` et `principes` — les identifiants du gabarit de
+      référence livré dans le code — alors qu'il est attaché à *sa* fiche à lui,
+      où elles s'appellent `stats` et `principles`. Les deux menus du panneau de
+      jet étaient vides, et l'écran lui reprochait de n'avoir rien choisi.
+
+      Un pilote écrit à la main, importé, ou dont on renomme les sections après
+      coup ne repasse jamais devant la Forge : *une vérification qui ne tourne
+      qu'à la naissance ne protège que du premier jour.* Le panneau de jet
+      résout donc lui aussi, à l'exécution.
+
+      Le message, lui, nomme désormais la section qui répond — corriger un
+      pilote suppose de savoir par quoi remplacer, et c'est l'outil qui le sait.
+    */
     (driver.jet?.seuil ?? []).forEach((composante, i) => {
-        if (!idsDeSections.has(composante.sectionId)) {
-            erreur(
-                `jet.seuil[${i}].sectionId`,
-                `« ${composante.sectionId} » n'est pas une section de la fiche : le joueur n'aurait ` +
-                'nulle part où choisir sa ' + composante.label.toLowerCase() + '.',
-            );
-        }
+        if (idsDeSections.has(composante.sectionId)) return;
+
+        const { section } = sectionDeLaComposante(sections as SheetSection[], composante);
+        erreur(
+            `jet.seuil[${i}].sectionId`,
+            `« ${composante.sectionId} » n'est pas une section de la fiche : le joueur n'aurait ` +
+            'nulle part où choisir sa ' + composante.label.toLowerCase() + '.'
+            + (section
+                ? ` La fiche nomme « ${section.label || section.id} » (${section.id}) — c'est `
+                  + 'sans doute elle.'
+                : ''),
+        );
     });
 
     const reserve = driver.jet?.reserve;

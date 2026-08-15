@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { preparerLeJet, verdict, type DescripteurDeJet } from './DescripteurDeJet';
+import {
+    preparerLeJet, sectionDeLaComposante, verdict, type DescripteurDeJet,
+} from './DescripteurDeJet';
+import type { SheetSection } from '../../data/defaultSheetTemplates';
 import { DiceEngine } from './DiceEngine';
 import { DEFAULT_GAME_DRIVERS } from '../../data/defaultGameDrivers';
 
@@ -297,5 +300,110 @@ describe('un système sans descripteur continue de fonctionner', () => {
         const sansJet: DescripteurDeJet | undefined = undefined;
         expect(sansJet).toBeUndefined();
         expect(DEFAULT_GAME_DRIVERS.every(d => d.jet === undefined || (d.jet.seuil ?? []).length > 0)).toBe(true);
+    });
+});
+
+describe('le pilote désigne une section, la fiche la nomme autrement', () => {
+    /**
+     * **Le défaut, relevé par David le 2026-08-15 sur sa fiche de Dune.** Les
+     * deux menus « Compétence » et « Principe » étaient vides, et le panneau
+     * répondait *« aucun champ retenu »* — comme s'il avait négligé de choisir.
+     * Il n'y avait rien à choisir.
+     *
+     * Les sections ci-dessous sont **celles de son gabarit persisté**
+     * (`tpl-1774724573418`), relevées dans son IndexedDB : son pilote réclame
+     * `competences` et `principes`, les identifiants du gabarit de référence
+     * livré dans le code, alors qu'il est attaché à cette fiche-là.
+     *
+     * *Vérifier sur la charge réelle, jamais sur un exemple qu'on a écrit
+     * soi-même* — un cas inventé aurait porté les bons identifiants.
+     */
+    const SECTIONS_DE_DAVID: SheetSection[] = [
+        { id: 'identity', label: 'Identité', fields: [
+            { id: 'char_name', label: 'Nom', type: 'text', defaultValue: '' },
+        ] },
+        { id: 'stats', label: 'Compétences', fields: [
+            { id: 'analyse', label: 'Analyse', type: 'number', defaultValue: 4 },
+            { id: 'combat', label: 'Combat', type: 'number', defaultValue: 4 },
+        ] },
+        { id: 'principles', label: 'Principes & Maximes', fields: [
+            { id: 'devotion', label: 'Devoir', type: 'number', defaultValue: 5 },
+            { id: 'justice', label: 'Justice', type: 'number', defaultValue: 4 },
+        ] },
+    ];
+
+    it('reconnaît la section à son intitulé quand l\'identifiant a dérivé', () => {
+        const competence = sectionDeLaComposante(SECTIONS_DE_DAVID, jetDune.seuil![0]);
+        const principe = sectionDeLaComposante(SECTIONS_DE_DAVID, jetDune.seuil![1]);
+
+        expect(competence.section?.id, '« competences » → « Compétences »').toBe('stats');
+        expect(competence.par).toBe('label');
+        expect(principe.section?.id, '« principes » → « Principes & Maximes »').toBe('principles');
+        expect(principe.par).toBe('label');
+    });
+
+    it('le jet se compose alors normalement, et la dérive se dit', () => {
+        const jet = preparerLeJet(
+            jetDune,
+            { combat: 6, devotion: 5 },
+            { champs: { competence: 'combat', principe: 'devotion' } },
+            SECTIONS_DE_DAVID,
+        );
+
+        expect(jet.seuil, 'Combat 6 + Devoir 5').toBe(11);
+        expect(jet.avertissements, 'rien ne doit empêcher de lancer').toEqual([]);
+        expect(jet.remarques).toHaveLength(2);
+        expect(jet.remarques[0]).toContain('stats');
+    });
+
+    it('l\'identifiant exact l\'emporte toujours, et ne remarque rien', () => {
+        // La résolution par intitulé est un rattrapage, pas une préférence : un
+        // pilote juste ne doit pas voir sa section changer sous ses pieds.
+        const sections: SheetSection[] = [
+            { id: 'competences', label: 'Rien à voir', fields: [] },
+            ...SECTIONS_DE_DAVID,
+        ];
+        const retenue = sectionDeLaComposante(sections, jetDune.seuil![0]);
+
+        expect(retenue.section?.id).toBe('competences');
+        expect(retenue.par).toBe('id');
+    });
+
+    it('ne tranche jamais entre deux sections qui répondent au même nom', () => {
+        /**
+         * *L'outil suit l'état, il n'arbitre pas.* Trois sections de compétences
+         * — c'est la fiche de Rêve de Dragon — et l'outil n'a aucun moyen de
+         * savoir laquelle le pilote visait. Il le dit, un humain tranche.
+         */
+        const reveDeDragon: SheetSection[] = [
+            { id: 'competences_generales', label: 'Compétences Générales', fields: [] },
+            { id: 'competences_particulieres', label: 'Compétences Particulières', fields: [] },
+        ];
+        const retenue = sectionDeLaComposante(reveDeDragon, jetDune.seuil![0]);
+
+        expect(retenue.section).toBeNull();
+        expect(retenue.ambigues).toHaveLength(2);
+    });
+
+    it('une section introuvable accuse le pilote, pas le joueur', () => {
+        const jet = preparerLeJet(
+            jetDune, {}, { champs: {} },
+            [{ id: 'identity', label: 'Identité', fields: [] }],
+        );
+
+        expect(jet.avertissements[0]).toContain('le pilote désigne');
+        expect(jet.avertissements[0]).toContain('competences');
+        expect(
+            jet.avertissements.some(a => a.includes('aucun champ retenu')),
+            "on ne reproche pas au joueur de n'avoir pas choisi dans un menu vide",
+        ).toBe(false);
+    });
+
+    it('sans sections fournies, rien ne change pour les appelants d\'avant', () => {
+        const jet = preparerLeJet(jetDune, FICHE, { champs: { competence: 'combat', principe: 'devoir' } });
+
+        expect(jet.seuil).toBe(11);
+        expect(jet.avertissements).toEqual([]);
+        expect(jet.remarques).toEqual([]);
     });
 });

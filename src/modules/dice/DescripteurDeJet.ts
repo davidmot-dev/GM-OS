@@ -19,6 +19,8 @@
  * L'outil calcule ce qui est mécanique ; il n'arbitre pas.
  */
 
+import type { SheetSection } from '../../data/defaultSheetTemplates';
+
 /** Un choix que le joueur fait sur sa fiche au moment de lancer. */
 export interface ComposanteDeJet {
     /** Identifiant de la composante — `competence`, `principe`, `attribut`. */
@@ -134,6 +136,90 @@ export interface JetPrepare {
      * de la jauge à zéro qui se tait.
      */
     avertissements: string[];
+    /**
+     * Ce qui s'est raccordé tout seul, et qu'il faut dire quand même.
+     *
+     * **Séparé des avertissements parce que le panneau refuse de lancer tant
+     * qu'il en reste un.** Une section reconnue à son intitulé plutôt qu'à son
+     * identifiant est un vrai défaut du pilote, qu'il faut corriger — mais le
+     * jet, lui, est juste. Bloquer le joueur en pleine séance pour un nom de
+     * section serait lui faire payer une rigueur qui ne le concerne pas.
+     */
+    remarques: string[];
+}
+
+/**
+ * Où le joueur choisit sa composante — **et le pilote peut se tromper de nom**.
+ *
+ * **Le défaut, relevé par David le 2026-08-15 sur sa fiche de Dune** : les deux
+ * menus « Compétence » et « Principe » étaient vides, et le panneau lui répondait
+ * *« aucun champ retenu »*, comme s'il avait négligé de choisir. Il n'y avait
+ * rien à choisir.
+ *
+ * Son pilote Dune réclame les sections `competences` et `principes` — les
+ * identifiants du gabarit **de référence** livré dans le code. Mais il est
+ * attaché à **sa** fiche à lui, où les mêmes sections s'appellent `stats`
+ * (« Compétences ») et `principles` (« Principes & Maximes »). Un pilote écrit
+ * contre un gabarit, branché sur un autre.
+ *
+ * `controlerLePilote` attrape exactement cela depuis le 2026-08-11 — mais il ne
+ * tourne qu'à la Forge, au moment de la dérivation. *Un pilote écrit à la main,
+ * importé, ou dont on renomme les sections après coup ne repasse jamais devant
+ * lui.* La vérification existait ; elle n'avait simplement jamais vu ce couple.
+ *
+ * **Ce qu'on s'autorise, et pourquoi ce n'est pas arbitrer.** Une section porte
+ * deux noms : son identifiant et son intitulé. Quand l'identifiant annoncé ne
+ * répond pas et qu'**une seule** section répond à ce nom-là, la retenir, c'est
+ * suivre l'état — la fiche dit « Compétences », le pilote demande les
+ * compétences. On le dit à l'écran, et on ne tranche jamais entre plusieurs :
+ * deux sections qui répondent au même nom sont une question pour un humain.
+ */
+export interface SectionRetenue {
+    section: SheetSection | null;
+    /** `id` quand la section porte le nom annoncé, `label` quand il a fallu la reconnaître. */
+    par: 'id' | 'label' | null;
+    /** Les sections qui répondaient toutes au même nom, quand plusieurs le faisaient. */
+    ambigues: string[];
+}
+
+/** Sans accents, sans casse, sans ponctuation — deux façons d'écrire le même mot. */
+function normaliser(texte: string): string {
+    return texte.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+/**
+ * Deux noms désignent-ils la même chose ?
+ *
+ * Le plus court doit préfixer le plus long : « competence » répond à
+ * « Compétences », « principes » à « Principes & Maximes ». En dessous de cinq
+ * lettres on exige l'égalité — sur trois caractères, un préfixe ne prouve rien.
+ */
+function memeNom(a: string, b: string): boolean {
+    if (!a || !b) return false;
+    const [court, long] = a.length <= b.length ? [a, b] : [b, a];
+    return court.length < 5 ? court === long : long.startsWith(court);
+}
+
+/** La section où choisir cette composante, si la fiche en tient une. */
+export function sectionDeLaComposante(
+    sections: readonly SheetSection[] | undefined,
+    composante: ComposanteDeJet,
+): SectionRetenue {
+    const toutes = sections ?? [];
+
+    const parIdentifiant = toutes.find(s => s.id === composante.sectionId);
+    if (parIdentifiant) return { section: parIdentifiant, par: 'id', ambigues: [] };
+
+    // L'intitulé de la composante compte autant que l'identifiant qu'elle vise :
+    // un pilote qui demande « Compétence » cherche la section des compétences,
+    // quel que soit le mot qu'il a mis dans `sectionId`.
+    const noms = [composante.sectionId, composante.label].map(normaliser).filter(Boolean);
+    const repondent = toutes.filter(s => noms.some(nom =>
+        memeNom(nom, normaliser(s.id)) || memeNom(nom, normaliser(s.label ?? ''))));
+
+    if (repondent.length === 1) return { section: repondent[0], par: 'label', ambigues: [] };
+    return { section: null, par: null, ambigues: repondent.map(s => s.label || s.id) };
 }
 
 /** Le nombre lu sur la fiche, ou zéro si le champ n'y est pas. */
@@ -155,8 +241,18 @@ export function preparerLeJet(
     descripteur: DescripteurDeJet,
     valeursDeLaFiche: Record<string, unknown>,
     choix: ChoixDuJoueur,
+    /**
+     * Les sections de la fiche ouverte, quand l'appelant les connaît.
+     *
+     * Facultatives : le seuil se compose à partir des **valeurs**, et n'en a
+     * pas besoin. Elles servent à dire la vérité sur ce qui manque — sans
+     * elles, une section introuvable se présentait au joueur comme un oubli de
+     * sa part.
+     */
+    sections?: readonly SheetSection[],
 ): JetPrepare {
     const avertissements: string[] = [];
+    const remarques: string[] = [];
     const composantes: JetPrepare['composantes'] = [];
     let seuil = 0;
 
@@ -166,6 +262,30 @@ export function preparerLeJet(
       chaque six est une réussite quelle que soit la valeur du personnage.
     */
     for (const composante of descripteur.seuil ?? []) {
+        /*
+          **Où le joueur aurait dû pouvoir choisir.** Quand la section annoncée
+          n'existe pas, il n'a rien eu à se reprocher : le menu était vide. Le
+          dire ainsi désigne le pilote, qui est le fautif, plutôt que lui.
+        */
+        if (sections) {
+            const { section, par, ambigues } = sectionDeLaComposante(sections, composante);
+            if (!section) {
+                avertissements.push(ambigues.length > 1
+                    ? `${composante.label} : le pilote désigne la section « ${composante.sectionId} », `
+                        + `absente de cette fiche, et ${ambigues.length} sections pourraient y répondre `
+                        + `(${ambigues.join(', ')}). Au pilote de dire laquelle.`
+                    : `${composante.label} : le pilote désigne la section « ${composante.sectionId} », `
+                        + "qui n'existe pas dans cette fiche — il n'y a rien à y choisir.");
+                continue;
+            }
+            if (par === 'label') {
+                remarques.push(
+                    `${composante.label} : le pilote désigne la section « ${composante.sectionId} », `
+                    + `que cette fiche nomme « ${section.label || section.id} » (${section.id}).`,
+                );
+            }
+        }
+
         const champ = choix.champs[composante.id];
         if (!champ) {
             avertissements.push(`${composante.label} : aucun champ retenu.`);
@@ -235,6 +355,7 @@ export function preparerLeJet(
         doubleSous: Math.max(choix.critiqueEtendu ?? 0, descripteur.critique ?? 0),
         difficulte,
         avertissements,
+        remarques,
     };
 }
 

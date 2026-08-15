@@ -1,7 +1,10 @@
 import React, { useMemo, useState } from 'react';
-import { Dices, AlertTriangle, Plus, Minus, Coins } from 'lucide-react';
+import { Dices, AlertTriangle, Info, Plus, Minus, Coins } from 'lucide-react';
 import { DiceEngine, type RollResult } from '../../../dice/DiceEngine';
-import { preparerLeJet, verdict, type DescripteurDeJet } from '../../../dice/DescripteurDeJet';
+import {
+    preparerLeJet, sectionDeLaComposante, verdict,
+    type ComposanteDeJet, type DescripteurDeJet,
+} from '../../../dice/DescripteurDeJet';
 import { ventilerLaDepense, type RessourceDeTable } from '../../../table/RessourcesDeTable';
 import { useRessourcesDeTableStore } from '../../../table/useRessourcesDeTableStore';
 import type { SheetTemplate } from '../../../../data/defaultSheetTemplates';
@@ -55,13 +58,24 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const { etatDe, depenser, gagner } = useRessourcesDeTableStore();
     const monnaie = campaignId && ressourcesDeTable?.length ? { campaignId, ressourcesDeTable } : null;
 
-    /** Les champs proposés pour une composante : ceux de sa section. */
-    const champsDe = (sectionId: string) =>
-        template.sections.find(s => s.id === sectionId)?.fields ?? [];
+    /**
+     * Les champs proposés pour une composante : ceux de sa section.
+     *
+     * **La résolution est partagée avec `preparerLeJet`**, et c'est essentiel :
+     * un menu rempli depuis une section que le calcul ignorerait — ou l'inverse
+     * — rendrait un jet dont l'écran et le moteur ne parlent plus du même
+     * endroit de la fiche.
+     */
+    const champsDe = (composante: ComposanteDeJet) =>
+        sectionDeLaComposante(template.sections, composante).section?.fields ?? [];
 
     const jet = useMemo(
-        () => preparerLeJet(descripteur, valeurs, { champs: choix, desSupplementaires: desAchetes, difficulte }),
-        [descripteur, valeurs, choix, desAchetes, difficulte],
+        () => preparerLeJet(
+            descripteur, valeurs,
+            { champs: choix, desSupplementaires: desAchetes, difficulte },
+            template.sections,
+        ),
+        [descripteur, valeurs, choix, desAchetes, difficulte, template.sections],
     );
 
     /** Rien ne part tant que chaque composante n'a pas son champ. */
@@ -146,7 +160,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             className="bg-app-bg/60 border border-app-border/40 rounded-lg px-3 py-2 text-xs font-bold focus:outline-none focus:border-accent/50"
                         >
                             <option value="">— choisir —</option>
-                            {champsDe(composante.sectionId).map(f => (
+                            {champsDe(composante).map(f => (
                                 <option key={f.id} value={f.id}>
                                     {f.label} ({String(valeurs[f.id] ?? f.defaultValue)})
                                 </option>
@@ -245,6 +259,22 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     {jet.avertissements.map((a, i) => (
                         <li key={i} className="flex items-start gap-2 text-[11px] text-amber-300/70">
                             <AlertTriangle size={12} className="mt-0.5 shrink-0" /> {a}
+                        </li>
+                    ))}
+                </ul>
+            )}
+
+            {/*
+                Ce qui s'est raccordé malgré une dérive du pilote. Plus discret
+                que les avertissements — le jet est juste et part —, mais dit :
+                un défaut silencieux finit toujours par coûter plus cher qu'une
+                ligne de texte.
+            */}
+            {jet.remarques.length > 0 && (
+                <ul className="space-y-1">
+                    {jet.remarques.map((r, i) => (
+                        <li key={i} className="flex items-start gap-2 text-[10px] text-app-text/35">
+                            <Info size={11} className="mt-0.5 shrink-0" /> {r}
                         </li>
                     ))}
                 </ul>
