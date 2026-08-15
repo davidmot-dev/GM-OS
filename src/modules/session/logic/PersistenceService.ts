@@ -5,6 +5,7 @@ import { isMainWindow } from '../../../utils/windowRole';
 import { reparerLiensDeGabarit } from '../store/liensDeGabarit';
 import { inscrireLesSystemes } from './systemeDeclare';
 import { redimensionnerLesHorloges } from './horlogesADimensionner';
+import { rattacherLaSanteDesAdversaires } from './santeDesAdversaires';
 
 export const SESSION_STORE_KEY = 'gmos-v5-session-os-storage';
 
@@ -159,6 +160,41 @@ export const PersistenceService: PersistOptions<SessionOSStore> = {
                     console.warn(
                         `[Persistence] Horloge de défaite de « ${h.personnage} » : ` +
                         `${h.ancienCompte} → ${h.nouveauCompte} segments, lus sur sa fiche.`,
+                    );
+                }
+            }
+
+            /*
+              **Les adversaires nés sans mécanisme de santé.**
+
+              `AddEntityForm` n'en écrivait aucun avant le 2026-08-15 : chaque
+              PNJ ne portait que les points de vie de D&D. On rattache celui de
+              son jeu, **uniquement là où il manque** — jamais par-dessus.
+
+              Les PNJ d'un jeu à tâche de défaite reçoivent le PLANCHER que le
+              pilote déclare, faute de fiche où lire leur compétence défensive :
+              c'est la seule reprise de la journée qui pose une valeur non lue,
+              et chacune est journalisée pour que le meneur l'ajuste. Se taire
+              aurait laissé ces PNJ afficher une barre de vie sur un jeu qui n'a
+              pas de points de vie.
+            */
+            const { entities, rattachees } = rattacherLaSanteDesAdversaires(
+                state.entities ?? [],
+                state.campaigns ?? [],
+                state.customGameDrivers ?? [],
+            );
+            if (rattachees.length > 0) {
+                state.entities = entities;
+                const aAjuster = rattachees.filter(r => r.aAjuster);
+                console.warn(
+                    `[Persistence] ${rattachees.length} adversaire(s) sans mécanisme de santé ` +
+                    'rattaché(s) au modèle de leur jeu.',
+                );
+                if (aAjuster.length > 0) {
+                    console.warn(
+                        `[Persistence] ${aAjuster.length} d'entre eux reçoivent le SEUIL MINIMAL de leur ` +
+                        `tâche de défaite, faute de fiche où lire leur compétence défensive — à ajuster : ` +
+                        aAjuster.map(r => r.entite).join(', '),
                     );
                 }
             }
