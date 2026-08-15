@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { rattacherLaSanteDesAdversaires } from './santeDesAdversaires';
+import { rattacherLaSanteDesAdversaires, santeSelonLeJeu } from './santeDesAdversaires';
 import type { GameDriver } from '../../../types/drivers';
 import type { Entity } from '../../../types/entity.types';
 
@@ -118,5 +118,57 @@ describe('ce que la reprise refuse de faire', () => {
         const second = rattacherLaSanteDesAdversaires(neuf.entities, CAMPAGNES, [ALIEN]);
         expect(neuf.rattachees).toHaveLength(1);
         expect(second.rattachees).toEqual([]);
+    });
+});
+
+describe('la même règle vaut à la création, quel que soit l\'écran', () => {
+    /**
+     * **La demande de David, le 2026-08-15** : *« peux-tu utiliser le même
+     * modèle quand je crée un PNJ de zéro ? »* — et elle porte plus loin qu'elle
+     * n'en a l'air. **Trois chemins** créent des adversaires : le formulaire,
+     * l'export depuis NPC-OS, et la Forge de chronique. Un seul connaissait le
+     * pilote.
+     *
+     * La règle vit donc dans `santeSelonLeJeu`, appelée par `addEntity` — le
+     * point unique par lequel les trois passent. C'est le geste que
+     * `addCombatant` a déjà fait pour le combat : *on complète à cet endroit
+     * unique plutôt que d'instruire chaque écran, et surtout plutôt que d'en
+     * oublier un.*
+     */
+    it('un jeu à tâche de défaite donne une horloge, pas des points de vie', () => {
+        const sante = santeSelonLeJeu(DUNE, { hp: 10, maxHp: 10 });
+
+        expect(sante!.type).toBe('clocks');
+        expect(sante!.data).toMatchObject({ filled: 0, segments: 4 });
+    });
+
+    it('un jeu à points de vie reprend ceux qu\'on lui donne', () => {
+        expect(santeSelonLeJeu(ALIEN, { hp: 4, maxHp: 4 })!.data).toMatchObject({ current: 4, max: 4 });
+    });
+
+    it('sans points lisibles, le modèle garde son défaut', () => {
+        expect(santeSelonLeJeu(ALIEN, { hp: 'Immobile', maxHp: 0 })!.data).toMatchObject({ current: 10, max: 10 });
+        expect(santeSelonLeJeu(ALIEN)!.type).toBe('hp');
+    });
+
+    it('un jeu qui ne déclare rien ne reçoit AUCUN modèle', () => {
+        // *L'absence n'est pas un zéro* : un modèle inventé se jouerait comme un
+        // vrai, et c'est exactement ce qu'on a passé la journée à défaire.
+        expect(santeSelonLeJeu(null)).toBeUndefined();
+        expect(santeSelonLeJeu(pilote('muet', { statsToTrack: [], initiativeFormula: '' }))).toBeUndefined();
+    });
+
+    it('la reprise et la création rendent le MÊME modèle', () => {
+        /**
+         * Deux règles jumelles auraient produit deux populations de PNJ que rien
+         * ne distinguerait à l'œil : ceux d'avant et ceux d'après, soignés
+         * différemment en combat.
+         */
+        const aLaCreation = santeSelonLeJeu(DUNE, { hp: 13, maxHp: 10 });
+        const aLaReprise = rattacherLaSanteDesAdversaires(
+            [pnj({ campaignId: 'c-dune', hp: 13, maxHp: 10 })], CAMPAGNES, [DUNE],
+        );
+
+        expect(santeDe(aLaReprise)).toEqual(aLaCreation);
     });
 });

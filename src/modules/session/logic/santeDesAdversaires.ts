@@ -35,6 +35,52 @@ import type { Entity } from '../../../types/entity.types';
  *    barre de vie à 130 % sur un jeu qui n'a pas de points de vie.
  */
 
+/**
+ * Le mécanisme de santé qu'un jeu donne à ses adversaires.
+ *
+ * **Une seule règle, pour la reprise ET pour la création.** David, le
+ * 2026-08-15 : *« peux-tu utiliser le même modèle quand je crée un PNJ de
+ * zéro ? »* — et c'est le bon geste, plus large que sa question. **Trois
+ * chemins** créent des adversaires : le formulaire, l'export depuis NPC-OS, et
+ * la Forge de chronique. Un seul connaissait le pilote.
+ *
+ * C'est exactement ce que `addCombatant` a réglé pour le combat : *huit écrans
+ * ajoutent des combattants et un seul connaît le pilote — on complète à cet
+ * endroit unique plutôt que d'en instruire sept, et surtout plutôt que d'en
+ * oublier un.*
+ *
+ * `points` sert au modèle `hp` : on **déclare ce que l'entité porte déjà**
+ * plutôt que les dix de `createDefault`. Les valeurs non numériques sont
+ * ignorées — la Forge de chronique a écrit « Inférieure à 1 (gravement battu) »,
+ * et fabriquer un nombre à partir d'une phrase perdrait ce qu'elle dit.
+ *
+ * Rend `undefined` quand le jeu ne déclare rien : *l'absence n'est pas un zéro*,
+ * et un modèle inventé se jouerait comme un vrai.
+ */
+export function santeSelonLeJeu(
+    pilote: GameDriver | null | undefined,
+    points?: { hp?: unknown; maxHp?: unknown },
+): Entity['healthSystem'] | undefined {
+    const tache = pilote?.combat?.tacheDeDefaite;
+    if (tache) {
+        /*
+          Le seuil vaut « la compétence défensive » de la cible, qu'un PNJ n'a
+          nulle part où porter. On pose le plancher que le pilote déclare — c'est
+          au meneur de le relever, et l'écran de création le lui demande.
+        */
+        return { type: 'clocks', data: { filled: 0, segments: tache.seuil.min }, state: 'healthy', badges: [] };
+    }
+
+    const modele = pilote?.combat?.defaultHealthType;
+    if (!modele) return undefined;
+
+    const sante = HealthInterpreter.createDefault(modele);
+    const lisibles = typeof points?.hp === 'number' && typeof points?.maxHp === 'number' && points.maxHp > 0;
+    return modele === 'hp' && lisibles
+        ? { ...sante, data: { ...sante.data, current: points!.hp, max: points!.maxHp } }
+        : sante;
+}
+
 export interface SanteRattachee {
     entite: string;
     modele: string;
@@ -57,41 +103,18 @@ export function rattacherLaSanteDesAdversaires(
         const pilote = pilotes.find(d => d.id === campagne?.system);
         if (!pilote) return entite;
 
-        const tache = pilote.combat?.tacheDeDefaite;
-        if (tache) {
-            rattachees.push({ entite: entite.name, modele: 'clocks', aAjuster: true });
-            return {
-                ...entite,
-                healthSystem: {
-                    type: 'clocks' as const,
-                    data: { filled: 0, segments: tache.seuil.min },
-                    state: 'healthy' as const,
-                    badges: [],
-                },
-            };
-        }
+        // La MÊME règle que celle appliquée à la création : une reprise qui
+        // rattraperait autrement que ce que le formulaire écrit produirait deux
+        // populations de PNJ que rien ne distinguerait à l'œil.
+        const sante = santeSelonLeJeu(pilote, entite);
+        if (!sante) return entite;
 
-        const modele = pilote.combat?.defaultHealthType;
-        if (!modele) return entite;
-
-        const sante = HealthInterpreter.createDefault(modele);
-        /*
-          Pour le modèle `hp`, on **déclare ce que le PNJ porte déjà** au lieu
-          des dix de `createDefault` : ses points de vie sont une donnée réelle,
-          souvent posée à la main. Les valeurs non numériques — la Forge de
-          chronique en a écrit, « Inférieure à 1 (gravement battu) » — ne sont
-          pas converties : on laisse alors le défaut du modèle plutôt que de
-          fabriquer un nombre à partir d'une phrase.
-        */
-        const lisibles = typeof entite.hp === 'number' && typeof entite.maxHp === 'number' && entite.maxHp > 0;
-        rattachees.push({ entite: entite.name, modele, aAjuster: false });
-
-        return {
-            ...entite,
-            healthSystem: modele === 'hp' && lisibles
-                ? { ...sante, data: { ...sante.data, current: entite.hp, max: entite.maxHp } }
-                : sante,
-        };
+        rattachees.push({
+            entite: entite.name,
+            modele: sante.type,
+            aAjuster: !!pilote.combat?.tacheDeDefaite,
+        });
+        return { ...entite, healthSystem: sante };
     });
 
     return rattachees.length > 0

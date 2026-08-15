@@ -216,8 +216,11 @@ const NPCCard: React.FC = () => {
                 avatar: avatarSrc || '',
                 hp: isNaN(hp) ? 10 : hp,
                 maxHp: isNaN(hp) ? 10 : hp,
-                ac: isNaN(ac) ? 10 : ac,
-                speed: 30,
+                /* Ni classe d'armure ni vitesse inventees : aucun pilote ne
+                   declare l'une, personne ne lit l'autre. Le mecanisme de sante
+                   est pose par `addEntity`, qui seul connait le pilote. */
+                ac: isNaN(ac) ? 0 : ac,
+                speed: 0,
                 initiative: 0,
                 description: description,
                 roleplayingNotes: currentEntity!.gmNotes || '',

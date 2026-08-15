@@ -26,10 +26,9 @@ import { chronicleForgeService, type ChronicleForgeResult } from '../ChronicleSe
 import { gmToast } from '../../../stores/useToastStore';
 import { gmConfirm } from '../../../stores/useModalStore';
 import { useAIStore } from '../../../stores/useAIStore';
-import { HealthInterpreter } from '../../session/logic/HealthInterpreter';
+import { santeSelonLeJeu } from '../../session/logic/santeDesAdversaires';
 import { abregerLaSante, aUneJaugeDeVie } from '../../combat/logic/SanteDuCombattant';
 import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
-import type { GameDriver } from '../../../types/drivers';
 
 /**
  * Le mécanisme de santé d'un PNJ engendré, selon ce que le jeu compte.
@@ -39,13 +38,11 @@ import type { GameDriver } from '../../../types/drivers';
  * Le meneur l'ajuste ensuite — mieux vaut un plancher qu'il corrige qu'un six
  * qui n'est le chiffre d'aucun jeu.
  */
-function santeGeneree(driver?: GameDriver) {
-    const tache = driver?.combat?.tacheDeDefaite;
-    if (tache) {
-        return { type: 'clocks' as const, data: { filled: 0, segments: tache.seuil.min }, state: 'healthy' as const, badges: [] };
-    }
-    return HealthInterpreter.createDefault(driver?.combat?.defaultHealthType ?? 'hp');
-}
+/*
+  La regle vit dans `santeSelonLeJeu`, partagee avec la creation manuelle et la
+  reprise des PNJ deja ecrits. Trois copies de la meme regle auraient fini par
+  produire trois populations d'adversaires que rien ne distinguerait a l'oeil.
+*/
 
 interface NotebookSource {
   id: string;
@@ -343,7 +340,7 @@ const ChronicleForge: React.FC = () => {
           le meneur ajuste — c'est ce que la fiche appelle « la compétence
           défensive » de la cible, et une IA ne la connaît pas.
         */
-        healthSystem: e.healthSystem ?? santeGeneree(driver),
+        healthSystem: e.healthSystem ?? santeSelonLeJeu(driver, e),
         hp: e.hp ?? 10,
         maxHp: e.maxHp ?? 10,
         // La classe d'armure n'est déclarée par aucun pilote : on ne l'invente

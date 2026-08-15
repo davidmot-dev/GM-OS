@@ -12,6 +12,10 @@ import i18next from 'i18next';
 import { gmToast } from '../../../stores/useToastStore';
 // import { useJournalStore } from '../../journal/useJournalStore'; // Broken by circular dependency
 import { HealthInterpreter } from '../logic/HealthInterpreter';
+import { santeSelonLeJeu } from '../logic/santeDesAdversaires';
+import { tousLesPilotes } from './tousLesPilotes';
+import type { GameDriver } from '../../../types/drivers';
+import type { Campaign } from '../../../types/campaign.types';
 import type {
     Entity,
     Player,
@@ -121,10 +125,44 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
 
     addEntity: (entity) => {
         const defaultAvatar = 'https://api.dicebear.com/9.x/adventurer-neutral/svg?seed=NPC&backgroundColor=b6e3f4';
-        const newEntity: Entity = { 
-            ...entity, 
+
+        /*
+          **Tout adversaire naît avec le mécanisme de santé de son jeu, quel que
+          soit l'écran qui le crée.**
+
+          Demandé par David le 2026-08-15 : *« peux-tu utiliser le même modèle
+          quand je crée un PNJ de zéro ? »* — et la question porte plus loin
+          qu'elle n'en a l'air. **Trois chemins** créent des adversaires : le
+          formulaire, l'export depuis NPC-OS (`NPCCard`), et la Forge de
+          chronique. Deux le faisaient déjà ; le troisième écrivait `hp: 10,
+          ac: 10, speed: 30` et aucun modèle.
+
+          C'est le geste que `addCombatant` a déjà fait pour le combat : *huit
+          écrans ajoutent des combattants et un seul connaît le pilote — on
+          complète à cet endroit unique plutôt que d'en instruire sept, et
+          surtout plutôt que d'en oublier un.* Ici il y en avait trois, et le
+          quatrième à venir aurait été muet lui aussi.
+
+          On ne complète **que ce qui manque** : le formulaire pose un seuil de
+          défaite choisi par le meneur, qui vaut mieux que le plancher du pilote.
+        */
+        const pilote = entity.healthSystem ? null : (() => {
+            /*
+              Les campagnes et les pilotes vivent dans d'autres tranches du même
+              store : `get()` les porte à l'exécution, mais son type ne connaît
+              que celle-ci. On élargit ici plutôt que d'importer les autres
+              tranches, ce qui fermerait un cycle.
+            */
+            const etat = get() as unknown as { campaigns?: Campaign[]; customGameDrivers?: GameDriver[] };
+            const campagne = (etat.campaigns ?? []).find(c => c.id === entity.campaignId);
+            return tousLesPilotes(etat.customGameDrivers ?? []).find(d => d.id === campagne?.system) ?? null;
+        })();
+
+        const newEntity: Entity = {
+            ...entity,
+            healthSystem: entity.healthSystem ?? santeSelonLeJeu(pilote, entity),
             avatar: entity.avatar || defaultAvatar,
-            id: `e-${Date.now()}` 
+            id: `e-${Date.now()}`
         };
         set((state) => ({ entities: [...state.entities, newEntity] }));
         gmToast(i18next.t('modules:session.toasts.entity_created', { name: newEntity.name }), 'success');
