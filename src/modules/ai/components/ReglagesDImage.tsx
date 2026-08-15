@@ -1,6 +1,7 @@
 import React from 'react';
-import { ImagePlus, Eye, EyeOff, ExternalLink } from 'lucide-react';
+import { ImagePlus, Eye, EyeOff, ExternalLink, Beaker, Loader2 } from 'lucide-react';
 import { useAIStore } from '../../../stores/useAIStore';
+import { genererViaCloudflare, octetsDeLImage } from '../cloudflareImage';
 
 /**
  * Le service qui fabrique les images — **séparé de celui qui répond aux
@@ -28,7 +29,34 @@ const ReglagesDImage: React.FC = () => {
     const { image, updateImageConfig } = useAIStore();
     const [visible, setVisible] = React.useState(false);
 
+    /**
+     * Le résultat du dernier essai.
+     *
+     * **Il montre l'image, pas seulement un « OK ».** Un service peut répondre
+     * 200 et rendre autre chose que ce qu'on croit — c'est arrivé assez souvent
+     * dans ce projet pour qu'on ne s'en remette plus à un code de retour. Voir
+     * la vignette, c'est vérifier ; lire « succès », c'est faire confiance.
+     */
+    const [essai, setEssai] = React.useState<
+        { etat: 'encours' } | { etat: 'ok'; apercu: string; octets: number } | { etat: 'echec'; dit: string } | null
+    >(null);
+
     const pret = !!image.accountId && !!image.apiKey;
+
+    const tester = async () => {
+        setEssai({ etat: 'encours' });
+        try {
+            // Le MÊME chemin que la génération réelle — un test qui emprunterait
+            // une autre route ne testerait pas ce qui tourne en séance.
+            const base64 = await genererViaCloudflare(
+                'a lone astronaut helmet resting on red desert sand, cinematic lighting',
+                image,
+            );
+            setEssai({ etat: 'ok', apercu: `data:image/jpeg;base64,${base64}`, octets: octetsDeLImage(base64).byteLength });
+        } catch (err) {
+            setEssai({ etat: 'echec', dit: err instanceof Error ? err.message : String(err) });
+        }
+    };
 
     return (
         <div className="p-6 rounded-2xl border border-app-border/20 bg-app-surface/40 space-y-5">
@@ -52,6 +80,17 @@ const ReglagesDImage: React.FC = () => {
                     </div>
                 </div>
 
+                <div className="flex items-center gap-2">
+                <button
+                    type="button"
+                    onClick={tester}
+                    disabled={!pret || essai?.etat === 'encours'}
+                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-accent/10 border border-accent/30 text-[10px] font-black uppercase tracking-widest text-accent hover:bg-accent/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                >
+                    {essai?.etat === 'encours'
+                        ? <><Loader2 size={12} className="animate-spin" /> Essai…</>
+                        : <><Beaker size={12} /> Tester</>}
+                </button>
                 <a
                     href="https://dash.cloudflare.com/?to=/:account/ai/workers-ai"
                     target="_blank"
@@ -60,7 +99,33 @@ const ReglagesDImage: React.FC = () => {
                 >
                     <ExternalLink size={12} /> Tableau de bord
                 </a>
+                </div>
             </div>
+
+            {/*
+                Le résultat de l'essai, montré et non résumé. Un échec rend le
+                message de Cloudflare tel quel : quota épuisé, jeton sans la
+                permission Edit et identifiant de compte erroné sont trois
+                problèmes distincts, et les confondre ferait chercher au mauvais
+                endroit.
+            */}
+            {essai?.etat === 'ok' && (
+                <div className="flex items-center gap-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30">
+                    <img src={essai.apercu} alt="Essai de génération" className="w-20 h-20 rounded-lg object-cover" />
+                    <div>
+                        <p className="text-[11px] font-black uppercase tracking-widest text-emerald-400">Cloudflare répond</p>
+                        <p className="text-[11px] text-app-text/50 mt-1">
+                            {Math.round(essai.octets / 1024)} Ko reçus. La génération d'image passera par lui.
+                        </p>
+                    </div>
+                </div>
+            )}
+            {essai?.etat === 'echec' && (
+                <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30">
+                    <p className="text-[11px] font-black uppercase tracking-widest text-red-400">Cloudflare refuse</p>
+                    <p className="text-[11px] text-app-text/60 mt-1 font-mono leading-relaxed">{essai.dit}</p>
+                </div>
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">

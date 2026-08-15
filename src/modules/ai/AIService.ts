@@ -3,6 +3,7 @@ import { useSessionOSStore } from '../session/useSessionOSStore';
 import { useJournalStore } from '../journal/useJournalStore';
 import { useMediaStore } from '../../stores/useMediaStore';
 import { ragService } from './RAGService';
+import { genererViaCloudflare, octetsDeLImage } from './cloudflareImage';
 import type { AIResponse, AIProvider } from './types';
 import type { JournalEvent } from '../journal/types';
 import i18n from '../../i18n';
@@ -468,34 +469,11 @@ export class AIService {
       const image = useAIStore.getState().image;
       if (image.accountId && image.apiKey) {
         try {
-          const modele = image.modelId || '@cf/black-forest-labs/flux-1-schnell';
-          const urlCf = `https://api.cloudflare.com/client/v4/accounts/${image.accountId}/ai/run/${modele}`;
-
-          const reponse = await window.appBridge?.ai?.proxyRequest?.(
-            urlCf, 'POST',
-            { 'Content-Type': 'application/json', Authorization: `Bearer ${image.apiKey}` },
-            // Quatre pas : c'est le régime pour lequel schnell est entraîné, et
-            // le plafond du modèle est de huit.
-            { prompt, steps: 4 },
-          );
-
-          if (!reponse?.ok) {
-            /*
-              **On dit ce que Cloudflare a répondu, et pas « échec ».** Un quota
-              épuisé, un jeton sans la permission `Workers AI - Edit` et un
-              identifiant de compte erroné produisent trois messages distincts —
-              les confondre ferait chercher au mauvais endroit.
-            */
-            const erreurs = (reponse?.data as { errors?: { message?: string }[] })?.errors;
-            throw new Error(erreurs?.map(e => e.message).join(' ; ') || reponse?.statusText || 'réponse illisible');
-          }
-
-          const base64 = (reponse.data as { result?: { image?: string } })?.result?.image;
-          if (!base64) throw new Error('réponse sans image');
-
-          const binaire = atob(base64);
-          const octets = new Uint8Array(binaire.length);
-          for (let i = 0; i < binaire.length; i++) octets[i] = binaire.charCodeAt(i);
+          // L'appel vit dans `cloudflareImage.ts`, partagé avec le bouton
+          // « Tester » des réglages : un test qui emprunterait un autre chemin
+          // ne testerait pas ce qui tourne en séance.
+          const base64 = await genererViaCloudflare(prompt, image);
+          const octets = octetsDeLImage(base64);
 
           if (octets.byteLength > 1000) {
             const fileName = `cloudflare_${Date.now()}.jpg`;
