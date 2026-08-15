@@ -12,6 +12,7 @@ import { Loader2 } from 'lucide-react';
 import { useRuleEngine } from '../hooks/useRuleEngine';
 import LienAuCorpus from '../../forge/corpus/LienAuCorpus';
 import PanneauDesPersonas from '../../forge/corpus/PanneauDesPersonas';
+import EditeurDuJet from './rules/EditeurDuJet';
 
 export const RuleEngineEditor: React.FC = () => {
     const { t } = useTranslation(['settings', 'modules']);
@@ -205,6 +206,22 @@ export const RuleEngineEditor: React.FC = () => {
                                         </p>
                                     </div>
                                 </div>
+
+                                {/*
+                                    **Le descripteur de jet, enfin éditable.**
+
+                                    Il n'avait aucun écran : seule une
+                                    redérivation complète pouvait le changer,
+                                    pour deux lignes. C'est le même défaut que
+                                    les personas du 2026-08-14 — quelque chose
+                                    qui existe, fonctionne, et n'a pas d'écran
+                                    n'existe pas pour qui s'en sert.
+                                */}
+                                <EditeurDuJet
+                                    driver={driver}
+                                    gabarit={[...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates].find(g => g.id === driver.templateId)}
+                                    onUpdate={handleUpdate}
+                                />
                             </div>
                         )}
 
