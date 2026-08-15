@@ -58,6 +58,60 @@ export interface PorteurDeSante {
     healthSystem?: { type: string; data: Record<string, unknown>; state: string };
 }
 
+/**
+ * La santé en trois mots, pour une pastille — **les cinq modèles compris**.
+ *
+ * **Le défaut qu'elle referme, trouvé le 2026-08-15 dans `HubCombatTracker` :**
+ * ses deux blocs lisaient `healthSystem.data` à la main, chacun de son côté, et
+ * ne connaissaient que trois modèles au mieux. Un combattant en **anatomie**
+ * n'affichait rien du tout, et les **cases** manquaient dans la file d'attente.
+ * Pas d'erreur, pas de champ vide : un combattant simplement muet sur son état.
+ *
+ * *Un modèle ajouté ailleurs qu'au seul endroit qui les connaît tous est
+ * invisible sur les écrans qui l'ignorent, et rien ne le signale.*
+ *
+ * **Les points de vie se taisent par défaut, et c'est délibéré.** Le Hub est
+ * l'écran partagé de la table : le compte exact des PV d'un adversaire renseigne
+ * les joueurs sur ce que le meneur n'a pas choisi de leur dire. La règle était
+ * écrite dans le tracker ; elle vit maintenant ici, où elle ne peut plus être
+ * oubliée par un troisième écran.
+ */
+export function abregerLaSante(
+    c: PorteurDeSante,
+    options: { avecPointsDeVie?: boolean } = {},
+): string | null {
+    const sys = c.healthSystem;
+    if (!sys) return null;
+    const d = sys.data ?? {};
+    const etat = ETATS[sys.state] ?? sys.state;
+
+    switch (sys.type) {
+        case 'hp':
+            if (!options.avecPointsDeVie) return null;
+            return typeof d.current === 'number' && typeof d.max === 'number'
+                ? `${d.current}/${d.max}` : etat;
+        case 'clocks':
+            return typeof d.filled === 'number' && typeof d.segments === 'number'
+                ? `Horloge ${d.filled}/${d.segments}` : etat;
+        case 'boxes': {
+            const cases = Array.isArray(d.boxes) ? (d.boxes as { filled?: boolean }[]) : [];
+            return cases.length > 0 ? `Cases ${cases.filter(b => b.filled).length}/${cases.length}` : etat;
+        }
+        case 'wounds': {
+            const niveaux = Array.isArray(d.levels) ? (d.levels as string[]) : [];
+            const i = typeof d.currentIndex === 'number' ? d.currentIndex : -1;
+            return i >= 0 && niveaux[i] ? niveaux[i] : etat;
+        }
+        case 'anatomy': {
+            const parts = (d.parts as Record<string, { status?: string }> | undefined) ?? {};
+            const atteintes = Object.values(parts).filter(p => p.status && p.status !== 'healthy').length;
+            return atteintes > 0 ? `${atteintes} atteinte${atteintes > 1 ? 's' : ''}` : etat;
+        }
+        default:
+            return etat;
+    }
+}
+
 export function decrireLaSante(c: PorteurDeSante): string | null {
     const sys = c.healthSystem;
     if (sys) {

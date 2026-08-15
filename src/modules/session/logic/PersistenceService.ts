@@ -3,6 +3,7 @@ import type { SessionOSStore } from '../store/index';
 import { idbStateStorage, onPersistedStateChanged } from './idbStorage';
 import { isMainWindow } from '../../../utils/windowRole';
 import { reparerLiensDeGabarit } from '../store/liensDeGabarit';
+import { inscrireLesSystemes } from './systemeDeclare';
 import { redimensionnerLesHorloges } from './horlogesADimensionner';
 
 export const SESSION_STORE_KEY = 'gmos-v5-session-os-storage';
@@ -102,6 +103,34 @@ export const PersistenceService: PersistOptions<SessionOSStore> = {
             }
 
             /*
+              **Le jeu qu'un personnage déclare.**
+
+              Faute de `systemId`, il est retrouvé par son gabarit ou par sa
+              campagne — des rattrapages qui marchent, mais qui dépendent de
+              choses qui bougent : renommer un gabarit ou repointer une campagne
+              ferait changer de jeu un personnage sans que personne ne l'ait
+              décidé.
+
+              On n'inscrit que là où **un seul pilote réclame le gabarit**, et
+              jamais depuis la campagne : celle-ci est légitime à l'exécution
+              parce qu'elle suit le présent, et la figer rendrait faux ce qui
+              n'était qu'approximatif.
+            */
+            const { players: avecSysteme, inscrits } = inscrireLesSystemes(
+                state.players ?? [],
+                state.customGameDrivers ?? [],
+            );
+            if (inscrits.length > 0) {
+                state.players = avecSysteme;
+                for (const i of inscrits) {
+                    console.warn(
+                        `[Persistence] « ${i.personnage} » ne déclarait aucun jeu ; ` +
+                        `son gabarit n'est réclamé que par « ${i.piloteNom} » (${i.systemId}).`,
+                    );
+                }
+            }
+
+            /*
               **Les horloges de défaite figées à six.**
 
               Six n'est le chiffre d'aucun jeu : chez Dune le seuil vaut la
@@ -114,6 +143,10 @@ export const PersistenceService: PersistOptions<SessionOSStore> = {
               avertissement** : retenir un minimum de repli reviendrait à
               remplacer une valeur fausse par une valeur devinée, ce qui ne fait
               que la rendre crédible.
+
+              **Après l'inscription des `systemId`, et pas avant** : le pilote
+              d'un personnage se résout mieux une fois son jeu déclaré, donc
+              cette reprise-ci profite de la précédente.
             */
             const { players, redimensionnees } = redimensionnerLesHorloges(
                 state.players ?? [],

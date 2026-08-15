@@ -1,7 +1,7 @@
 import React from 'react';
 import { ResolvedImage } from '../ResolvedImage';
 import type { Combatant } from '../../modules/combat/useCombatStore';
-import { woundLabel as palierDeBlessure } from '../../modules/session/logic/HealthInterpreter';
+import { abregerLaSante } from '../../modules/combat/logic/SanteDuCombattant';
 
 interface HubCombatTrackerProps {
     combatants: Combatant[];
@@ -54,40 +54,31 @@ export const HubCombatTracker: React.FC<HubCombatTrackerProps> = ({
                             <div className="ml-auto text-rose-500 material-symbols-outlined">double_arrow</div>
                         </div>
 
-                        {/* Health Indicators.
-                            Les points de vie ne sont pas affichés : le Hub est
-                            l'écran partagé de la table, et le compte exact des PV
-                            d'un adversaire renseigne les joueurs sur ce que le MJ
-                            n'a pas choisi de leur dire. */}
-                        {activeCombatant.healthSystem && (
+                        {/*
+                            **L'état de santé, quel que soit le modèle.**
+
+                            Ces deux blocs lisaient `healthSystem.data` à la
+                            main, chacun de son côté, et ne connaissaient que
+                            trois modèles au mieux : un combattant en anatomie
+                            n'affichait **rien**, et les cases manquaient dans la
+                            file d'attente. `abregerLaSante` les connaît tous les
+                            cinq — le rendu reste ici, la lecture non.
+
+                            Les points de vie restent tus, et c'est la même règle
+                            qu'avant : le Hub est l'écran partagé de la table, et
+                            le compte exact des PV d'un adversaire renseigne les
+                            joueurs sur ce que le MJ n'a pas choisi de leur dire.
+                            Elle vit désormais dans `abregerLaSante`, qui se tait
+                            par défaut, plutôt que dans la mémoire de celui qui
+                            écrira le prochain écran.
+                        */}
+                        {abregerLaSante(activeCombatant) && (
                             <div className="flex flex-wrap gap-2 pt-2 border-t border-rose-500/20">
-                                {/* Les formes lues ici sont celles que
-                                    `HealthInterpreter` écrit, et pas d'autres :
-                                    « blessures » est un index dans une liste de
-                                    paliers, « horloges » un compte de segments
-                                    remplis. */}
-                                {activeCombatant.healthSystem.type === 'wounds' && (
-                                    <div className="px-2 py-0.5 rounded-full bg-orange-500/20 border border-orange-500/40">
-                                        <span className="text-[10px] font-black text-orange-400 uppercase tracking-tighter">
-                                            {palierDeBlessure(activeCombatant.healthSystem)}
-                                        </span>
-                                    </div>
-                                )}
-                                {activeCombatant.healthSystem.type === 'clocks' && (
-                                    <div className="px-2 py-0.5 rounded-full bg-blue-500/20 border border-blue-500/40">
-                                        <span className="text-[10px] font-black text-blue-400 uppercase tracking-tighter">
-                                            Horloge {Number(activeCombatant.healthSystem.data.filled || 0)}/{Number(activeCombatant.healthSystem.data.segments || 0)}
-                                        </span>
-                                    </div>
-                                )}
-                                {activeCombatant.healthSystem.type === 'boxes' && (
-                                    <div className="flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-orange-500/20 border border-orange-500/40">
-                                        <span className="text-[10px] font-black text-orange-400 uppercase tracking-tighter mr-1">Stress</span>
-                                        {(activeCombatant.healthSystem.data.boxes as Array<{ filled: boolean }> || []).map((b, bi) => (
-                                            <div key={bi} className={`w-1.5 h-1.5 rounded-xs border ${b.filled ? 'bg-orange-500 border-orange-400' : 'border-orange-500/30'}`} />
-                                        ))}
-                                    </div>
-                                )}
+                                <div className="px-2 py-0.5 rounded-full bg-blue-500/20 border border-blue-500/40">
+                                    <span className="text-[10px] font-black text-blue-400 uppercase tracking-tighter">
+                                        {abregerLaSante(activeCombatant)}
+                                    </span>
+                                </div>
                             </div>
                         )}
                     </div>
@@ -107,19 +98,12 @@ export const HubCombatTracker: React.FC<HubCombatTrackerProps> = ({
                                 même chose qu'un nombre, en moins précis. */}
                         </div>
                         
-                        {/* Mini health system tags if present */}
-                        {combatant.healthSystem && (
+                        {/* La même lecture que pour le tour actif, en plus petit. */}
+                        {abregerLaSante(combatant) && (
                             <div className="flex flex-wrap gap-1 mt-1">
-                                {combatant.healthSystem.type === 'wounds' && (
-                                    <span className="text-[8px] font-black text-amber-500/80 uppercase px-1.5 rounded bg-amber-500/10 border border-amber-500/20">
-                                        {palierDeBlessure(combatant.healthSystem)}
-                                    </span>
-                                )}
-                                {combatant.healthSystem.type === 'clocks' && (
-                                    <span className="text-[8px] font-black text-blue-400 uppercase px-1.5 rounded bg-blue-500/10 border border-blue-500/20">
-                                        {Number(combatant.healthSystem.data.filled || 0)}/{Number(combatant.healthSystem.data.segments || 0)}
-                                    </span>
-                                )}
+                                <span className="text-[8px] font-black text-blue-400 uppercase px-1.5 rounded bg-blue-500/10 border border-blue-500/20">
+                                    {abregerLaSante(combatant)}
+                                </span>
                             </div>
                         )}
                     </div>

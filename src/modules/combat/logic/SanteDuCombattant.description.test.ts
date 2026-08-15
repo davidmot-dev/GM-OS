@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-    decrireLaSante, santeDeDepart, aUneJaugeDeVie, fractionDeVie,
+    abregerLaSante, decrireLaSante, santeDeDepart, aUneJaugeDeVie, fractionDeVie,
     pointsDeVieApres, estHorsDeCombat, type PorteurDeSante,
 } from './SanteDuCombattant';
 
@@ -202,5 +202,70 @@ describe('la santé d\'un personnage sans points de vie', () => {
         // ancien, qui aurait rendu la moitié des écrans muets.
         expect(fractionDeVie({ hp: 3, hpMax: 6 })).toBe(0.5);
         expect(fractionDeVie({ hp: 3, maxHp: 6 })).toBe(0.5);
+    });
+});
+
+describe('la santé en trois mots, pour une pastille', () => {
+    /**
+     * **Le défaut refermé le 2026-08-15.** Les deux blocs de `HubCombatTracker`
+     * lisaient `healthSystem.data` à la main, chacun de son côté : un combattant
+     * en **anatomie** n'affichait rien du tout, et les **cases** manquaient dans
+     * la file d'attente. Pas d'erreur, pas de champ vide — un combattant muet
+     * sur son état.
+     */
+    it('connaît les cinq modèles, pas trois', () => {
+        expect(abregerLaSante({
+            healthSystem: { type: 'clocks', data: { filled: 2, segments: 4 }, state: 'wounded' },
+        })).toBe('Horloge 2/4');
+
+        expect(abregerLaSante({
+            healthSystem: {
+                type: 'boxes',
+                data: { boxes: [{ filled: true }, { filled: false }, { filled: false }] },
+                state: 'scratched',
+            },
+        })).toBe('Cases 1/3');
+
+        expect(abregerLaSante({
+            healthSystem: { type: 'wounds', data: { levels: ['Sonné', 'Blessé'], currentIndex: 1 }, state: 'wounded' },
+        })).toBe('Blessé');
+
+        expect(abregerLaSante({
+            healthSystem: {
+                type: 'anatomy',
+                data: { parts: { head: { status: 'healthy' }, torso: { status: 'broken' }, leftArm: { status: 'hurt' } } },
+                state: 'critical',
+            },
+        }), 'le modèle qui n\'affichait rien du tout').toBe('2 atteintes');
+    });
+
+    it('se tait sur les points de vie, et c\'est une règle', () => {
+        /**
+         * Le Hub est l'écran **partagé** de la table : le compte exact des PV
+         * d'un adversaire renseigne les joueurs sur ce que le meneur n'a pas
+         * choisi de leur dire. La règle vivait dans un commentaire du tracker ;
+         * elle est ici, où un troisième écran ne peut plus l'ignorer.
+         */
+        expect(abregerLaSante({ healthSystem: { type: 'hp', data: { current: 3, max: 20 }, state: 'critical' } }))
+            .toBeNull();
+
+        // L'écran du meneur, lui, les demande explicitement.
+        expect(abregerLaSante(
+            { healthSystem: { type: 'hp', data: { current: 3, max: 20 }, state: 'critical' } },
+            { avecPointsDeVie: true },
+        )).toBe('3/20');
+    });
+
+    it('rend l\'état plutôt qu\'un compte inventé quand les données manquent', () => {
+        // *L'absence n'est pas un zéro* : « Horloge 0/0 » se lirait comme une
+        // mesure, alors que rien n'a été mesuré.
+        expect(abregerLaSante({ healthSystem: { type: 'clocks', data: {}, state: 'healthy' } })).toBe('indemne');
+        expect(abregerLaSante({ healthSystem: { type: 'boxes', data: { boxes: [] }, state: 'wounded' } })).toBe('blessé');
+        expect(abregerLaSante({ healthSystem: { type: 'wounds', data: { levels: [], currentIndex: -1 }, state: 'healthy' } })).toBe('indemne');
+    });
+
+    it('un porteur sans modèle de santé n\'a rien à dire', () => {
+        expect(abregerLaSante({})).toBeNull();
+        expect(abregerLaSante({ hp: 4, maxHp: 4 }), 'une jauge seule n\'est pas un modèle').toBeNull();
     });
 });
