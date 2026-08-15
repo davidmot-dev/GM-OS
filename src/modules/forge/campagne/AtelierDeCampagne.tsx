@@ -1,10 +1,11 @@
 import React from 'react';
 import {
     BookOpen, Globe, Loader2, Play, Check, AlertTriangle, FolderTree,
-    ListOrdered, FileText, Upload, RotateCcw,
+    ListOrdered, FileText, Upload, Zap, X,
 } from 'lucide-react';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { gmToast } from '../../../stores/useToastStore';
+import { forgeService } from '../ForgeService';
 import { listerLesCarnets, listerLesSources, type CarnetLM, type SourceDuCarnet } from '../carnetNotebookLM';
 import {
     serviceDeCampagne, etapesDeLaCampagne, corpusDeLaCampagne,
@@ -31,7 +32,21 @@ import type { CorpusDeCampagne } from '../../../../electron/corpusDeCampagne';
 const AtelierDeCampagne: React.FC = () => {
     const { campaigns } = useSessionOSStore();
 
+    /**
+     * La campagne visée — **existante ou pas encore**.
+     *
+     * David, le 2026-08-15 : *« je ne peux pas faire de nouvelle campagne. »*
+     * L'écran n'offrait que les campagnes déjà créées, alors que forger sert
+     * précisément à en documenter une qui n'existe pas encore. C'était mettre la
+     * charrue avant les bœufs : **l'Atelier ne produit pas de campagne**, il
+     * produit un dossier de fiches sourcées. Un nom suffit à savoir où les
+     * écrire, et la campagne naîtra plus tard de la Forge — *dériver du corpus,
+     * pas produire en parallèle.*
+     *
+     * Chaîne vide = campagne neuve, dont le nom se saisit juste en dessous.
+     */
     const [campagneId, setCampagneId] = React.useState('');
+    const [nomNeuf, setNomNeuf] = React.useState('');
     const [corpus, setCorpus] = React.useState<CorpusDeCampagne | null>(null);
 
     const [carnets, setCarnets] = React.useState<CarnetLM[]>([]);
@@ -39,6 +54,18 @@ const AtelierDeCampagne: React.FC = () => {
     const [sources, setSources] = React.useState<SourceDuCarnet[]>([]);
     const [sourcesRetenues, setSourcesRetenues] = React.useState<string[]>([]);
     const [chargement, setChargement] = React.useState(false);
+    /**
+     * Le sélecteur de carnet est une **fenêtre de l'application**, pas une liste
+     * déroulante native.
+     *
+     * David, le 2026-08-15 : *« quand je clique sur choisir un carnet j'ai une
+     * fenêtre qui s'ouvre à l'extérieur de l'application. »* Un `<select>` natif
+     * ouvre un menu du système : hors du thème, hors de la fenêtre, et surtout
+     * il ne sait afficher qu'**une** colonne — or le geste est en deux temps,
+     * carnet **puis** sources. La Forge Système avait déjà tranché la question
+     * en deux colonnes ; j'ai contourné son panneau au lieu de le reprendre.
+     */
+    const [selecteurOuvert, setSelecteurOuvert] = React.useState(false);
 
     const [inventaire, setInventaire] = React.useState<string | null>(null);
     const [actes, setActes] = React.useState<ActeLu[]>([]);
@@ -48,25 +75,51 @@ const AtelierDeCampagne: React.FC = () => {
     const [enCours, setEnCours] = React.useState<string | null>(null);
     const [erreur, setErreur] = React.useState<string | null>(null);
 
-    const campagne = campaigns.find(c => c.id === campagneId);
+    const campagneExistante = campaigns.find(c => c.id === campagneId);
+    const nomCible = (campagneExistante?.name ?? nomNeuf).trim();
     const etapes = React.useMemo(() => etapesDeLaCampagne(actes), [actes]);
-    const pret = !!campagne && !!carnetId;
+    const pret = !!nomCible && !!carnetId;
 
-    // Le corpus se résout dès que la campagne est choisie : il faut le MONTRER
-    // avant d'écrire, surtout quand le dossier n'existe pas encore.
+    // Le corpus se résout dès qu'un nom est connu : il faut le MONTRER avant
+    // d'écrire, surtout quand le dossier n'existe pas encore.
+    const cheminDeclare = campagneExistante?.campaignPath;
     React.useEffect(() => {
-        if (!campagne) { setCorpus(null); return; }
+        if (!nomCible) { setCorpus(null); return; }
         let vivant = true;
-        void corpusDeLaCampagne(campagne.name, campagne.campaignPath)
+        void corpusDeLaCampagne(nomCible, cheminDeclare)
             .then(c => { if (vivant) setCorpus(c); });
         return () => { vivant = false; };
-    }, [campagne]);
+    }, [nomCible, cheminDeclare]);
 
-    const chargerLesCarnets = async () => {
+    const ouvrirLeSelecteur = async () => {
+        setSelecteurOuvert(true);
+        if (carnets.length > 0) return; // déjà chargés : on ne repaie pas l'appel
         setChargement(true);
         setErreur(null);
         try {
             setCarnets(await listerLesCarnets());
+        } catch (e) {
+            setErreur(e instanceof Error ? e.message : String(e));
+        } finally {
+            setChargement(false);
+        }
+    };
+
+    /**
+     * Force la réauthentification MCP.
+     *
+     * Le serveur laisse expirer sa session sans le dire autrement que par une
+     * erreur opaque. Le bouton existe dans le sélecteur de la Forge Système pour
+     * exactement cette raison, et il n'y a pas de raison qu'un atelier l'ait et
+     * pas l'autre.
+     */
+    const reconnecter = async () => {
+        setChargement(true);
+        setErreur(null);
+        try {
+            await forgeService.callMcpTool('notebooklm-mcp-server', 'refresh_auth', {});
+            setCarnets(await listerLesCarnets());
+            gmToast('Pont NotebookLM rétabli.', 'success');
         } catch (e) {
             setErreur(e instanceof Error ? e.message : String(e));
         } finally {
@@ -109,7 +162,7 @@ const AtelierDeCampagne: React.FC = () => {
     const lancerInventaire = () => appeler('inventaire', async () => {
         const brut = await serviceDeCampagne.inventaire(carnetId, sourcesRetenues);
         setInventaire(brut);
-        if (corpus && campagne) await ecrireLInventaire(corpus, corpus.id, brut);
+        if (corpus) await ecrireLInventaire(corpus, corpus.id, brut);
     });
 
     const lancerStructure = () => appeler('structure', async () => {
@@ -149,9 +202,30 @@ const AtelierDeCampagne: React.FC = () => {
                         onChange={e => setCampagneId(e.target.value)}
                         className="w-full bg-app-bg/40 px-4 py-3 rounded-xl border border-app-border/20 text-xs outline-none focus:border-accent/50 cursor-pointer"
                     >
-                        <option value="">— choisir —</option>
+                        <option value="">— nouvelle campagne —</option>
                         {campaigns.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                     </select>
+
+                    {!campagneExistante && (
+                        <>
+                            <input
+                                value={nomNeuf}
+                                onChange={e => setNomNeuf(e.target.value)}
+                                placeholder="Le titre de la campagne, tel que le livre l'écrit"
+                                className="w-full mt-3 bg-app-bg/40 px-4 py-3 rounded-xl border border-app-border/20 text-xs outline-none focus:border-accent/50"
+                            />
+                            {/*
+                                Dire ce que l'Atelier fait, et ce qu'il ne fait
+                                pas. Il documente ; il ne crée pas la campagne
+                                dans l'application — c'est le travail de la Forge,
+                                qui dérivera ces fiches en actes, lieux et PNJ.
+                            */}
+                            <p className="text-[11px] text-app-text/30 italic leading-relaxed mt-2">
+                                Pas besoin qu'elle existe déjà : l'Atelier écrit un dossier de fiches
+                                sourcées. La campagne elle-même naîtra de la Forge, à partir d'elles.
+                            </p>
+                        </>
+                    )}
 
                     {corpus && (
                         <div className="mt-3 space-y-1.5">
@@ -178,48 +252,31 @@ const AtelierDeCampagne: React.FC = () => {
 
                 <Bloc icone={<Globe size={16} />} titre="Carnet NotebookLM">
                     <button
-                        onClick={chargerLesCarnets}
-                        disabled={chargement}
-                        className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-app-text/60 hover:text-app-text disabled:opacity-40 transition-all"
+                        onClick={() => void ouvrirLeSelecteur()}
+                        className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-accent/10 border border-accent/30 text-[10px] font-black uppercase tracking-widest text-accent hover:bg-accent/20 transition-all"
                     >
-                        {chargement ? <Loader2 size={12} className="animate-spin" /> : <RotateCcw size={12} />}
-                        Charger les carnets
+                        <Globe size={12} /> {carnetId ? 'Changer de carnet' : 'Choisir un carnet'}
                     </button>
 
-                    {carnets.length > 0 && (
-                        <select
-                            value={carnetId}
-                            onChange={e => void choisirLeCarnet(e.target.value)}
-                            className="w-full mt-3 bg-app-bg/40 px-4 py-3 rounded-xl border border-app-border/20 text-xs outline-none focus:border-accent/50 cursor-pointer"
-                        >
-                            <option value="">— choisir —</option>
-                            {carnets.map(c => <option key={c.id} value={c.id}>{c.title}</option>)}
-                        </select>
-                    )}
-
-                    {sources.length > 0 && (
-                        <div className="mt-3 space-y-1.5">
-                            <p className="text-[10px] font-black uppercase tracking-widest text-app-text/30">
-                                Sources ({sourcesRetenues.length || 'toutes'})
+                    {carnetId && (
+                        <div className="mt-3 space-y-1">
+                            <p className="text-xs font-bold truncate">
+                                {carnets.find(c => c.id === carnetId)?.title ?? carnetId}
                             </p>
-                            {sources.map(s => (
-                                <label key={s.id} className="flex items-center gap-2 text-[11px] text-app-text/60 cursor-pointer hover:text-app-text">
-                                    <input
-                                        type="checkbox"
-                                        checked={sourcesRetenues.includes(s.id)}
-                                        onChange={() => setSourcesRetenues(r =>
-                                            r.includes(s.id) ? r.filter(x => x !== s.id) : [...r, s.id])}
-                                    />
-                                    <span className="truncate">{s.title}</span>
-                                </label>
-                            ))}
+                            <p className="text-[10px] uppercase tracking-widest font-bold text-app-text/30">
+                                {sourcesRetenues.length > 0
+                                    ? `${sourcesRetenues.length} source${sourcesRetenues.length > 1 ? 's' : ''} retenue${sourcesRetenues.length > 1 ? 's' : ''}`
+                                    : 'carnet entier'}
+                            </p>
                             {/* Filtrer les sources a fait passer l'inventaire des
                                 règles de l'échec à 72 secondes : douze sources
                                 contre une. C'est le levier le plus rentable. */}
-                            <p className="text-[11px] text-app-text/25 italic leading-relaxed pt-1">
-                                Rien de coché vise le carnet entier. Ne retenir que le livre de la campagne
-                                accélère beaucoup les réponses.
-                            </p>
+                            {sourcesRetenues.length === 0 && sources.length > 1 && (
+                                <p className="text-[11px] text-amber-300/70 leading-relaxed pt-1">
+                                    Ne retenir que le livre de cette campagne accélère beaucoup les
+                                    réponses — et évite que le carnet réponde depuis un autre jeu.
+                                </p>
+                            )}
                         </div>
                     )}
                 </Bloc>
@@ -310,9 +367,153 @@ const AtelierDeCampagne: React.FC = () => {
                     )}
                 </div>
             </div>
+
+            {selecteurOuvert && (
+                <SelecteurDeCarnet
+                    carnets={carnets}
+                    carnetId={carnetId}
+                    sources={sources}
+                    sourcesRetenues={sourcesRetenues}
+                    chargement={chargement}
+                    onChoisirCarnet={id => void choisirLeCarnet(id)}
+                    onBasculerSource={id => setSourcesRetenues(r =>
+                        r.includes(id) ? r.filter(x => x !== id) : [...r, id])}
+                    onReconnecter={() => void reconnecter()}
+                    onFermer={() => setSelecteurOuvert(false)}
+                />
+            )}
         </div>
     );
 };
+
+/**
+ * Le choix du carnet, **dans l'application**.
+ *
+ * Deux colonnes, comme celui de la Forge Système : les carnets à gauche, les
+ * sources du carnet retenu à droite. C'est le geste réel — *choisir le carnet,
+ * puis choisir ce qu'on veut forger dedans* — et une liste déroulante ne sait
+ * pas l'exprimer : elle n'a qu'une colonne, et son menu est rendu par le système
+ * d'exploitation, hors de la fenêtre et hors du thème.
+ */
+const SelecteurDeCarnet: React.FC<{
+    carnets: CarnetLM[];
+    carnetId: string;
+    sources: SourceDuCarnet[];
+    sourcesRetenues: string[];
+    chargement: boolean;
+    onChoisirCarnet: (id: string) => void;
+    onBasculerSource: (id: string) => void;
+    onReconnecter: () => void;
+    onFermer: () => void;
+}> = ({ carnets, carnetId, sources, sourcesRetenues, chargement, onChoisirCarnet, onBasculerSource, onReconnecter, onFermer }) => (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-12 bg-app-bg/80 backdrop-blur-sm animate-in fade-in">
+        <div className="w-full max-w-4xl h-[70vh] bg-app-bg border border-accent/20 rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col">
+            <div className="p-6 border-b border-app-border/10 flex items-center justify-between bg-accent/5">
+                <h2 className="text-lg font-bold uppercase tracking-wider text-accent flex items-center gap-3">
+                    <Globe size={22} /> Carnet et sources
+                </h2>
+                <div className="flex items-center gap-2">
+                    <button
+                        onClick={onReconnecter}
+                        title="Forcer la reconnexion au pont NotebookLM"
+                        className="p-2 hover:bg-accent/10 rounded-full text-accent transition-all hover:rotate-180 duration-500"
+                    >
+                        <Zap size={18} />
+                    </button>
+                    <button onClick={onFermer} title="Fermer" className="p-2 hover:bg-app-text/5 rounded-full text-app-text/40 transition-colors">
+                        <X size={18} />
+                    </button>
+                </div>
+            </div>
+
+            <div className="flex-1 flex overflow-hidden">
+                <div className="w-1/3 border-r border-app-border/10 overflow-y-auto custom-scrollbar p-4 space-y-2 bg-app-surface/20">
+                    {chargement && carnets.length === 0 ? (
+                        <div className="flex items-center justify-center h-40"><Loader2 size={28} className="text-accent animate-spin" /></div>
+                    ) : carnets.length === 0 ? (
+                        <p className="text-[11px] text-app-text/30 italic p-3 leading-relaxed">
+                            Aucun carnet. Le pont MCP est peut-être déconnecté — l'éclair, en haut, force
+                            la reconnexion.
+                        </p>
+                    ) : carnets.map(nb => (
+                        <button
+                            key={nb.id}
+                            onClick={() => onChoisirCarnet(nb.id)}
+                            className={`w-full text-left p-4 rounded-2xl transition-all border ${
+                                carnetId === nb.id
+                                    ? 'bg-accent/20 border-accent/40 text-accent'
+                                    : 'border-transparent hover:bg-app-text/5 text-app-text/40'
+                            }`}
+                        >
+                            <div className="text-xs font-bold uppercase tracking-widest">{nb.title}</div>
+                        </button>
+                    ))}
+                </div>
+
+                <div className="flex-1 overflow-y-auto custom-scrollbar p-6">
+                    {!carnetId ? (
+                        <div className="h-full flex flex-col items-center justify-center text-center opacity-20 italic gap-3">
+                            <BookOpen size={48} />
+                            <p className="text-sm">Choisis un carnet pour voir ses sources.</p>
+                        </div>
+                    ) : chargement ? (
+                        <div className="h-full flex items-center justify-center"><Loader2 size={36} className="text-accent animate-spin" /></div>
+                    ) : (
+                        <div className="space-y-3">
+                            {/*
+                                Rien de coché vise le carnet entier — et c'est un
+                                choix, pas un oubli. Une liste vide n'est PAS « pas
+                                de filtre » pour le serveur : selon les jours elle
+                                peut se lire « ne retiens aucune source », d'où
+                                l'omission de la clé côté service.
+                            */}
+                            <p className="text-[11px] text-app-text/35 leading-relaxed">
+                                {sourcesRetenues.length === 0
+                                    ? 'Aucune source retenue : le carnet entier sera interrogé.'
+                                    : `${sourcesRetenues.length} source${sourcesRetenues.length > 1 ? 's' : ''} retenue${sourcesRetenues.length > 1 ? 's' : ''} — les autres seront ignorées.`}
+                            </p>
+
+                            {sources.length === 0 && (
+                                <p className="text-[11px] text-app-text/30 italic">Ce carnet ne rend aucune source.</p>
+                            )}
+
+                            {sources.map(s => {
+                                const retenue = sourcesRetenues.includes(s.id);
+                                return (
+                                    <button
+                                        key={s.id}
+                                        onClick={() => onBasculerSource(s.id)}
+                                        className={`w-full flex items-center justify-between gap-4 p-4 rounded-2xl border text-left transition-all ${
+                                            retenue
+                                                ? 'bg-accent/15 border-accent/40'
+                                                : 'bg-app-surface/40 border-app-border/10 opacity-60 hover:opacity-100'
+                                        }`}
+                                    >
+                                        <span className="text-sm font-medium truncate">{s.title}</span>
+                                        <span className={`shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest ${
+                                            retenue ? 'bg-accent text-white' : 'bg-white/5 text-app-text/40'
+                                        }`}>
+                                            {retenue ? 'retenue' : 'retenir'}
+                                        </span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            <div className="p-4 border-t border-app-border/10 flex justify-end bg-app-surface/20">
+                <button
+                    onClick={onFermer}
+                    className="px-6 py-2.5 rounded-xl bg-accent text-white text-[10px] font-black uppercase tracking-widest hover:brightness-110 transition-all"
+                >
+                    Terminé
+                </button>
+            </div>
+        </div>
+    </div>
+);
 
 const Bloc: React.FC<{ icone: React.ReactNode; titre: string; children: React.ReactNode }> = ({ icone, titre, children }) => (
     <div className="rounded-2xl border border-app-border/10 bg-app-surface/40 p-5">
