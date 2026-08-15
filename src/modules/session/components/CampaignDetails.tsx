@@ -178,6 +178,20 @@ const CampaignDetails: React.FC = () => {
                         <h4 className="font-bold text-sm uppercase tracking-widest text-app-text/40 group-hover:text-accent transition-colors">{t('modules:session.campaign_details.actions.open_wiki')}</h4>
                         <p className="text-[10px] text-accent font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">{t('modules:session.campaign_details.descriptions.open_wiki')}</p>
                     </button>
+
+                    {/*
+                        La trame vit à côté de la chronique, et pas dedans : le
+                        wiki décrit un MONDE, la trame décrit une HISTOIRE. C'est
+                        le manque relevé le 2026-08-08 — l'application modélisait
+                        l'un sans jamais l'autre.
+                    */}
+                    <button
+                        onClick={() => setCurrentView('trame')}
+                        className="bg-app-surface/60 rounded-xl border border-app-border p-6 flex flex-col justify-center items-center gap-3 hover:bg-app-surface hover:border-accent/40 hover:shadow-glow-accent/10 transition-all group"
+                    >
+                        <h4 className="font-bold text-sm uppercase tracking-widest text-app-text/40 group-hover:text-accent transition-colors">Trame narrative</h4>
+                        <p className="text-[10px] text-accent font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">Actes et scènes</p>
+                    </button>
                 </div>
 
                 {/* Right: Session History & Lore Notes */}

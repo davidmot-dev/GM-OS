@@ -33,6 +33,7 @@ export type CurrentView =
     | 'session-prep'
     | 'session-focus'
     | 'timeline-wiki'
+    | 'trame'
     | 'forge'
     | 'template-editor'
     | 'driver-editor'

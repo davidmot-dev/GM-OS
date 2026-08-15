@@ -26,6 +26,7 @@ import { createSessionSlice, type SessionSlice } from './sessionSlice';
 import { createEntitySlice, type EntitySlice } from './entitySlice';
 import { createAtlasSlice, type AtlasSlice } from './atlasSlice';
 import { createChronicleSlice, type ChronicleSlice } from './chronicleSlice';
+import { createTrameSlice, type TrameSlice } from './trameSlice';
 import { createForgeSlice, type ForgeSlice } from './forgeSlice';
 import { createUiSlice, type UiSlice } from './uiSlice';
 import { createCluesSlice, type CluesSlice } from './cluesSlice';
@@ -105,6 +106,7 @@ export type SessionOSStore = CampaignSlice &
     EntitySlice &
     AtlasSlice &
     ChronicleSlice &
+    TrameSlice &
     ForgeSlice &
     UiSlice &
     CluesSlice &
@@ -125,6 +127,7 @@ export const useSessionOSStore = create<SessionOSStore>()(
             ...createEntitySlice(set as any, get as any, api as any),
             ...createAtlasSlice(set as any, get as any, api as any),
             ...createChronicleSlice(set as any, get as any, api as any),
+            ...createTrameSlice(set as any, get as any, api as any),
             ...createForgeSlice(set as any, get as any, api as any),
             ...createUiSlice(set as any, get as any, api as any),
             ...createCluesSlice(set as any, get as any, api as any),

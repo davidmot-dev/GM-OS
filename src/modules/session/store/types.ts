@@ -68,6 +68,12 @@ export type {
     DeckSessionState,
 } from '../../../types/deck.types';
 
+export type {
+    OrigineDeScene,
+    Acte,
+    Scene,
+} from '../../../types/trame.types';
+
 // ─────────────────────────────────────────────
 // Re-exports tiers (drivers, sheet templates)
 // ─────────────────────────────────────────────

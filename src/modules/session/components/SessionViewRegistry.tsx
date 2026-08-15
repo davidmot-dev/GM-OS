@@ -11,6 +11,7 @@ import NpcManagement from './NpcManagement';
 import SessionPrep from './SessionPrep';
 import SessionFocusEditor from './SessionFocusEditor';
 import TimelineWikiDashboard from './TimelineWikiDashboard';
+import TrameDashboard from './TrameDashboard';
 import TemplateDashboard from './TemplateDashboard';
 import SheetTemplateEditor from './SheetTemplateEditor';
 import RuleEngineEditor from './RuleEngineEditor';
@@ -59,6 +60,8 @@ const SessionViewRegistry: React.FC = () => {
             */
             case 'forge':
                 return null;
+            case 'trame':
+                return <TrameDashboard />;
             case 'social-graph':
                 return <SocialGraph />;
             case 'templates':

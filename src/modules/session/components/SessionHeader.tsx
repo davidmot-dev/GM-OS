@@ -26,6 +26,7 @@ const SessionHeader: React.FC<SessionHeaderProps> = ({
         switch (currentView) {
             case 'cockpit': return t('modules:session.header.master_cockpit');
             case 'timeline-wiki': return t('modules:session.header.chronicles');
+            case 'trame': return 'Trame narrative';
             case 'templates': return t('modules:session.header.sheet_library');
             case 'template-editor': return t('modules:session.header.template_editor');
             case 'social-graph': return t('modules:session.header.social_nexus');

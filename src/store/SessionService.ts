@@ -37,6 +37,12 @@ export const SessionService = {
                     timelineEvents: osState.timelineEvents,
                     wikiEntries: osState.wikiEntries,
                     atlasMaps: osState.atlasMaps,
+                    // La trame est de la préparation, au même titre que le wiki
+                    // et l'atlas qu'elle désigne : une sauvegarde qui rendrait
+                    // les lieux sans les scènes qui les emploient rendrait un
+                    // décor sans son histoire.
+                    actes: osState.actes,
+                    scenes: osState.scenes,
                     customGameDrivers: osState.customGameDrivers,
                     customSheetTemplates: osState.customSheetTemplates,
                 },

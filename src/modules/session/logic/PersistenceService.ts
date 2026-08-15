@@ -219,6 +219,13 @@ export const PersistenceService: PersistOptions<SessionOSStore> = {
             timelineEvents: state.timelineEvents,
             wikiEntries: state.wikiEntries,
             clues: state.clues,
+            // La trame est de la préparation : elle survit à la fermeture au même
+            // titre que les PNJ et les lieux qu'elle désigne. L'oublier ici
+            // l'aurait fait disparaître au redémarrage sans rien signaler — le
+            // piège du profil vocal, dont le `partialize` ne retient que les
+            // fiches mémorisées.
+            actes: state.actes,
+            scenes: state.scenes,
             customSheetTemplates: state.customSheetTemplates,
             customGameDrivers: state.customGameDrivers,
             activeCampaignId: state.activeCampaignId,
