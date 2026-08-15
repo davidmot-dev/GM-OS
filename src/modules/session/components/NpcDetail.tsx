@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
-import { Swords, MapPin, Monitor, Heart, Shield, Wind, Zap, Lock, BookOpen, ArrowLeft, Edit2, CheckCircle, Image as ImageIcon, Sparkles, Layers, Skull, Search, Users } from 'lucide-react';
+import { aUneJaugeDeVie, abregerLaSante, decrireLaSante } from '../../combat/logic/SanteDuCombattant';
+import { Activity, Swords, MapPin, Monitor, Heart, Shield, Wind, Zap, Lock, BookOpen, ArrowLeft, Edit2, CheckCircle, Image as ImageIcon, Sparkles, Layers, Skull, Search, Users } from 'lucide-react';
 import { FieldGauge, FieldRating } from './fields/SheetFields';
 import { DEFAULT_SHEET_TEMPLATES, type SheetField } from '../../../data/defaultSheetTemplates';
 import { useMapStore } from '../../map/useMapStore';
@@ -377,18 +378,29 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
 
                     {/* Stats Editor / Display */}
                     <div className="grid grid-cols-5 gap-3">
-                        {/* Standard Stats Always Editable or Driver-based */}
+                        {/*
+                            **Les points de vie et la classe d'armure ne
+                            concernent qu'un modèle sur cinq.**
+
+                            Ils s'affichaient pour tous les jeux : un adversaire
+                            de Dune proposait d'éditer des points de vie qui
+                            n'existent pas et une classe d'armure qu'aucun pilote
+                            ne déclare. Sans jauge, on montre l'état que le
+                            système décrit — « horloge de défaite 2/5 » — plutôt
+                            que deux champs à remplir au hasard.
+                        */}
+                        {aUneJaugeDeVie(selectedNpc) ? (<>
                         <div className="col-span-2 bg-app-surface/60 border border-accent/30 p-3 rounded-xl flex flex-col items-center justify-center gap-1">
                             <Heart size={14} className="text-rose-500" />
                             <div className="flex items-center gap-1 bg-black/20 px-2 py-0.5 rounded-lg border border-white/5 h-7">
-                                <input 
+                                <input
                                     type="number" value={selectedNpc.hp ?? 0}
                                     onChange={(e) => updateEntityHP(selectedNpc.id, parseInt(e.target.value) || 0)}
                                     className="w-20 bg-transparent text-center text-white font-black text-xs outline-none"
                                     title={t('common:status.vitality')}
                                 />
                                 <span className="text-app-text/20 font-bold text-xs">/</span>
-                                <input 
+                                <input
                                     type="number" value={selectedNpc.maxHp ?? 10}
                                     onChange={(e) => updateEntityMaxHP(selectedNpc.id, parseInt(e.target.value) || 0)}
                                     className="w-20 bg-transparent text-center text-app-text/40 font-black text-xs outline-none"
@@ -397,11 +409,26 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                             </div>
                             <span className="text-[8px] font-bold text-accent uppercase tracking-widest">{t('common:status.vitality')}</span>
                         </div>
+                        {/* La classe d'armure suit les points de vie : c'est un
+                            seuil contre des attaques qui en retirent. Le jour où
+                            un pilote dira quel champ de fiche porte la
+                            protection, cette heuristique lui laissera la place. */}
                         <div className="col-span-1 bg-app-surface/40 border border-white/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1">
                             <Shield size={14} className="text-blue-400" />
                             <input type="number" value={selectedNpc.ac ?? 10} onChange={e => updateEntity(selectedNpc.id, { ac: parseInt(e.target.value) || 0 })} className="w-full bg-transparent text-center text-white font-black text-xs outline-none" title={t('modules:session.forms.labels.ac')} />
                             <span className="text-[8px] font-bold text-app-text/20 uppercase">{t('modules:session.forms.labels.ac')}</span>
                         </div>
+                        </>) : (
+                        <div className="col-span-3 bg-app-surface/60 border border-rose-500/20 p-3 rounded-xl flex flex-col items-center justify-center gap-1">
+                            <Activity size={14} className="text-rose-400" />
+                            <span className="text-white font-black text-xs">
+                                {abregerLaSante(selectedNpc) ?? 'santé non chiffrée'}
+                            </span>
+                            <span className="text-[8px] font-bold text-app-text/20 uppercase tracking-widest">
+                                {decrireLaSante(selectedNpc) ?? 'aucun modèle de santé'}
+                            </span>
+                        </div>
+                        )}
                         <div className="col-span-1 bg-app-surface/40 border border-white/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1">
                             <Wind size={14} className="text-emerald-400" />
                             <input type="number" value={selectedNpc.speed ?? 30} onChange={e => updateEntity(selectedNpc.id, { speed: parseInt(e.target.value) || 0 })} className="w-full bg-transparent text-center text-white font-black text-xs outline-none" title={t('modules:session.forms.labels.speed')} />

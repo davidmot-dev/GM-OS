@@ -2,6 +2,7 @@
 import type { EncounterTemplate } from '../../../types/drivers';
 import type { Entity } from '../useSessionOSStore';
 import { DiceEngine } from '../../dice/DiceEngine';
+import { aUneJaugeDeVie } from '../../combat/logic/SanteDuCombattant';
 
 export class EncounterGenerator {
     /**
@@ -42,15 +43,35 @@ export class EncounterGenerator {
                     gmSecretInfo: (proto.gmSecretInfo || '') + `\n[Instance de rencontre: ${template.name}]`,
                 };
                 
-                // Adjust stats based on role (simple multiplier for now)
+                /*
+                  **Le multiplicateur ne s'applique qu'à ce qui se multiplie.**
+
+                  Il portait sur `hp`, `maxHp` et `ac` quel que soit le jeu — et
+                  fabriquait une classe d'armure de 10 quand l'entité n'en avait
+                  pas. Sur un jeu sans points de vie, cela gonflait des champs
+                  que rien ne lit, et inventait une protection que le livre ne
+                  connaît pas.
+
+                  **Le seuil d'une tâche de défaite n'est délibérément pas
+                  touché.** Chez Dune il vaut « la compétence défensive » de la
+                  cible, de quatre à huit : le multiplier par trois pour un chef
+                  inventerait une règle que le jeu n'énonce pas. *L'outil suit
+                  l'état, il n'arbitre pas* — au meneur de relever le seuil s'il
+                  le veut, dans les bornes que le pilote déclare.
+                */
+                const compteDesPoints = aUneJaugeDeVie(instance);
                 if (encounterEntity.role === 'elite') {
-                    instance.hp = Math.floor(instance.hp * 1.5);
-                    instance.maxHp = Math.floor(instance.maxHp * 1.5);
-                    instance.ac = (instance.ac || 10) + 2;
+                    if (compteDesPoints) {
+                        instance.hp = Math.floor(instance.hp * 1.5);
+                        instance.maxHp = Math.floor(instance.maxHp * 1.5);
+                    }
+                    if (instance.ac) instance.ac += 2;
                 } else if (encounterEntity.role === 'boss') {
-                    instance.hp *= 3;
-                    instance.maxHp *= 3;
-                    instance.ac = (instance.ac || 10) + 4;
+                    if (compteDesPoints) {
+                        instance.hp *= 3;
+                        instance.maxHp *= 3;
+                    }
+                    if (instance.ac) instance.ac += 4;
                     instance.initiative = (instance.initiative || 0) + 2;
                 }
 

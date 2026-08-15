@@ -1,23 +1,49 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Heart, Image as ImageIcon, Wind, Zap, Lock, BookOpen, Skull, Users, ArrowLeft } from 'lucide-react';
+import { Activity, Shield, Heart, Image as ImageIcon, Wind, Zap, Lock, BookOpen, Skull, Users, ArrowLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import type { Entity } from '../useSessionOSStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { gmToast } from '../../../stores/useToastStore';
+import { HealthInterpreter } from '../logic/HealthInterpreter';
 const AddEntityForm: React.FC = () => {
-    const { t } = useTranslation(['modules', 'common']);
+    const { t, i18n } = useTranslation(['modules', 'common']);
     const { 
         addEntity, setIsAddingEntity, activeCampaignId, getActiveDriver,
         pendingPreFill, clearPendingPreFill 
     } = useSessionOSStore();
+
+    /**
+     * **Ce que le jeu compte réellement, et non ce que comptait D&D.**
+     *
+     * Ce formulaire demandait « PV Max » et « CA » à tout le monde, et
+     * n'écrivait **aucun** `healthSystem` : un adversaire de Dune naissait avec
+     * dix points de vie et une classe d'armure, alors que sa fiche de corpus dit
+     * qu'« il n'existe aucune jauge numérique de santé sur la feuille de
+     * personnage » et qu'aucun pilote ne déclare de classe d'armure.
+     *
+     * C'est le même défaut que celui corrigé le 2026-08-15 sur la création d'un
+     * personnage joueur, laissé intact du côté des PNJ — *chercher par motif ne
+     * trouve que ce qui ressemble au motif qu'on a en tête.*
+     */
+    const pilote = getActiveDriver();
+    const modeleDeSante = pilote?.combat?.defaultHealthType ?? 'hp';
+    const tacheDeDefaite = pilote?.combat?.tacheDeDefaite;
 
     const [name, setName] = useState('');
     const [type, setType] = useState<Entity['type']>('npc');
     const [role, setRole] = useState<Entity['role']>('neutral');
     const [description, setDescription] = useState('');
     const [maxHp, setMaxHp] = useState(10);
+    /**
+     * Le seuil de défaite d'un adversaire, quand le jeu en a un.
+     *
+     * Chez Dune il **vaut sa compétence défensive**, de quatre à huit. Un PNJ n'a
+     * pas de fiche remplie : c'est donc au meneur de le poser, plutôt qu'à
+     * `createDefault('clocks')` d'inventer six pour tout le monde.
+     */
+    const [seuilDeDefaite, setSeuilDeDefaite] = useState(tacheDeDefaite?.seuil.min ?? 4);
     const [ac, setAc] = useState(10);
     const [speed, setSpeed] = useState(30);
     const [initiative, setInitiative] = useState(0);
@@ -49,12 +75,36 @@ const AddEntityForm: React.FC = () => {
         e.preventDefault();
         if (!name.trim() || !activeCampaignId) return;
 
+        /*
+          **Tout adversaire naît avec un mécanisme de santé**, comme les
+          personnages joueurs depuis le 2026-08-15. C'est `healthSystem` qui est
+          toujours là ; les points de vie n'en sont qu'une forme sur cinq.
+
+          Le seuil de la tâche de défaite vient du meneur et non de
+          `createDefault('clocks')`, dont les six segments ne sont le chiffre
+          d'aucun jeu.
+        */
+        const sante = tacheDeDefaite
+            ? { type: 'clocks' as const, data: { filled: 0, segments: seuilDeDefaite }, state: 'healthy' as const, badges: [] }
+            : HealthInterpreter.createDefault(modeleDeSante);
+
         addEntity({
             name,
             type,
             role,
             status: 'alive',
             avatar: avatarMediaId || 'https://api.dicebear.com/9.x/adventurer/svg?seed=' + name,
+            healthSystem: sante,
+            /*
+              `Entity` exige `hp` et `maxHp` — contrairement à `PlayerCharacter`,
+              où ils sont devenus facultatifs. Les rendre optionnels ici touche
+              l'arithmétique du store, le générateur de rencontres et l'export
+              Obsidian : c'est un chantier à part, non ouvert aujourd'hui.
+
+              Ils restent donc écrits, mais **inertes** : `aUneJaugeDeVie`
+              consulte `healthSystem` en premier depuis le 2026-08-15, et aucun
+              écran ne les montrera pour un jeu qui ne compte pas de points.
+            */
             hp: maxHp,
             maxHp,
             ac,
@@ -65,7 +115,7 @@ const AddEntityForm: React.FC = () => {
             gmSecretInfo,
             linkedMapIds: [],
             campaignId: activeCampaignId,
-            templateId: getActiveDriver()?.templateId || 'generic',
+            templateId: pilote?.templateId || 'generic',
         });
 
         gmToast(t('modules:session.toasts.entity_created', { name }));
@@ -182,14 +232,49 @@ const AddEntityForm: React.FC = () => {
                         />
                     </div>
 
-                    {/* Stats Grid */}
+                    {/*
+                        **La grille demande ce que le jeu compte.**
+
+                        Elle proposait « PV Max » et « CA » à tous les systèmes,
+                        c'est-à-dire le vocabulaire d'un seul. Un adversaire de
+                        Dune n'a ni l'un ni l'autre : il a un **seuil de
+                        défaite**, qui vaut sa compétence défensive.
+
+                        La classe d'armure ne se propose que là où le jeu compte
+                        des points de vie — une classe d'armure est un seuil
+                        *contre des attaques qui retirent des points*. **Aucun
+                        pilote ne la déclare** ; le jour où l'un d'eux dira quel
+                        champ de fiche porte la protection, cette heuristique
+                        laissera la place à sa déclaration.
+                    */}
                     <div className="grid grid-cols-4 gap-3">
                         {[
-                            { id: 'entity-hp', label: 'PV Max', val: maxHp, set: setMaxHp, icon: <Heart size={14} className="text-red-400" /> },
-                            { id: 'entity-ac', label: 'CA', val: ac, set: setAc, icon: <Shield size={14} className="text-blue-400" /> },
+                            ...(tacheDeDefaite
+                                ? [{
+                                    id: 'entity-seuil',
+                                    label: tacheDeDefaite.label || 'Seuil de défaite',
+                                    val: seuilDeDefaite,
+                                    set: setSeuilDeDefaite,
+                                    icon: <Activity size={14} className="text-rose-400" />,
+                                }]
+                                : modeleDeSante === 'hp'
+                                    ? [{ id: 'entity-hp', label: 'PV Max', val: maxHp, set: setMaxHp, icon: <Heart size={14} className="text-red-400" /> }]
+                                    : []),
+                            ...(modeleDeSante === 'hp' && !tacheDeDefaite
+                                ? [{ id: 'entity-ac', label: 'CA', val: ac, set: setAc, icon: <Shield size={14} className="text-blue-400" /> }]
+                                : []),
                             { id: 'entity-speed', label: 'Vitesse', val: speed, set: setSpeed, icon: <Wind size={14} className="text-emerald-400" /> },
                             { id: 'entity-initiative', label: 'Init.', val: initiative, set: setInitiative, icon: <Zap size={14} className="text-amber-400" /> },
-                        ].map((stat, i) => (
+                        ].map((stat, i) => {
+                            /*
+                              L'intitulé passe par les traductions **quand la clé
+                              existe**. « Seuil de défaite » vient du pilote, qui
+                              le nomme lui-même — l'envoyer au dictionnaire
+                              aurait affiché la clé brute à l'écran.
+                            */
+                            const cle = `modules:session.forms.labels.${stat.id.split('-')[1]}`;
+                            const intitule = i18n.exists(cle) ? t(cle) : stat.label;
+                            return (
                             <div key={i} className="bg-app-surface/40 border border-white/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1 group hover:border-accent/20 transition-all">
                                 {stat.icon}
                                 <input
@@ -198,11 +283,12 @@ const AddEntityForm: React.FC = () => {
                                     value={stat.val}
                                     onChange={(e) => stat.set(parseInt(e.target.value) || 0)}
                                     className="w-full bg-transparent border-none text-center text-white font-black text-sm focus:ring-0"
-                                    title={t(`modules:session.forms.labels.${stat.id.split('-')[1]}`)}
+                                    title={intitule}
                                 />
-                                <label htmlFor={stat.id} className="text-[9px] uppercase font-bold text-app-text/20 tracking-wider">{t(`modules:session.forms.labels.${stat.id.split('-')[1]}`)}</label>
+                                <label htmlFor={stat.id} className="text-[9px] uppercase font-bold text-app-text/20 tracking-wider">{intitule}</label>
                             </div>
-                        ))}
+                            );
+                        })}
                     </div>
 
                     <div className="flex flex-col gap-4">

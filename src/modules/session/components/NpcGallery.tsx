@@ -3,9 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import type { Entity } from '../useSessionOSStore';
 import { useCombatStore } from '../../combat/useCombatStore';
+import { abregerLaSante, decrireLaSante, fractionDeVie } from '../../combat/logic/SanteDuCombattant';
 import { gmToast } from '../../../stores/useToastStore';
 import { useImageStore } from '../../image/useImageStore';
 import { 
+    Activity,
     Search, 
     UserPlus, 
     Swords, 
@@ -382,19 +384,35 @@ const NpcGalleryItem: React.FC<{
 
                 {/* Bottom Controls */}
                 <div className="mt-4 pt-4 border-t border-white/5 flex flex-col gap-3">
-                    {/* Simplified HP Gauge */}
+                    {/*
+                        **La barre n'existe que si le jeu compte des points.**
+
+                        Elle divisait `npc.hp` par `npc.maxHp` sans rien
+                        demander : sur Dune, dont la défaite est une tâche
+                        étendue, un adversaire affichait une barre de vie pleine
+                        tirée de champs que rien n'utilise. Même correctif que
+                        pour la grille des personnages joueurs — sans jauge, on
+                        montre ce que le système décrit.
+                    */}
+                    {fractionDeVie(npc) === null ? (
+                        <div className="flex items-center gap-1.5 text-[10px] font-black text-slate-600 tracking-widest uppercase">
+                            <Activity size={11} className="text-rose-400/60" />
+                            <span>{abregerLaSante(npc) ?? decrireLaSante(npc) ?? 'santé non chiffrée'}</span>
+                        </div>
+                    ) : (<>
                     <div className="flex justify-between items-center text-[10px] font-black text-slate-600 mb-1 tracking-widest uppercase">
                         <span>{t('modules:session.npc_gallery.hp_label')}</span>
-                        <span className={npc.hp / npc.maxHp < 0.3 ? 'text-red-400' : 'text-accent'}>{npc.hp} / {npc.maxHp} HP</span>
+                        <span className={fractionDeVie(npc)! < 0.3 ? 'text-red-400' : 'text-accent'}>{npc.hp} / {npc.maxHp} HP</span>
                     </div>
                     <div className="w-full h-1 bg-black/10 rounded-full overflow-hidden">
                         <div
                             className={`h-full transition-all duration-500 ${
-                                npc.hp / npc.maxHp < 0.3 ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]' : 'bg-accent shadow-[0_0_8px_rgba(var(--accent-rgb),0.5)]'
+                                fractionDeVie(npc)! < 0.3 ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]' : 'bg-accent shadow-[0_0_8px_rgba(var(--accent-rgb),0.5)]'
                             }`}
-                            style={{ width: `${(npc.hp / npc.maxHp) * 100}%` }}
+                            style={{ width: `${fractionDeVie(npc)! * 100}%` }}
                         />
                     </div>
+                    </>)}
 
                     {/* Quick Access Buttons */}
                     <div className="flex gap-2 mt-2">

@@ -26,7 +26,26 @@ import { chronicleForgeService, type ChronicleForgeResult } from '../ChronicleSe
 import { gmToast } from '../../../stores/useToastStore';
 import { gmConfirm } from '../../../stores/useModalStore';
 import { useAIStore } from '../../../stores/useAIStore';
+import { HealthInterpreter } from '../../session/logic/HealthInterpreter';
+import { abregerLaSante, aUneJaugeDeVie } from '../../combat/logic/SanteDuCombattant';
 import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
+import type { GameDriver } from '../../../types/drivers';
+
+/**
+ * Le mécanisme de santé d'un PNJ engendré, selon ce que le jeu compte.
+ *
+ * Une tâche de défaite part à son **minimum** : le seuil vaut « la compétence
+ * défensive » de la cible, et une IA qui écrit une chronique ne la connaît pas.
+ * Le meneur l'ajuste ensuite — mieux vaut un plancher qu'il corrige qu'un six
+ * qui n'est le chiffre d'aucun jeu.
+ */
+function santeGeneree(driver?: GameDriver) {
+    const tache = driver?.combat?.tacheDeDefaite;
+    if (tache) {
+        return { type: 'clocks' as const, data: { filled: 0, segments: tache.seuil.min }, state: 'healthy' as const, badges: [] };
+    }
+    return HealthInterpreter.createDefault(driver?.combat?.defaultHealthType ?? 'hp');
+}
 
 interface NotebookSource {
   id: string;
@@ -311,9 +330,25 @@ const ChronicleForge: React.FC = () => {
         role: (e.role as Entity['role']) || 'neutral',
         status: (e.status as Entity['status']) || 'alive',
         avatar: e.avatar || '',
+        /*
+          **Le mécanisme de santé vient du pilote, pas d'un dix universel.**
+
+          Chaque PNJ généré naissait avec `hp: 10, maxHp: 10, ac: 10` — les
+          valeurs de D&D, sur n'importe quel jeu. Sur Dune, dont la défaite est
+          une tâche étendue, la chronique produisait donc des adversaires dotés
+          de points de vie et d'une classe d'armure que le livre ne connaît pas.
+
+          Le pilote est choisi juste au-dessus (`selectedDriverId`) : il n'y
+          avait qu'à le consulter. Le seuil de défaite part à son minimum, que
+          le meneur ajuste — c'est ce que la fiche appelle « la compétence
+          défensive » de la cible, et une IA ne la connaît pas.
+        */
+        healthSystem: e.healthSystem ?? santeGeneree(driver),
         hp: e.hp ?? 10,
         maxHp: e.maxHp ?? 10,
-        ac: e.ac ?? 10,
+        // La classe d'armure n'est déclarée par aucun pilote : on ne l'invente
+        // plus, on garde ce que la génération a bien voulu dire.
+        ac: e.ac ?? 0,
         speed: e.speed ?? 30,
         initiative: e.initiative ?? 0,
         description: e.description || '',
@@ -572,8 +607,16 @@ const ChronicleForge: React.FC = () => {
                             </div>
                           </div>
                           <div className="flex flex-col items-end gap-1 font-mono">
-                            <span className="text-xs text-app-text/40 font-bold">HP {ent.hp}</span>
-                            <span className="text-xs text-app-text/40 font-bold">AC {ent.ac}</span>
+                            {/* On annonce ce que le jeu compte : des points, ou
+                                l'état que son modèle décrit. « HP 10 » et
+                                « AC 10 » sur un jeu qui n'a ni l'un ni l'autre
+                                se lisaient comme des mesures. */}
+                            <span className="text-xs text-app-text/40 font-bold">
+                              {abregerLaSante(ent) ?? (aUneJaugeDeVie(ent) ? `HP ${ent.hp}` : '')}
+                            </span>
+                            {(ent.ac ?? 0) > 0 && (
+                              <span className="text-xs text-app-text/40 font-bold">AC {ent.ac}</span>
+                            )}
                           </div>
                         </div>
                         <p className="text-sm text-app-text/60 italic mb-3 font-sans leading-relaxed">"{ent.description}"</p>
