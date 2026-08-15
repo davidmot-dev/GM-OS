@@ -6,6 +6,51 @@ import type { AIProvider, AIModelConfig } from '../modules/ai/types';
 const CLE_DU_JETON_IMAGE = 'ai-key-image';
 
 /**
+ * La réhydratation par-dessus l'état en mémoire — **sans effacer les clés**.
+ *
+ * **Le défaut que David vivait tous les jours** (« mon trousseau perd tout le
+ * temps les clés, je dois constamment les remettre ») : la fusion remplaçait
+ * chaque fournisseur **en bloc** par sa version enregistrée — et cette
+ * version-là n'a jamais de `apiKey`, puisque `partialize` la retire à dessein.
+ *
+ * Or le démarrage charge les clés depuis le coffre **avant** que la
+ * réhydratation n'arrive : le stockage est IndexedDB, donc asynchrone. La
+ * réhydratation atterrissait ensuite sur des clés déjà en mémoire et les
+ * écrasait par du vide. Le coffre n'avait rien perdu — il était relu, puis
+ * recouvert. *Une clé qui disparaît sans erreur ressemble à un coffre qui
+ * oublie ; c'était une fusion qui écrase.*
+ *
+ * C'est le même mécanisme que la perte de campagnes du 2026-08-07, cité dans
+ * `PersistenceService` : **une fusion superficielle qui remplace des objets
+ * entiers**. Ici on fusionne champ par champ — l'état enregistré ne portant pas
+ * de `apiKey`, il ne peut plus en supprimer une.
+ *
+ * Le correctif rend surtout **l'ordre indifférent** : que le coffre soit relu
+ * avant ou après la réhydratation, la clé survit. Une correction qui se
+ * contenterait de retarder l'un des deux marcherait jusqu'au jour où la machine
+ * est lente.
+ */
+export function fusionnerEtatIA(persistedState: unknown, currentState: AIState): AIState {
+    const enregistre = (persistedState ?? {}) as Partial<AIState>;
+
+    const configs = Object.fromEntries(
+        Object.entries(currentState.configs).map(([nom, config]) => [
+            nom,
+            // Champ par champ : `modelId` et `endpoint` viennent de l'état
+            // enregistré, `apiKey` reste celui qu'on a en mémoire.
+            { ...config, ...(enregistre.configs?.[nom as AIProvider] ?? {}) },
+        ]),
+    ) as Record<AIProvider, AIModelConfig>;
+
+    return {
+        ...currentState,
+        ...enregistre,
+        configs,
+        image: { ...currentState.image, ...(enregistre.image ?? {}) },
+    };
+}
+
+/**
  * De quoi appeler un service de génération d'image.
  *
  * **Séparé du fournisseur de texte, et c'est délibéré.** `AIProvider` désigne
@@ -127,7 +172,11 @@ export const useAIStore = create<AIState>()(
         console.log('[AI Store] 🔐 Début de synchronisation avec le trousseau...');
         let hasChanges = false;
         
-        for (const provider of ['gemini', 'openai', 'anthropic', 'custom'] as AIProvider[]) {
+        /*
+          `ollama_cloud` manquait à cette liste : une instance distante protégée
+          par une clé la perdait à chaque démarrage, sans que rien ne le dise.
+        */
+        for (const provider of ['gemini', 'openai', 'anthropic', 'custom', 'ollama_cloud'] as AIProvider[]) {
           const secretId = `ai-key-${provider}`;
           try {
             // 1. Récupération : On charge la clé depuis le trousseau natif
@@ -203,18 +252,7 @@ export const useAIStore = create<AIState>()(
           image: imageSansJeton
         };
       },
-      merge: (persistedState, currentState) => {
-        const typedPersisted = persistedState as AIState;
-        return {
-          ...currentState,
-          ...typedPersisted,
-          configs: {
-            ...currentState.configs,
-            ...(typedPersisted?.configs || {})
-          },
-          image: { ...currentState.image, ...(typedPersisted?.image || {}) }
-        };
-      },
+      merge: (persistedState, currentState) => fusionnerEtatIA(persistedState, currentState),
     }
   )
 );
