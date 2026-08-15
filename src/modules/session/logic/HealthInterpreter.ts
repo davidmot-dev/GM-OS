@@ -12,7 +12,15 @@ import type { HealthSystem, DamageImpact } from '../useSessionOSStore';
  * `currentIndex` vaut -1 quand le personnage est indemne — d'où la chaîne vide,
  * qui est la bonne réponse et non un échec.
  */
-export function woundLabel(health: HealthSystem): string {
+/**
+ * Le palier de blessure courant.
+ *
+ * **Ne demande que `data`**, parce qu'il ne lit que `data` : exiger un
+ * `HealthSystem` complet interdisait de l'appeler avec le porteur plus permissif
+ * de `SanteDuCombattant`, et poussait à écrire un `as` qui aurait masqué la
+ * prochaine incompatibilité réelle.
+ */
+export function woundLabel(health: { data: Record<string, unknown> }): string {
     const levels = (health.data.levels as string[]) ?? [];
     const index = (health.data.currentIndex as number) ?? -1;
     return levels[index] ?? '';

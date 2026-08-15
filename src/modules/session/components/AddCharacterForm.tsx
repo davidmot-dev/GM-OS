@@ -7,6 +7,7 @@ import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { tousLesPilotes } from '../store/tousLesPilotes';
 import { ficheNeuve } from '../logic/ficheNeuve';
+import { horlogeDeDefaite } from '../../combat/logic/TacheDeDefaite';
 import { santeDeDepart } from '../../combat/logic/SanteDuCombattant';
 import { HealthInterpreter } from '../logic/HealthInterpreter';
 
@@ -100,7 +101,30 @@ export const AddCharacterForm: React.FC = () => {
           Le modèle vient du pilote ; `hp` à défaut, comme demandé.
         */
         const modele = jeuChoisi?.combat?.defaultHealthType ?? 'hp';
-        const sante = HealthInterpreter.createDefault(modele);
+
+        /*
+          **Six segments ne sont le chiffre d'aucun jeu.**
+
+          Relevé par David le 2026-08-15 : *« es-tu certain que pour Dune la
+          santé se gère par une horloge de 6 sections ? »* Non, et la fiche le
+          dit noir sur blanc — « le seuil (la compétence défensive de quatre à
+          huit) ». Le nombre de segments **vaut la compétence défensive de la
+          cible**, il dépend donc du personnage.
+
+          `createDefault('clocks')` écrit six pour tout le monde. C'est le même
+          défaut que `createDefault('hp')` avec ses dix points, corrigé pour la
+          naissance quelques lignes plus haut : *une valeur qui dépend du
+          personnage ne peut pas vivre dans le pilote.* `addCombatant` le
+          rattrapait à l'entrée en combat, mais la fiche — et la tablette du
+          joueur — affichait six jusque-là.
+
+          La fiche neuve est déjà construite : ses champs sont lisibles, donc le
+          seuil aussi.
+        */
+        const tache = jeuChoisi?.combat?.tacheDeDefaite;
+        const sante = tache
+            ? horlogeDeDefaite(tache, valeurs).sante
+            : HealthInterpreter.createDefault(modele);
 
         addCharacterToPlayer(selectedPlayerId, {
             name,

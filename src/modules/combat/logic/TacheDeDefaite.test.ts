@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { seuilDeDefaite, progressionDeLAttaque, horlogeDeDefaite, type TacheDeDefaite } from './TacheDeDefaite';
 import { HealthInterpreter } from '../../session/logic/HealthInterpreter';
+import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
+import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
+import { ficheNeuve } from '../../session/logic/ficheNeuve';
 
 /**
  * Valeurs tirées de `docs/systems/dune/rules/sante-et-blessures.md`, fiche v3.
@@ -113,5 +116,52 @@ describe('l\'horloge de défaite — le mur qui tombe', () => {
         const apresUn = HealthInterpreter.calculateNextState(sante, { value: progression });
         expect(apresUn.state).not.toBe('dead');
         expect(HealthInterpreter.calculateNextState(apresUn, { value: progression }).state).toBe('dead');
+    });
+});
+
+describe('l\'horloge de Dune ne fait pas six segments', () => {
+    /**
+     * **La question de David, le 2026-08-15** : *« es-tu certain que pour Dune
+     * la santé se gère par une horloge de 6 sections ? »*
+     *
+     * Non. `docs/systems/dune/rules/sante-et-blessures.md` écrit : « Dès que le
+     * seuil (**la compétence défensive de quatre à huit**) est atteint, la cible
+     * est vaincue et retirée. » Le nombre de segments **dépend du personnage**,
+     * et six n'est le chiffre d'aucun jeu — c'est celui de
+     * `HealthInterpreter.createDefault('clocks')`, qui ne sait rien de la fiche.
+     *
+     * Le test se fait sur le pilote de référence et son gabarit, pas sur un
+     * exemple écrit ici : *vérifier sur la charge réelle, jamais sur un exemple
+     * qu'on a écrit soi-même.*
+     */
+    const dune = DEFAULT_GAME_DRIVERS.find(d => d.id === 'dune')!;
+    const tache = dune.combat!.tacheDeDefaite!;
+
+    it('la borne vient du livre : quatre à huit', () => {
+        expect(tache.seuil).toEqual({ min: 4, max: 8 });
+        expect(tache.seuil.min, 'six n\'est ni la borne basse…').not.toBe(6);
+        expect(tache.seuil.max, '…ni la borne haute').not.toBe(6);
+    });
+
+    it('deux personnages de Combat différent n\'ont pas la même horloge', () => {
+        const debutant = horlogeDeDefaite(tache, { combat: 4 }).sante;
+        const aguerri = horlogeDeDefaite(tache, { combat: 7 }).sante;
+
+        expect(debutant.data.segments).toBe(4);
+        expect(aguerri.data.segments).toBe(7);
+        expect(debutant.data.segments).not.toBe(aguerri.data.segments);
+    });
+
+    it('un personnage neuf de Dune ne naît pas avec six segments', () => {
+        /**
+         * Le gabarit de référence donne 4 à chaque compétence : une fiche neuve
+         * porte donc `combat: 4`, et son horloge en compte quatre. C'est le
+         * chemin exact de `AddCharacterForm`.
+         */
+        const gabarit = DEFAULT_SHEET_TEMPLATES.find(t => t.id === dune.templateId)!;
+        const neuve = ficheNeuve(gabarit);
+
+        expect(neuve.combat, 'la fiche neuve porte bien la compétence').toBe(4);
+        expect(horlogeDeDefaite(tache, neuve).sante.data.segments).toBe(4);
     });
 });

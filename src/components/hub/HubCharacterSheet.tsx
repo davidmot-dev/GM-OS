@@ -1,6 +1,7 @@
 import React, { useState, memo } from 'react';
-import { Heart, ChevronLeft, Package, BookOpen, PenTool, Shield, Layout } from 'lucide-react';
-import { aUneJaugeDeVie, fractionDeVie, pointsDeVieApres } from '../../modules/combat/logic/SanteDuCombattant';
+import { ChevronLeft, Package, BookOpen, PenTool, Shield, Layout } from 'lucide-react';
+import { pointsDeVieApres } from '../../modules/combat/logic/SanteDuCombattant';
+import EtatDeSante from '../../modules/combat/components/EtatDeSante';
 import { useSessionOSStore } from '../../modules/session/useSessionOSStore';
 import { useClientStore } from '../../stores/useClientStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../data/defaultSheetTemplates';
@@ -171,34 +172,26 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                         </div>
 
                         {/*
-                          **Le bloc entier disparaît sans jauge.** Il affichait
-                          « undefined / undefined » et une barre en `NaN` pour
-                          les jeux qui ne comptent pas la santé en points — les
-                          points de vie ne sont que le détail d'un modèle sur
-                          cinq. Un panneau vide vaut mieux qu'un panneau faux.
+                          **L'état de santé, quel que soit le modèle du jeu.**
+
+                          Ce bloc ne s'affichait que pour le modèle `hp` : un
+                          joueur de Dune, dont la défaite est une tâche étendue,
+                          ne voyait **rien** — ni son seuil, ni où il en était.
+                          La condition avait été posée pour ne plus afficher
+                          « undefined / undefined », ce qui était juste, mais on
+                          s'était arrêté à faire disparaître le faux sans mettre
+                          le vrai à la place.
+
+                          Les cinq modèles se dessinent dans `EtatDeSante`, et
+                          les boutons de points de vie n'apparaissent que là où
+                          des points existent.
                         */}
-                        {hubOptions.showHP && aUneJaugeDeVie(character) && (
-                            <section className="bg-app-surface/60 border border-app-border rounded-[2.5rem] p-6 shadow-xl">
-                                <div className="flex items-center justify-between mb-4">
-                                    <div className="flex items-center gap-3">
-                                        <Heart size={18} className="text-red-500" fill="currentColor" />
-                                        <h3 className="text-xs font-black text-app-text uppercase tracking-widest">Points de Vie</h3>
-                                    </div>
-                                    <span className="text-xl font-black text-app-text font-mono">{character.hp} / {character.maxHp}</span>
-                                </div>
-                                <div className="h-3 bg-app-bg/40 rounded-full border border-app-border/10 p-[1px] mb-6">
-                                    <div 
-                                        className="h-full rounded-full bg-gradient-to-r from-red-600 to-rose-400 transition-all duration-700"
-                                        style={{ '--progress-width': `${(fractionDeVie(character) ?? 0) * 100}%`, width: 'var(--progress-width)' } as React.CSSProperties}
-                                    />
-                                </div>
-                                <div className="flex items-center justify-center gap-3">
-                                    <button onClick={() => handleUpdateHP(-5)} title="-5 HP" className="w-12 h-12 rounded-xl bg-app-surface border border-app-border flex items-center justify-center text-app-text/40 hover:text-red-500 hover:border-red-500/30 transition-all">-5</button>
-                                    <button onClick={() => handleUpdateHP(-1)} title="-1 HP" className="w-10 h-10 rounded-lg bg-app-surface border border-app-border flex items-center justify-center text-app-text/40 hover:text-red-500 hover:border-red-500/30 transition-all">-1</button>
-                                    <button onClick={() => handleUpdateHP(1)} title="+1 HP" className="w-10 h-10 rounded-lg bg-app-surface border border-app-border flex items-center justify-center text-app-text/40 hover:text-emerald-500 hover:border-emerald-500/30 transition-all">+1</button>
-                                    <button onClick={() => handleUpdateHP(5)} title="+5 HP" className="w-12 h-12 rounded-xl bg-app-surface border border-app-border flex items-center justify-center text-app-text/40 hover:text-emerald-500 hover:border-emerald-500/30 transition-all">+5</button>
-                                </div>
-                            </section>
+                        {hubOptions.showHP && (
+                            <EtatDeSante
+                                porteur={character}
+                                onAjusterPV={handleUpdateHP}
+                                libelle={pilote?.combat?.tacheDeDefaite?.label}
+                            />
                         )}
                     </div>
 
