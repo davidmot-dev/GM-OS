@@ -4,9 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useSessionStore } from '../../../store/useSessionStore';
 import { useModalStore } from '../../../stores/useModalStore';
-import { BookOpen, LayoutDashboard, Swords, Users, Users2, Map as MapIcon, Archive, PlusCircle, Library, FileText, ExternalLink, File, StickyNote, Play, RefreshCw, Eye, Zap, Layers, MessageSquare } from 'lucide-react';
+import { AlertTriangle, BookOpen, LayoutDashboard, Swords, Users, Users2, Map as MapIcon, Archive, PlusCircle, Library, FileText, ExternalLink, File, StickyNote, Play, RefreshCw, Eye, Zap, Layers, MessageSquare } from 'lucide-react';
 import SessionChecklist from './SessionChecklist';
 import TradeRequestPanel from './TradeRequestPanel';
+import { tousLesPilotes } from '../store/tousLesPilotes';
+import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 
 const CampaignCockpit: React.FC = () => {
     const { t } = useTranslation();
@@ -18,7 +20,9 @@ const CampaignCockpit: React.FC = () => {
         currentView, 
         updateSession, 
         applySystemSnapshot,
-        decks
+        decks,
+        customGameDrivers,
+        customSheetTemplates
     } = useSessionOSStore();
     const { setActiveModule } = useSessionStore();
     const { showCustom, showConfirm, customVariant, type: modalType } = useModalStore();
@@ -28,6 +32,36 @@ const CampaignCockpit: React.FC = () => {
     const campaignSystem = activeCampaign?.system || 'generic';
     const hasLinkedDeck = decks.some(d => d.systemId === campaignSystem);
     const { theme } = useSessionStore();
+
+    /**
+     * À quel jeu cette campagne est rattachée — **et le dire quand elle ne
+     * l'est à aucun**.
+     *
+     * **Le défaut, trouvé le 2026-08-15 en cherchant pourquoi David ne voyait
+     * pas ses réserves de table.** « Agents de Dune » porte `system: 'generic'`
+     * — l'identifiant d'un **gabarit de fiche**, pas d'un pilote. Le sélecteur
+     * de la fiche de campagne propose les deux familles dans le même champ, et
+     * `'generic'` est la valeur par défaut : une campagne créée sans choix
+     * explicite se retrouve donc rattachée à aucun jeu.
+     *
+     * Rien ne le disait. La carte annonçait « CAMPAGNE ACTIVE » et s'arrêtait
+     * là, pendant que le bandeau des réserves, le modèle de santé, le moteur de
+     * dés et l'ordre du tour se taisaient tous les quatre — chacun ayant
+     * d'excellentes raisons de se taire, aucun ne pouvant savoir que les trois
+     * autres se taisaient aussi. *C'est la forme exacte du défaut que ce projet
+     * traque : quelque chose qui ne fonctionne pas sans le dire.*
+     *
+     * On ne corrige rien d'autorité : rattacher une chronique à un jeu est une
+     * décision, pas une réparation. On la nomme, et on ouvre la porte.
+     */
+    const rattachement = React.useMemo(() => {
+        if (!activeCampaign) return null;
+        const pilote = tousLesPilotes(customGameDrivers).find(d => d.id === activeCampaign.system);
+        if (pilote) return { pilote };
+        const gabarit = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates]
+            .find(t_val => t_val.id === activeCampaign.system);
+        return { pilote: null, gabarit };
+    }, [activeCampaign, customGameDrivers, customSheetTemplates]);
 
     // Find active session for progress (mock logic for now)
     const activeSession = activeCampaign ? sessions.find(s => s.id === activeCampaign.activeSessionId && s.status === 'active') : null;
@@ -57,6 +91,34 @@ const CampaignCockpit: React.FC = () => {
                     </div>
                     <BookOpen className="text-accent group-hover:scale-110 transition-transform" size={24} />
                 </div>
+
+                {/*
+                    Le jeu de la campagne, nommé. Trois cas, et les deux
+                    derniers sont des impasses silencieuses qu'il fallait
+                    rendre visibles.
+                */}
+                {rattachement?.pilote && (
+                    <p className="text-[10px] text-app-text/40 flex items-center gap-1.5">
+                        <span className="text-sm">{rattachement.pilote.emoji}</span>
+                        <span className="font-bold">{rattachement.pilote.name}</span>
+                    </p>
+                )}
+                {rattachement && !rattachement.pilote && (
+                    <button
+                        type="button"
+                        onClick={e => { e.stopPropagation(); setCurrentView('campaign-editor'); }}
+                        className="mt-1 w-full text-left flex items-start gap-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 px-2 py-1.5 text-[10px] leading-snug text-amber-300/90 hover:bg-amber-500/20 transition-colors"
+                    >
+                        <AlertTriangle size={11} className="mt-0.5 shrink-0" />
+                        <span>
+                            {rattachement.gabarit
+                                ? <>Rattachée à « {rattachement.gabarit.name} », qui est un <b>gabarit de fiche</b> et non un jeu.</>
+                                : <>Rattachée à <b>aucun jeu</b>.</>}
+                            {' '}Ni dés, ni modèle de santé, ni réserves de table. <u>Choisir le jeu</u>
+                        </span>
+                    </button>
+                )}
+
                 <div className="mt-4 flex flex-col gap-2">
                     <div className="flex justify-between text-xs text-app-text/40">
                         <span>{t('modules:session.cockpit.session_progress')}</span>
