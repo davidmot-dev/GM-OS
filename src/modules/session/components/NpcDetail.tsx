@@ -181,8 +181,20 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
         customSheetTemplates,
         atlasMaps,
         clues, activeCampaignId, setCurrentView, setActiveCampaignFormSection, setEditingClueId,
-        generateEntityPortrait, isGeneratingAIImage 
+        generateEntityPortrait, isGeneratingAIImage, getActiveDriver
     } = useSessionOSStore();
+
+    /**
+     * Ce jeu ordonne-t-il son tour par un **nombre** ?
+     *
+     * Alien tire des cartes numérotées, Dune alterne entre les camps : dans les
+     * deux cas l'initiative chiffrée d'un PNJ ne sera jamais lue. Même règle que
+     * dans le formulaire de création — *un champ qu'aucun chemin n'atteint est
+     * un champ mort qui a l'air vivant.*
+     */
+    const piloteActif = getActiveDriver();
+    const initiativeChiffree = !piloteActif?.combat?.initiativeCards
+        && piloteActif?.combat?.initiative?.mode !== 'alternance';
     const { closeModal } = useModalStore();
     const { addToken } = useMapStore();
     const currentId = embeddedId || selectedEntityId;
@@ -413,11 +425,13 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                             seuil contre des attaques qui en retirent. Le jour où
                             un pilote dira quel champ de fiche porte la
                             protection, cette heuristique lui laissera la place. */}
+                        {!!selectedNpc.ac && (
                         <div className="col-span-1 bg-app-surface/40 border border-white/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1">
                             <Shield size={14} className="text-blue-400" />
-                            <input type="number" value={selectedNpc.ac ?? 10} onChange={e => updateEntity(selectedNpc.id, { ac: parseInt(e.target.value) || 0 })} className="w-full bg-transparent text-center text-white font-black text-xs outline-none" title={t('modules:session.forms.labels.ac')} />
+                            <input type="number" value={selectedNpc.ac} onChange={e => updateEntity(selectedNpc.id, { ac: parseInt(e.target.value) || 0 })} className="w-full bg-transparent text-center text-white font-black text-xs outline-none" title={t('modules:session.forms.labels.ac')} />
                             <span className="text-[8px] font-bold text-app-text/20 uppercase">{t('modules:session.forms.labels.ac')}</span>
                         </div>
+                        )}
                         </>) : (
                         <div className="col-span-3 bg-app-surface/60 border border-rose-500/20 p-3 rounded-xl flex flex-col items-center justify-center gap-1">
                             <Activity size={14} className="text-rose-400" />
@@ -429,16 +443,29 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                             </span>
                         </div>
                         )}
+                        {/* La vitesse — trente pieds par round — n'est lue par
+                            AUCUN mecanisme : ni le combat, ni la carte, ni le
+                            module tactique, qui raisonne en bandes de portee
+                            declarees par le pilote. Seul l'export Obsidian
+                            l'imprime. On la garde la ou elle porte une valeur,
+                            on ne la propose plus a blanc. */}
+                        {!!selectedNpc.speed && (
                         <div className="col-span-1 bg-app-surface/40 border border-white/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1">
                             <Wind size={14} className="text-emerald-400" />
-                            <input type="number" value={selectedNpc.speed ?? 30} onChange={e => updateEntity(selectedNpc.id, { speed: parseInt(e.target.value) || 0 })} className="w-full bg-transparent text-center text-white font-black text-xs outline-none" title={t('modules:session.forms.labels.speed')} />
+                            <input type="number" value={selectedNpc.speed} onChange={e => updateEntity(selectedNpc.id, { speed: parseInt(e.target.value) || 0 })} className="w-full bg-transparent text-center text-white font-black text-xs outline-none" title={t('modules:session.forms.labels.speed')} />
                             <span className="text-[8px] font-bold text-app-text/20 uppercase">{t('modules:session.forms.labels.speed')}</span>
                         </div>
+                        )}
+                        {/* L'initiative chiffree n'a de sens que si le jeu
+                            ordonne son tour par un nombre. Alien tire des
+                            cartes, Dune alterne entre les camps. */}
+                        {initiativeChiffree && (
                         <div className="col-span-1 bg-app-surface/40 border border-white/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1">
                             <Zap size={14} className="text-amber-400" />
                             <input type="number" value={selectedNpc.initiative ?? 0} onChange={e => updateEntity(selectedNpc.id, { initiative: parseInt(e.target.value) || 0 })} className="w-full bg-transparent text-center text-white font-black text-xs outline-none" title={t('modules:session.forms.labels.initiative')} />
                             <span className="text-[8px] font-bold text-app-text/20 uppercase">{t('modules:session.forms.labels.initiative')}</span>
                         </div>
+                        )}
                     </div>
 
                     {/* Template Selection */}

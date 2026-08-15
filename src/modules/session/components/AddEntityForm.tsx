@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Activity, Shield, Heart, Image as ImageIcon, Wind, Zap, Lock, BookOpen, Skull, Users, ArrowLeft } from 'lucide-react';
+import { Activity, Heart, Image as ImageIcon, Zap, Lock, BookOpen, Skull, Users, ArrowLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import type { Entity } from '../useSessionOSStore';
@@ -31,6 +31,16 @@ const AddEntityForm: React.FC = () => {
     const modeleDeSante = pilote?.combat?.defaultHealthType ?? 'hp';
     const tacheDeDefaite = pilote?.combat?.tacheDeDefaite;
 
+    /**
+     * Ce jeu ordonne-t-il son tour par un **nombre** ?
+     *
+     * Alien tire des cartes numérotées (`initiativeCards`), Dune alterne entre
+     * les camps (`initiative.mode`). Dans les deux cas, l'initiative chiffrée
+     * d'un PNJ ne sera jamais lue : la demander invite à remplir un champ mort.
+     */
+    const initiativeChiffree = !pilote?.combat?.initiativeCards
+        && pilote?.combat?.initiative?.mode !== 'alternance';
+
     const [name, setName] = useState('');
     const [type, setType] = useState<Entity['type']>('npc');
     const [role, setRole] = useState<Entity['role']>('neutral');
@@ -44,8 +54,18 @@ const AddEntityForm: React.FC = () => {
      * `createDefault('clocks')` d'inventer six pour tout le monde.
      */
     const [seuilDeDefaite, setSeuilDeDefaite] = useState(tacheDeDefaite?.seuil.min ?? 4);
-    const [ac, setAc] = useState(10);
-    const [speed, setSpeed] = useState(30);
+    /*
+      **Gardés comme valeurs écrites, plus comme questions posées.**
+
+      `Entity` exige `ac` et `speed`. On cesse de les demander — aucun pilote ne
+      déclare de classe d'armure, et personne ne lit la vitesse — mais on ne les
+      efface pas du modèle : c'est un chantier à part, qui touche l'export
+      Obsidian et le générateur de rencontres. Zéro plutôt que dix : *une valeur
+      inventée se lit comme une mesure*, et `NpcDetail` ne montre plus la classe
+      d'armure que là où elle en porte une.
+    */
+    const ac = 0;
+    const speed = 0;
     const [initiative, setInitiative] = useState(0);
     const [avatarMediaId, setAvatarMediaId] = useState('');
     const [roleplayingNotes, setRoleplayingNotes] = useState('');
@@ -240,12 +260,27 @@ const AddEntityForm: React.FC = () => {
                         Dune n'a ni l'un ni l'autre : il a un **seuil de
                         défaite**, qui vaut sa compétence défensive.
 
-                        La classe d'armure ne se propose que là où le jeu compte
-                        des points de vie — une classe d'armure est un seuil
-                        *contre des attaques qui retirent des points*. **Aucun
-                        pilote ne la déclare** ; le jour où l'un d'eux dira quel
-                        champ de fiche porte la protection, cette heuristique
-                        laissera la place à sa déclaration.
+                        **Trois des quatre étaient du vocabulaire de D&D**, relevé
+                        par David le 2026-08-15 en créant un PNJ d'Alien : « PV
+                        MAX 10, CA 10, VITESSE 30, INIT. 0 » — *« c'est quoi ces
+                        valeurs ? »*
+
+                        - **CA** : aucun pilote ne déclare de classe d'armure.
+                          On ne la demande plus à la création ; elle reste
+                          modifiable dans la fiche du PNJ là où elle porte déjà
+                          une valeur.
+                        - **Vitesse** : trente pieds par round. **Personne ne la
+                          lit** — ni le combat, ni la carte, ni le module
+                          tactique, qui raisonne en bandes de portée déclarées
+                          par le pilote. Seul l'export Obsidian l'imprime.
+                        - **Init.** : ne se propose que si le jeu ordonne son
+                          tour par un nombre. Alien tire des **cartes**, Dune
+                          **alterne entre les camps** : leur demander une
+                          initiative chiffrée invite à remplir un champ que
+                          l'ordre du tour n'ouvrira jamais.
+
+                        Même geste que pour « Classe / Race » sur la fiche de
+                        personnage : on cesse de demander, sans rien effacer.
                     */}
                     <div className="grid grid-cols-4 gap-3">
                         {[
@@ -260,11 +295,9 @@ const AddEntityForm: React.FC = () => {
                                 : modeleDeSante === 'hp'
                                     ? [{ id: 'entity-hp', label: 'PV Max', val: maxHp, set: setMaxHp, icon: <Heart size={14} className="text-red-400" /> }]
                                     : []),
-                            ...(modeleDeSante === 'hp' && !tacheDeDefaite
-                                ? [{ id: 'entity-ac', label: 'CA', val: ac, set: setAc, icon: <Shield size={14} className="text-blue-400" /> }]
+                            ...(initiativeChiffree
+                                ? [{ id: 'entity-initiative', label: 'Init.', val: initiative, set: setInitiative, icon: <Zap size={14} className="text-amber-400" /> }]
                                 : []),
-                            { id: 'entity-speed', label: 'Vitesse', val: speed, set: setSpeed, icon: <Wind size={14} className="text-emerald-400" /> },
-                            { id: 'entity-initiative', label: 'Init.', val: initiative, set: setInitiative, icon: <Zap size={14} className="text-amber-400" /> },
                         ].map((stat, i) => {
                             /*
                               L'intitulé passe par les traductions **quand la clé

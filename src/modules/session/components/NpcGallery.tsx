@@ -428,7 +428,11 @@ const NpcGalleryItem: React.FC<{
                                 e.stopPropagation();
                                 useCombatStore.getState().addCombatant({
                                     name: npc.name,
-                                    init: 0,
+                                    /* `NpcDetail` envoyait `npc.initiative`, cet
+                                       écran envoyait zéro : le même PNJ entrait
+                                       en combat avec deux initiatives selon le
+                                       bouton cliqué, et rien ne le disait. */
+                                    init: npc.initiative ?? 0,
                                     hp: npc.hp,
                                     hpMax: npc.maxHp,
                                     avatar: npc.avatar,

@@ -349,7 +349,9 @@ const ChronicleForge: React.FC = () => {
         // La classe d'armure n'est déclarée par aucun pilote : on ne l'invente
         // plus, on garde ce que la génération a bien voulu dire.
         ac: e.ac ?? 0,
-        speed: e.speed ?? 30,
+        // Ni vitesse ni initiative inventees : trente pieds par round est du
+        // vocabulaire de D&D, et personne ne lit ce champ.
+        speed: e.speed ?? 0,
         initiative: e.initiative ?? 0,
         description: e.description || '',
         roleplayingNotes: e.roleplayingNotes || '',
