@@ -3,6 +3,7 @@ import type { SessionOSStore } from '../store/index';
 import { idbStateStorage, onPersistedStateChanged } from './idbStorage';
 import { isMainWindow } from '../../../utils/windowRole';
 import { reparerLiensDeGabarit } from '../store/liensDeGabarit';
+import { redimensionnerLesHorloges } from './horlogesADimensionner';
 
 export const SESSION_STORE_KEY = 'gmos-v5-session-os-storage';
 
@@ -96,6 +97,35 @@ export const PersistenceService: PersistOptions<SessionOSStore> = {
                     console.warn(
                         `[Persistence] « ${r.driverName} » visait le modèle de fiche ` +
                         `${r.ancienTemplateId}, qui n'existe pas. Rattaché à ${r.nouveauTemplateId}.`,
+                    );
+                }
+            }
+
+            /*
+              **Les horloges de défaite figées à six.**
+
+              Six n'est le chiffre d'aucun jeu : chez Dune le seuil vaut la
+              compétence défensive de la cible, de quatre à huit. Les
+              personnages créés avant le 2026-08-15 portent le six de
+              `createDefault('clocks')`, qui ne sait rien de leur fiche.
+
+              La cause est corrigée à la source. Ceci reprend les fiches déjà
+              écrites, et **seulement là où le seuil se lit sans le moindre
+              avertissement** : retenir un minimum de repli reviendrait à
+              remplacer une valeur fausse par une valeur devinée, ce qui ne fait
+              que la rendre crédible.
+            */
+            const { players, redimensionnees } = redimensionnerLesHorloges(
+                state.players ?? [],
+                state.campaigns ?? [],
+                state.customGameDrivers ?? [],
+            );
+            if (redimensionnees.length > 0) {
+                state.players = players;
+                for (const h of redimensionnees) {
+                    console.warn(
+                        `[Persistence] Horloge de défaite de « ${h.personnage} » : ` +
+                        `${h.ancienCompte} → ${h.nouveauCompte} segments, lus sur sa fiche.`,
                     );
                 }
             }
