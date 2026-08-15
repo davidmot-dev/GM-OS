@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { decrireLaSante, santeDeDepart } from './SanteDuCombattant';
+import {
+    decrireLaSante, santeDeDepart, aUneJaugeDeVie, fractionDeVie,
+    pointsDeVieApres, estHorsDeCombat, type PorteurDeSante,
+} from './SanteDuCombattant';
 
 /**
  * Ce que ces tests protègent : **l'invite envoyée à l'IA ne doit rien affirmer
@@ -159,5 +162,45 @@ describe('la santé de départ, lue sur la fiche', () => {
 
     it('une division par zéro renonce plutôt que de rendre l\'infini', () => {
         expect(santeDeDepart('force / agilite', fiche({ force: 4, agilite: 0 }))).toBeNull();
+    });
+});
+
+describe('la santé d\'un personnage sans points de vie', () => {
+    /**
+     * **Le cadrage de David, le 2026-08-15, et il débloque tout le reste :**
+     * *« normalement tout jeu a un mécanisme de Santé ; tu peux dire que s'il
+     * n'y en a pas, il peut mettre un système de HP par défaut ».*
+     *
+     * C'est juste, et la distinction est celle qui manquait : **le mécanisme,
+     * c'est `healthSystem`** — il connaît cinq formes et il est toujours là.
+     * Les points de vie n'en sont qu'une, celle du modèle `hp`. Les tenir pour
+     * obligatoires revenait à imposer D&D à tous les jeux, et c'est ce qui
+     * cassait la logique des pilotes dans Combat OS.
+     *
+     * `hp`/`maxHp` sont donc devenus facultatifs sur `PlayerCharacter`, et les
+     * six écrans qui les lisaient passent par ces fonctions.
+     */
+    it('un personnage d\'Alien n\'a ni jauge ni fraction, sans que rien ne casse', () => {
+        const perso = { name: 'Ripley' } as PorteurDeSante;
+
+        expect(aUneJaugeDeVie(perso)).toBe(false);
+        expect(fractionDeVie(perso), 'aucune barre à dessiner').toBeNull();
+        expect(pointsDeVieApres(perso, -3), 'rien à retrancher').toBeNull();
+        expect(estHorsDeCombat(perso), 'faute d\'information, on ne le déclare pas mort').toBe(false);
+    });
+
+    it('le système de santé fait autorité, même sans points de vie', () => {
+        const brise = {
+            healthSystem: { type: 'clocks', data: { filled: 6, segments: 6 }, state: 'dead' },
+        };
+        expect(estHorsDeCombat(brise)).toBe(true);
+        expect(decrireLaSante(brise)).toContain('hors de combat');
+    });
+
+    it('les deux noms du maximum donnent la même fraction', () => {
+        // `Combatant` dit `hpMax`, `PlayerCharacter` dit `maxHp` : un piège
+        // ancien, qui aurait rendu la moitié des écrans muets.
+        expect(fractionDeVie({ hp: 3, hpMax: 6 })).toBe(0.5);
+        expect(fractionDeVie({ hp: 3, maxHp: 6 })).toBe(0.5);
     });
 });

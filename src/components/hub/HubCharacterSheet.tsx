@@ -1,5 +1,6 @@
 import React, { useState, memo } from 'react';
 import { Heart, ChevronLeft, Package, BookOpen, PenTool, Shield, Layout } from 'lucide-react';
+import { aUneJaugeDeVie, fractionDeVie, pointsDeVieApres } from '../../modules/combat/logic/SanteDuCombattant';
 import { useSessionOSStore } from '../../modules/session/useSessionOSStore';
 import { useClientStore } from '../../stores/useClientStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../data/defaultSheetTemplates';
@@ -63,8 +64,10 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
     const hubOptions = character.hubOptions ?? { showHP: true, showMP: true, showAP: true, showInventory: true, showRelations: true };
 
     const handleUpdateHP = (delta: number) => {
-        const newHP = Math.max(0, Math.min(character.maxHp, character.hp + delta));
-        if (newHP !== character.hp) {
+        // Sans jauge, il n'y a rien à ajuster : `pointsDeVieApres` rend `null`
+        // plutôt que de créer des points de vie que le système n'a pas.
+        const newHP = pointsDeVieApres(character, delta);
+        if (newHP !== null && newHP !== character.hp) {
             remoteUpdateCharacterVitals(playerId, character.id, { hp: newHP });
         }
     };
@@ -120,7 +123,14 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                             <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-app-bg to-transparent opacity-80" />
                         </div>
 
-                        {hubOptions.showHP && (
+                        {/*
+                          **Le bloc entier disparaît sans jauge.** Il affichait
+                          « undefined / undefined » et une barre en `NaN` pour
+                          les jeux qui ne comptent pas la santé en points — les
+                          points de vie ne sont que le détail d'un modèle sur
+                          cinq. Un panneau vide vaut mieux qu'un panneau faux.
+                        */}
+                        {hubOptions.showHP && aUneJaugeDeVie(character) && (
                             <section className="bg-app-surface/60 border border-app-border rounded-[2.5rem] p-6 shadow-xl">
                                 <div className="flex items-center justify-between mb-4">
                                     <div className="flex items-center gap-3">
@@ -132,7 +142,7 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                                 <div className="h-3 bg-app-bg/40 rounded-full border border-app-border/10 p-[1px] mb-6">
                                     <div 
                                         className="h-full rounded-full bg-gradient-to-r from-red-600 to-rose-400 transition-all duration-700"
-                                        style={{ '--progress-width': `${(character.hp / character.maxHp) * 100}%`, width: 'var(--progress-width)' } as React.CSSProperties}
+                                        style={{ '--progress-width': `${(fractionDeVie(character) ?? 0) * 100}%`, width: 'var(--progress-width)' } as React.CSSProperties}
                                     />
                                 </div>
                                 <div className="flex items-center justify-center gap-3">

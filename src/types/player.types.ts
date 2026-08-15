@@ -68,21 +68,24 @@ export interface PlayerCharacter {
     portraitUrl: string;
     tokenUrl?: string;
     /**
-     * **Encore obligatoires, et c'est un reste à traiter.**
+     * Points de vie — **le détail d'un seul modèle de santé, pas la santé.**
      *
-     * L'écran de création ne les demande plus depuis le 2026-08-15 : la valeur
-     * vient de `combat.santeDeDepart`, lue sur la fiche. Mais les rendre
-     * facultatifs dans ce type casse **six écrans et trente lectures**, dont
-     * chacune devrait décider quoi afficher en l'absence de jauge. Un `?? 0`
-     * mécanique y recréerait le défaut que tout ce travail combat : *l'absence
-     * n'est pas un zéro, et un mourant affiché pour tout le monde ne se
-     * signale pas.*
+     * **La distinction qui débloque tout, posée par David le 2026-08-15 :**
+     * *« normalement tout jeu a un mécanisme de Santé »*. C'est vrai — mais ce
+     * mécanisme est `healthSystem`, qui en connaît cinq formes. Les points de
+     * vie n'en sont qu'une, celle du modèle `hp`. Les tenir pour obligatoires
+     * revenait à imposer D&D à tous les jeux.
      *
-     * À reprendre écran par écran, avec `SanteDuCombattant` qui sait déjà
-     * répondre `null`.
+     * Facultatifs depuis lors, et **`healthSystem` fait autorité** : il est
+     * posé à la création, d'après le modèle du pilote, ou `hp` à défaut — tout
+     * personnage a donc toujours une santé, même quand ces deux champs sont
+     * vides.
+     *
+     * Ne les lisez pas directement : `SanteDuCombattant` répond à « comment va
+     * ce personnage » et rend `null` là où il n'y a rien à dire.
      */
-    hp: number;
-    maxHp: number;
+    hp?: number;
+    maxHp?: number;
     campaignId: string | null;
     /**
      * Le **jeu** pour lequel ce personnage a été créé — l'identifiant d'un pilote.

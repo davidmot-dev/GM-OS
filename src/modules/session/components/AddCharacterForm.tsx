@@ -8,6 +8,7 @@ import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 import { ficheNeuve } from '../logic/ficheNeuve';
 import { santeDeDepart } from '../../combat/logic/SanteDuCombattant';
+import { HealthInterpreter } from '../logic/HealthInterpreter';
 
 export const AddCharacterForm: React.FC = () => {
     const { addCharacterToPlayer, selectedPlayerId, customSheetTemplates, customGameDrivers, campaigns, activeCampaignId } = useSessionOSStore();
@@ -88,8 +89,24 @@ export const AddCharacterForm: React.FC = () => {
             },
         ) ?? 10;
 
+        /*
+          **Tout personnage naît avec un mécanisme de santé.** David, le
+          2026-08-15 : *« normalement tout jeu a un mécanisme de Santé ; tu peux
+          dire que s'il n'y en a pas, il peut mettre un système de HP par
+          défaut »*. C'est le contrat qui débloque tout le reste : les points de
+          vie deviennent facultatifs parce qu'ils ne sont qu'une forme parmi
+          cinq, mais `healthSystem`, lui, est toujours là.
+
+          Le modèle vient du pilote ; `hp` à défaut, comme demandé.
+        */
+        const modele = jeuChoisi?.combat?.defaultHealthType ?? 'hp';
+        const sante = HealthInterpreter.createDefault(modele);
+
         addCharacterToPlayer(selectedPlayerId, {
             name,
+            healthSystem: modele === 'hp'
+                ? { ...sante, data: { ...sante.data, current: depart, max: depart } }
+                : sante,
             maxHp: depart,
             hp: depart,
             portraitUrl: portraitMediaId || 'https://api.dicebear.com/9.x/adventurer/svg?seed=' + name,

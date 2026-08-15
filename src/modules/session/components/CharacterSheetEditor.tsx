@@ -1,5 +1,6 @@
 import React from 'react';
 import { Save, FolderOpen, Layers, FileText, Trash2, Lock, BookOpen, Eye, Heart, Sparkles, Package, Tablet, PenTool, Plus, Check, X } from 'lucide-react';
+import { fractionDeVie } from '../../combat/logic/SanteDuCombattant';
 import { useImageStore } from '../../image/useImageStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
@@ -59,8 +60,11 @@ const CharacterSheetEditor: React.FC = () => {
     const [newItemName, setNewItemName] = React.useState('');
     const hpBarRef = React.useRef<HTMLDivElement>(null);
     React.useEffect(() => {
-        if (hpBarRef.current && editor.character && editor.character.maxHp > 0) {
-            hpBarRef.current.style.width = `${Math.max(0, Math.min(100, (editor.character.hp / editor.character.maxHp) * 100))}%`;
+        // `null` sans jauge : la barre n'est pas redimensionnée plutôt que de
+        // recevoir une largeur calculée sur `NaN`.
+        const part = editor.character ? fractionDeVie(editor.character) : null;
+        if (hpBarRef.current && part !== null) {
+            hpBarRef.current.style.width = `${Math.max(0, Math.min(100, part * 100))}%`;
         }
     }, [editor.character, editor.character?.hp, editor.character?.maxHp]);
 
@@ -166,7 +170,11 @@ const CharacterSheetEditor: React.FC = () => {
                                                     portraitUrl: character.portraitUrl,
                                                     avatar: character.tokenUrl || character.portraitUrl,
                                                     stats: {
-                                                        'Santé': (character.hp / character.maxHp) * 100
+                                                        // Pas de statistique de santé projetée
+                                                        // pour un jeu qui n'en compte pas.
+                                                        ...(fractionDeVie(character) !== null
+                                                            ? { 'Santé': fractionDeVie(character)! * 100 }
+                                                            : {}),
                                                     }
                                                 };
                                                 useImageStore.getState().projectEntity(projectedPJ);
@@ -253,7 +261,13 @@ const CharacterSheetEditor: React.FC = () => {
                             <div className="w-full bg-app-bg h-1.5 rounded-full overflow-hidden border border-app-border/40 ring-1 ring-white/5 p-[1px]">
                                 <div
                                     ref={hpBarRef}
-                                    className={`h-full rounded-full transition-all duration-500 ${character.hp / character.maxHp > 0.6 ? 'bg-gradient-to-r from-emerald-600 to-emerald-400' : character.hp / character.maxHp > 0.3 ? 'bg-gradient-to-r from-amber-600 to-amber-400' : 'bg-gradient-to-r from-rose-700 to-rose-500'}`}
+                                    className={`h-full rounded-full transition-all duration-500 ${(() => {
+                                        const f = fractionDeVie(character);
+                                        if (f === null) return 'bg-app-border';
+                                        return f > 0.6 ? 'bg-gradient-to-r from-emerald-600 to-emerald-400'
+                                            : f > 0.3 ? 'bg-gradient-to-r from-amber-600 to-amber-400'
+                                            : 'bg-gradient-to-r from-rose-700 to-rose-500';
+                                    })()}`}
                                 />
                             </div>
                         </div>

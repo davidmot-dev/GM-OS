@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { fractionDeVie, pointsDeVieApres, decrireLaSante } from '../../combat/logic/SanteDuCombattant';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { gmCustom } from '../../../stores/useModalStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
@@ -85,7 +86,7 @@ const CharacterGrid: React.FC<{ ignoreCampaignFilter?: boolean }> = ({ ignoreCam
                                 isSelected={selectedCharacterId === character.id}
                                 onSelect={() => setSelectedCharacter(character.id)}
                                 onLink={(campaignId) => linkCharacterToCampaign(selectedPlayer.id, character.id, campaignId)}
-                                onHPChange={(delta) => updateCharacterHP(selectedPlayer.id, character.id, character.hp + delta)}
+                                onHPChange={(delta) => { const n = pointsDeVieApres(character, delta); if (n !== null) updateCharacterHP(selectedPlayer.id, character.id, n); }}
                                 onDelete={() => {
                                     if (window.confirm(t('modules:session.characters.delete_confirm', { name: character.name }))) {
                                         useSessionOSStore.getState().deleteCharacter(selectedPlayer.id, character.id);
@@ -141,8 +142,15 @@ const CharacterCard: React.FC<{
 }> = ({ character, campaigns, isSelected, onSelect, onLink, onHPChange, onDelete, activeSession, isProjectedInSession, onToggleSession }) => {
     const { t } = useTranslation(['modules']);
     const linkedCampaign = campaigns.find(c => c.id === character.campaignId);
-    const hpPercent = (character.hp / character.maxHp) * 100;
-    const hpColor = hpPercent > 60 ? 'bg-emerald-500' : hpPercent > 30 ? 'bg-amber-500' : 'bg-red-600';
+    /*
+      **`null` sans jauge, et la barre ne se dessine pas.** Ce calcul rendait
+      `NaN` pour un personnage d'Alien, dont la santé n'est pas comptée en
+      points — et une barre vide se lit comme un mourant.
+    */
+    const fraction = fractionDeVie(character);
+    const hpPercent = fraction === null ? null : fraction * 100;
+    const hpColor = hpPercent === null ? 'bg-app-border'
+        : hpPercent > 60 ? 'bg-emerald-500' : hpPercent > 30 ? 'bg-amber-500' : 'bg-red-600';
     const resolvedPortrait = useMediaUrl(character.portraitUrl);
 
     return (
@@ -187,7 +195,16 @@ const CharacterCard: React.FC<{
                     <p className="text-app-text/40 text-xs mt-0.5">{character.classRace}</p>
                 </div>
 
-                {/* HP Bar */}
+                {/* La barre de vie n'existe que si le jeu compte des points de vie.
+                    Sans jauge, on montre l'état que le système décrit — « Brisé »,
+                    « horloge 2/6 » — plutôt qu'une barre vide qui se lit comme un
+                    mourant. */}
+                {hpPercent === null ? (
+                    <div className="flex items-center gap-1 text-app-text/40 text-xs">
+                        <Heart size={11} className="text-app-text/20" />
+                        <span>{decrireLaSante(character) ?? 'santé non chiffrée'}</span>
+                    </div>
+                ) : (
                 <div className="flex flex-col gap-1">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1 text-app-text/40 text-xs">
@@ -204,6 +221,7 @@ const CharacterCard: React.FC<{
                         <div className={`h-full transition-all duration-300 ${hpColor}`} style={{ width: `${hpPercent}%` }}></div>
                     </div>
                 </div>
+                )}
 
                 {/* Actions */}
                 <div className="flex gap-2 mt-auto pt-2 border-t border-app-border/50">
@@ -244,7 +262,11 @@ const CharacterCard: React.FC<{
                                 portraitUrl: character.portraitUrl,
                                 avatar: character.tokenUrl || character.portraitUrl,
                                 stats: {
-                                    'Santé': (character.hp / character.maxHp) * 100
+                                    // Sans jauge, on ne projette pas de statistique
+                                    // de santé plutôt que d'en projeter une fausse.
+                                    ...(fractionDeVie(character) !== null
+                                        ? { 'Santé': fractionDeVie(character)! * 100 }
+                                        : {}),
                                 }
                             };
                             useImageStore.getState().projectEntity(projectedPJ);

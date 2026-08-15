@@ -22,7 +22,18 @@ import type {
     DamageImpact,
 } from './types';
 
-export function syncHealthSystem(currentHp: number, maxHp: number, existingHealth?: HealthSystem): HealthSystem | undefined {
+/**
+ * Accorde le système de santé aux points de vie, quand il y en a.
+ *
+ * **`currentHp` et `maxHp` sont devenus facultatifs le 2026-08-15** : les
+ * points de vie ne sont que le détail d'un modèle sur cinq. Sans eux, il n'y a
+ * rien à accorder — on rend le système existant tel quel plutôt que d'y écrire
+ * des `undefined`, ce qui produirait un état calculé sur `NaN`.
+ */
+export function syncHealthSystem(currentHp: number | undefined, maxHp: number | undefined, existingHealth?: HealthSystem): HealthSystem | undefined {
+    if (typeof currentHp !== 'number' || typeof maxHp !== 'number' || maxHp <= 0) {
+        return existingHealth;
+    }
     // If there's an existing system that isn't HP, do not override it.
     if (existingHealth && existingHealth.type !== 'hp') {
         return existingHealth;

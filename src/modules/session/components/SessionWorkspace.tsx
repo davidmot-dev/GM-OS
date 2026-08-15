@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { fractionDeVie, pointsDeVieApres, decrireLaSante } from '../../combat/logic/SanteDuCombattant';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useMapStore } from '../../map/useMapStore';
 import { Eye, Edit3, Lock, History, Search, Layers, MapPin, Pin, Plus } from 'lucide-react';
@@ -36,7 +37,10 @@ const SessionWorkspace: React.FC = () => {
         for (const p of players) {
             const pc = p.characters.find(c => c.id === id);
             if (pc) {
-                updateCharacterHP(p.id, id, pc.hp + delta);
+                // Rien à ajuster sans jauge : on ne crée pas de points de vie
+                // que le système du jeu n'a pas.
+                const n = pointsDeVieApres(pc, delta);
+                if (n !== null) updateCharacterHP(p.id, id, n);
                 break;
             }
         }
@@ -78,9 +82,9 @@ const SessionWorkspace: React.FC = () => {
                                 return (
                                     <div key={pc.id} className="w-12 h-12 rounded-full border-2 border-app-bg bg-app-surface relative group cursor-pointer hover:z-20 transition-all hover:scale-110">
                                         <div className="w-full h-full rounded-full overflow-hidden" onClick={() => navigateToPlayerDetail(ownerId, pc.id)}>
-                                            <ResolvedAsset src={pc.portraitUrl} alt={pc.name} className="w-full h-full object-cover" title={`${pc.name}: ${pc.hp}/${pc.maxHp}`} />
+                                            <ResolvedAsset src={pc.portraitUrl} alt={pc.name} className="w-full h-full object-cover" title={[pc.name, decrireLaSante(pc)].filter(Boolean).join(' — ')} />
                                         </div>
-                                        <div className={`absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-app-bg ${pc.hp > pc.maxHp * 0.5 ? 'bg-green-500' : pc.hp > 0 ? 'bg-yellow-500' : 'bg-red-500'}`}></div>
+                                        <div className={`absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-app-bg ${(() => { const f = fractionDeVie(pc); return f === null ? 'bg-app-border' : f > 0.5 ? 'bg-green-500' : f > 0 ? 'bg-yellow-500' : 'bg-red-500'; })()}`}></div>
 
                                         {/* Quick HP Controls */}
                                         <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-app-surface border border-app-border rounded px-2 py-1 text-[10px] hidden group-hover:flex items-center gap-2 z-50 shadow-xl">

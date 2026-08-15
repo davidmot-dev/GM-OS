@@ -1,4 +1,3 @@
-import type { Combatant } from '../types';
 
 /**
  * Une seule réponse à « comment va ce combattant ».
@@ -233,9 +232,20 @@ function evaluerArithmetique(expression: string): number | null {
     return i === jetons.length ? resultat : null;
 }
 
-/** Ce combattant a-t-il une jauge de points de vie ? */
-export function aUneJaugeDeVie(c: Combatant): boolean {
-    return typeof c.hp === 'number' && typeof c.hpMax === 'number' && c.hpMax > 0;
+/**
+ * Ce porteur a-t-il une jauge de points de vie ?
+ *
+ * **Élargi aux personnages joueurs le 2026-08-15.** `hp`/`maxHp` sont devenus
+ * facultatifs sur `PlayerCharacter` — les points de vie ne sont que le détail
+ * d'un modèle de santé parmi cinq — et six écrans les lisaient directement.
+ * Ils passent tous par ici désormais.
+ *
+ * Rappel du piège de nommage : `Combatant` dit `hpMax`, `Entity` et
+ * `PlayerCharacter` disent `maxHp`.
+ */
+export function aUneJaugeDeVie(c: PorteurDeSante): boolean {
+    const max = c.hpMax ?? c.maxHp;
+    return typeof c.hp === 'number' && typeof max === 'number' && max > 0;
 }
 
 /**
@@ -245,9 +255,9 @@ export function aUneJaugeDeVie(c: Combatant): boolean {
  * qui doit dessiner une barre découvre qu'il n'a rien à dessiner, au lieu d'en
  * dessiner une vide.
  */
-export function fractionDeVie(c: Combatant): number | null {
+export function fractionDeVie(c: PorteurDeSante): number | null {
     if (!aUneJaugeDeVie(c)) return null;
-    return Math.max(0, Math.min(1, c.hp! / c.hpMax!));
+    return Math.max(0, Math.min(1, c.hp! / (c.hpMax ?? c.maxHp)!));
 }
 
 /**
@@ -257,7 +267,7 @@ export function fractionDeVie(c: Combatant): number | null {
  * jauge de points de vie. **Sans l'un ni l'autre, la réponse est non** — on ne
  * déclare pas mort un combattant faute d'information.
  */
-export function estHorsDeCombat(c: Combatant): boolean {
+export function estHorsDeCombat(c: PorteurDeSante): boolean {
     if (c.healthSystem) return c.healthSystem.state === 'dead';
     if (aUneJaugeDeVie(c)) return c.hp! <= 0;
     return false;
@@ -269,7 +279,7 @@ export function estHorsDeCombat(c: Combatant): boolean {
  * `null` sans jauge : il n'y a rien à ajuster, et forcer un nombre reviendrait
  * à créer des PV que le système n'a pas.
  */
-export function pointsDeVieApres(c: Combatant, delta: number): number | null {
+export function pointsDeVieApres(c: PorteurDeSante, delta: number): number | null {
     if (!aUneJaugeDeVie(c)) return null;
-    return Math.min(c.hpMax!, Math.max(0, c.hp! + delta));
+    return Math.min((c.hpMax ?? c.maxHp)!, Math.max(0, c.hp! + delta));
 }

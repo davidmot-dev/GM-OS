@@ -1,5 +1,6 @@
 import { useSessionOSStore } from '../useSessionOSStore';
 import { gmAlert, gmConfirm } from '../../../stores/useModalStore';
+import { aUneJaugeDeVie, fractionDeVie, decrireLaSante } from '../../combat/logic/SanteDuCombattant';
 import { Plus, Settings2, MoreVertical } from 'lucide-react';
 
 const TeamTracker: React.FC = () => {
@@ -16,14 +17,26 @@ const TeamTracker: React.FC = () => {
     );
 
     const healParty = () => {
+        // On ne soigne que ceux qui ont une jauge : rendre `undefined` points
+        // de vie à un personnage qui n'en a pas lui en inventerait.
         party.forEach(char => {
-            updateCharacterHP(char.playerId, char.id, char.maxHp);
+            if (typeof char.maxHp === 'number') updateCharacterHP(char.playerId, char.id, char.maxHp);
         });
     };
 
-    // Calculate overall party health
-    const totalHp = party.reduce((sum: number, p) => sum + p.hp, 0);
-    const totalMaxHp = party.reduce((sum: number, p) => sum + p.maxHp, 0);
+    /*
+      **La santé du groupe ne compte que ceux qui en ont une.**
+
+      Ces sommes lisaient `p.hp` et `p.maxHp` directement. Depuis que les points
+      de vie sont facultatifs — ils ne sont que le détail d'un modèle sur cinq —
+      un personnage d'Alien y entrait pour `undefined`, et la barre entière
+      partait en `NaN`. Les additionner comme des zéros aurait été pire : le
+      groupe aurait paru à l'agonie parce qu'un de ses membres relève d'un jeu
+      qui ne compte pas comme ça.
+    */
+    const avecJauge = party.filter(aUneJaugeDeVie);
+    const totalHp = avecJauge.reduce((sum: number, p) => sum + p.hp!, 0);
+    const totalMaxHp = avecJauge.reduce((sum: number, p) => sum + p.maxHp!, 0);
     const healthPercent = totalMaxHp > 0 ? (totalHp / totalMaxHp) * 100 : 0;
 
     return (
@@ -31,13 +44,15 @@ const TeamTracker: React.FC = () => {
             <div className="flex items-center gap-6 w-full lg:w-auto overflow-x-auto custom-scrollbar no-scrollbar">
                 <div className="flex -space-x-3 shrink-0">
                     {party.map((char) => {
-                        const healthRatio = char.hp / char.maxHp;
-                        let ringColor = 'border-emerald-500';
-                        if (healthRatio < 0.3) ringColor = 'border-red-500';
-                        else if (healthRatio < 0.6) ringColor = 'border-yellow-500';
+                        // `null` sans jauge : l'anneau reste neutre plutôt que
+                        // de virer au rouge sur une division impossible.
+                        const healthRatio = fractionDeVie(char);
+                        let ringColor = healthRatio === null ? 'border-app-border' : 'border-emerald-500';
+                        if (healthRatio !== null && healthRatio < 0.3) ringColor = 'border-red-500';
+                        else if (healthRatio !== null && healthRatio < 0.6) ringColor = 'border-yellow-500';
 
                         return (
-                            <div key={char.id} className="w-10 h-10 rounded-full border-2 border-app-bg bg-app-surface relative group cursor-help transition-transform hover:-translate-y-1 hover:z-10 bg-cover bg-center" style={{ backgroundImage: `url(${char.portraitUrl})` }} title={`${char.name} (${char.hp}/${char.maxHp})`}>
+                            <div key={char.id} className="w-10 h-10 rounded-full border-2 border-app-bg bg-app-surface relative group cursor-help transition-transform hover:-translate-y-1 hover:z-10 bg-cover bg-center" style={{ backgroundImage: `url(${char.portraitUrl})` }} title={[char.name, decrireLaSante(char)].filter(Boolean).join(' — ')}>
                                 <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border border-app-bg bg-app-bg shadow-inner flex items-center justify-center`}>
                                     <div className={`w-full h-full rounded-full border-2 ${ringColor}`} />
                                 </div>
