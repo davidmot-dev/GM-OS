@@ -43,6 +43,20 @@ const ReglagesDImage: React.FC = () => {
 
     const pret = !!image.accountId && !!image.apiKey;
 
+    /**
+     * L'identifiant de compte a-t-il la forme d'un identifiant de compte ?
+     *
+     * **Le premier essai de David, le 2026-08-15, a échoué là-dessus** : il
+     * avait saisi `morning-smoke-a9c1`, un nom lisible — celui d'un Worker ou
+     * d'un sous-domaine. Cloudflare a répondu « perhaps your object identifier
+     * is invalid », ce qui est juste mais ne dit pas *ce qu'on attendait*.
+     *
+     * Un Account ID est **32 caractères hexadécimaux**. On ne refuse pas — le
+     * format pourrait changer, et *ne rien refuser sans motif écrit* vaut aussi
+     * contre soi-même — mais on dit ce qu'on attend, et où le trouver.
+     */
+    const compteDouteux = !!image.accountId && !/^[0-9a-f]{32}$/i.test(image.accountId);
+
     const tester = async () => {
         setEssai({ etat: 'encours' });
         try {
@@ -137,9 +151,19 @@ const ReglagesDImage: React.FC = () => {
                         type="text"
                         value={image.accountId || ''}
                         onChange={e => updateImageConfig({ accountId: e.target.value.trim() })}
-                        placeholder="Visible sur le tableau de bord Workers AI"
-                        className="w-full bg-app-bg/40 px-4 py-3 rounded-xl border border-app-border/20 font-mono text-xs text-app-text focus:border-accent/50 outline-none"
+                        placeholder="32 caractères hexadécimaux"
+                        className={`w-full bg-app-bg/40 px-4 py-3 rounded-xl border font-mono text-xs text-app-text outline-none transition-colors ${
+                            compteDouteux ? 'border-amber-500/50 focus:border-amber-400' : 'border-app-border/20 focus:border-accent/50'
+                        }`}
                     />
+                    {compteDouteux && (
+                        <p className="text-[11px] text-amber-300/80 leading-relaxed px-1">
+                            Un identifiant de compte fait 32 caractères hexadécimaux — celui-ci n'en a pas
+                            la forme. Ce n'est ni le nom d'un Worker ni ton sous-domaine : ouvre
+                            <a href="https://dash.cloudflare.com" target="_blank" rel="noreferrer" className="underline mx-1">dash.cloudflare.com</a>
+                            et lis-le <b>dans l'URL</b>, ou copie-le dans la colonne de droite de « Workers &amp; Pages ».
+                        </p>
+                    )}
                 </div>
 
                 <div className="space-y-2">
