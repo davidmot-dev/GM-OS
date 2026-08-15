@@ -10,7 +10,7 @@ import { useSessionOSStore } from '../useSessionOSStore';
 import { useBrainstormStore } from '../../forge/rules/store/useBrainstormStore';
 
 import type { DocEntry } from '../../ai/RAGService';
-import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
+import { tousLesPilotes } from '../store/tousLesPilotes';
 import { resoudreCorpus, cheminDesFiches } from '../../../../electron/corpusSysteme';
 import { gmToast } from '../../../stores/useToastStore';
 import { obsidianExportService } from '../ObsidianExportService';
@@ -46,7 +46,7 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
     const { activeCampaignId, campaigns, customGameDrivers } = useSessionOSStore();
 
     const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
-    const allDrivers = [...DEFAULT_GAME_DRIVERS, ...customGameDrivers];
+    const allDrivers = tousLesPilotes(customGameDrivers);
 
     const systemId = driverId || activeCampaign?.system || 'generic';
     const driver = allDrivers.find(d => d.id === systemId);

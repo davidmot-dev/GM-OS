@@ -1,6 +1,7 @@
 import React from 'react';
 import { Save, FolderOpen, Layers, FileText, Trash2, Lock, BookOpen, Eye, Heart, Sparkles, Package, Tablet, PenTool, Plus, Check, X } from 'lucide-react';
 import { fractionDeVie } from '../../combat/logic/SanteDuCombattant';
+import { tousLesPilotes } from '../store/tousLesPilotes';
 import { useImageStore } from '../../image/useImageStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
@@ -12,7 +13,6 @@ import {
 import { useCharacterEditor } from '../hooks/useCharacterEditor';
 import PanneauDeJet from './fields/PanneauDeJet';
 import { useSessionOSStore } from '../useSessionOSStore';
-import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 import { useSheetCalculator } from '../hooks/useSheetCalculator';
 import { Calculator } from 'lucide-react';
 import type { SheetField } from '../../../data/defaultSheetTemplates';
@@ -52,7 +52,7 @@ const CharacterSheetEditor: React.FC = () => {
     const piloteDeLaFiche = React.useMemo(() => {
         const campagne = campaigns.find(c => c.id === activeCampaignId);
         if (!campagne?.system) return null;
-        return [...DEFAULT_GAME_DRIVERS, ...customGameDrivers].find(d => d.id === campagne.system) ?? null;
+        return tousLesPilotes(customGameDrivers).find(d => d.id === campagne.system) ?? null;
     }, [campaigns, activeCampaignId, customGameDrivers]);
 
     const { evaluateFormula } = useSheetCalculator(editor.character as PlayerCharacter | null, editor.template, editor.localData);

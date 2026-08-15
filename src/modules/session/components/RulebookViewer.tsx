@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
 
-import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
+import { tousLesPilotes } from '../store/tousLesPilotes';
 
 import { RuleWorkshopViewer } from './RuleWorkshopViewer';
 
@@ -20,7 +20,7 @@ export const RulebookViewer: React.FC = () => {
         setCurrentView
     } = useSessionOSStore();
 
-    const allDrivers = [...DEFAULT_GAME_DRIVERS, ...customGameDrivers];
+    const allDrivers = tousLesPilotes(customGameDrivers);
     const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
     
     // Initial driver selection: from campaign or first available

@@ -51,7 +51,26 @@ export interface SheetTemplate {
  */
 const DUNE_TEMPLATE: SheetTemplate = {
     id: 'dune',
-    name: "Dune : Aventures dans l'Imperium",
+    /**
+     * **Le nom dit que c'est une fiche, et une référence.**
+     *
+     * Il valait « Dune : Aventures dans l'Imperium » — c'est-à-dire le nom du
+     * **pilote**. David, le 2026-08-15, voyant l'onglet Fiches : *« il y a le
+     * "Système Officiel" de Dune qui ne correspond pas à la réalité et que je
+     * ne peux pas effacer »*. Il avait toutes les raisons de s'y perdre : trois
+     * cartes voisines s'appelaient « Dune : Aventures dans l'Imperium »,
+     * « Fiche de Personnage Dune » et « Fiche de Chevalier des Tempêtes », sans
+     * que rien ne dise laquelle était quoi.
+     *
+     * C'est la même confusion pilote/gabarit que celle corrigée la veille dans
+     * l'écran de création de personnage, où un sélecteur intitulé « Système de
+     * Jeu » listait des fiches.
+     *
+     * L'identifiant, lui, ne bouge pas : `dune` est asserté par
+     * `duneReference.test.ts`, `DescripteurDeJet.test.ts` et
+     * `controlesDuPilote.test.ts` — c'est l'étalon qui les calibre.
+     */
+    name: 'Dune — fiche de référence',
     emoji: '🏜️',
     isBuiltin: true,
     sections: [

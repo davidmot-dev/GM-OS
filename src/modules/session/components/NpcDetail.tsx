@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { Swords, MapPin, Monitor, Heart, Shield, Wind, Zap, Lock, BookOpen, ArrowLeft, Edit2, CheckCircle, Image as ImageIcon, Sparkles, Layers, Skull, Search, Users } from 'lucide-react';
+import { FieldGauge, FieldRating } from './fields/SheetFields';
 import { DEFAULT_SHEET_TEMPLATES, type SheetField } from '../../../data/defaultSheetTemplates';
 import { useMapStore } from '../../map/useMapStore';
 import { useCombatStore } from '../../combat/useCombatStore';
@@ -31,31 +32,15 @@ const ROLE_ICONS = {
 };
 
 // --- Sub-components ---
-const FieldGauge: React.FC<{
-    field: SheetField;
-    value: number;
-    onChange: (val: number) => void;
-    t: (key: string) => string;
-}> = ({ field, value, onChange }) => (
-    <div className="group space-y-2">
-        <div className="flex justify-between items-center">
-            <label className="text-[11px] font-black uppercase tracking-wider text-app-text/60">{field.label}</label>
-            <span className="text-[11px] font-black text-accent font-mono">{value}%</span>
-        </div>
-        <div className="relative h-2 bg-app-bg rounded-full overflow-hidden border border-app-border/40">
-            <div
-                className="absolute inset-y-0 left-0 bg-accent transition-all duration-300"
-                style={{ width: `${value}%` }}
-            />
-            <input
-                type="range" min={0} max={100} step={1} value={value ?? 0}
-                onChange={e => onChange(parseInt(e.target.value))}
-                className="absolute inset-0 w-full opacity-0 cursor-pointer z-10 h-full"
-                title={`${field.label}: ${value ?? 0}%`}
-            />
-        </div>
-    </div>
-);
+/**
+ * La jauge d'un PNJ — **la même que celle des personnages**.
+ *
+ * Cet écran en portait une copie qui affichait des pourcentages sur une échelle
+ * de cent imposée, alors que chaque champ déclare son maximum. Deux jauges
+ * divergentes pour la même donnée, c'est la garantie qu'un des deux écrans dira
+ * un jour autre chose que l'autre — on emploie donc celle de `SheetFields`,
+ * corrigée le 2026-08-15.
+ */
 
 const FieldNumber: React.FC<{
     field: SheetField;
@@ -152,34 +137,14 @@ const FieldTextarea: React.FC<{
 );
 
 
-const FieldRating: React.FC<{
-    field: SheetField;
-    value: number;
-    onChange: (val: number) => void;
-    t: (key: string) => string;
-}> = ({ field, value, onChange }) => {
-    const max = field.max || 5;
-    return (
-        <div className="flex items-center justify-between p-3 bg-app-bg/40 rounded-xl border border-app-border/40 hover:border-accent/20 transition-all">
-            <label className="text-[11px] font-black uppercase tracking-wider text-app-text/60">{field.label}</label>
-            <div className="flex items-center gap-1.5">
-                {Array.from({ length: max }).map((_, i) => (
-                    <button
-                        key={i}
-                        onClick={() => onChange(i + 1 === value ? 0 : i + 1)}
-                        className={`w-3 h-3 rounded-full transition-all border ${
-                            i < value 
-                                ? 'bg-accent border-accent scale-110 shadow-[0_0_8px_rgba(var(--color-accent),0.5)]' 
-                                : 'bg-black/20 border-white/10 hover:border-accent/50'
-                        }`}
-                        title={`${field.label}: ${i + 1}`}
-                    />
-                ))}
-            </div>
-        </div>
-    );
-};
-
+/**
+ * `FieldRating` vient de `SheetFields`, comme `FieldGauge`.
+ *
+ * Cet écran en portait une copie avec les mêmes pastilles vides invisibles —
+ * `bg-black/20 border-white/10`. Deux composants pour la même donnée, c'est la
+ * garantie qu'une correction n'en atteindra qu'un : celle du 2026-08-15 aurait
+ * laissé les fiches de PNJ illisibles.
+ */
 
 const FieldFormula: React.FC<{
     field: SheetField;
@@ -485,13 +450,13 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                             const value = selectedNpc.sheetData?.[field.id] ?? field.defaultValue;
                                             const onChange = (v: string | number | boolean) => updateEntitySheetData(selectedNpc.id, field.id, v);
                                             
-                                            if (field.type === 'gauge') return <FieldGauge key={field.id} field={field} value={value as number} onChange={onChange} t={t} />;
+                                            if (field.type === 'gauge') return <FieldGauge key={field.id} field={field} value={value as number} onChange={onChange} />;
                                             if (field.type === 'number') return <FieldNumber key={field.id} field={field} value={value as number} onChange={onChange} t={t} />;
                                             if (field.type === 'text') return <FieldText key={field.id} field={field} value={value as string} onChange={onChange} t={t} />;
                                             if (field.type === 'checkbox') return <FieldCheckbox key={field.id} field={field} value={value as boolean} onChange={onChange} t={t} />;
                                             if (field.type === 'select') return <FieldSelect key={field.id} field={field} value={value as string} onChange={onChange} t={t} />;
                                             if (field.type === 'textarea') return <FieldTextarea key={field.id} field={field} value={value as string} onChange={onChange} t={t} />;
-                                            if (field.type === 'rating') return <FieldRating key={field.id} field={field} value={value as number} onChange={onChange} t={t} />;
+                                            if (field.type === 'rating') return <FieldRating key={field.id} field={field} value={value as number} onChange={onChange} />;
                                             if (field.type === 'formula') return <FieldFormula key={field.id} field={field} value={evaluateFormula(field.formula || '')} />;
                                             
                                             return null;

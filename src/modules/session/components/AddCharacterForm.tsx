@@ -5,7 +5,7 @@ import { useModalStore } from '../../../stores/useModalStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
-import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
+import { tousLesPilotes } from '../store/tousLesPilotes';
 import { ficheNeuve } from '../logic/ficheNeuve';
 import { santeDeDepart } from '../../combat/logic/SanteDuCombattant';
 import { HealthInterpreter } from '../logic/HealthInterpreter';
@@ -30,7 +30,7 @@ export const AddCharacterForm: React.FC = () => {
      * une question à laquelle personne ne pouvait répondre juste, et garantit
      * que la fiche est bien celle du jeu retenu.
      */
-    const jeux = [...DEFAULT_GAME_DRIVERS, ...customGameDrivers];
+    const jeux = tousLesPilotes(customGameDrivers);
     const [systemId, setSystemId] = useState(jeux[0]?.id ?? '');
     const jeuChoisi = jeux.find(d => d.id === systemId);
 

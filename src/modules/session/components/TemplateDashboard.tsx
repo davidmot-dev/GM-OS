@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useSessionStore } from '../../../store/useSessionStore';
 import { DEFAULT_SHEET_TEMPLATES, type SheetTemplate } from '../../../data/defaultSheetTemplates';
-import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 import { corpusOrphelins } from '../../../../electron/corpusSysteme';
 import LienAuCorpus from '../../forge/corpus/LienAuCorpus';
+import { tousLesPilotes } from '../store/tousLesPilotes';
 import { Search, Hammer, Trash2, Copy, FileText, Sparkles, CheckCircle2, ChevronRight, Pencil, DownloadCloud, Upload, Eye, FolderTree } from 'lucide-react';
 import { gmToast } from '../../../stores/useToastStore';
 import { useModalStore } from '../../../stores/useModalStore';
@@ -58,7 +58,7 @@ const TemplateDashboard: React.FC = () => {
     const orphelins = React.useMemo(
         () => corpusOrphelins(
             dossiersSystemes,
-            [...DEFAULT_GAME_DRIVERS, ...customGameDrivers].map(d => ({
+            tousLesPilotes(customGameDrivers).map(d => ({
                 systemId: d.id,
                 systemName: d.name,
                 corpusId: d.corpusId,

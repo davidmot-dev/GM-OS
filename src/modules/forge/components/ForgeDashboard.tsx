@@ -13,7 +13,7 @@ import { gmToast } from '../../../stores/useToastStore';
 import { gmConfirm } from '../../../stores/useModalStore';
 import type { GameDriver } from '../../../types/drivers';
 import type { SheetTemplate } from '../../../data/defaultSheetTemplates';
-import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
+import { tousLesPilotes } from '../../session/store/tousLesPilotes';
 import ChronicleForge from './ChronicleForge';
 import { useAIStore } from '../../../stores/useAIStore';
 import { useBrainstormStore } from '../rules/store/useBrainstormStore';
@@ -85,7 +85,7 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
 
   // ... tabs state etc ...
 
-  const allDrivers = [...DEFAULT_GAME_DRIVERS, ...customGameDrivers];
+  const allDrivers = tousLesPilotes(customGameDrivers);
 
   const [activeTab, setActiveTab] = useState<'structure' | 'rules'>('structure');
 
