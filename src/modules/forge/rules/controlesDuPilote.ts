@@ -346,12 +346,18 @@ export function controlerLePilote(
       Le message, lui, nomme désormais la section qui répond — corriger un
       pilote suppose de savoir par quoi remplacer, et c'est l'outil qui le sait.
     */
-    (driver.jet?.seuil ?? []).forEach((composante, i) => {
+    const composantesDuJet: [string, NonNullable<GameDriver['jet']>['seuil']][] = [
+        ['jet.seuil', driver.jet?.seuil],
+        // Même contrôle sur la réserve depuis le 2026-08-15 : elle se compose
+        // désormais depuis la fiche, donc elle peut la manquer de la même façon.
+        ['jet.reserve.composantes', driver.jet?.reserve?.composantes],
+    ];
+    composantesDuJet.forEach(([ou, liste]) => (liste ?? []).forEach((composante, i) => {
         if (idsDeSections.has(composante.sectionId)) return;
 
         const { section } = sectionDeLaComposante(sections as SheetSection[], composante);
         erreur(
-            `jet.seuil[${i}].sectionId`,
+            `${ou}[${i}].sectionId`,
             `« ${composante.sectionId} » n'est pas une section de la fiche : le joueur n'aurait ` +
             'nulle part où choisir sa ' + composante.label.toLowerCase() + '.'
             + (section
@@ -359,24 +365,34 @@ export function controlerLePilote(
                   + 'sans doute elle.'
                 : ''),
         );
-    });
+    }));
 
     const reserve = driver.jet?.reserve;
     /*
-      Une réserve se compte en nombres, jamais en formule.
+      **Les bornes de la réserve se comptent en nombres ; sa composition, elle,
+      a désormais un endroit pour vivre.**
 
       Relevé sur Alien le 2026-08-12 : `base: "attribut+comp_level"`. Le modèle
-      voulait dire « la réserve vaut attribut plus compétence » — ce que le
-      descripteur ne sait pas exprimer —, et l'a écrit là où le panneau de jet
-      attend un entier. Il n'aurait rien lancé.
+      voulait dire « la réserve vaut attribut plus compétence » — la bonne
+      mécanique, écrite là où le panneau attendait un entier, faute de champ
+      pour l'exprimer. L'invite lui commandait ensuite d'y renoncer : *« en
+      NOMBRES et jamais en formule »*. **C'est l'outil qui ordonnait de perdre
+      la règle**, comme la consigne du zigzag sur les portées.
+
+      Depuis le 2026-08-15, `jet.reserve.composantes` porte cette composition,
+      exactement comme `jet.seuil` porte celle du seuil. Le contrôle reste — une
+      formule dans `base` ne lancerait toujours rien — mais son message dit
+      maintenant où écrire la règle au lieu de la condamner.
     */
     for (const borne of ['base', 'max', 'faces'] as const) {
         const valeur = reserve?.[borne] as unknown;
         if (reserve && valeur !== undefined && typeof valeur !== 'number') {
             erreur(
                 `jet.reserve.${borne}`,
-                `« ${String(valeur)} » n'est pas un nombre. La réserve se compte en dés ; une ` +
-                'composition tirée de la fiche ne peut pas y être écrite en toutes lettres.',
+                `« ${String(valeur)} » n'est pas un nombre. Les bornes de la réserve se comptent ` +
+                "en dés. Si le jeu compose sa réserve depuis la fiche — « autant de dés que " +
+                "l'attribut plus la compétence » —, cela s'écrit dans " +
+                '`jet.reserve.composantes`, une par valeur invoquée, comme pour le seuil.',
             );
         }
     }

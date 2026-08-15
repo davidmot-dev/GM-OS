@@ -479,3 +479,63 @@ describe('champsInvoques', () => {
         expect(champsInvoques('2d6 + dex + dex + int')).toEqual(['dex', 'int']);
     });
 });
+
+describe('la réserve composée depuis la fiche se contrôle comme le seuil', () => {
+    /**
+     * **Depuis le 2026-08-15**, `jet.reserve.composantes` porte les valeurs que
+     * le joueur additionne pour former sa **poignée de dés** — chez Alien, un
+     * attribut plus une compétence. Elles désignent des sections de la fiche,
+     * donc elles peuvent les manquer, exactement comme celles du seuil.
+     *
+     * Sans ce contrôle, le menu correspondant serait vide en séance et le joueur
+     * lancerait la seule base du pilote, sans que rien ne le dise — le silence
+     * habituel.
+     */
+    const fiche = {
+        sections: [
+            { id: 'attributs', label: 'Attributs', fields: [{ id: 'force', label: 'Force', type: 'number' as const, defaultValue: 2 }] },
+            { id: 'competences', label: 'Compétences', fields: [{ id: 'pilotage', label: 'Pilotage', type: 'number' as const, defaultValue: 0 }] },
+        ],
+    };
+
+    const piloteAvec = (sectionId: string) => ({
+        jet: {
+            sens: 'superieur-ou-egal' as const,
+            reserve: {
+                base: 0, max: 10, faces: 6,
+                composantes: [{ id: 'attribut', label: 'Attribut', sectionId }],
+            },
+        },
+        dice: { defaultDice: '1d6', logic: 'count-success' as const, engine: 'yze' as const },
+    });
+
+    it('ne dit rien quand la section existe', () => {
+        const constats = controlerLePilote(piloteAvec('attributs'), fiche);
+        expect(constats.filter(c => c.ou.startsWith('jet.reserve.composantes'))).toEqual([]);
+    });
+
+    it('signale une section introuvable, et nomme celle qui répond', () => {
+        const constats = controlerLePilote(piloteAvec('les attributs du personnage'), fiche);
+        const constat = constats.find(c => c.ou.startsWith('jet.reserve.composantes'));
+
+        expect(constat?.gravite).toBe('erreur');
+        expect(constat?.message).toContain('Attributs');
+    });
+
+    it('une formule dans « base » renvoie désormais vers le bon champ', () => {
+        /**
+         * Relevé sur Alien le 2026-08-12 : `base: "attribut+comp_level"`. Le
+         * modèle avait compris la règle et l'avait écrite là où le panneau
+         * attendait un entier, faute d'un endroit pour l'exprimer. Le message
+         * doit maintenant dire OÙ l'écrire, au lieu de la condamner.
+         */
+        const constats = controlerLePilote(
+            { jet: { sens: 'superieur-ou-egal', reserve: { base: 'attribut+comp_level' as unknown as number, max: 10, faces: 6 } } },
+            fiche,
+        );
+        const constat = constats.find(c => c.ou === 'jet.reserve.base');
+
+        expect(constat?.gravite).toBe('erreur');
+        expect(constat?.message).toContain('jet.reserve.composantes');
+    });
+});

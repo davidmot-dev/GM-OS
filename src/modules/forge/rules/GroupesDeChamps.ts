@@ -267,9 +267,13 @@ export const GROUPES: readonly GroupeDeChamps[] = [
             '"sous-ou-egal" s\'il compte ceux qui restent SOUS un seuil lu sur la fiche ' +
             '(« chaque dé sous la compétence est une réussite »). Les deux se ressemblent et ' +
             's\'inversent : un jet résolu à l\'envers ne se voit jamais en séance. ' +
-            '"jet.reserve" décrit le nombre de dés lancés, en NOMBRES et jamais en formule : ' +
-            'si le jeu constitue sa réserve à partir de la fiche plutôt qu\'un seuil, laisse ' +
-            '"seuil" vide et donne dans "reserve" le minimum et le maximum de dés qu\'on peut lancer',
+            '"jet.reserve" décrit le nombre de dés lancés. Ses bornes ("base", "max", "faces") ' +
+            'sont des NOMBRES. **SI LE JEU COMPOSE SA RÉSERVE À PARTIR DE LA FICHE** — « lance ' +
+            'autant de dés que la somme de ton attribut et de ta compétence » —, N\'ÉCRIS PAS ' +
+            'CETTE SOMME DANS "base" : mets "base" à 0 et donne une entrée dans ' +
+            '"reserve.composantes" PAR VALEUR INVOQUÉE, chacune avec son "id", son "label" et le ' +
+            '"sectionId" de la section où le joueur la choisit — exactement la forme de ' +
+            '"jet.seuil". Un jeu à réserve laisse alors "seuil" vide',
         exemple: '{"driver":{"dice":{"defaultDice":"2d20","logic":"count-success","engine":"2d20"},"jet":{"seuil":[{"id":"competence","label":"Compétence","sectionId":"competences"},{"id":"principe","label":"Principe","sectionId":"principes"}],"reserve":{"base":2,"max":5,"faces":20,"cout":[1,2,3],"ressource":"impulsion"},"sens":"sous-ou-egal","critique":1,"complication":20,"difficulte":{"min":0,"max":5,"defaut":1}}}}',
     },
     {

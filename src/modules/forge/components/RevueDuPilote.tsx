@@ -169,9 +169,20 @@ export const RevueDuPilote: React.FC<{
               <Id valeur={composante.sectionId} resolu={idsDeSections.has(composante.sectionId)} />
             </Ligne>
           ))}
+          {/* Les composantes de la réserve se montrent comme celles du seuil :
+              elles désignent des sections de la fiche, donc elles peuvent les
+              manquer, donc elles doivent être relues avant d'enregistrer. */}
+          {(jet.reserve?.composantes ?? []).map((composante, i) => (
+            <Ligne key={`reserve-${i}`} clef={`${composante.label} (dés)`}>
+              <Id valeur={composante.id} /> pris dans la section{' '}
+              <Id valeur={composante.sectionId} resolu={idsDeSections.has(composante.sectionId)} />
+            </Ligne>
+          ))}
           {jet.reserve && (
             <Ligne clef="Réserve de dés">
-              {jet.reserve.base} à {jet.reserve.max} dés à {jet.reserve.faces} faces
+              {(jet.reserve.composantes?.length ?? 0) > 0
+                ? <>{jet.reserve.base} + {jet.reserve.composantes!.map(c => c.label.toLowerCase()).join(' + ')}, jusqu’à {jet.reserve.max} dés à {jet.reserve.faces} faces</>
+                : <>{jet.reserve.base} à {jet.reserve.max} dés à {jet.reserve.faces} faces</>}
               {jet.reserve.cout?.length ? `, coût ${jet.reserve.cout.join(' puis ')}` : ''}
               {jet.reserve.ressource && (
                 <> — payés en <Id valeur={jet.reserve.ressource} resolu={(driver.ressourcesDeTable ?? []).some(r => r.id === jet.reserve?.ressource)} /></>

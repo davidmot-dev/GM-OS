@@ -407,3 +407,111 @@ describe('le pilote désigne une section, la fiche la nomme autrement', () => {
         expect(jet.remarques).toEqual([]);
     });
 });
+
+describe('la réserve se compose depuis la fiche — le dernier mur', () => {
+    /**
+     * **La règle, telle que le corpus d'Alien l'écrit** (`resolution-des-jets.md`,
+     * fiche v3) : *« Pour agir, on lance des dés de base égaux à son attribut
+     * plus sa compétence, ou ses seuls dés d'attribut. S'y ajoute un nombre de
+     * dés de stress égal au Niveau de Stress actuel. »*
+     *
+     * Le descripteur ne savait composer que des **seuils**. Le pilote n'avait
+     * donc qu'un nombre fixe à offrir, et tous les personnages entraient dans la
+     * scène avec la même poignée de dés — sans que rien ne le dise.
+     *
+     * La preuve que le modèle avait compris la règle est dans le journal du
+     * 2026-08-12 : il a rendu `base: "attribut+comp_level"`. C'est l'invite qui
+     * lui commandait ensuite d'y renoncer — *« en NOMBRES et jamais en
+     * formule »*.
+     */
+    const alien: DescripteurDeJet = {
+        reserve: {
+            base: 0,
+            composantes: [
+                { id: 'attribut', label: 'Attribut', sectionId: 'attributs' },
+                { id: 'competence', label: 'Compétence', sectionId: 'competences' },
+            ],
+            max: 10,
+            faces: 6,
+        },
+        sens: 'superieur-ou-egal',
+    };
+
+    const RIPLEY = { force: 4, agilite: 3, pilotage: 2, combat_rapproche: 1 };
+
+    it('lance attribut + compétence, et le dit', () => {
+        const jet = preparerLeJet(alien, RIPLEY, {
+            champs: { attribut: 'force', competence: 'combat_rapproche' },
+        });
+
+        expect(jet.nombreDeDes, 'Force 4 + Combat rapproché 1').toBe(5);
+        expect(jet.composantesDeLaReserve).toEqual([
+            { label: 'Attribut', champ: 'force', valeur: 4 },
+            { label: 'Compétence', champ: 'combat_rapproche', valeur: 1 },
+        ]);
+        expect(jet.avertissements).toEqual([]);
+    });
+
+    it('deux personnages n\'entrent pas dans la scène avec la même réserve', () => {
+        // C'est tout l'objet du mur : avant, `base` était un nombre du système.
+        const fort = preparerLeJet(alien, RIPLEY, { champs: { attribut: 'force', competence: 'pilotage' } });
+        const agile = preparerLeJet(alien, RIPLEY, { champs: { attribut: 'agilite', competence: 'pilotage' } });
+
+        expect(fort.nombreDeDes).toBe(6);
+        expect(agile.nombreDeDes).toBe(5);
+    });
+
+    it('« ses seuls dés d\'attribut » — une compétence à zéro reste une réserve', () => {
+        const jet = preparerLeJet(alien, { ...RIPLEY, xenologie: 0 }, {
+            champs: { attribut: 'force', competence: 'xenologie' },
+        });
+        expect(jet.nombreDeDes).toBe(4);
+        expect(jet.avertissements, 'zéro est une valeur lue, pas un manque').toEqual([]);
+    });
+
+    it('le plafond du système s\'applique à la réserve composée', () => {
+        const colosse = preparerLeJet(alien, { force: 8, athletisme: 7 }, {
+            champs: { attribut: 'force', competence: 'athletisme' },
+        });
+        expect(colosse.nombreDeDes, 'plafonné à dix').toBe(10);
+        expect(colosse.avertissements.some(a => a.includes('plafonnée'))).toBe(true);
+    });
+
+    it('la base s\'ajoute aux composantes, pour un jeu qui garantit un dé', () => {
+        const avecBase = { ...alien, reserve: { ...alien.reserve!, base: 1 } };
+        const jet = preparerLeJet(avecBase, RIPLEY, {
+            champs: { attribut: 'force', competence: 'pilotage' },
+        });
+        expect(jet.nombreDeDes, '1 + Force 4 + Pilotage 2').toBe(7);
+    });
+
+    it('un champ non retenu se dit, et n\'invente pas de dés', () => {
+        const jet = preparerLeJet(alien, RIPLEY, { champs: { attribut: 'force' } });
+
+        expect(jet.nombreDeDes, 'la Force seule, sans compétence inventée').toBe(4);
+        expect(jet.avertissements.some(a => a.includes('Compétence'))).toBe(true);
+    });
+
+    it('les dés achetés se comptent au-delà de la réserve du personnage', () => {
+        const jet = preparerLeJet(alien, RIPLEY, {
+            champs: { attribut: 'force', competence: 'pilotage' },
+            desSupplementaires: 2,
+        });
+        expect(jet.nombreDeDes, '4 + 2 + 2 achetés').toBe(8);
+        expect(jet.desAchetes).toBe(2);
+    });
+
+    it('un pilote sans composantes garde exactement son comportement d\'avant', () => {
+        // Les pilotes déjà forgés portent une réserve à base fixe : ils ne
+        // doivent rien voir changer.
+        const ancien: DescripteurDeJet = {
+            reserve: { base: 1, max: 10, faces: 6 },
+            sens: 'superieur-ou-egal',
+        };
+        const jet = preparerLeJet(ancien, RIPLEY, { champs: {} });
+
+        expect(jet.nombreDeDes).toBe(1);
+        expect(jet.composantesDeLaReserve).toEqual([]);
+        expect(jet.avertissements).toEqual([]);
+    });
+});

@@ -109,9 +109,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     );
 
     /** Rien ne part tant que chaque composante n'a pas son champ. */
-    // Un jeu sans composante de seuil est prêt d'emblée : il n'y a rien à
-    // choisir sur la fiche avant de lancer.
-    const pret = (descripteur.seuil ?? []).every(c => choix[c.id]) && jet.avertissements.length === 0;
+    // Un jeu qui ne compose rien depuis la fiche est prêt d'emblée. Les
+    // composantes de la réserve comptent autant que celles du seuil : lancer
+    // sans attribut ni compétence donnerait une poignée de dés arbitraire.
+    const pret = [...(descripteur.seuil ?? []), ...(descripteur.reserve?.composantes ?? [])]
+        .every(c => choix[c.id]) && jet.avertissements.length === 0;
 
     /**
      * D'où sortiront les points, **avant** de lancer.
@@ -194,9 +196,18 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 <Dices size={14} /> Lancer un test
             </h3>
 
-            {/* Les composantes du seuil : un menu par composante. */}
+            {/*
+                Les composantes que le joueur retient sur sa fiche : celles du
+                seuil, et **celles de la réserve**.
+
+                Chez Alien le nombre de dés vaut un attribut plus une compétence
+                — le pilote ne savait offrir qu'un nombre fixe, et tous les
+                personnages lançaient la même poignée. Les deux familles se
+                choisissent au même endroit parce que c'est le même geste : le
+                joueur désigne ce qu'il invoque, avant de lancer.
+            */}
             <div className="grid grid-cols-2 gap-3">
-                {(descripteur.seuil ?? []).map(composante => (
+                {[...(descripteur.reserve?.composantes ?? []), ...(descripteur.seuil ?? [])].map(composante => (
                     <label key={composante.id} className="flex flex-col gap-1">
                         <span className="text-[9px] font-black uppercase tracking-widest text-app-text/40">
                             {composante.label}
@@ -217,17 +228,45 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 ))}
             </div>
 
-            {/* Le seuil, décomposé — on doit voir d'où il sort. */}
-            <div className="flex items-baseline gap-2 text-xs">
-                <span className="text-app-text/40 font-bold uppercase tracking-widest text-[9px]">Seuil</span>
-                <span className="font-mono text-lg font-black text-accent">{jet.seuil}</span>
-                {jet.composantes.length > 0 && (
+            {/* Le seuil, décomposé — on doit voir d'où il sort. Un jeu à
+                réserve pure n'en compose aucun : on ne montre pas un « Seuil 0 »
+                qui se lirait comme une mesure. */}
+            {(descripteur.seuil ?? []).length > 0 && (
+                <div className="flex items-baseline gap-2 text-xs">
+                    <span className="text-app-text/40 font-bold uppercase tracking-widest text-[9px]">Seuil</span>
+                    <span className="font-mono text-lg font-black text-accent">{jet.seuil}</span>
+                    {jet.composantes.length > 0 && (
+                        <span className="text-app-text/30 font-mono">
+                            = {jet.composantes.map(c => `${c.valeur}`).join(' + ')}
+                            <span className="ml-1 opacity-60">({jet.composantes.map(c => c.champ).join(' + ')})</span>
+                        </span>
+                    )}
+                </div>
+            )}
+
+            {/* La réserve, décomposée pour la même raison : un joueur d'Alien
+                doit voir que ses cinq dés sont « Force 4 + Pilotage 1 », et non
+                un nombre tombé du ciel. */}
+            {jet.composantesDeLaReserve.length > 0 && (
+                <div className="flex items-baseline gap-2 text-xs">
+                    <span className="text-app-text/40 font-bold uppercase tracking-widest text-[9px]">Réserve</span>
+                    <span className="font-mono text-lg font-black text-accent">{jet.nombreDeDes}</span>
                     <span className="text-app-text/30 font-mono">
-                        = {jet.composantes.map(c => `${c.valeur}`).join(' + ')}
-                        <span className="ml-1 opacity-60">({jet.composantes.map(c => c.champ).join(' + ')})</span>
+                        = {[
+                            ...(descripteur.reserve?.base ? [`${descripteur.reserve.base}`] : []),
+                            ...jet.composantesDeLaReserve.map(c => `${c.valeur}`),
+                            ...(jet.desAchetes > 0 ? [`${jet.desAchetes}`] : []),
+                        ].join(' + ')}
+                        <span className="ml-1 opacity-60">
+                            ({[
+                                ...(descripteur.reserve?.base ? ['base'] : []),
+                                ...jet.composantesDeLaReserve.map(c => c.champ),
+                                ...(jet.desAchetes > 0 ? ['achetés'] : []),
+                            ].join(' + ')})
+                        </span>
                     </span>
-                )}
-            </div>
+                </div>
+            )}
 
             <div className="flex items-center gap-6">
                 {/* Réserve : les dés supplémentaires s'achètent, jusqu'au plafond du système. */}
@@ -239,7 +278,15 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     ><Minus size={12} /></button>
                     <span className="font-mono text-sm font-black w-6 text-center">{jet.nombreDeDes}</span>
                     <button
-                        onClick={() => setDesAchetes(d => Math.min((descripteur.reserve?.max ?? 0) - (descripteur.reserve?.base ?? 0), d + 1))}
+                        /* Le plafond se compte à partir de la réserve RÉELLE du
+                           personnage, composantes comprises — sinon un joueur
+                           d'Alien à cinq dés pourrait en acheter dix de plus. */
+                        onClick={() => setDesAchetes(d => Math.min(
+                            (descripteur.reserve?.max ?? 0)
+                                - (descripteur.reserve?.base ?? 0)
+                                - jet.composantesDeLaReserve.reduce((s, c) => s + c.valeur, 0),
+                            d + 1,
+                        ))}
                         className="p-1 rounded-md bg-app-bg/60 border border-app-border/40 hover:border-accent/40 transition-colors"
                     ><Plus size={12} /></button>
                 </div>

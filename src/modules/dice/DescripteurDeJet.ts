@@ -69,7 +69,38 @@ export interface DescripteurDeJet {
      * qui paie ; sans elle, les dés sont gratuits et le panneau ne demande
      * rien.
      */
-    reserve?: { base: number; max: number; faces: number; cout?: number[]; ressource?: string };
+    reserve?: {
+        /** Dés lancés d'office, avant toute composante et tout achat. */
+        base: number;
+        /**
+         * Composantes **additionnées à la base**, choisies sur la fiche.
+         *
+         * **Le dernier mur, abattu le 2026-08-15.** Chez Alien la réserve vaut
+         * un **attribut plus une compétence** — « lance autant de dés que la
+         * somme de ton attribut et de ta compétence » — et le descripteur ne
+         * savait composer que des *seuils*. Le pilote n'avait donc qu'un nombre
+         * fixe à offrir : tous les jets partaient avec la même poignée de dés,
+         * quel que soit le personnage, et rien ne le disait.
+         *
+         * La preuve que le modèle avait compris la règle est dans le journal :
+         * dérivé le 2026-08-12, il a rendu `base: "attribut+comp_level"` — la
+         * bonne mécanique, écrite là où le panneau attendait un entier. Et
+         * l'invite lui commandait ensuite d'y renoncer : *« en NOMBRES et jamais
+         * en formule »*. **C'est l'outil qui ordonnait de perdre la règle**, la
+         * même faute que la consigne du zigzag sur les portées.
+         *
+         * Même forme que `seuil`, à dessein : le joueur retient un champ par
+         * composante, et les valeurs s'additionnent. **Les identifiants partagent
+         * un seul espace de noms avec ceux du seuil** — `choix.champs` est une
+         * carte unique, et deux composantes homonymes désigneraient le même
+         * choix.
+         */
+        composantes?: ComposanteDeJet[];
+        max: number;
+        faces: number;
+        cout?: number[];
+        ressource?: string;
+    };
     /** Chaque dé est-il une réussite en dessous ou au-dessus du seuil ? */
     sens: SensDuJet;
     /** Un dé à cette valeur ou en deçà compte double. Chez Dune, le 1 naturel. */
@@ -113,6 +144,15 @@ export interface JetPrepare {
     /** Le détail du seuil, pour l'afficher : `[{ label: 'Combat', valeur: 6 }, …]`. */
     composantes: { label: string; champ: string; valeur: number }[];
     nombreDeDes: number;
+    /**
+     * Le détail de la réserve, quand elle se compose depuis la fiche.
+     *
+     * Séparé des composantes du seuil parce qu'ils ne disent pas la même chose :
+     * l'un forme un nombre à comparer, l'autre un nombre de dés. Les afficher
+     * ensemble donnerait « 4 + 3 » sans qu'on sache si ce sont des dés ou un
+     * seuil — c'est justement ce que le panneau doit rendre lisible.
+     */
+    composantesDeLaReserve: { label: string; champ: string; valeur: number }[];
     /** Dés effectivement achetés, plafond appliqué. */
     desAchetes: number;
     /**
@@ -253,54 +293,73 @@ export function preparerLeJet(
 ): JetPrepare {
     const avertissements: string[] = [];
     const remarques: string[] = [];
-    const composantes: JetPrepare['composantes'] = [];
-    let seuil = 0;
+
+    /**
+     * Additionne une liste de composantes lues sur la fiche.
+     *
+     * **Une seule fonction pour le seuil et pour la réserve**, parce que la
+     * règle est identique : le joueur retient un champ par composante, on lit sa
+     * valeur, on additionne, et **tout ce qui manque se dit sans empêcher de
+     * lancer**. Deux boucles jumelles auraient fini par diverger — l'une
+     * apprenant à reconnaître une section renommée, l'autre non.
+     */
+    const additionner = (liste: readonly ComposanteDeJet[]) => {
+        const retenues: JetPrepare['composantes'] = [];
+        let total = 0;
+
+        for (const composante of liste) {
+            /*
+              **Où le joueur aurait dû pouvoir choisir.** Quand la section
+              annoncée n'existe pas, il n'a rien eu à se reprocher : le menu
+              était vide. Le dire ainsi désigne le pilote, qui est le fautif,
+              plutôt que lui.
+            */
+            if (sections) {
+                const { section, par, ambigues } = sectionDeLaComposante(sections, composante);
+                if (!section) {
+                    avertissements.push(ambigues.length > 1
+                        ? `${composante.label} : le pilote désigne la section « ${composante.sectionId} », `
+                            + `absente de cette fiche, et ${ambigues.length} sections pourraient y répondre `
+                            + `(${ambigues.join(', ')}). Au pilote de dire laquelle.`
+                        : `${composante.label} : le pilote désigne la section « ${composante.sectionId} », `
+                            + "qui n'existe pas dans cette fiche — il n'y a rien à y choisir.");
+                    continue;
+                }
+                if (par === 'label') {
+                    remarques.push(
+                        `${composante.label} : le pilote désigne la section « ${composante.sectionId} », `
+                        + `que cette fiche nomme « ${section.label || section.id} » (${section.id}).`,
+                    );
+                }
+            }
+
+            const champ = choix.champs[composante.id];
+            if (!champ) {
+                avertissements.push(`${composante.label} : aucun champ retenu.`);
+                continue;
+            }
+            const valeur = valeurDuChamp(valeursDeLaFiche, champ);
+            if (valeur === null) {
+                // Le cas exact que le contrôle de cohérence attrape sur le
+                // pilote : un identifiant qui ne correspond à aucun champ.
+                avertissements.push(`${composante.label} : « ${champ} » est absent de la fiche.`);
+                continue;
+            }
+            total += valeur;
+            retenues.push({ label: composante.label, champ, valeur });
+        }
+
+        return { total, retenues };
+    };
 
     /*
       Un jeu à réserve ne compose aucun seuil depuis la fiche : la boucle ne
       tourne simplement pas, et le seuil reste à zéro. C'est le cas d'Alien, où
-      chaque six est une réussite quelle que soit la valeur du personnage.
+      chaque six est une réussite quelle que soit la valeur du personnage — mais
+      où le NOMBRE de dés, lui, vient de la fiche.
     */
-    for (const composante of descripteur.seuil ?? []) {
-        /*
-          **Où le joueur aurait dû pouvoir choisir.** Quand la section annoncée
-          n'existe pas, il n'a rien eu à se reprocher : le menu était vide. Le
-          dire ainsi désigne le pilote, qui est le fautif, plutôt que lui.
-        */
-        if (sections) {
-            const { section, par, ambigues } = sectionDeLaComposante(sections, composante);
-            if (!section) {
-                avertissements.push(ambigues.length > 1
-                    ? `${composante.label} : le pilote désigne la section « ${composante.sectionId} », `
-                        + `absente de cette fiche, et ${ambigues.length} sections pourraient y répondre `
-                        + `(${ambigues.join(', ')}). Au pilote de dire laquelle.`
-                    : `${composante.label} : le pilote désigne la section « ${composante.sectionId} », `
-                        + "qui n'existe pas dans cette fiche — il n'y a rien à y choisir.");
-                continue;
-            }
-            if (par === 'label') {
-                remarques.push(
-                    `${composante.label} : le pilote désigne la section « ${composante.sectionId} », `
-                    + `que cette fiche nomme « ${section.label || section.id} » (${section.id}).`,
-                );
-            }
-        }
-
-        const champ = choix.champs[composante.id];
-        if (!champ) {
-            avertissements.push(`${composante.label} : aucun champ retenu.`);
-            continue;
-        }
-        const valeur = valeurDuChamp(valeursDeLaFiche, champ);
-        if (valeur === null) {
-            // Le cas exact que le contrôle de cohérence attrape sur le pilote :
-            // un identifiant qui ne correspond à aucun champ de la fiche.
-            avertissements.push(`${composante.label} : « ${champ} » est absent de la fiche.`);
-            continue;
-        }
-        seuil += valeur;
-        composantes.push({ label: composante.label, champ, valeur });
-    }
+    const { total: seuil, retenues: composantes } = additionner(descripteur.seuil ?? []);
+    const deLaReserve = additionner(descripteur.reserve?.composantes ?? []);
 
     /*
       **Sans réserve déclarée, on ne fabrique pas de dés.** Un pilote peut
@@ -314,9 +373,19 @@ export function preparerLeJet(
         avertissements.push('Le pilote ne décrit aucune réserve de dés : rien à lancer.');
     }
 
+    /*
+      **La réserve du personnage, et non celle du système.**
+
+      Chez Alien elle vaut un attribut plus une compétence : deux personnages
+      n'entrent pas dans la même scène avec la même poignée de dés. `base` reste
+      ce qui est lancé d'office — souvent zéro dès que des composantes existent,
+      un pour les jeux qui garantissent un dé.
+    */
+    const reserveDeDepart = (reserve?.base ?? 0) + deLaReserve.total;
+
     // Les dés achetés ne franchissent pas le plafond du système : chez Dune,
     // cinq dés au total, quoi qu'on dépense.
-    const demandes = (reserve?.base ?? 0) + Math.max(0, choix.desSupplementaires ?? 0);
+    const demandes = reserveDeDepart + Math.max(0, choix.desSupplementaires ?? 0);
     const nombreDeDes = Math.min(demandes, reserve?.max ?? 0);
     if (reserve && demandes > reserve.max) {
         avertissements.push(`Réserve plafonnée à ${reserve.max} dés.`);
@@ -324,7 +393,7 @@ export function preparerLeJet(
 
     // Le prix croît dé après dé : on additionne les échelons réellement
     // franchis, pas le nombre de dés fois un prix moyen.
-    const desAchetes = nombreDeDes - (reserve?.base ?? 0);
+    const desAchetes = nombreDeDes - reserveDeDepart;
     const echelons = reserve?.cout ?? [];
     const total = echelons.slice(0, Math.max(0, desAchetes)).reduce((s, c) => s + c, 0);
 
@@ -347,6 +416,7 @@ export function preparerLeJet(
         seuil,
         composantes,
         nombreDeDes,
+        composantesDeLaReserve: deLaReserve.retenues,
         desAchetes: Math.max(0, desAchetes),
         cout: { total, ressource: reserve?.ressource },
         faces: reserve?.faces ?? 0,
