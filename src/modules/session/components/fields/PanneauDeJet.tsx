@@ -199,7 +199,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
          * gagner trois points et n'en voir arriver qu'un doit s'expliquer.
          */
         if (monnaie && jet.cout.ressource) {
-            const excedent = verdict(res.successes ?? 0, jet.difficulte).excedent;
+            const excedent = verdict(res.successes ?? 0, jet.reussitesRequises).excedent;
             if (excedent > 0) {
                 dits.push(...mouvoir(
                     jet.cout.ressource, excedent,
@@ -212,7 +212,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     };
 
     const reussites = resultat?.successes ?? 0;
-    const v = verdict(reussites, difficulte);
+    const v = verdict(reussites, jet.reussitesRequises);
     const complications = descripteur.complication
         ? (resultat?.rolls ?? []).filter(d => typeof d.val === 'number' && d.val >= descripteur.complication!).length
         : 0;
@@ -470,8 +470,14 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         <span className={`font-black uppercase tracking-widest ${v.reussi ? 'text-emerald-400' : 'text-red-400'}`}>
                             {v.reussi ? 'Réussite' : 'Échec'}
                         </span>
+                        {/* « difficulté 0 » ne voulait rien dire sur un jeu qui
+                            n'en gradue aucune : il en faut une, et c'est ça
+                            qu'on annonce. */}
                         <span className="text-app-text/50 font-mono">
-                            {reussites} réussite{reussites > 1 ? 's' : ''} / difficulté {difficulte}
+                            {reussites} réussite{reussites > 1 ? 's' : ''}
+                            {descripteur.difficulte
+                                ? ` / difficulté ${difficulte}`
+                                : ` / ${jet.reussitesRequises} requise${jet.reussitesRequises > 1 ? 's' : ''}`}
                         </span>
                         {/*
                             **Les 1 de la seconde poule, nommés par le jeu.**

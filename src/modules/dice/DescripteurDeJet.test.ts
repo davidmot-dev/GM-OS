@@ -614,3 +614,54 @@ describe('les dés de stress se comptent à part', () => {
         );
     });
 });
+
+describe('combien de réussites il faut vraiment', () => {
+    /**
+     * **Relevé par David le 2026-08-15, capture à l'appui.** Un jet d'Alien à
+     * deux six annonçait *« 2 réussites / difficulté 0 »* et **deux excédents**.
+     * Il n'y en a qu'un : le premier six **est** la réussite, les suivants sont
+     * le surplus.
+     *
+     * Alien ne gradue pas ses tests — son pilote ne déclare aucune difficulté —
+     * et `difficulte` retombait à zéro. Or zéro n'est pas la règle du jeu : la
+     * fiche dit « réussir exige d'obtenir au moins un six ». *Zéro déclaré et
+     * zéro par absence ne sont pas la même valeur.*
+     *
+     * Le défaut jumeau était plus grave et parfaitement invisible : un jet sans
+     * aucun six s'affichait **« RÉUSSITE »**.
+     */
+    const alien: DescripteurDeJet = {
+        reserve: { base: 1, max: 10, faces: 6 },
+        sens: 'superieur-ou-egal',
+    };
+
+    it('sans difficulté déclarée, il en faut une — et une seule', () => {
+        const jet = preparerLeJet(alien, {}, { champs: {} });
+        expect(jet.reussitesRequises).toBe(1);
+    });
+
+    it('deux six sur Alien font UN excédent, pas deux', () => {
+        const jet = preparerLeJet(alien, {}, { champs: {} });
+        expect(verdict(2, jet.reussitesRequises)).toEqual({ reussi: true, excedent: 1 });
+    });
+
+    it('aucun six n\'est pas une réussite — le défaut le plus silencieux', () => {
+        const jet = preparerLeJet(alien, {}, { champs: {} });
+        expect(verdict(0, jet.reussitesRequises).reussi).toBe(false);
+    });
+
+    it('un jeu qui gradue ses tests garde sa difficulté, zéro compris', () => {
+        /**
+         * Chez Dune la difficulté 0 est une valeur **déclarée** — une tâche
+         * automatiquement réussie —, pas une absence. On ne lui impose donc pas
+         * la réussite minimale d'Alien.
+         */
+        const facile = preparerLeJet(jetDune, FICHE, { champs: {}, difficulte: 0 });
+        expect(facile.reussitesRequises).toBe(0);
+        expect(verdict(0, facile.reussitesRequises).reussi, 'D0 passe sans réussite').toBe(true);
+
+        const ardu = preparerLeJet(jetDune, FICHE, { champs: {}, difficulte: 3 });
+        expect(ardu.reussitesRequises).toBe(3);
+        expect(verdict(5, ardu.reussitesRequises)).toEqual({ reussi: true, excedent: 2 });
+    });
+});

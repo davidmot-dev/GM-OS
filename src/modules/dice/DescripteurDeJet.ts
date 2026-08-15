@@ -208,6 +208,27 @@ export interface JetPrepare {
     doubleSous: number;
     difficulte: number;
     /**
+     * Combien de réussites il faut réellement pour que le jet passe.
+     *
+     * **Ce n'est pas toujours la difficulté, et c'est le défaut relevé par
+     * David le 2026-08-15** : sur un jet d'Alien à deux six, l'écran annonçait
+     * *« 2 réussites / difficulté 0 »* et **deux excédents**. Il n'y en a qu'un.
+     *
+     * Alien ne gradue pas ses tests : son pilote ne déclare **aucune**
+     * difficulté, et `difficulte` retombait donc à zéro. Or zéro n'est pas la
+     * règle du jeu — la fiche dit *« réussir exige d'obtenir au moins un six »*.
+     * Le premier six **est** la réussite ; les suivants sont le surplus.
+     *
+     * Le défaut jumeau était plus grave et invisible : `verdict(0, 0)` rend
+     * `reussi: true`. **Un jet d'Alien sans aucun six s'affichait « RÉUSSITE ».**
+     *
+     * *Zéro déclaré et zéro par absence ne sont pas la même valeur* — c'est la
+     * règle du projet : l'absence n'est pas un zéro. Quand le pilote déclare des
+     * bornes, on suit ce que le meneur a fixé, jusqu'à la difficulté 0 de Dune,
+     * qui signifie une tâche automatiquement réussie. Sinon, il en faut une.
+     */
+    reussitesRequises: number;
+    /**
      * Ce qui n'a pas pu être résolu.
      *
      * **Jamais une exception.** Un champ absent de la fiche est une erreur de
@@ -467,6 +488,13 @@ export function preparerLeJet(
         composantesDeLaSecondeReserve: deLaSeconde.retenues,
         desAchetes: Math.max(0, desAchetes),
         cout: { total, ressource: reserve?.ressource },
+        /*
+          Un jeu qui gradue ses tests dit combien de réussites il exige, jusqu'à
+          zéro — la difficulté 0 de Dune est une tâche automatiquement réussie.
+          Un jeu qui ne les gradue pas en demande une : c'est la définition d'un
+          compte de réussites.
+        */
+        reussitesRequises: bornes ? difficulte : 1,
         faces: reserve?.faces ?? 0,
         sens: descripteur.sens,
         // La spécialisation élargit le critique ; sans elle, le critique ordinaire.
