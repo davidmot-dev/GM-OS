@@ -101,6 +101,31 @@ export interface GameSession {
     sessionNotes?: string;
     moduleSnapshot?: SessionModuleSnapshot;
     feedbacks?: SessionFeedback[];
+
+    /**
+     * L'acte dans lequel cette séance est censée se dérouler.
+     *
+     * **La face PRÉVUE de la trame**, et elle seule. Le document du 2026-08-08
+     * distingue deux relations entre une séance et des scènes : ce qui a été
+     * *anticipé* — de la préparation, donc ici — et ce qui a été *traversé*, qui
+     * relève de la capture en partie et n'existe pas encore. *« La divergence
+     * entre les deux est elle-même intéressante : c'est là que la partie s'est
+     * écartée du plan, donc là où il s'est passé quelque chose. »*
+     *
+     * **La séance n'est pas rangée sous l'acte pour autant.** Une séance coupe
+     * la trame arbitrairement : ce sont deux axes qui se croisent, et ce champ
+     * est une prévision, pas une hiérarchie.
+     */
+    acteId?: string;
+    /**
+     * Les scènes qu'on pense jouer.
+     *
+     * Facultatif, et lu avec un repli partout : les séances écrites avant le
+     * 2026-08-15 n'en portent pas. Le déclarer obligatoire l'aurait rendu
+     * `undefined` à l'exécution en prétendant le contraire — c'est déjà le cas
+     * de `sessionEntityIds`, que tous ses lecteurs protègent par un `|| []`.
+     */
+    scenesPrevuesIds?: string[];
 }
 
 // ─────────────────────────────────────────────

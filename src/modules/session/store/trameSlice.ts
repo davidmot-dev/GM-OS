@@ -9,7 +9,37 @@
 
 import type { StateCreator } from 'zustand';
 import type { Acte, Scene, OrigineDeScene } from '../../../types/trame.types';
+import type { GameSession } from '../../../types/session.types';
 import { actesOrdonnes, scenesOrdonnees, prochainOrdre, deplacer } from '../logic/trame';
+
+/**
+ * Ce que ce slice doit voir chez son voisin, et rien de plus.
+ *
+ * Les séances désignent un acte et des scènes ; supprimer l'un sans nettoyer
+ * l'autre laisserait une séance annoncer un acte qui n'existe plus. On élargit
+ * le typage **localement** plutôt que d'importer `SessionSlice` — l'importer
+ * fermerait un cycle entre les deux modules, et c'est le geste déjà retenu dans
+ * `entitySlice`.
+ */
+type AvecSeances = TrameSlice & { sessions: GameSession[] };
+
+/** Retire un acte et ses scènes des prévisions de toutes les séances. */
+function oublierDansLesSeances(
+    sessions: GameSession[],
+    { acteId, sceneIds }: { acteId?: string; sceneIds?: Set<string> },
+): GameSession[] {
+    return sessions.map(s => {
+        const perdSonActe = !!acteId && s.acteId === acteId;
+        const prevues = s.scenesPrevuesIds ?? [];
+        const restantes = sceneIds ? prevues.filter(id => !sceneIds.has(id)) : prevues;
+        if (!perdSonActe && restantes.length === prevues.length) return s;
+        return {
+            ...s,
+            ...(perdSonActe ? { acteId: undefined } : {}),
+            scenesPrevuesIds: restantes,
+        };
+    });
+}
 
 // ─────────────────────────────────────────────
 // State
@@ -75,10 +105,17 @@ export const createTrameSlice: StateCreator<TrameSlice, [], [], TrameSlice> = (s
       nombre avant de demander confirmation — `scenesEmportees` est là pour ça.
     */
     supprimerActe: (id) =>
-        set((state) => ({
-            actes: state.actes.filter((a) => a.id !== id),
-            scenes: state.scenes.filter((s) => s.acteId !== id),
-        })),
+        (set as unknown as (fn: (state: AvecSeances) => Partial<AvecSeances>) => void)((state) => {
+            const emportees = new Set(state.scenes.filter((s) => s.acteId === id).map((s) => s.id));
+            return {
+                actes: state.actes.filter((a) => a.id !== id),
+                scenes: state.scenes.filter((s) => s.acteId !== id),
+                // Une séance qui annoncerait un acte disparu afficherait un vide
+                // sans dire pourquoi. On oublie la référence en même temps que
+                // sa cible.
+                sessions: oublierDansLesSeances(state.sessions ?? [], { acteId: id, sceneIds: emportees }),
+            };
+        }),
 
     deplacerActe: (id, sens) => {
         const acte = get().actes.find((a) => a.id === id);
@@ -124,8 +161,9 @@ export const createTrameSlice: StateCreator<TrameSlice, [], [], TrameSlice> = (s
         })),
 
     supprimerScene: (id) =>
-        set((state) => ({
+        (set as unknown as (fn: (state: AvecSeances) => Partial<AvecSeances>) => void)((state) => ({
             scenes: state.scenes.filter((s) => s.id !== id),
+            sessions: oublierDansLesSeances(state.sessions ?? [], { sceneIds: new Set([id]) }),
         })),
 
     deplacerScene: (id, sens) => {

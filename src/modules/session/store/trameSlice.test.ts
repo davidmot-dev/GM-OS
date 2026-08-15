@@ -106,6 +106,63 @@ describe('trameSlice', () => {
         expect(store.getState().scenes.find(s => s.id === voisine)!.ordre).toBe(0);
     });
 
+    /**
+     * **Ce qu'une séance annonce ne doit pas survivre à ce qu'elle annonce.**
+     *
+     * Une séance qui désigne un acte supprimé afficherait un vide sans dire
+     * pourquoi, et une scène prévue disparue laisserait un identifiant mort dans
+     * la liste. C'est la même classe de fuite que celle trouvée le 2026-08-15 à
+     * la relecture : `deleteCampaign` nettoyait six collections et oubliait les
+     * actes et les scènes.
+     */
+    describe('les séances oublient ce qui disparaît', () => {
+        const avecSeances = () => {
+            const s = nouveauStore();
+            const acteId = s.getState().ajouterActe('c1', 'Acte I');
+            const scene1 = s.getState().ajouterScene(acteId, 'S1');
+            const scene2 = s.getState().ajouterScene(acteId, 'S2');
+            (s as unknown as { setState: (p: object) => void }).setState({
+                sessions: [{
+                    id: 'sess-1', campaignId: 'c1', number: 1, date: '', status: 'planned',
+                    publicSummary: '', gmSecrets: '', checklist: [], sessionEntityIds: [],
+                    acteId, scenesPrevuesIds: [scene1, scene2],
+                }],
+            });
+            return { s, acteId, scene1, scene2 };
+        };
+
+        const seance = (s: ReturnType<typeof nouveauStore>) =>
+            (s.getState() as unknown as { sessions: { acteId?: string; scenesPrevuesIds?: string[] }[] }).sessions[0];
+
+        it('supprimer une scène la retire des séances qui la prévoyaient', () => {
+            const { s, acteId, scene1, scene2 } = avecSeances();
+            s.getState().supprimerScene(scene1);
+
+            expect(seance(s).scenesPrevuesIds).toEqual([scene2]);
+            expect(seance(s).acteId, 'l\'acte tient toujours').toBe(acteId);
+        });
+
+        it('supprimer un acte retire l\'acte ET ses scènes des séances', () => {
+            const { s, acteId } = avecSeances();
+            s.getState().supprimerActe(acteId);
+
+            expect(seance(s).acteId).toBeUndefined();
+            expect(seance(s).scenesPrevuesIds).toEqual([]);
+        });
+
+        it('une séance qui ne prévoyait rien n\'est pas réécrite', () => {
+            // Réécrire à l'identique ferait redessiner tous les écrans abonnés
+            // aux séances à chaque suppression de scène.
+            const { s, scene1 } = avecSeances();
+            (s as unknown as { setState: (p: object) => void }).setState({
+                sessions: [{ id: 'sess-2', campaignId: 'c1', scenesPrevuesIds: [] }],
+            });
+            const avant = seance(s);
+            s.getState().supprimerScene(scene1);
+            expect(seance(s)).toBe(avant);
+        });
+    });
+
     it('une scène naît préparée, sauf si on dit le contraire', () => {
         // L'origine n'est pas un choix qu'on demande au meneur : c'est le code
         // qui crée la scène qui le sait. Ici, l'écran de trame ; plus tard, un

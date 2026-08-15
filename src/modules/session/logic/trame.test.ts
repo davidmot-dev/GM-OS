@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
     actesOrdonnes, scenesOrdonnees, prochainOrdre, deplacer,
-    remplissageDeLaScene, scenesEmportees,
+    remplissageDeLaScene, scenesEmportees, repartirLesScenesPrevues,
 } from './trame';
 import type { Acte, Scene } from '../../../types/trame.types';
 
@@ -112,6 +112,53 @@ describe('remplissageDeLaScene — le taux remplace un second type d\'objet', ()
             entiteIds: ['e-1'],
         });
         expect(remplissageDeLaScene(retravaillee)).toBeCloseTo(3 / 5);
+    });
+});
+
+describe('repartirLesScenesPrevues — la séance prévoit sans être enfermée', () => {
+    const scenes = [
+        scene('s1', 'a1', 1),
+        scene('s2', 'a1', 0),
+        scene('ailleurs', 'a2', 0),
+    ];
+
+    it('range les scènes prévues selon l\'acte annoncé, chacune dans son ordre', () => {
+        const { deLActe, horsActe } = repartirLesScenesPrevues(scenes, 'a1', ['s1', 'ailleurs', 's2']);
+        expect(deLActe.map(s => s.id), 'triées, pas dans l\'ordre de saisie').toEqual(['s2', 's1']);
+        expect(horsActe.map(s => s.id)).toEqual(['ailleurs']);
+    });
+
+    it('une scène venue d\'un autre acte n\'est pas écartée', () => {
+        /**
+         * *« Ne pas imposer la linéarité. »* Une séance déborde sur l'acte
+         * suivant, un groupe prend de l'avance. Changer l'acte d'une séance ne
+         * doit rien effacer en silence : ce qui sort du cadre est montré à
+         * part.
+         */
+        const { deLActe, horsActe } = repartirLesScenesPrevues(scenes, 'a2', ['s1', 'ailleurs']);
+        expect(deLActe.map(s => s.id)).toEqual(['ailleurs']);
+        expect(horsActe.map(s => s.id)).toEqual(['s1']);
+    });
+
+    it('sans acte annoncé, tout est hors acte — et rien n\'est perdu', () => {
+        const { deLActe, horsActe } = repartirLesScenesPrevues(scenes, undefined, ['s1']);
+        expect(deLActe).toEqual([]);
+        expect(horsActe.map(s => s.id)).toEqual(['s1']);
+    });
+
+    it('compte les scènes disparues au lieu de les avaler', () => {
+        // C'est le défaut du `.filter(r => r.targetId)` de la Forge de
+        // chronique : ce qui ne se résout pas disparaît sans un mot. Ici le
+        // nombre remonte à l'écran.
+        const { introuvables } = repartirLesScenesPrevues(scenes, 'a1', ['s1', 'fantome', 'autre-fantome']);
+        expect(introuvables).toBe(2);
+    });
+
+    it('une séance d\'avant la trame ne porte rien, et ce n\'est pas une erreur', () => {
+        const { deLActe, horsActe, introuvables } = repartirLesScenesPrevues(scenes, 'a1', undefined);
+        expect(deLActe).toEqual([]);
+        expect(horsActe).toEqual([]);
+        expect(introuvables).toBe(0);
     });
 });
 

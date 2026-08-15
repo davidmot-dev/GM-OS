@@ -16,12 +16,14 @@ import {
     Link,
     File,
     StickyNote,
-    Star
+    Star,
+    Layers
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { ResolvedImage } from '../../../components/ResolvedImage';
 import SessionChecklist from './SessionChecklist';
 import SessionPrepEntityManager from './SessionPrepEntityManager';
+import PanneauDeTrameDeSeance from './PanneauDeTrameDeSeance';
 
 const SessionFocusEditor: React.FC = () => {
     const { t } = useTranslation();
@@ -205,6 +207,19 @@ const SessionFocusEditor: React.FC = () => {
                                 </div>
                             </div>
                         </motion.div>
+                        {/*
+                            La trame prévue vient AVANT les notes et la
+                            checklist : c'est elle qui dit ce que la séance va
+                            traverser, et le reste s'y accroche.
+                        */}
+                        <motion.div variants={itemVariants} className="flex flex-col gap-4">
+                            <div className="flex items-center gap-3 text-accent">
+                                <Layers size={20} />
+                                <h3 className="text-sm font-black uppercase tracking-[0.3em]">Trame prévue</h3>
+                            </div>
+                            <PanneauDeTrameDeSeance session={session} />
+                        </motion.div>
+
                         {/* Session Notes Section (from Cockpit) */}
                         <motion.div variants={itemVariants} className="flex flex-col gap-4">
                             <div className="flex items-center gap-3 text-gm-cyan">

@@ -114,6 +114,13 @@ export class SessionManager {
             wikiEntries: state.wikiEntries.filter(w => w.campaignId !== id),
             timelineEvents: state.timelineEvents.filter(t => t.campaignId !== id),
             clues: state.clues.filter(c => c.campaignId !== id),
+            // Oubliés à l'arrivée de la trame le 2026-08-15 : sans ces deux
+            // lignes, actes et scènes survivaient à leur campagne — invisibles
+            // partout, puisque tous les écrans filtrent par campagne, et
+            // définitivement irrécupérables puisqu'aucune campagne ne les
+            // réclamait plus.
+            actes: state.actes.filter(a => a.campaignId !== id),
+            scenes: state.scenes.filter(s => s.campaignId !== id),
             
             players: state.players.map(p => ({
                 ...p,

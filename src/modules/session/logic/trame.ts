@@ -91,3 +91,36 @@ export function remplissageDeLaScene(scene: Scene): number {
 export function scenesEmportees(scenes: readonly Scene[], acteId: string): Scene[] {
     return scenes.filter(s => s.acteId === acteId);
 }
+
+/**
+ * Les scènes prévues pour une séance, rangées selon qu'elles appartiennent ou
+ * non à l'acte annoncé.
+ *
+ * **Pourquoi ne pas simplement écarter les autres.** *« Ne pas imposer la
+ * linéarité »* — une séance déborde sur l'acte suivant, un groupe prend de
+ * l'avance, une scène préparée ailleurs se joue plus tôt que prévu. Changer
+ * l'acte d'une séance ne doit donc rien effacer en silence : ce qui sort du
+ * cadre est **montré à part**, jamais jeté. *Ne rien refuser sans motif écrit*,
+ * et ne rien supprimer sans le dire.
+ *
+ * `introuvables` compte les identifiants qui ne désignent plus rien — une scène
+ * supprimée depuis ailleurs. Le nombre remonte à l'écran plutôt que de
+ * disparaître dans un `filter` : c'est le défaut du `.filter(r => r.targetId)`
+ * de la Forge de chronique, qui jette les liens non résolus sans un mot.
+ */
+export function repartirLesScenesPrevues(
+    scenes: readonly Scene[],
+    acteId: string | undefined,
+    prevues: readonly string[] | undefined,
+): { deLActe: Scene[]; horsActe: Scene[]; introuvables: number } {
+    const ids = prevues ?? [];
+    const retenues = ids
+        .map(id => scenes.find(s => s.id === id))
+        .filter((s): s is Scene => !!s);
+
+    return {
+        deLActe: retenues.filter(s => s.acteId === acteId).sort((a, b) => a.ordre - b.ordre),
+        horsActe: retenues.filter(s => s.acteId !== acteId).sort((a, b) => a.ordre - b.ordre),
+        introuvables: ids.length - retenues.length,
+    };
+}

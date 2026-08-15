@@ -38,7 +38,9 @@ describe('SessionManager', () => {
             atlasMaps: [],
             wikiEntries: [],
             timelineEvents: [],
-            clues: []
+            clues: [],
+            actes: [{ id: 'a1', campaignId: 'c1' }, { id: 'a2', campaignId: 'c2' }],
+            scenes: [{ id: 'sc1', campaignId: 'c1' }, { id: 'sc2', campaignId: 'c2' }],
         }));
     });
 
@@ -70,5 +72,23 @@ describe('SessionManager', () => {
         
         expect(result.campaigns).toHaveLength(0);
         expect(result.entities).toHaveLength(0);
+    });
+
+    /**
+     * **Le trou trouvé le 2026-08-15, en relisant après coup.** La trame est
+     * arrivée le jour même et `deleteCampaign` n'a pas été mis à jour : actes et
+     * scènes survivaient à leur campagne. Ils devenaient alors **invisibles**
+     * — tous les écrans filtrent par campagne — et **irrécupérables**, puisque
+     * plus aucune campagne ne les réclamait.
+     *
+     * Le test vérifie aussi que la campagne voisine est intacte : une cascade
+     * trop large est le défaut symétrique, et bien pire.
+     */
+    it('la suppression emporte la trame de cette campagne, et d\'aucune autre', () => {
+        SessionManager.deleteCampaign(mockSet, mockGet, 'c1');
+        const result = mockSet.mock.calls[0][0](mockGet());
+
+        expect(result.actes.map((a: { id: string }) => a.id)).toEqual(['a2']);
+        expect(result.scenes.map((s: { id: string }) => s.id)).toEqual(['sc2']);
     });
 });
