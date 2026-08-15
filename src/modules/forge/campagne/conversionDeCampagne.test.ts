@@ -68,6 +68,33 @@ describe('convertirFiche en mode campagne', () => {
         expect(a.slug).toBe(b.slug);
     });
 
+    it('porte le jeu, pour que la Forge n\'ait pas à le redemander', () => {
+        /**
+         * L'Atelier n'en fait rien — les gabarits interdisent les règles. Mais la
+         * Forge en aura besoin pour le modèle de santé des PNJ et le gabarit de
+         * fiche, et une campagne neuve n'a nulle part où le porter. *Une
+         * information disponible maintenant et perdue ensuite doit s'écrire
+         * maintenant.*
+         */
+        const fiche = convertirFiche(FICHE, options({ champsSupplementaires: { jeu: 'dune' } }));
+        expect(fiche.markdown).toContain('jeu: dune');
+    });
+
+    it('l\'ordre du frontmatter reste stable : appartenance, puis extras', () => {
+        // Tout ce qui lit une fiche lit son en-tête ligne à ligne ; un ordre qui
+        // bouge d'une fiche à l'autre finit par casser un parseur.
+        const fiche = convertirFiche(FICHE, options({
+            champsSupplementaires: { jeu: 'dune', partie: 'Acte I' },
+        }));
+        const lignes = fiche.markdown.split('\n');
+        expect(lignes.slice(1, 5)).toEqual([
+            'sujet: Personnages non joueurs',
+            'campagne: agents-de-dune',
+            'jeu: dune',
+            'partie: Acte I',
+        ]);
+    });
+
     it('un sujet de règles est marqué hors canevas ici', () => {
         const brut = FICHE.replace('Personnages non joueurs', 'Initiative et déroulement du tour');
         const fiche = convertirFiche(brut, options());

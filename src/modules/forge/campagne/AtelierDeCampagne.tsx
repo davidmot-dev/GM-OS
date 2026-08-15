@@ -4,6 +4,7 @@ import {
     ListOrdered, FileText, Upload, Zap, X,
 } from 'lucide-react';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
+import { tousLesPilotes } from '../../session/store/tousLesPilotes';
 import { gmToast } from '../../../stores/useToastStore';
 import { forgeService } from '../ForgeService';
 import { listerLesCarnets, listerLesSources, type CarnetLM, type SourceDuCarnet } from '../carnetNotebookLM';
@@ -30,7 +31,8 @@ import type { CorpusDeCampagne } from '../../../../electron/corpusDeCampagne';
  * La revue est une *publication*, à froid, plus tard.
  */
 const AtelierDeCampagne: React.FC = () => {
-    const { campaigns } = useSessionOSStore();
+    const { campaigns, customGameDrivers } = useSessionOSStore();
+    const pilotes = React.useMemo(() => tousLesPilotes(customGameDrivers), [customGameDrivers]);
 
     /**
      * La campagne visée — **existante ou pas encore**.
@@ -47,6 +49,22 @@ const AtelierDeCampagne: React.FC = () => {
      */
     const [campagneId, setCampagneId] = React.useState('');
     const [nomNeuf, setNomNeuf] = React.useState('');
+    /**
+     * Le jeu de cette campagne — **inscrit dans les fiches, pas employé ici**.
+     *
+     * David : *« je n'ai pas dû choisir le driver, c'est normal ? »* Oui pour
+     * l'Atelier : il ne produit que du texte sourcé, et les gabarits interdisent
+     * les règles. Mais **la Forge en aura besoin** — le modèle de santé des PNJ
+     * (`santeSelonLeJeu`), le gabarit de fiche, le `system` de la campagne — et
+     * une campagne neuve n'a nulle part où le porter.
+     *
+     * L'information est disponible maintenant et perdue ensuite. On l'écrit donc
+     * en `jeu:` dans le frontmatter, et la chaîne se referme sans que personne
+     * ait à se souvenir de son choix dans deux jours. **Il ne change rien aux
+     * invites** : le carnet lit le livre de campagne, les règles y sont hors
+     * sujet par construction.
+     */
+    const [piloteId, setPiloteId] = React.useState('');
     const [corpus, setCorpus] = React.useState<CorpusDeCampagne | null>(null);
 
     const [carnets, setCarnets] = React.useState<CarnetLM[]>([]);
@@ -77,6 +95,12 @@ const AtelierDeCampagne: React.FC = () => {
 
     const campagneExistante = campaigns.find(c => c.id === campagneId);
     const nomCible = (campagneExistante?.name ?? nomNeuf).trim();
+    /*
+      Une campagne existante DÉCLARE son jeu : le redemander serait offrir de le
+      contredire, et c'est exactement ce qui a fait réécrire le système d'une
+      campagne depuis la Forge de chronique. Ce qu'elle déclare l'emporte.
+    */
+    const jeuCible = campagneExistante?.system || piloteId;
     const etapes = React.useMemo(() => etapesDeLaCampagne(actes), [actes]);
     const pret = !!nomCible && !!carnetId;
 
@@ -162,7 +186,7 @@ const AtelierDeCampagne: React.FC = () => {
     const lancerInventaire = () => appeler('inventaire', async () => {
         const brut = await serviceDeCampagne.inventaire(carnetId, sourcesRetenues);
         setInventaire(brut);
-        if (corpus) await ecrireLInventaire(corpus, corpus.id, brut);
+        if (corpus) await ecrireLInventaire(corpus, corpus.id, brut, jeuCible);
     });
 
     const lancerStructure = () => appeler('structure', async () => {
@@ -176,7 +200,7 @@ const AtelierDeCampagne: React.FC = () => {
 
     const forger = (etape: EtapeDeCampagne) => appeler(etape.id, async () => {
         if (!corpus) return;
-        const fiche = await serviceDeCampagne.fiche(carnetId, etape, corpus.id, sourcesRetenues);
+        const fiche = await serviceDeCampagne.fiche(carnetId, etape, corpus.id, sourcesRetenues, jeuCible);
         setFiches(f => ({ ...f, [etape.id]: fiche }));
         // Le brouillon part AVANT toute revue : une réponse acquise ne doit pas
         // dépendre de ce qui se passe ensuite.
@@ -243,7 +267,41 @@ const AtelierDeCampagne: React.FC = () => {
                                 Pas besoin qu'elle existe déjà : l'Atelier écrit un dossier de fiches
                                 sourcées. La campagne elle-même naîtra de la Forge, à partir d'elles.
                             </p>
+
+                            {/*
+                                Le jeu ne sert PAS à l'Atelier — il n'entre dans
+                                aucune invite. Il est écrit dans les fiches pour
+                                la Forge, qui en a besoin pour la santé des PNJ et
+                                le gabarit de fiche. Une campagne existante, elle,
+                                le déclare déjà : la redemander serait offrir de
+                                la contredire.
+                            */}
+                            <p className="text-[10px] font-black uppercase tracking-widest text-app-text/30 mt-4 mb-2">
+                                Jeu <span className="font-bold normal-case tracking-normal opacity-70">— pour la Forge, plus tard</span>
+                            </p>
+                            <div className="space-y-1 max-h-44 overflow-y-auto custom-scrollbar pr-1">
+                                <CibleDeCampagne
+                                    libelle="— je déciderai plus tard —"
+                                    actif={!piloteId}
+                                    onChoisir={() => setPiloteId('')}
+                                />
+                                {pilotes.map(p => (
+                                    <CibleDeCampagne
+                                        key={p.id}
+                                        libelle={`${p.emoji ?? ''} ${p.name}`.trim()}
+                                        actif={piloteId === p.id}
+                                        onChoisir={() => setPiloteId(p.id)}
+                                    />
+                                ))}
+                            </div>
                         </>
+                    )}
+
+                    {campagneExistante && (
+                        <p className="text-[11px] text-app-text/30 italic leading-relaxed mt-2">
+                            Jeu : <b className="not-italic text-app-text/50">{campagneExistante.system || 'non déclaré'}</b> —
+                            celui de la campagne, inscrit tel quel dans les fiches.
+                        </p>
                     )}
 
                     {corpus && (

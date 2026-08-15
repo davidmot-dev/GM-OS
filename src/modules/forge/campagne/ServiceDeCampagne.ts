@@ -135,6 +135,17 @@ export class ServiceDeCampagne {
         etape: EtapeDeCampagne,
         campagne: string,
         sourceIds?: string[],
+        /**
+         * Le jeu de la campagne, inscrit dans le frontmatter.
+         *
+         * **Il ne sert à rien ici, et c'est voulu** : les gabarits interdisent
+         * les règles, et le carnet lit le livre de campagne. Mais la Forge en
+         * aura besoin — le modèle de santé des PNJ, le gabarit de fiche, le
+         * `system` de la campagne — et une campagne neuve n'a nulle part où le
+         * porter. *Une information disponible maintenant et perdue ensuite doit
+         * s'écrire maintenant.*
+         */
+        jeu?: string,
     ): Promise<FicheDeCampagne> {
         const brut = await forgeService.interrogerCarnet(
             notebookId,
@@ -150,7 +161,10 @@ export class ServiceDeCampagne {
             clefDAppartenance: 'campagne',
             sujetDemande: etape.sujet.clef,
             canevas: CANEVAS_DE_CAMPAGNE,
-            ...(etape.acte ? { champsSupplementaires: { partie: etape.acte } } : {}),
+            champsSupplementaires: {
+                ...(jeu ? { jeu } : {}),
+                ...(etape.acte ? { partie: etape.acte } : {}),
+            },
             // Deux actes du même sujet ne se distinguent que par le slug : sans
             // cela, le second effacerait le premier en silence.
             slug: etape.id,
@@ -211,11 +225,17 @@ export async function publierLaFiche(corpus: CorpusDeCampagne, fiche: FicheDeCam
 }
 
 /** Enregistre l'inventaire comme fiche : c'est un livrable, pas un prétraitement. */
-export async function ecrireLInventaire(corpus: CorpusDeCampagne, campagne: string, brut: string): Promise<boolean> {
+export async function ecrireLInventaire(
+    corpus: CorpusDeCampagne,
+    campagne: string,
+    brut: string,
+    jeu?: string,
+): Promise<boolean> {
     const entete = [
         '---',
         'sujet: Inventaire de la campagne',
         `campagne: ${campagne}`,
+        ...(jeu ? [`jeu: ${jeu}`] : []),
         'genere_par: notebooklm',
         'gabarit: v3',
         'relu: false',
