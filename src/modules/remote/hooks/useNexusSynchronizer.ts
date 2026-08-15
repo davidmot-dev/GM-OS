@@ -12,6 +12,7 @@ import { useImageStore } from '../../image/useImageStore';
 
 import { useDiceStore } from '../../../stores/useDiceStore';
 import { useMapStore } from '../../map/useMapStore';
+import { useRessourcesDeTableStore } from '../../table/useRessourcesDeTableStore';
 import { getDifferentialPayload } from '../../../utils/syncUtils';
 import { resolveToSendableUrl } from '../../../utils/mediaResolver';
 import { crossWindowSync } from '../../../services/CrossWindowEventService';
@@ -192,6 +193,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
             const whiteboardStore = useWhiteboardStore.getState();
             const diceStore = useDiceStore.getState();
             const mapStore = useMapStore.getState();
+            const reservesStore = useRessourcesDeTableStore.getState();
 
             const { sessions, campaigns, entities, players, activeCampaignId: currentCampaignId, clues, atlasMaps, customSheetTemplates, customGameDrivers } = freshSessionOS;
 
@@ -331,6 +333,23 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                     activeCampaignWallpaper: resolvedWallpaper,
                     characterLocks: freshSessionOS.connectedCharacters,
                     favorites: resolvedFavorites,
+                    /*
+                      **Les réserves de table, et l'état qu'elles portent.**
+
+                      Demandé par David le 2026-08-15 : *« permet juste aux
+                      joueurs d'avoir une vue sur l'Impulsion et de la gérer »*.
+                      L'Impulsion est **commune aux joueurs** et n'existait que
+                      dans la fenêtre du meneur — une réserve partagée que le
+                      groupe ne voit pas n'est pas partagée, c'est la réserve du
+                      MJ qu'il annonce à voix haute.
+
+                      On envoie l'état brut, sans le filtrer par ce qui est
+                      visible : le caviardage se fait à l'affichage, et un
+                      filtrage ici priverait le panneau de jet du montant à
+                      débiter sur une réserve que le joueur ne voit pas mais
+                      dont le report l'alimente — la Menace, précisément.
+                    */
+                    reservesDeTable: currentCampaignId ? (reservesStore.reserves[currentCampaignId] ?? {}) : {},
                 },
             };
 

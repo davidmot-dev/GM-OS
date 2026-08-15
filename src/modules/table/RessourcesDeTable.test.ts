@@ -7,6 +7,8 @@ import {
     gagner,
     fixer,
     finDeScene,
+    visiblePourUnJoueur,
+    manipulableParUnJoueur,
     type RessourceDeTable,
 } from './RessourcesDeTable';
 
@@ -159,5 +161,54 @@ describe('fixer — le meneur pose la valeur qu\'il veut, dans les bornes', () =
 
     it('une réserve sans plafond accepte la valeur telle quelle', () => {
         expect(fixer(DUNE, { menace: 2 }, 'menace', 30).etat.menace).toBe(30);
+    });
+});
+
+describe('qui voit la réserve, et qui la fait bouger', () => {
+    /**
+     * **La demande de David, le 2026-08-15** : *« Impulsion est une jauge gérée
+     * par les joueurs et cela fait partie du Gameplay, cette gestion commune de
+     * la ressource. »*
+     *
+     * Deux questions distinctes de la propriété, et il fallait les séparer :
+     * chez Dune la **Menace appartient au meneur et se voit** — c'est de la
+     * regarder monter qui fait pression.
+     */
+    const impulsion: RessourceDeTable = {
+        id: 'impulsion', label: 'Impulsion', proprietaire: 'joueurs', depart: 0, min: 0, max: 6,
+    };
+    const menace: RessourceDeTable = {
+        id: 'menace', label: 'Menace', proprietaire: 'meneur', depart: 0, min: 0,
+    };
+
+    it('sans rien déclarer, on suit la propriété', () => {
+        // Le défaut compte : les pilotes déjà forgés ne portent aucun de ces
+        // deux champs, et l'Impulsion doit être visible sans reforge.
+        expect(visiblePourUnJoueur(impulsion)).toBe(true);
+        expect(manipulableParUnJoueur(impulsion)).toBe(true);
+        expect(visiblePourUnJoueur(menace)).toBe(false);
+        expect(manipulableParUnJoueur(menace)).toBe(false);
+    });
+
+    it('une réserve du meneur peut être publique sans devenir manipulable', () => {
+        const publique = { ...menace, visibleAuxJoueurs: true };
+        expect(visiblePourUnJoueur(publique)).toBe(true);
+        expect(manipulableParUnJoueur(publique), 'la voir n\'est pas y toucher').toBe(false);
+    });
+
+    it('manipuler suppose voir — et le refus est ici, pas dans les écrans', () => {
+        /**
+         * Une réserve déclarée manipulable mais cachée serait un bouton sur un
+         * nombre qu'on ne lit pas : le joueur dépenserait à l'aveugle. Le pilote
+         * vient d'un modèle de langage, cette contradiction est donc possible.
+         */
+        const incoherente = { ...impulsion, visibleAuxJoueurs: false, manipulableParLesJoueurs: true };
+        expect(manipulableParUnJoueur(incoherente)).toBe(false);
+    });
+
+    it('une réserve commune peut rester dans la main du meneur', () => {
+        const tenue = { ...impulsion, manipulableParLesJoueurs: false };
+        expect(visiblePourUnJoueur(tenue)).toBe(true);
+        expect(manipulableParUnJoueur(tenue)).toBe(false);
     });
 });

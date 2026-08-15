@@ -159,6 +159,23 @@ export const useHubSync = () => {
                 if (session.clues !== undefined) updates.clues = session.clues;
                 if (session.entities !== undefined) updates.entities = session.entities;
                 if (session.atlasMaps !== undefined) updates.atlasMaps = session.atlasMaps;
+                /*
+                  **Envoyés depuis toujours, appliqués par personne.**
+
+                  `useNexusSynchronizer` sérialise `customSheetTemplates` et
+                  `customGameDrivers` dans chaque diffusion — le MJ paie donc le
+                  coût de les envoyer —, et cette fonction les jetait. La
+                  tablette n'avait que `DEFAULT_SHEET_TEMPLATES` : toute fiche
+                  de personnage y retombait sur « Generic » et ses champs
+                  `stat1`, `stat2`, `info1`, quel que soit le jeu.
+
+                  Rien ne le signalait, parce que `resolveSheetTemplate` a un
+                  repli parfaitement légitime — c'est encore la même famille :
+                  quelque chose qui échoue sans le dire, sous couvert d'une
+                  valeur par défaut plausible.
+                */
+                if (session.customSheetTemplates !== undefined) updates.customSheetTemplates = session.customSheetTemplates;
+                if (session.customGameDrivers !== undefined) updates.customGameDrivers = session.customGameDrivers;
                 // 🛡️ NexusSynchronizer sends locks as `characterLocks`, accept both keys
                 if (session.characterLocks !== undefined) updates.connectedCharacters = session.characterLocks;
                 if (session.connectedCharacters !== undefined) updates.connectedCharacters = session.connectedCharacters;
@@ -171,6 +188,21 @@ export const useHubSync = () => {
 
             if (session.favorites !== undefined && sFavorite) {
                 sFavorite.setState({ favorites: session.favorites });
+            }
+
+            /*
+              Les réserves de table sont rangées par campagne dans leur propre
+              store — c'est ce qui évite qu'une chronique hérite l'Impulsion
+              d'une autre. On réécrit **la seule campagne diffusée**, sans
+              toucher aux autres : le MJ n'en diffuse qu'une, et écraser toute
+              la carte effacerait ce qu'une tablette sait d'une partie en
+              sommeil.
+            */
+            const sReserves = getStore('useRessourcesDeTableStore');
+            if (session.reservesDeTable !== undefined && sReserves && session.activeCampaignId) {
+                sReserves.setState((prev: any) => ({
+                    reserves: { ...prev.reserves, [session.activeCampaignId]: session.reservesDeTable },
+                }));
             }
         }
     }, []);
@@ -352,16 +384,29 @@ export const useHubSync = () => {
             socketRef.current?.send(JSON.stringify({ type: 'session:submit-feedback', payload: detail }));
         };
 
+        /*
+          Le geste sur une réserve commune est déjà appliqué localement par
+          `ajusterDepuisLaTablette` — d'où l'absence de second appel ici,
+          contrairement aux transferts d'objets. Ne reste qu'à le dire au MJ,
+          qui rejouera la même règle et rediffusera la valeur qui fait foi.
+        */
+        const handleAjusterReserve = (e: Event) => {
+            const detail = (e as CustomEvent).detail;
+            socketRef.current?.send(JSON.stringify({ type: 'table:ajuster', payload: detail }));
+        };
+
         window.addEventListener('session:send-message', handleSendMessage);
         window.addEventListener('session:request-item-transfer', handleRequestTransfer);
         window.addEventListener('session:remove-inventory-item', handleRemoveItem);
         window.addEventListener('session:submit-feedback', handleSubmitFeedback);
+        window.addEventListener('table:ajuster', handleAjusterReserve);
 
         return () => {
             window.removeEventListener('session:send-message', handleSendMessage);
             window.removeEventListener('session:request-item-transfer', handleRequestTransfer);
             window.removeEventListener('session:remove-inventory-item', handleRemoveItem);
             window.removeEventListener('session:submit-feedback', handleSubmitFeedback);
+            window.removeEventListener('table:ajuster', handleAjusterReserve);
             if (window.appBridge?.off) {
                 window.appBridge.off('image:sync-hub-data', handleIpcUpdate);
                 window.appBridge.off('map:ping', handleIpcUpdate);

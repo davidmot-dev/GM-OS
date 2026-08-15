@@ -1,7 +1,7 @@
 import React from 'react';
 import { Save, FolderOpen, Layers, FileText, Trash2, Lock, BookOpen, Eye, Heart, Sparkles, Package, Tablet, PenTool, Plus, Check, X } from 'lucide-react';
 import { fractionDeVie } from '../../combat/logic/SanteDuCombattant';
-import { tousLesPilotes } from '../store/tousLesPilotes';
+import { piloteDuPersonnage } from '../logic/piloteDuPersonnage';
 import { useImageStore } from '../../image/useImageStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
@@ -53,38 +53,14 @@ const CharacterSheetEditor: React.FC = () => {
     /**
      * **Le pilote du PERSONNAGE, pas celui de la campagne ouverte.**
      *
-     * Relevé par David le 2026-08-15, capture à l'appui : sur une fiche de Dune,
-     * « Lancer un test » tirait **cinq dés à six faces en comptant les six** —
-     * du Year Zero Engine — parce que sa campagne active était « TEST Alien ».
-     * Dune lance deux d20 **sous** un seuil composé d'une compétence et d'un
-     * principe : le jet n'était pas approximatif, il appartenait à un autre jeu.
-     *
-     * La campagne ne peut pas faire autorité : une fiche s'ouvre depuis
-     * n'importe où, et rien n'oblige la campagne ouverte à être celle du
-     * personnage. Trois sources, dans l'ordre de ce qui est le plus sûr :
-     *
-     * 1. `character.systemId` — le jeu que le personnage déclare. Écrit depuis
-     *    le 2026-08-15 par l'écran de création.
-     * 2. **Le pilote dont c'est le gabarit** : les personnages antérieurs n'ont
-     *    pas de `systemId`, mais leur `templateId` désigne une fiche, et un
-     *    pilote la réclame. C'est ce qui rattrape « test » et ses semblables.
-     * 3. La campagne, en dernier recours seulement.
+     * La règle et son histoire vivent dans `piloteDuPersonnage` : la fiche de
+     * la tablette en a besoin mot pour mot, et deux copies auraient fini par
+     * diverger sans que rien ne les compare.
      */
-    const piloteDeLaFiche = React.useMemo(() => {
-        const pilotes = tousLesPilotes(customGameDrivers);
-        const perso = editor.character;
-
-        if (perso?.systemId) {
-            const declare = pilotes.find(d => d.id === perso.systemId);
-            if (declare) return declare;
-        }
-        if (perso?.templateId) {
-            const parGabarit = pilotes.find(d => d.templateId === perso.templateId);
-            if (parGabarit) return parGabarit;
-        }
-        const campagne = campaigns.find(c => c.id === activeCampaignId);
-        return pilotes.find(d => d.id === campagne?.system) ?? null;
-    }, [campaigns, activeCampaignId, customGameDrivers, editor.character]);
+    const piloteDeLaFiche = React.useMemo(
+        () => piloteDuPersonnage(editor.character, campaigns, customGameDrivers, activeCampaignId),
+        [campaigns, activeCampaignId, customGameDrivers, editor.character],
+    );
 
     const { evaluateFormula } = useSheetCalculator(editor.character as PlayerCharacter | null, editor.template, editor.localData);
     const [isAddingItem, setIsAddingItem] = React.useState(false);

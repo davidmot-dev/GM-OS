@@ -37,6 +37,11 @@ const EXPECTED_TYPES = [
     'map:ping', 'remote:map:ping',
     'storyboard:trigger', 'remote:story:trigger',
     'remote:pad:trigger', 'universal:trigger',
+    // Réserves de table — la seule action de cette liste qu'un joueur non
+    // appairé peut émettre en plus des siennes propres, parce que la réserve
+    // commune se manipule par décision collective et non par le meneur. Le
+    // handler vérifie que le pilote la déclare manipulable.
+    'table:ajuster', 'remote:table:ajuster',
 ];
 
 describe('actionRegistry', () => {

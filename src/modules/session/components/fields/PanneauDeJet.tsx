@@ -39,10 +39,19 @@ interface PanneauDeJetProps {
      */
     campaignId?: string;
     ressourcesDeTable?: RessourceDeTable[];
+    /**
+     * Le panneau tourne sur la tablette d'un joueur.
+     *
+     * Le jet est **exactement le même** — mêmes dés, même seuil, même règle :
+     * *un jet qui change selon l'écran d'où on le lance n'est pas le même jet.*
+     * Seule la dépense change de chemin : elle doit remonter au meneur au lieu
+     * de rester dans la fenêtre où elle a été faite.
+     */
+    pourLesJoueurs?: boolean;
 }
 
 const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
-    descripteur, dice, template, valeurs, campaignId, ressourcesDeTable,
+    descripteur, dice, template, valeurs, campaignId, ressourcesDeTable, pourLesJoueurs = false,
 }) => {
     /** Champ retenu pour chaque composante — `{ competence: 'combat' }`. */
     const [choix, setChoix] = useState<Record<string, string>>({});
@@ -55,8 +64,29 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     /** Ce que le dernier lancer a fait aux réserves de la table. */
     const [mouvements, setMouvements] = useState<string[]>([]);
 
-    const { etatDe, depenser, gagner } = useRessourcesDeTableStore();
+    const { etatDe, depenser, gagner, ajusterDepuisLaTablette } = useRessourcesDeTableStore();
     const monnaie = campaignId && ressourcesDeTable?.length ? { campaignId, ressourcesDeTable } : null;
+
+    /**
+     * Débiter ou créditer la réserve, du bon côté du réseau.
+     *
+     * Sur la tablette, `depenser` n'écrirait que dans la fenêtre du joueur : sa
+     * réserve baisserait chez lui et nulle part ailleurs, ce qui est pire que
+     * de ne pas la lui donner — deux tables joueraient avec deux Impulsions.
+     *
+     * `motif` accompagne le mouvement jusqu'au journal de séance : *une
+     * Impulsion qui passe de quatre à un ne veut rien dire sans le jet qui l'a
+     * dépensée.*
+     */
+    const mouvoir = (id: string, delta: number, motif: string) => {
+        if (!monnaie) return { avertissements: [] as string[] };
+        if (pourLesJoueurs) {
+            return ajusterDepuisLaTablette(monnaie.campaignId, monnaie.ressourcesDeTable, id, delta, motif);
+        }
+        return delta < 0
+            ? depenser(monnaie.campaignId, monnaie.ressourcesDeTable, id, -delta, motif)
+            : gagner(monnaie.campaignId, monnaie.ressourcesDeTable, id, delta, motif);
+    };
 
     /**
      * Les champs proposés pour une composante : ceux de sa section.
@@ -105,8 +135,22 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         // Le coût se prélève au moment où l'on s'engage, pas pendant qu'on
         // tourne les boutons : régler avant de lancer ferait payer les
         // hésitations.
+        /**
+         * Ce que le jet a coûté, dit au journal avec ce qui l'a composé.
+         *
+         * « Jet : Combat + Devoir (seuil 11), 2 dés achetés » — relire une
+         * séance et y trouver une Impulsion tombée de quatre à un sans savoir
+         * pourquoi ne renseigne sur rien.
+         */
+        const enTete = jet.composantes.length > 0
+            ? `Jet : ${jet.composantes.map(c => c.label).join(' + ')} (seuil ${jet.seuil})`
+            : `Jet : ${jet.nombreDeDes}d${jet.faces}`;
+
         if (monnaie && jet.cout.ressource && jet.cout.total > 0) {
-            dits.push(...depenser(monnaie.campaignId, monnaie.ressourcesDeTable, jet.cout.ressource, jet.cout.total).avertissements);
+            dits.push(...mouvoir(
+                jet.cout.ressource, -jet.cout.total,
+                `${enTete}, ${jet.desAchetes} dé${jet.desAchetes > 1 ? 's' : ''} acheté${jet.desAchetes > 1 ? 's' : ''}`,
+            ).avertissements);
         }
 
         const res = DiceEngine.rollFromConfig(
@@ -128,7 +172,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         if (monnaie && jet.cout.ressource) {
             const excedent = verdict(res.successes ?? 0, jet.difficulte).excedent;
             if (excedent > 0) {
-                dits.push(...gagner(monnaie.campaignId, monnaie.ressourcesDeTable, jet.cout.ressource, excedent).avertissements);
+                dits.push(...mouvoir(
+                    jet.cout.ressource, excedent,
+                    `${enTete}, ${excedent} réussite${excedent > 1 ? 's' : ''} excédentaire${excedent > 1 ? 's' : ''}`,
+                ).avertissements);
             }
         }
 

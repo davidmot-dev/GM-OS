@@ -29,6 +29,21 @@ export const PLAYER_ALLOWED_ACTIONS: ReadonlySet<string> = new Set([
     // Elle ne demande que la rediffusion d'un état auquel le client a déjà
     // droit, caviardé selon son rôle : aucun gain de privilège.
     'remote:request-sync',
+    /*
+      **La réserve commune se manipule par décision collective, et c'est une
+      règle du jeu.** Chez Dune, l'Impulsion appartient aux joueurs : ils la
+      dépensent à la table, sans passer par le meneur. La leur refuser ici
+      reviendrait à décider que le meneur arbitre une réserve dont le livre dit
+      qu'elle ne lui appartient pas.
+
+      **Le contrôle fin n'est pas ici et ne peut pas y être.** Cette politique
+      ne connaît ni les pilotes ni les réserves qu'ils déclarent. C'est
+      `tableActions` qui vérifie que la réserve visée est bien déclarée
+      manipulable par les joueurs — sans quoi un client ferait monter la Menace
+      du meneur, qui est publique mais intouchable. Même partage que pour
+      `stripProjectionTarget` : le rôle en amont, le champ en aval.
+    */
+    'table:ajuster',
 ]);
 
 /** Rôles qui peuvent tout déclencher — ceux qui ont présenté le secret d'appairage. */

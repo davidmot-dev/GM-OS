@@ -49,6 +49,62 @@ export interface RessourceDeTable {
      */
     reportSurEpuisement?: string;
     description?: string;
+    /**
+     * La réserve est-elle **montrée aux joueurs**, sur leur tablette ?
+     *
+     * **Distincte du propriétaire, et ce n'est pas un détail.** `proprietaire`
+     * dit à qui la réserve appartient ; la voir est une autre question. Chez
+     * Dune la Menace est celle du meneur et pourtant **publique** — elle monte
+     * quand les joueurs prennent des risques, et c'est justement de la voir
+     * monter qui fait pression. Une table qui la joue à couvert existe aussi.
+     * L'outil suit l'état : c'est le pilote qui tranche, pas nous.
+     *
+     * **Absent, on suit la propriété** — ce que les joueurs possèdent, ils le
+     * voient. C'est le défaut le moins surprenant, et il rend l'Impulsion de
+     * Dune visible sans qu'il faille reforger quoi que ce soit.
+     */
+    visibleAuxJoueurs?: boolean;
+    /**
+     * Les joueurs peuvent-ils la faire bouger eux-mêmes ?
+     *
+     * **La demande de David, le 2026-08-15 :** *« Impulsion est une jauge gérée
+     * par les joueurs et cela fait partie du Gameplay, cette gestion commune de
+     * la ressource. »* C'est juste, et c'est une règle du jeu, pas un réglage
+     * d'interface : chez Dune la réserve commune se dépense par décision
+     * collective, à la table, sans passer par le meneur.
+     *
+     * Voir et manipuler restent séparés : une Menace publique se regarde monter
+     * sans qu'on y touche. **Manipuler suppose voir** — on ne fait pas bouger
+     * ce qu'on ne lit pas —, et cette implication est tenue par
+     * `visiblePourUnJoueur`, jamais par les appelants.
+     *
+     * Absent, on suit encore la propriété.
+     */
+    manipulableParLesJoueurs?: boolean;
+}
+
+/**
+ * Cette réserve est-elle montrée aux joueurs ?
+ *
+ * Une fonction plutôt qu'une lecture directe, parce que le défaut n'est pas
+ * `false` mais **« ce que dit la propriété »**, et qu'un `?? false` dispersé
+ * dans les écrans aurait caché l'Impulsion de tous les pilotes déjà forgés.
+ */
+export function visiblePourUnJoueur(ressource: RessourceDeTable): boolean {
+    return ressource.visibleAuxJoueurs ?? ressource.proprietaire === 'joueurs';
+}
+
+/**
+ * Ce joueur peut-il la faire bouger ?
+ *
+ * **Voir est une condition, pas une conséquence.** Une réserve déclarée
+ * manipulable mais cachée serait un bouton sur un nombre qu'on ne lit pas :
+ * le joueur dépenserait à l'aveugle. On refuse ici plutôt que d'espérer que
+ * chaque écran y pense.
+ */
+export function manipulableParUnJoueur(ressource: RessourceDeTable): boolean {
+    if (!visiblePourUnJoueur(ressource)) return false;
+    return ressource.manipulableParLesJoueurs ?? ressource.proprietaire === 'joueurs';
 }
 
 /** Ce que chaque réserve contient, à un instant donné. */

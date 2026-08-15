@@ -8,6 +8,10 @@ import { ResolvedImage } from '../ResolvedImage';
 import type { SheetSection, SheetField } from '../../data/defaultSheetTemplates';
 import type { PlayerCharacter, Campaign, SheetTemplate } from '../../modules/session/store/types';
 import { resolveSheetTemplate } from '../../modules/session/logic/templateResolver';
+import { piloteDuPersonnage } from '../../modules/session/logic/piloteDuPersonnage';
+import PanneauDesRessources from '../../modules/table/PanneauDesRessources';
+import PanneauDeJet from '../../modules/session/components/fields/PanneauDeJet';
+import type { GameDriver } from '../../types/drivers';
 
 interface HubCharacterSheetProps {
     onClose: () => void;
@@ -19,7 +23,7 @@ interface HubCharacterSheetProps {
  */
 const HubCharacterSheet: React.FC<HubCharacterSheetProps> = ({ onClose }) => {
     const { characterId } = useClientStore();
-    const { players, campaigns, remoteUpdateCharacterVitals, customSheetTemplates, remoteUpdateCharacterNarrative } = useSessionOSStore();
+    const { players, campaigns, remoteUpdateCharacterVitals, customSheetTemplates, remoteUpdateCharacterNarrative, customGameDrivers, activeCampaignId } = useSessionOSStore();
 
     const playerWithChar = players.find(p => p.characters.some(c => c.id === characterId));
     const character = playerWithChar?.characters.find(c => c.id === characterId);
@@ -36,6 +40,8 @@ const HubCharacterSheet: React.FC<HubCharacterSheetProps> = ({ onClose }) => {
             customSheetTemplates={customSheetTemplates}
             remoteUpdateCharacterNarrative={remoteUpdateCharacterNarrative}
             campaigns={campaigns}
+            customGameDrivers={customGameDrivers}
+            campaignId={character.campaignId ?? activeCampaignId ?? null}
         />
     );
 };
@@ -48,10 +54,13 @@ interface ContentProps {
     customSheetTemplates: SheetTemplate[];
     remoteUpdateCharacterNarrative: (playerId: string, charId: string, updates: { description?: string; playerNotes?: string; inventory?: string }) => void;
     campaigns: Campaign[];
+    customGameDrivers: GameDriver[];
+    /** Table à laquelle ce personnage joue — celle dont les réserves comptent. */
+    campaignId: string | null;
 }
 
 const HubCharacterSheetContent: React.FC<ContentProps> = ({ 
-    character, playerId, onClose, remoteUpdateCharacterVitals, customSheetTemplates, remoteUpdateCharacterNarrative, campaigns
+    character, playerId, onClose, remoteUpdateCharacterVitals, customSheetTemplates, remoteUpdateCharacterNarrative, campaigns, customGameDrivers, campaignId
 }) => {
     // État local pour une saisie fluide
     const [localDescription, setLocalDescription] = useState(character.description ?? '');
@@ -60,6 +69,21 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
 
     const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
     const template = resolveSheetTemplate(character, campaigns, allTemplates);
+
+    /**
+     * Le pilote du personnage — **la même règle que sur l'écran du meneur**.
+     *
+     * `piloteDuPersonnage` est partagé : `systemId`, sinon le pilote dont c'est
+     * le gabarit, sinon la campagne. Deux copies de cette résolution auraient
+     * fini par ne plus désigner le même jeu, et le joueur aurait lancé les dés
+     * d'un autre système sans que rien ne le dise — c'est exactement ce qui est
+     * arrivé le 2026-08-15 sur la fiche de Dune.
+     *
+     * Note : `customGameDrivers` n'arrivait pas jusqu'ici avant ce jour. Le MJ
+     * les diffusait, `useHubSync` les jetait, et toute fiche de la tablette
+     * retombait sur le gabarit « Generic ».
+     */
+    const pilote = piloteDuPersonnage(character, campaigns, customGameDrivers);
 
     const hubOptions = character.hubOptions ?? { showHP: true, showMP: true, showAP: true, showInventory: true, showRelations: true };
 
@@ -106,6 +130,29 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                     </div>
                 </div>
             </div>
+
+            {/*
+                **Les réserves communes, sous les yeux des joueurs.**
+
+                Demandé par David le 2026-08-15 : *« permet juste aux joueurs
+                d'avoir une vue sur l'Impulsion et de la gérer »*. Chez Dune,
+                l'Impulsion est une réserve **commune aux joueurs** qui se
+                dépense par décision collective — une réserve partagée que le
+                groupe ne voit pas n'est pas partagée.
+
+                Le composant est celui du meneur, en mode joueur : une réserve
+                doit se dessiner au même endroit pour tout le monde, sans quoi
+                les deux écrans finiraient par afficher deux vérités.
+            */}
+            {campaignId && (pilote?.ressourcesDeTable?.length ?? 0) > 0 && (
+                <div className="flex-shrink-0 mb-4 rounded-2xl border border-app-border/20 overflow-hidden">
+                    <PanneauDesRessources
+                        campaignId={campaignId}
+                        ressources={pilote!.ressourcesDeTable!}
+                        pourLesJoueurs
+                    />
+                </div>
+            )}
 
             <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 pb-12">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-7xl mx-auto">
@@ -157,7 +204,37 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
 
                     {/* Stats & Notes */}
                     <div className="lg:col-span-8 space-y-8">
-                        
+
+                        {/*
+                            **Lancer depuis sa propre fiche**, à côté des
+                            valeurs qui composent le seuil. Chez Dune il vaut
+                            une compétence plus un principe : le joueur seul
+                            sait lequel il invoque, et jusqu'ici il devait tout
+                            dicter au meneur pour qu'il lance à sa place.
+
+                            Le panneau est celui de l'écran du meneur, sans
+                            adaptation : mêmes dés, même seuil, même débit sur
+                            la réserve commune. *Un jet qui change de règle
+                            selon l'écran d'où on le lance n'est pas le même
+                            jet.*
+
+                            Il ne s'affiche que si le pilote décrit ses jets —
+                            un système sans descripteur garde sa fiche telle
+                            quelle, plutôt qu'un bouton qui lancerait n'importe
+                            quoi.
+                        */}
+                        {pilote?.jet && (
+                            <PanneauDeJet
+                                descripteur={pilote.jet}
+                                dice={pilote.dice}
+                                template={template}
+                                valeurs={character.sheetData ?? {}}
+                                campaignId={campaignId ?? undefined}
+                                ressourcesDeTable={pilote.ressourcesDeTable}
+                                pourLesJoueurs
+                            />
+                        )}
+
                         {template.sections.map((section: SheetSection) => (
                             <section key={section.id} className="space-y-4">
                                 <div className="flex items-center gap-4">

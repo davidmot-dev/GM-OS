@@ -4,6 +4,7 @@ import { combatActions } from './combatActions';
 import { sessionActions } from './sessionActions';
 import { whiteboardActions } from './whiteboardActions';
 import { sceneActions } from './sceneActions';
+import { tableActions } from './tableActions';
 import { HIGH_FREQUENCY_ACTIONS, type ActionContext, type ActionRegistry } from './types';
 
 export type { ActionContext, ActionRegistry } from './types';
@@ -35,6 +36,7 @@ export const actionRegistry: ActionRegistry = {
     ...sessionActions,
     ...whiteboardActions,
     ...sceneActions,
+    ...tableActions,
 };
 
 /** Types reconnus, utile aux tests et à l'inspection. */

@@ -84,6 +84,24 @@ describe('evaluateAction — actions permises aux joueurs', () => {
         expect(evaluateAction('remote:request-sync', undefined, 'hub', undefined).allowed).toBe(true);
     });
 
+    it('autorise le geste sur une réserve commune', () => {
+        /**
+         * **Ajoutée le 2026-08-15, et c'est une règle du jeu, pas un confort.**
+         * Chez Dune l'Impulsion appartient aux joueurs : elle se dépense par
+         * décision collective, à la table, sans passer par le meneur. La leur
+         * refuser reviendrait à faire arbitrer par le MJ une réserve dont le
+         * livre dit qu'elle n'est pas la sienne.
+         *
+         * **Cette politique n'est pas le dernier mot.** Elle ignore les pilotes
+         * et les réserves qu'ils déclarent ; c'est `tableActions` qui vérifie
+         * que la réserve visée est bien manipulable par les joueurs, sinon un
+         * client ferait monter la Menace du meneur — publique, mais intouchable.
+         * Même partage que `stripProjectionTarget` : le rôle en amont, le champ
+         * en aval.
+         */
+        expect(evaluateAction('table:ajuster', { ressourceId: 'impulsion', delta: -1 }, 'hub', CHAR).allowed).toBe(true);
+    });
+
     it('couvre exactement la liste déclarée', () => {
         expect([...PLAYER_ALLOWED_ACTIONS].sort()).toEqual([
             'remote:request-sync',
@@ -91,6 +109,7 @@ describe('evaluateAction — actions permises aux joueurs', () => {
             'session:request-item-transfer',
             'session:send-message',
             'session:submit-feedback',
+            'table:ajuster',
         ]);
     });
 });

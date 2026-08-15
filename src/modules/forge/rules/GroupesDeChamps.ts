@@ -191,8 +191,16 @@ export const GROUPES: readonly GroupeDeChamps[] = [
         id: 'ressources',
         label: 'Monnaie de table',
         sujets: ['Monnaie de table'],
-        cible: '"driver" avec seulement ressourcesDeTable',
-        exemple: '{"driver":{"ressourcesDeTable":[{"id":"impulsion","label":"Impulsion","proprietaire":"joueurs","depart":0,"min":0,"max":6,"erosionFinDeScene":1,"reportSurEpuisement":"menace"},{"id":"menace","label":"Menace","proprietaire":"meneur","depart":0,"min":0}]}}',
+        cible: '"driver" avec seulement ressourcesDeTable. '
+            + 'Pour CHAQUE réserve, dis aussi qui la voit et qui la manipule : '
+            + '"visibleAuxJoueurs" (les joueurs la lisent sur leur tablette) et '
+            + '"manipulableParLesJoueurs" (ils la font bouger eux-mêmes, sans passer par le '
+            + 'meneur). Ce sont DEUX questions distinctes de "proprietaire" : une réserve du '
+            + 'meneur peut être publique — les joueurs la voient monter sans y toucher —, et une '
+            + 'réserve commune aux joueurs se dépense en général par décision collective. '
+            + 'OMETS ces deux champs si les fiches ne le disent pas : on suivra alors le '
+            + 'propriétaire',
+        exemple: '{"driver":{"ressourcesDeTable":[{"id":"impulsion","label":"Impulsion","proprietaire":"joueurs","depart":0,"min":0,"max":6,"erosionFinDeScene":1,"reportSurEpuisement":"menace","visibleAuxJoueurs":true,"manipulableParLesJoueurs":true},{"id":"menace","label":"Menace","proprietaire":"meneur","depart":0,"min":0,"visibleAuxJoueurs":true,"manipulableParLesJoueurs":false}]}}',
     },
     {
         id: 'identite',
