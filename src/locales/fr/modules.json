@@ -1524,11 +1524,12 @@
       "intentions_label": "INTENTIONS DU MJ",
       "intentions_placeholder": "Ex: Concentre-toi sur l'ambiance horrifique...",
       "target_label": "CAMPAGNE CIBLE",
-      "target_placeholder": "Laisser vide pour une nouvelle chronique...",
+      "target_new": "Nouvelle campagne",
       "system_label": "SYSTÈME DE JEU",
       "system_select": "Sélectionner un système...",
       "deploy_button": "DÉPLOYER LA CHRONIQUE",
       "deploy_success": "Chronique déployée dans le Codex.",
+      "forge_success": "Chronique forgée — relis l'aperçu avant de déployer.",
       "tabs": {
         "campaign": "Campagne",
         "entities": "Entités",

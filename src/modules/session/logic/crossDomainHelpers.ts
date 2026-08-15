@@ -55,9 +55,27 @@ export const handleAddChronicle = (
         campaignId,
     } as unknown as WikiEntry));
 
+    /*
+      **Le jeu d'une campagne existante ne se réécrit pas, relevé le 2026-08-15.**
+
+      La ligne d'avant faisait `system: campaign.system || c.system`, et
+      `campaign.system` vaut TOUJOURS le pilote choisi dans la Forge — `startForge`
+      le rend obligatoire. Enrichir « Agents de Dune » avec le sélecteur resté sur
+      Alien changeait donc le jeu de la campagne, donc le pilote de tous ses PNJ
+      (`piloteDuPersonnage`, troisième source), leurs jets et leur modèle de santé.
+      Sans un mot.
+
+      La campagne garde le sien. On ne l'adopte que si elle n'en avait aucun — une
+      campagne orpheline rattachée à un jeu est un gain, une campagne déclarée
+      qu'on rebaptise est une perte. Et la divergence se dit, parce qu'elle
+      signale presque toujours un sélecteur oublié.
+    */
+    const systemeDivergent = !!existing && !!existing.system
+        && !!campaign.system && existing.system !== campaign.system;
+
     set((state) => {
-        const updatedCampaigns = existing 
-            ? state.campaigns.map(c => c.id === existing.id ? { ...c, system: campaign.system || c.system } : c)
+        const updatedCampaigns = existing
+            ? state.campaigns.map(c => c.id === existing.id ? { ...c, system: c.system || campaign.system } : c)
             : [...state.campaigns, { ...campaign, id: campaignId, activeLocationIds: [] } as unknown as Campaign];
 
         return {
@@ -70,10 +88,18 @@ export const handleAddChronicle = (
         };
     });
 
-    const msg = existing 
+    const msg = existing
         ? `Chronique fusionnée avec "${existing.name}". ${newEntities.length} entités ajoutées.`
         : `Chronique "${campaign.name}" importée avec ${newEntities.length} entités.`;
     gmToast(msg, 'success');
+
+    if (systemeDivergent) {
+        gmToast(
+            `"${existing!.name}" reste sur son jeu (${existing!.system}) — la Forge a produit `
+            + `pour ${campaign.system}. Les nouveaux PNJ suivront le jeu de la campagne.`,
+            'warning',
+        );
+    }
 };
 
 

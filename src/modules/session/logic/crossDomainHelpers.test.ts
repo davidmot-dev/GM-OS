@@ -47,23 +47,54 @@ describe('handleAddChronicle (crossDomainHelpers.ts)', () => {
         expect(gmToast).toHaveBeenCalledWith(expect.stringContaining('importée avec 1 entités'), 'success');
     });
 
-    it('merges with an existing campaign if name matches', () => {
+    /**
+     * **Ce test affirmait l'inverse jusqu'au 2026-08-15** : `// Updated system`.
+     * Il codifiait le défaut plutôt que la règle.
+     *
+     * Enrichir « Agents de Dune » avec le sélecteur de la Forge resté sur Alien
+     * réécrivait le jeu de la campagne — donc le pilote de tous ses PNJ
+     * (`piloteDuPersonnage`, troisième source), leurs jets, leur modèle de santé.
+     * Sans un mot. Le pilote choisi dans la Forge sert à *produire* ; il n'a
+     * jamais eu vocation à rebaptiser une campagne déclarée.
+     */
+    it('ne réécrit pas le jeu d\'une campagne existante', () => {
         mockState.campaigns = [
-            { id: 'c-123', name: 'Existing Campaign', system: 'D&D', activeLocationIds: [] }
+            { id: 'c-123', name: 'Existing Campaign', system: 'dune', activeLocationIds: [] }
         ];
 
         handleAddChronicle(mockSet as unknown as Parameters<typeof handleAddChronicle>[0], mockGet as unknown as () => SessionOSStore, {
-            campaign: { name: 'Existing Campaign', system: 'Custom' } as unknown as Parameters<typeof handleAddChronicle>[2]['campaign'],
+            campaign: { name: 'Existing Campaign', system: 'alien' } as unknown as Parameters<typeof handleAddChronicle>[2]['campaign'],
             entities: [{ name: 'Dragon', type: 'npc', hp: 100, maxHp: 100, status: 'alive' }] as unknown as Parameters<typeof handleAddChronicle>[2]['entities'],
             atlasMaps: [],
             wikiEntries: [],
         });
 
-        expect(mockState.campaigns.length).toBe(1); // Still 1 campaign
-        expect(mockState.campaigns[0].system).toBe('Custom'); // Updated system
+        expect(mockState.campaigns.length).toBe(1);
+        expect(mockState.campaigns[0].system, 'la campagne garde son jeu').toBe('dune');
         expect(mockState.entities.length).toBe(1);
-        expect(mockState.entities[0].campaignId).toBe('c-123'); // Maps to existing ID
+        expect(mockState.entities[0].campaignId).toBe('c-123');
         expect(gmToast).toHaveBeenCalledWith(expect.stringContaining('fusionnée avec "Existing Campaign"'), 'success');
+        // La divergence se dit : elle signale presque toujours un sélecteur oublié.
+        expect(gmToast).toHaveBeenCalledWith(expect.stringContaining('reste sur son jeu'), 'warning');
+    });
+
+    it('adopte le jeu de la Forge quand la campagne n\'en déclarait aucun', () => {
+        // Une campagne orpheline rattachée à un jeu est un gain ; une campagne
+        // déclarée qu'on rebaptise est une perte. Les deux cas ne se traitent pas
+        // pareil, et c'est la seule asymétrie que ce correctif introduit.
+        mockState.campaigns = [
+            { id: 'c-456', name: 'Orpheline', system: '', activeLocationIds: [] }
+        ];
+
+        handleAddChronicle(mockSet as unknown as Parameters<typeof handleAddChronicle>[0], mockGet as unknown as () => SessionOSStore, {
+            campaign: { name: 'Orpheline', system: 'alien' } as unknown as Parameters<typeof handleAddChronicle>[2]['campaign'],
+            entities: [],
+            atlasMaps: [],
+            wikiEntries: [],
+        });
+
+        expect(mockState.campaigns[0].system).toBe('alien');
+        expect(gmToast).not.toHaveBeenCalledWith(expect.stringContaining('reste sur son jeu'), 'warning');
     });
 
     it('correctly maps entity relations', () => {

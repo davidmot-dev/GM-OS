@@ -58,11 +58,30 @@ interface Notebook {
 
 const ChronicleForge: React.FC = () => {
   const { t } = useTranslation(['modules']);
-  const { activeProvider } = useAIStore();
+  const { activeProvider, configs } = useAIStore();
   const { customGameDrivers, addChronicle, campaigns } = useSessionOSStore();
-  
+
+  /**
+   * Le moteur réellement chargé.
+   *
+   * Le bandeau affichait « Gemini 1.5 » ou, pour tout le reste, « Gemma 4 » —
+   * quel que soit le modèle en service. Même défaut que le bandeau du profil
+   * vocal, corrigé le 2026-08-15 : *un écran qui nomme un modèle au lieu de le
+   * lire finit par nommer celui d'avant.*
+   */
+  const moteurActif = configs[activeProvider]?.modelId || activeProvider;
+
   const [contextItems, setContextItems] = useState<ForgeContextItem[]>([]);
-  const [existingCampaignName, setExistingCampaignName] = useState('');
+  /**
+   * La campagne à enrichir — **choisie, jamais saisie**.
+   *
+   * C'était un champ de texte libre adossé à une `datalist`, comparé ensuite par
+   * égalité stricte sur le nom. Une faute de frappe et l'invite partait quand
+   * même en mode enrichissement pendant que le dépôt créait une campagne neuve :
+   * deux comportements opposés à un caractère près, et rien à l'écran ne les
+   * distinguait. Un identifiant ne se tape pas.
+   */
+  const [campagneCibleId, setCampagneCibleId] = useState('');
   const [userInstructions, setUserInstructions] = useState('');
   const [isForging, setIsForging] = useState(false);
   const [result, setResult] = useState<ChronicleForgeResult | null>(null);
@@ -291,9 +310,13 @@ const ChronicleForge: React.FC = () => {
     setIsForging(true);
     setResult(null);
     try {
-      const forgeResult = await chronicleForgeService.forgeChronicle(contextItems, driver, userInstructions, existingCampaignName);
+      const cible = campaigns.find(c => c.id === campagneCibleId);
+      const forgeResult = await chronicleForgeService.forgeChronicle(contextItems, driver, userInstructions, cible?.name);
       setResult(forgeResult);
-      gmToast(t('modules:session.chronicle_forge_module.deploy_success'), "success");
+      // Rien n'est déployé à ce stade : c'est un aperçu. Les deux étapes
+      // partageaient la même clé, et la Forge annonçait « Chronique déployée
+      // dans le Codex » avant que quoi que ce soit n'ait quitté l'écran.
+      gmToast(t('modules:session.chronicle_forge_module.forge_success'), "success");
     } catch (err) {
       console.error(err);
       const errorMessage = err instanceof Error ? err.message : "Échec de la forge.";
@@ -310,7 +333,7 @@ const ChronicleForge: React.FC = () => {
                    DEFAULT_GAME_DRIVERS.find(d => d.id === selectedDriverId);
     const templateId = driver?.templateId || 'generic';
 
-    const existingCampaign = campaigns.find(c => c.name === existingCampaignName);
+    const existingCampaign = campaigns.find(c => c.id === campagneCibleId);
 
     addChronicle({
       campaign: {
@@ -341,8 +364,20 @@ const ChronicleForge: React.FC = () => {
           défensive » de la cible, et une IA ne la connaît pas.
         */
         healthSystem: e.healthSystem ?? santeSelonLeJeu(driver, e),
-        hp: e.hp ?? 10,
-        maxHp: e.maxHp ?? 10,
+        /*
+          **Zéro, et non dix.** `Entity.hp` est obligatoire, il faut donc écrire
+          quelque chose ; écrire dix, c'était encore poser les points de vie de
+          D&D sur un jeu qui n'en a pas — le même défaut que l'invite, une couche
+          plus bas. `aUneJaugeDeVie` exige un maximum strictement positif : à
+          zéro, aucun écran n'affiche de barre, et `healthSystem` ci-dessus porte
+          seul le vrai modèle. L'absence n'est pas un zéro, mais elle ne se
+          déguise pas non plus en dix.
+
+          L'ordre compte : `santeSelonLeJeu` lit `e`, donc les points RENDUS par
+          la Forge, avant ce repli.
+        */
+        hp: e.hp ?? 0,
+        maxHp: e.maxHp ?? 0,
         // La classe d'armure n'est déclarée par aucun pilote : on ne l'invente
         // plus, on garde ce que la génération a bien voulu dire.
         ac: e.ac ?? 0,
@@ -400,7 +435,7 @@ const ChronicleForge: React.FC = () => {
                activeProvider === 'gemini' ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400 shadow-glow-emerald/20'
              }`}>
                <Sparkles size={12} className={activeProvider === 'gemini' ? '' : 'animate-pulse'} />
-               {t('modules:session.forge_module.engine_label')} : {activeProvider === 'gemini' ? 'Gemini 1.5' : 'Gemma 4' }
+               {t('modules:session.forge_module.engine_label')} : {moteurActif}
              </div>
           </div>
           <p className="text-[10px] font-bold text-app-text/40 uppercase tracking-[0.3em]">{t('modules:session.chronicle_forge_module.subtitle')}</p>
@@ -511,20 +546,17 @@ const ChronicleForge: React.FC = () => {
             <h2 className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-accent font-display">
                <BookOpen size={14} className="animate-pulse" /> {t('modules:session.chronicle_forge_module.target_label')}
             </h2>
-            <input 
-              type="text"
-              list="existing-campaigns"
-              value={existingCampaignName} 
-              onChange={(e) => setExistingCampaignName(e.target.value)} 
-              placeholder={t('modules:session.chronicle_forge_module.target_placeholder')} 
-              className="w-full bg-transparent text-sm text-app-text/80 focus:outline-none placeholder:text-app-text/30 font-sans border-b border-app-border/10 pb-1 focus:border-accent/50 transition-all" 
+            <select
+              value={campagneCibleId}
+              onChange={(e) => setCampagneCibleId(e.target.value)}
+              className="w-full bg-app-surface/60 border border-app-border/10 rounded-xl p-3 text-xs text-app-text outline-none focus:border-accent/50 transition-all appearance-none cursor-pointer"
               title={t('modules:session.chronicle_forge_module.target_label')}
-            />
-            <datalist id="existing-campaigns">
+            >
+              <option value="">{t('modules:session.chronicle_forge_module.target_new')}</option>
               {campaigns.map((c) => (
-                <option key={c.id} value={c.name} />
+                <option key={c.id} value={c.id}>{c.name}</option>
               ))}
-            </datalist>
+            </select>
           </div>
 
           {/* Driver Selector */}
