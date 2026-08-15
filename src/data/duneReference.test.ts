@@ -116,7 +116,22 @@ describe('les valeurs viennent du corpus, pas d\'une supposition', () => {
     it('le jet est un compte de réussites sur une réserve de d20', () => {
         expect(dune.dice.logic).toBe('count-success');
         expect(dune.dice.defaultDice).toBe('2d20');
-        expect(dune.dice.critRange, 'le 1 naturel est la réussite critique').toBe(1);
+    });
+
+    it('la réussite critique est déclarée là où elle est LUE', () => {
+        /**
+         * **`dice.critRange` a été retiré le 2026-08-15.** Il était déclaré, le
+         * pilote de référence lui donnait `1` — et **aucun lecteur ne
+         * l'ouvrait** : `DiceEngine` calcule ses critiques en dur (`val ===
+         * faces`, `val === 1`), et c'est `jet.critique` que `PanneauDeJet`
+         * consulte pour doubler un dé.
+         *
+         * Un champ déclaré que personne ne lit est pire qu'un champ absent : la
+         * revue de forge le montrait, un humain le validait, et il ne changeait
+         * rien. Le 1 naturel de Dune est donc affirmé là où il agit.
+         */
+        expect(dune.jet?.critique, 'le 1 naturel est la réussite critique').toBe(1);
+        expect('critRange' in dune.dice, 'champ mort, retiré').toBe(false);
     });
 });
 

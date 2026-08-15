@@ -420,139 +420,32 @@ export class ForgeService {
     `;
   }
 
-  /**
-   * Generates a GameDriver from a rulebook Text using Gemini 1.5 Pro.
-   */
-  public async analyzeRulebookText(text: string, userInstructions?: string): Promise<Partial<GameDriver>> {
-    const prompt = this.getRulebookPrompt(userInstructions);
-    return (await this.callForgeAI(prompt, undefined, undefined, text)) as Partial<GameDriver>;
-  }
+  /*
+    **Quatre méthodes retirées le 2026-08-15, et leurs deux invites avec elles.**
 
-  private getRulebookPrompt(userInstructions?: string): string {
-    return `
-      Tu es l'ingénieur en chef de la Forge GM-OS, agissant en mode **🧠 CERVEAU (Logic & Rules)**.
-      Ton seul objectif est d'analyser ce document de règles de jeu de rôle pour en extraire la logique système pure.
-      Ignore la mise en page visuelle et concentre-toi sur les mécaniques, les dés et les statistiques de combat.
-      Le document peut être du texte brut, du Markdown, ou du JSON/JSONL contenant des données de règles.
+    `analyzeRulebook`, `analyzeRulebookText`, `analyzeCharacterSheet` et
+    `analyzeCharacterSheetText` n'étaient appelées de nulle part — ni dans
+    `src/`, ni dans `electron/`. Elles portaient l'ANCIENNE invite de forge,
+    celle que l'axe 1 du plan a remplacée le 2026-08-12 : son exemple de sortie
+    codait `"isMainHP": true`, `"defaultHealthType": "hp"`,
+    `"initiativeFormula": "dex"` et `"critRange": 20`.
 
-      ${userInstructions ? `INSTRUCTIONS SPÉCIFIQUES DE L'UTILISATEUR (À RESPECTER EN PRIORITÉ) :
-      "${userInstructions}"
-      ` : ''}
+    `ForgeService.test.ts` interdit ces valeurs — mais il ne mesure que le
+    prompt de `forgeSystem`. *Une vérification qui ne couvre qu'un chemin ne
+    protège que ce chemin* : le jour où quelqu'un aurait branché la forge « par
+    document direct », il aurait enseigné au modèle que tout jeu a des points de
+    vie, et un étalon faux est pire qu'un étalon absent puisque le modèle le
+    recopie.
 
-      Instructions critiques :
-      1. Identifie le nom du système, l'auteur et l'ambiance.
-      2. Analyse les mécaniques de dés (ex: 1d20 + bonus vs DC, ou d100 sous compétence).
-      3. Détermine quels champs de fiche de personnage sont essentiels pour le combat (HP, MP, Initiative).
-      4. Rédige des "aiInstructions" courtes mais précises pour qu'un autre assistant puisse simuler ce MJ.
-      5. Ajoute un "ui_config" esthétique :
-         - 'neon' (Cyberpunk/SF), 'bar' (Fantasy), 'segmented' (Retro/Grips).
-         - Couleurs vibrantes adaptées à l'ambiance.
+    La forge par corpus (`forgeSystem`, huit groupes) est le seul chemin vivant.
+    Le jour où la forge par document reviendra, elle repartira de `GROUPES`.
+  */
 
-      Format de sortie JSON obligatoire :
-      {
-        "name": "Nom du Système",
-        "description": "Courte description",
-        "emoji": "🎲",
-        "dice": {
-          "defaultDice": "1d20",
-          "logic": "sum | highest | d100-low",
-          "critRange": 20
-        },
-          "combat": {
-            "statsToTrack": [
-              { "fieldId": "hp", "label": "Points de Vie", "isMainHP": true, "isResource": false }
-            ],
-            "initiativeFormula": "dex",
-            "defaultHealthType": "hp | clocks | anatomy"
-          },
-        "ui_config": {
-          "gauges": [
-            { "fieldId": "hp", "label": "PV", "color": "bg-red-500", "style": "bar" }
-          ],
-          "initiativeStyle": "list"
-        },
-        "aiInstructions": "Tu es un MJ expert de [Système]..."
-      }
-    `;
-  }
-
-  /**
-   * Generates a GameDriver from a rulebook PDF/Text using Gemini 1.5 Pro.
-   */
-  public async analyzeRulebook(fileBase64: string, mimeType: string, userInstructions?: string): Promise<Partial<GameDriver>> {
-    const prompt = this.getRulebookPrompt(userInstructions);
-    return (await this.callForgeAI(prompt, fileBase64, mimeType)) as Partial<GameDriver>;
-  }
-
-  private getSheetPrompt(userInstructions?: string): string {
-    return `
-      Tu es l'ingénieur en chef de la Forge GM-OS, agissant en mode **👕 CORPS (Layout & Fields)**.
-      Ton rôle est d'analyser ce document pour générer une structure de template de fiche (UI) GM-OS v5.
-      Ignore les règles complexes de calcul de dés et concentre-toi sur l'extraction tous les champs (nom, caractéristiques, compétences, inventaire) à regrouper par sections logiques.
-      Si le document est en JSON/JSONL, sers-toi de la structure existante pour nommer précisément les champs.
-
-      ${userInstructions ? `INSTRUCTIONS SPÉCIFIQUES DE L'UTILISATEUR (À RESPECTER EN PRIORITÉ) :
-      "${userInstructions}"
-      ` : ''}
-
-      Format de sortie JSON obligatoire :
-      {
-        "name": "Nom du Template",
-        "emoji": "📜",
-        "sections": [
-          {
-            "id": "identite",
-            "label": "Identité",
-            "fields": [
-              { "id": "nom", "label": "Nom", "type": "text", "defaultValue": "" },
-              { "id": "force", "label": "Force", "type": "number", "defaultValue": 10 }
-            ]
-          }
-        ]
-      }
-    `;
-  }
-
-  /**
-   * Generates a Character Sheet Template from an image/PDF.
-   */
-  public async analyzeCharacterSheet(fileBase64: string, mimeType: string, userInstructions?: string): Promise<Partial<SheetTemplate>> {
-    const prompt = this.getSheetPrompt(userInstructions);
-    return (await this.callForgeAI(prompt, fileBase64, mimeType)) as Partial<SheetTemplate>;
-  }
-
-  public async analyzeCharacterSheetText(text: string, userInstructions?: string): Promise<Partial<SheetTemplate>> {
-    const prompt = this.getSheetPrompt(userInstructions);
-    return (await this.callForgeAI(prompt, undefined, undefined, text)) as Partial<SheetTemplate>;
-  }
-
-  private async callForgeAI(prompt: string, fileBase64?: string, mimeType?: string, rawText?: string): Promise<unknown> {
-    const aiService = AIService.getInstance();
-    const { activeProvider } = useAIStore.getState();
-
-    // 1. CAS TEXTE PUR (OU TEXTE EXTRAIT PAR NOTEBOOKLM)
-    if (rawText) {
-      const fullPrompt = `CONTENU DU DOCUMENT À ANALYSER :\n\n${rawText}\n\nREQUÊTE : ${prompt}`;
-      console.error(`[ForgeService] Analyzing text with ${activeProvider} (LITE MODE)...`);
-      return aiService.generateJSON(fullPrompt, "Tu es un expert en ingénierie de données JdR pour GM-OS. Réponds UNIQUEMENT en JSON pur.", [], { lite: true, sansPersona: true });
-    }
-
-    // 2. CAS DOCUMENT DIRECT (PDF/IMAGE)
-    if (fileBase64 && mimeType) {
-      // Si on n'est pas sur Gemini, la vision directe n'est pas supportée
-      if (activeProvider !== 'gemini') {
-        throw new Error("L'analyse visuelle directe n'est supportée que par Gemini. Veuillez utiliser NotebookLM pour extraire le texte.");
-      }
-
-      console.error(`[ForgeService] Analyzing visual document with Gemini (LITE MODE)...`);
-      return aiService.generateJSON(prompt, "Tu es un expert en analyse de documents JdR. Extrais les données structurées UNIQUEMENT en JSON.", [{
-        data: fileBase64,
-        mimeType: mimeType
-      }], { lite: true, sansPersona: true });
-    }
-
-    throw new Error("Aucun contenu fourni pour l'analyse.");
-  }
+  /*
+    `callForgeAI` est partie avec elles : elle n'existait que pour ces quatre
+    méthodes. La forge par corpus passe par `generateJSON`, qui impose la
+    grammaire JSON au décodeur au lieu de la demander au modèle.
+  */
 
   /** Une requête au carnet, filtrée sur les sources retenues. */
   private async interrogerCarnet(notebookId: string, query: string, sourceIds?: string[]): Promise<string> {

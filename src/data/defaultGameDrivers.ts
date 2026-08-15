@@ -81,7 +81,6 @@ const DUNE: GameDriver = {
         defaultDice: '2d20',
         logic: 'count-success',
         successThreshold: 8,
-        critRange: 1,
     },
 
     /**

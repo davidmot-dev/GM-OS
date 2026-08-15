@@ -26,7 +26,6 @@ export interface DiceConfig {
     logic: DiceRollLogic;
     engine?: 'standard' | 'formula' | 'pool' | 'pool_explode' | 'threshold' | 'advantage' | 'disadvantage' | 'exploding' | 'fate' | 'rolemaster' | 'yze' | '2d20'; // Specific specialized logic
     successThreshold?: number; // e.g. 8 for WoD, or dynamic
-    critRange?: number; // e.g. 20 for 5e, 1 for d100
 }
 
 export interface TacticalRangeThreshold {
