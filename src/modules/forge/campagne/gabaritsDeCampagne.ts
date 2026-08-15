@@ -65,7 +65,8 @@ emploie.`;
 const REGLES_COMMUNES = `- Cite tes sources par TITRE DE SECTION dans le corps du texte, par exemple
   « (section « La Chute de Carthag ») ». N'indique JAMAIS de numéro de page, ni
   de numéro de référence interne du carnet : les uns comme les autres sont faux
-  une fois sortis d'ici.
+  une fois sortis d'ici. N'insère AUCUN renvoi entre crochets — ni « [1-4] »,
+  ni « [3, 5, 6] ».
 - Écris tous les symboles en toutes lettres. Si le livre utilise une icône,
   nomme-la au lieu de la reproduire.
 - N'échappe pas la ponctuation : écris « 1. » et « + », jamais « 1\\. » ni « \\+ ».
@@ -107,6 +108,10 @@ lieux. « La campagne comporte plusieurs factions » est une réponse inutile ;
 
 La colonne « Sections » donne les TITRES EXACTS des chapitres ou sections où se
 trouve la matière, tels qu'ils y sont écrits. Aucun numéro de page.
+
+N'insère AUCUN renvoi entre crochets dans tes réponses — ni « [1-4] », ni
+« [3, 5, 6] ». Ces numéros désignent tes sources dans la présente conversation
+et ne veulent plus rien dire une fois la réponse enregistrée.
 
 Si un sujet n'est pas couvert par les sources, écris « non couvert par les
 sources » — n'invente rien, ne comble pas par analogie avec d'autres campagnes.

@@ -8,6 +8,7 @@ import {
     gabaritInventaireDeCampagne, gabaritStructureDeCampagne, gabaritFicheDeCampagne,
 } from './gabaritsDeCampagne';
 import { lireLaStructure, type ActeLu } from './structureDeCampagne';
+import { retirerLesRenvoisDuCarnet } from './renvoisDuCarnet';
 import {
     resoudreCorpusDeCampagne, cheminDesFichesDeCampagne, cheminDesBrouillonsDeCampagne,
     type CorpusDeCampagne,
@@ -103,7 +104,8 @@ export class ServiceDeCampagne {
      * fiche prise seule n'aurait dit.
      */
     public async inventaire(notebookId: string, sourceIds?: string[]): Promise<string> {
-        return forgeService.interrogerCarnet(notebookId, gabaritInventaireDeCampagne(), sourceIds);
+        const brut = await forgeService.interrogerCarnet(notebookId, gabaritInventaireDeCampagne(), sourceIds);
+        return retirerLesRenvoisDuCarnet(brut);
     }
 
     /**
@@ -118,7 +120,11 @@ export class ServiceDeCampagne {
         notebookId: string,
         sourceIds?: string[],
     ): Promise<{ actes: ActeLu[]; brut: string }> {
-        const brut = await forgeService.interrogerCarnet(notebookId, gabaritStructureDeCampagne(), sourceIds);
+        const reponse = await forgeService.interrogerCarnet(notebookId, gabaritStructureDeCampagne(), sourceIds);
+        // Les renvois partent AVANT la lecture : « Acte I — La Chute [3, 5] »
+        // deviendrait un titre que le livre ne porte pas, et c'est ce titre qui
+        // borne les onze requêtes suivantes.
+        const brut = retirerLesRenvoisDuCarnet(reponse);
         return { actes: lireLaStructure(brut), brut };
     }
 
@@ -147,11 +153,11 @@ export class ServiceDeCampagne {
          */
         jeu?: string,
     ): Promise<FicheDeCampagne> {
-        const brut = await forgeService.interrogerCarnet(
+        const brut = retirerLesRenvoisDuCarnet(await forgeService.interrogerCarnet(
             notebookId,
             gabaritFicheDeCampagne(etape.sujet, etape.acte),
             sourceIds,
-        );
+        ));
 
         const fiche = convertirFiche(brut, {
             systeme: campagne,
