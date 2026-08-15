@@ -38,13 +38,24 @@ const PlayerCharacterDetail: React.FC = () => {
                         className="bg-transparent text-xl font-black text-app-text focus:outline-none focus:ring-1 focus:ring-accent/20 rounded px-1 -ml-1 w-full"
                         placeholder={t('modules:session.characters.name_placeholder')}
                     />
-                    <input 
-                        type="text"
-                        value={character.classRace}
-                        onChange={(e) => updateCharacter(selectedPlayerId, character.id, { classRace: e.target.value })}
-                        className="bg-transparent text-xs text-app-text/40 italic focus:outline-none focus:ring-1 focus:ring-accent/20 rounded px-1 -ml-1 w-full"
-                        placeholder={t('modules:session.characters.class_race_placeholder')}
-                    />
+                    {/*
+                      **« Classe / Race » n'existe que pour les personnages qui
+                      en portent une.** C'est une notion de D&D : Dune parle de
+                      Maison Noble et de Rôle, Alien de Carrière — et ces
+                      champs-là vivent dans la fiche, où le jeu les a nommés.
+                      Le champ n'est donc plus propose a la saisie ; il reste
+                      modifiable tant qu'il porte une valeur, pour que les
+                      personnages anterieurs ne perdent pas la leur.
+                    */}
+                    {character.classRace && (
+                        <input 
+                            type="text"
+                            value={character.classRace}
+                            onChange={(e) => updateCharacter(selectedPlayerId, character.id, { classRace: e.target.value })}
+                            className="bg-transparent text-xs text-app-text/40 italic focus:outline-none focus:ring-1 focus:ring-accent/20 rounded px-1 -ml-1 w-full"
+                            placeholder={t('modules:session.characters.class_race_placeholder')}
+                        />
+                    )}
                 </div>
             </div>
 

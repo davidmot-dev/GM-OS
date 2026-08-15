@@ -102,6 +102,7 @@ const TemplateDashboard: React.FC = () => {
     const { showConfirm } = useModalStore();
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedId, setSelectedId] = useState<string | null>(null);
+    const [montrerReferences, setMontrerReferences] = useState(false);
 
     const activeTab = templateDashboardTab;
     const setActiveTab = setTemplateDashboardTab;
@@ -167,8 +168,29 @@ const TemplateDashboard: React.FC = () => {
 
     const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
     
+    /**
+     * **Les fiches de référence sont masquées, pas supprimées.**
+     *
+     * David, le 2026-08-15 : *« la fiche de référence ne me sert à rien, si tu
+     * ne peux pas l'effacer, explique-moi pourquoi et au pire cache-la »*.
+     *
+     * On ne peut pas l'effacer, et pour une raison qui vaut d'être écrite :
+     * `DEFAULT_SHEET_TEMPLATES.find(t => t.id === 'dune')` est **l'étalon qui
+     * calibre les contrôles du pilote** (`controlesDuPilote.test.ts`). La règle
+     * qui les gouverne est que *le pilote Dune de référence ne doit produire
+     * aucun constat — s'il en produisait, ce seraient les contrôles qu'il
+     * faudrait corriger.* Sans étalon, plus rien n'empêche un contrôle de crier
+     * à tort, ce qui est déjà arrivé sur les portées d'Alien.
+     *
+     * Elles sortent donc de la liste, sans disparaître du code. Et **on dit
+     * qu'elles sont masquées** : cacher en silence ce qu'on ne peut pas
+     * supprimer transformerait une contrainte en énigme.
+     */
+    const referencesMasquees = allTemplates.filter(t => t.isBuiltin).length;
+
     const filteredItems = activeTab === 'sheets' 
-        ? allTemplates.filter(t => t.name.toLowerCase().includes(searchQuery.toLowerCase()))
+        ? allTemplates.filter(t => (montrerReferences || !t.isBuiltin)
+            && t.name.toLowerCase().includes(searchQuery.toLowerCase()))
         : customGameDrivers.filter(d => d.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
     const selectedItem = activeTab === 'sheets'
@@ -319,6 +341,20 @@ const TemplateDashboard: React.FC = () => {
                             <p className="text-xs font-bold max-w-xs">{t('modules:session.template_dashboard.status.no_drivers_hint')}</p>
                         </div>
                     ) : (
+                        <>
+                        {/* Ce qui est masqué se dit, avec le moyen de l'ouvrir. */}
+                        {activeTab === 'sheets' && referencesMasquees > 0 && (
+                            <button
+                                type="button"
+                                onClick={() => setMontrerReferences(v => !v)}
+                                className="mb-4 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-app-text/30 hover:text-app-text/60 transition-colors"
+                            >
+                                <Eye size={12} />
+                                {montrerReferences
+                                    ? `Masquer les ${referencesMasquees} fiches de référence`
+                                    : `${referencesMasquees} fiches de référence masquées — livrées avec l'application, elles calibrent les contrôles de la Forge`}
+                            </button>
+                        )}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {filteredItems.map(item => (
                                 <div
@@ -370,6 +406,7 @@ const TemplateDashboard: React.FC = () => {
                                 </div>
                             ))}
                         </div>
+                        </>
                     )}
                 </div>
             </div>

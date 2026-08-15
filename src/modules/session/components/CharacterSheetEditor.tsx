@@ -49,11 +49,42 @@ const CharacterSheetEditor: React.FC = () => {
      * bouton qu'un bouton qui lancerait n'importe quoi.
      */
     const { campaigns, activeCampaignId, customGameDrivers } = useSessionOSStore();
+
+    /**
+     * **Le pilote du PERSONNAGE, pas celui de la campagne ouverte.**
+     *
+     * Relevé par David le 2026-08-15, capture à l'appui : sur une fiche de Dune,
+     * « Lancer un test » tirait **cinq dés à six faces en comptant les six** —
+     * du Year Zero Engine — parce que sa campagne active était « TEST Alien ».
+     * Dune lance deux d20 **sous** un seuil composé d'une compétence et d'un
+     * principe : le jet n'était pas approximatif, il appartenait à un autre jeu.
+     *
+     * La campagne ne peut pas faire autorité : une fiche s'ouvre depuis
+     * n'importe où, et rien n'oblige la campagne ouverte à être celle du
+     * personnage. Trois sources, dans l'ordre de ce qui est le plus sûr :
+     *
+     * 1. `character.systemId` — le jeu que le personnage déclare. Écrit depuis
+     *    le 2026-08-15 par l'écran de création.
+     * 2. **Le pilote dont c'est le gabarit** : les personnages antérieurs n'ont
+     *    pas de `systemId`, mais leur `templateId` désigne une fiche, et un
+     *    pilote la réclame. C'est ce qui rattrape « test » et ses semblables.
+     * 3. La campagne, en dernier recours seulement.
+     */
     const piloteDeLaFiche = React.useMemo(() => {
+        const pilotes = tousLesPilotes(customGameDrivers);
+        const perso = editor.character;
+
+        if (perso?.systemId) {
+            const declare = pilotes.find(d => d.id === perso.systemId);
+            if (declare) return declare;
+        }
+        if (perso?.templateId) {
+            const parGabarit = pilotes.find(d => d.templateId === perso.templateId);
+            if (parGabarit) return parGabarit;
+        }
         const campagne = campaigns.find(c => c.id === activeCampaignId);
-        if (!campagne?.system) return null;
-        return tousLesPilotes(customGameDrivers).find(d => d.id === campagne.system) ?? null;
-    }, [campaigns, activeCampaignId, customGameDrivers]);
+        return pilotes.find(d => d.id === campagne?.system) ?? null;
+    }, [campaigns, activeCampaignId, customGameDrivers, editor.character]);
 
     const { evaluateFormula } = useSheetCalculator(editor.character as PlayerCharacter | null, editor.template, editor.localData);
     const [isAddingItem, setIsAddingItem] = React.useState(false);
@@ -227,7 +258,9 @@ const CharacterSheetEditor: React.FC = () => {
                         {/* Identity */}
                         <div className="space-y-1 text-center">
                             <h2 className="text-lg font-black text-app-text">{character.name}</h2>
-                            <p className="text-xs text-app-text/40 italic">{character.classRace}</p>
+                            {character.classRace && (
+                                <p className="text-xs text-app-text/40 italic">{character.classRace}</p>
+                            )}
                         </div>
 
                         {/*
