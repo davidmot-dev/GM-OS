@@ -166,6 +166,24 @@
 }
 
 :root {
+  /**
+   * Le thème des CONTRÔLES NATIFS — menus de listes déroulantes, sélecteurs de
+   * date, cases à cocher, ascenseurs.
+   *
+   * **Le défaut, relevé par David le 2026-08-15, capture à l'appui** : *« quand
+   * je clique sur le sélecteur campagne, cela ouvre une fenêtre en dehors de
+   * l'application, quasi illisible. »* Un menu de `<select>` n'est pas dessiné
+   * par la page : c'est Chromium qui le rend, et **sans `color-scheme` il le
+   * rend en clair** — texte gris pâle sur fond gris, au milieu d'une interface
+   * sombre.
+   *
+   * Aucune feuille de style ne le déclarait, nulle part. Le remède n'est donc
+   * pas de remplacer les `<select>` un par un — ils sont des dizaines — mais de
+   * dire au moteur quel thème la page emploie. *Une cause commune se corrige à
+   * la racine ; la contourner écran par écran, c'est signer pour la corriger
+   * indéfiniment.*
+   */
+  color-scheme: dark;
   font-size: 85%;
   --background: 240 10% 3.9%;
   --foreground: 0 0% 98%;
@@ -229,6 +247,9 @@
 }
 
 :root[data-theme='claire'] {
+  /* Le seul thème clair : ses menus natifs doivent l'être aussi, sinon le
+     défaut s'inverse au lieu de disparaître. */
+  color-scheme: light;
   --app-accent: #3b82f6;
   --app-text: #2c2420;
   --app-bg: #fbfbf9;
