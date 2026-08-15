@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNPCStore } from '../useNPCStore';
-import { Save, Sword, FileText, Share2, User, MapPin, Package, Zap, Quote, Star, Eye, Sparkles, Skull, Database } from 'lucide-react';
+import { AudioLines, Save, Sword, FileText, Share2, User, MapPin, Package, Zap, Quote, Star, Eye, Sparkles, Skull, Database } from 'lucide-react';
 import { useCombatStore } from '../../combat/useCombatStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useMapStore } from '../../map/useMapStore';
@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next';
 
 const NPCCard: React.FC = () => {
     const { t } = useTranslation(['modules', 'common']);
-    const { currentEntity, saveToMemo, isGenerating, selectAvatar, generateAvatar, isGeneratingAIAvatar, toggleDeadStatus } = useNPCStore();
+    const { currentEntity, saveToMemo, isGenerating, selectAvatar, generateAvatar, isGeneratingAIAvatar, toggleDeadStatus, setVoiceProfile } = useNPCStore();
     const [showAIPrompt, setShowAIPrompt] = useState(false);
     const { addCombatant } = useCombatStore();
     const { 
@@ -33,7 +33,7 @@ const NPCCard: React.FC = () => {
     const [showRecipientSelector, setShowRecipientSelector] = useState(false);
     const { addToken } = useMapStore();
     const { addFavorite } = useFavoriteStore();
-    const { inputLevel, isSyncNPC, isActive, generateVoiceProfile } = useVoiceStore();
+    const { inputLevel, isSyncNPC, isActive, generateVoiceProfile, appliquerProfil } = useVoiceStore();
     
     // Check if session is active
     const activeSession = sessions.find(s => s.id === selectedSessionId);
@@ -333,14 +333,43 @@ const NPCCard: React.FC = () => {
                     >
                         <Skull size={18} />
                     </button>
+                    {/*
+                        **Le profil se range sur la fiche.** Il n'écrivait que
+                        dans l'état global du rack : générer une voix pour un
+                        second PNJ écrasait la première, sans moyen d'y revenir.
+                        Une voix qu'on doit refabriquer à chaque bascule n'est
+                        pas un profil, c'est un réglage.
+                    */}
                     <button
-                        onClick={(e) => { e.stopPropagation(); generateVoiceProfile(currentEntity); }}
+                        onClick={async (e) => {
+                            e.stopPropagation();
+                            const profil = await generateVoiceProfile(currentEntity);
+                            if (profil) setVoiceProfile(currentEntity.id, profil);
+                        }}
                         className="text-[10px] uppercase font-bold tracking-widest text-emerald-400/80 px-2 py-1 border border-emerald-500/20 rounded bg-emerald-500/10 flex items-center gap-1 backdrop-blur-sm hover:bg-emerald-500/20 transition-colors"
                         title={t('npc.card.voice_gen_tooltip')}
                     >
                         <Sparkles size={10} />
                         {t('npc.card.voice_gen')}
                     </button>
+                    {/* Le rappel n'apparaît que s'il y a quelque chose à
+                        rappeler : un bouton qui reposerait un profil inexistant
+                        remettrait le rack à des valeurs que personne n'a
+                        choisies. */}
+                    {currentEntity.voiceProfile && (
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                appliquerProfil(currentEntity.voiceProfile!);
+                                gmToast(`Voix de ${currentEntity.name} rappelée.`, 'info');
+                            }}
+                            className="text-[10px] uppercase font-bold tracking-widest text-cyan-300/80 px-2 py-1 border border-cyan-500/20 rounded bg-cyan-500/10 flex items-center gap-1 backdrop-blur-sm hover:bg-cyan-500/20 transition-colors"
+                            title="Reposer ce profil vocal sur le rack"
+                        >
+                            <AudioLines size={10} />
+                            Sa voix
+                        </button>
+                    )}
                     <div className="text-[10px] uppercase font-bold tracking-widest text-accent/50 px-2 py-1 border border-accent/20 rounded bg-accent/5 flex items-center backdrop-blur-sm">
                         {t(`npc.categories.${currentEntity.category}`)}
                     </div>

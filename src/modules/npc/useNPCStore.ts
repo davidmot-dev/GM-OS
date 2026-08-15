@@ -21,6 +21,17 @@ export interface NPCEntity {
     isDead?: boolean;
     /** Suggestion de prompt pour la génération d'image par l'IA */
     suggestedPrompt?: string;
+    /**
+     * Les réglages de voix retenus pour ce personnage.
+     *
+     * **Demandé par David le 2026-08-15** : *« sauve les données dans la fiche
+     * de PNJ, que je puisse la rappeler plus tard dans Voice-OS. »* Avant, le
+     * profil n'écrivait que dans l'état **global** du rack : générer une voix
+     * pour un second PNJ écrasait la première, et il n'y avait aucun moyen de
+     * revenir à l'une. Une voix qu'on doit refabriquer à chaque bascule n'est
+     * pas un profil, c'est un réglage.
+     */
+    voiceProfile?: import('../voice/useVoiceStore').ProfilVocal;
 }
 
 interface NPCBridge {
@@ -61,6 +72,8 @@ interface NPCState {
     saveToMemo: () => void;
     deleteFromMemo: (id: string) => void;
     updateEntityNotes: (id: string, notes: string) => void;
+    /** Range un profil vocal sur la fiche, ou l'en retire avec `null`. */
+    setVoiceProfile: (id: string, profil: import('../voice/useVoiceStore').ProfilVocal | null) => void;
     toggleDeadStatus: (id: string) => void;
     clearHistory: () => void;
     setCurrentEntity: (entity: NPCEntity | null) => void;
@@ -271,6 +284,23 @@ export const useNPCStore = create<NPCState>()(
                 // Check saved entities
                 set(state => ({
                     savedEntities: state.savedEntities.map(e => e.id === id ? { ...e, gmNotes: notes } : e)
+                }));
+            },
+
+            /*
+              Même geste que `updateEntityNotes` : la fiche en cours ET celle du
+              mémo, parce qu'un PNJ peut être les deux à la fois. N'en toucher
+              qu'une laisserait deux versions de la même fiche.
+            */
+            setVoiceProfile: (id, profil) => {
+                const applique = (e: NPCEntity) =>
+                    (profil ? { ...e, voiceProfile: profil } : (() => { const { voiceProfile: _, ...reste } = e; return reste as NPCEntity; })());
+
+                if (get().currentEntity?.id === id) {
+                    set(state => ({ currentEntity: state.currentEntity ? applique(state.currentEntity) : null }));
+                }
+                set(state => ({
+                    savedEntities: state.savedEntities.map(e => (e.id === id ? applique(e) : e)),
                 }));
             },
 

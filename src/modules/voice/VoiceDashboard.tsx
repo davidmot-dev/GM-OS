@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { 
+    AudioLines,
     Mic2, 
     Settings2, 
     Activity, 
@@ -15,6 +16,8 @@ import { useVoiceStore } from './useVoiceStore';
 import { voiceEngine } from './VoiceEngine';
 import { useHardwareStore } from '../../stores/useHardwareStore';
 import { useTranslation } from 'react-i18next';
+import { useNPCStore } from '../npc/useNPCStore';
+import { gmToast } from '../../stores/useToastStore';
 
 const VocalShaperSlider: React.FC<{
     label: string;
@@ -66,9 +69,17 @@ const VoiceDashboard: React.FC = () => {
         availableOutputs,
         setOutputDeviceId,
         lastSyncedEntityName,
+        appliquerProfil,
         isWorkletReady
     } = useVoiceStore();
     const { getAudioLabel } = useHardwareStore();
+
+    /*
+      Les PNJ du mémo qui portent une voix. Voice-OS lit le module des PNJ, et
+      non l'inverse : c'est lui qui a besoin de la liste, et le store des PNJ n'a
+      pas à connaître le rack.
+    */
+    const voixEnregistrees = useNPCStore(state => state.savedEntities).filter(e => e.voiceProfile);
     const { t } = useTranslation();
 
     useEffect(() => {
@@ -195,6 +206,48 @@ const VoiceDashboard: React.FC = () => {
                             )}
                         </button>
                     ))}
+
+                    {/*
+                        **Les voix rangées sur les fiches de PNJ.**
+
+                        Demandé par David le 2026-08-15 : un profil généré dans
+                        NPC-OS doit se rappeler ici, en séance, sans rouvrir le
+                        générateur. La liste ne montre que les PNJ qui EN ONT
+                        un — un rappel qui reposerait un profil inexistant
+                        remettrait le rack à des valeurs que personne n'a
+                        choisies.
+
+                        Ne sont listés que les PNJ **enregistrés au mémo** :
+                        `partialize` ne persiste que ceux-là, donc un profil posé
+                        sur une fiche non sauvée ne survivrait pas au
+                        redémarrage. Le dire ici évite de le découvrir demain.
+                    */}
+                    {voixEnregistrees.length > 0 && (
+                        <div className="mt-8">
+                            <h3 className="px-2 mb-2 text-[10px] font-black text-slate-600 uppercase tracking-[0.2em]">
+                                Voix des PNJ
+                            </h3>
+                            {voixEnregistrees.map(pnj => (
+                                <button
+                                    key={pnj.id}
+                                    onClick={() => {
+                                        appliquerProfil(pnj.voiceProfile!);
+                                        gmToast(`Voix de ${pnj.name} rappelée.`, 'info');
+                                    }}
+                                    className="w-full flex items-center gap-3 p-3 rounded-xl text-slate-500 hover:bg-app-surface/5 hover:text-slate-300 border border-transparent hover:border-cyan-500/20 transition-all group"
+                                >
+                                    <AudioLines size={16} className="text-slate-600 group-hover:text-cyan-300 transition-colors shrink-0" />
+                                    <div className="flex flex-col items-start min-w-0">
+                                        <span className="font-bold text-sm truncate w-full">{pnj.name}</span>
+                                        <span className="text-[10px] opacity-60">
+                                            {pnj.voiceProfile!.presetId ?? 'réglage sur mesure'}
+                                        </span>
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                    )}
+
                     <div className="mt-8 px-2 flex flex-col gap-4">
                         <div className="flex items-center gap-2 text-slate-500">
                             <Volume2 size={14} />

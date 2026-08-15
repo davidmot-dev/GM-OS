@@ -21,6 +21,22 @@ export interface VoiceEffects {
     duckingAttack: number; // ms for the fade transition
 }
 
+/**
+ * Un profil vocal enregistré sur la fiche d'un PNJ.
+ *
+ * **Ce qu'on garde, et pourquoi tout.** On enregistre l'état complet du rack —
+ * pas les cinq valeurs suggérées par le modèle. Le meneur retouche presque
+ * toujours aux curseurs après coup, et c'est cet état-là qu'il veut retrouver,
+ * pas la proposition initiale. *Ce qu'on rappelle doit être ce qu'on a entendu.*
+ */
+export interface ProfilVocal {
+    /** Le preset actif, s'il n'a pas été retouché depuis. */
+    presetId: string | null;
+    effects: VoiceEffects;
+    /** Quand il a été posé — pour que l'écran puisse dire « il y a trois jours ». */
+    enregistreLe: number;
+}
+
 export interface VoicePreset {
     id: string;
     name: string;
@@ -69,7 +85,16 @@ interface VoiceState {
     setWorkletReady: (ready: boolean) => void;
     
     syncWithNpc: (npc: { name: string; description: string; roleplayingNotes: string; id: string }) => void;
-    generateVoiceProfile: (npc: { name: string; gmNotes: string; fields: Record<string, string> }) => Promise<void>;
+    /**
+     * Fabrique un profil vocal et l'applique.
+     *
+     * **Rend le profil au lieu de se contenter de l'appliquer** : c'est
+     * l'appelant qui sait où le ranger — la fiche du PNJ — et le store de voix
+     * n'a pas à connaître le module des PNJ.
+     */
+    generateVoiceProfile: (npc: { name: string; gmNotes: string; fields: Record<string, string> }) => Promise<ProfilVocal | null>;
+    /** Repose un profil enregistré sur le rack. */
+    appliquerProfil: (profil: ProfilVocal) => void;
     
     presets: VoicePreset[];
 
@@ -224,73 +249,92 @@ export const useVoiceStore = create<VoiceState>()(
                 });
             },
 
+            appliquerProfil: (profil) => set({
+                currentEffects: { ...profil.effects },
+                activePresetId: profil.presetId,
+            }),
+
             generateVoiceProfile: async (npc) => {
                 const { updateEffect, applyPreset } = get();
                 const aiStore = (await import('../../stores/useAIStore')).useAIStore.getState();
-                
-                const provider = aiStore.configs.ollama ? 'ollama' : aiStore.activeProvider;
-                const model = provider === 'ollama' ? (aiStore.configs.ollama.modelId || 'phi3') : aiStore.configs[provider].modelId;
+
+                /*
+                  **Le fournisseur réellement employé, et non « Ollama » quoi
+                  qu'il arrive.**
+
+                  La ligne d'avant testait `configs.ollama ? 'ollama' : …` — or
+                  cet objet existe toujours, donc la condition était toujours
+                  vraie. L'appel partait bien vers le fournisseur actif, mais le
+                  message de confirmation annonçait Ollama à tout le monde.
+                  *Un message qui nomme le mauvais outil envoie chercher la
+                  panne au mauvais endroit.*
+                */
+                const provider = aiStore.activeProvider;
+                const model = aiStore.configs[provider]?.modelId ?? '—';
 
                 const fieldsText = Object.entries(npc.fields).map(([k, v]) => `${k}: ${v}`).join(', ');
-                const prompt = `Tu es une IA experte en sound-design. Analyse ce PNJ et suggère des réglages de voix.
-                Nom: ${npc.name}
-                Traits: ${fieldsText}
-                Notes: ${npc.gmNotes}
+                const prompt = `Analyse ce personnage et propose des réglages de voix.
+Nom: ${npc.name}
+Traits: ${fieldsText}
+Notes: ${npc.gmNotes}
 
-                Instructions STRICTES :
-                - Tu DOIS répondre EXCLUSIVEMENT avec un objet JSON.
-                - Aucun texte d'introduction ou de conclusion.
-                - Les valeurs doivent être des CHIFFRES (pas de texte, pas de signes +).
+Règles des valeurs :
+- preset: "clean", "ghost", "ogre", "robot" ou "dragon"
+- pitch: nombre entre -12 et 12
+- formant: nombre entre -100 et 100
+- reverb: nombre décimal entre 0 et 1
+- distortion: nombre décimal entre 0 et 1`;
 
-                Exemple de format EXACT attendu :
-                {
-                  "preset": "dragon",
-                  "pitch": -5,
-                  "formant": -20,
-                  "reverb": 0.2,
-                  "distortion": 0.1
-                }
-                
-                Règles des valeurs :
-                - preset: "clean", "ghost", "ogre", "robot", ou "dragon"
-                - pitch: nombre entre -12 et 12
-                - formant: nombre entre -100 et 100
-                - reverb: nombre décimal entre 0 et 1
-                - distortion: nombre décimal entre 0 et 1`;
+                /**
+                 * La forme imposée au décodeur, plutôt que demandée au modèle.
+                 *
+                 * **C'est la leçon de la Forge du 2026-08-12** : une consigne
+                 * s'ignore, une grammaire non. L'ancien code demandait poliment
+                 * « EXCLUSIVEMENT un objet JSON », puis rattrapait la réponse
+                 * avec trois filets — dont un `new Function()`, c'est-à-dire une
+                 * **évaluation de code sur la sortie d'un modèle**. Le schéma
+                 * rend ces filets inutiles.
+                 */
+                const schema = {
+                    type: 'object',
+                    properties: {
+                        preset: { type: 'string', enum: ['clean', 'ghost', 'ogre', 'robot', 'dragon'] },
+                        pitch: { type: 'number' },
+                        formant: { type: 'number' },
+                        reverb: { type: 'number' },
+                        distortion: { type: 'number' },
+                    },
+                    required: ['preset', 'pitch', 'formant', 'reverb', 'distortion'],
+                };
+
+                const translate = (await import('i18next')).default;
 
                 try {
                     const { aiService } = await import('../../modules/ai/AIService');
-                    const response = await aiService.generateText(prompt, 'voice-profiler');
-                    
-                    // Extraction du premier bloc JSON plat (ignore les accolades parasites après la réponse)
-                    const match = response.text.match(/\{[^{}]+\}/);
-                    
-                    if (!match) {
-                        throw new Error(`Format JSON introuvable dans la réponse: ${response.text.substring(0, 100)}...`);
-                    }
 
-                    const rawJson = match[0];
-                    
-                    // Nettoyeur auto-correctif:
-                    const cleanedJson = rawJson
-                        .replace(/:\s*\+(\d+)/g, ': $1')                // Signes +
-                        .replace(/,\s*([}\]])/g, '$1')                 // Virgules traînantes
-                        .replace(/(['"])?(\w+)(['"])?\s*:/g, '"$2":')    // Forcer double-quotes sur clés
-                        .replace(/'/g, '"');                            // Guillemets simples -> doubles
+                    /*
+                      **Sans persona et sans contexte de séance.**
 
-                    let profile: { preset?: string, pitch?: number, formant?: number, reverb?: number, distortion?: number } = {};
-                    try {
-                        profile = JSON.parse(cleanedJson);
-                    } catch (e1) {
-                        try {
-                            // Fallback ultime: Évaluation JS native
-                            // Accepte nativement les commentaires, clés sans guillemets, virgules traînantes, etc.
-                            profile = new Function(`return ${rawJson}`)();
-                        } catch (e2) {
-                            console.error("[Voice-OS] Échec absolu du parsing IA.", { erreurRegex: e1, erreurJS: e2, rawPayload: rawJson });
-                            throw new Error("Impossible d'interpréter la réponse de l'IA.");
-                        }
-                    }
+                      L'appel passait `'voice-profiler'` en DEUXIÈME argument —
+                      qui est le *contexte*, pas l'identifiant de persona. La
+                      demande de sound-design partait donc enrobée des
+                      instructions du Sage, des personnages et des PNJ de la
+                      séance en cours. C'est mot pour mot le défaut corrigé pour
+                      la Forge le 2026-08-12, où le modèle, sommé d'incarner un
+                      conteur pendant qu'on lui demandait d'extraire des données,
+                      commentait son travail. *Un contexte hérité d'ailleurs
+                      reste un choix que personne n'a fait.*
+                    */
+                    const response = await aiService.generateText(
+                        prompt, undefined, 'sage', {}, undefined,
+                        true,   // attendJson
+                        true,   // sansPersona
+                        schema,
+                    );
+
+                    const profile = JSON.parse(response.text) as {
+                        preset?: string; pitch?: number; formant?: number; reverb?: number; distortion?: number;
+                    };
 
                     if (profile.preset) applyPreset(profile.preset);
                     if (profile.pitch !== undefined) updateEffect('pitch', profile.pitch);
@@ -298,11 +342,24 @@ export const useVoiceStore = create<VoiceState>()(
                     if (profile.reverb !== undefined) updateEffect('reverb', profile.reverb);
                     if (profile.distortion !== undefined) updateEffect('distortion', profile.distortion);
 
-                    const translate = (await import('i18next')).default;
                     set({ lastSyncedEntityName: npc.name || 'Unknown NPC' });
-                    gmToast(translate.t('modules:voice.messages.profile_generated', { provider: provider.toUpperCase(), model }), "info");
+                    gmToast(translate.t('modules:voice.messages.profile_generated', { provider: provider.toUpperCase(), model }), 'info');
+
+                    // L'état RÉEL du rack après application — c'est lui qu'on
+                    // enregistre, pas la suggestion brute du modèle.
+                    const apres = get();
+                    return { presetId: apres.activePresetId, effects: { ...apres.currentEffects }, enregistreLe: Date.now() };
                 } catch (err) {
-                    console.error("Voice profiling failed:", err);
+                    /*
+                      **Un échec se dit.** Il partait dans la console et nulle
+                      part ailleurs : on cliquait, rien ne bougeait, et rien
+                      n'expliquait pourquoi. C'est la forme exacte du défaut que
+                      ce projet traque — quelque chose qui échoue sans le dire.
+                    */
+                    const dit = err instanceof Error ? err.message : String(err);
+                    console.error('[Voice-OS] Profilage vocal en échec :', err);
+                    gmToast(`Profil vocal : ${dit}`, 'error');
+                    return null;
                 }
             }
         }),
