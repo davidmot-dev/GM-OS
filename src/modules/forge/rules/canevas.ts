@@ -209,11 +209,33 @@ const SEUIL_RECIPROCITE = 1 / 3;
  * la comparaison entre jeux au lieu de simplement s'en abstenir.
  */
 export function clefCanonique(libelle: string): string | null {
+  return rabattreSurLeCanevas(libelle, CANEVAS);
+}
+
+/**
+ * Le même rabattage, sur **n'importe quel** canevas.
+ *
+ * **Extrait de `clefCanonique` le 2026-08-15, pour la Forge de campagne.** Les
+ * trois passes — égalité, préfixe, recouvrement réciproque — ne doivent rien au
+ * sujet traité : elles répondent à « le carnet a reformulé, est-ce le même
+ * sujet ? », et cette question se pose à l'identique pour des actes et des
+ * factions. La recopier aurait garanti la divergence, et la divergence porterait
+ * ici sur un rapprochement dont on sait déjà qu'il **écrase une fiche** quand
+ * il se trompe — le défaut de Blade Runner du 2026-08-10, sept reforges pour
+ * rien.
+ *
+ * `clefCanonique` reste la porte d'entrée du canevas des règles : ses deux
+ * appelants n'ont pas à savoir qu'il en existe un second.
+ */
+export function rabattreSurLeCanevas(
+  libelle: string,
+  canevas: readonly SujetCanevas[],
+): string | null {
   const cible = normaliser(libelle);
   if (!cible) return null;
 
   // 1. Égalité — le cas normal quand le carnet a repris la clé telle quelle.
-  for (const sujet of CANEVAS) {
+  for (const sujet of canevas) {
     if (normaliser(sujet.clef) === cible) return sujet.clef;
   }
 
@@ -221,7 +243,7 @@ export function clefCanonique(libelle: string): string | null {
   //    table. On retient le préfixe le plus long : il est le plus spécifique.
   let meilleurPrefixe: string | null = null;
   let longueurPrefixe = 0;
-  for (const sujet of CANEVAS) {
+  for (const sujet of canevas) {
     const clefNormalisee = normaliser(sujet.clef);
     const prefixe =
       cible.startsWith(clefNormalisee + ' ') || clefNormalisee.startsWith(cible + ' ');
@@ -242,7 +264,7 @@ export function clefCanonique(libelle: string): string | null {
   let meilleur: string | null = null;
   let meilleurScore = 0;
   let exAequo = false;
-  for (const sujet of CANEVAS) {
+  for (const sujet of canevas) {
     if (reciprocite(sujet.clef, libelle) < SEUIL_RECIPROCITE) continue;
     const score = recouvrement(sujet.clef, libelle);
     if (score > meilleurScore) {
