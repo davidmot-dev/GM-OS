@@ -186,6 +186,16 @@ export const serviceDeCampagne = ServiceDeCampagne.getInstance();
 // Écriture sur le disque
 // ─────────────────────────────────────────────
 
+/**
+ * Ce qu'il faut pour écrire une fiche : où, et quoi.
+ *
+ * Volontairement plus étroit que `FicheDeCampagne` — une fiche **reprise du
+ * disque** n'a ni étape ni réponse brute, et doit pourtant pouvoir être publiée.
+ * Exiger le tout aurait interdit précisément le geste que la reprise existe pour
+ * permettre.
+ */
+export type FicheAEcrire = Pick<FicheConvertie, 'slug' | 'markdown'>;
+
 /** Le corpus d'une campagne, résolu comme le lira l'Oracle. */
 export async function corpusDeLaCampagne(
     nom: string,
@@ -207,13 +217,13 @@ export async function corpusDeLaCampagne(
  * la fiche en mémoire plutôt que de s'arrêter au milieu d'une série de treize
  * appels.
  */
-export async function ecrireLeBrouillon(corpus: CorpusDeCampagne, fiche: FicheDeCampagne): Promise<boolean> {
+export async function ecrireLeBrouillon(corpus: CorpusDeCampagne, fiche: FicheAEcrire): Promise<boolean> {
     const chemin = `${cheminDesBrouillonsDeCampagne(corpus)}/${fiche.slug}.md`;
     return (await window.appBridge?.ai?.writeDoc?.(chemin, fiche.markdown).catch(() => false)) ?? false;
 }
 
 /** Publie une fiche relue vers `fiches/`, et retire son brouillon. */
-export async function publierLaFiche(corpus: CorpusDeCampagne, fiche: FicheDeCampagne): Promise<boolean> {
+export async function publierLaFiche(corpus: CorpusDeCampagne, fiche: FicheAEcrire): Promise<boolean> {
     const pont = window.appBridge?.ai;
     if (!pont?.writeDoc) return false;
 

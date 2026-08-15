@@ -13,8 +13,12 @@ import {
     ecrireLeBrouillon, publierLaFiche, ecrireLInventaire,
     type EtapeDeCampagne, type FicheDeCampagne,
 } from './ServiceDeCampagne';
+import { reprendreLAtelier, type FicheReprise } from './reprendreLAtelier';
 import type { ActeLu } from './structureDeCampagne';
 import type { CorpusDeCampagne } from '../../../../electron/corpusDeCampagne';
+
+/** Une fiche à l'écran : sortie du carnet, ou reprise du disque. */
+type FicheAffichee = FicheDeCampagne | FicheReprise;
 
 /**
  * L'Atelier de campagne — interroger le carnet, sujet par sujet.
@@ -88,7 +92,7 @@ const AtelierDeCampagne: React.FC = () => {
     const [inventaire, setInventaire] = React.useState<string | null>(null);
     const [actes, setActes] = React.useState<ActeLu[]>([]);
     const [structureBrute, setStructureBrute] = React.useState<string | null>(null);
-    const [fiches, setFiches] = React.useState<Record<string, FicheDeCampagne>>({});
+    const [fiches, setFiches] = React.useState<Record<string, FicheAffichee>>({});
     const [publiees, setPubliees] = React.useState<Set<string>>(new Set());
     const [enCours, setEnCours] = React.useState<string | null>(null);
     const [erreur, setErreur] = React.useState<string | null>(null);
@@ -114,6 +118,28 @@ const AtelierDeCampagne: React.FC = () => {
             .then(c => { if (vivant) setCorpus(c); });
         return () => { vivant = false; };
     }, [nomCible, cheminDeclare]);
+
+    /**
+     * **L'avancement se lit sur le disque, jamais en mémoire de session.**
+     *
+     * Sans cela, fermer l'application laissait les brouillons bien écrits mais
+     * hors d'atteinte de l'écran : il aurait fallu reforger, deux minutes de
+     * carnet pour une réponse déjà obtenue. On relit donc à chaque changement de
+     * corpus — ce qui est publié, et ce qui attend de l'être.
+     */
+    React.useEffect(() => {
+        if (!corpus) { setPubliees(new Set()); setFiches({}); return; }
+        let vivant = true;
+        void reprendreLAtelier(corpus).then(avancement => {
+            if (!vivant) return;
+            setPubliees(avancement.publiees);
+            // Les brouillons repris ne remplacent JAMAIS une fiche que la session
+            // vient de forger : celle-ci porte sa réponse brute et ses vrais
+            // avertissements, que le disque ne sait pas restituer.
+            setFiches(actuelles => ({ ...avancement.brouillons, ...actuelles }));
+        });
+        return () => { vivant = false; };
+    }, [corpus]);
 
     const ouvrirLeSelecteur = async () => {
         setSelecteurOuvert(true);
@@ -207,14 +233,26 @@ const AtelierDeCampagne: React.FC = () => {
         await ecrireLeBrouillon(corpus, fiche);
     });
 
-    const publier = async (etape: EtapeDeCampagne) => {
-        const fiche = fiches[etape.id];
+    const publier = async (slug: string) => {
+        const fiche = fiches[slug];
         if (!fiche || !corpus) return;
         const ok = await publierLaFiche(corpus, fiche);
         if (!ok) { gmToast("La fiche n'a pas pu être écrite sur le disque.", 'error'); return; }
-        setPubliees(p => new Set(p).add(etape.id));
+        setPubliees(p => new Set(p).add(slug));
         gmToast(`« ${fiche.sujet} » publiée.`, 'success');
     };
+
+    /**
+     * Les brouillons que le parcours courant ne montre pas.
+     *
+     * Au retour dans l'atelier, la structure n'a pas été relancée : il n'y a donc
+     * aucune étape, et les brouillons repris n'auraient nulle part où
+     * s'afficher — la reprise ne servirait à rien. On les liste à part, publiables
+     * tels quels.
+     */
+    const brouillonsOrphelins = Object.values(fiches).filter(
+        f => !publiees.has(f.slug) && !etapes.some(e => e.id === f.slug),
+    );
 
     return (
         <div className="h-full overflow-hidden grid grid-cols-12 gap-6 p-6 bg-app-bg text-app-text">
@@ -420,6 +458,14 @@ const AtelierDeCampagne: React.FC = () => {
                         </h3>
                     </div>
 
+                    {/* Ce que le disque atteste, avant même d'avoir relancé quoi que ce soit. */}
+                    {corpus && (publiees.size > 0 || brouillonsOrphelins.length > 0) && (
+                        <p className="text-[11px] text-app-text/40 leading-relaxed mt-2">
+                            Déjà sur le disque : <b className="text-emerald-400/80">{publiees.size} publiée{publiees.size > 1 ? 's' : ''}</b>
+                            {brouillonsOrphelins.length > 0 && <>, <b className="text-amber-300/80">{brouillonsOrphelins.length} brouillon{brouillonsOrphelins.length > 1 ? 's' : ''} en attente</b></>}.
+                        </p>
+                    )}
+
                     {actes.length === 0 ? (
                         <p className="text-[11px] text-app-text/30 italic leading-relaxed mt-2">
                             Les deux sujets qui s'interrogent partie par partie — les personnages et les
@@ -431,13 +477,33 @@ const AtelierDeCampagne: React.FC = () => {
                             {etapes.map(etape => (
                                 <LigneDeFiche
                                     key={etape.id}
-                                    etape={etape}
+                                    titre={etape.titre}
                                     fiche={fiches[etape.id]}
                                     publiee={publiees.has(etape.id)}
                                     enCours={enCours === etape.id}
                                     actif={pret && !!corpus}
                                     onForger={() => forger(etape)}
-                                    onPublier={() => void publier(etape)}
+                                    onPublier={() => void publier(etape.id)}
+                                />
+                            ))}
+                        </div>
+                    )}
+
+                    {brouillonsOrphelins.length > 0 && (
+                        <div className="mt-4 pt-4 border-t border-app-border/10 space-y-1.5">
+                            <p className="text-[10px] font-black uppercase tracking-widest text-amber-400/60">
+                                Brouillons repris du disque
+                            </p>
+                            {brouillonsOrphelins.map(fiche => (
+                                <LigneDeFiche
+                                    key={fiche.slug}
+                                    titre={fiche.sujet || fiche.slug}
+                                    fiche={fiche}
+                                    publiee={false}
+                                    enCours={false}
+                                    actif={false}
+                                    onForger={() => {}}
+                                    onPublier={() => void publier(fiche.slug)}
                                 />
                             ))}
                         </div>
@@ -646,16 +712,21 @@ const Etape: React.FC<{
 );
 
 const LigneDeFiche: React.FC<{
-    etape: EtapeDeCampagne; fiche?: FicheDeCampagne; publiee: boolean;
+    titre: string; fiche?: FicheAffichee; publiee: boolean;
     enCours: boolean; actif: boolean; onForger: () => void; onPublier: () => void;
-}> = ({ etape, fiche, publiee, enCours, actif, onForger, onPublier }) => (
+}> = ({ titre, fiche, publiee, enCours, actif, onForger, onPublier }) => (
     <div className="rounded-xl border border-app-border/10 bg-app-bg/30 px-4 py-3">
         <div className="flex items-center gap-3">
             <div className="flex-1 min-w-0">
-                <p className="text-xs font-bold truncate">{etape.titre}</p>
+                <p className="text-xs font-bold truncate">{titre}</p>
                 {fiche && (
                     <p className="text-[10px] uppercase tracking-widest font-bold text-app-text/30 mt-0.5">
                         couverture {fiche.couverture} · {fiche.sections.length} section{fiche.sections.length > 1 ? 's' : ''}
+                        {/* Une fiche relue du disque ne porte pas les avertissements
+                            de sa forge : la réponse brute du carnet n'est pas
+                            conservée. Le dire évite de lire un silence comme un
+                            « rien à signaler ». */}
+                        {'reprise' in fiche && <span className="text-amber-400/50"> · reprise du disque</span>}
                     </p>
                 )}
             </div>
