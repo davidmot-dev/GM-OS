@@ -351,6 +351,9 @@ export function controlerLePilote(
         // Même contrôle sur la réserve depuis le 2026-08-15 : elle se compose
         // désormais depuis la fiche, donc elle peut la manquer de la même façon.
         ['jet.reserve.composantes', driver.jet?.reserve?.composantes],
+        // La seconde poule — les dés de stress d'Alien — se lit sur la fiche
+        // comme les autres, donc elle peut la manquer comme les autres.
+        ['jet.reserve.secondaire.composantes', driver.jet?.reserve?.secondaire?.composantes],
     ];
     composantesDuJet.forEach(([ou, liste]) => (liste ?? []).forEach((composante, i) => {
         if (idsDeSections.has(composante.sectionId)) return;

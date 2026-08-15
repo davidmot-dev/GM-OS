@@ -515,3 +515,102 @@ describe('la réserve se compose depuis la fiche — le dernier mur', () => {
         expect(jet.avertissements).toEqual([]);
     });
 });
+
+describe('les dés de stress se comptent à part', () => {
+    /**
+     * **La question de David, le 2026-08-15** : *« dans Alien, dans la réserve
+     * de dés on doit aussi rajouter le stress — est-ce que tu vas traiter cela
+     * correctement ? »*
+     *
+     * Pas en l'ajoutant comme une composante ordinaire. Le corpus
+     * (`resolution-des-jets.md`) écrit : *« S'y ajoute un nombre de dés de
+     * stress égal au Niveau de Stress actuel. »* Et sur ces dés-là, **un 1
+     * déclenche la Panique**, ce qu'un dé de base ne fait jamais.
+     *
+     * Les fondre dans la première réserve donnerait le bon **nombre** de dés et
+     * perdrait la **mécanique** : le compte des réussites serait juste, et la
+     * Panique ne se déclencherait jamais. *Un jet qui rend le bon total en
+     * perdant sa règle est le pire des deux mondes — il a l'air juste.*
+     */
+    const alien: DescripteurDeJet = {
+        reserve: {
+            base: 0,
+            composantes: [
+                { id: 'attribut', label: 'Attribut', sectionId: 'attributs' },
+                { id: 'competence', label: 'Compétence', sectionId: 'competences' },
+            ],
+            max: 10,
+            faces: 6,
+            secondaire: {
+                label: 'Stress',
+                composantes: [{ id: 'stress', label: 'Stress', sectionId: 'jauges' }],
+                libelleDuUn: 'Panique',
+            },
+        },
+        sens: 'superieur-ou-egal',
+    };
+
+    const RIPLEY = { force: 4, pilotage: 2, niveau_de_stress: 3 };
+    const CHOIX = { champs: { attribut: 'force', competence: 'pilotage', stress: 'niveau_de_stress' } };
+
+    it('les deux poules se comptent séparément', () => {
+        const jet = preparerLeJet(alien, RIPLEY, CHOIX);
+
+        expect(jet.nombreDeDes, 'Force 4 + Pilotage 2').toBe(6);
+        expect(jet.desSecondaires, 'Niveau de Stress 3').toBe(3);
+        expect(jet.composantesDeLaSecondeReserve).toEqual([
+            { label: 'Stress', champ: 'niveau_de_stress', valeur: 3 },
+        ]);
+    });
+
+    it('le stress échappe au plafond de la réserve de base', () => {
+        /**
+         * Chez Alien le stress s'ajoute **par-dessus** : le borner reviendrait à
+         * effacer la pression que le jeu met précisément là.
+         */
+        const tendu = preparerLeJet(alien, { force: 5, pilotage: 5, niveau_de_stress: 8 }, CHOIX);
+
+        expect(tendu.nombreDeDes, 'la base plafonne à dix').toBe(10);
+        expect(tendu.desSecondaires, 'le stress, lui, ne plafonne pas').toBe(8);
+    });
+
+    it('sans stress, la seconde poule est vide et le jet ne change pas', () => {
+        const calme = preparerLeJet(alien, { ...RIPLEY, niveau_de_stress: 0 }, CHOIX);
+
+        expect(calme.desSecondaires).toBe(0);
+        expect(calme.nombreDeDes).toBe(6);
+        expect(calme.avertissements).toEqual([]);
+    });
+
+    it('un pilote sans seconde poule rend zéro, et rien ne change pour lui', () => {
+        const sansStress: DescripteurDeJet = {
+            reserve: { base: 1, max: 10, faces: 6 },
+            sens: 'superieur-ou-egal',
+        };
+        const jet = preparerLeJet(sansStress, RIPLEY, { champs: {} });
+
+        expect(jet.desSecondaires).toBe(0);
+        expect(jet.composantesDeLaSecondeReserve).toEqual([]);
+    });
+
+    it('le moteur reçoit bien deux poules, et ses 1 ne comptent que sur la seconde', () => {
+        /**
+         * La vérification qui compte : ce n'est pas une supposition sur
+         * `rollYZE`, c'est sa sortie. Les dés de la seconde poule portent
+         * `source: 'gear'` et leurs 1 alimentent `fails` — le compte que le
+         * panneau affiche sous le nom que le pilote donne, « Panique ».
+         */
+        const jet = preparerLeJet(alien, RIPLEY, CHOIX);
+        const res = DiceEngine.rollFromConfig(
+            { defaultDice: '1d6', logic: 'count-success', engine: 'yze' },
+            { baseCount: jet.nombreDeDes, gearCount: jet.desSecondaires },
+        );
+
+        expect(res.rolls).toHaveLength(9);
+        expect(res.rolls.filter(d => d.source === 'base')).toHaveLength(6);
+        expect(res.rolls.filter(d => d.source === 'gear')).toHaveLength(3);
+        expect(res.fails, 'seuls les 1 de la seconde poule comptent').toBe(
+            res.rolls.filter(d => d.source === 'gear' && d.val === 1).length,
+        );
+    });
+});

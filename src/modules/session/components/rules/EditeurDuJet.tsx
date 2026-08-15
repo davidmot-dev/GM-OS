@@ -93,6 +93,9 @@ const EditeurDuJet: React.FC<EditeurDuJetProps> = ({ driver, gabarit, onUpdate }
     const majReserve = (patch: Partial<NonNullable<NonNullable<GameDriver['jet']>['reserve']>>) =>
         majJet({ reserve: { base: 0, max: 10, faces: 6, ...jet?.reserve, ...patch } });
 
+    const majSecondaire = (patch: Partial<NonNullable<NonNullable<NonNullable<GameDriver['jet']>['reserve']>['secondaire']>>) =>
+        majReserve({ secondaire: { label: '', ...jet?.reserve?.secondaire, ...patch } });
+
     const nombre = (valeur: number | undefined, onChange: (n: number) => void, titre: string) => (
         <label className="flex-1">
             <span className="text-[9px] font-black uppercase tracking-[0.2em] text-accent/60 mb-2 block px-1">{titre}</span>
@@ -164,6 +167,53 @@ const EditeurDuJet: React.FC<EditeurDuJetProps> = ({ driver, gabarit, onUpdate }
                 {nombre(jet?.reserve?.base, base => majReserve({ base }), 'Dés d’office')}
                 {nombre(jet?.reserve?.max, max => majReserve({ max }), 'Plafond')}
                 {nombre(jet?.reserve?.faces, faces => majReserve({ faces }), 'Faces')}
+            </div>
+
+            {/*
+                **La seconde poule, comptée à part.**
+
+                Chez Alien, les dés de stress se lancent avec la réserve mais un
+                1 y déclenche la Panique — ce qu'un dé de base ne fait jamais.
+                Les fondre dans la première réserve donnerait le bon NOMBRE de
+                dés et perdrait la MÉCANIQUE : le compte des réussites serait
+                juste, et la Panique ne se déclencherait jamais.
+            */}
+            <div className="space-y-3 pt-2 border-t border-app-border/10">
+                <div className="flex gap-4 items-end">
+                    <label className="flex-1">
+                        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-amber-300/60 mb-2 block px-1">
+                            Seconde poule — son nom
+                        </span>
+                        <input
+                            type="text"
+                            value={jet?.reserve?.secondaire?.label ?? ''}
+                            onChange={e => majSecondaire({ label: e.target.value })}
+                            placeholder="Stress, Équipement… — vide si le jeu n’en a pas"
+                            title="Le nom que le jeu donne à cette seconde poule de dés"
+                            className="w-full bg-app-bg/40 px-4 py-3 rounded-xl border border-app-border/20 text-sm focus:border-amber-400/50 outline-none"
+                        />
+                    </label>
+                    <label className="flex-1">
+                        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-amber-300/60 mb-2 block px-1">
+                            Ce qu’un 1 déclenche
+                        </span>
+                        <input
+                            type="text"
+                            value={jet?.reserve?.secondaire?.libelleDuUn ?? ''}
+                            onChange={e => majSecondaire({ libelleDuUn: e.target.value })}
+                            placeholder="Panique…"
+                            title="Le mot qui dira au meneur d’ouvrir sa table"
+                            className="w-full bg-app-bg/40 px-4 py-3 rounded-xl border border-app-border/20 text-sm focus:border-amber-400/50 outline-none"
+                        />
+                    </label>
+                </div>
+                {jet?.reserve?.secondaire?.label && listeDeComposantes(
+                    `${jet.reserve.secondaire.label} — combien de dés`,
+                    'Chez Alien : « un nombre de dés de stress égal au Niveau de Stress actuel ». '
+                    + 'Cette poule échappe au plafond de la première.',
+                    jet.reserve.secondaire.composantes ?? [],
+                    composantes => majSecondaire({ composantes }),
+                )}
             </div>
 
             {listeDeComposantes(

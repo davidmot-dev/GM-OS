@@ -112,8 +112,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     // Un jeu qui ne compose rien depuis la fiche est prêt d'emblée. Les
     // composantes de la réserve comptent autant que celles du seuil : lancer
     // sans attribut ni compétence donnerait une poignée de dés arbitraire.
-    const pret = [...(descripteur.seuil ?? []), ...(descripteur.reserve?.composantes ?? [])]
-        .every(c => choix[c.id]) && jet.avertissements.length === 0;
+    const pret = [
+        ...(descripteur.seuil ?? []),
+        ...(descripteur.reserve?.composantes ?? []),
+        ...(descripteur.reserve?.secondaire?.composantes ?? []),
+    ].every(c => choix[c.id]) && jet.avertissements.length === 0;
 
     /**
      * D'où sortiront les points, **avant** de lancer.
@@ -170,9 +173,18 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         */
         const seuilDuMoteur = jet.composantes.length > 0 ? jet.seuil : dice.successThreshold;
 
+        /*
+          **La seconde poule part avec la première, et compte à part.**
+
+          `rollYZE` distingue les deux depuis toujours — les 1 de la seconde
+          deviennent des « fléaux » — mais **personne ne lui passait le
+          nombre** : `gearCount` restait à zéro. Un personnage d'Alien lançait
+          donc sa réserve sans ses dés de stress, et la Panique ne pouvait pas
+          se déclencher. Le moteur savait faire ; le chemin s'arrêtait avant lui.
+        */
         const res = DiceEngine.rollFromConfig(
             { ...dice, successThreshold: seuilDuMoteur },
-            { baseCount: jet.nombreDeDes, doubleSous: jet.doubleSous },
+            { baseCount: jet.nombreDeDes, gearCount: jet.desSecondaires, doubleSous: jet.doubleSous },
         );
         setSeuilDuLancer(jet.seuil);
         setResultat(res);
@@ -222,7 +234,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 joueur désigne ce qu'il invoque, avant de lancer.
             */}
             <div className="grid grid-cols-2 gap-3">
-                {[...(descripteur.reserve?.composantes ?? []), ...(descripteur.seuil ?? [])].map(composante => (
+                {[
+                    ...(descripteur.reserve?.composantes ?? []),
+                    ...(descripteur.reserve?.secondaire?.composantes ?? []),
+                    ...(descripteur.seuil ?? []),
+                ].map(composante => (
                     <label key={composante.id} className="flex flex-col gap-1">
                         <span className="text-[9px] font-black uppercase tracking-widest text-app-text/40">
                             {composante.label}
@@ -254,6 +270,23 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         <span className="text-app-text/30 font-mono">
                             = {jet.composantes.map(c => `${c.valeur}`).join(' + ')}
                             <span className="ml-1 opacity-60">({jet.composantes.map(c => c.champ).join(' + ')})</span>
+                        </span>
+                    )}
+                </div>
+            )}
+
+            {/* La seconde poule, nommée par le jeu. Elle se montre à part parce
+                qu'elle se compte à part : chez Alien, un 1 sur un dé de stress
+                déclenche la Panique, ce qu'un dé de base ne fait jamais. */}
+            {jet.desSecondaires > 0 && (
+                <div className="flex items-baseline gap-2 text-xs">
+                    <span className="text-amber-300/60 font-bold uppercase tracking-widest text-[9px]">
+                        {descripteur.reserve?.secondaire?.label ?? 'Seconde réserve'}
+                    </span>
+                    <span className="font-mono text-lg font-black text-amber-300">{jet.desSecondaires}</span>
+                    {jet.composantesDeLaSecondeReserve.length > 0 && (
+                        <span className="text-app-text/30 font-mono">
+                            ({jet.composantesDeLaSecondeReserve.map(c => c.champ).join(' + ')})
                         </span>
                     )}
                 </div>
@@ -396,18 +429,35 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             const val = typeof d.val === 'number' ? d.val : 0;
                             const critique = descripteur.critique !== undefined && val <= jet.doubleSous;
                             const complique = descripteur.complication !== undefined && val >= descripteur.complication;
+                            /*
+                              **Quel dé a déclenché, et pas seulement combien.**
+                              Un compte de Paniques sans savoir lequel des huit
+                              dés l'a causée n'aide personne à raconter la scène.
+                              La seconde poule se distingue à l'œil, et son 1
+                              porte le nom que le jeu lui donne.
+                            */
+                            const seconde = d.source === 'gear';
+                            const declenche = seconde && d.isCritMin;
+                            const nomDuUn = descripteur.reserve?.secondaire?.libelleDuUn ?? 'Fléau';
                             return (
                                 <span
                                     key={i}
-                                    title={critique ? 'Deux réussites' : complique ? 'Complication' : undefined}
+                                    title={declenche ? nomDuUn
+                                        : seconde ? descripteur.reserve?.secondaire?.label
+                                        : critique ? 'Deux réussites'
+                                        : complique ? 'Complication' : undefined}
                                     className={`w-9 h-9 rounded-lg flex items-center justify-center font-mono text-sm font-black border ${
-                                        critique
-                                            ? 'bg-emerald-500/20 border-emerald-400/50 text-emerald-200'
-                                            : d.isCritMax
-                                                ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300/80'
-                                                : complique
-                                                    ? 'bg-red-500/20 border-red-400/50 text-red-200'
-                                                    : 'bg-app-text/5 border-app-border/30 text-app-text/40'
+                                        declenche
+                                            ? 'bg-amber-500/25 border-amber-400 text-amber-100 shadow-[0_0_10px_rgba(251,191,36,0.35)]'
+                                            : critique
+                                                ? 'bg-emerald-500/20 border-emerald-400/50 text-emerald-200'
+                                                : d.isCritMax
+                                                    ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300/80'
+                                                    : complique
+                                                        ? 'bg-red-500/20 border-red-400/50 text-red-200'
+                                                        : seconde
+                                                            ? 'bg-app-text/5 border-dashed border-amber-400/40 text-app-text/50'
+                                                            : 'bg-app-text/5 border-app-border/30 text-app-text/40'
                                     }`}
                                 >
                                     {val}
@@ -423,6 +473,26 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         <span className="text-app-text/50 font-mono">
                             {reussites} réussite{reussites > 1 ? 's' : ''} / difficulté {difficulte}
                         </span>
+                        {/*
+                            **Les 1 de la seconde poule, nommés par le jeu.**
+
+                            `rollYZE` les compte comme des « fléaux » — un terme
+                            générique de la famille Year Zero. Chez Alien, ce
+                            sont des **Paniques**, et le mot compte : c'est lui
+                            qui dit au meneur d'ouvrir la table de Panique. On
+                            affiche donc ce que le pilote déclare, et « fléau »
+                            seulement à défaut.
+
+                            **On annonce, on ne déclenche pas.** Jouer la
+                            Panique est une décision de table — l'outil tient le
+                            compte, il n'arbitre pas.
+                        */}
+                        {(resultat?.fails ?? 0) > 0 && (
+                            <span className="text-amber-300 font-black uppercase tracking-widest">
+                                {resultat!.fails} {descripteur.reserve?.secondaire?.libelleDuUn ?? 'fléau'}
+                                {resultat!.fails! > 1 ? 's' : ''}
+                            </span>
+                        )}
                         {/* L'excédent alimente la monnaie de table — et depuis
                             le mur n° 4, il y est réellement versé. */}
                         {v.excedent > 0 && (

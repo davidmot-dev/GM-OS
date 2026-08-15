@@ -100,6 +100,37 @@ export interface DescripteurDeJet {
         faces: number;
         cout?: number[];
         ressource?: string;
+        /**
+         * **Une seconde réserve, lancée avec la première mais comptée à part.**
+         *
+         * **Pourquoi elle ne peut pas être une composante ordinaire.** Chez
+         * Alien, la réserve reçoit « un nombre de dés de stress égal au Niveau
+         * de Stress actuel » — et sur ces dés-là, **un 1 déclenche la Panique**,
+         * ce qu'un dé de base ne fait jamais. Les additionner à la première
+         * réserve donnerait le bon *nombre* de dés et perdrait la *mécanique* :
+         * le compte des réussites serait juste, et la Panique ne se
+         * déclencherait jamais. *Un jet qui rend le bon total en perdant sa
+         * règle est le pire des deux mondes — il a l'air juste.*
+         *
+         * `DiceEngine.rollYZE` distingue déjà les deux poules et compte les 1 de
+         * la seconde comme des « fléaux » : le moteur savait faire, personne ne
+         * lui passait le nombre. C'est la même forme dans toute la famille Year
+         * Zero — dés d'équipement ailleurs, dés de stress chez Alien.
+         *
+         * **Elle n'entre pas dans le plafond de la première.** Le stress
+         * s'ajoute par-dessus : le borner reviendrait à effacer la pression que
+         * le jeu met précisément là.
+         */
+        secondaire?: {
+            /** Ce que le jeu appelle cette poule — « Stress », « Équipement ». */
+            label: string;
+            /** Dés lancés d'office dans cette poule. */
+            base?: number;
+            /** Ce qui s'y ajoute, lu sur la fiche — le Niveau de Stress. */
+            composantes?: ComposanteDeJet[];
+            /** Ce qu'un 1 déclenche, tel que le jeu le nomme — « Panique ». */
+            libelleDuUn?: string;
+        };
     };
     /** Chaque dé est-il une réussite en dessous ou au-dessus du seuil ? */
     sens: SensDuJet;
@@ -153,6 +184,15 @@ export interface JetPrepare {
      * seuil — c'est justement ce que le panneau doit rendre lisible.
      */
     composantesDeLaReserve: { label: string; champ: string; valeur: number }[];
+    /**
+     * Les dés de la seconde poule — le Stress chez Alien.
+     *
+     * Zéro quand le pilote n'en déclare pas : le moteur reçoit alors zéro, et
+     * son comportement est exactement celui d'avant.
+     */
+    desSecondaires: number;
+    /** Le détail de cette seconde poule, pour l'afficher comme la première. */
+    composantesDeLaSecondeReserve: { label: string; champ: string; valeur: number }[];
     /** Dés effectivement achetés, plafond appliqué. */
     desAchetes: number;
     /**
@@ -360,6 +400,7 @@ export function preparerLeJet(
     */
     const { total: seuil, retenues: composantes } = additionner(descripteur.seuil ?? []);
     const deLaReserve = additionner(descripteur.reserve?.composantes ?? []);
+    const deLaSeconde = additionner(descripteur.reserve?.secondaire?.composantes ?? []);
 
     /*
       **Sans réserve déclarée, on ne fabrique pas de dés.** Un pilote peut
@@ -417,6 +458,13 @@ export function preparerLeJet(
         composantes,
         nombreDeDes,
         composantesDeLaReserve: deLaReserve.retenues,
+        /*
+          La seconde poule échappe au plafond de la première : chez Alien le
+          stress s'ajoute par-dessus, et le borner effacerait la pression que le
+          jeu met précisément là.
+        */
+        desSecondaires: Math.max(0, (descripteur.reserve?.secondaire?.base ?? 0) + deLaSeconde.total),
+        composantesDeLaSecondeReserve: deLaSeconde.retenues,
         desAchetes: Math.max(0, desAchetes),
         cout: { total, ressource: reserve?.ressource },
         faces: reserve?.faces ?? 0,
