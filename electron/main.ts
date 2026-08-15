@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, dialog, shell, screen, protocol, net } from 'electron'
+import { app, BrowserWindow, ipcMain, dialog, shell, screen, protocol, net, nativeTheme } from 'electron'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import fs from 'fs-extra'
@@ -743,6 +743,24 @@ app.on('activate', () => {
         createWindow()
     }
 })
+
+/**
+ * Le thème des fenêtres que **le système** dessine pour nous.
+ *
+ * **Le défaut, relevé par David le 2026-08-15, deux fois** : le menu d'une liste
+ * déroulante s'ouvrait en gris pâle, illisible, au milieu d'une interface
+ * sombre. Un menu de `<select>` n'est pas rendu par la page — sous Windows,
+ * Chromium en fait une **fenêtre native**, et c'est `nativeTheme` qui décide de
+ * son apparence, pas la CSS de la page.
+ *
+ * `color-scheme: dark` était nécessaire mais pas suffisant : il règle ce que la
+ * page dessine, jamais ce que le système dessine pour elle. Sans cette ligne, la
+ * fenêtre suit le thème de Windows — clair chez David — quoi que la feuille de
+ * style déclare.
+ *
+ * Posé **avant** `whenReady` : une fenêtre créée avant l'aurait ignoré.
+ */
+nativeTheme.themeSource = 'dark';
 
 app.whenReady().then(async () => {
     // Clean temp media on startup

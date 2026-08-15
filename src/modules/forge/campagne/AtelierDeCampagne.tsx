@@ -197,14 +197,33 @@ const AtelierDeCampagne: React.FC = () => {
             {/* Configuration */}
             <div className="col-span-4 overflow-y-auto custom-scrollbar space-y-4 pr-1">
                 <Bloc icone={<BookOpen size={16} />} titre="Campagne">
-                    <select
-                        value={campagneId}
-                        onChange={e => setCampagneId(e.target.value)}
-                        className="w-full bg-app-bg/40 px-4 py-3 rounded-xl border border-app-border/20 text-xs outline-none focus:border-accent/50 cursor-pointer"
-                    >
-                        <option value="">— nouvelle campagne —</option>
-                        {campaigns.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                    </select>
+                    {/*
+                        **Une liste, pas un menu déroulant.**
+
+                        Le menu d'un `<select>` est une fenêtre que le SYSTÈME
+                        dessine — sous Windows, Chromium en fait une fenêtre
+                        native. David l'a vu deux fois s'ouvrir en gris illisible.
+                        `color-scheme` et `nativeTheme` corrigent la cause à la
+                        racine, pour toute l'application ; ici, on n'a pas besoin
+                        d'un menu du tout. Cinq lignes tiennent à l'écran, elles
+                        se lisent d'un coup d'œil, et rien n'est délégué à
+                        personne.
+                    */}
+                    <div className="space-y-1">
+                        <CibleDeCampagne
+                            libelle="— nouvelle campagne —"
+                            actif={!campagneExistante}
+                            onChoisir={() => setCampagneId('')}
+                        />
+                        {campaigns.map(c => (
+                            <CibleDeCampagne
+                                key={c.id}
+                                libelle={c.name}
+                                actif={campagneId === c.id}
+                                onChoisir={() => setCampagneId(c.id)}
+                            />
+                        ))}
+                    </div>
 
                     {!campagneExistante && (
                         <>
@@ -513,6 +532,19 @@ const SelecteurDeCarnet: React.FC<{
             </div>
         </div>
     </div>
+);
+
+const CibleDeCampagne: React.FC<{ libelle: string; actif: boolean; onChoisir: () => void }> = ({ libelle, actif, onChoisir }) => (
+    <button
+        onClick={onChoisir}
+        className={`w-full text-left px-4 py-2.5 rounded-xl border text-xs transition-all ${
+            actif
+                ? 'bg-accent/15 border-accent/40 text-accent font-bold'
+                : 'bg-app-bg/30 border-app-border/20 text-app-text/50 hover:text-app-text/80'
+        }`}
+    >
+        {libelle}
+    </button>
 );
 
 const Bloc: React.FC<{ icone: React.ReactNode; titre: string; children: React.ReactNode }> = ({ icone, titre, children }) => (
