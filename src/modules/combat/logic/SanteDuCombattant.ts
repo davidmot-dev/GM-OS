@@ -294,10 +294,26 @@ function evaluerArithmetique(expression: string): number | null {
  * d'un modèle de santé parmi cinq — et six écrans les lisaient directement.
  * Ils passent tous par ici désormais.
  *
+ * **`healthSystem` fait autorité, et c'était la seule fonction du module à
+ * l'ignorer.** Relevé par David le 2026-08-15, capture du Roster à l'appui : son
+ * personnage de Dune y affichait « Points de Vie 10/10 » alors que son modèle
+ * de santé est une horloge de défaite. L'écran, lui, avait raison de faire
+ * confiance — il demandait bien une fraction avant de dessiner sa barre.
+ *
+ * La cause est en amont : `AddCharacterForm` écrivait `hp` et `maxHp` **quel que
+ * soit le modèle**, et cette fonction ne regardait que ces deux champs.
+ * `decrireLaSante` et `estHorsDeCombat` consultaient déjà `healthSystem` en
+ * premier ; celle-ci ne le faisait pas, et rien ne comparait les trois.
+ *
+ * *Un modèle qui n'est pas `hp` n'a pas de jauge de points de vie, quoi que
+ * disent des champs laissés là par une naissance trop généreuse* — sinon c'est
+ * la plus vieille des deux vérités qui gagne.
+ *
  * Rappel du piège de nommage : `Combatant` dit `hpMax`, `Entity` et
  * `PlayerCharacter` disent `maxHp`.
  */
 export function aUneJaugeDeVie(c: PorteurDeSante): boolean {
+    if (c.healthSystem && c.healthSystem.type !== 'hp') return false;
     const max = c.hpMax ?? c.maxHp;
     return typeof c.hp === 'number' && typeof max === 'number' && max > 0;
 }

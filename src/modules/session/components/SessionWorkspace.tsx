@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { fractionDeVie, pointsDeVieApres, decrireLaSante } from '../../combat/logic/SanteDuCombattant';
+import { aUneJaugeDeVie, fractionDeVie, pointsDeVieApres, decrireLaSante } from '../../combat/logic/SanteDuCombattant';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useMapStore } from '../../map/useMapStore';
 import { Eye, Edit3, Lock, History, Search, Layers, MapPin, Pin, Plus } from 'lucide-react';
@@ -86,12 +86,19 @@ const SessionWorkspace: React.FC = () => {
                                         </div>
                                         <div className={`absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-app-bg ${(() => { const f = fractionDeVie(pc); return f === null ? 'bg-app-border' : f > 0.5 ? 'bg-green-500' : f > 0 ? 'bg-yellow-500' : 'bg-red-500'; })()}`}></div>
 
-                                        {/* Quick HP Controls */}
+                                        {/* Quick HP Controls.
+                                            La pastille et l'infobulle passaient déjà par le
+                                            module de santé ; ces trois boutons, non. Sur un jeu
+                                            sans points de vie ils affichaient un nombre et
+                                            proposaient de le régler — le survol du même
+                                            personnage disait donc deux choses différentes. */}
+                                        {aUneJaugeDeVie(pc) && (
                                         <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-app-surface border border-app-border rounded px-2 py-1 text-[10px] hidden group-hover:flex items-center gap-2 z-50 shadow-xl">
                                             <button onClick={(e) => { e.stopPropagation(); updateEntityHP(pc.id, -1); }} className="hover:text-red-400 font-bold w-4 text-center">-</button>
                                             <span className="font-mono font-bold text-app-text min-w-[20px] text-center">{pc.hp}</span>
                                             <button onClick={(e) => { e.stopPropagation(); updateEntityHP(pc.id, 1); }} className="hover:text-green-400 font-bold w-4 text-center">+</button>
                                         </div>
+                                        )}
                                     </div>
                                 );
                             })}

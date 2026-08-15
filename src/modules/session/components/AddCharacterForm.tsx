@@ -131,8 +131,19 @@ export const AddCharacterForm: React.FC = () => {
             healthSystem: modele === 'hp'
                 ? { ...sante, data: { ...sante.data, current: depart, max: depart } }
                 : sante,
-            maxHp: depart,
-            hp: depart,
+            /*
+              **Pas de points de vie pour un jeu qui n'en compte pas.**
+
+              Ils étaient écrits quel que soit le modèle : un personnage de Dune
+              naissait avec `hp: 10, maxHp: 10` à côté de son horloge de défaite,
+              et le Roster affichait « Points de Vie 10/10 » pour un jeu dont la
+              fiche du corpus dit qu'« il n'existe aucune jauge numérique de
+              santé sur la feuille de personnage ».
+
+              *L'absence n'est pas un zéro — mais une présence inventée est pire
+              qu'un zéro : elle se lit comme une mesure.*
+            */
+            ...(modele === 'hp' ? { hp: depart, maxHp: depart } : {}),
             portraitUrl: portraitMediaId || 'https://api.dicebear.com/9.x/adventurer/svg?seed=' + name,
             campaignId,
             systemId,

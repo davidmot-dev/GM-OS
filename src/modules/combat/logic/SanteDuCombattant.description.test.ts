@@ -269,3 +269,50 @@ describe('la santé en trois mots, pour une pastille', () => {
         expect(abregerLaSante({ hp: 4, maxHp: 4 }), 'une jauge seule n\'est pas un modèle').toBeNull();
     });
 });
+
+describe('le modèle de santé l\'emporte sur des points de vie résiduels', () => {
+    /**
+     * **Le défaut, relevé par David le 2026-08-15, capture du Roster à l'appui :**
+     * son personnage de Dune y affichait « Points de Vie 10/10 » alors que son
+     * modèle est une horloge de défaite — et que la fiche du corpus dit qu'« il
+     * n'existe aucune jauge numérique de santé sur la feuille de personnage ».
+     *
+     * L'écran avait raison : il demandait bien une fraction avant de dessiner sa
+     * barre. `aUneJaugeDeVie` était **la seule fonction du module à ignorer
+     * `healthSystem`**, quand `decrireLaSante` et `estHorsDeCombat` le
+     * consultaient déjà en premier. Rien ne comparait les trois.
+     *
+     * La cause est en amont — `AddCharacterForm` écrivait `hp` et `maxHp` quel
+     * que soit le modèle — mais la garde vaut aussi pour les fiches déjà
+     * écrites, qui portent ces valeurs et ne les perdront pas.
+     */
+    const duneAvecResidu = {
+        hp: 10, maxHp: 10,
+        healthSystem: { type: 'clocks', data: { filled: 0, segments: 4 }, state: 'healthy' },
+    };
+
+    it('une horloge n\'a pas de jauge de points de vie, même si les champs traînent', () => {
+        expect(aUneJaugeDeVie(duneAvecResidu)).toBe(false);
+        expect(fractionDeVie(duneAvecResidu), 'aucune barre à dessiner').toBeNull();
+        expect(pointsDeVieApres(duneAvecResidu, -3), 'rien à retrancher').toBeNull();
+    });
+
+    it('c\'est l\'état du système qui se dit, pas les points résiduels', () => {
+        expect(decrireLaSante(duneAvecResidu)).toBe('horloge de défaite 0/4 (indemne)');
+    });
+
+    it('un modèle `hp` garde évidemment sa jauge', () => {
+        const alien = {
+            hp: 3, maxHp: 4,
+            healthSystem: { type: 'hp', data: { current: 3, max: 4 }, state: 'wounded' },
+        };
+        expect(aUneJaugeDeVie(alien)).toBe(true);
+        expect(fractionDeVie(alien)).toBe(0.75);
+    });
+
+    it('sans modèle déclaré, la jauge fait toujours foi', () => {
+        // Les personnages antérieurs n'ont pas de `healthSystem` : ils ne
+        // doivent pas perdre leur barre au passage.
+        expect(aUneJaugeDeVie({ hp: 5, maxHp: 5 })).toBe(true);
+    });
+});
