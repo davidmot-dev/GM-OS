@@ -447,8 +447,17 @@ export class ForgeService {
     grammaire JSON au décodeur au lieu de la demander au modèle.
   */
 
-  /** Une requête au carnet, filtrée sur les sources retenues. */
-  private async interrogerCarnet(notebookId: string, query: string, sourceIds?: string[]): Promise<string> {
+  /**
+   * Une requête au carnet, filtrée sur les sources retenues.
+   *
+   * **Publique depuis le 2026-08-15, pour l'Atelier de campagne.** Elle porte la
+   * réauthentification, le repli sur `healthcheck` et le plafond de temps ; un
+   * second chemin vers le même serveur les réécrirait à sa façon, et *deux
+   * chemins vers le même service finissent toujours par ne plus dire la même
+   * chose*. C'est le même raisonnement qui a sorti `genererViaCloudflare` dans
+   * son propre module pour que le bouton « Tester » emprunte la vraie route.
+   */
+  public async interrogerCarnet(notebookId: string, query: string, sourceIds?: string[]): Promise<string> {
     const result = await this.callMcpTool<{ content: string }>('notebooklm-mcp-server', 'notebook_query', {
       notebook_id: notebookId,
       query,

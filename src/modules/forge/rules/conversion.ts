@@ -21,7 +21,7 @@
  * laisse la relecture humaine trancher (`relu: false`).
  */
 
-import { clefCanonique, slugFiche } from './canevas';
+import { CANEVAS, rabattreSurLeCanevas, slugFiche, type SujetCanevas } from './canevas';
 
 export interface FicheConvertie {
   /** Clé canonique si le sujet entre dans le canevas, libellé du carnet sinon. */
@@ -41,9 +41,35 @@ export interface FicheConvertie {
 }
 
 export interface OptionsConversion {
+  /** Valeur du champ d'appartenance — l'identifiant du système, ou de la campagne. */
   systeme: string;
+  /**
+   * Nom de ce champ dans le frontmatter. `systeme` par défaut.
+   *
+   * Une fiche de campagne déclare `campagne:` : la ranger sous `systeme:`
+   * l'aurait fait passer pour une fiche de règles auprès de tout ce qui lit le
+   * frontmatter, à commencer par la sélection RAG.
+   */
+  clefDAppartenance?: string;
   /** Sujet demandé au carnet. Sert de repli si la fiche n'en déclare pas. */
   sujetDemande?: string;
+  /**
+   * Le canevas sur lequel rabattre le sujet. Celui des règles par défaut.
+   *
+   * Sans ce paramètre, une fiche de campagne se serait vue rabattue sur les
+   * sujets de règles — ou, plus probablement, marquée hors canevas à chaque
+   * fois, ce qui aurait vidé le classement de son sens.
+   */
+  canevas?: readonly SujetCanevas[];
+  /**
+   * Champs ajoutés au frontmatter, après l'appartenance.
+   *
+   * Sert à `partie:` pour une fiche interrogée acte par acte : deux fiches du
+   * même sujet ne se distinguent que par là.
+   */
+  champsSupplementaires?: Record<string, string>;
+  /** Slug du fichier, quand l'appelant en impose un — une fiche par acte, par exemple. */
+  slug?: string;
 }
 
 const COUVERTURES = ['complète', 'partielle', 'absente'] as const;
@@ -171,14 +197,18 @@ export function convertirFiche(brut: string, options: OptionsConversion): FicheC
   }
 
   // Sujet — le libellé du carnet, rabattu sur le canevas quand c'est possible.
+  const canevas = options.canevas ?? CANEVAS;
   const libelle = champs.get('sujet') || options.sujetDemande || '';
   if (!libelle) avertissements.push("Aucun sujet : la fiche est inclassable telle quelle.");
-  const canonique = libelle ? clefCanonique(libelle) : null;
+  const canonique = libelle ? rabattreSurLeCanevas(libelle, canevas) : null;
   const sujet = canonique ?? libelle ?? '';
   const horsCanevas = canonique === null;
   if (horsCanevas && libelle) {
+    // Le nombre était écrit « treize » en toutes lettres, et le canevas des
+    // règles en compte quatorze depuis le 2026-08-11. Un message qui vieillit
+    // sans qu'on le voie finit par mentir à celui qui le lit.
     avertissements.push(
-      `« ${libelle} » n'entre dans aucun des treize sujets : la fiche est marquée hors canevas.`,
+      `« ${libelle} » n'entre dans aucun des ${canevas.length} sujets : la fiche est marquée hors canevas.`,
     );
   }
 
@@ -215,7 +245,10 @@ export function convertirFiche(brut: string, options: OptionsConversion): FicheC
 
   const entetes: string[] = [
     `sujet: ${valeurYaml(sujet)}`,
-    `systeme: ${valeurYaml(options.systeme)}`,
+    `${options.clefDAppartenance ?? 'systeme'}: ${valeurYaml(options.systeme)}`,
+    ...Object.entries(options.champsSupplementaires ?? {}).map(
+      ([clef, valeur]) => `${clef}: ${valeurYaml(valeur)}`,
+    ),
     `couverture: ${couverture}`,
     `hors_canevas: ${horsCanevas}`,
     `sources: ${citer(sources)}`,
@@ -235,7 +268,7 @@ export function convertirFiche(brut: string, options: OptionsConversion): FicheC
     horsCanevas,
     couverture,
     sections,
-    slug: slugFiche(sujet),
+    slug: options.slug ?? slugFiche(sujet),
     markdown: `---\n${entetes.join('\n')}\n---\n\n${titre}${texteCorps}\n`,
     avertissements,
   };

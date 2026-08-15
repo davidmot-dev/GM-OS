@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Hammer, Sparkles } from 'lucide-react';
+import { Hammer, Sparkles, Layers } from 'lucide-react';
 import ForgeDashboard from './components/ForgeDashboard';
+import AtelierDeCampagne from './campagne/AtelierDeCampagne';
 import { useSessionStore } from '../../store/useSessionStore';
 
 /**
@@ -21,7 +22,14 @@ import { useSessionStore } from '../../store/useSessionStore';
  * La bascule des deux ateliers vivait dans l'en-tête de Session OS, qui n'existe
  * plus sur ce chemin : elle est portée par le module lui-même.
  */
-export type ModeForge = 'system' | 'chronicle';
+/**
+ * `campagne` est l'**Atelier** de campagne — il interroge NotebookLM et écrit
+ * des fiches sourcées, comme l'atelier des règles. `chronicle` est la Forge de
+ * chronique, qui produit directement des objets de jeu depuis des documents
+ * déversés. Les deux coexistent le temps que la seconde dérive du corpus plutôt
+ * que du livre.
+ */
+export type ModeForge = 'system' | 'campagne' | 'chronicle';
 
 const ForgeOS: React.FC = () => {
     const { t } = useTranslation(['modules']);
@@ -54,6 +62,14 @@ const ForgeOS: React.FC = () => {
                         <Hammer size={12} /> {t('modules:session.header.forge')}
                     </button>
                     <button
+                        onClick={() => setMode('campagne')}
+                        className={`px-6 py-1.5 transition-all flex items-center gap-2 ${
+                            theme === 'medieval' ? 'rounded-sm text-[11px] font-display tracking-widest' : 'rounded-lg text-[10px] font-black uppercase tracking-widest'
+                        } ${mode === 'campagne' ? 'bg-accent text-white shadow-glow-accent' : 'text-app-text/60'}`}
+                    >
+                        <Layers size={12} /> Campagne
+                    </button>
+                    <button
                         onClick={() => setMode('chronicle')}
                         className={`px-6 py-1.5 transition-all flex items-center gap-2 ${
                             theme === 'medieval' ? 'rounded-sm text-[11px] font-display tracking-widest' : 'rounded-lg text-[10px] font-black uppercase tracking-widest'
@@ -65,7 +81,9 @@ const ForgeOS: React.FC = () => {
             </header>
 
             <div className="flex-1 min-h-0 overflow-hidden">
-                <ForgeDashboard mode={mode} />
+                {mode === 'campagne'
+                    ? <AtelierDeCampagne />
+                    : <ForgeDashboard mode={mode} />}
             </div>
         </div>
     );
