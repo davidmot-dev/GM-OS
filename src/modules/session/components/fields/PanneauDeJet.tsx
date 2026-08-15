@@ -155,8 +155,23 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             ).avertissements);
         }
 
+        /*
+          **Le seuil composé ne remplace un seuil fixe que s'il existe.**
+
+          Le panneau écrasait `dice.successThreshold` par `jet.seuil` dans tous
+          les cas. Or un jeu à réserve n'en compose aucun : `jet.seuil` vaut
+          alors **zéro**, et `rollFromConfig` traite ce zéro comme une absence —
+          `(… ?? config.successThreshold) || 10`. Un pilote déclarant « chaque
+          six est une réussite » aurait donc lancé contre **dix**.
+
+          Alien y échappait par chance : son moteur `yze` court-circuite ce
+          chemin et compte les six en dur. Le défaut n'attendait que le premier
+          jeu à réserve déclarant un autre moteur.
+        */
+        const seuilDuMoteur = jet.composantes.length > 0 ? jet.seuil : dice.successThreshold;
+
         const res = DiceEngine.rollFromConfig(
-            { ...dice, successThreshold: jet.seuil },
+            { ...dice, successThreshold: seuilDuMoteur },
             { baseCount: jet.nombreDeDes, doubleSous: jet.doubleSous },
         );
         setSeuilDuLancer(jet.seuil);

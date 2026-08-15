@@ -167,11 +167,37 @@ const EditeurDuJet: React.FC<EditeurDuJetProps> = ({ driver, gabarit, onUpdate }
             </div>
 
             {listeDeComposantes(
-                'Seuil — sous quoi il faut passer',
+                'Seuil — la valeur à laquelle un dé se compare',
                 'Chez Dune : une compétence plus un principe, choisis test par test. '
-                + 'Laisse vide si le jeu compte les dés qui atteignent une valeur fixe.',
+                + 'Laisse vide si le jeu compare à une valeur FIXE — « chaque six est une réussite ».',
                 jet?.seuil ?? [],
                 seuil => majJet({ seuil }),
+            )}
+
+            {/*
+                **Le seuil fixe, quand rien ne le compose.**
+
+                Les deux s'excluent, et c'est pour ça qu'on ne montre l'un que
+                si l'autre est vide : afficher les deux ferait croire qu'ils
+                s'additionnent, alors que le composé l'emporte.
+
+                Note pour les jeux à Year Zero Engine : le moteur `yze` compte
+                les six **en dur** et ne lit pas ce champ. Le renseigner ne
+                nuit pas — il documente la règle et sert si l'on change de
+                moteur — mais il ne change rien tant que `yze` est choisi.
+            */}
+            {(jet?.seuil ?? []).length === 0 && (
+                <div className="flex gap-4 items-end">
+                    {nombre(
+                        driver.dice?.successThreshold,
+                        successThreshold => onUpdate({ dice: { ...driver.dice, successThreshold } }),
+                        'Seuil fixe',
+                    )}
+                    <p className="flex-[2] text-[11px] text-app-text/40 italic leading-relaxed pb-3">
+                        La valeur à atteindre — ou à ne pas dépasser — sur chaque dé.
+                        Le moteur « yze » compte les six de lui-même et ignore ce champ.
+                    </p>
+                </div>
             )}
 
             <div>

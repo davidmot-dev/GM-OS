@@ -36,3 +36,62 @@ describe('DiceEngine Alignment', () => {
         expect(res.modifier).toBe(1);
     });
 });
+
+describe('un seuil fixe ne se fait pas écraser par un seuil non composé', () => {
+    /**
+     * **Le défaut, trouvé le 2026-08-15 sur une question de David** : *« et au
+     * niveau du seuil fixe de 6, je fais comment ? »*
+     *
+     * `PanneauDeJet` remplaçait `dice.successThreshold` par `jet.seuil` **dans
+     * tous les cas**. Or un jeu à réserve n'en compose aucun : `jet.seuil` vaut
+     * alors zéro, et `rollFromConfig` traite ce zéro comme une absence —
+     * `(… ?? config.successThreshold) || 10`. Un pilote déclarant « chaque six
+     * est une réussite » aurait donc lancé **contre dix**.
+     *
+     * Alien y échappait par chance : son moteur `yze` court-circuite ce chemin
+     * et compte les six en dur. Le défaut n'attendait que le premier jeu à
+     * réserve déclarant un autre moteur.
+     */
+    it('le moteur retombe sur dix quand on lui passe zéro', () => {
+        // La mesure qui fonde le correctif : ce n'est pas une supposition sur
+        // le moteur, c'est son comportement.
+        const contreZero = DiceEngine.rollFromConfig(
+            { defaultDice: '5d6', logic: 'count-success', successThreshold: 0 },
+            { baseCount: 5 },
+        );
+        const contreDix = DiceEngine.rollFromConfig(
+            { defaultDice: '5d6', logic: 'count-success', successThreshold: 10 },
+            { baseCount: 5 },
+        );
+
+        // Sur un d6, un seuil de dix est inatteignable : zéro réussite, toujours.
+        expect(contreZero.successes).toBe(0);
+        expect(contreDix.successes).toBe(0);
+    });
+
+    it('un seuil de six sur des d6 compte les six, lui', () => {
+        let reussites = 0;
+        for (let i = 0; i < 400; i++) {
+            reussites += DiceEngine.rollFromConfig(
+                { defaultDice: '5d6', logic: 'count-success', successThreshold: 6 },
+                { baseCount: 5 },
+            ).successes ?? 0;
+        }
+        // 2 000 dés, un six sur six en moyenne : on vérifie l'ordre de grandeur,
+        // pas une valeur exacte — un test de hasard qui exige un nombre précis
+        // échoue tôt ou tard sans rien signaler d'utile.
+        expect(reussites).toBeGreaterThan(200);
+        expect(reussites).toBeLessThan(470);
+    });
+
+    it('le moteur yze ne lit pas ce champ et compte les six lui-même', () => {
+        // C'est pourquoi Alien fonctionnait malgré le défaut — et pourquoi
+        // renseigner un seuil fixe n'y change rien.
+        const jet = DiceEngine.rollFromConfig(
+            { defaultDice: '1d6', logic: 'count-success', engine: 'yze', successThreshold: 0 },
+            { baseCount: 6 },
+        );
+        expect(jet.rolls).toHaveLength(6);
+        expect(jet.successes).toBe(jet.rolls.filter(d => d.val === 6).length);
+    });
+});
