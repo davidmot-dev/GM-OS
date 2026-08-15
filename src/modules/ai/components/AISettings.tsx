@@ -8,6 +8,7 @@ import { gmToast } from '../../../stores/useToastStore';
 import { Select } from '../../../components/common/Select';
 import type { AIProvider } from '../types';
 import { aiService } from '../AIService';
+import ReglagesDImage from './ReglagesDImage';
 
 const AISettings: React.FC = () => {
   const { t } = useTranslation(['settings', 'modules']);
@@ -251,6 +252,14 @@ const AISettings: React.FC = () => {
           {t('ai.global_diagnostic')}
         </button>
       </div>
+
+      {/*
+          La génération d'image est un service distinct de celui qui répond aux
+          questions : elle a donc son bloc, hors de la liste des fournisseurs de
+          conversation. L'y mêler aurait proposé Cloudflare comme interlocuteur,
+          alors qu'il ne sait que fabriquer des images.
+      */}
+      <ReglagesDImage />
 
       <div className="grid grid-cols-1 gap-4 overflow-visible relative">
         {providers.map((p) => (

@@ -443,7 +443,84 @@ export class AIService {
         }
       }
 
-      // 1. TENTATIVE Z-IMAGE (HuggingFace Space via Gradio)
+      /*
+        1. CLOUDFLARE WORKERS AI
+
+        **Pourquoi il passe avant le Space HuggingFace.** Le recours « gratuit »
+        d'avant était `mrfakename-z-image-turbo.hf.space` — le Space **public
+        d'un tiers**, appelé en anonyme depuis le renderer. File d'attente, mise
+        en veille, renommage, suppression : rien n'était sous notre contrôle, et
+        c'est exactement pourquoi la génération d'image ne marchait plus.
+        *Un service qu'on a contractualisé passe avant un service qu'on
+        emprunte.*
+
+        Workers AI offre 10 000 Neurons par jour, remis à zéro à 00:00 UTC —
+        de l'ordre de deux mille images en 512×512 avec FLUX.1 schnell.
+
+        **L'appel passe par le proxy du process principal**, comme celui de
+        Gemini : le jeton ne traverse jamais le renderer, et il n'y a pas de
+        question de CORS. C'était l'autre défaut du chemin HuggingFace, seul
+        appel réseau à partir directement de la fenêtre.
+
+        La réponse est du JSON portant l'image en base64 — la même forme que
+        Gemini rend, donc la même écriture en aval.
+      */
+      const image = useAIStore.getState().image;
+      if (image.accountId && image.apiKey) {
+        try {
+          const modele = image.modelId || '@cf/black-forest-labs/flux-1-schnell';
+          const urlCf = `https://api.cloudflare.com/client/v4/accounts/${image.accountId}/ai/run/${modele}`;
+
+          const reponse = await window.appBridge?.ai?.proxyRequest?.(
+            urlCf, 'POST',
+            { 'Content-Type': 'application/json', Authorization: `Bearer ${image.apiKey}` },
+            // Quatre pas : c'est le régime pour lequel schnell est entraîné, et
+            // le plafond du modèle est de huit.
+            { prompt, steps: 4 },
+          );
+
+          if (!reponse?.ok) {
+            /*
+              **On dit ce que Cloudflare a répondu, et pas « échec ».** Un quota
+              épuisé, un jeton sans la permission `Workers AI - Edit` et un
+              identifiant de compte erroné produisent trois messages distincts —
+              les confondre ferait chercher au mauvais endroit.
+            */
+            const erreurs = (reponse?.data as { errors?: { message?: string }[] })?.errors;
+            throw new Error(erreurs?.map(e => e.message).join(' ; ') || reponse?.statusText || 'réponse illisible');
+          }
+
+          const base64 = (reponse.data as { result?: { image?: string } })?.result?.image;
+          if (!base64) throw new Error('réponse sans image');
+
+          const binaire = atob(base64);
+          const octets = new Uint8Array(binaire.length);
+          for (let i = 0; i < binaire.length; i++) octets[i] = binaire.charCodeAt(i);
+
+          if (octets.byteLength > 1000) {
+            const fileName = `cloudflare_${Date.now()}.jpg`;
+            if (window.appBridge?.npc?.saveAvatar) {
+              const copie = (octets.buffer as ArrayBuffer).slice(0);
+              const localUrl = await window.appBridge.npc.saveAvatar(copie, fileName);
+              try {
+                const activeCampaignId = useSessionOSStore.getState().activeCampaignId;
+                const fichier = new File([new Blob([octets], { type: 'image/jpeg' })], fileName, { type: 'image/jpeg' });
+                await useMediaStore.getState().addMedia(fichier, ['AI Generated', 'Cloudflare'], activeCampaignId ? [activeCampaignId] : []);
+              } catch (hubErr) {
+                console.warn('[AI Service] Enregistrement au Media Hub échoué (Cloudflare) :', hubErr);
+              }
+              if (localUrl) return localUrl;
+            }
+            return `data:image/jpeg;base64,${base64}`;
+          }
+          throw new Error('image trop petite pour être vraie');
+        } catch (err) {
+          const message = err instanceof Error ? err.message : String(err);
+          console.warn(`[AI Service] Cloudflare Workers AI en échec (${message}). Passage au recours suivant...`);
+        }
+      }
+
+      // 2. TENTATIVE Z-IMAGE (HuggingFace Space via Gradio)
       try {
         console.log(`[AI Service] Tentative de génération via Z-Image (HuggingFace Space)...`);
         const { Client } = await import('@gradio/client');

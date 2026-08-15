@@ -2,15 +2,47 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { AIProvider, AIModelConfig } from '../modules/ai/types';
 
+/** L'entrée du trousseau où vit le jeton de génération d'image. */
+const CLE_DU_JETON_IMAGE = 'ai-key-image';
+
+/**
+ * De quoi appeler un service de génération d'image.
+ *
+ * **Séparé du fournisseur de texte, et c'est délibéré.** `AIProvider` désigne
+ * qui répond aux questions ; `activeProvider` le sélectionne. Générer une image
+ * est un autre métier : Cloudflare Workers AI ne sait pas tenir une
+ * conversation, et l'inscrire dans la même liste l'aurait proposé là où il ne
+ * peut rien répondre.
+ *
+ * C'est d'ailleurs déjà la réalité du code : sur les trois recours de
+ * `generateImage`, deux ignorent complètement `activeProvider`.
+ */
+export interface ConfigDImage {
+  /** Identifiant de compte Cloudflare — visible sur le tableau de bord Workers AI. */
+  accountId?: string;
+  /**
+   * Jeton d'API.
+   *
+   * **Jamais persisté en clair** : il suit le même chemin que les clés de
+   * conversation — trousseau natif à l'écriture, `partialize` qui le retire de
+   * l'état enregistré.
+   */
+  apiKey?: string;
+  /** Modèle appelé. `flux-1-schnell` par défaut : quatre pas suffisent. */
+  modelId: string;
+}
+
 interface AIState {
   activeProvider: AIProvider;
   configs: Record<AIProvider, AIModelConfig>;
+  image: ConfigDImage;
   streamEnabled: boolean;
   liteContext: boolean;
   
   // Actions
   setProvider: (provider: AIProvider) => void;
   updateConfig: (provider: AIProvider, config: Partial<AIModelConfig>) => void;
+  updateImageConfig: (config: Partial<ConfigDImage>) => Promise<void>;
   getApiKey: (provider: AIProvider) => string | undefined;
   setStreamEnabled: (enabled: boolean) => void;
   setLiteContext: (enabled: boolean) => void;
@@ -41,6 +73,7 @@ export const useAIStore = create<AIState>()(
           endpoint: 'https://api.custom.com/v1'
         }
       },
+      image: { modelId: '@cf/black-forest-labs/flux-1-schnell' },
       streamEnabled: true,
       liteContext: false,
 
@@ -68,6 +101,18 @@ export const useAIStore = create<AIState>()(
             }
           }
         }));
+      },
+
+      /** Même traitement que les clés de conversation : le jeton va au trousseau. */
+      updateImageConfig: async (config) => {
+        if (config.apiKey !== undefined && window.appBridge?.security) {
+          try {
+            await window.appBridge.security.saveSecret(CLE_DU_JETON_IMAGE, config.apiKey);
+          } catch (err) {
+            console.error("[AI Store] Echec de la sauvegarde du jeton d'image :", err);
+          }
+        }
+        set((state) => ({ image: { ...state.image, ...config } }));
       },
 
       getApiKey: (provider) => get().configs[provider].apiKey,
@@ -114,6 +159,24 @@ export const useAIStore = create<AIState>()(
           }
         }
 
+        /*
+          Le jeton d'image suit le même chemin que les autres, et pour la même
+          raison : `partialize` le retire de l'état enregistré, donc sans cette
+          relecture il serait perdu à chaque redémarrage.
+        */
+        try {
+          const jeton = await security.getSecret(CLE_DU_JETON_IMAGE);
+          if (jeton && typeof jeton === 'string' && jeton.length > 5) {
+            set((state) => ({ image: { ...state.image, apiKey: jeton } }));
+            hasChanges = true;
+          } else {
+            const existant = get().image.apiKey;
+            if (existant && existant.length > 5) await security.saveSecret(CLE_DU_JETON_IMAGE, existant);
+          }
+        } catch (err) {
+          console.error("[AI Store] Erreur Keychain pour le jeton d'image :", err);
+        }
+
         if (hasChanges) {
           console.log('[AI Store] 🔐 Synchronisation terminée. État mis à jour.');
         }
@@ -129,11 +192,15 @@ export const useAIStore = create<AIState>()(
             return [k, rest];
           })
         );
+        // Le jeton d'image est retiré comme les clés de conversation : il vit
+        // dans le trousseau, et nulle part ailleurs.
+        const { apiKey: _jeton, ...imageSansJeton } = state.image;
         return {
           activeProvider: state.activeProvider,
           streamEnabled: state.streamEnabled,
           liteContext: state.liteContext,
-          configs: cleanConfigs
+          configs: cleanConfigs,
+          image: imageSansJeton
         };
       },
       merge: (persistedState, currentState) => {
@@ -144,7 +211,8 @@ export const useAIStore = create<AIState>()(
           configs: {
             ...currentState.configs,
             ...(typedPersisted?.configs || {})
-          }
+          },
+          image: { ...currentState.image, ...(typedPersisted?.image || {}) }
         };
       },
     }
