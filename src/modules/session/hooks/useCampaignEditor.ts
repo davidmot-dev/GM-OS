@@ -4,7 +4,7 @@ import type { Campaign } from '../store/types';
 import { gmToast } from '../../../stores/useToastStore';
 import { personaGeneratorService } from '../../ai/PersonaGeneratorService';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
-import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
+import { tousLesPilotes } from '../store/tousLesPilotes';
 import { useGemStore } from '../../../stores/useGemStore';
 
 export type CampaignSectionId = 'identity' | 'narrative' | 'clues' | 'ambience' | 'world' | 'intelligence' | 'npc';
@@ -46,7 +46,9 @@ export function useCampaignEditor({ campaign, isNew, onClose }: UseCampaignEdito
     const [isGenerating, setIsGenerating] = useState(false);
     
     const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
-    const allDrivers = [...DEFAULT_GAME_DRIVERS, ...customGameDrivers];
+    // Le sélecteur de système montre chaque pilote une fois, et c'est le
+    // personnalisé qui gagne — le même ordre d'autorité que `getGameDriver`.
+    const allDrivers = tousLesPilotes(customGameDrivers);
     const { gems, syncGemsWithDefaults } = useGemStore();
     
     useEffect(() => {

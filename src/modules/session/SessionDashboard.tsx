@@ -8,7 +8,7 @@ import PanneauDesRessources from '../table/PanneauDesRessources';
 import { useSessionOSStore } from './useSessionOSStore';
 import { useSessionStore } from '../../store/useSessionStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../data/defaultSheetTemplates';
-import { DEFAULT_GAME_DRIVERS } from '../../data/defaultGameDrivers';
+import { tousLesPilotes } from './store/tousLesPilotes';
 
 /**
  * SessionDashboard - Point d'entrée principal de l'OS de Session.
@@ -47,7 +47,16 @@ const SessionDashboard: React.FC = () => {
     // Résolution contextuelle réactive (Phase 8 Logic)
     const { activeCampaign, activeDriver, activeTemplate } = React.useMemo(() => {
         const camp = campaigns.find(c => c.id === activeCampaignId);
-        const driver = [...DEFAULT_GAME_DRIVERS, ...customGameDrivers].find(d => d.id === camp?.system);
+        /*
+          **Le personnalisé l'emporte, comme partout ailleurs.** La
+          concaténation brute rendait l'inverse : `find` s'arrêtait sur le
+          premier, donc sur le pilote de référence livré dans le code. David a
+          un pilote `dune` à lui, exactement cet identifiant — le bandeau des
+          réserves aurait affiché l'Impulsion de l'étalon pendant que le panneau
+          de jet débitait la sienne. *Deux résolutions du même pilote qui ne
+          donnent pas le même pilote sont indétectables par construction.*
+        */
+        const driver = tousLesPilotes(customGameDrivers).find(d => d.id === camp?.system);
         const template = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates].find(t => t.id === camp?.system);
         
         return { activeCampaign: camp, activeDriver: driver, activeTemplate: template };
