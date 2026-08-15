@@ -4,6 +4,7 @@ import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { useMediaStore } from '../../../stores/useMediaStore';
 import { resolveSheetTemplate } from '../logic/templateResolver';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
+import { santeDeDepart } from '../../combat/logic/SanteDuCombattant';
 import type { Player, PlayerCharacter } from '../store/types';
 
 export function useCharacterEditor() {
@@ -14,7 +15,7 @@ export function useCharacterEditor() {
         updateCharacterHP, updateCharacterMaxHP,
         updateCharacterHubOptions,
         addInventoryItem, removeInventoryItem,
-        campaigns
+        campaigns, getActiveDriver
     } = useSessionOSStore();
 
     const { mediaList, getMediaBlob } = useMediaStore();
@@ -75,6 +76,38 @@ export function useCharacterEditor() {
             updateCharacterSheetData(selectedPlayer.id, character.id, fieldId, value);
         }
         updateCharacterNarrative(selectedPlayer.id, character.id, { description, gmNotes, playerNotes, inventory });
+
+        /*
+          **La santé maximale suit la fiche, parce qu'elle en découle.**
+
+          Relevé par David le 2026-08-15 : un personnage d'Alien affichait
+          « 1 / 1 » alors que sa Force valait 5. La santé de départ est calculée
+          **à la création**, sur une fiche encore vide — Force à zéro, donc le
+          plancher de un — et elle ne suivait plus quand le joueur remplissait
+          ses attributs. Une valeur juste au moment où on la pose, fausse dès la
+          minute suivante.
+
+          On ne recalcule que si le pilote **déclare** où lire la santé : c'est
+          alors son contrat, la fiche fait foi. Sans `santeDeDepart`, les points
+          de vie restent ce que le meneur en a fait — on ne lui reprend pas un
+          réglage manuel.
+        */
+        const pilote = getActiveDriver?.();
+        const formule = pilote?.combat?.santeDeDepart;
+        if (formule) {
+            const nouveauMax = santeDeDepart(formule, champ => {
+                const brut = localData[champ];
+                const n = typeof brut === 'number' ? brut : Number(brut);
+                return Number.isFinite(n) ? n : undefined;
+            });
+            if (nouveauMax !== null && nouveauMax !== character.maxHp) {
+                updateCharacterMaxHP(selectedPlayer.id, character.id, nouveauMax);
+                // Les points courants suivent le plafond quand il monte, et ne
+                // le dépassent jamais quand il descend.
+                const courant = typeof character.hp === 'number' ? character.hp : nouveauMax;
+                updateCharacterHP(selectedPlayer.id, character.id, Math.min(courant, nouveauMax));
+            }
+        }
         setSaved(true);
         setTimeout(() => setSaved(false), 2000);
     };

@@ -230,10 +230,26 @@ const CharacterSheetEditor: React.FC = () => {
                             <p className="text-xs text-app-text/40 italic">{character.classRace}</p>
                         </div>
 
-                        {/* HP quick control */}
+                        {/*
+                          **Ce bloc ne concerne qu'un modèle de santé sur cinq.**
+
+                          Il s'appelait « Vigueur (PV) » et s'affichait pour tous
+                          les jeux, y compris ceux qui ne comptent pas la santé
+                          en points — David, sur une fiche d'Alien : « il y a
+                          toujours ce reliquat de Vigueur PV qui n'a rien à faire
+                          là ». Chez Dune, dont la défaite est une tâche étendue,
+                          il proposait d'éditer des points de vie qui n'existent
+                          pas.
+
+                          Le libellé venait de D&D ; le jeu, lui, nomme sa santé
+                          dans sa propre fiche. On affiche donc un intitulé
+                          neutre, et seulement quand le modèle du pilote compte
+                          réellement des points.
+                        */}
+                        {(piloteDeLaFiche?.combat?.defaultHealthType ?? 'hp') === 'hp' && (
                         <div className="p-4 bg-app-bg/60 border border-accent/20 rounded-xl space-y-3 shadow-lg shadow-red-500/5">
                             <div className="flex items-center justify-between">
-                                <span className="text-[9px] font-black uppercase tracking-[0.15em] text-accent">Vigueur (PV)</span>
+                                <span className="text-[9px] font-black uppercase tracking-[0.15em] text-accent">Points de vie</span>
                                 <Heart size={12} className="text-red-500 animate-pulse" />
                             </div>
                                                 <div className="flex items-center justify-center gap-2 mt-1">
@@ -271,6 +287,7 @@ const CharacterSheetEditor: React.FC = () => {
                                 />
                             </div>
                         </div>
+                        )}
                     </div>
 
                     {/* Right Col: Sheet Sections */}
