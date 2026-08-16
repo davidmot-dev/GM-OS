@@ -195,6 +195,8 @@ contextBridge.exposeInMainWorld('appBridge', {
         getSecret: (id: string) => ipcRenderer.invoke('security:get-secret', id),
         saveSecret: (id: string, value: string) => ipcRenderer.invoke('security:set-secret', id, value),
         deleteSecret: (id: string) => ipcRenderer.invoke('security:delete-secret', id),
+        /** L'état du coffre et les noms de ses entrées — jamais les valeurs. */
+        etatDuCoffre: () => ipcRenderer.invoke('security:etat'),
     },
     git: {
         getStatus: () => ipcRenderer.invoke('git:status'),

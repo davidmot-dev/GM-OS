@@ -34,7 +34,13 @@ const AISettings: React.FC = () => {
   const [isReindexing, setIsReindexing] = useState(false);
   
   const [isObsidianActive, setIsObsidianActive] = useState(false);
-  
+
+  /** Ce que le coffre porte — noms des entrées seulement, jamais les valeurs. */
+  const [etatDuCoffre, setEtatDuCoffre] = useState<{
+    etat: 'jamais-lu' | 'vide' | 'lu' | 'illisible';
+    entrees: string[];
+  } | null>(null);
+
   const [diagnosticResults, setDiagnosticResults] = useState<Record<string, { status: 'success' | 'error' | 'loading' | 'idle', message?: string }>>({
     gemini: { status: 'idle' },
     openai: { status: 'idle' },
@@ -59,6 +65,27 @@ const AISettings: React.FC = () => {
     
     syncWithKeychain();
   }, [syncGemsWithDefaults, syncWithKeychain]);
+
+  /**
+   * L'état du coffre, montré à l'écran.
+   *
+   * **Ce qui a manqué le 2026-08-16.** Les quatre clés étaient dans le coffre,
+   * intactes ; l'écran affichait quatre champs vides. Rien ne distinguait « tu
+   * n'as jamais saisi de clé » de « le coffre n'a pas pu être lu ». David a fait
+   * ce que n'importe qui aurait fait — il a retapé —, et retaper écrasait le
+   * coffre avec la seule clé retapée.
+   *
+   * *Un champ vide ne dit pas pourquoi il est vide.* On le lui fait dire.
+   */
+  useEffect(() => {
+    const lireLEtat = window.appBridge?.security?.etatDuCoffre;
+    if (!lireLEtat) return;
+    let vivant = true;
+    void lireLEtat()
+      .then(e => { if (vivant) setEtatDuCoffre(e); })
+      .catch(() => undefined);
+    return () => { vivant = false; };
+  }, [configs]);
 
   useEffect(() => {
     const fetchModels = async () => {
@@ -260,6 +287,50 @@ const AISettings: React.FC = () => {
           alors qu'il ne sait que fabriquer des images.
       */}
       <ReglagesDImage />
+
+      {/*
+          **Le bandeau qui aurait évité l'incident du 2026-08-16.**
+
+          Quatre clés dans le coffre, quatre champs vides à l'écran, et rien pour
+          dire laquelle des deux situations on regardait. Retaper était le geste
+          naturel — et c'est retaper qui détruisait le coffre.
+
+          Deux messages, deux situations bien distinctes : le coffre est illisible
+          (surtout ne rien retaper), ou il porte des clés que l'écran n'a pas
+          encore chargées (une synchronisation manque, mais rien n'est perdu).
+      */}
+      {etatDuCoffre?.etat === 'illisible' && (
+        <div className="p-4 rounded-2xl border border-red-500/40 bg-red-500/10 space-y-1">
+          <p className="text-[10px] font-black uppercase tracking-widest text-red-300">
+            Coffre illisible — ne retape rien
+          </p>
+          <p className="text-[11px] text-red-200/80 leading-relaxed">
+            Le fichier de clés existe mais n'a pas pu être déchiffré. <b>Tes clés y sont toujours.</b>
+            {' '}Redémarre complètement l'application : la lecture réussit presque toujours au second
+            essai. Si tu saisis une clé maintenant, l'ancien coffre sera mis de côté — rien ne sera
+            détruit, mais tu devras toutes les ressaisir.
+          </p>
+        </div>
+      )}
+
+      {etatDuCoffre?.etat === 'lu' && (() => {
+        const absentes = etatDuCoffre.entrees
+          .filter(e => e.startsWith('ai-key-'))
+          .map(e => e.replace('ai-key-', ''))
+          .filter(p => p !== 'image' && !configs[p as keyof typeof configs]?.apiKey);
+        if (absentes.length === 0) return null;
+        return (
+          <div className="p-4 rounded-2xl border border-amber-500/40 bg-amber-500/10 space-y-1">
+            <p className="text-[10px] font-black uppercase tracking-widest text-amber-300">
+              {absentes.length} clé{absentes.length > 1 ? 's' : ''} dans le coffre, pas à l'écran
+            </p>
+            <p className="text-[11px] text-amber-200/80 leading-relaxed">
+              Le coffre porte une clé pour <b>{absentes.join(', ')}</b>, mais le champ est vide :
+              la synchronisation n'a pas abouti. <b>Ne la retape pas</b> — redémarre l'application.
+            </p>
+          </div>
+        );
+      })()}
 
       <div className="grid grid-cols-1 gap-4 overflow-visible relative">
         {providers.map((p) => (

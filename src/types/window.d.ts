@@ -165,8 +165,26 @@ declare global {
         };
         security?: {
             getSecret: (id: string) => Promise<string | null>;
-            saveSecret: (id: string, value: string) => Promise<boolean>;
-            deleteSecret: (id: string) => Promise<boolean>;
+            /**
+             * Rend ce que l'écriture a fait, et non un `true` de politesse.
+             *
+             * Une valeur vide est **refusée** : l'écrire supprimait l'entrée en
+             * silence, et le champ de saisie appelle à chaque frappe.
+             */
+            saveSecret: (id: string, value: string) => Promise<{ ecrit: boolean; ecarte?: string; raison?: string }>;
+            deleteSecret: (id: string) => Promise<{ ecrit: boolean; ecarte?: string; raison?: string }>;
+            /**
+             * L'état du coffre et les NOMS de ses entrées — jamais les valeurs.
+             *
+             * Sans lui, un écran de réglages ne peut pas distinguer « aucune clé
+             * n'a jamais été saisie » de « le coffre n'a pas pu être lu ». La
+             * seconde phrase est celle qui évite de tout retaper — et de tout
+             * perdre.
+             */
+            etatDuCoffre?: () => Promise<{
+                etat: 'jamais-lu' | 'vide' | 'lu' | 'illisible';
+                entrees: string[];
+            }>;
         };
         ai?: {
             listDocs: () => Promise<AIDocument[]>;

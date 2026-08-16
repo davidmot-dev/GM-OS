@@ -125,15 +125,38 @@ export const useAIStore = create<AIState>()(
       setProvider: (provider) => set({ activeProvider: provider }),
 
       updateConfig: async (provider, config) => {
-        // Sécurité : Si une clé API est fournie, on l'enregistre dans le trousseau natif
-        // au lieu du store persistant (localStorage)
-        if (config.apiKey !== undefined && window.appBridge?.security) {
-          try {
-            console.log(`[AI Store] 🔐 Tentative de sauvegarde sécurisée pour "${provider}"...`);
-            await window.appBridge.security.saveSecret(`ai-key-${provider}`, config.apiKey);
-            console.log(`[AI Store] ✅ Clé sauvegardée avec succès dans le trousseau pour "${provider}"`);
-          } catch (err) {
-            console.error(`[AI Store] ❌ Échec de la sauvegarde dans le trousseau pour "${provider}":`, err);
+        /*
+          **Une clé va au trousseau, jamais au magasin persisté** — `partialize`
+          la retire de l'état enregistré, c'est voulu.
+
+          **Le champ vide ne part PAS au coffre.** Ce champ de saisie appelle à
+          chaque frappe : vider la case déclenchait donc une écriture de chaîne
+          vide, et `getSecret` rendant `null` sur une chaîne vide, l'entrée était
+          supprimée sans un mot. Le coffre refuse désormais aussi de son côté —
+          les deux, parce qu'une garde côté rendu évite l'aller-retour et qu'une
+          garde côté coffre protège les autres appelants.
+
+          Effacer une clé reste possible : c'est `deleteSecret`, un geste qu'on
+          demande explicitement.
+        */
+        if (config.apiKey !== undefined && config.apiKey.trim() !== '') {
+          if (!window.appBridge?.security) {
+            // Ne plus échouer sans un mot : sans pont, la clé ne vivra que le
+            // temps de la session et disparaîtra au redémarrage. C'est
+            // exactement ce que l'utilisateur croyait être « un coffre qui perd ».
+            console.error(
+              `[AI Store] ⚠️ Pont de sécurité absent : la clé "${provider}" reste en mémoire `
+              + 'et sera perdue au prochain démarrage.',
+            );
+          } else {
+            try {
+              const resultat = await window.appBridge.security.saveSecret(`ai-key-${provider}`, config.apiKey);
+              if (!resultat?.ecrit) {
+                console.error(`[AI Store] ❌ Clé "${provider}" non enregistrée : ${resultat?.raison ?? 'raison inconnue'}`);
+              }
+            } catch (err) {
+              console.error(`[AI Store] ❌ Échec de la sauvegarde dans le trousseau pour "${provider}":`, err);
+            }
           }
         }
 
@@ -148,11 +171,14 @@ export const useAIStore = create<AIState>()(
         }));
       },
 
-      /** Même traitement que les clés de conversation : le jeton va au trousseau. */
+      /** Même traitement que les clés de conversation, y compris le refus du vide. */
       updateImageConfig: async (config) => {
-        if (config.apiKey !== undefined && window.appBridge?.security) {
+        if (config.apiKey !== undefined && config.apiKey.trim() !== '' && window.appBridge?.security) {
           try {
-            await window.appBridge.security.saveSecret(CLE_DU_JETON_IMAGE, config.apiKey);
+            const resultat = await window.appBridge.security.saveSecret(CLE_DU_JETON_IMAGE, config.apiKey);
+            if (!resultat?.ecrit) {
+              console.error(`[AI Store] Jeton d'image non enregistré : ${resultat?.raison ?? 'raison inconnue'}`);
+            }
           } catch (err) {
             console.error("[AI Store] Echec de la sauvegarde du jeton d'image :", err);
           }
