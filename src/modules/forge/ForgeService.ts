@@ -295,7 +295,22 @@ export class ForgeService {
           }),
           systemPrompt,
           [],
-          { lite: true, sansPersona: true },
+          /*
+            **`groupe.schema` ne partait pas, et c'est resté vrai quatre jours.**
+            Trouvé le 2026-08-16 en transposant ce mécanisme aux campagnes :
+            `SCHEMA_DU_GABARIT` était déclaré sur le groupe `fiche`, documenté
+            comme la seule chose qui ait tenu là où trois hypothèses avaient été
+            réfutées — et **aucun appelant ne le lisait**. Le seul schéma qui
+            arrivait jusqu'au décodeur était celui de la Forge de chronique.
+
+            Ce que l'omission coûtait est exactement ce que la sonde du
+            2026-08-12 avait mesuré : sans grammaire, l'invite libre cassait à la
+            position 1 027, le modèle fourrant les champs dans la chaîne `label`
+            avec leurs guillemets échappés. *Un champ déclaré que personne ne lit
+            est pire qu'un champ absent : il fait croire que la question est
+            réglée.*
+          */
+          { lite: true, sansPersona: true, ...(groupe.schema ? { schema: groupe.schema } : {}) },
         );
         if (fragment && Object.keys(fragment).length > 0) fragments.push(fragment);
         else echecs.push({ groupe: groupe.id, raison: 'le modèle a rendu un objet vide' });
