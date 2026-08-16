@@ -245,3 +245,104 @@ describe('la campagne elle-même', () => {
         expect(ecrit.campagne?.champs.system).toBe('cthulhu-hack');
     });
 });
+
+/**
+ * Ce que ces tests protègent : **une lettre perdue ne coûte plus un renvoi**.
+ *
+ * Sur la forge réelle du 2026-08-16, un indice désignait « Temple
+ * d'Ara-Manopell » là où le lieu s'appelle « Temple d'Ara-Manopello ». Le lieu
+ * existait, le renvoi était juste, et la résolution stricte l'a jeté.
+ *
+ * *Un renvoi mal rattaché se voit et se corrige d'un clic ; un renvoi perdu
+ * laisse une scène sans son lieu et ne dit plus rien après coup.* D'où le
+ * rattachement — et le signalement, jamais l'un sans l'autre.
+ */
+describe('la résolution graduée des renvois', () => {
+    it("rattache une troncature, et le signale", () => {
+        const projet = PROJET();
+        projet.indices[0].lieu = "Villa d'Est"; // il manque le « e »
+
+        const ecrit = ecrireLaCampagne(projet, options());
+
+        expect(ecrit.clues[0].locationId).toBe(ecrit.atlasMaps[0].id);
+        expect(ecrit.nonResolus).toEqual([]);
+        expect(ecrit.approximatifs).toEqual([{
+            depuis: 'indice « La chouette »', champ: 'lieu',
+            ecrit: "Villa d'Est", retenu: "Villa d'Este",
+        }]);
+    });
+
+    it('rattache un prénom seul à son personnage', () => {
+        const projet = PROJET();
+        projet.scenes[0].pnj = ['Milo'];
+
+        const ecrit = ecrireLaCampagne(projet, options());
+
+        expect(ecrit.scenes[0].entiteIds).toEqual([ecrit.entities[0].id]);
+        expect(ecrit.approximatifs[0].retenu).toBe('Milo Torricelli');
+    });
+
+    it('ne rattache rien quand deux cibles conviennent également', () => {
+        const projet = PROJET();
+        projet.pnj.push({ name: 'Milo Rossi' });
+        projet.scenes[0].pnj = ['Milo'];
+
+        const ecrit = ecrireLaCampagne(projet, options());
+
+        // Une cible plausible et fausse est pire qu'une cible absente.
+        expect(ecrit.scenes[0].entiteIds).toEqual([]);
+        expect(ecrit.approximatifs).toEqual([]);
+        expect(ecrit.nonResolus[0]).toMatchObject({ champ: 'pnj', nom: 'Milo', ambigu: true });
+    });
+
+    it("ne rattache pas deux noms qui ne partagent pas leur début", () => {
+        const projet = PROJET();
+        projet.scenes[0].lieu = "Le palais d'Este"; // même famille, autre nom
+
+        const ecrit = ecrireLaCampagne(projet, options());
+
+        expect(ecrit.scenes[0].lieuId).toBeUndefined();
+        expect(ecrit.approximatifs).toEqual([]);
+        expect(ecrit.nonResolus.some(r => r.nom === "Le palais d'Este")).toBe(true);
+    });
+
+    it("ne rattache rien sur un nom trop court pour signifier", () => {
+        const projet = PROJET();
+        projet.scenes[0].lieu = 'Vil';
+
+        const ecrit = ecrireLaCampagne(projet, options());
+
+        expect(ecrit.scenes[0].lieuId).toBeUndefined();
+        expect(ecrit.nonResolus.some(r => r.nom === 'Vil')).toBe(true);
+    });
+
+    it('ne signale rien quand le nom est exact', () => {
+        expect(ecrireLaCampagne(PROJET(), options()).approximatifs).toEqual([]);
+    });
+
+    it("adopte le nom canonique d'une faction approchée", () => {
+        const projet = PROJET();
+        projet.pnj[0].faction = 'La Confréri'; // il manque le « e »
+
+        const ecrit = ecrireLaCampagne(projet, options());
+
+        // Deux graphies couperaient le graphe social en deux moitiés muettes.
+        expect(ecrit.entities[0].faction).toBe('La Confrérie');
+        expect(ecrit.approximatifs.some(r => r.champ === 'faction')).toBe(true);
+    });
+
+    it("ne conserve un objet que sur un nom EXACT", () => {
+        // La conservation décide de créer ou non : elle ne tolère rien. Un
+        // rapprochement flou y ferait disparaître un objet distinct.
+        const projet = PROJET();
+        projet.lieux = [{ name: "Villa d'Est" }];
+
+        const ecrit = ecrireLaCampagne(projet, {
+            ...options(),
+            existant: { atlasMaps: [{ id: 'am-ancien', campaignId: 'c-1', name: "Villa d'Este" } as never] },
+        });
+
+        expect(ecrit.atlasMaps.map(l => l.name)).toEqual(["Villa d'Est"]);
+        expect(ecrit.conserves).toEqual([]);
+    });
+});

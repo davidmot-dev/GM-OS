@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Hammer, Sparkles, Layers, Network } from 'lucide-react';
+import { Hammer, Layers, Network } from 'lucide-react';
 import ForgeDashboard from './components/ForgeDashboard';
 import AtelierDeCampagne from './campagne/AtelierDeCampagne';
 import ForgeDeLaTrame from './campagne/ForgeDeLaTrame';
@@ -29,11 +29,15 @@ import { useSessionStore } from '../../store/useSessionStore';
  * campagne, qui projette ces fiches en actes, scènes, PNJ et indices : les deux
  * étages du même chantier, dans cet ordre.
  *
- * `chronicle` est l'ancien chemin — il produit des objets de jeu directement
- * depuis des documents déversés, en un seul appel, et ne connaît ni actes, ni
- * scènes, ni indices. Il coexiste le temps que `trame` ait fait ses preuves.
+ * **`chronicle` a été retiré le 2026-08-16**, une fois `trame` éprouvée sur une
+ * vraie campagne. Elle déversait des documents en **un seul appel** — au-delà
+ * des ~8 000 tokens d'invite mesurés le 12 août, tout ce qui débordait se
+ * perdait sans un mot — et ne connaissait ni actes, ni scènes, ni indices.
+ * *Deux productions indépendantes des mêmes faits divergeront, et rien ne les
+ * comparera jamais.* Son unique capacité propre, avaler un PDF sans corpus, se
+ * remplace en ajoutant le PDF à un carnet.
  */
-export type ModeForge = 'system' | 'campagne' | 'trame' | 'chronicle';
+export type ModeForge = 'system' | 'campagne' | 'trame';
 
 const ForgeOS: React.FC = () => {
     const { t } = useTranslation(['modules']);
@@ -81,21 +85,13 @@ const ForgeOS: React.FC = () => {
                     >
                         <Network size={12} /> Trame
                     </button>
-                    <button
-                        onClick={() => setMode('chronicle')}
-                        className={`px-6 py-1.5 transition-all flex items-center gap-2 ${
-                            theme === 'medieval' ? 'rounded-sm text-[11px] font-display tracking-widest' : 'rounded-lg text-[10px] font-black uppercase tracking-widest'
-                        } ${mode === 'chronicle' ? 'bg-fuchsia-600/80 text-white shadow-glow-fuchsia/40' : 'text-app-text/60'}`}
-                    >
-                        <Sparkles size={12} /> {t('modules:session.header.chronicle_forge')}
-                    </button>
                 </div>
             </header>
 
             <div className="flex-1 min-h-0 overflow-hidden">
                 {mode === 'campagne' ? <AtelierDeCampagne />
                     : mode === 'trame' ? <ForgeDeLaTrame />
-                    : <ForgeDashboard mode={mode} />}
+                    : <ForgeDashboard />}
             </div>
         </div>
     );

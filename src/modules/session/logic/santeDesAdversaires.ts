@@ -81,6 +81,79 @@ export function santeSelonLeJeu(
         : sante;
 }
 
+/**
+ * Comment ce jeu met un adversaire hors de combat — et s'il faut lui demander
+ * des points de vie.
+ *
+ * **Le jumeau d'invite de `santeSelonLeJeu`, et il vit ici depuis le
+ * 2026-08-16.** Il était né dans `ChronicleService`, avec la Forge de chronique
+ * qu'il servait ; mais il ne parle pas de chroniques — il dit comment un jeu
+ * compte les dégâts, et c'est la Forge de campagne qui le lit aujourd'hui.
+ * Retirer l'ancien chemin aurait emporté une fonction dont le nouveau dépend.
+ *
+ * **Le défaut qu'il remplace, relevé le 2026-08-15.** L'invite disait
+ * « Remplis "hp", "ac", "speed", "initiative" en fonction du Driver » et montrait
+ * `"hp": 10, "ac": 10` — les valeurs de D&D, sur n'importe quel jeu. Sur Dune,
+ * dont la défaite est une tâche étendue, le modèle n'avait aucun point de vie à
+ * donner : il a répondu en prose, et `hp: "Inférieure à 1 (gravement battu)"`
+ * s'est retrouvé dans un champ typé `number`. *Ce n'est pas le modèle qui
+ * dérape, c'est la question qui n'a pas de réponse.*
+ *
+ * Le pilote savait pourtant répondre — `tacheDeDefaite`, `defaultHealthType`,
+ * `santeDeDepart` — et rien de tout cela ne partait. On ne demande donc plus que
+ * ce que le jeu déclare compter, et `santeSelonLeJeu` construit le reste à
+ * l'import, par la même règle que la création manuelle.
+ */
+export function santeAAnnoncer(driver: GameDriver): { demandeDesPoints: boolean; consigne: string } {
+    if (driver.combat?.tacheDeDefaite) {
+        return {
+            demandeDesPoints: false,
+            consigne:
+                "SANTÉ — CE JEU N'A PAS DE POINTS DE VIE. Mettre un adversaire hors de combat y est une "
+                + 'tâche étendue, dont le seuil se lit sur la fiche de la cible. N\'écris donc NI "hp" NI '
+                + '"maxHp" : le meneur réglera lui-même la résistance de chaque adversaire.',
+        };
+    }
+
+    const modele = driver.combat?.defaultHealthType;
+    if (modele === 'hp') {
+        const formule = driver.combat?.santeDeDepart;
+        return {
+            demandeDesPoints: true,
+            consigne:
+                'SANTÉ — ce jeu compte des points. Donne "hp" et "maxHp" **à l\'échelle de CE jeu**, jamais '
+                + "à celle d'un autre : un adversaire ordinaire n'a pas dix points de vie parce qu'un autre "
+                + 'jeu en donne dix.'
+                + (formule
+                    ? ` Sur ce jeu, la santé de départ se calcule ainsi : « ${formule} » — les valeurs `
+                      + 'restent donc du même ordre que les caractéristiques de la fiche.'
+                    : ''),
+        };
+    }
+
+    if (modele) {
+        const nom: Record<string, string> = {
+            clocks: 'une horloge à segments',
+            anatomy: 'des zones du corps',
+            wounds: 'des blessures nommées',
+            boxes: 'des cases à cocher',
+        };
+        return {
+            demandeDesPoints: false,
+            consigne:
+                `SANTÉ — ce jeu compte les dégâts par ${nom[modele] ?? modele}, PAS par points. `
+                + 'N\'écris NI "hp" NI "maxHp".',
+        };
+    }
+
+    return {
+        demandeDesPoints: false,
+        consigne:
+            "SANTÉ — le pilote de ce jeu ne déclare aucun modèle de santé. N'écris NI \"hp\" NI \"maxHp\" : "
+            + "l'absence n'est pas un zéro, et un nombre inventé se jouerait comme une mesure.",
+    };
+}
+
 export interface SanteRattachee {
     entite: string;
     modele: string;

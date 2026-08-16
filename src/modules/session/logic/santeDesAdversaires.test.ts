@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { rattacherLaSanteDesAdversaires, santeSelonLeJeu } from './santeDesAdversaires';
+import { rattacherLaSanteDesAdversaires, santeSelonLeJeu, santeAAnnoncer } from './santeDesAdversaires';
 import type { GameDriver } from '../../../types/drivers';
 import type { Entity } from '../../../types/entity.types';
 
@@ -170,5 +170,79 @@ describe('la même règle vaut à la création, quel que soit l\'écran', () => 
         );
 
         expect(santeDe(aLaReprise)).toEqual(aLaCreation);
+    });
+});
+
+/**
+ * Ce que ces tests protègent : **on ne demande à un modèle que ce que le jeu
+ * déclare compter**.
+ *
+ * **Le symptôme, relevé par David le 2026-08-15** : ses PNJ de Dune portaient
+ * `hp: "Inférieure à 1 (gravement battu)"` et `speed: "Normal"` — des phrases
+ * dans des champs typés `number`.
+ *
+ * La cause n'était pas le modèle. L'invite disait « Remplis "hp", "ac", "speed",
+ * "initiative" en fonction du Driver » et montrait `"hp": 10, "ac": 10`. Sur
+ * Dune, dont la mise hors de combat est une tâche étendue, il n'existe aucun
+ * point de vie à donner : sommé de répondre, le modèle a répondu en mots.
+ * *Ce n'est pas le modèle qui dérape, c'est la question qui n'a pas de réponse.*
+ *
+ * Ces tests ont suivi la fonction quand elle a quitté `ChronicleService` le
+ * 2026-08-16, avec le retrait de la Forge de chronique.
+ */
+const piloteDeTest = (combat: Partial<GameDriver['combat']>): GameDriver =>
+    ({ id: 'x', name: 'Jeu', combat: { statsToTrack: [], initiativeFormula: '', ...combat } } as GameDriver);
+describe('santeAAnnoncer — on ne demande que ce que le jeu compte', () => {
+    it('un jeu à tâche de défaite ne se voit demander aucun point', () => {
+        // Dune : le seuil vaut « la compétence défensive » de la cible, qui se lit
+        // sur sa fiche. Une IA qui écrit une chronique ne la connaît pas.
+        const { demandeDesPoints, consigne } = santeAAnnoncer(piloteDeTest({
+            defaultHealthType: 'clocks',
+            tacheDeDefaite: { sectionDuSeuil: 'competences', seuil: { min: 4, max: 8 } },
+        } as Partial<GameDriver['combat']>));
+
+        expect(demandeDesPoints, 'le défaut exact que David subissait').toBe(false);
+        expect(consigne).toContain("N'A PAS DE POINTS DE VIE");
+    });
+
+    it('la tâche de défaite l\'emporte sur le modèle déclaré', () => {
+        // `defaultHealthType: 'clocks'` ET des points seraient contradictoires ;
+        // c'est la tâche qui décrit vraiment la mise hors de combat.
+        const { demandeDesPoints } = santeAAnnoncer(piloteDeTest({
+            defaultHealthType: 'hp',
+            tacheDeDefaite: { sectionDuSeuil: 's', seuil: { min: 4, max: 8 } },
+        } as Partial<GameDriver['combat']>));
+
+        expect(demandeDesPoints).toBe(false);
+    });
+
+    it('un jeu à points demande des points, et dit à quelle échelle', () => {
+        const { demandeDesPoints, consigne } = santeAAnnoncer(piloteDeTest({
+            defaultHealthType: 'hp',
+            santeDeDepart: 'force',
+        }));
+
+        expect(demandeDesPoints).toBe(true);
+        // Chez Alien la Santé vaut la Force — deux à cinq. Sans le dire, le
+        // modèle donne dix, parce que dix est ce qu'un autre jeu donne.
+        expect(consigne).toContain('force');
+        expect(consigne).toContain("à l'échelle de CE jeu");
+    });
+
+    it.each(['clocks', 'anatomy', 'wounds', 'boxes'] as const)(
+        'un jeu qui compte en %s ne se voit demander aucun point',
+        (modele) => {
+            const { demandeDesPoints, consigne } = santeAAnnoncer(piloteDeTest({ defaultHealthType: modele }));
+            expect(demandeDesPoints).toBe(false);
+            expect(consigne).toContain('PAS par points');
+        },
+    );
+
+    it('un pilote muet ne fait rien inventer', () => {
+        // *L'absence n'est pas un zéro* : un pilote qui ne déclare pas de modèle
+        // de santé n'en a pas un par défaut, il n'en a pas.
+        const { demandeDesPoints, consigne } = santeAAnnoncer(piloteDeTest({}));
+        expect(demandeDesPoints).toBe(false);
+        expect(consigne).toContain('ne déclare aucun modèle de santé');
     });
 });

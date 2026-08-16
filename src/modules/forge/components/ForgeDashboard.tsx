@@ -14,7 +14,6 @@ import { gmConfirm } from '../../../stores/useModalStore';
 import type { GameDriver } from '../../../types/drivers';
 import type { SheetTemplate } from '../../../data/defaultSheetTemplates';
 import { tousLesPilotes } from '../../session/store/tousLesPilotes';
-import ChronicleForge from './ChronicleForge';
 import { useAIStore } from '../../../stores/useAIStore';
 import { useBrainstormStore } from '../rules/store/useBrainstormStore';
 import { corpusChoisi, corpusPourNouveauSysteme, sousDossiersDuCorpus } from '../../../../electron/corpusSysteme';
@@ -35,9 +34,11 @@ interface Notebook {
   sources_count?: number;
 }
 
-interface ForgeDashboardProps {
-  mode?: 'system' | 'chronicle';
-}
+/*
+  **Plus de `mode`.** Il n'existait que pour basculer vers la Forge de chronique,
+  retirée le 2026-08-16 : ce tableau de bord ne sert plus qu'à un seul métier,
+  documenter un système de jeu.
+*/
 
 /**
  * Ce que le corpus ne couvre pas — **et qui ne doit pas se perdre**.
@@ -73,7 +74,7 @@ const JournalDesLacunes: React.FC<{ lacunes: LacuneDuPilote[] }> = ({ lacunes })
   );
 };
 
-const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
+const ForgeDashboard: React.FC = () => {
   const { t } = useTranslation(['modules']);
   /*
     La campagne active n'entre plus ici. Les pilotes et les modèles de fiche
@@ -648,10 +649,6 @@ const ForgeDashboard: React.FC<ForgeDashboardProps> = ({ mode = 'system' }) => {
     addLog(t('modules:session.forge_module.sync_success'));
     forgeStore.reset();
   };
-
-  if (mode === 'chronicle') {
-    return <ChronicleForge />;
-  }
 
   return (
     <div className="h-full overflow-y-auto p-8 pt-6 flex flex-col gap-8 animate-in fade-in duration-500 custom-scrollbar bg-app-bg text-app-text font-sans">

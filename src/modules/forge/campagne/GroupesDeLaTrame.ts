@@ -36,7 +36,7 @@
 
 import type { GameDriver } from '../../../types/drivers';
 import { normaliser } from '../rules/canevas';
-import { santeAAnnoncer } from '../ChronicleService';
+import { santeAAnnoncer } from '../../session/logic/santeDesAdversaires';
 import type { FicheDeCampagneLue } from './lectureDesFiches';
 
 // ─────────────────────────────────────────────

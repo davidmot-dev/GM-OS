@@ -13,7 +13,6 @@ import {
     handleGenerateEntityPortrait,
     handleGenerateAtlasMapImage,
     handleGeneratePlayerPortrait,
-    handleAddChronicle,
     handleAppliquerLaCampagneForgee,
     handleExportActiveCampaignToObsidian,
     type CampagneForgee,
@@ -93,14 +92,13 @@ interface CrossDomainActions {
     generateEntityPortrait: (entityId: string, instructions?: string) => Promise<void>;
     generateAtlasMapImage: (mapId: string, instructions?: string) => Promise<void>;
     generatePlayerPortrait: (playerId: string, characterId: string, instructions?: string) => Promise<void>;
-    addChronicle: (data: any) => void;
     /**
      * Écrit une campagne forgée depuis ses fiches.
      *
-     * Distincte d'`addChronicle`, et volontairement : celle-là déverse un
-     * document en un seul appel et ne connaît ni actes, ni scènes, ni indices.
-     * Celle-ci reçoit un projet déjà résolu, dont tous les renvois pointent les
-     * uns vers les autres.
+     * Le seul chemin vers une campagne depuis le 2026-08-16 : elle reçoit un
+     * projet déjà résolu, dont tous les renvois pointent les uns vers les
+     * autres. `addChronicle`, qui déversait un document en un seul appel et ne
+     * connaissait ni actes ni scènes, a été retirée le même jour.
      */
     appliquerLaCampagneForgee: (ecriture: CampagneForgee) => void;
     exportActiveCampaignToObsidian: () => Promise<void>;
@@ -250,8 +248,6 @@ export const useSessionOSStore = create<SessionOSStore>()(
             generateEntityPortrait: async (entityId, instructions) => handleGenerateEntityPortrait(set, get, entityId, instructions),
             generateAtlasMapImage: async (mapId, instructions) => handleGenerateAtlasMapImage(set, get, mapId, instructions),
             generatePlayerPortrait: async (playerId, characterId, instructions) => handleGeneratePlayerPortrait(set, get, playerId, characterId, instructions),
-            addChronicle: (payload) => handleAddChronicle(set, get, payload),
-
             appliquerLaCampagneForgee: (ecriture) => handleAppliquerLaCampagneForgee(set, get, ecriture),
             exportActiveCampaignToObsidian: () => handleExportActiveCampaignToObsidian(get),
             generateEncounter: (templateId) => {

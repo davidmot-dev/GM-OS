@@ -54,6 +54,34 @@ export interface RenvoiNonResolu {
     champ: string;
     /** Le nom que le modèle a écrit, et qui ne désigne rien. */
     nom: string;
+    /**
+     * Plusieurs cibles convenaient également bien.
+     *
+     * **Un ex æquo est une ambiguïté, pas un choix.** On préfère ne rien poser
+     * et le dire — c'est déjà le réflexe de `rabattreSurLeCanevas`, où deux
+     * sujets à score égal renvoient au hors-canevas plutôt qu'au mauvais rang.
+     */
+    ambigu?: boolean;
+}
+
+/**
+ * Un renvoi résolu **à peu près**, et qui mérite d'être relu.
+ *
+ * **Le cas réel du 2026-08-16 :** un indice désignait « Temple d'Ara-Manopell »
+ * là où le lieu s'appelle « Temple d'Ara-Manopello ». Une lettre. Le lieu
+ * existait, le renvoi était juste, et il a été jeté.
+ *
+ * *Un renvoi mal rattaché se voit et se corrige d'un clic ; un renvoi perdu
+ * laisse une scène sans son lieu et ne dit plus rien après coup.* On rattache
+ * donc, et on le signale — jamais l'un sans l'autre.
+ */
+export interface RenvoiApproche {
+    depuis: string;
+    champ: string;
+    /** Ce que le modèle a écrit. */
+    ecrit: string;
+    /** Ce à quoi on l'a rattaché. */
+    retenu: string;
 }
 
 /** Un objet déjà présent dans la campagne, laissé tel quel. */
@@ -66,30 +94,87 @@ export interface ObjetConserve {
 // L'annuaire des noms
 // ─────────────────────────────────────────────
 
+/** Ce qu'une recherche dans l'annuaire a donné. */
+type Trouvaille =
+    | { etat: 'exact'; id: string }
+    | { etat: 'approche'; id: string; nom: string }
+    | { etat: 'ambigu' }
+    | { etat: 'absent' };
+
 /**
- * Nom → identifiant, à la tolérance près.
+ * En deçà, deux noms ne se ressemblent plus : ils partagent un début.
  *
- * **La comparaison passe par `normaliser`, et c'est un choix.** On a demandé au
- * modèle la recopie exacte ; exiger l'exactitude à la résolution ferait perdre
- * une scène entière pour un accent, une majuscule ou un article. *La consigne
- * vise le meilleur cas, la résolution encaisse le cas réel.*
+ * 0,85 laisse passer une lettre perdue sur quinze — la troncature du
+ * 2026-08-16, « Manopell » pour « Manopello », vaut 0,95 — et écarte
+ * « Le Sea-You » face à « Le Sea-You et la remontée du fleuve ».
+ */
+const SEUIL_DE_RESSEMBLANCE = 0.85;
+
+/** Un nom trop court n'a pas assez de matière pour qu'une approche ait un sens. */
+const LONGUEUR_MINIMALE = 4;
+
+/**
+ * Nom → identifiant, **par degrés**.
+ *
+ * **La consigne vise le meilleur cas, la résolution encaisse le cas réel.** On a
+ * demandé au modèle la recopie exacte ; exiger l'exactitude ici ferait perdre
+ * une scène entière pour un accent — puis, comme le 2026-08-16 l'a montré, pour
+ * une lettre.
+ *
+ * Trois degrés, du plus sûr au plus tolérant :
+ *
+ * 1. **Égalité normalisée** — accents, casse et ponctuation absorbés. Silencieux.
+ * 2. **Préfixe de mot entier**, dans un sens ou dans l'autre : « Milo » désigne
+ *    « Milo Torricelli ». Signalé.
+ * 3. **Préfixe partiel très proche** ({@link SEUIL_DE_RESSEMBLANCE}) : c'est la
+ *    troncature, « Manopell » pour « Manopello ». Signalé.
+ *
+ * **Un ex æquo ne résout rien.** Deux « Milo » dans la campagne, et « Milo »
+ * seul ne désigne plus personne : on rend `ambigu` plutôt que de tirer au sort.
+ * Même règle que `rabattreSurLeCanevas`, pour la même raison — *une cible
+ * plausible et fausse est pire qu'une cible absente, puisqu'elle ne se signale
+ * pas.*
  *
  * Le premier inscrit gagne : un doublon de nom est déjà écarté en amont, et
  * réécrire l'entrée ferait pointer les renvois vers le dernier venu.
  */
 class Annuaire {
-    private readonly parNom = new Map<string, string>();
+    private readonly parNom = new Map<string, { id: string; nom: string }>();
 
     public inscrire(nom: string | undefined, id: string): void {
         const clef = normaliser(nom ?? '');
         if (!clef || this.parNom.has(clef)) return;
-        this.parNom.set(clef, id);
+        this.parNom.set(clef, { id, nom: nom ?? '' });
     }
 
-    public trouver(nom: string | undefined): string | undefined {
+    public chercher(nom: string | undefined): Trouvaille {
         const clef = normaliser(nom ?? '');
-        return clef ? this.parNom.get(clef) : undefined;
+        if (!clef) return { etat: 'absent' };
+
+        const exact = this.parNom.get(clef);
+        if (exact) return { etat: 'exact', id: exact.id };
+
+        const candidats = [...this.parNom.entries()]
+            .filter(([inscrit]) => proches(clef, inscrit))
+            .map(([, valeur]) => valeur);
+
+        if (candidats.length === 1) {
+            return { etat: 'approche', id: candidats[0].id, nom: candidats[0].nom };
+        }
+        return candidats.length > 1 ? { etat: 'ambigu' } : { etat: 'absent' };
     }
+}
+
+/** Deux noms normalisés désignent-ils vraisemblablement la même chose ? */
+function proches(a: string, b: string): boolean {
+    if (a.length < LONGUEUR_MINIMALE || b.length < LONGUEUR_MINIMALE) return false;
+
+    // Degré 2 — préfixe de mot entier. « Milo » pour « Milo Torricelli ».
+    if (a.startsWith(`${b} `) || b.startsWith(`${a} `)) return true;
+
+    // Degré 3 — troncature. « Manopell » pour « Manopello ».
+    if (!a.startsWith(b) && !b.startsWith(a)) return false;
+    return Math.min(a.length, b.length) / Math.max(a.length, b.length) >= SEUIL_DE_RESSEMBLANCE;
 }
 
 // ─────────────────────────────────────────────
@@ -138,6 +223,8 @@ export interface EcritureDeLaCampagne {
      */
     liensSurExistants: { entityId: string; relation: EntityRelation }[];
     nonResolus: RenvoiNonResolu[];
+    /** Renvois rattaches a peu pres — poses, mais a relire. */
+    approximatifs: RenvoiApproche[];
     conserves: ObjetConserve[];
 }
 
@@ -163,12 +250,20 @@ export function ecrireLaCampagne(
     const neuf = options.identifiant ?? identifiantParDefaut;
     const existant = options.existant ?? {};
     const nonResolus: RenvoiNonResolu[] = [];
+    const approximatifs: RenvoiApproche[] = [];
     const conserves: ObjetConserve[] = [];
 
     const campaignId = options.campaignId ?? neuf('c');
     const templateId = options.driver?.templateId || 'generic';
 
-    /** Cherche une cible et consigne l'échec plutôt que de le taire. */
+    /**
+     * Cherche une cible, rattache ce qui s'approche, et **dit tout ce qui n'est
+     * pas une égalité**.
+     *
+     * Trois issues, trois traitements : l'exact passe en silence, l'approché est
+     * posé **et** signalé, l'absent comme l'ambigu ne sont pas posés et sont
+     * signalés. Aucun cas ne se règle sans laisser de trace.
+     */
     const resoudre = (
         annuaire: Annuaire,
         nom: string | undefined,
@@ -176,9 +271,21 @@ export function ecrireLaCampagne(
         champ: string,
     ): string | undefined => {
         if (!nom?.trim()) return undefined;
-        const id = annuaire.trouver(nom);
-        if (!id) nonResolus.push({ depuis, champ, nom });
-        return id;
+
+        const trouvaille = annuaire.chercher(nom);
+        switch (trouvaille.etat) {
+            case 'exact':
+                return trouvaille.id;
+            case 'approche':
+                approximatifs.push({ depuis, champ, ecrit: nom, retenu: trouvaille.nom });
+                return trouvaille.id;
+            case 'ambigu':
+                nonResolus.push({ depuis, champ, nom, ambigu: true });
+                return undefined;
+            default:
+                nonResolus.push({ depuis, champ, nom });
+                return undefined;
+        }
     };
 
     // ── Les actes ────────────────────────────────
@@ -190,7 +297,7 @@ export function ecrireLaCampagne(
     let ordreActe = apres(actesExistants);
     for (const projete of projet.actes) {
         if (!projete.titre?.trim()) continue;
-        if (annuaireDesActes.trouver(projete.titre)) {
+        if (annuaireDesActes.chercher(projete.titre).etat === 'exact') {
             conserves.push({ quoi: 'acte', nom: projete.titre });
             continue;
         }
@@ -215,7 +322,7 @@ export function ecrireLaCampagne(
     const atlasMaps: AtlasMap[] = [];
     for (const projete of projet.lieux) {
         if (!projete.name?.trim()) continue;
-        if (annuaireDesLieux.trouver(projete.name)) {
+        if (annuaireDesLieux.chercher(projete.name).etat === 'exact') {
             conserves.push({ quoi: 'lieu', nom: projete.name });
             continue;
         }
@@ -251,7 +358,7 @@ export function ecrireLaCampagne(
         quoi: string,
     ) => {
         if (!titre?.trim()) return;
-        if (annuaireDuWiki.trouver(titre)) {
+        if (annuaireDuWiki.chercher(titre).etat === 'exact') {
             conserves.push({ quoi, nom: titre });
             return;
         }
@@ -279,7 +386,7 @@ export function ecrireLaCampagne(
     const entities: Entity[] = [];
     for (const projete of projet.pnj) {
         if (!projete.name?.trim()) continue;
-        if (annuaireDesPnj.trouver(projete.name)) {
+        if (annuaireDesPnj.chercher(projete.name).etat === 'exact') {
             conserves.push({ quoi: 'personnage', nom: projete.name });
             continue;
         }
@@ -294,12 +401,24 @@ export function ecrireLaCampagne(
           le signale, parce qu'une faction hors liste est presque toujours le
           signe d'un nom mal recopié.
         */
-        const faction = projete.faction?.trim()
-            ? nomsDeFactions.trouver(projete.faction) ?? projete.faction
-            : undefined;
-        if (projete.faction?.trim() && !nomsDeFactions.trouver(projete.faction)) {
-            nonResolus.push({ depuis, champ: 'faction', nom: projete.faction });
-        }
+        const faction = ((): string | undefined => {
+            const ecrit = projete.faction?.trim();
+            if (!ecrit) return undefined;
+
+            const trouvaille = nomsDeFactions.chercher(ecrit);
+            if (trouvaille.etat === 'exact') return ecrit;
+            if (trouvaille.etat === 'approche') {
+                // On ADOPTE le nom canonique : deux graphies d'une même faction
+                // couperaient le graphe social en deux moitiés muettes.
+                approximatifs.push({ depuis, champ: 'faction', ecrit, retenu: trouvaille.nom });
+                return trouvaille.nom;
+            }
+            nonResolus.push({
+                depuis, champ: 'faction', nom: ecrit,
+                ...(trouvaille.etat === 'ambigu' ? { ambigu: true } : {}),
+            });
+            return ecrit;
+        })();
 
         entities.push(construireLePnj(projete, {
             id, campaignId, templateId,
@@ -344,7 +463,7 @@ export function ecrireLaCampagne(
     const clues: Clue[] = [];
     for (const projete of projet.indices) {
         if (!projete.title?.trim()) continue;
-        if (annuaireDesIndices.trouver(projete.title)) {
+        if (annuaireDesIndices.chercher(projete.title).etat === 'exact') {
             conserves.push({ quoi: 'indice', nom: projete.title });
             continue;
         }
@@ -428,7 +547,7 @@ export function ecrireLaCampagne(
             }
             : {}),
         actes, scenes, entities, atlasMaps, wikiEntries, clues,
-        liensSurExistants, nonResolus, conserves,
+        liensSurExistants, nonResolus, approximatifs, conserves,
     };
 }
 

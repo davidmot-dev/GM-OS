@@ -57,6 +57,18 @@ const ForgeDeLaTrame: React.FC = () => {
     const nomCible = (campagneExistante?.name ?? nomNeuf).trim();
     const cheminDeclare = campagneExistante?.campaignPath;
 
+    /**
+     * Une campagne qui porte déjà ce nom, à la casse près.
+     *
+     * David a écrit « Le Secret de Milo » face à « le secret de milo » : deux
+     * campagnes pour un seul corpus. La comparaison ignore donc la casse — c'est
+     * déjà ce que faisait `handleAddChronicle`, et la Forge de la trame ne le
+     * faisait pas.
+     */
+    const homonyme = campagneExistante
+        ? undefined
+        : campaigns.find(c => c.name.trim().toLowerCase() === nomCible.toLowerCase() && !!nomCible);
+
     /*
       **Le jeu de la campagne l'emporte sur celui des fiches.** Une campagne
       existante DÉCLARE son système ; l'adopter depuis les fiches reviendrait à
@@ -162,9 +174,38 @@ const ForgeDeLaTrame: React.FC = () => {
                                 placeholder="Le nom du dossier de fiches à projeter"
                                 className="w-full mt-3 bg-app-bg/40 px-4 py-3 rounded-xl border border-app-border/20 text-xs outline-none focus:border-accent/50"
                             />
-                            <p className="text-[11px] text-app-text/30 italic leading-relaxed mt-2">
-                                La campagne naîtra de cette forge, avec le jeu que ses fiches déclarent.
-                            </p>
+                            {/*
+                                **Le piège du 2026-08-16, et il a coûté une campagne en double.**
+
+                                Le corpus se résout par le NOM : taper « Le secret
+                                de Milo » trouve les bonnes fiches et forge
+                                parfaitement — puis l'écriture crée une SECONDE
+                                campagne, à côté de celle qui portait déjà tout le
+                                travail. Rien ne le disait, et le résultat ne se
+                                voyait qu'à « Conservés : 1 ».
+
+                                Un nom qui désigne une campagne existante n'est
+                                presque jamais une intention de doublon.
+                            */}
+                            {homonyme ? (
+                                <div className="mt-2 p-3 rounded-xl border border-amber-500/40 bg-amber-500/10 space-y-2">
+                                    <p className="text-[11px] text-amber-200/90 leading-relaxed">
+                                        <b>« {homonyme.name} » existe déjà.</b> Forger ici créerait une
+                                        seconde campagne du même nom : ce qu'elle porte déjà ne serait
+                                        ni reconnu, ni conservé.
+                                    </p>
+                                    <button
+                                        onClick={() => setCampagneId(homonyme.id)}
+                                        className="w-full px-3 py-2 rounded-lg bg-amber-500/20 border border-amber-500/40 text-[10px] font-black uppercase tracking-widest text-amber-200 hover:bg-amber-500/30 transition-all"
+                                    >
+                                        Viser celle qui existe
+                                    </button>
+                                </div>
+                            ) : (
+                                <p className="text-[11px] text-app-text/30 italic leading-relaxed mt-2">
+                                    La campagne naîtra de cette forge, avec le jeu que ses fiches déclarent.
+                                </p>
+                            )}
                         </>
                     )}
 
@@ -361,6 +402,33 @@ const ForgeDeLaTrame: React.FC = () => {
                                         amputée de ses PNJ a l'aspect exact d'une scène qui n'en avait
                                         pas, et l'écran annonçait un succès.
                                     */}
+                                    {/*
+                                        **Rattaché, mais pas à l'identique.** Le
+                                        cas du 2026-08-16 : « Temple
+                                        d'Ara-Manopell » pour « …Manopello ». Une
+                                        lettre, et le renvoi était jeté. On le
+                                        pose désormais — et on le dit, parce
+                                        qu'une approximation qu'on tairait
+                                        deviendrait une erreur qu'on ne verrait
+                                        plus.
+                                    */}
+                                    {ecrit.approximatifs.length > 0 && (
+                                        <div className="space-y-1 pt-1">
+                                            <p className="text-[10px] uppercase tracking-widest font-bold text-sky-300/70">
+                                                {ecrit.approximatifs.length} renvois rattachés à peu près
+                                            </p>
+                                            {ecrit.approximatifs.map((r, i) => (
+                                                <p key={`${r.depuis}-${r.champ}-${i}`} className="text-[11px] text-sky-200/70 leading-relaxed">
+                                                    {r.depuis} · {r.champ} → « {r.ecrit} » rattaché à
+                                                    {' '}<b>« {r.retenu} »</b>.
+                                                </p>
+                                            ))}
+                                            <p className="text-[11px] text-app-text/35 italic leading-relaxed pt-1">
+                                                À relire : le rattachement est probable, pas certain.
+                                            </p>
+                                        </div>
+                                    )}
+
                                     {ecrit.nonResolus.length > 0 ? (
                                         <div className="space-y-1 pt-1">
                                             <p className="text-[10px] uppercase tracking-widest font-bold text-amber-300/70">
@@ -368,7 +436,10 @@ const ForgeDeLaTrame: React.FC = () => {
                                             </p>
                                             {ecrit.nonResolus.map((r, i) => (
                                                 <p key={`${r.depuis}-${r.champ}-${i}`} className="text-[11px] text-amber-300/70 leading-relaxed">
-                                                    {r.depuis} · {r.champ} → « {r.nom} » ne désigne rien.
+                                                    {r.depuis} · {r.champ} → « {r.nom} »
+                                                    {r.ambigu
+                                                        ? ' désigne plusieurs cibles également plausibles.'
+                                                        : ' ne désigne rien.'}
                                                 </p>
                                             ))}
                                             <p className="text-[11px] text-app-text/35 italic leading-relaxed pt-1">
