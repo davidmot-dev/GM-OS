@@ -167,7 +167,10 @@ export async function lireFichesDuCorpus(
       ignorees.push({ fichier: nom, raison: 'frontmatter seul, aucun contenu' });
       continue;
     }
-    fiches.push({ sujet, contenu: corps });
+    // `couverture:` voyage avec la fiche : c'est elle qui dit si le livre traite
+    // ce sujet, et une fiche « absente » ne doit nourrir aucun groupe.
+    const couverture = champDeLaFiche(contenu, 'couverture');
+    fiches.push({ sujet, contenu: corps, ...(couverture ? { couverture } : {}) });
   }
 
   return { chemin, fiches, ignorees };

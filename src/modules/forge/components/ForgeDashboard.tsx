@@ -93,6 +93,17 @@ const ForgeDashboard: React.FC = () => {
   const allDrivers = tousLesPilotes(customGameDrivers);
 
   const [activeTab, setActiveTab] = useState<'structure' | 'rules'>('structure');
+  /**
+   * N'enrichir que le pilote, sans toucher à la fiche de personnage.
+   *
+   * **Coché par défaut, et c'est un choix.** Une fiche écrite à la main nomme
+   * rarement ses champs comme une dérivation les nommerait — `hp` contre
+   * `points_de_vie`, `mentalHealth` contre `sante_mentale`. L'ajout se faisant
+   * par identifiant, la fusion produirait des doublons de jauges sur toutes les
+   * fiches de personnage. Le défaut protège donc ce qui existe ; décocher est un
+   * geste délibéré.
+   */
+  const [piloteSeulement, setPiloteSeulement] = useState(true);
 
   // Stores
   const forgeStore = useForgeStore();
@@ -648,18 +659,46 @@ const ForgeDashboard: React.FC = () => {
         information que le meneur voudra peut-être arbitrer.
       */
       const gabaritExistant = customSheetTemplates.find(t => t.id === cible.templateId);
+      /*
+        **Pourquoi on peut vouloir laisser la fiche tranquille**, relevé sur
+        Cthulhu Hack le 2026-08-16. La fiche de David nomme ses champs `hp`,
+        `mentalHealth`, `capacitesSpeciales` ; la dérivation nomme les mêmes
+        choses `points_de_vie`, `sante_mentale`, `capacites`. L'ajout se fait par
+        identifiant : il aurait produit deux jauges de points de vie, deux de
+        santé mentale et une section Capacités en double.
+
+        C'est le cas NORMAL d'une fiche écrite à la main avant toute forge — et
+        aucune fusion automatique ne peut deviner que deux identifiants désignent
+        la même chose. On laisse donc le choix, plutôt que de trancher à la place
+        du meneur.
+      */
       const { driver, template: gabarit, journal } = enrichirLePilote(
-        { driver: cible, ...(gabaritExistant ? { template: gabaritExistant } : {}) },
-        { driver: forgeStore.analysisResult.driver, template: forgeStore.analysisResult.template },
+        { driver: cible, ...(gabaritExistant && !piloteSeulement ? { template: gabaritExistant } : {}) },
+        {
+          driver: forgeStore.analysisResult.driver,
+          ...(piloteSeulement ? {} : { template: forgeStore.analysisResult.template }),
+        },
       );
 
-      // Un pilote sans fiche en reçoit une neuve : c'est une création, pas un
-      // écrasement.
+      /*
+        Trois cas, et un seul crée quelque chose. La fiche visée est mise à jour
+        (ajouts seuls) ; on la laisse intacte si le meneur l'a demandé ; et un
+        pilote qui n'en avait AUCUNE en reçoit une neuve — c'est une création,
+        pas un écrasement.
+      */
       const idDuGabarit = gabarit
         ? (updateSheetTemplate(gabarit.id, gabarit), gabarit.id)
-        : addSheetTemplate(template);
+        : (piloteSeulement ? cible.templateId : addSheetTemplate(template));
 
-      saveGameDriver({ ...driver, templateId: idDuGabarit, corpusId: driver.corpusId || corpus.id });
+      saveGameDriver({
+        ...driver,
+        ...(idDuGabarit ? { templateId: idDuGabarit } : {}),
+        corpusId: driver.corpusId || corpus.id,
+      });
+
+      if (piloteSeulement) {
+        addLog('FICHE DE PERSONNAGE laissée intacte, à la demande : la dérivation n\'y a rien ajouté.');
+      }
 
       addLog(`ENRICHISSEMENT de « ${cible.name} » — ${journal.remplis.length} champs remplis, `
         + `${journal.conserves.length} laissés en place, `
@@ -782,6 +821,32 @@ const ForgeDashboard: React.FC = () => {
                       </div>
                     )}
                   </div>
+
+                  {/*
+                      Le choix n'a de sens que sur un pilote PERSONNALISÉ visé :
+                      une création n'a rien à préserver, et un pilote de
+                      référence ne s'édite pas.
+                  */}
+                  {customGameDrivers.some(d => d.name === forgeStore.targetSystemName.trim()) && (
+                    <label className="flex items-start gap-3 p-3 rounded-xl bg-white/2 border border-white/10 cursor-pointer hover:bg-white/5 transition-all">
+                      <input
+                        type="checkbox"
+                        checked={piloteSeulement}
+                        onChange={e => setPiloteSeulement(e.target.checked)}
+                        className="mt-0.5 accent-accent"
+                      />
+                      <span className="flex flex-col gap-1">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-app-text/70">
+                          Ne pas toucher à la fiche de personnage
+                        </span>
+                        <span className="text-[11px] text-app-text/40 leading-relaxed">
+                          {piloteSeulement
+                            ? "Seul le pilote est enrichi. La fiche existante reste telle quelle — ses champs, leurs identifiants, et les valeurs déjà saisies sur les personnages."
+                            : "La dérivation ajoutera ses sections et ses champs manquants. Si elle nomme « points_de_vie » ce que ta fiche appelle « hp », tu obtiendras les deux."}
+                        </span>
+                      </span>
+                    </label>
+                  )}
                 </div>
               </div>
 

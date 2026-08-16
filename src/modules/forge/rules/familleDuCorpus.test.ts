@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { lireNature, sourceDuGroupe } from './familleDuCorpus';
-import { GROUPES, type FicheDuCorpus } from './GroupesDeChamps';
+import { GROUPES, type FicheDuCorpus, type GroupeDeChamps } from './GroupesDeChamps';
 
 /**
  * Ce que ces tests protègent : **le jeu l'emporte toujours sur sa famille.**
@@ -99,5 +99,65 @@ describe('ce qu\'un corpus déclare de lui-même', () => {
     it('une famille sans moteur reste une famille', () => {
         expect(lireNature('{"nature":"famille"}')).toEqual({ nature: 'famille', moteur: undefined });
         expect(lireNature('{"nature":"famille","moteur":"  "}')?.moteur).toBeUndefined();
+    });
+});
+
+/**
+ * Ce que ces tests protègent : **une lacune est une réponse, pas une invitation
+ * à combler**.
+ *
+ * Relevé sur la dérivation de Cthulhu Hack du 2026-08-16. `monnaie-de-table.md`
+ * portait `couverture: absente` — le jeu n'a pas de réserve commune — et le
+ * pilote est ressorti avec une réserve « Fortune », qui est une ressource
+ * PERSONNELLE du personnage. La fiche disait qu'il n'y avait rien ; servie au
+ * modèle, elle l'a invité à produire quelque chose quand même.
+ *
+ * Et le comblement depuis la famille aurait aggravé le cas : le socle décrit
+ * peut-être une monnaie de table, mais l'y prendre inventerait au jeu une
+ * mécanique qu'il n'a pas.
+ */
+describe('un sujet déclaré non couvert', () => {
+    const groupe = { id: 'ressources', label: 'Monnaie de table', sujets: ['Monnaie de table'] } as GroupeDeChamps;
+
+    it('ne nourrit pas son groupe', () => {
+        const source = sourceDuGroupe(groupe, [
+            { sujet: 'Monnaie de table', contenu: "Le jeu n'a pas de réserve partagée.", couverture: 'absente' },
+        ]);
+
+        expect(source.fiches).toEqual([]);
+        expect(source.declareNonCouvert).toBe(true);
+    });
+
+    it('ne se comble PAS depuis la famille', () => {
+        // Le socle en décrit une ; le jeu dit qu'il n'en a pas. Le jeu l'emporte.
+        const source = sourceDuGroupe(
+            groupe,
+            [{ sujet: 'Monnaie de table', contenu: 'aucune', couverture: 'absente' }],
+            [{ sujet: 'Monnaie de table', contenu: 'Le socle décrit une réserve de Momentum.' }],
+        );
+
+        expect(source.fiches).toEqual([]);
+        expect(source.venuDeLaFamille).toBe(false);
+    });
+
+    it('laisse le SILENCE se combler depuis la famille', () => {
+        // Ne rien dire et dire « il n'y a rien » sont deux réponses différentes.
+        const source = sourceDuGroupe(
+            groupe,
+            [{ sujet: 'Résolution des jets', contenu: 'autre chose' }],
+            [{ sujet: 'Monnaie de table', contenu: 'Le socle décrit une réserve de Momentum.' }],
+        );
+
+        expect(source.fiches).toHaveLength(1);
+        expect(source.venuDeLaFamille).toBe(true);
+    });
+
+    it("ne retient qu'« absente » : « partielle » reste une matière utile", () => {
+        const source = sourceDuGroupe(groupe, [
+            { sujet: 'Monnaie de table', contenu: 'Une réserve de Fortune, mal décrite.', couverture: 'partielle' },
+        ]);
+
+        expect(source.fiches).toHaveLength(1);
+        expect(source.declareNonCouvert).toBeUndefined();
     });
 });

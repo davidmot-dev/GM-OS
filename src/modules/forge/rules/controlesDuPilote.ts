@@ -141,6 +141,45 @@ export function controlerLePilote(
     const tousLesChamps = new Set(sections.flatMap(s => (s.fields ?? []).map(f => f.id)));
     const ressources = new Set((driver.ressourcesDeTable ?? []).map(r => r.id));
 
+    /*
+      ---- Le moteur de dés, avant tout le reste -------------------------------
+
+      **Ces deux contrôles viennent de la dérivation de Cthulhu Hack du
+      2026-08-16, et ils auraient chacun évité une table faussée.**
+
+      Le pilote est ressorti avec `engine: '2d20'` et `logic: 'd100-low'` sur un
+      jeu qui lance **un seul d20 sous une Sauvegarde**. Ce que le moteur en
+      aurait fait : `rollFromConfig` intercepte `2d20` avant toute logique et
+      lance une réserve de deux d20 à la Modiphius ; `d100-low`, lui, lance un
+      d100 quoi que dise `defaultDice`.
+
+      Aucun des deux ne plante. Ils rendent des réussites plausibles et fausses —
+      *un jet résolu à l'envers ne se voit jamais en séance.* C'est exactement ce
+      qu'une revue doit attraper.
+    */
+    const des = driver.dice?.defaultDice ?? '';
+    const faces = /\d*d(\d+)/i.exec(des)?.[1];
+
+    if (driver.dice?.engine === '2d20' && /^1?d/i.test(des.trim())) {
+        erreur(
+            'dice.engine',
+            `« 2d20 » désigne la FAMILLE Modiphius — Dune, Star Trek, Conan —, où l'on lance ` +
+            `plusieurs d20 et où l'on compte les réussites. Ce pilote ne lance qu'un dé (« ${des} ») : ` +
+            'le pupitre ignorerait sa logique et lancerait une réserve de deux d20. ' +
+            'Un jeu qui jette un seul d20 prend « standard ».',
+        );
+    }
+
+    if ((driver.dice?.logic === 'd100-low' || driver.dice?.logic === 'd100-high') && faces && faces !== '100') {
+        erreur(
+            'dice.logic',
+            `« ${driver.dice.logic} » lance un d100, quoi que dise « defaultDice » (« ${des} » ici). ` +
+            'Ces deux logiques ne valent que pour les systèmes en pourcentage. Pour un seul dé ' +
+            'sous une valeur de la fiche, c\'est « count-success » avec « jet.sens » à ' +
+            '« sous-ou-egal ».',
+        );
+    }
+
     // ---- La fiche, socle de tout le reste -----------------------------------
     if (sections.length === 0) {
         avertir(

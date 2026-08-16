@@ -267,7 +267,19 @@ export class ForgeService {
       */
       const source = sourceDuGroupe(groupe, fiches, options.fichesDeLaFamille ?? []);
       if (source.fiches.length === 0) {
-        echecs.push({ groupe: groupe.id, raison: 'aucune fiche du corpus ne couvre ce sujet' });
+        /*
+          **Le silence et le refus ne se disent pas pareil.** « Aucune fiche »
+          appelle une reforge de l'atelier ; « le corpus déclare ce sujet non
+          couvert » est une RÉPONSE, et le groupe vide qui en résulte est juste.
+          Confondre les deux enverrait le meneur chercher une fiche qui existe et
+          dit précisément qu'il n'y a rien à trouver.
+        */
+        echecs.push({
+          groupe: groupe.id,
+          raison: source.declareNonCouvert
+            ? 'le corpus déclare ce sujet non couvert par le livre — le groupe reste vide, et c\'est juste'
+            : 'aucune fiche du corpus ne couvre ce sujet',
+        });
         continue;
       }
       // Un comblement n'est pas un échec, mais il n'est pas non plus un succès

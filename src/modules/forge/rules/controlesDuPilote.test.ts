@@ -539,3 +539,46 @@ describe('la réserve composée depuis la fiche se contrôle comme le seuil', ()
         expect(constat?.message).toContain('jet.reserve.composantes');
     });
 });
+
+/**
+ * Ce que ces tests protègent : **un moteur de dés faux se voit à la revue, pas
+ * à la table**.
+ *
+ * Dérivé le 2026-08-16, le pilote de Cthulhu Hack est ressorti avec
+ * `engine: '2d20'` et `logic: 'd100-low'` sur un jeu qui lance UN SEUL d20 sous
+ * une Sauvegarde. `rollFromConfig` intercepte `2d20` avant toute logique et
+ * lance une réserve de deux d20 à la Modiphius ; `d100-low` lance un d100 quoi
+ * que dise `defaultDice`.
+ *
+ * Aucun des deux ne plante. Ils rendent des réussites plausibles et fausses.
+ */
+describe('le moteur de dés', () => {
+    const piloteDeDes = (dice: Record<string, unknown>) =>
+        controlerLePilote({ dice } as never, { sections: [] } as never);
+
+    it("refuse « 2d20 » quand le pilote ne lance qu'un dé", () => {
+        const constats = piloteDeDes({ defaultDice: '1d20', logic: 'count-success', engine: '2d20' });
+
+        const trouve = constats.find(c => c.ou === 'dice.engine');
+        expect(trouve?.gravite).toBe('erreur');
+        expect(trouve?.message).toContain('Modiphius');
+    });
+
+    it('accepte « 2d20 » sur une vraie réserve', () => {
+        const constats = piloteDeDes({ defaultDice: '2d20', logic: 'count-success', engine: '2d20' });
+        expect(constats.some(c => c.ou === 'dice.engine')).toBe(false);
+    });
+
+    it("refuse « d100-low » sur un jeu qui ne jette pas de percentile", () => {
+        const constats = piloteDeDes({ defaultDice: '1d20', logic: 'd100-low', engine: 'standard' });
+
+        const trouve = constats.find(c => c.ou === 'dice.logic');
+        expect(trouve?.gravite).toBe('erreur');
+        expect(trouve?.message).toContain('count-success');
+    });
+
+    it('accepte « d100-low » sur un vrai percentile', () => {
+        const constats = piloteDeDes({ defaultDice: '1d100', logic: 'd100-low', engine: 'standard' });
+        expect(constats.some(c => c.ou === 'dice.logic')).toBe(false);
+    });
+});

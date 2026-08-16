@@ -29,6 +29,32 @@ export interface FicheDuCorpus {
     /** Le `sujet:` du frontmatter — c'est par lui qu'on rattache au canevas. */
     sujet: string;
     contenu: string;
+    /**
+     * Le `couverture:` du frontmatter — `complète`, `partielle` ou `absente`.
+     *
+     * **`absente` veut dire que le livre ne traite pas ce sujet**, et c'est une
+     * réponse, pas un échec. Elle ne doit donc **pas** nourrir son groupe :
+     * servie à un modèle, une fiche qui dit « ce jeu n'a pas de monnaie de
+     * table » l'invite à en produire une quand même.
+     *
+     * Relevé sur la dérivation de Cthulhu Hack du 2026-08-16 : `monnaie-de-table`
+     * portait `couverture: absente`, et le pilote est ressorti avec une réserve
+     * « Fortune » — qui est une ressource **personnelle** du personnage, prise
+     * pour une monnaie commune. *Une lacune est une réponse ; elle ne doit pas
+     * devenir une invention.*
+     */
+    couverture?: string;
+}
+
+/**
+ * Le corpus déclare-t-il ce sujet non couvert ?
+ *
+ * On ne retient que `absente`. `partielle` reste une matière utile — c'est
+ * l'état normal d'un inventaire —, et une fiche sans `couverture:` est une
+ * fiche ancienne qu'on n'a aucune raison d'écarter.
+ */
+export function declareeNonCouverte(fiche: FicheDuCorpus): boolean {
+    return (fiche.couverture ?? '').trim().toLowerCase().startsWith('absente');
 }
 
 export interface GroupeDeChamps {
@@ -256,12 +282,21 @@ export const GROUPES: readonly GroupeDeChamps[] = [
         cible:
             '"driver" avec seulement dice et jet. "dice.logic" vaut EXACTEMENT l\'une de ces valeurs : ' +
             'sum, highest, lowest, count-success, d100-low, d100-high. ' +
+            '**"d100-low" ET "d100-high" NE VALENT QUE POUR LES SYSTÈMES EN POURCENTAGE** : ils ' +
+            'lancent un d100, quoi que dise "defaultDice". Ne les choisis que si le jeu jette ' +
+            'vraiment des dés à cent faces. ' +
+            '**UN JEU QUI LANCE UN SEUL DÉ SOUS UNE VALEUR DE LA FICHE** — « lance 1d20 sous ta ' +
+            'Sauvegarde » — prend "count-success" avec "defaultDice" à "1d20" et ' +
+            '"jet.sens" à "sous-ou-egal" : un dé lancé, réussite s\'il passe sous le seuil. ' +
             '"dice.engine" NOMME LA FAMILLE DU MOTEUR et vaut EXACTEMENT l\'une de ces valeurs : ' +
             'standard, formula, pool, pool_explode, threshold, advantage, disadvantage, exploding, ' +
-            'fate, rolemaster, yze, 2d20. Les fiches nomment souvent le moteur en toutes lettres ' +
-            '(« Year Zero Engine » donne yze, « système 2d20 » donne 2d20) ; à défaut, choisis ' +
-            'd\'après la mécanique décrite, et n\'écris "2d20" que si le jeu lance vraiment des dés ' +
-            'à vingt faces. C\'est ce champ qui bascule le pupitre de dés dans le bon mode. ' +
+            'fate, rolemaster, yze, 2d20. Les fiches nomment souvent la famille en toutes lettres ' +
+            '(« Year Zero Engine » donne yze, « système 2d20 de Modiphius » donne 2d20). ' +
+            '**"2d20" DÉSIGNE LA FAMILLE MODIPHIUS** — Dune, Star Trek Adventures, Conan —, où l\'on ' +
+            'lance PLUSIEURS d20 et où l\'on COMPTE les dés passés sous un seuil. Ce n\'est PAS ' +
+            '« le jeu utilise un dé à vingt faces » : un jeu qui lance UN SEUL d20 prend ' +
+            '"standard", même si ce dé a vingt faces. Dans le doute, "standard". ' +
+            'C\'est ce champ qui bascule le pupitre de dés dans le bon mode. ' +
             'POUR "jet.sens", LIS BIEN LES FICHES : mets "superieur-ou-egal" si le jeu compte les dés ' +
             'qui ATTEIGNENT OU DÉPASSENT une valeur (« chaque six est une réussite »), et ' +
             '"sous-ou-egal" s\'il compte ceux qui restent SOUS un seuil lu sur la fiche ' +
@@ -477,6 +512,9 @@ export function blocDuVocabulaire(vocabulaire: VocabulaireDuPilote): string {
 export function fichesDuGroupe(groupe: GroupeDeChamps, fiches: FicheDuCorpus[]): FicheDuCorpus[] {
     const voulus = groupe.sujets.map(normaliser);
     return fiches.filter(f => {
+        // Une fiche qui déclare le sujet non couvert n'est pas une source :
+        // servie au modèle, elle l'invite à combler ce que le livre tait.
+        if (declareeNonCouverte(f)) return false;
         const sujet = normaliser(f.sujet);
         return voulus.some(v => sujet === v || sujet.startsWith(v) || v.startsWith(sujet));
     });

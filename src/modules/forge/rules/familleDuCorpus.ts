@@ -1,5 +1,5 @@
 import type { FicheDuCorpus, GroupeDeChamps } from './GroupesDeChamps';
-import { fichesDuGroupe } from './GroupesDeChamps';
+import { fichesDuGroupe, declareeNonCouverte } from './GroupesDeChamps';
 
 /**
  * Le socle mécanique dont plusieurs jeux héritent — YZE, 2d20, d20.
@@ -67,6 +67,14 @@ export interface SourceDuGroupe {
     fiches: FicheDuCorpus[];
     /** Vrai quand aucune fiche du jeu ne couvrait le groupe. */
     venuDeLaFamille: boolean;
+    /**
+     * Le jeu a une fiche sur ce sujet, et elle dit que le livre ne le traite pas.
+     *
+     * À distinguer du silence : un sujet tu peut se combler depuis la famille,
+     * un sujet REFUSÉ ne le doit jamais. C'est ce qui protège la Monnaie de
+     * table d'Alien d'hériter d'une réserve que le jeu n'a pas.
+     */
+    declareNonCouvert?: boolean;
 }
 
 /**
@@ -87,6 +95,20 @@ export function sourceDuGroupe(
 ): SourceDuGroupe {
     const duJeu = fichesDuGroupe(groupe, fichesDuJeu as FicheDuCorpus[]);
     if (duJeu.length > 0) return { fiches: duJeu, venuDeLaFamille: false };
+
+    /*
+      **Un sujet que le jeu déclare NON COUVERT ne se comble pas depuis la
+      famille**, et c'est le cas que le commentaire de tête décrivait déjà : la
+      Monnaie de table d'Alien est vide parce que le jeu n'a pas de réserve
+      partagée. Le socle, lui, en décrit peut-être une — l'y prendre inventerait
+      au jeu une mécanique qu'il n'a pas.
+
+      Le silence du corpus et son refus explicite ne se traitent donc pas
+      pareil : on comble le premier, jamais le second.
+    */
+    const refuse = fichesDuJeu.some(f =>
+        declareeNonCouverte(f) && fichesDuGroupe(groupe, [{ ...f, couverture: undefined }]).length > 0);
+    if (refuse) return { fiches: [], venuDeLaFamille: false, declareNonCouvert: true };
 
     const deLaFamille = fichesDuGroupe(groupe, fichesDeLaFamille as FicheDuCorpus[]);
     return { fiches: deLaFamille, venuDeLaFamille: deLaFamille.length > 0 };
