@@ -8,7 +8,7 @@ import {
     gabaritInventaireDeCampagne, gabaritStructureDeCampagne, gabaritFicheDeCampagne,
 } from './gabaritsDeCampagne';
 import { lireLaStructure, type ActeLu } from './structureDeCampagne';
-import { retirerLesRenvoisDuCarnet } from './renvoisDuCarnet';
+import { retirerLesRenvoisDuCarnet } from '../renvoisDuCarnet';
 import { sujetDuFrontmatter } from '../rules/fichesSupplantees';
 import { fichesSupplanteesDeCampagne, partieDuFrontmatter } from './fichesSupplanteesDeCampagne';
 import {

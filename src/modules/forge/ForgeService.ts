@@ -5,6 +5,7 @@ import type { SheetTemplate } from '../../data/defaultSheetTemplates';
 import type { BrainstormCandidate, BrainstormCard } from './rules/types';
 import { gabaritInventaire, gabaritFicheRegle, gabaritFichePratique, promptVoix, promptPersonas } from './rules/gabarits';
 import { lireInventaire } from './rules/inventaire';
+import { retirerLesRenvoisDuCarnet } from './renvoisDuCarnet';
 import { convertirFiche } from './rules/conversion';
 import {
   GROUPES,
@@ -500,7 +501,9 @@ export class ForgeService {
    * son absence qu'il faut voir.
    */
   public async discoverCandidates(notebookId: string, sourceIds?: string[]): Promise<InventaireForge> {
-    const contenu = await this.interrogerCarnet(notebookId, gabaritInventaire(), sourceIds);
+    const contenu = retirerLesRenvoisDuCarnet(
+      await this.interrogerCarnet(notebookId, gabaritInventaire(), sourceIds),
+    );
     const candidats = lireInventaire(contenu).map(entree => ({
       id: slugFiche(entree.sujet),
       title: entree.sujet,
@@ -546,14 +549,18 @@ export class ForgeService {
     // Première moitié : la règle et ses valeurs. Elle porte les métadonnées, donc
     // elle suffit à classer la fiche même si la seconde échoue.
     const regle = options?.moitieDeja
-      ?? await this.interrogerCarnet(notebookId, gabaritFicheRegle(candidate.title), sourceIds);
+      ?? retirerLesRenvoisDuCarnet(
+        await this.interrogerCarnet(notebookId, gabaritFicheRegle(candidate.title), sourceIds),
+      );
 
     // On la remet à l'appelant AVANT la seconde requête : une moitié acquise ne
     // doit pas dépendre du sort de l'autre. Le gabarit entier dépassait le délai
     // du serveur à 356 secondes — c'est précisément ce qu'on évite en scindant.
     options?.surMoitie?.(regle);
 
-    const pratique = await this.interrogerCarnet(notebookId, gabaritFichePratique(candidate.title), sourceIds);
+    const pratique = retirerLesRenvoisDuCarnet(
+      await this.interrogerCarnet(notebookId, gabaritFichePratique(candidate.title), sourceIds),
+    );
 
     const contenu = `${regle.trim()}
 
@@ -585,7 +592,9 @@ ${pratique.trim()}`;
    * l'appelant, qui montre d'abord et enregistre ensuite.
    */
   public async forgePersonas(notebookId: string, sourceIds?: string[]): Promise<ForgePersonasResult> {
-    const voix = await this.interrogerCarnet(notebookId, promptVoix(), sourceIds);
+    const voix = retirerLesRenvoisDuCarnet(
+      await this.interrogerCarnet(notebookId, promptVoix(), sourceIds),
+    );
     const brut = await this.interrogerCarnet(notebookId, promptPersonas(), sourceIds);
     const { personas, ignorees } = extrairePersonas(brut);
 

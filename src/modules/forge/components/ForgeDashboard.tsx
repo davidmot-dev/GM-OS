@@ -14,6 +14,7 @@ import { gmConfirm } from '../../../stores/useModalStore';
 import type { GameDriver } from '../../../types/drivers';
 import type { SheetTemplate } from '../../../data/defaultSheetTemplates';
 import { tousLesPilotes } from '../../session/store/tousLesPilotes';
+import { enrichirLePilote } from '../rules/enrichirLePilote';
 import { useAIStore } from '../../../stores/useAIStore';
 import { useBrainstormStore } from '../rules/store/useBrainstormStore';
 import { corpusChoisi, corpusPourNouveauSysteme, sousDossiersDuCorpus } from '../../../../electron/corpusSysteme';
@@ -81,7 +82,10 @@ const ForgeDashboard: React.FC = () => {
     sont un catalogue global — ils vivent dans le store de session mais ne
     dépendent d'aucune campagne —, et c'est tout ce dont la Forge a besoin.
   */
-  const { saveGameDriver, addSheetTemplate, customGameDrivers } = useSessionOSStore();
+  const {
+    saveGameDriver, addSheetTemplate, updateSheetTemplate,
+    customGameDrivers, customSheetTemplates,
+  } = useSessionOSStore();
 
 
   // ... tabs state etc ...
@@ -575,7 +579,23 @@ const ForgeDashboard: React.FC = () => {
       return;
     }
 
-    const driverId = `custom-${Date.now()}`;
+    /*
+      **ENRICHIR PLUTÔT QUE DOUBLER.** Jusqu'au 2026-08-16, l'enregistrement
+      faisait `custom-${Date.now()}` sans condition : le sélecteur « Destination »
+      ne servait qu'à NOMMER. Reforger un jeu déjà documenté produisait donc un
+      pilote jumeau à côté de celui que les campagnes désignent, et un gabarit
+      jumeau à côté de celui que les fiches de personnage désignent.
+
+      Troisième forme du même défaut dans la journée — campagnes en double le
+      matin, fiches d'acte l'après-midi. Ici elle coûtait le plus cher :
+      `sheetData` est indexé par `field.id`, donc un gabarit remplacé vide des
+      fiches déjà remplies, sans erreur ni champ en rouge.
+
+      La cible ne peut être qu'un pilote PERSONNALISÉ : les pilotes de référence
+      livrés avec le code ne s'éditent pas, on en dérive un neuf.
+    */
+    const cible = customGameDrivers.find(d => d.name === forgeStore.targetSystemName.trim());
+    const driverId = cible?.id ?? `custom-${Date.now()}`;
 
     /*
       Le corpus se décide ici, par le même ordre d'autorité que la lecture : un
@@ -617,19 +637,55 @@ const ForgeDashboard: React.FC = () => {
 
       On ne suppose plus l'identifiant, on le reçoit.
     */
-    const templateId = addSheetTemplate(template);
+    if (cible) {
+      /*
+        **On verse, on ne remplace pas.** `enrichirLePilote` remplit ce qui est
+        vide, laisse ce qui est pourvu, et complète le gabarit par AJOUT seul —
+        aucune section renommée, aucun champ retiré, parce que les fiches de
+        personnage sont indexées par `field.id`.
 
-    const driver: GameDriver = {
-      ...forgeStore.analysisResult.driver as GameDriver,
-      id: driverId,
-      templateId,
-      author: 'User',
-      version: '1.0.0',
-      name: nom,
-      corpusId: corpus.id,
-    };
+        Ce qu'on écarte est DIT : une valeur dérivée qu'on ne pose pas reste une
+        information que le meneur voudra peut-être arbitrer.
+      */
+      const gabaritExistant = customSheetTemplates.find(t => t.id === cible.templateId);
+      const { driver, template: gabarit, journal } = enrichirLePilote(
+        { driver: cible, ...(gabaritExistant ? { template: gabaritExistant } : {}) },
+        { driver: forgeStore.analysisResult.driver, template: forgeStore.analysisResult.template },
+      );
 
-    saveGameDriver(driver);
+      // Un pilote sans fiche en reçoit une neuve : c'est une création, pas un
+      // écrasement.
+      const idDuGabarit = gabarit
+        ? (updateSheetTemplate(gabarit.id, gabarit), gabarit.id)
+        : addSheetTemplate(template);
+
+      saveGameDriver({ ...driver, templateId: idDuGabarit, corpusId: driver.corpusId || corpus.id });
+
+      addLog(`ENRICHISSEMENT de « ${cible.name} » — ${journal.remplis.length} champs remplis, `
+        + `${journal.conserves.length} laissés en place, `
+        + `${journal.sectionsAjoutees.length} sections et ${journal.champsAjoutes.length} champs ajoutés.`);
+      for (const chemin of journal.remplis) addLog(`  rempli : ${chemin}`);
+      // Ce qui diverge se lit un par un : c'est là que le meneur arbitre.
+      for (const chemin of journal.conserves) addLog(`  conservé (la dérivation proposait autre chose) : ${chemin}`);
+      gmToast(
+        `« ${cible.name} » enrichi : ${journal.remplis.length} champs remplis, rien d'écrasé.`,
+        'success',
+      );
+    } else {
+      const templateId = addSheetTemplate(template);
+
+      const driver: GameDriver = {
+        ...forgeStore.analysisResult.driver as GameDriver,
+        id: driverId,
+        templateId,
+        author: 'User',
+        version: '1.0.0',
+        name: nom,
+        corpusId: corpus.id,
+      };
+
+      saveGameDriver(driver);
+    }
 
     // La création est annoncée par ce qu'elle a réellement fait, pas par ce
     // qu'elle a tenté : rejoindre un corpus existant et en créer un neuf sont
