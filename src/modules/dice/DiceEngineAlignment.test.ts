@@ -95,3 +95,73 @@ describe('un seuil fixe ne se fait pas écraser par un seuil non composé', () =
         expect(jet.successes).toBe(jet.rolls.filter(d => d.val === 6).length);
     });
 });
+
+/**
+ * Ce que ces tests protègent : **le sens du comptage arrive jusqu'au moteur**.
+ *
+ * Relevé par David le 2026-08-16, pupitre en main : « lorsque je choisis Pool de
+ * Dés (Succès), il ne tient pas compte du signe < ou >. Les succès sont toujours
+ * au-dessus du seuil. » Capture à l'appui — seuil 15, règle « ≤ », un d20 tombé
+ * sur 19, annoncé SUCCÈS.
+ *
+ * Le moteur savait compter dessous depuis le 2026-08-10. Ce sont les APPELANTS
+ * qui ne le lui disaient pas : le pupitre pour ses deux modes de réserve, et
+ * `rollFromConfig` parce que `jet.sens` vit à côté du bloc `dice` qu'il reçoit.
+ * *Le chemin s'arrêtait avant le moteur* — le même geste manquant que les dés de
+ * stress d'Alien.
+ *
+ * **Un jet résolu à l'envers ne se voit jamais en séance.** Il ne plante pas, il
+ * n'affiche rien d'anormal : il rend des réussites plausibles et exactement
+ * inverses. C'est le pire mode de défaillance qu'un moteur de dés puisse avoir.
+ */
+describe('le sens du comptage voyage jusqu\'au moteur', () => {
+    it("compte SOUS le seuil quand le pilote le déclare", () => {
+        const res = DiceEngine.rollFromConfig({
+            defaultDice: '20d20',
+            logic: 'count-success',
+            successThreshold: 15,
+            engine: 'standard',
+            sens: 'sous-ou-egal',
+        });
+
+        const reussis = res.rolls.filter(r => typeof r.val === 'number' && (r.val as number) <= 15).length;
+        expect(res.successes).toBe(reussis);
+    });
+
+    it('compte au-dessus quand le pilote déclare le sens inverse', () => {
+        const res = DiceEngine.rollFromConfig({
+            defaultDice: '20d20',
+            logic: 'count-success',
+            successThreshold: 15,
+            engine: 'standard',
+            sens: 'superieur-ou-egal',
+        });
+
+        const reussis = res.rolls.filter(r => typeof r.val === 'number' && (r.val as number) >= 15).length;
+        expect(res.successes).toBe(reussis);
+    });
+
+    it("garde le comptage au-dessus quand rien n'est déclaré", () => {
+        // C'était le comportement, et c'est celui des réserves à la Vampire ou
+        // Year Zero : un pilote muet ne doit pas changer de sens du jour au
+        // lendemain.
+        const res = DiceEngine.rollFromConfig({
+            defaultDice: '20d20', logic: 'count-success', successThreshold: 15, engine: 'standard',
+        });
+
+        const reussis = res.rolls.filter(r => typeof r.val === 'number' && (r.val as number) >= 15).length;
+        expect(res.successes).toBe(reussis);
+    });
+
+    /**
+     * Le cas exact de la capture : un seul dé à 19, seuil 15, règle « ≤ ».
+     * Aucune réussite ne doit être annoncée.
+     */
+    it("n'accorde aucune réussite à un 19 sous un seuil de 15", () => {
+        const dessus = DiceEngine.rollPool(20, 1, 0, 15, false, { sens: 'under' });
+        // On ne peut pas forcer le tirage : on vérifie l'invariant sur la valeur
+        // réellement obtenue, ce qui couvre le 19 comme tous les autres.
+        const val = dessus.rolls[0].val as number;
+        expect(dessus.successes).toBe(val <= 15 ? 1 : 0);
+    });
+});

@@ -183,7 +183,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
           se déclencher. Le moteur savait faire ; le chemin s'arrêtait avant lui.
         */
         const res = DiceEngine.rollFromConfig(
-            { ...dice, successThreshold: seuilDuMoteur },
+            // `jet.sens` accompagne le seuil : sans lui, une réserve « sous le
+            // seuil » comptait les dés au-dessus, et rendait des réussites
+            // plausibles et exactement inverses.
+            { ...dice, successThreshold: seuilDuMoteur, sens: jet.sens },
             { baseCount: jet.nombreDeDes, gearCount: jet.desSecondaires, doubleSous: jet.doubleSous },
         );
         setSeuilDuLancer(jet.seuil);

@@ -153,12 +153,17 @@ const DiceBoard: React.FC = () => {
 
         if (useSystemDriver && activeDriver && !remoteOverrides) {
             const modVal = typeof finalModifier === 'string' ? (parseInt(finalModifier.replace('+', ''), 10) || 0) : finalModifier;
-            result = DiceEngine.rollFromConfig(activeDriver.dice, {
-                modifier: modVal,
-                baseCount: finalCount,
-                gearCount: finalGearCount,
-                targetOverwrite: finalTarget
-            });
+            // Le sens du comptage vit sur `jet`, pas sur `dice` : sans ce
+            // passage, une réserve « sous le seuil » se résolvait à l'envers.
+            result = DiceEngine.rollFromConfig(
+                { ...activeDriver.dice, ...(activeDriver.jet?.sens ? { sens: activeDriver.jet.sens } : {}) },
+                {
+                    modifier: modVal,
+                    baseCount: finalCount,
+                    gearCount: finalGearCount,
+                    targetOverwrite: finalTarget,
+                },
+            );
             return { result, title: t('dice.results.system', { name: activeDriver.name }) };
         }
 
@@ -178,12 +183,28 @@ const DiceBoard: React.FC = () => {
                     result = DiceEngine.rollStandard(sides, finalCount, modVal, true);
                     title = t('dice.results.exploding', { count: finalCount, sides });
                     break;
+                /*
+                  **Le sélecteur ≥ / ≤ était affiché et ignoré**, relevé par
+                  David le 2026-08-16 : « lorsque je choisis Pool de Dés
+                  (Succès), il ne tient pas compte du signe ». Les réserves
+                  comptaient toujours AU-DESSUS du seuil, quel que soit le
+                  réglage — un 19 passait pour une réussite sous un seuil de 15.
+
+                  Le moteur savait faire depuis le 2026-08-10 : `rollPool` prend
+                  un `sens`, et `threshold`, `advantage` et `disadvantage` le lui
+                  passaient déjà. Les deux modes de réserve, non. *Le chemin
+                  s'arrêtait avant le moteur* — le même geste manquant que les
+                  dés de stress d'Alien.
+
+                  Un jet résolu à l'envers ne se voit jamais en séance : il rend
+                  des réussites plausibles, simplement inverses.
+                */
                 case 'pool':
-                    result = DiceEngine.rollPool(sides, finalCount, modVal, finalTarget, false);
+                    result = DiceEngine.rollPool(sides, finalCount, modVal, finalTarget, false, { sens: targetRule });
                     title = t('dice.results.pool', { count: finalCount, sides, target: finalTarget });
                     break;
                 case 'pool_explode':
-                    result = DiceEngine.rollPool(sides, finalCount, modVal, finalTarget, true);
+                    result = DiceEngine.rollPool(sides, finalCount, modVal, finalTarget, true, { sens: targetRule });
                     title = t('dice.results.pool_explode', { count: finalCount, sides, target: finalTarget });
                     break;
                 case 'threshold':

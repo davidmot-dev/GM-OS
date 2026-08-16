@@ -497,7 +497,30 @@ export class DiceEngine {
      * @param options Options dynamiques (modificateur, nombre de dés, seuil forcé).
      * @returns Objet RollResult final.
      */
-    static rollFromConfig(config: { defaultDice: string; logic: string; successThreshold?: number; engine?: string }, options?: { modifier?: number; baseCount?: number; gearCount?: number; targetOverwrite?: number; doubleSous?: number }): RollResult {
+    static rollFromConfig(
+        config: {
+            defaultDice: string;
+            logic: string;
+            successThreshold?: number;
+            engine?: string;
+            /**
+             * Le sens du comptage, tel que `jet.sens` le déclare.
+             *
+             * **Il ne voyageait pas, et c'est le même défaut que le sélecteur
+             * ignoré du pupitre** (2026-08-16). `rollFromConfig` ne recevait que
+             * le bloc `dice` du pilote ; `jet.sens` vit à côté, et n'atteignait
+             * donc jamais `rollPool`. Toute réserve déclarée en `count-success`
+             * comptait **au-dessus** du seuil, y compris sur un jeu qui compte
+             * dessous. Seule la famille `2d20` s'en tirait, parce que sa branche
+             * force `under` en dur.
+             *
+             * Absent, on garde `superieur-ou-egal` : c'est la réserve à la
+             * Vampire ou Year Zero, et c'était déjà le comportement.
+             */
+            sens?: 'sous-ou-egal' | 'superieur-ou-egal';
+        },
+        options?: { modifier?: number; baseCount?: number; gearCount?: number; targetOverwrite?: number; doubleSous?: number },
+    ): RollResult {
         // If an engine is specified, prioritize it
         if (config.engine === 'year-zero' || config.engine === 'yze') {
             const count = options?.baseCount ?? (parseInt(config.defaultDice) || 6);
@@ -547,7 +570,9 @@ export class DiceEngine {
 
         switch (config.logic) {
             case 'count-success':
-                return this.rollPool(faces, count, modifier, threshold, false);
+                return this.rollPool(faces, count, modifier, threshold, false, {
+                    sens: config.sens === 'sous-ou-egal' ? 'under' : 'over',
+                });
             case 'highest': {
                 const res = this.rollStandard(faces, count, modifier, false);
                 const max = Math.max(...res.rolls.map(r => typeof r.val === 'number' ? r.val : 0));

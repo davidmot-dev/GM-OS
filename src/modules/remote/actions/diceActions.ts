@@ -50,12 +50,17 @@ const roll = (payload: any) => {
 
     // Le pilote de système prime s'il est explicitement demandé.
     if (p.useSystem && activeDriver) {
-        result = DiceEngine.rollFromConfig(activeDriver.dice, {
-            modifier,
-            baseCount: count,
-            gearCount: p.gearCount || 0,
-            targetOverwrite: target,
-        });
+        // `jet.sens` voyage avec `dice` : la tablette doit résoudre exactement
+        // comme le pupitre du meneur, sens du comptage compris.
+        result = DiceEngine.rollFromConfig(
+            { ...activeDriver.dice, ...(activeDriver.jet?.sens ? { sens: activeDriver.jet.sens } : {}) },
+            {
+                modifier,
+                baseCount: count,
+                gearCount: p.gearCount || 0,
+                targetOverwrite: target,
+            },
+        );
         finalTitle = p.title || `Système (${activeDriver.name})`;
     } else {
         result = rollManually(mode, sides, count, modifier, target, p);
