@@ -109,14 +109,24 @@ const ORDRE_DES_PORTEES = ['contact', 'courte', 'moyenne', 'longue', 'extreme'] 
 const TEXTE_DES_EXEMPLES = GROUPES.map(g => g.exemple).join(' ');
 
 /**
- * Les identifiants qu'une formule d'initiative invoque.
+ * Les identifiants qu'une formule invoque.
  *
  * La notation de dés est retirée d'abord : `1d10` n'est pas un champ de fiche,
  * et le lire comme tel ferait crier le contrôle sur une formule parfaitement
  * valide — un faux positif est le plus sûr moyen de faire ignorer les vrais.
+ *
+ * **LES LETTRES ACCENTUÉES SONT DES LETTRES, et il a fallu une capture pour le
+ * voir.** Le 2026-08-17, la revue de Cthulhu Hack affichait DEUX erreurs pour
+ * une seule formule, « dé_de_vie + 8 » : elle reprochait au pilote d'invoquer
+ * « d », puis « _de_vie ». Ni l'un ni l'autre n'existait — c'était `[a-zA-Z_]`
+ * qui coupait le mot sur son « é ».
+ *
+ * *Un contrôle qui se trompe est pire qu'un contrôle absent* : il envoie
+ * corriger ce qui n'a rien, et il apprend à ne plus le lire. D'où `\p{L}`, qui
+ * tient toutes les langues et pas seulement l'anglais.
  */
 export function champsInvoques(formule: string): string[] {
-    return (formule.replace(/\b\d*d\d+\b/gi, ' ').match(/[a-zA-Z_][a-zA-Z0-9_]*/g) ?? [])
+    return (formule.replace(/\b\d*d\d+\b/gi, ' ').match(/[\p{L}_][\p{L}\p{N}_]*/gu) ?? [])
         .filter((mot, i, tous) => tous.indexOf(mot) === i);
 }
 

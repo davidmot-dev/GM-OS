@@ -582,3 +582,50 @@ describe('le moteur de dés', () => {
         expect(constats.some(c => c.ou === 'dice.logic')).toBe(false);
     });
 });
+
+/**
+ * Ce que ces tests protègent : **un contrôle qui se trompe est pire qu'un
+ * contrôle absent**.
+ *
+ * Le 2026-08-17, la revue de Cthulhu Hack affichait DEUX erreurs pour une seule
+ * formule, « dé_de_vie + 8 » : elle reprochait au pilote d'invoquer « d », puis
+ * « _de_vie ». Ni l'un ni l'autre n'existait — c'était `[a-zA-Z_]` qui coupait
+ * le mot sur son « é ».
+ *
+ * Il envoyait donc corriger ce qui n'avait rien, et il apprenait à ne plus être
+ * lu.
+ */
+describe('champsInvoques et les lettres accentuées', () => {
+    it('ne coupe pas un identifiant sur son accent', () => {
+        expect(champsInvoques('dé_de_vie + 8')).toEqual(['dé_de_vie']);
+    });
+
+    it('tient les autres lettres non anglaises', () => {
+        expect(champsInvoques('força + agilité')).toEqual(['força', 'agilité']);
+    });
+
+    it('retire toujours la notation de dés', () => {
+        expect(champsInvoques('1d10 + agilité')).toEqual(['agilité']);
+        expect(champsInvoques('d6 + constitution')).toEqual(['constitution']);
+    });
+
+    it("ne crie plus sur une formule dont le champ accentué existe", () => {
+        const constats = controlerLePilote(
+            { combat: { santeDeDepart: 'dé_de_vie + 8' } } as never,
+            { sections: [{ id: 'ressources', label: 'Ressources', fields: [{ id: 'dé_de_vie', label: 'Dé de vie', type: 'number' }] }] } as never,
+        );
+
+        expect(constats.filter(c => c.ou === 'combat.santeDeDepart')).toEqual([]);
+    });
+
+    it("crie UNE fois, et sur le vrai nom, quand le champ manque", () => {
+        const constats = controlerLePilote(
+            { combat: { santeDeDepart: 'dé_de_vie + 8' } } as never,
+            { sections: [{ id: 'ressources', label: 'Ressources', fields: [{ id: 'hp', label: 'PV', type: 'number' }] }] } as never,
+        );
+
+        const sante = constats.filter(c => c.ou === 'combat.santeDeDepart');
+        expect(sante).toHaveLength(1);
+        expect(sante[0].message).toContain('« dé_de_vie »');
+    });
+});
