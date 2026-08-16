@@ -179,6 +179,29 @@ export function decrireLaSante(c: PorteurDeSante): string | null {
  * cas l'appelant garde son comportement actuel. *On ne fait pas payer une
  * nouveauté à l'existant.*
  */
+/**
+ * Les identifiants qu'une formule invoque — **l'unique analyseur**.
+ *
+ * **Il y en avait deux, et ils ne disaient pas la même chose.** Celui-ci
+ * acceptait les accents (`À-ÿ`), celui du contrôle du pilote non
+ * (`[a-zA-Z_]`) : le 2026-08-17, la revue de Cthulhu Hack a donc reproché à la
+ * formule « dé_de_vie + 8 » d'invoquer « d » puis « _de_vie », deux fragments
+ * qui n'existaient pas, pendant que l'évaluateur, lui, lisait correctement le
+ * champ entier.
+ *
+ * *Deux chemins vers la même question finissent toujours par ne plus dire la
+ * même chose* — la règle qui a déjà valu son unicité à `interrogerCarnet`. Le
+ * contrôle délègue désormais ici : c'est l'évaluateur qui fait foi, puisque
+ * c'est lui qui joue en séance.
+ *
+ * `\p{L}` plutôt que `À-ÿ` : ce dernier s'arrête au latin-1 et laisserait
+ * tomber un « ā » ou un « ș ».
+ */
+export function champsDUneFormule(formule: string): string[] {
+    return (formule.match(/[\p{L}_][\p{L}\p{N}_]*/gu) ?? [])
+        .filter((m, i, tous) => tous.indexOf(m) === i);
+}
+
 export function santeDeDepart(
     formule: string | undefined,
     lire: (champ: string) => number | undefined,
@@ -187,9 +210,7 @@ export function santeDeDepart(
 
     // Les identifiants sont remplacés du plus long au plus court : sans cela,
     // « force » remplacerait le début de « force_mentale ».
-    const champs = (formule.match(/[a-zA-ZÀ-ÿ_][a-zA-ZÀ-ÿ0-9_]*/g) ?? [])
-        .filter((m, i, tous) => tous.indexOf(m) === i)
-        .sort((a, b) => b.length - a.length);
+    const champs = champsDUneFormule(formule).sort((a, b) => b.length - a.length);
 
     let expression = formule;
     for (const champ of champs) {

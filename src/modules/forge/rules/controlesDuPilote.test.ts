@@ -629,3 +629,47 @@ describe('champsInvoques et les lettres accentuées', () => {
         expect(sante[0].message).toContain('« dé_de_vie »');
     });
 });
+
+/**
+ * Ce que ces tests protègent : **une formule ne s'additionne que sur des
+ * nombres**.
+ *
+ * Cthulhu Hack, 2026-08-17. La dérivation a proposé
+ * `santeDeDepart: "dé_de_vie + 8"` — et le « dé de vie » de ce jeu est une
+ * TAILLE DE DÉ, `d6` ou `d8`. `"d8" + 8` n'est pas une addition.
+ *
+ * Ce que ça coûte : rien de visible. `santeDeDepart` refuse un champ illisible
+ * et rend `null`, l'appelant garde son comportement — donc la santé de départ
+ * ne s'applique jamais, sans un mot. C'est le pire endroit où poser une valeur
+ * fausse : celui où elle ne fait rien.
+ */
+describe('une formule de santé sur un champ non numérique', () => {
+    const avecChamp = (type: string) => controlerLePilote(
+        { combat: { santeDeDepart: 'dé_de_vie + 8' } } as never,
+        { sections: [{ id: 'ressources', label: 'Ressources', fields: [{ id: 'dé_de_vie', label: 'Dé de vie', type }] }] } as never,
+    ).filter(c => c.ou === 'combat.santeDeDepart');
+
+    it('refuse un champ texte, où vit une notation de dé', () => {
+        const constats = avecChamp('text');
+        expect(constats).toHaveLength(1);
+        expect(constats[0].message).toContain('non un nombre');
+    });
+
+    it('accepte un nombre, une jauge ou une note', () => {
+        for (const type of ['number', 'gauge', 'rating']) {
+            expect(avecChamp(type), type).toEqual([]);
+        }
+    });
+
+    it("ne crie pas deux fois pour un champ absent", () => {
+        // L'absence est déjà dite ; y ajouter « et il n'est pas numérique »
+        // serait redondant et ferait douter du reste.
+        const constats = controlerLePilote(
+            { combat: { santeDeDepart: 'inconnu + 8' } } as never,
+            { sections: [{ id: 'x', label: 'X', fields: [] }] } as never,
+        ).filter(c => c.ou === 'combat.santeDeDepart');
+
+        expect(constats).toHaveLength(1);
+        expect(constats[0].message).toContain("d'aucune section");
+    });
+});

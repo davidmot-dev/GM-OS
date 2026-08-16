@@ -3,6 +3,7 @@ import type { HealthSystemType } from '../../../types/entity.types';
 import type { SheetTemplate, SheetSection, SheetFieldType } from '../../../data/defaultSheetTemplates';
 import { sectionDeLaComposante, type SensDuJet } from '../../dice/DescripteurDeJet';
 import { GROUPES } from './GroupesDeChamps';
+import { champsDUneFormule } from '../../combat/logic/SanteDuCombattant';
 
 /**
  * Le pilote se vérifie — axe 4 du plan du 2026-08-11.
@@ -105,6 +106,15 @@ function facesLancees(driver: Partial<GameDriver>): number | undefined {
 /** Les cinq bandes de portée, de la plus proche à la plus lointaine. */
 const ORDRE_DES_PORTEES = ['contact', 'courte', 'moyenne', 'longue', 'extreme'] as const;
 
+/**
+ * Les types de champ qu'une formule peut additionner.
+ *
+ * `rating` en fait partie — c'est un entier borné. `text`, `textarea`, `select`
+ * et `checkbox` non : un « dé de vie » rangé dans un `text` vaut `d8`, et
+ * `"d8" + 8` n'est pas une addition.
+ */
+const TYPES_NUMERIQUES = new Set(['number', 'gauge', 'rating']);
+
 /** Tout ce que les exemples de l'invite montrent — donc tout ce qui peut en être recopié. */
 const TEXTE_DES_EXEMPLES = GROUPES.map(g => g.exemple).join(' ');
 
@@ -115,19 +125,21 @@ const TEXTE_DES_EXEMPLES = GROUPES.map(g => g.exemple).join(' ');
  * et le lire comme tel ferait crier le contrôle sur une formule parfaitement
  * valide — un faux positif est le plus sûr moyen de faire ignorer les vrais.
  *
- * **LES LETTRES ACCENTUÉES SONT DES LETTRES, et il a fallu une capture pour le
- * voir.** Le 2026-08-17, la revue de Cthulhu Hack affichait DEUX erreurs pour
- * une seule formule, « dé_de_vie + 8 » : elle reprochait au pilote d'invoquer
- * « d », puis « _de_vie ». Ni l'un ni l'autre n'existait — c'était `[a-zA-Z_]`
- * qui coupait le mot sur son « é ».
+ * **L'EXTRACTION EST DÉLÉGUÉE À L'ÉVALUATEUR, et il a fallu une capture pour
+ * voir pourquoi.** Le 2026-08-17, la revue de Cthulhu Hack affichait DEUX
+ * erreurs pour une seule formule, « dé_de_vie + 8 » : elle reprochait au pilote
+ * d'invoquer « d », puis « _de_vie ». Ni l'un ni l'autre n'existait — c'était le
+ * `[a-zA-Z_]` d'ici qui coupait le mot sur son « é », pendant que
+ * `SanteDuCombattant`, qui joue vraiment la formule en séance, la lisait
+ * correctement.
  *
- * *Un contrôle qui se trompe est pire qu'un contrôle absent* : il envoie
- * corriger ce qui n'a rien, et il apprend à ne plus le lire. D'où `\p{L}`, qui
- * tient toutes les langues et pas seulement l'anglais.
+ * Deux analyseurs pour la même question, dont un seul avait raison. *Un contrôle
+ * qui se trompe est pire qu'un contrôle absent* : il envoie corriger ce qui n'a
+ * rien, et il apprend à ne plus être lu. On ne garde donc que celui qui fait
+ * foi — l'évaluateur.
  */
 export function champsInvoques(formule: string): string[] {
-    return (formule.replace(/\b\d*d\d+\b/gi, ' ').match(/[\p{L}_][\p{L}\p{N}_]*/gu) ?? [])
-        .filter((mot, i, tous) => tous.indexOf(mot) === i);
+    return champsDUneFormule(formule.replace(/\b\d*d\d+\b/gi, ' '));
 }
 
 /**
@@ -149,6 +161,8 @@ export function controlerLePilote(
     const idsDeSections = new Set(sections.map(s => s.id));
     const champsParSection = new Map(sections.map(s => [s.id, new Set((s.fields ?? []).map(f => f.id))]));
     const tousLesChamps = new Set(sections.flatMap(s => (s.fields ?? []).map(f => f.id)));
+    /** Le type déclaré de chaque champ — une formule ne s'évalue que sur des nombres. */
+    const typeDuChamp = new Map(sections.flatMap(s => (s.fields ?? []).map(f => [f.id, f.type as string])));
     const ressources = new Set((driver.ressourcesDeTable ?? []).map(r => r.id));
 
     /*
@@ -506,6 +520,32 @@ export function controlerLePilote(
                 'combat.santeDeDepart',
                 `La santé de départ « ${formuleDeSante} » invoque « ${champ} », qui n'est un champ ` +
                 "d'aucune section de la fiche : chaque personnage naîtrait au minimum.",
+            );
+            continue;
+        }
+        /*
+          **Un champ existant ne suffit pas : il faut qu'il porte un NOMBRE.**
+
+          Relevé sur Cthulhu Hack le 2026-08-17. La dérivation a proposé
+          `santeDeDepart: "dé_de_vie + 8"` — et le « dé de vie » de ce jeu est
+          une taille de dé, `d6` ou `d8`, pas un entier. `"d8" + 8` n'est pas une
+          addition.
+
+          Ce que ça coûte : rien de visible. `santeDeDepart` refuse un champ
+          illisible et rend `null`, l'appelant garde son comportement — donc la
+          santé de départ ne s'applique **jamais**, sans un mot. C'est le pire
+          endroit où poser une valeur fausse : celui où elle ne fait rien.
+
+          Le type se lit sur la fiche, donc le contrôle peut trancher ici plutôt
+          que d'attendre la première création de personnage.
+        */
+        const type = typeDuChamp.get(champ);
+        if (type && !TYPES_NUMERIQUES.has(type)) {
+            erreur(
+                'combat.santeDeDepart',
+                `La santé de départ « ${formuleDeSante} » invoque « ${champ} », qui est un champ ` +
+                `« ${type} » et non un nombre. La formule ne s'évaluera jamais, et la santé de ` +
+                'départ restera sans effet — silencieusement.',
             );
         }
     }
