@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { forgerLaCampagne, vocabulaireDuProjet, projetVide } from './ForgeDeCampagne';
+import { forgerLaCampagne, vocabulaireDuProjet, projetVide, etablirLesActes } from './ForgeDeCampagne';
 import { GROUPES_DE_LA_TRAME } from './GroupesDeLaTrame';
 import type { FicheDeCampagneLue } from './lectureDesFiches';
 
@@ -18,7 +18,13 @@ const fiche = (sujet: string, contenu: string, partie?: string): FicheDeCampagne
 /** Un corpus complet et minuscule, deux actes, tous les sujets couverts. */
 const CORPUS: FicheDeCampagneLue[] = [
     fiche('Pitch et ton', 'Une enquête vénitienne.'),
-    fiche('Structure en actes', 'Acte I — Arlequin. Acte II — Italie.'),
+    // Un vrai tableau de structure, colonne « Sections » comprise : c'est elle
+    // qui a produit trente actes fantômes le 2026-08-16.
+    fiche('Structure en actes',
+        'Ordre | Titre exact | Enjeu | Sections\n'
+        + '--- | --- | --- | ---\n'
+        + '1 | Arlequin | On entre. | `Introduction` ; `Explorer l\'usine` ; `Bilan`\n'
+        + '2 | Italie | On creuse. | `Les appartements` ; `Le Sea-You`\n'),
     fiche('Lieux majeurs', "L'Hôtel Artemide."),
     fiche('Factions et organisations', 'La Confrérie.'),
     fiche('Personnages non joueurs', 'Arlequin.', 'Arlequin'),
@@ -160,8 +166,73 @@ describe('forgerLaCampagne', () => {
             onProgres: a => vus.push({ groupe: a.groupe.id, total: a.total }),
         });
 
-        // Neuf groupes, deux d'entre eux forgés deux fois : onze passes.
-        expect(vus[vus.length - 1].total).toBe(11);
+        // Huit groupes servis à un modèle, deux d'entre eux forgés une fois par
+        // acte : dix passes. Les actes, eux, ne coûtent aucun appel.
+        expect(vus[vus.length - 1].total).toBe(10);
+    });
+});
+
+/**
+ * Ce que ces tests protègent : **la colonne « Sections » n'est pas une liste
+ * d'actes**.
+ *
+ * Le défaut du 2026-08-16, et il était total. Les actes se forgeaient comme les
+ * autres groupes : on servait la fiche de structure à un modèle. Cette fiche est
+ * un tableau à quatre colonnes, dont la dernière énumère les titres de chapitre
+ * du livre — le modèle l'a aplatie. Trente actes nommés « Introduction »,
+ * « Explorer l'usine », « Le Sea-You », et les soixante passes de PNJ et de
+ * scènes qui ont suivi sont toutes tombées à vide, faute de fiche portant ces
+ * titres en `partie:`.
+ *
+ * *On demande au carnet ce qu'il sait produire, on fabrique localement ce qui
+ * doit être exact.*
+ */
+describe('etablirLesActes', () => {
+    it('lit la colonne des titres, jamais celle des sections', () => {
+        const { actes, lacune } = etablirLesActes(CORPUS);
+
+        expect(actes.map(a => a.titre)).toEqual(['Arlequin', 'Italie']);
+        expect(actes[0].resume).toBe('On entre.');
+        expect(lacune).toBeUndefined();
+    });
+
+    it("ne fait entrer aucun titre de section dans les actes", () => {
+        const titres = etablirLesActes(CORPUS).actes.map(a => a.titre);
+
+        for (const section of ['Introduction', "Explorer l'usine", 'Bilan', 'Le Sea-You']) {
+            expect(titres, `« ${section} » est une section, pas un acte`).not.toContain(section);
+        }
+    });
+
+    it("rend des titres identiques au « partie: » des fiches", () => {
+        // C'est la garantie que la lecture locale apporte et qu'un modèle ne
+        // pouvait pas donner : la même fonction a produit les deux.
+        const actes = etablirLesActes(CORPUS).actes.map(a => a.titre);
+        const parties = [...new Set(CORPUS.map(f => f.partie).filter(Boolean))];
+
+        expect(actes).toEqual(parties);
+    });
+
+    it('retombe sur le « partie: » des fiches quand la structure manque, et le dit', () => {
+        const sansStructure = CORPUS.filter(f => f.sujet !== 'Structure en actes');
+        const { actes, lacune } = etablirLesActes(sansStructure);
+
+        expect(actes.map(a => a.titre)).toEqual(['Arlequin', 'Italie']);
+        expect(actes.every(a => !a.resume)).toBe(true);
+        expect(lacune?.consequence).toContain('enjeu');
+    });
+
+    it("le dit autrement quand la structure existe mais ne se lit pas", () => {
+        const illisible = [
+            fiche('Structure en actes', 'Le livre se découpe en trois temps, sans plus de détail.'),
+            ...CORPUS.filter(f => f.sujet !== 'Structure en actes'),
+        ];
+
+        expect(etablirLesActes(illisible).lacune?.consequence).toContain("n'a pas pu être lue");
+    });
+
+    it('rend une liste vide quand rien ne permet de les établir', () => {
+        expect(etablirLesActes([fiche('Pitch et ton', 'x')])).toEqual({ actes: [] });
     });
 });
 

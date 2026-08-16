@@ -205,14 +205,17 @@ function liste(clef: string, item: Record<string, unknown>, requis: string[]): R
 const CHAINES = { type: 'array', items: { type: 'string' } } as const;
 
 /**
- * Les neuf groupes, **dans l'ordre de leurs dépendances**.
+ * Les huit groupes servis à un modèle, **dans l'ordre de leurs dépendances**.
  *
- * **Le neuvième — `savoir` — ne figurait pas au plan du 2026-08-15**, qui en
- * comptait huit. Sans lui, deux sujets du canevas sur dix ne se projettent nulle
- * part : « Amorces et accroches » et « Menaces et progression », tous deux
- * destinés à `WikiEntry` d'après le § 6.1 du même plan. Une fiche payée au
- * carnet et jamais projetée est précisément ce que le canevas s'interdisait en
- * ne retenant que des sujets dérivés de ce que le code consomme.
+ * Les **actes** n'y sont pas : ils se lisent localement, avant la boucle. Voir
+ * le commentaire en tête de la liste.
+ *
+ * **`savoir` ne figurait pas au plan du 2026-08-15.** Sans lui, deux sujets du
+ * canevas sur dix ne se projettent nulle part : « Amorces et accroches » et
+ * « Menaces et progression », tous deux destinés à `WikiEntry` d'après le § 6.1
+ * du même plan. Une fiche payée au carnet et jamais projetée est précisément ce
+ * que le canevas s'interdisait en ne retenant que des sujets dérivés de ce que
+ * le code consomme.
  *
  * *Les horloges de progression, elles, restent à trancher* (§ 10 du plan) : une
  * horloge se coche en séance, c'est un état et non une entrée d'encyclopédie. En
@@ -248,33 +251,25 @@ export const GROUPES_DE_LA_TRAME: readonly GroupeDeLaTrame[] = [
             + 'Le ton et le registre vont dans le synopsis : ils n\'ont pas de champ à eux',
         exemple: '{"campagne":{"name":"<le titre de la campagne>","description":"<le pitch, en deux ou trois phrases>","synopsis":"<l\'intrigue et le ton, un paragraphe>"}}',
     },
-    {
-        /**
-         * **La colonne vertébrale, et le seul groupe dont la fiche source n'est
-         * pas une fiche de canevas.** La structure a son gabarit propre à
-         * l'Atelier ; elle n'est écrite comme fiche que depuis le 2026-08-16.
-         * Sur un corpus antérieur — celui de Milo — elle est absente, et seuls
-         * les titres survivent, portés par le `partie:` des fiches par acte. Le
-         * service comble alors avec ces titres et **le dit**, plutôt que de
-         * demander au modèle d'inventer des enjeux.
-         */
-        id: 'actes',
-        label: 'Les actes',
-        sujets: ['Structure en actes'],
-        schema: () => liste('actes', {
-            titre: { type: 'string' },
-            resume: { type: 'string' },
-            notesDuMeneur: { type: 'string' },
-        }, ['titre']),
-        cible: () =>
-            '"actes" : LA LISTE ORDONNÉE des grandes parties de la campagne, de la première à la '
-            + 'dernière. Pour chacune : "titre" (exactement comme le livre la nomme — n\'y ajoute '
-            + 'ni numéro ni reformulation si le livre n\'en met pas), "resume" (l\'enjeu qui s\'y '
-            + 'joue, une ou deux phrases) et "notesDuMeneur" si les fiches disent quelque chose que '
-            + 'seul le meneur doit savoir. N\'invente aucune partie que les fiches ne nomment pas, '
-            + 'et n\'en fusionne aucune',
-        exemple: '{"actes":[{"titre":"<le titre exact de la première partie>","resume":"<l\'enjeu de cette partie>"},{"titre":"<le titre de la suivante>","resume":"<son enjeu>"}]}',
-    },
+    /*
+      **LES ACTES NE SONT PAS UN GROUPE, et ils l'ont été une journée.**
+
+      Le 2026-08-16, ils se forgeaient comme les autres : on servait la fiche de
+      structure à un modèle en lui demandant la liste des parties. Or cette fiche
+      est un **tableau à quatre colonnes**, dont la dernière énumère les titres de
+      chapitre du livre. Sur « Le secret de Milo », le modèle a aplati cette
+      colonne : trente actes nommés « Introduction », « Explorer l'usine »,
+      « Le Sea-You »… Aucune fiche ne portant ces titres en `partie:`, les
+      soixante passes de PNJ et de scènes qui ont suivi sont tombées à vide.
+
+      `lireLaStructure` fait ce travail exactement, de façon déterministe — et
+      c'est ELLE qui a produit les `partie:` des fiches au moment de l'atelier.
+      La relire garantit des titres identiques au caractère près. Voir
+      `etablirLesActes`, appelée avant la boucle.
+
+      *On demande au carnet ce qu'il sait produire, on fabrique localement ce qui
+      doit être exact.*
+    */
     {
         /**
          * **Les actes ne sont PAS injectés ici, contrairement au § 6.2 du plan.**

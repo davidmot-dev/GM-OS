@@ -32,10 +32,12 @@ describe("l'ordre des groupes", () => {
     it('ne laisse aucun groupe désigner ce qu\'un groupe ultérieur produit', () => {
         /** Ce que chaque groupe met à disposition des suivants. */
         const produit: Record<string, string> = {
-            actes: 'actes', lieux: 'lieux', factions: 'factions', pnj: 'pnj', indices: 'indices',
+            lieux: 'lieux', factions: 'factions', pnj: 'pnj', indices: 'indices',
         };
 
-        const disponibles = new Set<string>();
+        // Les actes ne sont pas un groupe : `etablirLesActes` les lit localement
+        // AVANT la boucle, donc ils sont disponibles d'emblée.
+        const disponibles = new Set<string>(['actes']);
         for (const g of GROUPES_DE_LA_TRAME) {
             for (const axe of g.designe ?? []) {
                 expect(
@@ -53,14 +55,28 @@ describe("l'ordre des groupes", () => {
         expect(ids.indexOf('indices')).toBeGreaterThan(ids.indexOf('pnj'));
         expect(ids.indexOf('pnj')).toBeGreaterThan(ids.indexOf('lieux'));
     });
+
+    /**
+     * **Aucun groupe ne réclame la structure, et c'est le correctif du
+     * 2026-08-16.** Servie à un modèle, sa fiche — un tableau à quatre colonnes
+     * dont la dernière liste les titres de chapitre du livre — a rendu trente
+     * actes nommés « Introduction », « Explorer l'usine », « Le Sea-You ». Elle
+     * se lit désormais localement, avec la fonction qui a produit les `partie:`.
+     */
+    it('ne demande jamais la structure à un modèle', () => {
+        expect(GROUPES_DE_LA_TRAME.flatMap(g => g.sujets)).not.toContain('Structure en actes');
+        expect(GROUPES_DE_LA_TRAME.map(g => g.id)).not.toContain('actes');
+    });
 });
 
 describe('la couverture du canevas', () => {
-    it('projette tous les sujets du canevas, sauf celui des règles', () => {
+    it('projette tous les sujets du canevas, sauf les deux qui ne passent pas par un modèle', () => {
         const reclames = new Set(GROUPES_DE_LA_TRAME.flatMap(g => g.sujets));
         const attendus = CANEVAS_DE_CAMPAGNE
             .map(s => s.clef)
-            .filter(clef => clef !== CLEF_DES_REGLES_PROPRES);
+            // Les règles n'alimentent aucun objet de jeu (décision du 2026-08-15) ;
+            // la structure se lit localement (`etablirLesActes`, 2026-08-16).
+            .filter(clef => clef !== CLEF_DES_REGLES_PROPRES && clef !== 'Structure en actes');
 
         for (const clef of attendus) {
             expect(reclames.has(clef), `aucun groupe ne consomme « ${clef} »`).toBe(true);

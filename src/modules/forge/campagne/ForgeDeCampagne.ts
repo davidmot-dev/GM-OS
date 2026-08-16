@@ -23,6 +23,7 @@ import {
     type GroupeDeLaTrame, type VocabulaireDeLaTrame,
 } from './GroupesDeLaTrame';
 import { partiesDesFiches, type FicheDeCampagneLue } from './lectureDesFiches';
+import { lireLaStructure } from './structureDeCampagne';
 import { normaliser } from '../rules/canevas';
 
 // ─────────────────────────────────────────────
@@ -295,6 +296,71 @@ export interface OptionsDeForge {
 }
 
 /**
+ * Les actes, **lus localement et jamais demandés à un modèle**.
+ *
+ * **Le défaut du 2026-08-16, et il était total.** Les actes étaient un groupe
+ * comme les autres : on servait la fiche de structure à un modèle en lui
+ * demandant la liste des parties. Or cette fiche est un **tableau à quatre
+ * colonnes**, dont la dernière énumère les titres de chapitre du livre. Sur « Le
+ * secret de Milo », le modèle a aplati cette colonne : trente actes nommés
+ * « Introduction », « Explorer l'usine », « Le Sea-You »… Aucune fiche ne
+ * portant ces titres en `partie:`, les soixante passes de PNJ et de scènes qui
+ * ont suivi sont toutes tombées à vide.
+ *
+ * **`lireLaStructure` sait déjà faire ce travail, exactement.** Elle est
+ * déterministe, testée, connaît les trois formes que le carnet emploie — et
+ * surtout, **c'est elle qui a produit les `partie:` des fiches** au moment de
+ * l'atelier. Relire la même fiche avec la même fonction garantit des titres
+ * identiques au caractère près : l'appariement acte ↔ fiches cesse d'être un
+ * pari sur la constance du modèle.
+ *
+ * *On demande au carnet ce qu'il sait produire, on fabrique localement ce qui
+ * doit être exact.* La règle était écrite dans `ServiceDeCampagne` ; je ne l'ai
+ * pas appliquée ici.
+ */
+export function etablirLesActes(
+    fiches: readonly FicheDeCampagneLue[],
+): { actes: ActeProjete[]; lacune?: LacuneDeForge } {
+    const structure = fiches.find(f => normaliser(f.sujet) === normaliser('Structure en actes'));
+
+    if (structure) {
+        const lus = lireLaStructure(structure.contenu);
+        if (lus.length > 0) {
+            return {
+                actes: lus.map(a => ({
+                    titre: a.titre,
+                    ...(a.enjeu ? { resume: a.enjeu } : {}),
+                })),
+            };
+        }
+    }
+
+    /*
+      **Le repli sur le `partie:` des fiches**, pour tout corpus antérieur au
+      2026-08-16 : l'Atelier lisait la structure et la gardait en mémoire. Les
+      titres survivent — chaque fiche par acte porte le sien —, les enjeux non.
+      On comble donc les titres et on l'ANNONCE, plutôt que de faire inventer un
+      enjeu. *Un acte sans enjeu se corrige à la main en trente secondes ; un
+      enjeu inventé se joue.*
+    */
+    const titres = partiesDesFiches(fiches);
+    if (titres.length === 0) return { actes: [] };
+
+    return {
+        actes: titres.map(titre => ({ titre })),
+        lacune: {
+            quoi: "les actes ont été reconstitués depuis le « partie: » des fiches",
+            consequence: structure
+                ? "la fiche de structure existe mais n'a pas pu être lue : ses enjeux sont perdus, "
+                  + 'les titres viennent des fiches. À relire à la main.'
+                : "leurs titres sont justes, mais leur enjeu est vide : la structure n'a pas été "
+                  + "enregistrée par l'Atelier. À écrire à la main, ou à reforger après une "
+                  + 'nouvelle lecture de la structure.',
+        },
+    };
+}
+
+/**
  * Projette les fiches d'une campagne en objets de jeu.
  *
  * Ne lève jamais sur une passe ratée : un groupe qui échoue est consigné et les
@@ -319,7 +385,17 @@ export async function forgerLaCampagne(
             lite: true, sansPersona: true, schema,
         }));
 
-    /** Les actes connus à l'instant t — d'abord aucun, puis ceux que le groupe `actes` a rendus. */
+    /*
+      **Les actes sont établis AVANT la boucle, et sans appel au modèle.** Ils ne
+      sortent pas d'une invite : ils se lisent dans la fiche de structure avec la
+      fonction qui a produit le `partie:` des fiches. C'est ce qui rend
+      l'appariement acte ↔ fiches exact par construction.
+    */
+    const structure = etablirLesActes(fiches);
+    projet.actes.push(...structure.actes);
+    if (structure.lacune) lacunes.push(structure.lacune);
+
+    /** Les actes connus. Fixés d'emblée : plus rien ne les fait varier en cours de route. */
     const actesConnus = () => projet.actes.map(a => a.titre).filter(Boolean);
 
     const total = () => {
@@ -329,18 +405,6 @@ export async function forgerLaCampagne(
     };
 
     for (const [index, groupe] of groupes.entries()) {
-        /*
-          **Les actes se comblent depuis le `partie:` des fiches** quand la
-          structure n'est pas sur le disque. C'est le cas de tout corpus antérieur
-          au 2026-08-16, celui de Milo compris : l'Atelier lisait la structure et
-          la gardait en mémoire. Les titres survivent — chaque fiche par acte
-          porte le sien —, les enjeux non.
-
-          On comble donc les titres et on **annonce** que les enjeux manquent,
-          plutôt que de demander au modèle de les inventer à partir de fiches qui
-          ne les portent pas. *Un acte sans enjeu se corrige à la main en trente
-          secondes ; un enjeu inventé se joue.*
-        */
         const passes: (string | undefined)[] = groupe.parActe
             ? (actesConnus().length > 0 ? actesConnus() : [undefined])
             : [undefined];
@@ -364,13 +428,11 @@ export async function forgerLaCampagne(
                 // Une passe sans fiche ne part pas : l'appel coûterait des
                 // minutes pour que le modèle comble un vide, ce qui est
                 // l'inverse exact du but de la Forge.
-                if (groupe.id !== 'actes') {
-                    echecs.push({
-                        groupe: groupe.id,
-                        ...(acte ? { acte } : {}),
-                        raison: 'aucune fiche ne couvre ce sujet',
-                    });
-                }
+                echecs.push({
+                    groupe: groupe.id,
+                    ...(acte ? { acte } : {}),
+                    raison: 'aucune fiche ne couvre ce sujet',
+                });
                 continue;
             }
 
@@ -414,22 +476,6 @@ export async function forgerLaCampagne(
                 echecs.push({ groupe: restant.id, raison: 'forge interrompue avant ce groupe' });
             }
             break;
-        }
-
-        // Le comblement se fait APRÈS la passe du groupe `actes` : elle peut
-        // avoir réussi, auquel cas il n'y a rien à combler.
-        if (groupe.id === 'actes' && projet.actes.length === 0) {
-            const titres = partiesDesFiches(fiches);
-            if (titres.length > 0) {
-                projet.actes.push(...titres.map(titre => ({ titre })));
-                lacunes.push({
-                    quoi: "les actes ont été reconstitués depuis le « partie: » des fiches",
-                    consequence:
-                        "leurs titres sont justes, mais leur enjeu est vide : la structure n'a pas "
-                        + "été enregistrée par l'Atelier. À écrire à la main, ou à reforger après "
-                        + 'une nouvelle lecture de la structure.',
-                });
-            }
         }
     }
 
