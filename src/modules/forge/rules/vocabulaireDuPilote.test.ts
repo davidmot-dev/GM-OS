@@ -143,3 +143,49 @@ describe('les valeurs que le moteur impose', () => {
     expect(jet.cible).toContain('"superieur-ou-egal"');
   });
 });
+
+/**
+ * Ce que ces tests protègent : **les deux exigences qu'on ne rattrape pas
+ * ensuite restent en tête de la cible du groupe `jet`**.
+ *
+ * Le 2026-08-16, j'y ai inséré au milieu les mises en garde sur `2d20` et
+ * `d100-low`. La dérivation suivante a corrigé le moteur — et rendu `jet.seuil`
+ * VIDE, là où la précédente donnait au moins une entrée. *Une consigne noyée est
+ * une consigne perdue.*
+ *
+ * Ces deux-là ne se rattrapent pas à la revue comme une énumération : un seuil
+ * absent, c'est un jeu qu'on ne peut pas lancer, et un sens inversé ne se voit
+ * jamais en séance.
+ */
+describe('la cible du groupe « jet »', () => {
+    const jet = GROUPES.find(g => g.id === 'jet')!;
+
+    it('nomme le seuil et le sens avant les énumérations', () => {
+        const rangSeuil = jet.cible.indexOf('"jet.seuil"');
+        const rangSens = jet.cible.indexOf('"jet.sens"');
+        const rangEnums = jet.cible.indexOf('vaut EXACTEMENT');
+
+        expect(rangSeuil).toBeGreaterThan(-1);
+        expect(rangSens).toBeGreaterThan(-1);
+        expect(rangSeuil, 'le seuil passe avant les énumérations').toBeLessThan(rangEnums);
+        expect(rangSens, 'le sens passe avant les énumérations').toBeLessThan(rangEnums);
+    });
+
+    it('exige TOUTES les valeurs de seuil, pas une', () => {
+        expect(jet.cible).toContain('TOUTES LES VALEURS');
+    });
+
+    it('dit que « sous-ou-egal » sans seuil ne veut rien dire', () => {
+        expect(jet.cible).toContain('SANS seuil ne veut rien dire');
+    });
+
+    it('distingue la famille 2d20 du fait de lancer un d20', () => {
+        expect(jet.cible).toContain('FAMILLE MODIPHIUS');
+        expect(jet.cible).toContain('Dans le doute, "standard"');
+    });
+
+    it("interdit la forme « section.champ » dans la santé de départ", () => {
+        const defaite = GROUPES.find(g => g.id === 'defaite')!;
+        expect(defaite.cible).toContain('section.champ');
+    });
+});

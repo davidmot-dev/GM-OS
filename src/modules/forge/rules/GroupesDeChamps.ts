@@ -279,36 +279,48 @@ export const GROUPES: readonly GroupeDeChamps[] = [
          * d'équipement — existe et n'aurait jamais été appelé. Une table
          * lançant des dés génériques toute une séance, sans un mot.
          */
+        /*
+          **L'ORDRE DE CETTE CIBLE EST DÉLIBÉRÉ, et il vient d'une régression.**
+
+          Le 2026-08-16, j'y ai ajouté les mises en garde sur `2d20` et
+          `d100-low` — au milieu. La dérivation suivante a corrigé le moteur…
+          et rendu `jet.seuil` VIDE, là où la précédente donnait au moins une
+          entrée. Une consigne noyée est une consigne perdue.
+
+          Les deux exigences qu'on ne peut pas rattraper ensuite passent donc en
+          TÊTE, courtes ; les énumérations, qui se vérifient d'un coup d'œil à la
+          revue, viennent après. C'est le même raisonnement qui place
+          `blocDuVocabulaire` juste après la tâche : *la contrainte la plus dure
+          ne doit pas se noyer.*
+        */
         cible:
-            '"driver" avec seulement dice et jet. "dice.logic" vaut EXACTEMENT l\'une de ces valeurs : ' +
-            'sum, highest, lowest, count-success, d100-low, d100-high. ' +
-            '**"d100-low" ET "d100-high" NE VALENT QUE POUR LES SYSTÈMES EN POURCENTAGE** : ils ' +
-            'lancent un d100, quoi que dise "defaultDice". Ne les choisis que si le jeu jette ' +
-            'vraiment des dés à cent faces. ' +
-            '**UN JEU QUI LANCE UN SEUL DÉ SOUS UNE VALEUR DE LA FICHE** — « lance 1d20 sous ta ' +
-            'Sauvegarde » — prend "count-success" avec "defaultDice" à "1d20" et ' +
-            '"jet.sens" à "sous-ou-egal" : un dé lancé, réussite s\'il passe sous le seuil. ' +
-            '"dice.engine" NOMME LA FAMILLE DU MOTEUR et vaut EXACTEMENT l\'une de ces valeurs : ' +
-            'standard, formula, pool, pool_explode, threshold, advantage, disadvantage, exploding, ' +
-            'fate, rolemaster, yze, 2d20. Les fiches nomment souvent la famille en toutes lettres ' +
-            '(« Year Zero Engine » donne yze, « système 2d20 de Modiphius » donne 2d20). ' +
-            '**"2d20" DÉSIGNE LA FAMILLE MODIPHIUS** — Dune, Star Trek Adventures, Conan —, où l\'on ' +
-            'lance PLUSIEURS d20 et où l\'on COMPTE les dés passés sous un seuil. Ce n\'est PAS ' +
-            '« le jeu utilise un dé à vingt faces » : un jeu qui lance UN SEUL d20 prend ' +
-            '"standard", même si ce dé a vingt faces. Dans le doute, "standard". ' +
-            'C\'est ce champ qui bascule le pupitre de dés dans le bon mode. ' +
-            'POUR "jet.sens", LIS BIEN LES FICHES : mets "superieur-ou-egal" si le jeu compte les dés ' +
-            'qui ATTEIGNENT OU DÉPASSENT une valeur (« chaque six est une réussite »), et ' +
-            '"sous-ou-egal" s\'il compte ceux qui restent SOUS un seuil lu sur la fiche ' +
-            '(« chaque dé sous la compétence est une réussite »). Les deux se ressemblent et ' +
-            's\'inversent : un jet résolu à l\'envers ne se voit jamais en séance. ' +
-            '"jet.reserve" décrit le nombre de dés lancés. Ses bornes ("base", "max", "faces") ' +
-            'sont des NOMBRES. **SI LE JEU COMPOSE SA RÉSERVE À PARTIR DE LA FICHE** — « lance ' +
-            'autant de dés que la somme de ton attribut et de ta compétence » —, N\'ÉCRIS PAS ' +
-            'CETTE SOMME DANS "base" : mets "base" à 0 et donne une entrée dans ' +
-            '"reserve.composantes" PAR VALEUR INVOQUÉE, chacune avec son "id", son "label" et le ' +
-            '"sectionId" de la section où le joueur la choisit — exactement la forme de ' +
-            '"jet.seuil". Un jeu à réserve laisse alors "seuil" vide',
+            '"driver" avec seulement dice et jet. ' +
+            'DEUX EXIGENCES D\'ABORD, le reste ensuite. ' +
+            '**(1) "jet.seuil" LISTE TOUTES LES VALEURS DE LA FICHE QUE LE JOUEUR PEUT CHOISIR** — ' +
+            'si la fiche porte six Sauvegardes, les SIX y sont, chacune avec son "id", son "label" ' +
+            'et le "sectionId" de la section où elle se lit. Une seule entrée signifierait qu\'on ne ' +
+            'peut jamais jeter que celle-là. Un jeu dont la réserve se compose depuis la fiche ' +
+            'laisse "seuil" vide et remplit "reserve.composantes" à la place — l\'un ou l\'autre, ' +
+            'jamais ni l\'un ni l\'autre. ' +
+            '**(2) "jet.sens" vaut "superieur-ou-egal"** si le jeu compte les dés qui ATTEIGNENT OU ' +
+            'DÉPASSENT une valeur (« chaque six est une réussite »), **"sous-ou-egal"** s\'il compte ' +
+            'ceux qui restent SOUS un seuil lu sur la fiche (« lance sous ta Sauvegarde »). ' +
+            'Les deux se ressemblent et s\'inversent : un jet résolu à l\'envers ne se voit jamais ' +
+            'en séance. Et "sous-ou-egal" SANS seuil ne veut rien dire — sous quoi ? ' +
+            'ENSUITE, les valeurs imposées. ' +
+            '"dice.logic" vaut EXACTEMENT : sum, highest, lowest, count-success, d100-low, ' +
+            'd100-high. "d100-low" et "d100-high" lancent un d100 quoi que dise "defaultDice" : ne ' +
+            'les choisis que sur un vrai système en pourcentage. Un jeu qui lance UN SEUL dé sous ' +
+            'une valeur de la fiche prend "count-success" avec "defaultDice" à "1d20". ' +
+            '"dice.engine" NOMME LA FAMILLE et vaut EXACTEMENT : standard, formula, pool, ' +
+            'pool_explode, threshold, advantage, disadvantage, exploding, fate, rolemaster, yze, ' +
+            '2d20. "2d20" désigne la FAMILLE MODIPHIUS — Dune, Star Trek, Conan —, où l\'on lance ' +
+            'PLUSIEURS d20 en comptant les réussites ; ce n\'est pas « le jeu utilise un d20 ». ' +
+            'Un jeu qui n\'en lance qu\'un prend "standard". Dans le doute, "standard". ' +
+            '"jet.reserve" décrit le nombre de dés lancés ; ses bornes ("base", "max", "faces") ' +
+            'sont des NOMBRES. Si la réserve se compose depuis la fiche — « autant de dés que la ' +
+            'somme de ton attribut et de ta compétence » —, mets "base" à 0 et donne une entrée ' +
+            'dans "reserve.composantes" PAR VALEUR INVOQUÉE, même forme que "jet.seuil"',
         exemple: '{"driver":{"dice":{"defaultDice":"2d20","logic":"count-success","engine":"2d20"},"jet":{"seuil":[{"id":"competence","label":"Compétence","sectionId":"competences"},{"id":"principe","label":"Principe","sectionId":"principes"}],"reserve":{"base":2,"max":5,"faces":20,"cout":[1,2,3],"ressource":"impulsion"},"sens":"sous-ou-egal","critique":1,"complication":20,"difficulte":{"min":0,"max":5,"defaut":1}}}}',
     },
     {
@@ -368,6 +380,9 @@ export const GROUPES: readonly GroupeDeChamps[] = [
             'combat.tacheDeDefaite et combat.damageTypes. ' +
             '"combat.santeDeDepart" dit OÙ LIRE LA SANTÉ DE DÉPART SUR LA FICHE, sous forme de ' +
             'formule portant des identifiants de champs — « force », ou « (force + agilite) / 2 ». ' +
+            '**N\'ÉCRIS JAMAIS "section.champ"** : « ressources.points_de_vie » ne désigne rien, ' +
+            'seul l\'identifiant du CHAMP compte, donc « points_de_vie ». La section ne s\'écrit ' +
+            'pas dans une formule. ' +
             'Ne le donne QUE si les fiches disent que la santé de départ se calcule depuis des ' +
             'caractéristiques du personnage. Si le jeu fixe le même nombre pour tous, ou n\'a pas ' +
             'de points de santé, OMETS-LE. N\'y écris jamais un nombre seul. ' +
