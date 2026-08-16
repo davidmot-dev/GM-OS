@@ -71,6 +71,39 @@ export function retirerLaNumerotation(valeur: string): string {
 }
 
 /**
+ * Retire une alternative entre parenthèses qui **redit le titre**.
+ *
+ * **Le défaut, sur la charge réelle du 2026-08-16.** Relancée sur « Le secret de
+ * Milo », la structure a rendu
+ * `**Scénario 3: Voyage en Mésopotamie** (ou **Voyage en Mésopotamie**)` là où
+ * la lecture d'août donnait `Scénario 3: Voyage en Mésopotamie`. Le carnet
+ * offrait poliment les deux façons dont le livre nomme ce scénario.
+ *
+ * Ce qu'a coûté cette politesse : **le titre borne tout**. Il devient le
+ * `partie:` des fiches, donc leur slug, donc l'acte que la Forge apparie. Deux
+ * titres pour un acte, et le corpus s'est retrouvé avec **deux jeux de fiches**
+ * pour le scénario 3 — l'un des deux ignoré en silence par la Forge, les deux
+ * indexés par l'Oracle. Rien ne plantait.
+ *
+ * **On ne coupe que ce qui n'apporte RIEN** : l'alternative doit être contenue
+ * dans le titre, ou le contenir. « Acte 2 (ou Chapitre 2) » désigne bien deux
+ * dénominations distinctes et reste intact — le doute penche du côté de ne rien
+ * toucher, comme partout où l'on nettoie ce que le carnet a écrit.
+ */
+export function retirerLAlternativeRedondante(titre: string): string {
+    const nu = titre.trim();
+    const trouve = /^(.*?)\s*\(\s*ou\s+(.+?)\s*\)$/i.exec(nu);
+    if (!trouve) return nu;
+
+    const principal = trouve[1].trim();
+    const alternative = sansAccent(trouve[2]);
+    if (!principal || !alternative) return nu;
+
+    const socle = sansAccent(principal);
+    return socle.includes(alternative) || alternative.includes(socle) ? principal : nu;
+}
+
+/**
  * Les cellules d'une ligne de tableau markdown, barres extérieures ôtées.
  *
  * **Les barres extérieures sont facultatives, et le carnet s'en sert.** Sans
@@ -126,7 +159,9 @@ export function lireLaStructure(contenu: string): ActeLu[] {
     const vus = new Set<string>();
 
     const ajouter = (titre: string, enjeu: string, sections: string[]) => {
-        const propre = retirerLaNumerotation(titre).replace(/^[«"'`\s]+|[»"'`\s]+$/g, '').trim();
+        const propre = retirerLAlternativeRedondante(
+            retirerLaNumerotation(titre).replace(/^[«"'`\s]+|[»"'`\s]+$/g, '').trim(),
+        );
         if (!propre) return;
         // Un titre répété est une reformulation du carnet, pas un second acte :
         // deux actes de même titre produiraient deux fiches au même slug, et la

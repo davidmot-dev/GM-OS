@@ -241,10 +241,23 @@ const AtelierDeCampagne: React.FC = () => {
     const publier = async (slug: string) => {
         const fiche = fiches[slug];
         if (!fiche || !corpus) return;
-        const ok = await publierLaFiche(corpus, fiche);
-        if (!ok) { gmToast("La fiche n'a pas pu être écrite sur le disque.", 'error'); return; }
+        const { publiee, ecartees } = await publierLaFiche(corpus, fiche);
+        if (!publiee) { gmToast("La fiche n'a pas pu être écrite sur le disque.", 'error'); return; }
         setPubliees(p => new Set(p).add(slug));
         gmToast(`« ${fiche.sujet} » publiée.`, 'success');
+        /*
+          **Un écartement se dit.** Une fiche du même sujet et du même acte,
+          publiée sous un autre nom, vient de sortir du corpus vivant. C'est
+          voulu — mais silencieux, le meneur croirait avoir deux versions alors
+          qu'il n'en a plus qu'une, ou l'inverse.
+        */
+        if (ecartees.length > 0) {
+            gmToast(
+                `${ecartees.length} fiche${ecartees.length > 1 ? 's' : ''} du même acte `
+                + `écartée${ecartees.length > 1 ? 's' : ''} vers fiches-v1/ : ${ecartees.join(', ')}.`,
+                'info',
+            );
+        }
     };
 
     /**

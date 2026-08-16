@@ -22,6 +22,10 @@ beforeEach(() => {
     disque = {};
     (window as unknown as { appBridge: unknown }).appBridge = {
         ai: {
+            listDir: vi.fn(async (chemin: string) =>
+                Object.keys(disque)
+                    .filter(c => c.startsWith(`${chemin}/`))
+                    .map(c => c.slice(chemin.length + 1))),
             readDoc: vi.fn(async (chemin: string) => disque[chemin] ?? null),
             writeDoc: vi.fn(async (chemin: string, contenu: string) => { disque[chemin] = contenu; return true; }),
             deleteDoc: vi.fn(async (chemin: string) => { delete disque[chemin]; return true; }),
@@ -70,9 +74,9 @@ describe('publierLaFiche', () => {
         disque[`${FICHES}/lieux-majeurs.md`] = 'ancienne';
         disque[`campaigns/le-secret-de-milo/drafts/lieux-majeurs.md`] = 'le brouillon';
 
-        const ok = await publierLaFiche(corpus, { slug: 'lieux-majeurs', markdown: 'nouvelle' });
+        const { publiee } = await publierLaFiche(corpus, { slug: 'lieux-majeurs', markdown: 'nouvelle' });
 
-        expect(ok).toBe(true);
+        expect(publiee).toBe(true);
         expect(disque[`${V1}/lieux-majeurs.md`]).toBe('ancienne');
         expect(disque[`${FICHES}/lieux-majeurs.md`]).toBe('nouvelle');
         expect(disque['campaigns/le-secret-de-milo/drafts/lieux-majeurs.md']).toBeUndefined();
@@ -84,11 +88,65 @@ describe('publierLaFiche', () => {
         // Le premier writeDoc est celui de l'archive.
         pont.writeDoc.mockResolvedValueOnce(false);
 
-        const ok = await publierLaFiche(corpus, { slug: 'lieux-majeurs', markdown: 'nouvelle' });
+        const { publiee } = await publierLaFiche(corpus, { slug: 'lieux-majeurs', markdown: 'nouvelle' });
 
         // Perdre une fiche neuve pour n'avoir pas su ranger l'ancienne serait le
         // pire des deux échanges.
-        expect(ok).toBe(true);
+        expect(publiee).toBe(true);
         expect(disque[`${FICHES}/lieux-majeurs.md`]).toBe('nouvelle');
+    });
+});
+
+/**
+ * Le second filet : la fiche supplantée porte un AUTRE nom de fichier.
+ *
+ * C'est le scénario exact du 2026-08-16 — une dérive du titre d'acte change le
+ * slug, donc la fiche neuve ne s'écrase pas, elle s'installe à côté.
+ */
+describe("publierLaFiche écarte les fiches du même acte publiées sous un autre nom", () => {
+    const fiche = (sujet: string, partie: string, corps: string) =>
+        `---\nsujet: ${sujet}\ncampagne: le-secret-de-milo\npartie: "${partie}"\n---\n\n${corps}\n`;
+
+    it('déplace la version au titre dérivé vers fiches-v1/', async () => {
+        const ancienNom = 'personnages-non-joueurs--scenario-3-voyage-en-mesopotamie.md';
+        disque[`${FICHES}/${ancienNom}`] = fiche(
+            'Personnages non joueurs', 'Scénario 3: Voyage en Mésopotamie', 'la version d\'août',
+        );
+
+        const { publiee, ecartees } = await publierLaFiche(corpus, {
+            slug: 'personnages-non-joueurs--scenario-3-voyage-en-mesopotamie-ou-voyage-en-mesopotamie',
+            markdown: fiche(
+                'Personnages non joueurs',
+                'Scénario 3: Voyage en Mésopotamie (ou Voyage en Mésopotamie)',
+                'la version relancée',
+            ),
+        });
+
+        expect(publiee).toBe(true);
+        expect(ecartees).toEqual([ancienNom]);
+        // Sortie du corpus vivant, mais pas du disque.
+        expect(disque[`${FICHES}/${ancienNom}`]).toBeUndefined();
+        expect(disque[`${V1}/${ancienNom}`]).toContain("la version d'août");
+    });
+
+    it("ne touche pas les fiches d'un autre acte", async () => {
+        disque[`${FICHES}/pnj--acte-1.md`] = fiche('Personnages non joueurs', 'Scénario 1: Manigances', 'acte 1');
+
+        const { ecartees } = await publierLaFiche(corpus, {
+            slug: 'pnj--acte-2',
+            markdown: fiche('Personnages non joueurs', 'Scénario 2: Mystères', 'acte 2'),
+        });
+
+        expect(ecartees).toEqual([]);
+        expect(disque[`${FICHES}/pnj--acte-1.md`]).toBeDefined();
+    });
+
+    it("n'écarte rien quand la fiche publiée n'a pas de sujet", async () => {
+        disque[`${FICHES}/lieux.md`] = fiche('Lieux majeurs', 'Acte I', 'x');
+
+        const { ecartees } = await publierLaFiche(corpus, { slug: 'brut', markdown: 'sans frontmatter' });
+
+        expect(ecartees).toEqual([]);
+        expect(disque[`${FICHES}/lieux.md`]).toBeDefined();
     });
 });

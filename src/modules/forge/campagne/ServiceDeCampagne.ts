@@ -9,6 +9,8 @@ import {
 } from './gabaritsDeCampagne';
 import { lireLaStructure, type ActeLu } from './structureDeCampagne';
 import { retirerLesRenvoisDuCarnet } from './renvoisDuCarnet';
+import { sujetDuFrontmatter } from '../rules/fichesSupplantees';
+import { fichesSupplanteesDeCampagne, partieDuFrontmatter } from './fichesSupplanteesDeCampagne';
 import {
     resoudreCorpusDeCampagne, cheminDesFichesDeCampagne, cheminDesBrouillonsDeCampagne,
     cheminDesFichesSupplanteesDeCampagne,
@@ -267,26 +269,104 @@ export async function archiverLaVersionPrecedente(
         : { archivee: false, raison: "l'ancienne version n'a pas pu être copiée dans fiches-v1/" };
 }
 
-/** Publie une fiche relue vers `fiches/`, et retire son brouillon. */
-export async function publierLaFiche(corpus: CorpusDeCampagne, fiche: FicheAEcrire): Promise<boolean> {
+/**
+ * Écarte les fiches du même sujet et du même acte publiées sous un AUTRE nom.
+ *
+ * **Le second filet, et il rattrape ce que l'archivage par slug ne voit pas.**
+ * Une dérive du titre d'acte — « Voyage en Mésopotamie » devenu « Voyage en
+ * Mésopotamie (ou Voyage en Mésopotamie) » le 2026-08-16 — change le slug : la
+ * fiche neuve n'écrase alors rien, elle s'installe **à côté**. Deux jeux de
+ * fiches pour un acte, l'un ignoré en silence par la Forge, les deux servis à
+ * l'Oracle.
+ *
+ * Déplacement, et non copie : ces fiches sortent du corpus vivant. Elles ne
+ * quittent pas le disque pour autant.
+ */
+async function ecarterLesFichesSupplantees(
+    corpus: CorpusDeCampagne,
+    fiche: FicheAEcrire,
+): Promise<string[]> {
     const pont = window.appBridge?.ai;
-    if (!pont?.writeDoc) return false;
+    if (!pont?.listDir || !pont?.readDoc || !pont?.writeDoc) return [];
+
+    const dossier = cheminDesFichesDeCampagne(corpus);
+    const noms = (await pont.listDir(dossier).catch(() => [] as string[]))
+        .filter(n => n.endsWith('.md'));
+    if (noms.length === 0) return [];
+
+    const lues = await Promise.all(noms.map(async nom => {
+        const contenu = (await pont.readDoc!(`${dossier}/${nom}`).catch(() => null)) ?? '';
+        return { nom, sujet: sujetDuFrontmatter(contenu), partie: partieDuFrontmatter(contenu), contenu };
+    }));
+
+    // On lit le sujet et l'acte sur la fiche QU'ON PUBLIE, jamais sur ce qui
+    // traîne : c'est elle qui définit ce qu'elle remplace.
+    const nomPublie = `${fiche.slug}.md`;
+    const sujet = sujetDuFrontmatter(fiche.markdown);
+    if (!sujet) return [];
+
+    const caduques = fichesSupplanteesDeCampagne(
+        sujet,
+        partieDuFrontmatter(fiche.markdown),
+        nomPublie,
+        lues,
+    );
+
+    const ecartees: string[] = [];
+    for (const nom of caduques) {
+        const source = lues.find(f => f.nom === nom);
+        if (!source?.contenu.trim()) continue;
+        // Écrire l'archive AVANT d'effacer : l'ordre n'est pas négociable, un
+        // effacement qui précède une écriture refusée perd la fiche.
+        const ecrite = await pont.writeDoc(
+            `${cheminDesFichesSupplanteesDeCampagne(corpus)}/${nom}`,
+            source.contenu,
+        ).catch(() => false);
+        if (!ecrite) continue;
+        await pont.deleteDoc?.(`${dossier}/${nom}`).catch(() => false);
+        ecartees.push(nom);
+    }
+    return ecartees;
+}
+
+/** Ce qu'une publication a fait — écrire, et ce qu'elle a écarté au passage. */
+export interface ResultatDePublication {
+    publiee: boolean;
+    /** Fiches du même sujet et du même acte, déplacées vers `fiches-v1/`. */
+    ecartees: string[];
+}
+
+/**
+ * Publie une fiche relue vers `fiches/`, et retire son brouillon.
+ *
+ * Deux archivages, parce qu'il y a deux façons de supplanter une fiche : le même
+ * slug (on écrase) et un slug différent pour le même sujet et le même acte (on
+ * s'installerait à côté). *On répare plutôt qu'on ne refuse, et on dit ce qu'on
+ * a réparé* — d'où les noms rendus, que l'écran annonce.
+ */
+export async function publierLaFiche(
+    corpus: CorpusDeCampagne,
+    fiche: FicheAEcrire,
+): Promise<ResultatDePublication> {
+    const pont = window.appBridge?.ai;
+    if (!pont?.writeDoc) return { publiee: false, ecartees: [] };
 
     // Avant d'écraser, on met de côté. Une reforge doit rester comparable à ce
     // qu'elle remplace, et rattrapable si elle est moins bonne.
     await archiverLaVersionPrecedente(corpus, fiche.slug);
+    const ecartees = await ecarterLesFichesSupplantees(corpus, fiche);
 
     const ecrit = await pont.writeDoc(
         `${cheminDesFichesDeCampagne(corpus)}/${fiche.slug}.md`,
         fiche.markdown,
     ).catch(() => false);
-    if (!ecrit) return false;
+    if (!ecrit) return { publiee: false, ecartees };
 
     // Conservé, le brouillon redeviendrait une décharge, avec deux versions de
     // chaque fiche dans le même dossier parent — le défaut corrigé sur le corpus
     // de règles le 2026-08-14.
     await pont.deleteDoc?.(`${cheminDesBrouillonsDeCampagne(corpus)}/${fiche.slug}.md`).catch(() => false);
-    return true;
+    return { publiee: true, ecartees };
 }
 
 /**

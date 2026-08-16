@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { lireLaStructure, retirerLaNumerotation } from './structureDeCampagne';
+import { lireLaStructure, retirerLaNumerotation, retirerLAlternativeRedondante } from './structureDeCampagne';
 
 /**
  * Ce que ces tests protègent : **le titre exact des actes**.
@@ -145,5 +145,56 @@ describe('lireLaStructure — ce qu\'elle refuse de faire', () => {
         // et le meneur tranche. Lever aurait perdu la requête.
         expect(lireLaStructure('Je n\'ai pas trouvé de découpage dans les sources.')).toEqual([]);
         expect(lireLaStructure('')).toEqual([]);
+    });
+});
+
+/**
+ * Ce que ces tests protègent : **le titre d'acte ne dérive pas d'une lecture à
+ * l'autre**.
+ *
+ * Relancée le 2026-08-16 sur « Le secret de Milo », la structure a rendu
+ * `**Scénario 3: Voyage en Mésopotamie** (ou **Voyage en Mésopotamie**)` là où
+ * la lecture d'août donnait le titre seul. Le carnet offrait poliment les deux
+ * dénominations du livre.
+ *
+ * Le titre borne tout : il devient le `partie:` des fiches, donc leur slug, donc
+ * l'acte que la Forge apparie. Deux titres pour un acte, et le corpus s'est
+ * retrouvé avec deux jeux de fiches — l'un ignoré en silence, les deux indexés.
+ */
+describe('retirerLAlternativeRedondante', () => {
+    it("retire une alternative qui redit le titre", () => {
+        expect(retirerLAlternativeRedondante('Scénario 3: Voyage en Mésopotamie (ou Voyage en Mésopotamie)'))
+            .toBe('Scénario 3: Voyage en Mésopotamie');
+    });
+
+    it('garde une alternative qui apporte une autre dénomination', () => {
+        // Le doute penche du côté de ne rien toucher : ces deux titres ne se
+        // contiennent pas, le livre nomme peut-être vraiment les deux.
+        const titre = 'Acte 2 (ou Chapitre du Sable)';
+        expect(retirerLAlternativeRedondante(titre)).toBe(titre);
+    });
+
+    it('accepte que le titre soit contenu dans son alternative', () => {
+        expect(retirerLAlternativeRedondante('Voyage (ou Le Voyage en Mésopotamie)'))
+            .toBe('Voyage');
+    });
+
+    it('ne touche pas un titre sans parenthèses', () => {
+        expect(retirerLAlternativeRedondante('Acte I — La Chute')).toBe('Acte I — La Chute');
+    });
+
+    it("ne touche pas une parenthèse qui n'est pas une alternative", () => {
+        expect(retirerLAlternativeRedondante('Acte I (Rome, 1923)')).toBe('Acte I (Rome, 1923)');
+    });
+
+    it('nettoie le titre dès la lecture de la structure', () => {
+        const actes = lireLaStructure(
+            'Ordre | Titre exact | Enjeu | Sections\n'
+            + '--- | --- | --- | ---\n'
+            + '3 | **Scénario 3: Voyage en Mésopotamie** (ou **Voyage en Mésopotamie**) | On remonte le fleuve. | `Le Sea-You`\n',
+        );
+
+        expect(actes).toHaveLength(1);
+        expect(actes[0].titre).toBe('Scénario 3: Voyage en Mésopotamie');
     });
 });
