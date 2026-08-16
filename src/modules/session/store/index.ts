@@ -14,7 +14,9 @@ import {
     handleGenerateAtlasMapImage,
     handleGeneratePlayerPortrait,
     handleAddChronicle,
-    handleExportActiveCampaignToObsidian
+    handleAppliquerLaCampagneForgee,
+    handleExportActiveCampaignToObsidian,
+    type CampagneForgee,
 } from '../logic/crossDomainHelpers';
 import { sanitizeSessions } from '../logic/sanitization';
 import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
@@ -92,6 +94,15 @@ interface CrossDomainActions {
     generateAtlasMapImage: (mapId: string, instructions?: string) => Promise<void>;
     generatePlayerPortrait: (playerId: string, characterId: string, instructions?: string) => Promise<void>;
     addChronicle: (data: any) => void;
+    /**
+     * Écrit une campagne forgée depuis ses fiches.
+     *
+     * Distincte d'`addChronicle`, et volontairement : celle-là déverse un
+     * document en un seul appel et ne connaît ni actes, ni scènes, ni indices.
+     * Celle-ci reçoit un projet déjà résolu, dont tous les renvois pointent les
+     * uns vers les autres.
+     */
+    appliquerLaCampagneForgee: (ecriture: CampagneForgee) => void;
     exportActiveCampaignToObsidian: () => Promise<void>;
     reconcileTemplates: () => void;
     generateEncounter: (templateId: string) => Entity[];
@@ -240,6 +251,8 @@ export const useSessionOSStore = create<SessionOSStore>()(
             generateAtlasMapImage: async (mapId, instructions) => handleGenerateAtlasMapImage(set, get, mapId, instructions),
             generatePlayerPortrait: async (playerId, characterId, instructions) => handleGeneratePlayerPortrait(set, get, playerId, characterId, instructions),
             addChronicle: (payload) => handleAddChronicle(set, get, payload),
+
+            appliquerLaCampagneForgee: (ecriture) => handleAppliquerLaCampagneForgee(set, get, ecriture),
             exportActiveCampaignToObsidian: () => handleExportActiveCampaignToObsidian(get),
             generateEncounter: (templateId) => {
                 const driver = get().getActiveDriver();

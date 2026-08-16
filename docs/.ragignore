@@ -33,3 +33,16 @@ drafts/
 # doublons. Archiver chez eux n'aurait rien retire de l'index — le doublon
 # serait reste, mais cache, ce qui est pire.
 rules-v1/
+
+# Le meme dossier, cote campagnes — et il manquait.
+#
+# `cheminDesFichesSupplanteesDeCampagne` designait « fiches-v1/ » depuis le
+# 2026-08-15, mais rien n'y ecrivait et rien ne l'excluait. Le jour ou
+# l'archivage a ete branche (2026-08-16), l'ancienne version d'une fiche serait
+# partie la — et l'Oracle aurait recu les DEUX, dont celle que la reforge venait
+# de remplacer. Exactement le defaut que « rules-v1/ » ci-dessus corrige.
+#
+# Cote campagnes, l'enjeu est meme plus direct : le slug d'une fiche de campagne
+# est deterministe, donc une reforge ECRASE. L'archive n'est pas un doublon
+# accidentel, c'est la seule copie de la version precedente.
+fiches-v1/

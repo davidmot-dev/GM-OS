@@ -11,6 +11,7 @@ import { lireLaStructure, type ActeLu } from './structureDeCampagne';
 import { retirerLesRenvoisDuCarnet } from './renvoisDuCarnet';
 import {
     resoudreCorpusDeCampagne, cheminDesFichesDeCampagne, cheminDesBrouillonsDeCampagne,
+    cheminDesFichesSupplanteesDeCampagne,
     type CorpusDeCampagne,
 } from '../../../../electron/corpusDeCampagne';
 
@@ -222,10 +223,58 @@ export async function ecrireLeBrouillon(corpus: CorpusDeCampagne, fiche: FicheAE
     return (await window.appBridge?.ai?.writeDoc?.(chemin, fiche.markdown).catch(() => false)) ?? false;
 }
 
+/**
+ * Met de côté la version précédente d'une fiche, s'il y en a une.
+ *
+ * **Ce que l'absence de ce geste coûtait, trouvé le 2026-08-16.**
+ * `cheminDesFichesSupplanteesDeCampagne` désignait `fiches-v1/` depuis la veille
+ * et **personne ne l'appelait** : `publierLaFiche` écrivait par-dessus. Or le
+ * slug d'une fiche de campagne est **déterministe** — `slugFicheDeCampagne` le
+ * dérive du sujet et de l'acte — donc une reforge ne produit pas un doublon
+ * comme côté règles : elle **écrase**. La version précédente n'était pas en
+ * concurrence dans l'index, elle n'existait plus du tout.
+ *
+ * *On répare plutôt qu'on ne refuse* : la publication continue même si
+ * l'archivage échoue — perdre une fiche neuve pour n'avoir pas su ranger
+ * l'ancienne serait le pire des deux échanges. Mais l'échec est rendu, pour que
+ * l'écran puisse le dire.
+ *
+ * **L'ordre n'est pas négociable** : relire, écrire l'archive, et seulement
+ * ensuite laisser l'appelant écraser. C'est la règle d'`archiverUneFiche` côté
+ * règles, et elle vient du même raisonnement — un archivage qui poserait un
+ * fichier vide détruirait la fiche au lieu de la mettre de côté.
+ */
+export async function archiverLaVersionPrecedente(
+    corpus: CorpusDeCampagne,
+    slug: string,
+): Promise<{ archivee: boolean; raison?: string }> {
+    const pont = window.appBridge?.ai;
+    if (!pont?.readDoc || !pont?.writeDoc) return { archivee: false };
+
+    const ancienne = await pont.readDoc(`${cheminDesFichesDeCampagne(corpus)}/${slug}.md`)
+        .catch(() => null);
+    // Pas de version précédente : c'est le cas normal d'une première
+    // publication, et ce n'est pas un échec.
+    if (!ancienne?.trim()) return { archivee: false };
+
+    const ecrite = await pont.writeDoc(
+        `${cheminDesFichesSupplanteesDeCampagne(corpus)}/${slug}.md`,
+        ancienne,
+    ).catch(() => false);
+
+    return ecrite
+        ? { archivee: true }
+        : { archivee: false, raison: "l'ancienne version n'a pas pu être copiée dans fiches-v1/" };
+}
+
 /** Publie une fiche relue vers `fiches/`, et retire son brouillon. */
 export async function publierLaFiche(corpus: CorpusDeCampagne, fiche: FicheAEcrire): Promise<boolean> {
     const pont = window.appBridge?.ai;
     if (!pont?.writeDoc) return false;
+
+    // Avant d'écraser, on met de côté. Une reforge doit rester comparable à ce
+    // qu'elle remplace, et rattrapable si elle est moins bonne.
+    await archiverLaVersionPrecedente(corpus, fiche.slug);
 
     const ecrit = await pont.writeDoc(
         `${cheminDesFichesDeCampagne(corpus)}/${fiche.slug}.md`,
@@ -240,16 +289,24 @@ export async function publierLaFiche(corpus: CorpusDeCampagne, fiche: FicheAEcri
     return true;
 }
 
-/** Enregistre l'inventaire comme fiche : c'est un livrable, pas un prétraitement. */
-export async function ecrireLInventaire(
+/**
+ * Une réponse brute enregistrée comme fiche, sous un sujet donné.
+ *
+ * L'inventaire et la structure ne passent pas par `convertirFiche` : ils n'ont
+ * ni sections ni couverture à déclarer, et les faire ressembler à des fiches de
+ * canevas leur prêterait des métadonnées qu'on n'a pas vérifiées.
+ */
+async function ecrireUneReponseBrute(
     corpus: CorpusDeCampagne,
     campagne: string,
+    sujet: string,
+    slug: string,
     brut: string,
     jeu?: string,
 ): Promise<boolean> {
     const entete = [
         '---',
-        'sujet: Inventaire de la campagne',
+        `sujet: ${sujet}`,
         `campagne: ${campagne}`,
         ...(jeu ? [`jeu: ${jeu}`] : []),
         'genere_par: notebooklm',
@@ -258,8 +315,47 @@ export async function ecrireLInventaire(
         '---',
         '',
     ].join('\n');
-    const chemin = `${cheminDesFichesDeCampagne(corpus)}/inventaire-de-la-campagne.md`;
+    // Relancer l'inventaire ou la structure écrase la réponse précédente, comme
+    // pour toute fiche : elles passent par le même archivage.
+    await archiverLaVersionPrecedente(corpus, slug);
+    const chemin = `${cheminDesFichesDeCampagne(corpus)}/${slug}.md`;
     return (await window.appBridge?.ai?.writeDoc?.(chemin, `${entete}${brut.trim()}\n`).catch(() => false)) ?? false;
+}
+
+/** Enregistre l'inventaire comme fiche : c'est un livrable, pas un prétraitement. */
+export async function ecrireLInventaire(
+    corpus: CorpusDeCampagne,
+    campagne: string,
+    brut: string,
+    jeu?: string,
+): Promise<boolean> {
+    return ecrireUneReponseBrute(
+        corpus, campagne, 'Inventaire de la campagne', 'inventaire-de-la-campagne', brut, jeu,
+    );
+}
+
+/**
+ * Enregistre la structure — et **c'est elle qui manquait le plus**.
+ *
+ * L'Atelier lisait la structure, en tirait les titres d'actes qui bornent les
+ * onze requêtes suivantes, puis **la laissait en mémoire**. Fermer la fenêtre la
+ * perdait. Les fiches par acte gardaient bien leur `partie:`, donc les *titres*
+ * survivaient ; l'**enjeu de chaque acte**, lui, disparaissait — et c'est
+ * exactement ce que `Acte.resume` attend. La Forge aurait dû soit s'en passer,
+ * soit l'inventer.
+ *
+ * *Une information disponible maintenant et perdue ensuite doit s'écrire
+ * maintenant* — la règle qui avait déjà valu son `jeu:` au frontmatter.
+ */
+export async function ecrireLaStructure(
+    corpus: CorpusDeCampagne,
+    campagne: string,
+    brut: string,
+    jeu?: string,
+): Promise<boolean> {
+    return ecrireUneReponseBrute(
+        corpus, campagne, 'Structure en actes', 'structure-en-actes', brut, jeu,
+    );
 }
 
 export { SUJETS_PAR_ACTE };

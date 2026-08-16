@@ -47,20 +47,32 @@ export interface LectureDuCorpus {
 }
 
 /**
- * Le `sujet:` du frontmatter, ou une chaîne vide.
+ * La valeur d'une clé du frontmatter, ou une chaîne vide.
  *
  * On ne lit que le bloc de tête : un `sujet:` qui apparaîtrait dans le corps
  * d'une fiche est du texte, pas une métadonnée.
+ *
+ * **Générique parce que les fiches de campagne portent plus que `sujet:`.**
+ * Elles déclarent aussi `partie:` — l'acte qui les borne — et `jeu:`, que la
+ * Forge de campagne lit pour ne pas redemander au meneur ce que l'Atelier
+ * savait déjà. Trois lecteurs de frontmatter écrits séparément finiraient par
+ * ne plus décoter les guillemets de la même façon.
  */
-export function sujetDeLaFiche(contenu: string): string {
+export function champDeLaFiche(contenu: string, clef: string): string {
   const entete = blocFrontmatter(contenu);
   if (!entete) return '';
 
+  const motif = new RegExp(`^${clef}\\s*:\\s*(.*)$`);
   for (const ligne of entete.bloc.split('\n')) {
-    const couple = /^sujet\s*:\s*(.*)$/.exec(ligne.trim());
+    const couple = motif.exec(ligne.trim());
     if (couple) return decoterYaml(couple[1].trim());
   }
   return '';
+}
+
+/** Le `sujet:` du frontmatter — c'est par lui qu'une fiche se rattache au canevas. */
+export function sujetDeLaFiche(contenu: string): string {
+  return champDeLaFiche(contenu, 'sujet');
 }
 
 /**

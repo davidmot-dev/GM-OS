@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Hammer, Sparkles, Layers } from 'lucide-react';
+import { Hammer, Sparkles, Layers, Network } from 'lucide-react';
 import ForgeDashboard from './components/ForgeDashboard';
 import AtelierDeCampagne from './campagne/AtelierDeCampagne';
+import ForgeDeLaTrame from './campagne/ForgeDeLaTrame';
 import { useSessionStore } from '../../store/useSessionStore';
 
 /**
@@ -24,12 +25,15 @@ import { useSessionStore } from '../../store/useSessionStore';
  */
 /**
  * `campagne` est l'**Atelier** de campagne — il interroge NotebookLM et écrit
- * des fiches sourcées, comme l'atelier des règles. `chronicle` est la Forge de
- * chronique, qui produit directement des objets de jeu depuis des documents
- * déversés. Les deux coexistent le temps que la seconde dérive du corpus plutôt
- * que du livre.
+ * des fiches sourcées, comme l'atelier des règles. `trame` est la **Forge** de
+ * campagne, qui projette ces fiches en actes, scènes, PNJ et indices : les deux
+ * étages du même chantier, dans cet ordre.
+ *
+ * `chronicle` est l'ancien chemin — il produit des objets de jeu directement
+ * depuis des documents déversés, en un seul appel, et ne connaît ni actes, ni
+ * scènes, ni indices. Il coexiste le temps que `trame` ait fait ses preuves.
  */
-export type ModeForge = 'system' | 'campagne' | 'chronicle';
+export type ModeForge = 'system' | 'campagne' | 'trame' | 'chronicle';
 
 const ForgeOS: React.FC = () => {
     const { t } = useTranslation(['modules']);
@@ -70,6 +74,14 @@ const ForgeOS: React.FC = () => {
                         <Layers size={12} /> Campagne
                     </button>
                     <button
+                        onClick={() => setMode('trame')}
+                        className={`px-6 py-1.5 transition-all flex items-center gap-2 ${
+                            theme === 'medieval' ? 'rounded-sm text-[11px] font-display tracking-widest' : 'rounded-lg text-[10px] font-black uppercase tracking-widest'
+                        } ${mode === 'trame' ? 'bg-accent text-white shadow-glow-accent' : 'text-app-text/60'}`}
+                    >
+                        <Network size={12} /> Trame
+                    </button>
+                    <button
                         onClick={() => setMode('chronicle')}
                         className={`px-6 py-1.5 transition-all flex items-center gap-2 ${
                             theme === 'medieval' ? 'rounded-sm text-[11px] font-display tracking-widest' : 'rounded-lg text-[10px] font-black uppercase tracking-widest'
@@ -81,8 +93,8 @@ const ForgeOS: React.FC = () => {
             </header>
 
             <div className="flex-1 min-h-0 overflow-hidden">
-                {mode === 'campagne'
-                    ? <AtelierDeCampagne />
+                {mode === 'campagne' ? <AtelierDeCampagne />
+                    : mode === 'trame' ? <ForgeDeLaTrame />
                     : <ForgeDashboard mode={mode} />}
             </div>
         </div>

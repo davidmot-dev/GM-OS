@@ -10,10 +10,11 @@ import { forgeService } from '../ForgeService';
 import { listerLesCarnets, listerLesSources, type CarnetLM, type SourceDuCarnet } from '../carnetNotebookLM';
 import {
     serviceDeCampagne, etapesDeLaCampagne, corpusDeLaCampagne,
-    ecrireLeBrouillon, publierLaFiche, ecrireLInventaire,
+    ecrireLeBrouillon, publierLaFiche, ecrireLInventaire, ecrireLaStructure,
     type EtapeDeCampagne, type FicheDeCampagne,
 } from './ServiceDeCampagne';
 import { reprendreLAtelier, type FicheReprise } from './reprendreLAtelier';
+import { Bloc, CibleDeCampagne } from './atomes';
 import type { ActeLu } from './structureDeCampagne';
 import type { CorpusDeCampagne } from '../../../../electron/corpusDeCampagne';
 
@@ -219,6 +220,10 @@ const AtelierDeCampagne: React.FC = () => {
         const { actes: lus, brut } = await serviceDeCampagne.structure(carnetId, sourcesRetenues);
         setActes(lus);
         setStructureBrute(brut);
+        // Écrite même quand la lecture ne trouve aucun acte : la réponse du
+        // carnet contient alors les enjeux sous une forme qu'on n'a pas su lire,
+        // et la jeter obligerait à la repayer.
+        if (corpus) await ecrireLaStructure(corpus, corpus.id, brut, jeuCible);
         if (lus.length === 0) {
             gmToast("Aucune partie lue — relis la réponse du carnet ci-dessous et saisis-les à la main.", 'warning');
         }
@@ -655,29 +660,6 @@ const SelecteurDeCarnet: React.FC<{
                 </button>
             </div>
         </div>
-    </div>
-);
-
-const CibleDeCampagne: React.FC<{ libelle: string; actif: boolean; onChoisir: () => void }> = ({ libelle, actif, onChoisir }) => (
-    <button
-        onClick={onChoisir}
-        className={`w-full text-left px-4 py-2.5 rounded-xl border text-xs transition-all ${
-            actif
-                ? 'bg-accent/15 border-accent/40 text-accent font-bold'
-                : 'bg-app-bg/30 border-app-border/20 text-app-text/50 hover:text-app-text/80'
-        }`}
-    >
-        {libelle}
-    </button>
-);
-
-const Bloc: React.FC<{ icone: React.ReactNode; titre: string; children: React.ReactNode }> = ({ icone, titre, children }) => (
-    <div className="rounded-2xl border border-app-border/10 bg-app-surface/40 p-5">
-        <div className="flex items-center gap-2 mb-3 text-accent">
-            {icone}
-            <h3 className="text-[11px] font-black uppercase tracking-widest text-app-text">{titre}</h3>
-        </div>
-        {children}
     </div>
 );
 

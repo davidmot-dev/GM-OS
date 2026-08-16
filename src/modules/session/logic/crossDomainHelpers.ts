@@ -1,6 +1,8 @@
 import { gmToast } from '../../../stores/useToastStore';
 import type { SessionOSStore } from '../store/index';
-import type { Campaign, Entity, AtlasMap, WikiEntry, EntityRelation } from '../store/types';
+import type {
+    Campaign, Entity, AtlasMap, WikiEntry, EntityRelation, Acte, Scene, Clue,
+} from '../store/types';
 
 export const handleAddChronicle = (
     set: (partial: Partial<SessionOSStore> | ((state: SessionOSStore) => Partial<SessionOSStore>)) => void,
@@ -102,6 +104,102 @@ export const handleAddChronicle = (
     }
 };
 
+
+/**
+ * Ce que la Forge de campagne dépose dans le magasin.
+ *
+ * Volontairement **plat et déjà résolu** : tous les identifiants ont été
+ * attribués par `ecrireLaCampagne`, et les renvois pointent déjà les uns vers les
+ * autres. Ce gestionnaire ne décide de rien — il applique. C'est ce qui permet
+ * de montrer au meneur exactement ce qui va se passer avant qu'il ne valide.
+ */
+export interface CampagneForgee {
+    campaignId: string;
+    campagne?: { creee: boolean; champs: Partial<Campaign> };
+    actes: Acte[];
+    scenes: Scene[];
+    entities: Entity[];
+    atlasMaps: AtlasMap[];
+    wikiEntries: WikiEntry[];
+    clues: Clue[];
+    liensSurExistants: { entityId: string; relation: EntityRelation }[];
+}
+
+/**
+ * Écrit une campagne forgée, **sans jamais écraser ce qui existe**.
+ *
+ * **La règle, et elle vaut pour tout ce gestionnaire :** on ajoute, on ne
+ * remplace pas. Sur une campagne existante, seuls les champs *vides* se
+ * remplissent — un synopsis que le meneur a retravaillé survit à une seconde
+ * forge, et le `system` suit la règle posée le 2026-08-15 : la campagne garde le
+ * sien, on ne l'adopte que si elle n'en avait aucun.
+ *
+ * *Si retravailler une campagne efface le travail de la semaine précédente, le
+ * meneur cessera de retravailler.*
+ */
+export const handleAppliquerLaCampagneForgee = (
+    set: (partial: Partial<SessionOSStore> | ((state: SessionOSStore) => Partial<SessionOSStore>)) => void,
+    get: () => SessionOSStore,
+    ecriture: CampagneForgee,
+) => {
+    const { campaignId, campagne, liensSurExistants } = ecriture;
+    const existante = get().campaigns.find(c => c.id === campaignId);
+
+    set((state) => {
+        const campaigns = existante
+            ? state.campaigns.map(c => c.id === campaignId
+                ? {
+                    ...c,
+                    // `||` et non `??` : une chaîne vide est un champ à remplir,
+                    // pas une valeur que quelqu'un a choisie.
+                    description: c.description || campagne?.champs.description || '',
+                    synopsis: c.synopsis || campagne?.champs.synopsis || '',
+                    system: c.system || campagne?.champs.system || '',
+                }
+                : c)
+            : [
+                ...state.campaigns,
+                {
+                    id: campaignId,
+                    name: campagne?.champs.name ?? 'Campagne sans nom',
+                    system: campagne?.champs.system ?? '',
+                    description: campagne?.champs.description ?? '',
+                    synopsis: campagne?.champs.synopsis ?? '',
+                    activeLocationIds: [],
+                } as Campaign,
+            ];
+
+        // Les liens venus de la Forge s'AJOUTENT à ceux que le meneur a posés.
+        const entities = liensSurExistants.length === 0
+            ? [...state.entities, ...ecriture.entities]
+            : [
+                ...state.entities.map(e => {
+                    const ajouts = liensSurExistants.filter(l => l.entityId === e.id);
+                    return ajouts.length === 0
+                        ? e
+                        : { ...e, relations: [...(e.relations ?? []), ...ajouts.map(l => l.relation)] };
+                }),
+                ...ecriture.entities,
+            ];
+
+        return {
+            campaigns,
+            entities,
+            actes: [...state.actes, ...ecriture.actes],
+            scenes: [...state.scenes, ...ecriture.scenes],
+            atlasMaps: [...state.atlasMaps, ...ecriture.atlasMaps],
+            wikiEntries: [...state.wikiEntries, ...ecriture.wikiEntries],
+            clues: [...state.clues, ...ecriture.clues],
+            activeCampaignId: campaignId,
+        };
+    });
+
+    gmToast(
+        `${ecriture.actes.length} actes, ${ecriture.scenes.length} scènes, `
+        + `${ecriture.entities.length} personnages écrits dans la campagne.`,
+        'success',
+    );
+};
 
 export const handleGenerateEntityPortrait = async (
     set: (partial: Partial<SessionOSStore> | ((state: SessionOSStore) => Partial<SessionOSStore>)) => void,
