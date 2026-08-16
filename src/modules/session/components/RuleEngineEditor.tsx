@@ -170,6 +170,38 @@ export const RuleEngineEditor: React.FC = () => {
                                                 placeholder={t('modules:session.rule_engine_editor.core.default_dice_placeholder')}
                                             />
                                         </div>
+                                        {/*
+                                            **`dice.logic` n'était éditable NULLE PART**, relevé par
+                                            David le 2026-08-17 : « je ne vois pas dice logic ».
+                                            L'écran donnait le moteur et la formule, pas la lecture.
+
+                                            Or c'est elle qui décide de ce qui compte comme réussite.
+                                            Un pilote forgé avec `sum` là où il faut `count-success`
+                                            ne pouvait donc se corriger qu'en reforgeant — ou pas du
+                                            tout. *Une valeur qu'on ne peut pas corriger à la main
+                                            est une valeur qu'on subit.*
+                                        */}
+                                        <div>
+                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/60 mb-3 block px-1">
+                                                {t('modules:session.rule_engine_editor.core.logic_label')}
+                                            </label>
+                                            <select
+                                                value={dice.logic || 'sum'}
+                                                onChange={e => handleUpdate({ dice: { ...dice, logic: e.target.value as GameDriver['dice']['logic'] } })}
+                                                className="w-full bg-app-bg/40 px-5 py-4 rounded-2xl border border-app-border/20 text-sm text-app-text focus:border-accent/50 outline-none transition-all shadow-inner"
+                                                title={t('modules:session.rule_engine_editor.core.logic_label')}
+                                                aria-label={t('modules:session.rule_engine_editor.core.logic_label')}
+                                            >
+                                                {(['sum', 'count-success', 'highest', 'lowest', 'd100-low', 'd100-high'] as const).map(valeur => (
+                                                    <option key={valeur} value={valeur}>
+                                                        {t(`modules:session.rule_engine_editor.core.logic_options.${valeur}`)}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            <p className="text-[11px] text-app-text/35 leading-relaxed mt-2 px-1">
+                                                {t('modules:session.rule_engine_editor.core.logic_help')}
+                                            </p>
+                                        </div>
                                     </div>
 
                                     <div className="p-8 bg-app-surface/20 border border-app-border/10 rounded-[2.5rem] backdrop-blur-sm flex flex-col justify-center">

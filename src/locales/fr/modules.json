@@ -2171,7 +2171,17 @@
         "default_dice_placeholder": "Ex: 1d20 + @StrMod",
         "sheet_link_label": "Liaison Fiche de Personnage",
         "sheet_link_none": "Aucun modèle lié",
-        "sheet_link_description": "La liaison permet à l'IA d'automatiser le remplissage des caractéristiques et d'utiliser les bons modificateurs lors des jets."
+        "sheet_link_description": "La liaison permet à l'IA d'automatiser le remplissage des caractéristiques et d'utiliser les bons modificateurs lors des jets.",
+        "logic_label": "Lecture du Résultat",
+        "logic_help": "Comment le système interprète les dés lancés. Le moteur choisit le pupitre ; la lecture décide de ce qui compte comme réussite.",
+        "logic_options": {
+          "sum": "Somme des dés (X + mods)",
+          "count-success": "Compter les réussites (réserve, ou un dé sous un seuil)",
+          "highest": "Garder le plus haut",
+          "lowest": "Garder le plus bas",
+          "d100-low": "Pourcentage — réussite sous le seuil (d100)",
+          "d100-high": "Pourcentage — réussite au-dessus (d100)"
+        }
       },
       "combat": {
         "title": "Combat & Initiative",

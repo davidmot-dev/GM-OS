@@ -2142,7 +2142,17 @@
         "default_dice_placeholder": "Ex: 1d20 + @StrMod",
         "sheet_link_label": "Character Sheet Link",
         "sheet_link_none": "No linked template",
-        "sheet_link_description": "Linking allows the AI to automate characteristic filling and use the correct modifiers during rolls."
+        "sheet_link_description": "Linking allows the AI to automate characteristic filling and use the correct modifiers during rolls.",
+        "logic_label": "Result Reading",
+        "logic_help": "How the system interprets the dice rolled. The engine picks the roller; the reading decides what counts as a success.",
+        "logic_options": {
+          "sum": "Sum of dice (X + mods)",
+          "count-success": "Count successes (pool, or one die under a threshold)",
+          "highest": "Keep highest",
+          "lowest": "Keep lowest",
+          "d100-low": "Percentile — success under threshold (d100)",
+          "d100-high": "Percentile — success above threshold (d100)"
+        }
       },
       "combat": {
         "title": "Combat & Initiative",
