@@ -391,6 +391,30 @@ const LigneDeSceneJouee: React.FC<{
         {depliee && (
             <div className="px-3 pb-3 pt-1 flex flex-col gap-3 border-t border-app-border/10">
                 {/*
+                    **Ce qui s'y joue, en tête.** C'est ce qu'on vient relire
+                    quand on déplie une scène en pleine partie — avant de savoir
+                    qui est là et bien avant l'ambiance.
+
+                    Affiché et non éditable : le résumé se prépare, il ne
+                    s'écrit pas à la table. Les notes du meneur, plus bas, sont
+                    là pour ce qu'on ajoute en jouant — et les deux séparés
+                    disent lequel est le plan et lequel est le vécu.
+
+                    Rien quand il est vide : une scène improvisée n'en a pas, et
+                    un cadre vide serait un reproche adressé à un état normal.
+                */}
+                {scene.resume.trim().length > 0 && (
+                    <div>
+                        <p className="text-[9px] font-black uppercase tracking-widest text-app-text/40 mb-1.5">
+                            Ce qui s'y joue
+                        </p>
+                        <p className="text-[12px] leading-relaxed text-app-text/80 whitespace-pre-wrap">
+                            {scene.resume}
+                        </p>
+                    </div>
+                )}
+
+                {/*
                     **Qui est là.** C'est la moitié manquante des scènes
                     simultanées : le groupe se sépare, deux scènes tournent, et
                     sans ce champ rien ne dit qui est où. On ne propose que la
