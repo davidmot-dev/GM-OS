@@ -235,6 +235,18 @@ export const useJournalStore = create<JournalState>()(
         isRecording: status !== undefined ? status : !state.isRecording
       })),
 
+      /*
+        **Le résumé se range sur le journal, plus dans ses événements.**
+
+        Il y était écrit par `addEvent` — donc il rejoignait `journal.events`,
+        que `summarizeSession` prend en entrée. Régénérer réinjectait le résumé
+        précédent, et la contamination s'aggravait à chaque passe. Le ranger
+        ailleurs supprime la boucle **par construction**, sans filtre à tenir.
+
+        L'échec, lui, reste un événement : c'est un fait de la séance, daté, et
+        sa place est dans le fil. Mais il ne prend plus la place du résumé — la
+        phrase d'excuse ne peut plus être lue comme un compte rendu.
+      */
       generateAISummary: async (journalId) => {
         const journal = get().journals.find(j => j.id === journalId);
         if (!journal || journal.events.length === 0) return;
@@ -243,17 +255,18 @@ export const useJournalStore = create<JournalState>()(
           const { aiService } = await import('../ai/AIService');
           const summary = await aiService.summarizeSession(journal.events);
 
-          get().addEvent({
-            type: 'SYSTEM',
-            title: i18next.t('modules:journal.events.ai_summary'),
-            content: summary
-          });
+          set((state) => ({
+            journals: state.journals.map(j =>
+              j.id === journalId ? { ...j, resumeIA: summary, resumeGenereLe: Date.now() } : j),
+          }));
         } catch (err) {
           console.error("[JournalStore] AI Summary failed:", err);
           get().addEvent({
             type: 'SYSTEM',
             title: i18next.t('modules:journal.events.ai_summary_failed'),
-            content: i18next.t('modules:journal.events.ai_summary_error')
+            content: err instanceof Error
+              ? err.message
+              : i18next.t('modules:journal.events.ai_summary_error'),
           });
         }
       },
@@ -262,9 +275,17 @@ export const useJournalStore = create<JournalState>()(
         const journal = get().journals.find(j => j.id === journalId);
         if (!journal) return;
 
-        // Find the AI summary event
-        const summaryEvent = journal.events.find(e => e.title === i18next.t('modules:journal.events.ai_summary'));
-        if (!summaryEvent) {
+        /*
+          **Le résumé se lit sur son champ, plus par son titre traduit.**
+
+          `journal.events.find(e => e.title === t('…ai_summary'))` liait une
+          relation structurelle à une chaîne d'AFFICHAGE : générer le résumé en
+          français puis basculer l'interface en anglais cassait le lien, et
+          l'envoi échouait sur « pas de résumé » alors qu'il était là. Même
+          famille de fragilité que l'appariement jeton ↔ combattant du Cortex.
+        */
+        const resume = journal.resumeIA?.trim();
+        if (!resume) {
           throw new Error(i18next.t('modules:journal.messages.no_ai_summary'));
         }
 
@@ -295,7 +316,7 @@ export const useJournalStore = create<JournalState>()(
             await window.appBridge.mcp.callTool('notebooklm-mcp-server', 'source_add', {
               notebook_id: notebookId,
               source_type: 'text',
-              text: summaryEvent.content,
+              text: resume,
               title: `Résumé Session: ${journal.title}`
             });
           } else {

@@ -303,8 +303,29 @@ export class AIService {
 
   /**
    * Génère un résumé narratif d'une session à partir des événements du journal.
+   *
+   * **Ce résumé n'a jamais fonctionné hors Gemini, et il ne le disait pas.**
+   * Signalé le 2026-08-08 (§ 1.2 du plan de trame narrative), corrigé le
+   * 2026-08-17. Cette méthode réimplémentait son propre appel réseau, ne
+   * traitait que Gemini, et terminait par
+   * `return "Résumé non disponible pour ce fournisseur d'IA."` — **rendu comme
+   * un succès**. `generateAISummary` l'enregistrait donc comme résumé, et
+   * `syncToNotebook` l'aurait poussé dans le carnet comme source. David est sur
+   * Ollama : il n'a jamais obtenu autre chose que cette phrase.
+   *
+   * `generateText`, trente lignes plus haut dans ce même fichier, parle à cinq
+   * fournisseurs — ollama, ollama_cloud, custom, gemini, anthropic — avec
+   * réessais et repli. *La capacité existait ; elle n'était pas branchée ici.*
+   *
+   * **`sansPersona`** : l'invite est close et se suffit. Sans lui,
+   * `prepareSystemPrompt` y ajouterait les instructions du Sage de la campagne
+   * active, ses personnages et son RAG — de quoi noyer un compte rendu déjà
+   * long, et faire commenter au modèle un travail qu'on ne lui demandait pas.
+   *
    * @param events Liste des événements chronologiques de la session.
    * @returns Le résumé narratif généré (Markdown).
+   * @throws si le fournisseur n'est pas configuré ou si la génération échoue —
+   *         *une panne doit ressembler à une panne.*
    */
   public async summarizeSession(events: JournalEvent[]): Promise<string> {
     const { activeProvider, configs } = useAIStore.getState();
@@ -351,24 +372,24 @@ export class AIService {
     FINAL SUMMARY:`;
 
     try {
-      if (activeProvider === 'gemini') {
-        const apiKey = config.apiKey?.trim().replace(/[\r\n]/g, '');
-        const model = config.modelId || 'gemini-1.5-flash';
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+      const { text } = await this.generateText(
+        summaryPrompt,
+        undefined,
+        'sage',
+        {},
+        false,
+        false,
+        /* sansPersona */ true,
+      );
 
-        const bridgeResponse = await window.appBridge?.ai?.proxyRequest?.(url, 'POST', { 'Content-Type': 'application/json' }, {
-          contents: [{ parts: [{ text: summaryPrompt }] }],
-          generationConfig: { temperature: 0.8, maxOutputTokens: 2048 }
-        });
-
-        if (bridgeResponse?.ok) {
-          const data = bridgeResponse.data as GeminiResponse;
-          return data.candidates?.[0]?.content?.parts?.[0]?.text || "Impossible de générer le résumé.";
-        }
-        throw new Error("L'appel au bridge pour le résumé a échoué.");
-      }
-      
-      return "Résumé non disponible pour ce fournisseur d'IA.";
+      /*
+        Un modèle qui ne rend rien est une panne, pas un résumé vide. La rendre
+        silencieusement écrirait une page blanche dans le journal sous le titre
+        « Résumé IA » — exactement le mode de défaillance qu'on vient de retirer.
+      */
+      const resume = text?.trim();
+      if (!resume) throw new Error("Le modèle n'a rien rendu pour le résumé de séance.");
+      return resume;
     } catch (err) {
       console.error("[AIService] Summarization error:", err);
       throw err;

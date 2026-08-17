@@ -45,7 +45,32 @@ export interface Journal {
   /** Liste chronologique des événements */
   events: JournalEvent[];
   /** Notes finales de conclusion du MJ */
-  finalNote?: string; 
+  finalNote?: string;
+  /**
+   * Le résumé narratif, **artefact dérivé du journal et non événement dedans**.
+   *
+   * **Le défaut qu'il corrige** (§ 4.2 du plan de trame narrative, 2026-08-08,
+   * corrigé le 2026-08-17) : le résumé était enregistré par `addEvent`, donc il
+   * rejoignait `journal.events` — et `summarizeSession` prend `journal.events`
+   * en entrée. **Régénérer le résumé lui réinjectait le résumé précédent**,
+   * contamination récursive qui s'aggrave à chaque passe. Il était de surcroît
+   * typé `SYSTEM`, donc destiné à être écarté par le futur filtre trace/récit :
+   * il se serait exclu lui-même.
+   *
+   * **Pourquoi ici et non sur `GameSession.publicSummary`**, que le plan
+   * suggérait : ce champ-là est écrit par le meneur et relu au démarrage de la
+   * séance suivante comme synopsis. Y verser le résumé de l'IA écraserait le
+   * texte du meneur, puis se réinjecterait comme point de départ de la suite —
+   * la même boucle, déplacée d'un cran. Un résumé dérive du journal ; il vit
+   * donc sur le journal.
+   *
+   * Les journaux d'avant n'en portent pas, et **on ne migre rien** : leur
+   * « résumé » était la phrase d'excuse d'un fournisseur non géré. Les
+   * régénérer est le seul geste qui ait un sens.
+   */
+  resumeIA?: string;
+  /** Quand ce résumé a été produit — un résumé plus vieux que la séance se voit. */
+  resumeGenereLe?: number;
 }
 
 /**

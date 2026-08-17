@@ -270,6 +270,41 @@ const JournalDashboard: React.FC = () => {
                 ))}
               </div>
 
+              {/*
+                **Le résumé a sa place à lui depuis le 2026-08-17.**
+
+                Il était enregistré comme un ÉVÉNEMENT du journal, donc il
+                s'affichait dans le fil — et `summarizeSession` le relisait à la
+                passe suivante, se résumant lui-même. En le sortant du flux, il
+                fallait lui rendre un écran : un artefact qu'on produit et qu'on
+                ne voit pas est un artefact qu'on croit perdu.
+
+                Sa date est affichée parce qu'elle se périme : un résumé plus
+                vieux que les derniers événements ne les raconte pas.
+              */}
+              {activeJournal?.resumeIA && (
+                <div className="mt-16 pt-12 border-t border-app-border/30">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="size-10 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center shadow-inner">
+                      <Sparkles className="size-5 text-accent" />
+                    </div>
+                    <div>
+                      <h3 className="text-base font-black uppercase tracking-[0.2em] text-accent">
+                        {t('modules:journal.events.ai_summary')}
+                      </h3>
+                      {activeJournal.resumeGenereLe && (
+                        <p className="text-[10px] text-slate-500 font-bold uppercase tracking-tighter opacity-80">
+                          {format(activeJournal.resumeGenereLe, 'dd/MM/yyyy à HH:mm')}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="bg-app-surface/20 border border-app-border/40 rounded-2xl p-6 text-sm text-slate-300 leading-relaxed whitespace-pre-wrap shadow-inner">
+                    {activeJournal.resumeIA}
+                  </div>
+                </div>
+              )}
+
               {/* Final Note Section */}
               <div className="mt-16 pt-12 border-t border-app-border/30">
                 <div className="flex items-center gap-4 mb-6">
