@@ -73,7 +73,7 @@ export const useJournalStore = create<JournalState>()(
         }
       },
 
-      stopJournal: (snapshot) => {
+      stopJournal: (snapshot, pourLaSuite) => {
         const { activeJournalId, journals, isRecording } = get();
         if (!activeJournalId || !isRecording) return;
 
@@ -181,6 +181,18 @@ export const useJournalStore = create<JournalState>()(
                 ...j,
                 endTimestamp: now,
                 duration: durationStr,
+                /*
+                  **On garde l'instantané, on ne fait plus que le raconter.**
+                  Il était uniquement transformé en événements `SYSTEM` — donc
+                  dilué dans le fil, et rien n'en restait d'exploitable. C'est la
+                  matière de la deuxième section du compte rendu, et elle se
+                  calcule sans modèle.
+
+                  Les événements restent : pendant la partie, le fil est ce
+                  qu'on regarde. *On ne supprime pas, on distingue.*
+                */
+                ...(snapshot ? { etatDeFin: snapshot } : {}),
+                ...(pourLaSuite ? { pourLaSuite } : {}),
               };
             }
             return j;

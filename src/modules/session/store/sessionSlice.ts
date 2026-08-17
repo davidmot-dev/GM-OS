@@ -16,6 +16,7 @@ import type { GameSession, TransferRequest, SessionFeedback } from './types';
 import type { Scene } from '../../../types/trame.types';
 import { sanitizeSession } from '../logic/sanitization';
 import { suspendreLesScenes, reprendreLesScenes } from '../logic/trame';
+import { cloturerLeJournalDeLaSeance } from '../../journal/clotureDeSeance';
 
 /**
  * Ce que ce slice doit voir chez son voisin, et rien de plus.
@@ -138,6 +139,20 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
                 return { sessions, scenes: reprendreLesScenes(state.scenes ?? [], avant.campaignId, id, quand) };
             }
             if (avant.status === 'active') {
+                /*
+                  **La séance qui s'arrête clôt son journal.**
+
+                  Elle ne le faisait pas : `stopJournal` n'était appelé que
+                  depuis `setActiveCampaign`, donc un journal restait ouvert
+                  jusqu'au changement de campagne — et personne ne lui passait
+                  d'instantané, si bien que toute sa capture d'état de fin
+                  n'avait jamais tourné.
+
+                  Appelé hors du `set` — la clôture lit plusieurs stores et en
+                  écrit un autre ; la faire pendant le calcul d'un état
+                  reviendrait à muter pendant qu'on se met à jour.
+                */
+                queueMicrotask(() => cloturerLeJournalDeLaSeance(avant.campaignId));
                 return { sessions, scenes: suspendreLesScenes(state.scenes ?? [], avant.campaignId, quand) };
             }
             return { sessions };

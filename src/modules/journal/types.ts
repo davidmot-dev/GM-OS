@@ -118,6 +118,49 @@ export interface Journal {
   resumeIA?: string;
   /** Quand ce résumé a été produit — un résumé plus vieux que la séance se voit. */
   resumeGenereLe?: number;
+  /**
+   * L'état des lieux au moment où la séance s'est arrêtée.
+   *
+   * **Conservé, et non plus seulement raconté.** `stopJournal` recevait déjà cet
+   * instantané et le transformait en événements `SYSTEM` — donc il se noyait
+   * dans le fil, et rien ne restait d'exploitable. Il est désormais gardé tel
+   * quel : c'est la matière de la deuxième section du compte rendu, et elle se
+   * calcule sans modèle.
+   *
+   * **Une photographie, pas une vue.** Relire un vieux journal doit montrer où
+   * en étaient les personnages *ce soir-là*, pas où ils en sont aujourd'hui.
+   */
+  etatDeFin?: SessionSnapshot;
+  /**
+   * Ce qui restait à jouer quand la séance s'est arrêtée.
+   *
+   * Même raison d'être une photographie : la trame d'aujourd'hui ne dit pas ce
+   * qui était prévu il y a trois semaines.
+   */
+  pourLaSuite?: PourLaSuite;
+}
+
+/**
+ * Ce qui reste devant, relevé à la clôture d'une séance.
+ *
+ * **Troisième section du compte rendu, et elle se calcule** — décision de David
+ * du 2026-08-17. Aucun appel au modèle : la trame sait déjà quelles scènes n'ont
+ * jamais été jouées, quels indices n'ont pas été révélés, quels actes restent
+ * ouverts. *Une chaîne construite est instantanée, gratuite, déterministe et
+ * fonctionne hors ligne.*
+ *
+ * Des noms et non des identifiants : ce compte rendu se lit, et se relit des
+ * mois plus tard, quand les objets pointés peuvent avoir disparu.
+ */
+export interface PourLaSuite {
+  /** Scènes de la campagne jamais ouvertes, dans l'ordre de la trame. */
+  scenesNonJouees: string[];
+  /** Scènes laissées en pause — elles reprendront à la séance suivante. */
+  scenesEnPause: string[];
+  /** Indices que le groupe n'a pas encore trouvés. */
+  indicesNonReveles: string[];
+  /** Actes que la campagne n'a pas achevés. */
+  actesOuverts: string[];
 }
 
 /**
@@ -167,8 +210,13 @@ export interface JournalState {
   // Actions
   /** Démarre un nouvel enregistrement de session avec snapshot initial */
   startJournal: (campaignName: string, sessionName?: string, startSnapshot?: SessionStartSnapshot) => void;
-  /** Termine l'enregistrement en cours et capture l'état final du système */
-  stopJournal: (snapshot?: SessionSnapshot) => void;
+  /**
+   * Termine l'enregistrement en cours et **conserve** l'état final du système.
+   *
+   * `pourLaSuite` est relevé par l'appelant, qui seul voit la trame — le journal
+   * ne connaît que ses propres événements.
+   */
+  stopJournal: (snapshot?: SessionSnapshot, pourLaSuite?: PourLaSuite) => void;
   /** Crée un journal vide manuellement */
   addJournal: (name: string) => void;
   /** Définit le journal actif pour l'affichage */
